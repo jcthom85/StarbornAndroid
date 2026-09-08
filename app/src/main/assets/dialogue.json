@@ -529,7 +529,7 @@
     "speaker": "Zeke",
     "emote": "confident",
     "text": "Logged as Grid Instability. The override is temporary, but the badge printed. Take the badge. Go.",
-    "trigger": "set_quest_task_done:w1_mq02:meet_zeke,set_quest_task_done:w1_mq02:spoof_liability_form,set_quest_task_done:w1_mq02:receive_mine_access_badge,give_item:mine_access_badge,give_item:medkit_i*2,give_item:ration_pack*2,complete_quest:w1_mq02,set_milestone:ms_w1_mq02_zeke_override,set_milestone:ms_w1_mq02_complete,start_quest:w1_mq03,track_quest:w1_mq03,advance_quest_stage:w1_mq03:sector_four_assignment"
+    "trigger": "set_quest_task_done:w1_mq02:meet_zeke,set_quest_task_done:w1_mq02:spoof_liability_form,set_quest_task_done:w1_mq02:receive_mine_access_badge,give_item:mine_access_badge,give_item:medkit_i*2,give_item:ration_pack*2,give_xp:75,complete_quest:w1_mq02,set_milestone:ms_w1_mq02_zeke_override,set_milestone:ms_w1_mq02_complete,start_quest:w1_mq03,track_quest:w1_mq03,advance_quest_stage:w1_mq03:sector_four_assignment"
   },
   {
     "id": "zeke_default_talk",
@@ -914,7 +914,7 @@
     "speaker": "Zeke",
     "text": "Fascinating scans! The cellular structure of these crystalline ferns behaves like an acoustic chamber. Here, take some spare stabilizers for your help.",
     "condition": "quest_active:w2_sq01,quest_task_done:w2_sq01:scan_flora_1,quest_task_done:w2_sq01:scan_flora_2,quest_task_done:w2_sq01:scan_flora_3,quest_task_done:w2_sq01:scan_flora_4,quest_task_done:w2_sq01:scan_flora_5",
-    "trigger": "complete_quest:w2_sq01,give_item:painkillers*2"
+    "trigger": "give_xp:100,complete_quest:w2_sq01,give_item:painkillers*2"
   },
   {
     "id": "zeke_w2_sq01_intro_1",

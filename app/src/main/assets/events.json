@@ -1023,6 +1023,10 @@
             "quantity": 1
           },
           {
+            "type": "give_xp",
+            "xp": 50
+          },
+          {
             "type": "complete_quest",
             "quest_id": "w1_mq01"
           },
@@ -1533,6 +1537,10 @@
         "type": "give_item",
         "item_id": "heavy_gear",
         "quantity": 1
+      },
+      {
+        "type": "give_xp",
+        "xp": 100
       },
       {
         "type": "complete_quest",
@@ -2516,6 +2524,10 @@
             "quantity": 2
           },
           {
+            "type": "give_xp",
+            "xp": 150
+          },
+          {
             "type": "complete_quest",
             "quest_id": "w1_mq03"
           },
@@ -2808,6 +2820,10 @@
         "quantity": 2
       },
       {
+        "type": "give_xp",
+        "xp": 150
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w1_mq04"
       },
@@ -3015,6 +3031,10 @@
                 "type": "set_quest_task_done",
                 "quest_id": "w1_mq05",
                 "task_id": "hit_planetary_shield"
+              },
+              {
+                "type": "give_xp",
+                "xp": 250
               },
               {
                 "type": "complete_quest",
@@ -3238,6 +3258,10 @@
         "quantity": 1
       },
       {
+        "type": "give_xp",
+        "xp": 110
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w1_sq04"
       },
@@ -3325,6 +3349,10 @@
       {
         "type": "set_milestone",
         "milestone": "ms_w1_sq05_completed"
+      },
+      {
+        "type": "give_xp",
+        "xp": 120
       },
       {
         "type": "complete_quest",
@@ -3483,6 +3511,10 @@
         "task_id": "follow_stream"
       },
       {
+        "type": "give_xp",
+        "xp": 150
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w2_mq01"
       },
@@ -3637,6 +3669,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w2_mq02",
         "task_id": "insert_chime"
+      },
+      {
+        "type": "give_xp",
+        "xp": 200
       },
       {
         "type": "complete_quest",
@@ -3808,6 +3844,10 @@
       {
         "type": "add_party_member",
         "item_id": "orion"
+      },
+      {
+        "type": "give_xp",
+        "xp": 250
       },
       {
         "type": "complete_quest",
@@ -4034,6 +4074,10 @@
             "type": "system_tutorial",
             "scene_id": "link_unlock",
             "context": "Canopy Ridge"
+          },
+          {
+            "type": "give_xp",
+            "xp": 300
           },
           {
             "type": "complete_quest",
@@ -4314,6 +4358,10 @@
       {
         "type": "warp",
         "room_id": "spire_sewers_landing"
+      },
+      {
+        "type": "give_xp",
+        "xp": 350
       },
       {
         "type": "complete_quest",
@@ -4622,6 +4670,10 @@
         "quantity": 2
       },
       {
+        "type": "give_xp",
+        "xp": 150
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w2_sq03"
       },
@@ -4776,6 +4828,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w3_mq11",
         "task_id": "establish_shield"
+      },
+      {
+        "type": "give_xp",
+        "xp": 400
       },
       {
         "type": "complete_quest",
@@ -5115,6 +5171,10 @@
         "task_id": "assemble_table"
       },
       {
+        "type": "give_xp",
+        "xp": 450
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w3_mq12"
       },
@@ -5237,6 +5297,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w3_sq11",
         "task_id": "install_core"
+      },
+      {
+        "type": "give_xp",
+        "xp": 200
       },
       {
         "type": "complete_quest",
@@ -5476,6 +5540,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w3_mq13",
         "task_id": "enter_lobby"
+      },
+      {
+        "type": "give_xp",
+        "xp": 500
       },
       {
         "type": "complete_quest",
@@ -5733,6 +5801,10 @@
       {
         "type": "unlock_skill",
         "skill_id": "source_art_scan"
+      },
+      {
+        "type": "give_xp",
+        "xp": 550
       },
       {
         "type": "complete_quest",
@@ -6081,6 +6153,10 @@
         "task_id": "launch_astra"
       },
       {
+        "type": "give_xp",
+        "xp": 700
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w3_mq15"
       },
@@ -6424,6 +6500,10 @@
         "quantity": 1
       },
       {
+        "type": "give_xp",
+        "xp": 750
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w4_mq16"
       },
@@ -6525,6 +6605,10 @@
       {
         "type": "unlock_skill",
         "skill_id": "gh0st_phase_counter"
+      },
+      {
+        "type": "give_xp",
+        "xp": 800
       },
       {
         "type": "complete_quest",
@@ -6716,6 +6800,10 @@
         "type": "give_item",
         "item_id": "explosive_tip",
         "quantity": 1
+      },
+      {
+        "type": "give_xp",
+        "xp": 350
       },
       {
         "type": "complete_quest",
@@ -6919,6 +7007,10 @@
       {
         "type": "set_milestone",
         "milestone": "ms_w4_matrix_overloaded"
+      },
+      {
+        "type": "give_xp",
+        "xp": 900
       },
       {
         "type": "complete_quest",
@@ -7225,6 +7317,10 @@
         "skill_id": "source_art_construct"
       },
       {
+        "type": "give_xp",
+        "xp": 950
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w4_mq19"
       },
@@ -7442,6 +7538,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w4_mq20",
         "task_id": "escape_launch"
+      },
+      {
+        "type": "give_xp",
+        "xp": 1200
       },
       {
         "type": "complete_quest",
@@ -7699,6 +7799,10 @@
         "milestone": "ms_w5_airlock_hacked"
       },
       {
+        "type": "give_xp",
+        "xp": 1000
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w5_mq21"
       },
@@ -7911,6 +8015,10 @@
         "type": "give_item",
         "item_id": "grav_boots",
         "quantity": 1
+      },
+      {
+        "type": "give_xp",
+        "xp": 1100
       },
       {
         "type": "complete_quest",
@@ -8303,6 +8411,10 @@
         "task_id": "defeat_construct"
       },
       {
+        "type": "give_xp",
+        "xp": 1200
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w5_mq23"
       },
@@ -8439,6 +8551,10 @@
       {
         "type": "unlock_skill",
         "skill_id": "source_art_stasis"
+      },
+      {
+        "type": "give_xp",
+        "xp": 1300
       },
       {
         "type": "complete_quest",
@@ -8607,6 +8723,10 @@
         "task_id": "enter_tear"
       },
       {
+        "type": "give_xp",
+        "xp": 1600
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w5_mq25"
       },
@@ -8750,6 +8870,10 @@
         "type": "give_item",
         "item_id": "void_clip",
         "quantity": 1
+      },
+      {
+        "type": "give_xp",
+        "xp": 550
       },
       {
         "type": "complete_quest",
@@ -8911,6 +9035,10 @@
         "quantity": 1
       },
       {
+        "type": "give_xp",
+        "xp": 1700
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w6_mq26"
       },
@@ -9025,6 +9153,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w6_mq27",
         "task_id": "reach_elevator"
+      },
+      {
+        "type": "give_xp",
+        "xp": 1400
       },
       {
         "type": "complete_quest",
@@ -9275,6 +9407,10 @@
         "task_id": "reach_singularity"
       },
       {
+        "type": "give_xp",
+        "xp": 1500
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w6_mq28"
       },
@@ -9394,6 +9530,10 @@
         "skill_id": "nova_legacy"
       },
       {
+        "type": "give_xp",
+        "xp": 600
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w6_sq26"
       },
@@ -9505,6 +9645,10 @@
         "skill_id": "zeke_unshackled"
       },
       {
+        "type": "give_xp",
+        "xp": 600
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w6_sq27"
       },
@@ -9614,6 +9758,10 @@
       {
         "type": "unlock_skill",
         "skill_id": "gh0st_source_balance"
+      },
+      {
+        "type": "give_xp",
+        "xp": 600
       },
       {
         "type": "complete_quest",
@@ -9867,6 +10015,10 @@
         "task_id": "reach_center"
       },
       {
+        "type": "give_xp",
+        "xp": 2000
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w6_mq29"
       },
@@ -10045,6 +10197,10 @@
         "scene_id": "scene_w6_final_note",
         "on_complete": [
           {
+            "type": "give_xp",
+            "xp": 3000
+          },
+          {
             "type": "complete_quest",
             "quest_id": "w6_mq30"
           },
@@ -10171,6 +10327,10 @@
         "skill_id": "orion_ancestral_grace"
       },
       {
+        "type": "give_xp",
+        "xp": 750
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w6_sq29"
       },
@@ -10283,6 +10443,10 @@
         "quantity": 1
       },
       {
+        "type": "give_xp",
+        "xp": 800
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w6_sq30"
       },
@@ -10365,6 +10529,10 @@
         "skill_id": "gh0st_intercept"
       },
       {
+        "type": "give_xp",
+        "xp": 200
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w3_sq12"
       },
@@ -10442,6 +10610,10 @@
         "type": "give_item",
         "item_id": "neon_band",
         "quantity": 1
+      },
+      {
+        "type": "give_xp",
+        "xp": 200
       },
       {
         "type": "complete_quest",
@@ -10523,6 +10695,10 @@
         "quantity": 1
       },
       {
+        "type": "give_xp",
+        "xp": 250
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w3_sq14"
       },
@@ -10600,6 +10776,10 @@
         "type": "give_item",
         "item_id": "phase_rounds",
         "quantity": 1
+      },
+      {
+        "type": "give_xp",
+        "xp": 300
       },
       {
         "type": "complete_quest",
@@ -10681,6 +10861,10 @@
         "quantity": 1
       },
       {
+        "type": "give_xp",
+        "xp": 300
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w4_sq17"
       },
@@ -10753,6 +10937,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w4_sq18",
         "task_id": "build_bypass"
+      },
+      {
+        "type": "give_xp",
+        "xp": 300
       },
       {
         "type": "complete_quest",
@@ -10831,6 +11019,10 @@
       {
         "type": "unlock_skill",
         "skill_id": "gh0st_harden"
+      },
+      {
+        "type": "give_xp",
+        "xp": 400
       },
       {
         "type": "complete_quest",
@@ -10912,6 +11104,10 @@
         "quantity": 1
       },
       {
+        "type": "give_xp",
+        "xp": 450
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w4_sq20"
       },
@@ -10990,6 +11186,10 @@
         "skill_id": "corporate_insight"
       },
       {
+        "type": "give_xp",
+        "xp": 400
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w5_sq21"
       },
@@ -11029,6 +11229,10 @@
       {
         "type": "unlock_skill",
         "skill_id": "orion_sunbeam"
+      },
+      {
+        "type": "give_xp",
+        "xp": 400
       },
       {
         "type": "complete_quest",
@@ -11071,6 +11275,10 @@
         "type": "give_item",
         "item_id": "mag_boots",
         "quantity": 1
+      },
+      {
+        "type": "give_xp",
+        "xp": 450
       },
       {
         "type": "complete_quest",
@@ -11149,6 +11357,10 @@
       {
         "type": "unlock_skill",
         "skill_id": "data_shield"
+      },
+      {
+        "type": "give_xp",
+        "xp": 500
       },
       {
         "type": "complete_quest",
@@ -11749,6 +11961,10 @@
         "message": "Quest Complete: Lost Patrol\n\nNova rebuilds the Thermal Cutter from Dominion salvage. The heated edge can cauterize Sector 9 razor-vines before they burst."
       },
       {
+        "type": "give_xp",
+        "xp": 100
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w2_sq02"
       }
@@ -11915,6 +12131,10 @@
       {
         "type": "set_milestone",
         "milestone": "ms_w2_sq04_complete"
+      },
+      {
+        "type": "give_xp",
+        "xp": 150
       },
       {
         "type": "complete_quest",
@@ -12084,6 +12304,10 @@
       {
         "type": "show_message",
         "message": "Quest Complete: Stolen Tech\n\nNova assembles the Rapid Capacitor from stolen Dominion timing hardware. Gh0st approves by not correcting anything."
+      },
+      {
+        "type": "give_xp",
+        "xp": 150
       },
       {
         "type": "complete_quest",
@@ -12613,6 +12837,10 @@
         "quantity": 1
       },
       {
+        "type": "give_xp",
+        "xp": 250
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w3_sq14"
       },
@@ -12653,6 +12881,10 @@
         "type": "give_item",
         "item_id": "rapid_capacitor",
         "quantity": 1
+      },
+      {
+        "type": "give_xp",
+        "xp": 400
       },
       {
         "type": "complete_quest",
@@ -12696,6 +12928,10 @@
         "skill_id": "zeke_guardian_covenant"
       },
       {
+        "type": "give_xp",
+        "xp": 500
+      },
+      {
         "type": "complete_quest",
         "quest_id": "w5_sq24"
       },
@@ -12735,6 +12971,10 @@
       {
         "type": "unlock_skill",
         "skill_id": "zeke_unshackled"
+      },
+      {
+        "type": "give_xp",
+        "xp": 600
       },
       {
         "type": "complete_quest",

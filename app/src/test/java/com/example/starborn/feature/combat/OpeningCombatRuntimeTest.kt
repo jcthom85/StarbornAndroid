@@ -20,6 +20,7 @@ import com.example.starborn.feature.combat.viewmodel.CombatViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.*
 import org.junit.After
 import org.junit.Assert.*
@@ -95,14 +96,113 @@ class OpeningCombatRuntimeTest {
         } finally { vm.viewModelScope.cancel() }
     }
 
-    private fun createCombat(): CombatViewModel {
+    @Test fun `combat rewards preserve a level earned under the previous curve`() {
+        val session = GameSessionStore().apply {
+            restore(GameSessionState(worldId = "world_1", roomId = "workshop_yard",
+                playerId = "nova", partyMembers = listOf("nova"), playerLevel = 12,
+                partyMemberLevels = mapOf("nova" to 12), playerXp = 4900,
+                partyMemberXp = mapOf("nova" to 4900)))
+        }
+        val vm = createCombat(session)
+        try {
+            val method = CombatViewModel::class.java.getDeclaredMethod("applyVictoryRewards", CombatReward::class.java)
+            method.isAccessible = true
+            method.invoke(vm, CombatReward(xp = 10))
+            assertEquals(12, session.state.value.playerLevel)
+            assertEquals(12, session.state.value.partyMemberLevels["nova"])
+            assertEquals(4910, session.state.value.playerXp)
+        } finally { vm.viewModelScope.cancel() }
+    }
+
+    // Estimated World 4 main-route checkpoint, not a campaign-earned equipment
+    // snapshot. Keep optional gear absent and exclude unearned level-12 skills.
+    private fun world4Session(): GameSessionStore {
+        val party = listOf("nova", "zeke", "orion", "gh0st")
+        return GameSessionStore().apply {
+            restore(GameSessionState(worldId = "world_4", playerId = "nova",
+                partyMembers = party, playerLevel = 9, playerXp = 11670,
+                partyMemberLevels = party.associateWith { 9 },
+                partyMemberXp = party.associateWith { 11670 },
+                unlockedSkills = setOf("nova_smoke_bomb", "nova_plasma_burst",
+                    "zeke_bulwark_stance", "zeke_overload_fists",
+                    "orion_nano_repair", "orion_disruption_pulse",
+                    "gh0st_venom_edge", "gh0st_system_crash")))
+        }
+    }
+
+    @Test fun `world four party exposes earned skill tiers against Titan Walker`() {
+        val session = world4Session()
+        val vm = createCombat(session, listOf("titan_walker_boss"))
+        try {
+            val party = requireNotNull(vm.combatState).combatants.values
+                .filter { it.combatant.side == CombatSide.PLAYER }
+            assertEquals(session.state.value.partyMembers.toSet(), party.map { it.combatant.id }.toSet())
+            session.state.value.partyMembers.forEach { id ->
+                val expected = session.state.value.unlockedSkills.filter { it.startsWith("${id}_") }.toSet() +
+                    assets.loadCharacters().single { it.id == id }.skills
+                assertEquals("Earned skills for $id", expected, vm.skillsForPlayer(id).map { it.id }.toSet())
+            }
+            assertEquals(listOf("titan_walker_boss"), vm.enemies.map { it.id })
+        } finally { vm.viewModelScope.cancel() }
+    }
+
+    @Test fun `world four Orion can execute his level nine command through production ATB`() {
+        val vm = createCombat(world4Session(), listOf("titan_walker_boss"))
+        try {
+            val skill = vm.skillsForPlayer("orion").single { it.id == "orion_disruption_pulse" }
+            repeat(80) {
+                dispatcher.scheduler.advanceTimeBy(250)
+                dispatcher.scheduler.runCurrent()
+                vm.selectReadyPlayer("orion")
+                if (vm.awaitingAction.value == "orion") {
+                    assertTrue(vm.canUseSkill("orion", skill))
+                    val before = vm.combatState
+                    vm.useSkill(skill, listOf("titan_walker_boss"))
+                    dispatcher.scheduler.runCurrent()
+                    assertNotEquals(before, vm.combatState)
+                    return
+                }
+            }
+            fail("Orion never became selectable during 20 seconds of production ATB")
+        } finally { vm.viewModelScope.cancel() }
+    }
+
+    @Test fun `wounded authored support enemy heals through production ATB and targeting`() {
+        val vm = createCombat(enemyIds = listOf("stalker_vine"))
+        try {
+            dispatcher.scheduler.runCurrent()
+            val initial = requireNotNull(vm.combatState)
+            val enemy = initial.combatants.getValue("stalker_vine")
+            // Seed only the injury, not AI choices, targeting or turn execution.
+            // Reflection keeps a test-only mutation hook out of the public API.
+            val field = CombatViewModel::class.java.getDeclaredField("_state").apply { isAccessible = true }
+            @Suppress("UNCHECKED_CAST")
+            val state = field.get(vm) as MutableStateFlow<CombatState?>
+            state.value = initial.copy(combatants = initial.combatants +
+                ("stalker_vine" to enemy.copy(hp = 10)))
+            repeat(240) {
+                dispatcher.scheduler.advanceTimeBy(250)
+                dispatcher.scheduler.runCurrent()
+                val healed = requireNotNull(vm.combatState).combatants.getValue("stalker_vine")
+                if (healed.hp > 10) {
+                    assertTrue("Healing must respect maximum HP", healed.hp <= healed.combatant.stats.maxHp)
+                    assertTrue("Heal must enter cooldown", healed.activeCooldowns.getOrDefault("nature_heal", 0) > 0)
+                    return
+                }
+            }
+            fail("Wounded Stalker-Vine did not heal during 60 seconds of production ATB")
+        } finally { vm.viewModelScope.cancel() }
+    }
+
+    private fun createCombat(initialSession: GameSessionStore? = null,
+                             enemyIds: List<String> = listOf("faulted_loader")): CombatViewModel {
         val items = reader.readList<Item>("items.json").associateBy { it.id }
         check(items.isNotEmpty())
         val catalog = object : ItemCatalog {
             override fun load() = Unit
             override fun findItem(idOrAlias: String): Item? = items[idOrAlias]
         }
-        val session = GameSessionStore().apply {
+        val session = initialSession ?: GameSessionStore().apply {
             restore(GameSessionState(worldId = "world_1", roomId = "workshop_yard",
                 playerId = "nova", partyMembers = listOf("nova"),
                 unlockedSkills = setOf("nova_arc_tether")))
@@ -120,7 +220,7 @@ class OpeningCombatRuntimeTest {
             progressionData = requireNotNull(assets.loadProgressionData()),
             audioRouter = AudioRouter(AudioBindings()), themeRepository = themes,
             environmentThemeManager = EnvironmentThemeManager(themes),
-            encounterCoordinator = EncounterCoordinator(), enemyIds = listOf("faulted_loader"),
+            encounterCoordinator = EncounterCoordinator(), enemyIds = enemyIds,
             tutorialsEnabled = false, elapsedRealtime = { dispatcher.scheduler.currentTime }
         )
     }

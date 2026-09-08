@@ -2932,7 +2932,8 @@ class CombatViewModel(
                 val previousLevel = snapshot.partyMemberLevels[member.id] ?: member.level
                 val newXp = previousXp + reward.xp
                 sessionStore.setPartyMemberXp(member.id, newXp)
-                val newLevel = levelingManager.levelForXp(newXp)
+                // Retain levels earned under an earlier XP curve when loading saves.
+                val newLevel = maxOf(previousLevel, levelingManager.levelForXp(newXp))
                 sessionStore.setPartyMemberLevel(member.id, newLevel)
                 val statChanges = mutableListOf<com.example.starborn.domain.leveling.StatDeltaSummary>()
                 if (newLevel > previousLevel) {
@@ -3196,7 +3197,9 @@ class CombatViewModel(
     }
 
 private fun determineSkillTargeting(skill: Skill): SkillTargeting {
-        if (skill.id == "driller_core_repair") return SkillTargeting.SELF
+        // Positive healing power is not damage; these authored repairs target
+        // their caster even though the generic power-based fallback does not.
+        if (skill.id == "driller_core_repair" || skill.id == "nature_heal") return SkillTargeting.SELF
         val statusDefs = skillStatusDefinitions(skill)
         val hasSelf = statusDefs.any { it.target.equals("self", true) }
         val hasAlly = statusDefs.any { it.target.equals("ally", true) }

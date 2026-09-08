@@ -257,6 +257,12 @@ class ExplorationViewModel(
     private val dialogueTriggerBinder: (((String) -> Boolean)?) -> Unit = {}
 ) : ViewModel() {
     private val arcadeService = ArcadeService(sessionStore, inventoryService)
+    private val explorationXpAwarder by lazy {
+        com.example.starborn.domain.leveling.ExplorationXpAwarder(
+            sessionStore, levelingManager,
+            worldAssets.loadProgressionData() ?: com.example.starborn.domain.leveling.ProgressionData()
+        )
+    }
 
     private val eventsById: Map<String, GameEvent> = eventDefinitions.associateBy { it.id }
     // The exploration destination is composed before its queued cinematic is promoted to UI state.
@@ -432,7 +438,7 @@ class ExplorationViewModel(
             },
             onGiveXp = { amount ->
                 if (amount > 0) {
-                    sessionStore.addXp(amount)
+                    explorationXpAwarder.award(amount)
                 }
                 postStatus("Gained $amount XP")
                 emitEvent(ExplorationEvent.XpGained(amount))
@@ -1525,7 +1531,7 @@ class ExplorationViewModel(
     private fun handleReward(reward: EventReward) {
         val parts = mutableListOf<String>()
         reward.xp?.takeIf { it > 0 }?.let { amount ->
-            sessionStore.addXp(amount)
+            explorationXpAwarder.award(amount)
             parts.add("$amount XP")
             emitEvent(ExplorationEvent.XpGained(amount))
         }
