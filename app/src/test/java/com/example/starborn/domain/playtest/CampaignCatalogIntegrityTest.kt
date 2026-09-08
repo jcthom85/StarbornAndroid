@@ -7,14 +7,15 @@ import org.junit.Assert.*
 import org.junit.Test
 import java.io.File
 
-class CampaignEndToEndPlaytest {
+// Catalog validation only; this does not execute gameplay or prove reachability.
+class CampaignCatalogIntegrityTest {
 
     private val root = if (File("app/src/main/assets").exists()) File(".") else File("..")
     private val assets = File(root, "app/src/main/assets")
     private val moshi = MoshiProvider.instance
 
     @Test
-    fun `simulate full campaign quest progression from prologue to epilogue`() {
+    fun `main quest catalog contains thirty quests with valid encounter references`() {
         val quests = readList<Quest>("quests.json")
         val events = readList<GameEvent>("events.json")
         val rooms = readList<Room>("rooms.json")

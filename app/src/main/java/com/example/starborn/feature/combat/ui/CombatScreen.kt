@@ -1012,7 +1012,7 @@ fun CombatScreen(
             val partyDockHeightPx = remember(playerParty.size) { mutableStateOf(0) }
             val partyDockHeight = with(density) { partyDockHeightPx.value.toDp() }
             val contentPadding = PaddingValues(horizontal = 16.dp, vertical = 24.dp)
-            BoxWithConstraints(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(contentPadding)

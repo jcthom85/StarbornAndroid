@@ -26,7 +26,13 @@ class DialogueService(
         val entries = dialogueBySpeaker[speaker.lowercase(Locale.getDefault())] ?: return null
         val candidates = entries.filter { it.id !in referencedNextIds }
         val (conditioned, unconditioned) = candidates.partition { !it.condition.isNullOrBlank() }
-        val ordered = conditioned + unconditioned
+        // Continue an eligible quest before offering another one. Preserve author
+        // order within each group; an old optional offer must not hide progress.
+        val ordered = conditioned.sortedByDescending { line ->
+            line.condition.orEmpty().split(',').any { token ->
+                token.trim().substringBefore(':') in setOf("quest", "quest_active")
+            }
+        } + unconditioned
         val start = ordered.firstOrNull { conditionEvaluator.isConditionMet(it.condition) } ?: return null
         return DialogueSession(dialogueById, start, conditionEvaluator, triggerHandler)
     }

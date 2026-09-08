@@ -22,7 +22,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
 
-class IntelligentGamePlaytesterTest {
+class CampaignEventIntegrationTest {
 
     private val root = if (File("app/src/main/assets").exists()) File(".") else File("..")
     private val assets = File(root, "app/src/main/assets")
@@ -31,8 +31,25 @@ class IntelligentGamePlaytesterTest {
     private fun Int?.orZero(): Int = this ?: 0
 
     @Test
-    fun `autonomous playtester clears World 1 critical path and validates state invariance`() {
-        val harness = PlaytestHarness()
+    fun `all thirty main quests complete through continuous events with save resume between worlds`() {
+        var harness = PlaytestHarness()
+        val worlds = listOf<(PlaytestHarness) -> Unit>(::playWorld1, ::playWorld2, ::playWorld3, ::playWorld4, ::playWorld5, ::playWorld6)
+        val mainQuests = readList<com.example.starborn.domain.model.Quest>("quests.json").filter { "_mq" in it.id }
+        worlds.forEachIndexed { index, play ->
+            play(harness)
+            val state = harness.store.state.value
+            val expected = mainQuests.filter { it.id.startsWith("w${index + 1}_") }.map { it.id }.toSet()
+            assertTrue("World ${index + 1} skipped quests: ${expected - state.completedQuests}", state.completedQuests.containsAll(expected))
+            val restored = harness.roundTripSave(state)
+            assertEquals("World ${index + 1} save must preserve the whole session", state, restored)
+            harness = PlaytestHarness(restored)
+        }
+        assertTrue(harness.store.state.value.completedMilestones.contains("ms_game_complete"))
+    }
+
+    // Event integration only: navigation, successful crafts, and encounter outcomes
+    // are supplied inputs. This test does not prove UI reachability or combat balance.
+    private fun playWorld1(harness: PlaytestHarness) {
         val agent = HeadlessPlaytesterAgent(harness)
 
         // 1. Initial State Verification
@@ -115,22 +132,14 @@ class IntelligentGamePlaytesterTest {
         assertTrue("Final save round-trip must succeed", harness.roundTripSave(finalState).completedQuests.contains("w1_mq05"))
     }
 
-    @Test
-    fun `autonomous playtester clears World 2 campaign to unlock Orion and Gh0st`() {
-        val harness = PlaytestHarness()
+    private fun playWorld2(harness: PlaytestHarness) {
         val agent = HeadlessPlaytesterAgent(harness)
-
-        // Bootstrap World 2 after Crash Site
-        harness.store.completeQuest("w1_mq05")
-        harness.store.setMilestone("ms_w1_mq05_complete")
-        harness.store.startQuest("w2_mq01")
-        harness.store.setRoom("sector9_crash_site")
-        harness.store.setInventory(mapOf("ghost_signal_cell" to 1, "chime" to 1))
-
-        // MQ01 -> MQ02
-        harness.store.completeQuest("w2_mq01")
-        harness.store.setMilestone("ms_w2_mq01_complete")
-        harness.store.startQuest("w2_mq02")
+        assertTrue(harness.store.state.value.activeQuests.contains("w2_mq01"))
+        agent.talkTo("Zeke")
+        agent.executeAction("w2_mq01_examine_pod")
+        agent.executeAction("w2_mq01_stabilize_zeke")
+        agent.navigateTo("sector9_landing_stream")
+        assertTrue(harness.store.state.value.completedQuests.contains("w2_mq01"))
 
         // MQ02: The Signal
         agent.talkTo("Zeke")
@@ -185,17 +194,9 @@ class IntelligentGamePlaytesterTest {
         assertEquals("spire_sewers_landing", state.roomId)
     }
 
-    @Test
-    fun `autonomous playtester clears World 3 Spire Infiltration campaign`() {
-        val harness = PlaytestHarness()
+    private fun playWorld3(harness: PlaytestHarness) {
         val agent = HeadlessPlaytesterAgent(harness)
-
-        // Bootstrap World 3
-        harness.store.setRoom("spire_sewers_landing")
-        harness.store.completeQuest("w2_mq05")
-        harness.store.setMilestone("ms_w2_mq05_complete")
-        harness.store.startQuest("w3_mq11")
-        harness.store.setTrackedQuest("w3_mq11")
+        assertTrue(harness.store.state.value.activeQuests.contains("w3_mq11"))
 
         // MQ11: Clear Landing & Safehouse
         agent.winEncounter(listOf("sewer_crawler"), "spire_sewers_landing")
@@ -219,8 +220,13 @@ class IntelligentGamePlaytesterTest {
         state = harness.store.state.value
         assertTrue("w3_mq12 should be completed", state.completedQuests.contains("w3_mq12"))
 
-        // MQ13 & MQ14: The Lens & Light Puzzle
-        harness.store.startQuest("w3_mq14")
+        // Follow the actual MQ12 -> MQ13 -> MQ14 handoff.
+        assertTrue(harness.store.state.value.activeQuests.contains("w3_mq13"))
+        agent.executeAction("w3_mq13_blend_in")
+        agent.executeAction("w3_mq13_disable_sensors")
+        agent.executeAction("w3_mq13_enter_lobby")
+        assertTrue(harness.store.state.value.completedQuests.contains("w3_mq13"))
+        assertTrue(harness.store.state.value.activeQuests.contains("w3_mq14"))
         agent.navigateTo("spire_archive_vault")
         agent.executeAction("w3_mq14_read_containment_field")
         agent.executeAction("w3_mq14_read_prism_shutters")
@@ -231,15 +237,24 @@ class IntelligentGamePlaytesterTest {
         state = harness.store.state.value
         assertTrue("w3_mq14 should be completed", state.completedQuests.contains("w3_mq14"))
         assertTrue("The Lens relic acquired", state.inventory["the_lens"].orZero() >= 1)
+        agent.navigateTo("spire_landing_pad_roof")
+        agent.winEncounter(listOf("aero_drone", "heavy_mech"), "spire_landing_pad_roof")
+        agent.winEncounter(listOf("administrator_boss"), "spire_landing_pad_roof")
+        agent.executeAction("w3_scan_shield_gap")
+        agent.executeAction("w3_mq15_launch_astra")
+        assertTrue(harness.store.state.value.completedQuests.contains("w3_mq15"))
     }
 
-    @Test
-    fun `autonomous playtester clears World 4 Foundry Anvil campaign`() {
-        val harness = PlaytestHarness()
+    private fun playWorld4(harness: PlaytestHarness) {
         val agent = HeadlessPlaytesterAgent(harness)
-
-        // Bootstrap World 4 Anvil recovery
-        harness.store.startQuest("w4_mq19")
+        assertTrue(harness.store.state.value.activeQuests.contains("w4_mq16"))
+        listOf("land_shelf", "cross_slag_river", "hack_cooling_vents", "enter_airlock")
+            .forEach { agent.executeAction("w4_mq16_$it") }
+        listOf("access_phantom_terminal", "regroup_springs")
+            .forEach { agent.executeAction("w4_mq17_$it") }
+        listOf("navigate_conveyors", "defeat_prototypes", "overload_matrix")
+            .forEach { agent.executeAction("w4_mq18_$it") }
+        assertTrue(harness.store.state.value.activeQuests.contains("w4_mq19"))
         agent.navigateTo("foundry_forge_anvil")
         agent.executeAction("w4_mq19_read_pulse_board")
         agent.executeAction("w4_mq19_read_grease_marks")
@@ -265,18 +280,23 @@ class IntelligentGamePlaytesterTest {
         assertTrue("World 5 Orbital Station access unlocked", state.completedMilestones.contains("ms_w5_access_unlocked"))
     }
 
-    @Test
-    fun `autonomous playtester clears World 5 Orbital Station and Anchor recovery`() {
-        val harness = PlaytestHarness()
+    private fun playWorld5(harness: PlaytestHarness) {
         val agent = HeadlessPlaytesterAgent(harness)
-
-        // Bootstrap World 5 Firewall & Anchor Chamber
-        harness.store.startQuest("w5_mq23")
+        assertTrue(harness.store.state.value.activeQuests.contains("w5_mq21"))
+        agent.navigateTo("orbital_executive_dock")
+        agent.winEncounter(listOf("orbital_fighter"), "orbital_executive_dock")
+        agent.executeAction("w5_mq21_force_dock")
+        agent.executeAction("w5_mq21_hack_airlock")
+        agent.executeAction("w5_mq22_cross_solarium")
+        agent.winEncounter(listOf("compliance_officer", "null_g_drone"), "orbital_grand_concourse")
+        listOf("traverse_shaft", "access_mainframe", "find_thorne")
+            .forEach { agent.executeAction("w5_mq22_$it") }
+        assertTrue(harness.store.state.value.activeQuests.contains("w5_mq23"))
         agent.executeAction("w5_mq23_navigate_maze")
         agent.executeAction("w5_mq23_firewall_alpha")
         agent.executeAction("w5_mq23_firewall_beta")
         agent.executeAction("w5_mq23_firewall_gamma")
-        agent.winEncounter(listOf("firewall_construct"), "deep_mainframe")
+        agent.winEncounter(listOf("firewall_construct"), "deep_firewall_gamma")
 
         var state = harness.store.state.value
         assertTrue("w5_mq23 should be completed", state.completedQuests.contains("w5_mq23"))
@@ -303,14 +323,19 @@ class IntelligentGamePlaytesterTest {
         assertEquals("source_campfire", state.roomId)
     }
 
-    @Test
-    fun `autonomous playtester clears World 6 Source finale and triggers campaign epilogue`() {
-        val harness = PlaytestHarness()
+    private fun playWorld6(harness: PlaytestHarness) {
         val agent = HeadlessPlaytesterAgent(harness)
-
-        // Bootstrap World 6 Finale
-        harness.store.startQuest("w6_mq29")
-        harness.store.setRoom("source_memory_stair")
+        assertTrue(harness.store.state.value.activeQuests.contains("w6_mq26"))
+        agent.winEncounter(listOf("manager_projection"), "source_zeke_review_loop")
+        agent.winEncounter(listOf("endless_war_echo"), "source_gh0st_kill_suite")
+        agent.winEncounter(listOf("silent_shore_wraith"), "source_orion_tide_well")
+        agent.executeAction("w6_mq26_reassemble")
+        agent.navigateTo("source_echo_mines")
+        agent.executeAction("w6_mq27_evade_manager")
+        agent.navigateTo("source_echo_elevator")
+        listOf("anchor_zeke", "anchor_ghost", "anchor_orion", "anchor_nova", "build_bridge", "final_banter", "reach_singularity")
+            .forEach { agent.executeAction("w6_mq28_$it") }
+        assertTrue(harness.store.state.value.activeQuests.contains("w6_mq29"))
 
         agent.executeAction("w6_mq29_refuse_jed_revision")
         agent.executeAction("w6_mq29_refuse_astra_revision")
@@ -339,7 +364,7 @@ class IntelligentGamePlaytesterTest {
     }
 
     @Test
-    fun `graph reachability prover verifies all 465 authored room connections`() {
+    fun `room connection targets exist in the catalog`() {
         val rooms = readList<Room>("rooms.json")
         val roomById = rooms.associateBy { it.id }
 
@@ -360,29 +385,40 @@ class IntelligentGamePlaytesterTest {
         }
 
         fun navigateTo(targetRoomId: String) {
-            harness.events.handleTrigger("enter_room", EventPayload.EnterRoom(targetRoomId))
+            check(targetRoomId in harness.roomIds) { "Unknown room: $targetRoomId" }
             harness.store.setRoom(targetRoomId)
+            harness.events.handleTrigger("enter_room", EventPayload.EnterRoom(targetRoomId))
         }
 
         fun talkTo(npcName: String) {
-            val session = harness.dialogue.startDialogue(npcName)
-            while (session != null && !session.isFinished()) {
+            val session = checkNotNull(harness.dialogue.startDialogue(npcName)) { "No eligible dialogue for $npcName" }
+            var steps = 0
+            while (!session.isFinished()) {
+                check(++steps <= 100) { "Dialogue stalled: $npcName at ${session.current()?.id}" }
+                check(session.choices().isEmpty()) { "Choose explicitly for $npcName: ${session.choices().map { it.id }}" }
                 session.advance()
             }
         }
 
         fun talkToZekeWithChoice(choiceId: String) {
-            val session = harness.dialogue.startDialogue("Zeke")
-            while (session != null && !session.isFinished()) {
+            val session = checkNotNull(harness.dialogue.startDialogue("Zeke")) { "No eligible Zeke dialogue" }
+            var steps = 0
+            var chosen = false
+            while (!session.isFinished()) {
+                check(++steps <= 100) { "Zeke dialogue stalled at ${session.current()?.id}" }
                 if (session.choices().any { it.id == choiceId }) {
                     session.choose(choiceId)
+                    chosen = true
                 } else {
                     session.advance()
                 }
             }
+            check(chosen) { "Choice was never offered: $choiceId" }
         }
 
         fun winEncounter(enemyIds: List<String>, roomId: String) {
+            check(roomId in harness.roomIds) { "Unknown encounter room: $roomId" }
+            check(enemyIds.all { it in harness.enemyIds }) { "Unknown encounter enemies: $enemyIds" }
             harness.events.handleTrigger(
                 "encounter_victory",
                 EventPayload.EncounterOutcome(
@@ -394,14 +430,18 @@ class IntelligentGamePlaytesterTest {
         }
     }
 
-    private inner class PlaytestHarness {
+    private inner class PlaytestHarness(initial: GameSessionState? = null) {
+        val roomIds = readList<Room>("rooms.json").map { it.id }.toSet()
+        val enemyIds = readList<com.example.starborn.domain.model.Enemy>("enemies.json").map { it.id }.toSet()
         val store = GameSessionStore().apply {
             restore(
-                GameSessionState(
+                initial ?: GameSessionState(
                     worldId = "world_1",
                     hubId = "hub_1_homestead",
                     roomId = "pit_nova_bunk",
                     playerId = "nova",
+                    partyMembers = listOf("nova"),
+                    unlockedSkills = setOf("nova_arc_tether"),
                     activeQuests = setOf("w1_mq01"),
                     trackedQuestId = "w1_mq01",
                     questStageById = mapOf("w1_mq01" to "wake_in_the_pit")
@@ -492,6 +532,11 @@ class IntelligentGamePlaytesterTest {
                     value !in state.failedQuests
                 "quest_completed" -> value in state.completedQuests
                 "quest_not_completed" -> value !in state.completedQuests
+                "quest_stage", "quest_stage_not" -> {
+                    val p = value.split(':', limit = 2)
+                    val matches = p.size == 2 && state.questStageById[p[0]] == p[1]
+                    if (type == "quest_stage") matches else !matches
+                }
                 "quest_task_done" -> {
                     val p = value.split(':', limit = 2)
                     p.size == 2 && state.questTasksCompleted[p[0]].orEmpty().contains(p[1])
@@ -502,7 +547,7 @@ class IntelligentGamePlaytesterTest {
                 }
                 "item" -> (state.inventory[value] ?: 0) > 0
                 "item_not" -> (state.inventory[value] ?: 0) <= 0
-                else -> true
+                else -> error("Unsupported dialogue condition in campaign test: $token")
             }
         }
     }

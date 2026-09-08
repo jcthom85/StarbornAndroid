@@ -23,7 +23,7 @@ class FunAuditReportTest {
     private val moshi = MoshiProvider.instance
 
     @Test
-    fun `generate deterministic combat and skill decision audits`() {
+    fun `generate synthetic combat smoke report and catalog skill audit`() {
         reports.mkdirs()
         val events = readList<GameEvent>("events.json")
         val rooms = readList<Room>("rooms.json")
@@ -45,16 +45,8 @@ class FunAuditReportTest {
         assertEquals(25, combat.getJSONArray("encounters").length())
         assertEquals(0, combat.getJSONArray("unresolved").length())
 
-        val encounters = combat.getJSONArray("encounters")
-        for (i in 0 until encounters.length()) {
-            val enc = encounters.getJSONObject(i)
-            val tactical = enc.getJSONObject("policies").getJSONObject("tactical")
-            val winRate = tactical.getDouble("win_rate")
-            val medianRounds = tactical.getDouble("median_rounds")
-            val questId = enc.getString("quest_id")
-            assertTrue("Encounter $questId win rate must be >= 0.85 (was $winRate)", winRate >= 0.85)
-            assertTrue("Encounter $questId median rounds must be <= 7.0 (was $medianRounds)", medianRounds <= 7.0)
-        }
+        // Synthetic parties cannot establish acceptable player win rates or
+        // encounter lengths. Keep this a report-generation/catalog smoke test.
     }
 
     private fun combatAudit(
@@ -128,6 +120,8 @@ class FunAuditReportTest {
         }
         return JSONObject()
             .put("schema", 1)
+            .put("evidence_type", "synthetic_smoke_test_not_balance_validation")
+            .put("limitations", "All player skills, synthetic stats/gear and party sizes, forced physical hits, simplified enemy choices, no production ATB or campaign-earned loadouts. Do not tune difficulty from these results.")
             .put("required_encounter_rule", "encounter_victory conditioned on an active main quest")
             .put("seeds_per_policy", 20)
             .put("encounters", results)
@@ -392,7 +386,9 @@ class FunAuditReportTest {
     private fun finding(type: String, skillIds: List<String>, reason: String) = JSONObject().put("type", type).put("skill_ids", JSONArray(skillIds)).put("reason", reason)
 
     private fun combatMarkdown(report: JSONObject): String = buildString {
-        appendLine("# Combat Variety Audit")
+        appendLine("# Synthetic Combat Smoke Report")
+        appendLine()
+        appendLine(report.getString("limitations"))
         appendLine()
         appendLine("Required encounters: ${report.getJSONArray("encounters").length()}; fixed seeds per policy: ${report.getInt("seeds_per_policy")}.")
         appendLine()

@@ -326,9 +326,7 @@ fun ExplorationScreen(
     onPlayAudio: (String) -> Unit = {},
     fxEvents: Flow<String>? = null
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle(
-        initialValue = viewModel.uiState.value
-    )
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var pendingInventoryItem by remember { mutableStateOf<InventoryPreviewItemUi?>(null) }
     var showInventoryTargetDialog by remember { mutableStateOf(false) }
     val fxBursts = remember { mutableStateListOf<UiFxBurst>() }
@@ -968,7 +966,7 @@ fun ExplorationScreen(
             serviceQuickActions.isNotEmpty() ||
             uiState.canReturnToHub
 
-        BoxWithConstraints(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding()

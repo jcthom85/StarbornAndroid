@@ -1,6 +1,7 @@
 package com.example.starborn.domain.session
 
 import androidx.datastore.core.Serializer
+import androidx.datastore.core.CorruptionException
 import com.example.starborn.datastore.GameSessionProto
 import com.google.protobuf.InvalidProtocolBufferException
 import java.io.InputStream
@@ -13,7 +14,7 @@ object GameSessionSerializer : Serializer<GameSessionProto> {
         try {
             GameSessionProto.parseFrom(input)
         } catch (exception: InvalidProtocolBufferException) {
-            defaultValue
+            throw CorruptionException("Unreadable game save", exception)
         }
 
     override suspend fun writeTo(t: GameSessionProto, output: OutputStream) {

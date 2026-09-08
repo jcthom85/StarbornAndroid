@@ -354,6 +354,77 @@ class GameSessionPersistenceTest {
         assertEquals(partyState, restored?.enemyPartyStates?.get("mine_patrol"))
     }
 
+    @Test
+    fun corruptSlotRecoversNewestReadableBackupAndRepairsPrimary() = runBlocking {
+        persistence.writeSlot(1, GameSessionState(roomId = "safe_room", playerCredits = 42))
+        val primary = storeFile("game_session_slot1.pb")
+        val corruptBackup = File(baseDir, "${primary.name}.newest.bak")
+        corruptBackup.writeBytes(byteArrayOf(0x0f))
+        corruptBackup.setLastModified(System.currentTimeMillis() + 10_000)
+        primary.writeBytes(byteArrayOf(0x0f))
+
+        assertEquals("safe_room", persistence.readSlot(1)?.roomId)
+        assertEquals(42, persistence.readSlot(1)?.playerCredits)
+        primary.inputStream().use {
+            assertEquals("safe_room", GameSessionSerializer.readFrom(it).roomId)
+        }
+    }
+
+    @Test
+    fun corruptAutosaveRecoversBackupOnFirstRead() = runBlocking {
+        // Seed the on-disk files before DataStore opens them, as after a process restart.
+        val proto = com.example.starborn.datastore.GameSessionProto.newBuilder()
+            .setRoomId("launch_lift").setPlayerCredits(73).build()
+        val primary = storeFile("game_session_autosave.pb")
+        File(baseDir, "${primary.name}.1.bak").outputStream().use { proto.writeTo(it) }
+        primary.writeBytes(byteArrayOf(0x0f))
+
+        assertEquals("launch_lift", persistence.readAutosave()?.roomId)
+        assertEquals(73, persistence.readAutosave()?.playerCredits)
+    }
+
+    @Test
+    fun unrecoverableSlotReportsCorruptionWithoutErasingEvidence() = runBlocking {
+        val primary = storeFile("game_session_slot1.pb")
+        primary.writeBytes(byteArrayOf(0x0f))
+        try {
+            persistence.readSlot(1)
+            org.junit.Assert.fail("Expected corruption to be reported")
+        } catch (_: androidx.datastore.core.CorruptionException) {
+            assertTrue(primary.readBytes().contentEquals(byteArrayOf(0x0f)))
+        }
+    }
+
+    @Test
+    fun unrecoverableAutosaveRetainsDamagedBytesAndAllowsNewSave() = runBlocking {
+        val primary = storeFile("game_session_autosave.pb")
+        primary.writeBytes(byteArrayOf(0x0f))
+        org.junit.Assert.assertNull(persistence.readAutosave())
+        val retained = baseDir.listFiles().orEmpty().single { it.name.endsWith(".corrupt") }
+        assertTrue(retained.readBytes().contentEquals(byteArrayOf(0x0f)))
+        persistence.writeAutosave(GameSessionState(roomId = "new_game"))
+        assertEquals("new_game", persistence.readAutosave()?.roomId)
+    }
+
+    @Test
+    fun clearedSlotCannotRecoverDeletedProgress() = runBlocking {
+        persistence.writeSlot(1, GameSessionState(roomId = "old_room"))
+        persistence.clearSlot(1)
+        org.junit.Assert.assertNull(persistence.readSlot(1))
+        assertTrue(baseDir.listFiles().orEmpty().none { it.name.startsWith("game_session_slot1.pb.") })
+    }
+
+    @Test
+    fun clearingAutomaticSavesRemovesRecoveryCopies() = runBlocking {
+        persistence.writeAutosave(GameSessionState(roomId = "old_room"))
+        persistence.writeQuickSave(GameSessionState(roomId = "old_room"))
+        persistence.clearAutosave()
+        persistence.clearQuickSave()
+        org.junit.Assert.assertNull(persistence.readAutosave())
+        org.junit.Assert.assertNull(persistence.readQuickSave())
+        assertTrue(baseDir.listFiles().orEmpty().none { it.name.endsWith(".bak") })
+    }
+
     private fun clearStores() {
         val files = listOf(
             "game_session.pb",

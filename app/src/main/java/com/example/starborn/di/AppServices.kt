@@ -158,7 +158,6 @@ class AppServices(context: Context) {
     companion object {
         private const val AUTOSAVE_INTERVAL_MS = 90_000L
         private const val AUTOSAVE_SLOT = 0
-        private const val SAMPLE_SLOT_ID = -1
         private const val MAX_MANUAL_SAVE_SLOT = 3
         private const val GAME_COMPLETE_MILESTONE = "ms_game_complete"
         private val SAMPLE_PARTY = setOf("nova", "zeke", "orion", "gh0st")
@@ -690,7 +689,7 @@ class AppServices(context: Context) {
     suspend fun autosaveInfo(): GameSessionSlotInfo? = sessionPersistence.autosaveInfo()
 
     suspend fun clearAutosave() {
-        sessionPersistence.writeAutosave(GameSessionState())
+        sessionPersistence.clearAutosave()
         resetAutosaveThrottle()
     }
 
@@ -752,39 +751,16 @@ class AppServices(context: Context) {
     suspend fun resetSlotFromAssets(slot: Int): Boolean =
         importLegacySlotFromAssets(slot)
 
-    private suspend fun resolveSlotInfo(slot: Int): GameSessionSlotInfo? {
-        var info = sessionPersistence.slotInfo(slot)
-        if ((info == null || info.state.needsFallbackImport()) && importLegacySlotFromAssets(slot)) {
-            info = sessionPersistence.slotInfo(slot)
-        }
-        if (slot == SAMPLE_SLOT_ID && (info == null || !info.state.matchesSampleSeed())) {
-            if (importLegacySlotFromAssets(slot)) {
-                info = sessionPersistence.slotInfo(slot)
-            }
-        }
-        if (slot == 2 && (info == null || info.state.worldId == "nova_prime" || info.state.roomId != "launch_bay" || !info.state.unlockedExits.contains("launch_bay::north"))) {
-            if (importLegacySlotFromAssets(slot)) {
-                info = sessionPersistence.slotInfo(slot)
-            }
-        }
-        return info
-    }
+    // Bundled checkpoints are imported only by the explicit reset action.
+    // Inspecting or loading a slot must never replace the player's progress.
+    private suspend fun resolveSlotInfo(slot: Int): GameSessionSlotInfo? =
+        sessionPersistence.slotInfo(slot)
 
     private fun GameSessionState.needsFallbackImport(): Boolean {
         val isPartyEmpty = playerId.isNullOrBlank() && partyMembers.isEmpty()
         val noProgress = worldId.isNullOrBlank() && hubId.isNullOrBlank() && roomId.isNullOrBlank()
         val noInventory = inventory.isEmpty() && playerCredits == 0
         return isPartyEmpty && noProgress && noInventory
-    }
-
-    private fun GameSessionState.matchesSampleSeed(): Boolean {
-        if (partyMembers.size != SAMPLE_PARTY.size) return false
-        if (!partyMembers.containsAll(SAMPLE_PARTY)) return false
-        if (!playerId.isNullOrBlank() && playerId !in SAMPLE_PARTY) return false
-        val worldMatches = worldId.isNullOrBlank() || worldId == SAMPLE_WORLD_ID
-        val hubMatches = hubId.isNullOrBlank() || hubId == SAMPLE_HUB_ID
-        val roomMatches = roomId.isNullOrBlank() || roomId == SAMPLE_ROOM_ID
-        return worldMatches && hubMatches && roomMatches
     }
 
     fun startNewGame(debugFullInventory: Boolean = false): Boolean {

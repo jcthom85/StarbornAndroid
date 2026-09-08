@@ -15,6 +15,9 @@ import com.example.starborn.domain.movement.EnemyPartyRuntimeState
 import java.io.File
 import java.util.Locale
 import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
+import androidx.datastore.core.CorruptionException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -89,6 +92,12 @@ class GameSessionPersistence(
 
     suspend fun clearQuickSave() {
         quickSaveStore.updateData { GameSessionProto.getDefaultInstance() }
+        backupsFor(quickSaveFile).forEach { it.delete() }
+    }
+
+    suspend fun clearAutosave() {
+        autosaveStore.updateData { GameSessionProto.getDefaultInstance() }
+        backupsFor(autosaveFile).forEach { it.delete() }
     }
 
     private fun slotStore(slot: Int): SlotStore = slotStoreFor(fileForName("game_session_slot$slot.pb"))
@@ -107,7 +116,15 @@ class GameSessionPersistence(
             return sharedStores.getOrPut(key) {
                 DataStoreFactory.create(
                     serializer = GameSessionSerializer,
-                    corruptionHandler = ReplaceFileCorruptionHandler { GameSessionProto.getDefaultInstance() },
+                    corruptionHandler = ReplaceFileCorruptionHandler {
+                        newestValidBackup(file) ?: run {
+                            // Keep the damaged bytes for recovery while allowing a new game
+                            // or an explicit clear to write this DataStore again.
+                            val retained = File.createTempFile("${file.name}.", ".corrupt", file.parentFile)
+                            file.copyTo(retained, overwrite = true)
+                            GameSessionProto.getDefaultInstance()
+                        }
+                    },
                     produceFile = { file },
                     scope = storeScope
                 )
@@ -138,13 +155,17 @@ private data class SlotStore(
     suspend fun read(): GameSessionSlotInfo? =
         mutex.withLock {
             if (!file.exists()) return null
-            runCatching {
+            try {
                 file.inputStream().use { input ->
                     val proto = GameSessionSerializer.readFrom(input)
                     if (proto == GameSessionProto.getDefaultInstance()) null
                     else GameSessionSlotInfo(proto.toState(), proto.lastSavedMs.takeIf { it > 0 })
                 }
-            }.getOrNull()
+            } catch (error: CorruptionException) {
+                val recovered = newestValidBackup(file) ?: throw error
+                writeProto(file, recovered)
+                GameSessionSlotInfo(recovered.toState(), recovered.lastSavedMs.takeIf { it > 0 })
+            }
         }
 
     suspend fun clear() {
@@ -152,6 +173,7 @@ private data class SlotStore(
             if (file.exists()) {
                 file.delete()
             }
+            backupsFor(file).forEach { it.delete() }
         }
     }
 }
@@ -173,21 +195,33 @@ private fun copyToBackup(target: File, snapshot: GameSessionProto) {
     runCatching {
         val parent = target.parentFile ?: return
         if (!parent.exists()) parent.mkdirs()
-        val stamp = System.currentTimeMillis()
-        val backup = File(parent, "${target.name}.$stamp.bak")
+        val backup = File.createTempFile("${target.name}.${System.currentTimeMillis()}.", ".bak", parent)
         backup.outputStream().use { out ->
             snapshot.writeTo(out)
         }
-        pruneBackups(target, parent)
+        pruneBackups(target)
     }
 }
 
-private fun pruneBackups(target: File, parent: File) {
-    val prefix = "${target.name}."
-    val backups = parent.listFiles { file ->
-        file.name.startsWith(prefix) && file.name.endsWith(".bak")
-    }?.sortedByDescending { it.lastModified() } ?: return
-    backups.drop(MAX_BACKUPS).forEach { it.delete() }
+private fun pruneBackups(target: File) {
+    backupsFor(target).drop(MAX_BACKUPS).forEach { it.delete() }
+}
+
+private fun backupsFor(target: File): List<File> =
+    target.parentFile?.listFiles { file ->
+        file.name.startsWith("${target.name}.") && file.name.endsWith(".bak")
+    }?.sortedByDescending { it.lastModified() }.orEmpty()
+
+private fun newestValidBackup(target: File): GameSessionProto? {
+    for (backup in backupsFor(target)) {
+        val proto = try {
+            backup.inputStream().use { GameSessionProto.parseFrom(it) }
+        } catch (_: IOException) {
+            continue
+        }
+        if (proto != GameSessionProto.getDefaultInstance()) return proto
+    }
+    return null
 }
 
 @Throws(IOException::class)
@@ -201,12 +235,7 @@ private fun writeProto(target: File, proto: GameSessionProto) {
         temp.outputStream().use { output ->
             proto.writeTo(output)
         }
-        if (!temp.renameTo(target)) {
-            target.delete()
-            if (!temp.renameTo(target)) {
-                throw IOException("Unable to rename ${temp.absolutePath} to ${target.absolutePath}")
-            }
-        }
+        Files.move(temp.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING)
     }.onFailure {
         temp.delete()
         throw it
