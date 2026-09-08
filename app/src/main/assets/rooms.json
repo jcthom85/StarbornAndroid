@@ -4841,7 +4841,7 @@
         "name": "lens relic",
         "type": "generic",
         "action_event": "w3_mq14_take_lens",
-        "condition_unmet_message": "The Lens floats inside a containment field, already reacting like it recognizes something in Nova."
+        "condition_unmet_message": "The Lens floats inside the containment field. Its Echo rises when Nova's calibrated cutter-suit signal reaches the glass."
       },
       {
         "name": "command tether-lines",
@@ -11222,7 +11222,7 @@
         "name": "bridge relic",
         "type": "generic",
         "action_event": "w2_mq05_reboot",
-        "condition_unmet_message": "The bridge relic can wake the Astra, but it needs the recovered conduits and the Chime routed through it first."
+        "condition_unmet_message": "The Astra needs her power conduits restored first. Once the Bridge has ship current, the Chime can authenticate Orion at the console."
       },
       {
         "name": "launch cradle",

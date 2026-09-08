@@ -203,7 +203,8 @@ class CraftingViewModel(
                     }
                     craftingService.learnSchematic(id)
                     sessionStore.setInventory(inventoryService.snapshot())
-                    outcome.message ?: "Crafted ${outcome.itemId}."
+                    val displayItem = inventoryService.itemDetail(outcome.itemId)?.name ?: outcome.itemId.replace('_', ' ')
+                    outcome.message ?: "Crafted $displayItem."
                 }
                 is CraftingOutcome.Failure -> outcome.message
             }
