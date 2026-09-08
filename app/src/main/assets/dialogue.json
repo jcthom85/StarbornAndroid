@@ -1706,6 +1706,78 @@
     "text": "You are not saving them. You are building a mass grave and calling the silence peace."
   },
   {
+    "id": "zeke_w6_post_nightmare_idle",
+    "speaker": "Zeke",
+    "text": "Dominion wrote my file in blood, but sitting by this fire, I feel like a man again.",
+    "condition": "milestone:ms_w6_mq26_complete,milestone_not_set:ms_w6_mq27_complete"
+  },
+  {
+    "id": "zeke_w6_post_mines_idle",
+    "speaker": "Zeke",
+    "text": "Seeing your old colony made me sick. Vale tried to sugarcoat the dirt and grease that forged you.",
+    "condition": "milestone:ms_w6_mq27_complete,milestone_not_set:ms_w6_mq28_complete"
+  },
+  {
+    "id": "zeke_w6_post_bridge_idle",
+    "speaker": "Zeke",
+    "text": "That bridge held because none of us carried it alone. We walk right up to Vale now.",
+    "condition": "milestone:ms_w6_mq28_complete,milestone_not_set:ms_w6_mq29_complete"
+  },
+  {
+    "id": "zeke_w6_post_spire_idle",
+    "speaker": "Zeke",
+    "text": "Top of the spire. Everything we survived led here. I am seeing this through to the finish.",
+    "condition": "milestone:ms_w6_mq29_complete,milestone_not_set:ms_w6_mq30_complete"
+  },
+  {
+    "id": "orion_w6_post_nightmare_idle",
+    "speaker": "Orion",
+    "text": "The frozen shore let go of my hands. The choir is not dead; their harmony lives through us.",
+    "condition": "milestone:ms_w6_mq26_complete,milestone_not_set:ms_w6_mq27_complete"
+  },
+  {
+    "id": "orion_w6_post_mines_idle",
+    "speaker": "Orion",
+    "text": "Vale cannot counterfeit the warmth of real survival. Your beginnings gave us the strength to endure.",
+    "condition": "milestone:ms_w6_mq27_complete,milestone_not_set:ms_w6_mq28_complete"
+  },
+  {
+    "id": "orion_w6_post_bridge_idle",
+    "speaker": "Orion",
+    "text": "The memory bridge rang like crystal bells. Separate frequencies, but perfectly tuned together across the void.",
+    "condition": "milestone:ms_w6_mq28_complete,milestone_not_set:ms_w6_mq29_complete"
+  },
+  {
+    "id": "orion_w6_post_spire_idle",
+    "speaker": "Orion",
+    "text": "Vale's silence waits just beyond this veil. Stand firm, Nova. We will ring the final note.",
+    "condition": "milestone:ms_w6_mq29_complete,milestone_not_set:ms_w6_mq30_complete"
+  },
+  {
+    "id": "ghost_w6_post_nightmare_idle",
+    "speaker": "Gh0st",
+    "text": "Unit 734 is dead. The order loop broke. I am here because I chose to stand with you.",
+    "condition": "milestone:ms_w6_mq26_complete,milestone_not_set:ms_w6_mq27_complete"
+  },
+  {
+    "id": "ghost_w6_post_mines_idle",
+    "speaker": "Gh0st",
+    "text": "Vale tried to sanitize your history. Scars are not mistakes to erase; they are proof we survived.",
+    "condition": "milestone:ms_w6_mq27_complete,milestone_not_set:ms_w6_mq28_complete"
+  },
+  {
+    "id": "ghost_w6_post_bridge_idle",
+    "speaker": "Gh0st",
+    "text": "Four anchors locked tight. Elara's voice echoed in the beams. She knows we are finishing this fight.",
+    "condition": "milestone:ms_w6_mq28_complete,milestone_not_set:ms_w6_mq29_complete"
+  },
+  {
+    "id": "ghost_w6_post_spire_idle",
+    "speaker": "Gh0st",
+    "text": "No retreat, no protocols. We tear down Vale's throne and take our future back.",
+    "condition": "milestone:ms_w6_mq29_complete,milestone_not_set:ms_w6_mq30_complete"
+  },
+  {
     "id": "sentinel_shop_intro",
     "speaker": "Sentinel-3",
     "text": "[High-pitched tone]... Trading interface established. Select components for exchange."
