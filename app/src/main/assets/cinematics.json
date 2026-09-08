@@ -757,11 +757,13 @@
     "steps": [
       {
         "type": "narration",
-        "text": "Nova opens the Bridge alone. Heat climbs her arm and her knees buckle."
+        "text": "Nova opens the Bridge alone. Heat climbs her arm and her knees buckle.",
+        "audio_cue": "sfx_combat_plasma_arc"
       },
       {
         "type": "dialogue",
         "speaker": "Orion",
+        "emote": "worried",
         "text": "Close it. The Bridge connects; it does not make one body carry the circuit."
       },
       {
@@ -771,15 +773,18 @@
       {
         "type": "dialogue",
         "speaker": "Gh0st",
+        "emote": "confident",
         "text": "No command attached. Proceed."
       },
       {
         "type": "narration",
-        "text": "Orion holds the counter-tone. The current divides across four willing contacts, and Zeke's wound steadies."
+        "text": "Orion holds the counter-tone. The current divides across four willing contacts, and Zeke's wound steadies.",
+        "audio_cue": "wpn_orion_bowl_resonance"
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
+        "emote": "confident",
         "text": "Link. Not merge. I get it."
       }
     ]
@@ -790,25 +795,30 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The Ascended falls, but Vale's forced network remains active. Five protocol signatures align through the crew's practiced circuit and complete the Key's access pattern."
+        "text": "The Ascended falls, but Vale's forced network remains active. Five protocol signatures align through the crew's practiced circuit and complete the Key's access pattern.",
+        "audio_cue": "sfx_combat_enemy_void_blast"
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
+        "emote": "confident",
         "text": "Ground lead failed. Zeke, manual bus. Gh0st, brace left. Orion, hold the counter-tone."
       },
       {
         "type": "narration",
-        "text": "The interface rejects Zeke, so he holds the bare ground path by hand. Gh0st takes the force aimed at the crew. Orion keeps the counter-tone level."
+        "text": "The interface rejects Zeke, so he holds the bare ground path by hand. Gh0st takes the force aimed at the crew. Orion keeps the counter-tone level.",
+        "audio_cue": "sfx_combat_plasma_arc"
       },
       {
         "type": "dialogue",
         "speaker": "Orion",
+        "emote": "confident",
         "text": "The Key is open. Release root access when the corridor clears."
       },
       {
         "type": "narration",
-        "text": "Nova opens a regional corridor, drops Vale's forced links, and releases root access. Her Source connection burns out as the network closes."
+        "text": "Nova opens a regional corridor, drops Vale's forced links, and releases root access. Her Source connection burns out as the network closes.",
+        "audio_cue": "wpn_orion_resonance"
       },
       {
         "type": "narration",
@@ -831,31 +841,37 @@
       {
         "type": "dialogue",
         "speaker": "Zeke",
+        "emote": "idle",
         "text": "For record accuracy: I complained about corrosion. The humidity was an associated grievance."
       },
       {
         "type": "dialogue",
         "speaker": "Gh0st",
+        "emote": "cool",
         "text": "You also threw a canteen at me. Accuracy: 94%."
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
+        "emote": "happy",
         "text": "The Source is gone. The thin whine stayed. I remember the rest."
       },
       {
         "type": "dialogue",
         "speaker": "Orion",
+        "emote": "happy",
         "text": "Good. Now you can hear the wind."
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
+        "emote": "idle",
         "text": "Sounds like a good day. Fill me in on the rest?"
       },
       {
         "type": "dialogue",
         "speaker": "Zeke",
+        "emote": "happy",
         "text": "Pull up a chair. It is a long story."
       },
       {
