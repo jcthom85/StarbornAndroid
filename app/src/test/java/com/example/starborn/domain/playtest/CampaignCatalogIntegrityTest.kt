@@ -153,7 +153,9 @@ class CampaignCatalogIntegrityTest {
         val confronted = ridge.descriptionVariants.single { it.requiresState["hunter_confronted"] == true }
         assertTrue(confronted.description.contains("Face the Beast"))
         assertFalse(confronted.description.contains("Confront stalker"))
-        val defeated = ridge.descriptionVariants.single { it.requiresState["beast_defeated"] == true }
+        val defeated = ridge.descriptionVariants.single {
+            it.requiresState["beast_defeated"] == true && it.forbiddenState.isEmpty()
+        }
         assertTrue(defeated.description.contains("Anchor Drill"))
         assertFalse(defeated.description.contains("Face the Beast"))
     }

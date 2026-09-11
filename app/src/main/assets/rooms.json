@@ -9588,6 +9588,40 @@
     "description_variants": [
       {
         "requires_state": {
+          "beast_defeated": true
+        },
+        "forbidden_state": {
+          "hunter_confronted": true,
+          "anchor_drill_complete": true
+        },
+        "requires_milestones": [
+          "ms_w2_mq03_complete"
+        ],
+        "forbidden_milestones": [
+          "ms_w2_mq04_complete"
+        ],
+        "description": "The Beast lies still at the edge of the stone shelf, but a rifle still watches from the brush. Confront stalker across the ledge. Orion has laid out a ground lead for the Anchor Drill. Look at Shield above the canopy."
+      },
+      {
+        "forbidden_state": {
+          "hunter_confronted": true
+        },
+        "requires_milestones": [
+          "ms_w2_mq03_complete"
+        ],
+        "description": "A stone shelf stands above the canopy. Look at Shield from beneath its distant ceiling; a rifle barrel tracks the ridge from the brush. Confront stalker before the angle closes."
+      },
+      {
+        "requires_state": {
+          "hunter_confronted": true
+        },
+        "forbidden_state": {
+          "beast_defeated": true
+        },
+        "description": "Gh0st lowers his rifle without accepting a command. Look at Shield above the canopy as brush breaks behind him; Face the Beast before it reaches the ledge."
+      },
+      {
+        "requires_state": {
           "anchor_drill_complete": true
         },
         "description": "The Beast is down and the grounding leads are packed. The completed Anchor Drill leaves four separate contact marks in the stone. Look at Shield above the quiet ridge."
@@ -9597,12 +9631,6 @@
           "beast_defeated": true
         },
         "description": "The Beast lies still beside Gh0st's unfired command channel. Orion sets a ground lead on the stone for the Anchor Drill. Look at Shield above the ledge."
-      },
-      {
-        "requires_state": {
-          "hunter_confronted": true
-        },
-        "description": "Gh0st lowers his rifle without accepting a command. Look at Shield above the canopy as brush breaks behind him; Face the Beast before it reaches the ledge."
       },
       {
         "requires_milestones": [

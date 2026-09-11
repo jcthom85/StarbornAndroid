@@ -5,12 +5,24 @@ exploration/narrative consistency, and presentation/release verification.
 
 ## Current phase status (2026-09-11)
 
-- Release preparation 1.3.26 (110): user authorized version increment, commit,
+- Release preparation 1.3.27 (111): user authorized commit, push and Internal
+  Testing upload of the ridge compatibility repair before a bounded World 1
+  pass. Includes description selection changes and 2,592 migrated / 108 raw
+  state combinations. No gameplay gates changed; IDE cache excluded.
+  Upload outcome will be recorded after publishing.
+  Release checks passed: 369 JVM tests, 354 strict selectors, signed bundle,
+  release lint (349 warnings, 11 hints, no errors) and diff check. Build used
+  the previously verified 8 GB heap / two-worker invocation.
+
+- Release 1.3.26 (110): commit `3ed88bf` pushed to
+  `origin/feature/multiplatform-port`; Google Play accepted bundle 110 and
+  committed a completed release on Internal Testing. Not production.
+  User authorized version increment, commit,
   push and Internal Testing upload before continuing Phase 5. Includes current
   Phase 4 large-text UI fixes, device flows and instrumentation coverage, World 2
   prose repairs and compatibility tests. Physical-device acceptance and ridge
-  compatibility repair remain open. Upload outcome is recorded after publishing;
-  this preparation entry does not claim a completed upload.
+  compatibility repair remain open at this release checkpoint. Subsequent ridge
+  changes are not part of uploaded bundle 110.
   Verification: 367 JVM tests, 354 strict selectors and diff checks passed;
   signed release bundle and release lint passed. Bundle signing exhausted the
   default 4 GB heap; rerun succeeded with command-line 8 GB heap and two workers
@@ -63,14 +75,46 @@ exploration/narrative consistency, and presentation/release verification.
 - Phase 5: three work areas remain: all-world discoverability triage (started;
   audit coverage added and 74 World 2 interaction prose fixes), compatible explicit
   action references, and route-discovery/narrative review. Initial static scan:
-  465 rooms, 909 inline actions, 436 missing-name candidates; now 340 after
-  74 interaction fixes (96 description references across 55 rooms).
+  465 rooms, 909 inline actions, 436 missing-name candidates; now 343 after
+  74 interaction fixes (96 description references across 55 rooms) and the
+  post-110 ridge compatibility descriptions. The extra variants add static
+  candidate pairs even though runtime coverage improves.
   Candidates are description/action pairs, NOT confirmed bugs
   or unique actions. Conditional reachability still needs review.
 - Phase 6: accessibility, lifecycle/save/audio, performance and release-device
   verification remain mostly pending. Uploading a bundle does not close these.
 
 ### Verification history
+
+- Post-release Phase 5 ridge repair (after bundle 110): added two descriptions
+  for unconfronted-hunter compatibility states and moved the Beast description
+  ahead of later completion flags, guarded by Beast-not-defeated. Normal
+  cumulative progression keeps its existing prose. The combined hunter/drill
+  variant only names both objectives when both visibility gates permit them.
+  No action definitions, event IDs, progression gates, rewards, routes or
+  migration logic changed. This is description-selection work, not prose-only
+  editing: description variants and their state guards changed intentionally.
+  Regression first failed against release 110's missing reference, then passed
+  after the repair. Added production-event coverage across 2,592 migrated flag,
+  quest/task and milestone combinations, plus 108 raw flag/milestone combinations
+  checking all visible ridge names and compatibility variants' retired objectives.
+  Absent and explicit-false flags are both covered. Event hooks connect room/task
+  updates to the session; combat and cinematics are not played on a device.
+  World 2's current 16 static candidates are classified: 13 ridge pairs are
+  covered by state/priority tests, 2 emitter pairs have blocked source-only events,
+  and the post-launch console event is blocked by quest completion. Audit logic
+  remains unchanged; none were suppressed to manufacture a zero count.
+  World 1 triage started (9 candidates): mine_shunt's base crew-datapad omission
+  is paired with a power-milestone variant that names it when shown. Still to
+  verify: dark-room omissions (bunk conduit, storage panel, backup terminal,
+  basement chest), bunk base compatibility, and post-completion/partial states
+  for medbay blockage, server terminal and loader diagnostic strip. Do not
+  infer event usability from their room flags alone. Then Worlds 3-6 and Astra,
+  explicit action references, and route-discovery/terminology review.
+  These follow-up changes are uncommitted and not in uploaded bundle 110.
+  Verification: full offline JVM suite passed (369 tests, zero failures/errors),
+  strict selectors passed (354), diff check passed. Static audit: 343 candidates,
+  16 World 2. No follow-up install, commit, push or upload.
 
 - Phase 5 compatibility investigation (2026-09-11): added four runtime tests
   covering ridge quest-complete versus milestone-only restoration, independently
