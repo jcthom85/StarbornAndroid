@@ -5,6 +5,37 @@ exploration/narrative consistency, and presentation/release verification.
 
 ## Current phase status (2026-09-11)
 
+- Release 1.3.25 (109): commit `92594a4` pushed to
+  `origin/feature/multiplatform-port`. Google Play publisher confirmed bundle
+  upload and committed a completed release for version 109 on the internal
+  testing track. This was not a production-track rollout or phase sign-off.
+  Release verification: 353 JVM tests passed; signed bundle and release lint
+  passed (350 warnings, 11 hints, no errors). Unrelated Android Studio device
+  cache change excluded from commit.
+  Post-release follow-up: added a targeted runtime test for both Jammed and
+  Silenced using shipped status definitions. It verifies skill blocking,
+  status-message priority over cooldown, cooldown remaining after status
+  removal, and availability after both blockers are removed. Targeted test
+  passed (1 test, no failures/errors); subsequent full JVM suite passed
+  (354 tests). Strict selector validation passes (350), diff check passes.
+  This seeds status state, not enemy
+  application or timed expiration, and does not verify rendered UI.
+
+### Remaining closeout checks
+
+- Phase 4: status-blocked ability presentation on device; large-text checks
+  for combat, loadout and journal; physical-device acceptance. Normal-size
+  cooldown, level-2/max Overcharge, long names, opening journal and detail
+  scrolling checks are already verified; do not restart those audits.
+- Phases 2-3: finale balance (Vale/God), campaign route/shop affordability,
+  renewable-resource economy and player/device acceptance remain open.
+- Phase 5: exploration action discoverability, explicit action references,
+  route-discovery pacing and narrative terminology review remain mostly pending.
+- Phase 6: accessibility, lifecycle/save/audio, performance and release-device
+  verification remain mostly pending. Uploading a bundle does not close these.
+
+### Verification history
+
 - Maximum-charge detail scrolling verified with checkpoint helper
   `phase4_overcharge_detail_scroll.yaml`: all commands passed. First cooldown
   visibility match did not scroll enough visually, but scrolling to Combat

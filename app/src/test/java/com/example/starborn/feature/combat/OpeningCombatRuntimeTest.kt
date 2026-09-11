@@ -63,6 +63,34 @@ class OpeningCombatRuntimeTest {
         }
     }
 
+    @Test fun `jammed and silence block skills with status explanation and recover when removed`() {
+        val vm = createCombat()
+        try {
+            val initial = requireNotNull(vm.combatState)
+            val nova = initial.combatants.getValue("nova")
+            val skill = vm.skillsForPlayer("nova").single()
+            val field = CombatViewModel::class.java.getDeclaredField("_state").apply { isAccessible = true }
+            @Suppress("UNCHECKED_CAST")
+            val flow = field.get(vm) as MutableStateFlow<CombatState?>
+            for (statusId in listOf("jammed", "silence")) {
+                flow.value = initial.copy(combatants = initial.combatants +
+                    ("nova" to nova.copy(statusEffects = listOf(StatusEffect(statusId, remainingTurns = 2)),
+                        activeCooldowns = mapOf(skill.id to 2))))
+                assertEquals(statusId, "Abilities blocked by status", vm.skillUnavailableReason("nova", skill))
+                assertFalse(statusId, vm.canUseSkill("nova", skill))
+                flow.value = initial.copy(combatants = initial.combatants +
+                    ("nova" to nova.copy(activeCooldowns = mapOf(skill.id to 2))))
+                assertEquals("On cooldown", vm.skillUnavailableReason("nova", skill))
+                assertFalse(vm.canUseSkill("nova", skill))
+                flow.value = initial
+                assertNull(vm.skillUnavailableReason("nova", skill))
+                assertTrue(vm.canUseSkill("nova", skill))
+            }
+        } finally {
+            vm.viewModelScope.cancel()
+        }
+    }
+
     @Test fun `opening fixture uses solo Nova and only her starting skill`() {
         val vm = createCombat()
         try {
