@@ -5,6 +5,18 @@ exploration/narrative consistency, and presentation/release verification.
 
 ## Current phase status (2026-09-11)
 
+- Release preparation 1.3.26 (110): user authorized version increment, commit,
+  push and Internal Testing upload before continuing Phase 5. Includes current
+  Phase 4 large-text UI fixes, device flows and instrumentation coverage, World 2
+  prose repairs and compatibility tests. Physical-device acceptance and ridge
+  compatibility repair remain open. Upload outcome is recorded after publishing;
+  this preparation entry does not claim a completed upload.
+  Verification: 367 JVM tests, 354 strict selectors and diff checks passed;
+  signed release bundle and release lint passed. Bundle signing exhausted the
+  default 4 GB heap; rerun succeeded with command-line 8 GB heap and two workers
+  (no project configuration change). Bundle SHA-256:
+  `51d5dc3fce78d93f8efc3a7dfa008ad209e2b3585b29f7231e7059c6052fb547`.
+
 - Release 1.3.25 (109): commit `92594a4` pushed to
   `origin/feature/multiplatform-port`. Google Play publisher confirmed bundle
   upload and committed a completed release for version 109 on the internal
@@ -21,20 +33,307 @@ exploration/narrative consistency, and presentation/release verification.
   This seeds status state, not enemy
   application or timed expiration, and does not verify rendered UI.
 
+  Android UI follow-up: `AbilityRowInstrumentedTest` passed both tests on the
+  Android 17 Medium Phone emulator at 320 dp width, with font scales 1.0 and
+  2.0. The production row displays the status explanation, disables Use
+  without invoking its callback, leaves Details actionable, and enables Use
+  after the supplied block is removed. `AbilityRow` is now internal for test
+  access; gameplay behavior is unchanged. This is isolated component coverage,
+  not enemy status application/expiration or a full-dialog visual audit.
+  Espresso (androidTest only) updated from 3.5.1 to 3.7.0 after the older
+  runner failed on Android 17 with InputManager.getInstance NoSuchMethodException.
+  The AndroidX release notes document the corresponding fix:
+  https://developer.android.com/jetpack/androidx/releases/test#espresso-3.7.0
+
 ### Remaining closeout checks
 
-- Phase 4: status-blocked ability presentation on device; large-text checks
-  for combat, loadout and journal; physical-device acceptance. Normal-size
+- Phase 4: one remaining acceptance group: physical-device verification on a
+  build containing the current UI fixes. Crowded ability-list scrolling and
+  level-2/max Overcharge large-text checks now pass end to end on the emulator.
+  Opening journal,
+  starter loadout and single-ability Loader list/details passed the full-screen
+  2.0-font-scale emulator checks. Normal-size
   cooldown, level-2/max Overcharge, long names, opening journal and detail
   scrolling checks are already verified; do not restart those audits.
+  Status-blocked ability-row behavior is now covered on the emulator at normal
+  and doubled text size; status application/expiration in a real encounter and
+  physical-device acceptance are not established by that isolated test.
 - Phases 2-3: finale balance (Vale/God), campaign route/shop affordability,
   renewable-resource economy and player/device acceptance remain open.
-- Phase 5: exploration action discoverability, explicit action references,
-  route-discovery pacing and narrative terminology review remain mostly pending.
+- Phase 5: three work areas remain: all-world discoverability triage (started;
+  audit coverage added and 74 World 2 interaction prose fixes), compatible explicit
+  action references, and route-discovery/narrative review. Initial static scan:
+  465 rooms, 909 inline actions, 436 missing-name candidates; now 340 after
+  74 interaction fixes (96 description references across 55 rooms).
+  Candidates are description/action pairs, NOT confirmed bugs
+  or unique actions. Conditional reachability still needs review.
 - Phase 6: accessibility, lifecycle/save/audio, performance and release-device
   verification remain mostly pending. Uploading a bundle does not close these.
 
 ### Verification history
+
+- Phase 5 compatibility investigation (2026-09-11): added four runtime tests
+  covering ridge quest-complete versus milestone-only restoration, independently
+  migrated ridge tasks, all four milestone combinations for each emitter, and
+  launch without console inspection. `GameSessionPersistence` reads milestones,
+  tasks and room flags independently; AppServices applies
+  `migrateOpeningNarrativeState` on startup, slot/quick/autosave load and legacy
+  import. The migration reconstructs ridge flags from corresponding tasks or
+  completed MQ04, not from the MQ04 milestone alone. Tests exercise that
+  production migration and shipped EventManager events, not save-file I/O.
+  Findings superseding the ambiguity in earlier checkpoints:
+  - Emitter source-only omissions (2 candidates): events explicitly require the
+    source milestone to be absent. The action can remain nominally visible but
+    cannot execute. Do not add prose advertising it. Retirement-only states hide
+    the action; with neither milestone present the event executes; with both
+    present the action is retired normally.
+    Migration does not reconcile these milestone pairs.
+  - Post-launch console omission (1 candidate): shipped launch can complete MQ05
+    without inspection. Console remains nominally visible, but its event requires
+    active MQ05 and is blocked after completion. Do not add post-launch console
+    prose. Migration backfills bridge installation, not console inspection.
+  - Ridge (10 candidates): normal cumulative progression remains covered.
+    Completed-quest legacy states repair all three flags. Milestone-only states
+    do not: Confront stalker is visible with MQ03 complete, absent from selected
+    prose, and actually executable if MQ04 is active with its task unfinished.
+    This is a confirmed compatibility discoverability defect, not a safe omission.
+    Independent task migration can also leave noncumulative flags. These require
+    a targeted description/state strategy; do not mark World 2 resolved yet.
+  No prose, action gates, migration logic or other production files changed in
+  this investigation. Next: cover the full noncumulative ridge state matrix and
+  repair its usable-action omissions, then World 1, Worlds 3-6 and Astra. Explicit
+  action references and route/terminology review remain subsequent work.
+  Verification: full offline JVM suite passed (367 tests, zero failures/errors),
+  strict Maestro selectors passed (354), and diff check passed. Static audit
+  remains 340 candidates overall / 13 World 2; no suppression was added.
+  No APK install, version change, commit, push or upload. IDE cache untouched.
+
+- Phase 5 tenth batch (9% usage checkpoint): added
+  `WorldTwoDiscoverabilityStateTest` using production `narrativeActionVisible`
+  and `resolveRoomDescription`, not a duplicated static matcher. Tests cover
+  cumulative ridge states: Confront stalker -> Face the Beast -> Anchor Drill ->
+  Shield inspection only, with every visible action named in selected prose.
+  A second test dispatches shipped emitter events and verifies they select their
+  completed descriptions while retiring the respective actions. Ridge states
+  are seeded, not earned through combat; no rendered UI or save-file I/O proof.
+  No game assets or production code changed this batch. Static totals unchanged:
+  340 candidates overall, 13 in World 2. Do not suppress these solely to reach zero.
+  Classification checkpoint: normal cumulative ridge progression and authored
+  paired-emitter event paths are covered; compatibility states remain unresolved.
+  In particular, MQ04-complete with missing ridge flags can leave Confront stalker
+  visible but absent from the milestone-only description. A source-only emitter
+  milestone likewise does not independently hide its action. Post-launch hangar
+  text omits dark console while visibility only checks the inspection milestone;
+  launch does not directly require that milestone. These require targeted
+  compatibility decisions/tests, not wholesale insertion of retired objectives.
+  Next: narrowly resolve completion/partial-state visibility, then proceed to
+  other worlds. Phase 5 and World 2 remain open; Phase 4 still needs phone acceptance.
+  Verification: full JVM suite passed (363 tests, no failures/errors), strict
+  Maestro selector validation passed (354), and diff whitespace check passed.
+  No install, commit or upload; retained a bounded checkpoint for remaining usage.
+
+- Phase 5 ninth batch (usage-conserving checkpoint): restored eight conditional
+  references across seven rooms: locker, muddy clearing, cargo panel, still
+  basins, central relief, stasis mural overview, bridge relic and launch cradle.
+  Expanded the conditional catalog regression for all eight. No action/event
+  definitions, gates, rewards or routes changed. Audit: 340 candidate pairs;
+  World 2: 13. No device install, commit or upload.
+  Verification: 361 JVM tests passed (no failures/errors), strict Maestro selector
+  validation passed (354), and diff whitespace check passed. No device proof.
+  Remaining World 2 classification:
+  - Two emitter variant[0] omissions match shipped events that set both the
+    source milestone selecting that variant and the action-retirement milestone.
+    Safe for that authored event path; independently seeded/legacy flags are
+    not proven equivalent. Do not re-expose completed emitter work blindly.
+  - Ten canopy-ridge candidates depend on show/hide state gates and variant
+    priority. Several are intentional, but milestone-only/legacy-state combinations
+    still need explicit review before declaring this group fully classified.
+  - One hangar post-launch dark-console omission needs the same legacy/route
+    review. Launch checks reboot completion, not the console-inspected milestone
+    directly; do not assume the two are identical.
+  Next checkpoint: resolve these 13 candidates with state/compatibility evidence,
+  then move to the remaining worlds. World 2 and Phase 5 are not yet signed off.
+
+- Phase 5 eighth batch: restored nineteen missing references across crash-site,
+  canopy, canopy ridge and stasis chamber states. Wreckage, glow-water and Shield
+  inspection persist; pod examination no longer strands moss scanning, fern
+  scanning retains spore/scout references, and stasis objectives retain unrelated
+  pod/root/vent references. Expanded catalog checks to those conditional states
+  and added ridge stage/gate regression coverage. Did not reinsert Confront stalker,
+  Face the Beast or Anchor Drill into stages where their authored gates hide them.
+  The static audit does not model these state gates or variant priority: the 21
+  remaining World 2 candidates include intentional omissions, not just fixes to do.
+  All 48 changed rooms remain prose-only against HEAD. Audit total: 348 candidates.
+  Verification: 361 JVM tests passed, strict Maestro selector validation passed
+  (354), and diff whitespace check passed. No rendered interaction proof claimed.
+  No device install, commit or upload. Next: remaining conditional inspections
+  (pod interior, brush/drop/pools, echo hall, observation, emitters and hangar),
+  then classify the ridge's remaining state-dependent candidates explicitly.
+
+- Phase 5 seventh batch: restored fifteen action names in twelve facility base
+  descriptions, plus bus bar array references in both breaker-deck variants.
+  Expanded the reviewed-action regression to 57 actions and conditional coverage
+  to both breaker completion milestones. Inspected the shipped breaker event:
+  it sets both source-breakers-starved and breakers-overloaded; its existing
+  action retirement gate is unchanged. The campaign integration suite already
+  exercises the breaker action during World 2's departure sequence.
+  Verified all 44 changed rooms against HEAD: only description text differs;
+  actions, gates, rewards, routes and events are unchanged. Audit: 367 candidate
+  pairs, World 2: 40. These are review candidates, not confirmed bugs or UI proof.
+  Verification: full JVM suite passed (360 tests, no failures/errors), strict
+  Maestro selector validation passed (354), and diff whitespace check passed.
+  No device install, commit or upload. Next: multi-state crash-site, canopy and
+  stasis descriptions and the remaining conditional inspection references.
+
+- Phase 5 sixth batch: restored eight missing description references across
+  beach pools and grotto. Weed scanning no longer removes the separate tideglass
+  gathering reference; cache inspection retains the separate prism and arches.
+  Anemones are named in both pools descriptions. Corrected the grotto's false
+  "salvaged" claim: the cache event only reports inert crystals and sets its
+  inspection milestone; the prism awards the actual relic mod separately.
+  Expanded conditional-prose checks and added shipped-event regressions for
+  scan-then-gather and inspect-then-prism-success, including payout replay checks.
+  These seed quest prerequisites/dispatch puzzle success, not route or slider UI
+  verification. No gameplay event, reward, gate or connection changes.
+  Audit: 384 candidate pairs, World 2: 57. No device install, commit or upload.
+  Verification: 360 JVM tests passed, strict Maestro selector validation passed
+  (354), and diff whitespace check passed. All 32 changed rooms remain prose-only
+  against HEAD. Next: remaining World 2 facility base descriptions, then the
+  multi-stage crash-site/canopy/stasis descriptions.
+
+- Phase 5 fifth batch: restored thirteen description references for seven
+  interactions across six rooms. Canopy, crystals, moss, stump and trunk
+  inspections now remain named after their unrelated local objectives; both
+  World 2 film cache names are exposed, including the cave's harvested variant.
+  Resolved the deferred film-cache concern: GameEvent defaults to nonrepeatable,
+  and EventManager skips completed events. A regression using shipped room/event
+  definitions verifies each film is granted exactly once, including replay after
+  in-memory session restoration (not save-file I/O or rendered UI verification).
+  Added conditional-prose regression coverage for five completed-objective states.
+  All thirty changed rooms remain prose-only against HEAD; no action definitions,
+  gates, rewards, routes or events changed. Audit: 392 candidate pairs, World 2: 65.
+  Full JVM suite passed (358 tests, no failures/errors); strict Maestro selector
+  validation passed (354); diff whitespace check passed. No device verification,
+  install, commit or upload. Next: beach pools/grotto conditional actions, then
+  remaining World 2 candidates. Beach gathering uses trigger action
+  `w2_sq03_gather_tideglass` on event ID `w2_sq03_gather`; do not mistake the
+  different event ID for a missing trigger.
+
+- Phase 5 fourth batch: restored nineteen missing action names across thirteen
+  stream, wilds and ridge base descriptions, including the pre-harvest blue-frond
+  cluster. Expanded the catalog regression to thirty reviewed actions; use a
+  list of pairs so multiple actions in one room are all tested. Verified all
+  24 changed rooms against HEAD: only description text differs, with action
+  definitions, events, gates, rewards and connections unchanged.
+  Audit: 405 candidate pairs, World 2: 78; other world counts unchanged.
+  Ridge Plateau's film cache remains deferred: its event has no authored
+  conditions, so check runtime repeat-collection handling before exposing it.
+  Narrative review also needs to check the existing Thermal Cutter shortcut/cache
+  inspection messages, which describe cutting but have no action event or item gate.
+  Verification: full JVM suite passed (356 tests, no failures/errors), strict
+  Maestro selector validation passed (354), and diff whitespace check passed.
+  No device verification, install, commit or upload this batch.
+
+- Phase 5 third batch: named warm sand and the resonant pillar in their base
+  descriptions, and wind-sculpted ridges in both base and harvested dunes prose.
+  Added a harvested-state catalog regression that preserves the grazer's
+  retirement gate and absence from harvested prose while retaining ridge discovery.
+  All eleven changed rooms remain prose-only: action definitions, milestone
+  gates, rewards and routes are unchanged. Audit: 424 candidate pairs, including
+  97 in World 2. Full JVM suite passed (356 tests, no failures/errors); strict
+  Maestro selector validation passed (354); diff whitespace check passed.
+  Static checks only; no device verification, install, commit or upload.
+
+- Phase 5 second batch: reviewed five sole/base-description omissions in World
+  2 and named the existing basalt cliffs, rusted hull, mineral shelter,
+  maintenance spores and shaft shortcut interactions in their room prose.
+  No action IDs, gates, rewards, routes or dialogue changed. Expanded the
+  reviewed-room catalog regression to all eight repaired references.
+  Audit now reports 428 candidate pairs (World 2: 101); other world counts
+  unchanged. This is static discoverability coverage, not device or route proof.
+  Full JVM suite passed; strict Maestro selector validation passed (354), and
+  diff whitespace check passed. No build install, commit or upload this batch.
+
+- Phase 5 first pass: added `scripts/audit_action_discoverability.ps1` covering
+  all rooms and grouping candidates by node/hub world mapping. It checks base,
+  dark and conditional description text, mirrors literal name variants, excludes
+  service/arcade controls, and recognizes direct milestone contradictions.
+  It does not simulate state, variant priority, NPC overlap, or route reachability;
+  intentional dark-state/retired-action omissions can remain candidates.
+  Unlike the World 1 validator, it does not silently acknowledge known omissions.
+  `-SummaryOnly` gives bounded output; `-Strict` exits 1 on candidates (verified).
+  Three World 2 actions absent from their sole descriptions now appear in prose:
+  service map (sector9_conduit_junction), Aethel extinction log
+  (sector9_archive_vault), research terminal (sector9_archive_reading_room).
+  No action names/IDs, gates, rewards, routes or dialogue changed. Added a
+  catalog regression for their action definitions and matching description text.
+  Remaining scan: W1 9, W2 106, W3 40, W4 140, W5 86, W6 39, Astra 10,
+  unmapped 3 = 433 candidate pairs. Do not interpret these as bug counts.
+  Next: prioritize base-description omissions in World 2, then conditional
+  cases and explicit-reference compatibility. No device verification claimed.
+  Verification: full JVM suite passed (355 tests); strict Maestro prose selector
+  validation passed (354); diff whitespace check passed. No commit or upload.
+
+- Emulator Phase 4 closeout: installed the rebuilt debug APK with stacked
+  AbilityDetailLine label/value presentation and ran
+  `phase4_large_text_combat.yaml` at system font scale 2.0. All required commands
+  passed, including level-2/max Overcharge, Arc Tether cooldown/traits scrolling,
+  Plasma Burst name/control access and Details, and return scrolling to Smoke
+  Bomb. Screenshots reviewed: complete readable cooldown suffix, Plasma Burst
+  name/summary/buttons and Smoke Bomb at the top; Back/Close remain reachable.
+  Earlier name failures were resolved by a 70% scroll visibility threshold;
+  the saved failure hierarchy already contained visible Smoke Bomb bounds.
+  Screenshot review remains required, not replaced by relaxed semantics.
+  Font scale restored to 1.0. This closes the scoped emulator group, not every
+  skill/device or combat balance. Physical-device acceptance remains open;
+  only emulator-5554 was connected. The uploaded internal 109 bundle predates
+  these uncommitted UI fixes. No new production changes/build needed in this
+  verification pass; prior build/JVM results remain 354 passing tests.
+
+- Crowded/Overcharge large-text follow-up: saved Maestro results from
+  2026-09-11_115317 confirm level-2 and maximum Overcharge flows plus max detail
+  scrolling passed at system font scale 2.0. Screenshots show the complete max
+  banner, Level 3 detail heading, and reachable cooldown/traits/Back control.
+  Visual review found the detail value column splitting the Overcharge suffix
+  mid-word. AbilityDetailLine now stacks label/value at font scales >= 1.5;
+  assembleDebug and testDebugUnitTest passed, but this new change has NOT yet
+  been installed or visually rechecked. Prior emulator screenshots predate it.
+  The full crowded-list flow failed: reaching the Plasma Burst Details button
+  did not leave its name in view. New checkpoint helpers separate name/control
+  checks, but retry 2026-09-11_121859 still reported Smoke Bomb absent while its
+  failure screenshot shows it clearly. Investigate accessibility selectors
+  before claiming full-list scroll coverage; no successful combined rerun.
+  Font scale restored to 1.0 by finally blocks. Strict selector validation
+  passed (354). No commit, push or upload. Phase 4 still has the emulator
+  detail/list closeout and physical-device acceptance groups open.
+
+- Large-text follow-up (Android 17 Medium Phone emulator, system font scale
+  2.0): fixed four presentation issues found by screenshot review, not just
+  semantic assertions. Debug scenario headers now scroll with their results
+  and category filters scroll horizontally; ability controls stack below the
+  copy at font scales >= 1.5; quest badges wrap and stage titles are no longer
+  one-line ellipsized; inventory category tabs scroll horizontally at large
+  text sizes instead of breaking words. Gameplay rules and content are unchanged.
+  `AbilityRowInstrumentedTest` now uses 270 dp width and asserts the large-text
+  controls sit below the explanation: both tests passed using direct adb
+  instrumentation. Debug build and 354 JVM tests pass; strict Maestro selector
+  validation passes (352). The combined `phase4_large_text.yaml` preserves app
+  data, replaces unsaved debug sessions, and requires external font setup/restore.
+  Final-build Loader list/details flow passed at 2.0; screenshots show the
+  intact ability name, full summary, and scrolled cooldown/traits/Back control.
+  Final-build opening journal flow also passed: screenshot review confirms
+  the complete TRACKED badge and scroll access to the full final cutter
+  objective and reward list. Stage guidance wraps and can be scrolled; the
+  current-stage screenshot is a scrolled excerpt, not the whole section at once.
+  Final-build starter loadout flow passed and screenshots confirm readable
+  empty/equipped tiles, selectors, locked mod controls and story-gate copy.
+  Both Mining Pistol and Flux Liner were equipped in the unsaved debug session.
+  Combined flow exited 0; its optional third Continue was absent (warning only).
+  Font scale was restored to its original 1.0 and verified afterward. The debug
+  game remains installed. No app-data clear, save operation, commit or upload
+  was performed in this pass. Existing unrelated IDE device cache edit retained.
+  This is a single-ability tutorial checkpoint, not a crowded multi-ability or
+  maximum-Overcharge large-text audit. Physical-device acceptance remains open.
 
 - Maximum-charge detail scrolling verified with checkpoint helper
   `phase4_overcharge_detail_scroll.yaml`: all commands passed. First cooldown

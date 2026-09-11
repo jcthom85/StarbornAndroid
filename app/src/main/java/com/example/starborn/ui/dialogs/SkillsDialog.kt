@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.starborn.data.local.Theme
@@ -197,7 +198,7 @@ fun SkillsDialog(
 }
 
 @Composable
-private fun AbilityRow(
+internal fun AbilityRow(
     skill: Skill,
     cooldownRemaining: Int,
     canUse: Boolean,
@@ -212,6 +213,7 @@ private fun AbilityRow(
     onDetails: () -> Unit,
     onUse: () -> Unit
 ) {
+    val stackActions = LocalDensity.current.fontScale >= 1.5f
     val rowBorder = when {
         highlighted -> accent
         momentum >= 3 -> Color(0xFFFFD700).copy(alpha = 0.7f)
@@ -229,53 +231,77 @@ private fun AbilityRow(
         },
         border = BorderStroke(if (highlighted || momentum > 0) 1.5.dp else 1.dp, rowBorder)
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Text(
-                    text = skill.name,
-                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
-                    color = if (canUse) Color.White else Color.White.copy(alpha = 0.62f)
-                )
-                Text(
-                    text = abilitySummary(skill, cooldownRemaining, momentum, infusedElement, infusedStatus),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = if (cooldownRemaining > 0) {
-                        Color(0xFFFFC857)
-                    } else {
-                        accent.copy(alpha = 0.88f)
-                    }
-                )
-                if (unavailableReason != null) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
                     Text(
-                        text = unavailableReason,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color(0xFFFFC857)
+                        text = skill.name,
+                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
+                        color = if (canUse) Color.White else Color.White.copy(alpha = 0.62f)
                     )
+                    Text(
+                        text = abilitySummary(skill, cooldownRemaining, momentum, infusedElement, infusedStatus),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = if (cooldownRemaining > 0) {
+                            Color(0xFFFFC857)
+                        } else {
+                            accent.copy(alpha = 0.88f)
+                        }
+                    )
+                    if (unavailableReason != null) {
+                        Text(
+                            text = unavailableReason,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color(0xFFFFC857)
+                        )
+                    }
+                }
+                if (!stackActions) {
+                    AbilityRowActions(skill.name, cooldownRemaining, canUse, accent, onDetails, onUse)
                 }
             }
-            IconButton(onClick = onDetails) {
-                Icon(
-                    imageVector = Icons.Outlined.Info,
-                    contentDescription = "Details for ${skill.name}",
-                    tint = accent
-                )
-            }
-            Button(
-                onClick = onUse,
-                enabled = canUse
-            ) {
-                Text(if (cooldownRemaining > 0) cooldownRemaining.toString() else "Use")
+            if (stackActions) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AbilityRowActions(skill.name, cooldownRemaining, canUse, accent, onDetails, onUse)
+                }
             }
         }
+    }
+}
+
+@Composable
+private fun AbilityRowActions(
+    skillName: String,
+    cooldownRemaining: Int,
+    canUse: Boolean,
+    accent: Color,
+    onDetails: () -> Unit,
+    onUse: () -> Unit
+) {
+    IconButton(onClick = onDetails) {
+        Icon(
+            imageVector = Icons.Outlined.Info,
+            contentDescription = "Details for $skillName",
+            tint = accent
+        )
+    }
+    Button(onClick = onUse, enabled = canUse) {
+        Text(if (cooldownRemaining > 0) cooldownRemaining.toString() else "Use")
     }
 }
 
@@ -464,6 +490,20 @@ private fun AbilityDetailsDialog(
 
 @Composable
 private fun AbilityDetailLine(label: String, value: String) {
+    if (LocalDensity.current.fontScale >= 1.5f) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(label, style = MaterialTheme.typography.labelMedium, color = Color.White.copy(alpha = 0.62f))
+            Text(
+                value,
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+                color = Color.White
+            )
+        }
+        return
+    }
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,

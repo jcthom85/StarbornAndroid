@@ -21,6 +21,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -70,6 +71,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -747,53 +749,57 @@ private fun DebugScenarioDialog(
         onDismissRequest = onDismiss,
         title = { Text("Debug Scenarios", fontWeight = FontWeight.Black) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text("Launching replaces the current unsaved session.", color = TitleMutedText, fontSize = 13.sp)
-                OutlinedTextField(
-                    value = query,
-                    onValueChange = { query = it },
-                    label = { Text("Search world, quest, room, or system") },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    DebugScenarioCategory.entries.forEach { option ->
-                        FilterChip(
-                            selected = category == option,
-                            onClick = { category = option.takeUnless { it == category } },
-                            label = { Text(option.label, fontSize = 11.sp) }
-                        )
-                    }
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                modifier = Modifier.heightIn(max = 430.dp)
+            ) {
+                item {
+                    Text("Launching replaces the current unsaved session.", color = TitleMutedText, fontSize = 13.sp)
                 }
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(6.dp),
-                    modifier = Modifier.heightIn(min = 180.dp, max = 430.dp)
-                ) {
-                    items(filtered, key = { it.id }) { scenario ->
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { onLaunch(scenario) }
-                                .background(TitleCyan.copy(alpha = 0.07f), RoundedCornerShape(10.dp))
-                                .padding(12.dp)
-                        ) {
-                            Text(scenario.title, fontWeight = FontWeight.Bold, color = TitleText)
-                            Text(
-                                "${scenario.category.label}  |  ${scenario.worldLabel}",
-                                color = TitleCyan,
-                                fontSize = 11.sp
+                item {
+                    OutlinedTextField(
+                        value = query,
+                        onValueChange = { query = it },
+                        label = { Text("Search world, quest, room, or system", maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                item {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())
+                    ) {
+                        DebugScenarioCategory.entries.forEach { option ->
+                            FilterChip(
+                                selected = category == option,
+                                onClick = { category = option.takeUnless { it == category } },
+                                label = { Text(option.label, fontSize = 11.sp, maxLines = 1) }
                             )
-                            Text(scenario.description, color = TitleMutedText, fontSize = 13.sp)
                         }
                     }
-                    if (filtered.isEmpty()) {
-                        item { Text("No matching scenarios.", color = TitleMutedText) }
+                }
+                items(filtered, key = { it.id }) { scenario ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onLaunch(scenario) }
+                            .background(TitleCyan.copy(alpha = 0.07f), RoundedCornerShape(10.dp))
+                            .padding(12.dp)
+                    ) {
+                        Text(scenario.title, fontWeight = FontWeight.Bold, color = TitleText)
+                        Text(
+                            "${scenario.category.label}  |  ${scenario.worldLabel}",
+                            color = TitleCyan,
+                            fontSize = 11.sp
+                        )
+                        Text(scenario.description, color = TitleMutedText, fontSize = 13.sp)
                     }
                 }
-                HorizontalDivider(color = TitleCyan.copy(alpha = 0.2f))
+                if (filtered.isEmpty()) {
+                    item { Text("No matching scenarios.", color = TitleMutedText) }
+                }
+                item { HorizontalDivider(color = TitleCyan.copy(alpha = 0.2f)) }
             }
         },
         confirmButton = {},

@@ -1,0 +1,8 @@
+appId: com.junewiregames.starborn.prealpha
+---
+# Precondition: set the emulator's system font_scale to 2.0 before launching.
+# Restore its original value after the run, including on failure.
+# Each child retains app data and replaces the unsaved debug session.
+- runFlow: phase4_loader_labels.yaml
+- runFlow: phase4_opening_guidance.yaml
+- runFlow: phase4_loadout.yaml

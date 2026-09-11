@@ -1,0 +1,35 @@
+appId: com.junewiregames.starborn.prealpha
+---
+# Requires the charged abilities dialog open. Name and controls may occupy
+# different viewports at large fonts; check each deliberately.
+- scrollUntilVisible:
+    element: "Smoke Bomb"
+    direction: UP
+    visibilityPercentage: 70
+    timeout: 20000
+- scrollUntilVisible:
+    element: "Plasma Burst"
+    direction: DOWN
+    visibilityPercentage: 70
+    speed: 20
+    timeout: 30000
+- takeScreenshot: phase4-large-plasma-name
+- scrollUntilVisible:
+    element: "Details for Plasma Burst"
+    direction: DOWN
+    centerElement: true
+    timeout: 15000
+- takeScreenshot: phase4-large-plasma-controls
+- tapOn: "Details for Plasma Burst"
+- assertVisible: "Plasma Burst"
+- assertVisible: "Back to Abilities"
+- takeScreenshot: phase4-large-plasma-details
+- tapOn: "Back to Abilities"
+- scrollUntilVisible:
+    element: "Smoke Bomb"
+    direction: UP
+    visibilityPercentage: 70
+    centerElement: true
+    timeout: 15000
+- takeScreenshot: phase4-large-crowded-list-top
+- assertVisible: "Close"

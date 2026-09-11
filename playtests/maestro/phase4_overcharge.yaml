@@ -48,8 +48,17 @@ appId: com.junewiregames.starborn.prealpha
             - tapOn: "Nova"
 - tapOn: "Abilities"
 - assertVisible: ".*OVERCHARGE:.*50% Power.*1-Turn CD Refund.*"
+- takeScreenshot: phase4-overcharge-banner
+- scrollUntilVisible:
+    element: "Details for Arc Tether"
+    direction: DOWN
+    timeout: 15000
 - assertVisible: ".*1 turn after use.*Overcharge.*"
 - takeScreenshot: phase4-overcharge-list
 - tapOn: "Details for Arc Tether"
+- scrollUntilVisible:
+    element: "1 turn after use.*Overcharge.*"
+    direction: DOWN
+    timeout: 15000
 - assertVisible: "1 turn after use.*Overcharge.*"
 - takeScreenshot: phase4-overcharge-details

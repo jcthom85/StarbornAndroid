@@ -51,6 +51,8 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -1760,6 +1762,7 @@ private fun serviceOffsets(count: Int, spacing: Float): List<Pair<Float, Float>>
 }
 
 @Composable
+@OptIn(ExperimentalLayoutApi::class)
 private fun QuestDetailSheet(
     detail: QuestDetailUi,
     accentColor: Color,
@@ -1831,7 +1834,7 @@ private fun QuestDetailSheet(
                                 .size(20.dp)
                         )
                     }
-                    Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                         Text(
                             text = "QUEST FILE",
                             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
@@ -1845,9 +1848,9 @@ private fun QuestDetailSheet(
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis
                         )
-                        Row(
+                        FlowRow(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                             QuestStatusPill(
                                 text = if (detail.completed) "COMPLETED" else "ACTIVE",
@@ -2051,9 +2054,7 @@ private fun QuestStageSection(
                 Text(
                     text = "Stage ${stage.stageIndex + 1}: ${stage.title}",
                     style = MaterialTheme.typography.titleSmall.copy(fontWeight = if (stage.current) FontWeight.Bold else FontWeight.SemiBold),
-                    color = if (stage.current) accentColor else Color.White,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    color = if (stage.current) accentColor else Color.White
                 )
             }
             if (statusLabel.isNotBlank()) {

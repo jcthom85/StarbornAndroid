@@ -1,0 +1,56 @@
+appId: com.junewiregames.starborn.prealpha
+---
+# Retains app data; replaces only the unsaved debug session.
+# Run at normal or enlarged system font scale; restore the setting externally.
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- scrollUntilVisible:
+    element: "Tutorial: Gear & Inventory"
+    direction: DOWN
+- tapOn: "Tutorial: Gear & Inventory"
+- extendedWaitUntil:
+    visible: "Scrap Yard"
+    timeout: 30000
+- tapOn: "MENU"
+- repeat:
+    times: 2
+    commands:
+      - tapOn:
+          text: "CONTINUE"
+          optional: true
+- tapOn: "Gear"
+- tapOn:
+    text: "CONTINUE"
+    optional: true
+- scrollUntilVisible:
+    element: "No weapon equipped"
+    direction: DOWN
+- takeScreenshot: phase4-loadout-empty
+- tapOn: "No weapon equipped"
+- assertVisible: "Weapon Loadout"
+- scrollUntilVisible:
+    element: "Mining Pistol"
+    direction: DOWN
+- takeScreenshot: phase4-loadout-weapon-selector
+- tapOn: "Mining Pistol"
+- assertVisible: "Mining Pistol"
+- takeScreenshot: phase4-loadout-weapon-equipped
+- scrollUntilVisible:
+    element: "No armor equipped"
+    direction: DOWN
+- tapOn: "No armor equipped"
+- assertVisible: "Armor Loadout"
+- scrollUntilVisible:
+    element: "Flux Liner"
+    direction: DOWN
+- takeScreenshot: phase4-loadout-armor-selector
+- tapOn: "Flux Liner"
+- scrollUntilVisible:
+    element: "Accessory"
+    direction: DOWN
+- assertVisible: "Flux Liner"
+- takeScreenshot: phase4-loadout-armor-equipped

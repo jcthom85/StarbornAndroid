@@ -7,9 +7,18 @@ appId: com.junewiregames.starborn.prealpha
     element: "Find Jed in his bunk and reach the workshop.*"
     direction: DOWN
     timeout: 15000
+- swipe:
+    start: "50%, 82%"
+    end: "50%, 60%"
+    duration: 450
 - takeScreenshot: phase4-opening-current-stage
 - scrollUntilVisible:
     element: "Run the live cutter test and wait for the fault log."
     direction: DOWN
     timeout: 15000
+- swipe:
+    start: "50%, 82%"
+    end: "50%, 60%"
+    duration: 450
+- assertVisible: "Run the live cutter test and wait for the fault log."
 - takeScreenshot: phase4-opening-final-objectives

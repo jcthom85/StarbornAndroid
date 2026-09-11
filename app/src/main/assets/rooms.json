@@ -8140,7 +8140,7 @@
     "weather": "fog",
     "title": "Crash Site",
     "background_image": "images/rooms/world_2/crash_site.webp",
-    "description": "The escape pod sits half-submerged in warm glow-water. A scorched navigation console ticks under an open panel. Zeke coughs on the hull while scan moss vibrates along the seams.",
+    "description": "The escape pod wreckage sits half-submerged in warm glow-water. A scorched navigation console ticks under an open panel. Zeke coughs on the hull while scan moss vibrates along the seams.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -8197,19 +8197,19 @@
         "requires_milestones": [
           "ms_w2_mq01_complete"
         ],
-        "description": "The escape pod has cooled in the glow-water. Zeke is stable, the navigation console is dead, and the scan moss registers a clean signal inland."
+        "description": "The escape pod wreckage has cooled in the glow-water. Zeke is stable, the navigation console is dead, and the scan moss registers a clean signal inland."
       },
       {
         "requires_milestones": [
           "ms_w2_flora_moss_scanned"
         ],
-        "description": "The escape pod sits wedged into the swamp silt, trailing steam into the humid air. The acoustic moss has been surveyed, and the navigation console remains active inside."
+        "description": "The escape pod wreckage sits wedged into the swamp silt and glow-water, trailing steam into the humid air. The acoustic moss has been surveyed, and the navigation console remains active inside."
       },
       {
         "requires_milestones": [
           "ms_w2_pod_examined"
         ],
-        "description": "The escape pod sits wedged into the swamp silt, trailing steam into the humid air. The impact telemetry has been extracted from the dark navigation console."
+        "description": "The escape pod wreckage sits wedged into the swamp silt and glow-water, trailing steam into the humid air. The impact telemetry has been extracted from the dark navigation console. Scan moss vibrates along the hull seams."
       }
     ]
   },
@@ -8256,7 +8256,7 @@
         "requires_milestones": [
           "ms_w2_zeke_stabilized"
         ],
-        "description": "The cramped interior of the escape pod smells of ozone and scorched wire. Zeke rests against the reinforced bulkhead, breathing steadily."
+        "description": "The cramped interior of the escape pod smells of ozone and scorched wire. The dented storage locker hangs open beside Zeke, who rests against the reinforced bulkhead, breathing steadily."
       }
     ]
   },
@@ -8298,7 +8298,7 @@
         "requires_milestones": [
           "ms_w2_herb_landing_foraged"
         ],
-        "description": "Charred brush and twisted crash debris line the ridge. The starleaf has been harvested, leaving only brittle black stems."
+        "description": "Charred brush and twisted crash debris line the muddy clearing. The starleaf has been harvested, leaving only brittle black stems."
       }
     ]
   },
@@ -8308,7 +8308,7 @@
     "weather": "fog",
     "title": "Overgrown Glade",
     "background_image": "images/rooms/world_2/landing_glade.webp",
-    "description": "A dense grove of giant broadleaf ferns arches overhead, filtering the dim sky into a green haze. Luminous mushrooms grow in thick clumps along a decaying log.",
+    "description": "A dense grove of giant ferns forms a broadleaf canopy overhead, filtering the dim sky into a green haze. Luminous mushrooms grow in thick clumps along a decaying log.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -8340,7 +8340,7 @@
         "requires_milestones": [
           "ms_w2_herb_glade_foraged"
         ],
-        "description": "A quiet mossy clearing lit by dim bioluminescence. The harvested mushroom stalks fade back into the dark moss."
+        "description": "A quiet mossy clearing beneath a broadleaf canopy, lit by dim bioluminescence. The harvested mushroom stalks fade back into the dark moss."
       }
     ]
   },
@@ -8445,7 +8445,7 @@
         "requires_milestones": [
           "ms_w2_conduits_collected"
         ],
-        "description": "A muddy slope littered with debris from the crash. The superconducting power conduits have been salvaged."
+        "description": "A muddy slope littered with debris from the crash, including a cargo panel wedged in the soil. The superconducting power conduits have been salvaged."
       }
     ]
   },
@@ -8490,7 +8490,7 @@
         "requires_milestones": [
           "ms_w2_herb_reeds_foraged"
         ],
-        "description": "Slow freshwater pools ripple beneath the canopy. The harvested reed stalks sway gently in the stream current."
+        "description": "Freshwater collects in wide, still basins beneath the canopy. The harvested reed stalks sway gently where the stream enters."
       }
     ]
   },
@@ -8500,7 +8500,7 @@
     "weather": "fog",
     "title": "Resonant Sedge",
     "background_image": "images/rooms/world_2/stream_wetlands.webp",
-    "description": "Thick marshes filled with glowing reeds. The wind passing through the reeds creates a low, musical whisper that seems to rise directly from the damp soil.",
+    "description": "Thick marshes filled with glowing, wind-sung reeds. Their low, musical whisper seems to rise directly from the damp soil. An Aethel spore warning marks amber sacs along the path.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -8533,7 +8533,7 @@
     "weather": "fog",
     "title": "Crystalline Flats",
     "background_image": "images/rooms/world_2/stream_flats.webp",
-    "description": "A wide, sandy delta where the stream spreads thin. The crystalline sand catch the blue light of the water, shimmering and vibrating with a faint hum when stepped on.",
+    "description": "A wide, sandy delta where the stream spreads thin over a half-sunken causeway. The crystalline sand catches the blue light of the water, shimmering and vibrating with a faint hum when stepped on.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -8601,7 +8601,7 @@
     "weather": "fog",
     "title": "Beach Transition",
     "background_image": "images/rooms/world_2/stream_tidepools.webp",
-    "description": "The stream widens into brackish coastal pools. A tidepool crawler is trapped near the shallow margins where star-shaped crystals settle.",
+    "description": "The stream widens into brackish coastal pools. A tidepool crawler is trapped near the shallow margins where star crystals settle.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -8633,7 +8633,7 @@
         "requires_milestones": [
           "ms_w2_meat_tidepool_foraged"
         ],
-        "description": "Saltwater tidepools carved into black volcanic stone. Clear water laps against empty shells where the crawlers fed."
+        "description": "Saltwater tidepools carved into black volcanic stone. Clear water laps against star crystals and empty shells where the crawlers fed."
       }
     ]
   },
@@ -8643,7 +8643,7 @@
     "weather": "fog",
     "title": "Cavern Entrance",
     "background_image": "images/rooms/world_2/stream_cave_entrance.webp",
-    "description": "A dark cavern opening behind the main waterfall shelf. Wet mist fills the air, and the stone walls are smooth, almost completely covered in dripping moss.",
+    "description": "A dark cavern opens behind a waterfall curtain beneath the main shelf. Wet mist fills the air, and cave glyphs glimmer between patches of dripping moss on the smooth stone walls.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -8675,7 +8675,7 @@
     "weather": "fog",
     "title": "Glow-Moss Cavern",
     "background_image": "images/rooms/world_2/stream_cave_depths.webp",
-    "description": "A quiet cavern chamber lit entirely by thick sheets of glowing blue moss. An echo nest rings the far wall, and the damp stone carries the waterfall in a hollow rhythm.",
+    "description": "A quiet cavern chamber lit blue by thick sheets of glowing moss. A waterproof cargo case rests against the rocks. An echo nest rings the far wall, and the damp stone carries the waterfall in a hollow rhythm.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -8715,7 +8715,7 @@
         "requires_milestones": [
           "ms_w2_meat_cave_foraged"
         ],
-        "description": "A cavern opening where deep seismic hums vibrate through the stone. The echo nest is cleared."
+        "description": "A cavern opening where deep seismic hums vibrate through the stone. Glowing moss lights a waterproof cargo case against the rocks. The echo nest is cleared."
       }
     ]
   },
@@ -8725,7 +8725,7 @@
     "weather": "fog",
     "title": "Waterlogged Tunnel",
     "background_image": "images/rooms/world_2/stream_sunken_passage.webp",
-    "description": "A narrow tunnel where the cavern roof dips close to the glowing water. A current of warm water runs through it, gurgling as it flows toward the beach grotto.",
+    "description": "A narrow tunnel where the cavern roof dips close to the glowing water. A warm current runs past a drowned console, gurgling as it flows toward the beach grotto.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -8757,7 +8757,7 @@
     "weather": "fog",
     "title": "Beach Cliffs",
     "background_image": "images/rooms/world_2/beach_cliffs.webp",
-    "description": "High overlooking cliffs of black basalt. Below, a signal reflection stutters across the glowing shoreline of Tideglass Beach, its warm sands shimmering in the dark.",
+    "description": "High basalt cliffs overlook the beach. Below, a signal reflection stutters across the glowing shoreline of Tideglass Beach, its warm sands shimmering in the dark.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -8790,7 +8790,7 @@
     "weather": "fog",
     "title": "Sandy Cove",
     "background_image": "images/rooms/world_2/beach_cove.webp",
-    "description": "A sheltered, sandy beach protected by tall stone walls. The sand is warm and dry, making it a safe place to set up a campfire and rest.",
+    "description": "A sheltered, sandy beach protected by tall stone walls. The warm sand is dry, making it a safe place to set up a campfire and rest.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -8822,7 +8822,7 @@
     "weather": "fog",
     "title": "Tide Pools",
     "background_image": "images/rooms/world_2/beach_pools.webp",
-    "description": "Glowing tide pools collect in the sand, calm enough to reflect the fog in pale blue sheets. Tide fishing is possible here, scan weeds pulse near the shore, and gather tideglass marks the useful herbs and clean meat Orion wanted.",
+    "description": "Glowing tide pools collect in the sand around luminescent anemones, calm enough to reflect the fog in pale blue sheets. Tide fishing is possible here, scan weeds pulse near the shore, and gather tideglass marks the useful herbs and clean meat Orion wanted.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -8873,7 +8873,7 @@
         "requires_milestones": [
           "ms_w2_flora_weeds_scanned"
         ],
-        "description": "Shallow tidal pools glisten against the volcanic sand. The bioluminescent weeds have been cataloged."
+        "description": "Shallow tidal pools glisten around luminescent anemones against the volcanic sand. The bioluminescent weeds have been cataloged. You can gather tideglass along the shore for Orion's recipe."
       }
     ]
   },
@@ -8883,7 +8883,7 @@
     "weather": "fog",
     "title": "Beached Cargo Wreck",
     "background_image": "images/rooms/world_2/beach_cargo.webp",
-    "description": "A rusted Dominion cargo container lies split open on the sand, its doors torn off. Sea-grass has claimed the interior, but crates of scrap metal are still visible.",
+    "description": "A Dominion cargo container lies split open on the sand, its rusted hull stripped of doors. Sea-grass has claimed the interior, but crates of scrap metal are still visible.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -8915,7 +8915,7 @@
     "weather": "fog",
     "title": "Sea Cavern",
     "background_image": "images/rooms/world_2/beach_cave.webp",
-    "description": "A high-ceilinged cavern carved by the waves. Water drains through fissures in the stone, creating hissing blowholes that spray fine mist into the dark.",
+    "description": "A high-ceilinged cavern carved by the waves. Abandoned bedroll hooks mark a mineral shelter beneath the soot-blackened ceiling. Water drains through fissures in the stone, creating hissing blowholes that spray fine mist into the dark.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -8943,7 +8943,7 @@
     "weather": "fog",
     "title": "Sunken Obelisk",
     "background_image": "images/rooms/world_2/beach_pillar.webp",
-    "description": "A colossal stone obelisk sits half-submerged in the surf. Ancient cymatic engravings cover the obelisk, glowing faintly as the tide rolls over them.",
+    "description": "A colossal stone obelisk sits half-submerged in the surf. Ancient cymatic engravings cover the resonant pillar, glowing faintly as the tide rolls over them.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -8969,7 +8969,7 @@
     "weather": "fog",
     "title": "Hidden Grotto",
     "background_image": "images/rooms/world_2/beach_grotto.webp",
-    "description": "A small, dry alcove hidden behind a basalt pillar. The cave walls are lined with smooth crystal clusters that glow with a cool, steady blue light.",
+    "description": "A small, dry alcove hidden behind a basalt pillar opens beneath sea-worn arches. A cache rests near the waterline, while a bioluminescent prism glows among the smooth crystal clusters lining the cave walls.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9008,7 +9008,7 @@
         "requires_milestones": [
           "ms_w2_grotto_relic_gathered"
         ],
-        "description": "A hidden sea cave lit by glowing anemones. The submerged Architect relic cache has been salvaged."
+        "description": "A hidden sea cave lit by glowing anemones beneath sea-worn arches. The inspected cache holds inert crystals, not the living materials Orion needs. A bioluminescent prism glows among the clusters lining the cave walls."
       }
     ]
   },
@@ -9018,7 +9018,7 @@
     "weather": "fog",
     "title": "Star-Sand Dunes",
     "background_image": "images/rooms/world_2/beach_dunes.webp",
-    "description": "Rolling dunes of fine crystalline sand sparkle in the dim light. A burrowing grazer ripples under the warm sand, and each step rings softly.",
+    "description": "Wind-sculpted ridges of fine crystalline sand sparkle in the dim light. A burrowing grazer ripples under the warm sand, and each step rings softly.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9049,7 +9049,7 @@
         "requires_milestones": [
           "ms_w2_meat_dunes_foraged"
         ],
-        "description": "Sweeping sand dunes facing the ocean breeze. Empty burrow mounds dot the slope where grazers nested."
+        "description": "Wind-sculpted ridges sweep across the sand dunes facing the ocean breeze. Empty burrow mounds dot the slope where grazers nested."
       }
     ]
   },
@@ -9110,7 +9110,7 @@
         "requires_milestones": [
           "ms_w2_flora_ferns_scanned"
         ],
-        "description": "The canopy is covered in giant crystalline ferns that hum in low frequency. The resonant survey readings have been logged."
+        "description": "The canopy is covered in giant crystalline ferns that hum in low frequency. The fern survey readings have been logged; scan spores offers a separate reading, while scavenge remains points to a fallen scout tangled nearby."
       }
     ]
   },
@@ -9203,7 +9203,7 @@
     "weather": "resonance",
     "title": "Poison Hollow",
     "background_image": "images/rooms/world_2/wilds_hollow.webp",
-    "description": "A low-lying hollow filled with a thick, stagnant layer of toxic purple spores. Distress signature beta blinks inside a root cage, and every breath drains guard rapidly.",
+    "description": "A low-lying hollow filled with a thick, stagnant layer of toxic purple spores around an ancient stump. Distress signature beta blinks inside a root cage, and every breath drains guard rapidly.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9235,7 +9235,7 @@
         "requires_milestones": [
           "ms_w2_beacon_beta_traced"
         ],
-        "description": "A sunken depression carpeted with purple moss. Distress signature beta has been traced toward the clearance."
+        "description": "A sunken depression carpeted with purple moss around an ancient stump. Distress signature beta has been traced toward the clearance."
       }
     ]
   },
@@ -9274,7 +9274,7 @@
     "weather": "resonance",
     "title": "Canopy Edge",
     "background_image": "images/rooms/world_2/wilds_overlook.webp",
-    "description": "A sheer ledge looking out over the endless green canopy of Sector 9. The Planetary Shield grid waves are visible, curving across the sky.",
+    "description": "A sheer ledge opens onto a canopy vista of Sector 9's endless green. Luminous waterways trace a canopy route below, while the Planetary Shield grid waves curve across the sky.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9306,7 +9306,7 @@
     "weather": "resonance",
     "title": "Hanging Root Bridge",
     "background_image": "images/rooms/world_2/wilds_canopy_walk.webp",
-    "description": "A natural bridge formed by giant woven tree roots hanging over the gorge. The bridge sways in the wind, creaking like a ship's timber.",
+    "description": "Aerial root bridges woven from giant tree roots hang over the gorge. They sway in the wind, creaking like a ship's timber. A razor-vine shortcut branches into a thorn-choked loop.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9349,7 +9349,7 @@
     "weather": "resonance",
     "title": "Architect Gateway",
     "background_image": "images/rooms/world_2/wilds_archway.webp",
-    "description": "A massive, partially collapsed archway of smooth Architect stone. Faint cymatic glyphs flicker along the edges, pulsing in slow cycles.",
+    "description": "A massive, partially collapsed archway of smooth Architect stone rises above Aethel boundary stones. Faint cymatic glyphs flicker along the edges, pulsing in slow cycles.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -9378,7 +9378,7 @@
     "weather": "resonance",
     "title": "Beast Run",
     "background_image": "images/rooms/world_2/wilds_dense_brush.webp",
-    "description": "A wide trail of trampled vines and broken tree trunks. Giant claw marks are scarred into the bark of the crystalline ferns.",
+    "description": "A wide trail of trampled vines and broken tree trunks skirts a violet toxic bloom. Giant claw marks are scarred into the bark of the crystalline ferns.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9405,7 +9405,7 @@
     "weather": "resonance",
     "title": "Burned Glade",
     "background_image": "images/rooms/world_2/wilds_clearance.webp",
-    "description": "An open clearing burned clean by old energy discharges. The ground is glazed like black glass, and the patrol transceiver pings beneath a collapsed slab.",
+    "description": "An open clearing ringed by shattered trunks and burned clean by old energy discharges. The ground is glazed like black glass, and the patrol transceiver pings beneath a collapsed slab.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9437,7 +9437,7 @@
         "requires_milestones": [
           "ms_w2_transceiver_recovered"
         ],
-        "description": "A wide stone plaza clearing in the jungle. The lost patrol's master transceiver has been secured."
+        "description": "A wide stone plaza clearing in the jungle, ringed by shattered trunks. The lost patrol's master transceiver has been secured."
       }
     ]
   },
@@ -9490,7 +9490,7 @@
     "weather": "resonance",
     "title": "Vine Climb",
     "background_image": "images/rooms/world_2/ridge_climb.webp",
-    "description": "A sheer cliff wall covered in thick, climbable root-vines. The climb is steep, but the roots are strong and offer stable handholds.",
+    "description": "A sheer cliff wall covered in thick, climbable root-vines. A medic satchel hangs snagged among them. The climb is steep, but the roots are strong and offer stable handholds.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9518,7 +9518,7 @@
     "weather": "resonance",
     "title": "Windy Ledges",
     "background_image": "images/rooms/world_2/ridge_ledges.webp",
-    "description": "High stone shelves swept by cold upper-atmosphere wind. The ambient sound of the winds whistling through the gaps forms a low chord.",
+    "description": "High stone shelves swept by cold upper-atmosphere wind. A blue-frond cluster clings to a sheltered crack. The ambient sound of the winds whistling through the gaps forms a low chord.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -9557,7 +9557,7 @@
     "weather": "resonance",
     "title": "Beast Lair Approach",
     "background_image": "images/rooms/world_2/ridge_overhang.webp",
-    "description": "The approach to a massive dark overhang in the cliff face. A heavy, musky scent hangs in the cold air, and deep growls echo.",
+    "description": "The approach to a massive dark overhang in the cliff face, where rain has exposed a weathered mural. A heavy, musky scent hangs in the cold air, and deep growls echo.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9584,31 +9584,31 @@
     "weather": "resonance",
     "title": "Canopy Ridge",
     "background_image": "images/rooms/world_2/canopy_ridge.webp",
-    "description": "A stone shelf stands above the canopy. The outer Shield is a distant ceiling; a rifle barrel tracks the ridge from the brush. Confront stalker before the angle closes.",
+    "description": "A stone shelf stands above the canopy. Look at Shield from beneath its distant ceiling; a rifle barrel tracks the ridge from the brush. Confront stalker before the angle closes.",
     "description_variants": [
       {
         "requires_state": {
           "anchor_drill_complete": true
         },
-        "description": "The Beast is down and the grounding leads are packed. The completed Anchor Drill leaves four separate contact marks in the stone."
+        "description": "The Beast is down and the grounding leads are packed. The completed Anchor Drill leaves four separate contact marks in the stone. Look at Shield above the quiet ridge."
       },
       {
         "requires_state": {
           "beast_defeated": true
         },
-        "description": "The Beast lies still beside Gh0st's unfired command channel. Orion sets a ground lead on the stone for the Anchor Drill."
+        "description": "The Beast lies still beside Gh0st's unfired command channel. Orion sets a ground lead on the stone for the Anchor Drill. Look at Shield above the ledge."
       },
       {
         "requires_state": {
           "hunter_confronted": true
         },
-        "description": "Gh0st lowers his rifle without accepting a command. Brush breaks behind him; Face the Beast before it reaches the ledge."
+        "description": "Gh0st lowers his rifle without accepting a command. Look at Shield above the canopy as brush breaks behind him; Face the Beast before it reaches the ledge."
       },
       {
         "requires_milestones": [
           "ms_w2_mq04_complete"
         ],
-        "description": "A narrow limestone ridge suspended high in the canopy. The heavy mining drill stands securely anchored into the bedrock."
+        "description": "A narrow limestone ridge suspended high in the canopy. The heavy mining drill stands securely anchored into the bedrock. Look at Shield above the treetops."
       }
     ],
     "npcs": [],
@@ -9666,7 +9666,7 @@
     "weather": "resonance",
     "title": "Shield Viewpoint",
     "background_image": "images/rooms/world_2/ridge_viewpoint.webp",
-    "description": "An open observation platform on the edge of the ridge. The Planetary Shield grid is directly visible, pulsing in timed waves.",
+    "description": "An open observation platform on the edge of the ridge offers a clear facility sightline through the green canopy. The Planetary Shield grid is directly visible, pulsing in timed waves.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9730,7 +9730,7 @@
     "weather": "resonance",
     "title": "High Pass",
     "background_image": "images/rooms/world_2/ridge_crevice.webp",
-    "description": "A narrow crevice split into the mountain stone. The walls are so close they block out the wind, creating an eerie, absolute silence.",
+    "description": "A narrow crevice follows a fault line through the mountain stone. A thorn mat conceals a razor-vine cache. The walls are so close they block out the wind, creating an eerie, absolute silence.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9762,7 +9762,7 @@
     "weather": "resonance",
     "title": "Sanctuary Outlook",
     "background_image": "images/rooms/world_2/ridge_plateau.webp",
-    "description": "A high stone plateau directly facing the Temple facades. The stone steps leading to the gateway are worn but stable.",
+    "description": "A high stone plateau directly facing the Temple facades. A ridge overlook cache sits near the edge. The stone steps leading to the gateway are worn but stable.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9802,7 +9802,7 @@
     "weather": "fog",
     "title": "Stone Courtyard",
     "background_image": "images/rooms/world_2/temple_plaza.webp",
-    "description": "A symmetric stone plaza in front of the gate. Geometric lines are carved into the ground, pulsing with a faint blue light.",
+    "description": "A symmetric flagstone courtyard spreads before the gate beneath a processional mural. Geometric lines are carved into the ground, pulsing with a faint blue light.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -9837,7 +9837,7 @@
     "weather": "fog",
     "title": "Outer Guard Post",
     "background_image": "images/rooms/world_2/temple_vestibule.webp",
-    "description": "A ruined outpost containing deactivated Dominion defense turrets. Rust and moss have fused the gears together.",
+    "description": "A ruined outpost containing deactivated Dominion defense turrets and an old sanitation console. Rust and moss have fused the turret gears together.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10010,7 +10010,7 @@
     "weather": "fog",
     "title": "Sanctuary Grand Hall",
     "background_image": "images/rooms/world_2/foyer_grand_hall.webp",
-    "description": "A colossal foyer of clean, ancient geometry. The air is cool and dry, and faint bands of light shimmer along the floor.",
+    "description": "A colossal foyer of clean, ancient geometry surrounds a welcome console. The air is cool and dry, and faint bands of light shimmer along the floor.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10039,7 +10039,7 @@
     "weather": "fog",
     "title": "Left Reliquary",
     "background_image": "images/rooms/world_2/foyer_left_gallery.webp",
-    "description": "A wide alcove showing cracked Architect resonance crystals displayed on stone pedestals. The crystals hum in discord.",
+    "description": "A wide alcove showing cracked Architect resonance crystals displayed on stone pedestals beside a botanical research log. The crystals hum in discord.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -10073,7 +10073,7 @@
     "weather": "fog",
     "title": "Right Archives",
     "background_image": "images/rooms/world_2/foyer_right_gallery.webp",
-    "description": "A gallery lined with stone data columns. The columns show old wave logs and frequency diagrams etched in light.",
+    "description": "A gallery lined with stone data columns and a light-mural procession. The columns show old wave logs and frequency diagrams etched in light.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10100,7 +10100,7 @@
     "weather": "fog",
     "title": "Dominion Outpost",
     "background_image": "images/rooms/world_2/foyer_security_hub.webp",
-    "description": "An abandoned security outpost setup. A console screen glows orange, reporting a breach in the stasis grid.",
+    "description": "An abandoned security outpost. A terminal screen glows orange, reporting a breach in the stasis grid.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10126,7 +10126,7 @@
     "weather": "fog",
     "title": "Hangar Portal",
     "background_image": "images/rooms/world_2/foyer_vault_door.webp",
-    "description": "A heavy blast door blocking access to the hangar bay. Security conduits run from the door frame into the vents.",
+    "description": "A heavy blast door blocking access to the hangar bay bears a security palimpsest of layered warnings. Security conduits run from the door frame into the vents.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10153,7 +10153,7 @@
     "weather": "fog",
     "title": "Maintenance Conduit",
     "background_image": "images/rooms/world_2/conduit_crawlspace.webp",
-    "description": "A dark, cramped ventilation crawlspace filled with bundles of thick optical wires and cooling conduits.",
+    "description": "A dark, cramped ventilation crawlspace filled with bundles of thick optical wires and cooling conduits. Glowing maintenance spores drift from fungus clinging to the warm pipes.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10180,7 +10180,7 @@
     "weather": "fog",
     "title": "T-Junction Wiring",
     "background_image": "images/rooms/world_2/conduit_junction.webp",
-    "description": "A junction point inside the crawlspace. Wire channels split off to the stasis deck and generator breakers.",
+    "description": "A junction point inside the crawlspace. A service map marks wire channels splitting off to the stasis deck and generator breakers.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -10241,7 +10241,7 @@
     "weather": "fog",
     "title": "Access Shaft",
     "background_image": "images/rooms/world_2/conduit_access_shaft.webp",
-    "description": "A vertical access shaft with a rusted ladder. Steam vents from pipes along the shaft walls, making the rungs slick.",
+    "description": "A vertical access shaft with a rusted ladder offers a shaft shortcut into the vents. Steam escapes from pipes along the shaft walls, making the rungs slick.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10317,7 +10317,7 @@
         "requires_milestones": [
           "ms_w2_murals_inspected"
         ],
-        "description": "A soaring gallery lined with vibrating acoustic pillars. The deciphered cymatic murals glow with stable turquoise light."
+        "description": "A soaring gallery lined with vibrating acoustic pillars. The deciphered cymatic murals glow with stable turquoise light above the central relief."
       }
     ]
   },
@@ -10327,7 +10327,7 @@
     "weather": "resonance",
     "title": "Echo Alcoves",
     "background_image": "images/rooms/world_2/hall_echo_alcoves.webp",
-    "description": "Small side alcoves designed for private study. Shifting light waveforms detail how separate minds once held a shared current without dissolving into it.",
+    "description": "Small side alcoves designed for private study. A choir alcove log projects shifting light waveforms, detailing how separate minds once held a shared current without dissolving into it.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10393,7 +10393,7 @@
     "weather": "resonance",
     "title": "Cymatic Basin",
     "background_image": "images/rooms/world_2/hall_reflection_pool.webp",
-    "description": "A circular basin of heavy mineral water. The waves forming on the surface form standing geometric shapes.",
+    "description": "A circular reflection pool holds heavy mineral water. Waves on its surface form standing geometric shapes.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10419,7 +10419,7 @@
     "weather": "resonance",
     "title": "Archive Vault",
     "background_image": "images/rooms/world_2/archive_vault.webp",
-    "description": "A circular archive vault filled with hollow stone cylinders. The cylinders hum softly when touched.",
+    "description": "A circular archive vault filled with hollow stone cylinders. The cylinders hum softly when touched; one bears the Aethel extinction log.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10446,7 +10446,7 @@
     "weather": "resonance",
     "title": "Interface Console",
     "background_image": "images/rooms/world_2/archive_reading_room.webp",
-    "description": "A console room with a glowing interface panel. Old Architect diagnostics flicker in slow wave loops.",
+    "description": "A console room with a glowing research terminal. Old Architect diagnostics flicker across its interface panel in slow wave loops.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10598,19 +10598,19 @@
         "requires_milestones": [
           "ms_w2_mq03_complete"
         ],
-        "description": "Orion's stasis pod hangs open in the circular chamber. The root lattice pulses through the floor as if the ruins are waking up with him."
+        "description": "Orion's stasis pod hangs open in the circular chamber. The root lattice pulses through the floor as if the ruins are waking up with him. A ceiling vent cuts a narrow shadow above the wall."
       },
       {
         "requires_milestones": [
           "ms_w2_roots_scanned"
         ],
-        "description": "A vast circular chamber centered on a suspended stasis cylinder. The deep root lattice has been mapped into your logs."
+        "description": "A vast circular chamber centered on a suspended stasis pod beneath a ceiling vent. The deep root lattice has been mapped into your logs."
       },
       {
         "requires_milestones": [
           "ms_w2_pod_inspected"
         ],
-        "description": "A vast circular chamber centered on a suspended stasis cylinder. The slumbering Architect's bio-readings are logged."
+        "description": "A vast circular chamber centered on a suspended stasis cylinder beneath a ceiling vent. The slumbering Architect's bio-readings are logged, while a root lattice pulses through cracks in the floor."
       }
     ]
   },
@@ -10745,7 +10745,7 @@
         "requires_milestones": [
           "ms_w2_stasis_overview_read"
         ],
-        "description": "The viewing balcony's overview remains projected over the stasis deck: memory, pressure, and return, each ring with a role instead of a random pitch."
+        "description": "The viewing balcony's stasis mural overview remains projected over the deck: memory, pressure, and return, each ring with a role instead of a random pitch."
       }
     ]
   },
@@ -10882,7 +10882,7 @@
     "weather": "fog",
     "title": "Source Dynamo",
     "background_image": "images/rooms/world_2/power_turbine.webp",
-    "description": "A massive dynamo spinning in a cylinder of glowing blue fluid, generating intense resonance.",
+    "description": "A massive dynamo spins in a cylinder of glowing blue fluid, generating intense resonance. A turbine inscription runs along the dynamo housing.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10948,7 +10948,7 @@
     "weather": "fog",
     "title": "Generator Controls",
     "background_image": "images/rooms/world_2/power_breaker_deck.webp",
-    "description": "A breaker bank hangs over the dynamo lines in a staggered emergency pattern. Each switch starves a different band of the gate's howl, but the living circuit needs somewhere safe to bleed first.",
+    "description": "The generator breakers hang over the dynamo lines beside a bus bar array in a staggered emergency pattern. Each switch starves a different band of the gate's howl, but the living circuit needs somewhere safe to bleed first.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10980,13 +10980,13 @@
         "requires_milestones": [
           "ms_w2_source_breakers_starved"
         ],
-        "description": "The generator breakers sit in a staggered emergency pattern. The gate circuit still has shape, but it no longer has enough power to lash out."
+        "description": "The generator breakers sit beside the bus bar array in a staggered emergency pattern. The gate circuit still has shape, but it no longer has enough power to lash out."
       },
       {
         "requires_milestones": [
           "ms_w2_breakers_overloaded"
         ],
-        "description": "A heavy industrial catwalk above the power turbines. The overloaded breakers hum quietly in bypass mode."
+        "description": "A heavy industrial catwalk above the power turbines and bus bar array. The overloaded breakers hum quietly in bypass mode."
       }
     ]
   },
@@ -11253,7 +11253,7 @@
         "requires_milestones": [
           "ms_w2_astra_inspected"
         ],
-        "description": "A cavernous launch hangar housing the ancient Astra shuttle. The flight bridge console hums with active telemetry."
+        "description": "A cavernous launch hangar housing the ancient Astra shuttle in its launch cradle. The flight bridge console displays diagnostic telemetry, while the bridge relic waits on the central dais."
       }
     ]
   },
@@ -11263,7 +11263,7 @@
     "weather": "fog",
     "title": "Maintenance Catwalks",
     "background_image": "images/rooms/world_2/hangar_scaffolding.webp",
-    "description": "catwalks suspended around the Astra's charred hull. Cables run from the scaffold into the ship.",
+    "description": "Catwalks suspended around the Astra's charred hull lead to a hangar overlook. Cables run from the scaffold into the ship.",
     "npcs": [],
     "items": [],
     "enemies": [],

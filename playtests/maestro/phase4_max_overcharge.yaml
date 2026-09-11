@@ -18,7 +18,16 @@ appId: com.junewiregames.starborn.prealpha
 - tapOn: "Abilities"
 - assertVisible: ".*MAX OVERCHARGE:.*80% Power.*Guaranteed CRIT!.*"
 - takeScreenshot: phase4-max-overcharge-list
+- scrollUntilVisible:
+    element: "Details for Arc Tether"
+    direction: DOWN
+    timeout: 15000
 - tapOn: "Details for Arc Tether"
 - assertVisible: ".*Overcharge Active.*Level 3.*"
+- takeScreenshot: phase4-max-overcharge-details-top
+- scrollUntilVisible:
+    element: "1 turn after use.*Overcharge.*"
+    direction: DOWN
+    timeout: 15000
 - assertVisible: "1 turn after use.*Overcharge.*"
 - takeScreenshot: phase4-max-overcharge-details

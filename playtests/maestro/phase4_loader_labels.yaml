@@ -30,5 +30,12 @@ appId: com.junewiregames.starborn.prealpha
 - takeScreenshot: phase4-ability-summary
 - tapOn: "Details for Arc Tether"
 - assertVisible: "Choose one enemy"
-- assertVisible: "2 turns after use"
+- scrollUntilVisible:
+    element: "2 turns after use"
+    direction: DOWN
+    timeout: 15000
+- scrollUntilVisible:
+    element: "Combat traits"
+    direction: DOWN
+    timeout: 15000
 - takeScreenshot: phase4-ability-details

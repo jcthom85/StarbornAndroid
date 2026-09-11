@@ -1,0 +1,8 @@
+appId: com.junewiregames.starborn.prealpha
+---
+# Precondition: system font_scale 2.0; restore original externally on completion/failure.
+# Uses unsaved debug sessions; no save-slot or app-data reset.
+- runFlow: phase4_max_overcharge.yaml
+- runFlow: phase4_overcharge_detail_scroll.yaml
+- tapOn: "Back to Abilities"
+- runFlow: phase4_assert_crowded_list.yaml

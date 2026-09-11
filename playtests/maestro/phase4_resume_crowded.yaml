@@ -1,0 +1,6 @@
+appId: com.junewiregames.starborn.prealpha
+---
+# Checkpoint helper: Nova command menu at maximum charge; no launch/reset.
+- tapOn: "Abilities"
+- assertVisible: ".*MAX OVERCHARGE:.*80% Power.*Guaranteed CRIT!.*"
+- runFlow: phase4_assert_crowded_list.yaml

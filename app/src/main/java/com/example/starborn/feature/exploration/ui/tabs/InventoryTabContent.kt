@@ -6,6 +6,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -161,11 +164,14 @@ private fun InventoryCarouselToggle(
     borderColor: Color,
     isGearTutorialActive: Boolean = false
 ) {
+    val largeText = LocalDensity.current.fontScale >= 1.5f
+    val scrollState = rememberScrollState()
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .border(BorderStroke(1.dp, borderColor.copy(alpha = 0.4f)), RoundedCornerShape(50.dp))
-            .padding(6.dp),
+            .padding(6.dp)
+            .then(if (largeText) Modifier.horizontalScroll(scrollState) else Modifier),
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         InventoryCarouselButton(
@@ -173,7 +179,7 @@ private fun InventoryCarouselToggle(
             selected = current == InventoryCarouselPage.SUPPLIES,
             onClick = { onSelect(InventoryCarouselPage.SUPPLIES) },
             accentColor = accentColor,
-            modifier = Modifier.weight(1f)
+            modifier = if (largeText) Modifier.padding(horizontal = 10.dp) else Modifier.weight(1f)
         )
         InventoryCarouselButton(
             label = "Gear",
@@ -181,14 +187,14 @@ private fun InventoryCarouselToggle(
             isTutorialBeacon = isGearTutorialActive && current != InventoryCarouselPage.GEAR,
             onClick = { onSelect(InventoryCarouselPage.GEAR) },
             accentColor = accentColor,
-            modifier = Modifier.weight(1f)
+            modifier = if (largeText) Modifier.padding(horizontal = 10.dp) else Modifier.weight(1f)
         )
         InventoryCarouselButton(
             label = "Key Items",
             selected = current == InventoryCarouselPage.KEY_ITEMS,
             onClick = { onSelect(InventoryCarouselPage.KEY_ITEMS) },
             accentColor = accentColor,
-            modifier = Modifier.weight(1f)
+            modifier = if (largeText) Modifier.padding(horizontal = 10.dp) else Modifier.weight(1f)
         )
     }
 }

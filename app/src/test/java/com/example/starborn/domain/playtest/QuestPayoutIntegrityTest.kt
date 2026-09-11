@@ -15,6 +15,87 @@ import org.junit.Test
 class QuestPayoutIntegrityTest {
     private val reader = AssetJsonReader(DesktopAssetProvider(), MoshiProvider.instance)
 
+    @Test fun `scanning beach weeds does not prevent the separate tideglass quest payout`() {
+        val events = reader.readList<GameEvent>("events.json").filter {
+            it.trigger.action in setOf("w2_sq01_scan_weeds", "w2_sq03_gather_tideglass")
+        }
+        assertEquals(2, events.size)
+        val store = GameSessionStore().apply {
+            startQuest("w2_sq01")
+            startQuest("w2_sq03")
+            setQuestTaskCompleted("w2_sq03", "visit_beach", true)
+        }
+        val grants = mutableMapOf<String, Int>()
+        val manager = EventManager(events, store, EventHooks(onGiveItem = { item, qty ->
+            grants[item] = grants.getOrDefault(item, 0) + qty
+        }))
+        manager.handleTrigger("player_action", EventPayload.Action("w2_sq01_scan_weeds"))
+        assertTrue("ms_w2_flora_weeds_scanned" in store.state.value.completedMilestones)
+        assertTrue(grants.isEmpty())
+        manager.handleTrigger("player_action", EventPayload.Action("w2_sq03_gather_tideglass"))
+        val expected = mapOf("herb" to 1, "beast_meat" to 1, "schematic_source_resin" to 1)
+        assertEquals(expected, grants)
+        manager.handleTrigger("player_action", EventPayload.Action("w2_sq03_gather_tideglass"))
+        assertEquals(expected, grants)
+    }
+
+    @Test fun `inspecting grotto cache leaves the separate prism reward unsolved`() {
+        val room = reader.readList<Room>("rooms.json").single { it.id == "sector9_beach_grotto" }
+        val prism = room.actions.single { it["name"] == "bioluminescent prism" }
+        val puzzle = reader.readList<TuningPuzzle>("tuning_puzzles.json").single { it.id == prism["puzzle_id"] }
+        val events = reader.readList<GameEvent>("events.json")
+        val store = GameSessionStore()
+        val grants = mutableMapOf<String, Int>()
+        val manager = EventManager(events.filter {
+            it.trigger.action in setOf("w2_sq03_gather_relic", puzzle.successEvent)
+        }, store, EventHooks(onGiveItem = { item, qty ->
+            grants[item] = grants.getOrDefault(item, 0) + qty
+        }))
+        manager.handleTrigger("player_action", EventPayload.Action("w2_sq03_gather_relic"))
+        assertTrue("ms_w2_grotto_relic_gathered" in store.state.value.completedMilestones)
+        val solved = prism["requires_milestone_not_set"] as String
+        assertFalse(solved in store.state.value.completedMilestones)
+        assertTrue(grants.isEmpty())
+        // Exercise the authored success event, not the rendered slider puzzle.
+        val success = requireNotNull(puzzle.successEvent)
+        manager.handleTrigger("player_action", EventPayload.Action(success))
+        assertTrue(solved in store.state.value.completedMilestones)
+        assertEquals(mapOf("relic_mod_biolum_focus" to 1), grants)
+        manager.handleTrigger("player_action", EventPayload.Action(success))
+        assertEquals(mapOf("relic_mod_biolum_focus" to 1), grants)
+    }
+
+    @Test fun `world two film caches grant once including after session restore`() {
+        val events = reader.readList<GameEvent>("events.json")
+        val rooms = reader.readList<Room>("rooms.json").associateBy { it.id }
+        val caches = listOf(
+            Triple("sector9_stream_cave_depths", "waterproof cargo case", "vhs_tape_03"),
+            Triple("sector9_ridge_plateau", "ridge overlook cache", "vhs_tape_04")
+        )
+        caches.forEach { (roomId, actionName, itemId) ->
+            val action = rooms.getValue(roomId).actions.single { it["name"] == actionName }
+            val eventId = action["action_event"] as String
+            val event = events.single { it.id == eventId }
+            assertFalse("$eventId must be one-shot", event.repeatable)
+            val store = GameSessionStore()
+            fun manager(target: GameSessionStore) = EventManager(listOf(event), target, EventHooks(
+                onGiveItem = { item, qty -> target.setInventory(target.state.value.inventory +
+                    (item to (target.state.value.inventory.getOrDefault(item, 0) + qty))) }
+            ))
+            val manager = manager(store)
+            manager.handleTrigger("player_action", EventPayload.Action(eventId))
+            val awarded = store.state.value
+            assertEquals(mapOf(itemId to 1), awarded.inventory)
+            assertTrue(eventId in awarded.completedEvents)
+            manager.handleTrigger("player_action", EventPayload.Action(eventId))
+            assertEquals(awarded.inventory, store.state.value.inventory)
+            // In-memory restore verifies replay protection, not save-file I/O or UI.
+            val restored = GameSessionStore().apply { restore(awarded) }
+            manager(restored).handleTrigger("player_action", EventPayload.Action(eventId))
+            assertEquals(awarded.inventory, restored.state.value.inventory)
+        }
+    }
+
     private fun flatten(actions: List<EventAction>): List<EventAction> = actions.flatMap {
         listOf(it) + flatten(it.onComplete.orEmpty()) + flatten(it.`do`.orEmpty()) + flatten(it.elseDo.orEmpty())
     }
