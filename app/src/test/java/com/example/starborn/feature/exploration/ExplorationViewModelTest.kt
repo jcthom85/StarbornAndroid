@@ -179,8 +179,11 @@ class ExplorationViewModelTest {
         method.invoke(viewModel)
 
         val state = sessionStore.state.value
-        assertEquals(120, state.partyMemberHp["nova"])
-        assertEquals(150, state.partyMemberHp["zeke"])
+        assertEquals(200, state.partyMemberHp["nova"])
+        assertEquals(230, state.partyMemberHp["zeke"])
+        // Resting again must not reduce vitality-derived combat health.
+        method.invoke(viewModel)
+        assertEquals(state.partyMemberHp, sessionStore.state.value.partyMemberHp)
     }
 
     @Test

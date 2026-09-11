@@ -17,13 +17,7 @@
         "types_in": [],
         "subtypes_in": []
       },
-      "gates": {
-        "basic_vest": {
-          "milestones": [
-            "MET_MECHANIC"
-          ]
-        }
-      }
+      "gates": {}
     },
     "buys": {
       "accept_types": [

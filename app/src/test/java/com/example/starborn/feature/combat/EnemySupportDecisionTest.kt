@@ -49,6 +49,32 @@ class EnemySupportDecisionTest {
         getPlayerIdList = { listOf(nova.id) }
     )
 
+    @Test fun `party ration ignores single selection heals living allies and consumes once`() {
+        val reader = AssetJsonReader(DesktopAssetProvider(), MoshiProvider.instance)
+        val ration = reader.readList<com.example.starborn.domain.model.Item>("items.json").single { it.id == "ration_pack" }
+        val zeke = nova.copy(id = "zeke")
+        val orion = nova.copy(id = "orion")
+        val ghost = nova.copy(id = "gh0st")
+        val actors = listOf(nova, zeke, orion, ghost, core)
+        val state = CombatState(turnOrder = actors.map { TurnSlot(it.id, 5) }, activeTurnIndex = 0,
+            combatants = actors.associate { it.id to CombatantState(it,
+                hp = when (it.id) { "gh0st" -> 0; "orion" -> 190; else -> 100 }, stability = 100) })
+        var consumed = 0
+        val processor = CombatActionProcessor(CombatEngine(statusRegistry = registry), registry, { null },
+            consumeItem = { id ->
+                assertEquals(ration.id, id)
+                consumed++
+                com.example.starborn.domain.inventory.ItemUseResult.Restore(ration, requireNotNull(ration.effect?.restoreHp))
+            })
+        val after = processor.execute(state, CombatAction.ItemUse("nova", ration.id, "nova")) { CombatReward() }
+        assertEquals(1, consumed)
+        assertEquals(135, after.combatants.getValue("nova").hp)
+        assertEquals(135, after.combatants.getValue("zeke").hp)
+        assertEquals(200, after.combatants.getValue("orion").hp)
+        assertEquals(0, after.combatants.getValue("gh0st").hp)
+        assertEquals(100, after.combatants.getValue(core.id).hp)
+    }
+
     @Test fun `wounded support AI repairs itself and processor heals the enemy`() {
         val state = scenario()
         val action = ai().selectEnemyAction(state, state.combatants.getValue(core.id), null) { }
@@ -66,6 +92,42 @@ class EnemySupportDecisionTest {
         val ai = ai()
         assertFalse(ai.canEnemyUseSkill(core.id, repair, state))
         assertFalse(ai.selectEnemyAction(state, state.combatants.getValue(core.id), null) { } is CombatAction.SkillUse)
+    }
+
+    @Test fun `Titan vents after either heavy attack and exposes only itself`() {
+        val skills = assets.loadSkills().associateBy { it.id }
+        val titan = core.copy(id = "titan_walker_boss", skills = listOf("missile_barrage", "titan_stomp", "vent_exposure"))
+        for (previous in listOf("missile_barrage", "titan_stomp")) {
+            val state = CombatState(turnOrder = listOf(TurnSlot(titan.id, 10), TurnSlot(nova.id, 5)),
+                activeTurnIndex = 0, combatants = mapOf(titan.id to CombatantState(titan, hp = 200, stability = 100),
+                    nova.id to CombatantState(nova, hp = 200, stability = 100)))
+            val ai = CombatEnemyAI(skills, assets.loadEnemies().associateBy { it.id }, registry, CombatAiWeights(),
+                isSupportSkill = { false }, skillStatusDefinitions = { emptyList() },
+                determineSkillTargeting = { SkillTargeting.SINGLE_ENEMY }, checkSkillConditions = { _, _, _, _ -> true },
+                enemyBrains = mutableMapOf(), enemyActionHistory = mutableMapOf(titan.id to ArrayDeque(listOf(previous))),
+                enemySkillUsageCounts = mutableMapOf(), getPlayerIdList = { listOf(nova.id) })
+            val action = ai.selectEnemyAction(state, state.combatants.getValue(titan.id), null) {}
+            assertEquals(CombatAction.SkillUse(titan.id, "vent_exposure", listOf(titan.id)), action)
+            val processor = CombatActionProcessor(CombatEngine(statusRegistry = registry), registry, skills::get,
+                random = SeededCombatRandom(1))
+            val after = processor.execute(state, action) { CombatReward() }
+            assertTrue(after.combatants.getValue(titan.id).statusEffects.any { it.id == "radiators_exposed" && it.remainingTurns > 0 })
+            assertTrue(after.combatants.getValue(nova.id).statusEffects.isEmpty())
+            assertEquals(200, after.combatants.getValue(nova.id).hp)
+        }
+    }
+
+    @Test fun `radiator exposure reduces physical defense with identical damage rolls`() {
+        val attacker = CombatantState(nova, hp = 200, stability = 100)
+        val target = CombatantState(core, hp = 200, stability = 100)
+        fun damage(defender: CombatantState): Int {
+            val processor = CombatActionProcessor(CombatEngine(statusRegistry = registry), registry, { null },
+                random = SeededCombatRandom(31))
+            val method = CombatActionProcessor::class.java.getDeclaredMethod("basePhysicalDamage",
+                CombatantState::class.java, CombatantState::class.java).apply { isAccessible = true }
+            return method.invoke(processor, attacker, defender) as Int
+        }
+        assertTrue(damage(target.copy(statusEffects = listOf(StatusEffect("radiators_exposed", 1)))) > damage(target))
     }
 
     @Test fun `support AI does not waste repair at full health`() {

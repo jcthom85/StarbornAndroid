@@ -158,7 +158,7 @@ private const val PIT_ENTRY_ROOM_ID = "pit_L1_landing"
 
 
 
-private class SystemTutorialCoordinator(
+internal class SystemTutorialCoordinator(
     private val tutorialManager: TutorialRuntimeManager,
     private val scope: CoroutineScope,
     private val tutorialsEnabled: () -> Boolean = { true }
@@ -181,6 +181,11 @@ private class SystemTutorialCoordinator(
     }
 
     private fun playNow(sceneId: String?, context: String?, onComplete: () -> Unit): Boolean {
+        // Settings can change while a system event is waiting to show its hint.
+        if (!tutorialsEnabled()) {
+            onComplete()
+            return false
+        }
         val normalizedScene = sceneId?.takeIf { it.isNotBlank() }
         if (normalizedScene != null) {
             val played = tutorialManager.playScript(
@@ -948,12 +953,16 @@ class ExplorationViewModel(
 
     private fun handleRestParty() = handleRestParty(null)
 
+    private val healthSkillNodes by lazy { worldAssets.loadSkillNodes() }
+
     private fun handleRestParty(message: String?) {
         val state = sessionStore.state.value
         val partyIds = state.partyMembers.ifEmpty { listOfNotNull(state.playerId) }
         var restoredAmount = 0
         val restoredHp = partyIds.mapNotNull { memberId ->
-            val maxHp = charactersById[memberId]?.hp?.takeIf { it > 0 } ?: return@mapNotNull null
+            val character = charactersById[memberId] ?: return@mapNotNull null
+            val maxHp = com.example.starborn.domain.combat.PartyHealth.maxHp(
+                character, state, inventoryService::catalogItem, healthSkillNodes)
             val currentHp = state.partyMemberHp[memberId] ?: maxHp
             restoredAmount += (maxHp - currentHp).coerceAtLeast(0)
             memberId to maxHp
@@ -3484,7 +3493,7 @@ class ExplorationViewModel(
             state.copy(settings = state.settings.copy(tutorialsEnabled = enabled))
         }
         if (!enabled) {
-            tutorialManager.cancelAllScheduled()
+            tutorialManager.cancelAllTutorials()
         }
         viewModelScope.launch(dispatchers.io) {
             userSettingsStore.setTutorialsEnabled(enabled)
@@ -4172,10 +4181,7 @@ class ExplorationViewModel(
     }
 
     private fun isArmorForCharacter(item: Item, characterId: String): Boolean {
-        val expectedType = GearRules.allowedArmorTypeFor(characterId) ?: return true
-        val armorType = item.type.trim().lowercase(Locale.getDefault())
-        if (!GearRules.isArmorType(armorType)) return false
-        return armorType == expectedType
+        return GearRules.matchesSlot(item.equipment, "armor", characterId, item.type)
     }
 
     fun onTinkeringClosed() {

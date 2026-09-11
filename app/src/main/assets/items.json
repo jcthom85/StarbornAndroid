@@ -1,5 +1,29 @@
 [
   {
+    "id": "pure_iron",
+    "name": "Pure Iron",
+    "description": "Refined Foundry iron recovered from the service airlock's maintenance reserve. Used to restore Slag Catcher and forge a Thermite Core Mod.",
+    "type": "component",
+    "value": 40,
+    "rarity": "rare"
+  },
+  {
+    "id": "composite_plate",
+    "name": "Composite Plate",
+    "description": "Lightweight hull laminate salvaged at the orbital executive dock. Used to restore Orbital Defense and assemble an Orbital Deflector Mod.",
+    "type": "component",
+    "value": 55,
+    "rarity": "rare"
+  },
+  {
+    "id": "astral_thread",
+    "name": "Astral Thread",
+    "description": "Resonant strands gathered in the Source Echo Mines. Used to restore Harmonic Pulse and weave an Astral Weave Mod.",
+    "type": "component",
+    "value": 70,
+    "rarity": "rare"
+  },
+  {
     "id": "hyperion_logic_board",
     "name": "Hyperion Logic Board",
     "description": "The intact amber logic board from a pre-Dominion arcade cabinet. Its hand-soldered score bus still remembers thousands of vanished lunch breaks.",
@@ -1770,6 +1794,7 @@
     "type": "component",
     "value": 32,
     "buy_price": 64,
+    "resale_value": 40,
     "rarity": "uncommon"
   },
   {
@@ -2794,6 +2819,7 @@
     "type": "mod",
     "value": 300,
     "buy_price": 600,
+    "resale_value": 80,
     "rarity": "rare",
     "equipment": {
       "slot": "mod",

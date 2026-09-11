@@ -24,6 +24,14 @@ class DesktopAssetProvider(
     )
 ) : AssetProvider {
 
+    // Development filesystem listing; packaged classpath/JAR enumeration is not supported.
+    override fun list(dir: String): List<String> {
+        val cleanPath = dir.removePrefix("/")
+        return devAssetDirs.flatMap { root ->
+            File(root, cleanPath).list()?.toList().orEmpty()
+        }.distinct().sorted()
+    }
+
     override fun open(path: String): InputStream? {
         if (path.isBlank()) return null
         val cleanPath = path.removePrefix("/")

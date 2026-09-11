@@ -965,7 +965,9 @@ class CombatActionProcessor(
         fallback: Targeting
     ): List<String> {
         val actorState = state.combatants[action.actorId]
-        val explicit = listOfNotNull(action.targetId).takeUnless { it.isEmpty() } ?: emptyList()
+        // Party-wide support items keep their authored scope even when the UI
+        // supplies the acting/selected character as a target.
+        val explicit = if (fallback == Targeting.ALLY) emptyList() else listOfNotNull(action.targetId)
         return actionTargets(state, actorState, explicit, fallback)
     }
 
@@ -1044,7 +1046,8 @@ class CombatActionProcessor(
         target: CombatantState
     ): Int {
         val attack = CombatFormulas.attackPower(attacker.effectiveStat("strength"))
-        val defense = CombatFormulas.defensePower(target.effectiveStat("vitality"))
+        val defense = (CombatFormulas.defensePower(target.effectiveStat("vitality")) *
+            defenseMultiplier(target)).roundToInt()
         val variance = random.nextInt(PHYSICAL_VARIANCE_MIN, PHYSICAL_VARIANCE_MAX + 1)
         val weaponDamage = rollWeaponDamage(attacker)
         val unarmedBonus = if (attacker.combatant.weapon == null) kotlin.math.max(3, attacker.effectiveStat("strength")) else 0
@@ -1057,6 +1060,10 @@ class CombatActionProcessor(
         val max = weapon.maxDamage.coerceAtLeast(min)
         if (max <= 0) return 0
         return random.nextInt(min, max + 1)
+    }
+
+    private fun defenseMultiplier(target: CombatantState): Double = target.statusEffects.fold(1.0) { total, status ->
+        total * (statusRegistry.definition(status.id)?.defenseMultiplier ?: 1.0).coerceAtLeast(0.0)
     }
 
     private fun CombatantState.accuracyRating(): Double {

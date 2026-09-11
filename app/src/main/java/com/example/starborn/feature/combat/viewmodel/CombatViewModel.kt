@@ -58,7 +58,8 @@ import com.example.starborn.domain.telemetry.NoOpPlaytestTelemetry
 import com.example.starborn.domain.telemetry.PlaytestTelemetry
 import com.example.starborn.domain.theme.defaultWeatherForEnvironment
 import java.util.Locale
-import kotlin.random.Random
+import com.example.starborn.domain.combat.CombatRandom
+import com.example.starborn.domain.combat.DefaultCombatRandom
 import kotlin.math.roundToInt
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -101,7 +102,8 @@ class CombatViewModel(
     enemyIds: List<String>,
     private val tutorialsEnabled: Boolean = true,
     private val telemetry: PlaytestTelemetry = NoOpPlaytestTelemetry,
-    private val elapsedRealtime: () -> Long = SystemClock::elapsedRealtime
+    private val elapsedRealtime: () -> Long = SystemClock::elapsedRealtime,
+    private val random: CombatRandom = DefaultCombatRandom
 ) : ViewModel() {
 
     val player: Player?
@@ -185,6 +187,8 @@ class CombatViewModel(
     private val _selectedEnemies = MutableStateFlow<Set<String>>(emptySet())
     val selectedEnemies: StateFlow<Set<String>> = _selectedEnemies.asStateFlow()
     private val _lungeActorId = MutableStateFlow<String?>(null)
+    private var lungePauseActive = false
+    private var lungeIntroJob: Job? = null
     val lungeActorId: StateFlow<String?> = _lungeActorId.asStateFlow()
     private val _lungeToken = MutableStateFlow(0L)
     val lungeToken: StateFlow<Long> = _lungeToken.asStateFlow()
@@ -393,6 +397,7 @@ class CombatViewModel(
         initializeAtbMeters()
 
         actionProcessor = CombatActionProcessor(
+            random = random,
             engine = combatEngine,
             statusRegistry = statusRegistry,
             skillLookup = { id -> skillById[id] },
@@ -406,6 +411,7 @@ class CombatViewModel(
             }
         )
         enemyAI = CombatEnemyAI(
+            random = random,
             skillById = skillById,
             enemyDefinitions = enemyDefinitions,
             statusRegistry = statusRegistry,
@@ -583,7 +589,7 @@ class CombatViewModel(
     }
 
     private fun triggerMissLunge(targetId: String) {
-        pauseAtbForAnimation()
+        if (_missLungeActorId.value == null) pauseAtbForAnimation()
         _missLungeToken.value = _missLungeToken.value + 1
         _missLungeActorId.value = targetId
     }
@@ -630,31 +636,41 @@ class CombatViewModel(
         style: AttackLungeStyle = AttackLungeStyle.MELEE,
         introDelayMs: Long = 0L
     ) {
-        if (introDelayMs > 0L) {
+        // One visible animation slot owns one pause, even if a newer lunge
+        // supersedes it before the UI finishes the previous token.
+        lungeIntroJob?.cancel()
+        if (!lungePauseActive) {
+            lungePauseActive = true
             pauseAtbForAnimation()
-            viewModelScope.launch {
+        }
+        _lungeToken.value = _lungeToken.value + 1
+        val token = _lungeToken.value
+        if (introDelayMs > 0L) {
+            _lungeActorId.value = null
+            lungeIntroJob = viewModelScope.launch {
                 delay(introDelayMs)
+                if (_lungeToken.value != token) return@launch
                 _lungeStyle.value = style
-                _lungeToken.value = _lungeToken.value + 1
                 _lungeActorId.value = actorId
             }
             return
         }
-        pauseAtbForAnimation()
         _lungeStyle.value = style
-        _lungeToken.value = _lungeToken.value + 1
         _lungeActorId.value = actorId
     }
 
     fun onLungeFinished(token: Long) {
-        if (_lungeToken.value == token) {
+        if (_lungeToken.value == token && lungePauseActive) {
+            lungeIntroJob?.cancel()
+            lungeIntroJob = null
+            lungePauseActive = false
             _lungeActorId.value = null
             resumeAtbForAnimation()
         }
     }
 
     fun onMissLungeFinished(token: Long) {
-        if (_missLungeToken.value == token) {
+        if (_missLungeToken.value == token && _missLungeActorId.value != null) {
             _missLungeActorId.value = null
             resumeAtbForAnimation()
         }
@@ -1028,31 +1044,34 @@ class CombatViewModel(
             resolveActivePlayerId(current)?.let { skillsForPlayer(it) }
         }.orEmpty()
 
-    fun canUseSkill(actorId: String, skill: Skill): Boolean {
-        val state = _state.value ?: return false
+    fun canUseSkill(actorId: String, skill: Skill): Boolean =
+        skillUnavailableReason(actorId, skill) == null
+
+    fun skillUnavailableReason(actorId: String, skill: Skill): String? {
+        val state = _state.value ?: return "Combat unavailable"
         
         // 0. Check Jammed
-        val actorState = state.combatants[actorId] ?: return false
+        val actorState = state.combatants[actorId] ?: return "Character unavailable"
         val isJammed = actorState.statusEffects.any { status ->
             statusRegistry.definition(status.id)?.blockSkills == true
         }
-        if (isJammed) return false
+        if (isJammed) return "Abilities blocked by status"
 
         // 1. Check Cooldown
-        if (actorState.activeCooldowns.getOrDefault(skill.id, 0) > 0) return false
+        if (actorState.activeCooldowns.getOrDefault(skill.id, 0) > 0) return "On cooldown"
         
         val key = "$actorId:${skill.id}"
         
         // 2. Check Usage Limits
         if (skill.usesPerBattle != null) {
             val used = skillUsageCounts.getOrDefault(key, 0)
-            if (used >= skill.usesPerBattle) return false
+            if (used >= skill.usesPerBattle) return "Battle use limit reached"
         }
         
         // 3. Check Conditions (Weapon Requirements, HP thresholds, etc.)
-        if (!checkSkillConditions(actorId, skill, state)) return false
+        if (!checkSkillConditions(actorId, skill, state)) return "Requirements not met - see details"
         
-        return true
+        return null
     }
 
     fun skillCooldownRemaining(actorId: String, skillId: String): Int {
@@ -1985,9 +2004,9 @@ class CombatViewModel(
     private fun initializeAtbMeters() {
         val initial = (playerCombatants + enemyCombatants).associate { combatant ->
             val seed = if (combatant.side == CombatSide.PLAYER || combatant.side == CombatSide.ALLY) {
-                Random.nextDouble(0.4, 0.8)
+                random.nextDouble(0.4, 0.8)
             } else {
-                Random.nextDouble(0.2, 0.6)
+                random.nextDouble(0.2, 0.6)
             }
             combatant.id to seed.toFloat()
         }
@@ -2681,7 +2700,7 @@ class CombatViewModel(
             name = name,
             side = CombatSide.PLAYER,
             stats = StatBlock(
-                maxHp = CombatFormulas.maxHp(hp, adjustedVitality) + bonuses.hpBonus + mealHpBonus,
+                maxHp = com.example.starborn.domain.combat.PartyHealth.maxHp(this, sessionStore.state.value, itemCatalog::findItem, skillNodesById),
                 strength = adjustedStrength,
                 vitality = adjustedVitality,
                 agility = adjustedAgility,
@@ -2887,7 +2906,7 @@ class CombatViewModel(
             dropsToProcess.forEach { drop ->
                 val chance = drop.chance.coerceIn(0.0, 1.0)
                 if (chance <= 0.0) return@forEach
-                if (chance >= 1.0 || Random.nextDouble() <= chance) {
+                if (chance >= 1.0 || random.nextDouble(0.0, 1.0) <= chance) {
                     val qty = rollDropQuantity(drop)
                     if (qty <= 0) return@forEach
                     val canonicalId = canonicalLootId(drop.id)
@@ -2919,7 +2938,7 @@ class CombatViewModel(
         val min = (drop.qtyMin ?: 1).coerceAtLeast(1)
         val max = (drop.qtyMax ?: min).coerceAtLeast(min)
         if (max <= min) return min
-        return Random.nextInt(min, max + 1)
+        return random.nextInt(min, max + 1)
     }
 
     private fun applyVictoryRewards(reward: CombatReward): List<LevelUpSummary> {
@@ -2979,9 +2998,8 @@ class CombatViewModel(
             inventoryService.addItem(drop.itemId, drop.quantity)
         }
 
-        if (reward.drops.isNotEmpty()) {
-            sessionStore.setInventory(inventoryService.snapshot())
-        }
+        // Consumed supplies must persist even when the loot roll awards nothing.
+        sessionStore.setInventory(inventoryService.snapshot())
 
         return levelUps
     }
@@ -3141,7 +3159,7 @@ class CombatViewModel(
         if (aliveIds.isEmpty()) return emptyList()
         if (allowMultiple || aliveIds.size == 1) return aliveIds
         val candidates = aliveIds.filterNot { it == lastEnemyTargetId }.ifEmpty { aliveIds }
-        val chosen = candidates[Random.nextInt(candidates.size)]
+        val chosen = candidates[random.nextInt(0, candidates.size)]
         lastEnemyTargetId = chosen
         return listOf(chosen)
     }

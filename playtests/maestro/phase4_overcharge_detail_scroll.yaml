@@ -1,0 +1,15 @@
+appId: com.junewiregames.starborn.prealpha
+---
+# Checkpoint helper: requires max-charge Arc Tether details already open.
+- assertVisible: "Arc Tether"
+- scrollUntilVisible:
+    element: "1 turn after use.*Overcharge.*"
+    direction: DOWN
+    timeout: 15000
+- takeScreenshot: phase4-max-overcharge-cooldown-scrolled
+- scrollUntilVisible:
+    element: "Combat traits"
+    direction: DOWN
+    timeout: 15000
+- takeScreenshot: phase4-max-overcharge-traits-scrolled
+- assertVisible: "Back to Abilities"

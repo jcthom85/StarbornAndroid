@@ -41,6 +41,26 @@ class UIPromptManager {
         }
     }
 
+    /** Discard obsolete queued prompts without firing callbacks for unseen UI. */
+    fun removeQueued(predicate: (UIPrompt) -> Boolean) {
+        synchronized(lock) {
+            queue.removeIf(predicate)
+            _state.update { it.copy(queue = queue.toList()) }
+        }
+    }
+
+    /** Remove matching UI without treating cancellation as user completion. */
+    fun discardMatching(predicate: (UIPrompt) -> Boolean) {
+        synchronized(lock) {
+            queue.removeIf(predicate)
+            if (_state.value.current?.let(predicate) == true) {
+                promoteNextLocked()
+            } else {
+                _state.update { it.copy(queue = queue.toList()) }
+            }
+        }
+    }
+
     fun dismissItemSequence(sequenceId: String) {
         synchronized(lock) {
             val current = _state.value.current

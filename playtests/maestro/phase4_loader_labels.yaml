@@ -1,0 +1,34 @@
+appId: com.junewiregames.starborn.prealpha
+---
+# Replaces the unsaved debug session, but does not clear app data or save slots.
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- scrollUntilVisible:
+    element: "Tutorial: Gear & Inventory"
+    direction: DOWN
+- tapOn: "Tutorial: Gear & Inventory"
+- extendedWaitUntil:
+    visible: "Scrap Yard"
+    timeout: 30000
+- tapOn: "Engage Faulted Loader"
+- extendedWaitUntil:
+    visible: "When Nova is ready, tap her, choose Abilities, then Arc Tether.*"
+    timeout: 30000
+- takeScreenshot: phase4-loader-briefing
+- tapOn: "Engage"
+- tapOn: "Nova"
+- extendedWaitUntil:
+    visible: "Abilities"
+    timeout: 30000
+- tapOn: "Abilities"
+- assertVisible: "Arc Tether"
+- assertVisible: ".*2 turns after use.*"
+- takeScreenshot: phase4-ability-summary
+- tapOn: "Details for Arc Tether"
+- assertVisible: "Choose one enemy"
+- assertVisible: "2 turns after use"
+- takeScreenshot: phase4-ability-details

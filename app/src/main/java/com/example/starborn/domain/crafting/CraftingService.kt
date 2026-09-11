@@ -15,14 +15,20 @@ class CraftingService(
     val cookingRecipes: List<CookingRecipe> by lazy { craftingDataSource.loadCookingRecipes() }
 
     fun canCook(recipe: CookingRecipe, batch: Int = 1): Boolean {
+        if (batch <= 0 || recipe.ingredients.isEmpty() || recipe.ingredients.values.any { it <= 0 }) return false
         val multiplier = batch.coerceAtLeast(1)
         val requirementCounts = recipe.ingredients.mapKeys { (item, _) -> normalizeToken(item) }
         val inventoryCounts = inventoryTokenCounts()
-        return requirementCounts.all { (id, needed) -> (inventoryCounts[id] ?: 0) >= (needed * multiplier) }
+        val resultId = inventoryService.catalogItem(recipe.result)?.id ?: recipe.result
+        // Reserve the possible masterwork portion before consuming anything.
+        val maxYield = recipe.resultQuantity.coerceAtLeast(1).toLong() * multiplier + 1
+        if (maxYield + (inventoryService.snapshot()[resultId] ?: 0) > Int.MAX_VALUE) return false
+        return requirementCounts.all { (id, needed) -> (inventoryCounts[id] ?: 0).toLong() >= needed.toLong() * multiplier }
     }
 
     fun cookMeal(recipeId: String, chefId: String? = null, batch: Int = 1): CraftingOutcome {
         val recipe = cookingRecipes.find { it.id == recipeId } ?: return CraftingOutcome.Failure("Unknown recipe")
+        if (batch <= 0) return CraftingOutcome.Failure("Invalid batch size")
         val multiplier = batch.coerceAtLeast(1)
         if (!canCook(recipe, multiplier)) return CraftingOutcome.Failure("Missing ingredients")
         val scaledIngredients = recipe.ingredients.mapValues { it.value * multiplier }

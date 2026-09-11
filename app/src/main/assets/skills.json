@@ -1968,9 +1968,9 @@
     ],
     "base_power": 0,
     "scaling": "focus",
-    "cooldown": 3,
+    "cooldown": 0,
     "status_applications": [
-      "exposed"
+      "radiators_exposed"
     ]
   },
   {

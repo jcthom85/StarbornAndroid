@@ -1,5 +1,12 @@
 [
   {
+    "id": "radiators_exposed",
+    "name": "Radiators Exposed",
+    "default_duration": 2,
+    "defense_multiplier": 0.0,
+    "target": "self"
+  },
+  {
     "id": "bleed",
     "name": "Bleeding",
     "default_duration": 3,

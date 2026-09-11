@@ -3,7 +3,7 @@
     "id": "w1_mq01",
     "title": "Wake Up Call",
     "summary": "Quota is due at first cage. Nova needs the cutter cold, grounded, and running outside factory limits before shift.",
-    "description": "Reach Jed, rebuild the Cryo-Inductor, patch the Flux Liner, confirm the governor bypass, and finish a live cutter test.",
+    "description": "Get ready: find Jed and clear the route to his workshop. Repair the cutter: craft the Functional Cryo-Inductor and patch the Flux Liner. Test the bypass: confirm the governor override, then run the live cutter test.",
     "flavor": "Four hours of sleep. One ration. The quota still wants a full shift.",
     "giver": "Jed",
     "hub_id": "hub_1_homestead",
@@ -30,7 +30,7 @@
       {
         "id": "report_to_jed",
         "title": "Report to Jed",
-        "description": "Find Jed in the Pit, then follow his directions to his place.",
+        "description": "Find Jed in his bunk and reach the workshop. After clearing the loader, collect the starter gear and craft the Functional Cryo-Inductor from the menu. Finish by patching the Flux Liner, confirming the governor bypass, and testing the cutter.",
         "tasks": [
           {
             "id": "find_jed",

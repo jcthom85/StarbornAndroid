@@ -1,6 +1,7 @@
 package com.example.starborn.domain.tutorial
 
 import com.example.starborn.domain.prompt.TutorialPrompt
+import com.example.starborn.domain.prompt.ItemGrantedPrompt
 import com.example.starborn.domain.prompt.UIPromptManager
 import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.tutorial.TutorialScript
@@ -21,6 +22,108 @@ import org.mockito.kotlin.whenever
 class TutorialRuntimeManagerTest {
 
     private val dispatcher = StandardTestDispatcher()
+
+    @Test fun shippedDelayedEventScriptsKeepOrderForFastAndSlowReaders() = runTest(dispatcher) {
+        val scripts = TutorialScriptRepository(com.example.starborn.data.assets.AssetJsonReader(
+            com.example.starborn.core.platform.DesktopAssetProvider(),
+            com.example.starborn.core.MoshiProvider.instance
+        ))
+        for (scriptId in listOf("world2_debuffs", "link_unlock")) {
+            for (slowReader in listOf(false, true)) {
+                val prompts = UIPromptManager()
+                val manager = TutorialRuntimeManager(GameSessionStore(), prompts, scripts, backgroundScope)
+                val script = requireNotNull(scripts.script(scriptId))
+                assertEquals(2, script.steps.size)
+                val waitMs = requireNotNull(script.steps[1].delayMs)
+                var completions = 0
+                manager.playScript(scriptId) { completions++ }
+                testScheduler.runCurrent()
+                assertEquals("${scriptId}_step_0", prompts.state.value.current?.id)
+                if (slowReader) {
+                    testScheduler.advanceTimeBy(waitMs + 1)
+                    testScheduler.runCurrent()
+                    assertEquals("${scriptId}_step_0", prompts.state.value.current?.id)
+                }
+                prompts.dismissCurrent()
+                if (!slowReader) {
+                    assertNull(prompts.state.value.current)
+                    testScheduler.advanceTimeBy(waitMs + 1)
+                    testScheduler.runCurrent()
+                }
+                assertEquals("${scriptId}_step_1", prompts.state.value.current?.id)
+                assertEquals(0, completions)
+                prompts.dismissCurrent()
+                assertEquals(1, completions)
+                assertTrue(manager.hasCompleted(scriptId))
+                assertNull(prompts.state.value.current)
+            }
+        }
+    }
+
+    @Test fun cancellingTutorialsPreservesRewardsAndDoesNotCompleteSkippedSteps() = runTest(dispatcher) {
+        val store = GameSessionStore()
+        val prompts = UIPromptManager()
+        val manager = TutorialRuntimeManager(store, prompts, null, backgroundScope)
+        var completions = 0
+        manager.showOnce("active", "Active", onDismiss = { completions++ })
+        manager.showOnce("queued", "Queued", onDismiss = { completions++ })
+        val reward = ItemGrantedPrompt("Medkit", 1)
+        prompts.enqueue(reward)
+        manager.showOnce("delayed", "Delayed", delayMs = 100)
+        manager.cancelAllTutorials()
+        testScheduler.advanceTimeBy(200)
+        testScheduler.runCurrent()
+        assertEquals(reward, prompts.state.value.current)
+        assertTrue(prompts.state.value.queue.isEmpty())
+        assertEquals(0, completions)
+        assertTrue(store.state.value.tutorialCompleted.isEmpty())
+        prompts.dismissCurrent()
+        assertNull(prompts.state.value.current)
+        manager.showOnce("active", "Can return after re-enabling")
+        assertEquals("active", prompts.state.value.current?.id)
+    }
+
+    @Test fun cancellingQueuedTutorialsPreservesActiveReward() = runTest(dispatcher) {
+        val prompts = UIPromptManager()
+        val manager = TutorialRuntimeManager(GameSessionStore(), prompts, null, backgroundScope)
+        val reward = ItemGrantedPrompt("Medkit", 1)
+        prompts.enqueue(reward)
+        manager.showOnce("queued", "Queued")
+        manager.cancelAllTutorials()
+        assertEquals(reward, prompts.state.value.current)
+        prompts.dismissCurrent()
+        assertNull(prompts.state.value.current)
+    }
+
+    @Test fun completingScriptDiscardsQueuedStepsButKeepsUnrelatedPrompt() = runTest(dispatcher) {
+        val store = GameSessionStore()
+        val prompts = UIPromptManager()
+        val manager = TutorialRuntimeManager(store, prompts, null, backgroundScope)
+        var unseenDismissals = 0
+        manager.enqueue(TutorialEntry(key = "first", context = null, message = "First", metadata = mapOf("script_id" to "bag")))
+        manager.enqueue(TutorialEntry(key = "second", context = null, message = "Second", metadata = mapOf("script_id" to "bag")),
+            onDismiss = { unseenDismissals++ })
+        manager.enqueue(TutorialEntry(key = "other", context = null, message = "Other"))
+        manager.completeAndDismiss("BAG")
+        assertEquals("other", prompts.state.value.current?.id)
+        assertTrue(prompts.state.value.queue.isEmpty())
+        assertEquals(0, unseenDismissals)
+        assertTrue(manager.hasCompleted("bag"))
+    }
+
+    @Test fun completingQueuedTutorialDoesNotDismissUnrelatedCurrentPrompt() = runTest(dispatcher) {
+        val store = GameSessionStore()
+        val prompts = UIPromptManager()
+        val manager = TutorialRuntimeManager(store, prompts, null, backgroundScope)
+        manager.enqueue(TutorialEntry(key = "other", context = null, message = "Keep reading"))
+        manager.enqueue(TutorialEntry(key = "finished", context = null, message = "Obsolete"))
+        manager.markCompleted("finished")
+        assertEquals("other", prompts.state.value.current?.id)
+        assertTrue(prompts.state.value.queue.isEmpty())
+        prompts.dismissCurrent()
+        manager.showOnce("finished", "Must not return")
+        assertNull(prompts.state.value.current)
+    }
 
     @Test
     fun showOnceEnqueuesSinglePrompt() = runTest(dispatcher) {

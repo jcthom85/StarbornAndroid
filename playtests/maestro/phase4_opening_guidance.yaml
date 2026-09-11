@@ -1,0 +1,31 @@
+appId: com.junewiregames.starborn.prealpha
+---
+# Retains app data; replaces only the unsaved debug session.
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- scrollUntilVisible:
+    element: "Tutorial: Gear & Inventory"
+    direction: DOWN
+- tapOn: "Tutorial: Gear & Inventory"
+- extendedWaitUntil:
+    visible: "Scrap Yard"
+    timeout: 30000
+- tapOn: "MENU"
+- repeat:
+    times: 2
+    commands:
+      - tapOn:
+          text: "CONTINUE"
+          optional: true
+- tapOn: "Journal"
+- extendedWaitUntil:
+    visible: "Quest Journal"
+    timeout: 15000
+- takeScreenshot: phase4-opening-journal
+- tapOn: "Wake Up Call"
+- takeScreenshot: phase4-opening-quest
+- runFlow: phase4_assert_opening_guidance.yaml

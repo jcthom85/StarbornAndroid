@@ -84,6 +84,9 @@ object GearRules {
         if (normalizedSlot != "weapon") {
             if (normalizedType != null && equipSlots.contains(normalizedType) && normalizedType != normalizedSlot) return false
             if (normalizedSlot == "armor") {
+                // Generic armor is shared gear; character-specific armor keeps
+                // its ownership restriction.
+                if (normalizedType == "armor") return true
                 val expectedArmorType = allowedArmorTypeFor(characterId) ?: return true
                 val armorType = normalizedType?.takeIf { isArmorType(it) } ?: return false
                 return armorType == expectedArmorType

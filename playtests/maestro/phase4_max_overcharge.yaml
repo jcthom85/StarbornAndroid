@@ -1,0 +1,24 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- runFlow: phase4_overcharge.yaml
+- tapOn: "Back to Abilities"
+- tapOn: "Close"
+- tapOn: "Attack"
+- tapOn:
+    text: "Echo-Borer"
+    index: 0
+- repeat:
+    times: 5
+    commands:
+      - runFlow:
+          when:
+            notVisible: "Abilities"
+          commands:
+            - tapOn: "Nova"
+- tapOn: "Abilities"
+- assertVisible: ".*MAX OVERCHARGE:.*80% Power.*Guaranteed CRIT!.*"
+- takeScreenshot: phase4-max-overcharge-list
+- tapOn: "Details for Arc Tether"
+- assertVisible: ".*Overcharge Active.*Level 3.*"
+- assertVisible: "1 turn after use.*Overcharge.*"
+- takeScreenshot: phase4-max-overcharge-details

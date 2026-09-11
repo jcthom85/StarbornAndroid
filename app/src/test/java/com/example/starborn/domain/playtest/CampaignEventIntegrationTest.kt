@@ -32,6 +32,11 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.Dispatchers
+import androidx.lifecycle.viewModelScope
+import org.mockito.kotlin.mock
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CampaignEventIntegrationTest {
@@ -41,6 +46,127 @@ class CampaignEventIntegrationTest {
     private val moshi = MoshiProvider.instance
 
     private fun Int?.orZero(): Int = this ?: 0
+
+    @Test fun `scripted campaign includes production rewards and saves a pre Titan checkpoint`() {
+        val combatDispatcher = StandardTestDispatcher()
+        Dispatchers.setMain(combatDispatcher)
+        var harness = PlaytestHarness()
+        val rewards = mutableListOf<com.example.starborn.domain.combat.CombatReward>()
+        try {
+            for (play in listOf<(PlaytestHarness) -> Unit>(::playWorld1, ::playWorld2, ::playWorld3)) {
+                harness.onBattleVictory = { ids, room -> rewards += applyScriptedBattleReward(harness.store, ids, room) }
+                play(harness)
+                val saved = harness.roundTripSave(harness.store.state.value)
+                assertEquals(harness.store.state.value, saved)
+                harness.close()
+                harness = PlaytestHarness(saved)
+                harness.assertJournalRestored()
+            }
+            val checkpoint = harness.store.state.value
+            assertEquals(5105 + rewards.sumOf { it.xp }, checkpoint.playerXp)
+            assertEquals(rewards.sumOf { it.ap }, checkpoint.playerAp)
+            assertEquals(rewards.sumOf { it.credits }, checkpoint.playerCredits)
+            assertEquals(2, checkpoint.inventory["nova_flux_liner"])
+            assertTrue("Battle rewards must contribute to progression", rewards.sumOf { it.xp } > 0)
+            println("BATTLE_EARNED_CHECKPOINT xp=${checkpoint.playerXp} level=${checkpoint.playerLevel} ap=${checkpoint.playerAp} credits=${checkpoint.playerCredits} inventory=${checkpoint.inventory.toSortedMap()}")
+            var beforeTitan: GameSessionState? = null
+            harness.onBattleVictory = { ids, room ->
+                if ("titan_walker_boss" in ids) {
+                    beforeTitan = harness.roundTripSave(harness.store.state.value)
+                    assertEquals(harness.store.state.value, beforeTitan)
+                }
+                rewards += applyScriptedBattleReward(harness.store, ids, room)
+            }
+            playWorld4(harness)
+            val bossCheckpoint = requireNotNull(beforeTitan)
+            assertEquals(10450, bossCheckpoint.playerXp)
+            assertEquals(8, bossCheckpoint.playerLevel)
+            assertTrue("Level-nine offense must not be invented", "zeke_overload_fists" !in bossCheckpoint.unlockedSkills)
+            assertTrue(bossCheckpoint.activeQuests.contains("w4_mq20"))
+            assertTrue(!bossCheckpoint.completedQuests.contains("w4_mq20"))
+            assertEquals("Titan AP must not be paid before the fight", checkpoint.playerAp, bossCheckpoint.playerAp)
+            val world = com.example.starborn.data.assets.WorldAssetDataSource(AssetJsonReader(DesktopAssetProvider(listOf(assets)), moshi))
+            val progression = requireNotNull(world.loadProgressionData())
+            bossCheckpoint.partyMembers.forEach { id ->
+                val level = requireNotNull(bossCheckpoint.partyMemberLevels[id])
+                progression.levelUpSkills[id].orEmpty().forEach { (threshold, skillId) ->
+                    if (threshold.toInt() <= level) assertTrue("Missing earned $skillId", skillId in bossCheckpoint.unlockedSkills)
+                }
+            }
+            println("PRE_TITAN_CHECKPOINT xp=${bossCheckpoint.playerXp} level=${bossCheckpoint.playerLevel} ap=${bossCheckpoint.playerAp} credits=${bossCheckpoint.playerCredits} skills=${bossCheckpoint.unlockedSkills.sorted()}")
+            val combatHarness = com.example.starborn.feature.combat.OpeningCombatRuntimeTest()
+            combatHarness.setUp()
+            try {
+                combatHarness.measureEarnedTitanCheckpoint(bossCheckpoint).forEach(::println)
+            } finally {
+                combatHarness.tearDown()
+                Dispatchers.setMain(combatDispatcher)
+            }
+            var beforeAvatar: GameSessionState? = null
+            harness.onBattleVictory = { ids, room ->
+                if ("compliance_avatar" in ids) {
+                    beforeAvatar = harness.roundTripSave(harness.store.state.value)
+                    assertEquals(harness.store.state.value, beforeAvatar)
+                }
+                rewards += applyScriptedBattleReward(harness.store, ids, room)
+            }
+            playWorld5(harness)
+            val avatarCheckpoint = requireNotNull(beforeAvatar)
+            assertEquals("Avatar's four AP must not enter its own checkpoint", 5, avatarCheckpoint.playerAp)
+            println("PRE_AVATAR_CHECKPOINT xp=${avatarCheckpoint.playerXp} level=${avatarCheckpoint.playerLevel} ap=${avatarCheckpoint.playerAp} credits=${avatarCheckpoint.playerCredits}")
+            val laterCombatHarness = com.example.starborn.feature.combat.OpeningCombatRuntimeTest()
+            laterCombatHarness.setUp()
+            try {
+                laterCombatHarness.measureEarnedBossCheckpoint(avatarCheckpoint, "compliance_avatar").forEach(::println)
+            } finally {
+                laterCombatHarness.tearDown()
+                Dispatchers.setMain(combatDispatcher)
+            }
+            var beforeFinal: GameSessionState? = null
+            harness.onBattleVictory = { ids, room ->
+                if ("ascended_vale" in ids) {
+                    beforeFinal = harness.roundTripSave(harness.store.state.value)
+                    assertEquals(harness.store.state.value, beforeFinal)
+                }
+                rewards += applyScriptedBattleReward(harness.store, ids, room)
+            }
+            playWorld6(harness)
+            val finalCheckpoint = requireNotNull(beforeFinal)
+            assertTrue("Final reward must not precede its battle", "source_art_tune_world" !in finalCheckpoint.unlockedSkills)
+            println("PRE_FINAL_CHECKPOINT xp=${finalCheckpoint.playerXp} level=${finalCheckpoint.playerLevel} ap=${finalCheckpoint.playerAp} credits=${finalCheckpoint.playerCredits}")
+            val finalCombatHarness = com.example.starborn.feature.combat.OpeningCombatRuntimeTest()
+            finalCombatHarness.setUp()
+            try { finalCombatHarness.measureFinalCheckpoint(finalCheckpoint).forEach(::println) }
+            finally { finalCombatHarness.tearDown(); Dispatchers.setMain(combatDispatcher) }
+        } finally { harness.close(); Dispatchers.resetMain() }
+    }
+
+    private fun applyScriptedBattleReward(store: GameSessionStore, ids: List<String>, room: String): com.example.starborn.domain.combat.CombatReward {
+        val reader = AssetJsonReader(DesktopAssetProvider(listOf(assets)), moshi)
+        val world = com.example.starborn.data.assets.WorldAssetDataSource(reader)
+        val catalog = com.example.starborn.data.repository.ItemRepository(com.example.starborn.data.assets.ItemAssetDataSource(reader)).apply { load() }
+        val registry = com.example.starborn.domain.combat.StatusRegistry(world.loadStatuses())
+        val themes = mock<com.example.starborn.data.repository.ThemeRepository>()
+        store.setRoom(room)
+        val vm = com.example.starborn.feature.combat.viewmodel.CombatViewModel(
+            worldAssets = world, combatEngine = com.example.starborn.domain.combat.CombatEngine(statusRegistry = registry),
+            statusRegistry = registry, sessionStore = store,
+            inventoryService = com.example.starborn.domain.inventory.InventoryService(catalog).apply { loadItems(); restore(store.state.value.inventory) },
+            itemCatalog = catalog, levelingManager = com.example.starborn.domain.leveling.LevelingManager(requireNotNull(world.loadLevelingData())),
+            progressionData = requireNotNull(world.loadProgressionData()),
+            audioRouter = com.example.starborn.domain.audio.AudioRouter(com.example.starborn.domain.audio.AudioBindings()),
+            themeRepository = themes, environmentThemeManager = com.example.starborn.domain.theme.EnvironmentThemeManager(themes),
+            encounterCoordinator = com.example.starborn.domain.combat.EncounterCoordinator(), enemyIds = ids,
+            tutorialsEnabled = false, elapsedRealtime = { 0L }, random = com.example.starborn.domain.combat.SeededCombatRandom(17))
+        try {
+            // Outcome supplied by the route; execute production generation/payment,
+            // not an invented reward formula or a claim that combat was simulated.
+            val generate = vm.javaClass.getDeclaredMethod("victoryReward").apply { isAccessible = true }
+            val reward = generate.invoke(vm) as com.example.starborn.domain.combat.CombatReward
+            vm.javaClass.getDeclaredMethod("applyVictoryRewards", reward.javaClass).apply { isAccessible = true }.invoke(vm, reward)
+            return reward
+        } finally { vm.viewModelScope.cancel() }
+    }
 
     @Test
     fun `all thirty main quests complete through continuous events with save resume between worlds`() {
@@ -88,9 +214,46 @@ class CampaignEventIntegrationTest {
             checkpoints.forEachIndexed { index, state ->
                 appendLine("| ${index + 1} | ${state.playerXp} | ${state.playerLevel} | ${state.playerCredits} | ${state.partyMembers.joinToString()} | ${state.unlockedSkills.sorted().joinToString()} |")
             }
+            appendLine()
+            appendLine("## Saved event-earned inventory and AP")
+            appendLine()
+            appendLine("These are actual restored event-harness snapshots, not full player budgets. Battle AP/loot and crafting costs remain excluded; the opening cryo-inductor is explicitly supplied by the harness.")
+            checkpoints.forEachIndexed { index, state ->
+                appendLine()
+                appendLine("### After World ${index + 1}")
+                appendLine()
+                appendLine("Shared event AP: ${state.playerAp}. Inventory: ${state.inventory.toSortedMap().entries.joinToString { (id, qty) -> "$id x$qty" }}.")
+            }
         }
         File(root, "reports/campaign").apply { mkdirs() }
             .resolve("event-checkpoints.md").writeText(report)
+    }
+
+    @Test fun `event earned pre World four armor can be equipped and preserved without buying replacement`() {
+        var harness = PlaytestHarness()
+        try {
+            for (play in listOf<(PlaytestHarness) -> Unit>(::playWorld1, ::playWorld2, ::playWorld3)) {
+                play(harness)
+                val restored = harness.roundTripSave(harness.store.state.value)
+                // Starter-kit reward bundle and later patch action each grant one.
+                assertEquals("Both authored opening armor grants survive each world boundary", 2, restored.inventory["nova_flux_liner"])
+                harness.close()
+                harness = PlaytestHarness(restored)
+            }
+            val earned = harness.store.state.value
+            // This route excludes battle XP/AP/credits: do not silently replace it
+            // with the level-nine, 1,070-credit constructed combat checkpoint.
+            assertEquals(5105, earned.playerXp)
+            assertEquals(7, earned.playerLevel)
+            assertEquals(0, earned.playerCredits)
+            assertEquals(0, earned.playerAp)
+            val equipped = earned.copy(equippedArmors = earned.equippedArmors + ("nova" to "nova_flux_liner"))
+            val restored = harness.roundTripSave(equipped)
+            assertEquals(equipped, restored)
+            assertEquals(earned.inventory, restored.inventory)
+            assertEquals(earned.playerCredits, restored.playerCredits)
+            assertEquals("nova_flux_liner", restored.equippedArmors["nova"])
+        } finally { harness.close() }
     }
 
     // Event integration only: navigation, successful crafts, and encounter outcomes
@@ -483,6 +646,7 @@ class CampaignEventIntegrationTest {
         fun winEncounter(enemyIds: List<String>, roomId: String) {
             check(roomId in harness.roomIds) { "Unknown encounter room: $roomId" }
             check(enemyIds.all { it in harness.enemyIds }) { "Unknown encounter enemies: $enemyIds" }
+            harness.onBattleVictory?.invoke(enemyIds, roomId)
             harness.events.handleTrigger(
                 "encounter_victory",
                 EventPayload.EncounterOutcome(
@@ -496,6 +660,7 @@ class CampaignEventIntegrationTest {
     }
 
     private inner class PlaytestHarness(initial: GameSessionState? = null) {
+        var onBattleVictory: ((List<String>, String) -> Unit)? = null
         val roomIds = readList<Room>("rooms.json").map { it.id }.toSet()
         val enemyIds = readList<com.example.starborn.domain.model.Enemy>("enemies.json").map { it.id }.toSet()
         val store = GameSessionStore().apply {
@@ -581,6 +746,7 @@ class CampaignEventIntegrationTest {
                     onGiveXp = xpAwarder::award,
                     onReward = { r ->
                         r.xp?.let(xpAwarder::award)
+                        r.ap?.let(store::addAp)
                         r.credits?.let(store::addCredits)
                         r.items.forEach { item ->
                             val inv = store.state.value.inventory

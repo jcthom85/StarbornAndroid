@@ -1,5 +1,32 @@
 [
   {
+    "id": "w4_salvage_pure_iron",
+    "description": "Recover the Foundry maintenance reserve.",
+    "trigger": { "type": "enter_room", "room": "foundry_service_airlock" },
+    "actions": [
+      { "type": "give_item", "item_id": "pure_iron", "quantity": 4 },
+      { "type": "show_message", "message": "A maintenance reserve beside the airlock holds four clean iron billets. Recovered Pure Iron x4: enough for the Slag Catcher cabinet repair and a Thermite Core Mod. Keep these rare components for crafting." }
+    ]
+  },
+  {
+    "id": "w5_salvage_composite_plate",
+    "description": "Recover orbital hull-repair laminate.",
+    "trigger": { "type": "enter_room", "room": "orbital_executive_dock" },
+    "actions": [
+      { "type": "give_item", "item_id": "composite_plate", "quantity": 4 },
+      { "type": "show_message", "message": "An abandoned hull-repair case contains four intact laminate panels. Recovered Composite Plate x4: enough for the Orbital Defense cabinet repair and an Orbital Deflector Mod. Keep these rare components for crafting." }
+    ]
+  },
+  {
+    "id": "w6_salvage_astral_thread",
+    "description": "Gather resonant strands from the Echo Mines.",
+    "trigger": { "type": "enter_room", "room": "source_echo_mines" },
+    "actions": [
+      { "type": "give_item", "item_id": "astral_thread", "quantity": 4 },
+      { "type": "show_message", "message": "Four strands of solid light hum between the mine supports. Recovered Astral Thread x4: enough for the Harmonic Pulse cabinet repair and an Astral Weave Mod. Keep these rare components for crafting." }
+    ]
+  },
+  {
     "id": "enter_camera_gallery",
     "description": "Camera moves demo.",
     "trigger": {

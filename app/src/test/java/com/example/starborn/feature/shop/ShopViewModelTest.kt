@@ -7,6 +7,7 @@ import com.example.starborn.domain.model.ShopBuys
 import com.example.starborn.domain.model.ShopDefinition
 import com.example.starborn.domain.model.ShopPricing
 import com.example.starborn.domain.model.ShopSells
+import com.example.starborn.domain.model.ShopGate
 import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.shop.ShopCatalog
 import kotlinx.coroutines.Dispatchers
@@ -132,6 +133,72 @@ class ShopViewModelTest {
 
         assertEquals("Cannot sell this item.", messageDeferred.await())
         assertTrue(inventoryService.hasItem(RELIC_ID, 1))
+    }
+
+    @Test fun unstockedCatalogItemCannotBePurchased() = runTest(dispatcher) {
+        viewModel.buyItem(RELIC_ID, 1)
+        assertEquals(500, sessionStore.state.value.playerCredits)
+        assertTrue(inventoryService.snapshot().isEmpty())
+    }
+
+    @Test fun overflowingPurchaseDoesNotGrantFreeItems() = runTest(dispatcher) {
+        viewModel.buyItem(MEDKIT_ID, Int.MAX_VALUE)
+        assertEquals(500, sessionStore.state.value.playerCredits)
+        assertTrue(inventoryService.snapshot().isEmpty())
+    }
+
+    @Test fun repeatedSalesWithoutCollectorUpdatesCannotPayTwice() = runTest(dispatcher) {
+        inventoryService.addItem(SCRAP_ID, 1)
+        advanceUntilIdle()
+        viewModel.sellItem(SCRAP_ID, 1)
+        viewModel.sellItem(SCRAP_ID, 1)
+        assertEquals(518, sessionStore.state.value.playerCredits)
+        assertTrue(inventoryService.snapshot().isEmpty())
+        assertEquals(inventoryService.snapshot(), sessionStore.state.value.inventory)
+    }
+
+    @Test fun purchaseByAliasImmediatelyPersistsInventory() = runTest(dispatcher) {
+        viewModel.buyItem("medkit", 1)
+        assertEquals(mapOf(MEDKIT_ID to 1), sessionStore.state.value.inventory)
+        assertEquals(350, sessionStore.state.value.playerCredits)
+    }
+
+    @Test fun saleCannotOverflowCreditBalanceOrConsumeStock() = runTest(dispatcher) {
+        inventoryService.addItem(SCRAP_ID, 1)
+        sessionStore.addCredits(Int.MAX_VALUE - 500)
+        viewModel.sellItem(SCRAP_ID, 1)
+        assertEquals(Int.MAX_VALUE, sessionStore.state.value.playerCredits)
+        assertEquals(1, inventoryService.snapshot()[SCRAP_ID])
+    }
+
+    @Test fun aliasGateUsesCurrentMilestonesWithoutWaitingForCollectors() = runTest(dispatcher) {
+        val shop = ShopDefinition(id = "gated", name = "Gated", sells = ShopSells(
+            items = listOf("medkit"), gates = mapOf("medkit" to ShopGate(listOf("ready")))))
+        val vm = ShopViewModel(shop.id, FakeShopCatalog(mapOf(shop.id to shop)), itemCatalog,
+            inventoryService, sessionStore)
+        assertTrue(vm.uiState.value.itemsForSale.single().locked)
+        vm.buyItem(MEDKIT_ID, 1)
+        assertEquals(500, sessionStore.state.value.playerCredits)
+        sessionStore.setMilestone("ready")
+        vm.buyItem(MEDKIT_ID, 1)
+        assertEquals(350, sessionStore.state.value.playerCredits)
+        assertEquals(mapOf(MEDKIT_ID to 1), inventoryService.snapshot())
+    }
+
+    @Test fun explicitResaleValueDoesNotChangePurchasePrice() = runTest(dispatcher) {
+        val item = Item(id = "crafted", name = "Crafted", type = "component", value = 300,
+            buyPrice = 600, resaleValue = 80)
+        val catalog = FakeItemCatalog(mapOf(item.id to item))
+        val inventory = InventoryService(catalog).apply { loadItems(); addItem(item.id, 1) }
+        val shop = ShopDefinition(id = "resale", name = "Resale",
+            pricing = ShopPricing(buyMarkdown = 0.5, sellMarkup = 1.2),
+            sells = ShopSells(items = listOf(item.id)))
+        val vm = ShopViewModel(shop.id, FakeShopCatalog(mapOf(shop.id to shop)), catalog, inventory, sessionStore)
+        assertEquals(720, vm.uiState.value.itemsForSale.single().price)
+        assertEquals(40, vm.uiState.value.sellInventory.single().price)
+        vm.sellItem(item.id, 1)
+        assertEquals(540, sessionStore.state.value.playerCredits)
+        assertTrue(inventory.snapshot().isEmpty())
     }
 
     private class FakeItemCatalog(

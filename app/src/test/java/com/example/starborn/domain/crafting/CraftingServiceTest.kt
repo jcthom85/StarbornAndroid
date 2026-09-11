@@ -27,6 +27,34 @@ class CraftingServiceTest {
         craftingService = CraftingService(recipeSource, inventoryService, sessionStore)
     }
 
+    @Test fun ingredientAliasesCannotSpendTheSameStockTwice() {
+        val inventory = InventoryService(TestItemCatalog(listOf(item("herb", "Green Herb")))).apply {
+            loadItems()
+            addItem("herb", 1)
+        }
+        assertFalse(inventory.consumeItems(mapOf("herb" to 1, "Green Herb" to 1)))
+        assertEquals(mapOf("herb" to 1), inventory.snapshot())
+        assertFalse(inventory.consumeItems(mapOf("herb" to -1)))
+        assertEquals(mapOf("herb" to 1), inventory.snapshot())
+        inventory.addItem("herb", 1)
+        assertTrue(inventory.consumeItems(mapOf("herb" to 1, "Green Herb" to 1)))
+        assertTrue(inventory.snapshot().isEmpty())
+    }
+
+    @Test fun oversizedAndInvalidCookingBatchesLeaveInventoryUnchanged() {
+        val inventory = InventoryService(TestItemCatalog(listOf(item("herb", "Herb"), item("soup", "Soup")))).apply {
+            loadItems()
+            addItem("herb", 2)
+        }
+        val recipe = CookingRecipe(id = "soup", name = "Soup", ingredients = mapOf("herb" to 2), result = "soup")
+        val service = CraftingService(TestRecipeSource(cooking = listOf(recipe)), inventory, sessionStore)
+        listOf(0, -1, Int.MAX_VALUE).forEach { batch ->
+            assertFalse(service.canCook(recipe, batch))
+            assertTrue(service.cookMeal("soup", batch = batch) is CraftingOutcome.Failure)
+            assertEquals(mapOf("herb" to 2), inventory.snapshot())
+        }
+    }
+
     @Test
     fun learnSchematicPersistsToSessionStore() {
         val learned = craftingService.learnSchematic("mod_power_lens_1")

@@ -1,0 +1,55 @@
+appId: com.junewiregames.starborn.prealpha
+---
+# Full-inventory debug checkpoint; app data and save slots retained.
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- tapOn: "Story"
+- scrollUntilVisible:
+    element: "The Echo: First Combat"
+    direction: DOWN
+- tapOn: "The Echo: First Combat"
+- extendedWaitUntil:
+    visible: "Travel north"
+    timeout: 90000
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Engage Echo Borer"
+    timeout: 30000
+- tapOn: "Engage Echo Borer"
+- extendedWaitUntil:
+    visible: "Nova"
+    timeout: 30000
+- repeat:
+    times: 2
+    commands:
+      - repeat:
+          times: 5
+          commands:
+            - runFlow:
+                when:
+                  notVisible: "Attack"
+                commands:
+                  - tapOn: "Nova"
+      - tapOn: "Attack"
+      - tapOn:
+          text: "Echo-Borer"
+          index: 0
+- repeat:
+    times: 5
+    commands:
+      - runFlow:
+          when:
+            notVisible: "Abilities"
+          commands:
+            - tapOn: "Nova"
+- tapOn: "Abilities"
+- assertVisible: ".*OVERCHARGE:.*50% Power.*1-Turn CD Refund.*"
+- assertVisible: ".*1 turn after use.*Overcharge.*"
+- takeScreenshot: phase4-overcharge-list
+- tapOn: "Details for Arc Tether"
+- assertVisible: "1 turn after use.*Overcharge.*"
+- takeScreenshot: phase4-overcharge-details

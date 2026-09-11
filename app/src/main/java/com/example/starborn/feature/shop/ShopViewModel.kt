@@ -203,7 +203,7 @@ class ShopViewModel(
         val markdown = shop.pricing?.buyMarkdown ?: DEFAULT_BUY_MARKDOWN
         return inventory.map { entry ->
             val item = entry.item
-            val basePrice = max(item.value, item.buyPrice ?: 0)
+            val basePrice = item.resaleValue ?: max(item.value, item.buyPrice ?: 0)
             val price = max(1, (basePrice * markdown).roundToInt())
             val isBlacklisted = shop.buys?.blacklist?.any { it.equals(item.id, ignoreCase = true) || it.equals(item.name, ignoreCase = true) } == true
             val typeAllowed = shop.buys?.acceptTypes.isNullOrEmpty() || shop.buys?.acceptTypes?.any { it.equals(item.type, ignoreCase = true) } == true
@@ -233,9 +233,16 @@ class ShopViewModel(
             return
         }
         val shop = definition ?: return
-        val state = latestSessionState
+        val state = sessionStore.state.value
         val item = itemCatalog.findItem(itemId)
         if (item == null) {
+            emitMessage("That item is no longer available.")
+            return
+        }
+        val stocked = (shop.sells.items + selectRotatingItems(shop)).any {
+            itemCatalog.findItem(it)?.id == item.id
+        }
+        if (!stocked) {
             emitMessage("That item is no longer available.")
             return
         }
@@ -245,7 +252,13 @@ class ShopViewModel(
             return
         }
         val price = priceFor(item, shop)
-        val totalCost = price * quantity
+        val total = price.toLong() * quantity
+        val owned = inventoryService.snapshot()[item.id] ?: 0
+        if (total > Int.MAX_VALUE || owned.toLong() + quantity > Int.MAX_VALUE) {
+            emitMessage("That purchase is too large.")
+            return
+        }
+        val totalCost = total.toInt()
         if (!sessionStore.spendCredits(totalCost)) {
             emitMessage("Not enough credits for that purchase.")
             return
@@ -253,7 +266,8 @@ class ShopViewModel(
         inventoryService.addItem(item.id, quantity)
         val label = if (quantity == 1) item.name else "${item.name} x$quantity"
         emitMessage("Purchased $label for $totalCost credits.")
-        refreshState(sessionStore.state.value, latestInventory)
+        sessionStore.setInventory(inventoryService.snapshot())
+        refreshState(sessionStore.state.value, inventoryService.state.value)
     }
 
     private fun selectRotatingItems(shop: ShopDefinition): Set<String> {
@@ -289,7 +303,7 @@ class ShopViewModel(
             return
         }
         val shop = definition ?: return
-        val entry = latestInventory.firstOrNull { it.item.id == itemId }
+        val entry = inventoryService.state.value.firstOrNull { it.item.id == itemId }
         if (entry == null) {
             emitMessage("Nothing to sell.")
             return
@@ -303,12 +317,21 @@ class ShopViewModel(
             emitMessage(sellUi?.reason ?: "Dealer won't buy that.")
             return
         }
-        inventoryService.removeItem(itemId, quantity)
-        val earnings = sellUi.price * quantity
+        val total = sellUi.price.toLong() * quantity
+        if (total + sessionStore.state.value.playerCredits > Int.MAX_VALUE) {
+            emitMessage("That sale would exceed the credit limit.")
+            return
+        }
+        if (!inventoryService.consumeItems(mapOf(itemId to quantity))) {
+            emitMessage("Nothing to sell.")
+            return
+        }
+        val earnings = total.toInt()
         sessionStore.addCredits(earnings)
         val label = if (quantity == 1) entry.item.name else "${entry.item.name} x$quantity"
         emitMessage("Sold $label for $earnings credits.")
-        refreshState(sessionStore.state.value, latestInventory)
+        sessionStore.setInventory(inventoryService.snapshot())
+        refreshState(sessionStore.state.value, inventoryService.state.value)
     }
 
     fun switchTab(tab: ShopTab) {
@@ -325,6 +348,7 @@ class ShopViewModel(
         val gates = shop.sells.gates
         if (gates.isEmpty()) return null
         return gates[item.id] ?: gates[item.name]
+            ?: gates.entries.firstOrNull { itemCatalog.findItem(it.key)?.id == item.id }?.value
     }
 
     private fun emitMessage(message: String) {

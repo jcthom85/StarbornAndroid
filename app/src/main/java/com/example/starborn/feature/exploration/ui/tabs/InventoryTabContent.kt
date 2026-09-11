@@ -710,9 +710,8 @@ private fun InventoryEquipmentPreview(
             if (normalizedSlot != "armor") {
                 emptyList()
             } else {
-                val expectedType = GearRules.allowedArmorTypeFor(normalizedCharacter)
-                if (expectedType == null) armorItems else armorItems.filter { item ->
-                    item.type.trim().lowercase(Locale.getDefault()) == expectedType
+                armorItems.filter { item ->
+                    GearRules.matchesSlot(item.equipment, "armor", normalizedCharacter, item.type)
                 }
             }
         }
@@ -813,7 +812,8 @@ private fun GearSlotTile(
 ) {
     val shape = RoundedCornerShape(16.dp)
     val background = Color.Black.copy(alpha = 0.2f)
-    val minHeight = if (modNames.isEmpty()) 76.dp else 108.dp
+    val emptyModHint = emptyModSlotHint(slot, modNames.isNotEmpty(), modsLocked)
+    val minHeight = if (modNames.isEmpty() || emptyModHint != null) 76.dp else 108.dp
     Surface(
         modifier = modifier
             .heightIn(min = minHeight)
@@ -854,12 +854,18 @@ private fun GearSlotTile(
                         } else {
                             Color.White
                         },
-                        maxLines = 1,
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
                 }
             }
-            if (modNames.isNotEmpty()) {
+            if (emptyModHint != null) {
+                Text(
+                    text = emptyModHint,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = accentColor.copy(alpha = 0.7f)
+                )
+            } else if (modNames.isNotEmpty()) {
                 val modSlots = modSlotsForBaseSlot(slot)
                 Column(
                     modifier = Modifier

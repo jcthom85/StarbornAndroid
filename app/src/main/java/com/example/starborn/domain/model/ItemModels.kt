@@ -18,7 +18,10 @@ data class Item(
     val description: String? = null,
     val equipment: Equipment? = null,
     val effect: ItemEffect? = null,
-    val unsellable: Boolean = false
+    val unsellable: Boolean = false,
+    // Optional base used before the shop's markdown; purchase pricing is unchanged.
+    @Json(name = "resale_value")
+    val resaleValue: Int? = null
 )
 
 @JsonClass(generateAdapter = true)

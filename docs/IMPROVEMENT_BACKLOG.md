@@ -3,6 +3,527 @@
 Approved scope: correctness, realistic campaign testing, combat/economy, opening/UI,
 exploration/narrative consistency, and presentation/release verification.
 
+## Current phase status (2026-09-11)
+
+- Maximum-charge detail scrolling verified with checkpoint helper
+  `phase4_overcharge_detail_scroll.yaml`: all commands passed. First cooldown
+  visibility match did not scroll enough visually, but scrolling to Combat
+  traits exposed the full cooldown suffix, applied Shock and traits with the
+  Back to Abilities control still accessible. Screenshots reviewed; current
+  emulator max-charge detail scrolling gap closed, not a large-font sign-off.
+  Bounded shipped-catalog review narrowed remaining disabled-state scope:
+  no skills have uses_per_battle; active player conditions are only
+  bonus_if_target_staggered / bonus_if_target_stunned, which do not block use.
+  HP-gated entries are passive or enemy skills. Battle-limit and requirements
+  messages retain synthetic coverage in OpeningCombatRuntimeTest; their device
+  display is deferred until applicable active content exists, not called tested.
+  Jammed and Silenced both have block_skills and remain the applicable status
+  UI check. Phase 4 remaining: status-blocked ability presentation and
+  large-text/physical-device verification. Other phases unchanged.
+  No production changes or build/JVM rerun in this pass.
+
+- Phase 4 maximum-charge banner verified: `phase4_max_overcharge.yaml`
+  passed end to end, including the level-2 flow and a third basic attack.
+  Screenshots show readable MAX OVERCHARGE and Level 3 banners (+80%, refund,
+  critical-hit text) and boosted list preview. The detail cooldown suffix is
+  below the initial viewport; scrolling that full section remains part of
+  layout/accessibility verification, not claimed visually complete here.
+  No overcharged ability was consumed. Non-cooldown disabled reasons and
+  large-text/physical-device checks remain; other phases unchanged.
+  Fixed static selector false positives by expanding the actual cooldown
+  formatter template for singular/plural labels, rather than allowing stale
+  strings. Strict validation now passes (350 selectors); diff check passes.
+  No production changes/build/JVM rerun in this automation-only pass.
+
+- Phase 4 level-2 Overcharge presentation verified: `phase4_overcharge.yaml`
+  passed end to end after two Nova basic attacks in the First Combat debug
+  checkpoint. Screenshots show the +50% banner, boosted Arc Tether power and
+  one-turn cooldown refund; list/detail cooldown labels match and are readable.
+  Detail content extends below the viewport and remains a scrolling layout;
+  this pass only inspected the visible Overcharge and cooldown section.
+  No production fix/rebuild needed. Not a maximum-charge or charge-consumption
+  check. Remaining combat UI coverage: max-charge presentation and non-cooldown
+  disabled reasons; large-text/physical-device group also remains. Phases 2-3
+  acceptance gaps and mostly-pending Phases 5-6 unchanged.
+  Verification: Maestro passed; diff check passed. Strict prose-selector check
+  reports two false positives for dynamically composed "1 turn after use" in
+  the new flow; not claimed clean. Existing JVM tests cover Momentum rules and
+  cooldown label calculation; suite was not rerun for this automation-only pass.
+
+- Phase 4 opening-guidance presentation check closed at current emulator
+  settings. `phase4_opening_guidance.yaml` passed end to end, including menu
+  hints, Journal -> Wake Up Call, grouped prepare/repair/test overview,
+  current-stage instructions, and scrolling to the final cutter objective.
+  Reviewed all four checkpoint views: copy wraps readably and final objectives
+  are accessible. No production fix needed. This uses the Gear & Inventory
+  debug checkpoint, whose earlier tasks remain unchecked despite placing Nova
+  at the workshop; it does not establish earned progression or route correctness.
+  No tracking toggle/save/data reset. Strict selector validation passes (343),
+  whitespace check passes; no production edits, so JVM/build were not rerun.
+  Phase 4 remaining groups: (1) Overcharge and non-cooldown disabled reasons,
+  (2) large-text and physical-device verification. Phases 2-3 acceptance gaps
+  and mostly-pending Phases 5-6 remain unchanged. No whole-phase sign-off.
+
+- Phase 4 ability-name truncation fixed: ability rows allow names to wrap.
+  Rebuilt/installed APK and ran `phase4_nonweak_cooldown.yaml` end to end:
+  every required command passed, including the two-turn disabled-parent and
+  matching detail-label assertions. One-turn conditional branch was skipped.
+  Screenshots confirm Smoke Bomb and Plasma Burst display full names on two
+  lines; Arc Tether countdown, explanation and buttons remain readable. Taller
+  rows reduce the number visible at once; this is not a large-font/full-list audit.
+  Long-name finding at current emulator settings and combined-flow rerun are
+  closed. Verification: 353 JVM tests, assembleDebug, 339-selector validation
+  and whitespace checks pass. Removed the now-unused TextOverflow import after
+  that build. Remaining Phase 4: Overcharge/other disabled reasons, opening quest
+  guidance, large-font and physical-device checks. Phases 2-3 acceptance gaps
+  and mostly-pending Phases 5-6 unchanged; no whole-phase sign-off.
+
+- Phase 4 nonzero-cooldown UI checkpoint verified on emulator-5554:
+  Arc Tether against Shock-resistant Echo-Borers displayed "Ready in 2 turns"
+  and "On cooldown"; Maestro confirmed the parent button containing 2 is
+  disabled and the detail label matches. Both screenshots reviewed, readable.
+  Added `phase4_nonweak_cooldown.yaml` and `phase4_assert_arc_cooldown.yaml`.
+  Navigation needed a cinematic wait and a skill-specific Use selector (the
+  first ability is Smoke Bomb). The original one-turn expectation was not
+  met; this is presentation coverage, NOT turn-timing verification. Final
+  assertion helper passed from the reached screen; the revised combined flow
+  still needs one end-to-end rerun. One-turn branch remains unexecuted.
+  New layout finding: some longer ability names truncate in the full-inventory
+  list. Remaining Phase 4: Overcharge/other disabled reasons, opening guidance,
+  long-name and large-font layouts, physical-device acceptance, and combined
+  cooldown-flow rerun. Phase 2-3 balance/economy acceptance gaps and mostly
+  pending Phases 5-6 unchanged. No production edits or rebuild in this pass.
+
+- Phase 4 post-Arc-Tether inspection exposed another tutorial copy mismatch:
+  success text claimed Arc Tether was on cooldown, but its weakness refund plus
+  the normal turn-end reduction clears the two-turn cooldown. The emulator
+  showed Use enabled at Nova's next turn; production cooldown code confirms
+  both reductions. Corrected the success text to explain weakness refunds
+  without claiming the skill is unavailable. No balance rules changed.
+  Added `phase4_loader_cooldown_refund.yaml`: reuses the label check, executes
+  Arc Tether, checks success copy and next-turn list/detail labels, and requires
+  Use enabled with no "On cooldown" message. Bounded portrait-tap retries
+  handle the visible-but-not-yet-ready interval. This scenario does NOT cover
+  the disabled-cooldown state; use a non-weakness encounter for that check.
+  Verification: 353 JVM tests pass, assembleDebug passes, APK installed with
+  data retained; strict selector validation passes (339 selectors), diff check
+  passes. Final Maestro rerun passed all commands after resuming the interrupted
+  session. Reviewed success-copy and post-refund list/detail screenshots: text
+  fits, Use is enabled, and the list/detail cooldown labels agree. This bounded
+  tutorial-copy/refund regression is closed; nonzero cooldown is not verified.
+  Phase 4 remaining: nonzero cooldown and other disabled reasons, Overcharge,
+  opening quest guidance, and large-font/physical-device layouts. Phases 2-3
+  acceptance gaps and mostly-pending Phases 5-6 are unchanged.
+
+- Phase 4 Maestro recheck passed on emulator-5554 with the rebuilt APK.
+  Added `playtests/maestro/phase4_loader_labels.yaml`, preserving app data and
+  selecting the Gear & Inventory scenario without keyboard input. The first
+  attempt was interrupted by Android handwriting-keyboard onboarding; the
+  scrolling-based rerun passed every command. Reviewed all three screenshots:
+  corrected Loader briefing is readable, Arc Tether's full summary wraps onto
+  two lines including "2 turns after use", and detail targeting/cooldown fit.
+  These two presentation-fix rechecks are closed. No combat action was used.
+  Remaining Phase 4: additional cooldown/disabled/Overcharge states, opening
+  quest guidance, and large-font/physical-device checks. Phases 2-3 retain their
+  campaign affordability/economy, finale balance and player/device acceptance
+  gaps; Phases 5-6 remain mostly pending. No whole-phase sign-off.
+  Verification: focused Maestro flow passed; strict selector validation passed
+  (338 prose selectors); diff whitespace check passed. No production code changed
+  in this pass, so the previously passing JVM suite was not rerun.
+
+- Corrected gear scenario visually verified on the connected emulator: arrived
+  at Scrap Yard (workshop_yard), inventory and gear tutorials displayed readable
+  text and dismissed with Continue, Flux Liner and Mining Pistol appeared in
+  selectors and equipped successfully. Equipped tiles show names, locked mod
+  controls and story-gate text. This validates the debug UI path at current
+  settings, not campaign acquisition, unlocked mods or large-font layouts.
+  Entered Faulted Loader combat: Arc Tether detail target selection and cooldown
+  are readable. Found list summary truncating before cooldown and loader briefing
+  incorrectly asking for Attack while tutorial requires Arc Tether. Removed the
+  summary's one-line truncation and corrected loader-specific briefing copy.
+  These two final presentation fixes needed visual recheck (now passed above).
+  Phase 4 remaining: that recheck, additional cooldown/disabled-action states,
+  opening quest guidance, and physical-device/large-font checks. No phase sign-off.
+  Verification: full JVM suite and assembleDebug pass after presentation fixes;
+  whitespace checks pass, emulator crash buffer empty. New APK was subsequently
+  installed and visually verified with Maestro as recorded above.
+
+- Phase 4 emulator visual pass started (Medium Phone API 37.1, debug 1.3.24/108).
+  Installed current debug APK without clearing data. Title screen, inventory
+  supplies, empty Nova loadout and empty armor selector render and respond.
+  Empty weapon/armor mod hints fit without clipping at the observed settings.
+  This is not large-font, physical-device or complete loadout acceptance.
+  Found stale Gear & Inventory debug bootstrap: nonexistent pit_landing room,
+  task ID used as stage ID, obsolete item IDs and missing unlocks. It fell back
+  to Nova's Bunk and could not exercise equipment. Updated only that bootstrap
+  to workshop_yard/report_to_jed, current starter item IDs, required unlocks and
+  the tutorial milestone; updated its description. Saved slots were not touched.
+  Remaining: rerun corrected scenario, equipped loadout and tutorial interaction,
+  opening guidance and combat-label visual checks. No Phase 4 sign-off yet.
+  Verification after bootstrap repair: full JVM suite and assembleDebug pass;
+  diff whitespace checks pass. Updated APK installed successfully. The corrected
+  scenario has not yet been relaunched/visually verified. No crash log entries
+  were returned during the inspected pre-repair UI session.
+
+- Phase 4 bounded tutorial-trigger review performed. QuestAssetDataSource loads
+  quests.json, which has no task tutorial IDs; stage-wide references found in
+  quests_base.json are not the shipped quest source. Shipped events reference
+  seven scripts: movement, menu_save, scene_market_locator, source_art_unlock,
+  world2_debuffs, link_unlock and rest_recovery. Only world2_debuffs and
+  link_unlock have delayed second steps; their guidance is not tied to acting
+  on a departed room/menu. Bag and gear entry scripts are single-step. No new
+  context-cancellation rule is justified by these active scripts. Archived save
+  data and future script additions are not covered by this finding.
+  Added shipped-asset regression for both delayed event scripts, checking first
+  step preservation for slow readers, second-step arrival for fast readers and
+  completion only after the final dismissal. No production changes this pass.
+  This closes the bounded code-level trigger review, not player pacing acceptance.
+  Phase 4 remaining: on-device opening/tutorial, loadout and combat-label checks,
+  plus concrete fixes from those checks. Phases 2-3 risks and 5-6 remain unchanged.
+  Verification: all 353 JVM tests pass, zero failures/errors/skips; whitespace
+  checks pass. Lint and visual/device checks not rerun this pass.
+
+- Phase 4 delayed system hints: SystemTutorialCoordinator now rechecks the
+  tutorial setting after its delay. Disabling hints during that wait suppresses
+  the popup and invokes the event continuation without marking a tutorial seen
+  or complete. Tests also retain the enabled path's wait-for-dismissal behavior.
+  Contextual pacing is NOT fully signed off: room/menu changes during multi-step
+  scripts and stage-wide tutorial scheduling still need a bounded trigger review.
+  Remaining Phase 4 checks: (1) that trigger review, (2) on-device opening,
+  inventory/loadout and combat-label review, including text wrapping and tutorial
+  timing. Fix concrete findings, then assess Phase 4 acceptance; do not reopen
+  unlimited cosmetic iterations. Phase 2-3 acceptance risks remain unchanged.
+  Verification: all 352 JVM tests pass, zero failures/errors/skips; whitespace
+  checks pass. Lint and device checks were not rerun this pass.
+
+- Phase 4 ability explanation pass: disabled rows show the first blocking reason
+  from the same checks used by canUseSkill (status, cooldown, battle limit or
+  conditions); tutorial restrictions have a separate instruction. Target details
+  now explicitly describe target selection, removing tag-based guesses about
+  self/group effect recipients. This does not change combat eligibility or
+  targeting. Tests cover availability/reason consistency and all selection labels.
+  The initial cooldown/target-selection/disabled-reason implementation pass is
+  done; per-effect targeting descriptions are not claimed audited. Phase 4 still
+  needs contextual tutorial pacing and visual/device verification, including
+  wrapping of these new labels. Phases 2-3 acceptance gaps and Phases 5-6 remain.
+  Verification: all 350 JVM tests pass, zero failures/errors/skips; whitespace
+  checks pass. Lint and device checks were not rerun for this pass.
+
+- Phase 4 combat cooldown labels: ability list and detail panel now share a
+  formatter distinguishing current lockout ("Ready in N turns") from cooldown
+  after use. Both preview the engine's one-turn Overcharge refund at two or
+  more Momentum, including zero cooldown. Active cooldown is not discounted
+  by current Momentum. Three regressions cover these cases and singular labels.
+  Combat rules are unchanged. Target descriptions and disabled-action reasons
+  still need review; contextual tutorial pacing and device/visual checks remain.
+  Verification: all 348 JVM tests pass with zero failures/errors/skips; diff
+  whitespace checks pass. Lint and device checks were not rerun for this pass.
+
+- Phase 4 tutorial-disable behavior: turning tutorials off now cancels scheduled
+  hints and discards active/queued tutorial prompts. Reward/item prompts are
+  preserved, and cancellation does not invoke completion callbacks or mark
+  skipped steps complete. Regression coverage checks both an active tutorial
+  and an active reward, delayed hints, and eligibility to show a skipped hint
+  again. This is a targeted interruption fix; contextual timing/pacing and
+  device verification remain open. Combat-label review is still pending.
+  Verification: full JVM suite passes (345 tests, zero failures/errors/skips);
+  diff whitespace checks pass. Lint and device checks not rerun this pass.
+
+- Phase 4 tutorial queue fix: marking a tutorial key or script complete now
+  removes its obsolete queued prompts without firing unseen dismissal callbacks.
+  Explicit complete-and-dismiss removes queued steps before promoting the next
+  prompt; unrelated prompts remain intact. Two regressions cover script matching,
+  callback suppression, preserving an unrelated active prompt and repeat blocking.
+  Verification: full JVM suite passes; diff whitespace checks pass. Device and
+  lint checks not rerun for this pass. This closes the stale-queue defect, not
+  the entire tutorial pacing review. Phase 4 still needs pacing review,
+  combat-label clarity and visual/device verification of opening/loadout changes.
+  Phases 2-3 retain the acceptance risks below; Phases 5-6 remain mostly pending.
+
+- Generic armor eligibility fixed: shared GearRules now accepts generic armor
+  for party members while retaining character-specific restrictions. Both armor
+  picker and equip handler use that rule; unlock requirements remain. Catalog
+  regressions cover Heat Liner, Flux Liner ownership, and wrong-slot rejection.
+  Avatar fixture now asserts the same eligibility rule. This resolves the
+  compatibility mismatch below, not full device/shop or finale acceptance.
+  Verification: all 341 JVM tests pass. Lint/device checks not rerun. Phase 4
+  remains open for tutorial interruptions, combat labels and visual verification,
+  plus any findings from review of the implemented guidance/loadout changes.
+
+- Phase 4 loadout presentation: empty weapon/armor tiles replace two unusable
+  mod chips with an instruction to equip the base item, and use a smaller minimum
+  height. Equipped item names can wrap to two lines. Equipped mod controls and
+  story gates remain unchanged. Pure presentation regressions cover hint rules;
+  Compose/device visual verification remains outstanding.
+  Verification: all 339 JVM tests pass; diff whitespace checks pass. Lint and
+  device checks were not rerun for this UI pass.
+
+- Acceptance caveat found during UI inspection: GearRules.matchesSlot requires
+  character-specific armor types, while Heat Liner is generic armor. Earlier
+  seeded combat comparisons installed it directly on Orion, bypassing picker
+  eligibility. Those results are not proof that this armor allocation is UI-
+  attainable. Do not silently treat the prior owned-slot assertion as full gear
+  compatibility validation; retain this issue for the loadout/acceptance review.
+
+- Phase 4 started: opening quest overview now groups preparation, cutter repair,
+  and bypass testing; workshop-stage description covers its full task sequence.
+  Text only; IDs, rewards and task order unchanged. Four campaign tests and both
+  asset checks pass. Remaining: tutorial interruptions, loadout presentation,
+  combat-label clarity and visual/device verification. This is an initial copy
+  improvement, not completion of the opening-guidance workstream.
+
+### Bounded Phase 2-3 closeout (supersedes open-ended variant work)
+
+1. Avatar investigation completed with limits: one four-weapon catalog-priced
+   build costs 1,800 of 2,140 credits (340 left), retains earned armor and spends
+   five AP legally. Cryo Vent/Hydraulic Kick priorities and conditional Link
+   recovery win seeds 1-4, lose seed 5, repeated identically. No boss nerf justified
+   from this result. Shop navigation/prior spending and player win rates unproven.
+2. Next: one World 6 earned-checkpoint boss pass.
+   Pass performed: disk-restored checkpoint has 29,800 XP, level 12, 9 AP and
+   2,640 credits. Five repeated runs with retained defensive gear lose to Vale
+   in 1.5-2.5 seconds; God phase is never reached. Credits/AP remain unspent.
+   Record as an unresolved finale balance risk, not readiness or full coverage.
+   No additional build search authorized by the bounded checklist; carry this
+   evidence into the economy/acceptance decision.
+3. Economy decision recorded: retain general prices/rewards/XP thresholds;
+   evidence supports targeted fixes, not a global economy rebalance. Avatar's
+   1,800-credit build leaves 340 only under the no-prior-spending baseline.
+   Full-route affordability and finale balance remain explicitly unapproved.
+4. Then: final tests/validators/lint and list outstanding device/player checks.
+
+All 337 tests pass after Avatar closeout; no production changes this pass.
+Three of four closeout items remain. This is not a percentage of the whole game.
+Update: the World 6 diagnostic pass is now performed. Two checklist activities
+remain (economy decision, final verification), but the finale risk is unresolved
+and must stay visible in any Phase 2-3 handoff. Full suite: 337 tests pass.
+Latest: economy decision is recorded in ECONOMY_AUDIT.md. Only final verification
+remains on the bounded checklist; unresolved balance/access evidence remains
+outside that checklist and prevents claiming full Phase 2-3 acceptance.
+
+Final bounded verification: 337 JVM tests pass, asset integrity and World 1
+validators pass, Android lintDebug passes, and diff whitespace checks pass.
+The four closeout activities are performed. Phases 2-3 are NOT fully accepted:
+finale readiness/second-phase coverage, continuous spending/shop access and
+renewable-input economy evidence remain unresolved. Device/player verification
+was not performed. Move implementation focus to Phase 4 opening/interface while
+keeping these explicit acceptance risks visible; do not present this as release
+approval or silently expand the closeout into more build variants.
+
+- Avatar AP allocation checked: spend saved five AP legally on Nova Quiet Steps/
+  Night Cloak and Zeke Training Session/Motivational Speech/Budgeting, retaining
+  earned gear and supplies. All five repeated runs still lose (40-55.5 seconds).
+  Inventory/credits unchanged by purchases; all 337 JVM tests pass. This closes
+  one legal AP comparison, not optimal allocation or balance acceptance. Next
+  prioritize shop-equipped offense and policy suitability; broader coverage and
+  affordability sign-off remain open.
+
+- Avatar trace exposed/fixed party-restoration targeting: an explicit selected
+  actor narrowed Ration Pack to one recipient. Party-support items now retain
+  authored ally scope. Regression covers one consumption, living allies, max-HP
+  clamp, no revival and no enemy healing. All 337 JVM tests and both asset checks
+  pass. Earlier ration measurements are historical. Avatar earned-gear runs still
+  lose; AP/shop allocation and broader affordability work remain outstanding.
+
+- Avatar earned-gear comparison: equip owned Heat Liner on Orion and Grav-Boots
+  on Gh0st, retaining Nova's Flux Liner. Ownership/slot and unchanged inventory/
+  credits checked; all five repeated seeds still lose (35.5-52 virtual seconds).
+  All 336 tests pass. Avatar's advertised Purge Mode has no named implementation
+  in searched combat code; catalog uses three shared attacks. Review description
+  intent, action/damage evidence and legal AP/shop options before balance tuning.
+  No remaining phase package is closed by this comparison.
+
+- World 5 baseline added: reward-linked pre-Avatar checkpoint survives disk
+  round trip at level 10, 17,930 XP, 5 AP, 2,140 credits. Five repeated production
+  combat runs lose using the World 4 policy and only retained Flux Liner equipped.
+  These are measured defeats, not suite failures (336 tests pass). Next audit
+  Avatar counterplay and an attainable loadout before tuning; unspent resources
+  and policy mismatch prevent a balance conclusion. Broader coverage advances,
+  but all three remaining Phase 2-3 packages are still open.
+
+- Earned AP allocation comparison completed: spend the saved two shared AP on
+  Quiet Steps/Training Session through prerequisite/tier/balance checks. No AP
+  grants, inventory additions or credit spending. With owned supplies, all five
+  seeds clear Golem/Titan both with and without camp. Supply efficiency is mixed,
+  so no optimal-build claim. Remaining: shop/resource-allocation decisions,
+  broader encounter coverage, and final affordability verification.
+
+- Owned-supply comparison: saved checkpoint's five Medkit I and ten Ration Packs
+  can now participate in a separate policy. Party rations are used when at least
+  two living members lack 35 HP; Medkit I follows ordinary medkit exhaustion.
+  Per-item consumption is reported and conserved after victories. Five paired
+  seeds clear both fights in four cases without camp, all five with camp. No
+  purchases/AP upgrades or gameplay changes; full suite 336 passing. Remaining:
+  legal resource allocation, broader encounters, and affordability/sign-off.
+
+- Saved-checkpoint attrition comparison: added Golem-to-Titan sequences with and
+  without the real one-time camp event. HP, medkit inventory and credits carry
+  through victories. Five paired/repeated seeds: three clear both without camp,
+  four with camp; seed 3 loses to Golem. All 336 JVM tests pass. This completes
+  the first constructed cumulative sequence, not full-route spending. Policy
+  still leaves AP, credits and some owned supplies unused. Broader encounters
+  and affordability sign-off remain open; Phases 4-6 mostly pending.
+
+- Saved level-eight checkpoint now feeds production Titan combat directly,
+  retaining earned inventory/unlocks and equipping one retained Flux Liner.
+  Five seeds, each replayed, all win using 0/1/1/1/1 medkits. No purchased gear,
+  extra XP or AP purchases. All 336 JVM tests pass. This closes the first saved
+  campaign-to-boss bridge; prior route attrition/spending remains unmodeled.
+  Remaining packages: extend checkpoint realism to cumulative spending, broaden
+  encounter coverage, then affordability decisions and final verification.
+
+- Pre-Titan correction: reward-linked route reaches 10,450 XP, level 8, 2 AP,
+  1,070 credits before Titan, with disk-restored state and earned-tier checks.
+  Earlier level-nine combat fixtures are not established by this route (550 XP
+  short); they also omit some story unlocks. Next run combat from this actual
+  snapshot with legal equipment/spending before balance decisions. Other optional
+  or unsimulated battles may add XP; no global level-cap/difficulty change made.
+
+- Production battle-reward checkpoint: separate World 1-3 route now generates
+  and pays supplied victories through CombatViewModel, retaining real protobuf
+  saves between worlds. Result: 7,050 XP, level 7, 2 shared AP, 1,070 credits.
+  Event-only ledger stays separate. This confirms credit/AP provenance, not
+  battle success or spending. Next carry progression to the World 4 pre-boss
+  point, then incorporate purchases/consumption. All three major packages remain
+  open; this advances checkpoint realism rather than closing Phase 2 or 3.
+  Verification: all 336 JVM tests pass; diff whitespace checks pass. No production
+  changes this pass; validators, lint and device checks were not rerun.
+
+- Event-earned checkpoint follow-up: report now includes restored inventory/AP
+  after all six worlds. A continuous World 1-3 test retains and equips earned
+  Flux Liner with a real protobuf disk round trip, without buying replacement.
+  The route grants two liners (starter kit plus patch action); retained unchanged
+  pending opening-intent review. Event-only checkpoint is level 7, 5,105 XP,
+  zero credits/AP: battle rewards/costs still need integration before this is a
+  full earned combat checkpoint. Three major Phase 2-3 packages remain open.
+
+- Player group-support coverage: production ATB/command tests now execute
+  Guardian Covenant and Link without explicit targets. Assert living-party
+  shield/regen coverage, Link healing, no enemy benefit, no fallen-ally revival,
+  and caster cooldown. Optional unlocks and injuries are deliberately seeded;
+  this is behavior coverage, not earned-route or enemy group-support coverage.
+  Remaining major packages: campaign-earned checkpoints, broader representative
+  encounters/support, and affordability decisions with final verification.
+
+- Optional accessory chain completed: the real workshop reward now feeds a
+  separate five-seed consecutive combat comparison. All seeds win Golem/Titan;
+  medkit spending is unchanged from the two-AP baseline. Full suite: 333 passing.
+  This closes this item's constructed comparison, not campaign-earned snapshots
+  or broader balance acceptance. Next prioritize those gaps and group support
+  rather than adding more World 4 accessory variants.
+
+- Optional equipment follow-up: Precision Sight now has a local ungated-route,
+  real loot-event/replay, and owner-scoped combat-stat regression. The earned
+  item is carried into a seeded World 4 party. Full navigation, disk persistence
+  for this scenario, and optional-gear encounter comparisons remain separate.
+
+- Two-AP comparison: pre-World-4 main-route boss rewards total two shared AP.
+  Added legally checked Quiet Steps/Training Session purchases and runtime stat
+  assertions, with five repeated seeded chains. Fixed missing desktop skill-tree
+  directory enumeration and victory inventory persistence on empty loot rolls.
+  Older combat measurements predate loaded passive definitions; use the latest
+  comparison in COMBAT_SPENDING_BASELINE.md. Optional route/gear and broader
+  campaign-earned checkpoint coverage remain open.
+  Verification: all 332 JVM tests and both asset checks pass. All five two-AP
+  chains clear Golem and Titan using 2-3 medkits total plus the camp item.
+
+- Earned-equipment follow-up: corrected the defensive fixture to retain its free
+  opening Flux Liner, with a source-grant assertion. Purchases now total 636 and
+  leave 434 credits; no extra supplies or stats were added. Recorded optional
+  pre-World-4 equipment sources and AP purchase constraints. Remaining: earned AP
+  ledger, legal chosen passives, and route/slot-verified optional gear comparisons.
+
+- Titan audit: fixed Vent Heat targeting the opponent and wired ignored status
+  defense multipliers into physical vitality-defense calculation. Titan now
+  takes an eligible cooling turn after either heavy skill; dedicated self-status
+  and regression tests added. Found free opening Flux Liner reward, so defensive
+  fixture budget was conservative by 432 credits. Full earned gear/passives
+  reconciliation remains before balance sign-off. All 332 JVM tests and both
+  asset checks pass. Expanded defensive/camp seeds 2-5 now defeat Titan;
+  seed 1 still loses to Golem. Earlier Titan-loss notes below are historical.
+
+- Expanded-offense comparison: level-earned offensive skills and the camp's
+  self-heal item now participate in the defensive test policy. Golem wins in
+  four of five seeds (versus two previously); all surviving paths still lose to
+  Titan. Full suite: 330 passing. Next narrow the audit to earned loadouts/passives
+  and Titan counterplay instead of assuming a global economy shortage.
+
+- First-use camp comparison implemented: real Forge camp event restores HP via
+  PartyHealth and grants its one-time supply; immediate replay changes nothing.
+  Two defensive seeds reach Titan with full HP but still lose under the limited
+  medkit/skill policy. All 330 JVM tests pass. Next is broader earned skill/item
+  use and a representative winning loadout, not yet enemy/price tuning.
+
+- Recovery follow-up: fixed rest using raw HP instead of the combat ceiling by
+  sharing PartyHealth between exploration and combat. Found first-use-only camps
+  beside the World 4 boss route. Golem loot cannot fully repay three medkits even
+  when both drops sell at the best dealer. No reward/price or camp-repeatability
+  change made; first-use recovery must be included in the next scenario.
+
+- Latest pass: defensive equipped/support policy exposed and fixed overlapping
+  animation pause leakage, with stale/duplicate callback regressions. Two of five
+  defensive seeds now complete Slag Golem before entering Titan with depleted
+  resources; no price/stat tuning. See `COMBAT_SPENDING_BASELINE.md` for limits.
+
+This summary supersedes historical pending notes below; the dated entries remain
+an implementation log, not a percentage-complete tracker.
+
+- Phase 1: original correctness acceptance completed. New regressions still get
+  fixed when discovered; completion is not a claim that no bugs remain.
+- Phase 2: campaign event/save coverage and seeded runtime fixtures implemented.
+  Remaining: more attainable equipped checkpoints, group-support scenarios,
+  and campaign-earned multi-encounter coverage beyond seeded inventory.
+- Phase 3: payout reconciliation, XP progression, shop safety, missing materials
+  and shop-funded resale loops addressed. Three remaining work packages:
+  (1) representative resource-spending measurements, (2) balance/affordability
+  decisions and justified adjustments, (3) rerun representative scenarios and
+  validators after tuning. No balance acceptance is claimed from limited policies.
+- Phase 4: mostly pending; opening guidance/tutorial pacing, loadout presentation,
+  and combat information/label clarity, followed by visual/device verification.
+- Phase 5: mostly pending; all-world action discoverability, compatible explicit
+  action references, and route/narrative terminology consistency.
+- Phase 6: mostly pending; device/accessibility/lifecycle checks, audio/assets,
+  performance profiling and release-build verification. A prior Play upload does
+  not establish these checks. External-player feedback remains separate.
+
+Do not translate test counts into percentage completion or a reliable time estimate.
+
+## Latest economy pass (2026-09-08)
+
+- Combat-spending baseline: injected default-preserving CombatRandom into the
+  production view model and AI; added five-seed, twice-replayed opening and
+  World 4 scenarios with real ATB/items/attacks and animation completion callbacks.
+  Timeouts fail. Opening consumed zero medkits; ungeared/basic-only Titan party
+  lost all five scenarios and used three medkits in four. No balance change made.
+  See `COMBAT_SPENDING_BASELINE.md`; next is equipped, skill-aware multi-encounter
+  testing, not treating this deliberately limited policy as realistic affordability.
+
+- Craft/resale follow-up: closed shop-funded Armor Plating and Source Resin
+  loops with targeted resale-value overrides, leaving purchase prices/stats and
+  recipe costs unchanged. Added chained-crafting expected-yield checks and a
+  production shop regression for separate buy/resale pricing.
+- Scripted battle reward baseline totals 2,640 credits; World 1 contributes 330.
+  This excludes additional encounters and loot sales, so it is not an actual
+  player budget. Broader affordability and combat-consumable measurements remain.
+
+- Material-source follow-up: defined Pure Iron, Composite Plate and Astral Thread
+  and added one-time World 4/5/6 room-entry caches supplying four each. Removed
+  the six missing-ingredient test exceptions. Added event-to-craft coverage for
+  both affected recipes per material, including state-restore replay protection.
+  Other ingredients are seeded in this focused test; supplies are finite and
+  sellable, not a renewable source. See `ECONOMY_AUDIT.md` for locations and limits.
+
+- Fixed shop stock validation, alias gates, live transaction checks, overflow
+  guards and immediate session inventory synchronization. Removed the mechanic's
+  unreachable basic-vest milestone gate; prices were not changed.
+- Fixed duplicate-alias ingredient consumption and invalid/oversized cooking
+  batches. Added transaction and catalog regressions.
+- Direct cross-shop resale checks found no profitable loops across ten shops.
+- Six recipes reference three undefined/unobtainable materials; explicitly
+  tracked as unresolved test debt, not silently treated as valid crafting paths.
+- See `ECONOMY_AUDIT.md` for price ranges, affected recipes and verification limits.
+  Phase 3 remains open for material sources, craft/resale loops and affordability.
+
 ## Phase 1 — correctness (completed 2026-09-08)
 
 - Implemented: remove three blocking Compose lint findings.

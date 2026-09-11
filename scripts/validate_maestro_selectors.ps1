@@ -62,6 +62,16 @@ $haystack = @(
 # JSON escapes apostrophes/quotes; normalise so "Loader's idle" matches.
 $normalizedHaystack = $haystack -replace '\\"', '"' -replace '\\u0027', "'"
 
+# Expand only the cooldown formatter's actual template, not an allowlist of
+# expected labels. Copy changes still invalidate old selectors. Numerical
+# correctness remains covered by AbilityCooldownLabelTest and device flows.
+$cooldownSource = Get-Content (Join-Path $root "app/src/main/java/com/example/starborn/ui/dialogs/AbilityCooldownLabel.kt") -Raw
+$cooldownTemplate = [regex]::Match($cooldownSource, '"\$\{turns\(effective\)\}([^"\r\n]*)"')
+if ($cooldownTemplate.Success) {
+    $cooldownSuffix = $cooldownTemplate.Groups[1].Value
+    $normalizedHaystack += "`n1 turn$cooldownSuffix`n2 turns$cooldownSuffix"
+}
+
 $findings = New-Object System.Collections.Generic.List[string]
 $checked = 0
 

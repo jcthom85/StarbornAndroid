@@ -67,6 +67,7 @@ scripts/.remote_device.json
 /hub*_*.png
 /hub*.png
 /maestro-current.png
+/phase4-*.png
 /mainquest-*.png
 /planetary-impact-cinematic.png
 /presence-*.png

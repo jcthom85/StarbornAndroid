@@ -1,0 +1,15 @@
+appId: com.junewiregames.starborn.prealpha
+---
+# Requires Wake Up Call details open at the top.
+- assertVisible: "Quest Details"
+- assertVisible: "Get ready: find Jed.*Repair the cutter:.*Test the bypass:.*"
+- scrollUntilVisible:
+    element: "Find Jed in his bunk and reach the workshop.*"
+    direction: DOWN
+    timeout: 15000
+- takeScreenshot: phase4-opening-current-stage
+- scrollUntilVisible:
+    element: "Run the live cutter test and wait for the fault log."
+    direction: DOWN
+    timeout: 15000
+- takeScreenshot: phase4-opening-final-objectives

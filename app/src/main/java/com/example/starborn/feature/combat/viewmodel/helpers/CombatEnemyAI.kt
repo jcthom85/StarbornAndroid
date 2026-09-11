@@ -14,7 +14,8 @@ import com.example.starborn.domain.model.Skill
 import com.example.starborn.domain.model.StatusDefinition
 import com.example.starborn.domain.combat.StatusEffect
 import java.util.Locale
-import kotlin.random.Random
+import com.example.starborn.domain.combat.CombatRandom
+import com.example.starborn.domain.combat.DefaultCombatRandom
 import kotlin.math.roundToInt
 import kotlin.collections.ArrayDeque
 
@@ -78,7 +79,8 @@ class CombatEnemyAI(
     private val enemyBrains: MutableMap<String, EnemyBrain>,
     private val enemyActionHistory: MutableMap<String, ArrayDeque<String>>,
     private val enemySkillUsageCounts: MutableMap<String, Int>,
-    private val getPlayerIdList: () -> List<String>
+    private val getPlayerIdList: () -> List<String>,
+    private val random: CombatRandom = DefaultCombatRandom
 ) {
     private val ELEMENT_TAGS = setOf("physical", "burn", "fire", "freeze", "ice", "shock", "lightning", "acid", "poison", "corrosion", "source", "harmonic", "psychic", "psionic")
     private val BLOCKING_STATUS_IDS = setOf("invulnerable", "shield", "guard", "defend")
@@ -490,6 +492,15 @@ class CombatEnemyAI(
     ): CombatAction {
         val enemyId = enemyState.combatant.id
         val brain = enemyBrains[enemyId] ?: EnemyBrain()
+        // Titan's authored counterplay: heavy attacks require a cooling turn.
+        // Respect skill availability (including Jammed) rather than bypassing it.
+        if (enemyId == "titan_walker_boss" && enemyActionHistory[enemyId]?.lastOrNull() in
+            setOf("missile_barrage", "titan_stomp")) {
+            val vent = skillById["vent_exposure"]
+            if (vent != null && vent.id in enemyState.combatant.skills && canEnemyUseSkill(enemyId, vent, state)) {
+                return CombatAction.SkillUse(enemyId, vent.id, listOf(enemyId))
+            }
+        }
         val candidates = mutableListOf<ScoredAction>()
 
         enemyState.combatant.skills.forEach { skillId ->
@@ -533,7 +544,7 @@ class CombatEnemyAI(
         val selected = candidates.maxByOrNull { it.score }?.let { best ->
             val threshold = best.score - 3.0
             val top = candidates.filter { it.score >= threshold }
-            top[Random.nextInt(top.size)]
+            top[random.nextInt(0, top.size)]
         }
 
         val fallbackTarget = basicTargets.firstOrNull() ?: enemyId

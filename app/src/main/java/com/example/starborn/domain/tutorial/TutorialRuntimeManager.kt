@@ -80,6 +80,10 @@ class TutorialRuntimeManager(
     fun markCompleted(key: String) {
         if (key.isBlank()) return
         sessionStore.markTutorialCompleted(key)
+        promptManager.removeQueued { prompt ->
+            prompt is TutorialPrompt && (prompt.entry.key?.equals(key, true) == true ||
+                prompt.entry.metadata["script_id"]?.equals(key, true) == true)
+        }
     }
 
     fun dismissTutorialIfActive(predicate: (TutorialEntry) -> Boolean) {
@@ -92,11 +96,14 @@ class TutorialRuntimeManager(
     fun completeAndDismiss(vararg scriptOrKeyIds: String) {
         val idSet = scriptOrKeyIds.map { it.lowercase(Locale.getDefault()) }.toSet()
         scriptOrKeyIds.forEach { markCompleted(it) }
-        dismissTutorialIfActive { entry ->
+        val matches: (TutorialEntry) -> Boolean = { entry ->
             val key = entry.key?.lowercase(Locale.getDefault())
             val scriptId = entry.metadata["script_id"]?.lowercase(Locale.getDefault())
             (key != null && key in idSet) || (scriptId != null && scriptId in idSet)
         }
+        // Remove stale steps before dismissing the active one promotes the queue.
+        promptManager.removeQueued { it is TutorialPrompt && matches(it.entry) }
+        dismissTutorialIfActive(matches)
     }
 
     fun showOnce(
@@ -228,6 +235,11 @@ class TutorialRuntimeManager(
         synchronized(lock) {
             scheduledJobs.remove(key)?.cancel()
         }
+    }
+
+    fun cancelAllTutorials() {
+        cancelAllScheduled()
+        promptManager.discardMatching { it is TutorialPrompt }
     }
 
     fun cancelAllScheduled() {

@@ -1,0 +1,56 @@
+appId: com.junewiregames.starborn.prealpha
+---
+# Debug session only; retain app data and save slots. Echo-Borer resists Shock.
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- tapOn: "Story"
+- scrollUntilVisible:
+    element: "The Echo: First Combat"
+    direction: DOWN
+- tapOn: "The Echo: First Combat"
+- extendedWaitUntil:
+    visible: "Elevator Landing"
+    timeout: 60000
+# This debug checkpoint retains the opening cinematic; room title appears first.
+- extendedWaitUntil:
+    visible: "Travel north"
+    timeout: 90000
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Engage Echo Borer"
+    timeout: 30000
+- tapOn: "Engage Echo Borer"
+- extendedWaitUntil:
+    visible: "Nova"
+    timeout: 30000
+- repeat:
+    times: 5
+    commands:
+      - runFlow:
+          when:
+            notVisible: "Abilities"
+          commands:
+            - tapOn: "Nova"
+- tapOn: "Abilities"
+- assertVisible: "Arc Tether"
+- tapOn:
+    text: "Use"
+    below: "Arc Tether"
+    above: "Cryo Vent"
+- tapOn:
+    text: "Echo-Borer"
+    index: 0
+- repeat:
+    times: 5
+    commands:
+      - runFlow:
+          when:
+            notVisible: "Abilities"
+          commands:
+            - tapOn: "Nova"
+- tapOn: "Abilities"
+- runFlow: phase4_assert_arc_cooldown.yaml

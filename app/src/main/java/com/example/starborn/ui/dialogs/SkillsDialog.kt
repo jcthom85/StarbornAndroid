@@ -37,7 +37,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.starborn.data.local.Theme
 import com.example.starborn.domain.model.Player
@@ -143,13 +142,16 @@ fun SkillsDialog(
                 ) {
                     items(skills, key = { it.id }) { skill ->
                         val allowedByGuide = allowedSkillIds == null || skill.id in allowedSkillIds
-                        val canUse = allowedByGuide && viewModel.canUseSkill(player.id, skill)
+                        val unavailableReason = if (!allowedByGuide) "Follow the tutorial's highlighted ability"
+                            else viewModel.skillUnavailableReason(player.id, skill)
+                        val canUse = unavailableReason == null
                         val cooldown = viewModel.skillCooldownRemaining(player.id, skill.id)
                         val highlighted = skill.id == highlightedSkillId
                         AbilityRow(
                             skill = skill,
                             cooldownRemaining = cooldown,
                             canUse = canUse,
+                            unavailableReason = unavailableReason,
                             highlighted = highlighted,
                             momentum = momentum,
                             infusedElement = infusedElement,
@@ -199,6 +201,7 @@ private fun AbilityRow(
     skill: Skill,
     cooldownRemaining: Int,
     canUse: Boolean,
+    unavailableReason: String?,
     highlighted: Boolean,
     momentum: Int = 0,
     infusedElement: String? = null,
@@ -240,9 +243,7 @@ private fun AbilityRow(
                 Text(
                     text = skill.name,
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
-                    color = if (canUse) Color.White else Color.White.copy(alpha = 0.62f),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    color = if (canUse) Color.White else Color.White.copy(alpha = 0.62f)
                 )
                 Text(
                     text = abilitySummary(skill, cooldownRemaining, momentum, infusedElement, infusedStatus),
@@ -251,10 +252,15 @@ private fun AbilityRow(
                         Color(0xFFFFC857)
                     } else {
                         accent.copy(alpha = 0.88f)
-                    },
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    }
                 )
+                if (unavailableReason != null) {
+                    Text(
+                        text = unavailableReason,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color(0xFFFFC857)
+                    )
+                }
             }
             IconButton(onClick = onDetails) {
                 Icon(
@@ -394,7 +400,7 @@ private fun AbilityDetailsDialog(
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             AbilityDetailLine("Type", skill.type.toDisplayLabel())
-                            AbilityDetailLine("Target", targetRequirement.toDisplayLabel(skill))
+                            AbilityDetailLine("Target selection", abilityTargetLabel(targetRequirement))
                             AbilityDetailLine(
                                 "Power",
                                 skill.basePower.takeIf { it > 0 }?.toString() ?: "Utility"
@@ -405,11 +411,7 @@ private fun AbilityDetailsDialog(
                             )
                             AbilityDetailLine(
                                 "Cooldown",
-                                when {
-                                    cooldownRemaining > 0 -> "$cooldownRemaining turns remaining"
-                                    skill.cooldown > 0 -> "${skill.cooldown} turns"
-                                    else -> "None"
-                                }
+                                abilityCooldownLabel(skill.cooldown, cooldownRemaining, momentum)
                             )
                             skill.usesPerBattle?.let { uses ->
                                 AbilityDetailLine("Battle limit", "$uses use${if (uses == 1) "" else "s"}")
@@ -521,18 +523,7 @@ private fun abilitySummary(
             add(powerText)
         }
         skill.scaling?.takeIf { it.isNotBlank() }?.let { add(it.toDisplayLabel()) }
-        when {
-            cooldownRemaining > 0 -> add("$cooldownRemaining turn cooldown")
-            skill.cooldown > 0 -> {
-                if (momentum >= 2) {
-                    val refundCd = (skill.cooldown - 1).coerceAtLeast(0)
-                    add("${skill.cooldown} (${refundCd}⚡) turn cooldown")
-                } else {
-                    add("${skill.cooldown} turn cooldown")
-                }
-            }
-            else -> add("No cooldown")
-        }
+        add(abilityCooldownLabel(skill.cooldown, cooldownRemaining, momentum))
         val isHeal = skill.type.equals("heal", ignoreCase = true) ||
             skill.combatTags?.any { it.equals("heal", ignoreCase = true) || it.equals("support", ignoreCase = true) } == true
         if (!isHeal) {
@@ -543,17 +534,6 @@ private fun abilitySummary(
         }
     }
     return parts.joinToString("  |  ")
-}
-
-private fun TargetRequirement.toDisplayLabel(skill: Skill): String = when (this) {
-    TargetRequirement.ENEMY -> "One enemy"
-    TargetRequirement.ALLY -> "One ally"
-    TargetRequirement.ANY -> "Any combatant"
-    TargetRequirement.NONE -> when {
-        skill.combatTags.orEmpty().any { it.equals("aoe", ignoreCase = true) } -> "Group"
-        skill.combatTags.orEmpty().any { it.equals("support", ignoreCase = true) } -> "Self or group"
-        else -> "Automatic"
-    }
 }
 
 private fun String.toDisplayLabel(): String =

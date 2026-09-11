@@ -27,7 +27,7 @@ object DebugScenarioCatalog {
         // --- TUTORIAL SCENARIOS ---
         scenario("tut_movement", "Tutorial: Movement & Bunks", "Start in Nova's bunk with swipe movement and light switch hints.", DebugScenarioCategory.TUTORIAL),
         scenario("tut_npc_dialogue", "Tutorial: NPC & Dialogue", "Start in Jed's bunk with the NPC interaction and dialogue prompt.", DebugScenarioCategory.TUTORIAL),
-        scenario("tut_gear_inventory", "Tutorial: Gear & Inventory", "Start in Pit Corridor with unequipped starter gear and inventory tutorial.", DebugScenarioCategory.TUTORIAL),
+        scenario("tut_gear_inventory", "Tutorial: Gear & Inventory", "Start in the workshop yard with unlocked, unequipped starter gear and inventory tutorial.", DebugScenarioCategory.TUTORIAL),
         scenario("tut_tinkering", "Tutorial: Tinkering Workbench", "Start in Jed's Workshop with Broken Cryo-Inductor, Scrap Metal, and Flux Liner.", DebugScenarioCategory.TUTORIAL),
         scenario("tut_save_system", "Tutorial: Save System", "Start in Workshop Yard with Shift Clearance active to test the save prompt.", DebugScenarioCategory.TUTORIAL),
         scenario("tut_journal_quests", "Tutorial: Journal & Quests", "Start in Market Plaza with active errands to test journal tracking.", DebugScenarioCategory.TUTORIAL),

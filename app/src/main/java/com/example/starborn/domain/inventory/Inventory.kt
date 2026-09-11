@@ -66,13 +66,15 @@ class InventoryService(
 
     @Synchronized
     fun consumeItems(requirements: Map<String, Int>): Boolean {
-        val resolved = mutableListOf<Pair<String, Int>>()
+        val resolved = mutableMapOf<String, Long>()
         for ((req, qty) in requirements) {
+            if (qty <= 0) return false
             val entry = findEntry(req) ?: return false
-            if (entry.second.quantity < qty) return false
-            resolved.add(entry.first to qty)
+            val total = resolved.getOrDefault(entry.first, 0L) + qty
+            if (entry.second.quantity < total) return false
+            resolved[entry.first] = total
         }
-        resolved.forEach { (id, qty) -> removeItemById(id, qty) }
+        resolved.forEach { (id, qty) -> removeItemById(id, qty.toInt()) }
         return true
     }
 

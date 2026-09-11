@@ -1,0 +1,30 @@
+appId: com.junewiregames.starborn.prealpha
+---
+# Requires Nova's Abilities dialog open with Arc Tether on cooldown.
+# Both command windows can occur in this full-party debug setup.
+- assertVisible: ".*Ready in [12] turns?.*"
+- assertVisible: "On cooldown"
+- runFlow:
+    when:
+      visible: ".*Ready in 2 turns.*"
+    commands:
+      - assertVisible:
+          containsChild:
+            text: "2"
+          enabled: false
+      - takeScreenshot: phase4-nonweak-cooldown
+      - tapOn: "Details for Arc Tether"
+      - assertVisible: "Ready in 2 turns"
+      - takeScreenshot: phase4-nonweak-cooldown-details
+- runFlow:
+    when:
+      visible: ".*Ready in 1 turn.*"
+    commands:
+      - assertVisible:
+          containsChild:
+            text: "1"
+          enabled: false
+      - takeScreenshot: phase4-nonweak-cooldown
+      - tapOn: "Details for Arc Tether"
+      - assertVisible: "Ready in 1 turn"
+      - takeScreenshot: phase4-nonweak-cooldown-details

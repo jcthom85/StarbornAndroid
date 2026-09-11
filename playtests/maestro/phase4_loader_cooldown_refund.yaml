@@ -1,0 +1,38 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- runFlow: phase4_loader_labels.yaml
+- tapOn: "Back to Abilities"
+- tapOn: "Use"
+- tapOn: "Faulted Loader"
+- extendedWaitUntil:
+    visible: "Finish Combat"
+    timeout: 30000
+- assertVisible: ".*Exploiting weaknesses shortens cooldowns.*"
+- takeScreenshot: phase4-loader-success
+- tapOn: "Finish Combat"
+- extendedWaitUntil:
+    visible: "Nova"
+    timeout: 30000
+# The portrait is visible before ATB readiness; an early tap is ignored.
+# Retry only while the command palette is absent, with a bounded attempt count.
+- repeat:
+    times: 5
+    commands:
+      - runFlow:
+          when:
+            notVisible: "Abilities"
+          commands:
+            - tapOn: "Nova"
+- extendedWaitUntil:
+    visible: "Abilities"
+    timeout: 30000
+- tapOn: "Abilities"
+- assertVisible: ".*2 turns after use.*"
+- assertNotVisible: "On cooldown"
+- assertVisible:
+    text: "Use"
+    enabled: true
+- takeScreenshot: phase4-ability-cooldown-refund
+- tapOn: "Details for Arc Tether"
+- assertVisible: "2 turns after use"
+- takeScreenshot: phase4-ability-cooldown-refund-details

@@ -145,7 +145,7 @@ fun CombatTutorialOverlay(
     val message = when (tutorial.step) {
         CombatTutorialStep.BRIEF ->
             if (isLoader)
-                "When Nova is ready, tap her to choose an action. Start with a standard Attack and select the Faulted Loader."
+                "When Nova is ready, tap her, choose Abilities, then Arc Tether. Select the Faulted Loader to exploit its Shock weakness."
             else
                 "That trainer eats direct hits. First, test the shield, then break its guard with Hydraulic Kick."
         CombatTutorialStep.SELECT_NOVA_ATTACK -> "Tap Nova when her action is ready."
@@ -169,7 +169,7 @@ fun CombatTutorialOverlay(
             if (isLoader) "Watch the Shock pulse break its stability." else "Watch the guard break."
         CombatTutorialStep.SUCCESS ->
             if (isLoader)
-                "Stability broken! Broken targets take 25% more direct damage. Arc Tether is on cooldown—use Attacks to finish it and build Momentum for your next Overcharge!"
+                "Stability broken! Broken targets take 25% more direct damage. Exploiting weaknesses shortens cooldowns. Use Attacks to build Momentum for your next Overcharge!"
             else
                 "Hydraulic Kick stripped the shield. Attack to finish the fight and build Momentum for your next Overcharge!"
     }
