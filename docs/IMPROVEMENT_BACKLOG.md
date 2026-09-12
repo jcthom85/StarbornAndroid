@@ -3,7 +3,108 @@
 Approved scope: correctness, realistic campaign testing, combat/economy, opening/UI,
 exploration/narrative consistency, and presentation/release verification.
 
-## Current phase status (2026-09-11)
+## Current phase status (2026-09-12)
+
+- Finale combat/status checkpoint: the earned six-world pre-finale state now spends
+  only resources actually present at that checkpoint (5 of 9 AP and 1,800 of 2,640
+  credits) on legal nodes and four authored weapon-shop upgrades. Finale-only enemy
+  skills and both Ascended forms were rebalanced from their previously overwhelming
+  values. Production ATB/AI simulations deterministically clear the Soloist phase in
+  all five seeds and clear both consecutive phases in four of five; the remaining
+  seed reaches phase two and loses after 126 seconds. Regression thresholds preserve
+  those results. A separate production-runtime test proves authored silence/weak
+  application and finite turn expiration with StatusApplied/StatusExpired logs.
+  Verification: 405 JVM tests pass with zero failures/errors; 354 strict Maestro
+  selectors and diff check pass; discoverability remains 22 classified candidates.
+  This is automated balance evidence, not physical-device finale acceptance. Changes
+  are uncommitted and are not included in Play 115. Next: renewable-resource and
+  campaign affordability analysis, followed by the remaining manual/device gates.
+
+- Renewable fishing economy checkpoint: fishing is repeatable and does not consume
+  rods or lures, but all eight catches previously inherited resale from doubled
+  `buy_price` values. Explicit resale bases now use ordinary catalog value, halving
+  best-dealer proceeds without changing catch odds, recipes or purchase prices.
+  Base-weighted expected sale proceeds are 8.4–59.4 credits per successful catch;
+  the maximum single catch is 90. A catalog regression guards explicit resale and
+  the 60-credit weighted ceiling. Human success/time cadence remains a device gate.
+  Next automated work: continuous route spending/access classification, then final
+  static/lifecycle checks that do not require a person or physical phone.
+
+- Six-world mid-quest persistence checkpoint: added real protobuf disk save/load
+  continuation cases for one gated main objective in every world (relic sync,
+  Source Gate, Lens, Anvil cradle, Anchor and Memory Bridge). Each case restores
+  into fresh quest/event runtimes, completes the pending production event, verifies
+  replay retirement, and persists the resulting state again. This complements the
+  existing world-boundary campaign resume and corruption/backup tests; it does not
+  prove process death during an active cinematic, combat or puzzle UI. Verification:
+  all 404 JVM tests and bounded validators pass; audit remains 22 classified pairs.
+  Next: finale combat/status simulation, then economy/resource analysis.
+
+- World 6 terminology/event checkpoint: corrected 23 actionable objectives across
+  MQ26–MQ30 and SQ26–SQ30 to name the shipped Source rooms and interaction labels,
+  including all four Memory Bridge anchors and both alternate Zeke record choices.
+  Confirmed MQ26–MQ29 completion events exclusively own their successor handoffs;
+  MQ30 completes through its existing cinematic callback and has no successor quest.
+  Added catalog and handoff regressions. No events, gates, rewards, routes or action
+  definitions changed. Verification: 403 JVM tests pass; narrative validation,
+  354 selectors and two explicit references pass; audit remains 22 classified
+  candidates. Static world terminology/event review is complete. Player route,
+  encounter and device acceptance remain open. Uncommitted and not in Play 115.
+
+- World 5 terminology/event checkpoint: corrected 25 actionable journal objectives
+  across MQ21–MQ25 and SQ21–SQ25 to name the shipped Orbital Ring/Deep Ring rooms
+  and interaction labels. Confirmed the five main completion events directly and
+  exclusively own their successor start/track handoffs; unlike World 3, no parallel
+  `quest_stage_complete` transitions duplicate them. Added catalog and handoff
+  regressions. No events, gates, rewards, routes or action definitions changed.
+  Verification: 401 JVM tests pass; narrative validation, 354 selectors, two
+  explicit references and diff check pass; audit remains 22 classified candidates.
+  Device traversal remains open. Next: World 6 terminology and event sequencing.
+  Changes are uncommitted and not in Play 115.
+
+- World 4 terminology checkpoint: corrected eight journal objectives across
+  SQ18, MQ19, SQ19 and SQ20 to name their authored rooms and interactions:
+  Waste Intake, The Forge, Reject Bay, Conveyor Belt, Control Alcove, the Anvil
+  cradle and the relevant consoles/controls. Added a catalog regression binding
+  the copy to those assets. No events, gates, rewards, routes or action definitions
+  changed. Verification: 399 JVM tests pass; narrative validation, 354 selectors,
+  two explicit references and diff check pass; audit remains 22 classified
+  candidates. Device traversal remains open. Next: World 5 terminology and event
+  sequencing, then World 6. Changes are uncommitted and not in Play 115.
+
+- World 3 event checkpoint: removed duplicate MQ12 -> MQ13 start/track/warp by
+  consolidating the handoff and node unlocks in the quest-completion transition.
+  Added an exact-once quest-start assertion. Verified MQ13 registry/sensor/chute,
+  MQ14 three-reading/Lens and MQ15 boss/scan/launch ordering against journal copy.
+  No other gate changes. Verification: full JVM suite passes (398 tests, zero
+  failures/errors); narrative validation and 354 selectors pass; explicit-action
+  validation passes; audit remains 22 classified candidates; diff check passes.
+  Device traversal remains open. Changes are uncommitted and not in Play 115.
+
+- World 2 MQ route checkpoint: clarified five journal destinations/actions,
+  especially Stasis Chamber/Ring Array and Pod Fragment -> Hangar Bay conduit/
+  Bridge handoff. Event trace confirms ring alignment recovery, four Source Gate
+  milestones, Astra inspection/conduit/reboot/launch ordering; no gates changed.
+  Added targeted catalog regression. Narrative validation, 354 selectors, audit
+  (22 candidates), diff check and full JVM suite pass.
+  Next: World 2 side-quest routes, then World 3 terminology. Device and migration
+  acceptance remain open; changes are uncommitted and not in Play 115.
+
+- World 2 side-quest route checkpoint: clarified nine journal destinations for
+  flora, Lost Patrol and vent infiltration against authored room/action names;
+  added catalog regression. No events, gates, rewards or crafting definitions
+  changed. JVM suite remains green, narrative
+  validation and 354 selectors pass. Next: World 3 terminology; side-quest
+  crafting/economy and device acceptance remain open. Uncommitted, not in Play 115.
+
+- World 3 terminology checkpoint: corrected nine journal labels across MQ12,
+  SQ12, SQ14 and SQ15 to match Security Kiosk, Elevator Service Gate, Zeke's
+  Apartment, Uniform Sorting, Exec Lounge and Drone Test Alcove actions. Added
+  targeted catalog regression. Review of Luna's preceding World 2 patch found
+  no partial World 3 edits or non-prose gameplay changes. Fresh verification:
+  398 JVM tests, zero failures/errors; narrative validation and 354 selectors
+  pass; audit remains 22; diff check clean. Next: World 3 event/transition
+  sequencing, then Worlds 4–6. Uncommitted and not included in Play 115.
 
 - Release preparation 2026-09-12: version 1.3.31 (115) packages the narrative-limit
   fixes and World 1 route/terminology review below. Their historical uncommitted

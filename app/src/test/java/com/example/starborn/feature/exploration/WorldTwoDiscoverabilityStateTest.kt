@@ -19,6 +19,40 @@ import org.junit.Test
 class WorldTwoDiscoverabilityStateTest {
     private val reader = AssetJsonReader(DesktopAssetProvider(), MoshiProvider.instance)
 
+    @Test fun `side quest journal locations match authored world two actions`() {
+        val rooms = reader.readList<Room>("rooms.json").associateBy { it.id }
+        val quests = reader.readList<com.example.starborn.domain.model.Quest>("quests.json").associateBy { it.id }
+        val tasks = quests.getValue("w2_sq01").stages.flatMap { it.tasks }.associateBy { it.id }
+        assertTrue(tasks.getValue("scan_flora_1").text.contains(rooms.getValue("sector9_canopy").title))
+        assertTrue(tasks.getValue("scan_flora_2").text.contains(rooms.getValue("sector9_beach_pools").title))
+        assertTrue(tasks.getValue("scan_flora_5").text.contains(rooms.getValue("sector9_stasis_chamber").title))
+        val patrol = quests.getValue("w2_sq02").stages.flatMap { it.tasks }.associateBy { it.id }
+        assertTrue(patrol.getValue("trace_alpha").text.contains(rooms.getValue("sector9_wilds_thickets").title))
+        assertTrue(patrol.getValue("trace_beta").text.contains(rooms.getValue("sector9_wilds_hollow").title))
+        assertTrue(patrol.getValue("trace_gamma").text.contains(rooms.getValue("sector9_ridge_sniper_perch").title))
+        val vents = quests.getValue("w2_sq05").stages.flatMap { it.tasks }.associateBy { it.id }
+        assertTrue(vents.getValue("hack_security_grid").text.contains(rooms.getValue("sector9_vents_gantry").title))
+        assertTrue(vents.getValue("bypass_guard_systems").text.contains(rooms.getValue("sector9_vents_access_grate").title))
+        assertTrue(vents.getValue("recover_transmitter").text.contains(rooms.getValue("sector9_vents_tech_alcove").title))
+    }
+
+    @Test fun `main quest journal names world two handoff rooms and authored actions`() {
+        val rooms = reader.readList<Room>("rooms.json").associateBy { it.id }
+        val quests = reader.readList<com.example.starborn.domain.model.Quest>("quests.json")
+            .associateBy { it.id }
+        val mq03 = quests.getValue("w2_mq03").stages.flatMap { it.tasks }.associateBy { it.id }
+        assertTrue(mq03.getValue("inspect_murals").text.contains(rooms.getValue("sector9_hall_of_echoes").title))
+        assertTrue(mq03.getValue("find_stasis_chamber").text.contains(rooms.getValue("sector9_stasis_chamber").title))
+        assertTrue(mq03.getValue("align_stasis_rings").text.contains(rooms.getValue("sector9_stasis_ring_array").title))
+        val mq05 = quests.getValue("w2_mq05").stages.flatMap { it.tasks }.associateBy { it.id }
+        assertTrue(mq05.getValue("collect_power_conduits").text.contains(rooms.getValue("sector9_landing_drop").title))
+        assertTrue(mq05.getValue("reboot_bridge_relic").text.contains(rooms.getValue("sector9_hangar_bay").title))
+        assertEquals("w2_mq05_collect_conduits", rooms.getValue("sector9_landing_drop").actions
+            .single { it["action_event"] == "w2_mq05_collect_conduits" }["action_event"])
+        assertEquals("w2_mq05_reboot", rooms.getValue("sector9_hangar_bay").actions
+            .single { it["name"] == "bridge relic" }["action_event"])
+    }
+
     @Test fun `completed ridge quest repairs absent flags but milestone alone does not`() {
         val room = reader.readList<Room>("rooms.json").single { it.id == "sector9_canopy_ridge" }
         val milestones = setOf("ms_w2_mq03_complete", "ms_w2_mq04_complete")

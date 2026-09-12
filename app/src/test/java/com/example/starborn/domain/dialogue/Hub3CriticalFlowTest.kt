@@ -111,6 +111,9 @@ class Hub3CriticalFlowTest {
         assertTrue(state.questTasksCompleted["w3_mq12"].orEmpty().contains("assemble_table"))
         assertTrue(state.completedQuests.contains("w3_mq12"))
         assertTrue(state.completedMilestones.contains("ms_w3_mq12_complete"))
+        assertTrue(state.activeQuests.contains("w3_mq13"))
+        assertEquals("w3_mq13", state.trackedQuestId)
+        assertEquals(1, harness.startedQuests.count { it == "w3_mq13" })
     }
 
     @Test
@@ -190,6 +193,7 @@ class Hub3CriticalFlowTest {
         val events: EventManager
         val dialogue: DialogueService
         val messages = mutableListOf<String>()
+        val startedQuests = mutableListOf<String>()
 
         init {
             initialState?.let(store::restore)
@@ -198,6 +202,7 @@ class Hub3CriticalFlowTest {
                 sessionStore = store,
                 eventHooks = EventHooks(
                     onMessage = { messages += it },
+                    onQuestStarted = { questId -> questId?.let(startedQuests::add) },
                     onSystemTutorial = { _, _, _, done -> done() },
                     onQuestTaskUpdated = { questId, taskId ->
                         if (!questId.isNullOrBlank() && !taskId.isNullOrBlank()) {

@@ -27,6 +27,111 @@ under that limit.
 
 ## Remaining review
 
+### World 2 main-quest route checkpoint (2026-09-12)
+
+Reviewed MQ01–MQ05 journal tasks against authored room edges and action events.
+Clarified MQ03 locations (Hall of Echoes, Stasis Chamber, Ring Array) and MQ05's
+return to the Pod Fragment for conduits followed by Bridge installation at Hangar
+Bay. The authored events confirm the sequence: ring alignment auto-completes
+Orion/Bridge recovery; Source Gate requires four independent milestones; Astra
+inspection precedes conduit collection; reboot requires Bridge and signal-cell
+items; launch requires reboot completion. No gates or event definitions changed.
+
+World 2 route ambiguity remains around side quests and player traversal through
+the many canopy/beach/ruins branches. Continue with side-quest route mapping,
+then review World 3 terminology. Static catalog tests do not replace device route
+acceptance or save/load migration tests.
+
+World 2 side-quest checkpoint: clarified flora scans (Resonant Canopy, Tide
+Pools, Crash Site, Stasis Chamber), patrol beacons (Spore Thickets, Poison
+Hollow, Sniper Lookout, then Burned Glade), and vent infiltration (High Gantry,
+Infiltration Hatch, Transmitter Site). The old prose used generic "wilds," "ridge
+perch," and "vent security" labels that did not match room titles. Action events
+and gates remain unchanged. A catalog regression binds nine journal destinations
+to their authored rooms. Remaining side-quest crafting/economy acceptance is not
+proven by these static checks.
+
+### World 3 terminology checkpoint (2026-09-12)
+
+Reviewed all main- and side-quest task labels against World 3 room titles and
+inline actions. Corrected nine ambiguous labels: MQ12 now names Security Kiosk,
+Elevator Service Gate and Zeke's Apartment; SQ12 names the memorial in Uniform
+Sorting and the Security Kiosk; SQ14 names Exec Lounge's concierge credential
+mirror and private safe; SQ15 names Drone Test Alcove and its prototype rack.
+
+These are terminology corrections only. The route graph, action events, quest
+conditions and rewards are unchanged. A catalog regression ties the revised
+tasks to shipped room titles/action names. The static check does not prove heist
+sequencing, combat, or navigation on device. Next: trace World 3 event ordering
+and transition gates, then continue Worlds 4–6.
+
+World 3 event checkpoint: the planning-table event previously completed MQ12 and
+directly started/tracked/warped into MQ13, while the production quest-completion
+callback also fired `w3_mq12_to_w3_mq13`, repeating that same handoff. Consolidated
+the handoff in the transition event and moved both Upper City node unlock pairs
+there so legacy/completion recovery keeps the full route. The planning action now
+owns task completion, XP, quest completion and milestone only. Hub3CriticalFlowTest
+records quest-start callbacks and asserts MQ13 starts exactly once.
+
+MQ13 ordering is blend at Skypark guest registry, then blind Laundry Service
+sensors, then use its service chute. MQ14 requires Archive entry plus three
+readings before the braided chord; Lens pickup starts MQ15. Rooftop launch requires
+Administrator defeat and Shield-window scan. These gates already agree with the
+journal; no further changes made. Device heist/roof traversal remains unproven.
+
+### World 4 terminology checkpoint (2026-09-12)
+
+Reviewed all World 4 main- and side-quest task labels against authored room
+titles and inline actions. Corrected eight objectives: SQ18 now points to the
+Waste Intake and its waste intake brake; MQ19 names The Forge and Anvil cradle;
+SQ19 identifies Reject Bay and the three Conveyor Belt choices; SQ20 names
+Control Alcove's hazard cycle map/overclock profile and The Forge's test chamber
+terminal.
+
+The edits are quest prose only. Events, gates, rewards, connections and action
+definitions are unchanged. A catalog regression binds each revised objective to
+the shipped room title or action label. Static coverage does not prove player
+navigation, hazard-wave combat or choice behavior on device. The complete JVM
+suite passes with 399 tests; narrative, selector and explicit-reference validators
+also pass, and the discoverability audit remains at 22 classified omissions.
+Next: World 5 terminology and event ordering, followed by World 6.
+
+### World 5 terminology and event checkpoint (2026-09-12)
+
+Reviewed MQ21–MQ25 and SQ21–SQ25 against the Orbital Ring and Deep Ring room
+catalog. Corrected 25 objectives to identify their actual interaction points,
+including Executive Dock controls, Solarium/Mirror Walk machinery, Service Shaft
+and Mainframe routes, the three Director-log actions, Server Farm backup choices,
+Anchor Chamber objects, and the Throne Room/Tear actions. Where the same event is
+intentionally offered in two rooms, the journal now names both valid routes.
+
+The five main-quest completion events each contain exactly one completion and one
+successor start/track pair. No `quest_stage_complete` event repeats those handoffs,
+so no event change analogous to World 3 was required. Catalog and handoff tests
+lock this behavior. The quest edits are prose only; events, gates, routes, rewards,
+connections and action definitions are unchanged. All 401 JVM tests and bounded
+validators pass; the audit remains 22 classified omissions. This does not prove
+fighter, zero-gravity, firewall, Avatar or route behavior on device. Next: World 6
+terminology and event sequencing.
+
+### World 6 terminology and event checkpoint (2026-09-12)
+
+Reviewed MQ26–MQ30 and SQ26–SQ30 against the Source room/action catalog. Corrected
+23 objectives to identify their interaction points: the Campfire song-fire,
+Manager Patrol Route, all Memory Bridge anchors, the side-quest memory controls,
+Memory Stair revisions, shared tuning focus, Aethel trail and future-Astra salvage
+route. The Zeke finale now explicitly names both valid choices.
+
+MQ26 through MQ29 completion events each own exactly one successor start/track
+handoff, with no duplicate `quest_stage_complete` transition. MQ30 intentionally
+has no successor quest: the shared tuning puzzle dispatches the existing cinematic
+callback, which completes MQ30, sets game completion and reaches the epilogue.
+Catalog and handoff regressions lock the reviewed contracts. Quest edits are prose
+only; event, route, gate, reward, connection and action definitions are unchanged.
+All 403 JVM tests and bounded validators pass; the audit remains 22 classified
+omissions. This completes static per-world terminology/event review, not real
+route discovery, finale combat, cinematic-resume or device acceptance.
+
 ### SQ03 compatibility resolution
 
 The legacy loader/cargo objectives are still backed by `workshop_dock` actions:

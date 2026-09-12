@@ -5208,38 +5208,6 @@
       {
         "type": "set_milestone",
         "milestone": "ms_w3_mq12_complete"
-      },
-      {
-        "type": "start_quest",
-        "quest_id": "w3_mq13"
-      },
-      {
-        "type": "track_quest",
-        "quest_id": "w3_mq13"
-      },
-      {
-        "type": "reveal_node",
-        "node_id": "spire_laundry"
-      },
-      {
-        "type": "unlock_node",
-        "node_id": "spire_laundry"
-      },
-      {
-        "type": "reveal_node",
-        "node_id": "spire_skypark"
-      },
-      {
-        "type": "unlock_node",
-        "node_id": "spire_skypark"
-      },
-      {
-        "type": "warp",
-        "room_id": "spire_laundry_service"
-      },
-      {
-        "type": "show_message",
-        "message": "Quest Complete: The Plan\n\nCurfews, patrol gaps, copied badges, disguises, security records, and Zeke's blueprints lock into one ugly route. Nova assigns the roles. The service lift swallows the crew into the clean machinery of the Upper City, where the only way forward is to look like labor nobody is paid to notice."
       }
     ]
   },
@@ -5438,12 +5406,28 @@
         "quest_id": "w3_mq13"
       },
       {
+        "type": "reveal_node",
+        "node_id": "spire_laundry"
+      },
+      {
+        "type": "unlock_node",
+        "node_id": "spire_laundry"
+      },
+      {
+        "type": "reveal_node",
+        "node_id": "spire_skypark"
+      },
+      {
+        "type": "unlock_node",
+        "node_id": "spire_skypark"
+      },
+      {
         "type": "warp",
         "room_id": "spire_laundry_service"
       },
       {
         "type": "show_message",
-        "message": "The heist begins. The copied badges hold just long enough for the service lift to swallow the crew into the clean machinery of the Upper City, where nobody screams because nobody has to."
+        "message": "Quest Complete: The Plan\n\nCurfews, patrol gaps, copied badges, disguises, security records, and Zeke's blueprints lock into one ugly route. Nova assigns the roles. The service lift swallows the crew into the clean machinery of the Upper City, where the only way forward is to look like labor nobody is paid to notice."
       }
     ]
   },

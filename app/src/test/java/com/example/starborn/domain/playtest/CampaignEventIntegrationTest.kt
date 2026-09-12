@@ -201,6 +201,55 @@ class CampaignEventIntegrationTest {
         }
     }
 
+    @Test fun `partial main quest objectives resume from disk in every world`() {
+        val cases = listOf(
+            Triple("w1_mq03_touch_relic", "w1_mq03", "touch_tuning_fork"),
+            Triple("w2_mq05_bypass_gate", "w2_mq05", "bypass_source_gate"),
+            Triple("w3_mq14_take_lens", "w3_mq14", "take_lens"),
+            Triple("w4_mq19_open_anvil_cradle", "w4_mq19", "solve_conveyor_puzzle"),
+            Triple("w5_mq24_take_anchor", "w5_mq24", "take_anchor"),
+            Triple("w6_mq28_build_bridge", "w6_mq28", "build_bridge")
+        )
+        val events = readList<GameEvent>("events.json").associateBy { it.id }
+
+        cases.forEach { (eventId, questId, expectedTask) ->
+            val event = events.getValue(eventId)
+            val prerequisiteTasks = event.conditions
+                .filter { it.type == "quest_task_done" }
+                .groupBy({ requireNotNull(it.questId) }, { requireNotNull(it.taskId) })
+                .mapValues { it.value.toSet() }
+            val seed = GameSessionState(
+                playerId = "nova",
+                partyMembers = listOf("nova"),
+                partyMemberXp = mapOf("nova" to 0),
+                partyMemberLevels = mapOf("nova" to 1),
+                activeQuests = event.conditions.filter { it.type == "quest_active" }
+                    .mapNotNull { it.questId }.toSet(),
+                trackedQuestId = questId,
+                questStageById = mapOf(questId to "resume_checkpoint"),
+                questTasksCompleted = prerequisiteTasks,
+                completedMilestones = event.conditions.filter { it.type == "milestone_set" }
+                    .mapNotNull { it.milestone }.toSet(),
+                inventory = if (eventId == "w1_mq03_touch_relic")
+                    mapOf("functional_cryo_inductor" to 1) else emptyMap()
+            )
+            val writer = PlaytestHarness(seed)
+            val restored = try { writer.roundTripSave(seed) } finally { writer.close() }
+            assertEquals("$eventId disk round trip", seed, restored)
+
+            val resumed = PlaytestHarness(restored)
+            try {
+                resumed.assertJournalRestored()
+                HeadlessPlaytesterAgent(resumed).executeAction(eventId)
+                val state = resumed.store.state.value
+                assertTrue("$eventId did not continue after restore",
+                    expectedTask in state.questTasksCompleted[questId].orEmpty())
+                assertTrue("$eventId was not retired after restore", eventId in state.completedEvents)
+                assertEquals(state, resumed.roundTripSave(state))
+            } finally { resumed.close() }
+        }
+    }
+
     private fun writeCheckpointReport(checkpoints: List<GameSessionState>) {
         val report = buildString {
             appendLine("# Campaign event checkpoint ledger")

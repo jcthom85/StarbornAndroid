@@ -4,6 +4,7 @@ import com.example.starborn.core.MoshiProvider
 import com.example.starborn.core.platform.DesktopAssetProvider
 import com.example.starborn.data.assets.AssetJsonReader
 import com.example.starborn.domain.model.Room
+import com.example.starborn.domain.model.Quest
 import com.example.starborn.feature.exploration.ui.resolveRoomDescription
 import com.example.starborn.feature.exploration.viewmodel.narrativeActionVisible
 import org.junit.Assert.*
@@ -16,6 +17,68 @@ import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.session.migrateOpeningNarrativeState
 
 class WorldFiveDiscoverabilityStateTest {
+    @Test fun `world five completion events exclusively own successor handoffs`() {
+        val events = AssetJsonReader(DesktopAssetProvider(), MoshiProvider.instance)
+            .readList<GameEvent>("events.json")
+        val handoffs = mapOf(
+            "w5_mq21_hack_airlock" to ("w5_mq21" to "w5_mq22"),
+            "w5_mq22_find_thorne" to ("w5_mq22" to "w5_mq23"),
+            "w5_mq23_defeat_construct" to ("w5_mq23" to "w5_mq24"),
+            "w5_mq24_take_anchor" to ("w5_mq24" to "w5_mq25"),
+            "w5_mq25_enter_tear" to ("w5_mq25" to "w6_mq26")
+        )
+        handoffs.forEach { (eventId, pair) ->
+            val event = events.single { it.id == eventId }
+            assertEquals(1, event.actions.count { it.type == "complete_quest" && it.questId == pair.first })
+            assertEquals(1, event.actions.count { it.type == "start_quest" && it.questId == pair.second })
+            assertEquals(1, event.actions.count { it.type == "track_quest" && it.questId == pair.second })
+            assertFalse(events.any { other ->
+                other.trigger.type == "quest_stage_complete" && other.trigger.questId == pair.first &&
+                    other.actions.any { it.type == "start_quest" && it.questId == pair.second }
+            })
+        }
+    }
+
+    @Test fun `quest terminology names authored world five rooms and actions`() {
+        val reader = AssetJsonReader(DesktopAssetProvider(), MoshiProvider.instance)
+        val rooms = reader.readList<Room>("rooms.json").associateBy { it.id }
+        val quests = reader.readList<Quest>("quests.json").associateBy { it.id }
+        fun tasks(id: String) = quests.getValue(id).stages.flatMap { it.tasks }.associateBy { it.id }
+        fun assertTerms(quest: String, task: String, vararg terms: String) {
+            val text = tasks(quest).getValue(task).text
+            terms.forEach { assertTrue("$quest/$task missing $it", text.contains(it, ignoreCase = true)) }
+        }
+
+        assertTerms("w5_mq21", "force_dock", rooms.getValue("orbital_executive_dock").title, "docking controls")
+        assertTerms("w5_mq21", "hack_airlock", "sealed airlock")
+        assertTerms("w5_mq22", "cross_solarium", rooms.getValue("orbital_solarium").title, "fake beach")
+        assertTerms("w5_mq22", "traverse_shaft", rooms.getValue("orbital_service_shaft").title, "zero-g cables", "patrol timing")
+        assertTerms("w5_mq22", "access_mainframe", "mainframe terminal")
+        assertTerms("w5_mq22", "find_thorne", rooms.getValue("deep_mainframe_nave").title, "Thorne trace")
+
+        assertTerms("w5_sq21", "find_redactions", rooms.getValue("orbital_security_hub").title, "Director redaction checksum")
+        assertTerms("w5_sq21", "read_logs", rooms.getValue("orbital_grand_concourse").title, "director logs")
+        assertTerms("w5_sq21", "publish_logs", "concourse public broadcast")
+        assertTerms("w5_sq22", "trace_false_sun", rooms.getValue("orbital_mirror_walk").title, "false sun path")
+        assertTerms("w5_sq22", "realign_mirrors", "mirror panels", "mirror array")
+        assertTerms("w5_sq22", "restore_gardens", "garden light priority")
+        assertTerms("w5_sq23", "map_pressure_loss", "pressure map")
+        assertTerms("w5_sq23", "seal_breaches", "airlock console")
+        assertTerms("w5_sq23", "reopen_dock", "dock access priority")
+
+        assertTerms("w5_mq23", "navigate_maze", rooms.getValue("orbital_server_farm").title, "coolant-pulse map")
+        assertTerms("w5_mq24", "find_elara", rooms.getValue("deep_anchor_chamber").title, "Elara")
+        assertTerms("w5_mq24", "take_anchor", "anchor relic")
+        assertTerms("w5_mq25", "witness_soloist", rooms.getValue("deep_throne_room").title, "containment field")
+        assertTerms("w5_mq25", "enter_tear", rooms.getValue("deep_tear").title, "reality breach")
+
+        assertTerms("w5_sq24", "trace_purge", rooms.getValue("orbital_server_farm").title, "purged backup rack")
+        assertTerms("w5_sq24", "recover_backup", rooms.getValue("deep_backup_rack").title, "purged backup rack")
+        assertTerms("w5_sq24", "restore_guardian", "guardian ownership flag", "crew covenant socket")
+        assertTerms("w5_sq25", "find_keycard", "dead sysadmin", rooms.getValue("deep_sysadmin_nest").title)
+        assertTerms("w5_sq25", "open_armory", rooms.getValue("deep_throne_room").title, "executive armory")
+    }
+
     @Test fun `remaining orbital rooms preserve actionable prose and retire completed events after restore`() {
         val reader = AssetJsonReader(DesktopAssetProvider(), MoshiProvider.instance)
         val events = reader.readList<GameEvent>("events.json")

@@ -121,6 +121,47 @@ class OpeningCombatRuntimeTest {
         } finally { vm.viewModelScope.cancel() }
     }
 
+    @Test fun `finale enemy applies authored status and combat turns expire it`() {
+        val session = world4Session()
+        val vm = createCombat(session, listOf("ascended_vale"), SeededCombatRandom(19))
+        try {
+            var applied: Pair<String, StatusEffect>? = null
+            for (tick in 0 until 480) {
+                dispatcher.scheduler.advanceTimeBy(250)
+                dispatcher.scheduler.runCurrent()
+                if (vm.lungeActorId.value != null) vm.onLungeFinished(vm.lungeToken.value)
+                if (vm.missLungeActorId.value != null) vm.onMissLungeFinished(vm.missLungeToken.value)
+                val state = requireNotNull(vm.combatState)
+                applied = state.combatants.values
+                    .filter { it.combatant.side == CombatSide.PLAYER }
+                    .firstNotNullOfOrNull { actor ->
+                        actor.statusEffects.firstOrNull { it.id in setOf("silence", "weak") }
+                            ?.let { actor.combatant.id to it }
+                    }
+                if (applied != null) break
+                session.state.value.partyMembers.forEach(vm::selectReadyPlayer)
+                if (vm.awaitingAction.value != null && state.outcome == null) {
+                    vm.playerAttack("ascended_vale")
+                }
+            }
+            val (targetId, status) = requireNotNull(applied) {
+                "Ascended Vale never applied silence or weak through production ATB/AI"
+            }
+            assertTrue("Applied status must have a finite duration", status.remainingTurns > 0)
+            assertTrue(requireNotNull(vm.combatState).log.any {
+                it is CombatLogEntry.StatusApplied && it.targetId == targetId && it.statusId == status.id
+            })
+
+            val engine = CombatEngine(statusRegistry = StatusRegistry(assets.loadStatuses()))
+            var expired = requireNotNull(vm.combatState)
+            repeat(status.remainingTurns) { expired = engine.tickEndOfTurn(expired) }
+            assertTrue(expired.combatants.getValue(targetId).statusEffects.none { it.id == status.id })
+            assertTrue(expired.log.any {
+                it is CombatLogEntry.StatusExpired && it.targetId == targetId && it.statusId == status.id
+            })
+        } finally { vm.viewModelScope.cancel(); dispatcher.scheduler.runCurrent() }
+    }
+
     @Test fun `starting skill command is accepted by production combat runtime`() {
         val vm = createCombat()
         try {
@@ -252,8 +293,38 @@ class OpeningCombatRuntimeTest {
         assertTrue((checkpoint.inventory["grav_boots"] ?: 0) > 0)
         val equipped = checkpoint.copy(equippedArmors = checkpoint.equippedArmors + gear,
             equippedItems = checkpoint.equippedItems + ("gh0st:accessory" to "grav_boots"))
+        val preparedStore = GameSessionStore().apply { restore(equipped) }
+        val nodes = listOf("nova_quiet_steps", "nova_night_cloak", "zeke_training_session",
+            "zeke_motivational_speech", "zeke_budgeting")
+        for (id in nodes) {
+            val tree = assets.loadSkillTrees().single { it.branches.values.flatten().any { node -> node.id == id } }
+            val node = tree.branches.values.flatten().single { it.id == id }
+            val state = preparedStore.state.value
+            assertTrue("Legal finale checkpoint purchase $id", com.example.starborn.feature.exploration.skilltree.evaluateNodeStatus(
+                node, tree, state.unlockedSkills, state.completedMilestones, state.playerAp).canPurchase)
+            assertTrue(preparedStore.spendAp(node.costAp))
+            preparedStore.unlockSkill(id)
+        }
+        val shop = com.example.starborn.data.assets.ShopAssetDataSource(reader).loadShops().single { it.id == "weapon_shop" }
+        val items = reader.readList<Item>("items.json").associateBy { it.id }
+        val weapons = mapOf("nova" to "nova_laser_blaster", "zeke" to "zeke_shock_fists",
+            "orion" to "orion_prism_focus", "gh0st" to "gh0st_whisperblade")
+        val cost = weapons.values.sumOf { id ->
+            assertTrue(id in shop.sells.items)
+            val item = items.getValue(id)
+            kotlin.math.round((item.buyPrice ?: item.value) * (shop.pricing?.sellMarkup ?: 1.0)).toInt()
+        }
+        assertTrue(preparedStore.spendCredits(cost))
+        val purchased = preparedStore.state.value
+        preparedStore.restore(purchased.copy(
+            inventory = purchased.inventory + weapons.values.associateWith { (purchased.inventory[it] ?: 0) + 1 },
+            equippedWeapons = purchased.equippedWeapons + weapons,
+            unlockedWeapons = purchased.unlockedWeapons + weapons.values))
+        val prepared = preparedStore.state.value
+        assertEquals(checkpoint.playerAp - 5, prepared.playerAp)
+        assertEquals(checkpoint.playerCredits - 1800, prepared.playerCredits)
         fun run(seed: Int): List<SpendingResult> {
-            val session = GameSessionStore().apply { restore(equipped) }
+            val session = GameSessionStore().apply { restore(prepared) }
             val results = mutableListOf<SpendingResult>()
             for (enemy in listOf("ascended_vale", "ascended_god")) {
                 val result = measureSpending(true, seed, session, enemy, skillAware = true,
@@ -264,11 +335,16 @@ class OpeningCombatRuntimeTest {
             }
             return results
         }
-        return (1..5).map { seed ->
+        val seededResults = (1..5).map { seed ->
             val result = run(seed)
             assertEquals(result, run(seed))
-            "FINAL_CHECKPOINT_COMBAT seed=$seed results=$result"
+            seed to result
         }
+        assertTrue("Every seed must clear the Soloist phase",
+            seededResults.all { (_, results) -> results.first().outcome == "victory" })
+        assertTrue("At least four of five seeds must clear both finale phases",
+            seededResults.count { (_, results) -> results.size == 2 && results.last().outcome == "victory" } >= 4)
+        return seededResults.map { (seed, results) -> "FINAL_CHECKPOINT_COMBAT seed=$seed results=$results" }
     }
 
     fun measureEarnedBossCheckpoint(checkpoint: GameSessionState, enemyId: String): List<String> {

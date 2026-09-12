@@ -4,6 +4,7 @@ import com.example.starborn.core.MoshiProvider
 import com.example.starborn.core.platform.DesktopAssetProvider
 import com.example.starborn.data.assets.AssetJsonReader
 import com.example.starborn.domain.model.Room
+import com.example.starborn.domain.model.Quest
 import com.example.starborn.domain.model.GameEvent
 import com.example.starborn.domain.event.EventManager
 import com.example.starborn.domain.event.EventPayload
@@ -32,6 +33,25 @@ class WorldThreeDiscoverabilityStateTest {
             "spire_skypark_scale_02"
     )
     private val scans = setOf("w3_scan_archive_tethers", "w3_scan_prism_alarm_chords", "w3_scan_drone_paths")
+
+    @Test fun `quest terminology names authored world three rooms and actions`() {
+        val rooms = reader.readList<Room>("rooms.json").associateBy { it.id }
+        val quests = reader.readList<Quest>("quests.json").associateBy { it.id }
+        fun tasks(id: String) = quests.getValue(id).stages.flatMap { it.tasks }.associateBy { it.id }
+        val plan = tasks("w3_mq12")
+        assertTrue(plan.getValue("interrogate_guard").text.contains(rooms.getValue("spire_security_kiosk").title))
+        assertTrue(plan.getValue("copy_badges").text.contains(rooms.getValue("spire_elevator_service_gate").title))
+        assertTrue(plan.getValue("hack_blueprints").text.contains(rooms.getValue("spire_zekes_apartment").title))
+        val coldCase = tasks("w3_sq12")
+        assertTrue(coldCase.getValue("find_case_number").text.contains(rooms.getValue("spire_uniform_sorting").title))
+        assertTrue(coldCase.getValue("access_terminal").text.contains(rooms.getValue("spire_security_kiosk").title))
+        val ledger = tasks("w3_sq14")
+        assertTrue(ledger.getValue("copy_concierge_key").text.contains("concierge credential"))
+        assertTrue(ledger.getValue("steal_ledger").text.contains("private safe"))
+        val prototype = tasks("w3_sq15")
+        assertTrue(prototype.getValue("scan_targeting").text.contains(rooms.getValue("spire_drone_test_alcove").title))
+        assertTrue(prototype.getValue("test_weapon").text.contains("prototype rack"))
+    }
 
     @Test fun `reviewed rooms name visible actions across milestone combinations`() {
         reader.readList<Room>("rooms.json").filter { it.id in ids }.forEach { room ->

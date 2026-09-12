@@ -65,6 +65,24 @@ No renewable farming source or additional shop stock was added in this pass.
 
 ## Remaining economy work
 
+### Renewable fishing resale (2026-09-12)
+
+Fishing is intentionally renewable: successful results add one catch, while rods
+and lures are ownership checks rather than consumables. All eight catch items had
+also inherited their resale basis from `buy_price`, which is twice catalog value.
+At the best ingredient dealer this paid the full nominal value, reaching 180
+credits for one Void Ray and a base-weighted 118.7 credits per successful cast at
+the Singularity Well before rod/lure weighting.
+
+Each fishing catch now explicitly uses its ordinary catalog value as the resale
+basis. Purchase prices, catch weights, rarity, recipes and fishing behavior are
+unchanged. With the highest dealer markdown, base-weighted proceeds range from
+8.4 to 59.4 credits per successful cast across authored zones; the maximum single
+catch pays 90. A catalog regression requires every renewable catch to retain an
+explicit resale basis and caps base-weighted proceeds at 60. This bounds the
+repeatable credit source; it does not measure human success rate, travel/shop time
+or on-device minigame cadence.
+
 ### Bounded closeout decision (2026-09-10)
 
 Keep general shop prices, battle credit rewards and XP thresholds unchanged in
@@ -79,14 +97,16 @@ already made, not a global increase in income or reduction in prices.
 - At a 60-credit medkit replacement price, 340 covers five medkits with 40 left.
   That does not also fund every ration, other upgrade or earlier purchase. Do
   not count the same cumulative credits separately for each checkpoint.
-- The final checkpoint's 2,640 credits and nine AP are unspent in its diagnostic
-  scenario. Rapid defeats therefore cannot establish an economic shortage.
-  They remain a serious combat-readiness risk, with the second phase untested.
+- The final checkpoint has 2,640 credits and nine AP. Its tested closeout spends
+  1,800 credits and five AP on stocked weapons and legal nodes, leaving 840
+  credits and four AP. After finale-specific tuning, all five deterministic seeds
+  clear phase one and four clear both phases. This proves one viable conditional
+  budget, not prior-spending history or shop navigation.
 
-Acceptance: targeted economy correctness work is verified; global affordability
-and finale balance are NOT approved. Remaining evidence gaps are continuous
-spending/access, renewable gathering/fishing loops, optional-content budgets,
-and device/player validation. These are explicit outstanding work, not silently
+Acceptance: targeted economy correctness, renewable resale bounds and automated
+finale balance are verified; global affordability is NOT approved. Remaining
+evidence gaps are continuous spending/access, optional-content budgets, and
+device/player fishing/finale validation. These are explicit outstanding work, not silently
 completed by the bounded closeout. Do not claim Phases 2-3 fully complete or
 release readiness on the basis of test counts. The next verification pass checks
 regressions; it cannot turn these unknowns into balance evidence.
@@ -141,8 +161,8 @@ validators passed. Device and lint checks were not rerun.
 Craft/resale follow-up: all 326 JVM tests, asset integrity and World 1 validators
 passed. Device and lint checks were not rerun.
 
-- Extend beyond shop-funded crafting to renewable gathering/fishing inputs if
-  their reward/time cadence suggests an exploit.
+- Renewable fishing resale is bounded statically; measure human success and
+  real-time cadence on device only if player acceptance identifies excessive gain.
 - Measure route earnings against gear upgrades and expected consumable spending.
 - Verify shop and crafting interactions on-device. No device or lint rerun was
   included in this pass.

@@ -1533,7 +1533,7 @@
     "combat_tags": [
       "dmg"
     ],
-    "base_power": 155,
+    "base_power": 75,
     "scaling": "focus",
     "cooldown": 2,
     "status_applications": [
@@ -1550,7 +1550,7 @@
       "aoe",
       "debuff"
     ],
-    "base_power": 175,
+    "base_power": 55,
     "scaling": "focus",
     "cooldown": 4,
     "status_applications": [
@@ -1568,7 +1568,7 @@
       "aoe",
       "dmg"
     ],
-    "base_power": 210,
+    "base_power": 70,
     "scaling": "focus",
     "cooldown": 3,
     "status_applications": [
@@ -1622,7 +1622,7 @@
       "aoe",
       "debuff"
     ],
-    "base_power": 135,
+    "base_power": 45,
     "scaling": "focus",
     "cooldown": 3,
     "status_applications": [

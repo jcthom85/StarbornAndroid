@@ -4,6 +4,7 @@ import com.example.starborn.core.MoshiProvider
 import com.example.starborn.core.platform.DesktopAssetProvider
 import com.example.starborn.data.assets.AssetJsonReader
 import com.example.starborn.domain.model.Room
+import com.example.starborn.domain.model.Quest
 import com.example.starborn.domain.model.GameEvent
 import com.example.starborn.domain.event.EventManager
 import com.example.starborn.domain.event.EventPayload
@@ -16,6 +17,34 @@ import org.junit.Test
 
 class WorldFourDiscoverabilityStateTest {
     private val reader = AssetJsonReader(DesktopAssetProvider(), MoshiProvider.instance)
+
+    @Test fun `quest terminology names authored world four rooms and actions`() {
+        val rooms = reader.readList<Room>("rooms.json").associateBy { it.id }
+        val quests = reader.readList<Quest>("quests.json").associateBy { it.id }
+        fun tasks(id: String) = quests.getValue(id).stages.flatMap { it.tasks }.associateBy { it.id }
+
+        val salvage = tasks("w4_sq18")
+        assertTrue(salvage.getValue("stop_intake").text.contains(rooms.getValue("foundry_waste_intake").title))
+        assertTrue(salvage.getValue("stop_intake").text.contains("waste intake brake"))
+
+        val core = tasks("w4_mq19")
+        assertTrue(core.getValue("reach_core_chamber").text.contains(rooms.getValue("foundry_forge_anvil").title))
+        assertTrue(core.getValue("reach_core_chamber").text.contains("Anvil cradle"))
+
+        val units = tasks("w4_sq19")
+        assertTrue(units.getValue("read_rejection_codes").text.contains(rooms.getValue("foundry_reject_bay").title))
+        assertTrue(units.getValue("read_rejection_codes").text.contains("rejected droid"))
+        assertTrue(units.getValue("resolve_units").text.contains(rooms.getValue("foundry_conveyor_belt").title))
+        assertTrue(units.getValue("release_units").text.contains("conveyor release lock"))
+        assertTrue(units.getValue("release_units").text.contains("worker defense relay"))
+
+        val hazards = tasks("w4_sq20")
+        assertTrue(hazards.getValue("map_hazards").text.contains(rooms.getValue("foundry_forge_control_alcove").title))
+        assertTrue(hazards.getValue("map_hazards").text.contains("hazard cycle map"))
+        assertTrue(hazards.getValue("survive_waves").text.contains(rooms.getValue("foundry_forge_anvil").title))
+        assertTrue(hazards.getValue("survive_waves").text.contains("test chamber terminal"))
+        assertTrue(hazards.getValue("steal_overclock").text.contains("overclock profile"))
+    }
 
     @Test fun `overlook forge controls and reject bay retain inspection references`() {
         val labels = mapOf(

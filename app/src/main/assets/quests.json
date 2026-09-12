@@ -738,11 +738,11 @@
         "tasks": [
           {
             "id": "inspect_murals",
-            "text": "Examine the shifting light murals in the Hall of Echoes."
+            "text": "In the Hall of Echoes, examine the shifting light murals above the empty crystal shadows."
           },
           {
             "id": "find_stasis_chamber",
-            "text": "Locate Orion's stasis chamber."
+            "text": "From the Hall of Echoes, head south to Orion's Stasis Chamber."
           }
         ]
       },
@@ -753,7 +753,7 @@
         "tasks": [
           {
             "id": "align_stasis_rings",
-            "text": "Stabilize the stasis rings with the chamber clues."
+            "text": "Read the pod, mural overview and coolant lines, then align the rings in the Ring Array."
           },
           {
             "id": "talk_to_orion",
@@ -837,11 +837,11 @@
           },
           {
             "id": "collect_power_conduits",
-            "text": "Recover power conduits from the pod wreckage."
+            "text": "Return to the Pod Fragment and recover the salvage conduits from the wreckage."
           },
           {
             "id": "reboot_bridge_relic",
-            "text": "Install the Bridge, power it from the Astra, and authenticate Orion with the Chime."
+            "text": "At the Hangar Bay, use the recovered conduits to install the Bridge and authenticate Orion with the Chime."
           },
           {
             "id": "launch_ship",
@@ -873,23 +873,23 @@
         "tasks": [
           {
             "id": "scan_flora_1",
-            "text": "Scan the giant crystalline ferns in the canopy."
+            "text": "In Resonant Canopy, scan the giant crystalline ferns."
           },
           {
             "id": "scan_flora_2",
-            "text": "Scan the bioluminescent weeds near the stream."
+            "text": "At Tide Pools, scan the bioluminescent weeds."
           },
           {
             "id": "scan_flora_3",
-            "text": "Scan the moss clinging to the pod wreckage."
+            "text": "At Crash Site, scan the moss clinging to the pod wreckage."
           },
           {
             "id": "scan_flora_4",
-            "text": "Scan the razor-vine spores in the path."
+            "text": "In Resonant Canopy, scan the razor-vine spores."
           },
           {
             "id": "scan_flora_5",
-            "text": "Scan the ancient roots in the stasis chamber."
+            "text": "In Stasis Chamber, scan the ancient root lattice."
           }
         ]
       }
@@ -917,15 +917,15 @@
         "tasks": [
           {
             "id": "trace_alpha",
-            "text": "Trace the beacon in the wilds thickets."
+            "text": "In Spore Thickets, trace distress signature alpha."
           },
           {
             "id": "trace_beta",
-            "text": "Decode the beacon in the patrol hollow."
+            "text": "In Poison Hollow, decode distress signature beta."
           },
           {
             "id": "trace_gamma",
-            "text": "Confirm the signal from the ridge perch."
+            "text": "At Sniper Lookout, confirm distress signature gamma."
           }
         ]
       },
@@ -936,7 +936,7 @@
         "tasks": [
           {
             "id": "recover_transceiver",
-            "text": "Recover the encrypted transceiver and damaged Thermal Cutter."
+            "text": "Recover the patrol transceiver in Burned Glade, along with the damaged Thermal Cutter."
           },
           {
             "id": "repair_thermal_cutter",
@@ -1051,11 +1051,11 @@
         "tasks": [
           {
             "id": "hack_security_grid",
-            "text": "Blind the vent security grid's timing."
+            "text": "At High Gantry, blind the vent security grid's timing."
           },
           {
             "id": "bypass_guard_systems",
-            "text": "Slip past the guard-system scan pattern."
+            "text": "At Infiltration Hatch, slip past the guard-system scan pattern."
           }
         ]
       },
@@ -1066,7 +1066,7 @@
         "tasks": [
           {
             "id": "recover_transmitter",
-            "text": "Recover the Dominion transmitter core."
+            "text": "Search the ceiling vent from Stasis Chamber, then recover the transmitter core at Transmitter Site."
           },
           {
             "id": "assemble_capacitor",
@@ -1153,11 +1153,11 @@
           },
           {
             "id": "interrogate_guard",
-            "text": "Pull security records from the plaza kiosk."
+            "text": "Pull security records from the Security Kiosk in Transit Plaza."
           },
           {
             "id": "copy_badges",
-            "text": "Copy freight badge patterns at the service gate."
+            "text": "At the Elevator Service Gate, copy the freight badge patterns."
           },
           {
             "id": "source_disguises",
@@ -1165,7 +1165,7 @@
           },
           {
             "id": "hack_blueprints",
-            "text": "Build the service-elevator route at Zeke's workstation."
+            "text": "At Zeke's Apartment, build the service-elevator route at his workstation."
           }
         ]
       },
@@ -1236,11 +1236,11 @@
         "tasks": [
           {
             "id": "find_case_number",
-            "text": "Recover the erased case number from the transit memorial."
+            "text": "Recover the erased case number from the memorial in Uniform Sorting."
           },
           {
             "id": "access_terminal",
-            "text": "Use the case number to search Dominion security records."
+            "text": "Use the case number at the Security Kiosk to search Dominion records."
           },
           {
             "id": "expose_transfer",
@@ -1451,11 +1451,11 @@
         "tasks": [
           {
             "id": "copy_concierge_key",
-            "text": "Copy the concierge's rotating safe credential."
+            "text": "At Exec Lounge, copy the concierge credential from the mirror."
           },
           {
             "id": "steal_ledger",
-            "text": "Use the credential to steal the encrypted ledger."
+            "text": "Use the credential on the private safe in Exec Lounge to steal the encrypted ledger."
           },
           {
             "id": "leak_ledger",
@@ -1492,11 +1492,11 @@
         "tasks": [
           {
             "id": "scan_targeting",
-            "text": "Scan the prototype's hidden targeting bias."
+            "text": "In Drone Test Alcove, scan the prototype's hidden targeting bias."
           },
           {
             "id": "test_weapon",
-            "text": "Test the corrected prototype on security drones."
+            "text": "Use the prototype rack in Drone Test Alcove to test the corrected weapon on security drones."
           },
           {
             "id": "scrub_telemetry",
@@ -1711,7 +1711,7 @@
         "tasks": [
           {
             "id": "stop_intake",
-            "text": "Jam the waste intake at the Slag Trench before it consumes the wrecks."
+            "text": "At Waste Intake, use the waste intake brake before the machinery consumes the wrecks."
           },
           {
             "id": "salvage_mechs",
@@ -1790,7 +1790,7 @@
         "tasks": [
           {
             "id": "reach_core_chamber",
-            "text": "Reach the Forge core chamber."
+            "text": "Reach The Forge and inspect the Anvil cradle."
           },
           {
             "id": "solve_conveyor_puzzle",
@@ -1899,15 +1899,15 @@
         "tasks": [
           {
             "id": "read_rejection_codes",
-            "text": "Read why the Foundry rejected the waking units."
+            "text": "At Reject Bay, inspect the rejected droid and read why the Foundry rejected the waking units."
           },
           {
             "id": "resolve_units",
-            "text": "Remove the obedience fault instead of scrapping the units."
+            "text": "At Conveyor Belt, use the rejected droid to remove the obedience fault."
           },
           {
             "id": "release_units",
-            "text": "Choose whether the units escape or stay to defend the workers."
+            "text": "At Conveyor Belt, choose the conveyor release lock or worker defense relay."
           }
         ]
       }
@@ -1935,15 +1935,15 @@
         "tasks": [
           {
             "id": "map_hazards",
-            "text": "Map the test chamber's heat-cycle sequence."
+            "text": "At Control Alcove, inspect the hazard cycle map."
           },
           {
             "id": "survive_waves",
-            "text": "Survive three overclocked hazard waves."
+            "text": "Use the test chamber terminal in The Forge and survive three overclocked hazard waves."
           },
           {
             "id": "steal_overclock",
-            "text": "Steal the chamber's overclock profile after surviving it."
+            "text": "Return to Control Alcove and steal the overclock profile."
           }
         ]
       }
@@ -1991,11 +1991,11 @@
         "tasks": [
           {
             "id": "force_dock",
-            "text": "Ram the Astra into the Executive Dock collar."
+            "text": "At Executive Dock, use the docking controls to ram the Astra into the collar."
           },
           {
             "id": "hack_airlock",
-            "text": "Help Gh0st break Thorne's airlock cipher."
+            "text": "At Executive Dock, use the sealed airlock to help Gh0st break Thorne's cipher."
           }
         ]
       }
@@ -2023,7 +2023,7 @@
         "tasks": [
           {
             "id": "cross_solarium",
-            "text": "Cross the Solarium by following the false sun's maintenance path."
+            "text": "At the Solarium, inspect the fake beach and follow the false sun's maintenance path."
           },
           {
             "id": "clear_security",
@@ -2038,15 +2038,15 @@
         "tasks": [
           {
             "id": "traverse_shaft",
-            "text": "Time the zero-g shaft between Hunter-Killer sweeps."
+            "text": "Use the Service Shaft's zero-g cables or the Zero-G Junction patrol timing between Hunter-Killer sweeps."
           },
           {
             "id": "access_mainframe",
-            "text": "Open the Great Silence log at the mainframe terminal."
+            "text": "At Server Farm or Mainframe Nave, open the Great Silence log at the mainframe terminal."
           },
           {
             "id": "find_thorne",
-            "text": "Trace Thorne through her buried emergency signal."
+            "text": "At Mainframe Nave, use the Thorne trace to follow her buried emergency signal."
           }
         ]
       }
@@ -2079,15 +2079,15 @@
         "tasks": [
           {
             "id": "find_redactions",
-            "text": "Find what the Director removed from the public record."
+            "text": "At Security Hub, inspect the Director redaction checksum."
           },
           {
             "id": "read_logs",
-            "text": "Decrypt the Director's personal logs."
+            "text": "At Grand Concourse, decrypt the director logs."
           },
           {
             "id": "publish_logs",
-            "text": "Publish the unredacted logs across the Ring."
+            "text": "At Grand Concourse, use the concourse public broadcast to publish the logs."
           }
         ]
       }
@@ -2115,15 +2115,15 @@
         "tasks": [
           {
             "id": "trace_false_sun",
-            "text": "Trace where the false sun's energy is being spent."
+            "text": "At Mirror Walk, inspect the false sun path."
           },
           {
             "id": "realign_mirrors",
-            "text": "Burn the void-moss and realign the mirror array."
+            "text": "Use the mirror panels at Mirror Walk or the mirror array in the Solarium to burn the void-moss."
           },
           {
             "id": "restore_gardens",
-            "text": "Redirect the repaired light from executive sightlines to the gardens."
+            "text": "At the Solarium, use garden light priority to redirect the repaired light."
           }
         ]
       }
@@ -2151,15 +2151,15 @@
         "tasks": [
           {
             "id": "map_pressure_loss",
-            "text": "Map the dock's pressure-loss sequence."
+            "text": "At Executive Dock, inspect the pressure map."
           },
           {
             "id": "seal_breaches",
-            "text": "Seal the three hull breaches in collapse order."
+            "text": "At Executive Dock, use the airlock console to seal the three breaches."
           },
           {
             "id": "reopen_dock",
-            "text": "Reopen the dock for non-executive traffic."
+            "text": "At Executive Dock, change the dock access priority for non-executive traffic."
           }
         ]
       }
@@ -2192,7 +2192,7 @@
         "tasks": [
           {
             "id": "navigate_maze",
-            "text": "Map the Server Farm by coolant pulse."
+            "text": "At Server Farm, use the coolant-pulse map."
           },
           {
             "id": "firewall_alpha",
@@ -2247,7 +2247,7 @@
           },
           {
             "id": "find_elara",
-            "text": "Find Elara wired into the Ring."
+            "text": "At Anchor Chamber, inspect Elara wired into the Ring."
           }
         ]
       },
@@ -2258,7 +2258,7 @@
         "tasks": [
           {
             "id": "take_anchor",
-            "text": "Acquire the Anchor relic."
+            "text": "At Anchor Chamber, take the anchor relic."
           }
         ]
       }
@@ -2295,7 +2295,7 @@
           },
           {
             "id": "witness_soloist",
-            "text": "Confront Vale and witness the Soloist."
+            "text": "At Throne Room, inspect the containment field and witness the Soloist."
           }
         ]
       },
@@ -2310,7 +2310,7 @@
           },
           {
             "id": "enter_tear",
-            "text": "Enter the Tear."
+            "text": "At The Tear, enter the reality breach."
           }
         ]
       }
@@ -2338,15 +2338,15 @@
         "tasks": [
           {
             "id": "trace_purge",
-            "text": "Trace the purge command through the server farm."
+            "text": "At Server Farm, inspect the purged backup rack to trace the purge command."
           },
           {
             "id": "recover_backup",
-            "text": "Recover the defensive backup data."
+            "text": "At Purged Backup Rack, recover the data from the purged backup rack."
           },
           {
             "id": "restore_guardian",
-            "text": "Choose whether the guardian stays independent or bonds with the crew."
+            "text": "At Server Farm, choose the guardian ownership flag or crew covenant socket."
           }
         ]
       }
@@ -2374,7 +2374,7 @@
         "tasks": [
           {
             "id": "find_keycard",
-            "text": "Recover the SysAdmin keycard."
+            "text": "Inspect the dead sysadmin at Server Farm or SysAdmin Nest to recover the keycard."
           }
         ]
       },
@@ -2385,7 +2385,7 @@
         "tasks": [
           {
             "id": "open_armory",
-            "text": "Unlock the executive armory."
+            "text": "At Throne Room, use the keycard to unlock the executive armory."
           }
         ]
       }
@@ -2437,7 +2437,7 @@
         "tasks": [
           {
             "id": "reassemble_team",
-            "text": "Let the song-fire gather the crew into the Key."
+            "text": "Return to The Campfire and use the song-fire to gather the crew into the Key."
           }
         ]
       }
@@ -2474,7 +2474,7 @@
           },
           {
             "id": "evade_manager",
-            "text": "Move between the Manager projections by real details."
+            "text": "At Manager Patrol Route, use the manager patrol's real details to evade the projections."
           },
           {
             "id": "reach_elevator",
@@ -2506,15 +2506,15 @@
         "tasks": [
           {
             "id": "build_bridge",
-            "text": "Anchor the bridge with the crew's separate memories."
+            "text": "At Memory Bridge, set Zeke's anchor, Gh0st's anchor, Orion's anchor and Nova's anchor, then use the unfinished bridge."
           },
           {
             "id": "final_banter",
-            "text": "Let the crew steady the bridge together."
+            "text": "At Shared Memory Span, use the campfire promise to steady the bridge together."
           },
           {
             "id": "reach_singularity",
-            "text": "Cross only when every voice is present."
+            "text": "At Singularity Threshold, cross through the singularity threshold when every voice is present."
           }
         ]
       }
@@ -2542,15 +2542,15 @@
         "tasks": [
           {
             "id": "find_tool_marks",
-            "text": "Find Jed's real tool marks in the false mine."
+            "text": "At Answering Chorus, inspect the crooked tool marks."
           },
           {
             "id": "talk_to_jed",
-            "text": "Let Jed's echo finish the lesson."
+            "text": "At Jed's Echo Bench, let the jed echo finish the lesson."
           },
           {
             "id": "carry_legacy",
-            "text": "Carry the lesson forward instead of preserving the ghost."
+            "text": "At Manager Patrol Route, use the open shift gate to carry the lesson forward."
           }
         ]
       }
@@ -2578,15 +2578,15 @@
         "tasks": [
           {
             "id": "find_backups",
-            "text": "Find the backups that keep recreating Zeke's file."
+            "text": "At Infinite Cubicle, inspect the backup lattice recreating Zeke's file."
           },
           {
             "id": "delete_record",
-            "text": "Let Zeke revoke the record's authority."
+            "text": "At Performance Review Loop, revoke the authorization chain's authority."
           },
           {
             "id": "leave_review",
-            "text": "Choose what Zeke does with the records after rejecting their authority."
+            "text": "At Break Room Exit, choose the unauthorized exit or worker broadcast."
           }
         ]
       }
@@ -2614,15 +2614,15 @@
         "tasks": [
           {
             "id": "isolate_voice",
-            "text": "Isolate Elara's voice beneath the battlefield orders."
+            "text": "At Endless War, isolate Elara's buried voice beneath the orders."
           },
           {
             "id": "break_command_layer",
-            "text": "Break the command layer without erasing her voice."
+            "text": "At Kill-Suite Loop, break the command carrier without erasing her voice."
           },
           {
             "id": "recover_song",
-            "text": "Preserve the clean recording."
+            "text": "At Clean Signal Alcove, preserve the pure audio log."
           }
         ]
       }
@@ -2650,7 +2650,7 @@
         "tasks": [
           {
             "id": "climb_stair",
-            "text": "Reject Vale's revisions and climb the Memory Stair."
+            "text": "At Memory Stair, reject Jed's door, Astra wreckage and Foundry catwalk, then climb the memory stair."
           },
           {
             "id": "defeat_shadow_wave",
@@ -2723,11 +2723,11 @@
         "tasks": [
           {
             "id": "use_key",
-            "text": "Link the crew through the Key."
+            "text": "At The Center, use the Key at the shared tuning focus."
           },
           {
             "id": "tune_world",
-            "text": "Tune the world as separate voices."
+            "text": "At The Center, tune the shared tuning focus as separate voices."
           }
         ]
       }
@@ -2755,15 +2755,15 @@
         "tasks": [
           {
             "id": "trace_names",
-            "text": "Trace the Aethel names beneath the threshold."
+            "text": "At Singularity Threshold, inspect the names beneath the light."
           },
           {
             "id": "find_grave",
-            "text": "Tune the Aethel Grave without flattening its voices."
+            "text": "At Memory Stair, tune the aethel grave without flattening its voices."
           },
           {
             "id": "carry_chorus",
-            "text": "Carry the answering chorus into the world-fracture."
+            "text": "At World-Fracture Landing, carry the answering chorus forward."
           }
         ]
       }
@@ -2791,15 +2791,15 @@
         "tasks": [
           {
             "id": "identify_timeline",
-            "text": "Identify the doomed timeline that produced the wreck."
+            "text": "At Spire of Thought, inspect the wreck timeline."
           },
           {
             "id": "recover_hull",
-            "text": "Detach the future Astra hull fragment."
+            "text": "At Impossible Archive, detach the future astra hull."
           },
           {
             "id": "fit_hull",
-            "text": "Fit the fragment as protection, not prophecy."
+            "text": "At Memory Defense Arena, fit the fragment into the empty armor socket."
           }
         ]
       }

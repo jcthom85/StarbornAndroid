@@ -7,6 +7,7 @@ import com.example.starborn.data.assets.ItemAssetDataSource
 import com.example.starborn.data.assets.ShopAssetDataSource
 import com.example.starborn.data.repository.ItemRepository
 import com.example.starborn.data.assets.CraftingAssetDataSource
+import com.example.starborn.data.assets.FishingAssetDataSource
 import com.example.starborn.domain.crafting.CraftingService
 import com.example.starborn.domain.crafting.CraftingOutcome
 import com.example.starborn.domain.inventory.InventoryService
@@ -27,6 +28,25 @@ class EconomyCatalogTest {
     private val reader = AssetJsonReader(DesktopAssetProvider(), MoshiProvider.instance)
     private val items = ItemRepository(ItemAssetDataSource(reader)).apply { load() }
     private val shops = ShopAssetDataSource(reader).loadShops()
+
+    @Test fun `renewable fishing catches use bounded explicit resale values`() {
+        val fishing = FishingAssetDataSource(reader).loadFishingData()
+        val bestIngredientMarkdown = shops.filter { shop ->
+            shop.buys?.acceptTypes.isNullOrEmpty() || shop.buys!!.acceptTypes.any { it.equals("ingredient", true) }
+        }.maxOf { it.pricing?.buyMarkdown ?: 0.35 }
+        val expectedSales = fishing.zones.mapValues { (_, catches) ->
+            val totalWeight = catches.sumOf { it.weight.toDouble() }
+            catches.sumOf { catch ->
+                val item = requireNotNull(items.findItem(catch.itemId))
+                assertNotNull("Renewable catch ${item.id} needs an explicit resale basis", item.resaleValue)
+                val sale = (item.resaleValue!! * bestIngredientMarkdown).roundToInt().coerceAtLeast(1)
+                catch.weight * sale
+            } / totalWeight
+        }
+        assertTrue("Fishing zones must be authored", expectedSales.isNotEmpty())
+        assertTrue("Base weighted sale value per successful catch must remain at most 60 credits: $expectedSales",
+            expectedSales.values.all { it <= 60.0 })
+    }
 
     @Test fun `shop funded crafting chains have no positive expected resale profit`() {
         data class RecipeCost(val id: String, val result: String, val yield: Double, val ingredients: Map<String, Int>)

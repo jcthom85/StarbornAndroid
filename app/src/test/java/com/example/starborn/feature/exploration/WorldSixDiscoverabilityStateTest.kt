@@ -4,6 +4,7 @@ import com.example.starborn.core.MoshiProvider
 import com.example.starborn.core.platform.DesktopAssetProvider
 import com.example.starborn.data.assets.AssetJsonReader
 import com.example.starborn.domain.model.Room
+import com.example.starborn.domain.model.Quest
 import com.example.starborn.domain.model.GameEvent
 import com.example.starborn.domain.event.EventManager
 import com.example.starborn.domain.event.EventPayload
@@ -16,6 +17,63 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class WorldSixDiscoverabilityStateTest {
+    @Test fun `world six completion events exclusively own successor handoffs`() {
+        val events = AssetJsonReader(DesktopAssetProvider(), MoshiProvider.instance)
+            .readList<GameEvent>("events.json")
+        val handoffs = mapOf(
+            "w6_mq26_reassemble" to ("w6_mq26" to "w6_mq27"),
+            "w6_mq27_reach_elevator" to ("w6_mq27" to "w6_mq28"),
+            "w6_mq28_reach_singularity" to ("w6_mq28" to "w6_mq29"),
+            "w6_mq29_reach_center" to ("w6_mq29" to "w6_mq30")
+        )
+        handoffs.forEach { (eventId, pair) ->
+            val event = events.single { it.id == eventId }
+            assertEquals(1, event.actions.count { it.type == "complete_quest" && it.questId == pair.first })
+            assertEquals(1, event.actions.count { it.type == "start_quest" && it.questId == pair.second })
+            assertEquals(1, event.actions.count { it.type == "track_quest" && it.questId == pair.second })
+            assertFalse(events.any { other ->
+                other.trigger.type == "quest_stage_complete" && other.trigger.questId == pair.first &&
+                    other.actions.any { it.type == "start_quest" && it.questId == pair.second }
+            })
+        }
+    }
+
+    @Test fun `quest terminology names authored world six rooms and actions`() {
+        val reader = AssetJsonReader(DesktopAssetProvider(), MoshiProvider.instance)
+        val rooms = reader.readList<Room>("rooms.json").associateBy { it.id }
+        val quests = reader.readList<Quest>("quests.json").associateBy { it.id }
+        fun tasks(id: String) = quests.getValue(id).stages.flatMap { it.tasks }.associateBy { it.id }
+        fun assertTerms(quest: String, task: String, room: String, vararg terms: String) {
+            val text = tasks(quest).getValue(task).text
+            assertTrue("$quest/$task missing room $room", text.contains(rooms.getValue(room).title, true))
+            terms.forEach { assertTrue("$quest/$task missing $it", text.contains(it, true)) }
+        }
+
+        assertTerms("w6_mq26", "reassemble_team", "source_campfire", "song-fire")
+        assertTerms("w6_mq27", "evade_manager", "source_echo_patrol", "manager patrol")
+        assertTerms("w6_mq28", "build_bridge", "source_memory_bridge", "unfinished bridge", "Zeke's anchor")
+        assertTerms("w6_mq28", "final_banter", "source_memory_bridge_span", "campfire promise")
+        assertTerms("w6_mq28", "reach_singularity", "source_memory_threshold", "singularity threshold")
+        assertTerms("w6_sq26", "find_tool_marks", "source_orion_chorus", "crooked tool marks")
+        assertTerms("w6_sq26", "talk_to_jed", "source_echo_workbench", "jed echo")
+        assertTerms("w6_sq26", "carry_legacy", "source_echo_patrol", "open shift gate")
+        assertTerms("w6_sq27", "find_backups", "source_zeke_nightmare", "backup lattice")
+        assertTerms("w6_sq27", "delete_record", "source_zeke_review_loop", "authorization chain")
+        assertTerms("w6_sq27", "leave_review", "source_zeke_break_room", "unauthorized exit", "worker broadcast")
+        assertTerms("w6_sq28", "isolate_voice", "source_gh0st_nightmare", "buried voice")
+        assertTerms("w6_sq28", "break_command_layer", "source_gh0st_kill_suite", "command carrier")
+        assertTerms("w6_sq28", "recover_song", "source_gh0st_elara_signal", "pure audio log")
+        assertTerms("w6_mq29", "climb_stair", "source_memory_stair", "Jed's door", "Astra wreckage", "Foundry catwalk")
+        assertTerms("w6_mq30", "use_key", "source_center", "shared tuning focus")
+        assertTerms("w6_mq30", "tune_world", "source_center", "shared tuning focus")
+        assertTerms("w6_sq29", "trace_names", "source_memory_threshold", "names beneath the light")
+        assertTerms("w6_sq29", "find_grave", "source_memory_stair", "aethel grave")
+        assertTerms("w6_sq29", "carry_chorus", "source_memory_fragments", "answering chorus")
+        assertTerms("w6_sq30", "identify_timeline", "source_spire_thought", "wreck timeline")
+        assertTerms("w6_sq30", "recover_hull", "source_spire_archive", "future astra hull")
+        assertTerms("w6_sq30", "fit_hull", "source_spire_arena", "empty armor socket")
+    }
+
     @Test fun `remaining Source references preserve partial progress and intentional epilogue replay`() {
         val reader = AssetJsonReader(DesktopAssetProvider(), MoshiProvider.instance)
         val rooms = reader.readList<Room>("rooms.json")
