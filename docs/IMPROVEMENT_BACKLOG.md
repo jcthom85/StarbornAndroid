@@ -5,11 +5,13 @@ exploration/narrative consistency, and presentation/release verification.
 
 ## Current phase status (2026-09-11)
 
-- Release preparation 1.3.27 (111): user authorized commit, push and Internal
+- Release 1.3.27 (111): commit `7229b72` pushed; Google Play accepted bundle
+  111 and committed the completed Internal Testing release. Not production.
+  User authorized commit, push and Internal
   Testing upload of the ridge compatibility repair before a bounded World 1
   pass. Includes description selection changes and 2,592 migrated / 108 raw
   state combinations. No gameplay gates changed; IDE cache excluded.
-  Upload outcome will be recorded after publishing.
+  The ridge repair is now included in the uploaded build.
   Release checks passed: 369 JVM tests, 354 strict selectors, signed bundle,
   release lint (349 warnings, 11 hints, no errors) and diff check. Build used
   the previously verified 8 GB heap / two-worker invocation.
@@ -85,6 +87,167 @@ exploration/narrative consistency, and presentation/release verification.
   verification remain mostly pending. Uploading a bundle does not close these.
 
 ### Verification history
+
+- World 4 seventh batch: restored the final 49 static description/action pairs
+  across Titan Dock and waste intake (ten descriptions). Later dock prose names
+  Rylos through his insignia rather than asserting he survives his defeat.
+  Intake prose retains separate quest controls, terminal, salvage and film-cache
+  references. Added both rooms to the milestone/event matrix; milestone_not_set
+  conditions are now explicitly checked for blocked dispatch as well as positive
+  cases. Prerequisite quest tasks are seeded independently of description flags;
+  actual combat, film reward delivery, routes and save-file I/O are not simulated.
+  All pending room changes verified prose-only, no action/gate/reward/route edits.
+  Verification: 377 JVM tests passed, zero failures/errors; 354 strict selectors
+  and diff check passed. Audit: 160 overall, zero World 4; audit logic unchanged.
+  This closes World 4 static discoverability triage, not device/narrative sign-off.
+  Next: World 5 (86 candidates), World 6 (39), Astra (10), debug/unmapped (3).
+  Earlier classified omissions remain: World 1 (1), World 2 (16), World 3 (5).
+  Explicit references and route/terminology review still follow. Changes remain
+  uncommitted and outside uploaded build 111; no install, version bump or release.
+
+- World 4 sixth bounded batch: restored eight references across slag landing,
+  slag river and stepping stones: compliance bulletin, crossing, crate alpha
+  and flare rhythm. Expanded the selected-description/milestone/event matrix to
+  these rooms. Authored positive quest prerequisites are seeded; description
+  milestones remain independent of unfinished quest tasks. The compliance
+  bulletin still requires active MQ16 and its own unread milestone; later
+  description milestones alone do not retire it in partial states.
+  All pending room edits verified prose-only. Audit: 209 overall, 49 World 4
+  (down from 217/57). No suppression, progression change, commit, version change,
+  push, install or upload. Next: Titan Dock and waste-intake candidates.
+  Verification: 377 JVM tests passed, zero failures/errors; 354 strict selectors
+  and diff check passed. Changes remain uncommitted and outside build 111.
+
+- World 4 fifth bounded batch: restored 19 references in power-core and service-
+  airlock base/variant descriptions. These retain engine mount, arrays, airlock
+  door, crate gamma and engineer valve references across independent milestones.
+  Extended the milestone matrix/event-dispatch regression to both rooms. Event
+  conditions use quest/task completion separately from the description milestones;
+  partial states can still execute these actions. Positive prerequisite tasks
+  are seeded; rendered UI, real save import and earned routes remain unproven.
+  All pending room edits verified prose-only. Audit: 217 overall, 57 World 4
+  (down from 236/76), without suppression. No version change, commit, push,
+  install or upload. Remaining World 4 candidates are the next batch.
+  Verification: 377 JVM tests passed with zero failures/errors, 354 strict
+  selectors passed, and diff check passed. Changes remain uncommitted, not in 111.
+
+- World 4 fourth bounded batch: restored nine references across forge control
+  alcove, bellows walk, obsidian overlook, coolant pipes and reject bay. Base and
+  milestone-selected descriptions now retain the reviewed inspection names.
+  Runtime regression checks selected prose/visibility and dispatches hazard-map,
+  overclock-profile and rejection-code events with required milestones seeded.
+  Reject-bay spared-units milestone alone does not retire reading rejection codes;
+  the event independently checks SQ19 completion and codes-read milestone.
+  Inspection-only actions have no event to dispatch. No route/device or save-file
+  I/O proof is claimed. All pending rooms.json edits verified prose-only.
+  Audit: 236 overall, 76 World 4 (down from 245/85), without suppression.
+  Next: power-core variants and service-airlock candidates, then remaining
+  World 4 rooms. No version change, commit, push, install or upload.
+  Verification: 377 JVM tests passed, zero failures/errors; 354 strict selectors
+  and diff check passed. Follow-up changes remain uncommitted, outside build 111.
+
+- World 4 third bounded batch: restored 23 references across Cooling Springs,
+  engine service ring, escape catwalk and forge/anvil descriptions. Added the
+  three worker-tablet omissions; expanded Cooling Springs coverage beyond the
+  earlier base-only test. Selected-description tests enumerate independent
+  description/action milestones and dispatch shipped generic events with their
+  positive quest prerequisites seeded. Completed tasks remain absent to model
+  partial saves. Tuning references are checked for visibility/prose only; puzzle
+  completion, rendered UI and save-file I/O are not established by these tests.
+  All pending rooms.json changes verified prose-only against release 111.
+  Audit: 245 overall, 85 World 4 (down from 268/108). No candidates suppressed.
+  Verification: 376 JVM tests passed, zero failures/errors; 354 strict selectors
+  and diff check passed. Changes remain uncommitted and are not in build 111.
+  No commit, push, version change, install or upload. Next: remaining World 4
+  rooms, then Worlds 5-6, Astra and debug rooms; explicit references and
+  route/terminology review still pending.
+
+- World 4 second bounded batch: restored 16 prose references in cooling springs
+  and decontamination rooms across base and milestone-selected descriptions.
+  Worker-tablet references remained unresolved in three descriptions; the
+  regression excluded unmet milestone prerequisites from its base-state check.
+  That check alone did not prove variant coverage or event usability. The third
+  batch above closes this gap. The previously reported count of 36 was incorrect.
+  No action definitions, event conditions, IDs, rewards or routes changed.
+  Verification: 375 JVM tests passed, 354 strict selectors passed, diff check
+  passed. Audit: 268 overall, 108 World 4. Remaining World 4 candidates are
+  still batched; no commit, upload or version change.
+
+- World 4 bounded batch: restored 16 prose references in the conveyor,
+  conditioning and belt-timing rooms. These are state-independent interactions;
+  event conditions remain unchanged. Added a 64-state milestone regression for
+  the reviewed rooms and confirmed executable events for gated conveyor actions.
+  Audit moved from 300 to 284 candidates overall; World 4 moved from 140 to 124.
+  Verification: 374 JVM tests passed, 354 strict selectors passed, and diff check
+  passed. The remaining 124 World 4 candidates need batched triage; no bulk
+  suppression or release action was performed. Changes remain uncommitted and
+  are not in Internal Testing build 111.
+
+- World 3 discoverability pass after 111: restored 35 description/action pairs
+  across 13 rooms. Added missing side-quest objects, caches, tuning console,
+  roof controls and post-Lens Scan references; completion variants retain
+  unrelated interactions and partial-state objectives. All changes are prose-only;
+  action definitions, conditions, IDs, rewards and connections are unchanged.
+  Reviewed shipped event conditions: side quests have their own quest/milestone
+  gates, not blanket main-quest retirement. Quest tasks and milestones can be
+  independently persisted; completion milestones alone do not prove task retirement.
+  The five remaining World 3 candidates are intentional pre-MQ14 Scan omissions:
+  Archive base/prism-solved, Prism base/prism-solved and drone base. All three
+  Scan events require ms_w3_mq14_complete; its first-priority variants now name
+  them. Runtime event tests prove blocked-before/executable-after behavior.
+  Added a bounded milestone-combination regression over all 13 reviewed rooms,
+  including independent action retirement/requirement and description milestones.
+  It checks visibility and selected prose, not event usability for every action.
+  Event usability beyond the three Scan events was reviewed from authored
+  conditions, not established through complete route/device execution. No rendered
+  interaction, puzzle completion or save-file I/O proof is claimed.
+  Verification: 373 JVM tests passed, zero failures/errors; 354 strict selectors
+  and diff check passed. Audit: 300 overall, 5 World 3; no suppression added.
+  World 3's 40 candidates are classified (35 fixed, 5 gated omissions).
+  Next: World 4's 140 candidates, then World 5 (86), World 6 (39), Astra (10)
+  and debug/unmapped (3); explicit references and route/terminology review remain.
+  Changes remain uncommitted and are not in uploaded 1.3.27 (111). No install,
+  version increment, commit, push or upload performed in this pass.
+
+- World 1 discoverability repair after 111: resolved the eight remaining pairs
+  with eight prose-only edits in seven rooms. Added bunk conduit references in
+  base/dark prose; tactile storage-panel/basement-chest references and backup
+  terminal standby glow; retained loader diagnostic, toxic-blockage and mainframe
+  terminal names in completion variants. Completion language remains historical
+  rather than instructing the player to repeat completed work.
+  Production `buildActionHints` only derives locks for toggle actions, not these
+  generic actions; generic selection/dispatch has no blanket darkness lock.
+  Runtime tests migrate seeded sessions, verify narrative visibility, dispatch
+  shipped events and require selected prose to name the executable action in all
+  eight cases. The backup terminal is repeatable, so execution is observed through
+  EventHooks rather than the one-shot completedEvents set. Room-only completion
+  flags can coexist with unfinished quest tasks after migration; the loader,
+  blockage and server events execute in those partial states.
+  Tests do not establish rendered UI, actual save-file import or earned routes.
+  World 1's nine static pairs are now classified: eight fixed, mine-shunt base
+  omission intentional and covered by its power/quest-state regression. Static
+  audit is 335 overall / 1 World 1; no audit suppression. Next: World 3 (40),
+  then World 4 (140), World 5 (86), World 6 (39), Astra (10), and debug/unmapped (3).
+  Explicit references and route/terminology review still follow discoverability.
+  All new room changes verified prose-only against release 111. No progression
+  gates, events, rewards, routes, version, commit, push, install or upload changed.
+  Verification: 371 JVM tests passed with zero failures/errors, 354 strict Maestro
+  selectors passed, and diff check passed. Changes remain uncommitted, not in 111.
+
+- Post-111 bounded World 1 pass: added a four-combination runtime selector
+  regression for mine_shunt's crew datapad. Power absent hides it; power present
+  selects prose naming it; SQ05 completion retires it. This classifies the base
+  omission without editing prose or suppressing the audit. No asset changes.
+  Eight World 1 candidates remain: bunk base conduit, four dark descriptions,
+  and medbay/server/loader partial or completed states. Code inspection found
+  darkness hides NPCs/items/service shortcuts, but inline actions are built from
+  selected dark prose and generic dispatch has no blanket darkness gate. Do not
+  classify dark omissions as unusable solely because the room is dark; action
+  hints and event conditions still require targeted checks. World 1 remains open.
+  Follow-up test and this release-outcome record are not committed or in 111.
+  Verification: 370 JVM tests passed, zero failures/errors; 354 strict selectors
+  and diff check passed. Audit unchanged at 343 candidates, 9 World 1 (one now
+  classified). Paused at this bounded checkpoint to conserve the stated budget.
 
 - Post-release Phase 5 ridge repair (after bundle 110): added two descriptions
   for unconfronted-hunter compatibility states and moved the Beast description

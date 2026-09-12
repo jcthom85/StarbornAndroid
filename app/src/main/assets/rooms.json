@@ -275,9 +275,9 @@
     "env": "mine",
     "title": "Nova's Bunk",
     "background_image": "images/rooms/world_1/pit_nova_bunk_v5.webp",
-    "description": "Your bunk is a narrow shelf in the colony wall. The bunk light hangs above cargo netting and a rusty locker holding your tools, a spare ration, and Jed's small metal carving.",
+    "description": "Your bunk is a narrow shelf in the colony wall. The bunk light hangs above cargo netting and a rusty locker holding your tools, a spare ration, and Jed's small metal carving. A scorched conduit runs beside the door release.",
     "reveal_title_when_dark": true,
-    "description_dark": "Nova can find the bunk edge and door switch without light. Only the bunk light switch carries an emergency glow.",
+    "description_dark": "Nova can find the bunk edge and door switch without light. Only the bunk light switch carries an emergency glow, outlining the scorched conduit beside the door release.",
     "description_variants": [
       {
         "requires_state": {
@@ -399,7 +399,7 @@
     ],
     "dark": true,
     "reveal_title_when_dark": true,
-    "description_dark": "Unlit storage bay. Nova can feel metal shelving, cold filter units, and an emergency breaker on the side wall.",
+    "description_dark": "Unlit storage bay. Nova can feel metal shelving, cold filter units, and an emergency breaker on the side wall. A loose floor panel shifts beneath her boot.",
     "description_variants": [
       {
         "requires_milestones": [
@@ -502,7 +502,7 @@
         "requires_state": {
           "loader_cleared": true
         },
-        "description": "The faulted loader rests cold beside the shutter, its relay dark. A clean route now cuts through the scrap to Jed's bench."
+        "description": "The faulted loader rests cold beside the shutter, its relay dark. The loader diagnostic strip remains fixed beside the cracked relay. A clean route now cuts through the scrap to Jed's bench."
       }
     ],
     "npcs": [],
@@ -791,7 +791,7 @@
     ],
     "dark": true,
     "reveal_title_when_dark": true,
-    "description_dark": "Pitch black beneath the shop. Water drips onto scrap metal. Nova can feel a workbench power switch mounted on the damp rock wall.",
+    "description_dark": "Pitch black beneath the shop. Water drips onto scrap metal. Nova can feel a workbench power switch mounted on the damp rock wall and the rim of a components chest bolted to the table.",
     "description_variants": [
       {
         "requires_milestones": [
@@ -1005,7 +1005,7 @@
         "requires_state": {
           "toxic_blockage_cleared": true
         },
-        "description": "The fans hold a steady speed and the patched conduits run quiet. The cracked vent ticks as it cools. The blockage is gone; clean air reaches the med-bay at normal pressure."
+        "description": "The fans hold a steady speed and the patched conduits run quiet. The cracked vent ticks as it cools. Stains mark where the toxic blockage collected; clean air reaches the med-bay at normal pressure."
       },
       {
         "requires_state": {
@@ -2155,7 +2155,7 @@
         "requires_state": {
           "override_applied": true
         },
-        "description": "The mainframe shows a standard login screen. The console is thawed, and its last rebel command is burned into a cracked circuit board."
+        "description": "The mainframe terminal shows a standard login screen. The console is thawed, and its last rebel command is burned into a cracked circuit board."
       },
       {
         "requires_state": {
@@ -2244,7 +2244,7 @@
     ],
     "dark": true,
     "reveal_title_when_dark": true,
-    "description_dark": "Sub-zero dark. Server fans whir in the cold shadows. Nova's fingers find heavy cases and a backup breaker box on the frame.",
+    "description_dark": "Sub-zero dark. Server fans whir in the cold shadows. Nova's fingers find heavy cases and a backup breaker box on the frame. An archive terminal gives off a faint standby glow on the wall.",
     "description_variants": [
       {
         "requires_milestones": [
@@ -3939,7 +3939,7 @@
     "env": "neon",
     "title": "Signal Stairwell",
     "background_image": "images/rooms/world_3/spire_the_static.webp",
-    "description": "A signal stairwell climbs behind The Static, each landing crowded with antenna wire and old mail slots. The whole shaft hums with pirate broadcasts.",
+    "description": "A signal stairwell climbs behind The Static, each landing crowded with antenna wire and old mail slots. The whole shaft hums with pirate broadcasts. A chrono coil console hums on the landing, monitoring temporal flux lines.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -3992,7 +3992,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "Zeke's apartment sits quiet inside Orion's shield. The planning table is empty now except for coffee rings, route burns, and the shape of a plan already in motion.",
+        "description": "Zeke's apartment sits quiet inside Orion's shield. The planning table is empty now except for coffee rings, route burns, and the shape of a plan already in motion. The workstation still hums beneath the route notes.",
         "requires_milestones": [
           "ms_w3_mq12_complete"
         ]
@@ -4082,7 +4082,7 @@
     "env": "neon",
     "title": "Night Market",
     "background_image": "images/rooms/world_3/spire_night_market.webp",
-    "description": "The Night Market is loud enough to feel alive on purpose. Lanterns swing over food steam, Noodle Row shouts through the rain, and a lantern bridge crosses above the drain like a string of stubborn stars.",
+    "description": "The Night Market is loud enough to feel alive on purpose. Lanterns swing over food steam, Noodle Row shouts through the rain, and a lantern bridge crosses above the drain like a string of stubborn stars. A market registry broadcast crackles from a speaker above the stalls.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4100,7 +4100,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Night Market is loud enough to feel alive on purpose. Repaired lanterns swing over food steam, Noodle Row shouts through the rain, and a lantern bridge crosses above the drain like a string of stubborn stars.",
+        "description": "The Night Market is loud enough to feel alive on purpose. Repaired lanterns swing over food steam, Noodle Row shouts through the rain, and a lantern bridge crosses above the drain like a string of stubborn stars. A market registry broadcast crackles from a speaker above the stalls.",
         "requires_milestones": [
           "ms_w3_market_lit"
         ]
@@ -4171,7 +4171,7 @@
     "env": "neon",
     "title": "Lantern Bridge",
     "background_image": "images/rooms/world_3/spire_night_market.webp",
-    "description": "A narrow lantern bridge crosses above the market drain. Paper charms flutter from the rail, each one carrying a name, a debt, or a prayer.",
+    "description": "A narrow lantern bridge crosses above the market drain. Paper charms flutter from the rail, each one carrying a name, a debt, or a prayer. An executive power siphon runs along a bright cable toward a billboard.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4323,7 +4323,7 @@
     "env": "neon",
     "title": "Security Kiosk",
     "background_image": "images/rooms/world_3/spire_transit_plaza.webp",
-    "description": "A security kiosk sits under the plaza stairs, unattended because the guards trust the software more than each other. The security terminal and case records glow behind cracked glass.",
+    "description": "A security kiosk sits under the plaza stairs, unattended because the guards trust the software more than each other. The security terminal and case records glow behind cracked glass. A public kiosk relay waits beside the record display.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4337,7 +4337,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The security kiosk sits under the plaza stairs with its software pride wounded. The security terminal still glows behind cracked glass, and the case records show fresh extraction marks from Gh0st's search.",
+        "description": "The security kiosk sits under the plaza stairs with its software pride wounded. The security terminal still glows behind cracked glass, and the case records show fresh extraction marks from Gh0st's search. A public kiosk relay waits beside the record display.",
         "requires_milestones": [
           "ms_w3_security_records_pulled"
         ]
@@ -4469,7 +4469,7 @@
     "env": "neon",
     "title": "Uniform Sorting",
     "background_image": "images/rooms/world_3/spire_laundry_service.webp",
-    "description": "Uniform sorting smells like detergent and fear. Uniform racks roll in strict rows, and laundry tags mark each sleeve for a life the Upper City will never notice.",
+    "description": "Uniform sorting smells like detergent and fear. Uniform racks roll in strict rows, and laundry tags mark each sleeve for a life the Upper City will never notice. An erased memorial name leaves a polished scar on a transit plaque.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4485,7 +4485,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "Uniform sorting smells like detergent, fear, and overheated brakes. Uniform racks stand abandoned in lockdown rows while laundry tags flicker with route closures the Upper City never shows its guests.",
+        "description": "Uniform sorting smells like detergent, fear, and overheated brakes. Uniform racks stand abandoned in lockdown rows while laundry tags flicker with route closures the Upper City never shows its guests. An erased memorial name leaves a polished scar on a transit plaque.",
         "requires_milestones": [
           "ms_w3_mq14_complete"
         ]
@@ -4515,7 +4515,7 @@
     "env": "neon",
     "title": "Service Lift",
     "background_image": "images/rooms/world_3/spire_laundry_service.webp",
-    "description": "A service lift rises through the bones of the Upper City. A worker network uplink can publish the ledger, while a private dead drop can turn it into a precise weapon against one executive.",
+    "description": "A service lift rises through the bones of the Upper City. A worker network uplink can publish the ledger, while a private dead drop can turn it into a precise weapon against one executive. The lift panel flickers beside a rattling inspection hatch.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4532,7 +4532,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The service lift judders between lockdown floors. The lift panel flashes CLOSED CORRIDOR warnings, and the inspection hatch rattles like the city is trying to shake the crew loose.",
+        "description": "The service lift judders between lockdown floors. The lift panel flashes CLOSED CORRIDOR warnings, and the inspection hatch rattles like the city is trying to shake the crew loose. A worker network uplink and a private dead drop remain accessible beside the panel.",
         "requires_milestones": [
           "ms_w3_mq14_complete"
         ]
@@ -4818,13 +4818,13 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Archive Vault is red now. Indexed crystal stacks strobe with alarm text, the empty containment field screams around the stolen lens relic, and Scan reveals black tether-lines running from the Administrator's system into the room's geometry.",
+        "description": "The Archive Vault is red now. Indexed crystal stacks strobe with alarm text, the empty containment field screams around the stolen lens relic, and Scan reveals black tether-lines running from the Administrator's system into the room's geometry. Command tether-lines cross the glass; scan tether-lines to follow their deeper geometry.",
         "requires_milestones": [
           "ms_w3_mq14_complete"
         ]
       },
       {
-        "description": "Indexed crystal stacks rise above a glass floor two hundred stories high. The Lens hangs unsupported after the resolved prism route drops containment.",
+        "description": "Indexed crystal stacks rise above a glass floor two hundred stories high. The Lens hangs unsupported after the resolved prism route drops containment. The lens relic hangs above the idle containment field, with command tether-lines still running back toward the gallery.",
         "requires_milestones": [
           "ms_w3_prism_solved"
         ]
@@ -4880,13 +4880,13 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Prism Gallery fractures the lockdown lights into visible alarm chords. The resolved containment route is still warm, and Scan shows a narrow timing path threaded through the noise toward the roof.",
+        "description": "The Prism Gallery fractures the lockdown lights into visible alarm chords. The resolved containment route is still warm, and Scan shows a narrow timing path threaded through the noise toward the roof. Prism shutters frame the braided chord in the glass; scan alarm chords to follow the timing path.",
         "requires_milestones": [
           "ms_w3_mq14_complete"
         ]
       },
       {
-        "description": "The Prism Gallery bends Archive light into audible color. The prism shutters now hold the containment field open, trembling at frequencies Orion can hear and Nova can no longer ignore.",
+        "description": "The Prism Gallery bends Archive light into audible color. The prism shutters now hold the containment field open, trembling at frequencies Orion can hear and Nova can no longer ignore. A braided chord remains suspended inside the glass.",
         "requires_milestones": [
           "ms_w3_prism_solved"
         ]
@@ -4923,7 +4923,7 @@
     "env": "neon",
     "title": "Drone Test Alcove",
     "background_image": "images/rooms/world_3/spire_archive_vault.webp",
-    "description": "Scratched glass and warning tape seal the alcove. A prototype rack waits beside sleeping security drones, their dormant sensor paths revealed by the Lens. A flight telemetry log flashes on the rack screen.",
+    "description": "Scratched glass and warning tape seal the alcove. A prototype rack waits beside sleeping security drones, their dormant sensor paths revealed by the Lens. A flight telemetry log flashes on the rack screen. A prototype targeting audit waits on the calibration screen.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4938,7 +4938,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The drone test alcove is awake. Red warning tape snaps in fanwash, security drones twitch in their nests, and Scan paints every targeting path as a cold line across Nova's ribs.",
+        "description": "The drone test alcove is awake. Red warning tape snaps in fanwash, security drones twitch in their nests, and Scan paints every targeting path as a cold line across Nova's ribs. The prototype rack holds a flight telemetry log and a prototype targeting audit. Scan targeting paths to trace the drones' lines of fire.",
         "requires_milestones": [
           "ms_w3_mq14_complete"
         ]
@@ -4983,7 +4983,7 @@
     "env": "neon",
     "title": "Landing Pad Roof",
     "background_image": "images/rooms/world_3/spire_landing_pad_roof.webp",
-    "description": "The roof shudders under violent wind and red lockdown light. The Astra waits across the pad while the Planetary Shield rotates overhead in heavy resonance bands, guarding the sky.",
+    "description": "The roof shudders under violent wind and red lockdown light. The Astra waits across the pad while the Planetary Shield rotates overhead in heavy resonance bands, guarding the sky. The flight display marks a shield window and a launch window beside a test telemetry relay.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5012,7 +5012,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Landing Pad Roof shudders under violent wind and red lockdown light. The Astra waits beyond the drone test alcove while Scan reveals the Planetary Shield as a rotating wound in the sky, open for less than a heartbeat.",
+        "description": "The Landing Pad Roof shudders under violent wind and red lockdown light. The Astra waits beyond the drone test alcove while Scan reveals the Planetary Shield as a rotating wound in the sky, open for less than a heartbeat. The flight display marks a shield window and a launch window beside a test telemetry relay.",
         "requires_milestones": [
           "ms_w3_mq14_complete"
         ]
@@ -5052,7 +5052,7 @@
     "env": "foundry",
     "title": "Obsidian Shelf",
     "background_image": "images/rooms/world_4/foundry_slag_landing.webp",
-    "description": "The Astra cools on a shelf of black volcanic glass above a river of magma. Heat shields glow cherry-red while ash falls like dirty snow, and the Lens still shows the Shield window closing behind you.",
+    "description": "The Astra cools on a shelf of black volcanic glass above a river of magma. Heat shields glow cherry-red while ash falls like dirty snow, and the Lens still shows the Shield window closing behind you. A compliance bulletin hisses from the factory PA.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -5069,13 +5069,13 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Obsidian Shelf trembles under distant factory alarms. The Astra waits with its hold open, ready for the engine and Phase-Cutter Arrays that can carry the crew into high orbit.",
+        "description": "The Obsidian Shelf trembles under distant factory alarms. The Astra waits with its hold open, ready for the engine and Phase-Cutter Arrays that can carry the crew into high orbit. A compliance bulletin hisses from the factory PA.",
         "requires_milestones": [
           "ms_w4_anvil_claimed"
         ]
       },
       {
-        "description": "The Astra sits secured on volcanic glass, engines clicking through emergency cool-down. The Lens proved the Shield has seams, but the ship does not have the muscle to climb any higher without a Foundry-grade engine.",
+        "description": "The Astra sits secured on volcanic glass, engines clicking through emergency cool-down. The Lens proved the Shield has seams, but the ship does not have the muscle to climb any higher without a Foundry-grade engine. A compliance bulletin hisses from the factory PA.",
         "requires_milestones": [
           "ms_w4_landing_secured"
         ]
@@ -5101,7 +5101,7 @@
     "env": "foundry",
     "title": "Obsidian Overlook",
     "background_image": "images/rooms/world_4/foundry_slag_landing.webp",
-    "description": "A cracked overlook juts above the Foundry basin. The whole sector glows below: slag rivers, intake pistons, and the factory spine Vale built to feed something larger than war.",
+    "description": "A cracked overlook juts above the Foundry basin. The whole sector glows below: slag rivers, intake pistons, and the factory spine Vale built to feed something larger than war. Shield window telemetry flickers on the crew's flight display.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -5115,7 +5115,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "From the overlook, the route has shape: cross the slag, tame the vents, breach the airlock. Zeke tags the engine cradle deep inside the factory, too hot and too guarded to reach from outside.",
+        "description": "From the overlook, the route across the Foundry basin has shape: cross the slag, tame the vents, breach the airlock. Zeke tags the engine cradle deep inside the factory, too hot and too guarded to reach from outside. Shield window telemetry flickers on the crew's flight display.",
         "requires_milestones": [
           "ms_w4_landing_secured"
         ]
@@ -5139,7 +5139,7 @@
     "env": "foundry",
     "title": "Slag River",
     "background_image": "images/rooms/world_4/foundry_slag_river.webp",
-    "description": "Broken stepping stones cross a flowing lava channel. Source flares erupt from pressure cracks without warning, bending the heat into bright, violent chords.",
+    "description": "Broken stepping stones form a slag crossing over a flowing lava channel. Source flares erupt from pressure cracks without warning, bending the heat into bright, violent chords. An ammo crate alpha hangs from a chain beside a basalt pylon.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5158,13 +5158,13 @@
     "state": {},
     "description_variants": [
       {
-        "description": "Broken stepping stones cross the lava channel. The ammo crate alpha chain is snapped, its blast mark still smoking against the basalt pylon.",
+        "description": "Broken stepping stones form a slag crossing over the lava channel. The ammo crate alpha chain is snapped, its blast mark still smoking against the basalt pylon.",
         "requires_milestones": [
           "ms_w4_crate_alpha_destroyed"
         ]
       },
       {
-        "description": "The slag crossing is mapped now: three safe stones, one false rhythm, and a flare pattern that tries to punish confidence. Smoke from the Astra's descent still hangs behind you.",
+        "description": "The slag crossing is mapped now: three safe stones, one false rhythm, and a flare pattern that tries to punish confidence. Smoke from the Astra's descent still hangs behind you. An ammo crate alpha hangs from a chain beside a basalt pylon.",
         "requires_milestones": [
           "ms_w4_slag_crossed"
         ]
@@ -5193,7 +5193,7 @@
     "env": "foundry",
     "title": "Stepping Stones",
     "background_image": "images/rooms/world_4/foundry_slag_river.webp",
-    "description": "Basalt stones rise from the lava channel in a crooked line. Each flare throws blue-white Source fire across a different step, turning the crossing into a readable rhythm.",
+    "description": "Basalt stones rise from the lava channel in a crooked line. Each flare throws blue-white Source fire across a different step, turning the crossing into a readable flare rhythm.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5224,7 +5224,7 @@
     "env": "foundry",
     "title": "Cooling Springs",
     "background_image": "images/rooms/world_4/foundry_cooling_springs.webp",
-    "description": "A hidden maintenance pocket where condensed steam collects in clear hot pools. The factory noise drops to a distant pulse, giving the crew room to breathe. A cooling basin collects mineral runoff.",
+        "description": "A hidden maintenance pocket where condensed steam collects in clear hot pools. The factory noise drops to a distant pulse, giving the crew room to breathe. A steam pool and cooling basin collect mineral runoff; a magma regulator pulses beside a salvaged cooling bypass. A worker tablet lies wrapped in a coolant-stained scarf beside the pool.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -5241,26 +5241,26 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The springs are no longer a hiding place, and the worker tablet's last ping has gone quiet. Gh0st's override key is in Nova's kit; the recovered coolant rig is useful, but it cannot make the factory merciful.",
+        "description": "The springs are no longer a hiding place, and the worker tablet's last ping has gone quiet. Gh0st's override key is in Nova's kit; the recovered coolant rig is useful, but it cannot make the factory merciful. The magma regulator and salvaged cooling bypass remain beside the steam pool.",
         "requires_milestones": [
           "ms_w4_springs_regrouped",
           "ms_w4_worker_traced"
         ]
       },
       {
-        "description": "The cooling springs are quiet after the worker tablet's last ping. The engineer is gone, but the recovered coolant rig makes the maintenance pocket feel less like a dead end.",
+        "description": "The cooling springs are quiet after the worker tablet's last ping. The engineer is gone, but the recovered coolant rig makes the maintenance pocket feel less like a dead end. The magma regulator and salvaged cooling bypass remain beside the steam pool.",
         "requires_milestones": [
           "ms_w4_worker_traced"
         ]
       },
       {
-        "description": "The springs are no longer a hiding place. Gh0st's override key is in Nova's kit, and the factory interior waits beyond the airlock like a wound under bandage.",
+        "description": "The springs are no longer a hiding place. Gh0st's override key is in Nova's kit, and the factory interior waits beyond the airlock like a wound under bandage. A magma regulator and salvaged cooling bypass sit beside the steam pool. A worker tablet lies wrapped in a coolant-stained scarf beside the pool.",
         "requires_milestones": [
           "ms_w4_springs_regrouped"
         ]
       },
       {
-        "description": "The cooling springs are quiet enough for the Phantom records to hurt properly. Steam curls around Gh0st while he decides what the files mean and what they do not get to mean.",
+        "description": "The cooling springs are quiet enough for the Phantom records to hurt properly. Steam curls around Gh0st while he decides what the files mean and what they do not get to mean. The magma regulator and salvaged cooling bypass sit beside the steam pool. A worker tablet lies wrapped in a coolant-stained scarf beside the pool.",
         "requires_milestones": [
           "ms_w4_phantom_records_found"
         ]
@@ -5336,7 +5336,7 @@
     "env": "foundry",
     "title": "Waste Intake",
     "background_image": "images/rooms/world_4/foundry_waste_intake.webp",
-    "description": "Massive pistons slam raw scrap into furnace mouths. Compactor chains drag wrecked mechs through ash and sparks toward the factory interior.",
+    "description": "Massive pistons slam raw scrap into furnace mouths. Compactor chains drag wrecked mechs through ash and sparks toward the factory interior. Cooling vent controls flank a waste intake brake; a worker maintenance ping pulses on the service display. A Project Phantom terminal sits behind thermal glass. An ammo crate beta rests near the pistons. A scrap mech pile crowds the edge of the lava flow. A wrecked loader stash is wedged inside a ruined chassis.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5366,7 +5366,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Project Phantom terminal is open, the ammo crate beta is gone, and stripped mech frames lie cooling beside the intake. Dominion's machine keeps moving, but this corner no longer feeds it cleanly.",
+        "description": "The Project Phantom terminal is open, the ammo crate beta is gone, and stripped mech frames lie cooling beside the intake. Dominion's machine keeps moving, but this corner no longer feeds it cleanly. Cooling vent controls flank a waste intake brake; a worker maintenance ping pulses on the service display. A scrap mech pile crowds the edge of the lava flow. A wrecked loader stash is wedged inside a ruined chassis.",
         "requires_milestones": [
           "ms_w4_phantom_records_found",
           "ms_w4_crate_beta_destroyed",
@@ -5374,25 +5374,25 @@
         ]
       },
       {
-        "description": "The intake pistons still hammer, but the ammo crate beta is gone, scattered into slag-bright fragments beneath the compactor teeth.",
+        "description": "The intake pistons still hammer, but the ammo crate beta is gone, scattered into slag-bright fragments beneath the compactor teeth. Cooling vent controls flank a waste intake brake; a worker maintenance ping pulses on the service display. A Project Phantom terminal sits behind thermal glass. A scrap mech pile crowds the edge of the lava flow. A wrecked loader stash is wedged inside a ruined chassis.",
         "requires_milestones": [
           "ms_w4_crate_beta_destroyed"
         ]
       },
       {
-        "description": "The scrap mech pile has been stripped before the lava could finish it. A few useful housings are missing, and the rest is finally just wreckage.",
+        "description": "The scrap mech pile has been stripped before the lava could finish it. A few useful housings are missing, and the rest is finally just wreckage. Cooling vent controls flank a waste intake brake; a worker maintenance ping pulses on the service display. A Project Phantom terminal sits behind thermal glass. An ammo crate beta rests near the pistons. A wrecked loader stash is wedged inside a ruined chassis.",
         "requires_milestones": [
           "ms_w4_mechs_salvaged"
         ]
       },
       {
-        "description": "The Project Phantom terminal is open and impossible to unread. The intake keeps swallowing scrap like the factory has not just confessed what it did to Elara and Gh0st.",
+        "description": "The Project Phantom terminal is open and impossible to unread. The intake keeps swallowing scrap like the factory has not just confessed what it did to Elara and Gh0st. Cooling vent controls flank a waste intake brake; a worker maintenance ping pulses on the service display. An ammo crate beta rests near the pistons. A scrap mech pile crowds the edge of the lava flow. A wrecked loader stash is wedged inside a ruined chassis.",
         "requires_milestones": [
           "ms_w4_phantom_records_found"
         ]
       },
       {
-        "description": "Hacked vents pull heat away from the service airlock. The piston cycle exposes a protected terminal bay for three seconds at a time.",
+        "description": "Hacked vents pull heat away from the service airlock. The piston cycle exposes a protected terminal bay for three seconds at a time. Cooling vent controls flank a waste intake brake; a worker maintenance ping pulses on the service display. A Project Phantom terminal sits behind thermal glass. An ammo crate beta rests near the pistons. A scrap mech pile crowds the edge of the lava flow. A wrecked loader stash is wedged inside a ruined chassis.",
         "requires_milestones": [
           "ms_w4_cooling_vents_hacked"
         ]
@@ -5484,7 +5484,7 @@
     "env": "foundry",
     "title": "Service Airlock",
     "background_image": "images/rooms/world_4/foundry_service_airlock.webp",
-    "description": "A heavy pressurized door separates volcanic exterior from sterile factory interior. Decon lights sweep the chamber in hard white bands.",
+    "description": "A heavy pressurized door separates volcanic exterior from sterile factory interior. Decon lights sweep the chamber in hard white bands. The airlock door looms beside the pumps. An ammo crate gamma sits beneath a soot-marked wall. An engineer safe-route valve is mounted on the coolant line.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5502,19 +5502,19 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The service airlock stands open, and the ammo crate gamma is nothing but scorched brackets beside the decon pumps. The Foundry exterior has fewer teeth now.",
+        "description": "The service airlock stands open, and the ammo crate gamma is nothing but scorched brackets beside the decon pumps. The Foundry exterior has fewer teeth now. The airlock door looms beside the pumps. An engineer safe-route valve is mounted on the coolant line.",
         "requires_milestones": [
           "ms_w4_crate_gamma_destroyed"
         ]
       },
       {
-        "description": "The service airlock has cooled enough to cycle. Decon lights sweep the chamber in hard white bands while the interior door unlocks one reluctant bolt at a time.",
+        "description": "The service airlock has cooled enough to cycle. Decon lights sweep the chamber in hard white bands while the interior door unlocks one reluctant bolt at a time. The airlock door looms beside the pumps. An ammo crate gamma sits beneath a soot-marked wall. An engineer safe-route valve is mounted on the coolant line.",
         "requires_milestones": [
           "ms_w4_cooling_vents_hacked"
         ]
       },
       {
-        "description": "The service airlock stands open behind you, ash on one side and factory sterility on the other. The Foundry no longer feels unreachable; it feels angry.",
+        "description": "The service airlock stands open behind you, ash on one side and factory sterility on the other. The Foundry no longer feels unreachable; it feels angry. The airlock door looms beside the pumps. An ammo crate gamma sits beneath a soot-marked wall. An engineer safe-route valve is mounted on the coolant line.",
         "requires_milestones": [
           "ms_w4_mq16_complete"
         ]
@@ -5549,7 +5549,7 @@
     "env": "foundry",
     "title": "Decon Chamber",
     "background_image": "images/rooms/world_4/foundry_service_airlock.webp",
-    "description": "Chemical mist hangs in a narrow decon chamber. The walls are too clean, the drains too large, and the emergency shower is bolted shut from the wrong side.",
+        "description": "Chemical mist hangs in a narrow decon chamber. The decon cycle waits behind a sealed panel; the walls are too clean, the drains too large, and the emergency shower is bolted shut from the wrong side.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5576,7 +5576,7 @@
     "env": "foundry",
     "title": "Conveyor Belt",
     "background_image": "images/rooms/world_4/foundry_conveyor_belt.webp",
-    "description": "Conveyor belts carry half-assembled droids under hammering presses. A rejected droid waits between two choices: the conveyor release lock opens the worker tunnels, while the worker defense relay lets the waking units stay and protect the line.",
+    "description": "Conveyor belts carry half-assembled droids under hammering presses. A belt timing console marks the rhythm. A rejected droid waits between two choices: the conveyor release lock opens the worker tunnels, while the worker defense relay lets the waking units stay and protect the line.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5606,19 +5606,19 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The fabrication matrix has gone silent. The conveyor belt still moves, but the factory floor has lost the rhythm that made new Phantom shells.",
+        "description": "The fabrication matrix has gone silent. The conveyor belt still moves, but the factory floor has lost the rhythm that made new Phantom shells. A belt timing console overlooks a rejected droid, the conveyor release lock, and the worker defense relay.",
         "requires_milestones": [
           "ms_w4_matrix_overloaded"
         ]
       },
       {
-        "description": "Broken Phantom prototypes lie among half-built shells. Gh0st keeps his eyes on the belt instead of the faces Dominion tried to stamp into obedience.",
+        "description": "Broken Phantom prototypes lie among half-built shells. Gh0st keeps his eyes on the belt instead of the faces Dominion tried to stamp into obedience. A belt timing console overlooks a rejected droid, the conveyor release lock, and the worker defense relay.",
         "requires_milestones": [
           "ms_w4_prototypes_defeated"
         ]
       },
       {
-        "description": "The belt timing is yours now. Presses still slam and shields still move, but Nova has marked the safe steps in the rhythm instead of being dragged by it.",
+        "description": "The belt timing is yours now. Presses still slam and shields still move, but Nova has marked the safe steps in the rhythm instead of being dragged by it. A belt timing console overlooks a rejected droid, the conveyor release lock, and the worker defense relay.",
         "requires_milestones": [
           "ms_w4_conveyors_timed"
         ]
@@ -5712,7 +5712,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Reject Bay is quieter now. The defective units still twitch, but no longer toward the furnace; Gh0st's override leaves them holding onto the small, stubborn spark Dominion called a defect.",
+        "description": "The Reject Bay is quieter now. A rejected droid twitches among the defective units, but no longer toward the furnace; Gh0st's override leaves them holding onto the small, stubborn spark Dominion called a defect.",
         "requires_milestones": [
           "ms_w4_defective_units_spared"
         ]
@@ -5738,7 +5738,7 @@
     "env": "foundry",
     "title": "Conditioning Chamber",
     "background_image": "images/rooms/world_4/foundry_conditioning_chamber.webp",
-    "description": "Sterile white tiles are stained with oil. Rows of empty chairs with restraints face a wall of Spectral ID calibration screens.",
+    "description": "Sterile white tiles are stained with oil. Rows of empty chairs with restraints face a wall of Spectral ID calibration screens displaying conditioning records.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5763,7 +5763,7 @@
         ]
       },
       {
-        "description": "With the fabrication matrix overloaded, the calibration screens stutter through failed Phantom profiles. Dominion can still hurt people here, but this line is no longer making an army.",
+        "description": "With the fabrication matrix overloaded, the calibration screens stutter through conditioning records and failed Phantom profiles. Dominion can still hurt people here, but this line is no longer making an army.",
         "requires_milestones": [
           "ms_w4_matrix_overloaded"
         ]
@@ -5808,7 +5808,7 @@
     "env": "foundry",
     "title": "The Forge",
     "background_image": "images/rooms/world_4/foundry_forge_anvil.webp",
-    "description": "A massive hammer falls over a relic mount. The Anvil hums beneath the impact rhythm, shaping raw ore like the factory is teaching metal to obey.",
+    "description": "A massive hammer falls over a relic mount. The Anvil hums beneath the impact rhythm, shaping raw ore like the factory is teaching metal to obey. A fabrication matrix panel overlooks the hammer lane. The anvil cradle glows beneath the hammer. The anvil relic glows inside the mount. A test chamber terminal waits beside the lane.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5827,26 +5827,26 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Anvil cradle is empty and the test chamber terminal has gone dark after the overclocked trial. The Forge no longer sounds confident; it sounds robbed.",
+        "description": "The Anvil cradle is empty and the test chamber terminal has gone dark after the overclocked trial. The Forge no longer sounds confident; it sounds robbed. A fabrication matrix panel overlooks the hammer lane. Scorch marks trace the anvil relic's former seat.",
         "requires_milestones": [
           "ms_w4_anvil_claimed",
           "ms_w4_hazard_trial_cleared"
         ]
       },
       {
-        "description": "The Anvil cradle is empty. The hammer still falls, but the Forge sounds hollow now, like the factory has lost the tool it built its confidence around.",
+        "description": "The Anvil cradle is empty. The hammer still falls, but the Forge sounds hollow now, like the factory has lost the tool it built its confidence around. A fabrication matrix panel overlooks the hammer lane. Scorch marks trace the anvil relic's former seat. A test chamber terminal waits beside the lane.",
         "requires_milestones": [
           "ms_w4_anvil_claimed"
         ]
       },
       {
-        "description": "The belt plates are locked in a safe pattern, the breath pistons are starved, and the Anvil cradle has opened around the relic like a hand unclenching. The Anvil sits there like a dare, bright enough to cast Nova's shadow up the hammer wall.",
+        "description": "The belt plates are locked in a safe pattern, the breath pistons are starved, and the Anvil cradle has opened around the relic like a hand unclenching. The Anvil sits there like a dare, bright enough to cast Nova's shadow up the hammer wall. A fabrication matrix panel overlooks the hammer lane. The anvil relic glows inside the mount. A test chamber terminal waits beside the lane.",
         "requires_milestones": [
           "ms_w4_conveyor_puzzle_solved"
         ]
       },
       {
-        "description": "The Forge bucks without the fabrication matrix feeding it clean instructions. The belt rhythm is mapped, the crawl marks point to a safe window, and the override paddle has killed one crusher lane. The breath pistons still feed too much heat into the Anvil cradle.",
+        "description": "The Forge bucks without the fabrication matrix feeding it clean instructions. The belt rhythm is mapped, the crawl marks point to a safe window, and the override paddle has killed one crusher lane. The breath pistons still feed too much heat into the Anvil cradle. The anvil relic glows inside the mount. A test chamber terminal waits beside the lane.",
         "requires_milestones": [
           "ms_w4_paddle_thrown"
         ],
@@ -5855,7 +5855,7 @@
         ]
       },
       {
-        "description": "The Forge bucks without the fabrication matrix feeding it clean instructions. The Anvil cradle is exposed, but the moving plates still protect it with industrial indifference.",
+        "description": "The Forge bucks without the fabrication matrix feeding it clean instructions. The Anvil cradle is exposed, but the moving plates still protect it with industrial indifference. The anvil relic glows inside the mount. A test chamber terminal waits beside the lane.",
         "requires_milestones": [
           "ms_w4_matrix_overloaded"
         ]
@@ -5902,7 +5902,7 @@
     "env": "foundry",
     "title": "Control Alcove",
     "background_image": "images/rooms/world_4/foundry_forge_anvil.webp",
-    "description": "A shielded alcove controls the Forge's moving belt plates. The panel is burned around the edges where previous operators tried to override the hammer cadence by hand.",
+    "description": "A shielded alcove controls the Forge's moving belt plates. The panel is burned around the edges where previous operators tried to override the hammer cadence by hand. A hazard cycle map fills one display; another holds the overclock profile readout.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -5961,7 +5961,7 @@
     "env": "foundry",
     "title": "Power Core",
     "background_image": "images/rooms/world_4/foundry_power_core.webp",
-    "description": "The Deep-Core Engine pulses in the center of the factory, feeding heat and psionic current into a cradle mount built for something far larger than a ship.",
+    "description": "The Deep-Core Engine pulses in the center of the factory, feeding heat and psionic current into a cradle mount built for something far larger than a ship. The engine mount connects to the core's thermal clamps. Phase-Cutter Arrays occupy the adjoining rack.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5982,25 +5982,25 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Power Core is stripped: engine gone, Phase-Cutter Arrays gone, alarms climbing into panic. The Astra can reach high orbit now if the crew can launch before the factory seals.",
+        "description": "The Power Core is stripped: engine gone, Phase-Cutter Arrays gone, alarms climbing into panic. The Astra can reach high orbit now if the crew can launch before the factory seals. The engine mount connects to the core's thermal clamps.",
         "requires_milestones": [
           "ms_w4_arrays_stolen"
         ]
       },
       {
-        "description": "The engine cradle is torn open. Without the Deep-Core Engine, the Foundry pulses unevenly, and Vale's Ascension Cradle timeline just lost its heart.",
+        "description": "The engine cradle is torn open. Without the Deep-Core Engine, the Foundry pulses unevenly, and Vale's Ascension Cradle timeline just lost its heart. The engine mount connects to the core's thermal clamps. Phase-Cutter Arrays occupy the adjoining rack.",
         "requires_milestones": [
           "ms_w4_engine_stolen"
         ]
       },
       {
-        "description": "The Titan Walker is down, and the Power Core no longer has a champion. Thermal clamps still grip the Deep-Core Engine while Phase-Cutter Arrays wait in a rack beside the cradle.",
+        "description": "The Titan Walker is down, and the Power Core no longer has a champion. Thermal clamps still grip the Deep-Core Engine while Phase-Cutter Arrays wait in a rack beside the cradle. The engine mount connects to the core's thermal clamps.",
         "requires_milestones": [
           "ms_w4_titan_defeated"
         ]
       },
       {
-        "description": "The Deep-Core Engine hammers at the center of the factory while the Anvil burns in Nova's kit. The theft is finally possible, which means every alarm is about to become honest.",
+        "description": "The Deep-Core Engine hammers at the center of the factory while the Anvil burns in Nova's kit. The theft is finally possible, which means every alarm is about to become honest. The engine mount connects to the core's thermal clamps. Phase-Cutter Arrays occupy the adjoining rack.",
         "requires_milestones": [
           "ms_w4_anvil_claimed"
         ]
@@ -6026,7 +6026,7 @@
     "env": "foundry",
     "title": "Engine Service Ring",
     "background_image": "images/rooms/world_4/foundry_power_core.webp",
-    "description": "A maintenance ring circles the Deep-Core Engine at arm's length from impossible heat. Every clamp is labeled with launch-grade tolerances the Astra does not currently meet.",
+    "description": "A maintenance ring circles the Deep-Core Engine at arm's length from impossible heat. Every clamp is labeled with launch-grade tolerances the Astra does not currently meet. Thermal clamps surround the core beside an array rack.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -6060,7 +6060,7 @@
     "env": "foundry",
     "title": "Titan Dock",
     "background_image": "images/rooms/world_4/foundry_titan_dock.webp",
-    "description": "A circular platform hangs over the volcano primary vent. Catwalks tremble above orange depth while a Titan Walker waits in its launch cradle.",
+    "description": "A circular platform hangs over the volcano primary vent. Catwalks tremble above orange depth while a Titan Walker waits in its launch cradle. Commander Rylos watches from the Titan Walker. The escape launch route runs past a gantry footlocker bolted to the rail.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -6083,20 +6083,20 @@
     "state": {},
     "description_variants": [
       {
-        "description": "Factory alarms turn the Titan Dock red. The Astra waits beyond the escape catwalk with a stolen engine, stolen arrays, and not much time.",
+        "description": "Factory alarms turn the Titan Dock red. The Astra waits beyond the escape catwalk with a stolen engine, stolen arrays, and not much time. Commander Rylos's insignia marks the launch cradle. The escape launch route runs past a gantry footlocker bolted to the rail.",
         "requires_milestones": [
           "ms_w4_engine_stolen",
           "ms_w4_arrays_stolen"
         ]
       },
       {
-        "description": "The Titan Walker lies broken in its launch cradle. The dock still trembles over the primary vent, but the path back to the Power Core is open.",
+        "description": "The Titan Walker lies broken in its launch cradle. The dock still trembles over the primary vent, but the path back to the Power Core is open. Commander Rylos's insignia marks the launch cradle. The escape launch route runs past a gantry footlocker bolted to the rail.",
         "requires_milestones": [
           "ms_w4_titan_defeated"
         ]
       },
       {
-        "description": "Rylos has stepped into the Titan Walker, chrome face bright in the volcano glare. He calls Gh0st a unit because calling him a person would admit the crime.",
+        "description": "Rylos has stepped into the Titan Walker, chrome face bright in the volcano glare. He calls Gh0st a unit because calling him a person would admit the crime. Commander Rylos watches from the Titan Walker. The escape launch route runs past a gantry footlocker bolted to the rail.",
         "requires_milestones": [
           "ms_w4_rylos_confronted"
         ]
@@ -6131,7 +6131,7 @@
     "env": "foundry",
     "title": "Escape Catwalk",
     "background_image": "images/rooms/world_4/foundry_titan_dock.webp",
-    "description": "A shaking catwalk runs from the Titan Dock toward the emergency gantry. Heat rolls up through the grate in hard orange sheets.",
+    "description": "A shaking catwalk runs from the Titan Dock toward the escape gantry. Heat rolls up through the grate in hard orange sheets.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -6145,7 +6145,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The escape catwalk rattles under lockdown shutters. With the engine and arrays aboard, this is the last clean line back to the Astra before the Foundry seals itself.",
+        "description": "The escape catwalk rattles under lockdown shutters. With the engine and arrays aboard, this is the last clean line back to the Astra before the Foundry seals itself. The escape gantry stretches toward the waiting ship.",
         "requires_milestones": [
           "ms_w4_engine_stolen",
           "ms_w4_arrays_stolen"
@@ -11966,7 +11966,7 @@
     "env": "neon",
     "title": "Lantern Roof",
     "background_image": "images/rooms/world_3/spire_night_market.webp",
-    "description": "String lights cross the lantern roof in careful knots above the Night Market. The anchor knots keep them up when patrol drones skim too low, and the lantern shadows hide handoffs under color.",
+    "description": "String lights cross the lantern roof in careful knots above the Night Market. The anchor knots keep them up when patrol drones skim too low, and the lantern shadows hide handoffs under color. A vendor lockbox is chained beneath the string lights.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12414,7 +12414,7 @@
     "env": "neon",
     "title": "Registry Pavilion",
     "background_image": "images/rooms/world_3/spire_skypark_dome.webp",
-    "description": "A registry pavilion floats over the park with a guest ledger projected in polite gold. The guest ledger shows which false identity can survive the next checkpoint.",
+    "description": "A registry pavilion floats over the park with a guest ledger projected in polite gold. The guest ledger shows which false identity can survive the next checkpoint. A pavilion bench cache is tucked beneath the seating.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13581,7 +13581,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The timing tower keeps ticking, but the pulse board now carries Nova's chalk marks across the fatal beats. The crusher rhythm is readable enough to use.",
+        "description": "The timing tower keeps ticking, but the pulse board now carries Nova's chalk marks across the fatal beats. The crusher rhythm is readable enough to use. A security seal still holds the belt speed dial in place.",
         "requires_milestones": [
           "ms_w4_pulse_board_read"
         ]
@@ -13872,7 +13872,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The bellows walk rises beside breath pistons locked half-closed. The Forge keeps trying to inhale, but the Anvil cradle has lost the heat pressure that kept it clenched.",
+        "description": "The bellows walk rises beside breath pistons locked half-closed. The Forge keeps trying to inhale, but the Anvil cradle has lost the heat pressure that kept it clenched. The bellows valve trembles under the remaining draft.",
         "requires_milestones": [
           "ms_w4_pistons_starved"
         ]
@@ -14099,7 +14099,7 @@
     "env": "foundry",
     "title": "Coolant Choir",
     "background_image": "images/rooms/world_4/foundry_power_core.webp",
-    "description": "Blue coolant pipes knock against their clamps under core pressure. Flow drops sharply at a damaged valve. A pressure relief lever is clamped in the open position.",
+    "description": "Blue pipes carry coolant under core pressure, knocking against their clamps in a coolant choir. Flow drops sharply at a damaged valve. A pressure relief lever is clamped in the open position.",
     "npcs": [],
     "items": [],
     "enemies": [],
