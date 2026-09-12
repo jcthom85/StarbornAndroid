@@ -5,6 +5,106 @@ exploration/narrative consistency, and presentation/release verification.
 
 ## Current phase status (2026-09-11)
 
+- Release preparation 2026-09-12: 1.3.29 (113) packages all World 5 and current
+  World 6 batches below, superseding their outside-bundle-112 notes. User authorized
+  commit, push and Internal Testing upload. Signed bundle, release lint and 385 JVM
+  tests passed; 354 strict selectors and diff checks passed. rooms.json changes
+  verified description-only. Audit remains 58 candidates, including 23 World 6.
+  IDE device cache excluded. Upload outcome is reported separately after publishing.
+
+- World 6 Center/Gh0st batch: repaired nine references across eight descriptions.
+  Center tuning maps to source_harmonic_focus / w6_mq30_tune_world; eligibility
+  requires active MQ30, defeat_god_form done and tune_world unfinished, independent
+  of the completion description milestone. Post-finale prose references Vale
+  historically. Added 1,280 event-state cases plus restored-state replay checks
+  and phantom dogtag reference coverage. Full JVM suite passed; 354 strict
+  selectors and diff check passed. Audit now 58 overall / 23 World 6 candidates.
+  These are event/prose tests, not tuning-dialog device or finale balance acceptance.
+  Changes remain uncommitted, outside bundle 112. Next: memory rooms and the
+  remaining World 6 references, then Astra.
+
+- World 6 first batch: repaired seven references across Jed's Echo Bench,
+  Manager Patrol Route (both descriptions), Locker Row Loop and White Shore.
+  Added 192 event-state cases for independent legacy milestones, prerequisite
+  tasks and quest retirement, with restored-state replay checks and inspect
+  reference coverage. Full JVM suite passed; 354 strict selectors and diff
+  check passed. Audit now 67 overall / 32 World 6 candidates. Prose-only asset
+  edits remain uncommitted and outside bundle 112. Center finale references
+  remain unclassified pending tuning eligibility and post-finale review;
+  continue World 6 with those and the Gh0st/memory rooms next.
+
+- World 5 final static-candidate batch: repaired 30 references in ten descriptions
+  across Server Farm, Service Shaft, Solarium, Surveillance Pit and Zero-G Junction.
+  Added runtime coverage of independent description/event milestones, retired
+  tasks/quests and restored-state replay protection, including film cache and
+  guardian choice events. Full JVM suite passed; 354 strict selectors and diff
+  check passed. World 5 now has zero static candidates; this is not device or
+  route-discovery sign-off. Overall audit: 74 candidates (World 1: 1, World 2: 16,
+  World 3: 5, World 6: 39, Astra: 10, unmapped: 3). All World 5 batches remain
+  uncommitted and outside Play bundle 112. Asset edits are description prose only.
+  Next: World 6 discoverability, then Astra and final residual classification.
+
+- World 5 concourse/mirror/security batch: restored 14 references across six
+  descriptions in Grand Concourse, Mirror Walk and Security Hub. Covered 640
+  event-state cases across six independent milestones and completed/incomplete
+  side quests, with action milestone prerequisites checked separately from
+  event eligibility. Replay checks restore through migration before retrying.
+  Full JVM suite passed; 354 strict selectors and diff check passed. Audit now
+  104 overall / 30 World 5 candidates. Prose-only asset changes remain
+  uncommitted and outside bundle 112. Next: Server Farm, Service Shaft, Solarium,
+  Surveillance Pit and Zero-G Junction (remaining World 5 candidates).
+
+- World 5 dock/gallery batch: repaired 17 missing references across five
+  descriptions in orbital_executive_dock and orbital_airlock_gallery. Tests
+  cover 1,536 event-state combinations spanning five independent milestones,
+  main-quest prerequisites/task retirement and side-quest completion, plus
+  generic/inspect references and replay checks. Sealing's event conditions alone
+  permit repetition, but EventManager completed-event history prevents replay;
+  the regression verifies this safeguard. All asset edits are prose-only.
+  Full JVM suite passed (381 tests), 354 strict selectors and diff check passed.
+  Audit now 118 overall / 44 World 5 candidates. Uncommitted, outside bundle 112.
+  Next: Grand Concourse, Mirror Walk and Security Hub, then remaining orbital rooms.
+
+- World 5 deep-station batch: repaired 17 references in nine descriptions across
+  Mainframe Nave, SysAdmin Nest, Tear and Throne Room. Inspect actions have no
+  state gates; quest actions use tasks independently of description milestones.
+  Runtime tests cover every description-milestone combination with prerequisite,
+  retired-task and side-quest-completed states (192 event attempts, 48 usable
+  states plus replay checks). Migration/restoration preserves these partial
+  states. Full JVM suite passed; strict selectors passed (354), diff check passed.
+  Audit now 135 overall / 61 World 5 candidates. Asset edits are prose-only;
+  changes remain uncommitted, outside bundle 112. Next: orbital_airlock_gallery
+  and orbital_executive_dock, then remaining orbital rooms.
+
+- World 5 firewall batch: classified and repaired all four Alpha/Beta/Gamma
+  variant omissions. AppServices restores/imports through
+  migrateOpeningNarrativeState then GameSessionStore.restore; these preserve
+  World 5 tasks and milestones independently. EventManager checks active quest,
+  prerequisite task and unfinished node task, not the description milestone.
+  Thus partial saves can execute a node even with its down milestone present.
+  Restored exact action names in the four variants without changing gates or
+  events. Regression reproduced the missing reference before the fix; all 96
+  combinations of active quest, prerequisite task, node task, node milestone
+  and MQ23 milestone now pass, including replay prevention after execution.
+  Full JVM suite and 354 strict selectors passed; audit is 152 overall / 78
+  World 5 candidates. Changes remain uncommitted and outside bundle 112.
+  Next: deep_mainframe_nave, deep_sysadmin_nest, deep_tear and deep_throne_room.
+
+- Release 1.3.28 (112): commit `e43c7e5` pushed; Google Play accepted and
+  committed bundle 112 to Internal Testing. Includes World 1/3/4 discoverability
+  work; 377 JVM tests, 354 selectors, release bundle and lint passed.
+- World 5 first bounded batch after 112: repaired four description references
+  (graviton well in all three Anchor Chamber descriptions; scratched route in
+  Thaw Gallery). Only prose changed in rooms.json. Added runtime coverage for
+  all eight independent combinations of Elara found, MQ24 complete and graviton
+  solved, including action retirement after solving. Puzzle asset resolves to
+  w5_graviton_matrix_tune. Full JVM suite passed; 354 strict selectors and diff
+  check passed. Audit now 156 overall candidates, 82 in World 5.
+  At that checkpoint Firewall Alpha/Beta/Gamma omissions remained unclassified: event retirement uses
+  quest-task completion while descriptions use milestones; inspect persistence
+  reconciliation and partial states before changing those variants. Next continue
+  World 5, then World 6/Astra. This batch is uncommitted and outside bundle 112.
+
 - Release 1.3.27 (111): commit `7229b72` pushed; Google Play accepted bundle
   111 and committed the completed Internal Testing release. Not production.
   User authorized commit, push and Internal

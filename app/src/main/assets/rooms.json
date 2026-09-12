@@ -6166,7 +6166,7 @@
     "env": "void",
     "title": "Executive Dock",
     "background_image": "images/rooms/world_5/orbital_executive_dock.webp",
-    "description": "The Astra hangs beneath the Ring while Compliance fighters rake the hull. Beyond the airlock, a red carpet floats over bright-white flooring and the bodies of Thorne loyalists drift in dead gravity pockets.",
+    "description": "The Astra hangs beneath the Ring while Compliance fighters rake the hull. Docking controls face the sealed airlock; its airlock console displays a pressure map and dock access priority. Beyond the glass, a red carpet floats over bright-white flooring and the bodies of Thorne loyalists drift in dead gravity pockets.",
     "npcs": [
       "gh0st"
     ],
@@ -6193,13 +6193,13 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Astra is locked hard to the Executive Dock, docking collar bent around stolen Foundry hardware. The fighter screen is gone, but the sealed airlock still treats the crew like cargo to be rejected.",
+        "description": "The Astra is locked hard to the Executive Dock, docking collar bent around stolen Foundry hardware. The fighter screen is gone, but the sealed airlock still treats the crew like cargo to be rejected. Docking controls glow beside the airlock console, where a pressure map sits beneath dock access priority.",
         "requires_milestones": [
           "ms_w5_fighter_screen_broken"
         ]
       },
       {
-        "description": "The Executive Dock is pressurized and ugly beneath the polish. The airlock console shows three sealed breaches, and the red carpet keeps drifting where gravity pockets fail.",
+        "description": "The Executive Dock is pressurized and ugly beneath the polish. The airlock console shows three sealed breaches on its pressure map beside dock access priority. Docking controls face the sealed airlock, and the red carpet keeps drifting where gravity pockets fail.",
         "requires_milestones": [
           "ms_w5_vacuum_seal_complete"
         ]
@@ -6252,7 +6252,7 @@
     "env": "void",
     "title": "Airlock Gallery",
     "background_image": "images/rooms/world_5/orbital_executive_dock.webp",
-    "description": "A glass gallery curves above the docking collar. The planet turns below in perfect silence while the stolen Deep-Core Engine shakes heat through the Astra's spine.",
+    "description": "A glass gallery curves above the docking collar. The planet turns below in perfect silence while the stolen Deep-Core Engine shakes heat through the Astra's spine. An airlock manifest hangs beside a speaker playing the Compliance greeting.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -6266,7 +6266,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Airlock Gallery is open now, and the Ring smells like disinfectant over panic. Vale's Compliance greeting loops from hidden speakers with no one left at reception to pretend it is normal.",
+        "description": "The Airlock Gallery is open now, and the Ring smells like disinfectant over panic. Vale's Compliance greeting loops from hidden speakers with no one left at reception to pretend it is normal. An airlock manifest hangs above the docking collar.",
         "requires_milestones": [
           "ms_w5_mq21_complete"
         ]
@@ -6298,7 +6298,7 @@
     "env": "void",
     "title": "Grand Concourse",
     "background_image": "images/rooms/world_5/orbital_grand_concourse.webp",
-    "description": "Golden Architect statues tower over an immaculate promenade. Every wall repeats Vale's compliance notices between advertisements for Harmony.",
+    "description": "Golden Architect statues tower over an immaculate promenade. Every wall repeats Vale's compliance notices between advertisements for Harmony. A holographic directory lists the director logs beside controls for the concourse public broadcast.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -6317,7 +6317,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Grand Concourse keeps selling Harmony between lockdown warnings. Thorne's director logs are open now, and the gold statues look less like reverence than evidence.",
+        "description": "The Grand Concourse keeps selling Harmony between lockdown warnings. Thorne's director logs are open now, and the gold statues look less like reverence than evidence. The holographic directory glows beside controls for the concourse public broadcast.",
         "requires_milestones": [
           "ms_w5_corporate_insight_unlocked"
         ]
@@ -6401,7 +6401,7 @@
     "env": "void",
     "title": "Solarium",
     "background_image": "images/rooms/world_5/orbital_solarium.webp",
-    "description": "Real soil, tropical trees, and a pale strip of sand sit beneath a fusion lamp. The fruit is rotting in a paradise built for executives.",
+    "description": "Real soil, tropical trees, and a fake beach sit beneath a fusion lamp and mirror array. The fruit is rotting in a paradise built for executives. A panel sets garden light priority, while a solarium tide cache rests beneath artificial coral ledges.",
     "npcs": [
       "maintenance_bot"
     ],
@@ -6422,13 +6422,13 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Solarium mirror array burns clean again. The false sun is still false, but its light no longer feeds void-moss across the executive trees.",
+        "description": "The Solarium mirror array burns clean again. The false sun is still false, but its light no longer feeds void-moss across the executive trees. A panel sets garden light priority above the fake beach, where a solarium tide cache rests beneath artificial coral ledges.",
         "requires_milestones": [
           "ms_w5_solar_maintenance_complete"
         ]
       },
       {
-        "description": "The fake beach has been crossed. Its sand keeps the shape of Nova's hand like paradise is trying to remember being real.",
+        "description": "The fake beach has been crossed. Its sand keeps the shape of Nova's hand like paradise is trying to remember being real. The mirror array hangs above a panel for garden light priority, and a solarium tide cache rests beneath artificial coral ledges.",
         "requires_milestones": [
           "ms_w5_solarium_crossed"
         ]
@@ -6478,7 +6478,7 @@
     "env": "void",
     "title": "Mirror Walk",
     "background_image": "images/rooms/world_5/orbital_solarium.webp",
-    "description": "Polished mirror panels line a humid maintenance walk behind the Solarium. Each panel reflects a different angle of the same fake sun.",
+    "description": "Polished mirror panels line a humid maintenance walk behind the Solarium. Each panel reflects a different angle of the same fake sun. The false sun path converges on a solar reflector hub.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -6494,7 +6494,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Mirror Walk is painfully bright after realignment. Burnt void-moss flakes from the panel seams like ash from a polite disaster.",
+        "description": "The Mirror Walk is painfully bright after realignment. Burnt void-moss flakes from the mirror panels like ash from a polite disaster. The false sun path converges on a solar reflector hub.",
         "requires_milestones": [
           "ms_w5_solar_maintenance_complete"
         ]
@@ -6530,7 +6530,7 @@
     "env": "void",
     "title": "Security Hub",
     "background_image": "images/rooms/world_5/orbital_security_hub.webp",
-    "description": "A fortified checkpoint seals the lift to the core. Compliance officers move without conversation while Null-G drones cling to the ceiling.",
+    "description": "A fortified checkpoint seals the lift to the core. Compliance officers move without conversation while Null-G drones cling to the ceiling. A security display pairs armory diagnostics with the Director redaction checksum.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -6557,7 +6557,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Security Hub patrol is down. Red lenses keep watching anyway, now more nervous than patient, while the service shaft lock blinks green.",
+        "description": "The Security Hub patrol is down. Red lenses keep watching anyway, now more nervous than patient, while the service shaft lock blinks green. A security display pairs armory diagnostics with the Director redaction checksum.",
         "requires_milestones": [
           "ms_w5_security_hub_cleared"
         ]
@@ -6584,7 +6584,7 @@
     "env": "void",
     "title": "Surveillance Pit",
     "background_image": "images/rooms/world_5/orbital_security_hub.webp",
-    "description": "A sunken room of red lenses tracks every corridor on the executive deck. The screens flag posture, pulse, hesitation, and anything else a frightened system calls intent.",
+    "description": "A sunken room of red lenses tracks every corridor on the executive deck. The panopticon archive preserves screens that flag posture, pulse, hesitation, and anything else a frightened system calls intent.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -6619,7 +6619,7 @@
     "env": "void",
     "title": "Service Shaft",
     "background_image": "images/rooms/world_5/orbital_service_shaft.webp",
-    "description": "Gravity ends at the hatch. Cables descend through a vertical dark while Hunter-Killer droids scrape along distant walls, too armored to fight head-on.",
+    "description": "Gravity ends at the hatch. Zero-g cables descend from a superconductor junction through a vertical dark while Hunter-Killer droids scrape along distant walls, too armored to fight head-on.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -6636,7 +6636,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The service shaft route is marked by grip scratches, cable tags, and one clear timing pattern through the Hunter-Killer sweeps. The drop is still awful, but it is no longer unreadable.",
+        "description": "The service shaft route follows zero-g cables from a superconductor junction, marked by grip scratches, cable tags, and one clear timing pattern through the Hunter-Killer sweeps. The drop is still awful, but it is no longer unreadable.",
         "requires_milestones": [
           "ms_w5_shaft_traversed"
         ]
@@ -6663,7 +6663,7 @@
     "env": "void",
     "title": "Zero-G Junction",
     "background_image": "images/rooms/world_5/orbital_service_shaft.webp",
-    "description": "Three maintenance tubes meet in a dead-gravity junction. Tools hover where workers dropped them, frozen into a quiet diagram of someone leaving in a hurry.",
+    "description": "Three maintenance tubes meet in a dead-gravity junction beside a gyroscope stabilizer. A display tracks patrol timing. Tools hover where workers dropped them, frozen into a quiet diagram of someone leaving in a hurry.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -6696,7 +6696,7 @@
     "env": "void",
     "title": "Server Farm",
     "background_image": "images/rooms/world_5/orbital_server_farm.webp",
-    "description": "Server columns vanish into cold mist around a purged backup rack. Once its routine is recovered, the guardian ownership flag can be erased for independence or replaced through the crew covenant socket for shared protection.",
+    "description": "Server columns vanish into cold mist around a purged backup rack. Once its routine is recovered, the guardian ownership flag can be erased for independence or replaced through the crew covenant socket for shared protection. A mainframe terminal displays a coolant-pulse map; a dead sysadmin drifts behind a coolant pipe.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -6717,13 +6717,13 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Server Farm no longer pretends to be endless. Zeke's coolant-pulse map marks the mainframe nave, three firewall nodes, a purged backup rack, and the route to Elara.",
+        "description": "The Server Farm no longer pretends to be endless. Zeke's coolant-pulse map on the mainframe terminal marks the mainframe nave, three firewall nodes, a purged backup rack, and the route to Elara. Controls offer a guardian ownership flag or crew covenant socket for the recovered routine. A dead sysadmin drifts behind a coolant pipe.",
         "requires_milestones": [
           "ms_w5_server_maze_mapped"
         ]
       },
       {
-        "description": "The Server Farm is wounded open. Firewall nodes alpha, beta, and gamma are dark, and the Anchor Chamber door answers Gh0st's voice from the far end of the cold.",
+        "description": "The Server Farm is wounded open. Firewall nodes alpha, beta, and gamma are dark, and the Anchor Chamber door answers Gh0st's voice from the far end of the cold. A mainframe terminal displays a coolant-pulse map beside a purged backup rack, with controls for the guardian ownership flag and crew covenant socket. A dead sysadmin drifts behind a coolant pipe.",
         "requires_milestones": [
           "ms_w5_firewall_gamma_down"
         ]
@@ -6788,7 +6788,7 @@
     "env": "void",
     "title": "Mainframe Nave",
     "background_image": "images/rooms/world_5/orbital_server_farm.webp",
-    "description": "Server columns form a cold cathedral around the mainframe terminal. Harmony's directory tree overlays older Architect notation like a luxury label pasted on a weapon.",
+    "description": "Server columns form a cold cathedral around the mainframe terminal and its quantum core lattice. Harmony's directory tree overlays older Architect notation like a luxury label pasted on a weapon. A buried signal is labeled Thorne trace.",
     "npcs": [
       "thorne"
     ],
@@ -6807,7 +6807,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Great Silence log is open on the mainframe terminal. Thorne's containment trace pulses beside it, proof that the person who built the cage finally got locked in it.",
+        "description": "The Great Silence log is open on the mainframe terminal beside the quantum core lattice. A signal labeled Thorne trace pulses beside it, proof that the person who built the cage finally got locked in it.",
         "requires_milestones": [
           "ms_w5_mainframe_accessed"
         ]
@@ -6857,7 +6857,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "Firewall Alpha is dark. Its hard-light cage has collapsed into harmless blue dust across the server aisle.",
+        "description": "Firewall node alpha is dark. Its hard-light cage has collapsed into harmless blue dust across the server aisle.",
         "requires_milestones": [
           "ms_w5_firewall_alpha_down"
         ]
@@ -6894,7 +6894,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "Firewall Beta has folded into itself and gone still. The recursion windows show only the cold aisle ahead.",
+        "description": "Firewall node beta has folded into itself and gone still. The recursion windows show only the cold aisle ahead.",
         "requires_milestones": [
           "ms_w5_firewall_beta_down"
         ]
@@ -6936,13 +6936,13 @@
     "state": {},
     "description_variants": [
       {
-        "description": "Firewall Gamma is gone. The hard-light body has shattered into dead glyphs, and the Anchor Chamber answers from beyond the final aisle.",
+        "description": "Firewall node gamma is gone. The hard-light body has shattered into dead glyphs, and the Anchor Chamber answers from beyond the final aisle.",
         "requires_milestones": [
           "ms_w5_mq23_complete"
         ]
       },
       {
-        "description": "Firewall Gamma has failed into violence. The hard-light body is complete now, blocking the Anchor Chamber with a blank execution face.",
+        "description": "Firewall node gamma has failed into violence. The hard-light body is complete now, blocking the Anchor Chamber with a blank execution face.",
         "requires_milestones": [
           "ms_w5_firewall_gamma_down"
         ]
@@ -7016,7 +7016,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The SysAdmin Nest is empty of anything useful now. The keycard is in Nova's kit, still warm from a system that thinks privilege survives the person carrying it.",
+        "description": "The dead sysadmin drifts in the stripped SysAdmin Nest. The keycard is in Nova's kit, still warm from a system that thinks privilege survives the person carrying it.",
         "requires_milestones": [
           "ms_w5_sysadmin_keycard_found"
         ]
@@ -7036,7 +7036,7 @@
     "env": "void",
     "title": "Anchor Chamber",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.webp",
-    "description": "A tank of conductive fluid hangs inside a cathedral of cables. Elara floats at its center, wired into the Ring as a living processor while the Anchor relic turns beside her.",
+    "description": "A tank of conductive fluid hangs inside a cathedral of cables. Elara floats at its center, wired into the Ring as a living processor while the Anchor relic turns beside her. A graviton well bends the light beneath the tank.",
     "npcs": [
       "elara"
     ],
@@ -7056,13 +7056,13 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The conductive tank is emptying around Elara's cables. The Anchor relic is gone, and the Hunter-Killer's charge is frozen in a perfect Stasis moment.",
+        "description": "The conductive tank is emptying around Elara's cables. The Anchor relic is gone, and the Hunter-Killer's charge is frozen in a perfect Stasis moment. A graviton well bends the light beneath the tank.",
         "requires_milestones": [
           "ms_w5_mq24_complete"
         ]
       },
       {
-        "description": "Elara's firewall is open from the inside. She is present, fighting, and running out of time while the Anchor relic turns beside her like a lock waiting to be stolen.",
+        "description": "Elara's firewall is open from the inside. She is present, fighting, and running out of time while the Anchor relic turns beside her like a lock waiting to be stolen. A graviton well bends the light beneath the tank.",
         "requires_milestones": [
           "ms_w5_elara_found"
         ]
@@ -7098,7 +7098,7 @@
     "env": "void",
     "title": "Throne Room",
     "background_image": "images/rooms/world_5/deep_throne_room.webp",
-    "description": "A glass observation deck looks down on the planet and its failing Shield. Thorne's containment field faces a command dais where Vale waits without blinking.",
+    "description": "A glass observation deck looks down on the planet and its failing Shield. Thorne's containment field faces a command dais where Vale waits without blinking. The director's desk stands beside the executive armory.",
     "npcs": [
       "vale"
     ],
@@ -7118,19 +7118,19 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The executive armory is open, its rack stripped of the Void Clip. Privilege survived its owner just long enough to be useful against Vale.",
+        "description": "The executive armory is open, its rack stripped of the Void Clip. Privilege survived its owner just long enough to be useful against Vale. The director's desk faces the containment field across the deck.",
         "requires_milestones": [
           "ms_w5_admin_privileges_complete"
         ]
       },
       {
-        "description": "Thorne is dead. Vale is gone through the breach. The Throne Room is no longer a command center; it is wreckage arranged around a missing voice.",
+        "description": "Thorne is dead. Vale is gone through the breach. The Throne Room is no longer a command center; it is wreckage arranged around a missing voice. The containment field, director's desk and executive armory remain amid the wreckage.",
         "requires_milestones": [
           "ms_w5_soloist_witnessed"
         ]
       },
       {
-        "description": "Vale's command dais is split by stolen light from the Anchor. Thorne's containment field flickers, and the executive armory still waits behind dead privilege.",
+        "description": "Vale's command dais is split by stolen light from the Anchor. Thorne's containment field flickers beside the director's desk, and the executive armory still waits behind dead privilege.",
         "requires_milestones": [
           "ms_w5_mq24_complete"
         ]
@@ -7163,7 +7163,7 @@
     "env": "void",
     "title": "The Tear",
     "background_image": "images/rooms/world_5/deep_tear.webp",
-    "description": "The Ring breaks into slow impossible angles around a wound in reality. Music exists here without air, speakers, or permission.",
+    "description": "The Ring breaks into slow impossible angles around a reality breach. Spatial shear folds its edges inward. Music exists here without air, speakers, or permission.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -7185,7 +7185,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Compliance Avatar has lost cohesion. The Tear pulls at every loose fragment of the Ring, and music exists here without air, speakers, or permission.",
+        "description": "The Compliance Avatar has lost cohesion. Spatial shear around the reality breach pulls at every loose fragment of the Ring, and music exists here without air, speakers, or permission.",
         "requires_milestones": [
           "ms_w5_avatar_defeated"
         ]
@@ -7381,7 +7381,7 @@
     "env": "source",
     "title": "Endless War",
     "background_image": "images/rooms/world_6/source_gh0st_nightmare.webp",
-    "description": "A corridor repeats under muzzle flashes without guns. Every target wears a Spectral ID, but the orders arrive before the faces resolve.",
+    "description": "A corridor repeats under muzzle flashes without guns. Every target wears a Spectral ID, but the orders arrive before the faces resolve. A buried voice persists beneath the orders.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -7408,7 +7408,7 @@
         "requires_milestones": [
           "ms_w6_mq26_complete"
         ],
-        "description": "The corridor is quiet now. Burned command prompts drift like ash, and Gh0st walks through them without waiting for permission."
+        "description": "The corridor is quiet now. Burned command prompts drift like ash, and Gh0st walks through them without waiting for permission. A buried voice persists beneath the fading static."
       }
     ]
   },
@@ -7417,7 +7417,7 @@
     "env": "source",
     "title": "Kill-Suite Loop",
     "background_image": "images/rooms/world_6/source_gh0st_nightmare.webp",
-    "description": "Red targeting brackets crawl over every wall. The loop keeps asking Gh0st to prove loyalty by surviving another order.",
+    "description": "Red targeting brackets crawl over every wall. A command carrier keeps asking Gh0st to prove loyalty by surviving another order.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -7458,7 +7458,7 @@
     "env": "source",
     "title": "Clean Signal Alcove",
     "background_image": "images/rooms/world_6/source_gh0st_nightmare.webp",
-    "description": "One blue waveform survives beneath the kill-suite noise. It is small, human, and stubborn enough to make the whole war hesitate.",
+    "description": "One blue waveform survives beneath the kill-suite noise, preserved in a pure audio log. It is small, human, and stubborn enough to make the whole war hesitate.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -7486,7 +7486,7 @@
         "requires_milestones": [
           "ms_w6_source_balance_unlocked"
         ],
-        "description": "Elara's clean waveform crosses the alcove without targeting brackets or hidden orders. Gh0st lets the final note end on its own."
+        "description": "Elara's clean waveform crosses the alcove from a pure audio log without targeting brackets or hidden orders. Gh0st lets the final note end on its own."
       }
     ]
   },
@@ -7601,7 +7601,7 @@
     "env": "source",
     "title": "Jed's Echo Bench",
     "background_image": "images/rooms/world_6/source_echo_mines.webp",
-    "description": "Jed's old workbench sits under shelter plastic and mine dust. The tools are wrong for this place, but the care in their arrangement is exact.",
+    "description": "Jed's old workbench sits under shelter plastic and mine dust. A Jed echo waits beside it. The tools are wrong for this place, but the care in their arrangement is exact.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -7637,7 +7637,7 @@
     "env": "source",
     "title": "Manager Patrol Route",
     "background_image": "images/rooms/world_6/source_echo_mines.webp",
-    "description": "Manager projections march through overlapping shifts, checking Nova against every rule that ever tried to make her small.",
+    "description": "A manager patrol of projections marches through overlapping shifts, checking Nova against every rule that ever tried to make her small. An open shift gate waits beyond their route.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -7674,7 +7674,7 @@
         "requires_milestones": [
           "ms_w6_legacy_unlocked"
         ],
-        "description": "The projections still march, but Nova carries Jed's lesson past them without preserving his ghost as another locked room."
+        "description": "The manager patrol still marches, but Nova carries Jed's lesson toward the open shift gate without preserving his ghost as another locked room."
       }
     ]
   },
@@ -8051,7 +8051,7 @@
     "env": "source",
     "title": "The Center",
     "background_image": "images/rooms/world_6/source_center.webp",
-    "description": "A single platform rests on an infinite white ocean. Vale waits where every voice in the Source can hear him choose silence for them, and the Key trembles before a choice it cannot make alone.",
+    "description": "A single platform rests on an infinite white ocean. Vale waits where every voice in the Source can hear him choose silence for them, and the Key trembles at a shared tuning focus before a choice it cannot make alone.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -8095,7 +8095,7 @@
         "requires_milestones": [
           "ms_w6_mq30_complete"
         ],
-        "description": "The white ocean is no longer silent. Countless voices move through it like tidewater, separate and connected by choice."
+        "description": "The white ocean is no longer silent. Countless voices move through it like tidewater, separate and connected by choice. The shared tuning focus remains where Vale tried to silence them."
       }
     ]
   },
@@ -15448,7 +15448,7 @@
     "env": "void",
     "title": "Thaw Gallery",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.webp",
-    "description": "A thaw gallery warms just enough for hands to work a release rail without freezing to the metal. Someone installed the release rail behind official paneling, then scratched a route back into the wall.",
+    "description": "A thaw gallery warms just enough for hands to work a release rail without freezing to the metal. Someone installed the release rail behind official paneling; a scratched route leads back along the wall.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -16252,7 +16252,7 @@
     "env": "source",
     "title": "Order Well",
     "background_image": "images/rooms/world_6/source_gh0st_nightmare.webp",
-    "description": "An order well drops through layers of command static until every voice sounds like an officer. The command static breaks whenever Elara's clean signal cuts through.",
+    "description": "An order well drops through layers of command static until every voice sounds like an officer. The command static breaks whenever Elara's clean signal cuts through. Phantom dogtags hang from a command terminal.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -16454,7 +16454,7 @@
     "env": "source",
     "title": "Locker Row Loop",
     "background_image": "images/rooms/world_6/source_echo_mines.webp",
-    "description": "A locker row repeats Nova's first shift number until the digits blur. Jed's sticker cuts through the loop, crooked and stubborn, marking the version of the past Vale cannot sanitize.",
+    "description": "A locker row repeats Nova's first shift number until the digits blur. Jed's sticker cuts through the loop, crooked and stubborn, marking the version of the past Vale cannot sanitize. A shift quota chalkboard preserves the old tallies beside it.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -16987,7 +16987,7 @@
     "env": "source",
     "title": "White Shore",
     "background_image": "images/rooms/world_6/source_center.webp",
-    "description": "A white shore curves around the Center with a still tide that reflects every voice Vale wants to dissolve. The still tide moves only when someone chooses a self.",
+    "description": "A white shore curves around the Center with a still tide that reflects every voice Vale wants to dissolve. The still tide moves only when someone chooses a self, carrying ocean resonance along the shore.",
     "npcs": [],
     "items": [],
     "enemies": [],
