@@ -2,6 +2,7 @@ param([switch]$Strict, [switch]$SummaryOnly)
 
 # Static candidate audit, not a route/state reachability proof. No asset writes.
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'explicit_action_references.ps1')
 $assetRoot = Join-Path (Split-Path -Parent $PSScriptRoot) 'app/src/main/assets'
 $rooms = Get-Content (Join-Path $assetRoot 'rooms.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 $nodes = Get-Content (Join-Path $assetRoot 'hub_nodes.json') -Raw -Encoding UTF8 | ConvertFrom-Json
@@ -17,6 +18,9 @@ foreach ($node in $nodes) {
 
 function Has-ActionName([string]$label, [string]$description) {
     if (-not $label -or -not $description) { return $false }
+    if (Test-ExplicitActionReference $description $label) { return $true }
+    # Marker display spans are reserved, even for unknown/hidden targets.
+    $description = [regex]::Replace($description, '\[(npc|action):([^\]]+)]', '', 'IgnoreCase')
     # Mirrors the runtime's literal variants; NPC markers may claim overlapping
     # text first, so even a match here does not establish a usable hit target.
     foreach ($candidate in @($label, $label.Replace('_', ' '), $label.Replace('-', ' '), $label.Replace([string][char]0x2019, "'"))) {

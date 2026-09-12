@@ -3416,7 +3416,7 @@
     "env": "logistics",
     "title": "Presence Stress Test",
     "background_image": "images/rooms/world_1/launch_checkpoint.webp",
-    "description": "A debug-only staging floor packed with friendly contacts, loose supplies, and multiple hostile patrol groups for checking the exploration presence UI under pressure.",
+    "description": "A debug-only staging floor packed with friendly contacts, loose supplies, and multiple hostile patrol groups for checking the exploration presence UI under pressure. A debug manifest describes the test setup.",
     "npcs": [
       "zeke",
       "scrapper",
@@ -3475,7 +3475,7 @@
     "env": "logistics",
     "title": "Enemy Party Size Test",
     "background_image": "images/rooms/world_1/launch_checkpoint.webp",
-    "description": "Debug layout room for enemy party sizes.",
+    "description": "Debug layout room for enemy party sizes. A [action:debug manifest|layout manifest] describes the test setup.",
     "npcs": [
       "zeke",
       "scrapper",
@@ -3526,7 +3526,7 @@
     "env": "logistics",
     "title": "Congested Enemy Party Test",
     "background_image": "images/rooms/world_1/launch_checkpoint.webp",
-    "description": "Debug layout room with five stationary enemy parties for congested placement checks.",
+    "description": "Debug layout room with five stationary enemy parties for congested placement checks. A debug manifest describes the test setup.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -7372,7 +7372,7 @@
         "requires_milestones": [
           "ms_w6_unshackled_unlocked"
         ],
-        "description": "The vending machine prints blank paper. The exit stands open, and no version of Zeke waits for permission to use it."
+        "description": "The vending machine prints blank paper. The unauthorized exit stands open beside the worker broadcast, and no version of Zeke waits for permission to use either."
       }
     ]
   },
@@ -7554,7 +7554,7 @@
     "env": "source",
     "title": "Answering Chorus",
     "background_image": "images/rooms/world_6/source_orion_nightmare.webp",
-    "description": "Lights under the water answer one by one. They do not erase the dead; they prove the dead were never just absence.",
+    "description": "Lights under the water answer one by one, illuminating crooked tool marks. They do not erase the dead; they prove the dead were never just absence.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -7761,7 +7761,7 @@
     "env": "source",
     "title": "Shared Memory Span",
     "background_image": "images/rooms/world_6/source_memory_bridge.webp",
-    "description": "The bridge forms from Tideglass sand, Foundry heat, Spire rain, and the Astra's engine note. Each step belongs to more than one survivor.",
+    "description": "The bridge forms from Tideglass sand, Foundry heat, Spire rain, and the Astra's engine note. Each step belongs to more than one survivor. A campfire promise hangs in the quiet beside a glowing memory altar box.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -7800,7 +7800,7 @@
     "env": "source",
     "title": "Singularity Threshold",
     "background_image": "images/rooms/world_6/source_memory_bridge.webp",
-    "description": "The bridge narrows into a bright wound in the sky. Vale's perfect world waits beyond it, polished clean of grief and therefore empty.",
+    "description": "The bridge narrows into a singularity threshold, a bright wound in the sky. Names beneath the light answer one another. Vale's perfect world waits beyond it, polished clean of grief and therefore empty.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -7833,7 +7833,7 @@
     "env": "source",
     "title": "Memory Stair",
     "background_image": "images/rooms/world_6/source_memory_stair.webp",
-    "description": "Jed's door opens into Astra wreckage, Spire glass, Foundry catwalk, and Ring metal arranged around the memory stair.",
+    "description": "Jed's door opens into Astra wreckage, Spire glass, Foundry catwalk, and Ring metal arranged around the memory stair. An Aethel grave waits among the fragments.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -7893,7 +7893,7 @@
     "env": "source",
     "title": "World-Fracture Landing",
     "background_image": "images/rooms/world_6/source_memory_stair.webp",
-    "description": "Chunks of every world rotate around the stair: mine dust, swamp moss, Spire rain, Foundry slag, and Ring ice all trying to become the only truth.",
+    "description": "Chunks of every world rotate around the stair: mine dust, swamp moss, Spire rain, Foundry slag, and Ring ice all trying to become the only truth. An answering chorus rises between them.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -7926,7 +7926,7 @@
         "requires_milestones": [
           "ms_w6_ancestral_grace_unlocked"
         ],
-        "description": "Mine dust, swamp moss, rain, slag, and ice rotate in time with the Aethel chorus. None becomes the only truth."
+        "description": "Mine dust, swamp moss, rain, slag, and ice rotate in time with the answering chorus of the Aethel. None becomes the only truth."
       }
     ],
     "enemy_parties": [
@@ -7942,7 +7942,7 @@
     "env": "source",
     "title": "Spire of Thought",
     "background_image": "images/rooms/world_6/source_spire_thought.webp",
-    "description": "A spiral arena assembles itself from the Warden's checkpoint, jungle ruins, Spire glass, Foundry steel, and Ring servers. Every discarded memory is waiting higher up.",
+    "description": "A spiral arena assembles itself from the Warden's checkpoint, jungle ruins, Spire glass, Foundry steel, and Ring servers. A wreck timeline fractures the view above. Every discarded memory is waiting higher up.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -7970,7 +7970,7 @@
     "env": "source",
     "title": "Impossible Archive",
     "background_image": "images/rooms/world_6/source_spire_thought.webp",
-    "description": "Shelves of futures turn their pages without wind. One scorched piece of the Astra juts from a timeline the crew is still trying to avoid.",
+    "description": "Shelves of futures turn their pages without wind. A scorched future Astra hull juts from a timeline the crew is still trying to avoid.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -8000,7 +8000,7 @@
     "env": "source",
     "title": "Memory Defense Arena",
     "background_image": "images/rooms/world_6/source_spire_thought.webp",
-    "description": "The archive folds into a hard circular arena. The Source stops tempting Nova with revision and starts defending the lie by force.",
+    "description": "The archive folds into a hard circular arena with an empty armor socket at its weakest seam. The Source stops tempting Nova with revision and starts defending the lie by force.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -8038,7 +8038,7 @@
         "requires_milestones": [
           "ms_w6_final_scavenge_complete"
         ],
-        "description": "The future hull fragment braces the arena's weakest seam. It is protection built from a warning, not proof of a fixed ending."
+        "description": "The future hull fragment braces the arena's weakest seam beside an empty armor socket. It is protection built from a warning, not proof of a fixed ending."
       }
     ],
     "enemy_flavor": {
@@ -8130,7 +8130,7 @@
         "requires_milestones": [
           "ms_game_complete"
         ],
-        "description": "Sunlight spills across the counter at Zeke's diner. Outside, the bells of an unscripted morning echo down the street while Nova rests her hand against the photograph."
+        "description": "Sunlight spills across the counter at Zeke's diner. Outside, the bells of an unscripted morning echo down the street while Nova rests her hand against the beach photograph."
       }
     ]
   },
@@ -11566,35 +11566,35 @@
     "weather": "industrial",
     "title": "Astra Common Room",
     "background_image": "images/rooms/astra/common_room.webp",
-    "description": "Coffee rings stain the central table. A patched kitchenette faces a couch bolted to the deck, and the shielded relic array occupies one warm corner. This is where the crew stops being a formation and becomes a family.",
+    "description": "Coffee rings stain the central table. A patched kitchenette faces a couch bolted to the deck, and the shielded relic array occupies one warm corner beside the Great Frontier film archive. This is where the crew stops being a formation and becomes a family.",
     "description_variants": [
       {
         "requires_milestones": [
           "ms_all_arcade_cabinets_restored"
         ],
         "background_image": "images/rooms/astra/common_room_arcade_v1.webp",
-        "description": "Coffee rings stain the central table. All six restored arcade cabinets hum in a glowing row along the bulkhead, casting bright neon ribbons across the deck. The crew stops being a formation and becomes a family."
+        "description": "Coffee rings stain the central table. Six restored arcade cabinets cast neon ribbons across the deck. The relic array and Great Frontier film archive share a warm corner. The crew stops being a formation and becomes a family."
       },
       {
         "requires_milestones": [
           "ms_arcade_cabinet_05_repaired"
         ],
         "background_image": "images/rooms/astra/common_room_arcade_v1.webp",
-        "description": "Coffee rings stain the central table. Five restored arcade cabinets stand along the bulkhead, casting cobalt and amber reflections across the deck. The crew stops being a formation and becomes a family."
+        "description": "Coffee rings stain the central table. Five restored arcade cabinets stand along the bulkhead, casting cobalt and amber reflections across the deck. The relic array and Great Frontier film archive share a warm corner. The crew stops being a formation and becomes a family."
       },
       {
         "requires_milestones": [
           "ms_arcade_cabinet_03_repaired"
         ],
         "background_image": "images/rooms/astra/common_room_arcade_v1.webp",
-        "description": "Coffee rings stain the central table. Deep Mine, Canopy Hopper, and Spire Infiltrator hum in an amber and cyan row beside the kitchenette. The crew stops being a formation and becomes a family."
+        "description": "Coffee rings stain the central table. Deep Mine, Canopy Hopper, and Spire Infiltrator hum in an amber and cyan row beside the kitchenette. The relic array and Great Frontier film archive share a warm corner. The crew stops being a formation and becomes a family."
       },
       {
         "requires_milestones": [
           "ms_arcade_cabinet_01_repaired"
         ],
         "background_image": "images/rooms/astra/common_room_arcade_v1.webp",
-        "description": "Coffee rings stain the central table. Beside the kitchenette, the restored Deep Mine cabinet paints the corner in warm amber light. The crew stops being a formation and becomes a family."
+        "description": "Coffee rings stain the central table. Beside the kitchenette, the restored Deep Mine cabinet paints the corner in warm amber light. The relic array and Great Frontier film archive share a warm corner. The crew stops being a formation and becomes a family."
       }
     ],
     "npcs": [],
@@ -11725,7 +11725,7 @@
     "weather": "industrial",
     "title": "Astra Cargo Bay",
     "background_image": "images/rooms/astra/cargo_bay.webp",
-    "description": "Cargo nets, sealed crates, and replacement conduits crowd the lower deck. A compact repair bench is powered beside a damaged storage terminal.",
+    "description": "Cargo nets, sealed crates, and replacement conduits crowd the lower deck. A compact [action:repair workbench|repair bench] is powered beside a damaged storage terminal.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -16151,7 +16151,7 @@
     "env": "source",
     "title": "Badge Labyrinth",
     "background_image": "images/rooms/world_6/source_zeke_nightmare.webp",
-    "description": "A badge labyrinth rises from cubicle walls, each plastic smile stamped with Zeke's employee number. The plastic smile cracks every time he stops asking permission to exist.",
+    "description": "A badge labyrinth rises from cubicle walls, each plastic smile stamped with Zeke's employee number. A corporate termination notice floats between the dividers. The plastic smile cracks every time he stops asking permission to exist.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -16353,7 +16353,7 @@
     "env": "source",
     "title": "Black Tide Shelf",
     "background_image": "images/rooms/world_6/source_orion_nightmare.webp",
-    "description": "A black tide shelf stretches under salt stars that refuse to reflect in the water. The salt stars brighten only when Orion stops accepting last survivor as a title.",
+    "description": "A black tide shelf stretches under salt stars that refuse to reflect in the water. A salt-crusted chronometer rests on the shelf. The salt stars brighten only when Orion stops accepting last survivor as a title.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -16587,7 +16587,7 @@
     "env": "source",
     "title": "Tideglass Span",
     "background_image": "images/rooms/world_6/source_memory_bridge.webp",
-    "description": "A tideglass span forms under the bridge, wet sand hardening into translucent steps. The beach photo flickers inside each step, laughing badly enough to be true.",
+    "description": "A tideglass span forms under the bridge, wet sand hardening into translucent steps marked by tideglass footprints. The beach photo flickers inside each step, laughing badly enough to be true.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -16718,7 +16718,7 @@
     "env": "source",
     "title": "Mine Dust Step",
     "background_image": "images/rooms/world_6/source_memory_stair.webp",
-    "description": "A mine dust step rises first, rough with the place Nova escaped. Vale polishes one half into a painless memory, but the unpolished half carries Jed's handprint.",
+    "description": "A mine dust step rises first, rough with the place Nova escaped. Vale polishes one half into a painless memory, but the unpolished half carries Jed's handprint beside a miner's motto carving.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -16851,7 +16851,7 @@
     "env": "source",
     "title": "Revision Gallery",
     "background_image": "images/rooms/world_6/source_spire_thought.webp",
-    "description": "A revision gallery displays better versions of every world: kinder mines, safer wilds, softer cities. The perfect frames fail wherever real names have worn fingerprints into the glass.",
+    "description": "A revision gallery displays better versions of every world: kinder mines, safer wilds, softer cities. A liberation blueprint rests on a thought pedestal. The perfect frames fail wherever real names have worn fingerprints into the glass.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -17094,7 +17094,7 @@
     "env": "source",
     "title": "Diner Booth",
     "background_image": "images/rooms/world_6/source_new_world.webp",
-    "description": "A diner booth waits under morning light with a shared menu full of food the colony was never allowed to waste. The shared menu has more choices than anyone knows what to do with.",
+    "description": "A diner booth waits under morning light with a shared menu full of food the colony was never allowed to waste. A diner coffee pot steams on the counter. The shared menu has more choices than anyone knows what to do with.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -17163,7 +17163,7 @@
     "env": "source",
     "title": "Open Window",
     "background_image": "images/rooms/world_6/source_new_world.webp",
-    "description": "An open window lets real sky into the diner without Shield shimmer or siren static. The real sky is frightening because it belongs to everyone.",
+    "description": "An open window lets real sky into the diner without Shield shimmer or siren static. A horizon sunrise lights the hills beyond. The real sky is frightening because it belongs to everyone.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -17817,7 +17817,7 @@
     "env": "source",
     "title": "Source Morning Street",
     "background_image": "images/rooms/world_6/source_new_world.webp",
-    "description": "A morning street outside the diner carries repair crews, bad jokes, and weather nobody scheduled. The repair crews and real weather make the ending feel lived in instead of merely won.",
+    "description": "A morning street outside the diner carries repair crews, bad jokes, and weather nobody scheduled. A terminal offers to call Astra shuttle. The repair crews and real weather make the ending feel lived in instead of merely won.",
     "npcs": [],
     "items": [],
     "enemies": [],

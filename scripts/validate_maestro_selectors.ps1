@@ -18,6 +18,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot 'explicit_action_references.ps1')
 $root = Split-Path -Parent $PSScriptRoot
 $assets = Join-Path $root "app/src/main/assets"
 $flowDir = Join-Path $root "playtests/maestro"
@@ -61,6 +62,7 @@ $haystack = @(
 
 # JSON escapes apostrophes/quotes; normalise so "Loader's idle" matches.
 $normalizedHaystack = $haystack -replace '\\"', '"' -replace '\\u0027', "'"
+$normalizedHaystack = ConvertTo-RenderedReferenceText $normalizedHaystack
 
 # Expand only the cooldown formatter's actual template, not an allowlist of
 # expected labels. Copy changes still invalidate old selectors. Numerical

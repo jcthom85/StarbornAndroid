@@ -6928,7 +6928,7 @@ private fun CompositeEnemyIcon(
 
 
 
-private fun buildInlineActionPlan(
+internal fun buildInlineActionPlan(
     description: String?,
     actions: List<RoomAction>,
     hints: Map<String, ActionHintUi>,
@@ -6938,19 +6938,39 @@ private fun buildInlineActionPlan(
     val segments = mutableListOf<InlineActionSegment>()
     val occupied = mutableListOf<IntRange>()
 
-    val markerPattern = Regex("""\[(npc):([^\]]+)]""", RegexOption.IGNORE_CASE)
+    // Explicit action references use the authored name, with an optional display label.
+    // Only actions supplied by the caller (already filtered for visibility) can resolve.
+    val markerPattern = Regex("""\[(npc|action):([^\]]+)]""", RegexOption.IGNORE_CASE)
+    val explicitActions = mutableSetOf<String>()
     val parsedDescription = buildString {
         var cursor = 0
         markerPattern.findAll(description).forEach { match ->
             append(description, cursor, match.range.first)
-            val label = match.groupValues[2].trim()
+            val isAction = match.groupValues[1].equals("action", ignoreCase = true)
+            val body = match.groupValues[2]
+            val reference = body.substringBefore('|').trim()
+            val label = if (isAction) body.substringAfter('|', reference).trim() else body.trim()
             val start = length
             append(label)
             val end = length
             if (label.isNotBlank()) {
                 val range = start until end
                 occupied += range
-                segments += InlineActionSegment(
+                if (isAction) {
+                    val action = actions.filter { it.isInlineDescriptionAction() }
+                        .singleOrNull { it.name.equals(reference, ignoreCase = true) }
+                    if (action != null) {
+                        val key = action.actionKey()
+                        explicitActions += key
+                        segments += InlineActionSegment(
+                            id = "$key:marker:$start",
+                            target = InlineActionTarget.Room(action),
+                            start = start,
+                            end = end,
+                            locked = hints[key]?.locked == true
+                        )
+                    }
+                } else segments += InlineActionSegment(
                     id = "npc-marker:$label:$start",
                     target = InlineActionTarget.Npc(label),
                     start = start,
@@ -6998,6 +7018,7 @@ private fun buildInlineActionPlan(
     }
 
     actions.filter { it.isInlineDescriptionAction() }.forEach { action ->
+        if (action.actionKey() in explicitActions) return@forEach
         val baseName = action.name
         if (baseName.isBlank()) return@forEach
         val range = findRange(baseName) ?: return@forEach
@@ -7028,7 +7049,8 @@ private fun buildInlineActionPlan(
             )
         }
 
-    if (segments.isEmpty()) return null
+    // Keep cleaned marker text even when its action is hidden or unresolved.
+    if (segments.isEmpty() && parsedDescription == description) return null
     segments.sortBy { it.start }
     return InlineActionPlan(description = parsedDescription, segments = segments)
 }

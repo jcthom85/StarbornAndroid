@@ -5,6 +5,109 @@ exploration/narrative consistency, and presentation/release verification.
 
 ## Current phase status (2026-09-11)
 
+- Astra route/terminology review started; see ROUTE_NARRATIVE_REVIEW.md. Boarding
+  and reciprocal five-room routes inspected; cargo facilities distinguished from
+  real services. Shortened the all-arcades variant from 48 words to below the
+  45-word cap. Targeted Astra regression, 354 selectors, explicit-reference
+  validation and diff checks passed; static audit unchanged at 22. Global strict
+  narrative validation FAILS (first finding: spire_night_market, 47 words).
+  Narrative acceptance remains open: inventory all findings and review route
+  hints/terminology world by world. Simulation fallback wording also needs review.
+
+- Cargo pilot integration passed on Android 17 Medium Phone: production ViewModel
+  loads authored Astra cargo actions; rendered custom-label click dispatches
+  onActionSelected and produces the exact workbench inspection status plus a
+  narration prompt, retaining the cargo room. All three explicit-link emulator
+  tests passed (cargo integration, doubled-text wrapping, locked nonactivation).
+  Uses a seeded cargo session and the production RoomDescription component;
+  does not prove navigation into cargo or the full-screen narration dismissal.
+  Fresh no-daemon runner and awake emulator worked without source changes.
+  Next: route-discovery and narrative-terminology review. Work remains uncommitted;
+  Play Internal Testing remains 1.3.29 (113).
+
+- Validator hardening/campaign pilot: strict explicit-reference checks now reject
+  incomplete/empty/nested/multi-separator markers, blank display text, unknown or
+  duplicate targets and service aliases. Added 19 validator cases alongside four
+  text-helper checks. Astra cargo bay pilots `repair bench` -> `repair workbench`;
+  its JVM regression verifies the rendered target set and cleaned display text.
+  Full JVM suite passed; 354 selectors, two authored references and diff checks
+  pass. Audit remains 22 classified candidates. Full campaign-room interaction
+  verification is still pending (prior device tests cover isolated renderer).
+  Next: verify cargo inspection flow on emulator, then route/terminology review.
+
+- Explicit-link device checkpoint: both ExplicitActionLinkInstrumentedTest cases
+  passed on Android 17 Medium Phone emulator: wrapped custom-label activation and
+  locked-link nonactivation at 2x font scale / 240 dp width. UTP AccessDenied was
+  resolved with an elevated fresh Gradle process (`--no-daemon`); reusing the old
+  daemon retained the failure. Initial device run had no Compose hierarchy while
+  emulator was asleep; wake/unlock followed by rerun passed both tests. No source
+  fix was needed. This verifies isolated renderer semantics/callbacks, not a full
+  campaign navigation flow or physical phone. Current debug build/test APKs were
+  installed on emulator. Next: explicit-link validator hardening and campaign
+  pilot review, then route-discovery/terminology review. No release operations.
+
+- Explicit-reference pilot: debug_enemy_party_sizes now displays `layout manifest`
+  targeting `debug manifest`. Added shared PowerShell marker handling, strict
+  reference validation and four helper checks; Maestro validates rendered labels,
+  and discoverability audit recognizes explicit targets while reserving marker
+  spans. Strict validation passes (1 reference), 354 selectors pass, audit remains
+  22 classified candidates, full JVM suite passes with the shipped-pilot test.
+  Added double-font wrapped/locked Compose link instrumentation; it compiles but
+  execution is blocked before tests by Android UTP temporary-directory failure
+  under C:\Users\jcthomas\.android\utp, including permission-elevated retries.
+  No device pass claimed. Next: resolve runner directory access and execute both
+  link tests before broader asset adoption. Work remains uncommitted.
+
+- Explicit action reference renderer added: `[action:authored name|display text]`
+  resolves a unique supplied inline action, preserves lock hints, reserves spans
+  against fallback collisions and displays hidden/unknown/ambiguous targets as
+  plain labels. Existing literal matching and NPC markers are retained. Three
+  renderer regression tests passed with the full JVM suite; strict selectors
+  (354) and diff check passed. See EXPLICIT_ACTION_REFERENCES.md for syntax and
+  limitations. No asset conversion or save-schema change. Next: teach authored
+  content validators about custom labels, pilot references in shipped prose and
+  verify wrapped/locked links on device before broader adoption. Work uncommitted.
+
+- 2026-09-12 residual classification: documented the existing state/event evidence
+  for 22 campaign candidate pairs in DISCOVERABILITY_CLASSIFICATION.md. Repaired
+  three usable debug-manifest references. Audit now 22 (World 1: 1, World 2: 16,
+  World 3: 5); no audit suppression or gameplay changes. Full JVM suite and 354
+  strict selectors passed, diff check passed. This completes the static triage
+  checkpoint, not rendered-link, route, save-file or device acceptance. Next:
+  compatible explicit action references, followed by route/terminology review.
+  Changes remain uncommitted and outside build 113.
+
+- 2026-09-12 Astra batch: repaired ten references across six descriptions in
+  common room/cargo bay. Tested all 128 independent arcade milestone combinations,
+  reaching all five common-room descriptions; archive event remains repeatable
+  after session restoration. Generic relic/workbench references retain their
+  existing inspection behavior. Full JVM suite passed; 354 selectors and diff
+  checks passed. Astra now has zero static candidates. Audit leaves 25 candidates:
+  World 1: 1, World 2: 16, World 3: 5, unmapped debug rooms: 3.
+  Prose-only asset edits remain uncommitted and outside build 113. Next: final
+  residual classification using existing state evidence, then compatible explicit
+  action references. Archive-dialog/device behavior is not established by these tests.
+
+- 2026-09-12 World 6 final batch: repaired 14 references across 13 descriptions.
+  Added 42 event-state cases for independent quest/milestone progress, restored
+  replay protection and intentionally repeatable epilogue/shuttle events, plus
+  five inspect-room checks. Full JVM suite passed (387 tests); 354 selectors
+  and diff checks passed. World 6 now has zero static candidates; this does not
+  establish route or device acceptance. Audit: 35 remaining (Astra 10, Worlds
+  1-3 22, unmapped debug rooms 3). Prose-only asset edits remain uncommitted,
+  outside bundle 113. Next: Astra, then residual classification.
+
+- 2026-09-12 memory-room batch after release 113: repaired nine references
+  across seven descriptions (bridge span/threshold, memory stair/fragments,
+  Tideglass footprints and miner's motto). Added 384 event-state cases spanning
+  independent Aethel milestones, main-quest prerequisites/tasks and side-quest
+  completion, plus restored-state replay checks including film cache 10.
+  Full JVM suite passed; 354 strict selectors and diff check passed. Audit now
+  49 overall / 14 World 6 candidates. Prose-only asset edits are uncommitted and
+  outside bundle 113. Next: remaining World 6 references, then Astra's 10.
+- Release 1.3.29 (113): commit `5a90a94` pushed; Google Play accepted bundle
+  113 and committed its completed Internal Testing release. Not production.
+
 - Release preparation 2026-09-12: 1.3.29 (113) packages all World 5 and current
   World 6 batches below, superseding their outside-bundle-112 notes. User authorized
   commit, push and Internal Testing upload. Signed bundle, release lint and 385 JVM
