@@ -35,6 +35,11 @@ class WorldTwoDiscoverabilityStateTest {
         assertTrue(partial.roomStates[room.id].isNullOrEmpty())
         val confront = room.actions.single { it["name"] == "Confront stalker" }
         assertTrue(narrativeActionVisible(confront, emptyMap(), emptyMap(), partial.completedMilestones))
+        // Keep the compatibility variant: MQ04's milestone alone must not select
+        // the completed-drill prose when the hunter flag is absent.
+        assertNotEquals(room.description, room.descriptionVariants[1].description)
+        assertEquals(room.descriptionVariants[1].description,
+            resolveRoomDescription(room, emptyMap(), partial.completedMilestones, false))
         assertTrue(requireNotNull(resolveRoomDescription(room, emptyMap(), partial.completedMilestones, false))
             .contains("Confront stalker", true))
         val store = GameSessionStore().apply { restore(partial) }

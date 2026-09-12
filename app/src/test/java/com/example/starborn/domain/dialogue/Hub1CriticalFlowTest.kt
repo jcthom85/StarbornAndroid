@@ -235,14 +235,16 @@ class Hub1CriticalFlowTest {
         assertEquals("bogs_w1_mq03_review_1", review?.current()?.id)
         review?.advanceUntilFinished()
 
-        harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq03_start_loader"))
-        harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq03_move_cargo"))
+        // The current mandatory route skips the legacy Workshop setup.
+        assertEquals("guard_break_training", harness.store.state.value.questStageById["w1_sq03"])
+        assertFalse(harness.store.state.value.questTasksCompleted["w1_sq03"].orEmpty().contains("start_loader"))
+        assertFalse(harness.store.state.value.questTasksCompleted["w1_sq03"].orEmpty().contains("move_cargo"))
         harness.events.handleTrigger(
             "encounter_victory",
             EventPayload.EncounterOutcome(
                 enemyIds = listOf("acoustic_bulwark"),
                 outcome = EventPayload.EncounterOutcome.Outcome.VICTORY,
-                roomId = "workshop_dock"
+                roomId = "admin_security"
             )
         )
 

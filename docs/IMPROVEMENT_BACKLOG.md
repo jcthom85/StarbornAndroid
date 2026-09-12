@@ -5,6 +5,95 @@ exploration/narrative consistency, and presentation/release verification.
 
 ## Current phase status (2026-09-11)
 
+- Release preparation 2026-09-12: version 1.3.31 (115) packages the narrative-limit
+  fixes and World 1 route/terminology review below. Their historical uncommitted
+  notes are superseded by this release commit. Target is Google Play Internal
+  Testing, not production; upload confirmation is recorded in the release handoff.
+  World 2 route review is next. No phase acceptance is implied by this release.
+
+- SQ03 compatibility classified: loader/cargo actions remain authored in Loading
+  Dock, so retain their objectives and legacy events; clarified two task labels.
+  Current mandatory review explicitly skips to guard_break_training. Updated its
+  regression to omit legacy setup dispatches and use Security Post victory,
+  while retaining the separate legacy flow test. No migration or gameplay edits.
+  Next: World 2 route/terminology review; real combat/device acceptance stays open.
+  Full JVM suite passed, including mandatory and legacy training flows; narrative
+  validation and 354 selectors pass, audit unchanged at 22, diff check clean.
+  Uncommitted; no install, version bump or release operations.
+
+- World 1 side-quest review: corrected nine journal tasks across SQ01, SQ02,
+  SQ04 and SQ05 to name actual rooms/actions and the terminal's second use.
+  Verified ten route edges. SQ03 loader/cargo setup tasks remain pending a
+  runtime/legacy compatibility trace; do not remove them based on naming alone.
+  Training victory does not itself check use of Guard Break. No progression
+  definitions changed. Next: SQ03 compatibility, then World 2 route review.
+  JVM suite passed; narrative validation clean, 354 selectors passed, explicit
+  references valid, audit unchanged at 22, diff check clean. Uncommitted; no
+  device install or release operations.
+
+- Relic-to-launch review: traced tuning puzzle success, cinematic completion,
+  Emergency Exit state gate, Cargo Lift victory/Jed dialogue, Warden hatch gate,
+  Zeke's two-room conversation and navigation-console launch. Clarified three
+  journal tasks and Zeke's authorization-versus-power line; updated its Maestro
+  selector. Added a catalog regression for the launch handoff. No gate/event
+  changes. Earlier mine tasks are not all direct relic-sync event prerequisites;
+  distinguish journal objectives, UI gates and event conditions. Next: World 1
+  side-quest routes. Device/puzzle/cinematic-resume acceptance remains open.
+  Verification: 395 JVM tests, zero failures/errors; narrative validation clean;
+  354 selectors and explicit-reference validation pass; audit remains 22;
+  diff check passes. Uncommitted; no release operations or device install.
+
+- MQ03 route checkpoint: confirmed Boggs' Concourse Lobby presence and the
+  post-training dialogue -> bogs_talked event -> cross-room elevator gate.
+  Removed premature green-authorization wording from the elevator description.
+  Three journal tasks now name Boggs' location, the elevator route and the north
+  Bulwark detour at Riot Control Post (onward mine route is east). Added a route/
+  prose regression. No events, gates, rewards or connections changed. Next:
+  relic-sync prerequisites, lockdown/launch sequence, then side-quest routes.
+  Verification: 394 JVM tests passed with zero failures/errors; narrative and
+  354 selectors pass; explicit-reference checks and diff check pass; audit stays
+  at 22 classified candidates. Uncommitted; no version or release operations.
+
+- World 1 route review started: compared five main-quest task lists with room
+  connections and hub entry policies. Corrected MQ02's nonexistent north-through-
+  market route and misleading Admin window destination in two Jed lines and two
+  journal tasks. Directions now name Transit Checkpoint on the hub map and
+  Zeke's Booth east of Search Bay. Added a catalog regression for that mapping.
+  No progression definitions changed. Next: MQ03 event gates, Boggs/elevator
+  terminology and pre-authorization prose, then lockdown/launch and side quests.
+  See ROUTE_NARRATIVE_REVIEW.md; this is static evidence, not player acceptance.
+  Verification: 393 JVM tests passed, zero failures/errors; narrative validation
+  passed without warnings; 354 selectors and explicit-reference checks passed;
+  audit unchanged at 22; diff check passed. Dialogue/quest structural comparison
+  confirms text-only changes. Work remains uncommitted, with no release actions.
+
+- 2026-09-12 narrative limits resolved: shortened the remaining 22 Foundry and
+  five Orbital descriptions; rewrote the ridge compatibility variant distinctly
+  without changing conditions or priority. Strengthened the partial-save test to
+  assert selection of that variant. Strict narrative validation now PASSES:
+  274 dialogue entries, 459 non-debug rooms, zero warnings. All 34 rooms.json
+  edits since HEAD are description-only and retain previously named actions.
+  Full JVM suite passes (392 tests, zero failures/errors), diff check passes,
+  selectors pass (354), explicit-reference checks pass, and audit remains 22
+  classified candidates. No new version, commit, push, install or upload.
+  Next: World 1 route hints and quest terminology, then Worlds 2-6; review the
+  Astra simulation fallback. Phase 5 acceptance remains open beyond static checks.
+
+- 2026-09-12 narrative inventory: fixed validator early exit so all findings are
+  reported, and count rendered action/NPC labels for room-copy limits. Initial
+  inventory: 34 errors, zero warnings. Shortened six World 3 descriptions while
+  preserving action names and route hints; 28 findings remain (22 World 4 lengths,
+  five World 5 lengths, one Canopy Ridge duplicate). Full inventory is recorded
+  in ROUTE_NARRATIVE_REVIEW.md. Full JVM suite, 354 selectors, explicit-reference
+  checks and diff check passed; discoverability remains 22 classified pairs.
+  Narrative validation still fails; no narrative or Phase 5 signoff. Next: Foundry
+  copy, then Orbital copy and ridge duplicate review, then world-by-world routes.
+
+- Release checkpoint superseding historical release/uncommitted notes below:
+  1.3.30 (114), commit 54c34da, pushed and committed to Google Play Internal
+  Testing. Not production. The narrative edits above are subsequent uncommitted
+  work and are not included in bundle 114. No new release operations this pass.
+
 - Astra route/terminology review started; see ROUTE_NARRATIVE_REVIEW.md. Boarding
   and reciprocal five-room routes inspected; cargo facilities distinguished from
   real services. Shortened the all-arcades variant from 48 words to below the

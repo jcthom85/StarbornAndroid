@@ -58,7 +58,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*Core is live.*Start the launch sequence.*"
+    visible: ".*Authorization accepted.*Start the launch sequence.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:

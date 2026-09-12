@@ -5,6 +5,15 @@ if ((ConvertTo-RenderedReferenceText '[action:crew datapad]') -cne 'crew datapad
 if (-not (Test-ExplicitActionReference '[ACTION:crew datapad|tablet]' 'crew datapad')) { throw 'Reference not recognized' }
 if (Test-ExplicitActionReference '[action:other|crew datapad]' 'crew datapad') { throw 'Display label mistaken for target' }
 Write-Output 'Explicit reference helper checks passed (4).'
+foreach ($case in @(
+    @{ Text='Read [action:long authored action name|tablet] now.'; Count=3 },
+    @{ Text='Read [action:tablet|the recovered crew tablet] now.'; Count=6 },
+    @{ Text='Ask [npc:Jed Thomas] now.'; Count=4 }
+)) {
+    $wordCount = @((ConvertTo-RenderedReferenceText $case.Text) -split '\s+' | Where-Object { $_ }).Count
+    if ($wordCount -ne $case.Count) { throw "Rendered narrative word count differs: $($case.Text)" }
+}
+Write-Output 'Rendered narrative word-count checks passed (3).'
 $action = [pscustomobject]@{ name='crew datapad'; type='generic' }
 foreach ($bad in @('[action:crew datapad', '[action:]', '[action:crew datapad|]', '[action:crew datapad|a|b]', '[action:crew datapad|[npc:Jed]]', '[action:missing]', '[action:crew datapad|   ]')) {
     if (@(Get-ExplicitReferenceErrors $bad @($action)).Count -eq 0) { throw "Accepted invalid marker: $bad" }

@@ -1918,7 +1918,7 @@
     "env": "market",
     "title": "Elevator Lobby",
     "background_image": "images/rooms/world_1/admin_elevator.webp",
-    "description": "Heavy warning signs and a biometric scanner mark the Deep Mine lift. Boggs' authorization shows green while the lift cables strain beneath the floor.",
+    "description": "Heavy warning signs and a biometric scanner mark the Deep Mine lift. The scanner checks Boggs' authorization while the lift cables strain beneath the floor.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4082,7 +4082,7 @@
     "env": "neon",
     "title": "Night Market",
     "background_image": "images/rooms/world_3/spire_night_market.webp",
-    "description": "The Night Market is loud enough to feel alive on purpose. Lanterns swing over food steam, Noodle Row shouts through the rain, and a lantern bridge crosses above the drain like a string of stubborn stars. A market registry broadcast crackles from a speaker above the stalls.",
+    "description": "The Night Market insists on being heard. Lanterns swing over food steam, Noodle Row shouts through rain, and a lantern bridge crosses the drain like stubborn stars. A market registry broadcast crackles from a speaker above the stalls.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4100,7 +4100,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Night Market is loud enough to feel alive on purpose. Repaired lanterns swing over food steam, Noodle Row shouts through the rain, and a lantern bridge crosses above the drain like a string of stubborn stars. A market registry broadcast crackles from a speaker above the stalls.",
+        "description": "The Night Market insists on being heard. Repaired lanterns swing over food steam, Noodle Row shouts through rain, and a lantern bridge crosses the drain like stubborn stars. A market registry broadcast crackles from a speaker above the stalls.",
         "requires_milestones": [
           "ms_w3_market_lit"
         ]
@@ -4818,7 +4818,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Archive Vault is red now. Indexed crystal stacks strobe with alarm text, the empty containment field screams around the stolen lens relic, and Scan reveals black tether-lines running from the Administrator's system into the room's geometry. Command tether-lines cross the glass; scan tether-lines to follow their deeper geometry.",
+        "description": "Crystal stacks strobe red with alarm text. The empty containment field screams around the stolen lens relic. Command tether-lines cross the glass from the Administrator's system; scan tether-lines to follow their deeper geometry.",
         "requires_milestones": [
           "ms_w3_mq14_complete"
         ]
@@ -4880,7 +4880,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Prism Gallery fractures the lockdown lights into visible alarm chords. The resolved containment route is still warm, and Scan shows a narrow timing path threaded through the noise toward the roof. Prism shutters frame the braided chord in the glass; scan alarm chords to follow the timing path.",
+        "description": "The Prism Gallery fractures lockdown lights into alarm chords. The resolved containment route is still warm. Prism shutters frame the braided chord in the glass; scan alarm chords to follow a narrow timing path through the noise toward the roof.",
         "requires_milestones": [
           "ms_w3_mq14_complete"
         ]
@@ -4938,7 +4938,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The drone test alcove is awake. Red warning tape snaps in fanwash, security drones twitch in their nests, and Scan paints every targeting path as a cold line across Nova's ribs. The prototype rack holds a flight telemetry log and a prototype targeting audit. Scan targeting paths to trace the drones' lines of fire.",
+        "description": "Red warning tape snaps in fanwash as security drones twitch awake. The prototype rack holds a flight telemetry log and a prototype targeting audit. Scan targeting paths to trace lines of fire across Nova's ribs.",
         "requires_milestones": [
           "ms_w3_mq14_complete"
         ]
@@ -5012,7 +5012,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Landing Pad Roof shudders under violent wind and red lockdown light. The Astra waits beyond the drone test alcove while Scan reveals the Planetary Shield as a rotating wound in the sky, open for less than a heartbeat. The flight display marks a shield window and a launch window beside a test telemetry relay.",
+        "description": "The roof shudders under wind and lockdown light. The Astra waits across the pad. Scan reveals the Planetary Shield opening for less than a heartbeat. The flight display marks a shield window and a launch window beside a test telemetry relay.",
         "requires_milestones": [
           "ms_w3_mq14_complete"
         ]
@@ -5115,7 +5115,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "From the overlook, the route across the Foundry basin has shape: cross the slag, tame the vents, breach the airlock. Zeke tags the engine cradle deep inside the factory, too hot and too guarded to reach from outside. Shield window telemetry flickers on the crew's flight display.",
+        "description": "The route across the Foundry basin has shape: cross the slag, tame the vents, breach the airlock. Zeke tags the engine cradle inside the factory, too hot and guarded to reach from outside. Shield window telemetry flickers on the crew's flight display.",
         "requires_milestones": [
           "ms_w4_landing_secured"
         ]
@@ -5224,7 +5224,7 @@
     "env": "foundry",
     "title": "Cooling Springs",
     "background_image": "images/rooms/world_4/foundry_cooling_springs.webp",
-        "description": "A hidden maintenance pocket where condensed steam collects in clear hot pools. The factory noise drops to a distant pulse, giving the crew room to breathe. A steam pool and cooling basin collect mineral runoff; a magma regulator pulses beside a salvaged cooling bypass. A worker tablet lies wrapped in a coolant-stained scarf beside the pool.",
+        "description": "Factory noise fades in this hidden maintenance pocket. A steam pool and cooling basin collect mineral runoff; a magma regulator pulses beside a salvaged cooling bypass. A worker tablet lies wrapped in a coolant-stained scarf beside the pool.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -5241,7 +5241,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The springs are no longer a hiding place, and the worker tablet's last ping has gone quiet. Gh0st's override key is in Nova's kit; the recovered coolant rig is useful, but it cannot make the factory merciful. The magma regulator and salvaged cooling bypass remain beside the steam pool.",
+        "description": "The worker tablet's last ping has gone quiet. Gh0st's override key and recovered coolant rig cannot make the factory merciful. The magma regulator and salvaged cooling bypass remain beside the steam pool, no longer a hiding place.",
         "requires_milestones": [
           "ms_w4_springs_regrouped",
           "ms_w4_worker_traced"
@@ -5254,13 +5254,13 @@
         ]
       },
       {
-        "description": "The springs are no longer a hiding place. Gh0st's override key is in Nova's kit, and the factory interior waits beyond the airlock like a wound under bandage. A magma regulator and salvaged cooling bypass sit beside the steam pool. A worker tablet lies wrapped in a coolant-stained scarf beside the pool.",
+        "description": "Gh0st's override key is in Nova's kit; the factory waits beyond the airlock. The springs offer no hiding place. A magma regulator and salvaged cooling bypass flank the steam pool. A worker tablet lies wrapped in a coolant-stained scarf.",
         "requires_milestones": [
           "ms_w4_springs_regrouped"
         ]
       },
       {
-        "description": "The cooling springs are quiet enough for the Phantom records to hurt properly. Steam curls around Gh0st while he decides what the files mean and what they do not get to mean. The magma regulator and salvaged cooling bypass sit beside the steam pool. A worker tablet lies wrapped in a coolant-stained scarf beside the pool.",
+        "description": "Steam curls around Gh0st as he weighs the Phantom records, refusing to let them define him. The magma regulator and salvaged cooling bypass flank the steam pool. A worker tablet lies wrapped in a coolant-stained scarf.",
         "requires_milestones": [
           "ms_w4_phantom_records_found"
         ]
@@ -5336,7 +5336,7 @@
     "env": "foundry",
     "title": "Waste Intake",
     "background_image": "images/rooms/world_4/foundry_waste_intake.webp",
-    "description": "Massive pistons slam raw scrap into furnace mouths. Compactor chains drag wrecked mechs through ash and sparks toward the factory interior. Cooling vent controls flank a waste intake brake; a worker maintenance ping pulses on the service display. A Project Phantom terminal sits behind thermal glass. An ammo crate beta rests near the pistons. A scrap mech pile crowds the edge of the lava flow. A wrecked loader stash is wedged inside a ruined chassis.",
+    "description": "Pistons hammer scrap toward the factory interior. Cooling vent controls flank a waste intake brake beneath a worker maintenance ping. Thermal glass shields a Project Phantom terminal; ammo crate beta, a scrap mech pile and a wrecked loader stash crowd the lava's edge.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5366,7 +5366,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Project Phantom terminal is open, the ammo crate beta is gone, and stripped mech frames lie cooling beside the intake. Dominion's machine keeps moving, but this corner no longer feeds it cleanly. Cooling vent controls flank a waste intake brake; a worker maintenance ping pulses on the service display. A scrap mech pile crowds the edge of the lava flow. A wrecked loader stash is wedged inside a ruined chassis.",
+        "description": "The Project Phantom terminal stands open; ammo crate beta is gone. The stripped scrap mech pile cools by a wrecked loader stash. Dominion's intake keeps hammering. Cooling vent controls flank a waste intake brake beneath a worker maintenance ping.",
         "requires_milestones": [
           "ms_w4_phantom_records_found",
           "ms_w4_crate_beta_destroyed",
@@ -5374,25 +5374,25 @@
         ]
       },
       {
-        "description": "The intake pistons still hammer, but the ammo crate beta is gone, scattered into slag-bright fragments beneath the compactor teeth. Cooling vent controls flank a waste intake brake; a worker maintenance ping pulses on the service display. A Project Phantom terminal sits behind thermal glass. A scrap mech pile crowds the edge of the lava flow. A wrecked loader stash is wedged inside a ruined chassis.",
+        "description": "Pistons grind ammo crate beta into slag. Cooling vent controls flank a waste intake brake beneath a worker maintenance ping. Thermal glass shields a Project Phantom terminal; a scrap mech pile and a wrecked loader stash crowd the lava's edge.",
         "requires_milestones": [
           "ms_w4_crate_beta_destroyed"
         ]
       },
       {
-        "description": "The scrap mech pile has been stripped before the lava could finish it. A few useful housings are missing, and the rest is finally just wreckage. Cooling vent controls flank a waste intake brake; a worker maintenance ping pulses on the service display. A Project Phantom terminal sits behind thermal glass. An ammo crate beta rests near the pistons. A wrecked loader stash is wedged inside a ruined chassis.",
+        "description": "The scrap mech pile is stripped. Cooling vent controls flank a waste intake brake beneath a worker maintenance ping. Thermal glass shields a Project Phantom terminal; ammo crate beta and a wrecked loader stash remain beside the hammering pistons.",
         "requires_milestones": [
           "ms_w4_mechs_salvaged"
         ]
       },
       {
-        "description": "The Project Phantom terminal is open and impossible to unread. The intake keeps swallowing scrap like the factory has not just confessed what it did to Elara and Gh0st. Cooling vent controls flank a waste intake brake; a worker maintenance ping pulses on the service display. An ammo crate beta rests near the pistons. A scrap mech pile crowds the edge of the lava flow. A wrecked loader stash is wedged inside a ruined chassis.",
+        "description": "The Project Phantom terminal exposes Elara and Gh0st's past. Pistons keep hammering beside ammo crate beta, a scrap mech pile and a wrecked loader stash. Cooling vent controls flank a waste intake brake beneath a worker maintenance ping.",
         "requires_milestones": [
           "ms_w4_phantom_records_found"
         ]
       },
       {
-        "description": "Hacked vents pull heat away from the service airlock. The piston cycle exposes a protected terminal bay for three seconds at a time. Cooling vent controls flank a waste intake brake; a worker maintenance ping pulses on the service display. A Project Phantom terminal sits behind thermal glass. An ammo crate beta rests near the pistons. A scrap mech pile crowds the edge of the lava flow. A wrecked loader stash is wedged inside a ruined chassis.",
+        "description": "Hacked vents cool the airlock; pistons expose a Project Phantom terminal every three seconds. Cooling vent controls flank a waste intake brake beneath a worker maintenance ping. Ammo crate beta, a scrap mech pile and a wrecked loader stash crowd the intake.",
         "requires_milestones": [
           "ms_w4_cooling_vents_hacked"
         ]
@@ -5484,7 +5484,7 @@
     "env": "foundry",
     "title": "Service Airlock",
     "background_image": "images/rooms/world_4/foundry_service_airlock.webp",
-    "description": "A heavy pressurized door separates volcanic exterior from sterile factory interior. Decon lights sweep the chamber in hard white bands. The airlock door looms beside the pumps. An ammo crate gamma sits beneath a soot-marked wall. An engineer safe-route valve is mounted on the coolant line.",
+    "description": "A pressurized airlock door separates volcanic ash from sterile factory corridors. Decon lights sweep the pumps in white bands. An ammo crate gamma sits beneath a soot-marked wall. An engineer safe-route valve is mounted on the coolant line.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5508,13 +5508,13 @@
         ]
       },
       {
-        "description": "The service airlock has cooled enough to cycle. Decon lights sweep the chamber in hard white bands while the interior door unlocks one reluctant bolt at a time. The airlock door looms beside the pumps. An ammo crate gamma sits beneath a soot-marked wall. An engineer safe-route valve is mounted on the coolant line.",
+        "description": "The airlock door has cooled enough to cycle, unlocking one reluctant bolt at a time. Decon lights sweep the pumps. An ammo crate gamma sits beneath a soot-marked wall. An engineer safe-route valve is mounted on the coolant line.",
         "requires_milestones": [
           "ms_w4_cooling_vents_hacked"
         ]
       },
       {
-        "description": "The service airlock stands open behind you, ash on one side and factory sterility on the other. The Foundry no longer feels unreachable; it feels angry. The airlock door looms beside the pumps. An ammo crate gamma sits beneath a soot-marked wall. An engineer safe-route valve is mounted on the coolant line.",
+        "description": "The airlock door stands open between ash and factory sterility. The Foundry feels angry, no longer unreachable. An ammo crate gamma sits beneath a soot-marked wall. An engineer safe-route valve is mounted on the coolant line beside the pumps.",
         "requires_milestones": [
           "ms_w4_mq16_complete"
         ]
@@ -5618,7 +5618,7 @@
         ]
       },
       {
-        "description": "The belt timing is yours now. Presses still slam and shields still move, but Nova has marked the safe steps in the rhythm instead of being dragged by it. A belt timing console overlooks a rejected droid, the conveyor release lock, and the worker defense relay.",
+        "description": "The belt timing is yours. Presses still slam and shields still move, but Nova has marked safe steps in the rhythm. A belt timing console overlooks a rejected droid, the conveyor release lock, and the worker defense relay.",
         "requires_milestones": [
           "ms_w4_conveyors_timed"
         ]
@@ -5808,7 +5808,7 @@
     "env": "foundry",
     "title": "The Forge",
     "background_image": "images/rooms/world_4/foundry_forge_anvil.webp",
-    "description": "A massive hammer falls over a relic mount. The Anvil hums beneath the impact rhythm, shaping raw ore like the factory is teaching metal to obey. A fabrication matrix panel overlooks the hammer lane. The anvil cradle glows beneath the hammer. The anvil relic glows inside the mount. A test chamber terminal waits beside the lane.",
+    "description": "A massive hammer shapes ore around the anvil cradle, teaching metal to obey. The anvil relic glows inside its mount. A fabrication matrix panel overlooks the hammer lane, with a test chamber terminal beside it.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -5834,19 +5834,19 @@
         ]
       },
       {
-        "description": "The Anvil cradle is empty. The hammer still falls, but the Forge sounds hollow now, like the factory has lost the tool it built its confidence around. A fabrication matrix panel overlooks the hammer lane. Scorch marks trace the anvil relic's former seat. A test chamber terminal waits beside the lane.",
+        "description": "The Anvil cradle is empty. The hammer still falls, but the Forge sounds hollow. A fabrication matrix panel overlooks the hammer lane. Scorch marks trace the anvil relic's former seat. A test chamber terminal waits beside the lane.",
         "requires_milestones": [
           "ms_w4_anvil_claimed"
         ]
       },
       {
-        "description": "The belt plates are locked in a safe pattern, the breath pistons are starved, and the Anvil cradle has opened around the relic like a hand unclenching. The Anvil sits there like a dare, bright enough to cast Nova's shadow up the hammer wall. A fabrication matrix panel overlooks the hammer lane. The anvil relic glows inside the mount. A test chamber terminal waits beside the lane.",
+        "description": "Belt plates lock safely; breath pistons starve. The Anvil cradle opens like an unclenching hand, the anvil relic casting Nova's shadow up the hammer wall. A fabrication matrix panel overlooks the hammer lane beside a test chamber terminal.",
         "requires_milestones": [
           "ms_w4_conveyor_puzzle_solved"
         ]
       },
       {
-        "description": "The Forge bucks without the fabrication matrix feeding it clean instructions. The belt rhythm is mapped, the crawl marks point to a safe window, and the override paddle has killed one crusher lane. The breath pistons still feed too much heat into the Anvil cradle. The anvil relic glows inside the mount. A test chamber terminal waits beside the lane.",
+        "description": "The fabrication matrix is disrupted; mapped belt rhythms, crawl marks and the override paddle reveal a safe lane. Breath pistons still overheat the Anvil cradle. The anvil relic glows inside its mount; a test chamber terminal waits nearby.",
         "requires_milestones": [
           "ms_w4_paddle_thrown"
         ],
@@ -6000,7 +6000,7 @@
         ]
       },
       {
-        "description": "The Deep-Core Engine hammers at the center of the factory while the Anvil burns in Nova's kit. The theft is finally possible, which means every alarm is about to become honest. The engine mount connects to the core's thermal clamps. Phase-Cutter Arrays occupy the adjoining rack.",
+        "description": "The Deep-Core Engine hammers while the Anvil burns in Nova's kit. The theft is finally possible; every alarm is about to become honest. The engine mount connects to the core's thermal clamps. Phase-Cutter Arrays occupy the adjoining rack.",
         "requires_milestones": [
           "ms_w4_anvil_claimed"
         ]
@@ -6090,13 +6090,13 @@
         ]
       },
       {
-        "description": "The Titan Walker lies broken in its launch cradle. The dock still trembles over the primary vent, but the path back to the Power Core is open. Commander Rylos's insignia marks the launch cradle. The escape launch route runs past a gantry footlocker bolted to the rail.",
+        "description": "The Titan Walker lies broken in its launch cradle. The dock trembles over the primary vent, but the path back to the Power Core is open. Commander Rylos's insignia marks the cradle. The escape launch route passes a bolted gantry footlocker.",
         "requires_milestones": [
           "ms_w4_titan_defeated"
         ]
       },
       {
-        "description": "Rylos has stepped into the Titan Walker, chrome face bright in the volcano glare. He calls Gh0st a unit because calling him a person would admit the crime. Commander Rylos watches from the Titan Walker. The escape launch route runs past a gantry footlocker bolted to the rail.",
+        "description": "Commander Rylos watches from the Titan Walker, chrome face bright in volcano glare. He calls Gh0st a unit; calling him a person would admit the crime. The escape launch route passes a gantry footlocker bolted to the rail.",
         "requires_milestones": [
           "ms_w4_rylos_confronted"
         ]
@@ -6166,7 +6166,7 @@
     "env": "void",
     "title": "Executive Dock",
     "background_image": "images/rooms/world_5/orbital_executive_dock.webp",
-    "description": "The Astra hangs beneath the Ring while Compliance fighters rake the hull. Docking controls face the sealed airlock; its airlock console displays a pressure map and dock access priority. Beyond the glass, a red carpet floats over bright-white flooring and the bodies of Thorne loyalists drift in dead gravity pockets.",
+    "description": "Compliance fighters rake the Astra beneath the Ring. Docking controls face the sealed airlock; its airlock console displays a pressure map and dock access priority. Beyond the glass, red carpet floats over white flooring beside Thorne loyalists' bodies, adrift in dead gravity.",
     "npcs": [
       "gh0st"
     ],
@@ -6193,7 +6193,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Astra is locked hard to the Executive Dock, docking collar bent around stolen Foundry hardware. The fighter screen is gone, but the sealed airlock still treats the crew like cargo to be rejected. Docking controls glow beside the airlock console, where a pressure map sits beneath dock access priority.",
+        "description": "The Astra's docking collar grips stolen Foundry hardware. The fighter screen is gone, but the sealed airlock rejects the crew like unwanted cargo. Docking controls glow beside the airlock console, where a pressure map sits beneath dock access priority.",
         "requires_milestones": [
           "ms_w5_fighter_screen_broken"
         ]
@@ -6696,7 +6696,7 @@
     "env": "void",
     "title": "Server Farm",
     "background_image": "images/rooms/world_5/orbital_server_farm.webp",
-    "description": "Server columns vanish into cold mist around a purged backup rack. Once its routine is recovered, the guardian ownership flag can be erased for independence or replaced through the crew covenant socket for shared protection. A mainframe terminal displays a coolant-pulse map; a dead sysadmin drifts behind a coolant pipe.",
+    "description": "Mist surrounds a purged backup rack. Recover its routine: erase the guardian ownership flag for independence or use the crew covenant socket for shared protection. A mainframe terminal displays a coolant-pulse map; a dead sysadmin drifts behind a coolant pipe.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -6717,13 +6717,13 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Server Farm no longer pretends to be endless. Zeke's coolant-pulse map on the mainframe terminal marks the mainframe nave, three firewall nodes, a purged backup rack, and the route to Elara. Controls offer a guardian ownership flag or crew covenant socket for the recovered routine. A dead sysadmin drifts behind a coolant pipe.",
+        "description": "Zeke's coolant-pulse map on the mainframe terminal locates the mainframe nave, three firewall nodes, a purged backup rack and Elara's route. The recovered routine offers a guardian ownership flag or crew covenant socket. A dead sysadmin drifts behind a coolant pipe.",
         "requires_milestones": [
           "ms_w5_server_maze_mapped"
         ]
       },
       {
-        "description": "The Server Farm is wounded open. Firewall nodes alpha, beta, and gamma are dark, and the Anchor Chamber door answers Gh0st's voice from the far end of the cold. A mainframe terminal displays a coolant-pulse map beside a purged backup rack, with controls for the guardian ownership flag and crew covenant socket. A dead sysadmin drifts behind a coolant pipe.",
+        "description": "Firewall nodes alpha, beta and gamma are dark; the Anchor Chamber answers Gh0st. The mainframe terminal's coolant-pulse map highlights a purged backup rack, guardian ownership flag and crew covenant socket. A dead sysadmin drifts behind a coolant pipe.",
         "requires_milestones": [
           "ms_w5_firewall_gamma_down"
         ]
@@ -9609,7 +9609,7 @@
         "requires_milestones": [
           "ms_w2_mq03_complete"
         ],
-        "description": "A stone shelf stands above the canopy. Look at Shield from beneath its distant ceiling; a rifle barrel tracks the ridge from the brush. Confront stalker before the angle closes."
+        "description": "A rifle barrel tracks the stone shelf from the brush. Confront stalker before the angle closes. Look at Shield above the canopy, its distant ceiling stretching beyond the ridge."
       },
       {
         "requires_state": {

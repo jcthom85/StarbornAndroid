@@ -108,7 +108,7 @@
         "tasks": [
           {
             "id": "approach_admin_gate",
-            "text": "Head North through the Market and report to the Transit Checkpoint for mine shift clearance."
+            "text": "Choose Transit Checkpoint on the hub map, then head north from the Shift Queue to the Search Bay for clearance."
           },
           {
             "id": "request_clearance",
@@ -123,7 +123,7 @@
         "tasks": [
           {
             "id": "meet_zeke",
-            "text": "Talk to Zeke at the Admin window."
+            "text": "Talk to Zeke in Zeke's Booth, east of the Search Bay."
           },
           {
             "id": "spoof_liability_form",
@@ -178,11 +178,11 @@
           },
           {
             "id": "talk_to_bogs",
-            "text": "Report to Foreman Boggs and survive the work assignment he finds in Nova's file."
+            "text": "Report to Foreman Boggs in the Concourse Lobby and survive the work assignment he finds in Nova's file."
           },
           {
             "id": "use_deep_elevator",
-            "text": "Use the Mine Access Badge and Boggs' authorization at the Deep Elevator."
+            "text": "From the Concourse Lobby, head west to the Elevator Lobby, then north into the Deep Mine with Boggs' authorization."
           }
         ]
       },
@@ -201,7 +201,7 @@
           },
           {
             "id": "break_riot_guard",
-            "text": "Defeat a shielded Acoustic Bulwark by using Guard Break or Stagger."
+            "text": "Head north from Cavern Junction to the Riot Control Post. Defeat its Acoustic Bulwark using Guard Break or Stagger."
           },
           {
             "id": "reach_architect_threshold",
@@ -290,7 +290,7 @@
           },
           {
             "id": "receive_chime",
-            "text": "Take Jed's Chime and the cost of using it."
+            "text": "After clearing the Cargo Lift, talk to Jed to receive his Chime."
           },
           {
             "id": "escape_to_launch_bay",
@@ -371,11 +371,11 @@
         "tasks": [
           {
             "id": "splice_chime",
-            "text": "Splice the Chime into the authorization/navigation bus."
+            "text": "Talk to Zeke in the Pod Bay, then follow him north into The Pod Core and talk again to splice the Chime into authorization/navigation."
           },
           {
             "id": "launch_from_colony",
-            "text": "Launch from the colony."
+            "text": "After splicing the Chime, use the navigation console in The Pod Core to launch."
           },
           {
             "id": "hit_planetary_shield",
@@ -407,7 +407,7 @@
         "tasks": [
           {
             "id": "find_hidden_stash",
-            "text": "Head into Trade Row and search the recessed alcove for the hidden stash."
+            "text": "From Market Strip in Trade Row, head east to The Hidden Stash."
           },
           {
             "id": "open_rebel_cache",
@@ -422,7 +422,7 @@
         "tasks": [
           {
             "id": "return_cache_proof",
-            "text": "Return to Scrapper at his scrap pile before his nerve breaks."
+            "text": "Return west to Market Strip, then north to Scrapper's Stall with the cache proof."
           }
         ]
       }
@@ -455,7 +455,7 @@
         "tasks": [
           {
             "id": "enter_ventilation_hub",
-            "text": "Enter the ventilation hub through the low service hatch."
+            "text": "Head east from Triage Hall to the Ventilation Hub."
           },
           {
             "id": "inspect_cracked_vent",
@@ -463,7 +463,7 @@
           },
           {
             "id": "reroute_airflow",
-            "text": "Reroute the failing fans at the manual bypass lever."
+            "text": "After inspecting the cracked vent, use the fans to reroute airflow."
           },
           {
             "id": "clear_toxic_blockage",
@@ -478,7 +478,7 @@
         "tasks": [
           {
             "id": "return_to_doc",
-            "text": "Return to Doc in the Med-Bay with the air quality report."
+            "text": "Return west to Triage Hall, then north to Doc's Exam Room with the air quality report."
           }
         ]
       }
@@ -515,11 +515,11 @@
           },
           {
             "id": "start_loader",
-            "text": "Start the loader or drill system."
+            "text": "Use the loader at the Loading Dock in Jed's Workshop."
           },
           {
             "id": "move_cargo",
-            "text": "Prepare the training area."
+            "text": "Use the cargo rail at the Loading Dock to clear the training area."
           }
         ]
       },
@@ -580,7 +580,7 @@
           },
           {
             "id": "locate_hacked_terminal",
-            "text": "Locate the hacked terminal."
+            "text": "From Air-Lock Entrance, head north through Aisle 01 to The Core Hub and inspect the terminal."
           },
           {
             "id": "restore_protocol_spoof",
@@ -588,7 +588,7 @@
           },
           {
             "id": "apply_access_override",
-            "text": "Restore the spoof and apply the rebel access override."
+            "text": "After thawing the console, use the terminal again to apply the rebel access override."
           }
         ]
       }
@@ -621,11 +621,11 @@
         "tasks": [
           {
             "id": "find_collapsed_tunnel",
-            "text": "Find the collapsed tunnel in the Deep Mine."
+            "text": "Restore power at Cavern Junction, then return south to Main Tunnel Alpha and head east into Side Shunt 4."
           },
           {
             "id": "recover_datapad",
-            "text": "Recover the dead miner's datapad."
+            "text": "Inspect the crew datapad in Side Shunt 4."
           },
           {
             "id": "read_final_letter",

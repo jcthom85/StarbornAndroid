@@ -322,13 +322,13 @@
   {
     "id": "jed_w1_mq02_handoff_3",
     "speaker": "Jed",
-    "text": "Head north through the market to Transit. If Hank's scanner rejects you, find Zeke at Admin—he knows how to bury liability paperwork.",
+    "text": "Choose Transit Checkpoint on the hub map. If Hank's scanner rejects you, Zeke's Booth is east of the Search Bay. He can bury paperwork.",
     "trigger": "set_milestone:ms_w1_mq02_jed_advised"
   },
   {
     "id": "jed_w1_mq02_reminder",
     "speaker": "Jed",
-    "text": "Head north through the market to the Transit Checkpoint. If Hank's gate scanner kicks you out, talk to Zeke at the Admin window.",
+    "text": "Transit Checkpoint is on the hub map. Past the Shift Queue, turn east from the Search Bay to Zeke's Booth if Hank rejects you.",
     "condition": "quest_active:w1_mq02,milestone:ms_w1_mq02_jed_advised,milestone_not_set:ms_w1_mq02_hank_denied"
   },
   {
@@ -810,7 +810,7 @@
     "id": "zeke_w1_mq05_pod_core_3",
     "speaker": "Zeke",
     "emote": "happy",
-    "text": "It took. Core is live. Wherever this pod drops us, Nova... we stick together.",
+    "text": "Authorization accepted. The pod has its own power. Wherever it drops us, Nova... we stick together.",
     "next": "zeke_w1_mq05_pod_core_4"
   },
   {

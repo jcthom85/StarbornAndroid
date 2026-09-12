@@ -2,6 +2,7 @@ param([switch]$Strict)
 
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
+. (Join-Path $PSScriptRoot 'explicit_action_references.ps1')
 $errors = [Collections.Generic.List[string]]::new()
 $warnings = [Collections.Generic.List[string]]::new()
 
@@ -56,7 +57,7 @@ foreach ($room in $allRooms) {
         @{ Field = "description_dark"; Text = [string]$room.description_dark }
     )) {
         if ([string]::IsNullOrWhiteSpace($entry.Text)) { continue }
-        $wordCount = @($entry.Text -split '\s+' | Where-Object { $_ }).Count
+        $wordCount = @((ConvertTo-RenderedReferenceText $entry.Text) -split '\s+' | Where-Object { $_ }).Count
         if ($wordCount -gt 45) {
             $errors.Add("Room '$($room.id)' $($entry.Field) is $wordCount words (maximum 45).")
         }
@@ -66,7 +67,7 @@ foreach ($room in $allRooms) {
     foreach ($variant in @($room.description_variants)) {
         $text = [string]$variant.description
         if (-not [string]::IsNullOrWhiteSpace($text)) {
-            $wordCount = @($text -split '\s+' | Where-Object { $_ }).Count
+            $wordCount = @((ConvertTo-RenderedReferenceText $text) -split '\s+' | Where-Object { $_ }).Count
             if ($wordCount -gt 45) {
                 $errors.Add("Room '$($room.id)' variant[$variantIndex] is $wordCount words (maximum 45).")
             }
@@ -179,7 +180,8 @@ if ($canonical -notmatch "People speak plainly") {
 
 $warnings | ForEach-Object { Write-Warning $_ }
 if ($errors.Count -gt 0) {
-    $errors | ForEach-Object { Write-Error $_ }
+    $errors | ForEach-Object { Write-Error $_ -ErrorAction Continue }
+    Write-Host "Narrative prose validation failed: $($errors.Count) error(s), $($warnings.Count) warning(s)."
     exit 1
 }
 Write-Host "Narrative prose validation passed: $($allDialogue.Count) total dialogue entries and $($allRooms.Count) rooms checked, $($warnings.Count) warning(s)."
