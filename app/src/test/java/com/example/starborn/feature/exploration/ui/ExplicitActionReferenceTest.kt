@@ -1,6 +1,7 @@
 package com.example.starborn.feature.exploration.ui
 
 import com.example.starborn.domain.model.GenericAction
+import com.example.starborn.domain.model.TravelAction
 import com.example.starborn.domain.model.actionKey
 import com.example.starborn.feature.exploration.ui.hud.InlineActionTarget
 import com.example.starborn.feature.exploration.viewmodel.ActionHintUi
@@ -8,6 +9,16 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class ExplicitActionReferenceTest {
+    @Test fun `special travel actions append explicit clickable paths`() {
+        val travel = TravelAction("Climb to Lantern Roof", "northeast")
+        val plan = requireNotNull(buildInlineActionPlan("Rain drums on the awnings.", listOf(travel), emptyMap(), null))
+
+        assertEquals("Rain drums on the awnings.\n\nPaths: Climb to Lantern Roof", plan.description)
+        assertEquals(1, plan.segments.size)
+        assertEquals("Climb to Lantern Roof", plan.description.substring(plan.segments.single().start, plan.segments.single().end))
+        assertEquals(InlineActionTarget.Room(travel), plan.segments.single().target)
+    }
+
     @Test fun `shipped debug pilot resolves custom label to authored action`() {
         val reader = com.example.starborn.data.assets.AssetJsonReader(
             com.example.starborn.core.platform.DesktopAssetProvider(), com.example.starborn.core.MoshiProvider.instance)

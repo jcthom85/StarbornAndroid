@@ -17,6 +17,8 @@ data class Room(
     @Json(name = "enemy_parties")
     val enemyParties: List<List<String>>? = null,
     val connections: Map<String, String>,
+    @Json(name = "special_exits")
+    val specialExits: Map<String, String> = emptyMap(),
     val pos: List<Int>,
     val state: Map<String, Any>,
     val actions: List<Map<String, Any?>>,

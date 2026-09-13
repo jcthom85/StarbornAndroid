@@ -87,6 +87,11 @@ data class EnemyAction(
     val label: String = "Enemy"
 ) : RoomAction
 
+data class TravelAction(
+    override val name: String,
+    val direction: String
+) : RoomAction
+
 data class GenericAction(
     override val name: String,
     val type: String,
@@ -113,6 +118,7 @@ fun RoomAction.actionKey(): String = when (this) {
     is ContainerAction -> listOf("container", stateKey, actionEvent, name).joinToString(":")
     is NpcAction -> listOf("npc", npcKey, interactionLabel, name).joinToString(":")
     is EnemyAction -> listOf("enemy", enemyId, label, name).joinToString(":")
+    is TravelAction -> listOf("travel", direction, name).joinToString(":")
     is GenericAction -> listOf("generic", type, actionEvent, zoneId, name).joinToString(":")
 }
 
@@ -123,5 +129,6 @@ fun RoomAction.serviceTag(): String? = when (this) {
     is ShopAction -> "Shop"
     is NpcAction -> interactionLabel
     is EnemyAction -> label
+    is TravelAction -> null
     else -> null
 }

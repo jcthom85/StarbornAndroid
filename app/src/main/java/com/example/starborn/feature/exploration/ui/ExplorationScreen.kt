@@ -209,6 +209,7 @@ import com.example.starborn.domain.model.ShopAction
 import com.example.starborn.domain.model.TinkeringAction
 import com.example.starborn.domain.model.GenericAction
 import com.example.starborn.domain.model.ToggleAction
+import com.example.starborn.domain.model.TravelAction
 import com.example.starborn.domain.model.TuningPuzzleAction
 import com.example.starborn.domain.model.Equipment
 import com.example.starborn.domain.model.Item
@@ -6935,6 +6936,14 @@ internal fun buildInlineActionPlan(
     room: Room?
 ): InlineActionPlan? {
     if (description.isNullOrBlank()) return null
+    val travelActions = actions.filterIsInstance<TravelAction>()
+    val sourceDescription = if (travelActions.isEmpty()) {
+        description
+    } else {
+        description.trimEnd() + "\n\nPaths: " + travelActions.joinToString(" | ") { action ->
+            "[action:${action.name}|${action.name}]"
+        }
+    }
     val segments = mutableListOf<InlineActionSegment>()
     val occupied = mutableListOf<IntRange>()
 
@@ -6944,8 +6953,8 @@ internal fun buildInlineActionPlan(
     val explicitActions = mutableSetOf<String>()
     val parsedDescription = buildString {
         var cursor = 0
-        markerPattern.findAll(description).forEach { match ->
-            append(description, cursor, match.range.first)
+        markerPattern.findAll(sourceDescription).forEach { match ->
+            append(sourceDescription, cursor, match.range.first)
             val isAction = match.groupValues[1].equals("action", ignoreCase = true)
             val body = match.groupValues[2]
             val reference = body.substringBefore('|').trim()
@@ -6980,7 +6989,7 @@ internal fun buildInlineActionPlan(
             }
             cursor = match.range.last + 1
         }
-        append(description, cursor, description.length)
+        append(sourceDescription, cursor, sourceDescription.length)
     }
     val lower = parsedDescription.lowercase(Locale.getDefault())
 
@@ -7050,7 +7059,7 @@ internal fun buildInlineActionPlan(
         }
 
     // Keep cleaned marker text even when its action is hidden or unresolved.
-    if (segments.isEmpty() && parsedDescription == description) return null
+    if (segments.isEmpty() && parsedDescription == sourceDescription) return null
     segments.sortBy { it.start }
     return InlineActionPlan(description = parsedDescription, segments = segments)
 }

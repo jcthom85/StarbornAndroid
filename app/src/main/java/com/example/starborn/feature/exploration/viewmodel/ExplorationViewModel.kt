@@ -78,6 +78,7 @@ import com.example.starborn.domain.model.SkillTreeDefinition
 import com.example.starborn.domain.model.SkillTreeNode
 import com.example.starborn.domain.model.TinkeringAction
 import com.example.starborn.domain.model.ToggleAction
+import com.example.starborn.domain.model.TravelAction
 import com.example.starborn.domain.model.TuningPuzzle
 import com.example.starborn.domain.model.TuningPuzzleAction
 import com.example.starborn.domain.model.actionKey
@@ -1420,13 +1421,18 @@ class ExplorationViewModel(
     ): Map<String, DirectionIndicatorUi> {
         if (room == null) return emptyMap()
         val indicators = mutableMapOf<String, DirectionIndicatorUi>()
+        val specialDirections = room.specialExits.keys
+            .map { it.lowercase(Locale.getDefault()) }
+            .toSet()
         val visibleDirections = visibleConnections(room).keys
             .map { it.lowercase(Locale.getDefault()) }
+            .filterNot { it in specialDirections }
             .toSet()
         room.connections.keys.forEach { direction ->
             val status = resolveBlockedIndicatorStatus(room, direction)
             val key = direction.lowercase(Locale.getDefault())
             if (status != null &&
+                key !in specialDirections &&
                 !shouldSuppressDirectionIndicator(room, key) &&
                 (!isRoomDark(room) || visibleDirections.contains(key))
             ) {
@@ -2703,7 +2709,7 @@ class ExplorationViewModel(
                 "locked" to (actionHint?.locked == true)
             )
         )
-        if (actionHint?.locked != true && !action.hasAuthoredAudioCue()) {
+        if (actionHint?.locked != true && action !is TravelAction && !action.hasAuthoredAudioCue()) {
             playUiCue("action_inspect")
         }
         dismissBlockedPrompt()
@@ -2715,6 +2721,7 @@ class ExplorationViewModel(
             return
         }
         when (action) {
+            is TravelAction -> travel(action.direction)
             is ToggleAction -> handleToggleAction(action)
             is ContainerAction -> handleContainerAction(action)
             is TinkeringAction -> handleTinkeringAction(
@@ -2745,6 +2752,7 @@ class ExplorationViewModel(
         is RestStopAction -> listOfNotNull(restEvent?.takeIf { it.isNotBlank() })
         is TuningPuzzleAction -> listOfNotNull(tuningPuzzlesById[puzzleId]?.successEvent?.takeIf { it.isNotBlank() })
         is GenericAction -> listOfNotNull(actionEvent?.takeIf { it.isNotBlank() })
+        is TravelAction -> emptyList()
         else -> emptyList()
     }
 
@@ -5674,7 +5682,7 @@ class ExplorationViewModel(
 
     private fun parseActions(room: Room?): List<RoomAction> {
         if (room == null) return emptyList()
-        return room.actions.mapNotNull { action ->
+        val authoredActions = room.actions.mapNotNull { action ->
             if (!isActionVisible(room, action)) return@mapNotNull null
             val type = action["type"].asStringOrNull()?.lowercase()
             val name = action["name"].asStringOrNull() ?: return@mapNotNull null
@@ -5735,6 +5743,13 @@ class ExplorationViewModel(
                 )
             }
         }
+        val travelActions = room.specialExits.mapNotNull { (direction, label) ->
+            val normalized = direction.lowercase(Locale.getDefault())
+            label.takeIf { it.isNotBlank() }
+                ?.takeIf { getConnection(room, normalized) != null }
+                ?.let { TravelAction(name = it, direction = normalized) }
+        }
+        return authoredActions + travelActions
     }
 
     private fun isActionVisible(room: Room, action: Map<String, Any?>): Boolean {

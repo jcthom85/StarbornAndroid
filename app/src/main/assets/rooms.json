@@ -453,6 +453,7 @@
   {
     "id": "pit_showers",
     "env": "mine",
+    "weather": "steam",
     "title": "Shared Showers",
     "background_image": "images/rooms/world_1/pit_showers_v5.webp",
     "description": "Cracked tiles and dense steam fill the communal showers. Three rusted steam valves shudder loudly above a vibrating drainage grate.",
@@ -3640,6 +3641,7 @@
   {
     "id": "spire_sewers_landing",
     "env": "neon",
+    "weather": "cave_drip",
     "title": "Sewer Landing Pad",
     "background_image": "images/rooms/world_3/spire_sewers_landing.webp",
     "description": "The Astra sits powered down beside a sewer landing pad, its hull reflecting algae-glow and warning strobes from the runoff lock ahead. The air is damp, smelling of ozone, old pipes, and a city trying not to notice you arrived.",
@@ -3666,6 +3668,7 @@
   {
     "id": "spire_runoff_lock",
     "env": "neon",
+    "weather": "cave_drip",
     "title": "Runoff Lock",
     "background_image": "images/rooms/world_3/spire_sewers_passage.webp",
     "description": "A rusted runoff lock divides the sewer landing from the city drains. Green water slaps against a sealed floodgate while a ladder cage climbs into steam.",
@@ -3698,6 +3701,7 @@
   {
     "id": "spire_sewers_passage",
     "env": "neon",
+    "weather": "cave_drip",
     "title": "Sewer Passage",
     "background_image": "images/rooms/world_3/spire_sewers_passage.webp",
     "description": "A long concrete sewer passage carries warm runoff under the Spire. Water drips from rusted vent pipes overhead while the tunnel splits toward maintenance heat, rainlight, and the guarded city above.",
@@ -3761,6 +3765,7 @@
   {
     "id": "spire_vent_output",
     "env": "neon",
+    "weather": "rain",
     "title": "Vent Output",
     "background_image": "images/rooms/world_3/spire_vent_output.webp",
     "description": "The vent output coughs the crew into acid rain and neon exhaust. Trash piles clog the curb, and Rain Gutter Alley vanishes west between buildings that lean like they are tired.",
@@ -3789,6 +3794,7 @@
   {
     "id": "spire_rain_gutter_alley",
     "env": "neon",
+    "weather": "rain",
     "title": "Rain Gutter Alley",
     "background_image": "images/rooms/world_3/spire_vent_output.webp",
     "description": "Rainwater sheets through Rain Gutter Alley in oily ribbons. A patrol mirror hangs above a cracked stairwell, giving the alley eyes even when no guard is present.",
@@ -3819,6 +3825,7 @@
   {
     "id": "spire_underrail_platform",
     "env": "neon",
+    "weather": "rain",
     "title": "Underrail Platform",
     "background_image": "images/rooms/world_3/spire_transit_plaza.webp",
     "description": "An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is scratched with routes, curfews, patrol timing, and warnings written in marker.",
@@ -3860,6 +3867,9 @@
   {
     "id": "spire_the_static",
     "env": "neon",
+    "special_exits": {
+      "northeast": "Check the Back Bar Ledger"
+    },
     "title": "The Static",
     "background_image": "images/rooms/world_3/spire_the_static.webp",
     "description": "The Static is a dark dive bar built around an old subway car. Neon signs pulse erratically, the sign outside keeps failing, and the signal stairwell behind the bar hums with pirate broadcasts.",
@@ -4041,6 +4051,7 @@
   {
     "id": "spire_safehouse_roof",
     "env": "neon",
+    "weather": "rain",
     "title": "Safehouse Roof",
     "background_image": "images/rooms/world_3/spire_zekes_apartment.webp",
     "description": "The safehouse roof is barely larger than the apartment below it. A skyline of corporate towers rises beyond laundry lines full of patched coats and disguise materials, and the shield shimmer turns the clouds into a visible cage.",
@@ -4080,6 +4091,10 @@
   {
     "id": "spire_night_market",
     "env": "neon",
+    "special_exits": {
+      "northeast": "Climb to Lantern Roof"
+    },
+    "weather": "rain",
     "title": "Night Market",
     "background_image": "images/rooms/world_3/spire_night_market.webp",
     "description": "The Night Market insists on being heard. Lanterns swing over food steam, Noodle Row shouts through rain, and a lantern bridge crosses the drain like stubborn stars. A market registry broadcast crackles from a speaker above the stalls.",
@@ -4139,6 +4154,7 @@
   {
     "id": "spire_noodle_row",
     "env": "neon",
+    "weather": "rain",
     "title": "Noodle Row",
     "background_image": "images/rooms/world_3/spire_night_market.webp",
     "description": "Noodle Row steams under plastic awnings. The soup counter never stops moving, and every bowl comes with news if you know how to listen.",
@@ -4169,6 +4185,7 @@
   {
     "id": "spire_lantern_bridge",
     "env": "neon",
+    "weather": "rain",
     "title": "Lantern Bridge",
     "background_image": "images/rooms/world_3/spire_night_market.webp",
     "description": "A narrow lantern bridge crosses above the market drain. Paper charms flutter from the rail, each one carrying a name, a debt, or a prayer. An executive power siphon runs along a bright cable toward a billboard.",
@@ -4235,6 +4252,10 @@
   {
     "id": "spire_transit_plaza",
     "env": "neon",
+    "special_exits": {
+      "northeast": "Enter the Ad Bay"
+    },
+    "weather": "rain",
     "title": "Transit Plaza",
     "background_image": "images/rooms/world_3/spire_transit_plaza.webp",
     "description": "Transit Plaza spreads beneath the Great Elevator, all surveillance glass, guard lanes, and crowded hesitation. The elevator controls tower above a checkpoint queue where fear moves faster than the line, while a security kiosk glows under the stairs.",
@@ -4281,6 +4302,7 @@
   {
     "id": "spire_checkpoint_queue",
     "env": "neon",
+    "weather": "rain",
     "title": "Checkpoint Queue",
     "background_image": "images/rooms/world_3/spire_transit_plaza.webp",
     "description": "The checkpoint queue snakes between metal rails and glass cameras. A queue display assigns wait times, threat scores, and fines before anyone reaches a guard.",
@@ -4373,6 +4395,7 @@
   {
     "id": "spire_elevator_service_gate",
     "env": "neon",
+    "weather": "rain",
     "title": "Elevator Service Gate",
     "background_image": "images/rooms/world_3/spire_transit_plaza.webp",
     "description": "A side service gate hides in the shadow of the Great Elevator. Freight crews pass through with eyes down, freight badges out, and no interest in heroics.",
@@ -4412,6 +4435,7 @@
   {
     "id": "spire_laundry_service",
     "env": "neon",
+    "weather": "steam",
     "title": "Laundry Service",
     "background_image": "images/rooms/world_3/spire_laundry_service.webp",
     "description": "Laundry Service runs beneath the Cloud District, packed with steam pipes, cleaning bots, a sensor console, and a service chute for invisible workers. Uniform sorting and the staff checkpoint turn labor into security theater.",
@@ -4734,6 +4758,7 @@
   {
     "id": "spire_exec_lounge_bar",
     "env": "neon",
+    "weather": "rain",
     "title": "Exec Lounge",
     "background_image": "images/rooms/world_3/spire_exec_lounge_bar.webp",
     "description": "The Exec Lounge floats on a grav-platform above a silent atrium. A private safe hides behind sculpture, a concierge credential mirror flashes beside the terminal, and every booth looks designed for blackmail.",
@@ -4796,6 +4821,9 @@
   {
     "id": "spire_archive_vault",
     "env": "neon",
+    "special_exits": {
+      "northeast": "Enter Catalog Atrium"
+    },
     "title": "Archive Vault",
     "background_image": "images/rooms/world_3/spire_archive_vault.webp",
     "description": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field that hums toward Nova before she touches it. Command tether-lines vanish into the glass, routing power back toward the Prism Gallery.",
@@ -4981,6 +5009,7 @@
   {
     "id": "spire_landing_pad_roof",
     "env": "neon",
+    "weather": "storm",
     "title": "Landing Pad Roof",
     "background_image": "images/rooms/world_3/spire_landing_pad_roof.webp",
     "description": "The roof shudders under violent wind and red lockdown light. The Astra waits across the pad while the Planetary Shield rotates overhead in heavy resonance bands, guarding the sky. The flight display marks a shield window and a launch window beside a test telemetry relay.",
@@ -5050,6 +5079,7 @@
   {
     "id": "foundry_slag_landing",
     "env": "foundry",
+    "weather": "dust",
     "title": "Obsidian Shelf",
     "background_image": "images/rooms/world_4/foundry_slag_landing.webp",
     "description": "The Astra cools on a shelf of black volcanic glass above a river of magma. Heat shields glow cherry-red while ash falls like dirty snow, and the Lens still shows the Shield window closing behind you. A compliance bulletin hisses from the factory PA.",
@@ -5099,6 +5129,7 @@
   {
     "id": "foundry_obsidian_overlook",
     "env": "foundry",
+    "weather": "dust",
     "title": "Obsidian Overlook",
     "background_image": "images/rooms/world_4/foundry_slag_landing.webp",
     "description": "A cracked overlook juts above the Foundry basin. The whole sector glows below: slag rivers, intake pistons, and the factory spine Vale built to feed something larger than war. Shield window telemetry flickers on the crew's flight display.",
@@ -5137,6 +5168,7 @@
   {
     "id": "foundry_slag_river",
     "env": "foundry",
+    "weather": "dust",
     "title": "Slag River",
     "background_image": "images/rooms/world_4/foundry_slag_river.webp",
     "description": "Broken stepping stones form a slag crossing over a flowing lava channel. Source flares erupt from pressure cracks without warning, bending the heat into bright, violent chords. An ammo crate alpha hangs from a chain beside a basalt pylon.",
@@ -5191,6 +5223,7 @@
   {
     "id": "foundry_slag_stepping_stones",
     "env": "foundry",
+    "weather": "dust",
     "title": "Stepping Stones",
     "background_image": "images/rooms/world_4/foundry_slag_river.webp",
     "description": "Basalt stones rise from the lava channel in a crooked line. Each flare throws blue-white Source fire across a different step, turning the crossing into a readable flare rhythm.",
@@ -5222,6 +5255,7 @@
   {
     "id": "foundry_cooling_springs",
     "env": "foundry",
+    "weather": "steam",
     "title": "Cooling Springs",
     "background_image": "images/rooms/world_4/foundry_cooling_springs.webp",
         "description": "Factory noise fades in this hidden maintenance pocket. A steam pool and cooling basin collect mineral runoff; a magma regulator pulses beside a salvaged cooling bypass. A worker tablet lies wrapped in a coolant-stained scarf beside the pool.",
@@ -5309,6 +5343,7 @@
   {
     "id": "foundry_lava_tube_bypass",
     "env": "foundry",
+    "weather": "steam",
     "title": "Lava Tube Bypass",
     "background_image": "images/rooms/world_4/foundry_cooling_springs.webp",
     "description": "A service crawlspace cuts under the cooling springs. Mineral fans beat hot air into steam, and old worker tags hang from pipe valves like small prayers.",
@@ -5334,6 +5369,10 @@
   {
     "id": "foundry_waste_intake",
     "env": "foundry",
+    "special_exits": {
+      "northeast": "Descend into Crusher Throat"
+    },
+    "weather": "gas",
     "title": "Waste Intake",
     "background_image": "images/rooms/world_4/foundry_waste_intake.webp",
     "description": "Pistons hammer scrap toward the factory interior. Cooling vent controls flank a waste intake brake beneath a worker maintenance ping. Thermal glass shields a Project Phantom terminal; ammo crate beta, a scrap mech pile and a wrecked loader stash crowd the lava's edge.",
@@ -5452,6 +5491,7 @@
   {
     "id": "foundry_intake_overlook",
     "env": "foundry",
+    "weather": "gas",
     "title": "Intake Overlook",
     "background_image": "images/rooms/world_4/foundry_waste_intake.webp",
     "description": "A grated balcony watches the intake pistons chew ruined machines into feedstock. Every impact shakes loose sparks, serial plates, and pieces of stories Dominion filed as material. The safety railing is pitted by hot slag.",
@@ -5547,6 +5587,7 @@
   {
     "id": "foundry_decon_chamber",
     "env": "foundry",
+    "weather": "steam",
     "title": "Decon Chamber",
     "background_image": "images/rooms/world_4/foundry_service_airlock.webp",
         "description": "Chemical mist hangs in a narrow decon chamber. The decon cycle waits behind a sealed panel; the walls are too clean, the drains too large, and the emergency shower is bolted shut from the wrong side.",
@@ -5574,6 +5615,10 @@
   {
     "id": "foundry_conveyor_belt",
     "env": "foundry",
+    "special_exits": {
+      "northeast": "Climb to Timing Tower"
+    },
+    "weather": "sparks",
     "title": "Conveyor Belt",
     "background_image": "images/rooms/world_4/foundry_conveyor_belt.webp",
     "description": "Conveyor belts carry half-assembled droids under hammering presses. A belt timing console marks the rhythm. A rejected droid waits between two choices: the conveyor release lock opens the worker tunnels, while the worker defense relay lets the waking units stay and protect the line.",
@@ -5666,6 +5711,7 @@
   {
     "id": "foundry_belt_service_walk",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Service Walk",
     "background_image": "images/rooms/world_4/foundry_conveyor_belt.webp",
     "description": "A narrow service walk runs above the conveyor feed. Warning lamps blink in strict sequence, spelling out when the crushers fall and when a person can move.",
@@ -5694,6 +5740,7 @@
   {
     "id": "foundry_reject_bay",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Reject Bay",
     "background_image": "images/rooms/world_4/foundry_conveyor_belt.webp",
     "description": "Defective units are dumped into a low bay before the furnace eats them. A rejected droid still twitches when the conveyor shudders, hands opening and closing around nothing.",
@@ -5806,6 +5853,7 @@
   {
     "id": "foundry_forge_anvil",
     "env": "foundry",
+    "weather": "sparks",
     "title": "The Forge",
     "background_image": "images/rooms/world_4/foundry_forge_anvil.webp",
     "description": "A massive hammer shapes ore around the anvil cradle, teaching metal to obey. The anvil relic glows inside its mount. A fabrication matrix panel overlooks the hammer lane, with a test chamber terminal beside it.",
@@ -5900,6 +5948,7 @@
   {
     "id": "foundry_forge_control_alcove",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Control Alcove",
     "background_image": "images/rooms/world_4/foundry_forge_anvil.webp",
     "description": "A shielded alcove controls the Forge's moving belt plates. The panel is burned around the edges where previous operators tried to override the hammer cadence by hand. A hazard cycle map fills one display; another holds the overclock profile readout.",
@@ -5959,6 +6008,10 @@
   {
     "id": "foundry_power_core",
     "env": "foundry",
+    "special_exits": {
+      "northeast": "Climb to Turbine Balcony"
+    },
+    "weather": "sparks",
     "title": "Power Core",
     "background_image": "images/rooms/world_4/foundry_power_core.webp",
     "description": "The Deep-Core Engine pulses in the center of the factory, feeding heat and psionic current into a cradle mount built for something far larger than a ship. The engine mount connects to the core's thermal clamps. Phase-Cutter Arrays occupy the adjoining rack.",
@@ -6024,6 +6077,7 @@
   {
     "id": "foundry_engine_service_ring",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Engine Service Ring",
     "background_image": "images/rooms/world_4/foundry_power_core.webp",
     "description": "A maintenance ring circles the Deep-Core Engine at arm's length from impossible heat. Every clamp is labeled with launch-grade tolerances the Astra does not currently meet. Thermal clamps surround the core beside an array rack.",
@@ -6058,6 +6112,7 @@
   {
     "id": "foundry_titan_dock",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Titan Dock",
     "background_image": "images/rooms/world_4/foundry_titan_dock.webp",
     "description": "A circular platform hangs over the volcano primary vent. Catwalks tremble above orange depth while a Titan Walker waits in its launch cradle. Commander Rylos watches from the Titan Walker. The escape launch route runs past a gantry footlocker bolted to the rail.",
@@ -6129,6 +6184,7 @@
   {
     "id": "foundry_escape_catwalk",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Escape Catwalk",
     "background_image": "images/rooms/world_4/foundry_titan_dock.webp",
     "description": "A shaking catwalk runs from the Titan Dock toward the escape gantry. Heat rolls up through the grate in hard orange sheets.",
@@ -6528,6 +6584,9 @@
   {
     "id": "orbital_security_hub",
     "env": "void",
+    "special_exits": {
+      "northeast": "Enter the Ring Service Alcove"
+    },
     "title": "Security Hub",
     "background_image": "images/rooms/world_5/orbital_security_hub.webp",
     "description": "A fortified checkpoint seals the lift to the core. Compliance officers move without conversation while Null-G drones cling to the ceiling. A security display pairs armory diagnostics with the Director redaction checksum.",
@@ -6617,6 +6676,9 @@
   {
     "id": "orbital_service_shaft",
     "env": "void",
+    "special_exits": {
+      "down": "Descend to Server Farm"
+    },
     "title": "Service Shaft",
     "background_image": "images/rooms/world_5/orbital_service_shaft.webp",
     "description": "Gravity ends at the hatch. Zero-g cables descend from a superconductor junction through a vertical dark while Hunter-Killer droids scrape along distant walls, too armored to fight head-on.",
@@ -6694,6 +6756,11 @@
   {
     "id": "orbital_server_farm",
     "env": "void",
+    "special_exits": {
+      "up": "Climb into the Service Shaft",
+      "northeast": "Enter the Ring Service Alcove"
+    },
+    "weather": "snow",
     "title": "Server Farm",
     "background_image": "images/rooms/world_5/orbital_server_farm.webp",
     "description": "Mist surrounds a purged backup rack. Recover its routine: erase the guardian ownership flag for independence or use the crew covenant socket for shared protection. A mainframe terminal displays a coolant-pulse map; a dead sysadmin drifts behind a coolant pipe.",
@@ -6786,6 +6853,7 @@
   {
     "id": "deep_mainframe_nave",
     "env": "void",
+    "weather": "snow",
     "title": "Mainframe Nave",
     "background_image": "images/rooms/world_5/orbital_server_farm.webp",
     "description": "Server columns form a cold cathedral around the mainframe terminal and its quantum core lattice. Harmony's directory tree overlays older Architect notation like a luxury label pasted on a weapon. A buried signal is labeled Thorne trace.",
@@ -6838,6 +6906,7 @@
   {
     "id": "deep_firewall_alpha",
     "env": "void",
+    "weather": "snow",
     "title": "Firewall Alpha",
     "background_image": "images/rooms/world_5/orbital_server_farm.webp",
     "description": "Firewall node alpha hangs in a cage of blue hard-light. Its cipher keeps rewriting itself in Thorne's old notation with Vale's edits layered over the top.",
@@ -6875,6 +6944,7 @@
   {
     "id": "deep_firewall_beta",
     "env": "void",
+    "weather": "snow",
     "title": "Firewall Beta",
     "background_image": "images/rooms/world_5/orbital_server_farm.webp",
     "description": "Firewall node beta loops through recursion windows. Each window shows a slightly different version of the same locked door.",
@@ -6912,6 +6982,7 @@
   {
     "id": "deep_firewall_gamma",
     "env": "void",
+    "weather": "snow",
     "title": "Firewall Gamma",
     "background_image": "images/rooms/world_5/orbital_server_farm.webp",
     "description": "Firewall node gamma projects a half-built hard-light body into the aisle. Its face is blank because the system has not decided who it wants to execute yet.",
@@ -6963,6 +7034,7 @@
   {
     "id": "deep_backup_rack",
     "env": "void",
+    "weather": "snow",
     "title": "Purged Backup Rack",
     "background_image": "images/rooms/world_5/orbital_server_farm.webp",
     "description": "A purged backup rack still blinks through a layer of frost. Vale's deletion order missed one defensive routine hiding under old checksum names.",
@@ -7000,6 +7072,7 @@
   {
     "id": "deep_sysadmin_nest",
     "env": "void",
+    "weather": "snow",
     "title": "SysAdmin Nest",
     "background_image": "images/rooms/world_5/orbital_server_farm.webp",
     "description": "A cramped admin station floats behind coolant pipes, abandoned halfway through an evacuation. A dead sysadmin still clutches a warning printout nobody above listened to.",
@@ -7034,6 +7107,7 @@
   {
     "id": "deep_anchor_chamber",
     "env": "void",
+    "weather": "resonance",
     "title": "Anchor Chamber",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.webp",
     "description": "A tank of conductive fluid hangs inside a cathedral of cables. Elara floats at its center, wired into the Ring as a living processor while the Anchor relic turns beside her. A graviton well bends the light beneath the tank.",
@@ -7096,6 +7170,7 @@
   {
     "id": "deep_throne_room",
     "env": "void",
+    "weather": "resonance",
     "title": "Throne Room",
     "background_image": "images/rooms/world_5/deep_throne_room.webp",
     "description": "A glass observation deck looks down on the planet and its failing Shield. Thorne's containment field faces a command dais where Vale waits without blinking. The director's desk stands beside the executive armory.",
@@ -7161,6 +7236,7 @@
   {
     "id": "deep_tear",
     "env": "void",
+    "weather": "resonance",
     "title": "The Tear",
     "background_image": "images/rooms/world_5/deep_tear.webp",
     "description": "The Ring breaks into slow impossible angles around a reality breach. Spatial shear folds its edges inward. Music exists here without air, speakers, or permission.",
@@ -7213,6 +7289,11 @@
   {
     "id": "source_campfire",
     "env": "source",
+    "special_exits": {
+      "northwest": "Enter Zeke's Infinite Cubicle",
+      "northeast": "Enter Orion's Silent Shore"
+    },
+    "weather": "resonance",
     "title": "The Campfire",
     "background_image": "images/rooms/world_6/source_campfire.webp",
     "description": "The song-fire burns again, rebuilt from blue waveforms on an island of memory. Three unstable paths pull away from the flame, each tuned to a missing crew member.",
@@ -7257,6 +7338,9 @@
   {
     "id": "source_zeke_nightmare",
     "env": "source",
+    "special_exits": {
+      "southeast": "Return to the Campfire"
+    },
     "title": "Infinite Cubicle",
     "background_image": "images/rooms/world_6/source_zeke_nightmare.webp",
     "description": "Identical desks stretch beyond sight beneath fluorescent panels. A backup lattice recreates Zeke's file in every cubicle while another version of him smiles through evaluation.",
@@ -7493,6 +7577,10 @@
   {
     "id": "source_orion_nightmare",
     "env": "source",
+    "special_exits": {
+      "southwest": "Return to the Campfire"
+    },
+    "weather": "starfall",
     "title": "Silent Shore",
     "background_image": "images/rooms/world_6/source_orion_nightmare.webp",
     "description": "A black ocean lies perfectly still beneath an empty sky. Every Aethel note dies at the waterline before Orion can hear an answer.",
@@ -7522,6 +7610,7 @@
   {
     "id": "source_orion_tide_well",
     "env": "source",
+    "weather": "starfall",
     "title": "Tide-Well",
     "background_image": "images/rooms/world_6/source_orion_nightmare.webp",
     "description": "The shore drops into a circular well of black water. Every ripple carries an Aethel voice that vanished before Orion could answer.",
@@ -7552,6 +7641,7 @@
   {
     "id": "source_orion_chorus",
     "env": "source",
+    "weather": "starfall",
     "title": "Answering Chorus",
     "background_image": "images/rooms/world_6/source_orion_nightmare.webp",
     "description": "Lights under the water answer one by one, illuminating crooked tool marks. They do not erase the dead; they prove the dead were never just absence.",
@@ -7578,6 +7668,7 @@
   {
     "id": "source_echo_mines",
     "env": "source",
+    "weather": "dust",
     "title": "Echo of the Mines",
     "background_image": "images/rooms/world_6/source_echo_mines.webp",
     "description": "Jed's workshop, the mine checkpoint, and the first shelter occupy the same impossible room. Nova can see the place where fear started, but not the path out yet.",
@@ -7599,6 +7690,7 @@
   {
     "id": "source_echo_workbench",
     "env": "source",
+    "weather": "dust",
     "title": "Jed's Echo Bench",
     "background_image": "images/rooms/world_6/source_echo_mines.webp",
     "description": "Jed's old workbench sits under shelter plastic and mine dust. A Jed echo waits beside it. The tools are wrong for this place, but the care in their arrangement is exact.",
@@ -7635,6 +7727,7 @@
   {
     "id": "source_echo_patrol",
     "env": "source",
+    "weather": "dust",
     "title": "Manager Patrol Route",
     "background_image": "images/rooms/world_6/source_echo_mines.webp",
     "description": "A manager patrol of projections marches through overlapping shifts, checking Nova against every rule that ever tried to make her small. An open shift gate waits beyond their route.",
@@ -7701,6 +7794,7 @@
   {
     "id": "source_memory_bridge",
     "env": "source",
+    "weather": "resonance",
     "title": "Memory Bridge",
     "background_image": "images/rooms/world_6/source_memory_bridge.webp",
     "description": "A platform of static extends over the raw Source. Zeke's anchor, Gh0st's anchor, Orion's anchor, and Nova's anchor wait where the unfinished bridge should be.",
@@ -7759,6 +7853,7 @@
   {
     "id": "source_memory_bridge_span",
     "env": "source",
+    "weather": "resonance",
     "title": "Shared Memory Span",
     "background_image": "images/rooms/world_6/source_memory_bridge.webp",
     "description": "The bridge forms from Tideglass sand, Foundry heat, Spire rain, and the Astra's engine note. Each step belongs to more than one survivor. A campfire promise hangs in the quiet beside a glowing memory altar box.",
@@ -7798,6 +7893,7 @@
   {
     "id": "source_memory_threshold",
     "env": "source",
+    "weather": "resonance",
     "title": "Singularity Threshold",
     "background_image": "images/rooms/world_6/source_memory_bridge.webp",
     "description": "The bridge narrows into a singularity threshold, a bright wound in the sky. Names beneath the light answer one another. Vale's perfect world waits beyond it, polished clean of grief and therefore empty.",
@@ -7831,6 +7927,7 @@
   {
     "id": "source_memory_stair",
     "env": "source",
+    "weather": "resonance",
     "title": "Memory Stair",
     "background_image": "images/rooms/world_6/source_memory_stair.webp",
     "description": "Jed's door opens into Astra wreckage, Spire glass, Foundry catwalk, and Ring metal arranged around the memory stair. An Aethel grave waits among the fragments.",
@@ -7891,6 +7988,7 @@
   {
     "id": "source_memory_fragments",
     "env": "source",
+    "weather": "resonance",
     "title": "World-Fracture Landing",
     "background_image": "images/rooms/world_6/source_memory_stair.webp",
     "description": "Chunks of every world rotate around the stair: mine dust, swamp moss, Spire rain, Foundry slag, and Ring ice all trying to become the only truth. An answering chorus rises between them.",
@@ -7940,6 +8038,7 @@
   {
     "id": "source_spire_thought",
     "env": "source",
+    "weather": "resonance",
     "title": "Spire of Thought",
     "background_image": "images/rooms/world_6/source_spire_thought.webp",
     "description": "A spiral arena assembles itself from the Warden's checkpoint, jungle ruins, Spire glass, Foundry steel, and Ring servers. A wreck timeline fractures the view above. Every discarded memory is waiting higher up.",
@@ -7968,6 +8067,7 @@
   {
     "id": "source_spire_archive",
     "env": "source",
+    "weather": "resonance",
     "title": "Impossible Archive",
     "background_image": "images/rooms/world_6/source_spire_thought.webp",
     "description": "Shelves of futures turn their pages without wind. A scorched future Astra hull juts from a timeline the crew is still trying to avoid.",
@@ -7998,6 +8098,7 @@
   {
     "id": "source_spire_arena",
     "env": "source",
+    "weather": "resonance",
     "title": "Memory Defense Arena",
     "background_image": "images/rooms/world_6/source_spire_thought.webp",
     "description": "The archive folds into a hard circular arena with an empty armor socket at its weakest seam. The Source stops tempting Nova with revision and starts defending the lie by force.",
@@ -8049,6 +8150,7 @@
   {
     "id": "source_center",
     "env": "source",
+    "weather": "resonance",
     "title": "The Center",
     "background_image": "images/rooms/world_6/source_center.webp",
     "description": "A single platform rests on an infinite white ocean. Vale waits where every voice in the Source can hear him choose silence for them, and the Key trembles at a shared tuning focus before a choice it cannot make alone.",
@@ -8216,7 +8318,6 @@
   {
     "id": "sector9_pod_interior",
     "env": "swamp",
-    "weather": "fog",
     "title": "Escape Pod Interior",
     "background_image": "images/rooms/world_2/pod_interior.webp",
     "description": "The cramped interior of the escape pod is scorched and smells of melted plastic. Sparks shower from the console frame, and a dented emergency storage locker hangs open beside an emergency medkit.",
@@ -8271,11 +8372,11 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "northeast": "sector9_landing_stream",
+      "north": "sector9_landing_stream",
       "east": "sector9_landing_drop"
     },
     "pos": [
-      0,
+      1,
       -1
     ],
     "state": {},
@@ -8357,7 +8458,7 @@
     "connections": {
       "west": "sector9_crash_site",
       "east": "sector9_stream_pools",
-      "southwest": "sector9_landing_brush"
+      "south": "sector9_landing_brush"
     },
     "pos": [
       1,
@@ -8422,7 +8523,7 @@
       "west": "sector9_landing_brush"
     },
     "pos": [
-      1,
+      2,
       -1
     ],
     "state": {},
@@ -8672,7 +8773,7 @@
   {
     "id": "sector9_stream_cave_depths",
     "env": "swamp",
-    "weather": "fog",
+    "weather": "cave_drip",
     "title": "Glow-Moss Cavern",
     "background_image": "images/rooms/world_2/stream_cave_depths.webp",
     "description": "A quiet cavern chamber lit blue by thick sheets of glowing moss. A waterproof cargo case rests against the rocks. An echo nest rings the far wall, and the damp stone carries the waterfall in a hollow rhythm.",
@@ -8722,7 +8823,7 @@
   {
     "id": "sector9_stream_sunken_passage",
     "env": "swamp",
-    "weather": "fog",
+    "weather": "cave_drip",
     "title": "Waterlogged Tunnel",
     "background_image": "images/rooms/world_2/stream_sunken_passage.webp",
     "description": "A narrow tunnel where the cavern roof dips close to the glowing water. A warm current runs past a drowned console, gurgling as it flows toward the beach grotto.",
@@ -8912,7 +9013,7 @@
   {
     "id": "sector9_beach_cave",
     "env": "swamp",
-    "weather": "fog",
+    "weather": "cave_drip",
     "title": "Sea Cavern",
     "background_image": "images/rooms/world_2/beach_cave.webp",
     "description": "A high-ceilinged cavern carved by the waves. Abandoned bedroll hooks mark a mineral shelter beneath the soot-blackened ceiling. Water drains through fissures in the stone, creating hissing blowholes that spray fine mist into the dark.",
@@ -8966,7 +9067,7 @@
   {
     "id": "sector9_beach_grotto",
     "env": "swamp",
-    "weather": "fog",
+    "weather": "cave_drip",
     "title": "Hidden Grotto",
     "background_image": "images/rooms/world_2/beach_grotto.webp",
     "description": "A small, dry alcove hidden behind a basalt pillar opens beneath sea-worn arches. A cache rests near the waterline, while a bioluminescent prism glows among the smooth crystal clusters lining the cave walls.",
@@ -9862,7 +9963,6 @@
   {
     "id": "sector9_temple_vestibule",
     "env": "swamp",
-    "weather": "fog",
     "title": "Outer Guard Post",
     "background_image": "images/rooms/world_2/temple_vestibule.webp",
     "description": "A ruined outpost containing deactivated Dominion defense turrets and an old sanitation console. Rust and moss have fused the turret gears together.",
@@ -9888,7 +9988,6 @@
   {
     "id": "sector9_temple_lock_chamber",
     "env": "swamp",
-    "weather": "fog",
     "title": "Resonator Chamber",
     "background_image": "images/rooms/world_2/temple_lock_chamber.webp",
     "description": "The resonator console chamber in front of the gate. Two tuning wings flank a central slot designed to hold the Chime.",
@@ -9920,7 +10019,6 @@
   {
     "id": "sector9_temple_left_wing",
     "env": "swamp",
-    "weather": "fog",
     "title": "Left Tuner Column",
     "background_image": "images/rooms/world_2/temple_left_wing.webp",
     "description": "The left resonator battery column holds the western resonance crystal in a copper-wired pillar that vibrates in low harmony.",
@@ -9956,7 +10054,6 @@
   {
     "id": "sector9_temple_right_wing",
     "env": "swamp",
-    "weather": "fog",
     "title": "Right Tuner Column",
     "background_image": "images/rooms/world_2/temple_right_wing.webp",
     "description": "The right frequency dampener column holds the eastern resonance crystal, filtering local seismic noise into an answering harmonic.",
@@ -9992,7 +10089,6 @@
   {
     "id": "sector9_temple_gate",
     "env": "swamp",
-    "weather": "fog",
     "title": "Temple Gate",
     "background_image": "images/rooms/world_2/temple_gate.webp",
     "description": "A massive stone door, perfectly smooth, stands embedded in the cliff. It is engraved with glowing cymatic patterns, and the stone lock has a slot shaped like the Chime in the center of a metal resonator.",
@@ -10035,7 +10131,6 @@
   {
     "id": "sector9_foyer_grand_hall",
     "env": "swamp",
-    "weather": "fog",
     "title": "Sanctuary Grand Hall",
     "background_image": "images/rooms/world_2/foyer_grand_hall.webp",
     "description": "A colossal foyer of clean, ancient geometry surrounds a welcome console. The air is cool and dry, and faint bands of light shimmer along the floor.",
@@ -10064,7 +10159,6 @@
   {
     "id": "sector9_foyer_left_gallery",
     "env": "swamp",
-    "weather": "fog",
     "title": "Left Reliquary",
     "background_image": "images/rooms/world_2/foyer_left_gallery.webp",
     "description": "A wide alcove showing cracked Architect resonance crystals displayed on stone pedestals beside a botanical research log. The crystals hum in discord.",
@@ -10098,7 +10192,6 @@
   {
     "id": "sector9_foyer_right_gallery",
     "env": "swamp",
-    "weather": "fog",
     "title": "Right Archives",
     "background_image": "images/rooms/world_2/foyer_right_gallery.webp",
     "description": "A gallery lined with stone data columns and a light-mural procession. The columns show old wave logs and frequency diagrams etched in light.",
@@ -10125,7 +10218,6 @@
   {
     "id": "sector9_foyer_security_hub",
     "env": "swamp",
-    "weather": "fog",
     "title": "Dominion Outpost",
     "background_image": "images/rooms/world_2/foyer_security_hub.webp",
     "description": "An abandoned security outpost. A terminal screen glows orange, reporting a breach in the stasis grid.",
@@ -10151,7 +10243,6 @@
   {
     "id": "sector9_foyer_vault_door",
     "env": "swamp",
-    "weather": "fog",
     "title": "Hangar Portal",
     "background_image": "images/rooms/world_2/foyer_vault_door.webp",
     "description": "A heavy blast door blocking access to the hangar bay bears a security palimpsest of layered warnings. Security conduits run from the door frame into the vents.",
@@ -10178,7 +10269,6 @@
   {
     "id": "sector9_conduit_crawlspace",
     "env": "swamp",
-    "weather": "fog",
     "title": "Maintenance Conduit",
     "background_image": "images/rooms/world_2/conduit_crawlspace.webp",
     "description": "A dark, cramped ventilation crawlspace filled with bundles of thick optical wires and cooling conduits. Glowing maintenance spores drift from fungus clinging to the warm pipes.",
@@ -10205,7 +10295,6 @@
   {
     "id": "sector9_conduit_junction",
     "env": "swamp",
-    "weather": "fog",
     "title": "T-Junction Wiring",
     "background_image": "images/rooms/world_2/conduit_junction.webp",
     "description": "A junction point inside the crawlspace. A service map marks wire channels splitting off to the stasis deck and generator breakers.",
@@ -10240,7 +10329,6 @@
   {
     "id": "sector9_conduit_breaker_room",
     "env": "swamp",
-    "weather": "fog",
     "title": "Breaker Deck",
     "background_image": "images/rooms/world_2/conduit_breaker_room.webp",
     "description": "An auxiliary generator cabin. Offline breakers hum with static, ready to be flipped to align stasis diagnostics.",
@@ -10266,7 +10354,6 @@
   {
     "id": "sector9_conduit_access_shaft",
     "env": "swamp",
-    "weather": "fog",
     "title": "Access Shaft",
     "background_image": "images/rooms/world_2/conduit_access_shaft.webp",
     "description": "A vertical access shaft with a rusted ladder offers a shaft shortcut into the vents. Steam escapes from pipes along the shaft walls, making the rungs slick.",
@@ -10571,7 +10658,6 @@
   {
     "id": "sector9_stasis_chamber",
     "env": "swamp",
-    "weather": "fog",
     "title": "Stasis Chamber",
     "background_image": "images/rooms/world_2/stasis_chamber.webp",
     "description": "A circular room gathers around a single humming stasis pod. A root lattice pulses through cracks in the floor, and a ceiling vent cuts a narrow shadow above the chamber wall.",
@@ -10645,7 +10731,6 @@
   {
     "id": "sector9_stasis_ring_array",
     "env": "swamp",
-    "weather": "fog",
     "title": "Ring Array",
     "background_image": "images/rooms/world_2/stasis_ring_array.webp",
     "description": "The ring console controls three concentric stasis rings. The alignment indicators hum with discordant tones, waiting for the mural pattern, pod pressure, overview sockets, and coolant flow to agree.",
@@ -10701,7 +10786,6 @@
   {
     "id": "sector9_stasis_coolant_lines",
     "env": "swamp",
-    "weather": "fog",
     "title": "Coolant Lines",
     "background_image": "images/rooms/world_2/stasis_coolant_lines.webp",
     "description": "A maintenance bay filled with stasis coolant lines. A coolant garden of luminous vines drinks from the thick pipes and keeps the ring pressure alive.",
@@ -10744,7 +10828,6 @@
   {
     "id": "sector9_stasis_observation",
     "env": "swamp",
-    "weather": "fog",
     "title": "Observation Deck",
     "background_image": "images/rooms/world_2/stasis_observation.webp",
     "description": "A glass-shielded viewing balcony overlooking the stasis deck. The stasis mural overview displays vital signs and ring roles over the sleeping chamber.",
@@ -10780,7 +10863,6 @@
   {
     "id": "sector9_vents_gantry",
     "env": "swamp",
-    "weather": "fog",
     "title": "High Gantry",
     "background_image": "images/rooms/world_2/vents_gantry.webp",
     "description": "Walkway gantries suspended high above the stasis pod. A security grid sweeps across the dusty metal beams in tight, predictable pulses.",
@@ -10833,7 +10915,6 @@
   {
     "id": "sector9_vents_access_grate",
     "env": "swamp",
-    "weather": "fog",
     "title": "Infiltration Hatch",
     "background_image": "images/rooms/world_2/vents_access_grate.webp",
     "description": "A ventilation access grate has been sliced open from the inside. Scrap metal shavings litter the guard-system bypass route.",
@@ -10871,7 +10952,6 @@
   {
     "id": "sector9_vents_tech_alcove",
     "env": "swamp",
-    "weather": "fog",
     "title": "Transmitter Site",
     "background_image": "images/rooms/world_2/vents_tech_alcove.webp",
     "description": "A narrow tech alcove behind the pipes. A locked case contains a stolen Dominion transceiver core.",
@@ -10907,7 +10987,6 @@
   {
     "id": "sector9_power_turbine",
     "env": "swamp",
-    "weather": "fog",
     "title": "Source Dynamo",
     "background_image": "images/rooms/world_2/power_turbine.webp",
     "description": "A massive dynamo spins in a cylinder of glowing blue fluid, generating intense resonance. A turbine inscription runs along the dynamo housing.",
@@ -10939,7 +11018,6 @@
   {
     "id": "sector9_power_manifold",
     "env": "swamp",
-    "weather": "fog",
     "title": "Distribution Manifold",
     "background_image": "images/rooms/world_2/power_manifold.webp",
     "description": "Heavy manifolds route fluid to the gate emitters. A facility camp station glows under the pipes, shaking in time with the barrier hum.",
@@ -10973,7 +11051,6 @@
   {
     "id": "sector9_power_breaker_deck",
     "env": "swamp",
-    "weather": "fog",
     "title": "Generator Controls",
     "background_image": "images/rooms/world_2/power_breaker_deck.webp",
     "description": "The generator breakers hang over the dynamo lines beside a bus bar array in a staggered emergency pattern. Each switch starves a different band of the gate's howl, but the living circuit needs somewhere safe to bleed first.",
@@ -11021,7 +11098,6 @@
   {
     "id": "sector9_power_valve",
     "env": "swamp",
-    "weather": "fog",
     "title": "Purge Valve",
     "background_image": "images/rooms/world_2/power_valve.webp",
     "description": "An emergency valve used to purge overloaded static charges from the dynamo lines. A root pressure gauge trembles where living conduit enters the machinery.",
@@ -11221,7 +11297,6 @@
   {
     "id": "sector9_hangar_bay",
     "env": "swamp",
-    "weather": "fog",
     "title": "Hangar Bay",
     "background_image": "images/rooms/world_2/hangar_bay.webp",
     "description": "A vast underground cavern opens to the sky. The Astra sits silent on the launch pad, her dark console starved of power. A bridge relic waits on the central dais while the launch cradle holds the ship like a breath not yet released.",
@@ -11288,7 +11363,6 @@
   {
     "id": "sector9_hangar_scaffolding",
     "env": "swamp",
-    "weather": "fog",
     "title": "Maintenance Catwalks",
     "background_image": "images/rooms/world_2/hangar_scaffolding.webp",
     "description": "Catwalks suspended around the Astra's charred hull lead to a hangar overlook. Cables run from the scaffold into the ship.",
@@ -11315,7 +11389,6 @@
   {
     "id": "sector9_hangar_staging",
     "env": "swamp",
-    "weather": "fog",
     "title": "Freight Lift",
     "background_image": "images/rooms/world_2/hangar_staging.webp",
     "description": "A freight lift used to load fuel cells onto the launch pad. The control motor is offline.",
@@ -11335,7 +11408,6 @@
   {
     "id": "sector9_hangar_tower",
     "env": "swamp",
-    "weather": "fog",
     "title": "Control Console",
     "background_image": "images/rooms/world_2/hangar_tower.webp",
     "description": "The launch computer towers. Conduits from the stasis core are routed here to boot systems.",
@@ -11357,7 +11429,6 @@
   {
     "id": "sector9_hangar_fuel_lines",
     "env": "swamp",
-    "weather": "fog",
     "title": "Fuel Intake Lines",
     "background_image": "images/rooms/world_2/hangar_fuel_lines.webp",
     "description": "Fuel intake lines. Fused fuel manifolds require manual routing to deliver starter fluid.",
@@ -11377,7 +11448,6 @@
   {
     "id": "sector9_hangar_lock",
     "env": "swamp",
-    "weather": "fog",
     "title": "Launch Blast Shield",
     "background_image": "images/rooms/world_2/hangar_lock.webp",
     "description": "The ceiling blast shields covering the hangar. Massive gear teeth lock the shields in place.",
@@ -11780,6 +11850,7 @@
   {
     "id": "spire_vent_output_scale_01",
     "env": "neon",
+    "weather": "rain",
     "title": "Condensate Run",
     "background_image": "images/rooms/world_3/spire_vent_output.webp",
     "description": "A condensate run channels warm rainwater down the back of the Vent Output. The scan drip under the pipe maps footsteps from the street above, while the rust initials prove lower-city kids have used this route for years.",
@@ -11842,6 +11913,7 @@
   {
     "id": "spire_vent_output_scale_03",
     "env": "neon",
+    "weather": "rain",
     "title": "Rain Grate Overlook",
     "background_image": "images/rooms/world_3/spire_vent_output.webp",
     "description": "A rain grate opens above the lower street where upper runoff falls clean before hitting rust. The upper runoff and patrol reflection make the route feel watched from both directions.",
@@ -11872,6 +11944,9 @@
   {
     "id": "spire_the_static_scale_01",
     "env": "neon",
+    "special_exits": {
+      "southwest": "Return to The Static"
+    },
     "title": "Back Bar Ledger",
     "background_image": "images/rooms/world_3/spire_the_static.webp",
     "description": "The Static's back bar hides cracked glasses, ration labels, and a favor slate no customer admits to reading. A chipped tumbler sits beside the slate, marked with names Jax only says after closing.",
@@ -11964,6 +12039,9 @@
   {
     "id": "spire_night_market_scale_01",
     "env": "neon",
+    "special_exits": {
+      "southwest": "Return to Night Market"
+    },
     "title": "Lantern Roof",
     "background_image": "images/rooms/world_3/spire_night_market.webp",
     "description": "String lights cross the lantern roof in careful knots above the Night Market. The anchor knots keep them up when patrol drones skim too low, and the lantern shadows hide handoffs under color. A vendor lockbox is chained beneath the string lights.",
@@ -12079,6 +12157,7 @@
   {
     "id": "spire_sewers_scale_01",
     "env": "neon",
+    "weather": "cave_drip",
     "title": "Pump Gallery",
     "background_image": "images/rooms/world_3/spire_sewers_landing.webp",
     "description": "The pump gallery beats under the city like a bad heart. A pressure map flashes routes the official grid denies exist, and the pump rhythm covers small mistakes.",
@@ -12117,6 +12196,7 @@
   {
     "id": "spire_sewers_scale_02",
     "env": "neon",
+    "weather": "cave_drip",
     "title": "Filter Sluice",
     "background_image": "images/rooms/world_3/spire_sewers_landing.webp",
     "description": "A filter sluice strains glittering trash from black water. A caught badge spins behind the grate, too damaged to pass but clean enough to copy. A drainage marker glows faintly above the water line.",
@@ -12192,6 +12272,9 @@
   {
     "id": "spire_transit_plaza_scale_01",
     "env": "neon",
+    "special_exits": {
+      "southwest": "Return to Transit Plaza"
+    },
     "title": "Ad Bay",
     "background_image": "images/rooms/world_3/spire_transit_plaza.webp",
     "description": "The ad bay projects a smiling loop of citizens thanking Dominion for clean air. The smiling loop glitches whenever a real worker walks past, and the dead speaker clicks through missing applause.",
@@ -12284,6 +12367,7 @@
   {
     "id": "spire_laundry_scale_01",
     "env": "neon",
+    "weather": "steam",
     "title": "Steam Rack",
     "background_image": "images/rooms/world_3/spire_laundry_service.webp",
     "description": "The steam rack turns executive uniforms ghost-white. Badge thread glints inside the cuffs, and the hiss of pressurized water makes the room safe for whispered planning.",
@@ -12491,6 +12575,9 @@
   {
     "id": "spire_archive_scale_01",
     "env": "neon",
+    "special_exits": {
+      "southwest": "Return to Archive Vault"
+    },
     "title": "Catalog Atrium",
     "background_image": "images/rooms/world_3/spire_archive_vault.webp",
     "description": "The catalog atrium sings file numbers in a soft index choir. Each note points to a life Dominion turned into property, and the index choir never wonders who is listening. An index terminal flashes amber in the dark.",
@@ -12766,6 +12853,7 @@
   {
     "id": "spire_landing_pad_scale_01",
     "env": "neon",
+    "weather": "storm",
     "title": "Fuel Bridge",
     "background_image": "images/rooms/world_3/spire_landing_pad_roof.webp",
     "description": "A fuel bridge rattles between the roof and the Astra. Wind shear shoves rain sideways through warning lights and reveals the Shield rhythm in the clouds.",
@@ -12799,6 +12887,7 @@
   {
     "id": "spire_landing_pad_scale_02",
     "env": "neon",
+    "weather": "storm",
     "title": "Shield Sightline",
     "background_image": "images/rooms/world_3/spire_landing_pad_roof.webp",
     "description": "The shield sightline lines up with a tiny gap shimmer rotating through the storm. The gap shimmer lasts less than a breath.",
@@ -12830,6 +12919,7 @@
   {
     "id": "spire_landing_pad_scale_03",
     "env": "neon",
+    "weather": "storm",
     "title": "Drone Wreck Roof",
     "background_image": "images/rooms/world_3/spire_landing_pad_roof.webp",
     "description": "A drone wreck skids across the roof, its broken rotor still trying to obey a command that no longer matters. The broken rotor twitches whenever the alarm network speaks.",
@@ -12863,6 +12953,7 @@
   {
     "id": "spire_landing_pad_scale_04",
     "env": "neon",
+    "weather": "storm",
     "title": "Boarding Causeway",
     "background_image": "images/rooms/world_3/spire_landing_pad_roof.webp",
     "description": "The boarding causeway stretches toward the Astra hatch under lockdown strobes. The Astra hatch light blinks like a heartbeat through rain and warning static.",
@@ -12893,6 +12984,7 @@
   {
     "id": "foundry_obsidian_shelf_scale_01",
     "env": "foundry",
+    "weather": "dust",
     "title": "Ash Survey Point",
     "background_image": "images/rooms/world_4/foundry_slag_landing.webp",
     "description": "An ash survey point overlooks the Astra's landing scorch and a field of black glass. The landing scorch shows how hard the Astra hit, while the survey marker rates the shelf as disposable. A basalt core sample rests on the surveyor's tripod.",
@@ -12929,6 +13021,7 @@
   {
     "id": "foundry_obsidian_shelf_scale_02",
     "env": "foundry",
+    "weather": "dust",
     "title": "Heat Shadow Alcove",
     "background_image": "images/rooms/world_4/foundry_slag_landing.webp",
     "description": "A heat shadow alcove hides behind stacked coolant tags fluttering in furnace wind. The coolant tags mark batches diverted from worker safety.",
@@ -12974,6 +13067,7 @@
   {
     "id": "foundry_obsidian_shelf_scale_03",
     "env": "foundry",
+    "weather": "dust",
     "title": "Slag Signal Post",
     "background_image": "images/rooms/world_4/foundry_slag_landing.webp",
     "description": "A slag signal post leans over the shelf with a range mast welded from spare rail. The range mast can ping the next safe rock when the river flares.",
@@ -13005,6 +13099,7 @@
   {
     "id": "foundry_obsidian_shelf_scale_04",
     "env": "foundry",
+    "weather": "dust",
     "title": "Survey Cache",
     "background_image": "images/rooms/world_4/foundry_slag_landing.webp",
     "description": "A survey cache contains a cracked scope and old hazard notes from crews who stopped reporting. The cracked scope still reads heat pockets through the smoke.",
@@ -13036,6 +13131,7 @@
   {
     "id": "foundry_slag_river_scale_01",
     "env": "foundry",
+    "weather": "dust",
     "title": "Basalt Switchback",
     "background_image": "images/rooms/world_4/foundry_slag_river.webp",
     "description": "A basalt switchback follows the slag-river wall beside a heat ladder glowing red at the edges. Its joints expand and contract with each furnace cycle. A heavy heat tether secures the hull against the glowing flow.",
@@ -13072,6 +13168,7 @@
   {
     "id": "foundry_slag_river_scale_02",
     "env": "foundry",
+    "weather": "dust",
     "title": "Coolant Spillway",
     "background_image": "images/rooms/world_4/foundry_slag_river.webp",
     "description": "A coolant spillway pours chemical blue into orange slag, raising a steam curtain thick enough to hide movement. The steam curtain turns patrol silhouettes into guesswork.",
@@ -13105,6 +13202,7 @@
   {
     "id": "foundry_slag_river_scale_03",
     "env": "foundry",
+    "weather": "dust",
     "title": "Slag Ferry Winch",
     "background_image": "images/rooms/world_4/foundry_slag_river.webp",
     "description": "A slag ferry hangs from a winch with half its teeth stripped smooth by heat. The winch teeth catch every third crank.",
@@ -13138,6 +13236,7 @@
   {
     "id": "foundry_slag_river_scale_04",
     "env": "foundry",
+    "weather": "dust",
     "title": "River Gauge Station",
     "background_image": "images/rooms/world_4/foundry_slag_river.webp",
     "description": "A river gauge station measures flow surges with a red needle bent past every printed warning. The red needle jumps before the river throws fire.",
@@ -13169,6 +13268,7 @@
   {
     "id": "foundry_cooling_springs_scale_01",
     "env": "foundry",
+    "weather": "steam",
     "title": "Mist Basin",
     "background_image": "images/rooms/world_4/foundry_cooling_springs.webp",
     "description": "A mist basin steams under mineral crust thick enough to write in. The mineral crust records every surge in brittle rings. A condensation trap drips steadily into a steel bucket.",
@@ -13205,6 +13305,7 @@
   {
     "id": "foundry_cooling_springs_scale_02",
     "env": "foundry",
+    "weather": "steam",
     "title": "Worker Marker",
     "background_image": "images/rooms/world_4/foundry_cooling_springs.webp",
     "description": "A worker marker stands beside a dead helmet light and a name scratched into pipe insulation. The helmet light died facing the exit.",
@@ -13238,6 +13339,7 @@
   {
     "id": "foundry_cooling_springs_scale_03",
     "env": "foundry",
+    "weather": "steam",
     "title": "Spring Valve Nest",
     "background_image": "images/rooms/world_4/foundry_cooling_springs.webp",
     "description": "A spring valve nest knots pipes around a pressure wheel painted with old handprints. The pressure wheel can lower the heat if it still turns.",
@@ -13269,6 +13371,7 @@
   {
     "id": "foundry_cooling_springs_scale_04",
     "env": "foundry",
+    "weather": "steam",
     "title": "Thermal Shelf",
     "background_image": "images/rooms/world_4/foundry_cooling_springs.webp",
     "description": "A thermal shelf catches runoff in a cool seam beneath the slag wall. The cool seam is a natural flaw the Foundry never managed to monetize.",
@@ -13300,6 +13403,10 @@
   {
     "id": "foundry_waste_intake_scale_01",
     "env": "foundry",
+    "special_exits": {
+      "southwest": "Return to Waste Intake"
+    },
+    "weather": "gas",
     "title": "Crusher Throat",
     "background_image": "images/rooms/world_4/foundry_waste_intake.webp",
     "description": "The crusher throat opens below the intake platform. A jammed tooth holds back a mountain of rejected parts. A chipped crusher tooth groans against jammed titanium.",
@@ -13336,6 +13443,7 @@
   {
     "id": "foundry_waste_intake_scale_02",
     "env": "foundry",
+    "weather": "gas",
     "title": "Records Shed",
     "background_image": "images/rooms/world_4/foundry_waste_intake.webp",
     "description": "A records shed lists Phantom labels on crates that officially never existed. The Phantom labels use budget codes instead of names.",
@@ -13369,6 +13477,7 @@
   {
     "id": "foundry_waste_intake_scale_03",
     "env": "foundry",
+    "weather": "gas",
     "title": "Magnet Ramp",
     "background_image": "images/rooms/world_4/foundry_waste_intake.webp",
     "description": "A magnet ramp drags loose filings uphill in glittering streams toward the sorting drums. The loose filings point toward live current under the floor.",
@@ -13402,6 +13511,7 @@
   {
     "id": "foundry_waste_intake_scale_04",
     "env": "foundry",
+    "weather": "gas",
     "title": "Intake Catwalk",
     "background_image": "images/rooms/world_4/foundry_waste_intake.webp",
     "description": "An intake catwalk sways above the waste pit on braces patched with hurry and prayer. The sway braces were signed by workers who expected them to fail.",
@@ -13564,6 +13674,10 @@
   {
     "id": "foundry_conveyor_belt_scale_01",
     "env": "foundry",
+    "special_exits": {
+      "southwest": "Return to Conveyor Belt"
+    },
+    "weather": "sparks",
     "title": "Timing Tower",
     "background_image": "images/rooms/world_4/foundry_conveyor_belt.webp",
     "description": "A timing tower ticks above the conveyor, its pulse board turning worker mistakes into production data. The pulse board predicts crush points before they happen. A belt speed dial is locked in place with a security seal.",
@@ -13609,6 +13723,7 @@
   {
     "id": "foundry_conveyor_belt_scale_02",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Reject Chute",
     "background_image": "images/rooms/world_4/foundry_conveyor_belt.webp",
     "description": "A reject chute spits scrap rain into a pit where defective parts keep twitching. The scrap rain hides small parts worth stealing.",
@@ -13642,6 +13757,7 @@
   {
     "id": "foundry_conveyor_belt_scale_03",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Roller Underpass",
     "background_image": "images/rooms/world_4/foundry_conveyor_belt.webp",
     "description": "A roller underpass runs beneath the belt through grease marks and warning paint. The grease marks show where previous crews crawled.",
@@ -13684,6 +13800,7 @@
   {
     "id": "foundry_conveyor_belt_scale_04",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Control Perch",
     "background_image": "images/rooms/world_4/foundry_conveyor_belt.webp",
     "description": "A control perch hangs over the belt with an override paddle locked behind mesh. The override paddle can pause one section if the mesh comes loose.",
@@ -13855,6 +13972,7 @@
   {
     "id": "foundry_forge_scale_01",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Bellows Walk",
     "background_image": "images/rooms/world_4/foundry_forge_anvil.webp",
     "description": "The bellows walk rises beside breath pistons that feed the Forge like lungs. The breath pistons can starve the fire if timed correctly. An iron bellows valve trembles under forced draft.",
@@ -13900,6 +14018,7 @@
   {
     "id": "foundry_forge_scale_02",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Anvil Shadow",
     "background_image": "images/rooms/world_4/foundry_forge_anvil.webp",
     "description": "The anvil shadow remains on the floor even when the light changes. A relic imprint glows beneath the ash.",
@@ -13933,6 +14052,7 @@
   {
     "id": "foundry_forge_scale_03",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Mold Library",
     "background_image": "images/rooms/world_4/foundry_forge_anvil.webp",
     "description": "A mold library stores broken casts for weapons Dominion decided were too expensive for ordinary troops. The broken casts are labeled by casualty forecast.",
@@ -13966,6 +14086,7 @@
   {
     "id": "foundry_forge_scale_04",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Slag Chapel",
     "background_image": "images/rooms/world_4/foundry_forge_anvil.webp",
     "description": "A slag chapel of welded braces and prayer bolts watches over the Forge core. The prayer bolts carry names etched too small for supervisors to notice.",
@@ -13997,6 +14118,10 @@
   {
     "id": "foundry_power_core_scale_01",
     "env": "foundry",
+    "special_exits": {
+      "southwest": "Return to Power Core"
+    },
+    "weather": "sparks",
     "title": "Turbine Balcony",
     "background_image": "images/rooms/world_4/foundry_power_core.webp",
     "description": "A turbine balcony hangs over spin blur so fast the air becomes a wall. The spin blur hides which blades are damaged. A turbine tachometer vibrates violently against its bracket.",
@@ -14033,6 +14158,7 @@
   {
     "id": "foundry_power_core_scale_02",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Engine Cradle",
     "background_image": "images/rooms/world_4/foundry_power_core.webp",
     "description": "The engine cradle grips the Deep-Core Engine with mount clamps bigger than mining rigs. The mount clamps loosen when the core output spikes.",
@@ -14066,6 +14192,7 @@
   {
     "id": "foundry_power_core_scale_03",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Array Lockers",
     "background_image": "images/rooms/world_4/foundry_power_core.webp",
     "description": "Array lockers line the core wall under phase seals and red theft warnings. The phase seals flicker whenever the Anvil wakes.",
@@ -14097,6 +14224,7 @@
   {
     "id": "foundry_power_core_scale_04",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Coolant Choir",
     "background_image": "images/rooms/world_4/foundry_power_core.webp",
     "description": "Blue pipes carry coolant under core pressure, knocking against their clamps in a coolant choir. Flow drops sharply at a damaged valve. A pressure relief lever is clamped in the open position.",
@@ -14133,6 +14261,7 @@
   {
     "id": "foundry_titan_dock_scale_01",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Walker Scaffold",
     "background_image": "images/rooms/world_4/foundry_titan_dock.webp",
     "description": "A walker scaffold wraps the Titan dock in hydraulic scars and fresh weld smoke. The hydraulic scars show where earlier test pilots lost arguments. A weld inspection stencil marks dangerous stress fractures.",
@@ -14169,6 +14298,7 @@
   {
     "id": "foundry_titan_dock_scale_02",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Ammo Lift",
     "background_image": "images/rooms/world_4/foundry_titan_dock.webp",
     "description": "An ammo lift hauls shells past the dock with a chain brake glowing cherry red. The chain brake will fail before the schedule does.",
@@ -14202,6 +14332,7 @@
   {
     "id": "foundry_titan_dock_scale_03",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Escape Rail",
     "background_image": "images/rooms/world_4/foundry_titan_dock.webp",
     "description": "An escape rail points toward the Astra route, but a cut coupler hangs loose under the track. The cut coupler can be forced if the core surge covers the noise.",
@@ -14235,6 +14366,7 @@
   {
     "id": "foundry_titan_dock_scale_04",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Meltdown View",
     "background_image": "images/rooms/world_4/foundry_titan_dock.webp",
     "description": "A meltdown view opens across the core where white fire climbs the walls like weather. The white fire bends toward the stolen engine cradle.",
@@ -14842,6 +14974,9 @@
   {
     "id": "orbital_security_hub_scale_01",
     "env": "void",
+    "special_exits": {
+      "southwest": "Return to Security Hub"
+    },
     "title": "Ring Service Alcove",
     "background_image": "images/rooms/world_5/orbital_security_hub.webp",
     "description": "A service alcove cuts away from the public route. A maintenance mark has been scratched beneath the brass trim, pointing toward passages the guest maps pretend do not exist.",
@@ -15226,6 +15361,10 @@
   {
     "id": "deep_server_farm_scale_01",
     "env": "void",
+    "special_exits": {
+      "southwest": "Return to Server Farm"
+    },
+    "weather": "snow",
     "title": "Ring Service Alcove",
     "background_image": "images/rooms/world_5/orbital_server_farm.webp",
     "description": "A service alcove cuts away from the public route. A maintenance mark has been scratched beneath the brass trim, pointing toward passages the guest maps pretend do not exist.",
@@ -15257,6 +15396,7 @@
   {
     "id": "deep_server_farm_scale_02",
     "env": "void",
+    "weather": "snow",
     "title": "Ring Pressure Gallery",
     "background_image": "images/rooms/world_5/orbital_server_farm.webp",
     "description": "A pressure gallery runs behind the polished walls. Its warning strip flashes through the trim whenever the Ring remembers there is vacuum outside the hospitality layer.",
@@ -15290,6 +15430,7 @@
   {
     "id": "deep_server_farm_scale_03",
     "env": "void",
+    "weather": "snow",
     "title": "Ring Overlook Niche",
     "background_image": "images/rooms/world_5/orbital_server_farm.webp",
     "description": "An overlook niche opens onto a service sightline that cuts past the official route. From here, the Ring looks less like paradise than a machine hiding its load-bearing wounds.",
@@ -15321,6 +15462,7 @@
   {
     "id": "deep_server_farm_scale_04",
     "env": "void",
+    "weather": "snow",
     "title": "Ring Control Pocket",
     "background_image": "images/rooms/world_5/orbital_server_farm.webp",
     "description": "A control pocket hides a manual toggle behind a panel dressed as decor. Someone left one practical way to make the automated system hesitate.",
@@ -15351,6 +15493,7 @@
   {
     "id": "deep_anchor_chamber_scale_01",
     "env": "void",
+    "weather": "resonance",
     "title": "Cable Narthex",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.webp",
     "description": "A cable narthex braids power lines into a pulse rosary leading toward Elara's tank. The pulse rosary counts her heartbeats as throughput, while a maintenance hymn loops softly enough to make captivity sound like care.",
@@ -15382,6 +15525,7 @@
   {
     "id": "deep_anchor_chamber_scale_02",
     "env": "void",
+    "weather": "resonance",
     "title": "Chorus Tank",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.webp",
     "description": "A chorus tank echoes with synthetic voices trying to smooth Elara into infrastructure. Breath meters rise beside the glass whenever the system calls her an asset instead of a person.",
@@ -15415,6 +15559,7 @@
   {
     "id": "deep_anchor_chamber_scale_03",
     "env": "void",
+    "weather": "resonance",
     "title": "Anchor Loom",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.webp",
     "description": "An Anchor loom spins gold command-thread around the relic, weaving every Ring permission through Elara's body. The gold spindle jitters each time the crew's signal interrupts Vale's ownership claim.",
@@ -15446,6 +15591,7 @@
   {
     "id": "deep_anchor_chamber_scale_04",
     "env": "void",
+    "weather": "resonance",
     "title": "Thaw Gallery",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.webp",
     "description": "A thaw gallery warms just enough for hands to work a release rail without freezing to the metal. Someone installed the release rail behind official paneling; a scratched route leads back along the wall.",
@@ -15489,6 +15635,7 @@
   {
     "id": "deep_anchor_chamber_scale_05",
     "env": "void",
+    "weather": "resonance",
     "title": "Living Cable Threshold",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.webp",
     "description": "The Living Cable threshold crosses the floor like a vein between Elara and the Ring. Command noise crawls along it, but beneath the static a human signal keeps refusing to flatten.",
@@ -15520,6 +15667,7 @@
   {
     "id": "deep_anchor_chamber_scale_06",
     "env": "void",
+    "weather": "resonance",
     "title": "Empty Cradle Afterimage",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.webp",
     "description": "An empty cradle afterimage burns where the Anchor should be, as if the relic refuses to admit it has been stolen. The afterimage throws Elara's shadow in the wrong direction.",
@@ -15553,6 +15701,7 @@
   {
     "id": "deep_anchor_chamber_scale_07",
     "env": "void",
+    "weather": "resonance",
     "title": "Mercy Lie Wall",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.webp",
     "description": "A Mercy Lie wall scrolls Vale's promise in calm white text: no pain, no separation, no self. The line edits itself whenever Nova looks away, trying to make extinction sound like relief.",
@@ -15584,6 +15733,7 @@
   {
     "id": "deep_anchor_chamber_scale_08",
     "env": "void",
+    "weather": "resonance",
     "title": "Manual Release Plinth",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.webp",
     "description": "A manual release plinth hides under ceremonial glass near the last tank cable. The manual key is labeled EMERGENCY, because even monsters leave themselves a maintenance route.",
@@ -15614,6 +15764,7 @@
   {
     "id": "deep_throne_room_scale_01",
     "env": "void",
+    "weather": "resonance",
     "title": "Observation Apse",
     "background_image": "images/rooms/world_5/deep_throne_room.webp",
     "description": "An observation apse frames the planet beneath the failing Shield, with executive seats arranged like a congregation around ownership. The planet view flickers wherever the prison sky is weakest.",
@@ -15645,6 +15796,7 @@
   {
     "id": "deep_throne_room_scale_02",
     "env": "void",
+    "weather": "resonance",
     "title": "Thorne Cell",
     "background_image": "images/rooms/world_5/deep_throne_room.webp",
     "description": "Thorne's cell hangs beside the dais, close enough for her to watch Vale turn her product into a religion. The containment seam glows brighter whenever she tries to speak.",
@@ -15678,6 +15830,7 @@
   {
     "id": "deep_throne_room_scale_03",
     "env": "void",
+    "weather": "resonance",
     "title": "Soloist Dais",
     "background_image": "images/rooms/world_5/deep_throne_room.webp",
     "description": "The Soloist dais waits under a white baton of hard light. Vale's command score hangs in the air around it, every note assigned to a system that used to answer someone else.",
@@ -15709,6 +15862,7 @@
   {
     "id": "deep_throne_room_scale_04",
     "env": "void",
+    "weather": "resonance",
     "title": "Boardroom Grave",
     "background_image": "images/rooms/world_5/deep_throne_room.webp",
     "description": "A boardroom grave of empty chairs surrounds a table still voting on dead agenda items. The casualty projection is filed between launch timing and consumer adoption.",
@@ -15742,6 +15896,7 @@
   {
     "id": "deep_throne_room_scale_05",
     "env": "void",
+    "weather": "resonance",
     "title": "Coup Balcony",
     "background_image": "images/rooms/world_5/deep_throne_room.webp",
     "description": "A coup balcony overlooks the Ring security crown as Vale rewrites command ownership in real time. The security crown changes color with each permission Thorne loses.",
@@ -15773,6 +15928,7 @@
   {
     "id": "deep_throne_room_scale_06",
     "env": "void",
+    "weather": "resonance",
     "title": "Avatar Gate",
     "background_image": "images/rooms/world_5/deep_throne_room.webp",
     "description": "An Avatar gate blooms with a compliance halo large enough to frame a boss fight. The halo rotates toward Nova like an accusation, already deciding what shape punishment should take.",
@@ -15806,6 +15962,7 @@
   {
     "id": "deep_throne_room_scale_07",
     "env": "void",
+    "weather": "resonance",
     "title": "Tear Runway",
     "background_image": "images/rooms/world_5/deep_throne_room.webp",
     "description": "A Tear runway extends from the throne deck into shaking glass and impossible music. Reflections arrive before the crew does, each one a future Vale claims he can make painless.",
@@ -15836,6 +15993,7 @@
   {
     "id": "deep_tear_scale_01",
     "env": "void",
+    "weather": "resonance",
     "title": "Gravity Suture",
     "background_image": "images/rooms/world_5/deep_tear.webp",
     "description": "A gravity suture stitches the Ring to the wound with black light that bends every rail inward. The black stitch pulls thoughts slightly out of order.",
@@ -15867,6 +16025,7 @@
   {
     "id": "deep_tear_scale_02",
     "env": "void",
+    "weather": "resonance",
     "title": "Choir Gap",
     "background_image": "images/rooms/world_5/deep_tear.webp",
     "description": "A choir gap opens where music moves without air. A soundless note presses against Nova's teeth, not silent but too full of signal to become sound.",
@@ -15900,6 +16059,7 @@
   {
     "id": "deep_tear_scale_03",
     "env": "void",
+    "weather": "resonance",
     "title": "Ring Shear",
     "background_image": "images/rooms/world_5/deep_tear.webp",
     "description": "A Ring shear folds the deck into angles the station was never engineered to survive. The folded deck points toward the Source like wreckage learning a new direction.",
@@ -15931,6 +16091,7 @@
   {
     "id": "deep_tear_scale_04",
     "env": "void",
+    "weather": "resonance",
     "title": "Event Lip",
     "background_image": "images/rooms/world_5/deep_tear.webp",
     "description": "The event lip burns blue at the edge of the Tear while Vale's coup collapses behind the crew. The blue horizon shows the Campfire before anyone jumps.",
@@ -15962,6 +16123,7 @@
   {
     "id": "deep_tear_scale_05",
     "env": "void",
+    "weather": "resonance",
     "title": "Last Bulkhead",
     "background_image": "images/rooms/world_5/deep_tear.webp",
     "description": "The last bulkhead holds one manual wheel between the Ring and the impossible. The manual wheel is hot from people trying to close what cannot close.",
@@ -15995,6 +16157,7 @@
   {
     "id": "deep_tear_scale_06",
     "env": "void",
+    "weather": "resonance",
     "title": "Source Drop",
     "background_image": "images/rooms/world_5/deep_tear.webp",
     "description": "The Source drop waits beyond the hull, filled with falling voices that do not get farther away. The falling voices include names Nova has not learned yet.",
@@ -16025,6 +16188,7 @@
   {
     "id": "source_campfire_node_scale_01",
     "env": "source",
+    "weather": "resonance",
     "title": "Blue Ash Circle",
     "background_image": "images/rooms/world_6/source_campfire.webp",
     "description": "Blue ash drifts around the Campfire in rings that never close. The open ring leaves space for each missing voice instead of smoothing them into one flame.",
@@ -16056,6 +16220,7 @@
   {
     "id": "source_campfire_node_scale_02",
     "env": "source",
+    "weather": "resonance",
     "title": "Three Dark Paths",
     "background_image": "images/rooms/world_6/source_campfire.webp",
     "description": "Three dark paths pull away from the song-fire, each tuned to a different kind of fear. The fear tones are ugly, personal, and too specific for Vale to call noise.",
@@ -16087,6 +16252,7 @@
   {
     "id": "source_campfire_node_scale_03",
     "env": "source",
+    "weather": "resonance",
     "title": "Unshared Blanket",
     "background_image": "images/rooms/world_6/source_campfire.webp",
     "description": "An unshared blanket lies beside the fire, folded with impossible neatness. The empty corner shows where the Source expects Nova to sit alone and call it strength.",
@@ -16118,6 +16284,7 @@
   {
     "id": "source_campfire_node_scale_04",
     "env": "source",
+    "weather": "resonance",
     "title": "Key Ember",
     "background_image": "images/rooms/world_6/source_campfire.webp",
     "description": "A key ember turns inside the fire before the Key exists, waiting for the crew to come back with their jagged selves intact. The ember will not answer a single voice.",
@@ -16351,6 +16518,7 @@
   {
     "id": "source_orion_nightmare_node_scale_01",
     "env": "source",
+    "weather": "starfall",
     "title": "Black Tide Shelf",
     "background_image": "images/rooms/world_6/source_orion_nightmare.webp",
     "description": "A black tide shelf stretches under salt stars that refuse to reflect in the water. A salt-crusted chronometer rests on the shelf. The salt stars brighten only when Orion stops accepting last survivor as a title.",
@@ -16391,6 +16559,7 @@
   {
     "id": "source_orion_nightmare_node_scale_02",
     "env": "source",
+    "weather": "starfall",
     "title": "Empty Observatory",
     "background_image": "images/rooms/world_6/source_orion_nightmare.webp",
     "description": "An empty observatory points a silent lens at a sky with no returning signal. The silent lens focuses on voices under the tide once Orion asks instead of apologizes.",
@@ -16422,6 +16591,7 @@
   {
     "id": "source_orion_nightmare_node_scale_03",
     "env": "source",
+    "weather": "starfall",
     "title": "Chorus Door",
     "background_image": "images/rooms/world_6/source_orion_nightmare.webp",
     "description": "A Chorus door hums with wet harmonics from below the shore. The wet harmonics carry names Orion thought the universe had erased.",
@@ -16452,6 +16622,7 @@
   {
     "id": "source_echo_mines_node_scale_01",
     "env": "source",
+    "weather": "dust",
     "title": "Locker Row Loop",
     "background_image": "images/rooms/world_6/source_echo_mines.webp",
     "description": "A locker row repeats Nova's first shift number until the digits blur. Jed's sticker cuts through the loop, crooked and stubborn, marking the version of the past Vale cannot sanitize. A shift quota chalkboard preserves the old tallies beside it.",
@@ -16490,6 +16661,7 @@
   {
     "id": "source_echo_mines_node_scale_02",
     "env": "source",
+    "weather": "dust",
     "title": "Pay Stub Drift",
     "background_image": "images/rooms/world_6/source_echo_mines.webp",
     "description": "Pay stubs drift through the air like dead leaves, each one subtracting time from a life. The missing hours glow where Dominion stole more than money.",
@@ -16523,6 +16695,7 @@
   {
     "id": "source_echo_mines_node_scale_03",
     "env": "source",
+    "weather": "dust",
     "title": "Shelter Plastic",
     "background_image": "images/rooms/world_6/source_echo_mines.webp",
     "description": "Shelter plastic snaps in a wind that cannot exist underground. Behind it, a false sunrise offers the Colony without hunger, without Jed, and without anyone worth saving.",
@@ -16554,6 +16727,7 @@
   {
     "id": "source_echo_mines_node_scale_04",
     "env": "source",
+    "weather": "dust",
     "title": "Manager Blind Spot",
     "background_image": "images/rooms/world_6/source_echo_mines.webp",
     "description": "A manager blind spot opens between two projection routes. The scuffed floor remembers where workers learned to breathe without being counted.",
@@ -16585,6 +16759,7 @@
   {
     "id": "source_memory_bridge_node_scale_01",
     "env": "source",
+    "weather": "resonance",
     "title": "Tideglass Span",
     "background_image": "images/rooms/world_6/source_memory_bridge.webp",
     "description": "A tideglass span forms under the bridge, wet sand hardening into translucent steps marked by tideglass footprints. The beach photo flickers inside each step, laughing badly enough to be true.",
@@ -16623,6 +16798,7 @@
   {
     "id": "source_memory_bridge_node_scale_02",
     "env": "source",
+    "weather": "resonance",
     "title": "Foundry Heat Rib",
     "background_image": "images/rooms/world_6/source_memory_bridge.webp",
     "description": "A Foundry heat rib locks into the bridge with slag-orange light. Gh0st touches the burn mark and the metal steadies instead of becoming a weapon.",
@@ -16654,6 +16830,7 @@
   {
     "id": "source_memory_bridge_node_scale_03",
     "env": "source",
+    "weather": "rain",
     "title": "Spire Rain Line",
     "background_image": "images/rooms/world_6/source_memory_bridge.webp",
     "description": "A Spire rain line hangs in the air, every drop reflecting a different stolen route. Zeke laughs once when the route refuses to obey signage.",
@@ -16685,6 +16862,7 @@
   {
     "id": "source_memory_bridge_node_scale_04",
     "env": "source",
+    "weather": "resonance",
     "title": "Astra Engine Note",
     "background_image": "images/rooms/world_6/source_memory_bridge.webp",
     "description": "The Astra engine note becomes a narrow gold rail across the static. It wobbles when Nova tries to lead alone and settles when the others answer.",
@@ -16716,6 +16894,7 @@
   {
     "id": "source_memory_stair_node_scale_01",
     "env": "source",
+    "weather": "dust",
     "title": "Mine Dust Step",
     "background_image": "images/rooms/world_6/source_memory_stair.webp",
     "description": "A mine dust step rises first, rough with the place Nova escaped. Vale polishes one half into a painless memory, but the unpolished half carries Jed's handprint beside a miner's motto carving.",
@@ -16754,6 +16933,7 @@
   {
     "id": "source_memory_stair_node_scale_02",
     "env": "source",
+    "weather": "resonance",
     "title": "Canopy Root Step",
     "background_image": "images/rooms/world_6/source_memory_stair.webp",
     "description": "A canopy root step knots through the stair with living green. Beast claw marks and Orion's careful notches share the bark without erasing each other.",
@@ -16787,6 +16967,7 @@
   {
     "id": "source_memory_stair_node_scale_03",
     "env": "source",
+    "weather": "rain",
     "title": "Neon Glass Step",
     "background_image": "images/rooms/world_6/source_memory_stair.webp",
     "description": "A neon glass step reflects the Spire as rain, curfew lights, and stolen elevator codes. The reflected city cracks wherever Zeke remembers being more than an employee number.",
@@ -16818,6 +16999,7 @@
   {
     "id": "source_memory_stair_node_scale_04",
     "env": "source",
+    "weather": "resonance",
     "title": "Ring Silence Step",
     "background_image": "images/rooms/world_6/source_memory_stair.webp",
     "description": "A Ring silence step absorbs sound until Elara's clean note cuts through it. The clean note proves silence was never peace, only a cage with better acoustics.",
@@ -16849,6 +17031,7 @@
   {
     "id": "source_spire_thought_node_scale_01",
     "env": "source",
+    "weather": "resonance",
     "title": "Revision Gallery",
     "background_image": "images/rooms/world_6/source_spire_thought.webp",
     "description": "A revision gallery displays better versions of every world: kinder mines, safer wilds, softer cities. A liberation blueprint rests on a thought pedestal. The perfect frames fail wherever real names have worn fingerprints into the glass.",
@@ -16889,6 +17072,7 @@
   {
     "id": "source_spire_thought_node_scale_02",
     "env": "source",
+    "weather": "resonance",
     "title": "Choir Fracture",
     "background_image": "images/rooms/world_6/source_spire_thought.webp",
     "description": "A choir fracture splits Vale's single note into separate voices arguing, grieving, and laughing out of tune. The out-of-tune laughter damages the Silence more than any weapon.",
@@ -16920,6 +17104,7 @@
   {
     "id": "source_spire_thought_node_scale_03",
     "env": "source",
+    "weather": "resonance",
     "title": "Memory Defense Line",
     "background_image": "images/rooms/world_6/source_spire_thought.webp",
     "description": "A memory defense line assembles from Warden armor, Phantom plating, and Ring hard-light. The patchwork shield exposes Vale's last lie: he calls deletion new, but it is built from old cruelty.",
@@ -16953,6 +17138,7 @@
   {
     "id": "source_spire_thought_node_scale_04",
     "env": "source",
+    "weather": "resonance",
     "title": "No Throne",
     "background_image": "images/rooms/world_6/source_spire_thought.webp",
     "description": "A throne-shaped absence waits at the top of the thought spiral. The absence brightens when Nova refuses to sit, leaving room for a circuit instead of a ruler.",
@@ -16985,6 +17171,7 @@
   {
     "id": "source_center_node_scale_01",
     "env": "source",
+    "weather": "resonance",
     "title": "White Shore",
     "background_image": "images/rooms/world_6/source_center.webp",
     "description": "A white shore curves around the Center with a still tide that reflects every voice Vale wants to dissolve. The still tide moves only when someone chooses a self, carrying ocean resonance along the shore.",
@@ -17023,6 +17210,7 @@
   {
     "id": "source_center_node_scale_02",
     "env": "source",
+    "weather": "resonance",
     "title": "Key Orbit",
     "background_image": "images/rooms/world_6/source_center.webp",
     "description": "The Key orbit circles Nova's hand in root sparks that answer to the whole crew. The root sparks brighten after Vale's human shape breaks, pointing toward the larger Silence unfolding above the shore.",
@@ -17054,6 +17242,7 @@
   {
     "id": "source_center_node_scale_03",
     "env": "source",
+    "weather": "resonance",
     "title": "Silence Pulpit",
     "background_image": "images/rooms/world_6/source_center.webp",
     "description": "A Silence pulpit rises from the ocean where Vale's broken human outline becomes blinding geometry. The geometry preaches one painless note while every separate voice in the crew pushes back.",
@@ -17199,6 +17388,7 @@
   {
     "id": "foundry_obsidian_shelf_scale_final",
     "env": "foundry",
+    "weather": "dust",
     "title": "Foundry Emergency Marker",
     "background_image": "images/rooms/world_4/foundry_slag_landing.webp",
     "description": "An emergency marker blinks above the black glass, its cracked beacon still guiding crews through heat that management calls acceptable. The cracked beacon and shift tally make the landing shelf feel like part of a working disaster.",
@@ -17229,6 +17419,7 @@
   {
     "id": "foundry_slag_river_scale_final",
     "env": "foundry",
+    "weather": "dust",
     "title": "Foundry River Control",
     "background_image": "images/rooms/world_4/foundry_slag_river.webp",
     "description": "A river control booth watches slag levels with a burned console and a rescue hook nobody officially issued. The burned console and rescue hook explain how workers survive routes the map calls closed.",
@@ -17261,6 +17452,7 @@
   {
     "id": "foundry_cooling_springs_scale_final",
     "env": "foundry",
+    "weather": "steam",
     "title": "Foundry Blue Steam Pocket",
     "background_image": "images/rooms/world_4/foundry_cooling_springs.webp",
     "description": "A blue steam pocket gathers under patched pipes, turning heat into a temporary hiding place. The patched pipes and cool residue show the Foundry being fought by its own workers.",
@@ -17291,6 +17483,7 @@
   {
     "id": "foundry_waste_intake_scale_final",
     "env": "foundry",
+    "weather": "gas",
     "title": "Foundry Sorter Spine",
     "background_image": "images/rooms/world_4/foundry_waste_intake.webp",
     "description": "A sorter spine rattles behind the intake with rejected parts climbing toward another chance at violence. The sorter spine and reject ledger make the waste system feel alive and complicit.",
@@ -17353,6 +17546,7 @@
   {
     "id": "foundry_conveyor_belt_scale_final",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Foundry Belt Nerve",
     "background_image": "images/rooms/world_4/foundry_conveyor_belt.webp",
     "description": "A belt nerve junction pulses beneath the conveyor, matching every crush cycle to a production target. The nerve junction and target counter turn traversal into readable machinery.",
@@ -17417,6 +17611,7 @@
   {
     "id": "foundry_forge_scale_final",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Foundry Relic Draft",
     "background_image": "images/rooms/world_4/foundry_forge_anvil.webp",
     "description": "A relic draft moves through the Forge before the fire does, tugging ash toward the Anvil's old imprint. The relic draft and ash trail make the Forge feel older than Dominion's machinery.",
@@ -17447,6 +17642,7 @@
   {
     "id": "foundry_power_core_scale_final",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Foundry Core Shadow",
     "background_image": "images/rooms/world_4/foundry_power_core.webp",
     "description": "A core shadow falls across the engine clamps in a shape too sharp for the room's lighting. The core shadow and clamp gauge foreshadow the theft that will make the Astra climb.",
@@ -17479,6 +17675,7 @@
   {
     "id": "foundry_titan_dock_scale_final",
     "env": "foundry",
+    "weather": "sparks",
     "title": "Foundry Last Gantry",
     "background_image": "images/rooms/world_4/foundry_titan_dock.webp",
     "description": "A last gantry shakes over the Titan dock, pointed directly at the escape route. The last gantry and release bolt turn the boss arena into a place built for a desperate exit.",
@@ -17663,6 +17860,7 @@
   {
     "id": "source_campfire_node_scale_final",
     "env": "source",
+    "weather": "resonance",
     "title": "Source Memory Shore",
     "background_image": "images/rooms/world_6/source_campfire.webp",
     "description": "A memory shore curves around the Campfire, where tide marks from six worlds meet in blue ash. The tide marks and blue ash make the finale feel like the whole journey gathered in one place.",
@@ -17693,6 +17891,7 @@
   {
     "id": "source_echo_mines_node_scale_final",
     "env": "source",
+    "weather": "dust",
     "title": "Source First Fear",
     "background_image": "images/rooms/world_6/source_echo_mines.webp",
     "description": "A first fear corridor repeats Nova's earliest exit routes, but every door now opens from the inside. The first fear and inside latch show that the beginning no longer owns her.",
@@ -17723,6 +17922,7 @@
   {
     "id": "source_memory_bridge_node_scale_final",
     "env": "source",
+    "weather": "resonance",
     "title": "Source Crew Span",
     "background_image": "images/rooms/world_6/source_memory_bridge.webp",
     "description": "A crew span brightens only where more than one shadow crosses it. The crew span and shared shadow make the bridge's rule impossible to miss.",
@@ -17753,6 +17953,7 @@
   {
     "id": "source_memory_stair_node_scale_final",
     "env": "source",
+    "weather": "resonance",
     "title": "Source Scar Step",
     "background_image": "images/rooms/world_6/source_memory_stair.webp",
     "description": "A scar step holds dents from every world, refusing Vale's offer to polish them away. The scar step and unpolished edge turn damage into proof of life.",
@@ -17785,6 +17986,7 @@
   {
     "id": "source_center_node_scale_final",
     "env": "source",
+    "weather": "resonance",
     "title": "Source Voice Orbit",
     "background_image": "images/rooms/world_6/source_center.webp",
     "description": "A voice orbit circles the Center with separate tones that harmonize without merging. The voice orbit and separate tones state the game's final answer in room form.",

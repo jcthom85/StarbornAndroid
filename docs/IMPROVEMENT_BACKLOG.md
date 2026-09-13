@@ -3,11 +3,33 @@
 Approved scope: correctness, realistic campaign testing, combat/economy, opening/UI,
 exploration/narrative consistency, and presentation/release verification.
 
-## Current phase status (2026-09-12)
+## Current phase status (2026-09-13)
 
-- Release checkpoint: 1.3.32 (116), commit c37e4f6, was pushed and accepted by
-  Google Play on Internal Testing. Historical uncommitted/Play 115 notes below
+- Release checkpoint: 1.3.33 (117), commit cf0cbed, was pushed and accepted by
+  Google Play on Internal Testing. Historical uncommitted/Play notes below
   describe earlier checkpoints.
+
+- Worlds 1-6 weather audit: reviewed all 465 room records and 214 unique room
+  backgrounds against physical exposure, prose, ambience and the 11 rendered
+  overlay types. Removed broad environment fallbacks that put dust, resonance or
+  starfall inside sealed World 1 rooms; removed weather from 32 sealed World 2
+  rooms; and added explicit reviewed rain, storm, drip, steam, industrial hazard
+  and Source effects across Worlds 1-6. A catalog regression protects supported
+  IDs, sealed-room exclusions and representative assignments. Verification: 416
+  JVM tests, 355 strict selectors and diff check pass. Device acceptance remains
+  open for density, contrast, motion sensitivity and performance. These changes
+  are uncommitted and not in the current Internal Testing build.
+
+- Swipe-first navigation checkpoint: audited 928 directed room connections. The
+  World 2 landing diagonal is now a cardinal north/south route with aligned map
+  positions. The remaining 24 directed diagonal/vertical links are 12 deliberate
+  fifth-exit, shaft or Source-memory pairs. They retain their underlying graph
+  edges for node transitions, minimaps, enemy adjacency, entry events and legacy
+  saves, but now expose authored named `special_exits` as bold Paths interactions
+  and no longer display misleading diagonal/center direction arrows. Regression
+  coverage requires complete reciprocal labels, limits the exception budget and
+  keeps all World 2 movement NSEW. Physical-device touch, accessibility and map
+  presentation remain to be accepted. These changes are uncommitted.
 
 - Lifecycle follow-up: combat now pauses ATB while its screen is below RESUMED,
   preserves the existing menu/tutorial pause gates, and holds an enemy attack

@@ -1,11 +1,12 @@
 package com.example.starborn.domain.theme
 
-fun defaultWeatherForEnvironment(environmentId: String?): String? {
-    return when (environmentId?.lowercase()) {
-        "mine" -> "dust"
-        "logistics" -> "resonance"
-        "space" -> "starfall"
-        "swamp" -> "fog"
-        else -> null
-    }
-}
+/**
+ * Authored campaign rooms must opt into environmental overlays explicitly.
+ *
+ * A single environment contains sealed interiors, sheltered routes, and exposed
+ * spaces, so inferring weather here placed particles over physically protected
+ * rooms.
+ */
+fun defaultWeatherForEnvironment(
+    @Suppress("UNUSED_PARAMETER") environmentId: String?
+): String? = null
