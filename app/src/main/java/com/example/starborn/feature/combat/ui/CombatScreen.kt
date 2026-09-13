@@ -300,6 +300,7 @@ fun CombatScreen(
     BackHandler(enabled = true) {
         // Block system back/edge-swipe from leaving combat.
     }
+    CombatLifecyclePause(viewModel::setBackgroundPaused)
     val playerParty = remember(viewModel) { viewModel.playerParty.toList() }
     val enemies = viewModel.enemies
     val enemyCombatantIds = viewModel.enemyCombatantIds

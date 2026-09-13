@@ -48,12 +48,12 @@ class GameSessionPersistence(
 
     suspend fun persist(state: GameSessionState) {
         val timestamp = System.currentTimeMillis()
-        dataStore.updateWithBackup(dataStoreFile) { state.toProto(timestamp) }
+        dataStore.updateWithBackup(dataStoreFile) { (state.battleCheckpoint ?: state).toProto(timestamp) }
     }
 
     suspend fun writeAutosave(state: GameSessionState) {
         val timestamp = System.currentTimeMillis()
-        autosaveStore.updateWithBackup(autosaveFile) { state.toProto(timestamp) }
+        autosaveStore.updateWithBackup(autosaveFile) { (state.battleCheckpoint ?: state).toProto(timestamp) }
     }
 
     suspend fun readSlot(slot: Int): GameSessionState? = slotInfo(slot)?.state
@@ -64,12 +64,12 @@ class GameSessionPersistence(
 
     suspend fun writeSlot(slot: Int, state: GameSessionState) {
         val timestamp = System.currentTimeMillis()
-        slotStore(slot).write { state.toProto(timestamp) }
+        slotStore(slot).write { (state.battleCheckpoint ?: state).toProto(timestamp) }
     }
 
     suspend fun writeQuickSave(state: GameSessionState) {
         val timestamp = System.currentTimeMillis()
-        quickSaveStore.updateWithBackup(quickSaveFile) { state.toProto(timestamp) }
+        quickSaveStore.updateWithBackup(quickSaveFile) { (state.battleCheckpoint ?: state).toProto(timestamp) }
     }
 
     suspend fun slotInfo(slot: Int): GameSessionSlotInfo? = slotStore(slot).read()
@@ -277,6 +277,8 @@ private fun GameSessionProto.toState(): GameSessionState = GameSessionState(
         listProto.completedTaskIdsList.toSet()
     },
     completedEvents = completedEventsList.toSet(),
+    pendingEventCinematics = pendingEventCinematicsList.toSet(),
+    pendingBattleJson = pendingBattleJson,
     unlockedAreas = unlockedAreasList.toSet(),
     unlockedExits = unlockedExitsList.toSet(),
     revealedNodes = revealedNodesList.toSet(),
@@ -373,6 +375,8 @@ private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis())
     addAllTutorialRoomsSeen(this@toProto.tutorialRoomsSeen)
     clearCompletedEvents()
     addAllCompletedEvents(this@toProto.completedEvents)
+    addAllPendingEventCinematics(this@toProto.pendingEventCinematics)
+    setPendingBattleJson(this@toProto.pendingBattleJson)
     clearUnlockedAreas()
     addAllUnlockedAreas(this@toProto.unlockedAreas)
     clearUnlockedExits()

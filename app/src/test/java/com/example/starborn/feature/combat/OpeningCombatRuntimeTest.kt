@@ -45,6 +45,24 @@ class OpeningCombatRuntimeTest {
     @Before fun setUp() = Dispatchers.setMain(dispatcher)
     @After fun tearDown() = Dispatchers.resetMain()
 
+    @Test fun `background pause freezes ATB and foreground resumes it`() {
+        val vm = createCombat()
+        try {
+            vm.setBackgroundPaused(true)
+            dispatcher.scheduler.runCurrent()
+            val meters = vm.atbMeters.value.toMap()
+            val state = vm.combatState
+            dispatcher.scheduler.advanceTimeBy(30_000)
+            dispatcher.scheduler.runCurrent()
+            assertEquals(meters, vm.atbMeters.value)
+            assertEquals(state, vm.combatState)
+            vm.setBackgroundPaused(false)
+            dispatcher.scheduler.advanceTimeBy(500)
+            dispatcher.scheduler.runCurrent()
+            assertNotEquals(meters, vm.atbMeters.value)
+        } finally { vm.viewModelScope.cancel() }
+    }
+
     @Test fun `unavailable skill explanations match availability gates`() {
         val vm = createCombat()
         try {

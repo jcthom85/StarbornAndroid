@@ -40,6 +40,9 @@ data class GameSessionState(
     val questStageById: Map<String, String> = emptyMap(),
     val questTasksCompleted: Map<String, Set<String>> = emptyMap(),
     val completedEvents: Set<String> = emptySet(),
+    val pendingEventCinematics: Set<String> = emptySet(),
+    val pendingBattleJson: String = "",
+    val battleCheckpoint: GameSessionState? = null,
     val roomStates: Map<String, Map<String, Boolean>> = emptyMap(),
     val enemyPartyStates: Map<String, EnemyPartyRuntimeState> = emptyMap(),
     val revealedNodes: Set<String> = emptySet(),
@@ -149,6 +152,8 @@ fun GameSessionState.fingerprint(): String {
     completedEvents.map { it.lowercase(normalizedLocale) }.sorted().forEach {
         builder.append("EVT:").append(it).append('|')
     }
+    pendingEventCinematics.sorted().forEach { builder.append("PENDING_SCENE:").append(it).append('|') }
+    builder.append("BATTLE:").append(pendingBattleJson).append('|')
     roomStates.entries.sortedBy { it.key.lowercase(normalizedLocale) }.forEach { (roomId, states) ->
         if (roomId.isBlank() || states.isEmpty()) return@forEach
         builder.append("ROOM:")

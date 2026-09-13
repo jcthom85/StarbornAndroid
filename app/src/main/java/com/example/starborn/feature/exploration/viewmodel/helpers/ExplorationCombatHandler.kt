@@ -29,7 +29,8 @@ class ExplorationCombatHandler(
         if (result.rewardXp > 0) rewardParts += "${result.rewardXp} XP"
         if (result.rewardAp > 0) rewardParts += "${result.rewardAp} AP"
         if (result.rewardCredits > 0) rewardParts += "${result.rewardCredits} credits"
-        val grantedItems = mutableListOf<String>()
+        // CombatViewModel has already granted and persisted these drops.
+        // The navigation payload describes the reward for presentation only.
         result.rewardItems.forEach { (itemId, quantity) ->
             val qty = quantity.coerceAtLeast(0)
             if (qty <= 0) return@forEach
@@ -37,11 +38,6 @@ class ExplorationCombatHandler(
             val name = inventoryService.itemDisplayName(canonicalId)
             rewardParts += "$qty x $name"
             emitEvent(ExplorationEvent.ItemGranted(name, qty))
-            inventoryService.addItem(canonicalId, qty)
-            grantedItems += "$qty x $name"
-        }
-        if (grantedItems.isNotEmpty()) {
-            sessionStore.setInventory(inventoryService.snapshot())
         }
         eventManager.handleTrigger(
             type = "encounter_victory",

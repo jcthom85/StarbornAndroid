@@ -1,6 +1,11 @@
 package com.example.starborn.domain.session
 
 import com.example.starborn.domain.inventory.ItemCatalog
+import com.example.starborn.domain.event.EventManager
+import com.example.starborn.domain.event.EventHooks
+import com.example.starborn.domain.model.EventAction
+import com.example.starborn.domain.model.EventTrigger
+import com.example.starborn.domain.model.GameEvent
 import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.movement.EnemyPartyRuntimeState
 import java.io.File
@@ -32,6 +37,110 @@ class GameSessionPersistenceTest {
     fun tearDown() {
         clearStores()
         baseDir.deleteRecursively()
+    }
+
+    @Test
+    fun interruptedBattleSavesCheckpointUntilRewardsAndProgressionAreFinished() = runBlocking {
+        val store = GameSessionStore().apply { restore(GameSessionState(
+            roomId = "boss_room", inventory = mapOf("medkit" to 3), playerCredits = 100,
+            partyMemberHp = mapOf("nova" to 80), completedEvents = setOf("boss_spawn"))) }
+        val descriptor = "{\"enemies\":[{\"enemyId\":\"ascended_vale\"}]}"
+        store.armBattle(descriptor)
+        store.checkpointBattle()
+        val checkpoint = requireNotNull(store.state.value.battleCheckpoint)
+        store.setInventory(mapOf("medkit" to 1))
+        store.addCredits(50) // Crash after payout but before exploration acknowledges victory.
+        store.setMilestone("boss_defeated")
+        persistence.writeAutosave(store.state.value)
+        persistence.writeQuickSave(store.state.value)
+        persistence.writeSlot(1, store.state.value)
+        listOf(persistence.readAutosave(), persistence.readQuickSave(), persistence.readSlot(1)).forEach {
+            assertEquals(checkpoint, it)
+        }
+        store.finishBattle(descriptor)
+        persistence.writeAutosave(store.state.value)
+        val finished = requireNotNull(persistence.readAutosave())
+        assertEquals(150, finished.playerCredits)
+        assertEquals(1, finished.inventory["medkit"])
+        assertTrue("boss_defeated" in finished.completedMilestones)
+        assertTrue(finished.pendingBattleJson.isEmpty())
+        assertEquals(null, finished.battleCheckpoint)
+    }
+
+    @Test
+    fun chainedBattleKeepsNextEncounterWhenPreviousVictoryIsAcknowledged() {
+        val store = GameSessionStore()
+        store.armBattle("first")
+        store.checkpointBattle()
+        store.addCredits(50)
+        store.armBattle("second")
+        store.finishBattle("first")
+        assertEquals("second", store.state.value.pendingBattleJson)
+        store.checkpointBattle()
+        assertEquals(50, store.state.value.battleCheckpoint?.playerCredits)
+        assertEquals("second", store.state.value.battleCheckpoint?.pendingBattleJson)
+    }
+
+    @Test
+    fun everyAuthoredPendingCinematicCanRestartFromSavedSceneId() {
+        val reader = com.example.starborn.data.assets.AssetJsonReader(
+            com.example.starborn.core.platform.DesktopAssetProvider(), com.example.starborn.core.MoshiProvider.instance)
+        val events = reader.readList<GameEvent>("events.json")
+        fun scenes(actions: List<EventAction>): List<String> = actions.flatMap { action ->
+            listOfNotNull(action.sceneId?.takeIf { !action.onComplete.isNullOrEmpty() }) +
+                scenes(action.`do`.orEmpty()) + scenes(action.elseDo.orEmpty()) + scenes(action.onComplete.orEmpty())
+        }
+        val pending = scenes(events.flatMap { it.actions }).toSet()
+        assertTrue(pending.isNotEmpty())
+        val store = GameSessionStore().apply { restore(GameSessionState(pendingEventCinematics = pending)) }
+        val restarted = mutableListOf<String>()
+        val runtime = EventManager(events, store, EventHooks(onPlayCinematic = { id, _ -> restarted += id }))
+        runtime.resumePendingCinematics()
+        runtime.resumePendingCinematics()
+        assertEquals(pending, restarted.toSet())
+        assertEquals(pending.size, restarted.size)
+    }
+
+    @Test
+    fun interruptedCinematicRestartsAfterDiskRestoreWithoutReplayingEarlierRewards() = runBlocking {
+        val event = GameEvent(id = "interrupted", trigger = EventTrigger(type = "custom"), actions = listOf(
+            EventAction(type = "give_item", itemId = "medkit", quantity = 1),
+            EventAction(type = "play_cinematic", sceneId = "first", onComplete = listOf(
+                EventAction(type = "give_item", itemId = "medkit", quantity = 2),
+                EventAction(type = "play_cinematic", sceneId = "credits", onComplete = listOf(
+                    EventAction(type = "set_milestone", milestone = "credits_seen")))
+            ))))
+        val callbacks = mutableMapOf<String, () -> Unit>()
+        fun manager(store: GameSessionStore) = EventManager(listOf(event), store, EventHooks(
+            onGiveItem = { id, qty -> store.setInventory(store.state.value.inventory +
+                (id to ((store.state.value.inventory[id] ?: 0) + qty))) },
+            onPlayCinematic = { id, complete -> callbacks[id] = complete }
+        ))
+        val original = GameSessionStore()
+        manager(original).handleTrigger("custom")
+        assertEquals(setOf("first"), original.state.value.pendingEventCinematics)
+        assertTrue("interrupted" in original.state.value.completedEvents)
+        persistence.writeAutosave(original.state.value)
+        callbacks.clear() // Process death loses all presentation callbacks.
+        val restored = GameSessionStore().apply { restore(requireNotNull(persistence.readAutosave())) }
+        val runtime = manager(restored)
+        runtime.handleTrigger("custom")
+        runtime.resumePendingCinematics()
+        runtime.resumePendingCinematics()
+        assertEquals(1, restored.state.value.inventory["medkit"])
+        val finish = callbacks.getValue("first")
+        finish()
+        finish()
+        assertEquals(3, restored.state.value.inventory["medkit"])
+        assertEquals(setOf("credits"), restored.state.value.pendingEventCinematics)
+        persistence.writeAutosave(restored.state.value)
+        callbacks.clear()
+        val credits = GameSessionStore().apply { restore(requireNotNull(persistence.readAutosave())) }
+        manager(credits).resumePendingCinematics()
+        callbacks.getValue("credits")()
+        assertTrue("credits_seen" in credits.state.value.completedMilestones)
+        assertTrue(credits.state.value.pendingEventCinematics.isEmpty())
+        assertEquals(3, credits.state.value.inventory["medkit"])
     }
 
     @Test

@@ -1,0 +1,48 @@
+appId: com.junewiregames.starborn.prealpha
+---
+# Uses a debug scenario; retains numbered saves and does not clear app data.
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "New Game"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- tapOn: "Search world, quest, room, or system"
+- inputText: "First Combat"
+- runScript: sleep.js
+- tapOn: "The Echo: First Combat"
+- extendedWaitUntil:
+    visible: "Elevator Landing"
+    timeout: 90000
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Engage Echo Borer"
+    timeout: 20000
+- tapOn: "Engage Echo Borer"
+- extendedWaitUntil:
+    visible: "Echo-Borer"
+    timeout: 60000
+- runScript: sleep.js
+- pressKey: HOME
+- runScript: sleep.js
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible: "Echo-Borer"
+    timeout: 30000
+- stopApp
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible: "Load Game"
+    timeout: 60000
+- tapOn: "Load Game"
+- extendedWaitUntil:
+    visible: "Load Autosave"
+    timeout: 15000
+- tapOn: "Load Autosave"
+- extendedWaitUntil:
+    visible: "Echo-Borer"
+    timeout: 60000
+- assertVisible: "Nova"
+- assertVisible: "Zeke"

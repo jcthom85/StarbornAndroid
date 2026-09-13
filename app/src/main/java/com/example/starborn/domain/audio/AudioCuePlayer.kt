@@ -286,6 +286,7 @@ class AudioCuePlayer(
         if (resumeAmbientAfterBackground) {
             ambientPlayers.values.forEach { it.play() }
         }
+        soundPool.autoResume()
         resumeMusicAfterBackground = false
         resumeAmbientAfterBackground = false
     }

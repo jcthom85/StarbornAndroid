@@ -29,6 +29,23 @@ class EconomyCatalogTest {
     private val items = ItemRepository(ItemAssetDataSource(reader)).apply { load() }
     private val shops = ShopAssetDataSource(reader).loadShops()
 
+    @Test fun `returning from combat reports already awarded loot without granting it again`() {
+        val inventory = InventoryService(items).apply { loadItems(); addItem("medkit", 3) }
+        val store = GameSessionStore().apply { setInventory(inventory.snapshot()) }
+        val before = store.state.value
+        val messages = mutableListOf<String>()
+        val handler = com.example.starborn.feature.exploration.viewmodel.helpers.ExplorationCombatHandler(
+            inventory, store, EventManager(emptyList(), store), { messages += it }, {}, { it })
+        val payload = com.example.starborn.navigation.CombatResultPayload(
+            outcome = com.example.starborn.navigation.CombatResultPayload.Outcome.VICTORY,
+            enemyIds = listOf("faulted_loader"), rewardItems = mapOf("medkit" to 2))
+        repeat(2) { handler.processVictory(payload, null) {} }
+        assertEquals(3, inventory.snapshot()["medkit"])
+        assertEquals(before, store.state.value)
+        assertEquals(2, messages.size)
+        assertTrue(messages.all { it.contains("2 x") })
+    }
+
     @Test fun `renewable fishing catches use bounded explicit resale values`() {
         val fishing = FishingAssetDataSource(reader).loadFishingData()
         val bestIngredientMarkdown = shops.filter { shop ->

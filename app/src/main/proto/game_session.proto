@@ -50,6 +50,8 @@ message GameSessionProto {
   string astra_return_room_id = 49;
   map<string, ArcadeProgressProto> arcade_progress = 50;
   ActiveMealBuffProto active_meal_buff = 51;
+  repeated string pending_event_cinematics = 52;
+  string pending_battle_json = 53;
 
   reserved 19;
   reserved 28, 29, 30, 31;

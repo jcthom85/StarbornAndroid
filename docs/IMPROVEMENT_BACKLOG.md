@@ -5,6 +5,66 @@ exploration/narrative consistency, and presentation/release verification.
 
 ## Current phase status (2026-09-12)
 
+- Release checkpoint: 1.3.32 (116), commit c37e4f6, was pushed and accepted by
+  Google Play on Internal Testing. Historical uncommitted/Play 115 notes below
+  describe earlier checkpoints.
+
+- Lifecycle follow-up: combat now pauses ATB while its screen is below RESUMED,
+  preserves the existing menu/tutorial pause gates, and holds an enemy attack
+  interrupted during its telegraph until foregrounding. Added a production-runtime
+  regression for a 30-second background interval and subsequent ATB resumption.
+  Strict audio validation passes for 114 referenced cues, with no catalog warnings.
+  Verification: 407 JVM tests pass with zero failures/errors/skips; lintDebug
+  completes successfully, 354 strict selectors pass, and diff check passes.
+  These new lifecycle changes are not in Play 116.
+
+### Remaining acceptance checklist
+
+- Combat reward follow-up: CombatViewModel already grants drops and synchronizes
+  inventory when victory resolves. ExplorationCombatHandler was adding those same
+  drops again from the navigation payload. Removed this second grant while keeping
+  reward announcements. Added a regression that delivers the result twice and
+  checks that inventory and saved state remain unchanged. Production payload
+  producers were checked: victory payloads come from CombatScreen after payout.
+  Verification: 410 JVM tests pass, zero failures/errors; 354 strict selectors and
+  diff check pass. Changes remain uncommitted and absent from Play 116.
+  Interrupted-battle recovery remains open: payout, enemy retirement via
+  combat_victory, and quest progression via combat_result are separate transitions.
+  A durable recovery design must distinguish an unfinished fight from an already
+  paid victory awaiting progression; restarting both would duplicate rewards.
+
+- Cinematic recovery checkpoint: confirmed that EventManager retired the event
+  when a scene started while its progression callback existed only in memory.
+  Added backward-compatible protobuf field 52 for pending event cinematics,
+  included it in autosave fingerprints, and restart pending scenes when exploration
+  loads. Only the scene/callback resumes; earlier event grants are not replayed.
+  Repeated resume calls and duplicate presentation callbacks are guarded. Unknown
+  or ambiguous saved scene IDs remain recorded rather than silently discarded.
+  All six authored callback scene IDs resolve in the catalog regression. A real
+  disk round-trip test covers interruption before completion, nested credits,
+  and reward conservation. Full JVM suite: 409 passing, zero failures/errors;
+  diff check passes. No install, commit or release performed for this change.
+  Scope: restores saves written while a cinematic is pending. It does not repair
+  previously stranded saves without this field or guarantee atomic recovery if
+  the process dies partway through a multi-action completion callback.
+
+- Verify lifecycle observer wiring and an interrupted enemy telegraph on an Android
+  device; verify ongoing timed prompts and animation callbacks after resuming.
+- Trace process death during combat and puzzles; test the new cinematic restart on
+  Android. Event-spawned encounters still use a transient pending descriptor.
+  Puzzle success dispatch occurs after solution validation; unsolved slider state
+  remains transient. Recovery of these flows is not yet accepted.
+- Verify interruption cannot skip a required encounter, duplicate its reward, or
+  retire an unfinished cinematic/puzzle event. Mid-quest disk tests alone do not
+  prove these boundaries.
+- Verify actual audio pause/resume, focus interruption, volume and route changes;
+  reference validation proves asset integrity only.
+- Measure frame time, memory and startup on the release device. Static lint is not
+  a performance measurement.
+- Complete continuous spending/shop-access and optional-content budget evidence.
+- Run physical-phone large-text, touch, route-discovery and finale acceptance,
+  then verify the intended release track before production release.
+
 - Finale combat/status checkpoint: the earned six-world pre-finale state now spends
   only resources actually present at that checkpoint (5 of 9 AP and 1,800 of 2,640
   credits) on legal nodes and four authored weapon-shop upgrades. Finale-only enemy

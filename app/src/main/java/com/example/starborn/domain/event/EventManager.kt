@@ -14,6 +14,23 @@ class EventManager(
 ) {
     private val eventsByTriggerType: Map<String, List<GameEvent>> =
         events.groupBy { it.trigger.type.lowercase() }
+    private val playingCinematics = mutableSetOf<String>()
+
+    /** Restart pending scenes without replaying the event's earlier grants or gates. */
+    fun resumePendingCinematics() {
+        fun flatten(actions: List<EventAction>): List<EventAction> = actions.flatMap {
+            listOf(it) + flatten(it.`do`.orEmpty()) + flatten(it.elseDo.orEmpty()) + flatten(it.onComplete.orEmpty())
+        }
+        val actions = flatten(events.flatMap { it.actions })
+        sessionStore.state.value.pendingEventCinematics.toList().forEach { sceneId ->
+            val candidates = actions.filter {
+                it.type.lowercase() in setOf("play_cinematic", "trigger_cutscene") &&
+                    it.sceneId == sceneId && !it.onComplete.isNullOrEmpty()
+            }.distinct()
+            // Preserve unknown or ambiguous entries rather than discarding their recovery evidence.
+            candidates.singleOrNull()?.let { executeActions(listOf(it)) }
+        }
+    }
 
     fun handleTrigger(type: String, payload: EventPayload = EventPayload.Empty) {
         val candidates = eventsByTriggerType[type.lowercase()].orEmpty()
@@ -224,10 +241,15 @@ class EventManager(
                         executeOnComplete(action)
                         action.onComplete != null
                     } else {
+                        val recoverable = !action.onComplete.isNullOrEmpty()
+                        if (recoverable && !playingCinematics.add(sceneId)) continue
+                        if (recoverable) sessionStore.setEventCinematicPending(sceneId, true)
                         var callbackInvoked = false
                         eventHooks.onPlayCinematic(sceneId) {
                             if (!callbackInvoked) {
                                 callbackInvoked = true
+                                playingCinematics.remove(sceneId)
+                                if (recoverable) sessionStore.setEventCinematicPending(sceneId, false)
                                 executeOnComplete(action)
                             }
                         }

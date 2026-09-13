@@ -154,6 +154,7 @@ class AppServices(context: Context) {
     private var autosaveJob: Job? = null
     private var lastAutosaveTimestamp: Long = 0L
     private var lastAutosaveFingerprint: String? = null
+    private var lastAutosaveRecoveryKey: String? = null
 
     companion object {
         private const val AUTOSAVE_INTERVAL_MS = 90_000L
@@ -2400,6 +2401,8 @@ class AppServices(context: Context) {
     }
 
     private fun scheduleAutosave(state: GameSessionState) {
+        val savedState = state.battleCheckpoint ?: state
+        val recoveryKey = savedState.pendingBattleJson + "|" + savedState.pendingEventCinematics.sorted().joinToString("|")
         val fingerprint = state.fingerprint()
         val now = System.currentTimeMillis()
         val elapsed = now - lastAutosaveTimestamp
@@ -2407,21 +2410,26 @@ class AppServices(context: Context) {
             return
         }
         autosaveJob?.cancel()
-        val delayMs = if (elapsed >= AUTOSAVE_INTERVAL_MS) 0L else AUTOSAVE_INTERVAL_MS - elapsed
+        val delayMs = if (elapsed >= AUTOSAVE_INTERVAL_MS || recoveryKey != lastAutosaveRecoveryKey) 0L
+            else AUTOSAVE_INTERVAL_MS - elapsed
         autosaveJob = persistenceScope.launch {
             if (delayMs > 0) delay(delayMs)
             sessionPersistence.writeAutosave(state)
             lastAutosaveTimestamp = System.currentTimeMillis()
             lastAutosaveFingerprint = fingerprint
+            lastAutosaveRecoveryKey = recoveryKey
         }
     }
 
     private fun recordAutosaveState(state: GameSessionState) {
+        val savedState = state.battleCheckpoint ?: state
+        lastAutosaveRecoveryKey = savedState.pendingBattleJson + "|" + savedState.pendingEventCinematics.sorted().joinToString("|")
         lastAutosaveFingerprint = state.fingerprint()
         lastAutosaveTimestamp = System.currentTimeMillis()
     }
 
     private fun resetAutosaveThrottle() {
+        lastAutosaveRecoveryKey = null
         lastAutosaveFingerprint = null
         lastAutosaveTimestamp = 0L
     }

@@ -890,6 +890,7 @@ class ExplorationViewModel(
     }
 
     fun onCombatVictory(result: CombatResultPayload) {
+        val pendingBattle = sessionStore.state.value.pendingBattleJson
         val outcomeMessage = combatHandler.processVictory(
             result = result,
             enemyMovementManager = enemyMovementManager,
@@ -899,10 +900,12 @@ class ExplorationViewModel(
                 refreshCurrentRoomBlockedDirections()
             }
         )
+        sessionStore.finishBattle(pendingBattle)
         playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
     }
 
     fun onCombatDefeat(enemyIds: List<String>) {
+        val pendingBattle = sessionStore.state.value.pendingBattleJson
         combatHandler.processDefeat(
             enemyIds = enemyIds,
             onDefeatProcessed = {
@@ -910,6 +913,7 @@ class ExplorationViewModel(
                 refreshCurrentRoomBlockedDirections()
             }
         )
+        sessionStore.finishBattle(pendingBattle)
         playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
     }
 
@@ -929,12 +933,14 @@ class ExplorationViewModel(
     }
 
     fun onCombatRetreat(enemyIds: List<String>) {
+        val pendingBattle = sessionStore.state.value.pendingBattleJson
         combatHandler.processRetreat(
             enemyIds = enemyIds,
             onRetreatProcessed = {
                 refreshCurrentRoomBlockedDirections()
             }
         )
+        sessionStore.finishBattle(pendingBattle)
         playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
     }
 
@@ -1677,6 +1683,7 @@ class ExplorationViewModel(
 
     fun launchSimulationCombat(enemyIds: List<String>) {
         dismissSimulationDeck()
+        setRecoverableEncounter(EncounterDescriptor(enemyIds.map { EncounterEnemyInstance(enemyId = it) }))
         emitEvent(ExplorationEvent.EnterCombat(enemyIds))
     }
 
@@ -2357,7 +2364,19 @@ class ExplorationViewModel(
             }
             playRoomAudio(initialHub?.id, initialRoom?.id)
             updateMinimap(initialRoom)
-            initialRoom?.let { eventManager.handleTrigger("enter_room", EventPayload.EnterRoom(it.id)) }
+            val recoveringBattle = sessionStore.state.value.pendingBattleJson.takeIf { it.isNotBlank() }
+            if (recoveringBattle != null) {
+                val descriptor = runCatching { battleDescriptorAdapter.fromJson(recoveringBattle) }.getOrNull()
+                if (descriptor != null && descriptor.enemies.isNotEmpty()) {
+                    encounterCoordinator.setPendingEncounter(descriptor)
+                    emitEvent(ExplorationEvent.EnterCombat(descriptor.enemies.map { it.enemyId }))
+                } else {
+                    postStatus("The interrupted encounter could not be restored. Load an earlier save.")
+                }
+            } else {
+                eventManager.resumePendingCinematics()
+                initialRoom?.let { eventManager.handleTrigger("enter_room", EventPayload.EnterRoom(it.id)) }
+            }
             processBootstrapQueues()
             if (movementCatalog.parties.isNotEmpty()) {
                 startEnemyMovementTicker()
@@ -3845,7 +3864,16 @@ class ExplorationViewModel(
 
     private fun preparePendingEncounter(room: Room, encounterIds: List<String>, sourcePartyId: String? = null) {
         val descriptor = buildEncounterDescriptor(room, encounterIds, sourcePartyId)
+        setRecoverableEncounter(descriptor)
+    }
+
+    private fun setRecoverableEncounter(descriptor: EncounterDescriptor) {
+        sessionStore.armBattle(battleDescriptorAdapter.toJson(descriptor))
         encounterCoordinator.setPendingEncounter(descriptor)
+    }
+
+    private val battleDescriptorAdapter by lazy {
+        com.example.starborn.core.MoshiProvider.instance.adapter(EncounterDescriptor::class.java)
     }
 
     private fun buildEncounterDescriptor(
@@ -4220,7 +4248,7 @@ class ExplorationViewModel(
             enemyIds == listOf("the_beast") &&
             "ms_debug_w2_anchor_flow" in sessionStore.state.value.completedMilestones
         ) {
-            encounterCoordinator.setPendingEncounter(
+            setRecoverableEncounter(
                 EncounterDescriptor(
                     enemies = listOf(EncounterEnemyInstance(enemyId = "the_beast", hp = 12, vitality = 0))
                 )

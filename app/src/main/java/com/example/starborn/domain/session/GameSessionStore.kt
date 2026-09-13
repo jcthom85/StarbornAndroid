@@ -12,6 +12,21 @@ class GameSessionStore {
     private val _state = MutableStateFlow(GameSessionState())
     val state: StateFlow<GameSessionState> = _state.asStateFlow()
 
+    fun armBattle(descriptorJson: String) {
+        _state.update { it.copy(pendingBattleJson = descriptorJson) }
+    }
+
+    fun checkpointBattle() {
+        _state.update { if (it.pendingBattleJson.isBlank() || it.battleCheckpoint != null) it
+            else it.copy(battleCheckpoint = it) }
+    }
+
+    fun finishBattle(expectedDescriptorJson: String) {
+        if (expectedDescriptorJson.isBlank()) return
+        _state.update { it.copy(battleCheckpoint = null,
+            pendingBattleJson = if (it.pendingBattleJson == expectedDescriptorJson) "" else it.pendingBattleJson) }
+    }
+
     fun restore(state: GameSessionState) {
         val normalized = normalizeArmors(normalizeWeapons(normalizeEquipment(state)))
         if (_state.value == normalized) return
@@ -422,6 +437,11 @@ class GameSessionStore {
     fun markEventCompleted(eventId: String) {
         if (eventId.isBlank()) return
         _state.update { it.copy(completedEvents = it.completedEvents + eventId) }
+    }
+
+    fun setEventCinematicPending(sceneId: String, pending: Boolean) {
+        _state.update { it.copy(pendingEventCinematics = if (pending)
+            it.pendingEventCinematics + sceneId else it.pendingEventCinematics - sceneId) }
     }
 
     fun clearEventCompletion(eventId: String) {

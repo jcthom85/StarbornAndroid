@@ -204,6 +204,12 @@ class CombatViewModel(
     val atbMeters: StateFlow<Map<String, Float>> = _atbMeters.asStateFlow()
     private var atbJob: Job? = null
     private var atbMenuPaused: Boolean = false
+    private var backgroundPaused: Boolean = false
+
+    fun setBackgroundPaused(paused: Boolean) {
+        backgroundPaused = paused
+        if (!paused && !isAtbPaused()) tryProcessEnemyTurns()
+    }
     private var atbAnimationPauses: Int = 0
     private var suppressMissLungeTargets: Set<String> = emptySet()
     private var lastShieldBlockCueAtMs: Long = 0L
@@ -212,7 +218,7 @@ class CombatViewModel(
     private var lastErosionWarningCueAtMs: Long = 0L
 
     private fun isAtbPaused(): Boolean =
-        atbMenuPaused || atbAnimationPauses > 0 || _combatTutorial.value?.paused == true
+        backgroundPaused || atbMenuPaused || atbAnimationPauses > 0 || _combatTutorial.value?.paused == true
 
     private fun clearCombatBanner() {
         bannerSession = null
@@ -297,6 +303,7 @@ class CombatViewModel(
         val allSkills = worldAssets.loadSkills()
         val rooms = worldAssets.loadRooms()
 
+        sessionStore.checkpointBattle()
         val sessionSnapshot = sessionStore.state.value
         val equippedItemsSnapshot = sessionSnapshot.equippedItems
         val equippedWeaponsSnapshot = sessionSnapshot.equippedWeapons
@@ -2523,6 +2530,8 @@ class CombatViewModel(
                 )
                 delay(420)
             }
+            // A telegraph may have started just before the activity paused.
+            while (backgroundPaused) delay(50)
             maybeTriggerAttackLunge(action)
             // Guard minigame disabled: enemy attacks always resolve immediately.
             suppressMissLungeTargets = emptySet()
