@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
@@ -51,6 +53,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.starborn.R
 import com.example.starborn.domain.fishing.MinigameResult
@@ -134,7 +137,7 @@ fun FishingScreen(
                 largeTouchTargets = largeTouchTargets
             )
             FishingHero(
-                zoneName = zone?.name ?: "Unknown Waters",
+                zone = zone,
                 state = uiState.fishingState,
                 highContrastMode = highContrastMode
             )
@@ -224,7 +227,7 @@ fun FishingRoute(
 
 @Composable
 private fun FishingHero(
-    zoneName: String,
+    zone: com.example.starborn.domain.fishing.FishingZone?,
     state: FishingState,
     highContrastMode: Boolean
 ) {
@@ -247,34 +250,94 @@ private fun FishingHero(
                 .background(gradient)
                 .padding(horizontal = 16.dp, vertical = 14.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(
-                        text = zoneName,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.White
-                    )
-                    Text(
-                        text = "Tide-smooth air, neon ripples, and distant biolights under the waterline.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.78f)
-                    )
-                    Text(
-                        text = "Current phase: ${state.label()}",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = Color.White.copy(alpha = 0.82f)
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = zone?.name ?: "Unknown Waters",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = Color.White
+                        )
+                        Text(
+                            text = "Tide-smooth air, neon ripples, and distant biolights under the waterline.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.White.copy(alpha = 0.78f)
+                        )
+                        Text(
+                            text = "Current phase: ${state.label()}",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Color.White.copy(alpha = 0.82f)
+                        )
+                    }
+                    Image(
+                        painter = painterResource(R.drawable.item_icon_fishing),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .height(48.dp)
+                            .padding(start = 8.dp)
                     )
                 }
-                Image(
-                    painter = painterResource(R.drawable.item_icon_fishing),
-                    contentDescription = null,
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.height(48.dp)
-                )
+
+                // Native Species Preview in this Water Body
+                val catches = zone?.catches.orEmpty()
+                if (catches.isNotEmpty()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Native Species:",
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold),
+                            color = if (highContrastMode) Color(0xFF8AC4FF) else MaterialTheme.colorScheme.primary
+                        )
+                        catches.forEach { catchDef ->
+                            val fishName = catchDef.itemId.replace('_', ' ')
+                                .split(' ')
+                                .joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
+                            Surface(
+                                shape = RoundedCornerShape(8.dp),
+                                color = Color.Black.copy(alpha = 0.35f),
+                                border = BorderStroke(0.5.dp, Color.White.copy(alpha = 0.15f))
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    Text(
+                                        text = "🐟 $fishName",
+                                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp),
+                                        color = Color.White.copy(alpha = 0.9f)
+                                    )
+                                    val rarityColor = when (catchDef.rarity) {
+                                        com.example.starborn.domain.fishing.FishingRarity.COMMON -> Color(0xFFAAAAAA)
+                                        com.example.starborn.domain.fishing.FishingRarity.UNCOMMON -> Color(0xFF81C784)
+                                        com.example.starborn.domain.fishing.FishingRarity.RARE -> Color(0xFF64B5F6)
+                                        com.example.starborn.domain.fishing.FishingRarity.EPIC -> Color(0xFFBA68C8)
+                                        com.example.starborn.domain.fishing.FishingRarity.EXOTIC -> Color(0xFFFFD54F)
+                                        else -> Color.Gray
+                                    }
+                                    Text(
+                                        text = "• ${catchDef.rarity.name.lowercase().replaceFirstChar { it.uppercase() }}",
+                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.SemiBold),
+                                        color = rarityColor
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -350,7 +413,7 @@ private fun FishingSetupSection(
             color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
         )
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text("Rods", style = MaterialTheme.typography.labelLarge)
+            Text("Select Rod", style = MaterialTheme.typography.labelLarge)
             if (state.availableRods.isEmpty()) {
                 Text(
                     text = "You don't have any fishing rods.",
@@ -358,22 +421,30 @@ private fun FishingSetupSection(
                     color = MaterialTheme.colorScheme.error
                 )
             } else {
-                state.availableRods.forEach { rod ->
-                    val subtitle = "Power ${rod.fishingPower.toInt()} | Stability ${"%.1f".format(rod.stability)}"
-                    GearCard(
-                        title = rod.name,
-                        subtitle = subtitle,
-                        description = rod.description,
-                        selected = state.selectedRod?.id == rod.id,
-                        onClick = { onSelectRod(rod) },
-                        highContrastMode = highContrastMode
-                    )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    state.availableRods.forEach { rod ->
+                        val subtitle = "Power ${rod.fishingPower.toInt()} • Stability ${"%.1f".format(rod.stability)}"
+                        GearCard(
+                            title = rod.name,
+                            subtitle = subtitle,
+                            description = rod.description,
+                            selected = state.selectedRod?.id == rod.id,
+                            onClick = { onSelectRod(rod) },
+                            highContrastMode = highContrastMode,
+                            modifier = Modifier.width(220.dp)
+                        )
+                    }
                 }
             }
         }
 
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text("Lures", style = MaterialTheme.typography.labelLarge)
+            Text("Select Lure", style = MaterialTheme.typography.labelLarge)
             if (state.availableLures.isEmpty()) {
                 Text(
                     text = "You don't have any lures.",
@@ -381,20 +452,30 @@ private fun FishingSetupSection(
                     color = MaterialTheme.colorScheme.error
                 )
             } else {
-                state.availableLures.forEach { lure ->
-                    val subtitle = buildString {
-                        append("Rarity +${lure.rarityBonus.toInt()}%")
-                        val attracts = lure.attracts.joinToString().ifBlank { "General fish" }
-                        append(" • Attracts: $attracts")
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    state.availableLures.forEach { lure ->
+                        val formattedAttracts = lure.attracts.joinToString { raw ->
+                            raw.replace('_', ' ').split(' ').joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
+                        }.ifBlank { "General fish" }
+                        val subtitle = buildString {
+                            append("Rarity +${lure.rarityBonus.toInt()}%")
+                            append(" • Attracts: $formattedAttracts")
+                        }
+                        GearCard(
+                            title = lure.name,
+                            subtitle = subtitle,
+                            description = lure.description,
+                            selected = state.selectedLure?.id == lure.id,
+                            onClick = { onSelectLure(lure) },
+                            highContrastMode = highContrastMode,
+                            modifier = Modifier.width(220.dp)
+                        )
                     }
-                    GearCard(
-                        title = lure.name,
-                        subtitle = subtitle,
-                        description = lure.description,
-                        selected = state.selectedLure?.id == lure.id,
-                        onClick = { onSelectLure(lure) },
-                        highContrastMode = highContrastMode
-                    )
                 }
             }
         }
@@ -632,22 +713,77 @@ private fun FishingReelSection(
         )
         val frameColor = MaterialTheme.colorScheme.surfaceVariant
         val progressColor = MaterialTheme.colorScheme.primary
+        val infiniteFishWiggle = rememberInfiniteTransition(label = "fishWiggle")
+        val fishWiggleOffset by infiniteFishWiggle.animateFloat(
+            initialValue = -3f,
+            targetValue = 3f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(300, easing = LinearEasing),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "fishWiggleOffset"
+        )
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(80.dp)
+                .height(84.dp)
         ) {
             Canvas(modifier = Modifier.matchParentSize()) {
+                // Background Track
+                drawRoundRect(
+                    color = frameColor.copy(alpha = 0.4f),
+                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(24f, 24f),
+                    style = androidx.compose.ui.graphics.drawscope.Fill
+                )
                 drawRoundRect(
                     color = frameColor,
                     cornerRadius = androidx.compose.ui.geometry.CornerRadius(24f, 24f),
                     style = Stroke(width = 6f)
                 )
+                // Filled progress
                 drawRect(
-                    color = progressColor,
+                    color = progressColor.copy(alpha = 0.35f),
                     topLeft = androidx.compose.ui.geometry.Offset.Zero,
                     size = androidx.compose.ui.geometry.Size(size.width * animated.value, size.height)
                 )
+            }
+            // Dynamic Fish swimming across the progress track toward the catch boundary
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                // Surface Target / Boat Anchor on the right
+                Text(
+                    text = "⚓ BOAT",
+                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, fontSize = 10.sp),
+                    color = Color.White.copy(alpha = 0.7f),
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                )
+                // Swimming fish marker that advances with progress
+                val clampedProgress = animated.value.coerceIn(0f, 1f)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(fraction = clampedProgress.coerceAtLeast(0.08f)),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(top = fishWiggleOffset.dp)
+                    ) {
+                        Text(
+                            text = "🐟",
+                            fontSize = 24.sp
+                        )
+                        Text(
+                            text = "${(clampedProgress * 100).toInt()}%",
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
+                            color = Color.White
+                        )
+                    }
+                }
             }
         }
         Text(
@@ -771,13 +907,13 @@ private fun GearCard(
     description: String?,
     selected: Boolean,
     onClick: () -> Unit,
-    highContrastMode: Boolean
+    highContrastMode: Boolean,
+    modifier: Modifier = Modifier
 ) {
     val surfaceColor = if (highContrastMode) Color(0xFF111A25) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = if (selected) 0.75f else 0.55f)
     val border = if (selected) BorderStroke(1.dp, if (highContrastMode) Color(0xFF8AC4FF) else MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)) else null
     Surface(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
             .clickable(enabled = !selected, onClick = onClick),
         shape = RoundedCornerShape(14.dp),
         tonalElevation = if (selected) 3.dp else 1.dp,
