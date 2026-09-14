@@ -25,8 +25,12 @@ android {
         applicationId = "com.junewiregames.starborn.prealpha"
         minSdk = 26
         targetSdk = 36
-        versionCode = 118
-        versionName = "1.3.34"
+        versionCode = 119
+        versionName = "1.3.35"
+
+        // Temporary testing access: keep the scenario browser available in Play builds.
+        // Set this to false before the public/production release.
+        buildConfigField("boolean", "ENABLE_SCENARIO_MENU", "true")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -498,7 +498,7 @@ fun MainMenuScreen(
                 enabled = buttonsInteractable,
                 primary = true
             )
-            if (BuildConfig.DEBUG) {
+            if (BuildConfig.ENABLE_SCENARIO_MENU) {
                 StarbornTitleButton(
                     text = "Debug Scenarios",
                     onClick = { showDebugBrowser = true },
@@ -624,7 +624,7 @@ fun MainMenuScreen(
             )
         }
 
-        if (BuildConfig.DEBUG && showDebugBrowser) {
+        if (BuildConfig.ENABLE_SCENARIO_MENU && showDebugBrowser) {
             DebugScenarioDialog(
                 onLaunch = { scenario ->
                     showDebugBrowser = false
