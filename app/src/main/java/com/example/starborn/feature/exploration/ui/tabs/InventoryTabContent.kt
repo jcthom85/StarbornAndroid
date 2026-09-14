@@ -50,6 +50,13 @@ import kotlin.math.roundToInt
 
 private enum class InventoryCarouselPage { SUPPLIES, GEAR, KEY_ITEMS }
 
+private enum class SuppliesFilter(val label: String) {
+    ALL("All"),
+    INGREDIENTS("Food & Fish"),
+    COMPONENTS("Crafting Mats"),
+    CONSUMABLES("Combat Items")
+}
+
 @Composable
 fun InventoryTabContent(
     inventoryItems: List<InventoryPreviewItemUi>,
@@ -76,8 +83,17 @@ fun InventoryTabContent(
     var page by rememberSaveable {
         mutableStateOf(if (isGearTutorialActive) InventoryCarouselPage.GEAR else InventoryCarouselPage.SUPPLIES)
     }
-    val supplies = remember(inventoryItems) {
+    var suppliesFilter by rememberSaveable { mutableStateOf(SuppliesFilter.ALL) }
+    val rawSupplies = remember(inventoryItems) {
         inventoryItems.filterNot { it.isKeyItem() }
+    }
+    val supplies = remember(rawSupplies, suppliesFilter) {
+        when (suppliesFilter) {
+            SuppliesFilter.ALL -> rawSupplies
+            SuppliesFilter.INGREDIENTS -> rawSupplies.filter { it.isIngredientOrFish() }
+            SuppliesFilter.COMPONENTS -> rawSupplies.filter { it.isCraftingComponent() }
+            SuppliesFilter.CONSUMABLES -> rawSupplies.filter { it.isCombatRationOrSnack() }
+        }
     }
     val keyItems = remember(inventoryItems) { inventoryItems.filter { it.isKeyItem() } }
     MenuSectionCard(
@@ -95,11 +111,39 @@ fun InventoryTabContent(
         Spacer(modifier = Modifier.height(12.dp))
         when (page) {
             InventoryCarouselPage.SUPPLIES -> {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    SuppliesFilter.entries.forEach { filterOption ->
+                        val isSelected = suppliesFilter == filterOption
+                        Surface(
+                            shape = RoundedCornerShape(16.dp),
+                            color = if (isSelected) accentColor.copy(alpha = 0.22f) else Color.White.copy(alpha = 0.05f),
+                            border = BorderStroke(1.dp, if (isSelected) accentColor else borderColor.copy(alpha = 0.3f)),
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(16.dp))
+                                .clickable { suppliesFilter = filterOption }
+                        ) {
+                            Text(
+                                text = filterOption.label,
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                    fontSize = 10.sp
+                                ),
+                                color = if (isSelected) Color.White else Color.White.copy(alpha = 0.7f),
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            )
+                        }
+                    }
+                }
                 InventoryItemsPreview(
                     items = supplies,
                     accentColor = accentColor,
                     borderColor = borderColor,
-                    emptyMessage = "No supplies collected yet. Explore rooms to gather materials.",
+                    emptyMessage = "No supplies found in this category.",
                     onItemClick = onUseConsumable,
                     onShowDetails = onShowItemDetails
                 )
@@ -309,11 +353,43 @@ private fun InventoryItemsPreview(
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
-                        Text(
-                            text = item.type.readableInventoryLabel(),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Color.White.copy(alpha = if (isUsable) 0.7f else 0.5f)
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Text(
+                                text = item.type.readableInventoryLabel(),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color.White.copy(alpha = if (isUsable) 0.7f else 0.5f)
+                            )
+                            if (item.isCombatSnack()) {
+                                Surface(
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = Color(0xFFFF9800).copy(alpha = 0.25f),
+                                    border = BorderStroke(0.5.dp, Color(0xFFFFB74D))
+                                ) {
+                                    Text(
+                                        text = "⚡ Snack (5T CD)",
+                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
+                                        color = Color(0xFFFFCC80),
+                                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                                    )
+                                }
+                            } else if (item.isCookedMeal()) {
+                                Surface(
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = Color(0xFF4CAF50).copy(alpha = 0.25f),
+                                    border = BorderStroke(0.5.dp, Color(0xFF81C784))
+                                ) {
+                                    Text(
+                                        text = "🍲 Feast Buff",
+                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
+                                        color = Color(0xFFA5D6A7),
+                                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
                 Row(
@@ -389,11 +465,43 @@ fun InventoryItemDetailsContent(
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis
                         )
-                        Text(
-                            text = item.type.readableInventoryLabel().uppercase(Locale.getDefault()),
-                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                            color = accentColor.copy(alpha = 0.9f)
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                text = item.type.readableInventoryLabel().uppercase(Locale.getDefault()),
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                color = accentColor.copy(alpha = 0.9f)
+                            )
+                            if (item.isCombatSnack()) {
+                                Surface(
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = Color(0xFFFF9800).copy(alpha = 0.25f),
+                                    border = BorderStroke(0.5.dp, Color(0xFFFFB74D))
+                                ) {
+                                    Text(
+                                        text = "COMBAT SNACK • 5-TURN COOLDOWN",
+                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
+                                        color = Color(0xFFFFCC80),
+                                        modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
+                                    )
+                                }
+                            } else if (item.isCookedMeal()) {
+                                Surface(
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = Color(0xFF4CAF50).copy(alpha = 0.25f),
+                                    border = BorderStroke(0.5.dp, Color(0xFF81C784))
+                                ) {
+                                    Text(
+                                        text = "CAMP MEAL • MULTI-BATTLE BUFF",
+                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
+                                        color = Color(0xFFA5D6A7),
+                                        modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
                 Text(
@@ -470,6 +578,41 @@ private fun PreviewDetailRow(label: String, value: String, accentColor: Color) {
 private fun InventoryPreviewItemUi.isKeyItem(): Boolean {
     val normalized = type.lowercase(Locale.getDefault())
     return normalized == "key" || normalized == "key_item" || normalized == "quest"
+}
+
+private fun InventoryPreviewItemUi.isCombatSnack(): Boolean {
+    val normalizedType = type.lowercase(Locale.getDefault())
+    return normalizedType == "snack" || (normalizedType == "consumable" && (id.contains("snack") || id.contains("gummies") || id.contains("crunch") || id.contains("trail_mix")))
+}
+
+private fun InventoryPreviewItemUi.isCookedMeal(): Boolean {
+    val lowerId = id.lowercase(Locale.getDefault())
+    return type.equals("consumable", ignoreCase = true) &&
+        (lowerId.contains("stew") || lowerId.contains("broth") || lowerId.contains("ramen") ||
+         lowerId.contains("delight") || lowerId.contains("brisket") || lowerId.contains("feast") ||
+         lowerId.contains("fillet") || lowerId.contains("tonic") || lowerId.contains("consomme") ||
+         lowerId.contains("skewer") || lowerId.contains("soup"))
+}
+
+private fun InventoryPreviewItemUi.isIngredientOrFish(): Boolean {
+    val normalizedType = type.lowercase(Locale.getDefault())
+    val lowerId = id.lowercase(Locale.getDefault())
+    return normalizedType == "ingredient" || lowerId.contains("fish") || lowerId.contains("carp") ||
+        lowerId.contains("minnow") || lowerId.contains("eel") || lowerId.contains("tetra") ||
+        lowerId.contains("guppy") || lowerId.contains("void_ray") || lowerId.contains("meat") ||
+        lowerId.contains("herb") || lowerId.contains("pepper") || lowerId.contains("noodle")
+}
+
+private fun InventoryPreviewItemUi.isCraftingComponent(): Boolean {
+    val normalizedType = type.lowercase(Locale.getDefault())
+    return normalizedType == "component" || normalizedType == "material" || normalizedType == "mod" ||
+        normalizedType == "schematic" || normalizedType == "junk" || normalizedType == "misc" ||
+        id.contains("scrap") || id.contains("wire") || id.contains("circuit") || id.contains("plate")
+}
+
+private fun InventoryPreviewItemUi.isCombatRationOrSnack(): Boolean {
+    val normalizedType = type.lowercase(Locale.getDefault())
+    return isCombatSnack() || isCookedMeal() || normalizedType == "consumable" || normalizedType == "medicine"
 }
 
 private fun previewEffectRows(effect: ItemEffect): List<Pair<String, String>> = buildList {

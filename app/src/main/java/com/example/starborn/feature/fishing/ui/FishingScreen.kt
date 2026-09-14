@@ -561,12 +561,16 @@ private fun FishingHookSection(
         }
 
         Text(
-            text = "Jerk the device upward quickly as if pulling a fishing rod, ${if (hookState?.fallbackVisible == true) "or tap the button below." else "to set the hook!"}",
+            text = if (hookState?.gyroAvailable == true) {
+                "Jerk the device upward quickly as if striking a rod, or tap the button below!"
+            } else {
+                "Tap the button below quickly to set the hook before the fish escapes!"
+            },
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             color = if (highContrastMode) Color.White.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant
         )
-        val gyroLabel = if (hookState?.gyroAvailable == true) "Gyro hookset active" else "Tap if motion failover"
+        val gyroLabel = if (hookState?.gyroAvailable == true) "⚡ Motion Strike + Touch Ready" else "Touch Strike Ready"
         Text(
             text = gyroLabel,
             style = MaterialTheme.typography.labelMedium,
@@ -577,10 +581,21 @@ private fun FishingHookSection(
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.error
         )
-        if (hookState?.fallbackVisible == true) {
-            Button(onClick = onSetHook, modifier = Modifier.heightIn(min = buttonHeight)) {
-                Text("Set Hook")
-            }
+        // Prominently display the Hook strike button for seamless one-handed or flat-surface play
+        Button(
+            onClick = onSetHook,
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = if (largeTouchTargets) 64.dp else 52.dp),
+            shape = RoundedCornerShape(14.dp),
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                containerColor = if (highContrastMode) Color(0xFF1D8BF2) else MaterialTheme.colorScheme.primary
+            )
+        ) {
+            Text(
+                text = "⚡ STRIKE & SET HOOK",
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+            )
         }
         OutlinedButton(onClick = onCancel, modifier = Modifier.heightIn(min = buttonHeight)) {
             Text("Abort")

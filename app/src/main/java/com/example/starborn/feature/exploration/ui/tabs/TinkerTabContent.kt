@@ -1015,39 +1015,85 @@ private fun SchematicsCatalogPanel(
         }
 
         if (lockedRecipes.isNotEmpty()) {
-            Text(
-                text = "UNKNOWN BLUEPRINTS (${lockedRecipes.size} locked)",
-                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                color = Color.White.copy(alpha = 0.4f)
-            )
+            var showLockedRequirements by rememberSaveable { mutableStateOf(false) }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "UNKNOWN BLUEPRINTS (${lockedRecipes.size} locked)",
+                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                    color = Color.White.copy(alpha = 0.5f)
+                )
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = if (showLockedRequirements) accentColor.copy(alpha = 0.2f) else Color.White.copy(alpha = 0.05f),
+                    border = BorderStroke(0.5.dp, if (showLockedRequirements) accentColor else borderColor.copy(alpha = 0.3f)),
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(12.dp))
+                        .clickable { showLockedRequirements = !showLockedRequirements }
+                ) {
+                    Text(
+                        text = if (showLockedRequirements) "Hide Required Items" else "Preview Required Items",
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold),
+                        color = if (showLockedRequirements) accentColor else Color.White.copy(alpha = 0.7f),
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                    )
+                }
+            }
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 140.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                    .heightIn(max = 200.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 items(lockedRecipes, key = { it.id }) { recipe ->
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(6.dp),
-                        color = Color.Black.copy(alpha = 0.25f),
-                        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.08f))
+                        shape = RoundedCornerShape(8.dp),
+                        color = Color.Black.copy(alpha = 0.35f),
+                        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.1f))
                     ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
+                        Column(
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            Text(
-                                text = "??? [Encrypted Schematic]",
-                                style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp),
-                                color = Color.White.copy(alpha = 0.35f)
-                            )
-                            Text(
-                                text = "LOCKED",
-                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
-                                color = Color.White.copy(alpha = 0.25f)
-                            )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = if (showLockedRequirements) recipe.name else "??? [Encrypted Schematic]",
+                                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp, fontWeight = FontWeight.SemiBold),
+                                    color = if (showLockedRequirements) Color.White.copy(alpha = 0.85f) else Color.White.copy(alpha = 0.4f)
+                                )
+                                Text(
+                                    text = "LOCKED",
+                                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
+                                    color = Color(0xFFFF9800).copy(alpha = 0.7f)
+                                )
+                            }
+                            if (showLockedRequirements) {
+                                recipe.description?.takeIf { it.isNotBlank() }?.let { desc ->
+                                    Text(
+                                        text = desc,
+                                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp),
+                                        color = Color.White.copy(alpha = 0.5f),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    recipe.ingredients.forEach { req ->
+                                        RequirementChip(req = req, accentColor = accentColor)
+                                    }
+                                }
+                            }
                         }
                     }
                 }
