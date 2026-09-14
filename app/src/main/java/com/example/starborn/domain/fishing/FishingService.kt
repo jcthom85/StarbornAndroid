@@ -7,7 +7,9 @@ import kotlin.random.Random
 class FishingService(
     private val fishingAssetDataSource: FishingAssetDataSource,
     private val inventoryService: InventoryService,
-    private val random: Random = Random.Default
+    private val random: Random = Random.Default,
+    private val sessionStore: com.example.starborn.domain.session.GameSessionStore? = null,
+    private val craftingService: com.example.starborn.domain.crafting.CraftingService? = null
 ) {
 
     private val fishingData: FishingData by lazy { fishingAssetDataSource.loadFishingData() }
@@ -46,6 +48,13 @@ class FishingService(
     }
 
     fun getVictoryScreen(): VictoryScreenConfig? = fishingData.victoryScreen
+
+    fun secureCatch(result: FishingResult): FishingResult {
+        if (result.quantity <= 0 || result.secured) return result
+        inventoryService.addItem(result.itemId, result.quantity)
+        sessionStore?.setInventory(inventoryService.snapshot())
+        return result.copy(secured = true, uses = craftingService?.usesFor(result.itemId).orEmpty())
+    }
 
     fun prepareEncounter(
         zone: FishingZone,
@@ -102,8 +111,9 @@ class FishingService(
         return zone.catches.map { catch ->
             val base = catch.weight.toDouble().coerceAtLeast(0.1)
             val rarityFactor = rarityBoost(catch.rarity)
-            val attractionMultiplier = if (normalizedAttracts.any { it == catch.itemId.lowercase() }) 1.5 else 1.0
-            val adjusted = (base * rarityFactor * zoneBonus * attractionMultiplier).coerceAtLeast(0.1)
+            val attracted = catch.itemId.lowercase() in normalizedAttracts
+            val attractionMultiplier = if (attracted) 1.5 * zoneBonus else 1.0
+            val adjusted = (base * rarityFactor * attractionMultiplier).coerceAtLeast(0.1)
             catch to adjusted
         }
     }
@@ -166,7 +176,9 @@ data class FishingResult(
     val message: String,
     val rarity: FishingRarity? = null,
     val flavorText: String? = null,
-    val behavior: FishBehaviorDefinition? = null
+    val behavior: FishBehaviorDefinition? = null,
+    val secured: Boolean = false,
+    val uses: List<String> = emptyList()
 )
 
 data class FishingEncounter(

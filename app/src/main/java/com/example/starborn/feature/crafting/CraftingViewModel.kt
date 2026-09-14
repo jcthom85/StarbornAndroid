@@ -158,7 +158,7 @@ class CraftingViewModel(
             TinkeringItemChoice(
                 id = it.item.id,
                 name = it.item.name,
-                description = it.item.description,
+                description = (listOfNotNull(it.item.description) + craftingService.usesFor(it.item.id)).joinToString("\n"),
                 quantity = it.quantity
             )
         }
@@ -355,7 +355,11 @@ class CraftingViewModel(
     private fun rebuildBench(current: TinkeringBenchState): TinkeringBenchState {
         val mainId = current.mainItemId?.takeIf { it.isNotBlank() }
         val components = current.componentIds.filter { it.isNotBlank() }.take(2)
-        val recipe = findMatchingRecipe(mainId, components)
+        val recipe = craftingService.tinkeringRecipes.firstOrNull { it.id == current.activeRecipeId }
+            ?.takeIf { loaded ->
+                loaded.base == mainId && craftingService.ingredientsFor(loaded).keys
+                    .filterNot { it == loaded.base }.take(2).toSet() == components.toSet()
+            } ?: findMatchingRecipe(mainId, components)
         val requirements = recipe?.let { requirementStatuses(it) } ?: emptyList()
         val canCraft = recipe?.let { craftingService.canCraft(it) } ?: false
         val preview = recipe?.let {
@@ -385,13 +389,13 @@ class CraftingViewModel(
     private fun findMatchingRecipe(mainId: String?, components: List<String>): TinkeringRecipe? {
         if (mainId == null) return null
         val mainKey = normalizeToken(mainId)
-        val componentCounts = components.filter { it.isNotBlank() }.groupingBy { normalizeToken(it) }.eachCount()
+        val componentTypes = components.filter { it.isNotBlank() }.map { normalizeToken(it) }.toSet()
         return craftingService.tinkeringRecipes.firstOrNull { recipe ->
             val recipeMain = recipe.base?.let { normalizeToken(it) }
             val recipeComponents = craftingService.ingredientsFor(recipe)
                 .filterKeys { ingredient -> recipe.base?.equals(ingredient, ignoreCase = true) != true }
                 .mapKeys { (ingredient, _) -> normalizeToken(ingredient) }
-            recipeMain == mainKey && countsEqual(componentCounts, recipeComponents)
+            recipeMain == mainKey && componentTypes == recipeComponents.keys
         }
     }
 
@@ -437,7 +441,7 @@ class CraftingViewModel(
         TinkeringRecipeUi(
             id = id,
             name = name,
-            description = description,
+            description = (listOfNotNull(description) + craftingService.usesFor(result)).joinToString("\n"),
             category = category,
             method = method,
             base = base,

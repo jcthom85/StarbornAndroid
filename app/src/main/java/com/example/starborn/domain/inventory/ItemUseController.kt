@@ -55,9 +55,15 @@ class ItemUseController(
                 val parts = mutableListOf<String>()
                 if (result.hp > 0) parts += "${result.hp} HP"
                 val label = formatTargetLabel(resolvedTargets, characters)
-                if (result.buffs.isNotEmpty()) {
+                if (result.buffs.isNotEmpty() || craftingService.cookingRecipes.any { it.result == result.item.id }) {
                     applyMealBuff(result.item.id, result.item.name, result.buffs)
-                    parts += "Well-Fed (${result.buffs.joinToString { "${it.stat}+${it.value}" }})"
+                    val bonuses = result.buffs.joinToString { "${it.stat}+${it.value}" }
+                    val chef = sessionStore.state.value.activeMealBuff?.chefId
+                    parts += listOfNotNull(
+                        "Well-Fed for 3 encounters",
+                        bonuses.takeIf { it.isNotBlank() },
+                        chef?.let { "$it's serving bonus" }
+                    ).joinToString("; ")
                 }
                 if (parts.isEmpty()) "Used ${result.item.name}."
                 else "Restored ${parts.joinToString(" and ")} to $label"
@@ -102,16 +108,31 @@ class ItemUseController(
                 "resist", "status_resist" -> statusResistBonus += buff.value
             }
         }
+        val state = sessionStore.state.value
+        val chef = state.mealChefId.takeIf { it in craftingService.availableChefs() }
+            ?.takeIf { craftingService.cookingRecipes.any { recipe -> recipe.result == itemId } }
+        if (chef == "nova") focusBonus += 10
+        if (chef == "zeke") { hpBonus += 25; stabilityBonus += 3 }
+        if (chef == "gh0st") { speedBonus += 5; statusResistBonus += 20 }
+        if (chef == "orion") critBonus += 0.08
+        fun bonus(stat: String) = buffs.filter { it.stat.equals(stat, ignoreCase = true) }.sumOf { it.value }
         val mealBuff = com.example.starborn.domain.session.ActiveMealBuff(
             recipeId = itemId,
             recipeName = itemName,
+            chefId = chef,
             remainingEncounters = 3,
             hpBonus = hpBonus,
             speedBonus = speedBonus,
             focusBonus = focusBonus,
             critBonus = critBonus,
             stabilityBonus = stabilityBonus,
-            statusResistBonus = statusResistBonus
+            statusResistBonus = statusResistBonus,
+            strengthBonus = bonus("strength"),
+            defenseBonus = bonus("defense"),
+            agilityBonus = bonus("agility"),
+            luckBonus = bonus("luck"),
+            accuracyBonus = bonus("accuracy"),
+            evasionBonus = bonus("evasion")
         )
         sessionStore.applyMealBuff(mealBuff)
     }

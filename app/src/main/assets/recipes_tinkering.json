@@ -1,5 +1,17 @@
 [
   {
+    "id": "gear_salvage_lure",
+    "name": "Magnetic Salvage Lure",
+    "category": "gear",
+    "method": "assemble",
+    "base": "basic_lure",
+    "components": ["scrap_metal", "wiring_bundle"],
+    "ingredients": {"basic_lure": 1, "scrap_metal": 2, "wiring_bundle": 1},
+    "result": "salvage_lure",
+    "description": "Fit a plain lure with a weighted magnet. Favors useful salvage over fish; ordinary materials remain available through exploration.",
+    "success_message": "Magnetic Salvage Lure ready. Select it at a fishing spot to hunt for parts."
+  },
+  {
     "id": "repair_deep_mine_cabinet",
     "name": "Restore Deep Mine Cabinet",
     "category": "repair",
@@ -420,7 +432,7 @@
     "name": "Thermite Core Mod",
     "category": "gear",
     "method": "mod",
-    "base": "thermite_core_mod",
+    "base": "pure_iron",
     "components": [
       "pure_iron",
       "wiring_bundle",
@@ -440,7 +452,7 @@
     "name": "Orbital Deflector Mod",
     "category": "gear",
     "method": "mod",
-    "base": "orbital_deflector_mod",
+    "base": "composite_plate",
     "components": [
       "composite_plate",
       "nano_filament",
@@ -460,7 +472,7 @@
     "name": "Astral Weave Mod",
     "category": "gear",
     "method": "mod",
-    "base": "astral_weave_mod",
+    "base": "astral_thread",
     "components": [
       "astral_thread",
       "source_resin",

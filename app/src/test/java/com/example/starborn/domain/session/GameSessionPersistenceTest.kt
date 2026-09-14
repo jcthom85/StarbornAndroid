@@ -40,6 +40,16 @@ class GameSessionPersistenceTest {
     }
 
     @Test
+    fun servingCompanionAndAllMealStatsRoundTrip() = runBlocking {
+        val state = GameSessionState(mealChefId = "zeke", activeMealBuff = ActiveMealBuff(
+            recipeId = "feast", recipeName = "Feast", chefId = "zeke", remainingEncounters = 2,
+            strengthBonus = 6, defenseBonus = 5, agilityBonus = 4, luckBonus = 3,
+            accuracyBonus = 2, evasionBonus = 1, hpBonus = 25, stabilityBonus = 3))
+        persistence.writeAutosave(state)
+        assertEquals(state, persistence.readAutosave())
+    }
+
+    @Test
     fun interruptedBattleSavesCheckpointUntilRewardsAndProgressionAreFinished() = runBlocking {
         val store = GameSessionStore().apply { restore(GameSessionState(
             roomId = "boss_room", inventory = mapOf("medkit" to 3), playerCredits = 100,

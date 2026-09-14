@@ -68,7 +68,7 @@ class FishingServiceTest {
 
         every { inventoryService.hasItem(any()) } returns true
 
-        fishingService = FishingService(fishingAssetDataSource, inventoryService, zeroRandom())
+        fishingService = FishingService(fishingAssetDataSource, inventoryService, zeroRandom(), sessionStore = null)
     }
 
     @Test

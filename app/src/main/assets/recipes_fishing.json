@@ -8,8 +8,8 @@
       "id": "wooden_rod",
       "name": "Field Rod",
       "description": "A collapsible starter rod. It works, but flexes under heavy resonance.",
-      "fishing_power": 1.0,
-      "stability": 1.0
+      "fishing_power": 1,
+      "stability": 1
     },
     {
       "id": "fiberglass_rod",
@@ -45,7 +45,7 @@
       "id": "basic_lure",
       "name": "Plain Chime Lure",
       "description": "A simple lure that clicks faintly in moving water.",
-      "rarity_bonus": 0.0,
+      "rarity_bonus": 0,
       "attracts": [
         "raw_glowfish",
         "old_boot",
@@ -107,6 +107,39 @@
         "orbital_false_tide": 4,
         "foundry_cooling_runoff": 4
       }
+    },
+    {
+      "id": "bioluminescent_lure",
+      "name": "Bioluminescent Lure",
+      "description": "Canopy Hopper's glowing prize favors rare fish, especially in Sector 9.",
+      "rarity_bonus": 0.6,
+      "attracts": [
+        "chime_minnow",
+        "frequency_tetra",
+        "void_ray"
+      ],
+      "zone_bonus": {
+        "sector9_stream": 4,
+        "singularity_ether_well": 2
+      }
+    },
+    {
+      "id": "salvage_lure",
+      "name": "Magnetic Salvage Lure",
+      "description": "A weighted magnet favors useful scrap over fish. Especially effective in drains and runoff.",
+      "rarity_bonus": 0,
+      "attracts": [
+        "scrap_metal",
+        "wiring_bundle",
+        "circuit_board",
+        "nano_filament"
+      ],
+      "zone_bonus": {
+        "colony_pit_drain": 4,
+        "spire_runoff": 4,
+        "foundry_cooling_runoff": 4,
+        "orbital_false_tide": 2
+      }
     }
   ],
   "zones": {
@@ -134,6 +167,18 @@
         "weight": 5,
         "rarity": "rare",
         "behavior_id": "erratic_burst"
+      },
+      {
+        "item": "scrap_metal",
+        "weight": 5,
+        "rarity": "common",
+        "behavior_id": "steady_pull"
+      },
+      {
+        "item": "wiring_bundle",
+        "weight": 3,
+        "rarity": "common",
+        "behavior_id": "steady_pull"
       }
     ],
     "spire_runoff": [
@@ -160,6 +205,18 @@
         "weight": 8,
         "rarity": "rare",
         "behavior_id": "erratic_burst"
+      },
+      {
+        "item": "wiring_bundle",
+        "weight": 6,
+        "rarity": "common",
+        "behavior_id": "steady_pull"
+      },
+      {
+        "item": "circuit_board",
+        "weight": 3,
+        "rarity": "common",
+        "behavior_id": "steady_pull"
       }
     ],
     "orbital_false_tide": [
@@ -192,6 +249,18 @@
         "weight": 6,
         "rarity": "junk",
         "behavior_id": "gentle_wobble"
+      },
+      {
+        "item": "wiring_bundle",
+        "weight": 4,
+        "rarity": "common",
+        "behavior_id": "steady_pull"
+      },
+      {
+        "item": "nano_filament",
+        "weight": 2,
+        "rarity": "rare",
+        "behavior_id": "steady_pull"
       }
     ],
     "colony_pit_drain": [
@@ -218,6 +287,18 @@
         "weight": 12,
         "rarity": "junk",
         "behavior_id": "gentle_wobble"
+      },
+      {
+        "item": "scrap_metal",
+        "weight": 8,
+        "rarity": "common",
+        "behavior_id": "steady_pull"
+      },
+      {
+        "item": "wiring_bundle",
+        "weight": 3,
+        "rarity": "common",
+        "behavior_id": "steady_pull"
       }
     ],
     "foundry_cooling_runoff": [
@@ -250,6 +331,18 @@
         "weight": 8,
         "rarity": "junk",
         "behavior_id": "gentle_wobble"
+      },
+      {
+        "item": "scrap_metal",
+        "weight": 7,
+        "rarity": "common",
+        "behavior_id": "steady_pull"
+      },
+      {
+        "item": "circuit_board",
+        "weight": 3,
+        "rarity": "common",
+        "behavior_id": "steady_pull"
       }
     ],
     "singularity_ether_well": [
@@ -276,6 +369,18 @@
         "weight": 15,
         "rarity": "uncommon",
         "behavior_id": "steady_pull"
+      },
+      {
+        "item": "nano_filament",
+        "weight": 4,
+        "rarity": "rare",
+        "behavior_id": "steady_pull"
+      },
+      {
+        "item": "scrap_metal",
+        "weight": 3,
+        "rarity": "common",
+        "behavior_id": "steady_pull"
       }
     ]
   },
@@ -284,37 +389,37 @@
       "pattern": "sine",
       "base_pull": 0.28,
       "burst_pull": 0.08,
-      "stamina": 10.0
+      "stamina": 10
     },
     "steady_pull": {
       "pattern": "linear",
       "base_pull": 0.42,
       "burst_pull": 0.12,
-      "stamina": 12.0
+      "stamina": 12
     },
     "erratic_burst": {
       "pattern": "burst",
       "base_pull": 0.36,
       "burst_pull": 0.34,
-      "stamina": 15.0
+      "stamina": 15
     },
     "blind_drift": {
       "pattern": "linear",
       "base_pull": 0.48,
       "burst_pull": 0.16,
-      "stamina": 14.0
+      "stamina": 14
     },
     "standing_wave": {
       "pattern": "burst",
       "base_pull": 0.52,
       "burst_pull": 0.42,
-      "stamina": 18.0
+      "stamina": 18
     },
     "ether_teleport": {
       "pattern": "burst",
       "base_pull": 0.62,
       "burst_pull": 0.48,
-      "stamina": 22.0
+      "stamina": 22
     }
   },
   "minigame_rules": {
@@ -324,7 +429,7 @@
     },
     "medium": {
       "target_size": 0.3,
-      "bar_speed": 1.0
+      "bar_speed": 1
     },
     "hard": {
       "target_size": 0.24,

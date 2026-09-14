@@ -275,22 +275,22 @@
     "env": "mine",
     "title": "Nova's Bunk",
     "background_image": "images/rooms/world_1/pit_nova_bunk_v5.webp",
-    "description": "Your bunk is a narrow shelf in the colony wall. The bunk light hangs above cargo netting and a rusty locker holding your tools, a spare ration, and Jed's small metal carving. A scorched conduit runs beside the door release.",
+    "description": "Your bunk is a narrow shelf in the colony wall. The bunk light hangs above cargo netting and a rusty locker holding your tools, a spare ration, and Jed's small metal carving. A door control panel sits beside the exit, its wiring scorched.",
     "reveal_title_when_dark": true,
-    "description_dark": "Nova can find the bunk edge and door switch without light. Only the bunk light switch carries an emergency glow, outlining the scorched conduit beside the door release.",
+    "description_dark": "Darkness presses against the narrow sleeping shelf. Only the bunk light switch carries a faint emergency glow. Nova needs some light to find her way out.",
     "description_variants": [
       {
         "requires_state": {
           "light_on": true,
           "conduit_isolated": true
         },
-        "description": "The bunk light has settled back to a cheap yellow buzz. The scorched conduit is dead and the door release is safe to touch. The closed maintenance ticket remains where Dominion left it."
+        "description": "The bunk light has settled back to a cheap yellow buzz. The damaged circuit is isolated and the door stands open to the west. The closed maintenance ticket remains where Dominion left it."
       },
       {
         "requires_state": {
           "light_on": true
         },
-        "description": "The bunk light coughs awake over the cargo netting and rusty locker. A scorched conduit spits blue-white sparks across the door release. Its maintenance ticket is stamped CLOSED: WITHIN QUOTA."
+        "description": "The bunk light coughs awake over the cargo netting and rusty locker. Beside the exit, a door control panel spits blue-white sparks from scorched wiring. A manual release sits beneath its isolation switch. The maintenance ticket is stamped CLOSED: WITHIN QUOTA."
       }
     ],
     "npcs": [],
@@ -325,8 +325,8 @@
             "value": true
           }
         ],
-        "message_locked": "The live conduit arcs across the door release. Nova needs to isolate it before she can leave safely.",
-        "message_unlock": "The conduit is dead. The door release is safe."
+        "message_locked": "Nova needs the bunk light on and the door opened before she can leave.",
+        "message_unlock": "The damaged circuit is isolated and the door is open."
       }
     },
     "actions": [
@@ -341,12 +341,13 @@
         "condition_unmet_message": "The wall switch is cold under your fingers."
       },
       {
-        "name": "scorched conduit",
+        "name": "door control panel",
         "type": "generic",
         "action_event": "w1_mq01_inspect_safety_fault",
         "requires_milestone": "ms_w1_mq01_fault_visible",
+        "show_when_state": "light_on",
         "hide_when_state": "conduit_isolated",
-        "condition_unmet_message": "Only the bunk light's weak emergency glow touches the wall seam."
+        "condition_unmet_message": "Turn on the bunk light to see the door controls."
       },
       {
         "name": "bunk",
@@ -3593,7 +3594,7 @@
     },
     "pos": [
       100,
-      98
+      100
     ],
     "state": {},
     "actions": []
@@ -3613,7 +3614,7 @@
     },
     "pos": [
       100,
-      100
+      98
     ],
     "state": {},
     "actions": []
@@ -3746,7 +3747,7 @@
     },
     "pos": [
       1,
-      1
+      3
     ],
     "state": {},
     "actions": [
@@ -3805,8 +3806,8 @@
       "east": "spire_vent_output"
     },
     "pos": [
-      -1,
-      0
+      0,
+      1
     ],
     "state": {},
     "actions": [
@@ -3835,11 +3836,11 @@
     "connections": {
       "west": "spire_vent_output",
       "east": "spire_the_static",
-      "south": "spire_transit_plaza"
+      "down": "spire_transit_plaza"
     },
     "pos": [
-      1,
-      0
+      2,
+      1
     ],
     "state": {},
     "description_variants": [
@@ -3862,7 +3863,10 @@
         "action_event": "w3_mq12_map_patrols",
         "condition_unmet_message": "The patrol timing is written into the underrail map in marker, shortcuts, and fear."
       }
-    ]
+    ],
+    "special_exits": {
+      "down": "Descend to Transit Plaza (one way)"
+    }
   },
   {
     "id": "spire_the_static",
@@ -3959,7 +3963,7 @@
     },
     "pos": [
       2,
-      0
+      2
     ],
     "state": {},
     "actions": [
@@ -3997,7 +4001,7 @@
     },
     "pos": [
       2,
-      -1
+      3
     ],
     "state": {},
     "description_variants": [
@@ -4063,7 +4067,7 @@
     },
     "pos": [
       2,
-      -2
+      4
     ],
     "state": {},
     "description_variants": [
@@ -4165,8 +4169,8 @@
       "west": "spire_night_market"
     },
     "pos": [
-      6,
-      0
+      4,
+      2
     ],
     "state": {},
     "actions": [
@@ -4196,8 +4200,8 @@
       "south": "spire_night_market"
     },
     "pos": [
-      5,
-      -1
+      3,
+      3
     ],
     "state": {},
     "actions": [
@@ -4232,7 +4236,7 @@
       "north": "spire_night_market"
     },
     "pos": [
-      5,
+      3,
       1
     ],
     "state": {},
@@ -4316,7 +4320,7 @@
     },
     "pos": [
       4,
-      1
+      2
     ],
     "state": {},
     "description_variants": [
@@ -4353,8 +4357,8 @@
       "north": "spire_transit_plaza"
     },
     "pos": [
-      3,
-      2
+      2,
+      1
     ],
     "state": {},
     "description_variants": [
@@ -4407,7 +4411,7 @@
     },
     "pos": [
       4,
-      0
+      5
     ],
     "state": {},
     "description_variants": [
@@ -4504,7 +4508,7 @@
     },
     "pos": [
       0,
-      6
+      0
     ],
     "state": {},
     "description_variants": [
@@ -4546,12 +4550,12 @@
     "connections": {
       "west": "spire_uniform_sorting",
       "north": "spire_skypark_dome",
-      "east": "spire_archive_vault",
-      "south": "spire_exec_lounge_bar"
+      "down": "spire_archive_vault",
+      "southeast": "spire_exec_lounge_bar"
     },
     "pos": [
       1,
-      6
+      0
     ],
     "state": {},
     "description_variants": [
@@ -4591,7 +4595,11 @@
         ],
         "condition_unmet_message": "The dead drop needs the stolen ledger before it can isolate one executive's security profile."
       }
-    ]
+    ],
+    "special_exits": {
+      "southeast": "Take the passage to the Exec Lounge",
+      "down": "Take the chute to the Archive (one way)"
+    }
   },
   {
     "id": "spire_staff_checkpoint",
@@ -4608,7 +4616,7 @@
     },
     "pos": [
       0,
-      4
+      2
     ],
     "state": {},
     "description_variants": [
@@ -4704,11 +4712,11 @@
     "connections": {
       "west": "spire_skypark_dome",
       "east": "spire_donor_gallery",
-      "south": "spire_archive_vault"
+      "down": "spire_archive_vault"
     },
     "pos": [
-      3,
-      4
+      2,
+      0
     ],
     "state": {},
     "actions": [
@@ -4722,7 +4730,10 @@
         "type": "generic",
         "condition_unmet_message": "The handrail is warm, spotless, and probably listening."
       }
-    ]
+    ],
+    "special_exits": {
+      "down": "Descend to the Archive (one way)"
+    }
   },
   {
     "id": "spire_donor_gallery",
@@ -4738,8 +4749,8 @@
       "south": "spire_archive_vault"
     },
     "pos": [
-      4,
-      4
+      3,
+      0
     ],
     "state": {},
     "actions": [
@@ -4767,8 +4778,8 @@
     "enemies": [],
     "connections": {
       "north": "spire_uniform_sorting",
-      "west": "spire_service_lift",
-      "east": "spire_archive_vault",
+      "northwest": "spire_service_lift",
+      "northeast": "spire_archive_vault",
       "south": "spire_exec_lounge_scale_01"
     },
     "pos": [
@@ -4816,13 +4827,18 @@
           "ms_w3_prototype_tested"
         ]
       }
-    ]
+    ],
+    "special_exits": {
+      "northwest": "Return to the Service Lift",
+      "northeast": "Take the passage to the Archive"
+    }
   },
   {
     "id": "spire_archive_vault",
     "env": "neon",
     "special_exits": {
-      "northeast": "Enter Catalog Atrium"
+      "northeast": "Enter Catalog Atrium",
+      "southwest": "Return to the Exec Lounge"
     },
     "title": "Archive Vault",
     "background_image": "images/rooms/world_3/spire_archive_vault.webp",
@@ -4835,7 +4851,7 @@
     "connections": {
       "west": "spire_prism_gallery",
       "north": "spire_donor_gallery",
-      "south": "spire_exec_lounge_bar",
+      "southwest": "spire_exec_lounge_bar",
       "east": "spire_drone_test_alcove",
       "northeast": "spire_archive_scale_01"
     },
@@ -4902,8 +4918,8 @@
       "east": "spire_archive_vault"
     },
     "pos": [
-      3,
-      6
+      1,
+      1
     ],
     "state": {},
     "description_variants": [
@@ -4960,8 +4976,8 @@
       "east": "spire_landing_pad_roof"
     },
     "pos": [
-      5,
-      6
+      3,
+      1
     ],
     "state": {},
     "description_variants": [
@@ -5141,7 +5157,7 @@
     },
     "pos": [
       0,
-      0
+      2
     ],
     "state": {},
     "description_variants": [
@@ -5237,7 +5253,7 @@
     },
     "pos": [
       1,
-      -1
+      1
     ],
     "state": {},
     "actions": [
@@ -5258,14 +5274,14 @@
     "weather": "steam",
     "title": "Cooling Springs",
     "background_image": "images/rooms/world_4/foundry_cooling_springs.webp",
-        "description": "Factory noise fades in this hidden maintenance pocket. A steam pool and cooling basin collect mineral runoff; a magma regulator pulses beside a salvaged cooling bypass. A worker tablet lies wrapped in a coolant-stained scarf beside the pool.",
+    "description": "Factory noise fades in this hidden maintenance pocket. A steam pool and cooling basin collect mineral runoff; a magma regulator pulses beside a salvaged cooling bypass. A worker tablet lies wrapped in a coolant-stained scarf beside the pool.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "north": "foundry_slag_landing",
       "south": "foundry_lava_tube_bypass",
-      "east": "foundry_waste_intake",
+      "southeast": "foundry_waste_intake",
       "west": "foundry_cooling_springs_scale_01"
     },
     "pos": [
@@ -5338,7 +5354,10 @@
         "requires_milestone_not_set": "ms_relic_w4_magma_solved",
         "condition_unmet_message": "Superheated magma pulses through heavy adamantine valves."
       }
-    ]
+    ],
+    "special_exits": {
+      "southeast": "Take the passage to Waste Intake"
+    }
   },
   {
     "id": "foundry_lava_tube_bypass",
@@ -5355,7 +5374,7 @@
     },
     "pos": [
       1,
-      3
+      1
     ],
     "state": {},
     "actions": [
@@ -5370,7 +5389,8 @@
     "id": "foundry_waste_intake",
     "env": "foundry",
     "special_exits": {
-      "northeast": "Descend into Crusher Throat"
+      "northeast": "Descend into Crusher Throat",
+      "northwest": "Return to Cooling Springs"
     },
     "weather": "gas",
     "title": "Waste Intake",
@@ -5394,7 +5414,7 @@
     "connections": {
       "west": "foundry_slag_river",
       "north": "foundry_intake_overlook",
-      "south": "foundry_cooling_springs",
+      "northwest": "foundry_cooling_springs",
       "east": "foundry_service_airlock",
       "northeast": "foundry_waste_intake_scale_01"
     },
@@ -5503,7 +5523,7 @@
     },
     "pos": [
       2,
-      0
+      2
     ],
     "state": {},
     "actions": [
@@ -5725,7 +5745,7 @@
     },
     "pos": [
       0,
-      0
+      2
     ],
     "state": {},
     "actions": [
@@ -5839,7 +5859,7 @@
     },
     "pos": [
       1,
-      -1
+      1
     ],
     "state": {},
     "actions": [
@@ -5865,7 +5885,7 @@
     "connections": {
       "north": "foundry_conveyor_belt",
       "west": "foundry_forge_control_alcove",
-      "east": "foundry_power_core",
+      "southeast": "foundry_power_core",
       "south": "foundry_forge_scale_01"
     },
     "pos": [
@@ -5943,7 +5963,10 @@
         ],
         "condition_unmet_message": "The overclocked trial program was built to reject weak Constructs, which makes it useful practice for Nova."
       }
-    ]
+    ],
+    "special_exits": {
+      "southeast": "Take the passage to the Power Core"
+    }
   },
   {
     "id": "foundry_forge_control_alcove",
@@ -6009,7 +6032,8 @@
     "id": "foundry_power_core",
     "env": "foundry",
     "special_exits": {
-      "northeast": "Climb to Turbine Balcony"
+      "northeast": "Climb to Turbine Balcony",
+      "northwest": "Return to the Forge"
     },
     "weather": "sparks",
     "title": "Power Core",
@@ -6024,7 +6048,7 @@
     "connections": {
       "north": "foundry_engine_service_ring",
       "west": "foundry_conditioning_chamber",
-      "south": "foundry_forge_anvil",
+      "northwest": "foundry_forge_anvil",
       "east": "foundry_titan_dock",
       "northeast": "foundry_power_core_scale_01"
     },
@@ -6091,7 +6115,7 @@
     },
     "pos": [
       2,
-      0
+      2
     ],
     "state": {},
     "actions": [
@@ -6196,7 +6220,7 @@
     },
     "pos": [
       3,
-      0
+      2
     ],
     "state": {},
     "description_variants": [
@@ -6317,7 +6341,7 @@
     },
     "pos": [
       0,
-      0
+      2
     ],
     "state": {},
     "description_variants": [
@@ -6423,7 +6447,7 @@
     },
     "pos": [
       1,
-      -1
+      1
     ],
     "state": {},
     "actions": [
@@ -6468,7 +6492,7 @@
     "connections": {
       "north": "orbital_executive_dock",
       "south": "orbital_mirror_walk",
-      "east": "orbital_security_hub",
+      "southeast": "orbital_security_hub",
       "west": "orbital_solarium_scale_01"
     },
     "pos": [
@@ -6527,7 +6551,10 @@
         "action_event": "find_vhs_tape_09",
         "condition_unmet_message": "A sealed container wedged beneath the artificial coral ledges."
       }
-    ]
+    ],
+    "special_exits": {
+      "southeast": "Take the passage to Security"
+    }
   },
   {
     "id": "orbital_mirror_walk",
@@ -6545,7 +6572,7 @@
     },
     "pos": [
       1,
-      3
+      1
     ],
     "state": {},
     "description_variants": [
@@ -6585,7 +6612,8 @@
     "id": "orbital_security_hub",
     "env": "void",
     "special_exits": {
-      "northeast": "Enter the Ring Service Alcove"
+      "northeast": "Enter the Ring Service Alcove",
+      "northwest": "Return to the Solarium"
     },
     "title": "Security Hub",
     "background_image": "images/rooms/world_5/orbital_security_hub.webp",
@@ -6605,7 +6633,7 @@
     "connections": {
       "north": "orbital_surveillance_pit",
       "west": "orbital_grand_concourse",
-      "south": "orbital_solarium",
+      "northwest": "orbital_solarium",
       "east": "orbital_service_shaft",
       "northeast": "orbital_security_hub_scale_01"
     },
@@ -6655,7 +6683,7 @@
     },
     "pos": [
       2,
-      0
+      2
     ],
     "state": {},
     "actions": [
@@ -6870,7 +6898,7 @@
     },
     "pos": [
       3,
-      1
+      6
     ],
     "state": {},
     "description_variants": [
@@ -6921,7 +6949,7 @@
     },
     "pos": [
       4,
-      1
+      6
     ],
     "state": {},
     "description_variants": [
@@ -6959,7 +6987,7 @@
     },
     "pos": [
       5,
-      1
+      6
     ],
     "state": {},
     "description_variants": [
@@ -6998,11 +7026,11 @@
     ],
     "connections": {
       "west": "deep_firewall_beta",
-      "east": "deep_anchor_chamber"
+      "down": "deep_anchor_chamber"
     },
     "pos": [
-      6,
-      1
+      7,
+      6
     ],
     "state": {},
     "description_variants": [
@@ -7029,6 +7057,9 @@
     ],
     "enemy_flavor": {
       "firewall_construct": "A hard-light construct assembles from defensive code, all angles and corporate certainty."
+    },
+    "special_exits": {
+      "down": "Enter the Anchor Chamber (one way)"
     }
   },
   {
@@ -7046,7 +7077,7 @@
     },
     "pos": [
       3,
-      3
+      1
     ],
     "state": {},
     "description_variants": [
@@ -7391,7 +7422,7 @@
     },
     "pos": [
       0,
-      -2
+      -1
     ],
     "state": {},
     "actions": [
@@ -7428,7 +7459,7 @@
     },
     "pos": [
       0,
-      -3
+      -2
     ],
     "state": {},
     "actions": [
@@ -7625,7 +7656,7 @@
     },
     "pos": [
       2,
-      -2
+      -1
     ],
     "state": {},
     "actions": [],
@@ -7653,7 +7684,7 @@
     },
     "pos": [
       3,
-      -2
+      -1
     ],
     "state": {},
     "actions": [
@@ -7703,7 +7734,7 @@
     },
     "pos": [
       0,
-      2
+      1
     ],
     "state": {},
     "actions": [
@@ -7742,7 +7773,7 @@
     },
     "pos": [
       1,
-      2
+      1
     ],
     "state": {},
     "actions": [
@@ -7785,7 +7816,7 @@
       "east": "source_memory_bridge"
     },
     "pos": [
-      0,
+      3,
       1
     ],
     "state": {},
@@ -7866,7 +7897,7 @@
     },
     "pos": [
       2,
-      2
+      1
     ],
     "state": {},
     "actions": [
@@ -7906,7 +7937,7 @@
     },
     "pos": [
       3,
-      2
+      1
     ],
     "state": {},
     "actions": [
@@ -8788,7 +8819,7 @@
     },
     "pos": [
       3,
-      2
+      3
     ],
     "state": {},
     "actions": [
@@ -8835,8 +8866,8 @@
       "north": "sector9_beach_grotto"
     },
     "pos": [
-      4,
-      2
+      6,
+      3
     ],
     "state": {},
     "actions": [
@@ -8864,7 +8895,7 @@
     "enemies": [],
     "connections": {
       "west": "sector9_stream_falls",
-      "south": "sector9_beach_cove"
+      "north": "sector9_beach_cove"
     },
     "pos": [
       5,
@@ -8896,12 +8927,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "north": "sector9_beach_cliffs",
-      "east": "sector9_beach_pools"
+      "south": "sector9_beach_cliffs",
+      "west": "sector9_beach_pools"
     },
     "pos": [
       5,
-      -1
+      2
     ],
     "state": {},
     "actions": [
@@ -8928,14 +8959,14 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "west": "sector9_beach_cove",
-      "east": "sector9_beach_cargo",
+      "east": "sector9_beach_cove",
+      "west": "sector9_beach_cargo",
       "north": "sector9_beach_cave",
       "south": "sector9_stream_tidepools"
     },
     "pos": [
-      5,
-      -2
+      4,
+      2
     ],
     "state": {},
     "actions": [
@@ -8989,12 +9020,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "west": "sector9_beach_pools",
+      "east": "sector9_beach_pools",
       "north": "sector9_beach_dunes"
     },
     "pos": [
-      6,
-      -2
+      2,
+      2
     ],
     "state": {},
     "actions": [
@@ -9026,8 +9057,8 @@
       "east": "sector9_beach_grotto"
     },
     "pos": [
-      5,
-      -3
+      4,
+      4
     ],
     "state": {},
     "actions": [
@@ -9052,8 +9083,8 @@
       "south": "sector9_beach_cave"
     },
     "pos": [
-      5,
-      -4
+      4,
+      5
     ],
     "state": {},
     "actions": [
@@ -9080,7 +9111,7 @@
     },
     "pos": [
       6,
-      -3
+      4
     ],
     "state": {},
     "actions": [
@@ -9127,8 +9158,8 @@
       "south": "sector9_beach_cargo"
     },
     "pos": [
-      6,
-      -1
+      2,
+      3
     ],
     "state": {},
     "actions": [
@@ -9462,7 +9493,7 @@
     },
     "pos": [
       1,
-      -5
+      -8
     ],
     "state": {},
     "actions": [
@@ -9489,7 +9520,7 @@
     },
     "pos": [
       2,
-      -5
+      -8
     ],
     "state": {},
     "actions": [
@@ -9516,7 +9547,7 @@
     },
     "pos": [
       2,
-      -4
+      -7
     ],
     "state": {},
     "actions": [
@@ -9558,7 +9589,7 @@
     },
     "pos": [
       2,
-      -3
+      -6
     ],
     "state": {},
     "actions": [
@@ -10144,8 +10175,8 @@
       "east": "sector9_hall_of_echoes"
     },
     "pos": [
-      0,
-      0
+      -1,
+      -2
     ],
     "state": {},
     "actions": [
@@ -10172,8 +10203,8 @@
       "west": "sector9_foyer_security_hub"
     },
     "pos": [
-      0,
-      1
+      -1,
+      -1
     ],
     "state": {},
     "actions": [
@@ -10203,8 +10234,8 @@
       "east": "sector9_foyer_vault_door"
     },
     "pos": [
-      0,
-      -1
+      -1,
+      -4
     ],
     "state": {},
     "actions": [
@@ -10228,8 +10259,8 @@
       "east": "sector9_foyer_left_gallery"
     },
     "pos": [
-      -1,
-      1
+      -2,
+      -1
     ],
     "state": {},
     "actions": [
@@ -10254,8 +10285,8 @@
       "east": "sector9_conduit_crawlspace"
     },
     "pos": [
-      1,
-      -1
+      4,
+      -4
     ],
     "state": {},
     "actions": [
@@ -10280,8 +10311,8 @@
       "east": "sector9_conduit_junction"
     },
     "pos": [
-      2,
-      -1
+      5,
+      -4
     ],
     "state": {},
     "actions": [
@@ -10309,8 +10340,8 @@
       "south": "sector9_conduit_breaker_room"
     },
     "pos": [
-      3,
-      -1
+      6,
+      -4
     ],
     "state": {},
     "actions": [
@@ -10339,8 +10370,8 @@
       "north": "sector9_conduit_junction"
     },
     "pos": [
-      3,
-      -2
+      6,
+      -5
     ],
     "state": {},
     "actions": [
@@ -10365,8 +10396,8 @@
       "north": "sector9_vents_gantry"
     },
     "pos": [
-      3,
-      0
+      6,
+      -3
     ],
     "state": {},
     "actions": [
@@ -10453,7 +10484,7 @@
     },
     "pos": [
       0,
-      -3
+      -1
     ],
     "state": {},
     "actions": [
@@ -10489,7 +10520,7 @@
     },
     "pos": [
       0,
-      -4
+      0
     ],
     "state": {},
     "actions": [
@@ -10517,7 +10548,7 @@
     },
     "pos": [
       1,
-      -3
+      -1
     ],
     "state": {},
     "actions": [
@@ -10876,8 +10907,8 @@
       "east": "sector9_vents_access_grate"
     },
     "pos": [
-      2,
-      -2
+      0,
+      -1
     ],
     "state": {},
     "actions": [
@@ -10927,8 +10958,8 @@
       "south": "sector9_stasis_observation"
     },
     "pos": [
-      3,
-      -2
+      1,
+      -1
     ],
     "state": {},
     "actions": [
@@ -10962,8 +10993,8 @@
       "south": "sector9_vents_access_grate"
     },
     "pos": [
-      3,
-      -3
+      1,
+      0
     ],
     "state": {},
     "actions": [
@@ -11863,7 +11894,7 @@
     },
     "pos": [
       1,
-      21
+      2
     ],
     "state": {},
     "actions": [
@@ -11894,7 +11925,7 @@
     },
     "pos": [
       1,
-      22
+      3
     ],
     "state": {},
     "actions": [
@@ -11925,7 +11956,7 @@
     },
     "pos": [
       1,
-      23
+      4
     ],
     "state": {},
     "actions": [
@@ -11958,8 +11989,8 @@
       "north": "spire_the_static_scale_02"
     },
     "pos": [
-      2,
-      21
+      3,
+      2
     ],
     "state": {},
     "actions": [
@@ -11989,8 +12020,8 @@
       "north": "spire_the_static_scale_03"
     },
     "pos": [
-      2,
-      22
+      3,
+      3
     ],
     "state": {},
     "actions": [
@@ -12019,8 +12050,8 @@
       "south": "spire_the_static_scale_02"
     },
     "pos": [
-      2,
-      23
+      3,
+      4
     ],
     "state": {},
     "actions": [
@@ -12053,8 +12084,8 @@
       "north": "spire_night_market_scale_02"
     },
     "pos": [
-      3,
-      22
+      4,
+      3
     ],
     "state": {},
     "actions": [
@@ -12102,8 +12133,8 @@
       "north": "spire_night_market_scale_03"
     },
     "pos": [
-      3,
-      23
+      4,
+      4
     ],
     "state": {},
     "actions": [
@@ -12137,8 +12168,8 @@
       "south": "spire_night_market_scale_02"
     },
     "pos": [
-      3,
-      24
+      4,
+      5
     ],
     "state": {},
     "actions": [
@@ -12172,7 +12203,7 @@
     },
     "pos": [
       0,
-      22
+      3
     ],
     "state": {},
     "actions": [
@@ -12212,7 +12243,7 @@
     },
     "pos": [
       0,
-      23
+      4
     ],
     "state": {},
     "actions": [
@@ -12253,7 +12284,7 @@
     },
     "pos": [
       0,
-      24
+      5
     ],
     "state": {},
     "actions": [
@@ -12286,8 +12317,8 @@
       "north": "spire_transit_plaza_scale_02"
     },
     "pos": [
-      2,
-      22
+      3,
+      3
     ],
     "state": {},
     "actions": [
@@ -12317,8 +12348,8 @@
       "north": "spire_transit_plaza_scale_03"
     },
     "pos": [
-      2,
-      23
+      3,
+      4
     ],
     "state": {},
     "actions": [
@@ -12347,8 +12378,8 @@
       "south": "spire_transit_plaza_scale_02"
     },
     "pos": [
-      2,
-      24
+      3,
+      5
     ],
     "state": {},
     "actions": [
@@ -12379,8 +12410,8 @@
       "north": "spire_laundry_scale_02"
     },
     "pos": [
-      0,
-      21
+      -1,
+      1
     ],
     "state": {},
     "actions": [
@@ -12410,8 +12441,8 @@
       "north": "spire_laundry_scale_03"
     },
     "pos": [
-      0,
-      22
+      -1,
+      2
     ],
     "state": {},
     "actions": [
@@ -12440,8 +12471,8 @@
       "south": "spire_laundry_scale_02"
     },
     "pos": [
-      0,
-      23
+      -1,
+      3
     ],
     "state": {},
     "actions": [
@@ -12472,7 +12503,7 @@
     },
     "pos": [
       1,
-      20
+      1
     ],
     "state": {},
     "actions": [
@@ -12508,7 +12539,7 @@
     },
     "pos": [
       1,
-      21
+      2
     ],
     "state": {},
     "actions": [
@@ -12556,7 +12587,7 @@
     },
     "pos": [
       1,
-      22
+      3
     ],
     "state": {},
     "actions": [
@@ -12589,8 +12620,8 @@
       "north": "spire_archive_scale_02"
     },
     "pos": [
-      2,
-      21
+      3,
+      2
     ],
     "state": {},
     "actions": [
@@ -12625,8 +12656,8 @@
       "north": "spire_archive_scale_03"
     },
     "pos": [
-      2,
-      22
+      3,
+      3
     ],
     "state": {},
     "actions": [
@@ -12660,8 +12691,8 @@
       "south": "spire_archive_scale_02"
     },
     "pos": [
-      2,
-      23
+      3,
+      4
     ],
     "state": {},
     "actions": [
@@ -12692,7 +12723,7 @@
     },
     "pos": [
       1,
-      22
+      1
     ],
     "state": {},
     "actions": [
@@ -12729,8 +12760,8 @@
       "north": "spire_exec_lounge_scale_03"
     },
     "pos": [
-      1,
-      23
+      2,
+      1
     ],
     "state": {},
     "actions": [
@@ -12770,8 +12801,8 @@
       "north": "spire_exec_lounge_scale_04"
     },
     "pos": [
-      1,
-      24
+      2,
+      2
     ],
     "state": {},
     "actions": [
@@ -12801,8 +12832,8 @@
       "north": "spire_exec_lounge_scale_05"
     },
     "pos": [
-      1,
-      25
+      2,
+      3
     ],
     "state": {},
     "actions": [
@@ -12833,8 +12864,8 @@
       "south": "spire_exec_lounge_scale_04"
     },
     "pos": [
-      1,
-      26
+      2,
+      4
     ],
     "state": {},
     "actions": [
@@ -12868,7 +12899,7 @@
     },
     "pos": [
       3,
-      21
+      2
     ],
     "state": {},
     "actions": [
@@ -12900,7 +12931,7 @@
     },
     "pos": [
       3,
-      22
+      3
     ],
     "state": {},
     "actions": [
@@ -12934,7 +12965,7 @@
     },
     "pos": [
       3,
-      23
+      4
     ],
     "state": {},
     "actions": [
@@ -12965,7 +12996,7 @@
     },
     "pos": [
       3,
-      24
+      5
     ],
     "state": {},
     "actions": [
@@ -12996,8 +13027,8 @@
       "north": "foundry_obsidian_shelf_scale_02"
     },
     "pos": [
-      0,
-      21
+      -1,
+      1
     ],
     "state": {},
     "actions": [
@@ -13035,8 +13066,8 @@
       "north": "foundry_obsidian_shelf_scale_03"
     },
     "pos": [
-      0,
-      22
+      -1,
+      2
     ],
     "state": {},
     "actions": [
@@ -13079,8 +13110,8 @@
       "north": "foundry_obsidian_shelf_scale_04"
     },
     "pos": [
-      0,
-      23
+      -1,
+      3
     ],
     "state": {},
     "actions": [
@@ -13111,8 +13142,8 @@
       "north": "foundry_obsidian_shelf_scale_final"
     },
     "pos": [
-      0,
-      24
+      -1,
+      4
     ],
     "state": {},
     "actions": [
@@ -13144,7 +13175,7 @@
     },
     "pos": [
       1,
-      20
+      -1
     ],
     "state": {},
     "actions": [
@@ -13182,8 +13213,8 @@
       "north": "foundry_slag_river_scale_03"
     },
     "pos": [
-      1,
-      21
+      2,
+      -1
     ],
     "state": {},
     "actions": [
@@ -13216,8 +13247,8 @@
       "north": "foundry_slag_river_scale_04"
     },
     "pos": [
-      1,
-      22
+      2,
+      0
     ],
     "state": {},
     "actions": [
@@ -13248,8 +13279,8 @@
       "north": "foundry_slag_river_scale_final"
     },
     "pos": [
-      1,
-      23
+      2,
+      1
     ],
     "state": {},
     "actions": [
@@ -13280,8 +13311,8 @@
       "north": "foundry_cooling_springs_scale_02"
     },
     "pos": [
-      1,
-      22
+      0,
+      2
     ],
     "state": {},
     "actions": [
@@ -13319,8 +13350,8 @@
       "north": "foundry_cooling_springs_scale_03"
     },
     "pos": [
-      1,
-      23
+      0,
+      3
     ],
     "state": {},
     "actions": [
@@ -13351,8 +13382,8 @@
       "north": "foundry_cooling_springs_scale_04"
     },
     "pos": [
-      1,
-      24
+      0,
+      4
     ],
     "state": {},
     "actions": [
@@ -13383,8 +13414,8 @@
       "north": "foundry_cooling_springs_scale_final"
     },
     "pos": [
-      1,
-      25
+      0,
+      5
     ],
     "state": {},
     "actions": [
@@ -13418,8 +13449,8 @@
       "north": "foundry_waste_intake_scale_02"
     },
     "pos": [
-      2,
-      21
+      3,
+      2
     ],
     "state": {},
     "actions": [
@@ -13457,8 +13488,8 @@
       "north": "foundry_waste_intake_scale_03"
     },
     "pos": [
-      2,
-      22
+      3,
+      3
     ],
     "state": {},
     "actions": [
@@ -13491,8 +13522,8 @@
       "north": "foundry_waste_intake_scale_04"
     },
     "pos": [
-      2,
-      23
+      3,
+      4
     ],
     "state": {},
     "actions": [
@@ -13523,8 +13554,8 @@
       "north": "foundry_waste_intake_scale_final"
     },
     "pos": [
-      2,
-      24
+      3,
+      5
     ],
     "state": {},
     "actions": [
@@ -13555,7 +13586,7 @@
     },
     "pos": [
       3,
-      21
+      2
     ],
     "state": {},
     "actions": [
@@ -13593,7 +13624,7 @@
     },
     "pos": [
       3,
-      22
+      3
     ],
     "state": {},
     "actions": [
@@ -13624,7 +13655,7 @@
     },
     "pos": [
       3,
-      23
+      4
     ],
     "state": {},
     "actions": [
@@ -13655,7 +13686,7 @@
     },
     "pos": [
       3,
-      24
+      5
     ],
     "state": {},
     "actions": [
@@ -13689,8 +13720,8 @@
       "north": "foundry_conveyor_belt_scale_02"
     },
     "pos": [
-      0,
-      21
+      1,
+      2
     ],
     "state": {},
     "description_variants": [
@@ -13737,8 +13768,8 @@
       "north": "foundry_conveyor_belt_scale_03"
     },
     "pos": [
-      0,
-      22
+      1,
+      3
     ],
     "state": {},
     "actions": [
@@ -13771,8 +13802,8 @@
       "north": "foundry_conveyor_belt_scale_04"
     },
     "pos": [
-      0,
-      23
+      1,
+      4
     ],
     "state": {},
     "description_variants": [
@@ -13812,8 +13843,8 @@
       "north": "foundry_conveyor_belt_scale_final"
     },
     "pos": [
-      0,
-      24
+      1,
+      5
     ],
     "state": {},
     "description_variants": [
@@ -13853,7 +13884,7 @@
     },
     "pos": [
       1,
-      20
+      -1
     ],
     "state": {},
     "actions": [
@@ -13890,8 +13921,8 @@
       "north": "foundry_conditioning_scale_03"
     },
     "pos": [
-      1,
-      21
+      2,
+      -1
     ],
     "state": {},
     "actions": [
@@ -13921,8 +13952,8 @@
       "north": "foundry_conditioning_scale_04"
     },
     "pos": [
-      1,
-      22
+      2,
+      0
     ],
     "state": {},
     "actions": [
@@ -13952,8 +13983,8 @@
       "north": "foundry_conditioning_scale_final"
     },
     "pos": [
-      1,
-      23
+      2,
+      1
     ],
     "state": {},
     "actions": [
@@ -13985,7 +14016,7 @@
     },
     "pos": [
       1,
-      22
+      1
     ],
     "state": {},
     "description_variants": [
@@ -14032,8 +14063,8 @@
       "north": "foundry_forge_scale_03"
     },
     "pos": [
-      1,
-      23
+      2,
+      1
     ],
     "state": {},
     "actions": [
@@ -14066,8 +14097,8 @@
       "north": "foundry_forge_scale_04"
     },
     "pos": [
-      1,
-      24
+      2,
+      2
     ],
     "state": {},
     "actions": [
@@ -14098,8 +14129,8 @@
       "north": "foundry_forge_scale_final"
     },
     "pos": [
-      1,
-      25
+      2,
+      3
     ],
     "state": {},
     "actions": [
@@ -14133,8 +14164,8 @@
       "north": "foundry_power_core_scale_02"
     },
     "pos": [
-      2,
-      21
+      3,
+      2
     ],
     "state": {},
     "actions": [
@@ -14172,8 +14203,8 @@
       "north": "foundry_power_core_scale_03"
     },
     "pos": [
-      2,
-      22
+      3,
+      3
     ],
     "state": {},
     "actions": [
@@ -14204,8 +14235,8 @@
       "north": "foundry_power_core_scale_04"
     },
     "pos": [
-      2,
-      23
+      3,
+      4
     ],
     "state": {},
     "actions": [
@@ -14236,8 +14267,8 @@
       "north": "foundry_power_core_scale_final"
     },
     "pos": [
-      2,
-      24
+      3,
+      5
     ],
     "state": {},
     "actions": [
@@ -14273,8 +14304,8 @@
       "north": "foundry_titan_dock_scale_02"
     },
     "pos": [
-      3,
-      21
+      4,
+      1
     ],
     "state": {},
     "actions": [
@@ -14312,8 +14343,8 @@
       "north": "foundry_titan_dock_scale_03"
     },
     "pos": [
-      3,
-      22
+      4,
+      2
     ],
     "state": {},
     "actions": [
@@ -14346,8 +14377,8 @@
       "north": "foundry_titan_dock_scale_04"
     },
     "pos": [
-      3,
-      23
+      4,
+      3
     ],
     "state": {},
     "actions": [
@@ -14378,8 +14409,8 @@
       "north": "foundry_titan_dock_scale_final"
     },
     "pos": [
-      3,
-      24
+      4,
+      4
     ],
     "state": {},
     "actions": [
@@ -14409,8 +14440,8 @@
       "north": "orbital_executive_dock_scale_02"
     },
     "pos": [
-      0,
-      21
+      -1,
+      1
     ],
     "state": {},
     "actions": [
@@ -14442,8 +14473,8 @@
       "north": "orbital_executive_dock_scale_03"
     },
     "pos": [
-      0,
-      22
+      -1,
+      2
     ],
     "state": {},
     "actions": [
@@ -14473,8 +14504,8 @@
       "north": "orbital_executive_dock_scale_04"
     },
     "pos": [
-      0,
-      23
+      -1,
+      3
     ],
     "state": {},
     "actions": [
@@ -14506,8 +14537,8 @@
       "north": "orbital_executive_dock_scale_05"
     },
     "pos": [
-      0,
-      24
+      -1,
+      4
     ],
     "state": {},
     "actions": [
@@ -14537,8 +14568,8 @@
       "north": "orbital_executive_dock_scale_06"
     },
     "pos": [
-      0,
-      25
+      -1,
+      5
     ],
     "state": {},
     "actions": [
@@ -14570,8 +14601,8 @@
       "north": "orbital_executive_dock_scale_final"
     },
     "pos": [
-      0,
-      26
+      -1,
+      6
     ],
     "state": {},
     "actions": [
@@ -14602,7 +14633,7 @@
     },
     "pos": [
       1,
-      20
+      -1
     ],
     "state": {},
     "actions": [
@@ -14634,8 +14665,8 @@
       "north": "orbital_grand_concourse_scale_03"
     },
     "pos": [
-      1,
-      21
+      2,
+      -1
     ],
     "state": {},
     "actions": [
@@ -14665,8 +14696,8 @@
       "north": "orbital_grand_concourse_scale_04"
     },
     "pos": [
-      1,
-      22
+      2,
+      0
     ],
     "state": {},
     "actions": [
@@ -14698,8 +14729,8 @@
       "north": "orbital_grand_concourse_scale_05"
     },
     "pos": [
-      1,
-      23
+      2,
+      1
     ],
     "state": {},
     "actions": [
@@ -14729,8 +14760,8 @@
       "north": "orbital_grand_concourse_scale_06"
     },
     "pos": [
-      1,
-      24
+      2,
+      2
     ],
     "state": {},
     "actions": [
@@ -14762,8 +14793,8 @@
       "north": "orbital_grand_concourse_scale_final"
     },
     "pos": [
-      1,
-      25
+      2,
+      3
     ],
     "state": {},
     "actions": [
@@ -14793,8 +14824,8 @@
       "north": "orbital_solarium_scale_02"
     },
     "pos": [
-      1,
-      22
+      0,
+      2
     ],
     "state": {},
     "actions": [
@@ -14826,8 +14857,8 @@
       "north": "orbital_solarium_scale_03"
     },
     "pos": [
-      1,
-      23
+      0,
+      3
     ],
     "state": {},
     "actions": [
@@ -14857,8 +14888,8 @@
       "north": "orbital_solarium_scale_04"
     },
     "pos": [
-      1,
-      24
+      0,
+      4
     ],
     "state": {},
     "actions": [
@@ -14890,8 +14921,8 @@
       "north": "orbital_solarium_scale_05"
     },
     "pos": [
-      1,
-      25
+      0,
+      5
     ],
     "state": {},
     "actions": [
@@ -14921,8 +14952,8 @@
       "north": "orbital_solarium_scale_06"
     },
     "pos": [
-      1,
-      26
+      0,
+      6
     ],
     "state": {},
     "actions": [
@@ -14954,8 +14985,8 @@
       "north": "orbital_solarium_scale_final"
     },
     "pos": [
-      1,
-      27
+      0,
+      7
     ],
     "state": {},
     "actions": [
@@ -14988,8 +15019,8 @@
       "north": "orbital_security_hub_scale_02"
     },
     "pos": [
-      2,
-      21
+      3,
+      2
     ],
     "state": {},
     "actions": [
@@ -15021,8 +15052,8 @@
       "north": "orbital_security_hub_scale_03"
     },
     "pos": [
-      2,
-      22
+      3,
+      3
     ],
     "state": {},
     "actions": [
@@ -15052,8 +15083,8 @@
       "north": "orbital_security_hub_scale_04"
     },
     "pos": [
-      2,
-      23
+      3,
+      4
     ],
     "state": {},
     "actions": [
@@ -15085,8 +15116,8 @@
       "north": "orbital_security_hub_scale_05"
     },
     "pos": [
-      2,
-      24
+      3,
+      5
     ],
     "state": {},
     "actions": [
@@ -15116,8 +15147,8 @@
       "north": "orbital_security_hub_scale_06"
     },
     "pos": [
-      2,
-      25
+      3,
+      6
     ],
     "state": {},
     "actions": [
@@ -15149,8 +15180,8 @@
       "north": "orbital_security_hub_scale_final"
     },
     "pos": [
-      2,
-      26
+      3,
+      7
     ],
     "state": {},
     "actions": [
@@ -15181,7 +15212,7 @@
     },
     "pos": [
       3,
-      21
+      2
     ],
     "state": {},
     "actions": [
@@ -15214,7 +15245,7 @@
     },
     "pos": [
       3,
-      22
+      3
     ],
     "state": {},
     "actions": [
@@ -15245,7 +15276,7 @@
     },
     "pos": [
       3,
-      23
+      4
     ],
     "state": {},
     "actions": [
@@ -15278,7 +15309,7 @@
     },
     "pos": [
       3,
-      24
+      5
     ],
     "state": {},
     "actions": [
@@ -15309,7 +15340,7 @@
     },
     "pos": [
       3,
-      25
+      6
     ],
     "state": {},
     "actions": [
@@ -15342,7 +15373,7 @@
     },
     "pos": [
       3,
-      26
+      7
     ],
     "state": {},
     "actions": [
@@ -15376,8 +15407,8 @@
       "north": "deep_server_farm_scale_02"
     },
     "pos": [
-      3,
-      22
+      6,
+      3
     ],
     "state": {},
     "actions": [
@@ -15410,8 +15441,8 @@
       "north": "deep_server_farm_scale_03"
     },
     "pos": [
-      3,
-      23
+      6,
+      4
     ],
     "state": {},
     "actions": [
@@ -15442,8 +15473,8 @@
       "north": "deep_server_farm_scale_04"
     },
     "pos": [
-      3,
-      24
+      6,
+      5
     ],
     "state": {},
     "actions": [
@@ -15473,8 +15504,8 @@
       "south": "deep_server_farm_scale_03"
     },
     "pos": [
-      3,
-      25
+      6,
+      7
     ],
     "state": {},
     "actions": [
@@ -15506,7 +15537,7 @@
     },
     "pos": [
       4,
-      22
+      3
     ],
     "state": {},
     "actions": [
@@ -15540,7 +15571,7 @@
     },
     "pos": [
       4,
-      23
+      4
     ],
     "state": {},
     "actions": [
@@ -15572,7 +15603,7 @@
     },
     "pos": [
       4,
-      24
+      5
     ],
     "state": {},
     "actions": [
@@ -15604,7 +15635,7 @@
     },
     "pos": [
       4,
-      25
+      6
     ],
     "state": {},
     "actions": [
@@ -15648,7 +15679,7 @@
     },
     "pos": [
       4,
-      26
+      7
     ],
     "state": {},
     "actions": [
@@ -15682,7 +15713,7 @@
     },
     "pos": [
       4,
-      27
+      8
     ],
     "state": {},
     "actions": [
@@ -15714,7 +15745,7 @@
     },
     "pos": [
       4,
-      28
+      9
     ],
     "state": {},
     "actions": [
@@ -15745,7 +15776,7 @@
     },
     "pos": [
       4,
-      29
+      10
     ],
     "state": {},
     "actions": [
@@ -15777,7 +15808,7 @@
     },
     "pos": [
       5,
-      22
+      3
     ],
     "state": {},
     "actions": [
@@ -15811,7 +15842,7 @@
     },
     "pos": [
       5,
-      23
+      4
     ],
     "state": {},
     "actions": [
@@ -15843,7 +15874,7 @@
     },
     "pos": [
       5,
-      24
+      5
     ],
     "state": {},
     "actions": [
@@ -15877,7 +15908,7 @@
     },
     "pos": [
       5,
-      25
+      6
     ],
     "state": {},
     "actions": [
@@ -15909,7 +15940,7 @@
     },
     "pos": [
       5,
-      26
+      7
     ],
     "state": {},
     "actions": [
@@ -15943,7 +15974,7 @@
     },
     "pos": [
       5,
-      27
+      8
     ],
     "state": {},
     "actions": [
@@ -15974,7 +16005,7 @@
     },
     "pos": [
       5,
-      28
+      9
     ],
     "state": {},
     "actions": [
@@ -16006,7 +16037,7 @@
     },
     "pos": [
       6,
-      22
+      3
     ],
     "state": {},
     "actions": [
@@ -16040,7 +16071,7 @@
     },
     "pos": [
       6,
-      23
+      4
     ],
     "state": {},
     "actions": [
@@ -16072,7 +16103,7 @@
     },
     "pos": [
       6,
-      24
+      5
     ],
     "state": {},
     "actions": [
@@ -16104,7 +16135,7 @@
     },
     "pos": [
       6,
-      25
+      6
     ],
     "state": {},
     "actions": [
@@ -16138,7 +16169,7 @@
     },
     "pos": [
       6,
-      26
+      7
     ],
     "state": {},
     "actions": [
@@ -16169,7 +16200,7 @@
     },
     "pos": [
       6,
-      27
+      8
     ],
     "state": {},
     "actions": [
@@ -16200,8 +16231,8 @@
       "north": "source_campfire_node_scale_02"
     },
     "pos": [
-      0,
-      20
+      1,
+      0
     ],
     "state": {},
     "actions": [
@@ -16232,8 +16263,8 @@
       "north": "source_campfire_node_scale_03"
     },
     "pos": [
-      0,
-      21
+      1,
+      1
     ],
     "state": {},
     "actions": [
@@ -16264,8 +16295,8 @@
       "north": "source_campfire_node_scale_04"
     },
     "pos": [
-      0,
-      22
+      1,
+      2
     ],
     "state": {},
     "actions": [
@@ -16296,8 +16327,8 @@
       "north": "source_campfire_node_scale_final"
     },
     "pos": [
-      0,
-      23
+      1,
+      3
     ],
     "state": {},
     "actions": [
@@ -16330,7 +16361,7 @@
     },
     "pos": [
       -1,
-      19
+      0
     ],
     "state": {},
     "actions": [
@@ -16368,7 +16399,7 @@
     },
     "pos": [
       -1,
-      20
+      1
     ],
     "state": {},
     "actions": [
@@ -16398,7 +16429,7 @@
     },
     "pos": [
       -1,
-      21
+      2
     ],
     "state": {},
     "actions": [
@@ -16431,7 +16462,7 @@
     },
     "pos": [
       0,
-      19
+      0
     ],
     "state": {},
     "actions": [
@@ -16469,7 +16500,7 @@
     },
     "pos": [
       0,
-      20
+      1
     ],
     "state": {},
     "actions": [
@@ -16499,7 +16530,7 @@
     },
     "pos": [
       0,
-      21
+      2
     ],
     "state": {},
     "actions": [
@@ -16533,7 +16564,7 @@
     },
     "pos": [
       1,
-      19
+      0
     ],
     "state": {},
     "actions": [
@@ -16552,7 +16583,7 @@
         "name": "salt-crusted chronometer",
         "type": "inspect",
         "description": "Inspect the brass chronometer resting on the black tide shelf.",
-        "inspect_message": "The hands are permanently fused at 04:17\u2014the exact minute the First Tide flooded the lower observatory. The glass lens is frosted with brine, yet the ticking spring inside still beats like a slow, stubborn heart."
+        "inspect_message": "The hands are permanently fused at 04:17—the exact minute the First Tide flooded the lower observatory. The glass lens is frosted with brine, yet the ticking spring inside still beats like a slow, stubborn heart."
       }
     ]
   },
@@ -16572,7 +16603,7 @@
     },
     "pos": [
       1,
-      20
+      1
     ],
     "state": {},
     "actions": [
@@ -16603,7 +16634,7 @@
     },
     "pos": [
       1,
-      21
+      2
     ],
     "state": {},
     "actions": [
@@ -16635,7 +16666,7 @@
     },
     "pos": [
       -1,
-      21
+      -2
     ],
     "state": {},
     "actions": [
@@ -16675,8 +16706,8 @@
       "north": "source_echo_mines_node_scale_03"
     },
     "pos": [
-      -1,
-      22
+      2,
+      -2
     ],
     "state": {},
     "actions": [
@@ -16707,8 +16738,8 @@
       "north": "source_echo_mines_node_scale_04"
     },
     "pos": [
-      -1,
-      23
+      2,
+      -1
     ],
     "state": {},
     "actions": [
@@ -16739,8 +16770,8 @@
       "north": "source_echo_mines_node_scale_final"
     },
     "pos": [
-      -1,
-      24
+      2,
+      0
     ],
     "state": {},
     "actions": [
@@ -16772,7 +16803,7 @@
     },
     "pos": [
       1,
-      21
+      2
     ],
     "state": {},
     "actions": [
@@ -16811,7 +16842,7 @@
     },
     "pos": [
       1,
-      22
+      3
     ],
     "state": {},
     "actions": [
@@ -16843,7 +16874,7 @@
     },
     "pos": [
       1,
-      23
+      4
     ],
     "state": {},
     "actions": [
@@ -16875,7 +16906,7 @@
     },
     "pos": [
       1,
-      24
+      5
     ],
     "state": {},
     "actions": [
@@ -16907,7 +16938,7 @@
     },
     "pos": [
       2,
-      21
+      2
     ],
     "state": {},
     "actions": [
@@ -16948,7 +16979,7 @@
     },
     "pos": [
       2,
-      22
+      3
     ],
     "state": {},
     "actions": [
@@ -16980,7 +17011,7 @@
     },
     "pos": [
       2,
-      23
+      4
     ],
     "state": {},
     "actions": [
@@ -17012,7 +17043,7 @@
     },
     "pos": [
       2,
-      24
+      5
     ],
     "state": {},
     "actions": [
@@ -17046,7 +17077,7 @@
     },
     "pos": [
       3,
-      21
+      2
     ],
     "state": {},
     "actions": [
@@ -17085,7 +17116,7 @@
     },
     "pos": [
       3,
-      22
+      3
     ],
     "state": {},
     "actions": [
@@ -17119,7 +17150,7 @@
     },
     "pos": [
       3,
-      23
+      4
     ],
     "state": {},
     "actions": [
@@ -17152,7 +17183,7 @@
     },
     "pos": [
       3,
-      24
+      5
     ],
     "state": {},
     "actions": [
@@ -17184,7 +17215,7 @@
     },
     "pos": [
       4,
-      21
+      2
     ],
     "state": {},
     "actions": [
@@ -17223,7 +17254,7 @@
     },
     "pos": [
       4,
-      22
+      3
     ],
     "state": {},
     "actions": [
@@ -17257,7 +17288,7 @@
     },
     "pos": [
       4,
-      23
+      4
     ],
     "state": {},
     "actions": [
@@ -17293,7 +17324,7 @@
     },
     "pos": [
       5,
-      21
+      2
     ],
     "state": {},
     "actions": [
@@ -17331,7 +17362,7 @@
     },
     "pos": [
       5,
-      22
+      3
     ],
     "state": {},
     "actions": [
@@ -17362,7 +17393,7 @@
     },
     "pos": [
       5,
-      23
+      4
     ],
     "state": {},
     "actions": [
@@ -17399,8 +17430,8 @@
       "south": "foundry_obsidian_shelf_scale_04"
     },
     "pos": [
-      0,
-      51
+      -1,
+      5
     ],
     "state": {},
     "actions": [
@@ -17432,8 +17463,8 @@
       "south": "foundry_slag_river_scale_04"
     },
     "pos": [
-      1,
-      50
+      2,
+      2
     ],
     "state": {},
     "actions": [
@@ -17463,8 +17494,8 @@
       "south": "foundry_cooling_springs_scale_04"
     },
     "pos": [
-      1,
-      52
+      0,
+      6
     ],
     "state": {},
     "actions": [
@@ -17496,8 +17527,8 @@
       "south": "foundry_waste_intake_scale_04"
     },
     "pos": [
-      2,
-      51
+      3,
+      6
     ],
     "state": {},
     "actions": [
@@ -17527,7 +17558,7 @@
     },
     "pos": [
       3,
-      51
+      6
     ],
     "state": {},
     "actions": [
@@ -17559,8 +17590,8 @@
       "south": "foundry_conveyor_belt_scale_04"
     },
     "pos": [
-      0,
-      51
+      1,
+      6
     ],
     "state": {},
     "actions": [
@@ -17591,8 +17622,8 @@
       "south": "foundry_conditioning_scale_04"
     },
     "pos": [
-      1,
-      50
+      2,
+      2
     ],
     "state": {},
     "actions": [
@@ -17622,8 +17653,8 @@
       "south": "foundry_forge_scale_04"
     },
     "pos": [
-      1,
-      52
+      2,
+      4
     ],
     "state": {},
     "actions": [
@@ -17655,8 +17686,8 @@
       "south": "foundry_power_core_scale_04"
     },
     "pos": [
-      2,
-      51
+      3,
+      6
     ],
     "state": {},
     "actions": [
@@ -17686,8 +17717,8 @@
       "south": "foundry_titan_dock_scale_04"
     },
     "pos": [
-      3,
-      51
+      4,
+      5
     ],
     "state": {},
     "actions": [
@@ -17716,8 +17747,8 @@
       "south": "orbital_executive_dock_scale_06"
     },
     "pos": [
-      0,
-      51
+      -1,
+      7
     ],
     "state": {},
     "actions": [
@@ -17748,8 +17779,8 @@
       "south": "orbital_grand_concourse_scale_06"
     },
     "pos": [
-      1,
-      50
+      2,
+      4
     ],
     "state": {},
     "actions": [
@@ -17778,8 +17809,8 @@
       "south": "orbital_solarium_scale_06"
     },
     "pos": [
-      1,
-      52
+      0,
+      8
     ],
     "state": {},
     "actions": [
@@ -17810,8 +17841,8 @@
       "south": "orbital_security_hub_scale_06"
     },
     "pos": [
-      2,
-      51
+      3,
+      8
     ],
     "state": {},
     "actions": [
@@ -17841,7 +17872,7 @@
     },
     "pos": [
       3,
-      51
+      8
     ],
     "state": {},
     "actions": [
@@ -17871,8 +17902,8 @@
       "south": "source_campfire_node_scale_04"
     },
     "pos": [
-      0,
-      50
+      1,
+      4
     ],
     "state": {},
     "actions": [
@@ -17902,8 +17933,8 @@
       "south": "source_echo_mines_node_scale_04"
     },
     "pos": [
-      -1,
-      51
+      2,
+      2
     ],
     "state": {},
     "actions": [
@@ -17934,7 +17965,7 @@
     },
     "pos": [
       1,
-      51
+      6
     ],
     "state": {},
     "actions": [
@@ -17967,7 +17998,7 @@
     },
     "pos": [
       2,
-      51
+      6
     ],
     "state": {},
     "actions": [
@@ -17998,7 +18029,7 @@
     },
     "pos": [
       4,
-      51
+      5
     ],
     "state": {},
     "actions": [
@@ -18028,7 +18059,7 @@
     },
     "pos": [
       5,
-      51
+      5
     ],
     "state": {},
     "actions": [

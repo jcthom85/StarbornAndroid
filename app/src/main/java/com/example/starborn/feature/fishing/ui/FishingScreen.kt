@@ -887,13 +887,18 @@ private fun FishingResultSection(
                 }
             }
         }
+        if (success) {
+            Text("Added to your inventory.", style = MaterialTheme.typography.bodyMedium)
+            catch?.uses?.forEach { Text(it, style = MaterialTheme.typography.bodySmall) }
+        }
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Button(onClick = onFishAgain, modifier = Modifier.heightIn(min = buttonHeight)) { Text("Fish Again") }
             val payload = FishingResultPayload(
                 itemId = catch?.itemId?.takeIf { it.isNotBlank() },
                 quantity = catch?.quantity,
                 message = catch?.message,
-                success = success
+                success = success,
+                secured = catch?.secured == true
             )
             Button(onClick = { onFinish(payload) }, modifier = Modifier.heightIn(min = buttonHeight)) { Text("Return to Explore") }
         }

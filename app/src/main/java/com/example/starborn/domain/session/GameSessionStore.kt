@@ -625,6 +625,12 @@ class GameSessionStore {
         _state.update { it.copy(activeMealBuff = buff) }
     }
 
+    fun selectMealChef(chefId: String) {
+        if (chefId in _state.value.partyMembers.ifEmpty { listOf(_state.value.playerId ?: "nova") }) {
+            _state.update { it.copy(mealChefId = chefId) }
+        }
+    }
+
     fun clearMealBuff() {
         _state.update { it.copy(activeMealBuff = null) }
     }

@@ -2,10 +2,36 @@ package com.example.starborn.feature.exploration.viewmodel.helpers
 
 import com.example.starborn.domain.model.Room
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class MapStateBuilderTest {
+    @Test
+    fun reciprocalDirectionDoesNotShareAnUnrelatedDestinationsGate() {
+        val source = room("source", mapOf("east" to "target"), listOf(0, 0))
+        val target = room("target", mapOf("west" to "other", "south" to "source"), listOf(1, 0))
+        assertNull(MapStateBuilder.reciprocalDirection(source, "east", target))
+        assertEquals("west", MapStateBuilder.reciprocalDirection(
+            source, "east", target.copy(connections = mapOf("west" to "source"))
+        ))
+        assertNull(MapStateBuilder.reciprocalDirection(source, "north", target))
+    }
+
+    @Test
+    fun oneWayArrivalDoesNotInventAReturnHint() {
+        val source = room("source", mapOf("east" to "target"), listOf(0, 0))
+        val target = room("target", mapOf("west" to "other"), listOf(1, 0))
+        val state = MapStateBuilder.buildMinimapState(
+            currentRoom = source, roomsInContext = listOf(source, target),
+            visitedRooms = setOf("source"), discoveredRooms = emptySet(),
+            isRoomDark = { false }, roomHasEnemies = { false },
+            computeBlockedDirections = { emptySet() }, parseRoomServices = { emptySet() }
+        )
+        assertTrue(state.cells.single { it.roomId == "target" }.pathHints.isEmpty())
+    }
+
     @Test
     fun buildMinimapState_showsOpenCurrentRoomNeighborsAsPreviewWithoutDiscoveringThem() {
         val current = room(

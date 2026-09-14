@@ -1,5 +1,13 @@
 [
   {
+    "id": "salvage_lure",
+    "name": "Magnetic Salvage Lure",
+    "description": "A weighted magnet that favors scrap, wiring, and small components. Select it at a fishing spot to trade some fish catches for tinkering supplies.",
+    "type": "accessory",
+    "value": 60,
+    "rarity": "uncommon"
+  },
+  {
     "id": "pure_iron",
     "name": "Pure Iron",
     "description": "Refined Foundry iron recovered from the service airlock's maintenance reserve. Used to restore Slag Catcher and forge a Thermite Core Mod.",
@@ -65,7 +73,8 @@
     "description": "A delicate, glowing swamp dish that restores health and sharpens sensory reflexes.",
     "type": "consumable",
     "value": 300,
-    "rarity": "rare"
+    "rarity": "rare",
+    "effect": { "restore_hp": 100, "buffs": [{ "stat": "accuracy", "value": 6, "duration": 3 }] }
   },
   {
     "id": "bioluminescent_lure",

@@ -47,6 +47,7 @@ class FishingViewModel(
     private var reelTension: Float = 0f
     private var isReeling: Boolean = false
     private var highestProgress: Float = 0f
+    private var peakTension: Float = 0f
 
     init {
         loadFishingData()
@@ -243,6 +244,7 @@ class FishingViewModel(
         reelTension = 0.18f
         isReeling = false
         highestProgress = reelProgress
+        peakTension = reelTension
         val fishName = encounter.catch.itemId
         _uiState.update {
             it.copy(
@@ -285,6 +287,7 @@ class FishingViewModel(
             reelTension = (reelTension - TENSION_RECOVERY / rod.stability.toFloat() + totalPull * 0.12f).coerceIn(0f, 1.2f)
         }
         highestProgress = max(highestProgress, reelProgress)
+        peakTension = max(peakTension, reelTension)
         if (reelTension > 0.75f && random.nextFloat() < 0.35f) {
             viewModelScope.launch { _events.emit(FishingEvent.Warning) }
         }
@@ -331,7 +334,7 @@ class FishingViewModel(
             currentEncounter = null
             return
         }
-        val resultType = if (highestProgress >= PERFECT_THRESHOLD && reelProgress >= 1f) {
+        val resultType = if (peakTension < PERFECT_THRESHOLD) {
             MinigameResult.PERFECT
         } else {
             MinigameResult.SUCCESS
@@ -354,13 +357,14 @@ class FishingViewModel(
         waitingJob?.cancel()
         hookJob?.cancel()
         reelJob?.cancel()
+        val securedResult = fishingService.secureCatch(result)
         _uiState.update {
             it.copy(
                 fishingState = FishingState.RESULT,
                 waitingState = null,
                 hookState = null,
                 reelState = null,
-                lastCatchResult = result,
+                lastCatchResult = securedResult,
                 lastResult = minigameResult
             )
         }

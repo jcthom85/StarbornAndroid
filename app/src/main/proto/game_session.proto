@@ -52,6 +52,7 @@ message GameSessionProto {
   ActiveMealBuffProto active_meal_buff = 51;
   repeated string pending_event_cinematics = 52;
   string pending_battle_json = 53;
+  string meal_chef_id = 54;
 
   reserved 19;
   reserved 28, 29, 30, 31;
@@ -104,4 +105,10 @@ message ActiveMealBuffProto {
   double crit_bonus = 8;
   int32 stability_bonus = 9;
   int32 status_resist_bonus = 10;
+  int32 strength_bonus = 11;
+  int32 defense_bonus = 12;
+  int32 agility_bonus = 13;
+  int32 luck_bonus = 14;
+  int32 accuracy_bonus = 15;
+  int32 evasion_bonus = 16;
 }

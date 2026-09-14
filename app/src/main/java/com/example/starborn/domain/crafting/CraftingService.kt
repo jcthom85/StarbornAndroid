@@ -14,6 +14,32 @@ class CraftingService(
     val tinkeringRecipes: List<TinkeringRecipe> by lazy { craftingDataSource.loadTinkeringRecipes() }
     val cookingRecipes: List<CookingRecipe> by lazy { craftingDataSource.loadCookingRecipes() }
 
+    val sessionState get() = sessionStore.state
+    fun availableChefs(): List<String> = sessionStore.state.value.let { state ->
+        state.partyMembers.ifEmpty { listOf(state.playerId ?: "nova") }
+            .filter { it in setOf("nova", "zeke", "gh0st", "orion") }
+    }
+    fun selectChef(id: String) = sessionStore.selectMealChef(id)
+    fun mealEffects(recipe: CookingRecipe): String {
+        val effect = inventoryService.catalogItem(recipe.result)?.effect ?: return "No meal effect"
+        val bonuses = effect.buffs.orEmpty() + listOfNotNull(effect.singleBuff)
+        return listOfNotNull(effect.restoreHp?.takeIf { it > 0 }?.let { "Restores $it HP" },
+            bonuses.takeIf { it.isNotEmpty() }?.joinToString { "${it.stat} +${it.value}" })
+            .joinToString(" · ") + " · Meal bonuses last 3 encounters"
+    }
+
+    fun usesFor(itemId: String): List<String> = buildList {
+        val meals = cookingRecipes.filter { itemId in it.ingredients }.map { it.name }
+        val gear = tinkeringRecipes.filter { itemId in ingredientsFor(it) }.map { it.name }
+        if (meals.isNotEmpty()) add("Cooking: ${meals.take(3).joinToString()}${if (meals.size > 3) " and more" else ""}")
+        if (gear.isNotEmpty()) add("Tinkering: ${gear.take(3).joinToString()}${if (gear.size > 3) " and more" else ""}")
+    }
+
+    fun sharedIngredientNotes(recipe: CookingRecipe): List<String> = recipe.ingredients.keys.mapNotNull { id ->
+        val names = tinkeringRecipes.filter { isSchematicLearned(it.id) && id in ingredientsFor(it) }.map { it.name }
+        if (names.isEmpty()) null else "${inventoryService.itemDisplayName(id)} is also used in ${names.joinToString()}."
+    }
+
     fun canCook(recipe: CookingRecipe, batch: Int = 1): Boolean {
         if (batch <= 0 || recipe.ingredients.isEmpty() || recipe.ingredients.values.any { it <= 0 }) return false
         val multiplier = batch.coerceAtLeast(1)
@@ -29,10 +55,12 @@ class CraftingService(
     fun cookMeal(recipeId: String, chefId: String? = null, batch: Int = 1): CraftingOutcome {
         val recipe = cookingRecipes.find { it.id == recipeId } ?: return CraftingOutcome.Failure("Unknown recipe")
         if (batch <= 0) return CraftingOutcome.Failure("Invalid batch size")
+        if (chefId != null && chefId !in availableChefs()) return CraftingOutcome.Failure("That companion is not available.")
         val multiplier = batch.coerceAtLeast(1)
         if (!canCook(recipe, multiplier)) return CraftingOutcome.Failure("Missing ingredients")
         val scaledIngredients = recipe.ingredients.mapValues { it.value * multiplier }
         if (!inventoryService.consumeItems(scaledIngredients)) return CraftingOutcome.Failure("Unable to consume ingredients")
+        if (chefId != null) sessionStore.selectMealChef(chefId)
 
         val isMasterwork = (Math.random() < 0.15)
         val extraYield = if (isMasterwork) 1 else 0
@@ -40,54 +68,8 @@ class CraftingService(
         inventoryService.addItem(recipe.result, totalYield)
         sessionStore.setInventory(inventoryService.snapshot())
 
-        // If a chef is designated, record active meal perk for the session
-        if (chefId != null) {
-            val chefPerkBuff = when (chefId.lowercase(java.util.Locale.getDefault())) {
-                "nova" -> com.example.starborn.domain.session.ActiveMealBuff(
-                    recipeId = recipe.id,
-                    recipeName = recipe.name,
-                    chefId = "nova",
-                    remainingEncounters = 3,
-                    focusBonus = 10
-                )
-                "zeke" -> com.example.starborn.domain.session.ActiveMealBuff(
-                    recipeId = recipe.id,
-                    recipeName = recipe.name,
-                    chefId = "zeke",
-                    remainingEncounters = 3,
-                    hpBonus = 25,
-                    stabilityBonus = 3
-                )
-                "gh0st" -> com.example.starborn.domain.session.ActiveMealBuff(
-                    recipeId = recipe.id,
-                    recipeName = recipe.name,
-                    chefId = "gh0st",
-                    remainingEncounters = 3,
-                    speedBonus = 5,
-                    statusResistBonus = 20
-                )
-                "orion" -> com.example.starborn.domain.session.ActiveMealBuff(
-                    recipeId = recipe.id,
-                    recipeName = recipe.name,
-                    chefId = "orion",
-                    remainingEncounters = 3,
-                    critBonus = 0.08
-                )
-                else -> null
-            }
-            if (chefPerkBuff != null) {
-                sessionStore.applyMealBuff(chefPerkBuff)
-            }
-        }
-
-        val masterworkMsg = if (isMasterwork) " ⭐ Masterwork Sizzle! (+1 extra portion)" else ""
-        val chefMsg = when (chefId?.lowercase(java.util.Locale.getDefault())) {
-            "nova" -> " Nova balanced the macros (+Focus)."
-            "zeke" -> " Zeke charred it over iron (+HP & Stability)."
-            "gh0st" -> " Gh0st steeped pungent herbs (+Spd & Resist)."
-            "orion" -> " Orion plated with precision (+Crit)."
-            else -> ""
-        }
+        val masterworkMsg = if (isMasterwork) " Masterwork! (+1 extra portion)" else ""
+        val chefMsg = " Eat from inventory to activate meal benefits."
         val baseMsg = recipe.successMessage ?: "Prepared ${recipe.name}"
         return CraftingOutcome.Success(recipe.result, "$baseMsg (x$totalYield)$masterworkMsg$chefMsg")
     }

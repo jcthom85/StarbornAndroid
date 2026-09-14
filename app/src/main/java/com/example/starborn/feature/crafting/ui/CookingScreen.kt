@@ -49,10 +49,12 @@ fun CookingScreen(
     modifier: Modifier = Modifier
 ) {
     val inventoryState by inventoryService.state.collectAsState()
+    val session by craftingService.sessionState.collectAsState()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     var recentlyCookedRecipeId by remember { mutableStateOf<String?>(null) }
-    var selectedChef by remember { mutableStateOf("nova") }
+    val selectedChef = session.mealChefId.takeIf { it in craftingService.availableChefs() }
+        ?: craftingService.availableChefs().firstOrNull()
 
     val recipes = remember { craftingService.cookingRecipes }
     val isCampfire = source?.contains("camp", ignoreCase = true) == true || source?.contains("fire", ignoreCase = true) == true
@@ -142,6 +144,9 @@ fun CookingScreen(
                 }
 
                 // Companion Head Chef Selection
+                Text("Serving companion", color = Color.White, style = MaterialTheme.typography.titleSmall)
+                Text("Cook portions now; eat from inventory before combat. The selected companion adds their perk when a meal is eaten. One meal lasts 3 encounters and replaces the previous meal.",
+                    color = Color(0xFFCBD5E0), style = MaterialTheme.typography.bodySmall)
                 val chefs = listOf(
                     Triple("nova", "Nova", "⚡ +10 Focus"),
                     Triple("zeke", "Zeke", "🛡️ +25 HP / +3 Stab"),
@@ -154,13 +159,13 @@ fun CookingScreen(
                         .padding(bottom = 12.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    chefs.forEach { (id, name, perk) ->
+                    chefs.filter { it.first in craftingService.availableChefs() }.forEach { (id, name, perk) ->
                         val isSelected = selectedChef == id
                         Surface(
                             modifier = Modifier
                                 .weight(1f)
                                 .clip(RoundedCornerShape(10.dp))
-                                .clickable { selectedChef = id },
+                                .clickable { craftingService.selectChef(id) },
                             color = if (isSelected) Color(0xFFED8936).copy(alpha = 0.25f) else Color(0xFF1A202C),
                             border = BorderStroke(1.dp, if (isSelected) Color(0xFFED8936) else Color(0xFF2D3748)),
                             shape = RoundedCornerShape(10.dp)
@@ -192,6 +197,7 @@ fun CookingScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     items(recipes, key = { it.id }) { recipe ->
+                        var selectedBatch by remember(recipe.id) { mutableStateOf(1) }
                         val canCook = craftingService.canCook(recipe)
                         val isRecentlyCooked = recentlyCookedRecipeId == recipe.id
 
@@ -280,6 +286,10 @@ fun CookingScreen(
                                 Spacer(modifier = Modifier.height(12.dp))
 
                                 // Ingredients required
+                                Text(craftingService.mealEffects(recipe), color = Color(0xFFFBD38D), style = MaterialTheme.typography.bodySmall)
+                                craftingService.sharedIngredientNotes(recipe).forEach { note ->
+                                    Text(note, color = Color(0xFFCBD5E0), style = MaterialTheme.typography.bodySmall)
+                                }
                                 Text(
                                     text = "Ingredients",
                                     style = MaterialTheme.typography.labelSmall.copy(
@@ -296,7 +306,8 @@ fun CookingScreen(
                                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                                     verticalArrangement = Arrangement.spacedBy(6.dp)
                                 ) {
-                                    recipe.ingredients.forEach { (ingredientId, count) ->
+                                    recipe.ingredients.forEach { (ingredientId, perPortion) ->
+                                        val count = perPortion * selectedBatch
                                         val currentQty = inventoryState.find {
                                             it.item.id.equals(ingredientId, ignoreCase = true) ||
                                                 it.item.name.equals(ingredientId, ignoreCase = true) ||
@@ -334,7 +345,6 @@ fun CookingScreen(
 
                                 Spacer(modifier = Modifier.height(10.dp))
 
-                                var selectedBatch by remember(recipe.id) { mutableStateOf(1) }
                                 val canCookCurrentBatch = craftingService.canCook(recipe, selectedBatch)
 
                                 Row(

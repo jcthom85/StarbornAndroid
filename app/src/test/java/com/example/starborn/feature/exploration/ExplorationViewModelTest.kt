@@ -81,6 +81,19 @@ class ExplorationViewModelTest {
     }
 
     @Test
+    fun returningFromFishingDoesNotDuplicateSecuredCatch() {
+        val viewModel = createViewModel()
+        val inventory = getPrivateField<InventoryService>(viewModel, "inventoryService")
+        whenever(inventory.itemDisplayName("glowfish")).thenReturn("Glowfish")
+        viewModel.onFishingResult(
+            com.example.starborn.feature.fishing.viewmodel.FishingResultPayload(
+                "glowfish", 1, "Caught Glowfish!", success = true, secured = true
+            )
+        )
+        org.mockito.kotlin.verify(inventory, org.mockito.kotlin.never()).addItem("glowfish", 1)
+    }
+
+    @Test
     fun enqueueLevelUpsPromotesSequentially() {
         val viewModel = createViewModel()
 
@@ -314,6 +327,30 @@ class ExplorationViewModelTest {
         assertEquals(3, farCell.offsetX)
         assertFalse(farCell.discovered)
         assertTrue(farCell.visited)
+    }
+
+    @Test
+    fun unlockingOneWayExitDoesNotUnlockAnotherRoomsReturnSlot() {
+        val viewModel = createViewModel()
+        val source = testRoom(
+            id = "source", connections = mapOf("north" to "target"), pos = listOf(0, 0),
+            blockedDirections = mapOf("north" to BlockedDirection(type = "lock"))
+        )
+        val target = testRoom(
+            id = "target", connections = mapOf("south" to "other"), pos = listOf(0, 1),
+            blockedDirections = mapOf("south" to BlockedDirection(type = "key", keyId = "other_key"))
+        )
+        setPrivateField(viewModel, "roomsById", mapOf(source.id to source, target.id to target))
+        val method = ExplorationViewModel::class.java.getDeclaredMethod(
+            "unlockDirection", String::class.java, String::class.java,
+            BlockedDirection::class.java, Boolean::class.javaPrimitiveType
+        ).apply { isAccessible = true }
+        method.invoke(viewModel, "source", "north", source.blockedDirections?.get("north"), true)
+        val updated = getPrivateField<Map<String, Room>>(viewModel, "roomsById")
+        assertFalse(updated.getValue("source").blockedDirections.orEmpty().containsKey("north"))
+        assertEquals("other_key", updated.getValue("target").blockedDirections?.get("south")?.keyId)
+        val unlocked = getPrivateField<MutableMap<String, MutableSet<String>>>(viewModel, "unlockedDirections")
+        assertFalse(unlocked["target"].orEmpty().contains("south"))
     }
 
     @Test

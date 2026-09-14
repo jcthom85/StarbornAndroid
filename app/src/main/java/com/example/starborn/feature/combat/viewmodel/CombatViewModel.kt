@@ -2692,11 +2692,11 @@ class CombatViewModel(
     ): Combatant =
         run {
             val bonuses = equipmentBonuses(id, equippedItems, equippedWeapons, equippedArmors)
-            val adjustedStrength = (strength + bonuses.strength).coerceAtLeast(0)
+            val adjustedStrength = (strength + bonuses.strength + (mealBuff?.strengthBonus ?: 0)).coerceAtLeast(0)
             val adjustedVitality = (vitality + bonuses.vitality).coerceAtLeast(0)
-            val adjustedAgility = (agility + bonuses.agility).coerceAtLeast(0)
+            val adjustedAgility = (agility + bonuses.agility + (mealBuff?.agilityBonus ?: 0)).coerceAtLeast(0)
             val adjustedFocus = (focus + bonuses.focus + (mealBuff?.focusBonus ?: 0)).coerceAtLeast(0)
-            val adjustedLuck = (luck + bonuses.luck).coerceAtLeast(0)
+            val adjustedLuck = (luck + bonuses.luck + (mealBuff?.luckBonus ?: 0)).coerceAtLeast(0)
             val mealSpeedBonus = mealBuff?.speedBonus ?: 0
             val adjustedSpeed = CombatFormulas.speed(bonuses.speed + mealSpeedBonus, adjustedAgility).roundToInt().coerceAtLeast(0)
             val mealHpBonus = mealBuff?.hpBonus ?: 0
@@ -2717,10 +2717,10 @@ class CombatViewModel(
                 luck = adjustedLuck,
                 speed = adjustedSpeed,
                 stability = 100 + mealStabilityBonus,
-                accuracyBonus = bonuses.accuracyBonus,
-                evasionBonus = bonuses.evasionBonus,
+                accuracyBonus = bonuses.accuracyBonus + (mealBuff?.accuracyBonus ?: 0) / 100.0,
+                evasionBonus = bonuses.evasionBonus + (mealBuff?.evasionBonus ?: 0) / 100.0,
                 critBonus = bonuses.critBonus + mealCritBonus,
-                flatDamageReduction = bonuses.flatDamageReduction
+                flatDamageReduction = bonuses.flatDamageReduction + (mealBuff?.defenseBonus ?: 0)
             ),
             resistances = ResistanceProfile(
                 burn = mealResistBonus,

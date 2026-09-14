@@ -49,8 +49,9 @@ object MapStateBuilder {
             val pathHints = when (room.id) {
                 currentRoom.id -> openConnections.keys
                 else -> {
-                    val incoming = openConnections.entries.firstOrNull { it.value == room.id }?.key
-                    incoming?.let { listOfNotNull(oppositeDirection(it)).toSet() } ?: emptySet()
+                    if (room.id in openConnections.values) {
+                        connections.filterValues { it == currentRoom.id }.keys
+                    } else emptySet()
                 }
             }
             val services = parseRoomServices(room)
@@ -120,6 +121,19 @@ object MapStateBuilder {
         val x = room.pos.getOrNull(0) ?: 0
         val y = room.pos.getOrNull(1) ?: 0
         return Pair(x, y)
+    }
+
+    /** Only the same physical connection may share a directional gate. */
+    fun reciprocalDirection(source: Room, direction: String, destination: Room): String? {
+        val opposite = oppositeDirection(direction) ?: return null
+        if (source.connections.entries.none {
+                it.key.equals(direction, ignoreCase = true) && it.value == destination.id
+            }) return null
+        return opposite.takeIf {
+            destination.connections.entries.any { (key, target) ->
+                key.equals(opposite, ignoreCase = true) && target == source.id
+            }
+        }
     }
 
     fun oppositeDirection(direction: String): String? = when (direction.lowercase(Locale.getDefault())) {

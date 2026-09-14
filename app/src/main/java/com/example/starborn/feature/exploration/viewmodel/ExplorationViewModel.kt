@@ -1480,7 +1480,9 @@ class ExplorationViewModel(
         }
 
         val destId = getConnection(room, normalized)
-        val opposite = oppositeDirection(normalized)
+        val opposite = destId?.let { roomsById[it] }?.let {
+            MapStateBuilder.reciprocalDirection(room, normalized, it)
+        }
         if (destId != null && opposite != null) {
             val destRoom = roomsById[destId]
             val destBlock = destRoom?.blockedDirections?.get(opposite)
@@ -2980,7 +2982,7 @@ class ExplorationViewModel(
         if (result.success && !result.itemId.isNullOrBlank()) {
             val itemId = result.itemId
             val quantity = (result.quantity ?: 1).coerceAtLeast(1)
-            inventoryService.addItem(itemId, quantity)
+            if (!result.secured) inventoryService.addItem(itemId, quantity)
             val displayName = inventoryService.itemDisplayName(itemId)
             val message = result.message?.takeIf { it.isNotBlank() } ?: "Caught $displayName!"
             postStatus(message)
@@ -5630,7 +5632,9 @@ class ExplorationViewModel(
         }
 
         val destId = currentRoom?.let { getConnection(it, normalized) }
-        val opposite = oppositeDirection(normalized)
+        val opposite = destId?.let { roomsById[it] }?.let { destination ->
+            currentRoom?.let { MapStateBuilder.reciprocalDirection(it, normalized, destination) }
+        }
         if (destId != null && opposite != null) {
             unlockedDirections.getOrPut(destId) { mutableSetOf() }.add(opposite)
             sessionStore.unlockExit(destId, opposite)

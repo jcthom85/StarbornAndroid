@@ -53,7 +53,8 @@ data class GameSessionState(
     val astraReturnHubId: String? = null,
     val astraReturnRoomId: String? = null,
     val arcadeProgress: Map<String, ArcadeCabinetProgress> = emptyMap(),
-    val activeMealBuff: ActiveMealBuff? = null
+    val activeMealBuff: ActiveMealBuff? = null,
+    val mealChefId: String = "nova"
 )
 
 data class ActiveMealBuff(
@@ -66,7 +67,13 @@ data class ActiveMealBuff(
     val focusBonus: Int = 0,
     val critBonus: Double = 0.0,
     val stabilityBonus: Int = 0,
-    val statusResistBonus: Int = 0
+    val statusResistBonus: Int = 0,
+    val strengthBonus: Int = 0,
+    val defenseBonus: Int = 0,
+    val agilityBonus: Int = 0,
+    val luckBonus: Int = 0,
+    val accuracyBonus: Int = 0,
+    val evasionBonus: Int = 0
 )
 
 data class ArcadeCabinetProgress(
@@ -81,6 +88,8 @@ data class ArcadeCabinetProgress(
 fun GameSessionState.fingerprint(): String {
     val normalizedLocale = Locale.US
     val builder = StringBuilder()
+    builder.append("MEAL_CHEF:").append(mealChefId).append('|')
+    builder.append("MEAL:").append(activeMealBuff).append('|')
     builder.append(worldId.orEmpty()).append('|')
     builder.append(hubId.orEmpty()).append('|')
     builder.append(roomId.orEmpty()).append('|')

@@ -455,7 +455,7 @@
       },
       {
         "type": "narrate",
-        "message": "The bunk light coughs on. Blue-white sparks jump from the door conduit. Its maintenance ticket reads CLOSED: WITHIN QUOTA.",
+        "message": "The bunk light coughs on, revealing the door control panel. Its maintenance ticket reads CLOSED: WITHIN QUOTA.",
         "tap_to_dismiss": true
       },
       {
@@ -520,7 +520,7 @@
       },
       {
         "type": "narrate",
-        "message": "Nova isolates the circuit and peels back the ticket. Three repair requests sit underneath it, each closed automatically without work. The sparks die, and the bunk door unlocks.",
+        "message": "Nova flips the panel's isolation switch. The sparks die. Beneath the ticket, three repair requests have been closed automatically without work. She pulls the manual release, and the bunk door slides open.",
         "tap_to_dismiss": true
       },
       {

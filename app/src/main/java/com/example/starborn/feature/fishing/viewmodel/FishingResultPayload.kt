@@ -4,5 +4,6 @@ data class FishingResultPayload(
     val itemId: String?,
     val quantity: Int?,
     val message: String?,
-    val success: Boolean
+    val success: Boolean,
+    val secured: Boolean = false
 )

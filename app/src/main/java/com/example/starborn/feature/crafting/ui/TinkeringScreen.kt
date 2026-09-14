@@ -682,7 +682,7 @@ private fun TinkeringRecipeCard(
             statusColor = MaterialTheme.colorScheme.tertiary
         }
         !recipe.learned -> {
-            statusText = "Locked"
+            statusText = "Discoverable"
             statusColor = MaterialTheme.colorScheme.error
         }
         else -> {

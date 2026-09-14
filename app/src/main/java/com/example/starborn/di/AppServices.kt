@@ -137,7 +137,7 @@ class AppServices(context: Context) {
     val uiFxBus = UiFxBus()
     val uiEventBus = UiEventBus()
     private var dialogueTriggerListener: ((String) -> Boolean)? = null
-    val fishingService = FishingService(fishingDataSource, inventoryService)
+    val fishingService = FishingService(fishingDataSource, inventoryService, sessionStore = sessionStore, craftingService = craftingService)
     val tutorialScripts = TutorialScriptRepository(assetReader)
     val userSettingsStore = UserSettingsStore(appContext)
     private val bootstrapCinematics: ArrayDeque<String> = ArrayDeque()

@@ -171,10 +171,10 @@
     "transition_text": "Travel to Anchor Chamber."
   },
   {
-    "id": "deep_firewall_gamma__east__deep_anchor_chamber",
+    "id": "deep_firewall_gamma__down__deep_anchor_chamber",
     "from_node": "deep_server_farm",
     "from_room": "deep_firewall_gamma",
-    "direction": "east",
+    "direction": "down",
     "to_node": "deep_anchor_chamber",
     "to_room": "deep_anchor_chamber",
     "transition_text": "Travel to Anchor Chamber."
@@ -270,10 +270,10 @@
     "transition_text": "Travel to The Forge."
   },
   {
-    "id": "foundry_cooling_springs__east__foundry_waste_intake",
+    "id": "foundry_cooling_springs__southeast__foundry_waste_intake",
     "from_node": "foundry_cooling_springs",
     "from_room": "foundry_cooling_springs",
-    "direction": "east",
+    "direction": "southeast",
     "to_node": "foundry_waste_intake",
     "to_room": "foundry_waste_intake",
     "transition_text": "Travel to Waste Intake."
@@ -288,10 +288,10 @@
     "transition_text": "Travel to Obsidian Shelf."
   },
   {
-    "id": "foundry_forge__east__foundry_power_core",
+    "id": "foundry_forge__southeast__foundry_power_core",
     "from_node": "foundry_forge",
     "from_room": "foundry_forge_anvil",
-    "direction": "east",
+    "direction": "southeast",
     "to_node": "foundry_power_core",
     "to_room": "foundry_power_core",
     "transition_text": "Travel to Power Core."
@@ -333,10 +333,10 @@
     "transition_text": "Travel to Titan Dock."
   },
   {
-    "id": "foundry_power_core__south__foundry_forge",
+    "id": "foundry_power_core__northwest__foundry_forge",
     "from_node": "foundry_power_core",
     "from_room": "foundry_power_core",
-    "direction": "south",
+    "direction": "northwest",
     "to_node": "foundry_forge",
     "to_room": "foundry_forge_anvil",
     "transition_text": "Travel to The Forge."
@@ -396,10 +396,10 @@
     "transition_text": "Travel to Service Airlock."
   },
   {
-    "id": "foundry_waste_intake__south__foundry_cooling_springs",
+    "id": "foundry_waste_intake__northwest__foundry_cooling_springs",
     "from_node": "foundry_waste_intake",
     "from_room": "foundry_waste_intake",
-    "direction": "south",
+    "direction": "northwest",
     "to_node": "foundry_cooling_springs",
     "to_room": "foundry_cooling_springs",
     "transition_text": "Travel to Cooling Springs."
@@ -513,10 +513,10 @@
     "transition_text": "Travel to Service Shaft."
   },
   {
-    "id": "orbital_security_hub__south__orbital_solarium",
+    "id": "orbital_security_hub__northwest__orbital_solarium",
     "from_node": "orbital_security_hub",
     "from_room": "orbital_security_hub",
-    "direction": "south",
+    "direction": "northwest",
     "to_node": "orbital_solarium",
     "to_room": "orbital_solarium",
     "transition_text": "Travel to Solarium."
@@ -549,10 +549,10 @@
     "transition_text": "Travel to Security Hub."
   },
   {
-    "id": "orbital_solarium__east__orbital_security_hub",
+    "id": "orbital_solarium__southeast__orbital_security_hub",
     "from_node": "orbital_solarium",
     "from_room": "orbital_solarium",
-    "direction": "east",
+    "direction": "southeast",
     "to_node": "orbital_security_hub",
     "to_room": "orbital_security_hub",
     "transition_text": "Travel to Security Hub."
@@ -882,10 +882,10 @@
     "transition_text": "Travel to Skypark."
   },
   {
-    "id": "spire_archive__spire_archive_vault__south__spire_exec_lounge",
+    "id": "spire_archive__spire_archive_vault__southwest__spire_exec_lounge",
     "from_node": "spire_archive",
     "from_room": "spire_archive_vault",
-    "direction": "south",
+    "direction": "southwest",
     "to_node": "spire_exec_lounge",
     "to_room": "spire_exec_lounge_bar",
     "transition_text": "Travel to Exec Lounge."
@@ -927,28 +927,28 @@
     "transition_text": "Travel to Laundry Service."
   },
   {
-    "id": "spire_exec_lounge__spire_exec_lounge_bar__west__spire_laundry",
+    "id": "spire_exec_lounge__spire_exec_lounge_bar__northwest__spire_laundry",
     "from_node": "spire_exec_lounge",
     "from_room": "spire_exec_lounge_bar",
-    "direction": "west",
+    "direction": "northwest",
     "to_node": "spire_laundry",
     "to_room": "spire_service_lift",
     "transition_text": "Travel to Laundry Service."
   },
   {
-    "id": "spire_exec_lounge__spire_exec_lounge_bar__east__spire_archive",
+    "id": "spire_exec_lounge__spire_exec_lounge_bar__northeast__spire_archive",
     "from_node": "spire_exec_lounge",
     "from_room": "spire_exec_lounge_bar",
-    "direction": "east",
+    "direction": "northeast",
     "to_node": "spire_archive",
     "to_room": "spire_archive_vault",
     "transition_text": "Travel to The Archive."
   },
   {
-    "id": "spire_skypark__spire_glasswalk__south__spire_archive",
+    "id": "spire_skypark__spire_glasswalk__down__spire_archive",
     "from_node": "spire_skypark",
     "from_room": "spire_glasswalk",
-    "direction": "south",
+    "direction": "down",
     "to_node": "spire_archive",
     "to_room": "spire_archive_vault",
     "transition_text": "Travel to The Archive."
@@ -999,19 +999,19 @@
     "transition_text": "Travel to Skypark."
   },
   {
-    "id": "spire_laundry__spire_service_lift__east__spire_archive",
+    "id": "spire_laundry__spire_service_lift__down__spire_archive",
     "from_node": "spire_laundry",
     "from_room": "spire_service_lift",
-    "direction": "east",
+    "direction": "down",
     "to_node": "spire_archive",
     "to_room": "spire_archive_vault",
     "transition_text": "Travel to The Archive."
   },
   {
-    "id": "spire_laundry__spire_service_lift__south__spire_exec_lounge",
+    "id": "spire_laundry__spire_service_lift__southeast__spire_exec_lounge",
     "from_node": "spire_laundry",
     "from_room": "spire_service_lift",
-    "direction": "south",
+    "direction": "southeast",
     "to_node": "spire_exec_lounge",
     "to_room": "spire_exec_lounge_bar",
     "transition_text": "Travel to Exec Lounge."
@@ -1107,10 +1107,10 @@
     "transition_text": "Travel to The Static."
   },
   {
-    "id": "spire_vent_output__spire_underrail_platform__south__spire_transit_plaza",
+    "id": "spire_vent_output__spire_underrail_platform__down__spire_transit_plaza",
     "from_node": "spire_vent_output",
     "from_room": "spire_underrail_platform",
-    "direction": "south",
+    "direction": "down",
     "to_node": "spire_transit_plaza",
     "to_room": "spire_transit_plaza",
     "transition_text": "Travel to Transit Plaza."

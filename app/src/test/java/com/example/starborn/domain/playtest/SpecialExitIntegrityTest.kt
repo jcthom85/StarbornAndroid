@@ -40,11 +40,15 @@ class SpecialExitIntegrityTest {
                 .map { (direction, target) -> Triple(room, direction, target) }
         }
 
-        assertEquals("The reviewed exception budget changed", 24, exceptional.size)
+        assertEquals("The reviewed exception budget changed", 38, exceptional.size)
         exceptional.forEach { (room, direction, targetId) ->
             assertFalse("${room.id}:$direction needs a visible travel label", room.specialExits[direction].isNullOrBlank())
             val target = byId[targetId]
             assertNotNull("${room.id}:$direction points to missing $targetId", target)
+            if (direction == "down" && NavigationIntegrityTest.oneWayExits[room.id] == targetId) {
+                assertTrue(room.specialExits.getValue(direction).contains("one way"))
+                return@forEach
+            }
             val reverse = opposite.getValue(direction)
             assertEquals("${room.id}:$direction must remain reciprocal", room.id, target?.connections?.get(reverse))
             assertFalse("$targetId:$reverse needs a visible return label", target?.specialExits?.get(reverse).isNullOrBlank())

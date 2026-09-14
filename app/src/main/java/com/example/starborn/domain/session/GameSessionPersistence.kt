@@ -325,12 +325,20 @@ private fun GameSessionProto.toState(): GameSessionState = GameSessionState(
             focusBonus = activeMealBuff.focusBonus,
             critBonus = activeMealBuff.critBonus,
             stabilityBonus = activeMealBuff.stabilityBonus,
-            statusResistBonus = activeMealBuff.statusResistBonus
+            statusResistBonus = activeMealBuff.statusResistBonus,
+            strengthBonus = activeMealBuff.strengthBonus,
+            defenseBonus = activeMealBuff.defenseBonus,
+            agilityBonus = activeMealBuff.agilityBonus,
+            luckBonus = activeMealBuff.luckBonus,
+            accuracyBonus = activeMealBuff.accuracyBonus,
+            evasionBonus = activeMealBuff.evasionBonus
         )
-    } else null
+    } else null,
+    mealChefId = mealChefId.ifBlank { "nova" }
 )
 
 private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis()): GameSessionProto = GameSessionProto.newBuilder().apply {
+    mealChefId = this@toProto.mealChefId
     worldId = this@toProto.worldId.orEmpty()
     hubId = this@toProto.hubId.orEmpty()
     roomId = this@toProto.roomId.orEmpty()
@@ -464,6 +472,12 @@ private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis())
             critBonus = buff.critBonus
             stabilityBonus = buff.stabilityBonus
             statusResistBonus = buff.statusResistBonus
+            strengthBonus = buff.strengthBonus
+            defenseBonus = buff.defenseBonus
+            agilityBonus = buff.agilityBonus
+            luckBonus = buff.luckBonus
+            accuracyBonus = buff.accuracyBonus
+            evasionBonus = buff.evasionBonus
         }.build()
     }
     lastSavedMs = savedAt

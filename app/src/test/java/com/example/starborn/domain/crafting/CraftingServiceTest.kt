@@ -347,7 +347,7 @@ class CraftingServiceTest {
     }
 
     @Test
-    fun chefSelectionAppliesUniquePerkToSessionStore() {
+    fun cookingStoresServingPreferenceWithoutGrantingAnUneatenMealBuff() {
         val catalog = TestItemCatalog(
             listOf(
                 item(id = "ration_pack", name = "Ration Pack"),
@@ -376,10 +376,8 @@ class CraftingServiceTest {
         service.cookMeal("provision_ration_soup", chefId = "nova")
 
         val activeBuff = store.state.value.activeMealBuff
-        org.junit.Assert.assertNotNull(activeBuff)
-        assertEquals("nova", activeBuff?.chefId)
-        assertEquals(10, activeBuff?.focusBonus)
-        assertEquals(3, activeBuff?.remainingEncounters)
+        org.junit.Assert.assertNull(activeBuff)
+        assertEquals("nova", store.state.value.mealChefId)
     }
 }
 
