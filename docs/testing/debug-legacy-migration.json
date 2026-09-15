@@ -1,0 +1,818 @@
+[
+  {
+    "id": "arcade_deep_mine",
+    "visible": true,
+    "launcher": "startNewGameAtDeepMineArcade()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "astra_access",
+    "visible": true,
+    "launcher": "startNewGameAtAstraAccess()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "astra_home",
+    "visible": true,
+    "launcher": "startNewGameAboardAstra()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "boss_ascended_vale",
+    "visible": true,
+    "launcher": "startNewGameAtW6Finale()",
+    "shared_setup_with": [
+      "w6_finale"
+    ],
+    "disposition": "merge_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "boss_hunter",
+    "visible": true,
+    "launcher": "startNewGameAtW2HunterCanopy()",
+    "shared_setup_with": [
+      "w2_hunter_canopy"
+    ],
+    "disposition": "merge_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "boss_titan_walker",
+    "visible": true,
+    "launcher": "startNewGameAtTitanApproach()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "boss_warden",
+    "visible": true,
+    "launcher": "startNewGameAtWardenApproach()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "checkpoint",
+    "visible": true,
+    "launcher": "startNewGameAtCheckpoint()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "crafting_cooking_kitchen",
+    "visible": true,
+    "launcher": "startProvisionSandbox(cooking = true)",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "crafting_tinkering_advanced",
+    "visible": true,
+    "launcher": "startProvisionSandbox(cooking = false)",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "deep_mine",
+    "visible": true,
+    "launcher": "startNewGameAtDeepMine()",
+    "shared_setup_with": [
+      "tut_combat_guard"
+    ],
+    "disposition": "merge_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "dynamic_patrol",
+    "visible": true,
+    "launcher": "startNewGameAtDynamicPatrol()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "enemy_party",
+    "visible": true,
+    "launcher": "startNewGameAtEnemyPartyCombat()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "first_combat",
+    "visible": true,
+    "launcher": "startNewGameAtFirstCombat()",
+    "shared_setup_with": [
+      "tut_combat_loader"
+    ],
+    "disposition": "merge_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "fishing_beach_pools",
+    "visible": true,
+    "launcher": "startNewGameAtFishingBeachPools()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "fishing_spire_runoff",
+    "visible": true,
+    "launcher": "startSpireFishingSandbox()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "full_inventory",
+    "visible": true,
+    "launcher": "startNewGame(debugFullInventory = true)",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "fun_w3_corporate_espionage",
+    "visible": true,
+    "launcher": "startNewGameAtFunW3CorporateEspionage()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "fun_w4_quality_control",
+    "visible": true,
+    "launcher": "startNewGameAtFunW4QualityControl()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "fun_w5_ghost_shell",
+    "visible": true,
+    "launcher": "startNewGameAtFunW5GhostInTheShell()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "fun_w6_hr_record",
+    "visible": true,
+    "launcher": "startNewGameAtFunW6HrRecord()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "heavy_lifting",
+    "visible": true,
+    "launcher": "startNewGameAtHeavyLifting()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "hub2_overview",
+    "visible": true,
+    "launcher": "startNewGameAtHub2Overview()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "hub_10_deep_ring",
+    "visible": true,
+    "launcher": "authored hub launcher",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "hub_11_event_horizon",
+    "visible": true,
+    "launcher": "authored hub launcher",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "hub_12_singularity",
+    "visible": true,
+    "launcher": "authored hub launcher",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "hub_1_homestead",
+    "visible": true,
+    "launcher": "authored hub launcher",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "hub_2_logistics",
+    "visible": true,
+    "launcher": "authored hub launcher",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "hub_3_sector9",
+    "visible": true,
+    "launcher": "authored hub launcher",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "hub_4_facility",
+    "visible": true,
+    "launcher": "authored hub launcher",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "hub_5_lower_city",
+    "visible": true,
+    "launcher": "authored hub launcher",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "hub_6_upper_city",
+    "visible": true,
+    "launcher": "authored hub launcher",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "hub_7_slag_pits",
+    "visible": true,
+    "launcher": "authored hub launcher",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "hub_8_assembly_line",
+    "visible": true,
+    "launcher": "authored hub launcher",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "hub_9_orbital_ring",
+    "visible": true,
+    "launcher": "authored hub launcher",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "hub_qa_w1_rest",
+    "visible": true,
+    "launcher": "startNewGameAtHubQaW1Rest()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "hub_qa_w2_cookfire",
+    "visible": true,
+    "launcher": "startNewGameAtHubQaW2Cookfire()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "hub_qa_w3_tuning",
+    "visible": true,
+    "launcher": "startNewGameAtHubQaW3Tuning()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "hub_qa_w4_tuning",
+    "visible": true,
+    "launcher": "startNewGameAtHubQaW4Tuning()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "hub_qa_w6_source",
+    "visible": true,
+    "launcher": "startNewGameAtHubQaW6Source()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "launch",
+    "visible": true,
+    "launcher": "startNewGameAtLaunch()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "lift_shaft",
+    "visible": false,
+    "launcher": "startNewGameAtLiftShaft()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "node_progression_w1",
+    "visible": true,
+    "launcher": "startNewGameAtWorld1NodeProgression()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "node_progression_w2",
+    "visible": true,
+    "launcher": "startNewGameAtWorld2NodeProgression()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "party_sizes",
+    "visible": false,
+    "launcher": "startNewGameAtEnemyPartySizes()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "presence_stress",
+    "visible": false,
+    "launcher": "startNewGameAtPresenceStress()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "qa_meal_reload",
+    "visible": true,
+    "launcher": "startMealReloadScenario()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "qa_recipe_exact",
+    "visible": true,
+    "launcher": "startRecipeBoundary(missing = false)",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "qa_recipe_short",
+    "visible": true,
+    "launcher": "startRecipeBoundary(missing = true)",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "qa_w2_gate_closed",
+    "visible": true,
+    "launcher": "startWorld2GateScenario(open = false)",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "qa_w2_gate_open",
+    "visible": true,
+    "launcher": "startWorld2GateScenario(open = true)",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "qa_w3_routes_after",
+    "visible": true,
+    "launcher": "startWorld3RouteScenario(after = true)",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "qa_w3_routes_before",
+    "visible": true,
+    "launcher": "startWorld3RouteScenario(after = false)",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "red_alert",
+    "visible": true,
+    "launcher": "startNewGameAtRedAlert()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "room_items",
+    "visible": false,
+    "launcher": "startNewGameAtRoomItems()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "scavenger",
+    "visible": true,
+    "launcher": "startNewGameAtScavengerStash()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "story_w1_start",
+    "visible": true,
+    "launcher": "startNewGame()",
+    "shared_setup_with": [
+      "tut_movement"
+    ],
+    "disposition": "merge_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "tinkering_tutorial",
+    "visible": true,
+    "launcher": "startNewGameAtTinkeringTutorial()",
+    "shared_setup_with": [
+      "tut_tinkering"
+    ],
+    "disposition": "merge_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "tut_combat_guard",
+    "visible": false,
+    "launcher": "startNewGameAtDeepMine()",
+    "shared_setup_with": [
+      "deep_mine"
+    ],
+    "disposition": "merge_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "tut_combat_loader",
+    "visible": false,
+    "launcher": "startNewGameAtFirstCombat()",
+    "shared_setup_with": [
+      "first_combat"
+    ],
+    "disposition": "merge_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "tut_combat_snacks",
+    "visible": true,
+    "launcher": "startNewGameAtTutCombatSnacks()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "tut_gear_inventory",
+    "visible": true,
+    "launcher": "startNewGameAtTutGearInventory()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "tut_journal_quests",
+    "visible": true,
+    "launcher": "startNewGameAtTutJournalQuests()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "tut_movement",
+    "visible": false,
+    "launcher": "startNewGame()",
+    "shared_setup_with": [
+      "story_w1_start"
+    ],
+    "disposition": "merge_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "tut_npc_dialogue",
+    "visible": true,
+    "launcher": "startNewGameAtTutNpcDialogue()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "tut_party_combat",
+    "visible": true,
+    "launcher": "startNewGameAtTutPartyCombat()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "tut_rest_recovery",
+    "visible": true,
+    "launcher": "startNewGameAtTutRestRecovery()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "tut_save_system",
+    "visible": true,
+    "launcher": "startNewGameAtTutSaveSystem()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "tut_source_blast_wave",
+    "visible": true,
+    "launcher": "startNewGameAtTutSourceBlastWave()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "tut_source_link",
+    "visible": true,
+    "launcher": "startNewGameAtTutSourceLink()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "tut_tinkering",
+    "visible": false,
+    "launcher": "startNewGameAtTinkeringTutorial()",
+    "shared_setup_with": [
+      "tinkering_tutorial"
+    ],
+    "disposition": "merge_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "tut_world2_debuffs",
+    "visible": true,
+    "launcher": "startNewGameAtTutWorld2Debuffs()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w2_astra_repair",
+    "visible": true,
+    "launcher": "startNewGameAtW2AstraRepair()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w2_crash_start",
+    "visible": true,
+    "launcher": "startNewGameAtW2CrashStart()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w2_hunter_canopy",
+    "visible": true,
+    "launcher": "startNewGameAtW2HunterCanopy()",
+    "shared_setup_with": [
+      "boss_hunter"
+    ],
+    "disposition": "merge_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w2_source_gate",
+    "visible": true,
+    "launcher": "startNewGameAtW2SourceGate()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w2_stasis_chamber",
+    "visible": true,
+    "launcher": "startNewGameAtW2StasisChamber()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w2_temple_gate",
+    "visible": true,
+    "launcher": "startNewGameAtW2TempleGate()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w3_checkpoint_infiltration",
+    "visible": true,
+    "launcher": "startNewGameAtW3CheckpointInfiltration()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w3_lens_archive",
+    "visible": true,
+    "launcher": "startNewGameAtW3LensArchive()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w3_lockdown_escape",
+    "visible": true,
+    "launcher": "startNewGameAtW3LockdownEscape()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w3_safehouse_plan",
+    "visible": true,
+    "launcher": "startNewGameAtW3SafehousePlan()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w3_sewers_entry",
+    "visible": true,
+    "launcher": "startNewGameAtW3SewersEntry()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w4_anvil_forge",
+    "visible": true,
+    "launcher": "startNewGameAtW4AnvilForge()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w4_assembly_floor",
+    "visible": true,
+    "launcher": "startNewGameAtW4AssemblyFloor()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w4_foundry_start",
+    "visible": true,
+    "launcher": "startNewGameAtW4FoundryStart()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w4_meltdown_escape",
+    "visible": true,
+    "launcher": "startNewGameAtW4MeltdownEscape()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w4_phantom_records",
+    "visible": true,
+    "launcher": "startNewGameAtW4PhantomRecords()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w5_anchor_chamber",
+    "visible": true,
+    "launcher": "startNewGameAtW5AnchorChamber()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w5_core_firewall",
+    "visible": true,
+    "launcher": "startNewGameAtW5CoreFirewall()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w5_critical_mass",
+    "visible": true,
+    "launcher": "startNewGameAtW5CriticalMass()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w5_docking_procedure",
+    "visible": true,
+    "launcher": "startNewGameAtW5DockingProcedure()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w5_zero_g",
+    "visible": true,
+    "launcher": "startNewGameAtW5ZeroG()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w6_crossing",
+    "visible": true,
+    "launcher": "startNewGameAtW6Crossing()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w6_echo_mines",
+    "visible": true,
+    "launcher": "startNewGameAtW6EchoMines()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w6_finale",
+    "visible": true,
+    "launcher": "startNewGameAtW6Finale()",
+    "shared_setup_with": [
+      "boss_ascended_vale"
+    ],
+    "disposition": "merge_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w6_fractured_minds",
+    "visible": true,
+    "launcher": "startNewGameAtW6FracturedMinds()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "w6_spire",
+    "visible": true,
+    "launcher": "startNewGameAtW6Spire()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "weather_lab",
+    "visible": true,
+    "launcher": "startNewGameAtWeatherLab()",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  }
+]

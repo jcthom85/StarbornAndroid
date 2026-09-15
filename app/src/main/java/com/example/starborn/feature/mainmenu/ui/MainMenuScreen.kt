@@ -83,9 +83,9 @@ import com.example.starborn.domain.audio.AudioCueType
 import com.example.starborn.domain.audio.AudioRouter
 import com.example.starborn.feature.exploration.ui.tabs.SettingsTabContent
 import com.example.starborn.feature.exploration.viewmodel.SettingsUiState
+import com.example.starborn.debug.DebugTestRegistry
 import com.example.starborn.feature.mainmenu.MainMenuViewModel
 import com.example.starborn.feature.mainmenu.DebugScenario
-import com.example.starborn.feature.mainmenu.DebugScenarioCatalog
 import com.example.starborn.feature.mainmenu.DebugScenarioCategory
 import com.example.starborn.feature.mainmenu.DebugScenarioDestination
 import com.example.starborn.ui.components.SaveLoadDialog
@@ -731,14 +731,17 @@ private fun TitleSettingsDialog(
 }
 
 @Composable
-private fun DebugScenarioDialog(
+internal fun DebugScenarioDialog(
     onLaunch: (DebugScenario) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    testSession: Boolean = true
 ) {
     var query by remember { mutableStateOf("") }
     var category by remember { mutableStateOf<DebugScenarioCategory?>(null) }
+    var selectedScenario by remember { mutableStateOf<DebugScenario?>(null) }
+
     val filtered = remember(query, category) {
-        DebugScenarioCatalog.scenarios.filter { scenario ->
+        DebugTestRegistry.allScenarios.filter { scenario ->
             (category == null || scenario.category == category) &&
                 (query.isBlank() || listOf(scenario.title, scenario.description, scenario.worldLabel)
                     .any { it.contains(query, ignoreCase = true) })
@@ -749,61 +752,121 @@ private fun DebugScenarioDialog(
         onDismissRequest = onDismiss,
         title = { Text("Debug Scenarios", fontWeight = FontWeight.Black) },
         text = {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-                modifier = Modifier.heightIn(max = 430.dp)
-            ) {
-                item {
-                    Text("Launching replaces the current unsaved session.", color = TitleMutedText, fontSize = 13.sp)
-                }
-                item {
-                    OutlinedTextField(
-                        value = query,
-                        onValueChange = { query = it },
-                        label = { Text("Search world, quest, room, or system", maxLines = 1, overflow = TextOverflow.Ellipsis) },
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-                item {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())
-                    ) {
-                        DebugScenarioCategory.entries.forEach { option ->
-                            FilterChip(
-                                selected = category == option,
-                                onClick = { category = option.takeUnless { it == category } },
-                                label = { Text(option.label, fontSize = 11.sp, maxLines = 1) }
-                            )
-                        }
-                    }
-                }
-                items(filtered, key = { it.id }) { scenario ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onLaunch(scenario) }
-                            .background(TitleCyan.copy(alpha = 0.07f), RoundedCornerShape(10.dp))
-                            .padding(12.dp)
-                    ) {
-                        Text(scenario.title, fontWeight = FontWeight.Bold, color = TitleText)
+            val scenarioForReview = selectedScenario
+            if (scenarioForReview != null) {
+                val procedure = scenarioForReview.procedure
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    modifier = Modifier.heightIn(max = 430.dp)
+                ) {
+                    item {
+                        Text(scenarioForReview.title, fontWeight = FontWeight.Bold, color = TitleText, fontSize = 16.sp)
                         Text(
-                            "${scenario.category.label}  |  ${scenario.worldLabel}",
+                            "${scenarioForReview.category.label}  |  ${scenarioForReview.worldLabel}",
                             color = TitleCyan,
                             fontSize = 11.sp
                         )
-                        Text(scenario.description, color = TitleMutedText, fontSize = 13.sp)
+                    }
+                    if (procedure != null) {
+                        item {
+                            Text("Starting State", fontWeight = FontWeight.SemiBold, color = TitleCyan, fontSize = 13.sp)
+                            Text(procedure.startingState, color = TitleMutedText, fontSize = 12.sp)
+                        }
+                        item {
+                            Text("Steps", fontWeight = FontWeight.SemiBold, color = TitleCyan, fontSize = 13.sp)
+                            procedure.steps.forEachIndexed { index, step ->
+                                Text("${index + 1}. $step", color = TitleMutedText, fontSize = 12.sp)
+                            }
+                        }
+                        item {
+                            Text("Expected", fontWeight = FontWeight.SemiBold, color = TitleCyan, fontSize = 13.sp)
+                            procedure.expected.forEachIndexed { index, exp ->
+                                Text("• $exp", color = TitleMutedText, fontSize = 12.sp)
+                            }
+                        }
+                        if (procedure.limitations.isNotBlank()) {
+                            item {
+                                Text("Limitations: ${procedure.limitations}", color = TitleMutedText.copy(alpha = 0.8f), fontSize = 11.sp)
+                            }
+                        }
+                    } else {
+                        item {
+                            Text(scenarioForReview.description, color = TitleMutedText, fontSize = 13.sp)
+                        }
                     }
                 }
-                if (filtered.isEmpty()) {
-                    item { Text("No matching scenarios.", color = TitleMutedText) }
+            } else {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    modifier = Modifier.heightIn(max = 430.dp)
+                ) {
+                    item {
+                        Text("Launching replaces the current unsaved session.", color = TitleMutedText, fontSize = 13.sp)
+                    }
+                    item {
+                        OutlinedTextField(
+                            value = query,
+                            onValueChange = { query = it },
+                            label = { Text("Search world, quest, room, or system", maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                    item {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())
+                        ) {
+                            DebugScenarioCategory.entries.forEach { option ->
+                                FilterChip(
+                                    selected = category == option,
+                                    onClick = { category = option.takeUnless { it == category } },
+                                    label = { Text(option.label, fontSize = 11.sp, maxLines = 1) }
+                                )
+                            }
+                        }
+                    }
+                    items(filtered, key = { it.id }) { scenario ->
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { selectedScenario = scenario }
+                                .background(TitleCyan.copy(alpha = 0.07f), RoundedCornerShape(10.dp))
+                                .padding(12.dp)
+                        ) {
+                            Text(scenario.title, fontWeight = FontWeight.Bold, color = TitleText)
+                            Text(
+                                "${scenario.category.label}  |  ${scenario.worldLabel}",
+                                color = TitleCyan,
+                                fontSize = 11.sp
+                            )
+                            Text(scenario.description, color = TitleMutedText, fontSize = 13.sp)
+                        }
+                    }
+                    if (filtered.isEmpty()) {
+                        item { Text("No matching scenarios.", color = TitleMutedText) }
+                    }
+                    item { HorizontalDivider(color = TitleCyan.copy(alpha = 0.2f)) }
                 }
-                item { HorizontalDivider(color = TitleCyan.copy(alpha = 0.2f)) }
             }
         },
-        confirmButton = {},
-        dismissButton = { OutlinedButton(onClick = onDismiss) { Text("Close") } },
+        confirmButton = {
+            val scenarioForReview = selectedScenario
+            if (scenarioForReview != null) {
+                Button(
+                    onClick = { onLaunch(scenarioForReview) }
+                ) {
+                    Text("Launch test")
+                }
+            }
+        },
+        dismissButton = {
+            if (selectedScenario != null) {
+                OutlinedButton(onClick = { selectedScenario = null }) { Text("Back") }
+            } else {
+                OutlinedButton(onClick = onDismiss) { Text("Close") }
+            }
+        },
         containerColor = TitlePanel,
         titleContentColor = TitleText,
         textContentColor = TitleMutedText

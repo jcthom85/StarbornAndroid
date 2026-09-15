@@ -19,7 +19,8 @@ data class DebugScenario(
     val description: String,
     val category: DebugScenarioCategory,
     val destination: DebugScenarioDestination,
-    val worldLabel: String = "World 1: The Mines"
+    val worldLabel: String = "World 1: The Mines",
+    val procedure: com.example.starborn.debug.DebugTestProcedure? = null
 )
 
 object DebugScenarioCatalog {
@@ -141,7 +142,8 @@ object DebugScenarioCatalog {
         scenario("hub_qa_w6_source", "Hub QA / W6 Source", "Open the Source campfire with story and rest actions separated.", DebugScenarioCategory.SYSTEM, worldLabel = "World 6: The Source")
     )
 
-    fun find(id: String): DebugScenario? = scenarios.firstOrNull { it.id == id }
+    fun find(id: String): DebugScenario? = com.example.starborn.debug.DebugTestRegistry.find(id)
+        ?: scenarios.firstOrNull { it.id == id }
 
     private fun scenario(
         id: String,

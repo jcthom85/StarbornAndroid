@@ -70,6 +70,18 @@ class CinematicCoordinator(
         }
     }
 
+    /** Abandon a test/session's scenes without completing their gameplay callbacks. */
+    fun cancelAll() {
+        synchronized(lock) {
+            queue.clear()
+            activeScene = null
+            activeCompletion = null
+            stepIndex = 0
+            _state.value = null
+            onSceneEnd()
+        }
+    }
+
     fun skip() {
         synchronized(lock) {
             if (activeScene == null) return

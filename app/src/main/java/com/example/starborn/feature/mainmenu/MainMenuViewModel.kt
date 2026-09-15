@@ -137,7 +137,7 @@ class MainMenuViewModel(
                 services.syncInventoryFromSession()
                 onComplete?.invoke()
             } else {
-                emitMessage("Failed to start ${scenario.title}.")
+                emitMessage(services.debugScenarioError ?: "Failed to start ${scenario.title}.")
                 onFailure?.invoke()
             }
         }

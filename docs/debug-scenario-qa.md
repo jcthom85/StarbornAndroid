@@ -1,5 +1,7 @@
 # Debug scenario QA
 
+Current rebuild workflow and verification: [test suite rebuild](testing/README.md). The sections below document the older suite and its historical checks; rebuilt scenarios use separate test saves.
+
 Use a disposable test save. Scenario launches replace the current session; save a personal playthrough in a separate slot first.
 
 ## Repaired shortcuts

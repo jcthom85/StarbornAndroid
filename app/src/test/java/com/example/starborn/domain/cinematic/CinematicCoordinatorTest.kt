@@ -34,6 +34,23 @@ class CinematicCoordinatorTest {
         assertNull(coordinator.state.value)
     }
 
+    @Test
+    fun cancellationDoesNotCompleteOrPromoteAbandonedScenes() {
+        val service = mock<CinematicService> { on { scene("first") } doReturn scene("first") }
+        val coordinator = CinematicCoordinator(service)
+        var completions = 0
+        coordinator.play("first") { completions++ }
+        coordinator.play("first") { completions++ }
+        coordinator.cancelAll()
+        coordinator.advance()
+        coordinator.skip()
+        assertNull(coordinator.state.value)
+        assertEquals(0, completions)
+        assertTrue(coordinator.play("first") { completions++ })
+        coordinator.skip()
+        assertEquals(1, completions)
+    }
+
     private fun scene(id: String) = CinematicScene(
         id = id,
         steps = listOf(CinematicStep(CinematicStepType.NARRATION, text = id))

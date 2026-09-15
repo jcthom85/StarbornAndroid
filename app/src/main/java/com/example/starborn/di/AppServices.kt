@@ -74,6 +74,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.drop
@@ -84,7 +85,7 @@ import java.util.Locale
 import java.io.File
 import kotlin.random.Random
 
-class AppServices(context: Context) {
+class AppServices(context: Context, val isTestSession: Boolean = false) {
     private val appContext = context.applicationContext
     private val moshi = MoshiProvider.instance
     private val assetReader = AssetJsonReader(com.example.starborn.core.platform.AndroidAssetProvider(context), moshi)
@@ -115,7 +116,8 @@ class AppServices(context: Context) {
     val playtestTelemetry = LocalPlaytestTelemetry(File(appContext.noBackupFilesDir, "playtest")).apply {
         startSession("app_launch")
     }
-    private val sessionPersistence = GameSessionPersistence(File(appContext.filesDir, "datastore"))
+    private val sessionPersistence = GameSessionPersistence(File(appContext.filesDir,
+        if (isTestSession) "debug-test-session/datastore" else "datastore"))
     val craftingService = CraftingService(craftingDataSource, inventoryService, sessionStore)
     val events: List<GameEvent> = eventDataSource.loadEvents()
     val statusRegistry = StatusRegistry(worldDataSource.loadStatuses())
@@ -941,7 +943,41 @@ class AppServices(context: Context) {
             ?.state
     }
 
-    fun startDebugScenario(id: String): Boolean = when (id) {
+    var debugScenarioError: String? = null
+        private set
+
+    internal fun readDebugAsset(name: String): String = appContext.assets.open(name).bufferedReader().use { it.readText() }
+
+    fun startDebugScenario(id: String): Boolean {
+        debugScenarioError = null
+        val rebuilt = com.example.starborn.debug.DebugTestRegistry.find(id)
+        if (rebuilt == null) return launchLegacyDebugScenario(id)
+        if (!isTestSession) {
+            debugScenarioError = "Open a Test Session before launching rebuilt scenarios."
+            return false
+        }
+        return runCatching {
+            tutorialManager.cancelAllScheduled()
+            promptManager.discardMatching { true }
+            cinematicCoordinator.cancelAll()
+            encounterCoordinator.clear()
+            val launched = com.example.starborn.debug.DebugFixtureBuilder.prepare(this, rebuilt.procedure!!)
+            check(launched) { "Could not build ${rebuilt.id}; inspect setup logs." }
+            syncInventoryFromSession()
+            val errors = com.example.starborn.debug.DebugFixtureValidator.validate(
+                sessionStore.state.value, worldDataSource.loadHubs(), worldDataSource.loadHubNodes(),
+                worldDataSource.loadRooms().map { it.id }.toSet(), questRepository.allQuests(),
+                itemRepository.allItems().map { it.id }.toSet())
+            check(errors.isEmpty()) { errors.joinToString("; ") }
+            true
+        }.getOrElse { error ->
+            debugScenarioError = error.message ?: "Unknown fixture error"
+            Log.e("DebugScenario", "Failed ${rebuilt.id}", error)
+            false
+        }
+    }
+
+    private fun launchLegacyDebugScenario(id: String): Boolean = when (id) {
         // --- TUTORIAL SHORTCUTS ---
         "tut_movement" -> startNewGame()
         "tut_npc_dialogue" -> startNewGameAtTutNpcDialogue()
@@ -1957,7 +1993,7 @@ class AppServices(context: Context) {
         return true
     }
 
-    private fun clearDebugBootstrap() {
+    internal fun clearDebugBootstrap() {
         bootstrapCinematics.clear()
         bootstrapPlayerActions.clear()
     }
@@ -2633,6 +2669,8 @@ class AppServices(context: Context) {
     }
 
     fun release() {
+        persistenceScope.cancel()
+        runtimeScope.cancel()
         audioCuePlayer.release()
     }
 }
