@@ -82,9 +82,9 @@ object DebugScenarioCatalog {
         scenario("w6_finale", "W6 / Finale", "Resume The Final Note at the Center before confronting Vale.", DebugScenarioCategory.STORY, worldLabel = "World 6: The Source"),
 
         // --- BOSS FIGHTS ---
-        scenario("boss_warden", "Boss: The Iron Warden", "Instant combat entry vs Sector Commander Iron Warden in Pod Bay.", DebugScenarioCategory.STORY, worldLabel = "World 1: The Mines"),
-        scenario("boss_hunter", "Boss: The Hunter Beast", "Instant combat encounter facing the Apex Stalker on Canopy Ridge.", DebugScenarioCategory.STORY, worldLabel = "World 2: Sector 9"),
-        scenario("boss_titan_walker", "Boss: Titan Walker", "Instant climax combat vs Commander Rylos and the Titan Walker.", DebugScenarioCategory.STORY, worldLabel = "World 4: The Foundry"),
+        scenario("boss_warden", "Boss: The Iron Warden", "Load Pod Bay before the authored Warden encounter.", DebugScenarioCategory.STORY, worldLabel = "World 1: The Mines"),
+        scenario("boss_hunter", "Boss: The Hunter Beast", "Load Canopy Ridge before Confront stalker and Face the Beast.", DebugScenarioCategory.STORY, worldLabel = "World 2: Sector 9"),
+        scenario("boss_titan_walker", "Boss: Titan Walker", "Load Titan Dock before confronting Rylos and the Titan Walker.", DebugScenarioCategory.STORY, worldLabel = "World 4: The Foundry"),
         scenario("boss_ascended_vale", "Boss: Ascended Vale", "Confront Ascended Vale at the Center of the Source.", DebugScenarioCategory.STORY, worldLabel = "World 6: The Source"),
 
         // --- CONTENT & AUDIT SCENARIOS ---
@@ -120,9 +120,16 @@ object DebugScenarioCatalog {
         // --- SYSTEM & CRAFTING QA SCENARIOS ---
         scenario("full_inventory", "Full Inventory", "Start at the beginning with all gear, skills, party members, and credits.", DebugScenarioCategory.SYSTEM, worldLabel = "World 1: The Mines"),
         scenario("crafting_cooking_kitchen", "Cooking Kitchen / Cookfire", "Start at Sector 9 cookfire with full fish, beast meat, noodles, spices, and herbs ready to cook.", DebugScenarioCategory.SYSTEM, worldLabel = "World 2: Sector 9"),
-        scenario("crafting_tinkering_advanced", "Tinkering / Advanced Workshop", "Start at Astra workshop with endgame gear mods, wiring bundles, composite plates, and blueprints.", DebugScenarioCategory.SYSTEM, worldLabel = "The Astra"),
+        scenario("crafting_tinkering_advanced", "Tinkering / Advanced Workshop", "Start aboard the Astra with ingredients and tools for every tinkering recipe. Open Tinkering from the menu.", DebugScenarioCategory.SYSTEM, worldLabel = "The Astra"),
         scenario("fishing_beach_pools", "Fishing / Sector 9 Beach", "Open Sector 9 Beach tide pools with starter and tuned rods and lures for minigame testing.", DebugScenarioCategory.SYSTEM, worldLabel = "World 2: Sector 9"),
         scenario("fishing_spire_runoff", "Fishing / Spire Deep Runoff", "Open Spire Sewer Passage with high-tier rods and lures for advanced fish catching.", DebugScenarioCategory.SYSTEM, worldLabel = "World 3: The Spire"),
+        scenario("qa_recipe_exact", "Progression QA / Exact Recipe", "Jed's Bench with exactly the Cryo-Inductor recipe requirements. No spare resources.", DebugScenarioCategory.SYSTEM),
+        scenario("qa_recipe_short", "Progression QA / Missing Scrap", "Jed's Bench without recipe scrap. Verify crafting refuses without consuming other ingredients; test recovery routes.", DebugScenarioCategory.SYSTEM),
+        scenario("qa_meal_reload", "Progression QA / Meal Save", "Sewer landing with injured crew and a three-encounter QA meal (+5 accuracy, +10 focus). Save, reload, then fight.", DebugScenarioCategory.SYSTEM, worldLabel = "World 3: The Spire"),
+        scenario("qa_w2_gate_closed", "Progression QA / W2 Locked", "Canopy Walk without a Thermal Cutter. Check the east gate and return route.", DebugScenarioCategory.SYSTEM, worldLabel = "World 2: Sector 9"),
+        scenario("qa_w2_gate_open", "Progression QA / W2 Unlocked", "Same Canopy Walk setup with a Thermal Cutter. Cross east, save/reload, and return west.", DebugScenarioCategory.SYSTEM, worldLabel = "World 2: Sector 9"),
+        scenario("qa_w3_routes_before", "Progression QA / W3 Before Intel", "The Static before completing The Plan. Walk Transit Plaza, Underrail, and Sewers; check Upper City access.", DebugScenarioCategory.SYSTEM, worldLabel = "World 3: The Spire"),
+        scenario("qa_w3_routes_after", "Progression QA / W3 After Intel", "The Static after The Plan. Walk the same routes toward Upper City and compare access.", DebugScenarioCategory.SYSTEM, worldLabel = "World 3: The Spire"),
         scenario("weather_lab", "Weather Lab", "Open the dedicated weather-effects test room.", DebugScenarioCategory.SYSTEM, worldLabel = "World 1: The Mines"),
         scenario("enemy_party", "Enemy Party Combat", "Test the launch-checkpoint enemy party encounter.", DebugScenarioCategory.SYSTEM, worldLabel = "World 1: The Mines"),
         scenario("dynamic_patrol", "Dynamic Patrol", "Test a live Deep Mine patrol route.", DebugScenarioCategory.SYSTEM, worldLabel = "World 1: The Mines"),

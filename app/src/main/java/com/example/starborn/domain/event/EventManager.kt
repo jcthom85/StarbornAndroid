@@ -331,6 +331,11 @@ class EventManager(
                     }
                     true
                 }
+                "take_required_item" -> {
+                    val id = action.itemId ?: action.item ?: return false
+                    if (!eventHooks.onTakeItem(id, (action.quantity ?: 1).coerceAtLeast(1))) return false
+                    true
+                }
                 "take_item" -> {
                     val id = action.item ?: action.itemId
                     if (id.isNullOrBlank()) {

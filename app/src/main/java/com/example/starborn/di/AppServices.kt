@@ -234,9 +234,9 @@ class AppServices(context: Context) {
         persistenceScope.launch {
             // Only hydrate from persisted session once on startup.
             // If the user starts a new game before the initial read completes, don't overwrite it.
-            val stored = sessionPersistence.sessionFlow.first()
+            val stored = sessionPersistence.sessionFlow.first().migrateOpeningNarrativeState()
             if (sessionStore.state.value.needsFallbackImport()) {
-                sessionStore.restore(stored.migrateOpeningNarrativeState())
+                sessionStore.restore(stored)
                 inventoryService.restore(stored.inventory)
                 migrateLegacyWeapons(stored)
                 migrateLegacyArmors(stored)
@@ -657,8 +657,8 @@ class AppServices(context: Context) {
 
     suspend fun loadSlot(slot: Int): Boolean {
         val info = resolveSlotInfo(slot) ?: return false
-        val state = info.state
-        sessionStore.restore(state.migrateOpeningNarrativeState())
+        val state = info.state.migrateOpeningNarrativeState()
+        sessionStore.restore(state)
         inventoryService.restore(state.inventory)
         migrateLegacyWeapons(state)
         migrateLegacyArmors(state)
@@ -676,8 +676,8 @@ class AppServices(context: Context) {
 
     suspend fun loadAutosave(): Boolean {
         val info = sessionPersistence.autosaveInfo() ?: return false
-        val state = info.state
-        sessionStore.restore(state.migrateOpeningNarrativeState())
+        val state = info.state.migrateOpeningNarrativeState()
+        sessionStore.restore(state)
         inventoryService.restore(state.inventory)
         migrateLegacyWeapons(state)
         migrateLegacyArmors(state)
@@ -701,8 +701,8 @@ class AppServices(context: Context) {
 
     suspend fun loadQuickSave(): Boolean {
         val info = sessionPersistence.quickSaveInfo() ?: return false
-        val state = info.state
-        sessionStore.restore(state.migrateOpeningNarrativeState())
+        val state = info.state.migrateOpeningNarrativeState()
+        sessionStore.restore(state)
         inventoryService.restore(state.inventory)
         migrateLegacyWeapons(state)
         migrateLegacyArmors(state)
@@ -723,8 +723,8 @@ class AppServices(context: Context) {
     }
 
     suspend fun importLegacySave(file: File): Boolean {
-        val imported = sessionPersistence.importLegacySave(file, itemRepository) ?: return false
-        sessionStore.restore(imported.migrateOpeningNarrativeState())
+        val imported = sessionPersistence.importLegacySave(file, itemRepository)?.migrateOpeningNarrativeState() ?: return false
+        sessionStore.restore(imported)
         inventoryService.restore(imported.inventory)
         migrateLegacyWeapons(imported)
         migrateLegacyArmors(imported)
@@ -1018,6 +1018,20 @@ class AppServices(context: Context) {
         "astra_home" -> startNewGameAboardAstra()
         "arcade_deep_mine" -> startNewGameAtDeepMineArcade()
         "fishing_beach_pools" -> startNewGameAtFishingBeachPools()
+        "boss_warden" -> startNewGameAtWardenApproach()
+        "boss_hunter" -> startNewGameAtW2HunterCanopy()
+        "boss_titan_walker" -> startNewGameAtTitanApproach()
+        "boss_ascended_vale" -> startNewGameAtW6Finale()
+        "crafting_cooking_kitchen" -> startProvisionSandbox(cooking = true)
+        "crafting_tinkering_advanced" -> startProvisionSandbox(cooking = false)
+        "fishing_spire_runoff" -> startSpireFishingSandbox()
+        "qa_recipe_exact" -> startRecipeBoundary(missing = false)
+        "qa_recipe_short" -> startRecipeBoundary(missing = true)
+        "qa_meal_reload" -> startMealReloadScenario()
+        "qa_w2_gate_closed" -> startWorld2GateScenario(open = false)
+        "qa_w2_gate_open" -> startWorld2GateScenario(open = true)
+        "qa_w3_routes_before" -> startWorld3RouteScenario(after = false)
+        "qa_w3_routes_after" -> startWorld3RouteScenario(after = true)
         else -> if (id.startsWith("hub_")) startNewGameAtDebugHub(id) else false
     }
 
@@ -1031,7 +1045,7 @@ class AppServices(context: Context) {
         sessionStore.visitNode("workshop")
         sessionStore.revealNode("workshop")
         sessionStore.startQuest("w1_mq01", track = true)
-        sessionStore.setQuestStage("w1_mq01", "inspect_cutter")
+        sessionStore.setQuestStage("w1_mq01", "report_to_jed")
         sessionStore.setQuestTasksCompleted(
             questId = "w1_mq01",
             taskIds = setOf("find_jed", "talk_to_jed", "equip_starter_gear")
@@ -1054,12 +1068,112 @@ class AppServices(context: Context) {
         true
     }.getOrElse { false }
 
+    private fun startNewGameAtWardenApproach(): Boolean {
+        if (!startNewGameAtEnemyPartyCombat()) return false
+        clearDebugBootstrap()
+        sessionStore.setRoom("launch_bay")
+        return true
+    }
+
+    private fun startNewGameAtTitanApproach(): Boolean {
+        if (!startNewGameAtW4AnvilForge()) return false
+        sessionStore.completeQuest("w4_mq19")
+        sessionStore.setMilestone("ms_w4_anvil_claimed")
+        inventoryService.addItem("the_anvil", 1)
+        sessionStore.startQuest("w4_mq20", track = true)
+        sessionStore.setQuestStage("w4_mq20", "steal_and_escape")
+        sessionStore.setRoom("foundry_titan_dock")
+        sessionStore.setInventory(inventoryService.snapshot())
+        return true
+    }
+
+    private fun startProvisionSandbox(cooking: Boolean): Boolean {
+        if (cooking) {
+            if (!startNewGameAtHubQaW2Cookfire()) return false
+        } else if (!startNewGameAboardAstra()) return false
+        val stock = mutableMapOf<String, Int>()
+        if (cooking) craftingService.cookingRecipes.forEach { recipe ->
+            recipe.ingredients.forEach { (id, count) -> stock[id] = (stock[id] ?: 0) + count * 5 }
+        } else craftingService.tinkeringRecipes.forEach { recipe ->
+            craftingService.ingredientsFor(recipe).forEach { (id, count) -> stock[id] = (stock[id] ?: 0) + count * 3 }
+            recipe.tools.forEach { stock[it] = maxOf(stock[it] ?: 0, 1) }
+        }
+        stock.forEach { (id, count) -> inventoryService.addItem(id, count) }
+        sessionStore.setInventory(inventoryService.snapshot())
+        return true
+    }
+
+    private fun startSpireFishingSandbox(): Boolean {
+        if (!startNewGameAtW3SewersEntry()) return false
+        sessionStore.setRoom("spire_sewers_passage")
+        listOf("wooden_rod", "fiberglass_rod", "carbon_rod", "basic_lure", "shiny_lure", "mystery_lure", "salvage_lure").forEach {
+            inventoryService.addItem(it, 1)
+        }
+        sessionStore.setInventory(inventoryService.snapshot())
+        return true
+    }
+
+    private fun startRecipeBoundary(missing: Boolean): Boolean {
+        if (!startNewGameAtTinkeringTutorial()) return false
+        val recipe = craftingService.tinkeringRecipes.first { it.result == "functional_cryo_inductor" }
+        val stock = craftingService.ingredientsFor(recipe).toMutableMap()
+        recipe.tools.forEach { stock[it] = maxOf(stock[it] ?: 0, 1) }
+        if (missing) stock.remove("scrap_metal")
+        inventoryService.restore(stock)
+        sessionStore.setInventory(stock)
+        return true
+    }
+
+    private fun startMealReloadScenario(): Boolean {
+        if (!startNewGameAtW3SewersEntry()) return false
+        sessionStore.selectMealChef("nova")
+        sessionStore.applyMealBuff(com.example.starborn.domain.session.ActiveMealBuff(
+            recipeId = "glowfish_broth", recipeName = "Glowfish Broth", chefId = "nova",
+            remainingEncounters = 3, accuracyBonus = 5, focusBonus = 10
+        ))
+        sessionStore.state.value.partyMembers.forEach { sessionStore.setPartyMemberHp(it, 1) }
+        return true
+    }
+
+    private fun startWorld2GateScenario(open: Boolean): Boolean {
+        if (!startNewGameAtW2TempleGate()) return false
+        sessionStore.setRoom("sector9_wilds_canopy_walk")
+        restrictQaInventory()
+        val stock = inventoryService.snapshot().toMutableMap()
+        stock.remove("thermal_cutter")
+        if (open) stock["thermal_cutter"] = 1
+        inventoryService.restore(stock)
+        sessionStore.setInventory(stock)
+        return true
+    }
+
+    private fun startWorld3RouteScenario(after: Boolean): Boolean {
+        if (after) {
+            if (!startNewGameAtW3CheckpointInfiltration()) return false
+        } else if (!startNewGameAtW3SafehousePlan()) return false
+        sessionStore.setWorld("world_3")
+        sessionStore.setHub("hub_5_lower_city")
+        sessionStore.setRoom("spire_the_static")
+        restrictQaInventory()
+        return true
+    }
+
+    // Gate checks must not inherit every quest key from the combat sandbox bootstrap.
+    private fun restrictQaInventory() {
+        val state = sessionStore.state.value
+        val equipment = state.equippedWeapons.values + state.equippedArmors.values + state.equippedItems.values
+        val stock = equipment.filter { itemRepository.findItem(it) != null }.associateWith { 1 }.toMutableMap()
+        stock["ration_pack"] = 5
+        inventoryService.restore(stock)
+        sessionStore.setInventory(stock)
+    }
+
     private fun startNewGameAtTutNpcDialogue(): Boolean = runCatching {
         if (!startNewGame(debugFullInventory = false)) return false
         clearDebugBootstrap()
         sessionStore.setWorld("world_1")
         sessionStore.setHub("hub_1_homestead")
-        sessionStore.setRoom("bunk_jed")
+        sessionStore.setRoom("pit_jed_bunk")
         sessionStore.visitNode("pit")
         sessionStore.resetTutorialProgress()
         true
@@ -1097,7 +1211,7 @@ class AppServices(context: Context) {
         sessionStore.completeQuest("w1_mq01")
         sessionStore.setMilestone("ms_w1_mq01_complete")
         sessionStore.startQuest("w1_mq02", track = true)
-        sessionStore.setQuestStage("w1_mq02", "leave_workshop")
+        sessionStore.setQuestStage("w1_mq02", "reach_checkpoint")
         sessionStore.setRoom("workshop_yard")
         sessionStore.visitNode("pit")
         sessionStore.visitNode("workshop")
@@ -1113,9 +1227,9 @@ class AppServices(context: Context) {
         sessionStore.completeQuest("w1_mq01")
         sessionStore.setMilestone("ms_w1_mq01_complete")
         sessionStore.startQuest("w1_mq02", track = true)
-        sessionStore.setQuestStage("w1_mq02", "find_tyson")
-        sessionStore.setRoom("market_plaza")
-        sessionStore.visitNode("market")
+        sessionStore.setQuestStage("w1_mq02", "reach_checkpoint")
+        sessionStore.setRoom("trade_strip")
+        sessionStore.visitNode("trade_row")
         sessionStore.resetTutorialProgress()
         true
     }.getOrElse { false }
@@ -1125,7 +1239,7 @@ class AppServices(context: Context) {
         clearDebugBootstrap()
         sessionStore.setWorld("world_1")
         sessionStore.setHub("hub_2_logistics")
-        sessionStore.setRoom("mine_descent_shaft")
+        sessionStore.setRoom("mine_landing")
         sessionStore.completeQuest("w1_mq01")
         sessionStore.completeQuest("w1_mq02")
         sessionStore.startQuest("w1_mq03", track = true)
@@ -1163,7 +1277,7 @@ class AppServices(context: Context) {
         sessionStore.startQuest("w2_mq01", track = true)
         sessionStore.setWorld("world_2")
         sessionStore.setHub("hub_3_sector9")
-        sessionStore.setRoom("sector9_canopy_path")
+        sessionStore.setRoom("sector9_canopy")
         sessionStore.resetTutorialProgress()
         true
     }.getOrElse { false }
@@ -1173,7 +1287,7 @@ class AppServices(context: Context) {
         clearDebugBootstrap()
         sessionStore.setWorld("world_1")
         sessionStore.setHub("hub_2_logistics")
-        sessionStore.setRoom("deep_mine_sublevel2")
+        sessionStore.setRoom("mine_landing")
         sessionStore.unlockSkill("nova_blast_wave")
         sessionStore.resetTutorialProgress()
         true
@@ -1184,7 +1298,7 @@ class AppServices(context: Context) {
         sessionStore.setPartyMembers(listOf("nova", "zeke", "orion"))
         sessionStore.setWorld("world_2")
         sessionStore.setHub("hub_4_facility")
-        sessionStore.setRoom("facility_source_chamber")
+        sessionStore.setRoom("sector9_source_gate")
         sessionStore.unlockSkill("nova_link")
         sessionStore.resetTutorialProgress()
         true
@@ -1216,7 +1330,7 @@ class AppServices(context: Context) {
     private fun startNewGameAtHubQaW2Cookfire(): Boolean = runCatching {
         if (!prepareWorld2DebugState(completedW2Quests = listOf("w2_mq01"))) return false
         sessionStore.startQuest("w2_mq02", track = true)
-        sessionStore.setQuestStage("w2_mq02", "follow_stream")
+        sessionStore.setQuestStage("w2_mq02", "reach_temple_gate")
         sessionStore.setWorld("world_2")
         sessionStore.setHub("hub_3_sector9")
         sessionStore.setRoom("sector9_stream_falls")

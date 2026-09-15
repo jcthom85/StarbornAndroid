@@ -792,11 +792,17 @@
     "trigger": "set_milestone:ms_w1_zeke_directed_to_pod"
   },
   {
+    "id": "zeke_w1_mq05_chime_missing",
+    "speaker": "Zeke",
+    "text": "The console needs Jed's Chime. Check your gear before we try the splice.",
+    "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:launch_pod,milestone:ms_w1_zeke_directed_to_pod,milestone_not_set:ms_w1_chime_spliced,item_not:ghost_signal_cell"
+  },
+  {
     "id": "zeke_w1_mq05_pod_core_1",
     "speaker": "Zeke",
     "emote": "worried",
     "text": "The console has a matching port. Try the Chime.",
-    "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:launch_pod,quest_task_not_done:w1_mq05:splice_chime,milestone:ms_w1_zeke_directed_to_pod",
+    "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:launch_pod,quest_task_not_done:w1_mq05:splice_chime,milestone:ms_w1_zeke_directed_to_pod,item:ghost_signal_cell",
     "next": "zeke_w1_mq05_pod_core_2"
   },
   {
@@ -818,7 +824,7 @@
     "speaker": "Nova",
     "emote": "confident",
     "text": "Agreed. Watch my back and I'll watch yours. Start the launch sequence.",
-    "trigger": "set_quest_task_done:w1_mq05:splice_chime,take_item:ghost_signal_cell,set_milestone:ms_w1_chime_spliced,recruit:zeke"
+    "trigger": "player_action:w1_mq05_splice_chime"
   },
   {
     "id": "zeke_w2_crash_1",

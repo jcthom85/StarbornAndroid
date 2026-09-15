@@ -542,7 +542,7 @@ function Validate-Action($action, $context) {
             }
             Validate-Room $actionContext (Get-Prop $action "room_id")
         }
-        { $_ -in @("give_item", "give_item_to_player", "take_item", "reveal_hidden_item", "spawn_item_on_ground") } {
+        { $_ -in @("give_item", "give_item_to_player", "take_item", "take_required_item", "reveal_hidden_item", "spawn_item_on_ground") } {
             $itemId = Get-Prop $action "item_id"
             if ([string]::IsNullOrWhiteSpace($itemId)) { $itemId = Get-Prop $action "item" }
             $rewardItems = @(As-Array (Get-Prop $action "items"))

@@ -3001,13 +3001,40 @@
     ]
   },
   {
+    "id": "w1_mq05_console_locked_feedback",
+    "repeatable": true,
+    "trigger": { "type": "player_action", "action": "use_nav_console" },
+    "conditions": [
+      { "type": "quest_active", "quest_id": "w1_mq05" },
+      { "type": "milestone_not_set", "milestone": "ms_w1_chime_spliced" }
+    ],
+    "actions": [{ "type": "show_message", "message": "The console is locked. Talk to Zeke and splice the Chime first." }]
+  },
+  {
+    "id": "w1_mq05_splice_chime",
+    "trigger": { "type": "player_action", "action": "w1_mq05_splice_chime" },
+    "conditions": [
+      { "type": "quest_active", "quest_id": "w1_mq05" },
+      { "type": "quest_stage", "quest_id": "w1_mq05", "stage_id": "launch_pod" },
+      { "type": "milestone_not_set", "milestone": "ms_w1_chime_spliced" },
+      { "type": "item", "item_id": "ghost_signal_cell", "quantity": 1 }
+    ],
+    "actions": [
+      { "type": "take_required_item", "item_id": "ghost_signal_cell", "quantity": 1 },
+      { "type": "set_quest_task_done", "quest_id": "w1_mq05", "task_id": "splice_chime" },
+      { "type": "set_milestone", "milestone": "ms_w1_chime_spliced" },
+      { "type": "add_party_member", "item_id": "zeke" }
+    ]
+  },
+  {
     "id": "w1_mq05_use_nav_console",
-    "description": "Handles the navigation console interaction inside the pod core.",
+    "description": "Launches only after the Chime is spliced; locked feedback is independently repeatable.",
     "trigger": {
       "type": "player_action",
       "action": "use_nav_console"
     },
     "conditions": [
+      { "type": "milestone_set", "milestone": "ms_w1_chime_spliced" },
       {
         "type": "quest_active",
         "quest_id": "w1_mq05"

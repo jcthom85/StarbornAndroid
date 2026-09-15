@@ -42,7 +42,7 @@ class WorldOneDiscoverabilityStateTest {
         assertTrue(lines.getValue("zeke_w1_mq05_pod_core_1").condition.orEmpty()
             .contains("milestone:ms_w1_zeke_directed_to_pod"))
         assertTrue(lines.getValue("zeke_w1_mq05_pod_core_4").trigger.orEmpty()
-            .contains("set_milestone:ms_w1_chime_spliced"))
+            .contains("player_action:w1_mq05_splice_chime"))
     }
 
     @Test fun `mine instructions distinguish elevator route from bulwark detour`() {
@@ -98,10 +98,10 @@ class WorldOneDiscoverabilityStateTest {
         val events = reader.readList<GameEvent>("events.json")
         data class Case(val room: String, val label: String, val state: GameSessionState, val dark: Boolean = false)
         val fault = GameSessionState(activeQuests = setOf("w1_mq01"),
-            completedMilestones = setOf("ms_w1_mq01_fault_visible"))
+            completedMilestones = setOf("ms_w1_mq01_fault_visible"),
+            roomStates = mapOf("pit_nova_bunk" to mapOf("light_on" to true)))
         val cases = listOf(
-            Case("pit_nova_bunk", "scorched conduit", fault),
-            Case("pit_nova_bunk", "scorched conduit", fault, true),
+            Case("pit_nova_bunk", "door control panel", fault),
             Case("pit_storage", "loose floor panel", GameSessionState(), true),
             Case("server_backup", "archive terminal", GameSessionState(), true),
             Case("workshop_basement", "components chest", GameSessionState(), true),

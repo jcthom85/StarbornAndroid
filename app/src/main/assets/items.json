@@ -987,6 +987,7 @@
     "type": "component",
     "value": 10,
     "buy_price": 20,
+    "resale_value": 5,
     "rarity": "common"
   },
   {
@@ -1480,6 +1481,7 @@
     "type": "component",
     "value": 10,
     "buy_price": 20,
+    "resale_value": 5,
     "rarity": "common"
   },
   {
@@ -1520,6 +1522,7 @@
     "type": "component",
     "value": 10,
     "buy_price": 20,
+    "resale_value": 5,
     "rarity": "common",
     "aliases": [
       "scrap"
@@ -1761,6 +1764,7 @@
     "type": "component",
     "value": 18,
     "buy_price": 36,
+    "resale_value": 9,
     "rarity": "common",
     "aliases": [
       "wiring"
@@ -1780,6 +1784,7 @@
   },
   {
     "id": "cryo_inductor",
+    "unsellable": true,
     "name": "Cryo-Inductor",
     "description": "A cracked cutter cold-loop coil. Rebuilt correctly, it can absorb one short thermal spike before fusing.",
     "type": "component",
@@ -1789,6 +1794,7 @@
   },
   {
     "id": "functional_cryo_inductor",
+    "unsellable": true,
     "name": "Functional Cryo-Inductor",
     "description": "A repaired cutter cold loop set for the live test. It can absorb one severe thermal spike before the coil fuses.",
     "type": "component",

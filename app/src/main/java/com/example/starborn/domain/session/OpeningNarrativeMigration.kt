@@ -48,6 +48,18 @@ fun GameSessionState.migrateOpeningNarrativeState(): GameSessionState {
         migratedQuestTasks.getOrPut(questId) { mutableSetOf() }.add(taskId)
     }
 
+    if ("w1_mq01" in activeQuests && "w1_mq01" !in completedQuests &&
+        "equip_starter_gear" in migratedTasks &&
+        migratedInventory.getOrDefault("cryo_inductor", 0) == 0 &&
+        migratedInventory.getOrDefault("functional_cryo_inductor", 0) == 0) {
+        // Recover a sold unique part without granting sellable replacements repeatedly.
+        if ("ms_w1_mq01_cryo_repaired" in migratedMilestones) {
+            migratedInventory["functional_cryo_inductor"] = 1
+        } else {
+            migratedInventory["cryo_inductor"] = 1
+        }
+    }
+
     if ("w1_mq01" in completedQuests) {
         backfillMilestone("ms_w1_mq01_cryo_repaired")
         backfillMilestone("ms_w1_mq01_cutter_surge")
@@ -65,7 +77,9 @@ fun GameSessionState.migrateOpeningNarrativeState(): GameSessionState {
         roomState("echo_heart", "relic_synced")
         if (migratedInventory.getOrDefault("tuning_fork", 0) < 1) migratedInventory["tuning_fork"] = 1
         if (migratedInventory.getOrDefault("nova_flux_liner", 0) < 1) migratedInventory["nova_flux_liner"] = 1
-        migratedInventory["functional_cryo_inductor"]?.let { count ->
+        migratedInventory["functional_cryo_inductor"]?.takeIf {
+            "ms_w1_mq03_liner_ground_spent" !in completedMilestones
+        }?.let { count ->
             if (count <= 1) migratedInventory.remove("functional_cryo_inductor")
             else migratedInventory["functional_cryo_inductor"] = count - 1
         }
@@ -98,6 +112,9 @@ fun GameSessionState.migrateOpeningNarrativeState(): GameSessionState {
     }
 
     return copy(
+        completedEvents = if ("w1_mq05" in activeQuests && "w1_mq05" !in completedQuests &&
+            "ms_w1_mq05_complete" !in migratedMilestones && "scene_launch_crash" !in pendingEventCinematics)
+            completedEvents - "w1_mq05_use_nav_console" else completedEvents,
         completedMilestones = migratedMilestones,
         milestoneHistory = migratedHistory.distinct(),
         questTasksCompleted = migratedQuestTasks,
