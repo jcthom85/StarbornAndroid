@@ -1,5 +1,6 @@
 package com.example.starborn.feature.shop.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -163,6 +164,14 @@ private fun ShopScreen(
     }
     var pendingPurchase by remember { mutableStateOf<ShopItemUi?>(null) }
     var pendingSale by remember { mutableStateOf<SellItemUi?>(null) }
+
+    BackHandler(enabled = true) {
+        when {
+            pendingPurchase != null -> pendingPurchase = null
+            pendingSale != null -> pendingSale = null
+            else -> onBack()
+        }
+    }
 
     StationBackground(
         highContrastMode = highContrastMode,
