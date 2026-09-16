@@ -322,7 +322,7 @@
   {
     "id": "jed_w1_mq02_handoff_3",
     "speaker": "Jed",
-    "text": "Choose Transit Checkpoint on the hub map. If Hank's scanner rejects you, Zeke's Booth is east of the Search Bay. He can bury paperwork.",
+    "text": "Choose Transit Checkpoint on the hub map. If Hank's scanner rejects you, Zeke's Booth is east of the Search Bay. He can bury paperwork. I'll slip up toward the service lift in case the colony goes on lockdown.",
     "trigger": "set_milestone:ms_w1_mq02_jed_advised"
   },
   {
@@ -926,7 +926,7 @@
     "id": "zeke_w2_sq01_intro_1",
     "speaker": "Zeke",
     "text": "Nova, the plants here respond directly to resonance frequencies. Scan five unique flora specimens and I can compile an ecological catalog. Sound good?",
-    "condition": "quest_not_started:w2_sq01,quest_completed:w2_mq01",
+    "condition": "quest_not_started:w2_sq01,quest_completed:w2_mq01,milestone_not_set:ms_w2_mq05_complete",
     "options": [
       {
         "id": "zeke_w2_sq01_accept",
@@ -983,7 +983,7 @@
     "id": "orion_w2_sq03_intro_1",
     "speaker": "Orion",
     "text": "Tideglass Beach is nearby. The wet shore grows herbs that bind Source residue into clean resin. Gather the materials and we can start.",
-    "condition": "quest_not_started:w2_sq03,quest_completed:w2_mq03",
+    "condition": "quest_not_started:w2_sq03,quest_completed:w2_mq03,milestone_not_set:ms_w2_mq05_complete",
     "options": [
       {
         "id": "orion_w2_sq03_accept",
@@ -1000,7 +1000,7 @@
     "id": "orion_w2_sq04_intro_1",
     "speaker": "Orion",
     "text": "The stasis mural needs three resonance crystals from the Sanctuary wings. Recover their voices so we can align the chord safely.",
-    "condition": "quest_not_started:w2_sq04,quest_completed:w2_mq03",
+    "condition": "quest_not_started:w2_sq04,quest_completed:w2_mq03,milestone_not_set:ms_w2_mq05_complete",
     "options": [
       {
         "id": "orion_w2_sq04_accept",
@@ -1060,7 +1060,7 @@
     "id": "ghost_w2_sq05_intro_1",
     "speaker": "Gh0st",
     "text": "The transmitter sits beyond a security grid. Blind its sensors, bypass the guards, and grab the core. Its timing crystal can build something faster.",
-    "condition": "quest_not_started:w2_sq05,quest_completed:w2_mq04",
+    "condition": "quest_not_started:w2_sq05,quest_completed:w2_mq04,milestone_not_set:ms_w2_mq05_complete",
     "options": [
       {
         "id": "ghost_w2_sq05_accept",
@@ -1162,7 +1162,7 @@
   {
     "id": "w3_sq12_ghost_intro",
     "speaker": "Gh0st",
-    "condition": "quest_not_started:w3_sq12,quest_completed:w3_mq11",
+    "condition": "quest_not_started:w3_sq12,quest_completed:w3_mq11,milestone_not_set:ms_w3_mq15_complete",
     "text": "Nova. Transit Plaza databases might hold records on Elara, my sister. If I log in, alarms trigger. Search it for me.",
     "options": [
       {

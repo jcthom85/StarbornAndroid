@@ -894,7 +894,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false) {
                 equippedWeapons = equippedWeapons,
                 equippedArmors = equippedArmors,
                 equippedItems = previousSession.equippedItems,
-                completedMilestones = setOf("ms_master_protocol_active", "ms_w2_mq05_complete")
+                completedMilestones = setOf("ms_master_protocol_active")
             )
             sessionStore.restore(seedState.migrateOpeningNarrativeState())
             sessionStore.resetTutorialProgress()

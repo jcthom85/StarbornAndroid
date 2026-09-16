@@ -445,22 +445,6 @@
     ]
   },
   {
-    "id": "ollie_intro_scene",
-    "title": "Main Road Encounter",
-    "steps": [
-      {
-        "type": "dialogue",
-        "speaker": "Ollie",
-        "text": "Nova! There you are! We're late to meet Jed."
-      },
-      {
-        "type": "dialogue",
-        "speaker": "Ollie",
-        "text": "Touch my name on your HUD, choose Talk, and let's catch up to him before he locks up."
-      }
-    ]
-  },
-  {
     "id": "scene_relic_sync",
     "title": "Calibration Handshake",
     "steps": [
