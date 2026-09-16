@@ -948,11 +948,11 @@ class AppServices(context: Context, val isTestSession: Boolean = false) {
 
     internal fun readDebugAsset(name: String): String = appContext.assets.open(name).bufferedReader().use { it.readText() }
 
-    fun startDebugScenario(id: String): Boolean {
+    fun startDebugScenario(id: String, allowInGameLaunch: Boolean = false): Boolean {
         debugScenarioError = null
         val rebuilt = com.example.starborn.debug.DebugTestRegistry.find(id)
         if (rebuilt == null) return launchLegacyDebugScenario(id)
-        if (!isTestSession) {
+        if (!isTestSession && !allowInGameLaunch) {
             debugScenarioError = "Open a Test Session before launching rebuilt scenarios."
             return false
         }

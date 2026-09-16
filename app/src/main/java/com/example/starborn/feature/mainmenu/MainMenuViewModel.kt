@@ -132,7 +132,7 @@ class MainMenuViewModel(
         onFailure: (() -> Unit)? = null
     ) {
         viewModelScope.launch {
-            val success = services.startDebugScenario(scenario.id)
+            val success = services.startDebugScenario(scenario.id, allowInGameLaunch = true)
             if (success) {
                 services.syncInventoryFromSession()
                 onComplete?.invoke()
