@@ -218,8 +218,7 @@
     "speaker": "Jed",
     "text": "You look awful. Sit down.",
     "condition": "quest_active:w1_mq01,milestone_not_set:ms_w1_mq01_jed_talked",
-    "next": "jed_w1_mq01_intro_2",
-    "music": "gf_06_refuge"
+    "next": "jed_w1_mq01_intro_2"
   },
   {
     "id": "jed_w1_mq01_intro_2",
@@ -834,7 +833,7 @@
     "text": "Nova... *cough*... My head feels like a reactor breach. Are you intact?",
     "condition": "quest_active:w2_mq01,quest_task_not_done:w2_mq01:check_on_zeke",
     "next": "zeke_w2_crash_2",
-    "music": "gf_01_unpayable_debt"
+    "music": "music_cinematic_crash"
   },
   {
     "id": "zeke_w2_crash_2",
@@ -852,7 +851,7 @@
     "id": "zeke_w2_crash_4",
     "speaker": "Zeke",
     "text": "I put the Chime on navigation without tracing the pair. That's on me. Check the wrecked nav console before the water gets in.",
-    "trigger": "music_persist:gf_01_unpayable_debt,set_quest_task_done:w2_mq01:check_on_zeke,recruit:zeke"
+    "trigger": "music_persist:music_cinematic_crash,set_quest_task_done:w2_mq01:check_on_zeke,recruit:zeke"
   },
   {
     "id": "zeke_w2_crash_repeat_1",
@@ -1044,7 +1043,7 @@
     "text": "You do not belong on this frequency. My orders are simple: erase the anomaly.",
     "condition": "quest_active:w2_mq04,quest_task_not_done:w2_mq04:confront_stalker",
     "next": "ghost_confrontation_2",
-    "music": "gf_10_shackles"
+    "music": "music_gh0st_theme"
   },
   {
     "id": "ghost_confrontation_2",

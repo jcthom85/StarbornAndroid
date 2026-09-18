@@ -61,6 +61,7 @@ class AudioCuePlayer(
     private val activeStreams = ConcurrentHashMap<Pair<AudioCueType, String>, Int>()
     private val fadeAnimators = EnumMap<AudioCueType, ValueAnimator>(AudioCueType::class.java)
     private var currentMusicCue: String? = null
+    private val musicTrackPositions = ConcurrentHashMap<String, Long>()
     private var musicGain: Float = 1f
     private var ambientGain: Float = 1f
     private var userMusicGain: Float = 1f
@@ -193,15 +194,24 @@ class AudioCuePlayer(
     private fun playStreaming(player: ExoPlayer, type: AudioCueType, cueId: String, command: AudioCommand.Play) {
         val uri = resolveRawResourceUri(cueId) ?: return
         cancelFade(type)
-        when (type) {
-            AudioCueType.MUSIC -> currentMusicCue = cueId
-            else -> Unit
+        if (type == AudioCueType.MUSIC) {
+            val previousCue = currentMusicCue
+            if (previousCue != null && previousCue != cueId && player.isPlaying) {
+                musicTrackPositions[previousCue] = player.currentPosition
+            }
+            currentMusicCue = cueId
         }
         player.stop()
         player.setMediaItem(MediaItem.fromUri(uri))
         player.repeatMode = if (command.loop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
         setLayerGainImmediate(type, command.gain)
         player.prepare()
+        if (type == AudioCueType.MUSIC && command.loop) {
+            val savedPos = musicTrackPositions[cueId] ?: 0L
+            if (savedPos > 0L) {
+                player.seekTo(savedPos)
+            }
+        }
         player.playWhenReady = true
     }
 
@@ -219,6 +229,13 @@ class AudioCuePlayer(
 
     private fun stopStreaming(player: ExoPlayer, type: AudioCueType, fadeMs: Long) {
         cancelFade(type)
+        if (type == AudioCueType.MUSIC) {
+            currentMusicCue?.let { cue ->
+                if (player.isPlaying) {
+                    musicTrackPositions[cue] = player.currentPosition
+                }
+            }
+        }
         if (fadeMs > 0) {
             scheduleGain(type, 0f, fadeMs) {
                 player.stop()

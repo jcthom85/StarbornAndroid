@@ -98,6 +98,22 @@ MUSIC_CATALOG = {
         "prompt": "A triumphant and energetic JRPG victory theme, 120 BPM, bright orchestral brass, upbeat rock drum kit, soaring electric guitar leads, positive and celebratory mood. Loopable.",
         "duration_ms": 60000,
     },
+    "music_theme_emotional": {
+        "prompt": "A tender, emotional acoustic piece inspired by classic JRPG themes, 68 BPM. Solo fingerpicked steel-string acoustic guitar carrying a delicate 5-note ascending melody, accompanied by warm solo cello, gentle ambient room reverb, poignant, nostalgic, bittersweet storytelling mood. Loopable: false.",
+        "duration_ms": 90000,
+    },
+    "music_zeke_theme": {
+        "prompt": "Rugged and loyal frontier acoustic blues, 82 BPM, slide resonator guitar, acoustic steel-string fingerpicking, subtle dusty porch foot-stomp rhythm, warm harmonica undertone, gritty, heartfelt and steadfast. Loopable.",
+        "duration_ms": 90000,
+    },
+    "music_orion_theme": {
+        "prompt": "Ethereal ancient cosmic resonance, 65 BPM, deep singing bowl vibrations, resonant glass chimes, gentle warm cello harmonics, contemplative acoustic wood flute, vast sacred space reverb, ancient guardian waking. Loopable.",
+        "duration_ms": 90000,
+    },
+    "music_gh0st_theme": {
+        "prompt": "Melancholic stealth noir, 78 BPM, subtle fretless bass groove, delicate clean electric guitar arpeggios with dark tape delay, distant brushed hi-hats, pensive and solitary, seeking redemption. Loopable.",
+        "duration_ms": 90000,
+    },
 }
 
 # Pre-configured SFX Prompts from Audio_Design_Guide.md

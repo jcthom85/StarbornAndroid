@@ -15,6 +15,62 @@
       ]
     },
     {
+      "id": "music_theme_emotional",
+      "type": "music",
+      "loop": false,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1200,
+      "gain": 0.85,
+      "tags": [
+        "title",
+        "emotional",
+        "acoustic",
+        "cello"
+      ]
+    },
+    {
+      "id": "music_zeke_theme",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1000,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "character",
+        "zeke",
+        "blues",
+        "acoustic"
+      ]
+    },
+    {
+      "id": "music_orion_theme",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1400,
+      "fade_out_ms": 1200,
+      "gain": 0.85,
+      "tags": [
+        "character",
+        "orion",
+        "ethereal",
+        "ambient"
+      ]
+    },
+    {
+      "id": "music_gh0st_theme",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "character",
+        "gh0st",
+        "noir",
+        "stealth"
+      ]
+    },
+    {
       "id": "music_w1_homestead_explore",
       "type": "music",
       "loop": true,
