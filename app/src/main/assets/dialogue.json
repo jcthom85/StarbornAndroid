@@ -185,7 +185,8 @@
     "speaker": "Jed",
     "text": "Nova. Good. The Warden is sealing the lift.",
     "condition": "quest_active:w1_mq04,quest_stage:w1_mq04:cargo_lift_sacrifice",
-    "next": "jed_w1_mq04_sacrifice_2"
+    "next": "jed_w1_mq04_sacrifice_2",
+    "music": "music_theme_emotional"
   },
   {
     "id": "jed_w1_mq04_sacrifice_2",
@@ -471,7 +472,8 @@
     "speaker": "Zeke",
     "emote": "scared",
     "text": "Your file... it's flagged: MANDATORY RETIREMENT. ASSET LIABILITY > PROJECTED VALUE. RECYCLE.",
-    "next": "zeke_w1_mq02_override_5"
+    "next": "zeke_w1_mq02_override_5",
+    "music": "music_zeke_theme"
   },
   {
     "id": "zeke_w1_mq02_override_5",

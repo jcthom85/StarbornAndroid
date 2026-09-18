@@ -452,7 +452,8 @@
     "steps": [
       {
         "type": "narration",
-        "text": "Phase sweep: 87 kHz. Cold loop: 68%. Ground phase: 180 degrees. The three diagnostic bands lock."
+        "text": "Phase sweep: 87 kHz. Cold loop: 68%. Ground phase: 180 degrees. The three diagnostic bands lock.",
+        "music_cue": "music_orion_theme"
       },
       {
         "type": "narration",
