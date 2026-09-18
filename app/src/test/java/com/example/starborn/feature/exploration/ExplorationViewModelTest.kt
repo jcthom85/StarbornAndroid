@@ -463,7 +463,9 @@ class ExplorationViewModelTest {
         )
     }
 
-    private fun createViewModel(): ExplorationViewModel {
+    private fun createViewModel(
+        dialogueService: DialogueService = mock<DialogueService>()
+    ): ExplorationViewModel {
         val worldAssets = mock<WorldAssetDataSource> {
             on { loadRooms() } doReturn emptyList()
             on { loadHubs() } doReturn emptyList()
@@ -472,7 +474,6 @@ class ExplorationViewModelTest {
             on { loadSkills() } doReturn emptyList()
         }
         val sessionStore = GameSessionStore()
-        val dialogueService = mock<DialogueService>()
         val inventoryFlow = MutableStateFlow<List<InventoryEntry>>(emptyList())
         val inventoryService = mock<InventoryService> {
             on { state } doReturn inventoryFlow
@@ -549,6 +550,53 @@ class ExplorationViewModelTest {
     private fun setPrivateField(target: Any, name: String, value: Any?) {
         val field = target.javaClass.getDeclaredField(name).apply { isAccessible = true }
         field.set(target, value)
+    }
+
+    @Test
+    fun dialogueMusicLifecycleTransientAndPersistent() {
+        val line = com.example.starborn.domain.model.DialogueLine(
+            id = "test_dlg_1",
+            speaker = "Jed",
+            text = "Hello",
+            musicCue = "gf_06_refuge"
+        )
+        val dialogueService = DialogueService(
+            listOf(line),
+            { true },
+            { _ -> }
+        )
+        val viewModel = createViewModel(dialogueService = dialogueService)
+
+        // Start dialogue with line that has musicCue
+        val startMethod = viewModel.javaClass.getDeclaredMethod("startImmediateDialogue", String::class.java).apply {
+            isAccessible = true
+        }
+        startMethod.invoke(viewModel, "Jed")
+        val activeAfterStart: Boolean = getPrivateField(viewModel, "dialogueMusicActive")
+        val persistentAfterStart: Boolean = getPrivateField(viewModel, "dialogueMusicPersistent")
+        assertTrue("Transient dialogue music should be active", activeAfterStart)
+        assertFalse("Transient dialogue music should not be persistent", persistentAfterStart)
+
+        // End dialogue - should reset dialogueMusicActive
+        viewModel.advanceDialogue()
+        val activeAfterEnd: Boolean = getPrivateField(viewModel, "dialogueMusicActive")
+        assertFalse("Dialogue music should deactivate after dialogue ends", activeAfterEnd)
+
+        // Trigger persistent music via dialogue trigger
+        val handleTriggerMethod = viewModel.javaClass.getDeclaredMethod("handleDialogueTrigger", String::class.java).apply {
+            isAccessible = true
+        }
+        handleTriggerMethod.invoke(viewModel, "music_persist:gf_01_unpayable_debt")
+        val persistentAfterTrigger: Boolean = getPrivateField(viewModel, "dialogueMusicPersistent")
+        assertTrue("Persistent dialogue music should be flagged persistent", persistentAfterTrigger)
+
+        // Room warp should reset persistence
+        val warpMethod = viewModel.javaClass.getDeclaredMethod("warpToRoom", String::class.java).apply {
+            isAccessible = true
+        }
+        warpMethod.invoke(viewModel, "pit_nova_bunk")
+        val persistentAfterWarp: Boolean = getPrivateField(viewModel, "dialogueMusicPersistent")
+        assertFalse("Room warp should reset dialogue music persistence", persistentAfterWarp)
     }
 
     @Suppress("UNCHECKED_CAST")

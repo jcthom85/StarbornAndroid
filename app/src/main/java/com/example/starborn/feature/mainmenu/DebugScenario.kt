@@ -1,6 +1,7 @@
 package com.example.starborn.feature.mainmenu
 
 enum class DebugScenarioCategory(val label: String) {
+    BURGFEST("BurgQuest"),
     STORY("Story"),
     TUTORIAL("Tutorials"),
     WORLD("Worlds"),
@@ -24,7 +25,14 @@ data class DebugScenario(
 )
 
 object DebugScenarioCatalog {
-    val scenarios: List<DebugScenario> = listOf(
+    val burgfestScenarios: List<DebugScenario> = listOf(
+        scenario("burgfest_story", "BURGFEST: 1. Story Opening (The Awakening)", "Nova wakes in the bunk with exploration, dialogue, and first combat.", DebugScenarioCategory.BURGFEST, worldLabel = "World 1: The Mines"),
+        scenario("burgfest_combat", "BURGFEST: 2. Tactical Combat (Canopy Skirmish)", "Full party combat in Sector 9 showcasing party switching, guard breaks, snacks, and Source Arts.", DebugScenarioCategory.BURGFEST, worldLabel = "World 2: Sector 9"),
+        scenario("burgfest_astra", "BURGFEST: 3. The Astra Flagship (Hub, Crafting & Arcade)", "Explore the Astra ship base with crew dialogue, tinkering workshop, and playable Arcade Cabinet.", DebugScenarioCategory.BURGFEST, worldLabel = "The Astra"),
+        scenario("burgfest_boss", "BURGFEST: 4. Boss Encounter (Titan Walker)", "High-stakes boss battle against the Titan Walker at the Foundry.", DebugScenarioCategory.BURGFEST, worldLabel = "World 4: The Foundry")
+    )
+
+    val scenarios: List<DebugScenario> = burgfestScenarios + listOf(
         // --- TUTORIAL SCENARIOS ---
         scenario("tut_npc_dialogue", "Tutorial: NPC & Dialogue", "Start in Jed's bunk with the NPC interaction and dialogue prompt.", DebugScenarioCategory.TUTORIAL, worldLabel = "World 1: The Mines"),
         scenario("tut_gear_inventory", "Tutorial: Gear & Inventory", "Start in the workshop yard with unlocked, unequipped starter gear and inventory tutorial.", DebugScenarioCategory.TUTORIAL, worldLabel = "World 1: The Mines"),

@@ -218,7 +218,8 @@
     "speaker": "Jed",
     "text": "You look awful. Sit down.",
     "condition": "quest_active:w1_mq01,milestone_not_set:ms_w1_mq01_jed_talked",
-    "next": "jed_w1_mq01_intro_2"
+    "next": "jed_w1_mq01_intro_2",
+    "music": "gf_06_refuge"
   },
   {
     "id": "jed_w1_mq01_intro_2",
@@ -754,7 +755,8 @@
     "speaker": "The Warden",
     "text": "Nova. Step away from the launch controls.",
     "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:defeat_warden,quest_task_not_done:w1_mq05:survive_warden_intro",
-    "next": "warden_boss_intro_2"
+    "next": "warden_boss_intro_2",
+    "music": "music_w1_boss_warden"
   },
   {
     "id": "warden_boss_intro_2",
@@ -767,7 +769,7 @@
     "id": "warden_boss_intro_3",
     "speaker": "The Warden",
     "text": "The shield is locked to this colony. You will not cross it.",
-    "trigger": "set_quest_task_done:w1_mq05:fight_through_launch_access,set_quest_task_done:w1_mq05:reach_pod_bay,advance_quest_stage:w1_mq05:defeat_warden,set_quest_task_done:w1_mq05:survive_warden_intro"
+    "trigger": "sting:sfx_warden_entry,set_quest_task_done:w1_mq05:fight_through_launch_access,set_quest_task_done:w1_mq05:reach_pod_bay,advance_quest_stage:w1_mq05:defeat_warden,set_quest_task_done:w1_mq05:survive_warden_intro"
   },
   {
     "id": "zeke_w1_mq05_defeat_warden_1",
@@ -831,7 +833,8 @@
     "speaker": "Zeke",
     "text": "Nova... *cough*... My head feels like a reactor breach. Are you intact?",
     "condition": "quest_active:w2_mq01,quest_task_not_done:w2_mq01:check_on_zeke",
-    "next": "zeke_w2_crash_2"
+    "next": "zeke_w2_crash_2",
+    "music": "gf_01_unpayable_debt"
   },
   {
     "id": "zeke_w2_crash_2",
@@ -849,7 +852,7 @@
     "id": "zeke_w2_crash_4",
     "speaker": "Zeke",
     "text": "I put the Chime on navigation without tracing the pair. That's on me. Check the wrecked nav console before the water gets in.",
-    "trigger": "set_quest_task_done:w2_mq01:check_on_zeke,recruit:zeke"
+    "trigger": "music_persist:gf_01_unpayable_debt,set_quest_task_done:w2_mq01:check_on_zeke,recruit:zeke"
   },
   {
     "id": "zeke_w2_crash_repeat_1",
@@ -939,7 +942,6 @@
       }
     ]
   },
-
   {
     "id": "orion_w2_mq05_gate_1",
     "speaker": "Orion",
@@ -1031,7 +1033,6 @@
     "text": "The Astra's hull breathes like an old friend. Once we clear the upper troposphere, I will tune the navigation array for the Spire.",
     "condition": "milestone:ms_w2_mq05_complete,quest_not_started:w3_mq11"
   },
-
   {
     "id": "orion_default_talk",
     "speaker": "Orion",
@@ -1042,7 +1043,8 @@
     "speaker": "Gh0st",
     "text": "You do not belong on this frequency. My orders are simple: erase the anomaly.",
     "condition": "quest_active:w2_mq04,quest_task_not_done:w2_mq04:confront_stalker",
-    "next": "ghost_confrontation_2"
+    "next": "ghost_confrontation_2",
+    "music": "gf_10_shackles"
   },
   {
     "id": "ghost_confrontation_2",
@@ -1054,7 +1056,7 @@
     "id": "ghost_confrontation_3",
     "speaker": "Gh0st",
     "text": "The Warden... *static*... error. System logic loop detected. Harmonic lock override...",
-    "trigger": "set_quest_task_done:w2_mq04:confront_stalker"
+    "trigger": "music_restore,set_quest_task_done:w2_mq04:confront_stalker"
   },
   {
     "id": "ghost_w2_sq05_intro_1",
@@ -1085,7 +1087,6 @@
     "text": "Perimeter scanned. The Astra's airlocks are sealed, and my rifle is tuned. I will watch the cargo ramp while you rest.",
     "condition": "milestone:ms_w2_mq05_complete,quest_not_started:w3_mq11"
   },
-
   {
     "id": "ghost_default_talk",
     "speaker": "Gh0st",
@@ -1308,7 +1309,6 @@
     "condition": "quest_active:w3_mq15,quest_task_not_done:w3_mq15:defeat_administrator",
     "text": "Archive anomaly detected. Administrator, lock the district. Seal the roof. I want no ungoverned noise leaving Sector 0, especially if it sings."
   },
-
   {
     "id": "upper_city_lounge_shop_intro",
     "speaker": "Concierge",
@@ -1599,7 +1599,8 @@
     "speaker": "Elara",
     "condition": "quest_active:w5_mq24,quest_task_done:w5_mq24:enter_chamber,quest_task_not_done:w5_mq24:find_elara",
     "text": "734. You are late. I cannot hold the door and the firewall. Take the Anchor. Get them out. That is a direct order, brother.",
-    "trigger": "player_action:w5_mq24_find_elara"
+    "trigger": "music_persist:music_elaras_song,player_action:w5_mq24_find_elara",
+    "music": "music_elaras_song"
   },
   {
     "id": "vale_w5_mq25_soloist",
@@ -1703,7 +1704,7 @@
     "speaker": "Vale",
     "condition": "quest_active:w6_mq30,quest_task_not_done:w6_mq30:confront_vale",
     "text": "Thorne wanted to bottle the ocean. I will break the glass. No bodies to starve, no minds to break. Why fight for friction?",
-    "trigger": "player_action:w6_mq30_confront_vale"
+    "trigger": "music_silence_persist,player_action:w6_mq30_confront_vale"
   },
   {
     "id": "nova_w6_final_answer",

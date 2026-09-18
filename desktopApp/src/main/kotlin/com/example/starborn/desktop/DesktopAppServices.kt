@@ -216,6 +216,10 @@ class DesktopAppServices(
     fun startDebugScenario(scenarioId: String): Boolean {
         val scenario = com.example.starborn.feature.mainmenu.DebugScenarioCatalog.scenarios.firstOrNull { it.id == scenarioId } ?: return false
         val startingRoom = when (scenarioId) {
+            "burgfest_story" -> "pit_nova_bunk"
+            "burgfest_combat" -> "sector9_crash_site"
+            "burgfest_astra" -> "astra_common_room"
+            "burgfest_boss" -> "foundry_titan_dock"
             "tut_npc_dialogue" -> "pit_jed_bunk"
             "tut_gear_inventory" -> "pit_L2_corridor"
             "tut_tinkering", "tinkering_tutorial" -> "workshop_floor"
@@ -246,9 +250,9 @@ class DesktopAppServices(
             else -> "pit_nova_bunk"
         }
         val worldId = when {
-            scenarioId.startsWith("w2") || scenarioId in listOf("tut_party_combat", "tut_world2_debuffs") -> "world_2"
-            scenarioId.startsWith("w3") -> "world_3"
-            scenarioId.startsWith("w4") -> "world_4"
+            scenarioId == "burgfest_combat" || scenarioId.startsWith("w2") || scenarioId in listOf("tut_party_combat", "tut_world2_debuffs") -> "world_2"
+            scenarioId == "burgfest_astra" || scenarioId.startsWith("w3") -> "world_3"
+            scenarioId == "burgfest_boss" || scenarioId.startsWith("w4") -> "world_4"
             scenarioId.startsWith("w5") -> "world_5"
             scenarioId.startsWith("w6") -> "world_6"
             else -> "world_1"

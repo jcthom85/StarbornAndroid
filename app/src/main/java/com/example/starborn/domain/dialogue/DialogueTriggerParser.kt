@@ -87,6 +87,51 @@ object DialogueTriggerParser {
             "player_action" -> value.takeIf { it.isNotBlank() }?.let {
                 EventAction(type = "player_action", action = it)
             }
+            "music", "play_music" -> value.takeIf { it.isNotBlank() }?.let {
+                EventAction(
+                    type = "audio_layer",
+                    audioLayer = "music",
+                    audioCueId = it,
+                    audioLoop = true,
+                    context = "transient"
+                )
+            }
+            "music_persist", "play_music_persist" -> value.takeIf { it.isNotBlank() }?.let {
+                EventAction(
+                    type = "audio_layer",
+                    audioLayer = "music",
+                    audioCueId = it,
+                    audioLoop = true,
+                    context = "persist"
+                )
+            }
+            "music_stop", "stop_music", "music_silence" -> EventAction(
+                type = "audio_layer",
+                audioLayer = "music",
+                audioStop = true,
+                audioFadeMs = value.toLongOrNull() ?: 600L,
+                context = "transient"
+            )
+            "music_silence_persist", "music_stop_persist", "stop_music_persist" -> EventAction(
+                type = "audio_layer",
+                audioLayer = "music",
+                audioStop = true,
+                audioFadeMs = value.toLongOrNull() ?: 600L,
+                context = "persist"
+            )
+            "music_restore" -> EventAction(
+                type = "audio_layer",
+                audioLayer = "music",
+                context = "restore"
+            )
+            "sting", "play_sting" -> value.takeIf { it.isNotBlank() }?.let {
+                EventAction(
+                    type = "audio_layer",
+                    audioLayer = "battle",
+                    audioCueId = it,
+                    audioLoop = false
+                )
+            }
             else -> null
         }
     }

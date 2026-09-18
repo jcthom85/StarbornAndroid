@@ -51,4 +51,51 @@ class DialogueTriggerParserTest {
         val actions = DialogueTriggerParser.parse("start_quest:,give_item:")
         assertTrue(actions.isEmpty())
     }
+
+    @Test
+    fun parsesMusicAndPersistentMusicActions() {
+        val actions = DialogueTriggerParser.parse("music:gf_06_refuge,music_persist:gf_01_unpayable_debt")
+        assertEquals(2, actions.size)
+
+        val transient = actions[0]
+        assertEquals("audio_layer", transient.type)
+        assertEquals("music", transient.audioLayer)
+        assertEquals("gf_06_refuge", transient.audioCueId)
+        assertEquals(true, transient.audioLoop)
+        assertEquals("transient", transient.context)
+
+        val persist = actions[1]
+        assertEquals("audio_layer", persist.type)
+        assertEquals("music", persist.audioLayer)
+        assertEquals("gf_01_unpayable_debt", persist.audioCueId)
+        assertEquals(true, persist.audioLoop)
+        assertEquals("persist", persist.context)
+    }
+
+    @Test
+    fun parsesSilenceAndRestoreActions() {
+        val actions = DialogueTriggerParser.parse("music_stop:400,music_silence_persist,music_restore,sting:sfx_warden_entry")
+        assertEquals(4, actions.size)
+
+        val stop = actions[0]
+        assertEquals("audio_layer", stop.type)
+        assertEquals(true, stop.audioStop)
+        assertEquals(400L, stop.audioFadeMs)
+        assertEquals("transient", stop.context)
+
+        val silencePersist = actions[1]
+        assertEquals("audio_layer", silencePersist.type)
+        assertEquals(true, silencePersist.audioStop)
+        assertEquals("persist", silencePersist.context)
+
+        val restore = actions[2]
+        assertEquals("audio_layer", restore.type)
+        assertEquals("restore", restore.context)
+
+        val sting = actions[3]
+        assertEquals("audio_layer", sting.type)
+        assertEquals("battle", sting.audioLayer)
+        assertEquals("sfx_warden_entry", sting.audioCueId)
+        assertEquals(false, sting.audioLoop)
+    }
 }

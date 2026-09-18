@@ -419,7 +419,8 @@ class EventManager(
                         gain = action.audioGain,
                         fadeMs = action.audioFadeMs,
                         loop = action.audioLoop,
-                        stop = action.audioStop == true
+                        stop = action.audioStop == true,
+                        context = action.context
                     )
                     eventHooks.onAudioLayerCommand(command)
                     true
@@ -620,7 +621,8 @@ data class AudioLayerCommandSpec(
     val gain: Float?,
     val fadeMs: Long?,
     val loop: Boolean?,
-    val stop: Boolean = false
+    val stop: Boolean = false,
+    val context: String? = null
 )
 
 data class EventHooks(

@@ -19,4 +19,31 @@ class DialogueEventIntegrationTest {
         assertTrue(state.activeQuests.contains("gather_broken_gear"))
         assertTrue(state.completedMilestones.contains("ms_intro"))
     }
+
+    @Test
+    fun dialogueAudioTriggersDispatchToAudioLayerCommandHook() {
+        val sessionStore = GameSessionStore()
+        var receivedLayer: String? = null
+        var receivedCue: String? = null
+        var receivedContext: String? = null
+
+        val eventManager = EventManager(
+            events = emptyList(),
+            sessionStore = sessionStore,
+            eventHooks = com.example.starborn.domain.event.EventHooks(
+                onAudioLayerCommand = { spec ->
+                    receivedLayer = spec.layer
+                    receivedCue = spec.cueId
+                    receivedContext = spec.context
+                }
+            )
+        )
+
+        val actions = DialogueTriggerParser.parse("music_persist:gf_01_unpayable_debt")
+        eventManager.performActions(actions)
+
+        org.junit.Assert.assertEquals("music", receivedLayer)
+        org.junit.Assert.assertEquals("gf_01_unpayable_debt", receivedCue)
+        org.junit.Assert.assertEquals("persist", receivedContext)
+    }
 }

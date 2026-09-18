@@ -128,6 +128,7 @@ fun MainMenuScreen(
     var pendingScenario by remember { mutableStateOf<DebugScenario?>(null) }
     var pendingLoadSlot by remember { mutableStateOf<Int?>(null) }
     var showDebugBrowser by remember { mutableStateOf(false) }
+    var showBurgfestDialog by remember { mutableStateOf(false) }
     var showSettings by remember { mutableStateOf(false) }
     var saveLoadMode by remember { mutableStateOf<String?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
@@ -271,6 +272,7 @@ fun MainMenuScreen(
 
     BackHandler {
         when {
+            showBurgfestDialog -> showBurgfestDialog = false
             saveLoadMode != null -> saveLoadMode = null
             showDebugBrowser -> showDebugBrowser = false
             showSettings -> showSettings = false
@@ -486,6 +488,14 @@ fun MainMenuScreen(
             verticalArrangement = Arrangement.spacedBy(13.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            if (BuildConfig.ENABLE_SCENARIO_MENU) {
+                StarbornTitleButton(
+                    text = "BurgQuest Demo",
+                    onClick = { showBurgfestDialog = true },
+                    enabled = buttonsInteractable,
+                    primary = true
+                )
+            }
             StarbornTitleButton(
                 text = "New Game",
                 onClick = {
@@ -496,7 +506,7 @@ fun MainMenuScreen(
                     }
                 },
                 enabled = buttonsInteractable,
-                primary = true
+                primary = !BuildConfig.ENABLE_SCENARIO_MENU
             )
             if (BuildConfig.ENABLE_SCENARIO_MENU) {
                 StarbornTitleButton(
@@ -621,6 +631,16 @@ fun MainMenuScreen(
                 panelColor = panelColor,
                 borderColor = borderColor,
                 textColor = textColor
+            )
+        }
+
+        if (BuildConfig.ENABLE_SCENARIO_MENU && showBurgfestDialog) {
+            BurgfestDemoDialog(
+                onLaunch = { scenario ->
+                    showBurgfestDialog = false
+                    pendingScenario = scenario
+                },
+                onDismiss = { showBurgfestDialog = false }
             )
         }
 
@@ -866,6 +886,76 @@ internal fun DebugScenarioDialog(
             } else {
                 OutlinedButton(onClick = onDismiss) { Text("Close") }
             }
+        },
+        containerColor = TitlePanel,
+        titleContentColor = TitleText,
+        textContentColor = TitleMutedText
+    )
+}
+
+@Composable
+internal fun BurgfestDemoDialog(
+    onLaunch: (DebugScenario) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val scenarios = com.example.starborn.feature.mainmenu.DebugScenarioCatalog.burgfestScenarios
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("BurgQuest Demo Showcase", fontWeight = FontWeight.Black, color = TitleGold, fontSize = 20.sp)
+                Text(
+                    "Select a showcase track to launch directly:",
+                    color = TitleCyan,
+                    fontSize = 12.sp
+                )
+            }
+        },
+        text = {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 450.dp)
+            ) {
+                items(scenarios, key = { it.id }) { scenario ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(1.dp, TitleCyan.copy(alpha = 0.35f), RoundedCornerShape(12.dp))
+                            .background(TitleCyan.copy(alpha = 0.08f), RoundedCornerShape(12.dp))
+                            .padding(14.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Text(scenario.title, fontWeight = FontWeight.Bold, color = TitleText, fontSize = 15.sp)
+                        Text(
+                            scenario.worldLabel,
+                            color = TitleAmber,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(scenario.description, color = TitleMutedText, fontSize = 12.sp)
+                        Button(
+                            onClick = { onLaunch(scenario) },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = TitleGold,
+                                contentColor = Color.Black
+                            ),
+                            shape = RoundedCornerShape(8.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 4.dp)
+                        ) {
+                            Text("Launch Demo", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {},
+        dismissButton = {
+            OutlinedButton(onClick = onDismiss) { Text("Close") }
         },
         containerColor = TitlePanel,
         titleContentColor = TitleText,

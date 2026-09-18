@@ -82,7 +82,9 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The generator catches. Work lights snap on down the tunnel."
+        "text": "The generator catches. Work lights snap on down the tunnel.",
+        "audio_cue": "sfx_w2_astra_reboot",
+        "music_cue": "music_w1_deep_mine"
       },
       {
         "type": "narration",
@@ -479,7 +481,8 @@
       {
         "type": "narration",
         "text": "The pod clears the launch rail on its own capacitors. The Chime opens the authorization interlock; its paired beacon takes the navigation bus.",
-        "audio_cue": "sfx_pod_launch"
+        "audio_cue": "sfx_pod_launch",
+        "music_cue": "music_crash_flight"
       },
       {
         "type": "narration",
@@ -494,7 +497,8 @@
         "speaker": "Zeke",
         "emote": "worried",
         "text": "Nova! Brace! The navigation bus is burning out—the route lock won't release!",
-        "audio_cue": "sfx_security_lockdown"
+        "audio_cue": "sfx_security_lockdown",
+        "music_cue": "music_cinematic_crash"
       },
       {
         "type": "narration",
@@ -742,7 +746,8 @@
       {
         "type": "narration",
         "text": "Nova opens the Bridge alone. Heat climbs her arm and her knees buckle.",
-        "audio_cue": "sfx_combat_plasma_arc"
+        "audio_cue": "sfx_combat_plasma_arc",
+        "music_cue": "music_w2_ancient_gateway"
       },
       {
         "type": "dialogue",
@@ -780,7 +785,8 @@
       {
         "type": "narration",
         "text": "The Ascended falls, but Vale's forced network remains active. Five protocol signatures align through the crew's practiced circuit and complete the Key's access pattern.",
-        "audio_cue": "sfx_combat_enemy_void_blast"
+        "audio_cue": "sfx_combat_enemy_void_blast",
+        "music_cue": "music_w6_boss_final"
       },
       {
         "type": "dialogue",
@@ -816,7 +822,8 @@
     "steps": [
       {
         "type": "narration",
-        "text": "Morning in the Colony. One regional corridor stands open. Vale and Harmony are gone here; Dominion traffic still moves beyond the sector."
+        "text": "Morning in the Colony. One regional corridor stands open. Vale and Harmony are gone here; Dominion traffic still moves beyond the sector.",
+        "music_cue": "music_epilogue"
       },
       {
         "type": "narration",
@@ -860,7 +867,8 @@
       },
       {
         "type": "narration",
-        "text": "STAR BORN"
+        "text": "STAR BORN",
+        "music_cue": "music_credits_ending"
       },
       {
         "type": "narration",

@@ -714,6 +714,8 @@ class ExplorationViewModel(
      * hand back to the room when it ends, or its track keeps playing over whatever comes next.
      */
     private var cinematicMusicActive: Boolean = false
+    private var dialogueMusicActive: Boolean = false
+    private var dialogueMusicPersistent: Boolean = false
     private var initialFadePrimed: Boolean = startWithBlackScreen
     private val pendingFadeCallbacks: MutableMap<Long, () -> Unit> = mutableMapOf()
     private var userMusicVolume: Float = 1f
@@ -753,7 +755,17 @@ class ExplorationViewModel(
     }
 
     private fun handleAudioLayerCommand(command: AudioLayerCommandSpec) {
+        if (command.context.equals("restore", ignoreCase = true)) {
+            dialogueMusicActive = false
+            dialogueMusicPersistent = false
+            playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
+            return
+        }
         val layerType = command.layer?.let(::parseAudioLayer) ?: return
+        if (layerType == AudioCueType.MUSIC) {
+            dialogueMusicActive = true
+            dialogueMusicPersistent = command.context.equals("persist", ignoreCase = true)
+        }
         val commands = audioRouter.commandsForLayerOverride(
             layer = layerType,
             cueId = command.cueId,
@@ -763,6 +775,19 @@ class ExplorationViewModel(
             stop = command.stop
         )
         emitAudioCommands(commands)
+    }
+
+    private fun playDialogueMusic(cue: String, persistent: Boolean = false) {
+        if (cue.isBlank()) return
+        dialogueMusicActive = true
+        dialogueMusicPersistent = persistent
+        emitAudioCommands(
+            audioRouter.commandsForLayerOverride(
+                AudioCueType.MUSIC,
+                cueId = cue,
+                loop = true
+            )
+        )
     }
 
     private fun parseAudioLayer(raw: String): AudioCueType? {
@@ -2517,6 +2542,8 @@ class ExplorationViewModel(
     }
 
     private fun warpToRoom(roomId: String) {
+        dialogueMusicPersistent = false
+        dialogueMusicActive = false
         val nextRoom = roomsById[roomId] ?: return
         val nextRoomIsDark = isRoomDark(nextRoom)
         val nextTheme = themeByRoomId[nextRoom.id]
@@ -2567,6 +2594,8 @@ class ExplorationViewModel(
             )
         }
         activeDialogueSession = null
+        dialogueMusicPersistent = false
+        dialogueMusicActive = false
         updateMinimap(nextRoom)
         playRoomAudio(nextHub?.id ?: sessionStore.state.value.hubId, nextRoom.id)
         handleRoomEntryTutorials(nextRoom)
@@ -2590,6 +2619,7 @@ class ExplorationViewModel(
             )
         }
         session.current()?.voiceCue?.let { playVoiceCue(it) }
+        session.current()?.musicCue?.let { playDialogueMusic(it) }
         return true
     }
 
@@ -2611,6 +2641,7 @@ class ExplorationViewModel(
             )
         }
         session?.current()?.voiceCue?.let { playVoiceCue(it) }
+        session?.current()?.musicCue?.let { playDialogueMusic(it) }
         handleNpcTrigger("talk_to", npcName, dialogueName)
         handleNpcTrigger("npc_interaction", npcName, dialogueName)
         if (session == null) {
@@ -2628,6 +2659,10 @@ class ExplorationViewModel(
             activeDialogueNpcName = null
             _uiState.update { it.copy(activeDialogue = null, dialogueChoices = emptyList()) }
             lastDialogueVoiceCue = null
+            if (dialogueMusicActive && !dialogueMusicPersistent) {
+                playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
+            }
+            dialogueMusicActive = false
             if (!npcName.isNullOrBlank()) {
                 handleNpcTrigger("dialogue_closed", npcName, resolveNpcDialogueName(npcName))
             }
@@ -2641,6 +2676,7 @@ class ExplorationViewModel(
                 )
             }
             nextLine.voiceCue?.let { playVoiceCue(it) }
+            nextLine.musicCue?.let { playDialogueMusic(it) }
         }
     }
 
@@ -2662,6 +2698,10 @@ class ExplorationViewModel(
             activeDialogueNpcName = null
             _uiState.update { it.copy(activeDialogue = null, dialogueChoices = emptyList()) }
             lastDialogueVoiceCue = null
+            if (dialogueMusicActive && !dialogueMusicPersistent) {
+                playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
+            }
+            dialogueMusicActive = false
             if (!npcName.isNullOrBlank()) {
                 handleNpcTrigger("dialogue_closed", npcName, resolveNpcDialogueName(npcName))
             }
@@ -2675,6 +2715,7 @@ class ExplorationViewModel(
                 )
             }
             nextLine.voiceCue?.let { playVoiceCue(it) }
+            nextLine.musicCue?.let { playDialogueMusic(it) }
         }
     }
 

@@ -951,7 +951,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false) {
     fun startDebugScenario(id: String, allowInGameLaunch: Boolean = false): Boolean {
         debugScenarioError = null
         val rebuilt = com.example.starborn.debug.DebugTestRegistry.find(id)
-        if (rebuilt == null) return launchLegacyDebugScenario(id)
+        if (rebuilt == null || rebuilt.procedure == null) return launchLegacyDebugScenario(id)
         if (!isTestSession && !allowInGameLaunch) {
             debugScenarioError = "Open a Test Session before launching rebuilt scenarios."
             return false
@@ -978,6 +978,12 @@ class AppServices(context: Context, val isTestSession: Boolean = false) {
     }
 
     private fun launchLegacyDebugScenario(id: String): Boolean = when (id) {
+        // --- BURGFEST / BURGQUEST DEMO SHORTCUTS ---
+        "burgfest_story" -> startNewGame()
+        "burgfest_combat" -> startNewGameAtTutPartyCombat()
+        "burgfest_astra" -> startNewGameAboardAstra()
+        "burgfest_boss" -> startNewGameAtTitanApproach()
+
         // --- TUTORIAL SHORTCUTS ---
         "tut_movement" -> startNewGame()
         "tut_npc_dialogue" -> startNewGameAtTutNpcDialogue()

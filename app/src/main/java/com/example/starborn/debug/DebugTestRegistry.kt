@@ -1,6 +1,7 @@
 package com.example.starborn.debug
 
 import com.example.starborn.feature.mainmenu.DebugScenario
+import com.example.starborn.feature.mainmenu.DebugScenarioCatalog
 import com.example.starborn.feature.mainmenu.DebugScenarioCategory
 import com.example.starborn.feature.mainmenu.DebugScenarioDestination
 
@@ -92,7 +93,7 @@ object DebugTestRegistry {
                 cabinetId = cabinet.id), world = "The Astra")
     }
 
-    val allScenarios: List<DebugScenario> get() = scenarios + DebugCampaignScenarios.scenarios + DebugSystemScenarios.scenarios
+    val allScenarios: List<DebugScenario> get() = DebugScenarioCatalog.burgfestScenarios + scenarios + DebugCampaignScenarios.scenarios + DebugSystemScenarios.scenarios
 
     fun find(id: String): DebugScenario? = allScenarios.firstOrNull { it.id == id }
 
