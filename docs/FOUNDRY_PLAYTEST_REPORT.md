@@ -2,7 +2,34 @@
 
 Date: 2026-09-21
 
-Status: **CONTROLLED SKILL COMPARISON COMPLETE / CAMPAIGN ROUTE VALIDATION PENDING**
+Status: **ISOLATED SKILLS COMPLETE / STATUS-TIMING DEFECT REPRODUCED**
+
+## Latest: isolated level-9 skills
+
+Test-only change: `FOUNDRY_SKILL_POLICY` now accepts `overload`, `disruption`, and `crash`. Each adds just that skill to the pre9 offensive policy while retaining the same level-9 unlocks, stats, gear, medkits and two-AP allocation. Seeds 41–70, two loadouts, six parties, support/drone targeting: **2,160 fights completed, zero timeouts**. All three driver runs passed. Each evidence folder contains only its summary-listed 720 fixtures and traces: `test-results/foundry-skill-{overload,disruption,crash}-30-seed/`.
+
+| Offensive choices | Wins / 720 | Difference from pre9 |
+| --- | --- | --- |
+| Earlier-skill baseline | 530 | — |
+| + Overload Fists | 533 | +3 |
+| + Disruption Pulse | 506 | -24 |
+| + System Crash | 483 | -47 |
+
+Totals include repeated solo policies and are not independent player win rates. These measure fixed-priority usage, not optimal play or universal skill strength. Changing actions changes random-number consumption. Overload is approximately neutral in aggregate; the two other automatic priorities underperform. Effects are not additive (the prior all-skills batch won 479/720).
+
+### Confirmed timing behavior
+
+`FoundryStatusTimingAuditTest` passed using real skill/status assets and CombatActionProcessor. It characterizes current behavior, not the intended future contract:
+
+- System Crash applies `stun` (duration 1), then the same action's finalization expires it. The target has no stun left for its next action. Both application and expiration are logged. Its advertised shutdown does not survive to an enemy turn in this reproduction.
+- Disruption Pulse applies `weak` (duration 2, outgoing damage multiplier 0.75). Its casting action consumes one tick; an intervening ally Defend consumes the other. Both affected enemies can lose the debuff before acting. Full runtime example: `41-weak_ap-4-support-disruption-trace.txt` shows Orion applying weak to both enemies, GH0ST acting, both weak statuses expiring, and then the golem using Molten Slam.
+- Root mechanism: `CombatActionProcessor.finalizeAction` invokes `CombatEngine.tickEndOfTurn`, which decrements statuses for every combatant after each action. This also warrants auditing damage-over-time, regeneration, buffs and cooling exposure before any global change.
+
+### Recommendation
+
+Prioritize a separately approved status-duration design/fix before enemy-stat tuning. Define whether each effect expires on the affected actor's action, a full round, or another explicit boundary; ensure duration-1 stun survives application and skips exactly one intended action. Add multi-actor timing, reapplication, skipped-action, DOT/regen, recovery exposure and save/resume tests. Do not simply increase every status duration: that risks magnifying other effects and hiding the lifecycle problem.
+
+Then rerun the fixed-policy comparisons, followed by campaign route-income and attrition verification. No production skill, enemy, status or balance data changed in this audit. The new characterization test should be updated to the intended contract when a fix is implemented, not preserved as a requirement to retain the defect.
 
 ## Latest: level held separate from offensive skill choice
 

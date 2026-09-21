@@ -41,9 +41,12 @@ class FoundryCombatDriverTest {
         val fixtureXp = (System.getenv("FOUNDRY_XP") ?: "11000").toInt()
         // Keep unlocks/stats intact while holding offensive choices to the lower-level set.
         val skillPolicy = System.getenv("FOUNDRY_SKILL_POLICY") ?: "all"
-        require(skillPolicy in setOf("all", "pre9"))
-        val excludedSkills = if (skillPolicy == "pre9") requireNotNull(assets.loadProgressionData())
-            .levelUpSkills.values.flatMap { tiers -> tiers.filterKeys { it.toInt() >= 9 }.values }.toSet()
+        val isolatedSkills = mapOf("overload" to "zeke_overload_fists",
+            "disruption" to "orion_disruption_pulse", "crash" to "gh0st_system_crash")
+        require(skillPolicy in setOf("all", "pre9") + isolatedSkills.keys)
+        val excludedSkills = if (skillPolicy != "all") requireNotNull(assets.loadProgressionData())
+            .levelUpSkills.values.flatMap { tiers -> tiers.filterKeys { it.toInt() >= 9 }.values }.toSet() -
+                setOfNotNull(isolatedSkills[skillPolicy])
             else emptySet()
         val policies = (System.getenv("FOUNDRY_POLICIES") ?: "first,support,pressure,defensive_support,defensive_pressure").split(',')
         require(policies.all { it in setOf("first", "support", "pressure", "defensive_support", "defensive_pressure") })
