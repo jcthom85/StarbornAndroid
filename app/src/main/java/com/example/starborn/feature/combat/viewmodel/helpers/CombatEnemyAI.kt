@@ -354,6 +354,8 @@ class CombatEnemyAI(
         state: CombatState,
         brain: EnemyBrain
     ): Double {
+        // Use an existing defensive window instead of refreshing it indefinitely.
+        if (enemyState.statusEffects.any { isBlockingStatus(it.id) }) return 0.0
         val maxHp = enemyState.combatant.stats.maxHp.coerceAtLeast(1)
         val hpRatio = enemyState.hp.toDouble() / maxHp
 

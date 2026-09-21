@@ -46,7 +46,7 @@ class CombatActionProcessor(
                     reason = skipInfo.reason
                 )
             )
-            val afterTick = engine.tickEndOfTurn(skipped)
+            val afterTick = engine.tickEndOfTurn(skipped, action.actorId)
             val withOutcome = engine.resolveOutcome(afterTick, rewardProvider)
             return if (withOutcome.outcome != null) withOutcome else engine.advance(withOutcome)
         }
@@ -56,27 +56,27 @@ class CombatActionProcessor(
         val resolved = when (action) {
             is CombatAction.BasicAttack -> finalizeAction(
                 processBasicAttack(sanitized, action),
-                rewardProvider
+                rewardProvider, action.actorId, beforeLogSize
             )
             is CombatAction.SkillUse -> finalizeAction(
                 processSkillUse(sanitized, action),
-                rewardProvider
+                rewardProvider, action.actorId, beforeLogSize
             )
             is CombatAction.ItemUse -> finalizeAction(
                 processItemUse(sanitized, action),
-                rewardProvider
+                rewardProvider, action.actorId, beforeLogSize
             )
             is CombatAction.SnackUse -> finalizeAction(
                 processSnackUse(sanitized, action),
-                rewardProvider
+                rewardProvider, action.actorId, beforeLogSize
             )
             is CombatAction.Defend -> finalizeAction(
                 processDefend(sanitized, action),
-                rewardProvider
+                rewardProvider, action.actorId, beforeLogSize
             )
             is CombatAction.Flee -> finalizeAction(
                 processFlee(sanitized),
-                rewardProvider,
+                rewardProvider, action.actorId, beforeLogSize,
                 advance = false
             )
         }
@@ -1238,9 +1238,15 @@ class CombatActionProcessor(
     private fun finalizeAction(
         processed: CombatState,
         rewardProvider: () -> CombatReward,
+        actorId: String,
+        beforeLogSize: Int,
         advance: Boolean = true
     ): CombatState {
-        val afterTick = engine.tickEndOfTurn(processed)
+        // Newly applied/refreshed self effects start counting on the next personal turn.
+        val applied = processed.log.drop(beforeLogSize)
+            .filterIsInstance<CombatLogEntry.StatusApplied>()
+            .filter { it.targetId == actorId }.map { it.statusId }.toSet()
+        val afterTick = engine.tickEndOfTurn(processed, actorId, applied)
         val withOutcome = engine.resolveOutcome(afterTick, rewardProvider)
         if (!advance || withOutcome.outcome != null) return withOutcome
         return engine.advance(withOutcome)

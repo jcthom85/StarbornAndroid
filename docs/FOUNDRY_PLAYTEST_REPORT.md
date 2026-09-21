@@ -2,7 +2,38 @@
 
 Date: 2026-09-21
 
-Status: **ISOLATED SKILLS COMPLETE / STATUS-TIMING DEFECT REPRODUCED**
+Status: **STATUS TIMING FIX IMPLEMENTED / BROADER REGRESSIONS UNDER REVIEW**
+
+## Latest: affected-actor duration implementation
+
+Production timing now advances statuses, DOT/regen and temporary buffs only at the end of the affected actor's action (including a skipped turn). Newly applied/refreshed effects on the acting character are excluded from that action's tick, retaining their full authored duration. The action's explicit actor ID also drives cooldown ticking rather than relying on the ATB queue's current index. Skill cooldowns retain their existing immediate-tick compensation. No enemy or skill numeric assets were changed.
+
+The regression tests now require System Crash to skip exactly one target turn, Disruption Pulse to last two affected turns, self-regeneration to start on the next personal turn, defensive buff refreshes to retain duration, DOT to ignore unrelated actions, and cooling exposure to survive other actors' turns. Existing runtime assertions were updated where they explicitly assumed global expiry or immediate regen. Interrupted battles use the existing pre-battle checkpoint; no status serialization schema was introduced.
+
+Thirty seeds (41–70), two level-9 AP loadouts, six parties and two targeting policies were rerun for both skill policies. **1,440 terminal fights, zero timeouts**. Evidence folders contain only summary-listed runs: `test-results/foundry-owner-turn-all/` and `test-results/foundry-owner-turn-pre9/`.
+
+| Policy | Previous wins / 720 | Corrected timing wins / 720 |
+| --- | --- | --- |
+| All offensive skills | 479 | 627 |
+| Earlier offensive skills only | 530 | 586 |
+
+Full-policy mixed-party wins out of 30, ordered support-first / drone-first:
+
+| Party | Starter + 2 AP | Purchased + 2 AP |
+| --- | --- | --- |
+| Welder + Drone | 23 / 28 | 16 / 22 |
+| Golem + Welder | 30 / 30 | 29 / 27 |
+| Golem + Drone | 4 / 30 | 0 / 28 |
+
+These are fixed-policy, fresh-fight comparisons; equipment affordability and route attrition assumptions remain. Changes include enemy effects as well as player effects, so the improvement is not attributable to stun alone.
+
+### Release gate
+
+Final full-suite result: **544 tests, 541 passed, 3 failed**. Focused duration/runtime checks and the existing persistence/checkpoint tests pass. The failures below are still present after the final rerun.
+
+The broader suite exposed three remaining gameplay expectations: World 1's bare-gear Siren Skimmer fight (seed 2) and World 2's Ruin Guardian fight (seed 4) exceeded the existing attrition time limits, and the scripted finale failed its four-of-five-seeds victory threshold. Trace inspection shows longer-lasting enemy defenses; the Siren repeatedly defends at low HP. These expectations remain enforced, not weakened to conceal the changed behavior. Investigate sustained defense/AI choices and scenario builds before releasing this timing change. No version increment, commit, push or Play upload was performed for this fix.
+
+Earlier audit sections below describe pre-fix behavior.
 
 ## Latest: isolated level-9 skills
 

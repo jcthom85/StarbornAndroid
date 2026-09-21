@@ -172,7 +172,7 @@ class OpeningCombatRuntimeTest {
 
             val engine = CombatEngine(statusRegistry = StatusRegistry(assets.loadStatuses()))
             var expired = requireNotNull(vm.combatState)
-            repeat(status.remainingTurns) { expired = engine.tickEndOfTurn(expired) }
+            repeat(status.remainingTurns) { expired = engine.tickEndOfTurn(expired, targetId) }
             assertTrue(expired.combatants.getValue(targetId).statusEffects.none { it.id == status.id })
             assertTrue(expired.log.any {
                 it is CombatLogEntry.StatusExpired && it.targetId == targetId && it.statusId == status.id
@@ -360,6 +360,7 @@ class OpeningCombatRuntimeTest {
         }
         assertTrue("Every seed must clear the Soloist phase",
             seededResults.all { (_, results) -> results.first().outcome == "victory" })
+        seededResults.forEach { (seed, results) -> println("FINAL_TIMING_DIAGNOSTIC seed=$seed results=$results") }
         assertTrue("At least four of five seeds must clear both finale phases",
             seededResults.count { (_, results) -> results.size == 2 && results.last().outcome == "victory" } >= 4)
         return seededResults.map { (seed, results) -> "FINAL_CHECKPOINT_COMBAT seed=$seed results=$results" }
@@ -566,7 +567,10 @@ class OpeningCombatRuntimeTest {
                     val after = requireNotNull(vm.combatState)
                     for (id in listOf("nova", "zeke", "orion")) {
                         assertTrue("$skillId must apply $statusId to $id", after.combatants.getValue(id).statusEffects.any { it.id == statusId })
-                        if (skillId == "nova_link") assertTrue(after.combatants.getValue(id).hp > before.combatants.getValue(id).hp)
+                        if (skillId == "nova_link") {
+                            // Regen begins on each recipient's next turn, not on the caster's action.
+                            assertEquals(before.combatants.getValue(id).hp, after.combatants.getValue(id).hp)
+                        }
                     }
                     assertEquals(0, after.combatants.getValue("gh0st").hp)
                     assertTrue(after.combatants.getValue("gh0st").statusEffects.none { it.id == statusId })

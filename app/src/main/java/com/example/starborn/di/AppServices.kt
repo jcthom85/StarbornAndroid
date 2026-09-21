@@ -1995,6 +1995,23 @@ class AppServices(context: Context, val isTestSession: Boolean = false) {
         sessionStore.setHub("hub_5_lower_city")
         sessionStore.setRoom("spire_sewers_landing")
         sessionStore.visitNode("spire_sewers")
+
+        // Unlock and install all 6 arcade cabinets for Astra exploration
+        val allCabinets = listOf(
+            "deep_mine_asteroid_drill" to "ms_arcade_cabinet_01_repaired",
+            "canopy_hopper" to "ms_arcade_cabinet_02_repaired",
+            "spire_infiltrator" to "ms_arcade_cabinet_03_repaired",
+            "slag_catcher" to "ms_arcade_cabinet_04_repaired",
+            "orbital_defense" to "ms_arcade_cabinet_05_repaired",
+            "harmonic_pulse" to "ms_arcade_cabinet_06_repaired"
+        )
+        sessionStore.setMilestone("ms_all_arcade_cabinets_restored")
+        for ((cabId, milestone) in allCabinets) {
+            sessionStore.setMilestone(milestone)
+            sessionStore.updateArcadeProgress(cabId) {
+                it.copy(discovered = true, repaired = true, installed = true)
+            }
+        }
         return true
     }
 

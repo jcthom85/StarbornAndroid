@@ -219,13 +219,17 @@ class CombatEngine(
         return updatedState.copy(log = updatedState.log + logEntry)
     }
 
-    fun tickEndOfTurn(state: CombatState): CombatState {
+    fun tickEndOfTurn(
+        state: CombatState,
+        actorId: String? = state.activeCombatant?.combatant?.id,
+        appliedThisAction: Set<String> = emptySet()
+    ): CombatState {
         var working = state
         val expiredLogs = mutableListOf<CombatLogEntry>()
-        val combatantIds = working.combatants.keys.toList()
+        val combatantIds = listOfNotNull(actorId)
         for (combatantId in combatantIds) {
             val snapshot = working.combatants[combatantId] ?: continue
-            snapshot.statusEffects.forEach { status ->
+            snapshot.statusEffects.filterNot { it.id in appliedThisAction }.forEach { status ->
                 working = applyStatusTick(working, combatantId, status)
             }
 
@@ -233,8 +237,10 @@ class CombatEngine(
 
             val updatedStatuses = mutableListOf<StatusEffect>()
             current.statusEffects.forEach { status ->
-                val definition = statusRegistry.definition(status.id)
-                val ticked = definition?.tick
+                if (status.id in appliedThisAction) {
+                    updatedStatuses.add(status)
+                    return@forEach
+                }
                 val remaining = status.remainingTurns - 1
                 if (remaining > 0) {
                     updatedStatuses.add(status.copy(remainingTurns = remaining))
@@ -251,6 +257,10 @@ class CombatEngine(
 
             val updatedBuffs = mutableListOf<ActiveBuff>()
             current.buffs.forEach { buff ->
+                if ("buff_${buff.effect.stat}" in appliedThisAction) {
+                    updatedBuffs.add(buff)
+                    return@forEach
+                }
                 val remaining = buff.remainingTurns - 1
                 if (remaining > 0) {
                     updatedBuffs.add(buff.copy(remainingTurns = remaining))
@@ -265,7 +275,7 @@ class CombatEngine(
                 }
             }
 
-            val isActorTurnEnd = combatantId == state.activeCombatant?.combatant?.id
+            val isActorTurnEnd = combatantId == actorId
             val updatedActiveCooldowns = if (isActorTurnEnd) {
                 current.activeCooldowns.mapValues { (_, value) -> (value - 1).coerceAtLeast(0) }
                     .filterValues { it > 0 }
