@@ -39,6 +39,12 @@ class FoundryCombatDriverTest {
         val seeds = (System.getenv("FOUNDRY_SEEDS") ?: "41").split(',').map { it.trim().toInt() }
         val loadouts = (System.getenv("FOUNDRY_LOADOUTS") ?: "weak,purchased").split(',')
         val fixtureXp = (System.getenv("FOUNDRY_XP") ?: "11000").toInt()
+        // Keep unlocks/stats intact while holding offensive choices to the lower-level set.
+        val skillPolicy = System.getenv("FOUNDRY_SKILL_POLICY") ?: "all"
+        require(skillPolicy in setOf("all", "pre9"))
+        val excludedSkills = if (skillPolicy == "pre9") requireNotNull(assets.loadProgressionData())
+            .levelUpSkills.values.flatMap { tiers -> tiers.filterKeys { it.toInt() >= 9 }.values }.toSet()
+            else emptySet()
         val policies = (System.getenv("FOUNDRY_POLICIES") ?: "first,support,pressure,defensive_support,defensive_pressure").split(',')
         require(policies.all { it in setOf("first", "support", "pressure", "defensive_support", "defensive_pressure") })
         for (seed in seeds) for (loadout in loadouts)
@@ -64,7 +70,8 @@ class FoundryCombatDriverTest {
                 environmentThemeManager = EnvironmentThemeManager(themes), encounterCoordinator = EncounterCoordinator(),
                 enemyIds = enemies, tutorialsEnabled = false,
                 elapsedRealtime = { dispatcher.scheduler.currentTime }, random = SeededCombatRandom(seed))
-            val name = "$seed-$loadout-$index-$policy" + if (fixtureXp == 11000) "" else "-xp$fixtureXp"
+            val name = "$seed-$loadout-$index-$policy" + (if (fixtureXp == 11000) "" else "-xp$fixtureXp") +
+                (if (skillPolicy == "all") "" else "-$skillPolicy")
             val start = dispatcher.scheduler.currentTime
             var opportunities = 0
             var exploited = 0
@@ -119,7 +126,7 @@ class FoundryCombatDriverTest {
                     if (target == exposed) exploited++
                     val priorities = listOf("zeke_overload_fists", "orion_disruption_pulse", "gh0st_system_crash",
                         "gh0st_venom_edge", "nova_arc_tether", "zeke_shatter_blow", "orion_prism_lance", "gh0st_headshot")
-                    val skill = vm.skillsForPlayer(actor).filter { it.id in priorities && vm.canUseSkill(actor, it) }
+                    val skill = vm.skillsForPlayer(actor).filter { it.id in priorities && it.id !in excludedSkills && vm.canUseSkill(actor, it) }
                         .minByOrNull { priorities.indexOf(it.id) }
                     if (skill != null) {
                         val targets = if (vm.targetRequirementFor(skill) == TargetRequirement.ENEMY)

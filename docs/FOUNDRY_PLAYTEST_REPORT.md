@@ -2,7 +2,15 @@
 
 Date: 2026-09-21
 
-Status: **LEVEL-7 SENSITIVITY COMPARISON COMPLETE / CAMPAIGN ROUTE VALIDATION PENDING**
+Status: **CONTROLLED SKILL COMPARISON COMPLETE / CAMPAIGN ROUTE VALIDATION PENDING**
+
+## Latest: level held separate from offensive skill choice
+
+After building release 1.3.48, added test-only `FOUNDRY_SKILL_POLICY=pre9`. It retains the level-9 fixture's unlocks/stats but excludes level-9-and-later skills from offensive selection. Seeds 41–70, `weak_ap,purchased_ap`, `support,pressure`, XP 11000: **720 terminal fights, 530 victories, 190 defeats, zero timeouts**. Evidence: `test-results/foundry-level9-pre9-30-seed/summary.txt` and the 720 `-pre9-trace.txt` files identified by that summary.
+
+All 720 corresponding action traces are byte-identical to the XP-6430 batch; normalized summaries also match. Thus the level-7/level-9 discrepancy in this experiment is caused by changed offensive choices, not level alone. This does not establish that every level-9 skill is weak: isolate Overload Fists, Disruption Pulse and System Crash individually before attributing the effect to a particular skill or altering production balance. Route-earned gear/income and attrition remain unverified.
+
+Evidence directories copied from the driver may also contain older trace files because build output is cumulative. Use each batch's summary as the authoritative run manifest, not a directory-wide file count.
 
 ## Latest: XP reconciliation and level-7 sensitivity
 
