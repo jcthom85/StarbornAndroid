@@ -28,7 +28,7 @@ class GameSessionStore {
     }
 
     fun restore(state: GameSessionState) {
-        val normalized = normalizeArmors(normalizeWeapons(normalizeEquipment(state)))
+        val normalized = normalizeArmors(normalizeWeapons(normalizeEquipment(state.withoutRetiredCompanion())))
         if (_state.value == normalized) return
         _state.value = normalized
     }
@@ -46,6 +46,7 @@ class GameSessionStore {
     }
 
     fun setPlayer(playerId: String?) {
+        if (playerId?.trim()?.equals("ollie", ignoreCase = true) == true) return
         _state.update {
             val sanitizedId = playerId
             val updatedLevels = if (sanitizedId != null) {
@@ -342,6 +343,7 @@ class GameSessionStore {
     }
 
     fun setEquippedWeapon(characterId: String, weaponId: String?) {
+        if (characterId.trim().equals("ollie", ignoreCase = true)) return
         if (characterId.isBlank()) return
         val normalizedId = characterId.trim().lowercase(Locale.getDefault())
         _state.update { state ->
@@ -362,6 +364,7 @@ class GameSessionStore {
     }
 
     fun setEquippedArmor(characterId: String, armorId: String?) {
+        if (characterId.trim().equals("ollie", ignoreCase = true)) return
         if (characterId.isBlank()) return
         val normalizedId = characterId.trim().lowercase(Locale.getDefault())
         _state.update { state ->
@@ -383,7 +386,7 @@ class GameSessionStore {
 
     fun setPartyMembers(ids: List<String>) {
         _state.update { state ->
-            val distinct = ids.distinct()
+            val distinct = ids.filterNot { it.trim().equals("ollie", ignoreCase = true) }.distinct()
             val filteredXp = state.partyMemberXp.filterKeys { it in distinct }
             val filteredLevels = state.partyMemberLevels.filterKeys { it in distinct }
             val seededXp = distinct.fold(filteredXp) { acc, id ->

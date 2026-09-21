@@ -10,15 +10,13 @@ object GearRules {
         "nova" to "gun",
         "zeke" to "glove",
         "orion" to "jewel",
-        "gh0st" to "sword",
-        "ollie" to "slingshot"
+        "gh0st" to "sword"
     )
     private val armorTypesByCharacter: Map<String, String> = mapOf(
         "nova" to "armor_nova",
         "zeke" to "armor_zeke",
         "orion" to "armor_orion",
-        "gh0st" to "armor_gh0st",
-        "ollie" to "armor_ollie"
+        "gh0st" to "armor_gh0st"
     )
     private val weaponTypes: Set<String> = weaponTypesByCharacter.values.toSet()
     private val charactersByWeaponType: Map<String, String> =
@@ -76,6 +74,7 @@ object GearRules {
         characterId: String?,
         itemTypeHint: String? = null
     ): Boolean {
+        if (characterId?.trim()?.equals("ollie", ignoreCase = true) == true) return false
         val normalizedSlot = normalize(slotId) ?: return false
         val (itemSlot, itemWeaponType) = resolveSlotAndWeaponType(equipment, itemTypeHint) ?: return false
         if (itemSlot != normalizedSlot) return false

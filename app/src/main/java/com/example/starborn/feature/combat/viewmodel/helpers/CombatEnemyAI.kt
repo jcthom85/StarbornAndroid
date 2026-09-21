@@ -492,11 +492,11 @@ class CombatEnemyAI(
     ): CombatAction {
         val enemyId = enemyState.combatant.id
         val brain = enemyBrains[enemyId] ?: EnemyBrain()
-        // Titan's authored counterplay: heavy attacks require a cooling turn.
-        // Respect skill availability (including Jammed) rather than bypassing it.
-        if (enemyId == "titan_walker_boss" && enemyActionHistory[enemyId]?.lastOrNull() in
-            setOf("missile_barrage", "titan_stomp")) {
-            val vent = skillById["vent_exposure"]
+        // Definitions are keyed by encounter instance, so duplicate enemies have independent cycles.
+        val recoveryId = enemyDefinitions[enemyId]?.recoveryAfter
+            ?.get(enemyActionHistory[enemyId]?.lastOrNull())
+        if (recoveryId != null) {
+            val vent = skillById[recoveryId]
             if (vent != null && vent.id in enemyState.combatant.skills && canEnemyUseSkill(enemyId, vent, state)) {
                 return CombatAction.SkillUse(enemyId, vent.id, listOf(enemyId))
             }

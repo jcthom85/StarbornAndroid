@@ -13,7 +13,7 @@ class GearRulesTest {
 
     @Test fun `generic earned armor fits all party members but not other slots`() {
         val armor = items.getValue("heat_liner")
-        for (owner in listOf("nova", "zeke", "orion", "gh0st", "ollie")) {
+        for (owner in listOf("nova", "zeke", "orion", "gh0st")) {
             assertTrue(GearRules.matchesSlot(armor.equipment, "armor", owner, armor.type))
             assertFalse(GearRules.matchesSlot(armor.equipment, "weapon", owner, armor.type))
             assertFalse(GearRules.matchesSlot(armor.equipment, "accessory", owner, armor.type))

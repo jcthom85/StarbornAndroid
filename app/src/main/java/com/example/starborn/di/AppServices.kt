@@ -173,8 +173,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false) {
         "nova" to "nova_flux_liner",
         "zeke" to "zeke_surge_harness",
         "orion" to "orion_channeler_mantle",
-        "gh0st" to "gh0st_phaseweave_jacket",
-        "ollie" to "basic_vest"
+        "gh0st" to "gh0st_phaseweave_jacket"
     )
 
     private val defaultWeaponsByCharacter = mapOf(
@@ -1593,7 +1592,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false) {
             it.copy(discovered = true, repaired = true, installed = true)
         }
         sessionStore.setRoom("astra_common_room")
-        sessionStore.visitNode("astra_common_node")
+        sessionStore.visitNode("astra_bridge_node")
         true
     }.getOrElse { false }
 

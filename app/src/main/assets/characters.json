@@ -66,22 +66,5 @@
         ],
         "mini_icon_path": "images/characters/gh0st_portrait.png",
         "combat_icon_path": "images/characters/gh0st_combat.png"
-    },
-    {
-        "id": "ollie",
-        "name": "Ollie",
-        "level": 1,
-        "xp": 0,
-        "hp": 50,
-        "strength": 4,
-        "vitality": 5,
-        "agility": 8,
-        "focus": 6,
-        "luck": 8,
-        "skills": [
-            "slingshot"
-        ],
-        "mini_icon_path": "images/characters/ollie_portrait.png",
-        "combat_icon_path": "images/characters/ollie_combat.png"
     }
 ]

@@ -23,9 +23,10 @@ object DebugFixtureBuilder {
                 activeQuests = emptySet(), trackedQuestId = null, questStageById = emptyMap(),
                 questTasksCompleted = emptyMap(),
                 completedMilestones = setOf("ms_w2_mq05_complete", cabinet.discoveryMilestone, cabinet.repairedMilestone),
-                revealedNodes = setOf("astra_common_node", "astra_bridge_node"),
-                unlockedNodes = setOf("astra_common_node", "astra_bridge_node"),
-                visitedNodes = setOf("astra_common_node"),
+                revealedNodes = setOf("astra_bridge_node"),
+                unlockedNodes = setOf("astra_bridge_node"),
+                visitedNodes = setOf("astra_bridge_node"),
+                astraReturnWorldId = "world_3", astraReturnHubId = "hub_5_lower_city", astraReturnRoomId = "spire_vent_output",
                 arcadeProgress = mapOf(cabinet.id to com.example.starborn.domain.session.ArcadeCabinetProgress(
                     discovered = true, repaired = true, installed = true))
             ))

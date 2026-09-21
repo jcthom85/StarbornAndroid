@@ -25,12 +25,12 @@ android {
         applicationId = "com.junewiregames.starborn.prealpha"
         minSdk = 26
         targetSdk = 36
-        versionCode = 131
-        versionName = "1.3.47"
+        versionCode = 132
+        versionName = "1.3.48"
 
         // Temporary testing access: keep the scenario browser available in Play builds.
         // Set this to false before the public/production release.
-        buildConfigField("boolean", "ENABLE_SCENARIO_MENU", "false")
+        buildConfigField("boolean", "ENABLE_SCENARIO_MENU", "true")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -49,10 +49,10 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("boolean", "ENABLE_SCENARIO_MENU", "false")
+            buildConfigField("boolean", "ENABLE_SCENARIO_MENU", "true")
         }
         release {
-            buildConfigField("boolean", "ENABLE_SCENARIO_MENU", "false")
+            buildConfigField("boolean", "ENABLE_SCENARIO_MENU", "true")
             isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("release")
             proguardFiles(

@@ -1495,6 +1495,24 @@ class CombatViewModelTest {
         )
     }
 
+    @Test
+    fun authoredFoundryRepairTargetsSquadAndCoolingTargetsCaster() {
+        val vm = createMinimalCombatViewModel("torch_cut")
+        try {
+            val assets = WorldAssetDataSource(com.example.starborn.data.assets.AssetJsonReader(
+                com.example.starborn.core.platform.DesktopAssetProvider(), com.example.starborn.core.MoshiProvider.instance))
+            val skills = assets.loadSkills().associateBy { it.id }
+            val method = CombatViewModel::class.java.getDeclaredMethod("determineSkillTargeting", Skill::class.java)
+                .apply { isAccessible = true }
+            assertEquals(com.example.starborn.feature.combat.viewmodel.SkillTargeting.ALL_ALLIES,
+                method.invoke(vm, skills.getValue("field_weld")))
+            assertEquals(com.example.starborn.feature.combat.viewmodel.SkillTargeting.SELF,
+                method.invoke(vm, skills.getValue("slag_cooldown")))
+        } finally {
+            vm.viewModelScope.cancel()
+        }
+    }
+
     private fun createWeaknessRewardViewModel(): CombatViewModel {
         val player = Player(
             id = "nova",

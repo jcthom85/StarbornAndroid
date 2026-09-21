@@ -26,6 +26,8 @@ data class Enemy(
     val resistances: Resistances = Resistances(),
     val tags: List<String> = emptyList(),
     val abilities: List<String> = emptyList(),
+    @Json(name = "recovery_after")
+    val recoveryAfter: Map<String, String> = emptyMap(),
     val flavor: String = "",
     @Json(name = "xp_reward")
     val xpReward: Int,

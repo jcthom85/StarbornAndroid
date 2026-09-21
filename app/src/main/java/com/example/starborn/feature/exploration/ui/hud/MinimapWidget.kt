@@ -25,6 +25,8 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import com.example.starborn.feature.exploration.ui.drawDarkRoomOverlay
 import com.example.starborn.feature.exploration.viewmodel.MinimapUiState
 import kotlin.math.abs
@@ -56,6 +58,10 @@ fun MinimapWidget(
     Surface(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
+            .semantics {
+                contentDescription = if (obscured) "Minimap obscured by darkness" else
+                    "Minimap. " + nodeExitDescription(minimap?.cells.orEmpty())
+            }
             .clickable(enabled = !obscured, onClick = onLegend),
         color = Color.Transparent,
         shape = RoundedCornerShape(12.dp)
@@ -186,6 +192,9 @@ fun MinimapWidget(
                                 hatchColor = Color.White.copy(alpha = 0.08f),
                                 hatchSpacing = overlaySize.width / 4f
                             )
+                        }
+                        cell.nodeExits.forEach { exit ->
+                            drawNodeExitMarker(center, exit, pipSize * 0.6f, step * 0.65f)
                         }
                     }
                 }

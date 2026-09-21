@@ -20,5 +20,6 @@ data class Skill(
     val statusApplications: List<String>? = null,
     @Json(name = "uses_per_battle")
     val usesPerBattle: Int? = null,
-    val conditions: List<String>? = null
+    val conditions: List<String>? = null,
+    val targeting: String? = null
 )

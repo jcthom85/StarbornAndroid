@@ -40,7 +40,9 @@ class FunAuditReportTest {
         File(reports, "skill-decisions.json").writeText(skill.toString(2))
         File(reports, "skill-decisions.md").writeText(skillMarkdown(skill))
 
-        assertEquals(121, skills.size)
+        assertEquals(123, skills.size)
+        assertTrue(skills.any { it.id == "field_weld" })
+        assertTrue(skills.any { it.id == "slag_cooldown" })
         assertTrue(skills.any { it.id == "nova_link" })
         assertEquals(25, combat.getJSONArray("encounters").length())
         assertEquals(0, combat.getJSONArray("unresolved").length())

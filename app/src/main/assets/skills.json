@@ -1801,6 +1801,33 @@
     ]
   },
   {
+    "id": "field_weld",
+    "name": "Field Weld",
+    "character": "enemy",
+    "type": "heal",
+    "description": "Repairs the welder's squad. Its portable repair spool supports only two uses per battle.",
+    "combat_tags": ["heal", "support"],
+    "targeting": "all_allies",
+    "base_power": 45,
+    "scaling": "focus",
+    "cooldown": 3,
+    "uses_per_battle": 2,
+    "status_applications": []
+  },
+  {
+    "id": "slag_cooldown",
+    "name": "Slag Shell Cooling",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "The golem opens its overheated slag shell, sacrificing its action and armor while it cools.",
+    "combat_tags": ["tactical"],
+    "targeting": "self",
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 0,
+    "status_applications": ["radiators_exposed"]
+  },
+  {
     "id": "molten_slam",
     "name": "Molten Slam",
     "character": "enemy",

@@ -13,6 +13,7 @@ import com.example.starborn.domain.model.Quest
 import com.example.starborn.domain.node.NodeProgressionEvaluator
 import com.example.starborn.domain.node.NodeVisibility
 import com.example.starborn.domain.session.GameSessionState
+import com.example.starborn.domain.session.AstraTravel
 import com.example.starborn.domain.session.GameSessionStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -132,7 +133,7 @@ class HubViewModel(
             }.toMutableList().apply {
                 if (hub.id != ASTRA_HUB_ID && ASTRA_UNLOCK_MILESTONE in session.completedMilestones) {
                     add(astraAccessNode())
-                } else if (hub.id == ASTRA_HUB_ID && session.astraReturnHubId != null) {
+                } else if (hub.id == ASTRA_HUB_ID) {
                     add(astraDisembarkNode())
                 }
             }
@@ -164,10 +165,11 @@ class HubViewModel(
 
         if (node.special == SPECIAL_ASTRA) {
             val session = sessionStore.state.value
+            if (session.hubId == ASTRA_HUB_ID) return
             sessionStore.setAstraReturnLocation(session.worldId, session.hubId, session.roomId)
             sessionStore.setWorld(ASTRA_WORLD_ID)
             sessionStore.setHub(ASTRA_HUB_ID)
-            sessionStore.setRoom(ASTRA_BRIDGE_ROOM_ID)
+            sessionStore.setRoom(AstraTravel.ENTRY_ROOM_ID)
             sessionStore.visitNode(ASTRA_BRIDGE_NODE_ID)
             onEnter(node)
             return
@@ -175,9 +177,11 @@ class HubViewModel(
 
         if (node.special == SPECIAL_DISEMBARK) {
             val session = sessionStore.state.value
-            sessionStore.setWorld(session.astraReturnWorldId)
-            sessionStore.setHub(session.astraReturnHubId)
-            sessionStore.setRoom(session.astraReturnRoomId)
+            val dock = AstraTravel.dockingLocation(session, hubsById.values.toList(), nodesByHub.values.flatten())
+            sessionStore.setWorld(dock.worldId)
+            sessionStore.setHub(dock.hubId)
+            sessionStore.setRoom(dock.roomId)
+            sessionStore.visitNode(dock.nodeId)
             sessionStore.clearAstraReturnLocation()
             onEnter(node)
             return
@@ -226,7 +230,7 @@ class HubViewModel(
     private fun astraAccessNode() = HubNodeUi(
         id = ASTRA_ACCESS_ID,
         title = "The Astra",
-        entryRoom = ASTRA_BRIDGE_ROOM_ID,
+        entryRoom = AstraTravel.ENTRY_ROOM_ID,
         centerX = 0.5f,
         centerY = 0.88f,
         sizeHint = 240f,

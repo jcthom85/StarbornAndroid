@@ -58,9 +58,5 @@
   "source_spire_thought_node": "A tower of thought turns inward, built from doubts sharp enough to leave marks.",
   "source_center_node": "Everything bends toward the center, where the Source waits without distance or mercy.",
   "source_new_world_node": "A horizon opens beyond the impossible, bright with danger and the shape of a choice.",
-  "astra_bridge_node": "Forward glass, worn controls, and quiet engine hum make this the place the crew becomes a course.",
-  "astra_common_node": "Mismatched seats and warm lights gather the crew between disasters, giving silence somewhere to rest.",
-  "astra_quarters_node": "Narrow bunks and personal clutter turn steel walls into something dangerously close to home.",
-  "astra_cargo_node": "Strapped crates and spare parts fill the bay with the useful kind of mess.",
-  "astra_simulation_node": "Hard-light grids wait in the dark, ready to turn practice into bruises."
+  "astra_bridge_node": "Board through the cargo ramp and walk between the common room, bridge, quarters, and simulation deck. Disembark from the cargo bay."
 }

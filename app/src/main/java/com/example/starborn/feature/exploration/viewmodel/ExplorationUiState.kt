@@ -75,6 +75,7 @@ data class ExplorationUiState(
     val isSimulationDeckVisible: Boolean = false,
     val isTapeDeckVisible: Boolean = false,
     val isAstraNavConsoleVisible: Boolean = false,
+    val astraDestinations: List<com.example.starborn.domain.session.AstraDestination> = emptyList(),
     val playingTapeId: String? = null,
     val settings: SettingsUiState = SettingsUiState(),
     val inventoryPreview: List<InventoryPreviewItemUi> = emptyList(),
@@ -289,7 +290,15 @@ data class MinimapCellUi(
     val pathHints: Set<String> = emptySet(),
     val services: Set<MinimapService> = emptySet(),
     val isDark: Boolean = false,
-    val isPreview: Boolean = false
+    val isPreview: Boolean = false,
+    val nodeExits: List<MapNodeExitUi> = emptyList()
+)
+
+data class MapNodeExitUi(
+    val direction: String,
+    val destinationNodeId: String,
+    val destinationTitle: String,
+    val blocked: Boolean = false
 )
 
 enum class MinimapService {

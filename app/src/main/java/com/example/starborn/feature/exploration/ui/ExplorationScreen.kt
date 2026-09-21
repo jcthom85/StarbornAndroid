@@ -126,6 +126,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.text.rememberTextMeasurer
+import com.example.starborn.feature.exploration.ui.hud.drawFullMapNodeExits
+import com.example.starborn.feature.exploration.ui.hud.drawNodeExitMarker
+import com.example.starborn.feature.exploration.ui.hud.nodeExitDescription
+import com.example.starborn.feature.exploration.viewmodel.MapNodeExitUi
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Brush
@@ -1042,7 +1047,8 @@ fun ExplorationScreen(
                             groundItems = visibleGroundItems,
                             serviceActions = serviceQuickActions,
                             canReturnToHub = uiState.canReturnToHub && !blockingOverlayActive,
-                            sectorTitle = uiState.currentHub?.title,
+                            sectorTitle = if (uiState.currentHub?.id == "hub_astra") "Cargo ramp" else uiState.currentHub?.title,
+                            isDisembarking = uiState.currentHub?.id == "hub_astra",
                             onReturnToHub = { viewModel.requestReturnToHub() },
                             itemDisplayName = { itemId -> viewModel.itemDisplayName(itemId) },
                             itemDetailLabel = { itemId -> viewModel.roomItemDetailLabel(itemId) },
@@ -1136,6 +1142,7 @@ fun ExplorationScreen(
         }
         if (uiState.isAstraNavConsoleVisible) {
             AstraNavConsoleDialog(
+                destinations = uiState.astraDestinations,
                 onSelectDestination = { worldId, hubId, roomId, nodeId ->
                     viewModel.travelToWorldFromAstra(worldId, hubId, roomId, nodeId)
                 },
@@ -1446,7 +1453,8 @@ fun ExplorationScreen(
             ) {
                 if (uiState.canReturnToHub && uiState.prompt == null && !blockingOverlayActive) {
                     ReturnHubButton(
-                        destinationName = uiState.currentHub?.title,
+                        destinationName = if (uiState.currentHub?.id == "hub_astra") "Cargo ramp" else uiState.currentHub?.title,
+                        isDisembarking = uiState.currentHub?.id == "hub_astra",
                         onClick = { viewModel.requestReturnToHub() }
                     )
                 } else {
@@ -3363,6 +3371,7 @@ private data class SimulationProgram(
 
 @Composable
 private fun AstraNavConsoleDialog(
+    destinations: List<com.example.starborn.domain.session.AstraDestination>,
     onSelectDestination: (worldId: String, hubId: String, roomId: String, nodeId: String) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
@@ -3409,18 +3418,9 @@ private fun AstraNavConsoleDialog(
                 }
 
                 Text(
-                    text = "Select an atmospheric landing sector to deploy the crew via Astra transport:",
+                    text = "Choose an established route. New destinations become available as the journey progresses. To return to your docking location, use the cargo ramp.",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.White.copy(alpha = 0.75f)
-                )
-
-                val destinations = listOf(
-                    AstraDestination("World 1: The Outskirts", "Mining colony perimeter, repair workshops, and deep scrap shafts.", "world_1", "hub_1_homestead", "pit_L1_landing", "pit"),
-                    AstraDestination("World 2: Tideglass Coast", "Bioluminescent coastal shallows, ancient ruins, and jungle canopies.", "world_2", "hub_3_sector9", "sector9_crash_site", "sector9_landing"),
-                    AstraDestination("World 3: Zenith Spire", "Corporate megacity towers, monorail lines, and sewer ratlines.", "world_3", "hub_5_lower_city", "spire_vent_output", "spire_vent_output"),
-                    AstraDestination("World 4: The Slag Foundry", "Heavy industrial smelters, conveyor networks, and magma conduits.", "world_4", "hub_7_slag_pits", "foundry_slag_river", "foundry_slag_river"),
-                    AstraDestination("World 5: Dominion Orbital Ring", "Zero-G executive facilities, server crypts, and frozen void corridors.", "world_5", "hub_9_orbital_ring", "orbital_executive_dock", "orbital_executive_dock"),
-                    AstraDestination("World 6: Source Singularity", "Post-singularity morning streets, memory bridges, and the new world.", "world_6", "hub_11_event_horizon", "source_campfire", "source_campfire_node")
                 )
 
                 destinations.forEach { dest ->
@@ -3471,15 +3471,6 @@ private fun AstraNavConsoleDialog(
         }
     }
 }
-
-private data class AstraDestination(
-    val title: String,
-    val desc: String,
-    val worldId: String,
-    val hubId: String,
-    val roomId: String,
-    val nodeId: String
-)
 
 @Composable
 private fun TapeDeckDialog(
@@ -4298,6 +4289,17 @@ private fun MapLegendOverlay(
                 }
 
                 LegendEntry(
+                    title = "Passage to another area",
+                    description = "Gold arrows point out of a room into another area. A padlock means the passage is blocked; double arrows mean up or down. Unknown destinations stay unnamed.",
+                    textColor = textColor
+                ) {
+                    Canvas(Modifier.size(36.dp)) {
+                        drawNodeExitMarker(Offset(size.width * 0.2f, size.height * 0.5f),
+                            MapNodeExitUi("east", "", ""), 0f, size.width * 0.6f)
+                    }
+                }
+
+                LegendEntry(
                     title = "Player marker",
                     description = "The glowing dot on the minimap is you.",
                     textColor = textColor
@@ -4486,6 +4488,7 @@ fun FullMapCanvas(
     modifier: Modifier = Modifier
 ) {
     val cells = fullMap.cells
+    val textMeasurer = rememberTextMeasurer()
     val density = LocalDensity.current
     val primaryColor = MaterialTheme.colorScheme.primary
     val visitedColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
@@ -4512,6 +4515,7 @@ fun FullMapCanvas(
     val heightDp = with(density) { (spacing * FULL_MAP_ROWS).toDp() }.coerceAtLeast(200.dp)
     Canvas(
         modifier = modifier
+            .semantics { contentDescription = "Area map. " + nodeExitDescription(cells) }
             .fillMaxWidth()
             .height(heightDp)
     ) {
@@ -4574,6 +4578,11 @@ fun FullMapCanvas(
                     }
                 }
             }
+
+            drawFullMapNodeExits(cells, centerOf = { cell ->
+                Offset(originX + (cell.gridX - displayMinX) * spacing + cellSizePx / 2f,
+                    originY + (displayMaxY - cell.gridY) * spacing + cellSizePx / 2f)
+            }, cellSize = cellSizePx, textMeasurer = textMeasurer)
 
             cells.filter { it.isCurrent }.forEach { cell ->
                 val centerX = originX + (cell.gridX - displayMinX) * spacing + cellSizePx / 2f
@@ -4690,6 +4699,7 @@ private fun MenuToggleButton(
 @Composable
 private fun ReturnHubButton(
     destinationName: String? = null,
+    isDisembarking: Boolean = false,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -4753,7 +4763,7 @@ private fun ReturnHubButton(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "OVERWORLD",
+                    text = if (isDisembarking) "DISEMBARK" else "OVERWORLD",
                     color = Color.White.copy(alpha = 0.92f),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
@@ -5363,6 +5373,7 @@ private fun RoomEntitySection(
     serviceActions: List<QuickMenuAction> = emptyList(),
     canReturnToHub: Boolean = false,
     sectorTitle: String? = null,
+    isDisembarking: Boolean = false,
     onReturnToHub: () -> Unit = {},
     itemDisplayName: (String) -> String,
     itemDetailLabel: (String) -> String?,
@@ -5395,6 +5406,7 @@ private fun RoomEntitySection(
             if (canReturnToHub) {
                 OverworldGatewayCard(
                     sectorTitle = sectorTitle,
+                    isDisembarking = isDisembarking,
                     borderColor = borderColor,
                     isDark = isDark,
                     onClick = onReturnToHub
@@ -5566,6 +5578,7 @@ private fun ServicePresenceChip(
 @Composable
 private fun OverworldGatewayCard(
     sectorTitle: String?,
+    isDisembarking: Boolean = false,
     borderColor: Color,
     isDark: Boolean,
     onClick: () -> Unit,
@@ -5582,8 +5595,8 @@ private fun OverworldGatewayCard(
             .clip(shape)
             .clickable(onClick = onClick)
             .clearAndSetSemantics {
-                contentDescription = "Exit to Overworld: ${sectorTitle ?: "Colony Map"}"
-                onClick(label = "Exit to Overworld") {
+                contentDescription = if (isDisembarking) "Disembark from the Astra" else "Exit to Overworld: ${sectorTitle ?: "Colony Map"}"
+                onClick(label = if (isDisembarking) "Disembark" else "Exit to Overworld") {
                     onClick()
                     true
                 }
@@ -5640,7 +5653,7 @@ private fun OverworldGatewayCard(
                     }
                 }
                 Text(
-                    text = "OVERWORLD MAP",
+                    text = if (isDisembarking) "DISEMBARK" else "OVERWORLD MAP",
                     color = Color.White.copy(alpha = 0.94f),
                     style = MaterialTheme.typography.labelMedium.copy(
                         fontWeight = FontWeight.Bold,

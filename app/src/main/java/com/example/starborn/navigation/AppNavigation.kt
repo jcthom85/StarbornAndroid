@@ -80,14 +80,16 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 @Composable
 fun NavigationHost(
     navController: NavHostController = rememberNavController(),
-    showCombatActionText: Boolean = true
+    showCombatActionText: Boolean = true,
+    providedServices: AppServices? = null,
+    initialDestination: String = MainMenu.route
 ) {
     val context = LocalContext.current
     val hostView = LocalView.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val keepScreenAwake = shouldKeepScreenAwake(currentBackStackEntry?.destination?.route)
-    val services = remember { AppServices(context) }
+    val services = remember(providedServices) { providedServices ?: AppServices(context) }
     val userSettings by services.userSettingsStore.settings.collectAsState(initial = UserSettings())
     val sessionState by services.sessionStore.state.collectAsState()
     val environmentThemeState by services.environmentThemeManager.state.collectAsState()
@@ -139,7 +141,7 @@ fun NavigationHost(
 
     NavHost(
         navController = navController,
-        startDestination = MainMenu.route
+        startDestination = initialDestination
     ) {
         composable(MainMenu.route) {
             val mainMenuViewModel: MainMenuViewModel = viewModel(factory = MainMenuViewModelFactory(services))

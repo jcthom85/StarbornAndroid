@@ -124,7 +124,7 @@ object DebugScenarioCatalog {
         hubScenario("node_progression_w1", "Node Progression / World 1", "World 1: The Mines", "Open Homestead with normal discovery state and the Transit Checkpoint visibly locked."),
         hubScenario("node_progression_w2", "Node Progression / World 2", "World 2: Sector 9", "Open Jungle Ruins with only the Crash Site discovered; reveal other nodes through exploration."),
         hubScenario("astra_access", "Astra Access / Regional Hub", "World 3: The Spire", "Open the Lower City after repairing the Astra and test entering the ship from a regional hub."),
-        hubScenario("astra_home", "Astra Home Base", "The Astra", "Start aboard the Astra with crew conversations, rest, disembark, and staged room locks available."),
+        hubScenario("astra_home", "Astra Home Base", "The Astra", "Explore the connected ship, talk to the crew, rest, and disembark through the cargo ramp."),
 
         // --- SYSTEM & CRAFTING QA SCENARIOS ---
         scenario("full_inventory", "Full Inventory", "Start at the beginning with all gear, skills, party members, and credits.", DebugScenarioCategory.SYSTEM, worldLabel = "World 1: The Mines"),

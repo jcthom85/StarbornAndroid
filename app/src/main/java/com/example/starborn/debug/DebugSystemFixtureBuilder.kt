@@ -55,6 +55,9 @@ object DebugSystemFixtureBuilder {
             partyMemberLevels = party.associateWith { 1 }, partyMemberXp = party.associateWith { 0 },
             revealedNodes = setOf(node.id), unlockedNodes = setOf(node.id), visitedNodes = setOf(node.id), inventory = stock
         ))
+        if (!fishing) {
+            store.setAstraReturnLocation("world_3", "hub_5_lower_city", "spire_vent_output")
+        }
         services.inventoryService.restore(stock)
         return true
     }

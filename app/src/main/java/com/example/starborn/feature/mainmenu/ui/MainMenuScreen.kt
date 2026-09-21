@@ -488,14 +488,6 @@ fun MainMenuScreen(
             verticalArrangement = Arrangement.spacedBy(13.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (BuildConfig.ENABLE_SCENARIO_MENU) {
-                StarbornTitleButton(
-                    text = "BurgQuest Demo",
-                    onClick = { showBurgfestDialog = true },
-                    enabled = buttonsInteractable,
-                    primary = true
-                )
-            }
             StarbornTitleButton(
                 text = "New Game",
                 onClick = {
@@ -506,7 +498,7 @@ fun MainMenuScreen(
                     }
                 },
                 enabled = buttonsInteractable,
-                primary = !BuildConfig.ENABLE_SCENARIO_MENU
+                primary = true
             )
             if (BuildConfig.ENABLE_SCENARIO_MENU) {
                 StarbornTitleButton(

@@ -89,7 +89,6 @@
         "zeke_shock_fists",
         "orion_prism_focus",
         "gh0st_whisperblade",
-        "basic_slingshot",
         "pulse_grenade",
         "nova_plasma_shotgun",
         "zeke_quake_knuckles",
@@ -173,17 +172,14 @@
         "zeke_surge_harness",
         "orion_channeler_mantle",
         "gh0st_phaseweave_jacket",
-        "basic_vest",
         "nova_starline_jacket",
         "zeke_brawler_rig",
         "orion_driftweave_cloak",
         "gh0st_killer_harness",
-        "basic_jacket",
         "nova_helioguard_plate",
         "zeke_bulwark_plate",
         "orion_ward_coat",
-        "gh0st_nullguard_coat",
-        "ollie_canopy_mantle"
+        "gh0st_nullguard_coat"
       ],
       "rules": {
         "types_in": [],
@@ -210,11 +206,6 @@
             "ms_w1_mq03_complete"
           ]
         },
-        "basic_jacket": {
-          "milestones": [
-            "ms_w1_mq03_complete"
-          ]
-        },
         "nova_helioguard_plate": {
           "milestones": [
             "ms_w1_mq05_complete"
@@ -231,11 +222,6 @@
           ]
         },
         "gh0st_nullguard_coat": {
-          "milestones": [
-            "ms_w1_mq05_complete"
-          ]
-        },
-        "ollie_canopy_mantle": {
           "milestones": [
             "ms_w1_mq05_complete"
           ]

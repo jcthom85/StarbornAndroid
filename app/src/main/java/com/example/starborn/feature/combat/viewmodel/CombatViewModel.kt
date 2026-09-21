@@ -3224,6 +3224,12 @@ class CombatViewModel(
     }
 
 private fun determineSkillTargeting(skill: Skill): SkillTargeting {
+        when (skill.targeting) {
+            "self" -> return SkillTargeting.SELF
+            "all_allies" -> return SkillTargeting.ALL_ALLIES
+            "all_enemies" -> return SkillTargeting.ALL_ENEMIES
+            "single_enemy" -> return SkillTargeting.SINGLE_ENEMY
+        }
         // Positive healing power is not damage; these authored repairs target
         // their caster even though the generic power-based fallback does not.
         if (skill.id == "driller_core_repair" || skill.id == "nature_heal") return SkillTargeting.SELF

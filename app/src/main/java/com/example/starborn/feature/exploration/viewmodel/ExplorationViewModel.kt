@@ -4,6 +4,7 @@ import com.example.starborn.feature.exploration.viewmodel.helpers.*
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.starborn.domain.session.AstraTravel
 import androidx.lifecycle.viewModelScope
 import com.example.starborn.core.DefaultDispatcherProvider
 import com.example.starborn.core.DispatcherProvider
@@ -629,6 +630,7 @@ class ExplorationViewModel(
     private var roomsByEnvironment: Map<String, List<Room>> = emptyMap()
     private var roomsByNodeId: Map<String, List<Room>> = emptyMap()
     private var nodeIdByRoomId: Map<String, String> = emptyMap()
+    private var nodeExitResolver = NodeExitResolver(emptyList(), emptyList())
     private val portraitBySpeaker: MutableMap<String, String> = mutableMapOf()
     private val emotesBySpeaker: MutableMap<String, Map<String, String>> = mutableMapOf()
     private val portraitOverrides: Map<String, String> = mapOf(
@@ -1251,7 +1253,7 @@ class ExplorationViewModel(
     }
 
     private fun handlePartyMemberJoined(memberId: String) {
-        applyPartyMemberRoomOverrides(memberId)
+        if (memberId.trim().equals("ollie", ignoreCase = true)) return
         val displayName = charactersById[memberId]?.name
             ?: memberId.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
         val message = "${displayName.ifBlank { "New party member" }} joined the party."
@@ -1261,17 +1263,6 @@ class ExplorationViewModel(
             message = message,
             accentColor = EVENT_ANNOUNCEMENT_ACCENT
         )
-    }
-
-    private fun applyPartyMemberRoomOverrides(memberId: String) {
-        val normalized = memberId.lowercase(Locale.getDefault())
-        if (normalized == "ollie") {
-            removeNpcFromRoom(
-                roomId = "town_8",
-                npcId = "Ollie",
-                descriptionRemovals = listOf("Ollie waves to you.", "Ollie waves to you")
-            )
-        }
     }
 
     private fun removeNpcFromRoom(roomId: String, npcId: String, descriptionRemovals: List<String> = emptyList()) {
@@ -1341,6 +1332,10 @@ class ExplorationViewModel(
 
     private fun updateMinimap(currentRoom: Room?) {
         currentRoom?.let { room ->
+            if (nodeIdByRoomId[room.id] == AstraTravel.NODE_ID) {
+                // A familiar ship has a deck plan, including cabins not yet visited.
+                discoveredRooms.addAll(roomsByNodeId[AstraTravel.NODE_ID].orEmpty().map { it.id })
+            }
             markDiscovered(room)
         }
         val minimap = currentRoom?.let { buildMinimapState(it) }
@@ -1350,6 +1345,7 @@ class ExplorationViewModel(
 
     private fun buildMinimapState(currentRoom: Room): MinimapUiState {
         return MapStateBuilder.buildMinimapState(
+            nodeExits = { nodeExitResolver.exits(it, sessionStore.state.value) },
             currentRoom = currentRoom,
             roomsInContext = roomsForMaps(currentRoom),
             visitedRooms = visitedRooms,
@@ -1377,6 +1373,7 @@ class ExplorationViewModel(
 
     private fun buildFullMapState(currentRoom: Room): FullMapUiState {
         return MapStateBuilder.buildFullMapState(
+            nodeExits = { nodeExitResolver.exits(it, sessionStore.state.value) },
             currentRoom = currentRoom,
             roomsInContext = roomsForMaps(currentRoom),
             visitedRooms = visitedRooms,
@@ -1673,7 +1670,14 @@ class ExplorationViewModel(
             _uiState.update { it.copy(isTapeDeckVisible = true) }
         }
         if (actionId.equals("astra_nav_console", ignoreCase = true)) {
-            _uiState.update { it.copy(isAstraNavConsoleVisible = true) }
+            _uiState.update { it.copy(
+                isAstraNavConsoleVisible = true,
+                astraDestinations = AstraTravel.availableDestinations(sessionStore.state.value)
+            ) }
+        }
+        if (actionId.equals("astra_disembark", ignoreCase = true)) {
+            disembarkAstra()
+            return
         }
         if (actionId.equals("source_board_astra", ignoreCase = true)) {
             boardAstraFromWorld()
@@ -1686,10 +1690,20 @@ class ExplorationViewModel(
     }
 
     fun travelToWorldFromAstra(worldId: String, hubId: String, roomId: String, nodeId: String) {
-        dismissAstraNavConsole()
         viewModelScope.launch(dispatchers.main) {
+            val session = sessionStore.state.value
+            val destination = AstraTravel.availableDestinations(session).firstOrNull {
+                it.worldId == worldId && it.hubId == hubId && it.roomId == roomId && it.nodeId == nodeId
+            }
+            if (session.hubId != AstraTravel.HUB_ID || session.roomId != "astra_bridge" || destination == null) {
+                postStatus("That route is not available yet.")
+                return@launch
+            }
+            dismissAstraNavConsole()
+            sessionStore.clearAstraReturnLocation()
             sessionStore.setWorld(worldId)
             sessionStore.setHub(hubId)
+            sessionStore.setRoom(roomId)
             sessionStore.visitNode(nodeId)
             warpToRoom(roomId)
             playUiCue("menu_action")
@@ -1700,11 +1714,13 @@ class ExplorationViewModel(
     private fun boardAstraFromWorld() {
         viewModelScope.launch(dispatchers.main) {
             val session = sessionStore.state.value
+            if (session.hubId == AstraTravel.HUB_ID) return@launch
             sessionStore.setAstraReturnLocation(session.worldId, session.hubId, session.roomId)
             sessionStore.setWorld("world_astra")
             sessionStore.setHub("hub_astra")
-            sessionStore.visitNode("astra_bridge_node")
-            warpToRoom("astra_bridge")
+            sessionStore.setRoom(AstraTravel.ENTRY_ROOM_ID)
+            sessionStore.visitNode(AstraTravel.NODE_ID)
+            warpToRoom(AstraTravel.ENTRY_ROOM_ID)
             playUiCue("menu_action")
             postStatus("Astra boarding sequence complete.")
         }
@@ -1712,6 +1728,22 @@ class ExplorationViewModel(
 
     fun dismissSimulationDeck() {
         _uiState.update { it.copy(isSimulationDeckVisible = false) }
+    }
+
+    private fun disembarkAstra() {
+        viewModelScope.launch(dispatchers.main) {
+            val session = sessionStore.state.value
+            if (session.hubId != AstraTravel.HUB_ID || session.roomId != AstraTravel.ENTRY_ROOM_ID) return@launch
+            val dock = AstraTravel.dockingLocation(session, worldAssets.loadHubs(), worldAssets.loadHubNodes())
+            sessionStore.setWorld(dock.worldId)
+            sessionStore.setHub(dock.hubId)
+            sessionStore.setRoom(dock.roomId)
+            sessionStore.visitNode(dock.nodeId)
+            warpToRoom(dock.roomId)
+            sessionStore.clearAstraReturnLocation()
+            playUiCue("menu_action")
+            postStatus("Disembarked from the Astra.")
+        }
     }
 
     fun launchSimulationCombat(enemyIds: List<String>) {
@@ -1818,6 +1850,12 @@ class ExplorationViewModel(
                 if (!_uiState.value.isLoading) {
                     roomsById.keys.forEach { roomId ->
                         reevaluateBlockedDirections(roomId, silent = false)
+                    }
+                    // Discovery and gate changes can rename/unlock an exit without moving rooms.
+                    _uiState.value.currentRoom?.let { room ->
+                        val minimap = buildMinimapState(room)
+                        val fullMap = buildFullMapState(room)
+                        _uiState.update { it.copy(minimap = minimap, fullMap = fullMap) }
                     }
                 }
                 val currentRoomId = _uiState.value.currentRoom?.id
@@ -2123,7 +2161,6 @@ class ExplorationViewModel(
             "scene_fixers_favor_table" -> "Tap the tinkering table when Jed calls you over to begin the tutorial."
             "scene_fixers_favor_craft" -> "Follow Jed's prompts to slot parts and press Craft to seal the repair."
             "scene_fixers_favor_return" -> "Close the bench and talk to Jed again to wrap up the repair session."
-            "scene_ollie_recruitment" -> "Tap ally portraits on the HUD to swap party members or hear their guidance."
             "scene_market_locator" -> "Use the minimap to follow open connections through the Scrap Yard to reach Jed's Workshop."
             "scene_market_journal" -> "Open your journal from the HUD to track errands and area summaries."
             else -> null
@@ -2206,13 +2243,13 @@ class ExplorationViewModel(
                 room.dark == true || booleanValueOf(room.state["dark"]) == true
             }.map { it.id }.toSet()
             nodeIdByRoomId = nodes.flatMap { node -> node.rooms.map { it to node.id } }.toMap()
+            nodeExitResolver = NodeExitResolver(nodes, worldAssets.loadNodeTransitions())
             restoreRoomStates(existingState.roomStates)
             flushPendingUnlockedExits()
             flushPendingUnlockedAreas()
             initializeRoomStates(rooms)
             sanitizeDarkStates()
             applyRoomStatesToRooms()
-            existingState.partyMembers.forEach { applyPartyMemberRoomOverrides(it) }
             roomsByEnvironment = roomsById.values.groupBy { environmentKey(it.env) }
             roomsByNodeId = nodes.associate { node ->
                 node.id to node.rooms.mapNotNull { roomId -> roomsById[roomId] }
@@ -3178,6 +3215,10 @@ class ExplorationViewModel(
     fun requestReturnToHub() {
         viewModelScope.launch(dispatchers.main) {
             val currentRoom = _uiState.value.currentRoom
+            if (currentRoom?.id == AstraTravel.ENTRY_ROOM_ID) {
+                disembarkAstra()
+                return@launch
+            }
             if (!canReturnToHub(currentRoom)) {
                 playUiCue("error")
                 postStatus(returnToHubBlockedMessage(currentRoom))
@@ -4542,6 +4583,7 @@ class ExplorationViewModel(
     private fun returnToHubBlockedMessage(room: Room?): String {
         val roomId = room?.id
         return when {
+            nodeIdByRoomId[roomId] == AstraTravel.NODE_ID -> "Use the cargo ramp to disembark from the Astra."
             roomId.equals(PIT_ENTRY_ROOM_ID, ignoreCase = true) && !hasJedSentNovaToWorkshop() ->
                 "Jed is waiting upstairs. Nova should check in before heading out."
             else -> "You can only exit to the Overworld from the zone entrance."

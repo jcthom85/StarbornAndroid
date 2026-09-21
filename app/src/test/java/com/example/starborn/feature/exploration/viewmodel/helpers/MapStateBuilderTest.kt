@@ -9,6 +9,37 @@ import org.junit.Test
 
 class MapStateBuilderTest {
     @Test
+    fun externalExitsStayVisibleWhenBlockedWithoutAddingRemoteRooms() {
+        val current = room("current", mapOf("north" to "remote"), listOf(0, 0))
+        val exit = com.example.starborn.feature.exploration.viewmodel.MapNodeExitUi("north", "mine", "Deep Mine")
+        for (blocked in listOf(true, false)) {
+            val mini = MapStateBuilder.buildMinimapState(current, listOf(current), setOf("current"), emptySet(),
+                { false }, { false }, { if (blocked) setOf("north") else emptySet() }, { emptySet() }, { listOf(exit) })
+            val full = MapStateBuilder.buildFullMapState(current, listOf(current), setOf("current"), emptySet(),
+                { false }, { false }, { if (blocked) setOf("north") else emptySet() }, { emptySet() }, { listOf(exit) })
+            assertEquals(listOf("current"), mini.cells.map { it.roomId })
+            assertEquals(listOf("current"), full.cells.map { it.roomId })
+            assertEquals(exit.copy(blocked = blocked), mini.cells.single().nodeExits.single())
+            assertEquals(mini.cells.single().nodeExits, full.cells.single().nodeExits)
+        }
+    }
+
+    @Test
+    fun undiscoveredPreviewAndDarkRoomsDoNotRevealTheirExternalExits() {
+        val current = room("current", mapOf("east" to "preview"), listOf(0, 0))
+        val preview = room("preview", mapOf("north" to "remote"), listOf(1, 0))
+        val hidden = room("hidden", mapOf("west" to "remote"), listOf(-1, 0))
+        val exit = com.example.starborn.feature.exploration.viewmodel.MapNodeExitUi("north", "mine", "Deep Mine")
+        val mini = MapStateBuilder.buildMinimapState(current, listOf(current, preview, hidden), setOf("current"), emptySet(),
+            { false }, { false }, { emptySet() }, { emptySet() }, { listOf(exit) })
+        assertTrue(mini.cells.single { it.roomId == "preview" }.nodeExits.isEmpty())
+        assertFalse(mini.cells.any { it.roomId == "hidden" })
+        val dark = MapStateBuilder.buildFullMapState(current, listOf(current), setOf("current"), emptySet(),
+            { true }, { false }, { emptySet() }, { emptySet() }, { listOf(exit) })
+        assertTrue(dark.cells.single().nodeExits.isEmpty())
+    }
+
+    @Test
     fun reciprocalDirectionDoesNotShareAnUnrelatedDestinationsGate() {
         val source = room("source", mapOf("east" to "target"), listOf(0, 0))
         val target = room("target", mapOf("west" to "other", "south" to "source"), listOf(1, 0))

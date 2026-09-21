@@ -5646,12 +5646,13 @@
     "items": [],
     "enemies": [
       "welder_bot",
+      "magma_drone",
       "phantom_prototype"
     ],
     "enemy_parties": [
       [
         "welder_bot",
-        "welder_bot"
+        "magma_drone"
       ],
       [
         "phantom_prototype"
@@ -11826,7 +11827,7 @@
     "weather": "industrial",
     "title": "Astra Cargo Bay",
     "background_image": "images/rooms/astra/cargo_bay.webp",
-    "description": "Cargo nets, sealed crates, and replacement conduits crowd the lower deck. A compact [action:repair workbench|repair bench] is powered beside a damaged storage terminal.",
+    "description": "Cargo nets, sealed crates, and replacement conduits crowd the lower deck. A compact [action:repair workbench|repair bench] is powered beside a damaged storage terminal. The [action:disembark|cargo ramp] leads back outside; the common room is through the east hatch.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11843,6 +11844,11 @@
         "name": "storage terminal",
         "type": "generic",
         "condition_unmet_message": "Long-term cargo storage is still offline while Zeke rebuilds its index."
+      },
+      {
+        "name": "disembark",
+        "type": "generic",
+        "action_event": "astra_disembark"
       },
       {
         "name": "repair workbench",
@@ -11874,7 +11880,8 @@
         "name": "archive console",
         "type": "generic",
         "action_event": "astra_launch_simulation",
-        "condition_unmet_message": "Combat replay and cinematic archives are installed but await the simulation runtime."
+        "requires_milestone": "ms_w3_mq15_complete",
+        "condition_unmet_message": "The simulation projectors need repairs. They will be ready after the escape from the Spire."
       }
     ]
   },
@@ -17521,7 +17528,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "welder_bot"
+      "welder_bot",
+      "magma_drone"
     ],
     "connections": {
       "south": "foundry_waste_intake_scale_04"
@@ -17680,7 +17688,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "slag_golem"
+      "slag_golem",
+      "welder_bot"
     ],
     "connections": {
       "south": "foundry_power_core_scale_04"

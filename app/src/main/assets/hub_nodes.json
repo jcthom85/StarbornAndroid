@@ -1761,122 +1761,26 @@
     "id": "astra_bridge_node",
     "world_id": "world_astra",
     "hub_id": "hub_astra",
-    "title": "Bridge",
-    "entry_room": "astra_bridge",
+    "title": "Ship Interior",
+    "entry_room": "astra_cargo_bay",
     "pos_hint": {
       "center_x": 0.5,
-      "center_y": 0.18
+      "center_y": 0.45
     },
     "size": [
       210,
       210
     ],
     "rooms": [
-      "astra_bridge"
-    ],
-    "discovered": false,
-    "initial_visibility": "unlocked",
-    "entry_policy": "hub",
-    "return_policy": "entry"
-  },
-  {
-    "id": "astra_common_node",
-    "world_id": "world_astra",
-    "hub_id": "hub_astra",
-    "title": "Common Room",
-    "entry_room": "astra_common_room",
-    "pos_hint": {
-      "center_x": 0.5,
-      "center_y": 0.45
-    },
-    "size": [
-      220,
-      220
-    ],
-    "rooms": [
-      "astra_common_room"
-    ],
-    "discovered": false,
-    "initial_visibility": "unlocked",
-    "entry_policy": "hub",
-    "return_policy": "entry"
-  },
-  {
-    "id": "astra_quarters_node",
-    "world_id": "world_astra",
-    "hub_id": "hub_astra",
-    "title": "Living Quarters",
-    "entry_room": "astra_quarters",
-    "pos_hint": {
-      "center_x": 0.78,
-      "center_y": 0.58
-    },
-    "size": [
-      190,
-      190
-    ],
-    "rooms": [
-      "astra_quarters"
-    ],
-    "discovered": false,
-    "initial_visibility": "unlocked",
-    "entry_policy": "hub",
-    "return_policy": "entry"
-  },
-  {
-    "id": "astra_cargo_node",
-    "world_id": "world_astra",
-    "hub_id": "hub_astra",
-    "title": "Cargo Bay",
-    "entry_room": "astra_cargo_bay",
-    "pos_hint": {
-      "center_x": 0.22,
-      "center_y": 0.58
-    },
-    "size": [
-      190,
-      190
-    ],
-    "rooms": [
-      "astra_cargo_bay"
-    ],
-    "discovered": false,
-    "initial_visibility": "revealed",
-    "entry_policy": "hub",
-    "return_policy": "entry",
-    "unlock_conditions": [
-      {
-        "type": "milestone",
-        "id": "ms_w3_mq15_complete"
-      }
-    ]
-  },
-  {
-    "id": "astra_simulation_node",
-    "world_id": "world_astra",
-    "hub_id": "hub_astra",
-    "title": "Simulation Deck",
-    "entry_room": "astra_simulation_deck",
-    "pos_hint": {
-      "center_x": 0.5,
-      "center_y": 0.75
-    },
-    "size": [
-      190,
-      190
-    ],
-    "rooms": [
+      "astra_bridge",
+      "astra_common_room",
+      "astra_quarters",
+      "astra_cargo_bay",
       "astra_simulation_deck"
     ],
     "discovered": false,
-    "initial_visibility": "revealed",
+    "initial_visibility": "unlocked",
     "entry_policy": "hub",
-    "return_policy": "entry",
-    "unlock_conditions": [
-      {
-        "type": "milestone",
-        "id": "ms_w3_mq15_complete"
-      }
-    ]
+    "return_policy": "entry"
   }
 ]

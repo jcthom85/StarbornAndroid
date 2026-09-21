@@ -547,6 +547,105 @@ class ExplorationViewModelTest {
         )
     }
 
+    private fun createAstraViewModel(
+        roomId: String = "astra_cargo_bay",
+        returnRoom: String? = "spire_laundry_service"
+    ): ExplorationViewModel {
+        val viewModel = createViewModel()
+        val authored = WorldAssetDataSource(com.example.starborn.data.assets.AssetJsonReader(
+            com.example.starborn.core.platform.DesktopAssetProvider(), com.example.starborn.core.MoshiProvider.instance
+        ))
+        val assets = getPrivateField<WorldAssetDataSource>(viewModel, "worldAssets")
+        val nodes = authored.loadHubNodes()
+        val hubs = authored.loadHubs()
+        val roomIds = nodes.single { it.id == "astra_bridge_node" }.rooms +
+            com.example.starborn.domain.session.AstraTravel.destinations.map { it.roomId } + "spire_laundry_service"
+        whenever(assets.loadRooms()).thenReturn(authored.loadRooms().filter { it.id in roomIds })
+        whenever(assets.loadHubNodes()).thenReturn(nodes)
+        whenever(assets.loadHubs()).thenReturn(hubs)
+        whenever(assets.loadWorlds()).thenReturn(authored.loadWorlds())
+        val node = nodes.single { roomId in it.rooms }
+        val hub = hubs.single { it.id == node.hubId }
+        val store = getPrivateField<GameSessionStore>(viewModel, "sessionStore")
+        store.restore(com.example.starborn.domain.session.GameSessionState(
+            worldId = hub.worldId, hubId = hub.id, roomId = roomId,
+            completedMilestones = setOf("ms_w2_mq05_complete"),
+            astraReturnWorldId = "world_3", astraReturnHubId = "hub_5_lower_city", astraReturnRoomId = returnRoom
+        ))
+        dispatcher.scheduler.advanceUntilIdle()
+        return viewModel
+    }
+
+    @Test
+    fun astraDeckIsConnectedAndOnlyCargoRampDisembarksToExactBoardingRoom() {
+        val viewModel = createAstraViewModel()
+        val store = getPrivateField<GameSessionStore>(viewModel, "sessionStore")
+        assertEquals(5, viewModel.uiState.value.fullMap?.cells?.size)
+        assertTrue(viewModel.uiState.value.canReturnToHub)
+        val exitCells = viewModel.uiState.value.fullMap!!.cells.filter {
+            com.example.starborn.feature.exploration.viewmodel.MinimapService.EXIT in it.services
+        }
+        assertEquals(listOf("astra_cargo_bay"), exitCells.map { it.roomId })
+        viewModel.travel("east")
+        assertEquals("astra_common_room", viewModel.uiState.value.currentRoom?.id)
+        assertFalse(viewModel.uiState.value.canReturnToHub)
+        viewModel.travel("north")
+        assertEquals("astra_bridge", store.state.value.roomId)
+        viewModel.travel("south")
+        viewModel.travel("east")
+        assertEquals("astra_quarters", store.state.value.roomId)
+        viewModel.travel("west")
+        viewModel.travel("west")
+        viewModel.requestReturnToHub()
+        dispatcher.scheduler.advanceUntilIdle()
+        assertEquals("spire_laundry_service", store.state.value.roomId)
+        assertEquals(store.state.value.roomId, viewModel.uiState.value.currentRoom?.id)
+        assertEquals("hub_6_upper_city", store.state.value.hubId)
+        assertEquals("world_3", store.state.value.worldId)
+        assertNull(store.state.value.astraReturnRoomId)
+    }
+
+    @Test
+    fun astraRampActionRecoversMissingDockAndBoardingCanBeRepeated() {
+        val viewModel = createAstraViewModel(returnRoom = null)
+        val store = getPrivateField<GameSessionStore>(viewModel, "sessionStore")
+        val ramp = viewModel.uiState.value.actions.single { it.name == "disembark" }
+        viewModel.onActionSelected(ramp)
+        dispatcher.scheduler.advanceUntilIdle()
+        assertEquals("spire_sewers_landing", store.state.value.roomId)
+        repeat(2) {
+            viewModel.onActionSelected(com.example.starborn.domain.model.GenericAction(
+                name = "board Astra", type = "generic", actionEvent = "source_board_astra"
+            ))
+            dispatcher.scheduler.advanceUntilIdle()
+            assertEquals("astra_cargo_bay", store.state.value.roomId)
+            assertEquals("astra_cargo_bay", viewModel.uiState.value.currentRoom?.id)
+            assertEquals("spire_sewers_landing", store.state.value.astraReturnRoomId)
+            viewModel.requestReturnToHub()
+            dispatcher.scheduler.advanceUntilIdle()
+            assertEquals("spire_sewers_landing", store.state.value.roomId)
+        }
+    }
+
+    @Test
+    fun astraBridgeRejectsFutureRoutesAndPersistsSuccessfulTransit() {
+        val viewModel = createAstraViewModel(roomId = "astra_bridge")
+        val store = getPrivateField<GameSessionStore>(viewModel, "sessionStore")
+        val target = com.example.starborn.domain.session.AstraTravel.destinations.single { it.worldId == "world_4" }
+        viewModel.travelToWorldFromAstra(target.worldId, target.hubId, target.roomId, target.nodeId)
+        dispatcher.scheduler.advanceUntilIdle()
+        assertEquals("astra_bridge", store.state.value.roomId)
+        assertEquals("spire_laundry_service", store.state.value.astraReturnRoomId)
+        store.setMilestone("ms_w3_mq15_complete")
+        viewModel.travelToWorldFromAstra(target.worldId, target.hubId, target.roomId, target.nodeId)
+        dispatcher.scheduler.advanceUntilIdle()
+        assertEquals(target.roomId, store.state.value.roomId)
+        assertEquals(target.roomId, viewModel.uiState.value.currentRoom?.id)
+        assertEquals(target.worldId, store.state.value.worldId)
+        assertEquals(target.hubId, store.state.value.hubId)
+        assertNull(store.state.value.astraReturnRoomId)
+    }
+
     private fun setPrivateField(target: Any, name: String, value: Any?) {
         val field = target.javaClass.getDeclaredField(name).apply { isAccessible = true }
         field.set(target, value)

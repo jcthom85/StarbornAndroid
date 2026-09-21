@@ -5,6 +5,7 @@ import com.example.starborn.feature.exploration.viewmodel.MinimapCellUi
 import com.example.starborn.feature.exploration.viewmodel.MinimapService
 import com.example.starborn.feature.exploration.viewmodel.MinimapUiState
 import com.example.starborn.feature.exploration.viewmodel.FullMapUiState
+import com.example.starborn.feature.exploration.viewmodel.MapNodeExitUi
 import java.util.Locale
 import kotlin.math.abs
 
@@ -17,7 +18,8 @@ object MapStateBuilder {
         isRoomDark: (Room) -> Boolean,
         roomHasEnemies: (Room) -> Boolean,
         computeBlockedDirections: (Room) -> Set<String>,
-        parseRoomServices: (Room) -> Set<MinimapService>
+        parseRoomServices: (Room) -> Set<MinimapService>,
+        nodeExits: (Room) -> List<MapNodeExitUi> = { emptyList() }
     ): MinimapUiState {
         val currentPos = roomPosition(currentRoom)
         val currentBlocked = computeBlockedDirections(currentRoom)
@@ -70,7 +72,10 @@ object MapStateBuilder {
                 pathHints = pathHints,
                 services = services,
                 isDark = isRoomDark(room),
-                isPreview = isPreview
+                isPreview = isPreview,
+                nodeExits = if (!isPreview && !isRoomDark(room)) {
+                    nodeExits(room).map { it.copy(blocked = it.direction in blocked) }
+                } else emptyList()
             )
         }
         return MinimapUiState(cells = cells)
@@ -84,7 +89,8 @@ object MapStateBuilder {
         isRoomDark: (Room) -> Boolean,
         roomHasEnemies: (Room) -> Boolean,
         computeBlockedDirections: (Room) -> Set<String>,
-        parseRoomServices: (Room) -> Set<MinimapService>
+        parseRoomServices: (Room) -> Set<MinimapService>,
+        nodeExits: (Room) -> List<MapNodeExitUi> = { emptyList() }
     ): FullMapUiState {
         val currentPos = roomPosition(currentRoom)
         val cells = roomsInContext.mapNotNull { room ->
@@ -111,7 +117,10 @@ object MapStateBuilder {
                 blockedDirections = blocked,
                 connections = connections,
                 services = services,
-                isDark = isRoomDark(room)
+                isDark = isRoomDark(room),
+                nodeExits = if (!isRoomDark(room)) {
+                    nodeExits(room).map { it.copy(blocked = it.direction in blocked) }
+                } else emptyList()
             )
         }
         return FullMapUiState(cells = cells)

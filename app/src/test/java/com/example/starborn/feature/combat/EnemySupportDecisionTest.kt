@@ -94,6 +94,59 @@ class EnemySupportDecisionTest {
         assertFalse(ai.selectEnemyAction(state, state.combatants.getValue(core.id), null) { } is CombatAction.SkillUse)
     }
 
+    @Test fun `duplicate golems recover independently and jammed recovery cannot bypass skill gates`() {
+        val skills = assets.loadSkills().associateBy { it.id }
+        val definition = assets.loadEnemies().single { it.id == "slag_golem" }
+        val first = core.copy(id = "slag_golem", skills = definition.abilities)
+        val second = first.copy(id = "slag_golem_2")
+        val actors = listOf(first, second, nova)
+        val state = CombatState(actors.map { TurnSlot(it.id, 5) }, 0,
+            actors.associate { it.id to CombatantState(it, 200, 100) })
+        val ai = CombatEnemyAI(skills, mapOf(first.id to definition, second.id to definition), registry, CombatAiWeights(),
+            isSupportSkill = { false }, skillStatusDefinitions = { emptyList() },
+            determineSkillTargeting = { if (it.targeting == "self") SkillTargeting.SELF else SkillTargeting.SINGLE_ENEMY },
+            checkSkillConditions = { _, _, _, _ -> true }, enemyBrains = mutableMapOf(),
+            enemyActionHistory = mutableMapOf(second.id to ArrayDeque(listOf("molten_slam"))),
+            enemySkillUsageCounts = mutableMapOf(), getPlayerIdList = { listOf(nova.id) })
+        val recovery = ai.selectEnemyAction(state, state.combatants.getValue(second.id), null) {}
+        assertEquals(CombatAction.SkillUse(second.id, "slag_cooldown", listOf(second.id)), recovery)
+        val after = CombatActionProcessor(CombatEngine(statusRegistry = registry), registry, skills::get)
+            .execute(state.copy(activeTurnIndex = 1), recovery) { CombatReward() }
+        assertTrue(after.combatants.getValue(second.id).statusEffects.any { it.id == "radiators_exposed" })
+        assertTrue(after.combatants.getValue(first.id).statusEffects.isEmpty())
+        val jammed = state.combatants.getValue(second.id).copy(statusEffects = listOf(StatusEffect("jammed", 2)))
+        val blocked = state.copy(combatants = state.combatants + (second.id to jammed))
+        assertFalse(ai.selectEnemyAction(blocked, jammed, null) {} is CombatAction.SkillUse)
+    }
+
+    @Test fun `welder repairs living squad members not opponents and respects finite supplies`() {
+        val weld = assets.loadSkills().single { it.id == "field_weld" }
+        val welder = core.copy(id = "welder_bot", skills = listOf(weld.id))
+        val ally = core.copy(id = "slag_golem")
+        val actors = listOf(welder, ally, nova)
+        val state = CombatState(actors.map { TurnSlot(it.id, 5) }, 0,
+            actors.associate { it.id to CombatantState(it, if (it.id == nova.id) 100 else 20, 100) })
+        val usage = mutableMapOf<String, Int>()
+        val ai = CombatEnemyAI(mapOf(weld.id to weld), assets.loadEnemies().associateBy { it.id }, registry, CombatAiWeights(),
+            isSupportSkill = { it.type == "heal" }, skillStatusDefinitions = { emptyList() },
+            determineSkillTargeting = { SkillTargeting.ALL_ALLIES }, checkSkillConditions = { _, _, _, _ -> true },
+            enemyBrains = mutableMapOf(welder.id to EnemyBrain(CombatBehavior.DEFENSIVE, CombatRole.SUPPORT)),
+            enemyActionHistory = mutableMapOf(), enemySkillUsageCounts = usage, getPlayerIdList = { listOf(nova.id) })
+        val action = ai.selectEnemyAction(state, state.combatants.getValue(welder.id), null) {}
+        assertEquals(CombatAction.SkillUse(welder.id, weld.id, listOf(welder.id, ally.id)), action)
+        val after = CombatActionProcessor(CombatEngine(statusRegistry = registry), registry, { weld })
+            .execute(state, action) { CombatReward() }
+        assertTrue(after.combatants.getValue(welder.id).hp > 20)
+        assertTrue(after.combatants.getValue(ally.id).hp > 20)
+        assertEquals(100, after.combatants.getValue(nova.id).hp)
+        usage["${welder.id}:${weld.id}"] = 2
+        assertFalse(ai.canEnemyUseSkill(welder.id, weld, state))
+        val onCooldown = state.copy(combatants = state.combatants + (welder.id to state.combatants.getValue(welder.id)
+            .copy(activeCooldowns = mapOf(weld.id to 2))))
+        usage.clear()
+        assertFalse(ai.canEnemyUseSkill(welder.id, weld, onCooldown))
+    }
+
     @Test fun `Titan vents after either heavy attack and exposes only itself`() {
         val skills = assets.loadSkills().associateBy { it.id }
         val titan = core.copy(id = "titan_walker_boss", skills = listOf("missile_barrage", "titan_stomp", "vent_exposure"))

@@ -940,7 +940,7 @@
     "id": "magma_drone",
     "name": "Magma Drone",
     "tier": "standard",
-    "combat_behavior": "harrier",
+    "combat_behavior": "aggressive",
     "combat_role": "striker",
     "hp": 150,
     "strength": 12,
@@ -985,7 +985,7 @@
     "id": "slag_golem",
     "name": "Slag Golem",
     "tier": "elite",
-    "combat_behavior": "tank",
+    "combat_behavior": "aggressive",
     "combat_role": "defender",
     "hp": 380,
     "strength": 22,
@@ -1009,8 +1009,9 @@
     ],
     "abilities": [
       "molten_slam",
-      "guard_protocol"
+      "slag_cooldown"
     ],
+    "recovery_after": { "molten_slam": "slag_cooldown" },
     "flavor": "A furnace-bulk material hauler with slag hardened around its frame like living armor.",
     "xp_reward": 220,
     "credit_reward": 130,
@@ -1024,15 +1025,15 @@
         "chance": 0.35
       }
     ],
-    "description": "Heavy molten tank. Freeze and shock effects crack its slag shell.",
+    "description": "Slow armored hitter. After Molten Slam it spends a turn cooling with its shell exposed. Exploit that opening or use Freeze and Shock against its armor.",
     "portrait": "images/enemies/heavy_loader_combat.png"
   },
   {
     "id": "welder_bot",
     "name": "Welder Bot",
     "tier": "standard",
-    "combat_behavior": "aggressive",
-    "combat_role": "striker",
+    "combat_behavior": "defensive",
+    "combat_role": "support",
     "hp": 170,
     "strength": 15,
     "vitality": 10,
@@ -1053,7 +1054,7 @@
     ],
     "abilities": [
       "torch_cut",
-      "death_burst"
+      "field_weld"
     ],
     "flavor": "A close-range assembly bot whose safety governors were removed for productivity.",
     "xp_reward": 130,
@@ -1068,7 +1069,7 @@
         "chance": 0.25
       }
     ],
-    "description": "Melee burn bot. Dangerous up close and unstable when destroyed.",
+    "description": "Repair support. Field Weld restores itself and its squad, but only twice per battle. Disable it or focus it down before attacking armored allies; between repairs it uses Torch Cut.",
     "portrait": "images/enemies/heavy_loader_combat.png"
   },
   {
@@ -1200,6 +1201,7 @@
   },
   {
     "id": "titan_walker_boss",
+    "recovery_after": { "missile_barrage": "vent_exposure", "titan_stomp": "vent_exposure" },
     "name": "Titan Walker",
     "tier": "boss",
     "combat_behavior": "boss",

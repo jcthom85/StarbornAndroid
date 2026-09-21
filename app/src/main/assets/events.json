@@ -12794,6 +12794,16 @@
     ]
   },
   {
+    "id": "astra_disembark",
+    "description": "The cargo ramp returns the crew to the docking location through the ship navigation handler.",
+    "trigger": {
+      "type": "player_action",
+      "action": "astra_disembark"
+    },
+    "repeatable": true,
+    "actions": []
+  },
+  {
     "id": "astra_rest_party",
     "description": "Restores the active party aboard the Astra.",
     "trigger": {
