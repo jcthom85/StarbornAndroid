@@ -495,8 +495,10 @@ class CombatEnemyAI(
         val enemyId = enemyState.combatant.id
         val brain = enemyBrains[enemyId] ?: EnemyBrain()
         // Definitions are keyed by encounter instance, so duplicate enemies have independent cycles.
-        val recoveryId = enemyDefinitions[enemyId]?.recoveryAfter
-            ?.get(enemyActionHistory[enemyId]?.lastOrNull())
+        val history = enemyActionHistory[enemyId]
+        val definition = enemyDefinitions[enemyId]
+        val recoveryId = if (history.isNullOrEmpty()) definition?.openingSkill else
+            definition?.recoveryAfter?.get(history.lastOrNull())
         if (recoveryId != null) {
             val vent = skillById[recoveryId]
             if (vent != null && vent.id in enemyState.combatant.skills && canEnemyUseSkill(enemyId, vent, state)) {

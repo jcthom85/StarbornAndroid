@@ -568,7 +568,9 @@ fun NavigationHost(
             arguments = listOf(navArgument("cabinetId") { type = NavType.StringType })
         ) { backStackEntry ->
             val cabinetId = backStackEntry.arguments?.getString("cabinetId")?.let(Uri::decode)
-            if (cabinetId == ArcadeIds.DEEP_MINE) {
+            if (cabinetId in setOf(ArcadeIds.DEEP_MINE, ArcadeIds.CANOPY_HOPPER,
+                    ArcadeIds.SPIRE_INFILTRATOR, ArcadeIds.SLAG_CATCHER,
+                    ArcadeIds.ORBITAL_DEFENSE, ArcadeIds.HARMONIC_PULSE)) {
                 DisposableEffect(Unit) {
                     services.audioCuePlayer.execute(
                         services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_arcade_cabinet", loop = true)

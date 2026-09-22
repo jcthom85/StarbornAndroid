@@ -547,6 +547,7 @@ private fun abilitySummary(
     infusedStatus: String? = null
 ): String {
     val parts = buildList {
+        if (skill.id == "nova_link") add("Heals party + Regen")
         if (skill.basePower > 0) {
             val powerText = if (momentum > 0) {
                 val mult = when (momentum) {

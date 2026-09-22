@@ -28,6 +28,8 @@ data class Enemy(
     val abilities: List<String> = emptyList(),
     @Json(name = "recovery_after")
     val recoveryAfter: Map<String, String> = emptyMap(),
+    @Json(name = "opening_skill")
+    val openingSkill: String? = null,
     val flavor: String = "",
     @Json(name = "xp_reward")
     val xpReward: Int,

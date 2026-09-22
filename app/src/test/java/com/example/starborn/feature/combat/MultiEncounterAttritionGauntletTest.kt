@@ -285,15 +285,10 @@ class MultiEncounterAttritionGauntletTest {
 
                     val finalHp = state.combatants
                         .filterValues { it.combatant.side == CombatSide.PLAYER }
-                        .mapValues { it.value.hp.coerceAtLeast(1) }
+                        .mapValues { it.value.hp }
 
-                    // Apply victory state back to session store (faithful persistence)
-                    if (victory != null) {
-                        session.addCredits(victory.rewards.credits)
-                        session.updatePartyVitals(finalHp)
-                        val remainingMedkits = (session.state.value.inventory["medkit"] ?: 0) - medkitsSpent + lootedMedkits
-                        session.setInventory(session.state.value.inventory + ("medkit" to remainingMedkits.coerceAtLeast(0)))
-                    }
+                    // The production view model persists rewards, vitals, and inventory.
+                    // Applying them again here would double rewards and consumption.
 
                     return AttritionResult(
                         outcome = outcomeStr,
@@ -357,7 +352,7 @@ class MultiEncounterAttritionGauntletTest {
                                 val skill = if (skillAware) {
                                     vm.skillsForPlayer(activeId)
                                         .sortedBy { s -> priorities.indexOf(s.id).let { if (it < 0) 999 else it } }
-                                        .firstOrNull { vm.canUseSkill(activeId, it) }
+                                        .firstOrNull { it.id in priorities && vm.canUseSkill(activeId, it) }
                                 } else null
 
                                 if (skill != null) {
@@ -371,6 +366,7 @@ class MultiEncounterAttritionGauntletTest {
                 }
             }
 
+            println("ATTRITION_TIMEOUT enemy=$enemyId seed=$seed " + vm.combatState)
             return AttritionResult("timeout", 0, medkitsSpent, 0, emptyMap())
         } finally {
             vm.viewModelScope.cancel()

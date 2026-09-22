@@ -341,20 +341,38 @@ class OpeningCombatRuntimeTest {
         val prepared = preparedStore.state.value
         assertEquals(checkpoint.playerAp - 5, prepared.playerAp)
         assertEquals(checkpoint.playerCredits - 1800, prepared.playerCredits)
-        fun run(seed: Int): List<SpendingResult> {
+        fun run(seed: Int, simulationTicks: Int = 960): List<SpendingResult> {
             val session = GameSessionStore().apply { restore(prepared) }
             val results = mutableListOf<SpendingResult>()
             for (enemy in listOf("ascended_vale", "ascended_god")) {
                 val result = measureSpending(true, seed, session, enemy, skillAware = true,
-                    defensive = true, expanded = true, ownedSupplies = true, avatarPolicy = true)
-                assertNotEquals("Final encounter must resolve", "timeout", result.outcome)
+                    defensive = true, expanded = true, ownedSupplies = true, avatarPolicy = true,
+                    simulationTicks = simulationTicks)
                 results += result
                 if (result.outcome != "victory") break
             }
             return results
         }
+        val tactic = System.getenv("FINALE_TACTIC")
+        if (tactic != null) {
+            require(tactic in setOf("direct", "control", "standard_no_venom", "direct_venom"))
+            // Sensitivity report only: retain failures rather than aborting on the first seed.
+            val diagnosticSeeds = System.getenv("FINALE_DIAGNOSTIC_SEEDS")?.split(',')?.map { it.trim().toInt() }
+                ?: (1..35).toList()
+            return diagnosticSeeds.map { seed ->
+                val result = run(seed)
+                assertEquals(result, run(seed))
+                if (result.any { it.outcome == "timeout" } && System.getenv("FINALE_TRACE") == "1") {
+                    val extended = run(seed, simulationTicks = 3840)
+                    assertEquals(extended, run(seed, simulationTicks = 3840))
+                    println("TACTIC_EXTENDED tactic=$tactic seed=$seed results=$extended")
+                }
+                "FINAL_TACTIC tactic=$tactic seed=$seed results=$result".also { println(it) }
+            }
+        }
         val seededResults = (1..5).map { seed ->
             val result = run(seed)
+            assertTrue("Final encounter must resolve", result.none { it.outcome == "timeout" })
             assertEquals(result, run(seed))
             seed to result
         }
@@ -363,6 +381,19 @@ class OpeningCombatRuntimeTest {
         seededResults.forEach { (seed, results) -> println("FINAL_TIMING_DIAGNOSTIC seed=$seed results=$results") }
         assertTrue("At least four of five seeds must clear both finale phases",
             seededResults.count { (_, results) -> results.size == 2 && results.last().outcome == "victory" } >= 4)
+        // Optional held-out seeds report generalization without replacing the original gate.
+        val holdouts = System.getenv("FINALE_HOLDOUT_SEEDS")?.split(',')?.map { it.trim().toInt() }?.map { seed ->
+            val results = run(seed)
+            assertEquals(results, run(seed))
+            println("FINAL_HOLDOUT seed=$seed results=$results")
+            if (results.any { it.outcome == "timeout" } && System.getenv("FINALE_TRACE") == "1") {
+                val extended = run(seed, simulationTicks = 3840)
+                assertEquals(extended, run(seed, simulationTicks = 3840))
+                println("FINAL_EXTENDED_DIAGNOSTIC seed=$seed limitMs=960000 results=$extended")
+            }
+            results
+        }
+        assertTrue("Held-out finale fights must resolve", holdouts.orEmpty().flatten().none { it.outcome == "timeout" })
         return seededResults.map { (seed, results) -> "FINAL_CHECKPOINT_COMBAT seed=$seed results=$results" }
     }
 
@@ -549,10 +580,19 @@ class OpeningCombatRuntimeTest {
                     when {
                         id == "gh0st" -> actor.copy(hp = 0)
                         actor.combatant.side == CombatSide.PLAYER -> actor.copy(hp = actor.combatant.stats.maxHp / 2)
-                        else -> actor
+                        else -> actor.copy(hp = actor.combatant.stats.maxHp / 2)
                     }
                 })
                 val skill = vm.skillsForPlayer(caster).single { it.id == skillId }
+                if (skillId == "nova_link") {
+                    val resolver = CombatViewModel::class.java.getDeclaredMethod("determineSkillTargeting", skill.javaClass)
+                        .apply { isAccessible = true }
+                    assertEquals(com.example.starborn.feature.combat.viewmodel.SkillTargeting.ALL_ALLIES,
+                        resolver.invoke(vm, skill.copy(targeting = null)))
+                    val offensive = assets.loadSkills().single { it.id == "reality_break" }
+                    assertEquals(com.example.starborn.feature.combat.viewmodel.SkillTargeting.ALL_ENEMIES,
+                        resolver.invoke(vm, offensive))
+                }
                 var used = false
                 for (tick in 0 until 240) {
                     dispatcher.scheduler.advanceTimeBy(250)
@@ -568,14 +608,16 @@ class OpeningCombatRuntimeTest {
                     for (id in listOf("nova", "zeke", "orion")) {
                         assertTrue("$skillId must apply $statusId to $id", after.combatants.getValue(id).statusEffects.any { it.id == statusId })
                         if (skillId == "nova_link") {
-                            // Regen begins on each recipient's next turn, not on the caster's action.
-                            assertEquals(before.combatants.getValue(id).hp, after.combatants.getValue(id).hp)
+                            // Link heals immediately; its separate Regen starts on the recipient's next turn.
+                            assertTrue(after.combatants.getValue(id).hp > before.combatants.getValue(id).hp)
                         }
                     }
                     assertEquals(0, after.combatants.getValue("gh0st").hp)
                     assertTrue(after.combatants.getValue("gh0st").statusEffects.none { it.id == statusId })
                     val enemy = after.combatants.getValue("faulted_loader")
                     assertEquals(before.combatants.getValue("faulted_loader").hp, enemy.hp)
+                    assertTrue(after.log.drop(before.log.size).filterIsInstance<CombatLogEntry.Heal>()
+                        .none { it.targetId == "faulted_loader" })
                     assertTrue(enemy.statusEffects.none { it.id == statusId })
                     assertTrue(after.combatants.getValue(caster).activeCooldowns.getOrDefault(skillId, 0) > 0)
                     used = true
@@ -816,7 +858,7 @@ class OpeningCombatRuntimeTest {
     private fun measureSpending(laterGame: Boolean, seed: Int, suppliedSession: GameSessionStore? = null,
                                 enemy: String? = null, skillAware: Boolean = false,
                                 defensive: Boolean = false, expanded: Boolean = false, ownedSupplies: Boolean = false,
-                                avatarPolicy: Boolean = false): SpendingResult {
+                                avatarPolicy: Boolean = false, simulationTicks: Int = 960): SpendingResult {
         val session = suppliedSession ?: if (laterGame) world4Session() else GameSessionStore().apply {
             restore(GameSessionState(worldId = "world_1", roomId = "workshop_yard",
                 playerId = "nova", partyMembers = listOf("nova"), unlockedSkills = setOf("nova_arc_tether")))
@@ -830,6 +872,10 @@ class OpeningCombatRuntimeTest {
         var supportUsed = 0
         var otherHeals = 0
         val extraSupplies = mutableMapOf<String, Int>()
+        val offensiveTactic = if (enemy in setOf("ascended_vale", "ascended_god")) System.getenv("FINALE_TACTIC") else null
+        val earlyTriage = enemy == "compliance_avatar" && System.getenv("AVATAR_EARLY_TRIAGE") == "1"
+        val traceFinale = System.getenv("FINALE_TRACE") == "1" && enemy in setOf("ascended_god", "compliance_avatar")
+        if (traceFinale) println("FINAL_TRACE_START enemy=$enemy seed=$seed limitTicks=$simulationTicks inventory=${vm.inventory.value.map { it.item.id to it.quantity }} state=${vm.combatState}")
         try {
             if (defensive) assertTrue("Nova's armor must affect runtime defense",
                 requireNotNull(vm.combatState).combatants.getValue("nova").combatant.stats.flatDamageReduction > 0)
@@ -840,7 +886,7 @@ class OpeningCombatRuntimeTest {
                 val actor = requireNotNull(vm.combatState).combatants.getValue(id)
                 assertEquals(hp.coerceIn(1, actor.combatant.stats.maxHp), actor.hp)
             }
-            repeat(960) {
+            repeat(simulationTicks) {
                 dispatcher.scheduler.advanceTimeBy(250)
                 dispatcher.scheduler.runCurrent()
                 // Supply the presentation callback after one 250ms tick. The
@@ -849,7 +895,8 @@ class OpeningCombatRuntimeTest {
                 if (vm.missLungeActorId.value != null) vm.onMissLungeFinished(vm.missLungeToken.value)
                 val state = requireNotNull(vm.combatState)
                 if (state.outcome != null) {
-                    if (enemy == "compliance_avatar" && seed == 1) {
+                    if (traceFinale) println("FINAL_TRACE_END enemy=$enemy seed=$seed limitTicks=$simulationTicks inventory=${vm.inventory.value.map { it.item.id to it.quantity }} state=$state")
+                    if (enemy in listOf("compliance_avatar", "ascended_god") && seed == 1) {
                         println("AVATAR_ACTION_TRACE " + state.log.joinToString("\n"))
                     }
                     val victory = state.outcome as? CombatOutcome.Victory
@@ -861,7 +908,8 @@ class OpeningCombatRuntimeTest {
                 session.state.value.partyMembers.forEach { vm.selectReadyPlayer(it) }
                 if (vm.awaitingAction.value != null) {
                     val wounded = state.combatants.values.filter {
-                        it.combatant.side == CombatSide.PLAYER && it.isAlive && it.hp * 100L < it.combatant.stats.maxHp * 40L
+                        it.combatant.side == CombatSide.PLAYER && it.isAlive &&
+                            it.hp * 100L < it.combatant.stats.maxHp * (if (earlyTriage) 65L else 40L)
                     }.minByOrNull { it.hp.toDouble() / it.combatant.stats.maxHp }
                     val medkit = vm.inventory.value.firstOrNull { it.item.id == "medkit" && it.quantity > 0 }
                         ?: if (ownedSupplies) vm.inventory.value.firstOrNull { it.item.id == "medkit_i" && it.quantity > 0 } else null
@@ -885,7 +933,13 @@ class OpeningCombatRuntimeTest {
                         (activeId == "zeke" || active.hp * 100L < active.combatant.stats.maxHp * 80L)) {
                         vm.skillsForPlayer(activeId).firstOrNull { it.id == supportId && vm.canUseSkill(activeId, it) }
                     } else null
-                    if (partyHeal != null) {
+                    if (earlyTriage && wounded != null && medkit != null) {
+                        val before = medkit.quantity
+                        vm.useItem(medkit, wounded.combatant.id)
+                        val used = before - (vm.inventory.value.firstOrNull { it.item.id == medkit.item.id }?.quantity ?: 0)
+                        if (medkit.item.id == "medkit") consumed += used
+                        else extraSupplies[medkit.item.id] = (extraSupplies[medkit.item.id] ?: 0) + used
+                    } else if (partyHeal != null && support?.id != "nova_link") {
                         val before = partyHeal.quantity
                         vm.useItem(partyHeal, activeId)
                         val used = before - (vm.inventory.value.firstOrNull { it.item.id == "ration_pack" }?.quantity ?: 0)
@@ -895,7 +949,10 @@ class OpeningCombatRuntimeTest {
                         vm.useItem(selfHeal, activeId)
                         otherHeals += before - (vm.inventory.value.firstOrNull { it.item.id == "painkillers" }?.quantity ?: 0)
                     } else if (support != null && (wounded == null || medkit == null)) {
-                        if (avatarPolicy && support.id == "nova_link") vm.useSkill(support)
+                        if (avatarPolicy && support.id == "nova_link") {
+                            // Exercise production target resolution, never a test-only override.
+                            vm.useSkill(support)
+                        }
                         else vm.useSkill(support, listOf(activeId))
                         skillsUsed++
                         supportUsed++
@@ -911,7 +968,17 @@ class OpeningCombatRuntimeTest {
                             val actor = requireNotNull(vm.awaitingAction.value)
                             // Source/shock beat physical here; avoid burn against Foundry
                             // resistance. Only currently unlocked and usable skills qualify.
-                            val priorities = if (avatarPolicy) listOf("nova_cryo_vent", "nova_hydraulic_kick",
+                            val priorities = if (avatarPolicy && offensiveTactic == "standard_no_venom") listOf(
+                                "nova_cryo_vent", "nova_hydraulic_kick", "zeke_overload_fists", "nova_arc_tether",
+                                "zeke_shatter_blow", "gh0st_headshot", "orion_prism_lance")
+                            else if (avatarPolicy && offensiveTactic == "direct_venom") listOf(
+                                "gh0st_venom_edge", "nova_arc_tether", "zeke_shatter_blow", "gh0st_headshot", "orion_prism_lance")
+                            else if (avatarPolicy && offensiveTactic == "direct") listOf(
+                                "nova_arc_tether", "zeke_shatter_blow", "gh0st_headshot", "orion_prism_lance")
+                            else if (avatarPolicy && offensiveTactic == "control") listOf(
+                                "gh0st_system_crash", "nova_cryo_vent", "zeke_overload_fists", "orion_prism_lance",
+                                "nova_arc_tether", "zeke_shatter_blow", "gh0st_headshot")
+                            else if (avatarPolicy) listOf("nova_cryo_vent", "nova_hydraulic_kick",
                                 "zeke_overload_fists", "gh0st_venom_edge", "nova_arc_tether", "zeke_shatter_blow",
                                 "gh0st_headshot", "orion_prism_lance") else if (expanded) listOf("zeke_overload_fists", "gh0st_system_crash",
                                 "nova_arc_tether", "gh0st_venom_edge", "orion_prism_lance", "zeke_shatter_blow", "gh0st_headshot")
@@ -928,10 +995,12 @@ class OpeningCombatRuntimeTest {
                     }
                 }
             }
+            println("TIMEOUT_STATE seed=$seed inventory=${vm.inventory.value.map { it.item.id to it.quantity }} " + vm.combatState)
             println("TIMEOUT enemy=$enemy pauses=" + CombatViewModel::class.java.getDeclaredField("atbAnimationPauses").apply { isAccessible = true }.get(vm) +
                 " lunge=${vm.lungeActorId.value} miss=${vm.missLungeActorId.value} awaiting=${vm.awaitingAction.value} round=${vm.combatState?.round}")
             return SpendingResult("timeout", consumed, 0, dispatcher.scheduler.currentTime - start,
-                requireNotNull(vm.combatState).combatants.filterValues { it.combatant.side == CombatSide.PLAYER }.mapValues { it.value.hp }, skillsUsed, supportUsed)
+                requireNotNull(vm.combatState).combatants.filterValues { it.combatant.side == CombatSide.PLAYER }.mapValues { it.value.hp },
+                skillsUsed, supportUsed, otherHeals, extraSupplies = extraSupplies.toMap())
         } finally { vm.viewModelScope.cancel(); dispatcher.scheduler.runCurrent() }
     }
 

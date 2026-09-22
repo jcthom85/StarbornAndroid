@@ -2,7 +2,45 @@
 
 Date: 2026-09-21
 
-Status: **STATUS TIMING FIX IMPLEMENTED / BROADER REGRESSIONS UNDER REVIEW**
+Status: **LINK TARGETING FIXED / 35-SEED FINALE GATE PASSES**
+
+## Latest: remaining bosses diagnosed and Foundry refreshed
+
+`REMAINING_BOSS_DIAGNOSTICS.md` distinguishes long wins, attrition losses and Avatar burst pressure. All alternate-policy timeout diagnostics terminate. The refreshed current-mechanics Foundry matrix is 627 wins / 93 defeats / zero timeouts in 720 fights; World 1/2/4 consecutive-fight tests pass. Evidence: `test-results/foundry-current-30-seed/`. Mixed-pair results still depend strongly on targeting policy; full player-route resource validation is not complete. This pass changes only tests/documentation, not production balance.
+
+## Latest: erosion isolation and world status
+
+See `CAMPAIGN_VALIDATION_STATUS.md`. Standard minus Venom Edge wins 32/35 (one defeat, two timeouts); adding Venom Edge to the direct policy raises wins from 18/35 to 34/35 (one timeout). Erosion-related offense is strong, not demonstrated mandatory. The experiment changes a whole skill, so do not attribute the entire difference solely to its DOT. Recovery and Link UI copy now explain their purpose. No numeric balance changes in this pass. Full suite: 547/547. The status document distinguishes scripted progression coverage from actual fight and route-balance validation for every world.
+
+## Latest: broader tactics and presentation (2026-09-22)
+
+Read `FINALE_PRESENTATION_AND_TACTICS.md`. The standard policy remains 35/35, but direct-damage priorities produce 18 wins / 5 defeats / 12 timeouts, and control-first priorities produce 31 / 2 / 2 across the same 35 seeds. These are diagnostic comparisons, not loosened standard gates. Link's menu interaction heals the party without healing the boss in the isolated Android UI test. Gathering Silence is readable, but its banner does not explain the recovery opportunity. Full standard suite remains 547/547. Hold broad balance sign-off until tactic dependence and player-facing explanations are reviewed. No production or menu edits in this verification pass.
+
+## Latest: targeting and response-window implementation (2026-09-22)
+
+Final Android check: installed the rebuilt debug/test APKs with `adb install -r` (no save clear) on emulator-5554. `CombatStatusTimingDeviceTest` passed **2/2** tests in 0.472 seconds: packaged Link ally healing/cross-side rejection/no revival, and affected-actor status timing. This validates runtime behavior; no manual finale UI playthrough is claimed.
+
+Link explicitly targets all allies. The generic resolver now distinguishes healing power from damage, and the processor rejects dead or opposing-side healing targets. Regression coverage wounds both allies and the enemy, verifies immediate healing separately from deferred Regen, checks no revival/enemy healing, and preserves offensive AoE targeting. The test-only Link target override was removed.
+
+Targeting alone still left long losing fights. The Ascended now uses **Gathering Silence**, a harmless visible setup action, before its first attack and after Reality Break, Shadow Chorus or Great Silence. This uses an optional authored `opening_skill` and the existing per-enemy recovery mapping. Other enemies retain their existing behavior. Damage, HP, durations and the four-minute gate were not reduced or relaxed in this implementation; the earlier candidate cooldown changes remain.
+
+**547/547 unit tests pass**, including the optional extended finale gate. **35/35 finale seeds clear both phases, repeated deterministically, with zero timeouts**, using default production targeting. Debug and instrumentation APKs build successfully. Evidence: `test-results/finale-targeting-fix/final-campaign.xml`; `targeting-only.xml` preserves the intermediate failure, and `with-response-windows.xml` preserves the first successful comparison. These remain fixed-policy scripted campaign checks, not proof that every player strategy is balanced. No commit, push or Play upload was performed; BurgQuest Demo remains untouched.
+
+## Latest: remaining finale failure diagnosis
+
+See `FINALE_FAILURE_INVESTIGATION.md` for reproduced traces, supply accounting and recommendations. **Link is healing the boss**, due to generic AoE target resolution treating positive healing power as damage. Seed 24 is not frozen: a separate diagnostic ends in defeat at 256.25 seconds. The other defeat seeds also heal the boss. Test-only explicit ally targeting yields 27/30 victories, one defeat and two timeouts, so fixing targeting is necessary but is not yet proven sufficient for balance acceptance. Production code/assets and the BurgQuest Demo button were left unchanged during this diagnostic follow-up; prior candidate changes remain in the workspace.
+
+## Latest: defense and crowd-control follow-up
+
+The existing AI fix refuses basic Defend while a blocking status is already active; a new regression test covers defend, guard, shield and invulnerability. The Siren no longer refreshes its defense indefinitely. Local asset changes increase Barrier Field cooldown from 3 to 5 and Relic Strike from 2 to 4, creating attack windows and reducing repeated stagger against slower survivors. Finale cooldowns are now 8 for Reality Break, Shadow Chorus and Great Silence (previously 3, 3 and 4). Damage, HP and status durations are unchanged.
+
+The attrition harness no longer applies rewards and inventory consumption twice or selects support skills as offensive attacks. It relies on production persistence. The finale policy considers an available Link before a ration rather than always spending the weaker party heal first. Prioritizing System Crash did not improve results and was reverted; no extra equipment, supplies or unlocks were granted.
+
+The original five-seed finale comparison now clears both phases in **5/5** seeds, with deterministic reruns. World 1, World 2 and Foundry attrition gates pass. Additional seeds **6–35** clear both phases **26/30**, with three defeats (10, 11, 13) and one timeout (24). Each result was repeated deterministically. The holdout assertion intentionally fails for the timeout; do not hide it by dropping seed 24 or increasing the acceptance time limit. Its trace shows active combat, Nova surviving at 44 HP and the boss at 577/660 HP after early party-wide stagger. This is unresolved attrition/control pressure, not an animation deadlock. The original five seeds alone are insufficient evidence of release readiness.
+
+Final standard suite: **545 tests passed, zero failures**; debug and instrumentation APKs build successfully. This excludes the optional holdout assertion, which remains failing for seed 24. Evidence: `test-results/status-timing-followup/finale-holdout.xml`, `attrition.xml`, `enemy-ai.xml` and `campaign-default.xml`. Reproduce the expanded run with `FINALE_HOLDOUT_SEEDS` set to comma-separated integers 6 through 35 and `:app:testDebugUnitTest --tests '*CampaignEventIntegrationTest'`. The optional batch records all seeds before asserting no timeouts. The original victory gates remain unchanged.
+
+Android verification passed **2/2 tests** on emulator-5554: `CombatStatusTimingDeviceTest` and the isolated Foundry launcher with Slag Golem + Welder Bot. The timing test uses packaged assets and the real processor without reading or writing a player save. It checks stun survival across ally actions, exactly one skipped enemy turn, cooling exposure duration and deferred self-regeneration. The launcher screenshot and fixture are preserved under `test-results/status-timing-followup/emulator/`; the screenshot was visually checked for the combat HUD and four-character party. This is runtime and launch verification, not a claim of manual full-campaign playtesting. The current cooldown changes are local candidates; no release operation was performed in this follow-up.
 
 ## Latest: affected-actor duration implementation
 

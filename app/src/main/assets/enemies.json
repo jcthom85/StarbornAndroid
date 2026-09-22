@@ -1932,6 +1932,12 @@
   },
   {
     "id": "ascended_god",
+    "opening_skill": "gathering_silence",
+    "recovery_after": {
+      "reality_break": "gathering_silence",
+      "shadow_chorus": "gathering_silence",
+      "silence_wave": "gathering_silence"
+    },
     "name": "The Ascended: Silence",
     "tier": "boss",
     "combat_behavior": "boss",
@@ -1960,7 +1966,8 @@
     "abilities": [
       "reality_break",
       "shadow_chorus",
-      "silence_wave"
+      "silence_wave",
+      "gathering_silence"
     ],
     "flavor": "Porcelain skin splits into blinding geometry as Vale attempts to reduce creation to one painless note.",
     "xp_reward": 1500,

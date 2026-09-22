@@ -87,6 +87,50 @@ class EnemySupportDecisionTest {
         assertEquals(state.combatants.getValue(nova.id).hp, after.combatants.getValue(nova.id).hp)
     }
 
+    @Test fun `protected wounded enemy attacks instead of refreshing basic defense`() {
+        for (status in listOf("defend", "guard", "shield", "invulnerable")) {
+            val initial = scenario(cooldown = 2)
+            val enemy = initial.combatants.getValue(core.id).copy(statusEffects = listOf(StatusEffect(status, 2)))
+            val state = initial.copy(combatants = initial.combatants + (core.id to enemy))
+            assertTrue("Existing $status must not trigger repeated Defend",
+                ai().selectEnemyAction(state, enemy, null) {} is CombatAction.BasicAttack)
+        }
+    }
+
+    @Test fun `healing rejects explicit enemy targets`() {
+        val link = assets.loadSkills().single { it.id == "nova_link" }
+        val state = scenario().let { it.copy(combatants = it.combatants +
+            (nova.id to it.combatants.getValue(nova.id).copy(hp = 50))) }
+        val processor = CombatActionProcessor(CombatEngine(statusRegistry = registry), registry, { link })
+        val after = processor.execute(state, CombatAction.SkillUse(nova.id, link.id, listOf(core.id))) { CombatReward() }
+        assertEquals(30, after.combatants.getValue(core.id).hp)
+        assertTrue(after.log.filterIsInstance<CombatLogEntry.Heal>().none { it.targetId == core.id })
+    }
+
+    @Test fun `final boss opens and recovers with a non damaging setup action`() {
+        val skills = assets.loadSkills().associateBy { it.id }
+        val definition = assets.loadEnemies().single { it.id == "ascended_god" }
+        val boss = core.copy(id = definition.id, skills = definition.abilities)
+        val state = CombatState(listOf(TurnSlot(boss.id, 10), TurnSlot(nova.id, 5)), 0,
+            mapOf(boss.id to CombatantState(boss, 200, 100), nova.id to CombatantState(nova, 200, 100)))
+        for (previous in listOf(null, "reality_break", "shadow_chorus", "silence_wave")) {
+            val history = mutableMapOf<String, ArrayDeque<String>>()
+            if (previous != null) history[boss.id] = ArrayDeque(listOf(previous))
+            val ai = CombatEnemyAI(skills, mapOf(boss.id to definition), registry, CombatAiWeights(),
+                isSupportSkill = { it.type == "support" }, skillStatusDefinitions = { emptyList() },
+                determineSkillTargeting = { if (it.targeting == "self") SkillTargeting.SELF else SkillTargeting.ALL_ENEMIES },
+                checkSkillConditions = { _, _, _, _ -> true }, enemyBrains = mutableMapOf(),
+                enemyActionHistory = history, enemySkillUsageCounts = mutableMapOf(), getPlayerIdList = { listOf(nova.id) })
+            val action = ai.selectEnemyAction(state, state.combatants.getValue(boss.id), null) {}
+            assertEquals(CombatAction.SkillUse(boss.id, "gathering_silence", listOf(boss.id)), action)
+            val after = CombatActionProcessor(CombatEngine(statusRegistry = registry), registry, skills::get)
+                .execute(state, action) { CombatReward() }
+            assertTrue(after.log.none { it is CombatLogEntry.Damage || it is CombatLogEntry.StatusApplied })
+            history[boss.id] = ArrayDeque(listOf("gathering_silence"))
+            assertNotEquals(action, ai.selectEnemyAction(state, state.combatants.getValue(boss.id), null) {})
+        }
+    }
+
     @Test fun `repair on cooldown is excluded from enemy decisions`() {
         val state = scenario(cooldown = 2)
         val ai = ai()

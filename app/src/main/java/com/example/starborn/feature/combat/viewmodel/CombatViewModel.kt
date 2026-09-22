@@ -2198,6 +2198,8 @@ class CombatViewModel(
         return CombatBannerMessage(
             id = session.id,
             primary = session.primary,
+            secondary = if ((entry.action as? CombatAction.SkillUse)?.skillId == "gathering_silence")
+                "Recovery window — attack or heal" else null,
             accent = session.accent,
             icon = session.icon
         )
@@ -3237,12 +3239,15 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
         val hasSelf = statusDefs.any { it.target.equals("self", true) }
         val hasAlly = statusDefs.any { it.target.equals("ally", true) }
         val hasEnemy = statusDefs.any { it.target.equals("enemy", true) }
-        val dealsDamage = skill.basePower > 0
+        val healing = skill.type.equals("heal", true) || skill.combatTags.orEmpty().any { it.equals("heal", true) }
+        val dealsDamage = skill.basePower > 0 && !healing
         val supportTag = skill.combatTags.orEmpty().any { it.equals("support", true) || it.equals("heal", true) }
         val aoeTag = skill.combatTags.orEmpty().any {
             it.equals("aoe", true) || it.equals("burst", true) || it.equals("multi", true)
         }
         return when {
+            healing && aoeTag -> SkillTargeting.ALL_ALLIES
+            healing -> SkillTargeting.SELF
             hasSelf || (hasAlly && !dealsDamage) || (!dealsDamage && supportTag) -> SkillTargeting.SELF
             aoeTag -> SkillTargeting.ALL_ENEMIES
             hasEnemy && supportTag && !dealsDamage -> SkillTargeting.ALL_ENEMIES

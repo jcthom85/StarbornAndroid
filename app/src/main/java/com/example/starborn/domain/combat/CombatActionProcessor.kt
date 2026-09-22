@@ -812,6 +812,9 @@ class CombatActionProcessor(
         var working = state
         val targets = actionTargets(working, source, explicitTargets, Targeting.SELF)
         targets.forEach { targetId ->
+            val target = working.combatants[targetId] ?: return@forEach
+            // Healing skills cannot revive or restore the opposing side, even with stale explicit targets.
+            if (!target.isAlive || target.combatant.side != source?.combatant?.side) return@forEach
             working = engine.applyHeal(
                 state = working,
                 sourceId = sourceId,

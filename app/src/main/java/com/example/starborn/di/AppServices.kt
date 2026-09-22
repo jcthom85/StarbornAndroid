@@ -2008,6 +2008,9 @@ class AppServices(context: Context, val isTestSession: Boolean = false) {
         sessionStore.setMilestone("ms_all_arcade_cabinets_restored")
         for ((cabId, milestone) in allCabinets) {
             sessionStore.setMilestone(milestone)
+            // These cabinets are already installed in the showcase: launch on the first tap.
+            val installId = if (cabId == "deep_mine_asteroid_drill") "deep_mine" else cabId
+            sessionStore.setMilestone("ms_arcade_${installId}_install_seen")
             sessionStore.updateArcadeProgress(cabId) {
                 it.copy(discovered = true, repaired = true, installed = true)
             }

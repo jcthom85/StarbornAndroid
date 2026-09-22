@@ -1445,6 +1445,10 @@ internal fun CombatImpactBanner(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+                message.secondary?.takeIf { it.isNotBlank() }?.let { detail ->
+                    Text(text = detail, style = secondaryStyle, color = Color.White.copy(alpha = 0.9f),
+                        maxLines = 2, overflow = TextOverflow.Ellipsis)
+                }
             }
         }
     }
