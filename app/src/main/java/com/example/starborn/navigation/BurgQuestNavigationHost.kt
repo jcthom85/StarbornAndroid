@@ -7,10 +7,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
@@ -60,11 +62,15 @@ private fun BurgQuestVisit(
     var begun by remember { mutableStateOf(false) }
     var finish by remember { mutableStateOf<String?>(null) }
     var showGuide by remember { mutableStateOf(false) }
+    var showDemoMenu by remember { mutableStateOf(false) }
     var chooseAnother by remember { mutableStateOf(false) }
     BackHandler { finish = "Thanks for playing Starborn!" }
 
     if (begun) {
         val services = remember { createServices() }
+        val visitNavigation = rememberNavController()
+        val visitEntry by visitNavigation.currentBackStackEntryAsState()
+        val exploring = visitEntry?.destination?.route == NavigationDestination.Exploration.route
         // A booth can cycle through many visitors without recreating the activity.
         // Own and clear each visit's navigation ViewModels as well as its services.
         val visitOwner = remember { object : ViewModelStoreOwner {
@@ -79,23 +85,18 @@ private fun BurgQuestVisit(
             ready = services.startDebugScenario(scenario.id, allowInGameLaunch = true)
             if (!ready) finish = "This showcase could not start. Please choose another demo."
         }
-        Column(Modifier.fillMaxSize()) {
-            Surface(tonalElevation = 3.dp) {
-                Row(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = 8.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                    TextButton(onClick = { showGuide = true }) { Text("Demo guide") }
-                    TextButton(onClick = { finish = "Thanks for playing Starborn!" }) { Text("Finish demo") }
-                }
-            }
+        Box(Modifier.fillMaxSize()) {
             // Finish is terminal: unmount the game, including an arcade's animation loop.
             // The next visit always creates a new controller and fresh fixture.
-            if (ready && finish == null) Box(Modifier.weight(1f)) {
+            if (ready && finish == null) Box(Modifier.fillMaxSize()) {
                 CompositionLocalProvider(LocalViewModelStoreOwner provides visitOwner) {
                     CampaignNavigationHost(
+                        navController = visitNavigation,
                         showCombatActionText = showCombatActionText,
                         providedServices = services,
                         initialDestination = NavigationDestination.Exploration.route,
                         demoEnemies = BurgQuestDemo.enemies(scenario.id),
-                        demoPaused = showGuide,
+                        demoPaused = showGuide || showDemoMenu,
                         onDemoExit = onExit,
                         onDemoCombatResult = { result ->
                             finish = when (result.outcome) {
@@ -107,9 +108,29 @@ private fun BurgQuestVisit(
                     )
                 }
             }
+            if (finish == null) Surface(
+                modifier = if (exploring) {
+                    Modifier.align(Alignment.BottomStart).navigationBarsPadding().padding(start = 12.dp, bottom = 12.dp)
+                } else {
+                    Modifier.align(Alignment.TopEnd).statusBarsPadding().padding(top = 4.dp, end = 8.dp)
+                },
+                shape = MaterialTheme.shapes.large,
+                tonalElevation = 4.dp
+            ) {
+                TextButton(onClick = { showDemoMenu = true }) { Text("Demo") }
+            }
         }
     }
 
+    if (showDemoMenu && finish == null) AlertDialog(
+        onDismissRequest = { showDemoMenu = false },
+        title = { Text("Demo menu") },
+        text = { Column {
+            TextButton(onClick = { showDemoMenu = false; showGuide = true }) { Text("Demo guide") }
+            TextButton(onClick = { showDemoMenu = false; finish = "Thanks for playing Starborn!" }) { Text("Finish demo") }
+        } },
+        confirmButton = { TextButton(onClick = { showDemoMenu = false }) { Text("Resume demo") } }
+    )
     if ((!begun || showGuide) && finish == null) AlertDialog(
         onDismissRequest = { if (begun) showGuide = false else onExit() },
         title = { Text(scenario.title) },

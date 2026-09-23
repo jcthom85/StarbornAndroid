@@ -5,6 +5,7 @@ import android.graphics.Typeface
 import android.os.SystemClock
 import androidx.activity.compose.BackHandler
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import com.example.starborn.ui.haptics.Haptics
 import com.example.starborn.ui.haptics.HapticType
 import androidx.compose.animation.AnimatedVisibility
@@ -296,7 +297,8 @@ fun CombatScreen(
     showCombatActionText: Boolean,
     cinematicState: StateFlow<CinematicPlaybackState?>? = null,
     onAdvanceCinematic: (() -> Unit)? = null,
-    overlayPaused: Boolean = false
+    overlayPaused: Boolean = false,
+    demoMode: Boolean = false
 ) {
     BackHandler(enabled = true) {
         // Block system back/edge-swipe from leaving combat.
@@ -832,9 +834,9 @@ fun CombatScreen(
         }
 
         val backgroundPainter = rememberRoomBackgroundPainter(viewModel.roomBackground)
-        Box(
+        BoxWithConstraints(
             modifier = Modifier
-                .fillMaxSize()
+                    .fillMaxSize()
                 .background(Color(0xFF05070B))
                 .clipToBounds()
                 .focusRequester(combatFocusRequester)
@@ -1011,31 +1013,26 @@ fun CombatScreen(
                 ?: commandActor?.hp?.coerceAtLeast(1)
                 ?: 1
             val commandCurrentHp = commandActorState?.hp ?: commandMaxHp
-            val partyDockHeightPx = remember(playerParty.size) { mutableStateOf(0) }
-            val partyDockHeight = with(density) { partyDockHeightPx.value.toDp() }
-            val contentPadding = PaddingValues(horizontal = 16.dp, vertical = 24.dp)
-            Box(
+            val compactCrew = playerParty.size > 2 &&
+                (maxHeight < 640.dp || (enemies.size > 3 && maxHeight < 800.dp))
+            val crewPortraitSize = if (compactCrew) 48.dp else if (maxHeight < 640.dp) 64.dp else 80.dp
+            val crewSingleRow = maxWidth >= 600.dp
+            val contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(contentPadding)
+                    .statusBarsPadding()
+                    .navigationBarsPadding()
             ) {
-                BattleStageBackdrop(
-                    accentColor = accentColor,
-                    borderColor = borderColor,
-                    panelColor = panelColor,
-                    highContrastMode = highContrastMode,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = 92.dp, bottom = partyDockHeight + 76.dp)
-                )
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .align(Alignment.TopCenter)
-                        .statusBarsPadding()
+                        .weight(1f)
                 ) {
                     Column(
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         CombatEncounterHeader(
@@ -1047,9 +1044,12 @@ fun CombatScreen(
                             } else null,
                             theme = viewModel.theme,
                             highContrastMode = highContrastMode,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth().padding(end = if (demoMode) 76.dp else 0.dp)
                         )
-                        EnemyRoster(
+                        com.example.starborn.feature.combat.ui.components.EnemyFormationViewport(
+                            Modifier.fillMaxWidth().weight(1f).testTag("combat-enemies")
+                        ) {
+                          EnemyRoster(
                             enemies = enemies,
                             combatantIds = enemyCombatantIds,
                             combatState = state,
@@ -1081,33 +1081,25 @@ fun CombatScreen(
                             showTargetPrompt = false,
                             lungeStyle = lungeStyle
                         )
+                        }
                     }
                 }
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .align(Alignment.BottomCenter)
-                        .navigationBarsPadding()
-                        .padding(bottom = partyDockHeight + 8.dp)
+                        .height(56.dp)
                 ) {
                     if (!commandPaletteVisible && !targetMode) {
-                        CombatLogPanel(
-                            bannerMessage = if (showCombatActionText) combatBanner else null,
-                            instruction = null,
-                            showCancel = false,
-                            instructionShownAbove = false,
+                        CombatImpactBanner(
+                            message = if (showCombatActionText) combatBanner else null,
+                            hasInstruction = false,
                             highContrastMode = highContrastMode,
                             theme = viewModel.theme,
-                            onCancel = null
+                            modifier = Modifier.align(Alignment.Center)
                         )
                     }
                 }
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(contentPadding)
-            ) {
+                Spacer(Modifier.height(8.dp))
                 PartyRoster(
                     party = playerParty,
                     combatState = state,
@@ -1129,16 +1121,10 @@ fun CombatScreen(
                     lungeToken = lungeToken,
                     lungeStyle = lungeStyle,
                     onLungeFinished = viewModel::onLungeFinished,
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .navigationBarsPadding()
-                            .padding(bottom = 4.dp)
-                        .onGloballyPositioned { coords ->
-                            val height = coords.size.height
-                            if (height > 0 && partyDockHeightPx.value != height) {
-                                partyDockHeightPx.value = height
-                            }
-                        }
+                    portraitSize = crewPortraitSize,
+                    singleRow = crewSingleRow,
+                    compact = compactCrew,
+                    modifier = Modifier.fillMaxWidth().testTag("combat-party")
                 )
             }
 

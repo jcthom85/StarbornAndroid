@@ -676,6 +676,7 @@ internal fun CampaignNavigationHost(
                 )
                 CombatScreen(
                     overlayPaused = demoPaused,
+                    demoMode = onDemoExit != null,
                     navController = navController,
                     viewModel = combatViewModel,
                     audioCuePlayer = services.audioCuePlayer,

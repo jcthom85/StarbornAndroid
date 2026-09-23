@@ -31,6 +31,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -89,20 +91,23 @@ fun PartyRoster(
     lungeToken: Long,
     lungeStyle: AttackLungeStyle,
     onLungeFinished: (Long) -> Unit,
+    portraitSize: Dp = 80.dp,
+    singleRow: Boolean = false,
+    compact: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     if (party.isEmpty()) return
-    val rows = remember(party) { party.chunked(2) }
+    val rows = remember(party, singleRow) { party.chunked(if (singleRow) 4 else 2) }
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         rows.forEach { rowMembers ->
             key(rowMembers.joinToString(separator = "|") { member -> member.id }) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
                     verticalAlignment = Alignment.Top
                 ) {
                     rowMembers.forEach { member ->
@@ -125,11 +130,12 @@ fun PartyRoster(
                                 else -> member.combatIconPath.takeIf { it.isNotBlank() } ?: member.miniIconPath
                             }
                             val portraitPainter = rememberAssetPainter(portraitPath, painterResource(R.drawable.main_menu_background))
-                            val portraitFrameSize = 114.dp
+                            val portraitFrameSize = portraitSize + 8.dp
+                            val barWidth = if (compact) 64.dp else if (singleRow && party.size > 2) 112.dp else 128.dp
                             val atbProgress = atbMeters[member.id] ?: 0f
                             val readyToAct = atbProgress >= 0.999f
 
-                            val baseModifier = Modifier.widthIn(min = 150.dp)
+                            val baseModifier = Modifier.width(if (compact) 140.dp else barWidth + 12.dp)
                             val canTap = onMemberTap != null && isAlive && (readyToAct || allowNonReadySelection)
                             val interactiveModifier = if (canTap) {
                                 baseModifier.clickable { onMemberTap(member.id) }
@@ -155,12 +161,11 @@ fun PartyRoster(
                                 label = "party_active_scale_${member.id}"
                             )
                             Box(
-                                modifier = interactiveModifier.padding(horizontal = 4.dp)
+                                modifier = interactiveModifier
                             ) {
-                                Column(
-                                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                CrewMemberContent(
+                                    compact = compact,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp)
                                 ) {
                                     Box(
                                         modifier = Modifier.size(portraitFrameSize),
@@ -208,7 +213,7 @@ fun PartyRoster(
                                         val isLowHp = isAlive && (currentHp.toFloat() / maxHp.coerceAtLeast(1)) <= 0.25f
                                         Box(
                                             modifier = Modifier
-                                                .size(100.dp)
+                                                .size(portraitSize)
                                                 .clip(CircleShape)
                                                 .background(Color(0xFF1C1F24))
                                                 .graphicsLayer {
@@ -292,7 +297,7 @@ fun PartyRoster(
                                     )
                                     AtbBar(
                                         progress = atbProgress,
-                                        modifier = Modifier.width(HUD_BAR_WIDTH)
+                                        modifier = Modifier.width(barWidth)
                                     )
                                     StatBar(
                                         current = currentHp,
@@ -300,12 +305,12 @@ fun PartyRoster(
                                         color = Color(0xFFFF5252),
                                         background = Color.Black.copy(alpha = 0.5f),
                                         height = 12.dp,
-                                        modifier = Modifier.width(HUD_BAR_WIDTH)
+                                        modifier = Modifier.width(barWidth)
                                     )
                                     MomentumGauge(
                                         momentum = memberState?.momentum ?: 0,
                                         modifier = Modifier
-                                            .width(HUD_BAR_WIDTH)
+                                            .width(barWidth)
                                             .padding(top = 2.dp)
                                     )
                                 }
@@ -336,8 +341,9 @@ fun PartyRoster(
                                     showKnockout = knockoutFx.any { it.targetId == member.id },
                                     shape = CircleShape,
                                     modifier = Modifier
-                                        .align(Alignment.TopCenter)
-                                        .padding(top = 12.dp)
+                                        .align(if (compact) Alignment.TopStart else Alignment.TopCenter)
+                                        .padding(start = if (compact) 6.dp else 0.dp)
+                                        .padding(top = 4.dp)
                                         .size(portraitFrameSize)
                                 )
                                 CombatFxOverlay(
@@ -355,9 +361,37 @@ fun PartyRoster(
                             }
                         }
                     }
-                    if (rowMembers.size == 1 && party.size > 1) {
-                        Spacer(modifier = Modifier.width(150.dp))
-                    }
+                }
+            }
+        }
+    }
+}
+
+/** Compact cards put vitals beside the portrait so short screens retain a readable enemy area. */
+@Composable
+private fun CrewMemberContent(compact: Boolean, modifier: Modifier, content: @Composable () -> Unit) {
+    Layout(content = content, modifier = modifier) { children, constraints ->
+        val items = children.map { it.measure(Constraints(maxWidth = constraints.maxWidth)) }
+        val gap = 4.dp.roundToPx()
+        if (compact) {
+            val portrait = items.first()
+            val vitals = items.drop(1)
+            val vitalsHeight = vitals.sumOf { it.height } + gap * (vitals.size - 1)
+            val height = maxOf(portrait.height, vitalsHeight)
+            layout(constraints.maxWidth, height) {
+                portrait.placeRelative(0, (height - portrait.height) / 2)
+                var y = (height - vitalsHeight) / 2
+                vitals.forEach { item ->
+                    item.placeRelative(portrait.width + gap * 2, y)
+                    y += item.height + gap
+                }
+            }
+        } else {
+            layout(constraints.maxWidth, items.sumOf { it.height } + gap * (items.size - 1)) {
+                var y = 0
+                items.forEach { item ->
+                    item.placeRelative((constraints.maxWidth - item.width) / 2, y)
+                    y += item.height + gap
                 }
             }
         }
