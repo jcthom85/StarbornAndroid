@@ -920,28 +920,101 @@ internal fun BurgfestDemoDialog(
         },
         text = {
             LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 450.dp)
+                    .heightIn(max = 480.dp)
             ) {
                 item {
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text("Aim for 5–10 minutes · Go at your own pace", color = TitleText)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(2.dp, TitleGold, RoundedCornerShape(14.dp))
+                            .background(TitleGold.copy(alpha = 0.12f), RoundedCornerShape(14.dp))
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        androidx.compose.material3.Surface(
+                            shape = RoundedCornerShape(4.dp),
+                            color = TitleGold,
+                            contentColor = Color.Black
+                        ) {
+                            Text(
+                                "★ RECOMMENDED FOR FIRST-TIME PLAYERS",
+                                fontWeight = FontWeight.Black,
+                                fontSize = 10.sp,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                            )
+                        }
+                        Text(
+                            "Starborn Sampler",
+                            fontWeight = FontWeight.Black,
+                            color = TitleGold,
+                            fontSize = 18.sp
+                        )
+                        Text(
+                            "The complete 5–10 min experience: fight in tactical combat with the crew, unwind aboard the Astra, and explore ship activities.",
+                            color = TitleText,
+                            fontSize = 12.sp,
+                            lineHeight = 16.sp
+                        )
+                        Text(
+                            "Go at your own pace · Campaign saves stay safe",
+                            color = TitleAmber,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Medium
+                        )
                         Button(
                             onClick = { onLaunch(com.example.starborn.feature.mainmenu.BurgQuestLaunch.sampler()) },
-                            modifier = Modifier.fillMaxWidth().testTag("demo-start-sampler"),
-                            colors = ButtonDefaults.buttonColors(containerColor = TitleGold, contentColor = Color.Black)
-                        ) { Text("Start the Starborn sampler") }
-                        Text("Explore individual demos", fontWeight = FontWeight.Bold, color = TitleCyan)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("demo-start-sampler")
+                                .padding(top = 4.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = TitleGold,
+                                contentColor = Color.Black
+                            ),
+                            shape = RoundedCornerShape(10.dp),
+                            contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 12.dp)
+                        ) {
+                            Text(
+                                "Start the Starborn sampler",
+                                fontWeight = FontWeight.Black,
+                                fontSize = 14.sp
+                            )
+                        }
+                    }
+                }
+                item {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        HorizontalDivider(
+                            modifier = Modifier.weight(1f),
+                            color = TitleCyan.copy(alpha = 0.3f)
+                        )
+                        Text(
+                            "Or explore individual showcases",
+                            fontWeight = FontWeight.SemiBold,
+                            color = TitleCyan,
+                            fontSize = 12.sp
+                        )
+                        HorizontalDivider(
+                            modifier = Modifier.weight(1f),
+                            color = TitleCyan.copy(alpha = 0.3f)
+                        )
                     }
                 }
                 items(scenarios, key = { it.id }) { scenario ->
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .border(1.dp, TitleCyan.copy(alpha = 0.35f), RoundedCornerShape(12.dp))
-                            .background(TitleCyan.copy(alpha = 0.08f), RoundedCornerShape(12.dp))
+                            .border(1.dp, TitleCyan.copy(alpha = 0.25f), RoundedCornerShape(12.dp))
+                            .background(TitleCyan.copy(alpha = 0.05f), RoundedCornerShape(12.dp))
                             .padding(14.dp),
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
@@ -953,19 +1026,19 @@ internal fun BurgfestDemoDialog(
                             fontWeight = FontWeight.SemiBold
                         )
                         Text(scenario.description, color = TitleMutedText, fontSize = 12.sp)
-                        Button(
+                        OutlinedButton(
                             onClick = { onLaunch(com.example.starborn.feature.mainmenu.BurgQuestLaunch(scenario)) },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = TitleGold,
-                                contentColor = Color.Black
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = TitleCyan
                             ),
+                            border = BorderStroke(1.dp, TitleCyan.copy(alpha = 0.6f)),
                             shape = RoundedCornerShape(8.dp),
                             modifier = Modifier
-                                .testTag("demo-launch-${scenario.id}")
+                                .testTag("demo-launch-" + scenario.id)
                                 .fillMaxWidth()
                                 .padding(top = 4.dp)
                         ) {
-                            Text("Launch Demo", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                            Text("Launch Demo", fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
                         }
                     }
                 }
