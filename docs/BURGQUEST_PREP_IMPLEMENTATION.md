@@ -1,6 +1,6 @@
 # BurgQuest focused prep - September 22, 2026
 
-September 23 local follow-up: [combat layout and compact demo controls](COMBAT_LAYOUT_BURGQUEST.md). These changes are not yet in the Play release below.
+September 23 follow-up: [combat layout and compact demo controls](COMBAT_LAYOUT_BURGQUEST.md), shipped in version 1.3.53 (137).
 
 ## Implementation shipped in 1.3.52 (versionCode 136)
 

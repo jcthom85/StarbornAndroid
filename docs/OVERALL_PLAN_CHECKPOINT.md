@@ -1,11 +1,11 @@
-# Overall plan checkpoint — September 22, 2026
+# Overall plan checkpoint — September 23, 2026
 
-**Read this first when resuming.** This supersedes older next-step lists in the campaign/Foundry documents. The world balance program is temporarily paused for BurgQuest booth preparation. BurgQuest build 1.3.52 is released to Google Play internal testing; see [the focused prep record](BURGQUEST_PREP_IMPLEMENTATION.md). Actual-device/newcomer checks remain. The world-by-world position and combat resume point below are unchanged.
+**Read this first when resuming.** This supersedes older next-step lists in the campaign/Foundry documents. The world balance program is temporarily paused for BurgQuest booth preparation. BurgQuest build 1.3.53 is released to Google Play internal testing; see [the focused prep record](BURGQUEST_PREP_IMPLEMENTATION.md). Actual-device/newcomer checks remain. The world-by-world position and combat resume point below are unchanged.
 
 ## Released versus local
 
-- Last confirmed release: **1.3.52 (136)**, commit `aeec426`, pushed to `feature/multiplatform-port`. Google Play accepted the bundle and confirmed it committed/live on internal testing on September 22, 2026.
-- This release includes the BurgQuest booth flow and curated fixtures, isolated booth saves, finish/retry navigation, Astra workbench repair, Avatar's post-barrage recovery, related tests and campaign/finale diagnostics. New Game remains hidden; restore this flag after BurgQuest. Story Opening still starts the campaign deliberately.
+- Last confirmed release: **1.3.53 (137)**, commit `29b840d`, pushed to `feature/multiplatform-port`. Google Play accepted the bundle and confirmed it committed/live on internal testing on September 23, 2026.
+- This release includes the combat formation spacing, responsive 1-4 crew layouts, compact demo controls and all BurgQuest booth features, as well as the Astra workbench repair, Avatar's post-barrage recovery, tests and campaign/finale diagnostics. New Game remains hidden; restore this flag after BurgQuest. Story Opening still starts the campaign deliberately.
 - Finale stagger candidates are **test-only**. Production Reality Break still applies stagger. No every-other-cast candidate has been implemented yet.
 - Release verification: **551 unit tests passed; 8/8 Android instrumentation tests passed offline**. BurgQuest fixture simulations won 40/40; see the prep record for limitations and operator checks.
 - Preserve unrelated untracked booth audio, generation scripts, `desktop.ini` and local evidence. Do not stage the entire workspace indiscriminately.

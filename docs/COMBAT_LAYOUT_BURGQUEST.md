@@ -1,6 +1,6 @@
 # Combat layout and demo controls - September 23, 2026
 
-Local follow-up to Play internal release 1.3.52 (136).
+Shipped in Play internal release 1.3.53 (versionCode 137), commit `29b840d`, on September 23, 2026.
 
 ## Changes
 
@@ -17,4 +17,4 @@ Local follow-up to Play internal release 1.3.52 (136).
 - Formation check passed all 24 combinations on the final build (49.896 seconds): 1-4 party members, 560/720dp available heights, and 1/2/5 enemies. It checks visible portraits, formation separation, sprite bounds and centered solo/three-member rows.
 - Evidence: local `test-results/combat-layout/` and its `burgquest-prep/` subdirectory. White space below height-limited test screenshots is outside the deliberately constrained combat surface.
 
-No version bump or release in this follow-up. Physical booth-device playtesting remains useful, especially font scaling and tap comfort. The checks do not claim coverage of every composite boss or display configuration.
+Physical booth-device playtesting remains useful, especially font scaling and tap comfort. The checks do not claim coverage of every composite boss or display configuration.
