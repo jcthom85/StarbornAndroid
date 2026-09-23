@@ -2198,7 +2198,7 @@ class CombatViewModel(
         return CombatBannerMessage(
             id = session.id,
             primary = session.primary,
-            secondary = if ((entry.action as? CombatAction.SkillUse)?.skillId == "gathering_silence")
+            secondary = if ((entry.action as? CombatAction.SkillUse)?.skillId in setOf("gathering_silence", "avatar_recalibration", "vent_exposure"))
                 "Recovery window — attack or heal" else null,
             accent = session.accent,
             icon = session.icon

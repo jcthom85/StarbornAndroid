@@ -26,10 +26,10 @@ data class DebugScenario(
 
 object DebugScenarioCatalog {
     val burgfestScenarios: List<DebugScenario> = listOf(
-        scenario("burgfest_story", "BURGFEST: 1. Story Opening (The Awakening)", "Nova wakes in the bunk with exploration, dialogue, and first combat.", DebugScenarioCategory.BURGFEST, worldLabel = "World 1: The Mines"),
-        scenario("burgfest_combat", "BURGFEST: 2. Tactical Combat (Canopy Skirmish)", "Full party combat in Sector 9 showcasing party switching, guard breaks, snacks, and Source Arts.", DebugScenarioCategory.BURGFEST, worldLabel = "World 2: Sector 9"),
-        scenario("burgfest_astra", "BURGFEST: 3. The Astra Flagship (Hub, Crafting & Arcade)", "Explore the Astra ship base with crew dialogue, tinkering workshop, and playable Arcade Cabinet.", DebugScenarioCategory.BURGFEST, worldLabel = "The Astra"),
-        scenario("burgfest_boss", "BURGFEST: 4. Boss Encounter (Titan Walker)", "High-stakes boss battle against the Titan Walker at the Foundry.", DebugScenarioCategory.BURGFEST, worldLabel = "World 4: The Foundry")
+        scenario("burgfest_combat", "Tactical Combat - Start Here", "A short, full-party skirmish against a Siren Skimmer and Spore-Spitter. Fixed gear, a small skill selection and healing supplies. Finish one fight, then try another showcase.", DebugScenarioCategory.BURGFEST, worldLabel = "BurgQuest / Sector 9"),
+        scenario("burgfest_astra", "The Astra - Arcade & Workshop", "A relaxed five-minute suggested route: play an arcade in the common room, then optionally visit the workshop. Finish whenever you like.", DebugScenarioCategory.BURGFEST, worldLabel = "BurgQuest / The Astra"),
+        scenario("burgfest_boss", "Titan Walker - Boss Challenge", "The harder combat showcase. Four prepared crew members face Titan with limited supplies. Watch for its recovery opening.", DebugScenarioCategory.BURGFEST, worldLabel = "BurgQuest / The Foundry"),
+        scenario("burgfest_story", "The Awakening - Story Preview", "Meet Nova in the unabridged campaign opening. Read at your own pace; combat may take longer than ten minutes to reach.", DebugScenarioCategory.BURGFEST, worldLabel = "BurgQuest / The Mines")
     )
 
     val scenarios: List<DebugScenario> = burgfestScenarios + listOf(

@@ -1541,6 +1541,17 @@
     ]
   },
   {
+    "id": "avatar_recalibration",
+    "name": "Recalibrating Weapons",
+    "character": "enemy",
+    "type": "support",
+    "description": "The Avatar recalibrates its weapons after the missile barrage, leaving a brief opening to attack or heal.",
+    "targeting": "self",
+    "combat_tags": ["support"],
+    "base_power": 0,
+    "cooldown": 0
+  },
+  {
     "id": "gathering_silence",
     "name": "Gathering Silence",
     "character": "enemy",

@@ -78,11 +78,16 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 
 @Composable
-fun NavigationHost(
+internal fun CampaignNavigationHost(
     navController: NavHostController = rememberNavController(),
     showCombatActionText: Boolean = true,
     providedServices: AppServices? = null,
-    initialDestination: String = MainMenu.route
+    initialDestination: String = MainMenu.route,
+    onBurgQuestLaunch: ((com.example.starborn.feature.mainmenu.DebugScenario) -> Unit)? = null,
+    onDemoCombatResult: ((CombatResultPayload) -> Unit)? = null,
+    onDemoExit: (() -> Unit)? = null,
+    demoEnemies: List<String> = emptyList(),
+    demoPaused: Boolean = false
 ) {
     val context = LocalContext.current
     val hostView = LocalView.current
@@ -94,6 +99,15 @@ fun NavigationHost(
     val sessionState by services.sessionStore.state.collectAsState()
     val environmentThemeState by services.environmentThemeManager.state.collectAsState()
     val settingsScope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        if (demoEnemies.isNotEmpty()) navController.navigate(Combat.create(demoEnemies))
+    }
+    LaunchedEffect(currentBackStackEntry?.destination?.route) {
+        if (services.isBurgQuestSession && currentBackStackEntry?.destination?.route == MainMenu.route) {
+            onDemoExit?.invoke()
+        }
+    }
 
     DisposableEffect(hostView, keepScreenAwake) {
         hostView.keepScreenOn = keepScreenAwake
@@ -135,7 +149,6 @@ fun NavigationHost(
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
-            services.release()
         }
     }
 
@@ -146,6 +159,7 @@ fun NavigationHost(
         composable(MainMenu.route) {
             val mainMenuViewModel: MainMenuViewModel = viewModel(factory = MainMenuViewModelFactory(services))
             MainMenuScreen(
+                onBurgQuestLaunch = onBurgQuestLaunch,
                 viewModel = mainMenuViewModel,
                 audioCuePlayer = services.audioCuePlayer,
                 audioRouter = services.audioRouter,
@@ -304,7 +318,8 @@ fun NavigationHost(
                 launch {
                     resultFlow.collect { result ->
                         if (!result.isPlaceholder) {
-                            when (result.outcome) {
+                            if (onDemoCombatResult != null) onDemoCombatResult(result)
+                            else when (result.outcome) {
                                 CombatResultPayload.Outcome.VICTORY ->
                                     explorationViewModel.onCombatVictory(result)
                                 CombatResultPayload.Outcome.DEFEAT ->
@@ -656,10 +671,11 @@ fun NavigationHost(
                     factory = CombatViewModelFactory(
                         services = services,
                         enemyIds = enemyIds,
-                        tutorialsEnabled = userSettings.tutorialsEnabled
+                        tutorialsEnabled = userSettings.tutorialsEnabled && !services.isBurgQuestSession
                     )
                 )
                 CombatScreen(
+                    overlayPaused = demoPaused,
                     navController = navController,
                     viewModel = combatViewModel,
                     audioCuePlayer = services.audioCuePlayer,

@@ -1,5 +1,7 @@
 # Next combat review — 2026-09-22
 
+> **Resume from [OVERALL_PLAN_CHECKPOINT.md](OVERALL_PLAN_CHECKPOINT.md).** Avatar recovery has since been implemented and verified locally. Finale pacing and no-stagger comparisons are complete; every-other Reality Break is the next proposed experiment. Combat work is paused for BurgQuest preparation. The original sequence below is historical.
+
 Resumed after the Astra arcade navigation repair. This is a diagnostic plan, not an approved production balance change. Baseline evidence: `REMAINING_BOSS_DIAGNOSTICS.md`.
 
 ## 1. Avatar response windows

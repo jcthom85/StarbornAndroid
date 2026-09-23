@@ -87,6 +87,7 @@ import com.example.starborn.debug.DebugTestRegistry
 import com.example.starborn.feature.mainmenu.MainMenuViewModel
 import com.example.starborn.feature.mainmenu.DebugScenario
 import com.example.starborn.feature.mainmenu.DebugScenarioCategory
+import androidx.compose.ui.platform.testTag
 import com.example.starborn.feature.mainmenu.DebugScenarioDestination
 import com.example.starborn.ui.components.SaveLoadDialog
 import com.example.starborn.ui.theme.themeColor
@@ -120,7 +121,8 @@ fun MainMenuScreen(
     onToggleHapticsDisabled: (Boolean) -> Unit = {},
     onStartGame: () -> Unit,
     onStartHub: () -> Unit,
-    onSlotLoaded: () -> Unit
+    onSlotLoaded: () -> Unit,
+    onBurgQuestLaunch: ((DebugScenario) -> Unit)? = null
 ) {
     var startingGame by remember { mutableStateOf(false) }
     var startingGamePlus by remember { mutableStateOf(false) }
@@ -494,7 +496,9 @@ fun MainMenuScreen(
                 enabled = buttonsInteractable,
                 primary = true
             )
-            StarbornTitleButton(
+            // Restore after BurgQuest by setting this temporary visibility flag to true.
+            val showNewGameForPublicRelease = false
+            if (showNewGameForPublicRelease) StarbornTitleButton(
                 text = "New Game",
                 onClick = {
                     if (newGamePlusUnlocked) {
@@ -636,7 +640,7 @@ fun MainMenuScreen(
             BurgfestDemoDialog(
                 onLaunch = { scenario ->
                     showBurgfestDialog = false
-                    pendingScenario = scenario
+                    if (onBurgQuestLaunch != null) onBurgQuestLaunch(scenario) else pendingScenario = scenario
                 },
                 onDismiss = { showBurgfestDialog = false }
             )
@@ -646,7 +650,9 @@ fun MainMenuScreen(
             DebugScenarioDialog(
                 onLaunch = { scenario ->
                     showDebugBrowser = false
-                    pendingScenario = scenario
+                    if (scenario.category == DebugScenarioCategory.BURGFEST && onBurgQuestLaunch != null) {
+                        onBurgQuestLaunch(scenario)
+                    } else pendingScenario = scenario
                 },
                 onDismiss = { showDebugBrowser = false }
             )
@@ -904,7 +910,7 @@ internal fun BurgfestDemoDialog(
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text("BurgQuest Demo Showcase", fontWeight = FontWeight.Black, color = TitleGold, fontSize = 20.sp)
                 Text(
-                    "Select a showcase track to launch directly:",
+                    "Start with Tactical Combat. Demos use separate saves and reset for each visitor.",
                     color = TitleCyan,
                     fontSize = 12.sp
                 )
@@ -942,6 +948,7 @@ internal fun BurgfestDemoDialog(
                             ),
                             shape = RoundedCornerShape(8.dp),
                             modifier = Modifier
+                                .testTag("demo-launch-${scenario.id}")
                                 .fillMaxWidth()
                                 .padding(top = 4.dp)
                         ) {

@@ -1,6 +1,8 @@
 package com.example.starborn
 
 import androidx.activity.ComponentActivity
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ApplicationProvider
@@ -17,6 +19,18 @@ import java.util.UUID
 
 class RecoveryInstrumentedTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
+
+    @Test fun demoGuideKeepsCombatPausedAcrossBackgroundResume() {
+        var overlay by androidx.compose.runtime.mutableStateOf(false)
+        var paused = true
+        compose.setContent { CombatLifecyclePause(overlay) { paused = it } }
+        compose.runOnIdle { assertFalse(paused); overlay = true }
+        compose.runOnIdle { assertTrue(paused) }
+        compose.activityRule.scenario.moveToState(Lifecycle.State.CREATED)
+        compose.activityRule.scenario.moveToState(Lifecycle.State.RESUMED)
+        compose.runOnIdle { assertTrue(paused); overlay = false }
+        compose.runOnIdle { assertFalse(paused) }
+    }
 
     @Test fun combatPauseFollowsActivityBackgroundAndResume() {
         var paused = true

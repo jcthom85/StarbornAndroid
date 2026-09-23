@@ -131,6 +131,29 @@ class EnemySupportDecisionTest {
         }
     }
 
+    @Test fun `Avatar recalibrates only after barrage without damage or permanent recovery loop`() {
+        val skills = assets.loadSkills().associateBy { it.id }
+        val definition = assets.loadEnemies().single { it.id == "compliance_avatar" }
+        assertNull(definition.openingSkill)
+        assertEquals(mapOf("missile_barrage" to "avatar_recalibration"), definition.recoveryAfter)
+        val boss = core.copy(id = definition.id, skills = definition.abilities)
+        val state = CombatState(listOf(TurnSlot(boss.id, 10), TurnSlot(nova.id, 5)), 0,
+            mapOf(boss.id to CombatantState(boss, 200, 100), nova.id to CombatantState(nova, 200, 100)))
+        val history = mutableMapOf(boss.id to ArrayDeque(listOf("missile_barrage")))
+        val ai = CombatEnemyAI(skills, mapOf(boss.id to definition), registry, CombatAiWeights(),
+            isSupportSkill = { it.type == "support" }, skillStatusDefinitions = { emptyList() },
+            determineSkillTargeting = { if (it.targeting == "self") SkillTargeting.SELF else SkillTargeting.SINGLE_ENEMY },
+            checkSkillConditions = { _, _, _, _ -> true }, enemyBrains = mutableMapOf(),
+            enemyActionHistory = history, enemySkillUsageCounts = mutableMapOf(), getPlayerIdList = { listOf(nova.id) })
+        val action = ai.selectEnemyAction(state, state.combatants.getValue(boss.id), null) {}
+        assertEquals(CombatAction.SkillUse(boss.id, "avatar_recalibration", listOf(boss.id)), action)
+        val after = CombatActionProcessor(CombatEngine(statusRegistry = registry), registry, skills::get)
+            .execute(state, action) { CombatReward() }
+        assertTrue(after.log.none { it is CombatLogEntry.Damage || it is CombatLogEntry.StatusApplied })
+        history[boss.id] = ArrayDeque(listOf("avatar_recalibration"))
+        assertNotEquals(action, ai.selectEnemyAction(after, after.combatants.getValue(boss.id), null) {})
+    }
+
     @Test fun `repair on cooldown is excluded from enemy decisions`() {
         val state = scenario(cooldown = 2)
         val ai = ai()

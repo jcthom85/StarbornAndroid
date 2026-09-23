@@ -29,6 +29,11 @@ import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.spy
+import org.mockito.kotlin.whenever
+import org.mockito.kotlin.doAnswer
+import org.mockito.kotlin.anyOrNull
+import com.example.starborn.feature.combat.viewmodel.helpers.CombatEnemyAI
 
 /**
  * Attainable opening checkpoint: solo Nova, starting skills, no optional gear
@@ -467,7 +472,10 @@ class OpeningCombatRuntimeTest {
             assertEquals(result, run(seed, earnedGear = true, allocatedAp = true))
             "AVATAR_ALLOCATED_AP seed=$seed result=$result"
         }
-        val purchased = (1..5).map { seed ->
+        val avatarSeeds = System.getenv("AVATAR_BASELINE_SEEDS")?.split(',')
+            ?.map { it.trim().toInt() }?.distinct() ?: (1..5).toList()
+        require(avatarSeeds.isNotEmpty() && avatarSeeds.all { it > 0 })
+        val purchased = avatarSeeds.map { seed ->
             val result = run(seed, earnedGear = true, allocatedAp = true, shopWeapons = true)
             assertEquals(result, run(seed, earnedGear = true, allocatedAp = true, shopWeapons = true))
             "AVATAR_CLOSEOUT_LOADOUT seed=$seed result=$result"
@@ -855,23 +863,101 @@ class OpeningCombatRuntimeTest {
         }
     }
 
+    @Test fun `BurgQuest exact curated combat fixtures resolve across seeds`() {
+        val fixture = com.example.starborn.feature.mainmenu.BurgQuestDemo
+        val leveling = LevelingManager(requireNotNull(assets.loadLevelingData()))
+        for (id in listOf("burgfest_combat", "burgfest_boss")) {
+            for (skills in listOf(false, true)) {
+                val results = (1..10).map { seed ->
+                    val state = fixture.curate(GameSessionState(), id, leveling.levelBounds(fixture.level(id)).first)
+                    val result = measureSpending(true, seed, GameSessionStore().apply { restore(state) },
+                        enemy = fixture.enemies(id).first(), skillAware = skills, defensive = true,
+                        expanded = true, ownedSupplies = true, encounter = fixture.enemies(id))
+                    println("BURGQUEST id=$id skills=$skills seed=$seed result=$result")
+                    assertNotEquals("Booth encounter should not stall", "timeout", result.outcome)
+                    result
+                }
+                if (skills) assertTrue("Prepared booth crew should reliably win: $id",
+                    results.count { it.outcome == "victory" } >= 9)
+            }
+        }
+    }
+
     private fun measureSpending(laterGame: Boolean, seed: Int, suppliedSession: GameSessionStore? = null,
                                 enemy: String? = null, skillAware: Boolean = false,
                                 defensive: Boolean = false, expanded: Boolean = false, ownedSupplies: Boolean = false,
-                                avatarPolicy: Boolean = false, simulationTicks: Int = 960): SpendingResult {
+                                avatarPolicy: Boolean = false, simulationTicks: Int = 960,
+                                encounter: List<String>? = null): SpendingResult {
         val session = suppliedSession ?: if (laterGame) world4Session() else GameSessionStore().apply {
             restore(GameSessionState(worldId = "world_1", roomId = "workshop_yard",
                 playerId = "nova", partyMembers = listOf("nova"), unlockedSkills = setOf("nova_arc_tether")))
         }
         // Supplied stock is not claimed as an earned campaign inventory.
         if (suppliedSession == null) session.setInventory(mapOf("medkit" to 3))
-        val vm = createCombat(session, listOf(enemy ?: if (laterGame) "titan_walker_boss" else "faulted_loader"), SeededCombatRandom(seed))
+        val recoveryExperiment = enemy == "compliance_avatar" && avatarPolicy && System.getenv("AVATAR_RECOVERY") in setOf("1", "barrage")
+        val vm = createCombat(session, encounter ?: listOf(enemy ?: if (laterGame) "titan_walker_boss" else "faulted_loader"), SeededCombatRandom(seed), recoveryExperiment)
+        if (enemy == "compliance_avatar" && avatarPolicy && System.getenv("AVATAR_NO_REPEAT") == "1") {
+            require(!recoveryExperiment) { "Compare candidate mechanisms separately" }
+            require(assets.loadEnemies().single { it.id == "compliance_avatar" }.recoveryAfter.isEmpty()) {
+                "Target-only historical experiment requires the pre-recovery Avatar definition"
+            }
+            val field = CombatViewModel::class.java.getDeclaredField("enemyAI").apply { isAccessible = true }
+            val candidate = spy(field.get(vm) as CombatEnemyAI)
+            doAnswer { invocation ->
+                val state = invocation.getArgument<CombatState>(0)
+                // Use executed/logged actions: AI also selects actions on turns later skipped by freeze.
+                val previousTarget = state.log.asReversed().filterIsInstance<CombatLogEntry.ActionQueued>()
+                    .filter { it.actorId == "compliance_avatar" }.mapNotNull {
+                        when (val action = it.action) {
+                            is CombatAction.BasicAttack -> action.targetId
+                            is CombatAction.SkillUse -> action.targetIds.singleOrNull()
+                            else -> null
+                        }?.takeIf { id -> state.combatants[id]?.combatant?.side == CombatSide.PLAYER }
+                    }.firstOrNull()
+                val chosen = invocation.callRealMethod() as CombatAction
+                val target = when (chosen) {
+                    is CombatAction.BasicAttack -> chosen.targetId
+                    is CombatAction.SkillUse -> chosen.targetIds.singleOrNull()
+                    else -> null
+                }
+                val opponents = state.combatants.values.filter { it.isAlive && it.combatant.side == CombatSide.PLAYER }
+                val alternative = opponents.filter { it.combatant.id != target }.maxByOrNull { it.hp }?.combatant?.id
+                val finalTarget = if (target == previousTarget && alternative != null) alternative else target
+                val result = if (target != null && opponents.any { it.combatant.id == target } && finalTarget != target) {
+                    when (chosen) {
+                        is CombatAction.BasicAttack -> chosen.copy(targetId = requireNotNull(finalTarget))
+                        is CombatAction.SkillUse -> chosen.copy(targetIds = listOf(requireNotNull(finalTarget)))
+                        else -> chosen
+                    }
+                } else chosen
+                if (target != null && opponents.any { it.combatant.id == target }) {
+                    invocation.getArgument<(String?) -> Unit>(3)(finalTarget)
+                }
+                result
+            }.whenever(candidate).selectEnemyAction(any(), any(), anyOrNull(), any())
+            field.set(vm, candidate)
+        }
         val start = dispatcher.scheduler.currentTime
         var consumed = 0
         var skillsUsed = 0
         var supportUsed = 0
         var otherHeals = 0
         val extraSupplies = mutableMapOf<String, Int>()
+        val pacing = System.getenv("FINALE_PACING") == "1" && enemy in setOf("ascended_vale", "ascended_god")
+        val pacingTicks = linkedMapOf<String, Int>()
+        fun reportPacing(outcome: String) {
+            if (!pacing) return
+            val state = requireNotNull(vm.combatState)
+            val actions = state.log.filterIsInstance<CombatLogEntry.ActionQueued>()
+            println("FINALE_PACING enemy=$enemy seed=$seed tactic=${System.getenv("FINALE_TACTIC") ?: "standard"} outcome=$outcome " +
+                "sampleMs=${pacingTicks.mapValues { it.value * 250 }} " +
+                "actions=${actions.groupingBy { it.actorId }.eachCount()} " +
+                "recoveryActions=${actions.count { (it.action as? CombatAction.SkillUse)?.skillId == "gathering_silence" }} " +
+                "skips=${state.log.filterIsInstance<CombatLogEntry.TurnSkipped>().groupingBy { "${it.actorId}:${it.reason}" }.eachCount()}")
+        }
+        val traceAvatar = enemy == "compliance_avatar" && avatarPolicy && System.getenv("AVATAR_TRACE") == "1"
+        var previousTraceState = requireNotNull(vm.combatState)
+        var previousTraceMeters = vm.atbMeters.value.toMap()
         val offensiveTactic = if (enemy in setOf("ascended_vale", "ascended_god")) System.getenv("FINALE_TACTIC") else null
         val earlyTriage = enemy == "compliance_avatar" && System.getenv("AVATAR_EARLY_TRIAGE") == "1"
         val traceFinale = System.getenv("FINALE_TRACE") == "1" && enemy in setOf("ascended_god", "compliance_avatar")
@@ -887,6 +973,14 @@ class OpeningCombatRuntimeTest {
                 assertEquals(hp.coerceIn(1, actor.combatant.stats.maxHp), actor.hp)
             }
             repeat(simulationTicks) {
+                if (pacing) {
+                    val bucket = when {
+                        vm.lungeActorId.value != null || vm.missLungeActorId.value != null -> "animationPending"
+                        vm.awaitingAction.value != null -> "playerInputPending"
+                        else -> "otherRuntime"
+                    }
+                    pacingTicks[bucket] = (pacingTicks[bucket] ?: 0) + 1
+                }
                 dispatcher.scheduler.advanceTimeBy(250)
                 dispatcher.scheduler.runCurrent()
                 // Supply the presentation callback after one 250ms tick. The
@@ -894,7 +988,24 @@ class OpeningCombatRuntimeTest {
                 if (vm.lungeActorId.value != null) vm.onLungeFinished(vm.lungeToken.value)
                 if (vm.missLungeActorId.value != null) vm.onMissLungeFinished(vm.missLungeToken.value)
                 val state = requireNotNull(vm.combatState)
+                if (traceAvatar) {
+                    val newEntries = state.log.drop(previousTraceState.log.size)
+                    val deaths = state.combatants.values.filter {
+                        it.combatant.side == CombatSide.PLAYER && !it.isAlive &&
+                            previousTraceState.combatants[it.combatant.id]?.isAlive == true
+                    }.map { it.combatant.id }
+                    if (newEntries.isNotEmpty() || deaths.isNotEmpty()) {
+                        println("AVATAR_TICK seed=$seed ms=${dispatcher.scheduler.currentTime - start} " +
+                            "deaths=$deaths beforeHp=${previousTraceState.combatants.mapValues { it.value.hp }} " +
+                            "afterHp=${state.combatants.mapValues { it.value.hp }} beforeMeters=$previousTraceMeters " +
+                            "afterMeters=${vm.atbMeters.value} awaiting=${vm.awaitingAction.value} " +
+                            "supplies=${vm.inventory.value.filter { it.item.id in setOf("medkit", "medkit_i", "ration_pack") }.map { it.item.id to it.quantity }} entries=$newEntries")
+                    }
+                    previousTraceState = state
+                    previousTraceMeters = vm.atbMeters.value.toMap()
+                }
                 if (state.outcome != null) {
+                    reportPacing(if (state.outcome is CombatOutcome.Victory) "victory" else "defeat")
                     if (traceFinale) println("FINAL_TRACE_END enemy=$enemy seed=$seed limitTicks=$simulationTicks inventory=${vm.inventory.value.map { it.item.id to it.quantity }} state=$state")
                     if (enemy in listOf("compliance_avatar", "ascended_god") && seed == 1) {
                         println("AVATAR_ACTION_TRACE " + state.log.joinToString("\n"))
@@ -995,6 +1106,7 @@ class OpeningCombatRuntimeTest {
                     }
                 }
             }
+            reportPacing("timeout")
             println("TIMEOUT_STATE seed=$seed inventory=${vm.inventory.value.map { it.item.id to it.quantity }} " + vm.combatState)
             println("TIMEOUT enemy=$enemy pauses=" + CombatViewModel::class.java.getDeclaredField("atbAnimationPauses").apply { isAccessible = true }.get(vm) +
                 " lunge=${vm.lungeActorId.value} miss=${vm.missLungeActorId.value} awaiting=${vm.awaitingAction.value} round=${vm.combatState?.round}")
@@ -1006,7 +1118,26 @@ class OpeningCombatRuntimeTest {
 
     private fun createCombat(initialSession: GameSessionStore? = null,
                              enemyIds: List<String> = listOf("faulted_loader"),
-                             random: CombatRandom = DefaultCombatRandom): CombatViewModel {
+                             random: CombatRandom = DefaultCombatRandom,
+                             avatarRecovery: Boolean = false): CombatViewModel {
+        val finaleNoStagger = enemyIds == listOf("ascended_god") && System.getenv("FINALE_NO_STAGGER") == "1"
+        val combatAssets = if (avatarRecovery || finaleNoStagger) spy(assets) else assets
+        if (finaleNoStagger) {
+            val skills = assets.loadSkills().map { skill ->
+                if (skill.id == "reality_break") skill.copy(statusApplications = skill.statusApplications.orEmpty() - "stagger") else skill
+            }
+            doReturn(skills).whenever(combatAssets).loadSkills()
+        }
+        if (avatarRecovery) combatAssets.also { fixture ->
+            val enemies = assets.loadEnemies().map { enemy ->
+                if (enemy.id != "compliance_avatar") enemy else enemy.copy(
+                    abilities = enemy.abilities + "gathering_silence",
+                    recoveryAfter = (if (System.getenv("AVATAR_RECOVERY") == "barrage") listOf("missile_barrage")
+                        else listOf("missile_barrage", "seismic_stomp", "roar_of_the_source"))
+                        .associateWith { "gathering_silence" })
+            }
+            doReturn(enemies).whenever(fixture).loadEnemies()
+        }
         val items = reader.readList<Item>("items.json").associateBy { it.id }
         check(items.isNotEmpty())
         val catalog = object : ItemCatalog {
@@ -1024,7 +1155,7 @@ class OpeningCombatRuntimeTest {
             on { getStyle(any()) } doReturn null
         }
         return CombatViewModel(
-            worldAssets = assets, combatEngine = CombatEngine(statusRegistry = registry),
+            worldAssets = combatAssets, combatEngine = CombatEngine(statusRegistry = registry),
             statusRegistry = registry, sessionStore = session,
             inventoryService = InventoryService(catalog).apply { loadItems(); restore(session.state.value.inventory) }, itemCatalog = catalog,
             levelingManager = LevelingManager(requireNotNull(assets.loadLevelingData())),

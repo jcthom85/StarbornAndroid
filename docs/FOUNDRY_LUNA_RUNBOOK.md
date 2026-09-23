@@ -1,5 +1,7 @@
 # Foundry continuation for Luna
 
+Read [OVERALL_PLAN_CHECKPOINT.md](OVERALL_PLAN_CHECKPOINT.md) first. It supersedes the older instructions below with completed world tests, the local Avatar implementation, the next finale experiment, and the temporary BurgQuest priority.
+
 ## Current follow-up: extended finale verification
 
 **Latest diagnostics complete:** read `REMAINING_BOSS_DIAGNOSTICS.md`. All previously observed alternate-policy timeouts terminate under a separately labelled extended diagnostic; do not repeat them as unexplained stalls. Avatar early triage worsened prepared-build wins from 4/5 to 1/5 and is not a recommended fix. `FINALE_TACTIC` is now restricted to the finale, not Avatar. Foundry's refreshed 720-fight matrix and three consecutive-fight tests pass their terminal/safety gates. Next work is a design decision on Avatar burst and finale pacing, plus actual route-resource validation—not unapproved balance changes or release.

@@ -1533,6 +1533,7 @@
   },
   {
     "id": "compliance_avatar",
+    "recovery_after": { "missile_barrage": "avatar_recalibration" },
     "name": "Compliance Avatar",
     "tier": "boss",
     "combat_behavior": "boss",
@@ -1561,7 +1562,8 @@
     "abilities": [
       "missile_barrage",
       "seismic_stomp",
-      "roar_of_the_source"
+      "roar_of_the_source",
+      "avatar_recalibration"
     ],
     "flavor": "Orbital Compliance given a body: turrets, purge routines, and Vale's certainty rendered as hard light.",
     "xp_reward": 750,

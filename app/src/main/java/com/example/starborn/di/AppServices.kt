@@ -85,8 +85,11 @@ import java.util.Locale
 import java.io.File
 import kotlin.random.Random
 
-class AppServices(context: Context, val isTestSession: Boolean = false) {
+class AppServices(context: Context, val isTestSession: Boolean = false, val isBurgQuestSession: Boolean = false) {
     private val appContext = context.applicationContext
+
+    /** Share assets/settings, but never campaign persistence, with a booth visit. */
+    fun createBurgQuestSession(): AppServices = AppServices(appContext, isBurgQuestSession = true)
     private val moshi = MoshiProvider.instance
     private val assetReader = AssetJsonReader(com.example.starborn.core.platform.AndroidAssetProvider(context), moshi)
 
@@ -117,7 +120,11 @@ class AppServices(context: Context, val isTestSession: Boolean = false) {
         startSession("app_launch")
     }
     private val sessionPersistence = GameSessionPersistence(File(appContext.filesDir,
-        if (isTestSession) "debug-test-session/datastore" else "datastore"))
+        when {
+            isBurgQuestSession -> "burgquest-demo/datastore"
+            isTestSession -> "debug-test-session/datastore"
+            else -> "datastore"
+        }))
     val craftingService = CraftingService(craftingDataSource, inventoryService, sessionStore)
     val events: List<GameEvent> = eventDataSource.loadEvents()
     val statusRegistry = StatusRegistry(worldDataSource.loadStatuses())
@@ -235,6 +242,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false) {
         persistenceScope.launch {
             // Only hydrate from persisted session once on startup.
             // If the user starts a new game before the initial read completes, don't overwrite it.
+            if (isBurgQuestSession) return@launch // Every visitor starts a fresh fixture.
             val stored = sessionPersistence.sessionFlow.first().migrateOpeningNarrativeState()
             if (sessionStore.state.value.needsFallbackImport()) {
                 sessionStore.restore(stored)
@@ -976,12 +984,36 @@ class AppServices(context: Context, val isTestSession: Boolean = false) {
         }
     }
 
+    private fun startBurgQuestFixture(id: String): Boolean = runCatching {
+        val prepared = when (id) {
+            "burgfest_combat" -> startNewGameAtTutPartyCombat()
+            "burgfest_astra" -> startNewGameAboardAstra()
+            "burgfest_boss" -> startNewGameAtTitanApproach()
+            else -> false
+        }
+        if (!prepared) return false
+        clearDebugBootstrap()
+        val fixture = com.example.starborn.feature.mainmenu.BurgQuestDemo
+        var curated = fixture.curate(sessionStore.state.value, id, levelingManager.levelBounds(fixture.level(id)).first)
+        if (id == "burgfest_combat") curated = curated.copy(roomId = "sector9_canopy")
+        if (id == "burgfest_astra") {
+            val recipe = craftingService.tinkeringRecipes.first { it.result == "functional_cryo_inductor" }
+            val materials = craftingService.ingredientsFor(recipe) + recipe.tools.associateWith { 1 }
+            curated = curated.copy(roomId = "astra_common_room", inventory = curated.inventory + materials,
+                learnedSchematics = setOf(recipe.id))
+        }
+        inventoryService.restore(curated.inventory)
+        sessionStore.restore(curated)
+        true
+    }.getOrElse { error ->
+        Log.e("BurgQuest", "Could not prepare $id", error)
+        false
+    }
+
     private fun launchLegacyDebugScenario(id: String): Boolean = when (id) {
         // --- BURGFEST / BURGQUEST DEMO SHORTCUTS ---
         "burgfest_story" -> startNewGame()
-        "burgfest_combat" -> startNewGameAtTutPartyCombat()
-        "burgfest_astra" -> startNewGameAboardAstra()
-        "burgfest_boss" -> startNewGameAtTitanApproach()
+        "burgfest_combat", "burgfest_astra", "burgfest_boss" -> startBurgQuestFixture(id)
 
         // --- TUTORIAL SHORTCUTS ---
         "tut_movement" -> startNewGame()

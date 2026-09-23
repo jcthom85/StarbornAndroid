@@ -11827,7 +11827,7 @@
     "weather": "industrial",
     "title": "Astra Cargo Bay",
     "background_image": "images/rooms/astra/cargo_bay.webp",
-    "description": "Cargo nets, sealed crates, and replacement conduits crowd the lower deck. A compact [action:repair workbench|repair bench] is powered beside a damaged storage terminal. The [action:disembark|cargo ramp] leads back outside; the common room is through the east hatch.",
+    "description": "Cargo nets, sealed crates, and replacement conduits crowd the lower deck. A compact [action:Astra workbench|repair bench] is powered beside a damaged storage terminal. The [action:disembark|cargo ramp] leads back outside; the common room is through the east hatch.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11851,8 +11851,8 @@
         "action_event": "astra_disembark"
       },
       {
-        "name": "repair workbench",
-        "type": "generic",
+        "name": "Astra workbench",
+        "type": "tinkering",
         "condition_unmet_message": "A sturdy titanium bench equipped with laser soldering tools and schematic vices."
       }
     ]

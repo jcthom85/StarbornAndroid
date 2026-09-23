@@ -1,5 +1,7 @@
 # Campaign validation status — 2026-09-22
 
+> **Superseded checkpoint:** See [OVERALL_PLAN_CHECKPOINT.md](OVERALL_PLAN_CHECKPOINT.md) for current world coverage, released versus local changes, and the BurgQuest pause/resume plan. The tables and next steps below record the earlier pre-Avatar-implementation snapshot; their 4/5 Avatar result and Foundry rerun instruction are historical.
+
 This is the current coverage summary, not a claim of complete game QA. All **547 unit tests pass**. Automated main-story/event checks cover Worlds 1–6, including reward delivery, recruitment, journal/save restoration and final completion. Scripted victories used in progression traversal do not prove those battles are balanced; separate production-combat runs supply that evidence.
 
 Latest follow-up: `REMAINING_BOSS_DIAGNOSTICS.md` closes the timeout investigation (all extended runs terminate; some win slowly, others lose), reproduces Avatar's burst-driven loss and rejects an unsuccessful early-healing policy. The current Foundry mixed-party refresh completes 720 fights with 627 wins and no timeouts; selected consecutive-fight gates pass. Full-route resource validation and broader build fairness are still open. No further production tuning was applied.

@@ -26,6 +26,49 @@ import java.io.File
 class FinalePresentationTest {
     @get:Rule val compose = createComposeRule()
 
+    @Test fun avatarRecoveryCue() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val base = ApplicationProvider.getApplicationContext<Context>()
+        lateinit var services: AppServices
+        lateinit var vm: CombatViewModel
+        var created = false
+        instrumentation.runOnMainSync { services = AppServices(IsolatedProgressionContext(base), true) }
+        try {
+            SystemClock.sleep(1000)
+            instrumentation.runOnMainSync {
+                assertTrue(services.startDebugScenario("campaign_w5_mq25"))
+                vm = CombatViewModelFactory(services, listOf("compliance_avatar"), tutorialsEnabled = false)
+                    .create(CombatViewModel::class.java)
+                created = true
+                // Presentation fixture starts immediately after a barrage; unit/runtime tests verify the sequence.
+                val field = CombatViewModel::class.java.getDeclaredField("enemyActionHistory").apply { isAccessible = true }
+                @Suppress("UNCHECKED_CAST")
+                val history = field.get(vm) as MutableMap<String, ArrayDeque<String>>
+                history["compliance_avatar"] = ArrayDeque(listOf("missile_barrage"))
+            }
+            compose.setContent {
+                StarbornTheme {
+                    CombatScreen(rememberNavController(), vm, services.audioCuePlayer,
+                        suppressFlashes = true, suppressScreenshake = true, highContrastMode = false,
+                        largeTouchTargets = false, showCombatActionText = true)
+                }
+            }
+            compose.waitUntil(30_000) {
+                compose.onAllNodesWithText("Recalibrating Weapons", substring = true).fetchSemanticsNodes().isNotEmpty()
+            }
+            compose.onNodeWithText("Recovery window — attack or heal").assertExists()
+            val output = File(base.getExternalFilesDir(null), "avatar-presentation").apply { mkdirs() }
+            val bitmap = requireNotNull(instrumentation.uiAutomation.takeScreenshot())
+            File(output, "recalibrating.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+            bitmap.recycle()
+        } finally {
+            instrumentation.runOnMainSync {
+                if (created) vm.viewModelScope.cancel()
+                services.release()
+            }
+        }
+    }
+
     @Test fun openingCueAndLinkSelection() {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val base = ApplicationProvider.getApplicationContext<Context>()

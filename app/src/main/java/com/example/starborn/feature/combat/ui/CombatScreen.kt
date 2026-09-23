@@ -295,12 +295,13 @@ fun CombatScreen(
     largeTouchTargets: Boolean,
     showCombatActionText: Boolean,
     cinematicState: StateFlow<CinematicPlaybackState?>? = null,
-    onAdvanceCinematic: (() -> Unit)? = null
+    onAdvanceCinematic: (() -> Unit)? = null,
+    overlayPaused: Boolean = false
 ) {
     BackHandler(enabled = true) {
         // Block system back/edge-swipe from leaving combat.
     }
-    CombatLifecyclePause(viewModel::setBackgroundPaused)
+    CombatLifecyclePause(overlayPaused, viewModel::setBackgroundPaused)
     val playerParty = remember(viewModel) { viewModel.playerParty.toList() }
     val enemies = viewModel.enemies
     val enemyCombatantIds = viewModel.enemyCombatantIds
