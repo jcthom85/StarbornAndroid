@@ -21,6 +21,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.starborn.di.AppServices
 import com.example.starborn.R
+import com.example.starborn.domain.prompt.TutorialPrompt
+import com.example.starborn.domain.tutorial.TutorialEntry
 import com.example.starborn.feature.mainmenu.BurgQuestDemo
 import com.example.starborn.feature.mainmenu.BurgQuestLaunch
 import com.example.starborn.feature.mainmenu.ui.BurgfestDemoDialog
@@ -106,8 +108,11 @@ private fun BurgQuestVisitContent(
     BackHandler(enabled = begun && ending == null) { showDemoMenu = true }
 
     // Finishing unmounts the whole session: game loops, owned ViewModels and audio.
+    val services = remember { createServices() }
+    DisposableEffect(services) { onDispose {
+        services.release()
+    } }
     if (begun && ending == null) {
-        val services = remember { createServices() }
         val visitNavigation = rememberNavController()
         val visitEntry by visitNavigation.currentBackStackEntryAsState()
         val exploring = visitEntry?.destination?.route == NavigationDestination.Exploration.route
@@ -117,7 +122,6 @@ private fun BurgQuestVisitContent(
         var ready by remember { mutableStateOf(false) }
         DisposableEffect(services) { onDispose {
             visitOwner.viewModelStore.clear()
-            services.release()
         } }
         LaunchedEffect(services) {
             ready = try {
@@ -181,8 +185,28 @@ private fun BurgQuestVisitContent(
         } },
         confirmButton = { TextButton(onClick = { showDemoMenu = false }) { Text("Resume demo") } }
     )
+    var homecomingTutorialShown by remember { mutableStateOf(false) }
+    val showHomecomingTutorialIfNeeded = {
+        if (launch.isHomecoming && !homecomingTutorialShown) {
+            homecomingTutorialShown = true
+            services.promptManager.enqueue(
+                TutorialPrompt(
+                    TutorialEntry(
+                        key = "tut_astra_sampler_movement",
+                        context = "Exploration",
+                        message = "Swipe to move between rooms, or tap the direction arrows. Head west to find the workshop."
+                    )
+                )
+            )
+        }
+    }
     if ((!begun || showGuide) && ending == null) AlertDialog(
-        onDismissRequest = { if (begun) showGuide = false else onExit() },
+        onDismissRequest = {
+            if (begun) {
+                showGuide = false
+                showHomecomingTutorialIfNeeded()
+            } else onExit()
+        },
         title = { Text(if (launch.isHomecoming) "Make yourself at home" else scenario.title) },
         text = {
             val introduction = if (!begun && scenario.id == "burgfest_combat") {
@@ -191,10 +215,16 @@ private fun BurgQuestVisitContent(
             Text(introduction + if (!begun) "\n\nA fresh demo for every visitor. Your campaign saves stay safe." else "",
                 Modifier.verticalScroll(rememberScrollState()))
         },
-        confirmButton = { TextButton(onClick = { begun = true; showGuide = false }) {
-            Text(if (begun) "Back to demo" else "Begin demo")
+        confirmButton = { TextButton(onClick = {
+            begun = true
+            showGuide = false
+            showHomecomingTutorialIfNeeded()
+        }) {
+            Text(if (launch.isHomecoming) "Continue" else if (begun) "Back to demo" else "Begin demo")
         } },
-        dismissButton = { TextButton(onClick = onExit) { Text("Title screen") } }
+        dismissButton = if (launch.isHomecoming) null else {
+            { TextButton(onClick = onExit) { Text("Title screen") } }
+        }
     )
     ending?.let { result ->
         if (!chooseAnother) BurgQuestFinishDialog(

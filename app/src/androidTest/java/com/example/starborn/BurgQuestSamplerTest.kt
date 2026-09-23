@@ -92,7 +92,7 @@ class BurgQuestSamplerTest {
                 compose.onNodeWithTag("burgquest-homecoming").assertExists()
                 compose.onNodeWithText("Skip").performClick()
                 waitText("Make yourself at home")
-                compose.onNodeWithText("Back to demo").performClick()
+                compose.onNodeWithText("Continue").performClick()
             } else {
                 waitText("Begin demo")
                 compose.onNodeWithText("Begin demo").performClick()

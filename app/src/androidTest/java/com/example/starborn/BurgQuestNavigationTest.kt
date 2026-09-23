@@ -173,7 +173,7 @@ class BurgQuestNavigationTest {
             }
             waitText("Make yourself at home")
             capture("05d-astra-guide")
-            compose.onNodeWithText("Back to demo").performClick()
+            compose.onNodeWithText("Continue").performClick()
             compose.waitUntil(30_000) {
                 compose.onAllNodesWithContentDescription("Deep Mine Asteroid Drill action", ignoreCase = true).fetchSemanticsNodes().isNotEmpty()
             }
