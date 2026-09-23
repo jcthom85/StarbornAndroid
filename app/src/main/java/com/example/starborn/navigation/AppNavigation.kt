@@ -83,11 +83,12 @@ internal fun CampaignNavigationHost(
     showCombatActionText: Boolean = true,
     providedServices: AppServices? = null,
     initialDestination: String = MainMenu.route,
-    onBurgQuestLaunch: ((com.example.starborn.feature.mainmenu.DebugScenario) -> Unit)? = null,
+    onBurgQuestLaunch: ((com.example.starborn.feature.mainmenu.BurgQuestLaunch) -> Unit)? = null,
     onDemoCombatResult: ((CombatResultPayload) -> Unit)? = null,
     onDemoExit: (() -> Unit)? = null,
     demoEnemies: List<String> = emptyList(),
-    demoPaused: Boolean = false
+    demoPaused: Boolean = false,
+    onDemoRootBack: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
     val hostView = LocalView.current
@@ -361,6 +362,7 @@ internal fun CampaignNavigationHost(
             }
             Box(modifier = Modifier.fillMaxSize()) {
                 ExplorationScreen(
+                    onDemoRootBack = onDemoRootBack,
                     viewModel = explorationViewModel,
                     audioCuePlayer = services.audioCuePlayer,
                     uiEventBus = services.uiEventBus,
@@ -675,6 +677,7 @@ internal fun CampaignNavigationHost(
                     )
                 )
                 CombatScreen(
+                    onDemoRootBack = onDemoRootBack,
                     overlayPaused = demoPaused,
                     demoMode = onDemoExit != null,
                     navController = navController,

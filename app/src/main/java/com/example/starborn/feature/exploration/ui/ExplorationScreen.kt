@@ -332,7 +332,8 @@ fun ExplorationScreen(
     onReturnToHub: () -> Unit = {},
     onReturnToTitle: () -> Unit = {},
     onPlayAudio: (String) -> Unit = {},
-    fxEvents: Flow<String>? = null
+    fxEvents: Flow<String>? = null,
+    onDemoRootBack: (() -> Unit)? = null
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var pendingInventoryItem by remember { mutableStateOf<InventoryPreviewItemUi?>(null) }
@@ -582,7 +583,7 @@ fun ExplorationScreen(
             uiState.narrationPrompt != null -> viewModel.dismissNarration()
             uiState.prompt != null -> viewModel.dismissPrompt()
             uiState.isMenuOverlayVisible -> viewModel.closeMenuOverlay()
-            else -> Unit
+            else -> if (!blockingOverlayActive) onDemoRootBack?.invoke()
         }
     }
 

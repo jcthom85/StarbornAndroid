@@ -298,10 +298,12 @@ fun CombatScreen(
     cinematicState: StateFlow<CinematicPlaybackState?>? = null,
     onAdvanceCinematic: (() -> Unit)? = null,
     overlayPaused: Boolean = false,
-    demoMode: Boolean = false
+    demoMode: Boolean = false,
+    onDemoRootBack: (() -> Unit)? = null
 ) {
     BackHandler(enabled = true) {
-        // Block system back/edge-swipe from leaving combat.
+        // Campaign combat cannot be left by Back; booth combat opens its pause menu.
+        onDemoRootBack?.invoke()
     }
     CombatLifecyclePause(overlayPaused, viewModel::setBackgroundPaused)
     val playerParty = remember(viewModel) { viewModel.playerParty.toList() }

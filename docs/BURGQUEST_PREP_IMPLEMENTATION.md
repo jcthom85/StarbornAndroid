@@ -2,6 +2,8 @@
 
 September 23 follow-up: [combat layout and compact demo controls](COMBAT_LAYOUT_BURGQUEST.md), shipped in version 1.3.53 (137).
 
+Later September 23 local work: [guided sampler and crew homecoming](BURGQUEST_GUIDED_SAMPLER.md). This supersedes the visitor-route recommendation below; it has not been released. Debug Scenarios and Load Game are now hidden locally alongside New Game.
+
 ## Implementation shipped in 1.3.52 (versionCode 136)
 
 Committed as `aeec426`, pushed to `feature/multiplatform-port`, and accepted/committed on the Google Play internal track on September 22, 2026.

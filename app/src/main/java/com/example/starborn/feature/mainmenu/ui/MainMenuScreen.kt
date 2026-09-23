@@ -122,7 +122,7 @@ fun MainMenuScreen(
     onStartGame: () -> Unit,
     onStartHub: () -> Unit,
     onSlotLoaded: () -> Unit,
-    onBurgQuestLaunch: ((DebugScenario) -> Unit)? = null
+    onBurgQuestLaunch: ((com.example.starborn.feature.mainmenu.BurgQuestLaunch) -> Unit)? = null
 ) {
     var startingGame by remember { mutableStateOf(false) }
     var startingGamePlus by remember { mutableStateOf(false) }
@@ -496,8 +496,10 @@ fun MainMenuScreen(
                 enabled = buttonsInteractable,
                 primary = true
             )
-            // Restore after BurgQuest by setting this temporary visibility flag to true.
+            // Restore these title entries after BurgQuest; functionality and saves stay intact.
             val showNewGameForPublicRelease = false
+            val showDebugScenariosOnTitle = false
+            val showLoadGameOnTitle = false
             if (showNewGameForPublicRelease) StarbornTitleButton(
                 text = "New Game",
                 onClick = {
@@ -510,14 +512,14 @@ fun MainMenuScreen(
                 enabled = buttonsInteractable,
                 primary = false
             )
-            if (BuildConfig.ENABLE_SCENARIO_MENU) {
+            if (showDebugScenariosOnTitle && BuildConfig.ENABLE_SCENARIO_MENU) {
                 StarbornTitleButton(
                     text = "Debug Scenarios",
                     onClick = { showDebugBrowser = true },
                     enabled = buttonsInteractable
                 )
             }
-            StarbornTitleButton(
+            if (showLoadGameOnTitle) StarbornTitleButton(
                 text = "Load Game",
                 onClick = { saveLoadMode = "load" },
                 enabled = buttonsInteractable
@@ -638,9 +640,9 @@ fun MainMenuScreen(
 
         if (showBurgfestDialog) {
             BurgfestDemoDialog(
-                onLaunch = { scenario ->
+                onLaunch = { launch ->
                     showBurgfestDialog = false
-                    if (onBurgQuestLaunch != null) onBurgQuestLaunch(scenario) else pendingScenario = scenario
+                    if (onBurgQuestLaunch != null) onBurgQuestLaunch(launch) else pendingScenario = launch.scenario
                 },
                 onDismiss = { showBurgfestDialog = false }
             )
@@ -651,7 +653,7 @@ fun MainMenuScreen(
                 onLaunch = { scenario ->
                     showDebugBrowser = false
                     if (scenario.category == DebugScenarioCategory.BURGFEST && onBurgQuestLaunch != null) {
-                        onBurgQuestLaunch(scenario)
+                        onBurgQuestLaunch(com.example.starborn.feature.mainmenu.BurgQuestLaunch(scenario))
                     } else pendingScenario = scenario
                 },
                 onDismiss = { showDebugBrowser = false }
@@ -899,7 +901,7 @@ internal fun DebugScenarioDialog(
 
 @Composable
 internal fun BurgfestDemoDialog(
-    onLaunch: (DebugScenario) -> Unit,
+    onLaunch: (com.example.starborn.feature.mainmenu.BurgQuestLaunch) -> Unit,
     onDismiss: () -> Unit
 ) {
     val scenarios = com.example.starborn.feature.mainmenu.DebugScenarioCatalog.burgfestScenarios
@@ -910,7 +912,7 @@ internal fun BurgfestDemoDialog(
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text("BurgQuest Demo Showcase", fontWeight = FontWeight.Black, color = TitleGold, fontSize = 20.sp)
                 Text(
-                    "Start with Tactical Combat. Demos use separate saves and reset for each visitor.",
+                    "Fight alongside the crew, then unwind aboard their ship.",
                     color = TitleCyan,
                     fontSize = 12.sp
                 )
@@ -923,6 +925,17 @@ internal fun BurgfestDemoDialog(
                     .fillMaxWidth()
                     .heightIn(max = 450.dp)
             ) {
+                item {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text("Aim for 5–10 minutes · Go at your own pace", color = TitleText)
+                        Button(
+                            onClick = { onLaunch(com.example.starborn.feature.mainmenu.BurgQuestLaunch.sampler()) },
+                            modifier = Modifier.fillMaxWidth().testTag("demo-start-sampler"),
+                            colors = ButtonDefaults.buttonColors(containerColor = TitleGold, contentColor = Color.Black)
+                        ) { Text("Start the Starborn sampler") }
+                        Text("Explore individual demos", fontWeight = FontWeight.Bold, color = TitleCyan)
+                    }
+                }
                 items(scenarios, key = { it.id }) { scenario ->
                     Column(
                         modifier = Modifier
@@ -941,7 +954,7 @@ internal fun BurgfestDemoDialog(
                         )
                         Text(scenario.description, color = TitleMutedText, fontSize = 12.sp)
                         Button(
-                            onClick = { onLaunch(scenario) },
+                            onClick = { onLaunch(com.example.starborn.feature.mainmenu.BurgQuestLaunch(scenario)) },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = TitleGold,
                                 contentColor = Color.Black

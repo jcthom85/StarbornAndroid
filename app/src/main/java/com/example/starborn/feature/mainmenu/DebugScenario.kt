@@ -26,9 +26,9 @@ data class DebugScenario(
 
 object DebugScenarioCatalog {
     val burgfestScenarios: List<DebugScenario> = listOf(
-        scenario("burgfest_combat", "Tactical Combat - Start Here", "A short, full-party skirmish against a Siren Skimmer and Spore-Spitter. Fixed gear, a small skill selection and healing supplies. Finish one fight, then try another showcase.", DebugScenarioCategory.BURGFEST, worldLabel = "BurgQuest / Sector 9"),
-        scenario("burgfest_astra", "The Astra - Arcade & Workshop", "A relaxed five-minute suggested route: play an arcade in the common room, then optionally visit the workshop. Finish whenever you like.", DebugScenarioCategory.BURGFEST, worldLabel = "BurgQuest / The Astra"),
-        scenario("burgfest_boss", "Titan Walker - Boss Challenge", "The harder combat showcase. Four prepared crew members face Titan with limited supplies. Watch for its recovery opening.", DebugScenarioCategory.BURGFEST, worldLabel = "BurgQuest / The Foundry"),
+        scenario("burgfest_combat", "Tactical Combat", "Meet all four crew members in a short skirmish. Try their skills, help each other out, and get a feel for combat.", DebugScenarioCategory.BURGFEST, worldLabel = "BurgQuest / Sector 9"),
+        scenario("burgfest_astra", "The Astra — Meet the Crew", "Make yourself at home: talk to the crew, play an arcade round or try crafting in the workshop. Stay as long as you like.", DebugScenarioCategory.BURGFEST, worldLabel = "BurgQuest / The Astra"),
+        scenario("burgfest_boss", "Titan Walker — Harder Challenge", "Ready for a tougher fight? Face Titan with a prepared crew and limited supplies. Watch for its recovery opening.", DebugScenarioCategory.BURGFEST, worldLabel = "BurgQuest / The Foundry"),
         scenario("burgfest_story", "The Awakening - Story Preview", "Meet Nova in the unabridged campaign opening. Read at your own pace; combat may take longer than ten minutes to reach.", DebugScenarioCategory.BURGFEST, worldLabel = "BurgQuest / The Mines")
     )
 

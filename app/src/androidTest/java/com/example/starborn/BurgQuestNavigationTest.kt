@@ -89,11 +89,14 @@ class BurgQuestNavigationTest {
             compose.setContent { StarbornTheme { NavigationHost(providedServices = campaign) } }
             waitText("BurgQuest Demo")
             compose.onNodeWithText("New Game").assertDoesNotExist()
-            compose.onNodeWithText("Debug Scenarios").assertExists()
+            compose.onNodeWithText("Debug Scenarios").assertDoesNotExist()
+            compose.onNodeWithText("Load Game").assertDoesNotExist()
+            compose.onNodeWithText("Settings").assertExists()
             compose.onNodeWithText("BurgQuest Demo").performClick()
-            waitText("Tactical Combat - Start Here")
+            waitText("Start the Starborn sampler")
             capture("01-picker")
-            launch("burgfest_combat")
+            compose.onNodeWithTag("demo-start-sampler").performClick()
+            waitText("Begin demo")
             capture("02-combat-guide")
             compose.onNodeWithText("Begin demo").performClick()
             waitText("Demo")
@@ -105,13 +108,15 @@ class BurgQuestNavigationTest {
             capture("04-guide-reopened")
             compose.onNodeWithText("Back to demo").performClick()
             finishDemo()
-            waitText("Play again - fresh start")
+            waitText("Until the next adventure")
             capture("05-finish")
-            compose.onNodeWithText("Play again - fresh start").performClick()
+            compose.onNodeWithText("Explore another demo").performClick()
+            compose.onNodeWithTag("demo-start-sampler").performClick()
             waitText("Begin demo")
             compose.onNodeWithText("Begin demo").performClick()
             waitText("Siren")
             // Real UI commands and production ATB, not an injected victory outcome.
+            repeat(2) { attempt ->
             val started = SystemClock.elapsedRealtime()
             var turn = 0
             compose.mainClock.autoAdvance = false
@@ -147,13 +152,37 @@ class BurgQuestNavigationTest {
             compose.onNodeWithText("Victory! You completed the combat showcase.").assertExists()
             android.util.Log.i("BurgQuestFlow", "Real UI tactical completion ms=${SystemClock.elapsedRealtime() - started}; automated selection, not newcomer timing")
             compose.mainClock.autoAdvance = true
-            compose.onNodeWithText("Choose another demo").performClick()
-            launch("burgfest_astra")
-            compose.onNodeWithText("Begin demo").performClick()
+            if (attempt == 0) {
+                compose.onNodeWithText("Play again — fresh start").performScrollTo().performClick()
+                waitText("Begin demo")
+                compose.onNodeWithText("Begin demo").performClick()
+                waitText("Siren")
+            }
+            }
+            compose.onNodeWithText("Visit the Astra").performClick()
+            waitText("Everyone made it back.")
+            capture("05c-homecoming")
+            // Read all six lines using the visible controls a newcomer sees.
+            val crewLines = listOf("Everyone made it back.", "Good day?", "I checked.",
+                "See? Excellent day.", "Let the next adventure", "Welcome aboard the Astra.")
+            crewLines.forEachIndexed { index, line ->
+                waitText(line)
+                compose.mainClock.advanceTimeBy(6000)
+                compose.onNodeWithText(if (index == crewLines.lastIndex) "Explore the Astra" else "Next")
+                    .performScrollTo().performClick()
+            }
+            waitText("Make yourself at home")
+            capture("05d-astra-guide")
+            compose.onNodeWithText("Back to demo").performClick()
             compose.waitUntil(30_000) {
                 compose.onAllNodesWithContentDescription("Deep Mine Asteroid Drill action", ignoreCase = true).fetchSemanticsNodes().isNotEmpty()
             }
             capture("06-astra")
+            compose.onNodeWithContentDescription("Talk to Orion").performScrollTo().performClick()
+            waitText("The Astra's hull")
+            compose.mainClock.advanceTimeBy(10_000)
+            capture("06b-talk-to-orion")
+            compose.onNodeWithContentDescription("Dialogue Popup. Tap to continue").performClick()
             compose.onNodeWithContentDescription("Deep Mine Asteroid Drill action", ignoreCase = true).performScrollTo().performClick()
             compose.mainClock.autoAdvance = false
             compose.mainClock.advanceTimeBy(1500)
@@ -161,7 +190,7 @@ class BurgQuestNavigationTest {
             capture("07-arcade")
             finishDemo()
             compose.mainClock.advanceTimeBy(1000)
-            compose.onNodeWithText("Title screen").performClick()
+            compose.onNodeWithText("Return to title").performClick()
             compose.mainClock.advanceTimeBy(1000)
             compose.mainClock.autoAdvance = true
             waitText("BurgQuest Demo")
@@ -172,7 +201,7 @@ class BurgQuestNavigationTest {
             waitText("Titan Walker")
             capture("11-titan")
             finishDemo()
-            compose.onNodeWithText("Choose another demo").performClick()
+            compose.onNodeWithText("Explore another demo").performClick()
             launch("burgfest_story")
             compose.onNodeWithText("Begin demo").performClick()
             waitText("Demo")
@@ -181,7 +210,7 @@ class BurgQuestNavigationTest {
             SystemClock.sleep(5000)
             capture("12-story")
             finishDemo()
-            compose.onNodeWithText("Title screen").performClick()
+            compose.onNodeWithText("Return to title").performClick()
             waitText("BurgQuest Demo")
             assertEquals(original, campaign.sessionStore.state.value)
             runBlocking {

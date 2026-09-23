@@ -14,6 +14,17 @@ class BurgQuestDemoTest {
     private val reader = AssetJsonReader(DesktopAssetProvider(), MoshiProvider.instance)
     private val assets = WorldAssetDataSource(reader)
 
+    @Test fun `sampler and standalone launches preserve scenario ids without sharing homecoming intent`() {
+        val sampler = BurgQuestLaunch.sampler()
+        assertEquals("burgfest_combat", sampler.scenario.id)
+        assertTrue(sampler.sampler)
+        assertFalse(sampler.isHomecoming)
+        val homecoming = BurgQuestLaunch.homecoming()
+        assertEquals("burgfest_astra", homecoming.scenario.id)
+        assertTrue(homecoming.isHomecoming)
+        assertFalse(BurgQuestLaunch(homecoming.scenario).isHomecoming)
+    }
+
     @Test fun `showcase catalog is honest and combat comes first`() {
         val demos = DebugScenarioCatalog.burgfestScenarios
         assertEquals("burgfest_combat", demos.first().id)

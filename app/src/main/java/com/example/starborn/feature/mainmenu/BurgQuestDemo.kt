@@ -4,6 +4,9 @@ import com.example.starborn.domain.session.GameSessionState
 
 /** Booth-only fixtures. These grants never change campaign progression or enemy balance. */
 object BurgQuestDemo {
+    const val farewell = "Thanks for spending a little time with the crew. Want to know where their adventure goes next? Come chat with us at the booth."
+    const val combatIntroduction = "Meet Nova, Zeke, Orion and Gh0st. Help them through a short skirmish, then visit their home aboard the Astra.\n\n1. Tap a ready crew portrait.\n2. Choose an attack or skill, then its target.\n3. Use a medkit or healing skill when someone needs help."
+
     val party = listOf("nova", "zeke", "orion", "gh0st")
     val weapons = mapOf("nova" to "nova_laser_blaster", "zeke" to "zeke_shock_fists",
         "orion" to "orion_prism_focus", "gh0st" to "gh0st_whisperblade")
@@ -23,10 +26,10 @@ object BurgQuestDemo {
     fun level(id: String): Int = if (id == "burgfest_boss") 8 else 5
 
     fun briefing(id: String): String = when (id) {
-        "burgfest_combat" -> "Defeat the Siren Skimmer and Spore-Spitter with all four crew members. Tap a ready portrait, then choose an attack and target. Try Arc Tether or Shatter Blow. Use Link, Nano Repair or a medkit when the crew is hurt. Take your time choosing actions."
+        "burgfest_combat" -> "$combatIntroduction\n\nTry Arc Tether or Shatter Blow. Link and Nano Repair help the crew recover. Take your time choosing actions. Use Demo → Finish demo whenever you like."
         "burgfest_boss" -> "Defeat Titan Walker. Shock skills help against its armor. After a barrage or stomp, watch for Vent Exposure: use that recovery turn to attack or heal. Your crew has fixed gear and limited medkits; this is the harder showcase."
-        "burgfest_astra" -> "Start in the common room. Tap a restored arcade cabinet and play a round, then return to the ship. Optional: head west to the cargo bay, tap Astra workbench and try the stocked Cryo-Inductor recipe. Use Finish demo whenever you are ready."
-        else -> "Meet Nova in the campaign opening. Follow the dialogue and quest prompts at your own pace. This is a story preview, not a promise of combat within five minutes. Use Finish demo when you have seen enough."
+        "burgfest_astra" -> "Make yourself at home. Talk to Orion or Gh0st in the common room, then choose something to try:\n\n• Play a round of Deep Mine Asteroid Drill, then return to the ship. The other cabinets are ready too.\n• Or head west to the cargo bay, tap Astra workbench and craft the stocked Cryo-Inductor recipe.\n\nNothing is required. Use Demo → Finish demo whenever you are ready."
+        else -> "Meet Nova in the campaign opening. Follow the dialogue and quest prompts at your own pace. This is a reading-focused story preview; reaching combat can take longer than ten minutes. Use Demo → Finish demo when you have seen enough."
     }
 
     fun curate(state: GameSessionState, id: String, xp: Int): GameSessionState {
