@@ -1,6 +1,8 @@
 # BurgQuest focused prep - September 22, 2026
 
-## Local implementation (not released)
+## Implementation shipped in 1.3.52 (versionCode 136)
+
+Committed as `aeec426`, pushed to `feature/multiplatform-port`, and accepted/committed on the Google Play internal track on September 22, 2026.
 
 - New Game remains temporarily hidden. BurgQuest Demo and Debug Scenarios remain available.
 - Tactical Combat is first and recommended. Its briefing launches an actual two-enemy encounter (Siren Skimmer + Spore-Spitter), with all four crew members. The initial vine pair was replaced after visual inspection showed both used borrowed bat art.
@@ -46,6 +48,6 @@ Before the event, on the actual booth device:
 1. Run that Tactical -> Astra visit with a newcomer and time the whole visit, including reading and choosing actions. Aim for 5-10 minutes across the visit, not each scenario.
 2. Check text/tap targets at the intended display size, music/voice/SFX levels with the booth speakers/headphones, charging and screen brightness.
 3. Finish to title and give the next visitor a fresh demo. Keep the normal Load Game option away from the visitor script.
-4. Confirm the verified build is the installed event build. This pass does not itself publish a release.
+4. Install/confirm version 1.3.52 from the internal track on the booth device.
 
-No version bump, commit, push or Play upload in this pass. World/finale work remains paused at [the overall checkpoint](OVERALL_PLAN_CHECKPOINT.md).
+World/finale work remains paused at [the overall checkpoint](OVERALL_PLAN_CHECKPOINT.md).
