@@ -141,7 +141,11 @@ private fun BurgQuestVisitContent(
                         navController = visitNavigation,
                         showCombatActionText = showCombatActionText,
                         providedServices = services,
-                        initialDestination = NavigationDestination.Exploration.route,
+                        initialDestination = if (BurgQuestDemo.enemies(scenario.id).isNotEmpty()) {
+                            NavigationDestination.Combat.create(BurgQuestDemo.enemies(scenario.id))
+                        } else {
+                            NavigationDestination.Exploration.route
+                        },
                         demoEnemies = BurgQuestDemo.enemies(scenario.id),
                         demoPaused = showGuide || showDemoMenu || showHomecoming,
                         onDemoRootBack = { showDemoMenu = true },

@@ -993,6 +993,7 @@ fun ExplorationScreen(
             val minimapSize = 78.dp
             val titleColor = themeColor(activeTheme?.accent, Color(0xFFBEE9FF))
             val warmTitleColor = Color(0xFFFF9F2E)
+            if (uiState.currentRoom != null && !uiState.isLoading) {
             Column(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
@@ -1000,7 +1001,7 @@ fun ExplorationScreen(
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 RoomHeaderPanel(
-                    roomTitle = uiState.currentRoom?.title ?: "Unknown area",
+                    roomTitle = uiState.currentRoom?.title ?: "",
                     isDark = isRoomDark,
                     obscureTitle = isRoomDark && uiState.currentRoom?.revealTitleWhenDark != true,
                     titleColor = titleColor,
@@ -1064,6 +1065,7 @@ fun ExplorationScreen(
                         )
                     }
                 }
+            }
             }
 
             if (!isRoomDark && uiState.visualEnemyParties.isNotEmpty()) {
