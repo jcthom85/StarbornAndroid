@@ -2,7 +2,7 @@
 
 ## Status and intent
 
-Prepared for **1.3.54 (138)** on top of released 1.3.53 (137). Signed release build and internal-track upload are in progress; publication is not yet confirmed. World testing remains paused at [the overall checkpoint](OVERALL_PLAN_CHECKPOINT.md).
+Released as **1.3.54 (138)**, game commit `2a613ba`, pushed to `feature/multiplatform-port` on September 23, 2026. The signed bundle built successfully in 49 seconds. Google Play accepted version 138 and confirmed the internal-track edit committed. Bundle SHA-1: `4c6ede5f1876e637f80764896c96ab3dc70892d5`; upload log: `test-results/burgquest-1.3.54-play-upload.log`. World testing remains paused at [the overall checkpoint](OVERALL_PLAN_CHECKPOINT.md).
 
 The intended short visit is **meet the crew → Tactical Combat → Astra homecoming → one optional activity → farewell**. Aim for 5–10 minutes including reading and choices; this is not a measured newcomer-duration claim. The emphasis is crew and adventure, not demonstrating every system.
 

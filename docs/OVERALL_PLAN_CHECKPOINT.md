@@ -1,15 +1,15 @@
 # Overall plan checkpoint — September 23, 2026
 
-**Read this first when resuming.** This supersedes older next-step lists in the campaign/Foundry documents. The world balance program is temporarily paused for BurgQuest booth preparation. BurgQuest build 1.3.53 is released to Google Play internal testing; see [the focused prep record](BURGQUEST_PREP_IMPLEMENTATION.md). Actual-device/newcomer checks remain. The world-by-world position and combat resume point below are unchanged.
+**Read this first when resuming.** This supersedes older next-step lists in the campaign/Foundry documents. The world balance program is temporarily paused for BurgQuest booth preparation. BurgQuest build 1.3.54 is released to Google Play internal testing; see [the guided sampler record](BURGQUEST_GUIDED_SAMPLER.md). Actual-device/newcomer checks remain. The world-by-world position and combat resume point below are unchanged.
 
 ## Released versus local
 
-- New local work: [BurgQuest guided sampler](BURGQUEST_GUIDED_SAMPLER.md), including crew homecoming, direct combat-to-Astra routing and the booth-only title menu. Implementation/automated checks complete: 552 unit tests, 12-test broad emulator pass, 5-test targeted polish pass and 2-test compact/large-text pass. Human/booth checks remain. Not yet published; world/finale resume points below are unchanged.
+- Released in 1.3.54: [BurgQuest guided sampler](BURGQUEST_GUIDED_SAMPLER.md), including crew homecoming, direct combat-to-Astra routing and the booth-only title menu. Human/booth checks remain; world/finale resume points below are unchanged.
 
-- Last confirmed release: **1.3.53 (137)**, commit `29b840d`, pushed to `feature/multiplatform-port`. Google Play accepted the bundle and confirmed it committed/live on internal testing on September 23, 2026.
-- This release includes the combat formation spacing, responsive 1-4 crew layouts, compact demo controls and all BurgQuest booth features, as well as the Astra workbench repair, Avatar's post-barrage recovery, tests and campaign/finale diagnostics. New Game remains hidden; restore this flag after BurgQuest. Story Opening still starts the campaign deliberately.
+- Last confirmed release: **1.3.54 (138)**, commit `2a613ba`, pushed to `feature/multiplatform-port`. Google Play accepted the bundle and confirmed it committed/live on internal testing on September 23, 2026.
+- This release includes the guided sampler and earlier combat formation spacing, responsive 1-4 crew layouts, compact demo controls, Astra workbench repair, Avatar's post-barrage recovery, tests and campaign/finale diagnostics. New Game, Load Game and Debug Scenarios are temporarily hidden; restore their grouped title flags after BurgQuest. Story Opening starts the campaign opening in an isolated demo session.
 - Finale stagger candidates are **test-only**. Production Reality Break still applies stagger. No every-other-cast candidate has been implemented yet.
-- Release verification: **551 unit tests passed; 8/8 Android instrumentation tests passed offline**. BurgQuest fixture simulations won 40/40; see the prep record for limitations and operator checks.
+- Release verification: **552 unit tests passed**, plus a 12-test broad emulator pass, 5-test targeted polish pass and 2-test compact/large-text pass, all offline. Earlier unchanged BurgQuest fixture simulations won 40/40; see the guided sampler/prep records for limitations and operator checks.
 - Preserve unrelated untracked booth audio, generation scripts, `desktop.ini` and local evidence. Do not stage the entire workspace indiscriminately.
 
 ## World-by-world position
