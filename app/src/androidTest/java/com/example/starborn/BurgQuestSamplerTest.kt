@@ -39,7 +39,7 @@ class BurgQuestSamplerTest {
         listOf(BurgQuestEnding.VICTORY, BurgQuestEnding.DEFEAT, BurgQuestEnding.RETREAT).forEachIndexed { index, result ->
             compose.runOnIdle { ending = result }
             compose.onNodeWithText("Visit the Astra").performScrollTo().assertIsEnabled().performClick()
-            compose.onNodeWithText(if (result == BurgQuestEnding.VICTORY) "Play again — fresh start" else "Try again — fresh start")
+            compose.onNodeWithText(if (result == BurgQuestEnding.VICTORY) "Play again (Tactical Combat)" else "Try again (Tactical Combat)")
                 .performScrollTo().performClick()
             compose.onNodeWithText("Finish demo").performScrollTo().performClick()
             compose.runOnIdle {

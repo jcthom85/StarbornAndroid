@@ -212,8 +212,7 @@ private fun BurgQuestVisitContent(
             val introduction = if (!begun && scenario.id == "burgfest_combat") {
                 BurgQuestDemo.combatIntroduction
             } else BurgQuestDemo.briefing(scenario.id)
-            Text(introduction + if (!begun) "\n\nA fresh demo for every visitor. Your campaign saves stay safe." else "",
-                Modifier.verticalScroll(rememberScrollState()))
+            Text(introduction, Modifier.verticalScroll(rememberScrollState()))
         },
         confirmButton = { TextButton(onClick = {
             begun = true
@@ -256,12 +255,12 @@ internal fun BurgQuestFinishDialog(
                 Text(ending.message)
                 if (ending.isCombatResult) {
                     if (ending != BurgQuestEnding.VICTORY) {
-                        Button(onClick = onRetry, modifier = Modifier.fillMaxWidth()) { Text("Try again — fresh start") }
+                        Button(onClick = onRetry, modifier = Modifier.fillMaxWidth()) { Text("Try again (Tactical Combat)") }
                     }
                     Button(onClick = onVisitAstra, modifier = Modifier.fillMaxWidth()) { Text("Visit the Astra") }
                     Text("The Astra starts fresh, with a rested crew and stocked supplies.", style = MaterialTheme.typography.bodySmall)
                     if (ending == BurgQuestEnding.VICTORY) {
-                        TextButton(onClick = onRetry, modifier = Modifier.fillMaxWidth()) { Text("Play again — fresh start") }
+                        TextButton(onClick = onRetry, modifier = Modifier.fillMaxWidth()) { Text("Play again (Tactical Combat)") }
                     }
                     TextButton(onClick = onFinish, modifier = Modifier.fillMaxWidth()) { Text("Finish demo") }
                 } else {

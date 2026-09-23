@@ -153,7 +153,7 @@ class BurgQuestNavigationTest {
             android.util.Log.i("BurgQuestFlow", "Real UI tactical completion ms=${SystemClock.elapsedRealtime() - started}; automated selection, not newcomer timing")
             compose.mainClock.autoAdvance = true
             if (attempt == 0) {
-                compose.onNodeWithText("Play again — fresh start").performScrollTo().performClick()
+                compose.onNodeWithText("Play again (Tactical Combat)").performScrollTo().performClick()
                 waitText("Begin demo")
                 compose.onNodeWithText("Begin demo").performClick()
                 waitText("Siren")
