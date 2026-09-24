@@ -190,7 +190,7 @@ private fun BurgQuestVisitContent(
                 )
                 if (combatTransitionVisible && demoEnemies.isNotEmpty()) {
                     CombatTransitionOverlay(
-                        visible = exploring,
+                        visible = true,
                         theme = environmentThemeState.theme,
                         suppressFlashes = userSettings.disableFlashes,
                         highContrastMode = userSettings.highContrastMode,

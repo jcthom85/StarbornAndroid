@@ -143,7 +143,7 @@ fun CombatTransitionOverlay(
 
             // --- Phase 2: The Hold (Full Coverage) ---
             // 0.25 -> 0.85: Screen is fully blocked (or held indefinitely for ENTER until navigation leaves)
-            if (t > 0.25f && (mode == TransitionMode.ENTER || t < 0.85f)) {
+            if (t > 0.25f && (mode == TransitionMode.ENTER || t <= 0.85f)) {
                 // Background fill to ensure no leaks
                 drawRect(color = bgColor)
                 

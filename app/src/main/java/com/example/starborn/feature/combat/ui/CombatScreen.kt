@@ -636,13 +636,14 @@ fun CombatScreen(
     val focusEnemy = focusEnemyEntry?.first
     val focusEnemyCombatantId = focusEnemyEntry?.second
 
-    if (focusEnemy != null && focusEnemyCombatantId != null && state != null) {
-        val showSkillsDialog = remember { mutableStateOf(false) }
-        val showItemsDialog = remember { mutableStateOf(false) }
-        val enemyState = state.combatants[focusEnemyCombatantId]
-        val combatLocked = pendingOutcome != null || timedPromptState != null || pendingVictoryPayload != null
-        val menuActor = awaitingActionId?.let { id -> playerParty.firstOrNull { it.id == id } }
-        val menuActorState = awaitingActionId?.let { id -> state.combatants[id] }
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (focusEnemy != null && focusEnemyCombatantId != null && state != null) {
+            val showSkillsDialog = remember { mutableStateOf(false) }
+            val showItemsDialog = remember { mutableStateOf(false) }
+            val enemyState = state.combatants[focusEnemyCombatantId]
+            val combatLocked = pendingOutcome != null || timedPromptState != null || pendingVictoryPayload != null
+            val menuActor = awaitingActionId?.let { id -> playerParty.firstOrNull { it.id == id } }
+            val menuActorState = awaitingActionId?.let { id -> state.combatants[id] }
         val menuActorCannotAct = menuActorState?.statusEffects.orEmpty().any { effect ->
             val id = effect.id.lowercase()
             id == "shock" || id == "freeze" || id == "stun"
@@ -1253,16 +1254,6 @@ fun CombatScreen(
                     .fillMaxSize()
                     .zIndex(80f)
             )
-            
-            CombatTransitionOverlay(
-                visible = exitTransitionVisible,
-                theme = viewModel.theme,
-                suppressFlashes = suppressFlashes,
-                highContrastMode = highContrastMode,
-                mode = TransitionMode.EXIT,
-                onFinished = { exitTransitionVisible = false },
-                modifier = Modifier.zIndex(100f)
-            )
 
             if (isExiting) {
                 CombatTransitionOverlay(
@@ -1277,8 +1268,6 @@ fun CombatScreen(
                     modifier = Modifier.zIndex(100f)
                 )
             }
-
-
         }
     } else {
         Box(
@@ -1291,8 +1280,19 @@ fun CombatScreen(
                 text = "Preparing encounter...",
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.White.copy(alpha = 0.85f)
-        )
+            )
         }
+    }
+
+    CombatTransitionOverlay(
+        visible = exitTransitionVisible,
+        theme = viewModel.theme,
+        suppressFlashes = suppressFlashes,
+        highContrastMode = highContrastMode,
+        mode = TransitionMode.EXIT,
+        onFinished = { exitTransitionVisible = false },
+        modifier = Modifier.zIndex(100f)
+    )
     }
 }
 
