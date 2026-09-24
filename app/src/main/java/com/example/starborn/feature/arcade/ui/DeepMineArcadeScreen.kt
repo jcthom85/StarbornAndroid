@@ -162,10 +162,19 @@ fun DeepMineArcadeScreen(
                         "Snag drifting Coolant Pods for instant +22% fuel!"
                     ),
                     action = "START RUN",
-                    onAction = { tutorial = false; onPlayCue("confirm") }
+                    onAction = { tutorial = false; onPlayCue("confirm") },
+                    secondaryAction = "LEAVE CABINET",
+                    onSecondaryAction = onBack
                 )
             } else if (paused) {
-                ArcadeOverlay("RUN PAUSED", listOf("Your probe is holding position in the shaft."), "RESUME") { paused = false }
+                ArcadeOverlay(
+                    title = "RUN PAUSED",
+                    lines = listOf("Your probe is holding position in the shaft."),
+                    action = "RESUME",
+                    onAction = { paused = false },
+                    secondaryAction = "LEAVE CABINET",
+                    onSecondaryAction = onBack
+                )
             } else if (snapshot.gameOver) {
                 val tiers = submitted?.newlyClaimed.orEmpty().joinToString()
                 ArcadeOverlay(
@@ -183,7 +192,9 @@ fun DeepMineArcadeScreen(
                         submitted = null
                         input = DeepMineInput()
                         onPlayCue("confirm")
-                    }
+                    },
+                    secondaryAction = "LEAVE CABINET",
+                    onSecondaryAction = onBack
                 )
             }
         }
@@ -191,7 +202,21 @@ fun DeepMineArcadeScreen(
         Spacer(Modifier.height(5.dp))
         ArcadeControls(input, largeTouchTargets) { input = it }
         Spacer(Modifier.height(5.dp))
-        ServiceKey { paused = true }
+        Row(
+            modifier = Modifier.fillMaxWidth(.88f),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            ServiceKey(
+                text = "SERVICE  •  PAUSE",
+                onClick = { paused = true },
+                modifier = Modifier.weight(1f)
+            )
+            ServiceKey(
+                text = "LEAVE CABINET",
+                onClick = onBack,
+                modifier = Modifier.weight(1f)
+            )
+        }
     }
 }
 
@@ -586,21 +611,33 @@ private fun CabinetControl(
 }
 
 @Composable
-private fun ServiceKey(onClick: () -> Unit) {
+private fun ServiceKey(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF17151A), contentColor = Color(0xFFC9BFA8)),
         shape = RoundedCornerShape(4.dp),
-        modifier = Modifier
+        modifier = modifier
             .height(32.dp)
-            .border(1.dp, Color(0xFF4B4240), RoundedCornerShape(4.dp))
+            .border(1.dp, Color(0xFF4B4240), RoundedCornerShape(4.dp)),
+        contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
     ) {
-        Text("SERVICE  •  PAUSE / EXIT", fontFamily = FontFamily.Monospace, fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = .8.sp)
+        Text(text, fontFamily = FontFamily.Monospace, fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = .8.sp)
     }
 }
 
 @Composable
-private fun ArcadeOverlay(title: String, lines: List<String>, action: String, onAction: () -> Unit) {
+private fun ArcadeOverlay(
+    title: String,
+    lines: List<String>,
+    action: String,
+    onAction: () -> Unit,
+    secondaryAction: String? = null,
+    onSecondaryAction: (() -> Unit)? = null
+) {
     Column(
         Modifier
             .fillMaxWidth(.84f)
@@ -628,6 +665,21 @@ private fun ArcadeOverlay(title: String, lines: List<String>, action: String, on
                 .height(40.dp)
         ) {
             Text(action, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Black, fontSize = 11.sp, letterSpacing = 1.sp)
+        }
+        if (secondaryAction != null && onSecondaryAction != null) {
+            Spacer(Modifier.height(6.dp))
+            Button(
+                onClick = onSecondaryAction,
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E1719), contentColor = Color(0xFFDCD0B9)),
+                shape = RoundedCornerShape(4.dp),
+                modifier = Modifier
+                    .fillMaxWidth(.75f)
+                    .height(36.dp)
+                    .border(1.dp, Color(0xFF5A4930), RoundedCornerShape(4.dp)),
+                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
+            ) {
+                Text(secondaryAction, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, fontSize = 10.sp, letterSpacing = .8.sp)
+            }
         }
     }
 }
