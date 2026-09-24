@@ -27,6 +27,9 @@ import com.example.starborn.feature.mainmenu.BurgQuestDemo
 import com.example.starborn.feature.mainmenu.BurgQuestLaunch
 import com.example.starborn.feature.mainmenu.ui.BurgfestDemoDialog
 import com.example.starborn.feature.mainmenu.ui.BurgQuestHomecoming
+import com.example.starborn.data.local.UserSettings
+import com.example.starborn.feature.exploration.ui.CombatTransitionOverlay
+import com.example.starborn.feature.exploration.ui.TransitionMode
 import kotlinx.coroutines.CancellationException
 
 /** Normal services stay alive while a separate, disposable booth session is on screen. */
@@ -113,9 +116,13 @@ private fun BurgQuestVisitContent(
         services.release()
     } }
     if (begun && ending == null) {
+        val userSettings by services.userSettingsStore.settings.collectAsState(initial = UserSettings())
+        val environmentThemeState by services.environmentThemeManager.state.collectAsState()
         val visitNavigation = rememberNavController()
         val visitEntry by visitNavigation.currentBackStackEntryAsState()
         val exploring = visitEntry?.destination?.route == NavigationDestination.Exploration.route
+        val demoEnemies = remember(scenario.id) { BurgQuestDemo.enemies(scenario.id) }
+        var combatTransitionVisible by remember { mutableStateOf(demoEnemies.isNotEmpty()) }
         val visitOwner = remember { object : ViewModelStoreOwner {
             override val viewModelStore = ViewModelStore()
         } }
@@ -133,6 +140,9 @@ private fun BurgQuestVisitContent(
                 false
             }
             if (!ready) ending = BurgQuestEnding.START_FAILED
+            else if (demoEnemies.isNotEmpty()) {
+                services.audioCuePlayer.play("sfx_combat_transition_slam")
+            }
         }
         Box(Modifier.fillMaxSize()) {
             if (ready) {
@@ -142,7 +152,7 @@ private fun BurgQuestVisitContent(
                         showCombatActionText = showCombatActionText,
                         providedServices = services,
                         initialDestination = NavigationDestination.Exploration.route,
-                        demoEnemies = BurgQuestDemo.enemies(scenario.id),
+                        demoEnemies = emptyList(),
                         demoPaused = showGuide || showDemoMenu || showHomecoming,
                         onDemoRootBack = { showDemoMenu = true },
                         onDemoExit = { ending = BurgQuestEnding.FINISHED },
@@ -170,6 +180,19 @@ private fun BurgQuestVisitContent(
                     audioCuePlayer = services.audioCuePlayer,
                     onComplete = { showHomecoming = false; showGuide = true }
                 )
+                if (combatTransitionVisible && demoEnemies.isNotEmpty()) {
+                    CombatTransitionOverlay(
+                        visible = combatTransitionVisible,
+                        theme = environmentThemeState.theme,
+                        suppressFlashes = userSettings.disableFlashes,
+                        highContrastMode = userSettings.highContrastMode,
+                        mode = TransitionMode.ENTER,
+                        onFinished = {
+                            combatTransitionVisible = false
+                            visitNavigation.navigate(NavigationDestination.Combat.create(demoEnemies))
+                        }
+                    )
+                }
             } else {
                 CircularProgressIndicator(Modifier.align(Alignment.Center))
             }
