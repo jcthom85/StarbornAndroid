@@ -34,7 +34,7 @@ class AudioLifecycleAndDuckingTest {
     // =========================================================================
 
     @Test
-    fun explorationToCombatTransition_issuesCleanMusicDuckingAndBattleCue() {
+    fun battleCuesLeaveMusicAtItsAuthoredLevel() {
         val bindings = AudioBindings(
             music = mapOf("hub_1_homestead" to "music_w1_homestead_explore"),
             ambience = mapOf("pit_mine_shaft" to "amb_mine_drip"),
@@ -53,12 +53,8 @@ class AudioLifecycleAndDuckingTest {
         // 2. Trigger combat encounter
         val battleCommands = router.commandsForBattle("combat_start")
 
-        // Invariant: Music must duck (gain = 0.35f) with positive fadeMs to avoid audio pops
-        val duckCommand = battleCommands.filterIsInstance<AudioCommand.Duck>().firstOrNull()
-        assertNotNull("Combat trigger must issue a Duck command for exploration music", duckCommand)
-        assertEquals(AudioCueType.MUSIC, duckCommand?.type)
-        assertEquals(0.35f, duckCommand?.gain ?: 0f, 0.01f)
-        assertTrue("Fade-in/duck transition must have positive duration", (duckCommand?.fadeMs ?: 0L) > 0L)
+        assertTrue("Battle sounds must not suppress the soundtrack",
+            battleCommands.none { it is AudioCommand.Duck })
 
         // Invariant: Battle SFX cue plays with haptic trigger
         val playBattle = battleCommands.filterIsInstance<AudioCommand.Play>().firstOrNull()
@@ -66,11 +62,26 @@ class AudioLifecycleAndDuckingTest {
         assertEquals("sfx_combat_engage", playBattle?.cueId)
         assertTrue("Battle engagement cue should enable haptics", playBattle?.triggerHaptic == true)
 
-        // 3. Post-combat: restore exploration layer
-        val restoreCommands = router.restoreLayer(AudioCueType.MUSIC)
-        val restoreCmd = restoreCommands.filterIsInstance<AudioCommand.Restore>().firstOrNull()
-        assertNotNull("Ending battle must issue a Restore command for exploration music", restoreCmd)
-        assertEquals(AudioCueType.MUSIC, restoreCmd?.type)
+        // Match actual combat: start cue, combat music, then repeated attacks.
+        router.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_w2_combat")
+        repeat(8) {
+            val attacks = router.commandsForBattle("combat_start")
+            assertTrue(attacks.all { it is AudioCommand.Play && it.type == AudioCueType.BATTLE })
+        }
+        assertTrue("Attacks must not leave a music restore pending",
+            router.restoreLayer(AudioCueType.MUSIC).isEmpty())
+    }
+
+    @Test
+    fun battleCueDoesNotCancelIntentionalCinematicDucking() {
+        val router = AudioRouter(AudioBindings(battle = mapOf("hit" to "sfx_hit")))
+        router.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_w2_combat")
+        assertTrue(router.duckForCinematic().any { it is AudioCommand.Duck })
+        assertTrue(router.commandsForBattle("hit").all {
+            it is AudioCommand.Play && it.type == AudioCueType.BATTLE
+        })
+        assertTrue("The cinematic still owns restoration after a battle cue",
+            router.restoreAfterCinematic().any { it is AudioCommand.Restore && it.type == AudioCueType.MUSIC })
     }
 
     @Test

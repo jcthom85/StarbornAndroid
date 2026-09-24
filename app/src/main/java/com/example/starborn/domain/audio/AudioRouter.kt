@@ -130,10 +130,8 @@ class AudioRouter(
         val normalized = bindings.battle[event].normalize() ?: return emptyList()
         val commands = mutableListOf<AudioCommand>()
         val meta = cueMetadata(normalized)
-        if (musicGain > 0.4f && currentMusic != null) {
-            commands += AudioCommand.Duck(AudioCueType.MUSIC, gain = 0.35f, fadeMs = 250L)
-            musicGain = 0.35f
-        }
+        // Short battle cues must not latch the soundtrack into a quieter mix.
+        // Intentional dialogue/cinematic ducking owns its own restore lifecycle.
         commands += AudioCommand.Play(
             AudioCueType.BATTLE,
             normalized,
