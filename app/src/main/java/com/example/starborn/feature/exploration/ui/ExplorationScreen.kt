@@ -553,6 +553,7 @@ fun ExplorationScreen(
         uiState.isTapeDeckVisible ||
         uiState.isSimulationDeckVisible ||
         uiState.isAstraNavConsoleVisible ||
+        uiState.showBurgQuestAstraExitDialog ||
         uiState.isMilestoneGalleryVisible ||
         uiState.isQuestLogVisible ||
         uiState.skillTreeOverlay != null ||
@@ -567,6 +568,7 @@ fun ExplorationScreen(
     BackHandler(enabled = true) {
         when {
             showExitConfirmDialog -> showExitConfirmDialog = false
+            uiState.showBurgQuestAstraExitDialog -> viewModel.dismissBurgQuestAstraExitDialog()
             saveLoadMode != null -> saveLoadMode = null
             showInventoryTargetDialog -> {
                 showInventoryTargetDialog = false
@@ -824,13 +826,17 @@ fun ExplorationScreen(
             }
             resolved
         }
-        val baseRoomDescription = remember(currentRoom, uiState.roomState, uiState.completedMilestones, isRoomDark) {
-            resolveRoomDescription(
-                room = currentRoom,
-                roomState = uiState.roomState,
-                completedMilestones = uiState.completedMilestones,
-                isRoomDark = isRoomDark
-            )
+        val baseRoomDescription = remember(currentRoom, uiState.roomState, uiState.completedMilestones, isRoomDark, uiState.isBurgQuestSession) {
+            if (uiState.isBurgQuestSession && currentRoom?.id == "astra_common_room") {
+                "Coffee rings stain the central table. The restored Deep Mine Asteroid Drill cabinet paints the recreation corner in warm amber light. The relic array and Great Frontier film archive share a quiet corner. The crew stops being a formation and becomes a family."
+            } else {
+                resolveRoomDescription(
+                    room = currentRoom,
+                    roomState = uiState.roomState,
+                    completedMilestones = uiState.completedMilestones,
+                    isRoomDark = isRoomDark
+                )
+            }
         }
 
         val activeWeatherId = debugWeatherOverride ?: currentRoom?.weather ?: defaultWeatherForEnvironment(currentRoom?.env)
@@ -1435,6 +1441,37 @@ fun ExplorationScreen(
                     }
                 },
                 containerColor = FieldMenuDesign.panel,
+                modifier = Modifier.zIndex(100f)
+            )
+        }
+
+        if (uiState.showBurgQuestAstraExitDialog) {
+            androidx.compose.material3.AlertDialog(
+                onDismissRequest = { viewModel.dismissBurgQuestAstraExitDialog() },
+                title = {
+                    Text(
+                        text = "Astra Docked",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                        color = FieldMenuDesign.gold
+                    )
+                },
+                text = {
+                    Text(
+                        text = "Disembarking is unavailable during the BurgQuest demo. Feel free to explore the ship, try out the simulation deck or workbench, or use the Demo menu to finish your visit.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = FieldMenuDesign.text
+                    )
+                },
+                confirmButton = {
+                    androidx.compose.material3.TextButton(
+                        onClick = { viewModel.dismissBurgQuestAstraExitDialog() }
+                    ) {
+                        Text("Stay Aboard", color = FieldMenuDesign.cyan)
+                    }
+                },
+                containerColor = FieldMenuDesign.panel,
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(FieldMenuDesign.cardRadius),
                 modifier = Modifier.zIndex(100f)
             )
         }

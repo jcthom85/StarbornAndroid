@@ -464,7 +464,8 @@ class ExplorationViewModelTest {
     }
 
     private fun createViewModel(
-        dialogueService: DialogueService = mock<DialogueService>()
+        dialogueService: DialogueService = mock<DialogueService>(),
+        isBurgQuestSession: Boolean = false
     ): ExplorationViewModel {
         val worldAssets = mock<WorldAssetDataSource> {
             on { loadRooms() } doReturn emptyList()
@@ -543,15 +544,18 @@ class ExplorationViewModelTest {
             encounterCoordinator = encounterCoordinator,
             userSettingsStore = userSettingsStore,
             eventDefinitions = emptyList(),
-            dispatchers = dispatcherProvider
+            dispatchers = dispatcherProvider,
+            isBurgQuestSession = isBurgQuestSession
         )
     }
 
     private fun createAstraViewModel(
         roomId: String = "astra_cargo_bay",
-        returnRoom: String? = "spire_laundry_service"
+        returnRoom: String? = "spire_laundry_service",
+        isBurgQuestSession: Boolean = false,
+        completedMilestones: Set<String> = setOf("ms_w2_mq05_complete")
     ): ExplorationViewModel {
-        val viewModel = createViewModel()
+        val viewModel = createViewModel(isBurgQuestSession = isBurgQuestSession)
         val authored = WorldAssetDataSource(com.example.starborn.data.assets.AssetJsonReader(
             com.example.starborn.core.platform.DesktopAssetProvider(), com.example.starborn.core.MoshiProvider.instance
         ))
@@ -569,7 +573,7 @@ class ExplorationViewModelTest {
         val store = getPrivateField<GameSessionStore>(viewModel, "sessionStore")
         store.restore(com.example.starborn.domain.session.GameSessionState(
             worldId = hub.worldId, hubId = hub.id, roomId = roomId,
-            completedMilestones = setOf("ms_w2_mq05_complete"),
+            completedMilestones = completedMilestones,
             astraReturnWorldId = "world_3", astraReturnHubId = "hub_5_lower_city", astraReturnRoomId = returnRoom
         ))
         dispatcher.scheduler.advanceUntilIdle()
@@ -681,6 +685,68 @@ class ExplorationViewModelTest {
         dispatcher.scheduler.advanceUntilIdle()
         assertEquals("spire_laundry_service", store.state.value.astraReturnRoomId)
         assertNull(viewModel.uiState.value.astraArrivalTitle)
+    }
+
+    @Test
+    fun burgQuestSessionPreventsAstraDisembarkAndShowsPopup() {
+        val viewModel = createAstraViewModel(isBurgQuestSession = true)
+        val store = getPrivateField<GameSessionStore>(viewModel, "sessionStore")
+
+        // Try disembarking via cargo ramp
+        viewModel.disembarkAstra()
+        dispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(viewModel.uiState.value.showBurgQuestAstraExitDialog)
+        assertEquals("hub_astra", store.state.value.hubId)
+        assertEquals("astra_cargo_bay", store.state.value.roomId)
+
+        // Dismiss popup
+        viewModel.dismissBurgQuestAstraExitDialog()
+        assertFalse(viewModel.uiState.value.showBurgQuestAstraExitDialog)
+
+        // Try travel from bridge
+        viewModel.travel("east")
+        viewModel.travel("north")
+        assertEquals("astra_bridge", store.state.value.roomId)
+        viewModel.travelToWorldFromAstra("world_1", "hub_1_homestead", "colony_airlock", "homestead_node")
+        dispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(viewModel.uiState.value.showBurgQuestAstraExitDialog)
+        assertEquals("hub_astra", store.state.value.hubId)
+        assertEquals("astra_bridge", store.state.value.roomId)
+
+        // Try requestReturnToHub while in BurgQuest
+        viewModel.dismissBurgQuestAstraExitDialog()
+        viewModel.requestReturnToHub()
+        dispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(viewModel.uiState.value.showBurgQuestAstraExitDialog)
+        assertEquals("hub_astra", store.state.value.hubId)
+    }
+
+    @Test
+    fun burgQuestSessionHidesGalleyKitchenetteInCommonRoom() {
+        val allCabinets = setOf(
+            "ms_w2_mq05_complete",
+            "ms_arcade_cabinet_01_repaired", "ms_arcade_cabinet_02_repaired",
+            "ms_arcade_cabinet_03_repaired", "ms_arcade_cabinet_04_repaired",
+            "ms_arcade_cabinet_05_repaired", "ms_arcade_cabinet_06_repaired"
+        )
+        val normalVm = createAstraViewModel(roomId = "astra_common_room", isBurgQuestSession = false, completedMilestones = allCabinets)
+        val burgQuestVm = createAstraViewModel(roomId = "astra_common_room", isBurgQuestSession = true, completedMilestones = allCabinets)
+
+        assertTrue(normalVm.uiState.value.actions.any { it.name.contains("galley", ignoreCase = true) })
+        assertFalse(burgQuestVm.uiState.value.actions.any { it.name.contains("galley", ignoreCase = true) })
+
+        // Normal session has all 6 arcade cabinets; BurgQuest keeps only Deep Mine Asteroid Drill
+        val arcadeCabinetNames = listOf("Deep Mine Asteroid Drill", "Canopy Hopper", "Spire Infiltrator", "Slag Catcher", "Orbital Defense 2000", "Harmonic Pulse")
+        val normalArcadeActions = normalVm.uiState.value.actions.filter { it.name in arcadeCabinetNames }
+        val burgQuestArcadeActions = burgQuestVm.uiState.value.actions.filter { it.name in arcadeCabinetNames }
+        assertEquals(6, normalArcadeActions.size)
+        assertEquals(1, burgQuestArcadeActions.size)
+        assertEquals("Deep Mine Asteroid Drill", burgQuestArcadeActions.single().name)
+        assertFalse(burgQuestVm.uiState.value.actions.any { it.name.contains("prize", ignoreCase = true) })
+        assertTrue(burgQuestVm.uiState.value.isBurgQuestSession)
     }
 
     private fun setPrivateField(target: Any, name: String, value: Any?) {

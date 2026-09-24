@@ -75,6 +75,8 @@ data class ExplorationUiState(
     val isSimulationDeckVisible: Boolean = false,
     val isTapeDeckVisible: Boolean = false,
     val isAstraNavConsoleVisible: Boolean = false,
+    val showBurgQuestAstraExitDialog: Boolean = false,
+    val isBurgQuestSession: Boolean = false,
     val astraDockedTitle: String = "",
     val astraDockedWorldId: String? = null,
     val astraTransitTitle: String? = null,

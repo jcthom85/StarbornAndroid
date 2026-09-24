@@ -28,7 +28,7 @@ object BurgQuestDemo {
     fun briefing(id: String): String = when (id) {
         "burgfest_combat" -> "$combatIntroduction\n\nTry Arc Tether or Shatter Blow. Link and Nano Repair help the crew recover. Take your time choosing actions. Use Demo → Finish demo whenever you like."
         "burgfest_boss" -> "Defeat Titan Walker. Shock skills help against its armor. After a barrage or stomp, watch for Vent Exposure: use that recovery turn to attack or heal. Your crew has fixed gear and limited medkits; this is the harder showcase."
-        "burgfest_astra" -> "Make yourself at home. Talk to Orion or Gh0st in the common room, then choose something to try:\n\n• Play a round of Deep Mine Asteroid Drill, then return to the ship. The other cabinets are ready too.\n• Or head west to the cargo bay, tap Astra workbench and craft the stocked Cryo-Inductor recipe.\n\nNothing is required. Use Demo → Finish demo whenever you are ready."
+        "burgfest_astra" -> "Make yourself at home. Talk to Orion or Gh0st in the common room, then choose something to try:\n\n• Play a round of Deep Mine Asteroid Drill at the common room cabinet.\n• Or head west to the cargo bay, tap Astra workbench and craft the stocked Cryo-Inductor recipe.\n\nNothing is required. Use Demo → Finish demo whenever you are ready."
         else -> "Meet Nova in the campaign opening. Follow the dialogue and quest prompts at your own pace. This is a reading-focused story preview; reaching combat can take longer than ten minutes. Use Demo → Finish demo when you have seen enough."
     }
 

@@ -116,6 +116,21 @@ private fun BurgQuestVisitContent(
     DisposableEffect(services) { onDispose {
         services.release()
     } }
+    var homecomingTutorialShown by remember { mutableStateOf(false) }
+    val showHomecomingTutorialIfNeeded = {
+        if ((launch.isHomecoming || scenario.id == "burgfest_astra") && !homecomingTutorialShown) {
+            homecomingTutorialShown = true
+            services.promptManager.enqueue(
+                TutorialPrompt(
+                    TutorialEntry(
+                        key = "tut_astra_sampler_movement",
+                        context = "Exploration",
+                        message = "Swipe to move between rooms, or tap the direction arrows."
+                    )
+                )
+            )
+        }
+    }
     if (begun && ending == null) {
         val userSettings by services.userSettingsStore.settings.collectAsState(initial = UserSettings())
         val environmentThemeState by services.environmentThemeManager.state.collectAsState()
@@ -197,6 +212,11 @@ private fun BurgQuestVisitContent(
                         modifier = Modifier.zIndex(100f)
                     )
                 }
+                LaunchedEffect(exploring, showGuide, showHomecoming, showDemoMenu) {
+                    if (exploring && !showGuide && !showHomecoming && !showDemoMenu) {
+                        showHomecomingTutorialIfNeeded()
+                    }
+                }
             } else {
                 CircularProgressIndicator(Modifier.align(Alignment.Center))
             }
@@ -212,26 +232,10 @@ private fun BurgQuestVisitContent(
         } },
         confirmButton = { TextButton(onClick = { showDemoMenu = false }) { Text("Resume demo") } }
     )
-    var homecomingTutorialShown by remember { mutableStateOf(false) }
-    val showHomecomingTutorialIfNeeded = {
-        if (launch.isHomecoming && !homecomingTutorialShown) {
-            homecomingTutorialShown = true
-            services.promptManager.enqueue(
-                TutorialPrompt(
-                    TutorialEntry(
-                        key = "tut_astra_sampler_movement",
-                        context = "Exploration",
-                        message = "Swipe to move between rooms, or tap the direction arrows. Head west to find the workshop."
-                    )
-                )
-            )
-        }
-    }
     if ((!begun || showGuide) && ending == null) AlertDialog(
         onDismissRequest = {
             if (begun) {
                 showGuide = false
-                showHomecomingTutorialIfNeeded()
             } else onExit()
         },
         title = { Text(if (launch.isHomecoming) "Make yourself at home" else scenario.title) },
@@ -244,7 +248,6 @@ private fun BurgQuestVisitContent(
         confirmButton = { TextButton(onClick = {
             begun = true
             showGuide = false
-            showHomecomingTutorialIfNeeded()
         }) {
             Text(if (launch.isHomecoming) "Continue" else if (begun) "Back to demo" else "Begin demo")
         } },
@@ -255,6 +258,7 @@ private fun BurgQuestVisitContent(
     ending?.let { result ->
         if (!chooseAnother) BurgQuestFinishDialog(
             ending = result,
+            scenarioTitle = scenario.title,
             onVisitAstra = { onChoose(BurgQuestLaunch.homecoming()) },
             onRetry = onRetry,
             onFinish = { ending = BurgQuestEnding.FINISHED },
@@ -268,6 +272,7 @@ private fun BurgQuestVisitContent(
 @Composable
 internal fun BurgQuestFinishDialog(
     ending: BurgQuestEnding,
+    scenarioTitle: String = "Tactical Combat",
     onVisitAstra: () -> Unit,
     onRetry: () -> Unit,
     onFinish: () -> Unit,
@@ -282,12 +287,12 @@ internal fun BurgQuestFinishDialog(
                 Text(ending.message)
                 if (ending.isCombatResult) {
                     if (ending != BurgQuestEnding.VICTORY) {
-                        Button(onClick = onRetry, modifier = Modifier.fillMaxWidth()) { Text("Try again (Tactical Combat)") }
+                        Button(onClick = onRetry, modifier = Modifier.fillMaxWidth()) { Text("Try again ($scenarioTitle)") }
                     }
                     Button(onClick = onVisitAstra, modifier = Modifier.fillMaxWidth()) { Text("Visit the Astra") }
                     Text("The Astra starts fresh, with a rested crew and stocked supplies.", style = MaterialTheme.typography.bodySmall)
                     if (ending == BurgQuestEnding.VICTORY) {
-                        TextButton(onClick = onRetry, modifier = Modifier.fillMaxWidth()) { Text("Play again (Tactical Combat)") }
+                        TextButton(onClick = onRetry, modifier = Modifier.fillMaxWidth()) { Text("Play again ($scenarioTitle)") }
                     }
                     TextButton(onClick = onFinish, modifier = Modifier.fillMaxWidth()) { Text("Finish demo") }
                 } else {

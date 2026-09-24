@@ -41,7 +41,8 @@ class ExplorationViewModelFactory(
                 bootstrapCinematics = services.drainPendingCinematics(),
                 bootstrapActions = services.drainPendingPlayerActions(),
                 telemetry = services.playtestTelemetry,
-                dialogueTriggerBinder = services::setDialogueTriggerListener
+                dialogueTriggerBinder = services::setDialogueTriggerListener,
+                isBurgQuestSession = services.isBurgQuestSession
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

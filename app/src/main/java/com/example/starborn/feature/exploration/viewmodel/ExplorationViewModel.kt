@@ -261,7 +261,8 @@ class ExplorationViewModel(
     bootstrapActions: List<String> = emptyList(),
     private val dispatchers: DispatcherProvider = DefaultDispatcherProvider,
     private val telemetry: PlaytestTelemetry = NoOpPlaytestTelemetry,
-    private val dialogueTriggerBinder: (((String) -> Boolean)?) -> Unit = {}
+    private val dialogueTriggerBinder: (((String) -> Boolean)?) -> Unit = {},
+    private val isBurgQuestSession: Boolean = false
 ) : ViewModel() {
     private val arcadeService = ArcadeService(sessionStore, inventoryService)
     private val explorationXpAwarder by lazy {
@@ -277,7 +278,12 @@ class ExplorationViewModel(
     private val startWithBlackScreen: Boolean = bootstrapActions.any {
         it.equals("new_game_spawn_player_and_fade", ignoreCase = true)
     }
-    private val _uiState = MutableStateFlow(ExplorationUiState(forceBlackScreen = startWithBlackScreen))
+    private val _uiState = MutableStateFlow(
+        ExplorationUiState(
+            forceBlackScreen = startWithBlackScreen,
+            isBurgQuestSession = isBurgQuestSession
+        )
+    )
     val uiState: StateFlow<ExplorationUiState> = _uiState.asStateFlow()
 
     private val _events = MutableSharedFlow<ExplorationEvent>()
@@ -1694,9 +1700,18 @@ class ExplorationViewModel(
         _uiState.update { it.copy(isAstraNavConsoleVisible = false, astraArrivalTitle = null) }
     }
 
+    fun dismissBurgQuestAstraExitDialog() {
+        _uiState.update { it.copy(showBurgQuestAstraExitDialog = false) }
+    }
+
     fun travelToWorldFromAstra(worldId: String, hubId: String, roomId: String, nodeId: String) {
         viewModelScope.launch(dispatchers.main) {
             if (_uiState.value.astraTransitTitle != null || _uiState.value.astraArrivalTitle != null) return@launch
+            if (isBurgQuestSession) {
+                dismissAstraNavConsole()
+                _uiState.update { it.copy(showBurgQuestAstraExitDialog = true) }
+                return@launch
+            }
             val session = sessionStore.state.value
             val destination = AstraTravel.availableDestinations(session).firstOrNull {
                 it.worldId == worldId && it.hubId == hubId && it.roomId == roomId && it.nodeId == nodeId
@@ -1741,6 +1756,11 @@ class ExplorationViewModel(
         viewModelScope.launch(dispatchers.main) {
             val session = sessionStore.state.value
             if (_uiState.value.astraTransitTitle != null) return@launch
+            if (isBurgQuestSession && session.hubId == AstraTravel.HUB_ID) {
+                dismissAstraNavConsole()
+                _uiState.update { it.copy(showBurgQuestAstraExitDialog = true) }
+                return@launch
+            }
             if (session.hubId != AstraTravel.HUB_ID ||
                 (session.roomId != AstraTravel.ENTRY_ROOM_ID && _uiState.value.astraArrivalTitle == null)) return@launch
             val dock = AstraTravel.dockingLocation(session, worldAssets.loadHubs(), worldAssets.loadHubNodes())
@@ -2437,7 +2457,8 @@ class ExplorationViewModel(
                         }
                         staticVisuals + movingVisuals
                     }.orEmpty(),
-                    forceBlackScreen = startWithBlackScreen
+                    forceBlackScreen = startWithBlackScreen,
+                    isBurgQuestSession = isBurgQuestSession
                 )
             }
             initialRoom?.let { room ->
@@ -3230,6 +3251,11 @@ class ExplorationViewModel(
     fun requestReturnToHub() {
         viewModelScope.launch(dispatchers.main) {
             val currentRoom = _uiState.value.currentRoom
+            if (isBurgQuestSession && sessionStore.state.value.hubId == AstraTravel.HUB_ID) {
+                dismissAstraNavConsole()
+                _uiState.update { it.copy(showBurgQuestAstraExitDialog = true) }
+                return@launch
+            }
             if (currentRoom?.id == AstraTravel.ENTRY_ROOM_ID) {
                 disembarkAstra()
                 return@launch
@@ -5857,6 +5883,13 @@ class ExplorationViewModel(
     }
 
     private fun isActionVisible(room: Room, action: Map<String, Any?>): Boolean {
+        if (isBurgQuestSession && room.id == "astra_common_room") {
+            val name = (action["name"] as? String)?.lowercase(Locale.getDefault()).orEmpty()
+            if (name.contains("galley") || name.contains("kitchen")) return false
+            val type = (action["type"] as? String)?.lowercase(Locale.getDefault()).orEmpty()
+            if (type == "arcade" && !name.contains("deep mine")) return false
+            if (name.contains("arcade prize")) return false
+        }
         val session = sessionStore.state.value
         return narrativeActionVisible(
             action = action,
