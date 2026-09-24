@@ -88,7 +88,8 @@ internal fun CampaignNavigationHost(
     onDemoExit: (() -> Unit)? = null,
     demoEnemies: List<String> = emptyList(),
     demoPaused: Boolean = false,
-    onDemoRootBack: (() -> Unit)? = null
+    onDemoRootBack: (() -> Unit)? = null,
+    onDemoCombatComposed: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
     val hostView = LocalView.current
@@ -261,7 +262,10 @@ internal fun CampaignNavigationHost(
                 }
             )
         }
-        composable(Exploration.route) { backStackEntry ->
+        composable(Exploration.route, exitTransition = {
+            if (onDemoCombatComposed != null && targetState.destination.route == Combat.route)
+                androidx.compose.animation.ExitTransition.None else null
+        }) { backStackEntry ->
             val explorationViewModel: ExplorationViewModel = viewModel(factory = ExplorationViewModelFactory(services))
             val craftingViewModel: CraftingViewModel = viewModel(
                 factory = CraftingViewModelFactory(
@@ -660,6 +664,9 @@ internal fun CampaignNavigationHost(
         }
         composable(
             route = Combat.route,
+            enterTransition = {
+                if (onDemoCombatComposed != null) androidx.compose.animation.EnterTransition.None else null
+            },
             arguments = listOf(navArgument("enemyIds") { type = NavType.StringType })
         ) { backStackEntry ->
             val encoded = backStackEntry.arguments?.getString("enemyIds")
@@ -691,6 +698,9 @@ internal fun CampaignNavigationHost(
                     cinematicState = services.cinematicState,
                     onAdvanceCinematic = services.cinematicCoordinator::advance
                 )
+                // Release the booth cover only after the combat surface and its opaque
+                // reveal overlay have successfully composed, not on back-stack mutation.
+                androidx.compose.runtime.SideEffect { onDemoCombatComposed?.invoke() }
             }
         }
         composable(

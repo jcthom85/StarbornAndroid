@@ -124,11 +124,6 @@ private fun BurgQuestVisitContent(
         val exploring = visitEntry?.destination?.route == NavigationDestination.Exploration.route
         val demoEnemies = remember(scenario.id) { BurgQuestDemo.enemies(scenario.id) }
         var combatTransitionVisible by remember { mutableStateOf(demoEnemies.isNotEmpty()) }
-        LaunchedEffect(visitEntry?.destination?.route) {
-            if (visitEntry?.destination?.route != null && !exploring) {
-                combatTransitionVisible = false
-            }
-        }
         val visitOwner = remember { object : ViewModelStoreOwner {
             override val viewModelStore = ViewModelStore()
         } }
@@ -159,6 +154,7 @@ private fun BurgQuestVisitContent(
                         providedServices = services,
                         initialDestination = NavigationDestination.Exploration.route,
                         demoEnemies = emptyList(),
+                        onDemoCombatComposed = { combatTransitionVisible = false },
                         demoPaused = showGuide || showDemoMenu || showHomecoming,
                         onDemoRootBack = { showDemoMenu = true },
                         onDemoExit = { ending = BurgQuestEnding.FINISHED },
