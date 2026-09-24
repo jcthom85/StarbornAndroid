@@ -55,7 +55,7 @@ class AstraTransitNavigationTest {
             }
             compose.onNodeWithContentDescription("Enter The Astra").assertIsDisplayed()
             compose.onAllNodesWithText("The Astra").onFirst().assertIsDisplayed()
-            compose.onNodeWithContentDescription("Enter The Astra").performTouchInput { doubleClick() }
+            compose.onNodeWithContentDescription("Enter The Astra").performClick()
             compose.waitUntil(10_000) { nav.currentDestination?.route == NavigationDestination.Exploration.route }
             instrumentation.runOnMainSync { assertEquals("astra_cargo_bay", services.sessionStore.state.value.roomId) }
         } finally {

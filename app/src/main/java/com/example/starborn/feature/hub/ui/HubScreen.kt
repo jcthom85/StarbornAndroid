@@ -14,6 +14,8 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -51,6 +53,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
@@ -143,7 +146,7 @@ fun HubScreen(
 }
 
 @Composable
-private fun HubScreenContent(
+internal fun HubScreenContent(
     uiState: HubUiState,
     settings: SettingsUiState,
     onNodeFocused: (HubNodeUi) -> Unit,
@@ -161,8 +164,10 @@ private fun HubScreenContent(
 ) {
     val backgroundPainter = rememberHubBackgroundPainter(uiState.backgroundImage)
     var menuVisible by remember { mutableStateOf(false) }
-    var destinationPanelHeightPx by remember { mutableStateOf(0) }
-    val destinationPanelInset = with(LocalDensity.current) { destinationPanelHeightPx.toDp() }
+    var headerHeightPx by remember { mutableStateOf(0) }
+    var astraControlHeightPx by remember { mutableStateOf(0) }
+    val headerInset = with(LocalDensity.current) { headerHeightPx.toDp() }
+    val panelReserve = (164f * LocalDensity.current.fontScale.coerceIn(1f, 1.5f)).dp
     val selectedNode = remember(uiState.nodes, uiState.selectedNodeId) {
         uiState.nodes.firstOrNull { it.id == uiState.selectedNodeId } ?: uiState.nodes.firstOrNull()
     }
@@ -175,17 +180,6 @@ private fun HubScreenContent(
         }
     }
 
-    val infiniteTransition = rememberInfiniteTransition(label = "hub_atmosphere")
-    val parallaxScale by infiniteTransition.animateFloat(
-        initialValue = 1.0f,
-        targetValue = 1.035f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 14000, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "hub_parallax_scale"
-    )
-
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -194,12 +188,8 @@ private fun HubScreenContent(
         Image(
             painter = backgroundPainter,
             contentDescription = null,
-            modifier = Modifier
-                .fillMaxSize()
-                .graphicsLayer {
-                    scaleX = parallaxScale
-                    scaleY = parallaxScale
-                },
+            modifier = Modifier.fillMaxSize(),
+            alpha = .16f,
             contentScale = ContentScale.Crop
         )
         HubAtmosphereCanvas(
@@ -226,6 +216,7 @@ private fun HubScreenContent(
             statusMessage = uiState.statusMessage,
             modifier = Modifier
                 .align(Alignment.TopStart)
+                .onSizeChanged { headerHeightPx = it.height }
                 .statusBarsPadding()
                 .padding(start = 20.dp, top = 18.dp, end = 88.dp)
         )
@@ -239,18 +230,39 @@ private fun HubScreenContent(
         )
 
         if (!uiState.isLoading) {
-            HubNodeLayer(
+            HubMapScene(
+                hubId = uiState.hub?.id,
+                background = backgroundPainter,
                 nodes = uiState.nodes,
                 selectedId = uiState.selectedNodeId,
                 trackedQuest = uiState.trackedQuest,
-                onNodeSelected = onNodeFocused,
-                onNodeEnterRequested = onEnterSelectedNode,
+                onSelect = onNodeFocused,
+                onEnter = onEnterSelectedNode,
                 modifier = Modifier
                     .align(Alignment.Center)
                     .fillMaxSize()
-                    .padding(start = 14.dp, top = 146.dp, end = 14.dp,
-                        bottom = if (destinationPanelHeightPx == 0) 142.dp else destinationPanelInset + 12.dp)
+                    .navigationBarsPadding()
+                    .padding(start = 8.dp, top = maxOf(headerInset + 10.dp,
+                        if (uiState.nodes.any { it.id == "astra_access" } && HubMapLayouts.all[uiState.hub?.id]?.astraDock == null)
+                            with(LocalDensity.current) { astraControlHeightPx.toDp() } + 10.dp else 130.dp), end = 8.dp,
+                        bottom = panelReserve + 12.dp)
             )
+        }
+
+        val astraAccess = uiState.nodes.firstOrNull { it.id == "astra_access" }
+        if (astraAccess != null && HubMapLayouts.all[uiState.hub?.id]?.astraDock == null) {
+            TextButton(onClick = { onEnterSelectedNode(astraAccess) },
+                modifier = Modifier.align(Alignment.TopEnd).onSizeChanged { astraControlHeightPx = it.height }.statusBarsPadding()
+                    .padding(top = 72.dp, end = 8.dp).width(80.dp)
+                    .semantics { contentDescription = "Enter The Astra" }) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    rememberHubNodePainter("images/nodes/astra_ship_map.webp")?.let {
+                        Image(it, null, modifier = Modifier.size(28.dp))
+                    }
+                    Text("The Astra", color = Color(0xFFBFEFFF), textAlign = TextAlign.Center,
+                        fontSize = 11.sp, lineHeight = 13.sp)
+                }
+            }
         }
 
         selectedNode?.let { node ->
@@ -259,9 +271,10 @@ private fun HubScreenContent(
                 onEnter = { onEnterSelectedNode(node) },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .onSizeChanged { destinationPanelHeightPx = it.height }
                     .navigationBarsPadding()
                     .padding(horizontal = 16.dp, vertical = 18.dp)
+                    .heightIn(max = panelReserve - 36.dp)
+                    .verticalScroll(rememberScrollState())
             )
         }
 
@@ -410,14 +423,14 @@ private fun HubDestinationPanel(
     }
     Surface(
         modifier = modifier
-            .fillMaxWidth()
-            .widthIn(max = 620.dp),
-        shape = RoundedCornerShape(10.dp),
+            .widthIn(max = 620.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
         color = Color(0xF2071018),
-        border = BorderStroke(1.dp, accent.copy(alpha = 0.46f)),
-        shadowElevation = 14.dp
+        border = BorderStroke(1.dp, accent.copy(alpha = 0.28f)),
+        shadowElevation = 8.dp
     ) {
-        Column(
+        BoxWithConstraints(
             modifier = Modifier
                 .background(
                     Brush.verticalGradient(
@@ -427,58 +440,68 @@ private fun HubDestinationPanel(
                         )
                     )
                 )
-                .padding(horizontal = 12.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+                .padding(16.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = node.title,
-                    modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                    color = Color.White
-                )
-                Surface(
-                    onClick = onEnter,
-                    enabled = node.canEnter,
-                    shape = RoundedCornerShape(9.dp),
-                    color = if (node.canEnter) accent.copy(alpha = 0.24f) else Color.White.copy(alpha = 0.05f),
-                    border = BorderStroke(1.dp, accent.copy(alpha = if (node.canEnter) 0.72f else 0.22f))
-                ) {
-                    Row(
-                        modifier = Modifier.heightIn(min = 48.dp)
-                            .padding(horizontal = 14.dp, vertical = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = if (node.canEnter) Icons.Filled.PlayArrow else Icons.Filled.Lock,
-                            contentDescription = null,
-                            tint = if (node.canEnter) Color.White else Color.White.copy(alpha = 0.42f),
-                            modifier = Modifier.size(17.dp)
-                        )
-                        Text(
-                            text = if (node.canEnter) "Enter" else "Locked",
-                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
-                            color = if (node.canEnter) Color.White else Color.White.copy(alpha = 0.42f)
-                        )
-                    }
-                }
-            }
+            val stacked = maxWidth < 300.dp || LocalDensity.current.fontScale > 1.3f
             val detail = when {
                 !node.canEnter -> node.lockReason ?: node.lockedPreview ?: node.description
                     ?: "Find a story reason to go here first."
                 else -> node.description
             }
-            if (!detail.isNullOrBlank()) {
-                Text(
-                    text = detail,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.White.copy(alpha = 0.76f)
-                )
+            val description: @Composable (Modifier) -> Unit = { contentModifier ->
+                Column(modifier = contentModifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(
+                        text = node.title,
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                        color = Color.White
+                    )
+                    if (!detail.isNullOrBlank()) {
+                        Text(
+                            text = detail,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color(0xFFB8C6D2)
+                        )
+                    }
+                }
+            }
+            val enterButton: @Composable (Modifier) -> Unit = { buttonModifier ->
+                Surface(
+                    modifier = buttonModifier,
+                    onClick = onEnter,
+                    enabled = node.canEnter,
+                    shape = RoundedCornerShape(12.dp),
+                    color = if (node.canEnter) accent else Color.White.copy(alpha = 0.06f)
+                ) {
+                    Row(
+                        modifier = Modifier.heightIn(min = 48.dp)
+                            .padding(horizontal = 14.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = if (node.canEnter) Icons.Filled.PlayArrow else Icons.Filled.Lock,
+                            contentDescription = null,
+                            tint = if (node.canEnter) Color(0xFF071018) else Color.White.copy(alpha = 0.55f),
+                            modifier = Modifier.size(17.dp)
+                        )
+                        Text(
+                            text = if (node.canEnter) "Enter" else "Locked",
+                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                            color = if (node.canEnter) Color(0xFF071018) else Color.White.copy(alpha = 0.55f)
+                        )
+                    }
+                }
+            }
+            if (stacked) {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    description(Modifier.fillMaxWidth())
+                    enterButton(Modifier.fillMaxWidth())
+                }
+            } else {
+                Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                    description(Modifier.weight(1f))
+                    enterButton(Modifier)
+                }
             }
         }
     }
@@ -839,266 +862,8 @@ private fun HubLockedPromptOverlay(
     }
 }
 
-@Composable
-private fun HubNodeLayer(
-    nodes: List<HubNodeUi>,
-    selectedId: String?,
-    trackedQuest: HubQuestUi?,
-    onNodeSelected: (HubNodeUi) -> Unit,
-    onNodeEnterRequested: (HubNodeUi) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    BoxWithConstraints(modifier = modifier) {
-        val widthPx = constraints.maxWidth.toFloat()
-        val heightPx = constraints.maxHeight.toFloat()
-        val density = LocalDensity.current
 
-        nodes.forEach { node ->
-            val composition = hubNodeComposition(node)
-            val markerWidthPx = with(density) { composition.width.toPx() }
-            val markerHeightPx = with(density) { composition.height.toPx() }
-            val centerX = widthPx * node.centerX
-            val centerY = heightPx * node.centerY
-            val rawOffsetX = centerX - markerWidthPx * composition.anchorX
-            val offsetX = if (node.id in WorldOneNodeIds) {
-                rawOffsetX.roundToInt()
-            } else {
-                rawOffsetX
-                    .coerceIn(0f, (widthPx - markerWidthPx).coerceAtLeast(0f))
-                    .roundToInt()
-            }
-            val offsetY = (centerY - markerHeightPx * composition.anchorY)
-                .coerceIn(0f, (heightPx - markerHeightPx).coerceAtLeast(0f))
-                .roundToInt()
-            HubNodeMarker(
-                node = node,
-                selected = selectedId == node.id,
-                objective = trackedQuest?.let { nodeMatchesQuest(node, it) } == true,
-                modifier = Modifier
-                    .width(composition.width)
-                    .height(composition.height)
-                    .offset { IntOffset(offsetX, offsetY) },
-                onClick = { onNodeSelected(node) },
-                onDoubleClick = {
-                    onNodeSelected(node)
-                    if (node.canEnter) onNodeEnterRequested(node)
-                }
-            )
-        }
-    }
-}
-
-@Composable
-private fun HubNodeMarker(
-    node: HubNodeUi,
-    selected: Boolean,
-    objective: Boolean,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    onDoubleClick: () -> Unit
-) {
-    val iconPainter = rememberHubNodePainter(node.iconPath)
-    val composition = hubNodeComposition(node)
-    val highlight by animateFloatAsState(
-        targetValue = if (selected) 1f else 0f,
-        animationSpec = tween(durationMillis = 260),
-        label = "hubNodeHighlight"
-    )
-    val pulseTransition = rememberInfiniteTransition(label = "hubNodePulse")
-    val pulse by pulseTransition.animateFloat(
-        initialValue = 0.97f,
-        targetValue = 1.04f,
-        animationSpec = infiniteRepeatable(
-            animation = tween<Float>(durationMillis = 2400, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "hubNodeScale"
-    )
-    val scale by animateFloatAsState(
-        targetValue = if (selected || objective) pulse else 1f,
-        animationSpec = tween(durationMillis = 260),
-        label = "hubNodeScaleEase"
-    )
-    Column(
-        modifier = modifier
-            .semantics { contentDescription = "Enter ${node.title}" }
-            .pointerInput(node.id, node.canEnter) {
-                detectTapGestures(
-                    onTap = { onClick() },
-                    onDoubleTap = { onDoubleClick() }
-                )
-            }
-            .graphicsLayer {
-                scaleX = scale
-                scaleY = scale
-            },
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom
-    ) {
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.BottomCenter
-        ) {
-            if (selected || objective) {
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .size(composition.imageWidth * if (selected) 0.88f else 0.74f)
-                        .clip(CircleShape)
-                        .background(
-                            Brush.radialGradient(
-                                listOf(
-                                    Color(0xFF7BE4FF).copy(alpha = if (selected) 0.24f else 0.14f),
-                                    Color.Transparent
-                                )
-                            )
-                        )
-                        .border(
-                            1.dp,
-                            Color(0xFF7BE4FF).copy(alpha = if (selected) 0.58f else 0.34f),
-                            CircleShape
-                        )
-                )
-            }
-            if (iconPainter != null) {
-                Image(
-                    painter = iconPainter,
-                    contentDescription = null,
-                    contentScale = ContentScale.Fit,
-                    alpha = if (node.unlocked) 1f else 0.38f,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .widthIn(max = composition.imageWidth)
-                        .graphicsLayer {
-                            if (node.id == "pit") scaleX = -1f
-                        }
-                )
-            } else {
-                Box(
-                    modifier = Modifier
-                        .size(composition.imageWidth * 0.62f)
-                        .clip(CircleShape)
-                        .background(
-                            Brush.radialGradient(
-                                colors = listOf(Color(0xFF24536A), Color(0xFF0B1820))
-                            )
-                        )
-                        .border(1.5.dp, TitleMarkerBorder, CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = if (node.unlocked) node.title.take(1).uppercase() else "?",
-                        color = Color.White,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Black
-                    )
-                }
-            }
-            NodeBadge(
-                node = node,
-                objective = objective,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .offset(
-                        x = composition.imageWidth * 0.28f,
-                        y = composition.imageWidth * 0.14f
-                    )
-            )
-        }
-
-        Surface(
-            shape = RoundedCornerShape(7.dp),
-            color = Color(0xDC080C11),
-            border = androidx.compose.foundation.BorderStroke(
-                1.dp,
-                Color.White.copy(alpha = if (selected) 0.34f else 0.16f)
-            ),
-            shadowElevation = 4.dp
-        ) {
-            Text(
-                text = node.title,
-                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                maxLines = 2,
-                softWrap = true,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier
-                    .widthIn(max = 132.dp)
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-            )
-        }
-    }
-}
-
-private data class HubNodeComposition(
-    val width: androidx.compose.ui.unit.Dp,
-    val height: androidx.compose.ui.unit.Dp,
-    val imageWidth: androidx.compose.ui.unit.Dp = width,
-    val anchorX: Float = 0.5f,
-    val anchorY: Float = 0.5f
-)
-
-private val WorldOneNodeIds = setOf("pit", "workshop", "med_bay", "trade_row", "admin_gate")
-
-private fun hubNodeComposition(node: HubNodeUi): HubNodeComposition = when (node.id) {
-    "astra_access" -> HubNodeComposition(width = 132.dp, height = 130.dp, imageWidth = 86.dp, anchorY = 0.5f)
-    "pit" -> HubNodeComposition(width = 120.dp, height = 120.dp, imageWidth = 96.dp, anchorX = 0.5f, anchorY = 0.72f)
-    "workshop" -> HubNodeComposition(width = 130.dp, height = 128.dp, imageWidth = 106.dp, anchorX = 0.5f, anchorY = 0.74f)
-    "med_bay" -> HubNodeComposition(width = 124.dp, height = 122.dp, imageWidth = 96.dp, anchorX = 0.5f, anchorY = 0.70f)
-    "trade_row" -> HubNodeComposition(width = 126.dp, height = 126.dp, imageWidth = 100.dp, anchorX = 0.5f, anchorY = 0.74f)
-    "admin_gate" -> HubNodeComposition(width = 126.dp, height = 118.dp, imageWidth = 92.dp, anchorX = 0.5f, anchorY = 0.69f)
-    "admin_concourse" -> HubNodeComposition(width = 142.dp, height = 126.dp, imageWidth = 106.dp, anchorX = 0.5f, anchorY = 0.62f)
-    "server_room" -> HubNodeComposition(width = 136.dp, height = 132.dp, imageWidth = 108.dp, anchorX = 0.5f, anchorY = 0.68f)
-    "deep_mine" -> HubNodeComposition(width = 132.dp, height = 138.dp, imageWidth = 114.dp, anchorX = 0.5f, anchorY = 0.66f)
-    "echo_chamber" -> HubNodeComposition(width = 142.dp, height = 130.dp, imageWidth = 110.dp, anchorX = 0.5f, anchorY = 0.62f)
-    "launch_bay" -> HubNodeComposition(width = 132.dp, height = 136.dp, imageWidth = 114.dp, anchorX = 0.5f, anchorY = 0.62f)
-    else -> {
-        // Asset metadata uses source-pixel hints, not density-independent screen sizes.
-        val size = (node.sizeHint * 0.36f).coerceIn(72f, 96f).dp
-        HubNodeComposition(width = size, height = size + 28.dp, imageWidth = size, anchorY = 0.62f)
-    }
-}
-
-@Composable
-private fun NodeBadge(
-    node: HubNodeUi,
-    objective: Boolean,
-    modifier: Modifier = Modifier
-) {
-    val icon = when {
-        !node.canEnter -> Icons.Filled.Lock
-        node.completed -> Icons.Filled.CheckCircle
-        objective -> Icons.AutoMirrored.Rounded.Assignment
-        node.canEnter && !node.visited -> Icons.Filled.Star
-        else -> null
-    } ?: return
-    val color = when {
-        !node.canEnter -> Color(0xFFFF8A65)
-        node.completed -> Color(0xFF8EF6B3)
-        node.canEnter && !node.visited -> Color(0xFFFFD166)
-        else -> Color(0xFFFFC857)
-    }
-    Surface(
-        modifier = modifier,
-        shape = CircleShape,
-        color = Color(0xE5060B12),
-        border = BorderStroke(1.dp, color.copy(alpha = 0.48f))
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = color,
-            modifier = Modifier
-                .padding(4.dp)
-                .size(14.dp)
-        )
-    }
-}
-
-private fun nodeMatchesQuest(node: HubNodeUi, quest: HubQuestUi): Boolean {
+internal fun nodeMatchesQuest(node: HubNodeUi, quest: HubQuestUi): Boolean {
     val haystack = listOfNotNull(quest.objective, quest.stageTitle, quest.title)
         .joinToString(" ")
         .lowercase()
@@ -1116,10 +881,8 @@ private fun nodeMatchesQuest(node: HubNodeUi, quest: HubQuestUi): Boolean {
     return idTokens.any { token -> haystack.contains(token) }
 }
 
-private val TitleMarkerBorder = Color(0xFF7BE4FF).copy(alpha = 0.72f)
-
 @Composable
-private fun rememberHubNodePainter(iconPath: String?): Painter? {
+internal fun rememberHubNodePainter(iconPath: String?): Painter? {
     if (iconPath.isNullOrBlank()) return null
     val context = LocalContext.current
     return remember(iconPath) {
@@ -1129,22 +892,6 @@ private fun rememberHubNodePainter(iconPath: String?): Painter? {
             }
         }.getOrNull()
     }
-}
-
-private fun nodeColor(node: HubNodeUi, selected: Boolean, highlight: Float): Color {
-    val base = if (node.discovered) Color(0xFF1E5C8E) else Color(0xFF455A64)
-    val selectedTint = Color(0xFF80CBC4)
-    return lerpColor(base, selectedTint, highlight)
-}
-
-private fun lerpColor(start: Color, end: Color, t: Float): Color {
-    val clamped = t.coerceIn(0f, 1f)
-    return Color(
-        red = start.red + (end.red - start.red) * clamped,
-        green = start.green + (end.green - start.green) * clamped,
-blue = start.blue + (end.blue - start.blue) * clamped,
-        alpha = start.alpha + (end.alpha - start.alpha) * clamped
-    )
 }
 
 @Composable
