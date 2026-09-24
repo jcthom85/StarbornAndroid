@@ -21,21 +21,23 @@ class HubMapLayoutTest {
             assertEquals(hub.id, expected, layout.sites.keys)
             (layout.sites.values + listOfNotNull(layout.astraDock)).forEach { site ->
                 assertTrue(site.x in 0f..1f)
-                assertTrue(site.y > layout.cropTop && site.y < layout.cropBottom)
+                assertTrue(site.y in .24f.. .81f)
                 assertTrue(site.artworkWidth in 0f..0.4f)
+            }
+            if (hub.id != "hub_astra") layout.sites.filterKeys { it != "hangar_bay" }.values.forEach {
+                assertTrue("${hub.id} must display destination artwork", it.artworkWidth > 0f)
             }
         }
     }
 
-    @Test fun `map fit preserves image proportions at compact phone and tablet sizes`() {
-        listOf(320f to 340f, 400f to 540f, 800f to 900f).forEach { (width, height) ->
-            HubMapLayouts.all.values.forEach { layout ->
-                val fit = HubMapTransform.fit(width, height, 9f / 16f, layout.cropTop, layout.cropBottom)
-                assertTrue(fit.width <= width + .01f)
-                assertTrue(fit.y(layout.cropBottom) <= height + .01f)
-                assertEquals(0f, fit.y(layout.cropTop), .001f)
-                assertEquals(9f / 16f, fit.width / fit.imageHeight, .001f)
-            }
+    @Test fun `portrait map fills the screen with no letterboxing and matching anchor transform`() {
+        listOf(320f to 640f, 400f to 890f, 800f to 1280f).forEach { (width, height) ->
+            val fit = HubMapTransform.cover(width, height, 1088f / 1920f)
+            assertTrue(fit.x(0f) <= 0f && fit.x(1f) >= width)
+            assertTrue(fit.y(0f) <= 0f && fit.y(1f) >= height)
+            assertEquals(width / 2, fit.x(.5f), .001f)
+            assertEquals(height / 2, fit.y(.5f), .001f)
+            assertEquals(1088f / 1920f, fit.width / fit.imageHeight, .001f)
         }
     }
 }

@@ -498,7 +498,7 @@ fun MainMenuScreen(
             )
             // Restore these title entries after BurgQuest; functionality and saves stay intact.
             val showNewGameForPublicRelease = false
-            val showDebugScenariosOnTitle = false
+            val showDebugScenariosOnTitle = BuildConfig.ENABLE_SCENARIO_MENU
             val showLoadGameOnTitle = false
             if (showNewGameForPublicRelease) StarbornTitleButton(
                 text = "New Game",

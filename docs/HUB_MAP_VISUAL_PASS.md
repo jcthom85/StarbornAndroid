@@ -1,6 +1,6 @@
 # Hub map visual pass — September 24, 2026
 
-Implemented locally; not versioned, committed, or released by this pass.
+The original pass below shipped in 1.3.66 (150) and was rejected: the inset map and landmark-circle treatment violated the intended portrait presentation and canonical separate-node artwork. It is retained as historical evidence, not current design guidance. See [the portrait correction](HUB_PORTRAIT_CORRECTION.md).
 
 ## Layout rules
 

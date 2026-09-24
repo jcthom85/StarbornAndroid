@@ -93,7 +93,7 @@ object DebugTestRegistry {
                 cabinetId = cabinet.id), world = "The Astra")
     }
 
-    val allScenarios: List<DebugScenario> get() = DebugScenarioCatalog.burgfestScenarios + scenarios + DebugCampaignScenarios.scenarios + DebugSystemScenarios.scenarios
+    val allScenarios: List<DebugScenario> get() = (DebugScenarioCatalog.burgfestScenarios + DebugScenarioCatalog.scenarios + scenarios + DebugCampaignScenarios.scenarios + DebugSystemScenarios.scenarios).distinctBy { it.id }
 
     fun find(id: String): DebugScenario? = allScenarios.firstOrNull { it.id == id }
 

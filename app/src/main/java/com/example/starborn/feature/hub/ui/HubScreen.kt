@@ -164,9 +164,6 @@ internal fun HubScreenContent(
 ) {
     val backgroundPainter = rememberHubBackgroundPainter(uiState.backgroundImage)
     var menuVisible by remember { mutableStateOf(false) }
-    var headerHeightPx by remember { mutableStateOf(0) }
-    var astraControlHeightPx by remember { mutableStateOf(0) }
-    val headerInset = with(LocalDensity.current) { headerHeightPx.toDp() }
     val panelReserve = (164f * LocalDensity.current.fontScale.coerceIn(1f, 1.5f)).dp
     val selectedNode = remember(uiState.nodes, uiState.selectedNodeId) {
         uiState.nodes.firstOrNull { it.id == uiState.selectedNodeId } ?: uiState.nodes.firstOrNull()
@@ -189,9 +186,20 @@ internal fun HubScreenContent(
             painter = backgroundPainter,
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
-            alpha = .16f,
             contentScale = ContentScale.Crop
         )
+        if (!uiState.isLoading) {
+            HubMapScene(
+                hubId = uiState.hub?.id,
+                background = backgroundPainter,
+                nodes = uiState.nodes,
+                selectedId = uiState.selectedNodeId,
+                trackedQuest = uiState.trackedQuest,
+                onSelect = onNodeFocused,
+                onEnter = onEnterSelectedNode,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
         HubAtmosphereCanvas(
             modifier = Modifier.fillMaxSize()
         )
@@ -216,7 +224,6 @@ internal fun HubScreenContent(
             statusMessage = uiState.statusMessage,
             modifier = Modifier
                 .align(Alignment.TopStart)
-                .onSizeChanged { headerHeightPx = it.height }
                 .statusBarsPadding()
                 .padding(start = 20.dp, top = 18.dp, end = 88.dp)
         )
@@ -229,34 +236,14 @@ internal fun HubScreenContent(
                 .padding(top = 20.dp, end = 18.dp)
         )
 
-        if (!uiState.isLoading) {
-            HubMapScene(
-                hubId = uiState.hub?.id,
-                background = backgroundPainter,
-                nodes = uiState.nodes,
-                selectedId = uiState.selectedNodeId,
-                trackedQuest = uiState.trackedQuest,
-                onSelect = onNodeFocused,
-                onEnter = onEnterSelectedNode,
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .fillMaxSize()
-                    .navigationBarsPadding()
-                    .padding(start = 8.dp, top = maxOf(headerInset + 10.dp,
-                        if (uiState.nodes.any { it.id == "astra_access" } && HubMapLayouts.all[uiState.hub?.id]?.astraDock == null)
-                            with(LocalDensity.current) { astraControlHeightPx.toDp() } + 10.dp else 130.dp), end = 8.dp,
-                        bottom = panelReserve + 12.dp)
-            )
-        }
-
         val astraAccess = uiState.nodes.firstOrNull { it.id == "astra_access" }
         if (astraAccess != null && HubMapLayouts.all[uiState.hub?.id]?.astraDock == null) {
             TextButton(onClick = { onEnterSelectedNode(astraAccess) },
-                modifier = Modifier.align(Alignment.TopEnd).onSizeChanged { astraControlHeightPx = it.height }.statusBarsPadding()
+                modifier = Modifier.align(Alignment.TopEnd).statusBarsPadding()
                     .padding(top = 72.dp, end = 8.dp).width(80.dp)
                     .semantics { contentDescription = "Enter The Astra" }) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    rememberHubNodePainter("images/nodes/astra_ship_map.webp")?.let {
+                    rememberHubNodePainter("images/nodes/astra_ship_map_v2.webp")?.let {
                         Image(it, null, modifier = Modifier.size(28.dp))
                     }
                     Text("The Astra", color = Color(0xFFBFEFFF), textAlign = TextAlign.Center,
@@ -323,7 +310,7 @@ private fun HubHeader(
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )
-        Text(
+        if (trackedQuest == null) Text(
             text = subtitle,
             style = MaterialTheme.typography.bodySmall,
             color = Color.White.copy(alpha = 0.74f),
@@ -442,14 +429,14 @@ private fun HubDestinationPanel(
                 )
                 .padding(16.dp)
         ) {
-            val stacked = maxWidth < 300.dp || LocalDensity.current.fontScale > 1.3f
+            val stacked = maxWidth < 260.dp
             val detail = when {
                 !node.canEnter -> node.lockReason ?: node.lockedPreview ?: node.description
                     ?: "Find a story reason to go here first."
                 else -> node.description
             }
             val description: @Composable (Modifier) -> Unit = { contentModifier ->
-                Column(modifier = contentModifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Column(modifier = contentModifier.heightIn(max = 84.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(
                         text = node.title,
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),

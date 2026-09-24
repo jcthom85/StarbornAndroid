@@ -14,6 +14,7 @@ import com.example.starborn.core.platform.AndroidAssetProvider
 import com.example.starborn.data.assets.AssetJsonReader
 import com.example.starborn.data.assets.WorldAssetDataSource
 import com.example.starborn.feature.exploration.viewmodel.SettingsUiState
+import com.example.starborn.feature.hub.ui.HubMapLayouts
 import com.example.starborn.feature.hub.ui.HubScreenContent
 import com.example.starborn.feature.hub.viewmodel.*
 import com.example.starborn.ui.theme.StarbornTheme
@@ -28,7 +29,8 @@ class HubMapVisualAuditTest {
     @Test fun everyHubHasReadableStableDestinationsAcrossDisplaySizes() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val assets = WorldAssetDataSource(AssetJsonReader(AndroidAssetProvider(context), MoshiProvider.instance))
-        val hubs = assets.loadHubs()
+        val requestedHubs = InstrumentationRegistry.getArguments().getString("hubIds")?.split(",")?.toSet()
+        val hubs = assets.loadHubs().filter { requestedHubs == null || it.id in requestedHubs }
         val nodes = assets.loadHubNodes()
         var state by mutableStateOf(HubUiState())
         var displayScale by mutableStateOf(1f)
@@ -61,11 +63,19 @@ class HubMapVisualAuditTest {
                         lockReason = if (mode == "locked_quest") "Continue the main story to open this route." else null)
                 } + if (hub.id == "hub_astra") listOf(HubNodeUi("astra_disembark", "Disembark", "", .5f, .94f, 180f, true))
                 else if (mode == "before_astra") emptyList() else listOf(HubNodeUi("astra_access", "The Astra", "astra_cargo_bay", .5f, .72f, 240f, true, special = "astra",
+                    iconPath = "images/nodes/astra_ship_map_v2.webp",
                     description = "Return to the crew's ship. Use the bridge console to set course for another world."))
                 compose.runOnIdle { state = HubUiState(false, hub, hubNodes, hub.backgroundImage, hubNodes.first().id,
                     trackedQuest = if (mode == "locked_quest") HubQuestUi("audit", "Find the way forward", "Explore ${hubNodes.first().title}", null) else null) }
                 compose.waitForIdle()
                 hubNodes.forEach { node -> compose.onNodeWithContentDescription("Enter ${node.title}").assertIsDisplayed() }
+                val layout = HubMapLayouts.all[hub.id]
+                hubNodes.filter { node ->
+                    val site = if (node.id == "astra_access") layout?.astraDock else layout?.sites?.get(node.id)
+                    (site?.artworkWidth ?: 0f) > 0f && !node.iconPath.isNullOrBlank()
+                }.forEach { node ->
+                    compose.onNodeWithContentDescription("Artwork: ${node.title}").assertIsDisplayed()
+                }
                 val first = compose.onNodeWithContentDescription("Enter ${hubNodes.first().title}").fetchSemanticsNode().boundsInRoot
                 compose.runOnIdle { state = state.copy(selectedNodeId = hubNodes.last().id) }
                 compose.waitForIdle()
