@@ -142,8 +142,8 @@ fun CombatTransitionOverlay(
             }
 
             // --- Phase 2: The Hold (Full Coverage) ---
-            // 0.25 -> 0.85: Screen is fully blocked
-            if (t > 0.25f && t < 0.85f) {
+            // 0.25 -> 0.85: Screen is fully blocked (or held indefinitely for ENTER until navigation leaves)
+            if (t > 0.25f && (mode == TransitionMode.ENTER || t < 0.85f)) {
                 // Background fill to ensure no leaks
                 drawRect(color = bgColor)
                 
@@ -167,8 +167,8 @@ fun CombatTransitionOverlay(
             }
 
             // --- Phase 3: The Reveal (Exit) ---
-            // 0.85 -> 1.0: Slashes retreat
-            if (t > 0.85f) {
+            // 0.85 -> 1.0: Slashes retreat (only for FULL or EXIT modes, never ENTER)
+            if (t > 0.85f && mode != TransitionMode.ENTER) {
                 val exitT = ((t - 0.85f) / 0.15f).coerceIn(0f, 1f)
                 val exitEase = androidx.compose.animation.core.LinearOutSlowInEasing.transform(exitT)
                 

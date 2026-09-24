@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
@@ -123,6 +124,11 @@ private fun BurgQuestVisitContent(
         val exploring = visitEntry?.destination?.route == NavigationDestination.Exploration.route
         val demoEnemies = remember(scenario.id) { BurgQuestDemo.enemies(scenario.id) }
         var combatTransitionVisible by remember { mutableStateOf(demoEnemies.isNotEmpty()) }
+        LaunchedEffect(visitEntry?.destination?.route) {
+            if (visitEntry?.destination?.route != null && !exploring) {
+                combatTransitionVisible = false
+            }
+        }
         val visitOwner = remember { object : ViewModelStoreOwner {
             override val viewModelStore = ViewModelStore()
         } }
@@ -165,16 +171,18 @@ private fun BurgQuestVisitContent(
                         }
                     )
                 }
-                Surface(
-                    modifier = if (exploring) {
-                        Modifier.align(Alignment.BottomStart).navigationBarsPadding().padding(start = 12.dp, bottom = 12.dp)
-                    } else {
-                        Modifier.align(Alignment.TopEnd).statusBarsPadding().padding(top = 4.dp, end = 8.dp)
-                    },
-                    shape = MaterialTheme.shapes.large,
-                    tonalElevation = 4.dp
-                ) {
-                    TextButton(onClick = { showDemoMenu = true }) { Text("Demo") }
+                if (!combatTransitionVisible || !exploring) {
+                    Surface(
+                        modifier = if (exploring) {
+                            Modifier.align(Alignment.BottomStart).navigationBarsPadding().padding(start = 12.dp, bottom = 12.dp)
+                        } else {
+                            Modifier.align(Alignment.TopEnd).statusBarsPadding().padding(top = 4.dp, end = 8.dp)
+                        },
+                        shape = MaterialTheme.shapes.large,
+                        tonalElevation = 4.dp
+                    ) {
+                        TextButton(onClick = { showDemoMenu = true }) { Text("Demo") }
+                    }
                 }
                 if (showHomecoming && exploring) BurgQuestHomecoming(
                     audioCuePlayer = services.audioCuePlayer,
@@ -182,15 +190,15 @@ private fun BurgQuestVisitContent(
                 )
                 if (combatTransitionVisible && demoEnemies.isNotEmpty()) {
                     CombatTransitionOverlay(
-                        visible = combatTransitionVisible,
+                        visible = exploring,
                         theme = environmentThemeState.theme,
                         suppressFlashes = userSettings.disableFlashes,
                         highContrastMode = userSettings.highContrastMode,
                         mode = TransitionMode.ENTER,
                         onFinished = {
-                            combatTransitionVisible = false
                             visitNavigation.navigate(NavigationDestination.Combat.create(demoEnemies))
-                        }
+                        },
+                        modifier = Modifier.zIndex(100f)
                     )
                 }
             } else {
