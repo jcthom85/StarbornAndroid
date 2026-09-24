@@ -609,6 +609,7 @@ class ExplorationViewModelTest {
     fun astraRampActionRecoversMissingDockAndBoardingCanBeRepeated() {
         val viewModel = createAstraViewModel(returnRoom = null)
         val store = getPrivateField<GameSessionStore>(viewModel, "sessionStore")
+        store.clearAstraReturnLocation()
         val ramp = viewModel.uiState.value.actions.single { it.name == "disembark" }
         viewModel.onActionSelected(ramp)
         dispatcher.scheduler.advanceUntilIdle()
@@ -639,11 +640,47 @@ class ExplorationViewModelTest {
         store.setMilestone("ms_w3_mq15_complete")
         viewModel.travelToWorldFromAstra(target.worldId, target.hubId, target.roomId, target.nodeId)
         dispatcher.scheduler.advanceUntilIdle()
-        assertEquals(target.roomId, store.state.value.roomId)
-        assertEquals(target.roomId, viewModel.uiState.value.currentRoom?.id)
+        assertEquals("astra_bridge", store.state.value.roomId)
+        assertEquals("astra_bridge", viewModel.uiState.value.currentRoom?.id)
+        assertEquals("hub_astra", store.state.value.hubId)
+        assertEquals(target.hubId, store.state.value.astraReturnHubId)
+        assertNull(store.state.value.astraReturnRoomId)
+        assertEquals("The Foundry", viewModel.uiState.value.astraArrivalTitle)
+        viewModel.disembarkAstra()
+        dispatcher.scheduler.advanceUntilIdle()
+        assertNull(store.state.value.roomId)
         assertEquals(target.worldId, store.state.value.worldId)
         assertEquals(target.hubId, store.state.value.hubId)
         assertNull(store.state.value.astraReturnRoomId)
+    }
+
+    @Test
+    fun astraStayAboardKeepsNewDockForCargoRamp() {
+        val viewModel = createAstraViewModel(roomId = "astra_bridge")
+        val store = getPrivateField<GameSessionStore>(viewModel, "sessionStore")
+        val target = com.example.starborn.domain.session.AstraTravel.destinations.first()
+        viewModel.travelToWorldFromAstra(target.worldId, target.hubId, target.roomId, target.nodeId)
+        dispatcher.scheduler.advanceUntilIdle()
+        viewModel.dismissAstraNavConsole()
+        assertEquals("astra_bridge", store.state.value.roomId)
+        assertNull(viewModel.uiState.value.astraArrivalTitle)
+        viewModel.travel("south")
+        viewModel.travel("west")
+        viewModel.requestReturnToHub()
+        dispatcher.scheduler.advanceUntilIdle()
+        assertEquals(target.hubId, store.state.value.hubId)
+        assertNull(store.state.value.roomId)
+    }
+
+    @Test
+    fun astraCurrentWorldCannotResetExactBoardingLocation() {
+        val viewModel = createAstraViewModel(roomId = "astra_bridge")
+        val store = getPrivateField<GameSessionStore>(viewModel, "sessionStore")
+        val target = com.example.starborn.domain.session.AstraTravel.destinations.single { it.worldId == "world_3" }
+        viewModel.travelToWorldFromAstra(target.worldId, target.hubId, target.roomId, target.nodeId)
+        dispatcher.scheduler.advanceUntilIdle()
+        assertEquals("spire_laundry_service", store.state.value.astraReturnRoomId)
+        assertNull(viewModel.uiState.value.astraArrivalTitle)
     }
 
     private fun setPrivateField(target: Any, name: String, value: Any?) {

@@ -209,7 +209,7 @@ internal fun CampaignNavigationHost(
                     }
                 },
                 onSlotLoaded = {
-                    navController.navigate(Exploration.route) {
+                    navController.navigate(if (services.sessionStore.state.value.roomId == null) Hub.route else Exploration.route) {
                         popUpTo(MainMenu.route) { inclusive = true }
                         launchSingleTop = true
                     }
@@ -249,7 +249,7 @@ internal fun CampaignNavigationHost(
                     services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue))
                 },
                 onEnterNode = { node ->
-                    navController.navigate(Exploration.route) {
+                    navController.navigate(if (services.sessionStore.state.value.roomId == null) Hub.route else Exploration.route) {
                         popUpTo(Hub.route) { inclusive = true }
                         launchSingleTop = true
                     }

@@ -180,8 +180,8 @@ class HubViewModel(
             val dock = AstraTravel.dockingLocation(session, hubsById.values.toList(), nodesByHub.values.flatten())
             sessionStore.setWorld(dock.worldId)
             sessionStore.setHub(dock.hubId)
-            sessionStore.setRoom(dock.roomId)
-            sessionStore.visitNode(dock.nodeId)
+            sessionStore.setRoom(if (AstraTravel.disembarksToMap(session)) null else dock.roomId)
+            if (!AstraTravel.disembarksToMap(session)) sessionStore.visitNode(dock.nodeId)
             sessionStore.clearAstraReturnLocation()
             onEnter(node)
             return
@@ -232,7 +232,7 @@ class HubViewModel(
         title = "The Astra",
         entryRoom = AstraTravel.ENTRY_ROOM_ID,
         centerX = 0.5f,
-        centerY = 0.88f,
+        centerY = 0.72f,
         sizeHint = 240f,
         discovered = true,
         iconPath = "images/nodes/world_2/hangar_bay.webp",

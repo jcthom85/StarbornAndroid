@@ -1146,6 +1146,11 @@ fun ExplorationScreen(
         if (uiState.isAstraNavConsoleVisible) {
             AstraNavConsoleDialog(
                 destinations = uiState.astraDestinations,
+                dockedTitle = uiState.astraDockedTitle,
+                dockedWorldId = uiState.astraDockedWorldId,
+                transitTitle = uiState.astraTransitTitle,
+                arrivalTitle = uiState.astraArrivalTitle,
+                onDisembark = { viewModel.disembarkAstra() },
                 onSelectDestination = { worldId, hubId, roomId, nodeId ->
                     viewModel.travelToWorldFromAstra(worldId, hubId, roomId, nodeId)
                 },
@@ -3375,11 +3380,16 @@ private data class SimulationProgram(
 @Composable
 private fun AstraNavConsoleDialog(
     destinations: List<com.example.starborn.domain.session.AstraDestination>,
+    dockedTitle: String,
+    dockedWorldId: String?,
+    transitTitle: String?,
+    arrivalTitle: String?,
+    onDisembark: () -> Unit,
     onSelectDestination: (worldId: String, hubId: String, roomId: String, nodeId: String) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Dialog(onDismissRequest = onDismiss) {
+    Dialog(onDismissRequest = { if (transitTitle == null) onDismiss() }) {
         Surface(
             modifier = modifier
                 .fillMaxWidth(0.95f)
@@ -3409,6 +3419,7 @@ private fun AstraNavConsoleDialog(
                     )
                     IconButton(
                         onClick = onDismiss,
+                        enabled = transitTitle == null,
                         modifier = Modifier.size(28.dp)
                     ) {
                         androidx.compose.material3.Icon(
@@ -3421,17 +3432,26 @@ private fun AstraNavConsoleDialog(
                 }
 
                 Text(
-                    text = "Choose an established route. New destinations become available as the journey progresses. To return to your docking location, use the cargo ramp.",
+                    text = when {
+                        transitTitle != null -> "IN TRANSIT\nSetting course for $transitTitle…"
+                        arrivalTitle != null -> "ARRIVAL COMPLETE\nDocked at $arrivalTitle. Disembark to explore the regional map, or stay aboard."
+                        else -> "Currently docked at: $dockedTitle\nChoose a route and set course. Use the cargo ramp to disembark."
+                    },
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.White.copy(alpha = 0.75f)
                 )
 
-                destinations.forEach { dest ->
+                if (transitTitle != null) {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                } else if (arrivalTitle != null) {
+                    Button(onClick = onDisembark, modifier = Modifier.fillMaxWidth()) { Text("Disembark") }
+                    TextButton(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) { Text("Stay aboard") }
+                } else destinations.forEach { dest ->
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(12.dp))
-                            .clickable { onSelectDestination(dest.worldId, dest.hubId, dest.roomId, dest.nodeId) },
+                            .clickable(enabled = dest.worldId != dockedWorldId) { onSelectDestination(dest.worldId, dest.hubId, dest.roomId, dest.nodeId) },
                         shape = RoundedCornerShape(12.dp),
                         color = Color(0xFF141F2C),
                         border = BorderStroke(1.dp, Color(0xFFFFB703).copy(alpha = 0.35f))
@@ -3443,7 +3463,7 @@ private fun AstraNavConsoleDialog(
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = dest.title,
+                                    text = dest.title.substringAfter(": "),
                                     style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                                     color = Color(0xFFFFD54F)
                                 )
@@ -3461,7 +3481,7 @@ private fun AstraNavConsoleDialog(
                                 border = BorderStroke(1.dp, Color(0xFFFFB703).copy(alpha = 0.6f))
                             ) {
                                 Text(
-                                    text = "TRANSIT",
+                                    text = if (dest.worldId == dockedWorldId) "DOCKED" else "SET COURSE",
                                     style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                     color = Color(0xFFFFD54F),
                                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)

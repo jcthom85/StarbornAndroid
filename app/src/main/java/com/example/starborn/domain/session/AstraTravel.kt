@@ -41,6 +41,14 @@ object AstraTravel {
     /** Recover old/debug saves without a docking record; never return to the ship itself. */
     fun dockingLocation(state: GameSessionState, hubs: List<Hub>, nodes: List<HubNode>): AstraDestination {
         val savedRoom = state.astraReturnRoomId
+        if (savedRoom == null) {
+            val mapHub = hubs.firstOrNull { it.id == state.astraReturnHubId && it.id != HUB_ID }
+            val mapNode = nodes.firstOrNull { it.hubId == mapHub?.id }
+            if (mapHub != null && mapNode != null) {
+                return AstraDestination(mapHub.title, "Docked at the regional map.", mapHub.worldId,
+                    mapHub.id, mapNode.entryRoom, mapNode.id)
+            }
+        }
         val owner = nodes.firstOrNull { it.hubId != HUB_ID && savedRoom in it.rooms }
         val hub = owner?.let { node -> hubs.firstOrNull { it.id == node.hubId } }
         if (owner != null && hub != null && savedRoom != null) {
@@ -48,4 +56,7 @@ object AstraTravel {
         }
         return availableDestinations(state).last()
     }
+
+    fun disembarksToMap(state: GameSessionState): Boolean =
+        state.astraReturnRoomId == null && state.astraReturnHubId != null
 }

@@ -1670,10 +1670,14 @@ class ExplorationViewModel(
             _uiState.update { it.copy(isTapeDeckVisible = true) }
         }
         if (actionId.equals("astra_nav_console", ignoreCase = true)) {
+            val dock = AstraTravel.dockingLocation(sessionStore.state.value, worldAssets.loadHubs(), worldAssets.loadHubNodes())
             _uiState.update { it.copy(
                 isAstraNavConsoleVisible = true,
+                astraDockedTitle = dock.title.substringAfter(": "),
+                astraDockedWorldId = dock.worldId,
                 astraDestinations = AstraTravel.availableDestinations(sessionStore.state.value)
             ) }
+            return
         }
         if (actionId.equals("astra_disembark", ignoreCase = true)) {
             disembarkAstra()
@@ -1686,11 +1690,13 @@ class ExplorationViewModel(
     }
 
     fun dismissAstraNavConsole() {
-        _uiState.update { it.copy(isAstraNavConsoleVisible = false) }
+        if (_uiState.value.astraTransitTitle != null) return
+        _uiState.update { it.copy(isAstraNavConsoleVisible = false, astraArrivalTitle = null) }
     }
 
     fun travelToWorldFromAstra(worldId: String, hubId: String, roomId: String, nodeId: String) {
         viewModelScope.launch(dispatchers.main) {
+            if (_uiState.value.astraTransitTitle != null || _uiState.value.astraArrivalTitle != null) return@launch
             val session = sessionStore.state.value
             val destination = AstraTravel.availableDestinations(session).firstOrNull {
                 it.worldId == worldId && it.hubId == hubId && it.roomId == roomId && it.nodeId == nodeId
@@ -1699,15 +1705,16 @@ class ExplorationViewModel(
                 postStatus("That route is not available yet.")
                 return@launch
             }
-            dismissAstraNavConsole()
-            sessionStore.clearAstraReturnLocation()
-            sessionStore.setWorld(worldId)
-            sessionStore.setHub(hubId)
-            sessionStore.setRoom(roomId)
-            sessionStore.visitNode(nodeId)
-            warpToRoom(roomId)
+            val dock = AstraTravel.dockingLocation(session, worldAssets.loadHubs(), worldAssets.loadHubNodes())
+            if (dock.worldId == worldId) return@launch
+            val title = destination.title.substringAfter(": ")
+            _uiState.update { it.copy(astraTransitTitle = title) }
             playUiCue("menu_action")
-            postStatus("Astra transit sequence complete.")
+            delay(1400)
+            // A null return room records a regional-map dock and survives save/restore.
+            sessionStore.setAstraReturnLocation(worldId, hubId, null)
+            _uiState.update { it.copy(astraTransitTitle = null, astraArrivalTitle = title,
+                astraDockedTitle = title, astraDockedWorldId = worldId) }
         }
     }
 
@@ -1730,16 +1737,24 @@ class ExplorationViewModel(
         _uiState.update { it.copy(isSimulationDeckVisible = false) }
     }
 
-    private fun disembarkAstra() {
+    fun disembarkAstra() {
         viewModelScope.launch(dispatchers.main) {
             val session = sessionStore.state.value
-            if (session.hubId != AstraTravel.HUB_ID || session.roomId != AstraTravel.ENTRY_ROOM_ID) return@launch
+            if (_uiState.value.astraTransitTitle != null) return@launch
+            if (session.hubId != AstraTravel.HUB_ID ||
+                (session.roomId != AstraTravel.ENTRY_ROOM_ID && _uiState.value.astraArrivalTitle == null)) return@launch
             val dock = AstraTravel.dockingLocation(session, worldAssets.loadHubs(), worldAssets.loadHubNodes())
+            dismissAstraNavConsole()
             sessionStore.setWorld(dock.worldId)
             sessionStore.setHub(dock.hubId)
-            sessionStore.setRoom(dock.roomId)
-            sessionStore.visitNode(dock.nodeId)
-            warpToRoom(dock.roomId)
+            if (AstraTravel.disembarksToMap(session)) {
+                sessionStore.setRoom(null)
+                emitEvent(ExplorationEvent.ReturnToHub)
+            } else {
+                sessionStore.setRoom(dock.roomId)
+                sessionStore.visitNode(dock.nodeId)
+                warpToRoom(dock.roomId)
+            }
             sessionStore.clearAstraReturnLocation()
             playUiCue("menu_action")
             postStatus("Disembarked from the Astra.")
@@ -3422,6 +3437,8 @@ class ExplorationViewModel(
                         val targetRoomId = sessionStore.state.value.roomId
                         if (targetRoomId != null) {
                             warpToRoom(targetRoomId)
+                        } else if (success) {
+                            emitEvent(ExplorationEvent.ReturnToHub)
                         }
                         triggerFadeOverlay(
                             fromAlpha = 1f,

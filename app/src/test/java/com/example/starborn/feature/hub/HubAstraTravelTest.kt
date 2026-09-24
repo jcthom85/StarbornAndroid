@@ -75,4 +75,16 @@ class HubAstraTravelTest {
         assertEquals("spire_sewers_landing", store.state.value.roomId)
         assertEquals("world_3", store.state.value.worldId)
     }
+
+    @Test fun `map boarding and disembarking preserve the regional map`() {
+        start(GameSessionState(worldId = "world_3", hubId = "hub_6_upper_city",
+            completedMilestones = setOf("ms_w2_mq05_complete")))
+        viewModel.enterNode("astra_access") {}
+        dispatcher.scheduler.advanceUntilIdle()
+        assertNull(store.state.value.astraReturnRoomId)
+        viewModel.enterNode("astra_disembark") {}
+        dispatcher.scheduler.advanceUntilIdle()
+        assertEquals("hub_6_upper_city", store.state.value.hubId)
+        assertNull(store.state.value.roomId)
+    }
 }

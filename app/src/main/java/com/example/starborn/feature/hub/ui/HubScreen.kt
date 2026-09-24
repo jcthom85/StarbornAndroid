@@ -45,7 +45,6 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.material.icons.rounded.Save
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Icon
@@ -72,6 +71,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
@@ -161,6 +161,8 @@ private fun HubScreenContent(
 ) {
     val backgroundPainter = rememberHubBackgroundPainter(uiState.backgroundImage)
     var menuVisible by remember { mutableStateOf(false) }
+    var destinationPanelHeightPx by remember { mutableStateOf(0) }
+    val destinationPanelInset = with(LocalDensity.current) { destinationPanelHeightPx.toDp() }
     val selectedNode = remember(uiState.nodes, uiState.selectedNodeId) {
         uiState.nodes.firstOrNull { it.id == uiState.selectedNodeId } ?: uiState.nodes.firstOrNull()
     }
@@ -246,7 +248,8 @@ private fun HubScreenContent(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .fillMaxSize()
-                    .padding(start = 14.dp, top = 146.dp, end = 14.dp, bottom = 142.dp)
+                    .padding(start = 14.dp, top = 146.dp, end = 14.dp,
+                        bottom = if (destinationPanelHeightPx == 0) 142.dp else destinationPanelInset + 12.dp)
             )
         }
 
@@ -256,6 +259,7 @@ private fun HubScreenContent(
                 onEnter = { onEnterSelectedNode(node) },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
+                    .onSizeChanged { destinationPanelHeightPx = it.height }
                     .navigationBarsPadding()
                     .padding(horizontal = 16.dp, vertical = 18.dp)
             )
@@ -423,56 +427,20 @@ private fun HubDestinationPanel(
                         )
                     )
                 )
-                .padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+                .padding(horizontal = 12.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Top
-            ) {
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Text(
-                        text = node.title,
-                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                        color = Color.White,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-                DestinationStatusIcon(node = node, color = accent)
-            }
-            val detail = when {
-                !node.canEnter -> node.lockedPreview ?: node.description ?: "Find a story reason to go here first."
-                !node.description.isNullOrBlank() -> node.description
-                node.completed -> "You can return here whenever you need to."
-                else -> "The map marks this place, but the story around it has not been written yet."
-            }
-            Text(
-                text = detail,
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.White.copy(alpha = 0.76f),
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (node.canEnter) {
-                    Text(
-                        text = "Double-tap marker or tap Enter",
-                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
-                        color = Color.White.copy(alpha = 0.5f)
-                    )
-                } else {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-
+                Text(
+                    text = node.title,
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                    color = Color.White
+                )
                 Surface(
                     onClick = onEnter,
                     enabled = node.canEnter,
@@ -481,7 +449,8 @@ private fun HubDestinationPanel(
                     border = BorderStroke(1.dp, accent.copy(alpha = if (node.canEnter) 0.72f else 0.22f))
                 ) {
                     Row(
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                        modifier = Modifier.heightIn(min = 48.dp)
+                            .padding(horizontal = 14.dp, vertical = 8.dp),
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -499,23 +468,20 @@ private fun HubDestinationPanel(
                     }
                 }
             }
+            val detail = when {
+                !node.canEnter -> node.lockReason ?: node.lockedPreview ?: node.description
+                    ?: "Find a story reason to go here first."
+                else -> node.description
+            }
+            if (!detail.isNullOrBlank()) {
+                Text(
+                    text = detail,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White.copy(alpha = 0.76f)
+                )
+            }
         }
     }
-}
-
-@Composable
-private fun DestinationStatusIcon(node: HubNodeUi, color: Color) {
-    val icon = when {
-        !node.canEnter -> Icons.Filled.Lock
-        node.completed -> Icons.Filled.CheckCircle
-        else -> Icons.Outlined.RadioButtonUnchecked
-    }
-    Icon(
-        imageVector = icon,
-        contentDescription = null,
-        tint = color,
-        modifier = Modifier.size(22.dp)
-    )
 }
 
 @Composable
@@ -1078,6 +1044,7 @@ private data class HubNodeComposition(
 private val WorldOneNodeIds = setOf("pit", "workshop", "med_bay", "trade_row", "admin_gate")
 
 private fun hubNodeComposition(node: HubNodeUi): HubNodeComposition = when (node.id) {
+    "astra_access" -> HubNodeComposition(width = 132.dp, height = 130.dp, imageWidth = 86.dp, anchorY = 0.5f)
     "pit" -> HubNodeComposition(width = 120.dp, height = 120.dp, imageWidth = 96.dp, anchorX = 0.5f, anchorY = 0.72f)
     "workshop" -> HubNodeComposition(width = 130.dp, height = 128.dp, imageWidth = 106.dp, anchorX = 0.5f, anchorY = 0.74f)
     "med_bay" -> HubNodeComposition(width = 124.dp, height = 122.dp, imageWidth = 96.dp, anchorX = 0.5f, anchorY = 0.70f)
