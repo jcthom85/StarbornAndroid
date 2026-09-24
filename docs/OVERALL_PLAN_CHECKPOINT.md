@@ -6,7 +6,7 @@
 
 - Released in 1.3.54: [BurgQuest guided sampler](BURGQUEST_GUIDED_SAMPLER.md), including crew homecoming, direct combat-to-Astra routing and the booth-only title menu. Human/booth checks remain; world/finale resume points below are unchanged.
 
-- Last confirmed release: **1.3.62 (146)**, commit `4665f81`, pushed to `feature/multiplatform-port`. Google Play internal testing reported versionCode 146 before this release; version 147 is being prepared with the follow-up transition handoff fix.
+- Last confirmed release: **1.3.63 (147)**, commit `8d3762a`, pushed to `feature/multiplatform-port`. Google Play accepted the bundle and confirmed it committed/live on the internal track on September 24, 2026. This includes the combat transition handoff fix.
 - This release includes the guided sampler and earlier combat formation spacing, responsive 1-4 crew layouts, compact demo controls, Astra workbench repair, Avatar's post-barrage recovery, tests and campaign/finale diagnostics. New Game, Load Game and Debug Scenarios are temporarily hidden; restore their grouped title flags after BurgQuest. Story Opening starts the campaign opening in an isolated demo session.
 - Finale stagger candidates are **test-only**. Production Reality Break still applies stagger. No every-other-cast candidate has been implemented yet.
 - Release verification: **552 unit tests passed**, plus a 12-test broad emulator pass, 5-test targeted polish pass and 2-test compact/large-text pass, all offline. Earlier unchanged BurgQuest fixture simulations won 40/40; see the guided sampler/prep records for limitations and operator checks.
