@@ -3388,13 +3388,17 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
                 else -> "music_w1_boss_warden"
             }
         } else {
-            when (worldId) {
-                "world_2" -> "music_w2_combat"
-                "world_3" -> "music_w3_combat"
-                "world_4" -> "music_w4_combat"
-                "world_5" -> "music_w5_combat"
-                "world_6" -> "music_w6_combat"
-                else -> "music_w1_combat"
+            if (sessionStore.state.value.roomId == "sector9_canopy" && enemyDefinitions.containsKey("siren_skimmer")) {
+                "music_w1_combat"
+            } else {
+                when (worldId) {
+                    "world_2" -> "music_w2_combat"
+                    "world_3" -> "music_w3_combat"
+                    "world_4" -> "music_w4_combat"
+                    "world_5" -> "music_w5_combat"
+                    "world_6" -> "music_w6_combat"
+                    else -> "music_w1_combat"
+                }
             }
         }
         val commands = mutableListOf<com.example.starborn.domain.audio.AudioCommand>()

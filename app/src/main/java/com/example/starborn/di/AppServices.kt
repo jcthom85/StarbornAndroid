@@ -995,7 +995,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
         clearDebugBootstrap()
         val fixture = com.example.starborn.feature.mainmenu.BurgQuestDemo
         var curated = fixture.curate(sessionStore.state.value, id, levelingManager.levelBounds(fixture.level(id)).first)
-        if (id == "burgfest_combat") curated = curated.copy(roomId = "sector9_canopy")
+        if (id == "burgfest_combat") curated = curated.copy(worldId = "world_1", roomId = "sector9_canopy")
         if (id == "burgfest_astra") {
             val recipe = craftingService.tinkeringRecipes.first { it.result == "functional_cryo_inductor" }
             val materials = craftingService.ingredientsFor(recipe) + recipe.tools.associateWith { 1 }
