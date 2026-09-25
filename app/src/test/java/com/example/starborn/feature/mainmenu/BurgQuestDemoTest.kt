@@ -28,7 +28,7 @@ class BurgQuestDemoTest {
     @Test fun `showcase catalog is honest and combat comes first`() {
         val demos = DebugScenarioCatalog.burgfestScenarios
         assertEquals("burgfest_combat", demos.first().id)
-        assertEquals(4, demos.map { it.id }.distinct().size)
+        assertEquals(3, demos.map { it.id }.distinct().size)
         assertTrue(demos.none { "BURGFEST" in it.title })
         assertTrue(demos.all { BurgQuestDemo.briefing(it.id).isNotBlank() })
     }

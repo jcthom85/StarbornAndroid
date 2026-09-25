@@ -986,59 +986,65 @@ internal fun BurgfestDemoDialog(
                     }
                 }
                 item {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        HorizontalDivider(
-                            modifier = Modifier.weight(1f),
-                            color = TitleCyan.copy(alpha = 0.3f)
-                        )
-                        Text(
-                            "Or explore individual showcases",
-                            fontWeight = FontWeight.SemiBold,
-                            color = TitleCyan,
-                            fontSize = 12.sp
-                        )
-                        HorizontalDivider(
-                            modifier = Modifier.weight(1f),
-                            color = TitleCyan.copy(alpha = 0.3f)
-                        )
+                    val storyScenario = scenarios.firstOrNull { it.id == "burgfest_story" }
+                    if (storyScenario != null) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            HorizontalDivider(
+                                modifier = Modifier.weight(1f),
+                                color = TitleCyan.copy(alpha = 0.3f)
+                            )
+                            Text(
+                                "Or start from the beginning",
+                                fontWeight = FontWeight.SemiBold,
+                                color = TitleCyan,
+                                fontSize = 12.sp
+                            )
+                            HorizontalDivider(
+                                modifier = Modifier.weight(1f),
+                                color = TitleCyan.copy(alpha = 0.3f)
+                            )
+                        }
                     }
                 }
-                items(scenarios, key = { it.id }) { scenario ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .border(1.dp, TitleCyan.copy(alpha = 0.25f), RoundedCornerShape(12.dp))
-                            .background(TitleCyan.copy(alpha = 0.05f), RoundedCornerShape(12.dp))
-                            .padding(14.dp),
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        Text(scenario.title, fontWeight = FontWeight.Bold, color = TitleText, fontSize = 15.sp)
-                        Text(
-                            scenario.worldLabel,
-                            color = TitleAmber,
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Text(scenario.description, color = TitleMutedText, fontSize = 12.sp)
-                        OutlinedButton(
-                            onClick = { onLaunch(com.example.starborn.feature.mainmenu.BurgQuestLaunch(scenario)) },
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                contentColor = TitleCyan
-                            ),
-                            border = BorderStroke(1.dp, TitleCyan.copy(alpha = 0.6f)),
-                            shape = RoundedCornerShape(8.dp),
+                item {
+                    val storyScenario = scenarios.firstOrNull { it.id == "burgfest_story" }
+                    if (storyScenario != null) {
+                        Column(
                             modifier = Modifier
-                                .testTag("demo-launch-" + scenario.id)
                                 .fillMaxWidth()
-                                .padding(top = 4.dp)
+                                .border(1.dp, TitleCyan.copy(alpha = 0.25f), RoundedCornerShape(12.dp))
+                                .background(TitleCyan.copy(alpha = 0.05f), RoundedCornerShape(12.dp))
+                                .padding(14.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
-                            Text("Launch Demo", fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
+                            Text(storyScenario.title, fontWeight = FontWeight.Bold, color = TitleText, fontSize = 15.sp)
+                            Text(
+                                storyScenario.worldLabel,
+                                color = TitleAmber,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            Text(storyScenario.description, color = TitleMutedText, fontSize = 12.sp)
+                            OutlinedButton(
+                                onClick = { onLaunch(com.example.starborn.feature.mainmenu.BurgQuestLaunch(storyScenario)) },
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    contentColor = TitleCyan
+                                ),
+                                border = BorderStroke(1.dp, TitleCyan.copy(alpha = 0.6f)),
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier
+                                    .testTag("demo-launch-" + storyScenario.id)
+                                    .fillMaxWidth()
+                                    .padding(top = 4.dp)
+                            ) {
+                                Text("Start Story Preview", fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
+                            }
                         }
                     }
                 }

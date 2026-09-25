@@ -195,13 +195,6 @@ class BurgQuestNavigationTest {
             compose.mainClock.autoAdvance = true
             waitText("BurgQuest Demo")
             compose.onNodeWithText("BurgQuest Demo").performClick()
-            launch("burgfest_boss")
-            capture("10-titan-guide")
-            compose.onNodeWithText("Begin demo").performClick()
-            waitText("Titan Walker")
-            capture("11-titan")
-            finishDemo()
-            compose.onNodeWithText("Explore another demo").performClick()
             launch("burgfest_story")
             compose.onNodeWithText("Begin demo").performClick()
             waitText("Demo")
