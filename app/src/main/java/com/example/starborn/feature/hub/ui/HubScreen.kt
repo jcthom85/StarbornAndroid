@@ -197,6 +197,7 @@ internal fun HubScreenContent(
                 trackedQuest = uiState.trackedQuest,
                 onSelect = onNodeFocused,
                 onEnter = onEnterSelectedNode,
+                bottomReserve = panelReserve + 24.dp,
                 modifier = Modifier.fillMaxSize()
             )
         }

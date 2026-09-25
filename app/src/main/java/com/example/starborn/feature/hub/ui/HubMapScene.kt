@@ -16,6 +16,9 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.zIndex
@@ -30,6 +33,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -50,7 +54,8 @@ import kotlin.math.sin
 @Composable
 internal fun HubMapScene(
     hubId: String?, background: Painter, nodes: List<HubNodeUi>, selectedId: String?, trackedQuest: HubQuestUi?,
-    onSelect: (HubNodeUi) -> Unit, onEnter: (HubNodeUi) -> Unit, modifier: Modifier = Modifier
+    onSelect: (HubNodeUi) -> Unit, onEnter: (HubNodeUi) -> Unit, modifier: Modifier = Modifier,
+    bottomReserve: androidx.compose.ui.unit.Dp = 190.dp
 ) {
     val layout = HubMapLayouts.all[hubId] ?: return
     BoxWithConstraints(modifier.clipToBounds(), contentAlignment = Alignment.Center) {
@@ -61,6 +66,7 @@ internal fun HubMapScene(
         val mapWidth = with(density) { transform.width.toDp() }
         val viewportWidth = maxWidth
         val viewportWidthPx = constraints.maxWidth.toFloat()
+        val viewportHeightPx = constraints.maxHeight.toFloat()
 
         val infiniteTransition = rememberInfiniteTransition(label = "hub_map_motion")
         val idlePhase by infiniteTransition.animateFloat(
@@ -165,6 +171,7 @@ internal fun HubMapScene(
                     else -> Color(0xFFBFEFFF)
                 }
                 val imageSize = minOf(mapWidth * site.artworkWidth, viewportWidth * .36f)
+                val anchorRatio = if (node.id == "astra_access") .79f else .94f
                 val painter = if (site.artworkWidth > 0) rememberHubNodePainter(
                     if (node.id == "astra_access") "images/nodes/astra_ship_map_v2.webp" else node.iconPath
                 ) else null
@@ -210,8 +217,6 @@ internal fun HubMapScene(
                         animationSpec = tween(durationMillis = 220),
                         label = "node_alpha_${node.id}"
                     )
-
-                    val anchorRatio = if (node.id == "astra_access") .79f else .94f
 
                     // Artwork bottoms meet the painted ground; labels are independent siblings.
                     Image(
@@ -284,22 +289,47 @@ internal fun HubMapScene(
                     }
                 }
 
-                // --- Layer 3: Independent Grounded Labels (Bounds strictly preserved) ---
+                // --- Layer 3: Independent Grounded Labels (Dynamic Smart-Flipping) ---
                 val labelWidth = minOf(104.dp, mapWidth * .32f)
                 val labelX = (transform.x(site.x + site.labelDx) - with(density) { labelWidth.toPx() } / 2)
                     .coerceIn(0f, (viewportWidthPx - with(density) { labelWidth.toPx() }).coerceAtLeast(0f))
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
+
+                val panelTopPx = viewportHeightPx - with(density) { bottomReserve.toPx() }
+                val flipAbove = site.labelDy < 0f || (site.labelDy == 0f && (
+                    anchorY + with(density) { 36.dp.toPx() } > panelTopPx || site.y >= 0.72f
+                ))
+
+                val defaultPillHeightPx = with(density) { 26.dp.roundToPx() }
+                var pillHeightPx by remember(node.id) { mutableIntStateOf(defaultPillHeightPx) }
+
+                val imageSizePx = with(density) { imageSize.toPx() }
+                val pillY = if (flipAbove) {
+                    if (painter != null) {
+                        val artworkTopY = anchorY - (imageSizePx * anchorRatio)
+                        artworkTopY - with(density) { 10.dp.toPx() } - pillHeightPx
+                    } else {
+                        anchorY - with(density) { 16.dp.toPx() } - pillHeightPx
+                    }
+                } else {
+                    if (painter != null) {
+                        transform.y(site.y + site.labelDy)
+                    } else {
+                        transform.y(site.y + site.labelDy) + with(density) { 14.dp.toPx() }
+                    }
+                }.coerceIn(0f, (viewportHeightPx - pillHeightPx).coerceAtLeast(0f))
+
+                Box(
+                    contentAlignment = Alignment.TopCenter,
                     modifier = Modifier
                         .zIndex(3f)
                         .offset {
                             IntOffset(
                                 labelX.roundToInt(),
-                                (transform.y(site.y + site.labelDy) - with(density) { 12.dp.toPx() }).roundToInt()
+                                pillY.roundToInt()
                             )
                         }
                         .width(labelWidth)
-                        .heightIn(min = 48.dp)
+                        .heightIn(min = 36.dp)
                         .semantics {
                             contentDescription = "Enter ${node.title}"
                             role = Role.Button
@@ -312,11 +342,15 @@ internal fun HubMapScene(
                             )
                         }
                 ) {
-                    Spacer(Modifier.height(if (painter != null) 12.dp else 26.dp))
                     Surface(
                         shape = RoundedCornerShape(6.dp),
                         color = Color(0xEF08121B),
-                        border = BorderStroke(1.dp, tint.copy(alpha = if (selected) .85f else .3f))
+                        border = BorderStroke(1.dp, tint.copy(alpha = if (selected) .85f else .3f)),
+                        modifier = Modifier.onSizeChanged { size ->
+                            if (size.height > 0) {
+                                pillHeightPx = size.height
+                            }
+                        }
                     ) {
                         Text(
                             node.title,
