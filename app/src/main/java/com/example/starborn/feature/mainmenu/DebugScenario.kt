@@ -26,9 +26,9 @@ data class DebugScenario(
 
 object DebugScenarioCatalog {
     val burgfestScenarios: List<DebugScenario> = listOf(
-        scenario("burgfest_combat", "Tactical Combat", "Meet all four crew members in a short skirmish. Try their skills, help each other out, and get a feel for combat.", DebugScenarioCategory.BURGFEST, worldLabel = "BurgQuest / Sector 9"),
-        scenario("burgfest_astra", "The Astra — Meet the Crew", "Make yourself at home: talk to the crew, play Deep Mine Asteroid Drill or try crafting at the workbench in the cargo bay. Stay as long as you like.", DebugScenarioCategory.BURGFEST, worldLabel = "BurgQuest / The Astra"),
-        scenario("burgfest_story", "The Awakening - Story Preview", "Meet Nova in the unabridged campaign opening. Read at your own pace; combat may take longer than ten minutes to reach.", DebugScenarioCategory.BURGFEST, worldLabel = "BurgQuest / The Mines")
+        scenario("burgfest_combat", "Tactical Combat", "Meet all four crew members in a short skirmish. Try their skills, help each other out, and get a feel for combat.", DebugScenarioCategory.BURGFEST, worldLabel = "World 2: Sector 9"),
+        scenario("burgfest_astra", "The Astra — Meet the Crew", "Make yourself at home: talk to the crew, play Deep Mine Asteroid Drill or try crafting at the workbench in the cargo bay. Stay as long as you like.", DebugScenarioCategory.BURGFEST, worldLabel = "The Astra"),
+        scenario("burgfest_story", "The Awakening - Story Preview", "Meet Nova in the unabridged campaign opening. Read at your own pace; combat may take longer than ten minutes to reach.", DebugScenarioCategory.BURGFEST, worldLabel = "World 1: The Mines")
     )
 
     val scenarios: List<DebugScenario> = burgfestScenarios + listOf(

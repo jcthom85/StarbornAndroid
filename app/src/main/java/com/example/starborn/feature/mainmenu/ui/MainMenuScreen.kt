@@ -490,25 +490,44 @@ fun MainMenuScreen(
             verticalArrangement = Arrangement.spacedBy(13.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            StarbornTitleButton(
-                text = "BurgQuest Demo",
-                onClick = { showBurgfestDialog = true },
-                enabled = buttonsInteractable,
-                primary = true
-            )
-            // Restore these title entries after BurgQuest; functionality and saves stay intact.
-            val showNewGameForPublicRelease = false
+            val showNewGame = true
+            val showLoadGame = true
+            val showDemoSampler = true
             val showDebugScenariosOnTitle = BuildConfig.ENABLE_SCENARIO_MENU
-            val showLoadGameOnTitle = false
-            if (showNewGameForPublicRelease) StarbornTitleButton(
-                text = "New Game",
-                onClick = {
-                    if (newGamePlusUnlocked) {
-                        showNewGameConfirm = true
-                    } else {
-                        startingGame = true
-                    }
-                },
+
+            if (showNewGame) {
+                StarbornTitleButton(
+                    text = "New Game",
+                    onClick = {
+                        if (newGamePlusUnlocked) {
+                            showNewGameConfirm = true
+                        } else {
+                            startingGame = true
+                        }
+                    },
+                    enabled = buttonsInteractable,
+                    primary = true
+                )
+            }
+            if (showLoadGame) {
+                StarbornTitleButton(
+                    text = "Load Game",
+                    onClick = { saveLoadMode = "load" },
+                    enabled = buttonsInteractable,
+                    primary = false
+                )
+            }
+            if (showDemoSampler) {
+                StarbornTitleButton(
+                    text = "Starborn Sampler",
+                    onClick = { showBurgfestDialog = true },
+                    enabled = buttonsInteractable,
+                    primary = false
+                )
+            }
+            StarbornTitleButton(
+                text = "Settings",
+                onClick = { showSettings = true },
                 enabled = buttonsInteractable,
                 primary = false
             )
@@ -516,19 +535,10 @@ fun MainMenuScreen(
                 StarbornTitleButton(
                     text = "Debug Scenarios",
                     onClick = { showDebugBrowser = true },
-                    enabled = buttonsInteractable
+                    enabled = buttonsInteractable,
+                    primary = false
                 )
             }
-            if (showLoadGameOnTitle) StarbornTitleButton(
-                text = "Load Game",
-                onClick = { saveLoadMode = "load" },
-                enabled = buttonsInteractable
-            )
-            StarbornTitleButton(
-                text = "Settings",
-                onClick = { showSettings = true },
-                enabled = buttonsInteractable
-            )
         }
 
         if (showNewGameConfirm && newGamePlusUnlocked) {
@@ -910,7 +920,7 @@ internal fun BurgfestDemoDialog(
         onDismissRequest = onDismiss,
         title = {
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text("BurgQuest Demo Showcase", fontWeight = FontWeight.Black, color = TitleGold, fontSize = 20.sp)
+                Text("Starborn Sampler Showcase", fontWeight = FontWeight.Black, color = TitleGold, fontSize = 20.sp)
                 Text(
                     "Fight alongside the crew, then unwind aboard their ship.",
                     color = TitleCyan,

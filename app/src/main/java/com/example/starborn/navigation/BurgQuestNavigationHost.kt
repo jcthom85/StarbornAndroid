@@ -281,7 +281,7 @@ internal fun BurgQuestFinishDialog(
 ) {
     AlertDialog(
         onDismissRequest = {},
-        title = { Text(if (ending == BurgQuestEnding.FINISHED) "Until the next adventure" else "BurgQuest showcase") },
+        title = { Text(if (ending == BurgQuestEnding.FINISHED) "Until the next adventure" else "Starborn Sampler") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.verticalScroll(rememberScrollState())) {
                 Text(ending.message)

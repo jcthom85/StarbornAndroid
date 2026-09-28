@@ -87,12 +87,11 @@ class BurgQuestNavigationTest {
             runBlocking { campaign.saveSlot(3); assertTrue(campaign.quickSave()) }
             val original = campaign.sessionStore.state.value
             compose.setContent { StarbornTheme { NavigationHost(providedServices = campaign) } }
-            waitText("BurgQuest Demo")
-            compose.onNodeWithText("New Game").assertDoesNotExist()
-            compose.onNodeWithText("Debug Scenarios").assertDoesNotExist()
-            compose.onNodeWithText("Load Game").assertDoesNotExist()
+            waitText("Starborn Sampler")
+            compose.onNodeWithText("New Game").assertExists()
+            compose.onNodeWithText("Load Game").assertExists()
             compose.onNodeWithText("Settings").assertExists()
-            compose.onNodeWithText("BurgQuest Demo").performClick()
+            compose.onNodeWithText("Starborn Sampler").performClick()
             waitText("Start the Starborn sampler")
             capture("01-picker")
             compose.onNodeWithTag("demo-start-sampler").performClick()
@@ -193,8 +192,8 @@ class BurgQuestNavigationTest {
             compose.onNodeWithText("Return to title").performClick()
             compose.mainClock.advanceTimeBy(1000)
             compose.mainClock.autoAdvance = true
-            waitText("BurgQuest Demo")
-            compose.onNodeWithText("BurgQuest Demo").performClick()
+            waitText("Starborn Sampler")
+            compose.onNodeWithText("Starborn Sampler").performClick()
             launch("burgfest_story")
             compose.onNodeWithText("Begin demo").performClick()
             waitText("Demo")
@@ -204,7 +203,7 @@ class BurgQuestNavigationTest {
             capture("12-story")
             finishDemo()
             compose.onNodeWithText("Return to title").performClick()
-            waitText("BurgQuest Demo")
+            waitText("Starborn Sampler")
             assertEquals(original, campaign.sessionStore.state.value)
             runBlocking {
                 assertEquals(original, campaign.slotState(3))

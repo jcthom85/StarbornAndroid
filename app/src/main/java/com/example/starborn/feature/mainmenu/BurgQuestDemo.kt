@@ -4,7 +4,7 @@ import com.example.starborn.domain.session.GameSessionState
 
 /** Booth-only fixtures. These grants never change campaign progression or enemy balance. */
 object BurgQuestDemo {
-    const val farewell = "Thanks for spending a little time with the crew. Want to know where their adventure goes next? Come chat with us at the booth."
+    const val farewell = "Thanks for spending a little time with the crew. Ready to embark on their full adventure? Start a New Game from the title screen!"
     const val combatIntroduction = "Meet Nova, Zeke, Orion and Gh0st. Help them through a short skirmish, then visit their home aboard the Astra.\n\n1. Tap a ready crew portrait.\n2. Choose an attack or skill, then its target.\n3. Use a medkit or healing skill when someone needs help."
 
     val party = listOf("nova", "zeke", "orion", "gh0st")
