@@ -2586,5 +2586,46 @@
     "text": "[Jason picks up an intricately wound electromagnetic coil soldered to a miniature audio transducer.] That? It's an experimental harmonic field tuner. Calibrates frequency resonance so your gear operates with zero parasitic drag. Here, take it—I'm about to build a revision with three extra filter stages anyway. Put it to good use out there, Nova.",
     "trigger": "give_item:creators_harmonic_resonator,give_xp:500,set_milestone:ms_jason_resonator_received",
     "next": "creator_jason_default_talk"
+  },
+  {
+    "id": "oliver_default_talk",
+    "speaker": "Oliver",
+    "text": "Oliver is curled with regal poise on a plush thermal cushion at the foot of the bunks. His golden eyes open smoothly as you approach. He lets out a single, precise, schedule-affirming meow, reminding you that all shifts must run on time.",
+    "options": [
+      {
+        "id": "oliver_opt_inspect",
+        "text": "[Report for shift inspection]",
+        "next": "oliver_inspection_reply"
+      },
+      {
+        "id": "oliver_opt_meal",
+        "text": "[Remind Oliver that mealtime is in five minutes]",
+        "next": "oliver_meal_reply"
+      },
+      {
+        "id": "oliver_opt_pat",
+        "text": "[Offer respectful chin scratches]",
+        "next": "oliver_pat_reply"
+      }
+    ]
+  },
+  {
+    "id": "oliver_inspection_reply",
+    "speaker": "Oliver",
+    "text": "Oliver sits up tall, sniffs your sleeve with supreme dignity, and offers a slow, approving blink. The starship's operations may proceed under his continued supervision.",
+    "next": "oliver_default_talk"
+  },
+  {
+    "id": "oliver_meal_reply",
+    "speaker": "Oliver",
+    "text": "Oliver's ears swivel instantly. He rises to his feet, arches his back into a luxurious stretch, and trotts with dignified urgency toward the galley corridor, looking back over his shoulder to ensure you follow.",
+    "next": "oliver_default_talk"
+  },
+  {
+    "id": "oliver_pat_reply",
+    "speaker": "Oliver",
+    "text": "Oliver leans into your knuckles, his chin resting comfortably on your fingers as a steady, mechanical-grade purr reverberates through his chest. He gently nudges a polished brass chronometer tag toward you.",
+    "trigger": "give_item:olivers_supervisory_seal,give_xp:300,set_milestone:ms_oliver_tag_received",
+    "next": "oliver_default_talk"
   }
 ]

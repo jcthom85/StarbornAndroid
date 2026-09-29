@@ -3616,5 +3616,21 @@
         "accuracy": 4
       }
     }
+  },
+  {
+    "id": "olivers_supervisory_seal",
+    "name": "Oliver's Supervisory Seal",
+    "description": "A miniature polished brass chronometer tag stamped with a sleeping cat silhouette. Radiates steady domestic calm and absolute punctuality. \"The crew may fly the ship, but Oliver sets the clock.\"",
+    "type": "accessory",
+    "value": 450,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": {
+        "stability": 4,
+        "vitality": 3,
+        "defense": 3
+      }
+    }
   }
 ]

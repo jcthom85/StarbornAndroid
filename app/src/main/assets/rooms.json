@@ -11968,8 +11968,10 @@
     "weather": "industrial",
     "title": "Astra Living Quarters",
     "background_image": "images/rooms/astra/quarters.webp",
-    "description": "A short bunk corridor gives each crew member a narrow door and privacy. Nova's bed is plain but clean, and the ship's vibration feels safer than silence. A handmade paper guardian sits by her pillow, and an astronaut slate rests on the small desk.",
-    "npcs": [],
+    "description": "A short bunk corridor gives each crew member privacy. Nova's bed is plain but clean, with a handmade paper guardian by the pillow and an astronaut slate on the desk. Oliver the supervisor observes from a soft cushion.",
+    "npcs": [
+      "oliver_supervisor"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
@@ -11996,6 +11998,13 @@
         "name": "young astronaut slate",
         "type": "generic",
         "condition_unmet_message": "A personal research datapad displaying planetary orbit projections, ancient prehistoric predator skeletons, and tactical defensive shield angles. Scrawled across the top in bright digital marker: 'Cadet Ian — Mission Objective: Explore the stars, defend the home ship, and never leave the crew behind.'"
+      },
+      {
+        "id": "inspect_supervisor_perch",
+        "name": "supervisor cushion",
+        "type": "inspect",
+        "description": "Inspect Oliver's designated supervisory cushion.",
+        "inspect_message": "A velvet thermal cushion claimed by Oliver the moment it was brought aboard. A handwritten shift log sits beside it, meticulously approved with a faint paw print."
       }
     ]
   },

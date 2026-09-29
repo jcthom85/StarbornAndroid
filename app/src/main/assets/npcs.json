@@ -658,5 +658,25 @@
         "dialogue_id": "creator_jason_default_talk"
       }
     ]
+  },
+  {
+    "id": "oliver_supervisor",
+    "name": "Oliver",
+    "aliases": [
+      "oliver",
+      "supervisor oliver",
+      "ship supervisor"
+    ],
+    "role": "Vessel Operations Supervisor",
+    "description": "An impeccably poised black-and-white feline who quietly enforces the ship's daily schedule. Oliver monitors crew meal cadences, tests every new blanket for thermal retention by sleeping directly on it, and allows the crew to operate the starship only under his supervision.",
+    "portrait": "images/characters/orion_portrait.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Check In",
+        "type": "talk",
+        "dialogue_id": "oliver_default_talk"
+      }
+    ]
   }
 ]
