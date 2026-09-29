@@ -2375,5 +2375,82 @@
     "text": "[Cameron grabs the composite plates and slides the hydraulic fluid into the pressure reservoir. With practiced speed, he flanged the joint, sparks flying from his handheld welder, locking the seal in seconds.] Listen to that—zero hiss, steady twelve atmospheres! Grandpappy would be proud. Here, Nova, take this. It's my heavy-duty titanium flange wrench, stamped with Sherman's seal. When things get tight out there, hold the line and don't give up.",
     "trigger": "take_item:composite_plate*2,take_item:hydraulic_fluid*1,give_item:camerons_pipe_wrench,give_xp:350,give_credits:400,set_milestone:ms_cameron_pipe_favor_completed",
     "next": "pipefitter_cameron_default_talk"
+  },
+  {
+    "id": "analyst_charles_default_talk",
+    "speaker": "Charles",
+    "text": "Don't tell me—let me guess: you're trying to breach the Executive Core on a standard hyper-drive budget without optimizing your salvage loop margins? [Charles tilts his illuminated slate, gesturing to an empty plush chair.] Sit down, Nova. If you're going to dismantle the Dominion, at least do it with sound operational architecture.",
+    "options": [
+      {
+        "id": "charles_opt_mmo",
+        "text": "Are you running financial models or playing a game on that slate?",
+        "next": "charles_mmo_reply"
+      },
+      {
+        "id": "charles_opt_critique",
+        "text": "You sound like someone who's spent a lifetime reviewing other people's systems.",
+        "next": "charles_critique_reply"
+      },
+      {
+        "id": "charles_opt_frontier",
+        "text": "What's that 'Great Frontier' folder on your screen?",
+        "next": "charles_frontier_reply"
+      },
+      {
+        "id": "charles_opt_ethics",
+        "text": "Why help someone breaking through Dominion customs?",
+        "next": "charles_ethics_reply"
+      },
+      {
+        "id": "charles_opt_favor_offer",
+        "text": "Could your analytics help tune my tactical heuristics?",
+        "condition": "milestone_not_set:ms_charles_analytics_favor_asked",
+        "next": "charles_favor_offer"
+      },
+      {
+        "id": "charles_opt_favor_turnin",
+        "text": "I've brought the circuit boards and focusing lens for your network tap.",
+        "condition": "milestone:ms_charles_analytics_favor_asked,milestone_not_set:ms_charles_analytics_favor_completed,item:circuit_board,item:focusing_lens",
+        "next": "charles_favor_turnin"
+      }
+    ]
+  },
+  {
+    "id": "charles_mmo_reply",
+    "speaker": "Charles",
+    "text": "Both! High-tier MMO raid economies and interstellar corporate monopolies are governed by the exact same principles: drop rates, scarcity choke points, and latency. The Dominion thinks they've built an unbreachable ring, but their supply chains are leaking margin like a broken sieve. If you understand the auction houses, you understand where the whole empire is vulnerable.",
+    "next": "analyst_charles_default_talk"
+  },
+  {
+    "id": "charles_critique_reply",
+    "speaker": "Charles",
+    "text": "[Charles laughs warmly, pushing up his glasses.] That's because I have. If someone brings me a project, a business plan, or a prototype, I don't give them polite applause—I give them the truth. Where does it break? Where's the bloat? What makes it actually matter? Praise without scrutiny is useless. But when something is genuinely brilliant, I will defend it with everything I've got.",
+    "next": "analyst_charles_default_talk"
+  },
+  {
+    "id": "charles_frontier_reply",
+    "speaker": "Charles",
+    "text": "[A fond, nostalgic grin touches his face.] An old creative work by a close friend. Years ago, he wrote this incredible, sprawling story-in-song—audio drama, rock opera, real human heart. I spent nights listening to every track, tearing the pacing apart, arguing over mix levels and character arcs. He hated me for half the notes and thanked me for all of them. Good ideas deserve someone who cares enough to tell you when a chorus is running two bars too long.",
+    "next": "analyst_charles_default_talk"
+  },
+  {
+    "id": "charles_ethics_reply",
+    "speaker": "Charles",
+    "text": "Because at the end of the day, having an MBA or a computer science degree doesn't mean a thing if you don't use it to be a good person. The Dominion turns people into line items. If my algorithms can help a crew like the Astra break their grip and give people their freedom back, that's the only return on investment I care about.",
+    "next": "analyst_charles_default_talk"
+  },
+  {
+    "id": "charles_favor_offer",
+    "speaker": "Charles",
+    "text": "I can compile a custom tactical optimization heuristic for your suit computer, but my local node is throttled by station firewalls. Bring me 2 Circuit Boards to bypass the local packet switch and 1 Focusing Lens to align the quantum transmitter. Once I hook into the central concourse pipeline, I'll compile a heuristic slate that will redline your focus and critical timing.",
+    "trigger": "set_milestone:ms_charles_analytics_favor_asked",
+    "next": "analyst_charles_default_talk"
+  },
+  {
+    "id": "charles_favor_turnin",
+    "speaker": "Charles",
+    "text": "[Charles snaps the focusing lens into his custom bus and solders the circuit boards in place with surgical accuracy. A cascade of green diagnostic metrics flows across his displays.] Feed linked. Latency reduced to zero point two milliseconds. [He hands you an encrypted, glowing tactical slate.] Take this, Nova—the Venture Heuristic Slate. It'll tighten your focus, expand your situational bandwidth, and make sure your strikes hit where they hurt most. Now go tear their system apart.",
+    "trigger": "take_item:circuit_board*2,take_item:focusing_lens*1,give_item:charles_heuristic_slate,give_xp:400,give_credits:500,set_milestone:ms_charles_analytics_favor_completed",
+    "next": "analyst_charles_default_talk"
   }
 ]

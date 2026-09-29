@@ -598,5 +598,25 @@
         "dialogue_id": "pipefitter_cameron_default_talk"
       }
     ]
+  },
+  {
+    "id": "analyst_charles",
+    "name": "Charles",
+    "aliases": [
+      "charles",
+      "venture charles",
+      "analyst charles"
+    ],
+    "role": "Systems Venture Analyst",
+    "description": "A sharp-witted strategist and computer scientist running continuous macro-economic models from a cushioned concourse lounge. Equally capable of pinpointing a fatal flaw in a starship's economy or championing a friend's wildest invention, Charles balances unsparing analytical honesty with a deep heart and an unyielding drive to do good.",
+    "portrait": "images/npcs/curator.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "analyst_charles_default_talk"
+      }
+    ]
   }
 ]

@@ -6462,8 +6462,10 @@
     "env": "void",
     "title": "Customs Lounge",
     "background_image": "images/rooms/world_5/orbital_customs_lounge.webp",
-    "description": "A silent lounge waits behind velvet queue ropes and biometric gates. Luggage floats in gentle circles where gravity has failed, each case tagged PRIORITY HUMAN CAPITAL. An automated commissary terminal hums on the wall beside executive galley recycler and lounge seating. A customs observation console rests in the waiting niche.",
-    "npcs": [],
+    "description": "A silent lounge waits behind velvet queue ropes and biometric gates. An automated commissary terminal hums on the wall beside an executive galley recycler and lounge seating. A customs observation console rests in the waiting niche beside an analyst's glowing slate.",
+    "npcs": [
+      "analyst_charles"
+    ],
     "items": [],
     "enemies": [
       "compliance_officer"
@@ -6504,6 +6506,13 @@
         "name": "commissary terminal",
         "type": "shop",
         "shop_id": "orbital_dispensary"
+      },
+      {
+        "id": "inspect_charles_slate",
+        "name": "encrypted slate",
+        "type": "inspect",
+        "description": "Inspect the glowing analytics slate resting on the table.",
+        "inspect_message": "A dual-display analytics tablet running live simulations of Dominion trade flows, MMO auction house margins, and an open project folder titled 'Great Frontier Feedback & World Architecture'."
       }
     ]
   },

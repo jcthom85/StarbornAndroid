@@ -3566,5 +3566,22 @@
         "stability": 3
       }
     }
+  },
+  {
+    "id": "charles_heuristic_slate",
+    "name": "Charles's Venture Heuristic Slate",
+    "description": "An encrypted analytics slate loaded with real-time market simulations, redlined architectural critiques, and optimal tactical algorithms. Stamped with an open folder titled 'Great Frontier'. \"If you're going to build something, build it right.\"",
+    "type": "accessory",
+    "value": 600,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": {
+        "focus": 5,
+        "accuracy": 4,
+        "defense": 3,
+        "stability": 3
+      }
+    }
   }
 ]
