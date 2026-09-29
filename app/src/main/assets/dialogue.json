@@ -2056,6 +2056,11 @@
         "next": "cheno_friends_reply"
       },
       {
+        "id": "cheno_opt_family",
+        "text": "Who's that in the photo on your tool locker?",
+        "next": "cheno_family_reply"
+      },
+      {
         "id": "cheno_opt_favor_offer",
         "text": "Need an extra pair of hands on the rigging?",
         "condition": "milestone_not_set:ms_cheno_rigging_favor_asked",
@@ -2272,6 +2277,11 @@
         "id": "david_opt_penny",
         "text": "Who's this big fluffy dog keeping watch over the camp?",
         "next": "david_penny_reply"
+      },
+      {
+        "id": "david_opt_nancy",
+        "text": "How do you keep this whole camp running so neatly?",
+        "next": "david_nancy_reply"
       }
     ]
   },
@@ -2328,6 +2338,11 @@
         "id": "cameron_opt_family",
         "text": "Is that a photo of your family on the toolbox?",
         "next": "cameron_family_reply"
+      },
+      {
+        "id": "cameron_opt_smokey",
+        "text": "Whose collar is that hanging beside the gloves?",
+        "next": "cameron_smokey_reply"
       },
       {
         "id": "cameron_opt_favor_offer",
@@ -2982,5 +2997,23 @@
     "speaker": "Meeko",
     "text": "Meeko lets out a low, gravelly purr that sounds like a heavy diesel engine idling. He looks down at Jason's soldering iron, sighs with deep feline patience, and taps his claws against the amplifier casing.",
     "next": "meeko_default_talk"
+  },
+  {
+    "id": "cheno_family_reply",
+    "speaker": "Cheno",
+    "text": "That's my whole world right there. My wife Angela—kindest, most hardworking soul you'll ever meet. Keeps the county running and always has a cold cider waiting on the porch. Our girl Raegan takes right after me: total firecracker, brilliant, always singing 'hee-hee' and making everybody laugh. And her big brother Brody is a rock—college football player, looks out for his sister like a guardian angel. Everything I lift, every bolt I tighten, it's all for them.",
+    "next": "cheno_default_talk"
+  },
+  {
+    "id": "cameron_smokey_reply",
+    "speaker": "Cameron",
+    "text": "[Cameron looks over at the collar with a fond, quiet smile.] That was our little buddy Smokey. Bella's brother—he was with Kasey and me for nearly thirteen years. Best dog a guy could ask for. He used to curl right up by the hearth while the girls were doing their lessons. Miss that little guy every single day.",
+    "next": "pipefitter_cameron_default_talk"
+  },
+  {
+    "id": "david_nancy_reply",
+    "speaker": "David",
+    "text": "[David chuckles, wiping down the cedar cutting board.] If you think this is neat, you should see our home quarters back on the coast! My partner Nancy would throw a fit if she found one speck of grease on the floor. She keeps everything immaculate, while I handle the brisket and the wild river stories. We balance each other out pretty darn well.",
+    "next": "david_default_talk"
   }
 ]

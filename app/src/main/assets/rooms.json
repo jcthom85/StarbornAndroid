@@ -694,17 +694,19 @@
     "env": "mine",
     "title": "Parts Loft",
     "background_image": "images/rooms/world_1/workshop_loft_v3.webp",
-    "description": "The storage loft hangs above the shop on creaking beams. An organized mod bench sits under dust tarps beside neat rows of machine parts.",
+    "description": "The storage loft hangs above the shop on creaking beams. An organized mod bench sits under dust tarps beside neat rows of machine parts and a shipwright's slide rule on the drafting desk.",
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w1_workshop_loft_looted"
         ],
-        "description": "The storage loft hangs above the shop on creaking beams. Jed's loft bench sits cleared under dust tarps beside neat rows of machine parts."
+        "description": "The storage loft hangs above the shop on creaking beams. Jed's loft bench sits cleared under dust tarps beside neat rows of machine parts and a shipwright's slide rule on the desk."
       }
     ],
     "npcs": [],
-    "items": [],
+    "items": [
+      "papaws_marine_slide_rule"
+    ],
     "enemies": [],
     "connections": {
       "east": "workshop_floor"
@@ -726,6 +728,13 @@
         "name": "parts",
         "type": "generic",
         "condition_unmet_message": "Sorted coils, solder spools, and high-tensile fasteners."
+      },
+      {
+        "id": "inspect_shipwright_slide_rule",
+        "name": "shipwright's slide rule",
+        "type": "inspect",
+        "description": "Inspect the vintage brass-and-boxwood slide rule on the drafting desk.",
+        "inspect_message": "A precision calculating slide rule engraved: 'C. Thomas — Master Shipwright & Marine Engineer'. Beside it lie handwritten hull stress calculations and a postcard from Paris. A note in the leather case reads: 'Math is honest, steel holds true, and family is everything.'"
       }
     ]
   },
@@ -1792,7 +1801,7 @@
     "env": "market",
     "title": "Customer Service",
     "background_image": "images/rooms/world_1/admin_window.webp",
-    "description": "A row of identical glass booths where the colony's bureaucracy processes the living and the dead. The silence is broken only by the soft chime of verified badges.",
+    "description": "A row of identical glass booths processes the colony's living and dead. A call queue terminal flickers beside the window while verified badges chime softly.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1816,6 +1825,13 @@
         "name": "badges",
         "type": "generic",
         "condition_unmet_message": "Each verified badge produces the same soft chime."
+      },
+      {
+        "id": "inspect_call_queue_headset",
+        "name": "call queue terminal",
+        "type": "inspect",
+        "description": "Inspect the flickering customer support terminal.",
+        "inspect_message": "A monitor blinks: 'HOLD QUEUE: 42 CALLERS WAITING. AVERAGE HANDLE TIME: EXCEEDED.' Beside it sits a headset and a worn troubleshooting flowchart: 'Did you reboot the modem? Escalate to supervisor.' Nova shudders—she would rather mine pure bedrock with her bare hands than work customer service."
       }
     ],
     "npc_presence": [
@@ -9011,7 +9027,9 @@
     "background_image": "images/rooms/world_2/beach_cliffs.webp",
     "description": "High basalt cliffs overlook the beach. Below, a signal reflection stutters across the glowing shoreline of Tideglass Beach, its warm sands shimmering in the dark.",
     "npcs": [],
-    "items": [],
+    "items": [
+      "kodi_and_bellas_sunstone"
+    ],
     "enemies": [],
     "connections": {
       "west": "sector9_stream_falls",
@@ -9035,14 +9053,18 @@
         "condition_unmet_message": "Sheer volcanic columns rise against the tidal surf, worn smooth by centuries of mineral spray."
       },
       {
+        "id": "inspect_driftwood_marker",
         "name": "driftwood marker",
-        "type": "generic",
-        "condition_unmet_message": "A weathered piece of sea-bleached driftwood is planted in the cliffside grass, carved with two simple words: 'GO BEACH.' Beside it, petrified in the stone sand, are small, playful paw prints leading toward the warmest patch of afternoon sun."
+        "type": "inspect",
+        "description": "Inspect the sun-bleached driftwood marker overlooking the surf.",
+        "inspect_message": "A weathered piece of sea-bleached driftwood planted in the cliffside grass, carved with two simple words: 'GO BEACH.' Beside it, petrified in the stone sand, are small, playful paw prints leading toward the warmest patch of afternoon sun."
       },
       {
+        "id": "inspect_elephant_toy",
         "name": "weathered elephant toy",
-        "type": "generic",
-        "condition_unmet_message": "A small, resilient fabric elephant toy tucked into a sunny hollow in the basalt rock. Softened by years of affection, it rests peacefully beside the driftwood marker, looking out over the quiet tide."
+        "type": "inspect",
+        "description": "Inspect the little fabric elephant toy tucked into the cliff hollow.",
+        "inspect_message": "A small, resilient fabric elephant toy tucked into a sunny hollow in the basalt rock. Softened by years of affection, it rests peacefully beside the driftwood marker, looking out over the quiet tide."
       }
     ]
   },
@@ -19019,6 +19041,13 @@
         "name": "heavy winch rig",
         "type": "generic",
         "condition_unmet_message": "Bridgman Civil heavy-duty hydraulic winch. Capable of hauling an orbital hauler out of a gravitational sinkhole."
+      },
+      {
+        "id": "inspect_cheno_family",
+        "name": "framed family holopic",
+        "type": "inspect",
+        "description": "Inspect the warm family holopic resting on Cheno's tool locker.",
+        "inspect_message": "A warm holopic of Cheno smiling beside his wife Angela, holding an autumn cider. Their headstrong daughter Raegan strikes a hilarious dance pose with a mischievous grin, while dependable older brother Brody stands proudly in his varsity football jacket."
       }
     ]
   },
@@ -19069,6 +19098,13 @@
         "type": "inspect",
         "description": "Inspect the twin-loop steam bypass manifold.",
         "inspect_message": "A massive twin-loop steam manifold engineered to absorb thermal shock without shedding system pressure, welded with immaculate precision."
+      },
+      {
+        "id": "inspect_smokey_collar",
+        "name": "leather dog collar",
+        "type": "inspect",
+        "description": "Inspect the worn leather collar hung from the workbench peg.",
+        "inspect_message": "A soft, worn leather collar looped over a brass peg beside Sherman's gloves. An engraved brass tag reads: 'Smokey — Good boy for thirteen years. Rest easy, pal.'"
       }
     ]
   },

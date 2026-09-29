@@ -15,7 +15,7 @@ Rebuilt registry: 97 implemented entries. Built does not mean gameplay passed.
 | arcade | 6 |
 | characters | 4 |
 | cinematics | 50 |
-| dialogue | 383 |
+| dialogue | 386 |
 | enemies | 47 |
 | events | 444 |
 | exit | 938 |
@@ -25,7 +25,7 @@ Rebuilt registry: 97 implemented entries. Built does not mean gameplay passed.
 | fishing_zone | 6 |
 | hub_nodes | 60 |
 | hubs | 13 |
-| items | 250 |
+| items | 252 |
 | milestones | 294 |
 | npcs | 42 |
 | patrol_zone | 2 |
@@ -34,7 +34,7 @@ Rebuilt registry: 97 implemented entries. Built does not mean gameplay passed.
 | quests | 60 |
 | recipes_cooking | 15 |
 | recipes_tinkering | 27 |
-| room_action | 1074 |
+| room_action | 1078 |
 | rooms | 469 |
 | shops | 13 |
 | skills | 125 |

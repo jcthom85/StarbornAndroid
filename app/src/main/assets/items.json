@@ -3729,5 +3729,37 @@
         "defense": 4
       }
     }
+  },
+  {
+    "id": "papaws_marine_slide_rule",
+    "name": "Papaw's Precision Slide Rule",
+    "description": "A master marine engineer's vintage calculating slide rule from the Newport News docks. Elegant brass inlays and razor-sharp logarithmic scales grant unerring structural intuition. \"Math is honest, steel holds true, and family is everything.\"",
+    "type": "accessory",
+    "value": 450,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": {
+        "focus": 5,
+        "tech": 4,
+        "defense": 3
+      }
+    }
+  },
+  {
+    "id": "kodi_and_bellas_sunstone",
+    "name": "Kodi and Bella's Sunstone",
+    "description": "A radiant sea-glass talisman found nestled between the 'GO BEACH' driftwood marker and the little elephant toy. Imbued with the eternal joy, loyalty, and boundless energy of two beloved companions running across the warm coastal sand.",
+    "type": "accessory",
+    "value": 400,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": {
+        "agility": 4,
+        "vitality": 3,
+        "focus": 3
+      }
+    }
   }
 ]

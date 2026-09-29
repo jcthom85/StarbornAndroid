@@ -5,7 +5,7 @@
     "arcade": 6,
     "characters": 4,
     "cinematics": 50,
-    "dialogue": 383,
+    "dialogue": 386,
     "enemies": 47,
     "events": 444,
     "exit": 938,
@@ -15,7 +15,7 @@
     "fishing_zone": 6,
     "hub_nodes": 60,
     "hubs": 13,
-    "items": 250,
+    "items": 252,
     "milestones": 294,
     "npcs": 42,
     "patrol_zone": 2,
@@ -24,7 +24,7 @@
     "quests": 60,
     "recipes_cooking": 15,
     "recipes_tinkering": 27,
-    "room_action": 1074,
+    "room_action": 1078,
     "rooms": 469,
     "shops": 13,
     "skills": 125,
@@ -2593,7 +2593,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "057fe82a4e088593"
+      "source_digest": "ef387563cfea4560"
     },
     {
       "coverage_id": "exit:workshop_loft/east",
@@ -2639,6 +2639,21 @@
       "implementation": "planned",
       "execution": "not_run",
       "source_digest": "d36ab2cf164b1d87"
+    },
+    {
+      "coverage_id": "room_action:workshop_loft/2",
+      "asset_id": "workshop_loft/2",
+      "kind": "room_action",
+      "title": "shipwright's slide rule",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:workshop_loft",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "8b85c4fcf613fe0d"
     },
     {
       "coverage_id": "rooms:workshop_shed",
@@ -4796,7 +4811,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "349e8a2dc759bba7"
+      "source_digest": "4fba2c4199a6bf7c"
     },
     {
       "coverage_id": "exit:admin_window/west",
@@ -4872,6 +4887,21 @@
       "implementation": "planned",
       "execution": "not_run",
       "source_digest": "18b9f954d7236dad"
+    },
+    {
+      "coverage_id": "room_action:admin_window/2",
+      "asset_id": "admin_window/2",
+      "kind": "room_action",
+      "title": "call queue terminal",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:admin_window",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "c8455906871ae2f5"
     },
     {
       "coverage_id": "rooms:admin_office",
@@ -18118,7 +18148,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "17496db16c45b27a"
+      "source_digest": "c0ec356988273bf6"
     },
     {
       "coverage_id": "exit:sector9_beach_cliffs/west",
@@ -18193,7 +18223,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "19f2c731b45ce394"
+      "source_digest": "0b40cd71b915cd50"
     },
     {
       "coverage_id": "room_action:sector9_beach_cliffs/3",
@@ -18208,7 +18238,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "24ee16a3499530ba"
+      "source_digest": "548cbb6e8c1cd84f"
     },
     {
       "coverage_id": "rooms:sector9_beach_cove",
@@ -39228,7 +39258,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "4398715107c15eae"
+      "source_digest": "c19b57dfc6c6defa"
     },
     {
       "coverage_id": "exit:spire_rigging_deck/west",
@@ -39306,6 +39336,21 @@
       "source_digest": "86a9388764511ff2"
     },
     {
+      "coverage_id": "room_action:spire_rigging_deck/3",
+      "asset_id": "spire_rigging_deck/3",
+      "kind": "room_action",
+      "title": "framed family holopic",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:spire_rigging_deck",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "a0770aa05682506b"
+    },
+    {
       "coverage_id": "rooms:foundry_pipe_gallery",
       "asset_id": "foundry_pipe_gallery",
       "kind": "rooms",
@@ -39320,7 +39365,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "d91338b4ae503aea"
+      "source_digest": "b582fe8dab95d8b3"
     },
     {
       "coverage_id": "exit:foundry_pipe_gallery/west",
@@ -39396,6 +39441,21 @@
       "implementation": "planned",
       "execution": "not_run",
       "source_digest": "52c0ceb5aa910641"
+    },
+    {
+      "coverage_id": "room_action:foundry_pipe_gallery/4",
+      "asset_id": "foundry_pipe_gallery/4",
+      "kind": "room_action",
+      "title": "leather dog collar",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:foundry_pipe_gallery",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "0fc81ef32460b1b5"
     },
     {
       "coverage_id": "rooms:spire_hidden_studio",
@@ -52970,6 +53030,36 @@
       "implementation": "planned",
       "execution": "not_run",
       "source_digest": "e22606d271ea0d0d"
+    },
+    {
+      "coverage_id": "items:papaws_marine_slide_rule",
+      "asset_id": "papaws_marine_slide_rule",
+      "kind": "items",
+      "title": "Papaw's Precision Slide Rule",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_items",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "7fe81222164cd37f"
+    },
+    {
+      "coverage_id": "items:kodi_and_bellas_sunstone",
+      "asset_id": "kodi_and_bellas_sunstone",
+      "kind": "items",
+      "title": "Kodi and Bella's Sunstone",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_items",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "c9a64d3843227755"
     },
     {
       "coverage_id": "recipes_cooking:provision_spicy_ramen",
@@ -70234,7 +70324,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "b8180e97c2770c72"
+      "source_digest": "2e4610e2b907616b"
     },
     {
       "coverage_id": "dialogue:cheno_who_reply",
@@ -70534,7 +70624,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "b32ca5f5e7b19b55"
+      "source_digest": "7c8d7338826aaed8"
     },
     {
       "coverage_id": "dialogue:david_cooking_reply",
@@ -70624,7 +70714,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "717fbd8794f90871"
+      "source_digest": "11c8c51f991108bf"
     },
     {
       "coverage_id": "dialogue:cameron_shift_reply",
@@ -71555,6 +71645,51 @@
       "implementation": "planned",
       "execution": "not_run",
       "source_digest": "f6ad5d852e548da5"
+    },
+    {
+      "coverage_id": "dialogue:cheno_family_reply",
+      "asset_id": "cheno_family_reply",
+      "kind": "dialogue",
+      "title": "cheno_family_reply",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "298d4592398ecb21"
+    },
+    {
+      "coverage_id": "dialogue:cameron_smokey_reply",
+      "asset_id": "cameron_smokey_reply",
+      "kind": "dialogue",
+      "title": "cameron_smokey_reply",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "63df3ed86e0c9f96"
+    },
+    {
+      "coverage_id": "dialogue:david_nancy_reply",
+      "asset_id": "david_nancy_reply",
+      "kind": "dialogue",
+      "title": "david_nancy_reply",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "35f43ccb0046a62d"
     },
     {
       "coverage_id": "npcs:jed",
