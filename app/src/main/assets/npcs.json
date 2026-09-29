@@ -759,5 +759,25 @@
         "dialogue_id": "robert_default_talk"
       }
     ]
+  },
+  {
+    "id": "matriarch_pam",
+    "name": "Pam",
+    "aliases": [
+      "pam",
+      "gaga",
+      "pamela"
+    ],
+    "role": "Feisty Colony Matriarch",
+    "description": "A sharp-tongued, fiercely loyal mountain matriarch who doesn't take guff from anyone, least of all Dominion overseers. Known for her ceramic rooster figurines, her blunt honesty, and her bottomless love for her family, grandbabies, and dogs.",
+    "portrait": "images/npcs/vance.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "pam_default_talk"
+      }
+    ]
   }
 ]

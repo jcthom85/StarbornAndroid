@@ -2864,5 +2864,58 @@
     "text": "[Robert beams, gesturing proudly to a machined titanium balancing flywheel on his cart.] You have an eye for precision engineering! Here—take this high-torque gyroscopic buffer core. It stabilizes inertia and absorbs recoil. Slap it onto your defensive chassis, and nothing will knock you off balance.",
     "trigger": "give_item:roberts_buffer_core,give_xp:350,set_milestone:ms_robert_core_received",
     "next": "robert_default_talk"
+  },
+  {
+    "id": "pam_default_talk",
+    "speaker": "Pam",
+    "text": "Sit down and eat before you collapse, Nova. You look like a gust of solar wind could blow you into the next crater. I'm Pam—everyone around here calls me Gaga. What do you need, and don't dance around it.",
+    "options": [
+      {
+        "id": "pam_opt_rooster",
+        "text": "Is that a ceramic rooster on the shelf?",
+        "next": "pam_rooster_reply"
+      },
+      {
+        "id": "pam_opt_family",
+        "text": "You must be proud of Megan and Cameron.",
+        "next": "pam_family_reply"
+      },
+      {
+        "id": "pam_opt_blunt",
+        "text": "You don't mince words, do you?",
+        "next": "pam_blunt_reply"
+      },
+      {
+        "id": "pam_opt_biscuits",
+        "text": "Got anything warm to take into the deep shafts?",
+        "condition": "milestone_not_set:ms_pam_biscuits_received",
+        "next": "pam_biscuits_reply"
+      }
+    ]
+  },
+  {
+    "id": "pam_rooster_reply",
+    "speaker": "Pam",
+    "text": "[Pam crosses her arms with a fierce grin.] You got a problem with roosters? Back home in the mountains, a rooster means morning's here and it's time to get to work. Out here where it's pitch black day and night, you need something with a little strut to remind folks not to give up.",
+    "next": "pam_default_talk"
+  },
+  {
+    "id": "pam_family_reply",
+    "speaker": "Pam",
+    "text": "Proud? Those two are my whole life! Megan's out there running clinical science on the coast, smart as a whip and taking care of everybody. And Cameron's working sixty hours a week on the high-pressure pipes, just like his father Sherman used to do. Sherman would be bursting with pride if he could see them. Between them, my grandbabies, and those sweet dogs Kodi and Bella, I've got plenty to be thankful for.",
+    "next": "pam_default_talk"
+  },
+  {
+    "id": "pam_blunt_reply",
+    "speaker": "Pam",
+    "text": "Life's too short to sugar-coat vinegar, child. If someone's being a fool, you tell 'em so they stop. But if they're family or doing the right thing, you back 'em till the wheels fall off.",
+    "next": "pam_default_talk"
+  },
+  {
+    "id": "pam_biscuits_reply",
+    "speaker": "Pam",
+    "text": "[Pam shoves a steaming, wrapped tin of mountain-spiced skillet biscuits into your hands.] Take this. Real stone-ground meal and pepper gravy. It'll put some lead in your pencil and keep your shield steady when the miners get rowdy.",
+    "trigger": "give_item:gagas_skillet_biscuits,give_xp:300,set_milestone:ms_pam_biscuits_received",
+    "next": "pam_default_talk"
   }
 ]

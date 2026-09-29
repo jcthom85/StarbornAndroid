@@ -39,7 +39,7 @@
     "env": "mine",
     "title": "Mess Hall",
     "background_image": "images/rooms/world_1/pit_mess_v5.webp",
-    "description": "Bolted tables, dented trays, and crooked amber lights turn dinner into another shift. Miners trade jokes under their breath while a cracked Dominion monitor chirps about gratitude, casting dim light on a broken Hyperion cabinet in the corner.",
+    "description": "Bolted tables and crooked amber lights turn dinner into another shift. Miners trade jokes while a ceramic rooster stands on the shelf beside a vintage mystery monitor. Gaga ensures everyone eats before returning to the dark.",
     "description_variants": [
       {
         "requires_milestones": [
@@ -48,7 +48,9 @@
         "description": "The monitor is dead and the tables have gone loud without it. Miners argue about whose shift lost the grid, crowding past the dark broken Hyperion cabinet in the corner."
       }
     ],
-    "npcs": [],
+    "npcs": [
+      "matriarch_pam"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
@@ -78,6 +80,20 @@
         "type": "rest_stop",
         "rest_event": "w1_rest_mess_hall",
         "message": "Nova eats a hot ration and rests at the end of the mess table."
+      },
+      {
+        "id": "inspect_ceramic_rooster",
+        "name": "ceramic rooster",
+        "type": "inspect",
+        "description": "Inspect the ceramic rooster figurine perched on the mess counter.",
+        "inspect_message": "A hand-painted ceramic rooster proudly perches on the shelf above the mess counter. Placed there by Gaga to add some feisty country pride to the cold subterranean rock."
+      },
+      {
+        "id": "inspect_mystery_monitor",
+        "name": "vintage mystery monitor",
+        "type": "inspect",
+        "description": "Inspect the CRT monitor playing retro documentary archives.",
+        "inspect_message": "A retro amber CRT playing archived broadcasts of 'Cosmic Enigmas' with haunting synth music. A faded note beside an old recipe card reads: 'In memory of Nana Jessie — I hated cooking every meal, but I loved you kids too much to let you eat slop. Give Ashley a biscuit.'"
       }
     ],
     "npc_presence": [
