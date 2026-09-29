@@ -578,5 +578,25 @@
         "dialogue_id": "ren_default_talk"
       }
     ]
+  },
+  {
+    "id": "pipefitter_cameron",
+    "name": "Cameron",
+    "aliases": [
+      "cameron",
+      "pipefitter cameron",
+      "master pipefitter"
+    ],
+    "role": "Master Pipe-Fitter",
+    "description": "A tireless, sharp-eyed shipyard pipe-fitter in soot-dusted flame-retardant coveralls. Between seventy-hour double shifts and steam emergencies, Cameron carries on his father Sherman's legacy with flawless welds, high-speed racing pride, and boundless love for his wife Kasey and three daughters.",
+    "portrait": "images/npcs/armorer.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "pipefitter_cameron_default_talk"
+      }
+    ]
   }
 ]

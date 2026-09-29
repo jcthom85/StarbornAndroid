@@ -5641,7 +5641,8 @@
       "slag_golem"
     ],
     "connections": {
-      "west": "foundry_service_airlock"
+      "west": "foundry_service_airlock",
+      "east": "foundry_pipe_gallery"
     },
     "pos": [
       4,
@@ -18948,6 +18949,56 @@
         "name": "heavy winch rig",
         "type": "generic",
         "condition_unmet_message": "Bridgman Civil heavy-duty hydraulic winch. Capable of hauling an orbital hauler out of a gravitational sinkhole."
+      }
+    ]
+  },
+  {
+    "id": "foundry_pipe_gallery",
+    "env": "industrial",
+    "title": "High-Pressure Pipe Gallery",
+    "background_image": "images/rooms/world_4/foundry_service_airlock.webp",
+    "description": "Superheated steam hisses through massive overhead conduits in a pressurized gallery. Checkered racing pennants hang above a pipe bench stacked with flanging tools and leather gloves. A scuffed baseball rests in a tool rack.",
+    "npcs": [
+      "pipefitter_cameron"
+    ],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "foundry_decon_chamber"
+    },
+    "pos": [
+      5,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "id": "inspect_racing_pennants",
+        "name": "racing pennants",
+        "type": "inspect",
+        "description": "Inspect the checkered racing banners and speed decals.",
+        "inspect_message": "Twin checkered racing flags and a gold number 24 decal are stuck to the conduit shroud above the workbench, honoring late-night speedway runs."
+      },
+      {
+        "id": "inspect_pipe_bench",
+        "name": "pipe bench",
+        "type": "inspect",
+        "description": "Inspect the pipe-fitting workbench and tools.",
+        "inspect_message": "Tungsten flanging dies and heavy pipe cutters sit beside a well-oiled composite baseball bat and a pair of worn leather work gloves stamped with the initials S.T."
+      },
+      {
+        "id": "inspect_family_photo",
+        "name": "family photo",
+        "type": "inspect",
+        "description": "Inspect the snapshot clipped to the magnetic toolbox.",
+        "inspect_message": "A holo-snapshot is clipped to the toolbox lid: three smiling young girls in softball caps with a note: 'Be careful at work, Daddy! Love Lily, Emma & Hannah.'"
+      },
+      {
+        "id": "inspect_bypass_manifold",
+        "name": "bypass manifold",
+        "type": "inspect",
+        "description": "Inspect the twin-loop steam bypass manifold.",
+        "inspect_message": "A massive twin-loop steam manifold engineered to absorb thermal shock without shedding system pressure, welded with immaculate precision."
       }
     ]
   }

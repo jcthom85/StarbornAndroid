@@ -80,7 +80,7 @@ Large route/system families must be split into playable variants during prerequi
 | route_world_1 | events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 344 |
 | route_world_2 | events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 363 |
 | route_world_3 | dialogue, events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 283 |
-| route_world_4 | events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 269 |
+| route_world_4 | events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 272 |
 | route_world_5 | events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 293 |
 | route_world_6 | events, exit, hub_nodes, hubs, rooms | 250 |
 | route_world_astra | exit, hub_nodes, hubs, rooms | 15 |
@@ -112,19 +112,19 @@ Large route/system families must be split into playable variants during prerequi
 | system_completion_ngplus | system_behavior | 1 |
 | system_cooking | recipes_cooking | 15 |
 | system_device_performance | system_behavior | 1 |
-| system_dialogue | dialogue | 310 |
+| system_dialogue | dialogue | 317 |
 | system_enemies | enemies | 47 |
 | system_events | events | 96 |
 | system_fishing | fishing_lures, fishing_rods, system_behavior | 12 |
 | system_inventory | system_behavior | 1 |
-| system_items | items | 239 |
+| system_items | items | 240 |
 | system_legacy_saves | system_behavior | 1 |
 | system_leveling | system_behavior | 1 |
 | system_meals | system_behavior | 1 |
 | system_milestones | milestones | 294 |
 | system_navigation | exit | 8 |
 | system_node_progression | system_behavior | 1 |
-| system_npcs | npcs | 31 |
+| system_npcs | npcs | 32 |
 | system_patrols | patrol_zone | 2 |
 | system_recipe_boundaries | system_behavior | 1 |
 | system_recovery_battle | system_behavior | 1 |
@@ -132,7 +132,7 @@ Large route/system families must be split into playable variants during prerequi
 | system_recovery_puzzle | system_behavior | 1 |
 | system_recovery_transactions | system_behavior | 1 |
 | system_recovery_travel | system_behavior | 1 |
-| system_room_actions | room_action | 1055 |
+| system_room_actions | room_action | 1059 |
 | system_rooms | rooms | 7 |
 | system_save_slots | system_behavior | 1 |
 | system_shop_boundaries | system_behavior | 1 |

@@ -3549,5 +3549,22 @@
         "accuracy": 3
       }
     }
+  },
+  {
+    "id": "camerons_pipe_wrench",
+    "name": "Cameron's Heavy Flange Wrench",
+    "description": "A high-torque titanium alloy pipe wrench with checkered racing stripes etched into the grip and Sherman's signature stamped across the jaw. Built for extreme pressure and zero tolerance for leaks. \"Hold the line until the pressure settles.\"",
+    "type": "accessory",
+    "value": 550,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": {
+        "strength": 4,
+        "vitality": 3,
+        "defense": 4,
+        "stability": 3
+      }
+    }
   }
 ]
