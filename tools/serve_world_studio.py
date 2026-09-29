@@ -109,6 +109,19 @@ class StudioHandler(http.server.SimpleHTTPRequestHandler):
 
                 temp_file.replace(ROOMS_FILE)
 
+                hub_nodes = data.get("hub_nodes")
+                if hub_nodes and isinstance(hub_nodes, list):
+                    hub_backup_path = backup_dir / f"hub_nodes_backup_{now_str}.json"
+                    if HUB_NODES_FILE.exists():
+                        with open(HUB_NODES_FILE, "r", encoding="utf-8") as orig:
+                            with open(hub_backup_path, "w", encoding="utf-8") as bk:
+                                bk.write(orig.read())
+                    temp_hub_file = HUB_NODES_FILE.with_suffix(".tmp")
+                    with open(temp_hub_file, "w", encoding="utf-8") as f:
+                        json.dump(hub_nodes, f, indent=2, ensure_ascii=False)
+                        f.write("\n")
+                    temp_hub_file.replace(HUB_NODES_FILE)
+
                 resp = {
                     "status": "ok",
                     "message": f"Successfully saved {len(rooms)} rooms to {ROOMS_FILE.name}.",
