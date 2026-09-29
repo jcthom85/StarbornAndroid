@@ -2100,5 +2100,147 @@
     "text": "Look at that—solid Dominion-grade alloy! [Cheno takes the parts with massive hands, effortlessly locking them into the pneumatic press with a single smooth clamp.] There. That center truss will hold through a category-five solar gale. A deal's a deal, Nova. Take this—it's forged from Bridgman structural titanium. When things get heavy out there, remember you've got friends who've got your back.",
     "trigger": "take_item:heavy_gear*2,take_item:wiring_bundle*2,give_item:cheno_carabiner,give_xp:250,give_credits:300,set_milestone:ms_cheno_rigging_favor_completed",
     "next": "cheno_default_talk"
+  },
+  {
+    "id": "chris_default_talk",
+    "speaker": "Chris",
+    "text": "Watch your step over those patch cables. Dominion pipes four synthetic chords into every elevator to keep productivity up and blood pressure down. We broadcast the other eight. What brings you to our corner of the grid?",
+    "options": [
+      {
+        "id": "chris_opt_poster",
+        "text": "I saw your Wayfarer tour poster taped to the window.",
+        "next": "chris_poster_reply"
+      },
+      {
+        "id": "chris_opt_cheno",
+        "text": "I was just talking with Cheno out on the rigging deck.",
+        "next": "chris_cheno_reply"
+      },
+      {
+        "id": "chris_opt_favor_offer",
+        "text": "Are you two working on a new broadcast?",
+        "condition": "milestone_not_set:ms_wayfarer_broadcast_asked",
+        "next": "chris_favor_offer"
+      },
+      {
+        "id": "chris_opt_favor_turnin",
+        "text": "I brought the rapid capacitor and wiring bundle for your broadcast rig.",
+        "condition": "milestone:ms_wayfarer_broadcast_asked,milestone_not_set:ms_wayfarer_broadcast_completed,item:rapid_capacitor,item:wiring_bundle",
+        "next": "chris_favor_turnin"
+      },
+      {
+        "id": "chris_opt_writing",
+        "text": "What are the lyrics you're working on?",
+        "next": "chris_writing_reply"
+      }
+    ]
+  },
+  {
+    "id": "chris_poster_reply",
+    "speaker": "Chris",
+    "text": "That old thing? Screen-printed it ourselves in a damp basement before Dominion even had jammers over this sector. Played gigs in cargo holds, dive bars, gravel lots—anywhere people needed something real to hold onto. Time moves fast, but that poster reminds me of who we were when the world was wide open.",
+    "next": "chris_default_talk"
+  },
+  {
+    "id": "chris_cheno_reply",
+    "speaker": "Chris",
+    "text": "Cheno's the absolute best of us. Back when we were touring, he'd haul our amps through sleet storms, dial the front-of-house sound until the walls shook, and still be the first guy laughing at 3:00 AM over cold pizza. You won't find a more loyal soul in this galaxy.",
+    "next": "chris_default_talk"
+  },
+  {
+    "id": "chris_writing_reply",
+    "speaker": "Chris",
+    "text": "Songs about leaving home, about friends who drift to other cities, and about the things you build that stay behind. Words have weight out here, Nova. When the signal is honest, it travels further than any laser cannon.",
+    "next": "chris_default_talk"
+  },
+  {
+    "id": "chris_favor_offer",
+    "speaker": "Chris",
+    "text": "We're trying to send a pirate feed through the transit tunnels, but the high-frequency transmitter blew a capacitor during the last security sweep. If you can scavenge 1 rapid capacitor and 1 wiring bundle, Andrew and I can bypass the jammer and light up the airwaves.",
+    "trigger": "set_milestone:ms_wayfarer_broadcast_asked",
+    "next": "chris_default_talk"
+  },
+  {
+    "id": "chris_favor_turnin",
+    "speaker": "Chris",
+    "text": "You found them! Perfect capacitance. Andrew, solder that bypass lead—I'll patch the output bus. [Sparks flash as solder melts, followed by a crisp, chime-like hum through the monitors. Andrew hits a ringing major chord that echoes cleanly through the pirate airwaves.] Hear that? Clean signal. No Dominion compression, no corporate watermarks. Just pure sound. Nova... thanks for making the climb up here. It means more than you know.",
+    "next": "andrew_favor_acknowledgment"
+  },
+  {
+    "id": "andrew_default_talk",
+    "speaker": "Andrew",
+    "text": "Hey. Good to see friendly eyes in here. Take a breath—the world outside this car moves entirely too fast. We're just restringing the acoustic rig and trying to get these coils to sing.",
+    "options": [
+      {
+        "id": "andrew_opt_music",
+        "text": "What kind of music do you play?",
+        "next": "andrew_music_reply"
+      },
+      {
+        "id": "andrew_opt_hug",
+        "text": "It feels surprisingly peaceful in here.",
+        "next": "andrew_hug_reply"
+      },
+      {
+        "id": "andrew_opt_wayfarer",
+        "text": "Do you miss the old days on the road?",
+        "next": "andrew_wayfarer_reply"
+      },
+      {
+        "id": "andrew_opt_listen",
+        "text": "Play something for the room.",
+        "condition": "milestone:ms_wayfarer_broadcast_completed",
+        "next": "andrew_listen_reply"
+      }
+    ]
+  },
+  {
+    "id": "andrew_music_reply",
+    "speaker": "Andrew",
+    "text": "Acoustic lines with space to breathe. In a city full of synthesized sirens and neon glare, people forget how warm wooden resonance feels. We play the kind of chords that make you want to call an old friend.",
+    "next": "andrew_default_talk"
+  },
+  {
+    "id": "andrew_hug_reply",
+    "speaker": "Andrew",
+    "text": "[Andrew smiles, setting his guitar down carefully on the booth seat.] People spend so much time ducking patrols they forget they're allowed to be human. [He gives Nova a warm, genuine hug.] You're doing good work out there, Nova. Don't let the cold grind you down.",
+    "next": "andrew_default_talk"
+  },
+  {
+    "id": "andrew_wayfarer_reply",
+    "speaker": "Andrew",
+    "text": "Sometimes. Life scatters folks—Chris is busy writing, Cheno's keeping the city from caving in, and people grow up. But when we pick up our instruments, it's like no time has passed at all. The music keeps the thread unbroken.",
+    "next": "andrew_default_talk"
+  },
+  {
+    "id": "andrew_listen_reply",
+    "speaker": "Andrew",
+    "text": "[Andrew closes his eyes and plucks a resonant, melodic progression on his acoustic guitar. The sound fills the subway car with aching warmth, echoing softly out toward Cheno's rigging deck.] That one's called 'The Long Drive Home.' For everyone still traveling.",
+    "next": "andrew_default_talk"
+  },
+  {
+    "id": "andrew_favor_acknowledgment",
+    "speaker": "Andrew",
+    "text": "[Andrew wipes flux from his fingers and looks up with a soft, sincere smile.] Thank you, Nova. Seriously. Sometimes in a galaxy this big, you wonder if anyone's still listening, or if the songs we made together still matter. It's good to know they do.",
+    "options": [
+      {
+        "id": "opt_nova_thanks",
+        "text": "Thank you. Both of you.",
+        "next": "nova_personal_thanks"
+      }
+    ]
+  },
+  {
+    "id": "nova_personal_thanks",
+    "speaker": "Nova",
+    "text": "Thank you. For the music, for the long road, and for everything you made. Some things don't stop mattering just because life moves on. Keep playing.",
+    "next": "wayfarer_quest_conclude"
+  },
+  {
+    "id": "wayfarer_quest_conclude",
+    "speaker": "Chris",
+    "text": "[Chris blinks back a quiet flash of emotion, then breaks into a wide, bright smile. Andrew steps forward and wraps Nova in a heartfelt hug.] You heard her, brother. Volume up, signal hot. Here, Nova—take this. It's a hand-stamped resonance pick from our first run. When the road gets dark out there, remember you're never flying alone.",
+    "trigger": "take_item:rapid_capacitor*1,take_item:wiring_bundle*1,give_item:wayfarer_plectrum,give_xp:300,give_credits:350,set_milestone:ms_wayfarer_broadcast_completed",
+    "next": "chris_default_talk"
   }
 ]

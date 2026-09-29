@@ -3533,5 +3533,21 @@
         "defense": 5
       }
     }
+  },
+  {
+    "id": "wayfarer_plectrum",
+    "name": "Wayfarer's Resonance Plectrum",
+    "description": "A hand-stamped titanium acoustic pick tuned to 440 Hz. Scratched from countless rehearsals and late-night road trips. Carries the quiet truth that some things never stop mattering.",
+    "type": "accessory",
+    "value": 500,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": {
+        "focus": 4,
+        "agility": 3,
+        "accuracy": 3
+      }
+    }
   }
 ]

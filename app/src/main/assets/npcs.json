@@ -492,5 +492,45 @@
         "dialogue_id": "cheno_default_talk"
       }
     ]
+  },
+  {
+    "id": "musician_chris",
+    "name": "Chris",
+    "aliases": [
+      "chris",
+      "bassist chris",
+      "lyricist chris"
+    ],
+    "role": "Acoustic Engineer & Lyricist",
+    "description": "A sharp-witted audio engineer and brilliant writer with an articulate, observant edge. He works with Andrew in the old subway car to broadcast uncompromised music across the Spire.",
+    "portrait": "images/npcs/vance.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "chris_default_talk"
+      }
+    ]
+  },
+  {
+    "id": "musician_andrew",
+    "name": "Andrew",
+    "aliases": [
+      "andrew",
+      "guitarist andrew",
+      "lead guitarist"
+    ],
+    "role": "Resonance Technician & Guitarist",
+    "description": "A quiet, warm, and artistic musician with curly hair and an easy smile. He handles instrument repairs and acoustic resonance coils, keeping the heart of the music alive.",
+    "portrait": "images/npcs/orlo.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "andrew_default_talk"
+      }
+    ]
   }
 ]

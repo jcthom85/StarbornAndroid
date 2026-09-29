@@ -3924,8 +3924,11 @@
     "env": "neon",
     "title": "Old Subway Car",
     "background_image": "images/rooms/world_3/spire_old_subway_car.webp",
-    "description": "The Static spills into an old subway car bolted beside the bar. Torn booth seats, stickered windows, and a silent jukebox make the car feel half shrine, half hiding place. A reinforced door at the far end opens onto the Bridgman rigging deck.",
-    "npcs": [],
+    "description": "The Static spills into an old subway car bolted beside the bar. Torn booth seats, stickered windows, and a silent jukebox make the car feel half shrine, half studio. Chris tunes an audio board beside the booth while Andrew rests an acoustic guitar across his knee. A reinforced door at the far end opens onto the Bridgman rigging deck.",
+    "npcs": [
+      "musician_chris",
+      "musician_andrew"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
