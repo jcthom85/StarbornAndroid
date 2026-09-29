@@ -540,7 +540,81 @@ Comprehensive audit catalog of every item acquirable throughout Sector 9:
 
 ---
 
-## 13. Sector 9 Playtester Friction Log Template
+## 13. Combat Status Effects, Afflictions & Buffs Reference (Sector 9)
+
+Sector 9 introduces environmental hazards and advanced enemy control tech. Verify status interactions against this matrix:
+
+| Status ID | Display Name | Duration | Mechanics & Combat Impact | Inflicted By | Counter / Remedy |
+| :--- | :--- | :---: | :--- | :--- | :--- |
+| `brittle` | **Brittle** | 2 Turns | Multiplies incoming physical damage by **1.5x (+50%)** and total damage by **+30%**. Essential against The Beast. | Nova (`nova_cryo_vent`) | N/A (Enemy debuff). Chain with Zeke's Shatter Blow and Orion's Prism Lance. |
+| `blind` | **Blind** | 2 Turns | Reduces basic and skill attack accuracy by **40%**. Missed strikes deal 0 damage. | Siren Skimmer (`sonic_shriek`), Sentinel Orb (`resonance_beam`) | Use AoE skills or pulse grenades that bypass single-target evasion checks. |
+| `acid` / `poison` | **Acid / Spores**| 3 Turns | Deals periodic damage each combat turn, completely bypassing physical armor and shields. | Spore-Spitter (`toxic_spore`), Razor-Vine (`constrict`) | Defeat acid casters immediately; heal health pool with Medkits or Tideglass Delight. |
+| `stun` | **Stunned** | 1 Turn | Completely halts enemy or party member ATB bar progress; cancels charged skills. | Nova Arc Tether, Zeke Guard Break, Beast Seismic Stomp | Use Guard with Zeke to resist stomp stuns; exploit enemy posture shatter windows. |
+| `shield` | **Shielded** | Until Broken | Absorbs incoming kinetic and energy damage; prevents HP loss until stability/barrier breaks. | Ruin-Guardian (`barrier_field`) | Channel **Nova Arc Tether** (shock weakness) and **Zeke Shatter Blow** to destroy shield. |
+| `link` | **Nova Link** | 3 Turns | Anchors party resonance, distributing incoming burst damage and increasing outgoing critical chance by **20%**. | Nova (`nova_link` - unlocked after The Beast) | Active party buff; deploy during high-damage enemy phases. |
+| `luck` | **Critical Luck**| 3 Turns | Boosts party critical strike rate by **25%** and increases item drop rolls. | Consuming **Chime Minnow Broth** | Pre-buff before boss fights or rare component hunting. |
+| `erosion` | **Erosion Strain**| Persistent | Environmental cognitive fatigue from raw Source resonance; slows ATB fill rate by 15%. | Wilds and Ancient Ruins | Rest at any of the 4 campsites or consume **Neural Stabilizers** (`painkillers`). |
+
+---
+
+## 14. Main Menu Debug Scenario Jump-Start Directory (World 2)
+
+Use the built-in **Debug Scenarios** menu from the game title screen to jump directly into specific World 2 quests, bosses, and puzzle states:
+
+| Debug Scenario ID | Target Quest | Spawn Room & ID | Preset Party & State | Primary QA Focus |
+| :--- | :--- | :--- | :--- | :--- |
+| `campaign_w2_mq01` | **MQ01: A Strange Coast** | Crash Site<br>`sector9_crash_site` | Nova & Zeke (Lv 3), Starter Cutter, Flux Liner, Ghost Signal Cell ("Chime"). | Test pod examination, Zeke stabilization, moss scan, and stream exploration trigger. |
+| `campaign_w2_mq02` | **MQ02: The Signal** | Stream Bank<br>`sector9_landing_stream` | Nova & Zeke (Lv 3), Chime in inventory, MQ01 marked complete. | Test Razor-Vine Path traversal, canopy encounters, and Temple Gate Chime bypass. |
+| `campaign_w2_mq03` | **MQ03: Sleeping Giant** | Hall of Echoes<br>`sector9_hall_of_echoes` | Nova & Zeke (Lv 4), Temple Gate unlocked, MQ02 complete. | Test light murals inspection, stasis coolant stabilization, and Orion awakening sequence. |
+| `campaign_w2_mq04` | **MQ04: The Hunter** | Canopy Ridge<br>`sector9_canopy_ridge` | Nova, Zeke, Orion (Lv 4–5), Bridge Echo acquired. | **Boss Audit:** Test Gh0st confrontation, **The Source Beast** boss fight, and Anchor Drill. |
+| `campaign_w2_mq05` | **MQ05: Liftoff** | Source Gate<br>`sector9_source_gate` | Nova, Zeke, Orion, Gh0st (Lv 5), `nova_link` unlocked. | **Climax Audit:** Test 4-part acoustic gate bypass, conduit scavenge, Bridge reboot, and orbital launch. |
+| `campaign_w2_sq01` | **SQ01: Botanist** | Resonant Canopy<br>`sector9_canopy` | Nova & Zeke (Lv 3), survey quest active. | Test scanning giant crystalline ferns and tracking 5 flora specimens across both hubs. |
+| `campaign_w2_sq02` | **SQ02: Lost Patrol** | Spore Thickets<br>`sector9_wilds_thickets` | Nova & Zeke (Lv 3–4), dead scout encountered. | Test Beacon Alpha, Beta, Gamma triangulation, Burned Glade transceiver, and cutter repair. |
+| `campaign_w2_sq03` | **SQ03: Tideglass Day** | Tide Pools<br>`sector9_beach_pools` | Nova & Zeke (Lv 3–4), coastal access open. | Test Tideglass Beach discovery, foraging loop, and Tideglass Delight cooking recipe. |
+| `campaign_w2_sq04` | **SQ04: Ancient Echoes**| Hall of Echoes<br>`sector9_hall_of_echoes` | Nova, Zeke, Orion (Lv 4–5), facility open. | Test retrieving West, East, North resonance crystals, Ruin-Guardian combat, and mural tuning. |
+| `campaign_w2_sq05` | **SQ05: Stolen Tech** | High Gantry<br>`sector9_vents_gantry` | Full party (Lv 5), maintenance vents open. | Test security grid hack, guard scan bypass, transmitter recovery, and Rapid Capacitor mod. |
+
+---
+
+## 15. Audio, Shaders & Immersion Verification Matrix (Sector 9)
+
+Audit visual effects, sound design, and shader performance across Sector 9:
+
+| Zone / Node | Visual & Shader Checks | Audio Beds, Stingers & Soundscapes | Ergonomic / Performance Check |
+| :--- | :--- | :--- | :--- |
+| **Crash Site & Stream**<br>`sector9_crash_site` to `sector9_landing_stream` | • Pod wreckage fire and smoke particle dissipation.<br>• Water surface bioluminescent caustic shader.<br>• Hanging moss and fern dynamic wind sway. | • Crushed foliage and splashing water footstep sfx.<br>• Distant jungle wildlife chirps and low subterranean hum.<br>• Medical injector hiss during Zeke stabilization. | Confirm smoke particles do not cause frame jitter during pod examination. |
+| **Tideglass Beach & Grotto**<br>`sector9_stream_pools` to `sector9_beach_grotto` | • Ocean shoreline wave wash and sparkling star-sand dunes.<br>• Green crystal lattice illumination on prism puzzle solve.<br>• Bioluminescent glowfish lighting in shallow tidepools. | • Tidal surf audio bed with rolling waves.<br>• Prism puzzle slider acoustic pitch changes.<br>• Splash and line-tension audio cues during fishing minigame. | Verify fishing tension meter bar renders smoothly at 60 FPS without touch lag. |
+| **Razor-Vine Wilds**<br>`sector9_canopy` to `sector9_wilds_lookout` | • Dense purple spore cloud particle drift in thickets.<br>• Thermal Cutter cauterizing orange edge glow.<br>• Acid pool bubbling surface shader in Poison Hollow. | • Spore-Spitter wet projectile impact sound.<br>• Shard-Hound aggressive barking and pounce audio.<br>• Crackling campfire bed and acoustic guitar strum at camp. | Ensure purple spore particle volume maintains 60 FPS on mid-range Android chipsets. |
+| **Canopy Ridge & Overlook**<br>`sector9_ridge_climb` to `sector9_canopy_ridge` | • Dizzying vertical drop parallax layers.<br>• Violet Planetary Shield shimmer curving across the sky.<br>• Thunderous shockwave distortion during The Beast's roar. | • Howling mountain gale wind audio bed.<br>• Gh0st sniper rifle high-velocity supersonic crack.<br>• Grounded anchor drill electric discharge audio stinger. | Confirm screen shake during Beast's Seismic Stomp does not misalign touch targets. |
+| **Sanctuary Facility**<br>`sector9_foyer_grand_hall` to `sector9_stasis_chamber` | • Shifting light murals animating smoothly along stone walls.<br>• Spinning cryogenic stasis ring array glow.<br>• Ruin-Guardian blue barrier shield particle cage. | • Cathedral-like acoustic reverberation on all footsteps.<br>• Three-chord harmonic stinger when murals are calibrated.<br>• Cryogenic de-pressurization steam whoosh on Orion's release. | Verify light mural animation shader runs without memory allocation spikes. |
+| **Hangar Bay & The Sky**<br>`sector9_hangar_bay` to `sector9_the_sky` | • The *Astra* hull lighting up from dark to golden flight readiness.<br>• Ion lightning particle branching in Mesosphere Storm.<br>• Whiteout launch rail transition flash. | • Sub-light thruster deep ignition bass boom.<br>• Launch clamp heavy release mechanical thud.<br>• Atmospheric wind rush and transition fanfare into World 3. | Confirm launch whiteout transition fades cleanly without leaving artifacts. |
+
+---
+
+## 16. Android Hardware, Display Safe-Area & Performance Targets
+
+Technical criteria for testing Sector 9 on physical Android devices:
+
+### 1. Display Cutouts & Edge Insets
+- **Camera Cutout Safety:** Ensure the 4-member party status display on the left and the mini-map / room header on the top maintain a **16dp padding** clear of display cutouts and punch-holes.
+- **Gesture Bar Navigation:** Confirm that bottom exploration action prompts (`Examine`, `Forage`, `Fish`, `Camp`) do not overlap the Android gesture navigation pill.
+
+### 2. Touch Target Ergonomics & Sliders
+- All foraging nodes and examine targets must have generous hitboxes (minimum **48dp x 48dp**).
+- Hidden Grotto prism sliders (`Angle`, `Lux`, `Freq`) must permit natural continuous thumb dragging without dropping input when your thumb drifts off the slider axis.
+
+### 3. Combat Ergonomics with 4 Party Members
+- When Orion and Gh0st join the party, verify that the 4-character combat status cards remain easily readable on phone screens (no overlapping text or truncated health digits).
+- Ensure the newly added `[ ⚡ OP ]` toggle and `[ 💥 Win ]` buttons in the combat header do not obscure enemy target outlines or turn-order indicator icons.
+
+### 4. Frame Rate & Memory Benchmarks
+- **Target Frame Rate:** Uncapped or locked **60 FPS** across all 5 Sector 9 zones.
+- **Thermal Management:** Device surface temperature should remain normal during extended 30-minute playtest sessions without aggressive CPU thermal throttling.
+- **Heap Allocation:** Client heap allocation should remain stable under **400 MB** during transitions between Hub 3 (Jungle) and Hub 4 (Facility).
+
+---
+
+## 17. Sector 9 Playtester Friction Log Template
 
 Copy this table or record notes directly in this format during your test run. Submit this log along with your save export:
 
@@ -556,4 +630,5 @@ Copy this table or record notes directly in this format during your test run. Su
 | e.g. `sector9_hangar_lock` | [Polish] | Minor | Camera angle cut slightly early during the launch rail whiteout |
 ```
 *(Severity scale: Critical Blocker -> High Friction -> Medium Bug -> Low Polish)*
+
 

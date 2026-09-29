@@ -388,7 +388,75 @@ Comprehensive audit catalog of every item acquirable throughout World 1:
 
 ---
 
-## 10. Playtester Friction Log Template
+## 10. Combat Status Effects, Afflictions & Buffs Reference (World 1)
+
+During World 1 encounters, combatants apply status conditions that drastically alter damage calculation and action timing. Verify each status against this reference:
+
+| Status ID | Display Name | Duration | Mechanics & Combat Impact | Inflicted By | Counter / Remedy |
+| :--- | :--- | :---: | :--- | :--- | :--- |
+| `brittle` | **Brittle** | 2 Turns | Multiplies incoming physical damage by **1.5x (+50%)** and total damage by **+30%**. Critical for shattering bosses. | Nova (`nova_cryo_vent`) | N/A (Enemy debuff). Capitalize immediately with kinetic and shock bursts. |
+| `blind` | **Blind** | 2 Turns | Reduces basic attack and targeted skill accuracy by **40%**. Missed attacks deal 0 damage. | Siren Skimmer (`sonic_shriek`) | Use AoE pulse grenades or abilities that bypass evasion. |
+| `silence` | **Silenced** | 2 Turns | Disables all character active skills; grays out ability cards in the combat tray, forcing standard basic attacks. | Dominion Dampener (`silence_pulse`) | Eliminate Dampener drones first; basic kinetic shots still function. |
+| `stun` | **Stunned** | 1 Turn | Completely freezes target's ATB gauge progress; interrupts active skill charge channels. | Arc Tether, Guard Break | N/A (Enemy crowd-control). Exploits posture breaks. |
+| `guard` | **Guarding** | 1 Turn | Increases incoming damage reduction by **50%** and fortifies stability bar against guard breaks. | Nova / Zeke defensive action | Use Guard when boss cleaves are telegraphed. |
+| `shield` | **Shielded** | Until Depleted | Absorbs kinetic and energy damage before HP damage is registered. | Acoustic Bulwark (`acoustic_shield`) | Throw **Pulse Grenades** or land **Arc Tether** to shatter shields. |
+| `erosion` | **Neural Erosion** | Persistent | Passive environmental strain accumulated from deep mine exposure; reduces max ATB refill speed. | Deep Mine environment | Rest at bunks, mess halls, or consume **Neural Stabilizers** / rations. |
+
+---
+
+## 11. Main Menu Debug Scenario Jump-Start Directory (World 1)
+
+If you need to reproduce an edge case, re-test a boss fight, or verify a room transition without playing through prior hours of content, use the built-in **Debug Scenarios** menu on the game's title screen:
+
+| Debug Scenario ID | Target Quest | Spawn Room & ID | Preset Party & State | Primary QA Focus |
+| :--- | :--- | :--- | :--- | :--- |
+| `campaign_w1_mq02` | **MQ02: Shift Clearance** | Shift Queue<br>`checkpoint_queue` | Nova (Lv 1–2), Starter Cutter, Flux Liner, Jed test complete. | Test transit scanner, Guard Hank dialogue, and Zeke's 3 forged excuse branches. |
+| `campaign_w1_mq03` | **MQ03: The Echo** | Concourse Lobby<br>`admin_lobby` | Nova (Lv 2), Mine Access Badge, 4x Medkit I. | Test Boggs dialogue, Concourse exploration, and Deep Elevator descent to Sector 4. |
+| `campaign_w1_mq04` | **MQ04: Red Alert** | Emergency Exit<br>`echo_exit` | Nova (Lv 3), Tuning Fork acquired, Red Alert active. | Test evacuation gauntlet, siren lighting, Jed's cargo lift sacrifice, and Chime grant. |
+| `campaign_w1_mq05` | **MQ05: The Launch** | Pod Bay<br>`launch_bay` | Nova & Zeke (Lv 3), Ghost Signal Cell, full consumables. | **Boss Audit:** Test **The Iron Warden** boss fight, pod console splicing, and launch cinematic. |
+| `campaign_w1_sq01` | **SQ01: Scavenger's Stash** | Trade Row Gate<br>`trade_entrance` | Nova (Lv 1), Trade Row access unlocked. | Test Scrapper dialogue, Trade Row shop, and rebel stash disarm sequence. |
+| `campaign_w1_sq02` | **SQ02: System Flush** | Triage Hall<br>`medbay_hall` | Nova (Lv 1–2), Med Bay access unlocked. | Test Doc dialogue, Siren Skimmer combat, fan reversal, and Corrosive Rounds reward. |
+| `campaign_w1_sq03` | **SQ03: Heavy Lifting** | Security Post<br>`admin_security` | Nova (Lv 2), Concourse clearance active. | Test Acoustic Bulwark Guard Break training drill and Boggs elevator authorization. |
+| `campaign_w1_sq04` | **SQ04: Protocol Override**| Server Air-Lock<br>`server_airlock` | Nova (Lv 2), Server Room access unlocked. | Test Resonance Buoy combat, sub-zero console thaw, and rebel protocol upload. |
+| `campaign_w1_sq05` | **SQ05: The Lost Shift** | Elevator Landing<br>`mine_landing` | Nova (Lv 2–3), Sector 4 access unlocked. | Test Cavern Junction breaker power-up, Side Shunt 4 datapad, and Recoil Dampener grant. |
+
+---
+
+## 12. Audio, Shaders & Immersion Verification Matrix (World 1)
+
+Audit audio fidelity, dynamic lighting, and shader transitions across World 1 on your test device:
+
+| Zone / Room | Visual & Shader Checks | Audio Beds, Stingers & Soundscapes | Ergonomic / Performance Check |
+| :--- | :--- | :--- | :--- |
+| **Nova's Bunk & The Pit**<br>`pit_nova_bunk` to `pit_mess` | • Warm tungsten bunk lamp toggle effect.<br>• Broken arcade screen scanline shader in Mess Hall.<br>• Steam particle overlay in `pit_shaft`. | • Ambient low-hum ventilation drone.<br>• Footstep cadence on grated metal walkways.<br>• Lamp click sound effect on interaction. | Frame rate steady 60 FPS; confirm bunk rest button has comfortable thumb hitbox. |
+| **Trade Row**<br>`trade_entrance` to `trade_stash` | • Flickering neon signage in market strip.<br>• Blue ambient illumination in Recyc Bar. | • Distant crowd murmurs and generator thumps.<br>• Jukebox synth track plays cleanly in bar.<br>• Cash register chime on shop purchase/sell. | Shop UI scroll list moves smoothly with no inertia stutter. |
+| **Med Bay & Vents**<br>`medbay_hall` to `medbay_vents` | • Fluorescent clinical strobe flicker in Triage.<br>• Yellow-green toxic haze shader in vents.<br>• Exhaust fan rotation shadows. | • High-pitch bio-scanner hum.<br>• Siren Skimmer steam hiss and shriek.<br>• Fan reversal heavy mechanical clunk. | Ensure poison gas particle drift does not drop FPS on low-power devices. |
+| **Concourse & Server Room**<br>`admin_lobby` to `server_hub` | • High-contrast corporate glass reflections.<br>• Frost/ice condensation screen overlay in Cooling Unit.<br>• Blue server LED blinking arrays. | • Sub-zero air circulation fan rush.<br>• Terminal keyboard keystroke clatter.<br>• Corporate elevator cable groaning on descent. | Frost screen vignette renders without blocking UI text. |
+| **Sector 4 & The Heart**<br>`mine_landing` to `echo_heart` | • Dark rock contrast brightening when power is restored.<br>• Shimmering black alien stone fractals in `echo_walkway`.<br>• Glowing resonance lines on Tuning Fork cradle. | • Dramatic shift from industrial rumble to dead alien silence.<br>• Footstep echo reverberation in ancient chambers.<br>• Slider harmonic frequency tones during tuning. | Sliders respond instantly to touch without dragging lag. |
+| **Lockdown & Pod Bay**<br>`echo_exit` to `launch_rail` | • Red emergency alarm rotating beacon shaders.<br>• Volatile fuel vapor haze in refueling bay.<br>• Shield breach violet particle explosion on launch. | • Wailing klaxon alarm loops.<br>• Iron Warden heavy cleave impact bass thump.<br>• Sub-light rocket ignition crescendo. | Cinematic skip tap prompt appears cleanly and does not stick on screen. |
+
+---
+
+## 13. Android Hardware, Display Safe-Area & Performance Targets
+
+Ensure the client satisfies strict Android platform performance and UX standards:
+
+### 1. Display Cutouts & Edge Insets
+- **Camera Punch-Hole & Notch:** Verify that top party health bars, room title headers, and back navigation buttons maintain a 16dp minimum clearance from the display cutout.
+- **Bottom Navigation Bar (Gesture Inset):** Confirm that the bottom interaction bar (`Inspect`, `Talk`, `Tinkering`, `Rest`) does not overlap or trigger the Android home gesture line.
+
+### 2. Touch Target Ergonomics
+- All interactive UI elements (slider handles, inventory item cards, combat skill cards, and dialogue choices) must satisfy a **minimum touch target size of 48dp x 48dp**.
+- Slider puzzle handles (`w1_echo_counter_tune`) must feature generous drag boundaries that do not lose touch capture when your thumb moves slightly above or below the rail.
+
+### 3. Frame Rate & Memory Stability
+- **Target Framerate:** Solid **60 FPS** during all exploration screen transitions and combat ability executions.
+- **Particle Load Resilience:** Verify zero frame drops when `Cryo Vent`, `Pulse Grenade`, and the Iron Warden's `lockdown_burst` trigger in rapid succession.
+- **Memory Footprint:** Heap memory should remain stable (under 350 MB runtime allocation) without garbage collection stutter during repeated transitions between Concourse Hub 2 and Deep Mine Hub 1.
+
+---
+
+## 14. Playtester Friction Log Template
 
 Copy this section or jot down notes in this format as you play. Bring this log back when you complete the world:
 
@@ -403,4 +471,5 @@ Copy this section or jot down notes in this format as you play. Bring this log b
 | e.g. `echo_heart` | [Pacing] | Minor | Would love an extra line of dialogue from Nova after the echo vision |
 ```
 *(Severity scale: Critical Blocker -> High Friction -> Medium Bug -> Low Polish)*
+
 
