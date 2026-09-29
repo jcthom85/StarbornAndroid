@@ -22,7 +22,7 @@ This transcript reflects the exact player experience, including dialogue, room t
 > **[Dialogue]** Zeke: "I put the Chime on navigation without tracing the pair. That's on me. Check the wrecked nav console before the water gets in."
 - **[Action]** `w2_mq01_examine_pod`: Examine the wrecked navigation console and recover the Chime. [Quest: w2_mq01 (assess_crash_site)]
 - **[Action]** `w2_mq01_stabilize_zeke`: Use the emergency medkit from the pod to stabilize Zeke before leaving the crash site. [Quest: w2_mq01 (assess_crash_site)]
-**[Step 7 - Travel]** Entered room: Stream Bank | Prose snippet: "A narrow bank where the swamp mud gives way to smooth pebbles. A glow-water current runs eastward, gurgling softly as it..." [Quest: w2_mq02 (reach_temple_gate)]
+**[Step 7 - Travel]** Entered room: Stream Bank | Prose snippet: "A clear stream of warm glow-water flows east toward the coast. Smooth pebbles line the banks under hanging ferns, where ..." [Quest: w2_mq02 (reach_temple_gate)]
 > **[Dialogue]** Zeke: "The beacon's pulse is strong, coming from that massive stone gate ahead. But thick razor-vines block the path. Watch your step, Nova."
 **[Step 9 - Travel]** Entered room: Resonant Canopy | Prose snippet: "The canopy of the ruins is covered in giant, crystalline ferns that catch the dim light and buzz with low-frequency stan..." [Quest: w2_mq02 (reach_temple_gate)]
 **[Combat Encounter]** Victory against [echo_borer] in sector9_canopy

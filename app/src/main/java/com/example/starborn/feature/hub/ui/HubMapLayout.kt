@@ -1,6 +1,6 @@
 package com.example.starborn.feature.hub.ui
 
-/** Ground anchors in the full portrait source image; never relative to a UI inset. */
+/** Artwork treatment for a destination; asset-backed anchors come from hub_nodes.json. */
 internal data class HubMapSite(
     val x: Float, val y: Float, val artworkWidth: Float = .25f,
     val labelDx: Float = 0f, val labelDy: Float = 0f
@@ -8,6 +8,7 @@ internal data class HubMapSite(
 internal data class HubMapLayout(
     val sites: Map<String, HubMapSite>, val astraDock: HubMapSite? = null
 )
+/** Synthetic map entries retain fixed fallback anchors here; regular node positions are data-driven. */
 internal object HubMapLayouts {
     private fun site(x: Float, y: Float, width: Float = .25f) = HubMapSite(x, y, width)
     val all = mapOf(

@@ -48,7 +48,7 @@
           "response": [
             {
               "speaker": "Mechanic",
-              "text": "Scavvers dragged in a crate of micro-cores\u2014perfect for overclocking your drone."
+              "text": "Scavvers dragged in a crate of micro-cores—perfect for overclocking your drone."
             },
             {
               "speaker": "Mechanic",
@@ -66,7 +66,7 @@
             },
             {
               "speaker": "Mechanic",
-              "text": "Last crew brought back slagged plating\u2014whatever's down there hits hard."
+              "text": "Last crew brought back slagged plating—whatever's down there hits hard."
             }
           ]
         }
@@ -161,7 +161,7 @@
   "armor_shop": {
     "name": "The Aegis",
     "portrait": "images/npcs/armorer.webp",
-    "greeting": "Armorer: Step in and suit up\u2014no frontier scrape should catch you unshielded.",
+    "greeting": "Armorer: Step in and suit up—no frontier scrape should catch you unshielded.",
     "pricing": {
       "sell_markup": 1.2,
       "buy_markdown": 0.35
@@ -293,7 +293,7 @@
   "general_store": {
     "name": "General Store",
     "portrait": "images/npcs/shopkeep.webp",
-    "greeting": "Shopkeep: Supplies, snacks, emergency fixes\u2014if you need it, I stock it.",
+    "greeting": "Shopkeep: Supplies, snacks, emergency fixes—if you need it, I stock it.",
     "pricing": {
       "sell_markup": 1.2,
       "buy_markdown": 0.35
@@ -338,7 +338,7 @@
       "preface": [
         {
           "speaker": "Shopkeep",
-          "text": "Supplies, snacks, emergency fixes\u2014if you need it, I stock it."
+          "text": "Supplies, snacks, emergency fixes—if you need it, I stock it."
         }
       ],
       "smalltalk": [
@@ -358,7 +358,7 @@
           "response": [
             {
               "speaker": "Shopkeep",
-              "text": "If you see blue chalk on a doorframe, that's a scout mark\u2014follow it for safe rooms."
+              "text": "If you see blue chalk on a doorframe, that's a scout mark—follow it for safe rooms."
             }
           ]
         }
@@ -660,5 +660,174 @@
     },
     "trade_label": "Insert Tokens (Shop)",
     "leave_label": "Step Away"
+  },
+  "noodle_row_stall": {
+    "name": "Noodle Row Counter",
+    "portrait": "images/npcs/vance.webp",
+    "greeting": "Rourke: Hot broth or synth strips? Order fast, the line stretches to the plaza.",
+    "pricing": {
+      "sell_markup": 1.15,
+      "buy_markdown": 0.4
+    },
+    "sells": {
+      "items": [
+        "noodles",
+        "spicy_ramen",
+        "ember_broth",
+        "iron_biscuit",
+        "black_coffee",
+        "void_jerky",
+        "ration_pack"
+      ],
+      "rules": {
+        "types_in": [],
+        "subtypes_in": []
+      },
+      "gates": {}
+    },
+    "buys": {
+      "accept_types": [
+        "consumable",
+        "ingredient"
+      ],
+      "blacklist": []
+    },
+    "dialogue": {
+      "preface": [
+        {
+          "speaker": "Rourke",
+          "text": "Best broth in the Lower Spire. It might be synth protein, but it will keep your legs moving."
+        }
+      ],
+      "smalltalk": [
+        {
+          "id": "shop_rourke_market",
+          "label": "Ask about the market",
+          "response": [
+            {
+              "speaker": "Rourke",
+              "text": "Ever since Dominion locked down the transit lines, fresh supplies are rare. We make do with what trickles down from the executive decks."
+            }
+          ]
+        }
+      ],
+      "trade_label": "Order hot food",
+      "leave_label": "Step away from counter"
+    }
+  },
+  "foundry_welder_shop": {
+    "name": "Foundry Welder Rig",
+    "portrait": "images/npcs/mira.webp",
+    "greeting": "Mira: Watch your step near the slag conduits. If you need heat shields or reinforced plating, I've got spares.",
+    "pricing": {
+      "sell_markup": 1.2,
+      "buy_markdown": 0.45
+    },
+    "sells": {
+      "items": [
+        "burn_salve",
+        "heat_liner",
+        "thermal_clip",
+        "composite_plate",
+        "heavy_gear",
+        "hydraulic_fluid",
+        "rapid_capacitor",
+        "medkit_plus"
+      ],
+      "rules": {
+        "types_in": [],
+        "subtypes_in": []
+      },
+      "gates": {}
+    },
+    "buys": {
+      "accept_types": [
+        "consumable",
+        "component",
+        "armor",
+        "weapon",
+        "mod"
+      ],
+      "blacklist": []
+    },
+    "dialogue": {
+      "preface": [
+        {
+          "speaker": "Mira",
+          "text": "The heat in this sector eats through seals like acid. Keep your armor patched."
+        }
+      ],
+      "smalltalk": [
+        {
+          "id": "shop_mira_core",
+          "label": "Ask about the Forge",
+          "response": [
+            {
+              "speaker": "Mira",
+              "text": "The Anvil is overheating. Dominion pushed the output past safe thresholds to power their orbital tether. If you're going deeper, insulate your gear."
+            }
+          ]
+        }
+      ],
+      "trade_label": "Trade hardware & mods",
+      "leave_label": "Leave workshop"
+    }
+  },
+  "orbital_dispensary": {
+    "name": "Zenith Automated Commissary",
+    "portrait": "images/npcs/maintenance_bot.webp",
+    "greeting": "Terminal: [Automated chime] Executive tier account verified. Welcome to Zenith Concourse Dispensary.",
+    "pricing": {
+      "sell_markup": 1.25,
+      "buy_markdown": 0.5
+    },
+    "sells": {
+      "items": [
+        "medkit_plus",
+        "orbital_glimmer_tonic",
+        "nanite_plating_mod",
+        "astral_thread",
+        "pulse_grenade",
+        "composite_plate",
+        "adrenaline"
+      ],
+      "rules": {
+        "types_in": [],
+        "subtypes_in": []
+      },
+      "gates": {}
+    },
+    "buys": {
+      "accept_types": [
+        "consumable",
+        "component",
+        "mod",
+        "armor",
+        "accessory"
+      ],
+      "blacklist": []
+    },
+    "dialogue": {
+      "preface": [
+        {
+          "speaker": "System",
+          "text": "Authorized personnel may requisition medical and tactical supplies using approved credits."
+        }
+      ],
+      "smalltalk": [
+        {
+          "id": "shop_orbital_status",
+          "label": "Check station status",
+          "response": [
+            {
+              "speaker": "System",
+              "text": "Status: Ring containment active. Sub-deck quarantine engaged. Deep mainframe access restricted by Director Thorne."
+            }
+          ]
+        }
+      ],
+      "trade_label": "Access commissary inventory",
+      "leave_label": "Log off terminal"
+    }
   }
 }

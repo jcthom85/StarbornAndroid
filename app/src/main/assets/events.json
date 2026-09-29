@@ -2,28 +2,58 @@
   {
     "id": "w4_salvage_pure_iron",
     "description": "Recover the Foundry maintenance reserve.",
-    "trigger": { "type": "enter_room", "room": "foundry_service_airlock" },
+    "trigger": {
+      "type": "enter_room",
+      "room": "foundry_service_airlock"
+    },
     "actions": [
-      { "type": "give_item", "item_id": "pure_iron", "quantity": 4 },
-      { "type": "show_message", "message": "A maintenance reserve beside the airlock holds four clean iron billets. Recovered Pure Iron x4: enough for the Slag Catcher cabinet repair and a Thermite Core Mod. Keep these rare components for crafting." }
+      {
+        "type": "give_item",
+        "item_id": "pure_iron",
+        "quantity": 4
+      },
+      {
+        "type": "show_message",
+        "message": "A maintenance reserve beside the airlock holds four clean iron billets. Recovered Pure Iron x4: enough for the Slag Catcher cabinet repair and a Thermite Core Mod. Keep these rare components for crafting."
+      }
     ]
   },
   {
     "id": "w5_salvage_composite_plate",
     "description": "Recover orbital hull-repair laminate.",
-    "trigger": { "type": "enter_room", "room": "orbital_executive_dock" },
+    "trigger": {
+      "type": "enter_room",
+      "room": "orbital_executive_dock"
+    },
     "actions": [
-      { "type": "give_item", "item_id": "composite_plate", "quantity": 4 },
-      { "type": "show_message", "message": "An abandoned hull-repair case contains four intact laminate panels. Recovered Composite Plate x4: enough for the Orbital Defense cabinet repair and an Orbital Deflector Mod. Keep these rare components for crafting." }
+      {
+        "type": "give_item",
+        "item_id": "composite_plate",
+        "quantity": 4
+      },
+      {
+        "type": "show_message",
+        "message": "An abandoned hull-repair case contains four intact laminate panels. Recovered Composite Plate x4: enough for the Orbital Defense cabinet repair and an Orbital Deflector Mod. Keep these rare components for crafting."
+      }
     ]
   },
   {
     "id": "w6_salvage_astral_thread",
     "description": "Gather resonant strands from the Echo Mines.",
-    "trigger": { "type": "enter_room", "room": "source_echo_mines" },
+    "trigger": {
+      "type": "enter_room",
+      "room": "source_echo_mines"
+    },
     "actions": [
-      { "type": "give_item", "item_id": "astral_thread", "quantity": 4 },
-      { "type": "show_message", "message": "Four strands of solid light hum between the mine supports. Recovered Astral Thread x4: enough for the Harmonic Pulse cabinet repair and an Astral Weave Mod. Keep these rare components for crafting." }
+      {
+        "type": "give_item",
+        "item_id": "astral_thread",
+        "quantity": 4
+      },
+      {
+        "type": "show_message",
+        "message": "Four strands of solid light hum between the mine supports. Recovered Astral Thread x4: enough for the Harmonic Pulse cabinet repair and an Astral Weave Mod. Keep these rare components for crafting."
+      }
     ]
   },
   {
@@ -3003,27 +3033,72 @@
   {
     "id": "w1_mq05_console_locked_feedback",
     "repeatable": true,
-    "trigger": { "type": "player_action", "action": "use_nav_console" },
+    "trigger": {
+      "type": "player_action",
+      "action": "use_nav_console"
+    },
     "conditions": [
-      { "type": "quest_active", "quest_id": "w1_mq05" },
-      { "type": "milestone_not_set", "milestone": "ms_w1_chime_spliced" }
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq05"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_chime_spliced"
+      }
     ],
-    "actions": [{ "type": "show_message", "message": "The console is locked. Talk to Zeke and splice the Chime first." }]
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The console is locked. Talk to Zeke and splice the Chime first."
+      }
+    ]
   },
   {
     "id": "w1_mq05_splice_chime",
-    "trigger": { "type": "player_action", "action": "w1_mq05_splice_chime" },
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_mq05_splice_chime"
+    },
     "conditions": [
-      { "type": "quest_active", "quest_id": "w1_mq05" },
-      { "type": "quest_stage", "quest_id": "w1_mq05", "stage_id": "launch_pod" },
-      { "type": "milestone_not_set", "milestone": "ms_w1_chime_spliced" },
-      { "type": "item", "item_id": "ghost_signal_cell", "quantity": 1 }
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq05"
+      },
+      {
+        "type": "quest_stage",
+        "quest_id": "w1_mq05",
+        "stage_id": "launch_pod"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_chime_spliced"
+      },
+      {
+        "type": "item",
+        "item_id": "ghost_signal_cell",
+        "quantity": 1
+      }
     ],
     "actions": [
-      { "type": "take_required_item", "item_id": "ghost_signal_cell", "quantity": 1 },
-      { "type": "set_quest_task_done", "quest_id": "w1_mq05", "task_id": "splice_chime" },
-      { "type": "set_milestone", "milestone": "ms_w1_chime_spliced" },
-      { "type": "add_party_member", "item_id": "zeke" }
+      {
+        "type": "take_required_item",
+        "item_id": "ghost_signal_cell",
+        "quantity": 1
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq05",
+        "task_id": "splice_chime"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_chime_spliced"
+      },
+      {
+        "type": "add_party_member",
+        "item_id": "zeke"
+      }
     ]
   },
   {
@@ -3034,7 +3109,10 @@
       "action": "use_nav_console"
     },
     "conditions": [
-      { "type": "milestone_set", "milestone": "ms_w1_chime_spliced" },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w1_chime_spliced"
+      },
       {
         "type": "quest_active",
         "quest_id": "w1_mq05"
@@ -14447,6 +14525,690 @@
       {
         "type": "show_message",
         "message": "Recovered Ancient Relic Mod: Graviton Inertia Matrix."
+      }
+    ]
+  },
+  {
+    "id": "warp_spire_vent_output_scale_03_to_entry",
+    "description": "Return to spire_vent_output via chute.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_spire_vent_output_scale_03_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the chute, emerging back at Vent Output."
+      },
+      {
+        "type": "warp",
+        "room_id": "spire_vent_output"
+      }
+    ]
+  },
+  {
+    "id": "warp_spire_the_static_scale_03_to_entry",
+    "description": "Return to spire_the_static via fire escape.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_spire_the_static_scale_03_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the fire escape, emerging back at The Static."
+      },
+      {
+        "type": "warp",
+        "room_id": "spire_the_static"
+      }
+    ]
+  },
+  {
+    "id": "warp_spire_night_market_scale_03_to_entry",
+    "description": "Return to spire_night_market via slide.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_spire_night_market_scale_03_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the slide, emerging back at Night Market."
+      },
+      {
+        "type": "warp",
+        "room_id": "spire_night_market"
+      }
+    ]
+  },
+  {
+    "id": "warp_spire_sewers_scale_03_to_entry",
+    "description": "Return to spire_sewers_landing via ladder.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_spire_sewers_scale_03_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the ladder, emerging back at Sewer Landing Pad."
+      },
+      {
+        "type": "warp",
+        "room_id": "spire_sewers_landing"
+      }
+    ]
+  },
+  {
+    "id": "warp_spire_transit_plaza_scale_03_to_entry",
+    "description": "Return to spire_transit_plaza via turnstile.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_spire_transit_plaza_scale_03_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the turnstile, emerging back at Transit Plaza."
+      },
+      {
+        "type": "warp",
+        "room_id": "spire_transit_plaza"
+      }
+    ]
+  },
+  {
+    "id": "warp_spire_laundry_scale_03_to_entry",
+    "description": "Return to spire_laundry_service via chute.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_spire_laundry_scale_03_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the chute, emerging back at Laundry Service."
+      },
+      {
+        "type": "warp",
+        "room_id": "spire_laundry_service"
+      }
+    ]
+  },
+  {
+    "id": "warp_spire_skypark_scale_03_to_entry",
+    "description": "Return to spire_skypark_dome via spiral.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_spire_skypark_scale_03_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the spiral, emerging back at Skypark Dome."
+      },
+      {
+        "type": "warp",
+        "room_id": "spire_skypark_dome"
+      }
+    ]
+  },
+  {
+    "id": "warp_spire_exec_lounge_scale_05_to_entry",
+    "description": "Return to spire_exec_lounge_bar via elevator.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_spire_exec_lounge_scale_05_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the elevator, emerging back at Exec Lounge."
+      },
+      {
+        "type": "warp",
+        "room_id": "spire_exec_lounge_bar"
+      }
+    ]
+  },
+  {
+    "id": "warp_spire_archive_scale_03_to_entry",
+    "description": "Return to spire_archive_vault via lift.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_spire_archive_scale_03_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the lift, emerging back at Archive Vault."
+      },
+      {
+        "type": "warp",
+        "room_id": "spire_archive_vault"
+      }
+    ]
+  },
+  {
+    "id": "warp_spire_landing_pad_scale_04_to_entry",
+    "description": "Return to spire_landing_pad_roof via ladder.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_spire_landing_pad_scale_04_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the ladder, emerging back at Landing Pad Roof."
+      },
+      {
+        "type": "warp",
+        "room_id": "spire_landing_pad_roof"
+      }
+    ]
+  },
+  {
+    "id": "warp_foundry_obsidian_shelf_scale_final_to_entry",
+    "description": "Return to foundry_slag_landing via slide.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_foundry_obsidian_shelf_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the slide, emerging back at Obsidian Shelf."
+      },
+      {
+        "type": "warp",
+        "room_id": "foundry_slag_landing"
+      }
+    ]
+  },
+  {
+    "id": "warp_foundry_slag_river_scale_final_to_entry",
+    "description": "Return to foundry_slag_river via catwalk.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_foundry_slag_river_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the catwalk, emerging back at Slag River."
+      },
+      {
+        "type": "warp",
+        "room_id": "foundry_slag_river"
+      }
+    ]
+  },
+  {
+    "id": "warp_foundry_cooling_springs_scale_final_to_entry",
+    "description": "Return to foundry_cooling_springs via drain.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_foundry_cooling_springs_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the drain, emerging back at Cooling Springs."
+      },
+      {
+        "type": "warp",
+        "room_id": "foundry_cooling_springs"
+      }
+    ]
+  },
+  {
+    "id": "warp_foundry_waste_intake_scale_final_to_entry",
+    "description": "Return to foundry_waste_intake via ladder.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_foundry_waste_intake_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the ladder, emerging back at Waste Intake."
+      },
+      {
+        "type": "warp",
+        "room_id": "foundry_waste_intake"
+      }
+    ]
+  },
+  {
+    "id": "warp_foundry_service_airlock_scale_final_to_entry",
+    "description": "Return to foundry_service_airlock via hatch.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_foundry_service_airlock_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the hatch, emerging back at Service Airlock."
+      },
+      {
+        "type": "warp",
+        "room_id": "foundry_service_airlock"
+      }
+    ]
+  },
+  {
+    "id": "warp_foundry_conveyor_belt_scale_final_to_entry",
+    "description": "Return to foundry_conveyor_belt via slide.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_foundry_conveyor_belt_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the slide, emerging back at Conveyor Belt."
+      },
+      {
+        "type": "warp",
+        "room_id": "foundry_conveyor_belt"
+      }
+    ]
+  },
+  {
+    "id": "warp_foundry_conditioning_scale_final_to_entry",
+    "description": "Return to foundry_conditioning_chamber via valve.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_foundry_conditioning_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the valve, emerging back at Conditioning Chamber."
+      },
+      {
+        "type": "warp",
+        "room_id": "foundry_conditioning_chamber"
+      }
+    ]
+  },
+  {
+    "id": "warp_foundry_forge_scale_final_to_entry",
+    "description": "Return to foundry_forge_anvil via flue.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_foundry_forge_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the flue, emerging back at The Forge."
+      },
+      {
+        "type": "warp",
+        "room_id": "foundry_forge_anvil"
+      }
+    ]
+  },
+  {
+    "id": "warp_foundry_power_core_scale_final_to_entry",
+    "description": "Return to foundry_power_core via lift.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_foundry_power_core_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the lift, emerging back at Power Core."
+      },
+      {
+        "type": "warp",
+        "room_id": "foundry_power_core"
+      }
+    ]
+  },
+  {
+    "id": "warp_foundry_titan_dock_scale_final_to_entry",
+    "description": "Return to foundry_titan_dock via scaffolding.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_foundry_titan_dock_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the scaffolding, emerging back at Titan Dock."
+      },
+      {
+        "type": "warp",
+        "room_id": "foundry_titan_dock"
+      }
+    ]
+  },
+  {
+    "id": "warp_orbital_executive_dock_scale_final_to_entry",
+    "description": "Return to orbital_executive_dock via chute.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_orbital_executive_dock_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the chute, emerging back at Executive Dock."
+      },
+      {
+        "type": "warp",
+        "room_id": "orbital_executive_dock"
+      }
+    ]
+  },
+  {
+    "id": "warp_orbital_grand_concourse_scale_final_to_entry",
+    "description": "Return to orbital_grand_concourse via express escalator.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_orbital_grand_concourse_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the express escalator, emerging back at Grand Concourse."
+      },
+      {
+        "type": "warp",
+        "room_id": "orbital_grand_concourse"
+      }
+    ]
+  },
+  {
+    "id": "warp_orbital_solarium_scale_final_to_entry",
+    "description": "Return to orbital_solarium via stairwell.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_orbital_solarium_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the stairwell, emerging back at Solarium."
+      },
+      {
+        "type": "warp",
+        "room_id": "orbital_solarium"
+      }
+    ]
+  },
+  {
+    "id": "warp_orbital_security_hub_scale_final_to_entry",
+    "description": "Return to orbital_security_hub via hatch.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_orbital_security_hub_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the hatch, emerging back at Security Hub."
+      },
+      {
+        "type": "warp",
+        "room_id": "orbital_security_hub"
+      }
+    ]
+  },
+  {
+    "id": "warp_orbital_service_shaft_scale_final_to_entry",
+    "description": "Return to orbital_service_shaft via guide.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_orbital_service_shaft_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the guide, emerging back at Service Shaft."
+      },
+      {
+        "type": "warp",
+        "room_id": "orbital_service_shaft"
+      }
+    ]
+  },
+  {
+    "id": "warp_deep_server_farm_scale_04_to_entry",
+    "description": "Return to orbital_server_farm via slide.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_deep_server_farm_scale_04_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the slide, emerging back at Server Farm."
+      },
+      {
+        "type": "warp",
+        "room_id": "orbital_server_farm"
+      }
+    ]
+  },
+  {
+    "id": "warp_deep_anchor_chamber_scale_08_to_entry",
+    "description": "Return to deep_anchor_chamber via anchor cable.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_deep_anchor_chamber_scale_08_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the anchor cable, emerging back at Anchor Chamber."
+      },
+      {
+        "type": "warp",
+        "room_id": "deep_anchor_chamber"
+      }
+    ]
+  },
+  {
+    "id": "warp_deep_throne_room_scale_07_to_entry",
+    "description": "Return to deep_throne_room via lift.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_deep_throne_room_scale_07_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the lift, emerging back at Throne Room."
+      },
+      {
+        "type": "warp",
+        "room_id": "deep_throne_room"
+      }
+    ]
+  },
+  {
+    "id": "warp_deep_tear_scale_06_to_entry",
+    "description": "Return to deep_tear via reality slipstream.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_deep_tear_scale_06_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the reality slipstream, emerging back at The Tear."
+      },
+      {
+        "type": "warp",
+        "room_id": "deep_tear"
+      }
+    ]
+  },
+  {
+    "id": "warp_source_campfire_node_scale_final_to_entry",
+    "description": "Return to source_campfire via trail.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_source_campfire_node_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the trail, emerging back at The Campfire."
+      },
+      {
+        "type": "warp",
+        "room_id": "source_campfire"
+      }
+    ]
+  },
+  {
+    "id": "warp_source_zeke_nightmare_node_scale_03_to_entry",
+    "description": "Return to source_zeke_nightmare via door.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_source_zeke_nightmare_node_scale_03_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the door, emerging back at Infinite Cubicle."
+      },
+      {
+        "type": "warp",
+        "room_id": "source_zeke_nightmare"
+      }
+    ]
+  },
+  {
+    "id": "warp_source_gh0st_nightmare_node_scale_03_to_entry",
+    "description": "Return to source_gh0st_nightmare via clean signal.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_source_gh0st_nightmare_node_scale_03_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the clean signal, emerging back at Endless War."
+      },
+      {
+        "type": "warp",
+        "room_id": "source_gh0st_nightmare"
+      }
+    ]
+  },
+  {
+    "id": "warp_source_orion_nightmare_node_scale_03_to_entry",
+    "description": "Return to source_orion_nightmare via harmonic wave.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_source_orion_nightmare_node_scale_03_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the harmonic wave, emerging back at Silent Shore."
+      },
+      {
+        "type": "warp",
+        "room_id": "source_orion_nightmare"
+      }
+    ]
+  },
+  {
+    "id": "warp_source_echo_mines_node_scale_final_to_entry",
+    "description": "Return to source_echo_mines via echo.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_source_echo_mines_node_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the echo, emerging back at Echo of the Mines."
+      },
+      {
+        "type": "warp",
+        "room_id": "source_echo_mines"
+      }
+    ]
+  },
+  {
+    "id": "warp_source_memory_bridge_node_scale_final_to_entry",
+    "description": "Return to source_memory_bridge via light beam.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_source_memory_bridge_node_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the light beam, emerging back at Memory Bridge."
+      },
+      {
+        "type": "warp",
+        "room_id": "source_memory_bridge"
+      }
+    ]
+  },
+  {
+    "id": "warp_source_memory_stair_node_scale_final_to_entry",
+    "description": "Return to source_memory_stair via slide.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_source_memory_stair_node_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the slide, emerging back at Memory Stair."
+      },
+      {
+        "type": "warp",
+        "room_id": "source_memory_stair"
+      }
+    ]
+  },
+  {
+    "id": "warp_source_spire_thought_node_scale_04_to_entry",
+    "description": "Return to source_spire_thought via circuit.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_source_spire_thought_node_scale_04_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the circuit, emerging back at Spire of Thought."
+      },
+      {
+        "type": "warp",
+        "room_id": "source_spire_thought"
+      }
+    ]
+  },
+  {
+    "id": "warp_source_center_node_scale_final_to_entry",
+    "description": "Return to source_center via echo.",
+    "trigger": {
+      "type": "player_action",
+      "action": "warp_source_center_node_scale_final_to_entry"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "You take the echo, emerging back at The Center."
+      },
+      {
+        "type": "warp",
+        "room_id": "source_center"
       }
     ]
   }

@@ -1833,5 +1833,103 @@
     "id": "mechanic_mira_default_talk",
     "speaker": "Mira",
     "text": "Watch your fingers near the loader tracks. Dominion does not issue replacement knuckles."
+  },
+  {
+    "id": "kaelen_intro",
+    "speaker": "Scout Kaelen",
+    "text": "Step into the firelight where I can see your hands. You don't walk like one of those hollow patrol frames, and you don't smell like a shard-hound.",
+    "condition": "milestone_not_set:ms_kaelen_talked",
+    "options": [
+      {
+        "id": "kaelen_opt_who",
+        "text": "I'm Nova. We crashed recently in an escape pod.",
+        "next": "kaelen_who_reply"
+      },
+      {
+        "id": "kaelen_opt_advice",
+        "text": "Any advice for surviving this coast?",
+        "next": "kaelen_advice_reply"
+      },
+      {
+        "id": "kaelen_opt_barrier",
+        "text": "Do you know what's blocking the sky?",
+        "next": "kaelen_barrier_reply"
+      }
+    ]
+  },
+  {
+    "id": "kaelen_who_reply",
+    "speaker": "Scout Kaelen",
+    "text": "Another crash? Then you felt that violet ceiling too. Six months back my reconnaissance cutter hit that sky barrier at Mach 4. The hull sheared in half. I've been surviving on tideglass snails and boiled sedge roots ever since.",
+    "next": "kaelen_supplies"
+  },
+  {
+    "id": "kaelen_advice_reply",
+    "speaker": "Scout Kaelen",
+    "text": "Stay clear of the razor-vines unless you have a thermal blade or a cauterizing torch. Cold steel just pops their spore pods, and the neurotoxin will melt your lungs. And if you hear low hums in the mist—run. The Beast patrols the high ridge, and it hunts by acoustics.",
+    "next": "kaelen_supplies"
+  },
+  {
+    "id": "kaelen_barrier_reply",
+    "speaker": "Scout Kaelen",
+    "text": "They call it the Curfew Shield. Ancient planetary defense net. It doesn't shoot you down—it hardens the air into solid harmonic glass if you exceed orbital threshold. Whatever built that stone temple inland is the only key out.",
+    "next": "kaelen_supplies"
+  },
+  {
+    "id": "kaelen_supplies",
+    "speaker": "Scout Kaelen",
+    "text": "Take this ration pack and antidote flask. You'll need every scrap of padding if you're pushing into the canopy.",
+    "trigger": "give_item:antidote_flask,give_item:ration_pack,set_milestone:ms_kaelen_talked"
+  },
+  {
+    "id": "kaelen_repeat",
+    "speaker": "Scout Kaelen",
+    "text": "Keep your boots dry and your blade sharp, Nova. The tide turns fast on this coast.",
+    "condition": "milestone:ms_kaelen_talked"
+  },
+  {
+    "id": "echo_intro",
+    "speaker": "Caretaker Echo",
+    "text": "[Chime chime]... Carrier frequency detected. Resonance signature: Uncalibrated Visitor. Sanctuary archive systems operating at thirty-eight percent capacity.",
+    "options": [
+      {
+        "id": "echo_opt_purpose",
+        "text": "What is Sanctuary?",
+        "next": "echo_purpose_reply"
+      },
+      {
+        "id": "echo_opt_stasis",
+        "text": "Who is asleep in the Stasis Chamber?",
+        "next": "echo_stasis_reply"
+      },
+      {
+        "id": "echo_opt_curfew",
+        "text": "How do we breach the Curfew Shield?",
+        "next": "echo_curfew_reply"
+      }
+    ]
+  },
+  {
+    "id": "echo_purpose_reply",
+    "speaker": "Caretaker Echo",
+    "text": "Sanctuary is a Class-4 Harmonic Vault. When the Great Severance contaminated outer frequencies, this facility was sealed to preserve the Core Navigator lineages until the stars stabilized.",
+    "next": "echo_conclude"
+  },
+  {
+    "id": "echo_stasis_reply",
+    "speaker": "Caretaker Echo",
+    "text": "Subject: Orion. Navigator Caste, First Division. Orion was synchronized to the orbital cradle to await a valid Harmonic Chime. Forcing the pod without proper frequency calibration will result in neural shear.",
+    "next": "echo_conclude"
+  },
+  {
+    "id": "echo_curfew_reply",
+    "speaker": "Caretaker Echo",
+    "text": "The Sky Barrier requires a three-point harmonic bypass. The Source Gate emitters must be grounded, and the Astra launch cradle charged with pure resonance.",
+    "next": "echo_conclude"
+  },
+  {
+    "id": "echo_conclude",
+    "speaker": "Caretaker Echo",
+    "text": "Archive buffers stand ready. Continue harmonic alignment, traveler."
   }
 ]

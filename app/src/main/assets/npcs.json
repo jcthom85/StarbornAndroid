@@ -412,5 +412,44 @@
         "dialogue_id": "mechanic_mira_default_talk"
       }
     ]
+  },
+  {
+    "id": "scout_kaelen",
+    "name": "Scout Kaelen",
+    "aliases": [
+      "kaelen",
+      "scout"
+    ],
+    "role": "Stranded Dominion Scout",
+    "description": "A resourceful survivor of a crashed Dominion survey craft, keeping watch over Tideglass Beach and the razor-vine canopy.",
+    "portrait": "images/npcs/vale.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "kaelen_intro"
+      }
+    ]
+  },
+  {
+    "id": "caretaker_drone",
+    "name": "Caretaker Echo",
+    "aliases": [
+      "echo",
+      "archivist",
+      "caretaker"
+    ],
+    "role": "Aethel Archive Unit",
+    "description": "An ancient hovering diagnostic drone whose cymatic chassis hums softly with harmonic data fragments.",
+    "portrait": "images/npcs/maintenance_bot.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Query Archives",
+        "type": "talk",
+        "dialogue_id": "echo_intro"
+      }
+    ]
   }
 ]

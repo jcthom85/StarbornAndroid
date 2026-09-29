@@ -7,8 +7,8 @@
     "entry_room": "pit_L1_landing",
     "icon_image": "images/nodes/pit_hub1_v3.webp",
     "pos_hint": {
-      "center_x": 0.1,
-      "center_y": 0.59
+      "center_x": 0.35,
+      "center_y": 0.55
     },
     "size": [
       215,
@@ -39,8 +39,8 @@
     "entry_room": "workshop_yard",
     "icon_image": "images/nodes/workshop_hub1_v3.webp",
     "pos_hint": {
-      "center_x": 0.5,
-      "center_y": 0.72
+      "center_x": 0.43,
+      "center_y": 0.79
     },
     "size": [
       220,
@@ -69,8 +69,8 @@
     "entry_room": "medbay_hall",
     "icon_image": "images/nodes/medbay_hub1_v3.webp",
     "pos_hint": {
-      "center_x": 0.46,
-      "center_y": 0.2
+      "center_x": 0.23,
+      "center_y": 0.35
     },
     "size": [
       190,
@@ -98,8 +98,8 @@
     "entry_room": "trade_entrance",
     "icon_image": "images/nodes/trade_row_hub1_v3.webp",
     "pos_hint": {
-      "center_x": 0.82,
-      "center_y": 0.54
+      "center_x": 0.73,
+      "center_y": 0.69
     },
     "size": [
       230,
@@ -129,8 +129,8 @@
     "entry_room": "checkpoint_queue",
     "icon_image": "images/nodes/checkpoint_hub1_v3.webp",
     "pos_hint": {
-      "center_x": 0.88,
-      "center_y": 0.27
+      "center_x": 0.74,
+      "center_y": 0.41
     },
     "size": [
       205,
@@ -164,8 +164,8 @@
     "entry_room": "admin_lobby",
     "icon_image": "images/nodes/admin.webp",
     "pos_hint": {
-      "center_x": 0.2,
-      "center_y": 0.5
+      "center_x": 0.32,
+      "center_y": 0.31
     },
     "size": [
       250,
@@ -194,8 +194,8 @@
     "entry_room": "server_airlock",
     "icon_image": "images/nodes/server.webp",
     "pos_hint": {
-      "center_x": 0.43,
-      "center_y": 0.69
+      "center_x": 0.38,
+      "center_y": 0.46
     },
     "size": [
       200,
@@ -223,8 +223,8 @@
     "entry_room": "mine_landing",
     "icon_image": "images/nodes/mine.webp",
     "pos_hint": {
-      "center_x": 0.18,
-      "center_y": 0.3
+      "center_x": 0.39,
+      "center_y": 0.65
     },
     "size": [
       300,
@@ -257,8 +257,8 @@
     "entry_room": "echo_gap",
     "icon_image": "images/nodes/echo.webp",
     "pos_hint": {
-      "center_x": 0.8,
-      "center_y": 0.5
+      "center_x": 0.65,
+      "center_y": 0.51
     },
     "size": [
       250,
@@ -285,8 +285,8 @@
     "entry_room": "launch_access",
     "icon_image": "images/nodes/launch.webp",
     "pos_hint": {
-      "center_x": 0.62,
-      "center_y": 0.2
+      "center_x": 0.73,
+      "center_y": 0.3
     },
     "size": [
       250,
@@ -315,8 +315,8 @@
     "entry_room": "sector9_crash_site",
     "icon_image": "images/nodes/world_2/sector9_landing.webp",
     "pos_hint": {
-      "center_x": 0.15,
-      "center_y": 0.7
+      "center_x": 0.32,
+      "center_y": 0.6
     },
     "size": [
       220,
@@ -344,8 +344,8 @@
     "entry_room": "sector9_canopy",
     "icon_image": "images/nodes/world_2/razor_vine_path.webp",
     "pos_hint": {
-      "center_x": 0.38,
-      "center_y": 0.5
+      "center_x": 0.3,
+      "center_y": 0.36
     },
     "size": [
       200,
@@ -377,8 +377,8 @@
     "entry_room": "sector9_stream_pools",
     "icon_image": "images/nodes/world_2/tideglass_beach.webp",
     "pos_hint": {
-      "center_x": 0.4,
-      "center_y": 0.85
+      "center_x": 0.43,
+      "center_y": 0.72
     },
     "size": [
       200,
@@ -415,8 +415,8 @@
     "entry_room": "sector9_canopy_ridge",
     "icon_image": "images/nodes/world_2/canopy_ridge.webp",
     "pos_hint": {
-      "center_x": 0.68,
-      "center_y": 0.55
+      "center_x": 0.73,
+      "center_y": 0.48
     },
     "size": [
       220,
@@ -445,8 +445,8 @@
     "entry_room": "sector9_temple_gate",
     "icon_image": "images/nodes/world_2/temple_gate.webp",
     "pos_hint": {
-      "center_x": 0.85,
-      "center_y": 0.35
+      "center_x": 0.68,
+      "center_y": 0.28
     },
     "size": [
       220,
@@ -473,8 +473,8 @@
     "entry_room": "sector9_hall_of_echoes",
     "icon_image": "images/nodes/world_2/hall_of_echoes.webp",
     "pos_hint": {
-      "center_x": 0.15,
-      "center_y": 0.5
+      "center_x": 0.43,
+      "center_y": 0.29
     },
     "size": [
       220,
@@ -512,8 +512,8 @@
     "entry_room": "sector9_stasis_chamber",
     "icon_image": "images/nodes/world_2/stasis_chamber.webp",
     "pos_hint": {
-      "center_x": 0.45,
-      "center_y": 0.35
+      "center_x": 0.65,
+      "center_y": 0.38
     },
     "size": [
       200,
@@ -541,8 +541,8 @@
     "entry_room": "sector9_source_gate",
     "icon_image": "images/nodes/world_2/source_gate.webp",
     "pos_hint": {
-      "center_x": 0.5,
-      "center_y": 0.65
+      "center_x": 0.35,
+      "center_y": 0.49
     },
     "size": [
       200,
@@ -570,8 +570,8 @@
     "entry_room": "sector9_hangar_bay",
     "icon_image": "images/nodes/world_2/hangar_bay.webp",
     "pos_hint": {
-      "center_x": 0.8,
-      "center_y": 0.5
+      "center_x": 0.41,
+      "center_y": 0.79
     },
     "size": [
       240,
@@ -598,8 +598,8 @@
     "entry_room": "sector9_the_sky",
     "icon_image": "images/nodes/world_2/the_sky.webp",
     "pos_hint": {
-      "center_x": 0.9,
-      "center_y": 0.2
+      "center_x": 0.69,
+      "center_y": 0.65
     },
     "size": [
       200,
@@ -626,8 +626,8 @@
     "entry_room": "spire_vent_output",
     "icon_image": "images/nodes/world_3/spire_vent_output.webp",
     "pos_hint": {
-      "center_x": 0.15,
-      "center_y": 0.5
+      "center_x": 0.22,
+      "center_y": 0.47
     },
     "size": [
       200,
@@ -654,8 +654,8 @@
     "entry_room": "spire_the_static",
     "icon_image": "images/nodes/world_3/spire_the_static.webp",
     "pos_hint": {
-      "center_x": 0.4,
-      "center_y": 0.5
+      "center_x": 0.64,
+      "center_y": 0.68
     },
     "size": [
       220,
@@ -684,8 +684,8 @@
     "entry_room": "spire_night_market",
     "icon_image": "images/nodes/world_3/spire_night_market.webp",
     "pos_hint": {
-      "center_x": 0.65,
-      "center_y": 0.3
+      "center_x": 0.35,
+      "center_y": 0.76
     },
     "size": [
       200,
@@ -713,8 +713,8 @@
     "entry_room": "spire_sewers_landing",
     "icon_image": "images/nodes/world_3/spire_sewers.webp",
     "pos_hint": {
-      "center_x": 0.65,
-      "center_y": 0.7
+      "center_x": 0.51,
+      "center_y": 0.36
     },
     "size": [
       220,
@@ -742,8 +742,8 @@
     "entry_room": "spire_transit_plaza",
     "icon_image": "images/nodes/world_3/spire_transit_plaza.webp",
     "pos_hint": {
-      "center_x": 0.9,
-      "center_y": 0.5
+      "center_x": 0.72,
+      "center_y": 0.51
     },
     "size": [
       240,
@@ -771,8 +771,8 @@
     "entry_room": "spire_laundry_service",
     "icon_image": "images/nodes/world_3/spire_laundry.webp",
     "pos_hint": {
-      "center_x": 0.12,
-      "center_y": 0.62
+      "center_x": 0.26,
+      "center_y": 0.56
     },
     "size": [
       210,
@@ -800,8 +800,8 @@
     "entry_room": "spire_skypark_dome",
     "icon_image": "images/nodes/world_3/spire_skypark.webp",
     "pos_hint": {
-      "center_x": 0.34,
-      "center_y": 0.3
+      "center_x": 0.39,
+      "center_y": 0.38
     },
     "size": [
       210,
@@ -828,8 +828,8 @@
     "entry_room": "spire_exec_lounge_bar",
     "icon_image": "images/nodes/world_3/spire_exec_lounge.webp",
     "pos_hint": {
-      "center_x": 0.34,
-      "center_y": 0.76
+      "center_x": 0.72,
+      "center_y": 0.3
     },
     "size": [
       210,
@@ -856,8 +856,8 @@
     "entry_room": "spire_archive_vault",
     "icon_image": "images/nodes/world_3/spire_archive.webp",
     "pos_hint": {
-      "center_x": 0.64,
-      "center_y": 0.5
+      "center_x": 0.66,
+      "center_y": 0.47
     },
     "size": [
       230,
@@ -884,8 +884,8 @@
     "entry_room": "spire_landing_pad_roof",
     "icon_image": "images/nodes/world_3/spire_landing_pad.webp",
     "pos_hint": {
-      "center_x": 0.9,
-      "center_y": 0.5
+      "center_x": 0.33,
+      "center_y": 0.76
     },
     "size": [
       240,
@@ -911,8 +911,8 @@
     "entry_room": "foundry_slag_landing",
     "icon_image": "images/nodes/world_4/foundry_obsidian_shelf.webp",
     "pos_hint": {
-      "center_x": 0.12,
-      "center_y": 0.55
+      "center_x": 0.69,
+      "center_y": 0.56
     },
     "size": [
       220,
@@ -940,8 +940,8 @@
     "entry_room": "foundry_slag_river",
     "icon_image": "images/nodes/world_4/foundry_slag_river.webp",
     "pos_hint": {
-      "center_x": 0.36,
-      "center_y": 0.34
+      "center_x": 0.72,
+      "center_y": 0.77
     },
     "size": [
       220,
@@ -969,8 +969,8 @@
     "entry_room": "foundry_cooling_springs",
     "icon_image": "images/nodes/world_4/foundry_cooling_springs.webp",
     "pos_hint": {
-      "center_x": 0.36,
-      "center_y": 0.74
+      "center_x": 0.34,
+      "center_y": 0.46
     },
     "size": [
       220,
@@ -998,8 +998,8 @@
     "entry_room": "foundry_waste_intake",
     "icon_image": "images/nodes/world_4/foundry_waste_intake.webp",
     "pos_hint": {
-      "center_x": 0.64,
-      "center_y": 0.5
+      "center_x": 0.33,
+      "center_y": 0.68
     },
     "size": [
       230,
@@ -1027,8 +1027,8 @@
     "entry_room": "foundry_service_airlock",
     "icon_image": "images/nodes/world_4/foundry_service_airlock.webp",
     "pos_hint": {
-      "center_x": 0.9,
-      "center_y": 0.5
+      "center_x": 0.6,
+      "center_y": 0.28
     },
     "size": [
       230,
@@ -1056,8 +1056,8 @@
     "entry_room": "foundry_conveyor_belt",
     "icon_image": "images/nodes/world_4/foundry_conveyor_belt.webp",
     "pos_hint": {
-      "center_x": 0.12,
-      "center_y": 0.52
+      "center_x": 0.36,
+      "center_y": 0.65
     },
     "size": [
       220,
@@ -1087,7 +1087,7 @@
     "icon_image": "images/nodes/world_4/foundry_conditioning.webp",
     "pos_hint": {
       "center_x": 0.36,
-      "center_y": 0.3
+      "center_y": 0.44
     },
     "size": [
       220,
@@ -1115,8 +1115,8 @@
     "entry_room": "foundry_forge_anvil",
     "icon_image": "images/nodes/world_4/foundry_forge.webp",
     "pos_hint": {
-      "center_x": 0.36,
-      "center_y": 0.74
+      "center_x": 0.41,
+      "center_y": 0.29
     },
     "size": [
       220,
@@ -1144,8 +1144,8 @@
     "entry_room": "foundry_power_core",
     "icon_image": "images/nodes/world_4/foundry_power_core.webp",
     "pos_hint": {
-      "center_x": 0.64,
-      "center_y": 0.5
+      "center_x": 0.73,
+      "center_y": 0.39
     },
     "size": [
       230,
@@ -1173,8 +1173,8 @@
     "entry_room": "foundry_titan_dock",
     "icon_image": "images/nodes/world_4/foundry_titan_dock.webp",
     "pos_hint": {
-      "center_x": 0.9,
-      "center_y": 0.5
+      "center_x": 0.62,
+      "center_y": 0.54
     },
     "size": [
       240,
@@ -1202,8 +1202,8 @@
     "entry_room": "orbital_executive_dock",
     "icon_image": "images/nodes/world_5/orbital_executive_dock.webp",
     "pos_hint": {
-      "center_x": 0.12,
-      "center_y": 0.5
+      "center_x": 0.37,
+      "center_y": 0.71
     },
     "size": [
       220,
@@ -1233,8 +1233,8 @@
     "entry_room": "orbital_grand_concourse",
     "icon_image": "images/nodes/world_5/orbital_grand_concourse.webp",
     "pos_hint": {
-      "center_x": 0.35,
-      "center_y": 0.28
+      "center_x": 0.31,
+      "center_y": 0.44
     },
     "size": [
       220,
@@ -1264,8 +1264,8 @@
     "entry_room": "orbital_solarium",
     "icon_image": "images/nodes/world_5/orbital_solarium.webp",
     "pos_hint": {
-      "center_x": 0.35,
-      "center_y": 0.72
+      "center_x": 0.43,
+      "center_y": 0.29
     },
     "size": [
       220,
@@ -1295,8 +1295,8 @@
     "entry_room": "orbital_security_hub",
     "icon_image": "images/nodes/world_5/orbital_security_hub.webp",
     "pos_hint": {
-      "center_x": 0.63,
-      "center_y": 0.5
+      "center_x": 0.78,
+      "center_y": 0.35
     },
     "size": [
       230,
@@ -1326,8 +1326,8 @@
     "entry_room": "orbital_service_shaft",
     "icon_image": "images/nodes/world_5/orbital_service_shaft.webp",
     "pos_hint": {
-      "center_x": 0.89,
-      "center_y": 0.5
+      "center_x": 0.65,
+      "center_y": 0.52
     },
     "size": [
       240,
@@ -1357,8 +1357,8 @@
     "entry_room": "orbital_server_farm",
     "icon_image": "images/nodes/world_5/deep_server_farm.webp",
     "pos_hint": {
-      "center_x": 0.14,
-      "center_y": 0.5
+      "center_x": 0.27,
+      "center_y": 0.48
     },
     "size": [
       230,
@@ -1390,8 +1390,8 @@
     "entry_room": "deep_anchor_chamber",
     "icon_image": "images/nodes/world_5/deep_anchor_chamber.webp",
     "pos_hint": {
-      "center_x": 0.39,
-      "center_y": 0.5
+      "center_x": 0.5,
+      "center_y": 0.61
     },
     "size": [
       230,
@@ -1421,8 +1421,8 @@
     "entry_room": "deep_throne_room",
     "icon_image": "images/nodes/world_5/deep_throne_room.webp",
     "pos_hint": {
-      "center_x": 0.65,
-      "center_y": 0.5
+      "center_x": 0.49,
+      "center_y": 0.3
     },
     "size": [
       230,
@@ -1451,8 +1451,8 @@
     "entry_room": "deep_tear",
     "icon_image": "images/nodes/world_5/deep_tear.webp",
     "pos_hint": {
-      "center_x": 0.9,
-      "center_y": 0.5
+      "center_x": 0.78,
+      "center_y": 0.42
     },
     "size": [
       250,
@@ -1480,8 +1480,8 @@
     "entry_room": "source_campfire",
     "icon_image": "images/nodes/world_6/source_campfire_node.webp",
     "pos_hint": {
-      "center_x": 0.5,
-      "center_y": 0.5
+      "center_x": 0.51,
+      "center_y": 0.37
     },
     "size": [
       250,
@@ -1508,8 +1508,8 @@
     "entry_room": "source_zeke_nightmare",
     "icon_image": "images/nodes/world_6/source_zeke_nightmare_node.webp",
     "pos_hint": {
-      "center_x": 0.2,
-      "center_y": 0.25
+      "center_x": 0.76,
+      "center_y": 0.49
     },
     "size": [
       220,
@@ -1536,8 +1536,8 @@
     "entry_room": "source_gh0st_nightmare",
     "icon_image": "images/nodes/world_6/source_gh0st_nightmare_node.webp",
     "pos_hint": {
-      "center_x": 0.5,
-      "center_y": 0.18
+      "center_x": 0.77,
+      "center_y": 0.28
     },
     "size": [
       220,
@@ -1564,8 +1564,8 @@
     "entry_room": "source_orion_nightmare",
     "icon_image": "images/nodes/world_6/source_orion_nightmare_node.webp",
     "pos_hint": {
-      "center_x": 0.8,
-      "center_y": 0.25
+      "center_x": 0.27,
+      "center_y": 0.49
     },
     "size": [
       220,
@@ -1592,8 +1592,8 @@
     "entry_room": "source_echo_mines",
     "icon_image": "images/nodes/world_6/source_echo_mines_node.webp",
     "pos_hint": {
-      "center_x": 0.3,
-      "center_y": 0.76
+      "center_x": 0.27,
+      "center_y": 0.27
     },
     "size": [
       230,
@@ -1623,8 +1623,8 @@
     "entry_room": "source_memory_bridge",
     "icon_image": "images/nodes/world_6/source_memory_bridge_node.webp",
     "pos_hint": {
-      "center_x": 0.7,
-      "center_y": 0.76
+      "center_x": 0.68,
+      "center_y": 0.77
     },
     "size": [
       240,
@@ -1653,8 +1653,8 @@
     "entry_room": "source_memory_stair",
     "icon_image": "images/nodes/world_6/source_memory_stair_node.webp",
     "pos_hint": {
-      "center_x": 0.15,
-      "center_y": 0.5
+      "center_x": 0.28,
+      "center_y": 0.56
     },
     "size": [
       240,
@@ -1682,8 +1682,8 @@
     "entry_room": "source_spire_thought",
     "icon_image": "images/nodes/world_6/source_spire_thought_node.webp",
     "pos_hint": {
-      "center_x": 0.4,
-      "center_y": 0.5
+      "center_x": 0.57,
+      "center_y": 0.77
     },
     "size": [
       240,
@@ -1711,8 +1711,8 @@
     "entry_room": "source_center",
     "icon_image": "images/nodes/world_6/source_center_node.webp",
     "pos_hint": {
-      "center_x": 0.68,
-      "center_y": 0.5
+      "center_x": 0.59,
+      "center_y": 0.41
     },
     "size": [
       260,
@@ -1738,8 +1738,8 @@
     "entry_room": "source_new_world",
     "icon_image": "images/nodes/world_6/source_new_world_node.webp",
     "pos_hint": {
-      "center_x": 0.92,
-      "center_y": 0.5
+      "center_x": 0.64,
+      "center_y": 0.28
     },
     "size": [
       250,
@@ -1765,7 +1765,7 @@
     "entry_room": "astra_cargo_bay",
     "pos_hint": {
       "center_x": 0.5,
-      "center_y": 0.45
+      "center_y": 0.47
     },
     "size": [
       210,

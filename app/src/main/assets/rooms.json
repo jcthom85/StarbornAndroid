@@ -3662,7 +3662,8 @@
       {
         "name": "astra",
         "type": "generic",
-        "condition_unmet_message": "The Astra's engines are silent. The resonance shield holds the ship trapped here."
+        "condition_unmet_message": "The Astra boarding ramp hums softly, welcoming the crew aboard.",
+        "action_event": "source_board_astra"
       }
     ]
   },
@@ -4161,8 +4162,10 @@
     "weather": "rain",
     "title": "Noodle Row",
     "background_image": "images/rooms/world_3/spire_noodle_row.webp",
-    "description": "Noodle Row steams under plastic awnings. The soup counter never stops moving, and every bowl comes with news if you know how to listen.",
-    "npcs": [],
+    "description": "Noodle Row steams under plastic awnings. The soup counter never stops moving, with Rourke dishing out hot bowls and news to anyone with coin. The rain drums steadily against the vinyl above.",
+    "npcs": [
+      "cook_vance"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
@@ -4176,8 +4179,8 @@
     "actions": [
       {
         "name": "soup counter",
-        "type": "generic",
-        "condition_unmet_message": "The soup counter smells like pepper oil, broth, and a city refusing to become quiet."
+        "type": "shop",
+        "shop_id": "noodle_row_stall"
       },
       {
         "name": "plastic awnings",
@@ -5365,8 +5368,10 @@
     "weather": "steam",
     "title": "Lava Tube Bypass",
     "background_image": "images/rooms/world_4/foundry_lava_tube_bypass.webp",
-    "description": "A service crawlspace cuts under the cooling springs. Mineral fans beat hot air into steam, and old worker tags hang from pipe valves like small prayers.",
-    "npcs": [],
+    "description": "A service crawlspace cuts under the cooling springs. Mineral fans beat hot air into steam, and old worker tags hang from pipe valves like small prayers. Mira tends a glowing welder bench beside the conduits.",
+    "npcs": [
+      "mechanic_mira"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
@@ -5382,6 +5387,11 @@
         "name": "pipe valves",
         "type": "generic",
         "condition_unmet_message": "The valves route coolant to exterior vents, interior presses, and one sealed line marked PHANTOM."
+      },
+      {
+        "name": "welder bench",
+        "type": "shop",
+        "shop_id": "foundry_welder_shop"
       }
     ]
   },
@@ -6437,7 +6447,7 @@
     "env": "void",
     "title": "Customs Lounge",
     "background_image": "images/rooms/world_5/orbital_customs_lounge.webp",
-    "description": "A silent lounge waits behind velvet queue ropes and biometric gates. Luggage floats in gentle circles where gravity has failed, each case tagged PRIORITY HUMAN CAPITAL.",
+    "description": "A silent lounge waits behind velvet queue ropes and biometric gates. Luggage floats in gentle circles where gravity has failed, each case tagged PRIORITY HUMAN CAPITAL. An automated commissary terminal hums on the wall beside executive galley recycler and lounge seating. A customs observation console rests in the waiting niche.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -6474,6 +6484,11 @@
         "type": "arcade_discovery",
         "hide_when_milestone": "ms_arcade_cabinet_05_repaired",
         "condition_unmet_message": "A decommissioned customs arcade terminal is mounted in the passenger waiting niche. A Zenith telemetry array still hums in its memory slot."
+      },
+      {
+        "name": "commissary terminal",
+        "type": "shop",
+        "shop_id": "orbital_dispensary"
       }
     ]
   },
@@ -8483,7 +8498,7 @@
     "weather": "fog",
     "title": "Stream Bank",
     "background_image": "images/rooms/world_2/landing_stream.webp",
-    "description": "A narrow bank where the swamp mud gives way to smooth pebbles. A glow-water current runs eastward, gurgling softly as it cuts through the roots.",
+    "description": "A clear stream of warm glow-water flows east toward the coast. Smooth pebbles line the banks under hanging ferns, where a half-submerged river silt cache is lodged among the roots.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -8507,6 +8522,17 @@
         "name": "smooth pebbles",
         "type": "generic",
         "condition_unmet_message": "Water-rounded quartz crystals and silt shards coat the riverbank, warm to the touch."
+      },
+      {
+        "name": "river silt cache",
+        "type": "container",
+        "state_key": "w2_landing_stream_cache_opened",
+        "items": [
+          "herbal_poultice",
+          "scrap_metal"
+        ],
+        "already_open_message": "The silt cache has been cleared of useful salvage.",
+        "popup_title": "River Silt Cache"
       }
     ]
   },
@@ -8633,7 +8659,7 @@
     "weather": "fog",
     "title": "Resonant Sedge",
     "background_image": "images/rooms/world_2/stream_wetlands.webp",
-    "description": "Thick marshes filled with glowing, wind-sung reeds. Their low, musical whisper seems to rise directly from the damp soil. An Aethel spore warning marks amber sacs along the path.",
+    "description": "Dense sedge grasses with hollow, fluted stalks rise from the swamp. A handwritten spore warning sign leans in the muck as wind-sung reeds whistle in harmonic chords near a submerged emergency locker.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -8657,6 +8683,17 @@
         "name": "wind-sung reeds",
         "type": "generic",
         "condition_unmet_message": "Hollow reed stalks whistle with harmonic frequencies as the coastal breeze passes through them."
+      },
+      {
+        "name": "submerged emergency locker",
+        "type": "container",
+        "state_key": "w2_wetlands_locker_opened",
+        "items": [
+          "antidote_flask",
+          "pure_iron"
+        ],
+        "already_open_message": "The emergency locker stands open, draining brackish water into the sedge.",
+        "popup_title": "Emergency Locker"
       }
     ]
   },
@@ -8923,8 +8960,10 @@
     "weather": "fog",
     "title": "Sandy Cove",
     "background_image": "images/rooms/world_2/beach_cove.webp",
-    "description": "A sheltered, sandy beach protected by tall stone walls. The warm sand is dry, making it a safe place to set up a campfire and rest.",
-    "npcs": [],
+    "description": "A sheltered, sandy beach protected by tall stone walls. The warm sand is dry, making it a safe place to set up a campfire and rest. Stranded scout Kaelen tends a low grill over the flames.",
+    "npcs": [
+      "scout_kaelen"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
@@ -9032,8 +9071,15 @@
     "actions": [
       {
         "name": "crates",
-        "type": "generic",
-        "condition_unmet_message": "The crates contain heavy scrap metal and industrial spare parts."
+        "type": "container",
+        "state_key": "w2_beach_crates_opened",
+        "items": [
+          "scrap_metal",
+          "composite_plate",
+          "hydraulic_fluid"
+        ],
+        "already_open_message": "The beached shipping crates have been salvaged.",
+        "popup_title": "Beached Crates"
       },
       {
         "name": "rusted hull",
@@ -9048,7 +9094,7 @@
     "weather": "cave_drip",
     "title": "Sea Cavern",
     "background_image": "images/rooms/world_2/beach_cave.webp",
-    "description": "A high-ceilinged cavern carved by the waves. Abandoned bedroll hooks mark a mineral shelter beneath the soot-blackened ceiling. Water drains through fissures in the stone, creating hissing blowholes that spray fine mist into the dark.",
+    "description": "A high-ceilinged cavern carved by the waves. Abandoned bedroll hooks mark a mineral shelter beneath the soot-blackened ceiling, where a tide-worn chest rests safe from the spray. Water drains through fissures in the stone, creating hissing blowholes that spray fine mist into the dark.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9067,6 +9113,18 @@
         "name": "mineral shelter",
         "type": "generic",
         "condition_unmet_message": "Old bedroll hooks and a soot-blackened ceiling mark a patrol shelter abandoned in a hurry."
+      },
+      {
+        "name": "tide-worn chest",
+        "type": "container",
+        "state_key": "w2_sea_cavern_chest_opened",
+        "items": [
+          "bioluminescent_lure",
+          "tideglass_delight",
+          "burn_salve"
+        ],
+        "already_open_message": "The tide-worn chest is empty save for a crust of dried sea salt.",
+        "popup_title": "Tide-Worn Chest"
       }
     ]
   },
@@ -9298,7 +9356,7 @@
     "weather": "resonance",
     "title": "Hound Nest",
     "background_image": "images/rooms/world_2/wilds_nest.webp",
-    "description": "A clearing surrounded by jagged stone slabs. Shard-hound remains lie beside scavenged bones, and growls echo from the surrounding shadows.",
+    "description": "A shallow den trampled into the briars. Shard-hound tracks crisscross the mud around scattered bones and a trampled supply pack dragged beneath the thorns.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -9319,6 +9377,18 @@
         "action_event": "w2_forage_meat_nest",
         "condition_unmet_message": "Already harvested.",
         "requires_milestone_not_set": "ms_w2_meat_nest_foraged"
+      },
+      {
+        "name": "trampled supply pack",
+        "type": "container",
+        "state_key": "w2_hound_nest_pack_opened",
+        "items": [
+          "beast_meat",
+          "wiring_bundle",
+          "energy_core"
+        ],
+        "already_open_message": "The torn fabric holds only shredded padding and animal hair.",
+        "popup_title": "Trampled Pack"
       }
     ],
     "description_variants": [
@@ -9511,7 +9581,7 @@
     "weather": "resonance",
     "title": "Beast Run",
     "background_image": "images/rooms/world_2/wilds_dense_brush.webp",
-    "description": "A wide trail of trampled vines and broken tree trunks skirts a violet toxic bloom. Giant claw marks are scarred into the bark of the crystalline ferns.",
+    "description": "A wide trail of trampled vines and broken tree trunks skirts a violet toxic bloom. Giant claw marks are scarred into the bark of the crystalline ferns near a lost surveyor pack caught in the thorns.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9529,6 +9599,18 @@
         "name": "toxic bloom",
         "type": "generic",
         "condition_unmet_message": "A violet bloom exhales corrosive spores. Holding your breath, you mark a safer return path."
+      },
+      {
+        "name": "lost surveyor pack",
+        "type": "container",
+        "state_key": "w2_surveyor_pack_opened",
+        "items": [
+          "antidote_flask",
+          "medkit_plus",
+          "ration_pack"
+        ],
+        "already_open_message": "The torn nylon pack has been looted.",
+        "popup_title": "Surveyor Pack"
       }
     ]
   },
@@ -9990,6 +10072,14 @@
         "type": "generic",
         "condition_unmet_message": "Weathered geometric tiles align toward the temple portal with uncanny precision."
       }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_mq02_complete"
+        ],
+        "description": "A wide flagstone courtyard surrounded by ancient architecture. The unsealed processional mural glows faintly in sympathy with the open Temple Gate to the east."
+      }
     ]
   },
   {
@@ -10150,13 +10240,7 @@
         "requires_milestones": [
           "ms_w2_mq02_complete"
         ],
-        "description": "The Temple Gate stands open, its cymatic patterns still glowing around the Chime slot. The resonator hums with a frequency that feels less like machinery than memory."
-      },
-      {
-        "requires_milestones": [
-          "ms_w2_mq02_complete"
-        ],
-        "description": "The Temple Gate stands open, its cymatic patterns humming with harmonic resonance around the unsealed chime lock."
+        "description": "The Temple Gate stands open, its cymatic patterns still glowing around the unsealed stone lock. The resonator hums with a frequency that feels less like machinery than memory."
       }
     ]
   },
@@ -10185,6 +10269,14 @@
         "name": "welcome console",
         "type": "generic",
         "condition_unmet_message": "Aethel text calls this place a shore: a safe edge where minds of Ice could approach the Ocean."
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_mq03_complete"
+        ],
+        "description": "A colossal foyer of clean, ancient geometry. With the stasis array awakened, the welcome console glows with amber diagnostic rings, casting light across the polished stone floor."
       }
     ]
   },
@@ -10363,7 +10455,7 @@
     "env": "swamp",
     "title": "Breaker Deck",
     "background_image": "images/rooms/world_2/conduit_breaker_room.webp",
-    "description": "An auxiliary generator cabin. Offline breakers hum with static, ready to be flipped to align stasis diagnostics.",
+    "description": "An auxiliary generator cabin. Offline breakers hum with static, ready to be flipped to align stasis diagnostics. An insulated technician toolbox sits beside the cable duct.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10380,6 +10472,18 @@
         "name": "breakers",
         "type": "generic",
         "condition_unmet_message": "Flipping the auxiliary breaker alignment..."
+      },
+      {
+        "name": "technician toolbox",
+        "type": "container",
+        "state_key": "w2_breaker_toolbox_opened",
+        "items": [
+          "rapid_capacitor",
+          "wiring_bundle",
+          "pure_iron"
+        ],
+        "already_open_message": "The toolbox has been cleared of spare components.",
+        "popup_title": "Technician Toolbox"
       }
     ]
   },
@@ -10593,8 +10697,10 @@
     "weather": "resonance",
     "title": "Interface Console",
     "background_image": "images/rooms/world_2/archive_reading_room.webp",
-    "description": "A console room with a glowing research terminal. Old Architect diagnostics flicker across its interface panel in slow wave loops.",
-    "npcs": [],
+    "description": "A console room with a glowing research terminal. Caretaker Echo hovers beside the stone pillar as old Architect diagnostics flicker across its interface panel in slow wave loops.",
+    "npcs": [
+      "caretaker_drone"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
@@ -10666,7 +10772,7 @@
     "weather": "resonance",
     "title": "Hidden Reliquary",
     "background_image": "images/rooms/world_2/archive_secret_stash.webp",
-    "description": "A labeled calibration record sits behind the opened pedestal glass. Its diagrams separate four carrier bands around a physical ground lead.",
+    "description": "A labeled calibration record sits behind the opened pedestal glass. Its diagrams separate four carrier bands around a physical ground lead, beside a sealed relic coffer inlaid with resonant copper.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10684,6 +10790,18 @@
         "type": "generic",
         "action_event": "w2_sq04_decode_bridge_record",
         "condition_unmet_message": "The Bridge calibration record lists consent checks, separate carriers, and a mandatory ground."
+      },
+      {
+        "name": "relic coffer",
+        "type": "container",
+        "state_key": "w2_relic_coffer_opened",
+        "items": [
+          "astral_thread",
+          "relic_mod_biolum_focus",
+          "energy_core"
+        ],
+        "already_open_message": "The velvet-lined relic coffer is empty.",
+        "popup_title": "Relic Coffer"
       }
     ]
   },
@@ -11954,7 +12072,7 @@
     "weather": "rain",
     "title": "Rain Grate Overlook",
     "background_image": "images/rooms/world_3/spire_vent_output_scale_03.webp",
-    "description": "A rain grate opens above the lower street where upper runoff falls clean before hitting rust. The upper runoff and patrol reflection make the route feel watched from both directions.",
+    "description": "A rain grate opens above the lower street where upper runoff falls clean before hitting rust. The upper runoff and patrol reflection make the route feel watched from both directions. Tucked behind the grating sits a hidden smuggler stash. A one-way chute leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11976,8 +12094,25 @@
         "name": "upper runoff",
         "type": "generic",
         "condition_unmet_message": "The runoff smells filtered before the city dirt catches it."
+      },
+      {
+        "name": "smuggler stash",
+        "type": "container",
+        "state_key": "spire_vent_output_scale_03_cache_opened",
+        "items": [
+          "circuit_board",
+          "pulse_grenade"
+        ],
+        "popup_title": "Smuggler's Dead Drop",
+        "already_open_message": "The smuggler stash has already been emptied."
+      },
+      {
+        "name": "chute",
+        "type": "generic",
+        "action_event": "warp_spire_vent_output_scale_03_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "spire_the_static_scale_01",
@@ -12049,7 +12184,7 @@
     "env": "neon",
     "title": "Tenant Shrine",
     "background_image": "images/rooms/world_3/spire_the_static_scale_03.webp",
-    "description": "A tenant shrine of folded notices, dead neon, and cheap candles turns eviction paperwork into a memorial wall. The dead neon still flickers when transit drones pass overhead.",
+    "description": "A tenant shrine of folded notices, dead neon, and cheap candles turns eviction paperwork into a memorial wall. The dead neon still flickers when transit drones pass overhead. A discarded courier satchel lies forgotten in the corner. A one-way fire escape leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12071,8 +12206,25 @@
         "name": "folded notices",
         "type": "generic",
         "condition_unmet_message": "The notices are all stamped by different departments and the same contempt."
+      },
+      {
+        "name": "courier satchel",
+        "type": "container",
+        "state_key": "spire_the_static_scale_03_cache_opened",
+        "items": [
+          "mod_corrosive_rounds",
+          "ration_pack"
+        ],
+        "popup_title": "Abandoned Courier Satchel",
+        "already_open_message": "The courier satchel has already been emptied."
+      },
+      {
+        "name": "fire escape",
+        "type": "generic",
+        "action_event": "warp_spire_the_static_scale_03_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "spire_night_market_scale_01",
@@ -12167,7 +12319,7 @@
     "env": "neon",
     "title": "Rain Cache",
     "background_image": "images/rooms/world_3/spire_night_market_scale_03.webp",
-    "description": "A rain cache beneath a torn canopy keeps wrapped tools dry beside counterfeit guest pins. The guest pins are cheap, but the route printed on the underside is current.",
+    "description": "A rain cache beneath a torn canopy keeps wrapped tools dry beside counterfeit guest pins. The guest pins are cheap, but the route printed on the underside is current. A heavy black market safe rests under a tarp. A one-way slide leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12189,8 +12341,25 @@
         "name": "wrapped tools",
         "type": "generic",
         "condition_unmet_message": "The tools are cheap, mismatched, and perfect for quiet work."
+      },
+      {
+        "name": "black market safe",
+        "type": "container",
+        "state_key": "spire_night_market_scale_03_cache_opened",
+        "items": [
+          "cyber_visor",
+          "battery_pack"
+        ],
+        "popup_title": "Black Market Safe",
+        "already_open_message": "The black market safe has already been emptied."
+      },
+      {
+        "name": "slide",
+        "type": "generic",
+        "action_event": "warp_spire_night_market_scale_03_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "spire_sewers_scale_01",
@@ -12282,7 +12451,7 @@
     "env": "neon",
     "title": "Ratline Nook",
     "background_image": "images/rooms/world_3/spire_sewers_scale_03.webp",
-    "description": "A dry ratline nook branches away from the main sewer. Chalk arrows mark which exits are watched this week, and the dry ledge smells faintly of smoke and noodle broth.",
+    "description": "A dry ratline nook branches away from the main sewer. Chalk arrows mark which exits are watched this week, and the dry ledge smells faintly of smoke and noodle broth. A rusted maintenance locker clings to the wet brickwork. A one-way ladder leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12304,8 +12473,25 @@
         "name": "chalk arrows",
         "type": "generic",
         "condition_unmet_message": "The arrows have been updated recently enough to trust."
+      },
+      {
+        "name": "maintenance locker",
+        "type": "container",
+        "state_key": "spire_sewers_scale_03_cache_opened",
+        "items": [
+          "precision_core",
+          "nano_filament"
+        ],
+        "popup_title": "Flooded Maintenance Locker",
+        "already_open_message": "The maintenance locker has already been emptied."
+      },
+      {
+        "name": "ladder",
+        "type": "generic",
+        "action_event": "warp_spire_sewers_scale_03_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "spire_transit_plaza_scale_01",
@@ -12377,7 +12563,7 @@
     "env": "neon",
     "title": "Underrail Map Room",
     "background_image": "images/rooms/world_3/spire_transit_plaza_scale_03.webp",
-    "description": "The underrail map room stores obsolete route boards and a service legend that still matches the staff tunnels. A taped transfer notice explains why Dominion forgot to update the old map.",
+    "description": "The underrail map room stores obsolete route boards and a service legend that still matches the staff tunnels. A taped transfer notice explains why Dominion forgot to update the old map. An abandoned transit lockbox sits beneath a broken arrivals board. A one-way turnstile leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12399,8 +12585,25 @@
         "name": "service legend",
         "type": "generic",
         "condition_unmet_message": "The legend marks doors hidden from guest-facing overlays."
+      },
+      {
+        "name": "transit lockbox",
+        "type": "container",
+        "state_key": "spire_transit_plaza_scale_03_cache_opened",
+        "items": [
+          "focus_matrix",
+          "circuit_board"
+        ],
+        "popup_title": "Abandoned Transit Lockbox",
+        "already_open_message": "The transit lockbox has already been emptied."
+      },
+      {
+        "name": "turnstile",
+        "type": "generic",
+        "action_event": "warp_spire_transit_plaza_scale_03_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "spire_laundry_scale_01",
@@ -12470,7 +12673,7 @@
     "env": "neon",
     "title": "Service Bin",
     "background_image": "images/rooms/world_3/spire_laundry_scale_03.webp",
-    "description": "A service bin overflows with ruined napkins, broken jewelry, and a discarded pass snapped in half. The discarded pass is dead, but its route stamp is still readable.",
+    "description": "A service bin overflows with ruined napkins, broken jewelry, and a discarded pass snapped in half. The discarded pass is dead, but its route stamp is still readable. A tailored uniform case has been hidden inside an air intake. A one-way chute leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12492,8 +12695,25 @@
         "name": "discarded pass",
         "type": "generic",
         "condition_unmet_message": "The pass is dead, but the route printed on it is not."
+      },
+      {
+        "name": "tailored uniform case",
+        "type": "container",
+        "state_key": "spire_laundry_scale_03_cache_opened",
+        "items": [
+          "bulwark_layer",
+          "medkit_plus"
+        ],
+        "popup_title": "Directorate Courier Case",
+        "already_open_message": "The tailored uniform case has already been emptied."
+      },
+      {
+        "name": "chute",
+        "type": "generic",
+        "action_event": "warp_spire_laundry_scale_03_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "spire_skypark_scale_01",
@@ -12585,7 +12805,7 @@
     "env": "neon",
     "title": "Glass Lawn",
     "background_image": "images/rooms/world_3/spire_skypark_scale_03.webp",
-    "description": "The glass lawn is transparent all the way down to the city it refuses to see. Scanner mist drifts between ornamental trees, checking posture, fabric, and fear.",
+    "description": "The glass lawn is transparent all the way down to the city it refuses to see. Scanner mist drifts between ornamental trees, checking posture, fabric, and fear. A locked botanical vault is embedded in the synthetic root bed. A one-way spiral leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12607,8 +12827,25 @@
         "name": "scanner mist",
         "type": "generic",
         "condition_unmet_message": "The mist checks posture, fabric, and fear."
+      },
+      {
+        "name": "botanical vault",
+        "type": "container",
+        "state_key": "spire_skypark_scale_03_cache_opened",
+        "items": [
+          "stability_gyro_mod",
+          "herbal_poultice"
+        ],
+        "popup_title": "Synthetics Research Cache",
+        "already_open_message": "The botanical vault has already been emptied."
+      },
+      {
+        "name": "spiral",
+        "type": "generic",
+        "action_event": "warp_spire_skypark_scale_03_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "spire_archive_scale_01",
@@ -12690,7 +12927,7 @@
     "env": "neon",
     "title": "Alarm Spine",
     "background_image": "images/rooms/world_3/spire_archive_scale_03.webp",
-    "description": "The alarm spine runs behind the vault in red conduits. Every conduit is labeled with a consequence instead of a destination, and the red conduits pulse faster when Nova gets close.",
+    "description": "The alarm spine runs behind the vault in red conduits. Every conduit is labeled with a consequence instead of a destination, and the red conduits pulse faster when Nova gets close. An encrypted datacache hums softly inside a book press. A one-way lift leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12712,8 +12949,25 @@
         "name": "red conduits",
         "type": "generic",
         "condition_unmet_message": "The conduits pulse faster when Nova gets close."
+      },
+      {
+        "name": "encrypted datacache",
+        "type": "container",
+        "state_key": "spire_archive_scale_03_cache_opened",
+        "items": [
+          "impact_node",
+          "circuit_board"
+        ],
+        "popup_title": "Scholar Research Datacache",
+        "already_open_message": "The encrypted datacache has already been emptied."
+      },
+      {
+        "name": "lift",
+        "type": "generic",
+        "action_event": "warp_spire_archive_scale_03_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "spire_exec_lounge_scale_01",
@@ -12861,7 +13115,7 @@
     "env": "neon",
     "title": "Service Dumbwaiter",
     "background_image": "images/rooms/world_3/spire_exec_lounge_scale_05.webp",
-    "description": "A Service Dumbwaiter drops toward the kitchen levels with a silver tray still balanced inside. The silver tray reflects the patrol outside better than the room's polished cameras.",
+    "description": "A Service Dumbwaiter drops toward the kitchen levels with a silver tray still balanced inside. The silver tray reflects the patrol outside better than the room's polished cameras. A discreet executive safe gleams behind the mirrored mahogany. A one-way elevator leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -12885,8 +13139,25 @@
         "name": "silver tray",
         "type": "generic",
         "condition_unmet_message": "The tray is polished enough to reflect the patrol outside."
+      },
+      {
+        "name": "executive safe",
+        "type": "container",
+        "state_key": "spire_exec_lounge_scale_05_cache_opened",
+        "items": [
+          "phase_rounds",
+          "black_coffee"
+        ],
+        "popup_title": "Director's Private Safe",
+        "already_open_message": "The executive safe has already been emptied."
+      },
+      {
+        "name": "elevator",
+        "type": "generic",
+        "action_event": "warp_spire_exec_lounge_scale_05_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "spire_landing_pad_scale_01",
@@ -12994,7 +13265,7 @@
     "weather": "storm",
     "title": "Boarding Causeway",
     "background_image": "images/rooms/world_3/spire_landing_pad_scale_04.webp",
-    "description": "The boarding causeway stretches toward the Astra hatch under lockdown strobes. The Astra hatch light blinks like a heartbeat through rain and warning static.",
+    "description": "The boarding causeway stretches toward the Astra hatch under lockdown strobes. The Astra hatch light blinks like a heartbeat through rain and warning static. A forgotten avionics crate sits strapped against the wind break. A one-way ladder leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13016,8 +13287,25 @@
         "name": "Astra hatch",
         "type": "generic",
         "condition_unmet_message": "The hatch light blinks like a heartbeat."
+      },
+      {
+        "name": "avionics crate",
+        "type": "container",
+        "state_key": "spire_landing_pad_scale_04_cache_opened",
+        "items": [
+          "composite_plate",
+          "battery_pack"
+        ],
+        "popup_title": "Cargo Shuttle Avionics Crate",
+        "already_open_message": "The avionics crate has already been emptied."
+      },
+      {
+        "name": "ladder",
+        "type": "generic",
+        "action_event": "warp_spire_landing_pad_scale_04_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "foundry_obsidian_shelf_scale_01",
@@ -15503,7 +15791,7 @@
     "weather": "snow",
     "title": "Ring Control Pocket",
     "background_image": "images/rooms/world_5/deep_server_farm_scale_04.webp",
-    "description": "A control pocket hides a manual toggle behind a panel dressed as decor. Someone left one practical way to make the automated system hesitate.",
+    "description": "A control pocket hides a manual toggle behind a panel dressed as decor. Someone left one practical way to make the automated system hesitate. An active admin crypt terminal blinks behind a sub-floor hatch. A one-way slide leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -15525,8 +15813,25 @@
         "name": "manual toggle",
         "type": "generic",
         "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
+      },
+      {
+        "name": "admin crypt terminal",
+        "type": "container",
+        "state_key": "deep_server_farm_scale_04_cache_opened",
+        "items": [
+          "composite_plate",
+          "focus_matrix"
+        ],
+        "popup_title": "Root Access Recovery Unit",
+        "already_open_message": "The admin crypt terminal has already been emptied."
+      },
+      {
+        "name": "slide",
+        "type": "generic",
+        "action_event": "warp_deep_server_farm_scale_04_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "deep_anchor_chamber_scale_01",
@@ -15774,7 +16079,7 @@
     "weather": "resonance",
     "title": "Manual Release Plinth",
     "background_image": "images/rooms/world_5/deep_anchor_chamber_scale_08.webp",
-    "description": "A manual release plinth hides under ceremonial glass near the last tank cable. The manual key is labeled EMERGENCY, because even monsters leave themselves a maintenance route.",
+    "description": "A manual release plinth hides under ceremonial glass near the last tank cable. The manual key is labeled EMERGENCY, because even monsters leave themselves a maintenance route. A harmonic resonance anchor safe hums in tune with the containment field. A one-way anchor cable leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -15796,8 +16101,25 @@
         "name": "manual key",
         "type": "generic",
         "condition_unmet_message": "The key is small, physical, and absurdly fragile beside all this machinery."
+      },
+      {
+        "name": "resonance anchor safe",
+        "type": "container",
+        "state_key": "deep_anchor_chamber_scale_08_cache_opened",
+        "items": [
+          "composite_plate",
+          "astral_thread"
+        ],
+        "popup_title": "Elara's Personal Resonance Cache",
+        "already_open_message": "The resonance anchor safe has already been emptied."
+      },
+      {
+        "name": "anchor cable",
+        "type": "generic",
+        "action_event": "warp_deep_anchor_chamber_scale_08_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "deep_throne_room_scale_01",
@@ -16003,7 +16325,7 @@
     "weather": "resonance",
     "title": "Tear Runway",
     "background_image": "images/rooms/world_5/deep_throne_room_scale_07.webp",
-    "description": "A Tear runway extends from the throne deck into shaking glass and impossible music. Reflections arrive before the crew does, each one a future Vale claims he can make painless.",
+    "description": "A Tear runway extends from the throne deck into shaking glass and impossible music. Reflections arrive before the crew does, each one a future Vale claims he can make painless. An obsidian command dais locker sits under the shattered viewport. A one-way lift leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -16025,8 +16347,25 @@
         "name": "impossible music",
         "type": "generic",
         "condition_unmet_message": "The music has no speaker source and no mercy in it."
+      },
+      {
+        "name": "command dais locker",
+        "type": "container",
+        "state_key": "deep_throne_room_scale_07_cache_opened",
+        "items": [
+          "composite_plate",
+          "bulwark_layer"
+        ],
+        "popup_title": "Vale's Vanguard Cache",
+        "already_open_message": "The command dais locker has already been emptied."
+      },
+      {
+        "name": "lift",
+        "type": "generic",
+        "action_event": "warp_deep_throne_room_scale_07_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "deep_tear_scale_01",
@@ -16198,7 +16537,7 @@
     "weather": "resonance",
     "title": "Source Drop",
     "background_image": "images/rooms/world_5/deep_tear_scale_06.webp",
-    "description": "The Source drop waits beyond the hull, filled with falling voices that do not get farther away. The falling voices include names Nova has not learned yet.",
+    "description": "The Source drop waits beyond the hull, filled with falling voices that do not get farther away. The falling voices include names Nova has not learned yet. A pulsing anomaly fracture has crystallized into physical salvage. A one-way reality slipstream leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -16220,8 +16559,25 @@
         "name": "falling voices",
         "type": "generic",
         "condition_unmet_message": "The voices are not screaming. They are calling roll."
+      },
+      {
+        "name": "anomaly fracture",
+        "type": "container",
+        "state_key": "deep_tear_scale_06_cache_opened",
+        "items": [
+          "composite_plate",
+          "astral_thread"
+        ],
+        "popup_title": "Crystallized Anomaly Shard",
+        "already_open_message": "The anomaly fracture has already been emptied."
+      },
+      {
+        "name": "reality slipstream",
+        "type": "generic",
+        "action_event": "warp_deep_tear_scale_06_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "source_campfire_node_scale_01",
@@ -16427,7 +16783,7 @@
     "env": "source",
     "title": "Resignation Window",
     "background_image": "images/rooms/world_6/source_zeke_nightmare_node_scale_03.webp",
-    "description": "A resignation window looks out on open sky that the office insists is a motivational poster. The open sky does not need Zeke to earn it.",
+    "description": "A resignation window looks out on open sky that the office insists is a motivational poster. The open sky does not need Zeke to earn it. A battered freedom filing case sits marked with Zeke's real employee badge. A one-way door leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -16449,8 +16805,25 @@
         "name": "open sky",
         "type": "generic",
         "condition_unmet_message": "The sky becomes real only when Zeke stops treating freedom like a promotion."
+      },
+      {
+        "name": "freedom filing case",
+        "type": "container",
+        "state_key": "source_zeke_nightmare_node_scale_03_cache_opened",
+        "items": [
+          "astral_thread",
+          "stability_gyro_mod"
+        ],
+        "popup_title": "Zeke's Severance Record",
+        "already_open_message": "The freedom filing case has already been emptied."
+      },
+      {
+        "name": "door",
+        "type": "generic",
+        "action_event": "warp_source_zeke_nightmare_node_scale_03_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "source_gh0st_nightmare_node_scale_01",
@@ -16528,7 +16901,7 @@
     "env": "source",
     "title": "Sister Signal",
     "background_image": "images/rooms/world_6/source_gh0st_nightmare_node_scale_03.webp",
-    "description": "A sister signal glows behind the war noise with a soft waveform no command layer can counterfeit. The soft waveform remembers Elara before the Ring turned her into infrastructure.",
+    "description": "A sister signal glows behind the war noise with a soft waveform no command layer can counterfeit. The soft waveform remembers Elara before the Ring turned her into infrastructure. A pristine sister memory core pulses free of military encryption. A one-way clean signal leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -16550,8 +16923,25 @@
         "name": "soft waveform",
         "type": "generic",
         "condition_unmet_message": "The waveform is damaged and still human."
+      },
+      {
+        "name": "sister memory core",
+        "type": "container",
+        "state_key": "source_gh0st_nightmare_node_scale_03_cache_opened",
+        "items": [
+          "astral_thread",
+          "precision_core"
+        ],
+        "popup_title": "Gh0st's Uncorrupted Partition",
+        "already_open_message": "The sister memory core has already been emptied."
+      },
+      {
+        "name": "clean signal",
+        "type": "generic",
+        "action_event": "warp_source_gh0st_nightmare_node_scale_03_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "source_orion_nightmare_node_scale_01",
@@ -16632,7 +17022,7 @@
     "weather": "starfall",
     "title": "Chorus Door",
     "background_image": "images/rooms/world_6/source_orion_nightmare_node_scale_03.webp",
-    "description": "A Chorus door hums with wet harmonics from below the shore. The wet harmonics carry names Orion thought the universe had erased.",
+    "description": "A Chorus door hums with wet harmonics from below the shore. The wet harmonics carry names Orion thought the universe had erased. A luminous tide glass shell hums with melodies from home. A one-way harmonic wave leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -16654,8 +17044,25 @@
         "name": "wet harmonics",
         "type": "generic",
         "condition_unmet_message": "The harmonics prove the dead are carried, not flattened into silence."
+      },
+      {
+        "name": "tide glass shell",
+        "type": "container",
+        "state_key": "source_orion_nightmare_node_scale_03_cache_opened",
+        "items": [
+          "astral_thread",
+          "phase_rounds"
+        ],
+        "popup_title": "Orion's Resonant Shell",
+        "already_open_message": "The tide glass shell has already been emptied."
+      },
+      {
+        "name": "harmonic wave",
+        "type": "generic",
+        "action_event": "warp_source_orion_nightmare_node_scale_03_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "source_echo_mines_node_scale_01",
@@ -17179,7 +17586,7 @@
     "weather": "resonance",
     "title": "No Throne",
     "background_image": "images/rooms/world_6/source_spire_thought_node_scale_04.webp",
-    "description": "A throne-shaped absence waits at the top of the thought spiral. The absence brightens when Nova refuses to sit, leaving room for a circuit instead of a ruler.",
+    "description": "A throne-shaped absence waits at the top of the thought spiral. The absence brightens when Nova refuses to sit, leaving room for a circuit instead of a ruler. An unthroned ledger rests where a ruler was meant to sit.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -17203,8 +17610,25 @@
         "name": "circuit",
         "type": "generic",
         "condition_unmet_message": "The answer needs connection, not command."
+      },
+      {
+        "name": "unthroned ledger",
+        "type": "container",
+        "state_key": "source_spire_thought_node_scale_04_cache_opened",
+        "items": [
+          "astral_thread",
+          "cyber_visor"
+        ],
+        "popup_title": "The Free Mind Archive",
+        "already_open_message": "The unthroned ledger has already been emptied."
+      },
+      {
+        "name": "circuit",
+        "type": "generic",
+        "action_event": "warp_source_spire_thought_node_scale_04_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "source_center_node_scale_01",
@@ -17429,7 +17853,7 @@
     "weather": "dust",
     "title": "Foundry Emergency Marker",
     "background_image": "images/rooms/world_4/foundry_obsidian_shelf_scale_final.webp",
-    "description": "An emergency marker blinks above the black glass, its cracked beacon still guiding crews through heat that management calls acceptable. The cracked beacon and shift tally make the landing shelf feel like part of a working disaster.",
+    "description": "An emergency marker blinks above the black glass, its cracked beacon still guiding crews through heat that management calls acceptable. The cracked beacon and shift tally make the landing shelf feel like part of a working disaster. A heat-sealed container rests half-buried in volcanic slag. A one-way slide leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -17451,8 +17875,25 @@
         "name": "shift tally",
         "type": "generic",
         "condition_unmet_message": "Names and counts scratch across the metal: proof that someone kept track even when Dominion did not."
+      },
+      {
+        "name": "heat-sealed container",
+        "type": "container",
+        "state_key": "foundry_obsidian_shelf_scale_final_cache_opened",
+        "items": [
+          "pure_iron",
+          "burn_salve"
+        ],
+        "popup_title": "Emergency Survival Pod",
+        "already_open_message": "The heat-sealed container has already been emptied."
+      },
+      {
+        "name": "slide",
+        "type": "generic",
+        "action_event": "warp_foundry_obsidian_shelf_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "foundry_slag_river_scale_final",
@@ -17460,7 +17901,7 @@
     "weather": "dust",
     "title": "Foundry River Control",
     "background_image": "images/rooms/world_4/foundry_slag_river_scale_final.webp",
-    "description": "A river control booth watches slag levels with a burned console and a rescue hook nobody officially issued. The burned console and rescue hook explain how workers survive routes the map calls closed.",
+    "description": "A river control booth watches slag levels with a burned console and a rescue hook nobody officially issued. The burned console and rescue hook explain how workers survive routes the map calls closed. A heavy smelter toolbox sits bolted beside the sluice valve. A one-way catwalk leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -17484,8 +17925,25 @@
         "name": "rescue hook",
         "type": "generic",
         "condition_unmet_message": "The hook is unlogged, practical, and worn smooth by hands that were not supposed to need saving."
+      },
+      {
+        "name": "smelter toolbox",
+        "type": "container",
+        "state_key": "foundry_slag_river_scale_final_cache_opened",
+        "items": [
+          "foundry_crucible_lining",
+          "pure_iron"
+        ],
+        "popup_title": "Foreman's Smelter Toolbox",
+        "already_open_message": "The smelter toolbox has already been emptied."
+      },
+      {
+        "name": "catwalk",
+        "type": "generic",
+        "action_event": "warp_foundry_slag_river_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "foundry_cooling_springs_scale_final",
@@ -17493,7 +17951,7 @@
     "weather": "steam",
     "title": "Foundry Blue Steam Pocket",
     "background_image": "images/rooms/world_4/foundry_cooling_springs_scale_final.webp",
-    "description": "A blue steam pocket gathers under patched pipes, turning heat into a temporary hiding place. The patched pipes and cool residue show the Foundry being fought by its own workers.",
+    "description": "A blue steam pocket gathers under patched pipes, turning heat into a temporary hiding place. The patched pipes and cool residue show the Foundry being fought by its own workers. An insulated coolant reserve hums with frosty condensation. A one-way drain leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -17515,8 +17973,25 @@
         "name": "cool residue",
         "type": "generic",
         "condition_unmet_message": "Blue residue clings to the pipe seams, a small refusal of all this furnace logic."
+      },
+      {
+        "name": "coolant reserve",
+        "type": "container",
+        "state_key": "foundry_cooling_springs_scale_final_cache_opened",
+        "items": [
+          "thermal_solder_gun",
+          "burn_salve"
+        ],
+        "popup_title": "Pressurized Coolant Canister",
+        "already_open_message": "The coolant reserve has already been emptied."
+      },
+      {
+        "name": "drain",
+        "type": "generic",
+        "action_event": "warp_foundry_cooling_springs_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "foundry_waste_intake_scale_final",
@@ -17524,7 +17999,7 @@
     "weather": "gas",
     "title": "Foundry Sorter Spine",
     "background_image": "images/rooms/world_4/foundry_waste_intake_scale_final.webp",
-    "description": "A sorter spine rattles behind the intake with rejected parts climbing toward another chance at violence. The sorter spine and reject ledger make the waste system feel alive and complicit.",
+    "description": "A sorter spine rattles behind the intake with rejected parts climbing toward another chance at violence. The sorter spine and reject ledger make the waste system feel alive and complicit. A reinforced salvage bin caught against the intake teeth holds uncrushed gear. A one-way ladder leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -17549,15 +18024,32 @@
         "name": "reject ledger",
         "type": "generic",
         "condition_unmet_message": "The ledger calls every failed unit recoverable material. It never uses the word body."
+      },
+      {
+        "name": "salvage bin",
+        "type": "container",
+        "state_key": "foundry_waste_intake_scale_final_cache_opened",
+        "items": [
+          "pure_iron",
+          "nano_filament"
+        ],
+        "popup_title": "Scrap Sorter Salvage Bin",
+        "already_open_message": "The salvage bin has already been emptied."
+      },
+      {
+        "name": "ladder",
+        "type": "generic",
+        "action_event": "warp_foundry_waste_intake_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "foundry_service_airlock_scale_final",
     "env": "foundry",
     "title": "Foundry Seal Backroom",
     "background_image": "images/rooms/world_4/foundry_service_airlock_scale_final.webp",
-    "description": "A seal backroom stores pressure masks beside handwritten cycling rules. The pressure masks and cycling rules make the airlock feel maintained by people who expect the official procedure to fail.",
+    "description": "A seal backroom stores pressure masks beside handwritten cycling rules. The pressure masks and cycling rules make the airlock feel maintained by people who expect the official procedure to fail. A stamped technician locker remains locked against the heat. A one-way hatch leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -17579,8 +18071,25 @@
         "name": "cycling rules",
         "type": "generic",
         "condition_unmet_message": "The handwritten rules contradict the posted procedure in every way that would keep someone alive."
+      },
+      {
+        "name": "technician locker",
+        "type": "container",
+        "state_key": "foundry_service_airlock_scale_final_cache_opened",
+        "items": [
+          "pure_iron",
+          "circuit_board"
+        ],
+        "popup_title": "Dominion Line-Tech Locker",
+        "already_open_message": "The technician locker has already been emptied."
+      },
+      {
+        "name": "hatch",
+        "type": "generic",
+        "action_event": "warp_foundry_service_airlock_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "foundry_conveyor_belt_scale_final",
@@ -17588,7 +18097,7 @@
     "weather": "sparks",
     "title": "Foundry Belt Nerve",
     "background_image": "images/rooms/world_4/foundry_conveyor_belt_scale_final.webp",
-    "description": "A belt nerve junction pulses beneath the conveyor, matching every crush cycle to a production target. The nerve junction and target counter turn traversal into readable machinery.",
+    "description": "A belt nerve junction pulses beneath the conveyor, matching every crush cycle to a production target. The nerve junction and target counter turn traversal into readable machinery. An assembly cache has been knocked onto an inspection shelf. A one-way slide leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -17612,15 +18121,32 @@
         "name": "target counter",
         "type": "generic",
         "condition_unmet_message": "The counter values throughput over survival. Nova can still use its rhythm against the line."
+      },
+      {
+        "name": "assembly cache",
+        "type": "container",
+        "state_key": "foundry_conveyor_belt_scale_final_cache_opened",
+        "items": [
+          "pure_iron",
+          "mod_corrosive_rounds"
+        ],
+        "popup_title": "Automated Assembly Crate",
+        "already_open_message": "The assembly cache has already been emptied."
+      },
+      {
+        "name": "slide",
+        "type": "generic",
+        "action_event": "warp_foundry_conveyor_belt_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "foundry_conditioning_scale_final",
     "env": "foundry",
     "title": "Foundry Defect Choir",
     "background_image": "images/rooms/world_4/foundry_conditioning_scale_final.webp",
-    "description": "A defect choir of rejected units clicks behind glass, half-awake and waiting for a command that may never come. The defect choir and glass seam deepen the question of what the Foundry throws away.",
+    "description": "A defect choir of rejected units clicks behind glass, half-awake and waiting for a command that may never come. The defect choir and glass seam deepen the question of what the Foundry throws away. A hardened stress-test locker survived the pressure cycles. A one-way valve leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -17644,8 +18170,25 @@
         "name": "glass seam",
         "type": "generic",
         "condition_unmet_message": "The glass seam is weakest where too many hands have struck it from the inside."
+      },
+      {
+        "name": "stress-test locker",
+        "type": "container",
+        "state_key": "foundry_conditioning_scale_final_cache_opened",
+        "items": [
+          "stability_gyro_mod",
+          "battery_pack"
+        ],
+        "popup_title": "Stress-Test Prototype Locker",
+        "already_open_message": "The stress-test locker has already been emptied."
+      },
+      {
+        "name": "valve",
+        "type": "generic",
+        "action_event": "warp_foundry_conditioning_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "foundry_forge_scale_final",
@@ -17653,7 +18196,7 @@
     "weather": "sparks",
     "title": "Foundry Relic Draft",
     "background_image": "images/rooms/world_4/foundry_forge_scale_final.webp",
-    "description": "A relic draft moves through the Forge before the fire does, tugging ash toward the Anvil's old imprint. The relic draft and ash trail make the Forge feel older than Dominion's machinery.",
+    "description": "A relic draft moves through the Forge before the fire does, tugging ash toward the Anvil's old imprint. The relic draft and ash trail make the Forge feel older than Dominion's machinery. A heat-blackened master smith crate sits beside the flue.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -17675,8 +18218,25 @@
         "name": "ash trail",
         "type": "generic",
         "condition_unmet_message": "The ash curls in old patterns, older than Dominion and less obedient."
+      },
+      {
+        "name": "master smith crate",
+        "type": "container",
+        "state_key": "foundry_forge_scale_final_cache_opened",
+        "items": [
+          "pure_iron",
+          "precision_core"
+        ],
+        "popup_title": "Old Forge Master Crate",
+        "already_open_message": "The master smith crate has already been emptied."
+      },
+      {
+        "name": "flue",
+        "type": "generic",
+        "action_event": "warp_foundry_forge_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "foundry_power_core_scale_final",
@@ -17684,7 +18244,7 @@
     "weather": "sparks",
     "title": "Foundry Core Shadow",
     "background_image": "images/rooms/world_4/foundry_power_core_scale_final.webp",
-    "description": "A core shadow falls across the engine clamps in a shape too sharp for the room's lighting. The core shadow and clamp gauge foreshadow the theft that will make the Astra climb.",
+    "description": "A core shadow falls across the engine clamps in a shape too sharp for the room's lighting. The core shadow and clamp gauge foreshadow the theft that will make the Astra climb. A lead-lined shielded core case is clipped to the reactor frame. A one-way lift leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -17709,8 +18269,25 @@
         "name": "clamp gauge",
         "type": "generic",
         "condition_unmet_message": "The gauge measures thermal grip, but its redline also marks when the engine is movable."
+      },
+      {
+        "name": "shielded core case",
+        "type": "container",
+        "state_key": "foundry_power_core_scale_final_cache_opened",
+        "items": [
+          "pure_iron",
+          "focus_matrix"
+        ],
+        "popup_title": "Lead-Lined Core Component Case",
+        "already_open_message": "The shielded core case has already been emptied."
+      },
+      {
+        "name": "lift",
+        "type": "generic",
+        "action_event": "warp_foundry_power_core_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "foundry_titan_dock_scale_final",
@@ -17718,7 +18295,7 @@
     "weather": "sparks",
     "title": "Foundry Last Gantry",
     "background_image": "images/rooms/world_4/foundry_titan_dock_scale_final.webp",
-    "description": "A last gantry shakes over the Titan dock, pointed directly at the escape route. The last gantry and release bolt turn the boss arena into a place built for a desperate exit.",
+    "description": "A last gantry shakes over the Titan dock, pointed directly at the escape route. The last gantry and release bolt turn the boss arena into a place built for a desperate exit. A magnetic titan maintenance pod is tethered beneath the crane. A one-way scaffolding leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -17740,15 +18317,32 @@
         "name": "release bolt",
         "type": "generic",
         "condition_unmet_message": "The bolt is painted emergency yellow under a layer of old slag dust."
+      },
+      {
+        "name": "titan maintenance pod",
+        "type": "container",
+        "state_key": "foundry_titan_dock_scale_final_cache_opened",
+        "items": [
+          "pure_iron",
+          "bulwark_layer"
+        ],
+        "popup_title": "Heavy Walker Repair Pod",
+        "already_open_message": "The titan maintenance pod has already been emptied."
+      },
+      {
+        "name": "scaffolding",
+        "type": "generic",
+        "action_event": "warp_foundry_titan_dock_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "orbital_executive_dock_scale_final",
     "env": "void",
     "title": "Ring Dock Memorial",
     "background_image": "images/rooms/world_5/orbital_executive_dock_scale_final.webp",
-    "description": "A dock memorial projects names over the forced-docking scar, then redacts the staff names first. The dock memorial and redaction pulse show the Ring preserving class even during collapse.",
+    "description": "A dock memorial projects names over the forced-docking scar, then redacts the staff names first. The dock memorial and redaction pulse show the Ring preserving class even during collapse. An airtight diplomatic courier case floats secured by velcro. A one-way chute leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -17770,15 +18364,32 @@
         "name": "redaction pulse",
         "type": "generic",
         "condition_unmet_message": "Every pulse erases another line item, but never the titles."
+      },
+      {
+        "name": "diplomatic courier case",
+        "type": "container",
+        "state_key": "orbital_executive_dock_scale_final_cache_opened",
+        "items": [
+          "composite_plate",
+          "phase_rounds"
+        ],
+        "popup_title": "Directorate Diplomatic Pouch",
+        "already_open_message": "The diplomatic courier case has already been emptied."
+      },
+      {
+        "name": "chute",
+        "type": "generic",
+        "action_event": "warp_orbital_executive_dock_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "orbital_grand_concourse_scale_final",
     "env": "void",
     "title": "Ring Courtesy Theater",
     "background_image": "images/rooms/world_5/orbital_grand_concourse_scale_final.webp",
-    "description": "A courtesy theater keeps playing welcome footage to empty chairs while blast shutters grind nearby. The welcome footage and empty chairs make Harmony's politeness feel obscene.",
+    "description": "A courtesy theater keeps playing welcome footage to empty chairs while blast shutters grind nearby. The welcome footage and empty chairs make Harmony's politeness feel obscene. A shattered luxury display locker holds untouched luxury goods. A one-way express escalator leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -17802,15 +18413,32 @@
         "name": "empty chairs",
         "type": "generic",
         "condition_unmet_message": "The chairs are angled toward a welcome no one is alive enough to receive."
+      },
+      {
+        "name": "luxury display locker",
+        "type": "container",
+        "state_key": "orbital_grand_concourse_scale_final_cache_opened",
+        "items": [
+          "composite_plate",
+          "cyber_visor"
+        ],
+        "popup_title": "Concourse Display Locker",
+        "already_open_message": "The luxury display locker has already been emptied."
+      },
+      {
+        "name": "express escalator",
+        "type": "generic",
+        "action_event": "warp_orbital_grand_concourse_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "orbital_solarium_scale_final",
     "env": "void",
     "title": "Ring False Tide",
     "background_image": "images/rooms/world_5/orbital_solarium_scale_final.webp",
-    "description": "A false tide laps against the Solarium beach with water pumped through hidden climate veins. The false tide and climate veins make paradise visibly mechanical.",
+    "description": "A false tide laps against the Solarium beach with water pumped through hidden climate veins. The false tide and climate veins make paradise visibly mechanical. A pressurized hydroponic canister sits among dead decorative moss. A one-way stairwell leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -17832,15 +18460,32 @@
         "name": "climate veins",
         "type": "generic",
         "condition_unmet_message": "The veins carry paradise through the walls like coolant through a machine."
+      },
+      {
+        "name": "hydroponic canister",
+        "type": "container",
+        "state_key": "orbital_solarium_scale_final_cache_opened",
+        "items": [
+          "composite_plate",
+          "tideglass_delight"
+        ],
+        "popup_title": "Orbital Hydroponic Cache",
+        "already_open_message": "The hydroponic canister has already been emptied."
+      },
+      {
+        "name": "stairwell",
+        "type": "generic",
+        "action_event": "warp_orbital_solarium_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "orbital_security_hub_scale_final",
     "env": "void",
     "title": "Ring Threat Cathedral",
     "background_image": "images/rooms/world_5/orbital_security_hub_scale_final.webp",
-    "description": "A threat cathedral stacks surveillance feeds into stained-glass panes of suspicion. The surveillance panes and priority docket turn security into worship.",
+    "description": "A threat cathedral stacks surveillance feeds into stained-glass panes of suspicion. The surveillance panes and priority docket turn security into worship. A heavy tactical enforcer armory is recessed into the bulkhead. A one-way hatch leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -17864,15 +18509,32 @@
         "name": "priority docket",
         "type": "generic",
         "condition_unmet_message": "The docket ranks threats by inconvenience to power."
+      },
+      {
+        "name": "tactical enforcer armory",
+        "type": "container",
+        "state_key": "orbital_security_hub_scale_final_cache_opened",
+        "items": [
+          "composite_plate",
+          "impact_node"
+        ],
+        "popup_title": "Enforcer Quick-Armory Locker",
+        "already_open_message": "The tactical enforcer armory has already been emptied."
+      },
+      {
+        "name": "hatch",
+        "type": "generic",
+        "action_event": "warp_orbital_security_hub_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "orbital_service_shaft_scale_final",
     "env": "void",
     "title": "Ring Drift Chapel",
     "background_image": "images/rooms/world_5/orbital_service_shaft_scale_final.webp",
-    "description": "A drift chapel of tether hooks and emergency blankets floats beside the service shaft. The tether hooks and prayer patch show the workers who made zero-g survivable.",
+    "description": "A drift chapel of tether hooks and emergency blankets floats beside the service shaft. The tether hooks and prayer patch show the workers who made zero-g survivable. An orange EVA engineer pack is clamped to the structural truss. A one-way guide leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -17894,8 +18556,25 @@
         "name": "prayer patch",
         "type": "generic",
         "condition_unmet_message": "The patch is sewn crooked onto an emergency blanket: not regulation, just hope."
+      },
+      {
+        "name": "eva engineer pack",
+        "type": "container",
+        "state_key": "orbital_service_shaft_scale_final_cache_opened",
+        "items": [
+          "composite_plate",
+          "battery_pack"
+        ],
+        "popup_title": "EVA Emergency Salvage Pack",
+        "already_open_message": "The eva engineer pack has already been emptied."
+      },
+      {
+        "name": "guide",
+        "type": "generic",
+        "action_event": "warp_orbital_service_shaft_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "source_campfire_node_scale_final",
@@ -17903,7 +18582,7 @@
     "weather": "resonance",
     "title": "Source Memory Shore",
     "background_image": "images/rooms/world_6/source_campfire_node_scale_final.webp",
-    "description": "A memory shore curves around the Campfire, where tide marks from six worlds meet in blue ash. The tide marks and blue ash make the finale feel like the whole journey gathered in one place.",
+    "description": "A memory shore curves around the Campfire, where tide marks from six worlds meet in blue ash. The tide marks and blue ash make the finale feel like the whole journey gathered in one place. A warm hearth memory chest glows softly in the blue ash. A one-way trail leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -17925,8 +18604,25 @@
         "name": "blue ash",
         "type": "generic",
         "condition_unmet_message": "The ash glows where the journey should have ended and did not."
+      },
+      {
+        "name": "hearth memory chest",
+        "type": "container",
+        "state_key": "source_campfire_node_scale_final_cache_opened",
+        "items": [
+          "astral_thread",
+          "tideglass_delight"
+        ],
+        "popup_title": "Crew's Shared Memory Chest",
+        "already_open_message": "The hearth memory chest has already been emptied."
+      },
+      {
+        "name": "trail",
+        "type": "generic",
+        "action_event": "warp_source_campfire_node_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "source_echo_mines_node_scale_final",
@@ -17934,7 +18630,7 @@
     "weather": "dust",
     "title": "Source First Fear",
     "background_image": "images/rooms/world_6/source_echo_mines_node_scale_final.webp",
-    "description": "A first fear corridor repeats Nova's earliest exit routes, but every door now opens from the inside. The first fear and inside latch show that the beginning no longer owns her.",
+    "description": "A first fear corridor repeats Nova's earliest exit routes, but every door now opens from the inside. The first fear and inside latch show that the beginning no longer owns her. An unburned first shift locker holds tools Nova thought were lost forever. A one-way echo leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -17956,8 +18652,25 @@
         "name": "inside latch",
         "type": "generic",
         "condition_unmet_message": "The latch opens from Nova's side now."
+      },
+      {
+        "name": "first shift locker",
+        "type": "container",
+        "state_key": "source_echo_mines_node_scale_final_cache_opened",
+        "items": [
+          "astral_thread",
+          "thermal_solder_gun"
+        ],
+        "popup_title": "Jed & Nova's First Toolbox",
+        "already_open_message": "The first shift locker has already been emptied."
+      },
+      {
+        "name": "echo",
+        "type": "generic",
+        "action_event": "warp_source_echo_mines_node_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "source_memory_bridge_node_scale_final",
@@ -17965,7 +18678,7 @@
     "weather": "resonance",
     "title": "Source Crew Span",
     "background_image": "images/rooms/world_6/source_memory_bridge_node_scale_final.webp",
-    "description": "A crew span brightens only where more than one shadow crosses it. The crew span and shared shadow make the bridge's rule impossible to miss.",
+    "description": "A crew span brightens only where more than one shadow crosses it. The crew span and shared shadow make the bridge's rule impossible to miss. A radiant covenant beacon marks where the crew chose each other. A one-way light beam leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -17987,8 +18700,25 @@
         "name": "shared shadow",
         "type": "generic",
         "condition_unmet_message": "The shadow is not a loss of self. It is proof that someone stayed close."
+      },
+      {
+        "name": "covenant beacon",
+        "type": "container",
+        "state_key": "source_memory_bridge_node_scale_final_cache_opened",
+        "items": [
+          "astral_thread",
+          "focus_matrix"
+        ],
+        "popup_title": "Unbreakable Covenant Cache",
+        "already_open_message": "The covenant beacon has already been emptied."
+      },
+      {
+        "name": "light beam",
+        "type": "generic",
+        "action_event": "warp_source_memory_bridge_node_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "source_memory_stair_node_scale_final",
@@ -17996,7 +18726,7 @@
     "weather": "resonance",
     "title": "Source Scar Step",
     "background_image": "images/rooms/world_6/source_memory_stair_node_scale_final.webp",
-    "description": "A scar step holds dents from every world, refusing Vale's offer to polish them away. The scar step and unpolished edge turn damage into proof of life.",
+    "description": "A scar step holds dents from every world, refusing Vale's offer to polish them away. The scar step and unpolished edge turn damage into proof of life. A scarred survivor reliquary holds fragments of every battle survived. A one-way slide leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -18020,8 +18750,25 @@
         "name": "unpolished edge",
         "type": "generic",
         "condition_unmet_message": "The edge catches light because it was never made harmless."
+      },
+      {
+        "name": "survivor reliquary",
+        "type": "container",
+        "state_key": "source_memory_stair_node_scale_final_cache_opened",
+        "items": [
+          "astral_thread",
+          "bulwark_layer"
+        ],
+        "popup_title": "Reliquary of Scars",
+        "already_open_message": "The survivor reliquary has already been emptied."
+      },
+      {
+        "name": "slide",
+        "type": "generic",
+        "action_event": "warp_source_memory_stair_node_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "source_center_node_scale_final",
@@ -18029,7 +18776,7 @@
     "weather": "resonance",
     "title": "Source Voice Orbit",
     "background_image": "images/rooms/world_6/source_center_node_scale_final.webp",
-    "description": "A voice orbit circles the Center with separate tones that harmonize without merging. The voice orbit and separate tones state the game's final answer in room form.",
+    "description": "A voice orbit circles the Center with separate tones that harmonize without merging. The voice orbit and separate tones state the game's final answer in room form. A glowing chorus harmony seed spins in equilibrium. A one-way echo leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -18051,15 +18798,32 @@
         "name": "separate tones",
         "type": "generic",
         "condition_unmet_message": "The tones harmonize because they stay distinct."
+      },
+      {
+        "name": "chorus harmony seed",
+        "type": "container",
+        "state_key": "source_center_node_scale_final_cache_opened",
+        "items": [
+          "astral_thread",
+          "foundry_crucible_lining"
+        ],
+        "popup_title": "Seed of the New Chorus",
+        "already_open_message": "The chorus harmony seed has already been emptied."
+      },
+      {
+        "name": "echo",
+        "type": "generic",
+        "action_event": "warp_source_center_node_scale_final_to_entry"
       }
-    ]
+    ],
+    "special_exits": {}
   },
   {
     "id": "source_new_world_node_scale_final",
     "env": "source",
     "title": "Source Morning Street",
     "background_image": "images/rooms/world_6/source_new_world_node_scale_final.webp",
-    "description": "A morning street outside the diner carries repair crews, bad jokes, and weather nobody scheduled. A terminal offers to call Astra shuttle. The repair crews and real weather make the ending feel lived in instead of merely won.",
+    "description": "A morning street outside the diner carries repair crews, bad jokes, and weather nobody scheduled. A terminal offers to call Astra shuttle. The repair crews and real weather make the ending feel lived in instead of merely won. A morning provision basket sits packed for the journey ahead. A one-way alley leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -18093,7 +18857,19 @@
         "type": "fishing",
         "zone_id": "singularity_ether_well",
         "condition_unmet_message": "A crystalline well pulses with temporal resonance, its luminous depths harboring elusive chronal creatures."
+      },
+      {
+        "name": "morning provision basket",
+        "type": "container",
+        "state_key": "source_new_world_node_scale_final_cache_opened",
+        "items": [
+          "astral_thread",
+          "black_coffee"
+        ],
+        "popup_title": "Fresh Dawn Provisions",
+        "already_open_message": "The morning provision basket has already been emptied."
       }
-    ]
+    ],
+    "special_exits": {}
   }
 ]

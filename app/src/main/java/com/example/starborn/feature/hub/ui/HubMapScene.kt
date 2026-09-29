@@ -96,8 +96,13 @@ internal fun HubMapScene(
                 nodes.forEach { node ->
                     val site = (if (node.id == "astra_access") layout.astraDock else layout.sites[node.id]) ?: return@forEach
                     val selected = node.id == selectedId
-                    val anchorX = transform.x(site.x)
-                    val anchorY = transform.y(site.y)
+                    // Asset-backed node positions come from hub_nodes.json. Synthetic nodes
+                    // keep their authored fallback anchors in HubMapLayouts.
+                    val usesSyntheticPosition = node.id == "astra_access" || node.id == "astra_disembark"
+                    val nodeX = if (usesSyntheticPosition) site.x else node.centerX
+                    val nodeY = if (usesSyntheticPosition) site.y else node.centerY
+                    val anchorX = transform.x(nodeX)
+                    val anchorY = transform.y(nodeY)
 
                     if (site.artworkWidth > 0f) {
                         val imageWidthPx = (minOf(mapWidth * site.artworkWidth, viewportWidth * .36f)).toPx()
@@ -162,6 +167,9 @@ internal fun HubMapScene(
             nodes.forEach { node ->
                 val site = if (node.id == "astra_access") layout.astraDock else layout.sites[node.id]
                 if (site == null) return@forEach
+                val usesSyntheticPosition = node.id == "astra_access" || node.id == "astra_disembark"
+                val nodeX = if (usesSyntheticPosition) site.x else node.centerX
+                val nodeY = if (usesSyntheticPosition) site.y else node.centerY
                 val selected = node.id == selectedId
                 val objective = trackedQuest?.let { nodeMatchesQuest(node, it) } == true
                 val tint = when {
@@ -175,13 +183,13 @@ internal fun HubMapScene(
                 val painter = if (site.artworkWidth > 0) rememberHubNodePainter(
                     if (node.id == "astra_access") "images/nodes/astra_ship_map_v2.webp" else node.iconPath
                 ) else null
-                val anchorX = transform.x(site.x)
-                val anchorY = transform.y(site.y)
+                val anchorX = transform.x(nodeX)
+                val anchorY = transform.y(nodeY)
 
                 if (site.labelDx != 0f || site.labelDy != 0f) {
                     Canvas(Modifier.fillMaxSize()) {
                         drawLine(tint.copy(alpha = .6f), Offset(anchorX, anchorY),
-                            Offset(transform.x(site.x + site.labelDx), transform.y(site.y + site.labelDy) + 14.dp.toPx()),
+                            Offset(transform.x(nodeX + site.labelDx), transform.y(nodeY + site.labelDy) + 14.dp.toPx()),
                             strokeWidth = 1.dp.toPx())
                     }
                 }
@@ -291,12 +299,12 @@ internal fun HubMapScene(
 
                 // --- Layer 3: Independent Grounded Labels (Dynamic Smart-Flipping) ---
                 val labelWidth = minOf(104.dp, mapWidth * .32f)
-                val labelX = (transform.x(site.x + site.labelDx) - with(density) { labelWidth.toPx() } / 2)
+                val labelX = (transform.x(nodeX + site.labelDx) - with(density) { labelWidth.toPx() } / 2)
                     .coerceIn(0f, (viewportWidthPx - with(density) { labelWidth.toPx() }).coerceAtLeast(0f))
 
                 val panelTopPx = viewportHeightPx - with(density) { bottomReserve.toPx() }
                 val flipAbove = site.labelDy < 0f || (site.labelDy == 0f && (
-                    anchorY + with(density) { 36.dp.toPx() } > panelTopPx || site.y >= 0.72f
+                    anchorY + with(density) { 36.dp.toPx() } > panelTopPx || nodeY >= 0.72f
                 ))
 
                 val defaultPillHeightPx = with(density) { 26.dp.roundToPx() }
@@ -312,9 +320,9 @@ internal fun HubMapScene(
                     }
                 } else {
                     if (painter != null) {
-                        transform.y(site.y + site.labelDy)
+                        transform.y(nodeY + site.labelDy)
                     } else {
-                        transform.y(site.y + site.labelDy) + with(density) { 14.dp.toPx() }
+                        transform.y(nodeY + site.labelDy) + with(density) { 14.dp.toPx() }
                     }
                 }.coerceIn(0f, (viewportHeightPx - pillHeightPx).coerceAtLeast(0f))
 
