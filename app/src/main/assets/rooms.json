@@ -8769,9 +8769,10 @@
     "weather": "fog",
     "title": "Resonant Falls",
     "background_image": "images/rooms/world_2/stream_falls.webp",
-    "description": "The stream cascades over three massive stone pillars. Behind the falling water, a sheltered cookfire recess stays dry while the stone hums softly. David tends a smoker over the coals, the rich scent of smoked brisket and fresh coffee drifting through the spray.",
+    "description": "The stream cascades over stone pillars. Behind the falling water, a sheltered cookfire stays dry while David tends a brisket smoker. Penny the sheepadoodle watches over the camp, nudging everyone into a protective pack.",
     "npcs": [
-      "chef_david"
+      "chef_david",
+      "hound_penny"
     ],
     "items": [],
     "enemies": [],
@@ -8802,6 +8803,13 @@
         "name": "provisions counter",
         "type": "shop",
         "shop_id": "davids_provisions"
+      },
+      {
+        "id": "inspect_penny_bed",
+        "name": "penny camp bed",
+        "type": "inspect",
+        "description": "Inspect Penny's pile of warm river towels.",
+        "inspect_message": "A soft nest of warm fleece towels beside the hearth. A heavily chewed pine branch and a clean water dish sit ready for whenever she finishes her shift guarding the camp."
       }
     ]
   },

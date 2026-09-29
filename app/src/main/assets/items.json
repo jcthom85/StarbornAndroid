@@ -3632,5 +3632,21 @@
         "defense": 3
       }
     }
+  },
+  {
+    "id": "pennys_herder_bandana",
+    "name": "Penny's Pack-Guardian Bandana",
+    "description": "A soft, bright red woven bandana that smells of sweet campfires and river pine. Carries the fierce, loving instinct to round up the family and never let anyone wander off alone. \"Nobody gets left behind.\"",
+    "type": "accessory",
+    "value": 500,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": {
+        "defense": 4,
+        "vitality": 4,
+        "stability": 4
+      }
+    }
   }
 ]

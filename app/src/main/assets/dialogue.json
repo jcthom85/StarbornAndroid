@@ -2267,6 +2267,11 @@
         "id": "david_opt_beach",
         "text": "Have you been down to the beach cliffs to the east?",
         "next": "david_beach_reply"
+      },
+      {
+        "id": "david_opt_penny",
+        "text": "Who's this big fluffy dog keeping watch over the camp?",
+        "next": "david_penny_reply"
       }
     ]
   },
@@ -2627,5 +2632,54 @@
     "text": "Oliver leans into your knuckles, his chin resting comfortably on your fingers as a steady, mechanical-grade purr reverberates through his chest. He gently nudges a polished brass chronometer tag toward you.",
     "trigger": "give_item:olivers_supervisory_seal,give_xp:300,set_milestone:ms_oliver_tag_received",
     "next": "oliver_default_talk"
+  },
+  {
+    "id": "david_penny_reply",
+    "speaker": "David",
+    "text": "That's Penny! Sweetest girl in the sector, but don't try wandering off into the mist without her permission. She considers this whole party her personal flock. She'll sprint full-tilt after a pine cone, wrestle you for ten straight minutes, and then pass out cold right here by the brisket smoker. Best camp companion an old outdoor cook could ask for.",
+    "next": "david_default_talk"
+  },
+  {
+    "id": "penny_default_talk",
+    "speaker": "Penny",
+    "text": "Penny bounds forward with full-body enthusiasm, a flurry of shaggy black-and-white curls! She circles your legs, nudges your hips with her nose, and glances around to ensure every single member of the party is standing together in a tight, safe circle.",
+    "options": [
+      {
+        "id": "penny_opt_wrestle",
+        "text": "[Have an energetic wrestling match with Penny]",
+        "condition": "milestone_not_set:ms_penny_wrestle_completed",
+        "next": "penny_wrestle_reply"
+      },
+      {
+        "id": "penny_opt_play_again",
+        "text": "[Offer another playful tussle]",
+        "condition": "milestone:ms_penny_wrestle_completed",
+        "next": "penny_play_again_reply"
+      },
+      {
+        "id": "penny_opt_soothe",
+        "text": "[Give Penny gentle ear scratches and reassure her the pack is safe]",
+        "next": "penny_soothe_reply"
+      }
+    ]
+  },
+  {
+    "id": "penny_wrestle_reply",
+    "speaker": "Penny",
+    "text": "You drop to one knee and grapple with Penny! She lets out happy, playful snorts, batting at your arms with fluffy front paws and wagging so hard her whole rear end sways. For two glorious, chaotic minutes she wrestles with maximum energy—then suddenly flops onto the warm stone with a huge doggy sigh, completely exhausted and blissfully happy. She pushes her red woven bandana into your hand.",
+    "trigger": "give_item:pennys_herder_bandana,give_xp:350,set_milestone:ms_penny_wrestle_completed",
+    "next": "penny_default_talk"
+  },
+  {
+    "id": "penny_play_again_reply",
+    "speaker": "Penny",
+    "text": "Penny gives a single ecstatic yip, playfully batting at your forearms before rolling onto her back on the soft river towels, paws in the air, demanding tummy rubs.",
+    "next": "penny_default_talk"
+  },
+  {
+    "id": "penny_soothe_reply",
+    "speaker": "Penny",
+    "text": "Penny leans her entire weight against your legs, letting out a soft whimper of pure devotion. Knowing everyone is accounted for, she rests her big shaggy chin on your boot and wags her tail gently.",
+    "next": "penny_default_talk"
   }
 ]
