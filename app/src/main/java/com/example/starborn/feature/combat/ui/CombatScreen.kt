@@ -324,6 +324,7 @@ fun CombatScreen(
     val combatTutorial by viewModel.combatTutorial.collectAsStateWithLifecycle()
     val awaitingActionId by viewModel.awaitingAction.collectAsStateWithLifecycle()
     val combatBanner by viewModel.combatBanner.collectAsStateWithLifecycle()
+    val isOpMode by viewModel.isOpMode.collectAsStateWithLifecycle()
         val cinematicPlayback = cinematicState
         ?.collectAsStateWithLifecycle(initialValue = null)
         ?.value
@@ -1047,7 +1048,14 @@ fun CombatScreen(
                             } else null,
                             theme = viewModel.theme,
                             highContrastMode = highContrastMode,
-                            modifier = Modifier.fillMaxWidth().padding(end = if (demoMode) 76.dp else 0.dp)
+                            modifier = Modifier.fillMaxWidth().padding(end = if (demoMode) 76.dp else 0.dp),
+                            actions = {
+                                CombatPlaytestControls(
+                                    isOpMode = isOpMode,
+                                    onToggleOpMode = { viewModel.toggleOpMode() },
+                                    onInstaWin = { viewModel.instaWinBattle() }
+                                )
+                            }
                         )
                         com.example.starborn.feature.combat.ui.components.EnemyFormationViewport(
                             Modifier.fillMaxWidth().weight(1f).testTag("combat-enemies")

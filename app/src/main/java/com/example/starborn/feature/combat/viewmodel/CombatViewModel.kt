@@ -16,6 +16,7 @@ import com.example.starborn.domain.combat.CombatAiWeights
 import com.example.starborn.domain.combat.CombatEngine
 import com.example.starborn.domain.combat.CombatFormulas
 import com.example.starborn.domain.combat.CombatOutcome
+import com.example.starborn.domain.combat.CombatPlaytestBridge
 import com.example.starborn.domain.combat.CombatReward
 import com.example.starborn.domain.combat.CombatSetup
 import com.example.starborn.domain.combat.CombatSide
@@ -175,6 +176,7 @@ class CombatViewModel(
     val combatBanner: StateFlow<CombatBannerMessage?> = _combatBanner.asStateFlow()
     private val _combatTutorial = MutableStateFlow<CombatTutorialState?>(null)
     val combatTutorial: StateFlow<CombatTutorialState?> = _combatTutorial.asStateFlow()
+    val isOpMode: StateFlow<Boolean> = CombatPlaytestBridge.isOpModeFlow
 
     private val _state = MutableStateFlow<CombatState?>(null)
     val state: StateFlow<CombatState?> = _state.asStateFlow()
@@ -483,6 +485,9 @@ class CombatViewModel(
             startAtbTicker()
         }
         refreshSelection(_state.value)
+        if (CombatPlaytestBridge.isOpMode) {
+            healPartyToFull()
+        }
     }
 
     fun playerAttack(targetIdOverride: String? = null) {
@@ -726,12 +731,14 @@ class CombatViewModel(
     }
 
     fun snackCooldownRemaining(actorId: String): Int {
+        if (CombatPlaytestBridge.isOpMode) return 0
         val state = _state.value ?: return 0
         val actorState = state.combatants[actorId] ?: return 0
         return actorState.snackCooldown.coerceAtLeast(0)
     }
 
     fun canUseSnack(actorId: String): Boolean {
+        if (CombatPlaytestBridge.isOpMode) return true
         if (snackCooldownRemaining(actorId) > 0) return false
         val equippedItems = sessionStore.state.value.equippedItems
         val snackId = equippedItemId(actorId, "snack", equippedItems) ?: return false
@@ -1055,6 +1062,7 @@ class CombatViewModel(
         skillUnavailableReason(actorId, skill) == null
 
     fun skillUnavailableReason(actorId: String, skill: Skill): String? {
+        if (CombatPlaytestBridge.isOpMode) return null
         val state = _state.value ?: return "Combat unavailable"
         
         // 0. Check Jammed
@@ -1082,6 +1090,7 @@ class CombatViewModel(
     }
 
     fun skillCooldownRemaining(actorId: String, skillId: String): Int {
+        if (CombatPlaytestBridge.isOpMode) return 0
         val state = _state.value ?: return 0
         val actorState = state.combatants[actorId] ?: return 0
         return actorState.activeCooldowns.getOrDefault(skillId, 0)
@@ -3553,6 +3562,49 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
         return normalizedType == "weapon" ||
             GearRules.isWeaponType(normalizedType) ||
             equipment?.slot?.equals("weapon", ignoreCase = true) == true
+    }
+
+    fun toggleOpMode(): Boolean {
+        val enabled = CombatPlaytestBridge.toggleOpMode()
+        if (enabled) {
+            healPartyToFull()
+        }
+        return enabled
+    }
+
+    fun healPartyToFull() {
+        updateState { current ->
+            val updatedCombatants = current.combatants.mapValues { (_, combatantState) ->
+                if (combatantState.combatant.side == CombatSide.PLAYER || combatantState.combatant.side == CombatSide.ALLY) {
+                    combatantState.copy(
+                        hp = combatantState.combatant.stats.maxHp,
+                        stability = combatantState.combatant.stats.stability,
+                        breakTurns = 0
+                    )
+                } else {
+                    combatantState
+                }
+            }
+            val updatedState = current.copy(combatants = updatedCombatants)
+            persistPartyVitals(updatedState)
+            updatedState
+        }
+    }
+
+    fun instaWinBattle() {
+        updateState { current ->
+            if (current.outcome != null) return@updateState current
+            val updatedCombatants = current.combatants.mapValues { (_, combatantState) ->
+                if (combatantState.combatant.side == CombatSide.ENEMY) {
+                    combatantState.copy(hp = 0, stability = 0)
+                } else {
+                    combatantState
+                }
+            }
+            val defeatEnemiesState = current.copy(combatants = updatedCombatants)
+            val withOutcome = combatEngine.resolveOutcome(defeatEnemiesState, ::victoryReward)
+            withOutcome.applyOutcomeResults(current)
+        }
     }
 
     companion object {

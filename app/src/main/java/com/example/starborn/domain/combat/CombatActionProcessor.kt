@@ -28,16 +28,17 @@ class CombatActionProcessor(
         when (action) {
             is CombatAction.SkillUse -> {
                 val skill = skillLookup(action.skillId) ?: return state
-                if (actorState.activeCooldowns.getOrDefault(skill.id, 0) > 0) return state
-                if (!checkSkillConditions(action.actorId, skill, state, action.targetIds)) return state
+                if (!CombatPlaytestBridge.isOpMode && actorState.activeCooldowns.getOrDefault(skill.id, 0) > 0) return state
+                if (!CombatPlaytestBridge.isOpMode && !checkSkillConditions(action.actorId, skill, state, action.targetIds)) return state
             }
             is CombatAction.SnackUse -> {
-                if (actorState.snackCooldown > 0) return state
+                if (!CombatPlaytestBridge.isOpMode && actorState.snackCooldown > 0) return state
             }
             else -> {}
         }
 
-        val skipInfo = skipReason(actorState)
+        val isFriendly = actorState.combatant.side == CombatSide.PLAYER || actorState.combatant.side == CombatSide.ALLY
+        val skipInfo = if (CombatPlaytestBridge.isOpMode && isFriendly) null else skipReason(actorState)
         if (skipInfo != null) {
             val skipped = state.copy(
                 log = state.log + CombatLogEntry.TurnSkipped(
@@ -1028,6 +1029,9 @@ class CombatActionProcessor(
         target: CombatantState,
         critBonus: Double = 0.0
     ): HitRoll {
+        if (CombatPlaytestBridge.isOpMode && (attacker.combatant.side == CombatSide.PLAYER || attacker.combatant.side == CombatSide.ALLY)) {
+            return HitRoll.Hit(9999, critical = true)
+        }
         val hitChance = (attacker.accuracyRating() - target.evasionRating())
             .coerceIn(MIN_HIT_CHANCE, MAX_HIT_CHANCE)
         val roll = random.nextDouble(0.0, 100.0)

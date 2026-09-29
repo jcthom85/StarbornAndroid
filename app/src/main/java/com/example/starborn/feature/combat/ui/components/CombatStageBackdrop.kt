@@ -1,6 +1,13 @@
 package com.example.starborn.feature.combat.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.platform.testTag
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -40,7 +47,8 @@ fun CombatEncounterHeader(
     onCancelTarget: (() -> Unit)?,
     theme: Theme?,
     highContrastMode: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    actions: @Composable (RowScope.() -> Unit)? = null
 ) {
     val accent = themeColor(theme?.accent, Color(0xFF7BE4FF))
     val border = themeColor(theme?.border, Color(0xFF5CCBE8))
@@ -88,6 +96,7 @@ fun CombatEncounterHeader(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
+                actions?.invoke(this)
                 if (targetMode && onCancelTarget != null) {
                     TextButton(onClick = onCancelTarget) {
                         Icon(
@@ -119,6 +128,77 @@ fun CombatEncounterHeader(
                         )
                     )
             )
+        }
+    }
+}
+
+@Composable
+fun CombatPlaytestControls(
+    isOpMode: Boolean,
+    onToggleOpMode: () -> Unit,
+    onInstaWin: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Surface(
+            shape = RoundedCornerShape(12.dp),
+            color = if (isOpMode) Color(0xFFFFA000).copy(alpha = 0.35f) else Color(0xFF0D1B2A).copy(alpha = 0.70f),
+            border = BorderStroke(
+                width = 1.dp,
+                color = if (isOpMode) Color(0xFFFFD54F) else Color(0xFF5CCBE8).copy(alpha = 0.6f)
+            ),
+            modifier = Modifier
+                .testTag("combat-op-toggle")
+                .clickable(onClick = onToggleOpMode)
+        ) {
+            Row(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = if (isOpMode) "⚡ OP: ON" else "⚡ OP",
+                    color = if (isOpMode) Color(0xFFFFE082) else Color(0xFF7BE4FF),
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 0.5.sp
+                    )
+                )
+            }
+        }
+
+        AnimatedVisibility(
+            visible = isOpMode,
+            enter = fadeIn() + expandHorizontally(),
+            exit = fadeOut() + shrinkHorizontally()
+        ) {
+            Surface(
+                shape = RoundedCornerShape(12.dp),
+                color = Color(0xFFD32F2F).copy(alpha = 0.35f),
+                border = BorderStroke(1.dp, Color(0xFFFF8A80)),
+                modifier = Modifier
+                    .testTag("combat-op-win")
+                    .clickable(onClick = onInstaWin)
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = "💥 Win",
+                        color = Color(0xFFFFCDD2),
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 0.5.sp
+                        )
+                    )
+                }
+            }
         }
     }
 }

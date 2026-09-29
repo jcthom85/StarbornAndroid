@@ -71,11 +71,28 @@ class CombatEngine(
     ): CombatState {
         val targetState = state.combatants[targetId] ?: return state
         val tier = resolveAffinityTier(targetState, element)
-        val clamped = if (amount < 0) 0 else amount
+        val attackerState = state.combatants[attackerId]
+        val isTargetFriendly = targetState.combatant.side == CombatSide.PLAYER || targetState.combatant.side == CombatSide.ALLY
+        val isAttackerFriendly = attackerState?.combatant?.side == CombatSide.PLAYER || attackerState?.combatant?.side == CombatSide.ALLY
+        val opMode = CombatPlaytestBridge.isOpMode
+
+        val effectiveAmount = when {
+            opMode && isTargetFriendly -> 0
+            opMode && isAttackerFriendly -> 9999
+            else -> amount
+        }
+        val effectiveCritical = if (opMode && isAttackerFriendly) true else critical
+
+        val clamped = if (effectiveAmount < 0) 0 else effectiveAmount
         val isWeakness = clamped > 0 && tier == AffinityTier.WEAKNESS
         val newHp = (targetState.hp - clamped).coerceAtLeast(0)
 
-        val stabilityDamage = if (isWeakness) clamped * 2 else clamped
+        val stabilityDamage = when {
+            opMode && isTargetFriendly -> 0
+            opMode && isAttackerFriendly -> 9999
+            isWeakness -> clamped * 2
+            else -> clamped
+        }
         var newStability = targetState.stability - stabilityDamage
         var breakTurns = targetState.breakTurns
 
@@ -95,7 +112,7 @@ class CombatEngine(
             targetId = targetId,
             amount = clamped,
             element = element,
-            critical = critical,
+            critical = effectiveCritical,
             isWeakness = isWeakness,
             isBrokenBonus = brokenBonus,
             momentumSpent = momentumSpent
