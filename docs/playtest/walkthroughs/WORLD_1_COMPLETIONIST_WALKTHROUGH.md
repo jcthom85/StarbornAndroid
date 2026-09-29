@@ -253,7 +253,8 @@ flowchart LR
     C --> D["Medkit / Defensive Buff<br>(Mitigate Heavy Cleave)"]
 ```
 
-- **Vulnerabilities:** Weak to **Brittle** status and **Shock** damage.
+- **Boss Stats:** HP: 280 | Stability: 120 | Element: Physical/Shock
+- **Vulnerabilities:** Weak to **Brittle** status and **Shock** damage (-50%).
 - **Core Tactic:**
   1. Open immediately with **Cryo Vent** (unlocked in Phase 1) to inflict **Brittle**, increasing all subsequent damage taken by 30%.
   2. Throw **Pulse Grenades** (awarded in `w1_sq01`) to devastate the Warden's posture and trigger a Guard Break stun.
@@ -269,7 +270,125 @@ flowchart LR
 
 ---
 
-## 6. Playtester Friction Log Template
+## 6. Master Bestiary & Tactical Combat Strategies
+
+Every enemy in World 1 features distinct posture metrics, element resistances, and attack telegraphs. Audit their behaviors against this table:
+
+| Enemy | Tier & Role | HP / Stability | Element & Weaknesses | Key Abilities | Tactical Counter-Strategy |
+| :--- | :--- | :---: | :--- | :--- | :--- |
+| **Siren Skimmer** | Standard<br>Controller | **35** / 33 | Acid<br>**Freeze: -100%**<br>Physical: +50% | `sonic_shriek`<br>`volatile_swell` | High agility flyer that applies **Blind**. Do not waste physical shots; cast **Cryo Vent** to collapse its steam sac in a single strike. |
+| **Faulted Loader** | Elite<br>Striker | **85** / 65 | Physical<br>**Shock: -100%**<br>Physical: +25% | `hydraulic_slam`<br>`fault_arc` | Industrial loader with exposed circuits. Open with **Arc Tether** to instantly trigger a posture shatter, then execute with basic blaster fire. |
+| **Echo-Borer** | Standard<br>Striker | **45** / 42 | Physical<br>**Burn: -100%**<br>**Freeze: -50%**<br>Shock: +50% | `subterranean_strike`<br>`chitin_burrow` | Burrowing creature with tough armor. Use **Corrosive Rounds** or **Cryo Vent**; avoid relying purely on electric/shock abilities. |
+| **Resonance Buoy** | Standard<br>Support | **35** / 24 | Shock<br>**Shock: -100%**<br>Acid: +50% | `resonance_buoy_emp_burst`<br>`static_burst` | **Priority Kill.** Calls reinforcements and fires static bursts. Low HP and stability; drop immediately with Arc Tether or a Pulse Grenade. |
+| **Acoustic Bulwark** | Elite<br>Tank | **110** / 145 | Physical<br>**Shock: -50%**<br>Physical: +40% | `acoustic_shield`<br>`seismic_slam` | Heavy riot drone with regenerating barrier. Must be broken using **Guard Break** or Arc Tether stun before health damage registers. |
+| **Dominion Dampener** | Elite<br>Controller | **60** / 40 | Tech<br>**Physical: -50%**<br>Shock: +30% | `suppression_field`<br>`silence_pulse` | **High Priority Threat.** Emits an acoustic dampening field that silences active character skills. Focus with rapid kinetic blaster shots first. |
+| **The Iron Warden** | Boss<br>Bruiser | **280** / 120 | Heavy Tech<br>**Shock: -50%**<br>**Brittle: +30% Dmg** | `warden_cleave`<br>`lockdown_burst`<br>`shield_overcharge` | World 1 Climax Boss. Apply Brittle with Cryo Vent, break posture with Pulse Grenades, and punish during recovery windows. |
+
+---
+
+## 7. NPC Roster, Dialogues & Trade Directory
+
+World 1 features 8 distinct NPCs across the colony and deep sectors. Test their dialogue trees, branching choices, and trade interfaces:
+
+| NPC & ID | Location | Primary Role & Quests | Key Interactions & Dialogue Branches |
+| :--- | :--- | :--- | :--- |
+| **Jed**<br>`jed` | `pit_jed_bunk`<br>`workshop_floor`<br>`launch_lift` | Mentor & Mechanic<br>`w1_mq01`, `w1_mq04` | • Gives Starter Kit in bunk.<br>• Guides Cryo-Inductor crafting and cutter surge test.<br>• Overrides cargo lift controls during lockdown and bequeaths the **Ghost Signal Cell** ("Chime"). |
+| **Zeke**<br>`zeke` | `checkpoint_booth`<br>`launch_bay`<br>`launch_pod` | Smuggler & Transit Clerk<br>`w1_mq02`, `w1_mq05` | • Interrogates Nova through booth window on mandatory retirement.<br>• **Branching Choices:** Choose excuse (*Grid Instability*, *Badge Demagnetization*, or *Admin Error*) to print forged pass.<br>• Prepares pod navigation console in Pod Bay and co-pilots launch into World 2. |
+| **Scrapper**<br>`scrapper` | `trade_scrapper` | Black Market Merchant<br>`w1_sq01` | • Offers `w1_sq01` (Scavenger's Stash) to recover contraband cache.<br>• Operates **Scrapper's Contraband** shop. |
+| **Doc**<br>`doc` | `medbay_exam1` | Colony Physician<br>`w1_sq02` | • Offers `w1_sq02` (System Flush) to clear toxic ventilation blockage.<br>• Rewards Nova with the **Corrosive Rounds** weapon mod. |
+| **Foreman Boggs**<br>`foreman_bogs` | `admin_lobby` | Concourse Administrator<br>`w1_mq03`, `w1_sq03` | • Assigns deep mine assignment to Sector 4.<br>• Administers mandatory Guard Break training drill in `admin_security`.<br>• Grants **Mine Access Badge** and unlocks Deep Elevator. |
+| **Guard Hank**<br>`guard_hank` | `checkpoint_bay` | Dominion Enforcer | • Scans Nova's badge and initiates mandatory retirement lockdown alert. |
+| **Miner Bill**<br>`miner_bill` | `trade_bar` | Veteran Miner | • Ambient world-building and lore on deep mine tremors and strange harmonics. |
+| **The Warden**<br>`the_warden` | `launch_bay` | Colony Commander | • Confronts Nova and Zeke at the pod gantry; climax boss encounter. |
+
+### Shop Catalog: Scrapper's Contraband (`trade_scrapper`)
+- **Pricing Rules:** 1.4x Sell Markup / 0.5x Buy Markdown
+- **Accepted Trade Types:** Consumables, Weapons, Armor, Accessories, Components, Mods.
+
+| Item Stock | Category | Base Value | Purchase Cost | Stock Notes & Mechanical Utility |
+| :--- | :--- | :---: | :---: | :--- |
+| `medkit_i` | Consumable | 25c | **35c** | Restores 75 HP to one ally. Core survival staple. |
+| `medkit` | Consumable | 25c | **35c** | Field trauma kit. Restores 75 HP to one ally. |
+| `ration_pack` | Consumable | 35c | **49c** | Restores 35 HP to entire squad. |
+| `pulse_grenade` | Consumable | 60c | **84c** | High EMP blast; shatters enemy barriers and shields. |
+| `battery_pack` | Component | 10c | **14c** | General power cell component. |
+| `scrap_metal` | Component | 10c | **14c** | Core crafting ingredient for weapon and suit mods. |
+| `wiring_bundle` | Component | 18c | **25c** | Insulated copper harness for electrical tinkering. |
+
+---
+
+## 8. Secrets, Hidden Caches & Fishing Compendium
+
+Audit every hidden cache, secret discovery, and optional mechanic across World 1:
+
+### 1. Arcade Cabinet Discovery (The Astra Mini-Game Link)
+- **Location:** Mess Hall (`pit_mess`).
+- **Interaction:** Inspect the broken Hyperion arcade cabinet on the north wall.
+- **Engine State:** Registers the Deep Mine cabinet with the *Astra* game library. When you reach the ship in World 2, this cabinet will be fully playable in the Astra Common Room!
+
+### 2. Secret Floor Stashes & Wall Lockers
+- **Supply Closet Stash (`pit_storage`):** Flip the breaker, then tap the loose floor panel to loot hidden credits and salvage (`ms_w1_pit_storage_looted`).
+- **Vent Crawl Cache (`pit_vents`):** Crawl into maintenance conduit to claim hidden parts (`ms_w1_pit_vents_looted`).
+- **Jed's Bunk Tool Case (`pit_jed_bunk`):** Inspect tool chest under bunk (`ms_w1_jed_bunk_tools_looted`).
+- **Trade Row Security Locker (`trade_locker`):** Acoustic security locker containing high-grade wire (`ms_w1_trade_locker_unlocked`).
+- **Holding Cell Mortar Seash (`checkpoint_cell`):** Tap loose brick beneath bunk to claim hidden contraband (`ms_w1_checkpoint_cell_looted`).
+- **Cryogenic Med Locker (`medbay_storage`):** Sub-zero locker containing emergency **Medkit I** (`ms_w1_medbay_storage_looted`).
+- **Parts Loft Mod Bench (`workshop_loft`):** Secret workbench loot (`ms_w1_workshop_loft_looted`).
+- **Tool Shed Low Shelf (`workshop_shed`):** Hidden toolbox (`ms_w1_workshop_shed_looted`).
+- **Flooded Basement Chest (`workshop_basement`):** Waterlogged components chest (`ms_w1_workshop_basement_looted`).
+- **Back Alley Dolly (`workshop_back`):** Salvage dolly scrap (`ms_w1_workshop_back_looted`).
+- **Shift Queue Contraband Bin (`checkpoint_queue`):** Stashed goods in confiscation bin (`ms_w1_checkpoint_queue_looted`).
+- **Server Airlock Locker (`server_airlock`):** Emergency thermal suit locker (`ms_w1_server_airlock_locker_looted`).
+- **Server Cooling Case (`server_cooling`):** Sub-zero component case (`ms_w1_server_cooling_looted`).
+- **Server Backup Archives (`server_backup`):** Archive data logs (`ms_w1_server_backup_looted`).
+- **Admin Office Slate (`server_office`):** Admin badge and data slate (`ms_w1_server_office_datapads_read`).
+- **Toxic Pocket Medical Stash (`mine_gas`):** Hidden ground cache behind ruptured pipe (Loot: **Medkit I**).
+- **Refueling Bay Volatile Cache (`launch_fuel`):** Optional gantry detour before the cargo lift. Yields **Medkit x1**, **Medkit I x1**, and **Ration x1**!
+
+### 3. Colony Pit Drain Fishing Hole (`mine_landing`)
+In `mine_landing`, interact with the runoff drain pool to launch the fishing minigame:
+- **Zone ID:** `colony_pit_drain`
+- **Catch Table:**
+  - `raw_glowfish` (Common - 48% weight | Gentle Wobble behavior)
+  - `stellarium_eel` (Uncommon - 24% weight | Blind Drift behavior)
+  - `resonance_carp` (Uncommon - 16% weight | Steady Pull behavior)
+  - `old_boot` (Junk - 12% weight | Gentle Wobble behavior)
+  - `scrap_metal` (Common - 8% weight | Steady Pull behavior)
+  - `wiring_bundle` (Common - 3% weight | Steady Pull behavior)
+
+---
+
+## 9. Master Item, Gear & Mod Catalog (World 1)
+
+Comprehensive audit catalog of every item acquirable throughout World 1:
+
+| Item ID | Display Name | Category | Base Value | Acquisition Location | Stat Buffs, Mechanics & In-Game Utility |
+| :--- | :--- | :--- | :---: | :--- | :--- |
+| `starter_cutter` | **Starter Mining Cutter** | Weapon | 0c | Nova's Bunk (`pit_nova_bunk`) | Nova's default weapon. Fast plasma beam strikes. |
+| `flux_liner` | **Flux Liner** | Armor | 0c | Nova's Bunk (`pit_nova_bunk`) | Basic work suit. Patched during Phase 1 surge test. |
+| `functional_cryo_inductor`| **Functional Cryo-Inductor** | Component | 45c | Jed's Workshop (`workshop_floor`) | Crafted during `w1_mq01`. Unlocks **Cryo Vent** ability. |
+| `mine_access_badge` | **Mine Access Badge** | Key Item | 0c | Concourse Lobby (`admin_lobby`) | Granted by Foreman Boggs. Unlocks deep elevator descent. |
+| `tuning_fork` | **The Tuning Fork** | Key Item | 0c | The Heart (`echo_heart`) | Architect Echo #1. Solves `w1_mq03`. Resonates with alien stone. |
+| `ghost_signal_cell` | **Ghost Signal Cell** ("Chime") | Key Item | 0c | Cargo Lift (`launch_lift`) | Bequeathed by Jed. Ancient brass chime needed for World 2. |
+| `mod_corrosive_rounds` | **Corrosive Rounds** | Weapon Mod | 250c | Med Bay Exam (`medbay_exam1`) | Reward for `w1_sq02`. Coats shots in acid to melt armor. |
+| `recoil_dampener` | **Recoil Dampener** | Weapon Mod | 210c | Side Shunt 4 (`mine_shunt`) | Reward for `w1_sq05`. Tames weapon recoil and tightens spread. |
+| `pulse_grenade` | **Pulse Grenade** | Consumable | 60c | Scrapper's Shop / Stash (`w1_sq01`) | AoE EMP detonation; deals heavy shield and posture damage. |
+| `medkit_i` | **Medkit I** | Consumable | 25c | Lockers / Drops / Shops | Restores 75 HP to target ally. |
+| `medkit` | **Medkit** | Consumable | 25c | Drops / Refueling Bay | Restores 75 HP to target ally. |
+| `ration_pack` | **Ration Pack** | Consumable | 35c | Kitchen / Drops / Shops | Restores 35 HP to all squad members. |
+| `power_cell` | **Power Cell** | Component | 30c | Trade Row / Server Room | Charged cell used in field electronics. |
+| `battery_pack` | **Battery Pack** | Component | 10c | Server Room / Drops | Basic chemical battery for electrical tools. |
+| `scrap_metal` | **Scrap Metal** | Component | 10c | Scrap Yard / Drops / Shops | Essential alloy for tinkering and repairs. |
+| `wiring_bundle` | **Wiring Bundle** | Component | 18c | Vents / Drops / Shops | Insulated wire harness for electronics. |
+| `circuit_board` | **Circuit Board** | Component | 10c | Server Room (`w1_sq04`) | Populated control board awarded by rebel override. |
+| `hydraulic_fluid` | **Hydraulic Fluid** | Component | 40c | Security Post (`w1_sq03`) | Industrial lubricant awarded by Boggs' shield drill. |
+| `heavy_gear` | **Heavy Gear** | Component | 60c | Security Post (`w1_sq03`) | Machined gear awarded by Boggs' shield drill. |
+| `admin_badge` | **Admin Badge** | Key Item | 0c | Server Office (`server_office`) | High-tier Dominion security keychit. |
+| `shipment_log` | **Shipment Log** | Lore Item | 0c | Foreman's Desk (`admin_office`) | Logistics slate detailing rerouted Architect relics. |
+
+---
+
+## 10. Playtester Friction Log Template
 
 Copy this section or jot down notes in this format as you play. Bring this log back when you complete the world:
 
@@ -284,3 +403,4 @@ Copy this section or jot down notes in this format as you play. Bring this log b
 | e.g. `echo_heart` | [Pacing] | Minor | Would love an extra line of dialogue from Nova after the echo vision |
 ```
 *(Severity scale: Critical Blocker -> High Friction -> Medium Bug -> Low Polish)*
+

@@ -404,9 +404,95 @@ To lower the barrier at `sector9_source_gate`:
 
 ---
 
-## 8. Sector 9 Tinkering Recipes & Crafting Directory
+## 8. Master Bestiary & Tactical Combat Strategies (Sector 9)
 
-All recipes can be crafted at any workbench (Jed's Shutter, Hunter's Blind in `sector9_wilds_lookout`, or the Astra Workshop):
+Every enemy encountered throughout Sector 9 possesses distinct elemental affinities, posture tolerances, and behavioral roles. Audit their parameters and combat pacing against this directory:
+
+| Enemy | Tier & Role | HP / Stability | Element & Weaknesses | Key Abilities | Tactical Counter-Strategy |
+| :--- | :--- | :---: | :--- | :--- | :--- |
+| **Siren Skimmer** | Standard<br>Controller | **35** / 33 | Acid<br>**Freeze: -100%**<br>Physical: +50% | `sonic_shriek`<br>`volatile_swell` | High agility flyer. Casts `sonic_shriek` to inflict **Blind**. Cast **Cryo Vent** immediately; the freezing blast collapses its steam sac in one hit. |
+| **Shard-Hound** | Standard<br>Striker | **65** / 38 | Physical<br>**Burn: -50%**<br>Shock: +30% | `gnaw`<br>`pounce` | Agile pack hunter. Pounces quickly to interrupt cast gauges. Exploit its **Burn** vulnerability using fire attacks or Corrosive Rounds. |
+| **Spore-Spitter** | Standard<br>Striker | **50** / 54 | Acid<br>**Burn: -100%**<br>Physical: +20% | `toxic_spore` | Bulbous rooted flora. Fires long-range corrosive acid spores. Highly flammable (-100% Burn); burn down quickly before acid ticks accumulate. |
+| **Razor-Vine** | Standard<br>Hazard | **45** / 63 | Acid<br>**Burn: -150%**<br>Acid: +80% | `constrict` | Predatory thorny vine that entangles party members. Extreme **Burn** vulnerability (-150%), or cauterize safely with the repaired **Thermal Cutter**. |
+| **Stalker-Vine** | Elite<br>Support | **100** / 153 | Acid<br>**Burn: -100%**<br>Acid: +80% | `constrict`<br>`nature_heal` | **Priority Target.** Channeled organism that rapidly heals other wild flora with `nature_heal`. Focus immediately with fire and Zeke's Shatter Blow. |
+| **Sentinel Orb** | Elite<br>Controller | **80** / 110 | Shock<br>**Physical: -20%**<br>Shock: +100% | `static_burst`<br>`resonance_beam` | Hovering facility defense sphere. **Completely absorbs Shock damage** (+100%). Do NOT use Arc Tether; smash with Zeke's heavy kinetic strikes. |
+| **Ruin-Guardian** | Elite<br>Tank | **130** / 187 | Physical<br>**Shock: -50%**<br>Physical: +30% | `relic_strike`<br>`barrier_field` | Shielded ancient sentinel guarding facility reliquaries. Channel **Arc Tether** to pierce its shock weakness, then shatter its 187 stability bar. |
+| **The Source Beast** | Boss<br>Apex Striker | **520** / 240 | Physical/Resonance<br>**Burn: -100%**<br>**Shock: -50%** | `claw_swipe`<br>`roar_of_the_source`<br>`seismic_stomp` | Mutated apex predator on Canopy Ridge. Apply Brittle with Cryo Vent, break posture with Shatter Blow, and burst down with Orion's Prism Lance. |
+
+---
+
+## 9. NPC Roster, Dialogues & Trade Directory (Sector 9)
+
+Track the story continuity, personality, dialogue triggers, and trade interfaces for all Sector 9 NPCs:
+
+| NPC & ID | Location | Primary Role & Quests | Key Interactions & Dialogue Branches |
+| :--- | :--- | :--- | :--- |
+| **Zeke**<br>`zeke` | `sector9_crash_site`<br>Party Roster | Co-Pilot & Tank<br>`w2_mq01`, `w2_sq01` | • Recovered from wreckage; stabilized with emergency medkit.<br>• Gives **Botanist** (`w2_sq01`) to survey 5 native flora specimens.<br>• Active party member delivering frontline kinetic strikes. |
+| **Orion**<br>`orion` | `sector9_stasis_chamber`<br>Party Roster | Ancient Tuner & Mystic<br>`w2_mq03`, `w2_sq03`, `w2_sq04`, `w2_mq05` | • Awakened from 20-year stasis via the Ring Array.<br>• Offers **Tideglass Day** (`w2_sq03`) and **Ancient Echoes** (`w2_sq04`).<br>• Yields the **Bridge Echo** (`bridge_relic`) and authenticates Astra launch telemetry. |
+| **Gh0st**<br>`gh0st` | `sector9_canopy_ridge`<br>`sector9_vents_gantry`<br>Party Roster | Ex-Dominion Sniper<br>`w2_mq04`, `w2_sq05` | • Stalks the squad across the ridge; confronted in high overlook.<br>• Offers **Stolen Tech** (`w2_sq05`) to infiltrate facility maintenance vents.<br>• Assists in taking down The Beast and conducts the Anchor Drill. |
+| **Sentinel-3**<br>`sentinel_3` | `sector9_temple_lock_chamber` | Ancient Aethel Vendor | • Operates **Sentinel Scraps** shop.<br>• **Smalltalk Dialogue:** *"The ground sings. The canopy sings. Even the wreckage hums at 432 Hz. You must learn to listen."* |
+| **Dead Soldier**<br>`dead_soldier` | `sector9_wilds_thickets` | Fallen Dominion Scout<br>`w2_sq02` | • Dying scout in spore thickets; initiates **Lost Patrol** (`w2_sq02`) to triangulate beacons and recover his thermal cutter. |
+
+### Shop Catalog: Sentinel Scraps (`sector9_temple_lock_chamber`)
+- **Pricing Rules:** 1.15x Sell Markup / 0.45x Buy Markdown
+- **Accepted Trade Types:** Consumables, Weapons, Armor, Accessories, Ingredients, Components, Mods.
+
+| Item Stock | Category | Base Value | Purchase Cost | Stock Notes & Mechanical Utility |
+| :--- | :--- | :---: | :---: | :--- |
+| `painkillers` | Medicine | 15c | **17c** | Neural Stabilizer. Restores focus, clears erosion fatigue. |
+| `scrap_metal` | Component | 10c | **11c** | Essential alloy for cutter repair and rapid capacitor mod. |
+| `wiring_bundle` | Component | 18c | **20c** | High-grade copper lead wire for electrical tinkering. |
+| `beast_meat` | Ingredient | 14c | **16c** | Chewy, calorie-dense muscle tissue; ingredient for Source Resin. |
+| `herb` | Ingredient | 6c | **7c** | Pungent cave lichen; base ingredient for Source Resin mod. |
+
+---
+
+## 10. Secrets, Foraging & Fishing Compendium (Sector 9)
+
+Comprehensive guide to every hidden discovery, gathering node, fishing catch, and campsite in Sector 9:
+
+### 1. All 8 Wild Foraging Nodes
+Collect wild ingredients across the jungle and coast for crafting Source Resin and cooking provisions:
+- **Herb Node 1:** Overgrown Glade (`sector9_landing_glade`) -> Tap shimmering flora (`ms_w2_herb_glade_foraged`).
+- **Herb Node 2:** Scorched Brush (`sector9_landing_brush`) -> Tap burnt brush (`ms_w2_herb_landing_foraged`).
+- **Herb Node 3:** Resonant Sedge (`sector9_stream_wetlands`) -> Tap marsh reeds (`ms_w2_herb_reeds_foraged`).
+- **Herb Node 4:** Vine Climb (`sector9_ridge_climb`) -> Tap cliffside hanging moss (`ms_w2_herb_ridge_foraged`).
+- **Meat Node 1:** Glow-Moss Cavern (`sector9_stream_cave_depths`) -> Carve beast carcass (`ms_w2_meat_cave_foraged`).
+- **Meat Node 2:** Tide Pools (`sector9_beach_pools`) -> Scavenge tidepool crab (`ms_w2_meat_tidepool_foraged`).
+- **Meat Node 3:** Star-Sand Dunes (`sector9_beach_dunes`) -> Scavenge washed-up beast (`ms_w2_meat_dunes_foraged`).
+- **Meat Node 4:** Hound Nest (`sector9_wilds_nest`) -> Scavenge bone pile (`ms_w2_meat_nest_foraged`).
+
+### 2. Tideglass Beach Fishing Hole (`sector9_beach_pools`)
+Interact with the glowing water pool in `sector9_beach_pools` to launch the fishing minigame:
+- **Zone ID:** `sector9_stream`
+- **Catch Distribution Table:**
+  - `raw_glowfish` (Common - 55% weight | Gentle Wobble behavior)
+  - `resonance_carp` (Uncommon - 28% weight | Steady Pull behavior)
+  - `old_boot` (Junk - 12% weight | Gentle Wobble behavior)
+  - `chime_minnow` (Rare - 5% weight | Erratic Burst behavior)
+  - `scrap_metal` (Common - 5% weight | Steady Pull behavior)
+  - `wiring_bundle` (Common - 3% weight | Steady Pull behavior)
+- **Special Catch: Chime Minnow:**
+  - A rare glowing fish whose bones ring like glass. Cook it into **Chime Minnow Broth** (`chime_minnow` + water/salt) to restore 90 HP and temporarily boost party Critical Luck!
+
+### 3. Secret Reliquary & Lore Discoveries
+- **Hidden Grotto Prism Puzzle (`sector9_beach_grotto`):** Calibrate the prism (`135°`, `64%`, `92 kHz`) to claim the **Focus Conduit** accessory.
+- **Hidden Reliquary (`sector9_archive_secret_stash`):** Found east of the Tuning Matrix in Hub 4. Decode the ancient data crystal to unlock the Bridge Echo historical record (`ms_w2_bridge_record_decoded`).
+- **Beached Cargo Wreck (`sector9_beach_cargo`):** Pry open the rusted container for Scrap Metal x2 and Wiring Bundle x1.
+- **Dominion Outpost Cache (`sector9_foyer_security_hub`):** Loot the abandoned crate for Battery x1 and Medkit I x1.
+
+### 4. Campsites & Rest Perks
+Four wilderness camps are available across Sector 9. Resting at any campfire restores **100% squad HP**, dispels mental erosion, and rewards a complimentary **Neural Stabilizer** (`painkillers`):
+- **Resonant Falls Camp (`sector9_stream_falls`):** Waterfalls mask the party's presence from patrols.
+- **Hunter's Blind Camp (`sector9_wilds_lookout`):** Heat ring shelter above the spore thickets.
+- **Sanctuary Outlook Camp (`sector9_ridge_plateau`):** High stone shelf with a panoramic view of the temple facade.
+- **Distribution Manifold Camp (`sector9_power_manifold`):** Sterile heat plate shelter inside the power complex.
+
+---
+
+## 11. Sector 9 Tinkering Recipes & Crafting Directory
+
+All recipes can be crafted at any workbench (Hunter's Blind in `sector9_wilds_lookout`, Transmitter Site, or Astra Workshop):
 
 | Recipe ID | Item Name | Category | Base Item | Required Components | In-Game Output & Utility |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -416,10 +502,45 @@ All recipes can be crafted at any workbench (Jed's Shutter, Hunter's Blind in `s
 | `mod_resonance_capacitor`| **Resonance Capacitor Mod** | Gear Mod | `rapid_capacitor` x1 | `source_resin` x1<br>`nano_filament` x1 | **Late Mod.** Stores player intent as charge, releasing massive bonus damage on impact. |
 | `gear_reinforced_resin_rod`| **Reinforced Resin Rod** | Fishing | `fiberglass_rod` x1 | `wiring_bundle` x1<br>`circuit_board` x1 | **Fishing Upgrade.** Stabilizes bite sensor for heavier runoff and coastal catches. |
 | `provision_tideglass_delight`| **Tideglass Delight** | Cooking | `raw_glowfish` x1 | `beast_meat` x1<br>`herb` x1 | **Consumable.** Restores 120 HP and sharpens party reaction speed. |
+| `provision_stellarium_eel_skewer`| **Stellarium Eel Skewer** | Cooking | `stellarium_eel` x1 | `fiery_pepper` x1 | **Consumable.** Restores 90 HP and sparks with kinetic charge. |
 
 ---
 
-## 9. Sector 9 Playtester Friction Log Template
+## 12. Master Item, Mod & Equipment Catalog (World 2)
+
+Comprehensive audit catalog of every item acquirable throughout Sector 9:
+
+| Item ID | Display Name | Category | Base Value | Acquisition Location | Stat Buffs, Mechanics & In-Game Utility |
+| :--- | :--- | :--- | :---: | :--- | :--- |
+| `thermal_cutter` | **Thermal Cutter** | Quest / Tool | 0c | Tinkering Repair (`w2_sq02`) | Cauterizes razor-vines cleanly before they release toxic spores. |
+| `damaged_thermal_cutter` | **Damaged Thermal Cutter**| Component | 0c | Burned Glade (`sector9_wilds_clearance`)| Cracked Dominion cutter head; base for repair. |
+| `bridge_relic` | **The Bridge Echo** | Key Item | 0c | Stasis Chamber (`w2_mq03`) | Architect Echo #2. Coordinates willing minds without merging them. |
+| `power_conduits` | **Power Conduits** | Quest Item | 0c | Pod Fragment (`sector9_landing_drop`) | Heavy salvage cables used to install and reboot the Bridge. |
+| `dominion_transmitter_core`| **Transmitter Core** | Component | 0c | Tech Alcove (`sector9_vents_tech_alcove`)| Stolen military transceiver core with clean timing crystal. |
+| `focus_conduit` | **Focus Conduit** | Accessory | 210c | Hidden Grotto / `w2_sq04` | Crystal conduit that boosts Focus (+12) and ATB regeneration. |
+| `source_resin` | **Source Resin Mod** | Armor Mod | 300c | Tinkering / The Beast drop | Solidified resonance residue that stabilizes energy flow (+Def). |
+| `rapid_capacitor` | **Rapid Capacitor Mod** | Gear Mod | 300c | Tinkering (`w2_sq05`) | Overclocked capacitor that speeds up skill cooling cycles by 15%. |
+| `resonance_capacitor_mod` | **Resonance Capacitor Mod**| Gear Mod | 520c | Advanced Tinkering | Stores intent as charge, releasing burst damage on impact. |
+| `reinforced_resin_rod` | **Reinforced Resin Rod** | Fishing Rod | 240c | Advanced Tinkering | Rewired resin rod with stabilized bite sensor for heavy catches. |
+| `tideglass_delight` | **Tideglass Delight** | Consumable | 300c | Camp Cooking (`w2_sq03`) | Restores 120 HP and sharpens party reaction speed. |
+| `chime_minnow_broth` | **Chime Minnow Broth** | Consumable | 145c | Camp Cooking | Restores 90 HP and temporarily boosts Critical Luck. |
+| `painkillers` | **Neural Stabilizer** | Medicine | 15c | Campsites / Sentinel Scraps | Restores 40 HP and eliminates erosion fatigue. |
+| `vial_of_venom` | **Vial of Venom** | Component | 22c | Siren Skimmer / Spore-Spitter | Corrosive acid venom for weapon modding. |
+| `herb` | **Herb** | Ingredient | 6c | Foraging / Sentinel Scraps | Wild subterranean lichen; base for Source Resin. |
+| `beast_meat` | **Beast Meat** | Ingredient | 14c | Foraging / Hound Den / Sentinel | Calorie-dense muscle tissue; ingredient for Source Resin. |
+| `raw_glowfish` | **Raw Glowfish** | Ingredient | 10c | Tide Pools Fishing | Glowing swamp fish; ingredient for Tideglass Delight. |
+| `resonance_carp` | **Resonance Carp** | Ingredient | 28c | Tide Pools Fishing | Deep humming carp; high nutrition for field provisions. |
+| `chime_minnow` | **Chime Minnow** | Ingredient | 65c | Tide Pools Fishing (Rare) | Tiny glass-boned minnow; base for luck broth. |
+| `nano_filament` | **Nano Filament** | Component | 10c | Rare Drop / Scavenge | High-tensile micro-filament for advanced mods. |
+| `armor_plate` | **Armor Plate** | Component | 50c | Ruin-Guardian Drop | Heavy composite armor plate for suit fortifications. |
+| `battery` | **Battery** | Component | 30c | Sentinel Orb Drop | High-capacity electrical storage cell. |
+| `schematic_thermal_cutter` | **Schematic: Thermal Cutter**| Schematic | 180c | Burned Glade (`w2_sq02`) | Blueprint for rebuilding vine-cauterizing cutter heads. |
+| `schematic_source_resin` | **Schematic: Source Resin** | Schematic | 220c | Tideglass Beach (`w2_sq03`) | Orion's blueprint for synthesizing Source-insulating resin. |
+| `schematic_rapid_capacitor`| **Schematic: Rapid Capacitor**| Schematic | 220c | Transmitter Site (`w2_sq05`) | Gh0st's blueprint for overclocking transmitter salvage. |
+
+---
+
+## 13. Sector 9 Playtester Friction Log Template
 
 Copy this table or record notes directly in this format during your test run. Submit this log along with your save export:
 
@@ -435,3 +556,4 @@ Copy this table or record notes directly in this format during your test run. Su
 | e.g. `sector9_hangar_lock` | [Polish] | Minor | Camera angle cut slightly early during the launch rail whiteout |
 ```
 *(Severity scale: Critical Blocker -> High Friction -> Medium Bug -> Low Polish)*
+
