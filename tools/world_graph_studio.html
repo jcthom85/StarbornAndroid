@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Starborn // World Graph & Navigation Studio</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --panel: #111726;
+      --panel-elevated: #182238;
+      --border: #23304a;
+      --border-focus: #00e5ff;
+      --text: #e2e8f0;
+      --text-muted: #8492a6;
+      --accent-cyan: #00e5ff;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+      --accent-purple: #a855f7;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TOP HEADER */
+    header {
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      height: 52px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 50;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand h1 {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand span.tag {
+      background: rgba(0, 229, 255, 0.12);
+      border: 1px solid rgba(0, 229, 255, 0.35);
+      color: var(--accent-cyan);
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+
+    .server-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-family: var(--font-mono);
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 8px var(--accent-green);
+    }
+    .status-dot.offline {
+      background: var(--accent-amber);
+      box-shadow: 0 0 8px var(--accent-amber);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .toggle-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--panel-elevated);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .toggle-pill input { cursor: pointer; }
+    .toggle-pill:hover { color: var(--text); border-color: var(--border-focus); }
+
+    button.btn {
+      background: var(--panel-elevated);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    button.btn:hover {
+      background: #202d4a;
+      border-color: var(--border-focus);
+      color: #fff;
+    }
+    button.btn-primary {
+      background: #0284c7;
+      border-color: #38bdf8;
+      color: #fff;
+    }
+    button.btn-primary:hover {
+      background: #0369a1;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+    }
+    button.btn-save {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #34d399;
+    }
+    button.btn-save:hover {
+      background: #059669;
+      border-color: #10b981;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
+    }
+
+    /* WORLD / HUB FILTER TOOLBAR */
+    .filter-bar {
+      background: #0d1322;
+      border-bottom: 1px solid var(--border);
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      z-index: 40;
+    }
+
+    .world-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--panel);
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .world-tab {
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.15s ease;
+    }
+    .world-tab:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    .world-tab.active {
+      background: var(--accent-cyan);
+      color: #04101e;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+    }
+
+    .hub-select-container {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    select.studio-select {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      outline: none;
+      cursor: pointer;
+    }
+    select.studio-select:focus { border-color: var(--border-focus); }
+
+    .search-box {
+      margin-left: auto;
+      position: relative;
+    }
+    .search-box input {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 5px 10px 5px 28px;
+      border-radius: 6px;
+      font-size: 12px;
+      width: 200px;
+      outline: none;
+    }
+    .search-box input:focus { border-color: var(--border-focus); width: 240px; }
+    .search-box svg {
+      position: absolute;
+      left: 8px;
+      top: 6px;
+      fill: var(--text-muted);
+    }
+
+    /* KPI METRICS RIBBON */
+    .kpi-ribbon {
+      background: #080c16;
+      border-bottom: 1px solid var(--border);
+      padding: 6px 16px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 12px;
+      font-family: var(--font-mono);
+      z-index: 30;
+      overflow-x: auto;
+    }
+    .kpi-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .kpi-item:hover { background: rgba(255,255,255,0.05); }
+    .kpi-label { color: var(--text-muted); }
+    .kpi-value { font-weight: 700; color: #fff; }
+    .kpi-value.good { color: var(--accent-green); }
+    .kpi-value.warn { color: var(--accent-amber); }
+    .kpi-value.error { color: var(--accent-red); }
+
+    /* WORKSPACE BODY */
+    .workspace {
+      flex: 1;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* CANVAS VIEWPORT */
+    .canvas-viewport {
+      flex: 1;
+      height: 100%;
+      position: relative;
+      background: radial-gradient(circle at 50% 50%, #101626 0%, #080c14 100%);
+      cursor: grab;
+      overflow: hidden;
+    }
+    .canvas-viewport:active { cursor: grabbing; }
+
+    #gridCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    #linksSvg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    #nodesLayer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: 0 0;
+      z-index: 3;
+    }
+
+    /* ROOM NODE CARD */
+    .room-node {
+      position: absolute;
+      width: 150px;
+      min-height: 80px;
+      background: rgba(18, 25, 41, 0.94);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+      padding: 8px 10px;
+      cursor: move;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      user-select: none;
+    }
+    .room-node:hover {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 16px rgba(0, 229, 255, 0.35);
+      z-index: 20 !important;
+    }
+    .room-node.selected {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px #38bdf8, 0 0 20px rgba(56, 189, 248, 0.5);
+      z-index: 30 !important;
+    }
+    .room-node.collision {
+      border-color: var(--accent-amber);
+      animation: pulse-warn 1.5s infinite;
+    }
+    .room-node.has-violation {
+      border-left: 3px solid var(--accent-red);
+    }
+
+    @keyframes pulse-warn {
+      0%, 100% { box-shadow: 0 0 4px var(--accent-amber); }
+      50% { box-shadow: 0 0 16px var(--accent-amber); }
+    }
+
+    .node-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 4px;
+      gap: 4px;
+    }
+    .node-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+    .node-pos {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-muted);
+      background: rgba(0,0,0,0.3);
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+
+    .node-id {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--accent-cyan);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-bottom: 6px;
+    }
+
+    .node-badges {
+      display: flex;
+      gap: 4px;
+      font-size: 10px;
+    }
+    .badge {
+      background: rgba(255,255,255,0.06);
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 9px;
+    }
+    .badge.combat { color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .badge.action { color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .badge.item { color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge.npc { color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+
+    /* CARDINAL CONNECTION PINS */
+    .port-pin {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #334155;
+      border: 1px solid #64748b;
+      cursor: crosshair;
+      transition: all 0.15s;
+      z-index: 10;
+    }
+    .port-pin:hover {
+      background: var(--accent-cyan);
+      box-shadow: 0 0 8px var(--accent-cyan);
+      transform: scale(1.3);
+    }
+    .port-pin.connected { background: var(--accent-green); border-color: #34d399; }
+    .port-pin.pin-n { top: -5px; left: calc(50% - 5px); }
+    .port-pin.pin-s { bottom: -5px; left: calc(50% - 5px); }
+    .port-pin.pin-e { right: -5px; top: calc(50% - 5px); }
+    .port-pin.pin-w { left: -5px; top: calc(50% - 5px); }
+
+    /* FLOATING CANVAS CONTROLS */
+    .canvas-hud {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      display: flex;
+      gap: 6px;
+      z-index: 30;
+      background: rgba(17, 23, 38, 0.85);
+      backdrop-filter: blur(8px);
+      padding: 6px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    /* RIGHT INSPECTOR DRAWER */
+    .inspector-drawer {
+      width: 360px;
+      height: 100%;
+      background: var(--panel);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      z-index: 40;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+    .inspector-drawer.collapsed {
+      transform: translateX(100%);
+      margin-left: -360px;
+    }
+
+    .drawer-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .drawer-header h2 { font-size: 14px; font-weight: 700; color: #fff; }
+    .drawer-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .form-input, .form-textarea, .form-select {
+      background: var(--panel-elevated);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      outline: none;
+      font-family: inherit;
+    }
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color: var(--border-focus);
+    }
+    .form-textarea { min-height: 70px; resize: vertical; line-height: 1.4; }
+
+    .coord-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    /* EXITS MATRIX PANEL IN INSPECTOR */
+    .exits-box {
+      background: var(--panel-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .exit-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .exit-badge {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      background: #1e293b;
+      color: #94a3b8;
+    }
+    .exit-badge.active { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .exit-badge.warn { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+
+    .exit-target-select {
+      flex: 1;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: #fff;
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .btn-clear-exit {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 2px 6px;
+    }
+    .btn-clear-exit:hover { color: var(--accent-red); }
+
+    /* ACTION CONVERSION BOX */
+    .mold-breaker-alert {
+      background: rgba(168, 85, 247, 0.12);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      border-radius: 6px;
+      padding: 10px;
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mold-breaker-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #c084fc;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mold-breaker-desc {
+      font-size: 11px;
+      color: #cbd5e1;
+      line-height: 1.3;
+    }
+
+    /* AUDIT ISSUES MODAL / TRAY */
+    .audit-tray {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: calc(100% - 360px);
+      height: 220px;
+      background: var(--panel);
+      border-top: 1px solid var(--border);
+      z-index: 45;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 0.2s ease;
+    }
+    .audit-tray.open { transform: translateY(0); }
+    .audit-tray-header {
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0d1322;
+    }
+    .audit-tray-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 16px;
+    }
+    .issue-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .issue-row:hover { background: rgba(255,255,255,0.04); }
+    .issue-type { font-weight: 700; font-family: var(--font-mono); font-size: 11px; }
+    .issue-type.violation { color: var(--accent-red); }
+    .issue-type.asymmetric { color: var(--accent-amber); }
+    .issue-desc { color: var(--text); flex: 1; margin: 0 16px; }
+
+    /* TOAST ALERT */
+    #toast {
+      position: fixed;
+      top: 64px;
+      right: 24px;
+      background: #0f172a;
+      border: 1px solid var(--border-focus);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      display: none;
+      z-index: 100;
+      animation: slide-in 0.2s ease;
+    }
+    @keyframes slide-in {
+      from { transform: translateX(50px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER -->
+  <header>
+    <div class="brand">
+      <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2">
+          <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+          <polyline points="2 17 12 22 22 17"></polyline>
+          <polyline points="2 12 12 17 22 12"></polyline>
+        </svg>
+        STARBORN
+      </h1>
+      <span class="tag">WORLD GRAPH &amp; NAVIGATION STUDIO</span>
+      <div class="server-status">
+        <div id="statusDot" class="status-dot"></div>
+        <span id="statusText">Connecting...</span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <label class="toggle-pill">
+        <input type="checkbox" id="autoReciprocalCheck" checked>
+        Auto-Wire Reciprocal Exits (NSEW)
+      </label>
+      <label class="toggle-pill">
+        <input type="checkbox" id="gridSnapCheck" checked>
+        Snap to Grid
+      </label>
+      <button class="btn" id="btnUndo" title="Undo (Ctrl+Z)">↺ Undo</button>
+      <button class="btn" id="btnExport" title="Download rooms.json">⬇ Export JSON</button>
+      <button class="btn btn-save" id="btnSave" title="Save to Project (Ctrl+S)">💾 Save to Project</button>
+    </div>
+  </header>
+
+  <!-- WORLD / HUB FILTER TOOLBAR -->
+  <div class="filter-bar">
+    <div class="world-tabs" id="worldTabs">
+      <div class="world-tab active" data-world="all">All Worlds</div>
+      <div class="world-tab" data-world="world_1">World 1: Mines</div>
+      <div class="world-tab" data-world="world_2">World 2: Sector 9</div>
+      <div class="world-tab" data-world="world_3">World 3: Spire</div>
+      <div class="world-tab" data-world="world_4">World 4: Foundry</div>
+      <div class="world-tab" data-world="world_5">World 5: Orbital</div>
+      <div class="world-tab" data-world="world_6">World 6: Tear</div>
+      <div class="world-tab" data-world="world_astra">Astra &amp; Hubs</div>
+    </div>
+
+    <div class="hub-select-container">
+      <span>Hub:</span>
+      <select class="studio-select" id="hubFilterSelect">
+        <option value="all">All Hubs in World</option>
+      </select>
+    </div>
+
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24"><path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"/></svg>
+      <input type="text" id="searchInput" placeholder="Search room title or ID...">
+    </div>
+  </div>
+
+  <!-- KPI AUDIT RIBBON -->
+  <div class="kpi-ribbon">
+    <div class="kpi-item">
+      <span class="kpi-label">Active Rooms:</span>
+      <span class="kpi-value" id="kpiTotalRooms">0</span>
+    </div>
+    <div class="kpi-item" id="kpiComplianceBtn" title="Click to view audit issues">
+      <span class="kpi-label">Strict NSEW Compliance:</span>
+      <span class="kpi-value good" id="kpiCompliance">100%</span>
+    </div>
+    <div class="kpi-item" id="kpiViolationsBtn" title="Click to view diagonal & non-NSEW exits">
+      <span class="kpi-label">Diagonal / Non-NSEW Exits:</span>
+      <span class="kpi-value warn" id="kpiViolations">0</span>
+    </div>
+    <div class="kpi-item" id="kpiAsymmetricBtn" title="Click to view asymmetric one-way drops">
+      <span class="kpi-label">Asymmetric / One-Way:</span>
+      <span class="kpi-value warn" id="kpiAsymmetric">0</span>
+    </div>
+    <div class="kpi-item" id="kpiCollisionsBtn" title="Rooms occupying the exact same [x,y]">
+      <span class="kpi-label">Coord Collisions:</span>
+      <span class="kpi-value good" id="kpiCollisions">0</span>
+    </div>
+    <div class="kpi-item" id="kpiOrphansBtn" title="Rooms with 0 incoming links">
+      <span class="kpi-label">Orphan Rooms:</span>
+      <span class="kpi-value" id="kpiOrphans">0</span>
+    </div>
+    <button class="btn" style="margin-left: auto; padding: 2px 8px; font-size: 11px;" id="btnToggleAuditTray">
+      📋 View Diagnostic Log
+    </button>
+  </div>
+
+  <!-- WORKSPACE BODY -->
+  <div class="workspace">
+    <!-- CANVAS VIEWPORT -->
+    <div class="canvas-viewport" id="canvasViewport">
+      <canvas id="gridCanvas"></canvas>
+      <svg id="linksSvg"></svg>
+      <div id="nodesLayer"></div>
+
+      <!-- HUD CONTROLS -->
+      <div class="canvas-hud">
+        <button class="btn" id="btnZoomIn" title="Zoom In">+</button>
+        <button class="btn" id="btnZoomOut" title="Zoom Out">-</button>
+        <button class="btn" id="btnResetView" title="Reset View">⊙ Fit All</button>
+        <button class="btn" id="btnCreateRoom" title="Create New Room">+ Add Room</button>
+      </div>
+    </div>
+
+    <!-- RIGHT INSPECTOR DRAWER -->
+    <div class="inspector-drawer" id="inspectorDrawer">
+      <div class="drawer-header">
+        <h2>Room Inspector</h2>
+        <button class="btn" style="padding: 2px 6px;" id="btnCloseDrawer">✕</button>
+      </div>
+
+      <div class="drawer-content" id="drawerContent">
+        <p style="color: var(--text-muted); font-size: 12px; text-align: center; margin-top: 30px;">
+          Select a room on the canvas to inspect coordinates, connections, and properties.
+        </p>
+      </div>
+    </div>
+
+    <!-- AUDIT TRAY (DRAWER AT BOTTOM) -->
+    <div class="audit-tray" id="auditTray">
+      <div class="audit-tray-header">
+        <h3 style="font-size: 13px; font-weight: 700; color: #fff;">Navigation Integrity &amp; Strict NSEW Diagnostics</h3>
+        <button class="btn" style="padding: 2px 6px;" id="btnCloseAuditTray">✕</button>
+      </div>
+      <div class="audit-tray-content" id="auditTrayContent">
+        <!-- populated dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING TOAST -->
+  <div id="toast"></div>
+
+  <!-- CORE STUDIO LOGIC SCRIPT -->
+  <script>
+    // State store
+    const state = {
+      rooms: [],
+      hubNodes: [],
+      hubs: [],
+      worlds: [],
+      roomMap: new Map(),
+      activeWorld: 'world_1',
+      activeHub: 'all',
+      selectedRoomId: null,
+      zoom: 1.0,
+      panX: 400,
+      panY: 300,
+      isPanning: false,
+      panStartX: 0,
+      panStartY: 0,
+      draggedRoomId: null,
+      dragOffsetX: 0,
+      dragOffsetY: 0,
+      isDraggingNode: false,
+      connectingFrom: null, // { roomId, direction }
+      history: [],
+      gridSpacing: 180,
+      isServerLive: false
+    };
+
+    const oppositeDirections = {
+      north: 'south',
+      south: 'north',
+      east: 'west',
+      west: 'east',
+      up: 'down',
+      down: 'up',
+      northeast: 'southwest',
+      southwest: 'northeast',
+      northwest: 'southeast',
+      southeast: 'northwest'
+    };
+
+    // DOM Elements
+    const canvasViewport = document.getElementById('canvasViewport');
+    const nodesLayer = document.getElementById('nodesLayer');
+    const linksSvg = document.getElementById('linksSvg');
+    const gridCanvas = document.getElementById('gridCanvas');
+    const ctx = gridCanvas.getContext('2d');
+    const toast = document.getElementById('toast');
+    const inspectorDrawer = document.getElementById('inspectorDrawer');
+    const drawerContent = document.getElementById('drawerContent');
+    const auditTray = document.getElementById('auditTray');
+    const auditTrayContent = document.getElementById('auditTrayContent');
+
+    function showToast(msg, duration = 3000) {
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, duration);
+    }
+
+    // Initialize & Fetch
+    async function init() {
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+      setupCanvasEvents();
+      setupToolbarEvents();
+
+      try {
+        const res = await fetch('/api/data');
+        if (res.ok) {
+          const data = await res.json();
+          state.rooms = data.rooms || [];
+          state.hubNodes = data.hubNodes || data.hub_nodes || [];
+          state.hubs = data.hubs || [];
+          state.worlds = data.worlds || [];
+          state.isServerLive = true;
+          document.getElementById('statusDot').classList.remove('offline');
+          document.getElementById('statusText').textContent = 'Server Live: ' + state.rooms.length + ' rooms';
+          showToast('Loaded ' + state.rooms.length + ' rooms from project assets.');
+        } else {
+          throw new Error('Server returned ' + res.status);
+        }
+      } catch (err) {
+        state.isServerLive = false;
+        document.getElementById('statusDot').classList.add('offline');
+        document.getElementById('statusText').textContent = 'Offline File Mode';
+        console.warn('Local API unavailable, falling back:', err);
+      }
+
+      indexData();
+      populateHubSelector();
+      fitViewToWorld(state.activeWorld);
+      render();
+    }
+
+    function indexData() {
+      state.roomMap.clear();
+      state.rooms.forEach(r => state.roomMap.set(r.id, r));
+    }
+
+    function resizeCanvas() {
+      gridCanvas.width = canvasViewport.clientWidth;
+      gridCanvas.height = canvasViewport.clientHeight;
+      renderGrid();
+    }
+
+    function pushHistory() {
+      state.history.push(JSON.stringify(state.rooms));
+      if (state.history.length > 30) state.history.shift();
+    }
+
+    function undo() {
+      if (state.history.length > 0) {
+        state.rooms = JSON.parse(state.history.pop());
+        indexData();
+        render();
+        showToast('Undo executed.');
+      }
+    }
+
+    // World & Hub filtering
+    function getRoomWorldId(room) {
+      for (const node of state.hubNodes) {
+        if (node.rooms && node.rooms.includes(room.id)) return node.world_id;
+        if (node.entry_room === room.id) return node.world_id;
+      }
+      if (room.id.startsWith('pit_') || room.id.startsWith('trade_') || room.id.startsWith('medbay_') || room.id.startsWith('workshop_') || room.id.startsWith('checkpoint_') || room.id.startsWith('admin_') || room.id.startsWith('server_') || room.id.startsWith('mine_') || room.id.startsWith('echo_') || room.id.startsWith('launch_')) return 'world_1';
+      if (room.id.startsWith('sector9_')) return 'world_2';
+      if (room.id.startsWith('spire_')) return 'world_3';
+      if (room.id.startsWith('foundry_')) return 'world_4';
+      if (room.id.startsWith('orbital_') || room.id.startsWith('deep_')) return 'world_5';
+      if (room.id.startsWith('source_')) return 'world_6';
+      if (room.id.startsWith('astra_')) return 'world_astra';
+      return 'world_1';
+    }
+
+    function getRoomHubId(room) {
+      for (const node of state.hubNodes) {
+        if (node.rooms && node.rooms.includes(room.id)) return node.hub_id;
+      }
+      return 'unknown';
+    }
+
+    function getVisibleRooms() {
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      return state.rooms.filter(r => {
+        const wId = getRoomWorldId(r);
+        if (state.activeWorld !== 'all' && wId !== state.activeWorld) return false;
+        if (state.activeHub !== 'all' && getRoomHubId(r) !== state.activeHub) return false;
+        if (q) {
+          const matchTitle = (r.title || '').toLowerCase().includes(q);
+          const matchId = r.id.toLowerCase().includes(q);
+          if (!matchTitle && !matchId) return false;
+        }
+        return true;
+      });
+    }
+
+    function populateHubSelector() {
+      const select = document.getElementById('hubFilterSelect');
+      select.innerHTML = '<option value="all">All Hubs in World</option>';
+      const relevantHubs = state.hubs.filter(h => state.activeWorld === 'all' || h.world_id === state.activeWorld);
+      relevantHubs.forEach(h => {
+        const opt = document.createElement('option');
+        opt.value = h.id;
+        opt.textContent = h.title || h.id;
+        select.appendChild(opt);
+      });
+    }
+
+    // Grid rendering
+    function renderGrid() {
+      ctx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
+      const step = state.gridSpacing * state.zoom;
+      if (step < 15) return;
+
+      const offsetX = (state.panX % step + step) % step;
+      const offsetY = (state.panY % step + step) % step;
+
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+      ctx.lineWidth = 1;
+
+      for (let x = offsetX; x < gridCanvas.width; x += step) {
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, gridCanvas.height);
+      }
+      for (let y = offsetY; y < gridCanvas.height; y += step) {
+        ctx.moveTo(0, y);
+        ctx.lineTo(gridCanvas.width, y);
+      }
+      ctx.stroke();
+    }
+
+    // Coordinate conversions
+    function gridToScreen(gx, gy) {
+      return {
+        x: state.panX + gx * state.gridSpacing * state.zoom,
+        y: state.panY - gy * state.gridSpacing * state.zoom // Cartesian: Y goes UP
+      };
+    }
+
+    function screenToGrid(sx, sy) {
+      return {
+        x: Math.round((sx - state.panX) / (state.gridSpacing * state.zoom)),
+        y: Math.round(-(sy - state.panY) / (state.gridSpacing * state.zoom))
+      };
+    }
+
+    // Fit View
+    function fitViewToWorld(worldId) {
+      const rooms = state.rooms.filter(r => worldId === 'all' || getRoomWorldId(r) === worldId);
+      if (rooms.length === 0) return;
+
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      rooms.forEach(r => {
+        const pos = r.pos || [0, 0];
+        minX = Math.min(minX, pos[0]);
+        maxX = Math.max(maxX, pos[0]);
+        minY = Math.min(minY, pos[1]);
+        maxY = Math.max(maxY, pos[1]);
+      });
+
+      const centerX = (minX + maxX) / 2;
+      const centerY = (minY + maxY) / 2;
+      const spanX = Math.max(maxX - minX + 2, 4);
+      const spanY = Math.max(maxY - minY + 2, 4);
+
+      const targetZoomX = canvasViewport.clientWidth / (spanX * state.gridSpacing);
+      const targetZoomY = canvasViewport.clientHeight / (spanY * state.gridSpacing);
+      state.zoom = Math.min(Math.max(Math.min(targetZoomX, targetZoomY), 0.35), 1.2);
+
+      state.panX = canvasViewport.clientWidth / 2 - centerX * state.gridSpacing * state.zoom;
+      state.panY = canvasViewport.clientHeight / 2 + centerY * state.gridSpacing * state.zoom;
+      render();
+    }
+
+    // Main Render
+    function render() {
+      renderGrid();
+      nodesLayer.innerHTML = '';
+      linksSvg.innerHTML = '';
+
+      const visibleRooms = getVisibleRooms();
+      const visibleSet = new Set(visibleRooms.map(r => r.id));
+
+      // Audit counts
+      let totalReciprocal = 0;
+      let totalViolations = 0;
+      let totalAsymmetric = 0;
+      const coordCounts = new Map();
+      const incomingCounts = new Map();
+
+      visibleRooms.forEach(r => {
+        const p = (r.pos || [0,0]).join(',');
+        coordCounts.set(p, (coordCounts.get(p) || 0) + 1);
+      });
+
+      // Render Nodes
+      visibleRooms.forEach(room => {
+        const pos = room.pos || [0, 0];
+        const screenPos = gridToScreen(pos[0], pos[1]);
+
+        const nodeEl = document.createElement('div');
+        nodeEl.className = 'room-node';
+        nodeEl.id = 'node_' + room.id;
+        nodeEl.style.left = (screenPos.x - 75) + 'px';
+        nodeEl.style.top = (screenPos.y - 40) + 'px';
+        nodeEl.style.transform = `scale(${Math.min(Math.max(state.zoom, 0.7), 1.1)})`;
+
+        if (state.selectedRoomId === room.id) nodeEl.classList.add('selected');
+        if ((coordCounts.get(pos.join(',')) || 0) > 1) nodeEl.classList.add('collision');
+
+        // Check if room has violations
+        let roomHasViolation = false;
+        const conns = room.connections || {};
+        for (const [dir, target] of Object.entries(conns)) {
+          if (!['north', 'south', 'east', 'west'].includes(dir)) {
+            roomHasViolation = true;
+            totalViolations++;
+          } else {
+            const opp = oppositeDirections[dir];
+            const targetRoom = state.roomMap.get(target);
+            if (!targetRoom || (targetRoom.connections || {})[opp] !== room.id) {
+              totalAsymmetric++;
+            } else {
+              totalReciprocal++;
+            }
+          }
+          incomingCounts.set(target, (incomingCounts.get(target) || 0) + 1);
+        }
+        if (roomHasViolation) nodeEl.classList.add('has-violation');
+
+        // Header
+        const headerEl = document.createElement('div');
+        headerEl.className = 'node-header';
+        headerEl.innerHTML = `
+          <div class="node-title" title="${escapeHtml(room.title || room.id)}">${escapeHtml(room.title || 'Untitled')}</div>
+          <div class="node-pos">${pos[0]},${pos[1]}</div>
+        `;
+
+        const idEl = document.createElement('div');
+        idEl.className = 'node-id';
+        idEl.textContent = room.id;
+
+        // Badges
+        const badgesEl = document.createElement('div');
+        badgesEl.className = 'node-badges';
+        if (room.enemies && room.enemies.length > 0) badgesEl.innerHTML += `<span class="badge combat" title="Enemies: ${room.enemies.join(', ')}">⚔️ ${room.enemies.length}</span>`;
+        if (room.actions && room.actions.length > 0) badgesEl.innerHTML += `<span class="badge action" title="Actions: ${room.actions.length}">⚡ ${room.actions.length}</span>`;
+        if (room.items && room.items.length > 0) badgesEl.innerHTML += `<span class="badge item" title="Items: ${room.items.length}">📦 ${room.items.length}</span>`;
+        if (room.npcs && room.npcs.length > 0) badgesEl.innerHTML += `<span class="badge npc" title="NPCs: ${room.npcs.join(', ')}">👤</span>`;
+
+        nodeEl.appendChild(headerEl);
+        nodeEl.appendChild(idEl);
+        nodeEl.appendChild(badgesEl);
+
+        // Cardinal Pins
+        ['n', 's', 'e', 'w'].forEach(dirKey => {
+          const pin = document.createElement('div');
+          const fullDir = { n: 'north', s: 'south', e: 'east', w: 'west' }[dirKey];
+          pin.className = `port-pin pin-${dirKey}`;
+          if (conns[fullDir]) pin.classList.add('connected');
+          pin.title = `Connect ${fullDir.toUpperCase()}`;
+          pin.addEventListener('mousedown', (e) => {
+            e.stopPropagation();
+            startConnection(room.id, fullDir);
+          });
+          nodeEl.appendChild(pin);
+        });
+
+        // Click & Drag Node
+        nodeEl.addEventListener('mousedown', (e) => {
+          if (e.button !== 0) return;
+          e.stopPropagation();
+          selectRoom(room.id);
+          startNodeDrag(room.id, e);
+        });
+
+        nodesLayer.appendChild(nodeEl);
+      });
+
+      // Render Connections SVG
+      const drawnLinks = new Set();
+      visibleRooms.forEach(room => {
+        const fromPos = room.pos || [0, 0];
+        const p1 = gridToScreen(fromPos[0], fromPos[1]);
+        const conns = room.connections || {};
+
+        for (const [dir, targetId] of Object.entries(conns)) {
+          if (!visibleSet.has(targetId)) continue;
+          const targetRoom = state.roomMap.get(targetId);
+          if (!targetRoom) continue;
+
+          const toPos = targetRoom.pos || [0, 0];
+          const p2 = gridToScreen(toPos[0], toPos[1]);
+
+          const linkKey = [room.id, targetId].sort().join('--');
+          const isNSEW = ['north', 'south', 'east', 'west'].includes(dir);
+          const opp = oppositeDirections[dir];
+          const isReciprocal = opp && (targetRoom.connections || {})[opp] === room.id;
+
+          if (isReciprocal && drawnLinks.has(linkKey)) continue;
+          drawnLinks.add(linkKey);
+
+          drawConnectionLine(p1, p2, dir, isNSEW, isReciprocal);
+        }
+      });
+
+      // Update KPIs
+      document.getElementById('kpiTotalRooms').textContent = visibleRooms.length;
+      const totalLinks = (totalReciprocal / 2) + totalViolations + totalAsymmetric;
+      const compliancePct = totalLinks > 0 ? Math.round(((totalReciprocal / 2) / totalLinks) * 100) : 100;
+      const compEl = document.getElementById('kpiCompliance');
+      compEl.textContent = compliancePct + '%';
+      compEl.className = 'kpi-value ' + (compliancePct > 95 ? 'good' : compliancePct > 80 ? 'warn' : 'error');
+
+      document.getElementById('kpiViolations').textContent = totalViolations;
+      document.getElementById('kpiAsymmetric').textContent = totalAsymmetric;
+
+      let collisions = 0;
+      coordCounts.forEach(count => { if (count > 1) collisions += (count - 1); });
+      const collEl = document.getElementById('kpiCollisions');
+      collEl.textContent = collisions;
+      collEl.className = 'kpi-value ' + (collisions === 0 ? 'good' : 'warn');
+
+      let orphans = 0;
+      visibleRooms.forEach(r => {
+        if (!incomingCounts.has(r.id) && Object.keys(r.connections || {}).length === 0) orphans++;
+      });
+      document.getElementById('kpiOrphans').textContent = orphans;
+    }
+
+    function drawConnectionLine(p1, p2, dir, isNSEW, isReciprocal) {
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', p1.x);
+      line.setAttribute('y1', p1.y);
+      line.setAttribute('x2', p2.x);
+      line.setAttribute('y2', p2.y);
+
+      if (!isNSEW) {
+        // Red violation
+        line.setAttribute('stroke', 'var(--accent-red)');
+        line.setAttribute('stroke-width', '2.5');
+        line.setAttribute('stroke-dasharray', '4,4');
+      } else if (!isReciprocal) {
+        // Asymmetric one-way drop (Amber)
+        line.setAttribute('stroke', 'var(--accent-amber)');
+        line.setAttribute('stroke-width', '2');
+        line.setAttribute('stroke-dasharray', '6,3');
+      } else {
+        // Strict reciprocal NSEW (Green)
+        line.setAttribute('stroke', 'var(--accent-green)');
+        line.setAttribute('stroke-width', '2');
+      }
+      linksSvg.appendChild(line);
+    }
+
+    // Node Dragging
+    function startNodeDrag(roomId, e) {
+      state.isDraggingNode = true;
+      state.draggedRoomId = roomId;
+      const room = state.roomMap.get(roomId);
+      const pos = room.pos || [0, 0];
+      const screenPos = gridToScreen(pos[0], pos[1]);
+      state.dragOffsetX = e.clientX - screenPos.x;
+      state.dragOffsetY = e.clientY - screenPos.y;
+      pushHistory();
+    }
+
+    function onNodeDrag(e) {
+      if (!state.isDraggingNode || !state.draggedRoomId) return;
+      const room = state.roomMap.get(state.draggedRoomId);
+      if (!room) return;
+
+      const mouseX = e.clientX - state.dragOffsetX;
+      const mouseY = e.clientY - state.dragOffsetY;
+      const gridPos = screenToGrid(mouseX, mouseY);
+
+      if (document.getElementById('gridSnapCheck').checked) {
+        if (!room.pos || room.pos[0] !== gridPos.x || room.pos[1] !== gridPos.y) {
+          room.pos = [gridPos.x, gridPos.y];
+          render();
+          updateInspectorCoords(gridPos.x, gridPos.y);
+        }
+      } else {
+        // non-snapped free drag
+        room.pos = [gridPos.x, gridPos.y];
+        render();
+      }
+    }
+
+    function stopNodeDrag() {
+      state.isDraggingNode = false;
+      state.draggedRoomId = null;
+    }
+
+    // Connection Wiring
+    function startConnection(roomId, direction) {
+      state.connectingFrom = { roomId, direction };
+      showToast(`Select target room to connect from [${roomId}] (${direction.toUpperCase()})...`);
+    }
+
+    function completeConnection(targetRoomId) {
+      if (!state.connectingFrom) return;
+      const { roomId, direction } = state.connectingFrom;
+      state.connectingFrom = null;
+
+      if (roomId === targetRoomId) {
+        showToast('Cannot connect a room to itself.');
+        return;
+      }
+
+      pushHistory();
+      const sourceRoom = state.roomMap.get(roomId);
+      const targetRoom = state.roomMap.get(targetRoomId);
+
+      if (!sourceRoom.connections) sourceRoom.connections = {};
+      sourceRoom.connections[direction] = targetRoomId;
+
+      // Auto-Reciprocal Wiring
+      if (document.getElementById('autoReciprocalCheck').checked) {
+        const opp = oppositeDirections[direction];
+        if (opp) {
+          if (!targetRoom.connections) targetRoom.connections = {};
+          targetRoom.connections[opp] = roomId;
+        }
+      }
+
+      showToast(`Connected ${roomId} (${direction}) -> ${targetRoomId}`);
+      render();
+      if (state.selectedRoomId === roomId || state.selectedRoomId === targetRoomId) {
+        selectRoom(state.selectedRoomId);
+      }
+    }
+
+    // Canvas Events (Pan & Zoom)
+    function setupCanvasEvents() {
+      canvasViewport.addEventListener('mousedown', (e) => {
+        if (e.target.closest('.room-node') || e.target.closest('.canvas-hud')) return;
+        state.isPanning = true;
+        state.panStartX = e.clientX - state.panX;
+        state.panStartY = e.clientY - state.panY;
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (state.isPanning) {
+          state.panX = e.clientX - state.panStartX;
+          state.panY = e.clientY - state.panStartY;
+          render();
+        } else if (state.isDraggingNode) {
+          onNodeDrag(e);
+        }
+      });
+
+      window.addEventListener('mouseup', () => {
+        state.isPanning = false;
+        stopNodeDrag();
+      });
+
+      canvasViewport.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+        const newZoom = Math.min(Math.max(state.zoom * zoomFactor, 0.25), 2.0);
+
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+
+        state.panX = mouseX - (mouseX - state.panX) * (newZoom / state.zoom);
+        state.panY = mouseY - (mouseY - state.panY) * (newZoom / state.zoom);
+        state.zoom = newZoom;
+        render();
+      }, { passive: false });
+
+      // HUD buttons
+      document.getElementById('btnZoomIn').addEventListener('click', () => {
+        state.zoom = Math.min(state.zoom * 1.2, 2.0);
+        render();
+      });
+      document.getElementById('btnZoomOut').addEventListener('click', () => {
+        state.zoom = Math.max(state.zoom * 0.8, 0.25);
+        render();
+      });
+      document.getElementById('btnResetView').addEventListener('click', () => {
+        fitViewToWorld(state.activeWorld);
+      });
+      document.getElementById('btnCreateRoom').addEventListener('click', createNewRoom);
+    }
+
+    // Toolbar & Filter Events
+    function setupToolbarEvents() {
+      // World tabs
+      document.querySelectorAll('.world-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.world-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          state.activeWorld = tab.dataset.world;
+          state.activeHub = 'all';
+          populateHubSelector();
+          fitViewToWorld(state.activeWorld);
+        });
+      });
+
+      // Hub selector
+      document.getElementById('hubFilterSelect').addEventListener('change', (e) => {
+        state.activeHub = e.target.value;
+        render();
+      });
+
+      // Search
+      document.getElementById('searchInput').addEventListener('input', () => {
+        render();
+      });
+
+      // Undo / Redo
+      document.getElementById('btnUndo').addEventListener('click', undo);
+      window.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+          e.preventDefault();
+          undo();
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+          e.preventDefault();
+          saveToProject();
+        }
+      });
+
+      // Save & Export
+      document.getElementById('btnSave').addEventListener('click', saveToProject);
+      document.getElementById('btnExport').addEventListener('click', exportJson);
+
+      // Audit Drawer Toggle
+      document.getElementById('btnToggleAuditTray').addEventListener('click', toggleAuditTray);
+      document.getElementById('btnCloseAuditTray').addEventListener('click', () => auditTray.classList.remove('open'));
+      document.getElementById('kpiViolationsBtn').addEventListener('click', () => openAuditFilter('violations'));
+      document.getElementById('kpiAsymmetricBtn').addEventListener('click', () => openAuditFilter('asymmetric'));
+      document.getElementById('kpiCollisionsBtn').addEventListener('click', () => openAuditFilter('collisions'));
+      document.getElementById('kpiOrphansBtn').addEventListener('click', () => openAuditFilter('orphans'));
+      document.getElementById('btnCloseDrawer').addEventListener('click', () => {
+        inspectorDrawer.classList.add('collapsed');
+      });
+    }
+
+    // Room Selection & Inspector
+    function selectRoom(roomId) {
+      if (state.connectingFrom) {
+        completeConnection(roomId);
+        return;
+      }
+
+      state.selectedRoomId = roomId;
+      inspectorDrawer.classList.remove('collapsed');
+      const room = state.roomMap.get(roomId);
+      if (!room) return;
+
+      const pos = room.pos || [0, 0];
+      const conns = room.connections || {};
+
+      let nonNsewRows = '';
+      for (const [dir, target] of Object.entries(conns)) {
+        if (!['north', 'south', 'east', 'west'].includes(dir)) {
+          nonNsewRows += `
+            <div class="mold-breaker-alert">
+              <div class="mold-breaker-title">🚨 Non-NSEW Exit: ${dir.toUpperCase()} -> ${target}</div>
+              <div class="mold-breaker-desc">This diagonal/vertical exit breaks mobile 4-way swipe navigation.</div>
+              <button class="btn btn-primary" style="font-size:11px; padding:4px 8px;" onclick="convertExitToAction('${room.id}', '${dir}', '${target}')">
+                ⚡ Convert to Actionable Keyword Exit
+              </button>
+            </div>
+          `;
+        }
+      }
+
+      drawerContent.innerHTML = `
+        <div class="form-group">
+          <label class="form-label">Room Title</label>
+          <input type="text" class="form-input" id="editRoomTitle" value="${escapeHtml(room.title || '')}">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Room ID (Unique Key)</label>
+          <input type="text" class="form-input" style="font-family: var(--font-mono); color: var(--accent-cyan);" value="${room.id}" readonly>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Grid Coordinates (X = E/W, Y = N/S)</label>
+          <div class="coord-grid">
+            <input type="number" class="form-input" id="editCoordX" value="${pos[0]}">
+            <input type="number" class="form-input" id="editCoordY" value="${pos[1]}">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description / Narrative Flavor</label>
+          <textarea class="form-textarea" id="editRoomDesc">${escapeHtml(room.description || '')}</textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Cardinal Exits (NSEW Navigation)</label>
+          <div class="exits-box">
+            ${renderExitSelector(room, 'north', 'N')}
+            ${renderExitSelector(room, 'south', 'S')}
+            ${renderExitSelector(room, 'east', 'E')}
+            ${renderExitSelector(room, 'west', 'W')}
+          </div>
+          ${nonNsewRows}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Environment &amp; Weather</label>
+          <div class="coord-grid">
+            <input type="text" class="form-input" id="editEnv" value="${room.env || ''}" placeholder="env (e.g. mine)">
+            <input type="text" class="form-input" id="editWeather" value="${room.weather || ''}" placeholder="weather (e.g. clear)">
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 10px;">
+          <button class="btn" style="flex:1" onclick="centerOnRoom('${room.id}')">⊙ Focus Node</button>
+          <button class="btn" style="color: var(--accent-red)" onclick="deleteRoom('${room.id}')">🗑 Delete Room</button>
+        </div>
+      `;
+
+      // Attach live listeners
+      document.getElementById('editRoomTitle').addEventListener('input', (e) => {
+        room.title = e.target.value;
+        const nodeTitleEl = document.querySelector(`#node_${room.id} .node-title`);
+        if (nodeTitleEl) nodeTitleEl.textContent = room.title || 'Untitled';
+      });
+
+      document.getElementById('editRoomDesc').addEventListener('input', (e) => {
+        room.description = e.target.value;
+      });
+
+      document.getElementById('editCoordX').addEventListener('change', (e) => {
+        pushHistory();
+        room.pos = [parseInt(e.target.value) || 0, room.pos ? room.pos[1] : 0];
+        render();
+      });
+
+      document.getElementById('editCoordY').addEventListener('change', (e) => {
+        pushHistory();
+        room.pos = [room.pos ? room.pos[0] : 0, parseInt(e.target.value) || 0];
+        render();
+      });
+
+      document.getElementById('editEnv').addEventListener('input', (e) => { room.env = e.target.value; });
+      document.getElementById('editWeather').addEventListener('input', (e) => { room.weather = e.target.value; });
+
+      render();
+    }
+
+    function renderExitSelector(room, dir, badge) {
+      const conns = room.connections || {};
+      const currentTarget = conns[dir] || '';
+      const isConnected = !!currentTarget;
+
+      let options = `<option value="">-- No Exit --</option>`;
+      state.rooms.forEach(r => {
+        if (r.id !== room.id) {
+          options += `<option value="${r.id}" ${r.id === currentTarget ? 'selected' : ''}>${escapeHtml(r.title || r.id)} (${r.id})</option>`;
+        }
+      });
+
+      return `
+        <div class="exit-row">
+          <div class="exit-badge ${isConnected ? 'active' : ''}">${badge}</div>
+          <select class="exit-target-select" onchange="onExitSelectChange('${room.id}', '${dir}', this.value)">
+            ${options}
+          </select>
+          ${isConnected ? `<button class="btn-clear-exit" onclick="clearExit('${room.id}', '${dir}')" title="Disconnect Exit">✕</button>` : ''}
+        </div>
+      `;
+    }
+
+    window.onExitSelectChange = function(roomId, direction, targetId) {
+      pushHistory();
+      const room = state.roomMap.get(roomId);
+      if (!room.connections) room.connections = {};
+
+      if (!targetId) {
+        delete room.connections[direction];
+      } else {
+        room.connections[direction] = targetId;
+        // Auto reciprocal
+        if (document.getElementById('autoReciprocalCheck').checked) {
+          const opp = oppositeDirections[direction];
+          const targetRoom = state.roomMap.get(targetId);
+          if (opp && targetRoom) {
+            if (!targetRoom.connections) targetRoom.connections = {};
+            targetRoom.connections[opp] = roomId;
+          }
+        }
+      }
+      selectRoom(roomId);
+    };
+
+    window.clearExit = function(roomId, direction) {
+      pushHistory();
+      const room = state.roomMap.get(roomId);
+      if (room && room.connections) {
+        const targetId = room.connections[direction];
+        delete room.connections[direction];
+        if (document.getElementById('autoReciprocalCheck').checked && targetId) {
+          const targetRoom = state.roomMap.get(targetId);
+          const opp = oppositeDirections[direction];
+          if (opp && targetRoom && targetRoom.connections && targetRoom.connections[opp] === roomId) {
+            delete targetRoom.connections[opp];
+          }
+        }
+      }
+      selectRoom(roomId);
+    };
+
+    // CONVERT INVALID EXIT TO ACTIONABLE TEXT INTERACTION
+    window.convertExitToAction = function(roomId, dir, targetId) {
+      pushHistory();
+      const room = state.roomMap.get(roomId);
+      const targetRoom = state.roomMap.get(targetId);
+      if (!room) return;
+
+      // 1. Remove invalid direction
+      delete room.connections[dir];
+
+      // 2. Add text interactable
+      if (!room.actions) room.actions = [];
+      const actionLabel = `inspect ${dir === 'down' ? 'chute' : dir === 'up' ? 'lift' : targetRoom ? targetRoom.title.toLowerCase() : 'passage'}`;
+      room.actions.push({
+        name: actionLabel,
+        type: 'generic',
+        action_event: `warp_${targetId}`,
+        condition_unmet_message: `You move through to ${targetRoom ? targetRoom.title : targetId}.`
+      });
+
+      showToast(`Converted ${dir.toUpperCase()} exit to actionable text keyword!`);
+      selectRoom(roomId);
+    };
+
+    window.centerOnRoom = function(roomId) {
+      const room = state.roomMap.get(roomId);
+      if (!room) return;
+      const pos = room.pos || [0, 0];
+      state.panX = canvasViewport.clientWidth / 2 - pos[0] * state.gridSpacing * state.zoom;
+      state.panY = canvasViewport.clientHeight / 2 + pos[1] * state.gridSpacing * state.zoom;
+      render();
+    };
+
+    window.deleteRoom = function(roomId) {
+      if (!confirm(`Are you sure you want to delete room [${roomId}]?`)) return;
+      pushHistory();
+      state.rooms = state.rooms.filter(r => r.id !== roomId);
+      state.rooms.forEach(r => {
+        if (r.connections) {
+          for (const [dir, tId] of Object.entries(r.connections)) {
+            if (tId === roomId) delete r.connections[dir];
+          }
+        }
+      });
+      state.selectedRoomId = null;
+      inspectorDrawer.classList.add('collapsed');
+      indexData();
+      render();
+      showToast(`Deleted room [${roomId}].`);
+    };
+
+    function createNewRoom() {
+      pushHistory();
+      let newX = 0, newY = 0;
+      if (state.selectedRoomId) {
+        const sel = state.roomMap.get(state.selectedRoomId);
+        if (sel && sel.pos) {
+          newX = sel.pos[0] + 1;
+          newY = sel.pos[1];
+        }
+      }
+
+      const idSuffix = Date.now().toString().slice(-4);
+      const newRoom = {
+        id: `room_${state.activeWorld}_${idSuffix}`,
+        title: `New Chamber ${idSuffix}`,
+        description: "An unexplored passage in the sector.",
+        pos: [newX, newY],
+        connections: {},
+        actions: [],
+        enemies: [],
+        items: []
+      };
+
+      state.rooms.push(newRoom);
+      indexData();
+      selectRoom(newRoom.id);
+      showToast(`Created new room: ${newRoom.id}`);
+    }
+
+    function updateInspectorCoords(x, y) {
+      const elX = document.getElementById('editCoordX');
+      const elY = document.getElementById('editCoordY');
+      if (elX) elX.value = x;
+      if (elY) elY.value = y;
+    }
+
+    // AUDIT TRAY
+    function toggleAuditTray() {
+      auditTray.classList.toggle('open');
+      if (auditTray.classList.contains('open')) {
+        populateAuditTray('all');
+      }
+    }
+
+    function openAuditFilter(filterType) {
+      auditTray.classList.add('open');
+      populateAuditTray(filterType);
+    }
+
+    function populateAuditTray(filterType) {
+      auditTrayContent.innerHTML = '';
+      const visibleRooms = getVisibleRooms();
+      const issues = [];
+
+      visibleRooms.forEach(room => {
+        const conns = room.connections || {};
+        for (const [dir, targetId] of Object.entries(conns)) {
+          if (!['north', 'south', 'east', 'west'].includes(dir)) {
+            issues.push({
+              type: 'violation',
+              label: 'NON-NSEW DIRECTION',
+              roomId: room.id,
+              desc: `[${room.title || room.id}] has diagonal/vertical exit "${dir}" -> [${targetId}]`
+            });
+          } else {
+            const opp = oppositeDirections[dir];
+            const target = state.roomMap.get(targetId);
+            if (!target || (target.connections || {})[opp] !== room.id) {
+              issues.push({
+                type: 'asymmetric',
+                label: 'ONE-WAY ASYMMETRY',
+                roomId: room.id,
+                desc: `[${room.title || room.id}] leads ${dir.toUpperCase()} to [${target ? target.title : targetId}], but return path does not exist.`
+              });
+            }
+          }
+        }
+      });
+
+      if (issues.length === 0) {
+        auditTrayContent.innerHTML = `<div style="color: var(--accent-green); padding: 12px; font-size: 13px;">✓ All rooms in current view adhere to strict reciprocal NSEW navigation!</div>`;
+        return;
+      }
+
+      issues.forEach(iss => {
+        const row = document.createElement('div');
+        row.className = 'issue-row';
+        row.innerHTML = `
+          <span class="issue-type ${iss.type}">${iss.label}</span>
+          <span class="issue-desc">${escapeHtml(iss.desc)}</span>
+          <button class="btn" style="padding: 2px 8px; font-size: 11px;">Fix</button>
+        `;
+        row.addEventListener('click', () => {
+          centerOnRoom(iss.roomId);
+          selectRoom(iss.roomId);
+        });
+        auditTrayContent.appendChild(row);
+      });
+    }
+
+    // SAVE & EXPORT
+    async function saveToProject() {
+      if (!state.isServerLive) {
+        exportJson();
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ rooms: state.rooms })
+        });
+        const resp = await res.json();
+        if (resp.status === 'ok') {
+          showToast(`✓ Saved to project! Backup: ${resp.backup}`, 4500);
+        } else {
+          alert('Save failed: ' + resp.message);
+        }
+      } catch (err) {
+        alert('Error saving to server: ' + err.message);
+      }
+    }
+
+    function exportJson() {
+      const jsonStr = JSON.stringify(state.rooms, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'rooms.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Exported rooms.json download.');
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // Boot
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
