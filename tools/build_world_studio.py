@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """
 Build script for Starborn World Graph & Navigation Studio.
-Generates tools/world_graph_studio.html with bundled data fallback,
-node-level room map architecture, and live sync capabilities.
+Generates tools/world_graph_studio.html with:
+1. Bundled offline dataset (rooms, hub_nodes, hubs, worlds, hub_layouts)
+2. Room background image display (Inspector preview + Canvas Art Mode toggle + Lightbox)
+3. Interactive Hub Screen Layout with node ground sites and Astra ship dock
+4. Strict NSEW swipe navigation validation and visual editor
 """
 
 import json
@@ -11,18 +14,21 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent
 ASSETS_DIR = PROJECT_ROOT / "app" / "src" / "main" / "assets"
+HUB_LAYOUTS_FILE = BASE_DIR / "hub_layouts.json"
 
 def build():
     rooms = json.load(open(ASSETS_DIR / "rooms.json", encoding="utf-8"))
     hub_nodes = json.load(open(ASSETS_DIR / "hub_nodes.json", encoding="utf-8"))
     hubs = json.load(open(ASSETS_DIR / "hubs.json", encoding="utf-8"))
     worlds = json.load(open(ASSETS_DIR / "worlds.json", encoding="utf-8"))
+    hub_layouts = json.load(open(HUB_LAYOUTS_FILE, encoding="utf-8")) if HUB_LAYOUTS_FILE.exists() else {}
 
     bundled_data = {
         "rooms": rooms,
         "hub_nodes": hub_nodes,
         "hubs": hubs,
-        "worlds": worlds
+        "worlds": worlds,
+        "hub_layouts": hub_layouts
     }
 
     bundled_json_str = json.dumps(bundled_data, ensure_ascii=False)
@@ -69,7 +75,7 @@ def build():
     header {{
       background: var(--panel);
       border-bottom: 1px solid var(--border);
-      height: 50px;
+      height: 52px;
       padding: 0 16px;
       display: flex;
       align-items: center;
@@ -124,6 +130,38 @@ def build():
     .status-dot.offline {{
       background: var(--accent-amber);
       box-shadow: 0 0 8px var(--accent-amber);
+    }}
+
+    .view-mode-tabs {{
+      display: flex;
+      background: rgba(0,0,0,0.35);
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      gap: 3px;
+    }}
+    .view-mode-btn {{
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }}
+    .view-mode-btn:hover {{
+      color: #fff;
+      background: rgba(255,255,255,0.06);
+    }}
+    .view-mode-btn.active {{
+      background: var(--accent-cyan);
+      color: #04101e;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
     }}
 
     .header-actions {{
@@ -424,7 +462,7 @@ def build():
     /* ROOM NODE CARD */
     .room-node {{
       position: absolute;
-      width: 154px;
+      width: 160px;
       min-height: 84px;
       background: rgba(18, 25, 41, 0.94);
       backdrop-filter: blur(8px);
@@ -435,6 +473,7 @@ def build():
       cursor: move;
       transition: border-color 0.15s, box-shadow 0.15s;
       user-select: none;
+      overflow: hidden;
     }}
     .room-node:hover {{
       border-color: var(--accent-cyan);
@@ -462,12 +501,29 @@ def build():
       to {{ box-shadow: 0 0 18px var(--accent-red); }}
     }}
 
+    /* Card Art Banner in Visual Art Mode */
+    .node-art-banner {{
+      height: 48px;
+      margin: -8px -10px 6px -10px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }}
+    .banner-gradient {{
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(18,25,41,0.92) 100%);
+    }}
+
     .node-header {{
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 4px;
       gap: 4px;
+      position: relative;
+      z-index: 2;
     }}
     .node-title {{
       font-size: 11px;
@@ -496,6 +552,8 @@ def build():
       text-overflow: ellipsis;
       white-space: nowrap;
       margin-bottom: 5px;
+      position: relative;
+      z-index: 2;
     }}
 
     .node-badges {{
@@ -503,6 +561,8 @@ def build():
       flex-wrap: wrap;
       gap: 3px;
       font-size: 9px;
+      position: relative;
+      z-index: 2;
     }}
     .badge {{
       background: rgba(255,255,255,0.06);
@@ -515,7 +575,6 @@ def build():
     .badge.action {{ color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }}
     .badge.item {{ color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }}
     .badge.npc {{ color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }}
-    .badge.external {{ color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); }}
 
     /* CARDINAL CONNECTION PINS */
     .port-pin {{
@@ -540,7 +599,7 @@ def build():
     .port-pin.pin-e {{ right: -5px; top: calc(50% - 5px); }}
     .port-pin.pin-w {{ left: -5px; top: calc(50% - 5px); }}
 
-    /* FLOATING CANVAS CONTROLS */
+    /* FLOATING CANVAS HUD */
     .canvas-hud {{
       position: absolute;
       bottom: 16px;
@@ -553,6 +612,161 @@ def build():
       padding: 6px;
       border-radius: 8px;
       border: 1px solid var(--border);
+    }}
+
+    /* HUB SCREEN VIEWPORT */
+    .hub-screen-container {{
+      flex: 1;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 50%, #131d33 0%, #060912 100%);
+      position: relative;
+      overflow: hidden;
+    }}
+
+    .hub-device-frame {{
+      height: calc(100vh - 180px);
+      aspect-ratio: 9 / 16;
+      background: #000;
+      border-radius: 24px;
+      border: 3px solid #23304a;
+      box-shadow: 0 0 40px rgba(0,0,0,0.8), 0 0 20px rgba(0, 229, 255, 0.15);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }}
+
+    .hub-bg-canvas {{
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+    }}
+
+    .hub-top-scrim {{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 110px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
+      pointer-events: none;
+      z-index: 2;
+    }}
+    .hub-bottom-scrim {{
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 120px;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 2;
+    }}
+
+    .hub-screen-header {{
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      right: 18px;
+      z-index: 3;
+    }}
+    .hub-screen-title {{
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    }}
+    .hub-screen-desc {{
+      font-size: 10px;
+      color: #cbd5e1;
+      margin-top: 3px;
+      line-height: 1.3;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+    }}
+
+    .hub-sites-layer {{
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+    }}
+
+    .hub-site-anchor {{
+      position: absolute;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }}
+    .hub-site-anchor:hover {{
+      transform: translate(-50%, -50%) scale(1.12);
+      z-index: 10;
+    }}
+    .hub-site-anchor.selected {{
+      transform: translate(-50%, -50%) scale(1.18);
+      z-index: 12;
+    }}
+
+    .hub-site-pin {{
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.9);
+      border: 2px solid var(--accent-cyan);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.7), 0 0 14px rgba(0, 229, 255, 0.35);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }}
+    .hub-site-anchor.selected .hub-site-pin {{
+      border-color: #fff;
+      box-shadow: 0 0 22px var(--accent-cyan);
+    }}
+    .hub-site-pin img {{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }}
+
+    .hub-site-badge {{
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 700;
+      margin-top: 4px;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }}
+    .hub-site-anchor.selected .hub-site-badge {{
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }}
+
+    /* Astra Dock special styling */
+    .hub-site-anchor.astra-dock .hub-site-pin {{
+      border-color: #38bdf8;
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.6);
+      background: radial-gradient(circle, #0369a1 0%, #0b1329 100%);
+    }}
+    .hub-site-anchor.astra-dock .hub-site-badge {{
+      border-color: #38bdf8;
+      color: #7dd3fc;
+      background: rgba(12, 74, 110, 0.95);
     }}
 
     /* RIGHT INSPECTOR DRAWER */
@@ -596,6 +810,41 @@ def build():
       display: flex;
       flex-direction: column;
       gap: 14px;
+    }}
+
+    /* Room Background Art Preview Card */
+    .room-art-card {{
+      width: 100%;
+      height: 130px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }}
+    .room-art-card img {{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }}
+    .room-art-card:hover img {{
+      transform: scale(1.05);
+    }}
+    .room-art-scrim {{
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%);
+      display: flex;
+      align-items: flex-end;
+      padding: 8px 10px;
+      justify-content: space-between;
+    }}
+    .room-art-tags {{
+      display: flex;
+      gap: 4px;
+      font-size: 9px;
     }}
 
     .form-group {{
@@ -737,6 +986,33 @@ def build():
       background: var(--panel-hover);
     }}
 
+    /* LIGHTBOX MODAL */
+    .lightbox-modal {{
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }}
+    .lightbox-modal img {{
+      max-width: 90vw;
+      max-height: 80vh;
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(0, 229, 255, 0.3);
+      border: 1px solid var(--border-focus);
+    }}
+    .lightbox-caption {{
+      margin-top: 12px;
+      color: #fff;
+      font-size: 13px;
+      font-family: var(--font-mono);
+    }}
+
     /* FLOATING TOAST */
     #toast {{
       position: fixed;
@@ -777,6 +1053,12 @@ def build():
         <span id="statusText">Connecting...</span>
         <button id="btnReconnect" class="btn" style="padding: 2px 6px; font-size: 9px; display: none;">Reconnect</button>
       </div>
+    </div>
+
+    <!-- PRIMARY VIEW MODE SWITCHER -->
+    <div class="view-mode-tabs">
+      <button class="view-mode-btn active" id="btnModeRoomGrid">🗺️ Room Grid Map</button>
+      <button class="view-mode-btn" id="btnModeHubScreen">🪐 Hub Screen Layout</button>
     </div>
 
     <div class="header-actions">
@@ -822,7 +1104,7 @@ def build():
         <select class="studio-select" id="hubFilterSelect"></select>
       </div>
 
-      <div class="select-group">
+      <div class="select-group" id="nodeFilterGroup">
         <span>Node:</span>
         <select class="studio-select" id="nodeFilterSelect"></select>
       </div>
@@ -866,7 +1148,7 @@ def build():
 
   <!-- MAIN WORKSPACE -->
   <div class="workspace">
-    <!-- CANVAS VIEWPORT -->
+    <!-- VIEW A: CANVAS VIEWPORT (Node Room Grid) -->
     <div class="canvas-viewport" id="canvasViewport">
       <canvas id="gridCanvas"></canvas>
       <svg id="linksSvg"></svg>
@@ -878,8 +1160,23 @@ def build():
         <button class="btn" id="btnZoomIn" title="Zoom In (+)">➕</button>
         <button class="btn" id="btnZoomOut" title="Zoom Out (-)">➖</button>
         <button class="btn" id="btnResetView" title="Center &amp; Fit View">🎯 Fit</button>
+        <button class="btn" id="btnToggleArtMode" title="Toggle Room Artwork Cards">🖼️ Art Mode: ON</button>
         <button class="btn" id="btnToggleLabels" title="Toggle Detail Badges">🏷️ Details</button>
         <button class="btn btn-primary" id="btnCreateRoom" title="Add New Room to Node">➕ Add Room</button>
+      </div>
+    </div>
+
+    <!-- VIEW B: HUB SCREEN LAYOUT (Interactive Mobile Hub Scene) -->
+    <div class="hub-screen-container" id="hubScreenContainer" style="display: none;">
+      <div class="hub-device-frame">
+        <img id="hubBgImage" class="hub-bg-canvas" src="" alt="Hub Background">
+        <div class="hub-top-scrim"></div>
+        <div class="hub-bottom-scrim"></div>
+        <div class="hub-screen-header">
+          <div class="hub-screen-title" id="hubScreenTitle">Homestead Quarter</div>
+          <div class="hub-screen-desc" id="hubScreenDesc">A dense cluster of sleeping pods and industrial workshops.</div>
+        </div>
+        <div id="hubSitesLayer" class="hub-sites-layer"></div>
       </div>
     </div>
 
@@ -887,7 +1184,7 @@ def build():
     <div class="inspector-drawer collapsed" id="inspectorDrawer">
       <div class="drawer-header">
         <div class="drawer-title">
-          <span>Room Inspector</span>
+          <span>Inspector</span>
         </div>
         <button class="btn" id="btnCloseDrawer" style="padding: 2px 6px;">✕</button>
       </div>
@@ -908,10 +1205,16 @@ def build():
     </div>
   </div>
 
+  <!-- FLOATING IMAGE LIGHTBOX -->
+  <div id="imageLightbox" class="lightbox-modal" style="display: none;" onclick="this.style.display='none'">
+    <img id="lightboxImg" src="" alt="Room Artwork">
+    <div id="lightboxCaption" class="lightbox-caption"></div>
+  </div>
+
   <!-- FLOATING TOAST -->
   <div id="toast"></div>
 
-  <!-- BUNDLED OFFLINE DATASET (Guarantees zero blank screen even when opened directly as file:///) -->
+  <!-- BUNDLED OFFLINE DATASET -->
   <script id="bundledData" type="application/json">
 {bundled_json_str}
   </script>
@@ -924,13 +1227,16 @@ def build():
       hubNodes: [],
       hubs: [],
       worlds: [],
+      hubLayouts: {{}},
       roomMap: new Map(),
       nodeMap: new Map(),
       hubMap: new Map(),
       activeWorld: 'world_1',
       activeHub: 'hub_1_homestead',
       activeNode: 'pit', // node id OR 'all_nodes'
+      activeViewMode: 'room_grid', // 'room_grid' | 'hub_screen'
       selectedRoomId: null,
+      selectedHubNodeId: null,
       zoom: 1.0,
       panX: 400,
       panY: 300,
@@ -941,10 +1247,11 @@ def build():
       dragOffsetX: 0,
       dragOffsetY: 0,
       isDraggingNode: false,
-      connectingFrom: null, // {{ roomId, direction }}
+      connectingFrom: null,
       history: [],
       gridSpacing: 180,
       isServerLive: false,
+      showArt: true,
       showDetails: true
     }};
 
@@ -963,6 +1270,7 @@ def build():
 
     // DOM Elements
     const canvasViewport = document.getElementById('canvasViewport');
+    const hubScreenContainer = document.getElementById('hubScreenContainer');
     const nodesLayer = document.getElementById('nodesLayer');
     const islandsLayer = document.getElementById('islandsLayer');
     const linksSvg = document.getElementById('linksSvg');
@@ -980,6 +1288,24 @@ def build():
       setTimeout(() => {{ toast.style.display = 'none'; }}, duration);
     }}
 
+    function getImageUrl(imgPath) {{
+      if (!imgPath) return '';
+      const clean = imgPath.replace(/^\/+/, '');
+      if (state.isServerLive || window.location.protocol === 'http:' || window.location.protocol === 'https:') {{
+        return '/' + clean;
+      }}
+      return '../world_assets/src/main/assets/' + clean;
+    }}
+
+    function openLightbox(url, title) {{
+      const lb = document.getElementById('imageLightbox');
+      const img = document.getElementById('lightboxImg');
+      const cap = document.getElementById('lightboxCaption');
+      img.src = url;
+      cap.textContent = title || url;
+      lb.style.display = 'flex';
+    }}
+
     // Initialization
     async function init() {{
       resizeCanvas();
@@ -987,7 +1313,7 @@ def build():
       setupCanvasEvents();
       setupToolbarEvents();
 
-      // Load bundled data first to guarantee immediate display
+      // Load bundled data first
       try {{
         const bundledText = document.getElementById('bundledData').textContent;
         const bundled = JSON.parse(bundledText);
@@ -995,6 +1321,7 @@ def build():
         state.hubNodes = bundled.hubNodes || bundled.hub_nodes || [];
         state.hubs = bundled.hubs || [];
         state.worlds = bundled.worlds || [];
+        state.hubLayouts = bundled.hub_layouts || bundled.hubLayouts || {{}};
       }} catch (e) {{
         console.error('Failed to parse bundled data:', e);
       }}
@@ -1008,6 +1335,7 @@ def build():
           state.hubNodes = data.hubNodes || data.hub_nodes || state.hubNodes;
           state.hubs = data.hubs || state.hubs;
           state.worlds = data.worlds || state.worlds;
+          state.hubLayouts = data.hub_layouts || state.hubLayouts;
           state.isServerLive = true;
           document.getElementById('statusDot').classList.remove('offline');
           document.getElementById('statusText').textContent = 'Server Live: ' + state.rooms.length + ' rooms (Direct Save Active)';
@@ -1081,13 +1409,11 @@ def build():
       return 'unknown';
     }}
 
-    // Node Spatial Offsets for "All Nodes (Dispersed)" view
     function getNodeOffset(nodeId) {{
       if (!nodeId || nodeId === 'all_nodes') return {{ x: 0, y: 0 }};
       const node = state.nodeMap.get(nodeId);
       if (!node) return {{ x: 0, y: 0 }};
 
-      // Arrange nodes in the hub in a structured cluster
       const hubNodes = state.hubNodes.filter(n => n.hub_id === node.hub_id);
       const index = hubNodes.findIndex(n => n.id === nodeId);
       if (index === -1) return {{ x: 0, y: 0 }};
@@ -1104,7 +1430,6 @@ def build():
     function getVisibleRooms() {{
       const q = document.getElementById('searchInput').value.trim().toLowerCase();
 
-      // If search query is active, search across everything
       if (q) {{
         return state.rooms.filter(r => {{
           const matchTitle = (r.title || '').toLowerCase().includes(q);
@@ -1113,7 +1438,6 @@ def build():
         }});
       }}
 
-      // Specific Node Selected (Focused Node Map View)
       if (state.activeNode !== 'all_nodes') {{
         const node = state.nodeMap.get(state.activeNode);
         if (node && node.rooms) {{
@@ -1123,7 +1447,6 @@ def build():
         }}
       }}
 
-      // All Nodes in Hub or World Selected
       return state.rooms.filter(r => {{
         const wId = getRoomWorldId(r);
         if (state.activeWorld !== 'all' && wId !== state.activeWorld) return false;
@@ -1148,7 +1471,6 @@ def build():
           opt.textContent = h.title || h.id;
           hubSelect.appendChild(opt);
         }});
-        // Pick first hub if activeHub not in relevant list
         if (!relevantHubs.some(h => h.id === state.activeHub)) {{
           state.activeHub = relevantHubs[0].id;
         }}
@@ -1170,7 +1492,6 @@ def build():
         return true;
       }});
 
-      // Add "All Nodes (Dispersed View)" option
       const optAll = document.createElement('option');
       optAll.value = 'all_nodes';
       optAll.textContent = '🌐 All Nodes in Hub (Dispersed Islands)';
@@ -1215,12 +1536,196 @@ def build():
       const nodeSelect = document.getElementById('nodeFilterSelect');
       if (nodeSelect) nodeSelect.value = nodeId;
 
-      document.querySelectorAll('.node-pill').forEach(pill => {{
-        pill.classList.remove('active');
-      }});
       populateNodeSelector();
+      if (state.activeViewMode === 'hub_screen') {{
+        switchViewMode('room_grid');
+      }}
       fitView();
       render();
+    }}
+
+    function switchViewMode(mode) {{
+      state.activeViewMode = mode;
+      document.getElementById('btnModeRoomGrid').classList.toggle('active', mode === 'room_grid');
+      document.getElementById('btnModeHubScreen').classList.toggle('active', mode === 'hub_screen');
+
+      if (mode === 'room_grid') {{
+        canvasViewport.style.display = 'block';
+        hubScreenContainer.style.display = 'none';
+        document.getElementById('nodeFilterGroup').style.display = 'flex';
+        document.getElementById('nodePills').style.display = 'flex';
+        fitView();
+        render();
+      }} else {{
+        canvasViewport.style.display = 'none';
+        hubScreenContainer.style.display = 'flex';
+        document.getElementById('nodeFilterGroup').style.display = 'none';
+        document.getElementById('nodePills').style.display = 'none';
+        renderHubScreen();
+      }}
+    }}
+
+    // Render Mobile Hub Screen Scene
+    function renderHubScreen() {{
+      const hub = state.hubMap.get(state.activeHub);
+      if (!hub) return;
+
+      document.getElementById('hubScreenTitle').textContent = hub.title || hub.id;
+      document.getElementById('hubScreenDesc').textContent = hub.description || '';
+
+      const bgImg = document.getElementById('hubBgImage');
+      if (hub.background_image) {{
+        bgImg.src = getImageUrl(hub.background_image);
+      }}
+
+      const layout = state.hubLayouts[hub.id] || {{ sites: {{}}, astra_dock: null }};
+      const sitesLayer = document.getElementById('hubSitesLayer');
+      sitesLayer.innerHTML = '';
+
+      // Render Nodes
+      const hubNodes = state.hubNodes.filter(n => n.hub_id === hub.id);
+      hubNodes.forEach(node => {{
+        const site = layout.sites[node.id] || {{ x: 0.5, y: 0.5 }};
+        const anchor = document.createElement('div');
+        anchor.className = 'hub-site-anchor' + (state.selectedHubNodeId === node.id ? ' selected' : '');
+        anchor.style.left = (site.x * 100) + '%';
+        anchor.style.top = (site.y * 100) + '%';
+
+        anchor.innerHTML = `
+          <div class="hub-site-pin">
+            <img src="${{getImageUrl(node.icon_image || 'images/nodes/pit_hub1_v3.webp')}}" onerror="this.src='${{getImageUrl('images/nodes/pit_hub1_v3.webp')}}'" />
+          </div>
+          <div class="hub-site-badge">
+            <span>${{escapeHtml(node.title || node.id)}}</span>
+            <span style="color:var(--accent-cyan); font-size:9px;">${{(node.rooms || []).length}}r</span>
+          </div>
+        `;
+
+        anchor.addEventListener('click', (e) => {{
+          e.stopPropagation();
+          selectHubNode(node.id);
+        }});
+
+        anchor.addEventListener('dblclick', (e) => {{
+          e.stopPropagation();
+          selectNode(node.id);
+        }});
+
+        sitesLayer.appendChild(anchor);
+      }});
+
+      // Render Astra Dock
+      if (layout.astra_dock) {{
+        const astraSite = layout.astra_dock;
+        const astraAnchor = document.createElement('div');
+        astraAnchor.className = 'hub-site-anchor astra-dock' + (state.selectedHubNodeId === 'astra_access' ? ' selected' : '');
+        astraAnchor.style.left = (astraSite.x * 100) + '%';
+        astraAnchor.style.top = (astraSite.y * 100) + '%';
+
+        astraAnchor.innerHTML = `
+          <div class="hub-site-pin">
+            <img src="${{getImageUrl('images/nodes/astra_ship_map_v2.webp')}}" />
+          </div>
+          <div class="hub-site-badge">
+            <span style="color:#7dd3fc;">The Astra</span>
+            <span style="color:var(--accent-cyan); font-size:9px;">Ship</span>
+          </div>
+        `;
+
+        astraAnchor.addEventListener('click', (e) => {{
+          e.stopPropagation();
+          selectHubNode('astra_access');
+        }});
+
+        sitesLayer.appendChild(astraAnchor);
+      }}
+
+      // Scope Label
+      document.getElementById('kpiScope').textContent = `Scope: Hub [${{hub.title || hub.id}}] Screen Layout`;
+    }}
+
+    function selectHubNode(nodeId) {{
+      state.selectedHubNodeId = nodeId;
+      renderHubScreen();
+      inspectorDrawer.classList.remove('collapsed');
+
+      if (nodeId === 'astra_access') {{
+        drawerContent.innerHTML = `
+          <div class="room-art-card" onclick="openLightbox('${{getImageUrl('images/nodes/astra_ship_map_v2.webp')}}', 'The Astra')">
+            <img src="${{getImageUrl('images/nodes/astra_ship_map_v2.webp')}}" />
+            <div class="room-art-scrim">
+              <div class="room-art-tags">
+                <span class="badge entry">🚀 PLAYER STARSHIP</span>
+              </div>
+              <span style="font-size:10px; color:#fff;">🔍 Expand</span>
+            </div>
+          </div>
+          <div style="color:#fff; font-size:14px; font-weight:700;">The Astra (Landing Site)</div>
+          <div style="font-size:11px; color:var(--text-muted); line-height:1.4;">
+            Your personal interstellar corvette and operational mobile headquarters. From here, the crew repairs gear, manufactures equipment, consults tactical archives, and plots sub-light courses.
+          </div>
+          <button class="btn btn-primary" style="margin-top:10px;" onclick="enterAstraNode()">
+            🚀 Board The Astra (Common Room)
+          </button>
+        `;
+        return;
+      }}
+
+      const node = state.nodeMap.get(nodeId);
+      if (!node) return;
+
+      const roomCount = (node.rooms || []).length;
+      drawerContent.innerHTML = `
+        <div class="room-art-card" onclick="openLightbox('${{getImageUrl(node.icon_image || '')}}', '${{escapeHtml(node.title)}}')">
+          <img src="${{getImageUrl(node.icon_image || '')}}" onerror="this.src='${{getImageUrl('images/nodes/pit_hub1_v3.webp')}}'" />
+          <div class="room-art-scrim">
+            <div class="room-art-tags">
+              <span class="badge entry">📍 HUB NODE</span>
+              <span class="badge">${{roomCount}} Rooms</span>
+            </div>
+            <span style="font-size:10px; color:#fff;">🔍 Expand</span>
+          </div>
+        </div>
+
+        <div style="color:#fff; font-size:14px; font-weight:700;">${{escapeHtml(node.title || node.id)}}</div>
+        <div style="font-size:11px; color:var(--text-muted);">Node ID: <code style="color:var(--accent-cyan);">${{node.id}}</code></div>
+
+        <div class="form-group" style="margin-top:6px;">
+          <label class="form-label">Entry Room</label>
+          <input type="text" class="form-input" value="${{node.entry_room || ''}}" readonly>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Rooms in this Facility (${{roomCount}})</label>
+          <div style="display:flex; flex-direction:column; gap:4px; max-height:160px; overflow-y:auto;">
+            ${{(node.rooms || []).map(rId => {{
+              const r = state.roomMap.get(rId);
+              return `
+                <div style="background:var(--panel-elevated); border:1px solid var(--border); padding:5px 8px; border-radius:4px; font-size:11px; display:flex; justify-content:space-between; align-items:center;">
+                  <span style="color:#fff;">${{escapeHtml(r ? (r.title || r.id) : rId)}}</span>
+                  <span style="color:var(--text-muted); font-size:9px;">${{r ? '[' + (r.pos || [0,0]).join(',') + ']' : ''}}</span>
+                </div>
+              `;
+            }}).join('')}}
+          </div>
+        </div>
+
+        <button class="btn btn-primary" style="margin-top:10px; padding:8px;" onclick="selectNode('${{node.id}}')">
+          🗺️ Enter Node Room Map (4-Way Swipe Grid) ➡️
+        </button>
+      `;
+    }}
+
+    function enterAstraNode() {{
+      const astraNode = state.hubNodes.find(n => n.id === 'astra_disembark' || n.id === 'astra_bridge_node');
+      if (astraNode) {{
+        state.activeWorld = 'world_astra';
+        state.activeHub = 'hub_astra';
+        populateHubSelector();
+        selectNode(astraNode.id);
+      }} else {{
+        showToast('Astra facility selected.');
+      }}
     }}
 
     // Canvas & Grid Renderers
@@ -1254,7 +1759,6 @@ def build():
       ctx.stroke();
     }}
 
-    // Coordinate conversions
     function gridToScreen(gx, gy, nodeId = null) {{
       let effectiveX = gx;
       let effectiveY = gy;
@@ -1284,7 +1788,6 @@ def build():
       return {{ x: gx, y: gy }};
     }}
 
-    // Fit View
     function fitView() {{
       const visibleRooms = getVisibleRooms();
       const vpWidth = canvasViewport.clientWidth || window.innerWidth - 360;
@@ -1327,6 +1830,11 @@ def build():
 
     // Main Render Pipeline
     function render() {{
+      if (state.activeViewMode === 'hub_screen') {{
+        renderHubScreen();
+        return;
+      }}
+
       renderGrid();
       nodesLayer.innerHTML = '';
       islandsLayer.innerHTML = '';
@@ -1335,7 +1843,7 @@ def build():
       const visibleRooms = getVisibleRooms();
       const visibleSet = new Set(visibleRooms.map(r => r.id));
 
-      // Update Scope Label
+      // Scope Label
       const scopeLabel = document.getElementById('kpiScope');
       if (state.activeNode !== 'all_nodes') {{
         const n = state.nodeMap.get(state.activeNode);
@@ -1356,7 +1864,6 @@ def build():
         inNodeCoordCounts.set(key, (inNodeCoordCounts.get(key) || 0) + 1);
       }});
 
-      // Audit Counters
       let totalReciprocal = 0;
       let totalViolations = 0;
       let totalAsymmetric = 0;
@@ -1393,7 +1900,6 @@ def build():
           islandBox.style.background = 'rgba(15, 23, 42, 0.35)';
           islandBox.style.pointerEvents = 'auto';
           islandBox.style.cursor = 'pointer';
-          islandBox.title = `Click to focus on node: ${{node.title || node.id}}`;
 
           const tag = document.createElement('div');
           tag.style.position = 'absolute';
@@ -1427,8 +1933,8 @@ def build():
         const nodeEl = document.createElement('div');
         nodeEl.className = 'room-node';
         nodeEl.id = 'node_' + room.id;
-        nodeEl.style.left = (screenPos.x - 77) + 'px';
-        nodeEl.style.top = (screenPos.y - 42) + 'px';
+        nodeEl.style.left = (screenPos.x - 80) + 'px';
+        nodeEl.style.top = (screenPos.y - (state.showArt ? 64 : 42)) + 'px';
         nodeEl.style.transform = `scale(${{Math.min(Math.max(state.zoom, 0.7), 1.15)}})`;
 
         if (state.selectedRoomId === room.id) nodeEl.classList.add('selected');
@@ -1442,7 +1948,6 @@ def build():
         const isEntry = node && (node.entry_room === room.id);
         if (isEntry) nodeEl.classList.add('is-entry');
 
-        // Check Room Violations
         let roomHasViolation = false;
         const conns = room.connections || {{}};
         for (const [dir, target] of Object.entries(conns)) {{
@@ -1461,6 +1966,15 @@ def build():
           incomingCounts.set(target, (incomingCounts.get(target) || 0) + 1);
         }}
         if (roomHasViolation) nodeEl.classList.add('has-violation');
+
+        // Art Banner (if Art Mode enabled)
+        if (state.showArt && room.background_image) {{
+          const bannerEl = document.createElement('div');
+          bannerEl.className = 'node-art-banner';
+          bannerEl.style.backgroundImage = `url('${{getImageUrl(room.background_image)}}')`;
+          bannerEl.innerHTML = `<div class="banner-gradient"></div>`;
+          nodeEl.appendChild(bannerEl);
+        }}
 
         // Header
         const headerEl = document.createElement('div');
@@ -1531,7 +2045,6 @@ def build():
           const toNodeId = toNode ? toNode.id : null;
           const isCrossNode = fromNodeId && toNodeId && (fromNodeId !== toNodeId);
 
-          // If target is outside visible set, render as an outbound exit marker
           if (!visibleSet.has(targetId)) {{
             drawOutboundExitIndicator(p1, dir, targetId, toNode ? toNode.title : 'External');
             continue;
@@ -1577,7 +2090,6 @@ def build():
       document.getElementById('kpiOrphans').textContent = orphanCount;
     }}
 
-    // SVG Drawing Helpers
     function drawConnectionLine(p1, p2, dir, isNSEW, isReciprocal, isCrossNode) {{
       const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
       line.setAttribute('x1', p1.x);
@@ -1586,21 +2098,17 @@ def build():
       line.setAttribute('y2', p2.y);
 
       if (!isNSEW) {{
-        // Red: Non-Cardinal Violation
         line.setAttribute('stroke', '#ef4444');
         line.setAttribute('stroke-width', '3');
         line.setAttribute('stroke-dasharray', '4,4');
       }} else if (isCrossNode) {{
-        // Purple: Cross-Node Inter-facility Transit
         line.setAttribute('stroke', '#c084fc');
         line.setAttribute('stroke-width', '2.5');
         line.setAttribute('stroke-dasharray', '6,3');
       }} else if (isReciprocal) {{
-        // Green: Solid Strict Reciprocal Swipe
         line.setAttribute('stroke', '#10b981');
         line.setAttribute('stroke-width', '2.5');
       }} else {{
-        // Amber: Asymmetric One-Way Drop
         line.setAttribute('stroke', '#f59e0b');
         line.setAttribute('stroke-width', '2');
         line.setAttribute('stroke-dasharray', '5,5');
@@ -1715,7 +2223,7 @@ def build():
       }}
     }}
 
-    // Canvas Events (Pan & Zoom)
+    // Canvas Events
     function setupCanvasEvents() {{
       canvasViewport.addEventListener('mousedown', (e) => {{
         if (e.target.closest('.room-node') || e.target.closest('.canvas-hud')) return;
@@ -1765,6 +2273,11 @@ def build():
       document.getElementById('btnResetView').addEventListener('click', () => {{
         fitView();
       }});
+      document.getElementById('btnToggleArtMode').addEventListener('click', (e) => {{
+        state.showArt = !state.showArt;
+        e.target.textContent = state.showArt ? '🖼️ Art Mode: ON' : '📐 Blueprint Mode';
+        render();
+      }});
       document.getElementById('btnToggleLabels').addEventListener('click', () => {{
         state.showDetails = !state.showDetails;
         render();
@@ -1774,6 +2287,10 @@ def build():
 
     // Toolbar & Filter Events
     function setupToolbarEvents() {{
+      // View Mode Switcher
+      document.getElementById('btnModeRoomGrid').addEventListener('click', () => switchViewMode('room_grid'));
+      document.getElementById('btnModeHubScreen').addEventListener('click', () => switchViewMode('hub_screen'));
+
       // World tabs
       document.querySelectorAll('.world-tab').forEach(tab => {{
         tab.addEventListener('click', () => {{
@@ -1781,7 +2298,11 @@ def build():
           tab.classList.add('active');
           state.activeWorld = tab.dataset.world;
           populateHubSelector();
-          fitView();
+          if (state.activeViewMode === 'hub_screen') {{
+            renderHubScreen();
+          }} else {{
+            fitView();
+          }}
         }});
       }});
 
@@ -1789,7 +2310,11 @@ def build():
       document.getElementById('hubFilterSelect').addEventListener('change', (e) => {{
         state.activeHub = e.target.value;
         populateNodeSelector();
-        fitView();
+        if (state.activeViewMode === 'hub_screen') {{
+          renderHubScreen();
+        }} else {{
+          fitView();
+        }}
       }});
 
       // Node dropdown
@@ -1864,7 +2389,22 @@ def build():
         }}
       }}
 
+      const bgUrl = getImageUrl(room.background_image);
+
       drawerContent.innerHTML = `
+        ${{room.background_image ? `
+          <div class="room-art-card" onclick="openLightbox('${{bgUrl}}', '${{escapeHtml(room.title)}}')">
+            <img src="${{bgUrl}}" onerror="this.parentElement.style.display='none'" />
+            <div class="room-art-scrim">
+              <div class="room-art-tags">
+                <span class="badge entry">🌍 ${{room.env || 'interior'}}</span>
+                <span class="badge">${{room.weather || 'clear'}}</span>
+              </div>
+              <span style="font-size:10px; color:#fff;">🔍 Expand Artwork</span>
+            </div>
+          </div>
+        ` : ''}}
+
         <div style="background: rgba(0,0,0,0.25); border: 1px solid var(--border); padding: 8px 10px; border-radius: 6px; font-size: 11px;">
           <div style="color: var(--accent-cyan); font-weight: 700; margin-bottom: 2px;">📍 ${{node ? (node.title || node.id) : 'Unassigned Node'}}</div>
           <div style="color: var(--text-muted); font-size: 10px;">ID: ${{room.id}} | World: ${{getRoomWorldId(room)}}</div>
@@ -1905,6 +2445,11 @@ def build():
         ${{nonNsewRows}}
 
         <div class="form-group">
+          <label class="form-label">Background Image Path</label>
+          <input type="text" class="form-input" id="editRoomBg" placeholder="images/rooms/..." value="${{escapeHtml(room.background_image || '')}}">
+        </div>
+
+        <div class="form-group">
           <label class="form-label">Environment &amp; Weather</label>
           <div class="coords-row">
             <input type="text" class="form-input" id="editRoomEnv" placeholder="env (e.g. mine, urban)" value="${{escapeHtml(room.env || '')}}">
@@ -1932,7 +2477,6 @@ def build():
         </div>
       `;
 
-      // Attach dynamic listeners to inputs
       document.getElementById('editRoomTitle').addEventListener('input', (e) => {{
         pushHistory();
         room.title = e.target.value;
@@ -1950,6 +2494,10 @@ def build():
       }});
       document.getElementById('editRoomDesc').addEventListener('input', (e) => {{
         room.description = e.target.value;
+      }});
+      document.getElementById('editRoomBg').addEventListener('change', (e) => {{
+        room.background_image = e.target.value;
+        selectRoom(roomId);
       }});
       document.getElementById('editRoomEnv').addEventListener('input', (e) => {{
         room.env = e.target.value;
@@ -2024,7 +2572,6 @@ def build():
       if (yInput) yInput.value = y;
     }}
 
-    // Conversion of non-NSEW exits into bolded actionable keywords
     window.convertExitToAction = function(roomId, direction, targetRoomId) {{
       pushHistory();
       const room = state.roomMap.get(roomId);
@@ -2143,12 +2690,10 @@ def build():
       const issues = [];
       const visibleRooms = getVisibleRooms();
 
-      // Check within scope
       visibleRooms.forEach(room => {{
         const node = getRoomNode(room);
         const conns = room.connections || {{}};
 
-        // Non-cardinal
         for (const [dir, target] of Object.entries(conns)) {{
           if (!['north', 'south', 'east', 'west'].includes(dir)) {{
             issues.push({{

@@ -17,10 +17,12 @@ PORT = 8765
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent
 ASSETS_DIR = PROJECT_ROOT / "app" / "src" / "main" / "assets"
+WORLD_ASSETS_DIR = PROJECT_ROOT / "world_assets" / "src" / "main" / "assets"
 ROOMS_FILE = ASSETS_DIR / "rooms.json"
 HUB_NODES_FILE = ASSETS_DIR / "hub_nodes.json"
 HUBS_FILE = ASSETS_DIR / "hubs.json"
 WORLDS_FILE = ASSETS_DIR / "worlds.json"
+HUB_LAYOUTS_FILE = BASE_DIR / "hub_layouts.json"
 
 class StudioHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
@@ -50,12 +52,36 @@ class StudioHandler(http.server.SimpleHTTPRequestHandler):
                 self.wfile.write(b"<h1>world_graph_studio.html not found</h1>")
             return
 
+        if self.path.startswith("/images/"):
+            clean_path = self.path.split("?")[0].lstrip("/")
+            img_file = WORLD_ASSETS_DIR / clean_path
+            if img_file.exists() and img_file.is_file():
+                self.send_response(200)
+                if img_file.suffix == ".webp":
+                    self.send_header("Content-Type", "image/webp")
+                elif img_file.suffix in (".jpg", ".jpeg"):
+                    self.send_header("Content-Type", "image/jpeg")
+                elif img_file.suffix == ".png":
+                    self.send_header("Content-Type", "image/png")
+                else:
+                    self.send_header("Content-Type", "application/octet-stream")
+                self.send_header("Cache-Control", "public, max-age=86400")
+                self.end_headers()
+                with open(img_file, "rb") as f:
+                    self.wfile.write(f.read())
+                return
+            else:
+                self.send_response(404)
+                self.end_headers()
+                return
+
         if self.path == "/api/data":
             try:
                 rooms = json.load(open(ROOMS_FILE, encoding="utf-8")) if ROOMS_FILE.exists() else []
                 hub_nodes = json.load(open(HUB_NODES_FILE, encoding="utf-8")) if HUB_NODES_FILE.exists() else []
                 hubs = json.load(open(HUBS_FILE, encoding="utf-8")) if HUBS_FILE.exists() else []
                 worlds = json.load(open(WORLDS_FILE, encoding="utf-8")) if WORLDS_FILE.exists() else []
+                hub_layouts = json.load(open(HUB_LAYOUTS_FILE, encoding="utf-8")) if HUB_LAYOUTS_FILE.exists() else {}
 
                 payload = {
                     "status": "ok",
@@ -64,6 +90,7 @@ class StudioHandler(http.server.SimpleHTTPRequestHandler):
                     "hub_nodes": hub_nodes,
                     "hubs": hubs,
                     "worlds": worlds,
+                    "hub_layouts": hub_layouts,
                     "file_path": str(ROOMS_FILE)
                 }
                 self.send_response(200)

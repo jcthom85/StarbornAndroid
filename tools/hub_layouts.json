@@ -1,0 +1,420 @@
+{
+  "hub_1_homestead": {
+    "sites": {
+      "med_bay": {
+        "x": 0.23,
+        "y": 0.35,
+        "artwork_width": 0.25
+      },
+      "admin_gate": {
+        "x": 0.74,
+        "y": 0.41,
+        "artwork_width": 0.25
+      },
+      "pit": {
+        "x": 0.35,
+        "y": 0.55,
+        "artwork_width": 0.25
+      },
+      "trade_row": {
+        "x": 0.73,
+        "y": 0.69,
+        "artwork_width": 0.29
+      },
+      "workshop": {
+        "x": 0.43,
+        "y": 0.79,
+        "artwork_width": 0.25
+      }
+    },
+    "astra_dock": {
+      "x": 0.25,
+      "y": 0.66,
+      "artwork_width": 0.24
+    }
+  },
+  "hub_2_logistics": {
+    "sites": {
+      "admin_concourse": {
+        "x": 0.32,
+        "y": 0.31,
+        "artwork_width": 0.25
+      },
+      "launch_bay": {
+        "x": 0.73,
+        "y": 0.3,
+        "artwork_width": 0.25
+      },
+      "server_room": {
+        "x": 0.38,
+        "y": 0.46,
+        "artwork_width": 0.25
+      },
+      "echo_chamber": {
+        "x": 0.65,
+        "y": 0.51,
+        "artwork_width": 0.25
+      },
+      "deep_mine": {
+        "x": 0.39,
+        "y": 0.65,
+        "artwork_width": 0.25
+      }
+    },
+    "astra_dock": {
+      "x": 0.76,
+      "y": 0.73,
+      "artwork_width": 0.32
+    }
+  },
+  "hub_3_sector9": {
+    "sites": {
+      "razor_vine_path": {
+        "x": 0.3,
+        "y": 0.36,
+        "artwork_width": 0.25
+      },
+      "temple_gate": {
+        "x": 0.68,
+        "y": 0.28,
+        "artwork_width": 0.25
+      },
+      "sector9_landing": {
+        "x": 0.32,
+        "y": 0.6,
+        "artwork_width": 0.25
+      },
+      "canopy_ridge": {
+        "x": 0.73,
+        "y": 0.48,
+        "artwork_width": 0.25
+      },
+      "tideglass_beach": {
+        "x": 0.43,
+        "y": 0.72,
+        "artwork_width": 0.25
+      }
+    },
+    "astra_dock": {
+      "x": 0.5,
+      "y": 0.32,
+      "artwork_width": 0.21
+    }
+  },
+  "hub_4_facility": {
+    "sites": {
+      "hall_of_echoes": {
+        "x": 0.43,
+        "y": 0.29,
+        "artwork_width": 0.22
+      },
+      "stasis_chamber": {
+        "x": 0.65,
+        "y": 0.38,
+        "artwork_width": 0.22
+      },
+      "source_gate": {
+        "x": 0.35,
+        "y": 0.49,
+        "artwork_width": 0.25
+      },
+      "the_sky": {
+        "x": 0.69,
+        "y": 0.65,
+        "artwork_width": 0.25
+      },
+      "hangar_bay": {
+        "x": 0.41,
+        "y": 0.79,
+        "artwork_width": 0.0
+      }
+    },
+    "astra_dock": {
+      "x": 0.24,
+      "y": 0.36,
+      "artwork_width": 0.23
+    }
+  },
+  "hub_5_lower_city": {
+    "sites": {
+      "spire_sewers": {
+        "x": 0.51,
+        "y": 0.36,
+        "artwork_width": 0.25
+      },
+      "spire_transit_plaza": {
+        "x": 0.72,
+        "y": 0.51,
+        "artwork_width": 0.22
+      },
+      "spire_vent_output": {
+        "x": 0.22,
+        "y": 0.47,
+        "artwork_width": 0.2
+      },
+      "spire_the_static": {
+        "x": 0.64,
+        "y": 0.68,
+        "artwork_width": 0.25
+      },
+      "spire_night_market": {
+        "x": 0.35,
+        "y": 0.76,
+        "artwork_width": 0.25
+      }
+    },
+    "astra_dock": {
+      "x": 0.5,
+      "y": 0.57,
+      "artwork_width": 0.24
+    }
+  },
+  "hub_6_upper_city": {
+    "sites": {
+      "spire_skypark": {
+        "x": 0.39,
+        "y": 0.38,
+        "artwork_width": 0.25
+      },
+      "spire_exec_lounge": {
+        "x": 0.72,
+        "y": 0.3,
+        "artwork_width": 0.25
+      },
+      "spire_laundry": {
+        "x": 0.26,
+        "y": 0.56,
+        "artwork_width": 0.19
+      },
+      "spire_archive": {
+        "x": 0.66,
+        "y": 0.47,
+        "artwork_width": 0.25
+      },
+      "spire_landing_pad": {
+        "x": 0.33,
+        "y": 0.76,
+        "artwork_width": 0.22
+      }
+    },
+    "astra_dock": {
+      "x": 0.78,
+      "y": 0.68,
+      "artwork_width": 0.25
+    }
+  },
+  "hub_7_slag_pits": {
+    "sites": {
+      "foundry_service_airlock": {
+        "x": 0.6,
+        "y": 0.28,
+        "artwork_width": 0.23
+      },
+      "foundry_cooling_springs": {
+        "x": 0.34,
+        "y": 0.46,
+        "artwork_width": 0.22
+      },
+      "foundry_obsidian_shelf": {
+        "x": 0.69,
+        "y": 0.56,
+        "artwork_width": 0.23
+      },
+      "foundry_waste_intake": {
+        "x": 0.33,
+        "y": 0.68,
+        "artwork_width": 0.22
+      },
+      "foundry_slag_river": {
+        "x": 0.72,
+        "y": 0.77,
+        "artwork_width": 0.22
+      }
+    },
+    "astra_dock": {
+      "x": 0.48,
+      "y": 0.8,
+      "artwork_width": 0.25
+    }
+  },
+  "hub_8_assembly_line": {
+    "sites": {
+      "foundry_forge": {
+        "x": 0.41,
+        "y": 0.29,
+        "artwork_width": 0.25
+      },
+      "foundry_power_core": {
+        "x": 0.73,
+        "y": 0.39,
+        "artwork_width": 0.25
+      },
+      "foundry_conditioning": {
+        "x": 0.36,
+        "y": 0.44,
+        "artwork_width": 0.25
+      },
+      "foundry_titan_dock": {
+        "x": 0.62,
+        "y": 0.54,
+        "artwork_width": 0.25
+      },
+      "foundry_conveyor_belt": {
+        "x": 0.36,
+        "y": 0.65,
+        "artwork_width": 0.23
+      }
+    },
+    "astra_dock": {
+      "x": 0.66,
+      "y": 0.78,
+      "artwork_width": 0.25
+    }
+  },
+  "hub_9_orbital_ring": {
+    "sites": {
+      "orbital_solarium": {
+        "x": 0.43,
+        "y": 0.29,
+        "artwork_width": 0.25
+      },
+      "orbital_security_hub": {
+        "x": 0.78,
+        "y": 0.35,
+        "artwork_width": 0.25
+      },
+      "orbital_grand_concourse": {
+        "x": 0.31,
+        "y": 0.44,
+        "artwork_width": 0.25
+      },
+      "orbital_service_shaft": {
+        "x": 0.65,
+        "y": 0.52,
+        "artwork_width": 0.25
+      },
+      "orbital_executive_dock": {
+        "x": 0.37,
+        "y": 0.71,
+        "artwork_width": 0.25
+      }
+    },
+    "astra_dock": {
+      "x": 0.74,
+      "y": 0.7,
+      "artwork_width": 0.26
+    }
+  },
+  "hub_10_deep_ring": {
+    "sites": {
+      "deep_throne_room": {
+        "x": 0.49,
+        "y": 0.3,
+        "artwork_width": 0.25
+      },
+      "deep_tear": {
+        "x": 0.78,
+        "y": 0.42,
+        "artwork_width": 0.25
+      },
+      "deep_server_farm": {
+        "x": 0.27,
+        "y": 0.48,
+        "artwork_width": 0.25
+      },
+      "deep_anchor_chamber": {
+        "x": 0.5,
+        "y": 0.61,
+        "artwork_width": 0.22
+      }
+    },
+    "astra_dock": {
+      "x": 0.49,
+      "y": 0.77,
+      "artwork_width": 0.25
+    }
+  },
+  "hub_11_event_horizon": {
+    "sites": {
+      "source_echo_mines_node": {
+        "x": 0.27,
+        "y": 0.27,
+        "artwork_width": 0.25
+      },
+      "source_gh0st_nightmare_node": {
+        "x": 0.77,
+        "y": 0.28,
+        "artwork_width": 0.25
+      },
+      "source_campfire_node": {
+        "x": 0.51,
+        "y": 0.37,
+        "artwork_width": 0.25
+      },
+      "source_zeke_nightmare_node": {
+        "x": 0.76,
+        "y": 0.49,
+        "artwork_width": 0.25
+      },
+      "source_orion_nightmare_node": {
+        "x": 0.27,
+        "y": 0.49,
+        "artwork_width": 0.25
+      },
+      "source_memory_bridge_node": {
+        "x": 0.68,
+        "y": 0.77,
+        "artwork_width": 0.25
+      }
+    },
+    "astra_dock": {
+      "x": 0.32,
+      "y": 0.76,
+      "artwork_width": 0.25
+    }
+  },
+  "hub_12_singularity": {
+    "sites": {
+      "source_center_node": {
+        "x": 0.59,
+        "y": 0.41,
+        "artwork_width": 0.25
+      },
+      "source_new_world_node": {
+        "x": 0.64,
+        "y": 0.28,
+        "artwork_width": 0.21
+      },
+      "source_memory_stair_node": {
+        "x": 0.28,
+        "y": 0.56,
+        "artwork_width": 0.25
+      },
+      "source_spire_thought_node": {
+        "x": 0.57,
+        "y": 0.77,
+        "artwork_width": 0.25
+      }
+    },
+    "astra_dock": {
+      "x": 0.76,
+      "y": 0.5,
+      "artwork_width": 0.25
+    }
+  },
+  "hub_astra": {
+    "sites": {
+      "astra_bridge_node": {
+        "x": 0.5,
+        "y": 0.47,
+        "artwork_width": 0.0
+      },
+      "astra_disembark": {
+        "x": 0.5,
+        "y": 0.71,
+        "artwork_width": 0.0
+      }
+    },
+    "astra_dock": null
+  }
+}
