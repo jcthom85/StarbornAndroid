@@ -8750,8 +8750,10 @@
     "weather": "fog",
     "title": "Resonant Falls",
     "background_image": "images/rooms/world_2/stream_falls.webp",
-    "description": "The stream cascades over three massive Architect stone pillars. Behind the falling water, a sheltered cookfire recess stays dry while the stone rings out a quiet, rhythmic chord.",
-    "npcs": [],
+    "description": "The stream cascades over three massive Architect stone pillars. Behind the falling water, a sheltered cookfire recess stays dry while the stone rings out a quiet, rhythmic chord. David tends a cast-iron smoker over the coals, the rich scent of smoked brisket and fresh coffee drifting through the spray.",
+    "npcs": [
+      "chef_david"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
@@ -8776,6 +8778,11 @@
         "type": "rest_stop",
         "rest_event": "w2_camp_stream_falls",
         "message": "The steady water-chord quiets the mental strain, letting your squad rest and recharge."
+      },
+      {
+        "name": "provisions counter",
+        "type": "shop",
+        "shop_id": "davids_provisions"
       }
     ]
   },
@@ -8965,6 +8972,16 @@
         "name": "basalt cliffs",
         "type": "generic",
         "condition_unmet_message": "Sheer volcanic columns rise against the tidal surf, worn smooth by centuries of mineral spray."
+      },
+      {
+        "name": "driftwood marker",
+        "type": "generic",
+        "condition_unmet_message": "A weathered piece of sea-bleached driftwood is planted in the cliffside grass, carved with two simple words: 'GO BEACH.' Beside it, petrified in the stone sand, are small, playful paw prints leading toward the warmest patch of afternoon sun."
+      },
+      {
+        "name": "weathered elephant toy",
+        "type": "generic",
+        "condition_unmet_message": "A small, resilient fabric elephant toy tucked into a sunny hollow in the basalt rock. Softened by years of affection, it rests peacefully beside the driftwood marker, looking out over the quiet tide."
       }
     ]
   },
@@ -11932,7 +11949,7 @@
     "weather": "industrial",
     "title": "Astra Living Quarters",
     "background_image": "images/rooms/astra/quarters.webp",
-    "description": "A short bunk corridor gives every crew member a narrow door and a little privacy. Nova's bed is plain but clean, and the ship's vibration feels safer than silence.",
+    "description": "A short bunk corridor gives every crew member a narrow door and a little privacy. Nova's bed is plain but clean, and the ship's vibration feels safer than silence. A handmade paper guardian sits beside her bunk pillow, and a young astronaut slate rests on the small desk.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -11950,6 +11967,16 @@
         "type": "generic",
         "action_event": "astra_rest_party",
         "condition_unmet_message": "Rest aboard the Astra fully restores the active party."
+      },
+      {
+        "name": "handmade paper guardian",
+        "type": "generic",
+        "condition_unmet_message": "A small, charming creature lovingly crafted from folded paper, cotton balls, and clear tape. Its hand-drawn smile is fierce and joyful. A tiny penciled note on the back reads: 'To Nova and the crew — Built by Tyson.'"
+      },
+      {
+        "name": "young astronaut slate",
+        "type": "generic",
+        "condition_unmet_message": "A personal research datapad displaying planetary orbit projections, ancient prehistoric predator skeletons, and tactical defensive shield angles. Scrawled across the top in bright digital marker: 'Cadet Ian — Mission Objective: Explore the stars, defend the home ship, and never leave the crew behind.'"
       }
     ]
   },

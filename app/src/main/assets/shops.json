@@ -426,65 +426,6 @@
       "leave_label": "Back"
     }
   },
-  "tysons_provisions": {
-    "name": "Tyson's Provisions",
-    "greeting": "Tyson: If you're paying, I'm selling. If you're not, keep your hands where I can see 'em.",
-    "pricing": {
-      "sell_markup": 1.2,
-      "buy_markdown": 0.35
-    },
-    "sells": {
-      "items": [
-        "ration_pack",
-        "black_coffee",
-        "medkit_i",
-        "herbal_poultice",
-        "antidote_flask",
-        "battery_pack",
-        "scrap_metal",
-        "wiring_bundle",
-        "foundry_smoked_brisket"
-      ],
-      "rules": {
-        "types_in": [],
-        "subtypes_in": []
-      },
-      "gates": {}
-    },
-    "buys": {
-      "accept_types": [
-        "consumable",
-        "weapon",
-        "armor",
-        "accessory",
-        "ingredient",
-        "component"
-      ],
-      "blacklist": []
-    },
-    "dialogue": {
-      "preface": [
-        {
-          "speaker": "Tyson",
-          "text": "If the mine's calling you, take a medkit. That's not a suggestion."
-        }
-      ],
-      "smalltalk": [
-        {
-          "id": "shop_tyson_rumor",
-          "label": "Ask what's been moving",
-          "response": [
-            {
-              "speaker": "Tyson",
-              "text": "Ration shipments are light. Someone upstream is skimming or something's eating the supply lines."
-            }
-          ]
-        }
-      ],
-      "trade_label": "Browse provisions",
-      "leave_label": "Back"
-    }
-  },
   "upper_city_lounge": {
     "name": "Upper City Concierge",
     "portrait": "images/npcs/concierge.webp",
@@ -828,6 +769,65 @@
       ],
       "trade_label": "Access commissary inventory",
       "leave_label": "Log off terminal"
+    }
+  },
+  "davids_provisions": {
+    "name": "David's Camp & Provisions",
+    "portrait": "images/npcs/vance.webp",
+    "greeting": "David: Welcome to camp! Pull up a chair by the fire. Nobody walks past my table on an empty stomach.",
+    "pricing": {
+      "sell_markup": 1.15,
+      "buy_markdown": 0.45
+    },
+    "sells": {
+      "items": [
+        "foundry_smoked_brisket",
+        "black_coffee",
+        "ration_pack",
+        "herbal_poultice",
+        "antidote_flask",
+        "medkit_i",
+        "medkit",
+        "battery_pack"
+      ],
+      "rules": {
+        "types_in": [],
+        "subtypes_in": []
+      },
+      "gates": {}
+    },
+    "buys": {
+      "accept_types": [
+        "consumable",
+        "ingredient",
+        "component",
+        "accessory",
+        "weapon",
+        "armor"
+      ],
+      "blacklist": []
+    },
+    "dialogue": {
+      "preface": [
+        {
+          "speaker": "David",
+          "text": "Nothing keeps your legs moving on the trail like slow-smoked brisket and fresh-roasted coffee."
+        }
+      ],
+      "smalltalk": [
+        {
+          "id": "shop_david_philosophy",
+          "label": "Ask about the camp",
+          "response": [
+            {
+              "speaker": "David",
+              "text": "Thirty years in logistics taught me that the secret isn't just supply lines—it's good food, good company, and treating people like family."
+            }
+          ]
+        }
+      ],
+      "trade_label": "Browse camp provisions",
+      "leave_label": "Step back to the fire"
     }
   }
 }

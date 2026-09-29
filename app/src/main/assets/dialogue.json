@@ -2242,5 +2242,56 @@
     "text": "[Chris blinks back a quiet flash of emotion, then breaks into a wide, bright smile. Andrew steps forward and wraps Nova in a heartfelt hug.] You heard her, brother. Volume up, signal hot. Here, Nova—take this. It's a hand-stamped resonance pick from our first run. When the road gets dark out there, remember you're never flying alone.",
     "trigger": "take_item:rapid_capacitor*1,take_item:wiring_bundle*1,give_item:wayfarer_plectrum,give_xp:300,give_credits:350,set_milestone:ms_wayfarer_broadcast_completed",
     "next": "chris_default_talk"
+  },
+  {
+    "id": "david_default_talk",
+    "speaker": "David",
+    "text": "Well look who made it down from the ridge! Come on in under the falls and pull up a seat by the fire. The air out here is crisp, the water's cold, and I've got brisket slow-smoking over river hickory. What can I get for you?",
+    "options": [
+      {
+        "id": "david_opt_cooking",
+        "text": "That brisket smells incredible. Where'd you learn to cook like this?",
+        "next": "david_cooking_reply"
+      },
+      {
+        "id": "david_opt_camping",
+        "text": "You look right at home out here by the waterfall.",
+        "next": "david_camping_reply"
+      },
+      {
+        "id": "david_opt_supply",
+        "text": "How do you keep this camp supplied so far out on the coast?",
+        "next": "david_supply_reply"
+      },
+      {
+        "id": "david_opt_beach",
+        "text": "Have you been down to the beach cliffs to the east?",
+        "next": "david_beach_reply"
+      }
+    ]
+  },
+  {
+    "id": "david_cooking_reply",
+    "speaker": "David",
+    "text": "Practice, patience, and a whole lot of love. Good food isn't just about fuel—it brings folks together. When people sit down around a table, put their differences aside, and share a hot meal, that's when a camp becomes a family.",
+    "next": "david_default_talk"
+  },
+  {
+    "id": "david_camping_reply",
+    "speaker": "David",
+    "text": "Always been an outdoor soul. Back before the Dominion closed the sectors, I used to pack a tent and head into the high ranges—places like Yellowstone where the geysers steamed in the morning chill. Out here with the rushing falls and the mist in the pines... feels like being young again.",
+    "next": "david_default_talk"
+  },
+  {
+    "id": "david_supply_reply",
+    "speaker": "David",
+    "text": "Thirty years in supply and logistics taught me how to keep goods moving. I worked with the best producers in the sector, building partnerships from the ground up. You treat your suppliers with respect, you treat your customers like family, and you never cut corners on quality.",
+    "next": "david_default_talk"
+  },
+  {
+    "id": "david_beach_reply",
+    "speaker": "David",
+    "text": "[David looks toward the eastern bluffs with a soft, affectionate smile.] I have. There's a spot right out on the edge where the morning sun warms the stone. Two of the best companions a man could ever ask for used to love running that sand. If you walk out there, give 'em a nod for me.",
+    "next": "david_default_talk"
   }
 ]

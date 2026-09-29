@@ -532,5 +532,31 @@
         "dialogue_id": "andrew_default_talk"
       }
     ]
+  },
+  {
+    "id": "chef_david",
+    "name": "David",
+    "aliases": [
+      "david",
+      "granddaddy",
+      "chef david"
+    ],
+    "role": "Master Camp Cook",
+    "description": "A seasoned, warm-hearted frontier cook and retired supply specialist who loves the outdoors, good food, and gathering people around the campfire.",
+    "portrait": "images/npcs/vance.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "david_default_talk"
+      },
+      {
+        "label": "Provisions",
+        "type": "shop",
+        "shop_id": "davids_provisions",
+        "dialogue_id": "david_default_talk"
+      }
+    ]
   }
 ]
