@@ -1800,5 +1800,35 @@
     "name": "Jed's Advice",
     "description": "Consulted Jed regarding clearance protocols in the Colony.",
     "toast": "Objective updated: Consulted Jed"
+  },
+  {
+    "id": "ms_w3_sq16_started",
+    "name": "Skyline Lockdown",
+    "description": "Began investigating the poisoning in the Skyline VIP Salon.",
+    "toast": "Side quest begun: Murder in the Skyline Salon"
+  },
+  {
+    "id": "ms_w3_sq16_glass_inspected",
+    "name": "Tainted Vintage",
+    "description": "Discovered traces of lethal Cyano-Coolant 9 in Auditor Malick's glass.",
+    "toast": "Clue discovered: Poisoned Glass"
+  },
+  {
+    "id": "ms_w3_sq16_terminal_inspected",
+    "name": "Contradictory Timestamps",
+    "description": "Discovered that Director Vance's keycard pinged Malick's booth at 21:14.",
+    "toast": "Clue discovered: Timestamp Log"
+  },
+  {
+    "id": "ms_w3_sq16_rig_inspected",
+    "name": "Missing Coolant Core",
+    "description": "Confirmed Director Vance's comms unit was drained of its coolant core.",
+    "toast": "Clue discovered: Sabotaged Comms Rig"
+  },
+  {
+    "id": "ms_w3_sq16_complete",
+    "name": "A Murder in High Society",
+    "description": "Exposed Director Vance as Auditor Malick's assassin and lifted the Skyline Salon lockdown.",
+    "toast": "Side quest complete: Murder in the Skyline Salon"
   }
 ]

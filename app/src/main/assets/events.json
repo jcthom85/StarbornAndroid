@@ -15211,5 +15211,130 @@
         "room_id": "source_center"
       }
     ]
+  },
+  {
+    "id": "w3_sq16_start",
+    "description": "Begin the Skyline VIP Salon murder investigation.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_sq16_start"
+    },
+    "actions": [
+      {
+        "type": "if_quest_not_started",
+        "quest_id": "w3_sq16",
+        "do": [
+          {
+            "type": "start_quest",
+            "quest_id": "w3_sq16"
+          }
+        ]
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_sq16_started"
+      },
+      {
+        "type": "show_message",
+        "message": "Automated security barriers seal the room. Auditor Malick lies dead in the Syndicate Booth. Four suspects are held under emergency lockdown."
+      }
+    ]
+  },
+  {
+    "id": "w3_sq16_inspect_glass",
+    "description": "Inspect the poisoned crystal glass in the Syndicate Booth.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_sq16_inspect_glass"
+    },
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_sq16_glass_inspected"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_sq16",
+        "task_id": "inspect_glass"
+      },
+      {
+        "type": "show_message",
+        "message": "Nova checks the dregs of Malick's synth-sparkler. Chemical resonance reveals Cyano-Coolant 9—a lethal high-viscosity refrigerant used in executive comms rigs."
+      }
+    ]
+  },
+  {
+    "id": "w3_sq16_inspect_dispenser",
+    "description": "Inspect the drink dispenser log in the Skyline VIP Salon.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_sq16_inspect_dispenser"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The automated dispenser log verifies that pure synth-sparkler was poured at 21:15 without additives. Dax's mixology station was completely clean."
+      }
+    ]
+  },
+  {
+    "id": "w3_sq16_inspect_terminal",
+    "description": "Inspect the security terminal timestamp log.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_sq16_inspect_terminal"
+    },
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_sq16_terminal_inspected"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_sq16",
+        "task_id": "inspect_terminal"
+      },
+      {
+        "type": "show_message",
+        "message": "Zeke cross-references the access logs: Director Vance's executive comms unit vented coolant at 21:12, and his badge pinged the Syndicate Booth sensor at 21:14! He lied about never leaving his table."
+      }
+    ]
+  },
+  {
+    "id": "w3_sq16_inspect_rig",
+    "description": "Inspect the executive comms rig in the Syndicate Booth.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_sq16_inspect_rig"
+    },
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_sq16_rig_inspected"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w3_sq16",
+        "task_id": "inspect_rig"
+      },
+      {
+        "type": "show_message",
+        "message": "The portable comms unit stamped with Director Vance's procurement crest is missing its primary Cyano-Coolant 9 core. The empty bracket is still frosted with residue."
+      }
+    ]
+  },
+  {
+    "id": "w3_sq16_inspect_datapad",
+    "description": "Inspect Auditor Malick's datapad in the Syndicate Booth.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_sq16_inspect_datapad"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "Malick's encrypted files reveal Director Vance embezzled millions in military scrap. Malick scheduled this meeting to give Vance one chance to surrender before filing the report."
+      }
+    ]
   }
 ]

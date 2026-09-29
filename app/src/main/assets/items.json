@@ -3761,5 +3761,22 @@
         "focus": 3
       }
     }
+  },
+  {
+    "id": "skyline_master_passkey",
+    "name": "Skyline Master Passkey",
+    "description": "An executive-tier crystalline passkey surrendered by Director Vance. It grants unrestricted transit through Upper City private salons.",
+    "type": "quest",
+    "value": 0,
+    "rarity": "epic",
+    "unsellable": true
+  },
+  {
+    "id": "cyano_coolant_injector",
+    "name": "Cyano-Coolant Injector",
+    "description": "A weapon modification re-engineered from Director Vance's sabotaged comms core. Infuses strikes with freezing cyano-coolant, dealing +15 Freeze damage and raising posture stagger.",
+    "type": "accessory",
+    "value": 350,
+    "rarity": "rare"
   }
 ]

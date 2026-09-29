@@ -165,6 +165,9 @@ flowchart TD
 | **Exec Lounge**<br>`spire_exec_lounge_bar` | 1. Action `copy credential from mirror`<br>2. Action `open private safe` (`w3_sq14`)<br>3. Play **VIP Vector Arcade** | Encrypted Ledger recovered (`encrypted_ledger`).<br>Completes **`w3_sq14`** (**250 XP**).<br>Unlocks **Spire Infiltrator** minigame! | • Gilded velvet booths & clinking champagne flutes.<br>• Vector wireframe arcade screen glow. |
 | **Ledger Office**<br>`spire_exec_lounge_scale_04` | Inspect `executive desk` | Documents on Director Thorne's secret mining quotas. | • Holographic desk terminal. |
 | **Private Booth**<br>`spire_exec_lounge_scale_02` | ⚠️ **Combat: Sentinel Mk. I** | Sentinel neutralized before alarm triggers. | • Suppressed combat audio in luxury lounge. |
+| **Skyline VIP Salon**<br>`spire_skyline_vip_suite` | 1. East from Donor Gallery<br>2. Inspect `crime-scene barrier`<br>3. Inspect `dispenser log`<br>4. Inspect `security terminal`<br>5. Interrogate 4 suspects | Initiates **`w3_sq16`** (Murder in the Skyline Salon).<br>Gathers dispenser and timestamp clues.<br>Exposes Vance's lie. | • Velvet stanchions & emergency flashing strobes.<br>• Four stranded suspects around locked salon. |
+| **Syndicate Booth**<br>`spire_vip_private_booth` | 1. North from VIP Salon<br>2. Inspect `crystal glass`<br>3. Inspect `executive comms rig`<br>4. Inspect `auditor's datapad` | Chemical analysis: Cyano-Coolant 9.<br>Rig shows missing coolant core.<br>Datapad reveals Vance's embezzlement motive. | • Dead auditor slumped over crystal glass.<br>• High-tension noir detective background cue. |
+| **Vance Confrontation**<br>`director_vance` | 1. Select dialogue option confronting Vance with timestamp and coolant clues<br>2. Extract confession | Completes **`w3_sq16`** (**450 XP**).<br>Rewards: **Cyano-Coolant Injector** & **Skyline Master Passkey**!<br>Lockdown lifted. | • Dramatic vocal breakdown from arrogant director.<br>• Quest complete fanfare & ambient sirens cease. |
 
 ---
 
@@ -360,6 +363,8 @@ Interact with the Chrono-Flux console in `spire_prism_gallery`:
 | `mimis_jazz_bloom` | **Mimi's Jazz Hummingbird Orchid** | Accessory | Rare | +5 Vit, +4 Foc, +3 Def | Skypark Dome (Evelyn) |
 | `roberts_buffer_core`| **Robert's Gyroscopic Buffer Core** | Accessory | Rare | +6 Stb, +4 Def, +2 Agi | Skypark Dome (Robert) |
 | `cyber_visor` | **ICE Breaker Cyber Visor** | Accessory | Rare | +10% Critical Hit Chance | Exec Lounge side quest `w3_sq14` |
+| `cyano_coolant_injector`| **Cyano-Coolant Injector** | Accessory | Rare | +15 Freeze Dmg, +10% Stagger | Skyline VIP Murder Mystery `w3_sq16` |
+| `skyline_master_passkey`| **Skyline Master Passkey** | Key Item | Epic | Unlocks Upper City Private Salons | Skyline VIP Murder Mystery `w3_sq16` |
 | `neon_band` | **Neon Band** | Accessory | Uncommon | +4 Focus, +5% Crit Rate | Night Market side quest `w3_sq11` |
 | `comet_gummies` | **Comet Gummies** | Snack | Uncommon | Heals 120 HP, +15% Speed (3 turns) | Night Market food stalls |
 | `vhs_tape_05` | **Film 05: The Black City** | Key Item | Rare | Great Frontier screening media | Night Market rain cache safe |
@@ -378,6 +383,10 @@ Interact with the Chrono-Flux console in `spire_prism_gallery`:
 | `botanist_evelyn` | **Evelyn** | female | `spire_skypark_dome` | `evelyn_default_talk`, `evelyn_jazz_reply`, `evelyn_gardening_reply`, `evelyn_family_reply` |
 | `entrepreneur_robert` | **Robert** | male | `spire_skypark_dome` | `robert_default_talk`, `robert_mime_reply`, `robert_mop_reply` |
 | `noodle_cook_ren` | **Ren** | male | `spire_noodle_row` | `shop_noodle_row` (vendor interaction) |
+| `bartender_dax` | **Dax** | male | `spire_skyline_vip_suite` | `dax_default_talk`, `dax_default_talk_2`, `dax_default_talk_3` |
+| `director_vance` | **Director Vance**| male | `spire_skyline_vip_suite` | `director_vance_default_talk`, `vance_confession_1`, `vance_confession_2`, `vance_confession_3` |
+| `dr_lyra` | **Dr. Lyra** | female | `spire_skyline_vip_suite` | `dr_lyra_default_talk` |
+| `singer_selene` | **Selene** | female | `spire_skyline_vip_suite` | `singer_selene_default_talk` |
 
 ---
 
@@ -392,6 +401,12 @@ Execute these validation checks during your manual playthrough:
   - [ ] Moving east from `spire_old_subway_car` into `spire_rigging_deck` reveals Cheno and the family holopic inspectable.
   - [ ] Moving east from `spire_rigging_deck` into `spire_hidden_studio` reveals Jason, Meeko, and the CRT galaxy terminal.
   - [ ] Talking to Meeko displays dignified partner dialogue and grants `meekos_mafia_jack`.
+- [ ] **Skyline VIP Murder Mystery (`w3_sq16`):**
+  - [ ] Moving east from `spire_donor_gallery` enters `spire_skyline_vip_suite` at `pos: [4, 0]`.
+  - [ ] Inspecting `dispenser log` confirms pure drink pour at 21:15.
+  - [ ] Entering `spire_vip_private_booth` at `pos: [4, 1]` reveals Auditor Malick.
+  - [ ] Inspecting `crystal glass`, `executive comms rig`, and `auditor's datapad` unlocks the confrontation branch.
+  - [ ] Confronting Director Vance extracts the full confession, grants `cyano_coolant_injector`, `skyline_master_passkey`, and 450 XP, and completes `w3_sq16`.
 - [ ] **Chrono-Flux Slider Alignment:** In `spire_prism_gallery`, setting sliders to 45 / 108 / 240 correctly unlatches the Archive Vault and persists across save/reload.
 - [ ] **The Lens Acquisition Alarm:** Looting `the_lens` triggers immediate red-alert strobe overlay and transitions audio to high-tempo escape cue.
 - [ ] **Administrator Boss Balance:** Without OP Mode, verify that Shock abilities deal +50% bonus damage and that staggering the boss lasts 2 full turns.

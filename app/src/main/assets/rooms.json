@@ -4812,7 +4812,8 @@
     "enemies": [],
     "connections": {
       "west": "spire_glasswalk",
-      "south": "spire_archive_vault"
+      "south": "spire_archive_vault",
+      "east": "spire_skyline_vip_suite"
     },
     "pos": [
       3,
@@ -19202,6 +19203,98 @@
         "type": "inspect",
         "description": "Inspect the warm carafe on the clinician's desk.",
         "inspect_message": "A warm glass carafe of dark roast coffee sitting on a solar heater beside a handwritten note: 'Drink water, stretch your back, and stop reading autopsy reports at 2 AM.'"
+      }
+    ]
+  },
+  {
+    "id": "spire_skyline_vip_suite",
+    "env": "neon",
+    "weather": "rain",
+    "title": "Skyline VIP Salon",
+    "background_image": "images/rooms/world_3/spire_exec_lounge_bar.webp",
+    "description": "Plush velvet stanchions divide the glowing skyline salon from the rain-swept spires outside. Holographic chandeliers illuminate four stranded patrons around an automated crime-scene barrier. Emergency sirens pulse against the soundproof glass.",
+    "npcs": [
+      "bartender_dax",
+      "director_vance",
+      "dr_lyra",
+      "singer_selene"
+    ],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "spire_donor_gallery",
+      "north": "spire_vip_private_booth"
+    },
+    "pos": [
+      4,
+      0
+    ],
+    "state": {},
+    "description_variants": [
+      {
+        "description": "The emergency sirens have quieted. Director Vance sits slumped under guard, while the remaining patrons sip their drinks in subdued relief. The golden skyline shines through the rain outside.",
+        "requires_milestones": [
+          "ms_w3_sq16_complete"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "name": "crime-scene barrier",
+        "type": "generic",
+        "action_event": "w3_sq16_start",
+        "condition_unmet_message": "Yellow holographic caution tape seals the private Syndicate Booth. A murder investigation is underway."
+      },
+      {
+        "name": "dispenser log",
+        "type": "generic",
+        "action_event": "w3_sq16_inspect_dispenser",
+        "condition_unmet_message": "The automated dispenser log shows pure synth-sparkler was poured at 21:15 without additives."
+      },
+      {
+        "name": "security terminal",
+        "type": "generic",
+        "action_event": "w3_sq16_inspect_terminal",
+        "condition_unmet_message": "Terminal logs show Director Vance's keycard pinged the Syndicate Booth sensor at 21:14, and his comms unit vented coolant at 21:12."
+      }
+    ]
+  },
+  {
+    "id": "spire_vip_private_booth",
+    "env": "neon",
+    "weather": "rain",
+    "title": "Syndicate Booth",
+    "background_image": "images/rooms/world_3/spire_archive_vault.webp",
+    "description": "A private booth of curved mahogany overlooks the neon clouds. Auditor Malick slumps lifeless across the table beside a crystal glass. An executive comms rig lies open near the victim's splayed fingers.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "spire_skyline_vip_suite"
+    },
+    "pos": [
+      4,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "crystal glass",
+        "type": "generic",
+        "action_event": "w3_sq16_inspect_glass",
+        "condition_unmet_message": "Chemical analysis confirms traces of Cyano-Coolant 9, a rare executive comms refrigerant, mixed into the wine."
+      },
+      {
+        "name": "executive comms rig",
+        "type": "generic",
+        "action_event": "w3_sq16_inspect_rig",
+        "condition_unmet_message": "The portable comms unit stamped with Director Vance's executive crest has its coolant core compartment popped open and empty."
+      },
+      {
+        "name": "auditor's datapad",
+        "type": "generic",
+        "action_event": "w3_sq16_inspect_datapad",
+        "condition_unmet_message": "Auditor Malick's encrypted notes show he scheduled this meeting to confront Director Vance over millions in stolen scrap contracts."
       }
     ]
   }

@@ -3015,5 +3015,67 @@
     "speaker": "David",
     "text": "[David chuckles, wiping down the cedar cutting board.] If you think this is neat, you should see our home quarters back on the coast! My partner Nancy would throw a fit if she found one speck of grease on the floor. She keeps everything immaculate, while I handle the brisket and the wild river stories. We balance each other out pretty darn well.",
     "next": "david_default_talk"
+  },
+  {
+    "id": "dax_default_talk",
+    "speaker": "Dax",
+    "text": "I swear on my license, I only poured his synth-sparkler! The dispenser logs every milliliter—you can check it yourself at the bar!",
+    "next": "dax_default_talk_2"
+  },
+  {
+    "id": "dax_default_talk_2",
+    "speaker": "Player",
+    "text": "Did anyone else approach the glass?",
+    "next": "dax_default_talk_3"
+  },
+  {
+    "id": "dax_default_talk_3",
+    "speaker": "Dax",
+    "text": "I had my back turned prepping garnishes for Director Vance. But the terminal records every badge ping in this room!"
+  },
+  {
+    "id": "dr_lyra_default_talk",
+    "speaker": "Dr. Lyra",
+    "text": "Before you ask: yes, I handle binary coolants. And no, I didn't kill Malick. He was the one auditing Procurement to clear my record. Why would I poison my only ally?"
+  },
+  {
+    "id": "singer_selene_default_talk",
+    "speaker": "Selene",
+    "text": "I was up on stage singing 'Spire Falling' under three spotlights from 21:10 to 21:25. If someone poisoned Malick, they did it while everyone was watching me."
+  },
+  {
+    "id": "director_vance_default_talk",
+    "speaker": "Director Vance",
+    "text": "Do not waste my time, scrapper. I am a tier-four director! I've been seated at this corner table on an encrypted conference call since 21:00 sharp. My comms rig logs prove I never left my seat!",
+    "condition": "milestone_set:ms_w3_sq16_glass_inspected,milestone_set:ms_w3_sq16_terminal_inspected,milestone_set:ms_w3_sq16_rig_inspected,milestone_not_set:ms_w3_sq16_complete",
+    "options": [
+      {
+        "id": "vance_confront_evidence",
+        "text": "Your comms unit is missing its coolant vial—and your badge pinged Malick's booth at 21:14.",
+        "next": "vance_confession_1"
+      },
+      {
+        "id": "vance_confront_leave",
+        "text": "Never mind for now."
+      }
+    ]
+  },
+  {
+    "id": "vance_confession_1",
+    "speaker": "Director Vance",
+    "text": "What?! That's... that is an outrageous fabrication! A timestamp glitch in the logging firmware!",
+    "next": "vance_confession_2"
+  },
+  {
+    "id": "vance_confession_2",
+    "speaker": "Player",
+    "text": "Cyano-Coolant 9 in the glass. The exact refrigerant missing from your comms core. Malick's datapad says he was submitting your embezzlement audit in the morning. Give it up, Vance.",
+    "next": "vance_confession_3"
+  },
+  {
+    "id": "vance_confession_3",
+    "speaker": "Director Vance",
+    "text": "...Fine! The sanctimonious little bureaucrat was going to ruin me! Forty years climbing the Spire, destroyed over scrap manifests! Take the passkey and lift this lockdown—security will hear about this!",
+    "trigger": "give_xp:450,give_item:cyano_coolant_injector,give_item:skyline_master_passkey,complete_quest:w3_sq16,set_milestone:ms_w3_sq16_complete"
   }
 ]

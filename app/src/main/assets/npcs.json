@@ -799,5 +799,81 @@
         "dialogue_id": "meeko_default_talk"
       }
     ]
+  },
+  {
+    "id": "bartender_dax",
+    "name": "Dax",
+    "aliases": [
+      "dax",
+      "bartender"
+    ],
+    "role": "Lounge Bartender",
+    "description": "A high-end mixologist who prides himself on discretion and pristine vintage spirits.",
+    "portrait": "images/npcs/orlo.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "dax_default_talk"
+      }
+    ]
+  },
+  {
+    "id": "director_vance",
+    "name": "Director Vance",
+    "aliases": [
+      "vance",
+      "director"
+    ],
+    "role": "Dominion Procurement VP",
+    "description": "An arrogant corporate executive who treats everyone below tier-four clearance like cheap grease.",
+    "portrait": "images/npcs/vance.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "director_vance_default_talk"
+      }
+    ]
+  },
+  {
+    "id": "dr_lyra",
+    "name": "Dr. Lyra",
+    "aliases": [
+      "lyra",
+      "doctor"
+    ],
+    "role": "Disgraced Chem-Engineer",
+    "description": "A cynical medical technician who was recently demoted after questioning Dominion chemical contracts.",
+    "portrait": "images/npcs/doc.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "dr_lyra_default_talk"
+      }
+    ]
+  },
+  {
+    "id": "singer_selene",
+    "name": "Selene",
+    "aliases": [
+      "selene",
+      "singer"
+    ],
+    "role": "Cabaret Singer",
+    "description": "A sultry jazz vocalist whose acoustic set was cut short by the emergency lockdown sirens.",
+    "portrait": "images/npcs/elara.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "singer_selene_default_talk"
+      }
+    ]
   }
 ]

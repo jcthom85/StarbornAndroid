@@ -2815,5 +2815,62 @@
         "quantity": 1
       }
     ]
+  },
+  {
+    "id": "w3_sq16",
+    "title": "Murder in the Skyline Salon",
+    "summary": "Investigate the poisoning of Dominion auditor Malick in the Skyline VIP Salon.",
+    "description": "Examine the poisoned glass, inspect the automated lounge access logs, interrogate the four trapped suspects, and expose the killer to lift the lockdown.",
+    "flavor": "In the Upper City, poisoned wine is just aggressive negotiation.",
+    "giver": "Crime-Scene Barrier",
+    "hub_id": "hub_6_upper_city",
+    "stages": [
+      {
+        "id": "investigate_scene",
+        "title": "Crime Scene Investigation",
+        "description": "Gather clues from the poisoned glass, the security terminal, and the executive comms rig.",
+        "tasks": [
+          {
+            "id": "inspect_glass",
+            "text": "Inspect Auditor Malick's poisoned glass in the Syndicate Booth."
+          },
+          {
+            "id": "inspect_terminal",
+            "text": "Inspect the lounge security terminal timestamp log."
+          },
+          {
+            "id": "inspect_rig",
+            "text": "Inspect the sabotaged executive comms rig."
+          }
+        ]
+      },
+      {
+        "id": "confront_killer",
+        "title": "Expose the Killer",
+        "description": "Confront the true assassin with the gathered evidence.",
+        "tasks": [
+          {
+            "id": "expose_vance",
+            "text": "Confront Director Vance with the contradictory timestamp log."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 450
+      },
+      {
+        "type": "item",
+        "item_id": "cyano_coolant_injector",
+        "quantity": 1
+      },
+      {
+        "type": "item",
+        "item_id": "skyline_master_passkey",
+        "quantity": 1
+      }
+    ]
   }
 ]

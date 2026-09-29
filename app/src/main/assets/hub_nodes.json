@@ -816,7 +816,9 @@
       "spire_donor_gallery",
       "spire_skypark_scale_01",
       "spire_skypark_scale_02",
-      "spire_skypark_scale_03"
+      "spire_skypark_scale_03",
+      "spire_skyline_vip_suite",
+      "spire_vip_private_booth"
     ],
     "discovered": false,
     "initial_visibility": "hidden",
