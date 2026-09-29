@@ -25,6 +25,7 @@ __pycache__/
 *.pyc
 /tmp/
 /reports/
+/scratch/
 /appium-starborn*.log
 /app/src/main/res/drawable - Copy/
 
