@@ -3713,5 +3713,21 @@
       },
       "duration": 3
     }
+  },
+  {
+    "id": "meekos_mafia_jack",
+    "name": "Meeko's Gold-Plated Audio Jack",
+    "description": "A heavy, gold-plated quarter-inch audio jack stamped with a panther crest, granted by the studio's feline don. Radiates immovable dignity and uncompromised swagger. \"Treat him as an equal, or don't bother asking for an audience.\"",
+    "type": "accessory",
+    "value": 500,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": {
+        "stability": 5,
+        "vitality": 3,
+        "defense": 4
+      }
+    }
   }
 ]

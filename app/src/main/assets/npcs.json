@@ -779,5 +779,25 @@
         "dialogue_id": "pam_default_talk"
       }
     ]
+  },
+  {
+    "id": "feline_meeko",
+    "name": "Meeko",
+    "aliases": [
+      "meeko",
+      "mafioso cat",
+      "consigliere meeko"
+    ],
+    "role": "Equal Creative Partner",
+    "description": "A hefty, sleek charcoal cat-like creature with an imposing mafia boss gaze, lounging across the warm chassis of a tube amplifier. Meeko swats indifferently at loose patch cables, considers himself Jason's executive peer rather than anyone's pet, and demands mutual respect before granting a single majestic audience.",
+    "portrait": "images/characters/orion_portrait.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Approach",
+        "type": "talk",
+        "dialogue_id": "meeko_default_talk"
+      }
+    ]
   }
 ]

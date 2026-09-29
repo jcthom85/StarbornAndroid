@@ -2558,6 +2558,11 @@
         "text": "What's that small copper coil on the corner of your bench?",
         "condition": "milestone_not_set:ms_jason_resonator_received",
         "next": "jason_resonator_reply"
+      },
+      {
+        "id": "jason_opt_meeko",
+        "text": "Who's the hefty charcoal cat glaring at me from the tube amp?",
+        "next": "jason_meeko_reply"
       }
     ]
   },
@@ -2917,5 +2922,65 @@
     "text": "[Pam shoves a steaming, wrapped tin of mountain-spiced skillet biscuits into your hands.] Take this. Real stone-ground meal and pepper gravy. It'll put some lead in your pencil and keep your shield steady when the miners get rowdy.",
     "trigger": "give_item:gagas_skillet_biscuits,give_xp:300,set_milestone:ms_pam_biscuits_received",
     "next": "pam_default_talk"
+  },
+  {
+    "id": "jason_meeko_reply",
+    "speaker": "Jason",
+    "text": "[Jason looks up with a fond grin.] That's Meeko. Don't let him hear you call him a pet—he considers himself the studio's executive producer and my equal partner. He can be a complete jerk to strangers, but he's got my back no matter what. If he nods at you, consider yourself officially made.",
+    "next": "creator_jason_default_talk"
+  },
+  {
+    "id": "meeko_default_talk",
+    "speaker": "Meeko",
+    "text": "Meeko narrows his sharp green eyes at you from atop the warm amplifier. He doesn't move a muscle—merely tilts his chin upward with the calm, intimidating presence of an underworld boss granting an audience.",
+    "options": [
+      {
+        "id": "meeko_opt_respect",
+        "text": "[Offer a respectful nod and address Meeko as an equal business partner]",
+        "condition": "milestone_not_set:ms_meeko_audience_granted",
+        "next": "meeko_respect_reply"
+      },
+      {
+        "id": "meeko_opt_familiar",
+        "text": "[Address Meeko with the quiet respect of a made associate]",
+        "condition": "milestone:ms_meeko_audience_granted",
+        "next": "meeko_familiar_reply"
+      },
+      {
+        "id": "meeko_opt_babytalk",
+        "text": "[Attempt to baby-talk Meeko like a cute little kitty]",
+        "next": "meeko_babytalk_reply"
+      },
+      {
+        "id": "meeko_opt_habits",
+        "text": "[Inquire about Jason's working habits]",
+        "next": "meeko_habits_reply"
+      }
+    ]
+  },
+  {
+    "id": "meeko_respect_reply",
+    "speaker": "Meeko",
+    "text": "Meeko holds your gaze for three tense seconds. Slowly, he gives a single, subtle dip of his head—acknowledging your professional respect. He uncurls one massive front paw, nudging a heavy brass audio connector across the amp chassis toward you.",
+    "trigger": "give_item:meekos_mafia_jack,give_xp:350,set_milestone:ms_meeko_audience_granted",
+    "next": "meeko_default_talk"
+  },
+  {
+    "id": "meeko_familiar_reply",
+    "speaker": "Meeko",
+    "text": "Meeko gives a slow, dignified blink, resting his paws over the edge of the amplifier. You have been officially recognized as someone worth his time.",
+    "next": "meeko_default_talk"
+  },
+  {
+    "id": "meeko_babytalk_reply",
+    "speaker": "Meeko",
+    "text": "Meeko's tail twitches once with icy disdain. He turns his head ninety degrees away, staring into the middle distance and completely ignoring your existence until you learn some manners.",
+    "next": "meeko_default_talk"
+  },
+  {
+    "id": "meeko_habits_reply",
+    "speaker": "Meeko",
+    "text": "Meeko lets out a low, gravelly purr that sounds like a heavy diesel engine idling. He looks down at Jason's soldering iron, sighs with deep feline patience, and taps his claws against the amplifier casing.",
+    "next": "meeko_default_talk"
   }
 ]

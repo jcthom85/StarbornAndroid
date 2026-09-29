@@ -19077,9 +19077,10 @@
     "env": "city",
     "title": "Secret Signal Workshop",
     "background_image": "images/rooms/world_3/spire_the_static.webp",
-    "description": "Tucked behind acoustic baffles, a cluttered studio hums with glowing CRT monitors, vacuum-tube amplifiers, and half-assembled circuit boards. A miniature galaxy simulation rotates silently on a central terminal. Mementos and guitars cover every available shelf.",
+    "description": "Tucked behind acoustic baffles, a cluttered studio hums with glowing CRT monitors and tube amplifiers. A miniature galaxy simulation rotates silently. Meeko the charcoal cat lounges like an executive boss while Jason solders circuit boards.",
     "npcs": [
-      "creator_jason"
+      "creator_jason",
+      "feline_meeko"
     ],
     "items": [],
     "enemies": [],
@@ -19112,6 +19113,13 @@
         "type": "inspect",
         "description": "Inspect the crowded creation benches.",
         "inspect_message": "Soldering irons, hand-wound pickups, game cartridges, and health food wrappers are piled high around a handwritten whiteboard that reads: 'Ideas for next project: don't start until this one is done (ha).'"
+      },
+      {
+        "id": "inspect_amplifier_roost",
+        "name": "amplifier roost",
+        "type": "inspect",
+        "description": "Inspect the warm tube amplifier where Meeko perches.",
+        "inspect_message": "The warm, humming metal casing of a 100-watt tube amplifier, claimed by Meeko as his executive throne. He rests his heavy chin on the power transformer, observing the studio with sovereign authority."
       }
     ]
   },
