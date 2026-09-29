@@ -18945,7 +18945,8 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "west": "spire_old_subway_car"
+      "west": "spire_old_subway_car",
+      "east": "spire_hidden_studio"
     },
     "pos": [
       4,
@@ -19017,6 +19018,49 @@
         "type": "inspect",
         "description": "Inspect the twin-loop steam bypass manifold.",
         "inspect_message": "A massive twin-loop steam manifold engineered to absorb thermal shock without shedding system pressure, welded with immaculate precision."
+      }
+    ]
+  },
+  {
+    "id": "spire_hidden_studio",
+    "env": "city",
+    "title": "Secret Signal Workshop",
+    "background_image": "images/rooms/world_3/spire_the_static.webp",
+    "description": "Tucked behind acoustic baffles, a cluttered studio hums with glowing CRT monitors, vacuum-tube amplifiers, and half-assembled circuit boards. A miniature galaxy simulation rotates silently on a central terminal. Mementos and guitars cover every available shelf.",
+    "npcs": [
+      "creator_jason"
+    ],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "spire_rigging_deck"
+    },
+    "pos": [
+      5,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "id": "inspect_galaxy_terminal",
+        "name": "galaxy terminal",
+        "type": "inspect",
+        "description": "Inspect the glowing green-phosphor CRT display.",
+        "inspect_message": "A green-phosphor CRT display runs an intricate simulation of six interconnected worlds, starships, and tiny travelers moving between nodes. The build notes read: 'Revision 2.0 — Keep the heart, polish the edges.'"
+      },
+      {
+        "id": "inspect_music_workstation",
+        "name": "music workstation",
+        "type": "inspect",
+        "description": "Inspect the tube amplifiers and mixing desk.",
+        "inspect_message": "An array of vintage tube amplifiers, electric guitars, and audio monitors patched into a digital mixing console. A multitrack project is open titled 'The Long Drive Home - Master v34'."
+      },
+      {
+        "id": "inspect_workbench_clutter",
+        "name": "workbench clutter",
+        "type": "inspect",
+        "description": "Inspect the crowded creation benches.",
+        "inspect_message": "Soldering irons, hand-wound pickups, game cartridges, and health food wrappers are piled high around a handwritten whiteboard that reads: 'Ideas for next project: don't start until this one is done (ha).'"
       }
     ]
   }

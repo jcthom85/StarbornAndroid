@@ -3599,5 +3599,22 @@
         "focus": 3
       }
     }
+  },
+  {
+    "id": "creators_harmonic_resonator",
+    "name": "The Builder's Harmonic Resonator",
+    "description": "An experimental copper coil soldered to a miniature audio transducer and stamped with a smiling doodle. Radiates relentless creative energy and harmonic alignment. \"Why would you ever do anything else?\"",
+    "type": "accessory",
+    "value": 750,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": {
+        "focus": 5,
+        "stability": 5,
+        "vitality": 4,
+        "accuracy": 4
+      }
+    }
   }
 ]

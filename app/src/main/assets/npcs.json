@@ -638,5 +638,25 @@
         "dialogue_id": "charlie_default_talk"
       }
     ]
+  },
+  {
+    "id": "creator_jason",
+    "name": "Jason",
+    "aliases": [
+      "jason",
+      "the builder",
+      "creator"
+    ],
+    "role": "Relentless Builder",
+    "description": "A tireless creator, guitarist, and father with an irreverent grin and a workbench that never empties. Surrounded by vintage synthesizers, monitors, and half-finished inventions, he is always building three things at once and planning the fourth.",
+    "portrait": "images/npcs/vance.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "creator_jason_default_talk"
+      }
+    ]
   }
 ]

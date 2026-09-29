@@ -2522,5 +2522,69 @@
     "speaker": "Charlie",
     "text": "Charlie happily curls into a tight circle against your boots, tucking his nose beneath his tail. His steady, rhythmic purr fills the quiet glade with unmistakable peace.",
     "next": "charlie_default_talk"
+  },
+  {
+    "id": "creator_jason_default_talk",
+    "speaker": "Jason",
+    "text": "Hey! Watch your step around those guitar cables and power supplies. I was just adjusting the clock timing on this signal bus... or was I refactoring the enemy spawn tables? Actually, both. What can I do for you?",
+    "options": [
+      {
+        "id": "jason_opt_what",
+        "text": "What are you making in here? There's gear everywhere.",
+        "next": "jason_what_reply"
+      },
+      {
+        "id": "jason_opt_galaxy",
+        "text": "Is that a simulated galaxy on your terminal?",
+        "next": "jason_galaxy_reply"
+      },
+      {
+        "id": "jason_opt_finish",
+        "text": "Do you ever actually finish a project?",
+        "next": "jason_finish_reply"
+      },
+      {
+        "id": "jason_opt_passion",
+        "text": "You look like you genuinely love what you do.",
+        "next": "jason_passion_reply"
+      },
+      {
+        "id": "jason_opt_resonator",
+        "text": "What's that small copper coil on the corner of your bench?",
+        "condition": "milestone_not_set:ms_jason_resonator_received",
+        "next": "jason_resonator_reply"
+      }
+    ]
+  },
+  {
+    "id": "jason_what_reply",
+    "speaker": "Jason",
+    "text": "[Jason pauses, looks at the four glowing screens, the opened guitar pedal, and the soldering iron in his hand, then chuckles.] Which thing? Over here is an audio synth patch, that monitor's running a procedural star cluster, this slate is a nutritional tracker, and on the bench I'm tweaking the action on a custom six-string. My wife tells me I don't know how to stop. She's completely right, of course.",
+    "next": "creator_jason_default_talk"
+  },
+  {
+    "id": "jason_galaxy_reply",
+    "speaker": "Jason",
+    "text": "Yeah! It's a little model I've been tinkering with. Six worlds, an old mining colony, a runaway starship called the Astra, and a crew trying to figure out where they belong. The secret to making it work isn't the math or the rendering—it's the people you weave into the fabric. The ones you love are what give the whole universe its gravity.",
+    "next": "creator_jason_default_talk"
+  },
+  {
+    "id": "jason_finish_reply",
+    "speaker": "Jason",
+    "text": "[He grins warmly, brushing sawdust and flux off his jeans.] Eventually! But the joy isn't just getting to the finish line—it's the making of it. Building something with your own hands, sharing it with friends like Chris, Andrew, Cheno, and Charles, and watching it take on a life of its own. Once this one launches, I've already got five more notebooks waiting.",
+    "next": "creator_jason_default_talk"
+  },
+  {
+    "id": "jason_passion_reply",
+    "speaker": "Jason",
+    "text": "Every single second of it. If you can make things that make people smile, bring your family closer, or give a friend a world to explore, why would you ever do anything else?",
+    "next": "creator_jason_default_talk"
+  },
+  {
+    "id": "jason_resonator_reply",
+    "speaker": "Jason",
+    "text": "[Jason picks up an intricately wound electromagnetic coil soldered to a miniature audio transducer.] That? It's an experimental harmonic field tuner. Calibrates frequency resonance so your gear operates with zero parasitic drag. Here, take it—I'm about to build a revision with three extra filter stages anyway. Put it to good use out there, Nova.",
+    "trigger": "give_item:creators_harmonic_resonator,give_xp:500,set_milestone:ms_jason_resonator_received",
+    "next": "creator_jason_default_talk"
   }
 ]
