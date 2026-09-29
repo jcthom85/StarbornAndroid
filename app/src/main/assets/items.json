@@ -3665,5 +3665,37 @@
         "focus": 3
       }
     }
+  },
+  {
+    "id": "mimis_jazz_bloom",
+    "name": "Mimi's Jazz Hummingbird Orchid",
+    "description": "A luminous blue orchid tuned to cool jazz frequencies, lovingly cultivated by Evelyn. Radiates calming optimism and grandmotherly grace. \"Keep a little music in the air when the world gets noisy.\"",
+    "type": "accessory",
+    "value": 500,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": {
+        "focus": 4,
+        "vitality": 4,
+        "stability": 3
+      }
+    }
+  },
+  {
+    "id": "roberts_buffer_core",
+    "name": "Robert's Gyroscopic Buffer Core",
+    "description": "A precision-machined titanium counter-rotational flywheel from Robert's patented industrial cleaning rigs. Eliminates zero-g inertia and maintains immaculate balance. \"Cleanliness is choreography.\"",
+    "type": "accessory",
+    "value": 500,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": {
+        "stability": 5,
+        "defense": 4,
+        "agility": 3
+      }
+    }
   }
 ]

@@ -2758,5 +2758,111 @@
     "text": "[Megan works with swift, practiced clinical precision, synthesizing the chemical catalyst through the nano-filaments and locking the new filtration cartridge into the marsh monitoring grid with a satisfying snap.] Pressure normalized; filtration efficiency up thirty percent. The estuary will hold. Here, Nova, take this—it's my personal clinical diagnostic sensor. It tracks cellular stress and vital signs in real time. Take care of yourself out there. And remember to drink some water.",
     "trigger": "take_item:chemical_catalyst*1,take_item:nano_filament*1,give_item:megans_clinical_scanner,give_xp:450,give_credits:500,set_milestone:ms_megan_wetland_favor_completed",
     "next": "megan_default_talk"
+  },
+  {
+    "id": "evelyn_default_talk",
+    "speaker": "Evelyn",
+    "text": "[Evelyn hums a sparkling vocal jazz run, gently misting a cluster of glowing blue orchids with a brass atomizer.] Well hello, darling! Mind the roots by the pathway. Aren't these blossoms divine? They simply won't bloom without a little Monk or Coltrane in the morning air. What brings you up to our garden in the sky?",
+    "options": [
+      {
+        "id": "evelyn_opt_music",
+        "text": "Do the plants really respond to jazz?",
+        "next": "evelyn_music_reply"
+      },
+      {
+        "id": "evelyn_opt_grandkids",
+        "text": "You mentioned family?",
+        "next": "evelyn_grandkids_reply"
+      },
+      {
+        "id": "evelyn_opt_robert",
+        "text": "Is that gentleman over there trying to climb an invisible ladder?",
+        "next": "evelyn_robert_reply"
+      },
+      {
+        "id": "evelyn_opt_favor_offer",
+        "text": "Your orchids look exceptionally vibrant.",
+        "condition": "milestone_not_set:ms_evelyn_bloom_received",
+        "next": "evelyn_favor_reply"
+      }
+    ]
+  },
+  {
+    "id": "evelyn_music_reply",
+    "speaker": "Evelyn",
+    "text": "[Evelyn beams, her eyes twinkling.] Oh, absolutely! Pop music makes the stems stiff, and classical makes them too reserved. But jazz? Jazz gives them rhythm, syncopation, and freedom. My father loved music, and I passed that same song right down to my boy Jason. You can hear it echoing through everything he builds.",
+    "next": "evelyn_default_talk"
+  },
+  {
+    "id": "evelyn_grandkids_reply",
+    "speaker": "Evelyn",
+    "text": "My precious grandbabies, Tyson and Ian! Tyson is such an artist—always building things out of paper and imagination, just like his daddy. And little Ian with his big curious mind, dreaming about astronauts and dinosaurs. Being their Mimi is the greatest joy of my life. I keep their photos tucked right inside my garden ledger.",
+    "next": "evelyn_default_talk"
+  },
+  {
+    "id": "evelyn_robert_reply",
+    "speaker": "Evelyn",
+    "text": "[Evelyn lets out a delighted laugh and waves at Robert.] That's my sweet husband, Robert! He used to be a professional mime before he designed specialized industrial mop equipment for high-tech facilities. He made a wonderful living at it, but whenever he gets excited about his heavy-duty buffer pads, the pantomime comes right back out. He's an absolute darling, even if he leaves his buffer keys in the fern pots.",
+    "next": "evelyn_default_talk"
+  },
+  {
+    "id": "evelyn_favor_reply",
+    "speaker": "Evelyn",
+    "text": "[Evelyn snips a luminous, velvet-blue blossom with silver shears.] Here, sweetheart, take this. It's a Blue Horizon jazz orchid. Keep it near your suit lapel—it'll calm your heart and keep your focus steady when the world gets noisy.",
+    "trigger": "give_item:mimis_jazz_bloom,give_xp:350,set_milestone:ms_evelyn_bloom_received",
+    "next": "evelyn_default_talk"
+  },
+  {
+    "id": "robert_default_talk",
+    "speaker": "Robert",
+    "text": "[A dapper older gentleman in immaculate linen overalls raises one hand in theatrical greeting. Without speaking, he points to a tiny scuff mark on the glass floor, clutches his chest in silent melodramatic horror, and then presents his gleaming custom mop with a triumphant, silent flourish!]",
+    "options": [
+      {
+        "id": "robert_opt_mime",
+        "text": "[Smile and mime polishing an invisible pane of glass back at him]",
+        "next": "robert_mime_reply"
+      },
+      {
+        "id": "robert_opt_business",
+        "text": "You built a company out of specialized mops?",
+        "next": "robert_business_reply"
+      },
+      {
+        "id": "robert_opt_keys",
+        "text": "Evelyn said you were looking for something?",
+        "next": "robert_keys_reply"
+      },
+      {
+        "id": "robert_opt_gift",
+        "text": "Your industrial equipment is seriously impressive.",
+        "condition": "milestone_not_set:ms_robert_core_received",
+        "next": "robert_gift_reply"
+      }
+    ]
+  },
+  {
+    "id": "robert_mime_reply",
+    "speaker": "Robert",
+    "text": "[Robert's face lights up with sheer delight. He breaks character with an educated, gentlemanly chuckle.] Bravo! Splendid form! You understand the theatrical nuance! People think industrial cleaning is just soap and elbow grease. But when you're managing thirty thousand square meters of zero-friction orbital decks, cleanliness is choreography. It's poetry in motion.",
+    "next": "robert_default_talk"
+  },
+  {
+    "id": "robert_business_reply",
+    "speaker": "Robert",
+    "text": "Indeed! High-capacity microfiber loops, electrostatic core tensioners, dual-action fluid dispensers. Every corporate shipyard and high-rise concourse from here to Zenith uses my rigs. I used to enjoy a nice glass of vintage Bordeaux after a long tour, but nowadays good tea, Evelyn's jazz, and a spotless floor are all the reward I need.",
+    "next": "robert_default_talk"
+  },
+  {
+    "id": "robert_keys_reply",
+    "speaker": "Robert",
+    "text": "[Robert pats his pockets, a look of sudden, comical bewilderment washing over his face.] My buffer ignition key! Did I... ah. Did I leave it on the third tee of the virtual golf range, or behind the hydrangea planter? [He pauses, laughing warmly.] Never mind! A man with a great wife and clean floors can afford to misplace a key now and then.",
+    "next": "robert_default_talk"
+  },
+  {
+    "id": "robert_gift_reply",
+    "speaker": "Robert",
+    "text": "[Robert beams, gesturing proudly to a machined titanium balancing flywheel on his cart.] You have an eye for precision engineering! Here—take this high-torque gyroscopic buffer core. It stabilizes inertia and absorbs recoil. Slap it onto your defensive chassis, and nothing will knock you off balance.",
+    "trigger": "give_item:roberts_buffer_core,give_xp:350,set_milestone:ms_robert_core_received",
+    "next": "robert_default_talk"
   }
 ]

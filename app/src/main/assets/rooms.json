@@ -4668,8 +4668,11 @@
     "env": "neon",
     "title": "Skypark Dome",
     "background_image": "images/rooms/world_3/spire_skypark_dome.webp",
-    "description": "The Skypark Dome offers fake sun, perfect trees, and guest registry smiles polished thin. The glasswalk curves along the edge, showing the Lower City far enough below to become decoration instead of accusation.",
-    "npcs": [],
+    "description": "The Skypark Dome offers fake sun and blooming orchids under polished glass. Evelyn sings jazz while pruning glowing blossoms, and Robert demonstrates his industrial cleaning rigs with silent theatrical flair.",
+    "npcs": [
+      "botanist_evelyn",
+      "entrepreneur_robert"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
@@ -4703,6 +4706,20 @@
         "type": "generic",
         "action_event": "w3_mq13_blend_in",
         "condition_unmet_message": "The guest registry smiles while deciding who belongs, which makes it more frightening than a locked door."
+      },
+      {
+        "id": "inspect_jazz_planter",
+        "name": "jazz conservatory planter",
+        "type": "inspect",
+        "description": "Inspect the terraced flower beds and acoustic speakers.",
+        "inspect_message": "Terraced planters of rare blue-lipped orchids. A small magnetic speaker plays soft bebop and cool jazz chords that encourage the luminous petals to unfold."
+      },
+      {
+        "id": "inspect_vortex_buffer",
+        "name": "industrial vortex buffer",
+        "type": "inspect",
+        "description": "Inspect the gleaming industrial cleaning rig.",
+        "inspect_message": "A gleaming, custom-machined industrial cleaning rig with twin counter-rotating microfiber pads and polished chrome manifolds. Stamped: 'Robert's Custom Industrial Hygiene — Cleanliness is an Art.'"
       }
     ],
     "npc_presence": [

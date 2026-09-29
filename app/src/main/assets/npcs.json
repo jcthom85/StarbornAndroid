@@ -719,5 +719,45 @@
         "dialogue_id": "megan_default_talk"
       }
     ]
+  },
+  {
+    "id": "botanist_evelyn",
+    "name": "Evelyn",
+    "aliases": [
+      "evelyn",
+      "mimi",
+      "gardener evelyn"
+    ],
+    "role": "Hydroponic Jazz Botanist",
+    "description": "A kind, charmingly eccentric gardener with blonde hair, an infectious laugh, and a lifelong love of jazz. Evelyn hums vocal riffs while pruning rare botanical blossoms, beaming with boundless grandmotherly love for her grandsons Tyson and Ian.",
+    "portrait": "images/npcs/elara.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "evelyn_default_talk"
+      }
+    ]
+  },
+  {
+    "id": "entrepreneur_robert",
+    "name": "Robert",
+    "aliases": [
+      "robert",
+      "the mime",
+      "robert mop"
+    ],
+    "role": "Industrial Sanitary Mogul",
+    "description": "A courtly, distinguished entrepreneur and former theatrical mime who founded an interstellar industrial cleaning equipment empire. Known for communicating complex equipment tolerances through expressive, silent pantomime and occasionally misplacing his multi-stage floor buffers.",
+    "portrait": "images/npcs/curator.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Converse",
+        "type": "talk",
+        "dialogue_id": "robert_default_talk"
+      }
+    ]
   }
 ]
