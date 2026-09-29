@@ -5593,7 +5593,8 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "foundry_waste_intake"
+      "south": "foundry_waste_intake",
+      "north": "foundry_crucible_arena"
     },
     "pos": [
       2,
@@ -19295,6 +19296,59 @@
         "type": "generic",
         "action_event": "w3_sq16_inspect_datapad",
         "condition_unmet_message": "Auditor Malick's encrypted notes show he scheduled this meeting to confront Director Vance over millions in stolen scrap contracts."
+      }
+    ]
+  },
+  {
+    "id": "foundry_crucible_arena",
+    "env": "foundry",
+    "weather": "gas",
+    "title": "The Scrapper's Crucible",
+    "background_image": "images/rooms/world_4/foundry_intake_overlook.webp",
+    "description": "A sunken iron amphitheater enclosed by heavy blast cages and molten slag sluices. Pitmaster Brutus monitors telemetry above scorched titanium, orchestrating brutal machine combat for rogue loaders and eager betters.",
+    "npcs": [
+      "pitmaster_brutus"
+    ],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "foundry_intake_overlook"
+    },
+    "pos": [
+      2,
+      3
+    ],
+    "state": {
+      "crucible_round": 0
+    },
+    "description_variants": [
+      {
+        "description": "Sawdust and molten slag sizzle across the floor. With the Champion felled, rogue loader units raise their hydro-claws in cheer while Brutus grins from the victor's podium.",
+        "requires_milestones": [
+          "ms_w4_crucible_champion"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "name": "blast cage",
+        "type": "generic",
+        "condition_unmet_message": "Reinforced tungsten grates lock combatants inside until one side ceases function."
+      },
+      {
+        "name": "molten sluices",
+        "type": "generic",
+        "condition_unmet_message": "Open gutters of liquid slag heat the arena floor to blistering temperatures."
+      },
+      {
+        "name": "victor podium",
+        "type": "generic",
+        "condition_unmet_message": "A heavy steel anvil where Brutus rests the Crucible Forge-Plate prize."
+      },
+      {
+        "name": "announcer horn",
+        "type": "generic",
+        "condition_unmet_message": "A blaring pneumatic klaxon that signals wave starts and emergency coolant flushes."
       }
     ]
   }

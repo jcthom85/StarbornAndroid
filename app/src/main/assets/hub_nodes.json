@@ -1017,7 +1017,8 @@
       "foundry_waste_intake_scale_02",
       "foundry_waste_intake_scale_03",
       "foundry_waste_intake_scale_04",
-      "foundry_waste_intake_scale_final"
+      "foundry_waste_intake_scale_final",
+      "foundry_crucible_arena"
     ],
     "discovered": false,
     "initial_visibility": "hidden",

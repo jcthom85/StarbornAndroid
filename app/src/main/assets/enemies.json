@@ -1011,7 +1011,9 @@
       "molten_slam",
       "slag_cooldown"
     ],
-    "recovery_after": { "molten_slam": "slag_cooldown" },
+    "recovery_after": {
+      "molten_slam": "slag_cooldown"
+    },
     "flavor": "A furnace-bulk material hauler with slag hardened around its frame like living armor.",
     "xp_reward": 220,
     "credit_reward": 130,
@@ -1201,7 +1203,10 @@
   },
   {
     "id": "titan_walker_boss",
-    "recovery_after": { "missile_barrage": "vent_exposure", "titan_stomp": "vent_exposure" },
+    "recovery_after": {
+      "missile_barrage": "vent_exposure",
+      "titan_stomp": "vent_exposure"
+    },
     "name": "Titan Walker",
     "tier": "boss",
     "combat_behavior": "boss",
@@ -1533,7 +1538,9 @@
   },
   {
     "id": "compliance_avatar",
-    "recovery_after": { "missile_barrage": "avatar_recalibration" },
+    "recovery_after": {
+      "missile_barrage": "avatar_recalibration"
+    },
     "name": "Compliance Avatar",
     "tier": "boss",
     "combat_behavior": "boss",
@@ -1978,5 +1985,53 @@
     "drops": [],
     "description": "Final boss phase two. Reality warping and Great Silence.",
     "portrait": "images/enemies/the_iron_warden_combat.png"
+  },
+  {
+    "id": "crucible_champion",
+    "name": "Crucible Champion",
+    "tier": "boss",
+    "combat_behavior": "aggressive",
+    "combat_role": "striker",
+    "hp": 480,
+    "strength": 24,
+    "vitality": 20,
+    "agility": 8,
+    "focus": 10,
+    "luck": 6,
+    "speed": 8,
+    "stability": 220,
+    "element": "burn",
+    "resistances": {
+      "burn": 60,
+      "physical": 20,
+      "freeze": -40,
+      "shock": -25
+    },
+    "tags": [
+      "machine",
+      "foundry",
+      "construct",
+      "boss"
+    ],
+    "abilities": [
+      "molten_slam",
+      "torch_cut",
+      "heat_burst"
+    ],
+    "flavor": "A battle-scarred heavy loader reinforced with multilayered crucible alloy plating, undefeated in Brutus's arena.",
+    "xp_reward": 350,
+    "credit_reward": 200,
+    "drops": [
+      {
+        "id": "pure_iron",
+        "chance": 1.0
+      },
+      {
+        "id": "power_cell",
+        "chance": 0.8
+      }
+    ],
+    "description": "The undefeated champion of the Scrapper's Crucible. High burn and physical armor; exploit its cold and electrical vulnerability to stagger its massive chassis.",
+    "portrait": "images/enemies/heavy_loader_combat.png"
   }
 ]

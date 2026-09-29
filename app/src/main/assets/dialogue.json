@@ -3077,5 +3077,107 @@
     "speaker": "Director Vance",
     "text": "...Fine! The sanctimonious little bureaucrat was going to ruin me! Forty years climbing the Spire, destroyed over scrap manifests! Take the passkey and lift this lockdown—security will hear about this!",
     "trigger": "give_xp:450,give_item:cyano_coolant_injector,give_item:skyline_master_passkey,complete_quest:w3_sq16,set_milestone:ms_w3_sq16_complete"
+  },
+  {
+    "id": "brutus_dialogue_champion",
+    "speaker": "Pitmaster Brutus",
+    "text": "Hail the Crucible Champion! The loaders still buzz about your bout. Wear that Forge-Plate proud out there in the Foundry!",
+    "condition": "quest_completed:w4_sq_crucible"
+  },
+  {
+    "id": "brutus_dialogue_claim",
+    "speaker": "Pitmaster Brutus",
+    "text": "I don't believe it! The Champion... offline! You took everything the Crucible threw at you and came out glowing! As promised, take the Crucible Forge-Plate. You've earned every dent on it, Champion!",
+    "condition": "milestone:ms_crucible_round3_cleared,quest_not_completed:w4_sq_crucible",
+    "trigger": "set_quest_task_done:w4_sq_crucible:task_round3,set_milestone:ms_w4_crucible_champion,complete_quest:w4_sq_crucible,give_xp:500,give_item:crucible_forge_plate,give_credits:350"
+  },
+  {
+    "id": "brutus_dialogue_round3",
+    "speaker": "Pitmaster Brutus",
+    "text": "By the core, you cracked a Slag Golem wide open! The betting pool just went into meltdown! Only one match left: my personal masterwork, the Crucible Champion Juggernaut!",
+    "condition": "milestone:ms_crucible_round2_cleared,milestone_not_set:ms_crucible_round3_cleared",
+    "options": [
+      {
+        "id": "opt_brutus_start_round3",
+        "text": "Bring out your Champion!",
+        "next": "brutus_start_round3_go"
+      },
+      {
+        "id": "opt_brutus_wait_round3",
+        "text": "Hold on, let us prepare first."
+      }
+    ]
+  },
+  {
+    "id": "brutus_start_round3_go",
+    "speaker": "Pitmaster Brutus",
+    "text": "Sound the sirens! The Champion enters the ring! Show me what starborn steel is made of!",
+    "trigger": "player_action:w4_crucible_start_round_3"
+  },
+  {
+    "id": "brutus_dialogue_round2",
+    "speaker": "Pitmaster Brutus",
+    "text": "Ha! Turned those buzzing pests into molten scrap! But don't celebrate yet—the floor vents are heating up, and the heavy hitters are waiting behind the blast doors.",
+    "condition": "milestone:ms_crucible_round1_cleared,milestone_not_set:ms_crucible_round2_cleared",
+    "options": [
+      {
+        "id": "opt_brutus_start_round2",
+        "text": "Release Round 2: The Molten Crushers!",
+        "next": "brutus_start_round2_go"
+      },
+      {
+        "id": "opt_brutus_wait_round2",
+        "text": "We need a minute to patch our armor."
+      }
+    ]
+  },
+  {
+    "id": "brutus_start_round2_go",
+    "speaker": "Pitmaster Brutus",
+    "text": "Pneumatics releasing! Watch the floor vents—here comes the Slag Golem and its field welder crew!",
+    "trigger": "player_action:w4_crucible_start_round_2"
+  },
+  {
+    "id": "brutus_dialogue_initial",
+    "speaker": "Pitmaster Brutus",
+    "text": "Well, look what crawled out of the slag chutes. A fresh crew with genuine starborn chrome. You looking to bet on the scrap bouts, or did you come to bleed in the Crucible?",
+    "options": [
+      {
+        "id": "opt_brutus_rules",
+        "text": "What is the Scrapper's Crucible?",
+        "next": "brutus_dialogue_rules"
+      },
+      {
+        "id": "opt_brutus_start_round1",
+        "text": "We're ready. Bring on Round 1: Magma Drone Swarm!",
+        "next": "brutus_start_round1_go"
+      },
+      {
+        "id": "opt_brutus_pass",
+        "text": "Just scoping out the pits."
+      }
+    ]
+  },
+  {
+    "id": "brutus_dialogue_rules",
+    "speaker": "Pitmaster Brutus",
+    "text": "Three waves. No ref timeouts, no Dominion safety net. Wave one tests your speed against aerial stingers. Wave two brings out the heavy molten haulers. Wave three is my reigning undefeated Champion. Survive all three, and the Crucible Forge-Plate is yours.",
+    "options": [
+      {
+        "id": "opt_brutus_rules_accept",
+        "text": "Let's do this. Open the cage for Round 1!",
+        "next": "brutus_start_round1_go"
+      },
+      {
+        "id": "opt_brutus_rules_wait",
+        "text": "Give us a moment to prepare."
+      }
+    ]
+  },
+  {
+    "id": "brutus_start_round1_go",
+    "speaker": "Pitmaster Brutus",
+    "text": "Cage gates dropping! Keep your shields up and your footing cool—first wave is the Magma Drone Swarm!",
+    "trigger": "start_quest:w4_sq_crucible,set_milestone:ms_crucible_trial_accepted,player_action:w4_crucible_start_round_1"
   }
 ]

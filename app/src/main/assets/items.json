@@ -3778,5 +3778,23 @@
     "type": "accessory",
     "value": 350,
     "rarity": "rare"
+  },
+  {
+    "id": "crucible_forge_plate",
+    "name": "Crucible Forge-Plate",
+    "description": "Master-forged gladiator armor beaten under slag hammers (+10 Defense, +45 HP, +4 Vitality, +2 Strength).",
+    "type": "armor",
+    "value": 1500,
+    "buy_price": 3000,
+    "rarity": "legendary",
+    "equipment": {
+      "slot": "armor",
+      "defense": 10,
+      "hp_bonus": 45,
+      "stat_mods": {
+        "vitality": 4,
+        "strength": 2
+      }
+    }
   }
 ]

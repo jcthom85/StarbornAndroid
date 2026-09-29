@@ -15336,5 +15336,127 @@
         "message": "Malick's encrypted files reveal Director Vance embezzled millions in military scrap. Malick scheduled this meeting to give Vance one chance to surrender before filing the report."
       }
     ]
+  },
+  {
+    "id": "w4_crucible_spawn_round_1",
+    "description": "Spawn Crucible Round 1: Magma Drone Swarm",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_crucible_start_round_1"
+    },
+    "actions": [
+      {
+        "type": "spawn_encounter",
+        "encounter_id": "magma_drone,magma_drone,welder_bot",
+        "room_id": "foundry_crucible_arena"
+      }
+    ]
+  },
+  {
+    "id": "w4_crucible_victory_round_1",
+    "description": "Crucible Round 1 victory.",
+    "trigger": {
+      "type": "encounter_victory",
+      "room": "foundry_crucible_arena",
+      "enemies": [
+        "magma_drone",
+        "magma_drone",
+        "welder_bot"
+      ]
+    },
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_crucible_round1_cleared"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_sq_crucible",
+        "task_id": "task_round1"
+      },
+      {
+        "type": "show_message",
+        "message": "Round 1 cleared! The crowd of rogue loaders clatters in approval. Speak to Pitmaster Brutus when you are ready to face Round 2."
+      }
+    ]
+  },
+  {
+    "id": "w4_crucible_spawn_round_2",
+    "description": "Spawn Crucible Round 2: Molten Crushers",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_crucible_start_round_2"
+    },
+    "actions": [
+      {
+        "type": "spawn_encounter",
+        "encounter_id": "slag_golem,welder_bot",
+        "room_id": "foundry_crucible_arena"
+      }
+    ]
+  },
+  {
+    "id": "w4_crucible_victory_round_2",
+    "description": "Crucible Round 2 victory.",
+    "trigger": {
+      "type": "encounter_victory",
+      "room": "foundry_crucible_arena",
+      "enemies": [
+        "slag_golem",
+        "welder_bot"
+      ]
+    },
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_crucible_round2_cleared"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w4_sq_crucible",
+        "task_id": "task_round2"
+      },
+      {
+        "type": "show_message",
+        "message": "Round 2 cleared! The Slag Golem collapses into cooling cinders. Speak to Brutus when you are prepared to face the Crucible Champion!"
+      }
+    ]
+  },
+  {
+    "id": "w4_crucible_spawn_round_3",
+    "description": "Spawn Crucible Round 3: The Champion Bout",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_crucible_start_round_3"
+    },
+    "actions": [
+      {
+        "type": "spawn_encounter",
+        "encounter_id": "crucible_champion,magma_drone",
+        "room_id": "foundry_crucible_arena"
+      }
+    ]
+  },
+  {
+    "id": "w4_crucible_victory_round_3",
+    "description": "Crucible Round 3 victory.",
+    "trigger": {
+      "type": "encounter_victory",
+      "room": "foundry_crucible_arena",
+      "enemies": [
+        "crucible_champion",
+        "magma_drone"
+      ]
+    },
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_crucible_round3_cleared"
+      },
+      {
+        "type": "show_message",
+        "message": "CHAMPIONSHIP VICTORY! The Crucible Champion shuts down with a shudder of steam. Speak to Pitmaster Brutus to claim your legendary prize!"
+      }
+    ]
   }
 ]

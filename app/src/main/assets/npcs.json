@@ -875,5 +875,21 @@
         "dialogue_id": "singer_selene_default_talk"
       }
     ]
+  },
+  {
+    "id": "pitmaster_brutus",
+    "name": "Pitmaster Brutus",
+    "aliases": [],
+    "role": "Arena Master",
+    "description": "A burly, welder-turned-bookie who runs underground gladiator machine bouts in the Foundry drainage basin.",
+    "portrait": "images/npcs/scrapper.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "brutus_dialogue_initial"
+      }
+    ]
   }
 ]

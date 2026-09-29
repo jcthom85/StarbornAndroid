@@ -283,6 +283,7 @@ sequenceDiagram
 | **`w4_sq18`**<br>The Scrap Heap | Scrapper Drone<br>`foundry_waste_intake` | 1. Engage Waste Intake brake<br>2. Salvage intact actuators from wreck pile<br>3. Assemble cooling bypass at workbench | **300 XP**<br>**High-Grade Actuators x2** |
 | **`w4_sq19`**<br>Quality Control | Rejected Droid<br>`foundry_reject_bay` | 1. Locate 5 waking defective units in queue<br>2. Reprogram logic cores (or disable cleanly)<br>3. Override disposal furnace feed | **400 XP**<br>**Optic Mod: Glitch Sight** |
 | **`w4_sq20`**<br>Overclock Matrix | Cameron / Console<br>`foundry_conditioning_chamber`| 1. Purge thermal baffles in Conditioning Chamber<br>2. Re-route auxiliary cooling coolant<br>3. Stabilize generator output | **450 XP**<br>**Overclocked Core x1** |
+| **`w4_sq_crucible`**<br>The Scrapper's Crucible | Pitmaster Brutus<br>`foundry_crucible_arena` (North of Intake Overlook) | 1. Speak with Pitmaster Brutus and enter the cage<br>2. Survive Wave 1: Magma Drone Swarm<br>3. Defeat Wave 2: Slag Golem & Welder Bot<br>4. Defeat Wave 3: Crucible Champion Juggernaut | **500 XP**, **350 Credits**<br>**Crucible Forge-Plate** (Legendary Armor) |
 
 ---
 
@@ -290,18 +291,38 @@ sequenceDiagram
 
 In alignment with our master design playbook, World 4 houses two signature 16-bit gameplay systems:
 
+### A. The Scrapper's Crucible (Combat Arena Challenge)
+* **Location:** `foundry_crucible_arena` (`[2, 3]`), accessible directly north through `foundry_intake_overlook` (`[2, 2]`) in Hub 7.
+* **Arena Operator:** **Pitmaster Brutus**, a grease-stained welder-turned-bookie orchestrating machine bouts for rogue loaders.
+* **Instant QA Launch:** Select **`World 4: The Scrapper's Crucible`** (`campaign_w4_crucible`) from the Main Menu Debug Scenarios to drop directly into the arena pit.
+
 ```mermaid
 flowchart TD
-    subgraph Crucible["The Scrapper's Crucible (Slag Pit Arena Challenge)"]
-        Round1["Round 1: Magma Drone Swarm<br><i>Modifier: Overheat (Fire damage x2)</i>"]
-        Round2["Round 2: Twin Slag Golems<br><i>Modifier: Heavy Gravity (Agility -30%)</i>"]
-        Round3["Round 3: Welder Bot Squad & Prototype<br><i>Modifier: EMP Surge (Shields Disabled)</i>"]
+    subgraph Crucible["The Scrapper's Crucible (3-Wave Gladiator Trial)"]
+        Round1["Round 1: Magma Drone Swarm (2x Magma Drone, 1x Welder Bot)<br><i>Modifier: Overheat Surge (High burn pressure)</i>"]
+        Round2["Round 2: Molten Crushers (1x Slag Golem, 1x Welder Bot)<br><i>Modifier: Heavy Slag (Armored defense check)</i>"]
+        Round3["Round 3: The Champion Bout (1x Crucible Champion, 1x Magma Drone)<br><i>Modifier: EMP Arc Discharge (Shield stress trial)</i>"]
     end
-    Round1 --> Round2 --> Round3
+    Round1 --> Intermission1["Intermission: Heal, talk with Brutus"] --> Round2
+    Round2 --> Intermission2["Intermission: Re-equip, sound the siren"] --> Round3
     Round3 --> ChampionLoot["Grand Prize: Crucible Forge-Plate (Legendary Armor)"]
 ```
 
-### The 3-Wing Industrial Relay Puzzle (Level Design Blueprint):
+#### Arena Combat Strategy Guide:
+1. **Round 1 (The Swarm):**
+   - *Target Priority:* Focus down the `welder_bot` first with physical or shock strikes before it can cast `Field Weld`.
+   - *Vulnerability:* Use Freeze and Shock attacks to ground the aerial `magma_drone` units quickly.
+2. **Round 2 (Molten Crushers):**
+   - *Armor Breakdown:* The `slag_golem` boasts 380 HP and 60% Burn resistance. Use Freeze skills (-40% resistance) to shatter its thermal carapace.
+   - *Recovery Window:* When the golem executes `Molten Slam`, exploit its subsequent 1-turn `slag_cooldown` opening.
+3. **Round 3 (Crucible Champion Juggernaut):**
+   - *Boss Stats:* 480 HP, 24 STR, 220 Stability. Twin blowtorch actuators hit with heavy burn and stagger.
+   - *Tactic:* Dispel or evade its `Molten Slam` telegraph. Freeze abilities inflict massive damage while Shock attacks interrupt its `Torch Cut` channeling.
+   - *Reward Collection:* Talk to Pitmaster Brutus on the victor's podium to claim the **Crucible Forge-Plate** (`crucible_forge_plate`: +10 Defense, +45 HP, +4 Vitality, +2 Strength) and 500 XP!
+
+---
+
+### B. The 3-Wing Industrial Relay Puzzle (Level Design Blueprint):
 * **The Central Gate:** Sealed titanium blast door at `foundry_forge_anvil` with two unpowered conduit indicators.
 * **West Wing (Coolant Valve Relay):** Pulling linked valves A & B establishes net-zero pressure, illuminating the West Conduit.
 * **East Wing (The Ballast Crane):** Push a magnetic battery sled onto the hydraulic contact plate, closing the circuit and illuminating the East Conduit.
@@ -320,6 +341,7 @@ flowchart TD
 | Flame Trooper     | 260 | 140 | 7   | Brn | Source: -20%. Heavy armor-lock; cone flamethrower.|
 | Phantom Prototype | 230 | 120 | 20  | Src | Shock: -30%. High speed; cloaks on Turn 2.        |
 | Slag Golem        | 380 | 180 | 5   | Brn | Freeze: -40%, Shock: -20%. 1-turn recovery window |
+| Crucible Champion | 480 | 220 | 8   | Brn | Freeze: -40%, Shock: -25%. Undefeated Arena Boss.  |
 | Conveyor Crusher  | 999 | 999 | 1   | Phy | Stationary hazard. Hack console to bypass.        |
 | Titan Walker      | 540 | 260 | 8   | Phy | Shock: -50%, Source: -10%. Stagger post-Barrage.  |
 +-------------------+-----+-----+-----+-----+---------------------------------------------------+

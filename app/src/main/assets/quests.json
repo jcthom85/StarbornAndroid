@@ -2872,5 +2872,46 @@
         "quantity": 1
       }
     ]
+  },
+  {
+    "id": "w4_sq_crucible",
+    "title": "The Scrapper's Crucible",
+    "summary": "Survive Pitmaster Brutus's 3-wave gladiator machine trials in the Waste Intake.",
+    "description": "Step into the sunken arena north of the Intake Overlook, face three escalating waves of rogue automated war machines under brutal environmental hazards, and claim the legendary Crucible Forge-Plate.",
+    "flavor": "Machines do not bleed, but when the slag hits redline, they certainly crack.",
+    "giver": "Pitmaster Brutus",
+    "hub_id": "hub_7_slag_pits",
+    "stages": [
+      {
+        "id": "stage_trials",
+        "title": "Gladiator Waves",
+        "description": "Defeat the three combat trials in the slag cage pit north of the Waste Intake overlook.",
+        "tasks": [
+          {
+            "id": "task_round1",
+            "text": "Defeat Round 1: Magma Drone Swarm under Overheat conditions in the Crucible pit."
+          },
+          {
+            "id": "task_round2",
+            "text": "Defeat Round 2: Slag Golem and Welder Bot heavy line."
+          },
+          {
+            "id": "task_round3",
+            "text": "Defeat Round 3: The Crucible Champion and claim the victor's prize."
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "type": "xp",
+        "amount": 500
+      },
+      {
+        "type": "item",
+        "item_id": "crucible_forge_plate",
+        "quantity": 1
+      }
+    ]
   }
 ]

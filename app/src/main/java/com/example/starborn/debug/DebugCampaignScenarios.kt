@@ -464,6 +464,17 @@ object DebugCampaignScenarios {
                 "Reward is the powerful Overclock relic modification."),
             setOf("quests:w4_sq20")),
 
+        entry("campaign_w4_crucible", "w4_sq_crucible", "SQ: The Scrapper's Crucible", "World 4: The Foundry", DebugScenarioCategory.CONTENT, "foundry_crucible_arena",
+            "The Scrapper's Crucible pit north of Waste Intake; ready to face Pitmaster Brutus's 3-wave gauntlet.",
+            listOf("Speak with Pitmaster Brutus inside the sunken Crucible arena.",
+                "Accept the gladiator challenge and survive Wave 1: Magma Drone Swarm.",
+                "Speak to Brutus between rounds and initiate Wave 2: Molten Crushers.",
+                "Defeat Round 3: The Crucible Champion and claim the legendary Crucible Forge-Plate."),
+            listOf("Arena combat waves spawn cleanly and reward appropriate XP and progress.",
+                "Pitmaster Brutus dialogue responds dynamically to cleared waves.",
+                "Grand prize Crucible Forge-Plate is awarded upon championship victory."),
+            setOf("quests:w4_sq_crucible", "enemies:crucible_champion", "items:crucible_forge_plate")),
+
         // World 5 Main Quests
         entry("campaign_w5_mq21", "w5_mq21", "MQ21: Docking Procedure", "World 5: The Void", DebugScenarioCategory.STORY, "orbital_executive_dock",
             "Orbital Ring Executive Dock; Astra breaching the Dominion orbital stronghold.",

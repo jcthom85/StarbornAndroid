@@ -1830,5 +1830,35 @@
     "name": "A Murder in High Society",
     "description": "Exposed Director Vance as Auditor Malick's assassin and lifted the Skyline Salon lockdown.",
     "toast": "Side quest complete: Murder in the Skyline Salon"
+  },
+  {
+    "id": "ms_crucible_trial_accepted",
+    "name": "Crucible Challenger",
+    "description": "Accepted Pitmaster Brutus's 3-wave machine challenge in the Scrapper's Crucible.",
+    "toast": "Arena Trial: Entered the Scrapper's Crucible"
+  },
+  {
+    "id": "ms_crucible_round1_cleared",
+    "name": "Swarm Crusher",
+    "description": "Cleared Round 1 of the Scrapper's Crucible: Magma Drone Swarm.",
+    "toast": "Crucible Round 1 Cleared: Magma Drones"
+  },
+  {
+    "id": "ms_crucible_round2_cleared",
+    "name": "Slag Breaker",
+    "description": "Cleared Round 2 of the Scrapper's Crucible: Molten Crushers.",
+    "toast": "Crucible Round 2 Cleared: Slag Golem"
+  },
+  {
+    "id": "ms_crucible_round3_cleared",
+    "name": "Champion Down",
+    "description": "Felled the reigning Champion Juggernaut in Round 3 of the Scrapper's Crucible.",
+    "toast": "Crucible Round 3 Cleared: Champion Defeated"
+  },
+  {
+    "id": "ms_w4_crucible_champion",
+    "name": "Grand Crucible Champion",
+    "description": "Crowned Grand Champion of the Scrapper's Crucible and awarded the Crucible Forge-Plate.",
+    "toast": "Title earned: Grand Crucible Champion"
   }
 ]
