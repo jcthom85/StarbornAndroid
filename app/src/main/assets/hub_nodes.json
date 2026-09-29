@@ -669,7 +669,8 @@
       "spire_safehouse_roof",
       "spire_the_static_scale_01",
       "spire_the_static_scale_02",
-      "spire_the_static_scale_03"
+      "spire_the_static_scale_03",
+      "spire_rigging_deck"
     ],
     "discovered": false,
     "initial_visibility": "hidden",

@@ -2034,5 +2034,71 @@
     "speaker": "Rylan",
     "text": "Past the conveyor belts is the main Anvil. Dominion's been feeding power directly to their orbital tether without cooling breaks. The air in there will bake unshielded flesh in minutes. Keep your thermal defenses maxed.",
     "next": "forge_hand_rylan_default_talk"
+  },
+  {
+    "id": "cheno_default_talk",
+    "speaker": "Cheno",
+    "text": "Hey there, Nova! Watch your step around those cable drums—high-tension steel doesn't forgive careless boots. What can I do for you? If your ship's in a bind or you need something hauled, you came to the right deck.",
+    "options": [
+      {
+        "id": "cheno_opt_who",
+        "text": "What is Bridgman Civil working on up here?",
+        "next": "cheno_who_reply"
+      },
+      {
+        "id": "cheno_opt_music",
+        "text": "Do you help with the sound for The Static?",
+        "next": "cheno_music_reply"
+      },
+      {
+        "id": "cheno_opt_friends",
+        "text": "You seem to know everyone on this deck.",
+        "next": "cheno_friends_reply"
+      },
+      {
+        "id": "cheno_opt_favor_offer",
+        "text": "Need an extra pair of hands on the rigging?",
+        "condition": "milestone_not_set:ms_cheno_rigging_favor_asked",
+        "next": "cheno_favor_offer"
+      },
+      {
+        "id": "cheno_opt_favor_turnin",
+        "text": "I brought the heavy gears and wiring bundles for the center truss.",
+        "condition": "milestone:ms_cheno_rigging_favor_asked,milestone_not_set:ms_cheno_rigging_favor_completed,item:heavy_gear,item:wiring_bundle",
+        "next": "cheno_favor_turnin"
+      }
+    ]
+  },
+  {
+    "id": "cheno_who_reply",
+    "speaker": "Cheno",
+    "text": "Dominion built this Spire tall, but they didn't care much about the foundation holding it together. My crew and I shore up the transit arches, run the heavy power lines for the lower wards, and keep the whole place from tearing itself apart in high-altitude shear winds. It's honest work, and it keeps good people safe.",
+    "next": "cheno_default_talk"
+  },
+  {
+    "id": "cheno_music_reply",
+    "speaker": "Cheno",
+    "text": "[He lets out a deep, hearty laugh that shakes his toolbelt.] Every weekend, kid! Ran sound for the boys back in the day, ran sound for festivals, weddings, marathons—you name it. If you can make a kick drum punch through a crowd and keep the monitors clean, you can do anything. The kids in the subway car—Chris and Andrew—they've got good heads on their shoulders. We look out for each other.",
+    "next": "cheno_default_talk"
+  },
+  {
+    "id": "cheno_friends_reply",
+    "speaker": "Cheno",
+    "text": "Life's too short to walk past people with your head down. Out here on the frontier, you're only as good as the folks in your corner. If a buddy calls me from three star systems away stuck in a crater, I don't ask what happened—I just warm up the hauler and bring a tow line. That's how we were raised.",
+    "next": "cheno_default_talk"
+  },
+  {
+    "id": "cheno_favor_offer",
+    "speaker": "Cheno",
+    "text": "Tell you what: the storm winds off the upper concourse sheared through two of my primary load dampers. I need 2 heavy gears and 2 wiring bundles to re-tension the center truss before the transit trains run tonight. Bring those by, and I'll press you one of my personal load-rated carabiners. It'll keep your armor locked down when the pressure spikes.",
+    "trigger": "set_milestone:ms_cheno_rigging_favor_asked",
+    "next": "cheno_default_talk"
+  },
+  {
+    "id": "cheno_favor_turnin",
+    "speaker": "Cheno",
+    "text": "Look at that—solid Dominion-grade alloy! [Cheno takes the parts with massive hands, effortlessly locking them into the pneumatic press with a single smooth clamp.] There. That center truss will hold through a category-five solar gale. A deal's a deal, Nova. Take this—it's forged from Bridgman structural titanium. When things get heavy out there, remember you've got friends who've got your back.",
+    "trigger": "take_item:heavy_gear*2,take_item:wiring_bundle*2,give_item:cheno_carabiner,give_xp:250,give_credits:300,set_milestone:ms_cheno_rigging_favor_completed",
+    "next": "cheno_default_talk"
   }
 ]

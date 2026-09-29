@@ -3924,12 +3924,13 @@
     "env": "neon",
     "title": "Old Subway Car",
     "background_image": "images/rooms/world_3/spire_old_subway_car.webp",
-    "description": "The Static spills into an old subway car bolted beside the bar. Torn booth seats, stickered windows, and a silent jukebox make the car feel half shrine, half hiding place.",
+    "description": "The Static spills into an old subway car bolted beside the bar. Torn booth seats, stickered windows, and a silent jukebox make the car feel half shrine, half hiding place. A reinforced door at the far end opens onto the Bridgman rigging deck.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "west": "spire_the_static"
+      "west": "spire_the_static",
+      "east": "spire_rigging_deck"
     },
     "pos": [
       3,
@@ -3946,6 +3947,16 @@
         "name": "stickered windows",
         "type": "generic",
         "condition_unmet_message": "The stickered windows turn patrol lights into broken color."
+      },
+      {
+        "name": "Wayfarer tour poster",
+        "type": "generic",
+        "condition_unmet_message": "A screen-printed tour poster for 'THE WAYFARER' taped inside the subway window. It lists dates across Aethelgard Outpost, Tideglass Coast, The Static, and Zenith Orbital. A faint note in the margin reads: 'Sound: Cheno. Bass: Chris. Guitar: Andrew.'"
+      },
+      {
+        "name": "No Charge tape",
+        "type": "generic",
+        "condition_unmet_message": "A well-loved magnetic cassette with handwritten track titles. The plastic is scuffed from a hundred late-night road trips, but the tape ribbon inside is pristine."
       }
     ]
   },
@@ -18871,5 +18882,43 @@
       }
     ],
     "special_exits": {}
+  },
+  {
+    "id": "spire_rigging_deck",
+    "env": "neon",
+    "weather": "rain",
+    "title": "Bridgman Rigging Deck",
+    "background_image": "images/rooms/world_3/spire_landing_pad_roof.webp",
+    "description": "High-tension cables and hydraulic winch drums span the open structural gap beneath the Spire's entertainment level. Work lights illuminate heavy steel trusses, speaker stacks waiting for transport, and a fleet of heavy-duty tow rigs. Contractor Cheno leans over a holographic load-bearing schematic, broad shoulders dusted with truss grease.",
+    "npcs": [
+      "contractor_cheno"
+    ],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "spire_old_subway_car"
+    },
+    "pos": [
+      4,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "rigging schematic",
+        "type": "generic",
+        "condition_unmet_message": "The blueprints show reinforcement load lines for the entire lower Spire. Cheno has marked two critical stress points in red grease pencil with the note: 'HOLD FAST.'"
+      },
+      {
+        "name": "cider mug",
+        "type": "generic",
+        "condition_unmet_message": "An insulated travel mug beside a heavy wrench. It smells faintly of spiced autumn cider."
+      },
+      {
+        "name": "heavy winch rig",
+        "type": "generic",
+        "condition_unmet_message": "Bridgman Civil heavy-duty hydraulic winch. Capable of hauling an orbital hauler out of a gravitational sinkhole."
+      }
+    ]
   }
 ]

@@ -471,5 +471,26 @@
         "dialogue_id": "forge_hand_rylan_default_talk"
       }
     ]
+  },
+  {
+    "id": "contractor_cheno",
+    "name": "Cheno",
+    "aliases": [
+      "cheno",
+      "mike",
+      "contractor cheno",
+      "big mike"
+    ],
+    "role": "Chief Rigging Contractor",
+    "description": "A towering, broad-shouldered powerhouse of a man with an easy grin, a booming laugh, and a heart of gold. As lead civil contractor and live audio rigger, Cheno is the person who keeps the Spire's heaviest trusses standing—and the guy who would cross the star system to haul a friend out of a ditch.",
+    "portrait": "images/npcs/armorer.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "cheno_default_talk"
+      }
+    ]
   }
 ]

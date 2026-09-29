@@ -74,7 +74,16 @@
     "type": "consumable",
     "value": 300,
     "rarity": "rare",
-    "effect": { "restore_hp": 100, "buffs": [{ "stat": "accuracy", "value": 6, "duration": 3 }] }
+    "effect": {
+      "restore_hp": 100,
+      "buffs": [
+        {
+          "stat": "accuracy",
+          "value": 6,
+          "duration": 3
+        }
+      ]
+    }
   },
   {
     "id": "bioluminescent_lure",
@@ -2560,7 +2569,7 @@
       "attack_element": "electric",
       "status_on_hit": "shock",
       "status_chance": 25.0,
-      "crit_rate": 0.10,
+      "crit_rate": 0.1,
       "accuracy": 5.0,
       "stat_mods": {
         "focus": 6
@@ -3506,6 +3515,22 @@
       "stat_mods": {
         "agility": 4,
         "focus": 4
+      }
+    }
+  },
+  {
+    "id": "cheno_carabiner",
+    "name": "Cheno's Heavy Carabiner",
+    "description": "A massive titanium-alloy load-bearing carabiner stamped with the Bridgman Civil insignia. Heavy, indestructible, and given with a firm handshake. \"For when you need to pull a friend out of a ditch.\"",
+    "type": "accessory",
+    "value": 450,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": {
+        "vitality": 3,
+        "stability": 4,
+        "defense": 5
       }
     }
   }
