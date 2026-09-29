@@ -605,7 +605,7 @@
   "noodle_row_stall": {
     "name": "Noodle Row Counter",
     "portrait": "images/npcs/vance.webp",
-    "greeting": "Rourke: Hot broth or synth strips? Order fast, the line stretches to the plaza.",
+    "greeting": "Ren: Hot broth or synth strips? Order fast, the line stretches to the plaza.",
     "pricing": {
       "sell_markup": 1.15,
       "buy_markdown": 0.4
@@ -636,7 +636,7 @@
     "dialogue": {
       "preface": [
         {
-          "speaker": "Rourke",
+          "speaker": "Ren",
           "text": "Best broth in the Lower Spire. It might be synth protein, but it will keep your legs moving."
         }
       ],
@@ -646,7 +646,7 @@
           "label": "Ask about the market",
           "response": [
             {
-              "speaker": "Rourke",
+              "speaker": "Ren",
               "text": "Ever since Dominion locked down the transit lines, fresh supplies are rare. We make do with what trickles down from the executive decks."
             }
           ]

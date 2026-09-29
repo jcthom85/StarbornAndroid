@@ -3924,7 +3924,7 @@
     "env": "neon",
     "title": "Old Subway Car",
     "background_image": "images/rooms/world_3/spire_old_subway_car.webp",
-    "description": "The Static spills into an old subway car bolted beside the bar. Torn booth seats, stickered windows, and a silent jukebox make the car feel half shrine, half studio. Chris tunes an audio board beside the booth while Andrew rests an acoustic guitar across his knee. A reinforced door at the far end opens onto the Bridgman rigging deck.",
+    "description": "The Static spills into an old subway car bolted beside the bar. Torn booth seats, stickered windows, and a silent jukebox make the car half studio. Chris tunes an audio board while Andrew rests his guitar. A reinforced door opens to the rigging deck.",
     "npcs": [
       "musician_chris",
       "musician_andrew"
@@ -4176,9 +4176,9 @@
     "weather": "rain",
     "title": "Noodle Row",
     "background_image": "images/rooms/world_3/spire_noodle_row.webp",
-    "description": "Noodle Row steams under plastic awnings. The soup counter never stops moving, with Rourke dishing out hot bowls and news to anyone with coin. The rain drums steadily against the vinyl above.",
+    "description": "Noodle Row steams under plastic awnings. The soup counter never stops moving, with Chef Ren dishing out hot bowls and news to anyone with coin. The rain drums steadily against the vinyl above.",
     "npcs": [
-      "cook_vance"
+      "noodle_cook_ren"
     ],
     "items": [],
     "enemies": [],
@@ -8750,7 +8750,7 @@
     "weather": "fog",
     "title": "Resonant Falls",
     "background_image": "images/rooms/world_2/stream_falls.webp",
-    "description": "The stream cascades over three massive Architect stone pillars. Behind the falling water, a sheltered cookfire recess stays dry while the stone rings out a quiet, rhythmic chord. David tends a cast-iron smoker over the coals, the rich scent of smoked brisket and fresh coffee drifting through the spray.",
+    "description": "The stream cascades over three massive stone pillars. Behind the falling water, a sheltered cookfire recess stays dry while the stone hums softly. David tends a smoker over the coals, the rich scent of smoked brisket and fresh coffee drifting through the spray.",
     "npcs": [
       "chef_david"
     ],
@@ -11949,7 +11949,7 @@
     "weather": "industrial",
     "title": "Astra Living Quarters",
     "background_image": "images/rooms/astra/quarters.webp",
-    "description": "A short bunk corridor gives every crew member a narrow door and a little privacy. Nova's bed is plain but clean, and the ship's vibration feels safer than silence. A handmade paper guardian sits beside her bunk pillow, and a young astronaut slate rests on the small desk.",
+    "description": "A short bunk corridor gives each crew member a narrow door and privacy. Nova's bed is plain but clean, and the ship's vibration feels safer than silence. A handmade paper guardian sits by her pillow, and an astronaut slate rests on the small desk.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -18919,7 +18919,7 @@
     "weather": "rain",
     "title": "Bridgman Rigging Deck",
     "background_image": "images/rooms/world_3/spire_landing_pad_roof.webp",
-    "description": "High-tension cables and hydraulic winch drums span the open structural gap beneath the Spire's entertainment level. Work lights illuminate heavy steel trusses, speaker stacks waiting for transport, and a fleet of heavy-duty tow rigs. Contractor Cheno leans over a holographic load-bearing schematic, broad shoulders dusted with truss grease.",
+    "description": "High-tension cables and hydraulic winch drums span the structural gap beneath the entertainment level. Work lights illuminate steel trusses, speaker stacks, and heavy tow rigs. Contractor Cheno studies a holographic load schematic, his broad shoulders dusted with truss grease.",
     "npcs": [
       "contractor_cheno"
     ],

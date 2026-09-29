@@ -79,19 +79,22 @@ Large route/system families must be split into playable variants during prerequi
 | fish_spire_runoff | fishing_catch, fishing_zone | 7 |
 | route_world_1 | events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 344 |
 | route_world_2 | events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 363 |
-| route_world_3 | dialogue, events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 280 |
+| route_world_3 | dialogue, events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 283 |
 | route_world_4 | events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 269 |
 | route_world_5 | events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 293 |
 | route_world_6 | events, exit, hub_nodes, hubs, rooms | 250 |
-| route_world_astra | exit, hub_nodes, hubs, rooms | 19 |
+| route_world_astra | exit, hub_nodes, hubs, rooms | 15 |
 | shop_accessory_shop | shops | 1 |
 | shop_arcade_prize_shop | shops | 1 |
 | shop_armor_shop | shops | 1 |
+| shop_davids_provisions | shops | 1 |
+| shop_foundry_welder_shop | shops | 1 |
 | shop_general_store | shops | 1 |
 | shop_mechanic_shop | shops | 1 |
+| shop_noodle_row_stall | shops | 1 |
+| shop_orbital_dispensary | shops | 1 |
 | shop_scrappers_contraband | shops | 1 |
 | shop_sentinel_scraps | shops | 1 |
-| shop_tysons_provisions | shops | 1 |
 | shop_upper_city_lounge | shops | 1 |
 | shop_weapon_shop | shops | 1 |
 | system_arcade_rewards | system_behavior | 1 |
@@ -99,8 +102,8 @@ Large route/system families must be split into playable variants during prerequi
 | system_audio_lifecycle | system_behavior | 1 |
 | system_campaign_continuous | system_behavior | 1 |
 | system_campaign_economy | system_behavior | 1 |
-| system_characters | characters | 5 |
-| system_cinematics | cinematics | 51 |
+| system_characters | characters | 4 |
+| system_cinematics | cinematics | 50 |
 | system_combat_actions | system_behavior | 1 |
 | system_combat_outcomes | system_behavior | 1 |
 | system_combat_party | system_behavior | 1 |
@@ -109,19 +112,19 @@ Large route/system families must be split into playable variants during prerequi
 | system_completion_ngplus | system_behavior | 1 |
 | system_cooking | recipes_cooking | 15 |
 | system_device_performance | system_behavior | 1 |
-| system_dialogue | dialogue | 265 |
+| system_dialogue | dialogue | 310 |
 | system_enemies | enemies | 47 |
-| system_events | events | 57 |
+| system_events | events | 96 |
 | system_fishing | fishing_lures, fishing_rods, system_behavior | 12 |
 | system_inventory | system_behavior | 1 |
-| system_items | items | 237 |
+| system_items | items | 239 |
 | system_legacy_saves | system_behavior | 1 |
 | system_leveling | system_behavior | 1 |
 | system_meals | system_behavior | 1 |
 | system_milestones | milestones | 294 |
 | system_navigation | exit | 8 |
 | system_node_progression | system_behavior | 1 |
-| system_npcs | npcs | 23 |
+| system_npcs | npcs | 31 |
 | system_patrols | patrol_zone | 2 |
 | system_recipe_boundaries | system_behavior | 1 |
 | system_recovery_battle | system_behavior | 1 |
@@ -129,11 +132,11 @@ Large route/system families must be split into playable variants during prerequi
 | system_recovery_puzzle | system_behavior | 1 |
 | system_recovery_transactions | system_behavior | 1 |
 | system_recovery_travel | system_behavior | 1 |
-| system_room_actions | room_action | 958 |
+| system_room_actions | room_action | 1055 |
 | system_rooms | rooms | 7 |
 | system_save_slots | system_behavior | 1 |
 | system_shop_boundaries | system_behavior | 1 |
-| system_skills | skills | 121 |
+| system_skills | skills | 125 |
 | system_statuses | statuses | 22 |
 | system_tinkering | recipes_tinkering | 27 |
 | system_tuning_puzzles | tuning_puzzles | 1 |

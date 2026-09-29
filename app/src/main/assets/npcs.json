@@ -558,5 +558,25 @@
         "dialogue_id": "david_default_talk"
       }
     ]
+  },
+  {
+    "id": "noodle_cook_ren",
+    "name": "Ren",
+    "aliases": [
+      "ren",
+      "noodle cook",
+      "cook ren"
+    ],
+    "role": "Noodle Row Chef",
+    "description": "A lightning-fast wok chef who feeds half the Night Market through torrential rain.",
+    "portrait": "images/npcs/vance.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "ren_default_talk"
+      }
+    ]
   }
 ]

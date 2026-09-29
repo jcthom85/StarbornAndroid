@@ -2293,5 +2293,10 @@
     "speaker": "David",
     "text": "[David looks toward the eastern bluffs with a soft, affectionate smile.] I have. There's a spot right out on the edge where the morning sun warms the stone. Two of the best companions a man could ever ask for used to love running that sand. If you walk out there, give 'em a nod for me.",
     "next": "david_default_talk"
+  },
+  {
+    "id": "ren_default_talk",
+    "speaker": "Ren",
+    "text": "Hot broth or crispy noodles? Eat while it's steaming, friend. The rain out here cools soup in seconds."
   }
 ]

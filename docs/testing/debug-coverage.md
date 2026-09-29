@@ -13,31 +13,31 @@ Rebuilt registry: 97 implemented entries. Built does not mean gameplay passed.
 | Kind | Rows |
 | --- | ---: |
 | arcade | 6 |
-| characters | 5 |
-| cinematics | 51 |
-| dialogue | 275 |
+| characters | 4 |
+| cinematics | 50 |
+| dialogue | 320 |
 | enemies | 47 |
-| events | 405 |
-| exit | 928 |
+| events | 444 |
+| exit | 930 |
 | fishing_catch | 38 |
 | fishing_lures | 6 |
 | fishing_rods | 5 |
 | fishing_zone | 6 |
-| hub_nodes | 64 |
+| hub_nodes | 60 |
 | hubs | 13 |
-| items | 237 |
+| items | 239 |
 | milestones | 294 |
-| npcs | 23 |
+| npcs | 31 |
 | patrol_zone | 2 |
 | quest_stage | 94 |
 | quest_task | 241 |
 | quests | 60 |
 | recipes_cooking | 15 |
 | recipes_tinkering | 27 |
-| room_action | 958 |
-| rooms | 465 |
-| shops | 10 |
-| skills | 121 |
+| room_action | 1055 |
+| rooms | 466 |
+| shops | 13 |
+| skills | 125 |
 | statuses | 22 |
 | system_behavior | 28 |
 | tuning_puzzles | 6 |
@@ -114,6 +114,6 @@ Stage and task rows in the JSON ledger enumerate the required intermediate check
 
 ## Legacy review
 
-91 existing menu entries; 99 menu/explicit dispatch IDs in the migration inventory.
+94 existing menu entries; 103 menu/explicit dispatch IDs in the migration inventory.
 See `debug-legacy-migration.json` for shared setup groups and hidden launchers.
 No legacy entry is deleted merely because it shares a destination.

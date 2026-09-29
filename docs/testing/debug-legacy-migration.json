@@ -60,6 +60,41 @@
     "removal_gate": "replacement gameplay verified and callers migrated"
   },
   {
+    "id": "burgfest_astra",
+    "visible": true,
+    "launcher": "authored hub launcher",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "burgfest_boss",
+    "visible": false,
+    "launcher": "startBurgQuestFixture(id)",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "burgfest_combat",
+    "visible": true,
+    "launcher": "authored hub launcher",
+    "shared_setup_with": [],
+    "disposition": "replace_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
+    "id": "burgfest_story",
+    "visible": true,
+    "launcher": "startNewGame()",
+    "shared_setup_with": [
+      "story_w1_start",
+      "tut_movement"
+    ],
+    "disposition": "merge_review",
+    "removal_gate": "replacement gameplay verified and callers migrated"
+  },
+  {
     "id": "checkpoint",
     "visible": true,
     "launcher": "startNewGameAtCheckpoint()",
@@ -460,6 +495,7 @@
     "visible": true,
     "launcher": "startNewGame()",
     "shared_setup_with": [
+      "burgfest_story",
       "tut_movement"
     ],
     "disposition": "merge_review",
@@ -524,6 +560,7 @@
     "visible": false,
     "launcher": "startNewGame()",
     "shared_setup_with": [
+      "burgfest_story",
       "story_w1_start"
     ],
     "disposition": "merge_review",
