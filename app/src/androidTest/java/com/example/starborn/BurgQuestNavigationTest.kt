@@ -86,7 +86,7 @@ class BurgQuestNavigationTest {
             instrumentation.runOnMainSync { assertTrue(campaign.startNewGame()) }
             runBlocking { campaign.saveSlot(3); assertTrue(campaign.quickSave()) }
             val original = campaign.sessionStore.state.value
-            compose.setContent { StarbornTheme { NavigationHost(providedServices = campaign) } }
+            compose.setContent { StarbornTheme { NavigationHost(providedServices = campaign, enableDemoSampler = true) } }
             waitText("Starborn Sampler")
             compose.onNodeWithText("New Game").assertExists()
             compose.onNodeWithText("Load Game").assertExists()

@@ -39,7 +39,8 @@ fun NavigationHost(
     navController: NavHostController = rememberNavController(),
     showCombatActionText: Boolean = true,
     providedServices: AppServices? = null,
-    initialDestination: String = NavigationDestination.MainMenu.route
+    initialDestination: String = NavigationDestination.MainMenu.route,
+    enableDemoSampler: Boolean = false
 ) {
     val context = LocalContext.current
     val services = remember(providedServices) { providedServices ?: AppServices(context) }
@@ -53,7 +54,8 @@ fun NavigationHost(
     val selected = demo
     if (selected == null) {
         CampaignNavigationHost(navController, showCombatActionText, services, initialDestination,
-            onBurgQuestLaunch = { demo = it })
+            onBurgQuestLaunch = { demo = it },
+            enableDemoSampler = enableDemoSampler)
     } else key(selected, attempt) {
         BurgQuestVisit(selected, showCombatActionText, services::createBurgQuestSession,
             onRetry = { attempt++ },

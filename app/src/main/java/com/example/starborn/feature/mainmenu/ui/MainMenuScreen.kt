@@ -122,7 +122,8 @@ fun MainMenuScreen(
     onStartGame: () -> Unit,
     onStartHub: () -> Unit,
     onSlotLoaded: () -> Unit,
-    onBurgQuestLaunch: ((com.example.starborn.feature.mainmenu.BurgQuestLaunch) -> Unit)? = null
+    onBurgQuestLaunch: ((com.example.starborn.feature.mainmenu.BurgQuestLaunch) -> Unit)? = null,
+    enableDemoSampler: Boolean = false
 ) {
     var startingGame by remember { mutableStateOf(false) }
     var startingGamePlus by remember { mutableStateOf(false) }
@@ -492,7 +493,7 @@ fun MainMenuScreen(
         ) {
             val showNewGame = true
             val showLoadGame = true
-            val showDemoSampler = true
+            val showDemoSampler = enableDemoSampler
             val showDebugScenariosOnTitle = BuildConfig.ENABLE_SCENARIO_MENU
 
             if (showNewGame) {

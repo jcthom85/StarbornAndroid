@@ -89,7 +89,8 @@ internal fun CampaignNavigationHost(
     demoEnemies: List<String> = emptyList(),
     demoPaused: Boolean = false,
     onDemoRootBack: (() -> Unit)? = null,
-    onDemoCombatComposed: (() -> Unit)? = null
+    onDemoCombatComposed: (() -> Unit)? = null,
+    enableDemoSampler: Boolean = false
 ) {
     val context = LocalContext.current
     val hostView = LocalView.current
@@ -162,6 +163,7 @@ internal fun CampaignNavigationHost(
             val mainMenuViewModel: MainMenuViewModel = viewModel(factory = MainMenuViewModelFactory(services))
             MainMenuScreen(
                 onBurgQuestLaunch = onBurgQuestLaunch,
+                enableDemoSampler = enableDemoSampler,
                 viewModel = mainMenuViewModel,
                 audioCuePlayer = services.audioCuePlayer,
                 audioRouter = services.audioRouter,
