@@ -5368,9 +5368,9 @@
     "weather": "steam",
     "title": "Lava Tube Bypass",
     "background_image": "images/rooms/world_4/foundry_lava_tube_bypass.webp",
-    "description": "A service crawlspace cuts under the cooling springs. Mineral fans beat hot air into steam, and old worker tags hang from pipe valves like small prayers. Mira tends a glowing welder bench beside the conduits.",
+    "description": "A service crawlspace cuts under the cooling springs. Mineral fans beat hot air into steam, and old worker tags hang from pipe valves like small prayers. Rylan tends a glowing welder bench beside the conduits.",
     "npcs": [
-      "mechanic_mira"
+      "forge_hand_rylan"
     ],
     "items": [],
     "enemies": [],

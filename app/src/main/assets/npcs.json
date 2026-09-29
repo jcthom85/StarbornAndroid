@@ -451,5 +451,25 @@
         "dialogue_id": "echo_intro"
       }
     ]
+  },
+  {
+    "id": "forge_hand_rylan",
+    "name": "Rylan",
+    "aliases": [
+      "rylan",
+      "forge-hand",
+      "welder rylan"
+    ],
+    "role": "Foundry Machinist",
+    "description": "A heat-battered foundry survivor who keeps the lava tube bypass cool with improvised heat baffles and flux welds.",
+    "portrait": "images/npcs/mechanic.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Talk",
+        "type": "talk",
+        "dialogue_id": "forge_hand_rylan_default_talk"
+      }
+    ]
   }
 ]

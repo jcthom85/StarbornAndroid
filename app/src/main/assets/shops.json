@@ -716,9 +716,9 @@
     }
   },
   "foundry_welder_shop": {
-    "name": "Foundry Welder Rig",
-    "portrait": "images/npcs/mira.webp",
-    "greeting": "Mira: Watch your step near the slag conduits. If you need heat shields or reinforced plating, I've got spares.",
+    "name": "Rylan's Welder Rig",
+    "portrait": "images/npcs/mechanic.webp",
+    "greeting": "Rylan: Watch your step near the slag conduits. If you need heat shields or reinforced plating, I've got spares.",
     "pricing": {
       "sell_markup": 1.2,
       "buy_markdown": 0.45
@@ -753,17 +753,17 @@
     "dialogue": {
       "preface": [
         {
-          "speaker": "Mira",
+          "speaker": "Rylan",
           "text": "The heat in this sector eats through seals like acid. Keep your armor patched."
         }
       ],
       "smalltalk": [
         {
-          "id": "shop_mira_core",
+          "id": "shop_rylan_core",
           "label": "Ask about the Forge",
           "response": [
             {
-              "speaker": "Mira",
+              "speaker": "Rylan",
               "text": "The Anvil is overheating. Dominion pushed the output past safe thresholds to power their orbital tether. If you're going deeper, insulate your gear."
             }
           ]

@@ -1832,32 +1832,7 @@
   {
     "id": "mechanic_mira_default_talk",
     "speaker": "Mira",
-    "text": "Watch your fingers near the loader tracks. Dominion does not issue replacement knuckles. What do you need welded?",
-    "options": [
-      {
-        "id": "mira_opt_favor_offer",
-        "text": "Need any help around the welder bench?",
-        "condition": "milestone_not_set:ms_mira_welder_favor_asked",
-        "next": "mira_favor_offer"
-      },
-      {
-        "id": "mira_opt_favor_turnin",
-        "text": "I brought the heavy gear and hydraulic fluid you needed.",
-        "condition": "milestone:ms_mira_welder_favor_asked,milestone_not_set:ms_mira_welder_favor_completed,item:heavy_gear,item:hydraulic_fluid",
-        "next": "mira_favor_turnin"
-      },
-      {
-        "id": "mira_opt_worker",
-        "text": "I found Talia's worker tablet near the cooling pool.",
-        "condition": "milestone:ms_w4_worker_traced,milestone_not_set:ms_mira_worker_acknowledged",
-        "next": "mira_worker_acknowledged"
-      },
-      {
-        "id": "mira_opt_forge_intel",
-        "text": "What can you tell me about the heat deeper in the Foundry?",
-        "next": "mira_forge_intel"
-      }
-    ]
+    "text": "Watch your fingers near the loader tracks. Dominion does not issue replacement knuckles. Jed's inside checking the cutter calibrations, but if you're looking for scrap tips, don't touch anything glowing red."
   },
   {
     "id": "kaelen_intro",
@@ -2004,30 +1979,60 @@
     "next": "kaelen_repeat"
   },
   {
-    "id": "mira_favor_offer",
-    "speaker": "Mira",
+    "id": "forge_hand_rylan_default_talk",
+    "speaker": "Rylan",
+    "text": "Keep clear of the runoff valve unless you want your soles fused to the grating. If you brought scrap from the upper levels or need thermal plating, speak up.",
+    "options": [
+      {
+        "id": "rylan_opt_favor_offer",
+        "text": "Need any help around the welder bench?",
+        "condition": "milestone_not_set:ms_rylan_welder_favor_asked",
+        "next": "rylan_favor_offer"
+      },
+      {
+        "id": "rylan_opt_favor_turnin",
+        "text": "I brought the heavy gear and hydraulic fluid you needed.",
+        "condition": "milestone:ms_rylan_welder_favor_asked,milestone_not_set:ms_rylan_welder_favor_completed,item:heavy_gear,item:hydraulic_fluid",
+        "next": "rylan_favor_turnin"
+      },
+      {
+        "id": "rylan_opt_worker",
+        "text": "I found Talia's worker tablet near the cooling pool.",
+        "condition": "milestone:ms_w4_worker_traced,milestone_not_set:ms_rylan_worker_acknowledged",
+        "next": "rylan_worker_acknowledged"
+      },
+      {
+        "id": "rylan_opt_forge_intel",
+        "text": "What can you tell me about the heat deeper in the Foundry?",
+        "next": "rylan_forge_intel"
+      }
+    ]
+  },
+  {
+    "id": "rylan_favor_offer",
+    "speaker": "Rylan",
     "text": "Always. The conveyor crushers blew the pressure manifold on my hydraulic press. I need 1 heavy gear and 1 canister of hydraulic fluid to balance the cylinders. Scavenge those from the conveyor lines, and I'll forge you a custom heat-resistant armor liner.",
-    "trigger": "set_milestone:ms_mira_welder_favor_asked",
-    "next": "mechanic_mira_default_talk"
+    "trigger": "set_milestone:ms_rylan_welder_favor_asked",
+    "next": "forge_hand_rylan_default_talk"
   },
   {
-    "id": "mira_favor_turnin",
-    "speaker": "Mira",
+    "id": "rylan_favor_turnin",
+    "speaker": "Rylan",
     "text": "Clutch timing! Stand back while I cycle the hydraulic press... [Hiss and sparks]. There. Welded tight and sealed against magma heat. Take this Heat Liner—it'll keep your vitals cool when you step into the Forge.",
-    "trigger": "take_item:heavy_gear*1,take_item:hydraulic_fluid*1,give_item:heat_liner,give_xp:200,give_credits:250,set_milestone:ms_mira_welder_favor_completed",
-    "next": "mechanic_mira_default_talk"
+    "trigger": "take_item:heavy_gear*1,take_item:hydraulic_fluid*1,give_item:heat_liner,give_xp:200,give_credits:250,set_milestone:ms_rylan_welder_favor_completed",
+    "next": "forge_hand_rylan_default_talk"
   },
   {
-    "id": "mira_worker_acknowledged",
-    "speaker": "Mira",
+    "id": "rylan_worker_acknowledged",
+    "speaker": "Rylan",
     "text": "You found Talia's tablet? Damn it... I told her the cooling vents were a death trap. But she managed to vent the safe route before the heat got her. She was the best pipe-fitter in the sector. Her sacrifice won't be forgotten. Take this composite plate—she would have wanted you to have it.",
-    "trigger": "give_item:composite_plate,give_xp:100,set_milestone:ms_mira_worker_acknowledged",
-    "next": "mechanic_mira_default_talk"
+    "trigger": "give_item:composite_plate,give_xp:100,set_milestone:ms_rylan_worker_acknowledged",
+    "next": "forge_hand_rylan_default_talk"
   },
   {
-    "id": "mira_forge_intel",
-    "speaker": "Mira",
+    "id": "rylan_forge_intel",
+    "speaker": "Rylan",
     "text": "Past the conveyor belts is the main Anvil. Dominion's been feeding power directly to their orbital tether without cooling breaks. The air in there will bake unshielded flesh in minutes. Keep your thermal defenses maxed.",
-    "next": "mechanic_mira_default_talk"
+    "next": "forge_hand_rylan_default_talk"
   }
 ]
