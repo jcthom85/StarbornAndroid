@@ -698,5 +698,26 @@
         "dialogue_id": "penny_default_talk"
       }
     ]
+  },
+  {
+    "id": "clinician_megan",
+    "name": "Megan",
+    "aliases": [
+      "megan",
+      "doctor megan",
+      "clinician megan",
+      "dr megan"
+    ],
+    "role": "Chief Clinical & Forensic Officer",
+    "description": "The brilliant, grounded heart of the coastal station. Balancing meticulous clinical expertise with a sharp investigative mind for environmental forensics, Megan heals injured explorers, analyzes ecosystem anomalies like a courtroom prosecutor, and keeps the entire colony functioning.",
+    "portrait": "images/npcs/doc.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Consult",
+        "type": "talk",
+        "dialogue_id": "megan_default_talk"
+      }
+    ]
   }
 ]

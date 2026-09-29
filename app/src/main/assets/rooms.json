@@ -8825,7 +8825,8 @@
     "enemies": [],
     "connections": {
       "south": "sector9_stream_falls",
-      "north": "sector9_beach_pools"
+      "north": "sector9_beach_pools",
+      "east": "sector9_coastal_research_station"
     },
     "pos": [
       4,
@@ -8981,7 +8982,7 @@
     "enemies": [],
     "connections": {
       "west": "sector9_stream_falls",
-      "north": "sector9_beach_cove"
+      "north": "sector9_coastal_research_station"
     },
     "pos": [
       5,
@@ -9025,7 +9026,7 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "sector9_beach_cliffs",
+      "south": "sector9_coastal_research_station",
       "west": "sector9_beach_pools"
     },
     "pos": [
@@ -19078,6 +19079,52 @@
         "type": "inspect",
         "description": "Inspect the crowded creation benches.",
         "inspect_message": "Soldering irons, hand-wound pickups, game cartridges, and health food wrappers are piled high around a handwritten whiteboard that reads: 'Ideas for next project: don't start until this one is done (ha).'"
+      }
+    ]
+  },
+  {
+    "id": "sector9_coastal_research_station",
+    "env": "swamp",
+    "weather": "fog",
+    "title": "Coastal Resilience Station",
+    "background_image": "images/rooms/world_2/stream_pools.webp",
+    "description": "A weather-hardened eco-station perches over tidal wetlands and sea bluffs. Acoustic sediment sensors pulse against the marsh silt, while telemetry monitors map coastal marsh restoration and water filtration under the salty ocean breeze.",
+    "npcs": [
+      "clinician_megan"
+    ],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "sector9_stream_tidepools",
+      "south": "sector9_beach_cliffs",
+      "north": "sector9_beach_cove"
+    },
+    "pos": [
+      5,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "id": "inspect_wetland_telemetry",
+        "name": "wetland telemetry array",
+        "type": "inspect",
+        "description": "Inspect the coastal marsh and water filtration telemetry monitors.",
+        "inspect_message": "A bank of holographic water-quality sensors and tidal gauges monitoring marsh vegetation density and sediment stability across Sector 9's coastline. An IT tech's sticky note reads: 'If the telemetry drops, check the grounding wire before calling Jason.'"
+      },
+      {
+        "id": "inspect_forensic_slate",
+        "name": "forensic research slate",
+        "type": "inspect",
+        "description": "Inspect the clinical evidence and contaminant analysis slate.",
+        "inspect_message": "A diagnostic terminal analyzing trace contaminants and environmental trauma with the meticulous rigor of a courtroom forensic dossier. Redlined notes identify upstream industrial run-off."
+      },
+      {
+        "id": "inspect_solar_coffee",
+        "name": "solar coffee press",
+        "type": "inspect",
+        "description": "Inspect the warm carafe on the clinician's desk.",
+        "inspect_message": "A warm glass carafe of dark roast coffee sitting on a solar heater beside a handwritten note: 'Drink water, stretch your back, and stop reading autopsy reports at 2 AM.'"
       }
     ]
   }

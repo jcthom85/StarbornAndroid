@@ -2681,5 +2681,82 @@
     "speaker": "Penny",
     "text": "Penny leans her entire weight against your legs, letting out a soft whimper of pure devotion. Knowing everyone is accounted for, she rests her big shaggy chin on your boot and wags her tail gently.",
     "next": "penny_default_talk"
+  },
+  {
+    "id": "megan_default_talk",
+    "speaker": "Megan",
+    "text": "Welcome to Coastal Resilience, Nova. Step over to the scanner and let me check your suit filters—wetland spores and salt spray can wreck a pulmonary valve before you even notice. I'm Megan, chief clinician and ecological investigator here. What brings you down to the coast?",
+    "options": [
+      {
+        "id": "megan_opt_work",
+        "text": "What does this station study?",
+        "next": "megan_work_reply"
+      },
+      {
+        "id": "megan_opt_investigation",
+        "text": "You sound more like an investigator than a typical field medic.",
+        "next": "megan_investigation_reply"
+      },
+      {
+        "id": "megan_opt_husband",
+        "text": "Someone in World 3 mentioned a relentless builder with a messy workbench.",
+        "next": "megan_husband_reply"
+      },
+      {
+        "id": "megan_opt_penny",
+        "text": "Have you seen that big fluffy sheepadoodle over at the falls?",
+        "next": "megan_penny_reply"
+      },
+      {
+        "id": "megan_opt_favor_offer",
+        "text": "Need any field materials for your coastal restoration study?",
+        "condition": "milestone_not_set:ms_megan_wetland_favor_asked",
+        "next": "megan_favor_offer"
+      },
+      {
+        "id": "megan_opt_favor_turnin",
+        "text": "I've brought the chemical catalyst and nano-filaments for the filters.",
+        "condition": "milestone:ms_megan_wetland_favor_asked,milestone_not_set:ms_megan_wetland_favor_completed,item:chemical_catalyst,item:nano_filament",
+        "next": "megan_favor_turnin"
+      }
+    ]
+  },
+  {
+    "id": "megan_work_reply",
+    "speaker": "Megan",
+    "text": "Resilience. Coastal wetlands, tidal buffers, and water clean-up. When corporations like the Dominion strip-mine or dump slag upstream, it's the estuaries and salt marshes that absorb the shock. If the wetlands die, the whole sector collapses. We're here to make sure these shores stay alive, healthy, and protected for the people who come after us.",
+    "next": "megan_default_talk"
+  },
+  {
+    "id": "megan_investigation_reply",
+    "speaker": "Megan",
+    "text": "[Megan smiles with a sharp, discerning spark in her eyes.] In clinical hygiene and forensics, the details never lie. Whether you're examining enamel wear, tissue trauma, or micro-toxins in a sediment core, every case tells a story. I like piecing the evidence together until the truth is indisputable. When someone cuts corners, the science will always put them on trial.",
+    "next": "megan_default_talk"
+  },
+  {
+    "id": "megan_husband_reply",
+    "speaker": "Megan",
+    "text": "[Megan lets out an affectionate, knowing laugh and shakes her head.] That's Jason. If he's awake, he's building something. Music, software, games, gadgets... his brain runs at two hundred miles an hour. Half the time I have to walk into his workshop, pry a soldering iron out of his hand, and force him to eat real food. But he's got the biggest heart of anyone I've ever met, and I wouldn't trade him for anything.",
+    "next": "megan_default_talk"
+  },
+  {
+    "id": "megan_penny_reply",
+    "speaker": "Megan",
+    "text": "[Megan's face lights up with warmth.] Penny! That big shaggy girl would stay glued to my hip twenty-four hours a day if David weren't keeping her entertained with smoked brisket by the waterfall. She's the sweetest dog in the universe—thinks she's everyone's guardian. If you're heading back that way, give her an extra wrestle for me.",
+    "next": "megan_default_talk"
+  },
+  {
+    "id": "megan_favor_offer",
+    "speaker": "Megan",
+    "text": "Our tidal filtration array is detecting heavy chemical runoff leaking from the upper facilities. I need 1 Chemical Catalyst to neutralize the acidic sediment and 1 Nano Filament spool to weave new micro-mesh filters for the marsh reed beds. If you bring those to me, I'll calibrate a high-precision medical-grade bio-scanner that will boost your squad's vital recovery and defense.",
+    "trigger": "set_milestone:ms_megan_wetland_favor_asked",
+    "next": "megan_default_talk"
+  },
+  {
+    "id": "megan_favor_turnin",
+    "speaker": "Megan",
+    "text": "[Megan works with swift, practiced clinical precision, synthesizing the chemical catalyst through the nano-filaments and locking the new filtration cartridge into the marsh monitoring grid with a satisfying snap.] Pressure normalized; filtration efficiency up thirty percent. The estuary will hold. Here, Nova, take this—it's my personal clinical diagnostic sensor. It tracks cellular stress and vital signs in real time. Take care of yourself out there. And remember to drink some water.",
+    "trigger": "take_item:chemical_catalyst*1,take_item:nano_filament*1,give_item:megans_clinical_scanner,give_xp:450,give_credits:500,set_milestone:ms_megan_wetland_favor_completed",
+    "next": "megan_default_talk"
   }
 ]

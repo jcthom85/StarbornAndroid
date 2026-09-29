@@ -3648,5 +3648,22 @@
         "stability": 4
       }
     }
+  },
+  {
+    "id": "megans_clinical_scanner",
+    "name": "Megan's Clinical Bio-Scanner",
+    "description": "A surgical-grade diagnostic scanner loaded with forensic pathology protocols, tidal water metrics, and a warm reminder to stay hydrated. Calibrated with absolute precision. \"The details never lie, and the truth always holds the line.\"",
+    "type": "accessory",
+    "value": 650,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": {
+        "vitality": 5,
+        "stability": 4,
+        "defense": 4,
+        "focus": 3
+      }
+    }
   }
 ]
