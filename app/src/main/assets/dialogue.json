@@ -1832,7 +1832,32 @@
   {
     "id": "mechanic_mira_default_talk",
     "speaker": "Mira",
-    "text": "Watch your fingers near the loader tracks. Dominion does not issue replacement knuckles."
+    "text": "Watch your fingers near the loader tracks. Dominion does not issue replacement knuckles. What do you need welded?",
+    "options": [
+      {
+        "id": "mira_opt_favor_offer",
+        "text": "Need any help around the welder bench?",
+        "condition": "milestone_not_set:ms_mira_welder_favor_asked",
+        "next": "mira_favor_offer"
+      },
+      {
+        "id": "mira_opt_favor_turnin",
+        "text": "I brought the heavy gear and hydraulic fluid you needed.",
+        "condition": "milestone:ms_mira_welder_favor_asked,milestone_not_set:ms_mira_welder_favor_completed,item:heavy_gear,item:hydraulic_fluid",
+        "next": "mira_favor_turnin"
+      },
+      {
+        "id": "mira_opt_worker",
+        "text": "I found Talia's worker tablet near the cooling pool.",
+        "condition": "milestone:ms_w4_worker_traced,milestone_not_set:ms_mira_worker_acknowledged",
+        "next": "mira_worker_acknowledged"
+      },
+      {
+        "id": "mira_opt_forge_intel",
+        "text": "What can you tell me about the heat deeper in the Foundry?",
+        "next": "mira_forge_intel"
+      }
+    ]
   },
   {
     "id": "kaelen_intro",
@@ -1885,7 +1910,32 @@
     "id": "kaelen_repeat",
     "speaker": "Scout Kaelen",
     "text": "Keep your boots dry and your blade sharp, Nova. The tide turns fast on this coast.",
-    "condition": "milestone:ms_kaelen_talked"
+    "condition": "milestone:ms_kaelen_talked",
+    "options": [
+      {
+        "id": "kaelen_opt_favor_offer",
+        "text": "How are you holding up out here on your own?",
+        "condition": "milestone_not_set:ms_kaelen_favor_asked",
+        "next": "kaelen_favor_offer"
+      },
+      {
+        "id": "kaelen_opt_favor_turnin",
+        "text": "I've gathered fresh herbs and beast meat from the wilds.",
+        "condition": "milestone:ms_kaelen_favor_asked,milestone_not_set:ms_kaelen_favor_completed,item:herb,item:beast_meat",
+        "next": "kaelen_favor_turnin"
+      },
+      {
+        "id": "kaelen_opt_patrol",
+        "text": "I found your scout patrol's beacon in the Burned Glade. I recovered their Thermal Cutter.",
+        "condition": "milestone:ms_w2_cutter_repaired,milestone_not_set:ms_kaelen_patrol_acknowledged",
+        "next": "kaelen_patrol_acknowledged"
+      },
+      {
+        "id": "kaelen_opt_remind_advice",
+        "text": "Remind me about the coastal hazards.",
+        "next": "kaelen_advice_reply"
+      }
+    ]
   },
   {
     "id": "echo_intro",
@@ -1931,5 +1981,53 @@
     "id": "echo_conclude",
     "speaker": "Caretaker Echo",
     "text": "Archive buffers stand ready. Continue harmonic alignment, traveler."
+  },
+  {
+    "id": "kaelen_favor_offer",
+    "speaker": "Scout Kaelen",
+    "text": "Managing, but my rations are down to dry kelp and mineral silt. My knee took a bad torque during the crash, so hunting shard-hounds in the thickets is out. If you bring me 2 herbs and 1 cut of beast meat, I'll tune your weapon with my sniper division's custom precision sight.",
+    "trigger": "set_milestone:ms_kaelen_favor_asked",
+    "next": "kaelen_repeat"
+  },
+  {
+    "id": "kaelen_favor_turnin",
+    "speaker": "Scout Kaelen",
+    "text": "Real greens and roasted beast meat? By the stars, that smells better than anything Dominion ever packed into a ration tube. A deal's a deal. Here—take this Precision Sight from my optic rig. It'll keep your shots centered when the wind whips across the ridge.",
+    "trigger": "take_item:herb*2,take_item:beast_meat*1,give_item:precision_sight,give_xp:150,give_credits:200,set_milestone:ms_kaelen_favor_completed",
+    "next": "kaelen_repeat"
+  },
+  {
+    "id": "kaelen_patrol_acknowledged",
+    "speaker": "Scout Kaelen",
+    "text": "That cutter... it belonged to Sergeant Leto. So none of them made it out of the glade. I suspected as much when their telemetry flatlined six months ago, but hearing it hurts all the same. Thank you for putting their memory to rest, Nova. Leto would want that cutter in the hands of someone fighting the real enemy. Take this spare battery and salvage.",
+    "trigger": "give_item:battery_pack,give_item:scrap_metal*3,give_xp:120,set_milestone:ms_kaelen_patrol_acknowledged",
+    "next": "kaelen_repeat"
+  },
+  {
+    "id": "mira_favor_offer",
+    "speaker": "Mira",
+    "text": "Always. The conveyor crushers blew the pressure manifold on my hydraulic press. I need 1 heavy gear and 1 canister of hydraulic fluid to balance the cylinders. Scavenge those from the conveyor lines, and I'll forge you a custom heat-resistant armor liner.",
+    "trigger": "set_milestone:ms_mira_welder_favor_asked",
+    "next": "mechanic_mira_default_talk"
+  },
+  {
+    "id": "mira_favor_turnin",
+    "speaker": "Mira",
+    "text": "Clutch timing! Stand back while I cycle the hydraulic press... [Hiss and sparks]. There. Welded tight and sealed against magma heat. Take this Heat Liner—it'll keep your vitals cool when you step into the Forge.",
+    "trigger": "take_item:heavy_gear*1,take_item:hydraulic_fluid*1,give_item:heat_liner,give_xp:200,give_credits:250,set_milestone:ms_mira_welder_favor_completed",
+    "next": "mechanic_mira_default_talk"
+  },
+  {
+    "id": "mira_worker_acknowledged",
+    "speaker": "Mira",
+    "text": "You found Talia's tablet? Damn it... I told her the cooling vents were a death trap. But she managed to vent the safe route before the heat got her. She was the best pipe-fitter in the sector. Her sacrifice won't be forgotten. Take this composite plate—she would have wanted you to have it.",
+    "trigger": "give_item:composite_plate,give_xp:100,set_milestone:ms_mira_worker_acknowledged",
+    "next": "mechanic_mira_default_talk"
+  },
+  {
+    "id": "mira_forge_intel",
+    "speaker": "Mira",
+    "text": "Past the conveyor belts is the main Anvil. Dominion's been feeding power directly to their orbital tether without cooling breaks. The air in there will bake unshielded flesh in minutes. Keep your thermal defenses maxed.",
+    "next": "mechanic_mira_default_talk"
   }
 ]
