@@ -2452,5 +2452,75 @@
     "text": "[Charles snaps the focusing lens into his custom bus and solders the circuit boards in place with surgical accuracy. A cascade of green diagnostic metrics flows across his displays.] Feed linked. Latency reduced to zero point two milliseconds. [He hands you an encrypted, glowing tactical slate.] Take this, Nova—the Venture Heuristic Slate. It'll tighten your focus, expand your situational bandwidth, and make sure your strikes hit where they hurt most. Now go tear their system apart.",
     "trigger": "take_item:circuit_board*2,take_item:focusing_lens*1,give_item:charles_heuristic_slate,give_xp:400,give_credits:500,set_milestone:ms_charles_analytics_favor_completed",
     "next": "analyst_charles_default_talk"
+  },
+  {
+    "id": "charlie_default_talk",
+    "speaker": "Charlie",
+    "text": "A soft, fluffy gray-and-white creature peeks out from beneath the mossy log with wide, amber eyes. As you take a step closer, he flinches, retreating several inches into the hollow, his paws trembling slightly. A round, velvety spore puff ball rolls toward your boots.",
+    "options": [
+      {
+        "id": "charlie_opt_step_1",
+        "text": "[Leave a dried reed treat by the hollow and take three baby steps back]",
+        "condition": "milestone_not_set:ms_charlie_trust_1",
+        "next": "charlie_step_1_reply"
+      },
+      {
+        "id": "charlie_opt_step_2",
+        "text": "[Toss the spore puff ball gently across the mossy glade]",
+        "condition": "milestone:ms_charlie_trust_1,milestone_not_set:ms_charlie_trust_2",
+        "next": "charlie_step_2_reply"
+      },
+      {
+        "id": "charlie_opt_step_3",
+        "text": "[Kneel down, open your arms, and let him approach at his own pace]",
+        "condition": "milestone:ms_charlie_trust_2,milestone_not_set:ms_charlie_trust_3",
+        "next": "charlie_step_3_reply"
+      },
+      {
+        "id": "charlie_opt_play",
+        "text": "[Give Charlie a warm head scratch and play fetch with his puff ball]",
+        "condition": "milestone:ms_charlie_trust_3",
+        "next": "charlie_play_reply"
+      },
+      {
+        "id": "charlie_opt_cuddle",
+        "text": "[Sit on the moss and let Charlie curl up beside you]",
+        "condition": "milestone:ms_charlie_trust_3",
+        "next": "charlie_cuddle_reply"
+      }
+    ]
+  },
+  {
+    "id": "charlie_step_1_reply",
+    "speaker": "Charlie",
+    "text": "You set down a sweet reed morsel and step backward slowly. Charlie pokes his nose out, sniffing the air with rapid twitches. He looks up at you with wide, tentative wonder, then gently nudges the treat into his den before resting his chin on his paws, watching you with curiosity.",
+    "trigger": "set_milestone:ms_charlie_trust_1,give_xp:150",
+    "next": "charlie_default_talk"
+  },
+  {
+    "id": "charlie_step_2_reply",
+    "speaker": "Charlie",
+    "text": "Charlie bounds after the spore puff ball with sudden, clumsy enthusiasm! He pounces, tumbles over his paws, bats the ball back toward you with both front paws, and lets out a tiny, high-pitched chirp of pure joy.",
+    "trigger": "set_milestone:ms_charlie_trust_2,give_xp:200",
+    "next": "charlie_default_talk"
+  },
+  {
+    "id": "charlie_step_3_reply",
+    "speaker": "Charlie",
+    "text": "Charlie trotts right up to you without hesitation. He buries his entire fluffy head firmly into the crook of your arm and neck, pressing in with all his weight and letting out a deep, vibrating purr. He stays like that for a long, quiet moment, basking in safety. When he gently pulls back, he presses a smooth, glowing comfort stone into your palm.",
+    "trigger": "give_item:charlies_comfort_stone,set_milestone:ms_charlie_trust_3,give_xp:350",
+    "next": "charlie_default_talk"
+  },
+  {
+    "id": "charlie_play_reply",
+    "speaker": "Charlie",
+    "text": "You toss the spore puff ball into the tall ferns. Charlie scrambles after it in a blur of fur, skidding across the moss before proudly carrying it back in his jaws, purring loudly as he nuzzles your hand.",
+    "next": "charlie_default_talk"
+  },
+  {
+    "id": "charlie_cuddle_reply",
+    "speaker": "Charlie",
+    "text": "Charlie happily curls into a tight circle against your boots, tucking his nose beneath his tail. His steady, rhythmic purr fills the quiet glade with unmistakable peace.",
+    "next": "charlie_default_talk"
   }
 ]

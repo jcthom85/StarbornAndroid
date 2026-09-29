@@ -8480,8 +8480,10 @@
     "weather": "fog",
     "title": "Overgrown Glade",
     "background_image": "images/rooms/world_2/landing_glade.webp",
-    "description": "A dense grove of giant ferns forms a broadleaf canopy overhead, filtering the dim sky into a green haze. Luminous mushrooms grow in thick clumps along a decaying log.",
-    "npcs": [],
+    "description": "A dense grove of giant ferns forms a broadleaf canopy overhead, filtering the dim sky into a green haze. Luminous mushrooms grow in thick clumps along a decaying log beside a small mossy hollow.",
+    "npcs": [
+      "creature_charlie"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
@@ -8505,6 +8507,13 @@
         "name": "broadleaf canopy",
         "type": "generic",
         "condition_unmet_message": "Giant fronds filter the alien sunlight into a dappled teal glow, humming with ambient spore drift."
+      },
+      {
+        "id": "inspect_mossy_hollow",
+        "name": "mossy hollow",
+        "type": "inspect",
+        "description": "Inspect the cozy hollow nestled beneath the decaying log.",
+        "inspect_message": "A soft burrow lined with damp fern moss. Several dozen velvety, rounded spore puff balls are neatly clustered inside, clearly saved for playtime."
       }
     ],
     "description_variants": [

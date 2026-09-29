@@ -618,5 +618,25 @@
         "dialogue_id": "analyst_charles_default_talk"
       }
     ]
+  },
+  {
+    "id": "creature_charlie",
+    "name": "Charlie",
+    "aliases": [
+      "charlie",
+      "baby steps",
+      "glade creature"
+    ],
+    "role": "Shy Glade Prowler",
+    "description": "A gentle, fluffy feline creature with luminous gray-and-white fur and wide, curious amber eyes. Deeply skittish around strangers, Charlie takes 'baby steps' toward anyone patient enough to earn his trust. Once he feels safe, he showers his chosen friend with clumsy, joyous games of fetch and long, purring cuddles.",
+    "portrait": "images/characters/orion_portrait.png",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Interact",
+        "type": "talk",
+        "dialogue_id": "charlie_default_talk"
+      }
+    ]
   }
 ]

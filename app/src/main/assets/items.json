@@ -3583,5 +3583,21 @@
         "stability": 3
       }
     }
+  },
+  {
+    "id": "charlies_comfort_stone",
+    "name": "Charlie's Comfort Stone",
+    "description": "A warm, river-polished stone wrapped in glowing blue fern silk, gifted by a shy creature whose trust was earned one baby step at a time. Emits a soothing ambient hum. \"Trust takes time, but once given, it is absolute.\"",
+    "type": "accessory",
+    "value": 400,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "accessory",
+      "stat_mods": {
+        "vitality": 3,
+        "stability": 4,
+        "focus": 3
+      }
+    }
   }
 ]
