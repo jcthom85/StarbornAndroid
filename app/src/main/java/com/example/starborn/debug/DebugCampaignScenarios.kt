@@ -341,6 +341,17 @@ object DebugCampaignScenarios {
                 "Telemetry scrub completes the quest and retains the prototype mod."),
             setOf("quests:w3_sq15")),
 
+        entry("campaign_w3_sq16", "w3_sq16", "SQ16: Murder in the Skyline Salon", "World 3: The Spire", DebugScenarioCategory.CONTENT, "spire_skyline_vip_suite",
+            "Skyline VIP Salon under emergency lockdown; Auditor Malick poisoned in the Syndicate Booth.",
+            listOf("Inspect the crime-scene barrier to start the investigation.",
+                "Inspect the drink dispenser log and security terminal in the salon.",
+                "Move north to the Syndicate Booth and inspect the crystal glass, comms rig, and datapad.",
+                "Confront Director Vance with the contradictory timestamp log to extract his confession."),
+            listOf("Clues register in the journal and update quest tasks.",
+                "Dialogue confrontation cleanly solves the mystery and lifts the lockdown.",
+                "Awards Cyano-Coolant Injector and Skyline Master Passkey."),
+            setOf("quests:w3_sq16")),
+
         // World 4 Main Quests
         entry("campaign_w4_mq16", "w4_mq16", "MQ16: Into the Fire", "World 4: The Foundry", DebugScenarioCategory.STORY, "foundry_slag_landing",
             "Foundry Slag Landing on the Obsidian Shelf; Astra docked amidst molten rivers.",
@@ -708,6 +719,7 @@ object DebugCampaignScenarios {
         "w3_sq13" to "spire_night_market",
         "w3_sq14" to "spire_exec_lounge_bar",
         "w3_sq15" to "spire_drone_test_alcove",
+        "w3_sq16" to "spire_skyline_vip_suite",
         "w4_mq16" to "foundry_slag_landing",
         "w4_mq17" to "foundry_waste_intake",
         "w4_mq18" to "foundry_conditioning_chamber",
