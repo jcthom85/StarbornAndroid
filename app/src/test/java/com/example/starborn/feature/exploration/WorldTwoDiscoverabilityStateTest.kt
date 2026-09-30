@@ -116,12 +116,14 @@ class WorldTwoDiscoverabilityStateTest {
         }
     }
 
-    @Test fun `launch without inspection leaves console visible but its event unusable`() {
+    @Test fun `confirmed launch without inspection leaves console visible but its event unusable`() {
         val store = GameSessionStore().apply {
             startQuest("w2_mq05")
             setQuestTaskCompleted("w2_mq05", "reboot_bridge_relic", true)
         }
         dispatch(store, "w2_mq05_launch")
+        assertFalse("w2_mq05" in store.state.value.completedQuests)
+        dispatch(store, "w2_mq05_confirm_departure")
         val state = store.state.value.migrateOpeningNarrativeState()
         assertTrue("w2_mq05" in state.completedQuests)
         assertFalse("ms_w2_astra_inspected" in state.completedMilestones)

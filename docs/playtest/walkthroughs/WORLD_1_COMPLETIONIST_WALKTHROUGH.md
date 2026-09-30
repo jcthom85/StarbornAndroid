@@ -125,17 +125,17 @@ Track your numbers at each phase transition. If your game state deviates signifi
 | **Information Kiosk**<br>`admin_kiosk` | Inspect `terminal` & `screen`. | Corporate propaganda flavor. | • Terminal scanline shader check. |
 | **Staff Lounge**<br>`admin_lounge` | Inspect `executive dispenser` & `datapad`. | High-tier colony life lore. | • Corporate chime sound effect. |
 | **Customer Service**<br>`admin_window` | Inspect `booths`. | Bureaucratic flavor. | • Glass booth reflection art. |
-| **Security Post**<br>`admin_security` | ⚠️ **`w1_sq03` Combat Drill:**<br>**Acoustic Bulwark (Trainer)** | Use **Guard Break** / Arc Tether to break barrier.<br>Defeat Trainer. | • Guard Break tutorial prompt appears.<br>• Barrier shatter particle effect.<br>• `w1_sq03` updates to complete. |
+| **Security Post**<br>`admin_security` | ⚠️ **`w1_sq03` Combat Drill:**<br>**Shield Trainer** | Use **Hydraulic Kick** to break the barrier.<br>Defeat Trainer. | • Guard Break tutorial prompt appears.<br>• Barrier shatter particle effect.<br>• `w1_sq03` updates to complete. |
 | **Turn In: Boggs**<br>`admin_lobby` | Report certification to Boggs. | Completes **`w1_sq03`**.<br>**Rewards:** **100 XP**, **Hydraulic Fluid**, **Heavy Gear**.<br>Deep Elevator unlocked! | • Boggs approval dialogue.<br>• Elevator key clearance toast. |
 | **Hub Map**<br>`hub_2_logistics` | Tap **Server Room** site. | Transition to server array. | • Hub 2 map labels and artwork scaling. |
 | **Air-Lock Entrance**<br>`server_airlock` | Inspect `emergency locker`. | Locker looted:<br>`ms_w1_server_airlock_locker_looted`. | • Chilling sub-zero atmospheric sfx. |
 | **Crawlspace 4**<br>`server_crawl` | Inspect `service junction`. | Bundled cable routing lore. | • Low electrical hum loop. |
 | **Aisle 01**<br>`server_aisle1` | ⚠️ **Combat: 2x Resonance Buoy** | Combat victory.<br>Clears path north. | • Drone targeting outlines.<br>• Pulse attack telegraphed cleanly. |
 | **Cooling Unit B**<br>`server_cooling` | Inspect `bypass valve` & `thermal case`. | Thermal case looted:<br>`ms_w1_server_cooling_looted`. | • Condensation/frost screen overlay. |
-| **The Core Hub**<br>`server_hub` | 1. Inspect `console`<br>2. Inspect `terminal` | Initiates & advances **`w1_sq04`** (Protocol Override).<br>Thaws console.<br>Uploads rebel spoof! | • Terminal keyboard typing sfx.<br>• Rebel spoof confirmation message. |
+| **The Core Hub**<br>`server_hub` | 1. Inspect `terminal`<br>2. Thaw `console`<br>3. Read `output ports`<br>4. Reopen `terminal` and select the removable board | Initiates & advances **`w1_sq04`** (Protocol Override).<br>Recovers the key without a Dominion audit record. | • Terminal keyboard typing sfx.<br>• Rebel spoof confirmation message. |
 | **Backup Storage**<br>`server_backup` | 1. Flip `backup breaker box`<br>2. Loot `archive terminal` | Breaker engaged.<br>Loot: `data_logs` (`ms_w1_server_backup_looted`). | • Archive drives spinning sfx. |
 | **Admin Office**<br>`server_office` | 1. Inspect `audit datapads`<br>2. Loot `admin_badge` | Datapads read:<br>`ms_w1_server_office_datapads_read`.<br>Loot: **Admin Badge**. | • Office interior background clarity. |
-| **Auto Turn-In**<br>`server_hub` | Re-check terminal. | Completes **`w1_sq04`**.<br>**Rewards:** **110 XP**, **Circuit Board**. | • Side quest completion toast. |
+| **Auto Turn-In**<br>`server_hub` | Choose the isolated board output at the terminal. | Completes **`w1_sq04`**.<br>**Rewards:** **110 XP**, **Circuit Board**. | • Side quest completion toast. |
 
 ---
 
@@ -157,7 +157,7 @@ Track your numbers at each phase transition. If your game state deviates signifi
 - Defeat the Echo Borers in Main Tunnel Alpha.
 - Activate the Cavern Junction generator to restore power to the entire lower mine network (`mine_junction`).
 - Investigate Side Shunt 4, recover the missing shift's datapad, and read the final letter (`w1_sq05`).
-- Push through the upper mines: explore Riot Control Post, Toxic Pocket, and Ore Sifter.
+- Follow the main route east through Conveyor Belt, Ore Sifter, and Shoring Tunnel. Riot Control Post and Toxic Pocket are an optional northern combat/supply detour.
 - Cross the Ancient Threshold into the silent Architect Ruins.
 - Solve the three-slider Tuning Fork counter-tune puzzle in The Heart (`w1_mq03` climax).
 
@@ -170,7 +170,7 @@ Track your numbers at each phase transition. If your game state deviates signifi
 | **Elevator Lobby**<br>`admin_elevator` | Swipe badge at scanner. Ride lift down. | Starts descent sequence into Sector 4. | • Elevator cable groaning and descent audio. |
 | **Elevator Landing**<br>`mine_landing` | 1. Inspect `drain pool`<br>2. Inspect `beacons` & `machinery` | **Fishing Spot Discovery**: Can test starter rod and lures! | • Water ripple effects in drain pool.<br>• Fishing minigame launcher responsiveness. |
 | **Main Tunnel Alpha**<br>`mine_alpha` | ⚠️ **Combat: 2x Echo Borer** | Combat victory.<br>Burrowing threat neutralized. | • Echo Borer underground emergence animation.<br>• Physical damage impact audio. |
-| **Cavern Junction**<br>`mine_junction` | 1. Action `junction breaker box`<br>2. Toggle `track diverter lever` | **Mine Power Restored!** (`ms_mine_power_on`).<br>Flipping switch diverts narrow-gauge rails; ore cart smashes blast bulkhead (`ms_w1_cart_track_diverted`), unlocking western passage! | • Power-up audio swell and lights brightening.<br>• Heavy iron cart runaway rumble and explosive metal impact crash sfx. |
+| **Cavern Junction**<br>`mine_junction` | 1. Action `junction breaker box`<br>2. Inspect `switch rails`<br>3. Divert `track diverter lever` west<br>4. Release `wheel brake` | **Mine Power Restored!** (`ms_mine_power_on`).<br>Releasing the routed cart breaches the bulkhead (`ms_w1_cart_track_diverted`), permanently unlocking the western passage. | • Power-up audio swell and lights brightening.<br>• Heavy iron cart runaway rumble and explosive metal impact crash sfx. |
 | **Sealed Munitions Stash**<br>`mine_sealed_munitions_vault` | 1. Inspect `shattered ore cart`<br>2. Open `dominion munitions cache` | Stash looted: **Thermite Core Mod** (`thermite_core_mod` — Epic mod: +8 STR, +5 LCK), **Scrap Metal**, **Pure Iron**. | • Mangled bulkhead and dust particle dispersion.<br>• Military cache green terminal glow. |
 | **Side Shunt 4**<br>`mine_shunt` | 1. Inspect `crew datapad`<br>2. Read `final letter`<br>3. Inspect `resonant vein` | Initiates & completes **`w1_sq05`** (The Lost Shift).<br>**Rewards:** **120 XP**, **Recoil Dampener**. | • Poignant narrative letter text display.<br>• Resonant vein crystal shader shimmer. |
 | **Conveyor Belt**<br>`mine_conveyor` | Inspect `conveyor belt` & `motor`. | Heavy tread marks and ore dust flavor. | • Ambient conveyor rumble. |
@@ -192,28 +192,25 @@ Track your numbers at each phase transition. If your game state deviates signifi
 ### The Ore Cart Track Switch & Blast Door Breach (Environmental Puzzle)
 Located in the primary logistics nexus at `mine_junction`:
 - **Bulkhead Obstruction:** A reinforced Dominion blast bulkhead seals off the western spur. Attempting to head West alerts: *"A reinforced Dominion blast bulkhead seals the western spur. Narrow-gauge rails end abruptly before the steel door."*
-- **Track Diverter Mechanism:** Toggle the `track diverter lever` on the junction switchbox (`w1_cart_track_diverted`).
-- **Engine Effects:**
-  1. Triggers `w1_cart_track_diverted`, setting room state `track_diverted: true` and registering milestone `ms_w1_cart_track_diverted`.
-  2. The heavy slag-filled ore cart barrels down the western incline rails, impacting the rusted blast bulkhead with an explosive crash.
-  3. Dynamic room prose updates to describe the switch rails and shattered wreckage.
-  4. Directional lock on `west` dissolves: *"The heavy ore cart rolls down the switch rails, shattering the blast door with an echoing boom!"*
+- **Optional clue:** Read `switch rails` to identify the western siding (`ms_w1_cart_rails_read`).
+- **Route:** Toggle `track diverter lever` west (`w1_cart_track_diverted`), setting `track_diverted: true` and `ms_w1_cart_route_set`. The brake remains engaged.
+- **Release:** Select `wheel brake` (`w1_cart_release`). Without a western route, Nova holds the brake and explains what is missing. Correct diversion allows release even if the rails were never inspected.
+- **Permanent breach:** A valid release sets `bulkhead_breached: true` and the retained destruction milestone `ms_w1_cart_track_diverted`. Resetting the points, revisiting, and save/load must preserve access. Old saves with that milestone backfill the breached state on load.
 - **Sealed Munitions Stash Rewards:** Traversing West enters `mine_sealed_munitions_vault` ([-1, 2]). Open the **Dominion Munitions Cache** container to claim:
   - **Thermite Core Mod** (`thermite_core_mod`): Epic gear mod (+8 Strength, +5 Luck) that converts kinetic impacts into searing thermal strikes.
   - **Scrap Metal** & **Pure Iron**: Crucial early-game tinkering and weapon upgrade components.
 
 ---
 
-### The Tuning Fork Puzzle (Exact Solution & Tuning Guidance)
-The puzzle interface presents three tactile frequency sliders. Match the target values precisely:
+### The Tuning Fork Puzzle (Guided Signal Calibration)
+The World 1 panel presents one control at a time and a visual scope. No hearing or numeric entry is required.
 
-```
-[Slider 1] Phase Sweep (frequency)  : Set to  87 kHz  (Initial: 52 | Range: 40–120 | Tolerance: ±2)
-[Slider 2] Cold Loop (coolant)      : Set to  68%     (Initial: 35 | Range: 0–100  | Tolerance: ±3)
-[Slider 3] Ground Phase (phase)     : Set to 180°     (Initial: 0  | Range: 0–360  | Tolerance: ±6)
-```
+1. **Find the pulse:** adjust sweep until cutter peaks line up with the Fork; select **Hold sweep**. Holding stabilizes the calibration at the center of the accepted range.
+2. **Balance the cold loop:** match the cutter wave height to the Fork; select **Hold cold loop**.
+3. **Quiet the feedback:** turn ground phase until the waves oppose and the combined lower trace flattens; select **Engage handshake**.
 
-- When all three sliders are in their green harmonic tolerance windows, tap **Confirm Lock**.
+Canonical calibration is still 87 kHz / 68% / 180 degrees, with the original tolerances. The active objective describes the task instead of giving the solution.
+
 - **Success Event:** Triggers `w1_mq03_touch_relic`.
 - **Completion:** Completes **`w1_mq03`** -> **Rewards:** **150 XP**, **Tuning Fork**, 2x Medkit I, 2x Ration.
 - 🚨 **CRITICAL NARRATIVE TRANSITION:** Red strobe alarms fire, sirens wail through the alien stone, and **`w1_mq04`: Red Alert** begins!
@@ -222,7 +219,9 @@ The puzzle interface presents three tactile frequency sliders. Match the target 
 
 ### ⚡ Phase 3 Adversarial & Edge-Case Tests
 - [ ] **Power Gate Dependency:** Before flipping the breaker in `mine_junction`, enter `mine_shunt`. Verify Side Shunt 4 is dark and the datapad is unreadable without power.
-- [ ] **Tuning Puzzle Deliberate Failure:** Enter incorrect slider values and tap Confirm. Verify the failure hint text (*"The signals beat against each other and the cold loop climbs"*) displays correctly without freezing the puzzle.
+- [ ] **Tuning controls:** Verify each Hold button stays disabled outside tolerance. At the final step, verify Handshake stays disabled while the ground phase is wrong. Previous step allows correction without rewarding progress.
+- [ ] **Cart ordering and permanence:** Try the brake before diversion; then divert and release without inspecting. Reset and divert the switch again, revisit, and save/load. Feedback must describe the crashed cart after the breach. The western passage must remain open.
+- [ ] **Override retries:** Try both audited outputs, disconnect, then reopen and choose the removable board. Wrong choices do not reward progress; successful completion grants its existing rewards once.
 - [ ] **In-Puzzle Cancel:** Exit the puzzle without confirming. Verify you can re-engage the tuning fork cradle smoothly.
 
 ### 💾 Phase 3 Save/Resume Checkpoint

@@ -209,7 +209,7 @@ class QuestRuntimeManager(
                     stageProgress[questId] = finalStage.id
                     sessionStore.setQuestStage(questId, finalStage.id)
                     val tasks = completedTasks.getOrPut(questId) { mutableSetOf() }
-                    finalStage.tasks.forEach { task -> tasks.add(task.id) }
+                    finalStage.tasks.filterNot { it.optional }.forEach { task -> tasks.add(task.id) }
                     sessionStore.setQuestTasksCompleted(questId, tasks.toSet())
                 }
                 emitStateLocked(sessionStore.state.value)
@@ -366,7 +366,7 @@ class QuestRuntimeManager(
                     QuestObjectiveEntry(
                         id = task.id,
                         text = task.text,
-                        completed = completed || task.done || completedIds.contains(task.id)
+                        completed = (completed && !task.optional) || task.done || completedIds.contains(task.id)
                     )
                 },
                 completed = completed,
@@ -467,7 +467,7 @@ class QuestRuntimeManager(
         var progressed = false
         while (true) {
             val stage = stages.getOrNull(currentIndex) ?: break
-            val allDone = stage.tasks.all { task -> task.done || completedTasks.contains(task.id) }
+            val allDone = stage.tasks.all { task -> task.optional || task.done || completedTasks.contains(task.id) }
             val isLast = currentIndex == stages.lastIndex
             if (!allDone) break
 
@@ -504,7 +504,7 @@ class QuestRuntimeManager(
         finalStage?.let { stage ->
             this.completedTasks.getOrPut(questId) { mutableSetOf() }.apply {
                 addAll(completedTasks)
-                stage.tasks.forEach { add(it.id) }
+                stage.tasks.filterNot { it.optional }.forEach { add(it.id) }
                 sessionStore.setQuestTasksCompleted(questId, this.toSet())
             }
             sessionStore.setQuestStage(questId, stage.id)
@@ -584,7 +584,7 @@ class QuestRuntimeManager(
             )
         }
         val remaining = stage?.tasks.orEmpty()
-            .filterNot { task -> task.done || completed.contains(task.id) }
+            .filterNot { task -> task.optional || task.done || completed.contains(task.id) }
         val next = remaining.firstOrNull()?.let { task ->
             QuestObjectiveStatus(
                 id = task.id,

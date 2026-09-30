@@ -523,7 +523,7 @@
     "steps": [
       {
         "type": "narration",
-        "text": "Nova plugs her datapad into the debugging port. Encrypted command blocks fill the terminal."
+        "text": "Nova seats the cracked circuit board in the isolated socket. Encrypted command blocks fill the terminal."
       },
       {
         "type": "narration",
@@ -531,7 +531,7 @@
       },
       {
         "type": "narration",
-        "text": "The terminal confirms: PROTOCOL OVERRIDE BROADCAST. LOCAL ADMIN PRIVILEGES ACTIVE."
+        "text": "The terminal confirms: ACCESS KEY WRITTEN TO REMOVABLE BOARD. NETWORK TRANSMISSION: NONE. The recovered key clears from the terminal as Nova removes the board."
       }
     ]
   },
@@ -874,6 +874,35 @@
       {
         "type": "narration",
         "text": "Created by the Starborn team. Thank you for playing."
+      }
+    ]
+  },
+  {
+    "id": "scene_w2_astra_departure",
+    "title": "Airlane to the Spire",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The Astra rises from the cradle. Jungle and tideglass fall away below; the Planetary Shield remains a distant ceiling.",
+        "audio_cue": "sfx_w2_astra_launch"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Orion",
+        "text": "Keep below the hard deck. This service airlane takes us to the Spire; we are not crossing the outer shield."
+      },
+      {
+        "type": "narration",
+        "text": "Dominion interference floods the local guidance bands. Gh0st braces the crew while Zeke holds the manual ground path."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "text": "We have the city beneath us. Bring her down where the sensors cannot follow."
+      },
+      {
+        "type": "narration",
+        "text": "The Astra hits hard beneath the Spire. The crew survives, but the airlane is gone behind them."
       }
     ]
   }

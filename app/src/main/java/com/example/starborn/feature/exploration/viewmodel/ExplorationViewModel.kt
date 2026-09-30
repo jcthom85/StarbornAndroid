@@ -1,5 +1,6 @@
 package com.example.starborn.feature.exploration.viewmodel
 
+import com.example.starborn.domain.model.forEncounterRoom
 import com.example.starborn.feature.exploration.viewmodel.helpers.*
 
 import android.util.Log
@@ -4141,7 +4142,7 @@ class ExplorationViewModel(
             val partyIds = party.mapNotNull { id -> id.trim().takeIf { trimmed -> trimmed.isNotBlank() } }
             val leaderId = partyIds.firstOrNull().orEmpty()
             if (leaderId.isBlank()) return@forEach
-            val leaderEnemy = enemyById[leaderId]
+            val leaderEnemy = enemyById[leaderId]?.forEncounterRoom(room.id)
             val leaderSprite = leaderEnemy?.let { enemySpritePath(it) }
                 ?: "images/enemies/${leaderId}_combat.png"
             val partyEnemies = partyIds.mapNotNull { enemyById[it] }
@@ -4181,7 +4182,7 @@ class ExplorationViewModel(
                     return@forEach
                 }
             }
-            result[leaderId] = EnemyIconUi(spritePath = leaderSprite)
+            result[leaderId] = EnemyIconUi(spritePath = leaderSprite, displayName = leaderEnemy?.takeIf { it.id == "acoustic_bulwark" }?.name)
         }
         return result
     }
@@ -5105,7 +5106,8 @@ class ExplorationViewModel(
                         )
                     },
                     failureHint = puzzle.failureHint,
-                    successMessage = puzzle.successMessage
+                    successMessage = puzzle.successMessage,
+                    presentation = puzzle.presentation
                 )
             )
         }
@@ -5945,7 +5947,7 @@ private fun buildQuestDetail(
     }
     val completedTasks = runtimeManager.completedTaskIds(questId)
     val objectives = stage?.tasks.orEmpty().map { task ->
-        val done = isCompleted || task.done || completedTasks.contains(task.id)
+        val done = (isCompleted && !task.optional) || task.done || completedTasks.contains(task.id)
         QuestObjectiveUi(
             id = task.id,
             text = task.text,
@@ -5969,7 +5971,7 @@ private fun buildQuestDetail(
                 QuestObjectiveUi(
                     id = task.id,
                     text = task.text,
-                    completed = stageCompleted || task.done || completedTasks.contains(task.id)
+                    completed = (stageCompleted && !task.optional) || task.done || completedTasks.contains(task.id)
                 )
             },
             stageIndex = index,

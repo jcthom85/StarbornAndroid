@@ -2964,123 +2964,142 @@ private fun TuningPuzzleDialog(
         modifier = modifier,
         title = { Text(puzzle.title) },
         text = {
-            Column(
-                modifier = Modifier.verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(14.dp)
-            ) {
-                Text(puzzle.prompt)
-                puzzle.feedback?.takeIf { it.isNotBlank() }?.let { feedback ->
-                    Text(
-                        text = feedback,
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-                puzzle.sliders.forEach { slider ->
-                    val isLocked = kotlin.math.abs(slider.value - slider.target) <= slider.tolerance
-                    var numericInput by remember(slider.id) {
-                        mutableStateOf(slider.value.roundToInt().toString())
-                    }
-                    LaunchedEffect(slider.value) {
-                        val str = slider.value.roundToInt().toString()
-                        if (numericInput != str && numericInput.toFloatOrNull() != slider.value) {
-                            numericInput = str
-                        }
-                    }
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                if (isLocked) Color(0xFF1B382B).copy(alpha = 0.4f) else Color.Transparent,
-                                shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
-                            )
-                            .padding(6.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            val valueLabel = buildString {
-                                append(slider.label)
-                                append(": ")
-                                append(slider.value.roundToInt())
-                                slider.unit?.takeIf { it.isNotBlank() }?.let { append(it) }
-                            }
-                            Text(
-                                text = valueLabel,
-                                style = MaterialTheme.typography.labelLarge,
-                                color = if (isLocked) Color(0xFF69F0AE) else MaterialTheme.colorScheme.onSurface
-                            )
-                            if (isLocked) {
-                                Text(
-                                    text = "● IN PHASE",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = Color(0xFF69F0AE)
-                                )
-                            }
-                        }
-                        Slider(
-                            value = slider.value,
-                            onValueChange = {
-                                numericInput = it.roundToInt().toString()
-                                onSliderChange(slider.id, it)
-                            },
-                            valueRange = slider.min..slider.max,
-                            modifier = Modifier.semantics {
-                                contentDescription = "${slider.label} control"
-                            }
+            if (puzzle.presentation == "counter_tune") {
+                com.example.starborn.shared.puzzle.CounterTunePanel(
+                    dials = puzzle.sliders.map {
+                        com.example.starborn.shared.puzzle.SignalDial(it.id, it.value, it.min, it.max, it.target, it.tolerance)
+                    },
+                    onChange = onSliderChange,
+                    onHandshake = onSubmit,
+                    modifier = Modifier.fillMaxWidth(),
+                    feedback = puzzle.feedback
+                )
+            } else if (puzzle.presentation == "prism_optics") {
+                com.example.starborn.shared.puzzle.PrismOpticsPanel(
+                    dials = puzzle.sliders.map {
+                        com.example.starborn.shared.puzzle.SignalDial(it.id, it.value, it.min, it.max, it.target, it.tolerance)
+                    }, onChange = onSliderChange, onCapture = onSubmit,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            } else {
+                Column(
+                    modifier = Modifier.verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    Text(puzzle.prompt)
+                    puzzle.feedback?.takeIf { it.isNotBlank() }?.let { feedback ->
+                        Text(
+                            text = feedback,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodyMedium
                         )
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            OutlinedButton(
-                                onClick = {
-                                    val step = if ((slider.max - slider.min) > 100) 5f else 1f
-                                    val newVal = (slider.value - step).coerceIn(slider.min, slider.max)
-                                    numericInput = newVal.roundToInt().toString()
-                                    onSliderChange(slider.id, newVal)
-                                },
-                                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                                modifier = Modifier.height(48.dp)
-                            ) {
-                                Text("-", style = MaterialTheme.typography.titleMedium)
+                    }
+                    puzzle.sliders.forEach { slider ->
+                        val isLocked = kotlin.math.abs(slider.value - slider.target) <= slider.tolerance
+                        var numericInput by remember(slider.id) {
+                            mutableStateOf(slider.value.roundToInt().toString())
+                        }
+                        LaunchedEffect(slider.value) {
+                            val str = slider.value.roundToInt().toString()
+                            if (numericInput != str && numericInput.toFloatOrNull() != slider.value) {
+                                numericInput = str
                             }
-
-                            OutlinedTextField(
-                                value = numericInput,
-                                onValueChange = { candidate ->
-                                    if (candidate.isEmpty() || candidate.all(Char::isDigit)) {
-                                        numericInput = candidate
-                                        candidate.toFloatOrNull()?.let { entered ->
-                                            val applied = entered.coerceIn(slider.min, slider.max)
-                                            onSliderChange(slider.id, applied)
-                                        }
-                                    }
-                                },
-                                label = { Text("${slider.min.toInt()}–${slider.max.toInt()}") },
-                                singleLine = true,
-                                keyboardOptions = KeyboardOptions(
-                                    keyboardType = KeyboardType.Number,
-                                    imeAction = ImeAction.Done
-                                ),
-                                modifier = Modifier.weight(1f)
-                            )
-
-                            OutlinedButton(
-                                onClick = {
-                                    val step = if ((slider.max - slider.min) > 100) 5f else 1f
-                                    val newVal = (slider.value + step).coerceIn(slider.min, slider.max)
-                                    numericInput = newVal.roundToInt().toString()
-                                    onSliderChange(slider.id, newVal)
-                                },
-                                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                                modifier = Modifier.height(48.dp)
+                        }
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    if (isLocked) Color(0xFF1B382B).copy(alpha = 0.4f) else Color.Transparent,
+                                    shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
+                                )
+                                .padding(6.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text("+", style = MaterialTheme.typography.titleMedium)
+                                val valueLabel = buildString {
+                                    append(slider.label)
+                                    append(": ")
+                                    append(slider.value.roundToInt())
+                                    slider.unit?.takeIf { it.isNotBlank() }?.let { append(it) }
+                                }
+                                Text(
+                                    text = valueLabel,
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = if (isLocked) Color(0xFF69F0AE) else MaterialTheme.colorScheme.onSurface
+                                )
+                                if (isLocked) {
+                                    Text(
+                                        text = "● IN PHASE",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = Color(0xFF69F0AE)
+                                    )
+                                }
+                            }
+                            Slider(
+                                value = slider.value,
+                                onValueChange = {
+                                    numericInput = it.roundToInt().toString()
+                                    onSliderChange(slider.id, it)
+                                },
+                                valueRange = slider.min..slider.max,
+                                modifier = Modifier.semantics {
+                                    contentDescription = "${slider.label} control"
+                                }
+                            )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                OutlinedButton(
+                                    onClick = {
+                                        val step = if ((slider.max - slider.min) > 100) 5f else 1f
+                                        val newVal = (slider.value - step).coerceIn(slider.min, slider.max)
+                                        numericInput = newVal.roundToInt().toString()
+                                        onSliderChange(slider.id, newVal)
+                                    },
+                                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+                                    modifier = Modifier.height(48.dp)
+                                ) {
+                                    Text("-", style = MaterialTheme.typography.titleMedium)
+                                }
+
+                                OutlinedTextField(
+                                    value = numericInput,
+                                    onValueChange = { candidate ->
+                                        if (candidate.isEmpty() || candidate.all(Char::isDigit)) {
+                                            numericInput = candidate
+                                            candidate.toFloatOrNull()?.let { entered ->
+                                                val applied = entered.coerceIn(slider.min, slider.max)
+                                                onSliderChange(slider.id, applied)
+                                            }
+                                        }
+                                    },
+                                    label = { Text("${slider.min.toInt()}–${slider.max.toInt()}") },
+                                    singleLine = true,
+                                    keyboardOptions = KeyboardOptions(
+                                        keyboardType = KeyboardType.Number,
+                                        imeAction = ImeAction.Done
+                                    ),
+                                    modifier = Modifier.weight(1f)
+                                )
+
+                                OutlinedButton(
+                                    onClick = {
+                                        val step = if ((slider.max - slider.min) > 100) 5f else 1f
+                                        val newVal = (slider.value + step).coerceIn(slider.min, slider.max)
+                                        numericInput = newVal.roundToInt().toString()
+                                        onSliderChange(slider.id, newVal)
+                                    },
+                                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+                                    modifier = Modifier.height(48.dp)
+                                ) {
+                                    Text("+", style = MaterialTheme.typography.titleMedium)
+                                }
                             }
                         }
                     }
@@ -3088,7 +3107,9 @@ private fun TuningPuzzleDialog(
             }
         },
         confirmButton = {
-            Button(onClick = onSubmit) { Text("Engage Handshake") }
+            if (puzzle.presentation !in setOf("counter_tune", "prism_optics")) {
+                Button(onClick = onSubmit) { Text("Engage Handshake") }
+            }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) { Text("Cancel") }
@@ -6656,7 +6677,7 @@ private fun EnemyPartyStandee(
         modifier = modifier
             .width(size)
             .height(size + 28.dp)
-            .semantics { contentDescription = "Engage ${enemyDisplayLabel(enemyId)}" }
+            .semantics { contentDescription = "Engage ${icon?.displayName ?: enemyDisplayLabel(enemyId)}" }
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,

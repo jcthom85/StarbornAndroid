@@ -87,14 +87,8 @@ class EventManager(
             }
             "quest_stage_complete" -> payload is EventPayload.QuestStage && payload.questId == trigger.questId
             "encounter_victory" -> matchesOutcome(trigger, payload, EventPayload.EncounterOutcome.Outcome.VICTORY, state)
-            "encounter_defeat" -> payload is EventPayload.EncounterOutcome &&
-                payload.outcome == EventPayload.EncounterOutcome.Outcome.DEFEAT &&
-                matchesOutcomeRoom(trigger, payload, state) &&
-                (trigger.enemies.isNullOrEmpty() || payload.enemyIds.any { it in trigger.enemies })
-            "encounter_retreat" -> payload is EventPayload.EncounterOutcome &&
-                payload.outcome == EventPayload.EncounterOutcome.Outcome.RETREAT &&
-                matchesOutcomeRoom(trigger, payload, state) &&
-                (trigger.enemies.isNullOrEmpty() || payload.enemyIds.any { it in trigger.enemies })
+            "encounter_defeat" -> matchesOutcome(trigger, payload, EventPayload.EncounterOutcome.Outcome.DEFEAT, state)
+            "encounter_retreat" -> matchesOutcome(trigger, payload, EventPayload.EncounterOutcome.Outcome.RETREAT, state)
             "item_acquired" -> {
                 val itemPayload = (payload as? EventPayload.ItemAcquired)?.itemId
                 val triggerItem = trigger.itemId ?: trigger.item
@@ -562,8 +556,10 @@ class EventManager(
     ): Boolean {
         return when (payload) {
             is EventPayload.EnemyVictory -> expected == EventPayload.EncounterOutcome.Outcome.VICTORY &&
+                trigger.encounterId == null &&
                 (trigger.enemies.isNullOrEmpty() || payload.enemyIds.any { it in trigger.enemies })
             is EventPayload.EncounterOutcome -> payload.outcome == expected &&
+                (trigger.encounterId == null || trigger.encounterId == payload.encounterId) &&
                 matchesOutcomeRoom(trigger, payload, state) &&
                 (trigger.enemies.isNullOrEmpty() || payload.enemyIds.any { it in trigger.enemies })
             else -> false
@@ -605,7 +601,8 @@ sealed interface EventPayload {
     data class EncounterOutcome(
         val enemyIds: List<String>,
         val outcome: Outcome,
-        val roomId: String? = null
+        val roomId: String? = null,
+        val encounterId: String? = null
     ) : EventPayload {
         enum class Outcome {
             VICTORY,

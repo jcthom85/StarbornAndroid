@@ -27,6 +27,8 @@ data class EventTrigger(
     val questId: String? = null,
     @Json(name = "action")
     val action: String? = null,
+    @Json(name = "encounter_id")
+    val encounterId: String? = null,
     val enemies: List<String>? = null,
     val item: String? = null,
     @Json(name = "item_id")

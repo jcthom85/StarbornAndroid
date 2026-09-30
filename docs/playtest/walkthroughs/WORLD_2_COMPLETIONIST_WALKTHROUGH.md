@@ -3,6 +3,8 @@
 *Target Release:* `v1.3.74+ (versionCode 158+)`  
 *Scope:* 100% Completionist Audit (Quests, Exploration, Lore, Audio/Visuals, Economy & Combat)
 
+**September 30 refinement:** Read [the current World 2 interaction and recovery notes](../../WORLD2_REFINEMENT_PASS.md) before using this older field guide. Stasis now requires decisions, a separate Orion conversation, and Bridge recovery; the Source Gate and optional mural/vent consoles require choices. Departure requires confirmation and follows a low service airlane beneath the Shield. Sky rooms are grounded flight-plan previews. The XP/equipment benchmarks below are estimates, not verified arrival budgets.
+
 ---
 
 ## 1. Executive Playtest Overview

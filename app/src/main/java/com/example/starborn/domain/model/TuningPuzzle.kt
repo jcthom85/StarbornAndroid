@@ -14,7 +14,8 @@ data class TuningPuzzle(
     @Json(name = "failure_hint")
     val failureHint: String,
     @Json(name = "audio_cue")
-    val audioCue: String? = null
+    val audioCue: String? = null,
+    val presentation: String = "sliders"
 )
 
 data class TuningPuzzleSlider(

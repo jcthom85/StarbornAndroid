@@ -210,7 +210,7 @@ class HubViewModel(
         val stage = activeStage(quest, session)
         val completedTasks = session.questTasksCompleted[quest.id].orEmpty()
         val objective = stage?.tasks
-            ?.firstOrNull { task -> !completedTasks.contains(task.id) }
+            ?.firstOrNull { task -> !task.optional && !task.done && !completedTasks.contains(task.id) }
             ?.text
             ?: stage?.description.takeIf { !it.isNullOrBlank() }
             ?: quest.summary.takeIf { it.isNotBlank() }

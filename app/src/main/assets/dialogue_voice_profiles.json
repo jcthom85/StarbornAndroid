@@ -28,6 +28,7 @@
     "Pasha": "female",
     "Player": "female",
     "Rana": "female",
+    "Rebel Terminal": "none",
     "Rylos": "male",
     "Schoolteacher Kasey": "female",
     "Scrapper": "male",
@@ -66,6 +67,11 @@
     "Director Vance": "male",
     "Dr. Lyra": "female",
     "Selene": "female",
-    "Pitmaster Brutus": "male"
+    "Pitmaster Brutus": "male",
+    "Stasis Console": "none",
+    "Source Gate Console": "none",
+    "Mural Array": "none",
+    "Vent Scanner": "none",
+    "Astra Navigation": "none"
   }
 }

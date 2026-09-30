@@ -1,5 +1,6 @@
 package com.example.starborn.feature.combat.viewmodel
 
+import com.example.starborn.domain.model.forEncounterRoom
 import com.example.starborn.feature.combat.viewmodel.helpers.*
 import android.os.SystemClock
 import androidx.lifecycle.ViewModel
@@ -329,7 +330,7 @@ class CombatViewModel(
                 val overrides = pendingSlots.getOrNull(index)?.takeIf { it.enemyId == canonicalId }
                 EncounterEnemySlot(
                     canonicalId = canonicalId,
-                    enemy = enemy,
+                    enemy = enemy.forEncounterRoom(sessionSnapshot.roomId),
                     hp = overrides?.hp,
                     vitality = overrides?.vitality,
                     stability = overrides?.stability,

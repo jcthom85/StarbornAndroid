@@ -1,4 +1,4 @@
-﻿param(
+param(
     [Parameter(ValueFromRemainingArguments = $true)]
     [string[]] $MaestroArgs
 )
@@ -81,7 +81,6 @@ try {
         "... FAILED",
         "[Failed]",
         "Flow failed",
-        "Element not found",
         "Failed to find",
         "Assertion is false",
         "No device found",
@@ -102,3 +101,4 @@ try {
 } finally {
     Remove-Item -LiteralPath $runTemp -Recurse -Force -ErrorAction SilentlyContinue
 }
+

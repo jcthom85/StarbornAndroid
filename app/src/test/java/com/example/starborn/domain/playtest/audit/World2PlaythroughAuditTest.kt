@@ -79,7 +79,7 @@ class World2PlaythroughAuditTest {
             restore(
                 GameSessionState(
                     worldId = "world_2",
-                    hubId = "hub_2_sector9",
+                    hubId = "hub_3_sector9",
                     roomId = "sector9_crash_site",
                     playerId = "nova",
                     partyMembers = listOf("nova", "zeke"),
@@ -266,7 +266,7 @@ class World2PlaythroughAuditTest {
         // 2. MQ02: The Signal & Temple Gate
         talk("Zeke")
         navigate("sector9_canopy")
-        combat(listOf("echo_borer"), "sector9_canopy")
+        combat(listOf("stalker_vine"), "sector9_canopy")
         navigate("sector9_temple_gate")
         doAction("w2_mq02_use_chime")
 
@@ -280,6 +280,9 @@ class World2PlaythroughAuditTest {
         doAction("w2_mq03_read_mural_overview")
         doAction("w2_mq03_stabilize_coolant")
         doAction("w2_mq03_align_complete")
+        talk("Stasis Console", "correct")
+        talk("Orion")
+        doAction("w2_mq03_recover_bridge")
 
         assertTrue("w2_mq03 must be completed", store.state.value.completedQuests.contains("w2_mq03"))
         assertTrue("Orion must join party", store.state.value.partyMembers.contains("orion"))
@@ -305,10 +308,12 @@ class World2PlaythroughAuditTest {
         doAction("w2_mq05_read_pressure_gauge")
         doAction("w2_mq05_overload_breakers")
         doAction("w2_mq05_bypass_gate")
+        talk("Source Gate Console", "correct")
         doAction("w2_mq05_inspect_astra")
         doAction("w2_mq05_collect_conduits")
         doAction("w2_mq05_reboot")
         doAction("w2_mq05_launch")
+        talk("Astra Navigation", "depart")
 
         assertTrue("w2_mq05 must be completed", store.state.value.completedQuests.contains("w2_mq05"))
         assertTrue("World 3 Spire unlock milestone achieved", store.state.value.completedMilestones.contains("ms_w2_mq05_complete"))

@@ -318,6 +318,8 @@ class SideQuestPermutationIndependenceTest {
         harness.events.handleTrigger("player_action", EventPayload.Action("start_hack_sq04"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq04_thaw_console"))
         harness.events.handleTrigger("player_action", EventPayload.Action("start_hack_sq04"))
+        // The dedicated dialogue flow covers choosing the isolated board output.
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_sq04_compile_spoof"))
         assertTrue("w1_sq04 should be completed", harness.store.state.value.completedQuests.contains("w1_sq04"))
 
         // Complete SQ01 (The Scavenger's Stash) third

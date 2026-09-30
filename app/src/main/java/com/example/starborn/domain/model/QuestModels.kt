@@ -31,7 +31,8 @@ data class QuestTask(
     val text: String,
     val done: Boolean = false,
     @Json(name = "tutorial_id")
-    val tutorialId: String? = null
+    val tutorialId: String? = null,
+    val optional: Boolean = false
 )
 
 @JsonClass(generateAdapter = true)

@@ -368,6 +368,9 @@ class Hub1CriticalFlowTest {
         assertTrue(!completedTasks.contains("apply_access_override"))
 
         harness.events.handleTrigger("player_action", EventPayload.Action("start_hack_sq04"))
+        val routing = requireNotNull(harness.dialogue.startDialogue("Rebel Terminal"))
+        routing.advance()
+        routing.choose("board")
         state = harness.store.state.value
         completedTasks = state.questTasksCompleted["w1_sq04"].orEmpty()
         assertTrue(state.completedQuests.contains("w1_sq04"))
@@ -760,7 +763,7 @@ class Hub1CriticalFlowTest {
                     onStartDialogue = { npcName ->
                         val session = dialogue.startDialogue(npcName)
                         autoStartedDialogueIds += session?.current()?.id
-                        while (session?.isFinished() == false) {
+                        while (session?.isFinished() == false && session.choices().isEmpty()) {
                             session.advance()
                         }
                     },

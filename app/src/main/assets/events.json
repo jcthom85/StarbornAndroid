@@ -1552,12 +1552,13 @@
   },
   {
     "id": "w1_sq03_training_victory",
-    "description": "Completes Heavy Lifting when Nova defeats the shielded training guard.",
+    "description": "Completes certification for the Security Post shield drill.",
     "trigger": {
       "type": "encounter_victory",
       "enemies": [
         "acoustic_bulwark"
-      ]
+      ],
+      "room": "admin_security"
     },
     "conditions": [
       {
@@ -1665,145 +1666,6 @@
       {
         "type": "show_message",
         "message": "The toxic haze is too dense to reach through. The fans need to pull it away before Nova can clear the blockage."
-      }
-    ]
-  },
-  {
-    "id": "qpack_evt_collapse_ambush_victory",
-    "trigger": {
-      "type": "encounter_victory",
-      "encounter_id": "enc_collapse_ambush"
-    },
-    "actions": [
-      {
-        "type": "give_xp",
-        "xp": 320
-      },
-      {
-        "type": "advance_quest_if_active",
-        "quest_id": "q_mine_relay_scramble",
-        "to_stage_id": "q_mine_relay_scramble:stage_3",
-        "condition": "if_stage_eq:q_mine_relay_scramble:stage_2"
-      }
-    ]
-  },
-  {
-    "id": "qpack_evt_drone_sweep_victory",
-    "trigger": {
-      "type": "encounter_victory",
-      "encounter_id": "enc_drone_sweep"
-    },
-    "actions": [
-      {
-        "type": "give_xp",
-        "xp": 160
-      },
-      {
-        "type": "unlock_room_search",
-        "room_id": "living",
-        "note": "Victory reveals a tucked maintenance alcove with salvageable bits."
-      },
-      {
-        "type": "advance_quest_if_active",
-        "quest_id": "q_mine_relay_scramble",
-        "to_stage_id": "q_mine_relay_scramble:stage_3",
-        "condition": "if_stage_eq:q_mine_relay_scramble:stage_2"
-      }
-    ]
-  },
-  {
-    "id": "qpack_evt_relay_stage1_complete",
-    "trigger": {
-      "type": "quest_stage_complete",
-      "quest_id": "q_mine_relay_scramble",
-      "stage_id": "q_mine_relay_scramble:stage_1"
-    },
-    "actions": [
-      {
-        "type": "give_item",
-        "item_id": "itm_noise_maker",
-        "quantity": 1,
-        "to_player": true,
-        "note": "Gives a Noise Maker so the player can attempt a stealth bypass."
-      },
-      {
-        "type": "advance_quest",
-        "quest_id": "q_mine_relay_scramble",
-        "to_stage_id": "q_mine_relay_scramble:stage_2"
-      }
-    ]
-  },
-  {
-    "id": "qpack_evt_relay_stage2_complete",
-    "trigger": {
-      "type": "quest_stage_complete",
-      "quest_id": "q_mine_relay_scramble",
-      "stage_id": "q_mine_relay_scramble:stage_2"
-    },
-    "actions": [
-      {
-        "type": "spawn_encounter",
-        "encounter_id": "enc_collapse_ambush",
-        "room_id": "living",
-        "condition": "if_player_timed_trap_or_disturbs_alcove"
-      },
-      {
-        "type": "advance_quest",
-        "quest_id": "q_mine_relay_scramble",
-        "to_stage_id": "q_mine_relay_scramble:stage_3"
-      }
-    ]
-  },
-  {
-    "id": "qpack_evt_relay_stage3_complete",
-    "trigger": {
-      "type": "quest_stage_complete",
-      "quest_id": "q_mine_relay_scramble",
-      "stage_id": "q_mine_relay_scramble:stage_3"
-    },
-    "actions": [
-      {
-        "type": "give_item",
-        "item_id": "itm_stabilizer_plate",
-        "quantity": 1,
-        "to_player": true,
-        "note": "A salvaged stabilizer plate needed for final assembly."
-      },
-      {
-        "type": "advance_quest",
-        "quest_id": "q_mine_relay_scramble",
-        "to_stage_id": "q_mine_relay_scramble:stage_4"
-      }
-    ]
-  },
-  {
-    "id": "qpack_evt_relay_stage4_complete",
-    "trigger": {
-      "type": "quest_stage_complete",
-      "quest_id": "q_mine_relay_scramble",
-      "stage_id": "q_mine_relay_scramble:stage_4"
-    },
-    "actions": [
-      {
-        "type": "grant_reward",
-        "quest_id": "q_mine_relay_scramble",
-        "xp": 420,
-        "credits": 150,
-        "items": [
-          {
-            "item_id": "itm_relay_prototype",
-            "quantity": 1
-          }
-        ],
-        "ap": 1
-      },
-      {
-        "type": "trigger_cutscene",
-        "cutscene_id": "cs_relay_final"
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "q_mine_relay_scramble"
       }
     ]
   },
@@ -3244,7 +3106,7 @@
       },
       {
         "type": "show_message",
-        "message": "A dead rebel login answers from under the Dominion shell: IF YOU ARE READING THIS, WE FAILED. THE SPOOF STILL WORKS."
+        "message": "A dead rebel login answers from under the Dominion shell: IF YOU ARE READING THIS, WE FAILED. THE SPOOF STILL WORKS. Rebel warning: Dominion audits every network upload and account write. The removable board socket is isolated from that audit. Take the spoof out locally; leave no account behind."
       }
     ]
   },
@@ -3291,7 +3153,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova warms the console contacts with a careful power bleed. The keys register cleanly, and the rebel spoof accepts input."
+        "message": "Nova warms the console contacts with a careful power bleed. The keys register cleanly, and the rebel spoof accepts input. Select the terminal to choose an output; the output ports carry the audit warning."
       }
     ]
   },
@@ -3347,7 +3209,7 @@
   },
   {
     "id": "w1_sq04_apply_access_override",
-    "description": "Applies the rebel access override and completes Protocol Override.",
+    "description": "Choose an isolated output for the recovered rebel key.",
     "trigger": {
       "type": "player_action",
       "action": "start_hack_sq04"
@@ -3370,38 +3232,11 @@
     ],
     "actions": [
       {
-        "type": "set_room_state",
-        "room_id": "server_hub",
-        "state_key": "override_applied",
-        "value": true
-      },
-      {
-        "type": "play_cinematic",
-        "scene_id": "scene_sq04_hack"
-      },
-      {
-        "type": "set_quest_task_done",
-        "quest_id": "w1_sq04",
-        "task_id": "apply_access_override"
-      },
-      {
-        "type": "give_item",
-        "item_id": "circuit_board",
-        "quantity": 1
-      },
-      {
-        "type": "give_xp",
-        "xp": 110
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w1_sq04"
-      },
-      {
-        "type": "show_message",
-        "message": "The access key copies to the cracked circuit board, then erases itself from the terminal."
+        "type": "start_dialogue",
+        "npc": "Rebel Terminal"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "w1_sq05_start_shunt",
@@ -3695,7 +3530,8 @@
     "trigger": {
       "type": "encounter_victory",
       "enemies": [
-        "echo_borer"
+        "echo_borer",
+        "stalker_vine"
       ]
     },
     "conditions": [
@@ -3733,7 +3569,7 @@
       },
       {
         "type": "show_message",
-        "message": "The canopy goes quiet after the echo-borer falls. Zeke catches the distress pulse again; it is coming from a stone gate beyond the ridge."
+        "message": "The hostile canopy falls quiet. Zeke catches the distress pulse again; it is coming from a stone gate beyond the ridge."
       }
     ]
   },
@@ -3944,64 +3780,11 @@
     ],
     "actions": [
       {
-        "type": "audio_layer",
-        "layer": "stinger",
-        "cue_id": "sfx_w2_stasis_release",
-        "fade_ms": 0
-      },
-      {
-        "type": "set_quest_task_done",
-        "quest_id": "w2_mq03",
-        "task_id": "align_stasis_rings"
-      },
-      {
-        "type": "set_quest_task_done",
-        "quest_id": "w2_mq03",
-        "task_id": "talk_to_orion"
-      },
-      {
-        "type": "set_quest_task_done",
-        "quest_id": "w2_mq03",
-        "task_id": "recover_bridge_relic"
-      },
-      {
-        "type": "give_item",
-        "item_id": "bridge_relic",
-        "quantity": 1
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w2_bridge_recovered"
-      },
-      {
-        "type": "add_party_member",
-        "item_id": "orion"
-      },
-      {
-        "type": "give_xp",
-        "xp": 250
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w2_mq03"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w2_mq03_complete"
-      },
-      {
-        "type": "start_quest",
-        "quest_id": "w2_mq04"
-      },
-      {
-        "type": "track_quest",
-        "quest_id": "w2_mq04"
-      },
-      {
-        "type": "show_message",
-        "message": "Quest Complete: Sleeping Giant\n\nReserve cells open Orion's pod. A second cradle releases the Bridge into Nova's hands: a separate Architect Echo, cold and unpowered."
+        "type": "start_dialogue",
+        "npc": "Stasis Console"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "w2_mq04_reach_canopy",
@@ -4101,12 +3884,9 @@
         "type": "spawn_encounter",
         "encounter_id": "the_beast",
         "room_id": "sector9_canopy_ridge"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w2_beast_defeated"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "w2_mq04_victory",
@@ -4115,7 +3895,8 @@
       "type": "encounter_victory",
       "enemies": [
         "the_beast"
-      ]
+      ],
+      "room_id": "sector9_canopy_ridge"
     },
     "conditions": [
       {
@@ -4152,6 +3933,10 @@
       {
         "type": "show_message",
         "message": "The Beast is down. Gh0st checks his trigger, then lowers the rifle. No command attached. Orion points to the Bridge: training comes next."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_beast_defeated"
       }
     ]
   },
@@ -4228,10 +4013,6 @@
             "quest_id": "w2_mq05"
           }
         ]
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w2_mq04_complete"
       }
     ]
   },
@@ -4296,23 +4077,11 @@
     ],
     "actions": [
       {
-        "type": "set_quest_task_done",
-        "quest_id": "w2_mq05",
-        "task_id": "bypass_source_gate"
-      },
-      {
-        "type": "warp",
-        "room_id": "sector9_hangar_bay"
-      },
-      {
-        "type": "show_message",
-        "message": "The horn steadies, the receiver cup grounds, the pressure roots bleed safely, and the breakers starve the last howl from the lock. Orion gives the system one clean resolving tone, and the barrier dissolves into blue mist."
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w2_gate_bypassed"
+        "type": "start_dialogue",
+        "npc": "Source Gate Console"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "w2_mq05_inspect_astra",
@@ -4477,45 +4246,11 @@
     ],
     "actions": [
       {
-        "type": "audio_layer",
-        "layer": "stinger",
-        "cue_id": "sfx_w2_astra_launch",
-        "fade_ms": 0
-      },
-      {
-        "type": "set_quest_task_done",
-        "quest_id": "w2_mq05",
-        "task_id": "launch_ship"
-      },
-      {
-        "type": "warp",
-        "room_id": "spire_sewers_landing"
-      },
-      {
-        "type": "give_xp",
-        "xp": 350
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w2_mq05"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w2_mq05_complete"
-      },
-      {
-        "type": "start_quest",
-        "quest_id": "w3_mq11"
-      },
-      {
-        "type": "track_quest",
-        "quest_id": "w3_mq11"
-      },
-      {
-        "type": "show_message",
-        "message": "The Astra climbs through the shield's timed corridor until Dominion interference snaps the window shut. The ship punches through half-clean and crash-lands beneath the Spire."
+        "type": "start_dialogue",
+        "npc": "Astra Navigation"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "w2_sq01_scan_ferns",
@@ -4692,7 +4427,7 @@
     "description": "Triggered when entering Tideglass Beach.",
     "trigger": {
       "type": "enter_room",
-      "room": "sector9_stream_pools"
+      "room": "sector9_beach_pools"
     },
     "conditions": [
       {
@@ -12231,32 +11966,11 @@
     ],
     "actions": [
       {
-        "type": "set_quest_task_done",
-        "quest_id": "w2_sq04",
-        "task_id": "mural_tuning"
-      },
-      {
-        "type": "show_message",
-        "message": "Quest Complete: Ancient Echoes\n\nThree crystals restore the mural's separate carrier bands. A concealed pedestal opens around a labeled Bridge calibration record."
-      },
-      {
-        "type": "give_item",
-        "item_id": "focus_conduit",
-        "quantity": 1
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w2_sq04_complete"
-      },
-      {
-        "type": "give_xp",
-        "xp": 150
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w2_sq04"
+        "type": "start_dialogue",
+        "npc": "Mural Array"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "w2_sq05_hack_grid",
@@ -12277,19 +11991,11 @@
     ],
     "actions": [
       {
-        "type": "set_quest_task_done",
-        "quest_id": "w2_sq05",
-        "task_id": "hack_security_grid"
-      },
-      {
-        "type": "show_message",
-        "message": "Gh0st folds your signal into the grid noise. Security is blind for ninety seconds."
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w2_grid_hacked"
+        "type": "start_dialogue",
+        "npc": "Vent Scanner"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "w2_sq05_bypass_guards",
@@ -12461,12 +12167,44 @@
       {
         "type": "quest_active",
         "quest_id": "w2_sq04"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq04",
+        "task_id": "mural_tuning"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_sq04",
+        "task_id": "crystal_west"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_sq04",
+        "task_id": "crystal_east"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_sq04",
+        "task_id": "crystal_north"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_crystal_west_seated"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_crystal_east_seated"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_crystal_north_seated"
       }
     ],
     "actions": [
       {
         "type": "start_dialogue",
-        "npc": "Orion"
+        "npc": "Mural Array"
       }
     ]
   },
@@ -12704,7 +12442,7 @@
       },
       {
         "type": "show_message",
-        "message": "The root pressure gauge reveals the trick: the barrier is not powered by the roots, it is choking them. The pressure needs a bleed, not a cut."
+        "message": "The root pressure gauge reads BLEED, STARVE, RESOLVE. Open root relief into the grounded receiver first, then isolate lock power. Orion can resolve the remaining chord only after both routes are safe."
       },
       {
         "type": "set_milestone",
@@ -15553,7 +15291,7 @@
   },
   {
     "id": "w1_cart_track_diverted",
-    "description": "Throw the rusted track switch lever to divert the ore cart into the blast bulkhead.",
+    "description": "Set the cart route without releasing its brake.",
     "trigger": {
       "type": "player_action",
       "action": "w1_cart_track_diverted"
@@ -15567,11 +15305,23 @@
       },
       {
         "type": "set_milestone",
-        "milestone": "ms_w1_cart_track_diverted"
+        "milestone": "ms_w1_cart_route_set"
       },
       {
-        "type": "show_message",
-        "message": "With a screech of rusted iron, you heave the track lever. The switch points clack into place. You kick the manual wheel brake loose—the heavy ore cart rumbles down the slope, gathering terrifying speed before slamming through the reinforced blast door in a thunderous explosion of twisted steel and slag!"
+        "type": "if_milestone_not_set",
+        "milestone": "ms_w1_cart_track_diverted",
+        "do": [
+          {
+            "type": "show_message",
+            "message": "The switch points lock onto the western siding. The ore cart stays still: its wheel brake is engaged."
+          }
+        ],
+        "elseDo": [
+          {
+            "type": "show_message",
+            "message": "The switch points lock onto the western siding. Beyond them, the crashed cart rests behind the shattered bulkhead. The western passage remains open."
+          }
+        ]
       }
     ],
     "repeatable": true
@@ -15589,6 +15339,10 @@
         "room_id": "mine_junction",
         "state_key": "track_diverted",
         "value": false
+      },
+      {
+        "type": "clear_milestone",
+        "milestone": "ms_w1_cart_route_set"
       },
       {
         "type": "show_message",
@@ -15685,6 +15439,843 @@
       {
         "type": "show_message",
         "message": "You shut the cryogenic manifold valve. Without active coolant flow, the radiant subterranean heat remelts the obsidian bridge back into a churning river of molten slag."
+      }
+    ],
+    "repeatable": true
+  },
+  {
+    "id": "w1_cart_inspect_rails",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_cart_inspect_rails"
+    },
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_cart_rails_read"
+      },
+      {
+        "type": "show_message",
+        "message": "The main line runs toward the occupied checkpoint. The western siding slopes directly into the bulkhead. Divert the track west before releasing the wheel brake."
+      }
+    ],
+    "repeatable": true
+  },
+  {
+    "id": "w1_cart_release",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_cart_release"
+    },
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "mine_junction",
+        "state_key": "bulkhead_breached",
+        "value": true
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_cart_track_diverted"
+      },
+      {
+        "type": "show_message",
+        "message": "You release the wheel brake. The loaded cart gathers speed along the western siding and tears through the blast bulkhead. Twisted steel folds into the vault; the western passage is permanently open."
+      }
+    ],
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_cart_track_diverted"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w1_cart_route_set"
+      }
+    ]
+  },
+  {
+    "id": "w1_cart_brake_unread",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_cart_release"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "Nova holds the brake: the cart is still aimed toward the checkpoint. Divert the track toward the western bulkhead first. Inspect the switch rails if you need to check the route."
+      }
+    ],
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_cart_track_diverted"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_cart_rails_read"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_cart_route_set"
+      }
+    ],
+    "repeatable": true
+  },
+  {
+    "id": "w1_cart_brake_unrouted",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_cart_release"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The cart still faces the occupied checkpoint. Throw the track diverter lever toward the western bulkhead before releasing the brake."
+      }
+    ],
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_cart_track_diverted"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w1_cart_rails_read"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_cart_route_set"
+      }
+    ],
+    "repeatable": true
+  },
+  {
+    "id": "w1_sq04_compile_spoof",
+    "description": "Applies the rebel access override and completes Protocol Override.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_sq04_compile_spoof"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq04"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w1_sq04",
+        "task_id": "restore_protocol_spoof"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_sq04",
+        "task_id": "apply_access_override"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "server_hub",
+        "state_key": "override_applied",
+        "value": true
+      },
+      {
+        "type": "play_cinematic",
+        "scene_id": "scene_sq04_hack"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq04",
+        "task_id": "apply_access_override"
+      },
+      {
+        "type": "give_item",
+        "item_id": "circuit_board",
+        "quantity": 1
+      },
+      {
+        "type": "give_xp",
+        "xp": 110
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w1_sq04"
+      },
+      {
+        "type": "show_message",
+        "message": "The access key copies to the cracked circuit board, then erases itself from the terminal."
+      }
+    ]
+  },
+  {
+    "id": "w1_sq04_read_ports",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_sq04_read_ports"
+    },
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "Rebel warning: Dominion audits every network upload and account write. The removable board socket is isolated from that audit. Take the spoof out locally; leave no account behind."
+      }
+    ],
+    "repeatable": true
+  },
+  {
+    "id": "w1_sq03_workshop_training_victory",
+    "description": "Preserves certification from the legacy workshop shield drill.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "acoustic_bulwark"
+      ],
+      "room": "workshop_dock"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq03"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_sq03",
+        "task_id": "break_training_shield"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq03",
+        "task_id": "break_training_shield"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq03",
+        "task_id": "rescue_trapped_workers"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_guardbreak_trained"
+      },
+      {
+        "type": "give_item",
+        "item_id": "hydraulic_fluid",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "heavy_gear",
+        "quantity": 1
+      },
+      {
+        "type": "give_xp",
+        "xp": 100
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w1_sq03"
+      }
+    ]
+  },
+  {
+    "id": "w1_sq03_register_prior_drill",
+    "description": "Registers an already won drill without replaying combat rewards.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_sq03_register_drill"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq03"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_sq03",
+        "task_id": "break_training_shield"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w1_guard_drill_won"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq03",
+        "task_id": "break_training_shield"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq03",
+        "task_id": "rescue_trapped_workers"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_guardbreak_trained"
+      },
+      {
+        "type": "give_item",
+        "item_id": "hydraulic_fluid",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "heavy_gear",
+        "quantity": 1
+      },
+      {
+        "type": "give_xp",
+        "xp": 100
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w1_sq03"
+      }
+    ]
+  },
+  {
+    "id": "w1_sq03_recover_prior_drill",
+    "description": "Registers an already won drill without replaying combat rewards.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "admin_security"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_sq03"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_sq03",
+        "task_id": "break_training_shield"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w1_guard_drill_won"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq03",
+        "task_id": "break_training_shield"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_sq03",
+        "task_id": "rescue_trapped_workers"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_guardbreak_trained"
+      },
+      {
+        "type": "give_item",
+        "item_id": "hydraulic_fluid",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "heavy_gear",
+        "quantity": 1
+      },
+      {
+        "type": "give_xp",
+        "xp": 100
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w1_sq03"
+      }
+    ]
+  },
+  {
+    "id": "w1_sq03_record_drill_admin_security",
+    "trigger": {
+      "type": "encounter_victory",
+      "room": "admin_security",
+      "enemies": [
+        "acoustic_bulwark"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_guard_drill_won"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_guard_drill_won"
+      }
+    ]
+  },
+  {
+    "id": "w1_sq03_record_drill_workshop_dock",
+    "trigger": {
+      "type": "encounter_victory",
+      "room": "workshop_dock",
+      "enemies": [
+        "acoustic_bulwark"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_guard_drill_won"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_guard_drill_won"
+      }
+    ]
+  },
+  {
+    "id": "w2_mq03_apply_alignment",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq03_apply_alignment"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq03"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_murals_read"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_stasis_pod_read"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_stasis_overview_read"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_coolant_stabilized"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq03",
+        "task_id": "align_stasis_rings"
+      }
+    ],
+    "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_w2_stasis_release",
+        "fade_ms": 0
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq03",
+        "task_id": "align_stasis_rings"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_stasis_awake"
+      },
+      {
+        "type": "show_message",
+        "message": "The pressure ring opens its outer bypass. Memory stays on its own band; return waits for the coolant to settle. Orion opens his eyes. Return to the Stasis Chamber and talk to him."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq03_talk_to_orion",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq03_talk_to_orion"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq03"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_mq03",
+        "task_id": "align_stasis_rings"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq03",
+        "task_id": "talk_to_orion"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq03",
+        "task_id": "talk_to_orion"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_orion_briefed"
+      },
+      {
+        "type": "add_party_member",
+        "item_id": "orion"
+      }
+    ]
+  },
+  {
+    "id": "w2_mq03_recover_bridge",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq03_recover_bridge"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq03"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_mq03",
+        "task_id": "talk_to_orion"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq03",
+        "task_id": "recover_bridge_relic"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq03",
+        "task_id": "recover_bridge_relic"
+      },
+      {
+        "type": "give_item",
+        "item_id": "bridge_relic",
+        "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_bridge_recovered"
+      },
+      {
+        "type": "give_xp",
+        "xp": 250
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w2_mq03"
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_mq03_complete"
+      },
+      {
+        "type": "start_quest",
+        "quest_id": "w2_mq04"
+      },
+      {
+        "type": "track_quest",
+        "quest_id": "w2_mq04"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Sleeping Giant\n\nThe sealed cradle releases a cold, unpowered Bridge into Nova's hands. Orion joins the crew. A hunter is still watching Canopy Ridge."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq05_resolve_gate",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq05_resolve_gate"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq05"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_source_horn_stabilized"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_source_cup_grounded"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_source_pressure_mapped"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_source_breakers_starved"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq05",
+        "task_id": "bypass_source_gate"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq05",
+        "task_id": "bypass_source_gate"
+      },
+      {
+        "type": "warp",
+        "room_id": "sector9_hangar_bay"
+      },
+      {
+        "type": "show_message",
+        "message": "The horn steadies, the receiver cup grounds, the pressure roots bleed safely, and the breakers starve the last howl from the lock. Orion gives the system one clean resolving tone, and the barrier dissolves into blue mist."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_gate_bypassed"
+      }
+    ]
+  },
+  {
+    "id": "w2_sq04_restore_chorus",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq04_restore_chorus"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq04"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq04",
+        "task_id": "mural_tuning"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_sq04",
+        "task_id": "crystal_west"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_sq04",
+        "task_id": "crystal_east"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_sq04",
+        "task_id": "crystal_north"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_crystal_west_seated"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_crystal_east_seated"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_crystal_north_seated"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq04",
+        "task_id": "mural_tuning"
+      },
+      {
+        "type": "show_message",
+        "message": "Quest Complete: Ancient Echoes\n\nThree crystals restore the mural's separate carrier bands. A concealed pedestal opens around a labeled Bridge calibration record."
+      },
+      {
+        "type": "give_item",
+        "item_id": "focus_conduit",
+        "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_sq04_complete"
+      },
+      {
+        "type": "give_xp",
+        "xp": 150
+      },
+      {
+        "type": "complete_quest",
+        "quest_id": "w2_sq04"
+      }
+    ]
+  },
+  {
+    "id": "w2_sq05_mask_scan",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq05_mask_scan"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_sq05"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_sq05",
+        "task_id": "hack_security_grid"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_sq05",
+        "task_id": "hack_security_grid"
+      },
+      {
+        "type": "show_message",
+        "message": "Gh0st masks the transmitter beneath the grid's maintenance pulse. The blind pattern is latched until the crew clears the hatch; no countdown is running."
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_grid_hacked"
+      }
+    ]
+  },
+  {
+    "id": "w2_mq05_confirm_departure",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq05_confirm_departure"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq05"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_mq05",
+        "task_id": "reboot_bridge_relic"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq05",
+        "task_id": "launch_ship"
+      }
+    ],
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "scene_w2_astra_departure",
+        "on_complete": [
+          {
+            "type": "audio_layer",
+            "layer": "stinger",
+            "cue_id": "sfx_w2_astra_launch",
+            "fade_ms": 0
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w2_mq05",
+            "task_id": "launch_ship"
+          },
+          {
+            "type": "warp",
+            "room_id": "spire_sewers_landing"
+          },
+          {
+            "type": "give_xp",
+            "xp": 350
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w2_mq05"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w2_mq05_complete"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w3_mq11"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w3_mq11"
+          },
+          {
+            "type": "show_message",
+            "message": "The Astra follows the low service airlane beneath the distant Planetary Shield. Dominion interference strikes near the Spire; the crew brings her down hard beneath the city."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "w2_mq05_return_to_pod",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq05_return_to_pod"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq05"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_mq05",
+        "task_id": "inspect_astra"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq05",
+        "task_id": "collect_power_conduits"
+      }
+    ],
+    "actions": [
+      {
+        "type": "warp",
+        "room_id": "sector9_landing_drop"
+      },
+      {
+        "type": "show_message",
+        "message": "The opened service hatch leads back to the Pod Fragment. Recover the conduits here, then use the return route to the Hangar Bay."
+      }
+    ],
+    "repeatable": true
+  },
+  {
+    "id": "w2_mq05_return_to_hangar",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq05_return_to_hangar"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq05"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_mq05",
+        "task_id": "collect_power_conduits"
+      }
+    ],
+    "actions": [
+      {
+        "type": "warp",
+        "room_id": "sector9_hangar_bay"
       }
     ],
     "repeatable": true

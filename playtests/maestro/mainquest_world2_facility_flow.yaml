@@ -99,27 +99,37 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - assertVisible: "ring console"
 - tapOn: "ring console"
+- tapOn: "Dialogue Popup. Tap to continue"
+- tapOn: "Divert pressure around the memory shell."
+- tapOn: "Keep each identity on its own band."
+- tapOn: "Reconnect return after the outer bypass settles."
 - extendedWaitUntil:
-    visible: "Orion joined the party."
+    visible: ".*Orion opens his eyes.*"
     timeout: 15000
-- tapOn: "Tap to continue"
-- extendedWaitUntil:
-    visible: "Quest Completed"
-    timeout: 15000
-- assertVisible: "Sleeping Giant"
-- tapOn: "Continue"
-- extendedWaitUntil:
-    notVisible: "Quest Completed"
-    timeout: 10000
-
-# Walk back to Canopy Ridge
-# 5. Stasis Chamber
-- assertVisible: "Travel west"
+- tapOn: ".*Orion opens his eyes.*"
 - tapOn: "Travel west"
 - extendedWaitUntil:
     visible: "Stasis Chamber"
     timeout: 15000
+- tapOn: "Orion"
+- tapOn: "Dialogue Popup. Tap to continue"
+- tapOn: "Dialogue Popup. Tap to continue"
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "Orion joined the party."
+    timeout: 15000
+- tapOn: "Event Announcement. Tap to continue"
+- tapOn: "sealed Bridge cradle"
+- extendedWaitUntil:
+    visible: "Bridge Echo"
+    timeout: 15000
+- tapOn: "Tap to continue"
+- extendedWaitUntil:
+    visible: "Quest Complete"
+    timeout: 15000
+- tapOn: "Got it"
 
+# Walk back to Canopy Ridge from Stasis Chamber.
 # 6. Hall of Echoes
 - assertVisible: "Travel north"
 - tapOn: "Travel north"
@@ -209,8 +219,8 @@ appId: com.junewiregames.starborn.prealpha
     optional: true
 
 # 16. Engage and defeat The Source Beast
-- assertVisible: "Engage The Beast"
-- tapOn: "Engage The Beast"
+- assertVisible: "Face the Beast"
+- tapOn: "Face the Beast"
 - extendedWaitUntil:
     visible: "The Source Beast"
     timeout: 60000
@@ -568,8 +578,25 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Spoils Recovered"
     timeout: 60000
 - tapOn: "Continue"
+- tapOn:
+    text: "Gh0st joined the party."
+    optional: true
+- tapOn:
+    text: ".*The Beast is down.*"
+    optional: true
 - extendedWaitUntil:
-    visible: "Quest Completed"
+    visible: "Anchor Drill"
+    timeout: 15000
+- tapOn: "Anchor Drill"
+- repeat:
+    times: 6
+    commands:
+      - tapOn: ".*Tap to continue.*"
+- tapOn:
+    text: "Got it"
+    optional: true
+- extendedWaitUntil:
+    visible: "Quest Complete"
     timeout: 15000
 - assertVisible: "The Hunter"
 - tapOn: "Continue"
@@ -594,9 +621,9 @@ appId: com.junewiregames.starborn.prealpha
 - assertVisible: "acoustic lock"
 - tapOn: "acoustic lock"
 - extendedWaitUntil:
-    visible: "The acoustic lock will not resolve until.*"
+    visible: "Prepare all four feeds first:.*"
     timeout: 15000
-- tapOn: ".*The acoustic lock will not resolve until.*"
+- tapOn: ".*Prepare all four feeds first:.*"
 
 # 18. Stabilize the Source Gate hardware
 - assertVisible: "Travel west"
@@ -717,6 +744,10 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - assertVisible: "acoustic lock"
 - tapOn: "acoustic lock"
+- tapOn: "Dialogue Popup. Tap to continue"
+- tapOn: "Open the root relief into the grounded receiver."
+- tapOn: "Isolate the lock supply; keep the relief path open."
+- tapOn: "Let Orion resolve the remaining chord."
 - extendedWaitUntil:
     visible: "The horn steadies.*"
     timeout: 15000
@@ -1030,7 +1061,15 @@ appId: com.junewiregames.starborn.prealpha
 - assertVisible: "launch cradle"
 - tapOn: "launch cradle"
 - extendedWaitUntil:
-    visible: "Quest Completed"
+    visible: "Release the cradle and depart."
+    timeout: 15000
+- tapOn: "Release the cradle and depart."
+- repeat:
+    times: 5
+    commands:
+      - tapOn: ".*Tap to continue.*"
+- extendedWaitUntil:
+    visible: "Quest Complete"
     timeout: 30000
 - assertVisible: "Liftoff"
 - tapOn: "Continue"

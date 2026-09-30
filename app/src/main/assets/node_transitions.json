@@ -375,7 +375,7 @@
     "direction": "north",
     "to_node": "the_sky",
     "to_room": "sector9_the_sky",
-    "transition_text": "Travel to The Sky."
+    "transition_text": "Review the flight-plan projections above the hangar."
   },
   {
     "id": "hangar_bay__west__source_gate",

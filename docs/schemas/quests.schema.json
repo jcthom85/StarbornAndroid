@@ -51,6 +51,7 @@
         "id": { "$ref": "#/$defs/NonEmptyString" },
         "text": { "$ref": "#/$defs/NonEmptyString" },
         "done": { "type": "boolean" },
+        "optional": { "type": "boolean", "default": false },
         "tutorial_id": { "type": ["string", "null"] }
       }
     },

@@ -114,7 +114,8 @@ data class RoomTransitionUi(
 
 data class EnemyIconUi(
     val spritePath: String,
-    val composite: EnemyCompositeIconUi? = null
+    val composite: EnemyCompositeIconUi? = null,
+    val displayName: String? = null
 )
 
 data class EnemyCompositeIconUi(
@@ -366,7 +367,8 @@ data class TuningPuzzleUi(
     val sliders: List<TuningSliderUi>,
     val failureHint: String,
     val successMessage: String?,
-    val feedback: String? = null
+    val feedback: String? = null,
+    val presentation: String = "sliders"
 )
 
 data class TuningSliderUi(

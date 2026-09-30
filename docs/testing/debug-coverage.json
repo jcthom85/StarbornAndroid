@@ -4,28 +4,28 @@
   "counts": {
     "arcade": 6,
     "characters": 4,
-    "cinematics": 50,
-    "dialogue": 386,
-    "enemies": 47,
-    "events": 444,
-    "exit": 938,
+    "cinematics": 51,
+    "dialogue": 437,
+    "enemies": 48,
+    "events": 480,
+    "exit": 954,
     "fishing_catch": 38,
     "fishing_lures": 6,
     "fishing_rods": 5,
     "fishing_zone": 6,
     "hub_nodes": 60,
     "hubs": 13,
-    "items": 252,
-    "milestones": 294,
-    "npcs": 42,
+    "items": 259,
+    "milestones": 314,
+    "npcs": 47,
     "patrol_zone": 2,
-    "quest_stage": 94,
-    "quest_task": 241,
-    "quests": 60,
+    "quest_stage": 97,
+    "quest_task": 248,
+    "quests": 62,
     "recipes_cooking": 15,
     "recipes_tinkering": 27,
-    "room_action": 1078,
-    "rooms": 469,
+    "room_action": 1119,
+    "rooms": 477,
     "shops": 13,
     "skills": 125,
     "statuses": 22,
@@ -41,6 +41,7 @@
     "arcade_orbital_defense",
     "arcade_slag_catcher",
     "arcade_spire_infiltrator",
+    "campaign_w1_minecart_puzzle",
     "campaign_w1_mq01",
     "campaign_w1_mq02",
     "campaign_w1_mq03",
@@ -56,11 +57,13 @@
     "campaign_w2_mq03",
     "campaign_w2_mq04",
     "campaign_w2_mq05",
+    "campaign_w2_sluice_puzzle",
     "campaign_w2_sq01",
     "campaign_w2_sq02",
     "campaign_w2_sq03",
     "campaign_w2_sq04",
     "campaign_w2_sq05",
+    "campaign_w3_laser_puzzle",
     "campaign_w3_mq11",
     "campaign_w3_mq12",
     "campaign_w3_mq13",
@@ -71,11 +74,14 @@
     "campaign_w3_sq13",
     "campaign_w3_sq14",
     "campaign_w3_sq15",
+    "campaign_w3_sq16",
+    "campaign_w4_crucible",
     "campaign_w4_mq16",
     "campaign_w4_mq17",
     "campaign_w4_mq18",
     "campaign_w4_mq19",
     "campaign_w4_mq20",
+    "campaign_w4_slag_puzzle",
     "campaign_w4_sq16",
     "campaign_w4_sq17",
     "campaign_w4_sq18",
@@ -91,6 +97,7 @@
     "campaign_w5_sq23",
     "campaign_w5_sq24",
     "campaign_w5_sq25",
+    "campaign_w5_zero_g_puzzle",
     "campaign_w6_mq26",
     "campaign_w6_mq27",
     "campaign_w6_mq28",
@@ -571,7 +578,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "36b7cc890503e4e3"
+      "source_digest": "e42b79fae8c6f4ce"
     },
     {
       "coverage_id": "hub_nodes:echo_chamber",
@@ -656,7 +663,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "478ec6cc0d9dcaf9"
+      "source_digest": "c693068677777d90"
     },
     {
       "coverage_id": "hub_nodes:canopy_ridge",
@@ -894,7 +901,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "a915462350f552f0"
+      "source_digest": "5c85f8966879f6f7"
     },
     {
       "coverage_id": "hub_nodes:spire_exec_lounge",
@@ -979,7 +986,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "8a3674c1e5c2c831"
+      "source_digest": "cf717e16970fe1c3"
     },
     {
       "coverage_id": "hub_nodes:foundry_cooling_springs",
@@ -1013,7 +1020,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "0e7873b902108c98"
+      "source_digest": "ea388c0edec7e405"
     },
     {
       "coverage_id": "hub_nodes:foundry_service_airlock",
@@ -1200,7 +1207,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "08859fff9f1b9fd1"
+      "source_digest": "842c62a7003a0ee5"
     },
     {
       "coverage_id": "hub_nodes:deep_server_farm",
@@ -5564,7 +5571,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "c866956a203dce9d"
+      "source_digest": "653d824531ec46e2"
     },
     {
       "coverage_id": "exit:server_hub/south",
@@ -5640,6 +5647,21 @@
       "implementation": "planned",
       "execution": "not_run",
       "source_digest": "3cb749c4d3f19059"
+    },
+    {
+      "coverage_id": "room_action:server_hub/2",
+      "asset_id": "server_hub/2",
+      "kind": "room_action",
+      "title": "output ports",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:server_hub",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "d3bf75bf32c868b2"
     },
     {
       "coverage_id": "rooms:server_backup",
@@ -6148,7 +6170,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "0b5d3a51e5d5b6a4"
+      "source_digest": "b13ef26e9357a487"
     },
     {
       "coverage_id": "exit:mine_junction/south",
@@ -6196,8 +6218,38 @@
       "source_digest": "6ba50e759d408f41"
     },
     {
+      "coverage_id": "exit:mine_junction/west",
+      "asset_id": "mine_junction/west",
+      "kind": "exit",
+      "title": "mine_junction -> mine_sealed_munitions_vault",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:mine_junction",
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "db8030426a71b49e"
+    },
+    {
       "coverage_id": "room_action:mine_junction/0",
       "asset_id": "mine_junction/0",
+      "kind": "room_action",
+      "title": "track diverter lever",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:mine_junction",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "4e6291b0fd44cbcb"
+    },
+    {
+      "coverage_id": "room_action:mine_junction/1",
+      "asset_id": "mine_junction/1",
       "kind": "room_action",
       "title": "junction breaker box",
       "world": null,
@@ -6208,7 +6260,99 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "574e3a4a52d5b19d"
+      "source_digest": "1dadbcb48df0bcc7"
+    },
+    {
+      "coverage_id": "room_action:mine_junction/2",
+      "asset_id": "mine_junction/2",
+      "kind": "room_action",
+      "title": "switch rails",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:mine_junction",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "d7f5f4a6fba94595"
+    },
+    {
+      "coverage_id": "room_action:mine_junction/3",
+      "asset_id": "mine_junction/3",
+      "kind": "room_action",
+      "title": "wheel brake",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:mine_junction",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "85ca682328deb7aa"
+    },
+    {
+      "coverage_id": "rooms:mine_sealed_munitions_vault",
+      "asset_id": "mine_sealed_munitions_vault",
+      "kind": "rooms",
+      "title": "Sealed Munitions Stash",
+      "world": "world_1",
+      "hubs": [
+        "hub_2_logistics"
+      ],
+      "parent": null,
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "fc7a936f5f809c7b"
+    },
+    {
+      "coverage_id": "exit:mine_sealed_munitions_vault/east",
+      "asset_id": "mine_sealed_munitions_vault/east",
+      "kind": "exit",
+      "title": "mine_sealed_munitions_vault -> mine_junction",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:mine_sealed_munitions_vault",
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "731f3b006f3de4fc"
+    },
+    {
+      "coverage_id": "room_action:mine_sealed_munitions_vault/0",
+      "asset_id": "mine_sealed_munitions_vault/0",
+      "kind": "room_action",
+      "title": "dominion munitions cache",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:mine_sealed_munitions_vault",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "49174efe9a36d7dd"
+    },
+    {
+      "coverage_id": "room_action:mine_sealed_munitions_vault/1",
+      "asset_id": "mine_sealed_munitions_vault/1",
+      "kind": "room_action",
+      "title": "shattered ore cart",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:mine_sealed_munitions_vault",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "c57ae26ca6e3dfad"
     },
     {
       "coverage_id": "rooms:mine_conveyor",
@@ -10491,7 +10635,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "31a450296e1e3074"
+      "source_digest": "99ce55d36b91f1ef"
     },
     {
       "coverage_id": "exit:spire_donor_gallery/west",
@@ -10524,8 +10668,53 @@
       "source_digest": "5486e0959169ccb8"
     },
     {
+      "coverage_id": "exit:spire_donor_gallery/east",
+      "asset_id": "spire_donor_gallery/east",
+      "kind": "exit",
+      "title": "spire_donor_gallery -> spire_skyline_vip_suite",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:spire_donor_gallery",
+      "planned_scenario": "route_world_3",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "eab5d62cc9a6a3f4"
+    },
+    {
+      "coverage_id": "exit:spire_donor_gallery/north",
+      "asset_id": "spire_donor_gallery/north",
+      "kind": "exit",
+      "title": "spire_donor_gallery -> spire_black_site_lab",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:spire_donor_gallery",
+      "planned_scenario": "route_world_3",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "4dff2cedae6a154a"
+    },
+    {
       "coverage_id": "room_action:spire_donor_gallery/0",
       "asset_id": "spire_donor_gallery/0",
+      "kind": "room_action",
+      "title": "laser grid console",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:spire_donor_gallery",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "42edb76269c4dd17"
+    },
+    {
+      "coverage_id": "room_action:spire_donor_gallery/1",
+      "asset_id": "spire_donor_gallery/1",
       "kind": "room_action",
       "title": "donor wall",
       "world": null,
@@ -10536,11 +10725,11 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "7d673a4bbe1c1762"
+      "source_digest": "8c53f68e523fd902"
     },
     {
-      "coverage_id": "room_action:spire_donor_gallery/1",
-      "asset_id": "spire_donor_gallery/1",
+      "coverage_id": "room_action:spire_donor_gallery/2",
+      "asset_id": "spire_donor_gallery/2",
       "kind": "room_action",
       "title": "portrait plaques",
       "world": null,
@@ -10551,7 +10740,69 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "a44b08a400527de1"
+      "source_digest": "570400d7262d7c31"
+    },
+    {
+      "coverage_id": "rooms:spire_black_site_lab",
+      "asset_id": "spire_black_site_lab",
+      "kind": "rooms",
+      "title": "Executive Black-Site Lab",
+      "world": "world_3",
+      "hubs": [
+        "hub_6_upper_city"
+      ],
+      "parent": null,
+      "planned_scenario": "route_world_3",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "3430d028b5302b5c"
+    },
+    {
+      "coverage_id": "exit:spire_black_site_lab/south",
+      "asset_id": "spire_black_site_lab/south",
+      "kind": "exit",
+      "title": "spire_black_site_lab -> spire_donor_gallery",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:spire_black_site_lab",
+      "planned_scenario": "route_world_3",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "eea8eff1d29ef129"
+    },
+    {
+      "coverage_id": "room_action:spire_black_site_lab/0",
+      "asset_id": "spire_black_site_lab/0",
+      "kind": "room_action",
+      "title": "black-box safe",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:spire_black_site_lab",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "e47873890b641ce8"
+    },
+    {
+      "coverage_id": "room_action:spire_black_site_lab/1",
+      "asset_id": "spire_black_site_lab/1",
+      "kind": "room_action",
+      "title": "holographic projector",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:spire_black_site_lab",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "d716f4aeeb57f9fd"
     },
     {
       "coverage_id": "rooms:spire_exec_lounge_bar",
@@ -11439,7 +11690,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "449c3c64abaf1669"
+      "source_digest": "dd4a1f0cd5408979"
     },
     {
       "coverage_id": "exit:foundry_slag_stepping_stones/south",
@@ -11457,8 +11708,38 @@
       "source_digest": "7abf94afccee71d5"
     },
     {
+      "coverage_id": "exit:foundry_slag_stepping_stones/north",
+      "asset_id": "foundry_slag_stepping_stones/north",
+      "kind": "exit",
+      "title": "foundry_slag_stepping_stones -> foundry_subterranean_smelter",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:foundry_slag_stepping_stones",
+      "planned_scenario": "route_world_4",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "349f155f5f782707"
+    },
+    {
       "coverage_id": "room_action:foundry_slag_stepping_stones/0",
       "asset_id": "foundry_slag_stepping_stones/0",
+      "kind": "room_action",
+      "title": "cryogenic manifold valve",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:foundry_slag_stepping_stones",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "3724116bc0eab3d5"
+    },
+    {
+      "coverage_id": "room_action:foundry_slag_stepping_stones/1",
+      "asset_id": "foundry_slag_stepping_stones/1",
       "kind": "room_action",
       "title": "flare rhythm",
       "world": null,
@@ -11469,7 +11750,69 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "e37c2c92cda60147"
+      "source_digest": "48e9c20d6a512a2f"
+    },
+    {
+      "coverage_id": "rooms:foundry_subterranean_smelter",
+      "asset_id": "foundry_subterranean_smelter",
+      "kind": "rooms",
+      "title": "Subterranean Smelter Forge",
+      "world": "world_4",
+      "hubs": [
+        "hub_7_slag_pits"
+      ],
+      "parent": null,
+      "planned_scenario": "route_world_4",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "520cbacb76830dd5"
+    },
+    {
+      "coverage_id": "exit:foundry_subterranean_smelter/south",
+      "asset_id": "foundry_subterranean_smelter/south",
+      "kind": "exit",
+      "title": "foundry_subterranean_smelter -> foundry_slag_stepping_stones",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:foundry_subterranean_smelter",
+      "planned_scenario": "route_world_4",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "24ba3f256290638a"
+    },
+    {
+      "coverage_id": "room_action:foundry_subterranean_smelter/0",
+      "asset_id": "foundry_subterranean_smelter/0",
+      "kind": "room_action",
+      "title": "precursor crucible",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:foundry_subterranean_smelter",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "e9c7961033013f39"
+    },
+    {
+      "coverage_id": "room_action:foundry_subterranean_smelter/1",
+      "asset_id": "foundry_subterranean_smelter/1",
+      "kind": "room_action",
+      "title": "smelting anvil",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:foundry_subterranean_smelter",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "e42867d904b3ef0d"
     },
     {
       "coverage_id": "rooms:foundry_cooling_springs",
@@ -11897,7 +12240,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "f6f1d2094838b52b"
+      "source_digest": "1dc72b8788c4533e"
     },
     {
       "coverage_id": "exit:foundry_intake_overlook/south",
@@ -11913,6 +12256,21 @@
       "implementation": "planned",
       "execution": "not_run",
       "source_digest": "3d133833724dee4e"
+    },
+    {
+      "coverage_id": "exit:foundry_intake_overlook/north",
+      "asset_id": "foundry_intake_overlook/north",
+      "kind": "exit",
+      "title": "foundry_intake_overlook -> foundry_crucible_arena",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:foundry_intake_overlook",
+      "planned_scenario": "route_world_4",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "292099a300083aa4"
     },
     {
       "coverage_id": "room_action:foundry_intake_overlook/0",
@@ -14103,7 +14461,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "d957d248bd57b985"
+      "source_digest": "97278ccd21999afa"
     },
     {
       "coverage_id": "exit:orbital_zero_g_junction/west",
@@ -14121,8 +14479,38 @@
       "source_digest": "96fd0a376d69e285"
     },
     {
+      "coverage_id": "exit:orbital_zero_g_junction/east",
+      "asset_id": "orbital_zero_g_junction/east",
+      "kind": "exit",
+      "title": "orbital_zero_g_junction -> orbital_breached_avionics_lab",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:orbital_zero_g_junction",
+      "planned_scenario": "route_world_5",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "768fbcaabc8094d4"
+    },
+    {
       "coverage_id": "room_action:orbital_zero_g_junction/0",
       "asset_id": "orbital_zero_g_junction/0",
+      "kind": "room_action",
+      "title": "magnetic clamp console",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:orbital_zero_g_junction",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "f28a6e6c385f842d"
+    },
+    {
+      "coverage_id": "room_action:orbital_zero_g_junction/1",
+      "asset_id": "orbital_zero_g_junction/1",
       "kind": "room_action",
       "title": "patrol timing",
       "world": null,
@@ -14133,11 +14521,11 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "22062682a68c7c5d"
+      "source_digest": "9e61f118ed971191"
     },
     {
-      "coverage_id": "room_action:orbital_zero_g_junction/1",
-      "asset_id": "orbital_zero_g_junction/1",
+      "coverage_id": "room_action:orbital_zero_g_junction/2",
+      "asset_id": "orbital_zero_g_junction/2",
       "kind": "room_action",
       "title": "gyroscope stabilizer",
       "world": null,
@@ -14148,7 +14536,69 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "7ce6ba2d8a3db553"
+      "source_digest": "b701bd4d12585fab"
+    },
+    {
+      "coverage_id": "rooms:orbital_breached_avionics_lab",
+      "asset_id": "orbital_breached_avionics_lab",
+      "kind": "rooms",
+      "title": "Breached Avionics Lab",
+      "world": "world_5",
+      "hubs": [
+        "hub_9_orbital_ring"
+      ],
+      "parent": null,
+      "planned_scenario": "route_world_5",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "b2945ff22707aba4"
+    },
+    {
+      "coverage_id": "exit:orbital_breached_avionics_lab/west",
+      "asset_id": "orbital_breached_avionics_lab/west",
+      "kind": "exit",
+      "title": "orbital_breached_avionics_lab -> orbital_zero_g_junction",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:orbital_breached_avionics_lab",
+      "planned_scenario": "route_world_5",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "de589579dbae722d"
+    },
+    {
+      "coverage_id": "room_action:orbital_breached_avionics_lab/0",
+      "asset_id": "orbital_breached_avionics_lab/0",
+      "kind": "room_action",
+      "title": "experimental ai sub-vault",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:orbital_breached_avionics_lab",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "7a3d74f92585dcbf"
+    },
+    {
+      "coverage_id": "room_action:orbital_breached_avionics_lab/1",
+      "asset_id": "orbital_breached_avionics_lab/1",
+      "kind": "room_action",
+      "title": "shattered canopy",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:orbital_breached_avionics_lab",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "c3b50135c7d955c9"
     },
     {
       "coverage_id": "rooms:orbital_server_farm",
@@ -17365,7 +17815,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "b8512e548c2c6c3c"
+      "source_digest": "66c83e0ee5698559"
     },
     {
       "coverage_id": "exit:sector9_landing_drop/west",
@@ -17411,6 +17861,21 @@
       "implementation": "planned",
       "execution": "not_run",
       "source_digest": "ceff93ec71f850b0"
+    },
+    {
+      "coverage_id": "room_action:sector9_landing_drop/2",
+      "asset_id": "sector9_landing_drop/2",
+      "kind": "room_action",
+      "title": "return to Astra",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:sector9_landing_drop",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "a307ed47a3bc8a80"
     },
     {
       "coverage_id": "rooms:sector9_stream_pools",
@@ -18071,7 +18536,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "98dfb5e1278277ee"
+      "source_digest": "a83dd918cc4ceaa2"
     },
     {
       "coverage_id": "exit:sector9_stream_sunken_passage/west",
@@ -18104,8 +18569,38 @@
       "source_digest": "0d830fd01b77fb53"
     },
     {
+      "coverage_id": "exit:sector9_stream_sunken_passage/south",
+      "asset_id": "sector9_stream_sunken_passage/south",
+      "kind": "exit",
+      "title": "sector9_stream_sunken_passage -> sector9_sunken_aethel_vault",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:sector9_stream_sunken_passage",
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "cf8336b2464469fa"
+    },
+    {
       "coverage_id": "room_action:sector9_stream_sunken_passage/0",
       "asset_id": "sector9_stream_sunken_passage/0",
+      "kind": "room_action",
+      "title": "ancient sluice wheel",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:sector9_stream_sunken_passage",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "9b158a83a714957c"
+    },
+    {
+      "coverage_id": "room_action:sector9_stream_sunken_passage/1",
+      "asset_id": "sector9_stream_sunken_passage/1",
       "kind": "room_action",
       "title": "drowned console",
       "world": null,
@@ -18116,11 +18611,11 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "96fbfc9c1c807ff9"
+      "source_digest": "504bce2e26d20c55"
     },
     {
-      "coverage_id": "room_action:sector9_stream_sunken_passage/1",
-      "asset_id": "sector9_stream_sunken_passage/1",
+      "coverage_id": "room_action:sector9_stream_sunken_passage/2",
+      "asset_id": "sector9_stream_sunken_passage/2",
       "kind": "room_action",
       "title": "warm current",
       "world": null,
@@ -18131,7 +18626,69 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "9bb3ea65dafb2e73"
+      "source_digest": "25580e7be3b6ea12"
+    },
+    {
+      "coverage_id": "rooms:sector9_sunken_aethel_vault",
+      "asset_id": "sector9_sunken_aethel_vault",
+      "kind": "rooms",
+      "title": "Submerged Aethel Vault",
+      "world": "world_2",
+      "hubs": [
+        "hub_3_sector9"
+      ],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "d61c2a712e800ef8"
+    },
+    {
+      "coverage_id": "exit:sector9_sunken_aethel_vault/north",
+      "asset_id": "sector9_sunken_aethel_vault/north",
+      "kind": "exit",
+      "title": "sector9_sunken_aethel_vault -> sector9_stream_sunken_passage",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:sector9_sunken_aethel_vault",
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "41af684e824d3c18"
+    },
+    {
+      "coverage_id": "room_action:sector9_sunken_aethel_vault/0",
+      "asset_id": "sector9_sunken_aethel_vault/0",
+      "kind": "room_action",
+      "title": "precursor reliquary",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:sector9_sunken_aethel_vault",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "cadc18ff1bd22398"
+    },
+    {
+      "coverage_id": "room_action:sector9_sunken_aethel_vault/1",
+      "asset_id": "sector9_sunken_aethel_vault/1",
+      "kind": "room_action",
+      "title": "living coral",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:sector9_sunken_aethel_vault",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "5034f165f2bc8046"
     },
     {
       "coverage_id": "rooms:sector9_beach_cliffs",
@@ -21833,7 +22390,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "5725438104427b90"
+      "source_digest": "70fc185ecad12130"
     },
     {
       "coverage_id": "exit:sector9_stasis_chamber/north",
@@ -21926,6 +22483,21 @@
       "source_digest": "e288b2ec55a4f810"
     },
     {
+      "coverage_id": "room_action:sector9_stasis_chamber/3",
+      "asset_id": "sector9_stasis_chamber/3",
+      "kind": "room_action",
+      "title": "sealed Bridge cradle",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:sector9_stasis_chamber",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "280de6743bab1ded"
+    },
+    {
       "coverage_id": "rooms:sector9_stasis_ring_array",
       "asset_id": "sector9_stasis_ring_array",
       "kind": "rooms",
@@ -21940,7 +22512,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "349c1b63df5eb95a"
+      "source_digest": "1b9758fd9fc74c5b"
     },
     {
       "coverage_id": "exit:sector9_stasis_ring_array/west",
@@ -22000,7 +22572,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "772b9d7e806df053"
+      "source_digest": "115a216286712bee"
     },
     {
       "coverage_id": "rooms:sector9_stasis_coolant_lines",
@@ -22605,7 +23177,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "cefaf5bd61b21c2b"
+      "source_digest": "4db71aae49ca2350"
     },
     {
       "coverage_id": "exit:sector9_source_gate/north",
@@ -22680,7 +23252,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "8e5b361b240ca1a9"
+      "source_digest": "09f24aea86d872ef"
     },
     {
       "coverage_id": "rooms:sector9_gate_emitter_left",
@@ -22791,7 +23363,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "87e2b959d18e783e"
+      "source_digest": "4ecaadc53b9d6361"
     },
     {
       "coverage_id": "exit:sector9_hangar_bay/west",
@@ -22884,6 +23456,21 @@
       "source_digest": "ec9b06b09cf1a9b7"
     },
     {
+      "coverage_id": "room_action:sector9_hangar_bay/3",
+      "asset_id": "sector9_hangar_bay/3",
+      "kind": "room_action",
+      "title": "salvage return route",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:sector9_hangar_bay",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "c24052ea748b8231"
+    },
+    {
       "coverage_id": "rooms:sector9_hangar_scaffolding",
       "asset_id": "sector9_hangar_scaffolding",
       "kind": "rooms",
@@ -22960,7 +23547,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "a6828ed6c981058b"
+      "source_digest": "0b6e7adcb07d52de"
     },
     {
       "coverage_id": "exit:sector9_hangar_staging/north",
@@ -22978,6 +23565,21 @@
       "source_digest": "3529967f85964a30"
     },
     {
+      "coverage_id": "room_action:sector9_hangar_staging/0",
+      "asset_id": "sector9_hangar_staging/0",
+      "kind": "room_action",
+      "title": "cargo restraints",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:sector9_hangar_staging",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "975f6de3b695e51e"
+    },
+    {
       "coverage_id": "rooms:sector9_hangar_tower",
       "asset_id": "sector9_hangar_tower",
       "kind": "rooms",
@@ -22992,7 +23594,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "271aab72eb60a10a"
+      "source_digest": "2cb88ed7b60efb02"
     },
     {
       "coverage_id": "exit:sector9_hangar_tower/west",
@@ -23040,6 +23642,21 @@
       "source_digest": "c3a70a4db1f15981"
     },
     {
+      "coverage_id": "room_action:sector9_hangar_tower/0",
+      "asset_id": "sector9_hangar_tower/0",
+      "kind": "room_action",
+      "title": "airlane chart",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:sector9_hangar_tower",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "5b48523ffc5e1ad6"
+    },
+    {
       "coverage_id": "rooms:sector9_hangar_fuel_lines",
       "asset_id": "sector9_hangar_fuel_lines",
       "kind": "rooms",
@@ -23054,7 +23671,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "bd3616b18f60e3a3"
+      "source_digest": "77caffbb7cf10d5f"
     },
     {
       "coverage_id": "exit:sector9_hangar_fuel_lines/north",
@@ -23072,6 +23689,21 @@
       "source_digest": "c0669ec40dfa9e66"
     },
     {
+      "coverage_id": "room_action:sector9_hangar_fuel_lines/0",
+      "asset_id": "sector9_hangar_fuel_lines/0",
+      "kind": "room_action",
+      "title": "conduit bus",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:sector9_hangar_fuel_lines",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "f8dc43727226a339"
+    },
+    {
       "coverage_id": "rooms:sector9_hangar_lock",
       "asset_id": "sector9_hangar_lock",
       "kind": "rooms",
@@ -23086,7 +23718,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "9eced2a635f3147b"
+      "source_digest": "13996a12bd2e0944"
     },
     {
       "coverage_id": "exit:sector9_hangar_lock/south",
@@ -23119,6 +23751,21 @@
       "source_digest": "dba03c6857d62ec9"
     },
     {
+      "coverage_id": "room_action:sector9_hangar_lock/0",
+      "asset_id": "sector9_hangar_lock/0",
+      "kind": "room_action",
+      "title": "launch safety panel",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:sector9_hangar_lock",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "0e329e8da5e088c6"
+    },
+    {
       "coverage_id": "rooms:sector9_the_sky",
       "asset_id": "sector9_the_sky",
       "kind": "rooms",
@@ -23133,7 +23780,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "18d6cced0548deac"
+      "source_digest": "d5a5d57a550d78a9"
     },
     {
       "coverage_id": "exit:sector9_the_sky/south",
@@ -23166,6 +23813,21 @@
       "source_digest": "c83218cfd597277f"
     },
     {
+      "coverage_id": "room_action:sector9_the_sky/0",
+      "asset_id": "sector9_the_sky/0",
+      "kind": "room_action",
+      "title": "airlane preview",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:sector9_the_sky",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "814ab81857f55e3b"
+    },
+    {
       "coverage_id": "rooms:sector9_sky_mesosphere",
       "asset_id": "sector9_sky_mesosphere",
       "kind": "rooms",
@@ -23180,7 +23842,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "16295d116e9d03e8"
+      "source_digest": "29050610761c13ee"
     },
     {
       "coverage_id": "exit:sector9_sky_mesosphere/south",
@@ -23213,6 +23875,21 @@
       "source_digest": "2314ed313efa7762"
     },
     {
+      "coverage_id": "room_action:sector9_sky_mesosphere/0",
+      "asset_id": "sector9_sky_mesosphere/0",
+      "kind": "room_action",
+      "title": "storm overlay",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:sector9_sky_mesosphere",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "fc3bd21e36031ccc"
+    },
+    {
       "coverage_id": "rooms:sector9_sky_shield_threshold",
       "asset_id": "sector9_sky_shield_threshold",
       "kind": "rooms",
@@ -23227,7 +23904,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "338350f165ded07c"
+      "source_digest": "5b0e52c87749193e"
     },
     {
       "coverage_id": "exit:sector9_sky_shield_threshold/south",
@@ -23290,6 +23967,21 @@
       "source_digest": "a6eceef8e4dd84f2"
     },
     {
+      "coverage_id": "room_action:sector9_sky_shield_threshold/0",
+      "asset_id": "sector9_sky_shield_threshold/0",
+      "kind": "room_action",
+      "title": "shield ceiling overlay",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:sector9_sky_shield_threshold",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "4ef2ad58fe0dd243"
+    },
+    {
       "coverage_id": "rooms:sector9_sky_sensor_buoy",
       "asset_id": "sector9_sky_sensor_buoy",
       "kind": "rooms",
@@ -23304,7 +23996,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "2c79d7e8533c108a"
+      "source_digest": "c2e2aa5e189e14f2"
     },
     {
       "coverage_id": "exit:sector9_sky_sensor_buoy/west",
@@ -23322,6 +24014,21 @@
       "source_digest": "8f07787cbfd1941b"
     },
     {
+      "coverage_id": "room_action:sector9_sky_sensor_buoy/0",
+      "asset_id": "sector9_sky_sensor_buoy/0",
+      "kind": "room_action",
+      "title": "security scan preview",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:sector9_sky_sensor_buoy",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "e4f01dd8540b9009"
+    },
+    {
       "coverage_id": "rooms:sector9_sky_barrier_core",
       "asset_id": "sector9_sky_barrier_core",
       "kind": "rooms",
@@ -23336,7 +24043,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "6ea02678f931d502"
+      "source_digest": "32b59f9e7b8aec10"
     },
     {
       "coverage_id": "exit:sector9_sky_barrier_core/south",
@@ -23354,6 +24061,21 @@
       "source_digest": "aa1c5a1e286183d9"
     },
     {
+      "coverage_id": "room_action:sector9_sky_barrier_core/0",
+      "asset_id": "sector9_sky_barrier_core/0",
+      "kind": "room_action",
+      "title": "guidance interference model",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:sector9_sky_barrier_core",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "3166e79baa60e171"
+    },
+    {
       "coverage_id": "rooms:sector9_sky_hard_deck",
       "asset_id": "sector9_sky_hard_deck",
       "kind": "rooms",
@@ -23368,7 +24090,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "9d168eb1854744fe"
+      "source_digest": "97f4e3a2372dc8f6"
     },
     {
       "coverage_id": "exit:sector9_sky_hard_deck/east",
@@ -23384,6 +24106,21 @@
       "implementation": "planned",
       "execution": "not_run",
       "source_digest": "5178e46de419092c"
+    },
+    {
+      "coverage_id": "room_action:sector9_sky_hard_deck/0",
+      "asset_id": "sector9_sky_hard_deck/0",
+      "kind": "room_action",
+      "title": "altitude limiter",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:sector9_sky_hard_deck",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "0411a24f81b08135"
     },
     {
       "coverage_id": "rooms:astra_bridge",
@@ -39657,6 +40394,267 @@
       "source_digest": "c6204ed6e3522098"
     },
     {
+      "coverage_id": "rooms:spire_skyline_vip_suite",
+      "asset_id": "spire_skyline_vip_suite",
+      "kind": "rooms",
+      "title": "Skyline VIP Salon",
+      "world": "world_3",
+      "hubs": [
+        "hub_6_upper_city"
+      ],
+      "parent": null,
+      "planned_scenario": "route_world_3",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "94ac2912867000a7"
+    },
+    {
+      "coverage_id": "exit:spire_skyline_vip_suite/west",
+      "asset_id": "spire_skyline_vip_suite/west",
+      "kind": "exit",
+      "title": "spire_skyline_vip_suite -> spire_donor_gallery",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:spire_skyline_vip_suite",
+      "planned_scenario": "route_world_3",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "c7716ce04f50e118"
+    },
+    {
+      "coverage_id": "exit:spire_skyline_vip_suite/north",
+      "asset_id": "spire_skyline_vip_suite/north",
+      "kind": "exit",
+      "title": "spire_skyline_vip_suite -> spire_vip_private_booth",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:spire_skyline_vip_suite",
+      "planned_scenario": "route_world_3",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "bb6a86c40ceb34ae"
+    },
+    {
+      "coverage_id": "room_action:spire_skyline_vip_suite/0",
+      "asset_id": "spire_skyline_vip_suite/0",
+      "kind": "room_action",
+      "title": "crime-scene barrier",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:spire_skyline_vip_suite",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "59a228637388387d"
+    },
+    {
+      "coverage_id": "room_action:spire_skyline_vip_suite/1",
+      "asset_id": "spire_skyline_vip_suite/1",
+      "kind": "room_action",
+      "title": "dispenser log",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:spire_skyline_vip_suite",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "703f736b316fb25f"
+    },
+    {
+      "coverage_id": "room_action:spire_skyline_vip_suite/2",
+      "asset_id": "spire_skyline_vip_suite/2",
+      "kind": "room_action",
+      "title": "security terminal",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:spire_skyline_vip_suite",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "04fdc977e7f0450f"
+    },
+    {
+      "coverage_id": "rooms:spire_vip_private_booth",
+      "asset_id": "spire_vip_private_booth",
+      "kind": "rooms",
+      "title": "Syndicate Booth",
+      "world": "world_3",
+      "hubs": [
+        "hub_6_upper_city"
+      ],
+      "parent": null,
+      "planned_scenario": "route_world_3",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "86ec0cf7728615c0"
+    },
+    {
+      "coverage_id": "exit:spire_vip_private_booth/south",
+      "asset_id": "spire_vip_private_booth/south",
+      "kind": "exit",
+      "title": "spire_vip_private_booth -> spire_skyline_vip_suite",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:spire_vip_private_booth",
+      "planned_scenario": "route_world_3",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "0026c6e8d7cd2d76"
+    },
+    {
+      "coverage_id": "room_action:spire_vip_private_booth/0",
+      "asset_id": "spire_vip_private_booth/0",
+      "kind": "room_action",
+      "title": "crystal glass",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:spire_vip_private_booth",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "1c7c48e85b6674f6"
+    },
+    {
+      "coverage_id": "room_action:spire_vip_private_booth/1",
+      "asset_id": "spire_vip_private_booth/1",
+      "kind": "room_action",
+      "title": "executive comms rig",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:spire_vip_private_booth",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "d969867833df2af3"
+    },
+    {
+      "coverage_id": "room_action:spire_vip_private_booth/2",
+      "asset_id": "spire_vip_private_booth/2",
+      "kind": "room_action",
+      "title": "auditor's datapad",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:spire_vip_private_booth",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "056bc272692068ac"
+    },
+    {
+      "coverage_id": "rooms:foundry_crucible_arena",
+      "asset_id": "foundry_crucible_arena",
+      "kind": "rooms",
+      "title": "The Scrapper's Crucible",
+      "world": "world_4",
+      "hubs": [
+        "hub_7_slag_pits"
+      ],
+      "parent": null,
+      "planned_scenario": "route_world_4",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "2c2a07c31392613b"
+    },
+    {
+      "coverage_id": "exit:foundry_crucible_arena/south",
+      "asset_id": "foundry_crucible_arena/south",
+      "kind": "exit",
+      "title": "foundry_crucible_arena -> foundry_intake_overlook",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:foundry_crucible_arena",
+      "planned_scenario": "route_world_4",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "dd337a60753f7723"
+    },
+    {
+      "coverage_id": "room_action:foundry_crucible_arena/0",
+      "asset_id": "foundry_crucible_arena/0",
+      "kind": "room_action",
+      "title": "blast cage",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:foundry_crucible_arena",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "bd7b49fd7b0446c5"
+    },
+    {
+      "coverage_id": "room_action:foundry_crucible_arena/1",
+      "asset_id": "foundry_crucible_arena/1",
+      "kind": "room_action",
+      "title": "molten sluices",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:foundry_crucible_arena",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "65c41ee9fd0d9108"
+    },
+    {
+      "coverage_id": "room_action:foundry_crucible_arena/2",
+      "asset_id": "foundry_crucible_arena/2",
+      "kind": "room_action",
+      "title": "victor podium",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:foundry_crucible_arena",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "79f75bf81d6e4308"
+    },
+    {
+      "coverage_id": "room_action:foundry_crucible_arena/3",
+      "asset_id": "foundry_crucible_arena/3",
+      "kind": "room_action",
+      "title": "announcer horn",
+      "world": null,
+      "hubs": [],
+      "parent": "rooms:foundry_crucible_arena",
+      "planned_scenario": "system_room_actions",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "234c95f7a1026001"
+    },
+    {
       "coverage_id": "quests:w1_mq01",
       "asset_id": "w1_mq01",
       "kind": "quests",
@@ -40079,7 +41077,7 @@
       "content_review": "pending",
       "implementation": "built",
       "execution": "not_run",
-      "source_digest": "2b62a98e9c72cb4c"
+      "source_digest": "7cf8cc9c04ee95cc"
     },
     {
       "coverage_id": "quest_stage:w1_mq03/sector_four_assignment",
@@ -40164,7 +41162,7 @@
       "content_review": "pending",
       "implementation": "built",
       "execution": "not_run",
-      "source_digest": "2873a40584dbf953"
+      "source_digest": "a5d426c8dc14a215"
     },
     {
       "coverage_id": "quest_task:w1_mq03/deep_mine_descent/restore_deep_mine_power",
@@ -40204,7 +41202,7 @@
       "coverage_id": "quest_task:w1_mq03/deep_mine_descent/break_riot_guard",
       "asset_id": "w1_mq03/deep_mine_descent/break_riot_guard",
       "kind": "quest_task",
-      "title": "Head north from Cavern Junction to the Riot Control Post. Defeat its Acoustic Bulwark using Guard Break or Stagger.",
+      "title": "Optional: take the north detour from Cavern Junction to the Riot Control Post. Break the bulwark's Guard to reach the supplies beyond it.",
       "world": "world_1",
       "hubs": [
         "hub_2_logistics"
@@ -40215,7 +41213,7 @@
       "content_review": "pending",
       "implementation": "built",
       "execution": "not_run",
-      "source_digest": "67255bb9eefc1fdc"
+      "source_digest": "c7d9d51d4492b26f"
     },
     {
       "coverage_id": "quest_task:w1_mq03/deep_mine_descent/reach_architect_threshold",
@@ -40249,7 +41247,7 @@
       "content_review": "pending",
       "implementation": "built",
       "execution": "not_run",
-      "source_digest": "8313a9231b48a390"
+      "source_digest": "0307e0b45ae2732e"
     },
     {
       "coverage_id": "quest_task:w1_mq03/relic_sync/reach_echo_chamber",
@@ -40272,7 +41270,7 @@
       "coverage_id": "quest_task:w1_mq03/relic_sync/touch_tuning_fork",
       "asset_id": "w1_mq03/relic_sync/touch_tuning_fork",
       "kind": "quest_task",
-      "title": "Set 87 kHz phase sweep, 68% cold loop, and 180-degree ground phase.",
+      "title": "Match the pulse spacing, balance the cold loop, then oppose the Fork's wave to quiet the combined signal.",
       "world": "world_1",
       "hubs": [
         "hub_2_logistics"
@@ -40283,7 +41281,7 @@
       "content_review": "pending",
       "implementation": "built",
       "execution": "not_run",
-      "source_digest": "335e928ea6abba3d"
+      "source_digest": "0c6633ca8de91933"
     },
     {
       "coverage_id": "quest_task:w1_mq03/relic_sync/survive_source_sync",
@@ -41065,7 +42063,7 @@
       "content_review": "pending",
       "implementation": "built",
       "execution": "not_run",
-      "source_digest": "d58833256978ad86"
+      "source_digest": "5fb8e326d852b211"
     },
     {
       "coverage_id": "quest_stage:w1_sq04/find_rebel_terminal",
@@ -41082,7 +42080,7 @@
       "content_review": "pending",
       "implementation": "built",
       "execution": "not_run",
-      "source_digest": "b1eb183407b54ab6"
+      "source_digest": "7734dcd77cca427e"
     },
     {
       "coverage_id": "quest_task:w1_sq04/find_rebel_terminal/enter_server_room",
@@ -41139,7 +42137,7 @@
       "coverage_id": "quest_task:w1_sq04/find_rebel_terminal/apply_access_override",
       "asset_id": "w1_sq04/find_rebel_terminal/apply_access_override",
       "kind": "quest_task",
-      "title": "After thawing the console, use the terminal again to apply the rebel access override.",
+      "title": "After thawing the console, read the output-port warning and use the terminal to recover the key without leaving an audit record.",
       "world": "world_1",
       "hubs": [
         "hub_2_logistics"
@@ -41150,7 +42148,7 @@
       "content_review": "pending",
       "implementation": "built",
       "execution": "not_run",
-      "source_digest": "406e94c32572a616"
+      "source_digest": "8cefd234693eeddc"
     },
     {
       "coverage_id": "quests:w1_sq05",
@@ -41439,7 +42437,7 @@
       "content_review": "pending",
       "implementation": "built",
       "execution": "not_run",
-      "source_digest": "597b04ad6b5f1286"
+      "source_digest": "a35055bfa0e1a977"
     },
     {
       "coverage_id": "quest_stage:w2_mq03/investigate_murals",
@@ -41507,13 +42505,13 @@
       "content_review": "pending",
       "implementation": "built",
       "execution": "not_run",
-      "source_digest": "a2cc395528f1ac95"
+      "source_digest": "326ba5188f1ca251"
     },
     {
       "coverage_id": "quest_task:w2_mq03/override_stasis/align_stasis_rings",
       "asset_id": "w2_mq03/override_stasis/align_stasis_rings",
       "kind": "quest_task",
-      "title": "Read the pod, mural overview and coolant lines, then align the rings in the Ring Array.",
+      "title": "Read the chamber clues, then route pressure, memory and return at the Ring Array.",
       "world": "world_2",
       "hubs": [
         "hub_4_facility"
@@ -41524,13 +42522,13 @@
       "content_review": "pending",
       "implementation": "built",
       "execution": "not_run",
-      "source_digest": "4225f4c16fb48ba6"
+      "source_digest": "d35633c1912e303c"
     },
     {
       "coverage_id": "quest_task:w2_mq03/override_stasis/talk_to_orion",
       "asset_id": "w2_mq03/override_stasis/talk_to_orion",
       "kind": "quest_task",
-      "title": "Talk to the awakened Orion.",
+      "title": "Return to Stasis Chamber and talk to the awakened Orion.",
       "world": "world_2",
       "hubs": [
         "hub_4_facility"
@@ -41541,13 +42539,13 @@
       "content_review": "pending",
       "implementation": "built",
       "execution": "not_run",
-      "source_digest": "7dca5c3b2e2326eb"
+      "source_digest": "fb78887b488b4e7b"
     },
     {
       "coverage_id": "quest_task:w2_mq03/override_stasis/recover_bridge_relic",
       "asset_id": "w2_mq03/override_stasis/recover_bridge_relic",
       "kind": "quest_task",
-      "title": "Recover the Bridge Echo from its sealed cradle.",
+      "title": "After talking to Orion, open the sealed Bridge cradle in Stasis Chamber.",
       "world": "world_2",
       "hubs": [
         "hub_4_facility"
@@ -41558,7 +42556,7 @@
       "content_review": "pending",
       "implementation": "built",
       "execution": "not_run",
-      "source_digest": "2d2d9f9c51d64a23"
+      "source_digest": "e35167012ad4eb94"
     },
     {
       "coverage_id": "quests:w2_mq04",
@@ -42051,7 +43049,7 @@
       "content_review": "pending",
       "implementation": "built",
       "execution": "not_run",
-      "source_digest": "16f6a6787932cedc"
+      "source_digest": "1d611888f4b87417"
     },
     {
       "coverage_id": "quest_stage:w2_sq03/scavenge_food",
@@ -42068,13 +43066,13 @@
       "content_review": "pending",
       "implementation": "built",
       "execution": "not_run",
-      "source_digest": "320e5454031233fb"
+      "source_digest": "2ab584a56ae0e261"
     },
     {
       "coverage_id": "quest_task:w2_sq03/scavenge_food/visit_beach",
       "asset_id": "w2_sq03/scavenge_food/visit_beach",
       "kind": "quest_task",
-      "title": "Discover Tideglass Beach.",
+      "title": "Visit Tide Pools on Tideglass Beach.",
       "world": "world_2",
       "hubs": [
         "hub_3_sector9"
@@ -42085,7 +43083,7 @@
       "content_review": "pending",
       "implementation": "built",
       "execution": "not_run",
-      "source_digest": "d3bfa5cf4bf2e7fe"
+      "source_digest": "bbf5e4040385e208"
     },
     {
       "coverage_id": "quest_task:w2_sq03/scavenge_food/collect_food",
@@ -46372,6 +47370,210 @@
       "source_digest": "501fa9be2363361b"
     },
     {
+      "coverage_id": "quests:w3_sq16",
+      "asset_id": "w3_sq16",
+      "kind": "quests",
+      "title": "Murder in the Skyline Salon",
+      "world": "world_3",
+      "hubs": [
+        "hub_6_upper_city"
+      ],
+      "parent": null,
+      "planned_scenario": "campaign_w3_sq16",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "built",
+      "execution": "not_run",
+      "source_digest": "cd66a547e6e5d7ef"
+    },
+    {
+      "coverage_id": "quest_stage:w3_sq16/investigate_scene",
+      "asset_id": "w3_sq16/investigate_scene",
+      "kind": "quest_stage",
+      "title": "Crime Scene Investigation",
+      "world": "world_3",
+      "hubs": [
+        "hub_6_upper_city"
+      ],
+      "parent": "quests:w3_sq16",
+      "planned_scenario": "campaign_w3_sq16",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "built",
+      "execution": "not_run",
+      "source_digest": "47a25c0f7354cd6e"
+    },
+    {
+      "coverage_id": "quest_task:w3_sq16/investigate_scene/inspect_glass",
+      "asset_id": "w3_sq16/investigate_scene/inspect_glass",
+      "kind": "quest_task",
+      "title": "Inspect Auditor Malick's poisoned glass in the Syndicate Booth.",
+      "world": "world_3",
+      "hubs": [
+        "hub_6_upper_city"
+      ],
+      "parent": "quest_stage:w3_sq16/investigate_scene",
+      "planned_scenario": "campaign_w3_sq16",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "built",
+      "execution": "not_run",
+      "source_digest": "846326c8f513a07f"
+    },
+    {
+      "coverage_id": "quest_task:w3_sq16/investigate_scene/inspect_terminal",
+      "asset_id": "w3_sq16/investigate_scene/inspect_terminal",
+      "kind": "quest_task",
+      "title": "Inspect the lounge security terminal timestamp log.",
+      "world": "world_3",
+      "hubs": [
+        "hub_6_upper_city"
+      ],
+      "parent": "quest_stage:w3_sq16/investigate_scene",
+      "planned_scenario": "campaign_w3_sq16",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "built",
+      "execution": "not_run",
+      "source_digest": "955fd3a0fb070223"
+    },
+    {
+      "coverage_id": "quest_task:w3_sq16/investigate_scene/inspect_rig",
+      "asset_id": "w3_sq16/investigate_scene/inspect_rig",
+      "kind": "quest_task",
+      "title": "Inspect the sabotaged executive comms rig.",
+      "world": "world_3",
+      "hubs": [
+        "hub_6_upper_city"
+      ],
+      "parent": "quest_stage:w3_sq16/investigate_scene",
+      "planned_scenario": "campaign_w3_sq16",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "built",
+      "execution": "not_run",
+      "source_digest": "0dc4e7b0305cbefe"
+    },
+    {
+      "coverage_id": "quest_stage:w3_sq16/confront_killer",
+      "asset_id": "w3_sq16/confront_killer",
+      "kind": "quest_stage",
+      "title": "Expose the Killer",
+      "world": "world_3",
+      "hubs": [
+        "hub_6_upper_city"
+      ],
+      "parent": "quests:w3_sq16",
+      "planned_scenario": "campaign_w3_sq16",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "built",
+      "execution": "not_run",
+      "source_digest": "e79849ff991d2038"
+    },
+    {
+      "coverage_id": "quest_task:w3_sq16/confront_killer/expose_vance",
+      "asset_id": "w3_sq16/confront_killer/expose_vance",
+      "kind": "quest_task",
+      "title": "Confront Director Vance with the contradictory timestamp log.",
+      "world": "world_3",
+      "hubs": [
+        "hub_6_upper_city"
+      ],
+      "parent": "quest_stage:w3_sq16/confront_killer",
+      "planned_scenario": "campaign_w3_sq16",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "built",
+      "execution": "not_run",
+      "source_digest": "63c2dada637a3078"
+    },
+    {
+      "coverage_id": "quests:w4_sq_crucible",
+      "asset_id": "w4_sq_crucible",
+      "kind": "quests",
+      "title": "The Scrapper's Crucible",
+      "world": "world_4",
+      "hubs": [
+        "hub_7_slag_pits"
+      ],
+      "parent": null,
+      "planned_scenario": "campaign_w4_sq_crucible",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "58271a60c308326d"
+    },
+    {
+      "coverage_id": "quest_stage:w4_sq_crucible/stage_trials",
+      "asset_id": "w4_sq_crucible/stage_trials",
+      "kind": "quest_stage",
+      "title": "Gladiator Waves",
+      "world": "world_4",
+      "hubs": [
+        "hub_7_slag_pits"
+      ],
+      "parent": "quests:w4_sq_crucible",
+      "planned_scenario": "campaign_w4_sq_crucible",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "57ad065ff9f31808"
+    },
+    {
+      "coverage_id": "quest_task:w4_sq_crucible/stage_trials/task_round1",
+      "asset_id": "w4_sq_crucible/stage_trials/task_round1",
+      "kind": "quest_task",
+      "title": "Defeat Round 1: Magma Drone Swarm under Overheat conditions in the Crucible pit.",
+      "world": "world_4",
+      "hubs": [
+        "hub_7_slag_pits"
+      ],
+      "parent": "quest_stage:w4_sq_crucible/stage_trials",
+      "planned_scenario": "campaign_w4_sq_crucible",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "00033c7d1b35ea0b"
+    },
+    {
+      "coverage_id": "quest_task:w4_sq_crucible/stage_trials/task_round2",
+      "asset_id": "w4_sq_crucible/stage_trials/task_round2",
+      "kind": "quest_task",
+      "title": "Defeat Round 2: Slag Golem and Welder Bot heavy line.",
+      "world": "world_4",
+      "hubs": [
+        "hub_7_slag_pits"
+      ],
+      "parent": "quest_stage:w4_sq_crucible/stage_trials",
+      "planned_scenario": "campaign_w4_sq_crucible",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "11ec06805a0a66aa"
+    },
+    {
+      "coverage_id": "quest_task:w4_sq_crucible/stage_trials/task_round3",
+      "asset_id": "w4_sq_crucible/stage_trials/task_round3",
+      "kind": "quest_task",
+      "title": "Defeat Round 3: The Crucible Champion and claim the victor's prize.",
+      "world": "world_4",
+      "hubs": [
+        "hub_7_slag_pits"
+      ],
+      "parent": "quest_stage:w4_sq_crucible/stage_trials",
+      "planned_scenario": "campaign_w4_sq_crucible",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "bf17ecc89fb976d5"
+    },
+    {
       "coverage_id": "enemies:faulted_loader",
       "asset_id": "faulted_loader",
       "kind": "enemies",
@@ -46435,7 +47637,7 @@
       "coverage_id": "enemies:acoustic_bulwark",
       "asset_id": "acoustic_bulwark",
       "kind": "enemies",
-      "title": "Shield Trainer",
+      "title": "Acoustic Bulwark",
       "world": null,
       "hubs": [],
       "parent": null,
@@ -46444,7 +47646,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "ee4f0f81b0242473"
+      "source_digest": "5d0a625d6aa898e2"
     },
     {
       "coverage_id": "enemies:resonance_buoy",
@@ -47075,6 +48277,21 @@
       "implementation": "planned",
       "execution": "not_run",
       "source_digest": "faecf5e2a185d6fc"
+    },
+    {
+      "coverage_id": "enemies:crucible_champion",
+      "asset_id": "crucible_champion",
+      "kind": "enemies",
+      "title": "Crucible Champion",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_enemies",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "f93a786f32ce5807"
     },
     {
       "coverage_id": "skills:acid_splash",
@@ -53062,6 +54279,111 @@
       "source_digest": "c9a64d3843227755"
     },
     {
+      "coverage_id": "items:skyline_master_passkey",
+      "asset_id": "skyline_master_passkey",
+      "kind": "items",
+      "title": "Skyline Master Passkey",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_items",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "67f521af78cfe9e0"
+    },
+    {
+      "coverage_id": "items:cyano_coolant_injector",
+      "asset_id": "cyano_coolant_injector",
+      "kind": "items",
+      "title": "Cyano-Coolant Injector",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_items",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "89652addc718d542"
+    },
+    {
+      "coverage_id": "items:crucible_forge_plate",
+      "asset_id": "crucible_forge_plate",
+      "kind": "items",
+      "title": "Crucible Forge-Plate",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_items",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "7a665a87b8530608"
+    },
+    {
+      "coverage_id": "items:tidal_resonator_mod",
+      "asset_id": "tidal_resonator_mod",
+      "kind": "items",
+      "title": "Tidal Resonator",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_items",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "5c6b5e8a90da2ad0"
+    },
+    {
+      "coverage_id": "items:zero_g_gyro_stabilizer_mod",
+      "asset_id": "zero_g_gyro_stabilizer_mod",
+      "kind": "items",
+      "title": "Zero-G Gyro Stabilizer",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_items",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "82ecf0bcb8d9c72a"
+    },
+    {
+      "coverage_id": "items:syndicate_overclock_mod",
+      "asset_id": "syndicate_overclock_mod",
+      "kind": "items",
+      "title": "Syndicate Overclock",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_items",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "f350fe7f1c66304f"
+    },
+    {
+      "coverage_id": "items:magma_induction_core_mod",
+      "asset_id": "magma_induction_core_mod",
+      "kind": "items",
+      "title": "Magma Induction Core",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_items",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "61bcad063993ee8a"
+    },
+    {
       "coverage_id": "recipes_cooking:provision_spicy_ramen",
       "asset_id": "provision_spicy_ramen",
       "kind": "recipes_cooking",
@@ -53704,7 +55026,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "5aab41e34814a819"
+      "source_digest": "f829957d661be76a"
     },
     {
       "coverage_id": "tuning_puzzles:source_harmonic_focus",
@@ -53734,7 +55056,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "6e7f606301f8874a"
+      "source_digest": "14636bbac017db52"
     },
     {
       "coverage_id": "tuning_puzzles:w3_chrono_flux_tune",
@@ -54679,7 +56001,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "3afffde2338c83ef"
+      "source_digest": "4fc243f14f77101c"
     },
     {
       "coverage_id": "cinematics:scene_sq05_datapad",
@@ -54770,6 +56092,21 @@
       "implementation": "planned",
       "execution": "not_run",
       "source_digest": "f13e9fb3d5fb66a3"
+    },
+    {
+      "coverage_id": "cinematics:scene_w2_astra_departure",
+      "asset_id": "scene_w2_astra_departure",
+      "kind": "cinematics",
+      "title": "Airlane to the Spire",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_cinematics",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "2598c33e03e66563"
     },
     {
       "coverage_id": "events:w4_salvage_pure_iron",
@@ -55654,7 +56991,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "41c489ce48bfd053"
+      "source_digest": "8a5efd0736aabee4"
     },
     {
       "coverage_id": "events:w1_sq03_main_path_return_to_boggs",
@@ -55685,96 +57022,6 @@
       "implementation": "planned",
       "execution": "not_run",
       "source_digest": "3e5a036c1c8b0bd9"
-    },
-    {
-      "coverage_id": "events:qpack_evt_collapse_ambush_victory",
-      "asset_id": "qpack_evt_collapse_ambush_victory",
-      "kind": "events",
-      "title": "qpack_evt_collapse_ambush_victory",
-      "world": null,
-      "hubs": [],
-      "parent": null,
-      "planned_scenario": "system_events",
-      "assignment_status": "planned_system",
-      "content_review": "pending",
-      "implementation": "planned",
-      "execution": "not_run",
-      "source_digest": "3b3ccb1cb5857a46"
-    },
-    {
-      "coverage_id": "events:qpack_evt_drone_sweep_victory",
-      "asset_id": "qpack_evt_drone_sweep_victory",
-      "kind": "events",
-      "title": "qpack_evt_drone_sweep_victory",
-      "world": null,
-      "hubs": [],
-      "parent": null,
-      "planned_scenario": "system_events",
-      "assignment_status": "planned_system",
-      "content_review": "pending",
-      "implementation": "planned",
-      "execution": "not_run",
-      "source_digest": "dcade00f07b1a648"
-    },
-    {
-      "coverage_id": "events:qpack_evt_relay_stage1_complete",
-      "asset_id": "qpack_evt_relay_stage1_complete",
-      "kind": "events",
-      "title": "qpack_evt_relay_stage1_complete",
-      "world": null,
-      "hubs": [],
-      "parent": null,
-      "planned_scenario": "system_events",
-      "assignment_status": "planned_system",
-      "content_review": "pending",
-      "implementation": "planned",
-      "execution": "not_run",
-      "source_digest": "d921e6e9ad2ead4d"
-    },
-    {
-      "coverage_id": "events:qpack_evt_relay_stage2_complete",
-      "asset_id": "qpack_evt_relay_stage2_complete",
-      "kind": "events",
-      "title": "qpack_evt_relay_stage2_complete",
-      "world": null,
-      "hubs": [],
-      "parent": null,
-      "planned_scenario": "system_events",
-      "assignment_status": "planned_system",
-      "content_review": "pending",
-      "implementation": "planned",
-      "execution": "not_run",
-      "source_digest": "420854da67901857"
-    },
-    {
-      "coverage_id": "events:qpack_evt_relay_stage3_complete",
-      "asset_id": "qpack_evt_relay_stage3_complete",
-      "kind": "events",
-      "title": "qpack_evt_relay_stage3_complete",
-      "world": null,
-      "hubs": [],
-      "parent": null,
-      "planned_scenario": "system_events",
-      "assignment_status": "planned_system",
-      "content_review": "pending",
-      "implementation": "planned",
-      "execution": "not_run",
-      "source_digest": "1706008c6b1c13bf"
-    },
-    {
-      "coverage_id": "events:qpack_evt_relay_stage4_complete",
-      "asset_id": "qpack_evt_relay_stage4_complete",
-      "kind": "events",
-      "title": "qpack_evt_relay_stage4_complete",
-      "world": null,
-      "hubs": [],
-      "parent": null,
-      "planned_scenario": "system_events",
-      "assignment_status": "planned_system",
-      "content_review": "pending",
-      "implementation": "planned",
-      "execution": "not_run",
-      "source_digest": "0c70064a0e53d07d"
     },
     {
       "coverage_id": "events:qpack_evt_scout_reveal_hidden_fragment",
@@ -56314,7 +57561,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "143a6c48fd0ddbda"
+      "source_digest": "989afacc50f2006c"
     },
     {
       "coverage_id": "events:w1_sq04_thaw_console_controls",
@@ -56329,7 +57576,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "80c286a03e608c00"
+      "source_digest": "4452817c461d17ab"
     },
     {
       "coverage_id": "events:w1_sq04_console_before_terminal",
@@ -56374,7 +57621,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "36c4255e8741c9bd"
+      "source_digest": "da60b8a2029550c6"
     },
     {
       "coverage_id": "events:w1_sq05_start_shunt",
@@ -56464,7 +57711,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "b6268255a9f505db"
+      "source_digest": "d270cc73b044499b"
     },
     {
       "coverage_id": "events:w2_mq02_locate_gate",
@@ -56539,7 +57786,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "4b335c251ac10bc8"
+      "source_digest": "904098df0e91e2ea"
     },
     {
       "coverage_id": "events:w2_mq04_reach_canopy",
@@ -56584,7 +57831,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "222f5dc5d467643d"
+      "source_digest": "1d45801fa0883803"
     },
     {
       "coverage_id": "events:w2_mq04_victory",
@@ -56599,7 +57846,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "1cfc16af4e2363a5"
+      "source_digest": "1e9920bb280eb446"
     },
     {
       "coverage_id": "events:w2_mq04_anchor_drill",
@@ -56614,7 +57861,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "25310b789251cfef"
+      "source_digest": "2d0e53509d7656f3"
     },
     {
       "coverage_id": "events:w2_mq05_reach_gate",
@@ -56644,7 +57891,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "7125be4c00a230f5"
+      "source_digest": "e574b31361da7d5c"
     },
     {
       "coverage_id": "events:w2_mq05_inspect_astra",
@@ -56704,7 +57951,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "f12921141c7e8d3a"
+      "source_digest": "1d1e3d7692d6c4db"
     },
     {
       "coverage_id": "events:w2_sq01_scan_ferns",
@@ -56794,7 +58041,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "91d86f24e6918180"
+      "source_digest": "ec26d904f97a1944"
     },
     {
       "coverage_id": "events:w2_sq03_gather",
@@ -59614,7 +60861,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "494ecc86bbafdd34"
+      "source_digest": "5cba7dfe32e247c5"
     },
     {
       "coverage_id": "events:w2_sq05_hack_grid",
@@ -59629,7 +60876,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "bc7fd71ff2fbc767"
+      "source_digest": "1d176c1ddb4af028"
     },
     {
       "coverage_id": "events:w2_sq05_bypass_guards",
@@ -59704,7 +60951,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "7496bfb2a43e9df6"
+      "source_digest": "ca27c2b7015adad8"
     },
     {
       "coverage_id": "events:w2_sq04_collect_relic",
@@ -59839,7 +61086,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "a605d6fa30229274"
+      "source_digest": "0092d599e677ffa0"
     },
     {
       "coverage_id": "events:w2_mq05_overload_breakers",
@@ -61430,6 +62677,636 @@
       "implementation": "planned",
       "execution": "not_run",
       "source_digest": "fc10064d07660cce"
+    },
+    {
+      "coverage_id": "events:w3_sq16_start",
+      "asset_id": "w3_sq16_start",
+      "kind": "events",
+      "title": "w3_sq16_start",
+      "world": "world_3",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_3",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "e304511bfb021524"
+    },
+    {
+      "coverage_id": "events:w3_sq16_inspect_glass",
+      "asset_id": "w3_sq16_inspect_glass",
+      "kind": "events",
+      "title": "w3_sq16_inspect_glass",
+      "world": "world_3",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_3",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "ce9a0b0a6ffe48d7"
+    },
+    {
+      "coverage_id": "events:w3_sq16_inspect_dispenser",
+      "asset_id": "w3_sq16_inspect_dispenser",
+      "kind": "events",
+      "title": "w3_sq16_inspect_dispenser",
+      "world": "world_3",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_3",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "e87e4b3202eee864"
+    },
+    {
+      "coverage_id": "events:w3_sq16_inspect_terminal",
+      "asset_id": "w3_sq16_inspect_terminal",
+      "kind": "events",
+      "title": "w3_sq16_inspect_terminal",
+      "world": "world_3",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_3",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "5f9d23f402852247"
+    },
+    {
+      "coverage_id": "events:w3_sq16_inspect_rig",
+      "asset_id": "w3_sq16_inspect_rig",
+      "kind": "events",
+      "title": "w3_sq16_inspect_rig",
+      "world": "world_3",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_3",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "1d3bc3b43f2feacd"
+    },
+    {
+      "coverage_id": "events:w3_sq16_inspect_datapad",
+      "asset_id": "w3_sq16_inspect_datapad",
+      "kind": "events",
+      "title": "w3_sq16_inspect_datapad",
+      "world": "world_3",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_3",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "531cbb54dd413ffd"
+    },
+    {
+      "coverage_id": "events:w4_crucible_spawn_round_1",
+      "asset_id": "w4_crucible_spawn_round_1",
+      "kind": "events",
+      "title": "w4_crucible_spawn_round_1",
+      "world": "world_4",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_4",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "7d0f2dfdd0863805"
+    },
+    {
+      "coverage_id": "events:w4_crucible_victory_round_1",
+      "asset_id": "w4_crucible_victory_round_1",
+      "kind": "events",
+      "title": "w4_crucible_victory_round_1",
+      "world": "world_4",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_4",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "79bd82e0548a35cd"
+    },
+    {
+      "coverage_id": "events:w4_crucible_spawn_round_2",
+      "asset_id": "w4_crucible_spawn_round_2",
+      "kind": "events",
+      "title": "w4_crucible_spawn_round_2",
+      "world": "world_4",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_4",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "1f66730597168bc6"
+    },
+    {
+      "coverage_id": "events:w4_crucible_victory_round_2",
+      "asset_id": "w4_crucible_victory_round_2",
+      "kind": "events",
+      "title": "w4_crucible_victory_round_2",
+      "world": "world_4",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_4",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "23acfcd2930d0ec4"
+    },
+    {
+      "coverage_id": "events:w4_crucible_spawn_round_3",
+      "asset_id": "w4_crucible_spawn_round_3",
+      "kind": "events",
+      "title": "w4_crucible_spawn_round_3",
+      "world": "world_4",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_4",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "0e8b732e8494aa40"
+    },
+    {
+      "coverage_id": "events:w4_crucible_victory_round_3",
+      "asset_id": "w4_crucible_victory_round_3",
+      "kind": "events",
+      "title": "w4_crucible_victory_round_3",
+      "world": "world_4",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_4",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "447f60c9431febdc"
+    },
+    {
+      "coverage_id": "events:w2_sluice_drained",
+      "asset_id": "w2_sluice_drained",
+      "kind": "events",
+      "title": "w2_sluice_drained",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "4de3b67050df181f"
+    },
+    {
+      "coverage_id": "events:w2_sluice_closed",
+      "asset_id": "w2_sluice_closed",
+      "kind": "events",
+      "title": "w2_sluice_closed",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "a1e28ff31b691443"
+    },
+    {
+      "coverage_id": "events:w5_zero_g_anchor_engaged",
+      "asset_id": "w5_zero_g_anchor_engaged",
+      "kind": "events",
+      "title": "w5_zero_g_anchor_engaged",
+      "world": "world_5",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_5",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "0feea592c05f8cbb"
+    },
+    {
+      "coverage_id": "events:w5_zero_g_anchor_disengaged",
+      "asset_id": "w5_zero_g_anchor_disengaged",
+      "kind": "events",
+      "title": "w5_zero_g_anchor_disengaged",
+      "world": "world_5",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_5",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "08da0f29691937a8"
+    },
+    {
+      "coverage_id": "events:w1_cart_track_diverted",
+      "asset_id": "w1_cart_track_diverted",
+      "kind": "events",
+      "title": "w1_cart_track_diverted",
+      "world": "world_1",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "d930a0be6de8b15c"
+    },
+    {
+      "coverage_id": "events:w1_cart_track_reset",
+      "asset_id": "w1_cart_track_reset",
+      "kind": "events",
+      "title": "w1_cart_track_reset",
+      "world": "world_1",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "9656b3ca21e8d613"
+    },
+    {
+      "coverage_id": "events:w3_laser_grid_bypassed",
+      "asset_id": "w3_laser_grid_bypassed",
+      "kind": "events",
+      "title": "w3_laser_grid_bypassed",
+      "world": "world_3",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_3",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "72f84a12f642a874"
+    },
+    {
+      "coverage_id": "events:w3_laser_grid_reset",
+      "asset_id": "w3_laser_grid_reset",
+      "kind": "events",
+      "title": "w3_laser_grid_reset",
+      "world": "world_3",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_3",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "6e65f5242a6f6e14"
+    },
+    {
+      "coverage_id": "events:w4_slag_bridge_solidified",
+      "asset_id": "w4_slag_bridge_solidified",
+      "kind": "events",
+      "title": "w4_slag_bridge_solidified",
+      "world": "world_4",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_4",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "55259493c3364ac8"
+    },
+    {
+      "coverage_id": "events:w4_slag_bridge_melted",
+      "asset_id": "w4_slag_bridge_melted",
+      "kind": "events",
+      "title": "w4_slag_bridge_melted",
+      "world": "world_4",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_4",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "cc2402855f1eb2f5"
+    },
+    {
+      "coverage_id": "events:w1_cart_inspect_rails",
+      "asset_id": "w1_cart_inspect_rails",
+      "kind": "events",
+      "title": "w1_cart_inspect_rails",
+      "world": "world_1",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "d3bf1510c5f15d6c"
+    },
+    {
+      "coverage_id": "events:w1_cart_release",
+      "asset_id": "w1_cart_release",
+      "kind": "events",
+      "title": "w1_cart_release",
+      "world": "world_1",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "855fc271968b4b92"
+    },
+    {
+      "coverage_id": "events:w1_cart_brake_unread",
+      "asset_id": "w1_cart_brake_unread",
+      "kind": "events",
+      "title": "w1_cart_brake_unread",
+      "world": "world_1",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "755128e1b523c40e"
+    },
+    {
+      "coverage_id": "events:w1_cart_brake_unrouted",
+      "asset_id": "w1_cart_brake_unrouted",
+      "kind": "events",
+      "title": "w1_cart_brake_unrouted",
+      "world": "world_1",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "c91616a64a9a6ff2"
+    },
+    {
+      "coverage_id": "events:w1_sq04_compile_spoof",
+      "asset_id": "w1_sq04_compile_spoof",
+      "kind": "events",
+      "title": "w1_sq04_compile_spoof",
+      "world": "world_1",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "83e44d12dd672dad"
+    },
+    {
+      "coverage_id": "events:w1_sq04_read_ports",
+      "asset_id": "w1_sq04_read_ports",
+      "kind": "events",
+      "title": "w1_sq04_read_ports",
+      "world": "world_1",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "798b8d5f179d47ca"
+    },
+    {
+      "coverage_id": "events:w1_sq03_workshop_training_victory",
+      "asset_id": "w1_sq03_workshop_training_victory",
+      "kind": "events",
+      "title": "w1_sq03_workshop_training_victory",
+      "world": "world_1",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "31a0a60f5759ab59"
+    },
+    {
+      "coverage_id": "events:w1_sq03_register_prior_drill",
+      "asset_id": "w1_sq03_register_prior_drill",
+      "kind": "events",
+      "title": "w1_sq03_register_prior_drill",
+      "world": "world_1",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "3d2edb7cbd062b65"
+    },
+    {
+      "coverage_id": "events:w1_sq03_recover_prior_drill",
+      "asset_id": "w1_sq03_recover_prior_drill",
+      "kind": "events",
+      "title": "w1_sq03_recover_prior_drill",
+      "world": "world_1",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "af3c7122ac9f1c35"
+    },
+    {
+      "coverage_id": "events:w1_sq03_record_drill_admin_security",
+      "asset_id": "w1_sq03_record_drill_admin_security",
+      "kind": "events",
+      "title": "w1_sq03_record_drill_admin_security",
+      "world": "world_1",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "9aff14e438f76e33"
+    },
+    {
+      "coverage_id": "events:w1_sq03_record_drill_workshop_dock",
+      "asset_id": "w1_sq03_record_drill_workshop_dock",
+      "kind": "events",
+      "title": "w1_sq03_record_drill_workshop_dock",
+      "world": "world_1",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "3780830008446d67"
+    },
+    {
+      "coverage_id": "events:w2_mq03_apply_alignment",
+      "asset_id": "w2_mq03_apply_alignment",
+      "kind": "events",
+      "title": "w2_mq03_apply_alignment",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "0658d77a9ce36d02"
+    },
+    {
+      "coverage_id": "events:w2_mq03_talk_to_orion",
+      "asset_id": "w2_mq03_talk_to_orion",
+      "kind": "events",
+      "title": "w2_mq03_talk_to_orion",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "51b67d3ac7aa187a"
+    },
+    {
+      "coverage_id": "events:w2_mq03_recover_bridge",
+      "asset_id": "w2_mq03_recover_bridge",
+      "kind": "events",
+      "title": "w2_mq03_recover_bridge",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "b233cf826041f0f3"
+    },
+    {
+      "coverage_id": "events:w2_mq05_resolve_gate",
+      "asset_id": "w2_mq05_resolve_gate",
+      "kind": "events",
+      "title": "w2_mq05_resolve_gate",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "600d122eaab45efd"
+    },
+    {
+      "coverage_id": "events:w2_sq04_restore_chorus",
+      "asset_id": "w2_sq04_restore_chorus",
+      "kind": "events",
+      "title": "w2_sq04_restore_chorus",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "19131e28afd33431"
+    },
+    {
+      "coverage_id": "events:w2_sq05_mask_scan",
+      "asset_id": "w2_sq05_mask_scan",
+      "kind": "events",
+      "title": "w2_sq05_mask_scan",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "036ad9fa9798b6e7"
+    },
+    {
+      "coverage_id": "events:w2_mq05_confirm_departure",
+      "asset_id": "w2_mq05_confirm_departure",
+      "kind": "events",
+      "title": "w2_mq05_confirm_departure",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "73165d0ec050b982"
+    },
+    {
+      "coverage_id": "events:w2_mq05_return_to_pod",
+      "asset_id": "w2_mq05_return_to_pod",
+      "kind": "events",
+      "title": "w2_mq05_return_to_pod",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "4623ed928d062eb5"
+    },
+    {
+      "coverage_id": "events:w2_mq05_return_to_hangar",
+      "asset_id": "w2_mq05_return_to_hangar",
+      "kind": "events",
+      "title": "w2_mq05_return_to_hangar",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "1ec73de89a9c54ab"
     },
     {
       "coverage_id": "characters:nova",
@@ -65902,6 +67779,321 @@
       "source_digest": "ac63a8bc5ed00883"
     },
     {
+      "coverage_id": "milestones:ms_w3_sq16_started",
+      "asset_id": "ms_w3_sq16_started",
+      "kind": "milestones",
+      "title": "Skyline Lockdown",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "c4fca1dd97f4f2df"
+    },
+    {
+      "coverage_id": "milestones:ms_w3_sq16_glass_inspected",
+      "asset_id": "ms_w3_sq16_glass_inspected",
+      "kind": "milestones",
+      "title": "Tainted Vintage",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "2cfd5688330ea2be"
+    },
+    {
+      "coverage_id": "milestones:ms_w3_sq16_terminal_inspected",
+      "asset_id": "ms_w3_sq16_terminal_inspected",
+      "kind": "milestones",
+      "title": "Contradictory Timestamps",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "a6f1e00f2ac56cbd"
+    },
+    {
+      "coverage_id": "milestones:ms_w3_sq16_rig_inspected",
+      "asset_id": "ms_w3_sq16_rig_inspected",
+      "kind": "milestones",
+      "title": "Missing Coolant Core",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "1688d6a09500296c"
+    },
+    {
+      "coverage_id": "milestones:ms_w3_sq16_complete",
+      "asset_id": "ms_w3_sq16_complete",
+      "kind": "milestones",
+      "title": "A Murder in High Society",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "67c5eb9419365c2f"
+    },
+    {
+      "coverage_id": "milestones:ms_crucible_trial_accepted",
+      "asset_id": "ms_crucible_trial_accepted",
+      "kind": "milestones",
+      "title": "Crucible Challenger",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "83de433b1f53c291"
+    },
+    {
+      "coverage_id": "milestones:ms_crucible_round1_cleared",
+      "asset_id": "ms_crucible_round1_cleared",
+      "kind": "milestones",
+      "title": "Swarm Crusher",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "f882ce7874ca2306"
+    },
+    {
+      "coverage_id": "milestones:ms_crucible_round2_cleared",
+      "asset_id": "ms_crucible_round2_cleared",
+      "kind": "milestones",
+      "title": "Slag Breaker",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "cb2a408694ac549c"
+    },
+    {
+      "coverage_id": "milestones:ms_crucible_round3_cleared",
+      "asset_id": "ms_crucible_round3_cleared",
+      "kind": "milestones",
+      "title": "Champion Down",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "181fbd766d916285"
+    },
+    {
+      "coverage_id": "milestones:ms_w4_crucible_champion",
+      "asset_id": "ms_w4_crucible_champion",
+      "kind": "milestones",
+      "title": "Grand Crucible Champion",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "9f8608e00250fe93"
+    },
+    {
+      "coverage_id": "milestones:ms_w2_sluice_drained",
+      "asset_id": "ms_w2_sluice_drained",
+      "kind": "milestones",
+      "title": "Aethel Sluice Drained",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "da3860278375e22e"
+    },
+    {
+      "coverage_id": "milestones:ms_w5_magnetic_anchor_engaged",
+      "asset_id": "ms_w5_magnetic_anchor_engaged",
+      "kind": "milestones",
+      "title": "Zero-G Magnetic Anchor Engaged",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "4fd9002dd70db568"
+    },
+    {
+      "coverage_id": "milestones:ms_w1_cart_track_diverted",
+      "asset_id": "ms_w1_cart_track_diverted",
+      "kind": "milestones",
+      "title": "Blast Bulkhead Breached",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "737272cad783484b"
+    },
+    {
+      "coverage_id": "milestones:ms_w3_laser_grid_bypassed",
+      "asset_id": "ms_w3_laser_grid_bypassed",
+      "kind": "milestones",
+      "title": "Laser Grid Bypassed",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "82b633c31cb9c10a"
+    },
+    {
+      "coverage_id": "milestones:ms_w4_slag_bridge_solidified",
+      "asset_id": "ms_w4_slag_bridge_solidified",
+      "kind": "milestones",
+      "title": "Slag Bridge Solidified",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "cbada7dcfc8d193b"
+    },
+    {
+      "coverage_id": "milestones:ms_w1_cart_rails_read",
+      "asset_id": "ms_w1_cart_rails_read",
+      "kind": "milestones",
+      "title": "Cart Route Inspected",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "cab4930ed7486360"
+    },
+    {
+      "coverage_id": "milestones:ms_w1_cart_route_set",
+      "asset_id": "ms_w1_cart_route_set",
+      "kind": "milestones",
+      "title": "Cart Routed West",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "e270da7b5985c248"
+    },
+    {
+      "coverage_id": "milestones:ms_w1_guard_drill_won",
+      "asset_id": "ms_w1_guard_drill_won",
+      "kind": "milestones",
+      "title": "Shield Drill Recorded",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "4bb0b5049b61cfe6"
+    },
+    {
+      "coverage_id": "milestones:ms_w2_stasis_awake",
+      "asset_id": "ms_w2_stasis_awake",
+      "kind": "milestones",
+      "title": "The Sleeper Wakes",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "6012f041f3313028"
+    },
+    {
+      "coverage_id": "milestones:ms_w2_orion_briefed",
+      "asset_id": "ms_w2_orion_briefed",
+      "kind": "milestones",
+      "title": "A Separate Bridge",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_milestones",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "300d8f5114ca54b8"
+    },
+    {
+      "coverage_id": "dialogue:orion_w2_awakening_1",
+      "asset_id": "orion_w2_awakening_1",
+      "kind": "dialogue",
+      "title": "orion_w2_awakening_1",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "d7830c0f224c4235"
+    },
+    {
       "coverage_id": "dialogue:dlg_bran_intro",
       "asset_id": "dlg_bran_intro",
       "kind": "dialogue",
@@ -67444,7 +69636,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "58d67e133bfd617e"
+      "source_digest": "6c39333356011be7"
     },
     {
       "coverage_id": "dialogue:bogs_w1_mq03_review_2",
@@ -67489,7 +69681,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "cd67daaba360b15a"
+      "source_digest": "cbc6869c15911b80"
     },
     {
       "coverage_id": "dialogue:bogs_w1_mq03_guardbreak_gate_1",
@@ -67504,7 +69696,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "9c309e73109f65ad"
+      "source_digest": "4350f6b0be41a57d"
     },
     {
       "coverage_id": "dialogue:bogs_w1_mq03_guardbreak_gate_2",
@@ -67534,7 +69726,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "c5bd434fdf97ac04"
+      "source_digest": "bba1d3195e6cd362"
     },
     {
       "coverage_id": "dialogue:bogs_w1_mq03_intro_1",
@@ -67624,7 +69816,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "a5679084c9fded3d"
+      "source_digest": "0a8ed8994c5f3ea8"
     },
     {
       "coverage_id": "dialogue:bogs_w1_sq03_intro_2",
@@ -67654,7 +69846,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "d1825a917cbe39e6"
+      "source_digest": "f2ec9c971a574c7a"
     },
     {
       "coverage_id": "dialogue:bogs_w1_sq03_complete",
@@ -68164,7 +70356,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "a16d00f60eb3e912"
+      "source_digest": "9b33bae02ba99962"
     },
     {
       "coverage_id": "dialogue:orion_w2_sq04_tune_success",
@@ -68179,7 +70371,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "491e0cc70c3a34b8"
+      "source_digest": "031fe9a7e8c8df12"
     },
     {
       "coverage_id": "dialogue:orion_w2_sq04_tune_fail",
@@ -68194,7 +70386,7 @@
       "content_review": "pending",
       "implementation": "planned",
       "execution": "not_run",
-      "source_digest": "9e4688756357a7f4"
+      "source_digest": "303a383c52916887"
     },
     {
       "coverage_id": "dialogue:orion_w2_sq03_intro_1",
@@ -71692,6 +73884,756 @@
       "source_digest": "35f43ccb0046a62d"
     },
     {
+      "coverage_id": "dialogue:dax_default_talk",
+      "asset_id": "dax_default_talk",
+      "kind": "dialogue",
+      "title": "dax_default_talk",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "b64760ca6bfe58af"
+    },
+    {
+      "coverage_id": "dialogue:dax_default_talk_2",
+      "asset_id": "dax_default_talk_2",
+      "kind": "dialogue",
+      "title": "dax_default_talk_2",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "673533d06e12f10b"
+    },
+    {
+      "coverage_id": "dialogue:dax_default_talk_3",
+      "asset_id": "dax_default_talk_3",
+      "kind": "dialogue",
+      "title": "dax_default_talk_3",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "914bad180291c984"
+    },
+    {
+      "coverage_id": "dialogue:dr_lyra_default_talk",
+      "asset_id": "dr_lyra_default_talk",
+      "kind": "dialogue",
+      "title": "dr_lyra_default_talk",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "d8f10d66b065750f"
+    },
+    {
+      "coverage_id": "dialogue:singer_selene_default_talk",
+      "asset_id": "singer_selene_default_talk",
+      "kind": "dialogue",
+      "title": "singer_selene_default_talk",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "49c5e52ffe8bee14"
+    },
+    {
+      "coverage_id": "dialogue:director_vance_default_talk",
+      "asset_id": "director_vance_default_talk",
+      "kind": "dialogue",
+      "title": "director_vance_default_talk",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "74f3ec92cda84963"
+    },
+    {
+      "coverage_id": "dialogue:vance_confession_1",
+      "asset_id": "vance_confession_1",
+      "kind": "dialogue",
+      "title": "vance_confession_1",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "ce32f2d219b51012"
+    },
+    {
+      "coverage_id": "dialogue:vance_confession_2",
+      "asset_id": "vance_confession_2",
+      "kind": "dialogue",
+      "title": "vance_confession_2",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "81c3f06badc832a5"
+    },
+    {
+      "coverage_id": "dialogue:vance_confession_3",
+      "asset_id": "vance_confession_3",
+      "kind": "dialogue",
+      "title": "vance_confession_3",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "4a687590a3a3c40d"
+    },
+    {
+      "coverage_id": "dialogue:brutus_dialogue_champion",
+      "asset_id": "brutus_dialogue_champion",
+      "kind": "dialogue",
+      "title": "brutus_dialogue_champion",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "c0b2197d78d30e62"
+    },
+    {
+      "coverage_id": "dialogue:brutus_dialogue_claim",
+      "asset_id": "brutus_dialogue_claim",
+      "kind": "dialogue",
+      "title": "brutus_dialogue_claim",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "dcd8a8fb423cf83e"
+    },
+    {
+      "coverage_id": "dialogue:brutus_dialogue_round3",
+      "asset_id": "brutus_dialogue_round3",
+      "kind": "dialogue",
+      "title": "brutus_dialogue_round3",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "403c269540ffb35e"
+    },
+    {
+      "coverage_id": "dialogue:brutus_start_round3_go",
+      "asset_id": "brutus_start_round3_go",
+      "kind": "dialogue",
+      "title": "brutus_start_round3_go",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "c8315a619f3c78b2"
+    },
+    {
+      "coverage_id": "dialogue:brutus_dialogue_round2",
+      "asset_id": "brutus_dialogue_round2",
+      "kind": "dialogue",
+      "title": "brutus_dialogue_round2",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "86ce1459ed65b74f"
+    },
+    {
+      "coverage_id": "dialogue:brutus_start_round2_go",
+      "asset_id": "brutus_start_round2_go",
+      "kind": "dialogue",
+      "title": "brutus_start_round2_go",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "909304bdc89dde91"
+    },
+    {
+      "coverage_id": "dialogue:brutus_dialogue_initial",
+      "asset_id": "brutus_dialogue_initial",
+      "kind": "dialogue",
+      "title": "brutus_dialogue_initial",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "5096ed2bfc8c1bd4"
+    },
+    {
+      "coverage_id": "dialogue:brutus_dialogue_rules",
+      "asset_id": "brutus_dialogue_rules",
+      "kind": "dialogue",
+      "title": "brutus_dialogue_rules",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "a5a9356139a920f7"
+    },
+    {
+      "coverage_id": "dialogue:brutus_start_round1_go",
+      "asset_id": "brutus_start_round1_go",
+      "kind": "dialogue",
+      "title": "brutus_start_round1_go",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "140a71e04ffb6284"
+    },
+    {
+      "coverage_id": "dialogue:w1_sq04_routing_entry",
+      "asset_id": "w1_sq04_routing_entry",
+      "kind": "dialogue",
+      "title": "w1_sq04_routing_entry",
+      "world": "world_1",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "087e343489750805"
+    },
+    {
+      "coverage_id": "dialogue:w1_sq04_routing_choice",
+      "asset_id": "w1_sq04_routing_choice",
+      "kind": "dialogue",
+      "title": "w1_sq04_routing_choice",
+      "world": "world_1",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "1729e1ec9c99dc72"
+    },
+    {
+      "coverage_id": "dialogue:w1_sq04_routing_network",
+      "asset_id": "w1_sq04_routing_network",
+      "kind": "dialogue",
+      "title": "w1_sq04_routing_network",
+      "world": "world_1",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "5d2a350839c0791a"
+    },
+    {
+      "coverage_id": "dialogue:w1_sq04_routing_account",
+      "asset_id": "w1_sq04_routing_account",
+      "kind": "dialogue",
+      "title": "w1_sq04_routing_account",
+      "world": "world_1",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_1",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "526acc317bc20e62"
+    },
+    {
+      "coverage_id": "dialogue:bogs_w1_sq03_prior_drill",
+      "asset_id": "bogs_w1_sq03_prior_drill",
+      "kind": "dialogue",
+      "title": "bogs_w1_sq03_prior_drill",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "bdfb76186eb55791"
+    },
+    {
+      "coverage_id": "dialogue:bogs_w1_sq03_recover_drill",
+      "asset_id": "bogs_w1_sq03_recover_drill",
+      "kind": "dialogue",
+      "title": "bogs_w1_sq03_recover_drill",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "b93f5367013cdf5f"
+    },
+    {
+      "coverage_id": "dialogue:bogs_w1_sq03_registered_result",
+      "asset_id": "bogs_w1_sq03_registered_result",
+      "kind": "dialogue",
+      "title": "bogs_w1_sq03_registered_result",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "bb433d338e73c7d7"
+    },
+    {
+      "coverage_id": "dialogue:w2_stasis_entry",
+      "asset_id": "w2_stasis_entry",
+      "kind": "dialogue",
+      "title": "w2_stasis_entry",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "bf4df5326b278adb"
+    },
+    {
+      "coverage_id": "dialogue:w2_stasis_1",
+      "asset_id": "w2_stasis_1",
+      "kind": "dialogue",
+      "title": "w2_stasis_1",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "096384d4802889a4"
+    },
+    {
+      "coverage_id": "dialogue:w2_stasis_1_retry",
+      "asset_id": "w2_stasis_1_retry",
+      "kind": "dialogue",
+      "title": "w2_stasis_1_retry",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "45853971f9911f1b"
+    },
+    {
+      "coverage_id": "dialogue:w2_stasis_2",
+      "asset_id": "w2_stasis_2",
+      "kind": "dialogue",
+      "title": "w2_stasis_2",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "e31d4519653b39db"
+    },
+    {
+      "coverage_id": "dialogue:w2_stasis_2_retry",
+      "asset_id": "w2_stasis_2_retry",
+      "kind": "dialogue",
+      "title": "w2_stasis_2_retry",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "e66c928857a45321"
+    },
+    {
+      "coverage_id": "dialogue:w2_stasis_3",
+      "asset_id": "w2_stasis_3",
+      "kind": "dialogue",
+      "title": "w2_stasis_3",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "08db8a38c2d2b9d4"
+    },
+    {
+      "coverage_id": "dialogue:w2_stasis_3_retry",
+      "asset_id": "w2_stasis_3_retry",
+      "kind": "dialogue",
+      "title": "w2_stasis_3_retry",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "c3fca8ae2655feb2"
+    },
+    {
+      "coverage_id": "dialogue:orion_w2_awakening_2",
+      "asset_id": "orion_w2_awakening_2",
+      "kind": "dialogue",
+      "title": "orion_w2_awakening_2",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "e06b2b2bf6f3c7df"
+    },
+    {
+      "coverage_id": "dialogue:orion_w2_awakening_3",
+      "asset_id": "orion_w2_awakening_3",
+      "kind": "dialogue",
+      "title": "orion_w2_awakening_3",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_dialogue",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "a9d99e8a7bbe250a"
+    },
+    {
+      "coverage_id": "dialogue:w2_gate_entry",
+      "asset_id": "w2_gate_entry",
+      "kind": "dialogue",
+      "title": "w2_gate_entry",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "6c7c11b698619cb5"
+    },
+    {
+      "coverage_id": "dialogue:w2_gate_1",
+      "asset_id": "w2_gate_1",
+      "kind": "dialogue",
+      "title": "w2_gate_1",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "92e765d2def14b3b"
+    },
+    {
+      "coverage_id": "dialogue:w2_gate_1_retry",
+      "asset_id": "w2_gate_1_retry",
+      "kind": "dialogue",
+      "title": "w2_gate_1_retry",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "2d07ef168f80328b"
+    },
+    {
+      "coverage_id": "dialogue:w2_gate_2",
+      "asset_id": "w2_gate_2",
+      "kind": "dialogue",
+      "title": "w2_gate_2",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "2c853c4e5ee83ac3"
+    },
+    {
+      "coverage_id": "dialogue:w2_gate_2_retry",
+      "asset_id": "w2_gate_2_retry",
+      "kind": "dialogue",
+      "title": "w2_gate_2_retry",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "6e0e686473aaa31d"
+    },
+    {
+      "coverage_id": "dialogue:w2_gate_3",
+      "asset_id": "w2_gate_3",
+      "kind": "dialogue",
+      "title": "w2_gate_3",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "ad0995b4ea8fe4f8"
+    },
+    {
+      "coverage_id": "dialogue:w2_gate_3_retry",
+      "asset_id": "w2_gate_3_retry",
+      "kind": "dialogue",
+      "title": "w2_gate_3_retry",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "a79b066875cf9331"
+    },
+    {
+      "coverage_id": "dialogue:w2_mural_entry",
+      "asset_id": "w2_mural_entry",
+      "kind": "dialogue",
+      "title": "w2_mural_entry",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "d771f8900fee6fff"
+    },
+    {
+      "coverage_id": "dialogue:w2_mural_1",
+      "asset_id": "w2_mural_1",
+      "kind": "dialogue",
+      "title": "w2_mural_1",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "48e2897080b54542"
+    },
+    {
+      "coverage_id": "dialogue:w2_mural_1_retry",
+      "asset_id": "w2_mural_1_retry",
+      "kind": "dialogue",
+      "title": "w2_mural_1_retry",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "c5dec9aebc52d5aa"
+    },
+    {
+      "coverage_id": "dialogue:w2_mural_2",
+      "asset_id": "w2_mural_2",
+      "kind": "dialogue",
+      "title": "w2_mural_2",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "58e1c5d713ad67f5"
+    },
+    {
+      "coverage_id": "dialogue:w2_mural_2_retry",
+      "asset_id": "w2_mural_2_retry",
+      "kind": "dialogue",
+      "title": "w2_mural_2_retry",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "d31012efd7824147"
+    },
+    {
+      "coverage_id": "dialogue:w2_vent_entry",
+      "asset_id": "w2_vent_entry",
+      "kind": "dialogue",
+      "title": "w2_vent_entry",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "26428e724dcc6186"
+    },
+    {
+      "coverage_id": "dialogue:w2_vent_1",
+      "asset_id": "w2_vent_1",
+      "kind": "dialogue",
+      "title": "w2_vent_1",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "df21edf62983f355"
+    },
+    {
+      "coverage_id": "dialogue:w2_vent_1_retry",
+      "asset_id": "w2_vent_1_retry",
+      "kind": "dialogue",
+      "title": "w2_vent_1_retry",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "0707b0deb1de53f7"
+    },
+    {
+      "coverage_id": "dialogue:w2_departure_entry",
+      "asset_id": "w2_departure_entry",
+      "kind": "dialogue",
+      "title": "w2_departure_entry",
+      "world": "world_2",
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "route_world_2",
+      "assignment_status": "planned_route",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "988642bd3771e562"
+    },
+    {
       "coverage_id": "npcs:jed",
       "asset_id": "jed",
       "kind": "npcs",
@@ -72320,6 +75262,81 @@
       "implementation": "planned",
       "execution": "not_run",
       "source_digest": "05f6dbd4b261c748"
+    },
+    {
+      "coverage_id": "npcs:bartender_dax",
+      "asset_id": "bartender_dax",
+      "kind": "npcs",
+      "title": "Dax",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_npcs",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "ffe87083cf1102d4"
+    },
+    {
+      "coverage_id": "npcs:director_vance",
+      "asset_id": "director_vance",
+      "kind": "npcs",
+      "title": "Director Vance",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_npcs",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "0e70391fb5b82605"
+    },
+    {
+      "coverage_id": "npcs:dr_lyra",
+      "asset_id": "dr_lyra",
+      "kind": "npcs",
+      "title": "Dr. Lyra",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_npcs",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "1688f249e1f44b62"
+    },
+    {
+      "coverage_id": "npcs:singer_selene",
+      "asset_id": "singer_selene",
+      "kind": "npcs",
+      "title": "Selene",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_npcs",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "12372317295f092a"
+    },
+    {
+      "coverage_id": "npcs:pitmaster_brutus",
+      "asset_id": "pitmaster_brutus",
+      "kind": "npcs",
+      "title": "Pitmaster Brutus",
+      "world": null,
+      "hubs": [],
+      "parent": null,
+      "planned_scenario": "system_npcs",
+      "assignment_status": "planned_system",
+      "content_review": "pending",
+      "implementation": "planned",
+      "execution": "not_run",
+      "source_digest": "b07a0418df6bd5c0"
     },
     {
       "coverage_id": "shops:mechanic_shop",

@@ -6,7 +6,7 @@ Check for drift: `python scripts/debug_coverage.py --check`.
 These are planned assignments, not verified routes or test passes. Runtime reachability and exact fixture prerequisites require review.
 Execution evidence belongs in `runs/`; regeneration never rewrites run records.
 
-Rebuilt registry: 97 implemented entries. Built does not mean gameplay passed.
+Rebuilt registry: 104 implemented entries. Built does not mean gameplay passed.
 
 ## Asset inventory
 
@@ -14,28 +14,28 @@ Rebuilt registry: 97 implemented entries. Built does not mean gameplay passed.
 | --- | ---: |
 | arcade | 6 |
 | characters | 4 |
-| cinematics | 50 |
-| dialogue | 386 |
-| enemies | 47 |
-| events | 444 |
-| exit | 938 |
+| cinematics | 51 |
+| dialogue | 437 |
+| enemies | 48 |
+| events | 480 |
+| exit | 954 |
 | fishing_catch | 38 |
 | fishing_lures | 6 |
 | fishing_rods | 5 |
 | fishing_zone | 6 |
 | hub_nodes | 60 |
 | hubs | 13 |
-| items | 252 |
-| milestones | 294 |
-| npcs | 42 |
+| items | 259 |
+| milestones | 314 |
+| npcs | 47 |
 | patrol_zone | 2 |
-| quest_stage | 94 |
-| quest_task | 241 |
-| quests | 60 |
+| quest_stage | 97 |
+| quest_task | 248 |
+| quests | 62 |
 | recipes_cooking | 15 |
 | recipes_tinkering | 27 |
-| room_action | 1078 |
-| rooms | 469 |
+| room_action | 1119 |
+| rooms | 477 |
 | shops | 13 |
 | skills | 125 |
 | statuses | 22 |
@@ -111,6 +111,8 @@ Stage and task rows in the JSON ledger enumerate the required intermediate check
 | campaign_w6_mq30 | The Final Note | hub_12_singularity |
 | campaign_w6_sq29 | The Aethel Grave | hub_12_singularity |
 | campaign_w6_sq30 | The Final Scavenge | hub_12_singularity |
+| campaign_w3_sq16 | Murder in the Skyline Salon | hub_6_upper_city |
+| campaign_w4_sq_crucible | The Scrapper's Crucible | hub_7_slag_pits |
 
 ## Legacy review
 

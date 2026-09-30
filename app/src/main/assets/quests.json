@@ -201,7 +201,8 @@
           },
           {
             "id": "break_riot_guard",
-            "text": "Head north from Cavern Junction to the Riot Control Post. Defeat its Acoustic Bulwark using Guard Break or Stagger."
+            "optional": true,
+            "text": "Optional: take the north detour from Cavern Junction to the Riot Control Post. Break the bulwark's Guard to reach the supplies beyond it."
           },
           {
             "id": "reach_architect_threshold",
@@ -220,7 +221,7 @@
           },
           {
             "id": "touch_tuning_fork",
-            "text": "Set 87 kHz phase sweep, 68% cold loop, and 180-degree ground phase."
+            "text": "Match the pulse spacing, balance the cold loop, then oppose the Fork's wave to quiet the combined signal."
           },
           {
             "id": "survive_source_sync",
@@ -588,7 +589,7 @@
           },
           {
             "id": "apply_access_override",
-            "text": "After thawing the console, use the terminal again to apply the rebel access override."
+            "text": "After thawing the console, read the output-port warning and use the terminal to recover the key without leaving an audit record."
           }
         ]
       }
@@ -753,15 +754,15 @@
         "tasks": [
           {
             "id": "align_stasis_rings",
-            "text": "Read the pod, mural overview and coolant lines, then align the rings in the Ring Array."
+            "text": "Read the chamber clues, then route pressure, memory and return at the Ring Array."
           },
           {
             "id": "talk_to_orion",
-            "text": "Talk to the awakened Orion."
+            "text": "Return to Stasis Chamber and talk to the awakened Orion."
           },
           {
             "id": "recover_bridge_relic",
-            "text": "Recover the Bridge Echo from its sealed cradle."
+            "text": "After talking to Orion, open the sealed Bridge cradle in Stasis Chamber."
           }
         ]
       }
@@ -955,9 +956,9 @@
   {
     "id": "w2_sq03",
     "title": "Tideglass Day",
-    "summary": "Orion suggests collecting glowing tideglass skewers from the beach for a hot meal.",
-    "description": "Visit Tideglass Beach and gather glowing tideglass skewers.",
-    "flavor": "Sometimes a hot meal is the only shield you have left.",
+    "summary": "Gather living tideglass materials at the shore and craft Source Resin with Orion.",
+    "description": "Visit Tide Pools, gather clean herbs and meat, then craft Source Resin at a tinkering station.",
+    "flavor": "A quiet shore gives the crew something useful to carry forward.",
     "giver": "Orion",
     "hub_id": "hub_3_sector9",
     "stages": [
@@ -968,7 +969,7 @@
         "tasks": [
           {
             "id": "visit_beach",
-            "text": "Discover Tideglass Beach."
+            "text": "Visit Tide Pools on Tideglass Beach."
           },
           {
             "id": "collect_food",

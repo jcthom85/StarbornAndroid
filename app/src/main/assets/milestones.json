@@ -1875,7 +1875,7 @@
   },
   {
     "id": "ms_w1_cart_track_diverted",
-    "name": "Minecart Diverter Switched",
+    "name": "Blast Bulkhead Breached",
     "description": "Nova diverted the junction track rails and released the ore cart, smashing the blast door to the Sealed Munitions Stash.",
     "toast": "Blast door breached by ore cart."
   },
@@ -1890,5 +1890,30 @@
     "name": "Slag Bridge Solidified",
     "description": "Nova vented cryogenic coolant into the lava channel at Stepping Stones, solidifying an obsidian bridge into the Subterranean Smelter Forge.",
     "toast": "Molten slag solidified into bridge."
+  },
+  {
+    "id": "ms_w1_cart_rails_read",
+    "name": "Cart Route Inspected",
+    "description": "Nova identified the western siding as the safe cart route."
+  },
+  {
+    "id": "ms_w1_cart_route_set",
+    "name": "Cart Routed West",
+    "description": "The junction points currently direct the cart toward the blast bulkhead."
+  },
+  {
+    "id": "ms_w1_guard_drill_won",
+    "name": "Shield Drill Recorded",
+    "description": "The Security Post or legacy workshop drill recorded Nova's victory. Boggs can register this result for certification."
+  },
+  {
+    "id": "ms_w2_stasis_awake",
+    "name": "The Sleeper Wakes",
+    "description": "Safely routed the stasis rings and awakened Orion."
+  },
+  {
+    "id": "ms_w2_orion_briefed",
+    "name": "A Separate Bridge",
+    "description": "Heard Orion explain the Bridge before recovering it."
   }
 ]

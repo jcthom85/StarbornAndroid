@@ -176,7 +176,7 @@
   },
   {
     "id": "acoustic_bulwark",
-    "name": "Shield Trainer",
+    "name": "Acoustic Bulwark",
     "tier": "elite",
     "combat_behavior": "defensive",
     "combat_role": "tank",
@@ -204,7 +204,7 @@
       "barrier_field",
       "slide_slam"
     ],
-    "flavor": "A reinforced Dominion riot shield drill frame used for mandatory guard certification. Break its Guard with heavy attacks or skills to expose its core.",
+    "flavor": "A Dominion riot enforcer braces behind a powered acoustic shield. Break its Guard to expose the armor beneath.",
     "xp_reward": 100,
     "credit_reward": 40,
     "drops": [
@@ -217,7 +217,7 @@
         "chance": 0.4
       }
     ],
-    "description": "Dominion training dummy equipped with an active barrier. Break its Guard with Stagger or physical skills to shatter its shield.",
+    "description": "Armored Dominion opponent with an active barrier. Hydraulic Kick breaks its Guard; Stagger disrupts the shield.",
     "portrait": "images/enemies/acoustic_bulwark_combat.png"
   },
   {

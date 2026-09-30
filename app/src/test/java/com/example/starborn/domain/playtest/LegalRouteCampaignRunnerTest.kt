@@ -322,6 +322,17 @@ class LegalRouteCampaignRunnerTest {
             harness.settle()
         }
 
+        fun finishDialogue(choiceId: String) {
+            var steps = 0
+            while (harness.explorationVm.uiState.value.activeDialogue != null) {
+                check(++steps <= 30) { "Puzzle dialogue stalled" }
+                val choices = harness.explorationVm.uiState.value.dialogueChoices
+                if (choices.isEmpty()) harness.explorationVm.advanceDialogue()
+                else harness.explorationVm.onDialogueChoiceSelected(choices.single { it.id == choiceId }.id)
+                harness.settle()
+            }
+        }
+
         fun talkToNpc(npcName: String, choiceId: String? = null) {
             harness.explorationVm.onNpcInteraction(npcName)
             harness.settle()
@@ -470,6 +481,10 @@ class LegalRouteCampaignRunnerTest {
             performAction("w2_mq03_read_mural_overview")
             performAction("w2_mq03_stabilize_coolant")
             performAction("w2_mq03_align_complete")
+            finishDialogue("correct")
+            navigateLegalPath("sector9_stasis_chamber")
+            talkToNpc("Orion")
+            performAction("w2_mq03_recover_bridge")
             assertTrue("w2_mq03 completed", harness.sessionStore.state.value.completedQuests.contains("w2_mq03"))
             assertTrue("Orion joins party", harness.sessionStore.state.value.partyMembers.contains("orion"))
             assertTrue("w2_mq04 active", harness.sessionStore.state.value.activeQuests.contains("w2_mq04"))
@@ -490,10 +505,16 @@ class LegalRouteCampaignRunnerTest {
             performAction("w2_mq05_read_pressure_gauge")
             performAction("w2_mq05_overload_breakers")
             performAction("w2_mq05_bypass_gate")
+            finishDialogue("correct")
             performAction("w2_mq05_inspect_astra")
             performAction("w2_mq05_collect_conduits")
             performAction("w2_mq05_reboot")
             performAction("w2_mq05_launch")
+            finishDialogue("depart")
+            while (harness.cinematicCoordinator.state.value != null) {
+                harness.explorationVm.skipCinematic()
+                harness.settle()
+            }
             assertTrue("w2_mq05 completed", harness.sessionStore.state.value.completedQuests.contains("w2_mq05"))
             assertEquals("spire_sewers_landing", harness.sessionStore.state.value.roomId)
         }

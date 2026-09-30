@@ -2183,25 +2183,25 @@
     "env": "market",
     "title": "The Core Hub",
     "background_image": "images/rooms/world_1/server_hub.webp",
-    "description": "The primary mainframe terminal glows with sterile blue light. A frozen console sits below it, its keys filmed with condensation and old fingerprints.",
+    "description": "The primary mainframe terminal glows with sterile blue light. A frozen console sits below it, its keys filmed with condensation and old fingerprints. The output ports bear a faded rebel warning.",
     "description_variants": [
       {
         "requires_state": {
           "override_applied": true
         },
-        "description": "The mainframe terminal shows a standard login screen. The console is thawed, and its last rebel command is burned into a cracked circuit board."
+        "description": "The mainframe terminal shows a standard login screen. The console is thawed, and its last rebel command is burned into a cracked circuit board. The output ports carry the rebel warning."
       },
       {
         "requires_state": {
           "console_thawed": true
         },
-        "description": "The frozen console has thawed just enough for input, and the mainframe terminal waits with the rebel spoof queued beneath Dominion compliance layers."
+        "description": "The frozen console has thawed just enough for input, and the mainframe terminal waits with the rebel spoof queued beneath Dominion compliance layers. The output ports carry the rebel warning."
       },
       {
         "requires_state": {
           "rebel_terminal_found": true
         },
-        "description": "A dead rebel login flickers beneath the mainframe terminal while the frozen console drops inputs through stiff, ice-slick keys."
+        "description": "A dead rebel login flickers beneath the mainframe terminal while the frozen console drops inputs through stiff, ice-slick keys. The output ports carry the rebel warning."
       }
     ],
     "npcs": [],
@@ -2229,6 +2229,11 @@
         "type": "generic",
         "action_event": "w1_sq04_thaw_console",
         "condition_unmet_message": "The buttons are frozen stiff. You'll need to be careful with the input."
+      },
+      {
+        "name": "output ports",
+        "type": "generic",
+        "action_event": "w1_sq04_read_ports"
       }
     ]
   },
@@ -2513,7 +2518,7 @@
     "env": "mine",
     "title": "Cavern Junction",
     "background_image": "images/rooms/world_1/mine_junction.webp",
-    "description": "Mine tunnels branch around a central pillar. A mounted junction breaker box hums with power. Beside switch rails, a track diverter lever points toward a reinforced blast bulkhead.",
+    "description": "Mine tunnels branch around a central pillar. A junction breaker box hums beside the switch rails. A loaded ore cart waits above the junction, held by its wheel brake. The track diverter lever controls the route past a reinforced blast bulkhead.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2529,12 +2534,12 @@
         "requires": [
           {
             "room_id": "mine_junction",
-            "state_key": "track_diverted",
+            "state_key": "bulkhead_breached",
             "value": true
           }
         ],
         "message_locked": "A reinforced Dominion blast bulkhead seals the western spur. Narrow-gauge rails end abruptly before the steel door.",
-        "message_unlock": "The heavy ore cart rolls down the switch rails, shattering the blast door with an echoing boom!"
+        "message_unlock": "The cart has torn the western bulkhead open. The passage stays clear."
       }
     },
     "pos": [
@@ -2546,10 +2551,16 @@
     },
     "description_variants": [
       {
+        "requires_milestones": [
+          "ms_w1_cart_track_diverted"
+        ],
+        "description": "The western bulkhead is shattered, with the ore cart buried in slag beyond it. The switch rails and track diverter lever remain beside the junction breaker box; the western passage is permanently clear."
+      },
+      {
         "requires_state": {
           "track_diverted": true
         },
-        "description": "Tunnels branch from the junction where the junction breaker box hums. Switch rails curve west past the thrown track diverter lever, toward the shattered blast door and crushed slag."
+        "description": "The switch rails curve west toward the intact blast bulkhead. The loaded ore cart still waits above the junction with its wheel brake engaged. The track diverter lever is thrown beside the junction breaker box."
       }
     ],
     "actions": [
@@ -2558,7 +2569,7 @@
         "type": "toggle",
         "state_key": "track_diverted",
         "popup_title": "Ore Cart Track Switch",
-        "label_on": "Divert Track & Release Cart",
+        "label_on": "Divert Track West",
         "label_off": "Reset Track Switch",
         "action_event_on": "w1_cart_track_diverted",
         "action_event_off": "w1_cart_track_reset",
@@ -2574,6 +2585,17 @@
         "action_event_on": "evt_mine_power_on",
         "action_event_off": "evt_mine_power_off",
         "condition_unmet_message": "The mounted junction breaker box routes auxiliary power to the surrounding mine tunnels."
+      },
+      {
+        "name": "switch rails",
+        "type": "generic",
+        "action_event": "w1_cart_inspect_rails"
+      },
+      {
+        "name": "wheel brake",
+        "type": "generic",
+        "action_event": "w1_cart_release",
+        "hide_when_milestone": "ms_w1_cart_track_diverted"
       }
     ]
   },
@@ -8973,6 +8995,14 @@
         "name": "cargo panel",
         "type": "generic",
         "condition_unmet_message": "Reinforced alloy stenciled with Dominion emergency release instructions. The hydraulic latch is crushed shut."
+      },
+      {
+        "name": "return to Astra",
+        "type": "generic",
+        "action_event": "w2_mq05_return_to_hangar",
+        "show_when_milestone": "ms_w2_conduits_collected",
+        "requires_milestone_not_set": "ms_w2_mq05_complete",
+        "condition_unmet_message": "Follow the opened service route back to the Astra."
       }
     ],
     "description_variants": [
@@ -11325,6 +11355,14 @@
         "type": "generic",
         "action_event": "w2_sq05_search_vents",
         "condition_unmet_message": "The ventilation shaft is too narrow for comfort, but its scrape marks are newer than the dust."
+      },
+      {
+        "name": "sealed Bridge cradle",
+        "type": "generic",
+        "action_event": "w2_mq03_recover_bridge",
+        "show_when_milestone": "ms_w2_orion_briefed",
+        "requires_milestone_not_set": "ms_w2_bridge_recovered",
+        "condition_unmet_message": "Talk to Orion before opening the separate Bridge cradle."
       }
     ],
     "npc_presence": [
@@ -11336,9 +11374,27 @@
         "forbidden_milestones": [
           "ms_w2_mq03_complete"
         ]
+      },
+      {
+        "npc": "orion",
+        "requires_milestones": [
+          "ms_w2_stasis_awake"
+        ],
+        "forbidden_milestones": [
+          "ms_w2_mq03_complete"
+        ]
       }
     ],
     "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_stasis_awake"
+        ],
+        "forbidden_milestones": [
+          "ms_w2_mq03_complete"
+        ],
+        "description": "Orion sits beside the open stasis pod, watching its separate memory bands settle. Talk to Orion. A sealed Bridge cradle waits nearby; the root lattice and ceiling vent remain within reach."
+      },
       {
         "requires_milestones": [
           "ms_w2_mq03_complete"
@@ -11390,10 +11446,19 @@
           "ms_w2_coolant_stabilized"
         ],
         "condition_unmet_message": "The rings refuse to move until all four alignment frequencies are in phase.",
-        "requires_milestone_not_set": "ms_w2_mq03_complete"
+        "requires_milestone_not_set": "ms_w2_stasis_awake"
       }
     ],
     "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_stasis_awake"
+        ],
+        "forbidden_milestones": [
+          "ms_w2_mq03_complete"
+        ],
+        "description": "The aligned rings carry pressure safely around the memory shell. Orion is awake. Return west to Stasis Chamber to talk to him and open the separate Bridge cradle."
+      },
       {
         "requires_milestones": [
           "ms_w2_murals_read",
@@ -11799,7 +11864,7 @@
           "ms_w2_source_pressure_mapped",
           "ms_w2_source_breakers_starved"
         ],
-        "condition_unmet_message": "The acoustic lock will not resolve until both harmonic emitters are stabilized and grounded.",
+        "condition_unmet_message": "Prepare all four feeds first: brace the horn, ground the cup, read root pressure, and isolate the breakers.",
         "requires_milestone_not_set": "ms_w2_gate_bypassed"
       }
     ],
@@ -11823,6 +11888,12 @@
       },
       {
         "requires_milestones": [
+          "ms_w2_gate_bypassed"
+        ],
+        "description": "A colossal portal framed in dark alloy and resonance crystals. The acoustic lock is unsealed, revealing the path ahead."
+      },
+      {
+        "requires_milestones": [
           "ms_w2_source_horn_stabilized",
           "ms_w2_source_cup_grounded",
           "ms_w2_source_pressure_mapped",
@@ -11832,12 +11903,6 @@
           "ms_w2_mq05_complete"
         ],
         "description": "The Source Gate still blocks the hangar, but the acoustic lock's three howling bands have fallen into a tense, readable chord. The horn, cup, roots, and breakers are finally ready for Orion's resolving tone."
-      },
-      {
-        "requires_milestones": [
-          "ms_w2_gate_bypassed"
-        ],
-        "description": "A colossal portal framed in dark alloy and resonance crystals. The acoustic lock is unsealed, revealing the path ahead."
       }
     ]
   },
@@ -11963,6 +12028,14 @@
         "type": "generic",
         "action_event": "w2_mq05_launch",
         "condition_unmet_message": "The launch cradle will not release the Astra until the bridge relic is awake."
+      },
+      {
+        "name": "salvage return route",
+        "type": "generic",
+        "action_event": "w2_mq05_return_to_pod",
+        "show_when_milestone": "ms_w2_astra_inspected",
+        "requires_milestone_not_set": "ms_w2_conduits_collected",
+        "condition_unmet_message": "The service hatch follows the conduit route back toward the crashed pod."
       }
     ],
     "npc_presence": [
@@ -12034,7 +12107,13 @@
       -5
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "cargo restraints",
+        "type": "inspect",
+        "inspect_message": "Zeke has secured loose cargo. Departure takes the whole crew out of Sector 9; unfinished local errands will have to wait."
+      }
+    ]
   },
   {
     "id": "sector9_hangar_tower",
@@ -12055,7 +12134,13 @@
       -3
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "airlane chart",
+        "type": "inspect",
+        "inspect_message": "Orion's chart follows a low service airlane to the Spire. The outer Planetary Shield stays overhead; this flight cannot cross it."
+      }
+    ]
   },
   {
     "id": "sector9_hangar_fuel_lines",
@@ -12074,7 +12159,13 @@
       -4
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "conduit bus",
+        "type": "inspect",
+        "inspect_message": "The replacement power conduits match the crashed pod's gauge. Ship current powers the Bridge; the Chime supplies identity authentication."
+      }
+    ]
   },
   {
     "id": "sector9_hangar_lock",
@@ -12094,7 +12185,13 @@
       -2
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "launch safety panel",
+        "type": "inspect",
+        "inspect_message": "The cradle releases from Hangar Bay after the Bridge is installed. Check supplies and local quests before confirming departure."
+      }
+    ]
   },
   {
     "id": "sector9_the_sky",
@@ -12102,7 +12199,7 @@
     "weather": "resonance",
     "title": "The Sky",
     "background_image": "images/rooms/world_2/the_sky.webp",
-    "description": "Flying high above the cloud layer, approaching the violet glow of the Planetary Shield. Zeke grins, but the console starts to beep frantically.",
+    "description": "A holographic flight-plan projection fills an observation alcove above the hangar. The Astra remains in her cradle below. The preview shows a low service airlane toward the Spire, with the outer Planetary Shield far overhead.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12115,7 +12212,13 @@
       -1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "airlane preview",
+        "type": "inspect",
+        "inspect_message": "This is a route preview, not a flight. Release the launch cradle in Hangar Bay when the crew is ready."
+      }
+    ]
   },
   {
     "id": "sector9_sky_mesosphere",
@@ -12123,7 +12226,7 @@
     "weather": "resonance",
     "title": "Mesosphere Storm",
     "background_image": "images/rooms/world_2/sky_mesosphere.webp",
-    "description": "Ascending through violent storm clouds. Static charges discharge across the cockpit glass.",
+    "description": "A storm overlay paints static across the projected cockpit glass. The route stays beneath the hard deck; the preview marks weather pockets along the low airlane.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12136,7 +12239,13 @@
       0
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "storm overlay",
+        "type": "inspect",
+        "inspect_message": "The route skirts the storm front instead of climbing toward the shield. Orion needs a stable counter-tone if guidance becomes noisy."
+      }
+    ]
   },
   {
     "id": "sector9_sky_shield_threshold",
@@ -12144,7 +12253,7 @@
     "weather": "resonance",
     "title": "Shield Threshold",
     "background_image": "images/rooms/world_2/sky_shield_threshold.webp",
-    "description": "Directly facing the violet Shield lattice. The cockpit vibrates, systems reporting terminal warnings.",
+    "description": "The projection places the violet Shield lattice far above the service airlane. A red altitude line marks the ceiling the Astra must stay beneath.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12159,7 +12268,13 @@
       1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "shield ceiling overlay",
+        "type": "inspect",
+        "inspect_message": "The Planetary Shield is overhead. Reaching the Spire does not cross it; the crew still needs another way beyond its limits."
+      }
+    ]
   },
   {
     "id": "sector9_sky_sensor_buoy",
@@ -12167,7 +12282,7 @@
     "weather": "resonance",
     "title": "Security Buoy",
     "background_image": "images/rooms/world_2/sky_sensor_buoy.webp",
-    "description": "A security buoy logging flight data. Its status arrays glow violet in key with the Shield.",
+    "description": "The flight-plan model shows a Dominion security buoy sweeping the approach to the Spire. Its scan bands cut across the projected airlane.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12179,7 +12294,13 @@
       1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "security scan preview",
+        "type": "inspect",
+        "inspect_message": "The buoy can interfere with local guidance. Gh0st marks an approach beneath the strongest scan bands."
+      }
+    ]
   },
   {
     "id": "sector9_sky_barrier_core",
@@ -12187,7 +12308,7 @@
     "weather": "resonance",
     "title": "Barrier Controller",
     "background_image": "images/rooms/world_2/sky_barrier_core.webp",
-    "description": "The shield control node. It hums with the master curfew frequency of Sector 9.",
+    "description": "A navigation model separates the local Dominion guidance channels from the distant planetary barrier. A pulse of interference turns the Spire approach red.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12199,7 +12320,13 @@
       2
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "guidance interference model",
+        "type": "inspect",
+        "inspect_message": "Local guidance can fail even below the shield. The manual ground path must remain available; forcing the Bridge harder will not fix the airlane."
+      }
+    ]
   },
   {
     "id": "sector9_sky_hard_deck",
@@ -12207,7 +12334,7 @@
     "weather": "resonance",
     "title": "Pushback Node",
     "background_image": "images/rooms/world_2/sky_hard_deck.webp",
-    "description": "The boundary altitude. Flight thrusters shut down automatically to prevent disintegration.",
+    "description": "A safety diagram shows the permitted service altitude beneath the outer Shield. The projected Astra never crosses the red hard-deck line.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12219,7 +12346,13 @@
       1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "altitude limiter",
+        "type": "inspect",
+        "inspect_message": "Keep below the hard deck. The low airlane ends at the Spire, not beyond the planetary barrier."
+      }
+    ]
   },
   {
     "id": "astra_bridge",

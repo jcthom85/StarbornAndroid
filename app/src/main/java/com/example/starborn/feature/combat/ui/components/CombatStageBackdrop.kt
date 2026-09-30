@@ -8,6 +8,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -153,6 +155,7 @@ fun CombatPlaytestControls(
             ),
             modifier = Modifier
                 .testTag("combat-op-toggle")
+                .semantics { contentDescription = "OP Mode" }
                 .clickable(onClick = onToggleOpMode)
         ) {
             Row(
@@ -171,33 +174,28 @@ fun CombatPlaytestControls(
             }
         }
 
-        AnimatedVisibility(
-            visible = isOpMode,
-            enter = fadeIn() + expandHorizontally(),
-            exit = fadeOut() + shrinkHorizontally()
+        Surface(
+            shape = RoundedCornerShape(12.dp),
+            color = Color(0xFFD32F2F).copy(alpha = 0.35f),
+            border = BorderStroke(1.dp, Color(0xFFFF8A80)),
+            modifier = Modifier
+                .testTag("combat-op-win")
+                .semantics { contentDescription = "Instant Win" }
+                .clickable(onClick = onInstaWin)
         ) {
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = Color(0xFFD32F2F).copy(alpha = 0.35f),
-                border = BorderStroke(1.dp, Color(0xFFFF8A80)),
-                modifier = Modifier
-                    .testTag("combat-op-win")
-                    .clickable(onClick = onInstaWin)
+            Row(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Text(
-                        text = "💥 Win",
-                        color = Color(0xFFFFCDD2),
-                        style = MaterialTheme.typography.labelMedium.copy(
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 0.5.sp
-                        )
+                Text(
+                    text = "💥 Win",
+                    color = Color(0xFFFFCDD2),
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 0.5.sp
                     )
-                }
+                )
             }
         }
     }

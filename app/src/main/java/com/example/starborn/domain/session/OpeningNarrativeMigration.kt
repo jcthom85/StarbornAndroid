@@ -48,6 +48,28 @@ fun GameSessionState.migrateOpeningNarrativeState(): GameSessionState {
         migratedQuestTasks.getOrPut(questId) { mutableSetOf() }.add(taskId)
     }
 
+    // Early drill victories used to clear the trainer without recording credit.
+    // Recover evidence only; the guarded certification event grants its reward.
+    val priorDrillWin = listOf("admin_security", "workshop_dock").any { room ->
+        migratedRoomStates[room]?.get("encounter_cleared:acoustic_bulwark") == true
+    } || "break_training_shield" in migratedQuestTasks["w1_sq03"].orEmpty()
+    if (priorDrillWin || "w1_sq03" in completedQuests) {
+        backfillMilestone("ms_w1_guard_drill_won")
+    }
+    if ("w1_sq03" in completedQuests) {
+        backfillMilestone("ms_w1_guardbreak_trained")
+        migratedSkills.add("nova_hydraulic_kick")
+    }
+
+    // The old cart event already destroyed the door, even if the switch was reset.
+    if ("ms_w1_cart_track_diverted" in migratedMilestones) {
+        roomState("mine_junction", "bulkhead_breached")
+    }
+    // Preserve a route set before this pass when the cart has not been released.
+    if (migratedRoomStates["mine_junction"]?.get("track_diverted") == true) {
+        backfillMilestone("ms_w1_cart_route_set")
+    }
+
     if ("w1_mq01" in activeQuests && "w1_mq01" !in completedQuests &&
         "equip_starter_gear" in migratedTasks &&
         migratedInventory.getOrDefault("cryo_inductor", 0) == 0 &&
@@ -100,7 +122,26 @@ fun GameSessionState.migrateOpeningNarrativeState(): GameSessionState {
         migratedInventory.remove("bridge_relic")
     }
 
+    if ("align_stasis_rings" in migratedQuestTasks["w2_mq03"].orEmpty() || "w2_mq03" in completedQuests) {
+        backfillMilestone("ms_w2_stasis_awake")
+    }
+    if ("talk_to_orion" in migratedQuestTasks["w2_mq03"].orEmpty() || "w2_mq03" in completedQuests) {
+        backfillMilestone("ms_w2_orion_briefed")
+    }
+
     val ridgeTasks = migratedQuestTasks["w2_mq04"].orEmpty()
+    // Old encounter starts and pending drills wrote completion milestones too early.
+    if ("w2_mq04" in activeQuests && "w2_mq04" !in completedQuests) {
+        if ("defeat_the_beast" !in ridgeTasks && migratedRoomStates["sector9_canopy_ridge"]?.get("beast_defeated") != true) {
+            migratedMilestones.remove("ms_w2_beast_defeated")
+            migratedHistory.removeAll { it == "ms_w2_beast_defeated" }
+        }
+        if ("complete_anchor_drill" !in ridgeTasks && migratedRoomStates["sector9_canopy_ridge"]?.get("anchor_drill_complete") != true) {
+            migratedMilestones.remove("ms_w2_mq04_complete")
+            migratedHistory.removeAll { it == "ms_w2_mq04_complete" }
+        }
+    }
+
     if ("confront_stalker" in ridgeTasks || "w2_mq04" in completedQuests) roomState("sector9_canopy_ridge", "hunter_confronted")
     if ("defeat_the_beast" in ridgeTasks || "w2_mq04" in completedQuests) roomState("sector9_canopy_ridge", "beast_defeated")
     if ("complete_anchor_drill" in ridgeTasks || "w2_mq04" in completedQuests) roomState("sector9_canopy_ridge", "anchor_drill_complete")

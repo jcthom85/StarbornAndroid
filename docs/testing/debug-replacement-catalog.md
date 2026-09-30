@@ -41,6 +41,7 @@ Large route/system families must be split into playable variants during prerequi
 | campaign_w3_sq13 | quest_stage, quest_task, quests | 5 |
 | campaign_w3_sq14 | quest_stage, quest_task, quests | 5 |
 | campaign_w3_sq15 | quest_stage, quest_task, quests | 5 |
+| campaign_w3_sq16 | quest_stage, quest_task, quests | 7 |
 | campaign_w4_mq16 | quest_stage, quest_task, quests | 7 |
 | campaign_w4_mq17 | quest_stage, quest_task, quests | 5 |
 | campaign_w4_mq18 | quest_stage, quest_task, quests | 6 |
@@ -51,6 +52,7 @@ Large route/system families must be split into playable variants during prerequi
 | campaign_w4_sq18 | quest_stage, quest_task, quests | 5 |
 | campaign_w4_sq19 | quest_stage, quest_task, quests | 5 |
 | campaign_w4_sq20 | quest_stage, quest_task, quests | 5 |
+| campaign_w4_sq_crucible | quest_stage, quest_task, quests | 5 |
 | campaign_w5_mq21 | quest_stage, quest_task, quests | 7 |
 | campaign_w5_mq22 | quest_stage, quest_task, quests | 8 |
 | campaign_w5_mq23 | quest_stage, quest_task, quests | 8 |
@@ -77,11 +79,11 @@ Large route/system families must be split into playable variants during prerequi
 | fish_sector9_stream | fishing_catch, fishing_zone | 7 |
 | fish_singularity_ether_well | fishing_catch, fishing_zone | 7 |
 | fish_spire_runoff | fishing_catch, fishing_zone | 7 |
-| route_world_1 | events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 344 |
-| route_world_2 | events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 368 |
-| route_world_3 | dialogue, events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 286 |
-| route_world_4 | events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 272 |
-| route_world_5 | events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 293 |
+| route_world_1 | dialogue, events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 364 |
+| route_world_2 | dialogue, events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 405 |
+| route_world_3 | dialogue, events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 303 |
+| route_world_4 | events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 286 |
+| route_world_5 | events, exit, hub_nodes, hubs, rooms, tuning_puzzles | 298 |
 | route_world_6 | events, exit, hub_nodes, hubs, rooms | 250 |
 | route_world_astra | exit, hub_nodes, hubs, rooms | 15 |
 | shop_accessory_shop | shops | 1 |
@@ -103,7 +105,7 @@ Large route/system families must be split into playable variants during prerequi
 | system_campaign_continuous | system_behavior | 1 |
 | system_campaign_economy | system_behavior | 1 |
 | system_characters | characters | 4 |
-| system_cinematics | cinematics | 50 |
+| system_cinematics | cinematics | 51 |
 | system_combat_actions | system_behavior | 1 |
 | system_combat_outcomes | system_behavior | 1 |
 | system_combat_party | system_behavior | 1 |
@@ -112,19 +114,19 @@ Large route/system families must be split into playable variants during prerequi
 | system_completion_ngplus | system_behavior | 1 |
 | system_cooking | recipes_cooking | 15 |
 | system_device_performance | system_behavior | 1 |
-| system_dialogue | dialogue | 376 |
-| system_enemies | enemies | 47 |
-| system_events | events | 96 |
+| system_dialogue | dialogue | 400 |
+| system_enemies | enemies | 48 |
+| system_events | events | 90 |
 | system_fishing | fishing_lures, fishing_rods, system_behavior | 12 |
 | system_inventory | system_behavior | 1 |
-| system_items | items | 252 |
+| system_items | items | 259 |
 | system_legacy_saves | system_behavior | 1 |
 | system_leveling | system_behavior | 1 |
 | system_meals | system_behavior | 1 |
-| system_milestones | milestones | 294 |
+| system_milestones | milestones | 314 |
 | system_navigation | exit | 8 |
 | system_node_progression | system_behavior | 1 |
-| system_npcs | npcs | 42 |
+| system_npcs | npcs | 47 |
 | system_patrols | patrol_zone | 2 |
 | system_recipe_boundaries | system_behavior | 1 |
 | system_recovery_battle | system_behavior | 1 |
@@ -132,7 +134,7 @@ Large route/system families must be split into playable variants during prerequi
 | system_recovery_puzzle | system_behavior | 1 |
 | system_recovery_transactions | system_behavior | 1 |
 | system_recovery_travel | system_behavior | 1 |
-| system_room_actions | room_action | 1078 |
+| system_room_actions | room_action | 1119 |
 | system_rooms | rooms | 7 |
 | system_save_slots | system_behavior | 1 |
 | system_shop_boundaries | system_behavior | 1 |

@@ -63,7 +63,8 @@ class CampaignEventIntegrationTest {
                 harness.assertJournalRestored()
             }
             val checkpoint = harness.store.state.value
-            assertEquals(5105 + rewards.sumOf { it.xp }, checkpoint.playerXp)
+            // 4,525 main-quest XP + 100 training XP; retired relay rewards contributed an invalid 480.
+            assertEquals(4625 + rewards.sumOf { it.xp }, checkpoint.playerXp)
             assertEquals(rewards.sumOf { it.ap }, checkpoint.playerAp)
             assertEquals(rewards.sumOf { it.credits }, checkpoint.playerCredits)
             assertEquals(2, checkpoint.inventory["nova_flux_liner"])
@@ -79,7 +80,7 @@ class CampaignEventIntegrationTest {
             }
             playWorld4(harness)
             val bossCheckpoint = requireNotNull(beforeTitan)
-            assertEquals(10450, bossCheckpoint.playerXp)
+            assertEquals(9970, bossCheckpoint.playerXp)
             assertEquals(8, bossCheckpoint.playerLevel)
             assertTrue("Level-nine offense must not be invented", "zeke_overload_fists" !in bossCheckpoint.unlockedSkills)
             assertTrue(bossCheckpoint.activeQuests.contains("w4_mq20"))
@@ -204,7 +205,7 @@ class CampaignEventIntegrationTest {
     @Test fun `partial main quest objectives resume from disk in every world`() {
         val cases = listOf(
             Triple("w1_mq03_touch_relic", "w1_mq03", "touch_tuning_fork"),
-            Triple("w2_mq05_bypass_gate", "w2_mq05", "bypass_source_gate"),
+            Triple("w2_mq05_resolve_gate", "w2_mq05", "bypass_source_gate"),
             Triple("w3_mq14_take_lens", "w3_mq14", "take_lens"),
             Triple("w4_mq19_open_anvil_cradle", "w4_mq19", "solve_conveyor_puzzle"),
             Triple("w5_mq24_take_anchor", "w5_mq24", "take_anchor"),
@@ -292,8 +293,8 @@ class CampaignEventIntegrationTest {
             val earned = harness.store.state.value
             // This route excludes battle XP/AP/credits: do not silently replace it
             // with the level-nine, 1,070-credit constructed combat checkpoint.
-            assertEquals(5105, earned.playerXp)
-            assertEquals(7, earned.playerLevel)
+            assertEquals(4625, earned.playerXp)
+            assertEquals(6, earned.playerLevel)
             assertEquals(0, earned.playerCredits)
             assertEquals(0, earned.playerAp)
             val equipped = earned.copy(equippedArmors = earned.equippedArmors + ("nova" to "nova_flux_liner"))
@@ -417,6 +418,9 @@ class CampaignEventIntegrationTest {
         agent.executeAction("w2_mq03_read_mural_overview")
         agent.executeAction("w2_mq03_stabilize_coolant")
         agent.executeAction("w2_mq03_align_complete")
+        agent.solvePuzzle("Stasis Console")
+        agent.talkTo("Orion")
+        agent.executeAction("w2_mq03_recover_bridge")
 
         state = harness.store.state.value
         assertTrue("w2_mq03 should be completed", state.completedQuests.contains("w2_mq03"))
@@ -441,10 +445,12 @@ class CampaignEventIntegrationTest {
         agent.executeAction("w2_mq05_read_pressure_gauge")
         agent.executeAction("w2_mq05_overload_breakers")
         agent.executeAction("w2_mq05_bypass_gate")
+        agent.solvePuzzle("Source Gate Console")
         agent.executeAction("w2_mq05_inspect_astra")
         agent.executeAction("w2_mq05_collect_conduits")
         agent.executeAction("w2_mq05_reboot")
         agent.executeAction("w2_mq05_launch")
+        agent.solvePuzzle("Astra Navigation", "depart")
 
         state = harness.store.state.value
         assertTrue("w2_mq05 should be completed", state.completedQuests.contains("w2_mq05"))
@@ -662,6 +668,16 @@ class CampaignEventIntegrationTest {
             harness.store.setRoom(targetRoomId)
             harness.events.handleTrigger("enter_room", EventPayload.EnterRoom(targetRoomId))
             harness.settle()
+        }
+
+        fun solvePuzzle(speaker: String, choiceId: String = "correct") {
+            val session = checkNotNull(harness.dialogue.startDialogue(speaker))
+            repeat(30) {
+                if (session.isFinished()) return
+                if (session.choices().isEmpty()) session.advance() else session.choose(choiceId)
+                harness.settle()
+            }
+            error("Puzzle dialogue stalled: $speaker")
         }
 
         fun talkTo(npcName: String) {

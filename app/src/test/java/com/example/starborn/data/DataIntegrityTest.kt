@@ -30,7 +30,6 @@ class DataIntegrityTest {
 
     private val moshi = MoshiProvider.instance
     private val allowedMissingQuestIds = setOf(
-        "q_mine_relay_scramble",
         "gather_broken_gear",
         "talk_to_jed",
         "fixers_favor",

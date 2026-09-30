@@ -145,33 +145,34 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Counter-Tune the Fork"
     timeout: 15000
-- tapOn: "Phase Sweep value"
-- eraseText: 2
-- inputText: "87"
-- tapOn:
-    text: "Apply"
-    index: 0
+# Exercise each guided stage through its accessible increment controls.
 - scrollUntilVisible:
-    element: "Cold Loop value"
+    element: "Faster"
     direction: DOWN
     timeout: 10000
-- tapOn: "Cold Loop value"
-- eraseText: 2
-- inputText: "68"
-- tapOn:
-    text: "Apply"
-    index: 1
+- repeat:
+    times: 35
+    commands:
+      - tapOn: "Faster"
+- tapOn: "Hold sweep"
 - scrollUntilVisible:
-    element: "Ground Phase value"
+    element: "More cooling"
     direction: DOWN
     timeout: 10000
-- tapOn: "Ground Phase value"
-- eraseText: 1
-- inputText: "180"
-- tapOn:
-    text: "Apply"
-    index: 2
-- tapOn: "Tune"
+- repeat:
+    times: 33
+    commands:
+      - tapOn: "More cooling"
+- tapOn: "Hold cold loop"
+- scrollUntilVisible:
+    element: "Turn right"
+    direction: DOWN
+    timeout: 10000
+- repeat:
+    times: 36
+    commands:
+      - tapOn: "Turn right"
+- tapOn: "Engage handshake"
 - extendedWaitUntil:
     visible: ".*Phase sweep: 87 kHz.*"
     timeout: 10000

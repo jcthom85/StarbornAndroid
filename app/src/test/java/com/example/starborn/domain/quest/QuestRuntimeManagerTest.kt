@@ -189,6 +189,77 @@ class QuestRuntimeManagerTest {
         scope.cancel()
     }
 
+    @Test
+    fun optionalObjectiveDoesNotBlockStageProgression() = runTest {
+        val scope = CoroutineScope(SupervisorJob() + StandardTestDispatcher(testScheduler))
+        try {
+            val quest = Quest(id = "optional_route", title = "Route", stages = listOf(
+                QuestStage(id = "mine", title = "Mine", tasks = listOf(
+                    QuestTask("detour", "Optional detour", optional = true),
+                    QuestTask("threshold", "Reach the threshold")
+                )),
+                QuestStage(id = "fork", title = "Fork", tasks = listOf(QuestTask("sync", "Sync")))
+            ))
+            val store = GameSessionStore()
+            val manager = QuestRuntimeManager(createRepository(quest), store, scope, UiEventBus())
+            store.startQuest(quest.id, track = true)
+            advanceUntilIdle()
+            manager.markTaskComplete(quest.id, "threshold")
+            advanceUntilIdle()
+            assertEquals("fork", manager.currentStageId(quest.id))
+            assertFalse("detour" in manager.completedTaskIds(quest.id))
+            assertFalse(quest.id in store.state.value.completedQuests)
+        } finally { scope.cancel() }
+    }
+
+    @Test
+    fun skippedOptionalTaskIsNotMarkedCompletedWhenQuestEnds() = runTest {
+        val scope = CoroutineScope(SupervisorJob() + StandardTestDispatcher(testScheduler))
+        try {
+            val quest = Quest(id = "optional_finish", title = "Route", stages = listOf(
+                QuestStage(id = "final", title = "Final", tasks = listOf(
+                    QuestTask("detour", "Optional detour", optional = true),
+                    QuestTask("finish", "Finish")
+                ))
+            ))
+            val store = GameSessionStore()
+            val manager = QuestRuntimeManager(createRepository(quest), store, scope, UiEventBus())
+            store.startQuest(quest.id, track = true)
+            advanceUntilIdle()
+            manager.markTaskComplete(quest.id, "finish")
+            advanceUntilIdle()
+            assertTrue(quest.id in store.state.value.completedQuests)
+            assertFalse("detour" in manager.completedTaskIds(quest.id))
+            val entry = manager.state.value.completedJournal.single { it.id == quest.id }
+            assertFalse(entry.objectives.single { it.id == "detour" }.completed)
+            assertTrue(entry.objectives.single { it.id == "finish" }.completed)
+        } finally { scope.cancel() }
+    }
+
+    @Test
+    fun completedOptionalTaskRemainsCompletedAndDoesNotFinishRequiredTask() = runTest {
+        val scope = CoroutineScope(SupervisorJob() + StandardTestDispatcher(testScheduler))
+        try {
+            val quest = Quest(id = "optional_taken", title = "Route", stages = listOf(
+                QuestStage(id = "final", title = "Final", tasks = listOf(
+                    QuestTask("detour", "Optional detour", optional = true),
+                    QuestTask("finish", "Finish")
+                ))
+            ))
+            val store = GameSessionStore()
+            val manager = QuestRuntimeManager(createRepository(quest), store, scope, UiEventBus())
+            store.startQuest(quest.id, track = true)
+            advanceUntilIdle()
+            manager.markTaskComplete(quest.id, "detour")
+            advanceUntilIdle()
+            assertFalse(quest.id in store.state.value.completedQuests)
+            manager.markTaskComplete(quest.id, "finish")
+            advanceUntilIdle()
+            assertTrue(quest.id in store.state.value.completedQuests)
+            assertTrue(manager.state.value.completedJournal.single().objectives.single { it.id == "detour" }.completed)
+        } finally { scope.cancel() }
+    }
+
     private fun createRepository(vararg quests: Quest): QuestRepository {
         val dataSource = mockk<QuestAssetDataSource>()
         every { dataSource.loadQuests() } returns quests.toList()

@@ -1,5 +1,12 @@
 [
   {
+    "id": "orion_w2_awakening_1",
+    "speaker": "Orion",
+    "condition": "quest_active:w2_mq03,quest_task_done:w2_mq03:align_stasis_rings,quest_task_not_done:w2_mq03:talk_to_orion",
+    "text": "Twenty years. The roots have reached the chamber... and you kept my memory bands apart. Thank you.",
+    "next": "orion_w2_awakening_2"
+  },
+  {
     "id": "dlg_bran_intro",
     "speaker": "Innkeeper Bran",
     "text": "Bunks are dry, chicory's burnt. You checking in before the night shift whistles?",
@@ -645,7 +652,7 @@
     "id": "bogs_w1_mq03_review_1",
     "speaker": "Foreman Boggs",
     "text": "Nova. Your temporary badge landed on my review queue.",
-    "condition": "quest_active:w1_mq03,milestone_not_set:ms_w1_guardbreak_trained,milestone_not_set:ms_w1_sq03_started",
+    "condition": "quest_active:w1_mq03,milestone_not_set:ms_w1_guardbreak_trained,milestone_not_set:ms_w1_sq03_started,milestone_not_set:ms_w1_guard_drill_won",
     "next": "bogs_w1_mq03_review_2"
   },
   {
@@ -664,13 +671,13 @@
     "id": "bogs_w1_mq03_review_4",
     "speaker": "Foreman Boggs",
     "text": "East through Customer Service to the Security Post. Break the trainer's shield and log your certification.",
-    "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started,set_milestone:ms_w1_sq03_hydraulic_kick_ready,advance_quest_stage:w1_sq03:guard_break_training"
+    "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started,set_milestone:ms_w1_sq03_hydraulic_kick_ready,advance_quest_stage:w1_sq03:guard_break_training,player_action:w1_sq03_register_drill"
   },
   {
     "id": "bogs_w1_mq03_guardbreak_gate_1",
     "speaker": "Foreman Boggs",
     "text": "The training log is still blank. Hit the Security Post to the east and finish the shield drill.",
-    "condition": "quest_active:w1_mq03,milestone:ms_w1_sq03_started,milestone_not_set:ms_w1_guardbreak_trained",
+    "condition": "quest_active:w1_mq03,milestone:ms_w1_sq03_started,milestone_not_set:ms_w1_guardbreak_trained,milestone_not_set:ms_w1_guard_drill_won",
     "next": "bogs_w1_mq03_guardbreak_gate_2"
   },
   {
@@ -683,7 +690,7 @@
     "id": "bogs_w1_mq03_guardbreak_gate_3",
     "speaker": "Foreman Boggs",
     "text": "Then the lift stays locked and your override expires.",
-    "trigger": "track_quest:w1_sq03"
+    "trigger": "track_quest:w1_sq03,player_action:w1_sq03_register_drill"
   },
   {
     "id": "bogs_w1_mq03_intro_1",
@@ -720,7 +727,7 @@
     "id": "bogs_w1_sq03_intro_1",
     "speaker": "Foreman Boggs",
     "text": "You. Cutter. Loader's idle, cargo's blocking my schedule, and your certification log is blank.",
-    "condition": "quest_completed:w1_mq01,quest_not_started:w1_sq03",
+    "condition": "quest_completed:w1_mq01,quest_not_started:w1_sq03,milestone_not_set:ms_w1_guard_drill_won",
     "next": "bogs_w1_sq03_intro_2"
   },
   {
@@ -733,7 +740,7 @@
     "id": "bogs_w1_sq03_intro_3",
     "speaker": "Foreman Boggs",
     "text": "Then move the pile. Finish the shield drill while you're there.",
-    "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started"
+    "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started,player_action:w1_sq03_register_drill"
   },
   {
     "id": "bogs_w1_sq03_complete",
@@ -965,21 +972,19 @@
   {
     "id": "orion_w2_sq04_tune_1",
     "speaker": "Orion",
-    "text": "All three crystal voices are seated. The mural is ready; let the room carry the chord instead of forcing it by hand.",
-    "condition": "quest_active:w2_sq04,quest_task_done:w2_sq04:crystal_west,quest_task_done:w2_sq04:crystal_east,quest_task_done:w2_sq04:crystal_north,quest_task_not_done:w2_sq04:mural_tuning",
-    "trigger": "player_action:w2_sq04_complete"
+    "text": "The wing crystals hold three separate voices. Use the mural array to seat west in the foundation, east in the paired arcs, and north in the star.",
+    "condition": "quest_active:w2_sq04,quest_task_done:w2_sq04:crystal_west,quest_task_done:w2_sq04:crystal_east,quest_task_done:w2_sq04:crystal_north,quest_task_not_done:w2_sq04:mural_tuning"
   },
   {
     "id": "orion_w2_sq04_tune_success",
     "speaker": "Orion",
-    "text": "The mural stabilizes: many minds, distinct as Ice, carried without dissolving in the Ocean.",
-    "condition": "quest_active:w2_sq04,quest_task_done:w2_sq04:mural_tuning",
-    "trigger": "player_action:w2_sq04_complete"
+    "text": "The wing crystals hold three separate voices. Use the mural array to seat west in the foundation, east in the paired arcs, and north in the star.",
+    "condition": "quest_active:w2_sq04,quest_task_done:w2_sq04:mural_tuning"
   },
   {
     "id": "orion_w2_sq04_tune_fail",
     "speaker": "Orion",
-    "text": "No, the colors are shifting erratically. The room is missing one of its voices.",
+    "text": "The wing crystals hold three separate voices. Use the mural array to seat west in the foundation, east in the paired arcs, and north in the star.",
     "condition": "quest_active:w2_sq04,quest_task_not_done:w2_sq04:mural_tuning"
   },
   {
@@ -3179,5 +3184,371 @@
     "speaker": "Pitmaster Brutus",
     "text": "Cage gates dropping! Keep your shields up and your footing cool—first wave is the Magma Drone Swarm!",
     "trigger": "start_quest:w4_sq_crucible,set_milestone:ms_crucible_trial_accepted,player_action:w4_crucible_start_round_1"
+  },
+  {
+    "id": "w1_sq04_routing_entry",
+    "speaker": "Rebel Terminal",
+    "text": "Spoof recovered. Network traffic and account writes are audited. Recover the key without leaving a Dominion record.",
+    "condition": "quest_active:w1_sq04,quest_task_done:w1_sq04:restore_protocol_spoof,quest_task_not_done:w1_sq04:apply_access_override",
+    "next": "w1_sq04_routing_choice"
+  },
+  {
+    "id": "w1_sq04_routing_choice",
+    "speaker": "Rebel Terminal",
+    "text": "The recovered key is ready. Which output should receive it?",
+    "options": [
+      {
+        "id": "network",
+        "text": "Upload to the maintenance network",
+        "next": "w1_sq04_routing_network"
+      },
+      {
+        "id": "board",
+        "text": "Write to the removable circuit board",
+        "trigger": "player_action:w1_sq04_compile_spoof"
+      },
+      {
+        "id": "account",
+        "text": "Install in the local supervisor account",
+        "next": "w1_sq04_routing_account"
+      },
+      {
+        "id": "leave",
+        "text": "Disconnect for now"
+      }
+    ]
+  },
+  {
+    "id": "w1_sq04_routing_network",
+    "speaker": "Rebel Terminal",
+    "text": "The upload would register the rebel key with Dominion monitoring. The terminal blocks the write; the recovered key remains available.",
+    "next": "w1_sq04_routing_choice"
+  },
+  {
+    "id": "w1_sq04_routing_account",
+    "speaker": "Rebel Terminal",
+    "text": "Local accounts still report to Dominion compliance. That would tie the spoof to an identity. The terminal blocks the write; choose an isolated output.",
+    "next": "w1_sq04_routing_choice"
+  },
+  {
+    "id": "bogs_w1_sq03_prior_drill",
+    "speaker": "Foreman Boggs",
+    "text": "The drill frame logged your run already. I can attach that result to your certification.",
+    "condition": "quest_completed:w1_mq01,quest_not_started:w1_sq03,milestone:ms_w1_guard_drill_won",
+    "trigger": "start_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started,set_milestone:ms_w1_sq03_hydraulic_kick_ready,player_action:w1_sq03_register_drill",
+    "next": "bogs_w1_sq03_registered_result"
+  },
+  {
+    "id": "bogs_w1_sq03_recover_drill",
+    "speaker": "Foreman Boggs",
+    "text": "Your drill result is in the frame log. Give me a second to register your certification.",
+    "condition": "quest_active:w1_sq03,milestone:ms_w1_guard_drill_won,milestone_not_set:ms_w1_guardbreak_trained",
+    "trigger": "player_action:w1_sq03_register_drill",
+    "next": "bogs_w1_sq03_registered_result"
+  },
+  {
+    "id": "bogs_w1_sq03_registered_result",
+    "speaker": "Foreman Boggs",
+    "text": "Certification is logged. Now we can discuss your Sector 4 assignment."
+  },
+  {
+    "id": "w2_stasis_entry",
+    "speaker": "Stasis Console",
+    "text": "The pod is ready. Set pressure, memory, then return. The mural shows an outer pressure bypass; separate memory bands protect the sleeper.",
+    "condition": "quest_active:w2_mq03,quest_task_not_done:w2_mq03:align_stasis_rings",
+    "next": "w2_stasis_1"
+  },
+  {
+    "id": "w2_stasis_1",
+    "speaker": "Stasis Console",
+    "text": "Pressure ring: the Source is pushing against the pod. Where should it go?",
+    "options": [
+      {
+        "id": "correct",
+        "text": "Divert pressure around the memory shell.",
+        "next": "w2_stasis_2"
+      },
+      {
+        "id": "wrong",
+        "text": "Force pressure through the memory shell.",
+        "next": "w2_stasis_1_retry"
+      },
+      {
+        "id": "leave",
+        "text": "Step away."
+      }
+    ]
+  },
+  {
+    "id": "w2_stasis_1_retry",
+    "speaker": "Stasis Console",
+    "text": "The pod isolates memories from pressure. Use the outer bypass; forcing current through Orion would hurt him.",
+    "next": "w2_stasis_1"
+  },
+  {
+    "id": "w2_stasis_2",
+    "speaker": "Stasis Console",
+    "text": "Memory ring: the separate carrier bands are holding. How should they connect?",
+    "options": [
+      {
+        "id": "wrong",
+        "text": "Collapse the bands into one stronger signal.",
+        "next": "w2_stasis_2_retry"
+      },
+      {
+        "id": "correct",
+        "text": "Keep each identity on its own band.",
+        "next": "w2_stasis_3"
+      },
+      {
+        "id": "leave",
+        "text": "Step away."
+      }
+    ]
+  },
+  {
+    "id": "w2_stasis_2_retry",
+    "speaker": "Stasis Console",
+    "text": "The mural preserves distinct voices. A louder merged signal would erase the separation the pod protects.",
+    "next": "w2_stasis_2"
+  },
+  {
+    "id": "w2_stasis_3",
+    "speaker": "Stasis Console",
+    "text": "Return ring: the coolant is stable. Complete the waking circuit.",
+    "options": [
+      {
+        "id": "correct",
+        "text": "Reconnect return after the outer bypass settles.",
+        "trigger": "player_action:w2_mq03_apply_alignment"
+      },
+      {
+        "id": "wrong",
+        "text": "Close the bypass and return everything at once.",
+        "next": "w2_stasis_3_retry"
+      },
+      {
+        "id": "leave",
+        "text": "Step away."
+      }
+    ]
+  },
+  {
+    "id": "w2_stasis_3_retry",
+    "speaker": "Stasis Console",
+    "text": "Closing the bypass would put pressure back through Orion. Keep relief open while return reconnects.",
+    "next": "w2_stasis_3"
+  },
+  {
+    "id": "orion_w2_awakening_2",
+    "speaker": "Orion",
+    "text": "Your Chime carries an authentic identity chord. It opened the pod; it does not power the separate Echo in that cradle.",
+    "next": "orion_w2_awakening_3"
+  },
+  {
+    "id": "orion_w2_awakening_3",
+    "speaker": "Orion",
+    "text": "Take the Bridge from the sealed cradle. It connects willing carriers, but it needs a physical ground. I will travel with you. First, we should settle the rifle watching the ridge.",
+    "trigger": "player_action:w2_mq03_talk_to_orion"
+  },
+  {
+    "id": "w2_gate_entry",
+    "speaker": "Source Gate Console",
+    "text": "The horn is braced and the receiver cup grounded. The gauge reads: BLEED, STARVE, RESOLVE. The root pressure must fall before power is isolated.",
+    "condition": "quest_active:w2_mq05,quest_task_not_done:w2_mq05:bypass_source_gate",
+    "next": "w2_gate_1"
+  },
+  {
+    "id": "w2_gate_1",
+    "speaker": "Source Gate Console",
+    "text": "Route 1: living roots are under pressure. Select the relief path.",
+    "options": [
+      {
+        "id": "correct",
+        "text": "Open the root relief into the grounded receiver.",
+        "next": "w2_gate_2"
+      },
+      {
+        "id": "wrong",
+        "text": "Feed root pressure back into the horn.",
+        "next": "w2_gate_1_retry"
+      },
+      {
+        "id": "leave",
+        "text": "Step away."
+      }
+    ]
+  },
+  {
+    "id": "w2_gate_1_retry",
+    "speaker": "Source Gate Console",
+    "text": "The horn amplifies pressure. Route relief into the grounded cup so the roots can breathe.",
+    "next": "w2_gate_1"
+  },
+  {
+    "id": "w2_gate_2",
+    "speaker": "Source Gate Console",
+    "text": "Route 2: relief is open. What should happen to the breaker supply?",
+    "options": [
+      {
+        "id": "wrong",
+        "text": "Boost the lock supply to overpower the barrier.",
+        "next": "w2_gate_2_retry"
+      },
+      {
+        "id": "correct",
+        "text": "Isolate the lock supply; keep the relief path open.",
+        "next": "w2_gate_3"
+      },
+      {
+        "id": "leave",
+        "text": "Step away."
+      }
+    ]
+  },
+  {
+    "id": "w2_gate_2_retry",
+    "speaker": "Source Gate Console",
+    "text": "More power makes the barrier clamp harder. Isolate its feed while preserving root relief.",
+    "next": "w2_gate_2"
+  },
+  {
+    "id": "w2_gate_3",
+    "speaker": "Source Gate Console",
+    "text": "Route 3: pressure is relieved and the lock supply isolated.",
+    "options": [
+      {
+        "id": "correct",
+        "text": "Let Orion resolve the remaining chord.",
+        "trigger": "player_action:w2_mq05_resolve_gate"
+      },
+      {
+        "id": "wrong",
+        "text": "Force the three bands into one tone.",
+        "next": "w2_gate_3_retry"
+      },
+      {
+        "id": "leave",
+        "text": "Step away."
+      }
+    ]
+  },
+  {
+    "id": "w2_gate_3_retry",
+    "speaker": "Source Gate Console",
+    "text": "Orion can resolve the bands while keeping their carriers distinct. Forcing them together restores the unstable load.",
+    "next": "w2_gate_3"
+  },
+  {
+    "id": "w2_mural_entry",
+    "speaker": "Mural Array",
+    "text": "The west crystal carries the low support voice, east the answering voice, north the high stabilizer. Three sockets show a foundation, paired arcs, and a star.",
+    "condition": "quest_active:w2_sq04,quest_task_not_done:w2_sq04:mural_tuning",
+    "next": "w2_mural_1"
+  },
+  {
+    "id": "w2_mural_1",
+    "speaker": "Mural Array",
+    "text": "Foundation socket: which crystal supports the chorus?",
+    "options": [
+      {
+        "id": "correct",
+        "text": "Seat the low west voice in the foundation.",
+        "next": "w2_mural_2"
+      },
+      {
+        "id": "wrong",
+        "text": "Seat the high north voice in the foundation.",
+        "next": "w2_mural_1_retry"
+      },
+      {
+        "id": "leave",
+        "text": "Step away."
+      }
+    ]
+  },
+  {
+    "id": "w2_mural_1_retry",
+    "speaker": "Mural Array",
+    "text": "The west voice supports the others. The bright north voice belongs to the star socket.",
+    "next": "w2_mural_1"
+  },
+  {
+    "id": "w2_mural_2",
+    "speaker": "Mural Array",
+    "text": "The remaining sockets show paired arcs and a star.",
+    "options": [
+      {
+        "id": "wrong",
+        "text": "Seat north in the arcs; east in the star.",
+        "next": "w2_mural_2_retry"
+      },
+      {
+        "id": "correct",
+        "text": "Seat east in the arcs; north in the star.",
+        "trigger": "player_action:w2_sq04_restore_chorus"
+      },
+      {
+        "id": "leave",
+        "text": "Step away."
+      }
+    ]
+  },
+  {
+    "id": "w2_mural_2_retry",
+    "speaker": "Mural Array",
+    "text": "East answers in paired arcs. North stabilizes the chorus from the star socket.",
+    "next": "w2_mural_2"
+  },
+  {
+    "id": "w2_vent_entry",
+    "speaker": "Vent Scanner",
+    "text": "Two narrow scan pulses are followed by a long maintenance gap. The console can latch a mask to one part of that pattern.",
+    "condition": "quest_active:w2_sq05,quest_task_not_done:w2_sq05:hack_security_grid",
+    "next": "w2_vent_1"
+  },
+  {
+    "id": "w2_vent_1",
+    "speaker": "Vent Scanner",
+    "text": "Choose the mask timing before crossing the hatch.",
+    "options": [
+      {
+        "id": "correct",
+        "text": "Latch the mask to the long maintenance gap.",
+        "trigger": "player_action:w2_sq05_mask_scan"
+      },
+      {
+        "id": "wrong",
+        "text": "Transmit during the two narrow scan pulses.",
+        "next": "w2_vent_1_retry"
+      },
+      {
+        "id": "leave",
+        "text": "Step away."
+      }
+    ]
+  },
+  {
+    "id": "w2_vent_1_retry",
+    "speaker": "Vent Scanner",
+    "text": "The narrow pulses are active scans. Use the long maintenance gap; a wrong choice leaves you at the console without raising an alert.",
+    "next": "w2_vent_1"
+  },
+  {
+    "id": "w2_departure_entry",
+    "speaker": "Astra Navigation",
+    "condition": "quest_active:w2_mq05,quest_task_not_done:w2_mq05:launch_ship",
+    "text": "Departure leaves Sector 9 behind. Finish any local quests and exploration before releasing the cradle. Orion has plotted a low service airlane to the Spire, beneath the outer Planetary Shield.",
+    "options": [
+      {
+        "id": "depart",
+        "text": "Release the cradle and depart.",
+        "trigger": "player_action:w2_mq05_confirm_departure"
+      },
+      {
+        "id": "stay",
+        "text": "Finish exploring Sector 9."
+      }
+    ]
   }
 ]

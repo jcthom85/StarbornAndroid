@@ -1,7 +1,7 @@
 appId: com.junewiregames.starborn.prealpha
 ---
 - launchApp:
-    clearState: true
+    clearState: false
 - extendedWaitUntil:
     visible: "Debug Scenarios"
     timeout: 60000
@@ -13,14 +13,21 @@ appId: com.junewiregames.starborn.prealpha
 - eraseText
 - inputText: "Jungle Ruins"
 - hideKeyboard
+- extendedWaitUntil:
+    visible: "World 2 / Jungle Ruins"
+    timeout: 10000
 - tapOn: "World 2 / Jungle Ruins"
+- extendedWaitUntil:
+    visible: "Launch test"
+    timeout: 10000
+- tapOn: "Launch test"
 - extendedWaitUntil:
     visible: "Jungle Ruins"
     timeout: 30000
 - assertVisible: "Crash Site"
-- tapOn: "Enter Crash Site"
+- tapOn: "Enter"
 - extendedWaitUntil:
-    visible: "Crash Site"
+    visible: "Zeke"
     timeout: 30000
 
 # Assert that the CURRENT AREA/CURRENT ROOM label is NOT visible
@@ -43,7 +50,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*Check the core housing.*"
+    visible: ".*Check the wrecked nav console.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
@@ -61,68 +68,86 @@ appId: com.junewiregames.starborn.prealpha
 - assertVisible: "navigation console"
 - tapOn: "navigation console"
 - extendedWaitUntil:
-    visible: "ITEM OBTAINED"
+    visible: "ITEM ACQUIRED"
     timeout: 15000
-- tapOn: "GOT IT"
+- assertVisible: "Ghost Signal Cell"
+- tapOn: "Tap to continue"
 - extendedWaitUntil:
-    visible: "ITEM OBTAINED"
-    timeout: 15000
-- tapOn: "GOT IT"
+    visible: "Medkit"
+    timeout: 5000
+- tapOn: "Tap to continue"
 - extendedWaitUntil:
-    visible: "ITEM OBTAINED"
-    timeout: 15000
-- tapOn: "GOT IT"
+    visible: "Ration Pack"
+    timeout: 5000
+- tapOn: "Tap to continue"
 - extendedWaitUntil:
-    visible: "ITEM OBTAINED"
-    timeout: 15000
-- tapOn: "GOT IT"
+    visible: "Field Rod"
+    timeout: 5000
+- tapOn: "Tap to continue"
 - extendedWaitUntil:
-    notVisible: "ITEM OBTAINED"
+    visible: "Plain Chime Lure"
+    timeout: 5000
+- tapOn: "Tap to continue"
+- extendedWaitUntil:
+    notVisible: "ITEM ACQUIRED"
+    timeout: 5000
+- extendedWaitUntil:
+    visible: "Continue"
     timeout: 10000
+- tapOn: "Continue"
 
-# 3. Travel east to Stream Bank
+# 3. Enter Escape Pod Interior to use emergency medkit on Zeke
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Escape Pod Interior"
+    timeout: 15000
+- assertVisible: "(?i)emergency medkit"
+- tapOn: "(?i)emergency medkit"
+- tapOn:
+    text: ".*(Continue|Tap to continue).*"
+    optional: true
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
+- extendedWaitUntil:
+    visible: "Crash Site"
+    timeout: 15000
+
+# 4. Travel east to Stream Bank (completes w2_mq01 and starts w2_mq02)
 - assertVisible: "Travel east"
 - tapOn: "Travel east"
 - extendedWaitUntil:
     visible: "Stream Bank"
     timeout: 15000
+# Dismiss Tutorial, Quest Completed, and New Quest modals
+- extendedWaitUntil:
+    visible: "(?i)continue"
+    timeout: 10000
+- tapOn: "(?i)continue"
 
-# Dismiss "Quest Completed: A Strange Coast" if it is shown
 - extendedWaitUntil:
-    visible: "Quest Completed"
+    visible: "(?i)continue"
     timeout: 10000
-    optional: true
-- tapOn:
-    text: "Continue"
-    optional: true
-- extendedWaitUntil:
-    notVisible: "Quest Completed"
-    timeout: 10000
-    optional: true
+- tapOn: "(?i)continue"
 
-# Dismiss "New Quest: The Signal" if it is shown
 - extendedWaitUntil:
-    visible: "New Quest"
+    visible: "(?i)continue"
     timeout: 10000
-    optional: true
-- tapOn:
-    text: "Continue"
-    optional: true
-- extendedWaitUntil:
-    notVisible: "New Quest"
-    timeout: 10000
-    optional: true
+- tapOn: "(?i)continue"
 
-# 4. Travel southwest to Scorched Brush (the new diagonal connection!)
-- assertVisible: "Travel southwest"
-- tapOn: "Travel southwest"
+# 4. Travel south to Scorched Brush
+- extendedWaitUntil:
+    visible: "Travel south"
+    timeout: 15000
+- assertVisible: "Travel south"
+- tapOn: "Travel south"
 - extendedWaitUntil:
     visible: "Scorched Brush"
     timeout: 15000
 
-# 5. Travel northeast back to Stream Bank
-- assertVisible: "Travel northeast"
-- tapOn: "Travel northeast"
+# 5. Travel north back to Stream Bank
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
 - extendedWaitUntil:
     visible: "Stream Bank"
     timeout: 15000
@@ -141,191 +166,31 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Resonant Canopy"
     timeout: 15000
 
-# 8. Engage the Echo-Borer
-- assertVisible: "Engage Echo Borer"
-- tapOn: "Engage Echo Borer"
+# 8. Engage the enemy in Resonant Canopy
+- assertVisible: ".*Engage (Stalker Vine|Echo Borer).*"
+- tapOn: ".*Engage (Stalker Vine|Echo Borer).*"
 - extendedWaitUntil:
-    visible: "Echo-Borer"
+    visible: ".*(Stalker-Vine|Echo-Borer).*"
     timeout: 60000
 
-# 9. Perform Hydraulic Kick combat command
-- tapOn: "Nova"
+# 9. In non-combat quest test, use instant win playtest control to resolve combat
 - extendedWaitUntil:
-    visible: "Attack"
-    timeout: 20000
-- tapOn: "Abilities"
-- extendedWaitUntil:
-    visible: "Hydraulic Kick"
+    visible: "Instant Win"
     timeout: 10000
-- tapOn:
-    text: "Use"
-    index: 1
-- extendedWaitUntil:
-    visible: "Cancel"
-    timeout: 10000
-- tapOn: "Echo-Borer"
-- waitForAnimationToEnd:
-    timeout: 8000
+- tapOn: "Instant Win"
 
-# 9b. Perform Zeke standard attack
-- tapOn:
-    text: "Zeke"
-    optional: true
-- extendedWaitUntil:
-    visible: "Attack"
-    timeout: 10000
-    optional: true
-- tapOn:
-    text: "Attack"
-    optional: true
-- extendedWaitUntil:
-    visible: "Cancel"
-    timeout: 10000
-    optional: true
-- tapOn:
-    text: "Echo-Borer"
-    optional: true
-- waitForAnimationToEnd:
-    timeout: 8000
-    optional: true
-
-# 9c. Perform Orion standard attack
-- tapOn:
-    text: "Orion"
-    optional: true
-- extendedWaitUntil:
-    visible: "Attack"
-    timeout: 10000
-    optional: true
-- tapOn:
-    text: "Attack"
-    optional: true
-- extendedWaitUntil:
-    visible: "Cancel"
-    timeout: 10000
-    optional: true
-- tapOn:
-    text: "Echo-Borer"
-    optional: true
-- waitForAnimationToEnd:
-    timeout: 8000
-    optional: true
-
-# 9d. Perform Gh0st standard attack
-- tapOn:
-    text: "Gh0st"
-    optional: true
-- extendedWaitUntil:
-    visible: "Attack"
-    timeout: 10000
-    optional: true
-- tapOn:
-    text: "Attack"
-    optional: true
-- extendedWaitUntil:
-    visible: "Cancel"
-    timeout: 10000
-    optional: true
-- tapOn:
-    text: "Echo-Borer"
-    optional: true
-- waitForAnimationToEnd:
-    timeout: 8000
-    optional: true
-
-# 9e. Perform Nova standard attack
-- tapOn:
-    text: "Nova"
-    optional: true
-- extendedWaitUntil:
-    visible: "Attack"
-    timeout: 10000
-    optional: true
-- tapOn:
-    text: "Attack"
-    optional: true
-- extendedWaitUntil:
-    visible: "Cancel"
-    timeout: 10000
-    optional: true
-- tapOn:
-    text: "Echo-Borer"
-    optional: true
-- waitForAnimationToEnd:
-    timeout: 8000
-    optional: true
-
-# 9f. Perform Zeke standard attack
-- tapOn:
-    text: "Zeke"
-    optional: true
-- extendedWaitUntil:
-    visible: "Attack"
-    timeout: 10000
-    optional: true
-- tapOn:
-    text: "Attack"
-    optional: true
-- extendedWaitUntil:
-    visible: "Cancel"
-    timeout: 10000
-    optional: true
-- tapOn:
-    text: "Echo-Borer"
-    optional: true
-- waitForAnimationToEnd:
-    timeout: 8000
-    optional: true
-
-# 9g. Perform Orion standard attack
-- tapOn:
-    text: "Orion"
-    optional: true
-- extendedWaitUntil:
-    visible: "Attack"
-    timeout: 10000
-    optional: true
-- tapOn:
-    text: "Attack"
-    optional: true
-- extendedWaitUntil:
-    visible: "Cancel"
-    timeout: 10000
-    optional: true
-- tapOn:
-    text: "Echo-Borer"
-    optional: true
-- waitForAnimationToEnd:
-    timeout: 8000
-    optional: true
-
-# 9h. Perform Gh0st standard attack
-- tapOn:
-    text: "Gh0st"
-    optional: true
-- extendedWaitUntil:
-    visible: "Attack"
-    timeout: 10000
-    optional: true
-- tapOn:
-    text: "Attack"
-    optional: true
-- extendedWaitUntil:
-    visible: "Cancel"
-    timeout: 10000
-    optional: true
-- tapOn:
-    text: "Echo-Borer"
-    optional: true
-- waitForAnimationToEnd:
-    timeout: 8000
-    optional: true
-
-# 10. Win combat and return to Resonant Canopy
+# 10. Handle victory spoils and level-up transition
 - extendedWaitUntil:
     visible: "Spoils Recovered"
-    timeout: 60000
-- tapOn: "Continue"
+    timeout: 15000
+- tapOn:
+    text: ".*(Next|Continue).*"
+
+# Dismiss post-combat story dialog
+- extendedWaitUntil:
+    visible: "(?i)continue"
+    timeout: 15000
+- tapOn: "(?i)continue"
 - extendedWaitUntil:
     visible: "Resonant Canopy"
     timeout: 15000
@@ -423,12 +288,13 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 
 # 12. Interact with Sentinel-3 shop
-- assertVisible: "Shop"
-- tapOn: "Shop"
+- assertVisible: ".*(Sentinel Scraps|Sentinel S).*"
+- tapOn: ".*(Sentinel Scraps|Sentinel S).*"
 - extendedWaitUntil:
-    visible: "Select components for exchange"
+    visible: "Sentinel Scraps"
     timeout: 15000
-- tapOn: "Leave"
+- tapOn:
+    text: ".*(Back|Close Shop).*"
 - extendedWaitUntil:
     visible: "Resonator Chamber"
     timeout: 15000
@@ -436,16 +302,28 @@ appId: com.junewiregames.starborn.prealpha
 # 13. Walk to Temple Gate
 - assertVisible: "Travel east"
 - tapOn: "Travel east"
+
+# Dismiss story dialog upon discovering Temple Gate
+- extendedWaitUntil:
+    visible: "(?i)continue"
+    timeout: 15000
+- tapOn: "(?i)continue"
 - extendedWaitUntil:
     visible: "Temple Gate"
     timeout: 15000
 
-# 14. Use the Chime on the Stone Lock to warp to Hall of Echoes
-- assertVisible: "Stone Lock"
-- tapOn: "Stone Lock"
+# 14. Use the Chime on the Stone Lock to open the Temple Gate
+- assertVisible: "(?i)stone lock"
+- tapOn: "(?i)stone lock"
+
+# Dismiss quest completion modal
+- extendedWaitUntil:
+    visible: "(?i)continue"
+    timeout: 15000
+- tapOn: "(?i)continue"
 - extendedWaitUntil:
     visible: "Hall of Echoes"
-    timeout: 20000
+    timeout: 15000
 
 # Take screenshot to verify World 2 completion
 - takeScreenshot: mainquest-world2-completed
