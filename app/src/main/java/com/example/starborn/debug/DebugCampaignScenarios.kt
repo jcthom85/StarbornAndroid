@@ -229,6 +229,17 @@ object DebugCampaignScenarios {
                 "Quest completes and upgrades Gh0st's stealth capabilities."),
             setOf("quests:w2_sq05")),
 
+        entry("campaign_w2_sluice_puzzle", "w2_sluice_puzzle", "SQ: The Aethel Drainage Sluice", "World 2: Sector 9", DebugScenarioCategory.CONTENT, "sector9_stream_sunken_passage",
+            "Waterlogged Tunnel in Sector 9; the southern vault passage is submerged under churning swamp runoff.",
+            listOf("Examine the flooded southern archway and verify it is locked by high water levels.",
+                "Operate the ancient brass sluice wheel toggle to engage the hydraulic drainage gates.",
+                "Verify the room description updates to the drained state and water recedes into floor grates.",
+                "Descend south into the Submerged Aethel Vault and open the Precursor Reliquary to claim the Tidal Resonator."),
+            listOf("Southern passage is impassable while flooded and displays the undertow warning.",
+                "Toggling the sluice wheel drains the water and unlocks the southern passage.",
+                "The Submerged Aethel Vault contains the Precursor Reliquary and rewards the Tidal Resonator mod."),
+            setOf("rooms:sector9_stream_sunken_passage", "rooms:sector9_sunken_aethel_vault", "items:tidal_resonator_mod", "events:w2_sluice_drained")),
+
         // World 3 Main Quests
         entry("campaign_w3_mq11", "w3_mq11", "MQ11: Homecoming", "World 3: The Spire", DebugScenarioCategory.STORY, "spire_sewers_landing",
             "Spire Sewers Landing beneath the lower city; full crew disembarked from Astra.",
@@ -720,6 +731,7 @@ object DebugCampaignScenarios {
         "w2_sq03" to "sector9_beach_pools",
         "w2_sq04" to "sector9_hall_of_echoes",
         "w2_sq05" to "sector9_vents_gantry",
+        "w2_sluice_puzzle" to "sector9_stream_sunken_passage",
         "w3_mq11" to "spire_sewers_landing",
         "w3_mq12" to "spire_zekes_apartment",
         "w3_mq13" to "spire_laundry_service",

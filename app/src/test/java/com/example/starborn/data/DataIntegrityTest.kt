@@ -125,7 +125,7 @@ class DataIntegrityTest {
             "southeast" to "northwest"
         )
 
-        assertEquals("World 2 should expose all authored rooms", 92, rooms.size)
+        assertEquals("World 2 should expose all authored rooms", 93, rooms.size)
         rooms.values.forEach { room ->
             assertTrue("${room.id} should not be an isolated scene", room.connections.isNotEmpty())
             room.connections.forEach { (direction, targetId) ->

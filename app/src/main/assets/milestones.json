@@ -1860,5 +1860,11 @@
     "name": "Grand Crucible Champion",
     "description": "Crowned Grand Champion of the Scrapper's Crucible and awarded the Crucible Forge-Plate.",
     "toast": "Title earned: Grand Crucible Champion"
+  },
+  {
+    "id": "ms_w2_sluice_drained",
+    "name": "Aethel Sluice Drained",
+    "description": "Nova engaged the ancient drainage sluice, exposing the submerged vault in Sector 9.",
+    "toast": "Aethel Sluice drained."
   }
 ]

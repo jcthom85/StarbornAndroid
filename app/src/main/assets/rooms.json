@@ -8995,20 +8995,54 @@
     "weather": "cave_drip",
     "title": "Waterlogged Tunnel",
     "background_image": "images/rooms/world_2/stream_sunken_passage.webp",
-    "description": "A narrow tunnel where the cavern roof dips close to the glowing water. A warm current runs past a drowned console, gurgling as it flows toward the beach grotto.",
+    "description": "A narrow tunnel where the cavern roof dips close to the glowing water. A warm current runs past a drowned console and an ancient brass sluice wheel. The southern passage is fully submerged beneath churning runoff.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "west": "sector9_stream_cave_depths",
-      "north": "sector9_beach_grotto"
+      "north": "sector9_beach_grotto",
+      "south": "sector9_sunken_aethel_vault"
+    },
+    "blocked_directions": {
+      "south": {
+        "type": "lock",
+        "requires": [
+          {
+            "room_id": "sector9_stream_sunken_passage",
+            "state_key": "sluice_drained",
+            "value": true
+          }
+        ],
+        "message_locked": "A churning surge of dark swamp runoff completely submerges the southern archway. You cannot dive through without drowning in the undertow.",
+        "message_unlock": "The water level recedes with a heavy hydraulic groan, revealing a stone stairway descending south!"
+      }
     },
     "pos": [
       6,
       3
     ],
     "state": {},
+    "description_variants": [
+      {
+        "requires_state": {
+          "sluice_drained": true
+        },
+        "description": "The drained tunnel echoes with dripping water. Runoff channels through bedrock grates, leaving wet silt along the walkway. An ancient brass sluice wheel stands locked open beside exposed stairs descending south into the vault."
+      }
+    ],
     "actions": [
+      {
+        "name": "ancient sluice wheel",
+        "type": "toggle",
+        "state_key": "sluice_drained",
+        "popup_title": "Aethel Drainage Sluice",
+        "label_on": "Turn Sluice Wheel",
+        "label_off": "Release Sluice Wheel",
+        "action_event_on": "w2_sluice_drained",
+        "action_event_off": "w2_sluice_closed",
+        "condition_unmet_message": "Heavy brass spokes connect to ancient hydraulic gates below."
+      },
       {
         "name": "drowned console",
         "type": "generic",
@@ -9018,6 +9052,45 @@
         "name": "warm current",
         "type": "generic",
         "condition_unmet_message": "Subterranean runoff warms the passage, carrying faint mineral notes from deep below."
+      }
+    ]
+  },
+  {
+    "id": "sector9_sunken_aethel_vault",
+    "env": "swamp",
+    "weather": "cave_drip",
+    "title": "Submerged Aethel Vault",
+    "background_image": "images/rooms/world_2/stream_sunken_passage.webp",
+    "description": "Ancient basalt pillars support a domed chamber carved from living coral. Drainage slits in the floor channel the remaining brine away from an ornate Precursor reliquary resting upon a dry central dais.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "north": "sector9_stream_sunken_passage"
+    },
+    "pos": [
+      6,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "precursor reliquary",
+        "type": "container",
+        "state_key": "w2_sunken_vault_chest_opened",
+        "items": [
+          "tidal_resonator_mod",
+          "astral_thread",
+          "bioluminescent_lure"
+        ],
+        "already_open_message": "The reliquary is open, its ancient brass seals broken.",
+        "popup_title": "Precursor Reliquary"
+      },
+      {
+        "name": "living coral",
+        "type": "inspect",
+        "description": "Inspect the bioluminescent coral pillars.",
+        "inspect_message": "Deep cyan and amber polyps pulse gently in time with the tide, calcified around Aethel harmonic conductors that have survived centuries under water."
       }
     ]
   },

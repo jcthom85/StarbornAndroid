@@ -3796,5 +3796,23 @@
         "strength": 2
       }
     }
+  },
+  {
+    "id": "tidal_resonator_mod",
+    "name": "Tidal Resonator",
+    "description": "An ancient Aethel acoustic dampener salvaged from the sunken vault. Harmonizes weapon strikes with tidal currents to bludgeon through kinetic barriers.",
+    "type": "mod",
+    "value": 360,
+    "buy_price": 720,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "mod",
+      "defense": 4,
+      "hp_bonus": 25,
+      "stat_mods": {
+        "vitality": 3,
+        "focus": 3
+      }
+    }
   }
 ]

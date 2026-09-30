@@ -15458,5 +15458,51 @@
         "message": "CHAMPIONSHIP VICTORY! The Crucible Champion shuts down with a shudder of steam. Speak to Pitmaster Brutus to claim your legendary prize!"
       }
     ]
+  },
+  {
+    "id": "w2_sluice_drained",
+    "description": "Engage the ancient Aethel drainage sluice wheel to drain the submerged tunnel.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sluice_drained"
+    },
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "sector9_stream_sunken_passage",
+        "state_key": "sluice_drained",
+        "value": true
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_sluice_drained"
+      },
+      {
+        "type": "show_message",
+        "message": "You heave on the ancient brass wheel. Deep within the bedrock, massive bronze gates slide into place with a thunderous clunk. Water gurgles down the drainage grates, exposing the southern stairway!"
+      }
+    ],
+    "repeatable": true
+  },
+  {
+    "id": "w2_sluice_closed",
+    "description": "Disengage the ancient Aethel drainage sluice wheel to flood the tunnel.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sluice_closed"
+    },
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "sector9_stream_sunken_passage",
+        "state_key": "sluice_drained",
+        "value": false
+      },
+      {
+        "type": "show_message",
+        "message": "You release the sluice wheel catch. The hydraulic gates grind upward, and water surges back into the lower passage with a frothing roar."
+      }
+    ],
+    "repeatable": true
   }
 ]

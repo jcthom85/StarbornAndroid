@@ -401,7 +401,8 @@
       "sector9_beach_pillar",
       "sector9_beach_grotto",
       "sector9_beach_dunes",
-      "sector9_coastal_research_station"
+      "sector9_coastal_research_station",
+      "sector9_sunken_aethel_vault"
     ],
     "discovered": false,
     "initial_visibility": "hidden",

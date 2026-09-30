@@ -99,7 +99,8 @@ flowchart TD
 | **Crystalline Flats**<br>`sector9_stream_flats` | Inspect `resonant crystals` in creek. | Lore on crystal resonance. | • Crystalline reflection highlight. |
 | **Cavern Entrance**<br>`sector9_stream_cave_entrance` | Inspect `cave mouth` & `dripping stalactites`. | Transition north into cavern. | • Cave acoustics reverb on footsteps. |
 | **Glow-Moss Cavern**<br>`sector9_stream_cave_depths` | 1. ⚠️ **Combat: Echo-Borer**<br>2. Action `forage meat` (`w2_forage_meat_cave`) | Borer defeated.<br>Loot: **Beast Meat x1** (`ms_w2_meat_cave_foraged`). | • Underground darkness and bioluminescent moss shader. |
-| **Waterlogged Tunnel**<br>`sector9_stream_sunken_passage` | Inspect `submerged ruins`. | Underwater ruin pillars lore. | • Water reflection caustic overlays. |
+| **Waterlogged Tunnel**<br>`sector9_stream_sunken_passage` | 1. Inspect `drowned console`<br>2. Inspect `submerged ruins`<br>3. Toggle `ancient sluice wheel` | Wheel toggle drains floodwaters (`ms_w2_sluice_drained`), unsealing southern stairs to Submerged Vault! | • Caustic reflections.<br>• Heavy hydraulic sluice gate opening audio cue.<br>• Tunnel description updates dynamically to drained state. |
+| **Submerged Aethel Vault**<br>`sector9_sunken_aethel_vault` | 1. Inspect `living coral`<br>2. Open `precursor reliquary` | Reliquary looted: **Tidal Resonator Mod** (`tidal_resonator_mod`), **Astral Thread**, **Bioluminescent Lure**. | • Domed coral architecture visuals.<br>• Water drainage grate ambience. |
 | **Resonant Falls**<br>`sector9_stream_falls` | Action `Rest at Camp` (`w2_camp_stream_falls`) | **Party Restored to 100% HP**.<br>Reward: **Painkillers x1**.<br>Campfire dialogue plays. | • Waterfall roar volume balance.<br>• Rest banner notification. |
 | **Beach Transition**<br>`sector9_stream_tidepools` | Walkway north onto coast. | Ambient ocean swell soundscape. | • Seamless audio crossfade from river to ocean waves. |
 | **Tide Pools**<br>`sector9_beach_pools` | 1. Action `scan weeds` (`w2_sq01`)<br>2. Action `forage meat` (`w2_forage_meat_tidepool`)<br>3. Inspect `fishing pool` (`fish_tideglass`) | Plant #2 scanned (`ms_w2_flora_weeds_scanned`).<br>Loot: **Beast Meat x1**.<br>Launches **Fishing Minigame**! | • Verify fishing cast & tension bar responsiveness.<br>• Catch **Raw Glowfish** & **Chime Minnow**. |
@@ -110,6 +111,22 @@ flowchart TD
 | **Sea Cavern**<br>`sector9_beach_cave` | Inspect `hollow grotto entrance`. | Tunnel leads to Hidden Grotto. | • Tidal surge audio echo. |
 | **Sunken Obelisk**<br>`sector9_beach_pillar` | Inspect `ancient obelisk`. | Cymatic glyphs glowing in salt water. | • Carved glyph light pulsation. |
 | **Hidden Grotto**<br>`sector9_beach_grotto` | Inspect `Bioluminescent Prism`.<br>Launch **Calibrate Bioluminescent Prism** UI. | Solves `w2_biolum_matrix_tune`.<br>**Rewards:** **Focus Conduit** (Accessory), **150 XP**! | • Tactical slider puzzle audio ticks.<br>• Green crystal illumination effect on solve. |
+
+---
+
+### The Aethel Drainage Sluice & Submerged Vault Mechanic (Water Temple Feature)
+Located deep within the subterranean runoff tunnel at `sector9_stream_sunken_passage`:
+- **Flooded State:** Heavy swamp runoff churns violently over the southern archway. Attempting to step South alerts the player: *"A churning surge of dark swamp runoff completely submerges the southern archway. You cannot dive through without drowning in the undertow."*
+- **Sluice Activation:** Interact with the `ancient sluice wheel` toggle action. Nova turns the heavy brass spokes, activating the hydraulic Precursor valves.
+- **Engine Effects:**
+  1. Triggers event `w2_sluice_drained`, setting room state `sluice_drained: true` and registering milestone `ms_w2_sluice_drained`.
+  2. Room dynamic description activates, describing the receding waters and drained silt walkways.
+  3. Directional lock on `south` dissolves with an unlock chime: *"The water level recedes with a heavy hydraulic groan, revealing a stone stairway descending south!"*
+- **Sunken Vault Rewards:** Stepping South enters `sector9_sunken_aethel_vault` ([6, 2]), where the dry central dais houses the **Precursor Reliquary**:
+  - **Tidal Resonator Mod** (`tidal_resonator_mod`): Aethel acoustic dampener module (+4 DEF, +25 HP, +3 VIT, +3 FOC).
+  - **Astral Thread** (`astral_thread`): Rare crafting fiber.
+  - **Bioluminescent Lure** (`bioluminescent_lure`): Premium fishing lure for Tide Pools.
+- Releasing the sluice wheel floods the passage again, proving state bidirectional persistence.
 
 ---
 
@@ -476,6 +493,7 @@ Interact with the glowing water pool in `sector9_beach_pools` to launch the fish
   - A rare glowing fish whose bones ring like glass. Cook it into **Chime Minnow Broth** (`chime_minnow` + water/salt) to restore 90 HP and temporarily boost party Critical Luck!
 
 ### 3. Secret Reliquary & Lore Discoveries
+- **Submerged Aethel Vault (`sector9_sunken_aethel_vault`):** Drain the floodwaters using the ancient sluice wheel in `sector9_stream_sunken_passage` to unlock the southern stairway and loot the Precursor Reliquary for the **Tidal Resonator Mod**, Astral Thread, and Bioluminescent Lure.
 - **Hidden Grotto Prism Puzzle (`sector9_beach_grotto`):** Calibrate the prism (`135°`, `64%`, `92 kHz`) to claim the **Focus Conduit** accessory.
 - **Hidden Reliquary (`sector9_archive_secret_stash`):** Found east of the Tuning Matrix in Hub 4. Decode the ancient data crystal to unlock the Bridge Echo historical record (`ms_w2_bridge_record_decoded`).
 - **Beached Cargo Wreck (`sector9_beach_cargo`):** Pry open the rusted container for Scrap Metal x2 and Wiring Bundle x1.
@@ -518,6 +536,7 @@ Comprehensive audit catalog of every item acquirable throughout Sector 9:
 | `power_conduits` | **Power Conduits** | Quest Item | 0c | Pod Fragment (`sector9_landing_drop`) | Heavy salvage cables used to install and reboot the Bridge. |
 | `dominion_transmitter_core`| **Transmitter Core** | Component | 0c | Tech Alcove (`sector9_vents_tech_alcove`)| Stolen military transceiver core with clean timing crystal. |
 | `focus_conduit` | **Focus Conduit** | Accessory | 210c | Hidden Grotto / `w2_sq04` | Crystal conduit that boosts Focus (+12) and ATB regeneration. |
+| `tidal_resonator_mod` | **Tidal Resonator Mod** | Gear Mod | 420c | Submerged Aethel Vault (`sector9_sunken_aethel_vault`) | Aethel acoustic dampener mod (+4 DEF, +25 HP, +3 VIT, +3 FOC). |
 | `source_resin` | **Source Resin Mod** | Armor Mod | 300c | Tinkering / The Beast drop | Solidified resonance residue that stabilizes energy flow (+Def). |
 | `rapid_capacitor` | **Rapid Capacitor Mod** | Gear Mod | 300c | Tinkering (`w2_sq05`) | Overclocked capacitor that speeds up skill cooling cycles by 15%. |
 | `resonance_capacitor_mod` | **Resonance Capacitor Mod**| Gear Mod | 520c | Advanced Tinkering | Stores intent as charge, releasing burst damage on impact. |
@@ -573,6 +592,7 @@ Use the built-in **Debug Scenarios** menu from the game title screen to jump dir
 | `campaign_w2_sq03` | **SQ03: Tideglass Day** | Tide Pools<br>`sector9_beach_pools` | Nova & Zeke (Lv 3–4), coastal access open. | Test Tideglass Beach discovery, foraging loop, and Tideglass Delight cooking recipe. |
 | `campaign_w2_sq04` | **SQ04: Ancient Echoes**| Hall of Echoes<br>`sector9_hall_of_echoes` | Nova, Zeke, Orion (Lv 4–5), facility open. | Test retrieving West, East, North resonance crystals, Ruin-Guardian combat, and mural tuning. |
 | `campaign_w2_sq05` | **SQ05: Stolen Tech** | High Gantry<br>`sector9_vents_gantry` | Full party (Lv 5), maintenance vents open. | Test security grid hack, guard scan bypass, transmitter recovery, and Rapid Capacitor mod. |
+| `campaign_w2_sluice_puzzle` | **Puzzle: Aethel Sluice & Submerged Vault** | Waterlogged Tunnel<br>`sector9_stream_sunken_passage` | Nova & Zeke (Lv 3–4), Sluice Wheel accessible. | Test brass sluice wheel toggle, flood drainage, southern lock opening, and Precursor Reliquary loot. |
 
 ---
 
