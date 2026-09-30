@@ -5329,7 +5329,7 @@ class ExplorationViewModel(
                 val completed = sessionStore.state.value.completedMilestones
                 val locked = required.any { it !in completed }
                 val status = action.conditionUnmetMessage?.takeIf { it.isNotBlank() }
-                    ?: "Triggered ${action.name}"
+                    ?: if (action.type.equals("inspect", ignoreCase = true)) "Inspected ${action.name}." else "Triggered ${action.name}"
                 if (locked) {
                     showInspection(status)
                     return
@@ -5870,6 +5870,9 @@ class ExplorationViewModel(
                     requiresMilestones = action["requires_milestones"].asListOrNull(),
                     requiresMilestone = action["requires_milestone"].asStringOrNull(),
                     conditionUnmetMessage = action["condition_unmet_message"].asStringOrNull()
+                        ?: action["inspect_message"].asStringOrNull()
+                        ?: action["message"].asStringOrNull()
+                        ?: action["description"].asStringOrNull()
                 )
             }
         }

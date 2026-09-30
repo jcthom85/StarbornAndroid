@@ -236,7 +236,7 @@ fun DesktopExplorationScreen(
         if (actionEvent != null) {
             actionNotification = "Interacted with $name."
         } else {
-            val message = action["condition_unmet_message"] as? String ?: action["description"] as? String ?: "Inspected $name."
+            val message = action["condition_unmet_message"] as? String ?: action["inspect_message"] as? String ?: action["message"] as? String ?: action["description"] as? String ?: "Inspected $name."
             actionNotification = message
         }
     }

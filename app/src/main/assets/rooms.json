@@ -4974,7 +4974,8 @@
         "name": "holographic projector",
         "type": "inspect",
         "description": "Inspect the quantum holographic projector.",
-        "inspect_message": "Flickering blue schematics display classified Dominion urban pacification drones and neural compliance collars marked for Spire lower-city deployment."
+        "inspect_message": "Flickering blue schematics display classified Dominion urban pacification drones and neural compliance collars marked for Spire lower-city deployment.",
+        "condition_unmet_message": "Flickering blue schematics display classified Dominion urban pacification drones and neural compliance collars marked for Spire lower-city deployment."
       }
     ]
   },
@@ -5520,7 +5521,7 @@
     "weather": "sparks",
     "title": "Subterranean Smelter Forge",
     "background_image": "images/rooms/world_4/foundry_slag_stepping_stones.webp",
-    "description": "Colossal obsidian crucibles loom in the crimson gloom. Ancient geothermal vents feed a pre-Dominion smelting anvil, where an unyielding precursor crucible safe rests sealed.",
+    "description": "Colossal obsidian crucibles loom in the crimson gloom. Ancient geothermal vents feed a pre-Dominion smelting anvil, where an unyielding precursor crucible rests sealed.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -5549,7 +5550,8 @@
         "name": "smelting anvil",
         "type": "inspect",
         "description": "Inspect the ancient geothermal smelting anvil.",
-        "inspect_message": "Carved from a single basalt monolith, the anvil still hums with dormant tectonic resonance, etched with cymatic cooling channels that predate the Dominion."
+        "inspect_message": "Carved from a single basalt monolith, the anvil still hums with dormant tectonic resonance, etched with cymatic cooling channels that predate the Dominion.",
+        "condition_unmet_message": "Carved from a single basalt monolith, the anvil still hums with dormant tectonic resonance, etched with cymatic cooling channels that predate the Dominion."
       }
     ]
   },

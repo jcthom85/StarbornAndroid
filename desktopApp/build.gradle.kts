@@ -23,6 +23,7 @@ kotlin {
                 "com/example/starborn/feature/arcade/games/**",
                 "com/example/starborn/feature/exploration/ui/menu/FieldMenuDesign.kt",
                 "com/example/starborn/feature/mainmenu/DebugScenario*",
+                "com/example/starborn/debug/**",
                 "com/example/starborn/feature/enemy/**",
                 "com/example/starborn/ui/events/**"
             )
@@ -31,7 +32,9 @@ kotlin {
                 "**/AudioCuePlayer.kt",
                 "**/UserSettingsStore.kt",
                 "**/GameSaveRepository.kt",
-                "**/*_temp.kt.ignored"
+                "**/*_temp.kt.ignored",
+                "**/Debug*FixtureBuilder.kt",
+                "**/DebugFixtureValidator.kt"
             )
         }
     }
