@@ -1866,5 +1866,11 @@
     "name": "Aethel Sluice Drained",
     "description": "Nova engaged the ancient drainage sluice, exposing the submerged vault in Sector 9.",
     "toast": "Aethel Sluice drained."
+  },
+  {
+    "id": "ms_w5_magnetic_anchor_engaged",
+    "name": "Zero-G Magnetic Anchor Engaged",
+    "description": "Engaged the emergency magnetic clamp in Zero-G Junction, polarizing drifting debris to reach the Breached Avionics Lab.",
+    "toast": "Zero-G magnetic anchor engaged."
   }
 ]

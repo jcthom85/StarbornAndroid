@@ -6844,19 +6844,53 @@
     "env": "void",
     "title": "Zero-G Junction",
     "background_image": "images/rooms/world_5/orbital_zero_g_junction.webp",
-    "description": "Three maintenance tubes meet in a dead-gravity junction beside a gyroscope stabilizer. A display tracks patrol timing. Tools hover where workers dropped them, frozen into a quiet diagram of someone leaving in a hurry.",
+    "description": "Three maintenance tubes meet in a dead-gravity junction beside a gyroscope stabilizer. A display tracks patrol timing. An emergency magnetic clamp console overlooks the eastern breach, where unanchored scrap drifts dangerously.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "west": "orbital_service_shaft"
+      "west": "orbital_service_shaft",
+      "east": "orbital_breached_avionics_lab"
+    },
+    "blocked_directions": {
+      "east": {
+        "type": "lock",
+        "requires": [
+          {
+            "room_id": "orbital_zero_g_junction",
+            "state_key": "magnetic_anchor_engaged",
+            "value": true
+          }
+        ],
+        "message_locked": "A sheared conduit vents violent micro-meteorite scrap across the eastern access tube. Without engaging the magnetic anchoring clamp, the debris stream would shred the squad's suits.",
+        "message_unlock": "The magnetic clamp locks the spinning debris into a rigid metallic bridge, anchoring the eastern access tube!"
+      }
     },
     "pos": [
       4,
       1
     ],
     "state": {},
+    "description_variants": [
+      {
+        "requires_state": {
+          "magnetic_anchor_engaged": true
+        },
+        "description": "Three maintenance tubes converge in the zero-G junction. The magnetic clamp hums with high amperage, holding a dense cluster of tungsten plating rigid across the eastern tube opening."
+      }
+    ],
     "actions": [
+      {
+        "name": "magnetic clamp console",
+        "type": "toggle",
+        "state_key": "magnetic_anchor_engaged",
+        "popup_title": "Emergency Magnetic Clamp",
+        "label_on": "Engage Magnetic Clamp",
+        "label_off": "Disengage Clamp",
+        "action_event_on": "w5_zero_g_anchor_engaged",
+        "action_event_off": "w5_zero_g_anchor_disengaged",
+        "condition_unmet_message": "Heavy magnetic solenoids await power routing to polarize the drift debris."
+      },
       {
         "name": "patrol timing",
         "type": "generic",
@@ -6869,6 +6903,44 @@
         "type": "inspect",
         "description": "Examine the massive orbital gyroscope stabilizer.",
         "inspect_message": "The three-story brass gimbal rotates with a deep, bone-rattling thrum, keeping the artificial gravity rings synchronized. Tiny counterweights click against magnetic stops as the station slowly corrects for orbital drag."
+      }
+    ]
+  },
+  {
+    "id": "orbital_breached_avionics_lab",
+    "env": "void",
+    "title": "Breached Avionics Lab",
+    "background_image": "images/rooms/world_5/orbital_zero_g_junction.webp",
+    "description": "Cold stellar light floods through a shattered observation canopy. Frozen liquid coolant beads drift above abandoned quantum mainframes, where an emergency AI sub-vault remains sealed.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "west": "orbital_zero_g_junction"
+    },
+    "pos": [
+      5,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "experimental ai sub-vault",
+        "type": "container",
+        "state_key": "w5_avionics_vault_opened",
+        "items": [
+          "zero_g_gyro_stabilizer_mod",
+          "composite_plate",
+          "circuit_board"
+        ],
+        "already_open_message": "The sub-vault lies open, its vacuum seals hissing faint vapor into the void.",
+        "popup_title": "Experimental AI Sub-Vault"
+      },
+      {
+        "name": "shattered canopy",
+        "type": "inspect",
+        "description": "Inspect the shattered observation canopy.",
+        "inspect_message": "Fractured composite glass looks out over the curved horizon of the planet below, illuminated by the distant blue corona of the orbital shield."
       }
     ]
   },

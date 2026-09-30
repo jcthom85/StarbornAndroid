@@ -598,6 +598,17 @@ object DebugCampaignScenarios {
                 "Armory contains endgame armor and weapon upgrades."),
             setOf("quests:w5_sq25")),
 
+        entry("campaign_w5_zero_g_puzzle", "w5_zero_g_puzzle", "Puzzle: Zero-G Magnetic Anchor", "World 5: The Void", DebugScenarioCategory.CONTENT, "orbital_zero_g_junction",
+            "Zero-G Junction in Service Shaft; inspecting unanchored scrap debris blocking the eastern breach.",
+            listOf("Examine the high-velocity debris venting across the eastern access breach.",
+                "Interact with the magnetic clamp console to polarize and anchor the drifting tungsten plating.",
+                "Traverse the magnetic bridge east into the Breached Avionics Lab.",
+                "Loot the Experimental AI Sub-Vault for the Zero-G Gyro Stabilizer mod."),
+            listOf("Magnetic clamp toggle persists state and unseals the eastern corridor.",
+                "East passage transition allows bidirectional movement between junction and avionics lab.",
+                "Experimental AI Sub-Vault awards unique stats mod and components."),
+            setOf("events:w5_zero_g_anchor_engaged", "milestones:ms_w5_magnetic_anchor_engaged")),
+
         // World 6 Main Quests
         entry("campaign_w6_mq26", "w6_mq26", "MQ26: Fractured Minds", "World 6: The Source", DebugScenarioCategory.STORY, "source_campfire",
             "Source Campfire beyond the Tear; crew separated in psychic nightmare domains.",
@@ -763,6 +774,7 @@ object DebugCampaignScenarios {
         "w5_sq23" to "orbital_executive_dock",
         "w5_sq24" to "orbital_server_farm",
         "w5_sq25" to "deep_sysadmin_nest",
+        "w5_zero_g_puzzle" to "orbital_zero_g_junction",
         "w6_mq26" to "source_campfire",
         "w6_mq27" to "source_campfire",
         "w6_mq28" to "source_echo_mines",

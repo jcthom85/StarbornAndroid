@@ -1344,6 +1344,7 @@
     "rooms": [
       "orbital_service_shaft",
       "orbital_zero_g_junction",
+      "orbital_breached_avionics_lab",
       "orbital_service_shaft_scale_01",
       "orbital_service_shaft_scale_02",
       "orbital_service_shaft_scale_03",

@@ -3814,5 +3814,23 @@
         "focus": 3
       }
     }
+  },
+  {
+    "id": "zero_g_gyro_stabilizer_mod",
+    "name": "Zero-G Gyro Stabilizer",
+    "description": "An experimental orbital avionics gyro dampener recovered from the breached sub-vault. Counteracts inertial drift, reinforcing posture against vacuum recoil.",
+    "type": "mod",
+    "value": 420,
+    "buy_price": 840,
+    "rarity": "rare",
+    "equipment": {
+      "slot": "mod",
+      "defense": 5,
+      "hp_bonus": 30,
+      "stat_mods": {
+        "agility": 4,
+        "focus": 3
+      }
+    }
   }
 ]

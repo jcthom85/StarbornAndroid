@@ -15504,5 +15504,51 @@
       }
     ],
     "repeatable": true
+  },
+  {
+    "id": "w5_zero_g_anchor_engaged",
+    "description": "Engage the emergency magnetic clamp to anchor zero-G drift debris.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_zero_g_anchor_engaged"
+    },
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "orbital_zero_g_junction",
+        "state_key": "magnetic_anchor_engaged",
+        "value": true
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_magnetic_anchor_engaged"
+      },
+      {
+        "type": "show_message",
+        "message": "High-voltage magnetic coils charge with an electric whine. Spinning tungsten scrap snaps into alignment across the eastern breach, forming a stable walkway into the avionics lab!"
+      }
+    ],
+    "repeatable": true
+  },
+  {
+    "id": "w5_zero_g_anchor_disengaged",
+    "description": "Disengage the emergency magnetic clamp in zero-G junction.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_zero_g_anchor_disengaged"
+    },
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "orbital_zero_g_junction",
+        "state_key": "magnetic_anchor_engaged",
+        "value": false
+      },
+      {
+        "type": "show_message",
+        "message": "You cut power to the magnetic solenoids. The aligned scrap metal drifts apart into the vacuum, tumbling violently across the eastern access breach."
+      }
+    ],
+    "repeatable": true
   }
 ]

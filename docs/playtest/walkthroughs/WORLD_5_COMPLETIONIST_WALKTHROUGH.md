@@ -129,7 +129,10 @@ Moving east from the airlock gallery leads into the luxurious upper tiers built 
 
 ### Traversing the Service Shafts:
 1. **Orbital Security Hub (`orbital_security_hub`):** Battle through patrolling security drones and neutralize the surveillance pit consoles.
-2. **Zero-G Junction (`orbital_zero_g_junction`):** Atmospheric venting requires equipped **Mag-Boots** or **Grav-Boots** to prevent inertial drift penalties.
+2. **Zero-G Junction (`orbital_zero_g_junction`):**
+   * Atmospheric venting requires equipped **Mag-Boots** or **Grav-Boots** to prevent inertial drift penalties.
+   * **Environmental Puzzle — Magnetic Clamp Alignment:** High-velocity micro-meteorite scrap vents violently across the eastern access breach. Interact with the `magnetic clamp console` toggle action (`w5_zero_g_anchor_engaged`). Activating the clamp charges high-voltage magnetic coils, polarizing the tumbling tungsten plating into a rigid metallic walkway across the breach (`ms_w5_magnetic_anchor_engaged`).
+   * **Breached Avionics Lab (`orbital_breached_avionics_lab`):** Step East across the anchored scrap bridge into this vacuum-exposed research module. Loot the **Experimental AI Sub-Vault** container to claim the **Zero-G Gyro Stabilizer Mod** (`zero_g_gyro_stabilizer_mod`), Composite Plate, and Circuit Board!
 3. **Descent into the Deep Ring:** Downward vertical shafts connect Hub 9 to Hub 10 (`orbital_server_farm`).
 4. **Mainframe Nave (`deep_mainframe_nave`):**
    * Intercept the emergency signal pulsing from behind the quantum core lattice.
@@ -376,6 +379,7 @@ The servers in `deep_server_farm` generate lethal heat loops:
 ### Relics & Unique Gear Acquired:
 * **The Anchor (Precursor Relic):** Unlocks **Source Art: Stasis**, immobilizing targets in temporal lock.
 * **Graviton Inertia Matrix (Relic Mod):** Grants complete immunity to stagger, knockback, and concussive stun.
+* **Zero-G Gyro Stabilizer (Gear Mod):** Experimental avionics gyro dampener recovered from the Breached Avionics Lab (+5 DEF, +30 HP, +4 AGI, +3 FOC).
 * **Mag-Boots (Accessory):** Nullifies zero-G movement penalties and platform slide hazards.
 * **Void Clip (Weapon Mod):** 30% armor pierce on all ranged attacks.
 
@@ -395,6 +399,7 @@ Test any section of World 5 instantly via the developer title screen debug menu:
 * `campaign_w5_sq23`: Tests Executive Dock breach sealing under vacuum timer.
 * `campaign_w5_sq24`: Tests Server Farm backup recovery and guardian covenant binding.
 * `campaign_w5_sq25`: Tests SysAdmin keycard acquisition and Throne Room armory unlock.
+* `campaign_w5_zero_g_puzzle`: Spawns at Zero-G Junction to verify magnetic clamp debris alignment, eastern corridor unlocking, and Breached Avionics Lab looting.
 
 ### Critical QA Assertions:
 1. **Elara Voice & Character Presence:** Verify that Elara's dialogue lines correctly use female synthesis and display `images/npcs/elara.webp`.
