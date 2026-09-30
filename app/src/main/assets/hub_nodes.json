@@ -816,6 +816,7 @@
       "spire_skypark_dome",
       "spire_glasswalk",
       "spire_donor_gallery",
+      "spire_black_site_lab",
       "spire_skypark_scale_01",
       "spire_skypark_scale_02",
       "spire_skypark_scale_03",
@@ -957,6 +958,7 @@
     "rooms": [
       "foundry_slag_river",
       "foundry_slag_stepping_stones",
+      "foundry_subterranean_smelter",
       "foundry_slag_river_scale_01",
       "foundry_slag_river_scale_02",
       "foundry_slag_river_scale_03",

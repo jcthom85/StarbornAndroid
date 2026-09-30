@@ -15596,5 +15596,97 @@
       }
     ],
     "repeatable": true
+  },
+  {
+    "id": "w3_laser_grid_bypassed",
+    "description": "Adjust the optical prism console to refract the crimson security laser grid.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_laser_grid_bypassed"
+    },
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "spire_donor_gallery",
+        "state_key": "laser_grid_bypassed",
+        "value": true
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w3_laser_grid_bypassed"
+      },
+      {
+        "type": "show_message",
+        "message": "You calibrate the optical prism dials on the security console. The crimson laser grid fractures into harmless blue refraction beams, unsealing the northern corridor into the black-site lab!"
+      }
+    ],
+    "repeatable": true
+  },
+  {
+    "id": "w3_laser_grid_reset",
+    "description": "Reset the optical prism console in the donor gallery.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_laser_grid_reset"
+    },
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "spire_donor_gallery",
+        "state_key": "laser_grid_bypassed",
+        "value": false
+      },
+      {
+        "type": "show_message",
+        "message": "The optical prisms return to default alignment. Crimson security lasers snap back across the northern corridor."
+      }
+    ],
+    "repeatable": true
+  },
+  {
+    "id": "w4_slag_bridge_solidified",
+    "description": "Open the high-pressure cryogenic manifold valve to solidify the molten slag river.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_slag_bridge_solidified"
+    },
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "foundry_slag_stepping_stones",
+        "state_key": "slag_bridge_solidified",
+        "value": true
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_slag_bridge_solidified"
+      },
+      {
+        "type": "show_message",
+        "message": "You heave the cryogenic manifold valve open. Sub-zero coolant cascades into the lava channel with an ear-splitting hiss! Clouds of white steam erupt as the molten slag crusts over into a sturdy obsidian bridge!"
+      }
+    ],
+    "repeatable": true
+  },
+  {
+    "id": "w4_slag_bridge_melted",
+    "description": "Shut the cryogenic manifold valve at the stepping stones.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_slag_bridge_melted"
+    },
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "foundry_slag_stepping_stones",
+        "state_key": "slag_bridge_solidified",
+        "value": false
+      },
+      {
+        "type": "show_message",
+        "message": "You shut the cryogenic manifold valve. Without active coolant flow, the radiant subterranean heat remelts the obsidian bridge back into a churning river of molten slag."
+      }
+    ],
+    "repeatable": true
   }
 ]

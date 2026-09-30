@@ -165,6 +165,8 @@ flowchart TD
 | **Exec Lounge**<br>`spire_exec_lounge_bar` | 1. Action `copy credential from mirror`<br>2. Action `open private safe` (`w3_sq14`)<br>3. Play **VIP Vector Arcade** | Encrypted Ledger recovered (`encrypted_ledger`).<br>Completes **`w3_sq14`** (**250 XP**).<br>Unlocks **Spire Infiltrator** minigame! | • Gilded velvet booths & clinking champagne flutes.<br>• Vector wireframe arcade screen glow. |
 | **Ledger Office**<br>`spire_exec_lounge_scale_04` | Inspect `executive desk` | Documents on Director Thorne's secret mining quotas. | • Holographic desk terminal. |
 | **Private Booth**<br>`spire_exec_lounge_scale_02` | ⚠️ **Combat: Sentinel Mk. I** | Sentinel neutralized before alarm triggers. | • Suppressed combat audio in luxury lounge. |
+| **Donor Gallery**<br>`spire_donor_gallery` | 1. Inspect `donor wall`<br>2. Inspect `portrait plaques`<br>3. Toggle `laser grid console` (`w3_laser_grid_bypassed`) | Realigns optical prisms.<br>Sets `laser_grid_bypassed = true`.<br>Awards milestone **`ms_w3_laser_grid_bypassed`**.<br>Unlocks northern corridor to Black-Site Lab! | • Crimson security laser grid spanning corridor.<br>• Blue prism alignment chime and laser dissipation VFX. |
+| **Black-Site Lab**<br>`spire_black_site_lab` | 1. Loot `black-box safe` (`w3_black_site_safe_opened`)<br>2. Inspect `holographic projector` | Safe looted: **Syndicate Overclock Mod** (`syndicate_overclock_mod`), **Circuit Board x1**, **Battery x1**.<br>Lore on Dominion urban pacification drones. | • Cold neon backlighting cryogenic stasis cylinders.<br>• Flickering holographic projector blueprints. |
 | **Skyline VIP Salon**<br>`spire_skyline_vip_suite` | 1. East from Donor Gallery<br>2. Inspect `crime-scene barrier`<br>3. Inspect `dispenser log`<br>4. Inspect `security terminal`<br>5. Interrogate 4 suspects | Initiates **`w3_sq16`** (Murder in the Skyline Salon).<br>Gathers dispenser and timestamp clues.<br>Exposes Vance's lie. | • Velvet stanchions & emergency flashing strobes.<br>• Four stranded suspects around locked salon. |
 | **Syndicate Booth**<br>`spire_vip_private_booth` | 1. North from VIP Salon<br>2. Inspect `crystal glass`<br>3. Inspect `executive comms rig`<br>4. Inspect `auditor's datapad` | Chemical analysis: Cyano-Coolant 9.<br>Rig shows missing coolant core.<br>Datapad reveals Vance's embezzlement motive. | • Dead auditor slumped over crystal glass.<br>• High-tension noir detective background cue. |
 | **Vance Confrontation**<br>`director_vance` | 1. Select dialogue option confronting Vance with timestamp and coolant clues<br>2. Extract confession | Completes **`w3_sq16`** (**450 XP**).<br>Rewards: **Cyano-Coolant Injector** & **Skyline Master Passkey**!<br>Lockdown lifted. | • Dramatic vocal breakdown from arrogant director.<br>• Quest complete fanfare & ambient sirens cease. |
@@ -363,6 +365,7 @@ Interact with the Chrono-Flux console in `spire_prism_gallery`:
 | `mimis_jazz_bloom` | **Mimi's Jazz Hummingbird Orchid** | Accessory | Rare | +5 Vit, +4 Foc, +3 Def | Skypark Dome (Evelyn) |
 | `roberts_buffer_core`| **Robert's Gyroscopic Buffer Core** | Accessory | Rare | +6 Stb, +4 Def, +2 Agi | Skypark Dome (Robert) |
 | `cyber_visor` | **ICE Breaker Cyber Visor** | Accessory | Rare | +10% Critical Hit Chance | Exec Lounge side quest `w3_sq14` |
+| `syndicate_overclock_mod` | **Syndicate Overclock Mod** | Mod (Suit/Core) | Epic | +6 Agi, +6 Foc, +35 HP | Executive Black-Site Lab safe (Donor Gallery) |
 | `cyano_coolant_injector`| **Cyano-Coolant Injector** | Accessory | Rare | +15 Freeze Dmg, +10% Stagger | Skyline VIP Murder Mystery `w3_sq16` |
 | `skyline_master_passkey`| **Skyline Master Passkey** | Key Item | Epic | Unlocks Upper City Private Salons | Skyline VIP Murder Mystery `w3_sq16` |
 | `neon_band` | **Neon Band** | Accessory | Uncommon | +4 Focus, +5% Crit Rate | Night Market side quest `w3_sq11` |
@@ -407,7 +410,19 @@ Execute these validation checks during your manual playthrough:
   - [ ] Entering `spire_vip_private_booth` at `pos: [4, 1]` reveals Auditor Malick.
   - [ ] Inspecting `crystal glass`, `executive comms rig`, and `auditor's datapad` unlocks the confrontation branch.
   - [ ] Confronting Director Vance extracts the full confession, grants `cyano_coolant_injector`, `skyline_master_passkey`, and 450 XP, and completes `w3_sq16`.
+- [ ] **Laser Grid Security Matrix:** In `spire_donor_gallery`, toggle `laser grid console` to realign optical prisms. Verify northern corridor unseals, `spire_black_site_lab` is accessible at `pos: [3, 1]`, and looting `black-box safe` awards `syndicate_overclock_mod`.
 - [ ] **Chrono-Flux Slider Alignment:** In `spire_prism_gallery`, setting sliders to 45 / 108 / 240 correctly unlatches the Archive Vault and persists across save/reload.
 - [ ] **The Lens Acquisition Alarm:** Looting `the_lens` triggers immediate red-alert strobe overlay and transitions audio to high-tempo escape cue.
 - [ ] **Administrator Boss Balance:** Without OP Mode, verify that Shock abilities deal +50% bonus damage and that staggering the boss lasts 2 full turns.
 - [ ] **Liftoff Transition:** Triggering the Astra launch cleanly completes World 3, displays the chapter complete banner, and transitions the party into World 4 (`hub_7_slag_pits`).
+
+---
+
+## 13. Campaign Debug Scenarios Quick Reference
+
+Launch these debug states from the in-game debug menu to jump directly to specific encounters and puzzles:
+
+| Scenario ID | Name | Target Room | Notes |
+| :--- | :--- | :--- | :--- |
+| `campaign_w3_laser_puzzle` | **Laser Grid Matrix** | `spire_donor_gallery` | Tests optical prism console toggle, northern corridor lock, and Black-Site Lab looting. |
+

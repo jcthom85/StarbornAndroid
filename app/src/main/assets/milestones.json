@@ -1878,5 +1878,17 @@
     "name": "Minecart Diverter Switched",
     "description": "Nova diverted the junction track rails and released the ore cart, smashing the blast door to the Sealed Munitions Stash.",
     "toast": "Blast door breached by ore cart."
+  },
+  {
+    "id": "ms_w3_laser_grid_bypassed",
+    "name": "Laser Grid Bypassed",
+    "description": "Nova refracted the executive laser security grid in the Donor Gallery, exposing the hidden Black-Site Lab.",
+    "toast": "Laser security grid bypassed."
+  },
+  {
+    "id": "ms_w4_slag_bridge_solidified",
+    "name": "Slag Bridge Solidified",
+    "description": "Nova vented cryogenic coolant into the lava channel at Stepping Stones, solidifying an obsidian bridge into the Subterranean Smelter Forge.",
+    "toast": "Molten slag solidified into bridge."
   }
 ]

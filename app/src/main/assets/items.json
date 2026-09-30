@@ -3832,5 +3832,40 @@
         "focus": 3
       }
     }
+  },
+  {
+    "id": "syndicate_overclock_mod",
+    "name": "Syndicate Overclock",
+    "description": "An illegal corporate cybernetic co-processor salvaged from the executive black-site. Overclocks neural reflex timing and critical evasion.",
+    "type": "mod",
+    "value": 480,
+    "buy_price": 960,
+    "rarity": "epic",
+    "equipment": {
+      "slot": "mod",
+      "hp_bonus": 35,
+      "stat_mods": {
+        "agility": 6,
+        "focus": 6
+      }
+    }
+  },
+  {
+    "id": "magma_induction_core_mod",
+    "name": "Magma Induction Core",
+    "description": "A geothermal smelting core recovered from the subterranean forge. Channels molten slag energy into devastating kinetic impact strikes.",
+    "type": "mod",
+    "value": 500,
+    "buy_price": 1000,
+    "rarity": "epic",
+    "equipment": {
+      "slot": "mod",
+      "defense": 6,
+      "hp_bonus": 40,
+      "stat_mods": {
+        "strength": 7,
+        "vitality": 5
+      }
+    }
   }
 ]

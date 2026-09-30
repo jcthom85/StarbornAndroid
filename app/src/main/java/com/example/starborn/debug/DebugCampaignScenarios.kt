@@ -374,6 +374,17 @@ object DebugCampaignScenarios {
                 "Awards Cyano-Coolant Injector and Skyline Master Passkey."),
             setOf("quests:w3_sq16")),
 
+        entry("campaign_w3_laser_puzzle", "w3_laser_puzzle", "Puzzle: Executive Laser Grid", "World 3: The Spire", DebugScenarioCategory.CONTENT, "spire_donor_gallery",
+            "Donor Gallery in Skypark; inspecting the crimson laser security grid sealing the northern corridor.",
+            listOf("Examine the crimson laser security grid blocking the northern corridor.",
+                "Interact with the optical laser grid console to realign optical prisms.",
+                "Traverse north into the Executive Black-Site Lab through refracted beams.",
+                "Loot the Black-Box Safe for the Syndicate Overclock Mod."),
+            listOf("Laser grid console toggle unlocks the northern corridor with state persistence.",
+                "North passage allows bidirectional movement between gallery and black-site lab.",
+                "Black-Box Safe awards Syndicate Overclock Mod and high-tier components."),
+            setOf("events:w3_laser_grid_bypassed", "milestones:ms_w3_laser_grid_bypassed")),
+
         // World 4 Main Quests
         entry("campaign_w4_mq16", "w4_mq16", "MQ16: Into the Fire", "World 4: The Foundry", DebugScenarioCategory.STORY, "foundry_slag_landing",
             "Foundry Slag Landing on the Obsidian Shelf; Astra docked amidst molten rivers.",
@@ -496,6 +507,17 @@ object DebugCampaignScenarios {
                 "Pitmaster Brutus dialogue responds dynamically to cleared waves.",
                 "Grand prize Crucible Forge-Plate is awarded upon championship victory."),
             setOf("quests:w4_sq_crucible", "enemies:crucible_champion", "items:crucible_forge_plate")),
+
+        entry("campaign_w4_slag_puzzle", "w4_slag_puzzle", "Puzzle: Coolant Slag Bridge", "World 4: The Foundry", DebugScenarioCategory.CONTENT, "foundry_slag_stepping_stones",
+            "Stepping Stones in Slag River; inspecting the boiling slag cataract and cryogenic manifold valve.",
+            listOf("Examine the boiling slag cataract blocking northern passage across the lava channel.",
+                "Interact with the cryogenic manifold valve to flood the channel with sub-zero coolant.",
+                "Cross the solidified obsidian bridge north into the Subterranean Smelter Forge.",
+                "Loot the Precursor Crucible for the Magma Induction Core Mod."),
+            listOf("Cryogenic manifold valve toggle crusts molten slag into a navigable bridge.",
+                "North passage allows bidirectional movement between stepping stones and smelter forge.",
+                "Precursor Crucible awards Magma Induction Core Mod and crafting components."),
+            setOf("events:w4_slag_bridge_solidified", "milestones:ms_w4_slag_bridge_solidified")),
 
         // World 5 Main Quests
         entry("campaign_w5_mq21", "w5_mq21", "MQ21: Docking Procedure", "World 5: The Void", DebugScenarioCategory.STORY, "orbital_executive_dock",
@@ -766,6 +788,7 @@ object DebugCampaignScenarios {
         "w3_sq14" to "spire_exec_lounge_bar",
         "w3_sq15" to "spire_drone_test_alcove",
         "w3_sq16" to "spire_skyline_vip_suite",
+        "w3_laser_puzzle" to "spire_donor_gallery",
         "w4_mq16" to "foundry_slag_landing",
         "w4_mq17" to "foundry_waste_intake",
         "w4_mq18" to "foundry_conditioning_chamber",
@@ -776,6 +799,7 @@ object DebugCampaignScenarios {
         "w4_sq18" to "foundry_waste_intake",
         "w4_sq19" to "foundry_reject_bay",
         "w4_sq20" to "foundry_forge_control_alcove",
+        "w4_slag_puzzle" to "foundry_slag_stepping_stones",
         "w5_mq21" to "orbital_executive_dock",
         "w5_mq22" to "orbital_solarium",
         "w5_mq23" to "deep_firewall_alpha",

@@ -4879,21 +4879,55 @@
     "env": "neon",
     "title": "Donor Gallery",
     "background_image": "images/rooms/world_3/spire_donor_gallery.webp",
-    "description": "The donor gallery displays smiling portraits of executives who bought pieces of the sky. A donor wall and portrait plaques thank families whose names appear in half the city laws.",
+    "description": "Executive portraits line the marble hall. A donor wall and portrait plaques praise private contracts, while a crimson laser grid console seals the northern private corridor.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "west": "spire_glasswalk",
       "south": "spire_archive_vault",
-      "east": "spire_skyline_vip_suite"
+      "east": "spire_skyline_vip_suite",
+      "north": "spire_black_site_lab"
+    },
+    "blocked_directions": {
+      "north": {
+        "type": "lock",
+        "requires": [
+          {
+            "room_id": "spire_donor_gallery",
+            "state_key": "laser_grid_bypassed",
+            "value": true
+          }
+        ],
+        "message_locked": "A lethal crisscross of crimson security lasers seals the northern executive corridor. Stepping through without bypassing the grid would trigger automated thermal incineration.",
+        "message_unlock": "The laser grid refracts through aligned prisms and dissipates with a gentle electronic chime!"
+      }
     },
     "pos": [
       3,
       0
     ],
     "state": {},
+    "description_variants": [
+      {
+        "requires_state": {
+          "laser_grid_bypassed": true
+        },
+        "description": "A donor wall and portrait plaques line the gallery. The laser grid console hums with blue refraction light, keeping the northern corridor open into the black-site lab."
+      }
+    ],
     "actions": [
+      {
+        "name": "laser grid console",
+        "type": "toggle",
+        "state_key": "laser_grid_bypassed",
+        "popup_title": "Optical Laser Grid",
+        "label_on": "Realign Optical Prisms",
+        "label_off": "Reset Security Grid",
+        "action_event_on": "w3_laser_grid_bypassed",
+        "action_event_off": "w3_laser_grid_reset",
+        "condition_unmet_message": "Precision optical prism dials control the executive security grid."
+      },
       {
         "name": "donor wall",
         "type": "generic",
@@ -4903,6 +4937,44 @@
         "name": "portrait plaques",
         "type": "generic",
         "condition_unmet_message": "The portrait plaques list charity gifts beside private security contracts."
+      }
+    ]
+  },
+  {
+    "id": "spire_black_site_lab",
+    "env": "neon",
+    "title": "Executive Black-Site Lab",
+    "background_image": "images/rooms/world_3/spire_donor_gallery.webp",
+    "description": "Cold neon backlights row upon row of cryogenic stasis cylinders and prototype server banks. An executive black-box safe rests sealed beneath a humming quantum holographic projector.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "spire_donor_gallery"
+    },
+    "pos": [
+      3,
+      1
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "black-box safe",
+        "type": "container",
+        "state_key": "w3_black_site_safe_opened",
+        "items": [
+          "syndicate_overclock_mod",
+          "circuit_board",
+          "battery"
+        ],
+        "already_open_message": "The black-box safe is open, its magnetic tumblers depolarized.",
+        "popup_title": "Black-Box Safe"
+      },
+      {
+        "name": "holographic projector",
+        "type": "inspect",
+        "description": "Inspect the quantum holographic projector.",
+        "inspect_message": "Flickering blue schematics display classified Dominion urban pacification drones and neural compliance collars marked for Spire lower-city deployment."
       }
     ]
   },
@@ -5382,21 +5454,55 @@
     "weather": "dust",
     "title": "Stepping Stones",
     "background_image": "images/rooms/world_4/foundry_slag_stepping_stones.webp",
-    "description": "Basalt stones rise from the lava channel in a crooked line. Each flare throws blue-white Source fire across a different step, turning the crossing into a readable flare rhythm.",
+    "description": "Basalt stones rise from the lava channel in a readable flare rhythm. A roaring slag cataract blocks the northern crossing beside a cryogenic manifold valve.",
     "npcs": [],
     "items": [],
     "enemies": [
       "magma_drone"
     ],
     "connections": {
-      "south": "foundry_slag_river"
+      "south": "foundry_slag_river",
+      "north": "foundry_subterranean_smelter"
+    },
+    "blocked_directions": {
+      "north": {
+        "type": "lock",
+        "requires": [
+          {
+            "room_id": "foundry_slag_stepping_stones",
+            "state_key": "slag_bridge_solidified",
+            "value": true
+          }
+        ],
+        "message_locked": "A roaring cataract of molten white slag surges across the northern channel. The searing thermal updraft would vaporize anyone attempting to jump across.",
+        "message_unlock": "Cryogenic coolant floods the channel, hissing into steam as the molten slag crusts into a solid obsidian bridge!"
+      }
     },
     "pos": [
       1,
       1
     ],
     "state": {},
+    "description_variants": [
+      {
+        "requires_state": {
+          "slag_bridge_solidified": true
+        },
+        "description": "Basalt stones rise past the cooled flare rhythm. Clouds of white steam billow around the cryogenic manifold valve, where solid obsidian forms a northern bridge."
+      }
+    ],
     "actions": [
+      {
+        "name": "cryogenic manifold valve",
+        "type": "toggle",
+        "state_key": "slag_bridge_solidified",
+        "popup_title": "Cryogenic Coolant Manifold",
+        "label_on": "Open Coolant Valve",
+        "label_off": "Close Coolant Valve",
+        "action_event_on": "w4_slag_bridge_solidified",
+        "action_event_off": "w4_slag_bridge_melted",
+        "condition_unmet_message": "A heavy frost-rimmed iron valve connects to high-pressure coolant pipes."
+      },
       {
         "name": "flare rhythm",
         "type": "generic",
@@ -5407,6 +5513,45 @@
     "enemy_flavor": {
       "magma_drone": "A magma drone darts between flare bursts, using the crossing itself as a weapon."
     }
+  },
+  {
+    "id": "foundry_subterranean_smelter",
+    "env": "foundry",
+    "weather": "sparks",
+    "title": "Subterranean Smelter Forge",
+    "background_image": "images/rooms/world_4/foundry_slag_stepping_stones.webp",
+    "description": "Colossal obsidian crucibles loom in the crimson gloom. Ancient geothermal vents feed a pre-Dominion smelting anvil, where an unyielding precursor crucible safe rests sealed.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "south": "foundry_slag_stepping_stones"
+    },
+    "pos": [
+      1,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "precursor crucible",
+        "type": "container",
+        "state_key": "w4_precursor_crucible_opened",
+        "items": [
+          "magma_induction_core_mod",
+          "pure_iron",
+          "composite_plate"
+        ],
+        "already_open_message": "The crucible safe is open, its volcanic slag seals cracked.",
+        "popup_title": "Precursor Crucible"
+      },
+      {
+        "name": "smelting anvil",
+        "type": "inspect",
+        "description": "Inspect the ancient geothermal smelting anvil.",
+        "inspect_message": "Carved from a single basalt monolith, the anvil still hums with dormant tectonic resonance, etched with cymatic cooling channels that predate the Dominion."
+      }
+    ]
   },
   {
     "id": "foundry_cooling_springs",

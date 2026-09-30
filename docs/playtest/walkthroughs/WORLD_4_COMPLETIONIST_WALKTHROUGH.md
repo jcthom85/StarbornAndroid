@@ -125,7 +125,8 @@ sequenceDiagram
 | **Slag Landing**<br>`foundry_slag_landing` | 1. Disembark Astra<br>2. Inspect `slag observation point` | Baseline state initialized.<br>Astra docked in background. | Orange atmospheric heat shimmer, heavy rhythmic forge pounding audio. |
 | **Obsidian Overlook**<br>`foundry_obsidian_overlook` | Inspect `magma fall`<br>Inspect `thermal sensor` | Milestone `ms_w4_overlook_scouted` | Cascading molten rock particle shader. |
 | **Slag River**<br>`foundry_slag_river` | 1. ⚠️ **Combat: Magma Drone**<br>2. Action `slag crossing`<br>3. Action `ammo crate alpha` | Victory (110 XP).<br>`ms_w4_slag_crossed` set.<br>`w4_sq16` stage 1 complete. | Searing hiss of lava, stone crumbling audio on crossing. |
-| **Stepping Stones**<br>`foundry_slag_stepping_stones` | Action `flare rhythm` | Validates timing window.<br>Awards **Scrap Metal x2**. | Blue-white Source flare eruption VFX. |
+| **Stepping Stones**<br>`foundry_slag_stepping_stones` | 1. ⚠️ **Combat: Magma Drone**<br>2. Action `flare rhythm`<br>3. Toggle `cryogenic manifold valve` (`w4_slag_bridge_solidified`) | Validates timing window.<br>Sets `slag_bridge_solidified = true`.<br>Awards milestone **`ms_w4_slag_bridge_solidified`**.<br>Solidifies slag into obsidian bridge north! | Blue-white Source flare eruption VFX.<br>Violent steam hissing audio cue as molten cataract freezes into obsidian. |
+| **Subterranean Smelter**<br>`foundry_subterranean_smelter` | 1. Loot `precursor crucible` (`w4_precursor_crucible_opened`)<br>2. Inspect `smelting anvil` | Crucible safe looted: **Magma Induction Core Mod** (`magma_induction_core_mod`), **Pure Iron x1**, **Composite Plate x1**.<br>Ancient basalt anvil lore. | Crimson volcanic glow reflecting off colossal basalt crucibles, spark particle shower. |
 | **Waste Intake**<br>`foundry_waste_intake` | 1. Action `ammo crate beta`<br>2. Action `intake brake` (`w4_sq18`)<br>3. ⚠️ **Combat: Slag Golem** | `w4_sq16` stage 2 complete.<br>`w4_sq18` intake halted.<br>Victory (220 XP, **Power Cell x1**). | Grinding industrial shredder gears stopping with a metallic jolt. |
 
 ---
@@ -385,6 +386,7 @@ flowchart TD
 
 ### 1. Unique Collectibles & Relics:
 * **Sherman's Memorial Wrench:** Awarded by Cameron in `foundry_pipe_gallery`. (+18 Atk, +15% Posture Damage vs Machines).
+* **Magma Induction Core Mod:** Epic Core Mod (+7 STR, +5 VIT, +6 DEF, +40 HP). Awarded in `foundry_subterranean_smelter`.
 * **The Anvil:** Main quest relic from `foundry_forge_anvil`. Unlocks the **Construct** ability.
 * **Deep-Core Engine:** Core quest item from `foundry_titan_dock`. Enables Astra high-orbit travel.
 * **Phase-Cutter Arrays:** Secondary engine component from `foundry_titan_dock`.
@@ -402,6 +404,7 @@ Use this checklist during manual or automated playtest runs:
 
 - [ ] **Astra Docking:** Confirm Astra model renders cleanly in `foundry_slag_landing` background.
 - [ ] **Flare Rhythm:** Verify flare timing window at `foundry_slag_river` prevents instant party wipes.
+- [ ] **Cryogenic Slag Bridge & Subterranean Smelter:** At `foundry_slag_stepping_stones`, toggle `cryogenic manifold valve` to freeze boiling slag cataract into solid obsidian. Confirm `foundry_subterranean_smelter` opens at `pos: [1, 2]` and looting `precursor crucible` awards `magma_induction_core_mod`.
 - [ ] **Cameron's Gallery:** Ensure `foundry_pipe_gallery` is accessible from `foundry_decon_chamber` at `pos: [5, 1]`.
 - [ ] **Easter Eggs Verification:**
   - [ ] Check `#24` racing banners inspection text.
@@ -413,3 +416,14 @@ Use this checklist during manual or automated playtest runs:
 - [ ] **Titan Walker Vent Recovery:** Confirm Titan enters `vent_exposure` state immediately following `missile_barrage`.
 - [ ] **Meltdown Evacuation:** Confirm `foundry_escape_catwalk` smoothly transitions to Astra liftoff without navigation soft-locks.
 - [ ] **Compass Geometry:** Ensure `python navigation_audit.py --check` passes with zero discrepancies across Hubs 7 and 8.
+
+---
+
+## 15. Campaign Debug Scenarios Quick Reference
+
+Launch these debug states from the in-game debug menu to jump directly to specific encounters and puzzles:
+
+| Scenario ID | Name | Target Room | Notes |
+| :--- | :--- | :--- | :--- |
+| `campaign_w4_crucible` | **The Scrapper's Crucible** | `foundry_crucible_arena` | Drops directly into the 3-wave machine gladiator combat arena. |
+| `campaign_w4_slag_puzzle` | **Cryogenic Slag Bridge** | `foundry_slag_stepping_stones` | Tests cryogenic valve toggle, obsidian bridge freezing, and Subterranean Smelter looting. |
