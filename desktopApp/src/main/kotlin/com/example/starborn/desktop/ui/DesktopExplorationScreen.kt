@@ -233,6 +233,35 @@ fun DesktopExplorationScreen(
             }
         }
 
+        if (type == "container") {
+            val alreadyOpen = stateKey?.let { (sessionState.roomStates[currentRoom.id]?.get(it) as? Boolean) } ?: false
+            if (alreadyOpen) {
+                actionNotification = action["already_open_message"] as? String ?: "You've already searched $name."
+                return
+            }
+            if (stateKey != null) {
+                val currentRoomState = ((sessionState.roomStates[currentRoom.id] ?: currentRoom.state.mapNotNull { (k, v) ->
+                    (v as? Boolean)?.let { k to it }
+                }.toMap())).toMutableMap()
+                currentRoomState[stateKey] = true
+                val updatedMap = sessionState.roomStates.toMutableMap()
+                updatedMap[currentRoom.id] = currentRoomState
+                services.sessionStore.restore(sessionState.copy(roomStates = updatedMap))
+            }
+            val items = (action["items"] as? List<*>)?.filterIsInstance<String>().orEmpty()
+            val names = items.map { itemId ->
+                services.inventoryService.addItem(itemId, 1)
+                services.inventoryService.itemDisplayName(itemId)
+            }
+            val containerTitle = action["popup_title"] as? String ?: name
+            actionNotification = if (names.isEmpty()) {
+                "The ${containerTitle.lowercase(Locale.getDefault())} is empty."
+            } else {
+                "Found ${names.joinToString(", ")} in $containerTitle."
+            }
+            return
+        }
+
         if (actionEvent != null) {
             actionNotification = "Interacted with $name."
         } else {

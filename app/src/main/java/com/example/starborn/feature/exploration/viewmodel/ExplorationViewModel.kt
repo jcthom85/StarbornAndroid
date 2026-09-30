@@ -511,18 +511,11 @@ class ExplorationViewModel(
                 milestoneManager.applyEffectsFor(milestone)
 
                 itemPopupByMilestone[milestone]?.let { spec ->
-                    val itemName = inventoryService.itemDisplayName(spec.itemId)
-                    val itemLabel = if (spec.quantity == 1) itemName else "${spec.quantity} x $itemName"
-                    val message = if (spec.quantity == 1) {
-                        "Recovered $itemName."
-                    } else {
-                        "Recovered ${spec.quantity} x $itemName."
-                    }
-                    enqueueEventAnnouncement(
-                        title = spec.title,
-                        message = message,
-                        eyebrow = "Recovered",
-                        items = listOf(itemLabel)
+                    promptManager.enqueue(
+                        itemGrantedPrompt(
+                            itemId = spec.itemId,
+                            quantity = spec.quantity
+                        )
                     )
                 }
             },
@@ -5530,41 +5523,40 @@ class ExplorationViewModel(
 
         stateKey?.let { setRoomStateValue(roomId, it, true) }
 
-        val grantedItems = action.items.mapNotNull { itemId ->
-            if (itemId.isBlank()) return@mapNotNull null
+        val validItems = action.items.filter { it.isNotBlank() }
+        val sequenceId = "container_${UUID.randomUUID()}"
+        val grantedDisplayNames = mutableListOf<String>()
+
+        validItems.forEachIndexed { index, itemId ->
             inventoryService.addItem(itemId, 1)
             val displayName = inventoryService.itemDisplayName(itemId)
             emitEvent(ExplorationEvent.ItemGranted(displayName, 1))
-            promptManager.enqueue(ItemGrantedPrompt(displayName, 1))
-            displayName
+            promptManager.enqueue(
+                itemGrantedPrompt(
+                    itemId = itemId,
+                    quantity = 1,
+                    sequenceId = sequenceId,
+                    sequenceIndex = index + 1,
+                    sequenceTotal = validItems.size
+                )
+            )
+            grantedDisplayNames.add(displayName)
+        }
+        if (grantedDisplayNames.isNotEmpty()) {
+            sessionStore.setInventory(inventoryService.snapshot())
         }
 
+        val containerTitle = action.popupTitle?.takeIf { it.isNotBlank() } ?: action.name
         val message = when {
-            grantedItems.isEmpty() -> action.popupTitle ?: "The ${action.name.lowercase(Locale.getDefault())} is empty."
-            grantedItems.size == 1 -> "Found ${grantedItems.first()}."
+            grantedDisplayNames.isEmpty() -> "The ${containerTitle.lowercase(Locale.getDefault())} is empty."
+            grantedDisplayNames.size == 1 -> "Found ${grantedDisplayNames.first()} in the $containerTitle."
             else -> {
-                val prefix = grantedItems.dropLast(1).joinToString(", ")
-                val suffix = grantedItems.last()
-                "Found $prefix and $suffix."
+                val prefix = grantedDisplayNames.dropLast(1).joinToString(", ")
+                val suffix = grantedDisplayNames.last()
+                "Found $prefix and $suffix in the $containerTitle."
             }
         }
         postStatus(message)
-        if (grantedItems.isNotEmpty()) {
-            val title = action.popupTitle?.takeIf { it.isNotBlank() }
-                ?: action.name.ifBlank { "Supply Cache" }
-            val announcement = if (grantedItems.size == 1) {
-                "Recovered ${grantedItems.first()}."
-            } else {
-                val prefix = grantedItems.dropLast(1).joinToString(", ")
-                "Recovered $prefix and ${grantedItems.last()}."
-            }
-            enqueueEventAnnouncement(
-                title = title,
-                message = announcement,
-                eyebrow = "Recovered",
-                items = grantedItems
-            )
-        }
 
         triggerPlayerAction(action.actionEvent?.takeIf { it.isNotBlank() })
         updateActionHints(_uiState.value.currentRoom)
