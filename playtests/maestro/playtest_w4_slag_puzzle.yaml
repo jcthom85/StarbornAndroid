@@ -1,0 +1,54 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 10000
+- tapOn: "Search world, quest, room, or system"
+- eraseText
+- inputText: "Coolant Slag Bridge"
+- hideKeyboard
+- extendedWaitUntil:
+    visible: ".*Coolant Slag Bridge.*"
+    timeout: 10000
+- tapOn: ".*Coolant Slag Bridge.*"
+- extendedWaitUntil:
+    visible: "Launch test"
+    timeout: 10000
+- tapOn: "Launch test"
+- extendedWaitUntil:
+    visible: "Stepping Stones"
+    timeout: 30000
+- assertVisible: "Stepping Stones"
+- takeScreenshot: w4-01-stepping-stones-initial
+- assertVisible: "cryogenic manifold valve"
+- tapOn: "cryogenic manifold valve"
+- extendedWaitUntil:
+    visible: "Cryogenic Coolant Manifold"
+    timeout: 10000
+- assertVisible: "Open Coolant Valve"
+- tapOn: "Open Coolant Valve"
+- extendedWaitUntil:
+    visible: ".*solid obsidian bridge.*"
+    timeout: 10000
+- takeScreenshot: w4-02-slag-bridge-solidified
+- tapOn: ".*solid obsidian bridge.*"
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Subterranean Smelter Forge"
+    timeout: 15000
+- assertVisible: "Subterranean Smelter Forge"
+- takeScreenshot: w4-03-subterranean-smelter
+- assertVisible: "precursor crucible"
+- tapOn: "precursor crucible"
+- extendedWaitUntil:
+    visible: "ITEM OBTAINED"
+    timeout: 15000
+- takeScreenshot: w4-04-crucible-opened-reward
+- tapOn: "GOT IT"

@@ -1,0 +1,54 @@
+appId: com.junewiregames.starborn.prealpha
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Debug Scenarios"
+    timeout: 60000
+- tapOn: "Debug Scenarios"
+- extendedWaitUntil:
+    visible: "Search world, quest, room, or system"
+    timeout: 10000
+- tapOn: "Search world, quest, room, or system"
+- eraseText
+- inputText: "Executive Laser Grid"
+- hideKeyboard
+- extendedWaitUntil:
+    visible: ".*Executive Laser Grid.*"
+    timeout: 10000
+- tapOn: ".*Executive Laser Grid.*"
+- extendedWaitUntil:
+    visible: "Launch test"
+    timeout: 10000
+- tapOn: "Launch test"
+- extendedWaitUntil:
+    visible: "Donor Gallery"
+    timeout: 30000
+- assertVisible: "Donor Gallery"
+- takeScreenshot: w3-01-donor-gallery-initial
+- assertVisible: "laser grid console"
+- tapOn: "laser grid console"
+- extendedWaitUntil:
+    visible: "Optical Laser Grid"
+    timeout: 10000
+- assertVisible: "Realign Optical Prisms"
+- tapOn: "Realign Optical Prisms"
+- extendedWaitUntil:
+    visible: ".*gentle electronic chime.*"
+    timeout: 10000
+- takeScreenshot: w3-02-laser-grid-bypassed
+- tapOn: ".*gentle electronic chime.*"
+- assertVisible: "Travel north"
+- tapOn: "Travel north"
+- extendedWaitUntil:
+    visible: "Executive Black-Site Lab"
+    timeout: 15000
+- assertVisible: "Executive Black-Site Lab"
+- takeScreenshot: w3-03-black-site-lab
+- assertVisible: "black-box safe"
+- tapOn: "black-box safe"
+- extendedWaitUntil:
+    visible: "ITEM OBTAINED"
+    timeout: 15000
+- takeScreenshot: w3-04-safe-opened-reward
+- tapOn: "GOT IT"

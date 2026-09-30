@@ -10,7 +10,7 @@ object DebugCampaignFixtureBuilder {
 
     fun prepare(services: AppServices, procedure: DebugTestProcedure): Boolean {
         val questId = procedure.targetId ?: return false
-        val quest = services.questRepository.questById(questId) ?: return false
+        val quest = services.questRepository.questById(questId)
         val roomId = DebugCampaignScenarios.startRooms[questId] ?: return false
         val room = services.worldDataSource.loadRooms().firstOrNull { it.id == roomId } ?: return false
         val node = services.worldDataSource.loadHubNodes().firstOrNull { roomId in it.rooms || roomId == it.entryRoom } ?: return false
@@ -84,10 +84,10 @@ object DebugCampaignFixtureBuilder {
         if (worldNum >= 5) (16..20).forEach { completedQuests.add("w4_mq$it") }
         if (worldNum >= 6) (21..25).forEach { completedQuests.add("w5_mq$it") }
 
-        // Start the target quest at its first stage
-        val firstStage = quest.stages.first()
-        val stageMap = mapOf(quest.id to firstStage.id)
-        val taskMap = mapOf(quest.id to emptySet<String>())
+        // Start the target quest at its first stage if present
+        val firstStage = quest?.stages?.firstOrNull()
+        val stageMap = if (quest != null && firstStage != null) mapOf(quest.id to firstStage.id) else emptyMap()
+        val taskMap = if (quest != null) mapOf(quest.id to emptySet<String>()) else emptyMap()
 
         val stock = mutableMapOf(
             "ration_pack" to 3,
@@ -137,8 +137,8 @@ object DebugCampaignFixtureBuilder {
             partyMemberXp = partyXp,
             partyMemberHp = emptyMap(),
             playerCredits = worldNum * 500,
-            activeQuests = setOf(quest.id),
-            trackedQuestId = quest.id,
+            activeQuests = if (quest != null) setOf(quest.id) else emptySet(),
+            trackedQuestId = quest?.id,
             completedQuests = completedQuests,
             failedQuests = emptySet(),
             questStageById = stageMap,
