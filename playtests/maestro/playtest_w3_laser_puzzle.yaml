@@ -1,7 +1,7 @@
 appId: com.junewiregames.starborn.prealpha
 ---
 - launchApp:
-    clearState: true
+    clearState: false
 - extendedWaitUntil:
     visible: "Debug Scenarios"
     timeout: 60000
@@ -14,9 +14,9 @@ appId: com.junewiregames.starborn.prealpha
 - inputText: "Executive Laser Grid"
 - hideKeyboard
 - extendedWaitUntil:
-    visible: ".*Executive Laser Grid.*"
+    visible: "Puzzle: Executive Laser Grid"
     timeout: 10000
-- tapOn: ".*Executive Laser Grid.*"
+- tapOn: "Puzzle: Executive Laser Grid"
 - extendedWaitUntil:
     visible: "Launch test"
     timeout: 10000
@@ -29,15 +29,14 @@ appId: com.junewiregames.starborn.prealpha
 - assertVisible: "laser grid console"
 - tapOn: "laser grid console"
 - extendedWaitUntil:
-    visible: "Optical Laser Grid"
+    visible: ".*unsealing the northern corridor.*"
     timeout: 10000
-- assertVisible: "Realign Optical Prisms"
-- tapOn: "Realign Optical Prisms"
+- assertVisible: "Continue"
+- tapOn: "Continue"
 - extendedWaitUntil:
-    visible: ".*gentle electronic chime.*"
+    visible: ".*keeping the northern corridor open.*"
     timeout: 10000
 - takeScreenshot: w3-02-laser-grid-bypassed
-- tapOn: ".*gentle electronic chime.*"
 - assertVisible: "Travel north"
 - tapOn: "Travel north"
 - extendedWaitUntil:
@@ -48,7 +47,25 @@ appId: com.junewiregames.starborn.prealpha
 - assertVisible: "black-box safe"
 - tapOn: "black-box safe"
 - extendedWaitUntil:
-    visible: "ITEM OBTAINED"
+    visible: "ITEM ACQUIRED"
     timeout: 15000
-- takeScreenshot: w3-04-safe-opened-reward
-- tapOn: "GOT IT"
+- assertVisible: "1 / 3"
+- assertVisible: "Syndicate Overclock"
+- takeScreenshot: w3-04-safe-item-1
+- tapOn: "Tap for next"
+- extendedWaitUntil:
+    visible: "2 / 3"
+    timeout: 5000
+- assertVisible: "Circuit Board"
+- takeScreenshot: w3-05-safe-item-2
+- tapOn: "Tap for next"
+- extendedWaitUntil:
+    visible: "3 / 3"
+    timeout: 5000
+- assertVisible: "Battery"
+- takeScreenshot: w3-06-safe-item-3
+- tapOn: "Tap to continue"
+- extendedWaitUntil:
+    notVisible: "ITEM ACQUIRED"
+    timeout: 5000
+- takeScreenshot: w3-07-safe-looted

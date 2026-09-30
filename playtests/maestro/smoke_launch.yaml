@@ -13,6 +13,7 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Search world, quest, room, or system"
     timeout: 15000
+- tapOn: "Story"
 - assertVisible: "Wake Up Call"
 - tapOn: "Close"
 - extendedWaitUntil:
