@@ -170,7 +170,8 @@ Track your numbers at each phase transition. If your game state deviates signifi
 | **Elevator Lobby**<br>`admin_elevator` | Swipe badge at scanner. Ride lift down. | Starts descent sequence into Sector 4. | • Elevator cable groaning and descent audio. |
 | **Elevator Landing**<br>`mine_landing` | 1. Inspect `drain pool`<br>2. Inspect `beacons` & `machinery` | **Fishing Spot Discovery**: Can test starter rod and lures! | • Water ripple effects in drain pool.<br>• Fishing minigame launcher responsiveness. |
 | **Main Tunnel Alpha**<br>`mine_alpha` | ⚠️ **Combat: 2x Echo Borer** | Combat victory.<br>Burrowing threat neutralized. | • Echo Borer underground emergence animation.<br>• Physical damage impact audio. |
-| **Cavern Junction**<br>`mine_junction` | Action `junction breaker box`. | **Mine Power Restored!** (`ms_mine_power_on`).<br>Emergency lights turn bright white. | • Power-up audio swell and lights brightening. |
+| **Cavern Junction**<br>`mine_junction` | 1. Action `junction breaker box`<br>2. Toggle `track diverter lever` | **Mine Power Restored!** (`ms_mine_power_on`).<br>Flipping switch diverts narrow-gauge rails; ore cart smashes blast bulkhead (`ms_w1_cart_track_diverted`), unlocking western passage! | • Power-up audio swell and lights brightening.<br>• Heavy iron cart runaway rumble and explosive metal impact crash sfx. |
+| **Sealed Munitions Stash**<br>`mine_sealed_munitions_vault` | 1. Inspect `shattered ore cart`<br>2. Open `dominion munitions cache` | Stash looted: **Thermite Core Mod** (`thermite_core_mod` — Epic mod: +8 STR, +5 LCK), **Scrap Metal**, **Pure Iron**. | • Mangled bulkhead and dust particle dispersion.<br>• Military cache green terminal glow. |
 | **Side Shunt 4**<br>`mine_shunt` | 1. Inspect `crew datapad`<br>2. Read `final letter`<br>3. Inspect `resonant vein` | Initiates & completes **`w1_sq05`** (The Lost Shift).<br>**Rewards:** **120 XP**, **Recoil Dampener**. | • Poignant narrative letter text display.<br>• Resonant vein crystal shader shimmer. |
 | **Conveyor Belt**<br>`mine_conveyor` | Inspect `conveyor belt` & `motor`. | Heavy tread marks and ore dust flavor. | • Ambient conveyor rumble. |
 | **Ore Sifter**<br>`mine_sifter` | Inspect `machinery` & `strobes`. | Loud deafening rock-sorting flavor. | • Dust particle overlay in strobe light. |
@@ -185,6 +186,21 @@ Track your numbers at each phase transition. If your game state deviates signifi
 | **The Harmonic Well**<br>`echo_well` | Inspect `mist`. | White glow and copper taste in air. | • Sub-bass hum audio loop. |
 | **Signal Alcove**<br>`echo_memory` | Inspect `walls` & `static`. | Suit clock drops half-second and resumes. | • Visor static flicker visual effect. |
 | **The Heart**<br>`echo_heart` | Inspect `tuning fork` cradle.<br>Launch Tuning Puzzle. | Opens **Counter-Tune the Fork** UI. | • Puzzle interface layout, sliders, and audio feedback. |
+
+---
+
+### The Ore Cart Track Switch & Blast Door Breach (Environmental Puzzle)
+Located in the primary logistics nexus at `mine_junction`:
+- **Bulkhead Obstruction:** A reinforced Dominion blast bulkhead seals off the western spur. Attempting to head West alerts: *"A reinforced Dominion blast bulkhead seals the western spur. Narrow-gauge rails end abruptly before the steel door."*
+- **Track Diverter Mechanism:** Toggle the `track diverter lever` on the junction switchbox (`w1_cart_track_diverted`).
+- **Engine Effects:**
+  1. Triggers `w1_cart_track_diverted`, setting room state `track_diverted: true` and registering milestone `ms_w1_cart_track_diverted`.
+  2. The heavy slag-filled ore cart barrels down the western incline rails, impacting the rusted blast bulkhead with an explosive crash.
+  3. Dynamic room prose updates to describe the switch rails and shattered wreckage.
+  4. Directional lock on `west` dissolves: *"The heavy ore cart rolls down the switch rails, shattering the blast door with an echoing boom!"*
+- **Sealed Munitions Stash Rewards:** Traversing West enters `mine_sealed_munitions_vault` ([-1, 2]). Open the **Dominion Munitions Cache** container to claim:
+  - **Thermite Core Mod** (`thermite_core_mod`): Epic gear mod (+8 Strength, +5 Luck) that converts kinetic impacts into searing thermal strikes.
+  - **Scrap Metal** & **Pure Iron**: Crucial early-game tinkering and weapon upgrade components.
 
 ---
 
@@ -343,6 +359,7 @@ Audit every hidden cache, secret discovery, and optional mechanic across World 1
 - **Server Backup Archives (`server_backup`):** Archive data logs (`ms_w1_server_backup_looted`).
 - **Admin Office Slate (`server_office`):** Admin badge and data slate (`ms_w1_server_office_datapads_read`).
 - **Toxic Pocket Medical Stash (`mine_gas`):** Hidden ground cache behind ruptured pipe (Loot: **Medkit I**).
+- **Sealed Munitions Stash (`mine_sealed_munitions_vault`):** Divert the junction rails and release the slag ore cart in `mine_junction` to obliterate the blast bulkhead and breach the stash (Loot: **Thermite Core Mod**, Scrap Metal, Pure Iron).
 - **Refueling Bay Volatile Cache (`launch_fuel`):** Optional gantry detour before the cargo lift. Yields **Medkit x1**, **Medkit I x1**, and **Ration x1**!
 
 ### 3. Colony Pit Drain Fishing Hole (`mine_landing`)
@@ -370,6 +387,7 @@ Comprehensive audit catalog of every item acquirable throughout World 1:
 | `mine_access_badge` | **Mine Access Badge** | Key Item | 0c | Concourse Lobby (`admin_lobby`) | Granted by Foreman Boggs. Unlocks deep elevator descent. |
 | `tuning_fork` | **The Tuning Fork** | Key Item | 0c | The Heart (`echo_heart`) | Architect Echo #1. Solves `w1_mq03`. Resonates with alien stone. |
 | `ghost_signal_cell` | **Ghost Signal Cell** ("Chime") | Key Item | 0c | Cargo Lift (`launch_lift`) | Bequeathed by Jed. Ancient brass chime needed for World 2. |
+| `thermite_core_mod` | **Thermite Core Mod** | Weapon Mod | 520c | Sealed Munitions Stash (`mine_sealed_munitions_vault`) | Epic core; channels kinetic impacts into searing thermal critical strikes (+8 STR, +5 LCK). |
 | `mod_corrosive_rounds` | **Corrosive Rounds** | Weapon Mod | 250c | Med Bay Exam (`medbay_exam1`) | Reward for `w1_sq02`. Coats shots in acid to melt armor. |
 | `recoil_dampener` | **Recoil Dampener** | Weapon Mod | 210c | Side Shunt 4 (`mine_shunt`) | Reward for `w1_sq05`. Tames weapon recoil and tightens spread. |
 | `pulse_grenade` | **Pulse Grenade** | Consumable | 60c | Scrapper's Shop / Stash (`w1_sq01`) | AoE EMP detonation; deals heavy shield and posture damage. |
@@ -379,6 +397,7 @@ Comprehensive audit catalog of every item acquirable throughout World 1:
 | `power_cell` | **Power Cell** | Component | 30c | Trade Row / Server Room | Charged cell used in field electronics. |
 | `battery_pack` | **Battery Pack** | Component | 10c | Server Room / Drops | Basic chemical battery for electrical tools. |
 | `scrap_metal` | **Scrap Metal** | Component | 10c | Scrap Yard / Drops / Shops | Essential alloy for tinkering and repairs. |
+| `pure_iron` | **Pure Iron** | Component | 40c | Munitions Stash / Drops | Refined Foundry iron used for advanced weapon mods. |
 | `wiring_bundle` | **Wiring Bundle** | Component | 18c | Vents / Drops / Shops | Insulated wire harness for electronics. |
 | `circuit_board` | **Circuit Board** | Component | 10c | Server Room (`w1_sq04`) | Populated control board awarded by rebel override. |
 | `hydraulic_fluid` | **Hydraulic Fluid** | Component | 40c | Security Post (`w1_sq03`) | Industrial lubricant awarded by Boggs' shield drill. |
@@ -419,6 +438,7 @@ If you need to reproduce an edge case, re-test a boss fight, or verify a room tr
 | `campaign_w1_sq03` | **SQ03: Heavy Lifting** | Security Post<br>`admin_security` | Nova (Lv 2), Concourse clearance active. | Test Acoustic Bulwark Guard Break training drill and Boggs elevator authorization. |
 | `campaign_w1_sq04` | **SQ04: Protocol Override**| Server Air-Lock<br>`server_airlock` | Nova (Lv 2), Server Room access unlocked. | Test Resonance Buoy combat, sub-zero console thaw, and rebel protocol upload. |
 | `campaign_w1_sq05` | **SQ05: The Lost Shift** | Elevator Landing<br>`mine_landing` | Nova (Lv 2–3), Sector 4 access unlocked. | Test Cavern Junction breaker power-up, Side Shunt 4 datapad, and Recoil Dampener grant. |
+| `campaign_w1_minecart_puzzle` | **Puzzle: Ore Cart Blast Door** | Cavern Junction<br>`mine_junction` | Nova (Lv 2–3), Sector 4 access unlocked. | Test track diverter lever toggle, ore cart runaway collision, blast door shattering, and munitions cache loot. |
 
 ---
 

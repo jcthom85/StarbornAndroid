@@ -2513,14 +2513,29 @@
     "env": "mine",
     "title": "Cavern Junction",
     "background_image": "images/rooms/world_1/mine_junction.webp",
-    "description": "Mine tunnels branch from a cavernous junction around a central support pillar. A mounted junction breaker box hums while an intermittent pulse runs through the power relay.",
+    "description": "Mine tunnels branch around a central pillar. A mounted junction breaker box hums with power. Beside switch rails, a track diverter lever points toward a reinforced blast bulkhead.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "south": "mine_alpha",
       "north": "mine_checkpoint",
-      "east": "mine_conveyor"
+      "east": "mine_conveyor",
+      "west": "mine_sealed_munitions_vault"
+    },
+    "blocked_directions": {
+      "west": {
+        "type": "lock",
+        "requires": [
+          {
+            "room_id": "mine_junction",
+            "state_key": "track_diverted",
+            "value": true
+          }
+        ],
+        "message_locked": "A reinforced Dominion blast bulkhead seals the western spur. Narrow-gauge rails end abruptly before the steel door.",
+        "message_unlock": "The heavy ore cart rolls down the switch rails, shattering the blast door with an echoing boom!"
+      }
     },
     "pos": [
       0,
@@ -2529,7 +2544,26 @@
     "state": {
       "power_on": false
     },
+    "description_variants": [
+      {
+        "requires_state": {
+          "track_diverted": true
+        },
+        "description": "Tunnels branch from the junction where the junction breaker box hums. Switch rails curve west past the thrown track diverter lever, toward the shattered blast door and crushed slag."
+      }
+    ],
     "actions": [
+      {
+        "name": "track diverter lever",
+        "type": "toggle",
+        "state_key": "track_diverted",
+        "popup_title": "Ore Cart Track Switch",
+        "label_on": "Divert Track & Release Cart",
+        "label_off": "Reset Track Switch",
+        "action_event_on": "w1_cart_track_diverted",
+        "action_event_off": "w1_cart_track_reset",
+        "condition_unmet_message": "Heavy switch points connect the main line to the western incline siding."
+      },
       {
         "name": "junction breaker box",
         "type": "toggle",
@@ -2540,6 +2574,45 @@
         "action_event_on": "evt_mine_power_on",
         "action_event_off": "evt_mine_power_off",
         "condition_unmet_message": "The mounted junction breaker box routes auxiliary power to the surrounding mine tunnels."
+      }
+    ]
+  },
+  {
+    "id": "mine_sealed_munitions_vault",
+    "env": "mine",
+    "weather": "dust",
+    "title": "Sealed Munitions Stash",
+    "background_image": "images/rooms/world_1/mine_junction.webp",
+    "description": "A hidden Dominion armory buried beneath rockfall. Shattered blast door plates flank the shattered ore cart, revealing stacked lockers and an intact dominion munitions cache.",
+    "npcs": [],
+    "items": [],
+    "enemies": [],
+    "connections": {
+      "east": "mine_junction"
+    },
+    "pos": [
+      -1,
+      2
+    ],
+    "state": {},
+    "actions": [
+      {
+        "name": "dominion munitions cache",
+        "type": "container",
+        "state_key": "w1_munitions_cache_opened",
+        "items": [
+          "thermite_core_mod",
+          "scrap_metal",
+          "pure_iron"
+        ],
+        "already_open_message": "The munitions cache stands open, its thermal locks burned through.",
+        "popup_title": "Dominion Munitions Cache"
+      },
+      {
+        "name": "shattered ore cart",
+        "type": "inspect",
+        "description": "Inspect the demolished slag ore cart.",
+        "inspect_message": "The heavy iron cart rests wedged into the twisted bulkhead frame, its slag payload scattered across the stone floor in a heap of gray dust."
       }
     ]
   },

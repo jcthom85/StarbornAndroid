@@ -68,7 +68,7 @@ This transcript reflects the exact player experience, including dialogue, room t
 > **[Dialogue]** Foreman Boggs: "The lift is open. Restore the junction power, then trace the failed relays."
 **[Step 51 - Travel]** Entered room: Elevator Landing | Prose snippet: "The industrial lift opens into raw rock, red safety beacons, and idle drilling machinery. Boggs' override shows one auth..." [Quest: w1_mq03 (deep_mine_descent)]
 **[Combat Encounter]** Victory against [echo_borer] in mine_landing
-**[Step 53 - Travel]** Entered room: Cavern Junction | Prose snippet: "Mine tunnels branch from a cavernous junction around a central support pillar. A mounted junction breaker box hums while..." [Quest: w1_mq03 (deep_mine_descent)]
+**[Step 53 - Travel]** Entered room: Cavern Junction | Prose snippet: "Mine tunnels branch around a central pillar. A mounted junction breaker box hums with power. Beside switch rails, a trac..." [Quest: w1_mq03 (deep_mine_descent)]
 - **[Action]** `evt_mine_power_on`: Activates the Stellarium Mine generator and restores lighting. [Quest: w1_mq03 (deep_mine_descent)]
 **[Step 55 - Travel]** Entered room: Geometric Gap | Prose snippet: "Dominion floor paint ends at a straight seam in the Architect stone. Drill scoring stops at the same line without markin..." [Quest: w1_mq03 (deep_mine_descent)]
 - **[Action]** `w1_mq03_touch_relic`: Completes the counter-tune and cutter-suit-operator handshake after correct puzzle values. [Quest: w1_mq04 (lockdown_escape)]

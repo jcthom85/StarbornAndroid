@@ -235,6 +235,7 @@
       "mine_alpha",
       "mine_shunt",
       "mine_junction",
+      "mine_sealed_munitions_vault",
       "mine_conveyor",
       "mine_checkpoint",
       "mine_sifter",

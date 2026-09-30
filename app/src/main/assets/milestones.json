@@ -1872,5 +1872,11 @@
     "name": "Zero-G Magnetic Anchor Engaged",
     "description": "Engaged the emergency magnetic clamp in Zero-G Junction, polarizing drifting debris to reach the Breached Avionics Lab.",
     "toast": "Zero-G magnetic anchor engaged."
+  },
+  {
+    "id": "ms_w1_cart_track_diverted",
+    "name": "Minecart Diverter Switched",
+    "description": "Nova diverted the junction track rails and released the ore cart, smashing the blast door to the Sealed Munitions Stash.",
+    "toast": "Blast door breached by ore cart."
   }
 ]

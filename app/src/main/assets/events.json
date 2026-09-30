@@ -15550,5 +15550,51 @@
       }
     ],
     "repeatable": true
+  },
+  {
+    "id": "w1_cart_track_diverted",
+    "description": "Throw the rusted track switch lever to divert the ore cart into the blast bulkhead.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_cart_track_diverted"
+    },
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "mine_junction",
+        "state_key": "track_diverted",
+        "value": true
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_cart_track_diverted"
+      },
+      {
+        "type": "show_message",
+        "message": "With a screech of rusted iron, you heave the track lever. The switch points clack into place. You kick the manual wheel brake loose—the heavy ore cart rumbles down the slope, gathering terrifying speed before slamming through the reinforced blast door in a thunderous explosion of twisted steel and slag!"
+      }
+    ],
+    "repeatable": true
+  },
+  {
+    "id": "w1_cart_track_reset",
+    "description": "Reset the track switch lever in the mine junction.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_cart_track_reset"
+    },
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "mine_junction",
+        "state_key": "track_diverted",
+        "value": false
+      },
+      {
+        "type": "show_message",
+        "message": "You pull the lever back to its neutral position, disengaging the switch points."
+      }
+    ],
+    "repeatable": true
   }
 ]

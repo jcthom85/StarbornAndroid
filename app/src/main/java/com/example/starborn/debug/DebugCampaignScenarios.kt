@@ -117,6 +117,17 @@ object DebugCampaignScenarios {
                 "Quest completes and awards recoil dampener."),
             setOf("quests:w1_sq05", "items:recoil_dampener")),
 
+        entry("campaign_w1_minecart_puzzle", "w1_minecart_puzzle", "Puzzle: Ore Cart Blast Door", "World 1: The Mines", DebugScenarioCategory.CONTENT, "mine_junction",
+            "Cavern Junction in Deep Mine; inspecting the track diverter and blast bulkhead.",
+            listOf("Examine the reinforced Dominion blast bulkhead sealing the western spur.",
+                "Interact with the track diverter lever to align the switch rails.",
+                "Release the ore cart handbrake to breach the blast door in an explosion of slag.",
+                "Traverse west into the Sealed Munitions Stash to claim the Thermite Core Mod."),
+            listOf("Track diverter toggle unlocks the western spur with state persistence.",
+                "West passage allows bidirectional movement between junction and stash.",
+                "Dominion Munitions Cache awards the Thermite Core Mod and crafting supplies."),
+            setOf("events:w1_cart_track_diverted", "milestones:ms_w1_cart_track_diverted")),
+
         // World 2 Main Quests
         entry("campaign_w2_mq01", "w2_mq01", "MQ01: A Strange Coast", "World 2: Sector 9", DebugScenarioCategory.STORY, "sector9_crash_site",
             "Sector 9 Crash Site with the escape pod wreckage; Zeke injured on the ground.",
@@ -732,6 +743,7 @@ object DebugCampaignScenarios {
         "w1_sq03" to "admin_lobby",
         "w1_sq04" to "server_hub",
         "w1_sq05" to "mine_junction",
+        "w1_minecart_puzzle" to "mine_junction",
         "w2_mq01" to "sector9_crash_site",
         "w2_mq02" to "sector9_landing_stream",
         "w2_mq03" to "sector9_hall_of_echoes",
