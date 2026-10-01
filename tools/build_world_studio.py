@@ -4,7 +4,7 @@ Build script for Starborn World Graph & Navigation Studio.
 Generates tools/world_graph_studio.html with:
 1. Bundled offline dataset (rooms, hub_nodes, hubs, worlds, hub_layouts)
 2. Room background image display (Inspector preview + Canvas Art Mode toggle + Lightbox)
-3. Interactive Hub Screen Layout with node ground sites and Astra ship dock
+3. Interactive Hub Screen Layout with drag-and-drop node placement, sliders, crosshairs, and Astra ship dock
 4. Strict NSEW swipe navigation validation and visual editor
 """
 
@@ -703,16 +703,60 @@ def build():
       display: flex;
       flex-direction: column;
       align-items: center;
-      cursor: pointer;
-      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: grab;
+      user-select: none;
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
     }}
     .hub-site-anchor:hover {{
       transform: translate(-50%, -50%) scale(1.12);
-      z-index: 10;
+      z-index: 15;
     }}
     .hub-site-anchor.selected {{
       transform: translate(-50%, -50%) scale(1.18);
-      z-index: 12;
+      z-index: 18;
+    }}
+    .hub-site-anchor.dragging {{
+      cursor: grabbing;
+      transform: translate(-50%, -50%) scale(1.22);
+      z-index: 25 !important;
+      transition: none;
+    }}
+
+    .anchor-coord-tooltip {{
+      position: absolute;
+      bottom: -22px;
+      background: rgba(3, 105, 161, 0.95);
+      border: 1px solid var(--accent-cyan);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      pointer-events: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+    }}
+
+    /* Crosshairs on device frame during hover/drag */
+    .hub-crosshair-x {{
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      border-left: 1px dashed rgba(0, 229, 255, 0.4);
+      pointer-events: none;
+      z-index: 5;
+      display: none;
+    }}
+    .hub-crosshair-y {{
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      border-top: 1px dashed rgba(0, 229, 255, 0.4);
+      pointer-events: none;
+      z-index: 5;
+      display: none;
     }}
 
     .hub-site-pin {{
@@ -878,6 +922,28 @@ def build():
       resize: vertical;
       min-height: 60px;
       line-height: 1.4;
+    }}
+
+    input[type=range].form-range {{
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      background: #1e293b;
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+    }}
+    input[type=range].form-range::-webkit-slider-thumb {{
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      cursor: pointer;
+      box-shadow: 0 0 8px var(--accent-cyan);
+      border: 2px solid #fff;
     }}
 
     .coords-row {{
@@ -1168,7 +1234,7 @@ def build():
 
     <!-- VIEW B: HUB SCREEN LAYOUT (Interactive Mobile Hub Scene) -->
     <div class="hub-screen-container" id="hubScreenContainer" style="display: none;">
-      <div class="hub-device-frame">
+      <div class="hub-device-frame" id="hubDeviceFrame">
         <img id="hubBgImage" class="hub-bg-canvas" src="" alt="Hub Background">
         <div class="hub-top-scrim"></div>
         <div class="hub-bottom-scrim"></div>
@@ -1177,6 +1243,8 @@ def build():
           <div class="hub-screen-desc" id="hubScreenDesc">A dense cluster of sleeping pods and industrial workshops.</div>
         </div>
         <div id="hubSitesLayer" class="hub-sites-layer"></div>
+        <div id="hubCrosshairX" class="hub-crosshair-x"></div>
+        <div id="hubCrosshairY" class="hub-crosshair-y"></div>
       </div>
     </div>
 
@@ -1233,7 +1301,7 @@ def build():
       hubMap: new Map(),
       activeWorld: 'world_1',
       activeHub: 'hub_1_homestead',
-      activeNode: 'pit', // node id OR 'all_nodes'
+      activeNode: 'pit',
       activeViewMode: 'room_grid', // 'room_grid' | 'hub_screen'
       selectedRoomId: null,
       selectedHubNodeId: null,
@@ -1247,6 +1315,8 @@ def build():
       dragOffsetX: 0,
       dragOffsetY: 0,
       isDraggingNode: false,
+      isDraggingHubNode: false,
+      draggedHubNodeId: null,
       connectingFrom: null,
       history: [],
       gridSpacing: 180,
@@ -1368,15 +1438,27 @@ def build():
     }}
 
     function pushHistory() {{
-      state.history.push(JSON.stringify(state.rooms));
+      state.history.push(JSON.stringify({{
+        rooms: state.rooms,
+        hubNodes: state.hubNodes,
+        hubLayouts: state.hubLayouts
+      }}));
       if (state.history.length > 30) state.history.shift();
     }}
 
     function undo() {{
       if (state.history.length > 0) {{
-        state.rooms = JSON.parse(state.history.pop());
+        const snap = JSON.parse(state.history.pop());
+        state.rooms = snap.rooms || state.rooms;
+        state.hubNodes = snap.hubNodes || state.hubNodes;
+        state.hubLayouts = snap.hubLayouts || state.hubLayouts;
         indexData();
-        render();
+        if (state.activeViewMode === 'hub_screen') {{
+          renderHubScreen();
+          if (state.selectedHubNodeId) selectHubNode(state.selectedHubNodeId);
+        }} else {{
+          render();
+        }}
         showToast('Undo executed.');
       }}
     }}
@@ -1578,16 +1660,26 @@ def build():
         bgImg.src = getImageUrl(hub.background_image);
       }}
 
-      const layout = state.hubLayouts[hub.id] || {{ sites: {{}}, astra_dock: null }};
+      if (!state.hubLayouts[hub.id]) {{
+        state.hubLayouts[hub.id] = {{ sites: {{}}, astra_dock: null }};
+      }}
+      const layout = state.hubLayouts[hub.id];
       const sitesLayer = document.getElementById('hubSitesLayer');
       sitesLayer.innerHTML = '';
 
       // Render Nodes
       const hubNodes = state.hubNodes.filter(n => n.hub_id === hub.id);
       hubNodes.forEach(node => {{
-        const site = layout.sites[node.id] || {{ x: 0.5, y: 0.5 }};
+        if (!layout.sites[node.id]) {{
+          const fallbackX = node.pos_hint ? (node.pos_hint.center_x || 0.5) : 0.5;
+          const fallbackY = node.pos_hint ? (node.pos_hint.center_y || 0.5) : 0.5;
+          layout.sites[node.id] = {{ x: fallbackX, y: fallbackY, artwork_width: 0.25 }};
+        }}
+        const site = layout.sites[node.id];
+
         const anchor = document.createElement('div');
         anchor.className = 'hub-site-anchor' + (state.selectedHubNodeId === node.id ? ' selected' : '');
+        anchor.id = 'anchor_' + node.id;
         anchor.style.left = (site.x * 100) + '%';
         anchor.style.top = (site.y * 100) + '%';
 
@@ -1599,7 +1691,14 @@ def build():
             <span>${{escapeHtml(node.title || node.id)}}</span>
             <span style="color:var(--accent-cyan); font-size:9px;">${{(node.rooms || []).length}}r</span>
           </div>
+          <div class="anchor-coord-tooltip">${{Math.round(site.x * 100)}}%, ${{Math.round(site.y * 100)}}%</div>
         `;
+
+        anchor.addEventListener('mousedown', (e) => {{
+          if (e.button !== 0) return;
+          e.stopPropagation();
+          startHubNodeDrag(node.id, e);
+        }});
 
         anchor.addEventListener('click', (e) => {{
           e.stopPropagation();
@@ -1619,6 +1718,7 @@ def build():
         const astraSite = layout.astra_dock;
         const astraAnchor = document.createElement('div');
         astraAnchor.className = 'hub-site-anchor astra-dock' + (state.selectedHubNodeId === 'astra_access' ? ' selected' : '');
+        astraAnchor.id = 'anchor_astra_access';
         astraAnchor.style.left = (astraSite.x * 100) + '%';
         astraAnchor.style.top = (astraSite.y * 100) + '%';
 
@@ -1630,7 +1730,14 @@ def build():
             <span style="color:#7dd3fc;">The Astra</span>
             <span style="color:var(--accent-cyan); font-size:9px;">Ship</span>
           </div>
+          <div class="anchor-coord-tooltip">${{Math.round(astraSite.x * 100)}}%, ${{Math.round(astraSite.y * 100)}}%</div>
         `;
+
+        astraAnchor.addEventListener('mousedown', (e) => {{
+          if (e.button !== 0) return;
+          e.stopPropagation();
+          startHubNodeDrag('astra_access', e);
+        }});
 
         astraAnchor.addEventListener('click', (e) => {{
           e.stopPropagation();
@@ -1644,12 +1751,179 @@ def build():
       document.getElementById('kpiScope').textContent = `Scope: Hub [${{hub.title || hub.id}}] Screen Layout`;
     }}
 
-    function selectHubNode(nodeId) {{
-      state.selectedHubNodeId = nodeId;
-      renderHubScreen();
-      inspectorDrawer.classList.remove('collapsed');
+    // Interactive Hub Node Dragging Logic
+    function startHubNodeDrag(nodeId, e) {{
+      state.isDraggingHubNode = true;
+      state.draggedHubNodeId = nodeId;
+      selectHubNode(nodeId);
+      pushHistory();
+
+      const anchor = document.getElementById('anchor_' + nodeId);
+      if (anchor) anchor.classList.add('dragging');
+
+      const crossX = document.getElementById('hubCrosshairX');
+      const crossY = document.getElementById('hubCrosshairY');
+      if (crossX) crossX.style.display = 'block';
+      if (crossY) crossY.style.display = 'block';
+    }}
+
+    function onHubNodeDrag(e) {{
+      if (!state.isDraggingHubNode || !state.draggedHubNodeId) return;
+      const frame = document.getElementById('hubDeviceFrame');
+      if (!frame) return;
+      const rect = frame.getBoundingClientRect();
+
+      let normX = (e.clientX - rect.left) / rect.width;
+      let normY = (e.clientY - rect.top) / rect.height;
+
+      normX = Math.min(Math.max(normX, 0.05), 0.95);
+      normY = Math.min(Math.max(normY, 0.05), 0.95);
+
+      normX = Math.round(normX * 100) / 100;
+      normY = Math.round(normY * 100) / 100;
+
+      updateNodePosition(state.draggedHubNodeId, normX, normY);
+    }}
+
+    function stopHubNodeDrag() {{
+      if (state.isDraggingHubNode) {{
+        if (state.draggedHubNodeId) {{
+          const anchor = document.getElementById('anchor_' + state.draggedHubNodeId);
+          if (anchor) anchor.classList.remove('dragging');
+        }}
+        state.isDraggingHubNode = false;
+        state.draggedHubNodeId = null;
+
+        const crossX = document.getElementById('hubCrosshairX');
+        const crossY = document.getElementById('hubCrosshairY');
+        if (crossX) crossX.style.display = 'none';
+        if (crossY) crossY.style.display = 'none';
+
+        showToast('Updated node placement on Hub screen.');
+      }}
+    }}
+
+    function updateNodePosition(nodeId, x, y) {{
+      const hubId = state.activeHub;
+      if (!state.hubLayouts[hubId]) state.hubLayouts[hubId] = {{ sites: {{}}, astra_dock: null }};
+      const layout = state.hubLayouts[hubId];
 
       if (nodeId === 'astra_access') {{
+        if (!layout.astra_dock) layout.astra_dock = {{ x: 0.5, y: 0.5, artwork_width: 0.25 }};
+        layout.astra_dock.x = x;
+        layout.astra_dock.y = y;
+      }} else {{
+        if (!layout.sites[nodeId]) layout.sites[nodeId] = {{ x: 0.5, y: 0.5, artwork_width: 0.25 }};
+        layout.sites[nodeId].x = x;
+        layout.sites[nodeId].y = y;
+
+        // Sync in hubNodes
+        const node = state.nodeMap.get(nodeId);
+        if (node) {{
+          if (!node.pos_hint) node.pos_hint = {{}};
+          node.pos_hint.center_x = x;
+          node.pos_hint.center_y = y;
+        }}
+      }}
+
+      // Update Anchor Element
+      const anchor = document.getElementById('anchor_' + nodeId);
+      if (anchor) {{
+        anchor.style.left = (x * 100) + '%';
+        anchor.style.top = (y * 100) + '%';
+        const tooltip = anchor.querySelector('.anchor-coord-tooltip');
+        if (tooltip) tooltip.textContent = `${{Math.round(x * 100)}}%, ${{Math.round(y * 100)}}% (${{x.toFixed(2)}}, ${{y.toFixed(2)}})`;
+      }}
+
+      // Update crosshairs
+      const crossX = document.getElementById('hubCrosshairX');
+      const crossY = document.getElementById('hubCrosshairY');
+      if (crossX) crossX.style.left = (x * 100) + '%';
+      if (crossY) crossY.style.top = (y * 100) + '%';
+
+      // Update Inspector inputs
+      updateInspectorSiteInputs(nodeId, x, y);
+    }}
+
+    function updateInspectorSiteInputs(nodeId, x, y) {{
+      const sxInput = document.getElementById('numSiteX');
+      const syInput = document.getElementById('numSiteY');
+      const rxSlider = document.getElementById('sliderSiteX');
+      const rySlider = document.getElementById('sliderSiteY');
+      const lx = document.getElementById('labelSiteX');
+      const ly = document.getElementById('labelSiteY');
+      const codeInput = document.getElementById('codeKotlinSite');
+
+      if (sxInput) sxInput.value = x.toFixed(2);
+      if (syInput) syInput.value = y.toFixed(2);
+      if (rxSlider) rxSlider.value = x;
+      if (rySlider) rySlider.value = y;
+      if (lx) lx.textContent = `${{Math.round(x * 100)}}% (${{x.toFixed(2)}})`;
+      if (ly) ly.textContent = `${{Math.round(y * 100)}}% (${{y.toFixed(2)}})`;
+
+      if (codeInput) {{
+        if (nodeId === 'astra_access') {{
+          codeInput.value = `astraDock = site(${{x.toFixed(2)}}f, ${{y.toFixed(2)}}f)`;
+        }} else {{
+          codeInput.value = `"${{nodeId}}" to site(${{x.toFixed(2)}}f, ${{y.toFixed(2)}}f)`;
+        }}
+      }}
+    }}
+
+    window.onSiteSliderInput = function(nodeId, axis, val) {{
+      const num = parseFloat(val);
+      const hubId = state.activeHub;
+      const layout = state.hubLayouts[hubId] || {{ sites: {{}}, astra_dock: null }};
+      const current = (nodeId === 'astra_access' ? layout.astra_dock : layout.sites[nodeId]) || {{ x: 0.5, y: 0.5 }};
+
+      if (axis === 'x') {{
+        updateNodePosition(nodeId, num, current.y);
+      }} else if (axis === 'y') {{
+        updateNodePosition(nodeId, current.x, num);
+      }} else if (axis === 'w') {{
+        current.artwork_width = num;
+        const lw = document.getElementById('labelSiteW');
+        if (lw) lw.textContent = num.toFixed(2);
+        const codeInput = document.getElementById('codeKotlinSite');
+        if (codeInput) {{
+          if (nodeId === 'astra_access') {{
+            codeInput.value = `astraDock = site(${{current.x.toFixed(2)}}f, ${{current.y.toFixed(2)}}f, ${{num.toFixed(2)}}f)`;
+          }} else {{
+            codeInput.value = `"${{nodeId}}" to site(${{current.x.toFixed(2)}}f, ${{current.y.toFixed(2)}}f, ${{num.toFixed(2)}}f)`;
+          }}
+        }}
+      }}
+    }};
+
+    window.onSiteNumberInput = function(nodeId, axis, val) {{
+      const num = parseFloat(val);
+      if (isNaN(num)) return;
+      onSiteSliderInput(nodeId, axis, num);
+    }};
+
+    window.centerSiteX = function(nodeId) {{
+      onSiteSliderInput(nodeId, 'x', 0.50);
+    }};
+
+    window.copyKotlinSnippet = function(nodeId) {{
+      const codeInput = document.getElementById('codeKotlinSite');
+      if (codeInput) {{
+        navigator.clipboard.writeText(codeInput.value);
+        showToast('Copied: ' + codeInput.value);
+      }}
+    }};
+
+    function selectHubNode(nodeId) {{
+      state.selectedHubNodeId = nodeId;
+      inspectorDrawer.classList.remove('collapsed');
+
+      const hub = state.hubMap.get(state.activeHub);
+      const layout = (hub && state.hubLayouts[hub.id]) || {{ sites: {{}}, astra_dock: null }};
+      const isAstra = (nodeId === 'astra_access');
+      const site = isAstra ? (layout.astra_dock || {{ x: 0.5, y: 0.5, artwork_width: 0.25 }}) : (layout.sites[nodeId] || {{ x: 0.5, y: 0.5, artwork_width: 0.25 }});
+      const kotlinSnippet = isAstra ? `astraDock = site(${{site.x.toFixed(2)}}f, ${{site.y.toFixed(2)}}f)` : `"${{nodeId}}" to site(${{site.x.toFixed(2)}}f, ${{site.y.toFixed(2)}}f)`;
+
+      if (isAstra) {{
         drawerContent.innerHTML = `
           <div class="room-art-card" onclick="openLightbox('${{getImageUrl('images/nodes/astra_ship_map_v2.webp')}}', 'The Astra')">
             <img src="${{getImageUrl('images/nodes/astra_ship_map_v2.webp')}}" />
@@ -1662,8 +1936,51 @@ def build():
           </div>
           <div style="color:#fff; font-size:14px; font-weight:700;">The Astra (Landing Site)</div>
           <div style="font-size:11px; color:var(--text-muted); line-height:1.4;">
-            Your personal interstellar corvette and operational mobile headquarters. From here, the crew repairs gear, manufactures equipment, consults tactical archives, and plots sub-light courses.
+            Your personal interstellar corvette and operational mobile headquarters. Drag anywhere on the mobile hub screen or adjust coordinates below.
           </div>
+
+          <div class="form-group" style="background:rgba(0,0,0,0.25); border:1px solid var(--border); padding:10px; border-radius:6px; margin-top:8px;">
+            <label class="form-label">Hub Screen Placement Controls</label>
+            <div style="display:flex; flex-direction:column; gap:8px; margin-top:4px;">
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:3px;">
+                  <span style="color:#cbd5e1; font-weight:600;">Horizontal (X)</span>
+                  <span id="labelSiteX" style="font-family:var(--font-mono); color:var(--accent-cyan);">${{Math.round(site.x * 100)}}% (${{site.x.toFixed(2)}})</span>
+                </div>
+                <input type="range" class="form-range" id="sliderSiteX" min="0.05" max="0.95" step="0.01" value="${{site.x}}" oninput="onSiteSliderInput('astra_access', 'x', this.value)">
+                <div style="display:flex; gap:6px; margin-top:4px;">
+                  <input type="number" class="form-input" id="numSiteX" min="0.05" max="0.95" step="0.01" value="${{site.x.toFixed(2)}}" onchange="onSiteNumberInput('astra_access', 'x', this.value)">
+                  <button class="btn" style="padding:2px 8px; font-size:10px;" onclick="centerSiteX('astra_access')">Center (0.50)</button>
+                </div>
+              </div>
+
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:3px;">
+                  <span style="color:#cbd5e1; font-weight:600;">Vertical (Y)</span>
+                  <span id="labelSiteY" style="font-family:var(--font-mono); color:var(--accent-cyan);">${{Math.round(site.y * 100)}}% (${{site.y.toFixed(2)}})</span>
+                </div>
+                <input type="range" class="form-range" id="sliderSiteY" min="0.05" max="0.95" step="0.01" value="${{site.y}}" oninput="onSiteSliderInput('astra_access', 'y', this.value)">
+                <input type="number" class="form-input" id="numSiteY" min="0.05" max="0.95" step="0.01" value="${{site.y.toFixed(2)}}" style="margin-top:4px;" onchange="onSiteNumberInput('astra_access', 'y', this.value)">
+              </div>
+
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:3px;">
+                  <span style="color:#cbd5e1; font-weight:600;">Scale / Width</span>
+                  <span id="labelSiteW" style="font-family:var(--font-mono); color:var(--accent-cyan);">${{site.artwork_width || 0.25}}</span>
+                </div>
+                <input type="range" class="form-range" id="sliderSiteW" min="0.10" max="0.50" step="0.01" value="${{site.artwork_width || 0.25}}" oninput="onSiteSliderInput('astra_access', 'w', this.value)">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Kotlin Source Code</label>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <input type="text" class="form-input" id="codeKotlinSite" value="${{kotlinSnippet}}" readonly style="font-family:var(--font-mono); font-size:10px;">
+              <button class="btn" onclick="copyKotlinSnippet('astra_access')">📋 Copy</button>
+            </div>
+          </div>
+
           <button class="btn btn-primary" style="margin-top:10px;" onclick="enterAstraNode()">
             🚀 Board The Astra (Common Room)
           </button>
@@ -1690,6 +2007,52 @@ def build():
         <div style="color:#fff; font-size:14px; font-weight:700;">${{escapeHtml(node.title || node.id)}}</div>
         <div style="font-size:11px; color:var(--text-muted);">Node ID: <code style="color:var(--accent-cyan);">${{node.id}}</code></div>
 
+        <div class="form-group" style="background:rgba(0,0,0,0.25); border:1px solid var(--border); padding:10px; border-radius:6px; margin-top:8px;">
+          <label class="form-label">Hub Screen Placement Controls</label>
+          <div style="font-size:10px; color:var(--text-muted); margin-bottom:6px;">
+            Drag directly on the mobile hub screen or adjust precision coordinates below.
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:3px;">
+                <span style="color:#cbd5e1; font-weight:600;">Horizontal (X)</span>
+                <span id="labelSiteX" style="font-family:var(--font-mono); color:var(--accent-cyan);">${{Math.round(site.x * 100)}}% (${{site.x.toFixed(2)}})</span>
+              </div>
+              <input type="range" class="form-range" id="sliderSiteX" min="0.05" max="0.95" step="0.01" value="${{site.x}}" oninput="onSiteSliderInput('${{node.id}}', 'x', this.value)">
+              <div style="display:flex; gap:6px; margin-top:4px;">
+                <input type="number" class="form-input" id="numSiteX" min="0.05" max="0.95" step="0.01" value="${{site.x.toFixed(2)}}" onchange="onSiteNumberInput('${{node.id}}', 'x', this.value)">
+                <button class="btn" style="padding:2px 8px; font-size:10px;" onclick="centerSiteX('${{node.id}}')">Center (0.50)</button>
+              </div>
+            </div>
+
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:3px;">
+                <span style="color:#cbd5e1; font-weight:600;">Vertical (Y)</span>
+                <span id="labelSiteY" style="font-family:var(--font-mono); color:var(--accent-cyan);">${{Math.round(site.y * 100)}}% (${{site.y.toFixed(2)}})</span>
+              </div>
+              <input type="range" class="form-range" id="sliderSiteY" min="0.05" max="0.95" step="0.01" value="${{site.y}}" oninput="onSiteSliderInput('${{node.id}}', 'y', this.value)">
+              <input type="number" class="form-input" id="numSiteY" min="0.05" max="0.95" step="0.01" value="${{site.y.toFixed(2)}}" style="margin-top:4px;" onchange="onSiteNumberInput('${{node.id}}', 'y', this.value)">
+            </div>
+
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:3px;">
+                <span style="color:#cbd5e1; font-weight:600;">Scale / Width</span>
+                <span id="labelSiteW" style="font-family:var(--font-mono); color:var(--accent-cyan);">${{site.artwork_width || 0.25}}</span>
+              </div>
+              <input type="range" class="form-range" id="sliderSiteW" min="0.10" max="0.50" step="0.01" value="${{site.artwork_width || 0.25}}" oninput="onSiteSliderInput('${{node.id}}', 'w', this.value)">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Kotlin Source Code</label>
+          <div style="display:flex; gap:6px; align-items:center;">
+            <input type="text" class="form-input" id="codeKotlinSite" value="${{kotlinSnippet}}" readonly style="font-family:var(--font-mono); font-size:10px;">
+            <button class="btn" onclick="copyKotlinSnippet('${{node.id}}')">📋 Copy</button>
+          </div>
+        </div>
+
         <div class="form-group" style="margin-top:6px;">
           <label class="form-label">Entry Room</label>
           <input type="text" class="form-input" value="${{node.entry_room || ''}}" readonly>
@@ -1697,7 +2060,7 @@ def build():
 
         <div class="form-group">
           <label class="form-label">Rooms in this Facility (${{roomCount}})</label>
-          <div style="display:flex; flex-direction:column; gap:4px; max-height:160px; overflow-y:auto;">
+          <div style="display:flex; flex-direction:column; gap:4px; max-height:140px; overflow-y:auto;">
             ${{(node.rooms || []).map(rId => {{
               const r = state.roomMap.get(rId);
               return `
@@ -2145,7 +2508,7 @@ def build():
       linksSvg.appendChild(circle);
     }}
 
-    // Node Dragging
+    // Room Dragging
     function startNodeDrag(roomId, e) {{
       state.isDraggingNode = true;
       state.draggedRoomId = roomId;
@@ -2233,7 +2596,9 @@ def build():
       }});
 
       window.addEventListener('mousemove', (e) => {{
-        if (state.isDraggingNode) {{
+        if (state.isDraggingHubNode) {{
+          onHubNodeDrag(e);
+        }} else if (state.isDraggingNode) {{
           onNodeDrag(e);
         }} else if (state.isPanning) {{
           state.panX = e.clientX - state.panStartX;
@@ -2243,6 +2608,7 @@ def build():
       }});
 
       window.addEventListener('mouseup', () => {{
+        if (state.isDraggingHubNode) stopHubNodeDrag();
         if (state.isDraggingNode) stopNodeDrag();
         state.isPanning = false;
       }});
@@ -2775,10 +3141,11 @@ def build():
       }}
 
       try {{
-        showToast('Saving to project assets...');
+        showToast('Saving to project assets & Kotlin layouts...');
         const payload = {{
           rooms: state.rooms,
-          hub_nodes: state.hubNodes
+          hub_nodes: state.hubNodes,
+          hub_layouts: state.hubLayouts
         }};
 
         const res = await fetch('/api/save', {{
@@ -2789,7 +3156,7 @@ def build():
 
         if (res.ok) {{
           const result = await res.json();
-          showToast(`✅ Saved ${{state.rooms.length}} rooms! Backup created: ${{result.backup}}`, 4000);
+          showToast(`✅ ${{result.message}} (Backup: ${{result.backup}})`, 4000);
         }} else {{
           throw new Error('Server returned ' + res.status);
         }}
