@@ -150,4 +150,6 @@ Scrap preview recipe matching now uses the same item-ID rule as the action.
 
 Android and desktop Kotlin compilation passed. No tests were added or run. Device review remains
 necessary for font scaling, touch navigation, saves and item target cancellation. The classic layout
-remains available through Settings; this work has not been committed or released.
+remains available through Settings. The menu and Map tab changes shipped in version 1.3.82 (166)
+to Google Play's internal track. Device review remains necessary for touch gestures, font scaling,
+and the map layout on narrow screens.

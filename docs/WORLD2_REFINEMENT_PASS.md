@@ -19,9 +19,13 @@ completion plans and walkthrough estimates are not balance acceptance evidence.
   explanation inside the answer labels; textual clues remain available.
 - World 1 certification labels workshop setup as optional practice while
   retaining the task IDs and compatibility with the workshop drill.
-- Updated the existing World2RefinementTest sequence lengths. Tests were not
-  run for this follow-up. Edited JSON parses, dialogue IDs are unique, all
-  dialogue next references resolve, and the scoped diff has no whitespace errors.
+- Updated the existing World2RefinementTest sequence lengths. Edited JSON
+  parses, dialogue IDs are unique, all dialogue next references resolve, and
+  the scoped diff has no whitespace errors. The focused release regression set
+  subsequently passed: World2RefinementTest (11), World1RecentChangesTest (13),
+  QuestRuntimeManagerTest (7) and DataIntegrityTest (30). DataIntegrityTest's
+  initial failure exposed two missing room action labels; adding those labels to
+  the room descriptions cleared the rerun.
 - Playtest acceptance remains character voice, six-beat awakening pacing,
   Source Gate satisfaction, mural clue clarity and certification journal display.
 
