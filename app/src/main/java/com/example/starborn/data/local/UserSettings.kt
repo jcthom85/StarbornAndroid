@@ -14,5 +14,6 @@ data class UserSettings(
     val disableHaptics: Boolean = false,
     val highContrastMode: Boolean = false,
     val largeTouchTargets: Boolean = false,
-    val themeBandsEnabled: Boolean = false
+    val themeBandsEnabled: Boolean = false,
+    val modernFieldMenu: Boolean = true
 )

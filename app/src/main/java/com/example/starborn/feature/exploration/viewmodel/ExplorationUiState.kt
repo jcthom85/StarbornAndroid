@@ -36,6 +36,7 @@ data class ExplorationUiState(
     val activeDialogue: DialogueUi? = null,
     val dialogueChoices: List<DialogueChoiceUi> = emptyList(),
     val statusMessage: String? = null,
+    val menuFeedback: String? = null,
     val blockedPrompt: BlockedPrompt? = null,
     val activeQuests: Set<String> = emptySet(),
     val completedQuests: Set<String> = emptySet(),
@@ -169,7 +170,8 @@ data class QuestSummaryUi(
     val objectives: List<String>,
     val completed: Boolean,
     val stageIndex: Int,
-    val totalStages: Int
+    val totalStages: Int,
+    val currentObjective: String? = null
 )
 
 data class QuestDetailUi(
@@ -392,7 +394,8 @@ data class SettingsUiState(
     val largeTouchTargets: Boolean = false,
     val disableScreenshake: Boolean = false,
     val disableFlashes: Boolean = false,
-    val disableHaptics: Boolean = false
+    val disableHaptics: Boolean = false,
+    val modernFieldMenu: Boolean = true
 )
 
 data class PartyStatusUi(
@@ -420,7 +423,9 @@ data class PartyMemberDetailsUi(
     val portraitPath: String?,
     val primaryStats: List<CharacterStatValueUi>,
     val combatStats: List<CharacterStatValueUi>,
-    val unlockedSkills: List<String>
+    val unlockedSkills: List<String>,
+    val hpProgress: Float? = null,
+    val xpProgress: Float = 0f
 )
 
 data class CharacterStatValueUi(

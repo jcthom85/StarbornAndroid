@@ -14,6 +14,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Backpack
+import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Science
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.ui.semantics.Role
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -37,7 +44,13 @@ import com.example.starborn.domain.inventory.GearRules
 import com.example.starborn.domain.model.Equipment
 import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.model.ItemEffect
+import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuLargeTargets
+import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuHighContrast
+import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
+import com.example.starborn.feature.exploration.ui.menu.LocalModernFieldMenu
 import com.example.starborn.feature.exploration.ui.MenuSectionCard
+import com.example.starborn.feature.exploration.ui.components.ModernGearPicker
+import com.example.starborn.feature.exploration.ui.components.EquipmentComparison
 import com.example.starborn.feature.exploration.ui.components.GearSelectionDialog
 import com.example.starborn.feature.exploration.ui.components.previewItemIconRes
 import com.example.starborn.feature.exploration.viewmodel.InventoryPreviewItemUi
@@ -57,6 +70,7 @@ private enum class SuppliesFilter(val label: String) {
     CONSUMABLES("Combat Items")
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun InventoryTabContent(
     inventoryItems: List<InventoryPreviewItemUi>,
@@ -83,9 +97,14 @@ fun InventoryTabContent(
     var page by rememberSaveable {
         mutableStateOf(if (isGearTutorialActive) InventoryCarouselPage.GEAR else InventoryCarouselPage.SUPPLIES)
     }
+    val modernMenu = LocalModernFieldMenu.current
+    var retainTutorialGear by rememberSaveable { mutableStateOf(isGearTutorialActive) }
+    LaunchedEffect(isGearTutorialActive) {
+        if (isGearTutorialActive) retainTutorialGear = true
+    }
     var suppliesFilter by rememberSaveable { mutableStateOf(SuppliesFilter.ALL) }
-    val rawSupplies = remember(inventoryItems) {
-        inventoryItems.filterNot { it.isKeyItem() }
+    val rawSupplies = remember(inventoryItems, modernMenu) {
+        inventoryItems.filterNot { it.isKeyItem() || (modernMenu && (it.equipment != null || it.type.lowercase(Locale.ROOT) in setOf("weapon", "armor", "gear", "mod"))) }
     }
     val supplies = remember(rawSupplies, suppliesFilter) {
         when (suppliesFilter) {
@@ -106,17 +125,13 @@ fun InventoryTabContent(
             onSelect = { page = it },
             accentColor = accentColor,
             borderColor = borderColor,
-            isGearTutorialActive = isGearTutorialActive
+            isGearTutorialActive = isGearTutorialActive,
+            showTutorialGear = retainTutorialGear
         )
         Spacer(modifier = Modifier.height(12.dp))
         when (page) {
             InventoryCarouselPage.SUPPLIES -> {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
+                val filterContent: @Composable () -> Unit = {
                     SuppliesFilter.entries.forEach { filterOption ->
                         val isSelected = suppliesFilter == filterOption
                         Surface(
@@ -131,13 +146,59 @@ fun InventoryTabContent(
                                 text = filterOption.label,
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                    fontSize = 10.sp
+                                    fontSize = if (LocalModernFieldMenu.current) 12.sp else 10.sp
                                 ),
                                 color = if (isSelected) Color.White else Color.White.copy(alpha = 0.7f),
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                modifier = Modifier.heightIn(min = if (LocalModernFieldMenu.current) 44.dp else 0.dp)
+                                    .padding(horizontal = if (LocalModernFieldMenu.current) 10.dp else 8.dp, vertical = if (LocalModernFieldMenu.current) 8.dp else 4.dp)
                             )
                         }
                     }
+                }
+                if (LocalModernFieldMenu.current) {
+                    Row(
+                        Modifier.fillMaxWidth().padding(bottom = 8.dp).selectableGroup(),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        SuppliesFilter.entries.forEach { filter ->
+                            val selected = suppliesFilter == filter
+                            val tint = if (selected) FieldMenuDesign.gold else FieldMenuDesign.textMuted
+                            val icon = when (filter) {
+                                SuppliesFilter.ALL -> Icons.Default.Backpack
+                                SuppliesFilter.INGREDIENTS -> Icons.Default.Restaurant
+                                SuppliesFilter.COMPONENTS -> Icons.Default.Settings
+                                SuppliesFilter.CONSUMABLES -> Icons.Default.Science
+                            }
+                            val label = when (filter) {
+                                SuppliesFilter.ALL -> "All"
+                                SuppliesFilter.INGREDIENTS -> "Food"
+                                SuppliesFilter.COMPONENTS -> "Materials"
+                                SuppliesFilter.CONSUMABLES -> "Combat"
+                            }
+                            Surface(
+                                modifier = Modifier.weight(1f).clip(RoundedCornerShape(12.dp))
+                                    .selectable(selected = selected, role = Role.Tab,
+                                        onClick = { suppliesFilter = filter }),
+                                shape = RoundedCornerShape(12.dp),
+                                color = if (selected) FieldMenuDesign.gold.copy(alpha = 0.12f) else FieldMenuDesign.panel,
+                                border = BorderStroke(1.dp, if (selected) FieldMenuDesign.gold.copy(alpha = 0.6f)
+                                    else Color.White.copy(alpha = 0.08f))
+                            ) {
+                                Column(
+                                    modifier = Modifier.heightIn(min = 64.dp).padding(horizontal = 4.dp, vertical = 10.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                                ) {
+                                    Icon(icon, contentDescription = null, tint = tint, modifier = Modifier.size(24.dp))
+                                    Text(label, color = tint, style = MaterialTheme.typography.labelSmall,
+                                        textAlign = TextAlign.Center)
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    Row(Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)) { filterContent() }
                 }
                 InventoryItemsPreview(
                     items = supplies,
@@ -148,7 +209,7 @@ fun InventoryTabContent(
                     onShowDetails = onShowItemDetails
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Row(
+                if (!modernMenu) Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically
@@ -206,7 +267,8 @@ private fun InventoryCarouselToggle(
     onSelect: (InventoryCarouselPage) -> Unit,
     accentColor: Color,
     borderColor: Color,
-    isGearTutorialActive: Boolean = false
+    isGearTutorialActive: Boolean = false,
+    showTutorialGear: Boolean = isGearTutorialActive
 ) {
     val largeText = LocalDensity.current.fontScale >= 1.5f
     val scrollState = rememberScrollState()
@@ -225,7 +287,7 @@ private fun InventoryCarouselToggle(
             accentColor = accentColor,
             modifier = if (largeText) Modifier.padding(horizontal = 10.dp) else Modifier.weight(1f)
         )
-        InventoryCarouselButton(
+        if (!LocalModernFieldMenu.current || showTutorialGear) InventoryCarouselButton(
             label = "Gear",
             selected = current == InventoryCarouselPage.GEAR,
             isTutorialBeacon = isGearTutorialActive && current != InventoryCarouselPage.GEAR,
@@ -312,14 +374,8 @@ private fun InventoryItemsPreview(
         )
         return
     }
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(max = 360.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(bottom = 6.dp)
-    ) {
-        items(items, key = { it.id }) { item ->
+    val itemRow: @Composable (InventoryPreviewItemUi) -> Unit = { item ->
+            val modernMenuRow = LocalModernFieldMenu.current
             val isUsable = onItemClick != null && item.effect != null
             val shape = RoundedCornerShape(18.dp)
             val iconRes = remember(item.id + item.type) { previewItemIconRes(item.type) }
@@ -329,7 +385,9 @@ private fun InventoryItemsPreview(
                     .clip(shape)
                     .background(if (isUsable) Color.White.copy(alpha = 0.05f) else Color.Transparent)
                     .border(BorderStroke(1.dp, borderColor.copy(alpha = 0.35f)), shape)
-                    .clickable(enabled = isUsable) { onItemClick?.invoke(item) }
+                    .clickable(enabled = isUsable || modernMenuRow) {
+                        if (modernMenuRow) onShowDetails(item) else onItemClick?.invoke(item)
+                    }
                     .padding(horizontal = 14.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -369,7 +427,7 @@ private fun InventoryItemsPreview(
                                     border = BorderStroke(0.5.dp, Color(0xFFFFB74D))
                                 ) {
                                     Text(
-                                        text = "⚡ Snack (5T CD)",
+                                        text = item.effect?.cooldown?.takeIf { it > 0 }?.let { "Cooldown: ${it}T" } ?: "Snack",
                                         style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
                                         color = Color(0xFFFFCC80),
                                         modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
@@ -382,7 +440,7 @@ private fun InventoryItemsPreview(
                                     border = BorderStroke(0.5.dp, Color(0xFF81C784))
                                 ) {
                                     Text(
-                                        text = "🍲 Feast Buff",
+                                        text = "Meal",
                                         style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
                                         color = Color(0xFFA5D6A7),
                                         modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
@@ -403,7 +461,7 @@ private fun InventoryItemsPreview(
                     )
                     IconButton(
                         onClick = { onShowDetails(item) },
-                        modifier = Modifier.size(36.dp)
+                        modifier = Modifier.size(if (modernMenuRow) 48.dp else 36.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Info,
@@ -414,10 +472,20 @@ private fun InventoryItemsPreview(
                     }
                 }
             }
+    }
+    if (LocalModernFieldMenu.current) {
+        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            items.forEach { item -> key(item.id) { itemRow(item) } }
+        }
+    } else {
+        LazyColumn(Modifier.fillMaxWidth().heightIn(max = 360.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 6.dp)) {
+            items(items, key = { it.id }) { itemRow(it) }
         }
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun InventoryItemDetailsContent(
     item: InventoryPreviewItemUi,
@@ -429,9 +497,9 @@ fun InventoryItemDetailsContent(
         Surface(
             modifier = modifier.fillMaxWidth(),
             shape = RoundedCornerShape(18.dp),
-            color = Color(0xF0061018),
-            border = BorderStroke(1.dp, accentColor.copy(alpha = 0.48f)),
-            shadowElevation = 16.dp
+            color = if (LocalModernFieldMenu.current) FieldMenuDesign.panel else Color(0xF0061018),
+            border = BorderStroke(1.dp, if (LocalModernFieldMenu.current) Color.White.copy(alpha = 0.10f) else accentColor.copy(alpha = 0.48f)),
+            shadowElevation = if (LocalModernFieldMenu.current) 0.dp else 16.dp
         ) {
             Column(
                 modifier = Modifier
@@ -465,8 +533,8 @@ fun InventoryItemDetailsContent(
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis
                         )
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
+                        FlowRow(
+                            verticalArrangement = Arrangement.spacedBy(6.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Text(
@@ -474,33 +542,7 @@ fun InventoryItemDetailsContent(
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                 color = accentColor.copy(alpha = 0.9f)
                             )
-                            if (item.isCombatSnack()) {
-                                Surface(
-                                    shape = RoundedCornerShape(4.dp),
-                                    color = Color(0xFFFF9800).copy(alpha = 0.25f),
-                                    border = BorderStroke(0.5.dp, Color(0xFFFFB74D))
-                                ) {
-                                    Text(
-                                        text = "COMBAT SNACK • 5-TURN COOLDOWN",
-                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
-                                        color = Color(0xFFFFCC80),
-                                        modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
-                                    )
-                                }
-                            } else if (item.isCookedMeal()) {
-                                Surface(
-                                    shape = RoundedCornerShape(4.dp),
-                                    color = Color(0xFF4CAF50).copy(alpha = 0.25f),
-                                    border = BorderStroke(0.5.dp, Color(0xFF81C784))
-                                ) {
-                                    Text(
-                                        text = "CAMP MEAL • MULTI-BATTLE BUFF",
-                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
-                                        color = Color(0xFFA5D6A7),
-                                        modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
-                                    )
-                                }
-                            }
+
                         }
                     }
                 }
@@ -511,7 +553,6 @@ fun InventoryItemDetailsContent(
                 )
                 HorizontalDivider(color = borderColor.copy(alpha = 0.24f))
                 PreviewDetailRow("Quantity", "x${item.quantity}", accentColor)
-                PreviewDetailRow("Type", item.type.readableInventoryLabel(), accentColor)
                 item.effect?.let { effect ->
                     HorizontalDivider(color = borderColor.copy(alpha = 0.24f))
                     Text(
@@ -523,26 +564,14 @@ fun InventoryItemDetailsContent(
                         PreviewDetailRow(label, value, accentColor)
                     }
                 }
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = Color.White.copy(alpha = 0.045f),
-                    border = BorderStroke(1.dp, Color.White.copy(alpha = 0.10f))
-                ) {
-                    Text(
-                        text = previewFlavorText(item),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.68f),
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp)
-                    )
-                }
-                Row(
+                if (onUse != null) Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
                     Button(
                         onClick = { onUse?.invoke() },
                         enabled = onUse != null,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp),
                         shape = RoundedCornerShape(10.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = accentColor,
@@ -562,12 +591,13 @@ fun InventoryItemDetailsContent(
 private fun PreviewDetailRow(label: String, value: String, accentColor: Color) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.Top
     ) {
-        Text(label, style = MaterialTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.62f))
+        Text(label, modifier = Modifier.weight(0.4f), style = MaterialTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.62f))
         Text(
             value,
+            modifier = Modifier.weight(0.6f),
             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
             color = accentColor,
             textAlign = TextAlign.End
@@ -619,14 +649,16 @@ private fun previewEffectRows(effect: ItemEffect): List<Pair<String, String>> = 
     effect.type?.takeIf { it.isNotBlank() }?.let { add("Effect Type" to it.readableInventoryLabel()) }
     effect.target?.takeIf { it.isNotBlank() }?.let { add("Target" to it.readableInventoryLabel()) }
     effect.restoreHp?.takeIf { it > 0 }?.let { add("Restore HP" to "+$it") }
+    effect.cooldown?.takeIf { it > 0 }?.let { add("Cooldown" to "$it turns") }
+    effect.usesPerBattle?.takeIf { it > 0 }?.let { add("Uses per battle" to it.toString()) }
     effect.damage?.takeIf { it > 0 }?.let { add("Damage" to it.toString()) }
     effect.amount?.takeIf { it != 0 }?.let { add("Amount" to it.toString()) }
     effect.status?.takeIf { it.isNotBlank() }?.let { add("Status" to it.readableInventoryLabel()) }
     effect.duration?.takeIf { it > 0 }?.let { add("Duration" to "$it turn${if (it == 1) "" else "s"}") }
     effect.learnSchematic?.takeIf { it.isNotBlank() }?.let { add("Schematic" to it.readableInventoryLabel()) }
-    effect.singleBuff?.let { add("Buff" to "${it.stat.readableInventoryLabel()} ${if (it.value >= 0) "+${it.value}" else it.value.toString()}") }
+    effect.singleBuff?.let { add("Buff" to "${it.stat.readableInventoryLabel()} ${if (it.value >= 0) "+${it.value}" else it.value.toString()}${it.duration?.let { turns -> " ($turns turns)" }.orEmpty()}") }
     effect.buffs?.forEach { buff ->
-        add("Buff" to "${buff.stat.readableInventoryLabel()} ${if (buff.value >= 0) "+${buff.value}" else buff.value.toString()}")
+        add("Buff" to "${buff.stat.readableInventoryLabel()} ${if (buff.value >= 0) "+${buff.value}" else buff.value.toString()}${buff.duration?.let { turns -> " ($turns turns)" }.orEmpty()}")
     }
     if (isEmpty()) add("Effect" to "Usable item")
 }
@@ -644,19 +676,8 @@ private fun String.readableInventoryLabel(): String =
         }
         .ifBlank { this }
 
-private fun previewFlavorText(item: InventoryPreviewItemUi): String {
-    return when {
-        item.isKeyItem() -> "Kept because someone, somewhere, will ask for it when the lights are low."
-        item.effect != null -> "Small comfort, practical chemistry, or both."
-        item.equipment != null -> "Tuned for survival, patched for the realities of the colony."
-        item.type.contains("component", ignoreCase = true) || item.type.contains("material", ignoreCase = true) ->
-            "The kind of part Jed would save twice before admitting it was useful."
-        else -> "Another piece of the colony that found its way into your pack."
-    }
-}
-
 @Composable
-private fun InventoryEquipmentPreview(
+internal fun InventoryEquipmentPreview(
     inventoryItems: List<InventoryPreviewItemUi>,
     equippedItems: Map<String, String>,
     completedMilestones: Set<String>,
@@ -750,10 +771,10 @@ private fun InventoryEquipmentPreview(
                 verticalArrangement = Arrangement.spacedBy(6.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .border(BorderStroke(1.dp, borderColor.copy(alpha = 0.4f)), RoundedCornerShape(18.dp))
-                    .padding(12.dp)
+                    .then(if (LocalModernFieldMenu.current) Modifier else Modifier.border(BorderStroke(1.dp, borderColor.copy(alpha = 0.4f)), RoundedCornerShape(18.dp)))
+                    .padding(if (LocalModernFieldMenu.current) 0.dp else 12.dp)
             ) {
-                Row(
+                if (!LocalModernFieldMenu.current || partyMembers.size > 1) Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -969,7 +990,7 @@ private fun GearSlotTile(
             .clip(shape)
             .clickable { onSelectSlot() },
         color = background,
-        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.5f))
+        border = BorderStroke(1.dp, if (LocalModernFieldMenu.current) Color.White.copy(alpha = 0.10f) else borderColor.copy(alpha = 0.5f))
     ) {
         Column(
             modifier = Modifier
@@ -1274,6 +1295,12 @@ private fun WeaponSelectionDialog(
     onSelect: (String?) -> Unit,
     onDismiss: () -> Unit
 ) {
+    if (LocalModernFieldMenu.current) {
+        ModernGearPicker(characterName, "Weapon", weapons.map {
+            InventoryPreviewItemUi(it.id, it.name, 1, it.type, it.description, it.effect, it.equipment)
+        }, equippedWeaponId, onSelect, onDismiss)
+        return
+    }
     val equippedNormalized = remember(equippedWeaponId) { equippedWeaponId?.lowercase(Locale.getDefault()).orEmpty() }
     Dialog(
         onDismissRequest = onDismiss,
@@ -1284,8 +1311,8 @@ private fun WeaponSelectionDialog(
                 .fillMaxWidth()
                 .fillMaxHeight(0.92f)
                 .padding(horizontal = 18.dp),
-            color = Color(0xFF060C14),
-            border = BorderStroke(1.dp, borderColor.copy(alpha = 0.7f)),
+            color = if (LocalModernFieldMenu.current) FieldMenuDesign.shell else Color(0xFF060C14),
+            border = BorderStroke(1.dp, borderColor.copy(alpha = if (LocalModernFieldMenu.current) 0.16f else 0.7f)),
             shape = RoundedCornerShape(24.dp)
         ) {
             Box(
@@ -1293,7 +1320,7 @@ private fun WeaponSelectionDialog(
                     .fillMaxSize()
                     .background(
                         Brush.verticalGradient(
-                            colors = listOf(Color(0xFF0A1422), Color(0xFF050A11))
+                            colors = if (LocalModernFieldMenu.current) listOf(FieldMenuDesign.shell, FieldMenuDesign.shell) else listOf(Color(0xFF0A1422), Color(0xFF050A11))
                         )
                     )
             ) {
@@ -1325,8 +1352,9 @@ private fun WeaponSelectionDialog(
                             contentDescription = "Close",
                             tint = Color.White.copy(alpha = 0.7f),
                             modifier = Modifier
-                                .size(24.dp)
+                                .size(if (LocalModernFieldMenu.current) 48.dp else 24.dp)
                                 .clickable { onDismiss() }
+                                .padding(if (LocalModernFieldMenu.current) 12.dp else 0.dp)
                         )
                     }
 
@@ -1352,6 +1380,7 @@ private fun WeaponSelectionDialog(
                                 val isEquipped = weapon.id.lowercase(Locale.getDefault()) == equippedNormalized
                                 WeaponFeatureCard(
                                     weapon = weapon,
+                                    currentItem = weapons.firstOrNull { it.id.equals(equippedWeaponId, true) },
                                     isEquipped = isEquipped,
                                     accentColor = accentColor,
                                     borderColor = borderColor,
@@ -1376,6 +1405,12 @@ private fun ArmorSelectionDialog(
     onSelect: (String?) -> Unit,
     onDismiss: () -> Unit
 ) {
+    if (LocalModernFieldMenu.current) {
+        ModernGearPicker(characterName, "Armor", armors.map {
+            InventoryPreviewItemUi(it.id, it.name, 1, it.type, it.description, it.effect, it.equipment)
+        }, equippedArmorId, onSelect, onDismiss)
+        return
+    }
     val equippedNormalized = remember(equippedArmorId) { equippedArmorId?.lowercase(Locale.getDefault()).orEmpty() }
     Dialog(
         onDismissRequest = onDismiss,
@@ -1386,8 +1421,8 @@ private fun ArmorSelectionDialog(
                 .fillMaxWidth()
                 .fillMaxHeight(0.92f)
                 .padding(horizontal = 18.dp),
-            color = Color(0xFF060C14),
-            border = BorderStroke(1.dp, borderColor.copy(alpha = 0.7f)),
+            color = if (LocalModernFieldMenu.current) FieldMenuDesign.shell else Color(0xFF060C14),
+            border = BorderStroke(1.dp, borderColor.copy(alpha = if (LocalModernFieldMenu.current) 0.16f else 0.7f)),
             shape = RoundedCornerShape(24.dp)
         ) {
             Box(
@@ -1395,7 +1430,7 @@ private fun ArmorSelectionDialog(
                     .fillMaxSize()
                     .background(
                         Brush.verticalGradient(
-                            colors = listOf(Color(0xFF0A1422), Color(0xFF050A11))
+                            colors = if (LocalModernFieldMenu.current) listOf(FieldMenuDesign.shell, FieldMenuDesign.shell) else listOf(Color(0xFF0A1422), Color(0xFF050A11))
                         )
                     )
             ) {
@@ -1427,8 +1462,9 @@ private fun ArmorSelectionDialog(
                             contentDescription = "Close",
                             tint = Color.White.copy(alpha = 0.7f),
                             modifier = Modifier
-                                .size(24.dp)
+                                .size(if (LocalModernFieldMenu.current) 48.dp else 24.dp)
                                 .clickable { onDismiss() }
+                                .padding(if (LocalModernFieldMenu.current) 12.dp else 0.dp)
                         )
                     }
 
@@ -1454,6 +1490,7 @@ private fun ArmorSelectionDialog(
                                 val isEquipped = armor.id.lowercase(Locale.getDefault()) == equippedNormalized
                                 ArmorFeatureCard(
                                     armor = armor,
+                                    currentItem = armors.firstOrNull { it.id.equals(equippedArmorId, true) },
                                     isEquipped = isEquipped,
                                     accentColor = accentColor,
                                     borderColor = borderColor,
@@ -1471,6 +1508,7 @@ private fun ArmorSelectionDialog(
 @Composable
 private fun WeaponFeatureCard(
     weapon: Item,
+    currentItem: Item?,
     isEquipped: Boolean,
     accentColor: Color,
     borderColor: Color,
@@ -1480,8 +1518,8 @@ private fun WeaponFeatureCard(
     val abilities = remember(weapon.id) { weaponAbilityLines(weapon) }
     val description = weapon.description?.takeIf { it.isNotBlank() } ?: "No description available."
     val shape = RoundedCornerShape(22.dp)
-    val background = if (isEquipped) accentColor.copy(alpha = 0.16f) else Color.White.copy(alpha = 0.05f)
-    val outline = if (isEquipped) accentColor else borderColor.copy(alpha = 0.6f)
+    val background = if (LocalModernFieldMenu.current) { if (isEquipped) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel } else if (isEquipped) accentColor.copy(alpha = 0.16f) else Color.White.copy(alpha = 0.05f)
+    val outline = if (LocalModernFieldMenu.current) { if (isEquipped) FieldMenuDesign.gold else Color.White.copy(alpha = 0.10f) } else if (isEquipped) accentColor else borderColor.copy(alpha = 0.6f)
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -1543,6 +1581,7 @@ private fun WeaponFeatureCard(
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.White.copy(alpha = 0.8f)
                 )
+                if (!isEquipped) EquipmentComparison(weapon.equipment, currentItem?.equipment, currentItem?.name)
                 HorizontalDivider(color = borderColor.copy(alpha = 0.4f))
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
@@ -1566,6 +1605,7 @@ private fun WeaponFeatureCard(
 @Composable
 private fun ArmorFeatureCard(
     armor: Item,
+    currentItem: Item?,
     isEquipped: Boolean,
     accentColor: Color,
     borderColor: Color,
@@ -1575,8 +1615,8 @@ private fun ArmorFeatureCard(
     val abilities = remember(armor.id) { armorAbilityLines(armor) }
     val description = armor.description?.takeIf { it.isNotBlank() } ?: "No description available."
     val shape = RoundedCornerShape(22.dp)
-    val background = if (isEquipped) accentColor.copy(alpha = 0.16f) else Color.White.copy(alpha = 0.05f)
-    val outline = if (isEquipped) accentColor else borderColor.copy(alpha = 0.6f)
+    val background = if (LocalModernFieldMenu.current) { if (isEquipped) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel } else if (isEquipped) accentColor.copy(alpha = 0.16f) else Color.White.copy(alpha = 0.05f)
+    val outline = if (LocalModernFieldMenu.current) { if (isEquipped) FieldMenuDesign.gold else Color.White.copy(alpha = 0.10f) } else if (isEquipped) accentColor else borderColor.copy(alpha = 0.6f)
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -1638,6 +1678,7 @@ private fun ArmorFeatureCard(
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.White.copy(alpha = 0.8f)
                 )
+                if (!isEquipped) EquipmentComparison(armor.equipment, currentItem?.equipment, currentItem?.name)
                 HorizontalDivider(color = borderColor.copy(alpha = 0.4f))
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(

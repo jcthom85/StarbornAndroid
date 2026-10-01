@@ -8,6 +8,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -18,6 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.starborn.feature.exploration.ui.menu.LocalModernFieldMenu
+import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuLargeTargets
+import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuHighContrast
+import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import com.example.starborn.R
 import com.example.starborn.data.local.Theme
 import com.example.starborn.feature.exploration.viewmodel.SkillTreeBranchUi
@@ -94,12 +100,12 @@ fun SkillTreeContent(
             .widthIn(max = 900.dp),
         shape = RoundedCornerShape(14.dp),
         color = Color(0xFF02070E).copy(alpha = 0.96f),
-        border = BorderStroke(1.dp, borderColor)
+        border = BorderStroke(1.dp, if (LocalModernFieldMenu.current) Color.White.copy(alpha = if (LocalFieldMenuHighContrast.current) .65f else .1f) else borderColor)
     ) {
         Column(
             modifier = Modifier
-                .verticalScroll(scrollState)
-                .padding(24.dp),
+                .then(if (LocalModernFieldMenu.current && !showClose) Modifier else Modifier.verticalScroll(scrollState))
+                .padding(if (LocalModernFieldMenu.current) 12.dp else 24.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Row(
@@ -161,7 +167,8 @@ fun SkillTreeContent(
                                 selectedNodeId = selectedNode?.id,
                                 onSelectNode = { node ->
                                     selectedNodeId = node.id
-                                }
+                                },
+                                onUnlock = onUnlockSkill
                             )
                         } else {
                             Box(
@@ -178,7 +185,7 @@ fun SkillTreeContent(
                         }
                     }
 
-                    SkillTreeNodeDetails(
+                    if (!LocalModernFieldMenu.current) SkillTreeNodeDetails(
                         node = selectedNode,
                         accentColor = accentColor,
                         borderColor = borderColor,
@@ -217,7 +224,7 @@ private fun SkillTreeBranchTabs(
                 shape = RoundedCornerShape(18.dp),
                 border = BorderStroke(
                     1.dp,
-                    if (selected) accentColor else borderColor.copy(alpha = 0.7f)
+                    if (selected) accentColor else borderColor.copy(alpha = if (LocalModernFieldMenu.current) 0.15f else 0.7f)
                 ),
                 color = if (selected) accentColor.copy(alpha = 0.15f) else Color.Transparent
             ) {
@@ -237,8 +244,36 @@ private fun SkillTreeGrid(
     branch: SkillTreeBranchUi,
     accentColor: Color,
     selectedNodeId: String?,
-    onSelectNode: (SkillTreeNodeUi) -> Unit
+    onSelectNode: (SkillTreeNodeUi) -> Unit,
+    onUnlock: (String) -> Unit
 ) {
+    if (LocalModernFieldMenu.current) {
+        Column(Modifier.fillMaxWidth().padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            var previousTier: Int? = null
+            branch.nodes.sortedWith(compareBy({ it.row }, { it.column })).forEach { node ->
+                if (previousTier != node.row) {
+                    Text("Tier ${node.row + 1}", color = FieldMenuDesign.gold, style = MaterialTheme.typography.labelLarge)
+                    previousTier = node.row
+                }
+                val selected = node.id == selectedNodeId
+                Surface(onClick = { onSelectNode(node) }, modifier = Modifier.semantics { this.selected = selected }, shape = RoundedCornerShape(12.dp),
+                    color = if (selected) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel,
+                    border = BorderStroke(1.dp, if (selected) FieldMenuDesign.gold else Color.White.copy(alpha = if (LocalFieldMenuHighContrast.current) .65f else .1f))) {
+                    Column(Modifier.fillMaxWidth().heightIn(min = 64.dp).padding(12.dp)) {
+                        Text(node.name, color = FieldMenuDesign.text, style = MaterialTheme.typography.titleSmall)
+                        Text(when {
+                            node.status.unlocked -> "Learned"
+                            node.status.canPurchase -> "Available · ${node.costAp} AP"
+                            else -> "Locked · ${node.costAp} AP"
+                        }, color = if (node.status.canPurchase) FieldMenuDesign.gold else FieldMenuDesign.textMuted,
+                            style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+                if (selected) SkillTreeNodeDetails(node, accentColor, FieldMenuDesign.border, onUnlock)
+            }
+        }
+        return
+    }
     val nodesByPosition = remember(branch) {
         branch.nodes.associateBy { it.row to it.column }
     }
@@ -375,7 +410,7 @@ private fun SkillTreeNodeDetails(
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
-        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.7f)),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = if (LocalModernFieldMenu.current) 0.15f else 0.7f)),
         color = Color.White.copy(alpha = 0.02f)
     ) {
         if (node == null) {

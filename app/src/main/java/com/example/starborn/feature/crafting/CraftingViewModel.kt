@@ -72,7 +72,8 @@ data class TinkeringItemChoice(
     val id: String,
     val name: String,
     val description: String?,
-    val quantity: Int
+    val quantity: Int,
+    val salvage: List<String> = emptyList()
 )
 
 data class TinkeringPreview(
@@ -159,7 +160,15 @@ class CraftingViewModel(
                 id = it.item.id,
                 name = it.item.name,
                 description = (listOfNotNull(it.item.description) + craftingService.usesFor(it.item.id)).joinToString("\n"),
-                quantity = it.quantity
+                quantity = it.quantity,
+                salvage = craftingService.tinkeringRecipes.firstOrNull { recipe ->
+                    val needle = normalizeToken(it.item.id)
+                    needle in listOf(normalizeToken(recipe.result), normalizeToken(recipe.name), normalizeToken(recipe.id))
+                }?.let { recipe ->
+                    craftingService.ingredientsFor(recipe).map { (id, count) ->
+                        "${inventoryService.itemDetail(id)?.name ?: id.replace('_', ' ')} x$count"
+                    }
+                }.orEmpty()
             )
         }
         val recipeResults = craftingService.tinkeringRecipes.flatMap { recipe ->

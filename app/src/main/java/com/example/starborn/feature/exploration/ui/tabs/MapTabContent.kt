@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.starborn.feature.exploration.ui.FullMapCanvas
 import com.example.starborn.feature.exploration.ui.MenuSectionCard
+import com.example.starborn.feature.exploration.ui.menu.LocalModernFieldMenu
+import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import com.example.starborn.feature.exploration.ui.ThemedMenuButton
 import com.example.starborn.feature.exploration.ui.hud.MinimapWidget
 import com.example.starborn.feature.exploration.viewmodel.FullMapUiState
@@ -60,6 +62,10 @@ private fun MapPreviewPanel(
 ) {
     val fullMapAvailable = fullMap?.cells?.isNotEmpty() == true
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        if (LocalModernFieldMenu.current && fullMapAvailable) {
+            Text("${fullMap?.cells?.count { it.visited } ?: 0} rooms visited · ${fullMap?.cells?.count { it.discovered && !it.visited } ?: 0} discovered",
+                color = FieldMenuDesign.textMuted, style = MaterialTheme.typography.bodySmall)
+        }
         if (fullMapAvailable && fullMap != null) {
             Box(
                 modifier = Modifier
@@ -67,7 +73,7 @@ private fun MapPreviewPanel(
                     .height(280.dp)
                     .clip(RoundedCornerShape(18.dp))
                     .background(Color.Black.copy(alpha = 0.2f))
-                    .border(1.dp, accentColor.copy(alpha = 0.35f), RoundedCornerShape(18.dp))
+                    .border(1.dp, if (LocalModernFieldMenu.current) Color.White.copy(alpha = .12f) else accentColor.copy(alpha = 0.35f), RoundedCornerShape(18.dp))
                     .padding(8.dp)
             ) {
                 FullMapCanvas(
@@ -94,7 +100,7 @@ private fun MapPreviewPanel(
                         minimap = it,
                         onLegend = {
                             onMenuAction()
-                            onOpenFullMap()
+                            onMapLegend()
                         },
                         obscured = isCurrentRoomDark,
                         modifier = Modifier.size(140.dp)
@@ -102,10 +108,15 @@ private fun MapPreviewPanel(
                 }
             }
         }
+        if (fullMapAvailable) {
+            ThemedMenuButton(label = "Open Full Map", accentColor = accentColor,
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+                onClick = { onMenuAction(); onOpenFullMap() })
+        }
         ThemedMenuButton(
             label = "Map Legend",
             accentColor = accentColor,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
             onClick = {
                 onMenuAction()
                 onMapLegend()

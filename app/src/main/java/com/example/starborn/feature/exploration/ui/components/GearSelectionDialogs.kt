@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.starborn.feature.exploration.ui.menu.LocalModernFieldMenu
+import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import com.example.starborn.R
 import com.example.starborn.feature.exploration.viewmodel.InventoryPreviewItemUi
 import java.util.Locale
@@ -42,6 +44,10 @@ fun GearSelectionDialog(
     onUnequip: () -> Unit,
     onDismiss: () -> Unit
 ) {
+    if (LocalModernFieldMenu.current) {
+        ModernGearPicker(characterName, slotLabel, options, equippedId, onSelect, onDismiss, onUnequip)
+        return
+    }
     val equippedNormalized = remember(equippedId) { equippedId?.lowercase(Locale.getDefault()).orEmpty() }
     Dialog(
         onDismissRequest = onDismiss,
@@ -51,8 +57,8 @@ fun GearSelectionDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            color = Color(0xFF071018),
-            border = BorderStroke(1.dp, borderColor.copy(alpha = 0.65f)),
+            color = if (LocalModernFieldMenu.current) FieldMenuDesign.shell else Color(0xFF071018),
+            border = BorderStroke(1.dp, borderColor.copy(alpha = if (LocalModernFieldMenu.current) 0.16f else 0.65f)),
             shape = RoundedCornerShape(20.dp)
         ) {
             Column(
@@ -81,7 +87,7 @@ fun GearSelectionDialog(
                     }
                     IconButton(
                         onClick = onDismiss,
-                        modifier = Modifier.size(28.dp)
+                        modifier = Modifier.size(if (LocalModernFieldMenu.current) 48.dp else 28.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
@@ -160,10 +166,10 @@ fun GearSelectionDialog(
                                     .clip(shape)
                                     .clickable { onSelect(option.id) },
                                 shape = shape,
-                                color = if (isEquipped) accentColor.copy(alpha = 0.15f) else Color(0xFF0A1624).copy(alpha = 0.7f),
+                                color = if (LocalModernFieldMenu.current) { if (isEquipped) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel } else if (isEquipped) accentColor.copy(alpha = 0.15f) else Color(0xFF0A1624).copy(alpha = 0.7f),
                                 border = BorderStroke(
                                     1.dp,
-                                    if (isEquipped) Color(0xFFFFC857) else borderColor.copy(alpha = 0.35f)
+                                    if (isEquipped) Color(0xFFFFC857) else if (LocalModernFieldMenu.current) Color.White.copy(alpha = 0.10f) else borderColor.copy(alpha = 0.35f)
                                 )
                             ) {
                                 Row(
@@ -205,6 +211,11 @@ fun GearSelectionDialog(
                                             style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
                                             color = accentColor.copy(alpha = 0.75f)
                                         )
+                                        if (!isEquipped) {
+                                            val current = options.firstOrNull { it.id.equals(equippedId, true) }
+                                            EquipmentComparison(option.equipment, current?.equipment,
+                                                current?.name ?: equippedId?.takeIf { it.isNotBlank() })
+                                        }
                                         itemDetailSummary(option)?.let { effect ->
                                             Text(
                                                 text = effect,

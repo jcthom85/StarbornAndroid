@@ -26,7 +26,8 @@ class UserSettingsStore(context: Context) {
             disableHaptics = prefs[DISABLE_HAPTICS] ?: false,
             highContrastMode = prefs[HIGH_CONTRAST_MODE] ?: false,
             largeTouchTargets = prefs[LARGE_TOUCH_TARGETS] ?: false,
-            themeBandsEnabled = prefs[THEME_BANDS_ENABLED] ?: false
+            themeBandsEnabled = prefs[THEME_BANDS_ENABLED] ?: false,
+            modernFieldMenu = prefs[MODERN_FIELD_MENU] ?: true
         )
     }
 
@@ -74,6 +75,10 @@ class UserSettingsStore(context: Context) {
         dataStore.edit { it[THEME_BANDS_ENABLED] = enabled }
     }
 
+    suspend fun setModernFieldMenu(enabled: Boolean) {
+        dataStore.edit { it[MODERN_FIELD_MENU] = enabled }
+    }
+
     companion object {
         private val MUSIC_VOLUME: Preferences.Key<Float> = floatPreferencesKey("music_volume")
         private val SFX_VOLUME: Preferences.Key<Float> = floatPreferencesKey("sfx_volume")
@@ -86,5 +91,6 @@ class UserSettingsStore(context: Context) {
         private val LARGE_TOUCH_TARGETS: Preferences.Key<Boolean> = booleanPreferencesKey("large_touch_targets")
         private val THEME_BANDS_ENABLED: Preferences.Key<Boolean> = booleanPreferencesKey("theme_bands_enabled")
         private val VOICE_VOLUME: Preferences.Key<Float> = floatPreferencesKey("voice_volume")
+        private val MODERN_FIELD_MENU = booleanPreferencesKey("modern_field_menu")
     }
 }

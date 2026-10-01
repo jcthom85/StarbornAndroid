@@ -2,6 +2,12 @@ package com.example.starborn.feature.exploration.ui.menu
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.staticCompositionLocalOf
+
+/** Default keeps shared components identical for classic menus and other screens. */
+val LocalModernFieldMenu = staticCompositionLocalOf { false }
+val LocalFieldMenuHighContrast = staticCompositionLocalOf { false }
+val LocalFieldMenuLargeTargets = staticCompositionLocalOf { false }
 
 /** Stable visual language for the out-of-world field menu. */
 object FieldMenuDesign {

@@ -35,11 +35,11 @@
         "id": "scene_tinkering_tutorial",
         "steps": [
             {
-                "message": "In the Tinker menu, choose Functional Cryo-Inductor or tap a slot to select a repair.",
+                "message": "Open Tinker and choose the Workbench. Tap the Broken Cryo-Inductor in the tray to place it in the Base socket.",
                 "context": "Tinker"
             },
             {
-                "message": "Check the requirements, add any missing parts, then press Tinker.",
+                "message": "Tap Scrap Metal in the tray to add the replacement part, then press Synthesize when the repair is ready.",
                 "context": "Tinker",
                 "delay_ms": 2500
             }
@@ -81,7 +81,7 @@
         "id": "menu_save",
         "steps": [
             {
-                "message": "You can save from the menu. Open the bottom menu anytime, then choose Save to store your progress.",
+                "message": "Open the menu to save your progress. In Settings, use Quick Save for a quick checkpoint, or Save Game to choose a manual save slot.",
                 "context": "Save"
             }
         ]

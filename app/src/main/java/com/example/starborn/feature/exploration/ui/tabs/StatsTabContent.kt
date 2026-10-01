@@ -156,6 +156,12 @@ private fun PartyMemberCard(
                 )
             }
         }
+        ThemedMenuButton(
+            label = "Skills",
+            accentColor = accentColor,
+            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+            onClick = { onShowSkillTree(member.id) }
+        )
     }
 }
 

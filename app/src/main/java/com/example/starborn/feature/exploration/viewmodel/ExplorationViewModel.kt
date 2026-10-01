@@ -598,6 +598,7 @@ class ExplorationViewModel(
                     vignetteEnabled = isVignetteEnabled,
                     tutorialsEnabled = tutorialsEnabled,
                     highContrastMode = settings.highContrastMode,
+                    modernFieldMenu = settings.modernFieldMenu,
                     largeTouchTargets = settings.largeTouchTargets,
                     disableScreenshake = settings.disableScreenshake,
                     disableFlashes = settings.disableFlashes,
@@ -1092,11 +1093,21 @@ class ExplorationViewModel(
         }
     }
 
+    private var menuFeedbackJob: Job? = null
+
     private fun postStatus(message: String) {
         val trimmed = message.trim()
         if (trimmed.isEmpty()) return
         viewModelScope.launch(dispatchers.main) {
             _uiState.update { it.copy(statusMessage = trimmed) }
+            if (_uiState.value.isMenuOverlayVisible) {
+                menuFeedbackJob?.cancel()
+                _uiState.update { it.copy(menuFeedback = trimmed) }
+                menuFeedbackJob = viewModelScope.launch(dispatchers.main) {
+                    delay(6000)
+                    _uiState.update { it.copy(menuFeedback = null) }
+                }
+            }
         }
     }
 
@@ -1868,7 +1879,7 @@ class ExplorationViewModel(
                             TutorialEntry(
                                 key = "tut_tinker_open_menu",
                                 context = "Tinkering",
-                                message = "Open the MENU and navigate to your Field Kit to repair the broken Cryo-Inductor."
+                                message = "Open the menu and choose Tinker to repair the broken Cryo-Inductor."
                             )
                         )
                     )
@@ -3241,12 +3252,15 @@ class ExplorationViewModel(
 
 
     private var lastMenuTab: MenuTab = MenuTab.INVENTORY
+    private var hasOpenedFieldMenu = false
 
     fun openMenuOverlay(defaultTab: MenuTab? = null) {
         viewModelScope.launch(dispatchers.main) {
             playUiCue("menu_open")
             val isTinkeringTut = _uiState.value.isTinkeringTutorialActive
-            val tab = defaultTab ?: if (isTinkeringTut) MenuTab.FIELD_KIT else lastMenuTab
+            val tab = defaultTab ?: if (isTinkeringTut) MenuTab.FIELD_KIT
+                else if (!hasOpenedFieldMenu && _uiState.value.settings.modernFieldMenu) MenuTab.STATS else lastMenuTab
+            hasOpenedFieldMenu = true
             lastMenuTab = tab
             _uiState.update { it.copy(isMenuOverlayVisible = true, menuTab = tab) }
             maybeShowInventoryTutorial(tab)
@@ -3393,6 +3407,10 @@ class ExplorationViewModel(
                         portraitPath = character.miniIconPath,
                         primaryStats = primaryStats,
                         combatStats = combatStats,
+                        hpProgress = if (maxHp > 0) (currentHp.toFloat() / maxHp).coerceIn(0f, 1f) else null,
+                        xpProgress = nextXp?.let { next ->
+                            if (next > startXp) ((xp - startXp).toFloat() / (next - startXp)).coerceIn(0f, 1f) else 1f
+                        } ?: 1f,
                         unlockedSkills = unlockedSkillNames
                     )
                 )
@@ -3456,16 +3474,22 @@ class ExplorationViewModel(
         }
     }
 
-    fun saveGame(slot: Int = 1) {
+    fun quickSaveAndReturnToTitle(onReturn: () -> Unit) {
         viewModelScope.launch(dispatchers.io) {
-            val success = when (slot) {
-                GameSaveRepository.QUICKSAVE_SLOT -> runCatching { saveRepository.quickSave() }.isSuccess
-                else -> runCatching { saveRepository.save(slot) }.isSuccess
-            }
-            val label = if (slot == GameSaveRepository.QUICKSAVE_SLOT) "quicksave" else "slot $slot"
-            val message = if (success) "Saved to $label." else "Save failed."
-            postStatus(message)
+            val success = runCatching { saveRepository.quickSave() }.getOrDefault(false)
+            if (success) withContext(dispatchers.main) { onReturn() }
+            else postStatus("Unable to quicksave. Still in game; try saving again.")
         }
+    }
+
+    suspend fun saveGame(slot: Int = 1): Boolean = withContext(dispatchers.io) {
+        val success = when (slot) {
+            GameSaveRepository.QUICKSAVE_SLOT -> runCatching { saveRepository.quickSave() }.getOrDefault(false)
+            else -> runCatching { saveRepository.save(slot) }.isSuccess
+        }
+        val label = if (slot == GameSaveRepository.QUICKSAVE_SLOT) "quicksave" else "slot $slot"
+        postStatus(if (success) "Saved to $label." else "Save failed. Try again.")
+        success
     }
 
     fun loadGame(slot: Int = 1) {
@@ -3680,7 +3704,7 @@ class ExplorationViewModel(
 
     private fun maybeShowInventoryTutorial(tab: MenuTab) {
         if (!tutorialsEnabled) return
-        if (tab != MenuTab.INVENTORY) return
+        if (tab != MenuTab.INVENTORY && !(tab == MenuTab.STATS && _uiState.value.settings.modernFieldMenu)) return
         val session = sessionStore.state.value
         val receivedStarterSupplies =
             "ms_w1_mq01_jed_talked" in session.completedMilestones ||
@@ -3688,6 +3712,15 @@ class ExplorationViewModel(
         if (!receivedStarterSupplies) return
         if (tutorialManager.hasCompleted(BAG_TUTORIAL_ID)) {
             maybeShowGearTutorial()
+            return
+        }
+        if (_uiState.value.settings.modernFieldMenu) {
+            tutorialManager.showOnce(key = BAG_TUTORIAL_ID, context = "Items",
+                message = "Open Items to browse Supplies and Key Items. Tap an info icon to inspect an item. Equipment is in Party: choose a character, then tap an equipment slot.",
+                onDismiss = {
+                    tutorialManager.markCompleted(BAG_TUTORIAL_ID)
+                    maybeShowGearTutorial()
+                })
             return
         }
         val scheduled = tutorialManager.playScript(
@@ -3717,8 +3750,14 @@ class ExplorationViewModel(
         if (!tutorialsEnabled) return
         val session = sessionStore.state.value
         val hasStarterKit = "ms_w1_mq01_jed_talked" in session.completedMilestones
-        if (!hasStarterKit || !session.equippedWeapons["nova"].isNullOrBlank()) return
+        if (!hasStarterKit || (!_uiState.value.settings.modernFieldMenu && !session.equippedWeapons["nova"].isNullOrBlank())) return
         if (tutorialManager.hasCompleted(GEAR_TUTORIAL_ID)) return
+        if (_uiState.value.settings.modernFieldMenu) {
+            tutorialManager.showOnce(key = GEAR_TUTORIAL_ID, context = "Party",
+                message = "Open Party and choose Nova. Tap Weapon to equip her cutter, then check Armor and available mod slots before heading into the mines. Locked mod slots show their requirements.",
+                onDismiss = { tutorialManager.markCompleted(GEAR_TUTORIAL_ID) })
+            return
+        }
         val scheduled = tutorialManager.playScript(
             scriptId = GEAR_TUTORIAL_ID,
             allowDuplicates = false
@@ -3756,6 +3795,11 @@ class ExplorationViewModel(
         viewModelScope.launch(dispatchers.io) {
             userSettingsStore.setHighContrastMode(enabled)
         }
+    }
+
+    fun setModernFieldMenu(enabled: Boolean) {
+        _uiState.update { it.copy(settings = it.settings.copy(modernFieldMenu = enabled)) }
+        viewModelScope.launch(dispatchers.io) { userSettingsStore.setModernFieldMenu(enabled) }
     }
 
     fun setLargeTouchTargets(enabled: Boolean) {
@@ -6116,6 +6160,7 @@ private fun QuestJournalEntry.toUiSummary(): QuestSummaryUi = QuestSummaryUi(
     stageTitle = stageTitle,
     stageDescription = stageDescription,
     objectives = objectives.map { it.text },
+    currentObjective = objectives.firstOrNull { !it.completed }?.text,
     completed = completed,
     stageIndex = stageIndex,
     totalStages = totalStages

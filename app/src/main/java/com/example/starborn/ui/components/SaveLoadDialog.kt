@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -70,13 +71,22 @@ fun SaveLoadDialog(
     panelColor: Color,
     borderColor: Color,
     textColor: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    modern: Boolean = false,
+    largeTargets: Boolean = false,
+    highContrast: Boolean = false,
+    confirmLoad: Boolean = false,
+    busy: Boolean = false,
+    errorMessage: String? = null
 ) {
+    val requestSave: (Int) -> Unit = { if (!busy) onSave(it) }
+    val requestLoad: (Int) -> Unit = { if (!busy) onLoad(it) }
+    val requestDelete: (Int) -> Unit = { if (!busy) onDelete(it) }
     val isSave = mode.equals("save", ignoreCase = true)
     val title = if (isSave) "Save Data" else "Load Data"
-    val kicker = if (isSave) "Choose where this run is written." else "Choose a timeline to resume."
+    val kicker = if (isSave) "Choose a slot for your progress." else "Choose a saved game to resume."
     val actionLabel = if (isSave) "Save" else "Load"
-    val solidPanel = Color(0xFF07111A)
+    val solidPanel = if (highContrast) Color.Black else if (modern) panelColor else Color(0xFF07111A)
     var confirmAction by remember { mutableStateOf<Pair<String, () -> Unit>?>(null) }
 
     Box(
@@ -88,12 +98,12 @@ fun SaveLoadDialog(
     ) {
         Surface(
             modifier = Modifier
-                .padding(24.dp)
-                .fillMaxWidth(0.92f)
+.padding(if (modern) 16.dp else 24.dp)
+                .fillMaxWidth(if (modern) 1f else .92f)
                 .fillMaxHeight(0.82f),
             color = solidPanel,
             shape = RoundedCornerShape(28.dp),
-            border = BorderStroke(1.dp, borderColor.copy(alpha = 0.9f))
+            border = BorderStroke(1.dp, if (highContrast) Color.White else borderColor.copy(alpha = if (modern) .25f else .9f))
         ) {
             Column(
                 modifier = Modifier
@@ -179,6 +189,8 @@ fun SaveLoadDialog(
                             )
                         )
                 )
+                if (busy) Text("Saving?", color = textColor, style = MaterialTheme.typography.bodyMedium)
+                errorMessage?.let { Text(it, color = Color(0xFFFFAA90), style = MaterialTheme.typography.bodyMedium) }
                 LazyColumn(
                     modifier = Modifier
                         .weight(1f)
@@ -191,19 +203,25 @@ fun SaveLoadDialog(
                             isSave = isSave,
                             onRequestSave = { slot, isOverwrite ->
                                 if (isOverwrite) {
-                                    confirmAction = "Overwrite Save Slot $slot?\nPrevious save data will be replaced." to { onSave(slot) }
+                                    confirmAction = "Overwrite Save Slot $slot?\nPrevious save data will be replaced." to { requestSave(slot) }
                                 } else {
-                                    onSave(slot)
+                                    requestSave(slot)
                                 }
                             },
-                            onLoad = onLoad,
+                            onLoad = { slot ->
+                                if (confirmLoad) confirmAction = "Load Save Slot $slot?\nCurrent unsaved progress will be replaced." to { requestLoad(slot) }
+                                else requestLoad(slot)
+                            },
                             onRequestDelete = { slot, label ->
-                                confirmAction = "$label?\nSaved progress will be permanently erased." to { onDelete(slot) }
+                                confirmAction = "$label?\nSaved progress will be permanently erased." to { requestDelete(slot) }
                             },
                             accent = accentColor,
                             textColor = textColor,
                             borderColor = borderColor,
-                            actionLabel = actionLabel
+                            actionLabel = actionLabel,
+                            largeTargets = largeTargets,
+                            highContrast = highContrast,
+                            busy = busy
                         )
                     }
                 }
@@ -265,7 +283,10 @@ private fun SaveSlotRow(
     accent: Color,
     textColor: Color,
     borderColor: Color,
-    actionLabel: String
+    actionLabel: String,
+    largeTargets: Boolean = false,
+    highContrast: Boolean = false,
+    busy: Boolean = false
 ) {
     val slotLabel = when {
         summary.isQuickSave -> "Quicksave"
@@ -276,7 +297,7 @@ private fun SaveSlotRow(
 
     Surface(
         tonalElevation = 6.dp,
-        color = solidSaveSlotCardColor(),
+        color = if (highContrast) Color.Black else solidSaveSlotCardColor(),
         shape = RoundedCornerShape(20.dp),
         border = BorderStroke(1.dp, if (occupied) accent.copy(alpha = 0.36f) else borderColor.copy(alpha = 0.52f)),
         modifier = Modifier.fillMaxWidth()
@@ -340,8 +361,9 @@ private fun SaveSlotRow(
                     val isOverwrite = !summary.isEmpty
                     Button(
                         onClick = { onRequestSave(summary.slot, isOverwrite) },
+                        enabled = !busy,
                         modifier = Modifier
-                            .widthIn(min = 112.dp)
+                            .widthIn(min = 112.dp).heightIn(min = if (largeTargets) 56.dp else 48.dp)
                             .semantics { contentDescription = "Save $slotLabel" },
                         colors = ButtonDefaults.buttonColors(containerColor = accent, contentColor = Color.Black)
                     ) {
@@ -351,9 +373,9 @@ private fun SaveSlotRow(
                 if (!isSave) {
                     Button(
                         onClick = { onLoad(summary.slot) },
-                        enabled = !summary.isEmpty,
+                        enabled = !summary.isEmpty && !busy,
                         modifier = Modifier
-                            .widthIn(min = 112.dp)
+                            .widthIn(min = 112.dp).heightIn(min = if (largeTargets) 56.dp else 48.dp)
                             .semantics { contentDescription = "Load $slotLabel" },
                         colors = ButtonDefaults.buttonColors(containerColor = accent, contentColor = Color.Black)
                     ) {
@@ -366,7 +388,7 @@ private fun SaveSlotRow(
                         val actionText = if (summary.isAutosave) "Clear Autosave" else "Delete $slotLabel"
                         onRequestDelete(summary.slot, actionText)
                     },
-                    enabled = deleteEnabled
+                    enabled = deleteEnabled && !busy
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Delete,

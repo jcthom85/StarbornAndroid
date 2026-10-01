@@ -175,6 +175,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.util.lerp
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -312,6 +313,12 @@ import com.example.starborn.feature.exploration.ui.tabs.QuestJournalRow
 import com.example.starborn.feature.exploration.ui.tabs.QuestJournalSectionCard
 import com.example.starborn.feature.exploration.ui.tabs.QuestJournalToggle
 import com.example.starborn.feature.exploration.ui.tabs.QuestJournalPage
+import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuHighContrast
+import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuLargeTargets
+import com.example.starborn.feature.exploration.ui.menu.LocalModernFieldMenu
+import com.example.starborn.feature.exploration.ui.menu.ModernFieldMenu
+import com.example.starborn.feature.exploration.ui.menu.ModernPartyPage
+import com.example.starborn.feature.exploration.ui.tabs.InventoryEquipmentPreview
 import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import com.example.starborn.feature.exploration.ui.menu.MenuDetailKind
 
@@ -1270,6 +1277,7 @@ fun ExplorationScreen(
                 onToggleTutorials = { viewModel.updateTutorialsEnabled(it) },
                 onToggleVignette = { viewModel.setVignetteEnabled(it) },
                 onToggleHighContrast = { viewModel.setHighContrastMode(it) },
+                onToggleModernFieldMenu = { viewModel.setModernFieldMenu(it) },
                 onToggleLargeTouchTargets = { viewModel.setLargeTouchTargets(it) },
                 onToggleScreenshakeDisabled = { viewModel.setScreenshakeDisabled(it) },
                 onToggleFlashesDisabled = { viewModel.setFlashesDisabled(it) },
@@ -1287,11 +1295,11 @@ fun ExplorationScreen(
                         saveLoadMode = "load"
                     }
                 },
-                onReturnToTitle = onReturnToTitle,
+                onReturnToTitle = if (uiState.settings.modernFieldMenu) ({ viewModel.quickSaveAndReturnToTitle(onReturnToTitle) }) else onReturnToTitle,
                 partyStatus = uiState.partyStatus,
                 onShowSkillTree = { memberId -> viewModel.openSkillTree(memberId) },
                 onShowDetails = { memberId -> viewModel.openPartyMemberDetails(memberId) },
-                statusMessage = uiState.statusMessage,
+                statusMessage = if (uiState.settings.modernFieldMenu) uiState.menuFeedback else uiState.statusMessage,
                 trackedQuest = trackedQuest,
                 activeQuests = uiState.questLogActive,
                 completedQuests = uiState.questLogCompleted,
@@ -1338,7 +1346,7 @@ fun ExplorationScreen(
                 onCloseFullMap = { viewModel.closeFullMapOverlay() },
                 craftingViewModel = craftingViewModel,
                 onTinkerTutorialStep = { viewModel.onTinkerTutorialStep(it) },
-                onDebugTinkeringTutorial = { viewModel.debugTriggerTinkeringTutorial() },
+                onDebugTinkeringTutorial = if (com.example.starborn.BuildConfig.DEBUG) ({ viewModel.debugTriggerTinkeringTutorial() }) else null,
                 onPlayAudio = onPlayAudio,
                 modifier = Modifier.statusBarsPadding()
             )
@@ -1373,15 +1381,24 @@ fun ExplorationScreen(
                 )
             }
         }
+        var saveDialogBusy by remember { mutableStateOf(false) }
+        var saveDialogError by remember { mutableStateOf<String?>(null) }
         if (saveLoadMode != null) {
             SaveLoadDialog(
                 mode = saveLoadMode!!,
                 slots = slotSummaries,
                 onSave = { slot ->
                     coroutineScope.launch {
-                        viewModel.saveGame(slot)
-                        slotSummaries = viewModel.fetchSaveSlots()
-                        saveLoadMode = null
+                        if (!saveDialogBusy) {
+                            saveDialogBusy = true
+                            saveDialogError = null
+                            try {
+                                if (viewModel.saveGame(slot)) {
+                                    slotSummaries = viewModel.fetchSaveSlots()
+                                    saveLoadMode = null
+                                } else saveDialogError = "Save failed. Try again."
+                            } finally { saveDialogBusy = false }
+                        }
                     }
                 },
                 onLoad = { slot ->
@@ -1395,11 +1412,17 @@ fun ExplorationScreen(
                         slotSummaries = viewModel.fetchSaveSlots()
                     }
                 },
-                onDismiss = { saveLoadMode = null },
+                onDismiss = { if (!saveDialogBusy) { saveLoadMode = null; saveDialogError = null } },
                 accentColor = FieldMenuDesign.cyan,
                 panelColor = FieldMenuDesign.panel,
                 borderColor = FieldMenuDesign.border.copy(alpha = 0.45f),
                 textColor = FieldMenuDesign.text,
+                modern = uiState.settings.modernFieldMenu,
+                largeTargets = uiState.settings.largeTouchTargets,
+                highContrast = uiState.settings.highContrastMode,
+                confirmLoad = true,
+                busy = saveDialogBusy,
+                errorMessage = saveDialogError,
                 modifier = Modifier
                     .align(Alignment.Center)
                     .zIndex(90f)
@@ -1845,12 +1868,12 @@ private fun QuestDetailSheet(
             .fillMaxHeight(0.85f),
         shape = RoundedCornerShape(16.dp),
         color = Color(0xF0061018),
-        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.48f)),
-        shadowElevation = 14.dp
+        border = BorderStroke(1.dp, if (embedded && LocalModernFieldMenu.current) Color.White.copy(alpha = .1f) else accentColor.copy(alpha = 0.48f)),
+        shadowElevation = if (embedded && LocalModernFieldMenu.current) 0.dp else 14.dp
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .then(if (embedded && LocalModernFieldMenu.current) Modifier.fillMaxWidth() else Modifier.fillMaxSize())
                 .background(
                     Brush.verticalGradient(
                         listOf(
@@ -1861,7 +1884,7 @@ private fun QuestDetailSheet(
                     )
                 )
                 .padding(18.dp)
-                .verticalScroll(scrollState),
+                .then(if (embedded && LocalModernFieldMenu.current) Modifier else Modifier.verticalScroll(scrollState)),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             Row(
@@ -2281,6 +2304,7 @@ private fun MenuOverlay(
     onVoiceVolumeChange: (Float) -> Unit,
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
+    onToggleModernFieldMenu: (Boolean) -> Unit = {},
     onToggleHighContrast: (Boolean) -> Unit = {},
     onToggleLargeTouchTargets: (Boolean) -> Unit = {},
     onToggleScreenshakeDisabled: (Boolean) -> Unit = {},
@@ -2377,6 +2401,109 @@ private fun MenuOverlay(
         menuScope.launch { sheetScroll.scrollTo(rootScrollPosition) }
     }
 
+    var selectedPartyId by rememberSaveable { mutableStateOf<String?>(null) }
+    val activePartyId = selectedPartyId?.takeIf { id -> partyStatus.members.any { it.id == id } }
+        ?: partyStatus.members.firstOrNull()?.id
+    val pageContent: @Composable () -> Unit = {
+                    if (detailKind == null) MenuTabContentArea(
+                        tab = selectedTab,
+                        modern = settings.modernFieldMenu,
+                        selectedMemberId = activePartyId,
+                        accentColor = accentColor,
+                        borderColor = panelBorder,
+                        isCurrentRoomDark = isCurrentRoomDark,
+                        statusMessage = statusMessage,
+                        partyStatus = partyStatus,
+                        trackedQuest = trackedQuest,
+                        activeQuests = activeQuests,
+                        completedQuests = completedQuests,
+                        minimap = minimap,
+                        fullMap = fullMap,
+                        settings = settings,
+                        onMenuAction = onMenuAction,
+                        onOpenInventory = onOpenInventory,
+                        onOpenJournal = onOpenJournal,
+                        onOpenMapLegend = {
+                            openDetail(MenuDetailKind.MAP_LEGEND, onOpen = onOpenMapLegend)
+                        },
+                        onOpenFullMap = {
+                            openDetail(MenuDetailKind.FULL_MAP, onOpen = onOpenFullMap)
+                        },
+                        onOpenFieldKit = onOpenFieldKit,
+                        onMusicVolumeChange = onMusicVolumeChange,
+                        onSfxVolumeChange = onSfxVolumeChange,
+                        onVoiceVolumeChange = onVoiceVolumeChange,
+                        onToggleTutorials = onToggleTutorials,
+                        onToggleVignette = onToggleVignette,
+                        onToggleModernFieldMenu = onToggleModernFieldMenu,
+                        onToggleHighContrast = onToggleHighContrast,
+                        onToggleLargeTouchTargets = onToggleLargeTouchTargets,
+                        onToggleScreenshakeDisabled = onToggleScreenshakeDisabled,
+                        onToggleFlashesDisabled = onToggleFlashesDisabled,
+                        onToggleHapticsDisabled = onToggleHapticsDisabled,
+                        onQuickSave = onQuickSave,
+                        onSaveGame = onSaveGame,
+                        onLoadGame = onLoadGame,
+                        onReturnToTitle = onReturnToTitle,
+                        onShowSkillTree = { memberId ->
+                            openDetail(MenuDetailKind.SKILL_TREE, id = memberId) {
+                                onShowSkillTree(memberId)
+                            }
+                        },
+                        onShowDetails = { memberId ->
+                            openDetail(MenuDetailKind.PARTY_MEMBER, id = memberId) {
+                                onShowDetails(memberId)
+                            }
+                        },
+                        inventoryItems = inventoryItems,
+                        equippedItems = equippedItems,
+                        completedMilestones = completedMilestones,
+                        unlockedWeapons = unlockedWeapons,
+                        equippedWeapons = equippedWeapons,
+                        unlockedArmors = unlockedArmors,
+                        equippedArmors = equippedArmors,
+                        onEquipItem = onEquipItem,
+                        onEquipMod = onEquipMod,
+                        onEquipWeapon = onEquipWeapon,
+                        resolveWeaponItem = resolveWeaponItem,
+                        onEquipArmor = onEquipArmor,
+                        resolveArmorItem = resolveArmorItem,
+                        onUseInventoryItem = onUseInventoryItem,
+                        onShowQuestDetails = { questId ->
+                            openDetail(MenuDetailKind.QUEST, id = questId) {
+                                onShowQuestDetails(questId)
+                            }
+                        },
+                        onShowItemDetails = { item ->
+                            openDetail(MenuDetailKind.INVENTORY_ITEM, id = item.id, item = item)
+                        },
+                        craftingViewModel = craftingViewModel,
+                        onTinkerTutorialStep = onTinkerTutorialStep,
+                        onDebugTinkeringTutorial = onDebugTinkeringTutorial,
+                        onPlayAudio = onPlayAudio,
+                        creditsLabel = creditsLabel,
+                        isGearTutorialActive = isGearTutorialActive
+                    ) else MenuNestedDetailContent(
+                        detailKind = detailKind,
+                        detailId = detailId,
+                        detailItem = detailItem?.let { saved ->
+                            inventoryItems.firstOrNull { it.id == saved.id } ?: saved.copy(quantity = 0)
+                        },
+                        questDetail = questDetail,
+                        partyMemberDetails = partyMemberDetails,
+                        skillTreeOverlay = skillTreeOverlay,
+                        fullMap = fullMap,
+                        accentColor = accentColor,
+                        borderColor = panelBorder,
+                        onBack = ::closeDetail,
+                        onToggleQuestTracking = onToggleQuestTracking,
+                        onUnlockSkill = onUnlockSkill,
+                        onUseItem = { item ->
+                            onUseInventoryItem(item)
+                        }
+                    )
+    }
+
     BackHandler(enabled = detailKind != null) { closeDetail() }
     val cornerRadius = 14.dp
     val borderWidth = 1.dp
@@ -2388,6 +2515,7 @@ private fun MenuOverlay(
             .fillMaxSize()
             .drawWithContent {
                 drawContent()
+                if (settings.modernFieldMenu) return@drawWithContent
                 val strokeWidth = borderWidth.toPx()
                 val halfStroke = strokeWidth / 2f
                 val left = halfStroke
@@ -2432,6 +2560,47 @@ private fun MenuOverlay(
         border = null
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
+            if (settings.modernFieldMenu) {
+                androidx.compose.runtime.CompositionLocalProvider(LocalModernFieldMenu provides true,
+                    LocalFieldMenuHighContrast provides settings.highContrastMode,
+                    LocalFieldMenuLargeTargets provides settings.largeTouchTargets) {
+                    ModernFieldMenu(
+                        tab = selectedTab,
+                        detailTitle = detailKind?.let { menuDetailTitle(it, selectedTab) },
+                        party = partyStatus,
+                        selectedMemberId = activePartyId,
+                        credits = if (detailKind == MenuDetailKind.SKILL_TREE) "${skillTreeOverlay?.availableAp ?: 0} AP available" else creditsLabel,
+                        scroll = sheetScroll,
+                        tinkerTutorial = isTinkeringTutorialActive,
+                        gearTutorial = isGearTutorialActive,
+                        roomAccent = roomAtmosphere,
+                        statusMessage = statusMessage,
+                        onSelectTab = { tab ->
+                            if (detailKind != null) closeDetail()
+                            menuScope.launch { sheetScroll.scrollTo(0) }
+                            onSelectTab(tab)
+                        },
+                        onSelectMember = { selectedPartyId = it },
+                        onBack = ::closeDetail,
+                        onSave = onQuickSave,
+                        onClose = { if (detailKind != null) closeDetail(); onClose() },
+                        tutorialGuide = {
+                            if (isTinkeringTutorialActive && selectedTab == MenuTab.FIELD_KIT && craftingViewModel != null) {
+                                val craftState by craftingViewModel.uiState.collectAsState()
+                                val step = craftState.tutorialStep
+                                LaunchedEffect(step) {
+                                    if (step != null) onPlayAudio("sfx_hub_node_select")
+                                }
+                                if (craftState.isTutorialActive && step != null) {
+                                    TinkeringTutorialOverlay(step = step, accentColor = accentColor,
+                                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp))
+                                }
+                            }
+                        },
+                        content = pageContent
+                    )
+                }
+            } else {
             Box(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
@@ -2530,99 +2699,7 @@ private fun MenuOverlay(
                         )
                     }
 
-                    if (detailKind == null) MenuTabContentArea(
-                        tab = selectedTab,
-                        accentColor = accentColor,
-                        borderColor = panelBorder,
-                        isCurrentRoomDark = isCurrentRoomDark,
-                        statusMessage = statusMessage,
-                        partyStatus = partyStatus,
-                        trackedQuest = trackedQuest,
-                        activeQuests = activeQuests,
-                        completedQuests = completedQuests,
-                        minimap = minimap,
-                        fullMap = fullMap,
-                        settings = settings,
-                        onMenuAction = onMenuAction,
-                        onOpenInventory = onOpenInventory,
-                        onOpenJournal = onOpenJournal,
-                        onOpenMapLegend = {
-                            openDetail(MenuDetailKind.MAP_LEGEND, onOpen = onOpenMapLegend)
-                        },
-                        onOpenFullMap = {
-                            openDetail(MenuDetailKind.FULL_MAP, onOpen = onOpenFullMap)
-                        },
-                        onOpenFieldKit = onOpenFieldKit,
-                        onMusicVolumeChange = onMusicVolumeChange,
-                        onSfxVolumeChange = onSfxVolumeChange,
-                        onVoiceVolumeChange = onVoiceVolumeChange,
-                        onToggleTutorials = onToggleTutorials,
-                        onToggleVignette = onToggleVignette,
-                        onToggleHighContrast = onToggleHighContrast,
-                        onToggleLargeTouchTargets = onToggleLargeTouchTargets,
-                        onToggleScreenshakeDisabled = onToggleScreenshakeDisabled,
-                        onToggleFlashesDisabled = onToggleFlashesDisabled,
-                        onToggleHapticsDisabled = onToggleHapticsDisabled,
-                        onQuickSave = onQuickSave,
-                        onSaveGame = onSaveGame,
-                        onLoadGame = onLoadGame,
-                        onReturnToTitle = onReturnToTitle,
-                        onShowSkillTree = { memberId ->
-                            openDetail(MenuDetailKind.SKILL_TREE, id = memberId) {
-                                onShowSkillTree(memberId)
-                            }
-                        },
-                        onShowDetails = { memberId ->
-                            openDetail(MenuDetailKind.PARTY_MEMBER, id = memberId) {
-                                onShowDetails(memberId)
-                            }
-                        },
-                        inventoryItems = inventoryItems,
-                        equippedItems = equippedItems,
-                        completedMilestones = completedMilestones,
-                        unlockedWeapons = unlockedWeapons,
-                        equippedWeapons = equippedWeapons,
-                        unlockedArmors = unlockedArmors,
-                        equippedArmors = equippedArmors,
-                        onEquipItem = onEquipItem,
-                        onEquipMod = onEquipMod,
-                        onEquipWeapon = onEquipWeapon,
-                        resolveWeaponItem = resolveWeaponItem,
-                        onEquipArmor = onEquipArmor,
-                        resolveArmorItem = resolveArmorItem,
-                        onUseInventoryItem = onUseInventoryItem,
-                        onShowQuestDetails = { questId ->
-                            openDetail(MenuDetailKind.QUEST, id = questId) {
-                                onShowQuestDetails(questId)
-                            }
-                        },
-                        onShowItemDetails = { item ->
-                            openDetail(MenuDetailKind.INVENTORY_ITEM, id = item.id, item = item)
-                        },
-                        craftingViewModel = craftingViewModel,
-                        onTinkerTutorialStep = onTinkerTutorialStep,
-                        onDebugTinkeringTutorial = onDebugTinkeringTutorial,
-                        onPlayAudio = onPlayAudio,
-                        creditsLabel = creditsLabel,
-                        isGearTutorialActive = isGearTutorialActive
-                    ) else MenuNestedDetailContent(
-                        detailKind = detailKind,
-                        detailId = detailId,
-                        detailItem = detailItem,
-                        questDetail = questDetail,
-                        partyMemberDetails = partyMemberDetails,
-                        skillTreeOverlay = skillTreeOverlay,
-                        fullMap = fullMap,
-                        accentColor = accentColor,
-                        borderColor = panelBorder,
-                        onBack = ::closeDetail,
-                        onToggleQuestTracking = onToggleQuestTracking,
-                        onUnlockSkill = onUnlockSkill,
-                        onUseItem = { item ->
-                            closeDetail()
-                            onUseInventoryItem(item)
-                        }
-                    )
+                    pageContent()
                 }
             }
             Box(
@@ -2664,8 +2741,10 @@ private fun MenuOverlay(
                 )
             }
 
+            }
+
             // SEPARATE POPUP OVERTOP THE ENTIRE FIELD MENU DIALOG
-            if (isTinkeringTutorialActive && selectedTab == MenuTab.FIELD_KIT && craftingViewModel != null) {
+            if (!settings.modernFieldMenu && isTinkeringTutorialActive && selectedTab == MenuTab.FIELD_KIT && craftingViewModel != null) {
                 val craftState by craftingViewModel.uiState.collectAsState()
                 val currentStep = craftState.tutorialStep
                 LaunchedEffect(currentStep) {
@@ -2754,7 +2833,7 @@ private fun MenuNestedDetailContent(
                 onClose = onBack,
                 onToggleTrack = onToggleQuestTracking,
                 embedded = true,
-                modifier = Modifier.heightIn(max = 700.dp)
+                modifier = if (LocalModernFieldMenu.current) Modifier else Modifier.heightIn(max = 700.dp)
             )
         } else MenuDetailLoading("Loading quest file…", accentColor)
 
@@ -2763,7 +2842,7 @@ private fun MenuNestedDetailContent(
                 item = detailItem,
                 accentColor = accentColor,
                 borderColor = borderColor,
-                onUse = detailItem.effect?.let { { onUseItem(detailItem) } }
+                onUse = detailItem.effect?.takeIf { detailItem.quantity > 0 }?.let { { onUseItem(detailItem) } }
             )
         } else MenuDetailLoading("Item details unavailable.", accentColor)
 
@@ -2781,7 +2860,7 @@ private fun MenuNestedDetailContent(
                 accentColor = accentColor,
                 borderColor = borderColor,
                 onUnlockSkill = onUnlockSkill,
-                modifier = Modifier.heightIn(max = 700.dp)
+                modifier = if (LocalModernFieldMenu.current) Modifier else Modifier.heightIn(max = 700.dp)
             )
         } else MenuDetailLoading("Loading skill tree…", accentColor)
 
@@ -3142,6 +3221,7 @@ private fun MenuTabContentArea(
     onVoiceVolumeChange: (Float) -> Unit,
     onToggleTutorials: (Boolean) -> Unit,
     onToggleVignette: (Boolean) -> Unit,
+    onToggleModernFieldMenu: (Boolean) -> Unit = {},
     onToggleHighContrast: (Boolean) -> Unit = {},
     onToggleLargeTouchTargets: (Boolean) -> Unit = {},
     onToggleScreenshakeDisabled: (Boolean) -> Unit = {},
@@ -3174,7 +3254,9 @@ private fun MenuTabContentArea(
     onDebugTinkeringTutorial: (() -> Unit)? = null,
     onPlayAudio: (String) -> Unit = {},
     creditsLabel: String,
-    isGearTutorialActive: Boolean = false
+    isGearTutorialActive: Boolean = false,
+    modern: Boolean = false,
+    selectedMemberId: String? = null
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         when (tab) {
@@ -3235,15 +3317,41 @@ private fun MenuTabContentArea(
                 onOpenMapLegend = onOpenMapLegend,
                 onOpenFullMap = onOpenFullMap
             )
-            MenuTab.STATS -> StatsTabContent(
+            MenuTab.STATS -> if (modern) {
+                val member = partyStatus.members.firstOrNull { it.id == selectedMemberId }
+                    ?: partyStatus.members.firstOrNull()
+                ModernPartyPage(member, onShowDetails, onShowSkillTree) {
+                    InventoryEquipmentPreview(
+                        inventoryItems = inventoryItems,
+                        equippedItems = equippedItems,
+                        completedMilestones = completedMilestones,
+                        unlockedWeapons = unlockedWeapons,
+                        equippedWeapons = equippedWeapons,
+                        unlockedArmors = unlockedArmors,
+                        equippedArmors = equippedArmors,
+                        partyMembers = listOfNotNull(member),
+                        borderColor = borderColor,
+                        accentColor = accentColor,
+                        onEquipItem = onEquipItem,
+                        onEquipMod = onEquipMod,
+                        onEquipWeapon = onEquipWeapon,
+                        resolveWeaponItem = resolveWeaponItem,
+                        onEquipArmor = onEquipArmor,
+                        resolveArmorItem = resolveArmorItem
+                    )
+                }
+            } else {
+                StatsTabContent(
                 partyStatus = partyStatus,
                 accentColor = accentColor,
                 borderColor = borderColor,
                 onShowSkillTree = onShowSkillTree,
                 onShowDetails = onShowDetails
             )
+            }
             MenuTab.SETTINGS -> SettingsTabContent(
                 settings = settings,
+                onToggleModernFieldMenu = onToggleModernFieldMenu,
                 accentColor = accentColor,
                 borderColor = borderColor,
                 onMusicVolumeChange = onMusicVolumeChange,
@@ -3819,6 +3927,15 @@ fun MenuSectionCard(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
+    if (LocalModernFieldMenu.current) {
+        Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            if (title !in setOf("Inventory Overview", "Party Status", "Quest Journal")) {
+                Text(title, color = FieldMenuDesign.text, style = MaterialTheme.typography.titleMedium)
+            }
+            content()
+        }
+        return
+    }
     Column(modifier = modifier) {
         Surface(
             shape = RoundedCornerShape(12.dp),
@@ -4155,6 +4272,8 @@ private fun FullMapOverlay(
     onClose: () -> Unit,
     embedded: Boolean = false
 ) {
+    val modern = embedded && LocalModernFieldMenu.current
+    val mapText = if (modern) FieldMenuDesign.text else MaterialTheme.colorScheme.onSurface
     Box(
         modifier = (if (embedded) Modifier.fillMaxWidth() else Modifier
             .fillMaxSize()
@@ -4164,13 +4283,13 @@ private fun FullMapOverlay(
     ) {
         Surface(
             shape = RoundedCornerShape(if (embedded) FieldMenuDesign.cardRadius else 28.dp),
-            tonalElevation = 10.dp,
-            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.98f),
+            tonalElevation = if (modern) 0.dp else 10.dp,
+            color = if (modern) FieldMenuDesign.panel else MaterialTheme.colorScheme.surface.copy(alpha = 0.98f),
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(
                 modifier = Modifier
-                    .padding(24.dp)
+                    .padding(if (modern) 12.dp else 24.dp)
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
@@ -4182,7 +4301,7 @@ private fun FullMapOverlay(
                     Text(
                         text = "Full Map",
                         style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = mapText
                     )
                     if (!embedded) {
                         TextButton(onClick = onClose) {
@@ -4199,17 +4318,25 @@ private fun FullMapOverlay(
                     ) {
                         Text(
                             text = "Map data unavailable.",
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = if (modern) FieldMenuDesign.textMuted else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 } else {
+                    Text("Drag to pan. Pinch to zoom, or use the zoom buttons.",
+                        color = mapText.copy(alpha = .7f), style = MaterialTheme.typography.bodySmall)
                     val cells = fullMap.cells
                     var viewportScale by remember(cells) { mutableStateOf(1f) }
                     var viewportOffset by remember(cells) { mutableStateOf(Offset.Zero) }
+                    var viewportSize by remember { mutableStateOf(Offset.Zero) }
+                    fun boundedOffset(value: Offset, scale: Float): Offset {
+                        val limitX = viewportSize.x * .45f * scale.coerceAtLeast(1f)
+                        val limitY = viewportSize.y * .45f * scale.coerceAtLeast(1f)
+                        return Offset(value.x.coerceIn(-limitX, limitX), value.y.coerceIn(-limitY, limitY))
+                    }
                     val transformModifier = Modifier.pointerInput(cells) {
                         detectTransformGestures { _, pan, zoom, _ ->
                             viewportScale = (viewportScale * zoom).coerceIn(0.4f, 4f)
-                            viewportOffset += pan
+                            viewportOffset = boundedOffset(viewportOffset + pan, viewportScale)
                         }
                     }
                     FullMapCanvas(
@@ -4218,10 +4345,22 @@ private fun FullMapOverlay(
                         offset = viewportOffset,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(360.dp)
+                            .height(if (modern) 320.dp else 360.dp)
+                            .onSizeChanged { viewportSize = Offset(it.width.toFloat(), it.height.toFloat()) }
                             .clip(RoundedCornerShape(18.dp))
                             .then(transformModifier)
                     )
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically) {
+                        OutlinedButton(onClick = {
+                            viewportScale = (viewportScale / 1.25f).coerceAtLeast(.4f)
+                            viewportOffset = boundedOffset(viewportOffset, viewportScale)
+                        }, enabled = viewportScale > .4f, modifier = Modifier.heightIn(min = 48.dp)) { Text("−", color = mapText) }
+                        Text("${(viewportScale * 100).toInt()}%", color = mapText)
+                        OutlinedButton(onClick = {
+                            viewportScale = (viewportScale * 1.25f).coerceAtMost(4f)
+                        }, enabled = viewportScale < 4f, modifier = Modifier.heightIn(min = 48.dp)) { Text("+", color = mapText) }
+                    }
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -4281,12 +4420,12 @@ private fun MapLegendOverlay(
                 .wrapContentHeight(),
             shape = RoundedCornerShape(if (embedded) FieldMenuDesign.cardRadius else 24.dp),
             color = panelColor,
-            border = BorderStroke(1.dp, borderColor),
-            tonalElevation = 10.dp
+            border = BorderStroke(1.dp, if (embedded && LocalModernFieldMenu.current) Color.White.copy(alpha = .12f) else borderColor),
+            tonalElevation = if (embedded && LocalModernFieldMenu.current) 0.dp else 10.dp
         ) {
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 24.dp, vertical = 20.dp)
+                    .padding(horizontal = if (embedded && LocalModernFieldMenu.current) 12.dp else 24.dp, vertical = 16.dp)
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {

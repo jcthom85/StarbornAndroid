@@ -39,6 +39,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.starborn.feature.exploration.ui.menu.LocalModernFieldMenu
+import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import com.example.starborn.R
 import com.example.starborn.feature.crafting.CraftingViewModel
 import com.example.starborn.feature.crafting.TinkeringBenchState
@@ -47,6 +49,8 @@ import com.example.starborn.feature.crafting.TinkeringItemChoice
 import com.example.starborn.feature.crafting.TinkeringRecipeUi
 import com.example.starborn.feature.crafting.TinkeringRequirementStatus
 import com.example.starborn.feature.crafting.TinkeringTutorialStep
+import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuLargeTargets
+import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuHighContrast
 import com.example.starborn.feature.exploration.ui.MenuSectionCard
 import com.example.starborn.feature.exploration.ui.components.previewItemIconRes
 
@@ -377,7 +381,7 @@ private fun WorkbenchTerminalView(
                             border = BorderStroke(1.dp, Color.White.copy(alpha = 0.15f))
                         ) {
                             Row(
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+                                modifier = Modifier.heightIn(min = if (LocalModernFieldMenu.current) 48.dp else 0.dp).padding(horizontal = 8.dp, vertical = 3.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(4.dp)
                             ) {
@@ -568,7 +572,7 @@ private fun WorkbenchTerminalView(
                 )
                 Text(
                     text = "Tap item to slot",
-                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+                    style = MaterialTheme.typography.labelSmall.copy(fontSize = if (LocalModernFieldMenu.current) 12.sp else 10.sp),
                     color = accentColor.copy(alpha = 0.7f)
                 )
             }
@@ -592,15 +596,7 @@ private fun WorkbenchTerminalView(
                     }
                 }
             } else {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 280.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(availableItems, key = { it.id }) { item ->
+                TinkerTray(availableItems) { item ->
                         val isItemTutorialTarget = (isBaseTutorialTarget && item.id == "cryo_inductor") ||
                             (isCompTutorialTarget && item.id == "scrap_metal")
                         InventoryMaterialChip(
@@ -610,7 +606,7 @@ private fun WorkbenchTerminalView(
                             isTutorialTarget = isItemTutorialTarget,
                             onClick = { onItemTapped(item.id) }
                         )
-                    }
+
                 }
             }
         }
@@ -626,7 +622,7 @@ private fun WorkbenchTerminalView(
                 Column(modifier = Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
                         text = "QUICK LOAD BLUEPRINTS",
-                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold),
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = if (LocalModernFieldMenu.current) 12.sp else 10.sp, fontWeight = FontWeight.Bold),
                         color = Color.White.copy(alpha = 0.6f)
                     )
                     Row(
@@ -649,14 +645,14 @@ private fun WorkbenchTerminalView(
                                 ) {
                                     Text(
                                         text = recipe.name,
-                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold),
+                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = if (LocalModernFieldMenu.current) 12.sp else 10.sp, fontWeight = FontWeight.Bold),
                                         color = Color.White,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
                                     Text(
                                         text = "Load →",
-                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = if (LocalModernFieldMenu.current) 11.sp else 9.sp),
                                         color = accentColor
                                     )
                                 }
@@ -759,7 +755,7 @@ private fun BenchSocket(
                     Text(
                         text = label,
                         style = MaterialTheme.typography.labelSmall.copy(
-                            fontSize = 9.sp,
+                            fontSize = if (LocalModernFieldMenu.current) 11.sp else 9.sp,
                             fontWeight = FontWeight.Bold
                         ),
                         color = if (isActive || isTutorialHighlighted) Color(0xFFFFC857) else accentColor.copy(alpha = 0.8f)
@@ -814,7 +810,7 @@ private fun BenchSocket(
                         )
                         Text(
                             text = if (isTutorialHighlighted) "TARGET" else if (isActive) "SELECTING" else "EMPTY",
-                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = if (LocalModernFieldMenu.current) 11.sp else 9.sp, fontWeight = FontWeight.Bold),
                             color = if (isActive || isTutorialHighlighted) Color(0xFFFFC857) else Color.White.copy(alpha = 0.35f)
                         )
                     }
@@ -907,7 +903,7 @@ private fun InventoryMaterialChip(
                     )
                     Text(
                         text = item.description?.takeIf { it.isNotBlank() } ?: "Component",
-                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 9.sp),
+                        style = MaterialTheme.typography.bodySmall.copy(fontSize = if (LocalModernFieldMenu.current) 11.sp else 9.sp),
                         color = Color.White.copy(alpha = 0.6f),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -926,7 +922,7 @@ private fun InventoryMaterialChip(
                         ) {
                             Text(
                                 text = "SLOT",
-                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, fontSize = 9.sp),
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, fontSize = if (LocalModernFieldMenu.current) 11.sp else 9.sp),
                                 color = Color(0xFFFFC857),
                                 modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
                             )
@@ -940,7 +936,7 @@ private fun InventoryMaterialChip(
                     ) {
                         Text(
                             text = "x${item.quantity}",
-                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, fontSize = 10.sp),
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, fontSize = if (LocalModernFieldMenu.current) 12.sp else 10.sp),
                             color = accentColor,
                             modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
                         )
@@ -996,13 +992,7 @@ private fun SchematicsCatalogPanel(
                 }
             }
         } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 280.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                items(recipes, key = { it.id }) { recipe ->
+            TinkerRows(recipes, keyOf = { it.id }) { recipe ->
                     BlueprintRecipeCard(
                         recipe = recipe,
                         accentColor = accentColor,
@@ -1010,7 +1000,7 @@ private fun SchematicsCatalogPanel(
                         onLoad = { onLoadRecipe(recipe.id) },
                         onCraftDirect = { onCraftDirect(recipe.id) }
                     )
-                }
+
             }
         }
 
@@ -1036,19 +1026,13 @@ private fun SchematicsCatalogPanel(
                 ) {
                     Text(
                         text = if (showLockedRequirements) "Hide Required Items" else "Preview Required Items",
-                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold),
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = if (LocalModernFieldMenu.current) 12.sp else 10.sp, fontWeight = FontWeight.Bold),
                         color = if (showLockedRequirements) accentColor else Color.White.copy(alpha = 0.7f),
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                        modifier = Modifier.heightIn(min = if (LocalModernFieldMenu.current) 48.dp else 0.dp).padding(horizontal = 8.dp, vertical = 3.dp)
                     )
                 }
             }
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 200.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                items(lockedRecipes, key = { it.id }) { recipe ->
+            TinkerRows(lockedRecipes, keyOf = { it.id }, classicMaxHeight = 200.dp) { recipe ->
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
@@ -1071,7 +1055,7 @@ private fun SchematicsCatalogPanel(
                                 )
                                 Text(
                                     text = "LOCKED",
-                                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
+                                    style = MaterialTheme.typography.labelSmall.copy(fontSize = if (LocalModernFieldMenu.current) 11.sp else 9.sp, fontWeight = FontWeight.Bold),
                                     color = Color(0xFFFF9800).copy(alpha = 0.7f)
                                 )
                             }
@@ -1079,7 +1063,7 @@ private fun SchematicsCatalogPanel(
                                 recipe.description?.takeIf { it.isNotBlank() }?.let { desc ->
                                     Text(
                                         text = desc,
-                                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp),
+                                        style = MaterialTheme.typography.bodySmall.copy(fontSize = if (LocalModernFieldMenu.current) 12.sp else 10.sp),
                                         color = Color.White.copy(alpha = 0.5f),
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
@@ -1096,7 +1080,7 @@ private fun SchematicsCatalogPanel(
                             }
                         }
                     }
-                }
+
             }
         }
     }
@@ -1110,6 +1094,26 @@ private fun BlueprintRecipeCard(
     onLoad: () -> Unit,
     onCraftDirect: () -> Unit
 ) {
+    if (LocalModernFieldMenu.current) {
+        Surface(Modifier.fillMaxWidth(), color = FieldMenuDesign.panel, shape = RoundedCornerShape(12.dp)) {
+            Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(recipe.name, color = FieldMenuDesign.text, style = MaterialTheme.typography.titleMedium)
+                recipe.description?.takeIf { it.isNotBlank() }?.let {
+                    Text(it, color = FieldMenuDesign.textMuted, style = MaterialTheme.typography.bodySmall)
+                }
+                recipe.ingredients.forEach { requirement ->
+                    Text("${requirement.label}: ${requirement.available}/${requirement.required}",
+                        color = if (requirement.available >= requirement.required) FieldMenuDesign.textMuted else Color(0xFFFFAA90))
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedButton(onClick = onLoad, modifier = Modifier.weight(1f).heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp)) { Text("Load recipe") }
+                    Button(onClick = onCraftDirect, enabled = recipe.canCraft,
+                        modifier = Modifier.weight(1f).heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp)) { Text("Craft") }
+                }
+            }
+        }
+        return
+    }
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
@@ -1130,7 +1134,7 @@ private fun BlueprintRecipeCard(
                 recipe.description?.takeIf { it.isNotBlank() }?.let { desc ->
                     Text(
                         text = desc,
-                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp),
+                        style = MaterialTheme.typography.bodySmall.copy(fontSize = if (LocalModernFieldMenu.current) 12.sp else 10.sp),
                         color = Color.White.copy(alpha = 0.5f),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -1152,9 +1156,9 @@ private fun BlueprintRecipeCard(
                     onClick = onLoad,
                     shape = RoundedCornerShape(6.dp),
                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-                    modifier = Modifier.height(28.dp)
+                    modifier = Modifier.heightIn(min = if (LocalModernFieldMenu.current) { if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp } else 28.dp)
                 ) {
-                    Text(text = "Socket", style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp))
+                    Text(text = "Socket", style = MaterialTheme.typography.labelSmall.copy(fontSize = if (LocalModernFieldMenu.current) 12.sp else 10.sp))
                 }
                 Button(
                     onClick = onCraftDirect,
@@ -1167,9 +1171,9 @@ private fun BlueprintRecipeCard(
                         disabledContentColor = Color.White.copy(alpha = 0.3f)
                     ),
                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-                    modifier = Modifier.height(28.dp)
+                    modifier = Modifier.heightIn(min = if (LocalModernFieldMenu.current) { if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp } else 28.dp)
                 ) {
-                    Text(text = "Craft", style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold))
+                    Text(text = "Craft", style = MaterialTheme.typography.labelSmall.copy(fontSize = if (LocalModernFieldMenu.current) 12.sp else 10.sp, fontWeight = FontWeight.Bold))
                 }
             }
         }
@@ -1183,6 +1187,18 @@ private fun ScrapListPanel(
     borderColor: Color,
     onScrapItem: (String) -> Unit
 ) {
+    val modernScrap = LocalModernFieldMenu.current
+    var pendingScrap by remember { mutableStateOf<TinkeringItemChoice?>(null) }
+    pendingScrap?.let { item ->
+        AlertDialog(onDismissRequest = { pendingScrap = null },
+            title = { Text("Scrap ${item.name}?") },
+            text = { Text("Consumes one item. You receive:\n${item.salvage.joinToString("\n").ifBlank { "Recipe materials" }}") },
+            confirmButton = { TextButton(onClick = {
+                pendingScrap = null
+                onScrapItem(item.id)
+            }) { Text("Scrap one") } },
+            dismissButton = { TextButton(onClick = { pendingScrap = null }) { Text("Cancel") } })
+    }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
             text = "SALVAGE & DISASSEMBLY",
@@ -1210,13 +1226,7 @@ private fun ScrapListPanel(
                 }
             }
         } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 280.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                items(scrapChoices, key = { it.id }) { item ->
+            TinkerRows(scrapChoices, keyOf = { it.id }) { item ->
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
@@ -1245,22 +1255,22 @@ private fun ScrapListPanel(
                                         color = Color.White
                                     )
                                     Text(
-                                        text = "Breaks down into raw constituent alloys",
-                                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 9.sp),
+                                        text = if (LocalModernFieldMenu.current) item.salvage.joinToString(", ").ifBlank { "Recipe materials" } else "Breaks down into raw constituent alloys",
+                                        style = MaterialTheme.typography.bodySmall.copy(fontSize = if (LocalModernFieldMenu.current) 11.sp else 9.sp),
                                         color = Color.White.copy(alpha = 0.5f)
                                     )
                                 }
                             }
                             Spacer(modifier = Modifier.width(8.dp))
                             Button(
-                                onClick = { onScrapItem(item.id) },
+                                onClick = { if (modernScrap) pendingScrap = item else onScrapItem(item.id) },
                                 shape = RoundedCornerShape(6.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = Color(0xFFE57373).copy(alpha = 0.8f),
                                     contentColor = Color.White
                                 ),
                                 contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
-                                modifier = Modifier.height(28.dp)
+                                modifier = Modifier.heightIn(min = if (LocalModernFieldMenu.current) { if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp } else 28.dp)
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Delete,
@@ -1270,12 +1280,12 @@ private fun ScrapListPanel(
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text(
                                     text = "Scrap",
-                                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                                    style = MaterialTheme.typography.labelSmall.copy(fontSize = if (LocalModernFieldMenu.current) 12.sp else 10.sp, fontWeight = FontWeight.Bold)
                                 )
                             }
                         }
                     }
-                }
+
             }
         }
     }
@@ -1309,7 +1319,7 @@ private fun RequirementChip(
             Text(
                 text = "${req.label} (${req.available}/${req.required})",
                 style = MaterialTheme.typography.labelSmall.copy(
-                    fontSize = 9.sp,
+                    fontSize = if (LocalModernFieldMenu.current) 11.sp else 9.sp,
                     fontWeight = FontWeight.Bold
                 ),
                 color = if (satisfied) Color.White.copy(alpha = 0.9f) else Color(0xFFEF5350)
@@ -1507,4 +1517,31 @@ fun TinkeringTutorialGuideBanner(
     modifier: Modifier = Modifier
 ) {
     TinkeringTutorialOverlay(step = step, modifier = modifier)
+}
+
+@Composable
+private fun <T> TinkerRows(values: List<T>, keyOf: (T) -> String, classicMaxHeight: androidx.compose.ui.unit.Dp = 280.dp, row: @Composable (T) -> Unit) {
+    if (LocalModernFieldMenu.current) {
+        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            values.forEach { value -> key(keyOf(value)) { row(value) } }
+        }
+    } else {
+        LazyColumn(Modifier.fillMaxWidth().heightIn(max = classicMaxHeight), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            items(values, key = keyOf) { row(it) }
+        }
+    }
+}
+
+@Composable
+private fun TinkerTray(values: List<TinkeringItemChoice>, row: @Composable (TinkeringItemChoice) -> Unit) {
+    if (LocalModernFieldMenu.current) {
+        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            values.forEach { value -> key(value.id) { row(value) } }
+        }
+    } else {
+        LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier.fillMaxWidth().heightIn(max = 280.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            items(values, key = { it.id }) { row(it) }
+        }
+    }
 }

@@ -31,6 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.starborn.feature.exploration.ui.menu.LocalModernFieldMenu
+import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import com.example.starborn.R
 import com.example.starborn.feature.exploration.viewmodel.CharacterStatValueUi
 import com.example.starborn.feature.exploration.viewmodel.PartyMemberDetailsUi
@@ -59,6 +61,7 @@ fun PartyMemberDetailsDialog(
 }
 
 @Composable
+@OptIn(ExperimentalLayoutApi::class)
 fun PartyMemberDetailsContent(
     details: PartyMemberDetailsUi,
     accentColor: Color,
@@ -71,14 +74,13 @@ fun PartyMemberDetailsContent(
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        color = Color(0xFF071018),
-        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.65f))
+        color = if (LocalModernFieldMenu.current) FieldMenuDesign.panel else Color(0xFF071018),
+        border = BorderStroke(1.dp, borderColor.copy(alpha = if (LocalModernFieldMenu.current) 0.12f else 0.65f))
     ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 580.dp)
-                    .verticalScroll(scrollState)
+                    .then(if (LocalModernFieldMenu.current && !showClose) Modifier else Modifier.heightIn(max = 580.dp).verticalScroll(scrollState))
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
@@ -153,9 +155,10 @@ fun PartyMemberDetailsContent(
                         ) {
                             // HP Bar
                             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                                Row(
+                                FlowRow(
                                     modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalArrangement = Arrangement.spacedBy(4.dp)
                                 ) {
                                     Text(
                                         text = "HEALTH (HP)",
@@ -163,13 +166,13 @@ fun PartyMemberDetailsContent(
                                         color = Color(0xFFFF6B6B)
                                     )
                                     Text(
-                                        text = details.hpLabel ?: "500 / 500",
+                                        text = details.hpLabel ?: "HP unavailable",
                                         style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold),
                                         color = Color.White.copy(alpha = 0.85f)
                                     )
                                 }
-                                LinearProgressIndicator(
-                                    progress = { 1f },
+                                if (details.hpProgress != null) LinearProgressIndicator(
+                                    progress = { details.hpProgress?.coerceIn(0f, 1f) ?: 0f },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(6.dp)
@@ -181,9 +184,10 @@ fun PartyMemberDetailsContent(
 
                             // XP Bar
                             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                                Row(
+                                FlowRow(
                                     modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalArrangement = Arrangement.spacedBy(4.dp)
                                 ) {
                                     Text(
                                         text = "EXPERIENCE (XP)",
@@ -197,7 +201,7 @@ fun PartyMemberDetailsContent(
                                     )
                                 }
                                 LinearProgressIndicator(
-                                    progress = { 0.25f },
+                                    progress = { details.xpProgress.coerceIn(0f, 1f) },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(6.dp)
@@ -247,9 +251,10 @@ fun PartyMemberDetailsContent(
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, letterSpacing = 1.sp),
                                 color = accentColor
                             )
-                            Row(
+                            FlowRow(
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
                             ) {
                                 details.unlockedSkills.forEach { skill ->
                                     Surface(
@@ -270,6 +275,8 @@ fun PartyMemberDetailsContent(
                                             )
                                             Text(
                                                 text = skill,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis,
                                                 style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold, fontSize = 11.sp),
                                                 color = Color.White
                                             )
@@ -324,11 +331,12 @@ private fun StatSectionCard(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(horizontal = 10.dp, vertical = 7.dp),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
                                         text = stat.label,
+                                        modifier = Modifier.weight(1f),
                                         style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
                                         color = Color.White.copy(alpha = 0.75f)
                                     )

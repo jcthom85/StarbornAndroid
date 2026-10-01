@@ -26,6 +26,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
+import com.example.starborn.feature.exploration.ui.menu.LocalModernFieldMenu
+import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuLargeTargets
+import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuHighContrast
 import com.example.starborn.feature.exploration.ui.MenuSectionCard
 import com.example.starborn.feature.exploration.viewmodel.QuestSummaryUi
 
@@ -65,7 +69,8 @@ fun JournalTabContent(
                     emptyMessage = "No active quests yet.",
                     accentColor = accentColor,
                     borderColor = borderColor,
-                    onQuestSelected = onQuestSelected
+                    onQuestSelected = onQuestSelected,
+                    trackedQuestId = trackedQuest?.id
                 )
             }
             QuestJournalPage.COMPLETED -> {
@@ -147,7 +152,8 @@ private fun QuestListPanel(
     emptyMessage: String,
     accentColor: Color,
     borderColor: Color,
-    onQuestSelected: (String) -> Unit
+    onQuestSelected: (String) -> Unit,
+    trackedQuestId: String? = null
 ) {
     if (quests.isEmpty()) {
         Text(
@@ -155,6 +161,16 @@ private fun QuestListPanel(
             color = Color.White.copy(alpha = 0.75f),
             style = MaterialTheme.typography.bodyMedium
         )
+        return
+    }
+    if (LocalModernFieldMenu.current) {
+        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            quests.forEach { quest ->
+                key(quest.id) {
+                    QuestJournalRow(quest, accentColor, borderColor, onClick = { onQuestSelected(quest.id) }, tracked = quest.id == trackedQuestId)
+                }
+            }
+        }
         return
     }
     LazyColumn(
@@ -179,7 +195,8 @@ fun QuestJournalRow(
     quest: QuestSummaryUi,
     accentColor: Color,
     borderColor: Color,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    tracked: Boolean = false
 ) {
     val shape = RoundedCornerShape(12.dp)
     val icon = if (quest.completed) Icons.Filled.CheckCircle else Icons.Filled.Flag
@@ -188,8 +205,8 @@ fun QuestJournalRow(
             .fillMaxWidth()
             .clip(shape)
             .clickable { onClick() },
-        color = Color(0xFF061018).copy(alpha = 0.58f),
-        border = BorderStroke(1.dp, borderColor.copy(alpha = 0.38f)),
+        color = if (LocalModernFieldMenu.current) FieldMenuDesign.panel else Color(0xFF061018).copy(alpha = 0.58f),
+        border = BorderStroke(1.dp, if (LocalModernFieldMenu.current) { if (tracked) FieldMenuDesign.gold.copy(alpha = .55f) else Color.White.copy(alpha = if (LocalFieldMenuHighContrast.current) .65f else .1f) } else borderColor.copy(alpha = 0.38f)),
         shape = shape
     ) {
         Row(
@@ -230,7 +247,7 @@ fun QuestJournalRow(
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = if (quest.completed) "COMPLETED" else "ACTIVE",
+                        text = if (quest.completed) "COMPLETED" else if (tracked) "TRACKED" else "ACTIVE",
                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                         color = accentColor.copy(alpha = if (quest.completed) 0.62f else 0.82f)
                     )
@@ -244,7 +261,9 @@ fun QuestJournalRow(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-                val objectives = quest.objectives.take(3)
+                val objectives = if (LocalModernFieldMenu.current) {
+                    if (quest.completed) emptyList() else listOfNotNull(quest.currentObjective)
+                } else quest.objectives.take(3)
                 if (objectives.isNotEmpty()) {
                     Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
                         objectives.forEach { objective ->
@@ -306,7 +325,7 @@ fun QuestJournalSectionCard(
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        color = Color(0xFF061018).copy(alpha = 0.58f),
+        color = if (LocalModernFieldMenu.current) FieldMenuDesign.panel else Color(0xFF061018).copy(alpha = 0.58f),
         border = BorderStroke(1.dp, Color.White.copy(alpha = 0.14f))
     ) {
         Column(

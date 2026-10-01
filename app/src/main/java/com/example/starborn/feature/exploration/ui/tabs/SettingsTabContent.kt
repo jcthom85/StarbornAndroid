@@ -19,6 +19,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.starborn.feature.exploration.ui.menu.LocalModernFieldMenu
+import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuLargeTargets
+import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuHighContrast
 import com.example.starborn.feature.exploration.ui.MenuSectionCard
 import com.example.starborn.feature.exploration.viewmodel.SettingsUiState
 import kotlin.math.roundToInt
@@ -43,9 +46,22 @@ fun SettingsTabContent(
     onSaveGame: () -> Unit,
     onLoadGame: () -> Unit,
     onReturnToTitle: (() -> Unit)? = null,
-    onDebugTinkeringTutorial: (() -> Unit)? = null
+    onDebugTinkeringTutorial: (() -> Unit)? = null,
+    onToggleModernFieldMenu: ((Boolean) -> Unit)? = null
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        onToggleModernFieldMenu?.let { toggle ->
+            MenuSectionCard(title = "Field menu layout", accentColor = accentColor, borderColor = borderColor) {
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) {
+                        Text("Modern layout", color = Color.White, style = MaterialTheme.typography.bodyLarge)
+                        Text("Turn off to restore the classic field menu.", color = Color.White.copy(alpha = .7f),
+                            style = MaterialTheme.typography.bodySmall)
+                    }
+                    Switch(checked = settings.modernFieldMenu, onCheckedChange = toggle)
+                }
+            }
+        }
         if (showSaveData) {
             MenuSectionCard(
                 title = "Save Data",
@@ -266,7 +282,7 @@ private fun SettingsPanel(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
+            Column(Modifier.weight(1f)) {
                 Text("Room Vignette", color = Color.White, style = MaterialTheme.typography.bodyMedium)
                 Text(
                     text = if (settings.vignetteEnabled) "Enabled" else "Disabled",
@@ -284,7 +300,7 @@ private fun SettingsPanel(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
+            Column(Modifier.weight(1f)) {
                 Text("Tutorials", color = Color.White, style = MaterialTheme.typography.bodyMedium)
                 Text(
                     text = if (settings.tutorialsEnabled) "Shown" else "Hidden",
@@ -309,6 +325,7 @@ private fun SaveDataPanel(
     onLoadGame: () -> Unit,
     onReturnToTitle: (() -> Unit)? = null
 ) {
+    val modern = LocalModernFieldMenu.current
     Surface(
         modifier = Modifier.fillMaxWidth(),
         color = Color(0xFF09131B),
@@ -347,7 +364,7 @@ private fun SaveDataPanel(
                         style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
                     )
                     Text(
-                        text = "Manual slots, quicksave, and title-screen load all use the same save system.",
+                        text = "Use manual slots to keep separate saves. Quick Save replaces your latest quick checkpoint.",
                         color = Color.White.copy(alpha = 0.64f),
                         style = MaterialTheme.typography.bodySmall
                     )
@@ -389,7 +406,7 @@ private fun SaveDataPanel(
                     icon = Icons.AutoMirrored.Rounded.ExitToApp,
                     accentColor = Color(0xFFFFB300),
                     onClick = {
-                        onQuickSave()
+                        if (!modern) onQuickSave()
                         onReturnToTitle()
                     },
                     modifier = Modifier.fillMaxWidth()
@@ -410,7 +427,7 @@ private fun SaveActionButton(
 ) {
     Surface(
         onClick = onClick,
-        modifier = modifier,
+        modifier = modifier.heightIn(min = if (LocalFieldMenuLargeTargets.current) 64.dp else 48.dp),
         shape = RoundedCornerShape(15.dp),
         color = Color(0xFF0B1722),
         border = BorderStroke(1.dp, accentColor.copy(alpha = 0.28f))
@@ -436,7 +453,7 @@ private fun SaveActionButton(
                 tint = accentColor,
                 modifier = Modifier.size(20.dp)
             )
-            Column {
+            Column(Modifier.weight(1f)) {
                 Text(
                     text = label,
                     color = Color.White,
