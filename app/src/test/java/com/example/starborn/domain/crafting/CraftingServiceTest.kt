@@ -338,7 +338,7 @@ class CraftingServiceTest {
         val outcome = service.cookMeal("provision_ration_soup", batch = 3)
 
         assertTrue(outcome is CraftingOutcome.Success)
-        // Yield is at least 3 (or 4 if 15% masterwork procced)
+        // Each of the three batch units has its own bonus-portion chance.
         val soupCount = inventory.snapshot()["ration_soup"] ?: 0
         assertTrue("Expected at least 3 soups, got $soupCount", soupCount >= 3)
         // Ingredients remaining: 5 - 3 = 2

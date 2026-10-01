@@ -34,11 +34,11 @@ class IntroCinematicAssetIntegrityTest {
             // PA line verbatim; without it the only signal of danger is a pressure
             // readout, and the scene has no threat in it at all.
             "SOURCE BEAST CONTAINMENT BREACH",
-            "Broadcast my identity. Draw it away.",
+            "Broadcast my identity. Get it away from them.",
             // The Chorus answering the Chime is the thematic seed of World 1's
             // "First Sound" pillar and pays off across the campaign.
-            "many notes agreeing to carry it",
-            "Mute this room. Begin stasis."
+            "A chord answers through the dark. The receiver needles rise together.",
+            "Mute the room. Seal me in."
         ).forEach { required ->
             assertTrue("Intro is missing required beat: $required", completeCopy.contains(required))
         }

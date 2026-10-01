@@ -70,7 +70,7 @@
   {
     "id": "tideglass_delight",
     "name": "Tideglass Delight",
-    "description": "A delicate, glowing swamp dish that restores health and sharpens sensory reflexes.",
+    "description": "A delicate, glowing swamp dish that restores health and sharpens sensory reflexes. Restores 100 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion's perk. In combat: accuracy +6 for 3 turns to one ally.",
     "type": "consumable",
     "value": 300,
     "rarity": "rare",
@@ -83,7 +83,8 @@
           "duration": 3
         }
       ]
-    }
+    },
+    "resale_value": 30
   },
   {
     "id": "bioluminescent_lure",
@@ -1097,7 +1098,8 @@
       },
       "target": "self",
       "cooldown": 5
-    }
+    },
+    "resale_value": 68
   },
   {
     "id": "comet_gummies",
@@ -1129,7 +1131,8 @@
       ],
       "target": "self",
       "cooldown": 5
-    }
+    },
+    "resale_value": 97
   },
   {
     "id": "stellar_scone",
@@ -1243,7 +1246,8 @@
       },
       "target": "self",
       "cooldown": 5
-    }
+    },
+    "resale_value": 44
   },
   {
     "id": "iron_biscuit",
@@ -1683,13 +1687,14 @@
       "nova rations"
     ],
     "type": "consumable",
-    "description": "Vacuum-sealed yeast paste, chewable glucose blocks, and electrolyte pouches. Shared among the squad to restore 35 HP to all allies.",
+    "description": "Vacuum-sealed yeast paste, chewable glucose blocks, and electrolyte pouches. Restores 35 HP to all allies. Eat before combat for a three-battle party meal bonus and your serving companion's perk.",
     "value": 35,
     "buy_price": 70,
     "effect": {
       "restore_hp": 35,
       "target": "party"
-    }
+    },
+    "resale_value": 18
   },
   {
     "id": "energy_core",
@@ -1741,7 +1746,7 @@
   {
     "id": "spicy_ramen",
     "name": "Spicy Ramen",
-    "description": "A piping bowl of noodles in fiery red broth. Ignites the blood and sharpens combat reflexes (+5 Speed for 2 turns).",
+    "description": "A piping bowl of noodles in fiery red broth. Restores 100 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion's perk. In combat: speed +5 for 2 turns to one ally.",
     "type": "consumable",
     "value": 55,
     "buy_price": 110,
@@ -1755,7 +1760,8 @@
           "duration": 2
         }
       ]
-    }
+    },
+    "resale_value": 29
   },
   {
     "id": "ballistic_weave",
@@ -1814,39 +1820,64 @@
   {
     "id": "armor_plating_mk_i",
     "name": "Armor Plating Mk. I",
-    "description": "A simple plating kit that reinforces light armor.",
-    "type": "component",
+    "description": "A simple ablative plate. It can also be used to build Nanite Plating.",
+    "type": "mod",
     "value": 32,
     "buy_price": 64,
     "resale_value": 40,
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "equipment": {
+      "slot": "mod",
+      "stat_mods": {
+        "defense": 2
+      }
+    }
   },
   {
     "id": "insulated_lining",
     "name": "Insulated Lining",
-    "description": "A custom lining that protects against electrical discharge.",
-    "type": "component",
+    "description": "An insulated suit lining that cushions incoming punishment.",
+    "type": "mod",
     "value": 26,
     "buy_price": 52,
-    "rarity": "common"
+    "rarity": "common",
+    "equipment": {
+      "slot": "mod",
+      "stat_mods": {
+        "defense": 1,
+        "vitality": 1
+      }
+    }
   },
   {
     "id": "ergonomic_grip",
     "name": "Ergonomic Grip",
-    "description": "A hand-crafted grip that steadies most firearms.",
-    "type": "component",
+    "description": "A fitted grip that steadies your aim.",
+    "type": "mod",
     "value": 30,
     "buy_price": 60,
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "equipment": {
+      "slot": "mod",
+      "stat_mods": {
+        "accuracy": 2
+      }
+    }
   },
   {
     "id": "power_lens_mk_i",
     "name": "Power Lens Mk. I",
-    "description": "An upgraded lens that boosts energy weapon output.",
-    "type": "component",
+    "description": "A calibrated lens that sharpens Source control.",
+    "type": "mod",
     "value": 34,
     "buy_price": 68,
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "equipment": {
+      "slot": "mod",
+      "stat_mods": {
+        "focus": 2
+      }
+    }
   },
   {
     "id": "wooden_rod",
@@ -2002,7 +2033,7 @@
   {
     "id": "celestial_fillet",
     "name": "Celestial Fillet",
-    "description": "Sear of void ray with herbs. Restores 150 HP and grants Well-Fed Focus.",
+    "description": "Sear of void ray with herbs. Restores 150 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion's perk. In combat: focus +12 for 3 turns; crit +8 for 3 turns to one ally.",
     "type": "consumable",
     "value": 240,
     "buy_price": 480,
@@ -2021,12 +2052,13 @@
           "duration": 3
         }
       ]
-    }
+    },
+    "resale_value": 195
   },
   {
     "id": "chronos_stew",
     "name": "Chronos Stew",
-    "description": "Quicksilver broth with noodles. Restores 130 HP and grants Well-Fed Speed.",
+    "description": "Quicksilver broth with noodles. Restores 130 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion's perk. In combat: speed +8 for 3 turns; resist +15 for 3 turns to one ally.",
     "type": "consumable",
     "value": 210,
     "buy_price": 420,
@@ -2045,7 +2077,8 @@
           "duration": 3
         }
       ]
-    }
+    },
+    "resale_value": 142
   },
   {
     "id": "old_boot",
@@ -2060,19 +2093,20 @@
   {
     "id": "ration_soup",
     "name": "Ration Soup",
-    "description": "A warmed ration broth with enough herbs to taste alive. Restores 60 HP.",
+    "description": "A warmed ration broth with enough herbs to taste alive. Restores 60 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion's perk.",
     "type": "consumable",
     "value": 45,
     "buy_price": 90,
     "rarity": "common",
     "effect": {
       "restore_hp": 60
-    }
+    },
+    "resale_value": 41
   },
   {
     "id": "glowfish_broth",
     "name": "Glowfish Broth",
-    "description": "Mineral-rich fish broth that steadies the hands. Restores 80 HP and improves accuracy briefly.",
+    "description": "Mineral-rich fish broth that steadies the hands. Restores 80 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion's perk. In combat: accuracy +5 for 2 turns to one ally.",
     "type": "consumable",
     "value": 75,
     "buy_price": 150,
@@ -2086,12 +2120,13 @@
           "duration": 2
         }
       ]
-    }
+    },
+    "resale_value": 26
   },
   {
     "id": "resonance_carp_stew",
     "name": "Resonance Carp Stew",
-    "description": "A deep, humming stew that settles the pulse. Restores 120 HP and improves focus briefly.",
+    "description": "A deep, humming stew that settles the pulse. Restores 120 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion's perk. In combat: focus +6 for 2 turns to one ally.",
     "type": "consumable",
     "value": 120,
     "buy_price": 240,
@@ -2105,12 +2140,13 @@
           "duration": 2
         }
       ]
-    }
+    },
+    "resale_value": 48
   },
   {
     "id": "chime_minnow_broth",
     "name": "Chime Minnow Broth",
-    "description": "A clear broth that rings softly in the cup. Restores 90 HP and improves luck briefly.",
+    "description": "A clear broth that rings softly in the cup. Restores 90 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion's perk. In combat: luck +8 for 2 turns to one ally.",
     "type": "consumable",
     "value": 145,
     "buy_price": 290,
@@ -2124,12 +2160,13 @@
           "duration": 2
         }
       ]
-    }
+    },
+    "resale_value": 81
   },
   {
     "id": "stellarium_eel_skewer",
     "name": "Stellarium Eel Skewer",
-    "description": "Charred runoff eel glazed with pepper oil. Restores 100 HP and improves defense briefly.",
+    "description": "Charred runoff eel glazed with pepper oil. Restores 100 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion's perk. In combat: defense +5 for 2 turns to one ally.",
     "type": "consumable",
     "value": 115,
     "buy_price": 230,
@@ -2143,12 +2180,13 @@
           "duration": 2
         }
       ]
-    }
+    },
+    "resale_value": 53
   },
   {
     "id": "frequency_tetra_consomme",
     "name": "Frequency Tetra Consomme",
-    "description": "A precise, high-note broth that steadies the whole body. Restores 140 HP and improves evasion briefly.",
+    "description": "A precise, high-note broth that steadies the whole body. Restores 140 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion's perk. In combat: evasion +8 for 2 turns to one ally.",
     "type": "consumable",
     "value": 190,
     "buy_price": 380,
@@ -2162,7 +2200,8 @@
           "duration": 2
         }
       ]
-    }
+    },
+    "resale_value": 181
   },
   {
     "id": "adrenaline",
@@ -3418,7 +3457,7 @@
   {
     "id": "foundry_smoked_brisket",
     "name": "Foundry Smoked Brisket",
-    "description": "Dense beast cuts cured over furnace heat. Restores 160 HP and boosts strength.",
+    "description": "Dense beast cuts cured over furnace heat. Restores 160 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion's perk. In combat: strength +7 for 3 turns to one ally.",
     "type": "consumable",
     "value": 140,
     "buy_price": 280,
@@ -3432,12 +3471,13 @@
           "duration": 3
         }
       ]
-    }
+    },
+    "resale_value": 43
   },
   {
     "id": "orbital_glimmer_tonic",
     "name": "Orbital Glimmer Tonic",
-    "description": "An effervescent station infusion brewed with chime minnows and fresh herbs. Restores 140 HP and heightens speed and focus.",
+    "description": "An effervescent station infusion brewed with chime minnows and fresh herbs. Restores 140 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion's perk. In combat: speed +6 for 3 turns; focus +6 for 3 turns to one ally.",
     "type": "consumable",
     "value": 150,
     "buy_price": 300,
@@ -3456,12 +3496,13 @@
           "duration": 3
         }
       ]
-    }
+    },
+    "resale_value": 87
   },
   {
     "id": "source_astral_feast",
     "name": "Source Astral Feast",
-    "description": "A master campfire banquet infused with harmonic resonance and fiery spice. Restores 250 HP and empowers all party capabilities.",
+    "description": "A master campfire banquet infused with harmonic resonance and fiery spice. Restores 250 HP to all allies. Eat before combat for a three-battle party meal bonus and your serving companion's perk. In combat: strength +6 for 3 turns; defense +6 for 3 turns; agility +6 for 3 turns; focus +6 for 3 turns to all allies.",
     "type": "consumable",
     "value": 300,
     "buy_price": 600,
@@ -3489,8 +3530,10 @@
           "value": 6,
           "duration": 3
         }
-      ]
-    }
+      ],
+      "target": "party"
+    },
+    "resale_value": 169
   },
   {
     "id": "item_arcade_token",

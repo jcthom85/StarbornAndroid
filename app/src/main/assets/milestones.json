@@ -1792,8 +1792,26 @@
   {
     "id": "ms_master_angler",
     "name": "Master Angler",
-    "description": "Fished native species across all 5 campaign fishing holes.",
+    "description": "Caught at least one native fish in each of the six campaign fishing waters.",
     "toast": "Master Angler: Frontier Waters Conquered!"
+  },
+  {
+    "id": "ms_fishing_reel_briefed",
+    "name": "Line Control",
+    "description": "Learned to reel during calm water and give slack during a surge.",
+    "toast": "Fishing: Line Control Ready"
+  },
+  {
+    "id": "ms_fishing_first_clean",
+    "name": "A Clean Catch",
+    "description": "Landed a native fish cleanly and earned a Glimmer Lure.",
+    "toast": "Clean Catch: Glimmer Lure Unlocked"
+  },
+  {
+    "id": "ms_fishing_clean_collection",
+    "name": "Reading the Waters",
+    "description": "Landed three different native species cleanly and earned a Ghost-Signal Lure.",
+    "toast": "Three Clean Species: Ghost-Signal Lure Unlocked"
   },
   {
     "id": "ms_w1_mq02_jed_advised",

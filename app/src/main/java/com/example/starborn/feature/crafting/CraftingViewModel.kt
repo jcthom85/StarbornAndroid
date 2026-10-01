@@ -27,6 +27,10 @@ enum class TinkeringTutorialStep {
 
 data class TinkeringUiState(
     val isLoading: Boolean = true,
+    val lastMessage: String? = null,
+    val baseItemIds: Set<String> = emptySet(),
+    val componentOptions: Map<String, Set<String>> = emptyMap(),
+    val schematicChoices: List<TinkeringItemChoice> = emptyList(),
     val filter: TinkeringFilter = TinkeringFilter.ALL,
     val learnedRecipes: List<TinkeringRecipeUi> = emptyList(),
     val lockedRecipes: List<TinkeringRecipeUi> = emptyList(),
@@ -48,7 +52,10 @@ data class TinkeringRecipeUi(
     val ingredients: List<TinkeringRequirementStatus>,
     val resultId: String,
     val canCraft: Boolean,
-    val learned: Boolean
+    val learned: Boolean,
+    val resultSummary: String = "",
+    val requiresSchematic: Boolean = false,
+    val discoveryHint: String? = null
 )
 
 data class TinkeringBenchState(
@@ -83,7 +90,10 @@ data class TinkeringPreview(
     val category: String,
     val method: String?,
     val resultId: String,
-    val learned: Boolean
+    val learned: Boolean,
+    val resultSummary: String = "",
+    val requiresSchematic: Boolean = false,
+    val discoveryHint: String? = null
 )
 
 enum class TinkeringFilter { ALL, REPAIR, GEAR }
@@ -161,30 +171,16 @@ class CraftingViewModel(
                 name = it.item.name,
                 description = (listOfNotNull(it.item.description) + craftingService.usesFor(it.item.id)).joinToString("\n"),
                 quantity = it.quantity,
-                salvage = craftingService.tinkeringRecipes.firstOrNull { recipe ->
-                    val needle = normalizeToken(it.item.id)
-                    needle in listOf(normalizeToken(recipe.result), normalizeToken(recipe.name), normalizeToken(recipe.id))
-                }?.let { recipe ->
-                    craftingService.ingredientsFor(recipe).map { (id, count) ->
-                        "${inventoryService.itemDetail(id)?.name ?: id.replace('_', ' ')} x$count"
-                    }
-                }.orEmpty()
+                salvage = craftingService.salvageFor(it.item.id).map { (id, count) ->
+                    "${inventoryService.itemDisplayName(id)} x$count"
+                }
             )
         }
-        val recipeResults = craftingService.tinkeringRecipes.flatMap { recipe ->
-            listOf(
-                normalizeToken(recipe.result),
-                normalizeToken(recipe.name),
-                normalizeToken(recipe.id)
-            )
+        val scrapables = inventoryChoices.filter { it.salvage.isNotEmpty() }
+        val accessibleRecipes = craftingService.tinkeringRecipes.filter {
+            !it.requiresSchematic || craftingService.isSchematicLearned(it.id)
         }
-        val scrapables = inventoryChoices.filter { choice ->
-            val choiceTokens = buildList {
-                add(normalizeToken(choice.id))
-                add(normalizeToken(choice.name))
-            }
-            choiceTokens.any { token -> recipeResults.any { it == token } }
-        }
+        val ingredientIds = craftingService.tinkeringRecipes.flatMap { craftingService.ingredientsFor(it).keys }.toSet()
         val currentBench = rebuildBench(_uiState.value.bench)
         val (isTutorial, tutStep) = evaluateTutorialStep(currentBench)
         _uiState.update {
@@ -192,13 +188,43 @@ class CraftingViewModel(
                 learnedRecipes = learned,
                 lockedRecipes = locked,
                 bench = currentBench,
-                inventory = inventoryChoices,
+                inventory = inventoryChoices.filter { it.id in ingredientIds },
+                schematicChoices = inventoryChoices.filter { choice ->
+                    inventoryService.catalogItem(choice.id)?.effect?.learnSchematic?.let {
+                        !craftingService.isSchematicLearned(it)
+                    } == true
+                },
+                baseItemIds = accessibleRecipes.mapNotNull { it.base }.toSet(),
+                componentOptions = accessibleRecipes.filter { it.base != null }.groupBy { it.base!! }.mapValues { (_, recipes) ->
+                    recipes.flatMap { craftingService.ingredientsFor(it).keys.filterNot { id -> id == it.base } }.toSet()
+                },
                 scrapChoices = scrapables,
                 isLoading = false,
                 isTutorialActive = isTutorial,
                 tutorialStep = tutStep
             )
         }
+    }
+
+    private suspend fun publishMessage(message: String) {
+        _uiState.update { it.copy(lastMessage = message) }
+        _messages.emit(message)
+    }
+
+    fun dismissFeedback() {
+        _uiState.update { it.copy(lastMessage = null) }
+    }
+
+    fun learnFoundSchematic(itemId: String) {
+        val item = inventoryService.catalogItem(itemId) ?: return
+        val recipeId = item.effect?.learnSchematic ?: return
+        if (craftingService.tinkeringRecipes.none { it.id == recipeId }) return
+        if (craftingService.isSchematicLearned(recipeId) || !inventoryService.hasItem(item.id)) return
+        if (inventoryService.useItem(item.id) !is com.example.starborn.domain.inventory.ItemUseResult.LearnSchematic) return
+        craftingService.learnSchematic(recipeId)
+        sessionStore.setInventory(inventoryService.snapshot())
+        viewModelScope.launch { publishMessage("Learned ${item.name.removePrefix("Schematic: ")}.") }
+        refreshState()
     }
 
     fun craft(id: String) {
@@ -217,7 +243,7 @@ class CraftingViewModel(
                 }
                 is CraftingOutcome.Failure -> outcome.message
             }
-            _messages.emit(message ?: "Crafting complete.")
+            publishMessage(message ?: "Crafting complete.")
             refreshState()
         }
     }
@@ -226,7 +252,7 @@ class CraftingViewModel(
         val bench = _uiState.value.bench
         val recipeId = bench.preview?.recipeId ?: bench.activeRecipeId
         if (recipeId == null) {
-            viewModelScope.launch { _messages.emit("Select an item and components to craft.") }
+            viewModelScope.launch { publishMessage("Select an item and components to craft.") }
             return
         }
         craft(recipeId)
@@ -254,7 +280,7 @@ class CraftingViewModel(
             _uiState.update { it.copy(bench = newBench, isTutorialActive = isTut, tutorialStep = step) }
         } else {
             viewModelScope.launch {
-                _messages.emit("No craftable schematics with current supplies.")
+                publishMessage("No craftable schematics with current supplies.")
             }
         }
     }
@@ -301,35 +327,33 @@ class CraftingViewModel(
     }
 
     fun scrap(itemId: String) {
-        val needle = normalizeToken(itemId)
         val displayName = inventoryService.itemDetail(itemId)?.name ?: itemId.replace('_', ' ')
-        val recipe = craftingService.tinkeringRecipes.find { recipe ->
-            val tokens = listOf(
-                normalizeToken(recipe.result),
-                normalizeToken(recipe.name),
-                normalizeToken(recipe.id)
-            )
-            tokens.any { it == needle }
-        }
-        if (recipe == null) {
-            viewModelScope.launch { _messages.emit("No scrap recipe for $displayName.") }
+        val salvage = craftingService.salvageFor(itemId)
+        if (salvage.isEmpty()) {
+            viewModelScope.launch { publishMessage("This item cannot be scrapped. Quest tools and equipped gear are protected.") }
             return
         }
         if (!inventoryService.hasItem(itemId, 1)) {
-            viewModelScope.launch { _messages.emit("You don't have $displayName.") }
+            viewModelScope.launch { publishMessage("You don't have $displayName.") }
+            return
+        }
+        if (salvage.any { (id, count) ->
+                (inventoryService.snapshot()[id] ?: 0).toLong() + count > Int.MAX_VALUE
+            }) {
+            viewModelScope.launch { publishMessage("There is no room for these salvage materials.") }
             return
         }
         val requirements = mapOf(itemId to 1)
         if (!inventoryService.consumeItems(requirements)) {
-            viewModelScope.launch { _messages.emit("Unable to scrap right now.") }
+            viewModelScope.launch { publishMessage("Unable to scrap right now.") }
             return
         }
-        craftingService.ingredientsFor(recipe).forEach { (item, qty) ->
+        salvage.forEach { (item, qty) ->
             inventoryService.addItem(item, qty)
         }
         sessionStore.setInventory(inventoryService.snapshot())
         viewModelScope.launch {
-            _messages.emit("Scrapped $displayName for parts.")
+            publishMessage("Scrapped $displayName for parts.")
         }
         refreshState()
     }
@@ -354,7 +378,10 @@ class CraftingViewModel(
                 category = recipe.category,
                 method = recipe.method,
                 resultId = recipe.result,
-                learned = craftingService.isSchematicLearned(recipe.id)
+                learned = craftingService.isSchematicLearned(recipe.id),
+                resultSummary = craftingService.resultSummary(recipe),
+                requiresSchematic = recipe.requiresSchematic,
+                discoveryHint = recipe.discoveryHint
             ),
             requirements = requirements,
             canCraftSelection = craftingService.canCraft(recipe)
@@ -363,7 +390,8 @@ class CraftingViewModel(
 
     private fun rebuildBench(current: TinkeringBenchState): TinkeringBenchState {
         val mainId = current.mainItemId?.takeIf { it.isNotBlank() }
-        val components = current.componentIds.filter { it.isNotBlank() }.take(2)
+        val componentSlots = current.componentIds.take(2)
+        val components = componentSlots.filter { it.isNotBlank() }
         val recipe = craftingService.tinkeringRecipes.firstOrNull { it.id == current.activeRecipeId }
             ?.takeIf { loaded ->
                 loaded.base == mainId && craftingService.ingredientsFor(loaded).keys
@@ -379,14 +407,19 @@ class CraftingViewModel(
                 category = it.category,
                 method = it.method,
                 resultId = it.result,
-                learned = craftingService.isSchematicLearned(it.id)
+                learned = craftingService.isSchematicLearned(it.id),
+                resultSummary = craftingService.resultSummary(it),
+                requiresSchematic = it.requiresSchematic,
+                discoveryHint = it.discoveryHint
             )
         }
-        val componentNames = components.map { id -> inventoryService.itemDetail(id)?.name ?: id }
+        val componentNames = componentSlots.map { id ->
+            if (id.isBlank()) "" else inventoryService.itemDetail(id)?.name ?: id
+        }
         return current.copy(
             mainItemId = mainId,
             mainItemName = mainId?.let { inventoryService.itemDetail(it)?.name ?: it },
-            componentIds = components,
+            componentIds = componentSlots,
             componentNames = componentNames,
             activeRecipeId = recipe?.id,
             preview = preview,
@@ -419,7 +452,7 @@ class CraftingViewModel(
 
     private fun requirementStatuses(recipe: TinkeringRecipe): List<TinkeringRequirementStatus> {
         val ingredientStatuses = craftingService.ingredientsFor(recipe).map { (item, needed) ->
-            val available = inventoryQuantity(item)
+            val available = craftingService.availableForCraft(item)
             TinkeringRequirementStatus(
                 label = inventoryService.itemDetail(item)?.name ?: item,
                 required = needed,
@@ -458,7 +491,10 @@ class CraftingViewModel(
             ingredients = requirementStatuses(this),
             resultId = result,
             canCraft = craftingService.canCraft(this),
-            learned = learned
+            learned = learned,
+            resultSummary = craftingService.resultSummary(this),
+            requiresSchematic = requiresSchematic,
+            discoveryHint = discoveryHint
         )
 
 }

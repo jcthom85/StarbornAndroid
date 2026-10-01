@@ -70,6 +70,7 @@ import com.example.starborn.feature.hub.viewmodel.HubViewModelFactory
 import com.example.starborn.data.local.UserSettings
 import com.example.starborn.ui.events.UiEvent
 import com.example.starborn.domain.audio.AudioCueType
+import com.example.starborn.domain.audio.AudioCommand
 import androidx.compose.runtime.DisposableEffect
 import com.example.starborn.feature.exploration.ui.TransitionMode
 import androidx.compose.ui.draw.scale
@@ -539,6 +540,8 @@ internal fun CampaignNavigationHost(
                 craftingService = services.craftingService,
                 inventoryService = services.inventoryService,
                 source = source,
+                highContrastMode = userSettings.highContrastMode,
+                largeTouchTargets = userSettings.largeTouchTargets,
                 onBack = { navController.popBackStack() },
                 onPlayAudio = { cue ->
                     services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue))
@@ -580,7 +583,13 @@ internal fun CampaignNavigationHost(
                         navController.popBackStack()
                     },
                     highContrastMode = userSettings.highContrastMode,
-                    largeTouchTargets = userSettings.largeTouchTargets
+                    largeTouchTargets = userSettings.largeTouchTargets,
+                    disableHaptics = userSettings.disableHaptics,
+                    onFishingCue = { cue ->
+                        services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue).map { command ->
+                            if (command is AudioCommand.Play) command.copy(triggerHaptic = false) else command
+                        })
+                    }
                 )
             } else {
                 navController.popBackStack()

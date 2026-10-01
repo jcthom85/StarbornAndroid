@@ -9,6 +9,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.zIndex
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -53,6 +56,7 @@ import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuLargeTarge
 import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuHighContrast
 import com.example.starborn.feature.exploration.ui.MenuSectionCard
 import com.example.starborn.feature.exploration.ui.components.previewItemIconRes
+import kotlinx.coroutines.flow.collect
 
 enum class TinkerTabMode { WORKBENCH, SCHEMATICS, SCRAP }
 enum class ActiveBenchSlot { BASE, COMPONENT_1, COMPONENT_2 }
@@ -70,12 +74,27 @@ fun TinkerTabContent(
     var activeSlot by remember { mutableStateOf(ActiveBenchSlot.BASE) }
     val shownTutorialSteps = remember { mutableSetOf<TinkeringTutorialStep>() }
 
+    LaunchedEffect(state.bench.mainItemId, state.bench.componentIds) {
+        if (state.bench.mainItemId == null && state.bench.componentIds.none { it.isNotBlank() }) {
+            activeSlot = ActiveBenchSlot.BASE
+        }
+    }
+
     LaunchedEffect(state.isTutorialActive, state.tutorialStep) {
         if (state.isTutorialActive) {
             val step = state.tutorialStep
             if (step != null && !shownTutorialSteps.contains(step)) {
                 shownTutorialSteps.add(step)
             }
+        }
+    }
+
+    LaunchedEffect(craftingViewModel) {
+        craftingViewModel.craftResults.collect { onPlayAudio("sfx_tinkering_wrench") }
+    }
+    LaunchedEffect(craftingViewModel) {
+        craftingViewModel.messages.collect { message ->
+            if (message.startsWith("Scrapped ")) onPlayAudio("sfx_tinkering_wrench")
         }
     }
 
@@ -96,12 +115,41 @@ fun TinkerTabContent(
                 borderColor = borderColor
             )
 
+            state.lastMessage?.let { message ->
+                Surface(color = FieldMenuDesign.elevatedPanel, shape = RoundedCornerShape(12.dp)) {
+                    Row(Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Text(message, Modifier.weight(1f).semantics { liveRegion = LiveRegionMode.Polite },
+                            color = FieldMenuDesign.text, style = MaterialTheme.typography.bodySmall)
+                        IconButton(onClick = craftingViewModel::dismissFeedback) {
+                            Icon(Icons.Default.Close, contentDescription = "Dismiss crafting message", tint = FieldMenuDesign.textMuted)
+                        }
+                    }
+                }
+            }
+            if (state.schematicChoices.isNotEmpty()) {
+                Surface(color = FieldMenuDesign.elevatedPanel, shape = RoundedCornerShape(12.dp)) {
+                    Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text("Found schematics", color = FieldMenuDesign.text, style = MaterialTheme.typography.titleSmall)
+                        Text("Learn a schematic to unlock its recipe. This consumes the blueprint, not its crafting materials.",
+                            color = if (LocalFieldMenuHighContrast.current) FieldMenuDesign.text else FieldMenuDesign.textMuted,
+                            style = MaterialTheme.typography.bodySmall)
+                        state.schematicChoices.forEach { item ->
+                            OutlinedButton(onClick = { craftingViewModel.learnFoundSchematic(item.id) },
+                                modifier = Modifier.fillMaxWidth().heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp)) {
+                                Text("Learn ${item.name.removePrefix("Schematic: ")}")
+                            }
+                        }
+                    }
+                }
+            }
             when (mode) {
                 TinkerTabMode.WORKBENCH -> {
                     WorkbenchTerminalView(
                         bench = state.bench,
                         inventory = state.inventory,
                         learnedRecipes = state.learnedRecipes,
+                        baseItemIds = state.baseItemIds,
+                        componentOptions = state.componentOptions,
                         activeSlot = activeSlot,
                         accentColor = accentColor,
                         borderColor = borderColor,
@@ -157,10 +205,10 @@ fun TinkerTabContent(
                         },
                         onAssemble = {
                             craftingViewModel.craftFromBench()
-                            onPlayAudio("sfx_tinkering_wrench")
                         },
                         onAutoFillRecipe = { recipeId ->
                             craftingViewModel.autoFill(recipeId)
+                            activeSlot = ActiveBenchSlot.BASE
                         }
                     )
                 }
@@ -172,11 +220,11 @@ fun TinkerTabContent(
                         borderColor = borderColor,
                         onLoadRecipe = { recipeId ->
                             craftingViewModel.autoFill(recipeId)
+                            activeSlot = ActiveBenchSlot.BASE
                             mode = TinkerTabMode.WORKBENCH
                         },
                         onCraftDirect = { recipeId ->
                             craftingViewModel.craft(recipeId)
-                            onPlayAudio("sfx_tinkering_wrench")
                         }
                     )
                 }
@@ -187,7 +235,6 @@ fun TinkerTabContent(
                         borderColor = borderColor,
                         onScrapItem = { itemId ->
                             craftingViewModel.scrap(itemId)
-                            onPlayAudio("sfx_tinkering_wrench")
                         }
                     )
                 }
@@ -309,7 +356,7 @@ private fun TinkerModeButton(
         onClick = onClick,
         modifier = modifier
             .clip(RoundedCornerShape(6.dp))
-            .height(34.dp),
+            .heightIn(min = if (LocalModernFieldMenu.current) { if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp } else 34.dp),
         shape = RoundedCornerShape(6.dp),
         color = if (selected) accentColor.copy(alpha = 0.25f) else Color.Transparent,
         border = if (selected) BorderStroke(1.dp, accentColor) else null
@@ -332,6 +379,8 @@ private fun WorkbenchTerminalView(
     bench: TinkeringBenchState,
     inventory: List<TinkeringItemChoice>,
     learnedRecipes: List<TinkeringRecipeUi>,
+    baseItemIds: Set<String>,
+    componentOptions: Map<String, Set<String>>,
     activeSlot: ActiveBenchSlot,
     accentColor: Color,
     borderColor: Color,
@@ -343,6 +392,12 @@ private fun WorkbenchTerminalView(
     onAssemble: () -> Unit,
     onAutoFillRecipe: (String) -> Unit
 ) {
+    if (LocalModernFieldMenu.current) {
+        ModernTinkerWorkbench(bench, inventory, learnedRecipes, baseItemIds, componentOptions,
+            activeSlot, accentColor, tutorialStep, onSelectSlot, onClearSlot, onClearBench,
+            onItemTapped, onAssemble, onAutoFillRecipe)
+        return
+    }
     val preview = bench.preview
     val hasItems = bench.mainItemId != null || bench.componentIds.any { it.isNotBlank() }
 
@@ -965,6 +1020,10 @@ private fun SchematicsCatalogPanel(
     onLoadRecipe: (String) -> Unit,
     onCraftDirect: (String) -> Unit
 ) {
+    if (LocalModernFieldMenu.current) {
+        ModernTinkerSchematics(recipes, lockedRecipes, onLoadRecipe, onCraftDirect)
+        return
+    }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
             text = "DISCOVERED BLUEPRINTS (${recipes.size})",
@@ -1012,7 +1071,7 @@ private fun SchematicsCatalogPanel(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "UNKNOWN BLUEPRINTS (${lockedRecipes.size} locked)",
+                    text = "UNKNOWN BLUEPRINTS (${lockedRecipes.size} undiscovered)",
                     style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                     color = Color.White.copy(alpha = 0.5f)
                 )
@@ -1054,7 +1113,7 @@ private fun SchematicsCatalogPanel(
                                     color = if (showLockedRequirements) Color.White.copy(alpha = 0.85f) else Color.White.copy(alpha = 0.4f)
                                 )
                                 Text(
-                                    text = "LOCKED",
+                                    text = if (recipe.requiresSchematic) "SCHEMATIC" else "DISCOVER",
                                     style = MaterialTheme.typography.labelSmall.copy(fontSize = if (LocalModernFieldMenu.current) 11.sp else 9.sp, fontWeight = FontWeight.Bold),
                                     color = Color(0xFFFF9800).copy(alpha = 0.7f)
                                 )
@@ -1187,6 +1246,10 @@ private fun ScrapListPanel(
     borderColor: Color,
     onScrapItem: (String) -> Unit
 ) {
+    if (LocalModernFieldMenu.current) {
+        ModernTinkerScrap(scrapChoices, onScrapItem)
+        return
+    }
     val modernScrap = LocalModernFieldMenu.current
     var pendingScrap by remember { mutableStateOf<TinkeringItemChoice?>(null) }
     pendingScrap?.let { item ->

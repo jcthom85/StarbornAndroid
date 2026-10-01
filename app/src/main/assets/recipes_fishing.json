@@ -48,7 +48,6 @@
       "rarity_bonus": 0,
       "attracts": [
         "raw_glowfish",
-        "old_boot",
         "stellarium_eel"
       ],
       "zone_bonus": {

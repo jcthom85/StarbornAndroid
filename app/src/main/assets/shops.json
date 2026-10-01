@@ -504,6 +504,8 @@
     "sells": {
       "items": [
         "painkillers",
+        "carbon_rod",
+        "mystery_lure",
         "scrap_metal",
         "wiring_bundle",
         "beast_meat",
@@ -781,6 +783,9 @@
     },
     "sells": {
       "items": [
+        "basic_lure",
+        "fiberglass_rod",
+        "shiny_lure",
         "foundry_smoked_brisket",
         "black_coffee",
         "ration_pack",

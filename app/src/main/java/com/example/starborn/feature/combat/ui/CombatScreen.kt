@@ -1515,6 +1515,7 @@ private fun InventoryEntry.targetFilter(): TargetFilter? {
 
 private fun InventoryEntry.isBattleUsableItem(): Boolean {
     if (quantity <= 0) return false
+    if (item.type.equals("snack", true) || item.equipment?.slot?.equals("snack", true) == true) return false
     val effect = item.effect ?: return false
     return effect.restoreHp?.let { it > 0 } == true ||
         effect.damage?.let { it > 0 } == true ||

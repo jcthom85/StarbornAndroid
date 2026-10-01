@@ -50,6 +50,17 @@ class GameSessionPersistenceTest {
     }
 
     @Test
+    fun fishingJournalAndRewardMilestonesRoundTrip() = runBlocking {
+        val state = GameSessionState(
+            roomStates = mapOf("fishing_journal:sector9_stream" to mapOf("caught:raw_glowfish" to true, "clean:raw_glowfish" to true)),
+            completedMilestones = setOf("ms_fishing_first_clean", "ms_fishing_reel_briefed"),
+            inventory = mapOf("shiny_lure" to 1)
+        )
+        persistence.writeAutosave(state)
+        assertEquals(state, persistence.readAutosave())
+    }
+
+    @Test
     fun interruptedBattleSavesCheckpointUntilRewardsAndProgressionAreFinished() = runBlocking {
         val store = GameSessionStore().apply { restore(GameSessionState(
             roomId = "boss_room", inventory = mapOf("medkit" to 3), playerCredits = 100,

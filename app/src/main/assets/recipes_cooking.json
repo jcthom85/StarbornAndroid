@@ -100,7 +100,8 @@
     },
     "result": "ration_pack",
     "description": "Cure hearty beast cuts with fiery pepper to yield dense survival rations.",
-    "success_message": "You pack two dense Spiced Rations for the trail."
+    "success_message": "You pack two dense Spiced Rations for the trail.",
+    "result_quantity": 2
   },
   {
     "id": "provision_tideglass_delight",
@@ -112,7 +113,9 @@
     },
     "result": "tideglass_delight",
     "description": "Skewer fresh swamp glowfish and seasoned meat with fragrant marsh herbs over camp coals.",
-    "success_message": "You roast a sizzling plate of Tideglass Delight that glows warmly in the swamp dark."
+    "success_message": "You roast a sizzling plate of Tideglass Delight that glows warmly in the swamp dark.",
+    "discovery_room": "sector9_stream_falls",
+    "discovery_hint": "Discover the sheltered cookfire at the Stream Falls in Sector 9."
   },
   {
     "id": "provision_foundry_smoked_brisket",
@@ -124,7 +127,9 @@
     },
     "result": "foundry_smoked_brisket",
     "description": "Slow-smoke dense beast cuts with fiery spices and hearty noodles over smelting embers.",
-    "success_message": "You carve a rich platter of Foundry Smoked Brisket that fuels heavy combat power."
+    "success_message": "You carve a rich platter of Foundry Smoked Brisket that fuels heavy combat power.",
+    "discovery_room": "foundry_forge_control_alcove",
+    "discovery_hint": "Discover the smelter break station in the Foundry forge control alcove."
   },
   {
     "id": "provision_orbital_glimmer_tonic",
@@ -136,7 +141,9 @@
     },
     "result": "orbital_glimmer_tonic",
     "description": "Steep chime minnows and fresh restorative herbs into an effervescent station focus tonic.",
-    "success_message": "You bottle a luminous Orbital Glimmer Tonic that fizzes with electric clarity."
+    "success_message": "You bottle a luminous Orbital Glimmer Tonic that fizzes with electric clarity.",
+    "discovery_room": "orbital_customs_lounge",
+    "discovery_hint": "Discover the executive galley recycler in the Orbital customs lounge."
   },
   {
     "id": "provision_source_astral_feast",
@@ -149,7 +156,9 @@
     },
     "result": "source_astral_feast",
     "description": "Prepare a master banquet of rare frequency tetra, charred stellarium eel, fiery spices, and herbs over the Source campfire.",
-    "success_message": "You cook an unforgettable Source Astral Feast that fills the entire crew with resonant vitality."
+    "success_message": "You cook an unforgettable Source Astral Feast that fills the entire crew with resonant vitality.",
+    "discovery_room": "source_campfire",
+    "discovery_hint": "Discover the cookware beside the Source Campfire."
   },
   {
     "id": "provision_celestial_fillet",
@@ -174,5 +183,50 @@
     "result": "chronos_stew",
     "description": "Simmer quicksilver chronos guppy with hearty noodles and fragrant wild herbs.",
     "success_message": "You prepare a warm bowl of Chronos Stew that hastens your reflex."
+  },
+  {
+    "id": "snack_mineral_trail_mix",
+    "name": "Mineral Trail Mix",
+    "category": "snack",
+    "ingredients": {
+      "resonance_carp": 1,
+      "beast_meat": 2,
+      "herb": 2
+    },
+    "result": "mineral_trail_mix",
+    "description": "Dry mineral-rich carp with meat and herbs into a durable defensive snack.",
+    "discovery_room": "sector9_stream_falls",
+    "discovery_hint": "Discover the sheltered cookfire at the Stream Falls in Sector 9.",
+    "success_message": "Mineral Trail Mix is ready."
+  },
+  {
+    "id": "snack_pulse_citrus",
+    "name": "Pulse Citrus",
+    "category": "snack",
+    "ingredients": {
+      "fiery_pepper": 2,
+      "raw_glowfish": 2,
+      "herb": 1
+    },
+    "result": "pulse_citrus",
+    "description": "Preserve bright pepper oils and glowfish minerals into a sharp speed snack.",
+    "discovery_room": "sector9_ridge_plateau",
+    "discovery_hint": "Discover the stone cookfire on the Sector 9 ridge plateau.",
+    "success_message": "Pulse Citrus is ready."
+  },
+  {
+    "id": "snack_comet_gummies",
+    "name": "Comet Gummies",
+    "category": "snack",
+    "ingredients": {
+      "chime_minnow": 1,
+      "raw_glowfish": 2,
+      "herb": 2
+    },
+    "result": "comet_gummies",
+    "description": "Set rare chime minerals into luminous chews that sharpen critical aim.",
+    "discovery_room": "spire_night_market_scale_01",
+    "discovery_hint": "Discover the lantern roof kitchen in the Spire night market.",
+    "success_message": "Comet Gummies are ready."
   }
 ]

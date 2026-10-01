@@ -86,7 +86,9 @@ data class VictoryScreenConfig(
 data class FishingZone(
     val id: String,
     val name: String,
-    val catches: List<FishingCatchDefinition> = emptyList()
+    val catches: List<FishingCatchDefinition> = emptyList(),
+    val backgroundImage: String? = null,
+    val description: String = "Watch the water for a bite."
 )
 
 enum class FishingRarity {

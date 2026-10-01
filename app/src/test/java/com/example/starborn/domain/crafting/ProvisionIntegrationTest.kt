@@ -73,6 +73,7 @@ class ProvisionIntegrationTest {
 
     @Test fun everyAuthoredRecipeCanLoadRefreshAndCraftFromBench() {
         tinkering.forEach { recipe ->
+            crafting.learnSchematic(recipe.id)
             inventory.restore(crafting.ingredientsFor(recipe) + recipe.tools.associateWith { 1 })
             assertTrue("${recipe.id} has an invalid base", recipe.base in crafting.ingredientsFor(recipe))
             val vm = CraftingViewModel(crafting, inventory, store)
@@ -94,7 +95,7 @@ class ProvisionIntegrationTest {
         assertTrue(use.useItem("glowfish_broth") is ItemUseController.Result.Success)
         val buff = store.state.value.activeMealBuff!!
         assertEquals(5, buff.accuracyBonus)
-        assertEquals(10, buff.focusBonus)
+        assertEquals(3, buff.focusBonus)
         assertEquals("nova", buff.chefId)
         assertEquals(3, buff.remainingEncounters)
         repeat(3) { store.decrementMealBuffEncounter() }
@@ -103,10 +104,10 @@ class ProvisionIntegrationTest {
 
     @Test fun allAuthoredFoodStatsSurviveConsumptionAndMealsReplaceRatherThanStack() = runTest {
         val use = ItemUseController(inventory, crafting, store) { emptyMap() }
-        cooking.forEach { recipe ->
+        cooking.filter { it.category == "meal" }.forEach { recipe ->
             inventory.addItem(recipe.result)
             assertNotNull("${recipe.result} needs an effect", items.getValue(recipe.result).effect)
-            assertTrue(use.useItem(recipe.result) is ItemUseController.Result.Success)
+            assertTrue(use.useItem(recipe.result, replaceMeal = true) is ItemUseController.Result.Success)
             val buff = store.state.value.activeMealBuff!!
             assertEquals(recipe.result, buff.recipeId)
             items.getValue(recipe.result).effect!!.buffs.orEmpty().forEach { effect ->
@@ -117,9 +118,9 @@ class ProvisionIntegrationTest {
                     "defense" -> buff.defenseBonus
                     "agility" -> buff.agilityBonus
                     "luck" -> buff.luckBonus
-                    "focus" -> buff.focusBonus - 10
+                    "focus" -> buff.focusBonus - 3
                     "speed" -> buff.speedBonus
-                    "crit" -> (buff.critBonus * 100).toInt()
+                    "crit" -> buff.critBonus.toInt()
                     "resist" -> buff.statusResistBonus
                     else -> error("Unsupported food stat ${effect.stat}")
                 }

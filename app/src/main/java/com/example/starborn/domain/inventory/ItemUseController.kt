@@ -3,13 +3,16 @@ package com.example.starborn.domain.inventory
 import com.example.starborn.domain.crafting.CraftingService
 import com.example.starborn.domain.model.Player
 import com.example.starborn.domain.session.GameSessionStore
-import com.example.starborn.domain.combat.CombatFormulas
+import com.example.starborn.domain.combat.PartyHealth
+import com.example.starborn.domain.crafting.MealRules
+import com.example.starborn.domain.model.SkillTreeNode
 import java.util.Locale
 
 class ItemUseController(
     private val inventoryService: InventoryService,
     private val craftingService: CraftingService,
     private val sessionStore: GameSessionStore,
+    private val skillNodesProvider: () -> Map<String, SkillTreeNode> = { emptyMap() },
     private val charactersProvider: () -> Map<String, Player>
 ) {
 
@@ -18,11 +21,21 @@ class ItemUseController(
         data class Failure(val message: String) : Result
     }
 
-    suspend fun useItem(itemId: String, targetId: String? = null): Result {
+    suspend fun useItem(itemId: String, targetId: String? = null, replaceMeal: Boolean = false): Result {
         val item = inventoryService.itemDetail(itemId)
         val effect = item?.effect
         if (item == null || effect == null) {
             return Result.Failure("Item can't be used right now.")
+        }
+        val isMeal = craftingService.isPreparedMeal(item.id)
+        if (item.type.equals("snack", true) || item.equipment?.slot?.equals("snack", true) == true) {
+            return Result.Failure("Equip ${item.name} as a snack to use its cooldown ability in combat.")
+        }
+        if ((effect.damage ?: 0) > 0 || (!isMeal && (effect.singleBuff != null || !effect.buffs.isNullOrEmpty()))) {
+            return Result.Failure("Use ${item.name} in combat. It does not replace your meal.")
+        }
+        if (isMeal && sessionStore.state.value.activeMealBuff != null && !replaceMeal) {
+            return Result.Failure("Eating this replaces your active meal. Confirm replacement first.")
         }
         val characters = charactersProvider()
         val sessionState = sessionStore.state.value
@@ -51,16 +64,16 @@ class ItemUseController(
         val message = when (result) {
             is ItemUseResult.None -> "Used ${result.item.name}."
             is ItemUseResult.Restore -> {
+                if (isMeal) applyMealBuff(result.item)
                 applyRestoration(resolvedTargets, result, characters)
                 val parts = mutableListOf<String>()
                 if (result.hp > 0) parts += "${result.hp} HP"
                 val label = formatTargetLabel(resolvedTargets, characters)
-                if (result.buffs.isNotEmpty() || craftingService.cookingRecipes.any { it.result == result.item.id }) {
-                    applyMealBuff(result.item.id, result.item.name, result.buffs)
+                if (isMeal) {
                     val bonuses = result.buffs.joinToString { "${it.stat}+${it.value}" }
                     val chef = sessionStore.state.value.activeMealBuff?.chefId
                     parts += listOfNotNull(
-                        "Well-Fed for 3 encounters",
+                        "Party Well-Fed for 3 battles",
                         bonuses.takeIf { it.isNotBlank() },
                         chef?.let { "$it's serving bonus" }
                     ).joinToString("; ")
@@ -70,9 +83,9 @@ class ItemUseController(
             }
             is ItemUseResult.Damage -> "${result.item.name} can't be used outside combat."
             is ItemUseResult.Buff -> {
-                applyMealBuff(result.item.id, result.item.name, result.buffs)
+                applyMealBuff(result.item)
                 val buffs = result.buffs.joinToString { "${it.stat}+${it.value}" }
-                "Well-Fed: $buffs (active for 3 encounters)"
+                "Well-Fed: $buffs (party bonus for 3 battles)"
             }
             is ItemUseResult.LearnSchematic -> {
                 val learned = craftingService.learnSchematic(result.schematicId)
@@ -83,58 +96,13 @@ class ItemUseController(
                 }
             }
         }
+        sessionStore.setInventory(inventoryService.snapshot())
         return Result.Success(result, message)
     }
 
-    private fun applyMealBuff(
-        itemId: String,
-        itemName: String,
-        buffs: List<com.example.starborn.domain.model.BuffEffect>
-    ) {
-        var hpBonus = 0
-        var speedBonus = 0
-        var focusBonus = 0
-        var critBonus = 0.0
-        var stabilityBonus = 0
-        var statusResistBonus = 0
-
-        buffs.forEach { buff ->
-            when (buff.stat.lowercase(java.util.Locale.getDefault())) {
-                "hp", "max_hp" -> hpBonus += buff.value
-                "speed", "spd" -> speedBonus += buff.value
-                "focus" -> focusBonus += buff.value
-                "crit", "crit_chance" -> critBonus += buff.value / 100.0
-                "stability" -> stabilityBonus += buff.value
-                "resist", "status_resist" -> statusResistBonus += buff.value
-            }
-        }
-        val state = sessionStore.state.value
-        val chef = state.mealChefId.takeIf { it in craftingService.availableChefs() }
-            ?.takeIf { craftingService.cookingRecipes.any { recipe -> recipe.result == itemId } }
-        if (chef == "nova") focusBonus += 10
-        if (chef == "zeke") { hpBonus += 25; stabilityBonus += 3 }
-        if (chef == "gh0st") { speedBonus += 5; statusResistBonus += 20 }
-        if (chef == "orion") critBonus += 0.08
-        fun bonus(stat: String) = buffs.filter { it.stat.equals(stat, ignoreCase = true) }.sumOf { it.value }
-        val mealBuff = com.example.starborn.domain.session.ActiveMealBuff(
-            recipeId = itemId,
-            recipeName = itemName,
-            chefId = chef,
-            remainingEncounters = 3,
-            hpBonus = hpBonus,
-            speedBonus = speedBonus,
-            focusBonus = focusBonus,
-            critBonus = critBonus,
-            stabilityBonus = stabilityBonus,
-            statusResistBonus = statusResistBonus,
-            strengthBonus = bonus("strength"),
-            defenseBonus = bonus("defense"),
-            agilityBonus = bonus("agility"),
-            luckBonus = bonus("luck"),
-            accuracyBonus = bonus("accuracy"),
-            evasionBonus = bonus("evasion")
-        )
-        sessionStore.applyMealBuff(mealBuff)
+    private fun applyMealBuff(item: com.example.starborn.domain.model.Item) {
+        val chef = sessionStore.state.value.mealChefId.takeIf { it in craftingService.availableChefs() }
+        sessionStore.applyMealBuff(MealRules.buff(item, chef))
     }
 
     private fun applyRestoration(
@@ -148,7 +116,7 @@ class ItemUseController(
                 val maxHp = maxHpFor(targetId, characters)
                 if (maxHp != null) {
                     val current = state.partyMemberHp[targetId] ?: maxHp
-                    val updated = (current + result.hp).coerceAtMost(maxHp)
+                    val updated = (current.toLong() + result.hp).coerceAtMost(maxOf(current, maxHp).toLong()).toInt()
                     sessionStore.setPartyMemberHp(targetId, updated)
                 }
             }
@@ -157,7 +125,7 @@ class ItemUseController(
 
     private fun maxHpFor(id: String, characters: Map<String, Player>): Int? {
         val character = characters[id] ?: return null
-        return CombatFormulas.maxHp(character.hp, character.vitality)
+        return PartyHealth.maxHp(character, sessionStore.state.value, inventoryService::catalogItem, skillNodesProvider())
     }
 
     private fun formatTargetLabel(targets: List<String>, characters: Map<String, Player>): String {

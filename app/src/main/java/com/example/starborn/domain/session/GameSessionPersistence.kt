@@ -323,7 +323,8 @@ private fun GameSessionProto.toState(): GameSessionState = GameSessionState(
             hpBonus = activeMealBuff.hpBonus,
             speedBonus = activeMealBuff.speedBonus,
             focusBonus = activeMealBuff.focusBonus,
-            critBonus = activeMealBuff.critBonus,
+            // Legacy meals stored fractional crit bonuses; combat uses percentage points.
+            critBonus = if (activeMealBuff.rulesVersion < 1) activeMealBuff.critBonus * 100.0 else activeMealBuff.critBonus,
             stabilityBonus = activeMealBuff.stabilityBonus,
             statusResistBonus = activeMealBuff.statusResistBonus,
             strengthBonus = activeMealBuff.strengthBonus,
@@ -478,6 +479,7 @@ private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis())
             luckBonus = buff.luckBonus
             accuracyBonus = buff.accuracyBonus
             evasionBonus = buff.evasionBonus
+            rulesVersion = buff.rulesVersion
         }.build()
     }
     lastSavedMs = savedAt

@@ -2729,17 +2729,13 @@ class CombatViewModel(
                 luck = adjustedLuck,
                 speed = adjustedSpeed,
                 stability = 100 + mealStabilityBonus,
-                accuracyBonus = bonuses.accuracyBonus + (mealBuff?.accuracyBonus ?: 0) / 100.0,
-                evasionBonus = bonuses.evasionBonus + (mealBuff?.evasionBonus ?: 0) / 100.0,
+                accuracyBonus = bonuses.accuracyBonus + (mealBuff?.accuracyBonus ?: 0).toDouble(),
+                evasionBonus = bonuses.evasionBonus + (mealBuff?.evasionBonus ?: 0).toDouble(),
                 critBonus = bonuses.critBonus + mealCritBonus,
-                flatDamageReduction = bonuses.flatDamageReduction + (mealBuff?.defenseBonus ?: 0)
+                flatDamageReduction = bonuses.flatDamageReduction + (mealBuff?.defenseBonus ?: 0),
+                statusResistance = mealResistBonus
             ),
-            resistances = ResistanceProfile(
-                burn = mealResistBonus,
-                freeze = mealResistBonus,
-                shock = mealResistBonus,
-                acid = mealResistBonus
-            ),
+            resistances = ResistanceProfile(),
             skills = skills,
             weapon = resolveCombatWeapon(id, equippedItems, equippedWeapons, unlockedWeapons),
             brokenTurns = 1
@@ -3056,6 +3052,9 @@ class CombatViewModel(
             sessionStore.decrementMealBuffEncounter()
             persistPartyVitals(resolved)
         } else if (resolved.outcome != null) {
+            if (previous.outcome == null && resolved.outcome is CombatOutcome.Retreat) {
+                sessionStore.decrementMealBuffEncounter()
+            }
             persistPartyVitals(resolved)
         }
         return resolved

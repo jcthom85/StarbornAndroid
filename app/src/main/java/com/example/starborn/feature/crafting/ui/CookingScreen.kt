@@ -1,42 +1,25 @@
 package com.example.starborn.feature.crafting.ui
 
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.OutdoorGrill
-import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.starborn.domain.crafting.CraftingOutcome
 import com.example.starborn.domain.crafting.CraftingService
+import com.example.starborn.domain.crafting.MealRules
 import com.example.starborn.domain.inventory.InventoryService
-import com.example.starborn.feature.exploration.ui.components.previewItemIconRes
-import kotlinx.coroutines.delay
+import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import kotlinx.coroutines.launch
-import kotlin.math.PI
-import kotlin.math.sin
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -46,377 +29,150 @@ fun CookingScreen(
     source: String?,
     onBack: () -> Unit,
     onPlayAudio: (String) -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    highContrastMode: Boolean = false,
+    largeTouchTargets: Boolean = false
 ) {
-    val inventoryState by inventoryService.state.collectAsState()
+    val inventory by inventoryService.state.collectAsState()
     val session by craftingService.sessionState.collectAsState()
     val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
-    var recentlyCookedRecipeId by remember { mutableStateOf<String?>(null) }
-    val selectedChef = session.mealChefId.takeIf { it in craftingService.availableChefs() }
-        ?: craftingService.availableChefs().firstOrNull()
+    val snackbar = remember { SnackbarHostState() }
+    var category by rememberSaveable { mutableStateOf("meal") }
+    var query by rememberSaveable { mutableStateOf("") }
+    var readyOnly by rememberSaveable { mutableStateOf(false) }
+    var feedback by rememberSaveable { mutableStateOf<String?>(null) }
+    val chefs = craftingService.availableChefs()
+    val selectedChef = session.mealChefId.takeIf { it in chefs } ?: chefs.firstOrNull()
+    val text = FieldMenuDesign.text
+    val muted = if (highContrastMode) text else FieldMenuDesign.textMuted
+    val orange = Color(0xFFFFBD80)
+    val actionHeight = if (largeTouchTargets) 56.dp else 48.dp
+    val recipes = craftingService.cookingRecipes.filter {
+        it.category == category && it.name.contains(query.trim(), true) && (!readyOnly || craftingService.canCook(it))
+    }.sortedByDescending { craftingService.canCook(it) }
 
-    val recipes = remember { craftingService.cookingRecipes }
-    val isCampfire = source?.contains("camp", ignoreCase = true) == true || source?.contains("fire", ignoreCase = true) == true
-    val isThermalCooker = source?.contains("thermal", ignoreCase = true) == true || source?.contains("cooker", ignoreCase = true) == true
-    val headerTitle = when {
-        isThermalCooker -> "Thermal Cooker"
-        isCampfire -> "Campfire Cooking"
-        else -> "Kitchen Provisions"
-    }
-    val headerSubtitle = when {
-        isThermalCooker -> "Convert raw ingredients and forage into field rations and nutritional preserves."
-        isCampfire -> "Prepare hot trail meals over the open flame."
-        else -> "Prepare nutritious field rations and restorative broths."
-    }
-
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = Color(0xFF121418)
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            if (isCampfire) {
-                CookingEmberCanvas(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp)
-                        .align(Alignment.TopCenter)
-                )
+    Scaffold(modifier = modifier.fillMaxSize(), containerColor = FieldMenuDesign.shell,
+        snackbarHost = { SnackbarHost(snackbar) }) { padding ->
+        LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            item {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(onClick = onBack, modifier = Modifier.size(actionHeight)) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back to exploration", tint = text)
+                    }
+                    Column(Modifier.weight(1f)) {
+                        Text(source ?: "Cooking", color = orange, style = MaterialTheme.typography.titleLarge)
+                        Text("Meals for preparation · Snacks for equipped abilities", color = muted,
+                            style = MaterialTheme.typography.bodySmall)
+                    }
+                }
             }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-            ) {
-                // Top Bar
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(
-                        onClick = onBack,
-                        modifier = Modifier
-                            .size(44.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(Color(0xFF1E232B))
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = Color(0xFFE2E8F0)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    Column {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = if (isCampfire) Icons.Default.OutdoorGrill else Icons.Default.Restaurant,
-                                contentDescription = null,
-                                tint = Color(0xFFF6AD55),
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                text = headerTitle,
-                                style = MaterialTheme.typography.titleLarge.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color(0xFFF7FAFC)
-                                )
-                            )
-                        }
-                        Text(
-                            text = headerSubtitle,
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                color = Color(0xFFA0AEC0)
-                            )
-                        )
+            item {
+                CookingPanel(highContrastMode) {
+                    Text("Current meal", color = text, style = MaterialTheme.typography.titleSmall)
+                    session.activeMealBuff?.let { meal ->
+                        Text("${meal.recipeName} · ${meal.remainingEncounters} battles left", color = orange,
+                            style = MaterialTheme.typography.bodySmall)
+                        Text(MealRules.summary(meal), color = muted, style = MaterialTheme.typography.bodySmall)
+                    } ?: Text("No active meal. Eat a prepared portion from Items before combat.", color = muted,
+                        style = MaterialTheme.typography.bodySmall)
+                    Text("One party meal at a time. A new meal replaces the previous bonus. Victories and escapes spend one battle.",
+                        color = muted, style = MaterialTheme.typography.bodySmall)
+                }
+            }
+            item {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    listOf("meal" to "Meals", "snack" to "Snacks").forEach { (id, label) ->
+                        OutlinedButton(onClick = { category = id }, modifier = Modifier.weight(1f).heightIn(min = actionHeight),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = if (category == id) orange else muted),
+                            border = BorderStroke(1.dp, if (category == id) orange else muted)) { Text(label) }
                     }
                 }
-
-                // Companion Head Chef Selection
-                Text("Serving companion", color = Color.White, style = MaterialTheme.typography.titleSmall)
-                Text("Cook portions now; eat from inventory before combat. The selected companion adds their perk when a meal is eaten. One meal lasts 3 encounters and replaces the previous meal.",
-                    color = Color(0xFFCBD5E0), style = MaterialTheme.typography.bodySmall)
-                val chefs = listOf(
-                    Triple("nova", "Nova", "⚡ +10 Focus"),
-                    Triple("zeke", "Zeke", "🛡️ +25 HP / +3 Stab"),
-                    Triple("gh0st", "Gh0st", "💨 +5 Spd / +20% Res"),
-                    Triple("orion", "Orion", "🎯 +8% Crit")
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    chefs.filter { it.first in craftingService.availableChefs() }.forEach { (id, name, perk) ->
-                        val isSelected = selectedChef == id
-                        Surface(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clip(RoundedCornerShape(10.dp))
-                                .clickable { craftingService.selectChef(id) },
-                            color = if (isSelected) Color(0xFFED8936).copy(alpha = 0.25f) else Color(0xFF1A202C),
-                            border = BorderStroke(1.dp, if (isSelected) Color(0xFFED8936) else Color(0xFF2D3748)),
-                            shape = RoundedCornerShape(10.dp)
-                        ) {
-                            Column(
-                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 6.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(
-                                    text = name,
-                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                    color = if (isSelected) Color(0xFFFFD54F) else Color(0xFFE2E8F0),
-                                    fontSize = 12.sp
-                                )
-                                Text(
-                                    text = perk,
-                                    fontSize = 8.sp,
-                                    color = if (isSelected) Color(0xFFFBD38D) else Color(0xFF718096),
-                                    maxLines = 1
-                                )
+            }
+            if (category == "meal") item {
+                CookingPanel(highContrastMode) {
+                    Text("Serving companion", color = text, style = MaterialTheme.typography.titleSmall)
+                    Text("This companion adds a party bonus when you eat a meal before combat. Cooking stores portions; it does not activate Well-Fed.",
+                        color = muted, style = MaterialTheme.typography.bodySmall)
+                    chefs.chunked(2).forEach { row ->
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            row.forEach { id ->
+                                OutlinedButton(onClick = { craftingService.selectChef(id) },
+                                    modifier = Modifier.weight(1f).heightIn(min = actionHeight),
+                                    border = BorderStroke(1.dp, if (selectedChef == id) orange else muted)) {
+                                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                        Text(if (id == "gh0st") "Gh0st" else id.replaceFirstChar { it.uppercase() }, color = text,
+                                            style = MaterialTheme.typography.bodySmall)
+                                        Text(MealRules.chefDescription(id), color = if (selectedChef == id) orange else muted,
+                                            style = MaterialTheme.typography.labelMedium)
+                                    }
+                                }
                             }
+                            if (row.size == 1) Spacer(Modifier.weight(1f))
                         }
                     }
                 }
-
-                // Recipe List
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(recipes, key = { it.id }) { recipe ->
-                        var selectedBatch by remember(recipe.id) { mutableStateOf(1) }
-                        val canCook = craftingService.canCook(recipe)
-                        val isRecentlyCooked = recentlyCookedRecipeId == recipe.id
-
-                        val cardScale = remember(isRecentlyCooked) { Animatable(if (isRecentlyCooked) 1.04f else 1f) }
-                        LaunchedEffect(isRecentlyCooked) {
-                            if (isRecentlyCooked) {
-                                cardScale.snapTo(1.04f)
-                                cardScale.animateTo(1f, tween(durationMillis = 350, easing = EaseOutBack))
+            } else item {
+                Text("Craft one to obtain an equippable snack. Its combat ability uses a cooldown and does not consume portions. Already-owned snacks do not need to be crafted again.",
+                    color = muted, style = MaterialTheme.typography.bodySmall)
+            }
+            item {
+                OutlinedTextField(query, { query = it }, modifier = Modifier.fillMaxWidth(), singleLine = true,
+                    label = { Text("Find a recipe") })
+                Row(Modifier.fillMaxWidth().heightIn(min = actionHeight), verticalAlignment = Alignment.CenterVertically) {
+                    Text("Can cook", Modifier.weight(1f), color = text, style = MaterialTheme.typography.bodySmall)
+                    Switch(readyOnly, { readyOnly = it })
+                }
+            }
+            feedback?.let { message -> item {
+                CookingPanel(highContrastMode) {
+                    Text(message, color = text, style = MaterialTheme.typography.bodySmall)
+                    TextButton(onClick = { feedback = null }, modifier = Modifier.heightIn(min = actionHeight)) { Text("Dismiss") }
+                }
+            } }
+            if (recipes.isEmpty()) item {
+                Text("No recipes match. Try another category, search, or filter.", color = muted, style = MaterialTheme.typography.bodySmall)
+            }
+            items(recipes, key = { it.id }) { recipe ->
+                var batch by rememberSaveable(recipe.id) { mutableStateOf(1) }
+                val snack = recipe.category == "snack"
+                val discovered = craftingService.isRecipeDiscovered(recipe)
+                val owned = snack && inventory.any { it.item.id == recipe.result && it.quantity > 0 }
+                CookingPanel(highContrastMode) {
+                    Text(recipe.name, color = text, style = MaterialTheme.typography.titleMedium)
+                    if (!discovered) {
+                        Text("Recipe undiscovered", color = orange, style = MaterialTheme.typography.labelLarge)
+                        Text(recipe.discoveryHint ?: "Find its cooking station.", color = muted, style = MaterialTheme.typography.bodySmall)
+                    } else {
+                        recipe.description?.let { Text(it, color = muted, style = MaterialTheme.typography.bodySmall) }
+                        Text(craftingService.mealEffects(recipe), color = orange, style = MaterialTheme.typography.bodySmall)
+                        Text(if (snack) "Creates one equippable snack" else "Yield: ${recipe.resultQuantity * batch} portions · 15% bonus-portion chance per batch unit",
+                            color = muted, style = MaterialTheme.typography.labelMedium)
+                        if (!snack) FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            listOf(1, 2, 3, 5).forEach { amount ->
+                                OutlinedButton(onClick = { batch = amount }, modifier = Modifier.heightIn(min = actionHeight),
+                                    border = BorderStroke(1.dp, if (batch == amount) orange else muted)) { Text("×$amount", color = text) }
                             }
                         }
-
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .graphicsLayer {
-                                    scaleX = cardScale.value
-                                    scaleY = cardScale.value
-                                }
-                                .border(
-                                    width = if (isRecentlyCooked) 1.5.dp else 1.dp,
-                                    color = when {
-                                        isRecentlyCooked -> Color(0xFFFFD54F)
-                                        canCook -> Color(0xFFED8936).copy(alpha = 0.6f)
-                                        else -> Color(0xFF2D3748)
-                                    },
-                                    shape = RoundedCornerShape(16.dp)
-                                ),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = if (isRecentlyCooked) Color(0xFF24221E) else Color(0xFF1A202C)
-                            )
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                            ) {
-                                // Title, Icon & Yield
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(10.dp)
-                                    ) {
-                                        Image(
-                                            painter = painterResource(previewItemIconRes(recipe.result)),
-                                            contentDescription = recipe.name,
-                                            modifier = Modifier.size(28.dp)
-                                        )
-                                        Text(
-                                            text = recipe.name,
-                                            style = MaterialTheme.typography.titleMedium.copy(
-                                                fontWeight = FontWeight.SemiBold,
-                                                color = Color(0xFFF7FAFC)
-                                            )
-                                        )
-                                    }
-                                    Surface(
-                                        color = Color(0xFF2D3748),
-                                        shape = RoundedCornerShape(8.dp)
-                                    ) {
-                                        Text(
-                                            text = "Yield: ${recipe.resultQuantity}",
-                                            style = MaterialTheme.typography.labelSmall.copy(
-                                                color = Color(0xFFCBD5E0)
-                                            ),
-                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                                        )
-                                    }
-                                }
-
-                                // Description
-                                recipe.description?.let { desc ->
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    Text(
-                                        text = desc,
-                                        style = MaterialTheme.typography.bodySmall.copy(
-                                            color = Color(0xFFA0AEC0)
-                                        )
-                                    )
-                                }
-
-                                Spacer(modifier = Modifier.height(12.dp))
-
-                                // Ingredients required
-                                Text(craftingService.mealEffects(recipe), color = Color(0xFFFBD38D), style = MaterialTheme.typography.bodySmall)
-                                craftingService.sharedIngredientNotes(recipe).forEach { note ->
-                                    Text(note, color = Color(0xFFCBD5E0), style = MaterialTheme.typography.bodySmall)
-                                }
-                                Text(
-                                    text = "Ingredients",
-                                    style = MaterialTheme.typography.labelSmall.copy(
-                                        fontWeight = FontWeight.Bold,
-                                        color = Color(0xFF718096),
-                                        fontSize = 11.sp
-                                    )
-                                )
-
-                                Spacer(modifier = Modifier.height(6.dp))
-
-                                FlowRow(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                    verticalArrangement = Arrangement.spacedBy(6.dp)
-                                ) {
-                                    recipe.ingredients.forEach { (ingredientId, perPortion) ->
-                                        val count = perPortion * selectedBatch
-                                        val currentQty = inventoryState.find {
-                                            it.item.id.equals(ingredientId, ignoreCase = true) ||
-                                                it.item.name.equals(ingredientId, ignoreCase = true) ||
-                                                it.item.aliases.any { alias -> alias.equals(ingredientId, ignoreCase = true) }
-                                        }?.quantity ?: 0
-                                        val hasEnough = currentQty >= count
-                                        val formattedName = ingredientId.replace("_", " ").replaceFirstChar { it.uppercase() }
-
-                                        Surface(
-                                            shape = RoundedCornerShape(8.dp),
-                                            color = if (hasEnough) Color(0xFF22543D).copy(alpha = 0.6f) else Color(0xFF2D3748),
-                                            border = if (hasEnough) BorderStroke(1.dp, Color(0xFF48BB78).copy(alpha = 0.5f)) else null
-                                        ) {
-                                            Row(
-                                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                                                verticalAlignment = Alignment.CenterVertically
-                                            ) {
-                                                Icon(
-                                                    imageVector = if (hasEnough) Icons.Default.Check else Icons.Default.Close,
-                                                    contentDescription = null,
-                                                    tint = if (hasEnough) Color(0xFF48BB78) else Color(0xFFE53E3E),
-                                                    modifier = Modifier.size(12.dp)
-                                                )
-                                                Spacer(modifier = Modifier.width(4.dp))
-                                                Text(
-                                                    text = "$formattedName $currentQty/$count",
-                                                    style = MaterialTheme.typography.labelSmall.copy(
-                                                        color = if (hasEnough) Color(0xFFE2E8F0) else Color(0xFFA0AEC0)
-                                                    )
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-
-                                Spacer(modifier = Modifier.height(10.dp))
-
-                                val canCookCurrentBatch = craftingService.canCook(recipe, selectedBatch)
-
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(vertical = 4.dp),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = "Portions:",
-                                        style = MaterialTheme.typography.labelSmall.copy(color = Color(0xFFA0AEC0))
-                                    )
-                                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                        listOf(1, 2, 3, 5).forEach { qty ->
-                                            val isSelected = selectedBatch == qty
-                                            val canCookQty = craftingService.canCook(recipe, qty)
-                                            Surface(
-                                                shape = RoundedCornerShape(6.dp),
-                                                color = if (isSelected) Color(0xFFED8936) else Color(0xFF2D3748),
-                                                modifier = Modifier.clickable(enabled = canCookQty) { selectedBatch = qty }
-                                            ) {
-                                                Text(
-                                                    text = "x$qty",
-                                                    fontSize = 11.sp,
-                                                    fontWeight = FontWeight.Bold,
-                                                    color = if (!canCookQty) Color(0xFF718096) else if (isSelected) Color.Black else Color.White,
-                                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-
-                                Spacer(modifier = Modifier.height(8.dp))
-
-                                // Cook Button
-                                Button(
-                                    onClick = {
-                                        val outcome = craftingService.cookMeal(recipe.id, chefId = selectedChef, batch = selectedBatch)
-                                        scope.launch {
-                                            when (outcome) {
-                                                is CraftingOutcome.Success -> {
-                                                    onPlayAudio("sfx_cooking_sizzle")
-                                                    recentlyCookedRecipeId = recipe.id
-                                                    snackbarHostState.showSnackbar("🍲 ${outcome.message}")
-                                                    delay(1200)
-                                                    if (recentlyCookedRecipeId == recipe.id) {
-                                                        recentlyCookedRecipeId = null
-                                                    }
-                                                }
-                                                is CraftingOutcome.Failure -> {
-                                                    snackbarHostState.showSnackbar("❌ ${outcome.message}")
-                                                }
-                                            }
-                                        }
-                                    },
-                                    enabled = canCookCurrentBatch,
-                                    modifier = Modifier.fillMaxWidth(),
-                                    shape = RoundedCornerShape(12.dp),
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = Color(0xFFDD6B20),
-                                        disabledContainerColor = Color(0xFF2D3748)
-                                    )
-                                ) {
-                                    Text(
-                                        text = if (canCookCurrentBatch) "Cook ${recipe.name} (x$selectedBatch)" else "Missing Ingredients",
-                                        fontWeight = FontWeight.Bold,
-                                        color = if (canCookCurrentBatch) Color.White else Color(0xFF718096)
-                                    )
-                                }
-                            }
+                        Text("Ingredients consumed", color = text, style = MaterialTheme.typography.labelLarge)
+                        recipe.ingredients.forEach { (id, quantity) ->
+                            val required = quantity * if (snack) 1 else batch
+                            val available = craftingService.availableForCraft(id)
+                            Text("${inventoryService.itemDisplayName(id)} · $available/$required", style = MaterialTheme.typography.bodySmall,
+                                color = if (available >= required) muted else Color(0xFFFFAA90))
+                        }
+                        craftingService.sharedIngredientNotes(recipe).forEach { note ->
+                            Text(note, color = muted, style = MaterialTheme.typography.labelMedium)
+                        }
+                        Button(onClick = {
+                            val outcome = craftingService.cookMeal(recipe.id, selectedChef, if (snack) 1 else batch)
+                            feedback = outcome.message
+                            if (outcome is CraftingOutcome.Success) onPlayAudio("sfx_cooking_sizzle")
+                            scope.launch { snackbar.showSnackbar(outcome.message ?: "Cooking complete.") }
+                        }, enabled = craftingService.canCook(recipe, if (snack) 1 else batch),
+                            modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight),
+                            colors = ButtonDefaults.buttonColors(containerColor = orange, contentColor = FieldMenuDesign.shell)) {
+                            Text(if (owned) "Already owned · equip from Items" else if (snack) "Craft snack" else "Cook ${recipe.resultQuantity * batch} portions")
                         }
                     }
                 }
@@ -426,35 +182,9 @@ fun CookingScreen(
 }
 
 @Composable
-private fun CookingEmberCanvas(
-    modifier: Modifier = Modifier,
-    particleCount: Int = 10
-) {
-    val transition = rememberInfiniteTransition(label = "campfire_embers")
-    val time by transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2400, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "ember_time"
-    )
-
-    Canvas(modifier = modifier) {
-        val width = size.width
-        val height = size.height
-        for (i in 0 until particleCount) {
-            val phase = (time + i.toFloat() / particleCount) % 1f
-            val x = (sin(phase * PI * 2.0 + i * 1.5).toFloat() * 0.4f + 0.5f) * width
-            val y = (1f - phase) * height
-            val alpha = (sin(phase * PI).toFloat()).coerceIn(0f, 1f)
-            val radius = 2.5.dp.toPx() * (1f - phase * 0.5f)
-            drawCircle(
-                color = if (i % 2 == 0) Color(0xFFFF9800).copy(alpha = alpha * 0.45f) else Color(0xFFFFD54F).copy(alpha = alpha * 0.6f),
-                radius = radius,
-                center = Offset(x, y)
-            )
-        }
+private fun CookingPanel(highContrast: Boolean, content: @Composable ColumnScope.() -> Unit) {
+    Surface(Modifier.fillMaxWidth(), color = FieldMenuDesign.panel, shape = RoundedCornerShape(12.dp),
+        border = if (highContrast) BorderStroke(1.dp, FieldMenuDesign.border) else null) {
+        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp), content = content)
     }
 }

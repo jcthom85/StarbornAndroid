@@ -916,6 +916,9 @@ class CombatActionProcessor(
                     amount = result.hp
                 )
             }
+            if (result.buffs.isNotEmpty()) {
+                working = engine.applyBuffs(working, targetId, result.buffs, sourceId = action.actorId)
+            }
         }
         return working
     }

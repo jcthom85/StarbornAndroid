@@ -62,7 +62,7 @@ class WorldOneDiscoverabilityStateTest {
         assertFalse(elevator.description.orEmpty().contains("shows green"))
         listOf(emptySet(), setOf("ms_w1_mq03_bogs_talked")).forEach { milestones ->
             val prose = requireNotNull(resolveRoomDescription(elevator, emptyMap(), milestones, false))
-            listOf("warning signs", "scanner", "cables").forEach { assertTrue(prose.contains(it)) }
+            listOf("warning signs", "scanner", "cables").forEach { assertTrue(prose.contains(it, ignoreCase = true)) }
         }
     }
 

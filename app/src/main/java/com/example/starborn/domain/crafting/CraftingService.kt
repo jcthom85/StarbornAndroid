@@ -20,17 +20,42 @@ class CraftingService(
             .filter { it in setOf("nova", "zeke", "gh0st", "orion") }
     }
     fun selectChef(id: String) = sessionStore.selectMealChef(id)
+    fun isPreparedMeal(itemId: String): Boolean = cookingRecipes.any { it.category == "meal" && it.result == itemId }
+
+    fun isRecipeDiscovered(recipe: CookingRecipe): Boolean = recipe.discoveryRoom == null ||
+        sessionStore.state.value.roomId == recipe.discoveryRoom ||
+        sessionStore.state.value.roomStates[recipe.discoveryRoom]?.get("cooking_discovered") == true
+
     fun mealEffects(recipe: CookingRecipe): String {
-        val effect = inventoryService.catalogItem(recipe.result)?.effect ?: return "No meal effect"
-        val bonuses = effect.buffs.orEmpty() + listOfNotNull(effect.singleBuff)
-        return listOfNotNull(effect.restoreHp?.takeIf { it > 0 }?.let { "Restores $it HP" },
-            bonuses.takeIf { it.isNotEmpty() }?.joinToString { "${it.stat} +${it.value}" })
-            .joinToString(" · ") + " · Meal bonuses last 3 encounters"
+        val item = inventoryService.catalogItem(recipe.result) ?: return "Unknown result"
+        val effect = item.effect ?: return "No effect"
+        if (recipe.category == "snack") {
+            val effects = effect.buffs.orEmpty() + listOfNotNull(effect.singleBuff)
+            val active = effects.joinToString(" · ") { "${MealRules.bonusLabel(it.stat, it.value)} for ${it.duration ?: 1} turns" }
+            val passive = item.equipment?.statMods.orEmpty().entries.joinToString { MealRules.bonusLabel(it.key, it.value) }
+            return listOfNotNull("Equip in a party member's snack slot.",
+                passive.takeIf { it.isNotBlank() }?.let { "While equipped: $it" },
+                item.equipment?.hpBonus?.let { "While equipped: Max HP +$it" },
+                "Ability: $active", "Target: ${effect.target ?: "self"} · Cooldown: ${effect.cooldown ?: 5} turns.",
+                "Using the ability does not consume the snack.").joinToString("\n")
+        }
+        val scope = if (effect.target in listOf("party", "all_allies")) "all allies" else "one ally"
+        val chef = sessionStore.state.value.mealChefId.takeIf { it in availableChefs() }
+        val serving = MealRules.buff(item, chef)
+        val combatBuffs = (effect.buffs.orEmpty() + listOfNotNull(effect.singleBuff)).joinToString(" · ") {
+            "${MealRules.bonusLabel(it.stat, it.value)} (${it.duration ?: 1} turns)"
+        }
+        return listOfNotNull(effect.restoreHp?.let { "Restores $it HP to $scope." },
+            "Eat before combat: party Well-Fed for 3 completed battles, including escapes.",
+            MealRules.summary(serving),
+            chef?.let { "Serving companion: $it (${MealRules.chefDescription(it)})." },
+            combatBuffs.takeIf { it.isNotBlank() }?.let { "Use in combat: $it to $scope; no Well-Fed or companion bonus." }
+        ).joinToString("\n")
     }
 
     fun usesFor(itemId: String): List<String> = buildList {
         val meals = cookingRecipes.filter { itemId in it.ingredients }.map { it.name }
-        val gear = tinkeringRecipes.filter { itemId in ingredientsFor(it) }.map { it.name }
+        val gear = tinkeringRecipes.filter { itemId in ingredientsFor(it) || itemId in it.tools }.map { it.name }
         if (meals.isNotEmpty()) add("Cooking: ${meals.take(3).joinToString()}${if (meals.size > 3) " and more" else ""}")
         if (gear.isNotEmpty()) add("Tinkering: ${gear.take(3).joinToString()}${if (gear.size > 3) " and more" else ""}")
     }
@@ -41,45 +66,45 @@ class CraftingService(
     }
 
     fun canCook(recipe: CookingRecipe, batch: Int = 1): Boolean {
-        if (batch <= 0 || recipe.ingredients.isEmpty() || recipe.ingredients.values.any { it <= 0 }) return false
-        val multiplier = batch.coerceAtLeast(1)
-        val requirementCounts = recipe.ingredients.mapKeys { (item, _) -> normalizeToken(item) }
-        val inventoryCounts = inventoryTokenCounts()
-        val resultId = inventoryService.catalogItem(recipe.result)?.id ?: recipe.result
-        // Reserve the possible masterwork portion before consuming anything.
-        val maxYield = recipe.resultQuantity.coerceAtLeast(1).toLong() * multiplier + 1
-        if (maxYield + (inventoryService.snapshot()[resultId] ?: 0) > Int.MAX_VALUE) return false
-        return requirementCounts.all { (id, needed) -> (inventoryCounts[id] ?: 0).toLong() >= needed.toLong() * multiplier }
+        if (batch !in 1..5 || recipe.resultQuantity <= 0 || recipe.ingredients.isEmpty() || recipe.ingredients.values.any { it <= 0 }) return false
+        if (!isRecipeDiscovered(recipe)) return false
+        val item = inventoryService.catalogItem(recipe.result) ?: return false
+        val snack = recipe.category == "snack"
+        if (snack && (batch != 1 || inventoryService.hasItem(item.id))) return false
+        val maxYield = recipe.resultQuantity.toLong() * batch + if (snack) 0 else batch
+        if (maxYield + (inventoryService.snapshot()[item.id] ?: 0) > Int.MAX_VALUE) return false
+        return recipe.ingredients.all { (id, count) -> availableForCraft(id).toLong() >= count.toLong() * batch }
     }
 
     fun cookMeal(recipeId: String, chefId: String? = null, batch: Int = 1): CraftingOutcome {
         val recipe = cookingRecipes.find { it.id == recipeId } ?: return CraftingOutcome.Failure("Unknown recipe")
         if (batch <= 0) return CraftingOutcome.Failure("Invalid batch size")
         if (chefId != null && chefId !in availableChefs()) return CraftingOutcome.Failure("That companion is not available.")
-        val multiplier = batch.coerceAtLeast(1)
-        if (!canCook(recipe, multiplier)) return CraftingOutcome.Failure("Missing ingredients")
-        val scaledIngredients = recipe.ingredients.mapValues { it.value * multiplier }
+        if (!isRecipeDiscovered(recipe)) return CraftingOutcome.Failure(recipe.discoveryHint ?: "Discover this recipe at its cooking station.")
+        if (!canCook(recipe, batch)) return CraftingOutcome.Failure("Missing ingredients, unavailable capacity, or snack already owned.")
+        val scaledIngredients = recipe.ingredients.mapValues { it.value * batch }
         if (!inventoryService.consumeItems(scaledIngredients)) return CraftingOutcome.Failure("Unable to consume ingredients")
-        if (chefId != null) sessionStore.selectMealChef(chefId)
-
-        val isMasterwork = (Math.random() < 0.15)
-        val extraYield = if (isMasterwork) 1 else 0
-        val totalYield = (recipe.resultQuantity.coerceAtLeast(1) * multiplier) + extraYield
-        inventoryService.addItem(recipe.result, totalYield)
+        val snack = recipe.category == "snack"
+        if (!snack && chefId != null) sessionStore.selectMealChef(chefId)
+        // One independent bonus-portion roll per recipe batch unit.
+        val extra = if (snack) 0 else (1..batch).count { Math.random() < 0.15 }
+        val total = recipe.resultQuantity * batch + extra
+        inventoryService.addItem(recipe.result, total)
         sessionStore.setInventory(inventoryService.snapshot())
-
-        val masterworkMsg = if (isMasterwork) " Masterwork! (+1 extra portion)" else ""
-        val chefMsg = " Eat from inventory to activate meal benefits."
-        val baseMsg = recipe.successMessage ?: "Prepared ${recipe.name}"
-        return CraftingOutcome.Success(recipe.result, "$baseMsg (x$totalYield)$masterworkMsg$chefMsg")
+        val bonus = if (extra > 0) " Masterwork: +$extra extra portion${if (extra == 1) "" else "s"}." else ""
+        val instruction = if (snack) " Equip it in a snack slot to use its cooldown ability." else " Eat from inventory to activate Well-Fed."
+        return CraftingOutcome.Success(recipe.result, "${recipe.successMessage ?: "Prepared ${recipe.name}"} (x$total)$bonus$instruction")
     }
 
     fun canCraft(recipe: TinkeringRecipe): Boolean {
+        if (recipe.requiresSchematic && !isSchematicLearned(recipe.id)) return false
+        val result = inventoryService.catalogItem(recipe.result) ?: return false
+        if (recipe.resultQuantity <= 0 ||
+            (inventoryService.snapshot()[result.id] ?: 0).toLong() + recipe.resultQuantity > Int.MAX_VALUE) return false
         val requirements = ingredientsFor(recipe)
         if (requirements.isEmpty()) return false
-        val requirementCounts = requirements.mapKeys { (item, _) -> normalizeToken(item) }
         val inventoryCounts = inventoryTokenCounts()
-        val hasIngredients = requirementCounts.all { (id, needed) -> (inventoryCounts[id] ?: 0) >= needed }
+        val hasIngredients = requirements.all { (id, needed) -> availableForCraft(id) >= needed }
         if (!hasIngredients) return false
         return recipe.tools.all { tool ->
             val normalizedTool = normalizeToken(tool)
@@ -117,6 +142,9 @@ class CraftingService(
 
     fun craftTinkering(recipeId: String): CraftingOutcome {
         val recipe = tinkeringRecipes.find { it.id == recipeId } ?: return CraftingOutcome.Failure("Unknown recipe")
+        if (recipe.requiresSchematic && !isSchematicLearned(recipe.id)) {
+            return CraftingOutcome.Failure("Learn the ${recipe.name} schematic from Inventory first.")
+        }
         if (!canCraft(recipe)) return CraftingOutcome.Failure("Missing components or tools")
         val requirements = ingredientsFor(recipe)
         if (!inventoryService.consumeItems(requirements)) return CraftingOutcome.Failure("Unable to consume components")
@@ -125,6 +153,38 @@ class CraftingService(
         sessionStore.setInventory(inventoryService.snapshot())
         recipe.successMessage?.let { return CraftingOutcome.Success(addedId, it) }
         return CraftingOutcome.Success(addedId, "Crafted ${recipe.name}")
+    }
+
+    fun salvageFor(itemId: String): Map<String, Int> {
+        val item = inventoryService.catalogItem(itemId) ?: return emptyMap()
+        val session = sessionStore.state.value
+        if (item.unsellable || item.type.equals("quest", true) ||
+            item.id in session.equippedItems.values || item.id in session.equippedWeapons.values ||
+            item.id in session.equippedArmors.values) return emptyMap()
+        val recipe = tinkeringRecipes.firstOrNull { it.result == item.id } ?: return emptyMap()
+        val salvage = recipe.salvage.filterValues { it > 0 }
+        if (salvage.keys.any { inventoryService.catalogItem(it) == null }) return emptyMap()
+        return salvage
+    }
+
+    fun availableForCraft(itemId: String): Int {
+        val item = inventoryService.catalogItem(itemId) ?: return 0
+        val session = sessionStore.state.value
+        val equipped = session.equippedItems.values + session.equippedWeapons.values + session.equippedArmors.values
+        return ((inventoryService.snapshot()[item.id] ?: 0) - equipped.count { it == item.id }).coerceAtLeast(0)
+    }
+
+    fun resultSummary(recipe: TinkeringRecipe): String {
+        val item = inventoryService.catalogItem(recipe.result) ?: return "Unknown result"
+        val stats = item.equipment?.statMods.orEmpty().entries.joinToString(" Â· ") { (stat, value) ->
+            "${stat.replace('_', ' ').replaceFirstChar { it.uppercase() }} ${if (value >= 0) "+" else ""}$value"
+        }
+        val element = item.equipment?.attackElement?.let { "Attack element: $it" }
+        return listOfNotNull(recipe.description?.takeIf { recipe.category == "repair" },
+            item.description, stats.takeIf { it.isNotBlank() }, element,
+            if (item.equipment?.slot == "mod") "Equip in a party member's mod slot." else null,
+            "Produces ${recipe.resultQuantity} item${if (recipe.resultQuantity == 1) "" else "s"}.")
+            .joinToString("\n")
     }
 
     fun ingredientsFor(recipe: TinkeringRecipe): Map<String, Int> {
@@ -146,29 +206,12 @@ class CraftingService(
     }
 
     private fun addCraftedItem(recipe: TinkeringRecipe): String {
-        val candidates = listOf(recipe.result, recipe.id, recipe.name)
-            .mapNotNull { it.trim().ifBlank { null } }
-
-        val resolvedId = candidates
-            .asSequence()
-            .mapNotNull { candidate ->
-                inventoryService.catalogItem(candidate)?.id
-                    ?: inventoryService.catalogItem(candidate.replace("\\s+".toRegex(), "_"))?.id
-                    ?: inventoryService.catalogItem(normalizeToken(candidate))?.id
-            }
-            .firstOrNull()
-            ?: inventoryService.itemDetail(candidates.first())?.id
-            ?: normalizeToken(recipe.result.ifBlank { recipe.id.ifBlank { recipe.name } })
-
-        val beforeQty = inventoryService.snapshot()[resolvedId] ?: 0
-        inventoryService.addItem(resolvedId, recipe.resultQuantity.coerceAtLeast(1))
-        val afterQty = inventoryService.snapshot()[resolvedId] ?: 0
-        if (afterQty <= beforeQty) {
-            // Guarantee the crafted item is present even if the first add failed to change quantity.
-            inventoryService.addItem(resolvedId, recipe.resultQuantity.coerceAtLeast(1))
-        }
-        return inventoryService.itemDetail(resolvedId)?.id ?: resolvedId
+        // canCraft validates the catalog result and capacity before materials are consumed.
+        val result = checkNotNull(inventoryService.catalogItem(recipe.result))
+        inventoryService.addItem(result.id, recipe.resultQuantity)
+        return result.id
     }
+
 }
 
 enum class MinigameResult {

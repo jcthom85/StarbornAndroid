@@ -302,7 +302,8 @@ class ExplorationViewModel(
         inventoryService = inventoryService,
         craftingService = craftingService,
         sessionStore = sessionStore,
-        charactersProvider = { charactersById }
+        charactersProvider = { charactersById },
+        skillNodesProvider = { healthSkillNodes }
     )
     private val stageTutorialKeys: MutableSet<String> = mutableSetOf()
     private val inventoryAddListener: (String, Int) -> Unit = { itemId, _ ->
@@ -1844,6 +1845,7 @@ class ExplorationViewModel(
                     )
                     current.copy(
                         completedMilestones = newState.completedMilestones,
+                        activeMeal = newState.activeMealBuff,
                         activeQuests = newState.activeQuests,
                         completedQuests = newState.completedQuests,
                         failedQuests = newState.failedQuests,
@@ -2436,6 +2438,7 @@ class ExplorationViewModel(
                     partyStatus = partyStatus,
                     progressionSummary = progressionSummary,
                     mineGeneratorOnline = isMineGeneratorOnline(),
+                    activeMeal = sessionState.activeMealBuff,
                     settings = SettingsUiState(
                         musicVolume = userMusicVolume,
                         sfxVolume = userSfxVolume,
@@ -4281,9 +4284,11 @@ class ExplorationViewModel(
 
     fun armorItem(itemId: String): Item? = inventoryService.itemDetail(itemId)
 
-    fun useInventoryItem(itemId: String, targetId: String? = null) {
+    fun isPreparedMeal(itemId: String): Boolean = craftingService.isPreparedMeal(itemId)
+
+    fun useInventoryItem(itemId: String, targetId: String? = null, replaceMeal: Boolean = false) {
         viewModelScope.launch(dispatchers.main) {
-            when (val outcome = itemUseController.useItem(itemId, targetId)) {
+            when (val outcome = itemUseController.useItem(itemId, targetId, replaceMeal)) {
                 is ItemUseController.Result.Success -> {
                     postStatus(outcome.message)
                     emitEvent(ExplorationEvent.ItemUsed(outcome.result, outcome.message))
@@ -5129,6 +5134,7 @@ class ExplorationViewModel(
 
     private fun handleRestStopAction(action: RestStopAction) {
         if (action.cookSource != null || action.name.contains("cook", ignoreCase = true) || action.name.contains("kitchen", ignoreCase = true)) {
+            _uiState.value.currentRoom?.id?.let { sessionStore.setRoomState(it, "cooking_discovered", true) }
             emitEvent(ExplorationEvent.OpenCooking(action.cookSource ?: action.name))
         } else {
             action.restEvent?.takeIf { it.isNotBlank() }?.let { triggerPlayerAction(it) } ?: handleRestParty()

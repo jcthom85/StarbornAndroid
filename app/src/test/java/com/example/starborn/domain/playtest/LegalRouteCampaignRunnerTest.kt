@@ -244,13 +244,15 @@ class LegalRouteCampaignRunnerTest {
             harness.explorationVm.travel(direction)
             harness.settle()
             if (harness.sessionStore.state.value.roomStates["admin_elevator"]
-                    ?.get("mine_map_reveal_pending") == true) {
+                    ?.get("mine_map_reveal_pending") == true &&
+                "deep_mine" !in harness.sessionStore.state.value.visitedNodes) {
+                harness.hubVm.finishNodeReveal("deep_mine")
                 harness.hubVm.enterNode("deep_mine") { }
                 harness.settle()
             }
             val afterRoom = harness.explorationVm.uiState.value.currentRoom?.id
             check(afterRoom != null && afterRoom != beforeRoom) {
-                "travel($direction) failed from room '$beforeRoom': blocked or no connection."
+                "travel($direction) failed from room '$beforeRoom': blocked or no connection. status=${harness.explorationVm.uiState.value.statusMessage}; prompt=${harness.explorationVm.uiState.value.blockedPrompt}; session=${harness.sessionStore.state.value.roomId}; hub=${harness.sessionStore.state.value.hubId}; pending=${harness.sessionStore.state.value.roomStates["admin_elevator"]}; visited=${harness.sessionStore.state.value.visitedNodes}"
             }
         }
 
@@ -878,6 +880,8 @@ class LegalRouteCampaignRunnerTest {
                 val type = parts[0].trim().lowercase(Locale.getDefault())
                 val value = parts.getOrNull(1)?.trim().orEmpty()
                 when (type) {
+                    "room" -> state.roomId?.equals(value, ignoreCase = true) == true
+                    "room_not" -> state.roomId?.equals(value, ignoreCase = true) != true
                     "milestone", "milestone_set" -> value in state.completedMilestones
                     "milestone_not_set" -> value !in state.completedMilestones
                     "quest", "quest_active" -> value in state.activeQuests

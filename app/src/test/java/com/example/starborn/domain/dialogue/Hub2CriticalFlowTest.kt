@@ -20,7 +20,7 @@ class Hub2CriticalFlowTest {
 
     @Test
     fun world2MainQuestProgressionsEndToEnd() {
-        val harness = Hub2Harness()
+        val harness = Hub2Harness().apply { store.setRoom("sector9_landing_stream") }
 
         // Setup World 2 start state (after MQ_01 completion)
         harness.store.completeQuest("w2_mq01")
@@ -92,6 +92,14 @@ class Hub2CriticalFlowTest {
         assertTrue(state.completedMilestones.contains("ms_w2_coolant_stabilized"))
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq03_align_complete"))
+        assertEquals("Stasis Console", harness.startedDialogues.last())
+        val stasis = requireNotNull(harness.dialogue.startDialogue("Stasis Console"))
+        stasis.finishWithChoice("correct")
+        assertFalse(harness.store.state.value.partyMembers.contains("orion"))
+        assertFalse(harness.store.state.value.completedQuests.contains("w2_mq03"))
+        requireNotNull(harness.dialogue.startDialogue("Orion")).advanceUntilFinished()
+        assertFalse(harness.store.state.value.completedQuests.contains("w2_mq03"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq03_recover_bridge"))
 
         state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w2_mq03"].orEmpty().contains("align_stasis_rings"))
@@ -166,6 +174,7 @@ class Hub2CriticalFlowTest {
         assertTrue(state.completedMilestones.contains("ms_w2_source_breakers_starved"))
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq05_bypass_gate"))
+        requireNotNull(harness.dialogue.startDialogue("Source Gate Console")).finishWithChoice("correct")
 
         state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w2_mq05"].orEmpty().contains("bypass_source_gate"))
@@ -188,6 +197,7 @@ class Hub2CriticalFlowTest {
 
         // Launch ship (Astra) -> warps to the sky, complete quest, collisions, warps to admin lobby
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq05_launch"))
+        requireNotNull(harness.dialogue.startDialogue("Astra Navigation")).finishWithChoice("depart")
         state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w2_mq05"].orEmpty().contains("launch_ship"))
         assertTrue(state.completedQuests.contains("w2_mq05"))
@@ -199,7 +209,7 @@ class Hub2CriticalFlowTest {
 
     @Test
     fun world2SideQuestsFlows() {
-        val harness = Hub2Harness()
+        val harness = Hub2Harness().apply { store.setRoom("sector9_landing_stream") }
         harness.store.completeQuest("w2_mq01")
 
         // --- SQ01: Botanist (Zeke) ---
@@ -261,7 +271,7 @@ class Hub2CriticalFlowTest {
         assertTrue(harness.store.state.value.activeQuests.contains("w2_sq03"))
 
         // Visit beach
-        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("sector9_stream_pools"))
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("sector9_beach_pools"))
         assertTrue(harness.store.state.value.questTasksCompleted["w2_sq03"].orEmpty().contains("visit_beach"))
 
         // Gather tideglass
@@ -305,6 +315,8 @@ class Hub2CriticalFlowTest {
         assertEquals("orion_w2_sq04_tune_1", tuneMural?.current()?.id)
         assertTrue(tuneMural?.choices().orEmpty().isEmpty())
         tuneMural?.advanceUntilFinished()
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq04_tune_murals"))
+        requireNotNull(harness.dialogue.startDialogue("Mural Array")).finishWithChoice("correct")
 
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w2_sq04"))
@@ -324,6 +336,7 @@ class Hub2CriticalFlowTest {
 
         // Blind the security grid, pass its guard pattern, then search the tech alcove.
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq05_hack_grid"))
+        requireNotNull(harness.dialogue.startDialogue("Vent Scanner")).finishWithChoice("correct")
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq05_bypass_guards"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq05_search_vents"))
         state = harness.store.state.value
@@ -418,6 +431,8 @@ class Hub2CriticalFlowTest {
                     val type = parts[0].trim().lowercase()
                     val value = parts.getOrNull(1)?.trim().orEmpty()
                     when (type) {
+                        "room" -> state.roomId?.equals(value, ignoreCase = true) == true
+                        "room_not" -> state.roomId?.equals(value, ignoreCase = true) != true
                         "milestone" -> value in state.completedMilestones
                         "milestone_set" -> value in state.completedMilestones
                         "milestone_not_set" -> value !in state.completedMilestones
@@ -478,7 +493,19 @@ class Hub2CriticalFlowTest {
 }
 
 private fun DialogueSession.advanceUntilFinished() {
+    var steps = 0
     while (!isFinished()) {
+        check(++steps <= 100) { "Dialogue stalled at ${current()?.id}; choices=${choices().map { it.id }}" }
+        check(choices().isEmpty()) { "Expected linear dialogue at ${current()?.id}" }
         advance()
+    }
+}
+
+private fun DialogueSession.finishWithChoice(choiceId: String) {
+    var steps = 0
+    while (!isFinished()) {
+        check(++steps <= 40) { "Puzzle dialogue stalled" }
+        if (choices().isEmpty()) advance()
+        else choose(choices().single { it.id == choiceId }.id)
     }
 }

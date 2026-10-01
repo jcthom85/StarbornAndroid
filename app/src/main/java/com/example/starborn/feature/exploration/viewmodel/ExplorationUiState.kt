@@ -35,6 +35,7 @@ data class ExplorationUiState(
     val groundItems: Map<String, Int> = emptyMap(),
     val activeDialogue: DialogueUi? = null,
     val dialogueChoices: List<DialogueChoiceUi> = emptyList(),
+    val activeMeal: com.example.starborn.domain.session.ActiveMealBuff? = null,
     val statusMessage: String? = null,
     val menuFeedback: String? = null,
     val blockedPrompt: BlockedPrompt? = null,

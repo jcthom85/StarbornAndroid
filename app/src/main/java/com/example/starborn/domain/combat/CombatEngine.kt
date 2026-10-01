@@ -3,10 +3,12 @@ package com.example.starborn.domain.combat
 import com.example.starborn.domain.model.BuffEffect
 import kotlin.math.max
 import kotlin.math.roundToInt
+import kotlin.random.Random
 
 class CombatEngine(
     private val timelineCalculator: TurnOrderCalculator = DefaultTurnOrderCalculator(),
-    private val statusRegistry: StatusRegistry = StatusRegistry()
+    private val statusRegistry: StatusRegistry = StatusRegistry(),
+    private val random: Random = Random.Default
 ) {
 
     fun beginEncounter(setup: CombatSetup): CombatState {
@@ -204,6 +206,11 @@ class CombatEngine(
         }
         if (resolvedDuration <= 0) return state
         val targetState = state.combatants[targetId] ?: return state
+        val source = sourceId?.let { state.combatants[it] }
+        val hostile = source != null &&
+            (source.combatant.side == CombatSide.ENEMY) != (targetState.combatant.side == CombatSide.ENEMY)
+        val resistance = targetState.combatant.stats.statusResistance.coerceIn(0, 100)
+        if (hostile && resistance > 0 && random.nextInt(100) < resistance) return state
         val updatedStatuses = targetState.statusEffects.toMutableList()
         val index = updatedStatuses.indexOfFirst { it.id.equals(statusId, ignoreCase = true) }
         val newStatus = if (index >= 0) {

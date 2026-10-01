@@ -22,10 +22,21 @@ class FishingService(
 
     fun getFishingZone(zoneId: String): FishingZone? {
         val catches = fishingData.zones[zoneId] ?: return null
+        val water = when (zoneId) {
+            "colony_pit_drain" -> "images/rooms/world_1/mine_landing.webp" to "Mineral runoff glows beneath the mine's safety beacons. Eels stir below the sediment."
+            "sector9_stream" -> "images/rooms/world_2/beach_pools.webp" to "Quiet tide pools catch the canopy's light. Watch for a ripple beneath the surface."
+            "spire_runoff" -> "images/rooms/world_3/spire_sewers_passage.webp" to "Rainwater carries neon reflections through the Spire's drains. Something pulls against the current."
+            "foundry_cooling_runoff" -> "images/rooms/world_4/foundry_cooling_springs.webp" to "Cooling water steams between the furnace channels. Silver shapes gather beyond the heat."
+            "orbital_false_tide" -> "images/rooms/world_5/orbital_solarium.webp" to "An artificial tide moves through the solarium. Its fish follow a rhythm of their own."
+            "singularity_ether_well" -> "images/rooms/world_6/source_new_world_node_scale_final.webp" to "The ether well folds its reflections inward. Give its strange inhabitants room to surge."
+            else -> null to "Watch the water for a bite."
+        }
         return FishingZone(
             id = zoneId,
             name = formatZoneName(zoneId),
-            catches = catches
+            catches = catches,
+            backgroundImage = water.first,
+            description = water.second
         )
     }
 
@@ -49,11 +60,50 @@ class FishingService(
 
     fun getVictoryScreen(): VictoryScreenConfig? = fishingData.victoryScreen
 
+    fun catchDisplayName(itemId: String): String = inventoryService.itemDisplayName(itemId).ifBlank { itemId }
+
+    fun hasReelBriefing(): Boolean = sessionStore?.state?.value?.completedMilestones
+        ?.contains("ms_fishing_reel_briefed") == true
+
+    fun markReelBriefing() { sessionStore?.setMilestone("ms_fishing_reel_briefed") }
+
+    fun getJournal(): List<FishingJournalEntry> = fishingData.zones.map { (zoneId, catches) ->
+        val recorded = sessionStore?.state?.value?.roomStates?.get(journalKey(zoneId)).orEmpty()
+        FishingJournalEntry(zoneId, formatZoneName(zoneId), catches.filter { it.isNativeFish() }.map {
+            FishingJournalSpecies(it.itemId, catchDisplayName(it.itemId),
+                recorded["caught:${it.itemId}"] == true, recorded["clean:${it.itemId}"] == true)
+        })
+    }
+
+    private fun journalKey(zoneId: String) = "fishing_journal:$zoneId"
+
     fun secureCatch(result: FishingResult): FishingResult {
         if (result.quantity <= 0 || result.secured) return result
         inventoryService.addItem(result.itemId, result.quantity)
+        val rewards = mutableListOf<String>()
+        val zone = result.zoneId?.let { getFishingZone(it) }
+        val catch = zone?.catches?.firstOrNull { it.itemId == result.itemId }
+        if (sessionStore != null && zone != null && catch?.isNativeFish() == true) {
+            sessionStore.setRoomState(journalKey(zone.id), "caught:${result.itemId}", true)
+            if (result.cleanCatch) sessionStore.setRoomState(journalKey(zone.id), "clean:${result.itemId}", true)
+            val journal = getJournal()
+            val cleanSpecies = journal.flatMap { it.species }.filter { it.clean }.map { it.itemId }.toSet().size
+            fun reward(milestone: String, itemId: String, text: String) {
+                if (milestone in sessionStore.state.value.completedMilestones) return
+                sessionStore.setMilestone(milestone)
+                inventoryService.addItem(itemId, 1)
+                rewards += text
+            }
+            if (cleanSpecies >= 1) reward("ms_fishing_first_clean", "shiny_lure", "First clean catch: Glimmer Lure unlocked.")
+            if (cleanSpecies >= 3) reward("ms_fishing_clean_collection", "mystery_lure", "Three species caught cleanly: Ghost-Signal Lure unlocked.")
+            if (journal.isNotEmpty() && journal.all { entry -> entry.species.any { it.caught } }) {
+                reward("ms_master_angler", "harmonic_spool_lure", "Master Angler: native fish caught in all six waters. Harmonic Spool Lure unlocked.")
+            }
+        }
         sessionStore?.setInventory(inventoryService.snapshot())
-        return result.copy(secured = true, uses = craftingService?.usesFor(result.itemId).orEmpty())
+        return result.copy(secured = true, displayName = catchDisplayName(result.itemId),
+            uses = craftingService?.usesFor(result.itemId).orEmpty(), rewards = rewards,
+            cleanCatch = result.cleanCatch && catch?.isNativeFish() == true)
     }
 
     fun prepareEncounter(
@@ -88,7 +138,8 @@ class FishingService(
             message = message,
             rarity = catch.rarity,
             flavorText = if (success) flavorTextFor(catch.rarity) else null,
-            behavior = encounter.behavior
+            behavior = encounter.behavior,
+            displayName = displayName
         )
     }
 
@@ -178,10 +229,20 @@ data class FishingResult(
     val flavorText: String? = null,
     val behavior: FishBehaviorDefinition? = null,
     val secured: Boolean = false,
-    val uses: List<String> = emptyList()
+    val uses: List<String> = emptyList(),
+    val zoneId: String? = null,
+    val cleanCatch: Boolean = false,
+    val displayName: String = "",
+    val rewards: List<String> = emptyList()
 )
 
 data class FishingEncounter(
     val catch: FishingCatchDefinition,
     val behavior: FishBehaviorDefinition?
 )
+
+data class FishingJournalSpecies(val itemId: String, val name: String, val caught: Boolean, val clean: Boolean)
+data class FishingJournalEntry(val zoneId: String, val name: String, val species: List<FishingJournalSpecies>)
+
+fun FishingCatchDefinition.isNativeFish(): Boolean = rarity != FishingRarity.JUNK &&
+    itemId !in setOf("scrap_metal", "wiring_bundle", "circuit_board", "nano_filament")

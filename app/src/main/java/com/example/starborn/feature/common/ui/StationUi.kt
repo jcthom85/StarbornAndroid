@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
@@ -37,6 +38,7 @@ fun StationBackground(
     highContrastMode: Boolean,
     @DrawableRes backgroundRes: Int = R.drawable.starborn_menu_bg,
     @DrawableRes vignetteRes: Int? = null,
+    backgroundPainter: Painter? = null,
     content: @Composable BoxScope.() -> Unit
 ) {
     val baseColor = if (highContrastMode) Color(0xFF0A1018) else Color.Black
@@ -47,7 +49,7 @@ fun StationBackground(
     ) {
         if (!highContrastMode) {
             Image(
-                painter = painterResource(backgroundRes),
+                painter = backgroundPainter ?: painterResource(backgroundRes),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),

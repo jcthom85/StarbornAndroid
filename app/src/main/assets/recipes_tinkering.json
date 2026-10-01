@@ -4,12 +4,24 @@
     "name": "Magnetic Salvage Lure",
     "category": "gear",
     "method": "assemble",
-    "base": "basic_lure",
-    "components": ["scrap_metal", "wiring_bundle"],
-    "ingredients": {"basic_lure": 1, "scrap_metal": 2, "wiring_bundle": 1},
+    "base": "scrap_metal",
+    "tools": [
+      "basic_lure"
+    ],
+    "components": [
+      "wiring_bundle"
+    ],
+    "ingredients": {
+      "scrap_metal": 2,
+      "wiring_bundle": 1
+    },
     "result": "salvage_lure",
-    "description": "Fit a plain lure with a weighted magnet. Favors useful salvage over fish; ordinary materials remain available through exploration.",
-    "success_message": "Magnetic Salvage Lure ready. Select it at a fishing spot to hunt for parts."
+    "description": "Use the plain lure as a reusable pattern to assemble a separate weighted magnet. Favors useful salvage over fish; keeps your original lure.",
+    "success_message": "Magnetic Salvage Lure ready. Select it at a fishing spot to hunt for parts.",
+    "salvage": {
+      "scrap_metal": 1
+    },
+    "discovery_hint": "Shape scrap metal with wiring bundle."
   },
   {
     "id": "repair_deep_mine_cabinet",
@@ -28,7 +40,8 @@
     },
     "result": "deep_mine_cabinet_core",
     "description": "Re-seat the Hyperion score bus, replace its corroded traces, and bring a lost piece of the Pit back to life.",
-    "success_message": "The board wakes in warm amber bands. DEEP MINE ASTEROID DRILL scrolls across its tiny diagnostic display."
+    "success_message": "The board wakes in warm amber bands. DEEP MINE ASTEROID DRILL scrolls across its tiny diagnostic display.",
+    "discovery_hint": "Start with the damaged device. Its repair needs scrap metal, wiring bundle."
   },
   {
     "id": "repair_canopy_hopper_cabinet",
@@ -47,7 +60,8 @@
     },
     "result": "canopy_hopper_cabinet_core",
     "description": "Re-solder the moisture-sealed optic board, calibrate the phosphor CRT raster, and restore the Sector 9 emergency survival pod arcade cabinet.",
-    "success_message": "Emerald phosphor ripples across the screen. CANOPY HOPPER glows with bioluminescent swamp hues."
+    "success_message": "Emerald phosphor ripples across the screen. CANOPY HOPPER glows with bioluminescent swamp hues.",
+    "discovery_hint": "Start with the damaged device. Its repair needs scrap metal, wiring bundle."
   },
   {
     "id": "repair_spire_infiltrator_cabinet",
@@ -66,7 +80,8 @@
     },
     "result": "spire_infiltrator_cabinet_core",
     "description": "Bridge the severed data bus on the Spire VIP chip and overclock the vector display to restore SPIRE INFILTRATOR.",
-    "success_message": "Electric cyan circuitry pulses across the screen. SPIRE INFILTRATOR boots into high-speed mainframe overdrive."
+    "success_message": "Electric cyan circuitry pulses across the screen. SPIRE INFILTRATOR boots into high-speed mainframe overdrive.",
+    "discovery_hint": "Start with the damaged device. Its repair needs circuit board, wiring bundle."
   },
   {
     "id": "repair_slag_catcher_cabinet",
@@ -85,7 +100,8 @@
     },
     "result": "slag_catcher_cabinet_core",
     "description": "Replace scorched heat shielding on the ceramic gate and re-mount the analog slider paddle to restore SLAG CATCHER.",
-    "success_message": "Molten ember light surges into the glass. SLAG CATCHER roars with the rhythm of the Foundry blast furnace."
+    "success_message": "Molten ember light surges into the glass. SLAG CATCHER roars with the rhythm of the Foundry blast furnace.",
+    "discovery_hint": "Start with the damaged device. Its repair needs pure iron, wiring bundle."
   },
   {
     "id": "repair_orbital_defense_cabinet",
@@ -104,7 +120,8 @@
     },
     "result": "orbital_defense_cabinet_core",
     "description": "Re-align the crystal optics, recharge the EMP capacitor bank, and restore the Zenith station ORBITAL DEFENSE 2000 cabinet.",
-    "success_message": "Deep cobalt starfields ignite across the CRT. ORBITAL DEFENSE 2000 boots with a triumphant synthesized fan-fare."
+    "success_message": "Deep cobalt starfields ignite across the CRT. ORBITAL DEFENSE 2000 boots with a triumphant synthesized fan-fare.",
+    "discovery_hint": "Start with the damaged device. Its repair needs composite plate, wiring bundle."
   },
   {
     "id": "repair_harmonic_pulse_cabinet",
@@ -123,7 +140,8 @@
     },
     "result": "harmonic_pulse_cabinet_core",
     "description": "Weave astral resonator filaments through the crystal frequency matrix and restore HARMONIC PULSE.",
-    "success_message": "Radiant iridescent frequency highways surge to life across the glass. HARMONIC PULSE resounds with the music of the cosmos."
+    "success_message": "Radiant iridescent frequency highways surge to life across the glass. HARMONIC PULSE resounds with the music of the cosmos.",
+    "discovery_hint": "Start with the damaged device. Its repair needs astral thread, wiring bundle."
   },
   {
     "id": "mod_power_lens_1",
@@ -139,8 +157,12 @@
       "wiring_bundle": 1
     },
     "result": "power_lens_mk_i",
-    "description": "Tune a focusing lens with insulated wiring to boost energy output.",
-    "success_message": "You assemble a crisp new Power Lens Mk. I."
+    "description": "Tune a focusing lens with insulated wiring into a mod that sharpens Source control.",
+    "success_message": "You assemble a crisp new Power Lens Mk. I.",
+    "salvage": {
+      "focusing_lens": 1
+    },
+    "discovery_hint": "Start with focusing lens. Try wiring bundle."
   },
   {
     "id": "mod_ergonomic_grip_1",
@@ -157,8 +179,12 @@
       "scrap_metal": 2
     },
     "result": "ergonomic_grip",
-    "description": "Mold reinforced weave and scrap into a steadier weapon grip.",
-    "success_message": "You mold an Ergonomic Grip that feels perfect in the hand."
+    "description": "Mold reinforced weave and scrap into an equippable grip that improves accuracy.",
+    "success_message": "You mold an Ergonomic Grip that feels perfect in the hand.",
+    "salvage": {
+      "scrap_metal": 1
+    },
+    "discovery_hint": "Start with ballistic weave. Try scrap metal."
   },
   {
     "id": "mod_armor_plating_1",
@@ -170,8 +196,12 @@
       "scrap_metal": 1
     },
     "result": "armor_plating_mk_i",
-    "description": "Press scrap into a simple ablative armor plate.",
-    "success_message": "You bolt together Armor Plating Mk. I."
+    "description": "Press scrap into an equippable defensive plate, or save it for Nanite Plating.",
+    "success_message": "You bolt together Armor Plating Mk. I.",
+    "salvage": {
+      "scrap_metal": 1
+    },
+    "discovery_hint": "Shape scrap metal into protective plating."
   },
   {
     "id": "mod_insulated_lining_1",
@@ -187,8 +217,12 @@
       "wiring_bundle": 1
     },
     "result": "insulated_lining",
-    "description": "Stitch insulated wiring through weave to soften energy discharge.",
-    "success_message": "You stitch an Insulated Lining that hums with safety."
+    "description": "Stitch insulated wiring through weave into a defensive suit mod.",
+    "success_message": "You stitch an Insulated Lining that hums with safety.",
+    "salvage": {
+      "ballistic_weave": 1
+    },
+    "discovery_hint": "Start with ballistic weave. Try wiring bundle."
   },
   {
     "id": "repair_cryo_inductor",
@@ -205,7 +239,8 @@
     },
     "result": "functional_cryo_inductor",
     "description": "Repair the damaged Cryo-Inductor and wire its cold loop into Nova's cutter to unlock Cryo Vent.",
-    "success_message": "The Cryo-Inductor locks into the cutter. Cryo Vent is online: make targets Brittle, then follow with physical attacks."
+    "success_message": "The Cryo-Inductor locks into the cutter. Cryo Vent is online: make targets Brittle, then follow with physical attacks.",
+    "discovery_hint": "Start with the damaged device. Its repair needs scrap metal."
   },
   {
     "id": "repaired_projector",
@@ -222,7 +257,8 @@
     },
     "result": "repaired_projector",
     "description": "Replace the cracked controller board and restore the school's projector.",
-    "success_message": "You repaired Schoolteacher Kasey's projector."
+    "success_message": "You repaired Schoolteacher Kasey's projector.",
+    "discovery_hint": "Start with the damaged device. Its repair needs circuit board."
   },
   {
     "id": "repaired_arcade_display",
@@ -239,7 +275,8 @@
     },
     "result": "repaired_arcade_display",
     "description": "Thread nano-filament through the dead pixel lattice.",
-    "success_message": "You repaired Sam and Ellie's arcade display."
+    "success_message": "You repaired Sam and Ellie's arcade display.",
+    "discovery_hint": "Start with the damaged device. Its repair needs nano filament."
   },
   {
     "id": "repaired_coffee_grinder",
@@ -256,7 +293,8 @@
     },
     "result": "repaired_coffee_grinder",
     "description": "Re-seat the grinder teeth and patch the cracked drive housing.",
-    "success_message": "You repaired Maddie's coffee grinder."
+    "success_message": "You repaired Maddie's coffee grinder.",
+    "discovery_hint": "Start with the damaged device. Its repair needs scrap metal."
   },
   {
     "id": "mod_source_resin",
@@ -273,7 +311,12 @@
     },
     "result": "source_resin",
     "description": "Process beast meat and jungle herbs into a thick, protective Source-insulating resin.",
-    "success_message": "You synthesize a jar of Source Resin."
+    "success_message": "You synthesize a jar of Source Resin.",
+    "salvage": {
+      "herb": 1
+    },
+    "requires_schematic": true,
+    "discovery_hint": "Gather supplies at the tideglass beach with Orion to obtain this schematic."
   },
   {
     "id": "repair_thermal_cutter",
@@ -292,7 +335,9 @@
     },
     "result": "thermal_cutter",
     "description": "Rebuild the Dominion cutter head into a controlled tool for cauterizing razor-vines.",
-    "success_message": "You repair the Thermal Cutter. Its edge glows hot enough to seal razor-vines as it cuts."
+    "success_message": "You repair the Thermal Cutter. Its edge glows hot enough to seal razor-vines as it cuts.",
+    "requires_schematic": true,
+    "discovery_hint": "Recover the lost patrol cache in Sector 9 to obtain this repair schematic."
   },
   {
     "id": "mod_rapid_capacitor",
@@ -311,7 +356,12 @@
     },
     "result": "rapid_capacitor",
     "description": "Combine scrap metal and insulated wiring into an overclocked rapid capacitor.",
-    "success_message": "You assemble a humming Rapid Capacitor."
+    "success_message": "You assemble a humming Rapid Capacitor.",
+    "salvage": {
+      "scrap_metal": 1
+    },
+    "requires_schematic": true,
+    "discovery_hint": "Recover the Dominion transmitter core to obtain Gh0st?s schematic."
   },
   {
     "id": "mod_photon_core",
@@ -330,7 +380,11 @@
     },
     "result": "photon_core_mod",
     "description": "Tune Source Resin through a focusing lens to create a compact thermal light-core.",
-    "success_message": "You align the Photon Core Mod until its light holds steady."
+    "success_message": "You align the Photon Core Mod until its light holds steady.",
+    "salvage": {
+      "focusing_lens": 1
+    },
+    "discovery_hint": "Start with source resin. Try focusing lens, wiring bundle."
   },
   {
     "id": "mod_nanite_plating",
@@ -349,7 +403,12 @@
     },
     "result": "nanite_plating_mod",
     "description": "Thread nano-filament through armor plating so the surface can knit itself under pressure.",
-    "success_message": "You finish a plate that flexes before your fingers touch it."
+    "success_message": "You finish a plate that flexes before your fingers touch it.",
+    "salvage": {
+      "scrap_metal": 1,
+      "nano_filament": 1
+    },
+    "discovery_hint": "Start with armor plating mk i. Try nano filament, scrap metal."
   },
   {
     "id": "mod_resonance_capacitor",
@@ -368,7 +427,11 @@
     },
     "result": "resonance_capacitor_mod",
     "description": "Stabilize an overclocked capacitor with Source Resin and nano-filament.",
-    "success_message": "You build a Resonance Capacitor Mod that charges in silence."
+    "success_message": "You build a Resonance Capacitor Mod that charges in silence.",
+    "salvage": {
+      "nano_filament": 1
+    },
+    "discovery_hint": "Start with rapid capacitor. Try source resin, nano filament."
   },
   {
     "id": "gear_reinforced_resin_rod",
@@ -387,7 +450,11 @@
     },
     "result": "reinforced_resin_rod",
     "description": "Rewire a Resin Rod with a bite sensor and reinforced guide loops for heavier runoff catches.",
-    "success_message": "You tune a Reinforced Resin Rod that holds steady under pressure."
+    "success_message": "You tune a Reinforced Resin Rod that holds steady under pressure.",
+    "salvage": {
+      "fiberglass_rod": 1
+    },
+    "discovery_hint": "Start with fiberglass rod. Try wiring bundle, circuit board."
   },
   {
     "id": "gear_harmonic_carbon_rod",
@@ -406,7 +473,11 @@
     },
     "result": "harmonic_carbon_rod",
     "description": "Stabilize carbon thread with Source Resin and nano-filament so the rod can ride standing waves.",
-    "success_message": "You build a Harmonic Carbon Rod that flexes in time with the air."
+    "success_message": "You build a Harmonic Carbon Rod that flexes in time with the air.",
+    "salvage": {
+      "carbon_rod": 1
+    },
+    "discovery_hint": "Start with carbon rod. Try source resin, nano filament."
   },
   {
     "id": "gear_harmonic_spool_lure",
@@ -425,7 +496,11 @@
     },
     "result": "harmonic_spool_lure",
     "description": "Tune a Ghost-Signal Lure with a chime minnow bone and insulated wire so it clicks across layered frequencies.",
-    "success_message": "You finish a Harmonic Spool Lure that taps out three rhythms at once."
+    "success_message": "You finish a Harmonic Spool Lure that taps out three rhythms at once.",
+    "salvage": {
+      "wiring_bundle": 1
+    },
+    "discovery_hint": "Start with mystery lure. Try chime minnow, wiring bundle."
   },
   {
     "id": "mod_thermite_core",
@@ -445,7 +520,11 @@
     },
     "result": "thermite_core_mod",
     "description": "Forge a superheated thermal core from pure Foundry iron and logic circuitry to augment weapon critical force.",
-    "success_message": "You assemble a Thermite Core Mod that radiates searing thermal power."
+    "success_message": "You assemble a Thermite Core Mod that radiates searing thermal power.",
+    "salvage": {
+      "pure_iron": 1
+    },
+    "discovery_hint": "Shape pure iron with wiring bundle, circuit board."
   },
   {
     "id": "mod_orbital_deflector",
@@ -465,7 +544,11 @@
     },
     "result": "orbital_deflector_mod",
     "description": "Laminate composite hull plating with micro-filaments to construct a high-absorption kinetic and energy deflector.",
-    "success_message": "You calibrate an Orbital Deflector Mod that locks into a rigid protective field."
+    "success_message": "You calibrate an Orbital Deflector Mod that locks into a rigid protective field.",
+    "salvage": {
+      "composite_plate": 1
+    },
+    "discovery_hint": "Shape composite plate with nano filament, wiring bundle."
   },
   {
     "id": "mod_astral_weave",
@@ -485,6 +568,10 @@
     },
     "result": "astral_weave_mod",
     "description": "Weave resonant astral threads with Source Resin to produce a lightweight, reality-shifting combat cloak mod.",
-    "success_message": "You weave an Astral Weave Mod that shimmers with quantum probability."
+    "success_message": "You weave an Astral Weave Mod that shimmers with quantum probability.",
+    "salvage": {
+      "astral_thread": 1
+    },
+    "discovery_hint": "Shape astral thread with source resin, nano filament."
   }
 ]

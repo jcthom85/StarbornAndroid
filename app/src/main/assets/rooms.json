@@ -7778,6 +7778,12 @@
         "type": "rest_stop",
         "rest_event": "w6_rest_memory_oasis",
         "message": "The blue fire is quiet enough to cook beside. Source pressure lifts Nova's tinnitus while the crew argues over seasoning."
+      },
+      {
+        "name": "campfire cookware",
+        "type": "rest_stop",
+        "cook_source": "Source Campfire",
+        "message": "The crew sets pots beside the blue flame."
       }
     ],
     "description_variants": [
@@ -9507,8 +9513,10 @@
     "actions": [
       {
         "name": "campfire",
-        "type": "generic",
-        "condition_unmet_message": "The fire burns with a warm, steady glow, throwing long shadows on the stone walls."
+        "type": "rest_stop",
+        "condition_unmet_message": "The fire burns with a warm, steady glow, throwing long shadows on the stone walls.",
+        "cook_source": "Campfire",
+        "message": "The sheltered beach fire is ready for cooking."
       },
       {
         "name": "warm sand",

@@ -73,7 +73,8 @@ data class ActiveMealBuff(
     val agilityBonus: Int = 0,
     val luckBonus: Int = 0,
     val accuracyBonus: Int = 0,
-    val evasionBonus: Int = 0
+    val evasionBonus: Int = 0,
+    val rulesVersion: Int = 1
 )
 
 data class ArcadeCabinetProgress(

@@ -6,6 +6,8 @@ import com.example.starborn.domain.fishing.FishingRod
 import com.example.starborn.domain.fishing.FishingResult
 import com.example.starborn.domain.fishing.FishingZone
 import com.example.starborn.domain.fishing.MinigameResult
+import com.example.starborn.domain.fishing.FishingFightPhase
+import com.example.starborn.domain.fishing.FishingJournalEntry
 
 data class FishingUiState(
     val availableRods: List<FishingRod> = emptyList(),
@@ -19,7 +21,11 @@ data class FishingUiState(
     val reelState: FishingReelState? = null,
     val lastCatchResult: FishingResult? = null,
     val lastResult: MinigameResult? = null,
-    val hookSensitivity: HookSensitivity = HookSensitivity.MEDIUM
+    val hookSensitivity: HookSensitivity = HookSensitivity.MEDIUM,
+    val motionEnabled: Boolean = false,
+    val motionSupported: Boolean = false,
+    val needsReelBriefing: Boolean = true,
+    val journal: List<FishingJournalEntry> = emptyList()
 )
 
 enum class HookSensitivity(val label: String, val thresholdValue: Float) {
@@ -32,6 +38,7 @@ enum class FishingState {
     SETUP,
     WAITING,
     HOOKSET,
+    READY,
     REELING,
     RESULT
 }
@@ -52,5 +59,7 @@ data class FishingReelState(
     val tension: Float,
     val isReeling: Boolean,
     val fishName: String?,
-    val behavior: FishBehaviorDefinition?
+    val behavior: FishBehaviorDefinition?,
+    val phase: FishingFightPhase = FishingFightPhase.CALM,
+    val staminaRemaining: Float = 1f
 )

@@ -81,6 +81,8 @@ class InventoryService(
     @Synchronized
     fun useItem(idOrAlias: String): ItemUseResult? {
         val item = resolveItem(idOrAlias) ?: return null
+        // Equipped snacks are reusable combat abilities, never inventory portions.
+        if (item.type.equals("snack", true) || item.equipment?.slot?.equals("snack", true) == true) return null
         if (!hasItemDirect(item.id)) return null
         val effect = item.effect
         val result = when {

@@ -345,6 +345,8 @@ fun ExplorationScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var pendingInventoryItem by remember { mutableStateOf<InventoryPreviewItemUi?>(null) }
     var showInventoryTargetDialog by remember { mutableStateOf(false) }
+    var pendingMealReplacement by remember { mutableStateOf<InventoryPreviewItemUi?>(null) }
+    var replacingMeal by remember { mutableStateOf(false) }
     val fxBursts = remember { mutableStateListOf<UiFxBurst>() }
     var saveLoadMode by remember { mutableStateOf<String?>(null) } // "save" or "load"
     var slotSummaries by remember { mutableStateOf<List<SaveSlotSummary>>(emptyList()) }
@@ -476,6 +478,8 @@ fun ExplorationScreen(
 
     LaunchedEffect(uiState.isMenuOverlayVisible) {
         if (!uiState.isMenuOverlayVisible) {
+            pendingMealReplacement = null
+            replacingMeal = false
             pendingInventoryItem = null
             showInventoryTargetDialog = false
         }
@@ -488,19 +492,24 @@ fun ExplorationScreen(
     }
 
     val menuPartyMembers = uiState.partyStatus.members
-    val onUsePreviewItem: (InventoryPreviewItemUi) -> Unit = { item ->
+    val beginInventoryUse: (InventoryPreviewItemUi, Boolean) -> Unit = { item, replace ->
         val effect = item.effect
         if (effect == null) {
             viewModel.showStatusMessage("${item.name} can't be used right now.")
         } else {
             val targetMode = effect.target?.lowercase(Locale.getDefault()) ?: "any"
-            if (targetMode == "party" || menuPartyMembers.isEmpty()) {
-                viewModel.useInventoryItem(item.id, null)
+            if (targetMode in listOf("party", "all_allies") || menuPartyMembers.isEmpty()) {
+                viewModel.useInventoryItem(item.id, null, replaceMeal = replace)
             } else {
                 pendingInventoryItem = item
+                replacingMeal = replace
                 showInventoryTargetDialog = true
             }
         }
+    }
+    val onUsePreviewItem: (InventoryPreviewItemUi) -> Unit = { item ->
+        if (viewModel.isPreparedMeal(item.id) && uiState.activeMeal != null) pendingMealReplacement = item
+        else beginInventoryUse(item, false)
     }
 
     val swipeThresholdPx = with(LocalDensity.current) { 72.dp.toPx() }
@@ -1346,6 +1355,16 @@ fun ExplorationScreen(
             )
         }
 
+        pendingMealReplacement?.let { item ->
+            AlertDialog(onDismissRequest = { pendingMealReplacement = null },
+                title = { Text("Replace your meal?") },
+                text = { Text("Eating ${item.name} replaces ${uiState.activeMeal?.recipeName ?: "your active meal"} and starts a new three-battle party bonus.") },
+                confirmButton = { TextButton(onClick = {
+                    pendingMealReplacement = null
+                    beginInventoryUse(item, true)
+                }) { Text("Replace meal") } },
+                dismissButton = { TextButton(onClick = { pendingMealReplacement = null }) { Text("Keep current meal") } })
+        }
         if (showInventoryTargetDialog && pendingInventoryItem != null) {
             val targetOptions = menuPartyMembers.map {
                 TargetSelectionOption(
@@ -1360,7 +1379,7 @@ fun ExplorationScreen(
                     itemName = pendingItem.name,
                     targets = targetOptions,
                     onSelect = { targetId ->
-                        viewModel.useInventoryItem(pendingItem.id, targetId)
+                        viewModel.useInventoryItem(pendingItem.id, targetId, replaceMeal = replacingMeal)
                         pendingInventoryItem = null
                         showInventoryTargetDialog = false
                     },

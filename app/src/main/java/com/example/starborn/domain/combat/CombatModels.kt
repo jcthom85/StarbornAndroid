@@ -32,7 +32,8 @@ data class StatBlock(
     val accuracyBonus: Double = 0.0,
     val evasionBonus: Double = 0.0,
     val critBonus: Double = 0.0,
-    val flatDamageReduction: Int = 0
+    val flatDamageReduction: Int = 0,
+    val statusResistance: Int = 0
 )
 
 data class ResistanceProfile(
