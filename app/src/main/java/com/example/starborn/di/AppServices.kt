@@ -2763,6 +2763,7 @@ internal fun isDialogueConditionMet(
                 questId == null || stageId == null ||
                     state.questStageById[questId]?.equals(stageId, ignoreCase = true) != true
             }
+            "room" -> value.isNotBlank() && value == state.roomId
             "milestone" -> value in state.completedMilestones
             "milestone_not_set" -> value !in state.completedMilestones
             "item" -> value.isNotBlank() && inventoryService.hasItem(value)

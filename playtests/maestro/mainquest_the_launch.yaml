@@ -29,15 +29,15 @@ appId: com.junewiregames.starborn.prealpha
 - assertVisible: "Zeke"
 - tapOn: "Zeke"
 - extendedWaitUntil:
-    visible: ".*Warden's down.*"
+    visible: ".*He's down.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*have the Chime.*"
+    visible: ".*Jed gave me the Chime.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*Inside.*seal the hatch.*"
+    visible: ".*You first.*seal the hatch.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
@@ -54,11 +54,15 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*Here goes.*"
+    visible: ".*Neither have I.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*Authorization accepted.*Start the launch sequence.*"
+    visible: ".*Authorization accepted.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*Start the launch sequence.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
@@ -66,32 +70,32 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "navigation console"
 - extendedWaitUntil:
-    visible: ".*pod clears the launch rail.*own capacitors.*"
+    visible: ".*pod.s capacitors.*Chime opens the launch interlock.*"
     timeout: 15000
 - takeScreenshot: planetary-impact-cinematic
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
-    visible: ".*forced route misses.*traffic corridor.*storm front.*"
+    visible: ".*permitted corridor slides out of reach.*planetary shield.*"
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
-    visible: ".*Crosswind rolls the pod.*stabilizer.*"
+    visible: ".*shield rejects the pod.*stabilizer.*"
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
-    visible: ".*navigation bus is burning out.*route lock won't release.*"
+    visible: ".*It won.t let me turn.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*navigation console arcs and dies.*hull starts tearing.*"
+    visible: ".*Hook your arm through the frame.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*navigation console arcs and goes dark.*storm.*"
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
-    visible: ".*shield rejects the pod.*"
-    timeout: 10000
-- tapOn: "Tap to continue.*"
-- extendedWaitUntil:
-    visible: ".*pod drops through the canopy and hits hard.*"
+    visible: ".*pod tears through the canopy and hits hard.*"
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:

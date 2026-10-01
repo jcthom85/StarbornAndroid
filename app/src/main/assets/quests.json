@@ -96,7 +96,7 @@
     "id": "w1_mq02",
     "title": "Shift Clearance",
     "summary": "Nova has to clear the Transit Checkpoint before Dominion's paperwork turns her into a liability.",
-    "description": "Report to the Transit Checkpoint, get a mine badge, and clear the retirement flag attached to Nova's cutter fault.",
+    "description": "Get through the Transit Checkpoint and help Zeke buy time against Nova's retirement order.",
     "flavor": "Nova's file marks her for bio-reclamation.",
     "giver": "Zeke",
     "hub_id": "hub_1_homestead",
@@ -182,7 +182,7 @@
           },
           {
             "id": "use_deep_elevator",
-            "text": "From the Concourse Lobby, head west to the Elevator Lobby, then north into the Deep Mine with Boggs' authorization."
+            "text": "With Boggs' authorization, head west to the Elevator Lobby. Choose Plan mine descent, then enter Deep Mine from the Logistics map."
           }
         ]
       },
@@ -368,7 +368,7 @@
       {
         "id": "launch_pod",
         "title": "Launch",
-        "description": "The pod has power. The Chime can open the launch interlock, but its paired beacon controls the route.",
+        "description": "Help Zeke wire Jed's Chime into the pod and get clear of the colony.",
         "tasks": [
           {
             "id": "splice_chime",
@@ -380,7 +380,7 @@
           },
           {
             "id": "hit_planetary_shield",
-            "text": "Miss the safe traffic corridor and crash toward Sector 9."
+            "text": "Survive the launch."
           }
         ]
       }

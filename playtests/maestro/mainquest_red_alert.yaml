@@ -41,23 +41,31 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 1000
 - tapOn: "Jed"
 - extendedWaitUntil:
-    visible: ".*Warden is sealing the lift.*"
+    visible: ".*Warden.s closing the lift.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*found us a route.*Come on.*"
+    visible: ".*Zeke.s opened a route.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*override won't hold itself.*lift locks.*"
+    visible: ".*Let go of this lever.*brake drops.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*jam it.*Move your hand.*"
+    visible: ".*You always have a spare.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
     visible: ".*Take the Chime.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*I kept fixing your cutter.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*Let me do this much.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:

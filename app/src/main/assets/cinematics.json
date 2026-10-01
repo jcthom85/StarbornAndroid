@@ -82,13 +82,13 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The generator catches. Work lights snap on down the tunnel.",
+        "text": "The generator catches. Work lights snap on down the tunnel, one row after another. Nova keeps her palm on the switch until it stops shaking.",
         "audio_cue": "sfx_w2_astra_reboot",
         "music_cue": "music_w1_deep_mine"
       },
       {
         "type": "narration",
-        "text": "Heavy locks release farther down the mine."
+        "text": "Heavy locks release farther down the mine. Under the returning machinery, the strange hum is still there."
       }
     ]
   },
@@ -312,7 +312,7 @@
     "steps": [
       {
         "type": "narration",
-        "text": "Jed taps the bench twice, already watching to see whether Nova remembers the first rule: power off before hands in."
+        "text": "Jed taps the bench twice. Nova reaches for the power switch before he can remind her. He shifts the housing closer, leaving her room to work."
       }
     ]
   },
@@ -322,7 +322,7 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The cutter settles at a steady idle. Jed checks the gauge twice, then gives Nova a small nod."
+        "text": "The cutter settles to a steady idle. Jed checks the gauge twice. Nova catches him doing it; he gives her the small nod she was waiting for."
       }
     ]
   },
@@ -452,25 +452,25 @@
     "steps": [
       {
         "type": "narration",
-        "text": "Phase sweep: 87 kHz. Cold loop: 68%. Ground phase: 180 degrees. The three diagnostic bands lock.",
+        "text": "Phase sweep: 87 kHz. Cold loop: 68%. Ground phase: 180 degrees. The three diagnostic bands settle together. For a breath, Nova feels the cutter stop fighting her.",
         "music_cue": "music_orion_theme"
       },
       {
         "type": "narration",
-        "text": "The damaged cradle closes its circuit through cutter, suit, and operator. Heat spikes past the Cryo-Inductor's limit."
+        "text": "The damaged cradle closes its circuit through cutter, suit, and operator. The grip turns hot. Nova tries to pull away; her fingers won't open."
       },
       {
         "type": "narration",
-        "text": "The Cryo-Inductor fuses. The Flux Liner dumps the neural discharge into the chamber floor and burns its sacrificial strip open.",
+        "text": "The Cryo-Inductor fuses with a sharp pop. The Flux Liner carries the discharge into the floor, burning its sacrificial ground strip open. Nova's knees strike the stone.",
         "audio_cue": "sfx_combat_plasma_arc"
       },
       {
         "type": "narration",
-        "text": "Pain crosses Nova's teeth and left hand. Her suit clock skips from 14:03:22.4 to 14:03:22.9. A new protocol carrier appears in her nerve telemetry."
+        "text": "Pain rings through her teeth and left hand. Her suit clock skips half a second. Beneath the fading hum, another pulse keeps time with her breathing."
       },
       {
         "type": "narration",
-        "text": "Nova releases the cutter. Her hand trembles. The Fork separates from the cradle while Harmony sensors flag a live Architect handshake.",
+        "text": "Nova lets the cutter fall. Her hand won't stop trembling. The Fork lifts free of its cradle. Above the mine, a Harmony sensor registers the Architect handshake and turns red.",
         "audio_cue": "wpn_orion_bowl_resonance"
       }
     ]
@@ -481,38 +481,40 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The pod clears the launch rail on its own capacitors. The Chime opens the authorization interlock; its paired beacon takes the navigation bus.",
+        "text": "The pod's capacitors kick it off the rail. Nova catches one last glimpse of the colony. Beside her, the Chime opens the launch interlock, then locks navigation onto its paired beacon.",
         "audio_cue": "sfx_pod_launch",
         "music_cue": "music_crash_flight"
       },
       {
         "type": "narration",
-        "text": "Zeke's override fails. The forced route misses a permitted traffic corridor and drops the pod into a Sector 9 storm front."
+        "text": "Zeke pulls at the route controls. The display snaps back to the same heading. Ahead, the permitted corridor slides out of reach and the planetary shield fills the viewport."
       },
       {
         "type": "narration",
-        "text": "Crosswind rolls the pod. The upper canopy tears one stabilizer free."
+        "text": "The shield rejects the pod. White light floods the cabin; the impact tears a stabilizer loose and throws them back toward Sector 9."
       },
       {
         "type": "dialogue",
         "speaker": "Zeke",
         "emote": "worried",
-        "text": "Nova! Brace! The navigation bus is burning out—the route lock won't release!",
+        "text": "It won't let me turn! Nova, I can't get us clear!",
         "audio_cue": "sfx_security_lockdown",
         "music_cue": "music_cinematic_crash"
       },
       {
-        "type": "narration",
-        "text": "The navigation console arcs and dies. Zeke hooks one arm through the frame as the hull starts tearing.",
-        "audio_cue": "sfx_combat_plasma_arc"
+        "type": "dialogue",
+        "text": "Look at me. Hook your arm through the frame. I'm here.",
+        "audio_cue": "sfx_combat_plasma_arc",
+        "speaker": "Nova",
+        "emote": "worried"
       },
       {
         "type": "narration",
-        "text": "The shield rejects the pod, throwing it back into the atmosphere in a spinning descent toward the overgrown ruins of Sector 9."
+        "text": "The navigation console arcs and goes dark. Zeke grips the frame beside Nova as the pod rolls into the storm. Rain hammers the hull. The thrusters sputter out."
       },
       {
         "type": "narration",
-        "text": "The thrusters cut. The pod drops through the canopy and hits hard.",
+        "text": "Black branches rush across the viewport. The pod tears through the canopy and hits hard. Nova's hand is still reaching for Zeke when the lights go out.",
         "audio_cue": "sfx_crash_impact"
       }
     ]
@@ -523,15 +525,15 @@
     "steps": [
       {
         "type": "narration",
-        "text": "Nova seats the cracked circuit board in the isolated socket. Encrypted command blocks fill the terminal."
+        "text": "Nova seats the cracked circuit board in the isolated socket. Encrypted commands crowd the screen. She checks the disconnected network cable before touching the keys."
       },
       {
         "type": "narration",
-        "text": "A hidden data block decrypts. The signature on the package is marked by standing waves and acoustic patterns, signed by the 'Chorus'."
+        "text": "A hidden block opens: overlapping wave patterns, repeated like a signature. Below them is one name: Chorus. Nova reads it twice."
       },
       {
         "type": "narration",
-        "text": "The terminal confirms: ACCESS KEY WRITTEN TO REMOVABLE BOARD. NETWORK TRANSMISSION: NONE. The recovered key clears from the terminal as Nova removes the board."
+        "text": "ACCESS KEY WRITTEN TO REMOVABLE BOARD. NETWORK TRANSMISSION: NONE. Nova pulls the board. The recovered key clears from the terminal, leaving nothing on the network to follow her."
       }
     ]
   },
@@ -541,19 +543,19 @@
     "steps": [
       {
         "type": "narration",
-        "text": "You boot up the discarded datapad. The battery is critically low, but the final text log is intact."
+        "text": "The discarded datapad warms in Nova's hand. Its battery warning covers half a final shift log. She lowers the brightness to keep it alive."
       },
       {
         "type": "narration",
-        "text": "Log Entry: 'They sealed the doors from the outside. Said the collapse was a biohazard risk, but we only hit a pocket of hum.'"
+        "text": "'They sealed the doors from outside. Called the collapse a biohazard. We only broke into a pocket of hum. We've been knocking between shifts of the drills. Nobody's answered.'"
       },
       {
         "type": "narration",
-        "text": "Log Entry: 'The resonance is beautiful. It doesn't sound like a machine. It sounds like currents in a deep ocean. I'm not afraid of the dark anymore.'"
+        "text": "'The sound comes in waves. We count them so we don't lose track of the hours. If somebody gets this out, tell them we were still here. We didn't abandon the shift.'"
       },
       {
         "type": "narration",
-        "text": "The screen flickers and goes dark permanently, leaving you in the cold silence of the mine."
+        "text": "The screen goes dark. Nova waits, then presses the power key once more. Nothing. She puts the datapad away instead of leaving it with the empty helmets."
       }
     ]
   },
@@ -607,7 +609,7 @@
       {
         "type": "dialogue",
         "speaker": "???",
-        "text": "Broadcast my identity. Draw it away.",
+        "text": "Broadcast my identity. Get it away from them.",
         "portrait": "images/characters/emotes/orion_angry.png",
         "caption_style": "dialogue",
         "image": "images/cinematics/intro_chime_launch_v1.webp",
@@ -636,7 +638,7 @@
       },
       {
         "type": "narration",
-        "text": "Something answers across the dark. Not a voice—a chord, many notes agreeing to carry it.",
+        "text": "A chord answers through the dark. The receiver needles rise together.",
         "image": "images/cinematics/intro_chorus_answer_v1.webp",
         "camera_start_scale": 1.0,
         "camera_end_scale": 1.08,
@@ -650,7 +652,7 @@
       {
         "type": "dialogue",
         "speaker": "???",
-        "text": "Mute this room. Begin stasis.",
+        "text": "Mute the room. Seal me in.",
         "portrait": "images/characters/emotes/orion_worried.png",
         "caption_style": "dialogue",
         "image": "images/cinematics/intro_orion_stasis_v1.webp",
@@ -710,32 +712,32 @@
     "steps": [
       {
         "type": "narration",
-        "text": "Nova clamps the Flux Liner's ground strip to the floor bus. Cold loop: 68%. Governor: bypassed."
+        "text": "Nova clamps the Flux Liner's ground strip to the floor bus. Cold loop: 68%. She opens the governor bypass. Jed keeps one hand beside the cut-off."
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
-        "text": "Bypass confirmed. One live sweep."
+        "text": "One sweep. I'm watching the heat."
       },
       {
         "type": "narration",
-        "text": "The cutter fires. Its phase sweep enters the buried old conduit under Jed's bench. The sector breaker trips hard enough to shake dust from the rafters.",
+        "text": "The cutter fires. Its phase sweep catches the buried conduit under Jed's bench. The breaker slams open. Dust falls into Nova's hair; the hum keeps climbing.",
         "audio_cue": "sfx_combat_plasma_arc"
       },
       {
         "type": "dialogue",
         "speaker": "Jed",
-        "text": "Kill it!"
+        "text": "Kill it, Nova!"
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
         "emote": "worried",
-        "text": "It is off. That hum is not mine."
+        "text": "I have. Jed... it's still answering."
       },
       {
         "type": "narration",
-        "text": "A terminal prints CUTTER FAULT 4C-117 and attaches operator NOVA VANCE. Deep below the shop, a chamber seal cracks.",
+        "text": "A terminal stamps CUTTER FAULT 4C-117 beside NOVA VANCE. Jed reaches past the report to steady her hand. Far below the workshop, an old chamber seal cracks.",
         "audio_cue": "sfx_distant_gate_rumble"
       }
     ]

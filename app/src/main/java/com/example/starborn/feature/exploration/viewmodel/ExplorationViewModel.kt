@@ -2505,6 +2505,24 @@ class ExplorationViewModel(
         dismissBlockedPrompt()
         val nextRoomId = getConnection(currentRoom, direction) ?: return
         val nextRoom = roomsById[nextRoomId] ?: return
+        val destinationNodeId = nodeIdByRoomId[nextRoomId]
+        val discoveringDestination = destinationNodeId != null &&
+            destinationNodeId !in sessionStore.state.value.visitedNodes
+        // Give the first authorized descent a map reveal before entering the mine.
+        // Keep the current room until the player chooses a destination, including
+        // across saves; subsequent crossings retain the continuous room route.
+        val descentSession = sessionStore.state.value
+        if (currentRoom.id == "admin_elevator" && nextRoomId == "mine_landing" &&
+            "ms_w1_mq03_bogs_talked" in descentSession.completedMilestones &&
+            "deep_mine" !in descentSession.visitedNodes &&
+            descentSession.roomStates["admin_elevator"]?.get("mine_map_reveal_seen") != true
+        ) {
+            sessionStore.revealNode("deep_mine")
+            sessionStore.unlockNode("deep_mine")
+            sessionStore.setRoomState("admin_elevator", "mine_map_reveal_pending", true)
+            emitEvent(ExplorationEvent.ReturnToHub)
+            return
+        }
         val nextRoomIsDark = isRoomDark(nextRoom)
         val nextTheme = themeByRoomId[nextRoom.id]
         val nextThemeStyle = themeStyleByRoomId[nextRoom.id]
@@ -2571,6 +2589,18 @@ class ExplorationViewModel(
         playRoomAudio(nextHub?.id ?: sessionState.hubId, nextRoom.id)
         handleRoomEntryTutorials(nextRoom)
         eventManager.handleTrigger("enter_room", EventPayload.EnterRoom(nextRoom.id))
+        if (discoveringDestination) {
+            when (destinationNodeId) {
+                "echo_chamber" -> {
+                    playUiCue("sfx_hub_node_select")
+                    postStatus("Echo Chamber discovered — the mine ends here. The pulse continues through the stone.")
+                }
+                "launch_bay" -> {
+                    playUiCue("sfx_hub_node_select")
+                    postStatus("Launch Bay reached — Zeke's route leads to the cargo lift. Keep moving.")
+                }
+            }
+        }
         telemetry.record(
             "room_entered",
             mapOf(
@@ -5874,7 +5904,12 @@ class ExplorationViewModel(
             val normalized = direction.lowercase(Locale.getDefault())
             label.takeIf { it.isNotBlank() }
                 ?.takeIf { getConnection(room, normalized) != null }
-                ?.let { TravelAction(name = it, direction = normalized) }
+                ?.let {
+                    val travelLabel = if (room.id == "admin_elevator" && normalized == "north" &&
+                        "deep_mine" in sessionStore.state.value.visitedNodes
+                    ) "Ride mine lift" else it
+                    TravelAction(name = travelLabel, direction = normalized)
+                }
         }
         return authoredActions + travelActions
     }

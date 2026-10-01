@@ -55,7 +55,8 @@ import kotlin.math.sin
 internal fun HubMapScene(
     hubId: String?, background: Painter, nodes: List<HubNodeUi>, selectedId: String?, trackedQuest: HubQuestUi?,
     onSelect: (HubNodeUi) -> Unit, onEnter: (HubNodeUi) -> Unit, modifier: Modifier = Modifier,
-    bottomReserve: androidx.compose.ui.unit.Dp = 190.dp
+    bottomReserve: androidx.compose.ui.unit.Dp = 190.dp,
+    newlyUnlockedNodeId: String? = null
 ) {
     val layout = HubMapLayouts.all[hubId] ?: return
     BoxWithConstraints(modifier.clipToBounds(), contentAlignment = Alignment.Center) {
@@ -186,9 +187,24 @@ internal fun HubMapScene(
                 val anchorX = transform.x(nodeX)
                 val anchorY = transform.y(nodeY)
 
+                val reveal = remember(node.id) {
+                    Animatable(if (node.id == newlyUnlockedNodeId) 0f else 1f)
+                }
+                androidx.compose.runtime.LaunchedEffect(node.id, newlyUnlockedNodeId) {
+                    if (node.id == newlyUnlockedNodeId) {
+                        reveal.snapTo(0f)
+                        kotlinx.coroutines.delay(250)
+                        reveal.animateTo(1f, spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessLow
+                        ))
+                    } else {
+                        reveal.snapTo(1f)
+                    }
+                }
                 if (site.labelDx != 0f || site.labelDy != 0f) {
                     Canvas(Modifier.fillMaxSize()) {
-                        drawLine(tint.copy(alpha = .6f), Offset(anchorX, anchorY),
+                        drawLine(tint.copy(alpha = .6f * reveal.value.coerceIn(0f, 1f)), Offset(anchorX, anchorY),
                             Offset(transform.x(nodeX + site.labelDx), transform.y(nodeY + site.labelDy) + 14.dp.toPx()),
                             strokeWidth = 1.dp.toPx())
                     }
@@ -231,7 +247,7 @@ internal fun HubMapScene(
                         painter = painter,
                         contentDescription = "Artwork: ${node.title}",
                         contentScale = ContentScale.Fit,
-                        alpha = animatedAlpha,
+                        alpha = animatedAlpha * reveal.value.coerceIn(0f, 1f),
                         modifier = Modifier
                             .offset {
                                 IntOffset(
@@ -241,8 +257,8 @@ internal fun HubMapScene(
                             }
                             .size(imageSize)
                             .graphicsLayer {
-                                scaleX = scale
-                                scaleY = scale
+                                scaleX = scale * (0.55f + 0.45f * reveal.value)
+                                scaleY = scale * (0.55f + 0.45f * reveal.value)
                                 translationY = floatOffsetPx
                                 transformOrigin = TransformOrigin(0.5f, anchorRatio)
                             }
@@ -338,6 +354,10 @@ internal fun HubMapScene(
                         }
                         .width(labelWidth)
                         .heightIn(min = 36.dp)
+                        .graphicsLayer {
+                            alpha = reveal.value.coerceIn(0f, 1f)
+                            translationY = (1f - reveal.value.coerceIn(0f, 1f)) * 10.dp.toPx()
+                        }
                         .semantics {
                             contentDescription = "Enter ${node.title}"
                             role = Role.Button
@@ -375,4 +395,3 @@ internal fun HubMapScene(
         }
     }
 }
-

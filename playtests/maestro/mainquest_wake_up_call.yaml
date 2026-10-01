@@ -31,7 +31,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
-    visible: ".*Bypass confirmed.*"
+    visible: ".*One sweep.*watching the heat.*"
     timeout: 10000
 - tapOn:
     point: "50%,85%"

@@ -167,7 +167,7 @@ Track your numbers at each phase transition. If your game state deviates signifi
 
 | Room & ID | Actions & Interactions | Expected Engine State & Rewards | Visual, Audio & UX Checks |
 | :--- | :--- | :--- | :--- |
-| **Elevator Lobby**<br>`admin_elevator` | Swipe badge at scanner. Ride lift down. | Starts descent sequence into Sector 4. | • Elevator cable groaning and descent audio. |
+| **Elevator Lobby**<br>`admin_elevator` | After Boggs authorizes descent, take the north lift. On the first trip, select **Descend** on the newly revealed **Deep Mine** hub node. | First descent returns to Logistics map; Deep Mine appears, is selected, and becomes enterable. Later crossings stay direct. | • Elevator cable groaning and descent audio. |
 | **Elevator Landing**<br>`mine_landing` | 1. Inspect `drain pool`<br>2. Inspect `beacons` & `machinery` | **Fishing Spot Discovery**: Can test starter rod and lures! | • Water ripple effects in drain pool.<br>• Fishing minigame launcher responsiveness. |
 | **Main Tunnel Alpha**<br>`mine_alpha` | ⚠️ **Combat: 2x Echo Borer** | Combat victory.<br>Burrowing threat neutralized. | • Echo Borer underground emergence animation.<br>• Physical damage impact audio. |
 | **Cavern Junction**<br>`mine_junction` | 1. Action `junction breaker box`<br>2. Inspect `switch rails`<br>3. Divert `track diverter lever` west<br>4. Release `wheel brake` | **Mine Power Restored!** (`ms_mine_power_on`).<br>Releasing the routed cart breaches the bulkhead (`ms_w1_cart_track_diverted`), permanently unlocking the western passage. | • Power-up audio swell and lights brightening.<br>• Heavy iron cart runaway rumble and explosive metal impact crash sfx. |

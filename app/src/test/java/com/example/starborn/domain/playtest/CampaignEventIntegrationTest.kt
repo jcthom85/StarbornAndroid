@@ -381,6 +381,7 @@ class CampaignEventIntegrationTest {
         agent.talkTo("The Warden")
         agent.winEncounter(listOf("the_iron_warden"), "launch_bay")
         agent.talkTo("Zeke")
+        agent.navigateTo("launch_pod")
         agent.talkTo("Zeke")
         agent.executeAction("use_nav_console")
 
@@ -848,6 +849,7 @@ class CampaignEventIntegrationTest {
             val type = parts[0].trim().lowercase()
             val value = parts.getOrNull(1)?.trim().orEmpty()
             when (type) {
+                "room" -> value == state.roomId
                 "milestone", "milestone_set" -> value in state.completedMilestones
                 "milestone_not_set" -> value !in state.completedMilestones
                 "quest", "quest_active" -> value in state.activeQuests

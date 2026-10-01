@@ -111,6 +111,10 @@ fun HubScreen(
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    androidx.compose.runtime.LaunchedEffect(uiState.newlyUnlockedNodeId) {
+        if (uiState.newlyUnlockedNodeId == null) return@LaunchedEffect
+        onPlayAudio("sfx_hub_node_select")
+    }
     val settings = remember(userSettings) {
         SettingsUiState(
             musicVolume = userSettings.musicVolume,
@@ -195,6 +199,7 @@ internal fun HubScreenContent(
                 nodes = uiState.nodes,
                 selectedId = uiState.selectedNodeId,
                 trackedQuest = uiState.trackedQuest,
+                newlyUnlockedNodeId = uiState.newlyUnlockedNodeId,
                 onSelect = onNodeFocused,
                 onEnter = onEnterSelectedNode,
                 bottomReserve = panelReserve + 24.dp,
@@ -473,7 +478,11 @@ private fun HubDestinationPanel(
                             modifier = Modifier.size(17.dp)
                         )
                         Text(
-                            text = if (node.canEnter) "Enter" else "Locked",
+                            text = when {
+                                !node.canEnter -> "Locked"
+                                node.id == "deep_mine" && !node.visited -> "Descend"
+                                else -> "Enter"
+                            },
                             style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
                             color = if (node.canEnter) Color(0xFF071018) else Color.White.copy(alpha = 0.55f)
                         )

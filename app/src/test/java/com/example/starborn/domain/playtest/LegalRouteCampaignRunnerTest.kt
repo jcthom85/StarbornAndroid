@@ -243,6 +243,11 @@ class LegalRouteCampaignRunnerTest {
             val beforeRoom = harness.explorationVm.uiState.value.currentRoom?.id
             harness.explorationVm.travel(direction)
             harness.settle()
+            if (harness.sessionStore.state.value.roomStates["admin_elevator"]
+                    ?.get("mine_map_reveal_pending") == true) {
+                harness.hubVm.enterNode("deep_mine") { }
+                harness.settle()
+            }
             val afterRoom = harness.explorationVm.uiState.value.currentRoom?.id
             check(afterRoom != null && afterRoom != beforeRoom) {
                 "travel($direction) failed from room '$beforeRoom': blocked or no connection."
@@ -449,6 +454,7 @@ class LegalRouteCampaignRunnerTest {
             talkToNpc("The Warden")
             winCombat(listOf("the_iron_warden"), "launch_bay")
             talkToNpc("Zeke")
+            navigateLegalPath("launch_pod")
             talkToNpc("Zeke")
             performAction("use_nav_console")
 

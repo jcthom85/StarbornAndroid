@@ -161,6 +161,7 @@ class World1PlaythroughAuditTest {
                 val type = parts[0].trim().lowercase()
                 val value = parts.getOrNull(1)?.trim().orEmpty()
                 when (type) {
+                    "room" -> value == state.roomId
                     "milestone", "milestone_set" -> value in state.completedMilestones
                     "milestone_not_set" -> value !in state.completedMilestones
                     "quest", "quest_active" -> value in state.activeQuests
@@ -317,6 +318,7 @@ class World1PlaythroughAuditTest {
         talk("The Warden")
         combat(listOf("the_iron_warden"), "launch_bay")
         talk("Zeke")
+        navigate("launch_pod")
         talk("Zeke")
         doAction("use_nav_console")
 

@@ -633,6 +633,7 @@ function Validate-DialogueExpression($raw, $context) {
         $tokenContext = "$context token '$type'"
 
         switch ($type) {
+            "room" { Validate-Room $tokenContext $value }
             { $_ -in @("quest", "quest_active", "quest_completed", "quest_not_started", "quest_failed", "start_quest", "complete_quest", "fail_quest", "track_quest", "advance_quest") } {
                 Validate-Quest $tokenContext $value
                 if ($type -eq "start_quest") { Add-SetValue $questStartSources $value }

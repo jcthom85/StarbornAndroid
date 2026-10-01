@@ -10,7 +10,8 @@ data class HubUiState(
     val selectedNodeId: String? = null,
     val statusMessage: String? = null,
     val trackedQuest: HubQuestUi? = null,
-    val lockedPrompt: HubLockedPrompt? = null
+    val lockedPrompt: HubLockedPrompt? = null,
+    val newlyUnlockedNodeId: String? = null
 )
 
 data class HubLockedPrompt(

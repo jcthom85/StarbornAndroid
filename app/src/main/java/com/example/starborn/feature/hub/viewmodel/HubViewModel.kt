@@ -74,8 +74,10 @@ class HubViewModel(
                     hub = currentHub,
                     backgroundImage = currentHub?.backgroundImage,
                     nodes = uiNodes,
-                    selectedNodeId = firstDiscovered?.id,
-                    trackedQuest = buildTrackedQuest(session)
+                    selectedNodeId = pendingMineReveal(session) ?: firstDiscovered?.id,
+                    trackedQuest = buildTrackedQuest(session),
+                    newlyUnlockedNodeId = pendingMineReveal(session),
+                    statusMessage = if (pendingMineReveal(session) != null) "Deep Mine unlocked — Boggs authorized the descent." else it.statusMessage
                 )
             }
         }
@@ -100,8 +102,10 @@ class HubViewModel(
                         hub = currentHub,
                         backgroundImage = currentHub?.backgroundImage,
                         nodes = uiNodes,
-                        selectedNodeId = selectedNodeId,
-                        trackedQuest = buildTrackedQuest(session)
+                        selectedNodeId = pendingMineReveal(session) ?: selectedNodeId,
+                        trackedQuest = buildTrackedQuest(session),
+                        newlyUnlockedNodeId = pendingMineReveal(session),
+                        statusMessage = if (pendingMineReveal(session) != null) "Deep Mine unlocked — Boggs authorized the descent." else it.statusMessage
                     )
                 }
             }
@@ -140,8 +144,26 @@ class HubViewModel(
         }.orEmpty()
     }
 
+    private fun pendingMineReveal(session: GameSessionState): String? =
+        "deep_mine".takeIf {
+            session.hubId == "hub_2_logistics" &&
+                "ms_w1_mq03_bogs_talked" in session.completedMilestones &&
+                "deep_mine" !in session.visitedNodes &&
+                session.roomStates["admin_elevator"]?.get("mine_map_reveal_seen") != true &&
+                session.roomStates["admin_elevator"]?.get("mine_map_reveal_pending") == true
+        }
+
+    fun finishNodeReveal(nodeId: String) {
+        if (nodeId != "deep_mine" || pendingMineReveal(sessionStore.state.value) == null) return
+        sessionStore.setRoomState("admin_elevator", "mine_map_reveal_seen", true)
+        sessionStore.setRoomState("admin_elevator", "mine_map_reveal_pending", false)
+        _uiState.update { it.copy(newlyUnlockedNodeId = null) }
+    }
+
     fun selectNode(nodeId: String) {
-        _uiState.update { it.copy(selectedNodeId = nodeId) }
+        // A deliberate map selection acknowledges the reveal; elapsed time doesn't.
+        _uiState.value.newlyUnlockedNodeId?.let(::finishNodeReveal)
+        _uiState.update { it.copy(selectedNodeId = nodeId, statusMessage = null) }
     }
 
     fun enterNode(nodeId: String, onEnter: (HubNodeUi) -> Unit) {
@@ -187,6 +209,7 @@ class HubViewModel(
             return
         }
 
+        finishNodeReveal(nodeId)
         sessionStore.setHub(hub.id)
         sessionStore.setWorld(hub.worldId)
         sessionStore.setRoom(node.entryRoom)

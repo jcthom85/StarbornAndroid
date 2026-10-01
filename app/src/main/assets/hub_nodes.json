@@ -247,8 +247,11 @@
     ],
     "discovered": true,
     "initial_visibility": "hidden",
-    "entry_policy": "transition",
-    "return_policy": "entry"
+    "entry_policy": "hub",
+    "return_policy": "entry",
+    "unlock_conditions": [
+      { "type": "milestone", "id": "ms_w1_mq03_bogs_talked" }
+    ]
   },
   {
     "id": "echo_chamber",

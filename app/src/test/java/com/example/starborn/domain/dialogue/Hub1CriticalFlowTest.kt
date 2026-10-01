@@ -429,6 +429,7 @@ class Hub1CriticalFlowTest {
         hank?.advanceUntilFinished()
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("checkpoint_booth"))
+        harness.store.setRoom("checkpoint_booth")
         val zeke = harness.dialogue.startDialogue("Zeke")
         assertEquals("zeke_w1_mq02_override_1", zeke?.current()?.id)
         assertNotNull(zeke)
@@ -555,11 +556,13 @@ class Hub1CriticalFlowTest {
             )
         )
 
+        harness.store.setRoom("launch_bay")
         val zekeAtBay = harness.dialogue.startDialogue("Zeke")
         assertEquals("zeke_w1_mq05_defeat_warden_1", zekeAtBay?.current()?.id)
         zekeAtBay?.advanceUntilFinished()
         assertTrue(harness.store.state.value.completedMilestones.contains("ms_w1_zeke_directed_to_pod"))
 
+        harness.store.setRoom("launch_pod")
         val zekeAtPod = harness.dialogue.startDialogue("Zeke")
         assertEquals("zeke_w1_mq05_pod_core_1", zekeAtPod?.current()?.id)
         zekeAtPod?.advanceUntilFinished()
@@ -668,10 +671,12 @@ class Hub1CriticalFlowTest {
             )
         )
 
+        harness.store.setRoom("launch_bay")
         val zekeAtBay = harness.dialogue.startDialogue("Zeke")
         assertEquals("zeke_w1_mq05_defeat_warden_1", zekeAtBay?.current()?.id)
         zekeAtBay?.advanceUntilFinished()
 
+        harness.store.setRoom("launch_pod")
         val zekeAtPod = harness.dialogue.startDialogue("Zeke")
         assertEquals("zeke_w1_mq05_pod_core_1", zekeAtPod?.current()?.id)
         zekeAtPod?.advanceUntilFinished()
@@ -691,6 +696,7 @@ class Hub1CriticalFlowTest {
         harness.store.startQuest("w2_mq01")
 
         // 1. Talk to Zeke at the crash site
+        harness.store.setRoom("checkpoint_booth")
         val zeke = harness.dialogue.startDialogue("Zeke")
         assertEquals("zeke_w2_crash_1", zeke?.current()?.id)
         zeke?.advanceUntilFinished()
@@ -879,6 +885,7 @@ class Hub1CriticalFlowTest {
                     val type = parts[0].trim().lowercase()
                     val value = parts.getOrNull(1)?.trim().orEmpty()
                     when (type) {
+                        "room" -> value == state.roomId
                         "milestone" -> value in state.completedMilestones
                         "milestone_set" -> value in state.completedMilestones
                         "milestone_not_set" -> value !in state.completedMilestones

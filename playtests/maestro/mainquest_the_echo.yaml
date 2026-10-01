@@ -36,7 +36,7 @@ appId: com.junewiregames.starborn.prealpha
 - runScript: sleep.js
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*Deep Elevator opens.*"
+    visible: ".*promised the Deep Elevator.*"
     timeout: 10000
 - runScript: sleep.js
 - tapOn: "Dialogue Popup. Tap to continue"
@@ -46,12 +46,12 @@ appId: com.junewiregames.starborn.prealpha
 - runScript: sleep.js
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*lift is locked.*"
+    visible: ".*disposal review.*"
     timeout: 10000
 - runScript: sleep.js
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*Restore the junction power.*"
+    visible: ".*Restore the junction.*"
     timeout: 10000
 - runScript: sleep.js
 - tapOn: "Dialogue Popup. Tap to continue"
@@ -65,6 +65,12 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Elevator Lobby"
     timeout: 15000
 - tapOn: "Travel north.*"
+- extendedWaitUntil:
+    visible: ".*Deep Mine unlocked.*"
+    timeout: 15000
+- waitForAnimationToEnd:
+    timeout: 3000
+- tapOn: "Descend"
 - extendedWaitUntil:
     visible: "Elevator Landing"
     timeout: 15000
@@ -182,7 +188,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
-    visible: ".*Cryo-Inductor fuses.*sacrificial strip.*"
+    visible: ".*Cryo-Inductor fuses.*sacrificial ground strip.*"
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
@@ -190,7 +196,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
-    visible: ".*hand trembles.*"
+    visible: ".*hand won.t stop trembling.*"
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:

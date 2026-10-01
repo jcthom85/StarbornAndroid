@@ -1952,7 +1952,7 @@
     "env": "market",
     "title": "Elevator Lobby",
     "background_image": "images/rooms/world_1/admin_elevator.webp",
-    "description": "Heavy warning signs and a biometric scanner mark the Deep Mine lift. The scanner checks Boggs' authorization while the lift cables strain beneath the floor.",
+    "description": "A biometric scanner guards the Deep Mine lift. Grease-dark cables strain beneath the floor. A route display beside the doors lists the sectors this badge can reach.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1996,7 +1996,10 @@
         "type": "generic",
         "condition_unmet_message": "Thick, grease-covered bundles of braided steel."
       }
-    ]
+    ],
+    "special_exits": {
+      "north": "Plan mine descent"
+    }
   },
   {
     "id": "admin_security",
@@ -2053,7 +2056,7 @@
     "env": "market",
     "title": "Air-Lock Entrance",
     "background_image": "images/rooms/world_1/server_airlock.webp",
-    "description": "The airlock hisses as it cycles, releasing a blast of sub-zero air. An emergency locker sits mounted beside the thick inner door.",
+    "description": "The airlock breathes freezing air over Nova's boots. Behind this service door, the colony keeps its records. An emergency locker hangs beside the inner door.",
     "description_variants": [
       {
         "requires_milestones": [
@@ -2379,7 +2382,7 @@
     "weather": "cave_drip",
     "title": "Elevator Landing",
     "background_image": "images/rooms/world_1/mine_landing.webp",
-    "description": "The industrial lift opens into raw rock, red safety beacons, and idle drilling machinery. Boggs' override shows one authorized descent and no scheduled return. A taped-off drain pool gathers in the corner.",
+    "description": "The lift opens onto raw rock and red safety beacons. Boggs booked Nova a descent into Sector 4, leaving the return time blank. An idle drill ticks as it cools beside a taped-off drain pool.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2396,7 +2399,7 @@
       {
         "name": "lift",
         "type": "generic",
-        "condition_unmet_message": "The lift panel shows Nova's descent authorization. Return access is locked."
+        "condition_unmet_message": "Nova's badge still opens the lift back to Admin. The schedule has no return booked for her. Boggs expects the work finished first."
       },
       {
         "name": "beacons",
@@ -3312,7 +3315,7 @@
       {
         "name": "override panel",
         "type": "generic",
-        "condition_unmet_message": "The override panel is jammed in a forced-open state. If Zeke loses the spoof, the lift will seal itself."
+        "condition_unmet_message": "The lever pulls hard against the closing shutters. Someone has to hold it while the lift crosses. A wrench lies bent beside the housing."
       },
       {
         "name": "hydraulics",
@@ -3455,6 +3458,21 @@
           "ms_w1_zeke_directed_to_pod"
         ]
       }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_warden_defeated",
+          "ms_w1_zeke_directed_to_pod"
+        ],
+        "description": "The Warden lies beside the launch rails. The open hatch leads to the Pod Core, where Zeke is working the controls. Security lights begin their restart sequence."
+      },
+      {
+        "requires_milestones": [
+          "ms_w1_warden_defeated"
+        ],
+        "description": "The Warden lies beside the launch rails. [npc:Zeke] has the hatch controls open. The alarms have stopped, but the security lights are beginning to reset."
+      }
     ]
   },
   {
@@ -3484,7 +3502,7 @@
       {
         "name": "navigation console",
         "type": "generic",
-        "condition_unmet_message": "The console needs Orion's launch authorization from the Chime and current from the pod capacitors.",
+        "condition_unmet_message": "The pod capacitors can power a launch. Jed's Chime fits the old authorization port; Zeke is checking how it connects to navigation.",
         "action_event": "use_nav_console"
       },
       {
