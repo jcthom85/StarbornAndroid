@@ -3,6 +3,28 @@
 Implemented September 30, 2026. This describes the current behavior; older
 completion plans and walkthrough estimates are not balance acceptance evidence.
 
+## October 1 writing and puzzle follow-up
+
+- Orion's awakening now has six dialogue beats, with Nova and Zeke responding
+  to the lost years before Orion joins. Recruitment and Bridge access still
+  occur only at the final dialogue trigger.
+- Revised crash dialogue, companion reactions and optional quest motivations
+  around Zeke's procedural habits, Orion's personal ties to Sanctuary, and
+  Gh0st's uncertainty without orders. Removed Nova's claim that the Warden sent
+  them. Ancient Echoes no longer uses identical hint/success/failure text.
+- Stasis retains its three safety decisions. Source Gate now has two routing
+  decisions; Orion's resolution follows the final correct switch without a
+  third repeated question about merging voices. Wrong answers and leaving
+  retain the existing retry flow. Mural choices no longer include the role
+  explanation inside the answer labels; textual clues remain available.
+- World 1 certification labels workshop setup as optional practice while
+  retaining the task IDs and compatibility with the workshop drill.
+- Updated the existing World2RefinementTest sequence lengths. Tests were not
+  run for this follow-up. Edited JSON parses, dialogue IDs are unique, all
+  dialogue next references resolve, and the scoped diff has no whitespace errors.
+- Playtest acceptance remains character voice, six-beat awakening pacing,
+  Source Gate satisfaction, mural clue clarity and certification journal display.
+
 ## Progression and recovery
 
 - Face the Beast can restart after defeat or retreat, including old saves that

@@ -3167,23 +3167,6 @@ class ExplorationViewModel(
         }
     }
 
-    fun openFullMapOverlay() {
-        viewModelScope.launch(dispatchers.main) {
-            val room = _uiState.value.currentRoom ?: return@launch
-            playUiCue("click")
-            val fullMap = buildFullMapState(room)
-            _uiState.update { it.copy(isFullMapVisible = true, fullMap = fullMap) }
-        }
-    }
-
-    fun closeFullMapOverlay() {
-        viewModelScope.launch(dispatchers.main) {
-            playUiCue("click")
-            _uiState.update { it.copy(isFullMapVisible = false) }
-        }
-    }
-
-
     fun openQuestLog() {
         viewModelScope.launch(dispatchers.main) {
             playUiCue("click")
@@ -3280,7 +3263,6 @@ class ExplorationViewModel(
                     partyMemberDetails = null,
                     skillTreeOverlay = null,
                     isMapLegendVisible = false,
-                    isFullMapVisible = false
                 )
             }
         }

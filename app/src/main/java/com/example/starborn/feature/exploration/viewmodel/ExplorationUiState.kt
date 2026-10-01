@@ -63,7 +63,6 @@ data class ExplorationUiState(
     val canReturnToHub: Boolean = false,
     val isMapLegendVisible: Boolean = false,
     val isQuestLogVisible: Boolean = false,
-    val isFullMapVisible: Boolean = false,
     val shopGreeting: ShopGreetingUi? = null,
     val pendingShopId: String? = null,
     val prompt: UIPrompt? = null,

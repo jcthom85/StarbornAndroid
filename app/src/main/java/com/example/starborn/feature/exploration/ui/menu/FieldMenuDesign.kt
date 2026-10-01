@@ -30,6 +30,5 @@ enum class MenuDetailKind {
     INVENTORY_ITEM,
     PARTY_MEMBER,
     SKILL_TREE,
-    FULL_MAP,
     MAP_LEGEND
 }

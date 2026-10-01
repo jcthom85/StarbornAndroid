@@ -28,8 +28,7 @@ The classic-layout switch remains the fallback. Keep its presentation separate f
 | Journal / Active | Keep | Tracked quest first, selection, progress | Stronger tracked/current objective hierarchy; consistent selected styling; remove excess frames |
 | Journal / Completed | Keep | Separate completed archive | Compact entries and meaningful empty state; verify late-game list size |
 | Journal / Quest Details | Refine | Description, objectives, tracking toggle | Embedded layout inherits a 700dp cap; unify title/action placement and optional objective presentation; make next objective easiest to scan |
-| Map / Area preview | Fix entry path, refine | Area map and dark-room behavior | When full map is available, preview has no click action and no Open Full Map button; only the fallback minimap invokes it. Add explicit full-map entry and clearer location/context |
-| Map / Full Map | Keep gestures, refine | Pan, zoom, Recenter | Unify Material theme surface with menu palette; give viewport useful space; review gesture competition with outer scrolling and bounded pan |
+| Map | Refine | Full map, gestures, legend and dark-room behavior | Keep the pan/zoom map directly on this tab; avoid a second full-map detail page |
 | Map / Legend | Keep, refine | Symbol explanations | Unify embedded spacing, headings and card styling; ensure legend remains legible at larger fonts |
 | Settings / Layout | Keep | Persisted classic/modern switch | Keep easily discoverable; explain only player-relevant behavior |
 | Settings / Save Data | Keep, refine | Quick save, manual save/load, return to title | Reduce duplication with header quick save; ensure feedback is visible; clarify quick vs manual slots |
@@ -122,11 +121,7 @@ is pending and no tests were run.
 
 ### Completed Map pass
 
-Area Map now offers Open Full Map whenever map data exists and shows visited/discovered counts
-in the modern layout. The fallback minimap's legend callback opens Legend. Full Map shares the
-modern palette and adds gesture guidance, zoom controls with percentage, bounded pan and Recenter.
-Embedded Legend has reduced padding and quieter borders. Kotlin compilation passed; touch gesture
-behavior and narrow-screen layout still require device review. No tests were run.
+The Map tab now hosts the interactive full map directly, with pan, pinch/zoom controls, and Recenter; the redundant Open Full Map detail page was removed. The tab shows visited/discovered counts in the modern layout, while the fallback minimap opens the Legend. The Map tab is the single map entry in the field menu. Embedded Legend has reduced padding and quieter borders. Kotlin compilation passed; touch gesture behavior and narrow-screen layout still require device review. No tests were run.
 
 - `feature/exploration/ui/menu/ModernFieldMenu.kt`: shared shell and navigation.
 - `feature/exploration/ui/tabs/InventoryTabContent.kt`: Items, Item Details, equipment selectors.

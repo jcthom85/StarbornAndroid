@@ -507,7 +507,7 @@
     "stages": [
       {
         "id": "clear_cargo_collapse",
-        "title": "Required Logistics Certification",
+        "title": "Report for Certification",
         "description": "Boggs requires a logged Guard Break certification before opening the Deep Mine elevator.",
         "tasks": [
           {
@@ -516,11 +516,13 @@
           },
           {
             "id": "start_loader",
-            "text": "Use the loader at the Loading Dock in Jed's Workshop."
+            "optional": true,
+            "text": "Optional workshop practice: start the loader at the Loading Dock."
           },
           {
             "id": "move_cargo",
-            "text": "Use the cargo rail at the Loading Dock to clear the training area."
+            "optional": true,
+            "text": "Optional workshop practice: clear the cargo rail at the Loading Dock."
           }
         ]
       },

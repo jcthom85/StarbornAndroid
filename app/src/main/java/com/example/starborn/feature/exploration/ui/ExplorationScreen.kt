@@ -370,7 +370,6 @@ fun ExplorationScreen(
             uiState.eventAnnouncement != null ||
             uiState.levelUpPrompt != null ||
             uiState.isQuestLogVisible ||
-            uiState.isFullMapVisible ||
             uiState.isMapLegendVisible ||
             uiState.tutorialState.current != null
     val questDetailBlockingOverlayActive =
@@ -387,7 +386,6 @@ fun ExplorationScreen(
             uiState.eventAnnouncement != null ||
             uiState.levelUpPrompt != null ||
             uiState.isQuestLogVisible ||
-            uiState.isFullMapVisible ||
             uiState.isMapLegendVisible ||
             uiState.prompt != null ||
             uiState.tutorialState.current != null
@@ -1263,9 +1261,6 @@ fun ExplorationScreen(
                 onOpenMapLegend = {
                     viewModel.openMapLegend()
                 },
-                onOpenFullMap = {
-                    viewModel.openFullMapOverlay()
-                },
                 onOpenFieldKit = {
                     viewModel.closeMenuOverlay()
                     onOpenFieldKit()
@@ -1343,7 +1338,6 @@ fun ExplorationScreen(
                 onCloseSkillTree = { viewModel.closeSkillTreeOverlay() },
                 onUnlockSkill = { viewModel.unlockSkillNode(it) },
                 onCloseMapLegend = { viewModel.closeMapLegend() },
-                onCloseFullMap = { viewModel.closeFullMapOverlay() },
                 craftingViewModel = craftingViewModel,
                 onTinkerTutorialStep = { viewModel.onTinkerTutorialStep(it) },
                 onDebugTinkeringTutorial = if (com.example.starborn.BuildConfig.DEBUG) ({ viewModel.debugTriggerTinkeringTutorial() }) else null,
@@ -1609,13 +1603,6 @@ fun ExplorationScreen(
                     viewModel.openQuestDetails(questId)
                 },
                 modifier = Modifier.align(Alignment.Center)
-            )
-        }
-
-        if (uiState.isFullMapVisible && !uiState.isMenuOverlayVisible) {
-            FullMapOverlay(
-                fullMap = uiState.fullMap,
-                onClose = { viewModel.closeFullMapOverlay() }
             )
         }
 
@@ -2296,7 +2283,6 @@ private fun MenuOverlay(
     onOpenInventory: () -> Unit,
     onOpenJournal: () -> Unit,
     onOpenMapLegend: () -> Unit,
-    onOpenFullMap: () -> Unit,
     onOpenFieldKit: () -> Unit,
     settings: SettingsUiState,
     onMusicVolumeChange: (Float) -> Unit,
@@ -2351,7 +2337,6 @@ private fun MenuOverlay(
     onCloseSkillTree: () -> Unit,
     onUnlockSkill: (String) -> Unit,
     onCloseMapLegend: () -> Unit,
-    onCloseFullMap: () -> Unit,
     craftingViewModel: CraftingViewModel? = null,
     onTinkerTutorialStep: ((com.example.starborn.feature.crafting.TinkeringTutorialStep) -> Unit)? = null,
     isTinkeringTutorialActive: Boolean = false,
@@ -2392,7 +2377,6 @@ private fun MenuOverlay(
             MenuDetailKind.PARTY_MEMBER -> onClosePartyMemberDetails()
             MenuDetailKind.SKILL_TREE -> onCloseSkillTree()
             MenuDetailKind.MAP_LEGEND -> onCloseMapLegend()
-            MenuDetailKind.FULL_MAP -> onCloseFullMap()
             else -> Unit
         }
         detailKind = null
@@ -2425,9 +2409,6 @@ private fun MenuOverlay(
                         onOpenJournal = onOpenJournal,
                         onOpenMapLegend = {
                             openDetail(MenuDetailKind.MAP_LEGEND, onOpen = onOpenMapLegend)
-                        },
-                        onOpenFullMap = {
-                            openDetail(MenuDetailKind.FULL_MAP, onOpen = onOpenFullMap)
                         },
                         onOpenFieldKit = onOpenFieldKit,
                         onMusicVolumeChange = onMusicVolumeChange,
@@ -2777,7 +2758,6 @@ private fun menuDetailTitle(
     MenuDetailKind.INVENTORY_ITEM -> "Item Details"
     MenuDetailKind.PARTY_MEMBER -> "Party Details"
     MenuDetailKind.SKILL_TREE -> "Skill Tree"
-    MenuDetailKind.FULL_MAP -> "Full Map"
     MenuDetailKind.MAP_LEGEND -> "Map Legend"
     null -> selectedTab.label()
 }
@@ -2864,7 +2844,6 @@ private fun MenuNestedDetailContent(
             )
         } else MenuDetailLoading("Loading skill tree…", accentColor)
 
-        MenuDetailKind.FULL_MAP -> FullMapOverlay(fullMap = fullMap, onClose = onBack, embedded = true)
         MenuDetailKind.MAP_LEGEND -> MapLegendOverlay(
             onClose = onBack,
             accentColor = accentColor,
@@ -3214,7 +3193,6 @@ private fun MenuTabContentArea(
     onOpenInventory: () -> Unit,
     onOpenJournal: () -> Unit,
     onOpenMapLegend: () -> Unit,
-    onOpenFullMap: () -> Unit,
     onOpenFieldKit: () -> Unit,
     onMusicVolumeChange: (Float) -> Unit,
     onSfxVolumeChange: (Float) -> Unit,
@@ -3315,7 +3293,6 @@ private fun MenuTabContentArea(
                 borderColor = borderColor,
                 onMenuAction = onMenuAction,
                 onOpenMapLegend = onOpenMapLegend,
-                onOpenFullMap = onOpenFullMap
             )
             MenuTab.STATS -> if (modern) {
                 val member = partyStatus.members.firstOrNull { it.id == selectedMemberId }
@@ -4267,24 +4244,20 @@ private fun FullMapCard(
 }
 
 @Composable
-private fun FullMapOverlay(
-    fullMap: FullMapUiState?,
-    onClose: () -> Unit,
-    embedded: Boolean = false
+internal fun InteractiveMapPanel(
+    fullMap: FullMapUiState?
 ) {
-    val modern = embedded && LocalModernFieldMenu.current
+    val modern = LocalModernFieldMenu.current
+    val highContrast = LocalFieldMenuHighContrast.current
+    val largeTargets = LocalFieldMenuLargeTargets.current
     val mapText = if (modern) FieldMenuDesign.text else MaterialTheme.colorScheme.onSurface
     Box(
-        modifier = (if (embedded) Modifier.fillMaxWidth() else Modifier
-            .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.65f))
-            .padding(16.dp)),
-        contentAlignment = Alignment.Center
+        modifier = Modifier.fillMaxWidth()
     ) {
         Surface(
-            shape = RoundedCornerShape(if (embedded) FieldMenuDesign.cardRadius else 28.dp),
+            shape = RoundedCornerShape(FieldMenuDesign.cardRadius),
             tonalElevation = if (modern) 0.dp else 10.dp,
-            color = if (modern) FieldMenuDesign.panel else MaterialTheme.colorScheme.surface.copy(alpha = 0.98f),
+            color = if (modern && !highContrast) FieldMenuDesign.panel else MaterialTheme.colorScheme.surface.copy(alpha = 0.98f),
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(
@@ -4293,22 +4266,6 @@ private fun FullMapOverlay(
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Full Map",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = mapText
-                    )
-                    if (!embedded) {
-                        TextButton(onClick = onClose) {
-                            Text("Close")
-                        }
-                    }
-                }
                 if (fullMap == null || fullMap.cells.isEmpty()) {
                     Box(
                         modifier = Modifier
@@ -4355,11 +4312,11 @@ private fun FullMapOverlay(
                         OutlinedButton(onClick = {
                             viewportScale = (viewportScale / 1.25f).coerceAtLeast(.4f)
                             viewportOffset = boundedOffset(viewportOffset, viewportScale)
-                        }, enabled = viewportScale > .4f, modifier = Modifier.heightIn(min = 48.dp)) { Text("−", color = mapText) }
+                        }, enabled = viewportScale > .4f, modifier = Modifier.heightIn(min = if (largeTargets) 56.dp else 48.dp)) { Text("-", color = mapText) }
                         Text("${(viewportScale * 100).toInt()}%", color = mapText)
                         OutlinedButton(onClick = {
                             viewportScale = (viewportScale * 1.25f).coerceAtMost(4f)
-                        }, enabled = viewportScale < 4f, modifier = Modifier.heightIn(min = 48.dp)) { Text("+", color = mapText) }
+                        }, enabled = viewportScale < 4f, modifier = Modifier.heightIn(min = if (largeTargets) 56.dp else 48.dp)) { Text("+", color = mapText) }
                     }
                     Box(
                         modifier = Modifier
@@ -4374,14 +4331,6 @@ private fun FullMapOverlay(
                             modifier = Modifier.align(Alignment.CenterStart)
                         ) {
                             Text("Recenter")
-                        }
-                        if (!embedded) {
-                            Button(
-                                onClick = onClose,
-                                modifier = Modifier.align(Alignment.CenterEnd)
-                            ) {
-                                Text("Done")
-                            }
                         }
                     }
                 }
