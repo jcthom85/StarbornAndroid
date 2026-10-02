@@ -123,7 +123,10 @@ fun MainMenuScreen(
     onStartHub: () -> Unit,
     onSlotLoaded: () -> Unit,
     onBurgQuestLaunch: ((com.example.starborn.feature.mainmenu.BurgQuestLaunch) -> Unit)? = null,
-    enableDemoSampler: Boolean = false
+    enableDemoSampler: Boolean = false,
+    onPlaytestLaunch: ((DebugScenario?) -> Unit)? = null,
+    onPlaytestExit: (() -> Unit)? = null,
+    isTestSession: Boolean = false
 ) {
     var startingGame by remember { mutableStateOf(false) }
     var startingGamePlus by remember { mutableStateOf(false) }
@@ -532,9 +535,18 @@ fun MainMenuScreen(
                 enabled = buttonsInteractable,
                 primary = false
             )
+            if (isTestSession) {
+                Text("TEST SESSION - separate saves", color = TitleCyan, fontSize = 14.sp)
+                if (onPlaytestExit != null) StarbornTitleButton(
+                    text = "Return to Main Game", onClick = onPlaytestExit,
+                    enabled = buttonsInteractable, primary = false)
+            } else if (onPlaytestLaunch != null && BuildConfig.ENABLE_SCENARIO_MENU) {
+                StarbornTitleButton(text = "Resume Playtest Saves", onClick = { onPlaytestLaunch(null) },
+                    enabled = buttonsInteractable, primary = false)
+            }
             if (showDebugScenariosOnTitle && BuildConfig.ENABLE_SCENARIO_MENU) {
                 StarbornTitleButton(
-                    text = "Debug Scenarios",
+                    text = "Playtest Scenarios",
                     onClick = { showDebugBrowser = true },
                     enabled = buttonsInteractable,
                     primary = false
@@ -665,6 +677,8 @@ fun MainMenuScreen(
                     showDebugBrowser = false
                     if (scenario.category == DebugScenarioCategory.BURGFEST && onBurgQuestLaunch != null) {
                         onBurgQuestLaunch(com.example.starborn.feature.mainmenu.BurgQuestLaunch(scenario))
+                    } else if (!isTestSession && onPlaytestLaunch != null) {
+                        onPlaytestLaunch(scenario)
                     } else pendingScenario = scenario
                 },
                 onDismiss = { showDebugBrowser = false }
@@ -797,6 +811,10 @@ internal fun DebugScenarioDialog(
                     modifier = Modifier.heightIn(max = 430.dp)
                 ) {
                     item {
+                        Text("Launching resets the scenario. Save to a test slot to keep a checkpoint; use Load Game to resume it.",
+                            color = TitleMutedText, fontSize = 14.sp)
+                        Text("Playtest scenarios use a separate collection of test saves.",
+                            color = TitleCyan, fontSize = 14.sp)
                         Text(scenarioForReview.title, fontWeight = FontWeight.Bold, color = TitleText, fontSize = 16.sp)
                         Text(
                             "${scenarioForReview.category.label}  |  ${scenarioForReview.worldLabel}",
@@ -893,7 +911,7 @@ internal fun DebugScenarioDialog(
                 Button(
                     onClick = { onLaunch(scenarioForReview) }
                 ) {
-                    Text("Launch test")
+                    Text("Launch / Reset")
                 }
             }
         },

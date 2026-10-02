@@ -91,14 +91,16 @@ internal fun CampaignNavigationHost(
     demoPaused: Boolean = false,
     onDemoRootBack: (() -> Unit)? = null,
     onDemoCombatComposed: (() -> Unit)? = null,
-    enableDemoSampler: Boolean = false
+    enableDemoSampler: Boolean = false,
+    onPlaytestLaunch: ((com.example.starborn.feature.mainmenu.DebugScenario?) -> Unit)? = null,
+    onPlaytestExit: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
     val hostView = LocalView.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val keepScreenAwake = shouldKeepScreenAwake(currentBackStackEntry?.destination?.route)
-    val services = remember(providedServices) { providedServices ?: AppServices(context) }
+    val services = remember(providedServices) { providedServices ?: AppServices(context, isTestSession = com.example.starborn.BuildConfig.IS_PLAYTEST_BUILD) }
     val userSettings by services.userSettingsStore.settings.collectAsState(initial = UserSettings())
     val sessionState by services.sessionStore.state.collectAsState()
     val environmentThemeState by services.environmentThemeManager.state.collectAsState()
@@ -164,6 +166,9 @@ internal fun CampaignNavigationHost(
             val mainMenuViewModel: MainMenuViewModel = viewModel(factory = MainMenuViewModelFactory(services))
             MainMenuScreen(
                 onBurgQuestLaunch = onBurgQuestLaunch,
+                onPlaytestLaunch = onPlaytestLaunch,
+                onPlaytestExit = onPlaytestExit,
+                isTestSession = services.isTestSession,
                 enableDemoSampler = enableDemoSampler,
                 viewModel = mainMenuViewModel,
                 audioCuePlayer = services.audioCuePlayer,

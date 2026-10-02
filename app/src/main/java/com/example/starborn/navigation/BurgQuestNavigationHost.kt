@@ -43,19 +43,27 @@ fun NavigationHost(
     enableDemoSampler: Boolean = false
 ) {
     val context = LocalContext.current
-    val services = remember(providedServices) { providedServices ?: AppServices(context) }
+    val services = remember(providedServices) { providedServices ?: AppServices(context, isTestSession = com.example.starborn.BuildConfig.IS_PLAYTEST_BUILD) }
+    var playtest by remember { mutableStateOf<PlaytestLaunch?>(null) }
     var demo by remember { mutableStateOf<BurgQuestLaunch?>(null) }
     var attempt by remember { mutableIntStateOf(0) }
     DisposableEffect(services) { onDispose { services.release() } }
-    LaunchedEffect(demo) {
-        if (demo != null) services.audioCuePlayer.pauseForBackground()
+    LaunchedEffect(demo, playtest) {
+        if (demo != null || playtest != null) services.audioCuePlayer.pauseForBackground()
         else services.audioCuePlayer.resumeFromBackground()
     }
     val selected = demo
-    if (selected == null) {
+    val testLaunch = playtest
+    if (testLaunch != null) {
+        key(testLaunch) {
+            PlaytestVisit(testLaunch, showCombatActionText, onExit = { playtest = null })
+        }
+    } else if (selected == null) {
         CampaignNavigationHost(navController, showCombatActionText, services, initialDestination,
             onBurgQuestLaunch = { demo = it },
-            enableDemoSampler = enableDemoSampler)
+            enableDemoSampler = enableDemoSampler,
+            onPlaytestLaunch = if (com.example.starborn.BuildConfig.ENABLE_SCENARIO_MENU && !services.isTestSession)
+                { scenario -> playtest = PlaytestLaunch(scenario) } else null)
     } else key(selected, attempt) {
         BurgQuestVisit(selected, showCombatActionText, services::createBurgQuestSession,
             onRetry = { attempt++ },
@@ -305,4 +313,39 @@ internal fun BurgQuestFinishDialog(
         },
         confirmButton = {}
     )
+}
+
+
+private data class PlaytestLaunch(val scenario: com.example.starborn.feature.mainmenu.DebugScenario?)
+
+/** Own services, navigation and ViewModels keep test saves and transient state away from the campaign. */
+@Composable
+private fun PlaytestVisit(launch: PlaytestLaunch, showCombatActionText: Boolean, onExit: () -> Unit) {
+    val context = LocalContext.current
+    val services = remember { AppServices(context, isTestSession = true) }
+    val owner = remember { object : ViewModelStoreOwner { override val viewModelStore = ViewModelStore() } }
+    var ready by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf<String?>(null) }
+    DisposableEffect(services, owner) { onDispose {
+        owner.viewModelStore.clear()
+        services.release()
+    } }
+    LaunchedEffect(launch) {
+        val scenario = launch.scenario
+        if (scenario == null || services.startDebugScenario(scenario.id)) ready = true
+        else error = services.debugScenarioError ?: "Could not prepare this playtest."
+    }
+    if (ready) {
+        CompositionLocalProvider(LocalViewModelStoreOwner provides owner) {
+            CampaignNavigationHost(showCombatActionText = showCombatActionText, providedServices = services,
+                initialDestination = when {
+                    launch.scenario == null -> NavigationDestination.MainMenu.route
+                    launch.scenario.destination == com.example.starborn.feature.mainmenu.DebugScenarioDestination.HUB -> NavigationDestination.Hub.route
+                    else -> NavigationDestination.Exploration.route
+                }, onPlaytestExit = onExit)
+        }
+    } else if (error != null) {
+        AlertDialog(onDismissRequest = onExit, title = { Text("Playtest setup failed") },
+            text = { Text(error.orEmpty()) }, confirmButton = { TextButton(onClick = onExit) { Text("Return to Main Game") } })
+    } else Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
 }

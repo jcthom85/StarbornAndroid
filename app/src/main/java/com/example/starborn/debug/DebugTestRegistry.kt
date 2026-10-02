@@ -17,7 +17,8 @@ data class DebugTestProcedure(
     val revision: Int = 1,
     val cabinetId: String? = null,
     val targetId: String? = null,
-    val emptyWallet: Boolean = false
+    val emptyWallet: Boolean = false,
+    val systemMode: String? = null
 )
 
 data class DebugArcadeCabinet(val id: String, val title: String, val discoveryMilestone: String, val repairedMilestone: String)

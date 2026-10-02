@@ -25,11 +25,12 @@ android {
         applicationId = "com.junewiregames.starborn.prealpha"
         minSdk = 26
         targetSdk = 36
-        versionCode = 167
-        versionName = "1.3.83"
+        versionCode = 168
+        versionName = "1.3.84"
 
         // Scenario browser disabled for release/Play builds; enabled in debug builds.
         buildConfigField("boolean", "ENABLE_SCENARIO_MENU", "false")
+        buildConfigField("boolean", "IS_PLAYTEST_BUILD", "false")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -50,8 +51,18 @@ android {
         debug {
             buildConfigField("boolean", "ENABLE_SCENARIO_MENU", "true")
         }
+        create("playtest") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".playtest"
+            versionNameSuffix = "-playtest"
+            matchingFallbacks += listOf("debug")
+            buildConfigField("boolean", "ENABLE_SCENARIO_MENU", "true")
+            buildConfigField("boolean", "IS_PLAYTEST_BUILD", "true")
+        }
         release {
-            buildConfigField("boolean", "ENABLE_SCENARIO_MENU", "false")
+            // Opt in only for tester releases uploaded to the internal track.
+            buildConfigField("boolean", "ENABLE_SCENARIO_MENU",
+                providers.gradleProperty("enablePlaytestScenarios").orNull?.toBooleanStrictOrNull()?.toString() ?: "false")
             isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("release")
             proguardFiles(
@@ -73,6 +84,9 @@ android {
     }
     sourceSets {
         getByName("debug") {
+            assets.srcDirs("src/debug/assets", "../world_assets/src/main/assets")
+        }
+        getByName("playtest") {
             assets.srcDirs("src/debug/assets", "../world_assets/src/main/assets")
         }
     }
