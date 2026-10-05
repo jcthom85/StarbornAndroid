@@ -2,9 +2,9 @@
 
 ## Google Play internal build
 
-Version 1.3.84 (168) includes **Playtest Scenarios** on the normal title screen. Launching a scenario opens a separate Test Session; normal campaign saves remain in the main session. To resume a test checkpoint after restarting the app, select **Resume Playtest Saves**, then **Load Game**. To leave testing, quit to the test title screen and select **Return to Main Game**.
+Version 1.3.87 (171) is the internal tester release with **Playtest Scenarios** on the normal title screen and the in-game walkthrough reader. The uploaded 1.3.86 (170) release uses normal release settings and hides both tester entry points. Launching a scenario opens a separate Test Session; normal campaign saves remain in the main session. To resume a test checkpoint after restarting the app, select **Resume Playtest Saves**, then **Load Game**. To leave testing, quit to the test title screen and select **Return to Main Game**.
 
-Internal release command: `./gradlew.bat :app:bundleRelease -PenablePlaytestScenarios=true`. Regular release builds default to hiding the scenario menu. Do not upload this tester-enabled artifact to a public track.
+Internal release command: `./gradlew.bat :app:bundleRelease -PenablePlaytestScenarios=true`. Regular release builds default to hiding the scenario menu. Keep the tester-enabled artifact on the internal track; do not promote it to a public track.
 
 ## Separate APK: install and launch
 

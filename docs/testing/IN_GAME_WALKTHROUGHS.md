@@ -1,8 +1,9 @@
 # In-game playtest walkthroughs
 
-In a debug/playtest build, or a release built with
-`-PenablePlaytestScenarios=true`, open **Exploration -> Menu -> Playtest
-walkthrough**. The entry appears in both modern and classic field menus.
+In the internal tester release (built with `-PenablePlaytestScenarios=true`),
+open **Exploration -> Menu -> Playtest walkthrough**. The entry appears in
+both modern and classic field menus. The regular public release hides this
+tester entry.
 
 ## Using the reader
 
