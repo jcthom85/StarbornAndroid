@@ -374,6 +374,7 @@ internal fun CampaignNavigationHost(
             }
             Box(modifier = Modifier.fillMaxSize()) {
                 ExplorationScreen(
+                    isTestSession = services.isTestSession,
                     onDemoRootBack = onDemoRootBack,
                     viewModel = explorationViewModel,
                     audioCuePlayer = services.audioCuePlayer,

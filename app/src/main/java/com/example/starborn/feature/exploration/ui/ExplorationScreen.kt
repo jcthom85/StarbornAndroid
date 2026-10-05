@@ -9,6 +9,7 @@ import com.example.starborn.feature.enemy.explorationEnemySpriteScale
 
 import androidx.annotation.DrawableRes
 import androidx.activity.compose.BackHandler
+import androidx.compose.material.icons.filled.Book
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -340,7 +341,8 @@ fun ExplorationScreen(
     onReturnToTitle: () -> Unit = {},
     onPlayAudio: (String) -> Unit = {},
     fxEvents: Flow<String>? = null,
-    onDemoRootBack: (() -> Unit)? = null
+    onDemoRootBack: (() -> Unit)? = null,
+    isTestSession: Boolean = false
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var pendingInventoryItem by remember { mutableStateOf<InventoryPreviewItemUi?>(null) }
@@ -349,6 +351,7 @@ fun ExplorationScreen(
     var replacingMeal by remember { mutableStateOf(false) }
     val fxBursts = remember { mutableStateListOf<UiFxBurst>() }
     var saveLoadMode by remember { mutableStateOf<String?>(null) } // "save" or "load"
+    var walkthroughVisible by rememberSaveable { mutableStateOf(false) }
     var slotSummaries by remember { mutableStateOf<List<SaveSlotSummary>>(emptyList()) }
     var debugWeatherOverride by remember { mutableStateOf<String?>(null) }
     var importantQuestPopupVisible by remember { mutableStateOf(false) }
@@ -358,7 +361,7 @@ fun ExplorationScreen(
     }
     val coroutineScope = rememberCoroutineScope()
     val blockingOverlayActive =
-        uiState.isMenuOverlayVisible ||
+        walkthroughVisible || uiState.isMenuOverlayVisible ||
             uiState.togglePrompt != null ||
             uiState.tuningPuzzle != null ||
             uiState.activeDialogue != null ||
@@ -375,7 +378,7 @@ fun ExplorationScreen(
             uiState.isMapLegendVisible ||
             uiState.tutorialState.current != null
     val questDetailBlockingOverlayActive =
-        uiState.isMenuOverlayVisible ||
+        walkthroughVisible || uiState.isMenuOverlayVisible ||
             uiState.togglePrompt != null ||
             uiState.tuningPuzzle != null ||
             uiState.activeDialogue != null ||
@@ -399,6 +402,10 @@ fun ExplorationScreen(
             viewModel.setExplorationVisible(false)
             viewModel.setExplorationInteractionBlocked(true)
         }
+    }
+
+    LaunchedEffect(blockingOverlayActive) {
+        viewModel.setExplorationInteractionBlocked(blockingOverlayActive)
     }
 
     LaunchedEffect(Unit) {
@@ -1256,6 +1263,7 @@ fun ExplorationScreen(
             val trackedQuest = uiState.questLogActive.firstOrNull { it.id == uiState.trackedQuestId }
             MenuOverlay(
                 selectedTab = uiState.menuTab,
+                onOpenWalkthrough = if (com.example.starborn.BuildConfig.DEBUG || com.example.starborn.BuildConfig.ENABLE_SCENARIO_MENU) ({ walkthroughVisible = true }) else null,
                 isTinkeringTutorialActive = uiState.isTinkeringTutorialActive,
                 isGearTutorialActive = uiState.isGearTutorialActive,
                 onSelectTab = { viewModel.selectMenuTab(it) },
@@ -1439,6 +1447,18 @@ fun ExplorationScreen(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .zIndex(90f)
+            )
+        }
+
+        if (walkthroughVisible) {
+            com.example.starborn.feature.playtest.WalkthroughViewer(
+                worldId = uiState.currentWorld?.id,
+                roomId = uiState.currentRoom?.id,
+                roomTitle = uiState.currentRoom?.title,
+                questId = uiState.trackedQuestId,
+                questTitle = uiState.questLogActive.firstOrNull { it.id == uiState.trackedQuestId }?.title,
+                isTestSession = isTestSession,
+                onReturnToGame = { walkthroughVisible = false; viewModel.closeMenuOverlay() }
             )
         }
 
@@ -2297,6 +2317,7 @@ fun DrawScope.drawDarkRoomOverlay(
 @Composable
 private fun MenuOverlay(
     selectedTab: MenuTab,
+    onOpenWalkthrough: (() -> Unit)? = null,
     onSelectTab: (MenuTab) -> Unit,
     onClose: () -> Unit,
     onOpenInventory: () -> Unit,
@@ -2585,6 +2606,13 @@ private fun MenuOverlay(
                         onSave = onQuickSave,
                         onClose = { if (detailKind != null) closeDetail(); onClose() },
                         tutorialGuide = {
+                            onOpenWalkthrough?.let { open ->
+                                TextButton(onClick = open, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
+                                    Icon(Icons.Filled.Book, contentDescription = null)
+                                    Spacer(Modifier.width(8.dp))
+                                    Text("Playtest walkthrough")
+                                }
+                            }
                             if (isTinkeringTutorialActive && selectedTab == MenuTab.FIELD_KIT && craftingViewModel != null) {
                                 val craftState by craftingViewModel.uiState.collectAsState()
                                 val step = craftState.tutorialStep
@@ -2683,6 +2711,11 @@ private fun MenuOverlay(
                     }
 
                     if (detailKind == null) {
+                        onOpenWalkthrough?.let { open ->
+                            TextButton(onClick = open, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
+                                Text("Playtest walkthrough")
+                            }
+                        }
                         MenuTabRow(
                             selectedTab = selectedTab,
                             onSelectTab = onSelectTab,

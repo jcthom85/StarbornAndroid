@@ -25,8 +25,8 @@ android {
         applicationId = "com.junewiregames.starborn.prealpha"
         minSdk = 26
         targetSdk = 36
-        versionCode = 168
-        versionName = "1.3.84"
+        versionCode = 169
+        versionName = "1.3.85"
 
         // Scenario browser disabled for release/Play builds; enabled in debug builds.
         buildConfigField("boolean", "ENABLE_SCENARIO_MENU", "false")
@@ -83,6 +83,9 @@ android {
         compose = true
     }
     sourceSets {
+        getByName("main") {
+            assets.srcDir(layout.buildDirectory.dir("generated/playtestGuideAssets").get().asFile)
+        }
         getByName("debug") {
             assets.srcDirs("src/debug/assets", "../world_assets/src/main/assets")
         }
@@ -92,6 +95,16 @@ android {
     }
     assetPacks += listOf(":world_assets")
 }
+
+// Keep the offline reader on the same maintained sources as the PDF guides.
+val syncPlaytestGuides = tasks.register<Sync>("syncPlaytestGuides") {
+    from(rootProject.file("docs/playtest/walkthroughs")) {
+        include("WORLD_1_COMPLETIONIST_WALKTHROUGH.md", "WORLD_2_COMPLETIONIST_WALKTHROUGH.md")
+        into("playtest_guides")
+    }
+    into(layout.buildDirectory.dir("generated/playtestGuideAssets"))
+}
+tasks.named("preBuild").configure { dependsOn(syncPlaytestGuides) }
 
 play {
     serviceAccountCredentials.set(rootProject.file("play-service-account.json"))

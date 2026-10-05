@@ -1,4 +1,4 @@
-"""Build the World 1 PDF from the maintained Markdown walkthrough."""
+"""Build the World 2 PDF from the maintained Markdown walkthrough."""
 from pathlib import Path
 import re
 from html import escape
@@ -11,8 +11,8 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak, 
 from reportlab.platypus.tableofcontents import TableOfContents
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "docs/playtest/walkthroughs/WORLD_1_COMPLETIONIST_WALKTHROUGH.md"
-OUTPUT = ROOT / "docs/playtest_guides/STARBORN_PLAYTEST_GUIDE_WORLD_1.pdf"
+SOURCE = ROOT / "docs/playtest/walkthroughs/WORLD_2_COMPLETIONIST_WALKTHROUGH.md"
+OUTPUT = ROOT / "docs/playtest_guides/STARBORN_PLAYTEST_GUIDE_WORLD_2.pdf"
 
 class GuideDocument(SimpleDocTemplate):
     def beforeDocument(self):
@@ -33,7 +33,7 @@ def inline(text):
     text = re.sub(r"\*\*(.+?)\*\*", r'<b>\1</b>', text)
     return text
 
-def build_world1_pdf(output_pdf=OUTPUT):
+def build_world2_pdf(output_pdf=OUTPUT):
     normal = Path("C:/Windows/Fonts/segoeui.ttf")
     bold = Path("C:/Windows/Fonts/segoeuib.ttf")
     if normal.exists() and bold.exists():
@@ -83,16 +83,16 @@ def build_world1_pdf(output_pdf=OUTPUT):
         canvas.line(40, 36, 572, 36)
         canvas.setFont(font, 8)
         canvas.setFillColor(colors.HexColor("#44616b"))
-        canvas.drawString(40, 24, "STARBORN | World 1 walkthrough | 1.3.84 | October 2, 2026")
+        canvas.drawString(40, 24, "STARBORN | World 2 walkthrough | 1.3.84 | October 2, 2026")
         canvas.drawRightString(572, 24, str(doc.page))
         canvas.restoreState()
     output = Path(output_pdf)
     output.parent.mkdir(parents=True, exist_ok=True)
     doc = GuideDocument(str(output), pagesize=letter, leftMargin=40, rightMargin=40,
-                        topMargin=40, bottomMargin=49, title="Starborn World 1 Complete Walkthrough",
+                        topMargin=40, bottomMargin=49, title="Starborn World 2 Complete Walkthrough",
                         author="Starborn development")
     doc.multiBuild(story, onFirstPage=footer, onLaterPages=footer)
     print(output)
 
 if __name__ == "__main__":
-    build_world1_pdf()
+    build_world2_pdf()
