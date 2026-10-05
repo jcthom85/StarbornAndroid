@@ -58,6 +58,17 @@ class CraftingService(
         val gear = tinkeringRecipes.filter { itemId in ingredientsFor(it) || itemId in it.tools }.map { it.name }
         if (meals.isNotEmpty()) add("Cooking: ${meals.take(3).joinToString()}${if (meals.size > 3) " and more" else ""}")
         if (gear.isNotEmpty()) add("Tinkering: ${gear.take(3).joinToString()}${if (gear.size > 3) " and more" else ""}")
+        cookingRecipes.filter { recipe ->
+            itemId in recipe.ingredients && isRecipeDiscovered(recipe) &&
+                !(recipe.category == "snack" && inventoryService.hasItem(recipe.result))
+        }.mapNotNull { recipe ->
+            val remaining = (recipe.ingredients.getValue(itemId) - availableForCraft(itemId)).coerceAtLeast(0)
+            when {
+                remaining > 0 -> "${recipe.name}: need $remaining more ${inventoryService.itemDisplayName(itemId)}."
+                canCook(recipe) -> "${recipe.name}: ingredients ready. Prepare at a cooking station."
+                else -> null
+            }
+        }.take(2).forEach { add(it) }
     }
 
     fun sharedIngredientNotes(recipe: CookingRecipe): List<String> = recipe.ingredients.keys.mapNotNull { id ->

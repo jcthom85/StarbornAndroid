@@ -121,7 +121,7 @@ class FishingRefinementTest {
             service.secureCatch(FishingResult(catches.first { it.isNativeFish() }.itemId, 1, "Caught", zoneId = id))
             assertEquals(index == 5, "ms_master_angler" in store.state.value.completedMilestones)
         }
-        assertEquals(1, inventory.snapshot()["harmonic_spool_lure"])
+        assertEquals(1, inventory.snapshot()["six_water_lure"])
     }
 
     @Test fun invalidZoneCannotCreateJournalProgress() {
@@ -142,6 +142,12 @@ class FishingRefinementTest {
         for (file in listOf("events.json", "rooms.json", "shops.json")) {
             collect(MoshiProvider.instance.adapter(Any::class.java).fromJson(File(assets, file).readText()))
         }
+        // Exclusive achievement gear is supplied by the runtime catch reward path.
+        data.zones.forEach { (zoneId, catches) ->
+            val native = catches.first { it.isNativeFish() }
+            service.secureCatch(FishingResult(native.itemId, 1, "Caught", zoneId = zoneId))
+        }
+        reachable += service.getAvailableLures().map { it.id }
         val recipes = MoshiProvider.instance.adapter<List<TinkeringRecipe>>(Types.newParameterizedType(List::class.java, TinkeringRecipe::class.java))
             .fromJson(File(assets, "recipes_tinkering.json").readText())!!
         repeat(gear.size) {

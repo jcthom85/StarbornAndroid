@@ -1933,5 +1933,25 @@
     "id": "ms_w2_orion_briefed",
     "name": "A Separate Bridge",
     "description": "Heard Orion explain the Bridge before recovering it."
+  },
+  {
+    "id": "ms_fishing_hook_briefed",
+    "name": "First Hook",
+    "description": "Learned to strike when a bite arrives."
+  },
+  {
+    "id": "ms_master_angler_reward_v2",
+    "name": "Six-Water Lure",
+    "description": "Received the exclusive Master Angler lure."
+  },
+  {
+    "id": "ms_fishing_all_species",
+    "name": "Complete Field Collection",
+    "description": "Recorded every native fish species in the fishing journal."
+  },
+  {
+    "id": "ms_fishing_clean_waters",
+    "name": "Clean-Water Angler",
+    "description": "Recorded a clean native catch in every fishing water."
   }
 ]

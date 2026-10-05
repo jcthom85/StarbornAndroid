@@ -3248,7 +3248,7 @@ class ExplorationViewModel(
                 else if (!hasOpenedFieldMenu && _uiState.value.settings.modernFieldMenu) MenuTab.STATS else lastMenuTab
             hasOpenedFieldMenu = true
             lastMenuTab = tab
-            _uiState.update { it.copy(isMenuOverlayVisible = true, menuTab = tab) }
+            _uiState.update { it.copy(isMenuOverlayVisible = true, menuTab = tab, fishingJournal = fishingService.getJournal()) }
             maybeShowInventoryTutorial(tab)
             if (tab == MenuTab.FIELD_KIT) {
                 triggerPlayerAction("tinkering_screen_entered")

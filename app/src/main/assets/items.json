@@ -3910,5 +3910,23 @@
         "vitality": 5
       }
     }
+  },
+  {
+    "id": "six_water_lure",
+    "name": "Six-Water Lure",
+    "description": "An exclusive Master Angler reward. Six resonant beads favor native fish in every water.",
+    "type": "fishing_lure",
+    "value": 0,
+    "rarity": "exotic",
+    "unsellable": true
+  },
+  {
+    "id": "angler_field_medallion",
+    "name": "Angler's Field Medallion",
+    "description": "Seven species, six waters, one complete field journal. Awarded for recording every native fish species.",
+    "type": "key_item",
+    "value": 0,
+    "rarity": "exotic",
+    "unsellable": true
   }
 ]

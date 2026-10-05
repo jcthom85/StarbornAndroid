@@ -62,7 +62,9 @@ data class FishBehaviorDefinition(
     val basePull: Double = 0.5,
     @Json(name = "burst_pull")
     val burstPull: Double = 0.0,
-    val stamina: Double = 10.0
+    val stamina: Double = 10.0,
+    @Json(name = "fight_style")
+    val fightStyle: String? = null
 )
 
 @JsonClass(generateAdapter = true)

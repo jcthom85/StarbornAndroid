@@ -43,6 +43,7 @@ data class ExplorationUiState(
     val completedQuests: Set<String> = emptySet(),
     val failedQuests: Set<String> = emptySet(),
     val trackedQuestId: String? = null,
+    val fishingJournal: List<com.example.starborn.domain.fishing.FishingJournalEntry> = emptyList(),
     val questLogEntries: List<QuestLogEntryUi> = emptyList(),
     val questLogActive: List<QuestSummaryUi> = emptyList(),
     val questLogCompleted: List<QuestSummaryUi> = emptyList(),

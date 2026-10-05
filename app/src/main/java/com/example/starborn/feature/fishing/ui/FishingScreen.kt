@@ -28,6 +28,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -96,6 +99,13 @@ fun FishingScreen(
     onFishingCue: (String) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val active = uiState.fishingState in setOf(FishingState.WAITING, FishingState.HOOKSET, FishingState.REELING)
+    val pageScroll = rememberScrollState()
+    val fightScroll = rememberScrollState()
+    LaunchedEffect(uiState.fishingState) {
+        pageScroll.scrollTo(0)
+        fightScroll.scrollTo(0)
+    }
     val zone = uiState.currentZone
     val buttonHeight = if (largeTouchTargets) 52.dp else 0.dp
 
@@ -138,7 +148,7 @@ fun FishingScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(uiState.fishingState, uiState.motionEnabled, lifecycleOwner, hookDetector) {
         fun synchronize() {
-            val active = lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
+            val active = lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
             viewModel.setPaused(!active)
             if (active && uiState.motionEnabled && uiState.fishingState == FishingState.HOOKSET && hookDetector.isSupported()) {
                 hookDetector.start { viewModel.onHookMotionDetected() }
@@ -163,7 +173,9 @@ fun FishingScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .then(if (active) Modifier else Modifier.verticalScroll(pageScroll))
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -174,28 +186,31 @@ fun FishingScreen(
                 highContrastMode = highContrastMode,
                 largeTouchTargets = largeTouchTargets
             )
-            FishingHero(
-                zone = zone,
-                state = uiState.fishingState,
-                highContrastMode = highContrastMode
-            )
-            FishingPhaseStepper(state = uiState.fishingState, highContrastMode = highContrastMode)
+            if (!active) {
+                FishingHero(
+                    zone = zone,
+                    state = uiState.fishingState,
+                    highContrastMode = highContrastMode
+                )
+                FishingPhaseStepper(state = uiState.fishingState, highContrastMode = highContrastMode)
+            }
             Surface(
                 tonalElevation = 4.dp,
                 shape = RoundedCornerShape(20.dp),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().then(if (active) Modifier.weight(1f) else Modifier),
                 color = if (highContrastMode) Color(0xFF0B1119) else MaterialTheme.colorScheme.surface.copy(alpha = 0.94f)
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .then(if (active) Modifier.verticalScroll(fightScroll) else Modifier)
                         .padding(horizontal = 16.dp, vertical = 14.dp)
                 ) {
                     when (uiState.fishingState) {
                         FishingState.SETUP -> Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                             if (uiState.needsReelBriefing) {
                                 Text("Your first cast", style = MaterialTheme.typography.titleMedium)
-                                Text("Tap Strike when the bite arrives. Reel while the fish is calm; release before its surge. Your first hook pauses for a safe explanation.")
+                                Text("Tap Strike when the bite arrives. Reel while the fish is calm; release before its surge. Your first bite waits for you to tap Strike, then pauses for a safe reel explanation.")
                             }
                             FishingSetupSection(
                                 state = uiState,
@@ -215,9 +230,10 @@ fun FishingScreen(
                         }
 
                         FishingState.READY -> Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                            Text("Fish hooked — take your time", style = MaterialTheme.typography.titleLarge)
+                            Text("Your line is set — take your time", style = MaterialTheme.typography.titleLarge)
                             Text("Hold the reel during CALM or RECOVERY. Watch PULL and your tension. When SURGE COMING appears, release and give the fish slack until it settles.")
-                            Text("Slack protects your progress during a surge. The fish tires over time. Keeping tension safe and giving slack through surges earns a clean catch.")
+                            Text("Slack protects your progress during a surge. Reeling safely and giving slack through surges tire the fish. Keeping tension safe and giving slack through surges earns a clean catch.")
+                            Text("Salvage uses a short, steady retrieval instead of a fish fight. Release the reel if its tension climbs.")
                             Button(onClick = viewModel::beginReeling, modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)) {
                                 Text("Ready — start reeling")
                             }
@@ -225,29 +241,17 @@ fun FishingScreen(
 
                         FishingState.WAITING -> FishingWaitingSection(
                             state = uiState.waitingState,
-                            onCancel = viewModel::cancelWaiting,
-                            highContrastMode = highContrastMode,
-                            largeTouchTargets = largeTouchTargets,
-                            buttonHeight = buttonHeight
+                            highContrastMode = highContrastMode
                         )
 
                         FishingState.HOOKSET -> FishingHookSection(
                             hookState = uiState.hookState,
-                            onSetHook = viewModel::onHookButtonPressed,
-                            onCancel = viewModel::cancelFishing,
-                            highContrastMode = highContrastMode,
-                            largeTouchTargets = largeTouchTargets,
-                            buttonHeight = buttonHeight
+                            highContrastMode = highContrastMode
                         )
 
                         FishingState.REELING -> FishingReelSection(
                             reelState = uiState.reelState,
-                            onReelPressed = viewModel::onReelPressed,
-                            onReelReleased = viewModel::onReelReleased,
-                            onCancel = viewModel::cancelFishing,
-                            highContrastMode = highContrastMode,
-                            largeTouchTargets = largeTouchTargets,
-                            buttonHeight = buttonHeight
+                            highContrastMode = highContrastMode
                         )
 
                         FishingState.RESULT -> FishingResultSection(
@@ -261,6 +265,14 @@ fun FishingScreen(
                     }
                 }
             }
+            if (active) FishingActiveControls(
+                state = uiState,
+                onStrike = viewModel::onHookButtonPressed,
+                onReelPressed = viewModel::onReelPressed,
+                onReelReleased = viewModel::onReelReleased,
+                onCancel = viewModel::cancelFishing,
+                largeTouchTargets = largeTouchTargets,
+            )
         }
     }
 }
@@ -287,24 +299,33 @@ fun FishingRoute(
 }
 
 @Composable
-private fun FishingJournal(entries: List<FishingJournalEntry>) {
-    var expanded by remember { mutableStateOf(false) }
-    val visited = entries.count { entry -> entry.species.any { it.caught } }
-    val cleanSpecies = entries.flatMap { it.species }.filter { it.clean }.map { it.itemId }.toSet().size
+fun FishingJournal(entries: List<FishingJournalEntry>) {
+    var expanded by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf(false) }
+    val waters = entries.count { entry -> entry.species.any { it.caught } }
+    val cleanWaters = entries.count { entry -> entry.species.any { it.clean } }
+    val species = entries.flatMap { it.species }.groupBy { it.itemId }
+    val caughtSpecies = species.values.count { records -> records.any { it.caught } }
+    val cleanSpecies = species.values.count { records -> records.any { it.clean } }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        OutlinedButton(onClick = { expanded = !expanded }) {
-            Text("Field journal · $visited/${entries.size} waters ${if (expanded) "▴" else "▾"}")
+        OutlinedButton(onClick = { expanded = !expanded }, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
+            Text("Fishing journal · $caughtSpecies/${species.size} species · $waters/${entries.size} waters")
         }
         if (expanded) {
-            Text("Clean catches: $cleanSpecies species", style = MaterialTheme.typography.titleSmall)
-            Text("First clean species: Glimmer Lure. Three different clean species: Ghost-Signal Lure. A native fish from all six waters: Master Angler and Harmonic Spool Lure.", style = MaterialTheme.typography.bodySmall)
+            Text("Collection goals", style = MaterialTheme.typography.titleMedium)
+            Text("First clean species: Glimmer Lure · ${cleanSpecies.coerceAtMost(1)}/1", style = MaterialTheme.typography.bodyMedium)
+            Text("Three clean species: Ghost-Signal Lure · ${cleanSpecies.coerceAtMost(3)}/3", style = MaterialTheme.typography.bodyMedium)
+            Text("Master Angler: fish in every water for the exclusive Six-Water Lure · $waters/${entries.size}", style = MaterialTheme.typography.bodyMedium)
+            Text("Every species: Angler's Field Medallion · $caughtSpecies/${species.size}", style = MaterialTheme.typography.bodyMedium)
+            Text("Clean-Water Angler: a clean catch in every water · $cleanWaters/${entries.size}", style = MaterialTheme.typography.bodyMedium)
             entries.forEach { entry ->
-                val caught = entry.species.filter { it.caught }
-                Text("${entry.name} · ${caught.size}/${entry.species.size}", fontWeight = FontWeight.Bold)
-                Text(caught.joinToString { "${it.name}${if (it.clean) " ★" else ""}" }.ifBlank { "No native fish recorded yet." },
-                    style = MaterialTheme.typography.bodySmall)
+                val caught = entry.species.count { it.caught }
+                Text("${entry.name} · $caught/${entry.species.size}", fontWeight = FontWeight.Bold)
+                entry.species.forEach { record ->
+                    Text(if (record.caught) "${record.name}${if (record.clean) " · Clean catch" else " · Caught"}"
+                        else "Undiscovered species", style = MaterialTheme.typography.bodyMedium)
+                }
             }
-            Text("★ Clean catch. Records remain after cooking or selling the fish.", style = MaterialTheme.typography.bodySmall)
+            Text("Records remain after cooking or selling. The Colony drain pool becomes fishable after the Sector 9 pod examination; return through Astra when travel is available.", style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
@@ -513,7 +534,9 @@ private fun FishingSetupSection(
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     state.availableRods.forEach { rod ->
-                        val subtitle = "Power ${"%.2f".format(rod.fishingPower)} • Stability ${"%.2f".format(rod.stability)}"
+                        val speed = (((rod.fishingPower - 1.0) / 2.05).coerceIn(0.0, 1.0) * 18).toInt()
+                        val forgiveness = (((rod.stability - 1.0) / 1.8).coerceIn(0.0, 1.0) * 30).toInt()
+                        val subtitle = if (speed == 0 && forgiveness == 0) "Starter handling - watch your tension" else "$speed% faster reeling - $forgiveness% more tension resistance"
                         GearCard(
                             title = rod.name,
                             subtitle = subtitle,
@@ -549,7 +572,8 @@ private fun FishingSetupSection(
                         }.ifBlank { "General fish" }
                         val subtitle = buildString {
                             append("Favors: $formattedAttracts")
-                            if ((lure.zoneBonuses[state.currentZone?.id] ?: 0) > 0) append(" • Local match")
+                            if ((lure.zoneBonuses[state.currentZone?.id] ?: 0) > 0 && state.currentZone?.catches?.any { it.itemId in lure.attracts } == true) append(" - Local match")
+                            if (lure.rarityBonus > 0) append(" - +${(lure.rarityBonus * 100).toInt()}% rare catch weight")
                         }
                         GearCard(
                             title = lure.name,
@@ -633,10 +657,7 @@ private fun FishingSetupSection(
 @Composable
 private fun FishingWaitingSection(
     state: FishingWaitingState?,
-    onCancel: () -> Unit,
-    highContrastMode: Boolean,
-    largeTouchTargets: Boolean,
-    buttonHeight: Dp
+    highContrastMode: Boolean
 ) {
     val progress = state?.let { (it.elapsedMs.toFloat() / it.targetMs.toFloat()).coerceIn(0f, 1f) } ?: 0f
     Column(
@@ -655,25 +676,19 @@ private fun FishingWaitingSection(
             trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
         )
         Text(
-            text = "Keep the line steady. You’ll feel a strong tug when it’s time to hook.",
+            text = "Watch for the bite signal. The Strike button appears when it is time to hook.",
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             color = if (highContrastMode) Color.White.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant
         )
-        OutlinedButton(onClick = onCancel, modifier = Modifier.heightIn(min = buttonHeight)) {
-            Text("Cancel")
-        }
+
     }
 }
 
 @Composable
 private fun FishingHookSection(
     hookState: FishingHookState?,
-    onSetHook: () -> Unit,
-    onCancel: () -> Unit,
-    highContrastMode: Boolean,
-    largeTouchTargets: Boolean,
-    buttonHeight: Dp
+    highContrastMode: Boolean
 ) {
     val remaining = hookState?.timeRemainingMs ?: 0L
     val seconds = remaining.coerceAtLeast(0L) / 1000f
@@ -692,10 +707,10 @@ private fun FishingHookSection(
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = "Fish on! Snap the hook!",
+            text = if (hookState?.practiceHook == true) "Your first bite · take your time" else "A bite! Set the hook",
             style = MaterialTheme.typography.titleMedium,
             color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
         )
@@ -703,7 +718,7 @@ private fun FishingHookSection(
         // Bouncing Upward Arrow Animation
         Box(
             modifier = Modifier
-                .height(80.dp)
+                .height(40.dp)
                 .width(60.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -730,7 +745,7 @@ private fun FishingHookSection(
             text = if (hookState?.gyroAvailable == true) {
                 "Jerk the device upward quickly as if striking a rod, or tap the button below!"
             } else {
-                "Tap the button below quickly to set the hook before the fish escapes!"
+                if (hookState?.practiceHook == true) "Tap Strike below to hook your catch. This first bite has no countdown." else "Tap Strike below before the bite is gone."
             },
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
@@ -743,51 +758,28 @@ private fun FishingHookSection(
             color = if (highContrastMode) Color.White.copy(alpha = 0.8f) else MaterialTheme.colorScheme.tertiary
         )
         Text(
-            text = "Time remaining: ${String.format(java.util.Locale.ROOT, "%.1f", seconds)}s",
+            text = if (hookState?.practiceHook == true) "Practice bite · no time limit" else "Time remaining: ${String.format(java.util.Locale.ROOT, "%.1f", seconds)}s",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.error
         )
-        // Prominently display the Hook strike button for seamless one-handed or flat-surface play
-        Button(
-            onClick = onSetHook,
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = if (largeTouchTargets) 64.dp else 52.dp),
-            shape = RoundedCornerShape(14.dp),
-            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                containerColor = if (highContrastMode) Color(0xFF1D8BF2) else MaterialTheme.colorScheme.primary
-            )
-        ) {
-            Text(
-                text = "⚡ STRIKE & SET HOOK",
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-            )
-        }
-        OutlinedButton(onClick = onCancel, modifier = Modifier.heightIn(min = buttonHeight)) {
-            Text("Abort")
-        }
+
     }
 }
 
 @Composable
 private fun FishingReelSection(
     reelState: FishingReelState?,
-    onReelPressed: () -> Unit,
-    onReelReleased: () -> Unit,
-    onCancel: () -> Unit,
-    highContrastMode: Boolean,
-    largeTouchTargets: Boolean,
-    buttonHeight: Dp
+    highContrastMode: Boolean
 ) {
     val progress = reelState?.progress ?: 0f
     val animated = animateFloatAsState(targetValue = progress, label = "reelProgress")
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = "Reel it in!",
+            text = if (reelState?.salvage == true) "Retrieve the salvage" else "Reel it in!",
             style = MaterialTheme.typography.titleMedium,
             color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
         )
@@ -811,7 +803,7 @@ private fun FishingReelSection(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(84.dp)
+                .height(60.dp)
         ) {
             Canvas(modifier = Modifier.matchParentSize()) {
                 // Background Track
@@ -856,10 +848,10 @@ private fun FishingReelSection(
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(top = fishWiggleOffset.dp)
+                        modifier = Modifier.offset(y = fishWiggleOffset.dp)
                     ) {
                         Text(
-                            text = "🐟",
+                            text = if (reelState?.salvage == true) "⚙" else "🐟",
                             fontSize = 24.sp
                         )
                         Text(
@@ -872,7 +864,7 @@ private fun FishingReelSection(
             }
         }
         Text(
-            text = reelState?.phase?.instruction ?: "Reel when the fish settles; give slack during a surge.",
+            text = if (reelState?.salvage == true) "Hold to retrieve it. Release if tension climbs." else reelState?.phase?.instruction ?: "Reel when the fish settles; give slack during a surge.",
             style = MaterialTheme.typography.bodySmall,
             color = if (highContrastMode) Color.White.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
@@ -888,7 +880,7 @@ private fun FishingReelSection(
             color = if (highContrastMode) Color.White.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant
         )
         Text(
-            text = when (reelState?.phase) {
+            text = if (reelState?.salvage == true) "STEADY RETRIEVAL" else when (reelState?.phase) {
                 FishingFightPhase.WARNING -> "SURGE COMING — RELEASE"
                 FishingFightPhase.SURGE -> "SURGE — GIVE SLACK"
                 FishingFightPhase.PULL -> "PULL — WATCH TENSION"
@@ -899,40 +891,67 @@ private fun FishingReelSection(
             color = if (reelState?.phase in listOf(FishingFightPhase.WARNING, FishingFightPhase.SURGE))
                 MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
         )
-        Text(if ((reelState?.staminaRemaining ?: 1f) < 0.25f) "The fish is tiring — keep reading its surges."
-            else "Fish stamina ${((reelState?.staminaRemaining ?: 1f) * 100).toInt()}%", style = MaterialTheme.typography.labelMedium)
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = if (largeTouchTargets) 76.dp else 60.dp)
-                .semantics {
-                    role = Role.Button
-                    onClick(label = "Toggle reeling and slack") {
-                        if (reelState?.isReeling == true) onReelReleased() else onReelPressed()
-                        true
-                    }
-                }
-                .pointerInput(Unit) {
-                    awaitEachGesture {
-                        awaitFirstDown()
-                        onReelPressed()
-                        try { waitForUpOrCancellation() } finally { onReelReleased() }
-                    }
-                },
-            shape = RoundedCornerShape(18.dp),
-            color = if (reelState?.isReeling == true) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer,
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
-        ) {
-            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    if (reelState?.isReeling == true) "Reeling..." else "Hold to Reel",
-                    fontWeight = FontWeight.Bold,
-                    color = if (reelState?.isReeling == true) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer
-                )
+        if (reelState?.salvage != true) Text(if ((reelState?.staminaRemaining ?: 1f) < 0.25f) "The fish is tiring — keep reading its surges."
+            else "Fish energy ${((reelState?.staminaRemaining ?: 1f) * 100).toInt()}% · tire it by reeling safely", style = MaterialTheme.typography.labelMedium)
+
+    }
+}
+
+@Composable
+private fun FishingActiveControls(
+    state: FishingUiState,
+    onStrike: () -> Unit,
+    onReelPressed: () -> Unit,
+    onReelReleased: () -> Unit,
+    onCancel: () -> Unit,
+    largeTouchTargets: Boolean
+) {
+    val reelState = state.reelState
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        if (state.fishingState == FishingState.HOOKSET) {
+            Button(onClick = onStrike, modifier = Modifier.fillMaxWidth().heightIn(min = if (largeTouchTargets) 64.dp else 52.dp)) {
+                Text("Strike & set hook", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             }
         }
-        OutlinedButton(onClick = onCancel, modifier = Modifier.heightIn(min = buttonHeight)) {
-            Text("Give Up")
+        if (state.fishingState == FishingState.REELING) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = if (largeTouchTargets) 76.dp else 60.dp)
+                    .semantics {
+                        role = Role.Button
+                        onClick(label = "Toggle reeling and slack") {
+                            if (reelState?.isReeling == true) onReelReleased() else onReelPressed()
+                            true
+                        }
+                    }
+                    .pointerInput(Unit) {
+                        awaitEachGesture {
+                            awaitFirstDown()
+                            onReelPressed()
+                            try { waitForUpOrCancellation() } finally { onReelReleased() }
+                        }
+                    },
+                shape = RoundedCornerShape(18.dp),
+                color = if (reelState?.isReeling == true) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer,
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
+            ) {
+                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        when {
+                            reelState?.isReeling == true && reelState.salvage -> "Retrieving..."
+                            reelState?.isReeling == true -> "Reeling..."
+                            reelState?.salvage == true -> "Hold to Retrieve"
+                            else -> "Hold to Reel"
+                        },
+                        fontWeight = FontWeight.Bold,
+                        color = if (reelState?.isReeling == true) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
+            }
+        }
+        OutlinedButton(onClick = onCancel, modifier = Modifier.fillMaxWidth().heightIn(min = if (largeTouchTargets) 52.dp else 48.dp)) {
+            Text(if (state.fishingState == FishingState.REELING) "Put the line down" else "Cancel cast")
         }
     }
 }

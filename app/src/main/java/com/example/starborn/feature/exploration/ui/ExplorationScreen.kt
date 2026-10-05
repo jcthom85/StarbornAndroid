@@ -1315,6 +1315,7 @@ fun ExplorationScreen(
                 trackedQuest = trackedQuest,
                 activeQuests = uiState.questLogActive,
                 completedQuests = uiState.questLogCompleted,
+                fishingJournal = uiState.fishingJournal,
                 minimap = uiState.minimap,
                 fullMap = uiState.fullMap,
                 theme = activeTheme,
@@ -2347,6 +2348,7 @@ private fun MenuOverlay(
     trackedQuest: QuestSummaryUi?,
     activeQuests: List<QuestSummaryUi>,
     completedQuests: List<QuestSummaryUi>,
+    fishingJournal: List<com.example.starborn.domain.fishing.FishingJournalEntry> = emptyList(),
     minimap: MinimapUiState?,
     fullMap: FullMapUiState?,
     theme: Theme?,
@@ -2441,6 +2443,7 @@ private fun MenuOverlay(
                         trackedQuest = trackedQuest,
                         activeQuests = activeQuests,
                         completedQuests = completedQuests,
+                        fishingJournal = fishingJournal,
                         minimap = minimap,
                         fullMap = fullMap,
                         settings = settings,
@@ -3238,6 +3241,7 @@ private fun MenuTabContentArea(
     trackedQuest: QuestSummaryUi?,
     activeQuests: List<QuestSummaryUi>,
     completedQuests: List<QuestSummaryUi>,
+    fishingJournal: List<com.example.starborn.domain.fishing.FishingJournalEntry> = emptyList(),
     minimap: MinimapUiState?,
     fullMap: FullMapUiState?,
     settings: SettingsUiState,
@@ -3335,7 +3339,8 @@ private fun MenuTabContentArea(
                 completedQuests = completedQuests,
                 accentColor = accentColor,
                 borderColor = borderColor,
-                onQuestSelected = onShowQuestDetails
+                onQuestSelected = onShowQuestDetails,
+                fishingJournal = fishingJournal
             )
             MenuTab.MAP -> MapTabContent(
                 minimap = minimap,

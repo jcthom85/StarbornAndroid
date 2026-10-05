@@ -20,6 +20,36 @@ class FishingService(
     fun getAvailableLures(): List<FishingLure> =
         fishingData.lures.filter { inventoryService.hasItem(it.id) }
 
+    private fun preferredId(kind: String): String? = sessionStore?.state?.value?.roomStates
+        ?.get("fishing_preferences")?.entries?.firstOrNull { it.key.startsWith("$kind:") && it.value }
+        ?.key?.substringAfter(':')
+
+    fun preferredRod(): FishingRod? = getAvailableRods().let { owned ->
+        owned.firstOrNull { it.id == preferredId("rod") } ?: owned.maxByOrNull { it.fishingPower + it.stability }
+    }
+
+    fun preferredLure(): FishingLure? = getAvailableLures().let { owned ->
+        owned.firstOrNull { it.id == preferredId("lure") } ?: owned.firstOrNull()
+    }
+
+    fun rememberGear(kind: String, id: String) {
+        val ids = when (kind) {
+            "rod" -> getAvailableRods().map { it.id }
+            "lure" -> getAvailableLures().map { it.id }
+            else -> return
+        }
+        if (id !in ids) return
+        sessionStore?.state?.value?.roomStates?.get("fishing_preferences")?.keys
+            ?.filter { it.startsWith("$kind:") && it != "$kind:$id" }
+            ?.forEach { sessionStore?.setRoomState("fishing_preferences", it, false) }
+        sessionStore?.setRoomState("fishing_preferences", "$kind:$id", true)
+    }
+
+    fun hasHookBriefing(): Boolean = sessionStore?.state?.value?.completedMilestones
+        ?.contains("ms_fishing_hook_briefed") == true || hasReelBriefing()
+
+    fun markHookBriefing() { sessionStore?.setMilestone("ms_fishing_hook_briefed") }
+
     fun getFishingZone(zoneId: String): FishingZone? {
         val catches = fishingData.zones[zoneId] ?: return null
         val water = when (zoneId) {
@@ -97,7 +127,20 @@ class FishingService(
             if (cleanSpecies >= 1) reward("ms_fishing_first_clean", "shiny_lure", "First clean catch: Glimmer Lure unlocked.")
             if (cleanSpecies >= 3) reward("ms_fishing_clean_collection", "mystery_lure", "Three species caught cleanly: Ghost-Signal Lure unlocked.")
             if (journal.isNotEmpty() && journal.all { entry -> entry.species.any { it.caught } }) {
-                reward("ms_master_angler", "harmonic_spool_lure", "Master Angler: native fish caught in all six waters. Harmonic Spool Lure unlocked.")
+                sessionStore.setMilestone("ms_master_angler")
+            }
+            // A separate grant also upgrades saves that earned the old, craftable reward.
+            if ("ms_master_angler" in sessionStore.state.value.completedMilestones) {
+                reward("ms_master_angler_reward_v2", "six_water_lure", "Master Angler: Six-Water Lure unlocked. An exclusive lure for every fishing water.")
+            }
+            val species = journal.flatMap { it.species }.groupBy { it.itemId }
+            if (species.isNotEmpty() && species.values.all { records -> records.any { it.caught } }) {
+                reward("ms_fishing_all_species", "angler_field_medallion", "Complete field collection: Angler's Field Medallion earned. Every native species recorded.")
+            }
+            if (journal.isNotEmpty() && journal.all { entry -> entry.species.any { it.clean } } &&
+                "ms_fishing_clean_waters" !in sessionStore.state.value.completedMilestones) {
+                sessionStore.setMilestone("ms_fishing_clean_waters")
+                rewards += "Clean-Water Angler: a clean catch recorded in every water."
             }
         }
         sessionStore?.setInventory(inventoryService.snapshot())
@@ -129,7 +172,9 @@ class FishingService(
         val displayName = inventoryService.itemDisplayName(catch.itemId).ifBlank { catch.itemId }
         val message = when {
             success && minigameResult == MinigameResult.PERFECT -> "Perfect catch! $displayName secured."
+            success && !catch.isNativeFish() -> "Recovered $displayName."
             success -> "You caught $displayName."
+            !catch.isNativeFish() -> "The salvage slipped back into the water."
             else -> "The fish slipped away."
         }
         return FishingResult(
@@ -137,7 +182,8 @@ class FishingService(
             quantity = quantity,
             message = message,
             rarity = catch.rarity,
-            flavorText = if (success) flavorTextFor(catch.rarity) else null,
+            flavorText = if (success && !catch.isNativeFish()) "Recovered from the water."
+                else if (success) fishFlavor(catch.itemId) ?: flavorTextFor(catch.rarity) else null,
             behavior = encounter.behavior,
             displayName = displayName
         )
@@ -182,15 +228,27 @@ class FishingService(
     }
 
     private fun rarityFactor(rarity: FishingRarity, rodPower: Double, lureBonus: Double): Double {
-        val bonus = (rodPower + lureBonus / 10.0).coerceAtLeast(0.0)
+        val bonus = rodPower.coerceAtLeast(0.0)
+        val lureFactor = 1.0 + lureBonus.coerceAtLeast(0.0)
         return when (rarity) {
             FishingRarity.JUNK -> 1.0
             FishingRarity.COMMON -> 1.0
-            FishingRarity.UNCOMMON -> 1 + 0.05 * bonus
-            FishingRarity.RARE -> 1 + 0.1 * bonus
-            FishingRarity.EPIC -> 1 + 0.15 * bonus
-            FishingRarity.EXOTIC -> 1 + 0.25 * bonus
+            FishingRarity.UNCOMMON -> (1 + 0.05 * bonus) * (1 + lureBonus.coerceAtLeast(0.0) * 0.5)
+            FishingRarity.RARE -> (1 + 0.1 * bonus) * lureFactor
+            FishingRarity.EPIC -> (1 + 0.15 * bonus) * lureFactor
+            FishingRarity.EXOTIC -> (1 + 0.25 * bonus) * lureFactor
         }
+    }
+
+    private fun fishFlavor(itemId: String): String? = when (itemId) {
+        "raw_glowfish" -> "Its mineral light flickers softly through your fingers."
+        "resonance_carp" -> "A low hum runs down the line before the carp settles."
+        "chime_minnow" -> "A tiny glass-clear note rings out as you lift it from the water."
+        "stellarium_eel" -> "Blind eyes turn toward the vibration of your footsteps."
+        "frequency_tetra" -> "Its scales pulse twice, as if answering a distant chord."
+        "void_ray" -> "For a heartbeat, its shadow arrives before the ray does."
+        "chronos_guppy" -> "One last ripple follows it a moment too late."
+        else -> null
     }
 
     private fun flavorTextFor(rarity: FishingRarity): String = when (rarity) {
@@ -202,11 +260,18 @@ class FishingService(
         FishingRarity.EXOTIC -> "An impossible catch!"
     }
 
-    private fun formatZoneName(zoneId: String): String =
-        zoneId.split('_')
+    private fun formatZoneName(zoneId: String): String = when (zoneId) {
+        "colony_pit_drain" -> "Colony Drain Pool"
+        "sector9_stream" -> "Sector 9 Tide Pools"
+        "spire_runoff" -> "Spire Rainwater Runoff"
+        "foundry_cooling_runoff" -> "Foundry Cooling Springs"
+        "orbital_false_tide" -> "Orbital False Tide"
+        "singularity_ether_well" -> "Source Ether Well"
+        else -> zoneId.split('_')
             .filter { it.isNotBlank() }
             .joinToString(" ") { part -> part.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() } }
             .ifBlank { zoneId }
+    }
 }
 
 enum class FishingDifficulty {

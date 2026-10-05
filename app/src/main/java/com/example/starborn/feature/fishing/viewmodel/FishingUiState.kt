@@ -25,6 +25,7 @@ data class FishingUiState(
     val motionEnabled: Boolean = false,
     val motionSupported: Boolean = false,
     val needsReelBriefing: Boolean = true,
+    val needsHookBriefing: Boolean = true,
     val journal: List<FishingJournalEntry> = emptyList()
 )
 
@@ -51,7 +52,8 @@ data class FishingWaitingState(
 data class FishingHookState(
     val timeRemainingMs: Long,
     val gyroAvailable: Boolean,
-    val fallbackVisible: Boolean
+    val fallbackVisible: Boolean,
+    val practiceHook: Boolean = false
 )
 
 data class FishingReelState(
@@ -61,5 +63,6 @@ data class FishingReelState(
     val fishName: String?,
     val behavior: FishBehaviorDefinition?,
     val phase: FishingFightPhase = FishingFightPhase.CALM,
-    val staminaRemaining: Float = 1f
+    val staminaRemaining: Float = 1f,
+    val salvage: Boolean = false
 )

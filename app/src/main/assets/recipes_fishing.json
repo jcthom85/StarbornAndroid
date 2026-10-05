@@ -1,6 +1,6 @@
 {
   "meta": {
-    "version": "2",
+    "version": "3",
     "description": "Fishing data for glow-water, Spire runoff, and Ring false-tide catches."
   },
   "rods": [
@@ -110,7 +110,7 @@
     {
       "id": "bioluminescent_lure",
       "name": "Bioluminescent Lure",
-      "description": "Canopy Hopper's glowing prize favors rare fish, especially in Sector 9.",
+      "description": "A glowing lure that favors rare fish, especially in Sector 9 and the Source ether well.",
       "rarity_bonus": 0.6,
       "attracts": [
         "chime_minnow",
@@ -138,6 +138,29 @@
         "spire_runoff": 4,
         "foundry_cooling_runoff": 4,
         "orbital_false_tide": 2
+      }
+    },
+    {
+      "id": "six_water_lure",
+      "name": "Six-Water Lure",
+      "description": "Earned by catching native fish in all six waters. Its six resonant beads favor every native species and work especially well in every fishing water.",
+      "rarity_bonus": 0.8,
+      "attracts": [
+        "raw_glowfish",
+        "resonance_carp",
+        "chime_minnow",
+        "stellarium_eel",
+        "frequency_tetra",
+        "void_ray",
+        "chronos_guppy"
+      ],
+      "zone_bonus": {
+        "sector9_stream": 4,
+        "spire_runoff": 4,
+        "orbital_false_tide": 4,
+        "colony_pit_drain": 4,
+        "foundry_cooling_runoff": 4,
+        "singularity_ether_well": 4
       }
     }
   ],
@@ -388,37 +411,43 @@
       "pattern": "sine",
       "base_pull": 0.28,
       "burst_pull": 0.08,
-      "stamina": 10
+      "stamina": 10,
+      "fight_style": "gentle"
     },
     "steady_pull": {
       "pattern": "linear",
       "base_pull": 0.42,
       "burst_pull": 0.12,
-      "stamina": 12
+      "stamina": 12,
+      "fight_style": "steady"
     },
     "erratic_burst": {
       "pattern": "burst",
       "base_pull": 0.36,
       "burst_pull": 0.34,
-      "stamina": 15
+      "stamina": 15,
+      "fight_style": "dart"
     },
     "blind_drift": {
       "pattern": "linear",
       "base_pull": 0.48,
       "burst_pull": 0.16,
-      "stamina": 14
+      "stamina": 14,
+      "fight_style": "drift"
     },
     "standing_wave": {
       "pattern": "burst",
       "base_pull": 0.52,
       "burst_pull": 0.42,
-      "stamina": 18
+      "stamina": 18,
+      "fight_style": "wave"
     },
     "ether_teleport": {
       "pattern": "burst",
       "base_pull": 0.62,
       "burst_pull": 0.48,
-      "stamina": 22
+      "stamina": 22,
+      "fight_style": "ether"
     }
   },
   "minigame_rules": {

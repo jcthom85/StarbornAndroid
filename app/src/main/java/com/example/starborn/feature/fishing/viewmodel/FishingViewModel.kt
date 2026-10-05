@@ -10,6 +10,7 @@ import com.example.starborn.domain.fishing.FishingResult
 import com.example.starborn.domain.fishing.FishingRod
 import com.example.starborn.domain.fishing.FishingService
 import com.example.starborn.domain.fishing.MinigameResult
+import com.example.starborn.domain.fishing.isNativeFish
 import kotlin.random.Random
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -60,10 +61,11 @@ class FishingViewModel(
                     availableRods = availableRods,
                     availableLures = availableLures,
                     currentZone = zone,
-                    selectedRod = availableRods.firstOrNull(),
-                    selectedLure = availableLures.firstOrNull(),
+                    selectedRod = fishingService.preferredRod(),
+                    selectedLure = fishingService.preferredLure(),
                     journal = fishingService.getJournal(),
-                    needsReelBriefing = !fishingService.hasReelBriefing()
+                    needsReelBriefing = !fishingService.hasReelBriefing(),
+                    needsHookBriefing = !fishingService.hasHookBriefing()
                 )
             }
         }
@@ -82,10 +84,14 @@ class FishingViewModel(
     }
 
     fun selectRod(rod: FishingRod) {
+        if (_uiState.value.fishingState != FishingState.SETUP || rod !in _uiState.value.availableRods) return
+        fishingService.rememberGear("rod", rod.id)
         _uiState.update { it.copy(selectedRod = rod) }
     }
 
     fun selectLure(lure: FishingLure) {
+        if (_uiState.value.fishingState != FishingState.SETUP || lure !in _uiState.value.availableLures) return
+        fishingService.rememberGear("lure", lure.id)
         _uiState.update { it.copy(selectedLure = lure) }
     }
 
@@ -146,6 +152,8 @@ class FishingViewModel(
                 lastResult = null,
                 availableRods = rods,
                 availableLures = lures,
+                selectedRod = rods.firstOrNull { rod -> rod.id == it.selectedRod?.id } ?: fishingService.preferredRod(),
+                selectedLure = lures.firstOrNull { lure -> lure.id == it.selectedLure?.id } ?: fishingService.preferredLure(),
                 journal = fishingService.getJournal()
             )
         }
@@ -224,7 +232,8 @@ class FishingViewModel(
         val hookState = FishingHookState(
             timeRemainingMs = HOOK_WINDOW_MS,
             gyroAvailable = gyroAvailable && _uiState.value.motionEnabled,
-            fallbackVisible = true
+            fallbackVisible = true,
+            practiceHook = _uiState.value.needsHookBriefing
         )
         _uiState.update {
             it.copy(
@@ -235,6 +244,7 @@ class FishingViewModel(
             )
         }
         hookJob = viewModelScope.launch {
+            if (hookState.practiceHook) return@launch
             var remaining = HOOK_WINDOW_MS
             while (isActive && remaining > 0) {
                 delay(HOOK_TICK_MS)
@@ -247,13 +257,15 @@ class FishingViewModel(
                 }
             }
             if (isActive) {
-                failHook("The fish darted away before you set the hook.")
+                failHook("The bite was gone before you set the hook.")
             }
         }
     }
 
     private fun attemptHook() {
         if (_uiState.value.fishingState != FishingState.HOOKSET) return
+        fishingService.markHookBriefing()
+        _uiState.update { it.copy(needsHookBriefing = false) }
         if (_uiState.value.needsReelBriefing) {
             hookJob?.cancel()
             _uiState.update { it.copy(fishingState = FishingState.READY, hookState = null) }
@@ -274,7 +286,7 @@ class FishingViewModel(
             failHook("You lowered your rod.")
             return
         }
-        fight = FishingFight(encounter.behavior, rod)
+        fight = FishingFight(encounter.behavior, rod, salvage = !encounter.catch.isNativeFish())
         isReeling = false
         lastWarningMs = -2_000L
         val fishName = fishingService.catchDisplayName(encounter.catch.itemId)
@@ -288,7 +300,8 @@ class FishingViewModel(
                     tension = fight!!.tension,
                     isReeling = isReeling,
                     fishName = fishName,
-                    behavior = encounter.behavior
+                    behavior = encounter.behavior,
+                    salvage = !encounter.catch.isNativeFish()
                 )
             )
         }
