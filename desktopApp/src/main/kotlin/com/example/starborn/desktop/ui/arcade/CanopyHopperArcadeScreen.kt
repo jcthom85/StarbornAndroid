@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.starborn.desktop.ui.desktopPointerHover
 import com.example.starborn.feature.arcade.domain.ArcadeIds
 import com.example.starborn.feature.arcade.domain.ArcadeRunSubmission
 import com.example.starborn.feature.arcade.domain.ArcadeService
@@ -147,7 +148,7 @@ fun CanopyHopperArcadeScreen(
                 CanopyOverlay(
                     title = "HOW TO HOP",
                     lines = listOf(
-                        "Tap D-Pad or HOP button to leap across lanes.",
+                        "Use Arrow keys / WASD, or click the D-Pad / HOP button to leap across lanes.",
                         "Cross the Predator Thicket without getting crushed.",
                         "Rest on the Mud Bank and snag Golden Spores.",
                         "Ride logs and lilypads across the rapids.",
@@ -570,6 +571,7 @@ private fun CanopyServiceKey(onClick: () -> Unit) {
         modifier = Modifier
             .height(30.dp)
             .border(1.dp, Color(0xFF204232), RoundedCornerShape(4.dp))
+            .desktopPointerHover()
     ) {
         Text("SERVICE  •  PAUSE / EXIT", fontFamily = FontFamily.Monospace, fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = .8.sp)
     }
@@ -602,6 +604,7 @@ private fun CanopyOverlay(title: String, lines: List<String>, action: String, on
             modifier = Modifier
                 .fillMaxWidth(.75f)
                 .height(38.dp)
+                .desktopPointerHover()
         ) {
             Text(action, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Black, fontSize = 11.sp, letterSpacing = 1.sp)
         }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.text.style.TextAlign
@@ -30,6 +31,9 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.*
 import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.ui.draw.clip
@@ -270,7 +274,7 @@ internal fun DesktopRuntimeMapContent(services: DesktopAppServices) {
                                         cell.services.any { it.name == "SHOP" } -> Icons.Default.ShoppingCart
                                         cell.services.any { it.name == "TINKERING" } -> Icons.Default.Build
                                         cell.services.any { it.name == "COOKING" } -> Icons.Default.Restaurant
-                                        cell.services.any { it.name == "EXIT" } -> Icons.Default.ExitToApp
+                                        cell.services.any { it.name == "EXIT" } -> Icons.AutoMirrored.Filled.ExitToApp
                                         cell.isCurrent -> Icons.Default.PersonPinCircle
                                         else -> Icons.Default.Room
                                     }
@@ -291,17 +295,59 @@ internal fun DesktopRuntimeMapContent(services: DesktopAppServices) {
             if (cells.isEmpty()) Text("Explore this area to reveal its map.", Modifier.align(Alignment.Center))
         }
     }
-    Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    val mapFocusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        runCatching { mapFocusRequester.requestFocus() }
+    }
+    Column(
+        Modifier
+            .fillMaxSize()
+            .focusRequester(mapFocusRequester)
+            .focusable()
+            .onKeyEvent { event ->
+                if (event.type == KeyEventType.KeyDown) {
+                    when (event.key) {
+                        Key.Equals, Key.Plus, Key.NumPadAdd -> {
+                            changeZoom(zoom + .15f)
+                            true
+                        }
+                        Key.Minus, Key.NumPadSubtract -> {
+                            changeZoom(zoom - .15f)
+                            true
+                        }
+                        Key.R -> {
+                            zoom = fitZoom
+                            scope.launch { horizontal.scrollTo(0); vertical.scrollTo(0) }
+                            true
+                        }
+                        Key.H -> {
+                            recenter()
+                            true
+                        }
+                        else -> false
+                    }
+                } else false
+            },
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(ui.currentHub?.title.orEmpty(), Modifier.weight(1f), style = MaterialTheme.typography.titleMedium)
-            TextButton(onClick = ::recenter) { Text("You are here") }
+            DesktopTooltip("Center on Current Room [H]", FieldMenuDesign.cyan) {
+                TextButton(onClick = ::recenter, modifier = Modifier.desktopPointerHover()) { Text("You are here") }
+            }
             Text("N \u2191", style = MaterialTheme.typography.labelMedium)
-            OutlinedButton(onClick = { changeZoom(zoom - .15f) }, enabled = zoom > .45f) { Text("-") }
-            TextButton(onClick = { zoom = fitZoom; scope.launch { horizontal.scrollTo(0); vertical.scrollTo(0) } }) { Text("Fit") }
-            OutlinedButton(onClick = { changeZoom(zoom + .15f) }, enabled = zoom < 2.5f) { Text("+") }
+            DesktopTooltip("Zoom Out [-]", FieldMenuDesign.cyan) {
+                OutlinedButton(onClick = { changeZoom(zoom - .15f) }, enabled = zoom > .45f, modifier = Modifier.desktopPointerHover()) { Text("-") }
+            }
+            DesktopTooltip("Reset Zoom / Fit [R]", FieldMenuDesign.cyan) {
+                TextButton(onClick = { zoom = fitZoom; scope.launch { horizontal.scrollTo(0); vertical.scrollTo(0) } }, modifier = Modifier.desktopPointerHover()) { Text("Fit") }
+            }
+            DesktopTooltip("Zoom In [+]", FieldMenuDesign.cyan) {
+                OutlinedButton(onClick = { changeZoom(zoom + .15f) }, enabled = zoom < 2.5f, modifier = Modifier.desktopPointerHover()) { Text("+") }
+            }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(18.dp)) {
-            Text("Current", color = Color(0xFFFFC857), style = MaterialTheme.typography.labelMedium)
+            Text("Gold: current room", color = Color(0xFFFFC857), style = MaterialTheme.typography.labelMedium)
             Text("Visited", color = Color(0xFF7FE6FF), style = MaterialTheme.typography.labelMedium)
             Text("Discovered", color = Color(0xFF8A99A4), style = MaterialTheme.typography.labelMedium)
             Text("Drag to pan / wheel to zoom", color = Color(0xFF8A99A4), style = MaterialTheme.typography.labelMedium)

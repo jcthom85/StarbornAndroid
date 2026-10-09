@@ -44,9 +44,10 @@ internal fun DesktopRuntimeGearContent(services: DesktopAppServices, characterId
     BoxWithConstraints(Modifier.fillMaxSize()) {
     val short = maxHeight < 320.dp
     Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-        LazyColumn(Modifier.width(140.dp).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(GearRules.equipSlots.toList() + modSlots) { target ->
+        Column(Modifier.width(140.dp).fillMaxHeight().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            (GearRules.equipSlots.toList() + modSlots).forEach { target ->
                 Surface(onClick = { slot = target }, shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier.desktopPointerHover(),
                     color = if (slot == target) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel,
                     border = BorderStroke(1.dp, if (slot == target) FieldMenuDesign.gold else FieldMenuDesign.border.copy(alpha = .3f))) {
                     Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -65,13 +66,33 @@ internal fun DesktopRuntimeGearContent(services: DesktopAppServices, characterId
                     if (!slotUnlocked) item { Text("This slot is locked by story progress.", color = FieldMenuDesign.textMuted) }
                     else if (owned.isEmpty()) item { Text("No compatible equipment.", color = FieldMenuDesign.textMuted) }
                     if (slotUnlocked) items(owned, key = { it.id }) { item ->
+                        val unlocked = when (slot) { "weapon" -> item.id in session.unlockedWeapons; "armor" -> item.id in session.unlockedArmors; else -> true }
+                        val canEquip = unlocked || item.id == equipped
+                        fun equipItem() {
+                            val id = item.id.takeUnless { it == equipped }
+                            when {
+                                mod -> services.exploration.equipInventoryMod(slot, id, character)
+                                slot == "weapon" -> services.exploration.equipWeapon(character, id)
+                                slot == "armor" -> services.exploration.equipArmor(character, id)
+                                else -> services.exploration.equipInventoryItem(slot, id, character)
+                            }
+                        }
                         Surface(onClick = { selection = item.id }, shape = RoundedCornerShape(10.dp),
+                            modifier = Modifier.desktopPointerHover(),
                             color = if (selected?.id == item.id) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel) {
                             Row(Modifier.fillMaxWidth().padding(10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
                                 DesktopMenuItemArt(services, item, Modifier.size(40.dp))
                                 Column(Modifier.weight(1f)) {
                                     Text(item.name, style = MaterialTheme.typography.labelLarge)
                                     if (item.id == equipped) Text("Equipped", color = FieldMenuDesign.gold, style = MaterialTheme.typography.labelSmall)
+                                }
+                                OutlinedButton(
+                                    onClick = ::equipItem,
+                                    enabled = canEquip,
+                                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+                                    modifier = Modifier.desktopPointerHover(canEquip)
+                                ) {
+                                    Text("${item.name} · equip", style = MaterialTheme.typography.labelSmall)
                                 }
                             }
                         }
@@ -116,7 +137,7 @@ internal fun DesktopRuntimeGearContent(services: DesktopAppServices, characterId
                                     slot == "armor" -> services.exploration.equipArmor(character, id)
                                     else -> services.exploration.equipInventoryItem(slot, id, character)
                                 }
-                            }, enabled = unlocked || item.id == equipped, modifier = Modifier.fillMaxWidth()) { Text(if (item.id == equipped) "Unequip" else "Equip") }
+                            }, enabled = unlocked || item.id == equipped, modifier = Modifier.fillMaxWidth().desktopPointerHover(unlocked || item.id == equipped)) { Text(if (item.id == equipped) "Unequip" else "Equip") }
                         }
                     }
                 }

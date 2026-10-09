@@ -31,6 +31,7 @@ internal fun DesktopMenuPartyStrip(services: DesktopAppServices, members: List<P
     Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         members.forEach { member ->
             Surface(onClick = { onSelect(member.id) }, shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.desktopPointerHover(),
                 color = if (selectedId == member.id) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel,
                 border = BorderStroke(1.dp, if (selectedId == member.id) FieldMenuDesign.gold else FieldMenuDesign.border.copy(alpha = .4f))) {
                 Row(Modifier.width(if (largeTargets) 240.dp else if (compact) 150.dp else 210.dp).padding(if (compact) 8.dp else 12.dp),

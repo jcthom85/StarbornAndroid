@@ -127,10 +127,10 @@ fun DesktopAuthoredDialogueOverlay(
     val tapInteraction = remember { MutableInteractionSource() }
     val containerModifier = Modifier
         .fillMaxWidth()
-        .semantics { contentDescription = if (tapToAdvanceAllowed) "Dialogue Popup. Tap to continue" else "Dialogue Popup" }
+        .semantics { contentDescription = if (tapToAdvanceAllowed) "Dialogue Popup. Click or Enter to continue" else "Dialogue Popup" }
         .let { base ->
             if (tapToAdvanceAllowed) {
-                base.clickable(
+                base.desktopPointerHover().clickable(
                     interactionSource = tapInteraction,
                     indication = null
                 ) {

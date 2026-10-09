@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.starborn.desktop.ui.desktopPointerHover
 import com.example.starborn.feature.arcade.domain.ArcadeIds
 import com.example.starborn.feature.arcade.domain.ArcadeRunSubmission
 import com.example.starborn.feature.arcade.domain.ArcadeService
@@ -146,11 +147,11 @@ fun SlagCatcherArcadeScreen(
                 SlagOverlay(
                     title = "HOW TO SMELT",
                     lines = listOf(
-                        "Drag or steer the Crucible Bucket left & right.",
+                        "Drag or steer the Crucible Bucket left & right (A/D, Arrow keys, or steer pads).",
                         "Catch Molten Slag (+100) and Titanium Ingots (+300).",
                         "Snag Prismatic Cores (+1,000) to cool the crucible.",
                         "DODGE Volatile Slag Bombs to prevent bucket loss!",
-                        "Tap VENT STEAM when heat rises to score big bonuses.",
+                        "Press Space or click VENT STEAM when heat rises to score big bonuses.",
                         "Don't let valuable slag drop into the waste drain."
                     ),
                     action = "START SHIFT",
@@ -524,6 +525,7 @@ private fun SlagServiceKey(onClick: () -> Unit) {
         modifier = Modifier
             .height(30.dp)
             .border(1.dp, Color(0xFF38190B), RoundedCornerShape(4.dp))
+            .desktopPointerHover()
     ) {
         Text("SERVICE  •  PAUSE / EXIT", fontFamily = FontFamily.Monospace, fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = .8.sp)
     }
@@ -556,6 +558,7 @@ private fun SlagOverlay(title: String, lines: List<String>, action: String, onAc
             modifier = Modifier
                 .fillMaxWidth(.75f)
                 .height(38.dp)
+                .desktopPointerHover()
         ) {
             Text(action, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Black, fontSize = 11.sp, letterSpacing = 1.sp)
         }

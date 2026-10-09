@@ -54,11 +54,11 @@ internal fun DesktopItemGrantedBanner(
 
     Surface(
         onClick = onDismiss,
-        modifier = modifier
+        modifier = modifier.desktopPointerHover()
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .widthIn(max = 560.dp).fillMaxWidth()
             .semantics {
-                contentDescription = "Item acquired: $itemLabel. Tap to continue."
+                contentDescription = "Item acquired: $itemLabel. Continue."
             },
         color = Color(0xFF060B13).copy(alpha = 0.98f),
         contentColor = Color.White,
@@ -160,7 +160,7 @@ internal fun DesktopItemGrantedBanner(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = if (prompt.sequenceIndex < prompt.sequenceTotal) "Tap for next" else "Tap to continue",
+                    text = if (prompt.sequenceIndex < prompt.sequenceTotal) "Next ▸" else "Continue",
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.White.copy(alpha = 0.52f)
                 )

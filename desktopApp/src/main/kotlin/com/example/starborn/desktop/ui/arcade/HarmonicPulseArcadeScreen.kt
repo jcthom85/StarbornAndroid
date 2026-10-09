@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.starborn.desktop.ui.desktopPointerHover
 import com.example.starborn.feature.arcade.domain.ArcadeIds
 import com.example.starborn.feature.arcade.domain.ArcadeRunSubmission
 import com.example.starborn.feature.arcade.domain.ArcadeService
@@ -142,11 +143,11 @@ fun HarmonicPulseArcadeScreen(
                 HarmonicOverlay(
                     title = "HARMONIC RESONANCE BRIEF",
                     lines = listOf(
-                        "Tap the 4 frequency pads as nodes reach the strike line.",
-                        "Time your taps with precision for PERFECT (+300) hits.",
+                        "Press 1-4 or click the frequency pads as nodes reach the strike line.",
+                        "Time strikes with precision for PERFECT (+300) hits.",
                         "Maintain combo streaks to raise the score multiplier.",
                         "Reach 100% Harmony to ignite HARMONIC OVERDRIVE (2× multiplier)!",
-                        "Missing nodes or tapping empty lanes destabilizes the core.",
+                        "Missing nodes or striking empty lanes destabilizes the core.",
                         "Clear all 3 cadence tracks to achieve resonance mastery."
                     ),
                     action = "START RESONANCE",
@@ -460,6 +461,7 @@ private fun HarmonicServiceKey(onClick: () -> Unit) {
         modifier = Modifier
             .height(30.dp)
             .border(1.dp, Color(0xFF38105C), RoundedCornerShape(4.dp))
+            .desktopPointerHover()
     ) {
         Text("SERVICE  •  PAUSE / EXIT", fontFamily = FontFamily.Monospace, fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = .8.sp)
     }
@@ -492,6 +494,7 @@ private fun HarmonicOverlay(title: String, lines: List<String>, action: String, 
             modifier = Modifier
                 .fillMaxWidth(.75f)
                 .height(38.dp)
+                .desktopPointerHover()
         ) {
             Text(action, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Black, fontSize = 11.sp, letterSpacing = 1.sp)
         }

@@ -25,6 +25,8 @@ import com.example.starborn.desktop.ui.DesktopFieldKitScreen
 import com.example.starborn.desktop.ui.DesktopFishingScreen
 import com.example.starborn.desktop.ui.DesktopHubScreen
 import com.example.starborn.desktop.ui.DesktopMainMenuScreen
+import com.example.starborn.desktop.ui.DesktopCombatTransitionOverlay
+import com.example.starborn.desktop.ui.TransitionMode
 import kotlinx.coroutines.launch
 
 enum class DesktopScreenState {
@@ -42,6 +44,11 @@ fun main(args: Array<String>) {
 private fun launchDesktop() = application {
     val services = remember { DesktopAppServices() }
     val displayMode by services.userSettingsStore.displayMode.collectAsState(initial = DesktopDisplayMode.WINDOWED)
+    val savedWidth by services.userSettingsStore.windowWidth.collectAsState(initial = 1280)
+    val savedHeight by services.userSettingsStore.windowHeight.collectAsState(initial = 800)
+    val savedX by services.userSettingsStore.windowX.collectAsState(initial = null)
+    val savedY by services.userSettingsStore.windowY.collectAsState(initial = null)
+    val savedMaximized by services.userSettingsStore.windowMaximized.collectAsState(initial = false)
     val coroutineScope = rememberCoroutineScope()
     var screenState by remember { mutableStateOf(DesktopScreenState.MAIN_MENU) }
 
@@ -62,19 +69,43 @@ private fun launchDesktop() = application {
     key(displayMode) {
         val windowState = rememberWindowState(
             size = if (displayMode == DesktopDisplayMode.BORDERLESS)
-                DpSize(monitorBounds.width.dp, monitorBounds.height.dp) else DpSize(1280.dp, 800.dp),
+                DpSize(monitorBounds.width.dp, monitorBounds.height.dp)
+            else DpSize(savedWidth.coerceAtLeast(1024).dp, savedHeight.coerceAtLeast(720).dp),
             position = if (displayMode == DesktopDisplayMode.BORDERLESS)
                 WindowPosition.Absolute(monitorBounds.x.dp, monitorBounds.y.dp)
-                else WindowPosition.Aligned(Alignment.Center),
-            placement = if (displayMode == DesktopDisplayMode.FULLSCREEN)
-                WindowPlacement.Fullscreen else WindowPlacement.Floating
+            else if (savedX != null && savedY != null)
+                WindowPosition.Absolute(savedX!!.dp, savedY!!.dp)
+            else WindowPosition.Aligned(Alignment.Center),
+            placement = when {
+                displayMode == DesktopDisplayMode.FULLSCREEN -> WindowPlacement.Fullscreen
+                savedMaximized && displayMode == DesktopDisplayMode.WINDOWED -> WindowPlacement.Maximized
+                else -> WindowPlacement.Floating
+            }
         )
+        val saveCurrentBounds: suspend () -> Unit = {
+            try {
+                val isMax = windowState.placement == WindowPlacement.Maximized
+                val pos = windowState.position as? WindowPosition.Absolute
+                services.userSettingsStore.saveWindowBounds(
+                    width = windowState.size.width.value.toInt(),
+                    height = windowState.size.height.value.toInt(),
+                    x = pos?.x?.value?.toInt(),
+                    y = pos?.y?.value?.toInt(),
+                    isMaximized = isMax
+                )
+            } catch (_: Throwable) {}
+        }
+        val icon = androidx.compose.ui.res.painterResource("icon.png")
         Window(
         onCloseRequest = {
-            services.close()
-            exitApplication()
+            coroutineScope.launch {
+                saveCurrentBounds()
+                services.close()
+                exitApplication()
+            }
         },
         title = "Starborn",
+        icon = icon,
         state = windowState,
         undecorated = displayMode != DesktopDisplayMode.WINDOWED,
         onPreviewKeyEvent = { keyEvent ->
@@ -108,12 +139,15 @@ private fun launchDesktop() = application {
     ) {
         CompositionLocalProvider(LocalDesktopForeground provides (LocalWindowInfo.current.isWindowFocused && !windowState.isMinimized)) {
         DisposableEffect(window, displayMode) {
+            window.minimumSize = java.awt.Dimension(1024, 720)
             monitorBounds = window.graphicsConfiguration.bounds
             if (displayMode == DesktopDisplayMode.BORDERLESS) {
                 // Full monitor bounds, including the taskbar area; no maximize work-area sizing.
                 window.bounds = monitorBounds
             }
-            onDispose { }
+            onDispose {
+                coroutineScope.launch { saveCurrentBounds() }
+            }
         }
         gameContent()
         }
@@ -128,8 +162,34 @@ fun DesktopGameApp(
     onScreenStateChange: (DesktopScreenState) -> Unit,
     onExit: () -> Unit
 ) {
-    val travelScope=rememberCoroutineScope()
-    val travel=remember { DesktopHubTravel(travelScope) }
+    val travelScope = rememberCoroutineScope()
+    val travel = remember { DesktopHubTravel(travelScope) }
+
+    LaunchedEffect(services) {
+        services.exploration.events.collect { event ->
+            when (event) {
+                is com.example.starborn.feature.exploration.viewmodel.ExplorationEvent.AudioCommands -> {
+                    services.audioDriver.executeAll(event.commands)
+                }
+                is com.example.starborn.feature.exploration.viewmodel.ExplorationEvent.AudioSettingsChanged -> {
+                    services.audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.MUSIC, event.musicVolume)
+                    services.audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.UI, event.sfxVolume)
+                    services.audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.BATTLE, event.sfxVolume)
+                    services.audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.VOICE, event.voiceVolume)
+                }
+                else -> Unit
+            }
+        }
+    }
+
+    var pendingCombatEnemies by remember { mutableStateOf<List<String>?>(null) }
+    var enteringCombatTransition by remember { mutableStateOf(false) }
+    var exitingCombatTransition by remember { mutableStateOf(false) }
+    var exitCombatPayload by remember { mutableStateOf<Pair<String, () -> Unit>?>(null) }
+    val currentSettings by services.userSettingsStore.settings.collectAsState(initial = com.example.starborn.data.local.UserSettings())
+    val envThemeState by services.environmentThemeManager.state.collectAsState()
+    val roomTheme = envThemeState.theme
+
     CompositionLocalProvider(LocalHubTravel provides travel) {
     Box(Modifier.fillMaxSize().onPreviewKeyEvent { travel.busy }) {
     var activeCombatEnemies by remember { mutableStateOf(listOf("scrapper_guard", "scrapper_drone")) }
@@ -159,10 +219,12 @@ fun DesktopGameApp(
             DesktopScreenState.EXPLORATION -> DesktopExplorationScreen(
                 services = services,
                 onEnterCombat = { enemies ->
-                    travel.request(travelScope) {
-                        activeCombatEnemies = enemies
-                        onScreenStateChange(DesktopScreenState.COMBAT)
-                    }
+                    if (enemies.isEmpty() || pendingCombatEnemies != null) return@DesktopExplorationScreen
+                    val stopAudio = services.audioRouter.commandsForLayerOverride(com.example.starborn.domain.audio.AudioCueType.MUSIC, stop = true, fadeMs = 150L) +
+                        services.audioRouter.commandsForLayerOverride(com.example.starborn.domain.audio.AudioCueType.AMBIENT, stop = true, fadeMs = 150L) +
+                        listOf(com.example.starborn.domain.audio.AudioCommand.Play(com.example.starborn.domain.audio.AudioCueType.UI, "sfx_combat_transition_slam", loop = false))
+                    services.audioDriver.executeAll(stopAudio)
+                    pendingCombatEnemies = enemies
                 },
                 onOpenHub = { travel.request(travelScope) { onScreenStateChange(DesktopScreenState.HUB) } },
                 onOpenFieldKit = { onScreenStateChange(DesktopScreenState.FIELD_KIT) },
@@ -174,25 +236,30 @@ fun DesktopGameApp(
                 services = services,
                 enemyIds = activeCombatEnemies,
                 onVictory = {
-                    travel.request(travelScope) {
-                    services.exploration.onCombatVictory(com.example.starborn.navigation.CombatResultPayload(
-                        outcome = com.example.starborn.navigation.CombatResultPayload.Outcome.VICTORY,
-                        enemyIds = activeCombatEnemies, roomId = services.sessionStore.state.value.roomId,
-                        sourcePartyId = services.encounterCoordinator.currentSourcePartyId()))
-                    onScreenStateChange(DesktopScreenState.EXPLORATION)
+                    exitCombatPayload = "" to {
+                        services.exploration.onCombatVictory(com.example.starborn.navigation.CombatResultPayload(
+                            outcome = com.example.starborn.navigation.CombatResultPayload.Outcome.VICTORY,
+                            enemyIds = activeCombatEnemies, roomId = services.sessionStore.state.value.roomId,
+                            sourcePartyId = services.encounterCoordinator.currentSourcePartyId()))
+                        onScreenStateChange(DesktopScreenState.EXPLORATION)
+                        exitingCombatTransition = true
                     }
                 },
-                onDefeat = { travel.request(travelScope) {
-                    services.exploration.onCombatDefeat(activeCombatEnemies)
-                    onScreenStateChange(DesktopScreenState.EXPLORATION)
-                } },
+                onDefeat = {
+                    exitCombatPayload = "The party collapses in defeat... Regrouping to recover." to {
+                        services.exploration.onCombatDefeat(activeCombatEnemies)
+                        onScreenStateChange(DesktopScreenState.EXPLORATION)
+                        exitingCombatTransition = true
+                    }
+                },
                 onFlee = {
-                    travel.request(travelScope) {
-                    services.exploration.onCombatRetreat(com.example.starborn.navigation.CombatResultPayload(
-                        outcome = com.example.starborn.navigation.CombatResultPayload.Outcome.RETREAT,
-                        enemyIds = activeCombatEnemies, roomId = services.sessionStore.state.value.roomId,
-                        sourcePartyId = services.encounterCoordinator.currentSourcePartyId()))
-                    onScreenStateChange(DesktopScreenState.EXPLORATION)
+                    exitCombatPayload = "Retreating to safe ground..." to {
+                        services.exploration.onCombatRetreat(com.example.starborn.navigation.CombatResultPayload(
+                            outcome = com.example.starborn.navigation.CombatResultPayload.Outcome.RETREAT,
+                            enemyIds = activeCombatEnemies, roomId = services.sessionStore.state.value.roomId,
+                            sourcePartyId = services.encounterCoordinator.currentSourcePartyId()))
+                        onScreenStateChange(DesktopScreenState.EXPLORATION)
+                        exitingCombatTransition = true
                     }
                 }
             )
@@ -211,8 +278,69 @@ fun DesktopGameApp(
             )
         }
     }
-    if(travel.busy) Box(Modifier.matchParentSize().zIndex(100f).background(Color.Black.copy(alpha=travel.opacity.value))
+    if (travel.busy) Box(Modifier.matchParentSize().zIndex(100f).background(Color.Black.copy(alpha=travel.opacity.value))
         .clickable(interactionSource=remember { androidx.compose.foundation.interaction.MutableInteractionSource() },indication=null) {})
+
+    pendingCombatEnemies?.let { enemies ->
+        DesktopCombatTransitionOverlay(
+            visible = true,
+            theme = roomTheme,
+            suppressFlashes = currentSettings.disableFlashes,
+            highContrastMode = currentSettings.highContrastMode,
+            mode = TransitionMode.ENTER,
+            mainText = "HOSTILES",
+            subText = "INCOMING!",
+            onFinished = {
+                activeCombatEnemies = enemies
+                pendingCombatEnemies = null
+                enteringCombatTransition = true
+                onScreenStateChange(DesktopScreenState.COMBAT)
+            },
+            modifier = Modifier.fillMaxSize().zIndex(150f)
+        )
+    }
+
+    if (enteringCombatTransition) {
+        DesktopCombatTransitionOverlay(
+            visible = true,
+            theme = roomTheme,
+            suppressFlashes = currentSettings.disableFlashes,
+            highContrastMode = currentSettings.highContrastMode,
+            mode = TransitionMode.EXIT,
+            onFinished = { enteringCombatTransition = false },
+            modifier = Modifier.fillMaxSize().zIndex(150f)
+        )
+    }
+
+    exitCombatPayload?.let { (text, action) ->
+        DesktopCombatTransitionOverlay(
+            visible = true,
+            theme = roomTheme,
+            suppressFlashes = currentSettings.disableFlashes,
+            highContrastMode = currentSettings.highContrastMode,
+            mode = TransitionMode.ENTER,
+            mainText = text,
+            subText = "",
+            onFinished = {
+                val act = action
+                exitCombatPayload = null
+                act()
+            },
+            modifier = Modifier.fillMaxSize().zIndex(150f)
+        )
+    }
+
+    if (exitingCombatTransition) {
+        DesktopCombatTransitionOverlay(
+            visible = true,
+            theme = roomTheme,
+            suppressFlashes = currentSettings.disableFlashes,
+            highContrastMode = currentSettings.highContrastMode,
+            mode = TransitionMode.EXIT,
+            onFinished = { exitingCombatTransition = false },
+            modifier = Modifier.fillMaxSize().zIndex(150f)
+        )
+    }
     }
     }
 

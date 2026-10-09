@@ -142,7 +142,7 @@ internal fun DesktopHubMapScene(services: DesktopAppServices, state: HubUiState,
             visual.art?.let { art ->
                 Image(visual.painter,null,contentScale=ContentScale.Fit,
                     modifier=Modifier.offset { IntOffset(art.left.roundToInt(),art.top.roundToInt()) }
-                        .size(with(density) { imagePx.toDp() }).testTag("hub-art-${node.id}").hoverable(artInteractions).pointerInput(node.id,node.canEnter) {
+                        .size(with(density) { imagePx.toDp() }).testTag("hub-art-${node.id}").desktopPointerHover(node.canEnter).hoverable(artInteractions).pointerInput(node.id,node.canEnter) {
                             detectTapGestures(onTap={onSelect(node.id)},onDoubleTap={onSelect(node.id);onEnter(node)})
                         }.graphicsLayer {
                             alpha=reveal.value*if(node.canEnter) 1f else .48f
@@ -156,12 +156,16 @@ internal fun DesktopHubMapScene(services: DesktopAppServices, state: HubUiState,
             val targetLeft=(bounds.center.x-targetWidth/2).coerceIn(0f,(viewport.width-targetWidth).coerceAtLeast(0f))
             val targetTop=(bounds.center.y-targetHeight/2).coerceIn(0f,(viewport.height-targetHeight).coerceAtLeast(0f))
             TooltipArea(tooltip={
-                if(visual.truncated) Surface(color=Color(0xFF061018),shape=RoundedCornerShape(6.dp),border=BorderStroke(1.dp,tint)) {
-                    Text(node.title,Modifier.padding(8.dp),color=Color.White,style=MaterialTheme.typography.bodySmall)
+                Surface(color=Color(0xFF061018),shape=RoundedCornerShape(6.dp),border=BorderStroke(1.dp,tint)) {
+                    Column(Modifier.padding(horizontal = 8.dp, vertical = 6.dp)) {
+                        Text(node.title, color = Color.White, style = MaterialTheme.typography.labelMedium)
+                        Text(if(!node.canEnter) "Access Locked" else if(node.completed) "Zone Cleared" else "Available · Double-click or Enter to deploy",
+                            color = tint.copy(alpha = 0.85f), style = MaterialTheme.typography.bodySmall)
+                    }
                 }
             },modifier=Modifier.offset { IntOffset(targetLeft.roundToInt(),targetTop.roundToInt()) }
                 .zIndex(3f).size(with(density){targetWidth.toDp()},with(density){targetHeight.toDp()})) {
-                Box(Modifier.fillMaxSize().testTag("hub-node-${node.id}").hoverable(interactions)
+                Box(Modifier.fillMaxSize().testTag("hub-node-${node.id}").desktopPointerHover(node.canEnter).hoverable(interactions)
                     .onFocusChanged { focused=it.hasFocus }.onPreviewKeyEvent {
                         if(it.type==KeyEventType.KeyDown && it.key==Key.Enter) {onSelect(node.id);onEnter(node);true} else false
                     }.combinedClickable(onClick={onSelect(node.id)},onDoubleClick={onSelect(node.id);onEnter(node)})

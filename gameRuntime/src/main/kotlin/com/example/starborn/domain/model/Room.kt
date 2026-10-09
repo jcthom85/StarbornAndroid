@@ -40,7 +40,9 @@ data class Room(
     @Json(name = "description_variants")
     val descriptionVariants: List<RoomDescriptionVariant> = emptyList(),
     @Json(name = "title_options")
-    val titleOptions: TitleOptions? = null
+    val titleOptions: TitleOptions? = null,
+    @Json(name = "environmental_effects")
+    val environmentalEffects: List<com.example.starborn.domain.environment.RoomEffectBinding>? = null
 )
 
 data class RoomDescriptionVariant(

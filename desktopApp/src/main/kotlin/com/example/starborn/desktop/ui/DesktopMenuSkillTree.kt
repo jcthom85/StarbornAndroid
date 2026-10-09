@@ -45,7 +45,7 @@ internal fun DesktopMenuSkillsContent(services: DesktopAppServices, tree: SkillT
     Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
             tree.branches.forEach { entry ->
-                FilterChip(entry.id == branch?.id, onClick = { branchId = entry.id }, label = { Text(entry.title) })
+                FilterChip(entry.id == branch?.id, onClick = { branchId = entry.id }, modifier = Modifier.desktopPointerHover(), label = { Text(entry.title) })
             }
             Text("${tree.apInvested} AP invested", color = FieldMenuDesign.textMuted, style = MaterialTheme.typography.labelMedium)
         }
@@ -83,7 +83,7 @@ internal fun DesktopMenuSkillsContent(services: DesktopAppServices, tree: SkillT
                                 }
                                 nodes.forEach { node ->
                                     val color = if (node.status.unlocked) FieldMenuDesign.gold else if (node.status.canPurchase) FieldMenuDesign.cyan else FieldMenuDesign.textMuted
-                                    Surface(onClick = { selectedId = node.id }, modifier = Modifier.offset(((node.column - minCol) * 168 + 20).dp, ((node.row - minRow) * 130 + 20).dp).size(144.dp, 98.dp),
+                                    Surface(onClick = { selectedId = node.id }, modifier = Modifier.desktopPointerHover().offset(((node.column - minCol) * 168 + 20).dp, ((node.row - minRow) * 130 + 20).dp).size(144.dp, 98.dp),
                                         color = if (selected?.id == node.id) FieldMenuDesign.elevatedPanel else FieldMenuDesign.shell,
                                         shape = RoundedCornerShape(12.dp), border = BorderStroke(if (selected?.id == node.id) 2.dp else 1.dp, color.copy(alpha = if (selected?.id == node.id) 1f else .4f))) {
                                         Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -120,7 +120,7 @@ internal fun DesktopMenuSkillsContent(services: DesktopAppServices, tree: SkillT
                             node.status.unmetRequirements.filter { id -> node.requirements.none { it.id == id } }.forEach { Text(names[it] ?: it, color = FieldMenuDesign.textMuted) }
                             if (!node.status.unlocked && !node.status.meetsTierRequirement) Text("Invest ${node.status.requiredApForTier} AP in this tree to unlock this tier.", color = FieldMenuDesign.textMuted)
                             if (!node.status.unlocked && !node.status.hasEnoughAp) Text("Not enough AP", color = FieldMenuDesign.textMuted)
-                            if (!node.status.unlocked) Button(onClick = { services.exploration.unlockSkillNode(node.id) }, enabled = node.status.canPurchase, modifier = Modifier.fillMaxWidth()) { Text("Unlock skill") }
+                            if (!node.status.unlocked) Button(onClick = { services.exploration.unlockSkillNode(node.id) }, enabled = node.status.canPurchase, modifier = Modifier.fillMaxWidth().desktopPointerHover(node.status.canPurchase)) { Text("Unlock skill") }
                         }
                     }
                 }

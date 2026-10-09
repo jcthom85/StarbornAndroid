@@ -12,6 +12,7 @@ import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import java.nio.file.Files
+import kotlinx.coroutines.flow.first
 
 class DesktopPresentationParityTest {
     @get:Rule val compose = createComposeRule()
@@ -70,5 +71,40 @@ class DesktopPresentationParityTest {
             compose.onNodeWithText("I'll check it.", substring = true).performClick()
             assertEquals("accept", choice)
         } finally { services.close(); directory.deleteRecursively() }
+    }
+
+    @Test fun testInputVocabularyAdaptsMobilePromptsForDesktop() {
+        val rawPrompts = listOf(
+            "Tap a highlighted character name to start a conversation.",
+            "Swipe toward any open exit to move. The minimap pips and connecting lines show nearby routes.",
+            "Tap the dialogue card to continue the conversation and advance the story.",
+            "When Nova is ready, tap her, choose Abilities, then Arc Tether. Select the Faulted Loader to exploit its Shock weakness."
+        )
+        rawPrompts.forEach { raw ->
+            val adapted = raw.adaptInputVocabularyForDesktop()
+            assertFalse("Expected no 'tap' in '$adapted'", adapted.contains("Tap", ignoreCase = true))
+            assertFalse("Expected no 'swipe' in '$adapted'", adapted.contains("Swipe", ignoreCase = true))
+        }
+    }
+
+    @Test fun testWindowBoundsPersistenceInUserSettings() = kotlinx.coroutines.runBlocking {
+        val tempDir = Files.createTempDirectory("starborn-window-test-").toFile()
+        try {
+            val store = DesktopUserSettingsStore(tempDir)
+            store.saveWindowBounds(1440, 900, 120, 80, isMaximized = false)
+            val width = store.windowWidth.first()
+            val height = store.windowHeight.first()
+            val x = store.windowX.first()
+            val y = store.windowY.first()
+            val max = store.windowMaximized.first()
+            assertEquals(1440, width)
+            assertEquals(900, height)
+            assertEquals(120, x)
+            assertEquals(80, y)
+            assertFalse(max)
+            store.close()
+        } finally {
+            tempDir.deleteRecursively()
+        }
     }
 }

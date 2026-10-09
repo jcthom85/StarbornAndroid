@@ -21,6 +21,29 @@ class WorldAssetDataSource(
     private val assetReader: AssetJsonReader
 ) {
 
+    val environmentalEffectsCatalog: com.example.starborn.domain.environment.EnvironmentalEffectCatalog by lazy {
+        val loaded=assetReader.readObject<com.example.starborn.domain.environment.EnvironmentalEffectCatalog>("environmental_effects.json")
+        val fallback=com.example.starborn.domain.environment.LegacyEnvironmentalCatalog.catalog
+        if(loaded==null || loaded.schemaVersion!=1) {
+            com.example.starborn.core.platform.AppLog.w("EnvironmentalEffects","Missing or unsupported catalog; using legacy compatibility effects")
+            fallback
+        } else {
+            loaded.presets.values.filter { it.primitive=="jet" }.distinctBy { it.frameAssetPrefix to it.frameCount }.forEach { preset ->
+                repeat(preset.frameCount.coerceIn(0,64)) { index ->
+                    val path="${preset.frameAssetPrefix}%02d.png".format(java.util.Locale.ROOT,index)
+                    if(!assetReader.assetExists(path)) com.example.starborn.core.platform.AppLog.w("EnvironmentalEffects","Missing frame $path; procedural fallback will be used")
+                }
+            }
+            loaded.validate().forEach { com.example.starborn.core.platform.AppLog.w("EnvironmentalEffects",it) }
+            loaded.copy(presets=fallback.presets+loaded.presets.filterValues {
+                com.example.starborn.domain.environment.EnvironmentalEffectCatalog.presetErrors(it).isEmpty()
+            })
+        }
+    }
+    val environmentalEffectResolver: com.example.starborn.domain.environment.EnvironmentalEffectResolver by lazy {
+        com.example.starborn.domain.environment.EnvironmentalEffectResolver(environmentalEffectsCatalog) { com.example.starborn.core.platform.AppLog.w("EnvironmentalEffects", it) }
+    }
+
     fun loadWorlds(): List<World> = assetReader.readList("worlds.json")
 
     fun loadHubs(): List<Hub> = assetReader.readList("hubs.json")

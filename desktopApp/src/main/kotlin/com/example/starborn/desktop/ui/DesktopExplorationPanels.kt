@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.scrollBy
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -91,9 +92,9 @@ internal fun DesktopExplorationPanels(
             }
         } else {
             Row(Modifier.align(Alignment.TopCenter).padding(12.dp).background(if (settings.highContrastMode) Color.Black else PanelInk, RoundedCornerShape(12.dp)).border(1.dp, if (settings.highContrastMode) Color.White else PanelCyan.copy(alpha = .25f), RoundedCornerShape(12.dp)).padding(horizontal = 8.dp, vertical = 2.dp).horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedButton(onClick = { compactPanel = if (compactPanel == "room") null else "room" }, enabled = !blocked) { Text("Room") }
-                OutlinedButton(onClick = { compactPanel = if (compactPanel == "status") null else "status" }, enabled = !blocked) { Text("Status") }
-                OutlinedButton(onClick = { onMenu(DesktopMenuTab.STATS) }, enabled = !blocked) { Text("Menu") }
+                OutlinedButton(onClick = { compactPanel = if (compactPanel == "room") null else "room" }, enabled = !blocked, modifier = Modifier.desktopPointerHover(!blocked)) { Text("Room") }
+                OutlinedButton(onClick = { compactPanel = if (compactPanel == "status") null else "status" }, enabled = !blocked, modifier = Modifier.desktopPointerHover(!blocked)) { Text("Status") }
+                OutlinedButton(onClick = { onMenu(DesktopMenuTab.STATS) }, enabled = !blocked, modifier = Modifier.desktopPointerHover(!blocked)) { Text("Menu") }
             }
             if (compactPanel != null) {
                 Column(Modifier.align(if (compactPanel == "room") Alignment.TopStart else Alignment.TopEnd)
@@ -137,7 +138,9 @@ private fun DesktopNarrativeArea(services: DesktopAppServices, ui: ExplorationUi
                         onAction = { if (!blocked) runtime.onActionSelected(it) },
                         onNpcClick = { if (!blocked && !isDark) runtime.onNpcInteraction(it) },
                         onEnemyClick = { if (!blocked && !isDark) runtime.engageEnemy(it) }, accentColor = PanelCyan,
-                        modifier = Modifier.fillMaxWidth().testTag("narrative-body"),
+                        modifier = Modifier.fillMaxWidth().testTag("narrative-body").semantics {
+                            scrollBy { _, y -> bodyScroll.dispatchRawDelta(y) != 0f }
+                        },
                         textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 17.sp, lineHeight = 26.sp))
                     }
                 }
@@ -197,7 +200,7 @@ private fun DesktopContextualControls(services: DesktopAppServices, ui: Explorat
 private fun DesktopIndependentHud(services: DesktopAppServices, ui: ExplorationUiState, isDark: Boolean, blocked: Boolean,
     onMenu: (DesktopMenuTab) -> Unit, modifier: Modifier) {
     val detailsScroll = rememberScrollState()
-    Column(modifier.testTag("exploration-status"), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    Column(modifier.testTag("exploration-status"), verticalArrangement = Arrangement.spacedBy(20.dp)) {
         if (isDark || ui.minimap?.cells?.any { it.discovered || it.visited || it.isCurrent } == true) {
             val map = ui.minimap
             ExplorationHudCard(Modifier.testTag("hud-minimap")) {
@@ -211,13 +214,15 @@ private fun DesktopIndependentHud(services: DesktopAppServices, ui: ExplorationU
         }
         }
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            OutlinedButton(onClick = { onMenu(DesktopMenuTab.STATS) }, enabled = !blocked,
-                colors = ButtonDefaults.outlinedButtonColors(containerColor = if (LocalExplorationSettings.current.highContrastMode) Color.Black else PanelInk, contentColor = Color.White),
-                border = BorderStroke(1.dp, if (LocalExplorationSettings.current.highContrastMode) Color.White else PanelBorder), modifier = Modifier.heightIn(min = if (LocalExplorationSettings.current.largeTouchTargets) 56.dp else 44.dp).explorationFeedback(!blocked), shape = RoundedCornerShape(8.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp)) {
-                Icon(Icons.Rounded.Menu, contentDescription = null, modifier = Modifier.size(18.dp))
-                Spacer(Modifier.width(8.dp))
-                Text("Menu", fontWeight = FontWeight.SemiBold)
+            DesktopTooltip("Open field menu [I / Esc]") {
+                OutlinedButton(onClick = { onMenu(DesktopMenuTab.STATS) }, enabled = !blocked,
+                    colors = ButtonDefaults.outlinedButtonColors(containerColor = if (LocalExplorationSettings.current.highContrastMode) Color.Black else PanelInk, contentColor = Color.White),
+                    border = BorderStroke(1.dp, if (LocalExplorationSettings.current.highContrastMode) Color.White else PanelBorder), modifier = Modifier.heightIn(min = if (LocalExplorationSettings.current.largeTouchTargets) 56.dp else 44.dp).explorationFeedback(!blocked), shape = RoundedCornerShape(8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp)) {
+                    Icon(Icons.Rounded.Menu, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Spacer(Modifier.width(8.dp))
+                    Text("Menu [Esc]", fontWeight = FontWeight.SemiBold)
+                }
             }
         }
     }
@@ -325,15 +330,18 @@ private fun DesktopNpcPresenceChip(services: DesktopAppServices, ui: Exploration
 @Composable
 private fun DesktopOverworldGateway(ui: ExplorationUiState, blocked: Boolean, onOpen: () -> Unit) {
     val disembarking = ui.currentRoom?.id == com.example.starborn.domain.session.AstraTravel.ENTRY_ROOM_ID
-    Surface(onClick = onOpen, enabled = !blocked, modifier = Modifier.fillMaxWidth().explorationFeedback(!blocked).testTag("overworld-gateway")
-        .semantics { contentDescription = if (disembarking) "Disembark from the Astra" else "Exit to Overworld" },
-        color = if (LocalExplorationSettings.current.highContrastMode) Color.Black else Color(0xE6060F17), shape = RoundedCornerShape(10.dp), border = BorderStroke(1.dp, if (LocalExplorationSettings.current.highContrastMode) Color.White else PanelCyan.copy(alpha = .35f))) {
-        Row(Modifier.background(Brush.horizontalGradient(listOf(PanelCyan.copy(alpha = .10f), Color.Transparent)))
-            .padding(14.dp), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.Default.Map, null, Modifier.size(26.dp), tint = PanelCyan)
-            Text(if (disembarking) "DISEMBARK" else "OVERWORLD MAP", Modifier.weight(1f), color = Color.White,
-                style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
-            Text("OPEN >", color = PanelCyan, style = MaterialTheme.typography.labelSmall)
+    val tooltipText = if (disembarking) "Disembark from ship and return to surface [M]" else "Deploy to regional Star Map and sector hubs [M]"
+    DesktopTooltip(tooltipText) {
+        Surface(onClick = onOpen, enabled = !blocked, modifier = Modifier.fillMaxWidth().explorationFeedback(!blocked).testTag("overworld-gateway")
+            .semantics { contentDescription = if (disembarking) "Disembark from the Astra" else "Exit to Overworld" },
+            color = if (LocalExplorationSettings.current.highContrastMode) Color.Black else Color(0xE6060F17), shape = RoundedCornerShape(10.dp), border = BorderStroke(1.dp, if (LocalExplorationSettings.current.highContrastMode) Color.White else PanelCyan.copy(alpha = .35f))) {
+            Row(Modifier.background(Brush.horizontalGradient(listOf(PanelCyan.copy(alpha = .10f), Color.Transparent)))
+                .padding(14.dp), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Default.Map, null, Modifier.size(26.dp), tint = PanelCyan)
+                Text(if (disembarking) "DISEMBARK" else "OVERWORLD MAP", Modifier.weight(1f), color = Color.White,
+                    style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+                Text("OPEN [M]", color = PanelCyan, style = MaterialTheme.typography.labelSmall)
+            }
         }
     }
 }

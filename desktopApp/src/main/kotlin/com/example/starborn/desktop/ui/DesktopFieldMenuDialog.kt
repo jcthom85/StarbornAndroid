@@ -40,6 +40,9 @@ import androidx.compose.foundation.focusable
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.key.*
+import androidx.compose.ui.input.pointer.PointerButton
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
@@ -53,15 +56,15 @@ import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import java.util.Locale
 
 enum class DesktopMenuTab(val label: String) {
-    STATS("Party"),
-    INVENTORY("Items"),
+    STATS("Stats"),
+    INVENTORY("Inventory"),
     FIELD_KIT("Tinker"),
     JOURNAL("Journal"),
     MAP("Map"),
     SETTINGS("Settings")
 }
 
-private enum class InventoryCategory { SUPPLIES, KEY_ITEMS }
+private enum class InventoryCategory { SUPPLIES, KEY_ITEMS, GEAR }
 
 /** An in-game overlay: the room remains visible around the menu. */
 @Composable
@@ -84,6 +87,7 @@ fun DesktopFieldMenuDialog(
     }
 }
 
+@OptIn(androidx.compose.ui.ExperimentalComposeUiApi::class)
 @Composable
 fun DesktopFieldMenuContent(
     services: DesktopAppServices,
@@ -135,10 +139,20 @@ fun DesktopFieldMenuContent(
     Surface(Modifier.focusRequester(keyboardFocus).onPreviewKeyEvent { event ->
         if (event.type != KeyEventType.KeyDown) false else {
             val index = listOf(Key.One, Key.Two, Key.Three, Key.Four, Key.Five, Key.Six).indexOf(event.key)
+            val directTab = when (event.key) {
+                Key.One -> DesktopMenuTab.INVENTORY
+                Key.Two -> DesktopMenuTab.FIELD_KIT
+                Key.Three -> DesktopMenuTab.JOURNAL
+                Key.Four -> DesktopMenuTab.MAP
+                Key.Five -> DesktopMenuTab.SETTINGS
+                Key.Zero -> DesktopMenuTab.STATS
+                else -> null
+            }
             when {
                 event.key == Key.Escape || event.isAltPressed && event.key == Key.DirectionLeft -> { back(); true }
                 event.key == Key.F5 -> { runtime.quickSave(); true }
                 event.isAltPressed && index >= 0 -> { select(DesktopMenuTab.entries[index]); true }
+                directTab != null && !event.isAltPressed && !event.isCtrlPressed -> { select(directTab); true }
                 event.isCtrlPressed && event.key == Key.Tab -> {
                     val step = if (event.isShiftPressed) -1 else 1
                     select(DesktopMenuTab.entries[(activeTab.ordinal + step + DesktopMenuTab.entries.size) % DesktopMenuTab.entries.size]); true
@@ -165,9 +179,15 @@ fun DesktopFieldMenuContent(
                     }
                     Text(if (ui.skillTreeOverlay != null) "${ui.skillTreeOverlay!!.availableAp} AP" else ui.progressionSummary.creditsLabel,
                         color = FieldMenuDesign.gold, style = MaterialTheme.typography.titleMedium)
-                    OutlinedButton(onClick = runtime::quickSave) { Text(if (compact) "Save" else "Quick save") }
-                    IconButton(onClick = { select(DesktopMenuTab.SETTINGS) }) { Icon(Icons.Default.Settings, "Settings", tint = FieldMenuDesign.textMuted) }
-                    IconButton(onClick = onDismiss) { Icon(Icons.Default.Close, "Close menu", tint = FieldMenuDesign.text) }
+                    DesktopTooltip("Quick save game [F5]") {
+                        OutlinedButton(onClick = runtime::quickSave, modifier = Modifier.desktopPointerHover()) { Text(if (compact) "Save" else "Quick save") }
+                    }
+                    DesktopTooltip("Settings [Alt+6]") {
+                        IconButton(onClick = { select(DesktopMenuTab.SETTINGS) }, modifier = Modifier.desktopPointerHover()) { Icon(Icons.Default.Settings, "Settings", tint = FieldMenuDesign.textMuted) }
+                    }
+                    DesktopTooltip("Close menu [Esc]") {
+                        IconButton(onClick = onDismiss, modifier = Modifier.desktopPointerHover()) { Icon(Icons.Default.Close, "Close menu", tint = FieldMenuDesign.text) }
+                    }
                 }
                 HorizontalDivider(color = accent.copy(alpha = .25f))
                 Row(Modifier.weight(1f)) {
@@ -184,26 +204,36 @@ fun DesktopFieldMenuContent(
                                 DesktopMenuTab.JOURNAL -> Icons.Default.Book
                                 else -> Icons.Default.Map
                             }
-                            Surface(onClick = { select(tab) }, modifier = Modifier.fillMaxWidth().semantics { selected = activeTab == tab },
-                                shape = RoundedCornerShape(10.dp),
-                                border = BorderStroke(1.dp, if (activeTab == tab) accent.copy(alpha = .5f) else Color.Transparent),
-                                color = if (activeTab == tab) accent.copy(alpha = .10f) else Color.Transparent) {
-                                Column(Modifier.padding(horizontal = 14.dp, vertical = 16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                        Icon(icon, null, Modifier.size(20.dp), tint = if (activeTab == tab) FieldMenuDesign.gold else FieldMenuDesign.textMuted)
-                                        if (!compact) Text(if (tab == DesktopMenuTab.JOURNAL && services.questPresentations.journalBadge > 0) "${tab.label} (${services.questPresentations.journalBadge})" else tab.label, color = if (activeTab == tab) FieldMenuDesign.gold else FieldMenuDesign.text)
+                            val tabIndex = DesktopMenuTab.entries.indexOf(tab)
+                            DesktopTooltip("${tab.label} [Alt+${tabIndex + 1}]") {
+                                Surface(onClick = { select(tab) }, modifier = Modifier.fillMaxWidth().desktopPointerHover().semantics { selected = activeTab == tab },
+                                    shape = RoundedCornerShape(10.dp),
+                                    border = BorderStroke(1.dp, if (activeTab == tab) accent.copy(alpha = .5f) else Color.Transparent),
+                                    color = if (activeTab == tab) accent.copy(alpha = .10f) else Color.Transparent) {
+                                    Column(Modifier.padding(horizontal = 14.dp, vertical = 16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                            Icon(icon, null, Modifier.size(20.dp), tint = if (activeTab == tab) FieldMenuDesign.gold else FieldMenuDesign.textMuted)
+                                            if (!compact) Text(if (tab == DesktopMenuTab.JOURNAL && services.questPresentations.journalBadge > 0) "${tab.label} (${services.questPresentations.journalBadge})" else tab.label, color = if (activeTab == tab) FieldMenuDesign.gold else FieldMenuDesign.text)
+                                        }
+                                        if (compact) Text(if (tab == DesktopMenuTab.JOURNAL && services.questPresentations.journalBadge > 0) "${tab.label} (${services.questPresentations.journalBadge})" else tab.label, style = MaterialTheme.typography.labelMedium)
+                                        if (beacon) Text("Guide", color = FieldMenuDesign.cyan, style = MaterialTheme.typography.labelSmall)
                                     }
-                                    if (compact) Text(if (tab == DesktopMenuTab.JOURNAL && services.questPresentations.journalBadge > 0) "${tab.label} (${services.questPresentations.journalBadge})" else tab.label, style = MaterialTheme.typography.labelMedium)
-                                    if (beacon) Text("Guide", color = FieldMenuDesign.cyan, style = MaterialTheme.typography.labelSmall)
-                                                                    }
+                                }
                             }
                         }
                         }
-                        TextButton(onClick = { select(DesktopMenuTab.SETTINGS) }) { Text("Settings", color = if (activeTab == DesktopMenuTab.SETTINGS) FieldMenuDesign.gold else FieldMenuDesign.textMuted) }
-                        onOpenControls?.let { TextButton(onClick = it) { Text("Controls") } }
+                        DesktopTooltip("Settings [Alt+6]") {
+                            TextButton(onClick = { select(DesktopMenuTab.SETTINGS) }, modifier = Modifier.desktopPointerHover()) { Text("Settings", color = if (activeTab == DesktopMenuTab.SETTINGS) FieldMenuDesign.gold else FieldMenuDesign.textMuted) }
+                        }
+                        onOpenControls?.let {
+                            DesktopTooltip("Tactical controls & keybindings guide [H]") {
+                                TextButton(onClick = it, modifier = Modifier.desktopPointerHover()) { Text("Controls") }
+                            }
+                        }
                         ui.actions.filterIsInstance<com.example.starborn.domain.model.RestStopAction>()
                             .firstOrNull { it.name.equals("bunk", true) }?.let { action ->
                                 TextButton(onClick = { onDismiss(); runtime.onActionSelected(action) },
+                                    modifier = Modifier.desktopPointerHover(ui.actionHints[action.actionKey()]?.locked != true),
                                     enabled = ui.actionHints[action.actionKey()]?.locked != true) { Text("Rest here") }
                             }
                     }
@@ -279,10 +309,14 @@ private fun DesktopInventoryTabContent(
                 category = InventoryCategory.KEY_ITEMS
                 selectedItemId = null
             }
+            DesktopSubTogglePill("Gear", category == InventoryCategory.GEAR, modifier = Modifier.weight(1f)) {
+                category = InventoryCategory.GEAR
+                selectedItemId = null
+            }
         }
 
-        run {
-            OutlinedTextField(search, { search = it }, Modifier.fillMaxWidth(), label = { Text("Search items") }, singleLine = true)
+        if (category != InventoryCategory.GEAR) {
+            OutlinedTextField(search, { search = it }, Modifier.fillMaxWidth(), label = { Text("Search cargo") }, placeholder = { Text("Search cargo") }, singleLine = true)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("Sort:", color = FieldMenuDesign.textMuted)
                 listOf("Name", "Quantity", "Type").forEach { option ->
@@ -291,6 +325,11 @@ private fun DesktopInventoryTabContent(
             }
         }
         when (category) {
+            InventoryCategory.GEAR -> {
+                Box(Modifier.weight(1f).fillMaxWidth()) {
+                    DesktopRuntimeGearContent(services)
+                }
+            }
             InventoryCategory.SUPPLIES -> {
                 val supplies = visibleEntries
                     .filterNot { allItems[it.key]?.type == "key" || allItems[it.key]?.categoryOverride == "key" }

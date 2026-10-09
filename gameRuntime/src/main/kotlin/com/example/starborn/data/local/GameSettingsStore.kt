@@ -15,5 +15,6 @@ interface GameSettingsStore {
     suspend fun setHighContrastMode(enabled: Boolean)
     suspend fun setLargeTouchTargets(enabled: Boolean)
     suspend fun setThemeBandsEnabled(enabled: Boolean)
+    suspend fun setEnvironmentalEffectsQuality(value: EnvironmentalEffectsQuality) {}
     suspend fun setModernFieldMenu(enabled: Boolean)
 }

@@ -48,8 +48,13 @@ class DesktopUserSettingsStore(
             highContrastMode = prefs[HIGH_CONTRAST_MODE] ?: false,
             largeTouchTargets = prefs[LARGE_TOUCH_TARGETS] ?: false,
             themeBandsEnabled = prefs[THEME_BANDS_ENABLED] ?: false,
-            modernFieldMenu = prefs[booleanPreferencesKey("modern_field_menu")] ?: true
+            modernFieldMenu = prefs[booleanPreferencesKey("modern_field_menu")] ?: true,
+            environmentalEffectsQuality = com.example.starborn.data.local.EnvironmentalEffectsQuality.fromId(prefs[stringPreferencesKey("environmental_effects_quality")])
         )
+    }
+
+    override suspend fun setEnvironmentalEffectsQuality(value: com.example.starborn.data.local.EnvironmentalEffectsQuality) {
+        dataStore.edit { it[stringPreferencesKey("environmental_effects_quality")] = value.name }
     }
 
     override suspend fun setMusicVolume(value: Float) {
@@ -97,6 +102,24 @@ class DesktopUserSettingsStore(
         dataStore.edit { it[DISPLAY_MODE] = mode.name }
     }
 
+    val windowWidth: Flow<Int> = dataStore.data.map { prefs -> prefs[WINDOW_WIDTH] ?: 1280 }
+    val windowHeight: Flow<Int> = dataStore.data.map { prefs -> prefs[WINDOW_HEIGHT] ?: 800 }
+    val windowX: Flow<Int?> = dataStore.data.map { prefs -> prefs[WINDOW_X] }
+    val windowY: Flow<Int?> = dataStore.data.map { prefs -> prefs[WINDOW_Y] }
+    val windowMaximized: Flow<Boolean> = dataStore.data.map { prefs -> prefs[WINDOW_MAXIMIZED] ?: false }
+
+    suspend fun saveWindowBounds(width: Int, height: Int, x: Int?, y: Int?, isMaximized: Boolean) {
+        dataStore.edit { prefs ->
+            prefs[WINDOW_MAXIMIZED] = isMaximized
+            if (!isMaximized) {
+                if (width >= 1024) prefs[WINDOW_WIDTH] = width
+                if (height >= 720) prefs[WINDOW_HEIGHT] = height
+                if (x != null) prefs[WINDOW_X] = x
+                if (y != null) prefs[WINDOW_Y] = y
+            }
+        }
+    }
+
     override suspend fun setThemeBandsEnabled(enabled: Boolean) {
         dataStore.edit { it[THEME_BANDS_ENABLED] = enabled }
     }
@@ -126,5 +149,10 @@ class DesktopUserSettingsStore(
         private val THEME_BANDS_ENABLED = booleanPreferencesKey("theme_bands_enabled")
         private val VOICE_VOLUME = floatPreferencesKey("voice_volume")
         private val DISPLAY_MODE = stringPreferencesKey("display_mode")
+        private val WINDOW_WIDTH = androidx.datastore.preferences.core.intPreferencesKey("window_width")
+        private val WINDOW_HEIGHT = androidx.datastore.preferences.core.intPreferencesKey("window_height")
+        private val WINDOW_X = androidx.datastore.preferences.core.intPreferencesKey("window_x")
+        private val WINDOW_Y = androidx.datastore.preferences.core.intPreferencesKey("window_y")
+        private val WINDOW_MAXIMIZED = androidx.datastore.preferences.core.booleanPreferencesKey("window_maximized")
     }
 }

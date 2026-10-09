@@ -97,6 +97,9 @@ class CombatViewModel(
     elapsedRealtime: () -> Long = SystemClock::elapsedRealtime,
     random: CombatRandom = DefaultCombatRandom
 ) : ViewModel() {
+    val environmentalAssets = worldAssets
+    val environmentalRoom by lazy { runtime.encounterRoomId?.let { id -> worldAssets.loadRooms().firstOrNull { it.id==id } } }
+    val environmentalSession = sessionStore.state
     val runtime = CombatController(
         worldAssets = worldAssets,
         combatEngine = combatEngine,

@@ -32,7 +32,7 @@ internal fun DesktopExplorationMinimap(state: MinimapUiState?, enabled: Boolean,
     var hoverLabel by remember(state, obscured) { mutableStateOf(if (obscured) "Minimap obscured by darkness" else "Open full map") }
     TooltipArea(tooltip = { Surface(color = Color(0xFF07111A), shape = RoundedCornerShape(8.dp), border = BorderStroke(1.dp, Color(0xFF63E6FF).copy(alpha = .4f))) { Text(hoverLabel, Modifier.padding(10.dp).widthIn(max = 260.dp), color = Color.White, style = MaterialTheme.typography.bodySmall) } }) {
     Column(Modifier.fillMaxWidth().explorationFeedback(enabled && !obscured).then(if (obscured) Modifier else Modifier.clickable(enabled = enabled, onClickLabel = "Open full map", onClick = onOpen))
-        .semantics { contentDescription = if (obscured) "Minimap obscured by darkness" else "Area minimap. " + cells.flatMap { it.nodeExits }.joinToString(". ") { "${it.direction} to ${it.destinationTitle}${if (it.blocked) ", blocked" else ""}" } }, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        .semantics { contentDescription = if (obscured) "Minimap obscured by darkness" else "Area minimap. " + cells.flatMap { it.nodeExits }.joinToString(". ") { "${it.direction} to ${it.destinationTitle}${if (it.blocked) ", blocked" else ""}" }.ifBlank { "Open full map" } }, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Canvas(Modifier.fillMaxWidth().height(164.dp).onSizeChanged { canvasSize = it }.onPointerEvent(PointerEventType.Move) { event ->
             if (!obscured) {
                 val pointer = event.changes.firstOrNull()?.position

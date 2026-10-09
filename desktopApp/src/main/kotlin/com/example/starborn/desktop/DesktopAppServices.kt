@@ -63,6 +63,8 @@ class DesktopAppServices(
         saveDirectory.mkdirs()
     }
 
+    val isDebugEnabled: Boolean = System.getProperty("starborn.debug") == "true" || System.getenv("STARBORN_DEBUG") == "true"
+
     val assetProvider: AssetProvider = DesktopAssetProvider()
     val moshi = MoshiProvider.instance
     val assetReader = AssetJsonReader(assetProvider, moshi)

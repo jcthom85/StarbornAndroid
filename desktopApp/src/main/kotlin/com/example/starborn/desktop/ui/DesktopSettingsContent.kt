@@ -1,5 +1,7 @@
 package com.example.starborn.desktop.ui
 
+import com.example.starborn.data.local.EnvironmentalEffectsQuality
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,11 +39,20 @@ internal fun DesktopSettingsContent(services: DesktopAppServices, userSettings: 
                 Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     DesktopDisplayMode.entries.forEach { option ->
                         FilterChip(mode == option, onClick = { scope.launch { services.userSettingsStore.setDisplayMode(option) } },
+                            modifier = Modifier.desktopPointerHover(),
                             label = { Text(when (option) { DesktopDisplayMode.WINDOWED -> "Windowed"; DesktopDisplayMode.BORDERLESS -> "Borderless"; DesktopDisplayMode.FULLSCREEN -> "Fullscreen" }) })
                     }
                 }
+                Text("Environmental effects",style=MaterialTheme.typography.titleSmall)
+                Row(horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+                    EnvironmentalEffectsQuality.entries.forEach { quality ->
+                        FilterChip(userSettings.environmentalEffectsQuality==quality,
+                            modifier = Modifier.desktopPointerHover(),
+                            onClick={ scope.launch { services.userSettingsStore.setEnvironmentalEffectsQuality(quality) } },label={ Text(quality.label) })
+                    }
+                }
                 Text("Windowed mode can be resized.", style = MaterialTheme.typography.bodySmall, color = FieldMenuDesign.textMuted)
-                onOpenControls?.let { OutlinedButton(onClick = it) { Text("Keyboard controls") } }
+                onOpenControls?.let { OutlinedButton(onClick = it, modifier = Modifier.desktopPointerHover()) { Text("Keyboard controls") } }
             }
         }
     }
@@ -62,17 +73,30 @@ internal fun DesktopSettingsContent(services: DesktopAppServices, userSettings: 
             Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 DesktopMenuSection("Save archive")
                 Text("Save to a manual slot or quick save. Existing slots require confirmation before replacement.", style = MaterialTheme.typography.bodySmall)
-                Button(onClick = { archiveOpen = true }) { Text("Open save archive") }
+                Button(onClick = { archiveOpen = true }, modifier = Modifier.desktopPointerHover()) { Text("Open save archive") }
                 Text("To load a different game, return to the title screen and choose Continue.", style = MaterialTheme.typography.bodySmall, color = FieldMenuDesign.textMuted)
-                onReturnToTitle?.let { OutlinedButton(onClick = it) { Text("Save and return to title") } }
+                onReturnToTitle?.let { OutlinedButton(onClick = it, modifier = Modifier.desktopPointerHover()) { Text("Save and return to title") } }
             }
         }
     }
     BoxWithConstraints(Modifier.fillMaxSize()) {
-        if (maxWidth >= 880.dp) Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-            Column(Modifier.weight(1f).fillMaxHeight().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(16.dp)) { audio(); display() }
-            Column(Modifier.weight(1f).fillMaxHeight().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(16.dp)) { accessibility(); saves() }
-        } else Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(16.dp)) { audio(); display(); accessibility(); saves() }
+        if (maxWidth >= 880.dp) {
+            LazyColumn(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                item {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+                        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(16.dp)) { audio(); display() }
+                        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(16.dp)) { accessibility(); saves() }
+                    }
+                }
+            }
+        } else {
+            LazyColumn(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                item { audio() }
+                item { display() }
+                item { accessibility() }
+                item { saves() }
+            }
+        }
     }
     if (archiveOpen) DesktopSaveLoadDialog(services, currentRoomTitle = currentRoomTitle,
         onLoadState = {}, onDismiss = { archiveOpen = false }, allowLoad = false)
@@ -86,6 +110,7 @@ private fun DesktopVolumeControl(label: String, persisted: Float, onCommit: (Flo
             Text(label); Text("${(volume * 100).toInt()}%", color = MaterialTheme.colorScheme.primary)
         }
         Slider(volume, { volume = it }, onValueChangeFinished = { onCommit(volume) },
+            modifier = Modifier.desktopPointerHover(),
             colors = SliderDefaults.colors(thumbColor = FieldMenuDesign.cyan, activeTrackColor = FieldMenuDesign.cyan,
                 inactiveTrackColor = FieldMenuDesign.cyan.copy(alpha = .12f)))
     }
@@ -94,6 +119,6 @@ private fun DesktopVolumeControl(label: String, persisted: Float, onCommit: (Flo
 @Composable
 private fun DesktopSettingToggle(label: String, value: Boolean, onChange: (Boolean) -> Unit) {
     Row(Modifier.fillMaxWidth().padding(vertical = 3.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-        Text(label, Modifier.weight(1f)); Switch(value, onChange)
+        Text(label, Modifier.weight(1f)); Switch(value, onChange, modifier = Modifier.desktopPointerHover())
     }
 }

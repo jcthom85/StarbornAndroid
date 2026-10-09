@@ -36,7 +36,7 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
     DisposableEffect(runtime) { onDispose { runtime.close(); services.exploration.onTinkeringClosed() } }
     Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            listOf("Workbench", "Schematics", "Scrap").forEach { tab -> FilterChip(page == tab, onClick = { page = tab; query = "" }, label = { Text(tab) }) }
+            listOf("Workbench", "Schematics", "Scrap").forEach { tab -> FilterChip(page == tab, onClick = { page = tab; query = "" }, modifier = Modifier.desktopPointerHover(), label = { Text(tab) }) }
         }
         state.lastMessage?.let { Text(it, color = FieldMenuDesign.cyan) }
         state.tutorialStep?.let { step ->
@@ -62,7 +62,7 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
                     LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         if (materials.isEmpty()) item { Text(if (socket != -1 && state.bench.mainItemId == null) "Choose a base item first." else "No matching materials in your inventory. Check Schematics for requirements.", color = FieldMenuDesign.textMuted) }
                         items(materials, key = { it.id }) { item ->
-                            OutlinedButton(onClick = { if (socket == -1) runtime.selectMain(item.id) else runtime.selectComponent(socket, item.id) }, modifier = Modifier.fillMaxWidth()) {
+                            OutlinedButton(onClick = { if (socket == -1) runtime.selectMain(item.id) else runtime.selectComponent(socket, item.id) }, modifier = Modifier.fillMaxWidth().desktopPointerHover()) {
                                 DesktopMenuItemArt(services, catalog[item.id], Modifier.size(40.dp))
                                 Text(item.name, Modifier.weight(1f).padding(start = 10.dp)); Text("x${item.quantity}")
                             }
@@ -74,6 +74,7 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
                     (-1..1).forEach { target ->
                         val name = if (target == -1) state.bench.mainItemName else state.bench.componentNames.getOrNull(target)
                         Surface(onClick = { socket = target }, color = FieldMenuDesign.panel, shape = RoundedCornerShape(10.dp),
+                            modifier = Modifier.desktopPointerHover(),
                             border = BorderStroke(1.dp, if (socket == target) FieldMenuDesign.gold else FieldMenuDesign.cyan.copy(alpha = .18f))) {
                             Row(Modifier.fillMaxWidth().padding(14.dp), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
                                 val itemId = if (target == -1) state.bench.mainItemId else state.bench.componentIds.getOrNull(target)
@@ -82,7 +83,7 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
                                     Text(if (target == -1) "Base item" else "Component ${target + 1}", color = FieldMenuDesign.gold)
                                     Text(name?.takeIf { it.isNotBlank() } ?: "Choose a part")
                                 }
-                                if (!name.isNullOrBlank()) TextButton(onClick = { if (target == -1) runtime.selectMain(null) else runtime.selectComponent(target, null) }) { Text("Remove") }
+                                if (!name.isNullOrBlank()) TextButton(onClick = { if (target == -1) runtime.selectMain(null) else runtime.selectComponent(target, null) }, modifier = Modifier.desktopPointerHover()) { Text("Remove") }
                             }
                         }
                     }
@@ -98,8 +99,8 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
                     }
                     state.bench.requirements.forEach { Text("${it.label}: ${it.available} / ${it.required}") }
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Button(onClick = runtime::craftFromBench, enabled = state.bench.canCraftSelection) { Text("Build") }
-                        TextButton(onClick = runtime::clearBench) { Text("Clear") }
+                        Button(onClick = runtime::craftFromBench, enabled = state.bench.canCraftSelection, modifier = Modifier.desktopPointerHover(state.bench.canCraftSelection)) { Text("Build") }
+                        TextButton(onClick = runtime::clearBench, modifier = Modifier.desktopPointerHover()) { Text("Clear") }
                     }
                 }
             }

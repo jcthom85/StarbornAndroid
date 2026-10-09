@@ -1,5 +1,8 @@
 package com.example.starborn.feature.exploration.ui
 
+import com.example.starborn.ui.vfx.AndroidRoomEnvironmentalEffects
+import com.example.starborn.ui.vfx.rememberEnvironmentalSettings
+
 import com.example.starborn.feature.exploration.ui.components.*
 import com.example.starborn.feature.exploration.ui.tabs.*
 import com.example.starborn.feature.exploration.ui.hud.*
@@ -346,6 +349,10 @@ fun ExplorationScreen(
     isTestSession: Boolean = false
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val environmentSettings=rememberEnvironmentalSettings()
+    val environmentMemory=remember { com.example.starborn.domain.environment.EnvironmentalSceneMemory() }
+    val environmentSession by viewModel.environmentalSession.collectAsStateWithLifecycle()
+    val environmentRooms=remember(viewModel) { viewModel.environmentalAssets.loadRooms().associateBy { it.id } }
     var pendingInventoryItem by remember { mutableStateOf<InventoryPreviewItemUi?>(null) }
     var showInventoryTargetDialog by remember { mutableStateOf(false) }
     var pendingMealReplacement by remember { mutableStateOf<InventoryPreviewItemUi?>(null) }
@@ -355,13 +362,14 @@ fun ExplorationScreen(
     var walkthroughVisible by rememberSaveable { mutableStateOf(false) }
     var slotSummaries by remember { mutableStateOf<List<SaveSlotSummary>>(emptyList()) }
     var debugWeatherOverride by remember { mutableStateOf<String?>(null) }
+    var environmentalPreview by remember { mutableStateOf(false) }
     var importantQuestPopupVisible by remember { mutableStateOf(false) }
     var restRecoveryNotice by remember { mutableStateOf<RestRecoveryNotice?>(null) }
     val weatherCycles = remember {
         listOf(null, "dust", "rain", "storm", "snow", "cave_drip", "starfall", "steam", "fog", "gas", "resonance", "sparks")
     }
     val coroutineScope = rememberCoroutineScope()
-    val blockingOverlayActive =
+    val blockingOverlayActive = environmentalPreview ||
         walkthroughVisible || uiState.isMenuOverlayVisible ||
             uiState.togglePrompt != null ||
             uiState.tuningPuzzle != null ||
@@ -862,10 +870,7 @@ fun ExplorationScreen(
         }
 
         val activeWeatherId = debugWeatherOverride ?: currentRoom?.weather ?: defaultWeatherForEnvironment(currentRoom?.env)
-        WeatherOverlay(
-            weatherId = activeWeatherId,
-            modifier = Modifier.fillMaxSize()
-        )
+
         val darknessAlpha by animateFloatAsState(
             targetValue = if (isRoomDark) 1f else 0f,
             animationSpec = tween(durationMillis = 850, easing = FastOutSlowInEasing)
@@ -876,6 +881,27 @@ fun ExplorationScreen(
                 modifier = Modifier.fillMaxSize()
             )
         }
+        val effectProgress=roomTransitionProgress.value.coerceIn(0f,1f)
+        val effectsMoving=outgoingBackgroundPath!=null && effectProgress<1f
+        val effectEnterX=when(roomTransition?.direction) { "east"->-1f;"west"->1f;else->0f }
+        val effectEnterY=when(roomTransition?.direction) { "north"->1f;"south"->-1f;else->0f }
+        if(effectsMoving) {
+            val outgoingRoom=environmentRooms[roomTransition?.fromRoomId]
+            val outgoingState=outgoingRoom?.state.orEmpty().mapNotNull { (k,v)->(v as? Boolean)?.let { k to it } }.toMap()+environmentSession.roomStates[outgoingRoom?.id].orEmpty()
+            AndroidRoomEnvironmentalEffects(outgoingRoom,outgoingBackgroundPainter.intrinsicSize,outgoingState,
+                uiState.completedMilestones,environmentSettings,viewModel.environmentalAssets,
+                dark=outgoingState["dark"] ?: outgoingRoom?.dark ?: false,paused=blockingOverlayActive || uiState.isMenuOverlayVisible,
+                translationX=-effectEnterX*.78f*effectProgress,translationY=-effectEnterY*.78f*effectProgress,
+                scale=1-.025f*effectProgress,opacity=(1-effectProgress/.82f).coerceIn(0f,1f),transition=true,sceneMemory=environmentMemory)
+        }
+        AndroidRoomEnvironmentalEffects(
+            room=if(debugWeatherOverride!=null) currentRoom?.copy(weather=activeWeatherId,environmentalEffects=null) else currentRoom,
+            artworkSize=backgroundPainter.intrinsicSize,roomState=uiState.roomState,
+            milestones=uiState.completedMilestones,settings=environmentSettings,assets=viewModel.environmentalAssets,
+            dark=isRoomDark,paused=blockingOverlayActive || uiState.isMenuOverlayVisible,
+            translationX=effectEnterX*.12f*(1-effectProgress),translationY=effectEnterY*.12f*(1-effectProgress),
+            scale=.99f+.01f*effectProgress,opacity=if(effectsMoving) effectProgress else 1f,
+            transition=effectsMoving,sceneMemory=environmentMemory)
         val vignetteIntensity = 0.48f * darknessAlpha
         VignetteOverlay(
             visible = uiState.settings.vignetteEnabled && vignetteIntensity > 0f,
@@ -1038,8 +1064,7 @@ fun ExplorationScreen(
                     minimapSize = minimapSize,
                     onTitleClick = {
                         if (isWeatherLab) {
-                            val nextIdx = (weatherCycles.indexOf(debugWeatherOverride) + 1) % weatherCycles.size
-                            debugWeatherOverride = weatherCycles[nextIdx]
+                            environmentalPreview=true
                         }
                     },
                     onMapClick = {
@@ -1359,6 +1384,7 @@ fun ExplorationScreen(
                 onCloseMapLegend = { viewModel.closeMapLegend() },
                 craftingViewModel = craftingViewModel,
                 onTinkerTutorialStep = { viewModel.onTinkerTutorialStep(it) },
+                onEnvironmentalPreview = if(com.example.starborn.BuildConfig.DEBUG) ({viewModel.closeMenuOverlay();environmentalPreview=true}) else null,
                 onDebugTinkeringTutorial = if (com.example.starborn.BuildConfig.DEBUG) ({ viewModel.debugTriggerTinkeringTutorial() }) else null,
                 onPlayAudio = onPlayAudio,
                 modifier = Modifier.statusBarsPadding()
@@ -1748,6 +1774,14 @@ fun ExplorationScreen(
             modifier = Modifier.fillMaxSize()
         )
 
+        if(environmentalPreview && uiState.currentRoom!=null) {
+            val previewRoom=uiState.currentRoom!!
+            val clipboard=androidx.compose.ui.platform.LocalClipboardManager.current
+            com.example.starborn.ui.environment.EnvironmentalEffectsPreview(previewRoom,
+                viewModel.environmentalAssets.environmentalEffectsCatalog,rememberRoomBackgroundPainter(previewRoom.backgroundImage),
+                com.example.starborn.ui.vfx.rememberAndroidEnvironmentSteam(true),uiState.roomState,uiState.completedMilestones,
+                onCopy={clipboard.setText(androidx.compose.ui.text.AnnotatedString(it))},onClose={environmentalPreview=false})
+        }
         if (!blockingOverlayActive && !showInventoryTargetDialog && saveLoadMode == null) {
             DirectionIndicatorsOverlay(
                 indicators = uiState.directionIndicators,
@@ -2384,6 +2418,7 @@ private fun MenuOverlay(
     onTinkerTutorialStep: ((com.example.starborn.feature.crafting.TinkeringTutorialStep) -> Unit)? = null,
     isTinkeringTutorialActive: Boolean = false,
     isGearTutorialActive: Boolean = false,
+    onEnvironmentalPreview: (() -> Unit)? = null,
     onDebugTinkeringTutorial: (() -> Unit)? = null,
     onPlayAudio: (String) -> Unit = {},
     modifier: Modifier = Modifier
@@ -2504,6 +2539,7 @@ private fun MenuOverlay(
                         },
                         craftingViewModel = craftingViewModel,
                         onTinkerTutorialStep = onTinkerTutorialStep,
+                        onEnvironmentalPreview = onEnvironmentalPreview,
                         onDebugTinkeringTutorial = onDebugTinkeringTutorial,
                         onPlayAudio = onPlayAudio,
                         creditsLabel = creditsLabel,
@@ -3286,6 +3322,7 @@ private fun MenuTabContentArea(
     onShowItemDetails: (InventoryPreviewItemUi) -> Unit,
     craftingViewModel: CraftingViewModel? = null,
     onTinkerTutorialStep: ((com.example.starborn.feature.crafting.TinkeringTutorialStep) -> Unit)? = null,
+    onEnvironmentalPreview: (() -> Unit)? = null,
     onDebugTinkeringTutorial: (() -> Unit)? = null,
     onPlayAudio: (String) -> Unit = {},
     creditsLabel: String,
@@ -3403,6 +3440,7 @@ private fun MenuTabContentArea(
                 onSaveGame = onSaveGame,
                 onLoadGame = onLoadGame,
                 onReturnToTitle = onReturnToTitle,
+                onEnvironmentalPreview = onEnvironmentalPreview,
                 onDebugTinkeringTutorial = onDebugTinkeringTutorial
             )
         }

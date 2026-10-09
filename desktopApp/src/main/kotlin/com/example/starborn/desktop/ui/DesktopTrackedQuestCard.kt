@@ -39,11 +39,12 @@ internal fun DesktopTrackedQuestCard(services: DesktopAppServices, ui: Explorati
     }
     val accent = ui.theme?.accent?.takeIf { it.size >= 3 }?.let { Color(it[0], it[1], it[2], it.getOrElse(3) { 1f }) } ?: Color(0xFF80E0FF)
     DesktopFieldMenuTheme(services) {
-        Surface(onClick = { services.exploration.openQuestDetails(quest.id); onOpen() }, enabled = !blocked,
-            modifier = Modifier.fillMaxWidth().explorationFeedback(!blocked, accent).testTag("hud-objective").semantics { contentDescription = "Open ${quest.title} in Journal" },
-            shape = RoundedCornerShape(12.dp), color = if (settings.highContrastMode) Color.Black else Color(0xFA061018), border = BorderStroke(1.dp, if (settings.highContrastMode) Color.White else accent.copy(alpha = .42f + .25f * glow.value))) {
-            Column(Modifier.background(Brush.horizontalGradient(listOf(accent.copy(alpha = .14f + .16f * glow.value), Color.Transparent)))
-                .padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        DesktopTooltip("Click to inspect in Journal [Alt+4]") {
+            Surface(onClick = { services.exploration.openQuestDetails(quest.id); onOpen() }, enabled = !blocked,
+                modifier = Modifier.fillMaxWidth().explorationFeedback(!blocked, accent).testTag("hud-objective").semantics { contentDescription = "Open tracked objective in Journal" },
+                shape = RoundedCornerShape(12.dp), color = if (settings.highContrastMode) Color.Black else Color(0xFA061018), border = BorderStroke(1.dp, if (settings.highContrastMode) Color.White else accent.copy(alpha = .42f + .25f * glow.value))) {
+                Column(Modifier.background(Brush.horizontalGradient(listOf(accent.copy(alpha = .14f + .16f * glow.value), Color.Transparent)))
+                    .padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Icon(Icons.Default.Star, null, Modifier.size(18.dp), tint = accent)
                     Text("TRACKED QUEST", Modifier.weight(1f), style = MaterialTheme.typography.labelSmall, color = accent, fontWeight = FontWeight.Bold)
@@ -65,4 +66,5 @@ internal fun DesktopTrackedQuestCard(services: DesktopAppServices, ui: Explorati
             }
         }
     }
+}
 }

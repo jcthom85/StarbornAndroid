@@ -4,7 +4,7 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.TouchApp
+import androidx.compose.material.icons.rounded.FlashOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -27,7 +27,7 @@ internal fun DesktopCombatReadyPrompt(accent: Color, ready: Boolean, settings: U
     val tint = if (settings.highContrastMode) Color.White else accent
     Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 20.dp).testTag("combat-ready-prompt"),
         verticalArrangement = Arrangement.spacedBy(14.dp)) {
-        Icon(Icons.Rounded.TouchApp, null, Modifier.size(28.dp), tint = tint.copy(alpha = alpha))
+        Icon(Icons.Rounded.FlashOn, null, Modifier.size(28.dp), tint = tint.copy(alpha = alpha))
         Text("Select a ready character", color = if (settings.highContrastMode) Color.White else Color(0xFFF3F4F5),
             style = MaterialTheme.typography.headlineSmall.copy(fontSize = 24.sp, lineHeight = 30.sp, fontWeight = FontWeight.Bold))
         Canvas(Modifier.width(64.dp).height(3.dp)) { drawRoundRect(tint.copy(alpha = alpha)) }

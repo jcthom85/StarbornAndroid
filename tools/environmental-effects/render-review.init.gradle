@@ -1,0 +1,14 @@
+allprojects { p ->
+ if (p.name == "desktopApp") p.afterEvaluate {
+  p.kotlin.sourceSets.main.kotlin.srcDir(p.rootProject.file("tools/environmental-effects"))
+  p.tasks.register("renderEnvironmentReview", JavaExec) {
+   dependsOn(p.tasks.named("classes"));classpath=p.sourceSets.main.runtimeClasspath
+   mainClass="com.example.starborn.desktop.ui.EnvironmentReviewKt";workingDir=p.projectDir
+   if(p.findProperty("reviewQuick")=="true") jvmArgs("-Dstarborn.environmentReview.quick=true")
+  }
+  p.tasks.register("benchmarkEnvironmentReview", JavaExec) {
+   dependsOn(p.tasks.named("classes"));classpath=p.sourceSets.main.runtimeClasspath
+   mainClass="com.example.starborn.desktop.ui.EnvironmentBenchmarkKt";workingDir=p.projectDir
+  }
+ }
+}

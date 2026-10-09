@@ -11,6 +11,8 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import com.example.starborn.data.local.UserSettings
 import com.example.starborn.desktop.DesktopAppServices
@@ -19,6 +21,40 @@ internal val LocalExplorationSettings = staticCompositionLocalOf { UserSettings(
 internal val LocalExplorationAccent = staticCompositionLocalOf { Color(0xFFFF9F2E) }
 internal class ExplorationDrawerState { var panel by mutableStateOf<String?>(null) }
 internal val LocalExplorationDrawer = staticCompositionLocalOf<ExplorationDrawerState?> { null }
+
+internal fun Modifier.desktopPointerHover(enabled: Boolean = true): Modifier =
+    if (enabled) this.pointerHoverIcon(PointerIcon(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR))) else this
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+internal fun DesktopTooltip(
+    text: String?,
+    accent: Color = Color(0xFF63E6FF),
+    content: @Composable () -> Unit
+) {
+    if (text.isNullOrBlank()) {
+        content()
+    } else {
+        TooltipArea(
+            tooltip = {
+                Surface(
+                    color = Color(0xFF07111A),
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(6.dp),
+                    border = BorderStroke(1.dp, accent.copy(alpha = 0.5f)),
+                    shadowElevation = 6.dp
+                ) {
+                    Text(
+                        text = text,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp).widthIn(max = 280.dp),
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            },
+            content = content
+        )
+    }
+}
 
 @Composable
 internal fun DesktopExplorationTheme(services: DesktopAppServices, content: @Composable () -> Unit) {
@@ -38,7 +74,7 @@ internal fun Modifier.explorationFeedback(enabled: Boolean = true, accent: Color
     val hovered by interactions.collectIsHoveredAsState()
     var focused by remember { mutableStateOf(false) }
     val contrast = LocalExplorationSettings.current.highContrastMode
-    return hoverable(interactions, enabled).onFocusChanged { focused = it.hasFocus }.drawWithContent {
+    return hoverable(interactions, enabled).desktopPointerHover(enabled).onFocusChanged { focused = it.hasFocus }.drawWithContent {
         drawContent()
         if (enabled && (hovered || focused)) {
             val color = if (contrast) Color.White else accent

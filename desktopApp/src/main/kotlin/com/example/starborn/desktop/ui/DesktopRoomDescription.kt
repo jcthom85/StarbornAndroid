@@ -286,6 +286,7 @@ private fun SinglePlanDescription(
                             }
                         }
                     }
+                    .desktopPointerHover(!segment.locked)
                     .clickable(
                         enabled = !segment.locked,
                         interactionSource = interactionSource,

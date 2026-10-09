@@ -39,6 +39,14 @@ kotlin {
             implementation(libs.androidx.datastore.core)
             implementation(libs.androidx.datastore.preferences)
         }
+        val androidMain by getting {
+            kotlin.srcDir("src/androidJvmMain/kotlin")
+            dependencies { implementation(project(":gameRuntime")) }
+        }
+        val jvmMain by getting {
+            kotlin.srcDir("src/androidJvmMain/kotlin")
+            dependencies { implementation(project(":gameRuntime")) }
+        }
         commonTest.dependencies {
             implementation(kotlin("test"))
         }

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
@@ -27,8 +28,13 @@ class UserSettingsStore(context: Context) : GameSettingsStore {
             highContrastMode = prefs[HIGH_CONTRAST_MODE] ?: false,
             largeTouchTargets = prefs[LARGE_TOUCH_TARGETS] ?: false,
             themeBandsEnabled = prefs[THEME_BANDS_ENABLED] ?: false,
-            modernFieldMenu = prefs[MODERN_FIELD_MENU] ?: true
+            modernFieldMenu = prefs[MODERN_FIELD_MENU] ?: true,
+            environmentalEffectsQuality = EnvironmentalEffectsQuality.fromId(prefs[stringPreferencesKey("environmental_effects_quality")])
         )
+    }
+
+    override suspend fun setEnvironmentalEffectsQuality(value: com.example.starborn.data.local.EnvironmentalEffectsQuality) {
+        dataStore.edit { it[stringPreferencesKey("environmental_effects_quality")] = value.name }
     }
 
     override suspend fun setMusicVolume(value: Float) {

@@ -141,6 +141,25 @@
   },
   {
     "id": "pit_shaft",
+    "environmental_effects": [
+      {
+        "id": "vent_mist",
+        "preset": "machinery.vent_mist",
+        "intensity": 0.3,
+        "emitters": [
+          {
+            "x": 0.63,
+            "y": 0.46,
+            "angle_degrees": -104
+          },
+          {
+            "x": 0.64,
+            "y": 0.69,
+            "angle_degrees": -100
+          }
+        ]
+      }
+    ],
     "env": "mine",
     "weather": "steam",
     "title": "Lift Shaft",
@@ -199,6 +218,14 @@
   },
   {
     "id": "pit_jed_bunk",
+    "environmental_effects": [
+      {
+        "id": "warm_dust",
+        "preset": "legacy.industrial",
+        "intensity": 0.08,
+        "space": "scene"
+      }
+    ],
     "env": "mine",
     "title": "Jed's Bunk",
     "background_image": "images/rooms/world_1/pit_jed_bunk_v5.webp",
@@ -288,6 +315,17 @@
   },
   {
     "id": "pit_nova_bunk",
+    "environmental_effects": [
+      {
+        "id": "lamp_dust",
+        "preset": "interior.dust_motes",
+        "intensity": 0.1,
+        "space": "scene",
+        "requires_state": {
+          "light_on": true
+        }
+      }
+    ],
     "env": "mine",
     "title": "Nova's Bunk",
     "background_image": "images/rooms/world_1/pit_nova_bunk_v5.webp",
@@ -469,6 +507,25 @@
   },
   {
     "id": "pit_showers",
+    "environmental_effects": [
+      {
+        "id": "vent_mist",
+        "preset": "machinery.vent_mist",
+        "intensity": 0.3,
+        "emitters": [
+          {
+            "x": 0.67,
+            "y": 0.61,
+            "angle_degrees": -90
+          },
+          {
+            "x": 0.82,
+            "y": 0.58,
+            "angle_degrees": -98
+          }
+        ]
+      }
+    ],
     "env": "mine",
     "weather": "steam",
     "title": "Shared Showers",
@@ -550,7 +607,7 @@
       "north": {
         "type": "enemy",
         "enemy_id": "faulted_loader",
-        "message_locked": "The loader's wild arm blocks the workshop shutter. Tap the Faulted Loader to engage in combat!",
+        "message_locked": "The loader's wild arm blocks the workshop shutter. Engage the Faulted Loader to enter combat!",
         "message_unlock": "The loader folds into the scrap, leaving the workshop route open."
       }
     },
@@ -2762,6 +2819,13 @@
   },
   {
     "id": "mine_gas",
+    "environmental_effects": [
+      {
+        "id": "toxic_haze",
+        "preset": "atmosphere.gas",
+        "intensity": 0.4
+      }
+    ],
     "env": "mine",
     "weather": "gas",
     "title": "Toxic Pocket",
@@ -2983,6 +3047,13 @@
   },
   {
     "id": "echo_heart",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "space",
     "weather": "resonance",
     "title": "The Heart",
@@ -4254,6 +4325,14 @@
   },
   {
     "id": "spire_night_market",
+    "environmental_effects": [
+      {
+        "id": "market_rain",
+        "preset": "weather.rain",
+        "intensity": 0.5,
+        "space": "viewport"
+      }
+    ],
     "env": "neon",
     "special_exits": {
       "northeast": "Climb to Lantern Roof"
@@ -4600,6 +4679,25 @@
   },
   {
     "id": "spire_laundry_service",
+    "environmental_effects": [
+      {
+        "id": "vent_mist",
+        "preset": "machinery.vent_mist",
+        "intensity": 0.3,
+        "emitters": [
+          {
+            "x": 0.24,
+            "y": 0.53,
+            "angle_degrees": -72
+          },
+          {
+            "x": 0.4,
+            "y": 0.54,
+            "angle_degrees": -102
+          }
+        ]
+      }
+    ],
     "env": "neon",
     "weather": "steam",
     "title": "Laundry Service",
@@ -5557,6 +5655,30 @@
   },
   {
     "id": "foundry_subterranean_smelter",
+    "environmental_effects": [
+      {
+        "id": "slag_sparks",
+        "preset": "machinery.sparks",
+        "intensity": 0.3,
+        "emitters": [
+          {
+            "x": 0.15,
+            "y": 0.7,
+            "angle_degrees": -75
+          },
+          {
+            "x": 0.82,
+            "y": 0.6,
+            "angle_degrees": -110
+          }
+        ]
+      },
+      {
+        "id": "ember_drift",
+        "preset": "heat.embers",
+        "intensity": 0.18
+      }
+    ],
     "env": "foundry",
     "weather": "sparks",
     "title": "Subterranean Smelter Forge",
@@ -5597,6 +5719,25 @@
   },
   {
     "id": "foundry_cooling_springs",
+    "environmental_effects": [
+      {
+        "id": "vent_mist",
+        "preset": "machinery.vent_mist",
+        "intensity": 0.3,
+        "emitters": [
+          {
+            "x": 0.18,
+            "y": 0.68,
+            "angle_degrees": -78
+          },
+          {
+            "x": 0.78,
+            "y": 0.69,
+            "angle_degrees": -104
+          }
+        ]
+      }
+    ],
     "env": "foundry",
     "weather": "steam",
     "title": "Cooling Springs",
@@ -5688,6 +5829,25 @@
   },
   {
     "id": "foundry_lava_tube_bypass",
+    "environmental_effects": [
+      {
+        "id": "vent_mist",
+        "preset": "machinery.vent_mist",
+        "intensity": 0.3,
+        "emitters": [
+          {
+            "x": 0.61,
+            "y": 0.25,
+            "angle_degrees": -105
+          },
+          {
+            "x": 0.63,
+            "y": 0.58,
+            "angle_degrees": -95
+          }
+        ]
+      }
+    ],
     "env": "foundry",
     "weather": "steam",
     "title": "Lava Tube Bypass",
@@ -5941,6 +6101,30 @@
   },
   {
     "id": "foundry_decon_chamber",
+    "environmental_effects": [
+      {
+        "id": "vent_mist",
+        "preset": "machinery.vent_mist",
+        "intensity": 0.3,
+        "emitters": [
+          {
+            "x": 0.17,
+            "y": 0.27,
+            "angle_degrees": 65
+          },
+          {
+            "x": 0.83,
+            "y": 0.27,
+            "angle_degrees": 115
+          },
+          {
+            "x": 0.5,
+            "y": 0.18,
+            "angle_degrees": 90
+          }
+        ]
+      }
+    ],
     "env": "foundry",
     "weather": "steam",
     "title": "Decon Chamber",
@@ -7560,6 +7744,13 @@
   },
   {
     "id": "deep_anchor_chamber",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Anchor Chamber",
@@ -7623,6 +7814,13 @@
   },
   {
     "id": "deep_throne_room",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.32
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Throne Room",
@@ -7689,6 +7887,13 @@
   },
   {
     "id": "deep_tear",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.32
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "The Tear",
@@ -7742,6 +7947,13 @@
   },
   {
     "id": "source_campfire",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.18
+      }
+    ],
     "env": "source",
     "special_exits": {
       "northwest": "Enter Zeke's Infinite Cubicle",
@@ -8036,6 +8248,13 @@
   },
   {
     "id": "source_orion_nightmare",
+    "environmental_effects": [
+      {
+        "id": "shore_starfall",
+        "preset": "field.starfall",
+        "intensity": 0.25
+      }
+    ],
     "env": "source",
     "special_exits": {
       "southwest": "Return to the Campfire"
@@ -8253,6 +8472,13 @@
   },
   {
     "id": "source_memory_bridge",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Memory Bridge",
@@ -8312,6 +8538,13 @@
   },
   {
     "id": "source_memory_bridge_span",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Shared Memory Span",
@@ -8352,6 +8585,13 @@
   },
   {
     "id": "source_memory_threshold",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.32
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Singularity Threshold",
@@ -8386,6 +8626,13 @@
   },
   {
     "id": "source_memory_stair",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.12
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Memory Stair",
@@ -8447,6 +8694,13 @@
   },
   {
     "id": "source_memory_fragments",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "World-Fracture Landing",
@@ -8497,6 +8751,13 @@
   },
   {
     "id": "source_spire_thought",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.32
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Spire of Thought",
@@ -8526,6 +8787,13 @@
   },
   {
     "id": "source_spire_archive",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.32
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Impossible Archive",
@@ -8557,6 +8825,13 @@
   },
   {
     "id": "source_spire_arena",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Memory Defense Arena",
@@ -8609,6 +8884,13 @@
   },
   {
     "id": "source_center",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.12
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "The Center",
@@ -9783,6 +10065,13 @@
   },
   {
     "id": "sector9_canopy",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.18
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Resonant Canopy",
@@ -9844,6 +10133,13 @@
   },
   {
     "id": "sector9_wilds_thickets",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.18
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Spore Thickets",
@@ -9889,6 +10185,13 @@
   },
   {
     "id": "sector9_wilds_nest",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.12
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Hound Nest",
@@ -9939,6 +10242,13 @@
   },
   {
     "id": "sector9_wilds_hollow",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.18
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Poison Hollow",
@@ -9981,6 +10291,13 @@
   },
   {
     "id": "sector9_wilds_grave",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.12
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Patrol Graveyard",
@@ -10010,6 +10327,13 @@
   },
   {
     "id": "sector9_wilds_overlook",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.18
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Canopy Edge",
@@ -10042,6 +10366,13 @@
   },
   {
     "id": "sector9_wilds_canopy_walk",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.18
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Hanging Root Bridge",
@@ -10085,6 +10416,13 @@
   },
   {
     "id": "sector9_wilds_archway",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.18
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Architect Gateway",
@@ -10114,6 +10452,13 @@
   },
   {
     "id": "sector9_wilds_dense_brush",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.18
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Beast Run",
@@ -10153,6 +10498,13 @@
   },
   {
     "id": "sector9_wilds_clearance",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.18
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Burned Glade",
@@ -10195,6 +10547,13 @@
   },
   {
     "id": "sector9_wilds_lookout",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.12
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Hunter's Blind",
@@ -10238,6 +10597,13 @@
   },
   {
     "id": "sector9_ridge_climb",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.12
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Vine Climb",
@@ -10266,6 +10632,13 @@
   },
   {
     "id": "sector9_ridge_ledges",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.12
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Windy Ledges",
@@ -10305,6 +10678,13 @@
   },
   {
     "id": "sector9_ridge_overhang",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.12
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Beast Lair Approach",
@@ -10332,6 +10712,13 @@
   },
   {
     "id": "sector9_canopy_ridge",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Canopy Ridge",
@@ -10442,6 +10829,13 @@
   },
   {
     "id": "sector9_ridge_viewpoint",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.12
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Shield Viewpoint",
@@ -10469,6 +10863,13 @@
   },
   {
     "id": "sector9_ridge_sniper_perch",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.18
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Sniper Lookout",
@@ -10506,6 +10907,13 @@
   },
   {
     "id": "sector9_ridge_crevice",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.18
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "High Pass",
@@ -10538,6 +10946,13 @@
   },
   {
     "id": "sector9_ridge_plateau",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.12
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Sanctuary Outlook",
@@ -11061,6 +11476,13 @@
   },
   {
     "id": "sector9_hall_of_echoes",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Hall of Echoes",
@@ -11111,6 +11533,13 @@
   },
   {
     "id": "sector9_hall_echo_alcoves",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Echo Alcoves",
@@ -11139,6 +11568,13 @@
   },
   {
     "id": "sector9_hall_acoustics_lab",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Acoustics Lab",
@@ -11177,6 +11613,13 @@
   },
   {
     "id": "sector9_hall_reflection_pool",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Cymatic Basin",
@@ -11203,6 +11646,13 @@
   },
   {
     "id": "sector9_archive_vault",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Archive Vault",
@@ -11230,6 +11680,13 @@
   },
   {
     "id": "sector9_archive_reading_room",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.12
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Interface Console",
@@ -11259,6 +11716,13 @@
   },
   {
     "id": "sector9_archive_tuning_bay",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Tuning Matrix",
@@ -11305,6 +11769,13 @@
   },
   {
     "id": "sector9_archive_secret_stash",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Hidden Reliquary",
@@ -11860,6 +12331,13 @@
   },
   {
     "id": "sector9_source_gate",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.32
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Source Gate",
@@ -11934,6 +12412,13 @@
   },
   {
     "id": "sector9_gate_emitter_left",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Harmonic Horn",
@@ -11976,6 +12461,13 @@
   },
   {
     "id": "sector9_gate_emitter_right",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Resonance Cup",
@@ -12221,6 +12713,13 @@
   },
   {
     "id": "sector9_the_sky",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "The Sky",
@@ -12248,6 +12747,13 @@
   },
   {
     "id": "sector9_sky_mesosphere",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.32
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Mesosphere Storm",
@@ -12275,6 +12781,13 @@
   },
   {
     "id": "sector9_sky_shield_threshold",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Shield Threshold",
@@ -12304,6 +12817,13 @@
   },
   {
     "id": "sector9_sky_sensor_buoy",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Security Buoy",
@@ -12330,6 +12850,13 @@
   },
   {
     "id": "sector9_sky_barrier_core",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.32
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Barrier Controller",
@@ -12356,6 +12883,13 @@
   },
   {
     "id": "sector9_sky_hard_deck",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "swamp",
     "weather": "resonance",
     "title": "Pushback Node",
@@ -12382,6 +12916,26 @@
   },
   {
     "id": "astra_bridge",
+    "environmental_effects": [
+      {
+        "id": "console_glow",
+        "preset": "light.gentle_pulse",
+        "intensity": 0.12,
+        "region": {
+          "x": 0.24,
+          "y": 0.25,
+          "width": 0.49,
+          "height": 0.24
+        },
+        "emitters": [
+          {
+            "x": 0.48,
+            "y": 0.39,
+            "angle_degrees": -90
+          }
+        ]
+      }
+    ],
     "env": "spaceship",
     "weather": "industrial",
     "title": "Astra Bridge",
@@ -12422,6 +12976,26 @@
   },
   {
     "id": "astra_common_room",
+    "environmental_effects": [
+      {
+        "id": "projector_glow",
+        "preset": "light.gentle_pulse",
+        "intensity": 0.08,
+        "region": {
+          "x": 0.39,
+          "y": 0.26,
+          "width": 0.27,
+          "height": 0.25
+        },
+        "emitters": [
+          {
+            "x": 0.52,
+            "y": 0.4,
+            "angle_degrees": -90
+          }
+        ]
+      }
+    ],
     "env": "spaceship",
     "weather": "industrial",
     "title": "Astra Common Room",
@@ -12554,6 +13128,14 @@
   },
   {
     "id": "astra_quarters",
+    "environmental_effects": [
+      {
+        "id": "quiet_motes",
+        "preset": "legacy.industrial",
+        "intensity": 0.06,
+        "space": "scene"
+      }
+    ],
     "env": "spaceship",
     "weather": "industrial",
     "title": "Astra Living Quarters",
@@ -12600,6 +13182,14 @@
   },
   {
     "id": "astra_cargo_bay",
+    "environmental_effects": [
+      {
+        "id": "cargo_dust",
+        "preset": "legacy.industrial",
+        "intensity": 0.12,
+        "space": "scene"
+      }
+    ],
     "env": "spaceship",
     "weather": "industrial",
     "title": "Astra Cargo Bay",
@@ -12636,6 +13226,26 @@
   },
   {
     "id": "astra_simulation_deck",
+    "environmental_effects": [
+      {
+        "id": "projector_glow",
+        "preset": "light.gentle_pulse",
+        "intensity": 0.18,
+        "region": {
+          "x": 0.18,
+          "y": 0.23,
+          "width": 0.64,
+          "height": 0.44
+        },
+        "emitters": [
+          {
+            "x": 0.5,
+            "y": 0.52,
+            "angle_degrees": -90
+          }
+        ]
+      }
+    ],
     "env": "spaceship",
     "weather": "industrial",
     "title": "Astra Simulation Deck",
@@ -13266,6 +13876,25 @@
   },
   {
     "id": "spire_laundry_scale_01",
+    "environmental_effects": [
+      {
+        "id": "vent_mist",
+        "preset": "machinery.vent_mist",
+        "intensity": 0.3,
+        "emitters": [
+          {
+            "x": 0.22,
+            "y": 0.21,
+            "angle_degrees": -80
+          },
+          {
+            "x": 0.7,
+            "y": 0.38,
+            "angle_degrees": -104
+          }
+        ]
+      }
+    ],
     "env": "neon",
     "weather": "steam",
     "title": "Steam Rack",
@@ -14252,6 +14881,25 @@
   },
   {
     "id": "foundry_cooling_springs_scale_01",
+    "environmental_effects": [
+      {
+        "id": "vent_mist",
+        "preset": "machinery.vent_mist",
+        "intensity": 0.3,
+        "emitters": [
+          {
+            "x": 0.48,
+            "y": 0.58,
+            "angle_degrees": -90
+          },
+          {
+            "x": 0.28,
+            "y": 0.75,
+            "angle_degrees": -74
+          }
+        ]
+      }
+    ],
     "env": "foundry",
     "weather": "steam",
     "title": "Mist Basin",
@@ -14289,6 +14937,20 @@
   },
   {
     "id": "foundry_cooling_springs_scale_02",
+    "environmental_effects": [
+      {
+        "id": "vent_mist",
+        "preset": "machinery.vent_mist",
+        "intensity": 0.3,
+        "emitters": [
+          {
+            "x": 0.79,
+            "y": 0.58,
+            "angle_degrees": -90
+          }
+        ]
+      }
+    ],
     "env": "foundry",
     "weather": "steam",
     "title": "Worker Marker",
@@ -14323,6 +14985,25 @@
   },
   {
     "id": "foundry_cooling_springs_scale_03",
+    "environmental_effects": [
+      {
+        "id": "vent_mist",
+        "preset": "machinery.vent_mist",
+        "intensity": 0.3,
+        "emitters": [
+          {
+            "x": 0.25,
+            "y": 0.31,
+            "angle_degrees": -80
+          },
+          {
+            "x": 0.7,
+            "y": 0.34,
+            "angle_degrees": -100
+          }
+        ]
+      }
+    ],
     "env": "foundry",
     "weather": "steam",
     "title": "Spring Valve Nest",
@@ -14355,6 +15036,25 @@
   },
   {
     "id": "foundry_cooling_springs_scale_04",
+    "environmental_effects": [
+      {
+        "id": "vent_mist",
+        "preset": "machinery.vent_mist",
+        "intensity": 0.3,
+        "emitters": [
+          {
+            "x": 0.22,
+            "y": 0.64,
+            "angle_degrees": -90
+          },
+          {
+            "x": 0.71,
+            "y": 0.77,
+            "angle_degrees": -90
+          }
+        ]
+      }
+    ],
     "env": "foundry",
     "weather": "steam",
     "title": "Thermal Shelf",
@@ -16494,6 +17194,13 @@
   },
   {
     "id": "deep_anchor_chamber_scale_01",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Cable Narthex",
@@ -16526,6 +17233,13 @@
   },
   {
     "id": "deep_anchor_chamber_scale_02",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Chorus Tank",
@@ -16560,6 +17274,13 @@
   },
   {
     "id": "deep_anchor_chamber_scale_03",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Anchor Loom",
@@ -16592,6 +17313,13 @@
   },
   {
     "id": "deep_anchor_chamber_scale_04",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.12
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Thaw Gallery",
@@ -16636,6 +17364,13 @@
   },
   {
     "id": "deep_anchor_chamber_scale_05",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Living Cable Threshold",
@@ -16668,6 +17403,13 @@
   },
   {
     "id": "deep_anchor_chamber_scale_06",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Empty Cradle Afterimage",
@@ -16702,6 +17444,13 @@
   },
   {
     "id": "deep_anchor_chamber_scale_07",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.12
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Mercy Lie Wall",
@@ -16734,6 +17483,13 @@
   },
   {
     "id": "deep_anchor_chamber_scale_08",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Manual Release Plinth",
@@ -16782,6 +17538,13 @@
   },
   {
     "id": "deep_throne_room_scale_01",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Observation Apse",
@@ -16814,6 +17577,13 @@
   },
   {
     "id": "deep_throne_room_scale_02",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Thorne Cell",
@@ -16848,6 +17618,13 @@
   },
   {
     "id": "deep_throne_room_scale_03",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Soloist Dais",
@@ -16880,6 +17657,13 @@
   },
   {
     "id": "deep_throne_room_scale_04",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.12
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Boardroom Grave",
@@ -16914,6 +17698,13 @@
   },
   {
     "id": "deep_throne_room_scale_05",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Coup Balcony",
@@ -16946,6 +17737,13 @@
   },
   {
     "id": "deep_throne_room_scale_06",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Avatar Gate",
@@ -16980,6 +17778,13 @@
   },
   {
     "id": "deep_throne_room_scale_07",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Tear Runway",
@@ -17028,6 +17833,13 @@
   },
   {
     "id": "deep_tear_scale_01",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.32
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Gravity Suture",
@@ -17060,6 +17872,13 @@
   },
   {
     "id": "deep_tear_scale_02",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.32
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Choir Gap",
@@ -17094,6 +17913,13 @@
   },
   {
     "id": "deep_tear_scale_03",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.32
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Ring Shear",
@@ -17126,6 +17952,13 @@
   },
   {
     "id": "deep_tear_scale_04",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.32
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Event Lip",
@@ -17158,6 +17991,13 @@
   },
   {
     "id": "deep_tear_scale_05",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.32
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Last Bulkhead",
@@ -17192,6 +18032,13 @@
   },
   {
     "id": "deep_tear_scale_06",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.32
+      }
+    ],
     "env": "void",
     "weather": "resonance",
     "title": "Source Drop",
@@ -17240,6 +18087,13 @@
   },
   {
     "id": "source_campfire_node_scale_01",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Blue Ash Circle",
@@ -17272,6 +18126,13 @@
   },
   {
     "id": "source_campfire_node_scale_02",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Three Dark Paths",
@@ -17304,6 +18165,13 @@
   },
   {
     "id": "source_campfire_node_scale_03",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Unshared Blanket",
@@ -17336,6 +18204,13 @@
   },
   {
     "id": "source_campfire_node_scale_04",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.32
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Key Ember",
@@ -17862,6 +18737,13 @@
   },
   {
     "id": "source_memory_bridge_node_scale_01",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Tideglass Span",
@@ -17901,6 +18783,13 @@
   },
   {
     "id": "source_memory_bridge_node_scale_02",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Foundry Heat Rib",
@@ -17965,6 +18854,13 @@
   },
   {
     "id": "source_memory_bridge_node_scale_04",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Astra Engine Note",
@@ -18036,6 +18932,13 @@
   },
   {
     "id": "source_memory_stair_node_scale_02",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Canopy Root Step",
@@ -18102,6 +19005,13 @@
   },
   {
     "id": "source_memory_stair_node_scale_04",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.12
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Ring Silence Step",
@@ -18134,6 +19044,13 @@
   },
   {
     "id": "source_spire_thought_node_scale_01",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Revision Gallery",
@@ -18175,6 +19092,13 @@
   },
   {
     "id": "source_spire_thought_node_scale_02",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Choir Fracture",
@@ -18207,6 +19131,13 @@
   },
   {
     "id": "source_spire_thought_node_scale_03",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Memory Defense Line",
@@ -18241,6 +19172,13 @@
   },
   {
     "id": "source_spire_thought_node_scale_04",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "No Throne",
@@ -18291,6 +19229,13 @@
   },
   {
     "id": "source_center_node_scale_01",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.12
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "White Shore",
@@ -18330,6 +19275,13 @@
   },
   {
     "id": "source_center_node_scale_02",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Key Orbit",
@@ -18362,6 +19314,13 @@
   },
   {
     "id": "source_center_node_scale_03",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.12
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Silence Pulpit",
@@ -18606,6 +19565,25 @@
   },
   {
     "id": "foundry_cooling_springs_scale_final",
+    "environmental_effects": [
+      {
+        "id": "vent_mist",
+        "preset": "machinery.vent_mist",
+        "intensity": 0.3,
+        "emitters": [
+          {
+            "x": 0.18,
+            "y": 0.32,
+            "angle_degrees": -78
+          },
+          {
+            "x": 0.82,
+            "y": 0.39,
+            "angle_degrees": -105
+          }
+        ]
+      }
+    ],
     "env": "foundry",
     "weather": "steam",
     "title": "Foundry Blue Steam Pocket",
@@ -19237,6 +20215,13 @@
   },
   {
     "id": "source_campfire_node_scale_final",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.32
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Source Memory Shore",
@@ -19333,6 +20318,13 @@
   },
   {
     "id": "source_memory_bridge_node_scale_final",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Source Crew Span",
@@ -19381,6 +20373,13 @@
   },
   {
     "id": "source_memory_stair_node_scale_final",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.23
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Source Scar Step",
@@ -19431,6 +20430,13 @@
   },
   {
     "id": "source_center_node_scale_final",
+    "environmental_effects": [
+      {
+        "id": "resonance",
+        "preset": "field.resonance",
+        "intensity": 0.32
+      }
+    ],
     "env": "source",
     "weather": "resonance",
     "title": "Source Voice Orbit",

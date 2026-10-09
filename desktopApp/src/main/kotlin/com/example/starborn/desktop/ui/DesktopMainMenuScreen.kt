@@ -59,12 +59,15 @@ fun DesktopMainMenuScreen(
     var showSettingsDialog by remember { mutableStateOf(false) }
     var showNewGameConfirm by remember { mutableStateOf(false) }
     var latestSlot by remember { mutableStateOf<Int?>(null) }
+    var latestSlotInfo by remember { mutableStateOf<com.example.starborn.desktop.DesktopSaveSlotInfo?>(null) }
     var newGamePlusUnlocked by remember { mutableStateOf(false) }
     var loading by remember { mutableStateOf(false) }
     val saveError by services.saveManager.lastError.collectAsState()
     LaunchedEffect(services) {
         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-            latestSlot = (-1..3).mapNotNull { slot -> services.saveManager.getSlotMetadata(slot)?.let { slot to it.timestamp } }.maxByOrNull { it.second }?.first
+            val meta = (-1..3).mapNotNull { slot -> services.saveManager.getSlotMetadata(slot) }.maxByOrNull { it.timestamp }
+            latestSlotInfo = meta
+            latestSlot = meta?.slotIndex
             newGamePlusUnlocked = services.completedGameForNewGamePlus() != null
         }
     }
@@ -86,6 +89,17 @@ fun DesktopMainMenuScreen(
             .onKeyEvent { keyEvent ->
                 if (keyEvent.type == KeyEventType.KeyDown) {
                     when (keyEvent.key) {
+                        Key.C -> {
+                            latestSlot?.let { slot ->
+                                if (!loading) coroutineScope.launch {
+                                    loading = true
+                                    val loaded = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { services.loadSlot(slot) }
+                                    loading = false
+                                    if (loaded) onStartGame()
+                                }
+                            }
+                            true
+                        }
                         Key.N, Key.One -> {
                             if (services.hasExistingSave()) {
                                 showNewGameConfirm = true
@@ -100,8 +114,10 @@ fun DesktopMainMenuScreen(
                             true
                         }
                         Key.D -> {
-                            showDebugScenarios = true
-                            true
+                            if (services.isDebugEnabled) {
+                                showDebugScenarios = true
+                                true
+                            } else false
                         }
                         Key.S, Key.Three -> {
                             showSettingsDialog = true
@@ -225,21 +241,38 @@ fun DesktopMainMenuScreen(
                     modifier = Modifier.fillMaxWidth(0.95f),
                     verticalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
-                    latestSlot?.let { slot -> AuthenticTitleButton(text = if (loading) "Loading…" else "Continue", primary = true, onClick = {
-                        if (!loading) coroutineScope.launch {
-                            loading = true
-                            val loaded = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { services.loadSlot(slot) }
-                            loading = false
-                            if (loaded) onStartGame()
+                    latestSlot?.let { slot ->
+                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            AuthenticTitleButton(
+                                text = if (loading) "Loading…" else "Continue",
+                                primary = true,
+                                onClick = {
+                                    if (!loading) coroutineScope.launch {
+                                        loading = true
+                                        val loaded = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { services.loadSlot(slot) }
+                                        loading = false
+                                        if (loaded) onStartGame()
+                                    }
+                                }
+                            )
+                            latestSlotInfo?.let { info ->
+                                Text(
+                                    text = "${info.roomTitle ?: "Sector"} · Lv.${info.playerLevel} · ${info.formattedDate}",
+                                    color = TitleCyan.copy(alpha = 0.85f),
+                                    fontSize = 11.sp,
+                                    fontFamily = FontFamily.Monospace,
+                                    modifier = Modifier.padding(start = 4.dp)
+                                )
+                            }
                         }
-                    }) }
+                    }
                     if (newGamePlusUnlocked) AuthenticTitleButton(text = "New Game+ · Master Protocol", primary = false, onClick = {
                         if (services.startNewGamePlus()) onStartGame()
                     })
                     saveError?.let { Text(it, color = Color(0xFFFF8A80)) }
                     AuthenticTitleButton(
                         text = "New Game",
-                        primary = true,
+                        primary = latestSlot == null,
                         onClick = {
                             if (services.hasExistingSave()) {
                                 showNewGameConfirm = true
@@ -256,11 +289,13 @@ fun DesktopMainMenuScreen(
                         onClick = { showLoadGame = true }
                     )
 
-                    AuthenticTitleButton(
-                        text = "Debug Scenarios",
-                        primary = false,
-                        onClick = { showDebugScenarios = true }
-                    )
+                    if (services.isDebugEnabled) {
+                        AuthenticTitleButton(
+                            text = "Debug Scenarios",
+                            primary = false,
+                            onClick = { showDebugScenarios = true }
+                        )
+                    }
 
                     AuthenticTitleButton(
                         text = "Settings",
@@ -436,6 +471,7 @@ private fun AuthenticTitleButton(
 
     val buttonModifier = Modifier
         .fillMaxWidth()
+        .desktopPointerHover()
         .height(if (primary) 58.dp else 52.dp)
         .graphicsLayer {
             scaleX = buttonScale

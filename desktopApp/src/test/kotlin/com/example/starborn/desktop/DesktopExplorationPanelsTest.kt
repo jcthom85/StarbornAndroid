@@ -80,7 +80,9 @@ class DesktopExplorationPanelsTest {
             val screenshots = File("build/reports/desktop/screenshots/three-panel").apply { mkdirs() }
             listOf("16x9" to Size(1024f, 576f), "16x10" to Size(1024f, 640f), "ultrawide" to Size(1008f, 432f), "narrow" to Size(480f, 768f)).forEach { (label, size) ->
                 compose.runOnIdle { dimensions.value = size }
-                compose.waitForIdle()
+                if (label == "narrow") {
+                    compose.onNodeWithText("Room", useUnmergedTree = true).performClick()
+                }
                 compose.onNodeWithTag("exploration-narrative").assertExists()
                 compose.onNodeWithTag("travel-east").assertDoesNotExist()
                 compose.onNodeWithContentDescription("Travel north, locked").assertIsNotEnabled()

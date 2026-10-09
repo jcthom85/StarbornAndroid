@@ -33,10 +33,10 @@ internal fun DesktopInspectionPrompt(message: String, onDismiss: () -> Unit, tap
                 title?.takeIf { it.isNotBlank() }?.let { Text(it, style = MaterialTheme.typography.titleLarge, color = accent) }
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     Box(Modifier.width(4.dp).height(52.dp).background(accent, RoundedCornerShape(8.dp)))
-                    Text(message, Modifier.weight(1f).heightIn(max = 400.dp).verticalScroll(rememberScrollState()),
+                    Text(message.adaptInputVocabularyForDesktop(), Modifier.weight(1f).heightIn(max = 400.dp).verticalScroll(rememberScrollState()),
                         color = Color.White, fontSize = 18.sp, lineHeight = 28.sp)
                 }
-                TextButton(onClick = onDismiss, modifier = Modifier.align(Alignment.End)) { Text("Continue", color = accent) }
+                TextButton(onClick = onDismiss, modifier = Modifier.align(Alignment.End).desktopPointerHover()) { Text("Continue", color = accent) }
             }
         }
     }
@@ -58,8 +58,8 @@ internal fun DesktopExplorationPromptBanner(services: com.example.starborn.deskt
     val action: String
     val accent: Color
     when (prompt) {
-        is TutorialPrompt -> { title = "Tutorial"; message = prompt.entry.message; action = "Continue"; accent = Color(0xFF7BE8FF) }
-        is MilestonePrompt -> { title = null; message = prompt.event.message; action = "Dismiss"; accent = Color(0xFFFFD27F) }
+        is TutorialPrompt -> { title = "Tutorial"; message = prompt.entry.message.adaptInputVocabularyForDesktop(); action = "Continue"; accent = Color(0xFF7BE8FF) }
+        is MilestonePrompt -> { title = null; message = prompt.event.message.adaptInputVocabularyForDesktop(); action = "Dismiss"; accent = Color(0xFFFFD27F) }
         is ItemGrantedPrompt -> {
             title = prompt.itemName + if (prompt.quantity > 1) " x${prompt.quantity}" else ""
             message = prompt.description.orEmpty() + if (prompt.sequenceTotal > 1) "\n${prompt.sequenceIndex} / ${prompt.sequenceTotal}" else ""
@@ -68,13 +68,20 @@ internal fun DesktopExplorationPromptBanner(services: com.example.starborn.deskt
         is ItemBatchGrantedPrompt -> { title = null; message = "Acquired ${prompt.summary}"; action = "Dismiss"; accent = Color(0xFF7BE8FF) }
         else -> return
     }
-    Surface(modifier.widthIn(max = 620.dp).fillMaxWidth().clickable(enabled = prompt is ItemBatchGrantedPrompt, onClick = onDismiss), shape = RoundedCornerShape(14.dp), color = Color(0xFA07111A),
-        border = BorderStroke(1.dp, accent.copy(alpha = .6f)), shadowElevation = 12.dp) {
+    Surface(
+        modifier.widthIn(max = 620.dp).fillMaxWidth()
+            .desktopPointerHover(prompt is ItemBatchGrantedPrompt)
+            .clickable(enabled = prompt is ItemBatchGrantedPrompt, onClick = onDismiss),
+        shape = RoundedCornerShape(14.dp),
+        color = Color(0xFA07111A),
+        border = BorderStroke(1.dp, accent.copy(alpha = .6f)),
+        shadowElevation = 12.dp
+    ) {
         Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             title?.let { Text(it, color = accent, style = MaterialTheme.typography.titleMedium) }
             if (message.isNotBlank()) Text(message, Modifier.heightIn(max = 180.dp).verticalScroll(rememberScrollState()),
                 color = Color.White, style = MaterialTheme.typography.bodyLarge)
-            TextButton(onClick = onDismiss, Modifier.align(Alignment.End)) { Text(action, color = accent) }
+            TextButton(onClick = onDismiss, Modifier.align(Alignment.End).desktopPointerHover()) { Text(action, color = accent) }
         }
     }
 }

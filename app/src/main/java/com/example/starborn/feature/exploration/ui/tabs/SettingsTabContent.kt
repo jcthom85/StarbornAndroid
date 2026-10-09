@@ -1,5 +1,13 @@
 package com.example.starborn.feature.exploration.ui.tabs
 
+import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.starborn.data.local.UserSettingsStore
+import com.example.starborn.data.local.UserSettings
+import com.example.starborn.data.local.EnvironmentalEffectsQuality
+import kotlinx.coroutines.launch
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -47,9 +55,23 @@ fun SettingsTabContent(
     onLoadGame: () -> Unit,
     onReturnToTitle: (() -> Unit)? = null,
     onDebugTinkeringTutorial: (() -> Unit)? = null,
+    onEnvironmentalPreview: (() -> Unit)? = null,
     onToggleModernFieldMenu: ((Boolean) -> Unit)? = null
 ) {
+    val context=LocalContext.current.applicationContext
+    val effectSettingsStore=remember(context) { UserSettingsStore(context) }
+    val effectSettings by effectSettingsStore.settings.collectAsStateWithLifecycle(initialValue=UserSettings())
+    val scope=rememberCoroutineScope()
     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        onEnvironmentalPreview?.let { open -> OutlinedButton(onClick=open) { Text("Environmental preview") } }
+        MenuSectionCard(title="Environmental effects",accentColor=accentColor,borderColor=borderColor) {
+            Row(horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+                EnvironmentalEffectsQuality.entries.forEach { quality ->
+                    FilterChip(effectSettings.environmentalEffectsQuality==quality,
+                        onClick={ scope.launch { effectSettingsStore.setEnvironmentalEffectsQuality(quality) } },label={ Text(quality.label) })
+                }
+            }
+        }
         onToggleModernFieldMenu?.let { toggle ->
             MenuSectionCard(title = "Field menu layout", accentColor = accentColor, borderColor = borderColor) {
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {

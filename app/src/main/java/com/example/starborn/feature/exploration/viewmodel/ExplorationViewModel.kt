@@ -159,6 +159,8 @@ class ExplorationViewModel(
     dialogueTriggerBinder: (((String) -> Boolean)?) -> Unit = {},
     isBurgQuestSession: Boolean = false
 ) : ViewModel() {
+    val environmentalAssets = worldAssets
+    val environmentalSession = sessionStore.state
     val runtime = ExplorationController(
         worldAssets = worldAssets,
         sessionStore = sessionStore,

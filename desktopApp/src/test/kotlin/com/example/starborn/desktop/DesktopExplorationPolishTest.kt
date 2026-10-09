@@ -72,7 +72,10 @@ class DesktopExplorationPolishTest {
         val directory = Files.createTempDirectory("starborn-polish-keyboard").toFile()
         val services = DesktopAppServices(directory)
         try {
-            runBlocking { services.userSettingsStore.setTutorialsEnabled(false) }
+            runBlocking {
+                services.userSettingsStore.setTutorialsEnabled(false)
+                services.userSettingsStore.setEnvironmentalEffectsQuality(com.example.starborn.data.local.EnvironmentalEffectsQuality.OFF)
+            }
             assertTrue(services.startDebugScenario("tut_npc_dialogue"))
             compose.setContent { Box(Modifier.size(900.dp, 650.dp)) { DesktopStarbornTheme {
                 DesktopExplorationScreen(services, {}, {}, {}, {}, {}, {})

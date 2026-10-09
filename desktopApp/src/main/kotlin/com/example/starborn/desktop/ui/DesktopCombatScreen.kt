@@ -1,5 +1,7 @@
 package com.example.starborn.desktop.ui
 
+import com.example.starborn.domain.environment.EnvironmentalGeometry
+
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.foundation.Image
@@ -20,10 +22,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.*
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
+import androidx.compose.ui.input.pointer.PointerButton
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.starborn.desktop.DesktopAppServices
 import com.example.starborn.domain.combat.*
 import com.example.starborn.feature.combat.viewmodel.*
@@ -48,6 +56,7 @@ fun DesktopCombatScreen(
     }
 }
 
+@OptIn(androidx.compose.ui.ExperimentalComposeUiApi::class)
 @Composable
 private fun DesktopCombatContent(
     services: DesktopAppServices,
@@ -96,8 +105,35 @@ private fun DesktopCombatContent(
     val history = remember(runtime) { mutableStateListOf<String>() }
     fun name(id: String) = runtime.state.value?.combatants?.get(id)?.combatant?.name ?: services.contentName(id)
     fun record(message: String) { history.add(message); if (history.size > 60) history.removeAt(0) }
-    fun showCue(target: String, label: String, color: Color, style: AttackLungeStyle? = null, strong: Boolean = false, kind: DesktopCueKind = DesktopCueKind.HIT) {
-        val cue = DesktopCombatCue(++cueToken, target, label, color, style, strong, kind)
+    fun showCue(
+        target: String,
+        label: String,
+        color: Color,
+        style: AttackLungeStyle? = null,
+        strong: Boolean = false,
+        kind: DesktopCueKind = DesktopCueKind.HIT,
+        amount: Int? = null,
+        critical: Boolean = false,
+        isWeakness: Boolean = false,
+        isBrokenBonus: Boolean = false,
+        isGuardBreak: Boolean = false,
+        element: String? = null
+    ) {
+        val cue = DesktopCombatCue(
+            token = ++cueToken,
+            targetId = target,
+            label = label,
+            color = color,
+            style = style,
+            strong = strong,
+            kind = kind,
+            amount = amount,
+            critical = critical,
+            isWeakness = isWeakness,
+            isBrokenBonus = isBrokenBonus,
+            isGuardBreak = isGuardBreak,
+            element = element
+        )
         cues.add(cue)
         scope.launch { delay(1500); cues.remove(cue) }
     }
@@ -129,13 +165,33 @@ private fun DesktopCombatContent(
                         "glove", "sword" -> AttackLungeStyle.MELEE
                         else -> runtime.lungeStyle.value
                     }
-                    showCue(effect.targetId, label, combatElementColor(effect.element), style.takeIf { effect.showAttackFx }, effect.critical || effect.isGuardBreak)
+                    showCue(
+                        target = effect.targetId,
+                        label = label,
+                        color = combatElementColor(effect.element),
+                        style = style.takeIf { effect.showAttackFx },
+                        strong = effect.critical || effect.isGuardBreak,
+                        kind = DesktopCueKind.HIT,
+                        amount = effect.amount,
+                        critical = effect.critical,
+                        isWeakness = effect.isWeakness,
+                        isBrokenBonus = effect.isBrokenBonus,
+                        isGuardBreak = effect.isGuardBreak,
+                        element = effect.element
+                    )
                     intents.remove(effect.sourceId)
                     record("${name(effect.targetId)}: $label")
                     lastEffect = "${name(effect.targetId)}: $label"
                 }
                 is CombatFxEvent.Heal -> {
-                    showCue(effect.targetId, "+${effect.amount} HP", Color(0xFF80E7A0), AttackLungeStyle.BUFF, kind = DesktopCueKind.HEAL)
+                    showCue(
+                        target = effect.targetId,
+                        label = "+${effect.amount} HP",
+                        color = Color(0xFF80E7A0),
+                        style = AttackLungeStyle.BUFF,
+                        kind = DesktopCueKind.HEAL,
+                        amount = effect.amount
+                    )
                     record("${name(effect.targetId)} recovers ${effect.amount} HP")
                 }
                 is CombatFxEvent.StatusApplied -> {
@@ -196,6 +252,17 @@ private fun DesktopCombatContent(
     val party = battle.combatants.values.filter { it.combatant.side != CombatSide.ENEMY }
     val enemies = battle.combatants.values.filter { it.combatant.side == CombatSide.ENEMY }
     val actor = battle.combatants[actorId]
+
+    // PC Ergonomics: Auto-select ready player character when turn meter is full
+    LaunchedEffect(actorId, meters, timedPrompt, targetAction, menu, battle.outcome) {
+        if (actorId == null && timedPrompt == null && targetAction == null && menu == null && battle.outcome == null && tutorial?.showsModal != true) {
+            val readyMember = party.firstOrNull { (meters[it.combatant.id] ?: 0f) >= 0.999f && it.isAlive }
+            if (readyMember != null) {
+                runtime.selectReadyPlayer(readyMember.combatant.id)
+            }
+        }
+    }
+
     var victoryPayload by remember(runtime) { mutableStateOf<com.example.starborn.navigation.CombatResultPayload?>(null) }
     LaunchedEffect(runtime, battle.outcome) {
         val outcome = battle.outcome as? CombatOutcome.Victory ?: return@LaunchedEffect
@@ -218,17 +285,40 @@ private fun DesktopCombatContent(
     fun openSkills() { if (actor != null && timedPrompt == null && targetAction == null && runtime.onCombatTutorialCommand("skills")) menu = "skills" }
     fun openItems() { if (actor != null && timedPrompt == null && targetAction == null && runtime.isCombatTutorialCommandEnabled("items")) menu = "items" }
 
-    Box(Modifier.fillMaxSize().focusRequester(keyboardFocus).onPreviewKeyEvent { event ->
-        if (battle.outcome != null) false else if (event.type == KeyEventType.KeyDown && event.key == Key.Escape && menu != null) {
-            menu = null; runtime.onCombatTutorialSkillDialogDismissed(); true
+    fun cancelActiveSelectionOrMenu(): Boolean {
+        if (menu != null || targetAction != null) {
+            if (menu != null) runtime.onCombatTutorialSkillDialogDismissed()
+            if (targetAction != null) runtime.onCombatTutorialTargetCancelled()
+            menu = null
+            targetAction = null
+            instruction = null
+            return true
+        }
+        return false
+    }
+
+    Box(Modifier.fillMaxSize().focusRequester(keyboardFocus).pointerInput(menu, targetAction) {
+        awaitPointerEventScope {
+            while (true) {
+                val event = awaitPointerEvent()
+                if (event.type == PointerEventType.Press && event.button == PointerButton.Secondary) {
+                    if (cancelActiveSelectionOrMenu()) {
+                        event.changes.forEach { it.consume() }
+                    }
+                }
+            }
+        }
+    }.onPreviewKeyEvent { event ->
+        if (battle.outcome != null) false else if (event.type == KeyEventType.KeyDown && (event.key == Key.Escape || (showLog && event.key == Key.L))) {
+            if (showLog) {
+                showLog = false
+                true
+            } else {
+                cancelActiveSelectionOrMenu()
+            }
         } else if (event.type != KeyEventType.KeyDown || !foreground || menu != null || showLog || battle.outcome != null) false else when (event.key) {
             Key.Spacebar -> if (timedPrompt != null) { runtime.registerTimedPromptTap(); true } else false
-            Key.Escape -> {
-                if (menu != null || targetAction != null) {
-                    menu = null; targetAction = null; instruction = null
-                    runtime.onCombatTutorialTargetCancelled(); true
-                } else false
-            }
+            Key.Escape -> cancelActiveSelectionOrMenu()
             Key.Four -> {
                 if (actorId != null && timedPrompt == null && targetAction == null && runtime.canUseSnack(requireNotNull(actorId)) && runtime.isCombatTutorialCommandEnabled("snack")) {
                     chooseTarget(runtime.snackTargetRequirement(requireNotNull(actorId)), "Choose a snack target") { runtime.useSnack(it) }
@@ -276,15 +366,22 @@ private fun DesktopCombatContent(
                 }
                 val focused = enemies.firstOrNull { it.combatant.id == (selectedTarget ?: focusedEnemies.firstOrNull()) }
                 focused?.let { target -> DesktopMenuCard(Modifier.fillMaxWidth()) {
-                    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(target.combatant.name, style = MaterialTheme.typography.titleMedium)
-                        Text("HP ${target.hp}/${target.combatant.stats.maxHp}")
-                        Text("Stability ${target.stability}/${target.combatant.stats.stability}")
-                        intents[target.combatant.id]?.let { Text(it, color = Color(0xFFFFBB55)) }
-                        target.statusEffects.forEach { Text("${services.contentName(it.id)} (${it.remainingTurns} turns)", style = MaterialTheme.typography.bodySmall) }
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                            Text("HP ${target.hp}/${target.combatant.stats.maxHp}", color = Color.White.copy(alpha = 0.85f), fontSize = 12.sp)
+                            Text("Stability ${target.stability}/${target.combatant.stats.stability}", color = Color(0xFF9F79D2), fontSize = 12.sp)
+                        }
+                        intents[target.combatant.id]?.let { Text(it, color = Color(0xFFFFBB55), fontSize = 12.sp) }
+                        if (target.statusEffects.isNotEmpty() || target.buffs.isNotEmpty()) {
+                            FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                target.statusEffects.forEach { DesktopCombatStatusChip(it, services) }
+                                target.buffs.forEach { DesktopCombatBuffChip(it, services) }
+                            }
+                        }
                     }
                 } }
-                TextButton(onClick = { showLog = true }, enabled = timedPrompt == null) { Text("Battle log") }
+                DesktopCombatLiveFeed(history = history, onExpandLog = { showLog = true })
             }
         }
         val accentValues = runtime.theme?.accent
@@ -309,7 +406,8 @@ private fun DesktopCombatContent(
                     }
                     if (targetAction != null) {
                         Text(instruction ?: "Choose a target", color = Color(0xFF63E6FF))
-                        TextButton(onClick = { targetAction = null; instruction = null; runtime.onCombatTutorialTargetCancelled() }) { Text("Cancel target") }
+                        Text("Arrows select · Enter confirms · Esc cancels", style = MaterialTheme.typography.bodySmall, color = Color(0xFF91A8B3))
+                        TextButton(onClick = { cancelActiveSelectionOrMenu() }, modifier = Modifier.desktopPointerHover()) { Text("Cancel target [Esc / Right Click]") }
                     } else if (menu != null && actorId != null) {
                         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                             Text(if (menu == "skills") "Abilities" else "Items", Modifier.weight(1f), style = MaterialTheme.typography.titleMedium)
@@ -353,19 +451,73 @@ private fun DesktopCombatContent(
                     }
                     } else if (actor != null) {
                         Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::attack, icon = Icons.Rounded.FlashOn, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("attack")) { Text("Attack") }
-                DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::openSkills, icon = Icons.Rounded.AutoAwesome,
-                    enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("skills")) { Text("Abilities") }
-                DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::openItems, icon = Icons.Rounded.Inventory2, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("items")) { Text("Items") }
-                DesktopCombatActionButton(modifier = Modifier.fillMaxWidth(), onClick = {
-                    actorId?.let { id -> chooseTarget(runtime.snackTargetRequirement(id), "Choose a snack target") { runtime.useSnack(it) } }
-                }, enabled = targetAction == null && timedPrompt == null && actorId?.let(runtime::canUseSnack) == true && runtime.isCombatTutorialCommandEnabled("snack")) {
-                    Text((actorId?.let(runtime::snackLabel) ?: "Snack") + "" + actorId?.let { id -> runtime.snackCooldownRemaining(id).takeIf { it > 0 }?.let { " ($it turns)" } }.orEmpty())
-                }
-                DesktopCombatActionButton(modifier = Modifier.fillMaxWidth(), onClick = { runtime.attemptRetreat() }, icon = Icons.Rounded.ExitToApp, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("retreat")) { Text("Retreat") }
-                if (targetAction != null) TextButton(modifier = Modifier.fillMaxWidth(), onClick = {
-                    targetAction = null; instruction = null; runtime.onCombatTutorialTargetCancelled()
-                }) { Text("Cancel target") }
+                    DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::attack, icon = Icons.Rounded.FlashOn, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("attack")) {
+                        Row(
+                            Modifier.fillMaxWidth().clearAndSetSemantics {
+                                set(SemanticsProperties.Text, listOf(AnnotatedString("Attack"), AnnotatedString("Attack [1]")))
+                            },
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("Attack")
+                            Text("[1]", color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f), style = MaterialTheme.typography.labelSmall)
+                        }
+                    }
+                    DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::openSkills, icon = Icons.Rounded.AutoAwesome,
+                        enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("skills")) {
+                        Row(
+                            Modifier.fillMaxWidth().clearAndSetSemantics {
+                                set(SemanticsProperties.Text, listOf(AnnotatedString("Abilities"), AnnotatedString("Abilities [2]")))
+                            },
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("Abilities")
+                            Text("[2]", color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f), style = MaterialTheme.typography.labelSmall)
+                        }
+                    }
+                    DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::openItems, icon = Icons.Rounded.Inventory2, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("items")) {
+                        Row(
+                            Modifier.fillMaxWidth().clearAndSetSemantics {
+                                set(SemanticsProperties.Text, listOf(AnnotatedString("Items"), AnnotatedString("Items [3]")))
+                            },
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("Items")
+                            Text("[3]", color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f), style = MaterialTheme.typography.labelSmall)
+                        }
+                    }
+                    DesktopCombatActionButton(modifier = Modifier.fillMaxWidth(), onClick = {
+                        actorId?.let { id -> chooseTarget(runtime.snackTargetRequirement(id), "Choose a snack target") { runtime.useSnack(it) } }
+                    }, enabled = targetAction == null && timedPrompt == null && actorId?.let(runtime::canUseSnack) == true && runtime.isCombatTutorialCommandEnabled("snack")) {
+                        val label = (actorId?.let(runtime::snackLabel) ?: "Snack") + "" + actorId?.let { id -> runtime.snackCooldownRemaining(id).takeIf { it > 0 }?.let { " ($it turns)" } }.orEmpty()
+                        Row(
+                            Modifier.fillMaxWidth().clearAndSetSemantics {
+                                set(SemanticsProperties.Text, listOf(AnnotatedString(label), AnnotatedString("$label [4]")))
+                            },
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(label)
+                            Text("[4]", color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f), style = MaterialTheme.typography.labelSmall)
+                        }
+                    }
+                    DesktopCombatActionButton(modifier = Modifier.fillMaxWidth(), onClick = { runtime.attemptRetreat() }, icon = Icons.Rounded.ExitToApp, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("retreat")) {
+                        Row(
+                            Modifier.fillMaxWidth().clearAndSetSemantics {
+                                set(SemanticsProperties.Text, listOf(AnnotatedString("Retreat"), AnnotatedString("Retreat [R]")))
+                            },
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("Retreat")
+                            Text("[R]", color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f), style = MaterialTheme.typography.labelSmall)
+                        }
+                    }
+                if (targetAction != null) TextButton(modifier = Modifier.fillMaxWidth().desktopPointerHover(), onClick = {
+                    cancelActiveSelectionOrMenu()
+                }) { Text("Cancel target [Esc / Right Click]") }
                         }
                     } else {
                         DesktopCombatReadyPrompt(commandAccent, false, settings)
@@ -377,9 +529,17 @@ private fun DesktopCombatContent(
         DesktopPortraitBackdrop(rememberDesktopAssetPainter(runtime.roomBackground, services.assetProvider), null, Modifier.fillMaxSize()) { layout ->
             val density = androidx.compose.ui.platform.LocalDensity.current
             Box(Modifier.offset(x = with(density) { layout.center.left.toDp() }).width(with(density) { layout.center.width.toDp() }).fillMaxHeight()) {
-                DesktopWeatherOverlay(runtime.weatherId, Modifier.fillMaxSize(), suppressFlashes = settings.disableFlashes)
+
                 DesktopVignetteOverlay(.38f, Modifier.fillMaxSize(), Color(0xFF030508))
             }
+            val environmentSession by services.sessionStore.state.collectAsState()
+            val environmentRoom=services.roomDefinitions[runtime.encounterRoomId]
+            val environmentState=environmentRoom?.state.orEmpty().mapNotNull { (key,value) -> (value as? Boolean)?.let { key to it } }.toMap() + environmentSession.roomStates[runtime.encounterRoomId].orEmpty()
+            DesktopEnvironmentalEffects(services,environmentRoom,
+                EnvironmentalGeometry(with(density) { maxWidth.toPx() },with(density) { maxHeight.toPx() },
+                    layout.center.left,layout.center.top,layout.center.width,layout.center.height),
+                environmentState,environmentSession.completedMilestones,settings,combat=true,
+                paused=!foreground || showLog || battle.outcome!=null,suppressAccents=timedPrompt!=null || tutorial?.showsModal==true)
             val battlefieldHeight = maxHeight
             val wide = hasThreePanelSpace(layout, density.density)
             val centerX = with(density) { layout.center.left.toDp() }
@@ -445,11 +605,11 @@ DesktopBattleFormation(party, services, Modifier.fillMaxWidth().weight(.46f), fa
                 Box(Modifier.offset(x = centerX).width(centerWidth).fillMaxHeight()) { DesktopTimedCombatPrompt(prompt, runtime::registerTimedPromptTap) }
             }
         }
-        if (showLog) AlertDialog(onDismissRequest = { showLog = false }, title = { Text("Battle log - paused") },
-            text = { LazyColumn(Modifier.heightIn(max = 480.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                if (history.isEmpty()) item { Text("No combat events yet.") }
-                items(history.asReversed().toList()) { Text(it, style = MaterialTheme.typography.bodyMedium) }
-            } }, confirmButton = { TextButton(onClick = { showLog = false }) { Text("Resume") } })
+        if (showLog) DesktopCombatLogDialog(
+            history = history,
+            onDismiss = { showLog = false },
+            accentColor = commandAccent
+        )
         tutorial?.let { training ->
             DesktopCombatTutorialOverlay(training, commandAccent, settings.highContrastMode,
                 runtime::onCombatTutorialContinue, runtime::skipCombatTutorial)
@@ -459,12 +619,15 @@ DesktopBattleFormation(party, services, Modifier.fillMaxWidth().weight(.46f), fa
                 itemNameResolver = { services.itemRepository.findItem(it)?.name ?: services.contentName(it) },
                 portraitById = runtime.playerParty.associate { it.id to "images/characters/emotes/${it.id}_cool.png" },
                 highContrastMode = settings.highContrastMode, onContinue = onVictory, largeTouchTargets = settings.largeTouchTargets)
+        } ?: run {
+            (battle.outcome as? CombatOutcome.Victory)?.let { victory ->
+                DesktopCombatOutcomeOverlay(victory, party, services)
+            }
         }
         battle.outcome?.takeUnless { it is CombatOutcome.Victory }?.let { outcome ->
-            AlertDialog(onDismissRequest = {}, title = { Text(if (outcome is CombatOutcome.Defeat) "Party defeated" else "Retreated") },
-                text = { Text("Continue to leave combat.") }, confirmButton = {
-                    Button(onClick = { if (outcome is CombatOutcome.Defeat) onDefeat() else onFlee() }) { Text("Continue") }
-                })
+            DesktopCombatOutcomeOverlay(outcome, party, services, onContinue = {
+                if (outcome is CombatOutcome.Defeat) onDefeat() else onFlee()
+            })
         }
     }
 }

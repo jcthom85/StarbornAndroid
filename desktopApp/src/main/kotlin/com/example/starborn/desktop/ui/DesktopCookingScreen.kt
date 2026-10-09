@@ -84,7 +84,7 @@ fun DesktopCookingScreen(
             item {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     listOf("meal" to "Meals", "snack" to "Snacks").forEach { (id, label) ->
-                        OutlinedButton(onClick = { category = id }, modifier = Modifier.weight(1f).heightIn(min = actionHeight),
+                        OutlinedButton(onClick = { category = id }, modifier = Modifier.weight(1f).desktopPointerHover().heightIn(min = actionHeight),
                             colors = ButtonDefaults.outlinedButtonColors(contentColor = if (category == id) orange else muted),
                             border = BorderStroke(1.dp, if (category == id) orange else muted)) { Text(label) }
                     }
@@ -99,7 +99,7 @@ fun DesktopCookingScreen(
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             row.forEach { id ->
                                 OutlinedButton(onClick = { craftingService.selectChef(id) },
-                                    modifier = Modifier.weight(1f).heightIn(min = actionHeight),
+                                    modifier = Modifier.weight(1f).desktopPointerHover().heightIn(min = actionHeight),
                                     border = BorderStroke(1.dp, if (selectedChef == id) orange else muted)) {
                                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                         Text(characterName(id), color = text,
@@ -151,7 +151,7 @@ fun DesktopCookingScreen(
                             color = muted, style = MaterialTheme.typography.labelMedium)
                         if (!snack) FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                             listOf(1, 2, 3, 5).forEach { amount ->
-                                OutlinedButton(onClick = { batch = amount }, modifier = Modifier.heightIn(min = actionHeight),
+                                OutlinedButton(onClick = { batch = amount }, modifier = Modifier.desktopPointerHover().heightIn(min = actionHeight),
                                     border = BorderStroke(1.dp, if (batch == amount) orange else muted)) { Text("×$amount", color = text) }
                             }
                         }
@@ -165,13 +165,14 @@ fun DesktopCookingScreen(
                         craftingService.sharedIngredientNotes(recipe).forEach { note ->
                             Text(note, color = muted, style = MaterialTheme.typography.labelMedium)
                         }
+                        val canCook = craftingService.canCook(recipe, if (snack) 1 else batch)
                         Button(onClick = {
                             val outcome = craftingService.cookMeal(recipe.id, selectedChef, if (snack) 1 else batch)
                             feedback = outcome.message
                             if (outcome is CraftingOutcome.Success) onPlayAudio("sfx_cooking_sizzle")
                             scope.launch { snackbar.showSnackbar(outcome.message ?: "Cooking complete.") }
-                        }, enabled = craftingService.canCook(recipe, if (snack) 1 else batch),
-                            modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight),
+                        }, enabled = canCook,
+                            modifier = Modifier.fillMaxWidth().desktopPointerHover(canCook).heightIn(min = actionHeight),
                             colors = ButtonDefaults.buttonColors(containerColor = orange, contentColor = FieldMenuDesign.shell)) {
                             Text(if (owned) "Already owned · equip from Items" else if (snack) "Craft snack" else "Cook ${recipe.resultQuantity * batch} portions")
                         }

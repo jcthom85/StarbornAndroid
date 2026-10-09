@@ -1,0 +1,979 @@
+{
+  "schema_version": 1,
+  "presets": {
+    "legacy.dust": {
+      "primitive": "motes",
+      "style": "dust",
+      "category": "atmosphere",
+      "intensity": 0.25,
+      "space": "viewport",
+      "color": [
+        1,
+        0.93,
+        0.75,
+        0.45
+      ],
+      "size": [
+        0.0007,
+        0.0018
+      ],
+      "speed": [
+        0.003,
+        0.01
+      ],
+      "rate": 8,
+      "lifetime": [
+        8,
+        14
+      ],
+      "angle": -70
+    },
+    "legacy.rain": {
+      "primitive": "precipitation",
+      "style": "rain",
+      "category": "weather",
+      "intensity": 0.5,
+      "space": "viewport",
+      "color": [
+        0.8,
+        0.9,
+        1,
+        0.32
+      ],
+      "size": [
+        0.008,
+        0.017
+      ],
+      "speed": [
+        0.7,
+        1.05
+      ],
+      "rate": 90,
+      "lifetime": [
+        1.2,
+        1.8
+      ],
+      "angle": 100
+    },
+    "legacy.storm": {
+      "primitive": "precipitation",
+      "style": "storm",
+      "category": "weather",
+      "intensity": 0.5,
+      "space": "viewport",
+      "color": [
+        0.8,
+        0.9,
+        1,
+        0.32
+      ],
+      "size": [
+        0.008,
+        0.017
+      ],
+      "speed": [
+        0.7,
+        1.05
+      ],
+      "rate": 90,
+      "lifetime": [
+        1.2,
+        1.8
+      ],
+      "angle": 100,
+      "burst_interval_seconds": [
+        9,
+        20
+      ],
+      "burst_duration_seconds": 0.55
+    },
+    "legacy.snow": {
+      "primitive": "precipitation",
+      "style": "snow",
+      "category": "weather",
+      "intensity": 0.5,
+      "space": "viewport",
+      "color": [
+        1,
+        1,
+        1,
+        0.65
+      ],
+      "size": [
+        0.0012,
+        0.0035
+      ],
+      "speed": [
+        0.025,
+        0.065
+      ],
+      "rate": 12,
+      "lifetime": [
+        9,
+        16
+      ],
+      "angle": 100
+    },
+    "legacy.cave_drip": {
+      "primitive": "precipitation",
+      "style": "drip",
+      "category": "atmosphere",
+      "intensity": 0.35,
+      "space": "viewport",
+      "color": [
+        0.6,
+        0.8,
+        1,
+        0.5
+      ],
+      "size": [
+        0.004,
+        0.007
+      ],
+      "speed": [
+        0.35,
+        0.6
+      ],
+      "rate": 6,
+      "lifetime": [
+        1,
+        2
+      ],
+      "angle": 90
+    },
+    "legacy.starfall": {
+      "primitive": "motes",
+      "style": "starfall",
+      "category": "field",
+      "intensity": 0.35,
+      "space": "viewport",
+      "color": [
+        0.9,
+        0.95,
+        1,
+        0.6
+      ],
+      "size": [
+        0.001,
+        0.0022
+      ],
+      "speed": [
+        0.015,
+        0.04
+      ],
+      "rate": 4,
+      "lifetime": [
+        8,
+        14
+      ],
+      "angle": -60
+    },
+    "legacy.steam": {
+      "primitive": "jet",
+      "style": "steam",
+      "category": "atmosphere",
+      "intensity": 0.5,
+      "space": "scene",
+      "color": [
+        0.92,
+        0.92,
+        0.95,
+        0.5
+      ],
+      "size": [
+        0.115,
+        0.155
+      ],
+      "speed": [
+        0.025,
+        0.04
+      ],
+      "rate": 0,
+      "lifetime": [
+        2,
+        4
+      ],
+      "angle": -70,
+      "emitters": [
+        {
+          "x": 0.385,
+          "y": 0.69,
+          "angle_degrees": -76
+        },
+        {
+          "x": 0.615,
+          "y": 0.69,
+          "angle_degrees": -104
+        },
+        {
+          "x": 0.36,
+          "y": 0.49,
+          "angle_degrees": -78
+        },
+        {
+          "x": 0.64,
+          "y": 0.49,
+          "angle_degrees": -102
+        },
+        {
+          "x": 0.5,
+          "y": 0.73,
+          "angle_degrees": -90
+        }
+      ],
+      "frame_asset_prefix": "images/vfx/steam_jet/steam_frame_",
+      "frame_count": 48
+    },
+    "legacy.fog": {
+      "primitive": "haze",
+      "style": "fog",
+      "category": "atmosphere",
+      "intensity": 0.5,
+      "space": "viewport",
+      "color": [
+        0.85,
+        0.88,
+        0.92,
+        0.3
+      ],
+      "size": [
+        0.1,
+        0.22
+      ],
+      "speed": [
+        0.003,
+        0.01
+      ],
+      "rate": 1,
+      "lifetime": [
+        14,
+        22
+      ],
+      "angle": 0
+    },
+    "legacy.gas": {
+      "primitive": "haze",
+      "style": "gas",
+      "category": "atmosphere",
+      "intensity": 0.5,
+      "space": "viewport",
+      "color": [
+        0.42,
+        0.72,
+        0.28,
+        0.25
+      ],
+      "size": [
+        0.08,
+        0.18
+      ],
+      "speed": [
+        0.006,
+        0.018
+      ],
+      "rate": 1,
+      "lifetime": [
+        8,
+        15
+      ],
+      "angle": -60
+    },
+    "legacy.resonance": {
+      "primitive": "field",
+      "style": "resonance",
+      "category": "field",
+      "intensity": 0.25,
+      "space": "viewport",
+      "color": [
+        0.48,
+        0.7,
+        1,
+        0.6
+      ],
+      "size": [
+        0.001,
+        0.0023
+      ],
+      "speed": [
+        0.002,
+        0.007
+      ],
+      "rate": 6,
+      "lifetime": [
+        12,
+        20
+      ],
+      "angle": -85
+    },
+    "legacy.sparks": {
+      "primitive": "sparks",
+      "style": "sparks",
+      "category": "machinery",
+      "intensity": 0.5,
+      "space": "viewport",
+      "color": [
+        1,
+        0.65,
+        0.15,
+        0.8
+      ],
+      "size": [
+        0.0009,
+        0.0018
+      ],
+      "speed": [
+        0.035,
+        0.13
+      ],
+      "rate": 35,
+      "lifetime": [
+        0.35,
+        0.9
+      ],
+      "angle": 80,
+      "emitters": [
+        {
+          "x": 0.4,
+          "y": 0.5,
+          "angle_degrees": 55
+        },
+        {
+          "x": 0.6,
+          "y": 0.65,
+          "angle_degrees": 125
+        }
+      ],
+      "burst_interval_seconds": [
+        3,
+        8
+      ],
+      "burst_duration_seconds": 0.8
+    },
+    "legacy.industrial": {
+      "primitive": "motes",
+      "style": "dust",
+      "category": "atmosphere",
+      "intensity": 0.1,
+      "space": "scene",
+      "color": [
+        0.88,
+        0.82,
+        0.65,
+        0.3
+      ],
+      "size": [
+        0.0007,
+        0.0018
+      ],
+      "speed": [
+        0.003,
+        0.01
+      ],
+      "rate": 4,
+      "lifetime": [
+        8,
+        14
+      ],
+      "angle": -70
+    },
+    "interior.dust_motes": {
+      "primitive": "motes",
+      "style": "dust",
+      "category": "atmosphere",
+      "intensity": 0.25,
+      "space": "viewport",
+      "color": [
+        1,
+        0.93,
+        0.75,
+        0.45
+      ],
+      "size": [
+        0.0007,
+        0.0018
+      ],
+      "speed": [
+        0.003,
+        0.01
+      ],
+      "rate": 8,
+      "lifetime": [
+        8,
+        14
+      ],
+      "angle": -70
+    },
+    "weather.rain": {
+      "primitive": "precipitation",
+      "style": "rain",
+      "category": "weather",
+      "intensity": 0.5,
+      "space": "viewport",
+      "color": [
+        0.8,
+        0.9,
+        1,
+        0.32
+      ],
+      "size": [
+        0.008,
+        0.017
+      ],
+      "speed": [
+        0.7,
+        1.05
+      ],
+      "rate": 90,
+      "lifetime": [
+        1.2,
+        1.8
+      ],
+      "angle": 100
+    },
+    "weather.storm": {
+      "primitive": "precipitation",
+      "style": "storm",
+      "category": "weather",
+      "intensity": 0.5,
+      "space": "viewport",
+      "color": [
+        0.8,
+        0.9,
+        1,
+        0.32
+      ],
+      "size": [
+        0.008,
+        0.017
+      ],
+      "speed": [
+        0.7,
+        1.05
+      ],
+      "rate": 90,
+      "lifetime": [
+        1.2,
+        1.8
+      ],
+      "angle": 100,
+      "burst_interval_seconds": [
+        9,
+        20
+      ],
+      "burst_duration_seconds": 0.55
+    },
+    "weather.snow": {
+      "primitive": "precipitation",
+      "style": "snow",
+      "category": "weather",
+      "intensity": 0.5,
+      "space": "viewport",
+      "color": [
+        1,
+        1,
+        1,
+        0.65
+      ],
+      "size": [
+        0.0012,
+        0.0035
+      ],
+      "speed": [
+        0.025,
+        0.065
+      ],
+      "rate": 12,
+      "lifetime": [
+        9,
+        16
+      ],
+      "angle": 100
+    },
+    "atmosphere.fog": {
+      "primitive": "haze",
+      "style": "fog",
+      "category": "atmosphere",
+      "intensity": 0.5,
+      "space": "viewport",
+      "color": [
+        0.85,
+        0.88,
+        0.92,
+        0.3
+      ],
+      "size": [
+        0.1,
+        0.22
+      ],
+      "speed": [
+        0.003,
+        0.01
+      ],
+      "rate": 1,
+      "lifetime": [
+        14,
+        22
+      ],
+      "angle": 0
+    },
+    "atmosphere.gas": {
+      "primitive": "haze",
+      "style": "gas",
+      "category": "atmosphere",
+      "intensity": 0.5,
+      "space": "viewport",
+      "color": [
+        0.42,
+        0.72,
+        0.28,
+        0.25
+      ],
+      "size": [
+        0.08,
+        0.18
+      ],
+      "speed": [
+        0.006,
+        0.018
+      ],
+      "rate": 1,
+      "lifetime": [
+        8,
+        15
+      ],
+      "angle": -60
+    },
+    "machinery.vent_mist": {
+      "primitive": "jet",
+      "style": "steam",
+      "category": "atmosphere",
+      "intensity": 0.5,
+      "space": "scene",
+      "color": [
+        0.92,
+        0.92,
+        0.95,
+        0.5
+      ],
+      "size": [
+        0.115,
+        0.155
+      ],
+      "speed": [
+        0.025,
+        0.04
+      ],
+      "rate": 0,
+      "lifetime": [
+        2,
+        4
+      ],
+      "angle": -70,
+      "emitters": [],
+      "frame_asset_prefix": "images/vfx/steam_jet/steam_frame_",
+      "frame_count": 48
+    },
+    "machinery.sparks": {
+      "primitive": "sparks",
+      "style": "sparks",
+      "category": "machinery",
+      "intensity": 0.5,
+      "space": "viewport",
+      "color": [
+        1,
+        0.65,
+        0.15,
+        0.8
+      ],
+      "size": [
+        0.0009,
+        0.0018
+      ],
+      "speed": [
+        0.035,
+        0.13
+      ],
+      "rate": 35,
+      "lifetime": [
+        0.35,
+        0.9
+      ],
+      "angle": 80,
+      "emitters": [],
+      "burst_interval_seconds": [
+        3,
+        8
+      ],
+      "burst_duration_seconds": 0.8
+    },
+    "field.resonance": {
+      "primitive": "field",
+      "style": "resonance",
+      "category": "field",
+      "intensity": 0.25,
+      "space": "viewport",
+      "color": [
+        0.48,
+        0.7,
+        1,
+        0.6
+      ],
+      "size": [
+        0.001,
+        0.0023
+      ],
+      "speed": [
+        0.002,
+        0.007
+      ],
+      "rate": 6,
+      "lifetime": [
+        12,
+        20
+      ],
+      "angle": -85
+    },
+    "field.starfall": {
+      "primitive": "motes",
+      "style": "starfall",
+      "category": "field",
+      "intensity": 0.35,
+      "space": "viewport",
+      "color": [
+        0.9,
+        0.95,
+        1,
+        0.6
+      ],
+      "size": [
+        0.001,
+        0.0022
+      ],
+      "speed": [
+        0.015,
+        0.04
+      ],
+      "rate": 4,
+      "lifetime": [
+        8,
+        14
+      ],
+      "angle": -60
+    },
+    "machinery.pressure_release": {
+      "primitive": "jet",
+      "style": "steam",
+      "category": "atmosphere",
+      "intensity": 0.5,
+      "space": "scene",
+      "color": [
+        0.92,
+        0.92,
+        0.95,
+        0.5
+      ],
+      "size": [
+        0.115,
+        0.155
+      ],
+      "speed": [
+        0.025,
+        0.04
+      ],
+      "rate": 0,
+      "lifetime": [
+        2,
+        4
+      ],
+      "angle": -70,
+      "emitters": [],
+      "frame_asset_prefix": "images/vfx/steam_jet/steam_frame_",
+      "frame_count": 48,
+      "burst_interval_seconds": [
+        5,
+        12
+      ],
+      "burst_duration_seconds": 2
+    },
+    "machinery.electrical_arc": {
+      "primitive": "sparks",
+      "style": "arc",
+      "category": "machinery",
+      "intensity": 0.4,
+      "space": "scene",
+      "color": [
+        0.45,
+        0.82,
+        1,
+        0.7
+      ],
+      "size": [
+        0.0007,
+        0.0018
+      ],
+      "speed": [
+        0.003,
+        0.01
+      ],
+      "rate": 0,
+      "lifetime": [
+        8,
+        14
+      ],
+      "angle": -70,
+      "priority": "accent",
+      "burst_interval_seconds": [
+        5,
+        12
+      ],
+      "burst_duration_seconds": 0.65
+    },
+    "heat.embers": {
+      "primitive": "motes",
+      "style": "embers",
+      "category": "atmosphere",
+      "intensity": 0.25,
+      "space": "scene",
+      "color": [
+        1,
+        0.55,
+        0.18,
+        0.75
+      ],
+      "size": [
+        0.0008,
+        0.0021
+      ],
+      "speed": [
+        0.015,
+        0.06
+      ],
+      "rate": 6,
+      "lifetime": [
+        4,
+        9
+      ],
+      "angle": -90
+    },
+    "heat.ash": {
+      "primitive": "motes",
+      "style": "ash",
+      "category": "atmosphere",
+      "intensity": 0.25,
+      "space": "viewport",
+      "color": [
+        0.65,
+        0.65,
+        0.67,
+        0.4
+      ],
+      "size": [
+        0.001,
+        0.002
+      ],
+      "speed": [
+        0.012,
+        0.035
+      ],
+      "rate": 8,
+      "lifetime": [
+        8,
+        14
+      ],
+      "angle": 100
+    },
+    "organic.spores": {
+      "primitive": "motes",
+      "style": "spores",
+      "category": "atmosphere",
+      "intensity": 0.2,
+      "space": "viewport",
+      "color": [
+        0.55,
+        0.9,
+        0.7,
+        0.55
+      ],
+      "size": [
+        0.001,
+        0.0024
+      ],
+      "speed": [
+        0.002,
+        0.01
+      ],
+      "rate": 6,
+      "lifetime": [
+        10,
+        18
+      ],
+      "angle": -75
+    },
+    "field.gravity_drift": {
+      "primitive": "motes",
+      "style": "gravity",
+      "category": "field",
+      "intensity": 0.2,
+      "space": "viewport",
+      "color": [
+        0.66,
+        0.62,
+        0.95,
+        0.4
+      ],
+      "size": [
+        0.0008,
+        0.0018
+      ],
+      "speed": [
+        0.002,
+        0.008
+      ],
+      "rate": 5,
+      "lifetime": [
+        12,
+        20
+      ],
+      "angle": -90
+    },
+    "atmosphere.smoke": {
+      "primitive": "haze",
+      "style": "smoke",
+      "category": "atmosphere",
+      "intensity": 0.5,
+      "space": "viewport",
+      "color": [
+        0.32,
+        0.36,
+        0.4,
+        0.35
+      ],
+      "size": [
+        0.1,
+        0.22
+      ],
+      "speed": [
+        0.003,
+        0.01
+      ],
+      "rate": 1,
+      "lifetime": [
+        14,
+        22
+      ],
+      "angle": 0
+    },
+    "light.gentle_pulse": {
+      "primitive": "light",
+      "style": "pulse",
+      "category": "light",
+      "intensity": 0.15,
+      "space": "scene",
+      "color": [
+        0.85,
+        0.73,
+        0.42,
+        0.4
+      ],
+      "size": [
+        0.0007,
+        0.0018
+      ],
+      "speed": [
+        0.003,
+        0.01
+      ],
+      "rate": 0,
+      "lifetime": [
+        8,
+        14
+      ],
+      "angle": -70,
+      "priority": "accent"
+    },
+    "light.power_flicker": {
+      "primitive": "light",
+      "style": "flicker",
+      "category": "light",
+      "intensity": 0.15,
+      "space": "scene",
+      "color": [
+        0.85,
+        0.73,
+        0.42,
+        0.4
+      ],
+      "size": [
+        0.0007,
+        0.0018
+      ],
+      "speed": [
+        0.003,
+        0.01
+      ],
+      "rate": 0,
+      "lifetime": [
+        8,
+        14
+      ],
+      "angle": -70,
+      "priority": "accent"
+    },
+    "light.scanner": {
+      "primitive": "light",
+      "style": "scanner",
+      "category": "light",
+      "intensity": 0.15,
+      "space": "scene",
+      "color": [
+        0.85,
+        0.73,
+        0.42,
+        0.4
+      ],
+      "size": [
+        0.0007,
+        0.0018
+      ],
+      "speed": [
+        0.003,
+        0.01
+      ],
+      "rate": 0,
+      "lifetime": [
+        8,
+        14
+      ],
+      "angle": -70,
+      "priority": "accent"
+    },
+    "light.shaft": {
+      "primitive": "light",
+      "style": "shaft",
+      "category": "light",
+      "intensity": 0.15,
+      "space": "scene",
+      "color": [
+        0.85,
+        0.73,
+        0.42,
+        0.4
+      ],
+      "size": [
+        0.0007,
+        0.0018
+      ],
+      "speed": [
+        0.003,
+        0.01
+      ],
+      "rate": 0,
+      "lifetime": [
+        8,
+        14
+      ],
+      "angle": -70,
+      "priority": "accent"
+    }
+  }
+}

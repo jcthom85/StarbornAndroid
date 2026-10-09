@@ -1,0 +1,11 @@
+// Compile only this task's instrumentation fixture. Several older UI fixtures still
+// reference removed Android APIs; this does not alter or conceal their normal suite.
+allprojects { p ->
+ if(p.name=="app") p.afterEvaluate {
+  def fixture=p.file("src/androidTest/java/com/example/starborn/EnvironmentalEffectsInstrumentationTest.kt")
+  p.tasks.configureEach { task -> if(task.name=="compileDebugAndroidTestKotlin") task.doFirst { task.setSource(p.files(fixture)) } }
+  p.android.sourceSets.androidTest.java.setSrcDirs([])
+  p.kotlin.sourceSets.androidTest.kotlin.setSrcDirs([p.file("src/androidTest/java/com/example/starborn")])
+  p.kotlin.sourceSets.androidTest.kotlin.include("EnvironmentalEffectsInstrumentationTest.kt")
+ }
+}

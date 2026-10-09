@@ -359,6 +359,7 @@ fun DesktopIllustratedCinematicOverlay(
                     true
                 }
             }
+            .desktopPointerHover()
             .clickable(
                 interactionSource = cinematicTapInteraction,
                 indication = null,
@@ -936,7 +937,7 @@ private fun CinematicNarrationCard(
                             style = MaterialTheme.typography.labelSmall
                         )
                         Text(
-                            text = if (isLastStep) "Tap to continue" else "Tap to continue ▸",
+                            text = if (isLastStep) "Click or Enter to continue" else "Click or Enter to continue ▸",
                             color = accentColor.copy(alpha = 0.5f),
                             style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.sp)
                         )

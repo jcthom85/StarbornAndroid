@@ -1,4 +1,4 @@
-﻿package com.example.starborn.desktop.ui
+package com.example.starborn.desktop.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -75,14 +75,14 @@ fun DesktopControlsDialog(
                                 fontFamily = FontFamily.Monospace
                             )
                             Text(
-                                text = "Desktop Keyboard & Gamepad Direct Navigation",
+                                text = "Desktop Keyboard & Mouse Navigation",
                                 color = Color.White.copy(alpha = 0.6f),
                                 fontSize = 11.sp
                             )
                         }
                     }
 
-                    IconButton(onClick = onDismiss) {
+                    IconButton(onClick = onDismiss, modifier = Modifier.desktopPointerHover()) {
                         Icon(imageVector = Icons.Default.Close, contentDescription = "Close", tint = Color.White)
                     }
                 }
@@ -109,7 +109,7 @@ fun DesktopControlsDialog(
 
                         KeybindRow("W / Up Arrow", "Travel North")
                         KeybindRow("S / Down Arrow", "Travel South")
-                        KeybindRow("A / Left Arrow", "Travel West / Arcade")
+                        KeybindRow("A / Left Arrow", "Travel West")
                         KeybindRow("D / Right Arrow", "Travel East")
                         KeybindRow("Mouse", "Choose actions, NPCs and threats")
                         KeybindRow("[E]", "Use the first room action")
@@ -138,11 +138,12 @@ fun DesktopControlsDialog(
                         KeybindRow("Combat [Arrows / Enter]", "Select / confirm a target")
                         KeybindRow("Combat [Tab]", "Select the next ready party member")
                         KeybindRow("Combat [Space]", "Respond to timing prompts")
+                        KeybindRow("Combat [Esc / Right Click]", "Cancel targeting or action menu")
                         KeybindRow("Fishing [Space]", "Cast / hook / hold to reel")
                         KeybindRow("[ESC]", "Field Menu / Pause / Back")
                         KeybindRow("Menu [Alt+1-6]", "Party / Items / Tinker / Journal / Map / Settings")
                         KeybindRow("Menu [Ctrl+Tab]", "Next page (Shift reverses)")
-                        KeybindRow("Map", "Drag to pan; + / - buttons to zoom")
+                        KeybindRow("Map", "Drag to pan; Scroll wheel / [+/-] to zoom")
                         KeybindRow("[F5]", "Quick save")
                         KeybindRow("[F11]", "Toggle Fullscreen / Windowed")
                         KeybindRow("[H]", "Open this controls guide")
@@ -170,7 +171,7 @@ fun DesktopControlsDialog(
                             modifier = Modifier.size(18.dp)
                         )
                         Text(
-                            text = "Mouse cursor or touch clicks remain fully active alongside keyboard controls at all times.",
+                            text = "Mouse controls, clicks, and keyboard shortcuts remain seamlessly active together at all times.",
                             color = Color.White.copy(alpha = 0.75f),
                             fontSize = 11.sp
                         )

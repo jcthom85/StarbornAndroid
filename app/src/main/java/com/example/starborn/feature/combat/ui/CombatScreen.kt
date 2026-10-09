@@ -1,5 +1,8 @@
 package com.example.starborn.feature.combat.ui
 
+import com.example.starborn.ui.vfx.AndroidRoomEnvironmentalEffects
+import com.example.starborn.ui.vfx.rememberEnvironmentalSettings
+
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.SystemClock
@@ -306,6 +309,9 @@ fun CombatScreen(
         onDemoRootBack?.invoke()
     }
     CombatLifecyclePause(overlayPaused, viewModel::setBackgroundPaused)
+    val persistedEnvironmentSettings=rememberEnvironmentalSettings()
+    val environmentSettings=persistedEnvironmentSettings.copy(disableFlashes=suppressFlashes || persistedEnvironmentSettings.disableFlashes,disableScreenshake=suppressScreenshake || persistedEnvironmentSettings.disableScreenshake,highContrastMode=highContrastMode || persistedEnvironmentSettings.highContrastMode)
+    val environmentSession by viewModel.environmentalSession.collectAsStateWithLifecycle()
     val playerParty = remember(viewModel) { viewModel.playerParty.toList() }
     val enemies = viewModel.enemies
     val enemyCombatantIds = viewModel.enemyCombatantIds
@@ -962,13 +968,12 @@ fun CombatScreen(
                     contentScale = ContentScale.Crop,
                     colorFilter = ColorFilter.tint(Color(0xFF070B14).copy(alpha = 0.42f), BlendMode.Darken)
                 )
-                WeatherOverlay(
-                    weatherId = viewModel.weatherId,
-                    suppressFlashes = suppressFlashes,
-                    modifier = Modifier.fillMaxSize(),
-                    tintColor = MaterialTheme.colorScheme.primary,
-                    darkness = 0f
-                )
+                val environmentRoom=viewModel.environmentalRoom
+                val environmentState=environmentRoom?.state.orEmpty().mapNotNull { (key,value) -> (value as? Boolean)?.let { key to it } }.toMap() + environmentSession.roomStates[environmentRoom?.id].orEmpty()
+                AndroidRoomEnvironmentalEffects(environmentRoom,backgroundPainter.intrinsicSize,environmentState,
+                    environmentSession.completedMilestones,environmentSettings,viewModel.environmentalAssets,
+                    combat=true,paused=overlayPaused || pendingOutcome!=null,
+                    suppressAccents=timedPromptState!=null || combatTutorial?.showsModal==true)
                 if (highContrastMode) {
                     Box(
                         modifier = Modifier

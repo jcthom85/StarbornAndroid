@@ -1,5 +1,7 @@
 package com.example.starborn.desktop.ui
 
+import com.example.starborn.domain.environment.EnvironmentalGeometry
+
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
@@ -88,6 +90,8 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
     onOpenArcade: () -> Unit, onReturnToMenu: () -> Unit) {
     val drawer = remember { ExplorationDrawerState() }
     val settings = LocalExplorationSettings.current
+    val environmentMemory=remember { com.example.starborn.domain.environment.EnvironmentalSceneMemory() }
+    val environmentSession by services.sessionStore.state.collectAsState()
     val runtime = remember(services) { services.exploration }
     val ui by runtime.uiState.collectAsState()
     val menuOpen = ui.isMenuOverlayVisible
@@ -97,6 +101,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
     var shopId by remember { mutableStateOf<String?>(null) }
     var cookingSource by remember { mutableStateOf<String?>(null) }
     var controlsOpen by remember { mutableStateOf(false) }
+    var environmentPreview by remember { mutableStateOf(false) }
     val questPresentations = services.questPresentations
     val fadeAlpha = remember { androidx.compose.animation.core.Animatable(0f) }
     val keyboardFocus = remember { FocusRequester() }
@@ -144,7 +149,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
         }
     }
     val revealingRoom = ui.fadeOverlay?.let { it.toAlpha < it.fromAlpha } == true
-    val sceneBlocked = menuOpen || shopId != null || controlsOpen || cookingSource != null || ui.activeDialogue != null || ui.cinematic != null || ui.prompt != null || ui.narrationPrompt != null || ui.togglePrompt != null || ui.tuningPuzzle != null || ui.blockedPrompt != null || ui.shopGreeting != null || ui.eventAnnouncement != null || (ui.forceBlackScreen && !revealingRoom) || ui.isAstraNavConsoleVisible || ui.isSimulationDeckVisible || ui.isTapeDeckVisible || ui.showBurgQuestAstraExitDialog || ui.isMilestoneGalleryVisible || ui.levelUpPrompt != null || ui.skillTreeOverlay != null || ui.questDetail != null || ui.partyMemberDetails != null || ui.tutorialState.current != null
+    val sceneBlocked = environmentPreview || menuOpen || shopId != null || controlsOpen || cookingSource != null || ui.activeDialogue != null || ui.cinematic != null || ui.prompt != null || ui.narrationPrompt != null || ui.togglePrompt != null || ui.tuningPuzzle != null || ui.blockedPrompt != null || ui.shopGreeting != null || ui.eventAnnouncement != null || (ui.forceBlackScreen && !revealingRoom) || ui.isAstraNavConsoleVisible || ui.isSimulationDeckVisible || ui.isTapeDeckVisible || ui.showBurgQuestAstraExitDialog || ui.isMilestoneGalleryVisible || ui.levelUpPrompt != null || ui.skillTreeOverlay != null || ui.questDetail != null || ui.partyMemberDetails != null || ui.tutorialState.current != null
     val questPopupVisible = !sceneBlocked && questPresentations.important.isNotEmpty()
     val blocked = sceneBlocked || questPopupVisible || moveProgress.value < 1f
     LaunchedEffect(blocked, ui.currentRoom?.id, drawer.panel) {
@@ -193,6 +198,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
             Key.I -> { runtime.openMenuOverlay(com.example.starborn.feature.exploration.viewmodel.MenuTab.INVENTORY); true }
             Key.M -> { runtime.requestReturnToHub(); true }
             Key.F5 -> { runtime.quickSave(); true }
+            Key.F8 -> { if (services.isDebugEnabled) { environmentPreview = true; true } else false }
             Key.H -> { controlsOpen = true; true }
             else -> false
         }
@@ -206,7 +212,32 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
         DesktopRoomTransitionBackdrop(services, ui, moveProgress.value,
             resolveRoomBackground(room, ui.roomState, ui.completedMilestones)) { layout ->
             if (isDark) Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = .85f)))
-            DesktopExplorationAtmosphere(services, room, isDark)
+            val density = androidx.compose.ui.platform.LocalDensity.current
+            val geometry = EnvironmentalGeometry(with(density) { maxWidth.toPx() }, with(density) { maxHeight.toPx() },
+                layout.center.left,layout.center.top,layout.center.width,layout.center.height)
+            val progress=moveProgress.value.coerceIn(0f,1f)
+            val moving=ui.roomTransition?.fromBackgroundImage!=null && progress<1f
+            val enterX=when(ui.roomTransition?.direction) { "east"->-1f;"west"->1f;else->0f }
+            val enterY=when(ui.roomTransition?.direction) { "north"->1f;"south"->-1f;else->0f }
+            fun sceneGeometry(scale:Float,x:Float,y:Float,base:EnvironmentalGeometry=geometry)=base.copy(
+                imageX=base.imageX+base.imageWidth*(1-scale)/2+base.imageWidth*x,
+                imageY=base.imageY+base.imageHeight*(1-scale)/2+base.imageHeight*y,
+                imageWidth=base.imageWidth*scale,imageHeight=base.imageHeight*scale)
+            val incomingGeometry=if(settings.disableScreenshake || !moving) geometry else sceneGeometry(.99f+.01f*progress,enterX*.12f*(1-progress),enterY*.12f*(1-progress))
+            if(moving) {
+                val outgoingRoom=services.roomDefinitions[ui.roomTransition?.fromRoomId]
+                val outgoingState=outgoingRoom?.state.orEmpty().mapNotNull { (k,v)->(v as? Boolean)?.let { k to it } }.toMap()+environmentSession.roomStates[outgoingRoom?.id].orEmpty()
+                val outgoingArtwork=rememberDesktopAssetPainter(ui.roomTransition?.fromBackgroundImage,services.assetProvider).intrinsicSize
+                val outgoingBase=EnvironmentalGeometry.fit(geometry.width,geometry.height,outgoingArtwork.width,outgoingArtwork.height)
+                val outgoingGeometry=if(settings.disableScreenshake) outgoingBase else sceneGeometry(1-.025f*progress,-enterX*.78f*progress,-enterY*.78f*progress,outgoingBase)
+                DesktopEnvironmentalEffects(services,outgoingRoom,outgoingGeometry,outgoingState,ui.completedMilestones,
+                    dark=(outgoingState["dark"] ?: outgoingRoom?.dark ?: false),paused=!foreground || sceneBlocked,
+                    opacity=if(settings.disableScreenshake) 1-progress*progress*(3-2*progress) else (1-progress/.82f).coerceIn(0f,1f),
+                    transition=true,sceneMemory=environmentMemory)
+            }
+            DesktopEnvironmentalEffects(services,room,incomingGeometry,ui.roomState,ui.completedMilestones,
+                dark=isDark,paused=!foreground || sceneBlocked,opacity=if(moving) progress else 1f,
+                transition=moving,sceneMemory=environmentMemory)
             if (!isDark) DesktopExplorationEnemyStage(services, ui, layout, blocked)
             DesktopExplorationPanels(services, ui, layout, description, inlinePlan, isDark, blocked) { tab ->
                 runtime.openMenuOverlay(if (tab == DesktopMenuTab.STATS) null else com.example.starborn.feature.exploration.viewmodel.MenuTab.valueOf(tab.name))
@@ -218,6 +249,14 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
             onOpenFieldKit = { runtime.closeMenuOverlay(); onOpenFieldKit() },
             onReturnToTitle = { runtime.quickSaveAndReturnToTitle(onReturnToMenu) }, onDismiss = runtime::closeMenuOverlay,
             onOpenControls = { runtime.closeMenuOverlay(); controlsOpen = true })
+        if(environmentPreview && room!=null) {
+            val clipboard=androidx.compose.ui.platform.LocalClipboardManager.current
+            val frames=rememberDesktopEnvironmentSteam(services,true)
+            com.example.starborn.ui.environment.EnvironmentalEffectsPreview(room,
+                services.worldDataSource.environmentalEffectsCatalog,
+                rememberDesktopAssetPainter(room.backgroundImage,services.assetProvider),frames,ui.roomState,ui.completedMilestones,
+                onCopy={clipboard.setText(androidx.compose.ui.text.AnnotatedString(it))},onClose={environmentPreview=false})
+        }
         if (controlsOpen) DesktopControlsDialog(onDismiss = { controlsOpen = false })
         shopId?.let { id -> DesktopShopDialog(services, id) { shopId = null } }
         ui.togglePrompt?.let { toggle ->
@@ -290,7 +329,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
 
 @Composable
 private fun ExplorationInteraction(label: String, onClick: () -> Unit, danger: Boolean = false, enabled: Boolean = true) {
-    Surface(Modifier.fillMaxWidth().clickable(enabled = enabled, onClick = onClick),
+    Surface(Modifier.fillMaxWidth().desktopPointerHover(enabled).clickable(enabled = enabled, onClick = onClick),
         shape = RoundedCornerShape(10.dp), color = Color(0xFF13232E),
         border = BorderStroke(1.dp, if (danger) Color(0xFFAA704C) else Color(0xFF354D5D))) {
         Row(Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
@@ -374,7 +413,7 @@ fun DesktopDialogueOverlay(
                             text = if (choices.isEmpty()) "CONTINUE" else "CHOOSE A RESPONSE",
                             color = FieldMenuDesign.textMuted,
                             fontSize = 11.sp,
-                            modifier = Modifier.clickable(enabled = choices.isEmpty(), onClick = onAdvance)
+                            modifier = Modifier.desktopPointerHover(choices.isEmpty()).clickable(enabled = choices.isEmpty(), onClick = onAdvance)
                         )
                     }
 
@@ -396,6 +435,7 @@ fun DesktopDialogueOverlay(
                                         .clip(RoundedCornerShape(FieldMenuDesign.controlRadius))
                                         .background(FieldMenuDesign.elevatedPanel)
                                         .border(BorderStroke(1.dp, FieldMenuDesign.border.copy(alpha = 0.35f)), RoundedCornerShape(FieldMenuDesign.controlRadius))
+                                        .desktopPointerHover()
                                         .clickable { onSelectChoice(index) }
                                         .padding(horizontal = 14.dp, vertical = 10.dp)
                                 ) {
@@ -414,7 +454,7 @@ fun DesktopDialogueOverlay(
                             horizontalArrangement = Arrangement.End
                         ) {
                             DesktopMinimalPillButton(
-                                text = "Continue",
+                                text = "Continue [Enter]",
                                 onClick = onAdvance
                             )
                         }
@@ -432,6 +472,7 @@ fun DesktopMinimalPillButton(
 ) {
     Box(
         modifier = Modifier
+            .desktopPointerHover()
             .clip(RoundedCornerShape(FieldMenuDesign.controlRadius))
             .background(FieldMenuDesign.panel.copy(alpha = 0.85f))
             .border(BorderStroke(1.dp, FieldMenuDesign.border.copy(alpha = 0.45f)), RoundedCornerShape(FieldMenuDesign.controlRadius))

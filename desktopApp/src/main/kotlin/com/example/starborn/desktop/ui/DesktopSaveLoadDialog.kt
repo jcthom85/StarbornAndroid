@@ -49,9 +49,9 @@ fun DesktopSaveLoadDialog(services: DesktopAppServices, initialMode: SaveDialogM
             Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 Text("Save archive", style = MaterialTheme.typography.headlineSmall)
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    TextButton(onClick = { mode = SaveDialogMode.SAVE }, enabled = !busy) { Text("Save") }
-                    if (allowLoad) TextButton(onClick = { mode = SaveDialogMode.LOAD }, enabled = !busy) { Text("Load") }
-                    TextButton(onClick = onDismiss, enabled = !busy) { Text("Close") }
+                    TextButton(onClick = { mode = SaveDialogMode.SAVE }, enabled = !busy, modifier = Modifier.desktopPointerHover()) { Text("Save") }
+                    if (allowLoad) TextButton(onClick = { mode = SaveDialogMode.LOAD }, enabled = !busy, modifier = Modifier.desktopPointerHover()) { Text("Load") }
+                    TextButton(onClick = onDismiss, enabled = !busy, modifier = Modifier.desktopPointerHover()) { Text("Close") }
                 }
                 LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     val slots = if (mode == SaveDialogMode.LOAD) listOf(0, -1, 1, 2, 3) else listOf(-1, 1, 2, 3)
@@ -65,14 +65,14 @@ fun DesktopSaveLoadDialog(services: DesktopAppServices, initialMode: SaveDialogM
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 if (mode == SaveDialogMode.SAVE) Button(onClick = {
                                     if (slot in occupied) confirmation = "Overwrite $name?" to { save(slot) } else save(slot)
-                                }, enabled = !busy) { Text(if (slot in occupied) "Overwrite" else "Save") }
+                                }, enabled = !busy, modifier = Modifier.desktopPointerHover()) { Text(if (slot in occupied) "Overwrite" else "Save") }
                                 else Button(onClick = { scope.launch {
                                     busy = true
                                     val loaded = withContext(Dispatchers.IO) { services.loadSlot(slot) }
                                     busy = false
                                     if (loaded) { onLoadState(); onDismiss() }
                                     else message = services.saveManager.lastError.value ?: "Unable to load this save."
-                                } }, enabled = !busy && slot in occupied) { Text("Load") }
+                                } }, enabled = !busy && slot in occupied, modifier = Modifier.desktopPointerHover()) { Text("Load") }
                                 if (slot in occupied) TextButton(onClick = {
                                     confirmation = "Delete $name?" to { scope.launch {
                                         busy = true
@@ -80,7 +80,7 @@ fun DesktopSaveLoadDialog(services: DesktopAppServices, initialMode: SaveDialogM
                                         message = if (deleted) "Save deleted." else services.saveManager.lastError.value
                                         refresh(); busy = false
                                     } }
-                                }, enabled = !busy) { Text("Delete") }
+                                }, enabled = !busy, modifier = Modifier.desktopPointerHover()) { Text("Delete") }
                             }
                         } }
                     } }
@@ -90,7 +90,7 @@ fun DesktopSaveLoadDialog(services: DesktopAppServices, initialMode: SaveDialogM
             }
         }
         confirmation?.let { (prompt, action) -> AlertDialog(onDismissRequest = { confirmation = null },
-            text = { Text(prompt) }, confirmButton = { TextButton(onClick = { confirmation = null; action() }) { Text("Confirm") } },
-            dismissButton = { TextButton(onClick = { confirmation = null }) { Text("Cancel") } }) }
+            text = { Text(prompt) }, confirmButton = { TextButton(onClick = { confirmation = null; action() }, modifier = Modifier.desktopPointerHover()) { Text("Confirm") } },
+            dismissButton = { TextButton(onClick = { confirmation = null }, modifier = Modifier.desktopPointerHover()) { Text("Cancel") } }) }
     }
 }

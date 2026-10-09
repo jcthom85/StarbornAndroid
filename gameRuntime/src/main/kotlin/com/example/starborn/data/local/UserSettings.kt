@@ -15,5 +15,12 @@ data class UserSettings(
     val highContrastMode: Boolean = false,
     val largeTouchTargets: Boolean = false,
     val themeBandsEnabled: Boolean = false,
-    val modernFieldMenu: Boolean = true
+    val modernFieldMenu: Boolean = true,
+    val environmentalEffectsQuality: EnvironmentalEffectsQuality = EnvironmentalEffectsQuality.FULL
 )
+
+/** Full is authored intensity, not maximum intensity. */
+enum class EnvironmentalEffectsQuality(val label: String) {
+    FULL("Full"), REDUCED("Reduced"), OFF("Off");
+    companion object { fun fromId(value: String?) = entries.firstOrNull { it.name.equals(value,true) } ?: FULL }
+}

@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.disabled
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -38,22 +39,41 @@ internal fun DesktopDirectionMarker(direction: String, status: DirectionIndicato
     val motion = if (animate) pulse else 0f
     val canTravel = !blocked && status in setOf(DirectionIndicatorStatus.UNEXPLORED, DirectionIndicatorStatus.EXPLORED)
     val label = when (status) {
-        DirectionIndicatorStatus.LOCKED -> "$direction exit locked"
+        DirectionIndicatorStatus.LOCKED -> "Travel $direction, locked"
         DirectionIndicatorStatus.ENEMY -> "$direction exit blocked by enemy"
         DirectionIndicatorStatus.NEARBY_THREAT -> "Threat nearby in $direction direction"
         else -> "Travel $direction"
     }
-    Box(modifier.explorationFeedback(canTravel).size(if (LocalExplorationSettings.current.largeTouchTargets) 64.dp else 56.dp).testTag("travel-$direction").clearAndSetSemantics {
-        contentDescription = label
-        if (canTravel) onClick(label) { onTravel(direction); true }
-    }.clickable(enabled = canTravel) { onTravel(direction) }, contentAlignment = Alignment.Center) {
-        Box(Modifier.graphicsLayer {
-            val nudge = (3.5.dp * motion).toPx()
-            scaleX = 1f + .08f * motion; scaleY = scaleX
-            alpha = if (!animate) .95f else if (status == DirectionIndicatorStatus.ENEMY) .55f + .43f * motion else .65f + .30f * motion
-            translationX = when { direction.contains("east") -> nudge; direction.contains("west") -> -nudge; else -> 0f }
-            translationY = when { direction.contains("north") -> -nudge; direction.contains("south") -> nudge; else -> 0f }
-        }) { DirectionIndicatorIcon(status, direction) }
+    val shortcut = when (direction.lowercase()) {
+        "north" -> " [W / ↑]"
+        "south" -> " [S / ↓]"
+        "west" -> " [A / ←]"
+        "east" -> " [D / →]"
+        else -> ""
+    }
+    val tooltipText = when (status) {
+        DirectionIndicatorStatus.LOCKED -> "$direction exit locked"
+        DirectionIndicatorStatus.ENEMY -> "$direction exit blocked by enemy"
+        DirectionIndicatorStatus.NEARBY_THREAT -> "Threat nearby in $direction direction"
+        else -> "Travel $direction$shortcut"
+    }
+    DesktopTooltip(tooltipText) {
+        Box(modifier.explorationFeedback(canTravel).size(if (LocalExplorationSettings.current.largeTouchTargets) 64.dp else 56.dp).testTag("travel-$direction").clearAndSetSemantics {
+            contentDescription = label
+            if (canTravel) {
+                onClick(label) { onTravel(direction); true }
+            } else {
+                disabled()
+            }
+        }.clickable(enabled = canTravel) { onTravel(direction) }, contentAlignment = Alignment.Center) {
+            Box(Modifier.graphicsLayer {
+                val nudge = (3.5.dp * motion).toPx()
+                scaleX = 1f + .08f * motion; scaleY = scaleX
+                alpha = if (!animate) .95f else if (status == DirectionIndicatorStatus.ENEMY) .55f + .43f * motion else .65f + .30f * motion
+                translationX = when { direction.contains("east") -> nudge; direction.contains("west") -> -nudge; else -> 0f }
+                translationY = when { direction.contains("north") -> -nudge; direction.contains("south") -> nudge; else -> 0f }
+            }) { DirectionIndicatorIcon(status, direction) }
+        }
     }
 }
 

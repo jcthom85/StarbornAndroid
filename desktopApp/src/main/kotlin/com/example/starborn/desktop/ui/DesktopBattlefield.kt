@@ -139,15 +139,41 @@ Column(Modifier.widthIn(max = if (enemySide) 220.dp else 180.dp).fillMaxWidth().
             if (state.isAlive && enemySide && state.stability <= 0) Text("BROKEN", color = Color(0xFFFFBB55), style = MaterialTheme.typography.labelSmall)
             intent?.let { Text(it, color = Color(0xFFFFBB55), fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis) }
             state.weaponCharge?.let { Text("Charging ${it.remainingTurns}", color = Color(0xFFFFDE70), fontSize = 10.sp) }
-            if (state.statusEffects.isNotEmpty()) Text(state.statusEffects.joinToString { services.contentName(it.id) }, color = Color(0xFFD3A1FF), fontSize = 9.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            if (state.buffs.isNotEmpty()) Text(state.buffs.joinToString { services.contentName(it.effect.stat) }, color = Color(0xFF80E7A0), fontSize = 9.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            if (if (targeting) validTarget else selected || !enemySide && readiness >= .999f) Text(if (targeting) "TARGET" else if (enemySide) "FOCUSED" else "READY", color = accent, style = MaterialTheme.typography.labelSmall)
+            if (state.statusEffects.isNotEmpty() || state.buffs.isNotEmpty()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
+                        state.statusEffects.forEach { status ->
+                            DesktopCombatStatusChip(status, services)
+                        }
+                        state.buffs.forEach { buff ->
+                            DesktopCombatBuffChip(buff, services)
+                        }
+                    }
+                }
+            }
+            if (if (targeting) validTarget else selected || !enemySide && readiness >= .999f) {
+                val label = if (targeting) {
+                    if (selected) "SELECTED TARGET" else "TARGET"
+                } else if (enemySide) "FOCUSED" else "READY"
+                Text(label, color = accent, style = MaterialTheme.typography.labelSmall)
+            }
         }
     }
-    Column(Modifier.width(cardWidth).clickable(interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }, indication = null, enabled = !targeting || validTarget, onClick = onClick),
+    Column(Modifier.width(cardWidth).desktopPointerHover(!targeting || validTarget).clickable(interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }, indication = null, enabled = !targeting || validTarget, onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally) {
         if (enemySide) status()
         Box(Modifier.fillMaxWidth().height(figureHeight), contentAlignment = Alignment.BottomCenter) {
+            val isReady = !enemySide && state.isAlive && readiness >= 0.999f
+            if (isReady) {
+                DesktopReadyAura(modifier = Modifier.fillMaxWidth().height(figureHeight))
+            }
             Canvas(Modifier.fillMaxSize()) {
                 drawOval(Color.Black.copy(alpha = .40f * lifeAlpha), Offset(size.width * .2f, size.height * .9f), androidx.compose.ui.geometry.Size(size.width * .6f, size.height * .08f))
                 if (state.isAlive && (selected || targeting && validTarget)) {
@@ -177,12 +203,20 @@ Column(Modifier.widthIn(max = if (enemySide) 220.dp else 180.dp).fillMaxWidth().
                 }
             }
             cues.forEach { cue -> key(cue.token) { DesktopCombatHit(cue, settings.disableFlashes, Modifier.fillMaxSize()) } }
-            Column(Modifier.align(Alignment.TopCenter), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                cues.takeLast(4).forEach { cue -> key(cue.token) {
-                    Surface(color = Color(0xF007111A), shape = RoundedCornerShape(6.dp)) {
-                        Text(cue.label, Modifier.padding(horizontal = 6.dp, vertical = 3.dp), color = cue.color, style = MaterialTheme.typography.labelMedium)
+            cues.forEach { cue ->
+                key(cue.token) {
+                    if (cue.kind == DesktopCueKind.HIT || cue.kind == DesktopCueKind.HEAL) {
+                        DesktopDamageBubble(cue, Modifier.align(Alignment.Center))
+                    } else {
+                        Surface(
+                            modifier = Modifier.align(Alignment.TopCenter).padding(top = 8.dp),
+                            color = Color(0xF007111A),
+                            shape = RoundedCornerShape(6.dp)
+                        ) {
+                            Text(cue.label, Modifier.padding(horizontal = 6.dp, vertical = 3.dp), color = cue.color, style = MaterialTheme.typography.labelMedium)
+                        }
                     }
-                } }
+                }
             }
             feedback?.let { label ->
                 Surface(Modifier.align(Alignment.BottomCenter).graphicsLayer { translationY = feedbackRise.value },
