@@ -16,14 +16,17 @@ This document defines the complete exploration, puzzle, and narrative structure 
     *   Nova wakes at the crash site. Zeke is injured.
     *   Nova must explore the surrounding swamp to salvage pod components, find a medkit, and clear the path.
     *   *Exploration choice:* Venture through the dangerous, spore-choked **Razor-Vine Path** or navigate the **Glow-Water Stream** wetlands to discover a cavern bypass.
-    *   *The Boss & The Truce:* Ascend to Canopy Ridge, fight the mutated **Source Beast** (mutated silverback), and establish a ceasefire with the hunter **Gh0st**.
 2.  **Dungeon Phase (Hub 4 - Sanctuary Facility):**
     *   Enter the Temple Gate by slotting the Chime.
-    *   Access the stasis vault, awaken **Orion** by aligning the ring array, and learn the **Anchor Drill** (unlocks **Link** relic).
-    *   Unlock the Hangar Bay by routing energy manifold breakers in the Power Grid to overload the Source Gate.
-    *   Repair the Astra's fuel lines, boot her bridge systems, and launch.
-3.  **Planetary Breach (The Mesosphere):**
-    *   Attempt to breach low orbit, encounter the Planetary Shield's warning lightning, and establish the next chapter goal (heist the Lens from the Spire in World 3).
+    *   Access the stasis vault, awaken **Orion** by aligning the ring array, and recover the **Bridge Echo (Echo #2)** from its navigation cradle. Its handshake is the source of **Link**; the later **Anchor Drill** trains Link while safely calibrating the Bridge interface.
+3.  **The Hunter & Anchor Drill (Return to Canopy Ridge):**
+    *   With Orion awake and the Bridge recovered, confront **Gh0st**. Nova's Fork protocol scar trips his Elara-calibrated Source Lock, pausing lethal action without issuing him a command.
+    *   Fight the mutated **Source Beast**. Gh0st chooses to protect the crew, and that choice—not the failsafe—earns a truce.
+    *   Complete Orion's **Anchor Drill**: Zeke grounds the circuit, Gh0st braces it voluntarily, Orion holds the tone, and Nova learns **Link** without merging minds.
+4.  **Astra Recovery & Low-Altitude Transit (The Spire Airlane):**
+    *   Return to the Sanctuary Facility and unlock the Hangar Bay by resolving the Source Gate's four feeding systems.
+    *   Install the recovered Bridge Echo, route salvaged conduits to ship and Echo power buses, authenticate Orion's interface with the Chime, and launch.
+    *   Cross the storm belt below the outer Planetary Shield and reach the Spire by controlled airlane. The Shield remains a visible ceiling and a future problem, not a barrier the Astra contacts in World 2.
 
 ---
 
@@ -182,7 +185,7 @@ This document defines the complete exploration, puzzle, and narrative structure 
     *   *Connections:* `archive_vault` (west), `archive_tuning_bay` (south).
 *   **archive_tuning_bay (Matrix Puzzle):** Tuning columns (align matrix to C#m7).
     *   *Connections:* `archive_reading_room` (north), `archive_secret_stash` (east).
-*   **archive_secret_stash (Hidden Relic Room):** Contains the **Link Relic** upgrade.
+*   **archive_secret_stash (Former Bridge Calibration Bay):** Contains an optional Aethel calibration record from the Bridge's former cradle, not another Echo. Orion releases **Bridge Echo #2** from Sanctuary's stasis-integrated navigation cradle and entrusts it to the crew when he wakes; its handshake exposes **Link**, later trained safely through the Anchor Drill.
     *   *Connections:* `archive_tuning_bay` (west).
 
 #### Area 11: Stasis Chamber Deck (4 Rooms)
@@ -235,18 +238,18 @@ This document defines the complete exploration, puzzle, and narrative structure 
 *   **hangar_lock (Hangar Blast Doors):** Ceiling blast shields.
     *   *Connections:* `hangar_pad` (up), `sky_ascent` (up).
 
-#### Area 16: Shield Mesosphere (6 Rooms)
-*   **sky_ascent (Climbing Flight):** Rising through mesosphere storms.
+#### Area 16: Spire Airlane (6 Rooms)
+*   **sky_ascent (Low Flight):** Skimming above the jungle canopy toward the Spire while the outer Shield remains far overhead.
     *   *Connections:* `hangar_lock` (down), `sky_mesosphere` (up).
-*   **sky_mesosphere (Storm Cells):** Heavy lightning.
+*   **sky_mesosphere (Storm Corridor):** Heavy lightning across the low-altitude route.
     *   *Connections:* `sky_ascent` (down), `sky_shield_threshold` (up).
-*   **sky_shield_threshold (Shield Edge):** Directly facing the Shield.
+*   **sky_shield_threshold (Spire Airlane):** A controlled route below the outer Shield, guarded by local traffic locks.
     *   *Connections:* `sky_mesosphere` (down), `sky_sensor_buoy` (east).
-*   **sky_sensor_buoy (Dominion Sat):** Buoy monitoring flight data.
+*   **sky_sensor_buoy (Security Buoy):** Buoy monitoring unauthorized low-altitude flight data.
     *   *Connections:* `sky_shield_threshold` (west).
-*   **sky_barrier_core (Frequency Node):** Local shield controller.
+*   **sky_barrier_core (Curtain Node):** Local air-traffic curtain controller; not part of the planetary Shield.
     *   *Connections:* `sky_shield_threshold` (north).
-*   **sky_hard_deck (The Boundary):** Shield barrier pushback node.
+*   **sky_hard_deck (Pushback Boundary):** Dominion signals enforce the edge of permitted Sector 9 airspace.
     *   *Connections:* `sky_shield_threshold` (up).
 
 ---
@@ -254,10 +257,10 @@ This document defines the complete exploration, puzzle, and narrative structure 
 ## 3. Integration with Quests
 
 ### A. Main Quests
-*   **w2_mq01 (A Strange Coast):** 
+*   **w2_mq01 (A Strange Coast):**
     *   Wake at `landing_core`.
     *   Search `landing_pod` to complete `examine_pod` and salvage a medkit.
-    *   Clear `wilds_trailhead` by defeating the vines (requires Cutter from `wilds_grave` or force-burn via Chime).
+    *   Clear `wilds_trailhead` by defeating the vines with the repaired thermal Cutter from `wilds_grave` or an environmental heat source. The Chime cannot burn or attack them.
 *   **w2_mq02 (The Signal):**
     *   Follow track from `wilds_thickets` -> `wilds_hollow` -> `ridge_climb` -> `temple_plaza`.
     *   Align resonator batteries at `temple_left_wing` and `temple_right_wing` to slot Chime into `temple_lock_chamber`.
@@ -268,6 +271,7 @@ This document defines the complete exploration, puzzle, and narrative structure 
 *   **w2_mq04 (The Hunter):**
     *   Scout sniper positions from `ridge_ledges` -> `ridge_sniper_perch`.
     *   Confront Gh0st at `ridge_arena` and defeat `the_beast` boss.
+    *   Complete Orion's grounded Anchor Drill to unlock Nova's `nova_link` Source Art before the quest closes.
 *   **w2_mq05 (Liftoff):**
     *   Dampen stasis coolant leaks at `stasis_coolant_lines`.
     *   Route generators at `power_breaker_deck` and `power_manifold` to drop the barrier at `gate_chamber`.
@@ -285,6 +289,6 @@ This document defines the complete exploration, puzzle, and narrative structure 
 *   **w2_sq03 (Tideglass Day):**
     *   Discover `beach_cove`. Gather 3 tideglass skewers at `beach_pools` and roast them at the cove campfire.
 *   **w2_sq04 (Ancient Echoes):**
-    *   Align sound matrices to C#m7 in the `archive_tuning_bay` to unlock the hidden reliquary at `archive_secret_stash`.
+    *   After the Bridge is recovered, align secondary sound matrices to C#m7 in the `archive_tuning_bay` to decode optional Aethel calibration records stored beside its cradle at `archive_secret_stash`.
 *   **w2_sq05 (Stolen Tech):**
     *   Infiltrate `vents_tech_alcove` via high scaffolding `vents_gantry` to recover the missing transmitter case for Gh0st.

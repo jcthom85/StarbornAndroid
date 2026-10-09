@@ -13,9 +13,9 @@
 ### Gh0st (The Hunter)
 *   **Role:** The Antagonist (initially) -> The Protector.
 *   **Location:** The Canopy (Ambush) -> Party.
-*   **State of Mind:** **Haunted.** His HUD screams "KILL," but his core programming screams "PROTECT ELARA." He is paralyzed by the contradiction.
+*   **State of Mind:** **Haunted.** Dominion built him as a distinct person around a partial derivative of Elara's neural map, then treated that borrowed architecture as proof he was property. Nova's Fork protocol mark trips an old Source Lock failsafe in that architecture; it interrupts his attack but gives him no replacement order.
 *   **Dialogue Style:** Clipped, military, robotic—until the mask cracks.
-*   **Key Line:** "Target acquired. Target... locked? Unknown frequency. Why can't I pull the trigger?"
+*   **Key Line:** "Source Lock. No command attached. Then the next move is mine."
 *   **Bark (Combat):** "Shields up. Stay behind me."
 
 ### Zeke (The Fish Out of Water)
@@ -25,4 +25,3 @@
 *   **Key Line:** "I can hack a bank mainframe in twelve seconds. I cannot, however, hack a mosquito. We are going to die here."
     *   **Zeke vs. Nova:** Zeke blames her for the crash.
     *   **Gh0st vs. The Party:** He is literally hunting them.
-

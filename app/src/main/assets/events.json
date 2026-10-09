@@ -378,6 +378,11 @@
         "scene_id": "new_game_fade_in",
         "on_complete": [
           {
+            "type": "narrate",
+            "message": "DOMINION SHIFT PA: First cage drops in eighteen minutes. Unbadged labor will be marked absent. Repeated absence will be deducted from asset value.",
+            "tap_to_dismiss": true
+          },
+          {
             "type": "if_milestone_not_set",
             "milestone": "ms_w1_mq01_bunk_light_on",
             "do": [
@@ -444,7 +449,7 @@
       },
       {
         "type": "narrate",
-        "message": "The bunk light snaps on with a tired buzz. The room returns in pieces: shelf, netting, door, floor.",
+        "message": "The bunk light snaps on with a tired buzz. Tools throw short shadows across the netting, and the door seam appears beside the bed.",
         "tap_to_dismiss": true
       },
       {
@@ -520,7 +525,7 @@
       },
       {
         "type": "narrate",
-        "message": "The bunk is hard, narrow, and still warm from the few hours of sleep you stole from the shift clock. It is not much, but it is yours.",
+        "message": "The bunk is hard, narrow, and warm from four hours of sleep. Drill vibration travels through the mattress in a steady pulse.",
         "tap_to_dismiss": true
       }
     ]
@@ -552,7 +557,7 @@
       },
       {
         "type": "narrate",
-        "message": "The cargo netting holds a few tools, a spare ration, and the small metal carving Jed made for you when you were younger. You have enough to face the shift clock.",
+        "message": "The cargo netting holds hand tools, one spare ration, and the little metal bird Jed made when you were twelve. Its wings are cut from a broken fan blade.",
         "tap_to_dismiss": true
       }
     ]
@@ -747,7 +752,7 @@
   },
   {
     "id": "w1_mq01_cryo_inductor_repaired",
-    "description": "Completes Wake Up Call and has Jed send Nova to shift clearance after the Cryo-Inductor repair.",
+    "description": "Records the rebuilt Cryo-Inductor and has Jed supervise a live cutter test.",
     "trigger": {
       "type": "player_action",
       "action": "tinkering_craft",
@@ -787,20 +792,75 @@
         "task_id": "use_tinkering_table"
       },
       {
-        "type": "complete_quest",
-        "quest_id": "w1_mq01"
-      },
-      {
         "type": "set_milestone",
-        "milestone": "ms_w1_mq01_complete"
-      },
-      {
-        "type": "unlock_node",
-        "node_id": "admin_gate"
+        "milestone": "ms_w1_mq01_cryo_repaired"
       },
       {
         "type": "start_dialogue",
         "npc": "Jed"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq01_cutter_surge",
+    "description": "Nova tests the ungoverned cutter, wakes the buried Architect conduit, and records the breaker fault that follows her to clearance.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_mq01_cutter_surge"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq01"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w1_mq01_cryo_repaired"
+      },
+      {
+        "type": "quest_not_started",
+        "quest_id": "w1_mq02"
+      }
+    ],
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "scene_cutter_surge",
+        "on_complete": [
+          {
+            "type": "complete_quest",
+            "quest_id": "w1_mq01"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w1_mq01_complete"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w1_mq01_cutter_surge"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w1_mq02"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w1_mq02"
+          },
+          {
+            "type": "advance_quest_stage",
+            "quest_id": "w1_mq02",
+            "to_stage_id": "reach_checkpoint"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w1_mq02_clearance_ordered"
+          },
+          {
+            "type": "unlock_node",
+            "node_id": "admin_gate"
+          }
+        ]
       }
     ]
   },
@@ -2176,10 +2236,10 @@
   },
   {
     "id": "w1_mq03_touch_relic",
-    "description": "Completes the relic touch and sync sequence when Nova interacts with the Tuning Fork.",
+    "description": "Completes the relic handshake after Nova counter-tunes the Tuning Fork with her ungoverned cutter.",
     "trigger": {
       "type": "player_action",
-      "action": "touch_relic"
+      "action": "w1_mq03_touch_relic"
     },
     "conditions": [
       {
@@ -2212,6 +2272,19 @@
             "room_id": "echo_heart",
             "state_key": "relic_synced",
             "value": true
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w1_mq03_echo_marked"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w1_mq03_liner_ground_spent"
+          },
+          {
+            "type": "take_item",
+            "item_id": "functional_cryo_inductor",
+            "quantity": 1
           },
           {
             "type": "give_item",
@@ -2680,7 +2753,7 @@
         "do": [
           {
             "type": "show_message",
-            "message": "The console is locked. It needs a physical Chime bypass to override the Dominion shield frequency."
+            "message": "The console rejects the pod. Splice the Chime into the authorization bus to spoof a valid operator and bind navigation to its paired beacon. It cannot open the outer Shield."
           }
         ]
       },
@@ -3465,6 +3538,20 @@
         "task_id": "talk_to_orion"
       },
       {
+        "type": "set_quest_task_done",
+        "quest_id": "w2_mq03",
+        "task_id": "recover_bridge_relic"
+      },
+      {
+        "type": "give_item",
+        "item_id": "bridge_relic",
+        "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_bridge_recovered"
+      },
+      {
         "type": "add_party_member",
         "item_id": "orion"
       },
@@ -3486,7 +3573,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Sleeping Giant\n\nThe mural pattern, pod pressure, overview sockets, and coolant flow finally agree. The pod opens around a man who remembers Sector 9 before Dominion buried it. Orion joins because the signal was his, and because the Astra still knows the way through the shield."
+        "message": "Quest Complete: Sleeping Giant\n\nThe mural pattern, pod pressure, overview sockets, and coolant flow finally agree. The pod opens around a man who remembers Sector 9 before Dominion buried it. Orion unseals the Bridge from Sanctuary and entrusts it to the crew: the Astra can carry the Echo, if they can supply its power and prove who is asking."
       }
     ]
   },
@@ -3547,6 +3634,47 @@
         "type": "set_quest_task_done",
         "quest_id": "w2_mq04",
         "task_id": "confront_stalker"
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "sector9_canopy_ridge",
+        "state_key": "hunter_confronted",
+        "value": true
+      },
+      {
+        "type": "show_message",
+        "message": "Nova's Fork mark trips an Elara-calibrated Source Lock and interrupts Gh0st's lethal trigger, but gives him no new order. Before either side can decide what comes next, the Source Beast tears out of the brush."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq04_beast_ambush",
+    "description": "Triggered when the party faces the Source Beast after confronting Gh0st.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq04_beast_ambush"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq04"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_mq04",
+        "task_id": "confront_stalker"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq04",
+        "task_id": "defeat_the_beast"
+      }
+    ],
+    "actions": [
+      {
+        "type": "spawn_encounter",
+        "encounter_id": "the_beast",
+        "room_id": "sector9_canopy_ridge"
       }
     ]
   },
@@ -3586,24 +3714,90 @@
         "item_id": "gh0st"
       },
       {
-        "type": "complete_quest",
-        "quest_id": "w2_mq04"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w2_mq04_complete"
-      },
-      {
-        "type": "start_quest",
-        "quest_id": "w2_mq05"
-      },
-      {
-        "type": "track_quest",
-        "quest_id": "w2_mq05"
+        "type": "set_room_state",
+        "room_id": "sector9_canopy_ridge",
+        "state_key": "beast_defeated",
+        "value": true
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Hunter\n\nThe beast's death breaks Gh0st's clean order set. He lowers the rifle, not out of trust, but because Dominion's command no longer matches what he has seen. Gh0st has joined your party."
+        "message": "When the Beast attacks, Gh0st chooses to turn his rifle away from the party and protect them. That choice—not the failsafe—is why Nova accepts his truce. Orion stops her from testing the Bridge's Link alone: first they will ground the circuit together in an Anchor Drill."
+      }
+    ]
+  },
+  {
+    "id": "w2_mq04_anchor_drill",
+    "description": "Triggered when the crew completes Orion's grounded Link exercise on Canopy Ridge.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq04_anchor_drill"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq04"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w2_mq04",
+        "task_id": "defeat_the_beast"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq04",
+        "task_id": "complete_anchor_drill"
+      }
+    ],
+    "actions": [
+      {
+        "type": "play_cinematic",
+        "scene_id": "scene_anchor_drill",
+        "on_complete": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w2_mq04",
+            "task_id": "complete_anchor_drill"
+          },
+          {
+            "type": "set_room_state",
+            "room_id": "sector9_canopy_ridge",
+            "state_key": "anchor_drill_complete",
+            "value": true
+          },
+          {
+            "type": "unlock_skill",
+            "skill_id": "nova_link"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w2_link_unlocked"
+          },
+          {
+            "type": "system_tutorial",
+            "scene_id": "link_unlock",
+            "context": "Anchor Drill"
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w2_mq04"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w2_mq04_complete"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w2_mq05"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w2_mq05"
+          },
+          {
+            "type": "show_message",
+            "message": "Quest Complete: The Hunter\n\nThe Bridge opens a Link only after Zeke grounds the circuit, Gh0st freely braces it, and Orion holds the tuning tone. Their minds remain separate. Nova learns Link, and Gh0st joins the crew by choice."
+          }
+        ]
       }
     ]
   },
@@ -3748,7 +3942,7 @@
       },
       {
         "type": "show_message",
-        "message": "You recover the power conduits from the pod wreckage. The insulation is scorched, but the cores still sing when the Chime gets close. The same crash that stranded you is going to help the Astra leave."
+        "message": "You recover the power conduits from the pod wreckage. The insulation is scorched, but the conductors still hold continuity. The same crash that stranded you is going to supply the Astra's startup current."
       }
     ]
   },
@@ -3788,8 +3982,17 @@
         "task_id": "reboot_bridge_relic"
       },
       {
+        "type": "take_item",
+        "item_id": "bridge_relic",
+        "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_bridge_installed"
+      },
+      {
         "type": "show_message",
-        "message": "You connect the conduits and place the Chime in the center slot. The Bridge Relic flares green, booting the primary systems of the Astra!"
+        "message": "You mount Sanctuary's Bridge in the Astra and connect the salvaged conduits. Pod current reaches the Echo first; then the Chime authenticates Orion's old identity at the center slot. The Bridge accepts the request and brings the Astra's primary systems online."
       }
     ]
   },
@@ -3850,7 +4053,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Astra climbs through the shield's timed corridor until Dominion interference snaps the window shut. The ship punches through half-clean and crash-lands beneath the Spire."
+        "message": "The Astra claws into low atmosphere on the recovered Bridge and salvaged power bus. Dominion jamming mangles the route before the crew can stabilize the ship, forcing a hard landing beneath the Spire."
       }
     ]
   },
@@ -5270,7 +5473,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Lens\n\nThe relic burns cold in Nova's hand. The Shield above the Spire becomes visible as rotating chords, and so does the thin old thread running through her own signal. Alarm text blooms across the air: ANOMALY DETECTED. The only route left is through the drone alcove and up to the roof, where the Astra has one impossible launch window."
+        "message": "Quest Complete: The Lens\n\nThe relic burns cold in Nova's hand. The internal sector curtains and the distant outer Shield resolve as two separate lattices. The Fork's protocol scar glows inside her signal. Alarm text blooms across the air: ANOMALY DETECTED. The only route left is through the drone alcove and up to the roof, where the Astra has one impossible internal-curtain window."
       }
     ]
   },
@@ -5366,7 +5569,7 @@
   },
   {
     "id": "w3_scan_shield_gap",
-    "description": "Use the Lens to read the Shield window while the Administrator still blocks the launch.",
+    "description": "Use the Lens to read the internal phase-curtain window while the Administrator still blocks the launch.",
     "repeatable": true,
     "trigger": {
       "type": "player_action",
@@ -5386,13 +5589,13 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "Scan reveals the Shield window opening and closing above the roof, smaller than courage and faster than panic. The Administrator's targeting lattice crosses every launch line."
+        "message": "Scan reveals the internal curtain window opening and closing beyond the roof, smaller than courage and faster than panic. The Administrator's targeting lattice crosses every launch line."
       }
     ]
   },
   {
     "id": "w3_scan_shield_gap_clear",
-    "description": "Use the Lens to read the Shield window after the Administrator falls.",
+    "description": "Use the Lens to read the internal phase-curtain window after the Administrator falls.",
     "trigger": {
       "type": "player_action",
       "action": "w3_scan_shield_gap"
@@ -5421,7 +5624,7 @@
       },
       {
         "type": "show_message",
-        "message": "Scan catches the Shield window on its next rotation. Orion counts under his breath. Zeke has the Astra hot. Nova has one launch window and no room left for fear."
+        "message": "Scan catches the internal curtain window on its next rotation. Orion counts under his breath. Zeke has the Astra hot. Nova has one launch window and no room left for fear."
       }
     ]
   },
@@ -5521,13 +5724,13 @@
       },
       {
         "type": "show_message",
-        "message": "The Administrator frame collapses, still smiling through sparking teeth. The Shield window opens for less than a second, and Nova can finally see exactly how small freedom is."
+        "message": "The Administrator frame collapses, still smiling through sparking teeth. The internal curtain window opens for less than a second, and Nova can finally see exactly how small freedom is."
       }
     ]
   },
   {
     "id": "w3_mq15_launch_needs_scan",
-    "description": "Explain that the Astra cannot launch until Nova scans the Shield window.",
+    "description": "Explain that the Astra cannot launch until Nova scans the internal phase-curtain window.",
     "repeatable": true,
     "trigger": {
       "type": "player_action",
@@ -5552,13 +5755,13 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "The Astra screams ready, but the Shield is still a wall of lethal timing. Nova needs to scan the Shield window before Orion can call the count."
+        "message": "The Astra screams ready, but the internal curtain is still a wall of lethal timing. Nova needs to scan its window before Orion can call the count."
       }
     ]
   },
   {
     "id": "w3_mq15_launch_astra",
-    "description": "Send the Astra through the Shield window toward World 4.",
+    "description": "Send the Astra through an internal phase-curtain window toward World 4.",
     "trigger": {
       "type": "player_action",
       "action": "w3_mq15_launch_astra"
@@ -5616,7 +5819,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Burn Notice\n\nThe Astra slips the Shield on Orion's count, using the Lens to ride a gap nobody was supposed to see. The crew survives the cage, but the ship cannot climb to the Orbital Ring on damaged drives. Zeke tags Sector 7's Foundry: a Deep-Core Engine for altitude, Phase-Cutter Arrays for teeth, and no legal way to take either."
+        "message": "Quest Complete: Burn Notice\n\nThe Astra stays low and slips through Sector 7's internal curtain on Orion's count, using the Lens to ride a gap nobody was supposed to see. The separate outer Planetary Shield remains intact above them. Zeke tags the Foundry's answer: a Deep-Core Engine for orbital velocity, Phase-Cutter Arrays to hold a future corridor open, and no legal way to take either."
       }
     ]
   },
@@ -5802,7 +6005,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Astra settles onto volcanic glass, still hot from the Shield slip. Orion confirms the bad news: surviving low orbit is not the same as reaching high orbit."
+        "message": "The Astra settles onto volcanic glass, still hot from the internal-curtain slip. Orion confirms the bad news: crossing a district barrier at low altitude is not the same as breaching the separate outer Shield to reach high orbit."
       }
     ]
   },
@@ -6791,7 +6994,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Anvil\n\nThe relic answers Nova too fast. Her first Construct twists, collapses, and nearly drops her into slag before Gh0st catches her. Rylos moves the Titan Walker to the Power Core; the engine theft just became a fight."
+        "message": "Quest Complete: The Anvil\n\nNova's Fork protocol scar drives an immediate handshake through the damaged Foundry cradle. Her first Construct twists, collapses, and nearly drops her into slag before Gh0st catches her. The Foundry amplifies the unstable input; the relic is not judging her. Rylos moves the Titan Walker to the Power Core, and the engine theft becomes a fight."
       }
     ]
   },
@@ -7018,7 +7221,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Meltdown\n\nThe stolen engine kicks the Astra into high orbit while the Phase-Cutter Arrays carve open the pursuit net. Below, Gh0st leaves Rylos alive because choice matters more than revenge. Vale loses the Ascension Cradle hardware and stops pretending this is a local audit: he relieves Thorne, locks the Ring, and activates the Soloist variant."
+        "message": "Quest Complete: Meltdown\n\nThe Lens calls the outer Shield's rotating corridor. The stolen Deep-Core Engine supplies orbital velocity while the Phase-Cutter Arrays hold that corridor open long enough for the Astra to breach into high orbit. Below, Gh0st leaves Rylos alive because choice matters more than revenge. At the Ring, Vale folds a fighter screen around the surviving approach, relieves Thorne, and activates the Soloist variant."
       }
     ]
   },
@@ -7155,7 +7358,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Halo fills the viewport like a crown around the planet. The stolen Deep-Core Engine holds the climb, the Phase-Cutter Arrays warm under the hull, and Vale answers by folding a fighter screen around the Ring. This is not a destination anymore. It is a siege."
+        "message": "The Halo fills the viewport like a crown around the planet. Behind the Astra, the outer Shield corridor seals: the Lens found it, the stolen Deep-Core Engine made orbital velocity, and the Phase-Cutter Arrays held it open. Vale answers with a fighter screen around the Ring. This is not a destination anymore. It is a siege."
       }
     ]
   },
@@ -7196,7 +7399,7 @@
       },
       {
         "type": "show_message",
-        "message": "The last fighter shears away under the Phase-Cutter Arrays. Zeke does not ask permission; he drives the damaged Astra straight at the Executive Dock before Compliance can rebuild the screen."
+        "message": "The last fighter burns away under the Astra's guns as the Phase-Cutter Arrays cool from the Shield breach. Zeke does not ask permission; he drives the damaged ship straight at the Executive Dock before Compliance can rebuild the screen."
       }
     ]
   },
@@ -9505,7 +9708,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Aethel Grave\n\nOrion hears the first Architects resting inside the current, not erased but carried. Ancestral Grace unlocked."
+        "message": "Quest Complete: The Aethel Grave\n\nOrion hears the ancestral Aethel resting inside the current, not erased but carried. Ancestral Grace unlocked."
       }
     ]
   },
@@ -10204,7 +10407,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Ancient Echoes\n\nThree crystal voices align the stasis mural. The song remembers humans as Ice held safely within the Ocean."
+        "message": "Quest Complete: Ancient Echoes\n\nThree crystal voices align the stasis mural. The song remembers humans as Ice held safely within the Ocean, and the stabilized chord unseals a Bridge calibration record in the Hidden Reliquary."
       },
       {
         "type": "give_item",
@@ -10424,11 +10627,46 @@
       "type": "player_action",
       "action": "w2_sq04_collect_relic"
     },
-    "conditions": [],
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w2_sq04_complete"
+      }
+    ],
     "actions": [
       {
         "type": "show_message",
-        "message": "The reliquary pedestal is keyed to the facility chorus. It will not release anything until the mural chord is stable."
+        "message": "The reliquary pedestal is keyed to the facility chorus. Its Bridge calibration record will remain sealed until the mural chord is stable."
+      }
+    ]
+  },
+  {
+    "id": "w2_sq04_decode_bridge_record",
+    "description": "Decode the former Bridge cradle's calibration record after stabilizing the mural chord.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_sq04_collect_relic"
+    },
+    "conditions": [
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_sq04_complete"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "sector9_archive_secret_stash",
+        "state_key": "bridge_record_decoded",
+        "value": true
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_bridge_record_decoded"
+      },
+      {
+        "type": "show_message",
+        "message": "The pedestal opens. This is not another Echo: it is a calibration record from the Bridge's former cradle. Orion used consent checks, separate carrier bands, and a physical ground so Link could connect minds without blending them. Nova copies the safer routing notes."
       }
     ]
   },
@@ -10725,7 +10963,7 @@
       },
       {
         "type": "show_message",
-        "message": "The last meal is simple, warm, and already fraying at the edges of Nova's memory."
+        "message": "The last meal is simple and warm. Source static needles Nova's hearing and sets her hand trembling, but every name and joke remains hers."
       }
     ]
   },

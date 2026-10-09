@@ -248,7 +248,7 @@ class ExplorationViewModel(
 ) : ViewModel() {
 
     private val eventsById: Map<String, GameEvent> = eventDefinitions.associateBy { it.id }
-    private val startWithBlackScreen: Boolean = bootstrapActions.any {
+    private val startWithBlackScreen: Boolean = bootstrapCinematics.isEmpty() && bootstrapActions.any {
         it.equals("new_game_spawn_player_and_fade", ignoreCase = true)
     }
     private val _uiState = MutableStateFlow(ExplorationUiState(forceBlackScreen = startWithBlackScreen))
@@ -383,6 +383,20 @@ class ExplorationViewModel(
             },
             onSpawnEncounter = { encounterId, roomId ->
                 emitEvent(ExplorationEvent.SpawnEncounter(encounterId, roomId))
+                val currentRoom = _uiState.value.currentRoom
+                val targetRoom = roomId
+                    ?.takeIf { it.isNotBlank() }
+                    ?.let(roomsById::get)
+                    ?: currentRoom
+                val enemyIds = encounterId
+                    ?.split(',')
+                    .orEmpty()
+                    .map(String::trim)
+                    .filter { it.isNotBlank() && it in enemyById }
+                if (targetRoom != null && targetRoom.id == currentRoom?.id && enemyIds.isNotEmpty()) {
+                    preparePendingEncounter(targetRoom, enemyIds)
+                    emitEvent(ExplorationEvent.EnterCombat(enemyIds))
+                }
             },
             onGiveItem = { itemId, quantity ->
                 oneTimeGiftMilestoneByItemId[itemId]?.let { milestone ->
@@ -1129,10 +1143,13 @@ class ExplorationViewModel(
 
     private fun processBootstrapQueues() {
         if (bootstrapCinematicQueue.isEmpty() && bootstrapActionQueue.isEmpty()) return
+        if (bootstrapCinematicQueue.isNotEmpty()) {
+            val sceneId = bootstrapCinematicQueue.removeFirst()
+            val started = startCinematic(sceneId) { processBootstrapQueues() }
+            if (!started) processBootstrapQueues()
+            return
+        }
         viewModelScope.launch(dispatchers.main) {
-            while (bootstrapCinematicQueue.isNotEmpty()) {
-                startCinematic(bootstrapCinematicQueue.removeFirst())
-            }
             while (bootstrapActionQueue.isNotEmpty()) {
                 triggerPlayerAction(bootstrapActionQueue.removeFirst())
             }
@@ -4924,6 +4941,24 @@ class ExplorationViewModel(
     private fun parseActions(room: Room?): List<RoomAction> {
         if (room == null) return emptyList()
         return room.actions.mapNotNull { action ->
+            val hideWhenState = action["hide_when_state"].asStringOrNull()
+            if (!hideWhenState.isNullOrBlank()) {
+                val currentValue = roomStates[room.id]?.get(hideWhenState)
+                    ?: room.state[hideWhenState]
+                if (booleanValueOf(currentValue) == true) return@mapNotNull null
+            }
+            val showWhenState = action["show_when_state"].asStringOrNull()
+            if (!showWhenState.isNullOrBlank()) {
+                val currentValue = roomStates[room.id]?.get(showWhenState)
+                    ?: room.state[showWhenState]
+                if (booleanValueOf(currentValue) != true) return@mapNotNull null
+            }
+            val showWhenMilestone = action["show_when_milestone"].asStringOrNull()
+            if (!showWhenMilestone.isNullOrBlank() &&
+                showWhenMilestone !in sessionStore.state.value.completedMilestones
+            ) {
+                return@mapNotNull null
+            }
             val type = action["type"].asStringOrNull()?.lowercase()
             val name = action["name"].asStringOrNull() ?: return@mapNotNull null
             when (type) {

@@ -120,6 +120,15 @@
         ]
     },
     {
+        "id": "link_unlock",
+        "steps": [
+            {
+                "message": "Source Art unlocked: Link. Route a grounded Bridge current to stabilize an ally; Link connects willing minds without merging or commanding them.",
+                "context": "Anchor Drill"
+            }
+        ]
+    },
+    {
         "id": "party_basics",
         "steps": [
             {

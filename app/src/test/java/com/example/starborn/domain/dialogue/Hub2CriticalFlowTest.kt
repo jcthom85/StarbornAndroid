@@ -114,8 +114,12 @@ class Hub2CriticalFlowTest {
         assertNotNull(ghostTalk)
         assertEquals("ghost_default_talk", ghostTalk?.current()?.id)
 
-        // Defeat mutated Source Beast
+        // The Beast is gated behind the confrontation instead of blocking the earlier Temple route.
         harness.store.setRoom("sector9_canopy_ridge")
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq04_beast_ambush"))
+        assertEquals("the_beast" to "sector9_canopy_ridge", harness.spawnedEncounters.lastOrNull())
+
+        // Defeat mutated Source Beast
         harness.events.handleTrigger(
             "encounter_victory",
             EventPayload.EncounterOutcome(
@@ -126,6 +130,17 @@ class Hub2CriticalFlowTest {
         state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w2_mq04"].orEmpty().contains("defeat_the_beast"))
         assertTrue(state.partyMembers.contains("gh0st"))
+        assertFalse(state.completedQuests.contains("w2_mq04"))
+        assertFalse(state.activeQuests.contains("w2_mq05"))
+        assertFalse(state.unlockedSkills.contains("nova_link"))
+
+        // Orion's grounded drill is the actual Link unlock and quest handoff.
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq04_anchor_drill"))
+        state = harness.store.state.value
+        assertTrue(state.questTasksCompleted["w2_mq04"].orEmpty().contains("complete_anchor_drill"))
+        assertEquals("scene_anchor_drill", harness.playedCinematics.lastOrNull())
+        assertTrue(state.unlockedSkills.contains("nova_link"))
+        assertTrue(state.completedMilestones.contains("ms_w2_link_unlocked"))
         assertTrue(state.completedQuests.contains("w2_mq04"))
         assertTrue(state.completedMilestones.contains("ms_w2_mq04_complete"))
         assertTrue(state.activeQuests.contains("w2_mq05"))
@@ -295,6 +310,12 @@ class Hub2CriticalFlowTest {
         assertTrue(state.completedQuests.contains("w2_sq04"))
         assertTrue(state.inventory["focus_conduit"].orZero() >= 1)
 
+        // The stabilized mural chord now unlocks the optional Bridge calibration record.
+        harness.events.handleTrigger("player_action", EventPayload.Action("w2_sq04_collect_relic"))
+        state = harness.store.state.value
+        assertTrue(state.completedMilestones.contains("ms_w2_bridge_record_decoded"))
+        assertTrue(harness.messages.lastOrNull().orEmpty().contains("not another Echo"))
+
         // --- SQ05: Stolen Tech (Gh0st search vents) ---
         harness.store.addPartyMember("gh0st")
         harness.store.completeQuest("w2_mq04")
@@ -330,6 +351,8 @@ class Hub2CriticalFlowTest {
         val dialogue: DialogueService
         val messages = mutableListOf<String>()
         val startedDialogues = mutableListOf<String>()
+        val spawnedEncounters = mutableListOf<Pair<String?, String?>>()
+        val playedCinematics = mutableListOf<String>()
 
         init {
             initialState?.let(store::restore)
@@ -338,7 +361,14 @@ class Hub2CriticalFlowTest {
                 sessionStore = store,
                 eventHooks = EventHooks(
                     onMessage = { messages += it },
+                    onPlayCinematic = { sceneId, done ->
+                        playedCinematics += sceneId
+                        done()
+                    },
                     onSystemTutorial = { _, _, _, done -> done() },
+                    onSpawnEncounter = { encounterId, roomId ->
+                        spawnedEncounters += encounterId to roomId
+                    },
                     onQuestTaskUpdated = { questId, taskId ->
                         if (!questId.isNullOrBlank() && !taskId.isNullOrBlank()) {
                             store.setQuestTaskCompleted(questId, taskId, true)

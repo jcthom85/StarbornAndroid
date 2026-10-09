@@ -19,7 +19,7 @@
     "id": "hub_3_sector9",
     "world_id": "world_2",
     "title": "Jungle Ruins",
-    "description": "Bioluminescent jungle reclaiming ancient Aethel stone ruins.",
+    "description": "Bioluminescent jungle reclaiming Architect stone ruins once used by Aethel survivors.",
     "background_image": "images/hubs/sector9.png",
     "discovered": true
   },
@@ -27,7 +27,7 @@
     "id": "hub_4_facility",
     "world_id": "world_2",
     "title": "Sector 9 Ruins",
-    "description": "The ancient Aethel facility buried beneath the jungle.",
+    "description": "An Architect-built facility buried beneath the jungle and later sealed by Aethel survivors.",
     "background_image": "images/hubs/facility.png",
     "discovered": false
   },

@@ -1,7 +1,7 @@
 # Locations — World 2: The Wilds (Hub 4: Sector 9 Ruins)
 
 ## Hub Layout
-The ancient Aethel facility buried deep beneath the jungle. Constructed of smooth, dark stone panels, the interior is clean of organic overgrowth, lit only by soft, pulsing light murals and standing liquid cymatic geometry. It serves as the resting place of *The Astra* and Orion's stasis vault.
+The **Architect-built facility** buried deep beneath the jungle. Later Aethel survivors adapted the smooth, dark structure into a sanctuary, archive, and stasis refuge without claiming its original construction as their own. Its interior is clean of organic overgrowth, lit only by soft, pulsing light murals and standing liquid cymatic geometry. It now serves as the resting place of *The Astra* and Orion's stasis vault.
 
 ---
 
@@ -25,7 +25,7 @@ The ancient Aethel facility buried deep beneath the jungle. Constructed of smoot
     *   `sector9_archive_vault` (Cylinder Vault): Rows of storage cylinders holding ancient Aethel data.
     *   `sector9_archive_reading_room` (Interface Console): A stone terminal where the cylinder logs can be played.
     *   `sector9_archive_tuning_bay` (Matrix Puzzle): A column puzzle requiring the alignment of three frequencies to a C#m7 chord.
-    *   `sector9_archive_secret_stash` (Hidden Relic Room): The vault containing the **Link Relic** upgrade.
+    *   `sector9_archive_secret_stash` (Former Bridge Calibration Bay): A sealed optional record from the Bridge's former cradle. Stabilizing the mural chord decodes its consent, carrier-separation, and grounding notes; this room contains no additional Echo. Orion releases the actual **Bridge Echo #2** when he wakes.
 
 ---
 
@@ -45,7 +45,7 @@ The ancient Aethel facility buried deep beneath the jungle. Constructed of smoot
 
 ## 3. Source Gate (`source_gate`)
 *   **Icon:** 🎼
-*   **Description:** The power distribution dynamo and the acoustic barrier blocking access to the Hangar.
+*   **Description:** The Sanctuary power distribution dynamo, salvageable conduit network, and acoustic barrier blocking access to the Hangar. The Chime can authenticate controls here but supplies no current.
 *   **Rooms:**
     *   `sector9_power_turbine` (Source Dynamo): A massive glowing turbine dynamo humming at a deafening pitch.
     *   `sector9_power_manifold` (Fluid Distribution): Heavy pipes carrying liquid energy fuel to the dynamo.
@@ -64,19 +64,19 @@ The ancient Aethel facility buried deep beneath the jungle. Constructed of smoot
     *   `sector9_hangar_bay` (Astra Pad): The launch pad where the damaged hull of *The Astra* is docked.
     *   `sector9_hangar_scaffolding` (Maintenance Gantry): Walkways wrapping around the ship's engines and hull.
     *   `sector9_hangar_staging` (Cargo Staging): A platform loading bay filled with old crates.
-    *   `sector9_hangar_tower` (Control Console): The primary flight deck terminal controlling launch operations.
-    *   `sector9_hangar_fuel_lines` (Conduit Hookups): Fuel lines connecting the ship to the facility's reserves.
+    *   `sector9_hangar_tower` (Bridge Cradle Interface): The control terminal used to install the separately recovered Bridge Echo and validate its navigation handshake.
+    *   `sector9_hangar_fuel_lines` (Salvaged Conduit Hookups): Compatible conduits routed from the Sanctuary bus to power *The Astra* and the Bridge Echo during repair and launch.
     *   `sector9_hangar_lock` (Ceiling Blast Shields): The massive ceiling shutters that slide open to reveal the sky.
 
 ---
 
-## 5. The Sky (`the_sky`)
+## 5. Low-Altitude Transit (`the_sky`)
 *   **Icon:** ☁️
-*   **Description:** The high mesosphere climb where the ship encounters the Planetary Shield.
+*   **Description:** *The Astra's* first controlled flight, following a Bridge-calculated corridor below the storm shelf from Sector 9 to the Spire. World 2 never takes the ship to the outer Shield.
 *   **Rooms:**
-    *   `sector9_the_sky` (Climbing Flight): *The Astra* climbing out of the Sector 9 atmosphere.
-    *   `sector9_sky_mesosphere` (Storm Cells): Heavy lightning clouds threatening the flight controls.
-    *   `sector9_sky_shield_threshold` (Shield Edge): The physical boundary directly below the Planetary Shield.
+    *   `sector9_the_sky` (Canopy Flight): *The Astra* flying between the canopy and the lowest storm shelf.
+    *   `sector9_sky_mesosphere` (Storm Shelf): Heavy lightning clouds above the allowed route; the ship remains below them.
+    *   `sector9_sky_shield_threshold` (Shield Telemetry): A sensor-only projection of the distant Planetary Shield, not a location the crew reaches in World 2.
     *   `sector9_sky_sensor_buoy` (Dominion Sat): A floating sensor monitoring atmospheric anomalies.
-    *   `sector9_sky_barrier_core` (Frequency Node): The central node generating the local phase field.
-    *   `sector9_sky_hard_deck` (The Boundary): The point of impact where the Shield discharge pushes the ship back.
+    *   `sector9_sky_barrier_core` (Curtain Telemetry): Bridge data showing the internal Phase Curtains that separate sectors and will require the Lens to read.
+    *   `sector9_sky_hard_deck` (Projected Boundary): The outer Shield limit displayed on navigation as unreachable with the current conduits; there is no impact encounter here.

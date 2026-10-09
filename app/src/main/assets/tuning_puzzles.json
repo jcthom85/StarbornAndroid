@@ -1,5 +1,46 @@
 [
   {
+    "id": "w1_echo_counter_tune",
+    "title": "Cutter Harmonic Sweep",
+    "prompt": "The Fork repeats three calibration marks through your cutter: hold the phase sweep at 87 kHz, feed the repaired cold loop at 68%, and turn the Flux Liner ground 180 degrees out of phase.",
+    "success_event": "w1_mq03_touch_relic",
+    "success_message": "The cutter and the Fork settle on one frequency. The damaged cradle accepts the circuit.",
+    "failure_hint": "The signals beat against each other hard enough to shake the cradle. Match all three calibration marks before the cold loop overheats.",
+    "audio_cue": "ui_confirm",
+    "sliders": [
+      {
+        "id": "frequency",
+        "label": "Phase Sweep",
+        "min": 40,
+        "max": 120,
+        "initial": 52,
+        "target": 87,
+        "tolerance": 2,
+        "unit": " kHz"
+      },
+      {
+        "id": "coolant",
+        "label": "Cold Loop",
+        "min": 0,
+        "max": 100,
+        "initial": 35,
+        "target": 68,
+        "tolerance": 3,
+        "unit": "%"
+      },
+      {
+        "id": "ground_phase",
+        "label": "Ground Phase",
+        "min": 0,
+        "max": 360,
+        "initial": 0,
+        "target": 180,
+        "tolerance": 6,
+        "unit": "°"
+      }
+    ]
+  },
+  {
     "id": "source_harmonic_focus",
     "title": "Harmonic Choir Lock",
     "prompt": "Hold Nova's heartbeat against the Chorus without flattening the other voices.",

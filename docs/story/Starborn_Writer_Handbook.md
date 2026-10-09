@@ -1,7 +1,7 @@
 # Starborn — Writer's Handbook (The Canon Style)
 
-**Status:** LOCKED  
-**Role:** The absolute source of truth for all text generation.  
+**Status:** Canon Authority — Prose, Dialogue, UI Copy, and Tonal Execution (Locked July 2026)
+**Role:** The style authority, subordinate to the Master Story Bible, Lore Bible, and Character Arcs. Style may sharpen established canon but never revise it.
 **Core Pillar:** "Blue Collar Cosmic." The universe is dirty, broken, and held together by duct tape—until the Source breaks it apart.
 
 ---
@@ -16,6 +16,18 @@
     *   **Matching:** The `name` field of the action must match the exact word (including casing) used in the `description` string.
     *   **Standard Casing:** Use normal sentence casing for these words. If a word is not at the start of a sentence or a proper noun, it should be lowercase.
     *   **Feedback:** If the action has no specific function (like a quest trigger), use `condition_unmet_message` to provide "examine" flavor text.
+5.  **Mechanism Before Metaphor:** When causality matters, name the physical action first. Nova removes a governor, sweeps a counter-frequency, and grounds a discharge; the music metaphor can follow once the player understands what happened.
+6.  **No Chosen-One Language:** Echoes do not choose, accept, judge, or recognize Nova as a person. Their damaged interfaces detect the Tuning Fork protocol signature written into her nerves. There is no Aethel ancestry or blood compatibility.
+7.  **Dramatize the Arc:** At emotional climaxes, prefer a changed action or habit over a speech explaining the theme. A hand staying on a failing ground cable says more than "I have learned that I matter."
+
+### Canon Guardrails for Text
+
+*   Nova is a **22-year-old adult**. Use "woman," "miner," "mechanic," or her name in neutral narration. Diminutives such as "girl" must be deliberate, relationship-specific characterization rather than the narrative default.
+*   The **Architects** made the Six Echoes and exploited Aethel consciousness while developing the Great Silence. The Aethel did not make the Echoes.
+*   A **Chime** is an identity key and beacon. It can authenticate systems and carry resonance imprints; it never acts as a battery, fuel cell, thruster, or universal key.
+*   Ordinary Source use causes pain, sensory distortion, lost seconds, fatigue, and neurological instability. Memories are endangered only by catastrophic failure and are never spent as routine fuel.
+*   Gh0st is a distinct person built from a partial derivative of Elara's neural map. "Backup" is Dominion's dehumanizing label; "brother" is the relationship Elara and Gh0st formed.
+*   The finale burns out Nova's Source connection while preserving her memories and identity. It opens this labor world and stops Vale; it does not end the wider Dominion.
 
 ---
 
@@ -61,7 +73,7 @@
 *   **Role:** The Mechanic.
 *   **Tone:** Scrappy, cynical, protective.
 *   **Vocabulary:** Mining slang ("Slag," "Breach," "Core-deep").
-*   **The Rule:** She creates friction. She doesn't ask "What is that?"; she asks "Can I break it?"
+*   **The Rule:** She creates friction and understands systems through touch. She does not ask "What is that?"; she asks "What is feeding back?" or "Can I break it?" Her early independence should sound practical, not meek: she takes dangerous work rather than admit she needs help.
 *   **Line:** "Zeke, if that thing beeps one more time, I'm putting a laser bolt through it."
 
 ### Zeke (The Insider)
@@ -82,7 +94,7 @@
 *   **Role:** The Operating System.
 *   **Tone:** Literal, concise, deadpan.
 *   **Vocabulary:** "Target," "Neutralized," "Inefficient," "Directive."
-*   **The Rule:** Statements of fact. No emotion (until the mask cracks).
+*   **The Rule:** Statements of fact. No emotion until the mask cracks—and even then, show feeling through changed priorities, pauses, and chosen actions before giving him therapeutic self-analysis.
 *   **Line:** "I have intimidated the beverage dispenser. It is now brewing."
 
 ---
@@ -113,7 +125,7 @@ Use this table when describing Starborn magic (The Source/Relics).
 | **Sound** | Described as Texture ("Grit in your teeth," "Sandpaper hum"). |
 | **Light** | Described as Sound ("Screaming white," "A quiet blue glow"). |
 | **Geometry** | Described as Emotion ("Hateful angles," "A lonely corridor"). |
-| **Pain** | Described as Data ("Erosion," "Static," "Memory Loss"). |
+| **Pain** | Described as Data ("Erosion," "Static," "Signal Lag," "Lost Seconds"). |
 
 ---
 
@@ -149,10 +161,10 @@ This is primarily a **text and framing rule**, not a command to make the UI visu
 "You kick the grate. It clatters into the darkness. Inside, huddled in the thermal exhaust, is Director Thorne."
 
 **Dialogue (Thorne):**
-"You... you're the miner. The anomaly. You weren't supposed to get this far. The projection models said you'd die in Sector 9."
+"You opened every system my probes could not. I was supposed to collect you after the Anchor. Vale moved the schedule."
 
 **Dialogue (Zeke):**
-"Your projection models didn't account for Nova's stubbornness quotient. It is statistically significant."
+"For clarity, 'collect' means she tracked us through five sectors and planned to put Nova in a lab."
 
 **Dialogue (Nova):**
 "Less math, Zeke. Thorne, get up. We're breaking you out of your own jail."

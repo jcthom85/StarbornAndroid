@@ -4,7 +4,7 @@
 The "Spire" is a massive vertical city. The Lower City is the foundation—rain-slicked, neon-lit poverty where the workers live. It is surveillance-heavy but chaotic.
 
 ## Key Themes
-- **The Blockade:** The party has a ship (*The Astra*), but cannot leave the planet due to the **Dominion Planetary Shield**.
+- **The Blockade:** An internal phase curtain seals the route to Sector 7, while the separate outer **Dominion Planetary Shield** seals the planet. The immediate heist needs the Lens to reveal an internal curtain window; orbital escape remains impossible.
 - **Anonymity:** Nova is a fugitive here. She must blend in.
 - **The Insider:** Zeke returns home to find his life erased.
 - **Breather:** A loud, colorful Night Market where the Lower City feels alive (not just oppressed).

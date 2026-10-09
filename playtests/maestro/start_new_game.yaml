@@ -7,6 +7,34 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 60000
 - tapOn: "New Game"
 - extendedWaitUntil:
-    notVisible: "New Game"
+    visible: ".*refuses to stay quiet.*"
+    timeout: 20000
+- tapOn: "Tap to continue.*"
+- extendedWaitUntil:
+    visible: ".*CONTAINMENT BREACH.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*leans against the other side.*"
+    timeout: 10000
+- tapOn: "Tap to continue.*"
+- extendedWaitUntil:
+    visible: ".*carry this beyond the seal.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*drawing the hunt with it.*"
+    timeout: 10000
+- tapOn: "Tap to continue.*"
+- extendedWaitUntil:
+    visible: ".*Mute my signal.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*Chime keeps running through the dark.*"
+    timeout: 10000
+- tapOn: "Tap to continue.*"
+- extendedWaitUntil:
+    visible: "Wake Up Call"
     timeout: 20000
 - takeScreenshot: start-new-game

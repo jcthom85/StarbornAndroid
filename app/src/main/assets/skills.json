@@ -837,6 +837,25 @@
     ]
   },
   {
+    "id": "nova_link",
+    "name": "Link",
+    "character": "nova",
+    "type": "source_art",
+    "description": "Routes a grounded Bridge current through willing allies, stabilizing wounds without merging minds or overriding choice.",
+    "combat_tags": [
+      "source",
+      "heal",
+      "support",
+      "aoe"
+    ],
+    "base_power": 90,
+    "scaling": "focus",
+    "cooldown": 4,
+    "status_applications": [
+      "regen"
+    ]
+  },
+  {
     "id": "zeke_signal_jammer",
     "name": "Signal Jammer",
     "character": "zeke",
@@ -1400,7 +1419,7 @@
     "name": "Ancestral Grace",
     "character": "orion",
     "type": "passive",
-    "description": "The first Architects' current continuously restores Orion while he remains in the fight.",
+    "description": "The ancestral Aethel current continuously restores Orion while he remains in the fight.",
     "combat_tags": [
       "heal",
       "buff"

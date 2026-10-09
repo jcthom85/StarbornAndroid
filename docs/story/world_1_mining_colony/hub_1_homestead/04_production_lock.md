@@ -7,11 +7,11 @@ This document is the working lock sheet for building Hub 1: Homestead Quarter. U
 Hub 1 is structurally ready to design in detail.
 
 - Live data has 5 Hub 1 nodes and 40 Hub 1 rooms.
-- The story spine is now clear: wake in the Pit, report to Jed, open the colony, complete optional Trade Row and Med-Bay loops, learn Guard Break through Heavy Lifting, get denied at the checkpoint, then get Zeke's badge override.
-- `w1_mq01` has passing in-app Maestro coverage from new game through Jed's Workshop tinkering completion and the `Wake Up Call` quest-complete popup.
+- The story spine is now clear: wake in the Pit, report to Jed, repair the Cryo-Inductor and Flux Liner, bypass the cutter governor, trigger the surge that wakes the buried Fork, open the colony, learn Guard Break through Heavy Lifting, then survive the checkpoint flag created by that surge.
+- `w1_mq01` has passing in-app Maestro coverage through the existing Cryo-Inductor crafting flow and `Wake Up Call` popup. That is now a regression baseline, not canon sign-off: the flow must be extended through the Flux Liner repair, player-performed governor bypass, cutter test, and visible surge.
 - `w1_sq01` and `w1_sq02` have playable first-pass data and passing in-app Maestro coverage. They are no longer content-design blockers.
-- `w1_sq03` has passing in-app Maestro coverage through Bogs' intro, loader/cargo quest updates, Hydraulic Kick unlock, Acoustic Bulwark training victory, spoils, level-up, quest completion, and return to the room.
-- If the player reaches `The Echo` without Guard Break training, Bogs now redirects them into `Heavy Lifting` before the Deep Mine route.
+- `w1_sq03` has passing in-app Maestro coverage through Boggs' intro, loader/cargo quest updates, Hydraulic Kick unlock, Acoustic Bulwark training victory, spoils, level-up, quest completion, and return to the room.
+- If the player reaches `The Echo` without Guard Break training, Boggs now redirects them into `Heavy Lifting` before the Deep Mine route.
 - Final artwork should begin only for rooms marked `Art Ready`.
 - Rooms marked `Design First` need their gameplay action, quest step, or blocker clarified before final art.
 - Rooms marked `Flavor Later` can use placeholder art until the first playable Hub 1 pass feels good.
@@ -33,12 +33,13 @@ Hub 1 is structurally ready to design in detail.
 | Wake in Nova's bunk | `pit_nova_bunk`, `pit_L2_corridor` | Quest starts on new game; bunk/netting actions exist. | In-app Maestro flow passes through bunk inspection and quest update. |
 | Move through home | `pit_shaft`, `pit_L1_landing`, `pit_mess` | Rooms exist with flavor actions. | Critical route passes; compact description/presence dock polish applied. |
 | Meet Jed | `workshop_floor` | Dialogue and task triggers exist. | In-app Maestro flow passes through Jed intro dialogue. |
-| Tinkering tutorial | `workshop_floor` | Tinkering entry completes `w1_mq01` after Jed talk. | In-app Maestro flow passes through Functional Cryo-Inductor crafting and quest completion. |
+| Tinkering / grounding setup | `workshop_floor` | Existing entry repairs the Cryo-Inductor; canonical flow must also repair the suit-linked Flux Liner and explain that they bleed heat and route feedback to ground. | Existing Maestro flow is a regression baseline; canonical component coverage pending. |
+| Cutter governor bypass and surge | `workshop_floor` | Add the player-performed frequency diagnostic, sealed-governor bypass, and test fire. The surge must brown out the Workshop, enter a buried Architect conduit, wake the Fork, crack the Echo Chamber seal, and log Nova's cutter ID. | Required before `w1_mq01` can be considered canon-complete. Reuse this frequency UI for the MQ03 counter-tune. |
 | Scavenger's Stash | `trade_scrapper`, `trade_stash` | Scrapper starts `w1_sq01`; stash room/action advances quest; Scrapper turn-in completes it. | In-app Maestro flow passes through stash discovery, rebel-cache pickup, return dialogue, and completion. |
 | System Flush | `medbay_exam1`, `medbay_vents` | Doc starts `w1_sq02`; vent room/action advances quest; Doc turn-in completes it. | In-app Maestro flow passes; banner/backtracking polish applied. |
-| Heavy Lifting | `workshop_dock` | Bogs starts `w1_sq03`; loader/cargo actions exist; Acoustic Bulwark training victory completes quest. | In-app Maestro flow passes through Hydraulic Kick unlock, Acoustic Bulwark victory, spoils, level-up, quest completion, and return to exploration. |
+| Heavy Lifting | `workshop_dock` | Boggs starts `w1_sq03`; loader/cargo actions exist; Acoustic Bulwark training victory completes quest. | In-app Maestro flow passes through Hydraulic Kick unlock, Acoustic Bulwark victory, spoils, level-up, quest completion, and return to exploration. |
 | Checkpoint denial | `checkpoint_queue`, `checkpoint_bay`, `checkpoint_booth` | Enter/action events and Hank/Zeke dialogue exist. | In-app Maestro flow passes through Hank denial, Zeke override, and Paperwork completion. |
-| Badge gate | `checkpoint_door`, `checkpoint_tunnel` | Door requires `mine_access_badge`; Concourse entry starts `The Echo`; Bogs redirects untrained Nova into Heavy Lifting before Deep Mine pressure. | In-app Maestro flow passes through badge gate, Concourse handoff, MQ03 start, and Bogs' Guard Break training signpost. |
+| Badge gate | `checkpoint_door`, `checkpoint_tunnel` | Door requires `mine_access_badge`; Concourse entry starts `The Echo`; Boggs redirects untrained Nova into Heavy Lifting before Deep Mine pressure. | In-app Maestro flow passes through badge gate, Concourse handoff, MQ03 start, and Boggs' Guard Break training signpost. |
 
 ## Room Purpose Lock
 
@@ -62,7 +63,7 @@ Hub 1 is structurally ready to design in detail.
 | Room | Purpose | Quest/Beat | Status | Art Direction |
 | --- | --- | --- | --- | --- |
 | `workshop_yard` | Transition from colony grit into Jed's space. | `w1_mq01` route. | Art Ready | Scrap piles, rusted shutter, salvage silhouettes. |
-| `workshop_floor` | Core home-base room; Jed, tinkering, first quest completion. | `w1_mq01`. | Art Ready | Warmest Hub 1 room, cluttered workbench, patched lights. |
+| `workshop_floor` | Core home-base room; Jed, both grounding-part repairs, cutter-frequency tutorial, governor bypass, and surge. | `w1_mq01`. | Design First | Warmest Hub 1 room; workbench must read both the Cryo-Inductor/Flux Liner repairs and a safe sightline for the cutter test/brownout. Final art waits on interaction blocking. |
 | `workshop_office` | Private Jed lore and future emotional setup. | Flavor/Jed. | Flavor Later | Cramped desk, old parts, hidden Chime foreshadowing if needed. |
 | `workshop_loft` | Optional overlook/storage. | Flavor/loot. | Flavor Later | Rickety platform over shop floor. |
 | `workshop_shed` | Materials room and route to dock/basement. | Exploration. | Design First | Tool wall, crates, side door to loader area. |
@@ -122,7 +123,6 @@ Start final art now for:
 - `pit_shaft`
 - `pit_L1_landing`
 - `workshop_yard`
-- `workshop_floor`
 - `workshop_dock`
 - `checkpoint_queue`
 - `checkpoint_bay`
@@ -169,7 +169,9 @@ Second art batch after feel pass:
 
 ## Immediate Build Checklist
 
-1. Keep `w1_sq03` in the regression set if later combat tuning touches tutorial HP, skill damage, spoils, level-up, or quest-completion timing.
-2. Extend or refine `w1_sq01` and `w1_sq02` coverage only if later pacing/content changes touch those routes.
-3. Keep the checkpoint/Bogs redirect flow in the regression set if later pacing changes touch the checkpoint, Concourse, Deep Mine, or Guard Break onboarding route.
-4. Start first art batch once the critical-path feel pass is acceptable.
+1. Extend `w1_mq01` coverage through both component repairs, the governor bypass, cutter test, visible surge, Fork wake-up signal, and Nova's logged cutter ID. Do not complete `Wake Up Call` before that causal chain is shown.
+2. Reuse the MQ01 frequency-control language in the later `echo_heart` counter-tune; verify the Cryo-Inductor fuses and the Flux Liner's sacrificial ground strip burns open only after grounding the handshake, while the liner remains equipped, and yield the persistent Echo mark plus immediate intact-capture lockdown without a memory-loss beat.
+3. Keep `w1_sq03` in the regression set if later combat tuning touches tutorial HP, skill damage, spoils, level-up, or quest-completion timing.
+4. Extend or refine `w1_sq01` and `w1_sq02` coverage only if later pacing/content changes touch those routes.
+5. Keep the checkpoint/Boggs redirect flow in the regression set if later pacing changes touch the checkpoint, Concourse, Deep Mine, or Guard Break onboarding route.
+6. Start first art batch once the critical-path feel pass is acceptable; hold `workshop_floor` final revision until cutter-test blocking is locked.

@@ -1,7 +1,7 @@
 # Events — World 2: The Wilds
 
 ## EVT_W2_01: The Hall of Echoes
-*   **Trigger:** Entering the Sanctuary murals (w2_mq02).
+*   **Trigger:** Returning to the Sanctuary murals with Orion after w2_mq03.
 *   **Action:**
     *   The Sanctuary’s main hall is lined with stone panels that aren’t carved—they’re *tuned*. When Nova gets close, the engravings shimmer like a waveform finding a speaker.
     *   The murals depict tall, faceless figures—the Architects—standing in a circle.
@@ -11,30 +11,30 @@
     *   Orion stares at the panels like they’re a crime scene.
     *   **Orion:** "They called it Harmony. Not peace—control."
     *   **Orion:** "Dominion didn’t invent this. They’re rebuilding an old ladder."
-    *   Nova touches the panel and hears it—not words, not a voice, just a chilling *instruction*: *merge / stabilize / silence.*
+    *   Nova touches the panel. Her Fork protocol mark translates a machine instruction—not inherited memory, not Elara's voice: *merge / stabilize / silence.*
 
 ## EVT_W2_02: The Awakening
-*   **Trigger:** w2_mq03 (Reinitializing the Pod).
+*   **Trigger:** w2_mq03 (routing Sanctuary reserve power through the aligned stasis rings).
 *   **Action:**
-    *   Pod hisses open.
-    *   Orion falls out, coughing blue fluid.
-    *   Orion's eyes snap to the Chime.
-    *   **Orion:** "That Chime... I jettisoned it. Twenty years ago."
-    *   He takes it, slots it into the pod, and the lights stabilize.
-    *   The moment the Chime clicks into place, Nova’s Echo marks flare—then the ruins drop out from under her.
-    *   **Flashback (Source Imprint):**
+    *   The Temple Gate has already accepted the Chime as Orion's identity key. That authentication—not energy from the Chime—wakes the Sanctuary reserve cells.
+    *   Nova and Zeke finish routing those reserves through the ring array. The pod hisses open.
+    *   Orion falls out, coughing blue fluid. His eyes snap to the Chime.
+    *   **Orion:** "My key... I jettisoned it. Twenty years ago."
+    *   He checks its paired cadence against the console. "Still calling. The receiver brought you here."
+    *   The authenticated console unlocks a stored launch log. Nova's Fork protocol mark translates the telemetry into painful sound and image—access granted by a machine scar, never ancestry.
+    *   **Flashback (Stored Machine Log):**
         *   Clean lab lighting. Fresh steel bolted onto ancient stone. Dominion warning stripes over Architect geometry.
         *   Red strobes. A siren that sounds like it’s chewing through the air.
         *   A younger Orion slams a canister into a launch tube—hands shaking, eyes wild.
         *   **Lab PA:** "SOURCE BEAST CONTAINMENT BREACH."
         *   The far doors bow inward like something is leaning on them from the other side.
-        *   Orion’s voice is a hiss meant for machines and prayers. "Get the signal out. If Veyra can hear me, it can find me."
+        *   Orion’s voice is a hiss meant for machines and prayers. "Carry my identity. Call for help. Pull Veyra away from the vault."
         *   He hits the release. The Chime rockets away into darkness.
         *   For a single impossible beat, the darkness answers—not a roar, not a voice, but a soft chord like many notes agreeing to carry it.
         *   The room shakes. The air tastes like metal and static.
         *   Orion dives into the stasis pod. "Mute my signal. Now."
         *   The glass seals. A shadow lunges at the pod—geometry glitching, too big for the room.
-    *   Nova gasps and the jungle ruins snap back into place.
+    *   Nova gasps and the Sanctuary snaps back into place.
     *   For a heartbeat, the pod’s hiss carries an undertone—soft harmony riding the static—then it’s gone.
     *   Zeke catches her elbow. "Hey—hey. You with us?"
     *   Orion stares at her like he’s seeing a witness.
@@ -46,8 +46,10 @@
     *   Nova reaches out on instinct to Link—to steady his breathing—and the connection shrieks. Static tears across her vision.
     *   She staggers. Zeke catches her. Orion grabs her wrist, firm.
     *   **Orion:** "Not with the noise. Focus. Ground. Then we learn control."
-    *   **Orion:** "You carry an Echo without erasing. Some humans have... traces. An old echo. We'll talk later."
-    *   He looks at the ship console. "**The Bridge** (Relic) is intact. With this, we can fly."
+    *   **Nova:** "Why could I read that?"
+    *   **Orion:** "The Fork wrote an Architect machine protocol into your nervous system. That is a wound with permissions, not blood or a hidden human trace."
+    *   A sealed navigation cradle illuminates beyond the pod. Inside is **the Bridge Echo**, a separate Architect system. The crew recovers it here; its handshake makes the Source Art **Link** available, though Orion warns that Nova needs a complete circuit before she can use it safely. The Bridge will be installed aboard *The Astra* later.
+    *   **Orion:** "The Bridge survived. The Chime can authenticate its cradle. It cannot power the Bridge—or the ship. For that, we need conduits."
 
 ## EVT_W2_02A: Canopy Ridge (Breather)
 *   **Trigger:** Traveling toward the canopy (mid-w2_mq04, mandatory beat).
@@ -76,51 +78,38 @@
     *   **Cinematic Battle Sequence:**
         *   Gh0st raises his rifle at Nova. **HUD POV:** "TARGET ACQUIRED."
         *   He pulls the trigger. *Click.* Nothing happens.
-        *   **HUD POV:** "ERROR. SOURCE LOCK DETECTED."
-        *   Gh0st growls and snaps his aim to Zeke.
-        *   He pulls the trigger. *Click.*
-        *   **HUD POV:** "ERROR. PROXIMITY OVERRIDE. SOURCE LOCK EXTENDED."
-        *   Gh0st, frustrated, spins and aims at Orion.
-        *   He pulls the trigger. *Click.*
-        *   **Gh0st:** "Weapon system failure? Impossible."
-        *   He draws his blade and charges Nova—physical override.
-        *   He swings, but his arm freezes mid-air, inches from her neck. His servos whine, fighting his own suit.
-        *   Nova channels the Source. She doesn't just ping as Elara; she sings **Elara's Song**.
-    *   Gh0st stumbles back, lowering his blade. "You sound like her. Why do you sound like her?"
+        *   **HUD POV:** "FOREIGN ECHO PROTOCOL MARK // SOURCE LOCK FAILSAFE // HOLD FOR AUTHORIZATION."
+        *   No authorization arrives. Source Lock is a generic Architect collision safety that pauses armed actuators around a valid but unresolved Echo protocol. Dominion inherited its recognition layer through the partial Elara neural-map derivative used in Gh0st's architecture. Nova's Fork mark can trip it, but cannot speak as Elara or issue a command.
+        *   Gh0st manually safes the rifle, draws his blade, and tests the lock. His arm moves. He could continue.
+        *   **Gh0st:** "No command attached. So the next move is mine."
+        *   He lowers the blade by choice, keeping distance while he demands answers.
+    *   **Gh0st:** "That mark touched a lock they put inside me. It did not make you her."
+    *   **Nova:** "Good. I'm not asking you to obey me."
     *   **Sudden Shift:** The trees behind Nova explode. The **Source Beast** (Mutated Silverback) lunges from the canopy, roaring.
     *   It swipes at Nova—a killing blow.
-    *   **Gh0st:** "PROTECTION DIRECTIVE: ENGAGED."
     *   Gh0st shoulder-checks Nova out of the way, taking the hit on his armor. He slides back, shields flaring.
-    *   **Gh0st:** "Target reassigned. We kill the beast."
+    *   **HUD POV:** "NO ACTIVE PROTECTION DIRECTIVE."
+    *   **Gh0st:** "My choice. We kill the beast."
     *   **[BOSS FIGHT: Source Beast]**
     *   **After the fight:** The Beast dissolves into Source dust. Gh0st stands over it, venting heat.
     *   **Gh0st:** "You are an anomaly. But you are not the enemy."
     *   **Nova:** "Does that mean you're not shooting us?"
-    *   **Gh0st:** "My systems won't allow it. Truce. Until I get answers."
+    *   **Gh0st:** "My systems would allow it now. I won't. Truce—until I get answers."
 
 ## EVT_W2_04: Anchor Drill
-*   **Trigger:** First rest after Gh0st's truce (post-w2_mq04, safe node).
+*   **Trigger:** First rest after the Beast fight and Gh0st's truce; final task before `w2_mq04` completes at Canopy Ridge.
 *   **Action:**
-    *   Night in the ruins. Bioluminescent spores drift like slow snow.
+    *   Night on Canopy Ridge. Bioluminescent spores drift like slow snow.
     *   Zeke is bandaging a cut. Nova reaches for Link again—trying to help—and the connection shrieks. Her vision fuzzes with static.
     *   Orion catches her wrist. Gentle, firm.
     *   **Orion:** "Stop. You are burning the wire."
     *   Nova blinks, breathing hard.
-    *   **Nova:** "I can handle it. I just need to focus."
-    *   **Orion:** "Focus isn't the problem. Physics is. No single wire can hold a thunderstorm."
-    *   He gestures to the others.
-    *   **Orion:** "You are the Spark. You open the door. But if you try to hold the energy alone, you will melt."
-    *   He points to Zeke. "He is the Ground. When the static gets too high, you push it to him. He dissipates it."
-    *   He points to Gh0st. "He is the Shield. He contains the heat so it doesn't leak."
-    *   **Nova:** "And you?"
-    *   **Orion:** "I am the Tuner. I make sure the noise becomes music."
-    *   Orion sets a pebble in her palm.
-    *   **Orion:** "Don't lift this alone. Build the circuit. Trust them to carry the weight."
-    *   Nova closes her eyes. She doesn't just push; she *connects*.
-    *   Zeke shakes his hand like he touched a live wire. "Whoa. Tingly."
-    *   Gh0st’s vents hiss softly. "Thermal spike absorbed."
-    *   The pebble glows—steady, bright, and cool.
-    *   **Orion:** "Better. Again tomorrow."
+    *   **Nova:** "I can hold it."
+    *   **Orion:** "The Bridge connects; it does not make one body carry the circuit. Ground first. Then channel."
+    *   Zeke clips a grounding lead to Nova's bracer. Gh0st considers the open circuit, then freely offers his armored hand. Orion holds one low tuning tone.
+    *   **Gh0st:** "No command attached. I am here. Route it."
+    *   Nova opens Link. Current passes among them without merging them; Zeke's wound stabilizes while every thought remains its owner's.
+    *   **Nova:** "Link. Not merge. I get it."
 
 ## EVT_W2_04A: Tideglass Beach (Optional Breather)
 *   **Trigger:** Visiting Tideglass Beach (w2_sq03, optional).
@@ -138,17 +127,18 @@
     *   Zeke digs through the wet sand, holding up a cluster of shelled creatures. "Okay. Tideglass Skewers. We eat like humans today."
     *   The scene plays like a rare thing: a family practicing being alive.
 
-## EVT_W2_11: The Ceiling
+## EVT_W2_11: First Liftoff
 *   **Trigger:** Launching the Astra (End of World 2).
 *   **Action:**
-    *   The ship breaks the clouds. The sky turns purple. A massive localized lightning strike from the Shield hits the hull, shaking the cockpit violently.
-    *   **Console:** "ALERT. HARD DECK BREACH DETECTED. DEFENSIVE DISCHARGE IMMINENT."
-    *   **Zeke:** "Back down! Dive! It's not a wall, it's a zapper!"
-    *   Nova forces the stick forward, diving back under the cloud layer just as a second bolt vaporizes the air where they were.
-    *   **Nova:** "We're trapped. We can't punch through."
-    *   **Orion:** "The Shield is a Phase Curtain. It isolates the sectors. Attempting to cross the border without the Lens to find the frequency gap will disintegrate the hull."
-    *   **Zeke:** "So we’re stuck in this bubble until we heist the key."
-    *   **Nova:** "Then we need a key. Or a map."
-    *   **Zeke:** "The Lens. In the Spire. It sees the frequency gaps."
-    *   **Result:** The goal shifts from "Leave Planet" to "Heist the Lens."
+    *   The crew locks the separately recovered Bridge Echo into *The Astra's* navigation cradle. Salvaged conduits feed both ship and Bridge from the repaired power bus; the Chime is used once to authenticate the old interface, never as a battery.
+    *   The ship rises above the canopy but stays below the storm shelf. The outer Shield is only a faint lattice high overhead—distant, untouched.
+    *   **Console:** "BRIDGE ECHO ONLINE. CONDUIT LOAD: EIGHTY-SEVEN PERCENT. LOW-ALTITUDE CORRIDOR LOCKED."
+    *   **Zeke:** "Tell me that number gets friendlier once we're moving."
+    *   **Nova:** "Tell the conduits to complain after we land."
+    *   The Bridge plots a stable line toward the Spire. Nova follows it, keeping the ship under the clouds.
+    *   **Orion:** "This repair can carry us to the Spire. It cannot cross an internal Phase Curtain, and it cannot climb to the outer Shield."
+    *   **Nova:** "Then we solve one ceiling at a time."
+    *   **Zeke:** "The Lens in the Spire reads frequency gaps. We steal it before we ask the ship for a miracle."
+    *   The Spire emerges through the haze. *The Astra* continues toward its hidden low-city approach without any Shield impact.
+    *   **Result:** World 2 ends with controlled low-altitude flight. World 3's Lens enables the later internal-curtain crossing; the Deep-Core Engine and phase-cutter arrays remain the later escalation for the orbital climb.
 

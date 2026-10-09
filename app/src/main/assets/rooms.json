@@ -215,7 +215,7 @@
     "env": "mine",
     "title": "Nova's Bunk",
     "background_image": "images/rooms/world_1/pit_nova_bunk_v5.png",
-    "description": "Your bunk is a narrow shelf in the colony wall, barely wide enough to dream sideways. The bunk light buzzes above cargo netting that holds your tools, your spare ration, and the little pieces of yourself Dominion has not inventoried yet.",
+    "description": "Condensation ticks down the wall beside your narrow bunk. A bunk light hangs over cargo netting stuffed with hand tools, one spare ration, and Jed's palm-sized metal carving.",
     "description_dark": "The room is dead black except for the emergency glow around your bunk light.",
     "description_variants": [
       {
@@ -223,13 +223,13 @@
           "light_on": true,
           "bunk_checked": true
         },
-        "description": "The bunk light steadies into a cheap yellow halo. Your bunk is still hard and narrow, the netting still sags with tools and rations, but now the door seam is visible enough to leave without cracking your shin."
+        "description": "The bunk light steadies to a cheap yellow. Your bunk is still hard, the netting still sags with tools and a ration, and the door seam is finally visible enough to leave without cracking your shin."
       },
       {
         "requires_state": {
           "light_on": true
         },
-        "description": "The bunk light buzzes awake, sketching the room back into shape: your narrow bunk, the cargo netting, the scratched floor, and the door out to the sleeping level."
+        "description": "The bunk light buzzes awake. It catches the narrow bunk, cargo netting, scratched floor, and the door out to the sleeping level."
       }
     ],
     "npcs": [],
@@ -276,7 +276,7 @@
         "name": "bunk",
         "type": "rest_stop",
         "rest_event": "w1_rest_nova_bunk",
-        "message": "It's hard, it's small, but it's yours. Resting here steadies Nova before the colony starts asking for pieces of her again."
+        "message": "The mattress is thin and the drill vibration comes through the wall, but ten quiet minutes takes the shake out of Nova's hands."
       },
       {
         "name": "netting",
@@ -449,12 +449,12 @@
       {
         "name": "workbench",
         "type": "tinkering",
-        "condition_unmet_message": "Jed's workbench is ready. Repair the Cryo-Inductor into a Functional Cryo-Inductor before shift clearance."
+        "condition_unmet_message": "Jed's workbench is ready. Rebuild the Cryo-Inductor around the open phase assembly while the safety governor stays out."
       },
       {
         "name": "mining cutter",
         "type": "generic",
-        "condition_unmet_message": "Your jury-rigged tool. It's built to cut rock, but it's currently held together by luck and Jed's patience."
+        "condition_unmet_message": "You pried out its safety governor for a wider phase sweep. The repaired cold loop is the only thing keeping that shortcut attached to your hand."
       }
     ]
   },
@@ -2355,7 +2355,7 @@
     "env": "space",
     "title": "Geometric Gap",
     "background_image": "images/rooms/world_1/echo_gap.png",
-    "description": "This is where the colony's industrial paint meets the ancient stone of the Architects. The transition line is surgically precise, and crossing it feels like stepping out of Dominion's story into something that was waiting first.",
+    "description": "A precise line marks where colony paint ends and smooth Architect stone begins. Fresh fractures radiate from a buried conduit that still carries the same pulse as your cutter surge.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2418,11 +2418,17 @@
     "weather": "resonance",
     "title": "The Heart",
     "background_image": "images/rooms/world_1/echo_heart.png",
-    "description": "The tuning fork hums in the center of the room, held in a cradle of white geometry. The air here vibrates with a pressure that feels like a physical weight against your chest.",
-    "npcs": [],
-    "items": [
-      "tuning_fork"
+    "description": "The tuning fork broadcasts from a broken cradle of white geometry. Your cutter controls answer with the same unstable pulse that kicked through the colony grid.",
+    "description_variants": [
+      {
+        "requires_state": {
+          "relic_synced": true
+        },
+        "description": "The broken cradle is quiet. The tuning fork rests in your kit, while your cutter's fused Cryo-Inductor and the scorched ground strip in your Flux Liner mark where the handshake closed."
+      }
     ],
+    "npcs": [],
+    "items": [],
     "enemies": [],
     "connections": {
       "south": "echo_walkway",
@@ -2435,12 +2441,27 @@
       2
     ],
     "state": {},
+    "blocked_directions": {
+      "north": {
+        "type": "lock",
+        "requires": [
+          {
+            "room_id": "echo_heart",
+            "state_key": "relic_synced",
+            "value": true
+          }
+        ],
+        "message_locked": "The emergency seam stays fused while the Fork is broadcasting. Complete the counter-tune first.",
+        "message_unlock": "The handshake closes and the emergency seam opens into a maintenance tunnel."
+      }
+    },
     "actions": [
       {
         "name": "tuning fork",
-        "type": "generic",
-        "action_event": "touch_relic",
-        "condition_unmet_message": "The Relic. It's calling to you."
+        "type": "tuning_puzzle",
+        "puzzle_id": "w1_echo_counter_tune",
+        "hide_when_state": "relic_synced",
+        "condition_unmet_message": "The Fork is broadcasting a calibration pattern. Your ungoverned cutter can answer it."
       },
       {
         "name": "geometry",
@@ -2454,7 +2475,7 @@
     "env": "space",
     "title": "The Harmonic Well",
     "background_image": "images/rooms/world_1/echo_well.png",
-    "description": "A deep pit of resonant energy that glows with a screaming white light. A low-hanging mist swirls around the edge of the well, tasting like copper and lost memories.",
+    "description": "A deep pit glows with screaming white light. Low mist circles the rim, cool on your skin and sharp as copper on your tongue.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2477,9 +2498,9 @@
   {
     "id": "echo_memory",
     "env": "space",
-    "title": "Memory Alcove",
+    "title": "Signal Alcove",
     "background_image": "images/rooms/world_1/echo_memory.png",
-    "description": "A small alcove where the past feels distant and blurred. The walls are covered in a fine layer of static that ripples when you move, as if the room is forgetting you.",
+    "description": "Fine static crawls over the alcove walls and skips whenever you move. Your suit clock drops half a second, then resumes as if nothing happened.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -2500,7 +2521,7 @@
       {
         "name": "static",
         "type": "generic",
-        "condition_unmet_message": "Snow on a dead screen. It feels like your thoughts are being scattered."
+        "condition_unmet_message": "Snow on a dead screen. Your suit clock stutters when the static jumps."
       }
     ]
   },
@@ -2836,7 +2857,7 @@
       {
         "name": "navigation console",
         "type": "generic",
-        "condition_unmet_message": "The console is locked. It needs a physical Chime bypass to override the Dominion shield frequency.",
+        "condition_unmet_message": "The console rejects the pod. The Chime must be spliced into the authorization bus to spoof a valid operator and bind navigation to its paired beacon; it cannot open the outer Shield.",
         "action_event": "use_nav_console"
       },
       {
@@ -4210,7 +4231,7 @@
     "env": "neon",
     "title": "Archive Vault",
     "background_image": "images/rooms/world_3/spire_archive_vault.png",
-    "description": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field that hums toward Nova before she touches it. Command tether-lines vanish into the glass, routing power back toward the Prism Gallery.",
+    "description": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. Before Nova touches the lens relic, its containment instruments sound a response tone at the Fork protocol scar carried in her signal. Command tether-lines vanish into the glass, routing power back toward the Prism Gallery.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -4253,7 +4274,7 @@
         "name": "lens relic",
         "type": "generic",
         "action_event": "w3_mq14_take_lens",
-        "condition_unmet_message": "The Lens floats inside a containment field, already reacting like it recognizes something in Nova."
+        "condition_unmet_message": "The Lens floats inside a containment field. Its instruments have detected the Fork protocol scar in Nova's signal, not recognized Nova herself."
       },
       {
         "name": "command tether-lines",
@@ -4381,7 +4402,7 @@
     "env": "neon",
     "title": "Landing Pad Roof",
     "background_image": "images/rooms/world_3/spire_landing_pad_roof.png",
-    "description": "The Landing Pad Roof shudders under violent wind and red lockdown light. The Astra waits beyond the drone test alcove while the Planetary Shield rotates overhead in impossible chords. Somewhere inside that sky is a shield gap small enough to miss and important enough to die for.",
+    "description": "The Landing Pad Roof shudders under violent wind and red lockdown light. The Astra waits beyond the drone test alcove while Sector 7's internal phase curtain pulses between districts. Somewhere in that local barrier is a timing seam small enough to miss and important enough to die for.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -4410,7 +4431,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Landing Pad Roof shudders under violent wind and red lockdown light. The Astra waits beyond the drone test alcove while Scan reveals the Planetary Shield as a rotating wound in the sky, open for less than a heartbeat.",
+        "description": "The Landing Pad Roof shudders under violent wind and red lockdown light. The Astra waits beyond the drone test alcove while Scan reveals the internal phase curtain as a rotating wound between districts, open for less than a heartbeat.",
         "requires_milestones": [
           "ms_w3_mq14_complete"
         ]
@@ -4418,16 +4439,16 @@
     ],
     "actions": [
       {
-        "name": "shield window",
+        "name": "curtain window",
         "type": "generic",
         "action_event": "w3_scan_shield_gap",
-        "condition_unmet_message": "The Shield is still an impossible wall until the Lens shows Nova the window in its rotation."
+        "condition_unmet_message": "The internal curtain is still an impossible wall until the Lens shows Nova the window in its rotation."
       },
       {
         "name": "launch window",
         "type": "generic",
         "action_event": "w3_mq15_launch_astra",
-        "condition_unmet_message": "The Astra can slip the Shield only after the Administrator is down and the Lens has found the window."
+        "condition_unmet_message": "The Astra can slip the internal curtain only after the Administrator is down and the Lens has found the window."
       }
     ],
     "enemy_flavor": {
@@ -4441,7 +4462,7 @@
     "env": "foundry",
     "title": "Obsidian Shelf",
     "background_image": "images/rooms/world_4/foundry_slag_landing.png",
-    "description": "The Astra cools on a shelf of black volcanic glass above a river of magma. Heat shields glow cherry-red while ash falls like dirty snow, and the Lens still shows the Shield window closing behind you.",
+    "description": "The Astra cools on a shelf of black volcanic glass above a river of magma. Heat shields glow cherry-red while ash falls like dirty snow, and the Lens still shows Sector 7's internal curtain closing behind you.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4464,7 +4485,7 @@
         ]
       },
       {
-        "description": "The Astra sits secured on volcanic glass, engines clicking through emergency cool-down. The Lens proved the Shield has seams, but the ship does not have the muscle to climb any higher without a Foundry-grade engine.",
+        "description": "The Astra sits secured on volcanic glass, engines clicking through emergency cool-down. The Lens proved the local curtain has seams, but the ship still lacks the orbital velocity and corridor hardware needed to challenge the separate outer Shield.",
         "requires_milestones": [
           "ms_w4_landing_secured"
         ]
@@ -4517,9 +4538,9 @@
         "condition_unmet_message": "The Foundry basin is not a building so much as an appetite: scrap in, weapons out, nobody counted."
       },
       {
-        "name": "shield window telemetry",
+        "name": "curtain window telemetry",
         "type": "generic",
-        "condition_unmet_message": "The Lens telemetry still flickers with the Shield window. Astra survived the slip, but not cleanly enough to climb to the Orbital Ring."
+        "condition_unmet_message": "The Lens telemetry still flickers with the internal-curtain window. The Astra survived the district crossing, but it still needs a Deep-Core Engine and Phase-Cutter Arrays before it can breach the outer Shield and climb to the Ring."
       }
     ]
   },
@@ -6346,7 +6367,7 @@
         "name": "memory oasis",
         "type": "rest_stop",
         "rest_event": "w6_rest_memory_oasis",
-        "message": "The blue fire is quiet enough to cook beside, but every shared bite carries a memory Nova can feel loosening."
+        "message": "The blue fire is quiet enough to cook beside, but its signal presses every borrowed grief against Nova's nerves. Rest helps; none of the memories are payment."
       }
     ],
     "description_variants": [
@@ -7181,7 +7202,7 @@
     "env": "source",
     "title": "New World",
     "background_image": "images/rooms/world_6/source_new_world.png",
-    "description": "Morning reaches the Colony without a Shield overhead. At Zeke's diner, a community board holds a beach photograph and the memories Nova can no longer access alone.",
+    "description": "Morning reaches the Colony through a newly opened regional corridor in the planetary curtain. At Zeke's diner, a community board holds a beach photograph Nova remembers clearly, even though the Source is silent to her now and a faint tremor follows her hand.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -7207,7 +7228,7 @@
         "requires_milestones": [
           "ms_game_complete"
         ],
-        "description": "Morning reaches the Colony without a Shield overhead. At Zeke's diner, a community board holds a beach photograph and the memories Nova can no longer access alone."
+        "description": "Morning reaches the Colony through a newly opened regional corridor in the planetary curtain. At Zeke's diner, a community board holds a beach photograph Nova remembers clearly, even though the Source is silent to her now and a faint tremor follows her hand."
       }
     ]
   },
@@ -8352,12 +8373,10 @@
     "weather": "resonance",
     "title": "Canopy Ridge",
     "background_image": "images/rooms/world_2/canopy_ridge.png",
-    "description": "A wind-carved stone shelf high above the jungle. Look at Shield catches the Planetary Shield lattice pulsing overhead, while Confront stalker marks the huge shadow shifting in the brush.",
+    "description": "A wind-carved stone shelf high above the jungle. Look at Shield catches the Planetary Shield lattice pulsing overhead. Confront stalker when the crew returns with Orion; the open shelf can hold an Anchor Drill after the hunter and Beast are dealt with.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "the_beast"
-    ],
+    "enemies": [],
     "connections": {
       "south": "sector9_ridge_overhang",
       "east": "sector9_ridge_viewpoint"
@@ -8367,6 +8386,26 @@
       -2
     ],
     "state": {},
+    "description_variants": [
+      {
+        "requires_state": {
+          "anchor_drill_complete": true
+        },
+        "description": "The wind moves cleanly over Canopy Ridge. The Beast is gone, the Anchor Drill is complete, and Link rests as a channel between separate minds—not a way to erase the distance between them."
+      },
+      {
+        "requires_state": {
+          "beast_defeated": true
+        },
+        "description": "The Source Beast lies still beneath the ridge. Gh0st has lowered his rifle by choice. Orion marks a safe grounding pattern across the open shelf; begin the Anchor Drill when everyone is ready."
+      },
+      {
+        "requires_state": {
+          "hunter_confronted": true
+        },
+        "description": "Gh0st's lethal trigger has stopped, but no command replaced it. The Source Beast crashes through the brush; Face the Beast before its charge reaches the wounded crew."
+      }
+    ],
     "actions": [
       {
         "name": "Look at Shield",
@@ -8377,7 +8416,25 @@
         "name": "Confront stalker",
         "type": "generic",
         "action_event": "w2_mq04_confront",
+        "show_when_milestone": "ms_w2_mq03_complete",
+        "hide_when_state": "hunter_confronted",
         "condition_unmet_message": "Confront the hunter waiting in the shadows."
+      },
+      {
+        "name": "Face the Beast",
+        "type": "generic",
+        "action_event": "w2_mq04_beast_ambush",
+        "show_when_state": "hunter_confronted",
+        "hide_when_state": "beast_defeated",
+        "condition_unmet_message": "The Source Beast tears out of the brush."
+      },
+      {
+        "name": "Anchor Drill",
+        "type": "generic",
+        "action_event": "w2_mq04_anchor_drill",
+        "show_when_state": "beast_defeated",
+        "hide_when_state": "anchor_drill_complete",
+        "condition_unmet_message": "Ground the Bridge circuit with Zeke, Gh0st, and Orion."
       }
     ]
   },
@@ -8665,7 +8722,7 @@
         "requires_milestones": [
           "ms_w2_mq02_complete"
         ],
-        "description": "The Temple Gate stands open, its cymatic patterns still glowing around the Chime slot. The resonator hums with a frequency that feels less like machinery than memory."
+        "description": "The Temple Gate stands open, its cymatic patterns still glowing around the Chime slot. The lock replays Orion's stored identity chord: machine-held authorization, not a memory in Nova."
       }
     ]
   },
@@ -9156,7 +9213,7 @@
     "weather": "resonance",
     "title": "Hidden Reliquary",
     "background_image": "images/rooms/world_2/archive_secret_stash.png",
-    "description": "A hidden reliquary vault. A glowing stone pedestal holds the **Link Relic** upgrade.",
+    "description": "A hidden reliquary vault. A glowing stone pedestal holds a Bridge calibration record that can make Link safer to use; it is not another Echo.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9168,12 +9225,21 @@
       -3
     ],
     "state": {},
+    "description_variants": [
+      {
+        "requires_state": {
+          "bridge_record_decoded": true
+        },
+        "description": "The reliquary pedestal stands open. Its decoded calibration record describes consent checks, separate carrier bands, and physical grounding for a safer Bridge Link; it was never another Echo."
+      }
+    ],
     "actions": [
       {
         "name": "pedestal",
         "type": "generic",
         "action_event": "w2_sq04_collect_relic",
-        "condition_unmet_message": "A pedestal holds the Link Relic upgrade."
+        "hide_when_state": "bridge_record_decoded",
+        "condition_unmet_message": "A pedestal holds a Bridge calibration record, waiting for the facility chorus to stabilize."
       }
     ]
   },
@@ -9722,7 +9788,7 @@
     "weather": "mist",
     "title": "Hangar Bay",
     "background_image": "images/rooms/world_2/hangar_bay.png",
-    "description": "A vast underground cavern opens to the sky. The Astra sits silent on the launch pad, her dark console starved of power. A bridge relic waits on the central dais while the launch cradle holds the ship like a breath not yet released.",
+    "description": "A vast underground cavern opens to the sky. The Astra sits silent on the launch pad, her dark console starved of power. An empty mounting yoke waits for Sanctuary's Bridge while the launch cradle holds the ship like a breath not yet released.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9747,7 +9813,7 @@
         "name": "bridge relic",
         "type": "generic",
         "action_event": "w2_mq05_reboot",
-        "condition_unmet_message": "The bridge relic can wake the Astra, but it needs the recovered conduits and the Chime routed through it first."
+        "condition_unmet_message": "Mount Sanctuary's Bridge here. The recovered conduits can supply startup power; the Chime can authenticate Orion's identity at the control slot."
       },
       {
         "name": "launch cradle",
@@ -9892,7 +9958,7 @@
     "weather": "resonance",
     "title": "The Sky",
     "background_image": "images/rooms/world_2/the_sky.png",
-    "description": "Flying high above the cloud layer, approaching the violet glow of the Planetary Shield. Zeke grins, but the console starts to beep frantically.",
+    "description": "The Astra skims above the jungle canopy on a low-altitude route toward the Spire. The outer Planetary Shield is a distant violet ceiling, never the ship's destination.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9911,9 +9977,9 @@
     "id": "sector9_sky_mesosphere",
     "env": "swamp",
     "weather": "resonance",
-    "title": "Mesosphere Storm",
+    "title": "Storm Corridor",
     "background_image": "images/rooms/world_2/sky_mesosphere.png",
-    "description": "Ascending through violent storm clouds. Static charges discharge across the cockpit glass.",
+    "description": "The low-altitude airlane cuts through violent storm clouds. Static crawls across the cockpit glass while Orion keeps the ship below the outer Shield.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9932,9 +9998,9 @@
     "id": "sector9_sky_shield_threshold",
     "env": "swamp",
     "weather": "resonance",
-    "title": "Shield Threshold",
+    "title": "Spire Airlane",
     "background_image": "images/rooms/world_2/sky_shield_threshold.png",
-    "description": "Directly facing the violet Shield lattice. The cockpit vibrates, systems reporting terminal warnings.",
+    "description": "The Spire's controlled airlane rises ahead through the storm. The cockpit vibrates under local traffic locks while the outer Shield remains far overhead.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9957,7 +10023,7 @@
     "weather": "resonance",
     "title": "Security Buoy",
     "background_image": "images/rooms/world_2/sky_sensor_buoy.png",
-    "description": "A security buoy logging flight data. Its status arrays glow violet in key with the Shield.",
+    "description": "A security buoy logs low-altitude flight data and forwards every unauthorized route to the Spire.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9977,7 +10043,7 @@
     "weather": "resonance",
     "title": "Barrier Controller",
     "background_image": "images/rooms/world_2/sky_barrier_core.png",
-    "description": "The shield control node. It hums with the master curfew frequency of Sector 9.",
+    "description": "A local air-traffic curtain node hums with Sector 9's curfew frequency. It governs district passage, not the planetary Shield.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9997,7 +10063,7 @@
     "weather": "resonance",
     "title": "Pushback Node",
     "background_image": "images/rooms/world_2/sky_hard_deck.png",
-    "description": "The boundary altitude. Flight thrusters shut down automatically to prevent disintegration.",
+    "description": "The boundary of permitted Sector 9 airspace. Dominion pushback signals try to force the Astra down toward the canopy.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10038,7 +10104,7 @@
       {
         "name": "Chime",
         "type": "generic",
-        "condition_unmet_message": "The Chime steadies the ship around a low Ocean-note, keeping the crew distinct as Ice inside the current."
+        "condition_unmet_message": "The Chime broadcasts Orion's old identity chord. The Bridge uses that credential to recognize the crew; the Astra supplies its own power."
       }
     ],
     "npc_presence": [
@@ -15458,7 +15524,7 @@
     "env": "source",
     "title": "Open Window",
     "background_image": "images/rooms/world_6/source_new_world_node_scale_03.png",
-    "description": "An open window lets real sky into the diner without Shield shimmer or siren static. The real sky is frightening because it belongs to everyone.",
+    "description": "An open window lets real sky into the diner through the corridor the crew opened in the regional Shield curtain. Beyond that narrow freedom, the wider lattice still shimmers over Dominion-held territory.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -15480,7 +15546,7 @@
       {
         "name": "real sky",
         "type": "generic",
-        "condition_unmet_message": "No corporate ceiling, no planetary lock, no permission layer."
+        "condition_unmet_message": "This corridor has no corporate lock or permission layer. The wider planetary lattice remains a fight for another day."
       }
     ]
   },

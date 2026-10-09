@@ -69,8 +69,8 @@ class Hub1CriticalFlowTest {
     }
 
     @Test
-    fun wakeUpCallCompletesFromBunkToJedToCryoInductorRepair() {
-        val harness = Hub1Harness()
+    fun wakeUpCallCompletesOnlyAfterTheCutterSurgeCinematic() {
+        val harness = Hub1Harness(autoCompleteCinematics = false)
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_nova_bunk"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_turn_on_bunk_light"))
@@ -109,10 +109,23 @@ class Hub1CriticalFlowTest {
         harness.events.handleTrigger("player_action", EventPayload.Action("tinkering_craft", "functional_cryo_inductor"))
 
         state = harness.store.state.value
-        assertTrue(state.completedQuests.contains("w1_mq01"))
-        assertTrue(state.completedMilestones.contains("ms_w1_mq01_complete"))
+        assertTrue(state.activeQuests.contains("w1_mq01"))
+        assertTrue(!state.completedQuests.contains("w1_mq01"))
+        assertTrue(state.completedMilestones.contains("ms_w1_mq01_cryo_repaired"))
+        assertTrue(!state.completedMilestones.contains("ms_w1_mq01_complete"))
         assertTrue(state.questTasksCompleted["w1_mq01"].orEmpty().contains("use_tinkering_table"))
         assertTrue(harness.autoStartedDialogueIds.contains("jed_w1_mq01_repair_done_1"))
+        assertTrue(harness.playedCinematicIds.contains("scene_cutter_surge"))
+        assertTrue(!state.activeQuests.contains("w1_mq02"))
+        assertTrue(!state.completedMilestones.contains("ms_w1_mq01_cutter_surge"))
+
+        harness.completePendingCinematics()
+
+        state = harness.store.state.value
+        assertTrue(state.completedQuests.contains("w1_mq01"))
+        assertTrue(!state.activeQuests.contains("w1_mq01"))
+        assertTrue(state.completedMilestones.contains("ms_w1_mq01_complete"))
+        assertTrue(state.completedMilestones.contains("ms_w1_mq01_cutter_surge"))
         assertTrue(state.completedMilestones.contains("ms_w1_mq02_clearance_ordered"))
         assertTrue(state.activeQuests.contains("w1_mq02"))
         assertEquals("w1_mq02", state.trackedQuestId)
@@ -445,14 +458,25 @@ class Hub1CriticalFlowTest {
         )
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("mine_threshold"))
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("echo_gap"))
-        harness.events.handleTrigger("player_action", EventPayload.Action("touch_relic"))
+        harness.store.setInventory(
+            harness.store.state.value.inventory + mapOf(
+                "functional_cryo_inductor" to 1,
+                "nova_flux_liner" to 1
+            )
+        )
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq03_touch_relic"))
 
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w1_mq03"))
         assertTrue(state.completedMilestones.contains("ms_w1_mq03_complete"))
+        assertTrue(state.completedMilestones.contains("ms_w1_mq03_echo_marked"))
+        assertTrue(state.completedMilestones.contains("ms_w1_mq03_liner_ground_spent"))
         assertTrue(state.activeQuests.contains("w1_mq04"))
         assertTrue(state.questTasksCompleted["w1_mq04"].orEmpty().contains("survive_lockdown_broadcast"))
         assertTrue(state.inventory["tuning_fork"].orZero() >= 1)
+        assertEquals(0, state.inventory["functional_cryo_inductor"].orZero())
+        assertEquals(1, state.inventory["nova_flux_liner"].orZero())
+        assertEquals(true, state.roomStates["echo_heart"].orEmpty()["relic_synced"])
         assertTrue(state.unlockedSkills.contains("nova_blast_wave"))
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("echo_exit"))
@@ -553,7 +577,13 @@ class Hub1CriticalFlowTest {
         )
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("mine_threshold"))
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("echo_gap"))
-        harness.events.handleTrigger("player_action", EventPayload.Action("touch_relic"))
+        harness.store.setInventory(
+            harness.store.state.value.inventory + mapOf(
+                "functional_cryo_inductor" to 1,
+                "nova_flux_liner" to 1
+            )
+        )
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq03_touch_relic"))
 
         val savedState = harness.store.state.value.copy(
             worldId = "world_1",
@@ -681,6 +711,7 @@ class Hub1CriticalFlowTest {
         val narrationMessages = mutableListOf<String>()
         val tutorialRequests = mutableListOf<Pair<String?, String?>>()
         val autoStartedDialogueIds = mutableListOf<String?>()
+        val playedCinematicIds = mutableListOf<String>()
         private val pendingCinematics = mutableListOf<() -> Unit>()
 
         init {
@@ -695,7 +726,8 @@ class Hub1CriticalFlowTest {
                         tutorialRequests += sceneId to context
                         done()
                     },
-                    onPlayCinematic = { _, done ->
+                    onPlayCinematic = { sceneId, done ->
+                        playedCinematicIds += sceneId
                         if (autoCompleteCinematics) {
                             done()
                         } else {

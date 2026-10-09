@@ -31,19 +31,19 @@
     *   **Zeke:** "You deleted my employee ID? Fine. I'm deleting your admin privileges."
     *   He slams the final command key. The containment field drops.
     *   **Zeke:** "Resignation accepted."
-    *   Nova steps up to the Lens. It hums, reacting to her presence before she even touches it.
-    *   **Zeke (Checking readings):** "Wait. The energy density is spiking. It's reading you as... incompatible. If you touch that, the feedback loop will light us up like a flare."
+    *   Nova steps up to the Lens. The containment instruments chirp as it detects the Tuning Fork protocol scar carried in her signal and answers with a low hum—not recognition of Nova, only a protocol response.
+    *   **Zeke (Checking readings):** "Wait. The energy density is spiking. It's reading that scar as... incompatible. If you touch that, the feedback loop will light us up like a flare."
     *   **Orion:** "He is right. The Source is too loud. We need to dampen it first."
     *   **Nova:** "We don't have time for a safe mode. I can tune it out. I'm strong enough."
     *   **Orion:** "Nova, don't—"
     *   She ignores them and grabs the Lens.
     *   Her vision shifts (Filter change). She doesn't see data; she sees **standing waves**.
-    *   Through the ceiling and the skyline, she can suddenly see the Planetary Shield as a rotating lattice—micro-windows opening and closing like a rhythm.
+    *   Through the ceiling and skyline, she sees two distinct systems: internal sector curtains rotating close to the city, and the outer Planetary Shield enclosing the world far above.
     *   The Lens reveals the structure in two layers: Dominion text on top, **visualized chords** underneath.
     *   **Overlay:** **PHASE CURTAIN // CORRIDOR ROTATION**  
     *   **Undercurrent (faint):** **SYNC: ESTABLISHED**
     *   She sees the Administrator's "Shadow" — a dark tether leading into the Source.
-    *   For a moment, she sees her own signature: a messy human waveform... and a thin, old Source thread running through it.
+    *   For a moment, she sees her own signature: a messy human waveform crossed by the Tuning Fork protocol scar burned into her nerves.
     *   The Lens flares hot. The Archive security system tags her in clean, clinical text: **ANOMALY DETECTED.**
     *   Nova recoils as feedback rips behind her eyes. Orion catches her wrist. "I told you. The Source isn't a toy."
     *   Orion clocks her reaction. "That Source—" He stops as alarms begin to rise. "Later."
@@ -66,13 +66,12 @@
 ## EVT_W3_05: The Breakout
 *   **Trigger:** Beating the Administrator and reaching the landing pad.
 *   **Action:**
-    *   Zeke uses the Lens to spot the rotating frequency gap.
+    *   Zeke uses the Lens to spot a rotating gap in the internal phase curtain around Sector 7.
     *   Orion calls the timing.
-    *   *The Astra* lifts off; the Shield ripples as they slip through.
-    *   The engines sputter in thin orbit.
-    *   **Orion:** "We can reach low orbit, not the Ring."
-    *   **Nova:** "So we get a bigger engine."
-    *   They drop back through the gap and set course for the Foundry.
+    *   *The Astra* stays low and cuts through as the curtain ripples shut behind them.
+    *   **Orion:** "The Lens showed us the outer Shield too. Sight will not give us the velocity or hold that corridor open."
+    *   **Nova:** "Then the Foundry owes us an engine and a bigger cutter."
+    *   They drop toward Sector 7 and set course for the Foundry.
 
 ## EVT_W3_06: The Audit (Thorne's Trap)
 *   **Trigger:** Grabbing the Lens.

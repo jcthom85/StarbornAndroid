@@ -96,8 +96,8 @@
       "scrap_metal": 1
     },
     "result": "functional_cryo_inductor",
-    "description": "Repair the damaged Cryo-Inductor so Jed can bring the cold loop online.",
-    "success_message": "The Cryo-Inductor whirs back to life."
+    "description": "Rebuild the cold loop around Nova's widened phase sweep without putting the safety governor back.",
+    "success_message": "The Cryo-Inductor catches. The cutter holds its wider sweep without cooking the grip."
   },
   {
     "id": "repaired_projector",

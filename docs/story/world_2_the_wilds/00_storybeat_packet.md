@@ -11,13 +11,13 @@ World 2 is the assembly of the crew. Nova is no longer in a structured society; 
 
 **Entry State:**
 - Party: Nova solo.
-- Items: Starter cutter, Tuning Fork, Chime.
+- Items: Starter cutter, Tuning Fork, Chime (Orion identity key + paired beacon; never a battery).
 - Status: Suffering from Erosion.
 
 **Exit State:**
 - Party: Nova, Zeke, Orion, Gh0st.
-- Relics: Tuning Fork (Blast), Chime (Light), Link (Relic).
-- Status: Repaired *Astra* locked under the Planetary Shield.
+- Echoes/Arts: Tuning Fork (Blast) and Bridge Echo (Link), with the Bridge installed aboard *The Astra*. The Chime remains a key/beacon, not a power-granting Echo.
+- Status: Repaired *Astra* capable of low-altitude flight to the Spire; internal Phase Curtains and the outer Shield remain beyond its current systems.
 
 ---
 
@@ -29,11 +29,12 @@ These are the primary narrative anchors for World 2.
 |---|---|---|---|
 | 1 | Waking at the Crash | Onboard survival pacing, Erosion tutorial, Zeke's injury. | `w2_mq01`, `landing_core`, `landing_pod`. |
 | 2 | Razor-Vine Gauntlet | First wilderness combat; introduction to wildlife threat. | `wilds_trailhead`, `wilds_thickets`. |
-| 3 | The Ceasefire | Ambush by Gh0st; Elara's Song override; Source Beast boss. | `EVT_W2_03`, `ridge_arena` boss encounter. |
-| 4 | Awakening the Ancient | Reconnecting with the past; Orion wakes up to a dead world. | `EVT_W2_02`, `stasis_pod_deck` ring alignment. |
-| 5 | The Anchor Drill | Learning to share the static; unlocking the **Link** Relic. | `EVT_W2_04`, first camp dialogue after Orion wakes. |
-| 6 | Stasis Observations | Reading light murals; learning about "Harmony" (Great Silence). | `EVT_W2_01`, `hall_main_gallery`. |
-| 7 | Hitting the Ceiling | Launch sequence fails when Planetary Shield discharges. | `EVT_W2_11`, launch cinematic in the mesosphere. |
+| 3 | Beacon Authentication | The Chime proves Orion's identity to the Temple Gate; Sanctuary reserve cells wake. | `w2_mq02`, `sector9_temple_lock_chamber`. |
+| 4 | Stasis Observations | Reading light murals; learning about "Harmony" (Great Silence). | `EVT_W2_01`, `hall_main_gallery`. |
+| 5 | Awakening the Ancient | Reserve power and the ring array release Orion into a dead world; the crew recovers the separate Bridge Echo. | `EVT_W2_02`, `stasis_pod_deck` ring alignment. |
+| 6 | The Ceasefire | Gh0st ambush; Nova's Fork mark trips a Source Lock failsafe but gives no order; Gh0st chooses to protect the party during the Source Beast attack. | `EVT_W2_03`, `ridge_arena` boss encounter. |
+| 7 | The Anchor Drill | Learning to share the static; safely unlocking the Bridge-granted Source Art **Link**. | `EVT_W2_04`, first camp dialogue after Gh0st's truce. |
+| 8 | First Liftoff | Salvaged conduits power *The Astra* and its newly installed Bridge Echo for a low-altitude flight to the Spire. The outer Shield is visible but never approached. | `EVT_W2_11`, launch cinematic over Sector 9. |
 
 ---
 
@@ -64,7 +65,7 @@ Dominion did not invent this. They are simply trying to strike the same note. Th
 
 ### EVT_W2_02: The Awakening
 **Location:** `sector9_stasis_chamber`
-**Scene:** The ring array aligns. Orion's pod vents coolant and opens. Orion falls forward, blue fluid on his chin, gasping.
+**Scene:** The Temple Gate accepted the Chime as Orion's identity key and woke the Sanctuary's reserve cells. Nova and Zeke route that reserve power through the aligned ring array. Orion's pod vents coolant and opens; he falls forward, blue fluid on his chin, gasping.
 
 ```
 ORION:
@@ -76,8 +77,8 @@ NOVA:
 Here. We found it in the mine.
 
 ORION:
-(takes it, slotting it into the console)
-It is still ringing. But the signal... it is hollow. Where are the others? Why is the sky so quiet?
+(checks its paired cadence against the console)
+My key. My beacon. It found its way back. The reserve cells accepted me before I was awake.
 
 ZEKE:
 Uh, buddy, we’ve got some bad news. The colony above us? It’s a Dominion quarry. Your people... they aren't around.
@@ -90,97 +91,77 @@ NOVA:
 (reaches out to touch his shoulder)
 Orion, wait—
 
-(The Echo marks flare on Nova’s arm. A painful shriek of static fills the air. Nova staggers back, clutching her head.)
+(The Fork protocol mark on Nova's arm catches a burst of Architect telemetry. It translates the machine log into painful sound and image; there is no inherited memory in it. Nova staggers back, clutching her head.)
 
 ORION:
 Stop! You are burning the wire. The current is too strong for a single spark.
+
+NOVA:
+Why could I read that?
+
+ORION:
+Because an Echo wrote a machine protocol into you. Not blood. Not ancestry. A wound with permissions.
+
+(Beyond the pod, Sanctuary reserves illuminate a sealed navigation cradle. Inside is the Bridge Echo—a separate Architect system. The crew recovers it here; its handshake makes the Source Art Link available, and it will be installed aboard *The Astra* later.)
 ```
 
 ---
 
-### EVT_W2_04: Anchor Drill (First Rest after Orion joins)
-**Location:** Campsite (e.g., `sector9_beach_cove` or `sector9_temple_plaza`)
-**Scene:** Evening. Spores drift down like glowing ash. Nova is shaking, her fingers glowing with blue static.
+### EVT_W2_04: Anchor Drill (First Rest after Gh0st's Truce)
+**Location:** `sector9_canopy_ridge`
+**Scene:** Night on the ridge. Zeke is bandaging a reopened cut when Nova tries to route the Bridge's Link into the wound by herself.
 
 ```
 ORION:
-(setting a pebble in Nova’s palm)
-Physics is simple. If you try to hold the ocean in a cup, it will overflow. You must build a circuit.
+Stop. You are burning the wire.
 
 NOVA:
-I can handle it. I just need to push harder.
+I can hold it.
 
 ORION:
-Pushing is what melts the wire, child. Look at them.
-
-(Orion points to Zeke.)
-
-ORION:
-He is the Ground. When the static rises, you push the excess to him. He is solid. He dissipates it.
-
-ZEKE:
-Wait, I’m the what now?
-
-(Orion points to Gh0st.)
-
-ORION:
-He is the Shield. He holds the heat so it does not leak into the air.
+The Bridge connects; it does not make one body carry the circuit. Ground first. Then channel.
 
 GH0ST:
-(adjusting his shoulder guard)
-Thermal dampening systems standing by.
+No command attached. I am here. Route it.
 
-ORION:
-And I am the Tuner. I make sure the noise becomes a chord. Close your eyes, Nova. Do not hold the spark. Link them.
+(Zeke clips a grounding lead to Nova's bracer. Gh0st freely offers his armored hand. Orion holds one low tone. Nova opens Link; current passes among them without merging them, and Zeke's wound stabilizes.)
 
 NOVA:
-(closing her eyes, exhaling)
-Linking...
-
-(A soft blue thread of light connects Nova, Zeke, and Gh0st. The pebble in Nova’s hand glows cool and steady.)
-
-ZEKE:
-Whoa. Tingly. Like drinking carbonated water through your fingers.
-
-GH0ST:
-Static discharge absorbed. Vector stable.
-
-ORION:
-Better. Again tomorrow.
+Link. Not merge. I get it.
 ```
 
 ---
 
-### EVT_W2_11: The Hard Deck (The Ceiling)
+### EVT_W2_11: First Liftoff
 **Location:** `sector9_the_sky`
-**Scene:** *The Astra* breaks through the thick jungle clouds. The sky turns deep purple. Suddenly, a blinding flash of yellow-white lightning from the Planetary Shield strikes the cockpit.
+**Scene:** Salvaged conduits feed *The Astra's* power bus. The Bridge Echo wakes in its newly installed cradle and paints a low-altitude route from Sector 9 to the Spire. The ship rises just above the jungle; the Planetary Shield remains a distant lattice high overhead.
 
 ```
 CONSOLE:
-WARNING. HARD DECK BREACH. ENERGY SHIELD DEFENSIVE DISCHARGE IMMINENT.
+BRIDGE ECHO ONLINE. CONDUIT LOAD: EIGHTY-SEVEN PERCENT. LOW-ALTITUDE CORRIDOR LOCKED.
 
 ZEKE:
-Pull back! Pull back! It's not a wall, Nova, it's a zapper!
+Tell me that number gets friendlier once we're moving.
 
 NOVA:
-(fighting the steering yoke)
-I can’t override it! It’s locking onto our heat signature!
+(steadying the steering yoke)
+Tell the conduits to complain after we land.
 
 ORION:
-The Shield is a Phase Curtain. It matches the frequency of the sector. Without the Lens to see the gap, we will disintegrate!
+Keep her under the storm shelf. These conduits can carry us to the Spire, not through a containment curtain and not to the outer Shield.
 
-(Nova slams the yoke forward. The ship dives back into the canopy just as a second blast vaporizes the clouds above them.)
-
-ZEKE:
-(panting, sliding out of his chair)
-Okay. So we are inside a giant fishbowl, and the lid is electrified. Fantastic.
-
-NOVA:
-Then we need a key. Or a map.
+(The Bridge Echo draws a stable line between the canopy and the cloud base. Nova follows it. The Spire emerges on the horizon.)
 
 ZEKE:
-The Administrator’s Spire. World 3. The Lens is kept in the central vault. It monitors the frequency gaps.
+(watching the conduit gauges)
+Low and slow. I can work with low and slow.
 
 NOVA:
-Then we have our next job. We heist the Lens.
+And when we need to cross sectors?
+
+ZEKE:
+The Lens in the Spire reads frequency gaps. We steal it before we ask this ship for a miracle.
+
+NOVA:
+First we land. Then we heist the Lens.
 ```

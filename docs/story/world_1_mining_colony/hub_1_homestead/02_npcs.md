@@ -5,14 +5,14 @@
 ### Jed (The Mentor)
 *   **Role:** Nova’s surrogate father. Retired engineer.
 *   **Location:** The Workshop (Home).
-*   **Function:** Tutorial Guide. Gives MQ_01; hands off the **Chime** (Ghost Signal Cell) at the Cargo Lift sacrifice (end of MQ_04 / start of MQ_05 flow).
+*   **Function:** Tutorial Guide. In MQ_01 he repairs the cutter's Cryo-Inductor and Nova's suit-linked Flux Liner, warns against bypassing the safety governor, and teaches the mechanical language that later saves her. At the Cargo Lift he hands off the **Chime** (Ghost Signal Cell), an identity key/beacon rather than a power source.
 *   **Dialogue Style:** Gruff, protective, technical.
 *   **Key Line:** "I didn't raise you to be a hero, Nova. I raised you to survive. Now use those legs and RUN."
 
 ### Zeke (The Insider)
 *   **Role:** Dominion Administrator / Party Member.
 *   **Location:** Roaming Hub (EVT_W1_00) -> Admin Window (MQ_02) -> Comms (MQ_04).
-*   **Function:** Introduces the "Anomaly" plot. Buffer/Debuffer.
+*   **Function:** Reclassifies the governor-bypass surge so Nova survives, then helps her escape once Dominion detects her Echo mark. Buffer/Debuffer.
 *   **Dialogue Style:** Nervous, uses corporate buzzwords ("Optimal," "Compliance") to hide panic.
 *   **Vibe:** Earnest but terrified. He tries to recruit Nova for a "Volunteer Committee" because he genuinely thinks rules save lives. He learns the hard way they don't.
 *   **Key Line:** "I accessed your file to help, and the system logged a Level 4 breach. I'm not a rebel, Nova. I'm just a loose end."
@@ -21,7 +21,7 @@
 *   **Role:** Head of Colony Security. Dominion loyalist.
 *   **Location:** Screens (Holograms) and Boss Encounter (MQ_05).
 *   **Appearance:** Massive power-armor suit. Face obscured by a glowing visor.
-*   **Function:** The "Wall" Nova must break.
+*   **Function:** The "Wall" Nova must break. His initial purge order becomes intact capture once orbital compliance recognizes the Echo mark.
 *   **Key Line:** "The Company owns the dirt, the ore, and you. Hand it over."
 
 ## Quest Givers & Merchants
@@ -46,7 +46,7 @@
 *   **Function:** Narrative depth.
 *   **Bark:** "Eat up, kid. Dominion doesn't charge for the gristle."
 
-### Foreman Bogs
+### Foreman Boggs
 *   **Role:** Shift Supervisor.
 *   **Location:** The Loading Dock.
 *   **Function:** Giver of **SQ_03** (Reward: Hydraulic Kick).

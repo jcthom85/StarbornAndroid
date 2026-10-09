@@ -48,8 +48,8 @@ This document tracks the **Entry State** (prerequisites) and **Exit State** (del
     *   **Vehicle:** Stolen Cargo Pod.
     *   **Goal:** Escape the planetary shield.
 *   **Content Requirements:**
-*   **Action:** Zeke splices the Chime into the pod for a burst of Source thrust.
-    *   **Beat:** Nav locks to Orion’s signal. Shield hits them.
+*   **Action:** Zeke splices the Chime into the pod's authorization bus; its old identity signature clears launch while its paired beacon locks navigation toward Orion.
+    *   **Beat:** The pod supplies its own thrust. With no valid outer-Shield corridor, the Shield rejects it.
 *   **Exit State:**
     *   **Status:** Crashed. Pod destroyed.
     *   **Next:** World 2 Start.
@@ -66,7 +66,7 @@ This document tracks the **Entry State** (prerequisites) and **Exit State** (del
     *   **Mood:** Alien, bioluminescent, dangerous.
 *   **Content Requirements:**
     *   **Recruit:** Orion (Awakened from Stasis).
-    *   **Recruit:** Gh0st (Hunter turned Protector via Elara Protocol).
+    *   **Recruit:** Gh0st (his Elara-calibrated Source Lock pauses one lethal action; he chooses to become a protector).
     *   **Relic:** **The Bridge** (Grants **Link**).
     *   **Ship:** *The Astra* is found here (Derelict state).
     *   **Breathers:** Canopy Ridge (Vista), Tideglass Beach (Rest).
@@ -106,7 +106,7 @@ This document tracks the **Entry State** (prerequisites) and **Exit State** (del
     *   **Breather:** Skypark (Fake Nature).
 *   **Exit State:**
     *   **Items:** The Lens Relic.
-    *   **Intel:** Planetary Shield has a frequency gap, but *Astra* needs better engines to reach the Ring.
+    *   **Intel:** The Lens can reveal timing seams in phase barriers. The crew crosses Sector 7's internal curtain, but the separate outer Shield still requires orbital velocity and corridor hardware.
     *   **Next:** World 4 (The Foundry).
 
 ---

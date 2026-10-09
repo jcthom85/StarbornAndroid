@@ -14,7 +14,7 @@ The operational heart of the colony. Clean lines, cold lights, and the hum of ma
     1.  **Concourse Lobby (admin_lobby):** The grand entrance.
     2.  **Observation Deck (admin_deck):** Large windows overlooking the mines.
     3.  **Customer Service (admin_window):** Zeke's second booth location.
-    4.  **Foreman's Office (admin_office):** Bogs' local HQ.
+    4.  **Foreman's Office (admin_office):** Boggs' local HQ and the surviving cutter-damage report.
     5.  **Information Kiosk (admin_kiosk):** Hacking/Lore terminal.
     6.  **Staff Lounge (admin_lounge):** Flavor room for corporate employees.
     7.  **Elevator Lobby (admin_elevator):** Transition to the Deep Mine.
@@ -41,7 +41,7 @@ The operational heart of the colony. Clean lines, cold lights, and the hum of ma
 ### Node 2B: Deep Mine
 *   **Icon:** ⛏️
 *   **Type:** Choice B / Combat
-*   **Description:** The raw, unrefined tunnels beneath the facility. Dark and dangerous.
+*   **Description:** The raw tunnels beneath the facility. A buried Architect phase conduit now pulses beneath Dominion wiring, carrying the response Nova woke with her cutter surge.
 *   **Rooms (12):**
     1.  **Elevator Landing (mine_landing):** Entry point at the base of the lift.
     2.  **Main Tunnel Alpha (mine_alpha):** Combat introduction.
@@ -52,7 +52,7 @@ The operational heart of the colony. Clean lines, cold lights, and the hum of ma
     7.  **Ore Sifter (mine_sifter):** Industrial puzzle room.
     8.  **Toxic Pocket (mine_gas):** Environmental hazard (Corrosion tutorial).
     9.  **Deep Shoring (mine_shoring):** Unstable tunnel (Timed escape beat).
-    10. **Ancient Threshold (mine_threshold):** Shift from rock to Architect stone.
+    10. **Ancient Threshold (mine_threshold):** Shift from rock to Architect stone; its old seal was forced partly open by the Workshop surge.
     11. **The Long Slope (mine_slope):** Steep transition descent.
     12. **Echo Antechamber (mine_antechamber):** Approach to the Relic.
 *   **Requirement:** Requires **Mine Access Badge** to access the Deep Elevator.
@@ -63,17 +63,17 @@ The operational heart of the colony. Clean lines, cold lights, and the hum of ma
 ### Node 3: Echo Chamber
 *   **Icon:** 🔮
 *   **Type:** Climax / Relic
-*   **Description:** A strange, acoustically deadened antechamber where the first Relic was found.
+*   **Description:** A newly reawakened Architect calibration chamber. Nova's opening surge reached it through the buried conduit, woke the Tuning Fork, and cracked its failing seal.
 *   **Rooms (6):**
     1.  **Geometric Gap (echo_gap):** The transition room from human to alien architecture.
     2.  **Silent Walkway (echo_walkway):** Acoustically deadened corridor.
-    3.  **The Harmonic Well (echo_well):** A deep pit of resonant energy.
-    4.  **The Heart (echo_heart):** Relic Sync location (Tuning Fork).
-    5.  **Memory Alcove (echo_memory):** Small room where Nova loses a memory.
+    3.  **The Harmonic Well (echo_well):** A deep resonant pit where the buried phase conduit terminates.
+    4.  **The Heart (echo_heart):** Player counter-tunes the Tuning Fork with the widened cutter diagnostic; final resonance opens the neural handshake.
+    5.  **Feedback Alcove (echo_memory):** Legacy room ID retained. Nova recovers here with signal tinnitus, a tremor, and missing perceived seconds; her memories and identity remain intact. The fused Cryo-Inductor and burned-open sacrificial strip in her still-equipped Flux Liner show what grounded the discharge.
     6.  **Emergency Exit (echo_exit):** Leads to Maintenance Tunnels.
-*   **Purpose:** Obtain Relic (Tuning Fork).
+*   **Purpose:** Counter-tune and obtain the Tuning Fork; fuse the repaired Cryo-Inductor, spend the Flux Liner's sacrificial ground strip, and persist Nova's Echo-mark protocol signature.
 *   **Unlocks:** Stage 4 (Launch Bay).
-*   **Routing Note:** After sync, Nova is forced up through Homestead under lockdown (short gauntlet path), then into Maintenance Tunnels → Cargo Lift → Launch Bay.
+*   **Routing Note:** Dominion detects the Echo mark immediately after the handshake and orders intact capture. Nova is forced up through Homestead under lockdown (short gauntlet path), then into Maintenance Tunnels → Cargo Lift → Launch Bay.
 
 ## Stage 4
 ### Node 4: Launch Bay
@@ -87,7 +87,7 @@ The operational heart of the colony. Clean lines, cold lights, and the hum of ma
     4.  **Cargo Lift (launch_lift):** Jed's Sacrifice scene.
     5.  **Security Checkpoint B (launch_checkpoint):** Final mini-gauntlet.
     6.  **Pod Bay (launch_bay):** Boss Arena (The Warden).
-    7.  **The Pod Core (launch_pod):** Inside the escape pod (Dialogue).
+    7.  **The Pod Core (launch_pod):** Inside the escape pod; Zeke connects the Chime to the launch-authorization bus, not the power system.
     8.  **Launch Rail (launch_rail):** Scripted exit scene.
 *   **Purpose:** BOSS FIGHT: The Warden.
 *   **Unlocks:** World 2 (The Wilds).

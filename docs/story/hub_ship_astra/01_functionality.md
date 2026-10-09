@@ -5,7 +5,7 @@
 **Object:** The Relic Array (Container for collected Echoes).
 
 ### Narrative Logic
-Relics are dangerous and misunderstood Aethel artifacts. The Array provides a shielded, grounded environment where crew members can safely physically interact with them. This controlled exposure allows late-joining members to "catch up" and unlock the skills the rest of the team gained in the field.
+Echoes are dangerous and misunderstood **Architect interfaces**, not Aethel artifacts. The Aethel learned to operate and preserve some of them, but did not create them. The Array provides a shielded, grounded environment where crew members can safely physically interact with the Echoes. This controlled exposure allows late-joining members to "catch up" and unlock the skills the rest of the team gained in the field.
 
 ### Mechanic
 1.  Player clicks on the **Relic Array**.
@@ -61,5 +61,4 @@ To transition from "allies by circumstance" to "found family," the party must en
 
 ### Late Game Tone Shift (World 5+)
 Once the party enters **The Void (World 5)**, the "Campfire" music shifts from acoustic guitar to a low, resonant drone.
-
 

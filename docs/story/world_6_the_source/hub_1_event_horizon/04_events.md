@@ -75,7 +75,7 @@
     *   In the center, something waits: a Relic that doesn’t feel like a weapon.
     *   The Key manifests as a simple, impossibly old object—part instrument, part access token—humming with admin authority.
     *   Orion’s face tightens. "That’s not a prize. That’s root access."
-    *   Nova reaches toward it and the universe flinches like it recognizes her hand.
+    *   The five accumulated Echo protocol signatures resonate through the crew's learned circuit, completing the Key's access pattern. The Key answers that circuit, not Nova's hand or ancestry.
     *   **The Ascended (everywhere):** "There it is."
 
 ## EVT_W6_06: The Campfire
@@ -152,22 +152,22 @@
         *   **Gh0st (Shield):** His armor vents scream, blasting white-hot steam. "THERMAL CRITICAL. HOLDING."
         *   **Orion (Tuner):** He hums a counter-frequency—a deep, resonant chord that forces the chaotic light into a beam.
     *   **Orion:** "No. We are Starborn."
-    *   **Result:** They fire the Tuned Note together. The Tear closes. The feedback blast knocks them all unconscious, but the circuit holds. They fall together.
+    *   **Result:** They fire the Tuned Note together. The Tear closes. The feedback burns out Nova's Source connection and knocks them all unconscious, but the circuit holds. Her memories and identity remain intact; signal tinnitus and a tremor in her tuning hand remain.
 
 ## EVT_W6_10: Epilogue
 *   **Visual:**
-    *   Morning in the Colony. The sky looks bigger—like a ceiling got lifted.
+    *   Morning in the Colony. A corridor stands open through the planetary curtain. Dominion insignia are coming down by hand; the wider Dominion still exists, and nobody mistakes an opening for a finished revolution.
     *   Zeke's Diner (Community Board): Nova stands in front of a photo pinned to the corkboard. It’s the crew at Tideglass Beach.
-    *   She touches her own face in the photo. She knows it’s her, but she doesn't remember the sand. The file is gone.
+    *   She steadies a mug in her trembling tuning hand. She remembers the sand, the salt, and exactly who threw the first canteen.
     *   Zeke slides a plate of real food onto the table.
-    *   **Zeke:** "Don't strain a processor, Nova. It was a Tuesday. It smelled like salt. You complained about the humidity."
+    *   **Zeke:** "Set the mug down before your hand votes against you. The tremor is worse when you're tired."
     *   Gh0st is by the door, fixing a kid's toy. He doesn't look up, but his sensors are tracked on her.
-    *   **Gh0st:** "You also threw a canteen at me. Accuracy: 94%."
+    *   **Gh0st:** "You threw the canteen at me. Accuracy: 94%. You remember losing the argument."
     *   Orion enters from the street, bringing fresh air with him.
-    *   **Orion:** "The hum is gone?"
-    *   **Nova:** "Yeah. I can't hear the music anymore."
-    *   **Orion:** "Good. Now you can hear the wind."
-    *   Nova looks at them—her backup drive. She realizes she didn't lose her life; she just gave up the receipt.
-    *   **Nova (smiling):** "Sounds like a good day. Fill me in on the rest?"
+    *   **Orion:** "The music is gone?"
+    *   **Nova:** "I remember the beach. The music is gone. The signal whine isn't."
+    *   **Orion:** "It may fade. Until then, listen past it. The wind is still there."
+    *   Nova looks at them. Losing the signal is not losing herself; the people beside her are not backups but witnesses who chose to stay.
+    *   **Nova (smiling):** "Sounds like a good day. Tell it again?"
     *   **Zeke:** "Pull up a chair. It’s a long story."
     *   **Credits.**

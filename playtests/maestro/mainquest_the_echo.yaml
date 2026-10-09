@@ -124,25 +124,53 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - tapOn: "Tuning fork"
 - extendedWaitUntil:
-    visible: ".*hand touches the Tuning Fork.*"
+    visible: "Cutter Harmonic Sweep"
+    timeout: 15000
+- assertVisible: "Phase Sweep: 52 kHz"
+- assertVisible: "Cold Loop: 35%"
+- assertVisible: "Ground Phase: 0.*"
+# Slider tracks are full-width within the centered dialog. These points set
+# 87 kHz, 68%, and 180 degrees on the standard percentage layout.
+- tapOn:
+    point: "56%,48%"
+- extendedWaitUntil:
+    visible: "Phase Sweep: 87 kHz"
+    timeout: 10000
+- tapOn:
+    point: "62%,59%"
+- extendedWaitUntil:
+    visible: "Cold Loop: 68%"
+    timeout: 10000
+- tapOn:
+    point: "50%,70%"
+- extendedWaitUntil:
+    visible: "Ground Phase: 180.*"
+    timeout: 10000
+- tapOn: "Tune"
+- extendedWaitUntil:
+    visible: ".*one clean pressure wave.*"
     timeout: 15000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
-    visible: ".*standing waves.*"
+    visible: ".*My surge woke you.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*instead of Nova's heart.*"
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
-    visible: ".*cold current surges up your arm.*"
+    visible: ".*OPERATOR HANDSHAKE INCOMPLETE.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*protocol is ringing through her nerves.*"
     timeout: 10000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
-    visible: ".*The Chorus.*"
+    visible: ".*Not a prophecy.*machine handshake.*"
     timeout: 10000
-- tapOn: "Tap to continue.*"
-- extendedWaitUntil:
-    visible: ".*resonance stabilizes.*"
-    timeout: 10000
-- tapOn: "Tap to continue.*"
+- tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
     visible: ".*containment threat.*"
     timeout: 15000

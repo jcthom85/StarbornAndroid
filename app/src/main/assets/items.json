@@ -478,7 +478,7 @@
   {
     "id": "nova_flux_liner",
     "name": "Flux Liner",
-    "description": "Lightweight layers that keep Nova dancing between volleys.",
+    "description": "A patched work liner threaded with sacrificial ground strips. Light on the shoulders; built to dump one bad surge somewhere that is not Nova.",
     "aliases": [
       "flux liner"
     ],
@@ -1103,7 +1103,7 @@
   {
     "id": "mining_pistol",
     "name": "Mining Pistol",
-    "description": "Standard issue energy cutter modified for personal defense.",
+    "description": "A phase cutter cut down for one hand, with its safety governor pried out. It sweeps wider, cuts faster, and can kick a bad frequency straight into the grid.",
     "type": "weapon",
     "value": 45,
     "buy_price": 90,
@@ -1271,7 +1271,7 @@
       "relic"
     ],
     "type": "key_item",
-    "description": "An ancient Echo Relic. It hums with a frequency that makes your teeth ache.",
+    "description": "An Architect Echo that answers stable counter-signals. Its first handshake left a protocol scar in Nova's nerves and a hum behind her teeth.",
     "value": 0,
     "rarity": "mythic"
   },
@@ -1284,7 +1284,20 @@
       "signal cell"
     ],
     "type": "key_item",
-    "description": "A resonant battery from the Old World. Dominion calls it a Ghost Signal Cell. Jed called it a Chime.",
+    "description": "A portable resonator keyed to an old identity signal. Dominion logged it as a Ghost Signal Cell. Jed called it a Chime—and knew it could make locked machines listen.",
+    "value": 0,
+    "rarity": "mythic"
+  },
+  {
+    "id": "bridge_relic",
+    "name": "The Bridge",
+    "aliases": [
+      "bridge",
+      "bridge relic",
+      "sanctuary bridge"
+    ],
+    "type": "key_item",
+    "description": "An Architect Echo recovered from Orion's Sanctuary. It can coordinate distinct signals into a shared circuit, but needs the Astra's own power and a recognized identity to start.",
     "value": 0,
     "rarity": "mythic"
   },
@@ -1447,7 +1460,7 @@
   {
     "id": "cryo_inductor",
     "name": "Cryo-Inductor",
-    "description": "A cryogenic coil taken from damaged refrigeration rigs.",
+    "description": "A cracked refrigeration coil. Rebuilt around the cutter's missing governor, it might keep the wide-band sweep from cooking Nova's wrist.",
     "type": "component",
     "value": 30,
     "buy_price": 60,
@@ -1456,7 +1469,7 @@
   {
     "id": "functional_cryo_inductor",
     "name": "Functional Cryo-Inductor",
-    "description": "A repaired cryo-inductor ready for mission-critical rigs.",
+    "description": "Jed's repaired cold-loop coil, clamped around Nova's ungoverned cutter. It can hold one dangerous sweep longer than it has any right to.",
     "type": "component",
     "value": 45,
     "buy_price": 90,
@@ -2517,7 +2530,7 @@
   {
     "id": "gh0st_override_key",
     "name": "Gh0st Override Key",
-    "description": "A small black chip Gh0st gives Nova after Project Phantom. It can interrupt his kill-suite if the failsafe takes control again.",
+    "description": "A small black chip Gh0st gives Nova after Project Phantom. It can halt his kill-suite long enough for him to choose his next action; it cannot control or command him.",
     "type": "quest",
     "value": 0,
     "rarity": "rare",
@@ -2559,7 +2572,7 @@
   {
     "id": "the_anvil",
     "name": "The Anvil",
-    "description": "A relic that shapes Source intent into temporary constructs. It answers confidence and punishes doubt.",
+    "description": "A relic that shapes Source intent into temporary constructs. Its damaged Foundry cradle amplifies unstable inputs, so hesitation can make a construct collapse without the relic judging its operator.",
     "type": "quest",
     "value": 0,
     "rarity": "legendary",

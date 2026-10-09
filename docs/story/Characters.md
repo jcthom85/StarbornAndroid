@@ -1,19 +1,27 @@
 # Starborn — Main Characters
 
+**Status:** Supporting character reference; subordinate to the Master Story, Lore Bible, and Character Arcs. Combat details may express canon but may not override narrative causality or artifact rules.
+
 ## Nova
 
 **Role:** Protagonist / The Spark (Accelerates Team Tempo - Cooldown Reduction)
+**Age:** 22
 **Archetype:** Striker (High-Speed Ranged)
-**Weapon:** Dual Laser Guns
+**Opening Tool/Weapon:** Illegally modified Dominion mining cutter
+**Combat Weapon:** Dual Laser Guns
 **Key Relics:** **The Tuning Fork** (Mines) & **The Anchor** (Void)
 
-Nova is a scrappy colony kid with a rogue vibe—steals, hacks, survives. She’s funny, sharp, reckless in a controlled way, and refuses to let Dominion define her life. Story-wise, she’s the "small person vs huge system" lens. When she becomes **imprinted** by the Source, she acts as the **Spark**—the one who opens the door to the energy, trusting her team to keep her from burning out.
+Nova is a scrappy young adult colony scavenger with a rogue vibe—steals, hacks, survives. She’s funny, sharp, reckless in a controlled way, and initially equates usefulness with safety. Story-wise, she’s the "small person vs huge system" lens. She has no Aethel ancestry, chosen status, or genetic compatibility. Her modified cutter wakes the Tuning Fork; her manual counter-tune and Jed's repaired safety gear let her survive the handshake. When she becomes **imprinted** by its protocol, she acts as the **Spark**—the one who opens the channel while trusting a crew of learned specialists to share the load.
+
+**Lie:** "No one is coming. If I stay useful and owe nobody, I can survive alone."
+
+**Truth:** "Survival is shared. Needing people does not make me owned by them."
 
 **Narrative Arc:**
-- World 1: Survives first contact (Tuning Fork), loses Jed, chooses freedom.
-- World 2: Learns she is a conduit, not a god. "Anchor first."
+- World 1: Removes her cutter governor, wakes and counter-tunes the Tuning Fork, loses Jed to his chosen sacrifice, and is forced beyond solitary survival.
+- World 2: Learns she is a conduit, not a god. "Ground first."
 - World 3: Leads the Lens heist.
-- World 6: Rejects "perfect contro" (The Anchor) and learns to **close the circuit**, sharing the load to save the world without losing herself.
+- World 6: Rejects perfect control and learns to **close the circuit**, sharing the load to stop the Great Silence. Tuning burns out her Source connection but preserves her memories and identity; signal tinnitus and a hand tremor remain.
 
 **Combat Kit (The Spark)**
 **Note: Skills are governed by Cooldowns.**
@@ -44,6 +52,7 @@ Zeke talks like corporate HR software—buzzwords, relentless optimism—because
 
 **Narrative Arc:**
 - World 1: Defects from Dominion.
+- World 2: Owns his decision to splice the Chime into navigation and his failure to override the crash route; he does not blame Nova.
 - World 3: Stops hiding behind the "HR voice" when he wields the Lens.
 - World 6: Accepts he is valuable without being a tool.
 
@@ -72,12 +81,12 @@ Zeke fights up close, using data to exploit weak points and destabilize enemies.
 **Weapon:** Focus Jewel
 **Key Relics:** **The Bridge** (Wilds)
 
-Orion is the last physical Aethel. He is introspective, earnest, and haunted by the "silence" of his people. He functions as the crew's conscience and medic.
+Orion is the last physical Aethel. He is introspective, earnest, and haunted by the "silence" of his people. He functions as the crew's conscience and medic. His Chime is an identity key and beacon, never a battery. It authenticates him to the Sanctuary, where the party recovers the separate Bridge Echo and installs it aboard the Astra.
 
 **Narrative Arc:**
 - World 2: Wakes from stasis, becomes the teacher.
 - World 5: Recognizes the "Great Silence" protocol.
-- World 6: Learns the Chorus is still there; chooses the living family.
+- World 6: Learns the Chorus is still there and offers a real ancestral continuity; answers "not yet" and remains with his living family.
 
 **Combat Kit (The Guide)**
 Orion channels the Source through his Jewel to damage enemies and heal the team.
@@ -103,12 +112,12 @@ Orion channels the Source through his Jewel to damage enemies and heal the team.
 **Weapon:** Heavy Blade
 **Key Relics:** **The Anvil** (Foundry)
 
-Gh0st is a defected corporate assassin (Phantom-class). He is cool, efficient, and humorless. He starts as a weapon and learns to be a shield.
+Gh0st is a defected corporate assassin (Phantom-class). He is cool, efficient, and humorless. Dominion built him from a **partial derivative of Elara's neural map**, but he is a distinct person, not a complete copy or biological sibling. Elara interacted with and trained him, forming the relationship that she later affirms by calling him **brother**. He starts as a weapon and learns to be a shield.
 
 **Narrative Arc:**
-- World 2: Hunt becomes protection.
-- World 4: Confronts his creator at the Foundry. Claims the Anvil.
-- World 5-6: Loses Elara, becomes a protector on purpose.
+- World 2: Nova's Fork mark trips the Elara-calibrated Source Lock, which only pauses his attack. Protecting the crew from the Source Beast is his first voluntary act.
+- World 4: Confronts his creator and Dominion's "backup" label at the Foundry. Claims the Anvil and refuses an ordered execution.
+- World 5-6: Elara names him her brother before she is pulled into the Tear; Gh0st becomes a protector on purpose.
 
 **Combat Kit (The Wall)**
 Gh0st holds the line with his blade and shields, forcing enemies to focus on him.

@@ -12,6 +12,7 @@
 *   **Role:** Act 1 Boss.
 *   **Location:** Launch Bay.
 *   **Archetype:** Heavy Tank / Summoner.
+*   **Story Objective:** Begins with a local purge order, then resents the orbital command to recover Nova intact after Project Harmony recognizes her Echo mark.
 *   **Mechanics:**
     *   *Riot Shield:* Immune while guarding. Must be Staggered/Guard Broken (via **Slide Kick**, **Hydraulic Kick**, or **Blast Wave**) before the party can meaningfully damage him.
     *   *Summon Drone:* Calls 2 Scout Drones every 3 turns.

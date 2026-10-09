@@ -36,4 +36,4 @@
 *   **Type:** Source Beast.
 *   **Role:** Apex Predator.
 *   **Appearance:** A silverback gorilla mutated by raw Source leakage. Glowing purple veins, bark-like armor.
-*   **Behavior:** Territorially aggressive. It wants the Chime.
+*   **Behavior:** Territorially aggressive. It follows the Chime's intermittent beacon ping as an intrusion into its range; it cannot draw power from the key.

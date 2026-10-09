@@ -7,6 +7,34 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 60000
 - tapOn: "New Game"
 - extendedWaitUntil:
+    visible: ".*refuses to stay quiet.*"
+    timeout: 20000
+- tapOn: "Tap to continue.*"
+- extendedWaitUntil:
+    visible: ".*CONTAINMENT BREACH.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*leans against the other side.*"
+    timeout: 10000
+- tapOn: "Tap to continue.*"
+- extendedWaitUntil:
+    visible: ".*carry this beyond the seal.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*drawing the hunt with it.*"
+    timeout: 10000
+- tapOn: "Tap to continue.*"
+- extendedWaitUntil:
+    visible: ".*Mute my signal.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*Chime keeps running through the dark.*"
+    timeout: 10000
+- tapOn: "Tap to continue.*"
+- extendedWaitUntil:
     visible: "Wake Up Call"
     timeout: 20000
 - tapOn: "Continue"
@@ -59,11 +87,11 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*cutter pops.*"
+    visible: ".*pulled the safety governor.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*If I don't push it.*"
+    visible: ".*widen the sweep.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
@@ -131,11 +159,11 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*cold-loop part.*"
+    visible: ".*governor stays out.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*Functional Cryo-Inductor.*"
+    visible: ".*Flux Liner grounded.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - tapOn: "workbench action"
@@ -157,30 +185,46 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "Craft Functional Cryo-Inductor"
 - extendedWaitUntil:
-    visible: "The Cryo-Inductor whirs back to life."
+    visible: "The Cryo-Inductor catches.*"
     timeout: 10000
 - tapOn: "Tap to continue"
 - pressKey: BACK
 - extendedWaitUntil:
-    visible: ".*That's the hum.*"
+    visible: ".*Cold loop is holding.*"
     timeout: 15000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*work the mine.*"
+    visible: ".*leave it out and make quota.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*Transit Checkpoint.*"
+    visible: ".*kick every breaker in the Pit.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*marks me absent.*"
+    visible: ".*cold loop at sixty-eight percent.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*Get to the checkpoint.*"
+    visible: ".*Easy on the trigger.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*every work light turns white.*"
+    timeout: 15000
+- tapOn: "Tap to continue.*"
+- extendedWaitUntil:
+    visible: "Kill it!"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*That hum is not mine.*"
+    timeout: 10000
+- tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: ".*attaches Nova's ID to the fault.*"
+    timeout: 15000
+- tapOn: "Tap to continue.*"
 - extendedWaitUntil:
     visible: "Wake Up Call"
     timeout: 15000

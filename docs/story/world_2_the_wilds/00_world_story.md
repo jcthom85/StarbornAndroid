@@ -22,8 +22,8 @@ The player should feel the dramatic contrast from World 1's low-ceilinged, indus
 
 ### Audio Identity (Acoustic Resonance)
 - **The Wilds Ambient:** Warm orchestral pads, woodwinds, and acoustic string swells. Hollow stone archways filter the wind into chords, and stone panels act as acoustic resonators. The sound of running Glow-Water is a soft chord rather than a splash.
-- **The Facility (Sanctuary):** Humming silence. Shifting cymatic patterns on the floor. When Nova approaches the murals or stasis pods, the background audio fades, replaced by a deep pressure—an acoustic chord print (Elara's Song) vibrating through the environment.
-- **The Shield:** The Planetary Shield emits a high, thin tension chord that ripples across the sky, crackling with defensive discharges whenever something tries to cross the hard deck.
+- **The Facility (Sanctuary):** Humming silence. Shifting cymatic patterns on the floor. The Chime's paired receiver answers with Orion's identity cadence; once authenticated, reserve cells bring up one cold aisle of lights and the stasis controls. Nova's Fork mark lets her parse some Architect machine telemetry, but the sound is a protocol—not Elara, blood memory, or a hidden song inside Nova.
+- **The Shield:** The distant Planetary Shield emits a high, thin tension chord that ripples across the sky. World 2 keeps it as an unreachable ceiling; *The Astra* never approaches or strikes it here.
 
 ### Ecology & Lore (The Resonance and the Ice)
 Sector 9 is a demonstration of the **Ocean** and the **Ice** metaphor. The Source is the Ocean, a vast current of resonance that flows through everything. Humans are like blocks of Ice floating on it; they are solid, separate, but destined to melt back into the current upon death.
@@ -41,7 +41,7 @@ Nova cannot hack or hustle her way out of the jungle. She must learn to navigate
 The ruins of Sector 9 are not silent tombs; they are recordings. The murals and stasis pods are tuned to ancient songs. By listening to the resonance, the crew reconstructs the history of the Aethel and learns that the Dominion is trying to build a machine of absolute compliance—the Great Silence.
 
 ### 3. Assembly (Grief and Duty)
-The crew is not a happy team; they are a collection of loose ends. Zeke carries guilt for splicing the Chime; Orion wakes to find his civilization dead and is immediate in his grief; Gh0st is haunted by contradictory programming. The thematic journey of World 2 is the transition from individual survival to a functional circuit.
+The crew is not a happy team; they are a collection of loose ends. Zeke carries guilt for trusting a locked beacon route while the pod was failing; Orion wakes to find his civilization dead and is immediate in his grief. Gh0st is a distinct person built around a partial derivative of Elara's neural map, trying to separate his choices from Dominion's embedded failsafes. The relevant **Source Lock** is a generic Architect collision safety: armed actuators pause when they encounter a valid but unresolved Echo protocol mark. Dominion inherited that recognition layer through Elara's interface map; the lock can delay Gh0st, but it cannot replace his judgment or accept orders from Nova. The thematic journey of World 2 is the transition from individual survival to a functional circuit.
 
 ---
 
@@ -52,7 +52,7 @@ The crew is not a happy team; they are a collection of loose ends. Zeke carries 
 | | State |
 |---|---|
 | **ENTRY** | Nova and Zeke have survived the crash. They are stranded, injured, and without a ship. Nova's Source Art is raw and unstable, causing painful Erosion. The Dominion's hunter is on their tail. |
-| **EXIT** | The party is assembled (Nova, Zeke, Orion, Gh0st). *The Astra* is repaired and flight-ready. They have hit the Planetary Shield and established that they cannot escape without the **Lens Relic** from World 3. |
+| **EXIT** | The party is assembled (Nova, Zeke, Orion, Gh0st). A separate **Bridge Echo** recovered from the Sanctuary is installed aboard *The Astra*, and salvaged conduits give the ship enough power for low-altitude flight to the Spire. The outer Shield remains far above them. |
 | **THE SHIFT** | From "surviving the crash" to "planning a planetary heist." |
 
 ### Hub 3: Jungle Ruins (Hub 1 of World 2) — "Survive the Wilds"
@@ -60,20 +60,20 @@ The crew is not a happy team; they are a collection of loose ends. Zeke carries 
 | | State |
 |---|---|
 | **ENTRY** | Nova wakes at the crash site. Zeke is injured. The surrounding jungle is hostile. Nova must salvage parts, fight through the thickets, and reach the Canopy. |
-| **MIDPOINT** | Nova confronts the mutated Source Beast on Canopy Ridge. Gh0st ambushes them, but his programming conflicts when he hears **Elara's Song** from Nova. They fight the beast together and agree to a ceasefire. |
-| **EXIT** | Nova uses the salvaged Chime to unlock the Temple Gate. They step through the stone threshold into the Sanctuary Facility, leaving the wild canopy behind. |
-| **THE SHIFT** | From "wild survival" to "uncovering the ancient facility." |
-| **WHAT THE PLAYER CARRIES FORWARD** | Gh0st as a temporary ally. The thermal cutter tool. Scavenged parts. Basic understanding of Erosion and stabilization. |
+| **MIDPOINT** | Nova uses the Chime to authenticate Orion at the Temple Gate. The Sanctuary's own reserve cells wake; nothing draws power from the Chime. |
+| **EXIT** | After waking Orion inside, the crew returns to Canopy Ridge and confronts Gh0st. Nova's Fork mark trips a generic Source Lock pause, but Gh0st receives no order; he chooses to protect the party from the Beast and offers a ceasefire. |
+| **THE SHIFT** | From "wild survival" to "a crew capable of returning to the ancient facility together." |
+| **WHAT THE PLAYER CARRIES FORWARD** | Orion and Gh0st as new allies. The thermal cutter tool, scavenged parts, and a basic understanding of Erosion and stabilization. |
 
 ### Hub 4: Sector 9 Ruins (Hub 2 of World 2) — "Wake the Past"
 
 | | State |
 |---|---|
-| **ENTRY** | Entering the cold, silent halls of the Sanctuary. The murals hum with cymatic geometry. The gate to the hangar is blocked by an acoustic energy barrier. |
-| **MIDPOINT** | Nova awakens Orion from stasis by aligning the resonance rings. Orion suffers immediate grief but teaches Nova the **Anchor Drill** and unlocks the **Link Relic** (Source Art: Link). |
-| **EXIT** | Rerouting the breakers in the power grid, they disable the gate barrier. They repair *The Astra*, board her bridge, and launch into the sky, only to be struck by the Planetary Shield's defensive discharge. |
-| **THE SHIFT** | From "rebuilding the ship" to "hitting the ceiling of the world." |
-| **WHAT THE PLAYER CARRIES FORWARD** | Orion and Gh0st as full party members. **Link** Relic (Source Art). The repaired *Astra* as their mobile base. The next goal: reach World 3 (The Spire) to steal the Lens. |
+| **ENTRY** | Entering the cold, silent halls of the Sanctuary. The Chime authenticates Orion's identity at the gate; Sanctuary reserve cells wake and expose the stasis controls. The gate to the hangar remains blocked by an acoustic energy barrier. |
+| **MIDPOINT** | The crew aligns the resonance rings using Sanctuary reserve power and wakes Orion. In a sealed cradle deeper inside, they recover the **Bridge Echo**, a separate Architect system built to navigate resonant corridors. The Bridge handshake makes its Source Art **Link** available; after Gh0st joins, Orion's **Anchor Drill** teaches Nova to use Link without carrying the whole circuit herself. |
+| **EXIT** | The crew reroutes breakers, salvages compatible conduits, disables the hangar barrier, and installs the Bridge Echo aboard *The Astra*. Ship and Bridge run on the conduit-fed power bus; the Chime remains an identity key and paired beacon. The repaired ship carries them to the Spire at low altitude without touching the outer Shield. |
+| **THE SHIFT** | From "rebuilding the ship" to "taking the first controlled flight." |
+| **WHAT THE PLAYER CARRIES FORWARD** | Orion and Gh0st as full party members, the installed **Bridge Echo** with its Source Art **Link**, and the repaired *Astra* as their mobile base. The next goal is to steal the **Lens** so they can read an internal Phase Curtain and reach Sector 7 later. |
 
 ---
 

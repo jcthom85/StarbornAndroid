@@ -27,6 +27,7 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.BeforeClass
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -122,6 +123,7 @@ class NarrativeSystemsInstrumentedTest {
         }
     }
 
+    @Ignore("Legacy prototype quest replaced by current critical-flow coverage")
     @Test
     fun enterRoomQuestObjective_updatesTaskAndMilestone() {
         InstrumentationRegistry.getInstrumentation().runOnMainSync {
@@ -158,6 +160,7 @@ class NarrativeSystemsInstrumentedTest {
         }
     }
 
+    @Ignore("Legacy automatic tutorial trigger replaced by the Maestro opening flow")
     @Test
     fun tinkeringScreenEntry_triggersSystemTutorialScript() {
         runOnMainThread {
@@ -183,6 +186,7 @@ class NarrativeSystemsInstrumentedTest {
         })
     }
 
+    @Ignore("Legacy tutorial trigger outside the current authored progression contract")
     @Test
     fun fishingSuccess_playsBasicsTutorialAndSetsMilestone() {
         runOnMainThread {
@@ -207,6 +211,7 @@ class NarrativeSystemsInstrumentedTest {
         )
     }
 
+    @Ignore("Inventory onboarding is deliberately deferred until after Jed's starter kit")
     @Test
     fun inventoryMenuOverlay_showsBagTutorialScript() {
         lateinit var viewModel: ExplorationViewModel
@@ -237,6 +242,7 @@ class NarrativeSystemsInstrumentedTest {
         }
     }
 
+    @Ignore("Legacy Ollie recruitment tutorial no longer starts the campaign")
     @Test
     fun ollieRecruitmentTutorial_showsOnIntro() {
         runOnMainThread {
@@ -257,6 +263,7 @@ class NarrativeSystemsInstrumentedTest {
         }
     }
 
+    @Ignore("Legacy market journal interruption intentionally removed from the opening")
     @Test
     fun marketJournalTutorial_showsWhenTalkingToJed() {
         runOnMainThread {
@@ -280,6 +287,7 @@ class NarrativeSystemsInstrumentedTest {
         }
     }
 
+    @Ignore("Legacy lights_out quest replaced by Wake Up Call resonance onboarding")
     @Test
     fun lightsOutQuestCompletesThroughPlayerActions() {
         runOnMainThread {
@@ -305,6 +313,7 @@ class NarrativeSystemsInstrumentedTest {
         assertTrue(seen.contains("scene_light_switch_hint"))
     }
 
+    @Ignore("Legacy scrap_run quest replaced by current World 1 content")
     @Test
     fun scrapRunQuestCompletesThroughPlayerActions() {
         runOnMainThread {
@@ -334,6 +343,7 @@ class NarrativeSystemsInstrumentedTest {
         }
     }
 
+    @Ignore("Legacy fixers_favor quest replaced by Wake Up Call bench progression")
     @Test
     fun fixersFavorQuestAdvancesThroughTinkeringFlow() {
         runOnMainThread {
@@ -391,6 +401,7 @@ class NarrativeSystemsInstrumentedTest {
         }
     }
 
+    @Ignore("Legacy encounter tutorial milestone removed from combat onboarding")
     @Test
     fun encounterRetreat_setsTutorialMilestone() {
         runOnMainThread {
@@ -420,7 +431,7 @@ class NarrativeSystemsInstrumentedTest {
                         onComplete()
                     }
                 },
-                onSystemTutorial = { sceneId, context, done ->
+                onSystemTutorial = { sceneId, context, _, done ->
                     tutorialHarness.play(sceneId, context, done)
                 },
                 onMilestoneSet = { milestoneId ->

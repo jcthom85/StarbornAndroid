@@ -17,7 +17,7 @@
     *   He looks at Nova—breathing, dirty, alive.
     *   **Zeke:** "I'm not doing it. I'm not signing a death warrant for a spreadsheet."
     *   He types a furious command. The red text vanishes.
-    *   **Zeke:** "I just flagged the surge as 'Grid Instability'. Not your fault. Temporary override."
+    *   **Zeke:** "I recoded the surge as 'Grid Instability.' The file says not your fault. The damage report still has your cutter ID, but this keeps you alive. Temporary override."
     *   **The Cost:** As the badge prints, a camera on the wall swivels to focus directly on Zeke. A silent "LOGGED" notification flashes on his console.
     *   **Zeke:** "I... just made a Level 4 breach. I'm a loose end now."
     *   He slides the chit under the glass, his hand shaking violently.
@@ -28,14 +28,15 @@
 *   **Trigger:** MQ_05 (Launch Bay).
 *   **Action:**
     *   The Warden crashes through the ceiling.
-    *   **Warden:** "Asset Forfeiture In Progress. Terminating subject."
-    *   **PA (Orbital Compliance):** "Pause. Termination is wasteful, Warden. Simply break the legs and recycle the biological material."
+    *   **Warden:** "Asset Recovery In Progress. Disabling subject."
+    *   **PA (Orbital Compliance):** "Pause. Preserve the marked asset, Warden. The interface must remain intact."
     *   The Warden hesitates, his visor twitching.
-    *   **Warden (Gritting teeth):** "Acknowledged. Breaking legs."
-    *   **Zeke:** "I hacked the pod! I spliced Jed's Ghost Signal Cell into the core. It's the only way it clears the rail!"
+    *   **Warden (Gritting teeth):** "Acknowledged. Intact recovery."
+    *   **Zeke:** "I hacked the pod! I spliced Jed's Ghost Signal Cell into the launch-auth bus. The pod thinks we're an old authorized operator!"
     *   Nova and Zeke jump into the pod.
-    *   The Pod shoots up the rail.
+    *   The pod's own reactor shoots it up the rail. The Chime supplies authorization, not power.
     *   **Console:** "AUTO-NAV: UNKNOWN SIGNAL LOCK."
     *   **Zeke:** "I can't override it!"
+    *   The Chime's paired beacon has seized navigation and is seeking its Sanctuary in Sector 9.
     *   The Planetary Shield blooms—solid outside the corridor. Impact. The pod spirals toward Sector 9.
     *   Fade to Black.

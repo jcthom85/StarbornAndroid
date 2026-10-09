@@ -202,10 +202,22 @@
     "toast": "Jed points you to the workbench."
   },
   {
+    "id": "ms_w1_mq01_cryo_repaired",
+    "name": "Cold Loop Rebuilt",
+    "description": "Nova rebuilt the cutter's Cryo-Inductor without restoring its safety governor.",
+    "toast": "The cutter's cold loop is ready for a live test."
+  },
+  {
     "id": "ms_w1_mq01_complete",
     "name": "Homestead Operations",
-    "description": "You completed Nova's onboarding and tinkering training with Jed.",
-    "toast": "Homestead operations briefing completed."
+    "description": "Nova completed Jed's live cutter test; the wide-band surge tripped a sector breaker and woke something below.",
+    "toast": "Cutter test completed. Shift clearance ordered."
+  },
+  {
+    "id": "ms_w1_mq01_cutter_surge",
+    "name": "Wide-Band Surge",
+    "description": "Nova's ungoverned cutter blew a sector breaker and woke an answering signal beneath Sector 4.",
+    "toast": "The cutter surge wakes something below."
   },
   {
     "id": "ms_w1_mq02_hank_denied",
@@ -238,9 +250,21 @@
     "toast": "Sector 4 assignment received."
   },
   {
+    "id": "ms_w1_mq03_echo_marked",
+    "name": "Echo Mark",
+    "description": "The Tuning Fork completed its damaged operator handshake through Nova's cutter, suit, and nervous system.",
+    "toast": "An Architect protocol is ringing through Nova."
+  },
+  {
+    "id": "ms_w1_mq03_liner_ground_spent",
+    "name": "Ground Strip Spent",
+    "description": "The Flux Liner's sacrificial ground strip burned open during the Fork handshake. The armor remains wearable, but that protection is spent until repaired.",
+    "toast": "The Flux Liner's sacrificial ground is spent."
+  },
+  {
     "id": "ms_w1_mq03_complete",
     "name": "Relic Synchronized",
-    "description": "You synchronized with the Tuning Fork relic deep within the mines.",
+    "description": "Nova counter-tuned the Tuning Fork and survived the resulting operator handshake.",
     "toast": "A heavy frequency vibrates in your mind."
   },
   {
@@ -252,8 +276,8 @@
   {
     "id": "ms_w1_chime_spliced",
     "name": "Chime Spliced",
-    "description": "You connected Jed's Chime to the launch pod core and forced the colony systems to accept the escape route.",
-    "toast": "The Chime locks into the pod core."
+    "description": "You connected Jed's Chime to the launch pod's authorization bus and made the colony systems accept an old launch identity.",
+    "toast": "The Chime authenticates the launch route."
   },
   {
     "id": "ms_w1_zeke_directed_to_pod",
@@ -347,19 +371,43 @@
   {
     "id": "ms_w2_mq03_complete",
     "name": "Awakened the Tuner",
-    "description": "You stabilized the stasis chamber and woke Orion.",
+    "description": "You stabilized the stasis chamber, woke Orion, and recovered Sanctuary's Bridge.",
     "toast": "Sleeping Giant is complete."
+  },
+  {
+    "id": "ms_w2_bridge_recovered",
+    "name": "Bridge Recovered",
+    "description": "Orion released the Bridge Echo from Sanctuary and entrusted it to the crew.",
+    "toast": "Sanctuary's Bridge is in your care."
+  },
+  {
+    "id": "ms_w2_bridge_record_decoded",
+    "name": "Bridge Calibration Decoded",
+    "description": "You decoded the former cradle's consent checks, separate carrier bands, and physical-grounding notes for safer Link use.",
+    "toast": "Bridge safety record decoded."
+  },
+  {
+    "id": "ms_w2_bridge_installed",
+    "name": "Bridge Installed",
+    "description": "The crew mounted the Bridge in the Astra, powered it from salvaged conduits, and authenticated it with the Chime.",
+    "toast": "The Astra recognizes its crew."
+  },
+  {
+    "id": "ms_w2_link_unlocked",
+    "name": "Grounded Link",
+    "description": "You completed Orion's Anchor Drill and learned to route the Bridge through a willing, grounded circuit while each mind remains separate.",
+    "toast": "Source Art unlocked: Link."
   },
   {
     "id": "ms_w2_mq04_complete",
     "name": "Assailant Truce",
-    "description": "You defeated the Source Beast on Canopy Ridge and recruited Gh0st.",
+    "description": "You defeated the Source Beast, accepted Gh0st's chosen truce, and completed the Anchor Drill on Canopy Ridge.",
     "toast": "The Hunter is complete."
   },
   {
     "id": "ms_w2_mq05_complete",
-    "name": "Planetary Escape",
-    "description": "You launched the Astra ship and transitioned to the Spire.",
+    "name": "Astra Liftoff",
+    "description": "You launched the Astra on a low-altitude route to the Spire without approaching the outer Shield.",
     "toast": "Liftoff is complete."
   },
   {
@@ -886,7 +934,7 @@
   {
     "id": "ms_w6_ancestral_grace_unlocked",
     "name": "Ancestral Grace",
-    "description": "Orion found the first Architects' resting current.",
+    "description": "Orion found the ancestral Aethel resting current.",
     "toast": "Ancestral Grace unlocked."
   },
   {

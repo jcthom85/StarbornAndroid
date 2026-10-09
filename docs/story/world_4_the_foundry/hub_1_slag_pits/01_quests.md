@@ -5,7 +5,7 @@
 | ID | Title | Objective | Key Steps | Rewards | Notes |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **MQ_16** | **Into the Fire** | Infiltrate the Factory. | 1. Land on the Obsidian Shelf.<br>2. Navigate the "Slag Rivers" (Hazard tutorial).<br>3. Hack the cooling vents to enter. | Burn Resistance Gear | Environmental hazards. |
-| **MQ_17** | **Ghost in the Machine** | Find Gh0st's blueprint data. | 1. Gh0st accesses the terminal.<br>2. Discover "Project Phantom" logs.<br>3. Realize Gh0st is Elara's replacement backup.<br>4. Regroup at the **Cooling Springs**. | **Gh0st Upgrade** | Narrative heavy + mandatory breather before the Assembly climb. |
+| **MQ_17** | **Ghost in the Machine** | Find Gh0st's blueprint data. | 1. Gh0st accesses the terminal.<br>2. Discover "Project Phantom" logs.<br>3. Learn that Gh0st's separate body and mind were built around a partial derivative of Elara's neural map; he is neither her backup nor her replacement.<br>4. Regroup at the **Cooling Springs**. | **Gh0st Upgrade** | Dominion's inventory labels are ownership language, not Gh0st's identity. Narrative heavy + mandatory breather before the Assembly climb. |
 
 ## Side Quests
 

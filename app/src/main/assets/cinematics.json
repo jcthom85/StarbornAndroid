@@ -1,5 +1,42 @@
 [
   {
+    "id": "intro_prologue",
+    "title": "The Signal",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "TWENTY YEARS EARLIER // SECTOR 9. Fresh Dominion steel has been bolted over an older chamber that refuses to stay quiet."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Lab PA",
+        "text": "SOURCE BEAST CONTAINMENT BREACH. ALL PERSONNEL CLEAR THE STASIS FLOOR."
+      },
+      {
+        "type": "narration",
+        "text": "The far doors bow inward. Orion tears a brass Chime from the signal cradle while something enormous leans against the other side."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Orion",
+        "text": "Chorus, carry this beyond the seal. Let it be louder than I am."
+      },
+      {
+        "type": "narration",
+        "text": "He fires the Chime through an emergency launch tube. Its identity signal streaks away from the facility, calling for help and drawing the hunt with it."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Orion",
+        "text": "Mute my signal. Now."
+      },
+      {
+        "type": "narration",
+        "text": "The stasis glass seals. The chamber goes silent. Outside, the Chime keeps running through the dark."
+      }
+    ]
+  },
+  {
     "id": "cinematic_narrative_test",
     "title": "Cosmic Resonance",
     "steps": [
@@ -266,7 +303,7 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The bunk wall hums awake around you. Somewhere below, the colony drills begin their morning rhythm."
+        "text": "A shift buzzer rattles the bunk wall. Below, the first drill cage drops and the quota clock starts counting."
       }
     ]
   },
@@ -317,6 +354,30 @@
       {
         "type": "narration",
         "text": "The cutter settles into a steady hum. Jed tries not to look proud and fails by half an inch."
+      }
+    ]
+  },
+  {
+    "id": "scene_cutter_surge",
+    "title": "Wide-Band Test",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Nova feathers the trigger. The cutter climbs past its factory limit, the repaired cold loop whining as every work light turns white."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Jed",
+        "text": "Kill it!"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "text": "It is off. That hum is not mine."
+      },
+      {
+        "type": "narration",
+        "text": "A lower note answers through the workshop floor. Then a sector breaker blows, and the Dominion terminal quietly attaches Nova's ID to the fault."
       }
     ]
   },
@@ -458,27 +519,34 @@
   },
   {
     "id": "scene_relic_sync",
-    "title": "The Tuning Fork Synchronized",
+    "title": "Counter-Signal",
     "steps": [
       {
         "type": "narration",
-        "text": "Your hand touches the Tuning Fork. Instantly, the subsystem hum in your teeth flares into a deafening pressure. It isn't sound; it is weight, pushing down from the roof of the chamber."
+        "text": "The cutter reaches eighty-seven kilohertz. The Tuning Fork answers, and two frequencies settle into one clean pressure wave."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "text": "Same pulse as the workshop. My surge woke you."
       },
       {
         "type": "narration",
-        "text": "The stone under your fingers doesn't feel solid. It feels like standing waves, a vibration held in place by sheer resonance."
+        "text": "The damaged cradle closes the circuit through the cutter. Jed's Cryo-Inductor holds the heat. The Flux Liner throws a blue arc into the floor instead of Nova's heart."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Unknown System",
+        "text": "CALIBRATION SIGNAL ACCEPTED. OPERATOR HANDSHAKE INCOMPLETE. COMPLETING THROUGH AVAILABLE CIRCUIT."
       },
       {
         "type": "narration",
-        "text": "A cold current surges up your arm, rippling through your neural link. The old songs in your eyes flicker and warp, replaced by a deep, oceanic pressure."
+        "text": "The chamber skips. Nova is suddenly on one knee, her suit clock missing half a second she never perceived. The cold-loop coil has fused, the liner's ground strip is black, and a new protocol is ringing through her nerves."
       },
       {
-        "type": "narration",
-        "text": "You hear it. Not a protocol error. A song. The Chorus. Standing waves of a resonance older than the colony, pressing against your mind."
-      },
-      {
-        "type": "narration",
-        "text": "You pull your hand back as the resonance stabilizes. The hum remains, settled deep in your chest."
+        "type": "dialogue",
+        "speaker": "Nova",
+        "text": "Not a prophecy. A machine handshake—and it just logged me in."
       }
     ]
   },
@@ -502,7 +570,7 @@
         "type": "dialogue",
         "speaker": "Zeke",
         "emote": "scared",
-        "text": "Nova! Hold on! The navigation console is burning out—the frequency bypass isn't holding!"
+        "text": "Nova! Hold on! Authorization passed and the beacon route locked, but there is no Shield corridor in this flight plan!"
       },
       {
         "type": "narration",
@@ -515,6 +583,49 @@
       {
         "type": "narration",
         "text": "Everything goes white as the thrusters fail and the ground rushes up to meet you."
+      }
+    ]
+  },
+  {
+    "id": "scene_anchor_drill",
+    "title": "Anchor Drill",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Night settles over Canopy Ridge. Nova reaches the Bridge's Link toward Zeke's reopened cut; static whites out her sight, and her knees strike stone."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Orion",
+        "text": "Stop. You are burning the wire."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "text": "I can hold it."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Orion",
+        "text": "The Bridge connects; it does not make one body carry the circuit. Ground first. Then channel."
+      },
+      {
+        "type": "narration",
+        "text": "Zeke clips a grounding lead to Nova's bracer. Gh0st offers his armored hand without an order forcing it. Orion holds one low tuning tone until all four breaths fall into time."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Gh0st",
+        "text": "No command attached. I am here. Route it."
+      },
+      {
+        "type": "narration",
+        "text": "Nova opens Link. Current passes among them without merging them; Zeke's wound stabilizes while every thought remains its owner's."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "text": "Link. Not merge. I get it."
       }
     ]
   },
@@ -596,36 +707,36 @@
     "steps": [
       {
         "type": "narration",
-        "text": "Morning in the Colony. The Shield is gone. The sky looks larger, as if someone finally removed a ceiling."
+        "text": "Morning in the Colony. A corridor stands open through the planetary curtain. Dominion insignia come down by hand; nobody mistakes an opening for a finished revolution."
       },
       {
         "type": "narration",
-        "text": "At Zeke's diner, Nova studies a photograph of the crew at Tideglass Beach. She knows the face is hers, but the sand and salt are missing."
+        "text": "At Zeke's diner, Nova steadies a mug in her trembling tuning hand and studies a photograph of the crew at Tideglass Beach. She remembers the sand, the salt, and exactly who threw the first canteen. A thin signal whine still threads behind everything she hears."
       },
       {
         "type": "dialogue",
         "speaker": "Zeke",
-        "text": "Do not strain a processor. It was a Tuesday. It smelled like salt. You complained about the humidity."
+        "text": "Set the mug down before your hand votes against you. The tremor is worse when you're tired."
       },
       {
         "type": "dialogue",
         "speaker": "Gh0st",
-        "text": "You also threw a canteen at me. Accuracy: 94%."
+        "text": "You threw the canteen at me. Accuracy: 94%. You remember losing the argument."
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
-        "text": "I cannot hear the music anymore."
+        "text": "I remember the beach. The music is gone. The signal whine isn't."
       },
       {
         "type": "dialogue",
         "speaker": "Orion",
-        "text": "Good. Now you can hear the wind."
+        "text": "It may fade. Until then, listen past it. The wind is still there."
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
-        "text": "Sounds like a good day. Fill me in on the rest?"
+        "text": "Sounds like a good day. Tell it again?"
       },
       {
         "type": "dialogue",

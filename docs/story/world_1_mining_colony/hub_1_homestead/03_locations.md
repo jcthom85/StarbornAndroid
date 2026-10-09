@@ -32,14 +32,14 @@ Nodes unlock in Stages. Nodes in the same Stage are available simultaneously.
 *   **Description:** Cluttered but cozy. Workbench covered in scavenged droid parts. The only safe place.
 *   **Rooms (8):**
     1.  **Scrap Yard (workshop_yard):** Cluttered exterior with scrap piles.
-    2.  **Main Bench (workshop_floor):** The heart of the shop; Workbench location.
+    2.  **Main Bench (workshop_floor):** Repair Cryo-Inductor and Flux Liner, bypass the cutter governor, and test-fire the prohibited frequency sweep that wakes the buried Fork.
     3.  **Jed's Office (workshop_office):** Cramped back room for private talk.
     4.  **Parts Loft (workshop_loft):** Storage area overlooking the floor.
     5.  **Tool Shed (workshop_shed):** Small side room with basic materials.
     6.  **Flooded Basement (workshop_basement):** Flooded storage; hides a secret mod.
     7.  **Back Alley (workshop_back):** Leads to an alley transition.
-    8.  **Loading Dock (workshop_dock):** Where Bogs starts SQ_03 and Nova learns Guard Break/Stagger.
-*   **Purpose:** Get Main Quest. Tutorial for Tinkering.
+    8.  **Loading Dock (workshop_dock):** Where Boggs starts SQ_03 and Nova learns Guard Break/Stagger.
+*   **Purpose:** Establish Jed, teach tinkering and cutter-frequency controls, and cause the surge that drives Nova's flag and Sector 4 punishment.
 *   **Unlocks:** Stage 3 (Med-Bay AND Trade Row).
 
 ## Stage 3 (Choice)

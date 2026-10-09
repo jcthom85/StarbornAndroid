@@ -81,7 +81,7 @@ The surface of Sector 9 is a dense, bioluminescent jungle climbing over smooth, 
 *   **Rooms:**
     *   `sector9_temple_plaza` (Stone Courtyard): Perfectly flat stone courtyard, free of jungle vegetation.
     *   `sector9_temple_vestibule` (Outer Guard Post): Deactivated security turrets covered in vines.
-    *   `sector9_temple_lock_chamber` (Resonator Lock): The central gate door containing a slot for the Chime.
+    *   `sector9_temple_lock_chamber` (Identity Resonator): The central gate door containing a slot that reads Orion's identity cadence from the Chime, then wakes Sanctuary reserve cells.
     *   `sector9_temple_left_wing` (Resonator Column): Left tuning column, puzzle interactable.
     *   `sector9_temple_right_wing` (Frequency Dampener): Right tuning column, puzzle interactable.
     *   `sector9_temple_gate` (Inner Gate Threshold): The dark hallway directly leading inside the facility.

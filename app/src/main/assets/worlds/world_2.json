@@ -47,9 +47,7 @@
         {
           "id": "canopy_ridge",
           "name": "Canopy Ridge",
-          "description": "A wind-carved stone shelf high above the jungle. The Planetary Shield curves across the sky above.",
-          "boss_arena": true,
-          "boss_id": "the_beast",
+          "description": "A wind-carved stone shelf high above the jungle. The Planetary Shield curves across the sky above; after Orion wakes, the crew returns here to confront Gh0st and the Source Beast.",
           "exits": ["razor_vine_path", "tideglass_beach", "temple_gate"]
         },
         {
@@ -131,7 +129,7 @@
         {
           "id": "the_sky",
           "name": "The Sky",
-          "description": "Flying high above the cloud layer, approaching the violet glow of the Planetary Shield.",
+          "description": "The Astra follows a low-altitude airlane toward the Spire while the violet Planetary Shield remains a distant ceiling overhead.",
           "exits": []
         }
       ]

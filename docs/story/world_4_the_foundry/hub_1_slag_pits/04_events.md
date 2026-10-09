@@ -25,10 +25,10 @@
     *   Nova looks at the schematics, then at Gh0st.
     *   **Gh0st:** "He's building a coffin for the world."
     *   **Nova:** "Then we steal the heart."
-    *   The terminal then transitions to the Project Phantom data (Elara neural map, Gh0st chip insertion).
-    *   **Gh0st:** "I... I am not her brother. I am her backup."
-    *   He looks at Nova like the missing puzzle piece is finally visible. "That's why I couldn't fire."
-    *   **Nova:** "No. You're you."
+    *   The terminal then transitions to Project Phantom data: a partial derivative of Elara's neural map seeded Unit 734's architecture, after which Gh0st's separate body and mind developed as their own person.
+    *   **Gh0st:** "Part of my architecture came from her map. The rest of this life is mine."
+    *   He looks at Nova like the missing puzzle piece is finally visible. "And the Source Lock? Your Fork mark matched its Elara-calibrated recognition layer. It paused one lethal action. It did not make the next choice."
+    *   **Nova:** "No designation gets to tell you who you are. You're you."
 
 ## EVT_W4_03: The Protocol
 *   **Trigger:** Cooling Springs safe node after EVT_W4_02 (mandatory breather beat).
@@ -39,12 +39,10 @@
     *   Orion’s shoulders lower a fraction. Nova realizes she’s been clenching her jaw since the Wilds.
     *   Gh0st sits just off the waterline with his blade stripped on a cloth—cleaning parts with automatic precision.
     *   Nova watches him for a while, then sits across the small gap of bare floor between them.
-    *   Gh0st taps his visor. A red line of text replays in his HUD: **SPECTRAL MATCH DETECTED. LETHAL LOCK: ENABLED.**
-    *   **Gh0st:** "My kill-suite doesn't read faces. It reads Spectral IDs."
-    *   **Nova:** "The chordprint thing."
-    *   He nods once. "When you channel the Source, you ring close enough to her that the failsafe grabs the wheel."
-    *   **Nova:** "So you didn't spare me."
-    *   Gh0st's jaw tightens. "The first time? No. The second time, I chose not to strike anyway."
+    *   Gh0st taps his visor. A red line of text replays in his HUD: **FORK PROTOCOL MARK DETECTED // SOURCE LOCK // LETHAL ACTION PAUSED.**
+    *   **Gh0st:** "The lock's recognition layer was calibrated from Elara's interface map. Your Fork mark matched enough of that protocol signature to trip it."
+    *   **Nova:** "A pause, not control."
+    *   He nods once. "One lethal action stopped. The lock issued no command. When the Beast came, protecting you was my choice."
     *   He pushes a small black chip across the floor—his override key. "If I ever draw a blade on you again, you use that. No hesitation."
     *   Zeke, half-asleep against a pipe, cracks one eye. "We are doing feelings in a volcano. Love that for us."
     *   Nova pockets the chip. "Okay. Then we're even. But if you ever throw a canteen at my feet again, I'm throwing it back."
@@ -53,12 +51,12 @@
 ## EVT_W4_04: First Forge
 *   **Trigger:** Acquiring the Anvil (MQ_19).
 *   **Action:**
-    *   The Anvil hums like an engine trying to sing.
+    *   The Anvil's damaged intent parser detects the Fork protocol scar in Nova's signal and forces an immediate handshake through its Foundry cradle.
     *   Nova reaches for it and tries to Construct a simple catwalk across a slag river.
-    *   The shape forms wrong—twisting into familiar scrap-metal geometry—then collapses mid-air.
+    *   The damaged cradle amplifies her unstable input. The shape forms wrong—twisting into familiar scrap-metal geometry—then collapses mid-air.
     *   Nova slips. Gh0st yanks her back by the collar as heat rolls up.
-    *   **Orion:** "It answers intention. Doubt becomes debris."
-    *   Nova swallows the fear, nods once, and tries again—slower.
+    *   **Orion:** "The cradle is amplifying noise in the signal. Slow it down. The relic is not grading you."
+    *   Nova grounds her breathing, nods once, and tries again—slower.
 
 ## EVT_W4_05: The Confrontation
 *   **Trigger:** Meeting Rylos (MQ_20).
@@ -79,7 +77,7 @@
     *   He turns his back on Rylos and walks away.
     *   Zeke exhales like he’s been holding it since the Wilds. "Okay. Okay. We are not doing murder in a volcano. Great growth."
     *   Orion nods once—approval without ceremony. "Choice is the point."
-    *   **Escape begins:** The crew grabs the Deep-Core Engine and runs for *The Astra* as the Foundry starts to die behind them.
+    *   **Escape begins:** The crew secures the Deep-Core Engine and Phase-Cutter Arrays, then runs for *The Astra* as the Foundry starts to die behind them.
 
 ## EVT_W4_06: Compliance Coup
 *   **Trigger:** During the escape launch (end MQ_20). (Stinger.)
