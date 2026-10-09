@@ -57,17 +57,29 @@ fun DesktopHubScreen(services: DesktopAppServices, onEnterRoom: (String) -> Unit
             runtime.selectNode(id)
         }
         fun enter(node: HubNodeUi) {
-            if(travel?.busy==true) return
+            if (travel?.busy == true) return
             val action = {
-                if(runtime.uiState.value.nodes.firstOrNull { it.id==node.id }?.canEnter==true)
+                if (runtime.uiState.value.nodes.firstOrNull { it.id == node.id }?.canEnter == true)
                     services.audioDriver.executeAll(services.audioRouter.commandsForUi("sfx_room_transition"))
                 runtime.enterNode(node.id) { services.sessionStore.state.value.roomId?.let(onEnterRoom) }
             }
-            if(!node.canEnter || travel==null) action() else travel.request(scope, onFailure={ services.exploration.showStatusMessage("Unable to travel. Please try again.") }, action=action)
+            if (!node.canEnter || travel == null) {
+                action()
+            } else {
+                travel.requestNodeDeployment(
+                    scope = scope,
+                    nodeTitle = node.title,
+                    regionTitle = state.hub?.title,
+                    entryRoomTitle = services.roomDefinitions[node.entryRoom]?.title,
+                    description = node.description,
+                    onFailure = { services.exploration.showStatusMessage("Unable to travel. Please try again.") },
+                    action = action
+                )
+            }
         }
         fun goBack() {
-            val action={ services.audioDriver.executeAll(services.audioRouter.commandsForUi("sfx_room_transition")); onBackToExploration() }
-            if(travel==null) action() else travel.request(scope, onFailure={ services.exploration.showStatusMessage("Unable to travel. Please try again.") }, action=action)
+            val action = { services.audioDriver.executeAll(services.audioRouter.commandsForUi("sfx_room_transition")); onBackToExploration() }
+            if (travel == null) action() else travel.requestHubReturn(scope, onFailure = { services.exploration.showStatusMessage("Unable to travel. Please try again.") }, action = action)
         }
         LaunchedEffect(state.newlyUnlockedNodeId) {
             if(state.newlyUnlockedNodeId!=null) services.audioDriver.executeAll(services.audioRouter.commandsForUi("sfx_hub_node_select"))

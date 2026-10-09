@@ -145,7 +145,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
     LaunchedEffect(ui.roomTransition?.id) {
         if (ui.roomTransition != null) {
             services.audioDriver.executeAll(listOf(com.example.starborn.domain.audio.AudioCommand.Play(com.example.starborn.domain.audio.AudioCueType.UI, "ui_room_move", fadeMs = 0)))
-            moveProgress.animateTo(1f, tween(240, easing = FastOutSlowInEasing))
+            moveProgress.animateTo(1f, tween(300, easing = FastOutSlowInEasing))
         }
     }
     val revealingRoom = ui.fadeOverlay?.let { it.toAlpha < it.fromAlpha } == true
@@ -217,29 +217,29 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                 layout.center.left,layout.center.top,layout.center.width,layout.center.height)
             val progress=moveProgress.value.coerceIn(0f,1f)
             val moving=ui.roomTransition?.fromBackgroundImage!=null && progress<1f
-            val enterX=when(ui.roomTransition?.direction) { "east"->-1f;"west"->1f;else->0f }
-            val enterY=when(ui.roomTransition?.direction) { "north"->1f;"south"->-1f;else->0f }
-            fun sceneGeometry(scale:Float,x:Float,y:Float,base:EnvironmentalGeometry=geometry)=base.copy(
-                imageX=base.imageX+base.imageWidth*(1-scale)/2+base.imageWidth*x,
-                imageY=base.imageY+base.imageHeight*(1-scale)/2+base.imageHeight*y,
-                imageWidth=base.imageWidth*scale,imageHeight=base.imageHeight*scale)
-            val incomingGeometry=if(settings.disableScreenshake || !moving) geometry else sceneGeometry(.99f+.01f*progress,enterX*.12f*(1-progress),enterY*.12f*(1-progress))
-            if(moving) {
-                val outgoingRoom=services.roomDefinitions[ui.roomTransition?.fromRoomId]
-                val outgoingState=outgoingRoom?.state.orEmpty().mapNotNull { (k,v)->(v as? Boolean)?.let { k to it } }.toMap()+environmentSession.roomStates[outgoingRoom?.id].orEmpty()
-                val outgoingArtwork=rememberDesktopAssetPainter(ui.roomTransition?.fromBackgroundImage,services.assetProvider).intrinsicSize
-                val outgoingBase=EnvironmentalGeometry.fit(geometry.width,geometry.height,outgoingArtwork.width,outgoingArtwork.height)
-                val outgoingGeometry=if(settings.disableScreenshake) outgoingBase else sceneGeometry(1-.025f*progress,-enterX*.78f*progress,-enterY*.78f*progress,outgoingBase)
-                DesktopEnvironmentalEffects(services,outgoingRoom,outgoingGeometry,outgoingState,ui.completedMilestones,
-                    dark=(outgoingState["dark"] ?: outgoingRoom?.dark ?: false),paused=!foreground || sceneBlocked,
-                    opacity=if(settings.disableScreenshake) 1-progress*progress*(3-2*progress) else (1-progress/.82f).coerceIn(0f,1f),
-                    transition=true,sceneMemory=environmentMemory)
+            val moveSignX = when (ui.roomTransition?.direction?.lowercase()) { "east" -> 1f; "west" -> -1f; else -> 0f }
+            val moveSignY = when (ui.roomTransition?.direction?.lowercase()) { "south" -> 1f; "north" -> -1f; else -> 0f }
+            fun sceneGeometry(scale: Float, x: Float, y: Float, base: EnvironmentalGeometry = geometry) = base.copy(
+                imageX = base.imageX + base.imageWidth * (1 - scale) / 2 + base.imageWidth * x,
+                imageY = base.imageY + base.imageHeight * (1 - scale) / 2 + base.imageHeight * y,
+                imageWidth = base.imageWidth * scale, imageHeight = base.imageHeight * scale)
+            val incomingGeometry = if (settings.disableScreenshake || !moving) geometry else sceneGeometry(.98f + .02f * progress, moveSignX * .28f * (1 - progress), moveSignY * .28f * (1 - progress))
+            if (moving) {
+                val outgoingRoom = services.roomDefinitions[ui.roomTransition?.fromRoomId]
+                val outgoingState = outgoingRoom?.state.orEmpty().mapNotNull { (k, v) -> (v as? Boolean)?.let { k to it } }.toMap() + environmentSession.roomStates[outgoingRoom?.id].orEmpty()
+                val outgoingArtwork = rememberDesktopAssetPainter(ui.roomTransition?.fromBackgroundImage, services.assetProvider).intrinsicSize
+                val outgoingBase = EnvironmentalGeometry.fit(geometry.width, geometry.height, outgoingArtwork.width, outgoingArtwork.height)
+                val outgoingGeometry = if (settings.disableScreenshake) outgoingBase else sceneGeometry(1 - .02f * progress, -moveSignX * .28f * progress, -moveSignY * .28f * progress, outgoingBase)
+                DesktopEnvironmentalEffects(services, outgoingRoom, outgoingGeometry, outgoingState, ui.completedMilestones,
+                    dark = (outgoingState["dark"] ?: outgoingRoom?.dark ?: false), paused = !foreground || sceneBlocked,
+                    opacity = if (settings.disableScreenshake) 1 - progress * progress * (3 - 2 * progress) else 1f - progress,
+                    transition = true, sceneMemory = environmentMemory)
             }
-            DesktopEnvironmentalEffects(services,room,incomingGeometry,ui.roomState,ui.completedMilestones,
-                dark=isDark,paused=!foreground || sceneBlocked,opacity=if(moving) progress else 1f,
-                transition=moving,sceneMemory=environmentMemory)
+            DesktopEnvironmentalEffects(services, room, incomingGeometry, ui.roomState, ui.completedMilestones,
+                dark = isDark, paused = !foreground || sceneBlocked, opacity = if (moving) progress else 1f,
+                transition = moving, sceneMemory = environmentMemory)
             if (!isDark) DesktopExplorationEnemyStage(services, ui, layout, blocked)
-            DesktopExplorationPanels(services, ui, layout, description, inlinePlan, isDark, blocked) { tab ->
+            DesktopExplorationPanels(services, ui, layout, description, inlinePlan, isDark, blocked, transitionProgress = progress) { tab ->
                 runtime.openMenuOverlay(if (tab == DesktopMenuTab.STATS) null else com.example.starborn.feature.exploration.viewmodel.MenuTab.valueOf(tab.name))
             }
         }

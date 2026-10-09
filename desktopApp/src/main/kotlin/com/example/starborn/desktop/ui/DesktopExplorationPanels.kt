@@ -9,6 +9,7 @@ import androidx.compose.material.icons.rounded.*
 import androidx.compose.ui.zIndex
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -67,6 +68,7 @@ internal fun unmatchedRoomTargets(ui: ExplorationUiState, plan: InlineActionPlan
 internal fun DesktopExplorationPanels(
     services: DesktopAppServices, ui: ExplorationUiState, layout: PortraitBackdropLayout,
     description: String?, plan: InlineActionPlan?, isDark: Boolean, blocked: Boolean,
+    transitionProgress: Float = 1f,
     onMenu: (DesktopMenuTab) -> Unit
 ) {
     val density = LocalDensity.current
@@ -84,7 +86,8 @@ internal fun DesktopExplorationPanels(
             val rightWidth = with(density) { layout.right.width.toDp() }
             Box(Modifier.width(leftWidth).fillMaxHeight().padding(start = 20.dp, end = 16.dp, top = 20.dp, bottom = 20.dp)) {
                 DesktopNarrativeArea(services, ui, description, plan, isDark, blocked,
-                    Modifier.align(Alignment.TopEnd).widthIn(max = 400.dp).fillMaxSize())
+                    Modifier.align(Alignment.TopEnd).widthIn(max = 400.dp).fillMaxSize(),
+                    transitionProgress = transitionProgress)
             }
             Box(Modifier.offset(x = rightX).width(rightWidth).fillMaxHeight().padding(start = 16.dp, end = 20.dp, top = 20.dp, bottom = 20.dp)) {
                 DesktopIndependentHud(services, ui, isDark, blocked, onMenu,
@@ -106,7 +109,7 @@ internal fun DesktopExplorationPanels(
                         TextButton(onClick = { compactPanel = null }) { Icon(Icons.Rounded.Close, null, Modifier.size(16.dp)); Spacer(Modifier.width(6.dp)); Text("Close") }
                     }
                     val overlay = Modifier.weight(1f).fillMaxWidth().padding(8.dp)
-                    if (compactPanel == "room") DesktopNarrativeArea(services, ui, description, plan, isDark, blocked, overlay, compact = true)
+                    if (compactPanel == "room") DesktopNarrativeArea(services, ui, description, plan, isDark, blocked, overlay, compact = true, transitionProgress = transitionProgress)
                     else DesktopIndependentHud(services, ui, isDark, blocked, onMenu, overlay)
                 }
             }
@@ -118,16 +121,22 @@ internal fun DesktopExplorationPanels(
 
 @Composable
 private fun DesktopNarrativeArea(services: DesktopAppServices, ui: ExplorationUiState, description: String?, plan: InlineActionPlan?,
-    isDark: Boolean, blocked: Boolean, modifier: Modifier, compact: Boolean = false) {
+    isDark: Boolean, blocked: Boolean, modifier: Modifier, compact: Boolean = false, transitionProgress: Float = 1f) {
     val runtime = services.exploration
     val accent = LocalExplorationAccent.current
     val settings = LocalExplorationSettings.current
     val bodyScroll = remember(ui.currentRoom?.id) { ScrollState(0) }
     val contextScroll = remember(ui.currentRoom?.id) { ScrollState(0) }
+    val contentAlpha = if (transitionProgress < 1f) (transitionProgress / 0.85f).coerceIn(0f, 1f) else 1f
+    val contentSlideY = if (transitionProgress < 1f) ((1f - transitionProgress) * 10f).dp else 0.dp
     BoxWithConstraints(modifier) {
         val narrativeHeightLimit = maxHeight * .6f
         Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Surface(Modifier.fillMaxWidth().heightIn(max = narrativeHeightLimit).testTag("exploration-narrative"),
+            Surface(Modifier.fillMaxWidth().heightIn(max = narrativeHeightLimit).testTag("exploration-narrative")
+                .graphicsLayer {
+                    alpha = contentAlpha
+                    translationY = contentSlideY.toPx()
+                },
                 shape = RoundedCornerShape(12.dp), color = if (settings.highContrastMode) Color.Black else Color(0xEB07111A), border = BorderStroke(1.dp, if (settings.highContrastMode) Color.White else accent.copy(alpha = .24f))) {
                 Column(Modifier.drawBehind { drawRect(accent.copy(alpha = .85f), size = androidx.compose.ui.geometry.Size(3.dp.toPx(), size.height)) }
                     .padding(22.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {

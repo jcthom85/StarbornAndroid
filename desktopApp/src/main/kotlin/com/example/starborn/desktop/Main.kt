@@ -27,6 +27,7 @@ import com.example.starborn.desktop.ui.DesktopFishingScreen
 import com.example.starborn.desktop.ui.DesktopHubScreen
 import com.example.starborn.desktop.ui.DesktopMainMenuScreen
 import com.example.starborn.desktop.ui.DesktopCombatTransitionOverlay
+import com.example.starborn.desktop.ui.DesktopHubTransitionOverlay
 import com.example.starborn.desktop.ui.TransitionMode
 import kotlinx.coroutines.launch
 
@@ -240,7 +241,7 @@ fun DesktopGameApp(
                     services.audioDriver.executeAll(stopAudio)
                     pendingCombatEnemies = enemies
                 },
-                onOpenHub = { travel.request(travelScope) { onScreenStateChange(DesktopScreenState.HUB) } },
+                onOpenHub = { travel.requestHubReturn(travelScope) { onScreenStateChange(DesktopScreenState.HUB) } },
                 onOpenFieldKit = { onScreenStateChange(DesktopScreenState.FIELD_KIT) },
                 onOpenFishing = { onScreenStateChange(DesktopScreenState.FISHING) },
                 onOpenArcade = { onScreenStateChange(DesktopScreenState.ARCADE) },
@@ -292,8 +293,7 @@ fun DesktopGameApp(
             )
         }
     }
-    if (travel.busy) Box(Modifier.matchParentSize().zIndex(100f).background(Color.Black.copy(alpha=travel.opacity.value))
-        .clickable(interactionSource=remember { androidx.compose.foundation.interaction.MutableInteractionSource() },indication=null) {})
+    DesktopHubTransitionOverlay(travel = travel)
 
     pendingCombatEnemies?.let { enemies ->
         DesktopCombatTransitionOverlay(
