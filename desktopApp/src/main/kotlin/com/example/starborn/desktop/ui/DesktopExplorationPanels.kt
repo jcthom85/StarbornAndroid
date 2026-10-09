@@ -69,6 +69,8 @@ internal fun DesktopExplorationPanels(
     services: DesktopAppServices, ui: ExplorationUiState, layout: PortraitBackdropLayout,
     description: String?, plan: InlineActionPlan?, isDark: Boolean, blocked: Boolean,
     transitionProgress: Float = 1f,
+    onOpenControls: () -> Unit = {},
+    onInteractFirst: () -> Unit = {},
     onMenu: (DesktopMenuTab) -> Unit
 ) {
     val density = LocalDensity.current
@@ -90,7 +92,7 @@ internal fun DesktopExplorationPanels(
                     transitionProgress = transitionProgress)
             }
             Box(Modifier.offset(x = rightX).width(rightWidth).fillMaxHeight().padding(start = 16.dp, end = 20.dp, top = 20.dp, bottom = 20.dp)) {
-                DesktopIndependentHud(services, ui, isDark, blocked, onMenu,
+                DesktopIndependentHud(services, ui, isDark, blocked, onMenu, onOpenControls, onInteractFirst,
                     Modifier.align(Alignment.TopStart).widthIn(max = 300.dp).fillMaxSize())
             }
         } else {
@@ -110,7 +112,7 @@ internal fun DesktopExplorationPanels(
                     }
                     val overlay = Modifier.weight(1f).fillMaxWidth().padding(8.dp)
                     if (compactPanel == "room") DesktopNarrativeArea(services, ui, description, plan, isDark, blocked, overlay, compact = true, transitionProgress = transitionProgress)
-                    else DesktopIndependentHud(services, ui, isDark, blocked, onMenu, overlay)
+                    else DesktopIndependentHud(services, ui, isDark, blocked, onMenu, onOpenControls, onInteractFirst, overlay)
                 }
             }
         }
@@ -207,7 +209,7 @@ private fun DesktopContextualControls(services: DesktopAppServices, ui: Explorat
 
 @Composable
 private fun DesktopIndependentHud(services: DesktopAppServices, ui: ExplorationUiState, isDark: Boolean, blocked: Boolean,
-    onMenu: (DesktopMenuTab) -> Unit, modifier: Modifier) {
+    onMenu: (DesktopMenuTab) -> Unit, onOpenControls: () -> Unit, onInteractFirst: () -> Unit, modifier: Modifier) {
     val detailsScroll = rememberScrollState()
     Column(modifier.testTag("exploration-status"), verticalArrangement = Arrangement.spacedBy(20.dp)) {
         if (isDark || ui.minimap?.cells?.any { it.discovered || it.visited || it.isCurrent } == true) {
@@ -217,23 +219,21 @@ private fun DesktopIndependentHud(services: DesktopAppServices, ui: ExplorationU
             }
         }
         DesktopExplorationScrollPane(detailsScroll, Modifier.weight(1f).fillMaxWidth().testTag("hud-details")) {
-        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            DesktopObjectiveCard(services, ui, blocked, onMenu)
-            DesktopPartyCard(services, ui, blocked, onMenu)
-        }
-        }
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            DesktopTooltip("Open field menu [I / Esc]") {
-                OutlinedButton(onClick = { onMenu(DesktopMenuTab.STATS) }, enabled = !blocked,
-                    colors = ButtonDefaults.outlinedButtonColors(containerColor = if (LocalExplorationSettings.current.highContrastMode) Color.Black else PanelInk, contentColor = Color.White),
-                    border = BorderStroke(1.dp, if (LocalExplorationSettings.current.highContrastMode) Color.White else PanelBorder), modifier = Modifier.heightIn(min = if (LocalExplorationSettings.current.largeTouchTargets) 56.dp else 44.dp).explorationFeedback(!blocked), shape = RoundedCornerShape(8.dp),
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp)) {
-                    Icon(Icons.Rounded.Menu, contentDescription = null, modifier = Modifier.size(18.dp))
-                    Spacer(Modifier.width(8.dp))
-                    Text("Menu [Esc]", fontWeight = FontWeight.SemiBold)
-                }
+            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                DesktopObjectiveCard(services, ui, blocked, onMenu)
+                DesktopPartyCard(services, ui, blocked, onMenu)
             }
         }
+        DesktopExplorationKeyLegendHud(
+            ui = ui,
+            blocked = blocked,
+            onInteractFirst = onInteractFirst,
+            onOpenMap = { services.exploration.requestReturnToHub() },
+            onOpenInventory = { onMenu(DesktopMenuTab.INVENTORY) },
+            onQuickSave = { services.exploration.quickSave() },
+            onOpenControls = onOpenControls,
+            onOpenMenu = { onMenu(DesktopMenuTab.STATS) }
+        )
     }
 }
 

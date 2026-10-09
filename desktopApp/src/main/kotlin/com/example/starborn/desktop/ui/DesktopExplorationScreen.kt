@@ -1,3 +1,5 @@
+@file:OptIn(androidx.compose.ui.ExperimentalComposeUiApi::class)
+
 package com.example.starborn.desktop.ui
 
 import com.example.starborn.domain.environment.EnvironmentalGeometry
@@ -40,6 +42,9 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.key.*
+import androidx.compose.ui.input.pointer.PointerButton
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -167,7 +172,23 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
     fun interactFirst() { if (!blocked) ui.actions.firstOrNull { ui.actionHints[it.actionKey()]?.locked != true }?.let(runtime::onActionSelected) }
 
     CompositionLocalProvider(LocalExplorationDrawer provides drawer) {
-    BoxWithConstraints(Modifier.fillMaxSize().focusRequester(keyboardFocus).onPreviewKeyEvent { event ->
+    BoxWithConstraints(Modifier.fillMaxSize().focusRequester(keyboardFocus).pointerInput(controlsOpen, environmentPreview, drawer.panel, ui.prompt, ui.narrationPrompt, ui.eventAnnouncement) {
+        awaitPointerEventScope {
+            while (true) {
+                val event = awaitPointerEvent()
+                if (event.type == PointerEventType.Press && event.button == PointerButton.Secondary) {
+                    when {
+                        controlsOpen -> { controlsOpen = false; event.changes.forEach { it.consume() } }
+                        environmentPreview -> { environmentPreview = false; event.changes.forEach { it.consume() } }
+                        drawer.panel != null -> { drawer.panel = null; event.changes.forEach { it.consume() } }
+                        ui.prompt != null -> { runtime.dismissPrompt(); event.changes.forEach { it.consume() } }
+                        ui.narrationPrompt != null -> { runtime.dismissNarration(); event.changes.forEach { it.consume() } }
+                        ui.eventAnnouncement != null -> { runtime.dismissEventAnnouncement(); event.changes.forEach { it.consume() } }
+                    }
+                }
+            }
+        }
+    }.onPreviewKeyEvent { event ->
         if (event.type != KeyEventType.KeyDown) false
         else if (menuOpen || questPopupVisible) false
         else if (event.key == Key.Escape && drawer.panel != null) { drawer.panel = null; true }
@@ -239,9 +260,21 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                 dark = isDark, paused = !foreground || sceneBlocked, opacity = if (moving) progress else 1f,
                 transition = moving, sceneMemory = environmentMemory)
             if (!isDark) DesktopExplorationEnemyStage(services, ui, layout, blocked)
-            DesktopExplorationPanels(services, ui, layout, description, inlinePlan, isDark, blocked, transitionProgress = progress) { tab ->
-                runtime.openMenuOverlay(if (tab == DesktopMenuTab.STATS) null else com.example.starborn.feature.exploration.viewmodel.MenuTab.valueOf(tab.name))
-            }
+            DesktopExplorationPanels(
+                services = services,
+                ui = ui,
+                layout = layout,
+                description = description,
+                plan = inlinePlan,
+                isDark = isDark,
+                blocked = blocked,
+                transitionProgress = progress,
+                onMenu = { tab ->
+                    runtime.openMenuOverlay(if (tab == DesktopMenuTab.STATS) null else com.example.starborn.feature.exploration.viewmodel.MenuTab.valueOf(tab.name))
+                },
+                onOpenControls = { controlsOpen = true },
+                onInteractFirst = ::interactFirst
+            )
         }
         if (ui.forceBlackScreen && ui.fadeOverlay == null) Box(Modifier.fillMaxSize().background(Color.Black))
         if (ui.fadeOverlay != null) Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = fadeAlpha.value.coerceIn(0f, 1f))))

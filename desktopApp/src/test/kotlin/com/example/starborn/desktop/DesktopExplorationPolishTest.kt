@@ -116,4 +116,47 @@ class DesktopExplorationPolishTest {
         compose.onNodeWithContentDescription("Minimap obscured by darkness").assertExists().assertHasNoClickAction()
         assertFalse(opened)
     }
+
+    @Test fun keyLegendHudRendersAndTriggersQuickSaveAndControls() {
+        val directory = Files.createTempDirectory("starborn-legend-hud-").toFile()
+        val services = DesktopAppServices(directory)
+        try {
+            runBlocking {
+                services.userSettingsStore.setTutorialsEnabled(false)
+                services.userSettingsStore.setEnvironmentalEffectsQuality(com.example.starborn.data.local.EnvironmentalEffectsQuality.OFF)
+            }
+            assertTrue(services.startDebugScenario("tut_npc_dialogue"))
+            compose.setContent {
+                Box(Modifier.size(1920.dp, 1080.dp)) {
+                    DesktopStarbornTheme {
+                        DesktopExplorationScreen(services, {}, {}, {}, {}, {}, {})
+                    }
+                }
+            }
+            compose.waitUntil(10000) { services.exploration.uiState.value.currentRoom?.id == "pit_jed_bunk" }
+            compose.waitForIdle()
+
+            // Key badges are present and interactive
+            compose.onNodeWithTag("key-legend-F5").assertIsDisplayed()
+            compose.onNodeWithTag("key-legend-H").assertIsDisplayed()
+            compose.onNodeWithTag("key-legend-Esc").assertIsDisplayed()
+            compose.onNodeWithTag("key-legend-WASD").assertIsDisplayed()
+
+            // Click Controls opens controls dialog
+            compose.onNodeWithTag("key-legend-H").performClick()
+            compose.waitForIdle()
+            compose.onNodeWithText("TACTICAL CONTROLS & KEYBINDINGS").assertIsDisplayed()
+
+            // Close dialog via Close button
+            compose.onNodeWithContentDescription("Close").performClick()
+            compose.waitForIdle()
+            compose.onNodeWithText("TACTICAL CONTROLS & KEYBINDINGS").assertDoesNotExist()
+
+            // Click Quick Save triggers quicksave
+            compose.onNodeWithTag("key-legend-F5").performClick()
+            compose.waitForIdle()
+            compose.onNodeWithText("Saved!").assertExists()
+        } finally { services.close(); directory.deleteRecursively() }
+    }
 }
+
