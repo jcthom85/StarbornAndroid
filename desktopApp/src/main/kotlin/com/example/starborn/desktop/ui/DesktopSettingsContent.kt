@@ -26,9 +26,12 @@ internal fun DesktopSettingsContent(services: DesktopAppServices, userSettings: 
         DesktopMenuCard(Modifier.fillMaxWidth()) {
             Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 DesktopMenuSection("Audio")
-                DesktopVolumeControl("Music and ambience", userSettings.musicVolume) { scope.launch { services.userSettingsStore.setMusicVolume(it) } }
+                DesktopVolumeControl("Master volume", userSettings.masterVolume) { scope.launch { services.userSettingsStore.setMasterVolume(it) } }
+                DesktopVolumeControl("Music", userSettings.musicVolume) { scope.launch { services.userSettingsStore.setMusicVolume(it) } }
+                DesktopVolumeControl("Ambience", userSettings.ambienceVolume) { scope.launch { services.userSettingsStore.setAmbienceVolume(it) } }
                 DesktopVolumeControl("Sound effects", userSettings.sfxVolume) { scope.launch { services.userSettingsStore.setSfxVolume(it) } }
                 DesktopVolumeControl("Voice", userSettings.voiceVolume) { scope.launch { services.userSettingsStore.setVoiceVolume(it) } }
+                DesktopSettingToggle("Mute when window unfocused", userSettings.muteWhenUnfocused) { scope.launch { services.userSettingsStore.setMuteWhenUnfocused(it) } }
             }
         }
     }
@@ -36,6 +39,7 @@ internal fun DesktopSettingsContent(services: DesktopAppServices, userSettings: 
         DesktopMenuCard(Modifier.fillMaxWidth()) {
             Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 DesktopMenuSection("Display")
+                Text("Screen mode", style = MaterialTheme.typography.titleSmall)
                 Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     DesktopDisplayMode.entries.forEach { option ->
                         FilterChip(mode == option, onClick = { scope.launch { services.userSettingsStore.setDisplayMode(option) } },
@@ -43,15 +47,26 @@ internal fun DesktopSettingsContent(services: DesktopAppServices, userSettings: 
                             label = { Text(when (option) { DesktopDisplayMode.WINDOWED -> "Windowed"; DesktopDisplayMode.BORDERLESS -> "Borderless"; DesktopDisplayMode.FULLSCREEN -> "Fullscreen" }) })
                     }
                 }
-                Text("Environmental effects",style=MaterialTheme.typography.titleSmall)
-                Row(horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-                    EnvironmentalEffectsQuality.entries.forEach { quality ->
-                        FilterChip(userSettings.environmentalEffectsQuality==quality,
+                Text("Interface scale", style = MaterialTheme.typography.titleSmall)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    listOf(1.0f to "100%", 1.25f to "125%", 1.50f to "150%").forEach { (scale, label) ->
+                        FilterChip(
+                            selected = kotlin.math.abs(userSettings.uiScale - scale) < 0.05f,
                             modifier = Modifier.desktopPointerHover(),
-                            onClick={ scope.launch { services.userSettingsStore.setEnvironmentalEffectsQuality(quality) } },label={ Text(quality.label) })
+                            onClick = { scope.launch { services.userSettingsStore.setUiScale(scale) } },
+                            label = { Text(label) }
+                        )
                     }
                 }
-                Text("Windowed mode can be resized.", style = MaterialTheme.typography.bodySmall, color = FieldMenuDesign.textMuted)
+                Text("Environmental effects", style = MaterialTheme.typography.titleSmall)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    EnvironmentalEffectsQuality.entries.forEach { quality ->
+                        FilterChip(userSettings.environmentalEffectsQuality == quality,
+                            modifier = Modifier.desktopPointerHover(),
+                            onClick = { scope.launch { services.userSettingsStore.setEnvironmentalEffectsQuality(quality) } }, label = { Text(quality.label) })
+                    }
+                }
+                Text("Windowed mode can be resized (minimum 1024×720).", style = MaterialTheme.typography.bodySmall, color = FieldMenuDesign.textMuted)
                 onOpenControls?.let { OutlinedButton(onClick = it, modifier = Modifier.desktopPointerHover()) { Text("Keyboard controls") } }
             }
         }
@@ -60,6 +75,7 @@ internal fun DesktopSettingsContent(services: DesktopAppServices, userSettings: 
         DesktopMenuCard(Modifier.fillMaxWidth()) {
             Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 DesktopMenuSection("Guidance and accessibility")
+                DesktopSettingToggle("Auto-advance dialogue", userSettings.autoAdvanceDialogue) { scope.launch { services.userSettingsStore.setAutoAdvanceDialogue(it) } }
                 DesktopSettingToggle("Tutorials", userSettings.tutorialsEnabled) { scope.launch { services.userSettingsStore.setTutorialsEnabled(it) } }
                 DesktopSettingToggle("Reduce flashes", userSettings.disableFlashes) { scope.launch { services.userSettingsStore.setFlashesDisabled(it) } }
                 DesktopSettingToggle("Larger controls", userSettings.largeTouchTargets) { scope.launch { services.userSettingsStore.setLargeTouchTargets(it) } }

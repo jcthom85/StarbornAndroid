@@ -107,4 +107,36 @@ class DesktopPresentationParityTest {
             tempDir.deleteRecursively()
         }
     }
+
+    @Test fun testPcNativeSettingsPersistence() = kotlinx.coroutines.runBlocking {
+        val tempDir = Files.createTempDirectory("starborn-settings-test-").toFile()
+        try {
+            val store = DesktopUserSettingsStore(tempDir)
+            store.setMasterVolume(0.75f)
+            store.setAmbienceVolume(0.60f)
+            store.setUiScale(1.25f)
+            store.setMuteWhenUnfocused(true)
+            store.setAutoAdvanceDialogue(true)
+            val settings = store.settings.first()
+            assertEquals(0.75f, settings.masterVolume, 0.001f)
+            assertEquals(0.60f, settings.ambienceVolume, 0.001f)
+            assertEquals(1.25f, settings.uiScale, 0.001f)
+            assertTrue(settings.muteWhenUnfocused)
+            assertTrue(settings.autoAdvanceDialogue)
+            store.close()
+            kotlinx.coroutines.delay(150)
+
+            // Verify persistence after store recreation
+            DesktopUserSettingsStore(tempDir).use { reloadedStore ->
+                val reloaded = reloadedStore.settings.first()
+                assertEquals(0.75f, reloaded.masterVolume, 0.001f)
+                assertEquals(0.60f, reloaded.ambienceVolume, 0.001f)
+                assertEquals(1.25f, reloaded.uiScale, 0.001f)
+                assertTrue(reloaded.muteWhenUnfocused)
+                assertTrue(reloaded.autoAdvanceDialogue)
+            }
+        } finally {
+            tempDir.deleteRecursively()
+        }
+    }
 }

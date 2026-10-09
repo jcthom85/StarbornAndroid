@@ -4,9 +4,14 @@ package com.example.starborn.data.local
  * Universal game user settings model shared across Android, iOS, and Desktop.
  */
 data class UserSettings(
+    val masterVolume: Float = 1f,
     val musicVolume: Float = 1f,
     val sfxVolume: Float = 1f,
+    val ambienceVolume: Float = 1f,
     val voiceVolume: Float = 1f,
+    val uiScale: Float = 1f,
+    val muteWhenUnfocused: Boolean = false,
+    val autoAdvanceDialogue: Boolean = false,
     val vignetteEnabled: Boolean = true,
     val tutorialsEnabled: Boolean = true,
     val disableScreenshake: Boolean = false,

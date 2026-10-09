@@ -83,15 +83,24 @@ internal fun DesktopMenuSkillsContent(services: DesktopAppServices, tree: SkillT
                                 }
                                 nodes.forEach { node ->
                                     val color = if (node.status.unlocked) FieldMenuDesign.gold else if (node.status.canPurchase) FieldMenuDesign.cyan else FieldMenuDesign.textMuted
-                                    Surface(onClick = { selectedId = node.id }, modifier = Modifier.desktopPointerHover().offset(((node.column - minCol) * 168 + 20).dp, ((node.row - minRow) * 130 + 20).dp).size(144.dp, 98.dp),
-                                        color = if (selected?.id == node.id) FieldMenuDesign.elevatedPanel else FieldMenuDesign.shell,
-                                        shape = RoundedCornerShape(12.dp), border = BorderStroke(if (selected?.id == node.id) 2.dp else 1.dp, color.copy(alpha = if (selected?.id == node.id) 1f else .4f))) {
-                                        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                                Icon(if (node.status.unlocked) Icons.Default.CheckCircle else if (node.status.canPurchase) Icons.Default.Stars else Icons.Default.Lock, null, Modifier.size(18.dp), tint = color)
-                                                Text(if (node.status.unlocked) "Unlocked" else "${node.costAp} AP", color = color, style = MaterialTheme.typography.labelSmall)
+                                    val tooltipText = buildString {
+                                        append(node.name)
+                                        append(if (node.status.unlocked) " (Unlocked)" else " (${node.costAp} AP)")
+                                        node.description?.takeIf { it.isNotBlank() }?.let { append("\n").append(it) }
+                                    }
+                                    Box(modifier = Modifier.offset(((node.column - minCol) * 168 + 20).dp, ((node.row - minRow) * 130 + 20).dp).size(144.dp, 98.dp)) {
+                                        DesktopTooltip(text = tooltipText, accent = color) {
+                                            Surface(onClick = { selectedId = node.id }, modifier = Modifier.fillMaxSize().desktopPointerHover(),
+                                                color = if (selected?.id == node.id) FieldMenuDesign.elevatedPanel else FieldMenuDesign.shell,
+                                                shape = RoundedCornerShape(12.dp), border = BorderStroke(if (selected?.id == node.id) 2.dp else 1.dp, color.copy(alpha = if (selected?.id == node.id) 1f else .4f))) {
+                                                Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                                        Icon(if (node.status.unlocked) Icons.Default.CheckCircle else if (node.status.canPurchase) Icons.Default.Stars else Icons.Default.Lock, null, Modifier.size(18.dp), tint = color)
+                                                        Text(if (node.status.unlocked) "Unlocked" else "${node.costAp} AP", color = color, style = MaterialTheme.typography.labelSmall)
+                                                    }
+                                                    Text(node.name, style = MaterialTheme.typography.labelLarge, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                                                }
                                             }
-                                            Text(node.name, style = MaterialTheme.typography.labelLarge, maxLines = 2, overflow = TextOverflow.Ellipsis)
                                         }
                                     }
                                 }

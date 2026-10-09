@@ -429,17 +429,26 @@ private fun DesktopInventorySplitLayout(
                     gridItems(entries, key = { it.key }) { entry ->
                         val item = allItems[entry.key]
                         val isSelected = entry.key == activeSelection
-                        Surface(onClick = { onSelectItem(entry.key) }, shape = RoundedCornerShape(12.dp),
-                            color = if (isSelected) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel,
-                            border = BorderStroke(if (isSelected) 2.dp else 1.dp, if (isSelected) FieldMenuDesign.cyan else FieldMenuDesign.border.copy(alpha = .3f))) {
-                            Column(Modifier.fillMaxWidth().height(150.dp).padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                Box(Modifier.fillMaxWidth().weight(1f)) {
-                                    DesktopMenuItemArt(services, item, Modifier.align(Alignment.Center).size(64.dp))
-                                    Text("x${entry.value}", Modifier.align(Alignment.TopEnd), color = FieldMenuDesign.gold, style = MaterialTheme.typography.labelLarge)
+                        val tooltipText = buildString {
+                            append(item?.name ?: services.contentName(entry.key))
+                            item?.description?.takeIf { it.isNotBlank() }?.let {
+                                append("\n")
+                                append(it)
+                            }
+                        }
+                        DesktopTooltip(text = tooltipText) {
+                            Surface(onClick = { onSelectItem(entry.key) }, shape = RoundedCornerShape(12.dp),
+                                color = if (isSelected) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel,
+                                border = BorderStroke(if (isSelected) 2.dp else 1.dp, if (isSelected) FieldMenuDesign.cyan else FieldMenuDesign.border.copy(alpha = .3f))) {
+                                Column(Modifier.fillMaxWidth().height(150.dp).padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    Box(Modifier.fillMaxWidth().weight(1f)) {
+                                        DesktopMenuItemArt(services, item, Modifier.align(Alignment.Center).size(64.dp))
+                                        Text("x${entry.value}", Modifier.align(Alignment.TopEnd), color = FieldMenuDesign.gold, style = MaterialTheme.typography.labelLarge)
+                                    }
+                                    Text(item?.name ?: services.contentName(entry.key), style = MaterialTheme.typography.labelLarge, maxLines = 2,
+                                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis, color = if (isSelected) FieldMenuDesign.cyan else FieldMenuDesign.text)
+                                    Text(item?.type.orEmpty().replace('_', ' '), style = MaterialTheme.typography.labelSmall, color = FieldMenuDesign.textMuted)
                                 }
-                                Text(item?.name ?: services.contentName(entry.key), style = MaterialTheme.typography.labelLarge, maxLines = 2,
-                                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis, color = if (isSelected) FieldMenuDesign.cyan else FieldMenuDesign.text)
-                                Text(item?.type.orEmpty().replace('_', ' '), style = MaterialTheme.typography.labelSmall, color = FieldMenuDesign.textMuted)
                             }
                         }
                     }

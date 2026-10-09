@@ -4,9 +4,14 @@ import kotlinx.coroutines.flow.Flow
 
 interface GameSettingsStore {
     val settings: Flow<UserSettings>
+    suspend fun setMasterVolume(value: Float) {}
     suspend fun setMusicVolume(value: Float)
     suspend fun setSfxVolume(value: Float)
+    suspend fun setAmbienceVolume(value: Float) {}
     suspend fun setVoiceVolume(value: Float)
+    suspend fun setUiScale(value: Float) {}
+    suspend fun setMuteWhenUnfocused(enabled: Boolean) {}
+    suspend fun setAutoAdvanceDialogue(enabled: Boolean) {}
     suspend fun setVignetteEnabled(enabled: Boolean)
     suspend fun setTutorialsEnabled(enabled: Boolean)
     suspend fun setScreenshakeDisabled(disabled: Boolean)

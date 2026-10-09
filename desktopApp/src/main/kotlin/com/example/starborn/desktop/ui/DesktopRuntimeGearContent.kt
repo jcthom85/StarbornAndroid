@@ -46,15 +46,29 @@ internal fun DesktopRuntimeGearContent(services: DesktopAppServices, characterId
     Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
         Column(Modifier.width(140.dp).fillMaxHeight().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             (GearRules.equipSlots.toList() + modSlots).forEach { target ->
-                Surface(onClick = { slot = target }, shape = RoundedCornerShape(10.dp),
-                    modifier = Modifier.desktopPointerHover(),
-                    color = if (slot == target) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel,
-                    border = BorderStroke(1.dp, if (slot == target) FieldMenuDesign.gold else FieldMenuDesign.border.copy(alpha = .3f))) {
-                    Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        DesktopMenuItemArt(services, equippedId(target)?.let(catalog::get), Modifier.size(40.dp), target)
-                        Text(slotLabel(target), color = FieldMenuDesign.gold, style = MaterialTheme.typography.labelLarge)
-                        Text(if (target in modSlots && !GearRules.isModSlotUnlocked(target, session.completedMilestones)) "Locked by story progress"
-                            else equippedId(target)?.let { catalog[it]?.name ?: services.contentName(it) } ?: "None", style = MaterialTheme.typography.bodySmall)
+                val currentItem = equippedId(target)?.let(catalog::get)
+                val tooltipText = buildString {
+                    append(slotLabel(target))
+                    if (currentItem != null) {
+                        append(": ").append(currentItem.name)
+                        currentItem.description?.takeIf { it.isNotBlank() }?.let { append("\n").append(it) }
+                    } else if (target in modSlots && !GearRules.isModSlotUnlocked(target, session.completedMilestones)) {
+                        append(" (Locked by story progress)")
+                    } else {
+                        append(" (Empty)")
+                    }
+                }
+                DesktopTooltip(tooltipText) {
+                    Surface(onClick = { slot = target }, shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier.fillMaxWidth().desktopPointerHover(),
+                        color = if (slot == target) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel,
+                        border = BorderStroke(1.dp, if (slot == target) FieldMenuDesign.gold else FieldMenuDesign.border.copy(alpha = .3f))) {
+                        Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            DesktopMenuItemArt(services, currentItem, Modifier.size(40.dp), target)
+                            Text(slotLabel(target), color = FieldMenuDesign.gold, style = MaterialTheme.typography.labelLarge)
+                            Text(if (target in modSlots && !GearRules.isModSlotUnlocked(target, session.completedMilestones)) "Locked by story progress"
+                                else currentItem?.name ?: "None", style = MaterialTheme.typography.bodySmall)
+                        }
                     }
                 }
             }
@@ -77,22 +91,25 @@ internal fun DesktopRuntimeGearContent(services: DesktopAppServices, characterId
                                 else -> services.exploration.equipInventoryItem(slot, id, character)
                             }
                         }
-                        Surface(onClick = { selection = item.id }, shape = RoundedCornerShape(10.dp),
-                            modifier = Modifier.desktopPointerHover(),
-                            color = if (selected?.id == item.id) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel) {
-                            Row(Modifier.fillMaxWidth().padding(10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
-                                DesktopMenuItemArt(services, item, Modifier.size(40.dp))
-                                Column(Modifier.weight(1f)) {
-                                    Text(item.name, style = MaterialTheme.typography.labelLarge)
-                                    if (item.id == equipped) Text("Equipped", color = FieldMenuDesign.gold, style = MaterialTheme.typography.labelSmall)
-                                }
-                                OutlinedButton(
-                                    onClick = ::equipItem,
-                                    enabled = canEquip,
-                                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-                                    modifier = Modifier.desktopPointerHover(canEquip)
-                                ) {
-                                    Text("${item.name} · equip", style = MaterialTheme.typography.labelSmall)
+                        val rowTooltip = item.description?.takeIf { it.isNotBlank() } ?: item.name
+                        DesktopTooltip(rowTooltip) {
+                            Surface(onClick = { selection = item.id }, shape = RoundedCornerShape(10.dp),
+                                modifier = Modifier.fillMaxWidth().desktopPointerHover(),
+                                color = if (selected?.id == item.id) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel) {
+                                Row(Modifier.fillMaxWidth().padding(10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+                                    DesktopMenuItemArt(services, item, Modifier.size(40.dp))
+                                    Column(Modifier.weight(1f)) {
+                                        Text(item.name, style = MaterialTheme.typography.labelLarge)
+                                        if (item.id == equipped) Text("Equipped", color = FieldMenuDesign.gold, style = MaterialTheme.typography.labelSmall)
+                                    }
+                                    OutlinedButton(
+                                        onClick = ::equipItem,
+                                        enabled = canEquip,
+                                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+                                        modifier = Modifier.desktopPointerHover(canEquip)
+                                    ) {
+                                        Text("${item.name} · equip", style = MaterialTheme.typography.labelSmall)
+                                    }
                                 }
                             }
                         }

@@ -618,179 +618,28 @@ private fun DesktopSettingsDialog(
     userSettings: UserSettings,
     onDismiss: () -> Unit
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    var musicVol by remember { mutableStateOf(userSettings.musicVolume) }
-    var sfxVol by remember { mutableStateOf(userSettings.sfxVolume) }
-    var voiceVol by remember { mutableStateOf(userSettings.voiceVolume) }
-    var highContrast by remember { mutableStateOf(userSettings.highContrastMode) }
-    var screenFlashes by remember { mutableStateOf(!userSettings.disableFlashes) }
-    var tutorialsEnabled by remember { mutableStateOf(userSettings.tutorialsEnabled) }
-
+    var showControls by remember { mutableStateOf(false) }
+    if (showControls) {
+        DesktopControlsDialog(onDismiss = { showControls = false })
+    }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("SETTINGS & ACCESSIBILITY", color = TitleCyan, fontWeight = FontWeight.Black) },
+        title = { Text("SETTINGS & CONFIGURATION", color = TitleCyan, fontWeight = FontWeight.Black) },
         text = {
-            Column(
-                modifier = Modifier.width(520.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Text("Audio Volumes", color = TitleGold, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-
-                Column {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("Music Volume", color = TitleText, fontSize = 13.sp)
-                        Text("${(musicVol * 100).toInt()}%", color = TitleCyan, fontSize = 13.sp)
-                    }
-                    Slider(
-                        value = musicVol,
-                        onValueChange = {
-                            musicVol = it
-                            coroutineScope.launch {
-                                services.userSettingsStore.setMusicVolume(it)
-                                services.audioDriver.setUserGain(AudioCueType.MUSIC, it)
-                            }
-                        }
-                    )
-                }
-
-                Column {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("Sound Effects (SFX)", color = TitleText, fontSize = 13.sp)
-                        Text("${(sfxVol * 100).toInt()}%", color = TitleCyan, fontSize = 13.sp)
-                    }
-                    Slider(
-                        value = sfxVol,
-                        onValueChange = {
-                            sfxVol = it
-                            coroutineScope.launch {
-                                services.userSettingsStore.setSfxVolume(it)
-                                services.audioDriver.setUserGain(AudioCueType.UI, it)
-                                services.audioDriver.setUserGain(AudioCueType.BATTLE, it)
-                            }
-                        }
-                    )
-                }
-
-                Column {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("Voiceover & Radio", color = TitleText, fontSize = 13.sp)
-                        Text("${(voiceVol * 100).toInt()}%", color = TitleCyan, fontSize = 13.sp)
-                    }
-                    Slider(
-                        value = voiceVol,
-                        onValueChange = {
-                            voiceVol = it
-                            coroutineScope.launch {
-                                services.userSettingsStore.setVoiceVolume(it)
-                                services.audioDriver.setUserGain(AudioCueType.VOICE, it)
-                            }
-                        }
-                    )
-                }
-
-                HorizontalDivider(color = TitleCyan.copy(alpha = 0.2f))
-
-                Text("Display & Window Configuration", color = TitleGold, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-
-                val currentDisplayMode by services.userSettingsStore.displayMode.collectAsState(initial = com.example.starborn.desktop.DesktopDisplayMode.WINDOWED)
-
-                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("Screen Mode", color = TitleText, fontSize = 13.sp)
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        com.example.starborn.desktop.DesktopDisplayMode.values().forEach { mode ->
-                            val isSelected = mode == currentDisplayMode
-                            Surface(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .clickable {
-                                        coroutineScope.launch {
-                                            services.userSettingsStore.setDisplayMode(mode)
-                                        }
-                                    },
-                                shape = RoundedCornerShape(8.dp),
-                                color = if (isSelected) TitleCyan.copy(alpha = 0.20f) else Color.White.copy(alpha = 0.05f),
-                                border = BorderStroke(1.2.dp, if (isSelected) TitleCyan else Color.White.copy(alpha = 0.15f))
-                            ) {
-                                Text(
-                                    text = when (mode) {
-                                        com.example.starborn.desktop.DesktopDisplayMode.WINDOWED -> "Windowed"
-                                        com.example.starborn.desktop.DesktopDisplayMode.BORDERLESS -> "Borderless"
-                                        com.example.starborn.desktop.DesktopDisplayMode.FULLSCREEN -> "Fullscreen"
-                                    },
-                                    color = if (isSelected) TitleCyan else TitleMutedText,
-                                    fontSize = 11.5.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    fontFamily = FontFamily.Monospace,
-                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                                    modifier = Modifier.padding(vertical = 8.dp)
-                                )
-                            }
-                        }
-                    }
-                }
-
-                HorizontalDivider(color = TitleCyan.copy(alpha = 0.2f))
-
-                Text("Gameplay & Accessibility", color = TitleGold, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text("Tutorial & Guide Prompts", color = TitleText, fontSize = 13.sp)
-                    Switch(
-                        checked = tutorialsEnabled,
-                        onCheckedChange = {
-                            tutorialsEnabled = it
-                            coroutineScope.launch {
-                                services.userSettingsStore.setTutorialsEnabled(it)
-                            }
-                        }
-                    )
-                }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text("High Contrast UI Badges", color = TitleText, fontSize = 13.sp)
-                    Switch(
-                        checked = highContrast,
-                        onCheckedChange = {
-                            highContrast = it
-                            coroutineScope.launch {
-                                services.userSettingsStore.setHighContrastMode(it)
-                            }
-                        }
-                    )
-                }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text("Combat Flashes & Visual FX", color = TitleText, fontSize = 13.sp)
-                    Switch(
-                        checked = screenFlashes,
-                        onCheckedChange = {
-                            screenFlashes = it
-                            coroutineScope.launch {
-                                services.userSettingsStore.setFlashesDisabled(!it)
-                            }
-                        }
-                    )
-                }
+            Box(Modifier.width(760.dp).height(500.dp)) {
+                DesktopSettingsContent(
+                    services = services,
+                    userSettings = userSettings,
+                    currentRoomTitle = null,
+                    onReturnToTitle = null,
+                    onOpenControls = { showControls = true }
+                )
             }
         },
         confirmButton = {
             Button(
                 onClick = onDismiss,
+                modifier = Modifier.desktopPointerHover(),
                 colors = ButtonDefaults.buttonColors(containerColor = TitleCyan, contentColor = Color.Black)
             ) {
                 Text("Done", fontWeight = FontWeight.Bold)

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.zIndex
+import com.example.starborn.data.local.UserSettings
 import com.example.starborn.desktop.ui.DesktopHubTravel
 import com.example.starborn.desktop.ui.LocalHubTravel
 import androidx.compose.material3.Surface
@@ -137,7 +138,20 @@ private fun launchDesktop() = application {
             } else false
         }
     ) {
-        CompositionLocalProvider(LocalDesktopForeground provides (LocalWindowInfo.current.isWindowFocused && !windowState.isMinimized)) {
+        val currentSettings by services.userSettingsStore.settings.collectAsState(initial = UserSettings())
+        val isForeground = LocalWindowInfo.current.isWindowFocused && !windowState.isMinimized
+        LaunchedEffect(isForeground, currentSettings.muteWhenUnfocused) {
+            (services.audioDriver as? DesktopAudioDriver)?.setMuted(!isForeground && currentSettings.muteWhenUnfocused)
+        }
+        val baseDensity = androidx.compose.ui.platform.LocalDensity.current
+        val effectiveDensity = remember(baseDensity, currentSettings.uiScale) {
+            val scale = currentSettings.uiScale.coerceIn(0.75f, 2.5f)
+            androidx.compose.ui.unit.Density(baseDensity.density * scale, baseDensity.fontScale)
+        }
+        CompositionLocalProvider(
+            LocalDesktopForeground provides isForeground,
+            androidx.compose.ui.platform.LocalDensity provides effectiveDensity
+        ) {
         DisposableEffect(window, displayMode) {
             window.minimumSize = java.awt.Dimension(1024, 720)
             monitorBounds = window.graphicsConfiguration.bounds

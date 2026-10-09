@@ -37,9 +37,14 @@ class DesktopUserSettingsStore(
 
     override val settings: Flow<UserSettings> = dataStore.data.map { prefs ->
         UserSettings(
+            masterVolume = prefs[MASTER_VOLUME] ?: 1f,
             musicVolume = prefs[MUSIC_VOLUME] ?: 1f,
             sfxVolume = prefs[SFX_VOLUME] ?: 1f,
+            ambienceVolume = prefs[AMBIENCE_VOLUME] ?: 1f,
             voiceVolume = prefs[VOICE_VOLUME] ?: 1f,
+            uiScale = prefs[UI_SCALE] ?: 1f,
+            muteWhenUnfocused = prefs[MUTE_WHEN_UNFOCUSED] ?: false,
+            autoAdvanceDialogue = prefs[AUTO_ADVANCE_DIALOGUE] ?: false,
             vignetteEnabled = prefs[VIGNETTE_ENABLED] ?: true,
             tutorialsEnabled = prefs[TUTORIALS_ENABLED] ?: true,
             disableScreenshake = prefs[DISABLE_SCREENSHAKE] ?: false,
@@ -53,12 +58,32 @@ class DesktopUserSettingsStore(
         )
     }
 
+    override suspend fun setMasterVolume(value: Float) {
+        dataStore.edit { it[MASTER_VOLUME] = value.coerceIn(0f, 1f) }
+    }
+
     override suspend fun setEnvironmentalEffectsQuality(value: com.example.starborn.data.local.EnvironmentalEffectsQuality) {
         dataStore.edit { it[stringPreferencesKey("environmental_effects_quality")] = value.name }
     }
 
     override suspend fun setMusicVolume(value: Float) {
         dataStore.edit { it[MUSIC_VOLUME] = value.coerceIn(0f, 1f) }
+    }
+
+    override suspend fun setAmbienceVolume(value: Float) {
+        dataStore.edit { it[AMBIENCE_VOLUME] = value.coerceIn(0f, 1f) }
+    }
+
+    override suspend fun setUiScale(value: Float) {
+        dataStore.edit { it[UI_SCALE] = value.coerceIn(0.75f, 2.5f) }
+    }
+
+    override suspend fun setMuteWhenUnfocused(enabled: Boolean) {
+        dataStore.edit { it[MUTE_WHEN_UNFOCUSED] = enabled }
+    }
+
+    override suspend fun setAutoAdvanceDialogue(enabled: Boolean) {
+        dataStore.edit { it[AUTO_ADVANCE_DIALOGUE] = enabled }
     }
 
     override suspend fun setSfxVolume(value: Float) {
@@ -137,8 +162,14 @@ class DesktopUserSettingsStore(
     }
 
     companion object {
+        private val MASTER_VOLUME = floatPreferencesKey("master_volume")
         private val MUSIC_VOLUME = floatPreferencesKey("music_volume")
+        private val AMBIENCE_VOLUME = floatPreferencesKey("ambience_volume")
         private val SFX_VOLUME = floatPreferencesKey("sfx_volume")
+        private val VOICE_VOLUME = floatPreferencesKey("voice_volume")
+        private val UI_SCALE = floatPreferencesKey("ui_scale")
+        private val MUTE_WHEN_UNFOCUSED = booleanPreferencesKey("mute_when_unfocused")
+        private val AUTO_ADVANCE_DIALOGUE = booleanPreferencesKey("auto_advance_dialogue")
         private val VIGNETTE_ENABLED = booleanPreferencesKey("vignette_enabled")
         private val TUTORIALS_ENABLED = booleanPreferencesKey("tutorials_enabled")
         private val DISABLE_SCREENSHAKE = booleanPreferencesKey("disable_screenshake")
@@ -147,7 +178,6 @@ class DesktopUserSettingsStore(
         private val HIGH_CONTRAST_MODE = booleanPreferencesKey("high_contrast_mode")
         private val LARGE_TOUCH_TARGETS = booleanPreferencesKey("large_touch_targets")
         private val THEME_BANDS_ENABLED = booleanPreferencesKey("theme_bands_enabled")
-        private val VOICE_VOLUME = floatPreferencesKey("voice_volume")
         private val DISPLAY_MODE = stringPreferencesKey("display_mode")
         private val WINDOW_WIDTH = androidx.datastore.preferences.core.intPreferencesKey("window_width")
         private val WINDOW_HEIGHT = androidx.datastore.preferences.core.intPreferencesKey("window_height")

@@ -379,8 +379,9 @@ class DesktopAppServices(
         }
         runtimeScope.launch(Dispatchers.IO) {
             userSettingsStore.settings.collectLatest { settings ->
+                (audioDriver as? DesktopAudioDriver)?.setMasterGain(settings.masterVolume)
                 audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.MUSIC, settings.musicVolume)
-                audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.AMBIENT, settings.musicVolume)
+                audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.AMBIENT, settings.ambienceVolume)
                 audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.UI, settings.sfxVolume)
                 audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.BATTLE, settings.sfxVolume)
                 audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.VOICE, settings.voiceVolume)
