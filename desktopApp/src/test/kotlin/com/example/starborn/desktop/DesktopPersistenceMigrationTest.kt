@@ -54,4 +54,58 @@ class DesktopPersistenceMigrationTest {
             assertFalse(File(saves, "game_session_slot3.pb").exists())
         } finally { root.deleteRecursively() }
     }
+
+    @Test fun saveDirectoryResolvesToAppDataOnWindowsAndUserHomeFallback() {
+        val fakeAppData = "C:\\Users\\MockPlayer\\AppData\\Roaming"
+        val fakeHome = "C:\\Users\\MockPlayer"
+
+        val windowsResolved = DesktopAppServices.resolveSaveDirectory(appDataEnv = fakeAppData, userHome = fakeHome)
+        assertEquals(File(fakeAppData, "Starborn").path, windowsResolved.path)
+
+        val fallbackResolved = DesktopAppServices.resolveSaveDirectory(appDataEnv = null, userHome = fakeHome)
+        assertEquals(File(fakeHome, ".starborn").path, fallbackResolved.path)
+
+        val blankAppDataResolved = DesktopAppServices.resolveSaveDirectory(appDataEnv = "   ", userHome = fakeHome)
+        assertEquals(File(fakeHome, ".starborn").path, blankAppDataResolved.path)
+    }
+
+    @Test fun legacySaveDirectoryMigratesToTargetWithoutDataLoss() {
+        val tempRoot = Files.createTempDirectory("starborn-dir-migration-").toFile()
+        try {
+            val legacyDir = File(tempRoot, ".starborn").apply { mkdirs() }
+            val targetDir = File(tempRoot, "AppData/Roaming/Starborn")
+
+            // Seed legacy saves and settings
+            val legacySavesDir = File(legacyDir, "saves").apply { mkdirs() }
+            val legacySaveFile = File(legacySavesDir, "slot_0.json").apply {
+                writeText("""{"roomId":"pit_command_deck","playerCredits":999}""")
+            }
+            val legacySettings = File(legacyDir, "user_settings.preferences_pb").apply {
+                writeText("mock_proto_bytes")
+            }
+
+            // Run migration
+            val result = DesktopAppServices.migrateSaveDirectory(source = legacyDir, target = targetDir)
+            assertTrue("Expected migration to succeed", result)
+
+            // Verify files exist in targetDir
+            val targetSaveFile = File(targetDir, "saves/slot_0.json")
+            val targetSettings = File(targetDir, "user_settings.preferences_pb")
+            assertTrue("Target save file must exist", targetSaveFile.exists())
+            assertTrue("Target settings file must exist", targetSettings.exists())
+            assertEquals(legacySaveFile.readText(), targetSaveFile.readText())
+            assertEquals(legacySettings.readText(), targetSettings.readText())
+
+            // Verify original legacy files were preserved
+            assertTrue("Original legacy save file must still exist", legacySaveFile.exists())
+            assertTrue("Original legacy settings file must still exist", legacySettings.exists())
+
+            // Running again on initialized target should be a safe no-op (returning false, not overwriting)
+            val secondRun = DesktopAppServices.migrateSaveDirectory(source = legacyDir, target = targetDir)
+            assertFalse("Second run should not re-migrate into populated directory", secondRun)
+        } finally {
+            tempRoot.deleteRecursively()
+        }
+    }
 }
+

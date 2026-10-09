@@ -22,7 +22,7 @@ enum class DesktopDisplayMode(val label: String) {
  * Desktop implementation of UserSettingsStore using file-backed DataStore.
  */
 class DesktopUserSettingsStore(
-    baseDir: File = File(System.getProperty("user.home"), ".starborn")
+    baseDir: File = DesktopAppServices.defaultSaveDirectory()
 ) : com.example.starborn.data.local.GameSettingsStore, AutoCloseable {
     private val settingsJob = kotlinx.coroutines.SupervisorJob()
     private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create(

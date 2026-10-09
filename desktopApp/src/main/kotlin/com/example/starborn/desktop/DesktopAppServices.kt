@@ -56,7 +56,7 @@ import java.io.File
  * Service container for Desktop (Windows) environment.
  */
 class DesktopAppServices(
-    val saveDirectory: File = File(System.getProperty("user.home"), ".starborn"),
+    val saveDirectory: File = defaultSaveDirectory(),
     audioDriverOverride: AudioDriver? = null
 ) {
     init {
@@ -423,4 +423,47 @@ class DesktopAppServices(
             sessionStore.unlockExit(exit.roomId, exit.direction)
         }
     }
+
+    companion object {
+        fun resolveSaveDirectory(
+            appDataEnv: String? = System.getenv("APPDATA"),
+            userHome: String = System.getProperty("user.home", ".")
+        ): File {
+            return if (!appDataEnv.isNullOrBlank()) {
+                File(appDataEnv, "Starborn")
+            } else {
+                File(userHome, ".starborn")
+            }
+        }
+
+        fun migrateSaveDirectory(source: File, target: File): Boolean {
+            if (source.canonicalPath == target.canonicalPath) return false
+            if (!source.exists() || !source.isDirectory) return false
+            val sourceFiles = source.listFiles() ?: return false
+            if (sourceFiles.isEmpty()) return false
+
+            // If target already has game files, avoid overwriting
+            if (target.exists() && !target.listFiles().isNullOrEmpty()) return false
+
+            target.mkdirs()
+            return try {
+                val copied = source.copyRecursively(target, overwrite = false)
+                if (copied) {
+                    println("[DesktopAppServices] Successfully migrated Starborn data from ${source.absolutePath} to ${target.absolutePath}")
+                }
+                copied
+            } catch (e: Exception) {
+                System.err.println("[DesktopAppServices] Failed to migrate save directory: ${e.message}")
+                false
+            }
+        }
+
+        fun defaultSaveDirectory(): File {
+            val target = resolveSaveDirectory()
+            val legacy = File(System.getProperty("user.home", "."), ".starborn")
+            migrateSaveDirectory(source = legacy, target = target)
+            return target
+        }
+    }
 }
+
