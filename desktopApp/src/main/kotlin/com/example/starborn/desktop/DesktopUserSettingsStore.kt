@@ -23,15 +23,19 @@ enum class DesktopDisplayMode(val label: String) {
  */
 class DesktopUserSettingsStore(
     baseDir: File = File(System.getProperty("user.home"), ".starborn")
-) {
+) : com.example.starborn.data.local.GameSettingsStore, AutoCloseable {
+    private val settingsJob = kotlinx.coroutines.SupervisorJob()
     private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create(
+        scope = kotlinx.coroutines.CoroutineScope(settingsJob + kotlinx.coroutines.Dispatchers.IO),
         produceFile = {
             baseDir.mkdirs()
             File(baseDir, "user_settings.preferences_pb")
         }
     )
 
-    val settings: Flow<UserSettings> = dataStore.data.map { prefs ->
+    override fun close() { settingsJob.cancel() }
+
+    override val settings: Flow<UserSettings> = dataStore.data.map { prefs ->
         UserSettings(
             musicVolume = prefs[MUSIC_VOLUME] ?: 1f,
             sfxVolume = prefs[SFX_VOLUME] ?: 1f,
@@ -43,39 +47,40 @@ class DesktopUserSettingsStore(
             disableHaptics = prefs[DISABLE_HAPTICS] ?: true,
             highContrastMode = prefs[HIGH_CONTRAST_MODE] ?: false,
             largeTouchTargets = prefs[LARGE_TOUCH_TARGETS] ?: false,
-            themeBandsEnabled = prefs[THEME_BANDS_ENABLED] ?: false
+            themeBandsEnabled = prefs[THEME_BANDS_ENABLED] ?: false,
+            modernFieldMenu = prefs[booleanPreferencesKey("modern_field_menu")] ?: true
         )
     }
 
-    suspend fun setMusicVolume(value: Float) {
+    override suspend fun setMusicVolume(value: Float) {
         dataStore.edit { it[MUSIC_VOLUME] = value.coerceIn(0f, 1f) }
     }
 
-    suspend fun setSfxVolume(value: Float) {
+    override suspend fun setSfxVolume(value: Float) {
         dataStore.edit { it[SFX_VOLUME] = value.coerceIn(0f, 1f) }
     }
 
-    suspend fun setVoiceVolume(value: Float) {
+    override suspend fun setVoiceVolume(value: Float) {
         dataStore.edit { it[VOICE_VOLUME] = value.coerceIn(0f, 1f) }
     }
 
-    suspend fun setVignetteEnabled(enabled: Boolean) {
+    override suspend fun setVignetteEnabled(enabled: Boolean) {
         dataStore.edit { it[VIGNETTE_ENABLED] = enabled }
     }
 
-    suspend fun setTutorialsEnabled(enabled: Boolean) {
+    override suspend fun setTutorialsEnabled(enabled: Boolean) {
         dataStore.edit { it[TUTORIALS_ENABLED] = enabled }
     }
 
-    suspend fun setScreenshakeDisabled(disabled: Boolean) {
+    override suspend fun setScreenshakeDisabled(disabled: Boolean) {
         dataStore.edit { it[DISABLE_SCREENSHAKE] = disabled }
     }
 
-    suspend fun setFlashesDisabled(disabled: Boolean) {
+    override suspend fun setFlashesDisabled(disabled: Boolean) {
         dataStore.edit { it[DISABLE_FLASHES] = disabled }
     }
 
-    suspend fun setHighContrastMode(enabled: Boolean) {
+    override suspend fun setHighContrastMode(enabled: Boolean) {
         dataStore.edit { it[HIGH_CONTRAST_MODE] = enabled }
     }
 
@@ -92,8 +97,20 @@ class DesktopUserSettingsStore(
         dataStore.edit { it[DISPLAY_MODE] = mode.name }
     }
 
-    suspend fun setThemeBandsEnabled(enabled: Boolean) {
+    override suspend fun setThemeBandsEnabled(enabled: Boolean) {
         dataStore.edit { it[THEME_BANDS_ENABLED] = enabled }
+    }
+
+    override suspend fun setHapticsDisabled(enabled: Boolean) {
+        dataStore.edit { it[booleanPreferencesKey("disable_haptics")] = enabled }
+    }
+
+    override suspend fun setLargeTouchTargets(enabled: Boolean) {
+        dataStore.edit { it[booleanPreferencesKey("large_touch_targets")] = enabled }
+    }
+
+    override suspend fun setModernFieldMenu(enabled: Boolean) {
+        dataStore.edit { it[booleanPreferencesKey("modern_field_menu")] = enabled }
     }
 
     companion object {

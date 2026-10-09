@@ -14,7 +14,7 @@ import com.example.starborn.domain.event.EventHooks
 import com.example.starborn.domain.session.GameSessionState
 import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.session.migrateOpeningNarrativeState
-import com.example.starborn.feature.exploration.ui.resolveRoomDescription
+import com.example.starborn.feature.exploration.presentation.resolveRoomDescription
 import com.example.starborn.feature.exploration.viewmodel.narrativeActionVisible
 import org.junit.Assert.*
 import org.junit.Test

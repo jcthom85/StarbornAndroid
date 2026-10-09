@@ -2,39 +2,39 @@ package com.example.starborn.domain.session
 
 import com.example.starborn.di.AppServices
 
-class GameSaveRepository(private val services: AppServices) {
+class GameSaveRepository(private val services: AppServices) : SessionSaveRepository {
 
     private val slotIndices = 1..3
 
-    suspend fun slotInfos(): List<Pair<Int, GameSessionSlotInfo?>> {
+    override suspend fun slotInfos(): List<Pair<Int, GameSessionSlotInfo?>> {
         return slotIndices.map { slot ->
             slot to services.slotInfo(slot)
         }
     }
 
-    suspend fun save(slot: Int) {
+    override suspend fun save(slot: Int) {
         services.saveSlot(slot)
     }
 
-    suspend fun load(slot: Int): Boolean {
+    override suspend fun load(slot: Int): Boolean {
         return services.loadSlot(slot)
     }
 
-    suspend fun quickSave(): Boolean = services.quickSave()
+    override suspend fun quickSave(): Boolean = services.quickSave()
 
-    suspend fun loadQuickSave(): Boolean = services.loadQuickSave()
+    override suspend fun loadQuickSave(): Boolean = services.loadQuickSave()
 
-    suspend fun quickSaveInfo(): GameSessionSlotInfo? = services.quickSaveInfo()
+    override suspend fun quickSaveInfo(): GameSessionSlotInfo? = services.quickSaveInfo()
 
-    suspend fun clearQuickSave() {
+    override suspend fun clearQuickSave() {
         services.clearQuickSave()
     }
 
-    suspend fun clearAutosave() {
+    override suspend fun clearAutosave() {
         services.clearAutosave()
     }
 
-    suspend fun clear(slot: Int) {
+    override suspend fun clear(slot: Int) {
         services.clearSlot(slot)
     }
 

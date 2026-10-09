@@ -12,7 +12,7 @@ import com.example.starborn.domain.leveling.LevelingManager
 import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.session.*
 import com.example.starborn.domain.theme.EnvironmentThemeManager
-import com.example.starborn.feature.combat.viewmodel.CombatViewModel
+import com.example.starborn.feature.combat.viewmodel.CombatController as CombatViewModel
 import com.example.starborn.feature.combat.viewmodel.TargetRequirement
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.*

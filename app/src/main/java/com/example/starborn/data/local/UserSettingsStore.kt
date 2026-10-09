@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.map
 
 private val Context.userSettingsDataStore by preferencesDataStore(name = "user_settings")
 
-class UserSettingsStore(context: Context) {
+class UserSettingsStore(context: Context) : GameSettingsStore {
     private val dataStore = context.userSettingsDataStore
 
-    val settings: Flow<UserSettings> = dataStore.data.map { prefs ->
+    override val settings: Flow<UserSettings> = dataStore.data.map { prefs ->
         UserSettings(
             musicVolume = prefs[MUSIC_VOLUME] ?: 1f,
             sfxVolume = prefs[SFX_VOLUME] ?: 1f,
@@ -31,51 +31,51 @@ class UserSettingsStore(context: Context) {
         )
     }
 
-    suspend fun setMusicVolume(value: Float) {
+    override suspend fun setMusicVolume(value: Float) {
         dataStore.edit { it[MUSIC_VOLUME] = value.coerceIn(0f, 1f) }
     }
 
-    suspend fun setSfxVolume(value: Float) {
+    override suspend fun setSfxVolume(value: Float) {
         dataStore.edit { it[SFX_VOLUME] = value.coerceIn(0f, 1f) }
     }
 
-    suspend fun setVoiceVolume(value: Float) {
+    override suspend fun setVoiceVolume(value: Float) {
         dataStore.edit { it[VOICE_VOLUME] = value.coerceIn(0f, 1f) }
     }
 
-    suspend fun setVignetteEnabled(enabled: Boolean) {
+    override suspend fun setVignetteEnabled(enabled: Boolean) {
         dataStore.edit { it[VIGNETTE_ENABLED] = enabled }
     }
 
-    suspend fun setTutorialsEnabled(enabled: Boolean) {
+    override suspend fun setTutorialsEnabled(enabled: Boolean) {
         dataStore.edit { it[TUTORIALS_ENABLED] = enabled }
     }
 
-    suspend fun setScreenshakeDisabled(disabled: Boolean) {
+    override suspend fun setScreenshakeDisabled(disabled: Boolean) {
         dataStore.edit { it[DISABLE_SCREENSHAKE] = disabled }
     }
 
-    suspend fun setFlashesDisabled(disabled: Boolean) {
+    override suspend fun setFlashesDisabled(disabled: Boolean) {
         dataStore.edit { it[DISABLE_FLASHES] = disabled }
     }
 
-    suspend fun setHapticsDisabled(disabled: Boolean) {
+    override suspend fun setHapticsDisabled(disabled: Boolean) {
         dataStore.edit { it[DISABLE_HAPTICS] = disabled }
     }
 
-    suspend fun setHighContrastMode(enabled: Boolean) {
+    override suspend fun setHighContrastMode(enabled: Boolean) {
         dataStore.edit { it[HIGH_CONTRAST_MODE] = enabled }
     }
 
-    suspend fun setLargeTouchTargets(enabled: Boolean) {
+    override suspend fun setLargeTouchTargets(enabled: Boolean) {
         dataStore.edit { it[LARGE_TOUCH_TARGETS] = enabled }
     }
 
-    suspend fun setThemeBandsEnabled(enabled: Boolean) {
+    override suspend fun setThemeBandsEnabled(enabled: Boolean) {
         dataStore.edit { it[THEME_BANDS_ENABLED] = enabled }
     }
 
-    suspend fun setModernFieldMenu(enabled: Boolean) {
+    override suspend fun setModernFieldMenu(enabled: Boolean) {
         dataStore.edit { it[MODERN_FIELD_MENU] = enabled }
     }
 

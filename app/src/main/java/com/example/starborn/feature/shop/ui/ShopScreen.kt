@@ -217,7 +217,7 @@ private fun ShopScreen(
                 ) {
                     when {
                         state.unavailableMessage != null -> {
-                            ShopEmptyState(message = state.unavailableMessage, colors = colors)
+                            ShopEmptyState(message = requireNotNull(state.unavailableMessage), colors = colors)
                         }
                         state.activeTab == ShopTab.BUY && state.itemsForSale.isEmpty() -> {
                             ShopEmptyState(message = "Nothing for sale right now.", colors = colors)

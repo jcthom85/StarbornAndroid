@@ -56,10 +56,10 @@ class ProvisionIntegrationTest {
     @Test fun repeatedFishingKeepsEveryCatchBeforeReturning() {
         val service = FishingService(source, inventory, sessionStore = store, craftingService = crafting)
         val vm = FishingViewModel(service, "sector9_stream")
-        val emit = FishingViewModel::class.java.getDeclaredMethod("emitResult", FishingResult::class.java,
+        val emit = com.example.starborn.feature.fishing.viewmodel.FishingController::class.java.getDeclaredMethod("emitResult", FishingResult::class.java,
             com.example.starborn.domain.fishing.MinigameResult::class.java).apply { isAccessible = true }
         repeat(3) {
-            emit.invoke(vm, FishingResult("raw_glowfish",1,"Caught"), com.example.starborn.domain.fishing.MinigameResult.SUCCESS)
+            emit.invoke(vm.runtime, FishingResult("raw_glowfish",1,"Caught"), com.example.starborn.domain.fishing.MinigameResult.SUCCESS)
             assertTrue(vm.uiState.value.lastCatchResult!!.secured)
             assertTrue(vm.uiState.value.lastCatchResult!!.uses.any { it.contains("Broth") })
             vm.resetFishing()

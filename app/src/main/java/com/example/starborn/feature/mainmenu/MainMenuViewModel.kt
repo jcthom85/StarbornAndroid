@@ -20,17 +20,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-data class SaveSlotSummary(
-    val slot: Int,
-    val state: GameSessionState?,
-    val title: String,
-    val subtitle: String,
-    val isEmpty: Boolean,
-    val isAutosave: Boolean = false,
-    val isQuickSave: Boolean = false,
-    val savedAtMillis: Long? = null,
-    val partyPortraits: List<String> = emptyList()
-)
+
 
 class MainMenuViewModel(
     private val services: AppServices

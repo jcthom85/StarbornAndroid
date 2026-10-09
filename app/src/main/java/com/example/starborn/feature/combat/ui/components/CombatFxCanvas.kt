@@ -50,7 +50,7 @@ import com.example.starborn.domain.combat.CombatLogEntry
 import com.example.starborn.domain.model.Player
 import com.example.starborn.feature.combat.ui.CombatNameFont
 import com.example.starborn.feature.combat.viewmodel.CombatFxEvent
-import com.example.starborn.feature.combat.viewmodel.CombatViewModel.TimedPromptState
+import com.example.starborn.feature.combat.viewmodel.CombatController.TimedPromptState
 import com.example.starborn.ui.background.rememberAssetPainter
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

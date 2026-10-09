@@ -1,14 +1,19 @@
 package com.example.starborn.desktop
 
 import com.example.starborn.core.MoshiProvider
+import com.example.starborn.domain.session.GameSessionPersistence
+import com.example.starborn.domain.session.GameSessionSlotInfo
 import com.example.starborn.domain.session.GameSessionState
-import com.squareup.moshi.JsonClass
+import com.example.starborn.domain.session.migrateOpeningNarrativeState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-@JsonClass(generateAdapter = true)
 data class DesktopSaveSlotInfo(
     val slotIndex: Int,
     val timestamp: Long,
@@ -21,78 +26,120 @@ data class DesktopSaveSlotInfo(
     val completedQuestsCount: Int
 )
 
+/** Desktop adapter over the same protocol, atomic writes and backups used by Android. */
 class DesktopSaveManager(
-    private val saveDirectory: File
+    saveDirectory: File,
+    private val roomTitleFor: (String?) -> String? = { it }
 ) {
     private val savesDir = File(saveDirectory, "saves").apply { mkdirs() }
-    private val moshi = MoshiProvider.instance
-    private val sessionAdapter = moshi.adapter(GameSessionState::class.java)
-    private val metadataAdapter = moshi.adapter(DesktopSaveSlotInfo::class.java)
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+    private val persistence = GameSessionPersistence(savesDir)
+    private val legacyAdapter = MoshiProvider.instance.adapter(GameSessionState::class.java)
+    private val titles = mutableMapOf<String, String>()
+    private val _lastError = MutableStateFlow<String?>(null)
+    val lastError = _lastError.asStateFlow()
 
-    fun saveGame(slotIndex: Int, state: GameSessionState, roomTitle: String? = null): Boolean {
-        return try {
-            val file = getSlotFile(slotIndex)
-            val metaFile = getMetadataFile(slotIndex)
-            val json = sessionAdapter.toJson(state)
-            file.writeText(json)
+    private fun validateSlot(slot: Int) = require(slot in -1..3) { "Invalid save slot: $slot" }
+    private fun newFile(slot: Int) = File(savesDir, when (slot) {
+        -1 -> "game_session_quicksave.pb"
+        0 -> "game_session_autosave.pb"
+        else -> "game_session_slot$slot.pb"
+    })
+    private fun legacyFile(slot: Int) = File(savesDir, if (slot == 0) "autosave.json" else "slot_$slot.json")
 
-            val meta = DesktopSaveSlotInfo(
-                slotIndex = slotIndex,
-                timestamp = System.currentTimeMillis(),
-                formattedDate = dateFormat.format(Date()),
-                roomId = state.roomId,
-                roomTitle = roomTitle ?: state.roomId ?: "Unknown Sector",
-                playerLevel = state.playerLevel,
-                credits = state.playerCredits,
-                activeQuestsCount = state.activeQuests.size,
-                completedQuestsCount = state.completedQuests.size
-            )
-            metaFile.writeText(metadataAdapter.toJson(meta))
-            true
-        } catch (_: Throwable) {
-            false
+    private suspend fun write(slot: Int, state: GameSessionState) {
+        when (slot) {
+            -1 -> persistence.writeQuickSave(state)
+            0 -> persistence.writeAutosave(state)
+            else -> persistence.writeSlot(slot, state)
         }
     }
 
-    fun loadGame(slotIndex: Int): GameSessionState? {
-        return try {
-            val file = getSlotFile(slotIndex)
-            if (!file.exists()) return null
-            val json = file.readText()
-            sessionAdapter.fromJson(json)
-        } catch (_: Throwable) {
-            null
+    private suspend fun read(slot: Int): GameSessionSlotInfo? = when (slot) {
+        -1 -> persistence.quickSaveInfo()
+        0 -> persistence.autosaveInfo()
+        else -> persistence.slotInfo(slot)
+    }
+
+    private suspend fun migrateLegacy(slot: Int) {
+        if (slot < 0 || newFile(slot).exists()) return
+        val legacy = legacyFile(slot)
+        if (!legacy.exists()) return
+        val original = legacy.readText()
+        val imported = requireNotNull(legacyAdapter.fromJson(original)) { "Empty legacy save" }
+            .migrateOpeningNarrativeState()
+        val backup = File(savesDir, legacy.name + ".pre-migration.bak")
+        if (!backup.exists()) legacy.copyTo(backup)
+        write(slot, imported)
+        check(read(slot)?.state == (imported.battleCheckpoint ?: imported)) { "Save migration verification failed" }
+        // The original JSON is deliberately retained. A protocol save takes precedence.
+    }
+
+    @Synchronized
+    fun saveGame(slotIndex: Int, state: GameSessionState, roomTitle: String? = null): Boolean = attempt(false) {
+        validateSlot(slotIndex)
+        migrateLegacy(slotIndex)
+        write(slotIndex, state)
+        if (roomTitle != null && state.roomId != null) titles[requireNotNull(state.roomId)] = roomTitle
+        true
+    }
+
+    @Synchronized
+    fun loadGame(slotIndex: Int): GameSessionState? = attempt(null) {
+        validateSlot(slotIndex)
+        val existed = newFile(slotIndex).exists() || legacyFile(slotIndex).exists()
+        migrateLegacy(slotIndex)
+        val info = read(slotIndex)
+        check(!existed || info != null) { "Save is unreadable; retained files are available for recovery" }
+        info?.state?.migrateOpeningNarrativeState()
+    }
+
+    @Synchronized
+    fun getSlotMetadata(slotIndex: Int): DesktopSaveSlotInfo? = attempt(null) {
+        validateSlot(slotIndex)
+        migrateLegacy(slotIndex)
+        read(slotIndex)?.let { info ->
+            val state = info.state
+            val timestamp = info.savedAtMillis ?: 0L
+            DesktopSaveSlotInfo(slotIndex, timestamp,
+                SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(timestamp)),
+                state.roomId, titles[state.roomId] ?: roomTitleFor(state.roomId), state.playerLevel,
+                state.playerCredits, state.activeQuests.size, state.completedQuests.size)
         }
     }
 
-    fun getSlotMetadata(slotIndex: Int): DesktopSaveSlotInfo? {
-        return try {
-            val metaFile = getMetadataFile(slotIndex)
-            if (!metaFile.exists()) return null
-            metadataAdapter.fromJson(metaFile.readText())
-        } catch (_: Throwable) {
-            null
-        }
+    @Synchronized
+    fun slotInfo(slotIndex: Int): GameSessionSlotInfo? = attempt(null) {
+        validateSlot(slotIndex)
+        migrateLegacy(slotIndex)
+        read(slotIndex)
     }
 
-    fun deleteSlot(slotIndex: Int): Boolean {
-        val file = getSlotFile(slotIndex)
-        val metaFile = getMetadataFile(slotIndex)
-        return file.delete() && metaFile.delete()
+    @Synchronized
+    fun deleteSlot(slotIndex: Int): Boolean = attempt(false) {
+        validateSlot(slotIndex)
+        // Remove legacy files too so explicitly deleted slots are not re-imported.
+        when (slotIndex) {
+            -1 -> persistence.clearQuickSave()
+            0 -> persistence.clearAutosave()
+            else -> persistence.clearSlot(slotIndex)
+        }
+        legacyFile(slotIndex).takeIf { it.exists() }?.let { check(it.delete()) }
+        File(savesDir, legacyFile(slotIndex).nameWithoutExtension + ".meta.json").takeIf { it.exists() }?.delete()
+        true
     }
 
     fun hasSave(slotIndex: Int): Boolean {
-        return getSlotFile(slotIndex).exists()
+        validateSlot(slotIndex)
+        return newFile(slotIndex).exists() || (slotIndex >= 0 && legacyFile(slotIndex).exists())
     }
 
-    private fun getSlotFile(slotIndex: Int): File {
-        val name = if (slotIndex == 0) "autosave.json" else "slot_$slotIndex.json"
-        return File(savesDir, name)
-    }
-
-    private fun getMetadataFile(slotIndex: Int): File {
-        val name = if (slotIndex == 0) "autosave.meta.json" else "slot_$slotIndex.meta.json"
-        return File(savesDir, name)
+    private fun <T> attempt(fallback: T, action: suspend () -> T): T = try {
+        val value = runBlocking(Dispatchers.IO) { action() }
+        _lastError.value = null
+        value
+    } catch (error: Exception) {
+        _lastError.value = error.message ?: error.javaClass.simpleName
+        System.err.println("Starborn save error: ${_lastError.value}")
+        fallback
     }
 }

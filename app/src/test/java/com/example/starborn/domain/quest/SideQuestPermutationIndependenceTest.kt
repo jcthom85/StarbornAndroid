@@ -62,7 +62,7 @@ class SideQuestPermutationIndependenceTest {
                 if (matchesQuest) {
                     for (action in event.actions) {
                         if (action.type == "set_milestone" && !action.milestone.isNullOrBlank()) {
-                            sqMilestones[sq]?.add(action.milestone)
+                            sqMilestones[sq]?.add(requireNotNull(action.milestone))
                         }
                     }
                 }

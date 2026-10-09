@@ -1,64 +1,75 @@
 package com.example.starborn.desktop
 
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onRoot
-import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.graphics.asAwtImage
-import com.example.starborn.desktop.ui.DesktopCinematicScreen
+import com.example.starborn.core.platform.AudioDriver
+import com.example.starborn.desktop.ui.*
+import com.example.starborn.domain.audio.*
 import com.example.starborn.domain.cinematic.*
+import com.example.starborn.feature.exploration.viewmodel.*
+import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import java.io.File
+import java.nio.file.Files
+import java.util.concurrent.CopyOnWriteArrayList
 import javax.imageio.ImageIO
 
 class DesktopCinematicSnapshotTest {
-    @get:Rule
-    val composeTestRule = createComposeRule()
+    @get:Rule val compose = createComposeRule()
+    private class RecordingAudio : AudioDriver {
+        val commands = CopyOnWriteArrayList<AudioCommand>()
+        override fun execute(command: AudioCommand) { commands += command }
+        override fun setUserGain(type: AudioCueType, gain: Float) {}
+        override fun release() {}
+    }
 
-    @Test
-    fun captureDesktopCinematicScene() {
-        val tempSaveDir = File(System.getProperty("java.io.tmpdir"), "starborn_cine_snap_${System.currentTimeMillis()}")
-        tempSaveDir.mkdirs()
-
+    @Test fun authoredIntroRunsAutomaticallyThroughTheLiveExplorationRoute() {
+        val directory = Files.createTempDirectory("starborn-cinematic-").toFile()
+        val audio = RecordingAudio()
+        val services = DesktopAppServices(directory, audio)
         try {
-            val services = DesktopAppServices(saveDirectory = tempSaveDir)
-            val testScene = CinematicScene(
-                id = "intro_prologue",
-                title = "PROLOGUE // DERELICT STATIONS OF SECTOR 4",
-                backdrop = CinematicBackdrop.ROOM,
-                presentation = CinematicPresentation.ILLUSTRATED,
-                steps = listOf(
-                    CinematicStep(
-                        type = CinematicStepType.DIALOGUE,
-                        speaker = "Nova",
-                        portrait = "images/characters/nova_combat.png",
-                        imagePath = "images/rooms/world_1/pit_L1_landing_v5.webp",
-                        text = "Scanners are picking up heavy ionic anomalies deep inside the derelict core. Keep your weapons primed and check the perimeter."
-                    )
-                ),
-                skippable = true
-            )
-
-            composeTestRule.mainClock.autoAdvance = false
-            composeTestRule.setContent {
-                DesktopCinematicScreen(
-                    services = services,
-                    scene = testScene,
-                    onComplete = {}
-                )
+            assertTrue(services.startNewGame())
+            compose.mainClock.autoAdvance = false
+            compose.setContent { DesktopStarbornTheme { DesktopExplorationScreen(services, {}, {}, {}, {}, {}, {}) } }
+            compose.waitUntil(15_000) { compose.mainClock.advanceTimeBy(16); services.exploration.uiState.value.cinematic?.sceneId == "intro_prologue" }
+            compose.onNodeWithText("Menu [Esc]").performClick()
+            assertFalse("Movie clicks must not open the underlying menu", services.exploration.uiState.value.isMenuOverlayVisible)
+            compose.onAllNodesWithText("Continue", useUnmergedTree = true).assertCountEquals(0)
+            // Image loading/click synchronization can outlast a frame. Verify forward playback,
+            // without requiring the test to catch exactly the second authored frame.
+            compose.waitUntil(8_000) { compose.mainClock.advanceTimeBy(250); (services.exploration.uiState.value.cinematic?.stepIndex ?: 0) > 0 }
+            val screenshots = File("build/reports/desktop/screenshots").apply { mkdirs() }
+            ImageIO.write(compose.onRoot().captureToImage().asAwtImage(), "png", File(screenshots, "intro-breach-fullscreen.png"))
+            compose.waitUntil(45_000) { compose.mainClock.advanceTimeBy(100); services.exploration.uiState.value.cinematic?.sceneId != "intro_prologue" }
+            val plays = audio.commands.filterIsInstance<AudioCommand.Play>()
+            assertTrue(plays.any { it.cueId == "amb_intro_containment_pressure" && it.type == AudioCueType.AMBIENT && it.loop })
+            listOf("sfx_intro_door_buckle", "sfx_intro_door_collapse", "sfx_intro_chime_launch", "sfx_intro_stasis_seal", "sfx_intro_stasis_lock", "sfx_intro_beast_strike").forEach { cue ->
+                assertTrue("Missing authored sound: $cue", plays.any { it.cueId == cue && it.type == AudioCueType.UI })
             }
-            composeTestRule.mainClock.advanceTimeBy(300)
+            assertTrue(plays.any { it.cueId == "music_intro_breach" && it.type == AudioCueType.MUSIC })
+            compose.waitForIdle()
+            assertTrue(audio.commands.filterIsInstance<AudioCommand.Stop>().any { it.cueId == "amb_intro_containment_pressure" })
+        } finally { services.close(); directory.deleteRecursively() }
+    }
 
-            val artifactsDir = File(System.getProperty("user.home"), ".gemini/antigravity-cli/brain/03813eca-b59d-44ca-9f2d-90a0e5b8e32f")
-            artifactsDir.mkdirs()
-
-            val node = composeTestRule.onRoot()
-            val image = node.captureToImage()
-            val awtImage = image.asAwtImage()
-
-            ImageIO.write(awtImage, "png", File(artifactsDir, "desktop_cinematic_preview.png"))
-        } finally {
-            tempSaveDir.deleteRecursively()
-        }
+    @Test fun illustratedVoiceAndRoomRevealAreHandled() {
+        val directory = Files.createTempDirectory("starborn-cinematic-default-").toFile()
+        val audio = RecordingAudio()
+        val services = DesktopAppServices(directory, audio)
+        var advances = 0
+        try {
+            val state = CinematicUiState("fixture", null, CinematicBackdrop.ROOM,
+                presentation = CinematicPresentation.ILLUSTRATED, stepIndex = 0, stepCount = 1,
+                step = CinematicStepUi(CinematicStepType.NARRATION, null, "", durationSeconds = .5,
+                    voiceCue = "fixture_voice", captionStyle = CinematicCaptionStyle.NONE))
+            compose.mainClock.autoAdvance = false
+            compose.setContent { DesktopStarbornTheme { DesktopCinematicOverlay(state, services, { advances++ }, {}) } }
+            compose.waitUntil(3_000) { compose.mainClock.advanceTimeBy(16); advances == 1 }
+            compose.onNodeWithContentDescription("Room fading in").assertExists()
+            assertTrue(audio.commands.filterIsInstance<AudioCommand.Play>().any { it.type == AudioCueType.VOICE && it.cueId == "fixture_voice" })
+            assertEquals(1, advances)
+        } finally { services.close(); directory.deleteRecursively() }
     }
 }

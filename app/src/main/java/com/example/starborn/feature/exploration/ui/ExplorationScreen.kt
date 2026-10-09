@@ -3,6 +3,7 @@ package com.example.starborn.feature.exploration.ui
 import com.example.starborn.feature.exploration.ui.components.*
 import com.example.starborn.feature.exploration.ui.tabs.*
 import com.example.starborn.feature.exploration.ui.hud.*
+import com.example.starborn.feature.exploration.presentation.*
 import com.example.starborn.feature.enemy.EnemyPresentationTier
 import com.example.starborn.feature.enemy.enemyPresentationTier
 import com.example.starborn.feature.enemy.explorationEnemySpriteScale
@@ -849,7 +850,7 @@ fun ExplorationScreen(
         }
         val baseRoomDescription = remember(currentRoom, uiState.roomState, uiState.completedMilestones, isRoomDark, uiState.isBurgQuestSession) {
             if (uiState.isBurgQuestSession && currentRoom?.id == "astra_common_room") {
-                "Coffee rings stain the central table. The restored Deep Mine Asteroid Drill cabinet paints the recreation corner in warm amber light. The relic array and Great Frontier film archive share a quiet corner. The crew stops being a formation and becomes a family."
+                com.example.starborn.feature.exploration.presentation.BurgQuestPresentation.commonRoomDescription
             } else {
                 resolveRoomDescription(
                     room = currentRoom,
@@ -3416,24 +3417,9 @@ private fun SimulationDeckDialog(
 ) {
     var selectedCategory by remember { mutableStateOf("THE RESONANCE CRUCIBLE") }
 
-    val allPrograms = listOf(
-        SimulationProgram("Sentinel Target Droid", "TRAINING PROTOCOLS", listOf("sentinel_mki"), "Basic targeting calibration & ATB cadence.", Color(0xFF00E5FF)),
-        SimulationProgram("Faulted Loader Sub-Routine", "TRAINING PROTOCOLS", listOf("faulted_loader"), "Three-beat armored cycle with exposed Shock openings.", Color(0xFF00E5FF)),
-        SimulationProgram("Ruin-Guardian Defense Matrix", "TRAINING PROTOCOLS", listOf("ruin_guardian"), "Heavy armor barrier penetration and stability shattering.", Color(0xFF00E5FF)),
-
-        SimulationProgram("Apex I: The Iron Warden", "APEX BOSS ARCHIVES", listOf("the_iron_warden"), "World 1 heavy enforcer benchmark. Ground slams & seismic pulse.", Color(0xFFFFB703)),
-        SimulationProgram("Apex II: The Mire Beast", "APEX BOSS ARCHIVES", listOf("the_beast"), "World 2 jungle apex bio-construct. High vitality and acid spit.", Color(0xFFFFB703)),
-        SimulationProgram("Apex III: Dominion Administrator", "APEX BOSS ARCHIVES", listOf("administrator_boss"), "World 3 corporate mastermind with defensive subroutines.", Color(0xFFFFB703)),
-        SimulationProgram("Apex IV: Titan Walker Siegemaster", "APEX BOSS ARCHIVES", listOf("titan_walker_boss"), "World 4 foundry dreadnought with explosive artillery.", Color(0xFFFFB703)),
-        SimulationProgram("Apex V: Compliance Avatar", "APEX BOSS ARCHIVES", listOf("compliance_avatar"), "World 5 digital construct of executive control.", Color(0xFFFFB703)),
-        SimulationProgram("Apex VI: Ascended Vale", "APEX BOSS ARCHIVES", listOf("ascended_vale"), "World 6 pre-singularity manifestation with psionic power.", Color(0xFFFFB703)),
-
-        SimulationProgram("Crucible I: Foundry Smelter Hazard", "THE RESONANCE CRUCIBLE", listOf("magma_drone", "slag_golem", "welder_bot"), "Thermal combat against high-heat automated factory defenders.", Color(0xFFFF5252)),
-        SimulationProgram("Crucible II: Corporate Strike Team", "THE RESONANCE CRUCIBLE", listOf("riot_guard", "corporate_assassin", "heavy_mech"), "Coordinated suppression assault. Prioritize high-threat targets.", Color(0xFFFF5252)),
-        SimulationProgram("Crucible III: Void Security Overdrive", "THE RESONANCE CRUCIBLE", listOf("elite_guard", "void_turret", "hk_droid"), "Dominion supreme hunter-killer droid with 900 HP chassis.", Color(0xFFFF5252)),
-        SimulationProgram("Crucible IV: Twin Titans of Steel", "THE RESONANCE CRUCIBLE", listOf("the_iron_warden", "titan_walker_boss"), "Simultaneous dual-boss encounter testing ultimate defensive survival.", Color(0xFFFF5252)),
-        SimulationProgram("Crucible Omega: The Ascended God", "THE RESONANCE CRUCIBLE", listOf("ascended_god"), "The supreme combat challenge. 1,800 HP cosmic singularity testing build perfection.", Color(0xFFFF1744))
-    )
+    val allPrograms = com.example.starborn.feature.exploration.presentation.AstraCatalog.simulations.map {
+        SimulationProgram(it.title, it.category, it.enemyIds, it.description, Color(it.accentArgb))
+    }
 
     val categories = listOf("THE RESONANCE CRUCIBLE", "APEX BOSS ARCHIVES", "TRAINING PROTOCOLS")
     val currentPrograms = remember(selectedCategory) {
@@ -3706,18 +3692,7 @@ private fun TapeDeckDialog(
 ) {
     val ownedTapeIds = remember(inventory) { inventory.map { it.id }.toSet() }
 
-    val tapes = listOf(
-        Triple("vhs_tape_01", "gf_01_unpayable_debt", "Film 01: Unpayable Debt" to "Mining Pit - Supply Stash"),
-        Triple("vhs_tape_02", "gf_02_memories_of_another_life", "Film 02: Memories of Another Life" to "Colony - Jed's Office"),
-        Triple("vhs_tape_03", "gf_03_showdown_in_the_rain", "Film 03: Showdown in the Rain" to "Coast - Glow-Moss Cavern"),
-        Triple("vhs_tape_04", "gf_04_the_road_at_night", "Film 04: The Road at Night" to "Sector 9 - Ridge Plateau"),
-        Triple("vhs_tape_05", "gf_05_the_black_city", "Film 05: The Black City" to "Spire - Night Market"),
-        Triple("vhs_tape_06", "gf_06_refuge", "Film 06: Refuge" to "Spire - SkyPark Pavilion"),
-        Triple("vhs_tape_07", "gf_07_reclamation", "Film 07: Reclamation" to "Foundry - Smelter Waste"),
-        Triple("vhs_tape_08", "gf_08_the_end_of_the_beginning", "Film 08: The End of the Beginning" to "Foundry - Titan Dock"),
-        Triple("vhs_tape_09", "gf_09_reconciliation", "Film 09: Reconciliation" to "Void Ring - Solarium"),
-        Triple("vhs_tape_10", "gf_10_shackles", "Film 10: Shackles" to "Source - Memory Bridge")
-    )
+    val tapes = com.example.starborn.feature.exploration.presentation.AstraCatalog.films
 
     Dialog(onDismissRequest = onDismiss) {
         Surface(
@@ -7168,191 +7143,6 @@ private fun CompositeEnemyIcon(
 
 
 
-internal fun buildInlineActionPlan(
-    description: String?,
-    actions: List<RoomAction>,
-    hints: Map<String, ActionHintUi>,
-    room: Room?
-): InlineActionPlan? {
-    if (description.isNullOrBlank()) return null
-    val travelActions = actions.filterIsInstance<TravelAction>()
-    val sourceDescription = if (travelActions.isEmpty()) {
-        description
-    } else {
-        description.trimEnd() + "\n\nPaths: " + travelActions.joinToString(" | ") { action ->
-            "[action:${action.name}|${action.name}]"
-        }
-    }
-    val segments = mutableListOf<InlineActionSegment>()
-    val occupied = mutableListOf<IntRange>()
-
-    // Explicit action references use the authored name, with an optional display label.
-    // Only actions supplied by the caller (already filtered for visibility) can resolve.
-    val markerPattern = Regex("""\[(npc|action):([^\]]+)]""", RegexOption.IGNORE_CASE)
-    val explicitActions = mutableSetOf<String>()
-    val parsedDescription = buildString {
-        var cursor = 0
-        markerPattern.findAll(sourceDescription).forEach { match ->
-            append(sourceDescription, cursor, match.range.first)
-            val isAction = match.groupValues[1].equals("action", ignoreCase = true)
-            val body = match.groupValues[2]
-            val reference = body.substringBefore('|').trim()
-            val label = if (isAction) body.substringAfter('|', reference).trim() else body.trim()
-            val start = length
-            append(label)
-            val end = length
-            if (label.isNotBlank()) {
-                val range = start until end
-                occupied += range
-                if (isAction) {
-                    val action = actions.filter { it.isInlineDescriptionAction() }
-                        .singleOrNull { it.name.equals(reference, ignoreCase = true) }
-                    if (action != null) {
-                        val key = action.actionKey()
-                        explicitActions += key
-                        segments += InlineActionSegment(
-                            id = "$key:marker:$start",
-                            target = InlineActionTarget.Room(action),
-                            start = start,
-                            end = end,
-                            locked = hints[key]?.locked == true
-                        )
-                    }
-                } else segments += InlineActionSegment(
-                    id = "npc-marker:$label:$start",
-                    target = InlineActionTarget.Npc(label),
-                    start = start,
-                    end = end,
-                    locked = false
-                )
-            }
-            cursor = match.range.last + 1
-        }
-        append(sourceDescription, cursor, sourceDescription.length)
-    }
-    val lower = parsedDescription.lowercase(Locale.getDefault())
-
-    fun variantsFor(label: String): List<String> {
-        if (label.isBlank()) return emptyList()
-        return buildList {
-            add(label)
-            val normalizedUnderscore = label.replace('_', ' ')
-            if (normalizedUnderscore != label) add(normalizedUnderscore)
-            val normalizedDash = label.replace('-', ' ')
-            if (normalizedDash != label) add(normalizedDash)
-            val normalizedApostrophe = label.replace('’', '\'')
-            if (normalizedApostrophe != label) add(normalizedApostrophe)
-        }.distinctBy { it.lowercase(Locale.getDefault()) }
-            .sortedByDescending { it.length }
-    }
-
-    fun findRange(label: String): IntRange? {
-        val variants = variantsFor(label)
-        if (variants.isEmpty()) return null
-        for (variant in variants) {
-            val needle = variant.lowercase(Locale.getDefault())
-            var searchIndex = 0
-            while (searchIndex <= lower.length - needle.length) {
-                val index = lower.indexOf(needle, searchIndex)
-                if (index < 0) break
-                val rangeCandidate = index until index + needle.length
-                if (occupied.none { rangesOverlap(it, rangeCandidate) }) {
-                    return rangeCandidate
-                }
-                searchIndex = index + 1
-            }
-        }
-        return null
-    }
-
-    actions.filter { it.isInlineDescriptionAction() }.forEach { action ->
-        if (action.actionKey() in explicitActions) return@forEach
-        val baseName = action.name
-        if (baseName.isBlank()) return@forEach
-        val range = findRange(baseName) ?: return@forEach
-        occupied += range
-        val key = action.actionKey()
-        val locked = hints[key]?.locked == true
-        segments += InlineActionSegment(
-            id = key,
-            target = InlineActionTarget.Room(action),
-            start = range.first,
-            end = range.last + 1,
-            locked = locked
-        )
-    }
-
-    room?.enemies.orEmpty()
-        .filter { it.isNotBlank() }
-        .forEach { enemyId ->
-            val label = enemyId
-            val range = findRange(label) ?: return@forEach
-            occupied += range
-            segments += InlineActionSegment(
-                id = "enemy:$enemyId",
-                target = InlineActionTarget.Enemy(enemyId, label),
-                start = range.first,
-                end = range.last + 1,
-                locked = false
-            )
-        }
-
-    // Keep cleaned marker text even when its action is hidden or unresolved.
-    if (segments.isEmpty() && parsedDescription == sourceDescription) return null
-    segments.sortBy { it.start }
-    return InlineActionPlan(description = parsedDescription, segments = segments)
-}
-
-fun resolveRoomDescription(
-    room: Room?,
-    roomState: Map<String, Boolean>,
-    completedMilestones: Set<String>,
-    isRoomDark: Boolean
-): String? {
-    if (room == null) return null
-    if (isRoomDark) {
-        return room.descriptionDark?.takeIf { it.isNotBlank() }
-            ?: "It's too dark to make out the room."
-    }
-    val variant = room.descriptionVariants.firstOrNull { variant ->
-        variant.description.isNotBlank() &&
-            variant.requiresState.all { (key, expected) -> roomState[key] == expected } &&
-            variant.forbiddenState.none { (key, forbidden) -> roomState[key] == forbidden } &&
-            variant.requiresMilestones.all { it in completedMilestones } &&
-            variant.forbiddenMilestones.none { it in completedMilestones }
-    }
-    return variant?.description ?: room.description
-}
-
-internal fun resolveRoomBackground(
-    room: Room?,
-    roomState: Map<String, Boolean>,
-    completedMilestones: Set<String>
-): String? {
-    room ?: return null
-    val variant = room.descriptionVariants.firstOrNull { variant ->
-        !variant.backgroundImage.isNullOrBlank() &&
-            variant.requiresState.all { (key, expected) -> roomState[key] == expected } &&
-            variant.forbiddenState.none { (key, forbidden) -> roomState[key] == forbidden } &&
-            variant.requiresMilestones.all { it in completedMilestones } &&
-            variant.forbiddenMilestones.none { it in completedMilestones }
-    }
-    return variant?.backgroundImage ?: room.backgroundImage
-}
-
-private fun RoomAction.isInlineDescriptionAction(): Boolean = when (this) {
-    is ShopAction,
-    is TinkeringAction,
-    is RestStopAction -> false
-    is GenericAction -> !type.equals("fish", ignoreCase = true) &&
-        !type.equals("fishing", ignoreCase = true) &&
-        !type.startsWith("arcade", ignoreCase = true)
-    else -> true
-}
-
-private fun rangesOverlap(a: IntRange, b: IntRange): Boolean =
-    a.first < b.last && b.first < a.last
-
 @Composable
 private fun QuestSummaryCard(
     trackedQuest: QuestSummaryUi?,
@@ -7376,7 +7166,7 @@ private fun QuestSummaryCard(
                 )
                 if (!quest.stageDescription.isNullOrBlank()) {
                     Text(
-                        text = quest.stageDescription,
+                        text = quest.stageDescription.orEmpty(),
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.White.copy(alpha = 0.75f)
                     )

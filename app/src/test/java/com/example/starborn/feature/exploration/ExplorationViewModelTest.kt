@@ -34,7 +34,7 @@ import com.example.starborn.domain.tutorial.TutorialRuntimeManager
 import com.example.starborn.data.local.UserSettings
 import com.example.starborn.data.local.UserSettingsStore
 import com.example.starborn.domain.theme.EnvironmentThemeManager
-import com.example.starborn.feature.exploration.viewmodel.ExplorationViewModel
+import com.example.starborn.feature.exploration.viewmodel.ExplorationController as ExplorationViewModel
 import com.example.starborn.feature.exploration.viewmodel.FullMapUiState
 import com.example.starborn.feature.exploration.viewmodel.MinimapUiState
 import com.example.starborn.feature.exploration.viewmodel.MenuTab

@@ -1,0 +1,243 @@
+package com.example.starborn.desktop.ui
+
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
+import com.example.starborn.feature.exploration.viewmodel.DirectionIndicatorUi
+import com.example.starborn.feature.exploration.viewmodel.DirectionIndicatorStatus
+import java.util.Locale
+
+/** Same vector shapes and pulse timing as Android, within a desktop-sized hit target. */
+@Composable
+internal fun DesktopDirectionMarker(direction: String, status: DirectionIndicatorStatus, blocked: Boolean,
+    animate: Boolean, modifier: Modifier = Modifier, onTravel: (String) -> Unit) {
+    val loop = rememberInfiniteTransition(label = "direction-$direction")
+    val pulse by loop.animateFloat(0f, 1f, infiniteRepeatable(tween(if (status == DirectionIndicatorStatus.ENEMY) 900 else 1200,
+        easing = FastOutSlowInEasing), RepeatMode.Reverse), label = "arrow pulse")
+    val motion = if (animate) pulse else 0f
+    val canTravel = !blocked && status in setOf(DirectionIndicatorStatus.UNEXPLORED, DirectionIndicatorStatus.EXPLORED)
+    val label = when (status) {
+        DirectionIndicatorStatus.LOCKED -> "$direction exit locked"
+        DirectionIndicatorStatus.ENEMY -> "$direction exit blocked by enemy"
+        DirectionIndicatorStatus.NEARBY_THREAT -> "Threat nearby in $direction direction"
+        else -> "Travel $direction"
+    }
+    Box(modifier.explorationFeedback(canTravel).size(if (LocalExplorationSettings.current.largeTouchTargets) 64.dp else 56.dp).testTag("travel-$direction").clearAndSetSemantics {
+        contentDescription = label
+        if (canTravel) onClick(label) { onTravel(direction); true }
+    }.clickable(enabled = canTravel) { onTravel(direction) }, contentAlignment = Alignment.Center) {
+        Box(Modifier.graphicsLayer {
+            val nudge = (3.5.dp * motion).toPx()
+            scaleX = 1f + .08f * motion; scaleY = scaleX
+            alpha = if (!animate) .95f else if (status == DirectionIndicatorStatus.ENEMY) .55f + .43f * motion else .65f + .30f * motion
+            translationX = when { direction.contains("east") -> nudge; direction.contains("west") -> -nudge; else -> 0f }
+            translationY = when { direction.contains("north") -> -nudge; direction.contains("south") -> nudge; else -> 0f }
+        }) { DirectionIndicatorIcon(status, direction) }
+    }
+}
+
+@Composable
+private fun DirectionIndicatorIcon(
+    status: DirectionIndicatorStatus,
+    direction: String
+) {
+    val baseSize = 36.dp
+    val color = when (status) {
+        DirectionIndicatorStatus.UNEXPLORED -> Color(0.56f, 0.78f, 1.0f)
+        DirectionIndicatorStatus.EXPLORED -> Color(0.48f, 0.62f, 0.78f)
+        DirectionIndicatorStatus.LOCKED -> Color(0.70f, 0.72f, 0.80f)
+        DirectionIndicatorStatus.ENEMY -> Color(1.0f, 0.32f, 0.32f)
+        DirectionIndicatorStatus.NEARBY_THREAT -> Color(1.0f, 0.5f, 0.2f)
+    }
+    when (status) {
+        DirectionIndicatorStatus.UNEXPLORED -> DirectionArrowIndicator(direction, baseSize, color, isExplored = false)
+        DirectionIndicatorStatus.EXPLORED -> DirectionArrowIndicator(direction, baseSize, color, isExplored = true)
+        DirectionIndicatorStatus.LOCKED -> DirectionLockIndicator(direction, baseSize, color)
+        DirectionIndicatorStatus.ENEMY -> DirectionEnemyIndicator(direction, baseSize, color)
+        DirectionIndicatorStatus.NEARBY_THREAT -> DirectionEnemyIndicator(direction, baseSize, color)
+    }
+}
+
+@Composable
+private fun DirectionArrowIndicator(direction: String, size: Dp, color: Color, isExplored: Boolean = false) {
+    val rotation = when (direction.lowercase(Locale.getDefault())) {
+        "northeast" -> 45f
+        "east" -> 90f
+        "southeast" -> 135f
+        "south" -> 180f
+        "southwest" -> 225f
+        "west" -> 270f
+        "northwest" -> 315f
+        else -> 0f
+    }
+    Canvas(
+        modifier = Modifier
+            .size(size)
+            .graphicsLayer { rotationZ = rotation }
+    ) {
+        val w = size.toPx()
+        val inset = w * 0.28f
+        val tipY = inset
+        val baseY = w - inset
+        val midX = w / 2f
+        val wing = w * 0.26f
+        val path = Path().apply {
+            moveTo(midX, tipY)
+            lineTo(midX + wing, baseY)
+            lineTo(midX, baseY - wing * 0.8f)
+            lineTo(midX - wing, baseY)
+            close()
+        }
+        if (isExplored) {
+            drawPath(path, color = color.copy(alpha = 0.3f))
+            drawPath(path, color = color.copy(alpha = 0.8f), style = Stroke(width = w * 0.05f))
+        } else {
+            // Glow
+            drawCircle(color = color.copy(alpha = 0.25f), radius = w * 0.55f, center = Offset(midX, midX))
+            drawCircle(color = color.copy(alpha = 0.35f), radius = w * 0.42f, center = Offset(midX, midX))
+            drawPath(path, color = color)
+            drawPath(path, color = Color.White.copy(alpha = 0.4f), style = Stroke(width = w * 0.05f))
+        }
+    }
+}
+
+@Composable
+private fun DirectionLockIndicator(direction: String, size: Dp, color: Color) {
+    Canvas(
+        modifier = Modifier.size(size)
+    ) {
+        val w = size.toPx()
+        val bodyWidth = w * 0.62f
+        val bodyHeight = w * 0.44f
+        val bodyTop = w * 0.48f
+        val bodyLeft = (w - bodyWidth) / 2f
+        val corner = CornerRadius(w * 0.12f, w * 0.12f)
+
+        // Glow
+        drawCircle(color = color.copy(alpha = 0.2f), radius = w * 0.52f, center = Offset(w / 2f, w / 2f))
+        drawCircle(color = color.copy(alpha = 0.3f), radius = w * 0.38f, center = Offset(w / 2f, w / 2f))
+
+        // Body
+        drawRoundRect(
+            color = color,
+            topLeft = Offset(bodyLeft, bodyTop),
+            size = Size(bodyWidth, bodyHeight),
+            cornerRadius = corner
+        )
+        drawRoundRect(
+            color = Color.White.copy(alpha = 0.35f),
+            topLeft = Offset(bodyLeft, bodyTop),
+            size = Size(bodyWidth, bodyHeight),
+            cornerRadius = corner,
+            style = Stroke(width = w * 0.05f)
+        )
+
+        // Shackle
+        val shackleThickness = w * 0.12f
+        val shackleWidth = w * 0.6f
+        val shackleHeight = w * 0.46f
+        val shackleLeft = (w - shackleWidth) / 2f
+        val shackleTop = w * 0.06f
+        drawArc(
+            color = color,
+            startAngle = 200f,
+            sweepAngle = 140f,
+            useCenter = false,
+            topLeft = Offset(shackleLeft, shackleTop),
+            size = Size(shackleWidth, shackleHeight),
+            style = Stroke(width = shackleThickness, cap = StrokeCap.Round)
+        )
+
+        // Keyhole
+        val keyholeRadius = w * 0.075f
+        val keyholeCenter = Offset(w / 2f, bodyTop + bodyHeight * 0.32f)
+        drawCircle(
+            color = Color.Black.copy(alpha = 0.7f),
+            radius = keyholeRadius,
+            center = keyholeCenter
+        )
+        drawRoundRect(
+            color = Color.Black.copy(alpha = 0.7f),
+            topLeft = Offset(keyholeCenter.x - keyholeRadius * 0.45f, keyholeCenter.y - keyholeRadius * 0.05f),
+            size = Size(keyholeRadius * 0.9f, keyholeRadius * 1.6f),
+            cornerRadius = CornerRadius(keyholeRadius * 0.4f, keyholeRadius * 0.4f)
+        )
+    }
+}
+
+@Composable
+private fun DirectionEnemyIndicator(direction: String, size: Dp, color: Color) {
+    val rotation = when (direction.lowercase(Locale.getDefault())) {
+        "northeast" -> 45f
+        "east" -> 90f
+        "southeast" -> 135f
+        "south" -> 180f
+        "southwest" -> 225f
+        "west" -> 270f
+        "northwest" -> 315f
+        else -> 0f
+    }
+    Canvas(
+        modifier = Modifier
+            .size(size)
+            .graphicsLayer { rotationZ = rotation }
+    ) {
+        val w = size.toPx()
+        val center = Offset(w / 2f, w / 2f)
+        val radius = w * 0.36f
+        val diamond = Path().apply {
+            moveTo(center.x, center.y - radius)
+            lineTo(center.x + radius, center.y)
+            lineTo(center.x, center.y + radius)
+            lineTo(center.x - radius, center.y)
+            close()
+        }
+
+        // Glow halo
+        drawCircle(color = color.copy(alpha = 0.22f), radius = w * 0.55f, center = center)
+        drawCircle(color = color.copy(alpha = 0.32f), radius = w * 0.42f, center = center)
+
+        // Core diamond
+        drawPath(diamond, color = color.copy(alpha = 0.92f))
+        drawPath(diamond, color = Color.White.copy(alpha = 0.4f), style = Stroke(width = w * 0.05f))
+
+        // Inner bevel
+        drawPath(diamond, color = Color.White.copy(alpha = 0.08f), style = Stroke(width = w * 0.14f))
+
+        // Exclamation mark
+        val barHeight = radius * 0.95f
+        val barWidth = w * 0.09f
+        drawRoundRect(
+            color = Color.White,
+            topLeft = Offset(center.x - barWidth / 2f, center.y - barHeight * 0.55f),
+            size = Size(barWidth, barHeight * 0.7f),
+            cornerRadius = CornerRadius(barWidth / 2f, barWidth / 2f)
+        )
+        drawCircle(
+            color = Color.White,
+            radius = barWidth * 0.65f,
+            center = Offset(center.x, center.y + barHeight * 0.35f)
+        )
+    }
+}

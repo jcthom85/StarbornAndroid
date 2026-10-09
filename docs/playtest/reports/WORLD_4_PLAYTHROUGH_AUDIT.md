@@ -31,14 +31,14 @@ This transcript reflects the exact player experience, including dialogue, room t
 **[Step 13 - Travel]** Entered room: Cooling Springs | Prose snippet: "Factory noise fades in this hidden maintenance pocket. A steam pool and cooling basin collect mineral runoff; a magma re..." [Quest: w4_mq17 (cooling_springs)]
 > **[Dialogue]** Gh0st: "My Source Lock matched the carrier structure in your Fork scar. It paused one trigger. No command followed."
 > **[Dialogue]** Gh0st: "This key pauses my kill suite. It does not steer me. If I lock up, use it and wait for my decision."
-> **[Dialogue]** Zeke: "Project Phantom wasn't an accident. They cloned and weaponized living recruits. We have to tear down that fabrication line."
+> **[Dialogue]** Zeke: "Keep your voice down. The booth records audio. I can lose a form; losing a recording takes more explaining."
 > **[Dialogue]** Orion: "Gh0st's resonance was shattered and forcibly welded to Dominion commands. Yet his true chord endured beneath the static."
 > **[Dialogue]** Gh0st: "These belts carried bodies before they carried machines. Watch the timing."
 > **[Dialogue]** Gh0st: "They made more of me. Faster. Emptier. Put them down before the line teaches them pain."
 > **[Dialogue]** Gh0st: "They gave me a number and called me vat-born. Now I know Elara was real. I am not their weapon."
 **[Combat Encounter]** Victory against [magma_drone] in foundry_conveyor_belt
 - **[Action]** `w4_mq18_overload_matrix`: Overload the fabrication matrix. [Quest: w4_mq19 (forge_access)]
-> **[Dialogue]** Zeke: "Matrix overloaded. No more phantom units crawling off the belts. Now let's crack the Forge and take their Anvil."
+> **[Dialogue]** Zeke: "Keep your voice down. The booth records audio. I can lose a form; losing a recording takes more explaining."
 > **[Dialogue]** Orion: "The discordant pulse of the cloning matrix is silenced. Ahead, in the Forge, the Anvil beats with deep formative rhythm."
 > **[Dialogue]** Gh0st: "The fabrication tanks are empty. No more hollow shells will wear my face. The debt moves to Rylos now."
 **[Step 26 - Travel]** Entered room: The Forge | Prose snippet: "A massive hammer shapes ore around the anvil cradle, teaching metal to obey. The anvil relic glows inside its mount. A f..." [Quest: w4_mq19 (forge_access)]
@@ -48,7 +48,7 @@ This transcript reflects the exact player experience, including dialogue, room t
 - **[Action]** `w4_mq19_starve_breath_pistons`: Starve the Forge breath pistons. [Quest: w4_mq19 (forge_access)]
 > **[Dialogue]** Orion: "Belts cycle, crushers cycle, then a three-second stop. Find the timing relay."
 > **[Dialogue]** Nova: "The cradle is amplifying my Fork scar. Input is noisy. Keep clear until I stabilize it."
-> **[Dialogue]** Zeke: "Rylos is powering up the Titan Walker on the dock. If we don't grab that Deep-Core Engine now, we melt with the facility."
+> **[Dialogue]** Zeke: "Keep your voice down. The booth records audio. I can lose a form; losing a recording takes more explaining."
 > **[Dialogue]** Orion: "Construct is awakened. With the Anvil, Nova can shape the intangible. But Rylos's machine stands between us and flight."
 > **[Dialogue]** Gh0st: "Rylos brought the Titan Walker to the dock. He wants to execute us where he built me. Let him try."
 > **[Dialogue]** Rylos: "You are malfunctioning, Unit 734. Submit for correction. Pain is just data leaving the body."

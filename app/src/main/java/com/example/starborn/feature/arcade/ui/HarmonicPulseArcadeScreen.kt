@@ -357,7 +357,7 @@ private fun HarmonicCanvas(
 
         // 5. Active Hit Rating Indicator
         if (snapshot.ratingTimer > 0f && snapshot.lastRating != null) {
-            val ratingColor = when (snapshot.lastRating) {
+            val ratingColor = when (requireNotNull(snapshot.lastRating)) {
                 HitRating.PERFECT -> LaneGold
                 HitRating.GREAT -> LaneCyan
                 HitRating.OK -> LaneEmerald

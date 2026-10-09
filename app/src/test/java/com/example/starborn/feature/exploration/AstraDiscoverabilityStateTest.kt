@@ -10,7 +10,7 @@ import com.example.starborn.domain.event.EventPayload
 import com.example.starborn.domain.event.EventHooks
 import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.session.migrateOpeningNarrativeState
-import com.example.starborn.feature.exploration.ui.resolveRoomDescription
+import com.example.starborn.feature.exploration.presentation.resolveRoomDescription
 import com.example.starborn.feature.exploration.viewmodel.narrativeActionVisible
 import org.junit.Assert.*
 import org.junit.Test
@@ -46,11 +46,11 @@ class AstraDiscoverabilityStateTest {
         val cargo = rooms.single { it.id == "astra_cargo_bay" }
         val prose = requireNotNull(resolveRoomDescription(cargo, emptyMap(), emptySet(), false))
         val actions = cargo.actions.map { com.example.starborn.domain.model.GenericAction(it["name"] as String, "generic") }
-        val plan = requireNotNull(com.example.starborn.feature.exploration.ui.buildInlineActionPlan(prose, actions, emptyMap(), cargo))
+        val plan = requireNotNull(com.example.starborn.feature.exploration.presentation.buildInlineActionPlan(prose, actions, emptyMap(), cargo))
         assertTrue(plan.description.contains("repair bench"))
         assertFalse(plan.description.contains("[action:"))
         assertEquals(actions.toSet(), plan.segments.mapNotNull {
-            (it.target as? com.example.starborn.feature.exploration.ui.hud.InlineActionTarget.Room)?.action
+            (it.target as? com.example.starborn.feature.exploration.presentation.InlineActionTarget.Room)?.action
         }.toSet())
     }
 }

@@ -37,7 +37,7 @@ import com.example.starborn.domain.model.SkillTreeNode
 import com.example.starborn.domain.model.StatusDefinition
 import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.theme.EnvironmentThemeManager
-import com.example.starborn.feature.combat.viewmodel.CombatViewModel
+import com.example.starborn.feature.combat.viewmodel.CombatController as CombatViewModel
 import com.example.starborn.feature.combat.viewmodel.CombatBannerAccent
 import com.example.starborn.feature.combat.viewmodel.CombatBannerIcon
 import com.example.starborn.feature.combat.viewmodel.CombatBannerImportance

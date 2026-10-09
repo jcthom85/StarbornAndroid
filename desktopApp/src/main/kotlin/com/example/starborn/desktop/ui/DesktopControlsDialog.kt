@@ -111,10 +111,11 @@ fun DesktopControlsDialog(
                         KeybindRow("S / Down Arrow", "Travel South")
                         KeybindRow("A / Left Arrow", "Travel West / Arcade")
                         KeybindRow("D / Right Arrow", "Travel East")
-                        KeybindRow("[1] / [2] / [3]", "Talk to NPCs / Engage Threat")
-                        KeybindRow("[E] / [Space]", "Interact with Room Objects")
+                        KeybindRow("Mouse", "Choose actions, NPCs and threats")
+                        KeybindRow("[E]", "Use the first room action")
                         KeybindRow("[M]", "Open Star Map / Hub")
-                        KeybindRow("[I]", "Tinker Loadout & Cargo")
+                        KeybindRow("[I] / [Esc]", "Open the field menu")
+                        KeybindRow("[Tab] / [Shift+Tab]", "Move keyboard focus")
                     }
 
                     // Right Column: Stations & Quick Actions
@@ -130,14 +131,21 @@ fun DesktopControlsDialog(
                             fontFamily = FontFamily.Monospace
                         )
 
-                        KeybindRow("[F]", "Cast Angling Rod (Fishing)")
-                        KeybindRow("[T]", "The Great Frontier Film Archive")
-                        KeybindRow("[V]", "Outpost Merchant / Shop")
-                        KeybindRow("[R]", "Stasis Rest Pod (Heal Squad)")
+                        KeybindRow("Station actions", "Fishing, cooking, tinkering, shops")
+                        KeybindRow("Combat [1]", "Attack, then choose a target")
+                        KeybindRow("Combat [2 / 3 / 4]", "Abilities / items / equipped snack")
+                        KeybindRow("Combat [R / L]", "Retreat / battle log")
+                        KeybindRow("Combat [Arrows / Enter]", "Select / confirm a target")
+                        KeybindRow("Combat [Tab]", "Select the next ready party member")
+                        KeybindRow("Combat [Space]", "Respond to timing prompts")
+                        KeybindRow("Fishing [Space]", "Cast / hook / hold to reel")
                         KeybindRow("[ESC]", "Field Menu / Pause / Back")
-                        KeybindRow("[F5]", "Quick Save to Stasis Disk 1")
+                        KeybindRow("Menu [Alt+1-6]", "Party / Items / Tinker / Journal / Map / Settings")
+                        KeybindRow("Menu [Ctrl+Tab]", "Next page (Shift reverses)")
+                        KeybindRow("Map", "Drag to pan; + / - buttons to zoom")
+                        KeybindRow("[F5]", "Quick save")
                         KeybindRow("[F11]", "Toggle Fullscreen / Windowed")
-                        KeybindRow("[H] / [?]", "Toggle this Controls Guide")
+                        KeybindRow("[H]", "Open this controls guide")
                     }
                 }
 

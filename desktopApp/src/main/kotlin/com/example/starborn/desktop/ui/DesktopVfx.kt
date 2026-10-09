@@ -160,13 +160,15 @@ private data class VfxParticle(
 @Composable
 fun DesktopWeatherOverlay(
     weatherId: String?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    suppressFlashes: Boolean = false,
+    rainWidthScale: Float = 1f
 ) {
     val cleanWeather = weatherId?.lowercase()?.trim() ?: return
 
     when (cleanWeather) {
-        "rain" -> RainEffect(modifier, intensity = "medium", color = Color(0.8f, 0.9f, 1.0f))
-        "storm" -> StormEffect(modifier, intensity = "high", color = Color(0.8f, 0.9f, 1.0f))
+        "rain" -> RainEffect(modifier, intensity = "medium", color = Color(0.8f, 0.9f, 1.0f), widthScale = rainWidthScale)
+        "storm" -> if (suppressFlashes) RainEffect(modifier, intensity = "high", color = Color(0.8f, 0.9f, 1.0f), widthScale = rainWidthScale) else StormEffect(modifier, intensity = "high", color = Color(0.8f, 0.9f, 1.0f), rainWidthScale = rainWidthScale)
         "dust" -> DustEffect(modifier, color = Color(1.0f, 0.93f, 0.75f))
         "snow" -> SnowEffect(modifier, intensity = "medium", color = Color.White)
         "sparks" -> SparksEffect(modifier, color = Color(1.0f, 0.65f, 0.15f))
@@ -180,7 +182,8 @@ fun DesktopWeatherOverlay(
 private fun RainEffect(
     modifier: Modifier,
     intensity: String,
-    color: Color
+    color: Color,
+    widthScale: Float = 1f
 ) {
     val particles = remember { mutableStateListOf<VfxParticle>() }
     val random = remember { Random(System.currentTimeMillis()) }
@@ -220,7 +223,7 @@ private fun RainEffect(
                 drawRect(
                     color = p.color.copy(alpha = alpha),
                     topLeft = Offset(p.position.x * size.width, p.position.y * size.height),
-                    size = Size(p.size.first * size.width, p.size.second * size.height)
+                    size = Size((p.size.first * size.width * widthScale).coerceAtLeast(.6.dp.toPx()), p.size.second * size.height)
                 )
             }
         }
@@ -231,12 +234,13 @@ private fun RainEffect(
 private fun StormEffect(
     modifier: Modifier,
     intensity: String,
-    color: Color
+    color: Color,
+    rainWidthScale: Float = 1f
 ) {
     val lightningAlpha = remember { Animatable(0f) }
 
     Box(modifier = modifier.fillMaxSize()) {
-        RainEffect(Modifier.matchParentSize(), intensity, color)
+        RainEffect(Modifier.matchParentSize(), intensity, color, widthScale = rainWidthScale)
         Box(
             modifier = Modifier
                 .matchParentSize()

@@ -47,7 +47,8 @@ fun DesktopTuningPuzzleDialog(
     services: DesktopAppServices,
     puzzle: TuningPuzzle,
     onSuccess: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onValues: (Map<String, Float>) -> Unit = {}
 ) {
     // Slider current values
     val sliderValues = remember(puzzle) {
@@ -87,6 +88,7 @@ fun DesktopTuningPuzzleDialog(
                                 puzzle.audioCue?.let { cue ->
                                     services.audioDriver.execute(AudioCommand.Play(AudioCueType.UI, cue, loop = false))
                                 }
+                                onValues(sliderValues.toMap())
                                 onSuccess()
                             }
                         },
@@ -118,6 +120,7 @@ fun DesktopTuningPuzzleDialog(
                                 puzzle.audioCue?.let { cue ->
                                     services.audioDriver.execute(AudioCommand.Play(AudioCueType.UI, cue, loop = false))
                                 }
+                                onValues(sliderValues.toMap())
                                 onSuccess()
                             }
                         },
@@ -357,6 +360,7 @@ fun DesktopTuningPuzzleDialog(
                                         AudioCommand.Play(AudioCueType.UI, cue, loop = false)
                                     )
                                 }
+                                onValues(sliderValues.toMap())
                                 onSuccess()
                             }
                         },
@@ -384,7 +388,7 @@ fun DesktopTuningPuzzleDialog(
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier.weight(0.45f).height(46.dp)
                     ) {
-                        Text(text = "ABORT [ESC]", color = FieldMenuDesign.text, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        Text(text = "ABORT", color = FieldMenuDesign.text, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                     }
                 }
             }

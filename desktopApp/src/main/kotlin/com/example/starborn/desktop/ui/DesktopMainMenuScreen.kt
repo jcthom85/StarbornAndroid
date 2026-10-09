@@ -54,9 +54,20 @@ fun DesktopMainMenuScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     var showDebugScenarios by remember { mutableStateOf(false) }
+    var debugScenarioError by remember { mutableStateOf<String?>(null) }
     var showLoadGame by remember { mutableStateOf(false) }
     var showSettingsDialog by remember { mutableStateOf(false) }
     var showNewGameConfirm by remember { mutableStateOf(false) }
+    var latestSlot by remember { mutableStateOf<Int?>(null) }
+    var newGamePlusUnlocked by remember { mutableStateOf(false) }
+    var loading by remember { mutableStateOf(false) }
+    val saveError by services.saveManager.lastError.collectAsState()
+    LaunchedEffect(services) {
+        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            latestSlot = (-1..3).mapNotNull { slot -> services.saveManager.getSlotMetadata(slot)?.let { slot to it.timestamp } }.maxByOrNull { it.second }?.first
+            newGamePlusUnlocked = services.completedGameForNewGamePlus() != null
+        }
+    }
 
     val userSettings by services.userSettingsStore.settings.collectAsState(
         initial = UserSettings()
@@ -186,63 +197,26 @@ fun DesktopMainMenuScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 72.dp, vertical = 48.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.spacedBy(40.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Left Hero: Authentic Animated Starborn Logo & Overview
+            // Left hero: original logo with room to breathe.
             Column(
                 modifier = Modifier
-                    .weight(1.3f)
+                    .weight(1.35f)
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.Start
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AuthenticTitleLogo(services)
 
-                Spacer(modifier = Modifier.height(16.dp))
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(0.88f)
-                        .clip(RoundedCornerShape(14.dp))
-                        .background(TitlePanel.copy(alpha = 0.85f))
-                        .border(BorderStroke(1.dp, TitleCyan.copy(alpha = 0.35f)), RoundedCornerShape(14.dp))
-                        .padding(20.dp)
-                ) {
-                    Column {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(8.dp)
-                                    .clip(RoundedCornerShape(4.dp))
-                                    .background(TitleCyan)
-                            )
-                            Text(
-                                text = "DEEP-SPACE TACTICAL RPG",
-                                color = TitleCyan,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 2.sp
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Explore the uncharted perimeter sectors. Assemble your crew, master tactical combat manipulation, craft high-tier technologies, and uncover ancient cosmic anomalies.",
-                            color = TitleMutedText,
-                            fontSize = 13.sp,
-                            lineHeight = 19.sp
-                        )
-                    }
-                }
             }
 
             // Right Action Menu: Authentic Starborn Title Buttons
             Column(
                 modifier = Modifier
-                    .weight(0.95f)
+                    .weight(.85f)
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.End
@@ -251,6 +225,18 @@ fun DesktopMainMenuScreen(
                     modifier = Modifier.fillMaxWidth(0.95f),
                     verticalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
+                    latestSlot?.let { slot -> AuthenticTitleButton(text = if (loading) "Loading…" else "Continue", primary = true, onClick = {
+                        if (!loading) coroutineScope.launch {
+                            loading = true
+                            val loaded = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { services.loadSlot(slot) }
+                            loading = false
+                            if (loaded) onStartGame()
+                        }
+                    }) }
+                    if (newGamePlusUnlocked) AuthenticTitleButton(text = "New Game+ · Master Protocol", primary = false, onClick = {
+                        if (services.startNewGamePlus()) onStartGame()
+                    })
+                    saveError?.let { Text(it, color = Color(0xFFFF8A80)) }
                     AuthenticTitleButton(
                         text = "New Game",
                         primary = true,
@@ -289,22 +275,6 @@ fun DesktopMainMenuScreen(
                     )
                 }
             }
-        }
-
-        // Bottom Controls HUD
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "STARBORN (Desktop Edition)  •  [F11] Fullscreen  •  [N] New Game  •  [L] Load  •  [D] Scenarios  •  [S] Settings",
-                color = TitleMutedText.copy(alpha = 0.6f),
-                fontSize = 11.sp,
-                fontFamily = FontFamily.Monospace
-            )
         }
 
         // Dialogs
@@ -347,13 +317,16 @@ fun DesktopMainMenuScreen(
             DesktopDebugScenarioDialog(
                 onLaunch = { scenario ->
                     showDebugScenarios = false
-                    services.startDebugScenario(scenario.id)
-                    onStartGame()
+                    if (services.startDebugScenario(scenario.id)) onStartGame()
+                    else debugScenarioError = "Unable to launch ${scenario.title}: its starting location is unavailable in the current game data."
                 },
                 onDismiss = { showDebugScenarios = false }
             )
         }
 
+        debugScenarioError?.let { message ->
+            AlertDialog(onDismissRequest = { debugScenarioError = null }, title = { Text("Scenario unavailable") }, text = { Text(message) }, confirmButton = { TextButton(onClick = { debugScenarioError = null }) { Text("Close") } })
+        }
         if (showLoadGame) {
             DesktopSaveLoadDialog(
                 services = services,
@@ -419,8 +392,8 @@ private fun AuthenticTitleLogo(services: DesktopAppServices) {
         contentDescription = "Starborn",
         contentScale = ContentScale.Fit,
         modifier = Modifier
-            .fillMaxWidth(0.92f)
-            .height(180.dp)
+            .fillMaxWidth(.84f)
+            .aspectRatio(1.5f)
             .graphicsLayer {
                 translationY = bobOffset
                 scaleX = logoScale
@@ -686,7 +659,7 @@ private fun DesktopSettingsDialog(
                 val currentDisplayMode by services.userSettingsStore.displayMode.collectAsState(initial = com.example.starborn.desktop.DesktopDisplayMode.WINDOWED)
 
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("Screen Mode (or press F11)", color = TitleText, fontSize = 13.sp)
+                    Text("Screen Mode", color = TitleText, fontSize = 13.sp)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)

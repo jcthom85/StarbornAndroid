@@ -16,7 +16,7 @@ import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.session.GameSessionState
 import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.theme.EnvironmentThemeManager
-import com.example.starborn.feature.combat.viewmodel.CombatViewModel
+import com.example.starborn.feature.combat.viewmodel.CombatController as CombatViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel

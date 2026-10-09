@@ -62,8 +62,8 @@ import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.telemetry.NoOpPlaytestTelemetry
 import com.example.starborn.domain.theme.EnvironmentThemeManager
 import com.example.starborn.domain.tutorial.TutorialRuntimeManager
-import com.example.starborn.feature.combat.viewmodel.CombatViewModel
-import com.example.starborn.feature.exploration.viewmodel.ExplorationViewModel
+import com.example.starborn.feature.combat.viewmodel.CombatController as CombatViewModel
+import com.example.starborn.feature.exploration.viewmodel.ExplorationController as ExplorationViewModel
 import com.example.starborn.feature.hub.viewmodel.HubViewModel
 import com.example.starborn.navigation.CombatResultPayload
 import com.example.starborn.ui.events.UiEventBus

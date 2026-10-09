@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.protobuf)
     alias(libs.plugins.play.publisher)
 }
 
@@ -112,6 +111,7 @@ play {
 }
 
 dependencies {
+    implementation(project(":gameRuntime"))
     implementation(project(":shared"))
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.core.ktx)
@@ -165,21 +165,6 @@ tasks.withType<Test>().configureEach {
     doFirst {
         isolatedHome.get().asFile.mkdirs()
         isolatedTmp.get().asFile.mkdirs()
-    }
-}
-
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:3.25.1"
-    }
-    generateProtoTasks {
-        all().forEach { task ->
-            task.builtins {
-                maybeCreate("java").apply {
-                    option("lite")
-                }
-            }
-        }
     }
 }
 

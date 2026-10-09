@@ -77,13 +77,15 @@ class DesktopWorldsDataAndEncounterPipelineTest {
             assertNotNull("Combat encounter should be initialized", combatState)
             assertEquals(3, combatState.combatants.size)
 
-            // 4. Verify All 26 Crafting Recipes Parse
+            // Validate the complete authored catalog rather than a historical recipe count.
             val recipes = services.craftingService.tinkeringRecipes
-            assertEquals("Should have exactly 26 tinkering schematics", 26, recipes.size)
+            assertEquals(services.craftingDataSource.loadTinkeringRecipes(), recipes)
+            assertTrue("Crafting catalog must not be empty", recipes.isNotEmpty())
 
             val allItems = services.itemRepository.allItems().associateBy { it.id }
             recipes.forEach { recipe ->
                 assertTrue("Recipe must have a valid non-empty result", recipe.result.isNotBlank())
+                assertTrue("Recipe output must exist: ${recipe.result}", allItems.containsKey(recipe.result))
                 assertTrue("Recipe must have ingredients", recipe.ingredients.isNotEmpty())
             }
 

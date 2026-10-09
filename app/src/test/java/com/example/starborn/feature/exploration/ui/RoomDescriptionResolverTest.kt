@@ -1,5 +1,7 @@
 package com.example.starborn.feature.exploration.ui
 
+import com.example.starborn.feature.exploration.presentation.*
+
 import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.RoomDescriptionVariant
 import org.junit.Assert.assertEquals

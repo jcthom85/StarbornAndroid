@@ -43,13 +43,21 @@ import com.example.starborn.feature.arcade.domain.ArcadeService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.delay
+import com.example.starborn.domain.session.SessionInventoryBridge
+import com.example.starborn.domain.session.migrateOpeningNarrativeState
 import java.io.File
 
 /**
  * Service container for Desktop (Windows) environment.
  */
 class DesktopAppServices(
-    val saveDirectory: File = File(System.getProperty("user.home"), ".starborn")
+    val saveDirectory: File = File(System.getProperty("user.home"), ".starborn"),
+    audioDriverOverride: AudioDriver? = null
 ) {
     init {
         saveDirectory.mkdirs()
@@ -60,6 +68,12 @@ class DesktopAppServices(
     val assetReader = AssetJsonReader(assetProvider, moshi)
 
     val worldDataSource = WorldAssetDataSource(assetReader)
+    val characterDefinitions by lazy { worldDataSource.loadCharacters().associateBy { it.id } }
+    val enemyDefinitions by lazy { worldDataSource.loadEnemies().associateBy { it.id } }
+    val skillDefinitions by lazy { worldDataSource.loadSkills().associateBy { it.id } }
+    val roomDefinitions by lazy { worldDataSource.loadRooms().associateBy { it.id } }
+    fun roomTitle(id: String): String = roomDefinitions[id]?.title ?: id
+    val worldDefinitions by lazy { worldDataSource.loadWorlds().associateBy { it.id } }
     val themeDataSource = ThemeAssetDataSource(assetReader)
     val themeStyleDataSource = ThemeStyleAssetDataSource(assetReader)
     val dialogueDataSource = DialogueAssetDataSource(assetReader)
@@ -79,6 +93,7 @@ class DesktopAppServices(
 
     val inventoryService = InventoryService(itemRepository).apply { loadItems() }
     val sessionStore = GameSessionStore()
+    private val inventoryBridge = SessionInventoryBridge(sessionStore, inventoryService)
     val arcadeService = ArcadeService(sessionStore, inventoryService)
 
     val playtestTelemetry = LocalPlaytestTelemetry(File(saveDirectory, "playtest")).apply {
@@ -88,6 +103,9 @@ class DesktopAppServices(
     val craftingService = CraftingService(craftingDataSource, inventoryService, sessionStore)
     val events: List<GameEvent> = eventDataSource.loadEvents()
     val statusRegistry = StatusRegistry(worldDataSource.loadStatuses())
+    private val schematicNames by lazy { craftingDataSource.loadTinkeringRecipes().associate { it.id to it.name } }
+    fun contentName(id: String): String = statusRegistry.definition(id)?.let { it.displayName ?: it.name }
+        ?: schematicNames[id] ?: itemRepository.findItem(id)?.name ?: id
     val combatEngine = CombatEngine(statusRegistry = statusRegistry)
     val encounterCoordinator = EncounterCoordinator()
     val levelingManager = LevelingManager(worldDataSource.loadLevelingData() ?: LevelingData())
@@ -98,17 +116,25 @@ class DesktopAppServices(
 
     val audioBindings: AudioBindings = assetReader.readObject<AudioBindings>("audio_bindings.json") ?: AudioBindings()
     val audioCatalog: AudioCatalog = assetReader.readObject<AudioCatalog>("audio_catalog.json") ?: AudioCatalog()
-    val audioDriver: AudioDriver = DesktopAudioDriver(assetProvider)
+    val audioDriver: AudioDriver = audioDriverOverride ?: DesktopAudioDriver(assetProvider)
     val audioRouter = AudioRouter(audioBindings, audioCatalog)
 
     val uiFxBus = UiFxBus()
     val uiEventBus = UiEventBus()
+    val questPresentations = com.example.starborn.desktop.ui.DesktopQuestPresentationState()
     val promptManager = UIPromptManager()
 
     val fishingService = FishingService(fishingDataSource, inventoryService)
     val tutorialScripts = TutorialScriptRepository(assetReader)
     val userSettingsStore = DesktopUserSettingsStore(saveDirectory)
-    val saveManager = DesktopSaveManager(saveDirectory)
+    val saveManager = DesktopSaveManager(saveDirectory) { id ->
+        worldDataSource.loadRooms().firstOrNull { it.id == id }?.title ?: id
+    }
+
+    @Volatile private var sessionActive = false
+    private var lastAutosaveAt = 0L
+    var playIntroOnStart: Boolean = false
+        private set
 
     private val runtimeScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
@@ -129,142 +155,166 @@ class DesktopAppServices(
     )
     val tutorialManager = TutorialRuntimeManager(sessionStore, promptManager, tutorialScripts, runtimeScope)
 
+    private var dialogueTriggerListener: ((String) -> Boolean)? = null
+
     val dialogueService: DialogueService = DialogueService(
         dialogueDataSource.loadDialogue(),
         DialogueConditionEvaluator { condition ->
             com.example.starborn.domain.dialogue.isDialogueConditionMet(condition, sessionStore.state.value, inventoryService)
         },
         DialogueTriggerHandler { trigger ->
-            com.example.starborn.domain.dialogue.handleDialogueTrigger(
-                trigger = trigger,
-                sessionStore = sessionStore,
-                questRuntimeManager = questRuntimeManager,
-                inventoryService = inventoryService,
-                onMilestoneSet = { milestone: String ->
-                    milestoneManager.handleMilestone(milestone, null)
-                    milestoneManager.applyEffectsFor(milestone)
-                }
-            )
+            if (dialogueTriggerListener?.invoke(trigger) != true) {
+                com.example.starborn.domain.dialogue.handleDialogueTrigger(
+                    trigger = trigger,
+                    sessionStore = sessionStore,
+                    questRuntimeManager = questRuntimeManager,
+                    inventoryService = inventoryService,
+                    onMilestoneSet = { milestone: String ->
+                        milestoneManager.handleMilestone(milestone, null)
+                        milestoneManager.applyEffectsFor(milestone)
+                    }
+                )
+            }
         }
     )
 
-    private val defaultArmorsByCharacter = mapOf(
-        "nova" to "nova_flux_liner",
-        "zeke" to "zeke_surge_harness",
-        "orion" to "orion_channeler_mantle",
-        "gh0st" to "gh0st_phaseweave_jacket",
-        "ollie" to "basic_vest"
-    )
+    private var explorationInstance: com.example.starborn.feature.exploration.viewmodel.ExplorationController? = null
+    private val bootstrapCinematics = mutableListOf<String>()
+    private val bootstrapActions = mutableListOf<String>()
+    var activeFishingZone: String? = null
+    var activeArcadeCabinet: String? = null
+    var openTinkeringOnNextFieldKit = false
 
-    private val defaultWeaponsByCharacter = mapOf(
-        "nova" to "nova_laser_blaster",
-        "zeke" to "zeke_shock_fists",
-        "orion" to "orion_prism_focus",
-        "gh0st" to "gh0st_whisperblade"
-    )
+    private val runtimeSaves = object : com.example.starborn.domain.session.SessionSaveRepository {
+        override suspend fun slotInfos() = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { (1..3).map { it to saveManager.slotInfo(it) } }
+        override suspend fun save(slot: Int) {
+            val snapshot = inventoryBridge.snapshot()
+            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                check(saveManager.saveGame(slot, snapshot)) { saveManager.lastError.value.orEmpty() }
+            }
+        }
+        override suspend fun load(slot: Int) = loadSlot(slot, resetRuntime = false)
+        override suspend fun quickSave(): Boolean {
+            val snapshot = inventoryBridge.snapshot()
+            return kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { saveManager.saveGame(-1, snapshot) }
+        }
+        override suspend fun loadQuickSave() = loadSlot(-1, resetRuntime = false)
+        override suspend fun quickSaveInfo() = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { saveManager.slotInfo(-1) }
+        override suspend fun clearQuickSave() = clear(-1)
+        override suspend fun clearAutosave() = clear(0)
+        override suspend fun clear(slot: Int) { kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { check(saveManager.deleteSlot(slot)) } }
+    }
+
+    val exploration: com.example.starborn.feature.exploration.viewmodel.ExplorationController
+        get() = explorationInstance ?: com.example.starborn.feature.exploration.viewmodel.ExplorationController(
+            worldAssets = worldDataSource, sessionStore = sessionStore, dialogueService = dialogueService,
+            inventoryService = inventoryService, craftingService = craftingService,
+            cinematicCoordinator = cinematicCoordinator, questRepository = questRepository,
+            questRuntimeManager = questRuntimeManager, milestoneManager = milestoneManager,
+            audioRouter = audioRouter, voiceoverController = voiceoverController,
+            shopRepository = shopRepository, themeRepository = themeRepository,
+            environmentThemeManager = environmentThemeManager, levelingManager = levelingManager,
+            tutorialManager = tutorialManager, promptManager = promptManager, fishingService = fishingService,
+            saveRepository = runtimeSaves, encounterCoordinator = encounterCoordinator,
+            userSettingsStore = userSettingsStore, eventDefinitions = events,
+            bootstrapCinematics = bootstrapCinematics.toList(), bootstrapActions = bootstrapActions.toList(),
+            parentScope = CoroutineScope(runtimeScope.coroutineContext + Dispatchers.Main.immediate),
+            dialogueTriggerBinder = { dialogueTriggerListener = it },
+            telemetry = playtestTelemetry
+        ).also { explorationInstance = it; bootstrapCinematics.clear(); bootstrapActions.clear(); recoverMissedJedReward() }
+
+    private fun recoverMissedJedReward() {
+        val state = sessionStore.state.value
+        if ("ms_w1_mq01_jed_talked" in state.completedMilestones &&
+            "w1_mq01_receive_starter_kit" !in state.completedEvents) {
+            dialogueTriggerListener?.invoke("player_action:w1_mq01_receive_starter_kit")
+        }
+    }
+
+    private fun resetExploration() {
+        questPresentations.clear()
+        explorationInstance?.close()
+        explorationInstance = null
+        cinematicCoordinator.cancelAll()
+        bootstrapCinematics.clear()
+        bootstrapActions.clear()
+    }
 
     fun hasExistingSave(): Boolean {
-        return (0..3).any { saveManager.hasSave(it) }
+        return (-1..3).any { saveManager.hasSave(it) }
+    }
+
+    fun completedGameForNewGamePlus(): GameSessionState? {
+        sessionStore.state.value.takeIf { "ms_game_complete" in it.completedMilestones }?.let { return it }
+        return (-1..3).mapNotNull { saveManager.slotInfo(it) }
+            .filter { "ms_game_complete" in it.state.completedMilestones }.maxByOrNull { it.savedAtMillis ?: 0L }?.state
+    }
+
+    fun startNewGamePlus(): Boolean {
+        val previous = completedGameForNewGamePlus() ?: return false
+        if (!startNewGame()) return false
+        val seed = com.example.starborn.domain.session.GameBootstrap.newGamePlus(worldDataSource.loadCharacters(), itemRepository.allItems().toList(), previous)
+        inventoryBridge.restore(seed.migrateOpeningNarrativeState())
+        sessionStore.resetTutorialProgress()
+        sessionStore.resetQuestProgress()
+        questRuntimeManager.resetAll()
+        sessionStore.startQuest(com.example.starborn.domain.session.GameBootstrap.startingQuest, track = true)
+        sessionStore.setQuestStage(com.example.starborn.domain.session.GameBootstrap.startingQuest, com.example.starborn.domain.session.GameBootstrap.startingStage)
+        saveManager.saveGame(0, inventoryBridge.snapshot())
+        return true
     }
 
     fun startNewGame(debugFullInventory: Boolean = false): Boolean {
+        sessionActive = false
+        resetExploration()
+        lastAutosaveAt = System.currentTimeMillis()
         promptManager.dismissCurrent()
         tutorialManager.cancelAllScheduled()
         milestoneManager.clearHistory()
 
         val players = runCatching { worldDataSource.loadCharacters() }.getOrNull().orEmpty()
-        val defaultPlayer = players.firstOrNull()
-        val playerId = defaultPlayer?.id ?: "nova"
-        val baseLevel = defaultPlayer?.level ?: 1
-        val baseXp = defaultPlayer?.xp ?: 0
-        val startingRoomId = "pit_nova_bunk"
-        val party = if (debugFullInventory) listOf("nova", "zeke", "orion", "gh0st") else listOf(playerId)
-
-        val startingUnlockedWeapons = mutableSetOf("mining_pistol", "nova_laser_blaster")
-        val startingEquippedWeapons = mutableMapOf("nova" to "mining_pistol")
-        val startingUnlockedArmors = mutableSetOf("nova_flux_liner", "basic_vest")
-        val startingEquippedArmors = mutableMapOf("nova" to "nova_flux_liner")
-
-        val seedState = GameSessionState(
-            worldId = "world_1",
-            hubId = "hub_1_homestead",
-            roomId = startingRoomId,
-            playerId = playerId,
-            playerLevel = baseLevel,
-            playerXp = baseXp,
-            unlockedWeapons = startingUnlockedWeapons,
-            unlockedArmors = startingUnlockedArmors,
-            partyMembers = party,
-            partyMemberLevels = party.associateWith { baseLevel },
-            partyMemberXp = party.associateWith { baseXp },
-            partyMemberHp = party.associateWith { 100 },
-            equippedWeapons = startingEquippedWeapons,
-            equippedArmors = startingEquippedArmors
-        )
-        sessionStore.restore(seedState)
+        val seedState = com.example.starborn.domain.session.GameBootstrap.newGame(players, itemRepository.allItems().toList(), debugFullInventory)
+        val party = seedState.partyMembers
+        val baseLevel = seedState.playerLevel
+        inventoryBridge.restore(seedState.migrateOpeningNarrativeState())
         sessionStore.resetTutorialProgress()
         sessionStore.resetQuestProgress()
         inventoryService.restore(emptyMap())
-        inventoryService.addItem("medkit", 2)
-        sessionStore.startQuest("w1_mq01", track = true)
-        sessionStore.setQuestStage("w1_mq01", "wake_in_the_pit")
+        if (debugFullInventory) {
+            inventoryService.restore(itemRepository.allItems().associate { it.id to 99 })
+            sessionStore.addCredits(50_000)
+        }
+        com.example.starborn.domain.session.GameBootstrap.startingSkills(party, players, progressionData, baseLevel,
+            worldDataSource.loadSkills(), debugFullInventory).forEach(sessionStore::unlockSkill)
+        questRuntimeManager.resetAll()
+        sessionStore.startQuest(com.example.starborn.domain.session.GameBootstrap.startingQuest, track = true)
+        sessionStore.setQuestStage(com.example.starborn.domain.session.GameBootstrap.startingQuest, com.example.starborn.domain.session.GameBootstrap.startingStage)
 
-        saveManager.saveGame(0, sessionStore.state.value, "Nova's Bunk")
+        sessionActive = true
+        playIntroOnStart = true
+        when {
+            cinematicService.scene("intro_prologue") != null -> bootstrapCinematics.add("intro_prologue")
+            cinematicService.scene("new_game_intro") != null -> bootstrapCinematics.add("new_game_intro")
+        }
+        bootstrapActions.add("new_game_spawn_player_and_fade")
+        saveManager.saveGame(0, inventoryBridge.snapshot(), "Nova's Bunk")
         return true
     }
 
     fun startDebugScenario(scenarioId: String): Boolean {
         val scenario = com.example.starborn.feature.mainmenu.DebugScenarioCatalog.scenarios.firstOrNull { it.id == scenarioId } ?: return false
-        val startingRoom = when (scenarioId) {
-            "burgfest_story" -> "pit_nova_bunk"
-            "burgfest_combat" -> "sector9_crash_site"
-            "burgfest_astra" -> "astra_common_room"
-            "burgfest_boss" -> "foundry_titan_dock"
-            "tut_npc_dialogue" -> "pit_jed_bunk"
-            "tut_gear_inventory" -> "pit_L2_corridor"
-            "tut_tinkering", "tinkering_tutorial" -> "workshop_floor"
-            "tut_save_system" -> "workshop_yard"
-            "tut_journal_quests" -> "market_plaza"
-            "tut_combat_loader", "first_combat" -> "deep_mine_entry"
-            "tut_combat_guard", "deep_mine" -> "deep_mine_sublevel1"
-            "tut_combat_snacks" -> "mine_descent_shaft"
-            "tut_party_combat", "w2_crash_start" -> "sector9_crash_site"
-            "tut_world2_debuffs" -> "sector9_canopy_path"
-            "tut_source_blast_wave" -> "deep_mine_sublevel2"
-            "red_alert" -> "sector4_concourse"
-            "launch" -> "launch_bay_gantry"
-            "w2_temple_gate" -> "architect_ruins_gate"
-            "w2_stasis_chamber" -> "stasis_chamber"
-            "w2_hunter_canopy" -> "canopy_ridge"
-            "w2_source_gate" -> "source_gate_exterior"
-            "w2_astra_repair" -> "astra_hangar"
-            "w3_sewers_entry" -> "spire_sewers_entry"
-            "w3_safehouse_plan" -> "zeke_safehouse"
-            "w3_checkpoint_infiltration" -> "upper_city_checkpoint"
-            "w3_lens_archive" -> "scholar_archive_entrance"
-            "w3_lockdown_escape" -> "spire_rooftop_evac"
-            "w4_foundry_start" -> "slag_pits_entry"
-            "w5_docking_procedure" -> "orbital_dock"
-            "w6_fractured_minds" -> "event_horizon_camp"
-            "w6_finale" -> "singularity_core"
-            else -> "pit_nova_bunk"
-        }
-        val worldId = when {
-            scenarioId == "burgfest_combat" || scenarioId.startsWith("w2") || scenarioId in listOf("tut_party_combat", "tut_world2_debuffs") -> "world_2"
-            scenarioId == "burgfest_astra" || scenarioId.startsWith("w3") -> "world_3"
-            scenarioId == "burgfest_boss" || scenarioId.startsWith("w4") -> "world_4"
-            scenarioId.startsWith("w5") -> "world_5"
-            scenarioId.startsWith("w6") -> "world_6"
-            else -> "world_1"
-        }
-        val hubId = when (worldId) {
-            "world_2" -> "hub_3_sector9"
-            "world_3" -> "hub_5_spire_lower"
-            "world_4" -> "hub_7_foundry_slag"
-            "world_5" -> "hub_9_orbital_ring"
-            "world_6" -> "hub_11_event_horizon"
-            else -> if (scenarioId in listOf("tut_combat_loader", "tut_combat_guard", "tut_combat_snacks", "first_combat", "deep_mine", "red_alert", "launch")) "hub_2_logistics" else "hub_1_homestead"
-        }
+        val hubs = worldDataSource.loadHubs()
+        val nodes = worldDataSource.loadHubNodes()
+        val startingRoom = desktopDebugRooms[scenarioId]
+            ?: hubs.firstOrNull { it.id == scenarioId }?.let { hub -> nodes.firstOrNull { it.hubId == hub.id }?.entryRoom }
+            ?: return false
+        if (startingRoom !in roomDefinitions) return false
+        val node = nodes.firstOrNull { startingRoom == it.entryRoom || startingRoom in it.rooms }
+        val hub = hubs.firstOrNull { it.id == node?.hubId }
+            ?: if (scenarioId == "weather_lab") hubs.firstOrNull { it.id == "hub_1_homestead" } else null
+        if (hub == null) return false
+        val worldId = hub.worldId
+        val hubId = hub.id
         val party = when (worldId) {
             "world_6", "world_5", "world_4" -> listOf("nova", "zeke", "orion", "gh0st")
             "world_3" -> listOf("nova", "zeke", "orion")
@@ -280,6 +330,8 @@ class DesktopAppServices(
             else -> 2
         }
 
+        sessionActive = false
+        resetExploration()
         val initialState = GameSessionState(
             worldId = worldId,
             hubId = hubId,
@@ -289,24 +341,72 @@ class DesktopAppServices(
             partyMembers = party,
             partyMemberLevels = party.associateWith { level },
             partyMemberXp = party.associateWith { 0 },
-            partyMemberHp = party.associateWith { 100 },
+            partyMemberHp = party.associateWith { characterDefinitions[it]?.hp ?: 100 },
             playerCredits = 500,
             unlockedWeapons = setOf("mining_pistol", "nova_laser_blaster", "zeke_shock_fists", "orion_prism_focus", "gh0st_whisperblade"),
             unlockedArmors = setOf("nova_flux_liner", "zeke_surge_harness", "orion_channeler_mantle", "gh0st_phaseweave_jacket"),
-            equippedWeapons = party.mapNotNull { id -> defaultWeaponsByCharacter[id]?.let { id to it } }.toMap(),
-            equippedArmors = party.mapNotNull { id -> defaultArmorsByCharacter[id]?.let { id to it } }.toMap()
+            equippedWeapons = party.mapNotNull { id -> com.example.starborn.domain.session.GameBootstrap.defaultWeapons[id]?.let { id to it } }.toMap(),
+            equippedArmors = party.mapNotNull { id -> com.example.starborn.domain.session.GameBootstrap.defaultArmors[id]?.let { id to it } }.toMap()
         )
-        sessionStore.restore(initialState)
+        inventoryBridge.restore(initialState.migrateOpeningNarrativeState())
+        node?.let { sessionStore.visitNode(it.id) }
         inventoryService.restore(emptyMap())
         inventoryService.addItem("medkit", 5)
+        sessionActive = false
+        playIntroOnStart = false
         return true
     }
 
-    fun loadSlot(slotIndex: Int): Boolean {
+    fun loadSlot(slotIndex: Int, resetRuntime: Boolean = true): Boolean {
         val loaded = saveManager.loadGame(slotIndex) ?: return false
-        sessionStore.restore(loaded)
-        inventoryService.restore(loaded.inventory)
+        if (resetRuntime) resetExploration()
+        sessionActive = false
+        lastAutosaveAt = System.currentTimeMillis()
+        promptManager.dismissCurrent()
+        tutorialManager.cancelAllScheduled()
+        inventoryBridge.restore(loaded)
+        if (explorationInstance != null) recoverMissedJedReward()
+        sessionActive = true
+        playIntroOnStart = false
         return true
+    }
+
+    init {
+        runtimeScope.launch(Dispatchers.Main.immediate, start = kotlinx.coroutines.CoroutineStart.UNDISPATCHED) {
+            uiEventBus.events.collect { questPresentations.accept(it) }
+        }
+        runtimeScope.launch(Dispatchers.IO) {
+            userSettingsStore.settings.collectLatest { settings ->
+                audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.MUSIC, settings.musicVolume)
+                audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.AMBIENT, settings.musicVolume)
+                audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.UI, settings.sfxVolume)
+                audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.BATTLE, settings.sfxVolume)
+                audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.VOICE, settings.voiceVolume)
+            }
+        }
+        runtimeScope.launch(Dispatchers.IO) {
+            sessionStore.state.collectLatest { state ->
+                if (!sessionActive || state.worldId == null) return@collectLatest
+                val remaining = (90_000 - (System.currentTimeMillis() - lastAutosaveAt)).coerceAtLeast(0)
+                delay(remaining)
+                if (sessionActive && saveManager.saveGame(0, inventoryBridge.snapshot())) {
+                    lastAutosaveAt = System.currentTimeMillis()
+                }
+            }
+        }
+    }
+
+    fun close() {
+        val shouldSave = sessionActive
+        sessionActive = false
+        resetExploration()
+        runtimeScope.cancel()
+        if (shouldSave && sessionStore.state.value.worldId != null) {
+            saveManager.saveGame(0, inventoryBridge.snapshot())
+        }
+        inventoryBridge.close()
+        userSettingsStore.close()
+        audioDriver.release()
     }
 
     private fun applyMilestoneEffects(effects: MilestoneEffects) {

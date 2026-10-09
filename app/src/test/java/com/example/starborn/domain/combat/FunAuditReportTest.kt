@@ -364,7 +364,7 @@ class FunAuditReportTest {
     private fun signature(skill: Skill) = listOf(skill.basePower, skill.cooldown, skill.combatTags.orEmpty().sorted(), skill.statusApplications.orEmpty().sorted(), skill.scaling, skill.usesPerBattle, skill.conditions.orEmpty().sorted()).joinToString("|")
     private fun role(skill: Skill) = if (skill.basePower > 0) "damage:${element(skill)}" else "support:${skill.combatTags.orEmpty().sorted()}"
     private fun dominates(a: Skill, b: Skill): Boolean {
-        val limitOk = a.usesPerBattle == null || (b.usesPerBattle != null && a.usesPerBattle >= b.usesPerBattle)
+        val limitOk = a.usesPerBattle == null || (b.usesPerBattle != null && requireNotNull(a.usesPerBattle) >= requireNotNull(b.usesPerBattle))
         val conditionsOk = a.conditions.orEmpty().size <= b.conditions.orEmpty().size
         return a.basePower >= b.basePower && a.cooldown <= b.cooldown && limitOk && conditionsOk && a.statusApplications.orEmpty().containsAll(b.statusApplications.orEmpty()) && (a.basePower > b.basePower || a.cooldown < b.cooldown || a.statusApplications.orEmpty().size > b.statusApplications.orEmpty().size)
     }

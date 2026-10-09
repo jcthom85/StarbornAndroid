@@ -1,5 +1,8 @@
 package com.example.starborn.feature.hub.ui
 
+import com.example.starborn.feature.hub.presentation.HubMapLayouts
+import com.example.starborn.feature.hub.presentation.nodeMatchesQuest
+
 import android.graphics.BitmapFactory
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateFloat
@@ -860,23 +863,6 @@ private fun HubLockedPromptOverlay(
 }
 
 
-internal fun nodeMatchesQuest(node: HubNodeUi, quest: HubQuestUi): Boolean {
-    val haystack = listOfNotNull(quest.objective, quest.stageTitle, quest.title)
-        .joinToString(" ")
-        .lowercase()
-    if (haystack.isBlank()) return false
-    val titleTokens = node.title
-        .lowercase()
-        .replace("'", "")
-        .split(Regex("[^a-z0-9]+"))
-        .filter { it.length >= 4 }
-    if (titleTokens.any { token -> haystack.contains(token) }) return true
-    val idTokens = node.id
-        .lowercase()
-        .split(Regex("[^a-z0-9]+"))
-        .filter { it.length >= 4 }
-    return idTokens.any { token -> haystack.contains(token) }
-}
 
 @Composable
 internal fun rememberHubNodePainter(iconPath: String?): Painter? {

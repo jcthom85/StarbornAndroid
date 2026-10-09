@@ -5,7 +5,7 @@ import com.example.starborn.core.platform.DesktopAssetProvider
 import com.example.starborn.data.assets.AssetJsonReader
 import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.Quest
-import com.example.starborn.feature.exploration.ui.resolveRoomDescription
+import com.example.starborn.feature.exploration.presentation.resolveRoomDescription
 import com.example.starborn.feature.exploration.viewmodel.narrativeActionVisible
 import org.junit.Assert.*
 import org.junit.Test

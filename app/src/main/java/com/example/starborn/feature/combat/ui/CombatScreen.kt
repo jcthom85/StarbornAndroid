@@ -177,7 +177,7 @@ import com.example.starborn.feature.combat.viewmodel.CombatBannerImportance
 import com.example.starborn.feature.combat.viewmodel.CombatBannerIcon
 import com.example.starborn.feature.combat.viewmodel.CombatBannerMessage
 import com.example.starborn.feature.combat.viewmodel.CombatViewModel
-import com.example.starborn.feature.combat.viewmodel.CombatViewModel.TimedPromptState
+import com.example.starborn.feature.combat.viewmodel.CombatController.TimedPromptState
 import com.example.starborn.feature.combat.viewmodel.CombatTutorialState
 import com.example.starborn.feature.combat.viewmodel.CombatTutorialStep
 import com.example.starborn.feature.combat.viewmodel.CombatFxEvent
@@ -1498,27 +1498,13 @@ internal fun titleCaseName(name: String): String {
         }
 }
 
-private fun InventoryEntry.targetFilter(): TargetFilter? {
-    val effect = item.effect ?: return null
-    val declared = effect.target?.lowercase()
-    return when {
-        declared == "enemy" || declared == "single_enemy" -> TargetFilter.ENEMY
-        declared == "ally" || declared == "single_ally" -> TargetFilter.ALLY
-        declared == "any" -> TargetFilter.ANY
-        declared == "self" || declared == "party" || declared == "all_allies" || declared == "enemy_group" || declared == "all_enemies" -> null
-        effect.damage?.let { it > 0 } == true -> TargetFilter.ENEMY
-        effect.restoreHp?.let { it > 0 } == true -> TargetFilter.ALLY
-        effect.singleBuff != null || !effect.buffs.isNullOrEmpty() -> TargetFilter.ALLY
-        else -> null
+private fun InventoryEntry.targetFilter(): TargetFilter? =
+    when (com.example.starborn.feature.combat.presentation.CombatItemPresentation.targetRequirement(this)) {
+        TargetRequirement.ENEMY -> TargetFilter.ENEMY
+        TargetRequirement.ALLY -> TargetFilter.ALLY
+        TargetRequirement.ANY -> TargetFilter.ANY
+        TargetRequirement.NONE -> null
     }
-}
 
-private fun InventoryEntry.isBattleUsableItem(): Boolean {
-    if (quantity <= 0) return false
-    if (item.type.equals("snack", true) || item.equipment?.slot?.equals("snack", true) == true) return false
-    val effect = item.effect ?: return false
-    return effect.restoreHp?.let { it > 0 } == true ||
-        effect.damage?.let { it > 0 } == true ||
-        effect.singleBuff != null ||
-        !effect.buffs.isNullOrEmpty()
-}
+private fun InventoryEntry.isBattleUsableItem(): Boolean =
+    com.example.starborn.feature.combat.presentation.CombatItemPresentation.isUsable(this)

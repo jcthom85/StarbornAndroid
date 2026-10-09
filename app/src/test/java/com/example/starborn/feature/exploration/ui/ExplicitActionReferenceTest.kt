@@ -1,9 +1,11 @@
 package com.example.starborn.feature.exploration.ui
 
+import com.example.starborn.feature.exploration.presentation.*
+
 import com.example.starborn.domain.model.GenericAction
 import com.example.starborn.domain.model.TravelAction
 import com.example.starborn.domain.model.actionKey
-import com.example.starborn.feature.exploration.ui.hud.InlineActionTarget
+import com.example.starborn.feature.exploration.presentation.InlineActionTarget
 import com.example.starborn.feature.exploration.viewmodel.ActionHintUi
 import org.junit.Assert.*
 import org.junit.Test

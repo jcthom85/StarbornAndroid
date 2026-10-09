@@ -2,174 +2,134 @@ package com.example.starborn.desktop
 
 import com.example.starborn.core.platform.AssetProvider
 import com.example.starborn.core.platform.AudioDriver
-import com.example.starborn.domain.audio.AudioCommand
-import com.example.starborn.domain.audio.AudioCueType
+import com.example.starborn.domain.audio.*
 import java.io.BufferedInputStream
-import java.io.InputStream
 import java.util.concurrent.ConcurrentHashMap
-import javax.sound.sampled.AudioFormat
-import javax.sound.sampled.AudioSystem
-import javax.sound.sampled.Clip
-import javax.sound.sampled.FloatControl
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+import javax.sound.sampled.*
+import kotlin.math.log10
 
-/**
- * Windows Desktop audio playback engine.
- * Directly integrates with JavaSound / Windows Audio Engine.
- */
-class DesktopAudioDriver(
-    private val assetProvider: AssetProvider
-) : AudioDriver {
+/** Decoding and clip operations run on one audio worker, away from the UI thread. */
+class DesktopAudioDriver(private val assetProvider: AssetProvider) : AudioDriver {
+    private data class Playing(val clip: Clip, val cueGain: Float, val loop: Boolean, var envelope: Float = 1f, var fadeVersion: Long = 0)
+    private val worker = Executors.newSingleThreadScheduledExecutor { task -> Thread(task, "starborn-audio").apply { isDaemon = true } }
+    private val active = ConcurrentHashMap<Pair<AudioCueType, String>, Playing>()
+    private val userGains = ConcurrentHashMap<AudioCueType, Float>()
+    private val layerGains = ConcurrentHashMap<AudioCueType, Float>()
+    private val layerVersions = mutableMapOf<AudioCueType, Long>()
+    private val reported = ConcurrentHashMap.newKeySet<String>()
+    @Volatile private var released = false
 
-    private val activeClips = ConcurrentHashMap<Pair<AudioCueType, String>, Clip>()
-    private var musicVolume = 1f
-    private var sfxVolume = 1f
-    private var voiceVolume = 1f
-    private var ambientVolume = 1f
+    init {
+        worker.scheduleAtFixedRate({
+            active.entries.toList().forEach { (key, playing) ->
+                if (!playing.loop && !playing.clip.isRunning && playing.clip.framePosition >= playing.clip.frameLength) {
+                    if (active.remove(key, playing)) playing.clip.close()
+                }
+            }
+        }, 1, 1, TimeUnit.SECONDS)
+    }
 
-    override fun execute(command: AudioCommand) {
+    override fun execute(command: AudioCommand) = enqueue {
         when (command) {
             is AudioCommand.Play -> play(command)
-            is AudioCommand.Stop -> stop(command)
-            is AudioCommand.Duck -> setGain(command.type, command.gain)
-            is AudioCommand.Restore -> setGain(command.type, 1f)
+            is AudioCommand.Stop -> active[command.type to normalize(command.cueId)]?.let { playing ->
+                fade(command.type, playing, 0f, command.fadeMs) {
+                    active.remove(command.type to normalize(command.cueId), playing)
+                    playing.clip.stop(); playing.clip.close()
+                }
+            }
+            is AudioCommand.Duck -> fadeLayer(command.type, command.gain, command.fadeMs)
+            is AudioCommand.Restore -> fadeLayer(command.type, 1f, command.fadeMs)
         }
     }
 
-    override fun setUserGain(type: AudioCueType, gain: Float) {
-        val clamped = gain.coerceIn(0f, 1f)
-        when (type) {
-            AudioCueType.MUSIC -> musicVolume = clamped
-            AudioCueType.AMBIENT -> ambientVolume = clamped
-            AudioCueType.VOICE -> voiceVolume = clamped
-            AudioCueType.UI, AudioCueType.BATTLE -> sfxVolume = clamped
-        }
-        updateActiveVolumes(type)
+    override fun setUserGain(type: AudioCueType, gain: Float) = enqueue {
+        userGains[type] = gain.coerceIn(0f, 1f)
+        active.forEach { (key, playing) -> if (key.first == type) applyGain(type, playing) }
     }
+
+    private fun enqueue(action: () -> Unit) {
+        if (released) return
+        try { worker.execute { if (!released) action() } } catch (_: java.util.concurrent.RejectedExecutionException) { }
+    }
+
+    private fun normalize(cue: String) = cue.trim().lowercase().replace('-', '_')
 
     private fun play(command: AudioCommand.Play) {
-        val normalizedCue = command.cueId.trim().lowercase().replace('-', '_')
-        if (normalizedCue.isBlank()) return
-
-        if (command.type == AudioCueType.MUSIC) {
-            stopType(AudioCueType.MUSIC)
-        }
-
+        val cue = normalize(command.cueId)
+        if (cue.isEmpty()) return
+        val key = command.type to cue
+        val existing = active[key]
+        if (command.loop && existing?.loop == true && existing.clip.isRunning) return
+        var clip: Clip? = null
         try {
-            val stream = findAudioStream(normalizedCue) ?: return
-            val inStream = AudioSystem.getAudioInputStream(BufferedInputStream(stream))
-            val baseFormat = inStream.format
-            val decodedFormat = AudioFormat(
-                AudioFormat.Encoding.PCM_SIGNED,
-                baseFormat.sampleRate,
-                16,
-                baseFormat.channels,
-                baseFormat.channels * 2,
-                baseFormat.sampleRate,
-                false
-            )
-            val audioStream = if (baseFormat.encoding != AudioFormat.Encoding.PCM_SIGNED) {
-                AudioSystem.getAudioInputStream(decodedFormat, inStream)
-            } else {
-                inStream
-            }
-            val clip = AudioSystem.getClip()
-            clip.open(audioStream)
-
-            applyGainToClip(clip, effectiveVolume(command.type, command.gain))
-
-            if (command.loop) {
-                clip.loop(Clip.LOOP_CONTINUOUSLY)
-            } else {
-                clip.start()
-            }
-
-            activeClips[command.type to normalizedCue] = clip
-        } catch (_: Throwable) {
-            // Audio loading/format fallback
-        }
-    }
-
-    private fun stop(command: AudioCommand.Stop) {
-        val normalizedCue = command.cueId.trim().lowercase().replace('-', '_')
-        val clip = activeClips.remove(command.type to normalizedCue)
-        clip?.stop()
-        clip?.close()
-    }
-
-    private fun stopType(type: AudioCueType) {
-        val toRemove = activeClips.keys.filter { it.first == type }
-        toRemove.forEach { key ->
-            val clip = activeClips.remove(key)
-            clip?.stop()
-            clip?.close()
-        }
-    }
-
-    private fun setGain(type: AudioCueType, multiplier: Float) {
-        activeClips.forEach { (key, clip) ->
-            if (key.first == type) {
-                applyGainToClip(clip, effectiveVolume(type, multiplier))
-            }
-        }
-    }
-
-    private fun updateActiveVolumes(type: AudioCueType) {
-        activeClips.forEach { (key, clip) ->
-            if (key.first == type) {
-                applyGainToClip(clip, effectiveVolume(type, 1f))
-            }
-        }
-    }
-
-    private fun effectiveVolume(type: AudioCueType, multiplier: Float): Float {
-        val userVol = when (type) {
-            AudioCueType.MUSIC -> musicVolume
-            AudioCueType.AMBIENT -> ambientVolume
-            AudioCueType.VOICE -> voiceVolume
-            AudioCueType.UI, AudioCueType.BATTLE -> sfxVolume
-        }
-        return (userVol * multiplier).coerceIn(0f, 1f)
-    }
-
-    private fun applyGainToClip(clip: Clip, linearVolume: Float) {
-        try {
-            if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-                val gainControl = clip.getControl(FloatControl.Type.MASTER_GAIN) as FloatControl
-                val dB = if (linearVolume <= 0.0001f) {
-                    gainControl.minimum
-                } else {
-                    (20.0 * Math.log10(linearVolume.toDouble())).toFloat().coerceIn(gainControl.minimum, gainControl.maximum)
+            val path = listOf("raw/$cue.mp3", "raw/$cue.wav", "raw/$cue.ogg", "$cue.mp3", "$cue.wav", "audio/$cue.wav", "audio/$cue.mp3", "audio/$cue.ogg")
+                .firstOrNull(assetProvider::exists) ?: return
+            requireNotNull(assetProvider.open(path)).use { raw ->
+                AudioSystem.getAudioInputStream(BufferedInputStream(raw)).use { encoded ->
+                    val format = encoded.format
+                    val pcm = AudioFormat(AudioFormat.Encoding.PCM_SIGNED, format.sampleRate, 16, format.channels, format.channels * 2, format.sampleRate, false)
+                    clip = AudioSystem.getClip()
+                    if (format.encoding == AudioFormat.Encoding.PCM_SIGNED) clip!!.open(encoded)
+                    else AudioSystem.getAudioInputStream(pcm, encoded).use { decoded -> clip!!.open(decoded) }
                 }
-                gainControl.value = dB
             }
-        } catch (_: Throwable) {
+            if (released) { clip?.close(); return }
+            if (command.type == AudioCueType.MUSIC || command.type == AudioCueType.VOICE) {
+                active.entries.filter { it.key.first == command.type }.forEach { (oldKey, old) -> active.remove(oldKey, old); old.clip.stop(); old.clip.close() }
+            }
+            active.remove(key)?.let { it.clip.stop(); it.clip.close() }
+            val playing = Playing(requireNotNull(clip), command.gain, command.loop, if (command.fadeMs > 0) 0f else 1f)
+            active[key] = playing
+            applyGain(command.type, playing)
+            if (command.loop) playing.clip.loop(Clip.LOOP_CONTINUOUSLY) else playing.clip.start()
+            fade(command.type, playing, 1f, command.fadeMs)
+        } catch (error: Exception) {
+            clip?.close()
+            if (reported.add(cue)) System.err.println("Starborn audio '$cue': ${error.message}")
         }
     }
 
-    private fun findAudioStream(cueId: String): InputStream? {
-        val candidates = listOf(
-            "raw/$cueId.mp3",
-            "raw/$cueId.wav",
-            "raw/$cueId.ogg",
-            "$cueId.mp3",
-            "$cueId.wav",
-            "$cueId.ogg",
-            "audio/$cueId.wav",
-            "audio/$cueId.mp3",
-            "audio/$cueId.ogg"
-        )
-        for (candidate in candidates) {
-            val stream = assetProvider.open(candidate)
-            if (stream != null) return stream
-        }
-        return null
+    private fun fade(type: AudioCueType, playing: Playing, target: Float, duration: Long, done: () -> Unit = {}) {
+        val version = ++playing.fadeVersion
+        val start = playing.envelope
+        val steps = (duration.coerceIn(0, 10_000) / 25).toInt().coerceAtLeast(1)
+        for (step in 1..steps) worker.schedule({
+            if (!released && playing.fadeVersion == version && playing.clip.isOpen) {
+                playing.envelope = start + (target - start) * step / steps
+                applyGain(type, playing)
+                if (step == steps) done()
+            }
+        }, duration.coerceIn(0, 10_000) * step / steps, TimeUnit.MILLISECONDS)
+    }
+
+    private fun fadeLayer(type: AudioCueType, target: Float, duration: Long) {
+        val version = (layerVersions[type] ?: 0) + 1
+        layerVersions[type] = version
+        val start = layerGains[type] ?: 1f
+        val steps = (duration.coerceIn(0, 10_000) / 25).toInt().coerceAtLeast(1)
+        for (step in 1..steps) worker.schedule({
+            if (!released && layerVersions[type] == version) {
+                layerGains[type] = start + (target.coerceIn(0f, 1f) - start) * step / steps
+                active.forEach { (key, playing) -> if (key.first == type) applyGain(type, playing) }
+            }
+        }, duration.coerceIn(0, 10_000) * step / steps, TimeUnit.MILLISECONDS)
+    }
+
+    private fun applyGain(type: AudioCueType, playing: Playing) {
+        val clip = playing.clip
+        if (!clip.isOpen || !clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) return
+        val control = clip.getControl(FloatControl.Type.MASTER_GAIN) as FloatControl
+        val volume = ((userGains[type] ?: 1f) * (layerGains[type] ?: 1f) * playing.cueGain * playing.envelope).coerceIn(0f, 1f)
+        control.value = if (volume <= .0001f) control.minimum else (20 * log10(volume)).coerceIn(control.minimum, control.maximum)
     }
 
     override fun release() {
-        activeClips.values.forEach { clip ->
-            clip.stop()
-            clip.close()
-        }
-        activeClips.clear()
+        released = true
+        worker.shutdownNow()
+        active.values.forEach { it.clip.stop(); it.clip.close() }
+        active.clear()
     }
 }

@@ -22,7 +22,7 @@ This transcript reflects the exact player experience, including dialogue, room t
 > **[Dialogue]** Zeke: "Welcome to my safehouse. They scrubbed my lease, work history, and access tags. But the pipes still know me; the walls carry my wiring."
 > **[Dialogue]** Nova: "Then we use what they forgot to erase. Orion, shield the room. If the city hears us breathing, the heist dies before it starts."
 > **[Dialogue]** Orion: "Establishing resonance lock. There. The Source is quiet here. The city will hear only rain, faulty neon, and its own arrogance."
-> **[Dialogue]** Zeke: "This safehouse smells like ozone and recycled steam. They erased my name, but the conduits still bleed into my old terminals."
+> **[Dialogue]** Zeke: "Keep your voice down. The booth records audio. I can lose a form; losing a recording takes more explaining."
 - **[Action]** `w3_mq12_talk_jax`: Triggered when talking to Jax. [Quest: w3_mq12 (gather_intel)]
 - **[Action]** `w3_mq12_map_patrols`: Study Lower City patrol timing from the underrail map. [Quest: w3_mq12 (gather_intel)]
 - **[Action]** `w3_mq12_interrogate_guard`: Triggered when searching plaza database. [Quest: w3_mq12 (gather_intel)]
@@ -30,11 +30,11 @@ This transcript reflects the exact player experience, including dialogue, room t
 - **[Action]** `w3_mq12_source_disguises`: Identify workable disguise materials on the safehouse roof. [Quest: w3_mq12 (gather_intel)]
 - **[Action]** `w3_mq12_hack_blueprints`: Triggered when hacking blueprints. [Quest: w3_mq12 (assemble_heist)]
 - **[Action]** `w3_mq12_assemble_planning`: Triggered when coordinating the heist plan. [Quest: w3_mq13 (gain_access)]
-> **[Dialogue]** Zeke: "The service-elevator timing is tight down to four seconds. If we miss the freight switch, we're climbing laundry chutes under spotlight."
+> **[Dialogue]** Zeke: "Keep your voice down. The booth records audio. I can lose a form; losing a recording takes more explaining."
 - **[Action]** `w3_mq13_blend_in`: Acquire Skypark guest access. [Quest: w3_mq13 (gain_access)]
 - **[Action]** `w3_mq13_disable_sensors`: Zeke and Orion disable sensors from Laundry Service. [Quest: w3_mq13 (infiltrate_lobby)]
 - **[Action]** `w3_mq13_enter_lobby`: Nova and Gh0st pass the lobby scanners. [Quest: w3_mq14 (archive_infiltration)]
-> **[Dialogue]** Zeke: "Upper City execs sip synthetic wine while the Lower City suffocates in smog. Stealing their precious Lens feels like overdue rent."
+> **[Dialogue]** Zeke: "Keep your voice down. The booth records audio. I can lose a form; losing a recording takes more explaining."
 **[Step 20 - Travel]** Entered room: Archive Vault | Prose snippet: "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a..." [Quest: w3_mq14 (archive_infiltration)]
 - **[Action]** `w3_mq14_read_containment_field`: Read the Archive containment field before routing the Prism Gallery chord. [Quest: w3_mq14 (archive_infiltration)]
 - **[Action]** `w3_mq14_read_prism_shutters`: Read the Prism Gallery shutter pattern. [Quest: w3_mq14 (archive_infiltration)]

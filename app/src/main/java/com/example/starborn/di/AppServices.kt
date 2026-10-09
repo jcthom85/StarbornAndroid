@@ -176,27 +176,6 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
         private const val SAMPLE_ROOM_ID = "market_2"
     }
 
-    private val defaultArmorsByCharacter = mapOf(
-        "nova" to "nova_flux_liner",
-        "zeke" to "zeke_surge_harness",
-        "orion" to "orion_channeler_mantle",
-        "gh0st" to "gh0st_phaseweave_jacket"
-    )
-
-    private val defaultWeaponsByCharacter = mapOf(
-        "nova" to "nova_laser_blaster",
-        "zeke" to "zeke_shock_fists",
-        "orion" to "orion_prism_focus",
-        "gh0st" to "gh0st_whisperblade"
-    )
-
-    private val defaultSnacksByCharacter = mapOf(
-        "nova" to "starbar_crunch",
-        "zeke" to "mineral_trail_mix",
-        "orion" to "comet_gummies",
-        "gh0st" to "void_jerky"
-    )
-
     val promptManager = UIPromptManager()
     val dialogueService: DialogueService = DialogueService(
         dialogueDataSource.loadDialogue(),
@@ -260,14 +239,8 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
                     scheduleAutosave(state)
                 }
         }
-        persistenceScope.launch {
-            inventoryService.state.collect { entries ->
-                val snapshot = entries.associate { it.item.id to it.quantity }.filterValues { it > 0 }
-                if (snapshot != sessionStore.state.value.inventory) {
-                    sessionStore.setInventory(snapshot)
-                }
-            }
-        }
+        com.example.starborn.domain.session.SessionInventoryBridge(sessionStore, inventoryService)
+
     }
 
     private fun applyMilestoneEffects(effects: MilestoneEffects) {
@@ -464,63 +437,6 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
             .forEach { sessionStore.unlockArmor(it.id) }
     }
 
-    private fun buildStartingWeaponState(
-        characterIds: List<String>,
-        unlockAll: Boolean
-    ): Pair<Set<String>, Map<String, String>> {
-        itemRepository.load()
-        val unlocked = mutableSetOf<String>()
-        val equipped = mutableMapOf<String, String>()
-        val weaponItems = itemRepository.allItems().filter { it.isWeaponItem() }
-
-        if (unlockAll) {
-            weaponItems.forEach { unlocked += it.id }
-        }
-
-        val rng = Random(System.currentTimeMillis())
-        characterIds
-            .map { it.trim().lowercase(Locale.getDefault()) }
-            .filter { it.isNotBlank() }
-            .distinct()
-            .forEach { normalizedId ->
-                if (!unlockAll && normalizedId == "nova") return@forEach
-                val chosen = pickDefaultWeaponForCharacter(normalizedId, weaponItems, rng) ?: return@forEach
-                unlocked += chosen.id
-                equipped.putIfAbsent(normalizedId, chosen.id)
-            }
-
-        return unlocked to equipped
-    }
-
-    private fun buildStartingArmorState(
-        characterIds: List<String>,
-        unlockAll: Boolean
-    ): Pair<Set<String>, Map<String, String>> {
-        itemRepository.load()
-        val unlocked = mutableSetOf<String>()
-        val equipped = mutableMapOf<String, String>()
-        val armorItems = itemRepository.allItems().filter { it.isArmorItem() }
-
-        if (unlockAll) {
-            armorItems.forEach { unlocked += it.id }
-        }
-
-        if (armorItems.isEmpty()) return unlocked to equipped
-        val rng = Random(System.currentTimeMillis())
-        characterIds
-            .map { it.trim().lowercase(Locale.getDefault()) }
-            .filter { it.isNotBlank() }
-            .distinct()
-            .forEach { normalizedId ->
-                if (!unlockAll && normalizedId == "nova") return@forEach
-                val chosen = pickDefaultArmorForCharacter(normalizedId, armorItems, rng) ?: return@forEach
-                unlocked += chosen.id
-                equipped.putIfAbsent(normalizedId, chosen.id)
-            }
-
-        return unlocked to equipped
-    }
-
     private fun canonicalWeaponId(rawId: String): String? =
         itemRepository.findItem(rawId)?.takeIf { it.isWeaponItem() }?.id
 
@@ -542,18 +458,6 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
     private fun weaponOwnerFor(itemId: String): String? =
         itemRepository.findItem(itemId)?.let { weaponOwnerFor(it) }
 
-    private fun weaponTypeFor(item: Item): String? {
-        val equipmentType = item.equipment?.weaponType?.trim()?.lowercase(Locale.getDefault())
-        if (!equipmentType.isNullOrBlank()) return equipmentType
-        val normalizedType = item.type.trim().lowercase(Locale.getDefault())
-        return normalizedType.takeIf { GearRules.isWeaponType(it) }
-    }
-
-    private fun armorTypeFor(item: Item): String? {
-        val normalizedType = item.type.trim().lowercase(Locale.getDefault())
-        return normalizedType.takeIf { GearRules.isArmorType(it) }
-    }
-
     private fun armorOwnerFor(item: Item): String? {
         val armorType = item.type.trim().lowercase(Locale.getDefault())
         return GearRules.characterForArmorType(armorType)
@@ -562,90 +466,11 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
     private fun armorOwnerFor(itemId: String): String? =
         itemRepository.findItem(itemId)?.let { armorOwnerFor(it) }
 
-    private fun pickDefaultWeaponForCharacter(
-        characterId: String,
-        weapons: List<Item>,
-        rng: Random
-    ): Item? {
-        val normalizedId = characterId.trim().lowercase(Locale.getDefault())
-        val expectedType = GearRules.allowedWeaponTypeFor(normalizedId)
-        val preferredId = defaultWeaponsByCharacter[normalizedId]
-        val preferred = preferredId?.let { id ->
-            weapons.firstOrNull { it.id.equals(id, ignoreCase = true) }
-        }
-        if (preferred != null) {
-            val preferredType = weaponTypeFor(preferred)
-            if (expectedType == null || preferredType == expectedType) {
-                return preferred
-            }
-        }
-        return pickRandomWeaponForCharacter(normalizedId, weapons, rng)
-    }
+    private fun pickDefaultWeaponForCharacter(characterId: String, items: List<Item>, rng: Random): Item? =
+        com.example.starborn.domain.session.GameBootstrap.chooseWeapon(characterId, items, rng)
 
-    private fun buildStartingSnackState(
-        characterIds: List<String>
-    ): Map<String, String> {
-        val equipped = mutableMapOf<String, String>()
-        characterIds
-            .map { it.trim().lowercase(Locale.getDefault()) }
-            .filter { it.isNotBlank() }
-            .distinct()
-            .forEach { normalizedId ->
-                val snackId = defaultSnacksByCharacter[normalizedId]
-                if (snackId != null) {
-                    equipped["$normalizedId:snack"] = snackId
-                }
-            }
-        return equipped
-    }
-
-    private fun pickRandomWeaponForCharacter(
-        characterId: String,
-        weapons: List<Item>,
-        rng: Random
-    ): Item? {
-        if (weapons.isEmpty()) return null
-        val expectedType = GearRules.allowedWeaponTypeFor(characterId)
-        val matches = if (expectedType == null) weapons else weapons.filter {
-            weaponTypeFor(it) == expectedType
-        }
-        val pool = if (matches.isNotEmpty()) matches else weapons
-        return pool[rng.nextInt(pool.size)]
-    }
-
-    private fun pickRandomArmorForCharacter(
-        characterId: String,
-        armors: List<Item>,
-        rng: Random
-    ): Item? {
-        if (armors.isEmpty()) return null
-        val expectedType = GearRules.allowedArmorTypeFor(characterId)
-        val matches = if (expectedType == null) armors else armors.filter {
-            armorTypeFor(it) == expectedType
-        }
-        val pool = if (matches.isNotEmpty()) matches else armors
-        return pool[rng.nextInt(pool.size)]
-    }
-
-    private fun pickDefaultArmorForCharacter(
-        characterId: String,
-        armors: List<Item>,
-        rng: Random
-    ): Item? {
-        val normalizedId = characterId.trim().lowercase(Locale.getDefault())
-        val expectedType = GearRules.allowedArmorTypeFor(normalizedId)
-        val preferredId = defaultArmorsByCharacter[normalizedId]
-        val preferred = preferredId?.let { id ->
-            armors.firstOrNull { it.id.equals(id, ignoreCase = true) }
-        }
-        if (preferred != null) {
-            val preferredType = armorTypeFor(preferred)
-            if (expectedType == null || preferredType == expectedType) {
-                return preferred
-            }
-        }
-        return pickRandomArmorForCharacter(normalizedId, armors, rng)
-    }
+    private fun pickDefaultArmorForCharacter(characterId: String, items: List<Item>, rng: Random): Item? =
+        com.example.starborn.domain.session.GameBootstrap.chooseArmor(characterId, items, rng)
 
     private fun Item.isWeaponItem(): Boolean {
         val normalizedType = type.trim().lowercase(Locale.getDefault())
@@ -782,39 +607,11 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
             milestoneManager.clearHistory()
 
             val players = runCatching { worldDataSource.loadCharacters() }.getOrNull().orEmpty()
-            val defaultPlayer = players.firstOrNull()
-            val playerId = defaultPlayer?.id ?: SAMPLE_PARTY.firstOrNull()
-            val baseLevel = defaultPlayer?.level ?: 1
-            val baseXp = defaultPlayer?.xp ?: 0
-            val startingRoomId = "pit_nova_bunk"
-            val party = if (debugFullInventory) SAMPLE_PARTY.toList() else playerId?.let { listOf(it) } ?: emptyList()
-            val rosterIds = players.map { it.id.trim() }.filter { it.isNotBlank() }.distinct()
-            val weaponSeedIds = if (rosterIds.isNotEmpty()) rosterIds else party
-            val (startingUnlockedWeapons, startingEquippedWeapons) = buildStartingWeaponState(
-                characterIds = weaponSeedIds,
-                unlockAll = debugFullInventory
-            )
-            val (startingUnlockedArmors, startingEquippedArmors) = buildStartingArmorState(
-                characterIds = weaponSeedIds,
-                unlockAll = debugFullInventory
-            )
-            val startingEquippedItems = if (debugFullInventory) buildStartingSnackState(weaponSeedIds) else emptyMap()
-            val seedState = GameSessionState(
-                worldId = "world_1",
-                hubId = "hub_1_homestead",
-                roomId = startingRoomId,
-                playerId = playerId,
-                playerLevel = baseLevel,
-                playerXp = baseXp,
-                unlockedWeapons = startingUnlockedWeapons,
-                unlockedArmors = startingUnlockedArmors,
-                partyMembers = party,
-                partyMemberLevels = party.associateWith { baseLevel },
-                partyMemberXp = party.associateWith { baseXp },
-                equippedWeapons = startingEquippedWeapons,
-                equippedArmors = startingEquippedArmors,
-                equippedItems = startingEquippedItems
-            )
+            itemRepository.load()
+            val seedState = com.example.starborn.domain.session.GameBootstrap.newGame(players, itemRepository.allItems().toList(), debugFullInventory)
+            val party = seedState.partyMembers
+            val baseLevel = seedState.playerLevel
+            val weaponSeedIds = players.map { it.id }.ifEmpty { party }
             sessionStore.restore(seedState.migrateOpeningNarrativeState())
             sessionStore.resetTutorialProgress()
             sessionStore.resetQuestProgress()
@@ -838,8 +635,8 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
             }
             questRuntimeManager.resetAll()
             playtestTelemetry.startSession(if (debugFullInventory) "debug_full_inventory" else "new_game")
-            sessionStore.startQuest("w1_mq01", track = true)
-            sessionStore.setQuestStage("w1_mq01", "wake_in_the_pit")
+            sessionStore.startQuest(com.example.starborn.domain.session.GameBootstrap.startingQuest, track = true)
+            sessionStore.setQuestStage(com.example.starborn.domain.session.GameBootstrap.startingQuest, com.example.starborn.domain.session.GameBootstrap.startingStage)
             playtestTelemetry.questStarted("w1_mq01")
             resetAutosaveThrottle()
 
@@ -867,42 +664,9 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
             milestoneManager.clearHistory()
 
             val players = runCatching { worldDataSource.loadCharacters() }.getOrNull().orEmpty()
-            val defaultPlayer = players.firstOrNull()
-            val playerId = defaultPlayer?.id ?: SAMPLE_PARTY.firstOrNull()
-            val startingRoomId = "pit_nova_bunk"
-
-            val party = if (previousSession.partyMembers.isNotEmpty()) previousSession.partyMembers else playerId?.let { listOf(it) } ?: emptyList()
-            val partyMemberLevels = if (previousSession.partyMemberLevels.isNotEmpty()) previousSession.partyMemberLevels else party.associateWith { defaultPlayer?.level ?: 1 }
-            val partyMemberXp = if (previousSession.partyMemberXp.isNotEmpty()) previousSession.partyMemberXp else party.associateWith { defaultPlayer?.xp ?: 0 }
-            val playerLevel = previousSession.playerLevel.coerceAtLeast(defaultPlayer?.level ?: 1)
-            val playerXp = previousSession.playerXp
-
-            val (defaultUnlockedWeapons, defaultEquippedWeapons) = buildStartingWeaponState(characterIds = party, unlockAll = false)
-            val (defaultUnlockedArmors, defaultEquippedArmors) = buildStartingArmorState(characterIds = party, unlockAll = false)
-
-            val unlockedWeapons = (previousSession.unlockedWeapons + defaultUnlockedWeapons).distinct().toSet()
-            val unlockedArmors = (previousSession.unlockedArmors + defaultUnlockedArmors).distinct().toSet()
-            val equippedWeapons = if (previousSession.equippedWeapons.isNotEmpty()) previousSession.equippedWeapons else defaultEquippedWeapons
-            val equippedArmors = if (previousSession.equippedArmors.isNotEmpty()) previousSession.equippedArmors else defaultEquippedArmors
-
-            val seedState = GameSessionState(
-                worldId = "world_1",
-                hubId = "hub_1_homestead",
-                roomId = startingRoomId,
-                playerId = playerId,
-                playerLevel = playerLevel,
-                playerXp = playerXp,
-                playerCredits = previousSession.playerCredits.coerceAtLeast(5000),
-                unlockedWeapons = unlockedWeapons,
-                unlockedArmors = unlockedArmors,
-                partyMembers = party,
-                partyMemberLevels = partyMemberLevels,
-                partyMemberXp = partyMemberXp,
-                equippedWeapons = equippedWeapons,
-                equippedArmors = equippedArmors,
-                equippedItems = previousSession.equippedItems,
-                completedMilestones = setOf("ms_master_protocol_active")
-            )
+            itemRepository.load()
+            val seedState = com.example.starborn.domain.session.GameBootstrap.newGamePlus(players, itemRepository.allItems().toList(), previousSession)
+            val party = seedState.partyMembers
             sessionStore.restore(seedState.migrateOpeningNarrativeState())
             sessionStore.resetTutorialProgress()
             sessionStore.resetQuestProgress()
@@ -912,8 +676,8 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
 
             questRuntimeManager.resetAll()
             playtestTelemetry.startSession("new_game_plus_master")
-            sessionStore.startQuest("w1_mq01", track = true)
-            sessionStore.setQuestStage("w1_mq01", "wake_in_the_pit")
+            sessionStore.startQuest(com.example.starborn.domain.session.GameBootstrap.startingQuest, track = true)
+            sessionStore.setQuestStage(com.example.starborn.domain.session.GameBootstrap.startingQuest, com.example.starborn.domain.session.GameBootstrap.startingStage)
             playtestTelemetry.questStarted("w1_mq01")
             resetAutosaveThrottle()
 
@@ -1117,7 +881,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
         sessionStore.visitNode("pit")
         sessionStore.visitNode("workshop")
         sessionStore.revealNode("workshop")
-        sessionStore.startQuest("w1_mq01", track = true)
+        sessionStore.startQuest(com.example.starborn.domain.session.GameBootstrap.startingQuest, track = true)
         sessionStore.setQuestStage("w1_mq01", "report_to_jed")
         sessionStore.setQuestTasksCompleted(
             questId = "w1_mq01",
@@ -1260,7 +1024,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
         sessionStore.setRoom("workshop_yard")
         sessionStore.visitNode("pit")
         sessionStore.visitNode("workshop")
-        sessionStore.startQuest("w1_mq01", track = true)
+        sessionStore.startQuest(com.example.starborn.domain.session.GameBootstrap.startingQuest, track = true)
         sessionStore.setQuestStage("w1_mq01", "report_to_jed")
         sessionStore.setMilestone("ms_w1_mq01_jed_talked")
         val inv = mapOf("mining_pistol" to 1, "nova_flux_liner" to 1, "starbar_crunch" to 2)
@@ -2703,26 +2467,13 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
         players: List<Player>,
         baseLevel: Int
     ) {
-        if (party.isEmpty()) return
-        val byId = players.associateBy { it.id }
-        party.forEach { memberId ->
-            byId[memberId]?.skills.orEmpty().forEach { skillId ->
-                sessionStore.unlockSkill(skillId)
-            }
-            progressionData.levelUpSkills[memberId].orEmpty().forEach { (level, skillId) ->
-                val resolvedLevel = level.toIntOrNull() ?: return@forEach
-                if (resolvedLevel <= baseLevel) {
-                    sessionStore.unlockSkill(skillId)
-                }
-            }
-        }
+        com.example.starborn.domain.session.GameBootstrap.startingSkills(party, players, progressionData, baseLevel)
+            .forEach(sessionStore::unlockSkill)
     }
 
     private fun unlockAllSkillsForParty(party: List<String>) {
-        if (party.isEmpty()) return
-        val skills = runCatching { worldDataSource.loadSkills() }.getOrNull().orEmpty()
-        skills.filter { skill -> party.contains(skill.character) }
-            .forEach { skill -> sessionStore.unlockSkill(skill.id) }
+        com.example.starborn.domain.session.GameBootstrap.startingSkills(party, emptyList(), progressionData, 1,
+            worldDataSource.loadSkills(), true).forEach(sessionStore::unlockSkill)
     }
 
     fun release() {

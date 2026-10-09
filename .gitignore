@@ -111,4 +111,5 @@ scripts/.remote_device.json
 /test-results/
 
 /tools/backups/
+/.tools/
 /app/src/main/assets/backups/

@@ -83,7 +83,7 @@ import com.example.starborn.feature.fishing.viewmodel.FishingReelState
 import com.example.starborn.feature.fishing.viewmodel.FishingState
 import com.example.starborn.feature.fishing.viewmodel.FishingUiState
 import com.example.starborn.feature.fishing.viewmodel.FishingViewModel
-import com.example.starborn.feature.fishing.viewmodel.FishingViewModel.FishingEvent
+import com.example.starborn.feature.fishing.viewmodel.FishingController.FishingEvent
 import com.example.starborn.feature.fishing.viewmodel.FishingWaitingState
 import com.example.starborn.feature.fishing.viewmodel.FishingResultPayload
 import kotlinx.coroutines.flow.collectLatest

@@ -149,7 +149,7 @@ class CampaignEventIntegrationTest {
         val registry = com.example.starborn.domain.combat.StatusRegistry(world.loadStatuses())
         val themes = mock<com.example.starborn.data.repository.ThemeRepository>()
         store.setRoom(room)
-        val vm = com.example.starborn.feature.combat.viewmodel.CombatViewModel(
+        val vm = com.example.starborn.feature.combat.viewmodel.CombatController(
             worldAssets = world, combatEngine = com.example.starborn.domain.combat.CombatEngine(statusRegistry = registry),
             statusRegistry = registry, sessionStore = store,
             inventoryService = com.example.starborn.domain.inventory.InventoryService(catalog).apply { loadItems(); restore(store.state.value.inventory) },

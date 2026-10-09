@@ -1,0 +1,13 @@
+# Hub feedback and travel polish
+
+The established layout is retained. Region, Return, Menu, and Enter now share the same 8dp framed control style and hub accent, with 44dp minimum targets (56dp for large targets). Enter carries the stronger fill/border. Compact destination reservation follows measured card content plus 16dp outer padding, capped at 28 percent of height or 180dp. Long descriptions scroll. Header reservation matches target size.
+
+Artwork and labels share hover feedback: hovering either emphasizes the nameplate, leader line, and destination ring. Selection remains stronger. Label occupancy uses the fitted painter aspect inside its original square draw region; artwork anchors and rendered sizes remain unchanged. Placement keeps its initial priority across selection changes and considers overlapping expanded click areas as a soft cost.
+
+Hub selection and newly unlocked destinations request the original Android sfx_hub_node_select event. Successful entry requests sfx_room_transition once. These original names lacked audio bindings. AudioRouter now resolves the missing aliases to the existing sfx_ui_button_click and ui_room_move sounds, while explicit authored bindings retain priority. JSON and sound assets are unchanged. Existing audio driver gain handling applies.
+
+DesktopGameApp owns the hub travel coordinator and black overlay. Entry, Return, opening the hub from exploration, and Astra map changes fade out for 120ms, mutate/navigate at full opacity, then fade in for 120ms. The animation uses the host coroutine scope so outgoing-screen disposal cannot cancel the incoming fade. Navigation is ignored while busy, and the host overlay blocks pointer and keyboard input. Reflections remain stationary; no movement is added under reduced motion. Locked nodes prompt immediately without a fade. Failures/cancellation clear the overlay and allow retry.
+
+Validation: seventeen focused checks passed across the hub UI/runtime, label placement, and polish suites. Coverage includes artwork-hover propagation, selection stability, compact reservation, cue alias resolution/override, screen disposal during travel, duplicate activation, and failure recovery. Android Kotlin compilation passed. Offscreen review covered nine representative standard, compact, short, ultrawide, dense-map and high-contrast configurations across five hubs. This is controlled UI/runtime validation; a full native campaign playthrough and live listening session were not performed.
+
+Delivery is the regular portable Windows folder, with no ZIP. If Windows reports a running-game file lock, packaging is reported as blocked rather than closing the player's process.

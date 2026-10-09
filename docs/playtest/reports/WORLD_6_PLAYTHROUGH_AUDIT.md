@@ -28,13 +28,13 @@ This transcript reflects the exact player experience, including dialogue, room t
 > **[Dialogue]** Orion: "They are not dead. They are still in the current. I was frozen. Now I have to remain on the shore a little longer."
 **[Step 11 - Travel]** Entered room: The Campfire | Prose snippet: "The song-fire burns again, rebuilt from blue waveforms on an island of memory. Three unstable paths pull away from the f..." [Quest: w6_mq26 (reassembly)]
 - **[Action]** `w6_mq26_reassemble`: Let the song-fire gather the crew into the Key. [Quest: w6_mq27 (distorted_mines)]
-> **[Dialogue]** Zeke: "Dominion wrote my file in blood, but sitting by this fire, I feel like a man again."
+> **[Dialogue]** Zeke: "Keep your voice down. The booth records audio. I can lose a form; losing a recording takes more explaining."
 > **[Dialogue]** Orion: "The frozen shore let go of my hands. The choir is not dead; their harmony lives through us."
 > **[Dialogue]** Gh0st: "Unit 734 is dead. The order loop broke. I am here because I chose to stand with you."
 **[Step 16 - Travel]** Entered room: Echo of the Mines | Prose snippet: "Jed's workshop, the mine checkpoint, and the first shelter occupy the same impossible room. Nova can see the place where..." [Quest: w6_mq27 (distorted_mines)]
 - **[Action]** `w6_mq27_evade_manager`: Move between the Manager projections by real details. [Quest: w6_mq27 (distorted_mines)]
 **[Step 18 - Travel]** Entered room: The Elevator | Prose snippet: "The mine elevator doors open onto white noise instead of a shaft. Its floor remembers every departure Nova could not sto..." [Quest: w6_mq28 (memory_bridge)]
-> **[Dialogue]** Zeke: "Seeing your old colony made me sick. Vale tried to sugarcoat the dirt and grease that forged you."
+> **[Dialogue]** Zeke: "Keep your voice down. The booth records audio. I can lose a form; losing a recording takes more explaining."
 > **[Dialogue]** Orion: "Vale cannot counterfeit the warmth of real survival. Your beginnings gave us the strength to endure."
 > **[Dialogue]** Gh0st: "Vale tried to sanitize your history. Scars are not mistakes to erase; they are proof we survived."
 **[Step 22 - Travel]** Entered room: Memory Bridge | Prose snippet: "A platform of static extends over the raw Source. Zeke's anchor, Gh0st's anchor, Orion's anchor, and Nova's anchor wait ..." [Quest: w6_mq28 (memory_bridge)]
@@ -45,7 +45,7 @@ This transcript reflects the exact player experience, including dialogue, room t
 - **[Action]** `w6_mq28_build_bridge`: Make the bridge hold with memories no one carries alone. [Quest: w6_mq28 (memory_bridge)]
 - **[Action]** `w6_mq28_final_banter`: Share the Campfire promise. [Quest: w6_mq28 (memory_bridge)]
 - **[Action]** `w6_mq28_reach_singularity`: Cross only when every voice is present. [Quest: w6_mq29 (memory_ascent)]
-> **[Dialogue]** Zeke: "That bridge held because none of us carried it alone. We walk right up to Vale now."
+> **[Dialogue]** Zeke: "Keep your voice down. The booth records audio. I can lose a form; losing a recording takes more explaining."
 > **[Dialogue]** Orion: "The memory bridge rang like crystal bells. Separate frequencies, but perfectly tuned together across the void."
 > **[Dialogue]** Gh0st: "Four anchors locked tight. Elara's voice echoed in the beams. She knows we are finishing this fight."
 **[Step 33 - Travel]** Entered room: Memory Stair | Prose snippet: "Jed's door opens into Astra wreckage, Spire glass, Foundry catwalk, and Ring metal arranged around the memory stair. An ..." [Quest: w6_mq29 (memory_ascent)]
@@ -56,7 +56,7 @@ This transcript reflects the exact player experience, including dialogue, room t
 **[Combat Encounter]** Victory against [source_shadow, distorted_sentinel, glitch_hound] in source_memory_stair
 **[Combat Encounter]** Victory against [memory_leak, nightmare_guard] in source_spire_arena
 **[Step 40 - Travel]** Entered room: The Center | Prose snippet: "A single platform rests on an infinite white ocean. Vale waits where every voice in the Source can hear him choose silen..." [Quest: w6_mq30 (soloist)]
-> **[Dialogue]** Zeke: "Top of the spire. Everything we survived led here. I am seeing this through to the finish."
+> **[Dialogue]** Zeke: "Keep your voice down. The booth records audio. I can lose a form; losing a recording takes more explaining."
 > **[Dialogue]** Orion: "Vale's silence waits just beyond this veil. Stand firm, Nova. We will ring the final note."
 > **[Dialogue]** Gh0st: "No retreat, no protocols. We tear down Vale's throne and take our future back."
 > **[Dialogue]** Vale: "Thorne wanted to bottle the ocean. I will break the glass. No bodies to starve, no minds to break. Why fight for friction?"

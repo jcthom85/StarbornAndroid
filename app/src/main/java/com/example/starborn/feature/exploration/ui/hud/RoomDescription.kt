@@ -50,27 +50,9 @@ import androidx.compose.ui.unit.dp
 import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.RoomAction
 import kotlin.math.roundToInt
+import com.example.starborn.feature.exploration.presentation.*
 
 private const val ACTION_TAG = "action"
-
-sealed interface InlineActionTarget {
-    data class Room(val action: RoomAction) : InlineActionTarget
-    data class Npc(val name: String) : InlineActionTarget
-    data class Enemy(val id: String, val label: String) : InlineActionTarget
-}
-
-data class InlineActionSegment(
-    val id: String,
-    val target: InlineActionTarget,
-    val start: Int,
-    val end: Int,
-    val locked: Boolean
-)
-
-data class InlineActionPlan(
-    val description: String,
-    val segments: List<InlineActionSegment>
-)
 
 private data class InlineActionHitBox(
     val segment: InlineActionSegment,
