@@ -29,6 +29,7 @@ import com.example.starborn.desktop.ui.DesktopMainMenuScreen
 import com.example.starborn.desktop.ui.DesktopCombatTransitionOverlay
 import com.example.starborn.desktop.ui.DesktopHubTransitionOverlay
 import com.example.starborn.desktop.ui.TransitionMode
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 enum class DesktopScreenState {
@@ -36,7 +37,10 @@ enum class DesktopScreenState {
 }
 
 fun main(args: Array<String>) {
-    if ("--smoke-test" in args) {
+    if ("--debug" in args) {
+        System.setProperty("starborn.debug", "true")
+    }
+    if ("--smoke-test" in args || "--smoke-check" in args) {
         DesktopPackagedSmokeCheck.run(args)
         return
     }
@@ -45,12 +49,8 @@ fun main(args: Array<String>) {
 
 private fun launchDesktop() = application {
     val services = remember { DesktopAppServices() }
-    val displayMode by services.userSettingsStore.displayMode.collectAsState(initial = DesktopDisplayMode.WINDOWED)
-    val savedWidth by services.userSettingsStore.windowWidth.collectAsState(initial = 1280)
-    val savedHeight by services.userSettingsStore.windowHeight.collectAsState(initial = 800)
-    val savedX by services.userSettingsStore.windowX.collectAsState(initial = null)
-    val savedY by services.userSettingsStore.windowY.collectAsState(initial = null)
-    val savedMaximized by services.userSettingsStore.windowMaximized.collectAsState(initial = false)
+    val initialBounds = remember { services.userSettingsStore.initialWindowBounds() }
+    val displayMode by services.userSettingsStore.displayMode.collectAsState(initial = initialBounds.displayMode)
     val coroutineScope = rememberCoroutineScope()
     var screenState by remember { mutableStateOf(DesktopScreenState.MAIN_MENU) }
 
@@ -72,15 +72,15 @@ private fun launchDesktop() = application {
         val windowState = rememberWindowState(
             size = if (displayMode == DesktopDisplayMode.BORDERLESS)
                 DpSize(monitorBounds.width.dp, monitorBounds.height.dp)
-            else DpSize(savedWidth.coerceAtLeast(1024).dp, savedHeight.coerceAtLeast(720).dp),
+            else DpSize(initialBounds.width.dp, initialBounds.height.dp),
             position = if (displayMode == DesktopDisplayMode.BORDERLESS)
                 WindowPosition.Absolute(monitorBounds.x.dp, monitorBounds.y.dp)
-            else if (savedX != null && savedY != null)
-                WindowPosition.Absolute(savedX!!.dp, savedY!!.dp)
+            else if (initialBounds.x != null && initialBounds.y != null)
+                WindowPosition.Absolute(initialBounds.x!!.dp, initialBounds.y!!.dp)
             else WindowPosition.Aligned(Alignment.Center),
             placement = when {
                 displayMode == DesktopDisplayMode.FULLSCREEN -> WindowPlacement.Fullscreen
-                savedMaximized && displayMode == DesktopDisplayMode.WINDOWED -> WindowPlacement.Maximized
+                initialBounds.isMaximized && displayMode == DesktopDisplayMode.WINDOWED -> WindowPlacement.Maximized
                 else -> WindowPlacement.Floating
             }
         )
@@ -96,6 +96,23 @@ private fun launchDesktop() = application {
                     isMaximized = isMax
                 )
             } catch (_: Throwable) {}
+        }
+        LaunchedEffect(windowState) {
+            snapshotFlow {
+                val isMax = windowState.placement == WindowPlacement.Maximized
+                val pos = windowState.position as? WindowPosition.Absolute
+                Triple(windowState.size, pos, isMax)
+            }.collect { (size, pos, isMax) ->
+                try {
+                    services.userSettingsStore.saveWindowBounds(
+                        width = size.width.value.toInt(),
+                        height = size.height.value.toInt(),
+                        x = pos?.x?.value?.toInt(),
+                        y = pos?.y?.value?.toInt(),
+                        isMaximized = isMax
+                    )
+                } catch (_: Throwable) {}
+            }
         }
         val icon = androidx.compose.ui.res.painterResource("icon.png")
         Window(
@@ -155,6 +172,15 @@ private fun launchDesktop() = application {
         ) {
         DisposableEffect(window, displayMode) {
             window.minimumSize = java.awt.Dimension(1024, 720)
+            try {
+                val iconStream = Thread.currentThread().contextClassLoader.getResourceAsStream("icon.png")
+                if (iconStream != null) {
+                    val awtImg = javax.imageio.ImageIO.read(iconStream)
+                    if (awtImg != null) {
+                        window.iconImage = awtImg
+                    }
+                }
+            } catch (_: Throwable) {}
             monitorBounds = window.graphicsConfiguration.bounds
             if (displayMode == DesktopDisplayMode.BORDERLESS) {
                 // Full monitor bounds, including the taskbar area; no maximize work-area sizing.

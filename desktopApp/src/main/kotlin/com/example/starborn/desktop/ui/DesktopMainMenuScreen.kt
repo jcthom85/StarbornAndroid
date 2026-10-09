@@ -58,18 +58,20 @@ fun DesktopMainMenuScreen(
     var showLoadGame by remember { mutableStateOf(false) }
     var showSettingsDialog by remember { mutableStateOf(false) }
     var showNewGameConfirm by remember { mutableStateOf(false) }
-    var latestSlot by remember { mutableStateOf<Int?>(null) }
-    var latestSlotInfo by remember { mutableStateOf<com.example.starborn.desktop.DesktopSaveSlotInfo?>(null) }
-    var newGamePlusUnlocked by remember { mutableStateOf(false) }
+    var latestSlotInfo by remember(services) {
+        mutableStateOf((-1..3).mapNotNull { slot -> services.saveManager.getSlotMetadata(slot) }.maxByOrNull { it.timestamp })
+    }
+    var latestSlot by remember(services) { mutableStateOf(latestSlotInfo?.slotIndex) }
+    var newGamePlusUnlocked by remember(services) { mutableStateOf(services.completedGameForNewGamePlus() != null) }
     var loading by remember { mutableStateOf(false) }
     val saveError by services.saveManager.lastError.collectAsState()
     LaunchedEffect(services) {
-        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-            val meta = (-1..3).mapNotNull { slot -> services.saveManager.getSlotMetadata(slot) }.maxByOrNull { it.timestamp }
-            latestSlotInfo = meta
-            latestSlot = meta?.slotIndex
-            newGamePlusUnlocked = services.completedGameForNewGamePlus() != null
+        val meta = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            (-1..3).mapNotNull { slot -> services.saveManager.getSlotMetadata(slot) }.maxByOrNull { it.timestamp }
         }
+        latestSlotInfo = meta
+        latestSlot = meta?.slotIndex
+        newGamePlusUnlocked = services.completedGameForNewGamePlus() != null
     }
 
     val userSettings by services.userSettingsStore.settings.collectAsState(
@@ -89,16 +91,24 @@ fun DesktopMainMenuScreen(
             .onKeyEvent { keyEvent ->
                 if (keyEvent.type == KeyEventType.KeyDown) {
                     when (keyEvent.key) {
-                        Key.C -> {
-                            latestSlot?.let { slot ->
+                        Key.C, Key.Enter, Key.Spacebar -> {
+                            if (latestSlot != null) {
                                 if (!loading) coroutineScope.launch {
                                     loading = true
-                                    val loaded = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { services.loadSlot(slot) }
+                                    val loaded = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { services.loadSlot(latestSlot!!) }
                                     loading = false
                                     if (loaded) onStartGame()
                                 }
-                            }
-                            true
+                                true
+                            } else if (keyEvent.key != Key.C) {
+                                if (services.hasExistingSave()) {
+                                    showNewGameConfirm = true
+                                } else {
+                                    services.startNewGame()
+                                    onStartGame()
+                                }
+                                true
+                            } else false
                         }
                         Key.N, Key.One -> {
                             if (services.hasExistingSave()) {
@@ -256,13 +266,37 @@ fun DesktopMainMenuScreen(
                                 }
                             )
                             latestSlotInfo?.let { info ->
-                                Text(
-                                    text = "${info.roomTitle ?: "Sector"} · Lv.${info.playerLevel} · ${info.formattedDate}",
-                                    color = TitleCyan.copy(alpha = 0.85f),
-                                    fontSize = 11.sp,
-                                    fontFamily = LocalStarbornFonts.current.orbitron,
-                                    modifier = Modifier.padding(start = 4.dp)
-                                )
+                                val slotBadge = when (info.slotIndex) {
+                                    -1 -> "QUICKSAVE"
+                                    0 -> "AUTOSAVE"
+                                    else -> "SLOT ${info.slotIndex}"
+                                }
+                                Row(
+                                    modifier = Modifier.padding(start = 4.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    Surface(
+                                        color = TitleCyan.copy(alpha = 0.15f),
+                                        shape = RoundedCornerShape(4.dp),
+                                        border = BorderStroke(1.dp, TitleCyan.copy(alpha = 0.35f))
+                                    ) {
+                                        Text(
+                                            text = slotBadge,
+                                            color = TitleCyan,
+                                            fontSize = 9.sp,
+                                            fontFamily = LocalStarbornFonts.current.orbitron,
+                                            fontWeight = FontWeight.Bold,
+                                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                                        )
+                                    }
+                                    Text(
+                                        text = "${info.roomTitle ?: "Deep Sector"} · Lv.${info.playerLevel} · ${info.formattedDate}",
+                                        color = TitleMutedText.copy(alpha = 0.85f),
+                                        fontSize = 11.sp,
+                                        fontFamily = LocalStarbornFonts.current.orbitron
+                                    )
+                                }
                             }
                         }
                     }

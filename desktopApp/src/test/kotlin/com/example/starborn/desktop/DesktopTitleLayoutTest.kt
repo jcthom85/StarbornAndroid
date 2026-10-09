@@ -43,6 +43,30 @@ class DesktopTitleLayoutTest {
             capture("title-large-logo-narrow")
         } finally { services.close(); directory.deleteRecursively() }
     }
+
+    @Test fun existingSaveRendersContinuePrimaryWithSlotInfo() {
+        val directory = Files.createTempDirectory("starborn-title-continue-").toFile()
+        val services = DesktopAppServices(directory, object : AudioDriver {
+            override fun execute(command: AudioCommand) {}
+            override fun setUserGain(type: AudioCueType, gain: Float) {}
+            override fun release() {}
+        })
+        try {
+            assertTrue(services.startNewGame())
+            services.saveManager.saveGame(-1, services.sessionStore.state.value, "Engineering Bay")
+            compose.setContent {
+                DesktopStarbornTheme {
+                    Box(Modifier.size(1280.dp, 720.dp)) {
+                        DesktopMainMenuScreen(services, onStartGame = {}, onQuit = {})
+                    }
+                }
+            }
+            compose.waitForIdle()
+            compose.onNodeWithText("Continue").assertIsDisplayed()
+            compose.onNodeWithText("QUICKSAVE").assertIsDisplayed()
+            compose.onNodeWithText("New Game").assertIsDisplayed()
+        } finally { services.close(); directory.deleteRecursively() }
+    }
     private fun capture(name: String) {
         val target = File("build/reports/desktop/screenshots/$name.png")
         target.parentFile.mkdirs()

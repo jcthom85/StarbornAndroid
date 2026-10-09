@@ -9,8 +9,18 @@ import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.starborn.data.local.UserSettings
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import java.io.File
+
+data class InitialWindowBounds(
+    val width: Int,
+    val height: Int,
+    val x: Int?,
+    val y: Int?,
+    val isMaximized: Boolean,
+    val displayMode: DesktopDisplayMode
+)
 
 enum class DesktopDisplayMode(val label: String) {
     WINDOWED("Windowed (1280x800)"),
@@ -142,6 +152,24 @@ class DesktopUserSettingsStore(
                 if (x != null) prefs[WINDOW_X] = x
                 if (y != null) prefs[WINDOW_Y] = y
             }
+        }
+    }
+
+    fun initialWindowBounds(): InitialWindowBounds {
+        return kotlinx.coroutines.runBlocking(kotlinx.coroutines.Dispatchers.IO) {
+            val prefs = dataStore.data.firstOrNull()
+            val modeStr = prefs?.get(DISPLAY_MODE)
+            val mode = if (modeStr != null) {
+                runCatching { DesktopDisplayMode.valueOf(modeStr) }.getOrDefault(DesktopDisplayMode.WINDOWED)
+            } else DesktopDisplayMode.WINDOWED
+            InitialWindowBounds(
+                width = (prefs?.get(WINDOW_WIDTH) ?: 1280).coerceAtLeast(1024),
+                height = (prefs?.get(WINDOW_HEIGHT) ?: 800).coerceAtLeast(720),
+                x = prefs?.get(WINDOW_X),
+                y = prefs?.get(WINDOW_Y),
+                isMaximized = prefs?.get(WINDOW_MAXIMIZED) ?: false,
+                displayMode = mode
+            )
         }
     }
 
