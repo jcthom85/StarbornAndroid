@@ -406,7 +406,7 @@ fun DesktopDialogueOverlay(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.sp,
-                            fontFamily = FontFamily.Monospace
+                            fontFamily = LocalStarbornFonts.current.orbitron
                         )
 
                         Text(
@@ -484,7 +484,7 @@ fun DesktopMinimalPillButton(
             color = FieldMenuDesign.text,
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.Monospace
+            fontFamily = LocalStarbornFonts.current.orbitron
         )
     }
 }

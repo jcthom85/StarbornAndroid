@@ -72,7 +72,7 @@ fun DesktopControlsDialog(
                                 color = Color.White,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Black,
-                                fontFamily = FontFamily.Monospace
+                                fontFamily = LocalStarbornFonts.current.orbitron
                             )
                             Text(
                                 text = "Desktop Keyboard & Mouse Navigation",
@@ -104,7 +104,7 @@ fun DesktopControlsDialog(
                             color = Color(0xFFFFC857),
                             fontSize = 11.5.sp,
                             fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.Monospace
+                            fontFamily = LocalStarbornFonts.current.orbitron
                         )
 
                         KeybindRow("W / Up Arrow", "Travel North")
@@ -128,7 +128,7 @@ fun DesktopControlsDialog(
                             color = Color(0xFFFFC857),
                             fontSize = 11.5.sp,
                             fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.Monospace
+                            fontFamily = LocalStarbornFonts.current.orbitron
                         )
 
                         KeybindRow("Station actions", "Fishing, cooking, tinkering, shops")
@@ -199,7 +199,7 @@ private fun KeybindRow(key: String, action: String) {
                 color = Color(0xFF63E6FF),
                 fontSize = 10.5.sp,
                 fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Monospace,
+                fontFamily = LocalStarbornFonts.current.orbitron,
                 modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
             )
         }

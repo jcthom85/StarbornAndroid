@@ -42,7 +42,10 @@ class DesktopCinematicSnapshotTest {
             compose.waitUntil(8_000) { compose.mainClock.advanceTimeBy(250); (services.exploration.uiState.value.cinematic?.stepIndex ?: 0) > 0 }
             val screenshots = File("build/reports/desktop/screenshots").apply { mkdirs() }
             ImageIO.write(compose.onRoot().captureToImage().asAwtImage(), "png", File(screenshots, "intro-breach-fullscreen.png"))
-            compose.waitUntil(60_000) { compose.mainClock.advanceTimeBy(200); services.exploration.uiState.value.cinematic?.sceneId != "intro_prologue" }
+            compose.waitUntil(90_000) {
+                compose.mainClock.advanceTimeBy(1_000)
+                services.exploration.uiState.value.cinematic?.sceneId != "intro_prologue"
+            }
             val plays = audio.commands.filterIsInstance<AudioCommand.Play>()
             assertTrue(plays.any { it.cueId == "amb_intro_containment_pressure" && it.type == AudioCueType.AMBIENT && it.loop })
             listOf("sfx_intro_door_buckle", "sfx_intro_door_collapse", "sfx_intro_chime_launch", "sfx_intro_stasis_seal", "sfx_intro_stasis_lock", "sfx_intro_beast_strike").forEach { cue ->

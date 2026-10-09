@@ -260,7 +260,7 @@ fun DesktopMainMenuScreen(
                                     text = "${info.roomTitle ?: "Sector"} · Lv.${info.playerLevel} · ${info.formattedDate}",
                                     color = TitleCyan.copy(alpha = 0.85f),
                                     fontSize = 11.sp,
-                                    fontFamily = FontFamily.Monospace,
+                                    fontFamily = LocalStarbornFonts.current.orbitron,
                                     modifier = Modifier.padding(start = 4.dp)
                                 )
                             }

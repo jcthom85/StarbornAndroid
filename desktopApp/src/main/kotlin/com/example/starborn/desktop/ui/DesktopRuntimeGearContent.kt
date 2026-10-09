@@ -8,8 +8,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.starborn.desktop.DesktopAppServices
 import com.example.starborn.domain.inventory.GearRules
@@ -170,17 +172,64 @@ private fun DesktopGearComparison(label: String, candidate: Double?, current: Do
     fun number(value: Double?): String = value?.let {
         if (percent) String.format(java.util.Locale.ROOT, "%.1f%%", it * 100)
         else String.format(java.util.Locale.ROOT, "%.1f", it).removeSuffix(".0")
-    } ?: "Not specified"
+    } ?: "—"
     val next = candidate ?: if (additive) 0.0 else null
     val old = current ?: if (additive) 0.0 else null
     val delta = if (next != null && old != null) next - old else null
-    val difference = delta?.let { " (${if (it > 0) "+" else ""}${number(it).removeSuffix("%")}${if (percent) " percentage points" else ""})" }.orEmpty()
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(label, style = MaterialTheme.typography.labelMedium, color = FieldMenuDesign.textMuted)
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(number(old), style = MaterialTheme.typography.bodySmall)
-            Text("${number(next)}$difference", style = MaterialTheme.typography.bodySmall,
-                color = when { delta == null || delta == 0.0 -> FieldMenuDesign.text; delta > 0 -> Color(0xFF80E7A0); else -> Color(0xFFFF887F) })
+
+    val deltaText = delta?.takeIf { it != 0.0 }?.let { d ->
+        val sign = if (d > 0) "+" else ""
+        val num = if (percent) String.format(java.util.Locale.ROOT, "%.1f%%", d * 100)
+        else String.format(java.util.Locale.ROOT, "%.1f", d).removeSuffix(".0")
+        "$sign$num"
+    }
+
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodySmall,
+            color = FieldMenuDesign.textMuted,
+            modifier = Modifier.weight(1.1f)
+        )
+        Row(
+            modifier = Modifier.weight(1.3f),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = number(old),
+                style = MaterialTheme.typography.bodySmall,
+                color = FieldMenuDesign.text.copy(alpha = 0.65f)
+            )
+            Text(
+                text = "  →  ",
+                style = MaterialTheme.typography.bodySmall,
+                color = FieldMenuDesign.textMuted.copy(alpha = 0.5f)
+            )
+            Text(
+                text = number(next),
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.SemiBold,
+                color = when {
+                    delta == null || delta == 0.0 -> FieldMenuDesign.text
+                    delta > 0 -> Color(0xFF80E7A0)
+                    else -> Color(0xFFFF887F)
+                }
+            )
+            if (deltaText != null) {
+                Spacer(Modifier.width(6.dp))
+                Text(
+                    text = if (delta!! > 0) "▲ $deltaText" else "▼ $deltaText",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = if (delta > 0) Color(0xFF80E7A0) else Color(0xFFFF887F)
+                )
+            }
         }
     }
 }
+

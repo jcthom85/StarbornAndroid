@@ -95,7 +95,7 @@ internal fun DesktopCombatLiveFeed(
                         color = accentColor,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.Monospace,
+                        fontFamily = LocalStarbornFonts.current.orbitron,
                         letterSpacing = 0.8.sp
                     )
                 }
@@ -122,7 +122,7 @@ internal fun DesktopCombatLiveFeed(
                                 color = accentColor,
                                 fontSize = 9.5.sp,
                                 fontWeight = FontWeight.Bold,
-                                fontFamily = FontFamily.Monospace
+                                fontFamily = LocalStarbornFonts.current.orbitron
                             )
                             Icon(
                                 imageVector = Icons.Rounded.OpenInFull,
@@ -142,7 +142,7 @@ internal fun DesktopCombatLiveFeed(
                     text = "Awaiting initial tactical contact...",
                     color = Color.White.copy(alpha = 0.5f),
                     fontSize = 11.sp,
-                    fontFamily = FontFamily.Monospace,
+                    fontFamily = LocalStarbornFonts.current.orbitron,
                     modifier = Modifier.padding(vertical = 12.dp)
                 )
             } else {
@@ -164,13 +164,13 @@ internal fun DesktopCombatLiveFeed(
                                 text = "›",
                                 color = accentColor.copy(alpha = 0.6f),
                                 fontSize = 10.sp,
-                                fontFamily = FontFamily.Monospace
+                                fontFamily = LocalStarbornFonts.current.orbitron
                             )
                             Text(
                                 text = text,
                                 color = textColor,
                                 fontSize = 10.5.sp,
-                                fontFamily = FontFamily.Monospace,
+                                fontFamily = LocalStarbornFonts.current.orbitron,
                                 lineHeight = 14.sp
                             )
                         }
@@ -242,7 +242,7 @@ internal fun DesktopCombatLogDialog(
                                 color = Color.White,
                                 fontSize = 13.5.sp,
                                 fontWeight = FontWeight.Black,
-                                fontFamily = FontFamily.Monospace,
+                                fontFamily = LocalStarbornFonts.current.orbitron,
                                 letterSpacing = 0.6.sp
                             )
                             Text(
@@ -276,7 +276,7 @@ internal fun DesktopCombatLogDialog(
                                 text = "No combat actions recorded yet.",
                                 color = Color.White.copy(alpha = 0.5f),
                                 fontSize = 12.sp,
-                                fontFamily = FontFamily.Monospace,
+                                fontFamily = LocalStarbornFonts.current.orbitron,
                                 modifier = Modifier.padding(vertical = 24.dp)
                             )
                         }
@@ -304,7 +304,7 @@ internal fun DesktopCombatLogDialog(
                                         text = text,
                                         color = textColor,
                                         fontSize = 11.5.sp,
-                                        fontFamily = FontFamily.Monospace
+                                        fontFamily = LocalStarbornFonts.current.orbitron
                                     )
                                 }
                             }
@@ -324,7 +324,7 @@ internal fun DesktopCombatLogDialog(
                         text = "Total Entries: ${history.size}",
                         color = Color.White.copy(alpha = 0.5f),
                         fontSize = 10.5.sp,
-                        fontFamily = FontFamily.Monospace
+                        fontFamily = LocalStarbornFonts.current.orbitron
                     )
 
                     Button(

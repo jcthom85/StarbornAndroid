@@ -181,7 +181,7 @@ fun DesktopTuningPuzzleDialog(
                             color = ScopeCyan,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.Monospace,
+                            fontFamily = LocalStarbornFonts.current.orbitron,
                             letterSpacing = 1.5.sp
                         )
                         Text(
@@ -213,7 +213,7 @@ fun DesktopTuningPuzzleDialog(
                                 color = if (isTuned) ScopeGreen else ScopeAmber,
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
-                                fontFamily = FontFamily.Monospace
+                                fontFamily = LocalStarbornFonts.current.orbitron
                             )
                         }
                     }
@@ -293,7 +293,7 @@ fun DesktopTuningPuzzleDialog(
                         color = if (isTuned) ScopeGreen else ScopeAmber,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.Monospace,
+                        fontFamily = LocalStarbornFonts.current.orbitron,
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
                             .padding(8.dp)
@@ -320,13 +320,13 @@ fun DesktopTuningPuzzleDialog(
                                     color = if (inTolerance) ScopeGreen else Color.White.copy(alpha = 0.85f),
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Bold,
-                                    fontFamily = FontFamily.Monospace
+                                    fontFamily = LocalStarbornFonts.current.orbitron
                                 )
                                 Text(
                                     text = "${currentVal.toInt()} ${slider.unit ?: "Hz"}  [TARGET: ${slider.target.toInt()} ±${slider.tolerance.toInt()}]",
                                     color = if (inTolerance) ScopeGreen else ScopeAmber,
                                     fontSize = 11.sp,
-                                    fontFamily = FontFamily.Monospace,
+                                    fontFamily = LocalStarbornFonts.current.orbitron,
                                     fontWeight = FontWeight.Bold
                                 )
                             }

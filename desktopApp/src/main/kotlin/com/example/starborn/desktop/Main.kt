@@ -56,7 +56,7 @@ private fun launchDesktop() = application {
     // Keep game composition alive while changing the native frame decoration.
     val gameContent = remember {
         movableContentOf {
-            com.example.starborn.desktop.ui.DesktopStarbornTheme {
+            com.example.starborn.desktop.ui.DesktopStarbornTheme(services) {
                 DesktopGameApp(services, screenState, { screenState = it }, {
                     services.close()
                     exitApplication()

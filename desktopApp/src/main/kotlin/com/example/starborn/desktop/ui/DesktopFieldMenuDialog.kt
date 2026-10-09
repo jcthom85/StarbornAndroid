@@ -547,9 +547,9 @@ private fun DesktopSubTogglePill(
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(50.dp))
-            .background(if (isSelected) FieldMenuDesign.cyan.copy(alpha = 0.22f) else Color.Transparent)
-            .border(BorderStroke(1.dp, if (isSelected) FieldMenuDesign.cyan else Color.Transparent), RoundedCornerShape(50.dp))
+            .clip(RoundedCornerShape(8.dp))
+            .background(if (isSelected) FieldMenuDesign.cyan.copy(alpha = 0.22f) else Color.White.copy(alpha = 0.03f))
+            .border(BorderStroke(1.dp, if (isSelected) FieldMenuDesign.cyan else FieldMenuDesign.cyan.copy(alpha = 0.15f)), RoundedCornerShape(8.dp))
             .clickable(onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 6.dp),
         contentAlignment = Alignment.Center
@@ -559,10 +559,11 @@ private fun DesktopSubTogglePill(
             color = if (isSelected) Color.White else FieldMenuDesign.textMuted,
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.Monospace
+            fontFamily = LocalStarbornFonts.current.orbitron
         )
     }
 }
+
 
 
 @Composable

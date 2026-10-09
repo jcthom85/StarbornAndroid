@@ -190,7 +190,7 @@ internal fun DesktopCombatStatusChip(
                     color = Color.White,
                     fontSize = 9.sp,
                     fontWeight = FontWeight.SemiBold,
-                    fontFamily = FontFamily.Monospace,
+                    fontFamily = LocalStarbornFonts.current.orbitron,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -232,7 +232,7 @@ internal fun DesktopCombatBuffChip(
                     color = Color.White,
                     fontSize = 9.sp,
                     fontWeight = FontWeight.SemiBold,
-                    fontFamily = FontFamily.Monospace,
+                    fontFamily = LocalStarbornFonts.current.orbitron,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
