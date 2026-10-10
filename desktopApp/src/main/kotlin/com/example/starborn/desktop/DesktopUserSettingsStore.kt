@@ -148,7 +148,7 @@ class DesktopUserSettingsStore(
             prefs[WINDOW_MAXIMIZED] = isMaximized
             if (!isMaximized) {
                 if (width >= 1024) prefs[WINDOW_WIDTH] = width
-                if (height >= 720) prefs[WINDOW_HEIGHT] = height
+                if (height >= 700) prefs[WINDOW_HEIGHT] = height
                 if (x != null) prefs[WINDOW_X] = x
                 if (y != null) prefs[WINDOW_Y] = y
             }
@@ -164,7 +164,7 @@ class DesktopUserSettingsStore(
             } else DesktopDisplayMode.WINDOWED
             InitialWindowBounds(
                 width = (prefs?.get(WINDOW_WIDTH) ?: 1280).coerceAtLeast(1024),
-                height = (prefs?.get(WINDOW_HEIGHT) ?: 800).coerceAtLeast(720),
+                height = (prefs?.get(WINDOW_HEIGHT) ?: 800).coerceAtLeast(700),
                 x = prefs?.get(WINDOW_X),
                 y = prefs?.get(WINDOW_Y),
                 isMaximized = prefs?.get(WINDOW_MAXIMIZED) ?: false,

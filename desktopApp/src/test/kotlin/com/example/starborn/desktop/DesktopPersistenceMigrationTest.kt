@@ -107,5 +107,30 @@ class DesktopPersistenceMigrationTest {
             tempRoot.deleteRecursively()
         }
     }
+
+    @Test fun windowBoundsEnforcesMinimumsAndPersistsState() = kotlinx.coroutines.runBlocking {
+        val tempRoot = Files.createTempDirectory("starborn-window-bounds-").toFile()
+        try {
+            val store = DesktopUserSettingsStore(tempRoot)
+            val defaults = store.initialWindowBounds()
+            assertEquals(1280, defaults.width)
+            assertEquals(800, defaults.height)
+            assertFalse(defaults.isMaximized)
+
+            // Attempt saving sub-minimum bounds (below 1024x700)
+            store.saveWindowBounds(width = 800, height = 600, x = 150, y = 150, isMaximized = false)
+            val constrained = store.initialWindowBounds()
+            assertEquals("Width must remain unmutated when below 1024", 1280, constrained.width)
+            assertEquals("Height must remain unmutated when below 700", 800, constrained.height)
+
+            // Save valid bounds
+            store.saveWindowBounds(width = 1600, height = 900, x = 200, y = 200, isMaximized = true)
+            val updated = store.initialWindowBounds()
+            assertTrue("Maximized state must be remembered", updated.isMaximized)
+            store.close()
+        } finally {
+            tempRoot.deleteRecursively()
+        }
+    }
 }
 

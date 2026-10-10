@@ -69,13 +69,20 @@ private fun launchDesktop() = application {
     // Each mode gets fresh state: native maximize/fullscreen state must not leak
     // into the next mode or race the recreation of an undecorated frame.
     key(displayMode) {
+        val isSavedPosValid = initialBounds.x != null && initialBounds.y != null && run {
+            try {
+                val ge = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment()
+                val rect = java.awt.Rectangle(initialBounds.x!!, initialBounds.y!!, initialBounds.width, initialBounds.height)
+                ge.screenDevices.any { it.defaultConfiguration.bounds.intersects(rect) }
+            } catch (_: Throwable) { true }
+        }
         val windowState = rememberWindowState(
             size = if (displayMode == DesktopDisplayMode.BORDERLESS)
                 DpSize(monitorBounds.width.dp, monitorBounds.height.dp)
             else DpSize(initialBounds.width.dp, initialBounds.height.dp),
             position = if (displayMode == DesktopDisplayMode.BORDERLESS)
                 WindowPosition.Absolute(monitorBounds.x.dp, monitorBounds.y.dp)
-            else if (initialBounds.x != null && initialBounds.y != null)
+            else if (isSavedPosValid)
                 WindowPosition.Absolute(initialBounds.x!!.dp, initialBounds.y!!.dp)
             else WindowPosition.Aligned(Alignment.Center),
             placement = when {
@@ -171,12 +178,22 @@ private fun launchDesktop() = application {
             androidx.compose.ui.platform.LocalDensity provides effectiveDensity
         ) {
         DisposableEffect(window, displayMode) {
-            window.minimumSize = java.awt.Dimension(1024, 720)
+            window.minimumSize = java.awt.Dimension(1024, 700)
             try {
                 val iconStream = Thread.currentThread().contextClassLoader.getResourceAsStream("icon.png")
                 if (iconStream != null) {
                     val awtImg = javax.imageio.ImageIO.read(iconStream)
                     if (awtImg != null) {
+                        val sizes = listOf(16, 24, 32, 48, 64, 128, 256, 512)
+                        val images = sizes.map { size ->
+                            val scaled = java.awt.image.BufferedImage(size, size, java.awt.image.BufferedImage.TYPE_INT_ARGB)
+                            val g = scaled.createGraphics()
+                            g.setRenderingHint(java.awt.RenderingHints.KEY_INTERPOLATION, java.awt.RenderingHints.VALUE_INTERPOLATION_BILINEAR)
+                            g.drawImage(awtImg, 0, 0, size, size, null)
+                            g.dispose()
+                            scaled
+                        }
+                        window.iconImages = images
                         window.iconImage = awtImg
                     }
                 }

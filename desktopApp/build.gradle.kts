@@ -51,7 +51,7 @@ compose.desktop {
             windows {
                 menuGroup = "Starborn"
                 upgradeUuid = "a4c28bb0-7988-466d-8b01-f1190db981b2"
-                iconFile.set(project.file("src/main/resources/icon.png"))
+                iconFile.set(project.file("src/main/resources/icon.ico"))
             }
         }
     }
