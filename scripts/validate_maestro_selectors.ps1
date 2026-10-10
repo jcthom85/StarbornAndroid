@@ -33,7 +33,13 @@ function Read-AssetText($name) {
 # content from the assets, plus UI chrome (labels, contentDescriptions) which
 # lives in Kotlin. A selector missing from BOTH is the real signal -- copy that
 # was rewritten or removed and left a flow behind.
-$sourceText = Get-ChildItem -Path (Join-Path $root "app/src/main/java") -Filter *.kt -Recurse |
+$sourceDirs = @(
+    Join-Path $root "app/src/main/java"
+    Join-Path $root "gameRuntime/src/main/kotlin"
+    Join-Path $root "shared/src"
+)
+$sourceText = $sourceDirs | Where-Object { Test-Path $_ } |
+    Get-ChildItem -Filter *.kt -Recurse |
     ForEach-Object { Get-Content $_.FullName -Raw }
 
 $haystack = @(
