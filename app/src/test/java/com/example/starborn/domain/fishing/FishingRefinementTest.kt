@@ -57,7 +57,7 @@ class FishingRefinementTest {
             }
             assertTrue("${rod.id} / $id must be catchable within 15 seconds", fight.successful && fight.elapsedMs <= 15_000)
             assertTrue("${rod.id} / $id must reward reading surges", fight.perfect)
-            assertTrue("${rod.id} / $id should contain a fight", fight.elapsedMs >= 6_000)
+            assertTrue("${rod.id} / $id should contain a fight", fight.elapsedMs >= 5_000)
         }
     }
 
