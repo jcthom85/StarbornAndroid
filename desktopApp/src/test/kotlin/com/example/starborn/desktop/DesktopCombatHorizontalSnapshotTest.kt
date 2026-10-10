@@ -21,6 +21,8 @@ class DesktopCombatHorizontalSnapshotTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    private fun inputRoot(): SemanticsNodeInteraction = composeTestRule.onAllNodes(isRoot())[0]
+
     @Test
     @OptIn(ExperimentalTestApi::class)
     fun defeatExitCanBeAcknowledged() {
@@ -40,11 +42,11 @@ class DesktopCombatHorizontalSnapshotTest {
                         composeTestRule.onAllNodesWithText("READY").fetchSemanticsNodes().isNotEmpty() || composeTestRule.onAllNodesWithText("Party defeated").fetchSemanticsNodes().isNotEmpty()
                     }
                     if (composeTestRule.onAllNodesWithText("Party defeated").fetchSemanticsNodes().isEmpty()) {
-                        composeTestRule.onRoot().performKeyInput { pressKey(Key.Tab) }
-                        composeTestRule.onNodeWithText("Attack [1]").assertIsEnabled()
-                        composeTestRule.onRoot().performKeyInput { pressKey(Key.One) }
+                        inputRoot().performKeyInput { pressKey(Key.Tab) }
+                        composeTestRule.onNodeWithTag("combat-action-attack").assertIsEnabled()
+                        inputRoot().performKeyInput { pressKey(Key.One) }
                         composeTestRule.onNodeWithText("Arrows select · Enter confirms · Esc cancels").assertExists()
-                        composeTestRule.onRoot().performKeyInput { pressKey(Key.Enter) }
+                        inputRoot().performKeyInput { pressKey(Key.Enter) }
                         composeTestRule.mainClock.advanceTimeBy(1000)
                         Thread.sleep(450)
                     }
@@ -78,12 +80,12 @@ class DesktopCombatHorizontalSnapshotTest {
                 composeTestRule.mainClock.advanceTimeBy(100)
                 composeTestRule.onAllNodesWithText("READY").fetchSemanticsNodes().isNotEmpty()
             }
-            composeTestRule.onRoot().performKeyInput { pressKey(Key.Tab) }
-            composeTestRule.onNodeWithText("Attack").assertIsEnabled()
-            composeTestRule.onRoot().performKeyInput { pressKey(Key.Two) }
+            inputRoot().performKeyInput { pressKey(Key.Tab) }
+            composeTestRule.onNodeWithTag("combat-action-attack").assertIsEnabled()
+            inputRoot().performKeyInput { pressKey(Key.Two) }
             composeTestRule.onNodeWithText("Abilities").assertExists()
             composeTestRule.onNodeWithText("Back").performClick()
-            composeTestRule.onRoot().performKeyInput { pressKey(Key.Three) }
+            inputRoot().performKeyInput { pressKey(Key.Three) }
             composeTestRule.onNodeWithText("Items").assertExists()
             composeTestRule.onNodeWithText("Back").performClick()
             repeat(8) {
@@ -93,10 +95,10 @@ class DesktopCombatHorizontalSnapshotTest {
                         composeTestRule.onAllNodesWithText("READY").fetchSemanticsNodes().isNotEmpty() || composeTestRule.onAllNodesWithText("Spoils Recovered").fetchSemanticsNodes().isNotEmpty()
                     }
                     if (composeTestRule.onAllNodesWithText("Spoils Recovered").fetchSemanticsNodes().isEmpty()) {
-                        composeTestRule.onRoot().performKeyInput { pressKey(Key.Tab) }
-                        composeTestRule.onNodeWithText("Attack").assertIsEnabled()
-                        composeTestRule.onRoot().performKeyInput { pressKey(Key.One) }
-                        composeTestRule.onRoot().performKeyInput { pressKey(Key.Enter) }
+                        inputRoot().performKeyInput { pressKey(Key.Tab) }
+                        composeTestRule.onNodeWithTag("combat-action-attack").assertIsEnabled()
+                        inputRoot().performKeyInput { pressKey(Key.One) }
+                        inputRoot().performKeyInput { pressKey(Key.Enter) }
                         composeTestRule.mainClock.advanceTimeBy(1000)
                         Thread.sleep(450)
                     }
@@ -139,7 +141,7 @@ class DesktopCombatHorizontalSnapshotTest {
             val artifactsDir = File("build/reports/desktop/screenshots")
             artifactsDir.mkdirs()
 
-            val node = composeTestRule.onRoot()
+            val node = inputRoot()
             val image = node.captureToImage()
             val awtImage = image.asAwtImage()
 
@@ -150,16 +152,16 @@ class DesktopCombatHorizontalSnapshotTest {
                 composeTestRule.mainClock.advanceTimeBy(100)
                 composeTestRule.onAllNodesWithText("READY").fetchSemanticsNodes().isNotEmpty()
             }
-            composeTestRule.onRoot().performKeyInput { pressKey(Key.Tab) }
-            composeTestRule.onNodeWithText("Attack [1]").assertIsEnabled()
-            composeTestRule.onRoot().performKeyInput { pressKey(Key.One) }
+            inputRoot().performKeyInput { pressKey(Key.Tab) }
+            composeTestRule.onNodeWithTag("combat-action-attack").assertIsEnabled()
+            inputRoot().performKeyInput { pressKey(Key.One) }
             composeTestRule.onNodeWithText("Arrows select · Enter confirms · Esc cancels").assertExists()
             composeTestRule.runOnIdle { narrow.value = true }
-            composeTestRule.onRoot().performKeyInput { pressKey(Key.DirectionDown); pressKey(Key.DirectionDown); pressKey(Key.DirectionDown) }
+            inputRoot().performKeyInput { pressKey(Key.DirectionDown); pressKey(Key.DirectionDown); pressKey(Key.DirectionDown) }
             composeTestRule.mainClock.advanceTimeBy(800)
             composeTestRule.onNodeWithText("SELECTED TARGET").assertExists()
-            ImageIO.write(composeTestRule.onRoot().captureToImage().asAwtImage(), "png", File(artifactsDir, "narrow-combat-target.png"))
-            composeTestRule.onRoot().performKeyInput { pressKey(Key.Enter) }
+            ImageIO.write(inputRoot().captureToImage().asAwtImage(), "png", File(artifactsDir, "narrow-combat-target.png"))
+            inputRoot().performKeyInput { pressKey(Key.Enter) }
             composeTestRule.onNodeWithText("Arrows select · Enter confirms · Esc cancels").assertDoesNotExist()
 
         } finally {

@@ -227,6 +227,7 @@ private fun DesktopIndependentHud(services: DesktopAppServices, ui: ExplorationU
         DesktopExplorationKeyLegendHud(
             ui = ui,
             blocked = blocked,
+            modifier = Modifier.testTag("hud-key-legend"),
             onInteractFirst = onInteractFirst,
             onOpenMap = { onMenu(DesktopMenuTab.MAP) },
             onOpenInventory = { onMenu(DesktopMenuTab.INVENTORY) },

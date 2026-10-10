@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.starborn.desktop.ui.desktopPointerHover
 import com.example.starborn.feature.arcade.domain.ArcadeIds
 import com.example.starborn.feature.arcade.domain.ArcadeRunSubmission
 import com.example.starborn.feature.arcade.domain.ArcadeService
@@ -62,14 +63,16 @@ fun OrbitalDefenseArcadeScreen(
     val highScore = maxOf(arcadeService.progress(ArcadeIds.ORBITAL_DEFENSE).highScore, submitted?.highScore ?: 0)
 
     DesktopArcadeKeys { code, pressed ->
-        if (code == java.awt.event.KeyEvent.VK_ENTER && pressed) { tutorial = false; paused = false }
+        if (pressed && (code == java.awt.event.KeyEvent.VK_ENTER || (code == java.awt.event.KeyEvent.VK_SPACE && tutorial))) {
+            if (tutorial) onPlayCue("confirm")
+            tutorial = false
+            paused = false
+        }
         input = when (code) {
-            java.awt.event.KeyEvent.VK_LEFT -> input.copy(moveLeft = pressed)
-            java.awt.event.KeyEvent.VK_A -> input.copy(moveLeft = pressed)
-            java.awt.event.KeyEvent.VK_RIGHT -> input.copy(moveRight = pressed)
-            java.awt.event.KeyEvent.VK_D -> input.copy(moveRight = pressed)
-            java.awt.event.KeyEvent.VK_SPACE -> input.copy(fire = pressed)
-            java.awt.event.KeyEvent.VK_E -> input.copy(triggerEmp = pressed)
+            java.awt.event.KeyEvent.VK_LEFT, java.awt.event.KeyEvent.VK_A -> input.copy(moveLeft = pressed)
+            java.awt.event.KeyEvent.VK_RIGHT, java.awt.event.KeyEvent.VK_D -> input.copy(moveRight = pressed)
+            java.awt.event.KeyEvent.VK_SPACE, java.awt.event.KeyEvent.VK_UP, java.awt.event.KeyEvent.VK_W -> input.copy(fire = pressed)
+            java.awt.event.KeyEvent.VK_E, java.awt.event.KeyEvent.VK_F, java.awt.event.KeyEvent.VK_DOWN, java.awt.event.KeyEvent.VK_S -> input.copy(triggerEmp = pressed)
             else -> input
         }
     }
@@ -148,12 +151,11 @@ fun OrbitalDefenseArcadeScreen(
                 OrbitalOverlay(
                     title = "ORBITAL DEFENSE BRIEF",
                     lines = listOf(
-                        "Steer your starfighter across the orbital defense line.",
-                        "Hold FIRE to unleash Twin Plasma Cannons.",
-                        "Destroy Flagships, Cruisers, and Swarm Drones.",
-                        "Shoot diving enemies for 2× BONUS points!",
+                        "Steer starfighter with A / D, Arrow keys, or touch pads.",
+                        "Hold Space / W / Up (or click FIRE) for Twin Plasma Cannons.",
+                        "Destroy Flagships, Cruisers, and diving Swarm Drones for 2× points!",
                         "Intercept the high-value Mystery Mothership.",
-                        "Trigger EMP BOMBS to clear all enemy plasma volleys."
+                        "Press E / S / Down / F to trigger EMP BOMBS and vaporize incoming plasma."
                     ),
                     action = "ENGAGE ENEMY FLEET",
                     onAction = { tutorial = false; onPlayCue("confirm") }
@@ -513,7 +515,8 @@ private fun OrbitalControls(
                                 onInput(input.copy(fire = false))
                             }
                         }
-                        .testTag("arcade_orbital_fire"),
+                        .testTag("arcade_orbital_fire")
+                        .desktopPointerHover(),
                     contentAlignment = Alignment.Center
                 ) {
                     Text("FIRE", color = WarmIvory, fontFamily = FontFamily.Monospace, fontSize = 14.sp, fontWeight = FontWeight.Black)
@@ -554,7 +557,8 @@ private fun SteerButton(
                         onHeld(false)
                     }
                 }
-                .testTag("steer_$glyph"),
+                .testTag("steer_$glyph")
+                .desktopPointerHover(),
             contentAlignment = Alignment.Center
         ) {
             Text(glyph, color = WarmIvory, fontSize = 18.sp, fontWeight = FontWeight.Black)
@@ -571,6 +575,7 @@ private fun OrbitalServiceKey(onClick: () -> Unit) {
         modifier = Modifier
             .height(30.dp)
             .border(1.dp, Color(0xFF152E4A), RoundedCornerShape(4.dp))
+            .desktopPointerHover()
     ) {
         Text("SERVICE  •  PAUSE / EXIT", fontFamily = FontFamily.Monospace, fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = .8.sp)
     }
@@ -603,6 +608,7 @@ private fun OrbitalOverlay(title: String, lines: List<String>, action: String, o
             modifier = Modifier
                 .fillMaxWidth(.75f)
                 .height(38.dp)
+                .desktopPointerHover()
         ) {
             Text(action, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Black, fontSize = 11.sp, letterSpacing = 1.sp)
         }

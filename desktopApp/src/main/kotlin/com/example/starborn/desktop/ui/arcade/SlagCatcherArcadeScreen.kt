@@ -62,13 +62,15 @@ fun SlagCatcherArcadeScreen(
     val highScore = maxOf(arcadeService.progress(ArcadeIds.SLAG_CATCHER).highScore, submitted?.highScore ?: 0)
 
     DesktopArcadeKeys { code, pressed ->
-        if (code == java.awt.event.KeyEvent.VK_ENTER && pressed) { tutorial = false; paused = false }
+        if (pressed && (code == java.awt.event.KeyEvent.VK_ENTER || (code == java.awt.event.KeyEvent.VK_SPACE && tutorial))) {
+            if (tutorial) onPlayCue("confirm")
+            tutorial = false
+            paused = false
+        }
         input = when (code) {
-            java.awt.event.KeyEvent.VK_LEFT -> input.copy(moveLeft = pressed)
-            java.awt.event.KeyEvent.VK_A -> input.copy(moveLeft = pressed)
-            java.awt.event.KeyEvent.VK_RIGHT -> input.copy(moveRight = pressed)
-            java.awt.event.KeyEvent.VK_D -> input.copy(moveRight = pressed)
-            java.awt.event.KeyEvent.VK_SPACE -> input.copy(ventSteam = pressed)
+            java.awt.event.KeyEvent.VK_LEFT, java.awt.event.KeyEvent.VK_A -> input.copy(moveLeft = pressed)
+            java.awt.event.KeyEvent.VK_RIGHT, java.awt.event.KeyEvent.VK_D -> input.copy(moveRight = pressed)
+            java.awt.event.KeyEvent.VK_SPACE, java.awt.event.KeyEvent.VK_UP, java.awt.event.KeyEvent.VK_W, java.awt.event.KeyEvent.VK_E -> input.copy(ventSteam = pressed)
             else -> input
         }
     }
@@ -466,7 +468,8 @@ private fun SlagControls(
                                 onInput(input.copy(ventSteam = false))
                             }
                         }
-                        .testTag("arcade_slag_vent"),
+                        .testTag("arcade_slag_vent")
+                        .desktopPointerHover(),
                     contentAlignment = Alignment.Center
                 ) {
                     Text("VENT", color = if (canVent) WarmIvory else Color(0xFF6B4E3D), fontFamily = FontFamily.Monospace, fontSize = 15.sp, fontWeight = FontWeight.Black)
@@ -508,7 +511,8 @@ private fun SteerButton(
                         onHeld(false)
                     }
                 }
-                .testTag("steer_$glyph"),
+                .testTag("steer_$glyph")
+                .desktopPointerHover(),
             contentAlignment = Alignment.Center
         ) {
             Text(glyph, color = WarmIvory, fontFamily = FontFamily.Monospace, fontSize = 12.sp, fontWeight = FontWeight.Black)

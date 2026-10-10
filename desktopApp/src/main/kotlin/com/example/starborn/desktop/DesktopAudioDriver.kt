@@ -169,17 +169,23 @@ class DesktopAudioDriver(
         return candidates.firstOrNull(assetProvider::exists)
     }
 
+    private fun createPcmFormat(format: AudioFormat): AudioFormat {
+        val sampleRate = if (format.sampleRate > 0) format.sampleRate else 44100f
+        val channels = if (format.channels > 0) format.channels else 2
+        return AudioFormat(
+            AudioFormat.Encoding.PCM_SIGNED,
+            sampleRate, 16,
+            channels, channels * 2,
+            sampleRate, false
+        )
+    }
+
     private fun loadPcm(cue: String): CachedPcm? {
         val path = resolvePath(cue) ?: return null
         return assetProvider.open(path)?.use { raw ->
             AudioSystem.getAudioInputStream(BufferedInputStream(raw)).use { encoded ->
                 val format = encoded.format
-                val pcmFormat = AudioFormat(
-                    AudioFormat.Encoding.PCM_SIGNED,
-                    format.sampleRate, 16,
-                    format.channels, format.channels * 2,
-                    format.sampleRate, false
-                )
+                val pcmFormat = createPcmFormat(format)
                 if (format.encoding == AudioFormat.Encoding.PCM_SIGNED) {
                     val bytes = encoded.readAllBytes()
                     if (bytes.size <= 2_500_000) CachedPcm(format, bytes) else null
@@ -245,12 +251,7 @@ class DesktopAudioDriver(
                     assetProvider.open(path)?.use { raw ->
                         AudioSystem.getAudioInputStream(BufferedInputStream(raw)).use { encoded ->
                             val format = encoded.format
-                            val pcmFormat = AudioFormat(
-                                AudioFormat.Encoding.PCM_SIGNED,
-                                format.sampleRate, 16,
-                                format.channels, format.channels * 2,
-                                format.sampleRate, false
-                            )
+                            val pcmFormat = createPcmFormat(format)
                             val clip = AudioSystem.getClip()
                             loadedClip = clip
                             if (format.encoding == AudioFormat.Encoding.PCM_SIGNED) {
@@ -341,12 +342,7 @@ class DesktopAudioDriver(
                 assetProvider.open(path)?.use { raw ->
                     AudioSystem.getAudioInputStream(BufferedInputStream(raw)).use { encoded ->
                         val format = encoded.format
-                        val pcmFormat = AudioFormat(
-                            AudioFormat.Encoding.PCM_SIGNED,
-                            format.sampleRate, 16,
-                            format.channels, format.channels * 2,
-                            format.sampleRate, false
-                        )
+                        val pcmFormat = createPcmFormat(format)
                         clip = AudioSystem.getClip()
                         if (format.encoding == AudioFormat.Encoding.PCM_SIGNED) {
                             if (isSfx) {

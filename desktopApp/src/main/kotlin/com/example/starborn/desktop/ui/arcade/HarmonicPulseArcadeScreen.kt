@@ -61,12 +61,16 @@ fun HarmonicPulseArcadeScreen(
     val highScore = maxOf(arcadeService.progress(ArcadeIds.HARMONIC_PULSE).highScore, submitted?.highScore ?: 0)
 
     DesktopArcadeKeys { code, pressed ->
-        if (code == java.awt.event.KeyEvent.VK_ENTER && pressed) { tutorial = false; paused = false }
+        if (pressed && (code == java.awt.event.KeyEvent.VK_ENTER || (code == java.awt.event.KeyEvent.VK_SPACE && tutorial))) {
+            if (tutorial) onPlayCue("confirm")
+            tutorial = false
+            paused = false
+        }
         input = when (code) {
-            java.awt.event.KeyEvent.VK_D -> input.copy(tapLane0 = pressed)
-            java.awt.event.KeyEvent.VK_F -> input.copy(tapLane1 = pressed)
-            java.awt.event.KeyEvent.VK_J -> input.copy(tapLane2 = pressed)
-            java.awt.event.KeyEvent.VK_K -> input.copy(tapLane3 = pressed)
+            java.awt.event.KeyEvent.VK_D, java.awt.event.KeyEvent.VK_1, java.awt.event.KeyEvent.VK_NUMPAD1, java.awt.event.KeyEvent.VK_LEFT -> input.copy(tapLane0 = pressed)
+            java.awt.event.KeyEvent.VK_F, java.awt.event.KeyEvent.VK_2, java.awt.event.KeyEvent.VK_NUMPAD2, java.awt.event.KeyEvent.VK_DOWN -> input.copy(tapLane1 = pressed)
+            java.awt.event.KeyEvent.VK_J, java.awt.event.KeyEvent.VK_3, java.awt.event.KeyEvent.VK_NUMPAD3, java.awt.event.KeyEvent.VK_UP -> input.copy(tapLane2 = pressed)
+            java.awt.event.KeyEvent.VK_K, java.awt.event.KeyEvent.VK_4, java.awt.event.KeyEvent.VK_NUMPAD4, java.awt.event.KeyEvent.VK_RIGHT -> input.copy(tapLane3 = pressed)
             else -> input
         }
     }
@@ -441,7 +445,8 @@ private fun StrikePad(
                         onHeld(false)
                     }
                 }
-                .testTag("strike_pad_$label"),
+                .testTag("strike_pad_$label")
+                .desktopPointerHover(),
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {

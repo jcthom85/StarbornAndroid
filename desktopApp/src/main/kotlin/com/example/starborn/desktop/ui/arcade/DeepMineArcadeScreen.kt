@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.starborn.desktop.ui.desktopPointerHover
 import com.example.starborn.feature.arcade.domain.ArcadeIds
 import com.example.starborn.feature.arcade.domain.ArcadeRunSubmission
 import com.example.starborn.feature.arcade.domain.ArcadeService
@@ -75,14 +76,16 @@ fun DeepMineArcadeScreen(
     val highScore = maxOf(arcadeService.progress(ArcadeIds.DEEP_MINE).highScore, submitted?.highScore ?: 0)
 
     DesktopArcadeKeys { code, pressed ->
-        if (code == java.awt.event.KeyEvent.VK_ENTER && pressed) { tutorial = false; paused = false }
+        if (pressed && (code == java.awt.event.KeyEvent.VK_ENTER || (code == java.awt.event.KeyEvent.VK_SPACE && tutorial))) {
+            if (tutorial) onPlayCue("confirm")
+            tutorial = false
+            paused = false
+        }
         input = when (code) {
-            java.awt.event.KeyEvent.VK_LEFT -> input.copy(left = pressed)
-            java.awt.event.KeyEvent.VK_A -> input.copy(left = pressed)
-            java.awt.event.KeyEvent.VK_RIGHT -> input.copy(right = pressed)
-            java.awt.event.KeyEvent.VK_D -> input.copy(right = pressed)
-            java.awt.event.KeyEvent.VK_SPACE -> input.copy(boost = pressed)
-            java.awt.event.KeyEvent.VK_E -> input.copy(drill = pressed)
+            java.awt.event.KeyEvent.VK_LEFT, java.awt.event.KeyEvent.VK_A -> input.copy(left = pressed)
+            java.awt.event.KeyEvent.VK_RIGHT, java.awt.event.KeyEvent.VK_D -> input.copy(right = pressed)
+            java.awt.event.KeyEvent.VK_SPACE, java.awt.event.KeyEvent.VK_UP, java.awt.event.KeyEvent.VK_W -> input.copy(boost = pressed)
+            java.awt.event.KeyEvent.VK_E, java.awt.event.KeyEvent.VK_DOWN, java.awt.event.KeyEvent.VK_S -> input.copy(drill = pressed)
             else -> input
         }
     }
@@ -164,10 +167,10 @@ fun DeepMineArcadeScreen(
                 ArcadeOverlay(
                     title = "HOW TO DRILL",
                     lines = listOf(
-                        "Use PORT and STBD thrusters to bank and steer.",
-                        "Feather MAIN BOOST to control descent speed.",
+                        "Steer with A / D, Arrow keys, or PORT / STBD buttons.",
+                        "Feather Space / W / Up for MAIN BOOST descent control.",
                         "Land gently on Amber Veins or High-Yield Fissures.",
-                        "Hold DRILL to extract ore and recharge fuel.",
+                        "Hold E / S / Down or click DRILL to extract ore & fuel.",
                         "Snag drifting Coolant Pods for instant +22% fuel!"
                     ),
                     action = "START RUN",
@@ -608,7 +611,8 @@ private fun CabinetControl(
                         onHeld(false)
                     }
                 }
-                .testTag("arcade_${label.lowercase()}_${function.lowercase()}"),
+                .testTag("arcade_${label.lowercase()}_${function.lowercase()}")
+                .desktopPointerHover(),
                 contentAlignment = Alignment.Center
             ) {
                 Text(glyph, color = WarmIvory, fontSize = if (glyph == "◆") 20.sp else 23.sp, fontWeight = FontWeight.Black)
@@ -631,7 +635,8 @@ private fun ServiceKey(
         shape = RoundedCornerShape(4.dp),
         modifier = modifier
             .height(32.dp)
-            .border(1.dp, Color(0xFF4B4240), RoundedCornerShape(4.dp)),
+            .border(1.dp, Color(0xFF4B4240), RoundedCornerShape(4.dp))
+            .desktopPointerHover(),
         contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
     ) {
         Text(text, fontFamily = FontFamily.Monospace, fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = .8.sp)
@@ -672,6 +677,7 @@ private fun ArcadeOverlay(
             modifier = Modifier
                 .fillMaxWidth(.75f)
                 .height(40.dp)
+                .desktopPointerHover()
         ) {
             Text(action, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Black, fontSize = 11.sp, letterSpacing = 1.sp)
         }
@@ -684,7 +690,8 @@ private fun ArcadeOverlay(
                 modifier = Modifier
                     .fillMaxWidth(.75f)
                     .height(36.dp)
-                    .border(1.dp, Color(0xFF5A4930), RoundedCornerShape(4.dp)),
+                    .border(1.dp, Color(0xFF5A4930), RoundedCornerShape(4.dp))
+                    .desktopPointerHover(),
                 contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
             ) {
                 Text(secondaryAction, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, fontSize = 10.sp, letterSpacing = .8.sp)

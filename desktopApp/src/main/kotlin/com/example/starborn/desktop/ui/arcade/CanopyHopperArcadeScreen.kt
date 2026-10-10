@@ -61,7 +61,11 @@ fun CanopyHopperArcadeScreen(
     val highScore = maxOf(arcadeService.progress(ArcadeIds.CANOPY_HOPPER).highScore, submitted?.highScore ?: 0)
 
     DesktopArcadeKeys { code, pressed ->
-        if (code == java.awt.event.KeyEvent.VK_ENTER && pressed) { tutorial = false; paused = false }
+        if (pressed && (code == java.awt.event.KeyEvent.VK_ENTER || (code == java.awt.event.KeyEvent.VK_SPACE && tutorial))) {
+            if (tutorial) onPlayCue("confirm")
+            tutorial = false
+            paused = false
+        }
         input = when (code) {
             java.awt.event.KeyEvent.VK_UP -> input.copy(up = pressed)
             java.awt.event.KeyEvent.VK_W -> input.copy(up = pressed)
@@ -513,7 +517,8 @@ private fun CanopyControls(
                                 onInput(input.copy(hop = false))
                             }
                         }
-                        .testTag("arcade_canopy_hop"),
+                        .testTag("arcade_canopy_hop")
+                        .desktopPointerHover(),
                     contentAlignment = Alignment.Center
                 ) {
                     Text("HOP", color = WarmIvory, fontFamily = FontFamily.Monospace, fontSize = 16.sp, fontWeight = FontWeight.Black)
@@ -554,7 +559,8 @@ private fun DpadButton(
                         onHeld(false)
                     }
                 }
-                .testTag("dpad_$glyph"),
+                .testTag("dpad_$glyph")
+                .desktopPointerHover(),
             contentAlignment = Alignment.Center
         ) {
             Text(glyph, color = WarmIvory, fontSize = 18.sp, fontWeight = FontWeight.Black)

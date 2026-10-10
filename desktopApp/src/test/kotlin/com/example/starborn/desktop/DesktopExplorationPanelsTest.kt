@@ -95,7 +95,8 @@ class DesktopExplorationPanelsTest {
                     assertTrue("Narrative must not stretch into a full-height shell", narrative.height <= (size.height - 40f) * .6f + 1f)
                     val minimap = compose.onNodeWithTag("hud-minimap").fetchSemanticsNode().boundsInRoot
                     val objective = compose.onNodeWithTag("hud-objective").fetchSemanticsNode().boundsInRoot
-                    assertTrue("Minimap and objective need visible background between them", objective.top - minimap.bottom >= 19f)
+                    val gap = objective.top - minimap.bottom
+                    assertTrue("Minimap and objective need visible background between them for $label (was $gap)", gap >= 19f)
                 }
                 ImageIO.write(compose.onNodeWithTag("stage").captureToImage().asAwtImage(), "png", File(screenshots, "$label.png"))
             }

@@ -54,6 +54,7 @@ fun DesktopKeyBadge(
     val content = @Composable {
         Surface(
             modifier = modifier
+                .heightIn(min = 28.dp, max = 34.dp)
                 .then(
                     if (onClick != null && enabled) {
                         Modifier
@@ -113,6 +114,9 @@ fun DesktopKeyBadge(
                     text = label,
                     color = if (highlighted) Color.White else Color(0xFFD8E2E8),
                     fontSize = 11.sp,
+                    maxLines = 1,
+                    softWrap = false,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
                     fontWeight = if (highlighted) FontWeight.SemiBold else FontWeight.Normal
                 )
             }

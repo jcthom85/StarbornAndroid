@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.starborn.desktop.ui.desktopPointerHover
 import com.example.starborn.feature.arcade.domain.ArcadeIds
 import com.example.starborn.feature.arcade.domain.ArcadeRunSubmission
 import com.example.starborn.feature.arcade.domain.ArcadeService
@@ -59,16 +60,16 @@ fun SpireInfiltratorArcadeScreen(
     val highScore = maxOf(arcadeService.progress(ArcadeIds.SPIRE_INFILTRATOR).highScore, submitted?.highScore ?: 0)
 
     DesktopArcadeKeys { code, pressed ->
-        if (code == java.awt.event.KeyEvent.VK_ENTER && pressed) { tutorial = false; paused = false }
+        if (pressed && (code == java.awt.event.KeyEvent.VK_ENTER || (code == java.awt.event.KeyEvent.VK_SPACE && tutorial))) {
+            if (tutorial) onPlayCue("confirm")
+            tutorial = false
+            paused = false
+        }
         input = when (code) {
-            java.awt.event.KeyEvent.VK_UP -> input.copy(up = pressed)
-            java.awt.event.KeyEvent.VK_W -> input.copy(up = pressed)
-            java.awt.event.KeyEvent.VK_DOWN -> input.copy(down = pressed)
-            java.awt.event.KeyEvent.VK_S -> input.copy(down = pressed)
-            java.awt.event.KeyEvent.VK_LEFT -> input.copy(left = pressed)
-            java.awt.event.KeyEvent.VK_A -> input.copy(left = pressed)
-            java.awt.event.KeyEvent.VK_RIGHT -> input.copy(right = pressed)
-            java.awt.event.KeyEvent.VK_D -> input.copy(right = pressed)
+            java.awt.event.KeyEvent.VK_UP, java.awt.event.KeyEvent.VK_W -> input.copy(up = pressed)
+            java.awt.event.KeyEvent.VK_DOWN, java.awt.event.KeyEvent.VK_S -> input.copy(down = pressed)
+            java.awt.event.KeyEvent.VK_LEFT, java.awt.event.KeyEvent.VK_A -> input.copy(left = pressed)
+            java.awt.event.KeyEvent.VK_RIGHT, java.awt.event.KeyEvent.VK_D -> input.copy(right = pressed)
             java.awt.event.KeyEvent.VK_SPACE -> input.copy(boost = pressed)
             else -> input
         }
@@ -146,7 +147,7 @@ fun SpireInfiltratorArcadeScreen(
                 SpireOverlay(
                     title = "HOW TO INFILTRATE",
                     lines = listOf(
-                        "Use the 4-Way D-Pad to buffer turns ahead of corners.",
+                        "Use Arrow keys / WASD or click D-Pad to steer and buffer turns.",
                         "Harvest all encrypted Data Nodes across the server grid.",
                         "Evade the 4 patrolling ICE Sentinel security routines.",
                         "Snag OVERCLOCK Nodes to dereference vulnerable Sentinels!",
@@ -497,7 +498,8 @@ private fun DpadButton(
                         onHeld(false)
                     }
                 }
-                .testTag("dpad_$glyph"),
+                .testTag("dpad_$glyph")
+                .desktopPointerHover(),
             contentAlignment = Alignment.Center
         ) {
             Text(glyph, color = WarmIvory, fontSize = 18.sp, fontWeight = FontWeight.Black)
@@ -514,6 +516,7 @@ private fun SpireServiceKey(onClick: () -> Unit) {
         modifier = Modifier
             .height(30.dp)
             .border(1.dp, Color(0xFF2E1754), RoundedCornerShape(4.dp))
+            .desktopPointerHover()
     ) {
         Text("SERVICE  •  PAUSE / EXIT", fontFamily = FontFamily.Monospace, fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = .8.sp)
     }
@@ -546,6 +549,7 @@ private fun SpireOverlay(title: String, lines: List<String>, action: String, onA
             modifier = Modifier
                 .fillMaxWidth(.75f)
                 .height(38.dp)
+                .desktopPointerHover()
         ) {
             Text(action, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Black, fontSize = 11.sp, letterSpacing = 1.sp)
         }
