@@ -217,7 +217,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
             Key.E -> { interactFirst(); true }
             Key.Escape -> { runtime.openMenuOverlay(); true }
             Key.I -> { runtime.openMenuOverlay(com.example.starborn.feature.exploration.viewmodel.MenuTab.INVENTORY); true }
-            Key.M -> { runtime.requestReturnToHub(); true }
+            Key.M -> { runtime.openMenuOverlay(com.example.starborn.feature.exploration.viewmodel.MenuTab.MAP); true }
             Key.F5 -> { runtime.quickSave(); true }
             Key.F8 -> { if (services.isDebugEnabled) { environmentPreview = true; true } else false }
             Key.H -> { controlsOpen = true; true }

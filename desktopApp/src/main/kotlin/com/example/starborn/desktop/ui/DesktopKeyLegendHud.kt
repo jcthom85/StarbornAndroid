@@ -148,7 +148,7 @@ fun DesktopExplorationKeyLegendHud(
     var savedNotice by remember { mutableStateOf(false) }
 
     val hasInteractiveActions = ui.actions.isNotEmpty() && !blocked
-    val canMap = ui.canReturnToHub && !blocked
+    val canMap = !blocked
 
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -240,9 +240,9 @@ fun DesktopExplorationKeyLegendHud(
                     DesktopKeyBadge(
                         keyGlyph = "M",
                         label = "Map",
-                        highlighted = true,
+                        highlighted = ui.canReturnToHub,
                         enabled = !blocked,
-                        tooltip = "Open regional Star Map / Deploy to hub [M]",
+                        tooltip = "Open regional Star Map & Sector Telemetry [M]",
                         onClick = onOpenMap
                     )
                 }

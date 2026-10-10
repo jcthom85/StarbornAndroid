@@ -228,7 +228,7 @@ private fun DesktopIndependentHud(services: DesktopAppServices, ui: ExplorationU
             ui = ui,
             blocked = blocked,
             onInteractFirst = onInteractFirst,
-            onOpenMap = { services.exploration.requestReturnToHub() },
+            onOpenMap = { onMenu(DesktopMenuTab.MAP) },
             onOpenInventory = { onMenu(DesktopMenuTab.INVENTORY) },
             onQuickSave = { services.exploration.quickSave() },
             onOpenControls = onOpenControls,
