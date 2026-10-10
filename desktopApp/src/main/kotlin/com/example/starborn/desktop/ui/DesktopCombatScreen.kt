@@ -32,6 +32,7 @@ import androidx.compose.ui.input.pointer.PointerButton
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.starborn.desktop.DesktopAppServices
@@ -358,7 +359,15 @@ private fun DesktopCombatContent(
             } else if (menu != null) {
                 if (event.key == Key.Backspace) { cancelActiveSelectionOrMenu(); true } else false
             } else when (event.key) {
-                Key.Spacebar -> if (timedPrompt != null) { runtime.registerTimedPromptTap(); true } else false
+                Key.Spacebar -> {
+                    if (timedPrompt != null) {
+                        runtime.registerTimedPromptTap()
+                        true
+                    } else if (targetAction != null && targetCandidates.isNotEmpty()) {
+                        targetAction?.invoke(targetCandidates[keyboardTarget.coerceIn(0, targetCandidates.lastIndex)].combatant.id)
+                        true
+                    } else false
+                }
                 Key.Escape -> cancelActiveSelectionOrMenu()
                 Key.Four -> {
                     if (actorId != null && timedPrompt == null && targetAction == null && runtime.canUseSnack(requireNotNull(actorId)) && runtime.isCombatTutorialCommandEnabled("snack")) {
@@ -384,11 +393,17 @@ private fun DesktopCombatContent(
                     } else false
                 }
                 Key.Tab -> {
-                    val ready = party.filter { (meters[it.combatant.id] ?: 0f) >= 1f && it.isAlive }
-                    if (timedPrompt == null && targetAction == null && ready.isNotEmpty()) {
-                        val next = (ready.indexOfFirst { it.combatant.id == actorId } + 1) % ready.size
-                        runtime.selectReadyPlayer(ready[next].combatant.id); true
-                    } else false
+                    if (targetAction != null && targetCandidates.isNotEmpty()) {
+                        val delta = if (event.isShiftPressed) -1 else 1
+                        keyboardTarget = Math.floorMod(keyboardTarget + delta, targetCandidates.size)
+                        true
+                    } else {
+                        val ready = party.filter { (meters[it.combatant.id] ?: 0f) >= 1f && it.isAlive }
+                        if (timedPrompt == null && targetAction == null && ready.isNotEmpty()) {
+                            val next = (ready.indexOfFirst { it.combatant.id == actorId } + 1) % ready.size
+                            runtime.selectReadyPlayer(ready[next].combatant.id); true
+                        } else false
+                    }
                 }
                 else -> false
             }
@@ -423,6 +438,65 @@ private fun DesktopCombatContent(
                             Text("Stability ${target.stability}/${target.combatant.stats.stability}", color = Color(0xFF9F79D2), fontSize = 12.sp)
                         }
                         intents[target.combatant.id]?.let { Text(it, color = Color(0xFFFFBB55), fontSize = 12.sp) }
+                        val res = target.combatant.resistances
+                        val affinities = listOf(
+                            "PHYSICAL" to res.physical,
+                            "BURN" to res.burn,
+                            "FREEZE" to res.freeze,
+                            "SHOCK" to res.shock,
+                            "ACID" to res.acid,
+                            "SOURCE" to res.source
+                        ).filter { it.second != 0 }
+                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Text(
+                                "AFFINITY TELEMETRY",
+                                color = Color(0xFF63E6FF),
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 0.8.sp
+                            )
+                            if (affinities.isNotEmpty()) {
+                                FlowRow(
+                                    modifier = Modifier.fillMaxWidth().testTag("combat-affinity-radar"),
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    affinities.forEach { (name, value) ->
+                                        val isWeak = value < 0
+                                        val chipColor = if (isWeak) Color(0xFFFF6961) else combatElementColor(name.lowercase())
+                                        val label = if (isWeak) "WEAK: $name (${value}%)" else "RESIST: $name (+${value}%)"
+                                        Surface(
+                                            shape = RoundedCornerShape(4.dp),
+                                            color = chipColor.copy(alpha = 0.16f),
+                                            border = BorderStroke(1.dp, chipColor.copy(alpha = 0.7f))
+                                        ) {
+                                            Text(
+                                                text = label,
+                                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                                color = chipColor,
+                                                fontSize = 10.sp,
+                                                fontWeight = FontWeight.SemiBold
+                                            )
+                                        }
+                                    }
+                                }
+                            } else {
+                                Surface(
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = Color(0xFF63E6FF).copy(alpha = 0.08f),
+                                    border = BorderStroke(1.dp, Color(0xFF63E6FF).copy(alpha = 0.25f)),
+                                    modifier = Modifier.testTag("combat-affinity-radar")
+                                ) {
+                                    Text(
+                                        text = "BALANCED DEFENSES",
+                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                        color = Color(0xFF91A8B3),
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
+                        }
                         if (target.statusEffects.isNotEmpty() || target.buffs.isNotEmpty()) {
                             FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                 target.statusEffects.forEach { DesktopCombatStatusChip(it, services) }
@@ -617,7 +691,7 @@ private fun DesktopCombatContent(
                             )
                         }
                     ) {
-                        DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::attack, icon = Icons.Rounded.FlashOn, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("attack")) {
+                        DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().testTag("combat-action-attack").heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::attack, icon = Icons.Rounded.FlashOn, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("attack")) {
                             Row(
                                 Modifier.fillMaxWidth().clearAndSetSemantics {
                                     set(SemanticsProperties.Text, listOf(AnnotatedString("Attack"), AnnotatedString("Attack [1]")))
@@ -646,7 +720,7 @@ private fun DesktopCombatContent(
                             )
                         }
                     ) {
-                        DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::openSkills, icon = Icons.Rounded.AutoAwesome,
+                        DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().testTag("combat-action-skills").heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::openSkills, icon = Icons.Rounded.AutoAwesome,
                             enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("skills")) {
                             Row(
                                 Modifier.fillMaxWidth().clearAndSetSemantics {
@@ -676,7 +750,7 @@ private fun DesktopCombatContent(
                             )
                         }
                     ) {
-                        DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::openItems, icon = Icons.Rounded.Inventory2, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("items")) {
+                        DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().testTag("combat-action-items").heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::openItems, icon = Icons.Rounded.Inventory2, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("items")) {
                             Row(
                                 Modifier.fillMaxWidth().clearAndSetSemantics {
                                     set(SemanticsProperties.Text, listOf(AnnotatedString("Items"), AnnotatedString("Items [3]")))
@@ -706,7 +780,7 @@ private fun DesktopCombatContent(
                             )
                         }
                     ) {
-                        DesktopCombatActionButton(modifier = Modifier.fillMaxWidth(), onClick = {
+                        DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().testTag("combat-action-snack"), onClick = {
                             actorId?.let { id -> chooseTarget(runtime.snackTargetRequirement(id), "Choose a snack target") { runtime.useSnack(it) } }
                         }, enabled = targetAction == null && timedPrompt == null && actorId?.let(runtime::canUseSnack) == true && runtime.isCombatTutorialCommandEnabled("snack")) {
                             val label = (actorId?.let(runtime::snackLabel) ?: "Snack") + "" + actorId?.let { id -> runtime.snackCooldownRemaining(id).takeIf { it > 0 }?.let { " ($it turns)" } }.orEmpty()
@@ -740,7 +814,7 @@ private fun DesktopCombatContent(
                         },
                         accent = Color(0xFFFF887F)
                     ) {
-                        DesktopCombatActionButton(modifier = Modifier.fillMaxWidth(), onClick = { runtime.attemptRetreat() }, icon = Icons.Rounded.ExitToApp, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("retreat")) {
+                        DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().testTag("combat-action-retreat"), onClick = { runtime.attemptRetreat() }, icon = Icons.Rounded.ExitToApp, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("retreat")) {
                             Row(
                                 Modifier.fillMaxWidth().clearAndSetSemantics {
                                     set(SemanticsProperties.Text, listOf(AnnotatedString("Retreat"), AnnotatedString("Retreat [R]")))
@@ -789,7 +863,7 @@ private fun DesktopCombatContent(
             val centerX = with(density) { layout.center.left.toDp() }
             val centerWidth = with(density) { layout.center.width.toDp() }
             Column(Modifier.offset(x = centerX).width(centerWidth).fillMaxHeight()
-                .background(Color(if (settings.highContrastMode) 0x9505070D else 0x2505070D)).padding(start = 12.dp, end = 12.dp, bottom = 12.dp, top = if (wide) 12.dp else 64.dp)) {
+                .background(Color(if (settings.highContrastMode) 0x9505070D else 0x2505070D)).padding(start = 12.dp, end = 12.dp, bottom = 44.dp, top = if (wide) 12.dp else 64.dp)) {
 DesktopBattleFormation(enemies, services, Modifier.fillMaxWidth().weight(.54f), true,
                     sprite = { id -> (runtime.enemies.firstOrNull { it.id == id }
                         ?: runtime.enemies.firstOrNull { id.startsWith(it.id) })?.portrait },
@@ -850,6 +924,22 @@ DesktopBattleFormation(party, services, Modifier.fillMaxWidth().weight(.46f), fa
             timedPrompt?.let { prompt ->
                 Box(Modifier.offset(x = centerX).width(centerWidth).fillMaxHeight()) { DesktopTimedCombatPrompt(prompt, runtime::registerTimedPromptTap) }
             }
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp, vertical = 8.dp)
+                .testTag("combat-bottom-key-legend"),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            DesktopCombatBottomKeyLegend(
+                targeting = targetAction != null,
+                menu = menu,
+                timedPrompt = timedPrompt != null,
+                actorAvailable = actor != null && targetAction == null && timedPrompt == null,
+                onToggleLog = { if (timedPrompt == null) showLog = !showLog },
+                onCancelTarget = { cancelActiveSelectionOrMenu() }
+            )
         }
         if (showLog) DesktopCombatLogDialog(
             history = history,

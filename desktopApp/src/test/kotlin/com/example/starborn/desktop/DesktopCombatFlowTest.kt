@@ -1,13 +1,75 @@
-﻿package com.example.starborn.desktop
+package com.example.starborn.desktop
 
+import androidx.compose.ui.graphics.asAwtImage
+import androidx.compose.ui.test.*
+import androidx.compose.ui.test.junit4.createComposeRule
+import com.example.starborn.desktop.ui.DesktopCombatScreen
+import com.example.starborn.desktop.ui.DesktopStarbornTheme
 import com.example.starborn.domain.combat.*
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
+import org.junit.Rule
 import org.junit.Test
 import java.io.File
+import javax.imageio.ImageIO
 
 class DesktopCombatFlowTest {
+
+    @get:Rule
+    val composeTestRule = createComposeRule()
+
+    @Test
+    fun testDesktopCombatScreenRendersControlsAndAffinityRadar() {
+        val tempSaveDir = File(System.getProperty("java.io.tmpdir"), "starborn_combat_ui_test_${System.currentTimeMillis()}")
+        tempSaveDir.mkdirs()
+
+        try {
+            val services = DesktopAppServices(saveDirectory = tempSaveDir)
+            services.startNewGame()
+            kotlinx.coroutines.runBlocking { services.userSettingsStore.setTutorialsEnabled(false) }
+
+            composeTestRule.setContent {
+                DesktopStarbornTheme(services) {
+                    DesktopCombatScreen(
+                        services = services,
+                        enemyIds = listOf("echo_borer"),
+                        onVictory = {},
+                        onDefeat = {},
+                        onFlee = {}
+                    )
+                }
+            }
+
+            composeTestRule.waitForIdle()
+
+            // Verify bottom key legend bar is present immediately
+            composeTestRule.onNodeWithTag("combat-bottom-key-legend").assertExists()
+
+            // Wait for combatant turn readiness to populate commands
+            composeTestRule.waitUntil(10_000) {
+                composeTestRule.onAllNodesWithTag("combat-action-attack").fetchSemanticsNodes().isNotEmpty()
+            }
+
+            // Verify primary combat action buttons
+            composeTestRule.onNodeWithTag("combat-action-attack").assertExists()
+            composeTestRule.onNodeWithTag("combat-action-skills").assertExists()
+            composeTestRule.onNodeWithTag("combat-action-items").assertExists()
+            composeTestRule.onNodeWithTag("combat-action-retreat").assertExists()
+
+            // Verify enemy inspect card affinity radar
+            composeTestRule.onNodeWithTag("combat-affinity-radar").assertExists()
+
+            // Capture preview artifact
+            val artifactsDir = File("C:/Users/jcthomas/.gemini/antigravity-ide/brain/4679957f-9fc8-4b49-a04b-cc85f289b043")
+            artifactsDir.mkdirs()
+            val image = composeTestRule.onRoot().captureToImage().asAwtImage()
+            ImageIO.write(image, "png", File(artifactsDir, "desktop_combat_preview.png"))
+
+        } finally {
+            tempSaveDir.deleteRecursively()
+        }
+    }
 
     @Test
     fun testFirstCombatEncounterSetupAndAction() {

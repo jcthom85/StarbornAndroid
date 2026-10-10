@@ -439,3 +439,77 @@ internal fun DesktopCombatPartyRoster(
     }
 }
 
+@Composable
+internal fun DesktopCombatBottomKeyLegend(
+    targeting: Boolean,
+    menu: String?,
+    timedPrompt: Boolean,
+    actorAvailable: Boolean,
+    onToggleLog: () -> Unit,
+    onCancelTarget: () -> Unit
+) {
+    Surface(
+        shape = RoundedCornerShape(8.dp),
+        color = Color(0xDD060F18),
+        border = BorderStroke(1.dp, Color(0xFF1B3549)),
+        shadowElevation = 8.dp,
+        modifier = Modifier.fillMaxWidth().heightIn(min = 38.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 14.dp, vertical = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                when {
+                    timedPrompt -> {
+                        DesktopKeyBadge("Space", "Intercept / Guard Strike", highlighted = true)
+                    }
+                    targeting -> {
+                        DesktopKeyBadge("Tab / Arrows", "Cycle Target", highlighted = true)
+                        DesktopKeyBadge("Space / Enter", "Confirm Target", highlighted = true)
+                        DesktopKeyBadge("Esc", "Cancel Targeting", onClick = onCancelTarget)
+                    }
+                    menu == "skills" -> {
+                        DesktopKeyBadge("1 - 9", "Select Ability", highlighted = true)
+                        DesktopKeyBadge("Esc", "Back to Actions", onClick = onCancelTarget)
+                    }
+                    menu == "items" -> {
+                        DesktopKeyBadge("1 - 9", "Deploy Item", highlighted = true)
+                        DesktopKeyBadge("Esc", "Back to Actions", onClick = onCancelTarget)
+                    }
+                    actorAvailable -> {
+                        DesktopKeyBadge("1", "Attack", highlighted = true)
+                        DesktopKeyBadge("2", "Abilities")
+                        DesktopKeyBadge("3", "Items")
+                        DesktopKeyBadge("4", "Quick Snack")
+                        DesktopKeyBadge("Tab", "Cycle Active Crew")
+                        DesktopKeyBadge("R", "Retreat")
+                    }
+                    else -> {
+                        DesktopKeyBadge("Auto", "Turn Readiness Meter Charging")
+                        DesktopKeyBadge("Tab", "Select Ready Combatant")
+                    }
+                }
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                DesktopKeyBadge(
+                    keyGlyph = "L",
+                    label = "Battle Log",
+                    onClick = onToggleLog
+                )
+            }
+        }
+    }
+}
+
+
