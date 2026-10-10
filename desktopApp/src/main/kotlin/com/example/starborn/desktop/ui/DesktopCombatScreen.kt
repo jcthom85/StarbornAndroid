@@ -481,52 +481,67 @@ private fun DesktopCombatContent(
                             itemsIndexed(runtime.activePlayerSkills(), key = { _, it -> it.id }) { index, skill ->
                                 val canUse = runtime.canUseSkill(requireNotNull(actorId), skill) && (tutorial?.step != CombatTutorialStep.CHOOSE_HYDRAULIC_KICK || skill.id == tutorial?.expectedSkillId)
                                 val keyGlyph = if (index < 9) "[${index + 1}]" else ""
-                                Surface(
-                                    shape = RoundedCornerShape(8.dp),
-                                    color = Color(0xFF09141B),
-                                    border = BorderStroke(1.dp, if (canUse) Color(0xFF2D4454) else Color(0xFF16232D)),
-                                    modifier = Modifier.fillMaxWidth().then(if (canUse) Modifier.desktopPointerHover() else Modifier)
-                                ) {
-                                    Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                        Row(
-                                            Modifier.fillMaxWidth(),
-                                            horizontalArrangement = Arrangement.SpaceBetween,
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Text(skill.name, style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold), color = if (canUse) Color.White else Color(0xFF7E8F9B))
-                                            if (keyGlyph.isNotBlank() && canUse) {
-                                                Surface(
-                                                    shape = RoundedCornerShape(4.dp),
-                                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
-                                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
-                                                ) {
-                                                    Text(keyGlyph, modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
-                                                }
-                                            }
-                                        }
-                                        Text(skill.description, style = MaterialTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.75f))
-                                        runtime.skillUnavailableReason(requireNotNull(actorId), skill)?.let { reason ->
-                                            Text(reason, color = Color(0xFFFFBB55), style = MaterialTheme.typography.bodySmall)
-                                        }
-                                        val remaining = runtime.skillCooldownRemaining(requireNotNull(actorId), skill.id)
-                                        if (remaining > 0) Text("Ready in $remaining turns", color = Color(0xFFFFBB55), style = MaterialTheme.typography.bodySmall)
-                                        Text(
-                                            "Target: ${skill.targeting?.replace('_', ' ') ?: runtime.targetRequirementFor(skill).name.lowercase()} · Cooldown: ${skill.cooldown} turns",
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelSmall
+                                DesktopRichTooltip(
+                                    tooltip = {
+                                        DesktopSkillTooltipContent(
+                                            skillName = skill.name,
+                                            description = skill.description,
+                                            cooldown = skill.cooldown,
+                                            targeting = skill.targeting ?: runtime.targetRequirementFor(skill).name.lowercase(),
+                                            keyGlyph = keyGlyph.takeIf { it.isNotBlank() },
+                                            accent = if (canUse) Color(0xFF63E6FF) else Color(0xFF7E8F9B)
                                         )
-                                        Button(
-                                            onClick = {
-                                                if (runtime.onCombatTutorialSkillSelected(skill.id)) {
-                                                    chooseTarget(runtime.targetRequirementFor(skill), "Choose a target for ${skill.name}") { target ->
-                                                        runtime.useSkill(skill, target?.let(::listOf))
+                                    },
+                                    accent = if (canUse) Color(0xFF63E6FF) else Color(0xFF7E8F9B),
+                                    maxWidth = 320.dp
+                                ) {
+                                    Surface(
+                                        shape = RoundedCornerShape(8.dp),
+                                        color = Color(0xFF09141B),
+                                        border = BorderStroke(1.dp, if (canUse) Color(0xFF2D4454) else Color(0xFF16232D)),
+                                        modifier = Modifier.fillMaxWidth().then(if (canUse) Modifier.desktopPointerHover() else Modifier)
+                                    ) {
+                                        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                            Row(
+                                                Modifier.fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(skill.name, style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold), color = if (canUse) Color.White else Color(0xFF7E8F9B))
+                                                if (keyGlyph.isNotBlank() && canUse) {
+                                                    Surface(
+                                                        shape = RoundedCornerShape(4.dp),
+                                                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                                                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                                                    ) {
+                                                        Text(keyGlyph, modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                                                     }
                                                 }
-                                            },
-                                            enabled = canUse,
-                                            shape = RoundedCornerShape(6.dp),
-                                            modifier = Modifier.align(Alignment.End).desktopPointerHover(canUse)
-                                        ) {
-                                            Text("Select")
+                                            }
+                                            Text(skill.description, style = MaterialTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.75f))
+                                            runtime.skillUnavailableReason(requireNotNull(actorId), skill)?.let { reason ->
+                                                Text(reason, color = Color(0xFFFFBB55), style = MaterialTheme.typography.bodySmall)
+                                            }
+                                            val remaining = runtime.skillCooldownRemaining(requireNotNull(actorId), skill.id)
+                                            if (remaining > 0) Text("Ready in $remaining turns", color = Color(0xFFFFBB55), style = MaterialTheme.typography.bodySmall)
+                                            Text(
+                                                "Target: ${skill.targeting?.replace('_', ' ') ?: runtime.targetRequirementFor(skill).name.lowercase()} · Cooldown: ${skill.cooldown} turns",
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelSmall
+                                            )
+                                            Button(
+                                                onClick = {
+                                                    if (runtime.onCombatTutorialSkillSelected(skill.id)) {
+                                                        chooseTarget(runtime.targetRequirementFor(skill), "Choose a target for ${skill.name}") { target ->
+                                                            runtime.useSkill(skill, target?.let(::listOf))
+                                                        }
+                                                    }
+                                                },
+                                                enabled = canUse,
+                                                shape = RoundedCornerShape(6.dp),
+                                                modifier = Modifier.align(Alignment.End).desktopPointerHover(canUse)
+                                            ) {
+                                                Text("Select")
+                                            }
                                         }
                                     }
                                 }
@@ -536,42 +551,54 @@ private fun DesktopCombatContent(
                             if (usable.isEmpty()) item { Text("No usable items") }
                             itemsIndexed(usable, key = { _, it -> it.item.id }) { index, entry ->
                                 val keyGlyph = if (index < 9) "[${index + 1}]" else ""
-                                Surface(
-                                    shape = RoundedCornerShape(8.dp),
-                                    color = Color(0xFF09141B),
-                                    border = BorderStroke(1.dp, Color(0xFF2D4454)),
-                                    modifier = Modifier.fillMaxWidth().desktopPointerHover()
+                                DesktopRichTooltip(
+                                    tooltip = {
+                                        DesktopItemTooltipContent(
+                                            item = entry.item,
+                                            fallbackName = entry.item.name,
+                                            quantity = entry.quantity,
+                                            services = services
+                                        )
+                                    },
+                                    maxWidth = 300.dp
                                 ) {
-                                    Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                        Row(
-                                            Modifier.fillMaxWidth(),
-                                            horizontalArrangement = Arrangement.SpaceBetween,
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Text(entry.item.name, style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold), color = Color.White)
-                                            if (keyGlyph.isNotBlank()) {
-                                                Surface(
-                                                    shape = RoundedCornerShape(4.dp),
-                                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
-                                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
-                                                ) {
-                                                    Text(keyGlyph, modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                    Surface(
+                                        shape = RoundedCornerShape(8.dp),
+                                        color = Color(0xFF09141B),
+                                        border = BorderStroke(1.dp, Color(0xFF2D4454)),
+                                        modifier = Modifier.fillMaxWidth().desktopPointerHover()
+                                    ) {
+                                        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                            Row(
+                                                Modifier.fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(entry.item.name, style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold), color = Color.White)
+                                                if (keyGlyph.isNotBlank()) {
+                                                    Surface(
+                                                        shape = RoundedCornerShape(4.dp),
+                                                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                                                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                                                    ) {
+                                                        Text(keyGlyph, modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                                    }
                                                 }
                                             }
-                                        }
-                                        entry.item.description?.takeIf { it.isNotBlank() }?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.75f)) }
-                                        com.example.starborn.feature.exploration.presentation.ItemDetails.lines(entry.item, services::contentName).forEach {
-                                            Text(it, style = MaterialTheme.typography.bodySmall, color = Color(0xFF91A8B3))
-                                        }
-                                        Button(
-                                            onClick = {
-                                                val requirement = CombatItemPresentation.targetRequirement(entry)
-                                                chooseTarget(requirement, "Choose a target for ${entry.item.name}") { runtime.useItem(entry, it) }
-                                            },
-                                            shape = RoundedCornerShape(6.dp),
-                                            modifier = Modifier.align(Alignment.End).desktopPointerHover()
-                                        ) {
-                                            Text("${entry.item.name} ×${entry.quantity}")
+                                            entry.item.description?.takeIf { it.isNotBlank() }?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.75f)) }
+                                            com.example.starborn.feature.exploration.presentation.ItemDetails.lines(entry.item, services::contentName).forEach {
+                                                Text(it, style = MaterialTheme.typography.bodySmall, color = Color(0xFF91A8B3))
+                                            }
+                                            Button(
+                                                onClick = {
+                                                    val requirement = CombatItemPresentation.targetRequirement(entry)
+                                                    chooseTarget(requirement, "Choose a target for ${entry.item.name}") { runtime.useItem(entry, it) }
+                                                },
+                                                shape = RoundedCornerShape(6.dp),
+                                                modifier = Modifier.align(Alignment.End).desktopPointerHover()
+                                            ) {
+                                                Text("${entry.item.name} ×${entry.quantity}")
+                                            }
                                         }
                                     }
                                 }
@@ -580,97 +607,155 @@ private fun DesktopCombatContent(
                     }
                     } else if (actor != null) {
                         Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::attack, icon = Icons.Rounded.FlashOn, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("attack")) {
-                        Row(
-                            Modifier.fillMaxWidth().clearAndSetSemantics {
-                                set(SemanticsProperties.Text, listOf(AnnotatedString("Attack"), AnnotatedString("Attack [1]")))
-                            },
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("Attack", fontWeight = FontWeight.SemiBold)
-                            Surface(
-                                shape = RoundedCornerShape(4.dp),
-                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
-                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                    DesktopRichTooltip(
+                        tooltip = {
+                            DesktopCombatActionTooltipContent(
+                                title = "Attack",
+                                shortcut = "[1]",
+                                description = "Standard weapon attack on an enemy target. Fills action readiness on turn completion.",
+                                details = "Consumes turn · Requires targeted enemy"
+                            )
+                        }
+                    ) {
+                        DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::attack, icon = Icons.Rounded.FlashOn, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("attack")) {
+                            Row(
+                                Modifier.fillMaxWidth().clearAndSetSemantics {
+                                    set(SemanticsProperties.Text, listOf(AnnotatedString("Attack"), AnnotatedString("Attack [1]")))
+                                },
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text("[1]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                Text("Attack", fontWeight = FontWeight.SemiBold)
+                                Surface(
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                                ) {
+                                    Text("[1]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                }
                             }
                         }
                     }
-                    DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::openSkills, icon = Icons.Rounded.AutoAwesome,
-                        enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("skills")) {
-                        Row(
-                            Modifier.fillMaxWidth().clearAndSetSemantics {
-                                set(SemanticsProperties.Text, listOf(AnnotatedString("Abilities"), AnnotatedString("Abilities [2]")))
-                            },
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("Abilities", fontWeight = FontWeight.SemiBold)
-                            Surface(
-                                shape = RoundedCornerShape(4.dp),
-                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
-                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                    DesktopRichTooltip(
+                        tooltip = {
+                            DesktopCombatActionTooltipContent(
+                                title = "Abilities",
+                                shortcut = "[2]",
+                                description = "Deploy specialized character abilities, elemental attacks, and support protocols.",
+                                details = "Select from available class skills"
+                            )
+                        }
+                    ) {
+                        DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::openSkills, icon = Icons.Rounded.AutoAwesome,
+                            enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("skills")) {
+                            Row(
+                                Modifier.fillMaxWidth().clearAndSetSemantics {
+                                    set(SemanticsProperties.Text, listOf(AnnotatedString("Abilities"), AnnotatedString("Abilities [2]")))
+                                },
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text("[2]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                Text("Abilities", fontWeight = FontWeight.SemiBold)
+                                Surface(
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                                ) {
+                                    Text("[2]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                }
                             }
                         }
                     }
-                    DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::openItems, icon = Icons.Rounded.Inventory2, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("items")) {
-                        Row(
-                            Modifier.fillMaxWidth().clearAndSetSemantics {
-                                set(SemanticsProperties.Text, listOf(AnnotatedString("Items"), AnnotatedString("Items [3]")))
-                            },
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("Items", fontWeight = FontWeight.SemiBold)
-                            Surface(
-                                shape = RoundedCornerShape(4.dp),
-                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
-                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                    DesktopRichTooltip(
+                        tooltip = {
+                            DesktopCombatActionTooltipContent(
+                                title = "Items",
+                                shortcut = "[3]",
+                                description = "Use field consumables, medical injectors, or combat ordnance from inventory.",
+                                details = "Consumes 1 cargo unit per use"
+                            )
+                        }
+                    ) {
+                        DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::openItems, icon = Icons.Rounded.Inventory2, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("items")) {
+                            Row(
+                                Modifier.fillMaxWidth().clearAndSetSemantics {
+                                    set(SemanticsProperties.Text, listOf(AnnotatedString("Items"), AnnotatedString("Items [3]")))
+                                },
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text("[3]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                Text("Items", fontWeight = FontWeight.SemiBold)
+                                Surface(
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                                ) {
+                                    Text("[3]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                }
                             }
                         }
                     }
-                    DesktopCombatActionButton(modifier = Modifier.fillMaxWidth(), onClick = {
-                        actorId?.let { id -> chooseTarget(runtime.snackTargetRequirement(id), "Choose a snack target") { runtime.useSnack(it) } }
-                    }, enabled = targetAction == null && timedPrompt == null && actorId?.let(runtime::canUseSnack) == true && runtime.isCombatTutorialCommandEnabled("snack")) {
-                        val label = (actorId?.let(runtime::snackLabel) ?: "Snack") + "" + actorId?.let { id -> runtime.snackCooldownRemaining(id).takeIf { it > 0 }?.let { " ($it turns)" } }.orEmpty()
-                        Row(
-                            Modifier.fillMaxWidth().clearAndSetSemantics {
-                                set(SemanticsProperties.Text, listOf(AnnotatedString(label), AnnotatedString("$label [4]")))
-                            },
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(label, fontWeight = FontWeight.SemiBold)
-                            Surface(
-                                shape = RoundedCornerShape(4.dp),
-                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
-                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                    DesktopRichTooltip(
+                        tooltip = {
+                            val snackName = actorId?.let(runtime::snackLabel) ?: "Snack"
+                            DesktopCombatActionTooltipContent(
+                                title = snackName,
+                                shortcut = "[4]",
+                                description = "Quickly consume equipped ration or snack for an instant HP or morale recovery without opening the items menu.",
+                                details = "Equipped in Field Menu · Character specific"
+                            )
+                        }
+                    ) {
+                        DesktopCombatActionButton(modifier = Modifier.fillMaxWidth(), onClick = {
+                            actorId?.let { id -> chooseTarget(runtime.snackTargetRequirement(id), "Choose a snack target") { runtime.useSnack(it) } }
+                        }, enabled = targetAction == null && timedPrompt == null && actorId?.let(runtime::canUseSnack) == true && runtime.isCombatTutorialCommandEnabled("snack")) {
+                            val label = (actorId?.let(runtime::snackLabel) ?: "Snack") + "" + actorId?.let { id -> runtime.snackCooldownRemaining(id).takeIf { it > 0 }?.let { " ($it turns)" } }.orEmpty()
+                            Row(
+                                Modifier.fillMaxWidth().clearAndSetSemantics {
+                                    set(SemanticsProperties.Text, listOf(AnnotatedString(label), AnnotatedString("$label [4]")))
+                                },
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text("[4]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                Text(label, fontWeight = FontWeight.SemiBold)
+                                Surface(
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                                ) {
+                                    Text("[4]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                }
                             }
                         }
                     }
-                    DesktopCombatActionButton(modifier = Modifier.fillMaxWidth(), onClick = { runtime.attemptRetreat() }, icon = Icons.Rounded.ExitToApp, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("retreat")) {
-                        Row(
-                            Modifier.fillMaxWidth().clearAndSetSemantics {
-                                set(SemanticsProperties.Text, listOf(AnnotatedString("Retreat"), AnnotatedString("Retreat [R]")))
-                            },
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("Retreat", fontWeight = FontWeight.SemiBold)
-                            Surface(
-                                shape = RoundedCornerShape(4.dp),
-                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
-                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                    DesktopRichTooltip(
+                        tooltip = {
+                            DesktopCombatActionTooltipContent(
+                                title = "Retreat",
+                                shortcut = "[R]",
+                                description = "Attempt to disengage from active hostiles and escape back to the previous safe area.",
+                                details = "May fail against certain high-threat encounters",
+                                accent = Color(0xFFFF887F)
+                            )
+                        },
+                        accent = Color(0xFFFF887F)
+                    ) {
+                        DesktopCombatActionButton(modifier = Modifier.fillMaxWidth(), onClick = { runtime.attemptRetreat() }, icon = Icons.Rounded.ExitToApp, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("retreat")) {
+                            Row(
+                                Modifier.fillMaxWidth().clearAndSetSemantics {
+                                    set(SemanticsProperties.Text, listOf(AnnotatedString("Retreat"), AnnotatedString("Retreat [R]")))
+                                },
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text("[R]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                Text("Retreat", fontWeight = FontWeight.SemiBold)
+                                Surface(
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                                ) {
+                                    Text("[R]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                }
                             }
                         }
                     }

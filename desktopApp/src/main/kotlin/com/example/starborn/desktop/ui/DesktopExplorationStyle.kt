@@ -61,6 +61,7 @@ internal fun DesktopTooltip(
 internal fun DesktopRichTooltip(
     tooltip: @Composable () -> Unit,
     accent: Color = Color(0xFF63E6FF),
+    maxWidth: androidx.compose.ui.unit.Dp = 320.dp,
     content: @Composable () -> Unit
 ) {
     TooltipArea(
@@ -71,7 +72,7 @@ internal fun DesktopRichTooltip(
                 border = BorderStroke(1.dp, accent.copy(alpha = 0.5f)),
                 shadowElevation = 8.dp
             ) {
-                Box(Modifier.padding(horizontal = 12.dp, vertical = 8.dp).widthIn(max = 320.dp)) {
+                Box(Modifier.padding(horizontal = 12.dp, vertical = 8.dp).widthIn(max = maxWidth)) {
                     tooltip()
                 }
             }

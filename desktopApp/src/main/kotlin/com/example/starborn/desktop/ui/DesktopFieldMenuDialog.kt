@@ -429,15 +429,20 @@ private fun DesktopInventorySplitLayout(
                     gridItems(entries, key = { it.key }) { entry ->
                         val item = allItems[entry.key]
                         val isSelected = entry.key == activeSelection
-                        val tooltipText = buildString {
-                            append(item?.name ?: services.contentName(entry.key))
-                            item?.description?.takeIf { it.isNotBlank() }?.let {
-                                append("\n")
-                                append(it)
-                            }
-                        }
-                        DesktopTooltip(text = tooltipText) {
+                        DesktopRichTooltip(
+                            tooltip = {
+                                DesktopItemTooltipContent(
+                                    item = item,
+                                    fallbackName = entry.key,
+                                    quantity = entry.value,
+                                    services = services
+                                )
+                            },
+                            accent = if (isSelected) FieldMenuDesign.cyan else FieldMenuDesign.border.copy(alpha = 0.5f),
+                            maxWidth = 300.dp
+                        ) {
                             Surface(onClick = { onSelectItem(entry.key) }, shape = RoundedCornerShape(12.dp),
+                                modifier = Modifier.desktopPointerHover(),
                                 color = if (isSelected) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel,
                                 border = BorderStroke(if (isSelected) 2.dp else 1.dp, if (isSelected) FieldMenuDesign.cyan else FieldMenuDesign.border.copy(alpha = .3f))) {
                                 Column(Modifier.fillMaxWidth().height(150.dp).padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {

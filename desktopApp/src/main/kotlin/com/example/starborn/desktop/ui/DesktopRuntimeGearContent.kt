@@ -49,18 +49,29 @@ internal fun DesktopRuntimeGearContent(services: DesktopAppServices, characterId
         Column(Modifier.width(140.dp).fillMaxHeight().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             (GearRules.equipSlots.toList() + modSlots).forEach { target ->
                 val currentItem = equippedId(target)?.let(catalog::get)
-                val tooltipText = buildString {
-                    append(slotLabel(target))
-                    if (currentItem != null) {
-                        append(": ").append(currentItem.name)
-                        currentItem.description?.takeIf { it.isNotBlank() }?.let { append("\n").append(it) }
-                    } else if (target in modSlots && !GearRules.isModSlotUnlocked(target, session.completedMilestones)) {
-                        append(" (Locked by story progress)")
-                    } else {
-                        append(" (Empty)")
-                    }
-                }
-                DesktopTooltip(tooltipText) {
+                DesktopRichTooltip(
+                    tooltip = {
+                        if (currentItem != null) {
+                            DesktopItemTooltipContent(
+                                item = currentItem,
+                                fallbackName = currentItem.name,
+                                services = services
+                            )
+                        } else {
+                            DesktopCombatActionTooltipContent(
+                                title = slotLabel(target),
+                                shortcut = if (target in modSlots && !GearRules.isModSlotUnlocked(target, session.completedMilestones)) "LOCKED" else "EMPTY",
+                                description = if (target in modSlots && !GearRules.isModSlotUnlocked(target, session.completedMilestones))
+                                    "This modification slot is locked until story milestone progression."
+                                else
+                                    "No item currently equipped in ${slotLabel(target)}. Click to view available inventory.",
+                                accent = if (target in modSlots && !GearRules.isModSlotUnlocked(target, session.completedMilestones)) FieldMenuDesign.textMuted else FieldMenuDesign.cyan
+                            )
+                        }
+                    },
+                    accent = if (slot == target) FieldMenuDesign.gold else FieldMenuDesign.cyan,
+                    maxWidth = 300.dp
+                ) {
                     Surface(onClick = { slot = target }, shape = RoundedCornerShape(10.dp),
                         modifier = Modifier.fillMaxWidth().desktopPointerHover(),
                         color = if (slot == target) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel,
@@ -93,8 +104,19 @@ internal fun DesktopRuntimeGearContent(services: DesktopAppServices, characterId
                                 else -> services.exploration.equipInventoryItem(slot, id, character)
                             }
                         }
-                        val rowTooltip = item.description?.takeIf { it.isNotBlank() } ?: item.name
-                        DesktopTooltip(rowTooltip) {
+                        val currentEquipped = equipped?.let(catalog::get)
+                        DesktopRichTooltip(
+                            tooltip = {
+                                DesktopEquipmentCompareTooltipContent(
+                                    candidate = item,
+                                    equipped = currentEquipped,
+                                    slotLabel = slotLabel(slot),
+                                    services = services
+                                )
+                            },
+                            accent = if (item.id == equipped) FieldMenuDesign.gold else FieldMenuDesign.cyan,
+                            maxWidth = 340.dp
+                        ) {
                             Surface(onClick = { selection = item.id }, shape = RoundedCornerShape(10.dp),
                                 modifier = Modifier.fillMaxWidth().desktopPointerHover(),
                                 color = if (selected?.id == item.id) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel) {

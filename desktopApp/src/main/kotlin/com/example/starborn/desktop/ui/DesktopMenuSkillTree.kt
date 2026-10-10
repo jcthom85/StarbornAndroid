@@ -83,13 +83,20 @@ internal fun DesktopMenuSkillsContent(services: DesktopAppServices, tree: SkillT
                                 }
                                 nodes.forEach { node ->
                                     val color = if (node.status.unlocked) FieldMenuDesign.gold else if (node.status.canPurchase) FieldMenuDesign.cyan else FieldMenuDesign.textMuted
-                                    val tooltipText = buildString {
-                                        append(node.name)
-                                        append(if (node.status.unlocked) " (Unlocked)" else " (${node.costAp} AP)")
-                                        node.description?.takeIf { it.isNotBlank() }?.let { append("\n").append(it) }
-                                    }
                                     Box(modifier = Modifier.offset(((node.column - minCol) * 168 + 20).dp, ((node.row - minRow) * 130 + 20).dp).size(144.dp, 98.dp)) {
-                                        DesktopTooltip(text = tooltipText, accent = color) {
+                                        DesktopRichTooltip(
+                                            tooltip = {
+                                                DesktopSkillTooltipContent(
+                                                    skillName = node.name,
+                                                    description = node.description.orEmpty(),
+                                                    costAp = node.costAp,
+                                                    unlocked = node.status.unlocked,
+                                                    accent = color
+                                                )
+                                            },
+                                            accent = color,
+                                            maxWidth = 300.dp
+                                        ) {
                                             Surface(onClick = { selectedId = node.id }, modifier = Modifier.fillMaxSize().desktopPointerHover(),
                                                 color = if (selected?.id == node.id) FieldMenuDesign.elevatedPanel else FieldMenuDesign.shell,
                                                 shape = RoundedCornerShape(12.dp), border = BorderStroke(if (selected?.id == node.id) 2.dp else 1.dp, color.copy(alpha = if (selected?.id == node.id) 1f else .4f))) {
