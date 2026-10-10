@@ -334,7 +334,8 @@ class DesktopAudioDriver(
             val cached = if (isSfx) sfxPcmCache[cue] else null
             if (cached != null) {
                 clip = AudioSystem.getClip()
-                clip.open(cached.format, cached.bytes, 0, cached.bytes.size)
+                val pcmBytes = if (command.pitch != 1.0f) resamplePcm(cached, command.pitch) else cached.bytes
+                clip.open(cached.format, pcmBytes, 0, pcmBytes.size)
             } else {
                 val path = resolvePath(cue) ?: return
                 assetProvider.open(path)?.use { raw ->
@@ -350,8 +351,9 @@ class DesktopAudioDriver(
                         if (format.encoding == AudioFormat.Encoding.PCM_SIGNED) {
                             if (isSfx) {
                                 val bytes = encoded.readAllBytes()
-                                clip.open(format, bytes, 0, bytes.size)
                                 if (bytes.size <= 2_500_000) sfxPcmCache[cue] = CachedPcm(format, bytes)
+                                val pcmBytes = if (command.pitch != 1.0f) resamplePcm(CachedPcm(format, bytes), command.pitch) else bytes
+                                clip.open(format, pcmBytes, 0, pcmBytes.size)
                             } else {
                                 clip.open(encoded)
                             }
@@ -359,8 +361,9 @@ class DesktopAudioDriver(
                             AudioSystem.getAudioInputStream(pcmFormat, encoded).use { decoded ->
                                 if (isSfx) {
                                     val bytes = decoded.readAllBytes()
-                                    clip.open(pcmFormat, bytes, 0, bytes.size)
                                     if (bytes.size <= 2_500_000) sfxPcmCache[cue] = CachedPcm(pcmFormat, bytes)
+                                    val pcmBytes = if (command.pitch != 1.0f) resamplePcm(CachedPcm(pcmFormat, bytes), command.pitch) else bytes
+                                    clip.open(pcmFormat, pcmBytes, 0, pcmBytes.size)
                                 } else {
                                     clip.open(decoded)
                                 }
@@ -470,6 +473,50 @@ class DesktopAudioDriver(
         sfxPcmCache.clear()
     }
 
+    private fun resamplePcm(cached: CachedPcm, pitch: Float): ByteArray {
+        val clampedPitch = pitch.coerceIn(0.5f, 2.0f)
+        if (kotlin.math.abs(clampedPitch - 1.0f) < 0.01f) {
+            return cached.bytes
+        }
+        val format = cached.format
+        val channels = format.channels
+        val bytesPerSample = 2 // 16-bit signed PCM
+        val frameSize = channels * bytesPerSample
+        val totalFrames = cached.bytes.size / frameSize
+        if (totalFrames <= 1) return cached.bytes
+
+        val outFrames = (totalFrames / clampedPitch).toInt().coerceAtLeast(1)
+        val outBytes = ByteArray(outFrames * frameSize)
+
+        val srcShorts = ShortArray(totalFrames * channels)
+        var byteIdx = 0
+        for (i in srcShorts.indices) {
+            val b0 = cached.bytes[byteIdx].toInt() and 0xFF
+            val b1 = cached.bytes[byteIdx + 1].toInt()
+            srcShorts[i] = ((b1 shl 8) or b0).toShort()
+            byteIdx += 2
+        }
+
+        var outByteIdx = 0
+        for (f in 0 until outFrames) {
+            val srcPos = f * clampedPitch
+            val srcFrame0 = srcPos.toInt().coerceIn(0, totalFrames - 1)
+            val srcFrame1 = (srcFrame0 + 1).coerceIn(0, totalFrames - 1)
+            val fraction = (srcPos - srcFrame0).coerceIn(0.0f, 1.0f)
+
+            for (ch in 0 until channels) {
+                val s0 = srcShorts[srcFrame0 * channels + ch].toFloat()
+                val s1 = srcShorts[srcFrame1 * channels + ch].toFloat()
+                val interpolated = (s0 + (s1 - s0) * fraction).toInt().coerceIn(-32768, 32767)
+
+                outBytes[outByteIdx] = (interpolated and 0xFF).toByte()
+                outBytes[outByteIdx + 1] = ((interpolated ushr 8) and 0xFF).toByte()
+                outByteIdx += 2
+            }
+        }
+        return outBytes
+    }
+
     companion object {
         val DEFAULT_PREWARM_CUES = listOf(
             "ui_click", "ui_back", "ui_confirm", "ui_error", "ui_room_move", "ui_title_start",
@@ -477,8 +524,12 @@ class DesktopAudioDriver(
             "sfx_ui_item_pickup", "sfx_ui_equip_item", "sfx_ui_error",
             "sfx_door_airlock_open", "sfx_door_airlock_close", "sfx_door_unlock",
             "shield_block", "shield_break", "battle_start",
-            "voice_murmur_female_01", "voice_murmur_male_01", "voice_murmur_nova_01",
-            "voice_murmur_orion_01", "voice_murmur_zeke_01", "voice_murmur_gh0st_01"
+            "voice_murmur_nova_01", "voice_murmur_nova_02", "voice_murmur_nova_03", "voice_murmur_nova_04",
+            "voice_murmur_orion_01", "voice_murmur_orion_02", "voice_murmur_orion_03", "voice_murmur_orion_04",
+            "voice_murmur_zeke_01", "voice_murmur_zeke_02", "voice_murmur_zeke_03", "voice_murmur_zeke_04",
+            "voice_murmur_gh0st_01", "voice_murmur_gh0st_02", "voice_murmur_gh0st_03", "voice_murmur_gh0st_04",
+            "voice_murmur_female_01", "voice_murmur_female_02", "voice_murmur_female_03", "voice_murmur_female_04",
+            "voice_murmur_male_01", "voice_murmur_male_02", "voice_murmur_male_03", "voice_murmur_male_04"
         )
     }
 }

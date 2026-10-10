@@ -166,7 +166,8 @@ class AudioCuePlayer(
             AudioCueType.BATTLE, AudioCueType.UI -> 2
             else -> 1
         }
-        val streamId = soundPool.play(soundId, scaledGain, scaledGain, streamPriority, loopMode, /*rate*/ 1f)
+        val pitchRate = command.pitch.coerceIn(0.5f, 2.0f)
+        val streamId = soundPool.play(soundId, scaledGain, scaledGain, streamPriority, loopMode, pitchRate)
         if (streamId == 0) {
             queuePendingShort(soundId, type, cueId, command)
             return

@@ -328,6 +328,9 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                     onChoice = runtime::onDialogueChoiceSelected, onAdvance = runtime::advanceDialogue,
                     onPlayVoice = { services.audioDriver.executeAll(listOf(com.example.starborn.domain.audio.AudioCommand.Play(com.example.starborn.domain.audio.AudioCueType.VOICE, it, fadeMs = 0))) },
                     onPlayMurmur = { services.audioDriver.executeAll(listOf(com.example.starborn.domain.audio.AudioCommand.Play(com.example.starborn.domain.audio.AudioCueType.VOICE, it, fadeMs = 0))) },
+                    onPlayMurmurWithPitch = { cue, pitch ->
+                        services.audioDriver.executeAll(listOf(com.example.starborn.domain.audio.AudioCommand.Play(com.example.starborn.domain.audio.AudioCueType.VOICE, cue, fadeMs = 0, pitch = pitch)))
+                    },
                     onRevealFinished = { dialogueRevealed = true }, revealAllRequest = dialogueRevealRequest,
                     modifier = Modifier.padding(32.dp).widthIn(max = 960.dp).fillMaxWidth())
             }

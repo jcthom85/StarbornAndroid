@@ -76,6 +76,7 @@ fun DesktopAuthoredDialogueOverlay(
     onChoice: (String) -> Unit,
     onPlayVoice: (String) -> Unit,
     onPlayMurmur: (String) -> Unit = {},
+    onPlayMurmurWithPitch: ((String, Float) -> Unit)? = null,
     onRevealFinished: () -> Unit = {},
     revealAllRequest: Int = 0,
     canDismissByTap: Boolean = true,
@@ -88,6 +89,7 @@ fun DesktopAuthoredDialogueOverlay(
     val displayedText = fullText.take(revealedCount.coerceIn(0, fullText.length))
     val voiceProfile = remember(line.speaker) { DialogueVoiceProfile.forSpeaker(line.speaker) }
     val latestOnPlayMurmur by rememberUpdatedState(onPlayMurmur)
+    val latestOnPlayMurmurWithPitch by rememberUpdatedState(onPlayMurmurWithPitch)
     val latestOnRevealFinished by rememberUpdatedState(onRevealFinished)
 
     val settings by services.userSettingsStore.settings.collectAsState(initial = com.example.starborn.data.local.UserSettings())
@@ -105,7 +107,14 @@ fun DesktopAuthoredDialogueOverlay(
             revealedCount = index + 1
             val char = fullText[index]
             if (voiceProfile != DialogueVoiceProfile.NONE && shouldPlayMurmur(fullText, index)) {
-                latestOnPlayMurmur(voiceProfile.randomCue(random))
+                val cue = voiceProfile.randomCue(random)
+                val pitch = voiceProfile.calculateCelestePitch(index, fullText, random)
+                val pitchCallback = latestOnPlayMurmurWithPitch
+                if (pitchCallback != null) {
+                    pitchCallback(cue, pitch)
+                } else {
+                    latestOnPlayMurmur(cue)
+                }
             }
             val delayMs = (revealDelayMs(char) / textSpeed.coerceAtLeast(0.1f)).toLong()
             delay(delayMs)
@@ -505,19 +514,45 @@ private fun String.toChoiceTag(): ChoiceTag? = when (this.lowercase(Locale.getDe
     else -> null
 }
 
-internal enum class DialogueVoiceProfile(private val cuePrefix: String?) {
-    NOVA("voice_murmur_female"),
-    ORION("voice_murmur_male"),
-    ZEKE("voice_murmur_male"),
-    GH0ST("voice_murmur_male"),
-    FEMALE("voice_murmur_female"),
-    MALE("voice_murmur_male"),
+internal enum class DialogueVoiceProfile(
+    val cuePrefix: String?,
+    val basePitch: Float = 1.0f
+) {
+    NOVA("voice_murmur_nova", basePitch = 1.12f),
+    ORION("voice_murmur_orion", basePitch = 0.90f),
+    ZEKE("voice_murmur_zeke", basePitch = 0.82f),
+    GH0ST("voice_murmur_gh0st", basePitch = 1.22f),
+    FEMALE("voice_murmur_female", basePitch = 1.08f),
+    MALE("voice_murmur_male", basePitch = 0.94f),
     NONE(null);
 
     fun randomCue(random: Random): String {
         val prefix = cuePrefix ?: return ""
         val variant = random.nextInt(1, 5)
         return "${prefix}_${variant.toString().padStart(2, '0')}"
+    }
+
+    fun calculateCelestePitch(index: Int, fullText: String, random: Random): Float {
+        if (cuePrefix == null) return 1.0f
+        // Undulating melodic sine wave: moves smoothly up and down across the sentence
+        val wave = kotlin.math.sin(index.toDouble() * 0.72).toFloat() * 0.12f
+
+        // Sentence cadence and question inflection
+        val endChar = fullText.trimEnd().lastOrNull()
+        val distToEnd = fullText.length - index
+        val cadence = when {
+            endChar == '?' && distToEnd < 14 -> {
+                // Pitch rises toward the end of a question
+                0.16f * (1f - (distToEnd.toFloat() / 14f).coerceIn(0f, 1f))
+            }
+            endChar == '!' -> 0.08f
+            else -> 0f
+        }
+
+        // Subtle micro-jitter (+/- 0.035) for natural speech variation
+        val jitter = (random.nextFloat() * 2f - 1f) * 0.035f
+
+        return (basePitch * (1.0f + wave + cadence + jitter)).coerceIn(0.6f, 1.8f)
     }
 
     companion object {

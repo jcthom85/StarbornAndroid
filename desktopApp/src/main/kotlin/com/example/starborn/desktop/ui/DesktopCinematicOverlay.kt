@@ -612,6 +612,11 @@ private fun DesktopIllustratedCinematicCaption(
                     listOf(AudioCommand.Play(AudioCueType.VOICE, cue, loop = false, fadeMs = 0L))
                 )
             },
+            onPlayMurmurWithPitch = { cue, pitch ->
+                services.audioDriver.executeAll(
+                    listOf(AudioCommand.Play(AudioCueType.VOICE, cue, loop = false, fadeMs = 0L, pitch = pitch))
+                )
+            },
             onRevealFinished = onRevealFinished,
             revealAllRequest = revealAllRequest,
             modifier = modifier
