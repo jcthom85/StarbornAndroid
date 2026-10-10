@@ -327,7 +327,7 @@ fun DesktopGameApp(
             )
             DesktopScreenState.FISHING -> DesktopFishingScreen(
                 services = services,
-                zoneId = services.activeFishingZone ?: "glow_moss_cavern",
+                zoneId = services.activeFishingZone ?: "sector9_stream",
                 onClose = { onScreenStateChange(DesktopScreenState.EXPLORATION) }
             )
             DesktopScreenState.ARCADE -> DesktopArcadeScreen(
