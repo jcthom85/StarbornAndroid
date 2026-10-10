@@ -43,19 +43,19 @@
         "effect": { "type": "damage", "mult": 1.2 }
       },
       {
-        "id": "nova_backstab",
-        "name": "Back Stab",
+        "id": "nova_hydraulic_kick",
+        "name": "Hydraulic Kick",
         "pos": [2, 2],
         "cost_ap": 2,
         "requires": ["nova_lockpicking"],
-        "effect": { "type": "damage", "mult": 1.5 }
+        "effect": { "type": "active", "subtype": "guard_break" }
       },
       {
         "id": "nova_smoke_bomb",
         "name": "Smoke Bomb",
         "pos": [1, 3],
         "cost_ap": 3,
-        "requires": ["nova_distraction", "nova_backstab"],
+        "requires": ["nova_distraction", "nova_hydraulic_kick"],
         "effect": { "type": "buff", "buff_type": "evasion", "value": 10 }
       },
       {
@@ -141,12 +141,12 @@
         "effect": { "type": "buff", "buff_type": "attack", "value": 5 }
       },
       {
-        "id": "nova_gloom_burst",
-        "name": "Gloom Burst",
+        "id": "nova_plasma_burst",
+        "name": "Plasma Burst",
         "pos": [0, 4],
         "cost_ap": 3,
         "requires": ["nova_dark_pact"],
-        "effect": { "type": "damage", "mult": 1.8 }
+        "effect": { "type": "active", "subtype": "burn" }
       },
       {
         "id": "nova_eclipse",
@@ -161,7 +161,7 @@
         "name": "Lord of Shadows",
         "pos": [1, 5],
         "cost_ap": 5,
-        "requires": ["nova_gloom_burst", "nova_eclipse"],
+        "requires": ["nova_plasma_burst", "nova_eclipse"],
         "effect": { "type": "damage", "mult": 2.2 }
       }
     ],
@@ -215,19 +215,19 @@
         "effect": { "type": "damage", "mult": 1.4 }
       },
       {
-        "id": "nova_turret_deploy",
-        "name": "Turret Deploy",
+        "id": "nova_cryo_vent",
+        "name": "Cryo Vent",
         "pos": [1, 3],
         "cost_ap": 3,
         "requires": ["nova_hacking", "nova_remote_mine"],
-        "effect": { "type": "utility", "subtype": "turret" }
+        "effect": { "type": "active", "subtype": "brittle" }
       },
       {
         "id": "nova_overclock",
         "name": "Overclock",
         "pos": [0, 4],
         "cost_ap": 3,
-        "requires": ["nova_turret_deploy"],
+        "requires": ["nova_cryo_vent"],
         "effect": { "type": "buff", "buff_type": "speed", "value": 10 }
       },
       {
@@ -235,7 +235,7 @@
         "name": "Drone Swarm",
         "pos": [2, 4],
         "cost_ap": 3,
-        "requires": ["nova_turret_deploy"],
+        "requires": ["nova_cryo_vent"],
         "effect": { "type": "damage", "mult": 1.7 }
       },
       {

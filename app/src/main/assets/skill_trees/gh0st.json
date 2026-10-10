@@ -35,12 +35,12 @@
         "effect": { "type": "damage", "mult": 1.2, "subtype": "piercing" }
       },
       {
-        "id": "gh0st_ambush",
-        "name": "Ambush",
+        "id": "gh0st_venom_edge",
+        "name": "Venom Edge",
         "pos": [0, 3],
         "cost_ap": 2,
         "requires": ["gh0st_penetrating_shot"],
-        "effect": { "type": "damage", "mult": 2.0, "subtype": "first_strike" }
+        "effect": { "type": "active", "subtype": "erosion" }
       },
       {
         "id": "gh0st_crippling_shot",
@@ -51,19 +51,19 @@
         "effect": { "type": "utility", "subtype": "debuff_speed", "value": -20 }
       },
       {
-        "id": "gh0st_kill_confirmed",
-        "name": "Kill Confirmed",
+        "id": "gh0st_system_crash",
+        "name": "System Crash",
         "pos": [1, 4],
         "cost_ap": 3,
-        "requires": ["gh0st_ambush", "gh0st_crippling_shot"],
-        "effect": { "type": "buff", "buff_type": "attack", "value": 15, "subtype": "on_kill" }
+        "requires": ["gh0st_venom_edge", "gh0st_crippling_shot"],
+        "effect": { "type": "active", "subtype": "stun" }
       },
       {
         "id": "gh0st_chain_shot",
         "name": "Chain Shot",
         "pos": [0, 5],
         "cost_ap": 3,
-        "requires": ["gh0st_kill_confirmed"],
+        "requires": ["gh0st_system_crash"],
         "effect": { "type": "damage", "mult": 0.8, "subtype": "multi_hit" }
       },
       {
@@ -71,16 +71,16 @@
         "name": "Ghost in the Machine",
         "pos": [2, 5],
         "cost_ap": 3,
-        "requires": ["gh0st_kill_confirmed"],
+        "requires": ["gh0st_system_crash"],
         "effect": { "type": "utility", "subtype": "invisibility" }
       },
       {
-        "id": "gh0st_one_shot_one_kill",
-        "name": "One Shot, One Kill",
+        "id": "gh0st_shadow_flurry",
+        "name": "Shadow Flurry",
         "pos": [1, 5],
         "cost_ap": 5,
         "requires": ["gh0st_chain_shot", "gh0st_ghost_in_the_machine"],
-        "effect": { "type": "damage", "mult": 5.0, "subtype": "execute" }
+        "effect": { "type": "active", "subtype": "bleed" }
       }
     ],
     "Sabotage": [

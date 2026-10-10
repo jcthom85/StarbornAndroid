@@ -115,17 +115,29 @@ internal fun DesktopMenuAttributesContent(services: DesktopAppServices, details:
             }
         } }
         item { Text("Unlocked skills", style = MaterialTheme.typography.titleMedium) }
-        items(details.unlockedSkills) { id -> services.skillDefinitions[id]?.let { skill ->
-            Surface(Modifier.fillMaxWidth(), color = FieldMenuDesign.panel, shape = RoundedCornerShape(12.dp), border = BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = .16f))) {
-                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(skill.name, color = FieldMenuDesign.gold); Text(skill.description)
-                    Text("Power: ${skill.basePower} · Cooldown: ${skill.cooldown} turns", style = MaterialTheme.typography.bodySmall)
-                    skill.targeting?.let { Text("Target: ${it.replace('_', ' ')}") }
-                    skill.usesPerBattle?.let { Text("Uses per battle: $it") }
-                    skill.statusApplications.orEmpty().forEach { Text("Status: ${services.contentName(it)}") }
+        items(details.unlockedSkills) { id ->
+            val skill = services.skillDefinitions[id]
+                ?: services.skillDefinitions.values.firstOrNull { it.name.equals(id, true) }
+            if (skill != null) {
+                Surface(Modifier.fillMaxWidth(), color = FieldMenuDesign.panel, shape = RoundedCornerShape(12.dp), border = BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = .16f))) {
+                    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Text(skill.name, color = FieldMenuDesign.gold)
+                        Text(skill.description)
+                        Text("Power: ${skill.basePower} · Cooldown: ${skill.cooldown} turns", style = MaterialTheme.typography.bodySmall)
+                        skill.targeting?.let { Text("Target: ${it.replace('_', ' ')}") }
+                        skill.usesPerBattle?.let { Text("Uses per battle: $it") }
+                        skill.statusApplications.orEmpty().forEach { Text("Status: ${services.contentName(it)}") }
+                    }
+                }
+            } else {
+                Surface(Modifier.fillMaxWidth(), color = FieldMenuDesign.panel, shape = RoundedCornerShape(12.dp), border = BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = .16f))) {
+                    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(id, color = FieldMenuDesign.gold, style = MaterialTheme.typography.titleSmall)
+                        Text("Passive technique active.", color = FieldMenuDesign.textMuted, style = MaterialTheme.typography.bodySmall)
+                    }
                 }
             }
-        } }
+        }
     }
 }
 

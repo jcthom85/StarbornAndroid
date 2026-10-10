@@ -51,35 +51,35 @@
         "effect": { "type": "buff", "buff_type": "attack", "value": 10 }
       },
       {
-        "id": "orion_energy_shield",
-        "name": "Energy Shield",
+        "id": "orion_disruption_pulse",
+        "name": "Disruption Pulse",
         "pos": [1, 4],
         "cost_ap": 3,
         "requires": ["orion_nano_repair", "orion_weapon_specialization"],
-        "effect": { "type": "utility", "subtype": "shield" }
+        "effect": { "type": "active", "subtype": "weak" }
       },
       {
         "id": "orion_overcharge",
         "name": "Overcharge",
         "pos": [0, 5],
         "cost_ap": 3,
-        "requires": ["orion_energy_shield"],
+        "requires": ["orion_disruption_pulse"],
         "effect": { "type": "buff", "buff_type": "attack", "value": 20 }
       },
       {
-        "id": "orion_singularity_bomb",
-        "name": "Singularity Bomb",
+        "id": "orion_stasis_field",
+        "name": "Stasis Field",
         "pos": [2, 5],
         "cost_ap": 3,
-        "requires": ["orion_energy_shield"],
-        "effect": { "type": "damage", "mult": 3.0 }
+        "requires": ["orion_disruption_pulse"],
+        "effect": { "type": "active", "subtype": "freeze" }
       },
       {
         "id": "orion_master_engineer",
         "name": "Master Engineer",
         "pos": [1, 5],
         "cost_ap": 5,
-        "requires": ["orion_overcharge", "orion_singularity_bomb"],
+        "requires": ["orion_overcharge", "orion_stasis_field"],
         "effect": { "type": "utility", "subtype": "ultimate_creation" }
       }
     ],

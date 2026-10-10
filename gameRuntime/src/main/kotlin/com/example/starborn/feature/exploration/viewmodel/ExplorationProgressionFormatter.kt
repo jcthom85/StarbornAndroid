@@ -143,10 +143,11 @@ internal fun buildLevelUpPrompt(
     )
 }
 
-internal fun buildSkillTreeOverlayUi(
+fun buildSkillTreeOverlayUi(
     tree: SkillTreeDefinition,
     character: Player?,
-    sessionState: GameSessionState
+    sessionState: GameSessionState,
+    skillsById: Map<String, Skill> = emptyMap()
 ): SkillTreeOverlayUi? {
     val nodes = tree.branches.values.flatten()
     if (nodes.isEmpty()) return null
@@ -167,6 +168,27 @@ internal fun buildSkillTreeOverlayUi(
                 availableAp = availableAp,
                 apInvested = apInvested
             )
+            val combatSkill = skillsById[node.id]
+            val category = when {
+                combatSkill != null -> SkillNodeCategory.KEYSTONE
+                node.effect?.type == "active" || node.effect?.type == "keystone" -> SkillNodeCategory.KEYSTONE
+                node.effect?.type == "damage" || node.effect?.type == "utility" || node.effect?.type == "heal" || node.effect?.subtype != null -> SkillNodeCategory.PERK
+                else -> SkillNodeCategory.STAT
+            }
+            val activeCombatSkill = combatSkill?.let { cs ->
+                ActiveCombatSkillSummary(
+                    id = cs.id,
+                    name = cs.name,
+                    description = cs.description,
+                    basePower = cs.basePower,
+                    cooldown = cs.cooldown ?: 0,
+                    scaling = cs.scaling,
+                    combatTags = cs.combatTags.orEmpty(),
+                    statusApplications = cs.statusApplications.orEmpty(),
+                    targeting = cs.targeting
+                )
+            }
+            val desc = combatSkill?.description ?: formatSkillNodeDescription(node.effect)
             SkillTreeNodeUi(
                 id = node.id,
                 name = node.name,
@@ -174,11 +196,13 @@ internal fun buildSkillTreeOverlayUi(
                 row = nodeRow(node),
                 column = nodeColumn(node),
                 status = status,
-                description = formatSkillNodeDescription(node.effect),
+                description = desc,
                 requirements = node.requires.orEmpty().mapNotNull { requirementId ->
                     val label = nodesById[requirementId]?.name ?: requirementId.humanizeId()
                     SkillTreeRequirementUi(id = requirementId, label = label)
-                }
+                },
+                category = category,
+                activeCombatSkill = activeCombatSkill
             )
         }
         if (nodeUis.isEmpty()) return@mapNotNull null

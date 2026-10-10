@@ -2180,7 +2180,7 @@ class ExplorationController(
     ): SkillTreeOverlayUi? {
         val tree = skillTreesByCharacter[characterId] ?: return null
         val character = charactersById[characterId]
-        return buildSkillTreeOverlayUi(tree, character, sessionState)
+        return buildSkillTreeOverlayUi(tree, character, sessionState, skillsById)
     }
 
     private fun findSkillNode(characterId: String, nodeId: String): SkillTreeNode? =

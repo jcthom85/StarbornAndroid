@@ -29,13 +29,16 @@ internal fun DesktopRuntimeStatsContent(services: DesktopAppServices) {
             Text(details.name, color = Color.Cyan)
             (details.primaryStats + details.combatStats).forEach { Text("${it.label}: ${it.value}", color = Color.White) }
             details.unlockedSkills.forEach { id ->
-                services.skillDefinitions[id]?.let { skill ->
+                val skill = services.skillDefinitions[id] ?: services.skillDefinitions.values.firstOrNull { it.name.equals(id, true) }
+                if (skill != null) {
                     Text(skill.name, color = Color.White)
                     Text(skill.description)
                     Text("Power: ${skill.basePower} \u00B7 Cooldown: ${skill.cooldown} turns")
                     skill.targeting?.let { Text("Target: ${it.replace('_', ' ')}") }
                     skill.usesPerBattle?.let { Text("Uses per battle: $it") }
                     skill.statusApplications.orEmpty().forEach { Text("Status: ${services.contentName(it)}") }
+                } else {
+                    Text(id, color = Color.White)
                 }
             }
         } }

@@ -4,7 +4,7 @@ import com.example.starborn.core.MoshiProvider
 import com.example.starborn.core.platform.DesktopAssetProvider
 import com.example.starborn.data.assets.AssetJsonReader
 import com.example.starborn.data.assets.WorldAssetDataSource
-import com.example.starborn.feature.hub.ui.HubMapLayouts
+import com.example.starborn.feature.hub.presentation.HubMapLayouts
 import com.example.starborn.feature.hub.ui.HubMapTransform
 import org.junit.Assert.*
 import org.junit.Test

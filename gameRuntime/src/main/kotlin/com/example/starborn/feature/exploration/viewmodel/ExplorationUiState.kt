@@ -470,6 +470,24 @@ data class SkillTreeBranchUi(
     val nodes: List<SkillTreeNodeUi>
 )
 
+enum class SkillNodeCategory {
+    STAT,
+    PERK,
+    KEYSTONE
+}
+
+data class ActiveCombatSkillSummary(
+    val id: String,
+    val name: String,
+    val description: String,
+    val basePower: Int,
+    val cooldown: Int,
+    val scaling: String?,
+    val combatTags: List<String> = emptyList(),
+    val statusApplications: List<String> = emptyList(),
+    val targeting: String? = null
+)
+
 data class SkillTreeNodeUi(
     val id: String,
     val name: String,
@@ -478,7 +496,9 @@ data class SkillTreeNodeUi(
     val column: Int,
     val status: com.example.starborn.feature.exploration.skilltree.SkillNodeStatus,
     val description: String?,
-    val requirements: List<SkillTreeRequirementUi>
+    val requirements: List<SkillTreeRequirementUi>,
+    val category: SkillNodeCategory = SkillNodeCategory.STAT,
+    val activeCombatSkill: ActiveCombatSkillSummary? = null
 )
 
 data class SkillTreeRequirementUi(
