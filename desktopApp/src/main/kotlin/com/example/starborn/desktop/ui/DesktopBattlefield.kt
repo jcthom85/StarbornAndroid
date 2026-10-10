@@ -14,6 +14,9 @@ import kotlin.math.cos
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -39,6 +42,7 @@ internal fun DesktopBattleFormation(
     cues: List<DesktopCombatCue>, lungeStyle: AttackLungeStyle,
     lungeActor: String?, lungeToken: Long, missActor: String?, missToken: Long,
     battleHeight: androidx.compose.ui.unit.Dp = 800.dp, opposingCount: Int = 0,
+    onHover: (String?) -> Unit = {},
     onSelect: (String) -> Unit
 ) {
     val settings by services.userSettingsStore.settings.collectAsState(initial = UserSettings())
@@ -74,6 +78,7 @@ internal fun DesktopBattleFormation(
                             selectedId == id, id in validTargets, targeting, meters[id], intents[id], feedback[id], figureHeight, cardWidth,
                             if (lungeActor == id) lungeToken else 0L, if (missActor == id) missToken else 0L,
                             cues = cues.filter { it.targetId == id }, lungeStyle = lungeStyle, settings = settings,
+                            onHover = onHover,
                             onClick = { onSelect(id) })
                     } }
                 }
@@ -88,7 +93,8 @@ private fun DesktopBattleFigure(
     state: CombatantState, sprite: String?, services: DesktopAppServices, enemySide: Boolean,
     selected: Boolean, validTarget: Boolean, targeting: Boolean, meter: Float?, intent: String?,
     feedback: String?, figureHeight: androidx.compose.ui.unit.Dp, cardWidth: androidx.compose.ui.unit.Dp, lungeToken: Long, missToken: Long,
-    cues: List<DesktopCombatCue>, lungeStyle: AttackLungeStyle, settings: UserSettings, onClick: () -> Unit
+    cues: List<DesktopCombatCue>, lungeStyle: AttackLungeStyle, settings: UserSettings,
+    onHover: (String?) -> Unit, onClick: () -> Unit
 ) {
     val motion = remember { Animatable(0f) }
     val recoil = remember { Animatable(0f) }
@@ -166,7 +172,15 @@ Column(Modifier.widthIn(max = if (enemySide) 220.dp else 180.dp).fillMaxWidth().
             }
         }
     }
-    Column(Modifier.width(cardWidth).desktopPointerHover(!targeting || validTarget).clickable(interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }, indication = null, enabled = !targeting || validTarget, onClick = onClick),
+    val interactionSource = remember { MutableInteractionSource() }
+    val isHovered by interactionSource.collectIsHoveredAsState()
+    LaunchedEffect(isHovered) {
+        onHover(if (isHovered) state.combatant.id else null)
+    }
+
+    Column(Modifier.width(cardWidth).desktopPointerHover(!targeting || validTarget)
+        .hoverable(interactionSource)
+        .clickable(interactionSource = interactionSource, indication = null, enabled = !targeting || validTarget, onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally) {
         if (enemySide) status()
         Box(Modifier.fillMaxWidth().height(figureHeight), contentAlignment = Alignment.BottomCenter) {
@@ -176,11 +190,30 @@ Column(Modifier.widthIn(max = if (enemySide) 220.dp else 180.dp).fillMaxWidth().
             }
             Canvas(Modifier.fillMaxSize()) {
                 drawOval(Color.Black.copy(alpha = .40f * lifeAlpha), Offset(size.width * .2f, size.height * .9f), androidx.compose.ui.geometry.Size(size.width * .6f, size.height * .08f))
-                if (state.isAlive && (selected || targeting && validTarget)) {
+                val isTargetedOrSelected = state.isAlive && (selected || targeting && validTarget || isHovered)
+                if (isTargetedOrSelected) {
+                    val ringColor = if (selected) Color(0xFFFFBB55) else if (isHovered) Color(0xFF63E6FF) else accent
                     val ringWidth = minOf(size.width * .6f, size.height * .8f)
-                    drawOval(accent.copy(alpha = .85f * lifeAlpha),
+                    drawOval(ringColor.copy(alpha = .85f * lifeAlpha),
                         Offset((size.width-ringWidth)/2, size.height * .88f),
                         androidx.compose.ui.geometry.Size(ringWidth, size.height * .10f), style = Stroke(2.dp.toPx()))
+
+                    val bracketColor = ringColor.copy(alpha = (if (selected) 0.95f else 0.75f) * lifeAlpha)
+                    val strokePx = 2.dp.toPx()
+                    val len = minOf(size.width, size.height) * 0.16f
+                    val pad = 4.dp.toPx()
+                    // Top-left
+                    drawLine(bracketColor, Offset(pad, pad), Offset(pad + len, pad), strokePx)
+                    drawLine(bracketColor, Offset(pad, pad), Offset(pad, pad + len), strokePx)
+                    // Top-right
+                    drawLine(bracketColor, Offset(size.width - pad, pad), Offset(size.width - pad - len, pad), strokePx)
+                    drawLine(bracketColor, Offset(size.width - pad, pad), Offset(size.width - pad, pad + len), strokePx)
+                    // Bottom-left
+                    drawLine(bracketColor, Offset(pad, size.height - pad), Offset(pad + len, size.height - pad), strokePx)
+                    drawLine(bracketColor, Offset(pad, size.height - pad), Offset(pad, size.height - pad - len), strokePx)
+                    // Bottom-right
+                    drawLine(bracketColor, Offset(size.width - pad, size.height - pad), Offset(size.width - pad - len, size.height - pad), strokePx)
+                    drawLine(bracketColor, Offset(size.width - pad, size.height - pad), Offset(size.width - pad, size.height - pad - len), strokePx)
                 }
             }
             Image(rememberDesktopAssetPainter(sprite, services.assetProvider), state.combatant.name,

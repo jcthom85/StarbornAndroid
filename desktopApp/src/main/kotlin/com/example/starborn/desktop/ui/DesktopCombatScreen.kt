@@ -18,12 +18,14 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.PointerButton
@@ -98,6 +100,7 @@ private fun DesktopCombatContent(
     var targetAction by remember { mutableStateOf<((String) -> Unit)?>(null) }
     var instruction by remember { mutableStateOf<String?>(null) }
     var lastEffect by remember { mutableStateOf<String?>(null) }
+    var hoveredEnemyId by remember { mutableStateOf<String?>(null) }
     val intents = remember { mutableStateMapOf<String, String>() }
     val feedback = remember { mutableStateMapOf<String, String>() }
     val cues = remember(runtime) { mutableStateListOf<DesktopCombatCue>() }
@@ -316,44 +319,84 @@ private fun DesktopCombatContent(
             } else {
                 cancelActiveSelectionOrMenu()
             }
-        } else if (event.type != KeyEventType.KeyDown || !foreground || menu != null || showLog || battle.outcome != null) false else when (event.key) {
-            Key.Spacebar -> if (timedPrompt != null) { runtime.registerTimedPromptTap(); true } else false
-            Key.Escape -> cancelActiveSelectionOrMenu()
-            Key.Four -> {
-                if (actorId != null && timedPrompt == null && targetAction == null && runtime.canUseSnack(requireNotNull(actorId)) && runtime.isCombatTutorialCommandEnabled("snack")) {
-                    chooseTarget(runtime.snackTargetRequirement(requireNotNull(actorId)), "Choose a snack target") { runtime.useSnack(it) }
-                }; true
-            }
-            Key.L -> { if (timedPrompt == null) showLog = true; true }
-            Key.R -> { if (actor != null && timedPrompt == null && targetAction == null && runtime.isCombatTutorialCommandEnabled("retreat")) runtime.attemptRetreat(); true }
-            Key.One -> { attack(); true }
-            Key.Two -> { openSkills(); true }
-            Key.Three -> { openItems(); true }
-            Key.DirectionLeft, Key.DirectionUp, Key.DirectionRight, Key.DirectionDown -> {
-                if (targetAction != null && targetCandidates.isNotEmpty()) {
-                    val delta = if (event.key == Key.DirectionLeft || event.key == Key.DirectionUp) -1 else 1
-                    keyboardTarget = Math.floorMod(keyboardTarget + delta, targetCandidates.size)
+        } else if (event.type != KeyEventType.KeyDown || !foreground || showLog || battle.outcome != null) false else {
+            if (menu == "skills") {
+                val numKeyIndex = when (event.key) {
+                    Key.One -> 0; Key.Two -> 1; Key.Three -> 2; Key.Four -> 3
+                    Key.Five -> 4; Key.Six -> 5; Key.Seven -> 6; Key.Eight -> 7; Key.Nine -> 8
+                    else -> -1
+                }
+                val skills = runtime.activePlayerSkills()
+                if (numKeyIndex in skills.indices) {
+                    val skill = skills[numKeyIndex]
+                    if (runtime.canUseSkill(requireNotNull(actorId), skill) && (tutorial?.step != CombatTutorialStep.CHOOSE_HYDRAULIC_KICK || skill.id == tutorial?.expectedSkillId)) {
+                        if (runtime.onCombatTutorialSkillSelected(skill.id)) {
+                            chooseTarget(runtime.targetRequirementFor(skill), "Choose a target for ${skill.name}") { target ->
+                                runtime.useSkill(skill, target?.let(::listOf))
+                            }
+                        }
+                    }
                     true
+                } else if (event.key == Key.Backspace) {
+                    cancelActiveSelectionOrMenu()
                 } else false
-            }
-            Key.Enter -> {
-                if (targetAction != null && targetCandidates.isNotEmpty()) {
-                    targetAction?.invoke(targetCandidates[keyboardTarget.coerceIn(0, targetCandidates.lastIndex)].combatant.id)
+            } else if (menu == "items") {
+                val numKeyIndex = when (event.key) {
+                    Key.One -> 0; Key.Two -> 1; Key.Three -> 2; Key.Four -> 3
+                    Key.Five -> 4; Key.Six -> 5; Key.Seven -> 6; Key.Eight -> 7; Key.Nine -> 8
+                    else -> -1
+                }
+                val usable = inventory.filter(CombatItemPresentation::isUsable)
+                if (numKeyIndex in usable.indices) {
+                    val entry = usable[numKeyIndex]
+                    val requirement = CombatItemPresentation.targetRequirement(entry)
+                    chooseTarget(requirement, "Choose a target for ${entry.item.name}") { runtime.useItem(entry, it) }
                     true
+                } else if (event.key == Key.Backspace) {
+                    cancelActiveSelectionOrMenu()
                 } else false
+            } else if (menu != null) {
+                if (event.key == Key.Backspace) { cancelActiveSelectionOrMenu(); true } else false
+            } else when (event.key) {
+                Key.Spacebar -> if (timedPrompt != null) { runtime.registerTimedPromptTap(); true } else false
+                Key.Escape -> cancelActiveSelectionOrMenu()
+                Key.Four -> {
+                    if (actorId != null && timedPrompt == null && targetAction == null && runtime.canUseSnack(requireNotNull(actorId)) && runtime.isCombatTutorialCommandEnabled("snack")) {
+                        chooseTarget(runtime.snackTargetRequirement(requireNotNull(actorId)), "Choose a snack target") { runtime.useSnack(it) }
+                    }; true
+                }
+                Key.L -> { if (timedPrompt == null) showLog = true; true }
+                Key.R -> { if (actor != null && timedPrompt == null && targetAction == null && runtime.isCombatTutorialCommandEnabled("retreat")) runtime.attemptRetreat(); true }
+                Key.One -> { attack(); true }
+                Key.Two -> { openSkills(); true }
+                Key.Three -> { openItems(); true }
+                Key.DirectionLeft, Key.DirectionUp, Key.DirectionRight, Key.DirectionDown -> {
+                    if (targetAction != null && targetCandidates.isNotEmpty()) {
+                        val delta = if (event.key == Key.DirectionLeft || event.key == Key.DirectionUp) -1 else 1
+                        keyboardTarget = Math.floorMod(keyboardTarget + delta, targetCandidates.size)
+                        true
+                    } else false
+                }
+                Key.Enter -> {
+                    if (targetAction != null && targetCandidates.isNotEmpty()) {
+                        targetAction?.invoke(targetCandidates[keyboardTarget.coerceIn(0, targetCandidates.lastIndex)].combatant.id)
+                        true
+                    } else false
+                }
+                Key.Tab -> {
+                    val ready = party.filter { (meters[it.combatant.id] ?: 0f) >= 1f && it.isAlive }
+                    if (timedPrompt == null && targetAction == null && ready.isNotEmpty()) {
+                        val next = (ready.indexOfFirst { it.combatant.id == actorId } + 1) % ready.size
+                        runtime.selectReadyPlayer(ready[next].combatant.id); true
+                    } else false
+                }
+                else -> false
             }
-            Key.Tab -> {
-                val ready = party.filter { (meters[it.combatant.id] ?: 0f) >= 1f && it.isAlive }
-                if (timedPrompt == null && targetAction == null && ready.isNotEmpty()) {
-                    val next = (ready.indexOfFirst { it.combatant.id == actorId } + 1) % ready.size
-                    runtime.selectReadyPlayer(ready[next].combatant.id); true
-                } else false
-            }
-            else -> false
         }
     }.focusable()) {
         val selectedTarget = if (targetAction != null) targetCandidates.getOrNull(keyboardTarget)?.combatant?.id else null
         val validIds = if (targetAction != null) targetCandidates.map { it.combatant.id }.toSet() else emptySet()
+        val inspectedEnemyId = hoveredEnemyId ?: selectedTarget ?: focusedEnemies.firstOrNull()
         val context: @Composable () -> Unit = {
             Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 DesktopMenuCard(Modifier.fillMaxWidth()) {
@@ -364,10 +407,17 @@ private fun DesktopCombatContent(
                         banner?.secondary?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
                     }
                 }
-                val focused = enemies.firstOrNull { it.combatant.id == (selectedTarget ?: focusedEnemies.firstOrNull()) }
+                val focused = enemies.firstOrNull { it.combatant.id == inspectedEnemyId }
                 focused?.let { target -> DesktopMenuCard(Modifier.fillMaxWidth()) {
                     Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(target.combatant.name, style = MaterialTheme.typography.titleMedium)
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(target.combatant.name, style = MaterialTheme.typography.titleMedium)
+                            if (target.combatant.id == hoveredEnemyId) {
+                                Surface(shape = RoundedCornerShape(4.dp), color = Color(0xFF63E6FF).copy(alpha = 0.15f), border = BorderStroke(1.dp, Color(0xFF63E6FF).copy(alpha = 0.6f))) {
+                                    Text("INSPECTED", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = Color(0xFF63E6FF), style = MaterialTheme.typography.labelSmall)
+                                }
+                            }
+                        }
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                             Text("HP ${target.hp}/${target.combatant.stats.maxHp}", color = Color.White.copy(alpha = 0.85f), fontSize = 12.sp)
                             Text("Stability ${target.stability}/${target.combatant.stats.stability}", color = Color(0xFF9F79D2), fontSize = 12.sp)
@@ -381,6 +431,18 @@ private fun DesktopCombatContent(
                         }
                     }
                 } }
+                DesktopCombatPartyRoster(
+                    party = party,
+                    services = services,
+                    meters = meters,
+                    actorId = actorId,
+                    playerPartyDefs = runtime.playerParty,
+                    onSelectActor = { id ->
+                        if (targetAction == null && timedPrompt == null && tutorial?.showsModal != true) {
+                            runtime.selectReadyPlayer(id)
+                        }
+                    }
+                )
                 DesktopCombatLiveFeed(history = history, onExpandLog = { showLog = true })
             }
         }
@@ -416,36 +478,103 @@ private fun DesktopCombatContent(
                     LazyColumn(Modifier.fillMaxWidth().weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         if (menu == "skills") {
                             if (runtime.activePlayerSkills().isEmpty()) item { Text("No abilities available") }
-                            items(runtime.activePlayerSkills(), key = { it.id }) { skill ->
-                                Column {
-                                    Text(skill.name)
-                                    Text(skill.description)
-                                    runtime.skillUnavailableReason(requireNotNull(actorId), skill)?.let { reason -> Text(reason, color = Color(0xFFFFBB55)) }
-                                    val remaining = runtime.skillCooldownRemaining(requireNotNull(actorId), skill.id)
-                                    if (remaining > 0) Text("Ready in $remaining turns", color = Color(0xFFFFBB55))
-                                    Text("Target: ${skill.targeting?.replace('_', ' ') ?: runtime.targetRequirementFor(skill).name.lowercase()} · Cooldown: ${skill.cooldown} turns",
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
-                                    Button(onClick = {
-                                        if (runtime.onCombatTutorialSkillSelected(skill.id)) {
-                                            chooseTarget(runtime.targetRequirementFor(skill), "Choose a target for ${skill.name}") { target ->
-                                                runtime.useSkill(skill, target?.let(::listOf))
+                            itemsIndexed(runtime.activePlayerSkills(), key = { _, it -> it.id }) { index, skill ->
+                                val canUse = runtime.canUseSkill(requireNotNull(actorId), skill) && (tutorial?.step != CombatTutorialStep.CHOOSE_HYDRAULIC_KICK || skill.id == tutorial?.expectedSkillId)
+                                val keyGlyph = if (index < 9) "[${index + 1}]" else ""
+                                Surface(
+                                    shape = RoundedCornerShape(8.dp),
+                                    color = Color(0xFF09141B),
+                                    border = BorderStroke(1.dp, if (canUse) Color(0xFF2D4454) else Color(0xFF16232D)),
+                                    modifier = Modifier.fillMaxWidth().then(if (canUse) Modifier.desktopPointerHover() else Modifier)
+                                ) {
+                                    Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                        Row(
+                                            Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Text(skill.name, style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold), color = if (canUse) Color.White else Color(0xFF7E8F9B))
+                                            if (keyGlyph.isNotBlank() && canUse) {
+                                                Surface(
+                                                    shape = RoundedCornerShape(4.dp),
+                                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                                                ) {
+                                                    Text(keyGlyph, modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                                }
                                             }
                                         }
-                                    }, enabled = runtime.canUseSkill(requireNotNull(actorId), skill) && (tutorial?.step != CombatTutorialStep.CHOOSE_HYDRAULIC_KICK || skill.id == tutorial?.expectedSkillId)) { Text("Select") }
+                                        Text(skill.description, style = MaterialTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.75f))
+                                        runtime.skillUnavailableReason(requireNotNull(actorId), skill)?.let { reason ->
+                                            Text(reason, color = Color(0xFFFFBB55), style = MaterialTheme.typography.bodySmall)
+                                        }
+                                        val remaining = runtime.skillCooldownRemaining(requireNotNull(actorId), skill.id)
+                                        if (remaining > 0) Text("Ready in $remaining turns", color = Color(0xFFFFBB55), style = MaterialTheme.typography.bodySmall)
+                                        Text(
+                                            "Target: ${skill.targeting?.replace('_', ' ') ?: runtime.targetRequirementFor(skill).name.lowercase()} · Cooldown: ${skill.cooldown} turns",
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelSmall
+                                        )
+                                        Button(
+                                            onClick = {
+                                                if (runtime.onCombatTutorialSkillSelected(skill.id)) {
+                                                    chooseTarget(runtime.targetRequirementFor(skill), "Choose a target for ${skill.name}") { target ->
+                                                        runtime.useSkill(skill, target?.let(::listOf))
+                                                    }
+                                                }
+                                            },
+                                            enabled = canUse,
+                                            shape = RoundedCornerShape(6.dp),
+                                            modifier = Modifier.align(Alignment.End).desktopPointerHover(canUse)
+                                        ) {
+                                            Text("Select")
+                                        }
+                                    }
                                 }
                             }
                         } else {
                             val usable = inventory.filter(CombatItemPresentation::isUsable)
                             if (usable.isEmpty()) item { Text("No usable items") }
-                            items(usable, key = { it.item.id }) { entry ->
-                                entry.item.description?.takeIf { it.isNotBlank() }?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
-                                com.example.starborn.feature.exploration.presentation.ItemDetails.lines(entry.item, services::contentName).forEach {
-                                    Text(it, style = MaterialTheme.typography.bodySmall)
+                            itemsIndexed(usable, key = { _, it -> it.item.id }) { index, entry ->
+                                val keyGlyph = if (index < 9) "[${index + 1}]" else ""
+                                Surface(
+                                    shape = RoundedCornerShape(8.dp),
+                                    color = Color(0xFF09141B),
+                                    border = BorderStroke(1.dp, Color(0xFF2D4454)),
+                                    modifier = Modifier.fillMaxWidth().desktopPointerHover()
+                                ) {
+                                    Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                        Row(
+                                            Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Text(entry.item.name, style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold), color = Color.White)
+                                            if (keyGlyph.isNotBlank()) {
+                                                Surface(
+                                                    shape = RoundedCornerShape(4.dp),
+                                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                                                ) {
+                                                    Text(keyGlyph, modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                                }
+                                            }
+                                        }
+                                        entry.item.description?.takeIf { it.isNotBlank() }?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.75f)) }
+                                        com.example.starborn.feature.exploration.presentation.ItemDetails.lines(entry.item, services::contentName).forEach {
+                                            Text(it, style = MaterialTheme.typography.bodySmall, color = Color(0xFF91A8B3))
+                                        }
+                                        Button(
+                                            onClick = {
+                                                val requirement = CombatItemPresentation.targetRequirement(entry)
+                                                chooseTarget(requirement, "Choose a target for ${entry.item.name}") { runtime.useItem(entry, it) }
+                                            },
+                                            shape = RoundedCornerShape(6.dp),
+                                            modifier = Modifier.align(Alignment.End).desktopPointerHover()
+                                        ) {
+                                            Text("${entry.item.name} ×${entry.quantity}")
+                                        }
+                                    }
                                 }
-                                Button(onClick = {
-                                    val requirement = CombatItemPresentation.targetRequirement(entry)
-                                    chooseTarget(requirement, "Choose a target for ${entry.item.name}") { runtime.useItem(entry, it) }
-                                }) { Text("${entry.item.name} ×${entry.quantity}") }
                             }
                         }
                     }
@@ -459,8 +588,14 @@ private fun DesktopCombatContent(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("Attack")
-                            Text("[1]", color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f), style = MaterialTheme.typography.labelSmall)
+                            Text("Attack", fontWeight = FontWeight.SemiBold)
+                            Surface(
+                                shape = RoundedCornerShape(4.dp),
+                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                            ) {
+                                Text("[1]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                            }
                         }
                     }
                     DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::openSkills, icon = Icons.Rounded.AutoAwesome,
@@ -472,8 +607,14 @@ private fun DesktopCombatContent(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("Abilities")
-                            Text("[2]", color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f), style = MaterialTheme.typography.labelSmall)
+                            Text("Abilities", fontWeight = FontWeight.SemiBold)
+                            Surface(
+                                shape = RoundedCornerShape(4.dp),
+                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                            ) {
+                                Text("[2]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                            }
                         }
                     }
                     DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::openItems, icon = Icons.Rounded.Inventory2, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("items")) {
@@ -484,8 +625,14 @@ private fun DesktopCombatContent(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("Items")
-                            Text("[3]", color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f), style = MaterialTheme.typography.labelSmall)
+                            Text("Items", fontWeight = FontWeight.SemiBold)
+                            Surface(
+                                shape = RoundedCornerShape(4.dp),
+                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                            ) {
+                                Text("[3]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                            }
                         }
                     }
                     DesktopCombatActionButton(modifier = Modifier.fillMaxWidth(), onClick = {
@@ -499,8 +646,14 @@ private fun DesktopCombatContent(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(label)
-                            Text("[4]", color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f), style = MaterialTheme.typography.labelSmall)
+                            Text(label, fontWeight = FontWeight.SemiBold)
+                            Surface(
+                                shape = RoundedCornerShape(4.dp),
+                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                            ) {
+                                Text("[4]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                            }
                         }
                     }
                     DesktopCombatActionButton(modifier = Modifier.fillMaxWidth(), onClick = { runtime.attemptRetreat() }, icon = Icons.Rounded.ExitToApp, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("retreat")) {
@@ -511,8 +664,14 @@ private fun DesktopCombatContent(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("Retreat")
-                            Text("[R]", color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f), style = MaterialTheme.typography.labelSmall)
+                            Text("Retreat", fontWeight = FontWeight.SemiBold)
+                            Surface(
+                                shape = RoundedCornerShape(4.dp),
+                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                            ) {
+                                Text("[R]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                            }
                         }
                     }
                 if (targetAction != null) TextButton(modifier = Modifier.fillMaxWidth().desktopPointerHover(), onClick = {
@@ -552,6 +711,7 @@ DesktopBattleFormation(enemies, services, Modifier.fillMaxWidth().weight(.54f), 
                     selectedId = selectedTarget ?: focusedEnemies.firstOrNull(), validTargets = validIds, targeting = targetAction != null,
                     meters = meters, intents = intents, feedback = feedback, cues = cues, lungeStyle = lungeStyle,
                     lungeActor = lungeActor, lungeToken = lungeToken, missActor = missActor, missToken = missToken, battleHeight = battlefieldHeight, opposingCount = enemies.size,
+                    onHover = { hoveredEnemyId = it },
                     onSelect = { id ->
                         if (enemies.firstOrNull { it.combatant.id == id }?.isAlive == true && runtime.isCombatTutorialTargetEnabled(id)) {
                             runtime.focusEnemyTarget(id)
@@ -573,6 +733,7 @@ DesktopBattleFormation(party, services, Modifier.fillMaxWidth().weight(.46f), fa
                     selectedId = selectedTarget ?: actorId, validTargets = validIds, targeting = targetAction != null,
                     meters = meters, intents = emptyMap(), feedback = feedback, cues = cues, lungeStyle = lungeStyle,
                     lungeActor = lungeActor, lungeToken = lungeToken, missActor = missActor, missToken = missToken, battleHeight = battlefieldHeight, opposingCount = enemies.size,
+                    onHover = {},
                     onSelect = { id ->
                         if (targetAction != null && id in validIds) targetAction?.invoke(id)
                         else if (targetAction == null && timedPrompt == null && tutorial?.showsModal != true) runtime.selectReadyPlayer(id)

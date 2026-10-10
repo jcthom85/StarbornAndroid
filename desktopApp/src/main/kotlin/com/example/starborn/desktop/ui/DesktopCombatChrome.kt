@@ -17,8 +17,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.foundation.clickable
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.starborn.desktop.DesktopAppServices
@@ -266,3 +268,174 @@ internal fun DesktopCombatOutcomeOverlay(
         }
     }
 }
+
+/** Persistent Party Roster Panel for Desktop Wide-Screen layout. */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+internal fun DesktopCombatPartyRoster(
+    party: List<CombatantState>,
+    services: DesktopAppServices,
+    meters: Map<String, Float>,
+    actorId: String?,
+    playerPartyDefs: List<com.example.starborn.domain.model.Player>,
+    onSelectActor: (String) -> Unit
+) {
+    DesktopMenuCard(Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "PARTY STATUS",
+                    color = Color(0xFF91A8B3),
+                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+                )
+                val readyCount = party.count { it.isAlive && (meters[it.combatant.id] ?: 0f) >= 0.999f }
+                if (readyCount > 1) {
+                    Surface(
+                        shape = RoundedCornerShape(4.dp),
+                        color = Color(0xFF63E6FF).copy(alpha = 0.15f),
+                        border = BorderStroke(1.dp, Color(0xFF63E6FF).copy(alpha = 0.5f))
+                    ) {
+                        Text(
+                            "[Tab] Cycle Ready",
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                            color = Color(0xFF63E6FF),
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                }
+            }
+
+            party.forEach { member ->
+                val id = member.combatant.id
+                val isActing = id == actorId
+                val meter = (meters[id] ?: 0f).coerceIn(0f, 1f)
+                val isReady = member.isAlive && meter >= 0.999f
+                val playerDef = playerPartyDefs.firstOrNull { it.id == id }
+                val iconPath = playerDef?.miniIconPath ?: playerDef?.combatIconPath
+
+                val cardBorder = when {
+                    isActing -> BorderStroke(1.2.dp, Color(0xFFFFBB55))
+                    isReady -> BorderStroke(1.dp, Color(0xFF63E6FF).copy(alpha = 0.6f))
+                    else -> BorderStroke(1.dp, Color(0xFF22323D).copy(alpha = 0.5f))
+                }
+
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = if (isActing) Color(0xFF13222B) else Color(0xFF09141B),
+                    border = cardBorder,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .then(if (isReady && !isActing) Modifier.desktopPointerHover() else Modifier)
+                        .clickable(enabled = isReady && !isActing) { onSelectActor(id) }
+                ) {
+                    Row(
+                        Modifier.padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        // Portrait / Mini-Icon
+                        Surface(
+                            shape = RoundedCornerShape(6.dp),
+                            color = Color.Black.copy(alpha = 0.4f),
+                            border = BorderStroke(1.dp, if (isActing) Color(0xFFFFBB55).copy(alpha = 0.6f) else Color(0xFF1E313D)),
+                            modifier = Modifier.size(38.dp)
+                        ) {
+                            if (iconPath != null) {
+                                Image(
+                                    rememberDesktopAssetPainter(iconPath, services.assetProvider),
+                                    contentDescription = member.combatant.name,
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentScale = ContentScale.Fit
+                                )
+                            }
+                        }
+
+                        // Info & Bars
+                        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    member.combatant.name,
+                                    color = if (member.isAlive) Color.White else Color(0xFF88959E),
+                                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold)
+                                )
+                                when {
+                                    isActing -> Text("ACTING", color = Color(0xFFFFBB55), style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                                    isReady -> Text("READY", color = Color(0xFF63E6FF), style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                                    !member.isAlive -> Text("DOWN", color = Color(0xFFE65D5D), style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                                    else -> Text("${(meter * 100).toInt()}%", color = Color(0xFF819AA8), style = MaterialTheme.typography.labelSmall)
+                                }
+                            }
+
+                            // HP Bar + exact numbers
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                LinearProgressIndicator(
+                                    progress = { (member.hp.toFloat() / member.combatant.stats.maxHp.coerceAtLeast(1)).coerceIn(0f, 1f) },
+                                    modifier = Modifier.weight(1f).height(4.dp),
+                                    color = if (member.hp < member.combatant.stats.maxHp * 0.25f) Color(0xFFFF4D59) else Color(0xFF55E588),
+                                    trackColor = Color(0x99070B12)
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    "${member.hp}/${member.combatant.stats.maxHp}",
+                                    color = Color.White.copy(alpha = 0.8f),
+                                    fontSize = 10.sp
+                                )
+                            }
+
+                            // ATB & Momentum Row
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                LinearProgressIndicator(
+                                    progress = { meter },
+                                    modifier = Modifier.weight(1f).height(3.dp),
+                                    color = Color(0xFF2F9BE8),
+                                    trackColor = Color(0x99070B12)
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+                                    repeat(3) { pipIdx ->
+                                        Box(
+                                            Modifier
+                                                .size(6.dp)
+                                                .background(
+                                                    if (member.momentum > pipIdx) Color(0xFF63E6FF) else Color.White.copy(alpha = 0.15f),
+                                                    RoundedCornerShape(1.dp)
+                                                )
+                                        )
+                                    }
+                                }
+                            }
+
+                            // Active Statuses & Buffs
+                            if (member.statusEffects.isNotEmpty() || member.buffs.isNotEmpty()) {
+                                FlowRow(
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                                ) {
+                                    member.statusEffects.forEach { DesktopCombatStatusChip(it, services) }
+                                    member.buffs.forEach { DesktopCombatBuffChip(it, services) }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
