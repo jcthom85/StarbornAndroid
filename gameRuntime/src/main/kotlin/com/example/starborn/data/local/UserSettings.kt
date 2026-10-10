@@ -10,6 +10,7 @@ data class UserSettings(
     val ambienceVolume: Float = 1f,
     val voiceVolume: Float = 1f,
     val uiScale: Float = 1f,
+    val textSpeed: Float = 1f,
     val muteWhenUnfocused: Boolean = false,
     val autoAdvanceDialogue: Boolean = false,
     val vignetteEnabled: Boolean = true,

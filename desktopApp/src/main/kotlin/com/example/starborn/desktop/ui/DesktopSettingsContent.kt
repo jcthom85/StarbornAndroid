@@ -15,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import com.example.starborn.data.local.UserSettings
 import com.example.starborn.desktop.DesktopAppServices
 import com.example.starborn.desktop.DesktopDisplayMode
+import com.example.starborn.domain.audio.AudioCommand
+import com.example.starborn.domain.audio.AudioCueType
 import kotlinx.coroutines.launch
 
 @Composable
@@ -29,7 +31,7 @@ internal fun DesktopSettingsContent(services: DesktopAppServices, userSettings: 
                 DesktopVolumeControl("Master volume", userSettings.masterVolume) { scope.launch { services.userSettingsStore.setMasterVolume(it) } }
                 DesktopVolumeControl("Music", userSettings.musicVolume) { scope.launch { services.userSettingsStore.setMusicVolume(it) } }
                 DesktopVolumeControl("Ambience", userSettings.ambienceVolume) { scope.launch { services.userSettingsStore.setAmbienceVolume(it) } }
-                DesktopVolumeControl("Sound effects", userSettings.sfxVolume) { scope.launch { services.userSettingsStore.setSfxVolume(it) } }
+                DesktopVolumeControl("Sound effects", userSettings.sfxVolume, isSfx = true, services = services) { scope.launch { services.userSettingsStore.setSfxVolume(it) } }
                 DesktopVolumeControl("Voice", userSettings.voiceVolume) { scope.launch { services.userSettingsStore.setVoiceVolume(it) } }
                 DesktopSettingToggle("Mute when window unfocused", userSettings.muteWhenUnfocused) { scope.launch { services.userSettingsStore.setMuteWhenUnfocused(it) } }
             }
@@ -66,7 +68,7 @@ internal fun DesktopSettingsContent(services: DesktopAppServices, userSettings: 
                             onClick = { scope.launch { services.userSettingsStore.setEnvironmentalEffectsQuality(quality) } }, label = { Text(quality.label) })
                     }
                 }
-                Text("Windowed mode can be resized (minimum 1024×720).", style = MaterialTheme.typography.bodySmall, color = FieldMenuDesign.textMuted)
+                Text("Windowed mode can be resized (minimum 1024×700).", style = MaterialTheme.typography.bodySmall, color = FieldMenuDesign.textMuted)
                 onOpenControls?.let { OutlinedButton(onClick = it, modifier = Modifier.desktopPointerHover()) { Text("Keyboard controls") } }
             }
         }
@@ -75,6 +77,17 @@ internal fun DesktopSettingsContent(services: DesktopAppServices, userSettings: 
         DesktopMenuCard(Modifier.fillMaxWidth()) {
             Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 DesktopMenuSection("Guidance and accessibility")
+                Text("Text reveal speed", style = MaterialTheme.typography.titleSmall)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    listOf(0.7f to "Slow", 1.0f to "Normal", 1.6f to "Fast", 0.0f to "Instant").forEach { (speed, label) ->
+                        FilterChip(
+                            selected = if (speed == 0.0f) userSettings.textSpeed == 0.0f else kotlin.math.abs(userSettings.textSpeed - speed) < 0.1f,
+                            modifier = Modifier.desktopPointerHover(),
+                            onClick = { scope.launch { services.userSettingsStore.setTextSpeed(speed) } },
+                            label = { Text(label) }
+                        )
+                    }
+                }
                 DesktopSettingToggle("Auto-advance dialogue", userSettings.autoAdvanceDialogue) { scope.launch { services.userSettingsStore.setAutoAdvanceDialogue(it) } }
                 DesktopSettingToggle("Tutorials", userSettings.tutorialsEnabled) { scope.launch { services.userSettingsStore.setTutorialsEnabled(it) } }
                 DesktopSettingToggle("Reduce flashes", userSettings.disableFlashes) { scope.launch { services.userSettingsStore.setFlashesDisabled(it) } }
@@ -119,13 +132,30 @@ internal fun DesktopSettingsContent(services: DesktopAppServices, userSettings: 
 }
 
 @Composable
-private fun DesktopVolumeControl(label: String, persisted: Float, onCommit: (Float) -> Unit) {
+private fun DesktopVolumeControl(
+    label: String,
+    persisted: Float,
+    isSfx: Boolean = false,
+    services: DesktopAppServices? = null,
+    onCommit: (Float) -> Unit
+) {
     var volume by remember(persisted) { mutableStateOf(persisted) }
     Column {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(label); Text("${(volume * 100).toInt()}%", color = MaterialTheme.colorScheme.primary)
         }
-        Slider(volume, { volume = it }, onValueChangeFinished = { onCommit(volume) },
+        Slider(volume, { volume = it }, onValueChangeFinished = {
+            onCommit(volume)
+            if (isSfx) {
+                services?.audioDriver?.execute(
+                    AudioCommand.Play(
+                        type = AudioCueType.UI,
+                        cueId = "menu_select",
+                        gain = 1f
+                    )
+                )
+            }
+        },
             modifier = Modifier.desktopPointerHover(),
             colors = SliderDefaults.colors(thumbColor = FieldMenuDesign.cyan, activeTrackColor = FieldMenuDesign.cyan,
                 inactiveTrackColor = FieldMenuDesign.cyan.copy(alpha = .12f)))

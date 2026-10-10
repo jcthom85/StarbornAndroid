@@ -45,6 +45,11 @@ class DesktopUserSettingsStore(
 
     override fun close() { settingsJob.cancel() }
 
+    suspend fun closeAndJoin() {
+        settingsJob.cancel()
+        settingsJob.join()
+    }
+
     override val settings: Flow<UserSettings> = dataStore.data.map { prefs ->
         UserSettings(
             masterVolume = prefs[MASTER_VOLUME] ?: 1f,
@@ -53,6 +58,7 @@ class DesktopUserSettingsStore(
             ambienceVolume = prefs[AMBIENCE_VOLUME] ?: 1f,
             voiceVolume = prefs[VOICE_VOLUME] ?: 1f,
             uiScale = prefs[UI_SCALE] ?: 1f,
+            textSpeed = prefs[TEXT_SPEED] ?: 1f,
             muteWhenUnfocused = prefs[MUTE_WHEN_UNFOCUSED] ?: false,
             autoAdvanceDialogue = prefs[AUTO_ADVANCE_DIALOGUE] ?: false,
             vignetteEnabled = prefs[VIGNETTE_ENABLED] ?: true,
@@ -86,6 +92,10 @@ class DesktopUserSettingsStore(
 
     override suspend fun setUiScale(value: Float) {
         dataStore.edit { it[UI_SCALE] = value.coerceIn(0.75f, 2.5f) }
+    }
+
+    override suspend fun setTextSpeed(value: Float) {
+        dataStore.edit { it[TEXT_SPEED] = value }
     }
 
     override suspend fun setMuteWhenUnfocused(enabled: Boolean) {
@@ -196,6 +206,7 @@ class DesktopUserSettingsStore(
         private val SFX_VOLUME = floatPreferencesKey("sfx_volume")
         private val VOICE_VOLUME = floatPreferencesKey("voice_volume")
         private val UI_SCALE = floatPreferencesKey("ui_scale")
+        private val TEXT_SPEED = floatPreferencesKey("text_speed")
         private val MUTE_WHEN_UNFOCUSED = booleanPreferencesKey("mute_when_unfocused")
         private val AUTO_ADVANCE_DIALOGUE = booleanPreferencesKey("auto_advance_dialogue")
         private val VIGNETTE_ENABLED = booleanPreferencesKey("vignette_enabled")

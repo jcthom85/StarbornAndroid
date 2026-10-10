@@ -10,6 +10,7 @@ interface GameSettingsStore {
     suspend fun setAmbienceVolume(value: Float) {}
     suspend fun setVoiceVolume(value: Float)
     suspend fun setUiScale(value: Float) {}
+    suspend fun setTextSpeed(value: Float) {}
     suspend fun setMuteWhenUnfocused(enabled: Boolean) {}
     suspend fun setAutoAdvanceDialogue(enabled: Boolean) {}
     suspend fun setVignetteEnabled(enabled: Boolean)

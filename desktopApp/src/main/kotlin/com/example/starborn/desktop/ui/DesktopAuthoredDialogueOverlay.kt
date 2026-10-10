@@ -36,6 +36,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -89,9 +90,12 @@ fun DesktopAuthoredDialogueOverlay(
     val latestOnPlayMurmur by rememberUpdatedState(onPlayMurmur)
     val latestOnRevealFinished by rememberUpdatedState(onRevealFinished)
 
-    LaunchedEffect(line.id, fullText, voiceProfile) {
+    val settings by services.userSettingsStore.settings.collectAsState(initial = com.example.starborn.data.local.UserSettings())
+    val textSpeed = settings.textSpeed
+
+    LaunchedEffect(line.id, fullText, voiceProfile, textSpeed) {
         revealedCount = 0
-        if (fullText.isBlank()) {
+        if (fullText.isBlank() || textSpeed <= 0f) {
             revealedCount = fullText.length
             return@LaunchedEffect
         }
@@ -103,12 +107,20 @@ fun DesktopAuthoredDialogueOverlay(
             if (voiceProfile != DialogueVoiceProfile.NONE && shouldPlayMurmur(fullText, index)) {
                 latestOnPlayMurmur(voiceProfile.randomCue(random))
             }
-            delay(revealDelayMs(char))
+            val delayMs = (revealDelayMs(char) / textSpeed.coerceAtLeast(0.1f)).toLong()
+            delay(delayMs)
         }
     }
 
-    LaunchedEffect(line.id, revealFinished) {
-        if (revealFinished) latestOnRevealFinished()
+    LaunchedEffect(line.id, revealFinished, settings.autoAdvanceDialogue) {
+        if (revealFinished) {
+            latestOnRevealFinished()
+            if (settings.autoAdvanceDialogue && choices.isEmpty()) {
+                val advanceWait = (1200L + fullText.length * 15L).coerceIn(1500L, 4000L)
+                delay(advanceWait)
+                onAdvance()
+            }
+        }
     }
 
     LaunchedEffect(line.id, revealAllRequest) {

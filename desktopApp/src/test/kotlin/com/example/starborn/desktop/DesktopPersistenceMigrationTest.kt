@@ -6,6 +6,7 @@ import org.junit.Assert.*
 import org.junit.Test
 import java.nio.file.Files
 import java.io.File
+import kotlinx.coroutines.flow.first
 
 class DesktopPersistenceMigrationTest {
     @Test fun legacySaveImportsWithoutDestroyingOriginalAndProtocolTakesPrecedence() {
@@ -128,6 +129,51 @@ class DesktopPersistenceMigrationTest {
             val updated = store.initialWindowBounds()
             assertTrue("Maximized state must be remembered", updated.isMaximized)
             store.close()
+        } finally {
+            tempRoot.deleteRecursively()
+        }
+    }
+
+    @Test fun userSettingsStorePersistsTextSpeedAndAudioLevels() = kotlinx.coroutines.runBlocking {
+        val tempRoot = Files.createTempDirectory("starborn-settings-test-").toFile()
+        try {
+            val store = DesktopUserSettingsStore(tempRoot)
+            assertEquals(1f, store.settings.first().textSpeed, 0.001f)
+            store.setTextSpeed(1.6f)
+            assertEquals(1.6f, store.settings.first().textSpeed, 0.001f)
+
+            store.setMasterVolume(0.85f)
+            assertEquals(0.85f, store.settings.first().masterVolume, 0.001f)
+
+            store.setMusicVolume(0.42f)
+            assertEquals(0.42f, store.settings.first().musicVolume, 0.001f)
+
+            store.setAmbienceVolume(0.63f)
+            assertEquals(0.63f, store.settings.first().ambienceVolume, 0.001f)
+
+            store.setSfxVolume(0.77f)
+            assertEquals(0.77f, store.settings.first().sfxVolume, 0.001f)
+
+            store.setVoiceVolume(0.91f)
+            assertEquals(0.91f, store.settings.first().voiceVolume, 0.001f)
+
+            store.setMuteWhenUnfocused(true)
+            assertTrue(store.settings.first().muteWhenUnfocused)
+
+            store.closeAndJoin()
+
+            // Re-instantiate store on same directory to test persistence
+            val reloadedStore = DesktopUserSettingsStore(tempRoot)
+            val reloaded = reloadedStore.settings.first()
+            assertEquals(1.6f, reloaded.textSpeed, 0.001f)
+            assertEquals(0.85f, reloaded.masterVolume, 0.001f)
+            assertEquals(0.42f, reloaded.musicVolume, 0.001f)
+            assertEquals(0.63f, reloaded.ambienceVolume, 0.001f)
+            assertEquals(0.77f, reloaded.sfxVolume, 0.001f)
+            assertEquals(0.91f, reloaded.voiceVolume, 0.001f)
+            assertTrue(reloaded.muteWhenUnfocused)
+
+            reloadedStore.closeAndJoin()
         } finally {
             tempRoot.deleteRecursively()
         }
