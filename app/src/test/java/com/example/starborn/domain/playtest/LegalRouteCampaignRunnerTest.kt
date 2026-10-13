@@ -233,7 +233,6 @@ class LegalRouteCampaignRunnerTest {
                 requireNotNull(parentFile).mkdirs()
                 writeText(publicCombats.joinToString("\n") + "\nAssisted actions: 0\n")
             }
-            runner.allowAssistedRoutes()
 
             // Checkpoint 4 Save / Reload
             val w4Saved = harness.saveSlot(1)
@@ -248,6 +247,12 @@ class LegalRouteCampaignRunnerTest {
 
             // --- WORLD 5: THE ORBITAL RING ---
             runner.playWorld5()
+            assertTrue("Worlds 1-5 must have no assisted actions or victories", assistance.isEmpty())
+            File("build/reports/campaign-systems/public-worlds12345-combat.txt").apply {
+                requireNotNull(parentFile).mkdirs()
+                writeText(publicCombats.joinToString("\n") + "\nAssisted actions: 0\n")
+            }
+            runner.allowAssistedRoutes()
 
             // Checkpoint 5 Save / Reload
             val w5Saved = harness.saveSlot(2)
@@ -593,7 +598,7 @@ class LegalRouteCampaignRunnerTest {
         }
 
         fun winCombat(enemyIds: List<String>, roomId: String) {
-            check(!strict) { "Synthetic victories are forbidden in Worlds 1-2" }
+            check(!strict) { "Synthetic victories are forbidden while strict checks are active" }
             assistance += "scripted_victory:$roomId:${enemyIds.joinToString(";")}"
             val reward = harness.applyScriptedBattleReward(enemyIds, roomId)
             val payload = CombatResultPayload(
@@ -926,21 +931,51 @@ class LegalRouteCampaignRunnerTest {
 
         fun playWorld5() {
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w5_mq21"))
-            winCombat(listOf("orbital_fighter"), "orbital_executive_dock")
+            harness.learnAtVisibleSkillTree("nova", "nova_quiet_steps")
+            harness.learnAtVisibleSkillTree("zeke", "zeke_motivational_speech")
+            navigateLegalPath("orbital_customs_lounge")
+            harness.explorationVm.equipArmor("orion", "heat_liner")
+            harness.settle()
+            assertEquals("Earned liner must equip through public controls", "heat_liner", harness.sessionStore.state.value.equippedArmors["orion"])
+            harness.sellAtVisibleShop("orbital_dispensary", "power_cell", 7)
+            harness.sellAtVisibleShop("orbital_dispensary", "composite_plate", 4)
+            harness.buyAtVisibleShop("orbital_dispensary", "medkit_plus", 6)
+            harness.buyAtVisibleShop("orbital_dispensary", "orbital_glimmer_tonic", 1)
+            harness.explorationVm.useInventoryItem("orbital_glimmer_tonic", "zeke")
+            harness.settle()
+            assertEquals("orbital_glimmer_tonic", harness.sessionStore.state.value.activeMealBuff?.recipeId)
+            assertEquals(6, harness.sessionStore.state.value.activeMealBuff?.speedBonus)
+            assertFalse("Eating must consume the purchased portion", harness.inventoryService.hasItem("orbital_glimmer_tonic"))
+            harness.restAtVisibleStop()
+            navigateLegalPath("orbital_executive_dock")
+            performAction("w5_mq21_force_dock")
+            assertFalse("Docking must wait for the real fighter victory", "ms_w5_forced_dock" in harness.sessionStore.state.value.completedMilestones)
+            harness.playPublicEncounter("orbital_fighter")
+            assertTrue("ms_w5_fighter_screen_broken" in harness.sessionStore.state.value.completedMilestones)
             performAction("w5_mq21_force_dock")
             performAction("w5_mq21_hack_airlock")
+            navigateLegalPath("orbital_solarium")
             performAction("w5_mq22_cross_solarium")
             navigateLegalPath("orbital_grand_concourse")
-            winCombat(listOf("compliance_officer", "null_g_drone"), "orbital_grand_concourse")
-            listOf("traverse_shaft", "access_mainframe", "find_thorne")
-                .forEach { performAction("w5_mq22_$it") }
+            harness.playPublicEncounter("compliance_officer")
+            navigateLegalPath("orbital_service_shaft")
+            performAction("w5_mq22_traverse_shaft")
+            navigateLegalPath("orbital_server_farm")
+            performAction("w5_mq22_access_mainframe")
+            navigateLegalPath("deep_mainframe_nave")
+            performAction("w5_mq22_find_thorne")
 
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w5_mq23"))
+            navigateLegalPath("orbital_server_farm")
             performAction("w5_mq23_navigate_maze")
+            navigateLegalPath("deep_firewall_alpha")
             performAction("w5_mq23_firewall_alpha")
+            navigateLegalPath("deep_firewall_beta")
             performAction("w5_mq23_firewall_beta")
+            navigateLegalPath("deep_firewall_gamma")
             performAction("w5_mq23_firewall_gamma")
-            winCombat(listOf("firewall_construct"), "deep_firewall_gamma")
+            assertTrue("Firewall controls alone must not complete the quest", "w5_mq23" in harness.sessionStore.state.value.activeQuests)
+            harness.playPublicEncounter("firewall_construct")
             assertTrue("w5_mq23 completed", harness.sessionStore.state.value.completedQuests.contains("w5_mq23"))
             assertTrue("w5_mq24 active", harness.sessionStore.state.value.activeQuests.contains("w5_mq24"))
 
@@ -953,7 +988,11 @@ class LegalRouteCampaignRunnerTest {
 
             navigateLegalPath("deep_throne_room")
             performAction("w5_mq25_soloist")
-            winCombat(listOf("compliance_avatar"), "deep_throne_room")
+            navigateLegalPath("deep_tear")
+            performAction("w5_mq25_enter_tear")
+            assertEquals("The breach must wait for the Avatar victory", "deep_tear", harness.sessionStore.state.value.roomId)
+            assertFalse("Uncleared breach must not unlock World 6", "ms_w6_access_unlocked" in harness.sessionStore.state.value.completedMilestones)
+            harness.playPublicEncounter("compliance_avatar")
             performAction("w5_mq25_enter_tear")
             assertTrue("w5_mq25 completed", harness.sessionStore.state.value.completedQuests.contains("w5_mq25"))
             assertTrue("ms_w6_access_unlocked set", harness.sessionStore.state.value.completedMilestones.contains("ms_w6_access_unlocked"))
@@ -1185,6 +1224,42 @@ class LegalRouteCampaignRunnerTest {
             }
         }
 
+        fun learnAtVisibleSkillTree(characterId: String, nodeId: String) {
+            explorationVm.openSkillTree(characterId)
+            settle()
+            val overlay = requireNotNull(explorationVm.uiState.value.skillTreeOverlay)
+            val node = overlay.branches.flatMap { it.nodes }.single { it.id == nodeId }
+            assertTrue("Earned AP must make $nodeId purchasable", node.status.canPurchase)
+            val before = sessionStore.state.value.playerAp
+            explorationVm.unlockSkillNode(nodeId)
+            settle()
+            assertTrue(nodeId in sessionStore.state.value.unlockedSkills)
+            assertEquals(before - node.costAp, sessionStore.state.value.playerAp)
+            explorationVm.closeSkillTreeOverlay()
+            settle()
+            publicCombats += "skillTree=$characterId purchased=$nodeId apSpent=${node.costAp} remainingAp=${sessionStore.state.value.playerAp}"
+        }
+
+        fun sellAtVisibleShop(shopId: String, itemId: String, quantity: Int) {
+            val action = explorationVm.uiState.value.actions.filterIsInstance<com.example.starborn.domain.model.ShopAction>()
+                .single { it.shopId == shopId }
+            explorationVm.onActionSelected(action)
+            settle()
+            explorationVm.enterPendingShop()
+            settle()
+            com.example.starborn.feature.shop.ShopController(shopId, shopRepository, itemRepository, inventoryService, sessionStore, coroutineScope).use { shop ->
+                val listing = shop.uiState.value.sellInventory.single { it.id == itemId }
+                assertTrue("Owned loot must be sellable", listing.canSell && listing.quantity >= quantity)
+                val credits = sessionStore.state.value.playerCredits
+                val owned = inventoryService.snapshot()[itemId] ?: 0
+                shop.sellItem(itemId, quantity)
+                settle()
+                assertEquals(owned - quantity, inventoryService.snapshot()[itemId] ?: 0)
+                assertEquals(credits + listing.price * quantity, sessionStore.state.value.playerCredits)
+                publicCombats += "shop=$shopId sold=$itemId quantity=$quantity credits=${listing.price * quantity} remainingCredits=${sessionStore.state.value.playerCredits}"
+            }
+        }
+
         fun playPublicEncounter(enemyId: String, retreat: Boolean = false, pending: Boolean = false) {
             val room = requireNotNull(sessionStore.state.value.roomId)
             if (!pending) {
@@ -1220,7 +1295,7 @@ class LegalRouteCampaignRunnerTest {
                 File("build/reports/campaign-systems/encounter-$enemyId-before.txt").apply {
                     requireNotNull(parentFile).mkdirs()
                     val snapshot = sessionStore.state.value
-                    writeText("room=$room enemies=$encounterIds credits=${snapshot.playerCredits}\ninventory=${snapshot.inventory}\nweapons=${snapshot.equippedWeapons}\narmor=${snapshot.equippedArmors}\nhp=${snapshot.partyMemberHp}\nskills=${snapshot.partyMembers.associateWith { combat.skillsForPlayer(it).map { s -> s.id } }}\n")
+                    writeText("room=$room enemies=$encounterIds credits=${snapshot.playerCredits}\ninventory=${snapshot.inventory}\nweapons=${snapshot.equippedWeapons}\narmor=${snapshot.equippedArmors}\nhp=${snapshot.partyMemberHp}\nskills=${snapshot.partyMembers.associateWith { combat.skillsForPlayer(it).map { s -> s.id } }}\nmeal=${snapshot.activeMealBuff}\nstats=${combat.combatState?.combatants?.mapValues { it.value.combatant.stats }}\n")
                 }
                 assertEquals(room, combat.encounterRoomId)
                 if (enemyId == "faulted_loader") {
@@ -1242,6 +1317,16 @@ class LegalRouteCampaignRunnerTest {
                         }
                         val actor = requireNotNull(combat.awaitingAction.value)
                         val active = state.combatants.getValue(actor)
+                        val livingEnemies = state.combatants.values.filter { it.combatant.side == com.example.starborn.domain.combat.CombatSide.ENEMY && it.isAlive }
+                        val controlId = when {
+                            (room.startsWith("orbital") || room.startsWith("deep")) && actor == "orion" && livingEnemies.any { enemy -> enemy.statusEffects.none { it.id == "weak" } } -> "orion_disruption_pulse"
+                            else -> null
+                        }
+                        val control = combat.skillsForPlayer(actor).firstOrNull { it.id == controlId && combat.canUseSkill(actor, it) }
+                        if (control != null) {
+                            combat.useSkill(control)
+                            continue
+                        }
                         val injuredAllies = state.combatants.values.count {
                             it.combatant.side == com.example.starborn.domain.combat.CombatSide.PLAYER && it.isAlive && it.hp < it.combatant.stats.maxHp * .7
                         }
@@ -1272,9 +1357,13 @@ class LegalRouteCampaignRunnerTest {
                         }
                         val target = state.combatants.values.filter { it.combatant.side == com.example.starborn.domain.combat.CombatSide.ENEMY && it.isAlive }
                             .minBy { it.hp }.combatant.id
-                        val skill = combat.skillsForPlayer(actor).filter {
-                            it.id in setOf("nova_arc_tether", "nova_blast_wave", "nova_hydraulic_kick", "zeke_shatter_blow", "orion_prism_lance", "gh0st_headshot") && combat.canUseSkill(actor, it)
-                        }.maxByOrNull { it.basePower }
+                        val availableSkills = combat.skillsForPlayer(actor).filter {
+                            (it.id in setOf("nova_arc_tether", "nova_blast_wave", "nova_hydraulic_kick", "zeke_shatter_blow", "orion_prism_lance", "gh0st_headshot") ||
+                                ((room.startsWith("orbital") || room.startsWith("deep")) && it.id in setOf("nova_cryo_vent", "zeke_overload_fists", "gh0st_system_crash", "gh0st_venom_edge"))) && combat.canUseSkill(actor, it)
+                        }
+                        val priorities = listOf("nova_blast_wave", "gh0st_system_crash", "nova_cryo_vent", "zeke_overload_fists", "gh0st_venom_edge", "nova_arc_tether", "zeke_shatter_blow", "gh0st_headshot", "orion_prism_lance")
+                        val skill = if (room.startsWith("orbital") || room.startsWith("deep")) availableSkills.minByOrNull { priorities.indexOf(it.id) }
+                            else availableSkills.maxByOrNull { it.basePower }
                         if (skill != null) {
                             if (combat.targetRequirementFor(skill) == com.example.starborn.feature.combat.viewmodel.TargetRequirement.NONE) {
                                 combat.useSkill(skill)

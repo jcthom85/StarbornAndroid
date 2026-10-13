@@ -1,5 +1,9 @@
 # World 4 public campaign route
 
+The follow-up [World 5 pass](PUBLIC_CAMPAIGN_WORLD_5.md) extends the unassisted
+route through the Ring, adds paid preparation and AP purchases, and replaces
+its four synthetic victories. This document records the preceding pass.
+
 Worlds 1-4 now finish without hidden action calls, room-position shortcuts, or synthetic victories in the test driver. Strict checks remain active until World 5.
 
 ## Route coverage
