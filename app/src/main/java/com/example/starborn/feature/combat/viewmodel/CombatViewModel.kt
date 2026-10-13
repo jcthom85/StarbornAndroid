@@ -158,6 +158,7 @@ class CombatViewModel(
     fun onMissLungeFinished(token: Long) = runtime.onMissLungeFinished(token)
     fun useItem(entry: InventoryEntry, targetId: String? = null) = runtime.useItem(entry, targetId)
     fun snackLabel(actorId: String) = runtime.snackLabel(actorId)
+    fun snackPreview(actorId: String) = runtime.snackPreview(actorId)
     fun snackTargetRequirement(actorId: String) = runtime.snackTargetRequirement(actorId)
     fun snackCooldownRemaining(actorId: String) = runtime.snackCooldownRemaining(actorId)
     fun canUseSnack(actorId: String) = runtime.canUseSnack(actorId)

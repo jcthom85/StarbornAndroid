@@ -65,7 +65,10 @@ fun DesktopPortraitBackdrop(
         val blurredPainter = rememberBlurredBackdropPainter(painter)
         val extensionPainter = blurredPainter ?: painter
         val seamPainter = rememberBlurredBackdropPainter(painter, 3f) ?: extensionPainter
-        val extensionModifier = if (painter is DesktopBitmapPainter) Modifier else Modifier.blur(32.dp, BlurredEdgeTreatment.Unbounded)
+        // A solid loading/fallback color has no detail to blur. Sending it through
+        // an unbounded native blur needlessly stalls cold scene renders.
+        val extensionModifier = if (painter is DesktopBitmapPainter || painter is androidx.compose.ui.graphics.painter.ColorPainter)
+            Modifier else Modifier.blur(32.dp, BlurredEdgeTreatment.Unbounded)
         val density = LocalDensity.current
         val viewport = with(density) { Size(maxWidth.toPx(), maxHeight.toPx()) }
         val layout = portraitBackdropLayout(viewport, painter.intrinsicSize)

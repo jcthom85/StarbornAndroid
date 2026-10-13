@@ -208,8 +208,12 @@ class ShopController(
             val price = max(1, (basePrice * markdown).roundToInt())
             val isBlacklisted = shop.buys?.blacklist?.any { it.equals(item.id, ignoreCase = true) || it.equals(item.name, ignoreCase = true) } == true
             val typeAllowed = shop.buys?.acceptTypes.isNullOrEmpty() || shop.buys?.acceptTypes?.any { it.equals(item.type, ignoreCase = true) } == true
-            val canSell = !item.unsellable && !isBlacklisted && typeAllowed && price > 0
+            val state = sessionStore.state.value
+            val reserved = (state.equippedItems.values + state.equippedWeapons.values + state.equippedArmors.values).count { it == item.id }
+            val available = (entry.quantity - reserved).coerceAtLeast(0)
+            val canSell = available > 0 && !item.unsellable && !isBlacklisted && typeAllowed && price > 0
             val reason = when {
+                available <= 0 -> "All copies are equipped."
                 item.unsellable -> "Cannot sell this item."
                 isBlacklisted -> "Dealer won't take this."
                 !typeAllowed -> "Dealer isn't buying this category."
@@ -220,7 +224,7 @@ class ShopController(
                 id = item.id,
                 name = item.name,
                 description = item.description,
-                quantity = entry.quantity,
+                quantity = available,
                 price = price,
                 canSell = canSell,
                 reason = reason
@@ -316,6 +320,10 @@ class ShopController(
         val sellUi = buildSellItems(shop, listOf(entry)).firstOrNull()
         if (sellUi == null || !sellUi.canSell) {
             emitMessage(sellUi?.reason ?: "Dealer won't buy that.")
+            return
+        }
+        if (quantity > sellUi.quantity) {
+            emitMessage("Only ${sellUi.quantity} unequipped copies are available.")
             return
         }
         val total = sellUi.price.toLong() * quantity

@@ -39,6 +39,8 @@ import com.example.starborn.desktop.DesktopAppServices
 import com.example.starborn.domain.fishing.FishingFightPhase
 import com.example.starborn.domain.fishing.FishingLure
 import com.example.starborn.domain.fishing.FishingRod
+import com.example.starborn.domain.fishing.handlingSummary
+import com.example.starborn.domain.fishing.catchSummary
 import com.example.starborn.domain.fishing.MinigameResult
 import com.example.starborn.feature.fishing.viewmodel.*
 
@@ -52,11 +54,19 @@ fun DesktopFishingScreen(
     val runtime = remember(services, zoneId) {
         FishingController(services.fishingService, zoneId, parentScope = scope)
     }
+    DisposableEffect(runtime) { onDispose { runtime.close() } }
+    DesktopFishingContent(services, runtime, onClose)
+}
+
+@Composable
+internal fun DesktopFishingContent(services: DesktopAppServices, runtime: FishingController, onClose: () -> Unit) {
     val state by runtime.uiState.collectAsState()
     val fonts = LocalStarbornFonts.current
-
-    DisposableEffect(runtime) {
-        onDispose { runtime.close() }
+    val foreground = LocalDesktopForeground.current
+    val settings by services.userSettingsStore.settings.collectAsState(initial = com.example.starborn.data.local.UserSettings())
+    var showJournalDrawer by remember { mutableStateOf(false) }
+    LaunchedEffect(runtime, foreground, showJournalDrawer) {
+        runtime.setPaused(!foreground || showJournalDrawer)
     }
 
     val cue: (String) -> Unit = { cueName ->
@@ -67,12 +77,12 @@ fun DesktopFishingScreen(
     LaunchedEffect(runtime) {
         runtime.events.collect { event ->
             when (event) {
-                FishingController.FishingEvent.Cast -> cue("action_inspect")
-                FishingController.FishingEvent.Nibble -> cue("sfx_button_toggle")
-                FishingController.FishingEvent.Bite -> cue("confirm")
-                FishingController.FishingEvent.Warning -> cue("sfx_stat_decrement")
-                FishingController.FishingEvent.CatchSuccess -> cue("sfx_loot_cache")
-                FishingController.FishingEvent.LineSnap -> cue("action_retreat")
+                FishingController.FishingEvent.Cast -> cue("fishing_cast")
+                FishingController.FishingEvent.Nibble -> cue("fishing_splash")
+                FishingController.FishingEvent.Bite -> cue("fishing_bite")
+                FishingController.FishingEvent.Warning -> Unit
+                FishingController.FishingEvent.CatchSuccess -> cue("fishing_catch")
+                FishingController.FishingEvent.LineSnap -> cue("fishing_splash")
             }
         }
     }
@@ -92,8 +102,8 @@ fun DesktopFishingScreen(
         runtime.resetFishing()
     }
 
-    var showJournalDrawer by remember { mutableStateOf(false) }
-
+    var spaceHeld by remember { mutableStateOf(false) }
+    LaunchedEffect(foreground, showJournalDrawer) { spaceHeld = false }
     // Keyboard controls
     val keyboardFocus = remember { FocusRequester() }
     LaunchedEffect(Unit) { keyboardFocus.requestFocus() }
@@ -104,6 +114,11 @@ fun DesktopFishingScreen(
             .background(Color(0xFF040A12))
             .focusRequester(keyboardFocus)
             .onPreviewKeyEvent { event ->
+                if (!foreground) return@onPreviewKeyEvent false
+                if (showJournalDrawer) {
+                    if (event.key == Key.Escape && event.type == KeyEventType.KeyDown) showJournalDrawer = false
+                    return@onPreviewKeyEvent true
+                }
                 if (event.key == Key.Escape && event.type == KeyEventType.KeyDown) {
                     if (state.fishingState == FishingState.WAITING) {
                         runtime.cancelWaiting()
@@ -115,6 +130,8 @@ fun DesktopFishingScreen(
                 } else if (event.key == Key.Spacebar) {
                     when (event.type) {
                         KeyEventType.KeyDown -> {
+                            if (spaceHeld) return@onPreviewKeyEvent true
+                            spaceHeld = true
                             when (state.fishingState) {
                                 FishingState.SETUP -> {
                                     if (state.selectedRod != null && state.selectedLure != null && state.currentZone != null) {
@@ -140,7 +157,7 @@ fun DesktopFishingScreen(
             .focusable()
     ) {
         // Deep water animated sonar canvas
-        SonarAtmosphereCanvas(state.fishingState)
+        if (!settings.disableFlashes) SonarAtmosphereCanvas(state.fishingState)
 
         Column(
             modifier = Modifier
@@ -172,6 +189,7 @@ fun DesktopFishingScreen(
                     FishingState.SETUP -> {
                         FishingSetupView(
                             state = state,
+                            itemDisplayName = services.inventoryService::itemDisplayName,
                             onSelectRod = runtime::selectRod,
                             onSelectLure = runtime::selectLure,
                             onCast = runtime::startFishing
@@ -186,6 +204,7 @@ fun DesktopFishingScreen(
                     FishingState.HOOKSET -> {
                         FishingHooksetView(
                             hookState = state.hookState,
+                            disableFlashes = settings.disableFlashes,
                             onHook = runtime::onHookButtonPressed
                         )
                     }
@@ -286,6 +305,7 @@ private fun SonarAtmosphereCanvas(state: FishingState) {
     )
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun FishingHeaderBar(
     zoneName: String,
@@ -305,12 +325,11 @@ private fun FishingHeaderBar(
         shadowElevation = 8.dp,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             // Zone Lore & Hydrophone Status
             Row(
@@ -353,9 +372,9 @@ private fun FishingHeaderBar(
             }
 
             // Tackles & Journal Badges + Exit
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 // Rod chip
                 Surface(
@@ -440,6 +459,7 @@ private fun FishingHeaderBar(
 @Composable
 private fun FishingSetupView(
     state: FishingUiState,
+    itemDisplayName: (String) -> String,
     onSelectRod: (FishingRod) -> Unit,
     onSelectLure: (FishingLure) -> Unit,
     onCast: () -> Unit
@@ -501,7 +521,7 @@ private fun FishingSetupView(
                                 val isSelected = rod == state.selectedRod
                                 GearSelectionCard(
                                     title = rod.name,
-                                    subtitle = "Power: ${rod.fishingPower} · Stability: ${rod.stability}",
+                                    subtitle = rod.handlingSummary(),
                                     description = rod.description.orEmpty(),
                                     isSelected = isSelected,
                                     accentColor = Color(0xFF00E5FF),
@@ -538,7 +558,7 @@ private fun FishingSetupView(
                                 val isSelected = lure == state.selectedLure
                                 GearSelectionCard(
                                     title = lure.name,
-                                    subtitle = "Rarity Bonus: +${(lure.rarityBonus * 100).toInt()}%",
+                                    subtitle = lure.catchSummary(state.currentZone, itemDisplayName),
                                     description = lure.description.orEmpty(),
                                     isSelected = isSelected,
                                     accentColor = Color(0xFFFFD54F),
@@ -573,7 +593,7 @@ private fun FishingSetupView(
                 ) {
                     Text("🎣", fontSize = 18.sp)
                     Text(
-                        text = if (canCast) "CAST LINE INTO DEEP WATERS [Spacebar / Enter]" else "SELECT A ROD AND LURE TO CAST",
+                        text = if (canCast) "CAST LINE INTO DEEP WATERS [Spacebar]" else "SELECT A ROD AND LURE TO CAST",
                         fontFamily = fonts.orbitron,
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp,
@@ -712,7 +732,7 @@ private fun FishingWaitingView(
             Spacer(Modifier.height(8.dp))
 
             Text(
-                text = "Keep your finger on [Spacebar]. When a specimen strikes, set the hook immediately!",
+                text = "Wait for the bite, then press [Spacebar] to hook.",
                 color = Color(0xFF8FB0C4),
                 fontSize = 13.sp,
                 textAlign = TextAlign.Center
@@ -740,6 +760,7 @@ private fun FishingWaitingView(
 @Composable
 private fun FishingHooksetView(
     hookState: FishingHookState?,
+    disableFlashes: Boolean = false,
     onHook: () -> Unit
 ) {
     val fonts = LocalStarbornFonts.current
@@ -756,7 +777,7 @@ private fun FishingHooksetView(
     Surface(
         shape = RoundedCornerShape(10.dp),
         color = Color(0xEE1E0B08),
-        border = BorderStroke(2.dp, Color(0xFFFF5252).copy(alpha = alertAlpha)),
+        border = BorderStroke(2.dp, Color(0xFFFF5252).copy(alpha = if (disableFlashes) 1f else alertAlpha)),
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
@@ -778,7 +799,7 @@ private fun FishingHooksetView(
             Spacer(Modifier.height(10.dp))
 
             Text(
-                text = "A fish took the bait! Hook the line before it escapes!",
+                text = if (hookState?.practiceHook == true) "Your first bite - take your time. Press Hook when ready." else "A fish took the bait! Hook the line before it escapes!",
                 color = Color(0xFFFFCDD2),
                 fontSize = 14.sp
             )
@@ -787,7 +808,7 @@ private fun FishingHooksetView(
 
             // Reaction Time Meter
             val remainingMs = hookState?.timeRemainingMs ?: 2000L
-            LinearProgressIndicator(
+            if (hookState?.practiceHook != true) LinearProgressIndicator(
                 progress = { (remainingMs / 2400f).coerceIn(0f, 1f) },
                 color = Color(0xFFFF5252),
                 trackColor = Color(0xFF3E1616),
@@ -1103,12 +1124,13 @@ private fun FishingResultView(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = if (isSuccess) "★ CATCH SECURED! ★" else "LINE SNAPPED!",
+                text = if (isSuccess) "★ CATCH SECURED! ★" else "CATCH LOST",
                 color = if (isSuccess) Color(0xFFFFD54F) else Color(0xFFFF5252),
                 fontFamily = fonts.orbitron,
                 fontWeight = FontWeight.Bold,
@@ -1134,7 +1156,7 @@ private fun FishingResultView(
                     border = BorderStroke(1.dp, Color(0xFF00FF9D).copy(alpha = 0.6f))
                 ) {
                     Text(
-                        text = "+${result.quantity} ${result.itemId.replace('_', ' ').uppercase()} ACQUIRED",
+                        text = "+${result.quantity} ${result.displayName.ifBlank { result.itemId.replace('_', ' ') }} ACQUIRED",
                         color = Color(0xFF00FF9D),
                         fontFamily = fonts.orbitron,
                         fontWeight = FontWeight.Bold,
@@ -1144,6 +1166,13 @@ private fun FishingResultView(
                 }
             }
 
+            result?.let { catch ->
+                catch.flavorText?.let { Text(it, color = Color.White, textAlign = TextAlign.Center) }
+                if (catch.cleanCatch) Text("Clean catch recorded", color = Color(0xFF00FF9D))
+                catch.cleanCatchProgress?.let { Text("Next clean-catch bonus: $it / 3", color = Color.White) }
+                catch.uses.forEach { Text(it, color = Color.White, textAlign = TextAlign.Center) }
+                catch.rewards.forEach { Text(it, color = Color(0xFFFFD54F), textAlign = TextAlign.Center) }
+            }
             Spacer(Modifier.height(30.dp))
 
             Button(
@@ -1269,7 +1298,7 @@ private fun FishingJournalModal(
                                                 color = if (sp.caught) Color(0x3300FF9D) else Color(0xFF142433)
                                             ) {
                                                 Text(
-                                                    text = if (sp.caught) "DOCUMENTED ✓" else "UNKNOWN",
+                                                    text = if (sp.clean) "CLEAN CATCH" else if (sp.caught) "DOCUMENTED" else "UNKNOWN",
                                                     color = if (sp.caught) Color(0xFF00FF9D) else Color(0xFF688899),
                                                     fontFamily = fonts.orbitron,
                                                     fontSize = 10.sp,

@@ -727,6 +727,11 @@ class CombatController(
         return itemCatalog.findItem(snackId)?.name ?: "Snack"
     }
 
+    fun snackPreview(actorId: String): String {
+        val id = equippedItemId(actorId, "snack", sessionStore.state.value.equippedItems)
+        return com.example.starborn.domain.combat.CombatClarity.snackPreview(id?.let(itemCatalog::findItem), snackCooldownRemaining(actorId))
+    }
+
     fun snackTargetRequirement(actorId: String): TargetRequirement {
         return TargetRequirement.NONE
     }
@@ -2795,10 +2800,8 @@ class CombatController(
                 ?.let { itemId -> itemCatalog.findItem(itemId) }
                 ?.equipment
         }
-        val modElement = modEquipments
-            .mapNotNull { it.attackElement?.trim()?.lowercase(Locale.getDefault()) }
-            .firstOrNull()
-        val element = equipment.attackElement?.trim()?.lowercase(Locale.getDefault()) ?: modElement
+        val element = com.example.starborn.domain.inventory.ModEquipmentRules.resolveAttackElement(
+            equipment.attackElement, modEquipments.map { it.attackElement })
         val baseStatus = equipment.statusOnHit?.trim()?.lowercase(Locale.getDefault())
         val baseChance = equipment.statusChance ?: 100.0
         val modStatus = modEquipments.mapNotNull { mod ->

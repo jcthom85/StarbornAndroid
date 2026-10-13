@@ -49,7 +49,7 @@ internal fun DesktopCombatTutorialOverlay(
                 border = BorderStroke(1.dp, border), shadowElevation = 12.dp) {
                 Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Text(CombatTutorialCopy.title(tutorial), style = MaterialTheme.typography.titleLarge, color = Color.White)
-                    Text(CombatTutorialCopy.message(tutorial).adaptInputVocabularyForDesktop(), style = MaterialTheme.typography.bodyLarge, color = Color.White.copy(alpha = .88f))
+                    Text(CombatTutorialCopy.message(tutorial).adaptInputVocabularyForDesktop(LocalDesktopKeyBindings.current), style = MaterialTheme.typography.bodyLarge, color = Color.White.copy(alpha = .88f))
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically) {
                         if (tutorial.canSkip) TextButton(onClick = onSkip, modifier = Modifier.desktopPointerHover()) { Text("Skip Training", color = Color.White.copy(alpha = .72f)) }
@@ -69,7 +69,7 @@ internal fun DesktopCombatTutorialOverlay(
                 Row(Modifier.padding(horizontal = 18.dp, vertical = 9.dp),
                     verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Box(Modifier.size(8.dp).background(accent, RoundedCornerShape(999.dp)))
-                    Text(CombatTutorialCopy.message(tutorial).adaptInputVocabularyForDesktop(), style = MaterialTheme.typography.bodyMedium,
+                    Text(CombatTutorialCopy.message(tutorial).adaptInputVocabularyForDesktop(LocalDesktopKeyBindings.current), style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.SemiBold, color = Color.White)
                 }
             }

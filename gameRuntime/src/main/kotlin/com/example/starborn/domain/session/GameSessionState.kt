@@ -54,7 +54,8 @@ data class GameSessionState(
     val astraReturnRoomId: String? = null,
     val arcadeProgress: Map<String, ArcadeCabinetProgress> = emptyMap(),
     val activeMealBuff: ActiveMealBuff? = null,
-    val mealChefId: String = "nova"
+    val mealChefId: String = "nova",
+    val fishingCleanCatchProgress: Int = 0
 )
 
 data class ActiveMealBuff(
@@ -90,6 +91,7 @@ fun GameSessionState.fingerprint(): String {
     val normalizedLocale = Locale.US
     val builder = StringBuilder()
     builder.append("MEAL_CHEF:").append(mealChefId).append('|')
+    builder.append("FISHING_CLEAN_PROGRESS:").append(fishingCleanCatchProgress).append('|')
     builder.append("MEAL:").append(activeMealBuff).append('|')
     builder.append(worldId.orEmpty()).append('|')
     builder.append(hubId.orEmpty()).append('|')

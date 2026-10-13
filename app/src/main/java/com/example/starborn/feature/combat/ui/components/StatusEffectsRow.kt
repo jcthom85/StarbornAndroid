@@ -3,6 +3,13 @@ package com.example.starborn.feature.combat.ui.components
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -39,7 +46,9 @@ data class StatusChip(
     val icon: ImageVector,
     val tint: Color,
     val turns: Int,
-    val value: Int? = null
+    val value: Int? = null,
+    val description: String = "",
+    val percent: Boolean = false
 )
 
 @Composable
@@ -50,7 +59,10 @@ fun EnemyStatusRail(
     maxVisible: Int = 3
 ) {
     val entries = statusChipsFor(statuses, buffs)
+    var showDetails by remember { mutableStateOf(false) }
+    LaunchedEffect(entries.isEmpty()) { if (entries.isEmpty()) showDetails = false }
     if (entries.isEmpty()) return
+    if (showDetails) StatusDetailsDialog(entries) { showDetails = false }
     val visible = entries.take(maxVisible.coerceAtLeast(1))
     val overflow = entries.size - visible.size
     Surface(
@@ -58,7 +70,8 @@ fun EnemyStatusRail(
         contentColor = Color.White,
         shape = RoundedCornerShape(999.dp),
         border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f)),
-        modifier = modifier
+        modifier = modifier.clickable(onClickLabel = "View all effects") { showDetails = true }
+            .semantics { contentDescription = entries.joinToString("; ") { it.description } }
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 4.dp, vertical = 3.dp),
@@ -98,7 +111,7 @@ fun EnemyStatusRail(
 
 @Composable
 fun EnemyStatusPip(chip: StatusChip) {
-    Box(modifier = Modifier.size(24.dp)) {
+    Box(modifier = Modifier.size(width = 36.dp, height = 28.dp).semantics { contentDescription = chip.description }) {
         Surface(
             color = chip.tint.copy(alpha = 0.88f),
             contentColor = Color.White,
@@ -126,7 +139,7 @@ fun EnemyStatusPip(chip: StatusChip) {
                 .widthIn(min = 12.dp)
         ) {
             Text(
-                text = statusChipLabel(chip),
+                text = visibleEffectLabel(chip),
                 style = MaterialTheme.typography.labelSmall.copy(
                     fontSize = 7.sp,
                     lineHeight = 8.sp,
@@ -144,9 +157,13 @@ fun EnemyStatusPip(chip: StatusChip) {
 @Composable
 fun StatusBadges(statuses: List<StatusEffect>, buffs: List<ActiveBuff>) {
     val entries = statusChipsFor(statuses, buffs)
+    var showDetails by remember { mutableStateOf(false) }
+    LaunchedEffect(entries.isEmpty()) { if (entries.isEmpty()) showDetails = false }
     if (entries.isEmpty()) return
+    if (showDetails) StatusDetailsDialog(entries) { showDetails = false }
     LazyRow(
-        modifier = Modifier.widthIn(max = 1200.dp),
+        modifier = Modifier.widthIn(max = 1200.dp).clickable(onClickLabel = "View all effects") { showDetails = true }
+            .semantics { contentDescription = entries.joinToString("; ") { it.description } },
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         contentPadding = PaddingValues(horizontal = 2.dp)
     ) {
@@ -168,7 +185,7 @@ fun StatusBadges(statuses: List<StatusEffect>, buffs: List<ActiveBuff>) {
                     )
                     Spacer(modifier = Modifier.width(3.dp))
                     Text(
-                        text = statusChipLabel(chip),
+                        text = visibleEffectLabel(chip),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold
@@ -187,7 +204,8 @@ fun statusChipsFor(statuses: List<StatusEffect>, buffs: List<ActiveBuff>): List<
                 StatusChip(
                     icon = iconForStatus(statusEffect.id),
                     tint = colorForStatus(statusEffect.id),
-                    turns = statusEffect.remainingTurns
+                    turns = statusEffect.remainingTurns,
+                    description = "${statusEffect.id.replace('_', ' ')}: ${com.example.starborn.domain.combat.CombatClarity.turns(statusEffect.remainingTurns)} left"
                 )
             )
         }
@@ -199,7 +217,9 @@ fun statusChipsFor(statuses: List<StatusEffect>, buffs: List<ActiveBuff>): List<
                     icon = iconForStat(stat),
                     tint = if (isPositive) Color(0xFF4CAF50) else Color(0xFFFF5252),
                     turns = buff.remainingTurns,
-                    value = buff.effect.value
+                    value = buff.effect.value,
+                    description = com.example.starborn.domain.combat.CombatClarity.buffLabel(buff),
+                    percent = stat in setOf("accuracy", "acc", "evasion", "eva", "crit", "crit_rate", "crit_chance", "status_resist", "resist")
                 )
             )
         }
@@ -467,4 +487,18 @@ fun BrokenFieldOverlay(
             )
         }
     }
+}
+
+private fun visibleEffectLabel(chip: StatusChip): String = chip.value?.let {
+    "${if (it >= 0) "+" else ""}$it${if (chip.percent) "%" else ""} · ${chip.turns.coerceAtLeast(0)}t"
+} ?: "${chip.turns.coerceAtLeast(0)}t"
+
+@Composable
+private fun StatusDetailsDialog(entries: List<StatusChip>, onDismiss: () -> Unit) {
+    AlertDialog(onDismissRequest = onDismiss, title = { Text("Active effects") },
+        text = {
+            Column(Modifier.heightIn(max = 360.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                entries.forEach { Text(it.description) }
+            }
+        }, confirmButton = { TextButton(onClick = onDismiss) { Text("Close") } })
 }

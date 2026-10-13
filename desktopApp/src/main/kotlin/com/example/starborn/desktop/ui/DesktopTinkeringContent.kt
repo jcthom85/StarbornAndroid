@@ -24,8 +24,22 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
     var socket by rememberSaveable { mutableIntStateOf(-1) }
     var query by rememberSaveable { mutableStateOf("") }
     var scrapId by rememberSaveable { mutableStateOf<String?>(null) }
+    var pendingScrap by remember { mutableStateOf<TinkeringItemChoice?>(null) }
     var recipeId by rememberSaveable { mutableStateOf<String?>(null) }
-    LaunchedEffect(runtime) { runtime.craftResults.collect { services.exploration.onTinkeringCrafted(it.itemId) } }
+    LaunchedEffect(runtime) { runtime.craftResults.collect {
+        services.exploration.onTinkeringCrafted(it.itemId)
+        services.audioDriver.executeAll(services.audioRouter.commandsForUi("tinkering_ratchet"))
+    } }
+    LaunchedEffect(runtime) { runtime.messages.collect { message ->
+        if (message.startsWith("Scrapped ")) services.audioDriver.executeAll(services.audioRouter.commandsForUi("tinkering_ratchet"))
+    } }
+    pendingScrap?.let { item ->
+        AlertDialog(onDismissRequest = { pendingScrap = null },
+            title = { Text("Scrap ${item.name}?") },
+            text = { Text("Consumes one item. You receive:\n${item.salvage.joinToString("\n")}") },
+            confirmButton = { TextButton(onClick = { pendingScrap = null; runtime.scrap(item.id) }) { Text("Scrap one") } },
+            dismissButton = { TextButton(onClick = { pendingScrap = null }) { Text("Cancel") } })
+    }
     LaunchedEffect(state.tutorialStep) {
         state.tutorialStep?.let { step ->
             services.exploration.onTinkerTutorialStep(step)
@@ -53,8 +67,8 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
             }
         }
         when (page) {
-            "Workbench" -> Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            "Workbench" -> DesktopStationPanes(Modifier.weight(1f), primary = { paneModifier ->
+                Column(paneModifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(if (socket == -1) "Base items" else "Compatible components", style = MaterialTheme.typography.titleMedium)
                     OutlinedTextField(query, { query = it }, Modifier.fillMaxWidth(), label = { Text("Find a part") }, singleLine = true)
                     val options = if (socket == -1) state.baseItemIds else state.componentOptions[state.bench.mainItemId].orEmpty()
@@ -69,7 +83,8 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
                         }
                     }
                 }
-                Column(Modifier.weight(1.2f).fillMaxHeight().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            }, detail = { paneModifier ->
+                Column(paneModifier.fillMaxHeight().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     DesktopMenuSection("Assembly")
                     (-1..1).forEach { target ->
                         val name = if (target == -1) state.bench.mainItemName else state.bench.componentNames.getOrNull(target)
@@ -93,6 +108,7 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
                                 Text("Result", color = FieldMenuDesign.cyan, style = MaterialTheme.typography.labelSmall)
                                 Text(preview.name, style = MaterialTheme.typography.titleLarge, color = FieldMenuDesign.gold)
                                 Text(preview.resultSummary)
+                                DesktopModComparison(preview.equipmentComparison)
                             }
                         }
                         if (preview.requiresSchematic && !preview.learned) Text(preview.discoveryHint ?: "Learn this schematic from Inventory first.")
@@ -103,13 +119,13 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
                         TextButton(onClick = runtime::clearBench, modifier = Modifier.desktopPointerHover()) { Text("Clear") }
                     }
                 }
-            }
+            })
             "Schematics" -> {
                 OutlinedTextField(query, { query = it }, Modifier.fillMaxWidth(), label = { Text("Find a schematic") }, singleLine = true)
                 val recipes = (state.learnedRecipes + state.lockedRecipes).filter { it.name.contains(query, true) }
                 val selected = recipes.firstOrNull { it.id == recipeId } ?: recipes.firstOrNull()
-                Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-                    LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                DesktopStationPanes(Modifier.weight(1f), primary = { paneModifier ->
+                    LazyColumn(paneModifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         items(state.schematicChoices, key = { "found-${it.id}" }) { item -> OutlinedButton(onClick = { runtime.learnFoundSchematic(item.id) }) { Text("Learn ${item.name}") } }
                         if (recipes.isEmpty()) item { Text("No matching schematics.") }
                         items(recipes, key = { it.id }) { recipe ->
@@ -118,21 +134,23 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
                             }
                         }
                     }
-                    selected?.let { recipe -> Column(Modifier.weight(1.3f).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                }, detail = { paneModifier ->
+                    selected?.let { recipe -> Column(paneModifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         DesktopMenuSection(recipe.name)
                         if (recipe.learned) {
                             DesktopMenuItemArt(services, catalog[recipe.resultId], Modifier.size(96.dp))
                             recipe.description?.let { Text(it) }; Text(recipe.resultSummary)
+                            DesktopModComparison(recipe.equipmentComparison)
                             recipe.ingredients.forEach { Text("${it.label}: ${it.available} / ${it.required}") }
                             Button(onClick = { runtime.craft(recipe.id) }, enabled = recipe.canCraft) { Text("Craft") }
                         } else Text(recipe.discoveryHint ?: "Find its schematic")
                     } }
-                }
+                })
             }
             else -> {
                 val selected = state.scrapChoices.firstOrNull { it.id == scrapId } ?: state.scrapChoices.firstOrNull()
-                Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-                    LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                DesktopStationPanes(Modifier.weight(1f), primary = { paneModifier ->
+                    LazyColumn(paneModifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         if (state.scrapChoices.isEmpty()) item { Text("No equipment available to scrap.", color = FieldMenuDesign.textMuted) }
                         items(state.scrapChoices, key = { it.id }) { item ->
                             Surface(onClick = { scrapId = item.id }, modifier = Modifier.fillMaxWidth(), color = if (selected?.id == item.id) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel,
@@ -144,21 +162,24 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
                             }
                         }
                     }
-                    selected?.let { item -> DesktopMenuCard(Modifier.weight(1.2f).fillMaxHeight()) {
+                }, detail = { paneModifier ->
+                    selected?.let { item -> DesktopMenuCard(paneModifier.fillMaxHeight()) {
                         Column(Modifier.fillMaxSize().padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                            DesktopMenuSection(item.name)
+                            Text(services.craftingService.copySummary(item.id), style = MaterialTheme.typography.labelSmall)
                             DesktopMenuScrollPane(Modifier.weight(1f).fillMaxWidth()) {
-                                DesktopMenuItemArt(services, catalog[item.id], Modifier.size(96.dp))
-                                DesktopMenuSection(item.name)
+                                DesktopMenuItemArt(services, catalog[item.id], Modifier.size(64.dp))
                                 catalog[item.id]?.description?.let { Text(it) }
-                                HorizontalDivider()
-                                Text("Salvage", color = FieldMenuDesign.cyan, style = MaterialTheme.typography.titleMedium)
-                                item.salvage.forEach { Text(it) }
                             }
-                            Button(onClick = { runtime.scrap(item.id) }, modifier = Modifier.fillMaxWidth()) { Text("Scrap") }
+                            HorizontalDivider()
+                            Text("Salvage", color = FieldMenuDesign.cyan, style = MaterialTheme.typography.titleMedium)
+                            item.salvage.forEach { Text(it) }
+                            Button(onClick = { pendingScrap = item }, modifier = Modifier.fillMaxWidth()) { Text("Scrap") }
                         }
                     } }
-                }
+                })
             }
         }
+
     }
 }

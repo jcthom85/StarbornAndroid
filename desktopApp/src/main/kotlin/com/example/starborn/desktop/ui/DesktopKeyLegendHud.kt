@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.starborn.feature.exploration.viewmodel.ExplorationUiState
+import com.example.starborn.desktop.DesktopAction
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -54,7 +55,7 @@ fun DesktopKeyBadge(
     val content = @Composable {
         Surface(
             modifier = modifier
-                .heightIn(min = 28.dp, max = 34.dp)
+                .heightIn(min = 28.dp)
                 .then(
                     if (onClick != null && enabled) {
                         Modifier
@@ -66,6 +67,10 @@ fun DesktopKeyBadge(
                     testTag = "key-legend-$keyGlyph"
                     set(androidx.compose.ui.semantics.SemanticsProperties.Text, listOf(androidx.compose.ui.text.AnnotatedString(label), androidx.compose.ui.text.AnnotatedString("$label [$keyGlyph]")))
                     contentDescription = "$label [$keyGlyph]"
+                    if (onClick != null) {
+                        role = Role.Button
+                        if (enabled) this.onClick { onClick(); true } else disabled()
+                    }
                 },
             shape = shape,
             color = CyberKeyBackground,
@@ -137,19 +142,23 @@ fun DesktopKeyBadge(
  * Offers immediate key visibility, mouse clickability, and quick-save feedback.
  */
 @Composable
+@OptIn(ExperimentalLayoutApi::class)
 fun DesktopExplorationKeyLegendHud(
     ui: ExplorationUiState,
     blocked: Boolean,
     modifier: Modifier = Modifier,
     onInteractFirst: () -> Unit = {},
+    onChooseActions: () -> Unit = {},
     onOpenMap: () -> Unit = {},
     onOpenInventory: () -> Unit = {},
-    onQuickSave: () -> Unit = {},
+    onQuickSave: suspend () -> Boolean = { false },
     onOpenControls: () -> Unit = {},
     onOpenMenu: () -> Unit = {}
 ) {
+    val bindings = LocalDesktopKeyBindings.current
     val coroutineScope = rememberCoroutineScope()
-    var savedNotice by remember { mutableStateOf(false) }
+    var saveNotice by remember { mutableStateOf<String?>(null) }
+    var saving by remember { mutableStateOf(false) }
 
     val hasInteractiveActions = ui.actions.isNotEmpty() && !blocked
     val canMap = !blocked
@@ -165,97 +174,95 @@ fun DesktopExplorationKeyLegendHud(
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             // Primary quick actions row
-            Row(
+            FlowRow(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                // Left: Quick Help & Save
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
                     DesktopKeyBadge(
-                        keyGlyph = "F5",
-                        label = if (savedNotice) "Saved!" else "Save",
-                        icon = Icons.Rounded.Save,
-                        highlighted = savedNotice,
-                        enabled = !blocked,
-                        tooltip = "Quick save game state [F5]",
+                        keyGlyph = bindings.label(DesktopAction.QUICK_SAVE),
+                        label = if (saving) "Saving..." else saveNotice ?: "Save",
+                        highlighted = saveNotice == "Saved!",
+                        enabled = !blocked && !saving,
+                        tooltip = "Quick save game state [${bindings.label(DesktopAction.QUICK_SAVE)}]",
                         onClick = {
-                            if (!blocked) {
-                                onQuickSave()
+                            if (!blocked && !saving) {
                                 coroutineScope.launch {
-                                    savedNotice = true
+                                    saving = true
+                                    val success = try { onQuickSave() }
+                                        catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled }
+                                        catch (_: Exception) { false }
+                                    saving = false
+                                    saveNotice = if (success) "Saved!" else "Save failed"
                                     delay(1800)
-                                    savedNotice = false
+                                    saveNotice = null
                                 }
                             }
                         }
                     )
 
                     DesktopKeyBadge(
-                        keyGlyph = "H",
+                        keyGlyph = bindings.label(DesktopAction.HELP),
                         label = "Controls",
-                        icon = Icons.Rounded.Keyboard,
                         enabled = true,
-                        tooltip = "View tactical keyboard and mouse controls [H]",
+                        tooltip = "View keyboard and mouse controls [${bindings.label(DesktopAction.HELP)}]",
                         onClick = onOpenControls
                     )
-                }
-
-                // Right: Menu
+                // Menu
                 DesktopKeyBadge(
-                    keyGlyph = "Esc",
+                    keyGlyph = bindings.label(DesktopAction.MENU),
                     label = "Menu",
-                    icon = Icons.Rounded.Menu,
                     highlighted = true,
                     enabled = !blocked,
-                    tooltip = "Open tactical field menu [Esc / I]",
+                    tooltip = "Open field menu [${bindings.label(DesktopAction.MENU)}]",
                     onClick = onOpenMenu
                 )
             }
 
             // Secondary contextual hotkeys strip
-            Row(
+            FlowRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 DesktopKeyBadge(
-                    keyGlyph = "WASD",
+                    keyGlyph = listOf(DesktopAction.NORTH, DesktopAction.WEST, DesktopAction.SOUTH, DesktopAction.EAST).joinToString("/") { bindings.label(it) },
                     label = "Move",
                     enabled = !blocked,
-                    tooltip = "Navigate north (W), south (S), west (A), east (D)"
+                    tooltip = "Move with the displayed keys or arrow keys"
                 )
 
+                DesktopKeyBadge(
+                    keyGlyph = bindings.label(DesktopAction.ACTIONS), label = "Actions",
+                    enabled = !blocked, tooltip = "Choose a room interaction", onClick = onChooseActions
+                )
                 if (hasInteractiveActions) {
                     DesktopKeyBadge(
-                        keyGlyph = "E",
+                        keyGlyph = bindings.label(DesktopAction.INTERACT),
                         label = "Interact",
                         highlighted = true,
                         enabled = !blocked,
-                        tooltip = "Trigger primary room action [E]",
+                        tooltip = "Use the first available room action [${bindings.label(DesktopAction.INTERACT)}]",
                         onClick = onInteractFirst
                     )
                 }
 
                 if (canMap) {
                     DesktopKeyBadge(
-                        keyGlyph = "M",
+                        keyGlyph = bindings.label(DesktopAction.MAP),
                         label = "Map",
                         highlighted = ui.canReturnToHub,
                         enabled = !blocked,
-                        tooltip = "Open regional Star Map & Sector Telemetry [M]",
+                        tooltip = "Open field map [${bindings.label(DesktopAction.MAP)}]",
                         onClick = onOpenMap
                     )
                 }
 
                 DesktopKeyBadge(
-                    keyGlyph = "I",
+                    keyGlyph = bindings.label(DesktopAction.INVENTORY),
                     label = "Items",
                     enabled = !blocked,
-                    tooltip = "Open field inventory [I]",
+                    tooltip = "Open inventory [${bindings.label(DesktopAction.INVENTORY)}]",
                     onClick = onOpenInventory
                 )
             }

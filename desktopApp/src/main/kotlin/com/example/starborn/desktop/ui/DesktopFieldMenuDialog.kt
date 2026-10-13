@@ -75,19 +75,20 @@ fun DesktopFieldMenuDialog(
     onOpenFieldKit: () -> Unit,
     onReturnToTitle: () -> Unit,
     onDismiss: () -> Unit,
-    onOpenControls: (() -> Unit)? = null
+    onOpenControls: (() -> Unit)? = null,
+    onQuitToDesktop: (() -> Unit)? = null
 ) {
     Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = .72f))
         .clickable(interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }, indication = null) {},
         contentAlignment = Alignment.Center) {
         DesktopFieldMenuTheme(services) {
             DesktopFieldMenuContent(services, initialTab, currentRoomTitle, onOpenFieldKit,
-                onReturnToTitle, onDismiss, onOpenControls)
+                onReturnToTitle, onDismiss, onOpenControls, onQuitToDesktop)
         }
     }
 }
 
-@OptIn(androidx.compose.ui.ExperimentalComposeUiApi::class)
+@OptIn(androidx.compose.ui.ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun DesktopFieldMenuContent(
     services: DesktopAppServices,
@@ -96,9 +97,11 @@ fun DesktopFieldMenuContent(
     onOpenFieldKit: () -> Unit,
     onReturnToTitle: () -> Unit,
     onDismiss: () -> Unit,
-    onOpenControls: (() -> Unit)? = null
+    onOpenControls: (() -> Unit)? = null,
+    onQuitToDesktop: (() -> Unit)? = null
 ) {
     var activeTab by rememberSaveable { mutableStateOf(initialTab) }
+    var quickLoadOpen by remember { mutableStateOf(false) }
     var selectedMember by rememberSaveable { mutableStateOf<String?>(null) }
     val runtime = services.exploration
     val keyboardFocus = remember { FocusRequester() }
@@ -136,9 +139,28 @@ fun DesktopFieldMenuContent(
     LaunchedEffect(activeTab) {
         runtime.selectMenuTab(com.example.starborn.feature.exploration.viewmodel.MenuTab.valueOf(activeTab.name))
     }
+    if (quickLoadOpen) DesktopQuickLoadDialog(services, onDismiss = { quickLoadOpen = false }) {
+        quickLoadOpen = false
+        onDismiss()
+        runtime.loadGame(-1)
+    }
     Surface(Modifier.focusRequester(keyboardFocus).onPreviewKeyEvent { event ->
         if (event.type != KeyEventType.KeyDown) false else {
             val index = listOf(Key.One, Key.Two, Key.Three, Key.Four, Key.Five, Key.Six).indexOf(event.key)
+            when {
+                event.key == Key.Escape || event.isAltPressed && event.key == Key.DirectionLeft -> { back(); true }
+                event.key == Key.F5 -> { runtime.quickSave(); true }
+                event.key == Key.F9 -> { quickLoadOpen = true; true }
+                event.isAltPressed && index >= 0 -> { select(DesktopMenuTab.entries[index]); true }
+                event.isCtrlPressed && event.key == Key.Tab -> {
+                    val step = if (event.isShiftPressed) -1 else 1
+                    select(DesktopMenuTab.entries[(activeTab.ordinal + step + DesktopMenuTab.entries.size) % DesktopMenuTab.entries.size]); true
+                }
+                else -> false
+            }
+        }
+    }.onKeyEvent { event ->
+        // Let text fields consume digits before interpreting unmodified page shortcuts.
             val directTab = when (event.key) {
                 Key.One -> DesktopMenuTab.INVENTORY
                 Key.Two -> DesktopMenuTab.FIELD_KIT
@@ -148,18 +170,9 @@ fun DesktopFieldMenuContent(
                 Key.Zero -> DesktopMenuTab.STATS
                 else -> null
             }
-            when {
-                event.key == Key.Escape || event.isAltPressed && event.key == Key.DirectionLeft -> { back(); true }
-                event.key == Key.F5 -> { runtime.quickSave(); true }
-                event.isAltPressed && index >= 0 -> { select(DesktopMenuTab.entries[index]); true }
-                directTab != null && !event.isAltPressed && !event.isCtrlPressed -> { select(directTab); true }
-                event.isCtrlPressed && event.key == Key.Tab -> {
-                    val step = if (event.isShiftPressed) -1 else 1
-                    select(DesktopMenuTab.entries[(activeTab.ordinal + step + DesktopMenuTab.entries.size) % DesktopMenuTab.entries.size]); true
-                }
-                else -> false
-            }
-        }
+        if (event.type == KeyEventType.KeyDown && directTab != null && !event.isAltPressed && !event.isCtrlPressed) {
+            select(directTab); true
+        } else false
     }.focusable().widthIn(max = 1440.dp).fillMaxWidth(.94f).fillMaxHeight(.92f),
         shape = RoundedCornerShape(18.dp), color = FieldMenuDesign.shell,
         border = BorderStroke(1.dp, if (settings.highContrastMode) Color.White else FieldMenuDesign.border)) {
@@ -167,10 +180,10 @@ fun DesktopFieldMenuContent(
             DesktopMenuAtmosphere(Modifier.fillMaxSize(), accent, !settings.highContrastMode && !settings.disableFlashes)
             val compact = maxWidth < 900.dp
             Column(Modifier.fillMaxSize()) {
-                Row(Modifier.fillMaxWidth().background(Brush.horizontalGradient(listOf(accent.copy(alpha = .12f), Color.Transparent)))
-                    .padding(horizontal = 24.dp, vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                FlowRow(Modifier.fillMaxWidth().background(Brush.horizontalGradient(listOf(accent.copy(alpha = .12f), Color.Transparent)))
+                    .padding(horizontal = if (compact) 16.dp else 24.dp, vertical = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Column(Modifier.widthIn(min = if (compact) 180.dp else 300.dp).weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Text("STARBORN", color = accent, style = MaterialTheme.typography.labelSmall, letterSpacing = 4.sp, fontWeight = FontWeight.Bold)
                         Text(if (ui.skillTreeOverlay != null) "${ui.skillTreeOverlay!!.characterName} - Skills"
                             else if (ui.partyMemberDetails != null) "${ui.partyMemberDetails!!.name} - Attributes"
@@ -191,7 +204,7 @@ fun DesktopFieldMenuContent(
                 }
                 HorizontalDivider(color = accent.copy(alpha = .25f))
                 Row(Modifier.weight(1f)) {
-                    Column(Modifier.width(if (compact) 104.dp else 180.dp).fillMaxHeight()
+                    Column(Modifier.width(if (compact) 136.dp else 180.dp).fillMaxHeight()
                         .background(FieldMenuDesign.panel.copy(alpha = .8f)).padding(12.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) { DesktopMenuTab.entries.filter { it != DesktopMenuTab.SETTINGS }.forEach { tab ->
@@ -210,7 +223,7 @@ fun DesktopFieldMenuContent(
                                     shape = RoundedCornerShape(10.dp),
                                     border = BorderStroke(1.dp, if (activeTab == tab) accent.copy(alpha = .5f) else Color.Transparent),
                                     color = if (activeTab == tab) accent.copy(alpha = .10f) else Color.Transparent) {
-                                    Column(Modifier.padding(horizontal = 14.dp, vertical = 16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    Column(Modifier.padding(horizontal = if (compact) 8.dp else 14.dp, vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                             Icon(icon, null, Modifier.size(20.dp), tint = if (activeTab == tab) FieldMenuDesign.gold else FieldMenuDesign.textMuted)
                                             if (!compact) Text(if (tab == DesktopMenuTab.JOURNAL && services.questPresentations.journalBadge > 0) "${tab.label} (${services.questPresentations.journalBadge})" else tab.label, color = if (activeTab == tab) FieldMenuDesign.gold else FieldMenuDesign.text)
@@ -226,7 +239,7 @@ fun DesktopFieldMenuContent(
                             TextButton(onClick = { select(DesktopMenuTab.SETTINGS) }, modifier = Modifier.desktopPointerHover()) { Text("Settings", color = if (activeTab == DesktopMenuTab.SETTINGS) FieldMenuDesign.gold else FieldMenuDesign.textMuted) }
                         }
                         onOpenControls?.let {
-                            DesktopTooltip("Tactical controls & keybindings guide [H]") {
+                            DesktopTooltip("Open controls guide") {
                                 TextButton(onClick = it, modifier = Modifier.desktopPointerHover()) { Text("Controls") }
                             }
                         }
@@ -262,7 +275,7 @@ fun DesktopFieldMenuContent(
                                     DesktopMenuTab.FIELD_KIT -> DesktopTinkeringContent(services)
                                     DesktopMenuTab.JOURNAL -> DesktopRuntimeJournalContent(services)
                                     DesktopMenuTab.MAP -> DesktopRuntimeMapContent(services)
-                                    DesktopMenuTab.SETTINGS -> DesktopSettingsContent(services, settings, currentRoomTitle, onReturnToTitle, onOpenControls)
+                                    DesktopMenuTab.SETTINGS -> DesktopSettingsContent(services, settings, currentRoomTitle, onReturnToTitle, onOpenControls, onQuitToDesktop)
                                 } }
                             }
                         }

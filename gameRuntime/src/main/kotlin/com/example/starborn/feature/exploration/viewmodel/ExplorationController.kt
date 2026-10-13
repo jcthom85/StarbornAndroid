@@ -1811,6 +1811,7 @@ class ExplorationController(
     init {
         viewModelScope.launch(dispatchers.main) {
             sessionStore.state.collect { newState ->
+                sessionStore.takeEquipmentRestoreNotice()?.let(::postStatus)
                 val partyStatus = buildPartyStatusUi(
                     sessionState = newState,
                     charactersById = charactersById,
@@ -4331,22 +4332,25 @@ class ExplorationController(
         telemetry.record("reward_equipped", mapOf("slot_id" to normalizedSlot, "item_id" to entry.item.id, "character_id" to characterId))
     }
 
-    fun equipInventoryMod(slotId: String, itemId: String?, characterId: String? = null) {
-        val normalizedSlot = slotId.trim().lowercase(Locale.getDefault())
-        if (normalizedSlot.isBlank()) return
-        val completed = sessionStore.state.value.completedMilestones
-        if (!GearRules.isModSlotUnlocked(normalizedSlot, completed)) return
-        if (itemId.isNullOrBlank()) {
-            sessionStore.setEquippedItem(normalizedSlot, null, characterId)
-            telemetry.record("reward_equipped", mapOf("slot_id" to normalizedSlot, "item_id" to null, "character_id" to characterId))
-            return
+    fun requestEquipInventoryMod(slotId: String, itemId: String?, characterId: String?,
+        source: com.example.starborn.domain.inventory.ModLocation? = null): com.example.starborn.domain.inventory.ModEquipResult {
+        val owner = characterId ?: sessionStore.state.value.partyMembers.firstOrNull() ?: sessionStore.state.value.playerId
+            ?: return com.example.starborn.domain.inventory.ModEquipResult.Rejected("Select a party member.")
+        val item = itemId?.let(inventoryService::catalogItem)
+        if (itemId != null && item == null) return com.example.starborn.domain.inventory.ModEquipResult.Rejected("Unknown mod.")
+        val result = sessionStore.tryEquipMod(com.example.starborn.domain.inventory.ModLocation(owner, slotId), item, source)
+        when (result) {
+            is com.example.starborn.domain.inventory.ModEquipResult.Rejected -> postStatus(result.message)
+            com.example.starborn.domain.inventory.ModEquipResult.Success -> telemetry.record("reward_equipped",
+                mapOf("slot_id" to slotId, "item_id" to itemId, "character_id" to owner))
+            else -> Unit
         }
-        val entry = inventoryService.state.value.firstOrNull { it.item.id.equals(itemId, ignoreCase = true) } ?: return
-        val normalizedType = entry.item.type.trim().lowercase(Locale.getDefault())
-        val isMod = normalizedType == "mod" || entry.item.equipment?.slot?.equals("mod", true) == true
-        if (!isMod) return
-        sessionStore.setEquippedItem(normalizedSlot, entry.item.id, characterId)
-        telemetry.record("reward_equipped", mapOf("slot_id" to normalizedSlot, "item_id" to entry.item.id, "character_id" to characterId))
+        return result
+    }
+
+    fun equipInventoryMod(slotId: String, itemId: String?, characterId: String? = null) {
+        if (requestEquipInventoryMod(slotId, itemId, characterId) is com.example.starborn.domain.inventory.ModEquipResult.TransferRequired)
+            postStatus("This copy is already equipped. Choose a copy to move.")
     }
 
     fun equipWeapon(characterId: String, weaponId: String?) {

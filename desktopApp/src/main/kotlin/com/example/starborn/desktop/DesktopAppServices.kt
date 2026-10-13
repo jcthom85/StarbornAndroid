@@ -94,7 +94,13 @@ class DesktopAppServices(
     val environmentThemeManager = EnvironmentThemeManager(themeRepository)
 
     val inventoryService = InventoryService(itemRepository).apply { loadItems() }
-    val sessionStore = GameSessionStore()
+    val sessionStore = GameSessionStore().apply {
+        configureRestoredHpCeilings { state ->
+            val nodes = worldDataSource.loadSkillNodes()
+            worldDataSource.loadCharacters().associate { player -> player.id to
+                com.example.starborn.domain.combat.PartyHealth.maxHp(player, state, inventoryService::catalogItem, nodes) }
+        }
+    }
     private val inventoryBridge = SessionInventoryBridge(sessionStore, inventoryService)
     val arcadeService = ArcadeService(sessionStore, inventoryService)
 
@@ -126,7 +132,7 @@ class DesktopAppServices(
     val questPresentations = com.example.starborn.desktop.ui.DesktopQuestPresentationState()
     val promptManager = UIPromptManager()
 
-    val fishingService = FishingService(fishingDataSource, inventoryService)
+    val fishingService = FishingService(fishingDataSource, inventoryService, sessionStore = sessionStore, craftingService = craftingService)
     val tutorialScripts = TutorialScriptRepository(assetReader)
     val userSettingsStore = DesktopUserSettingsStore(saveDirectory)
     val saveManager = DesktopSaveManager(saveDirectory) { id ->
@@ -181,6 +187,7 @@ class DesktopAppServices(
     )
 
     private var explorationInstance: com.example.starborn.feature.exploration.viewmodel.ExplorationController? = null
+    private var explorationAudioJob: kotlinx.coroutines.Job? = null
     private val bootstrapCinematics = mutableListOf<String>()
     private val bootstrapActions = mutableListOf<String>()
     var activeFishingZone: String? = null
@@ -223,7 +230,30 @@ class DesktopAppServices(
             parentScope = CoroutineScope(runtimeScope.coroutineContext + Dispatchers.Main.immediate),
             dialogueTriggerBinder = { dialogueTriggerListener = it },
             telemetry = playtestTelemetry
-        ).also { explorationInstance = it; bootstrapCinematics.clear(); bootstrapActions.clear(); recoverMissedJedReward() }
+        ).also { controller ->
+            explorationInstance = controller
+            // One collector per controller, including controllers recreated by New Game / Load.
+            explorationAudioJob = runtimeScope.launch(Dispatchers.Main.immediate, start = kotlinx.coroutines.CoroutineStart.UNDISPATCHED) {
+                controller.events.collect { event ->
+                    if (event is com.example.starborn.feature.exploration.viewmodel.ExplorationEvent.AudioCommands) {
+                        audioDriver.executeAll(event.commands)
+                    }
+                }
+            }
+            bootstrapCinematics.clear()
+            bootstrapActions.clear()
+            recoverMissedJedReward()
+        }
+
+    fun playTitleMusic() {
+        // The title theme is an explicit cue, just as on Android; there is no main_menu room binding.
+        audioDriver.executeAll(
+            audioRouter.commandsForLayerOverride(com.example.starborn.domain.audio.AudioCueType.AMBIENT, stop = true) +
+                audioRouter.commandsForLayerOverride(com.example.starborn.domain.audio.AudioCueType.MUSIC,
+                    cueId = "music_title_theme", loop = true) +
+                com.example.starborn.domain.audio.AudioCommand.Restore(com.example.starborn.domain.audio.AudioCueType.MUSIC, 0L)
+        )
+    }
 
     private fun recoverMissedJedReward() {
         val state = sessionStore.state.value
@@ -235,6 +265,8 @@ class DesktopAppServices(
 
     private fun resetExploration() {
         questPresentations.clear()
+        explorationAudioJob?.cancel()
+        explorationAudioJob = null
         explorationInstance?.close()
         explorationInstance = null
         cinematicCoordinator.cancelAll()

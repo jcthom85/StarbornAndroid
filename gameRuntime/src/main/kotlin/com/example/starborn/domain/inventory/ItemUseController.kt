@@ -21,6 +21,24 @@ class ItemUseController(
         data class Failure(val message: String) : Result
     }
 
+    /** Confirm meal replacement before spending ingredients; consume exactly one cooked portion. */
+    suspend fun cookAndEat(recipeId: String, chefId: String?, batch: Int = 1, replaceMeal: Boolean = false): Result {
+        val recipe = craftingService.cookingRecipes.firstOrNull { it.id == recipeId }
+            ?: return Result.Failure("Unknown recipe.")
+        if (recipe.category != "meal") return Result.Failure("Snacks must be equipped from Items.")
+        if (sessionStore.state.value.activeMealBuff != null && !replaceMeal) {
+            return Result.Failure("Eating this replaces your active meal. Confirm replacement first.")
+        }
+        val outcome = craftingService.cookMeal(recipeId, chefId, batch)
+        if (outcome !is com.example.starborn.domain.crafting.CraftingOutcome.Success) {
+            return Result.Failure(outcome.message ?: "Unable to cook this meal.")
+        }
+        return when (val used = useItem(outcome.itemId, replaceMeal = replaceMeal)) {
+            is Result.Success -> Result.Success(used.result, "${used.message} Any extra portions stay in inventory.")
+            is Result.Failure -> Result.Failure("Meal cooked and kept in inventory. ${used.message}")
+        }
+    }
+
     suspend fun useItem(itemId: String, targetId: String? = null, replaceMeal: Boolean = false): Result {
         val item = inventoryService.itemDetail(itemId)
         val effect = item?.effect

@@ -33,7 +33,7 @@ internal fun DesktopInspectionPrompt(message: String, onDismiss: () -> Unit, tap
                 title?.takeIf { it.isNotBlank() }?.let { Text(it, style = MaterialTheme.typography.titleLarge, color = accent) }
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     Box(Modifier.width(4.dp).height(52.dp).background(accent, RoundedCornerShape(8.dp)))
-                    Text(message.adaptInputVocabularyForDesktop(), Modifier.weight(1f).heightIn(max = 400.dp).verticalScroll(rememberScrollState()),
+                    Text(message.adaptInputVocabularyForDesktop(LocalDesktopKeyBindings.current), Modifier.weight(1f).heightIn(max = 400.dp).verticalScroll(rememberScrollState()),
                         color = Color.White, fontSize = 18.sp, lineHeight = 28.sp)
                 }
                 TextButton(onClick = onDismiss, modifier = Modifier.align(Alignment.End).desktopPointerHover()) { Text("Continue", color = accent) }
@@ -58,8 +58,8 @@ internal fun DesktopExplorationPromptBanner(services: com.example.starborn.deskt
     val action: String
     val accent: Color
     when (prompt) {
-        is TutorialPrompt -> { title = "Tutorial"; message = prompt.entry.message.adaptInputVocabularyForDesktop(); action = "Continue"; accent = Color(0xFF7BE8FF) }
-        is MilestonePrompt -> { title = null; message = prompt.event.message.adaptInputVocabularyForDesktop(); action = "Dismiss"; accent = Color(0xFFFFD27F) }
+        is TutorialPrompt -> { title = "Tutorial"; message = prompt.entry.message.adaptInputVocabularyForDesktop(LocalDesktopKeyBindings.current); action = "Continue"; accent = Color(0xFF7BE8FF) }
+        is MilestonePrompt -> { title = null; message = prompt.event.message.adaptInputVocabularyForDesktop(LocalDesktopKeyBindings.current); action = "Dismiss"; accent = Color(0xFFFFD27F) }
         is ItemGrantedPrompt -> {
             title = prompt.itemName + if (prompt.quantity > 1) " x${prompt.quantity}" else ""
             message = prompt.description.orEmpty() + if (prompt.sequenceTotal > 1) "\n${prompt.sequenceIndex} / ${prompt.sequenceTotal}" else ""

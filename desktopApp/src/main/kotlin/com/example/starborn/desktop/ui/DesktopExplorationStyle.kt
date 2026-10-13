@@ -85,7 +85,8 @@ internal fun DesktopRichTooltip(
 internal fun DesktopExplorationTheme(services: DesktopAppServices, content: @Composable () -> Unit) {
     val settings by services.userSettingsStore.settings.collectAsState(initial = UserSettings())
     val base = MaterialTheme.colorScheme
-    CompositionLocalProvider(LocalExplorationSettings provides settings) {
+    val bindings by services.userSettingsStore.keyBindings.collectAsState(initial = com.example.starborn.desktop.DesktopKeyBindings())
+    CompositionLocalProvider(LocalExplorationSettings provides settings, LocalDesktopKeyBindings provides bindings) {
         MaterialTheme(typography = desktopStarbornTypography(services), colorScheme = if (settings.highContrastMode)
             base.copy(surface = Color.Black, onSurface = Color.White, outline = Color.White, onSurfaceVariant = Color.White) else base,
             content = content)

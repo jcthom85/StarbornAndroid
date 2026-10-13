@@ -20,6 +20,31 @@ import javax.imageio.ImageIO
 
 class DesktopTitleLayoutTest {
     @get:Rule val compose = createComposeRule()
+    @Test fun titleScreenRequestsAuthoredThemeAndRestoresItAfterReturningFromGameplay() {
+        val directory = Files.createTempDirectory("starborn-title-audio-").toFile()
+        val audio = RecordingAudioDriver()
+        val services = DesktopAppServices(directory, audio)
+        val titleVisible = mutableStateOf(true)
+        try {
+            compose.setContent { DesktopStarbornTheme(services) {
+                if (titleVisible.value) DesktopMainMenuScreen(services, onStartGame = {}, onQuit = {})
+            } }
+            compose.waitForIdle()
+            val first = audio.commands.filterIsInstance<AudioCommand.Play>().single { it.type == AudioCueType.MUSIC }
+            assertTrue(first.cueId == "music_title_theme" && first.loop)
+            compose.runOnIdle {
+                titleVisible.value = false
+                services.audioDriver.executeAll(services.audioRouter.commandsForRoom("hub_1_homestead", "pit_nova_bunk"))
+            }
+            compose.waitForIdle()
+            audio.commands.clear()
+            compose.runOnIdle { titleVisible.value = true }
+            compose.waitForIdle()
+            assertTrue(audio.commands.any { it is AudioCommand.Stop && it.type == AudioCueType.AMBIENT })
+            assertTrue(audio.commands.any { it is AudioCommand.Play && it.cueId == "music_title_theme" && it.loop })
+            assertTrue(audio.commands.any { it is AudioCommand.Restore && it.type == AudioCueType.MUSIC })
+        } finally { services.close(); directory.deleteRecursively() }
+    }
     @Test fun largerLogoAndCleanTitleRenderAtTwoWindowSizes() {
         val directory = Files.createTempDirectory("starborn-title-layout-").toFile()
         val services = DesktopAppServices(directory, object : AudioDriver {

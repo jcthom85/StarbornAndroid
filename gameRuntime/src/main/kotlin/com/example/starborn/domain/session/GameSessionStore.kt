@@ -2,6 +2,8 @@ package com.example.starborn.domain.session
 
 import com.example.starborn.domain.movement.EnemyPartyRuntimeState
 import java.util.Locale
+import com.example.starborn.domain.inventory.*
+import com.example.starborn.domain.model.Item
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,8 +29,27 @@ class GameSessionStore {
             pendingBattleJson = if (it.pendingBattleJson == expectedDescriptorJson) "" else it.pendingBattleJson) }
     }
 
+    var equipmentRestoreNotice: String? = null
+        private set
+    private var restoredHpCeilings: ((GameSessionState) -> Map<String, Int>)? = null
+
+    fun configureRestoredHpCeilings(provider: (GameSessionState) -> Map<String, Int>) {
+        restoredHpCeilings = provider
+    }
+
+    fun takeEquipmentRestoreNotice(): String? = equipmentRestoreNotice.also { equipmentRestoreNotice = null }
+
     fun restore(state: GameSessionState) {
-        val normalized = normalizeArmors(normalizeWeapons(normalizeEquipment(state.withoutRetiredCompanion())))
+        val base = normalizeArmors(normalizeWeapons(normalizeEquipment(state.withoutRetiredCompanion())))
+        val equipment = ModEquipmentRules.reconcile(base, state)
+        val ceilings = if (equipment.partyMemberHp.isEmpty()) emptyMap() else restoredHpCeilings?.invoke(equipment).orEmpty()
+        val normalized = equipment.copy(fishingCleanCatchProgress = equipment.fishingCleanCatchProgress.coerceIn(0, 2), partyMemberHp = equipment.partyMemberHp.mapValues { (owner, hp) ->
+            ceilings[owner]?.let { hp.coerceIn(0, it.coerceAtLeast(1)) } ?: hp
+        })
+        equipmentRestoreNotice = if (normalized.equippedItems != base.equippedItems)
+            "Mod assignments adjusted to match owned copies and available slots."
+            else if (normalized.partyMemberHp != equipment.partyMemberHp)
+                "Loaded health was capped at the current maximum after equipment changes." else null
         if (_state.value == normalized) return
         _state.value = normalized
     }
@@ -293,10 +314,18 @@ class GameSessionStore {
         _state.update { it.copy(learnedSchematics = it.learnedSchematics - schematicId) }
     }
 
+    fun tryEquipMod(target: ModLocation, item: Item?, source: ModLocation? = null): ModEquipResult {
+        while (true) {
+            val previous = _state.value
+            val (next, result) = ModEquipmentRules.equip(previous, target, item, source)
+            if (next == previous || _state.compareAndSet(previous, next)) return result
+        }
+    }
+
     fun setEquippedItem(slotId: String, itemId: String?, characterId: String? = null) {
         if (slotId.isBlank()) return
         val normalizedSlot = slotId.trim().lowercase(Locale.getDefault())
-        if (normalizedSlot == "weapon" || normalizedSlot == "armor") return
+        if (normalizedSlot == "weapon" || normalizedSlot == "armor" || normalizedSlot == "mod") return
         val ownerId = characterId?.trim()?.lowercase(Locale.getDefault())
         _state.update { state ->
             val updated = state.equippedItems.toMutableMap()
@@ -308,6 +337,7 @@ class GameSessionStore {
                 val duplicateKeys = updated.filterValues { it.equals(normalizedItem, ignoreCase = true) }
                     .keys
                     .filterNot { key -> key.equals(targetKey, ignoreCase = true) }
+                    .filter { key -> normalizedSlot !in ModEquipmentRules.slots || key.substringBefore(':').equals(ownerId, true) }
                 duplicateKeys.forEach { updated.remove(it) }
             }
 
@@ -631,6 +661,15 @@ class GameSessionStore {
     fun selectMealChef(chefId: String) {
         if (chefId in _state.value.partyMembers.ifEmpty { listOf(_state.value.playerId ?: "nova") }) {
             _state.update { it.copy(mealChefId = chefId) }
+        }
+    }
+
+    /** One point per clean native catch; ordinary catches never reset progress. */
+    fun advanceCleanCatchProgress(): Boolean {
+        while (true) {
+            val previous = _state.value
+            val progress = previous.fishingCleanCatchProgress.coerceIn(0, 2) + 1
+            if (_state.compareAndSet(previous, previous.copy(fishingCleanCatchProgress = progress % 3))) return progress == 3
         }
     }
 

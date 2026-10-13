@@ -353,6 +353,13 @@ fun ExplorationScreen(
     val environmentMemory=remember { com.example.starborn.domain.environment.EnvironmentalSceneMemory() }
     val environmentSession by viewModel.environmentalSession.collectAsStateWithLifecycle()
     val environmentRooms=remember(viewModel) { viewModel.environmentalAssets.loadRooms().associateBy { it.id } }
+    var pendingModMove by remember { mutableStateOf<com.example.starborn.domain.inventory.ModTransferRequest?>(null) }
+    pendingModMove?.let { request ->
+        com.example.starborn.feature.crafting.ui.ModTransferDialog(request, uiState.inventoryPreview.firstOrNull { it.id == request.itemId }?.name ?: request.itemId.replace('_', ' '), { pendingModMove = null }) { source ->
+            pendingModMove = null
+            viewModel.requestEquipInventoryMod(request.target.slotId, request.itemId, request.target.characterId, source)
+        }
+    }
     var pendingInventoryItem by remember { mutableStateOf<InventoryPreviewItemUi?>(null) }
     var showInventoryTargetDialog by remember { mutableStateOf(false) }
     var pendingMealReplacement by remember { mutableStateOf<InventoryPreviewItemUi?>(null) }
@@ -1359,7 +1366,12 @@ fun ExplorationScreen(
                     viewModel.equipInventoryItem(slot, itemId, characterId)
                 },
                 onEquipMod = { slot, itemId, characterId ->
-                    viewModel.equipInventoryMod(slot, itemId, characterId)
+                    val result = viewModel.requestEquipInventoryMod(slot, itemId, characterId)
+                    if (result is com.example.starborn.domain.inventory.ModEquipResult.TransferRequired && itemId != null) {
+                        val owner = characterId ?: result.sources.firstOrNull()?.characterId
+                        if (owner != null) pendingModMove = com.example.starborn.domain.inventory.ModTransferRequest(
+                            com.example.starborn.domain.inventory.ModLocation(owner, slot), itemId, result.sources)
+                    }
                 },
                 onEquipWeapon = { characterId, weaponId ->
                     viewModel.equipWeapon(characterId, weaponId)

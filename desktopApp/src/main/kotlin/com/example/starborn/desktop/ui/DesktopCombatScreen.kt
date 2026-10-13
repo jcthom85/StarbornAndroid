@@ -517,7 +517,7 @@ private fun DesktopCombatContent(
                         }
                     }
                 )
-                DesktopCombatLiveFeed(history = history, onExpandLog = { showLog = true })
+                DesktopCombatLiveFeed(history = history.toList(), onExpandLog = { showLog = true })
             }
         }
         val accentValues = runtime.theme?.accent
@@ -537,7 +537,7 @@ private fun DesktopCombatContent(
                         Text("HP ${member.hp}/${member.combatant.stats.maxHp} / Momentum ${member.momentum}", style = MaterialTheme.typography.bodySmall)
                         LinearProgressIndicator(progress = { (meters[member.combatant.id] ?: 0f).coerceIn(0f, 1f) }, modifier = Modifier.fillMaxWidth())
                         member.weaponCharge?.let { Text("Charging: ${it.remainingTurns} turns", color = Color(0xFFFFDE70), style = MaterialTheme.typography.bodySmall) }
-                        member.buffs.forEach { Text("${it.effect.stat.replace('_', ' ')} ${it.effect.value} (${it.remainingTurns} turns)", style = MaterialTheme.typography.bodySmall) }
+                        member.buffs.forEach { Text(com.example.starborn.domain.combat.CombatClarity.compactBuffLabel(it), style = MaterialTheme.typography.bodySmall) }
                         member.statusEffects.forEach { Text("${services.contentName(it.id)} (${it.remainingTurns} turns)", style = MaterialTheme.typography.bodySmall) }
                     }
                     if (targetAction != null) {
@@ -551,6 +551,7 @@ private fun DesktopCombatContent(
                         }
                     LazyColumn(Modifier.fillMaxWidth().weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         if (menu == "skills") {
+                            item { Text(com.example.starborn.domain.combat.CombatClarity.SKILL_GUIDANCE, style = MaterialTheme.typography.bodySmall) }
                             if (runtime.activePlayerSkills().isEmpty()) item { Text("No abilities available") }
                             itemsIndexed(runtime.activePlayerSkills(), key = { _, it -> it.id }) { index, skill ->
                                 val canUse = runtime.canUseSkill(requireNotNull(actorId), skill) && (tutorial?.step != CombatTutorialStep.CHOOSE_HYDRAULIC_KICK || skill.id == tutorial?.expectedSkillId)
@@ -597,9 +598,9 @@ private fun DesktopCombatContent(
                                                 Text(reason, color = Color(0xFFFFBB55), style = MaterialTheme.typography.bodySmall)
                                             }
                                             val remaining = runtime.skillCooldownRemaining(requireNotNull(actorId), skill.id)
-                                            if (remaining > 0) Text("Ready in $remaining turns", color = Color(0xFFFFBB55), style = MaterialTheme.typography.bodySmall)
+                                            if (remaining > 0) Text("Ready in ${com.example.starborn.domain.combat.CombatClarity.turns(remaining)}", color = Color(0xFFFFBB55), style = MaterialTheme.typography.bodySmall)
                                             Text(
-                                                "Target: ${skill.targeting?.replace('_', ' ') ?: runtime.targetRequirementFor(skill).name.lowercase()} · Cooldown: ${skill.cooldown} turns",
+                                                "Target: ${skill.targeting?.replace('_', ' ') ?: runtime.targetRequirementFor(skill).name.lowercase()} · Cooldown: ${com.example.starborn.domain.combat.CombatClarity.skillCooldownLabel(skill.cooldown, 0, actor?.momentum ?: 0)}",
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelSmall
                                             )
                                             Button(
@@ -686,7 +687,7 @@ private fun DesktopCombatContent(
                             DesktopCombatActionTooltipContent(
                                 title = "Attack",
                                 shortcut = "[1]",
-                                description = "Standard weapon attack on an enemy target. Fills action readiness on turn completion.",
+                                description = "Attack with the equipped weapon. Builds Momentum for Overcharge; spends one action.",
                                 details = "Consumes turn · Requires targeted enemy"
                             )
                         }
@@ -775,7 +776,7 @@ private fun DesktopCombatContent(
                             DesktopCombatActionTooltipContent(
                                 title = snackName,
                                 shortcut = "[4]",
-                                description = "Quickly consume equipped ration or snack for an instant HP or morale recovery without opening the items menu.",
+                                description = actorId?.let(runtime::snackPreview) ?: "Select a ready character to view their snack ability.",
                                 details = "Equipped in Field Menu · Character specific"
                             )
                         }
@@ -783,7 +784,7 @@ private fun DesktopCombatContent(
                         DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().testTag("combat-action-snack"), onClick = {
                             actorId?.let { id -> chooseTarget(runtime.snackTargetRequirement(id), "Choose a snack target") { runtime.useSnack(it) } }
                         }, enabled = targetAction == null && timedPrompt == null && actorId?.let(runtime::canUseSnack) == true && runtime.isCombatTutorialCommandEnabled("snack")) {
-                            val label = (actorId?.let(runtime::snackLabel) ?: "Snack") + "" + actorId?.let { id -> runtime.snackCooldownRemaining(id).takeIf { it > 0 }?.let { " ($it turns)" } }.orEmpty()
+                            val label = (actorId?.let(runtime::snackLabel) ?: "Snack") + "" + actorId?.let { id -> runtime.snackCooldownRemaining(id).takeIf { it > 0 }?.let { " (ready in $it turns)" } }.orEmpty()
                             Row(
                                 Modifier.fillMaxWidth().clearAndSetSemantics {
                                     set(SemanticsProperties.Text, listOf(AnnotatedString(label), AnnotatedString("$label [4]")))
@@ -801,6 +802,10 @@ private fun DesktopCombatContent(
                                 }
                             }
                         }
+                    }
+                    actorId?.let { id ->
+                        Text(runtime.snackPreview(id), style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.fillMaxWidth().testTag("combat-snack-preview"))
                     }
                     DesktopRichTooltip(
                         tooltip = {
@@ -942,7 +947,7 @@ DesktopBattleFormation(party, services, Modifier.fillMaxWidth().weight(.46f), fa
             )
         }
         if (showLog) DesktopCombatLogDialog(
-            history = history,
+            history = history.toList(),
             onDismiss = { showLog = false },
             accentColor = commandAccent
         )

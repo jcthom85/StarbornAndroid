@@ -7,6 +7,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.starborn.desktop.DesktopAppServices
@@ -24,6 +25,8 @@ fun DesktopStarbornTheme(
     services: DesktopAppServices? = null,
     content: @Composable () -> Unit
 ) {
+    val bindings = services?.userSettingsStore?.keyBindings?.collectAsState(initial = com.example.starborn.desktop.DesktopKeyBindings())?.value
+        ?: LocalDesktopKeyBindings.current
     val fontBundle = services?.assetProvider?.let { rememberStarbornFonts(it) } ?: LocalStarbornFonts.current
     val typography = services?.let { desktopStarbornTypography(it) } ?: MaterialTheme.typography
 
@@ -45,6 +48,7 @@ fun DesktopStarbornTheme(
         CompositionLocalProvider(
             LocalContentColor provides MaterialTheme.colorScheme.onSurface,
             LocalStarbornFonts provides fontBundle,
+            LocalDesktopKeyBindings provides bindings,
             content = content
         )
     }

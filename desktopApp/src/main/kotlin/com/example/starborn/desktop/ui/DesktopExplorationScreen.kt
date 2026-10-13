@@ -53,6 +53,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.starborn.desktop.DesktopAppServices
+import com.example.starborn.desktop.DesktopAction
+import com.example.starborn.desktop.DesktopKeyBindings
 import com.example.starborn.feature.exploration.presentation.*
 import com.example.starborn.domain.model.actionKey
 import com.example.starborn.domain.model.Room
@@ -82,17 +84,18 @@ fun DesktopExplorationScreen(
     onOpenFieldKit: () -> Unit,
     onOpenFishing: () -> Unit,
     onOpenArcade: () -> Unit,
-    onReturnToMenu: () -> Unit
+    onReturnToMenu: () -> Unit,
+    onQuitToDesktop: (() -> Unit)? = null
 ) {
     DesktopExplorationTheme(services) {
-        DesktopExplorationContent(services, onEnterCombat, onOpenHub, onOpenFieldKit, onOpenFishing, onOpenArcade, onReturnToMenu)
+        DesktopExplorationContent(services, onEnterCombat, onOpenHub, onOpenFieldKit, onOpenFishing, onOpenArcade, onReturnToMenu, onQuitToDesktop)
     }
 }
 
 @Composable
 private fun DesktopExplorationContent(services: DesktopAppServices, onEnterCombat: (List<String>) -> Unit,
     onOpenHub: () -> Unit, onOpenFieldKit: () -> Unit, onOpenFishing: () -> Unit,
-    onOpenArcade: () -> Unit, onReturnToMenu: () -> Unit) {
+    onOpenArcade: () -> Unit, onReturnToMenu: () -> Unit, onQuitToDesktop: (() -> Unit)?) {
     val drawer = remember { ExplorationDrawerState() }
     val settings = LocalExplorationSettings.current
     val environmentMemory=remember { com.example.starborn.domain.environment.EnvironmentalSceneMemory() }
@@ -106,6 +109,9 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
     var shopId by remember { mutableStateOf<String?>(null) }
     var cookingSource by remember { mutableStateOf<String?>(null) }
     var controlsOpen by remember { mutableStateOf(false) }
+    var actionsOpen by remember { mutableStateOf(false) }
+    var quickLoadOpen by remember { mutableStateOf(false) }
+    val bindings by services.userSettingsStore.keyBindings.collectAsState(initial = DesktopKeyBindings())
     var environmentPreview by remember { mutableStateOf(false) }
     val questPresentations = services.questPresentations
     val fadeAlpha = remember { androidx.compose.animation.core.Animatable(0f) }
@@ -118,13 +124,6 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
         runtime.events.collect { event ->
             when (event) {
                 is com.example.starborn.feature.exploration.viewmodel.ExplorationEvent.EnterCombat -> onEnterCombat(event.enemyIds)
-                is com.example.starborn.feature.exploration.viewmodel.ExplorationEvent.AudioCommands -> services.audioDriver.executeAll(event.commands)
-                is com.example.starborn.feature.exploration.viewmodel.ExplorationEvent.AudioSettingsChanged -> {
-                    services.audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.MUSIC, event.musicVolume)
-                    services.audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.UI, event.sfxVolume)
-                    services.audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.BATTLE, event.sfxVolume)
-                    services.audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.VOICE, event.voiceVolume)
-                }
                 is com.example.starborn.feature.exploration.viewmodel.ExplorationEvent.OpenShop -> shopId = event.shopId
                 is com.example.starborn.feature.exploration.viewmodel.ExplorationEvent.OpenTinkering -> { services.openTinkeringOnNextFieldKit = true; onOpenFieldKit() }
                 is com.example.starborn.feature.exploration.viewmodel.ExplorationEvent.OpenCooking -> cookingSource = event.sourceId ?: "Cooking"
@@ -154,7 +153,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
         }
     }
     val revealingRoom = ui.fadeOverlay?.let { it.toAlpha < it.fromAlpha } == true
-    val sceneBlocked = environmentPreview || menuOpen || shopId != null || controlsOpen || cookingSource != null || ui.activeDialogue != null || ui.cinematic != null || ui.prompt != null || ui.narrationPrompt != null || ui.togglePrompt != null || ui.tuningPuzzle != null || ui.blockedPrompt != null || ui.shopGreeting != null || ui.eventAnnouncement != null || (ui.forceBlackScreen && !revealingRoom) || ui.isAstraNavConsoleVisible || ui.isSimulationDeckVisible || ui.isTapeDeckVisible || ui.showBurgQuestAstraExitDialog || ui.isMilestoneGalleryVisible || ui.levelUpPrompt != null || ui.skillTreeOverlay != null || ui.questDetail != null || ui.partyMemberDetails != null || ui.tutorialState.current != null
+    val sceneBlocked = actionsOpen || quickLoadOpen || environmentPreview || menuOpen || shopId != null || controlsOpen || cookingSource != null || ui.activeDialogue != null || ui.cinematic != null || ui.prompt != null || ui.narrationPrompt != null || ui.togglePrompt != null || ui.tuningPuzzle != null || ui.blockedPrompt != null || ui.shopGreeting != null || ui.eventAnnouncement != null || (ui.forceBlackScreen && !revealingRoom) || ui.isAstraNavConsoleVisible || ui.isSimulationDeckVisible || ui.isTapeDeckVisible || ui.showBurgQuestAstraExitDialog || ui.isMilestoneGalleryVisible || ui.levelUpPrompt != null || ui.skillTreeOverlay != null || ui.questDetail != null || ui.partyMemberDetails != null || ui.tutorialState.current != null
     val questPopupVisible = !sceneBlocked && questPresentations.important.isNotEmpty()
     val blocked = sceneBlocked || questPopupVisible || moveProgress.value < 1f
     LaunchedEffect(blocked, ui.currentRoom?.id, drawer.panel) {
@@ -209,21 +208,36 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                 else -> false
             }
         }
-        else if (blocked) false else when (event.key) {
-            Key.W, Key.DirectionUp -> { travelIfAvailable("north"); true }
-            Key.S, Key.DirectionDown -> { travelIfAvailable("south"); true }
-            Key.A, Key.DirectionLeft -> { travelIfAvailable("west"); true }
-            Key.D, Key.DirectionRight -> { travelIfAvailable("east"); true }
-            Key.E -> { interactFirst(); true }
-            Key.Escape -> { runtime.openMenuOverlay(); true }
-            Key.I -> { runtime.openMenuOverlay(com.example.starborn.feature.exploration.viewmodel.MenuTab.INVENTORY); true }
-            Key.M -> { runtime.openMenuOverlay(com.example.starborn.feature.exploration.viewmodel.MenuTab.MAP); true }
-            Key.F5 -> { runtime.quickSave(); true }
-            Key.F8 -> { if (services.isDebugEnabled) { environmentPreview = true; true } else false }
-            Key.H -> { controlsOpen = true; true }
-            else -> false
+        else if (blocked) false else if (event.key == Key.F8 && services.isDebugEnabled) {
+            environmentPreview = true; true
+        } else when (bindings.actionFor(event)) {
+            DesktopAction.NORTH -> { travelIfAvailable("north"); true }
+            DesktopAction.SOUTH -> { travelIfAvailable("south"); true }
+            DesktopAction.WEST -> { travelIfAvailable("west"); true }
+            DesktopAction.EAST -> { travelIfAvailable("east"); true }
+            DesktopAction.INTERACT -> { interactFirst(); true }
+            DesktopAction.ACTIONS -> { actionsOpen = true; true }
+            DesktopAction.MENU -> { runtime.openMenuOverlay(); true }
+            DesktopAction.INVENTORY -> { runtime.openMenuOverlay(com.example.starborn.feature.exploration.viewmodel.MenuTab.INVENTORY); true }
+            DesktopAction.MAP -> { runtime.openMenuOverlay(com.example.starborn.feature.exploration.viewmodel.MenuTab.MAP); true }
+            DesktopAction.QUICK_SAVE -> { runtime.quickSave(); true }
+            DesktopAction.QUICK_LOAD -> { quickLoadOpen = true; true }
+            DesktopAction.HELP -> { controlsOpen = true; true }
+            null -> false
         }
     }.focusable()) {
+        if (actionsOpen) DesktopRoomInteractionDialog(services, ui, onDismiss = { actionsOpen = false }) { target ->
+            actionsOpen = false
+            when (target) {
+                is InlineActionTarget.Room -> runtime.onActionSelected(target.action)
+                is InlineActionTarget.Npc -> runtime.onNpcInteraction(target.name)
+                is InlineActionTarget.Enemy -> runtime.engageEnemy(target.id)
+            }
+        }
+        if (quickLoadOpen) DesktopQuickLoadDialog(services, onDismiss = { quickLoadOpen = false }) {
+            quickLoadOpen = false
+            runtime.loadGame(-1)
+        }
         val room = ui.currentRoom
         val isDark = resolveRoomDarkness(ui)
         val description = if (ui.isBurgQuestSession && room?.id == "astra_common_room")
@@ -273,7 +287,8 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                     runtime.openMenuOverlay(if (tab == DesktopMenuTab.STATS) null else com.example.starborn.feature.exploration.viewmodel.MenuTab.valueOf(tab.name))
                 },
                 onOpenControls = { controlsOpen = true },
-                onInteractFirst = ::interactFirst
+                onInteractFirst = ::interactFirst,
+                onChooseActions = { actionsOpen = true }
             )
         }
         if (ui.forceBlackScreen && ui.fadeOverlay == null) Box(Modifier.fillMaxSize().background(Color.Black))
@@ -281,7 +296,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
         if (menuOpen) DesktopFieldMenuDialog(services = services, currentRoomTitle = room?.title, initialTab = DesktopMenuTab.valueOf(ui.menuTab.name),
             onOpenFieldKit = { runtime.closeMenuOverlay(); onOpenFieldKit() },
             onReturnToTitle = { runtime.quickSaveAndReturnToTitle(onReturnToMenu) }, onDismiss = runtime::closeMenuOverlay,
-            onOpenControls = { runtime.closeMenuOverlay(); controlsOpen = true })
+            onOpenControls = { runtime.closeMenuOverlay(); controlsOpen = true }, onQuitToDesktop = onQuitToDesktop)
         if(environmentPreview && room!=null) {
             val clipboard=androidx.compose.ui.platform.LocalClipboardManager.current
             val frames=rememberDesktopEnvironmentSteam(services,true)
@@ -352,7 +367,15 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
         }
         cookingSource?.let { source ->
             DesktopCookingScreen(services.craftingService, services.inventoryService, source,
-                onBack = { cookingSource = null }, characterName = { services.characterDefinitions[it]?.name ?: it })
+                onBack = { cookingSource = null },
+                onPlayAudio = { services.audioDriver.executeAll(services.audioRouter.commandsForUi(it)) },
+                highContrastMode = settings.highContrastMode,
+                largeTouchTargets = settings.largeTouchTargets,
+                onCookAndEat = { recipe, chef, batch, replace ->
+                    com.example.starborn.domain.inventory.ItemUseController(services.inventoryService, services.craftingService,
+                        services.sessionStore, skillNodesProvider = { services.worldDataSource.loadSkillNodes() },
+                        charactersProvider = { services.characterDefinitions }).cookAndEat(recipe, chef, batch, replace)
+                }, characterName = { services.characterDefinitions[it]?.name ?: it })
         }
         DesktopRuntimeOverlays(services, runtime, ui)
         DesktopQuestPresentation(services, questPresentations, sceneBlocked) { questId ->

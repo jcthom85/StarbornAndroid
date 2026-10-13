@@ -284,6 +284,8 @@ class ExplorationViewModel(
     fun isPreparedMeal(itemId: String) = runtime.isPreparedMeal(itemId)
     fun useInventoryItem(itemId: String, targetId: String? = null, replaceMeal: Boolean = false) = runtime.useInventoryItem(itemId, targetId, replaceMeal)
     fun equipInventoryItem(slotId: String, itemId: String?, characterId: String? = null) = runtime.equipInventoryItem(slotId, itemId, characterId)
+    fun requestEquipInventoryMod(slotId: String, itemId: String?, characterId: String?, source: com.example.starborn.domain.inventory.ModLocation? = null) =
+        runtime.requestEquipInventoryMod(slotId, itemId, characterId, source)
     fun equipInventoryMod(slotId: String, itemId: String?, characterId: String? = null) = runtime.equipInventoryMod(slotId, itemId, characterId)
     fun equipWeapon(characterId: String, weaponId: String?) = runtime.equipWeapon(characterId, weaponId)
     fun equipArmor(characterId: String, armorId: String?) = runtime.equipArmor(characterId, armorId)

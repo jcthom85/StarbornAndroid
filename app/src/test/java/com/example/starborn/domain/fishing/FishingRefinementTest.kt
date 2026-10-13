@@ -48,6 +48,72 @@ class FishingRefinementTest {
     }
     @After fun cleanup() { Dispatchers.resetMain() }
 
+    @Test fun cleanCatchBonusPersistsAcrossOrdinaryCatchesWatersAndSpeciesAndCannotRepeat() {
+        fun caught(id: String, zone: String, clean: Boolean = true) = service.secureCatch(
+            FishingResult(id, 1, "Caught", zoneId = zone, cleanCatch = clean))
+        val first = caught("raw_glowfish", "sector9_stream")
+        assertEquals(1, first.cleanCatchProgress)
+        caught("raw_glowfish", "sector9_stream", clean = false)
+        service.secureCatch(FishingResult("raw_glowfish", 0, "Lost", zoneId = "sector9_stream", cleanCatch = true))
+        assertEquals(1, store.state.value.fishingCleanCatchProgress)
+        val zone = data.zones.entries.first { it.key != "sector9_stream" && it.value.any { fish -> fish.isNativeFish() } }
+        caught(zone.value.first { it.isNativeFish() }.itemId, zone.key)
+        val saved = store.state.value
+        store.restore(saved)
+        assertEquals(2, store.state.value.fishingCleanCatchProgress)
+        val bonus = caught("resonance_carp", "sector9_stream")
+        assertEquals(2, bonus.quantity)
+        assertEquals(1, bonus.masteryBonusQuantity)
+        assertEquals(0, bonus.cleanCatchProgress)
+        val before = inventory.snapshot()
+        service.secureCatch(bonus)
+        assertEquals(before, inventory.snapshot())
+        assertEquals(0, store.state.value.fishingCleanCatchProgress)
+    }
+
+    @Test fun salvageAndInvalidWatersCannotEarnCleanProgress() {
+        val (zone, salvage) = data.zones.entries.firstNotNullOf { (zone, fish) ->
+            fish.firstOrNull { !it.isNativeFish() }?.let { zone to it }
+        }
+        val result = service.secureCatch(FishingResult(salvage.itemId, 1, "Salvage", zoneId = zone, cleanCatch = true))
+        assertEquals(0, store.state.value.fishingCleanCatchProgress)
+        assertNull(result.cleanCatchProgress)
+        service.secureCatch(FishingResult("raw_glowfish", 1, "Caught", zoneId = "missing", cleanCatch = true))
+        assertEquals(0, store.state.value.fishingCleanCatchProgress)
+    }
+
+    @Test fun seededRhythmsKeepEveryRodCatchableAndWarningsReadable() {
+        for (seed in 0..49) for (rod in data.rods) for ((id, behavior) in data.fishBehaviors) {
+            val fight = FishingFight(behavior, rod, random = Random(seed))
+            var warningTicks = 0
+            repeat(150) {
+                val previous = fight.phase
+                fight.tick(fight.phase !in setOf(FishingFightPhase.WARNING, FishingFightPhase.SURGE) && fight.tension < .65f)
+                if (fight.phase == FishingFightPhase.WARNING) warningTicks++
+                if (previous == FishingFightPhase.WARNING && fight.phase == FishingFightPhase.SURGE) {
+                    assertTrue("$seed / $id warning too short", warningTicks * FishingFight.TICK_MS >= 840)
+                    warningTicks = 0
+                }
+            }
+            assertTrue("$seed / ${rod.id} / $id must be catchable", fight.successful && fight.elapsedMs <= 15_000)
+            assertTrue("$seed / ${rod.id} / $id must reward attentive play", fight.perfect)
+        }
+    }
+
+    @Test fun rareRhythmsVaryBetweenSeedsButReplayExactlyAndCommonRhythmsStayFixed() {
+        fun trace(id: String, seed: Int): List<Pair<Long, FishingFightPhase>> {
+            val fight = FishingFight(data.fishBehaviors.getValue(id), data.rods.first(), random = Random(seed))
+            return List(100) {
+                fight.tick(fight.phase !in setOf(FishingFightPhase.WARNING, FishingFightPhase.SURGE) && fight.tension < .65f)
+                fight.elapsedMs to fight.phase
+            }
+        }
+        assertEquals(trace("ether_teleport", 7), trace("ether_teleport", 7))
+        assertNotEquals(trace("ether_teleport", 7), trace("ether_teleport", 8))
+        assertEquals(trace("gentle_wobble", 7), trace("gentle_wobble", 8))
+        assertEquals(trace("steady_pull", 7), trace("steady_pull", 8))
+    }
+
     @Test fun everyAuthoredRodCanLandEveryBehaviorByReadingTheFish() {
         for (rod in data.rods) for ((id, behavior) in data.fishBehaviors) {
             val fight = FishingFight(behavior, rod)
@@ -225,7 +291,7 @@ class FishingRefinementTest {
             assertTrue(vm.uiState.value.journal.first { it.zoneId == "sector9_stream" }.species.any { it.caught })
             vm.resetFishing()
         }
-        assertEquals(3, inventory.snapshot()["raw_glowfish"])
+        assertEquals(4, inventory.snapshot()["raw_glowfish"])
         assertEquals(1, inventory.snapshot()["shiny_lure"])
     }
 

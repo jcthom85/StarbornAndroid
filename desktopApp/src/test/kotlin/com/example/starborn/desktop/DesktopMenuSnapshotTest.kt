@@ -51,11 +51,10 @@ class DesktopMenuSnapshotTest {
             assertTrue((services.sessionStore.state.value.partyMemberHp["nova"] ?: 0) > 1)
             compose.onNodeWithText("Gear").performClick()
             compose.onNodeWithText("Search equipment").assertExists()
-            compose.onAllNodes(hasScrollToNodeAction()).onFirst().performScrollToNode(hasText("Mining Pistol · equip"))
-            compose.onNodeWithText("Mining Pistol · equip").assertIsNotEnabled()
+            compose.onNodeWithText("Equip").assertIsNotEnabled()
             compose.runOnIdle { services.sessionStore.restore(services.sessionStore.state.value.copy(unlockedWeapons = services.sessionStore.state.value.unlockedWeapons + "mining_pistol")) }
-            compose.onNodeWithText("Mining Pistol · equip").assertIsEnabled()
-            compose.onNodeWithText("Mining Pistol · equip").performClick()
+            compose.onNodeWithText("Equip").assertIsEnabled()
+            compose.onNodeWithText("Equip").performClick()
             compose.waitUntil(5_000) { services.sessionStore.state.value.equippedWeapons["nova"] == "mining_pistol" }
             capture("menu-equipment")
             listOf("Journal", "Map", "Stats", "Settings").forEach { tab ->

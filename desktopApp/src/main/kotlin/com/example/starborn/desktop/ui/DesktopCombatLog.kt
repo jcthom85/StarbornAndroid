@@ -57,10 +57,11 @@ internal fun DesktopCombatLiveFeed(
     accentColor: Color = Color(0xFF63E6FF)
 ) {
     val listState = rememberLazyListState()
+    val entries = history.takeLast(12)
 
-    LaunchedEffect(history.size) {
-        if (history.isNotEmpty()) {
-            listState.animateScrollToItem(history.lastIndex)
+    LaunchedEffect(entries) {
+        if (entries.isNotEmpty()) {
+            listState.animateScrollToItem(entries.lastIndex)
         }
     }
 
@@ -153,7 +154,7 @@ internal fun DesktopCombatLiveFeed(
                         .heightIn(max = 140.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    items(history.takeLast(12)) { entry ->
+                    items(entries) { entry ->
                         val (textColor, text) = formatLogEntry(entry)
                         Row(
                             modifier = Modifier.fillMaxWidth(),

@@ -16,7 +16,7 @@ class DesktopAudioDriverPipelineTest {
     @Before
     fun setUp() {
         assetProvider = DesktopAssetProvider()
-        driver = DesktopAudioDriver(assetProvider, prewarmDefaults = true)
+        driver = DesktopAudioDriver(assetProvider, prewarmDefaults = true, clipFactory = { TestAudioClip().clip })
     }
 
     @After
@@ -28,7 +28,7 @@ class DesktopAudioDriverPipelineTest {
     fun prewarmLoadsCommonSfxCuesIntoPcmCache() {
         // Allow background prewarm worker a brief moment to process the cues
         val deadline = System.currentTimeMillis() + 3000L
-        while (System.currentTimeMillis() < deadline && !driver.isPcmCached("ui_click")) {
+        while (System.currentTimeMillis() < deadline && !listOf("ui_click", "ui_room_move", "sfx_ui_button_click").all(driver::isPcmCached)) {
             Thread.sleep(50)
         }
         assertTrue("ui_click should be cached in PCM cache", driver.isPcmCached("ui_click"))
@@ -91,10 +91,52 @@ class DesktopAudioDriverPipelineTest {
 
     @Test
     fun masterMuteTogglesInstantlyWithoutInterruptingActiveClips() {
-        driver.execute(AudioCommand.Play(AudioCueType.UI, "ui_confirm", loop = false, fadeMs = 0))
-        driver.setMuted(true)
-        driver.setMuted(false)
+        driver.release()
+        val output = TestAudioClip()
+        driver = DesktopAudioDriver(assetProvider, prewarmDefaults = false, clipFactory = { output.clip })
+        driver.execute(AudioCommand.Play(AudioCueType.AMBIENT, "amb_vent", loop = true, fadeMs = 0))
+        await { driver.isPlaying(AudioCueType.AMBIENT, "amb_vent") }
         driver.setMasterGain(0.5f)
-        driver.setUserGain(AudioCueType.UI, 0.8f)
+        assertEquals(-6.02f, output.gain.value, .1f)
+        driver.setMuted(true)
+        assertEquals(output.gain.minimum, output.gain.value, .01f)
+        assertTrue(output.running)
+        driver.setMuted(false)
+        assertEquals(-6.02f, output.gain.value, .1f)
+        driver.setMasterGain(1f)
+        assertEquals(0f, output.gain.value, .01f)
+    }
+
+    @Test
+    fun stoppingMusicWhileItLoadsCannotStartItAfterwards() {
+        driver.release()
+        val loading = java.util.concurrent.CountDownLatch(1)
+        val finishLoading = java.util.concurrent.CountDownLatch(1)
+        val output = TestAudioClip()
+        val requests = java.util.concurrent.atomic.AtomicInteger()
+        driver = DesktopAudioDriver(assetProvider, prewarmDefaults = false, clipFactory = {
+            if (requests.incrementAndGet() == 1) {
+                loading.countDown()
+                check(finishLoading.await(5, java.util.concurrent.TimeUnit.SECONDS))
+                output.clip
+            } else TestAudioClip().clip
+        })
+        try {
+            driver.execute(AudioCommand.Play(AudioCueType.MUSIC, "music_title_theme", loop = true))
+            assertTrue(loading.await(3, java.util.concurrent.TimeUnit.SECONDS))
+            driver.execute(AudioCommand.Stop(AudioCueType.MUSIC, "music_title_theme"))
+            // Ambience shares the command worker, so playback proves Stop has been processed.
+            driver.execute(AudioCommand.Play(AudioCueType.AMBIENT, "amb_vent", loop = true))
+            await { driver.isPlaying(AudioCueType.AMBIENT, "amb_vent") }
+            finishLoading.countDown()
+            await { output.closed }
+            assertFalse(driver.isPlaying(AudioCueType.MUSIC, "music_title_theme"))
+        } finally { finishLoading.countDown() }
+    }
+
+    private fun await(condition: () -> Boolean) {
+        val deadline = System.currentTimeMillis() + 5000L
+        while (!condition() && System.currentTimeMillis() < deadline) Thread.sleep(10)
+        assertTrue("Audio command did not complete", condition())
     }
 }

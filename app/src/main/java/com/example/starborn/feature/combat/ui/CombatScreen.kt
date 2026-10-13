@@ -1006,7 +1006,7 @@ fun CombatScreen(
             val snackBaseLabel = commandActor?.let { actor -> viewModel.snackLabel(actor.id) } ?: "Snack"
             val snackCooldown = commandActor?.let { actor -> viewModel.snackCooldownRemaining(actor.id) } ?: 0
             val snackLabel = when {
-                snackCooldown > 0 -> "$snackBaseLabel ($snackCooldown)"
+                snackCooldown > 0 -> "$snackBaseLabel (ready in $snackCooldown turns)"
                 else -> snackBaseLabel
             }
             val snackRequirement = commandActor?.let { actor -> viewModel.snackTargetRequirement(actor.id) } ?: TargetRequirement.NONE
@@ -1172,6 +1172,7 @@ fun CombatScreen(
                     pendingInstruction = null
                 },
                 snackLabel = snackLabel,
+                snackPreview = commandActor?.let { viewModel.snackPreview(it.id) }.orEmpty(),
                 canSnack = canSnack && viewModel.isCombatTutorialCommandEnabled("Snack"),
                 snackCooldown = snackCooldown,
                 onSnack = {

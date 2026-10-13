@@ -85,9 +85,6 @@ class DesktopQuestPresentationTest {
         var opened: String? = null
         try {
             compose.setContent { DesktopStarbornTheme {
-                LaunchedEffect(services) { services.exploration.events.collect { event ->
-                    if (event is ExplorationEvent.AudioCommands) services.audioDriver.executeAll(event.commands)
-                } }
                 Box(Modifier.size(if (narrow.value) 800.dp else 1280.dp, if (narrow.value) 600.dp else 720.dp)) {
                     DesktopQuestPresentation(services, presentations, blocked.value) { opened = it }
                 }

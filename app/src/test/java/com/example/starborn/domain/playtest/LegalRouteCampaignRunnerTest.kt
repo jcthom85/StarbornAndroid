@@ -81,6 +81,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -112,6 +113,9 @@ class LegalRouteCampaignRunnerTest {
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var testScope: CoroutineScope
     private lateinit var saveDir: File
+    private val systemsAudit by lazy { CampaignSystemsRouteAudit(AssetJsonReader(DesktopAssetProvider(listOf(assets)), moshi)) }
+    private val assistance = mutableListOf<String>()
+    private var recordSystemsAudit = false
 
     @Before
     fun setUp() {
@@ -129,6 +133,7 @@ class LegalRouteCampaignRunnerTest {
 
     @Test
     fun `fresh game legal route traverses Worlds 1 through 6 to ms_game_complete with save reload checkpoints`() {
+        recordSystemsAudit = true
         var harness = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
         try {
             val runner = LegalCampaignAgent(harness)
@@ -228,9 +233,158 @@ class LegalRouteCampaignRunnerTest {
             assertTrue("All 30 main quests must be completed. Missing: ${allMainQuests - finalState.completedQuests}",
                 finalState.completedQuests.containsAll(allMainQuests))
 
+            systemsAudit.writeReports(assistance)
         } finally {
             harness.close()
         }
+    }
+
+    @Test
+    fun `unlocked public route buys a base catches components crafts and sells after Astra return`() {
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
+        try {
+            val setup = LegalCampaignAgent(h)
+            setup.playWorld1()
+            setup.playWorld2()
+            val assistedSetup = assistance.size
+            val started = testDispatcher.scheduler.currentTime
+            val log = mutableListOf("Setup completed through assisted World 2 runner; public slice starts at Spire landing.")
+            fun note(text: String) { log += "${testDispatcher.scheduler.currentTime - started} ms | ${h.sessionStore.state.value.roomId} | $text" }
+            fun walk(target: String) {
+                val start = requireNotNull(h.sessionStore.state.value.roomId)
+                val path = requireNotNull(h.findBfsPath(start, target)) { "Public slice needs a connected route: $start -> $target" }
+                for ((direction, nextRoom) in path) {
+                    val named = h.explorationVm.uiState.value.actions.filterIsInstance<com.example.starborn.domain.model.TravelAction>()
+                        .firstOrNull { it.direction == direction }
+                    if (named != null) h.explorationVm.onActionSelected(named) else h.explorationVm.travel(direction)
+                    h.settle()
+                    assertEquals("Public travel must succeed without a room-position fallback", nextRoom, h.sessionStore.state.value.roomId)
+                }
+                note("Walked to $target")
+            }
+            fun sail(world: String) {
+                val room = requireNotNull(h.sessionStore.state.value.roomId)
+                val node = h.hubNodes.first { room in it.rooms }
+                walk(node.entryRoom)
+                h.explorationVm.requestReturnToHub(); h.settle()
+                h.hubVm.enterNode("astra_access") {}; h.settle()
+                assertEquals("astra_cargo_bay", h.sessionStore.state.value.roomId)
+                walk("astra_bridge")
+                val console = h.explorationVm.uiState.value.actions.filterIsInstance<com.example.starborn.domain.model.GenericAction>()
+                    .first { it.actionEvent == "astra_nav_console" }
+                h.explorationVm.onActionSelected(console); h.settle()
+                val destination = com.example.starborn.domain.session.AstraTravel.availableDestinations(h.sessionStore.state.value).single { it.worldId == world }
+                h.explorationVm.travelToWorldFromAstra(destination.worldId, destination.hubId, destination.roomId, destination.nodeId)
+                h.settle(); testDispatcher.scheduler.advanceTimeBy(1401); h.settle()
+                h.explorationVm.disembarkAstra(); h.settle()
+                h.hubVm.enterNode(destination.nodeId) {}; h.settle()
+                assertEquals(destination.roomId, h.sessionStore.state.value.roomId)
+                note("Astra arrived in $world")
+            }
+            fun merchant(id: String): com.example.starborn.feature.shop.ShopController {
+                val action = h.explorationVm.uiState.value.actions.filterIsInstance<com.example.starborn.domain.model.ShopAction>().single { it.shopId == id }
+                h.explorationVm.onActionSelected(action); h.settle()
+                h.explorationVm.enterPendingShop(); h.settle()
+                return com.example.starborn.feature.shop.ShopController(id, h.shopRepository, h.itemRepository, h.inventoryService, h.sessionStore, testScope)
+            }
+            sail("world_2")
+            walk("sector9_stream_falls")
+            merchant("davids_provisions").use { shop ->
+                val before = h.sessionStore.state.value.playerCredits
+                val price = shop.uiState.value.itemsForSale.single { it.id == "fiberglass_rod" }.price
+                shop.buyItem("fiberglass_rod", 1); h.settle()
+                assertTrue(h.inventoryService.hasItem("fiberglass_rod"))
+                assertEquals(before - price, h.sessionStore.state.value.playerCredits)
+                note("Bought Resin Rod for $price credits")
+            }
+            walk("sector9_crash_site")
+            sail("world_3")
+            walk("spire_sewers_passage")
+            val fishAction = h.explorationVm.uiState.value.actions.filterIsInstance<com.example.starborn.domain.model.GenericAction>().single { it.zoneId == "spire_runoff" }
+            h.explorationVm.onActionSelected(fishAction); h.settle()
+            val fishing = com.example.starborn.feature.fishing.viewmodel.FishingController(h.fishingService, "spire_runoff", kotlin.random.Random(11), testScope)
+            var casts = 0
+            try {
+                h.settle()
+                fishing.selectRod(h.fishingService.getAvailableRods().single { it.id == "wooden_rod" })
+                fishing.selectLure(h.fishingService.getAvailableLures().single { it.id == "basic_lure" })
+                h.settle()
+                while ((!h.inventoryService.hasItem("wiring_bundle") || !h.inventoryService.hasItem("circuit_board")) && casts++ < 300) {
+                    fishing.startFishing(); h.settle()
+                    var ticks = 0
+                    while (fishing.uiState.value.fishingState == com.example.starborn.feature.fishing.viewmodel.FishingState.WAITING && ticks++ < 100) {
+                        testDispatcher.scheduler.advanceTimeBy(50); h.settle()
+                    }
+                    fishing.onHookButtonPressed(); fishing.beginReeling(); h.settle()
+                    ticks = 0
+                    while (fishing.uiState.value.fishingState == com.example.starborn.feature.fishing.viewmodel.FishingState.REELING && ticks++ < 500) {
+                        val reel = requireNotNull(fishing.uiState.value.reelState)
+                        if (reel.phase !in setOf(com.example.starborn.domain.fishing.FishingFightPhase.WARNING, com.example.starborn.domain.fishing.FishingFightPhase.SURGE) && reel.tension < .65f)
+                            fishing.onReelPressed() else fishing.onReelReleased()
+                        testDispatcher.scheduler.advanceTimeBy(com.example.starborn.domain.fishing.FishingFight.TICK_MS); h.settle()
+                    }
+                    assertEquals(com.example.starborn.feature.fishing.viewmodel.FishingState.RESULT, fishing.uiState.value.fishingState)
+                    assertTrue(requireNotNull(fishing.uiState.value.lastCatchResult).secured)
+                    fishing.resetFishing(); h.settle()
+                }
+            } finally { fishing.close() }
+            assertTrue("Public fishing must obtain both components", casts < 300)
+            note("Caught upgrade components in $casts casts")
+            h.explorationVm.openMenuOverlay(com.example.starborn.feature.exploration.viewmodel.MenuTab.FIELD_KIT); h.settle()
+            val bench = com.example.starborn.feature.crafting.CraftingController(h.craftingService, h.inventoryService, h.sessionStore, testScope)
+            try {
+                bench.autoFill("gear_reinforced_resin_rod"); h.settle()
+                assertTrue(bench.uiState.value.bench.canCraftSelection)
+                bench.craftFromBench(); h.settle()
+                assertTrue(h.inventoryService.hasItem("reinforced_resin_rod"))
+                assertFalse(h.inventoryService.hasItem("fiberglass_rod"))
+                h.explorationVm.onTinkeringCrafted("reinforced_resin_rod")
+            } finally { bench.close() }
+            h.explorationVm.closeMenuOverlay(); h.settle()
+            note("Crafted Reinforced Resin Rod through Field Kit")
+            walk("spire_sewers_landing")
+            sail("world_2")
+            walk("sector9_stream_falls")
+            merchant("davids_provisions").use { shop ->
+                var banked = 0
+                for (sale in shop.uiState.value.sellInventory.filter { it.canSell && it.id in setOf("raw_glowfish", "chime_minnow", "stellarium_eel") }) {
+                    val before = h.sessionStore.state.value.playerCredits
+                    val owned = h.inventoryService.snapshot().getValue(sale.id)
+                    val quantity = (sale.quantity - if (sale.id == "raw_glowfish") 2 else 0).coerceAtLeast(0)
+                    if (quantity == 0) continue
+                    shop.sellItem(sale.id, quantity); h.settle()
+                    assertEquals(before + sale.price * quantity, h.sessionStore.state.value.playerCredits)
+                    assertEquals(owned - quantity, h.inventoryService.snapshot()[sale.id] ?: 0)
+                    banked += sale.price * quantity
+                }
+                assertTrue(banked > 0)
+                note("Banked $banked credits by selling caught native fish after return trip")
+            }
+            walk("sector9_temple_lock_chamber")
+            merchant("sentinel_scraps").use { shop ->
+                shop.buyItem("fiery_pepper", 2); shop.buyItem("herb", 1); h.settle()
+                assertTrue(h.inventoryService.hasItem("fiery_pepper", 2))
+                assertTrue(h.inventoryService.hasItem("herb"))
+                note("Bought cooking ingredients from Sentinel Scraps")
+            }
+            walk("sector9_ridge_plateau")
+            val stove = h.explorationVm.uiState.value.actions.filterIsInstance<com.example.starborn.domain.model.RestStopAction>().first { it.cookSource != null }
+            h.explorationVm.onActionSelected(stove); h.settle()
+            assertEquals(true, h.sessionStore.state.value.roomStates["sector9_ridge_plateau"]?.get("cooking_discovered"))
+            assertTrue(h.craftingService.cookMeal("snack_pulse_citrus", "nova") is CraftingOutcome.Success)
+            assertTrue(h.inventoryService.hasItem("pulse_citrus"))
+            assertFalse(h.inventoryService.hasItem("fiery_pepper"))
+            note("Discovered the ridge cookfire and cooked Pulse Citrus")
+            val saved = h.saveSlot(3)
+            assertEquals(saved, h.loadSlot(3))
+            assertTrue(h.inventoryService.hasItem("reinforced_resin_rod"))
+            assertTrue(h.inventoryService.hasItem("pulse_citrus"))
+            note("Save/reload preserved purchases, recipes, rewards and crafted items")
+            assertEquals("Public procurement slice must add no assisted actions", assistedSetup, assistance.size)
+            assertTrue(h.inventoryService.hasItem("wooden_rod"))
+            assertTrue(h.inventoryService.hasItem("basic_lure"))
+            File("build/reports/campaign-systems/public-procurement-route.txt").apply { requireNotNull(parentFile).mkdirs(); writeText(log.joinToString("\n") + "\n") }
+        } finally { h.close() }
     }
 
     private inner class LegalCampaignAgent(private var harness: ProductionCampaignHarness) {
@@ -301,6 +455,7 @@ class LegalRouteCampaignRunnerTest {
                 }
             }
 
+            assistance += "room_position:${harness.sessionStore.state.value.roomId}->$targetRoomId"
             harness.sessionStore.setRoom(targetRoomId)
             harness.settle()
         }
@@ -315,6 +470,7 @@ class LegalRouteCampaignRunnerTest {
             if (matchingAction != null) {
                 harness.explorationVm.onActionSelected(matchingAction)
             } else {
+                assistance += "reflective_action:${harness.sessionStore.state.value.roomId}:$actionId"
                 val triggerMethod = harness.explorationVm.javaClass.getDeclaredMethod(
                     "triggerPlayerAction",
                     String::class.java,
@@ -370,6 +526,7 @@ class LegalRouteCampaignRunnerTest {
         }
 
         fun winCombat(enemyIds: List<String>, roomId: String) {
+            assistance += "scripted_victory:$roomId:${enemyIds.joinToString(";")}"
             val reward = harness.applyScriptedBattleReward(enemyIds, roomId)
             val payload = CombatResultPayload(
                 outcome = CombatResultPayload.Outcome.VICTORY,
@@ -732,7 +889,7 @@ class LegalRouteCampaignRunnerTest {
         val audioRouter = AudioRouter(AudioBindings())
         val voiceoverController = mock<VoiceoverController>()
         val shopRepository = ShopRepository(ShopAssetDataSource(reader)).apply { load() }
-        val fishingService = mock<FishingService>()
+        val fishingService = FishingService(com.example.starborn.data.assets.FishingAssetDataSource(reader), inventoryService, kotlin.random.Random(42), sessionStore, craftingService)
         val encounterCoordinator = EncounterCoordinator()
         val userSettingsFlow = MutableStateFlow(UserSettings())
         val userSettingsStore = mock<UserSettingsStore> {
@@ -798,7 +955,10 @@ class LegalRouteCampaignRunnerTest {
             settle()
         }
 
-        fun settle() = dispatcher.scheduler.runCurrent()
+        fun settle() {
+            dispatcher.scheduler.runCurrent()
+            if (recordSystemsAudit) systemsAudit.capture(explorationVm, sessionStore, inventoryService, craftingService, assistance.size, coroutineScope)
+        }
         fun close() = Unit
 
         fun saveSlot(slot: Int): GameSessionState = runBlocking {

@@ -140,20 +140,22 @@ class DesktopExplorationPolishTest {
             compose.onNodeWithTag("key-legend-F5").assertIsDisplayed()
             compose.onNodeWithTag("key-legend-H").assertIsDisplayed()
             compose.onNodeWithTag("key-legend-Esc").assertIsDisplayed()
-            compose.onNodeWithTag("key-legend-WASD").assertIsDisplayed()
+            compose.onNodeWithTag("key-legend-W/A/S/D").assertIsDisplayed()
 
             // Click Controls opens controls dialog
             compose.onNodeWithTag("key-legend-H").performClick()
             compose.waitForIdle()
-            compose.onNodeWithText("TACTICAL CONTROLS & KEYBINDINGS").assertIsDisplayed()
+            compose.onNodeWithText("Keyboard and mouse - Change exploration keys in Settings > Controls").assertIsDisplayed()
 
             // Close dialog via Close button
-            compose.onNodeWithContentDescription("Close").performClick()
+            compose.onNodeWithText("Close").performClick()
             compose.waitForIdle()
-            compose.onNodeWithText("TACTICAL CONTROLS & KEYBINDINGS").assertDoesNotExist()
+            compose.onNodeWithText("Keyboard and mouse - Change exploration keys in Settings > Controls").assertDoesNotExist()
 
             // Click Quick Save triggers quicksave
             compose.onNodeWithTag("key-legend-F5").performClick()
+            compose.waitUntil(5000) { services.saveManager.hasSave(-1) }
+            compose.waitUntil(5000) { compose.onAllNodesWithText("Saved!").fetchSemanticsNodes().isNotEmpty() }
             compose.waitForIdle()
             compose.onNodeWithText("Saved!").assertExists()
         } finally { services.close(); directory.deleteRecursively() }

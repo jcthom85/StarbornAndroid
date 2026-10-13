@@ -1088,7 +1088,7 @@
     "rarity": "uncommon",
     "equipment": {
       "slot": "snack",
-      "hp_bonus": 120
+      "hp_bonus": 40
     },
     "effect": {
       "buff_stat": {
@@ -1104,7 +1104,7 @@
   {
     "id": "comet_gummies",
     "name": "Comet Gummies",
-    "description": "Neon-bright chews. They taste like battery acid and make the world slow down.",
+    "description": "Neon-bright chews. They taste like battery acid and make the world slow down. Use the ability before basic weapon attacks; it spends your action to boost weapon accuracy and crit chance.",
     "type": "snack",
     "value": 180,
     "buy_price": 320,
@@ -1121,12 +1121,12 @@
         {
           "stat": "accuracy",
           "value": 8,
-          "duration": 2
+          "duration": 4
         },
         {
           "stat": "crit_rate",
-          "value": 10,
-          "duration": 2
+          "value": 30,
+          "duration": 4
         }
       ],
       "target": "self",
@@ -1227,7 +1227,7 @@
   {
     "id": "pulse_citrus",
     "name": "Pulse Citrus",
-    "description": "Synthetic citrus. Sour enough to jumpstart a stopped heart. Tastes like yellow.",
+    "description": "Synthetic citrus. Sour enough to jumpstart a stopped heart. Tastes like yellow. Use the ability early in a longer fight; it spends your action to accelerate your next turns.",
     "type": "snack",
     "value": 150,
     "buy_price": 300,
@@ -1241,8 +1241,8 @@
     "effect": {
       "buff_stat": {
         "stat": "speed",
-        "value": 8,
-        "duration": 2
+        "value": 16,
+        "duration": 3
       },
       "target": "self",
       "cooldown": 5

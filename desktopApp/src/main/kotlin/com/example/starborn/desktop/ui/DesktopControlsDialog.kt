@@ -1,181 +1,56 @@
 package com.example.starborn.desktop.ui
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.rounded.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 
 @Composable
-fun DesktopControlsDialog(
-    onDismiss: () -> Unit,
-    accentColor: Color = Color(0xFF63E6FF)
-) {
+fun DesktopControlsDialog(onDismiss: () -> Unit, accentColor: Color = Color(0xFF63E6FF)) {
+    val bindings = LocalDesktopKeyBindings.current
     Dialog(onDismissRequest = onDismiss) {
-        Surface(
-            shape = RoundedCornerShape(16.dp),
-            color = Color(0xFF060E16).copy(alpha = 0.96f),
-            border = BorderStroke(1.2.dp, accentColor.copy(alpha = 0.6f)),
-            shadowElevation = 24.dp,
-            modifier = Modifier.width(680.dp).padding(16.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .background(
-                        Brush.verticalGradient(
-                            listOf(accentColor.copy(alpha = 0.10f), Color.Transparent)
-                        )
-                    )
-                    .padding(22.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                // Header
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        Surface(
-                            shape = RoundedCornerShape(8.dp),
-                            color = accentColor.copy(alpha = 0.2f),
-                            border = BorderStroke(1.dp, accentColor)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.Keyboard,
-                                contentDescription = null,
-                                tint = accentColor,
-                                modifier = Modifier.padding(6.dp).size(22.dp)
-                            )
-                        }
-                        Column {
-                            Text(
-                                text = "TACTICAL CONTROLS & KEYBINDINGS",
-                                color = Color.White,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Black,
-                                fontFamily = LocalStarbornFonts.current.orbitron
-                            )
-                            Text(
-                                text = "Desktop Keyboard & Mouse Navigation",
-                                color = Color.White.copy(alpha = 0.6f),
-                                fontSize = 11.sp
-                            )
-                        }
-                    }
-
-                    IconButton(onClick = onDismiss, modifier = Modifier.desktopPointerHover()) {
-                        Icon(imageVector = Icons.Default.Close, contentDescription = "Close", tint = Color.White)
-                    }
+        Surface(Modifier.widthIn(max = 760.dp).fillMaxWidth().heightIn(max = 640.dp),
+            shape = MaterialTheme.shapes.large, color = Color(0xFF060E16),
+            border = BorderStroke(1.dp, accentColor.copy(alpha = .6f))) {
+            Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Text("Controls", Modifier.weight(1f), style = MaterialTheme.typography.titleLarge)
+                    TextButton(onClick = onDismiss, modifier = Modifier.desktopPointerHover()) { Text("Close") }
                 }
-
-                HorizontalDivider(color = accentColor.copy(alpha = 0.3f))
-
-                // Control Sections Grid
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    // Left Column: Exploration & Navigation
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        Text(
-                            text = "EXPLORATION & TRAVERSAL",
-                            color = Color(0xFFFFC857),
-                            fontSize = 11.5.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = LocalStarbornFonts.current.orbitron
-                        )
-
-                        KeybindRow("W / Up Arrow", "Travel North")
-                        KeybindRow("S / Down Arrow", "Travel South")
-                        KeybindRow("A / Left Arrow", "Travel West")
-                        KeybindRow("D / Right Arrow", "Travel East")
-                        KeybindRow("Mouse", "Choose actions, NPCs and threats")
-                        KeybindRow("[E]", "Use the first room action")
-                        KeybindRow("[M]", "Open Star Map / Hub")
-                        KeybindRow("[I] / [Esc]", "Open the field menu")
-                        KeybindRow("[Tab] / [Shift+Tab]", "Move keyboard focus")
-                    }
-
-                    // Right Column: Stations & Quick Actions
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        Text(
-                            text = "STATIONS & QUICK ACTIONS",
-                            color = Color(0xFFFFC857),
-                            fontSize = 11.5.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = LocalStarbornFonts.current.orbitron
-                        )
-
-                        KeybindRow("Station actions", "Fishing, cooking, tinkering, shops")
-                        KeybindRow("Combat [1]", "Attack, then choose a target")
-                        KeybindRow("Combat [2 / 3 / 4]", "Abilities / items / equipped snack")
-                        KeybindRow("Combat [R / L]", "Retreat / battle log")
-                        KeybindRow("Combat [Arrows / Enter]", "Select / confirm a target")
-                        KeybindRow("Combat [Tab]", "Select the next ready party member")
-                        KeybindRow("Combat [Space]", "Respond to timing prompts")
-                        KeybindRow("Combat [Esc / Right Click]", "Cancel targeting or action menu")
-                        KeybindRow("Fishing [Space]", "Cast / hook / hold to reel")
-                        KeybindRow("[ESC]", "Field Menu / Pause / Back")
-                        KeybindRow("Menu [Alt+1-6]", "Party / Items / Tinker / Journal / Map / Settings")
-                        KeybindRow("Menu [Ctrl+Tab]", "Next page (Shift reverses)")
-                        KeybindRow("Map", "Drag to pan; Scroll wheel / [+/-] to zoom")
-                        KeybindRow("[F5]", "Quick save")
-                        KeybindRow("[F11]", "Toggle Fullscreen / Windowed")
-                        KeybindRow("[H]", "Open this controls guide")
-                    }
-                }
-
-                HorizontalDivider(color = accentColor.copy(alpha = 0.2f))
-
-                // Footer tip
-                Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = Color.White.copy(alpha = 0.04f),
-                    border = BorderStroke(1.dp, Color.White.copy(alpha = 0.1f)),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.SportsEsports,
-                            contentDescription = null,
-                            tint = accentColor,
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Text(
-                            text = "Mouse controls, clicks, and keyboard shortcuts remain seamlessly active together at all times.",
-                            color = Color.White.copy(alpha = 0.75f),
-                            fontSize = 11.sp
-                        )
-                    }
+                Text("Keyboard and mouse - Change exploration keys in Settings > Controls",
+                    style = MaterialTheme.typography.bodySmall)
+                LazyColumn(Modifier.weight(1f, fill = false), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    item { ControlSectionHeading("Exploration", accentColor) }
+                    items(explorationControlHints(bindings)) { ControlHintRow(it) }
+                    item { ControlSectionHeading("Field menu", accentColor) }
+                    items(fieldMenuControlHints) { ControlHintRow(it) }
+                    item { ControlSectionHeading("Combat", accentColor) }
+                    items(listOf(
+                        DesktopControlHint("1 / 2 / 3 / 4", "Attack / Abilities / Items / Equipped snack"),
+                        DesktopControlHint("R / L", "Retreat / Battle log"),
+                        DesktopControlHint("Arrows / Enter", "Select / confirm target"),
+                        DesktopControlHint("Tab", "Select next ready party member"),
+                        DesktopControlHint("Space", "Respond to timing prompts"),
+                        DesktopControlHint("Esc / Right click", "Cancel targeting or action menu")
+                    )) { ControlHintRow(it) }
+                    item { ControlSectionHeading("Dialogue, stations, and display", accentColor) }
+                    items(listOf(
+                        DesktopControlHint("Enter", "Reveal dialogue, then advance a line without choices"),
+                        DesktopControlHint("1-9", "Choose a revealed dialogue response"),
+                        DesktopControlHint("Fishing: Space", "Cast / hook / hold to reel"),
+                        DesktopControlHint("Arcade: Enter / Esc", "Start or resume / pause"),
+                        DesktopControlHint("Arcade: WASD / Arrows", "Move; Space / E are primary / secondary actions"),
+                        DesktopControlHint("Harmonic Pulse: D/F/J/K", "Strike the four lanes"),
+                        DesktopControlHint("Map: Mouse wheel", "Zoom; drag to pan"),
+                        DesktopControlHint("F11 / Alt+Enter", "Toggle fullscreen / borderless window")
+                    )) { ControlHintRow(it) }
                 }
             }
         }
@@ -183,30 +58,15 @@ fun DesktopControlsDialog(
 }
 
 @Composable
-private fun KeybindRow(key: String, action: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Surface(
-            shape = RoundedCornerShape(5.dp),
-            color = Color.White.copy(alpha = 0.08f),
-            border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f))
-        ) {
-            Text(
-                text = key,
-                color = Color(0xFF63E6FF),
-                fontSize = 10.5.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = LocalStarbornFonts.current.orbitron,
-                modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
-            )
-        }
-        Text(
-            text = action,
-            color = Color.White.copy(alpha = 0.85f),
-            fontSize = 11.5.sp
-        )
+private fun ControlSectionHeading(label: String, accent: Color) {
+    HorizontalDivider()
+    Text(label, color = accent, style = MaterialTheme.typography.titleSmall)
+}
+
+@Composable
+internal fun ControlHintRow(hint: DesktopControlHint) {
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+        Text(hint.keys, color = Color(0xFF63E6FF), style = MaterialTheme.typography.labelMedium)
+        Text(hint.description, style = MaterialTheme.typography.bodySmall)
     }
 }

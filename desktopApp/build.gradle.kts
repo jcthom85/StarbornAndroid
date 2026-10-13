@@ -9,6 +9,13 @@ plugins {
 
 kotlin { jvmToolchain(21) }
 
+tasks.withType<Test>().configureEach {
+    // Compose/Skiko owns native graphics state. Isolate test classes so offscreen
+    // scenes cannot accumulate renderer state across the full acceptance suite.
+    forkEvery = 1
+    maxParallelForks = 1
+}
+
 dependencies {
     implementation(project(":gameRuntime"))
     implementation(project(":shared"))
@@ -28,6 +35,7 @@ dependencies {
     implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4")
     implementation("com.googlecode.soundlibs:jlayer:1.0.1.4")
     implementation("com.googlecode.soundlibs:tritonus-share:0.3.7.4")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
     testImplementation(libs.junit)
     testImplementation(compose.desktop.uiTestJUnit4)
 }

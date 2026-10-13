@@ -1,7 +1,10 @@
 package com.example.starborn.desktop
 
 import java.io.File
+import java.io.BufferedInputStream
 import java.nio.file.Files
+import javax.sound.sampled.AudioFormat
+import javax.sound.sampled.AudioSystem
 
 /** Invoked by the packaged launcher to verify its JVM and resources without changing player saves. */
 internal object DesktopPackagedSmokeCheck {
@@ -21,7 +24,18 @@ internal object DesktopPackagedSmokeCheck {
             val characters = services.worldDataSource.loadCharacters()
             check(rooms.any { it.id == "pit_nova_bunk" })
             check(characters.any { it.id == "nova" })
-            val result = "PASS\nAssets: ${manifest.size}\nRooms: ${rooms.size}\nCharacters: ${characters.size}\nJava: ${System.getProperty("java.version")}\nWorking directory: ${File(".").canonicalPath}\n"
+            // Verify the MP3 decoder is present in the distributed JVM/classpath, without needing an output device.
+            requireNotNull(assets.open("raw/music_title_theme.mp3")).use { raw ->
+                AudioSystem.getAudioInputStream(BufferedInputStream(raw)).use { encoded ->
+                    val rate = encoded.format.sampleRate.takeIf { it > 0 } ?: 44100f
+                    val channels = encoded.format.channels.takeIf { it > 0 } ?: 2
+                    val pcm = AudioFormat(AudioFormat.Encoding.PCM_SIGNED, rate, 16, channels, channels * 2, rate, false)
+                    AudioSystem.getAudioInputStream(pcm, encoded).use { decoded ->
+                        check(decoded.read(ByteArray(8192)) > 0) { "Title music could not be decoded" }
+                    }
+                }
+            }
+            val result = "PASS\nAssets: ${manifest.size}\nRooms: ${rooms.size}\nCharacters: ${characters.size}\nTitle music decode: PASS\nJava: ${System.getProperty("java.version")}\nWorking directory: ${File(".").canonicalPath}\n"
             report?.writeText(result)
             println(result)
         } catch (error: Throwable) {

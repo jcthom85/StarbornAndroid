@@ -35,20 +35,34 @@ precedence. Explicit deletion removes the playable protocol and legacy slot.
 
 ## Controls
 
-- Exploration: WASD / arrows to move, E for the first room action, Esc / I / Tab
-  for the field menu, M to request the hub map, H for help.
-- Combat: click a ready party member, select a command, then its target.
-  1 selects Attack, 2 Abilities, 3 Items; arrows select a target and Enter confirms.
-  Tab cycles ready party members; Space responds to timing prompts; Esc cancels targeting.
+- Exploration defaults: WASD / arrows to move, E for the first available room action,
+  Q for a numbered interaction chooser, Esc for the field menu, I for inventory,
+  M for the field map, H for help, F5 for quick save, and F9 to load the quicksave
+  after confirmation. Change exploration keys in Settings > Controls; the HUD
+  and guide follow the configured keys. Arrow keys, Esc, Tab and Enter remain
+  available for navigation.
+- Combat: a ready party member is selected automatically. 1 selects Attack,
+  2 Abilities, 3 Items, and 4 the equipped snack. Arrows select a target and
+  Enter confirms. Tab cycles ready party members, Space responds to timing
+  prompts, R retreats, L opens the battle log, and Esc / right click cancels.
 - Dialogue: Enter reveals the text, then advances a line without choices;
   number keys select responses after the text is revealed.
 - Illustrated intro: progresses automatically; hold the on-screen Skip control
   to skip it. Click the bold underlined words in room descriptions to interact.
-- Field menu: 1–6 select tabs; Esc closes it.
+- Field menu: 0 Stats, 1 Inventory, 2 Tinker, 3 Journal, 4 Map, 5 Settings.
+  Alt+1-6 selects pages in sidebar order; Ctrl+Tab cycles pages (Shift reverses).
+  Tab moves focus. Esc / right click goes back or closes the menu. F5 quick
+  saves and F9 loads the quicksave after confirmation. Digits remain usable
+  while entering search text.
 - Fishing: Space casts, hooks and starts reeling; hold mouse or Space to reel.
 - Arcade: Enter starts or resumes; Esc pauses; arrows / WASD move; Space is the
   primary action and E the secondary action. Harmonic Pulse uses D / F / J / K.
-- F11 toggles fullscreen.
+- Map: drag to pan and use the mouse wheel or +/- buttons to zoom.
+- F11 toggles fullscreen; Alt+Enter toggles borderless / windowed mode.
+  Windowed bounds are preserved across display-mode changes. UI scaling fits
+  the available window space.
+- Settings in exploration and the hub offer Save and quit to desktop. Audio
+  diagnostics and pitch testing are available only with --debug.
 
 ## Private release checks
 

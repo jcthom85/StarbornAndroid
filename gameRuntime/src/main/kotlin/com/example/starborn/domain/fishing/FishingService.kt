@@ -107,15 +107,27 @@ class FishingService(
 
     private fun journalKey(zoneId: String) = "fishing_journal:$zoneId"
 
+    @Synchronized
     fun secureCatch(result: FishingResult): FishingResult {
         if (result.quantity <= 0 || result.secured) return result
         inventoryService.addItem(result.itemId, result.quantity)
+        var masteryBonus = 0
         val rewards = mutableListOf<String>()
         val zone = result.zoneId?.let { getFishingZone(it) }
         val catch = zone?.catches?.firstOrNull { it.itemId == result.itemId }
         if (sessionStore != null && zone != null && catch?.isNativeFish() == true) {
             sessionStore.setRoomState(journalKey(zone.id), "caught:${result.itemId}", true)
             if (result.cleanCatch) sessionStore.setRoomState(journalKey(zone.id), "clean:${result.itemId}", true)
+            if (result.cleanCatch) {
+                val canAddBonus = (inventoryService.snapshot()[result.itemId] ?: 0) < Int.MAX_VALUE
+                if (sessionStore.state.value.fishingCleanCatchProgress < 2 || canAddBonus) {
+                    if (sessionStore.advanceCleanCatchProgress()) {
+                        inventoryService.addItem(result.itemId, 1)
+                        masteryBonus = 1
+                        rewards += "Clean-catch mastery: +1 ${catchDisplayName(result.itemId)}."
+                    }
+                } else rewards += "Clean-catch bonus ready: use a portion to make room."
+            }
             val journal = getJournal()
             val cleanSpecies = journal.flatMap { it.species }.filter { it.clean }.map { it.itemId }.toSet().size
             fun reward(milestone: String, itemId: String, text: String) {
@@ -144,7 +156,10 @@ class FishingService(
             }
         }
         sessionStore?.setInventory(inventoryService.snapshot())
-        return result.copy(secured = true, displayName = catchDisplayName(result.itemId),
+        return result.copy(secured = true, quantity = result.quantity + masteryBonus,
+            masteryBonusQuantity = masteryBonus,
+            cleanCatchProgress = if (result.cleanCatch && catch?.isNativeFish() == true) sessionStore?.state?.value?.fishingCleanCatchProgress else null,
+            displayName = catchDisplayName(result.itemId),
             uses = craftingService?.usesFor(result.itemId).orEmpty(), rewards = rewards,
             cleanCatch = result.cleanCatch && catch?.isNativeFish() == true)
     }
@@ -298,7 +313,9 @@ data class FishingResult(
     val zoneId: String? = null,
     val cleanCatch: Boolean = false,
     val displayName: String = "",
-    val rewards: List<String> = emptyList()
+    val rewards: List<String> = emptyList(),
+    val cleanCatchProgress: Int? = null,
+    val masteryBonusQuantity: Int = 0
 )
 
 data class FishingEncounter(

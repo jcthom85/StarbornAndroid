@@ -71,6 +71,7 @@ internal fun DesktopExplorationPanels(
     transitionProgress: Float = 1f,
     onOpenControls: () -> Unit = {},
     onInteractFirst: () -> Unit = {},
+    onChooseActions: () -> Unit = {},
     onMenu: (DesktopMenuTab) -> Unit
 ) {
     val density = LocalDensity.current
@@ -92,7 +93,7 @@ internal fun DesktopExplorationPanels(
                     transitionProgress = transitionProgress)
             }
             Box(Modifier.offset(x = rightX).width(rightWidth).fillMaxHeight().padding(start = 16.dp, end = 20.dp, top = 20.dp, bottom = 20.dp)) {
-                DesktopIndependentHud(services, ui, isDark, blocked, onMenu, onOpenControls, onInteractFirst,
+                DesktopIndependentHud(services, ui, isDark, blocked, onMenu, onOpenControls, onInteractFirst, onChooseActions,
                     Modifier.align(Alignment.TopStart).widthIn(max = 300.dp).fillMaxSize())
             }
         } else {
@@ -112,7 +113,7 @@ internal fun DesktopExplorationPanels(
                     }
                     val overlay = Modifier.weight(1f).fillMaxWidth().padding(8.dp)
                     if (compactPanel == "room") DesktopNarrativeArea(services, ui, description, plan, isDark, blocked, overlay, compact = true, transitionProgress = transitionProgress)
-                    else DesktopIndependentHud(services, ui, isDark, blocked, onMenu, onOpenControls, onInteractFirst, overlay)
+                    else DesktopIndependentHud(services, ui, isDark, blocked, onMenu, onOpenControls, onInteractFirst, onChooseActions, overlay)
                 }
             }
         }
@@ -209,12 +210,14 @@ private fun DesktopContextualControls(services: DesktopAppServices, ui: Explorat
 
 @Composable
 private fun DesktopIndependentHud(services: DesktopAppServices, ui: ExplorationUiState, isDark: Boolean, blocked: Boolean,
-    onMenu: (DesktopMenuTab) -> Unit, onOpenControls: () -> Unit, onInteractFirst: () -> Unit, modifier: Modifier) {
+    onMenu: (DesktopMenuTab) -> Unit, onOpenControls: () -> Unit, onInteractFirst: () -> Unit, onChooseActions: () -> Unit, modifier: Modifier) {
     val detailsScroll = rememberScrollState()
-    Column(modifier.testTag("exploration-status"), verticalArrangement = Arrangement.spacedBy(20.dp)) {
+    BoxWithConstraints(modifier.testTag("exploration-status")) {
+    val mapHeight = (maxHeight * .28f).coerceIn(90.dp, 200.dp)
+    Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(20.dp)) {
         if (isDark || ui.minimap?.cells?.any { it.discovered || it.visited || it.isCurrent } == true) {
             val map = ui.minimap
-            ExplorationHudCard(Modifier.testTag("hud-minimap")) {
+            ExplorationHudCard(Modifier.heightIn(max = mapHeight).testTag("hud-minimap")) {
                 Box(Modifier.padding(10.dp)) { DesktopExplorationMinimap(map, !blocked, obscured = isDark, roomName = services::roomTitle) { onMenu(DesktopMenuTab.MAP) } }
             }
         }
@@ -229,12 +232,14 @@ private fun DesktopIndependentHud(services: DesktopAppServices, ui: ExplorationU
             blocked = blocked,
             modifier = Modifier.testTag("hud-key-legend"),
             onInteractFirst = onInteractFirst,
+            onChooseActions = onChooseActions,
             onOpenMap = { onMenu(DesktopMenuTab.MAP) },
             onOpenInventory = { onMenu(DesktopMenuTab.INVENTORY) },
-            onQuickSave = { services.exploration.quickSave() },
+            onQuickSave = { services.exploration.saveGame(-1) },
             onOpenControls = onOpenControls,
             onOpenMenu = { onMenu(DesktopMenuTab.STATS) }
         )
+    }
     }
 }
 
@@ -340,7 +345,7 @@ private fun DesktopNpcPresenceChip(services: DesktopAppServices, ui: Exploration
 @Composable
 private fun DesktopOverworldGateway(ui: ExplorationUiState, blocked: Boolean, onOpen: () -> Unit) {
     val disembarking = ui.currentRoom?.id == com.example.starborn.domain.session.AstraTravel.ENTRY_ROOM_ID
-    val tooltipText = if (disembarking) "Disembark from ship and return to surface [M]" else "Deploy to regional Star Map and sector hubs [M]"
+    val tooltipText = if (disembarking) "Disembark from ship and return to surface" else "Travel to the regional hubs"
     DesktopTooltip(tooltipText) {
         Surface(onClick = onOpen, enabled = !blocked, modifier = Modifier.fillMaxWidth().explorationFeedback(!blocked).testTag("overworld-gateway")
             .semantics { contentDescription = if (disembarking) "Disembark from the Astra" else "Exit to Overworld" },
@@ -350,7 +355,7 @@ private fun DesktopOverworldGateway(ui: ExplorationUiState, blocked: Boolean, on
                 Icon(Icons.Default.Map, null, Modifier.size(26.dp), tint = PanelCyan)
                 Text(if (disembarking) "DISEMBARK" else "OVERWORLD MAP", Modifier.weight(1f), color = Color.White,
                     style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
-                Text("OPEN [M]", color = PanelCyan, style = MaterialTheme.typography.labelSmall)
+                Text("TRAVEL", color = PanelCyan, style = MaterialTheme.typography.labelSmall)
             }
         }
     }

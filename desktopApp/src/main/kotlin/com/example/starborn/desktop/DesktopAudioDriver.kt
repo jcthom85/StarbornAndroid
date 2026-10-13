@@ -25,7 +25,10 @@ import kotlin.math.log10
  */
 class DesktopAudioDriver(
     private val assetProvider: AssetProvider,
-    prewarmDefaults: Boolean = true
+    prewarmDefaults: Boolean = true,
+    private val clipFactory: (AudioFormat) -> Clip = { format ->
+        AudioSystem.getLine(DataLine.Info(Clip::class.java, format)) as Clip
+    }
 ) : AudioDriver {
     private data class Playing(val clip: Clip, val cueGain: Float, val loop: Boolean, var envelope: Float = 1f, var fadeVersion: Long = 0)
     private data class CachedPcm(val format: AudioFormat, val bytes: ByteArray)
@@ -48,6 +51,7 @@ class DesktopAudioDriver(
     private val layerVersions = ConcurrentHashMap<AudioCueType, Long>()
     private val reported = ConcurrentHashMap.newKeySet<String>()
     private val musicGeneration = AtomicLong(0)
+    private var pendingMusicCue: String? = null // Owned by musicWorker.
 
     @Volatile private var masterGain: Float = 1f
     @Volatile private var isMuted: Boolean = false
@@ -111,6 +115,10 @@ class DesktopAudioDriver(
 
     private fun stopCue(command: AudioCommand.Stop) {
         val key = command.type to normalize(command.cueId)
+        if (command.type == AudioCueType.MUSIC && pendingMusicCue == key.second) {
+            musicGeneration.incrementAndGet()
+            pendingMusicCue = null
+        }
         val playing = active.remove(key) ?: return
         if (command.fadeMs > 0) {
             fadingOutClips.add(playing.clip)
@@ -214,7 +222,9 @@ class DesktopAudioDriver(
     }
 
     private fun playMusicCrossfaded(command: AudioCommand.Play, key: Pair<AudioCueType, String>, cue: String) {
+        if (command.loop && pendingMusicCue == cue) return
         val currentGen = musicGeneration.incrementAndGet()
+        pendingMusicCue = cue
 
         // 1. Immediately extract and crossfade-out any other active music
         val outgoing = active.entries.filter { it.key.first == AudioCueType.MUSIC && it.key != key }
@@ -252,7 +262,7 @@ class DesktopAudioDriver(
                         AudioSystem.getAudioInputStream(BufferedInputStream(raw)).use { encoded ->
                             val format = encoded.format
                             val pcmFormat = createPcmFormat(format)
-                            val clip = AudioSystem.getClip()
+                            val clip = clipFactory(if (format.encoding == AudioFormat.Encoding.PCM_SIGNED) format else pcmFormat)
                             loadedClip = clip
                             if (format.encoding == AudioFormat.Encoding.PCM_SIGNED) {
                                 clip.open(encoded)
@@ -276,6 +286,7 @@ class DesktopAudioDriver(
                                 try { readyClip.close() } catch (_: Exception) {}
                                 return@execute
                             }
+                            pendingMusicCue = null
 
                             // Extra safety check for any remaining outgoing music
                             active.entries.filter { it.key.first == AudioCueType.MUSIC && it.key != key }.forEach { (oldKey, oldPlaying) ->
@@ -307,6 +318,10 @@ class DesktopAudioDriver(
                 } catch (error: Exception) {
                     try { loadedClip?.close() } catch (_: Exception) {}
                     if (reported.add(cue)) System.err.println("Starborn audio '$cue': ${error.message}")
+                } finally {
+                    enqueue(musicWorker) {
+                        if (musicGeneration.get() == currentGen) pendingMusicCue = null
+                    }
                 }
             }
         } catch (_: java.util.concurrent.RejectedExecutionException) {}
@@ -334,7 +349,7 @@ class DesktopAudioDriver(
 
             val cached = if (isSfx) sfxPcmCache[cue] else null
             if (cached != null) {
-                clip = AudioSystem.getClip()
+                clip = clipFactory(cached.format)
                 val pcmBytes = if (command.pitch != 1.0f) resamplePcm(cached, command.pitch) else cached.bytes
                 clip.open(cached.format, pcmBytes, 0, pcmBytes.size)
             } else {
@@ -343,7 +358,7 @@ class DesktopAudioDriver(
                     AudioSystem.getAudioInputStream(BufferedInputStream(raw)).use { encoded ->
                         val format = encoded.format
                         val pcmFormat = createPcmFormat(format)
-                        clip = AudioSystem.getClip()
+                        clip = clipFactory(if (format.encoding == AudioFormat.Encoding.PCM_SIGNED) format else pcmFormat)
                         if (format.encoding == AudioFormat.Encoding.PCM_SIGNED) {
                             if (isSfx) {
                                 val bytes = encoded.readAllBytes()

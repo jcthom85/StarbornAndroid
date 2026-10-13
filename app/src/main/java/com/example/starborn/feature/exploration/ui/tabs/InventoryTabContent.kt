@@ -949,7 +949,10 @@ internal fun InventoryEquipmentPreview(
         GearSelectionDialog(
             characterName = characterName,
             slotLabel = slotLabel(slotId),
-            options = modOptions,
+            options = modOptions.map { option ->
+                val equippedCount = equippedItems.values.count { it == option.id }
+                option.copy(description = "Owned: ${option.quantity} - Equipped: $equippedCount - Available: ${(option.quantity - equippedCount).coerceAtLeast(0)}\n${option.description.orEmpty()}")
+            },
             equippedId = equippedId,
             accentColor = accentColor,
             borderColor = borderColor,

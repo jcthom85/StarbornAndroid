@@ -79,9 +79,8 @@ fun DesktopMainMenuScreen(
     )
 
     // Trigger Title Music on launch
-    LaunchedEffect(Unit) {
-        val cmds = services.audioRouter.commandsForRoom(hubId = "main_menu", roomId = "main_menu")
-        services.audioDriver.executeAll(cmds)
+    LaunchedEffect(services) {
+        services.playTitleMusic()
     }
 
     Box(

@@ -147,6 +147,31 @@ class DesktopUserSettingsStore(
         dataStore.edit { it[DISPLAY_MODE] = mode.name }
     }
 
+    val keyBindings: Flow<DesktopKeyBindings> = dataStore.data.map { prefs ->
+        val bindings = DesktopKeyBindings(DesktopAction.entries.mapNotNull { action ->
+            prefs[stringPreferencesKey("desktop_key_${action.name.lowercase()}")]?.let { action to it }
+        }.toMap())
+        // Validate the complete map so valid swaps survive a restart.
+        if (DesktopAction.entries.all { bindings.conflict(it, bindings.label(it)) == null }) bindings
+        else DesktopKeyBindings()
+    }
+
+    suspend fun setKeyBinding(action: DesktopAction, keyName: String) {
+        dataStore.edit { prefs ->
+            val current = DesktopKeyBindings(DesktopAction.entries.mapNotNull { entry ->
+                prefs[stringPreferencesKey("desktop_key_${entry.name.lowercase()}")]?.let { entry to it }
+            }.toMap())
+            require(current.conflict(action, keyName) == null) { current.conflict(action, keyName).orEmpty() }
+            prefs[stringPreferencesKey("desktop_key_${action.name.lowercase()}")] = keyName
+        }
+    }
+
+    suspend fun resetKeyBindings() {
+        dataStore.edit { prefs ->
+            DesktopAction.entries.forEach { prefs.remove(stringPreferencesKey("desktop_key_${it.name.lowercase()}")) }
+        }
+    }
+
     val windowWidth: Flow<Int> = dataStore.data.map { prefs -> prefs[WINDOW_WIDTH] ?: 1280 }
     val windowHeight: Flow<Int> = dataStore.data.map { prefs -> prefs[WINDOW_HEIGHT] ?: 800 }
     val windowX: Flow<Int?> = dataStore.data.map { prefs -> prefs[WINDOW_X] }

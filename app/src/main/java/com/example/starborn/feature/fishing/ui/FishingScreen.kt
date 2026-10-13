@@ -1,5 +1,7 @@
 package com.example.starborn.feature.fishing.ui
 
+import com.example.starborn.domain.fishing.handlingSummary
+
 import android.hardware.SensorManager
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -534,9 +536,7 @@ private fun FishingSetupSection(
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     state.availableRods.forEach { rod ->
-                        val speed = (((rod.fishingPower - 1.0) / 2.05).coerceIn(0.0, 1.0) * 18).toInt()
-                        val forgiveness = (((rod.stability - 1.0) / 1.8).coerceIn(0.0, 1.0) * 30).toInt()
-                        val subtitle = if (speed == 0 && forgiveness == 0) "Starter handling - watch your tension" else "$speed% faster reeling - $forgiveness% more tension resistance"
+                        val subtitle = rod.handlingSummary()
                         GearCard(
                             title = rod.name,
                             subtitle = subtitle,
@@ -1016,6 +1016,7 @@ private fun FishingResultSection(
             catch?.uses?.forEach { Text(it, style = MaterialTheme.typography.bodySmall) }
             catch?.rewards?.forEach { Text(it, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold) }
             if (catch?.cleanCatch == true) Text("Clean catch recorded in your field journal.")
+            catch?.cleanCatchProgress?.let { Text("Next clean-catch bonus: $it / 3") }
         }
         FishingJournal(state.journal)
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {

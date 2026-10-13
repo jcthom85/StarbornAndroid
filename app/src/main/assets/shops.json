@@ -509,6 +509,7 @@
         "scrap_metal",
         "wiring_bundle",
         "beast_meat",
+        "fiery_pepper",
         "herb"
       ],
       "rules": {
@@ -615,6 +616,7 @@
     "sells": {
       "items": [
         "noodles",
+        "fiery_pepper",
         "spicy_ramen",
         "ember_broth",
         "iron_biscuit",

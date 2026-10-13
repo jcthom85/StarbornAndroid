@@ -289,7 +289,7 @@ class FishingController(
             failHook("You lowered your rod.")
             return
         }
-        fight = FishingFight(encounter.behavior, rod, salvage = !encounter.catch.isNativeFish())
+        fight = FishingFight(encounter.behavior, rod, salvage = !encounter.catch.isNativeFish(), random = random)
         isReeling = false
         lastWarningMs = -2_000L
         val fishName = fishingService.catchDisplayName(encounter.catch.itemId)

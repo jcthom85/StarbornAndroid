@@ -114,7 +114,13 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
     val environmentThemeManager = EnvironmentThemeManager(themeRepository)
 
     val inventoryService = InventoryService(itemRepository).apply { loadItems() }
-    val sessionStore = GameSessionStore()
+    val sessionStore = GameSessionStore().apply {
+        configureRestoredHpCeilings { state ->
+            val nodes = worldDataSource.loadSkillNodes()
+            worldDataSource.loadCharacters().associate { player -> player.id to
+                com.example.starborn.domain.combat.PartyHealth.maxHp(player, state, inventoryService::catalogItem, nodes) }
+        }
+    }
     val arcadeService = ArcadeService(sessionStore, inventoryService)
     val playtestTelemetry = LocalPlaytestTelemetry(File(appContext.noBackupFilesDir, "playtest")).apply {
         startSession("app_launch")

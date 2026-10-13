@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.example.starborn.domain.crafting.CraftingOutcome
 import com.example.starborn.domain.crafting.CraftingService
 import com.example.starborn.domain.crafting.MealRules
+import com.example.starborn.domain.inventory.ItemUseController
 import com.example.starborn.domain.inventory.InventoryService
 import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import kotlinx.coroutines.launch
@@ -29,6 +30,7 @@ fun CookingScreen(
     source: String?,
     onBack: () -> Unit,
     onPlayAudio: (String) -> Unit = {},
+    onCookAndEat: (suspend (String, String?, Int, Boolean) -> ItemUseController.Result)? = null,
     modifier: Modifier = Modifier,
     highContrastMode: Boolean = false,
     largeTouchTargets: Boolean = false
@@ -41,6 +43,15 @@ fun CookingScreen(
     var query by rememberSaveable { mutableStateOf("") }
     var readyOnly by rememberSaveable { mutableStateOf(false) }
     var feedback by rememberSaveable { mutableStateOf<String?>(null) }
+    var pendingMeal by remember { mutableStateOf<(() -> Unit)?>(null) }
+    var preparing by remember { mutableStateOf(false) }
+    pendingMeal?.let { action ->
+        AlertDialog(onDismissRequest = { pendingMeal = null },
+            title = { Text("Replace your active meal?") },
+            text = { Text("Cook and eat one portion. This replaces your current meal bonus; extra portions stay in inventory.") },
+            confirmButton = { TextButton(onClick = { pendingMeal = null; action() }) { Text("Replace meal") } },
+            dismissButton = { TextButton(onClick = { pendingMeal = null }) { Text("Cancel") } })
+    }
     val chefs = craftingService.availableChefs()
     val selectedChef = session.mealChefId.takeIf { it in chefs } ?: chefs.firstOrNull()
     val text = FieldMenuDesign.text
@@ -74,7 +85,7 @@ fun CookingScreen(
                         Text("${meal.recipeName} · ${meal.remainingEncounters} battles left", color = orange,
                             style = MaterialTheme.typography.bodySmall)
                         Text(MealRules.summary(meal), color = muted, style = MaterialTheme.typography.bodySmall)
-                    } ?: Text("No active meal. Eat a prepared portion from Items before combat.", color = muted,
+                    } ?: Text(if (onCookAndEat != null) "No active meal. Cook and eat now, or use a prepared portion from Items before combat." else "No active meal. Eat a prepared portion from Items before combat.", color = muted,
                         style = MaterialTheme.typography.bodySmall)
                     Text("One party meal at a time. A new meal replaces the previous bonus. Victories and escapes spend one battle.",
                         color = muted, style = MaterialTheme.typography.bodySmall)
@@ -92,7 +103,7 @@ fun CookingScreen(
             if (category == "meal") item {
                 CookingPanel(highContrastMode) {
                     Text("Serving companion", color = text, style = MaterialTheme.typography.titleSmall)
-                    Text("This companion adds a party bonus when you eat a meal before combat. Cooking stores portions; it does not activate Well-Fed.",
+                    Text("This companion adds a party bonus when you eat a meal before combat. Cook stores portions; Cook and eat activates the meal and keeps any extra portions.",
                         color = muted, style = MaterialTheme.typography.bodySmall)
                     chefs.chunked(2).forEach { row ->
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -146,6 +157,7 @@ fun CookingScreen(
                     } else {
                         recipe.description?.let { Text(it, color = muted, style = MaterialTheme.typography.bodySmall) }
                         Text(craftingService.mealEffects(recipe), color = orange, style = MaterialTheme.typography.bodySmall)
+                        if (session.activeMealBuff != null) craftingService.mealComparison(recipe)?.let { Text(it, color = text, style = MaterialTheme.typography.bodySmall) }
                         Text(if (snack) "Creates one equippable snack" else "Yield: ${recipe.resultQuantity * batch} portions · 15% bonus-portion chance per batch unit",
                             color = muted, style = MaterialTheme.typography.labelMedium)
                         if (!snack) FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -164,12 +176,39 @@ fun CookingScreen(
                         craftingService.sharedIngredientNotes(recipe).forEach { note ->
                             Text(note, color = muted, style = MaterialTheme.typography.labelMedium)
                         }
+                        val canCook = craftingService.canCook(recipe, if (snack) 1 else batch)
+                        if (!snack && onCookAndEat != null) {
+                            fun prepare(replace: Boolean) {
+                                preparing = true
+                                scope.launch {
+                                    try {
+                                        val result = onCookAndEat(recipe.id, selectedChef, batch, replace)
+                                        val message = when (result) {
+                                            is ItemUseController.Result.Success -> {
+                                                onPlayAudio("cooking_sizzle")
+                                                result.message
+                                            }
+                                            is ItemUseController.Result.Failure -> result.message
+                                        }
+                                        feedback = message
+                                        scope.launch { snackbar.showSnackbar(message) }
+                                    } finally { preparing = false }
+                                }
+                            }
+                            OutlinedButton(onClick = {
+                                if (session.activeMealBuff != null) pendingMeal = { prepare(true) }
+                                else prepare(false)
+                            }, enabled = canCook && !preparing,
+                                modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight)) {
+                                Text("Cook and eat one portion")
+                            }
+                        }
                         Button(onClick = {
                             val outcome = craftingService.cookMeal(recipe.id, selectedChef, if (snack) 1 else batch)
                             feedback = outcome.message
-                            if (outcome is CraftingOutcome.Success) onPlayAudio("sfx_cooking_sizzle")
+                            if (outcome is CraftingOutcome.Success) onPlayAudio("cooking_sizzle")
                             scope.launch { snackbar.showSnackbar(outcome.message ?: "Cooking complete.") }
-                        }, enabled = craftingService.canCook(recipe, if (snack) 1 else batch),
+                        }, enabled = canCook && !preparing,
                             modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight),
                             colors = ButtonDefaults.buttonColors(containerColor = orange, contentColor = FieldMenuDesign.shell)) {
                             Text(if (owned) "Already owned · equip from Items" else if (snack) "Craft snack" else "Cook ${recipe.resultQuantity * batch} portions")

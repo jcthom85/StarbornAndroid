@@ -1,5 +1,7 @@
 package com.example.starborn.feature.exploration.ui.tabs
 
+import com.example.starborn.feature.crafting.ui.ModComparisonPanel
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -102,6 +104,7 @@ internal fun ModernTinkerWorkbench(
                 Text(if (preview.learned) "Result" else "New discovery", color = accent, style = MaterialTheme.typography.labelMedium)
                 Text(preview.name, color = FieldMenuDesign.text, style = MaterialTheme.typography.titleMedium)
                 Text(preview.resultSummary, color = secondaryText(), style = MaterialTheme.typography.bodySmall)
+                ModComparisonPanel(preview.equipmentComparison)
                 TinkerRequirements(bench.requirements)
                 if (preview.requiresSchematic && !preview.learned) {
                     Text(preview.discoveryHint ?: "Learn this schematic from Inventory first.", color = secondaryText(),
@@ -198,6 +201,7 @@ internal fun ModernTinkerSchematics(recipes: List<TinkeringRecipeUi>, unknown: L
                 TinkerPanel {
                     Text(recipe.name, color = FieldMenuDesign.text, style = MaterialTheme.typography.titleMedium)
                     Text(recipe.resultSummary, color = secondaryText(), style = MaterialTheme.typography.bodySmall)
+                    ModComparisonPanel(recipe.equipmentComparison)
                     TinkerRequirements(recipe.ingredients)
                     // Separate full-width actions remain readable with larger system fonts.
                     Button(onClick = { onCraft(recipe.id) }, enabled = recipe.canCraft,

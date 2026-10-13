@@ -207,7 +207,7 @@ internal fun DesktopCombatBuffChip(
     modifier: Modifier = Modifier
 ) {
     val info = describeBuff(buff, services)
-    val tooltipText = "${info.title}\nDuration: ${buff.remainingTurns} ${if (buff.remainingTurns == 1) "turn" else "turns"}\n\n${info.summary}"
+    val tooltipText = com.example.starborn.domain.combat.CombatClarity.buffLabel(buff)
 
     DesktopTooltip(text = tooltipText, accent = info.accent) {
         Surface(
@@ -228,7 +228,8 @@ internal fun DesktopCombatBuffChip(
                     modifier = Modifier.size(11.dp)
                 )
                 Text(
-                    text = "${info.title} (${buff.remainingTurns}t)",
+                    text = com.example.starborn.domain.combat.CombatClarity.compactBuffAmount(buff),
+                    modifier = Modifier.weight(1f, fill = false),
                     color = Color.White,
                     fontSize = 9.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -236,6 +237,8 @@ internal fun DesktopCombatBuffChip(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+                Text("${buff.remainingTurns.coerceAtLeast(0)}t", color = Color.White, fontSize = 9.sp,
+                    fontWeight = FontWeight.SemiBold, fontFamily = LocalStarbornFonts.current.orbitron)
             }
         }
     }

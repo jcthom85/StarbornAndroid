@@ -69,30 +69,31 @@ private fun launchDesktop() = application {
     // Each mode gets fresh state: native maximize/fullscreen state must not leak
     // into the next mode or race the recreation of an undecorated frame.
     key(displayMode) {
-        val isSavedPosValid = initialBounds.x != null && initialBounds.y != null && run {
+        val restoredWindowBounds = remember(displayMode) { services.userSettingsStore.initialWindowBounds() }
+        val isSavedPosValid = restoredWindowBounds.x != null && restoredWindowBounds.y != null && run {
             try {
                 val ge = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment()
-                val rect = java.awt.Rectangle(initialBounds.x!!, initialBounds.y!!, initialBounds.width, initialBounds.height)
+                val rect = java.awt.Rectangle(restoredWindowBounds.x!!, restoredWindowBounds.y!!, restoredWindowBounds.width, restoredWindowBounds.height)
                 ge.screenDevices.any { it.defaultConfiguration.bounds.intersects(rect) }
             } catch (_: Throwable) { true }
         }
         val windowState = rememberWindowState(
             size = if (displayMode == DesktopDisplayMode.BORDERLESS)
                 DpSize(monitorBounds.width.dp, monitorBounds.height.dp)
-            else DpSize(initialBounds.width.dp, initialBounds.height.dp),
+            else DpSize(restoredWindowBounds.width.dp, restoredWindowBounds.height.dp),
             position = if (displayMode == DesktopDisplayMode.BORDERLESS)
                 WindowPosition.Absolute(monitorBounds.x.dp, monitorBounds.y.dp)
             else if (isSavedPosValid)
-                WindowPosition.Absolute(initialBounds.x!!.dp, initialBounds.y!!.dp)
+                WindowPosition.Absolute(restoredWindowBounds.x!!.dp, restoredWindowBounds.y!!.dp)
             else WindowPosition.Aligned(Alignment.Center),
             placement = when {
                 displayMode == DesktopDisplayMode.FULLSCREEN -> WindowPlacement.Fullscreen
-                initialBounds.isMaximized && displayMode == DesktopDisplayMode.WINDOWED -> WindowPlacement.Maximized
+                restoredWindowBounds.isMaximized && displayMode == DesktopDisplayMode.WINDOWED -> WindowPlacement.Maximized
                 else -> WindowPlacement.Floating
             }
         )
         val saveCurrentBounds: suspend () -> Unit = {
-            try {
+            if (displayMode == DesktopDisplayMode.WINDOWED) try {
                 val isMax = windowState.placement == WindowPlacement.Maximized
                 val pos = windowState.position as? WindowPosition.Absolute
                 services.userSettingsStore.saveWindowBounds(
@@ -110,7 +111,7 @@ private fun launchDesktop() = application {
                 val pos = windowState.position as? WindowPosition.Absolute
                 Triple(windowState.size, pos, isMax)
             }.collect { (size, pos, isMax) ->
-                try {
+                if (displayMode == DesktopDisplayMode.WINDOWED) try {
                     services.userSettingsStore.saveWindowBounds(
                         width = size.width.value.toInt(),
                         height = size.height.value.toInt(),
@@ -169,8 +170,9 @@ private fun launchDesktop() = application {
             (services.audioDriver as? DesktopAudioDriver)?.setMuted(!isForeground && currentSettings.muteWhenUnfocused)
         }
         val baseDensity = androidx.compose.ui.platform.LocalDensity.current
-        val effectiveDensity = remember(baseDensity, currentSettings.uiScale) {
-            val scale = currentSettings.uiScale.coerceIn(0.75f, 2.5f)
+        val effectiveDensity = remember(baseDensity, currentSettings.uiScale, windowState.size) {
+            val fittingScale = minOf(windowState.size.width.value / 800f, windowState.size.height.value / 560f).coerceAtLeast(.75f)
+            val scale = currentSettings.uiScale.coerceIn(0.75f, minOf(2.5f, fittingScale))
             androidx.compose.ui.unit.Density(baseDensity.density * scale, baseDensity.fontScale)
         }
         CompositionLocalProvider(
@@ -223,23 +225,6 @@ fun DesktopGameApp(
     val travelScope = rememberCoroutineScope()
     val travel = remember { DesktopHubTravel(travelScope) }
 
-    LaunchedEffect(services) {
-        services.exploration.events.collect { event ->
-            when (event) {
-                is com.example.starborn.feature.exploration.viewmodel.ExplorationEvent.AudioCommands -> {
-                    services.audioDriver.executeAll(event.commands)
-                }
-                is com.example.starborn.feature.exploration.viewmodel.ExplorationEvent.AudioSettingsChanged -> {
-                    services.audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.MUSIC, event.musicVolume)
-                    services.audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.UI, event.sfxVolume)
-                    services.audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.BATTLE, event.sfxVolume)
-                    services.audioDriver.setUserGain(com.example.starborn.domain.audio.AudioCueType.VOICE, event.voiceVolume)
-                }
-                else -> Unit
-            }
-        }
-    }
-
     var pendingCombatEnemies by remember { mutableStateOf<List<String>?>(null) }
     var enteringCombatTransition by remember { mutableStateOf(false) }
     var exitingCombatTransition by remember { mutableStateOf(false) }
@@ -272,7 +257,8 @@ fun DesktopGameApp(
                     onScreenStateChange(DesktopScreenState.EXPLORATION)
                 },
                 onBackToExploration = { onScreenStateChange(DesktopScreenState.EXPLORATION) },
-                onReturnToTitle = { onScreenStateChange(DesktopScreenState.MAIN_MENU) }
+                onReturnToTitle = { onScreenStateChange(DesktopScreenState.MAIN_MENU) },
+                onQuitToDesktop = onExit
             )
             DesktopScreenState.EXPLORATION -> DesktopExplorationScreen(
                 services = services,
@@ -288,7 +274,8 @@ fun DesktopGameApp(
                 onOpenFieldKit = { onScreenStateChange(DesktopScreenState.FIELD_KIT) },
                 onOpenFishing = { onScreenStateChange(DesktopScreenState.FISHING) },
                 onOpenArcade = { onScreenStateChange(DesktopScreenState.ARCADE) },
-                onReturnToMenu = { onScreenStateChange(DesktopScreenState.MAIN_MENU) }
+                onReturnToMenu = { onScreenStateChange(DesktopScreenState.MAIN_MENU) },
+                onQuitToDesktop = onExit
             )
             DesktopScreenState.COMBAT -> DesktopCombatScreen(
                 services = services,

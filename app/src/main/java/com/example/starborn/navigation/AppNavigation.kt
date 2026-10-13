@@ -546,6 +546,12 @@ internal fun CampaignNavigationHost(
                 craftingService = services.craftingService,
                 inventoryService = services.inventoryService,
                 source = source,
+                onCookAndEat = { recipe, chef, batch, replace ->
+                    com.example.starborn.domain.inventory.ItemUseController(services.inventoryService, services.craftingService,
+                        services.sessionStore, skillNodesProvider = { services.worldDataSource.loadSkillNodes() },
+                        charactersProvider = { services.worldDataSource.loadCharacters().associateBy { it.id } })
+                        .cookAndEat(recipe, chef, batch, replace)
+                },
                 highContrastMode = userSettings.highContrastMode,
                 largeTouchTargets = userSettings.largeTouchTargets,
                 onBack = { navController.popBackStack() },

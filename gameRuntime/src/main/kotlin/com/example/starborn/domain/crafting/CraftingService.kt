@@ -1,7 +1,7 @@
 package com.example.starborn.domain.crafting
 
 import com.example.starborn.data.assets.CraftingRecipeSource
-import com.example.starborn.domain.inventory.InventoryService
+import com.example.starborn.domain.inventory.*
 import com.example.starborn.domain.session.GameSessionStore
 import com.example.starborn.domain.model.CookingRecipe
 import com.example.starborn.domain.model.TinkeringRecipe
@@ -26,6 +26,45 @@ class CraftingService(
         sessionStore.state.value.roomId == recipe.discoveryRoom ||
         sessionStore.state.value.roomStates[recipe.discoveryRoom]?.get("cooking_discovered") == true
 
+    fun mealComparison(recipe: CookingRecipe): String? {
+        if (recipe.category != "meal" || !isRecipeDiscovered(recipe)) return null
+        val item = inventoryService.catalogItem(recipe.result) ?: return null
+        val state = sessionStore.state.value
+        val chefs = availableChefs()
+        val chef = state.mealChefId.takeIf { it in chefs } ?: chefs.firstOrNull()
+        return MealRules.comparison(state.activeMealBuff, MealRules.buff(item, chef))
+    }
+
+    fun equipmentComparison(resultId: String): List<ModSlotComparison> {
+        val item = inventoryService.catalogItem(resultId) ?: return emptyList()
+        if (item.equipment?.slot != "mod") return emptyList()
+        val state = sessionStore.state.value
+        return state.partyMembers.ifEmpty { listOfNotNull(state.playerId) }.flatMap { owner ->
+            ModEquipmentRules.slots.map { slot ->
+                val target = ModLocation(owner, slot)
+                val previousId = state.equippedItems[target.key]
+                val previous = previousId?.let(inventoryService::catalogItem)
+                val oldStats = previous?.equipment?.statMods.orEmpty()
+                val newStats = item.equipment.statMods.orEmpty()
+                val movingFrom = ModEquipmentRules.locations(state, resultId).firstOrNull { it.characterId.equals(owner, true) && it.key != target.key }
+                val deltas = (newStats.keys + oldStats.keys).associateWith {
+                    (if (movingFrom == null || (if (movingFrom.slotId.startsWith("weapon_")) state.equippedWeapons[owner].isNullOrBlank() else state.equippedArmors[owner].isNullOrBlank())) newStats[it] ?: 0 else 0) - (oldStats[it] ?: 0)
+                }.filterValues { it != 0 }
+                val projected = state.copy(equippedItems = (state.equippedItems - listOfNotNull(movingFrom?.key)) + (target.key to resultId))
+                ModSlotComparison(target, previousId, previous?.name, deltas,
+                    ModEquipmentRules.effectiveElement(state, owner, inventoryService::catalogItem),
+                    ModEquipmentRules.effectiveElement(projected, owner, inventoryService::catalogItem),
+                    ModEquipmentRules.blockedReason(state, target), movingFrom)
+            }
+        }
+    }
+
+    fun copySummary(itemId: String): String {
+        val owned = inventoryService.snapshot()[itemId] ?: 0
+        val equipped = ModEquipmentRules.locations(sessionStore.state.value, itemId).size
+        return "Owned: $owned - Equipped: $equipped - Available: ${(owned - equipped).coerceAtLeast(0)}"
+    }
+
     fun mealEffects(recipe: CookingRecipe): String {
         val item = inventoryService.catalogItem(recipe.result) ?: return "Unknown result"
         val effect = item.effect ?: return "No effect"
@@ -37,7 +76,13 @@ class CraftingService(
                 passive.takeIf { it.isNotBlank() }?.let { "While equipped: $it" },
                 item.equipment?.hpBonus?.let { "While equipped: Max HP +$it" },
                 "Ability: $active", "Target: ${effect.target ?: "self"} · Cooldown: ${effect.cooldown ?: 5} turns.",
-                "Using the ability does not consume the snack.").joinToString("\n")
+                "Using the ability spends this character's action; the snack is not consumed.",
+                when (item.id) {
+                    "comet_gummies" -> "Best before basic weapon attacks. Weapon accuracy and crit bonuses do not change skills' own crit rules."
+                    "pulse_citrus" -> "Best early in a longer fight, when the faster upcoming turns can repay the action spent."
+                    "mineral_trail_mix" -> "Use before heavy incoming damage. Its equipped HP bonus applies without using the ability."
+                    else -> null
+                }).joinToString("\n")
         }
         val scope = if (effect.target in listOf("party", "all_allies")) "all allies" else "one ally"
         val chef = sessionStore.state.value.mealChefId.takeIf { it in availableChefs() }
@@ -48,6 +93,7 @@ class CraftingService(
         return listOfNotNull(effect.restoreHp?.let { "Restores $it HP to $scope." },
             "Eat before combat: party Well-Fed for 3 completed battles, including escapes.",
             MealRules.summary(serving),
+            if (serving.accuracyBonus > 0) "Accuracy caps at 100%; this bonus can also offset accuracy penalties." else null,
             chef?.let { "Serving companion: $it (${MealRules.chefDescription(it)})." },
             combatBuffs.takeIf { it.isNotBlank() }?.let { "Use in combat: $it to $scope; no Well-Fed or companion bonus." }
         ).joinToString("\n")
@@ -170,8 +216,7 @@ class CraftingService(
         val item = inventoryService.catalogItem(itemId) ?: return emptyMap()
         val session = sessionStore.state.value
         if (item.unsellable || item.type.equals("quest", true) ||
-            item.id in session.equippedItems.values || item.id in session.equippedWeapons.values ||
-            item.id in session.equippedArmors.values) return emptyMap()
+            ((item.id in session.equippedItems.values || item.id in session.equippedWeapons.values || item.id in session.equippedArmors.values) && availableForCraft(item.id) <= 0)) return emptyMap()
         val recipe = tinkeringRecipes.firstOrNull { it.result == item.id } ?: return emptyMap()
         val salvage = recipe.salvage.filterValues { it > 0 }
         if (salvage.keys.any { inventoryService.catalogItem(it) == null }) return emptyMap()
@@ -187,13 +232,14 @@ class CraftingService(
 
     fun resultSummary(recipe: TinkeringRecipe): String {
         val item = inventoryService.catalogItem(recipe.result) ?: return "Unknown result"
-        val stats = item.equipment?.statMods.orEmpty().entries.joinToString(" Â· ") { (stat, value) ->
-            "${stat.replace('_', ' ').replaceFirstChar { it.uppercase() }} ${if (value >= 0) "+" else ""}$value"
+        val stats = item.equipment?.statMods.orEmpty().entries.joinToString(" · ") { (stat, value) ->
+            MealRules.bonusLabel(stat, value)
         }
         val element = item.equipment?.attackElement?.let { "Attack element: $it" }
         return listOfNotNull(recipe.description?.takeIf { recipe.category == "repair" },
             item.description, stats.takeIf { it.isNotBlank() }, element,
-            if (item.equipment?.slot == "mod") "Equip in a party member's mod slot." else null,
+            if (item.equipment?.slot == "mod") "Equip in an unlocked weapon or armor modification slot." else null,
+            if (item.equipment?.slot == "mod") copySummary(item.id) else null,
             "Produces ${recipe.resultQuantity} item${if (recipe.resultQuantity == 1) "" else "s"}.")
             .joinToString("\n")
     }

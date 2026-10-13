@@ -29,7 +29,7 @@ import kotlinx.coroutines.delay
 /** Shared controller owns selection, discovery, travel, and quest presentation. */
 @Composable
 fun DesktopHubScreen(services: DesktopAppServices, onEnterRoom: (String) -> Unit,
-    onBackToExploration: () -> Unit, onReturnToTitle: () -> Unit) {
+    onBackToExploration: () -> Unit, onReturnToTitle: () -> Unit, onQuitToDesktop: (() -> Unit)? = null) {
     DesktopExplorationTheme(services) {
         val scope = rememberCoroutineScope()
         val travel=LocalHubTravel.current
@@ -208,7 +208,8 @@ fun DesktopHubScreen(services: DesktopAppServices, onEnterRoom: (String) -> Unit
                                 Text("Settings", Modifier.weight(1f), style = MaterialTheme.typography.headlineSmall)
                                 TextButton(onClick = { settingsOpen = false }) { Text("Close") }
                             }
-                            DesktopSettingsContent(services, LocalExplorationSettings.current, state.hub?.title, { services.exploration.quickSaveAndReturnToTitle(onReturnToTitle) })
+                            DesktopSettingsContent(services, LocalExplorationSettings.current, state.hub?.title,
+                                { services.exploration.quickSaveAndReturnToTitle(onReturnToTitle) }, onQuitToDesktop = onQuitToDesktop)
                         }
                     }
                 }

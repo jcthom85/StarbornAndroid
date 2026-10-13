@@ -134,6 +134,7 @@ fun TinkeringRoute(
     LaunchedEffect(Unit) {
         launch {
             viewModel.messages.collectLatest { message ->
+                if (message.startsWith("Scrapped ")) onPlayAudio("tinkering_ratchet")
                 announcement = EventAnnouncementUi(
                     id = System.currentTimeMillis(),
                     title = null,
@@ -144,7 +145,7 @@ fun TinkeringRoute(
         }
         launch {
             viewModel.craftResults.collectLatest {
-                onPlayAudio("sfx_tinkering_wrench")
+                onPlayAudio("tinkering_ratchet")
                 onCrafted(it)
             }
         }
@@ -247,6 +248,16 @@ private fun TinkeringScreen(
     }
     var pickerTarget by remember { mutableStateOf<PickerTarget?>(null) }
     var scrapSelection by remember { mutableStateOf<String?>(null) }
+    var pendingScrap by remember { mutableStateOf<String?>(null) }
+    pendingScrap?.let { id ->
+        state.scrapChoices.firstOrNull { it.id == id }?.let { item ->
+            AlertDialog(onDismissRequest = { pendingScrap = null },
+                title = { Text("Scrap ${item.name}?") },
+                text = { Text("Consumes one item. You receive:\n${item.salvage.joinToString("\n")}") },
+                confirmButton = { TextButton(onClick = { pendingScrap = null; onScrap(id) }) { Text("Scrap one") } },
+                dismissButton = { TextButton(onClick = { pendingScrap = null }) { Text("Cancel") } })
+        }
+    }
     val fieldKitMode = source?.trim()?.equals("field_kit", ignoreCase = true) == true
     var selectedSection by remember(source) {
         mutableStateOf(if (fieldKitMode) TinkeringSection.Schematics else TinkeringSection.Tinker)
@@ -323,7 +334,7 @@ private fun TinkeringScreen(
                             state = state,
                             selectedId = scrapSelection,
                             onSelect = { scrapSelection = it },
-                            onScrap = onScrap,
+                            onScrap = { pendingScrap = it },
                             colors = colors,
                             highContrastMode = highContrastMode,
                             largeTouchTargets = largeTouchTargets
@@ -529,7 +540,9 @@ private fun SchematicsSection(
                                 category = it.category,
                                 method = it.method,
                                 resultId = it.resultId,
-                                learned = it.learned
+                                learned = it.learned,
+                                resultSummary = it.resultSummary,
+                                equipmentComparison = it.equipmentComparison
                             )
                             onPreview(preview)
                         },
@@ -821,6 +834,7 @@ private fun PreviewCard(
                 )
             } else {
                 Text(preview.name, style = MaterialTheme.typography.titleMedium, color = colors.textPrimary)
+                ModComparisonPanel(preview.equipmentComparison)
                 Text(
                     text = preview.categoryLabel(),
                     style = MaterialTheme.typography.labelSmall,
@@ -1093,6 +1107,7 @@ private fun WorkbenchResultStrip(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+                ModComparisonPanel(preview.equipmentComparison)
                 preview.description?.takeIf { it.isNotBlank() }?.let {
                     Text(
                         text = it,

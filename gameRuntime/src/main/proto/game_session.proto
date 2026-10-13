@@ -53,6 +53,7 @@ message GameSessionProto {
   repeated string pending_event_cinematics = 52;
   string pending_battle_json = 53;
   string meal_chef_id = 54;
+  int32 fishing_clean_catch_progress = 55;
 
   reserved 19;
   reserved 28, 29, 30, 31;

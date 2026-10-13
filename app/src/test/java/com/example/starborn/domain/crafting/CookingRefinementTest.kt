@@ -32,6 +32,81 @@ class CookingRefinementTest {
     private val use = ItemUseController(inventory, crafting, store,
         skillNodesProvider = { assets.loadSkillNodes() }, charactersProvider = { characters })
 
+    @Test fun mealComparisonIncludesBonusesLostWhenReplacingAndDoesNotAlterTheMeal() {
+        val current = MealRules.buff(items.getValue("glowfish_broth"), "nova").copy(remainingEncounters = 1)
+        val proposed = MealRules.buff(items.getValue("ration_pack"), "nova")
+        val comparison = MealRules.comparison(current, proposed)
+        assertTrue(comparison.contains("Accuracy -5%"))
+        assertFalse(comparison.contains("Focus +3"))
+        assertTrue(comparison.contains("3 battles"))
+        assertEquals(1, current.remainingEncounters)
+    }
+
+    @Test fun modComparisonUsesRealSlotsAndShowsTradeoffs() {
+        store.setPartyMembers(listOf("nova", "zeke"))
+        store.setMilestone("ms_w1_mq01_complete")
+        store.setEquippedWeapon("nova", "nova_laser_blaster")
+        store.setEquippedWeapon("zeke", "zeke_shock_fists")
+        inventory.addItem("power_lens_mk_i")
+        store.setInventory(inventory.snapshot())
+        assertEquals(ModEquipResult.Success, store.tryEquipMod(ModLocation("nova", "weapon_mod1"), items.getValue("power_lens_mk_i")))
+        val comparisons = crafting.equipmentComparison("ergonomic_grip")
+        val nova = comparisons.single { it.target.key == "nova:weapon_mod1" }
+        assertEquals("power_lens_mk_i", nova.equippedItemId)
+        assertEquals(mapOf("accuracy" to 2, "focus" to -2), nova.statDeltas)
+        assertNull(comparisons.single { it.target.key == "zeke:weapon_mod1" }.equippedItemId)
+        assertNotNull(comparisons.single { it.target.key == "nova:armor_mod1" }.blockedReason)
+    }
+
+    @Test fun trailMixKeepsItsAbilityAndRestoredHealthDoesNotExceedTheNewCeiling() = runTest {
+        val snack = items.getValue("mineral_trail_mix")
+        assertEquals(40, snack.equipment!!.hpBonus)
+        val effect = requireNotNull(snack.effect)
+        assertEquals(6, effect.singleBuff!!.value)
+        assertEquals(2, effect.singleBuff!!.duration)
+        assertEquals(5, effect.cooldown)
+        inventory.addItem(snack.id)
+        inventory.addItem("glowfish_broth")
+        use.useItem("glowfish_broth")
+        store.decrementMealBuffEncounter()
+        store.setEquippedItem("snack", snack.id, "nova")
+        store.configureRestoredHpCeilings { state -> characters.mapValues { (_, player) ->
+            PartyHealth.maxHp(player, state, items::get, assets.loadSkillNodes()) }
+        }
+        val saved = store.state.value.copy(partyMemberHp = mapOf("nova" to 240))
+        store.restore(saved)
+        assertEquals(160, store.state.value.partyMemberHp["nova"])
+        assertEquals(saved.inventory, store.state.value.inventory)
+        assertEquals(2, store.state.value.activeMealBuff!!.remainingEncounters)
+        store.restore(saved.copy(partyMemberHp = mapOf("nova" to 50)))
+        assertEquals(50, store.state.value.partyMemberHp["nova"])
+    }
+
+    @Test fun cookAndEatChecksReplacementBeforeSpendingIngredients() = runTest {
+        inventory.addItem("glowfish_broth")
+        use.useItem("glowfish_broth")
+        val recipe = recipes.single { it.id == "provision_spiced_ration_cache" }
+        recipe.ingredients.forEach { (id, amount) -> inventory.addItem(id, amount * 2) }
+        val before = inventory.snapshot()
+        val active = store.state.value.activeMealBuff
+        assertTrue(use.cookAndEat(recipe.id, "nova", batch = 2) is ItemUseController.Result.Failure)
+        assertEquals(before, inventory.snapshot())
+        assertEquals(active, store.state.value.activeMealBuff)
+        assertTrue(use.cookAndEat(recipe.id, "nova", batch = 2, replaceMeal = true) is ItemUseController.Result.Success)
+        assertTrue(inventory.snapshot().getValue("ration_pack") in 3..5)
+        recipe.ingredients.keys.forEach { assertFalse(inventory.hasItem(it)) }
+        assertEquals("nova", store.state.value.activeMealBuff!!.chefId)
+        assertEquals(3, store.state.value.activeMealBuff!!.remainingEncounters)
+    }
+
+    @Test fun cookAndEatRejectsSnacksWithoutSpendingMaterials() = runTest {
+        val recipe = recipes.single { it.id == "snack_mineral_trail_mix" }
+        inventory.restore(recipe.ingredients)
+        val before = inventory.snapshot()
+        assertTrue(use.cookAndEat(recipe.id, "nova") is ItemUseController.Result.Failure)
+        assertEquals(before, inventory.snapshot())
+    }
+
     @Test fun replacementNeedsConfirmationAndDoesNotSpendFoodOnCancel() = runTest {
         inventory.addItem("glowfish_broth", 2)
         assertTrue(use.useItem("glowfish_broth") is ItemUseController.Result.Success)

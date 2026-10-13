@@ -54,10 +54,46 @@ class GameSessionPersistenceTest {
         val state = GameSessionState(
             roomStates = mapOf("fishing_journal:sector9_stream" to mapOf("caught:raw_glowfish" to true, "clean:raw_glowfish" to true)),
             completedMilestones = setOf("ms_fishing_first_clean", "ms_fishing_reel_briefed"),
-            inventory = mapOf("shiny_lure" to 1)
+            inventory = mapOf("shiny_lure" to 1),
+            fishingCleanCatchProgress = 2
         )
         persistence.writeAutosave(state)
         assertEquals(state, persistence.readAutosave())
+    }
+
+    @Test fun independentModBindingsAndOldDefaultCleanProgressRoundTrip() = runBlocking {
+        val state = GameSessionState(partyMembers = listOf("nova", "zeke"),
+            inventory = mapOf("power_lens_mk_i" to 2),
+            equippedItems = mapOf("nova:weapon_mod1" to "power_lens_mk_i", "zeke:weapon_mod1" to "power_lens_mk_i"))
+        persistence.writeAutosave(state)
+        assertEquals(state, persistence.readAutosave())
+        assertEquals(0, persistence.readAutosave()!!.fishingCleanCatchProgress)
+        val store = GameSessionStore()
+        store.restore(state.copy(fishingCleanCatchProgress = 99))
+        assertEquals(2, store.state.value.fishingCleanCatchProgress)
+    }
+
+    @Test fun legacyModImportKeepsExplicitAssignmentsAheadOfPartyWideDefaults() {
+        val file = File(baseDir, "legacy-mods.json").apply { writeText("""
+            {"game_state":{"party":["nova","zeke"],"inventory":{"lens":1},
+                "equipment":{"weapon_mod1":"lens"},"completed_milestones":["ms_w1_mq01_complete"]},
+             "characters":{"nova":{"equipment":{"weapon":"pistol"}},
+                           "zeke":{"equipment":{"weapon":"glove","weapon_mod1":"lens"}}}}
+        """.trimIndent()) }
+        val items = mapOf(
+            "lens" to Item("lens", "Lens", type = "mod", equipment = com.example.starborn.domain.model.Equipment("mod")),
+            "pistol" to Item("pistol", "Pistol", type = "weapon", equipment = com.example.starborn.domain.model.Equipment("weapon", weaponType = "gun")),
+            "glove" to Item("glove", "Glove", type = "weapon", equipment = com.example.starborn.domain.model.Equipment("weapon", weaponType = "glove")))
+        val catalog = object : ItemCatalog {
+            override fun load() {}
+            override fun findItem(idOrAlias: String) = items[idOrAlias]
+        }
+        val imported = requireNotNull(persistence.importLegacySave(file, catalog))
+        val store = GameSessionStore()
+        store.restore(imported)
+        assertEquals(mapOf("zeke:weapon_mod1" to "lens"), store.state.value.equippedItems)
+        assertEquals(1, store.state.value.inventory["lens"])
+        assertNotNull(store.takeEquipmentRestoreNotice())
     }
 
     @Test

@@ -1,5 +1,7 @@
 package com.example.starborn.feature.exploration.ui.tabs
 
+import com.example.starborn.feature.crafting.ui.ModComparisonPanel
+
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
@@ -90,11 +92,11 @@ fun TinkerTabContent(
     }
 
     LaunchedEffect(craftingViewModel) {
-        craftingViewModel.craftResults.collect { onPlayAudio("sfx_tinkering_wrench") }
+        craftingViewModel.craftResults.collect { onPlayAudio("tinkering_ratchet") }
     }
     LaunchedEffect(craftingViewModel) {
         craftingViewModel.messages.collect { message ->
-            if (message.startsWith("Scrapped ")) onPlayAudio("sfx_tinkering_wrench")
+            if (message.startsWith("Scrapped ")) onPlayAudio("tinkering_ratchet")
         }
     }
 
@@ -537,6 +539,7 @@ private fun WorkbenchTerminalView(
                                         style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                                         color = if (preview.learned) Color.White else Color(0xFFFFC857)
                                     )
+                                    ModComparisonPanel(preview.equipmentComparison)
                                     preview.description?.takeIf { it.isNotBlank() }?.let { desc ->
                                         Text(
                                             text = desc,
@@ -1326,7 +1329,7 @@ private fun ScrapListPanel(
                             }
                             Spacer(modifier = Modifier.width(8.dp))
                             Button(
-                                onClick = { if (modernScrap) pendingScrap = item else onScrapItem(item.id) },
+                                onClick = { pendingScrap = item },
                                 shape = RoundedCornerShape(6.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = Color(0xFFE57373).copy(alpha = 0.8f),

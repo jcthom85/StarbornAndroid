@@ -1,6 +1,8 @@
 package com.example.starborn.domain.fishing
 
 import kotlin.math.sin
+import kotlin.math.roundToLong
+import kotlin.random.Random
 
 enum class FishingFightPhase(val instruction: String) {
     CALM("The fish settles — reel steadily."),
@@ -11,7 +13,7 @@ enum class FishingFightPhase(val instruction: String) {
 }
 
 /** Fixed-step, deterministic fight. Equipment adds forgiveness without removing fish tells. */
-class FishingFight(private val behavior: FishBehaviorDefinition?, rod: FishingRod, val salvage: Boolean = false) {
+class FishingFight(private val behavior: FishBehaviorDefinition?, rod: FishingRod, val salvage: Boolean = false, private val random: Random = Random.Default) {
     var progress = 0.2f
         private set
     var tension = 0.15f
@@ -43,7 +45,7 @@ class FishingFight(private val behavior: FishBehaviorDefinition?, rod: FishingRo
         val w = FishingFightPhase.WARNING
         val s = FishingFightPhase.SURGE
         val r = FishingFightPhase.RECOVERY
-        return when (style) {
+        val base = when (style) {
             "steady" -> listOf(c to 1440L, p to 1920L, w to 840L, s to 960L, r to 1440L)
             "dart" -> listOf(c to if (alternate) 2160L else 1320L, p to 720L, w to 840L,
                 s to if (alternate) 1080L else 720L, r to 1200L)
@@ -53,6 +55,12 @@ class FishingFight(private val behavior: FishBehaviorDefinition?, rod: FishingRo
             "ether" -> listOf(c to if (alternate) 960L else 1800L, p to 600L, w to 1080L,
                 s to 1200L, r to if (alternate) 1800L else 1080L)
             else -> listOf(c to 2160L, p to 720L, w to 840L, s to 720L, r to 1440L)
+        }
+        return base.map { (phase, duration) ->
+            if (style in setOf("gentle", "steady") || phase !in setOf(c, p, r)) phase to duration else {
+                val factor = listOf(.85, 1.0, 1.15)[random.nextInt(3)]
+                phase to ((duration * factor / TICK_MS).roundToLong() * TICK_MS).coerceAtLeast(TICK_MS)
+            }
         }
     }
     private val rhythms = listOf(rhythm(false), rhythm(true))

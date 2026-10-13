@@ -19,9 +19,10 @@ class DesktopSettingsDeckTest {
     val compose = createComposeRule()
 
     @Test
-    fun settingsDeckRendersAllCategoriesAndSupportsLiveDialogueChatterTest() {
+    fun settingsDeckRendersPlayerOptionsWithoutDebugDiagnostics() {
         val tempDir = Files.createTempDirectory("starborn-settings-test-").toFile()
         val services = DesktopAppServices(tempDir)
+        var quitRequested = false
         try {
             assertTrue(services.startNewGame())
             val userSettings = com.example.starborn.data.local.UserSettings()
@@ -34,7 +35,8 @@ class DesktopSettingsDeckTest {
                             userSettings = userSettings,
                             currentRoomTitle = "Nova's Bunk",
                             onReturnToTitle = {},
-                            onOpenControls = {}
+                            onOpenControls = {},
+                            onQuitToDesktop = { quitRequested = true }
                         )
                     }
                 }
@@ -46,11 +48,11 @@ class DesktopSettingsDeckTest {
             compose.onNodeWithText("Audio Mixer Deck").assertExists()
             compose.onNodeWithText("Master volume").assertExists()
             compose.onNodeWithText("Voice").assertExists()
-            compose.onNodeWithText("Dynamic Dialogue Chatter").assertExists()
+            compose.onNodeWithText("Dynamic Dialogue Chatter").assertDoesNotExist()
+            compose.onNodeWithText("Mute when unfocused").assertExists()
 
             // 2. Verify Dialogue Chatter test button
-            compose.onNodeWithText("Test Dialogue Chatter").assertExists()
-            compose.onNodeWithText("Test Dialogue Chatter").performClick()
+            compose.onNodeWithText("Test Dialogue Chatter").assertDoesNotExist()
 
             // 3. Verify section switching
             compose.onNodeWithText("Display").performClick()
@@ -66,6 +68,9 @@ class DesktopSettingsDeckTest {
             compose.waitForIdle()
             compose.onNodeWithText("Open save archive").assertExists()
             compose.onNodeWithText("Save and return to title").assertExists()
+            compose.onNodeWithText("Save and quit to desktop").performClick()
+            compose.waitUntil(5000) { quitRequested }
+            assertTrue(services.saveManager.hasSave(-1))
 
             // 4. Return to All Decks
             compose.onNodeWithText("All Decks").performClick()

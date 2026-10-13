@@ -10,6 +10,7 @@ import com.example.starborn.datastore.QuestTaskListProto
 import com.example.starborn.datastore.RoomStateProto
 import com.example.starborn.datastore.ArcadeProgressProto
 import com.example.starborn.domain.inventory.GearRules
+import com.example.starborn.domain.inventory.ModEquipmentRules
 import com.example.starborn.domain.inventory.ItemCatalog
 import com.example.starborn.domain.movement.EnemyPartyRuntimeState
 import java.io.File
@@ -335,11 +336,13 @@ private fun GameSessionProto.toState(): GameSessionState = GameSessionState(
             evasionBonus = activeMealBuff.evasionBonus
         )
     } else null,
-    mealChefId = mealChefId.ifBlank { "nova" }
+    mealChefId = mealChefId.ifBlank { "nova" },
+    fishingCleanCatchProgress = fishingCleanCatchProgress.coerceIn(0, 2)
 )
 
 private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis()): GameSessionProto = GameSessionProto.newBuilder().apply {
     mealChefId = this@toProto.mealChefId
+    fishingCleanCatchProgress = this@toProto.fishingCleanCatchProgress.coerceIn(0, 2)
     worldId = this@toProto.worldId.orEmpty()
     hubId = this@toProto.hubId.orEmpty()
     roomId = this@toProto.roomId.orEmpty()
@@ -783,7 +786,7 @@ fun GameSessionPersistence.importLegacySave(file: File, itemCatalog: ItemCatalog
         partyMembers.mapNotNull { it.takeIf { id -> id.isNotBlank() } }
             .forEach { memberId ->
                 val normalizedId = memberId.lowercase(Locale.getDefault())
-                baseEquipment.forEach { (slot, itemId) ->
+                baseEquipment.filterKeys { it !in ModEquipmentRules.slots }.forEach { (slot, itemId) ->
                     val scopedKey = "$normalizedId:$slot"
                     scopedEquipment.putIfAbsent(scopedKey, itemId)
                 }
@@ -907,7 +910,7 @@ private fun importSimpleSave(root: JSONObject, itemCatalog: ItemCatalog): GameSe
         partyMembers.mapNotNull { it.takeIf { id -> id.isNotBlank() } }
             .forEach { memberId ->
                 val normalizedId = memberId.lowercase(Locale.getDefault())
-                baseEquipment.forEach { (slot, itemId) ->
+                baseEquipment.filterKeys { it !in ModEquipmentRules.slots }.forEach { (slot, itemId) ->
                     scopedEquipment["$normalizedId:$slot"] = itemId
                 }
             }

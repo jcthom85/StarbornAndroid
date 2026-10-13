@@ -19,7 +19,7 @@ object MealRules {
 
     fun bonusLabel(stat: String, value: Int): String {
         val percent = stat.lowercase() in setOf("crit", "crit_rate", "crit_chance", "acc", "accuracy", "eva", "evasion", "resist", "status_resist")
-        return "${statLabel(stat)} +$value${if (percent) "%" else ""}"
+        return "${statLabel(stat)} ${if (value >= 0) "+" else ""}$value${if (percent) "%" else ""}"
     }
 
     fun chefDescription(id: String): String = when (id) {
@@ -61,4 +61,20 @@ object MealRules {
         buff.stabilityBonus.takeIf { it != 0 }?.let { "Stability +$it" },
         buff.statusResistBonus.takeIf { it != 0 }?.let { "Status resistance +$it%" }
     ).joinToString(" · ").ifBlank { "No stat bonus" }
+
+    fun comparison(current: ActiveMealBuff?, proposed: ActiveMealBuff): String {
+        if (current == null) return "Party bonus when eaten: ${summary(proposed)}"
+        fun values(buff: ActiveMealBuff) = linkedMapOf(
+            "Max HP" to buff.hpBonus, "Strength" to buff.strengthBonus, "Defense" to buff.defenseBonus,
+            "Agility" to buff.agilityBonus, "Focus" to buff.focusBonus, "Speed" to buff.speedBonus,
+            "Luck" to buff.luckBonus, "Accuracy" to buff.accuracyBonus, "Evasion" to buff.evasionBonus,
+            "Crit chance" to buff.critBonus.toInt(), "Stability" to buff.stabilityBonus,
+            "Status resistance" to buff.statusResistBonus)
+        val previous = values(current)
+        val changes = values(proposed).mapNotNull { (stat, value) ->
+            val delta = value - previous.getValue(stat)
+            if (delta == 0) null else "$stat ${if (delta > 0) "+" else ""}$delta${if (stat in setOf("Accuracy", "Evasion", "Crit chance", "Status resistance")) "%" else ""}"
+        }.joinToString(" · ").ifBlank { "Same party stat bonuses" }
+        return "Compared with ${current.recipeName}: $changes. Eating starts $BATTLES battles of meal bonuses."
+    }
 }

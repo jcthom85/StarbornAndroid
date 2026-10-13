@@ -3,6 +3,7 @@ package com.example.starborn.feature.crafting
 import com.example.starborn.domain.crafting.CraftingOutcome
 import com.example.starborn.domain.crafting.CraftingService
 import com.example.starborn.domain.inventory.InventoryService
+import com.example.starborn.domain.inventory.ModSlotComparison
 import com.example.starborn.domain.model.TinkeringRecipe
 import com.example.starborn.domain.session.GameSessionStore
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -47,7 +48,8 @@ data class TinkeringRecipeUi(
     val learned: Boolean,
     val resultSummary: String = "",
     val requiresSchematic: Boolean = false,
-    val discoveryHint: String? = null
+    val discoveryHint: String? = null,
+    val equipmentComparison: List<ModSlotComparison> = emptyList()
 )
 
 data class TinkeringBenchState(
@@ -85,7 +87,8 @@ data class TinkeringPreview(
     val learned: Boolean,
     val resultSummary: String = "",
     val requiresSchematic: Boolean = false,
-    val discoveryHint: String? = null
+    val discoveryHint: String? = null,
+    val equipmentComparison: List<ModSlotComparison> = emptyList()
 )
 
 enum class TinkeringFilter { ALL, REPAIR, GEAR }
@@ -377,6 +380,7 @@ class CraftingController(
                 resultId = recipe.result,
                 learned = craftingService.isSchematicLearned(recipe.id),
                 resultSummary = craftingService.resultSummary(recipe),
+                equipmentComparison = craftingService.equipmentComparison(recipe.result),
                 requiresSchematic = recipe.requiresSchematic,
                 discoveryHint = recipe.discoveryHint
             ),
@@ -406,6 +410,7 @@ class CraftingController(
                 resultId = it.result,
                 learned = craftingService.isSchematicLearned(it.id),
                 resultSummary = craftingService.resultSummary(it),
+                equipmentComparison = craftingService.equipmentComparison(it.result),
                 requiresSchematic = it.requiresSchematic,
                 discoveryHint = it.discoveryHint
             )
@@ -490,6 +495,7 @@ class CraftingController(
             canCraft = craftingService.canCraft(this),
             learned = learned,
             resultSummary = craftingService.resultSummary(this),
+            equipmentComparison = craftingService.equipmentComparison(result),
             requiresSchematic = requiresSchematic,
             discoveryHint = discoveryHint
         )

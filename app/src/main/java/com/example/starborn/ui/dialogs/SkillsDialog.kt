@@ -121,7 +121,7 @@ fun SkillsDialog(
                     }
                 } else {
                     Text(
-                        text = "⚡ Basic attacks build Momentum to Overcharge abilities (up to 3x)",
+                        text = "⚡ Basic attacks build Momentum to Overcharge abilities (up to 3 stacks)",
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.White.copy(alpha = 0.5f),
                         modifier = Modifier.padding(vertical = 2.dp)
@@ -344,6 +344,8 @@ private fun AbilityDetailsDialog(
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 item {
+                    Text(com.example.starborn.domain.combat.CombatClarity.SKILL_GUIDANCE,
+                        style = MaterialTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.8f))
                     Text(
                         text = skill.description.ifBlank { "No description available." },
                         style = MaterialTheme.typography.bodyLarge,

@@ -46,13 +46,15 @@ private enum class SettingsSection(val label: String) {
     SAVES("Save Archive")
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun DesktopSettingsContent(
     services: DesktopAppServices,
     userSettings: UserSettings,
     currentRoomTitle: String?,
     onReturnToTitle: (() -> Unit)? = null,
-    onOpenControls: (() -> Unit)? = null
+    onOpenControls: (() -> Unit)? = null,
+    onQuitToDesktop: (() -> Unit)? = null
 ) {
     val scope = rememberCoroutineScope()
     val mode by services.userSettingsStore.displayMode.collectAsState(initial = DesktopDisplayMode.WINDOWED)
@@ -105,133 +107,136 @@ internal fun DesktopSettingsContent(
 
                 HorizontalDivider(color = FieldMenuDesign.cyan.copy(alpha = 0.15f))
 
-                // Interactive Dialogue Chatter & Celeste Pitch Shift Tester
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(Color(0xFF091420))
-                        .border(1.dp, FieldMenuDesign.cyan.copy(alpha = 0.22f), RoundedCornerShape(10.dp))
-                        .padding(14.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                DesktopSettingToggle("Mute when unfocused", userSettings.muteWhenUnfocused) {
+                    scope.launch { services.userSettingsStore.setMuteWhenUnfocused(it) }
+                }
+
+                if (services.isDebugEnabled) {
+                    // Diagnostic tools are available only in debug builds.
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(Color(0xFF091420))
+                            .border(1.dp, FieldMenuDesign.cyan.copy(alpha = 0.22f), RoundedCornerShape(10.dp))
+                            .padding(14.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        Column {
-                            Text(
-                                "Dynamic Dialogue Chatter",
-                                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                                color = Color.White
-                            )
-                            Text(
-                                "Modulates pitch dynamically up & down as characters speak",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = FieldMenuDesign.textMuted
-                            )
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column {
+                                Text(
+                                    "Dynamic Dialogue Chatter",
+                                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                                    color = Color.White
+                                )
+                                Text(
+                                    "Modulates pitch dynamically up & down as characters speak",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = FieldMenuDesign.textMuted
+                                )
+                            }
+
+                            testPitchDisplay?.let { pitch ->
+                                Surface(
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = FieldMenuDesign.gold.copy(alpha = 0.18f),
+                                    border = BorderStroke(1.dp, FieldMenuDesign.gold.copy(alpha = 0.5f))
+                                ) {
+                                    Text(
+                                        "Pitch: ${"%.2f".format(pitch)}x",
+                                        modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp),
+                                        color = FieldMenuDesign.gold,
+                                        style = MaterialTheme.typography.labelSmall.copy(fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+                                    )
+                                }
+                            }
                         }
 
-                        testPitchDisplay?.let { pitch ->
-                            Surface(
-                                shape = RoundedCornerShape(4.dp),
-                                color = FieldMenuDesign.gold.copy(alpha = 0.18f),
-                                border = BorderStroke(1.dp, FieldMenuDesign.gold.copy(alpha = 0.5f))
-                            ) {
-                                Text(
-                                    "Pitch: ${"%.2f".format(pitch)}x",
-                                    modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp),
-                                    color = FieldMenuDesign.gold,
-                                    style = MaterialTheme.typography.labelSmall.copy(fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+                        // Speaker Selection Chips
+                        Row(
+                            Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            listOf(
+                                "nova" to "Nova",
+                                "orion" to "Orion",
+                                "zeke" to "Zeke",
+                                "gh0st" to "Gh0st",
+                                "female" to "Female NPC",
+                                "male" to "Male NPC"
+                            ).forEach { (id, label) ->
+                                FilterChip(
+                                    selected = selectedSpeaker == id,
+                                    onClick = { selectedSpeaker = id },
+                                    modifier = Modifier.desktopPointerHover(),
+                                    label = { Text(label) },
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = FieldMenuDesign.cyan.copy(alpha = 0.22f),
+                                        selectedLabelColor = FieldMenuDesign.cyan
+                                    )
                                 )
                             }
                         }
-                    }
 
-                    // Speaker Selection Chips
-                    Row(
-                        Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        listOf(
-                            "nova" to "Nova",
-                            "orion" to "Orion",
-                            "zeke" to "Zeke",
-                            "gh0st" to "Gh0st",
-                            "female" to "Female NPC",
-                            "male" to "Male NPC"
-                        ).forEach { (id, label) ->
-                            FilterChip(
-                                selected = selectedSpeaker == id,
-                                onClick = { selectedSpeaker = id },
-                                modifier = Modifier.desktopPointerHover(),
-                                label = { Text(label) },
-                                colors = FilterChipDefaults.filterChipColors(
-                                    selectedContainerColor = FieldMenuDesign.cyan.copy(alpha = 0.22f),
-                                    selectedLabelColor = FieldMenuDesign.cyan
-                                )
-                            )
-                        }
-                    }
-
-                    // Test Trigger Button
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Button(
-                            onClick = {
-                                if (isTestingChatter) return@Button
-                                scope.launch {
-                                    isTestingChatter = true
-                                    val profile = when (selectedSpeaker) {
-                                        "orion" -> DialogueVoiceProfile.ORION
-                                        "zeke" -> DialogueVoiceProfile.ZEKE
-                                        "gh0st" -> DialogueVoiceProfile.GH0ST
-                                        "female" -> DialogueVoiceProfile.FEMALE
-                                        "male" -> DialogueVoiceProfile.MALE
-                                        else -> DialogueVoiceProfile.NOVA
-                                    }
-                                    val sampleSentence = "Checking communication relays and local energy conduits... all clear?"
-                                    val random = Random(System.currentTimeMillis())
-                                    for (i in 0 until 6) {
-                                        val cue = profile.randomCue(random)
-                                        val pitch = profile.calculateCelestePitch(i * 3, sampleSentence, random)
-                                        testPitchDisplay = pitch
-                                        services.audioDriver.executeAll(
-                                            listOf(
-                                                AudioCommand.Play(
-                                                    type = AudioCueType.VOICE,
-                                                    cueId = cue,
-                                                    loop = false,
-                                                    fadeMs = 0L,
-                                                    gain = userSettings.voiceVolume,
-                                                    pitch = pitch
+                        // Test Trigger Button
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Button(
+                                onClick = {
+                                    if (isTestingChatter) return@Button
+                                    scope.launch {
+                                        isTestingChatter = true
+                                        val profile = when (selectedSpeaker) {
+                                            "orion" -> DialogueVoiceProfile.ORION
+                                            "zeke" -> DialogueVoiceProfile.ZEKE
+                                            "gh0st" -> DialogueVoiceProfile.GH0ST
+                                            "female" -> DialogueVoiceProfile.FEMALE
+                                            "male" -> DialogueVoiceProfile.MALE
+                                            else -> DialogueVoiceProfile.NOVA
+                                        }
+                                        val sampleSentence = "Checking communication relays and local energy conduits... all clear?"
+                                        val random = Random(System.currentTimeMillis())
+                                        for (i in 0 until 6) {
+                                            val cue = profile.randomCue(random)
+                                            val pitch = profile.calculateCelestePitch(i * 3, sampleSentence, random)
+                                            testPitchDisplay = pitch
+                                            services.audioDriver.executeAll(
+                                                listOf(
+                                                    AudioCommand.Play(
+                                                        type = AudioCueType.VOICE,
+                                                        cueId = cue,
+                                                        loop = false,
+                                                        fadeMs = 0L,
+                                                        gain = userSettings.voiceVolume,
+                                                        pitch = pitch
+                                                    )
                                                 )
                                             )
-                                        )
-                                        delay(115L)
+                                            delay(115L)
+                                        }
+                                        delay(400L)
+                                        testPitchDisplay = null
+                                        isTestingChatter = false
                                     }
-                                    delay(400L)
-                                    testPitchDisplay = null
-                                    isTestingChatter = false
-                                }
-                            },
-                            enabled = !isTestingChatter,
-                            modifier = Modifier.desktopPointerHover(),
-                            colors = ButtonDefaults.buttonColors(containerColor = FieldMenuDesign.cyan)
-                        ) {
-                            Text(
-                                if (isTestingChatter) "Speaking..." else "Test Dialogue Chatter",
-                                color = Color.Black,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
+                                },
+                                enabled = !isTestingChatter,
+                                modifier = Modifier.desktopPointerHover(),
+                                colors = ButtonDefaults.buttonColors(containerColor = FieldMenuDesign.cyan)
+                            ) {
+                                Text(
+                                    if (isTestingChatter) "Speaking..." else "Test Dialogue Chatter",
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
 
-                        DesktopSettingToggle("Mute when unfocused", userSettings.muteWhenUnfocused) {
-                            scope.launch { services.userSettingsStore.setMuteWhenUnfocused(it) }
                         }
                     }
                 }
@@ -347,7 +352,7 @@ internal fun DesktopSettingsContent(
                 DesktopSettingToggle("High contrast interface & text outlines", userSettings.highContrastMode) {
                     scope.launch { services.userSettingsStore.setHighContrastMode(it) }
                 }
-                DesktopSettingToggle("Larger click & touch targets", userSettings.largeTouchTargets) {
+                DesktopSettingToggle("Larger interaction targets", userSettings.largeTouchTargets) {
                     scope.launch { services.userSettingsStore.setLargeTouchTargets(it) }
                 }
             }
@@ -365,7 +370,7 @@ internal fun DesktopSettingsContent(
                     DesktopMenuSection("Tactical Keyboard Reference")
                     onOpenControls?.let {
                         OutlinedButton(onClick = it, modifier = Modifier.desktopPointerHover()) {
-                            Text("Full Guide Overlay [H]")
+                            Text("Full controls guide")
                         }
                     }
                 }
@@ -379,39 +384,10 @@ internal fun DesktopSettingsContent(
                         .padding(12.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    listOf(
-                        "W / A / S / D  or  Arrow Keys" to "Navigate Sector & Move Party",
-                        "E  or  Space  or  Enter" to "Interact with Terminals, NPCs & Items",
-                        "Tab  or  M" to "Open / Close Tactical Field Menu",
-                        "1, 2, 3, 4, 5, 0" to "Quick Decks: Cargo, Kit, Journal, Map, Settings, Stats",
-                        "F5" to "Instant Quick Save to Active Slot",
-                        "Esc" to "Cancel / Back / Close Dialog"
-                    ).forEach { (keys, desc) ->
-                        Row(
-                            Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Surface(
-                                shape = RoundedCornerShape(4.dp),
-                                color = FieldMenuDesign.cyan.copy(alpha = 0.15f),
-                                border = BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = 0.35f))
-                            ) {
-                                Text(
-                                    keys,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
-                                    color = FieldMenuDesign.cyan,
-                                    style = MaterialTheme.typography.labelSmall.copy(fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
-                                )
-                            }
-                            Text(
-                                desc,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = Color.White.copy(alpha = 0.9f)
-                            )
-                        }
-                    }
+                    (explorationControlHints(LocalDesktopKeyBindings.current) + fieldMenuControlHints).forEach { ControlHintRow(it) }
                 }
+                HorizontalDivider()
+                DesktopKeyboardSettings(services)
             }
         }
     }
@@ -426,7 +402,7 @@ internal fun DesktopSettingsContent(
                     color = Color.White.copy(alpha = 0.85f)
                 )
 
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(
                         onClick = { archiveOpen = true },
                         modifier = Modifier.desktopPointerHover(),
@@ -440,10 +416,14 @@ internal fun DesktopSettingsContent(
                             Text("Save and return to title")
                         }
                     }
+                    onQuitToDesktop?.let { quit ->
+                        OutlinedButton(onClick = { services.exploration.quickSaveAndReturnToTitle(quit) },
+                            modifier = Modifier.desktopPointerHover()) { Text("Save and quit to desktop") }
+                    }
                 }
 
                 Text(
-                    "Starborn Multiplatform PC Core · v2.4 (JVM JBR Engine)",
+                    "Saves are stored locally on this computer.",
                     style = MaterialTheme.typography.labelSmall,
                     color = FieldMenuDesign.textMuted
                 )
@@ -453,9 +433,10 @@ internal fun DesktopSettingsContent(
 
     Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         // Section Filter Strip
-        Row(
-            Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        FlowRow(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             SettingsSection.entries.forEach { section ->
                 FilterChip(
