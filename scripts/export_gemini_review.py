@@ -155,6 +155,56 @@ def write_package(destination: Path, sources: dict[str, bytes], manifest: dict,
     print(f"{destination}: {len(final_files)} files, {total / 1024 / 1024:.2f} MiB; secret scan PASS")
 
 
+def write_text_uploads(destination: Path, sources: dict[str, bytes], manifest: dict,
+                       prompt: str) -> None:
+    """Ordinary-file upload fallback, keeping each source file intact and labeled."""
+    destination.mkdir(parents=True, exist_ok=False)
+    header = (
+        "STARBORN REVIEW SNAPSHOT\n"
+        f"Branch: {manifest['branch']}\nCommit: {manifest['commit']}\n"
+        "Tracked working-tree text only; credentials, saves, media and builds excluded.\n"
+        "Paths below refer to the original repository. FILE END marks complete contents.\n"
+        "This upload is review context, not a runnable checkout. Do not assume all parts fit the model context.\n\n"
+    )
+    priority = {"DialogueService.kt": 0, "GameSessionState.kt": 1, "AppServices.kt": 2,
+                "DesktopAppServices.kt": 3, "ExplorationController.kt": 4}
+    ordered = sorted(sources, key=lambda path: (priority.get(PurePosixPath(path).name, 5), path))
+    parts: list[str] = []
+    current = header
+    for relative in ordered:
+        content = sources[relative].decode("utf-8")
+        entry = (f"\n=== FILE BEGIN: {relative} ===\n"
+                 f"SHA256: {hashlib.sha256(sources[relative]).hexdigest()}\n"
+                 f"{content}\n=== FILE END: {relative} ===\n")
+        if len(entry.encode("utf-8")) > 3 * 1024 * 1024:
+            raise RuntimeError(f"Source file too large for text fallback: {relative}")
+        if len(current.encode("utf-8")) + len(entry.encode("utf-8")) > 3 * 1024 * 1024:
+            parts.append(current)
+            current = header
+        current += entry
+    parts.append(current)
+    index = []
+    for number, text in enumerate(parts, 1):
+        name = f"starborn-{destination.name}-{number:02d}-of-{len(parts):02d}.txt"
+        path = destination / name
+        path.write_text(text, encoding="utf-8")
+        index.append(f"{name}: {path.stat().st_size} bytes")
+    (destination / "REVIEW_PROMPT.txt").write_text(prompt, encoding="utf-8")
+    (destination / "UPLOAD_INSTRUCTIONS.txt").write_text(
+        "Use ordinary Upload files, not folder import or ZIP.\n"
+        "Start with dialogue-autosave for the initial focused task.\n"
+        "Attach all numbered TXT parts of your chosen package and paste REVIEW_PROMPT.txt into the chat.\n"
+        "Ask Gemini to confirm it can read the three requested functions before reviewing.\n"
+        "These complete-source bundles still may exceed model context; use smaller tasks if warned.\n\n"
+        + "\n".join(index) + "\n", encoding="utf-8")
+    if len(parts) > 10:
+        raise RuntimeError("Text fallback requires more than ten attachments; narrow the scope.")
+    for path in destination.iterdir():
+        if secret_findings(path.read_text(encoding="utf-8")):
+            raise RuntimeError(f"Final text scan rejected {path.name}; do not upload.")
+    print(f"{destination}: {len(parts)} numbered TXT upload(s); secret scan PASS")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-parent", type=Path, default=ROOT / "output" / "gemini-review")
@@ -207,6 +257,9 @@ def main() -> None:
     focused_exclusions = exclusions + [{"path": path, "reason": "outside focused task"}
                                       for path in sorted(sources) if path not in focused]
     write_package(destination / "dialogue-autosave", focused, manifest, focused_exclusions, assets, True)
+    prompt = (destination / "dialogue-autosave" / "REVIEW_PROMPT.md").read_text(encoding="utf-8")
+    write_text_uploads(destination / "text-uploads" / "dialogue-autosave", focused, manifest, prompt)
+    write_text_uploads(destination / "text-uploads" / "full-source", sources, manifest, prompt)
 
 
 if __name__ == "__main__":

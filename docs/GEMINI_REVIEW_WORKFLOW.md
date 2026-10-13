@@ -6,6 +6,16 @@ Upload one using Gemini's **Import Code > Upload folder**, then submit the inclu
 `REVIEW_PROMPT.md`. The focused package starts with dialogue conditions and Android
 autosave coverage; request the full folder if missing dependencies matter.
 
+If Gemini shows a red upload error for a folder, use `text-uploads/` in the
+same timestamped export instead. Choose ordinary **Upload files** and attach
+the numbered `.txt` files in `dialogue-autosave` (recommended first) or
+`full-source`. Paste that package's `REVIEW_PROMPT.txt` into the message.
+Original paths, hashes, and complete file boundaries are preserved, with no
+source files split across parts. Each part is at most 3 MiB. Upload acceptance
+does not guarantee all source fits the model context: narrow the task if warned.
+The red icon's actual error text is needed to distinguish unsupported types,
+the ordinary-folder file limit, and account/storage limits.
+
 Exports use tracked working-tree files and explicit source/text allowlists.
 Credentials/local configuration, save-slot JSON, binary media, archives, build
 outputs, and caches are excluded. Symlinks are rejected. Known credential

@@ -79,6 +79,22 @@ class ReviewExportTest(unittest.TestCase):
             self.assertNotIn(secret, str(error.exception))
             self.assertFalse((root / "output").exists())
 
+    def test_text_upload_preserves_complete_source_with_original_paths(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / "focused"
+            sources = {"app/src/File.kt": b"fun example() = 42\n",
+                       "app/src/main/assets/events.json": b"[]"}
+            with contextlib.redirect_stdout(io.StringIO()):
+                exporter.write_text_uploads(output, sources,
+                                            {"branch": "fixture", "commit": "abc"}, "review")
+            parts = list(output.glob("starborn-*.txt"))
+            self.assertEqual(1, len(parts))
+            text = parts[0].read_text(encoding="utf-8")
+            for path, source in sources.items():
+                self.assertIn(f"=== FILE BEGIN: {path} ===", text)
+                self.assertIn(source.decode("utf-8"), text)
+                self.assertIn(f"=== FILE END: {path} ===", text)
+
 
 if __name__ == "__main__":
     unittest.main()
