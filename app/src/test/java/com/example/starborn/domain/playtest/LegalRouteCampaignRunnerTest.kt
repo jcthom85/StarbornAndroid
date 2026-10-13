@@ -133,6 +133,20 @@ class LegalRouteCampaignRunnerTest {
     }
 
     @Test
+    fun `public gear controls reject unowned gear and incompatible character weapons`() {
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
+        try {
+            h.explorationVm.equipWeapon("nova", "mining_pistol")
+            h.explorationVm.equipArmor("nova", "nova_flux_liner")
+            h.explorationVm.equipWeapon("nova", "zeke_shock_fists")
+            h.settle()
+            assertEquals(null, h.sessionStore.state.value.equippedWeapons["nova"])
+            assertEquals(null, h.sessionStore.state.value.equippedArmors["nova"])
+            assertFalse("Rejected gear must not be unlocked", "mining_pistol" in h.sessionStore.state.value.unlockedWeapons)
+        } finally { h.close() }
+    }
+
+    @Test
     fun `opening route earns combat victory and survives reload without assisted actions`() {
         val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
         try {
@@ -176,7 +190,7 @@ class LegalRouteCampaignRunnerTest {
 
             // --- WORLD 2: SECTOR 9 UNCHARTED WILDS ---
             runner.playWorld2()
-            assertTrue("Worlds 1-2 must use public routes and visible actions", assistance.all { it.startsWith("scripted_victory:") })
+            assertTrue("Worlds 1-2 must have no assisted actions or victories", assistance.isEmpty())
             File("build/reports/campaign-systems/public-worlds12-combat.txt").apply {
                 requireNotNull(parentFile).mkdirs()
                 writeText(publicCombats.joinToString("\n") + "\nRemaining synthetic victories:\n" + assistance.joinToString("\n") + "\n")
@@ -569,6 +583,7 @@ class LegalRouteCampaignRunnerTest {
         }
 
         fun winCombat(enemyIds: List<String>, roomId: String) {
+            check(!strict) { "Synthetic victories are forbidden in Worlds 1-2" }
             assistance += "scripted_victory:$roomId:${enemyIds.joinToString(";")}"
             val reward = harness.applyScriptedBattleReward(enemyIds, roomId)
             val payload = CombatResultPayload(
@@ -616,6 +631,8 @@ class LegalRouteCampaignRunnerTest {
             harness.explorationVm.equipWeapon("nova", "mining_pistol")
             harness.explorationVm.equipArmor("nova", "nova_flux_liner")
             harness.settle()
+            assertEquals("mining_pistol", harness.sessionStore.state.value.equippedWeapons["nova"])
+            assertEquals("nova_flux_liner", harness.sessionStore.state.value.equippedArmors["nova"])
             assertTrue("Cryo inductor received from Jed", (harness.sessionStore.state.value.inventory["cryo_inductor"] ?: 0) >= 1)
 
             // Navigate to workshop yard and encounter faulted loader
@@ -670,16 +687,21 @@ class LegalRouteCampaignRunnerTest {
 
             // Escape lockdown to launch lift
             navigateLegalPath("launch_lift")
-            winCombat(listOf("acoustic_bulwark"), "launch_lift")
+            harness.restAtVisibleStop()
+            harness.playPublicEncounter("acoustic_bulwark")
             talkToNpc("Jed")
             assertTrue("w1_mq04 completed", harness.sessionStore.state.value.completedQuests.contains("w1_mq04"))
             assertTrue("w1_mq05 active", harness.sessionStore.state.value.activeQuests.contains("w1_mq05"))
 
             // Launch Bay confrontation
-            winCombat(listOf("resonance_buoy"), "launch_bay")
+            harness.restAtVisibleStop()
+            navigateLegalPath("launch_checkpoint")
+            harness.explorationVm.collectAllGroundItems()
+            harness.settle()
+            harness.playPublicEncounter("dominion_dampener")
             navigateLegalPath("launch_bay")
             talkToNpc("The Warden")
-            winCombat(listOf("the_iron_warden"), "launch_bay")
+            harness.playPublicEncounter("the_iron_warden")
             talkToNpc("Zeke")
             navigateLegalPath("launch_pod")
             talkToNpc("Zeke")
@@ -729,9 +751,12 @@ class LegalRouteCampaignRunnerTest {
             assertTrue("w2_mq04 active", harness.sessionStore.state.value.activeQuests.contains("w2_mq04"))
 
             // MQ04: The Hunter (Source Beast & Gh0st joins)
+            navigateLegalPath("sector9_ridge_plateau")
+            harness.restAtVisibleStop()
             navigateLegalPath("sector9_canopy_ridge")
             performAction("w2_mq04_confront")
-            winCombat(listOf("the_beast"), "sector9_canopy_ridge")
+            performAction("w2_mq04_beast_ambush", requireVisible = true)
+            harness.playPublicEncounter("the_beast", pending = true)
             performAction("w2_mq04_anchor_drill")
             assertTrue("w2_mq04 completed", harness.sessionStore.state.value.completedQuests.contains("w2_mq04"))
             assertTrue("Gh0st joins party", harness.sessionStore.state.value.partyMembers.contains("gh0st"))
@@ -937,7 +962,8 @@ class LegalRouteCampaignRunnerTest {
         val hubNodes = worldDataSource.loadHubNodes()
 
         val sessionStore = GameSessionStore().apply {
-            restore(initialState ?: GameSessionState(
+            restore(initialState ?: com.example.starborn.domain.session.GameBootstrap.newGame(
+                worldDataSource.loadCharacters(), itemRepository.allItems().toList()).copy(
                 worldId = "world_1",
                 hubId = "hub_1_homestead",
                 roomId = "pit_nova_bunk",
@@ -1075,11 +1101,24 @@ class LegalRouteCampaignRunnerTest {
             return null
         }
 
-        fun playPublicEncounter(enemyId: String, retreat: Boolean = false) {
-            val room = requireNotNull(sessionStore.state.value.roomId)
-            assertTrue("Enemy must be present before engagement in $room", enemyId in explorationVm.uiState.value.enemies)
-            explorationVm.engageEnemy(enemyId)
+        fun restAtVisibleStop() {
+            val stop = explorationVm.uiState.value.actions.filterIsInstance<com.example.starborn.domain.model.RestStopAction>()
+                .first { it.cookSource == null }
+            explorationVm.onActionSelected(stop)
             settle()
+        }
+
+        fun playPublicEncounter(enemyId: String, retreat: Boolean = false, pending: Boolean = false) {
+            val room = requireNotNull(sessionStore.state.value.roomId)
+            if (!pending) {
+                assertTrue("Enemy must be present before engagement in $room", enemyId in explorationVm.uiState.value.enemies)
+                explorationVm.engageEnemy(enemyId)
+                settle()
+            }
+            val descriptor = requireNotNull(moshi.adapter(com.example.starborn.domain.combat.EncounterDescriptor::class.java)
+                .fromJson(sessionStore.state.value.pendingBattleJson))
+            val encounterIds = descriptor.enemies.map { it.enemyId }
+            assertTrue("Public encounter must include $enemyId", enemyId in encounterIds)
             val registry = StatusRegistry(worldDataSource.loadStatuses())
             val combat = CombatViewModel(
                 worldAssets = worldDataSource,
@@ -1094,13 +1133,18 @@ class LegalRouteCampaignRunnerTest {
                 themeRepository = themeRepository,
                 environmentThemeManager = environmentThemeManager,
                 encounterCoordinator = encounterCoordinator,
-                enemyIds = listOf(enemyId),
+                enemyIds = encounterIds,
                 tutorialsEnabled = false,
                 elapsedRealtime = { dispatcher.scheduler.currentTime },
                 random = SeededCombatRandom(17)
             )
             try {
                 combat.onScreenReady()
+                File("build/reports/campaign-systems/encounter-$enemyId-before.txt").apply {
+                    requireNotNull(parentFile).mkdirs()
+                    val snapshot = sessionStore.state.value
+                    writeText("room=$room enemies=$encounterIds credits=${snapshot.playerCredits}\ninventory=${snapshot.inventory}\nweapons=${snapshot.equippedWeapons}\narmor=${snapshot.equippedArmors}\nhp=${snapshot.partyMemberHp}\nskills=${snapshot.partyMembers.associateWith { combat.skillsForPlayer(it).map { s -> s.id } }}\n")
+                }
                 assertEquals(room, combat.encounterRoomId)
                 if (enemyId == "faulted_loader") {
                     assertEquals("Authored HP and vitality overrides must reach combat", com.example.starborn.domain.combat.CombatFormulas.maxHp(45, 1),
@@ -1120,9 +1164,21 @@ class LegalRouteCampaignRunnerTest {
                             continue
                         }
                         val actor = requireNotNull(combat.awaitingAction.value)
+                        val wounded = state.combatants.values.filter {
+                            it.combatant.side == com.example.starborn.domain.combat.CombatSide.PLAYER && it.isAlive &&
+                                it.hp < it.combatant.stats.maxHp * .45
+                        }.minByOrNull { it.hp.toDouble() / it.combatant.stats.maxHp }
+                        val healing = combat.inventory.value.filter {
+                            it.quantity > 0 && (it.item.effect?.restoreHp ?: 0) > 0 &&
+                                it.item.type.equals("consumable", ignoreCase = true)
+                        }.maxByOrNull { it.item.effect?.restoreHp ?: 0 }
+                        if (wounded != null && healing != null) {
+                            combat.useItem(healing, wounded.combatant.id)
+                            continue
+                        }
                         val target = state.combatants.values.first { it.combatant.side == com.example.starborn.domain.combat.CombatSide.ENEMY && it.isAlive }.combatant.id
                         val skill = combat.skillsForPlayer(actor).filter {
-                            it.id in setOf("nova_arc_tether", "nova_blast_wave", "nova_hydraulic_kick", "zeke_shatter_blow") && combat.canUseSkill(actor, it)
+                            it.id in setOf("nova_arc_tether", "nova_blast_wave", "nova_hydraulic_kick", "zeke_shatter_blow", "orion_prism_lance") && combat.canUseSkill(actor, it)
                         }.maxByOrNull { it.basePower }
                         if (skill != null) combat.useSkill(skill, listOf(target)) else combat.playerAttack(target)
                     }
@@ -1140,7 +1196,10 @@ class LegalRouteCampaignRunnerTest {
                     ?: error("Public combat failed in $room: ${state.outcome}; log=${state.log.takeLast(8)}")
                 assertTrue("Victory must include real damage", state.log.any { it is com.example.starborn.domain.combat.CombatLogEntry.Damage && it.amount > 0 })
                 val reward = victory.rewards
-                publicCombats += "room=$room enemy=$enemyId seed=17 damageEvents=${state.log.count { it is com.example.starborn.domain.combat.CombatLogEntry.Damage }} xp=${reward.xp} ap=${reward.ap} credits=${reward.credits} hp=${sessionStore.state.value.partyMemberHp}"
+                val usedItems = state.log.filterIsInstance<com.example.starborn.domain.combat.CombatLogEntry.ActionQueued>()
+                    .mapNotNull { (it.action as? com.example.starborn.domain.combat.CombatAction.ItemUse)?.itemId }
+                    .groupingBy { it }.eachCount()
+                publicCombats += "room=$room enemies=$encounterIds seed=17 damageEvents=${state.log.count { it is com.example.starborn.domain.combat.CombatLogEntry.Damage }} xp=${reward.xp} ap=${reward.ap} credits=${reward.credits} hp=${sessionStore.state.value.partyMemberHp} usedItems=$usedItems"
                 explorationVm.onCombatVictoryEnemiesCleared(combat.encounterEnemyIds)
                 explorationVm.onCombatVictory(CombatResultPayload(
                     outcome = CombatResultPayload.Outcome.VICTORY,

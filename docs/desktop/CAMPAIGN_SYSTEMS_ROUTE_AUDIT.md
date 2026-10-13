@@ -1,8 +1,8 @@
 # Campaign availability and economy audit
 
-The latest [Worlds 1-2 public-route pass](PUBLIC_CAMPAIGN_WORLDS_1_2.md) removes
+The latest [Worlds 1-2 boss pass](PUBLIC_CAMPAIGN_BOSSES.md) removes
 the room-position shortcut, reduces hidden action calls to 36 and synthetic
-victories to 19, and adds an unassisted opening test. Counts and economic
+victories to 15, and completes these two worlds without assistance. Counts and economic
 observations below describe the earlier audit snapshot.
 
 The follow-up [snack and public-route pass](SNACK_ABILITIES_PUBLIC_ROUTES.md)

@@ -1,5 +1,10 @@
 # Public campaign routes: Worlds 1-2
 
+The follow-up [real boss and group encounter pass](PUBLIC_CAMPAIGN_BOSSES.md)
+eliminates the four remaining synthetic victories in these worlds, preserves
+full enemy groups, corrects the fixture's starting equipment, and fixes owned
+reward gear eligibility. This document describes the preceding pass.
+
 This pass strengthens the shared-runtime campaign tests used for Android and desktop. It changes test drivers, not game balance or production content.
 
 ## Coverage added

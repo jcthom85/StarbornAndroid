@@ -1,7 +1,7 @@
 # Snack ability trials and public procurement routes
 
-The latest [Worlds 1-2 route pass](PUBLIC_CAMPAIGN_WORLDS_1_2.md) strengthens
-the setup used by this procurement slice; four synthetic victories still remain
+The latest [Worlds 1-2 boss pass](PUBLIC_CAMPAIGN_BOSSES.md) strengthens
+the setup used by this procurement slice; no synthetic victories remain
 before World 3.
 
 The follow-up [combat clarity pass](COMBAT_CLARITY_PASS.md) makes ability costs,

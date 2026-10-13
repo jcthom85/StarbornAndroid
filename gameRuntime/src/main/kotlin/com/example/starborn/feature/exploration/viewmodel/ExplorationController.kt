@@ -4362,7 +4362,9 @@ class ExplorationController(
             return
         }
         val unlocked = sessionStore.state.value.unlockedWeapons
-        val resolvedWeaponId = unlocked.firstOrNull { it.equals(weaponId, ignoreCase = true) } ?: return
+        val resolvedWeaponId = unlocked.firstOrNull { it.equals(weaponId, ignoreCase = true) }
+            ?: inventoryService.state.value.firstOrNull { it.quantity > 0 && it.item.id.equals(weaponId, ignoreCase = true) }?.item?.id
+            ?: return
         val item = inventoryService.itemDetail(resolvedWeaponId) ?: return
         if (!isWeaponForCharacter(item, normalizedCharacter)) return
         sessionStore.setEquippedWeapon(normalizedCharacter, resolvedWeaponId)
@@ -4378,7 +4380,9 @@ class ExplorationController(
             return
         }
         val unlocked = sessionStore.state.value.unlockedArmors
-        val resolvedArmorId = unlocked.firstOrNull { it.equals(armorId, ignoreCase = true) } ?: return
+        val resolvedArmorId = unlocked.firstOrNull { it.equals(armorId, ignoreCase = true) }
+            ?: inventoryService.state.value.firstOrNull { it.quantity > 0 && it.item.id.equals(armorId, ignoreCase = true) }?.item?.id
+            ?: return
         val item = inventoryService.itemDetail(resolvedArmorId) ?: return
         if (!isArmorItem(item)) return
         if (!isArmorForCharacter(item, normalizedCharacter)) return
