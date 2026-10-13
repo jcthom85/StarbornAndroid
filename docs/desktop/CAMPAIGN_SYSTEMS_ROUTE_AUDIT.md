@@ -1,5 +1,10 @@
 # Campaign availability and economy audit
 
+The latest [Worlds 1-2 public-route pass](PUBLIC_CAMPAIGN_WORLDS_1_2.md) removes
+the room-position shortcut, reduces hidden action calls to 36 and synthetic
+victories to 19, and adds an unassisted opening test. Counts and economic
+observations below describe the earlier audit snapshot.
+
 The follow-up [snack and public-route pass](SNACK_ABILITIES_PUBLIC_ROUTES.md)
 executes a procurement, crafting, cooking and Astra-selling slice through public
 controller actions and adds two snack ability trials.
