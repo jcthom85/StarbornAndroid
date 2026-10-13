@@ -1,5 +1,9 @@
 # Worlds 1-2: real boss and group encounters
 
+The follow-up [World 3 pass](PUBLIC_CAMPAIGN_WORLD_3.md) extends the unassisted
+route through the Spire and corrects the combat driver's area targeting. This
+document records the preceding pass's results.
+
 Worlds 1-2 now finish with no hidden action calls, room-position shortcuts, or synthetic victories. The runner rejects all three kinds of assistance until World 3.
 
 ## Changes

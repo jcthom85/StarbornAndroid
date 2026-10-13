@@ -195,7 +195,6 @@ class LegalRouteCampaignRunnerTest {
                 requireNotNull(parentFile).mkdirs()
                 writeText(publicCombats.joinToString("\n") + "\nRemaining synthetic victories:\n" + assistance.joinToString("\n") + "\n")
             }
-            runner.allowAssistedRoutes()
 
             // Checkpoint 2 Save / Reload
             val w2Saved = harness.saveSlot(2)
@@ -210,6 +209,12 @@ class LegalRouteCampaignRunnerTest {
 
             // --- WORLD 3: THE SPIRE ---
             runner.playWorld3()
+            assertTrue("Worlds 1-3 must have no assisted actions or victories", assistance.isEmpty())
+            File("build/reports/campaign-systems/public-worlds123-combat.txt").apply {
+                requireNotNull(parentFile).mkdirs()
+                writeText(publicCombats.joinToString("\n") + "\nAssisted actions: 0\n")
+            }
+            runner.allowAssistedRoutes()
 
             // Checkpoint 3 Save / Reload
             val w3Saved = harness.saveSlot(3)
@@ -792,7 +797,8 @@ class LegalRouteCampaignRunnerTest {
 
         fun playWorld3() {
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w3_mq11"))
-            winCombat(listOf("sewer_crawler"), "spire_sewers_landing")
+            navigateLegalPath("spire_sewers_scale_01")
+            harness.playPublicEncounter("sewer_crawler")
             navigateLegalPath("spire_vent_output")
             navigateLegalPath("spire_zekes_apartment")
             talkToNpc("Zeke")
@@ -800,18 +806,26 @@ class LegalRouteCampaignRunnerTest {
             assertTrue("w3_mq12 active", harness.sessionStore.state.value.activeQuests.contains("w3_mq12"))
 
             // MQ12: Heist Prep
-            performAction("w3_mq12_talk_jax")
+            navigateLegalPath("spire_the_static")
+            talkToNpc("Jax", "jax_w3_mq12_request_codes")
+            navigateLegalPath("spire_underrail_platform")
             performAction("w3_mq12_map_patrols")
+            navigateLegalPath("spire_security_kiosk")
             performAction("w3_mq12_interrogate_guard")
+            navigateLegalPath("spire_elevator_service_gate")
             performAction("w3_mq12_copy_badges")
+            navigateLegalPath("spire_safehouse_roof")
             performAction("w3_mq12_source_disguises")
+            navigateLegalPath("spire_zekes_apartment")
             performAction("w3_mq12_hack_blueprints")
             performAction("w3_mq12_assemble_planning")
             assertTrue("w3_mq12 completed", harness.sessionStore.state.value.completedQuests.contains("w3_mq12"))
 
             // Upper City Infiltration
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w3_mq13"))
+            navigateLegalPath("spire_skypark_dome")
             performAction("w3_mq13_blend_in")
+            navigateLegalPath("spire_laundry_service")
             performAction("w3_mq13_disable_sensors")
             performAction("w3_mq13_enter_lobby")
             assertTrue("w3_mq13 completed", harness.sessionStore.state.value.completedQuests.contains("w3_mq13"))
@@ -819,16 +833,27 @@ class LegalRouteCampaignRunnerTest {
 
             navigateLegalPath("spire_archive_vault")
             performAction("w3_mq14_read_containment_field")
+            navigateLegalPath("spire_prism_gallery")
             performAction("w3_mq14_read_prism_shutters")
+            navigateLegalPath("spire_archive_vault")
             performAction("w3_mq14_trace_command_tethers")
+            navigateLegalPath("spire_prism_gallery")
             performAction("w3_mq14_solve_light_puzzle")
+            navigateLegalPath("spire_archive_vault")
             talkToNpc("Zeke")
             assertTrue("w3_mq14 completed", harness.sessionStore.state.value.completedQuests.contains("w3_mq14"))
             assertTrue("The Lens acquired", (harness.sessionStore.state.value.inventory["the_lens"] ?: 0) >= 1)
 
+            navigateLegalPath("spire_skypark_scale_02")
+            harness.restAtVisibleStop()
+            navigateLegalPath("spire_exec_lounge_bar")
+            harness.buyAtVisibleShop("upper_city_lounge", "medkit", 6)
             navigateLegalPath("spire_landing_pad_roof")
-            winCombat(listOf("aero_drone", "heavy_mech"), "spire_landing_pad_roof")
-            winCombat(listOf("administrator_boss"), "spire_landing_pad_roof")
+            harness.playPublicEncounter("heavy_mech")
+            navigateLegalPath("spire_skypark_scale_02")
+            harness.restAtVisibleStop()
+            navigateLegalPath("spire_landing_pad_roof")
+            harness.playPublicEncounter("administrator_boss")
             performAction("w3_scan_shield_gap")
             performAction("w3_mq15_launch_astra")
             assertTrue("w3_mq15 completed", harness.sessionStore.state.value.completedQuests.contains("w3_mq15"))
@@ -1108,6 +1133,26 @@ class LegalRouteCampaignRunnerTest {
             settle()
         }
 
+        fun buyAtVisibleShop(shopId: String, itemId: String, quantity: Int) {
+            val action = explorationVm.uiState.value.actions.filterIsInstance<com.example.starborn.domain.model.ShopAction>()
+                .single { it.shopId == shopId }
+            explorationVm.onActionSelected(action)
+            settle()
+            explorationVm.enterPendingShop()
+            settle()
+            com.example.starborn.feature.shop.ShopController(shopId, shopRepository, itemRepository, inventoryService, sessionStore, coroutineScope).use { shop ->
+                val listing = shop.uiState.value.itemsForSale.single { it.id == itemId }
+                val credits = sessionStore.state.value.playerCredits
+                val owned = inventoryService.snapshot()[itemId] ?: 0
+                assertTrue("Earned credits must cover supplies", credits >= listing.price * quantity)
+                shop.buyItem(itemId, quantity)
+                settle()
+                assertEquals(owned + quantity, inventoryService.snapshot()[itemId])
+                assertEquals(credits - listing.price * quantity, sessionStore.state.value.playerCredits)
+                publicCombats += "shop=$shopId bought=$itemId quantity=$quantity cost=${listing.price * quantity} remainingCredits=${sessionStore.state.value.playerCredits}"
+            }
+        }
+
         fun playPublicEncounter(enemyId: String, retreat: Boolean = false, pending: Boolean = false) {
             val room = requireNotNull(sessionStore.state.value.roomId)
             if (!pending) {
@@ -1164,23 +1209,50 @@ class LegalRouteCampaignRunnerTest {
                             continue
                         }
                         val actor = requireNotNull(combat.awaitingAction.value)
+                        val active = state.combatants.getValue(actor)
+                        val injuredAllies = state.combatants.values.count {
+                            it.combatant.side == com.example.starborn.domain.combat.CombatSide.PLAYER && it.isAlive && it.hp < it.combatant.stats.maxHp * .7
+                        }
+                        val supportId = when {
+                            actor == "nova" && injuredAllies >= 2 -> "nova_link"
+                            actor == "orion" && active.hp < active.combatant.stats.maxHp * .8 && active.statusEffects.none { it.id == "regen" } -> "orion_nano_repair"
+                            actor == "zeke" && active.statusEffects.none { it.id == "guard" } -> "zeke_bulwark_stance"
+                            else -> null
+                        }
+                        val support = combat.skillsForPlayer(actor).firstOrNull { it.id == supportId && combat.canUseSkill(actor, it) }
                         val wounded = state.combatants.values.filter {
                             it.combatant.side == com.example.starborn.domain.combat.CombatSide.PLAYER && it.isAlive &&
-                                it.hp < it.combatant.stats.maxHp * .45
+                                it.hp < it.combatant.stats.maxHp * .65
                         }.minByOrNull { it.hp.toDouble() / it.combatant.stats.maxHp }
                         val healing = combat.inventory.value.filter {
                             it.quantity > 0 && (it.item.effect?.restoreHp ?: 0) > 0 &&
                                 it.item.type.equals("consumable", ignoreCase = true)
                         }.maxByOrNull { it.item.effect?.restoreHp ?: 0 }
-                        if (wounded != null && healing != null) {
+                        if (support?.id == "nova_link") {
+                            combat.useSkill(support)
+                            continue
+                        } else if (wounded != null && healing != null) {
                             combat.useItem(healing, wounded.combatant.id)
                             continue
+                        } else if (support != null) {
+                            combat.useSkill(support)
+                            continue
                         }
-                        val target = state.combatants.values.first { it.combatant.side == com.example.starborn.domain.combat.CombatSide.ENEMY && it.isAlive }.combatant.id
+                        val target = state.combatants.values.filter { it.combatant.side == com.example.starborn.domain.combat.CombatSide.ENEMY && it.isAlive }
+                            .minBy { it.hp }.combatant.id
                         val skill = combat.skillsForPlayer(actor).filter {
-                            it.id in setOf("nova_arc_tether", "nova_blast_wave", "nova_hydraulic_kick", "zeke_shatter_blow", "orion_prism_lance") && combat.canUseSkill(actor, it)
+                            it.id in setOf("nova_arc_tether", "nova_blast_wave", "nova_hydraulic_kick", "zeke_shatter_blow", "orion_prism_lance", "gh0st_headshot") && combat.canUseSkill(actor, it)
                         }.maxByOrNull { it.basePower }
-                        if (skill != null) combat.useSkill(skill, listOf(target)) else combat.playerAttack(target)
+                        if (skill != null) {
+                            if (combat.targetRequirementFor(skill) == com.example.starborn.feature.combat.viewmodel.TargetRequirement.NONE) {
+                                combat.useSkill(skill)
+                                val queued = requireNotNull(combat.combatState).log.filterIsInstance<com.example.starborn.domain.combat.CombatLogEntry.ActionQueued>()
+                                    .last().action as com.example.starborn.domain.combat.CombatAction.SkillUse
+                                assertEquals("Area attacks must use all living enemies", state.combatants.values.filter {
+                                    it.combatant.side == com.example.starborn.domain.combat.CombatSide.ENEMY && it.isAlive
+                                }.map { it.combatant.id }.toSet(), queued.targetIds.toSet())
+                            } else combat.useSkill(skill, listOf(target))
+                        } else combat.playerAttack(target)
                     }
                 }
                 val state = requireNotNull(combat.combatState)
@@ -1199,7 +1271,9 @@ class LegalRouteCampaignRunnerTest {
                 val usedItems = state.log.filterIsInstance<com.example.starborn.domain.combat.CombatLogEntry.ActionQueued>()
                     .mapNotNull { (it.action as? com.example.starborn.domain.combat.CombatAction.ItemUse)?.itemId }
                     .groupingBy { it }.eachCount()
-                publicCombats += "room=$room enemies=$encounterIds seed=17 damageEvents=${state.log.count { it is com.example.starborn.domain.combat.CombatLogEntry.Damage }} xp=${reward.xp} ap=${reward.ap} credits=${reward.credits} hp=${sessionStore.state.value.partyMemberHp} usedItems=$usedItems"
+                val knockedOut = state.combatants.values.filter { it.combatant.side == com.example.starborn.domain.combat.CombatSide.PLAYER && !it.isAlive }
+                    .map { it.combatant.id }
+                publicCombats += "room=$room enemies=$encounterIds seed=17 damageEvents=${state.log.count { it is com.example.starborn.domain.combat.CombatLogEntry.Damage }} xp=${reward.xp} ap=${reward.ap} credits=${reward.credits} persistedHp=${sessionStore.state.value.partyMemberHp} knockedOut=$knockedOut usedItems=$usedItems"
                 explorationVm.onCombatVictoryEnemiesCleared(combat.encounterEnemyIds)
                 explorationVm.onCombatVictory(CombatResultPayload(
                     outcome = CombatResultPayload.Outcome.VICTORY,
