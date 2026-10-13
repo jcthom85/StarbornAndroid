@@ -1,8 +1,8 @@
 # Campaign availability and economy audit
 
-The latest [World 3 pass](PUBLIC_CAMPAIGN_WORLD_3.md) removes
-the room-position shortcut, reduces hidden action calls to 28 and synthetic
-victories to 12, and completes Worlds 1-3 without assistance. Counts and economic
+The latest [World 4 pass](PUBLIC_CAMPAIGN_WORLD_4.md) removes
+the room-position shortcut, reduces hidden action calls to 14 and synthetic
+victories to 11, and completes Worlds 1-4 without test assistance. Counts and economic
 observations below describe the earlier audit snapshot.
 
 The follow-up [snack and public-route pass](SNACK_ABILITIES_PUBLIC_ROUTES.md)

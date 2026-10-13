@@ -1,5 +1,9 @@
 # World 3 public campaign route
 
+The follow-up [World 4 pass](PUBLIC_CAMPAIGN_WORLD_4.md) extends the unassisted
+route through the Foundry and replaces the Titan Walker's synthetic victory.
+This document records the preceding pass.
+
 Worlds 1-3 now complete without hidden action calls, room-position shortcuts, or synthetic victories. The runner keeps strict route checks active until it reaches World 4.
 
 ## Route changes

@@ -214,7 +214,6 @@ class LegalRouteCampaignRunnerTest {
                 requireNotNull(parentFile).mkdirs()
                 writeText(publicCombats.joinToString("\n") + "\nAssisted actions: 0\n")
             }
-            runner.allowAssistedRoutes()
 
             // Checkpoint 3 Save / Reload
             val w3Saved = harness.saveSlot(3)
@@ -229,6 +228,12 @@ class LegalRouteCampaignRunnerTest {
 
             // --- WORLD 4: THE FOUNDRY ---
             runner.playWorld4()
+            assertTrue("Worlds 1-4 must have no assisted actions or victories", assistance.isEmpty())
+            File("build/reports/campaign-systems/public-worlds1234-combat.txt").apply {
+                requireNotNull(parentFile).mkdirs()
+                writeText(publicCombats.joinToString("\n") + "\nAssisted actions: 0\n")
+            }
+            runner.allowAssistedRoutes()
 
             // Checkpoint 4 Save / Reload
             val w4Saved = harness.saveSlot(1)
@@ -862,19 +867,34 @@ class LegalRouteCampaignRunnerTest {
 
         fun playWorld4() {
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w4_mq16"))
-            listOf("land_shelf", "cross_slag_river", "hack_cooling_vents", "enter_airlock")
-                .forEach { performAction("w4_mq16_$it") }
-            listOf("access_phantom_terminal", "regroup_springs")
-                .forEach { performAction("w4_mq17_$it") }
-            listOf("navigate_conveyors", "defeat_prototypes", "overload_matrix")
-                .forEach { performAction("w4_mq18_$it") }
+            performAction("w4_mq16_land_shelf")
+            navigateLegalPath("foundry_slag_river")
+            performAction("w4_mq16_cross_slag_river")
+            navigateLegalPath("foundry_waste_intake")
+            performAction("w4_mq16_hack_cooling_vents")
+            navigateLegalPath("foundry_service_airlock")
+            performAction("w4_mq16_enter_airlock")
+            navigateLegalPath("foundry_waste_intake")
+            performAction("w4_mq17_access_phantom_terminal")
+            navigateLegalPath("foundry_cooling_springs")
+            performAction("w4_mq17_regroup_springs")
+            navigateLegalPath("foundry_conveyor_belt")
+            performAction("w4_mq18_navigate_conveyors")
+            navigateLegalPath("foundry_conditioning_chamber")
+            performAction("w4_mq18_defeat_prototypes")
+            navigateLegalPath("foundry_forge_anvil")
+            performAction("w4_mq18_overload_matrix")
 
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w4_mq19"))
-            navigateLegalPath("foundry_forge_anvil")
+            navigateLegalPath("foundry_conveyor_belt_scale_01")
             performAction("w4_mq19_read_pulse_board")
+            navigateLegalPath("foundry_conveyor_belt_scale_03")
             performAction("w4_mq19_read_grease_marks")
+            navigateLegalPath("foundry_conveyor_belt_scale_04")
             performAction("w4_mq19_throw_override_paddle")
+            navigateLegalPath("foundry_forge_scale_01")
             performAction("w4_mq19_starve_breath_pistons")
+            navigateLegalPath("foundry_forge_anvil")
             performAction("w4_mq19_open_anvil_cradle")
             talkToNpc("Nova")
             assertTrue("w4_mq19 completed", harness.sessionStore.state.value.completedQuests.contains("w4_mq19"))
@@ -882,10 +902,22 @@ class LegalRouteCampaignRunnerTest {
             assertTrue("w4_mq20 active", harness.sessionStore.state.value.activeQuests.contains("w4_mq20"))
 
             // MQ20: Confront Rylos & Titan Walker Boss
+            navigateLegalPath("foundry_forge_control_alcove")
+            harness.restAtVisibleStop()
+            navigateLegalPath("foundry_titan_dock")
             talkToNpc("Rylos")
-            winCombat(listOf("titan_walker_boss"), "foundry_forge_anvil")
+            harness.playPublicEncounter("titan_walker_boss")
+            assertTrue("Real Titan victory must advance the quest", "ms_w4_titan_defeated" in harness.sessionStore.state.value.completedMilestones)
+            performAction("w4_mq20_escape_launch")
+            assertEquals("Escape must wait for both stolen components", "foundry_titan_dock", harness.sessionStore.state.value.roomId)
+            assertTrue("Unprepared launch must not finish the quest", "w4_mq20" in harness.sessionStore.state.value.activeQuests)
+            assertFalse("Unprepared launch must not unlock World 5", "ms_w5_access_unlocked" in harness.sessionStore.state.value.completedMilestones)
+            navigateLegalPath("foundry_power_core")
             performAction("w4_mq20_steal_engine")
             performAction("w4_mq20_steal_arrays")
+            assertTrue(harness.inventoryService.hasItem("deep_core_engine"))
+            assertTrue(harness.inventoryService.hasItem("phase_cutter_arrays"))
+            navigateLegalPath("foundry_titan_dock")
             performAction("w4_mq20_escape_launch")
             assertTrue("w4_mq20 completed", harness.sessionStore.state.value.completedQuests.contains("w4_mq20"))
             assertTrue("ms_w5_access_unlocked set", harness.sessionStore.state.value.completedMilestones.contains("ms_w5_access_unlocked"))
