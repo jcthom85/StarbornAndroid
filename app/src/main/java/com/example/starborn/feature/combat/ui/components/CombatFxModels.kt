@@ -21,7 +21,8 @@ data class StatusFxUi(
     val id: String,
     val targetId: String,
     val statusId: String,
-    val stacks: Int
+    val stacks: Int,
+    val displayLabel: String? = null
 )
 
 data class KnockoutFxUi(

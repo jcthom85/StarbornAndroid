@@ -25,6 +25,7 @@ import com.example.starborn.domain.combat.EncounterCoordinator
 import com.example.starborn.domain.combat.Combatant
 import com.example.starborn.domain.combat.CombatantState
 import com.example.starborn.domain.combat.CombatLogEntry
+import com.example.starborn.domain.combat.CombatClarity
 import com.example.starborn.domain.combat.CombatWeapon
 import com.example.starborn.domain.combat.LootDrop
 import com.example.starborn.domain.combat.ResistanceProfile
@@ -2005,7 +2006,8 @@ class CombatController(
                 CombatFxEvent.StatusApplied(
                     targetId = entry.targetId,
                     statusId = entry.statusId,
-                    stacks = entry.stacks
+                    stacks = entry.stacks,
+                    displayLabel = CombatClarity.statusAppliedLabel(entry, statusDisplayName(entry.statusId))
                 )
             )
             return
@@ -2016,7 +2018,8 @@ class CombatController(
                 CombatFxEvent.StatusApplied(
                     targetId = entry.targetId,
                     statusId = entry.statusId,
-                    stacks = entry.stacks
+                    stacks = entry.stacks,
+                    displayLabel = CombatClarity.statusAppliedLabel(entry, statusDisplayName(entry.statusId))
                 )
             )
         }
@@ -2263,10 +2266,10 @@ class CombatController(
         if (combatTextVerbosity != CombatTextVerbosity.VERBOSE && !targetIsPlayer) return null
 
         val statusName = statusDisplayName(entry.statusId)
-        val stacksSuffix = if (entry.stacks > 1) " x${entry.stacks}" else ""
+        val statusLabel = CombatClarity.statusAppliedLabel(entry, statusName)
         val importance = if (targetIsPlayer) CombatBannerImportance.IMPORTANT else CombatBannerImportance.NORMAL
         val session = bannerSession?.takeIf { actionOwnsStatusBanner(currentAction, entry) }
-        val primary = session?.primary ?: "$statusName$stacksSuffix"
+        val primary = session?.primary ?: statusLabel
         return CombatBannerMessage(
             id = session?.id ?: UUID.randomUUID().toString(),
             primary = primary,
@@ -2410,9 +2413,7 @@ class CombatController(
     private fun statusDisplayName(statusId: String): String =
         statusRegistry.definition(statusId)?.displayName?.takeIf { it.isNotBlank() }
             ?: statusRegistry.definition(statusId)?.name?.takeIf { it.isNotBlank() }
-            ?: statusId.replace('_', ' ').trim().replaceFirstChar { ch ->
-                if (ch.isLowerCase()) ch.titlecase(Locale.getDefault()) else ch.toString()
-            }
+            ?: CombatClarity.statusName(statusId)
 
     private fun accentForStatus(statusId: String): CombatBannerAccent {
         val element = statusRegistry.definition(statusId)?.tick?.element
@@ -3527,11 +3528,11 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
             }
             is CombatLogEntry.StatusApplied -> {
                 val targetName = state.combatants[entry.targetId]?.combatant?.name ?: entry.targetId
-                "${entry.statusId.uppercase()} wraps around $targetName"
+                "$targetName gains ${CombatClarity.statusAppliedLabel(entry, statusDisplayName(entry.statusId))}"
             }
             is CombatLogEntry.StatusExpired -> {
                 val targetName = state.combatants[entry.targetId]?.combatant?.name ?: entry.targetId
-                "${entry.statusId.uppercase()} dissipates from $targetName"
+                "${statusDisplayName(entry.statusId)} expires on $targetName"
             }
 
             is CombatLogEntry.TurnSkipped -> {

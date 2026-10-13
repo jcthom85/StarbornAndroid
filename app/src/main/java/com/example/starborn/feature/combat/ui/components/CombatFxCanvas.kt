@@ -1257,7 +1257,7 @@ fun StatusPulse(
         shape = RoundedCornerShape(12.dp)
     ) {
         Text(
-            text = fx.statusId.uppercase(),
+            text = fx.displayLabel?.substringBefore(" (") ?: fx.statusId.replace('_', ' '),
             style = MaterialTheme.typography.labelMedium,
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
             textAlign = TextAlign.Center

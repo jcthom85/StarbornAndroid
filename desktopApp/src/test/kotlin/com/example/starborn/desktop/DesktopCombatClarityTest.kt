@@ -46,6 +46,8 @@ class DesktopCombatClarityTest {
             ImageIO.write(compose.onRoot().captureToImage().asAwtImage(), "png", target)
             compose.onNodeWithTag("combat-action-snack").performClick()
             compose.waitUntil(10000) { compose.onAllNodesWithText("Ready in 5 turns for this character.", substring = true).fetchSemanticsNodes().isNotEmpty() }
+            compose.waitUntil(10000) { compose.onAllNodesWithText("Accuracy +8% (4 turns for this character)", substring = true).fetchSemanticsNodes().isNotEmpty() }
+            compose.onAllNodesWithText("buff_accuracy", substring = true).assertCountEquals(0)
             compose.onNodeWithTag("combat-action-retreat").performScrollTo().assertIsDisplayed()
             ImageIO.write(compose.onRoot().captureToImage().asAwtImage(), "png",
                 File("build/reports/combat-clarity/snack-active-buffs.png"))

@@ -186,7 +186,8 @@ class CombatEngine(
                 turn = state.round,
                 targetId = targetId,
                 statusId = "buff_${effect.stat}",
-                stacks = effect.value
+                stacks = effect.value,
+                remainingTurns = updatedBuffs.first { it.effect.stat.equals(effect.stat, ignoreCase = true) }.remainingTurns
             )
         }
         return updatedState.copy(log = updatedState.log + logEntries)

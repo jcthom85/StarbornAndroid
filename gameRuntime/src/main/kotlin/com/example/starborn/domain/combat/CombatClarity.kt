@@ -5,6 +5,18 @@ import com.example.starborn.domain.model.Item
 
 /** Player-facing wording shared by touch and desktop combat. */
 object CombatClarity {
+    fun statusName(id: String): String = if (id.startsWith("buff_")) {
+        bonus(id.removePrefix("buff_"), 0).substringBefore(" +0")
+    } else id.replace('_', ' ').trim().replaceFirstChar { it.uppercaseChar() }
+
+    fun statusAppliedLabel(entry: CombatLogEntry.StatusApplied, name: String = statusName(entry.statusId)): String {
+        if (entry.statusId.startsWith("buff_")) {
+            val amount = bonus(entry.statusId.removePrefix("buff_"), entry.stacks)
+            return entry.remainingTurns?.let { "$amount (${turns(it)})" } ?: amount
+        }
+        return name + if (entry.stacks > 1) " (${entry.stacks} stacks)" else ""
+    }
+
     const val SKILL_GUIDANCE = "Using an ability spends one action. Cooldowns count this character's turns. Abilities use their own crit and Overcharge rules."
     fun turns(count: Int): String = "${count.coerceAtLeast(0)} ${if (count == 1) "turn" else "turns"} for this character"
 

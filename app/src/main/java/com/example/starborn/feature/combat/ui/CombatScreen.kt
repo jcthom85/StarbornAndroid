@@ -481,7 +481,8 @@ fun CombatScreen(
                         id = UUID.randomUUID().toString(),
                         targetId = event.targetId,
                         statusId = event.statusId,
-                        stacks = event.stacks
+                        stacks = event.stacks,
+                        displayLabel = event.displayLabel
                     )
                     statusFx += fx
                     launch {

@@ -10,6 +10,18 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class CombatClarityTest {
+    @Test fun combatLogDistinguishesBuffAmountsFromStatusStacks() {
+        assertEquals("Accuracy +8% (4 turns for this character)", CombatClarity.statusAppliedLabel(
+            CombatLogEntry.StatusApplied(1, "nova", "buff_accuracy", 8, 4)))
+        assertEquals("Weapon crit chance +30% (1 turn for this character)", CombatClarity.statusAppliedLabel(
+            CombatLogEntry.StatusApplied(1, "nova", "buff_crit_rate", 30, 1)))
+        assertEquals("Defense -6", CombatClarity.statusAppliedLabel(
+            CombatLogEntry.StatusApplied(1, "nova", "buff_defense", -6)))
+        assertEquals("Poison (3 stacks)", CombatClarity.statusAppliedLabel(
+            CombatLogEntry.StatusApplied(1, "nova", "poison", 3), "Poison"))
+        assertEquals("Weapon crit chance", CombatClarity.statusName("buff_crit_rate"))
+    }
+
     private val items = ItemRepository(ItemAssetDataSource(AssetJsonReader(DesktopAssetProvider(), MoshiProvider.instance))).apply { load() }
 
     @Test fun equippedAbilitiesExplainActualEffectsCostScopeAndRemainingCooldown() {

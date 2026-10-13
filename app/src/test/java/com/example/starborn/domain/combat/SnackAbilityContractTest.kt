@@ -16,6 +16,17 @@ class SnackAbilityContractTest {
         weapon = CombatWeapon("blade", "Blade", "sword", WeaponAttack.SingleTarget()))
     private val enemy = Combatant("enemy", "Enemy", CombatSide.ENEMY, StatBlock(10000, 1, 8, 2, 2, 2, 10))
 
+    @Test fun refreshedBuffLogReportsTheRetainedDurationAndNewAmount() {
+        val engine = CombatEngine(statusRegistry = registry)
+        var state = engine.beginEncounter(CombatSetup(listOf(player), listOf(enemy)))
+        state = engine.applyBuffs(state, "player", listOf(com.example.starborn.domain.model.BuffEffect("accuracy", 8, 4)))
+        state = engine.applyBuffs(state, "player", listOf(com.example.starborn.domain.model.BuffEffect("accuracy", -6, 1)))
+        val entry = state.log.filterIsInstance<CombatLogEntry.StatusApplied>().last()
+        assertEquals(4, entry.remainingTurns)
+        assertEquals(-6, entry.stacks)
+        assertEquals("Accuracy -6% (4 turns for this character)", CombatClarity.statusAppliedLabel(entry))
+    }
+
     @Test fun snackBuffsSurviveActivationAndEnemyTurnsAndExpireAfterTheAdvertisedPersonalTurns() {
         for ((id, duration) in listOf("comet_gummies" to 4, "pulse_citrus" to 3, "mineral_trail_mix" to 2)) {
             val inventory = InventoryService(catalog).apply { loadItems(); addItem(id) }
@@ -23,6 +34,9 @@ class SnackAbilityContractTest {
             val processor = CombatActionProcessor(engine, registry, { null }, inventory::useItem, catalog::findItem, random = SeededCombatRandom(1))
             var state = engine.beginEncounter(CombatSetup(listOf(player), listOf(enemy)))
             state = processor.execute(state, CombatAction.SnackUse("player", id)) { CombatReward() }
+            val applied = state.log.filterIsInstance<CombatLogEntry.StatusApplied>()
+            assertTrue(applied.isNotEmpty())
+            assertTrue(applied.all { it.remainingTurns == duration })
             assertTrue(state.combatants.getValue("player").buffs.all { it.remainingTurns == duration })
             assertEquals(5, state.combatants.getValue("player").snackCooldown)
             assertEquals(state, processor.execute(state, CombatAction.SnackUse("player", id)) { CombatReward() })

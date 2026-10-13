@@ -199,7 +199,7 @@ private fun DesktopCombatContent(
                     record("${name(effect.targetId)} recovers ${effect.amount} HP")
                 }
                 is CombatFxEvent.StatusApplied -> {
-                    val label = services.contentName(effect.statusId) + if (effect.stacks > 1) " x${effect.stacks}" else ""
+                    val label = effect.displayLabel ?: services.contentName(effect.statusId)
                     showCue(effect.targetId, label, Color(0xFFD3A1FF), AttackLungeStyle.CAST, kind = DesktopCueKind.STATUS)
                     record("${name(effect.targetId)}: $label")
                 }
