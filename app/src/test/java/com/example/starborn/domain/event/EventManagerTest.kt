@@ -13,6 +13,30 @@ import org.junit.Test
 class EventManagerTest {
 
     @Test
+    fun triggerEligibilityChecksGatesWithoutExecutingAndRejectsCompletedEvents() {
+        val store = GameSessionStore()
+        val manager = EventManager(
+            events = listOf(GameEvent(
+                id = "tuning_complete",
+                trigger = EventTrigger(type = "player_action", action = "tune"),
+                conditions = listOf(EventCondition(type = "quest_active", questId = "finale")),
+                actions = listOf(EventAction(type = "set_milestone", milestone = "tuned"))
+            )),
+            sessionStore = store
+        )
+        val payload = EventPayload.Action("tune")
+        assertEquals(false, manager.canHandleTrigger("player_action", payload))
+        manager.performActions(listOf(EventAction(type = "start_quest", questId = "finale")))
+        val before = store.state.value
+        assertTrue(manager.canHandleTrigger("player_action", payload))
+        assertEquals(before, store.state.value)
+        assertEquals(false, manager.canHandleTrigger("player_action", EventPayload.Action("other")))
+        manager.handleTrigger("player_action", payload)
+        assertTrue("tuned" in store.state.value.completedMilestones)
+        assertEquals(false, manager.canHandleTrigger("player_action", payload))
+    }
+
+    @Test
     fun nodeProgressActionsDelegateToHooks() {
         val sessionStore = GameSessionStore()
         val calls = mutableListOf<String>()

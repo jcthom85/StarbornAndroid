@@ -1,5 +1,7 @@
 # World 5 public campaign route
 
+The subsequent [World 6 pass](PUBLIC_CAMPAIGN_WORLD_6.md) removes the remaining assistance and completes the finale. Counts below describe the World 5 snapshot.
+
 Worlds 1-5 now finish with no hidden action calls, room-position shortcuts, or synthetic victories in the driver. Strict checks remain active until World 6.
 
 ## Route and combat changes

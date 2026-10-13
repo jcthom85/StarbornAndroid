@@ -1,8 +1,9 @@
 # Campaign availability and economy audit
 
-The latest [World 5 pass](PUBLIC_CAMPAIGN_WORLD_5.md) removes
-the room-position shortcut, reduces hidden action calls to 5 and synthetic
-victories to 7, and completes Worlds 1-5 without test assistance. Counts and economic
+The latest [World 6 and complete campaign pass](PUBLIC_CAMPAIGN_WORLD_6.md)
+removes all hidden action calls, synthetic victories, and room-position
+shortcuts. All 30 main quests now finish through public controller actions and
+real combat, including final tuning and ending save/reload. Counts and economic
 observations below describe the earlier audit snapshot.
 
 The follow-up [snack and public-route pass](SNACK_ABILITIES_PUBLIC_ROUTES.md)

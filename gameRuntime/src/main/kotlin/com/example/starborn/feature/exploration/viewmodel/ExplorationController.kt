@@ -3060,6 +3060,11 @@ class ExplorationController(
             postStatus("Tuning puzzle data unavailable.")
             return
         }
+        if (!eventManager.canHandleTrigger("player_action", EventPayload.Action(definition.successEvent))) {
+            _uiState.update { it.copy(tuningPuzzle = null) }
+            showInspection("The tuning interface is not ready yet.")
+            return
+        }
         val solved = ui.sliders.all { slider ->
             abs(slider.value - slider.target) <= slider.tolerance
         }
@@ -5154,6 +5159,11 @@ class ExplorationController(
             val message = action.conditionUnmetMessage?.takeIf { it.isNotBlank() }
                 ?: "The tuning interface is unavailable."
             showInspection(message)
+            return
+        }
+        if (!eventManager.canHandleTrigger("player_action", EventPayload.Action(puzzle.successEvent))) {
+            showInspection(action.conditionUnmetMessage?.takeIf { it.isNotBlank() }
+                ?: "The tuning interface is not ready yet.")
             return
         }
         _uiState.update {

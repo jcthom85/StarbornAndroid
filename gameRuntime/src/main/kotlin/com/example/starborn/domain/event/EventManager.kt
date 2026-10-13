@@ -32,6 +32,16 @@ class EventManager(
         }
     }
 
+    /** Check the same authored gates as dispatch without executing any actions. */
+    fun canHandleTrigger(type: String, payload: EventPayload = EventPayload.Empty): Boolean {
+        val state = sessionStore.state.value
+        return eventsByTriggerType[type.lowercase()].orEmpty().any { event ->
+            (event.repeatable || event.id !in state.completedEvents) &&
+                conditionsSatisfied(event.conditions, state) &&
+                matchesTrigger(event.trigger, payload, state)
+        }
+    }
+
     fun handleTrigger(type: String, payload: EventPayload = EventPayload.Empty) {
         val candidates = eventsByTriggerType[type.lowercase()].orEmpty()
         for (event in candidates) {
