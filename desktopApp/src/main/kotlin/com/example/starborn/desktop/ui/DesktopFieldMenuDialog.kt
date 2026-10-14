@@ -264,7 +264,7 @@ fun DesktopFieldMenuContent(
                             DesktopMenuAttributesContent(services, ui.partyMemberDetails!!)
                         } else {
                             if ((activeTab == DesktopMenuTab.STATS || activeTab == DesktopMenuTab.INVENTORY) && ui.partyStatus.members.size > 1) {
-                                DesktopMenuPartyStrip(services, ui.partyStatus.members, memberId, settings.largeTouchTargets) { selectedMember = it; if (activeTab == DesktopMenuTab.INVENTORY) select(DesktopMenuTab.STATS) }
+                                DesktopMenuPartyStrip(services, ui.partyStatus.members, memberId, settings.largeTouchTargets) { selectedMember = it }
                             }
                             Box(Modifier.weight(1f).fillMaxWidth().graphicsLayer {
                                 alpha = entrance.value; translationY = (1f - entrance.value) * 8.dp.toPx()

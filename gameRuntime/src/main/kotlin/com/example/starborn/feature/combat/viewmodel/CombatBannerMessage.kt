@@ -14,6 +14,7 @@ enum class CombatBannerAccent {
     ZEKE,
     ORION,
     GHOST,
+    OLLIE,
     ENEMY
 }
 

@@ -211,54 +211,54 @@ fun PartyRoster(
                                             label = "party_idle_wave"
                                         )
                                         val isLowHp = isAlive && (currentHp.toFloat() / maxHp.coerceAtLeast(1)) <= 0.25f
-                                        Box(
-                                            modifier = Modifier
-                                                .size(portraitSize)
-                                                .clip(CircleShape)
-                                                .background(Color(0xFF1C1F24))
-                                                .graphicsLayer {
-                                                    compositingStrategy = CompositingStrategy.Offscreen
-                                                    val pulse = 1f + 0.06f * hitPulse
-                                                    if (isAlive) {
-                                                        val breath = sin(partyIdleWave)
-                                                        val idleBob = if (isLowHp) breath * 2.8f else breath * 1.5f
-                                                        val breathScaleY = if (isLowHp) 0.024f else 0.012f
-                                                        scaleX = pulse * activeScale * (1f + 0.008f * breath)
-                                                        scaleY = pulse * activeScale * (1f + breathScaleY * breath)
-                                                        translationY = hitRecoilY + idleBob + activeStepY
-                                                        rotationZ = if (isLowHp) (-3.5f + sin(partyIdleWave * 1.5f) * 1.8f) else 0f
-                                                    } else {
-                                                        scaleX = pulse
-                                                        scaleY = pulse
-                                                        translationY = hitRecoilY
-                                                    }
-                                                },
-                                            contentAlignment = Alignment.Center
+                                        val lungeDistance = when {
+                                            suppressLunge -> 0.dp
+                                            isMissLunge -> 18.dp
+                                            lungeStyle == AttackLungeStyle.RANGED -> 12.dp
+                                            lungeStyle == AttackLungeStyle.BUFF -> 16.dp
+                                            lungeStyle == AttackLungeStyle.CAST -> 8.dp
+                                            lungeStyle == AttackLungeStyle.ITEM -> 6.dp
+                                            lungeStyle == AttackLungeStyle.SNACK -> 8.dp
+                                            else -> 24.dp
+                                        }
+                                        val lungeAxis = if (isMissLunge || lungeStyle == AttackLungeStyle.ITEM) LungeAxis.X else LungeAxis.Y
+                                        val lungeDirectionSign = when {
+                                            isMissLunge -> -1f
+                                            lungeStyle == AttackLungeStyle.RANGED -> -1f
+                                            else -> 1f
+                                        }
+                                        Lungeable(
+                                            side = CombatSide.PLAYER,
+                                            triggerToken = memberLungeToken,
+                                            distance = lungeDistance,
+                                            axis = lungeAxis,
+                                            directionSign = lungeDirectionSign,
+                                            modifier = Modifier.size(portraitSize),
+                                            onFinished = { memberLungeToken?.let(onLungeFinished) }
                                         ) {
-                                            val lungeDistance = when {
-                                                suppressLunge -> 0.dp
-                                                isMissLunge -> 18.dp
-                                                lungeStyle == AttackLungeStyle.RANGED -> 12.dp
-                                                lungeStyle == AttackLungeStyle.BUFF -> 16.dp
-                                                lungeStyle == AttackLungeStyle.CAST -> 8.dp
-                                                lungeStyle == AttackLungeStyle.ITEM -> 6.dp
-                                                lungeStyle == AttackLungeStyle.SNACK -> 8.dp
-                                                else -> 24.dp
-                                            }
-                                            val lungeAxis = if (isMissLunge || lungeStyle == AttackLungeStyle.ITEM) LungeAxis.X else LungeAxis.Y
-                                            val lungeDirectionSign = when {
-                                                isMissLunge -> -1f
-                                                lungeStyle == AttackLungeStyle.RANGED -> -1f
-                                                else -> 1f
-                                            }
-                                            Lungeable(
-                                                side = CombatSide.PLAYER,
-                                                triggerToken = memberLungeToken,
-                                                distance = lungeDistance,
-                                                axis = lungeAxis,
-                                                directionSign = lungeDirectionSign,
-                                                modifier = Modifier.matchParentSize(),
-                                                onFinished = { memberLungeToken?.let(onLungeFinished) }
+                                            Box(
+                                                modifier = Modifier
+                                                    .matchParentSize()
+                                                    .clip(CircleShape)
+                                                    .background(Color(0xFF1C1F24))
+                                                    .graphicsLayer {
+                                                        compositingStrategy = CompositingStrategy.Offscreen
+                                                        val pulse = 1f + 0.06f * hitPulse
+                                                        if (isAlive) {
+                                                            val breath = sin(partyIdleWave)
+                                                            val idleBob = if (isLowHp) breath * 2.8f else breath * 1.5f
+                                                            val breathScaleY = if (isLowHp) 0.024f else 0.012f
+                                                            scaleX = pulse * activeScale * (1f + 0.008f * breath)
+                                                            scaleY = pulse * activeScale * (1f + breathScaleY * breath)
+                                                            translationY = hitRecoilY + idleBob + activeStepY
+                                                            rotationZ = if (isLowHp) (-3.5f + sin(partyIdleWave * 1.5f) * 1.8f) else 0f
+                                                        } else {
+                                                            scaleX = pulse
+                                                            scaleY = pulse
+                                                            translationY = hitRecoilY
+                                                        }
+                                                    },
+                                                contentAlignment = Alignment.Center
                                             ) {
                                                 Image(
                                                     painter = portraitPainter,
@@ -266,24 +266,24 @@ fun PartyRoster(
                                                     modifier = Modifier.matchParentSize(),
                                                     contentScale = ContentScale.Crop
                                                 )
-                                            }
-                                            val shielded = memberState?.statusEffects.orEmpty().any { status ->
-                                                isShieldVisualStatus(status.id)
-                                            }
-                                            if (shielded && isAlive) {
-                                                ShieldFieldOverlay(
-                                                    modifier = Modifier
-                                                        .matchParentSize()
-                                                        .clip(CircleShape)
-                                                )
-                                            }
-                                            if (damageFlash > 0f) {
-                                                Box(
-                                                    modifier = Modifier
-                                                        .matchParentSize()
-                                                        .clip(CircleShape)
-                                                        .background(Color.Black.copy(alpha = 0.18f * damageFlash))
-                                                )
+                                                val shielded = memberState?.statusEffects.orEmpty().any { status ->
+                                                    isShieldVisualStatus(status.id)
+                                                }
+                                                if (shielded && isAlive) {
+                                                    ShieldFieldOverlay(
+                                                        modifier = Modifier
+                                                            .matchParentSize()
+                                                            .clip(CircleShape)
+                                                    )
+                                                }
+                                                if (damageFlash > 0f) {
+                                                    Box(
+                                                        modifier = Modifier
+                                                            .matchParentSize()
+                                                            .clip(CircleShape)
+                                                            .background(Color.Black.copy(alpha = 0.18f * damageFlash))
+                                                    )
+                                                }
                                             }
                                         }
                                     }
@@ -642,7 +642,8 @@ fun EnemyRoster(
                                     isActive = isActive,
                                     isSelected = isSelected,
                                     accentColor = labelBorderColor,
-                                    barWidth = barWidth
+                                    barWidth = barWidth,
+                                    weaknesses = enemyWeaknesses(enemy.resistances)
                                 )
                                 Spacer(modifier = Modifier.height(labelSpacer))
                                 Box(
@@ -1201,6 +1202,7 @@ fun CompositePartStatus(
             isSelected = isSelected,
             accentColor = labelBorderColor,
             barWidth = 90.dp,
+            weaknesses = enemyWeaknesses(entry.enemy.resistances),
             onClick = { if (isAlive) onEnemyTap(combatantId) },
             onLongClick = { if (isAlive) onEnemyLongPress(combatantId) }
         )
@@ -1213,6 +1215,16 @@ fun CompositePartStatus(
                 .zIndex(2f)
         )
     }
+}
+
+private fun enemyWeaknesses(resistances: com.example.starborn.domain.model.Resistances): List<String> = buildList {
+    if ((resistances.burn ?: 0) < 0) add("Burn")
+    if ((resistances.freeze ?: 0) < 0) add("Freeze")
+    if ((resistances.shock ?: 0) < 0) add("Shock")
+    if ((resistances.acid ?: 0) < 0) add("Acid")
+    if ((resistances.radiation ?: 0) < 0) add("Rad")
+    if ((resistances.source ?: 0) < 0) add("Source")
+    if ((resistances.physical ?: 0) < 0) add("Phys")
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -1230,6 +1242,7 @@ fun EnemyStatusLabel(
     isSelected: Boolean,
     accentColor: Color,
     barWidth: Dp,
+    weaknesses: List<String> = emptyList(),
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
     onLongClick: (() -> Unit)? = null
@@ -1265,31 +1278,51 @@ fun EnemyStatusLabel(
     } else {
         modifier
     }
+    val hasWeaknesses = weaknesses.isNotEmpty()
     Surface(
         color = Color(0xFF0C0F14).copy(alpha = if (isSelected) 0.72f else 0.5f),
         contentColor = Color.White,
         shape = RoundedCornerShape(14.dp),
         border = BorderStroke(1.dp, borderColor),
         modifier = interactionModifier
-            .height(66.dp)
+            .height(if (hasWeaknesses) 80.dp else 68.dp)
             .alpha(if (isAlive) 1f else 0.45f)
     ) {
         Column(
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp),
-            verticalArrangement = Arrangement.spacedBy(3.dp),
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = titleCaseName(name),
-                style = MaterialTheme.typography.labelSmall.copy(
-                    fontFamily = CombatNameFont,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 10.sp,
-                    lineHeight = 12.sp
-                ),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            Row(
+                modifier = Modifier.width(barWidth),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = titleCaseName(name),
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontFamily = CombatNameFont,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 10.sp,
+                        lineHeight = 12.sp
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = "$currentHp/$maxHp",
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontFamily = CombatNameFont,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 8.sp,
+                        lineHeight = 10.sp
+                    ),
+                    color = Color.White.copy(alpha = 0.85f),
+                    maxLines = 1
+                )
+            }
             AtbBar(
                 progress = atbProgress,
                 modifier = Modifier.width(barWidth),
@@ -1321,6 +1354,21 @@ fun EnemyStatusLabel(
                     background = Color.Black.copy(alpha = 0.45f),
                     height = 5.dp,
                     modifier = Modifier.weight(1f)
+                )
+            }
+            if (hasWeaknesses) {
+                val weakText = weaknesses.take(3).joinToString("/") { it.take(3).uppercase(Locale.getDefault()) }
+                Text(
+                    text = "WEAK: $weakText",
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontFamily = CombatNameFont,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 8.sp,
+                        lineHeight = 10.sp
+                    ),
+                    color = Color(0xFFFFD54F).copy(alpha = 0.92f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }

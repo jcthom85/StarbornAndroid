@@ -189,7 +189,7 @@ fun SaveLoadDialog(
                             )
                         )
                 )
-                if (busy) Text("Saving?", color = textColor, style = MaterialTheme.typography.bodyMedium)
+                if (busy) Text(if (isSave) "Saving..." else "Working...", color = textColor, style = MaterialTheme.typography.bodyMedium)
                 errorMessage?.let { Text(it, color = Color(0xFFFFAA90), style = MaterialTheme.typography.bodyMedium) }
                 LazyColumn(
                     modifier = Modifier

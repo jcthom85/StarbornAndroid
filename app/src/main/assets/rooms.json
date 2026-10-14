@@ -39,13 +39,13 @@
     "env": "mine",
     "title": "Mess Hall",
     "background_image": "images/rooms/world_1/pit_mess_v5.webp",
-    "description": "Bolted tables and crooked amber lights turn dinner into another shift. Miners trade jokes while a ceramic rooster stands on the shelf beside a vintage mystery monitor. Gaga ensures everyone eats before returning to the dark.",
+    "description": "Bolted tables and crooked amber lights turn dinner into another shift. Miners trade jokes near a broken Hyperion cabinet while a ceramic rooster stands on the shelf beside a vintage mystery monitor. Gaga ensures everyone eats before returning to the dark.",
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w1_mq01_cutter_surge"
         ],
-        "description": "The monitor is dead and the tables have gone loud without it. Miners argue about whose shift lost the grid, crowding past the dark broken Hyperion cabinet in the corner."
+        "description": "The monitor is dead and the tables have gone loud without it. Miners argue about whose shift lost the grid, crowding past the dark broken Hyperion cabinet while the ceramic rooster and vintage mystery monitor sit over the counter."
       }
     ],
     "npcs": [
@@ -329,7 +329,7 @@
     "env": "mine",
     "title": "Nova's Bunk",
     "background_image": "images/rooms/world_1/pit_nova_bunk_v5.webp",
-    "description": "Your bunk is a narrow shelf in the colony wall. The bunk light hangs above cargo netting and a rusty locker holding your tools, a spare ration, and Jed's small metal carving. A door control panel sits beside the exit, its wiring scorched.",
+    "description": "Your bunk is a narrow sleeping shelf in the colony wall. The bunk light hangs above cargo netting and a rusty locker holding your tools, a spare ration, and Jed's small metal carving. A door control panel sits beside the exit, its wiring scorched.",
     "reveal_title_when_dark": true,
     "description_dark": "Darkness presses against the narrow sleeping shelf. Only the bunk light switch carries a faint emergency glow. Nova needs some light to find her way out.",
     "description_variants": [
@@ -338,13 +338,13 @@
           "light_on": true,
           "conduit_isolated": true
         },
-        "description": "The bunk light has settled back to a cheap yellow buzz. The damaged circuit is isolated and the door stands open to the west. The closed maintenance ticket remains where Dominion left it."
+        "description": "The bunk light has settled back to a cheap yellow buzz over the narrow sleeping shelf. The damaged circuit is isolated and the door stands open to the west. The closed maintenance ticket remains where Dominion left it."
       },
       {
         "requires_state": {
           "light_on": true
         },
-        "description": "The bunk light coughs awake over the cargo netting and rusty locker. Beside the exit, a door control panel spits blue-white sparks from scorched wiring. A manual release sits beneath its isolation switch. The maintenance ticket is stamped CLOSED: WITHIN QUOTA."
+        "description": "The bunk light coughs awake over the narrow sleeping shelf, cargo netting, and rusty locker. Beside the exit, a door control panel spits blue-white sparks from scorched wiring. A manual release sits beneath its isolation switch. The maintenance ticket is stamped CLOSED: WITHIN QUOTA."
       }
     ],
     "npcs": [],
@@ -404,7 +404,7 @@
         "condition_unmet_message": "Turn on the bunk light to see the door controls."
       },
       {
-        "name": "bunk",
+        "name": "sleeping shelf",
         "type": "rest_stop",
         "rest_event": "w1_rest_nova_bunk",
         "message": "Nova sleeps until the shift alarm. Resting here restores the party."
@@ -646,6 +646,12 @@
     "description": "Work lights show scorched insulation and Jed's tools laid out by size. The mining cutter and Flux Liner wait beside the floor clamp; the live cutter test comes last.",
     "description_variants": [
       {
+        "requires_milestones": [
+          "ms_w1_mq01_cutter_surge"
+        ],
+        "description": "Scorched slag marks the test clamp where the cutter surged. The mining cutter and grounded Flux Liner rest beside Jed's bench under the steady hum of the repaired cold loop."
+      },
+      {
         "requires_state": {
           "cryo_inductor_installed": true
         },
@@ -757,7 +763,7 @@
         "requires_milestones": [
           "ms_w1_workshop_loft_looted"
         ],
-        "description": "The storage loft hangs above the shop on creaking beams. Jed's loft bench sits cleared under dust tarps beside neat rows of machine parts and a shipwright's slide rule on the desk."
+        "description": "The storage loft hangs above the shop on creaking beams. Jed's mod bench sits cleared under dust tarps beside neat rows of machine parts and a shipwright's slide rule on the desk."
       }
     ],
     "npcs": [],
@@ -934,7 +940,7 @@
         "requires_milestones": [
           "ms_w1_workshop_back_looted"
         ],
-        "description": "A narrow service dock runs from Jed's shop toward the lower tunnels. Stacked scrap plates lean beside the cleared dolly."
+        "description": "A narrow service dock runs from Jed's shop toward the lower tunnels. Stacked scrap plates lean beside the cleared salvage dolly."
       }
     ],
     "npcs": [],
@@ -1568,7 +1574,7 @@
         "requires_milestones": [
           "ms_w1_checkpoint_queue_looted"
         ],
-        "description": "A low corridor funnels miners toward the gate under white lights. Beside the biometric scanner, the emptied contraband box sits unlatched."
+        "description": "A low corridor funnels miners toward the gate under white lights. Beside the biometric scanner, the emptied contraband bin sits unlatched."
       }
     ],
     "npcs": [],
@@ -1682,7 +1688,7 @@
         "requires_milestones": [
           "ms_w1_checkpoint_cell_looted"
         ],
-        "description": "A temporary holding cell beside the security gate. Scratched graffiti and names cover the wall behind the cleared stone seam under the bench."
+        "description": "A temporary holding cell beside the security gate. Scratched graffiti and names cover the wall behind the cleared mortar seam under the bench."
       }
     ],
     "npcs": [],
@@ -2145,7 +2151,7 @@
       {
         "name": "inner door",
         "type": "generic",
-        "condition_unmet_message": "Heavy and reinforced. It keeps the sub-zero chill sealed inside Sector 4."
+        "condition_unmet_message": "Heavy and reinforced. It keeps the sub-zero chill sealed inside the server core."
       }
     ]
   },
@@ -3304,7 +3310,7 @@
     "env": "logistics",
     "title": "Refueling Bay",
     "background_image": "images/rooms/world_1/launch_fuel.webp",
-    "description": "The air is thick with the smell of high-grade propellant and industrial grease. A heavy refueling hose snaking across the floor, its nozzle leaking a shimmering, blue liquid.",
+    "description": "The air is thick with the smell of high-grade propellant and industrial grease. A heavy refueling hose snakes across the floor, its nozzle leaking a shimmering, blue liquid.",
     "description_variants": [
       {
         "requires_milestones": [
@@ -3396,7 +3402,7 @@
       {
         "name": "cargo lift",
         "type": "rest_stop",
-        "message": "Nova and Zeke take cover behind the cargo lift hydraulics to dress wounds and catch their breath before breaching the checkpoint."
+        "message": "Nova takes cover behind the cargo lift hydraulics while Jed braces the manual override, dressing wounds and catching her breath before breaching the checkpoint."
       }
     ],
     "blocked_directions": {
@@ -9062,7 +9068,7 @@
     "env": "swamp",
     "title": "Escape Pod Interior",
     "background_image": "images/rooms/world_2/pod_interior.webp",
-    "description": "The cramped interior of the escape pod is scorched and smells of melted plastic. Sparks shower from the console frame, and a dented emergency storage locker hangs open beside an emergency medkit.",
+    "description": "The cramped interior of the escape pod is scorched and smells of melted plastic. Sparks shower from the waterlogged survival console, and a dented emergency storage locker hangs open beside an emergency medkit.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9099,7 +9105,7 @@
         "requires_milestones": [
           "ms_w2_zeke_stabilized"
         ],
-        "description": "The cramped interior of the escape pod smells of ozone and scorched wire. The dented storage locker hangs open beside Zeke, who rests against the reinforced bulkhead, breathing steadily."
+        "description": "The cramped interior of the escape pod smells of ozone and scorched wire. The dented storage locker hangs open beside the waterlogged survival console and the emptied emergency med-station."
       }
     ]
   },
@@ -9192,7 +9198,7 @@
         "requires_milestones": [
           "ms_w2_herb_glade_foraged"
         ],
-        "description": "A quiet mossy clearing beneath a broadleaf canopy, lit by dim bioluminescence. The harvested mushroom stalks fade back into the dark moss."
+        "description": "A quiet clearing beneath a broadleaf canopy, lit by dim bioluminescence. The harvested mushroom stalks fade back into the dark moss beside a small mossy hollow."
       }
     ]
   },
@@ -9202,7 +9208,7 @@
     "weather": "fog",
     "title": "Stream Bank",
     "background_image": "images/rooms/world_2/landing_stream.webp",
-    "description": "A clear stream of warm glow-water flows east toward the coast. Smooth pebbles line the banks under hanging ferns, where a half-submerged river silt cache is lodged among the roots.",
+    "description": "A clear stream of warm water flows east toward the coast, its glow-water current rippling softly. Smooth pebbles line the banks under hanging ferns, where a half-submerged river silt cache is lodged among the roots.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9316,7 +9322,7 @@
         "requires_milestones": [
           "ms_w2_conduits_collected"
         ],
-        "description": "A muddy slope littered with debris from the crash, including a cargo panel wedged in the soil. The superconducting power conduits have been salvaged."
+        "description": "A muddy slope littered with debris from the crash, including a cargo panel wedged in the soil. The superconducting power conduits have been salvaged, leaving a clear path to [action:return to Astra|return to the Astra]."
       }
     ]
   },
@@ -9402,7 +9408,8 @@
         "state_key": "w2_wetlands_locker_opened",
         "items": [
           "antidote_flask",
-          "pure_iron"
+          "pure_iron",
+          "chemical_catalyst"
         ],
         "already_open_message": "The emergency locker stands open, draining brackish water into the sedge.",
         "popup_title": "Emergency Locker"
@@ -9448,7 +9455,7 @@
     "weather": "fog",
     "title": "Resonant Falls",
     "background_image": "images/rooms/world_2/stream_falls.webp",
-    "description": "The stream cascades over stone pillars. Behind the falling water, a sheltered cookfire stays dry while David tends a brisket smoker. Penny the sheepadoodle watches over the camp, nudging everyone into a protective pack.",
+    "description": "The stream cascades over stone pillars. Behind the falling water, a sheltered cookfire stays dry while David tends a brisket smoker. Penny the sheepadoodle watches over the camp from her [action:penny camp bed|camp bed], nudging everyone into a protective pack.",
     "npcs": [
       "chef_david",
       "hound_penny"
@@ -9623,7 +9630,7 @@
     "weather": "cave_drip",
     "title": "Waterlogged Tunnel",
     "background_image": "images/rooms/world_2/stream_sunken_passage.webp",
-    "description": "A narrow tunnel where the cavern roof dips close to the glowing water. A warm current runs past a drowned console and an ancient brass sluice wheel. The southern passage is fully submerged beneath churning runoff.",
+    "description": "A narrow tunnel where the cavern roof dips close to the glowing water. A warm current runs past a drowned console and an [action:ancient sluice wheel|ancient brass sluice wheel]. The southern passage is fully submerged beneath churning runoff.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9656,7 +9663,7 @@
         "requires_state": {
           "sluice_drained": true
         },
-        "description": "The drained tunnel echoes with dripping water. Runoff channels through bedrock grates, leaving wet silt along the walkway. An ancient brass sluice wheel stands locked open beside exposed stairs descending south into the vault."
+        "description": "The drained tunnel echoes with dripping water as a warm current channels through bedrock grates past the drowned console. An [action:ancient sluice wheel|ancient brass sluice wheel] stands locked open beside exposed stairs descending south into the vault."
       }
     ],
     "actions": [
@@ -9728,7 +9735,7 @@
     "weather": "fog",
     "title": "Beach Cliffs",
     "background_image": "images/rooms/world_2/beach_cliffs.webp",
-    "description": "High basalt cliffs overlook the beach. Below, a signal reflection stutters across the glowing shoreline of Tideglass Beach, its warm sands shimmering in the dark.",
+    "description": "High basalt cliffs overlook the beach, where a sun-bleached driftwood marker and a weathered elephant toy rest in a warm hollow near the edge. Below, a signal reflection stutters across the glowing shoreline of Tideglass Beach.",
     "npcs": [],
     "items": [
       "kodi_and_bellas_sunstone"
@@ -9813,7 +9820,7 @@
     "weather": "fog",
     "title": "Tide Pools",
     "background_image": "images/rooms/world_2/beach_pools.webp",
-    "description": "Glowing tide pools collect in the sand around luminescent anemones, calm enough to reflect the fog in pale blue sheets. Tide fishing is possible here, scan weeds pulse near the shore, and gather tideglass marks the useful herbs and clean meat Orion wanted.",
+    "description": "Glowing tide pools collect in the sand around luminescent anemones, calm enough for [action:tide fishing|fishing] beneath the pale blue fog. Bioluminescent [action:scan weeds|weeds] pulse near the shore where you can [action:gather tideglass|gather tideglass] for Orion's recipe.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9851,7 +9858,8 @@
         "name": "gather tideglass",
         "type": "generic",
         "action_event": "w2_sq03_gather_tideglass",
-        "condition_unmet_message": "Glowing tideglass skewers are harvested from the shore."
+        "condition_unmet_message": "Glowing tideglass skewers are harvested from the shore.",
+        "requires_milestone_not_set": "ms_w2_tideglass_gathered"
       },
       {
         "name": "luminescent anemones",
@@ -9862,9 +9870,22 @@
     "description_variants": [
       {
         "requires_milestones": [
+          "ms_w2_flora_weeds_scanned",
+          "ms_w2_tideglass_gathered"
+        ],
+        "description": "Shallow tidal pools glisten around luminescent anemones, calm enough for [action:tide fishing|fishing] against the volcanic sand. Both the bioluminescent weeds and the coastal tideglass have been cataloged and harvested."
+      },
+      {
+        "requires_milestones": [
           "ms_w2_flora_weeds_scanned"
         ],
-        "description": "Shallow tidal pools glisten around luminescent anemones against the volcanic sand. The bioluminescent weeds have been cataloged. You can gather tideglass along the shore for Orion's recipe."
+        "description": "Shallow tidal pools glisten around luminescent anemones, calm enough for [action:tide fishing|fishing] against the volcanic sand. The bioluminescent weeds have been cataloged, and you can [action:gather tideglass|gather tideglass] along the shore for Orion's recipe."
+      },
+      {
+        "requires_milestones": [
+          "ms_w2_tideglass_gathered"
+        ],
+        "description": "Glowing tide pools collect in the sand around luminescent anemones, calm enough for [action:tide fishing|fishing] beneath the pale blue fog. Bioluminescent [action:scan weeds|weeds] pulse near the shore where the tideglass was harvested."
       }
     ]
   },
@@ -9895,7 +9916,8 @@
         "items": [
           "scrap_metal",
           "composite_plate",
-          "hydraulic_fluid"
+          "hydraulic_fluid",
+          "nano_filament"
         ],
         "already_open_message": "The beached shipping crates have been salvaged.",
         "popup_title": "Beached Crates"
@@ -10076,7 +10098,7 @@
     "weather": "resonance",
     "title": "Resonant Canopy",
     "background_image": "images/rooms/world_2/resonant_canopy.webp",
-    "description": "The canopy of the ruins is covered in giant, crystalline ferns that catch the dim light and buzz with low-frequency standing waves. Scan ferns and scan spores mark two different readings, while scavenge remains points to a fallen scout tangled nearby.",
+    "description": "The canopy of the ruins is covered in giant, crystalline ferns that catch the dim light and buzz with low-frequency standing waves. You can [action:Scan ferns|scan the ferns] or [action:Scan spores|scan the drifting spores] for harmonic readings, or [action:Scavenge remains|scavenge the remains] of a fallen scout tangled nearby.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -10127,7 +10149,7 @@
         "requires_milestones": [
           "ms_w2_flora_ferns_scanned"
         ],
-        "description": "The canopy is covered in giant crystalline ferns that hum in low frequency. The fern survey readings have been logged; scan spores offers a separate reading, while scavenge remains points to a fallen scout tangled nearby."
+        "description": "The canopy is covered in giant, crystalline ferns that hum in low frequency. With the fern survey logged, you can still [action:Scan spores|scan the drifting spores] or [action:Scavenge remains|scavenge the remains] of the fallen scout tangled nearby."
       }
     ]
   },
@@ -10196,7 +10218,7 @@
     "weather": "resonance",
     "title": "Hound Nest",
     "background_image": "images/rooms/world_2/wilds_nest.webp",
-    "description": "A shallow den trampled into the briars. Shard-hound tracks crisscross the mud around scattered bones and a trampled supply pack dragged beneath the thorns.",
+    "description": "A shallow den trampled into the briars. Shard-hound tracks crisscross the mud around shard-hound remains and a trampled supply pack dragged beneath the thorns.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -10236,7 +10258,7 @@
         "requires_milestones": [
           "ms_w2_meat_nest_foraged"
         ],
-        "description": "A clearing surrounded by jagged stone slabs. The shard-hound nest is picked clean of salvageable cuts."
+        "description": "A clearing surrounded by jagged stone slabs where a trampled supply pack lies caught in the briars. The shard-hound nest is picked clean of salvageable cuts."
       }
     ]
   },
@@ -10723,7 +10745,7 @@
     "weather": "resonance",
     "title": "Canopy Ridge",
     "background_image": "images/rooms/world_2/canopy_ridge.webp",
-    "description": "A stone shelf stands above the canopy. Look at Shield from beneath its distant ceiling; a rifle barrel tracks the ridge from the brush. Confront stalker before the angle closes.",
+    "description": "A stone shelf stands above the canopy beneath the distant ceiling of the [action:Look at Shield|Planetary Shield]; a rifle barrel tracks the ridge from the brush, forcing you to [action:Confront stalker|confront the stalker] before the angle closes.",
     "description_variants": [
       {
         "requires_state": {
@@ -10739,7 +10761,7 @@
         "forbidden_milestones": [
           "ms_w2_mq04_complete"
         ],
-        "description": "The Beast lies still at the edge of the stone shelf, but a rifle still watches from the brush. Confront stalker across the ledge. Orion has laid out a ground lead for the Anchor Drill. Look at Shield above the canopy."
+        "description": "The Beast lies still at the edge of the stone shelf, but a rifle still watches from the brush—[action:Confront stalker|confront the stalker] across the ledge. Orion has laid out a ground lead for the Anchor Drill beneath the [action:Look at Shield|Planetary Shield] above the canopy."
       },
       {
         "forbidden_state": {
@@ -10748,7 +10770,7 @@
         "requires_milestones": [
           "ms_w2_mq03_complete"
         ],
-        "description": "A rifle barrel tracks the stone shelf from the brush. Confront stalker before the angle closes. Look at Shield above the canopy, its distant ceiling stretching beyond the ridge."
+        "description": "A rifle barrel tracks the stone shelf from the brush—[action:Confront stalker|confront the stalker] before the angle closes. High above the canopy, the [action:Look at Shield|Planetary Shield] stretches beyond the ridge."
       },
       {
         "requires_state": {
@@ -10757,25 +10779,25 @@
         "forbidden_state": {
           "beast_defeated": true
         },
-        "description": "Gh0st lowers his rifle without accepting a command. Look at Shield above the canopy as brush breaks behind him; Face the Beast before it reaches the ledge."
+        "description": "Gh0st lowers his rifle without accepting a command. Under the glow of the [action:Look at Shield|Planetary Shield], brush breaks behind him—[action:Face the Beast|face the Beast] before it reaches the ledge."
       },
       {
         "requires_state": {
           "anchor_drill_complete": true
         },
-        "description": "The Beast is down and the grounding leads are packed. The completed Anchor Drill leaves four separate contact marks in the stone. Look at Shield above the quiet ridge."
+        "description": "The Beast is down and the grounding leads are packed. The completed Anchor Drill leaves four separate contact marks in the stone beneath the [action:Look at Shield|Planetary Shield]."
       },
       {
         "requires_state": {
           "beast_defeated": true
         },
-        "description": "The Beast lies still beside Gh0st's unfired command channel. Orion sets a ground lead on the stone for the Anchor Drill. Look at Shield above the ledge."
+        "description": "The Beast lies still beside Gh0st's unfired command channel. Orion sets a ground lead on the stone for the Anchor Drill under the [action:Look at Shield|Planetary Shield]."
       },
       {
         "requires_milestones": [
           "ms_w2_mq04_complete"
         ],
-        "description": "A narrow limestone ridge suspended high in the canopy. The heavy mining drill stands securely anchored into the bedrock. Look at Shield above the treetops."
+        "description": "A narrow limestone ridge suspended high in the canopy. The heavy mining drill stands securely anchored into the bedrock beneath the [action:Look at Shield|Planetary Shield]."
       }
     ],
     "npcs": [],
@@ -11519,6 +11541,7 @@
           "ms_w2_crystal_east_seated",
           "ms_w2_crystal_north_seated"
         ],
+        "requires_milestone_not_set": "ms_w2_sq04_complete",
         "condition_unmet_message": "The central relief hums out of tune. It needs the west, east, and north crystal voices seated before the mural chord can hold."
       }
     ],
@@ -11750,10 +11773,17 @@
           "ms_w2_crystal_east_seated",
           "ms_w2_crystal_north_seated"
         ],
+        "requires_milestone_not_set": "ms_w2_sq04_complete",
         "condition_unmet_message": "The columns answer with three missing tones. Seat the west, east, and north crystal voices before asking them to carry the mural chord."
       }
     ],
     "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w2_sq04_complete"
+        ],
+        "description": "Four resonator columns hum in a stable three-part chord around the central acoustic pedestal."
+      },
       {
         "requires_milestones": [
           "ms_w2_crystal_west_seated",
@@ -11850,8 +11880,7 @@
       {
         "name": "ceiling vent",
         "type": "generic",
-        "action_event": "w2_sq05_search_vents",
-        "condition_unmet_message": "The ventilation shaft is too narrow for comfort, but its scrape marks are newer than the dust."
+        "condition_unmet_message": "The ventilation shaft above leads toward the high gantry and infiltration hatch; its scrape marks are newer than the dust."
       },
       {
         "name": "sealed Bridge cradle",
@@ -11900,15 +11929,22 @@
       },
       {
         "requires_milestones": [
+          "ms_w2_pod_inspected",
           "ms_w2_roots_scanned"
         ],
-        "description": "A vast circular chamber centered on a suspended stasis pod beneath a ceiling vent. The deep root lattice has been mapped into your logs."
+        "description": "A vast circular chamber centered on a suspended stasis cylinder beneath a ceiling vent. The slumbering Architect's bio-readings and the deep root lattice have both been mapped into your logs."
       },
       {
         "requires_milestones": [
           "ms_w2_pod_inspected"
         ],
         "description": "A vast circular chamber centered on a suspended stasis cylinder beneath a ceiling vent. The slumbering Architect's bio-readings are logged, while a root lattice pulses through cracks in the floor."
+      },
+      {
+        "requires_milestones": [
+          "ms_w2_roots_scanned"
+        ],
+        "description": "A vast circular chamber centered on a suspended stasis pod beneath a ceiling vent. The deep root lattice has been mapped into your logs."
       }
     ]
   },
@@ -12008,13 +12044,7 @@
         "requires_milestones": [
           "ms_w2_coolant_stabilized"
         ],
-        "description": "The coolant lines run steady through the maintenance bay. Luminous vines pulse with the same rhythm as the stasis rings instead of fighting them."
-      },
-      {
-        "requires_milestones": [
-          "ms_w2_coolant_stabilized"
-        ],
-        "description": "A garden of translucent coolant tubes glowing with cyan frost. The stabilized coolant flows steadily into the stasis core."
+        "description": "The stabilized coolant lines glow with cyan frost through the maintenance bay. Luminous vines pulse with the same rhythm as the stasis rings instead of fighting them."
       }
     ]
   },
@@ -12278,13 +12308,7 @@
         "requires_milestones": [
           "ms_w2_source_breakers_starved"
         ],
-        "description": "The generator breakers sit beside the bus bar array in a staggered emergency pattern. The gate circuit still has shape, but it no longer has enough power to lash out."
-      },
-      {
-        "requires_milestones": [
-          "ms_w2_breakers_overloaded"
-        ],
-        "description": "A heavy industrial catwalk above the power turbines and bus bar array. The overloaded breakers hum quietly in bypass mode."
+        "description": "The generator breakers sit beside the bus bar array in a staggered emergency bypass pattern. The gate circuit still has shape, but it no longer has enough power to lash out."
       }
     ]
   },
@@ -12319,13 +12343,7 @@
         "requires_milestones": [
           "ms_w2_source_pressure_mapped"
         ],
-        "description": "The root pressure gauge holds a readable pattern now: bleed, ground, starve, resolve. The living roots need relief, not violence."
-      },
-      {
-        "requires_milestones": [
-          "ms_w2_pressure_gauge_read"
-        ],
-        "description": "A massive bronze valve manifold wrapped in ancient root growth. The root pressure gauge is calibrated."
+        "description": "The calibrated root pressure gauge holds a readable pattern now: bleed, ground, starve, resolve. The living roots need relief, not violence."
       }
     ]
   },
@@ -12449,13 +12467,7 @@
         "requires_milestones": [
           "ms_w2_source_horn_stabilized"
         ],
-        "description": "The left emitter tower has stopped shaking against its copper stays. The harmonic horn now breathes in a low, steady band."
-      },
-      {
-        "requires_milestones": [
-          "ms_w2_horn_stabilized"
-        ],
-        "description": "A flared acoustic emitter focused on the gate archway. The left emitter is tuned and stable."
+        "description": "The left emitter tower has stopped shaking against its copper stays. Tuned and stable, the harmonic horn now breathes in a low, steady band."
       }
     ]
   },
@@ -12498,13 +12510,7 @@
         "requires_milestones": [
           "ms_w2_source_cup_grounded"
         ],
-        "description": "The receiver cup no longer glows white-hot. A blue pulse runs around its lip, grounding the barrier without burning the stone."
-      },
-      {
-        "requires_milestones": [
-          "ms_w2_cup_grounded"
-        ],
-        "description": "A cupped dish emitter collecting static discharge. The right emitter is securely grounded."
+        "description": "The receiver cup no longer glows white-hot. Securely grounded, a blue pulse runs around its lip without burning the stone."
       }
     ]
   },
@@ -12578,7 +12584,7 @@
         "requires_milestones": [
           "ms_w2_astra_inspected"
         ],
-        "description": "A cavernous launch hangar housing the ancient Astra shuttle in its launch cradle. The flight bridge console displays diagnostic telemetry, while the bridge relic waits on the central dais."
+        "description": "A cavernous launch hangar housing the ancient Astra shuttle in its launch cradle. The flight bridge console displays diagnostic telemetry, while the bridge relic waits on the central dais and a service hatch opens the salvage return route back toward the crashed pod."
       }
     ]
   },
@@ -12613,7 +12619,7 @@
     "env": "swamp",
     "title": "Freight Lift",
     "background_image": "images/rooms/world_2/hangar_staging.webp",
-    "description": "A freight lift used to load fuel cells onto the launch pad. The control motor is offline.",
+    "description": "A freight lift used to load fuel cells onto the launch pad sits beside heavy cargo restraints. The control motor is offline.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12638,7 +12644,7 @@
     "env": "swamp",
     "title": "Control Console",
     "background_image": "images/rooms/world_2/hangar_tower.webp",
-    "description": "The launch computer towers. Conduits from the stasis core are routed here to boot systems.",
+    "description": "The launch computer towers rise beside a glowing airlane chart. Conduits from the stasis core are routed here to boot systems.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12665,7 +12671,7 @@
     "env": "swamp",
     "title": "Fuel Intake Lines",
     "background_image": "images/rooms/world_2/hangar_fuel_lines.webp",
-    "description": "Fuel intake lines. Fused fuel manifolds require manual routing to deliver starter fluid.",
+    "description": "Fuel intake lines run alongside the main conduit bus. Fused fuel manifolds require manual routing to deliver starter fluid.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12690,7 +12696,7 @@
     "env": "swamp",
     "title": "Launch Blast Shield",
     "background_image": "images/rooms/world_2/hangar_lock.webp",
-    "description": "The ceiling blast shields covering the hangar. Massive gear teeth lock the shields in place.",
+    "description": "The ceiling blast shields covering the hangar are controlled by a launch safety panel. Massive gear teeth lock the shields in place.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12724,7 +12730,7 @@
     "weather": "resonance",
     "title": "The Sky",
     "background_image": "images/rooms/world_2/the_sky.webp",
-    "description": "A holographic flight-plan projection fills an observation alcove above the hangar. The Astra remains in her cradle below. The preview shows a low service airlane toward the Spire, with the outer Planetary Shield far overhead.",
+    "description": "A holographic flight-plan projection fills an observation alcove above the hangar. The Astra remains in her cradle below. The airlane preview shows a low service corridor toward the Spire, with the outer Planetary Shield far overhead.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12792,7 +12798,7 @@
     "weather": "resonance",
     "title": "Shield Threshold",
     "background_image": "images/rooms/world_2/sky_shield_threshold.webp",
-    "description": "The projection places the violet Shield lattice far above the service airlane. A red altitude line marks the ceiling the Astra must stay beneath.",
+    "description": "The shield ceiling overlay places the violet Shield lattice far above the service airlane. A red altitude line marks the ceiling the Astra must stay beneath.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12828,7 +12834,7 @@
     "weather": "resonance",
     "title": "Security Buoy",
     "background_image": "images/rooms/world_2/sky_sensor_buoy.webp",
-    "description": "The flight-plan model shows a Dominion security buoy sweeping the approach to the Spire. Its scan bands cut across the projected airlane.",
+    "description": "The security scan preview shows a Dominion sensor buoy sweeping the approach to the Spire. Its scan bands cut across the projected airlane.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12861,7 +12867,7 @@
     "weather": "resonance",
     "title": "Barrier Controller",
     "background_image": "images/rooms/world_2/sky_barrier_core.webp",
-    "description": "A navigation model separates the local Dominion guidance channels from the distant planetary barrier. A pulse of interference turns the Spire approach red.",
+    "description": "A guidance interference model separates the local Dominion guidance channels from the distant planetary barrier. A pulse of interference turns the Spire approach red.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -12894,7 +12900,7 @@
     "weather": "resonance",
     "title": "Pushback Node",
     "background_image": "images/rooms/world_2/sky_hard_deck.webp",
-    "description": "A safety diagram shows the permitted service altitude beneath the outer Shield. The projected Astra never crosses the red hard-deck line.",
+    "description": "A safety diagram linked to the altitude limiter shows the permitted service altitude beneath the outer Shield. The projected Astra never crosses the red hard-deck line.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -20697,7 +20703,7 @@
     "weather": "fog",
     "title": "Coastal Resilience Station",
     "background_image": "images/rooms/world_2/stream_pools.webp",
-    "description": "A weather-hardened eco-station perches over tidal wetlands and sea bluffs. Acoustic sediment sensors pulse against the marsh silt, while telemetry monitors map coastal marsh restoration and water filtration under the salty ocean breeze.",
+    "description": "A weather-hardened eco-station perches over tidal wetlands and sea bluffs. Acoustic sediment sensors pulse against the marsh silt, while a wetland telemetry array maps coastal marsh restoration and water filtration under the salty ocean breeze. On the clinician's desk, a forensic research slate rests beside a warm solar coffee press.",
     "npcs": [
       "clinician_megan"
     ],

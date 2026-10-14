@@ -341,10 +341,34 @@ fun previewItemIconRes(type: String?): Int {
             normalized.contains("material") -> R.drawable.item_icon_ingredient
         normalized.contains("component") ||
             normalized.contains("resource") ||
-            normalized.contains("part") -> R.drawable.item_icon_material
-        normalized.contains("armor") -> R.drawable.item_icon_armor
-        normalized.contains("accessory") -> R.drawable.item_icon_accessory
-        normalized.contains("weapon") || normalized.contains("gear") -> R.drawable.item_icon_sword
+            normalized.contains("part") ||
+            normalized.contains("scrap") ||
+            normalized.contains("inductor") ||
+            normalized.contains("coil") ||
+            normalized.contains("wire") ||
+            normalized.contains("cell") ||
+            normalized.contains("plate") ||
+            normalized.contains("core") ||
+            normalized.contains("lens") ||
+            normalized.contains("chip") ||
+            normalized.contains("schematic") -> R.drawable.item_icon_material
+        normalized.contains("armor") || normalized.contains("vest") || normalized.contains("coat") -> R.drawable.item_icon_armor
+        normalized.contains("accessory") || normalized.contains("charm") || normalized.contains("ring") || normalized.contains("badge") -> R.drawable.item_icon_accessory
+        normalized.contains("weapon") ||
+            normalized.contains("gear") ||
+            normalized.contains("sword") ||
+            normalized.contains("blade") ||
+            normalized.contains("gun") ||
+            normalized.contains("pistol") ||
+            normalized.contains("rifle") ||
+            normalized.contains("blaster") ||
+            normalized.contains("glove") ||
+            normalized.contains("gauntlet") ||
+            normalized.contains("fist") ||
+            normalized.contains("projector") ||
+            normalized.contains("wrench") ||
+            normalized.contains("spanner") ||
+            normalized.contains("emitter") -> R.drawable.item_icon_sword
         normalized.contains("mod") -> R.drawable.item_icon_material
         else -> R.drawable.item_icon_generic
     }

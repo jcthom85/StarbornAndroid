@@ -120,7 +120,7 @@ internal fun ModernFieldMenu(
                 party.members.forEach { member ->
                     val selected = member.id == selectedMemberId
                     Surface(
-                        onClick = { onSelectMember(member.id); onSelectTab(MenuTab.STATS) },
+                        onClick = { onSelectMember(member.id) },
                         modifier = Modifier.semantics { this.selected = selected },
                         color = if (selected) FieldMenuDesign.elevatedPanel else Color.Transparent,
                         shape = RoundedCornerShape(12.dp)

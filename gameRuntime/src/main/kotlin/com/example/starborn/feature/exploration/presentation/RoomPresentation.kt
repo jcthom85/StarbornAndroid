@@ -110,8 +110,11 @@ fun buildInlineActionPlan(
             while (searchIndex <= lower.length - needle.length) {
                 val index = lower.indexOf(needle, searchIndex)
                 if (index < 0) break
-                val rangeCandidate = index until index + needle.length
-                if (occupied.none { rangesOverlap(it, rangeCandidate) }) {
+                val end = index + needle.length
+                val startOk = index == 0 || !lower[index - 1].isLetterOrDigit()
+                val endOk = end == lower.length || !lower[end].isLetterOrDigit()
+                val rangeCandidate = index until end
+                if (startOk && endOk && occupied.none { rangesOverlap(it, rangeCandidate) }) {
                     return rangeCandidate
                 }
                 searchIndex = index + 1

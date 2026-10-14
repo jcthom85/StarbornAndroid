@@ -200,7 +200,7 @@ fun CombatTransitionOverlay(
                     )
                     
                     // The Split Line (Flash)
-                    if (exitT < 0.5f) {
+                    if (!suppressFlashes && exitT < 0.5f) {
                         val flashAlpha = (1f - (exitT * 2f))
                         val flashHeight = 40f * (1f - exitT)
                         // Top Flash
@@ -236,9 +236,11 @@ fun CombatTransitionOverlay(
                         scaleX = scale
                         scaleY = scale
                         this.alpha = alpha
-                        // Tiny jitter
-                        translationX = (Math.random() * 10 - 5).toFloat()
-                        translationY = (Math.random() * 10 - 5).toFloat()
+                        if (!suppressFlashes) {
+                            // Tiny jitter
+                            translationX = (Math.random() * 10 - 5).toFloat()
+                            translationY = (Math.random() * 10 - 5).toFloat()
+                        }
                     }
             ) {
                 Column(

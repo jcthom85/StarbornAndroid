@@ -60,7 +60,8 @@ enum class AttackFxStyle {
     NOVA_LASER,
     ZEKE_PUNCH,
     ORION_JEWEL,
-    GHOST_SLASH
+    GHOST_SLASH,
+    OLLIE_TECH
 }
 
 enum class TargetFilter {

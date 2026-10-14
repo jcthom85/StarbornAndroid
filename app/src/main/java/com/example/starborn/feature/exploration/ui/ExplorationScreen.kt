@@ -605,6 +605,7 @@ fun ExplorationScreen(
     BackHandler(enabled = true) {
         when {
             showExitConfirmDialog -> showExitConfirmDialog = false
+            environmentalPreview -> environmentalPreview = false
             uiState.showBurgQuestAstraExitDialog -> viewModel.dismissBurgQuestAstraExitDialog()
             saveLoadMode != null -> saveLoadMode = null
             showInventoryTargetDialog -> {
@@ -615,8 +616,13 @@ fun ExplorationScreen(
             uiState.isSimulationDeckVisible -> viewModel.dismissSimulationDeck()
             uiState.isAstraNavConsoleVisible -> viewModel.dismissAstraNavConsole()
             uiState.isMilestoneGalleryVisible -> viewModel.closeMilestoneGallery()
+            uiState.isMapLegendVisible -> viewModel.closeMapLegend()
             uiState.isQuestLogVisible -> viewModel.closeQuestLog()
+            uiState.questDetail != null -> viewModel.closeQuestDetails()
+            uiState.partyMemberDetails != null -> viewModel.closePartyMemberDetails()
             uiState.skillTreeOverlay != null -> viewModel.closeSkillTreeOverlay()
+            uiState.eventAnnouncement != null -> viewModel.dismissEventAnnouncement()
+            uiState.levelUpPrompt != null -> viewModel.dismissLevelUpPrompt()
             uiState.togglePrompt != null -> viewModel.dismissTogglePrompt()
             uiState.tuningPuzzle != null -> viewModel.dismissTuningPuzzle()
             uiState.narrationPrompt != null -> viewModel.dismissNarration()
@@ -661,8 +667,7 @@ fun ExplorationScreen(
                             val targetDir = uiState.availableConnections.keys.firstOrNull { key ->
                                 key.equals(dir, ignoreCase = true)
                             }
-                            val blocked = uiState.blockedDirections.any { it.equals(dir, ignoreCase = true) }
-                            if (targetDir != null && !blocked) {
+                            if (targetDir != null) {
                                 viewModel.travel(targetDir)
                             }
                         }
@@ -683,13 +688,19 @@ fun ExplorationScreen(
                         Key.ButtonB, Key.Escape -> {
                             when {
                                 showExitConfirmDialog -> showExitConfirmDialog = false
+                                environmentalPreview -> environmentalPreview = false
                                 saveLoadMode != null -> saveLoadMode = null
                                 uiState.isTapeDeckVisible -> viewModel.dismissTapeDeck()
                                 uiState.isSimulationDeckVisible -> viewModel.dismissSimulationDeck()
                                 uiState.isAstraNavConsoleVisible -> viewModel.dismissAstraNavConsole()
                                 uiState.isMilestoneGalleryVisible -> viewModel.closeMilestoneGallery()
+                                uiState.isMapLegendVisible -> viewModel.closeMapLegend()
                                 uiState.isQuestLogVisible -> viewModel.closeQuestLog()
+                                uiState.questDetail != null -> viewModel.closeQuestDetails()
+                                uiState.partyMemberDetails != null -> viewModel.closePartyMemberDetails()
                                 uiState.skillTreeOverlay != null -> viewModel.closeSkillTreeOverlay()
+                                uiState.eventAnnouncement != null -> viewModel.dismissEventAnnouncement()
+                                uiState.levelUpPrompt != null -> viewModel.dismissLevelUpPrompt()
                                 uiState.togglePrompt != null -> viewModel.dismissTogglePrompt()
                                 uiState.tuningPuzzle != null -> viewModel.dismissTuningPuzzle()
                                 uiState.narrationPrompt != null -> viewModel.dismissNarration()
@@ -750,8 +761,7 @@ fun ExplorationScreen(
                             val targetDir = uiState.availableConnections.keys.firstOrNull { key ->
                                 key.equals(direction, ignoreCase = true)
                             }
-                            val blocked = uiState.blockedDirections.any { it.equals(direction, ignoreCase = true) }
-                            if (targetDir != null && !blocked) {
+                            if (targetDir != null) {
                                 viewModel.travel(targetDir)
                                 return@onKeyEvent true
                             }

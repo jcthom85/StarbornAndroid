@@ -408,7 +408,7 @@ fun CombatScreen(
                                 playerIdSet = playerIdSet
                             )
                             val style = resolvedStyle
-                                ?: lastPlayerActionStyle?.takeIf { event.targetId in enemyCombatantIds }
+                                ?: lastPlayerActionStyle?.takeIf { event.sourceId.isBlank() && event.targetId in enemyCombatantIds }
                             if (style != null) {
                                 val attackDuration = attackFxDurationFor(style)
                                 val hitFx = AttackHitFxUi(
@@ -1218,10 +1218,10 @@ fun CombatScreen(
                 targetInstruction = null,
                 onCancelTarget = null,
                 modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .statusBarsPadding()
+                    .align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
                     .padding(contentPadding)
-                    .padding(top = 138.dp)
+                    .padding(bottom = 176.dp)
                     .zIndex(6f)
             )
             outcomeFx?.let { OutcomeOverlay(it, playerParty) }
@@ -1489,6 +1489,7 @@ private fun bannerAccentColor(accent: CombatBannerAccent, theme: Theme?): Color 
         CombatBannerAccent.ZEKE -> Color(0xFFFFB74D)
         CombatBannerAccent.ORION -> Color(0xFFB388FF)
         CombatBannerAccent.GHOST -> Color(0xFF80D8FF)
+        CombatBannerAccent.OLLIE -> Color(0xFFFFB74D)
         CombatBannerAccent.ENEMY -> themeColor(theme?.accent, Color(0xFFFF6A5F))
     }
 

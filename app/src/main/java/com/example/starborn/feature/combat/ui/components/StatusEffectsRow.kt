@@ -200,12 +200,14 @@ fun StatusBadges(statuses: List<StatusEffect>, buffs: List<ActiveBuff>) {
 fun statusChipsFor(statuses: List<StatusEffect>, buffs: List<ActiveBuff>): List<StatusChip> =
     buildList {
         statuses.forEach { statusEffect ->
+            val summary = statusEffectSummary(statusEffect.id)
+            val baseLabel = "${statusEffect.id.replace('_', ' ')}: ${com.example.starborn.domain.combat.CombatClarity.turns(statusEffect.remainingTurns)} left"
             add(
                 StatusChip(
                     icon = iconForStatus(statusEffect.id),
                     tint = colorForStatus(statusEffect.id),
                     turns = statusEffect.remainingTurns,
-                    description = "${statusEffect.id.replace('_', ' ')}: ${com.example.starborn.domain.combat.CombatClarity.turns(statusEffect.remainingTurns)} left"
+                    description = if (summary != null) "$baseLabel — $summary" else baseLabel
                 )
             )
         }
@@ -223,6 +225,23 @@ fun statusChipsFor(statuses: List<StatusEffect>, buffs: List<ActiveBuff>): List<
                 )
             )
         }
+    }
+
+private fun statusEffectSummary(statusId: String): String? =
+    when (statusId.lowercase(Locale.getDefault())) {
+        "burn", "meltdown" -> "Deals fire damage at the end of each turn"
+        "shock", "static" -> "Deals electric damage and slows turn recovery"
+        "freeze", "frozen" -> "Immobilizes target until thawed or struck"
+        "wet", "water" -> "Increases vulnerability to Shock and Freeze"
+        "acid", "poison", "erosion", "bleed" -> "Deals corrosive damage over time and weakens armor"
+        "stun", "stagger" -> "Skips the next turn"
+        "blind" -> "Reduces attack accuracy"
+        "shield", "guard", "invulnerable" -> "Reduces incoming damage"
+        "weak", "brittle", "exposed", "discord" -> "Increases damage taken from attacks"
+        "regen", "heal" -> "Restores HP at the end of each turn"
+        "jammed", "silence" -> "Prevents skill and tech ability usage"
+        "overdrive", "charged" -> "Boosts attack power and speed"
+        else -> null
     }
 
 fun statusChipLabel(chip: StatusChip): String {
@@ -247,13 +266,13 @@ fun iconForStatus(statusId: String): ImageVector {
         "shock", "static" -> Icons.Rounded.Bolt
         "freeze", "frozen" -> Icons.Rounded.AcUnit
         "wet", "water" -> Icons.Rounded.WaterDrop
-        "acid", "poison", "erosion", "bleed" -> Icons.Rounded.WaterDrop
+        "acid", "poison", "erosion", "bleed" -> Icons.Rounded.Science
         "stun", "stagger" -> Icons.Rounded.Star
         "blind" -> Icons.Rounded.VisibilityOff
         "shield", "guard", "invulnerable" -> Icons.Rounded.Shield
         "weak", "brittle", "exposed", "discord" -> Icons.Rounded.BrokenImage
         "regen", "heal" -> Icons.Rounded.AutoAwesome
-        "jammed", "silence" -> Icons.Rounded.VisibilityOff
+        "jammed", "silence" -> Icons.Rounded.Block
         "overdrive", "charged" -> Icons.Rounded.Bolt
         else -> Icons.Rounded.Warning
     }
@@ -261,7 +280,7 @@ fun iconForStatus(statusId: String): ImageVector {
 
 fun iconForStat(stat: String): ImageVector {
     return when (stat) {
-        "strength", "str", "atk" -> Icons.Rounded.Restaurant
+        "strength", "str", "atk" -> Icons.Rounded.FlashOn
         "vitality", "vit", "def" -> Icons.Rounded.Shield
         "agility", "agi", "spd", "speed" -> Icons.Rounded.AutoAwesome
         "focus", "int", "psi" -> Icons.Rounded.Bolt

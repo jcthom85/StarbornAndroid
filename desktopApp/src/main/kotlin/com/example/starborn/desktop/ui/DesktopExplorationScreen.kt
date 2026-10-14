@@ -165,7 +165,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
         }
     }
     fun travelIfAvailable(direction: String) {
-        if (blocked || ui.blockedDirections.any { it.equals(direction, true) }) return
+        if (blocked) return
         ui.availableConnections.entries.firstOrNull { it.key.equals(direction, true) && it.value != null }?.let { runtime.travel(it.key) }
     }
     fun interactFirst() { if (!blocked) ui.actions.firstOrNull { ui.actionHints[it.actionKey()]?.locked != true }?.let(runtime::onActionSelected) }

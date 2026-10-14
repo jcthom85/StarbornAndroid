@@ -478,9 +478,9 @@ private fun parseChoiceLabel(raw: String): ParsedChoiceLabel {
     if (tags.isEmpty()) {
         val lowered = remaining.lowercase(Locale.getDefault())
         when {
-            "quest" in lowered -> tags += ChoiceTag.QUEST
-            "tutorial" in lowered -> tags += ChoiceTag.TUTORIAL
-            "milestone" in lowered -> tags += ChoiceTag.MILESTONE
+            Regex("\\bquest\\b").containsMatchIn(lowered) -> tags += ChoiceTag.QUEST
+            Regex("\\btutorial\\b").containsMatchIn(lowered) -> tags += ChoiceTag.TUTORIAL
+            Regex("\\bmilestone\\b").containsMatchIn(lowered) -> tags += ChoiceTag.MILESTONE
         }
     }
     val cleaned = remaining.removePrefix("-").trimStart()
@@ -519,7 +519,8 @@ internal enum class DialogueVoiceProfile(private val cuePrefix: String?) {
                 "???",
                 "orion" -> ORION
 
-                "zeke" -> ZEKE
+                "zeke",
+                "ollie" -> ZEKE
 
                 "gh0st",
                 "ghost" -> GH0ST

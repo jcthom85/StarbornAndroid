@@ -113,3 +113,7 @@ scripts/.remote_device.json
 /tools/backups/
 /.tools/
 /app/src/main/assets/backups/
+
+/starborn_audit_*.txt
+/gemini4output.txt
+/starborn_source_clean.zip

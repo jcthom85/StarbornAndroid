@@ -598,8 +598,9 @@ private fun ScrapSection(
             )
         }
         val recipe = findRecipeForResult(selectedId, state)
+        val selectedName = state.scrapChoices.firstOrNull { it.id == selectedId }?.name ?: selectedId
         ScrapPreviewCard(
-            itemName = selectedId,
+            itemName = selectedName,
             recipe = recipe,
             colors = colors,
             highContrastMode = highContrastMode

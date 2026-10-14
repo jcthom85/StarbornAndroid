@@ -200,7 +200,7 @@ private fun DesktopContextualControls(services: DesktopAppServices, ui: Explorat
                         DesktopExplorationActionRow("Collect ${runtime.itemDisplayName(item)} \u00D7$quantity", "item", !blocked) { runtime.collectGroundItem(item) }
                     }
                     specialExits.forEach { (direction, _) ->
-                        DesktopExplorationActionRow(direction, "travel", !blocked && ui.blockedDirections.none { it.equals(direction, true) }) { runtime.travel(direction) }
+                        DesktopExplorationActionRow(direction, "travel", !blocked) { runtime.travel(direction) }
                     }
                 }
             }
@@ -313,7 +313,7 @@ private fun BoxScope.DesktopRoomNavigation(ui: ExplorationUiState, layout: Portr
             "southwest" -> Offset(center.left + inset, center.bottom - inset)
             else -> return@forEach
         }
-        DesktopDirectionMarker(direction, indicator.status, blocked || ui.blockedDirections.any { it.equals(direction, true) }, animate,
+        DesktopDirectionMarker(direction, indicator.status, blocked, animate,
             Modifier.offset { IntOffset((position.x - inset).roundToInt(), (position.y - inset).roundToInt()) }, onTravel)
     }
 }

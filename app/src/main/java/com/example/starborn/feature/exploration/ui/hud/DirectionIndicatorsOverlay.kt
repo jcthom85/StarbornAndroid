@@ -77,7 +77,9 @@ fun DirectionIndicatorsOverlay(
                 else -> 0f to 0f
             }
             val canTravel = indicator.status == DirectionIndicatorStatus.UNEXPLORED ||
-                indicator.status == DirectionIndicatorStatus.EXPLORED
+                indicator.status == DirectionIndicatorStatus.EXPLORED ||
+                indicator.status == DirectionIndicatorStatus.LOCKED ||
+                indicator.status == DirectionIndicatorStatus.ENEMY
             val actionLabel = when (indicator.status) {
                 DirectionIndicatorStatus.UNEXPLORED -> "Travel $direction"
                 DirectionIndicatorStatus.EXPLORED -> "Travel $direction"

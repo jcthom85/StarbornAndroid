@@ -696,7 +696,7 @@
     "id": "bogs_w1_mq03_review_4",
     "speaker": "Foreman Boggs",
     "text": "East through Customer Service to the Security Post. Break the trainer's shield and log your certification.",
-    "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started,set_milestone:ms_w1_sq03_hydraulic_kick_ready,advance_quest_stage:w1_sq03:guard_break_training,player_action:w1_sq03_register_drill"
+    "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_quest_task_done:w1_sq03:learn_hydraulic_kick,unlock_skill:nova_hydraulic_kick,set_milestone:ms_w1_sq03_started,set_milestone:ms_w1_sq03_hydraulic_kick_ready,advance_quest_stage:w1_sq03:guard_break_training,player_action:w1_sq03_register_drill"
   },
   {
     "id": "bogs_w1_mq03_guardbreak_gate_1",
@@ -745,7 +745,7 @@
   {
     "id": "bogs_w1_mq03_intro_5",
     "speaker": "Foreman Boggs",
-    "text": "It puts completed work beside your name. That's what I can authorize. The north lift is cleared for Sector 4. Restore the junction and trace the failed relays. Come back with something I can put in the report.",
+    "text": "It puts completed work beside your name. That's what I can authorize. The lift west of the lobby is cleared for Sector 4. Restore the junction and trace the failed relays. Come back with something I can put in the report.",
     "trigger": "set_quest_task_done:w1_mq03:talk_to_bogs,player_action:bogs_talked,set_milestone:ms_w1_mq03_bogs_talked,reveal_node:deep_mine,unlock_node:deep_mine"
   },
   {
@@ -2544,21 +2544,21 @@
     "id": "charlie_step_1_reply",
     "speaker": "Charlie",
     "text": "You set down a sweet reed morsel and step backward slowly. Charlie pokes his nose out, sniffing the air with rapid twitches. He looks up at you with wide, tentative wonder, then gently nudges the treat into his den before resting his chin on his paws, watching you with curiosity.",
-    "trigger": "set_milestone:ms_charlie_trust_1,give_xp:150",
+    "trigger": "set_milestone:ms_charlie_trust_1,give_xp:25",
     "next": "charlie_default_talk"
   },
   {
     "id": "charlie_step_2_reply",
     "speaker": "Charlie",
     "text": "Charlie bounds after the spore puff ball with sudden, clumsy enthusiasm! He pounces, tumbles over his paws, bats the ball back toward you with both front paws, and lets out a tiny, high-pitched chirp of pure joy.",
-    "trigger": "set_milestone:ms_charlie_trust_2,give_xp:200",
+    "trigger": "set_milestone:ms_charlie_trust_2,give_xp:35",
     "next": "charlie_default_talk"
   },
   {
     "id": "charlie_step_3_reply",
     "speaker": "Charlie",
-    "text": "Charlie trotts right up to you without hesitation. He buries his entire fluffy head firmly into the crook of your arm and neck, pressing in with all his weight and letting out a deep, vibrating purr. He stays like that for a long, quiet moment, basking in safety. When he gently pulls back, he presses a smooth, glowing comfort stone into your palm.",
-    "trigger": "give_item:charlies_comfort_stone,set_milestone:ms_charlie_trust_3,give_xp:350",
+    "text": "Charlie trots right up to you without hesitation. He buries his entire fluffy head firmly into the crook of your arm and neck, pressing in with all his weight and letting out a deep, vibrating purr. He stays like that for a long, quiet moment, basking in safety. When he gently pulls back, he presses a smooth, glowing comfort stone into your palm.",
+    "trigger": "give_item:charlies_comfort_stone,set_milestone:ms_charlie_trust_3,give_xp:60",
     "next": "charlie_default_talk"
   },
   {
@@ -2660,27 +2660,40 @@
       {
         "id": "oliver_opt_pat",
         "text": "[Offer respectful chin scratches]",
+        "condition": "milestone_not_set:ms_oliver_tag_received",
         "next": "oliver_pat_reply"
+      },
+      {
+        "id": "oliver_opt_pat_again",
+        "text": "[Offer respectful chin scratches]",
+        "condition": "milestone:ms_oliver_tag_received",
+        "next": "oliver_pat_again_reply"
       }
     ]
   },
   {
     "id": "oliver_inspection_reply",
     "speaker": "Oliver",
-    "text": "Oliver sits up tall, sniffs your sleeve with supreme dignity, and offers a slow, approving blink. The starship's operations may proceed under his continued supervision.",
+    "text": "Oliver sits up tall, sniffs your sleeve with supreme dignity, and offers a slow, approving blink. The colony's operations may proceed under his continued supervision.",
     "next": "oliver_default_talk"
   },
   {
     "id": "oliver_meal_reply",
     "speaker": "Oliver",
-    "text": "Oliver's ears swivel instantly. He rises to his feet, arches his back into a luxurious stretch, and trotts with dignified urgency toward the galley corridor, looking back over his shoulder to ensure you follow.",
+    "text": "Oliver's ears swivel instantly. He rises to his feet, arches his back into a luxurious stretch, and trots with dignified urgency toward the mess corridor, looking back over his shoulder to ensure you follow.",
     "next": "oliver_default_talk"
   },
   {
     "id": "oliver_pat_reply",
     "speaker": "Oliver",
     "text": "Oliver leans into your knuckles, his chin resting comfortably on your fingers as a steady, mechanical-grade purr reverberates through his chest. He gently nudges a polished brass chronometer tag toward you.",
-    "trigger": "give_item:olivers_supervisory_seal,give_xp:300,set_milestone:ms_oliver_tag_received",
+    "trigger": "give_item:olivers_supervisory_seal,give_xp:25,set_milestone:ms_oliver_tag_received",
+    "next": "oliver_default_talk"
+  },
+  {
+    "id": "oliver_pat_again_reply",
+    "speaker": "Oliver",
+    "text": "Oliver leans into your knuckles, his chin resting comfortably on your fingers as a steady, mechanical-grade purr reverberates through his chest.",
     "next": "oliver_default_talk"
   },
   {
@@ -2717,7 +2730,7 @@
     "id": "penny_wrestle_reply",
     "speaker": "Penny",
     "text": "You drop to one knee and grapple with Penny! She lets out happy, playful snorts, batting at your arms with fluffy front paws and wagging so hard her whole rear end sways. For two glorious, chaotic minutes she wrestles with maximum energy—then suddenly flops onto the warm stone with a huge doggy sigh, completely exhausted and blissfully happy. She pushes her red woven bandana into your hand.",
-    "trigger": "give_item:pennys_herder_bandana,give_xp:350,set_milestone:ms_penny_wrestle_completed",
+    "trigger": "give_item:pennys_herder_bandana,give_xp:50,set_milestone:ms_penny_wrestle_completed",
     "next": "penny_default_talk"
   },
   {
@@ -2749,7 +2762,7 @@
       },
       {
         "id": "megan_opt_husband",
-        "text": "Someone in World 3 mentioned a relentless builder with a messy workbench.",
+        "text": "The sticky note on your telemetry monitor mentions calling 'Jason'—who's that?",
         "next": "megan_husband_reply"
       },
       {
@@ -2806,7 +2819,7 @@
     "id": "megan_favor_turnin",
     "speaker": "Megan",
     "text": "[Megan works with swift, practiced clinical precision, synthesizing the chemical catalyst through the nano-filaments and locking the new filtration cartridge into the marsh monitoring grid with a satisfying snap.] Pressure normalized; filtration efficiency up thirty percent. The estuary will hold. Here, Nova, take this—it's my personal clinical diagnostic sensor. It tracks cellular stress and vital signs in real time. Take care of yourself out there. And remember to drink some water.",
-    "trigger": "take_item:chemical_catalyst*1,take_item:nano_filament*1,give_item:megans_clinical_scanner,give_xp:450,give_credits:500,set_milestone:ms_megan_wetland_favor_completed",
+    "trigger": "take_item:chemical_catalyst*1,take_item:nano_filament*1,give_item:megans_clinical_scanner,give_xp:200,give_credits:250,set_milestone:ms_megan_wetland_favor_completed",
     "next": "megan_default_talk"
   },
   {
@@ -2965,7 +2978,7 @@
     "id": "pam_biscuits_reply",
     "speaker": "Pam",
     "text": "[Pam shoves a steaming, wrapped tin of mountain-spiced skillet biscuits into your hands.] Take this. Real stone-ground meal and pepper gravy. It'll put some lead in your pencil and keep your shield steady when the miners get rowdy.",
-    "trigger": "give_item:gagas_skillet_biscuits,give_xp:300,set_milestone:ms_pam_biscuits_received",
+    "trigger": "give_item:gagas_skillet_biscuits,give_xp:25,set_milestone:ms_pam_biscuits_received",
     "next": "pam_default_talk"
   },
   {

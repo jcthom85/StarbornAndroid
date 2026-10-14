@@ -528,6 +528,12 @@ private fun combatItemEffectSummary(entry: InventoryEntry): String {
     val parts = mutableListOf<String>()
     effect.restoreHp?.takeIf { it > 0 }?.let { parts += "Restore $it HP" }
     effect.damage?.takeIf { it > 0 }?.let { parts += "Deal $it damage" }
+    effect.amount?.takeIf { it > 0 && (effect.restoreHp ?: 0) <= 0 && (effect.damage ?: 0) <= 0 }?.let {
+        parts += "Power $it"
+    }
+    effect.status?.takeIf { it.isNotBlank() }?.let { status ->
+        parts += "Inflicts ${status.replace('_', ' ')}"
+    }
     effect.singleBuff?.let { buff -> parts += "${buff.stat.uppercase(Locale.getDefault())} +${buff.value}" }
     effect.buffs?.forEach { buff -> parts += "${buff.stat.uppercase(Locale.getDefault())} +${buff.value}" }
     val target = when (effect.target?.trim()?.lowercase(Locale.getDefault())) {
@@ -540,13 +546,13 @@ private fun combatItemEffectSummary(entry: InventoryEntry): String {
         "self" -> "Self"
         "any" -> "Any target"
         else -> when {
-            (effect.damage ?: 0) > 0 -> "Enemy"
+            (effect.damage ?: 0) > 0 || !effect.status.isNullOrBlank() -> "Enemy"
             (effect.restoreHp ?: 0) > 0 || effect.singleBuff != null || !effect.buffs.isNullOrEmpty() -> "Ally"
             else -> null
         }
     }
     return buildString {
-        append(parts.joinToString(", ").ifBlank { "Battle effect" })
+        append(parts.joinToString(", ").ifBlank { entry.item.description.orEmpty().ifBlank { "Battle effect" } })
         target?.let { append(" - ").append(it) }
     }
 }

@@ -138,14 +138,16 @@ fun CombatFxOverlay(
                     .background(Color.Black.copy(alpha = 0.45f))
             )
         }
-        damageFx.forEach { fx ->
+        damageFx.forEachIndexed { index, fx ->
+            val staggerY = -(index * 22).dp
+            val staggerX = if (damageFx.size > 1) ((index % 2) * 16 - 8).dp else 0.dp
             ImpactBurst(
                 fx = fx,
                 modifier = Modifier.align(Alignment.Center).zIndex(50f)
             )
             DamageNumberBubble(
                 fx = fx,
-                modifier = Modifier.align(Alignment.Center).zIndex(100f)
+                modifier = Modifier.align(Alignment.Center).offset(x = staggerX, y = staggerY).zIndex(100f + index)
             )
         }
         shieldBreakFx.forEach { fx ->
@@ -154,11 +156,11 @@ fun CombatFxOverlay(
                 modifier = Modifier.align(Alignment.Center).zIndex(60f)
             )
         }
-        statusFx.forEach { fx ->
+        statusFx.forEachIndexed { index, fx ->
             key(fx.id) {
                 StatusPulse(
                     fx = fx,
-                    modifier = Modifier.align(Alignment.TopCenter).offset(y = (-24).dp).zIndex(80f)
+                    modifier = Modifier.align(Alignment.TopCenter).offset(y = (-24 - index * 20).dp).zIndex(80f + index)
                 )
                 StatusImpactFlash(
                     fx = fx,
@@ -172,10 +174,10 @@ fun CombatFxOverlay(
                 modifier = Modifier.matchParentSize().zIndex(40f)
             )
         }
-        healFx.forEach { fx ->
+        healFx.forEachIndexed { index, fx ->
             HealNumberBubble(
                 fx = fx,
-                modifier = Modifier.align(Alignment.Center).zIndex(100f)
+                modifier = Modifier.align(Alignment.Center).offset(y = -(index * 22).dp).zIndex(100f + index)
             )
         }
     }
@@ -186,6 +188,7 @@ fun attackFxStyleFor(sourceId: String): AttackFxStyle? = when (sourceId) {
     "zeke" -> AttackFxStyle.ZEKE_PUNCH
     "orion" -> AttackFxStyle.ORION_JEWEL
     "gh0st", "ghost" -> AttackFxStyle.GHOST_SLASH
+    "ollie" -> AttackFxStyle.OLLIE_TECH
     else -> null
 }
 
@@ -220,6 +223,7 @@ fun attackFxStyleForName(name: String): AttackFxStyle? {
         "zeke" in normalized -> AttackFxStyle.ZEKE_PUNCH
         "orion" in normalized -> AttackFxStyle.ORION_JEWEL
         "gh0st" in normalized || "ghost" in normalized -> AttackFxStyle.GHOST_SLASH
+        "ollie" in normalized -> AttackFxStyle.OLLIE_TECH
         else -> null
     }
 }
@@ -229,6 +233,7 @@ fun attackFxDurationFor(style: AttackFxStyle): Long = when (style) {
     AttackFxStyle.ZEKE_PUNCH -> ATTACK_FX_DURATION_MS
     AttackFxStyle.ORION_JEWEL -> ATTACK_FX_DURATION_MS
     AttackFxStyle.GHOST_SLASH -> ATTACK_FX_DURATION_MS
+    AttackFxStyle.OLLIE_TECH -> ATTACK_FX_DURATION_MS
 }
 
 fun normalizeAttackSourceId(sourceId: String): String {
@@ -276,6 +281,7 @@ fun AttackHitFx(
             AttackFxStyle.ZEKE_PUNCH -> Color(0xFFFFB74D)
             AttackFxStyle.ORION_JEWEL -> Color(0xFFB388FF)
             AttackFxStyle.GHOST_SLASH -> Color(0xFF80D8FF)
+            AttackFxStyle.OLLIE_TECH -> Color(0xFFFFB74D)
         }
         withTransform({
             scale(scale, scale, center)
@@ -741,6 +747,58 @@ fun AttackHitFx(
                         radius = sizeMin * 0.4f
                     )
                     drawCircle(brush = mist, radius = sizeMin * 0.4f, center = center)
+                }
+                AttackFxStyle.OLLIE_TECH -> {
+                    val pulseAlpha = (1f - t * 0.65f).coerceIn(0f, 1f)
+                    val ringRadius = sizeMin * (0.16f + 0.28f * t)
+                    drawCircle(
+                        color = Color(0xFFFFB74D).copy(alpha = 0.78f * pulseAlpha),
+                        radius = ringRadius,
+                        center = center,
+                        style = Stroke(width = sizeMin * (0.042f * (1f - 0.35f * t)))
+                    )
+                    drawCircle(
+                        color = Color(0xFF4DD0E1).copy(alpha = 0.72f * pulseAlpha),
+                        radius = ringRadius * 0.72f,
+                        center = center,
+                        style = Stroke(width = sizeMin * 0.025f)
+                    )
+                    val arcCount = 4
+                    val baseAngle = t * 140f
+                    val arcRectSize = Size(ringRadius * 1.75f, ringRadius * 1.75f)
+                    val arcTopLeft = Offset(center.x - arcRectSize.width / 2f, center.y - arcRectSize.height / 2f)
+                    for (i in 0 until arcCount) {
+                        drawArc(
+                            color = Color.White.copy(alpha = 0.85f * pulseAlpha),
+                            startAngle = baseAngle + i * 90f,
+                            sweepAngle = 42f,
+                            useCenter = false,
+                            topLeft = arcTopLeft,
+                            size = arcRectSize,
+                            style = Stroke(width = sizeMin * 0.032f, cap = StrokeCap.Round)
+                        )
+                    }
+                    val sparkCount = if (fx.critical) 10 else 6
+                    for (i in 0 until sparkCount) {
+                        val angle = ((i.toFloat() / sparkCount) * 360f + 35f * t) * (PI / 180f)
+                        val inner = sizeMin * (0.08f + 0.14f * t)
+                        val outer = inner + sizeMin * (0.12f * (1f - 0.3f * t))
+                        val start = Offset(
+                            x = center.x + cos(angle).toFloat() * inner,
+                            y = center.y + sin(angle).toFloat() * inner
+                        )
+                        val end = Offset(
+                            x = center.x + cos(angle).toFloat() * outer,
+                            y = center.y + sin(angle).toFloat() * outer
+                        )
+                        drawLine(
+                            color = if (i % 2 == 0) Color(0xFFFFD54F).copy(alpha = pulseAlpha) else Color(0xFF80DEEA).copy(alpha = pulseAlpha),
+                            start = start,
+                            end = end,
+                            strokeWidth = sizeMin * 0.022f,
+                            cap = StrokeCap.Round
+                        )
+                    }
                 }
             }
         }
