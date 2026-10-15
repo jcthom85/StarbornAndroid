@@ -308,10 +308,12 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                 onCopy={clipboard.setText(androidx.compose.ui.text.AnnotatedString(it))},onClose={environmentPreview=false})
         }
         ui.roomObjectOffer?.let { offer ->
-            AlertDialog(onDismissRequest = runtime::dismissRoomObject,
-                title = { Text(offer.title) }, text = { Text(offer.detail) },
-                confirmButton = { TextButton(onClick = runtime::confirmRoomObject) { Text(offer.confirmLabel) } },
-                dismissButton = { TextButton(onClick = runtime::dismissRoomObject) { Text("Back") } })
+            DesktopExplorationModal(offer.detail, runtime::dismissRoomObject, title = offer.title) {
+                Row(Modifier.align(Alignment.End), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    TextButton(onClick = runtime::dismissRoomObject) { Text("Back") }
+                    Button(onClick = runtime::confirmRoomObject) { Text(offer.confirmLabel) }
+                }
+            }
         }
         restNotice?.let { notice ->
             AlertDialog(onDismissRequest = { restNotice = null },

@@ -89,6 +89,8 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Flag
@@ -1105,10 +1107,12 @@ fun ExplorationScreen(
             )
         }
         uiState.blockedPrompt?.let { prompt ->
-            AlertDialog(onDismissRequest = viewModel::dismissBlockedPrompt,
-                modifier = Modifier.clickable(onClick = viewModel::dismissBlockedPrompt),
-                title = { Text("Route blocked") }, text = { Text(prompt.message) },
-                confirmButton = { TextButton(onClick = viewModel::dismissBlockedPrompt) { Text("OK") } })
+            InspectionOverlay(
+                prompt = NarrationPrompt(prompt.message, tapToDismiss = true),
+                theme = activeTheme,
+                onDismiss = viewModel::dismissBlockedPrompt,
+                modifier = Modifier.fillMaxSize().zIndex(40f)
+            )
         }
         if (uiState.roomActionsVisible) {
             AlertDialog(onDismissRequest = viewModel::dismissRoomActions,
@@ -1134,10 +1138,8 @@ fun ExplorationScreen(
                 } }, confirmButton = { TextButton(onClick = viewModel::dismissRoomActions) { Text("Close") } })
         }
         uiState.roomObjectOffer?.let { offer ->
-            AlertDialog(onDismissRequest = viewModel::dismissRoomObject,
-                title = { Text(offer.title) }, text = { Text(offer.detail) },
-                confirmButton = { TextButton(onClick = viewModel::confirmRoomObject) { Text(offer.confirmLabel) } },
-                dismissButton = { TextButton(onClick = viewModel::dismissRoomObject) { Text("Back") } })
+            RoomObjectOfferDialog(offer, activeTheme,
+                onConfirm = viewModel::confirmRoomObject, onDismiss = viewModel::dismissRoomObject)
         }
         uiState.togglePrompt?.let { prompt ->
             TogglePromptDialog(
@@ -5553,7 +5555,6 @@ private fun RoomEntitySection(
                 OverworldGatewayCard(
                     sectorTitle = sectorTitle,
                     isDisembarking = isDisembarking,
-                    borderColor = borderColor,
                     isDark = isDark,
                     onClick = onReturnToHub
                 )
@@ -5725,13 +5726,14 @@ private fun ServicePresenceChip(
 private fun OverworldGatewayCard(
     sectorTitle: String?,
     isDisembarking: Boolean = false,
-    borderColor: Color,
     isDark: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val shape = RoundedCornerShape(10.dp)
     val mapCyan = Color(0xFF00E5FF)
+    val destination = sectorTitle?.takeIf { it.isNotBlank() } ?: "Colony Map"
+    val label = if (isDisembarking) "Disembark" else "To $destination"
     Surface(
         shape = shape,
         color = Color(0xFF060F17).copy(alpha = if (isDark) 0.88f else 0.76f),
@@ -5741,8 +5743,8 @@ private fun OverworldGatewayCard(
             .clip(shape)
             .clickable(onClick = onClick)
             .clearAndSetSemantics {
-                contentDescription = if (isDisembarking) "Disembark from the Astra" else "Exit to Overworld: ${sectorTitle ?: "Colony Map"}"
-                onClick(label = if (isDisembarking) "Disembark" else "Exit to Overworld") {
+                contentDescription = if (isDisembarking) "Disembark from the Astra" else "Exit to $destination"
+                onClick(label = if (isDisembarking) "Disembark" else "Exit to $destination") {
                     onClick()
                     true
                 }
@@ -5750,6 +5752,7 @@ private fun OverworldGatewayCard(
     ) {
         Row(
             modifier = Modifier
+                .heightIn(min = 48.dp)
                 .background(
                     Brush.horizontalGradient(
                         colors = listOf(
@@ -5758,14 +5761,14 @@ private fun OverworldGatewayCard(
                         )
                     )
                 )
-                .padding(horizontal = 10.dp, vertical = 6.dp),
+                .padding(horizontal = 12.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(1f, fill = false)
+                modifier = Modifier.weight(1f)
             ) {
                 Surface(
                     shape = CircleShape,
@@ -5774,57 +5777,23 @@ private fun OverworldGatewayCard(
                     modifier = Modifier.size(26.dp)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        Canvas(modifier = Modifier.size(16.dp)) {
-                            val strokeWidth = 1.5.dp.toPx()
-                            drawCircle(
-                                color = mapCyan.copy(alpha = 0.85f),
-                                radius = size.minDimension * 0.44f,
-                                style = Stroke(width = strokeWidth)
-                            )
-                            drawLine(
-                                color = mapCyan.copy(alpha = 0.85f),
-                                start = Offset(size.width * 0.5f, size.height * 0.10f),
-                                end = Offset(size.width * 0.5f, size.height * 0.90f),
-                                strokeWidth = strokeWidth,
-                                cap = StrokeCap.Round
-                            )
-                            drawLine(
-                                color = mapCyan.copy(alpha = 0.85f),
-                                start = Offset(size.width * 0.10f, size.height * 0.5f),
-                                end = Offset(size.width * 0.90f, size.height * 0.5f),
-                                strokeWidth = strokeWidth,
-                                cap = StrokeCap.Round
-                            )
-                        }
+                        Icon(Icons.Outlined.Map, contentDescription = null,
+                            tint = mapCyan.copy(alpha = 0.85f), modifier = Modifier.size(18.dp))
                     }
                 }
                 Text(
-                    text = if (isDisembarking) "DISEMBARK" else "OVERWORLD MAP",
+                    text = label,
                     color = Color.White.copy(alpha = 0.94f),
                     style = MaterialTheme.typography.labelMedium.copy(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 0.5.sp
                     ),
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
             }
-            Surface(
-                shape = RoundedCornerShape(6.dp),
-                color = mapCyan.copy(alpha = 0.12f),
-                border = BorderStroke(1.dp, mapCyan.copy(alpha = 0.38f))
-            ) {
-                Text(
-                    text = "OPEN >",
-                    color = Color.White.copy(alpha = 0.90f),
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 9.sp,
-                        letterSpacing = 0.6.sp
-                    ),
-                    modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
-                )
-            }
+            Icon(Icons.Filled.ChevronRight, contentDescription = null,
+                tint = mapCyan.copy(alpha = 0.85f), modifier = Modifier.size(24.dp))
         }
     }
 }
@@ -7852,7 +7821,9 @@ fun NarrationCard(
     prompt: NarrationPrompt,
     theme: Theme?,
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    title: String? = null,
+    actions: (@Composable ColumnScope.() -> Unit)? = null
 ) {
     val accentColor = themeColor(theme?.accent, Color(0xFF8DE2FF))
     val borderColor = themeColor(theme?.border, Color.White.copy(alpha = 0.72f))
@@ -7879,6 +7850,7 @@ fun NarrationCard(
                 .padding(horizontal = 22.dp, vertical = 20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            title?.let { Text(it, color = accentColor, style = MaterialTheme.typography.titleMedium) }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.Top,
@@ -7899,7 +7871,7 @@ fun NarrationCard(
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
-            TextButton(
+            if (actions != null) actions() else TextButton(
                 onClick = onDismiss,
                 modifier = Modifier
                     .align(Alignment.End)
