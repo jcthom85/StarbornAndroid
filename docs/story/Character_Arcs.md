@@ -1,8 +1,10 @@
 # Character Arcs
 
+Status: Current character-development authority; reconciled October 14, 2026. These are intended beats, not a claim that every scene implements them. See [the documentation index](../README.md).
+
 This document outlines the emotional journeys and structural development of the main cast. Lie/Truth labels are planning shorthand, not dialogue. Reveal them through repeated choices, avoidance, conflict, and changed behavior; characters should rarely state the lesson of their arc.
 
-**Authority:** This document governs beliefs, relationships, choices, and emotional progression. It is subordinate to the Master Story Bible and Lore Bible, and it outranks the Writer's Handbook, supporting summaries, world/hub documents, and production assets.
+**Role:** This document records intended beliefs, relationships, choices, and emotional progression, alongside Master Story and Lore. Current code/assets establish what is implemented. Treat a mismatch with these planned beats as a documentation reconciliation task before proposing a game change.
 
 ---
 
@@ -14,10 +16,10 @@ This document outlines the emotional journeys and structural development of the 
 | World | State of Mind | Key Beat / Action |
 | :--- | :--- | :--- |
 | **1: The Mines** | Survival through overwork. Sharp, practical, and unwilling to admit need. | **Inciting Incident:** She removes the cutter governor to make quota, wakes the Fork, reads its feedback, and risks the counter-tune. Jed's repairs let her survive; his death is his deliberate choice under structural pressure. |
-| **2: The Wilds** | Overwhelmed. Tries to "brute force" the Source (panic-channelling). | **The Lesson:** Orion forces her to stop running. She learns to listen to the Source, not just scream at it. |
+| **2: The Wilds** | Overwhelmed. Tries to force the Source through panic and exhaustion. | **The Lesson:** Orion makes her stop, observe the effects, use a safe ground, and accept help. |
 | **3: The Spire** | Competent. Starts to enjoy the power. Feels like a "cool" rebel. | **The Test:** Leads the heist. Confidence borders on arrogance. She thinks she can outsmart the Administrator effortlessly. |
 | **4: The Foundry** | Responsibility. Realizes her power has consequences for others. | **The Pivot:** She creates room for Gh0st to choose what justice means instead of authoring his revenge. |
-| **5: The Void** | Failure. Tries to fix everything alone with "Stasis." Arrogant. | **Low Point:** Vale defeats her easily because she tries to control him. She realizes brute force (even Source power) can’t fix a broken soul. |
+| **5: The Void** | Overreaches. Tries to solve the confrontation through Stasis. | **Low Point:** The attempt fails against Vale. She must rely on the crew and a plan beyond applying more power. |
 | **6: The Source** | Acceptance. Rejects perfect control. | **Climax:** She trusts the crew's circuit, relinquishes root access, and loses Source power without losing herself or her memories. |
 
 ---
@@ -66,7 +68,7 @@ Dominion built Gh0st around a partial derivative of Elara's neural map. He has n
 | **1: The Mines** | Sleeping. | **Passive:** Stasis in the Wilds. Dreaming of the Chorus. |
 | **2: The Wilds** | Grief. Wakes up to a dead world. Wants to go back to sleep. | **The Awakening:** Sees Nova struggling with the Source. He can't let her die. He steps up as a reluctant teacher. |
 | **3: The Spire** | Judgment. Looks at the Dominion city with disgust. | **The Perspective:** He recognizes Architect technology built through exploitation of his people and helps human operators use it without repeating either empire's control logic. |
-| **4: The Foundry** | Connection. Bonding with the "Artificial" (Gh0st). | **The Wisdom:** He teaches Gh0st that having a "designed purpose" doesn't mean you lack a soul. |
+| **4: The Foundry** | Connection. Bonding with Gh0st. | **The Relationship:** He takes Gh0st's preferences and choices seriously, including when they differ from what either empire designed. |
 | **5: The Void** | Horror. Recognizes the Great Silence protocol. | **Low Point:** Learns the Architects exploited Aethel consciousness as living material. The Chorus offers real ancestral continuity. |
 | **6: The Source** | Life. Chooses the present. | **Climax:** He answers the Chorus "not yet," holds the crew's counter-tone, and remains embodied with the living. |
 

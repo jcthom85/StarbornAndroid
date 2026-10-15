@@ -41,10 +41,10 @@ internal fun DesktopCombatTutorialOverlay(
     val panel = if (highContrast) Color.Black else Color(0xF0061018)
     val border = if (highContrast) Color.White else accent.copy(alpha = .72f)
     if (tutorial.showsModal) {
-        Dialog(onDismissRequest = {}, properties = DialogProperties(
-            dismissOnBackPress = false, dismissOnClickOutside = false, usePlatformDefaultWidth = false
+        Dialog(onDismissRequest = onContinue, properties = DialogProperties(
+            dismissOnBackPress = true, dismissOnClickOutside = false, usePlatformDefaultWidth = false
         )) {
-            Surface(Modifier.widthIn(max = 540.dp).fillMaxWidth().padding(20.dp),
+            Surface(modifier = Modifier.widthIn(max = 540.dp).fillMaxWidth().padding(20.dp).informationAcknowledgement(onContinue),
                 shape = RoundedCornerShape(16.dp), color = panel,
                 border = BorderStroke(1.dp, border), shadowElevation = 12.dp) {
                 Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -277,6 +277,7 @@ internal fun DesktopCombatPartyRoster(
     services: DesktopAppServices,
     meters: Map<String, Float>,
     actorId: String?,
+    executingId: String? = null,
     playerPartyDefs: List<com.example.starborn.domain.model.Player>,
     onSelectActor: (String) -> Unit
 ) {
@@ -366,11 +367,9 @@ internal fun DesktopCombatPartyRoster(
                                     color = if (member.isAlive) Color.White else Color(0xFF88959E),
                                     style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold)
                                 )
-                                when {
-                                    isActing -> Text("ACTING", color = Color(0xFFFFBB55), style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
-                                    isReady -> Text("READY", color = Color(0xFF63E6FF), style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
-                                    !member.isAlive -> Text("DOWN", color = Color(0xFFE65D5D), style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
-                                    else -> Text("${(meter * 100).toInt()}%", color = Color(0xFF819AA8), style = MaterialTheme.typography.labelSmall)
+                                combatActionState(member.isAlive, id == executingId, id == actorId, isReady)?.let { label ->
+                                    Text(label, color = if (id == actorId || id == executingId) Color(0xFFFFBB55) else Color(0xFF63E6FF),
+                                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
                                 }
                             }
 
@@ -473,27 +472,27 @@ internal fun DesktopCombatBottomKeyLegend(
                     targeting -> {
                         DesktopKeyBadge("Tab / Arrows", "Cycle Target", highlighted = true)
                         DesktopKeyBadge("Space / Enter", "Confirm Target", highlighted = true)
-                        DesktopKeyBadge("Esc", "Cancel Targeting", onClick = onCancelTarget)
+                        DesktopKeyBadge("Esc", "Cancel", onClick = onCancelTarget)
                     }
                     menu == "skills" -> {
                         DesktopKeyBadge("1 - 9", "Select Ability", highlighted = true)
                         DesktopKeyBadge("Esc", "Back to Actions", onClick = onCancelTarget)
                     }
                     menu == "items" -> {
-                        DesktopKeyBadge("1 - 9", "Deploy Item", highlighted = true)
+                        DesktopKeyBadge("1 - 9", "Choose item", highlighted = true)
                         DesktopKeyBadge("Esc", "Back to Actions", onClick = onCancelTarget)
                     }
                     actorAvailable -> {
                         DesktopKeyBadge("1", "Attack", highlighted = true)
                         DesktopKeyBadge("2", "Abilities")
                         DesktopKeyBadge("3", "Items")
-                        DesktopKeyBadge("4", "Quick Snack")
-                        DesktopKeyBadge("Tab", "Cycle Active Crew")
+                        DesktopKeyBadge("4", "Snack")
+                        DesktopKeyBadge("Tab", "Switch character")
                         DesktopKeyBadge("R", "Retreat")
                     }
                     else -> {
-                        DesktopKeyBadge("Auto", "Turn Readiness Meter Charging")
-                        DesktopKeyBadge("Tab", "Select Ready Combatant")
+                        Text("Waiting for a turn", color = Color(0xFF91A8B3), style = MaterialTheme.typography.labelSmall)
+                        DesktopKeyBadge("Tab", "Ready characters")
                     }
                 }
             }

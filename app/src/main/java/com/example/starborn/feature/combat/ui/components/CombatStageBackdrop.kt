@@ -216,8 +216,10 @@ fun CombatTutorialOverlay(
     val title = com.example.starborn.feature.combat.presentation.CombatTutorialCopy.title(tutorial)
     val message = com.example.starborn.feature.combat.presentation.CombatTutorialCopy.message(tutorial)
     if (tutorial.showsModal) {
+        androidx.activity.compose.BackHandler(onBack = onContinue)
         Box(modifier = modifier, contentAlignment = Alignment.Center) {
             Surface(
+                onClick = onContinue,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp),

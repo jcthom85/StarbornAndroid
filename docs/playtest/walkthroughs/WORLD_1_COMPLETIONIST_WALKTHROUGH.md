@@ -273,7 +273,7 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 - **Exits:** West to Pit Landing (`pit_L1_landing`); East to Ration Sink (`pit_kitchen`); South to Vent Crawl (`pit_vents`).
 - **monitor**: Inspect/select this action. In-room feedback: 'YOUR SHIFT IS YOUR CONTRIBUTION.' The screen is spider-webbed with cracks.
 - **broken Hyperion cabinet**: Inspect/select this action. Hides after: `ms_arcade_deep_mine_discovered`. In-room feedback: A dead pre-Dominion arcade cabinet leans beneath a miner's coat. One amber diagnostic blinks behind the cracked glass.
-- **tables**: Rest/recovery interaction; finish or dismiss its prompt before moving.
+- **tables**: Scenery. Rest at Nova's bunk; the Mess Hall no longer offers a duplicate rest action.
 - **ceramic rooster**: Inspect/select this action. A hand-painted ceramic rooster proudly perches on the shelf above the mess counter. Placed there by Gaga to add some feisty country pride to the cold subterranean rock.
 - **vintage mystery monitor**: Inspect/select this action. A retro amber CRT playing archived broadcasts of 'Cosmic Enigmas' with haunting synth music. A faded note beside an old recipe card reads: 'In memory of Nana Jessie — I hated cooking every meal, but I loved you kids too much to let you eat slop. Give Ashley a biscuit.'
 

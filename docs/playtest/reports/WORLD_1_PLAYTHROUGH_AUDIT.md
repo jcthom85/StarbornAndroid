@@ -16,7 +16,7 @@ No blocking or warning-level issues detected during this run.
 
 This transcript reflects the exact player experience, including dialogue, room travel, and quest updates in chronological order:
 
-**[Step 1 - Travel]** Entered room: Nova's Bunk | Prose snippet: "Your bunk is a narrow shelf in the colony wall. The bunk light hangs above cargo netting and a rusty locker holding your..." [Quest: w1_mq01 (wake_in_the_pit)]
+**[Step 1 - Travel]** Entered room: Nova's Bunk | Prose snippet: "Your bunk is a narrow sleeping shelf in the colony wall. The bunk light hangs above cargo netting and a rusty locker hol..." [Quest: w1_mq01 (wake_in_the_pit)]
 - **[Action]** `w1_mq01_turn_on_bunk_light`: Turns on Nova's bunk light and reveals a dangerous, suppressed maintenance fault. [Quest: w1_mq01 (wake_in_the_pit)]
 - **[Action]** `w1_mq01_inspect_safety_fault`: Nova isolates the live conduit and confirms Dominion suppressed repeated repair requests. [Quest: w1_mq01 (wake_in_the_pit)]
 **[Step 4 - Travel]** Entered room: Jed's Bunk | Prose snippet: "Jed has filled his pod with manuals, gadgets, and half-built repairs. A narrow strip of mattress remains clear beside hi..." [Quest: w1_mq01 (wake_in_the_pit)]
@@ -65,7 +65,7 @@ This transcript reflects the exact player experience, including dialogue, room t
 > **[Dialogue]** Nova: "You promised the Deep Elevator. I've done the drill. Don't send me to another desk."
 > **[Dialogue]** Foreman Boggs: "Sector 4's relays are failing. Nobody down there gets paid until the junction runs. You're the cutter I have."
 > **[Dialogue]** Nova: "And my disposal review? Does fixing your mine make that disappear?"
-> **[Dialogue]** Foreman Boggs: "It puts completed work beside your name. That's what I can authorize. The north lift is cleared for Sector 4. Restore the junction and trace the failed relays. Come back with something I can put in the report."
+> **[Dialogue]** Foreman Boggs: "It puts completed work beside your name. That's what I can authorize. The lift west of the lobby is cleared for Sector 4. Restore the junction and trace the failed relays. Come back with something I can put in the report."
 **[Step 51 - Travel]** Entered room: Elevator Landing | Prose snippet: "The lift opens onto raw rock and red safety beacons. Boggs booked Nova a descent into Sector 4, leaving the return time ..." [Quest: w1_mq03 ()]
 **[Combat Encounter]** Victory against [echo_borer] in mine_landing
 **[Step 53 - Travel]** Entered room: Cavern Junction | Prose snippet: "Mine tunnels branch around a central pillar. A junction breaker box hums beside the switch rails. A loaded ore cart wait..." [Quest: w1_mq03 ()]

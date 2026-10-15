@@ -103,6 +103,7 @@ internal fun CampaignNavigationHost(
     val services = remember(providedServices) { providedServices ?: AppServices(context, isTestSession = com.example.starborn.BuildConfig.IS_PLAYTEST_BUILD) }
     val userSettings by services.userSettingsStore.settings.collectAsState(initial = UserSettings())
     val sessionState by services.sessionStore.state.collectAsState()
+    var pendingAreaEntry by remember { mutableStateOf<com.example.starborn.feature.exploration.viewmodel.AreaEntryUi?>(null) }
     val environmentThemeState by services.environmentThemeManager.state.collectAsState()
     val settingsScope = rememberCoroutineScope()
 
@@ -257,6 +258,11 @@ internal fun CampaignNavigationHost(
                     services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue))
                 },
                 onEnterNode = { node ->
+                    if (services.sessionStore.state.value.roomId != null) {
+                        pendingAreaEntry = com.example.starborn.feature.exploration.viewmodel.AreaEntryUi(
+                            System.nanoTime(), node.title, firstVisit = !node.visited
+                        )
+                    }
                     navController.navigate(if (services.sessionStore.state.value.roomId == null) Hub.route else Exploration.route) {
                         popUpTo(Hub.route) { inclusive = true }
                         launchSingleTop = true
@@ -308,8 +314,6 @@ internal fun CampaignNavigationHost(
             }
 
             LaunchedEffect(backStackEntry) {
-                val victoryFlow = backStackEntry.savedStateHandle
-                    .getStateFlow("combat_victory", emptyList<String>())
                 val resultFlow = backStackEntry.savedStateHandle
                     .getStateFlow("combat_result", CombatResultPayload.EMPTY)
                 val tinkeringClosedFlow = backStackEntry.savedStateHandle
@@ -318,15 +322,6 @@ internal fun CampaignNavigationHost(
                     .getStateFlow("tinkering_craft", "")
                 val fishingResultFlow = backStackEntry.savedStateHandle
                     .getStateFlow("fishing_result", null as FishingResultPayload?)
-
-                launch {
-                    victoryFlow.collect { defeatedIds ->
-                        if (defeatedIds.isNotEmpty()) {
-                            explorationViewModel.onCombatVictoryEnemiesCleared(defeatedIds)
-                            backStackEntry.savedStateHandle["combat_victory"] = emptyList<String>()
-                        }
-                    }
-                }
 
                 launch {
                     resultFlow.collect { result ->
@@ -374,6 +369,8 @@ internal fun CampaignNavigationHost(
             }
             Box(modifier = Modifier.fillMaxSize()) {
                 ExplorationScreen(
+                    hubAreaEntry = pendingAreaEntry,
+                    onHubAreaEntryFinished = { pendingAreaEntry = null },
                     isTestSession = services.isTestSession,
                     onDemoRootBack = onDemoRootBack,
                     viewModel = explorationViewModel,

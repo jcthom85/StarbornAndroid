@@ -589,6 +589,11 @@ class ExplorationController(
         userVoiceVolume = newVoice
         isVignetteEnabled = newVignette
         tutorialsEnabled = newTutorialsEnabled
+        if (!tutorialsEnabled) {
+            promptManager.discardMatching { it.id == com.example.starborn.domain.tutorial.NovaProgressionTutorial.FIRST_AP }
+        } else {
+            scheduleNovaBuildTutorial(sessionStore.state.value)
+        }
         _uiState.update { state ->
             state.copy(
                 settings = state.settings.copy(
@@ -603,7 +608,9 @@ class ExplorationController(
                     disableScreenshake = settings.disableScreenshake,
                     disableFlashes = settings.disableFlashes,
                     disableHaptics = settings.disableHaptics
-                )
+                ),
+                skillTreeOverlay = state.skillTreeOverlay?.copy(tutorialGuide =
+                    com.example.starborn.domain.tutorial.NovaProgressionTutorial.treeGuide(sessionStore.state.value, tutorialsEnabled))
             )
         }
         if (musicChanged || sfxChanged || voiceChanged) {
@@ -627,10 +634,11 @@ class ExplorationController(
     private val roomGroundItems: MutableMap<String, MutableMap<String, Int>> = mutableMapOf()
     private val visitedRooms: MutableSet<String> = mutableSetOf()
     private val discoveredRooms: MutableSet<String> = mutableSetOf()
-    private val blockedCinematicsShown: MutableSet<String> = mutableSetOf()
     private var roomsByEnvironment: Map<String, List<Room>> = emptyMap()
     private var roomsByNodeId: Map<String, List<Room>> = emptyMap()
     private var nodeIdByRoomId: Map<String, String> = emptyMap()
+    private var areaNodes: Map<String, com.example.starborn.domain.model.HubNode> = emptyMap()
+    private var areaEdges: List<com.example.starborn.domain.model.NodeTransition> = emptyList()
     private var nodeExitResolver = NodeExitResolver(emptyList(), emptyList())
     private val portraitBySpeaker: MutableMap<String, String> = mutableMapOf()
     private val emotesBySpeaker: MutableMap<String, Map<String, String>> = mutableMapOf()
@@ -887,9 +895,9 @@ class ExplorationController(
         postStatus(message)
     }
 
-    private fun removeEnemiesFromCurrentRoom(enemyIds: List<String>) {
+    private fun removeEnemiesFromRoom(roomId: String?, enemyIds: List<String>) {
         if (enemyIds.isEmpty()) return
-        val currentRoom = _uiState.value.currentRoom ?: return
+        val currentRoom = roomsById[roomId] ?: return
         if (roomEnemyParties(currentRoom).isEmpty()) return
         setRoomStateValue(
             roomIdOrNull = currentRoom.id,
@@ -897,29 +905,15 @@ class ExplorationController(
             value = true,
             notify = false
         )
-        val updatedRoom = removeDefeatedEnemies(currentRoom, enemyIds)
-        if (updatedRoom.enemies != currentRoom.enemies || updatedRoom.enemyParties != currentRoom.enemyParties) {
-            roomsById = roomsById + (updatedRoom.id to updatedRoom)
-            _uiState.update {
-                it.copy(
-                    currentRoom = updatedRoom,
-                    enemies = roomEnemyParties(updatedRoom).flatten(),
-                    enemyTiers = buildEnemyTierMap(updatedRoom),
-                    enemyIcons = buildEnemyIconMap(updatedRoom),
-                    blockedDirections = computeBlockedDirections(updatedRoom),
-                    directionIndicators = buildDirectionIndicators(updatedRoom),
-                    canReturnToHub = canReturnToHub(updatedRoom)
-                )
-            }
-        }
-    }
-
-    fun onCombatVictoryEnemiesCleared(enemyIds: List<String>) {
-        removeEnemiesFromCurrentRoom(enemyIds)
     }
 
     fun onCombatVictory(result: CombatResultPayload) {
+        if (result.isPlaceholder || result.outcome != CombatResultPayload.Outcome.VICTORY) return
         val pendingBattle = sessionStore.state.value.pendingBattleJson
+        // Victory is one operation on both platforms. Moving parties have their own persisted identity.
+        if (result.sourcePartyId == null) {
+            removeEnemiesFromRoom(result.roomId ?: _uiState.value.currentRoom?.id, result.enemyIds)
+        }
         val outcomeMessage = combatHandler.processVictory(
             result = result,
             enemyMovementManager = enemyMovementManager,
@@ -988,7 +982,13 @@ class ExplorationController(
 
     private fun handleRestParty() = handleRestParty(null)
 
-    private val healthSkillNodes by lazy { worldAssets.loadSkillNodes() }
+    private val normalHealthSkillNodes by lazy { worldAssets.loadSkillNodes() }
+    private val prototypeHealthSkillNodes by lazy { worldAssets.loadSkillNodes(1) }
+    private val healthSkillNodes get() = if (sessionStore.state.value.progressionPrototypeVersion == 1)
+        prototypeHealthSkillNodes else normalHealthSkillNodes
+
+    private fun maximumHp(character: Player, state: GameSessionState): Int =
+        com.example.starborn.domain.combat.PartyHealth.maxHp(character, state, inventoryService::catalogItem, healthSkillNodes)
 
     private fun handleRestParty(message: String?) {
         val state = sessionStore.state.value
@@ -1025,9 +1025,9 @@ class ExplorationController(
             room.contains("astra") -> {
                 when {
                     "ms_all_arcade_cabinets_restored" in milestones ->
-                        "The crew rests in the common room as all six restored cabinets hum their colorful attract tunes. Zeke shares hot tea, Gh0st leans against the bulkhead with a rare smirk, and the Astra truly feels like home."
+                        "The crew rests in the common room while the restored cabinets hum softly from the recreation deck. Zeke shares hot tea, Gh0st leans against the bulkhead with a rare smirk, and the Astra truly feels like home."
                     "ms_arcade_cabinet_01_repaired" in milestones ->
-                        "Nova rests on the common room couch. The amber and emerald CRT glows from the restored arcade corner dance across the deck plates as the ship's engines hum in harmony."
+                        "Nova rests on the common room couch. A restored cabinet hums on the recreation deck while the ship's engines keep a steady rhythm."
                     else ->
                         "The crew rests around the central common room table. Warm tea steams from battered tin cups, and for once, the silence feels earned."
                 }
@@ -1372,6 +1372,7 @@ class ExplorationController(
                 parseActions(room).forEach { action ->
                     when (action) {
                         is ShopAction -> services += MinimapService.SHOP
+                        is GenericAction -> if (action.actionEvent == "astra_recreation" && !isBurgQuestSession) services += MinimapService.SHOP
                         is TinkeringAction -> services += MinimapService.TINKERING
                         is RestStopAction -> services += MinimapService.COOKING
                         else -> Unit
@@ -1400,6 +1401,7 @@ class ExplorationController(
                 parseActions(room).forEach { action ->
                     when (action) {
                         is ShopAction -> services += MinimapService.SHOP
+                        is GenericAction -> if (action.actionEvent == "astra_recreation" && !isBurgQuestSession) services += MinimapService.SHOP
                         is TinkeringAction -> services += MinimapService.TINKERING
                         is RestStopAction -> services += MinimapService.COOKING
                         else -> Unit
@@ -1568,13 +1570,6 @@ class ExplorationController(
         )
     }
 
-    private fun handleBlockedDirectionCinematic(roomId: String, direction: String, block: BlockedDirection) {
-        val key = "$roomId:$direction"
-        if (!blockedCinematicsShown.add(key)) return
-        val sceneId = sceneIdForBlock(block) ?: return
-        startCinematic(sceneId)
-    }
-
     private fun sceneIdForBlock(block: BlockedDirection?): String? {
         val type = block?.type?.lowercase(Locale.getDefault()) ?: return null
         return when (type) {
@@ -1675,7 +1670,34 @@ class ExplorationController(
             _uiState.update { it.copy(forceBlackScreen = true) }
         }
         if (actionId.equals("astra_launch_simulation", ignoreCase = true)) {
-            _uiState.update { it.copy(isSimulationDeckVisible = true) }
+            _uiState.update { it.copy(isSimulationDeckVisible = true, availableSimulations = com.example.starborn.feature.exploration.presentation.AstraCatalog.availableSimulations(sessionStore.state.value)) }
+        }
+        if (actionId == "astra_recreation" && sessionStore.state.value.hubId == AstraTravel.HUB_ID) {
+            _uiState.update { it.copy(isAstraRecreationVisible = true,
+                astraArcades = com.example.starborn.feature.exploration.presentation.AstraCatalog.arcades.filter { game ->
+                    arcadeService.progress(game.id).installed && (!isBurgQuestSession || game.id == ArcadeIds.DEEP_MINE)
+                }, astraPrizesAvailable = !isBurgQuestSession) }
+        }
+        val facilityId = mapOf("astra_cargo_records" to "cargo", "astra_cargo_manifest" to "cargo", "astra_relic_array" to "relics",
+            "astra_chime_archive" to "chime", "astra_crew_checkin" to "crew", "astra_crew_downtime" to "quarters")[actionId]
+        if (facilityId != null && sessionStore.state.value.hubId == AstraTravel.HUB_ID) {
+            val state = sessionStore.state.value
+            val facility = com.example.starborn.feature.exploration.presentation.astraFacility(facilityId, state, inventoryService::itemDetail)
+            _uiState.update { it.copy(astraFacility = facility) }
+            if (facilityId == "crew" || facilityId == "quarters") {
+                val chapter = when {
+                    "w5_mq25" in state.completedQuests || "ms_w5_mq25_complete" in state.completedMilestones -> 5
+                    "w4_mq20" in state.completedQuests || "ms_w4_mq20_complete" in state.completedMilestones -> 4
+                    "w3_mq15" in state.completedQuests || "ms_w3_mq15_complete" in state.completedMilestones -> 3
+                    "w2_mq05" in state.completedQuests || "ms_w2_mq05_complete" in state.completedMilestones -> 2
+                    else -> 1
+                }
+                sessionStore.setRoomState(if (facilityId == "quarters") "astra_quarters" else "astra_common_room",
+                    "${if (facilityId == "quarters") "personal" else "table"}_checkin_$chapter", true)
+            }
+        }
+        if (actionId.equals("astra_open_catch_log", ignoreCase = true) && sessionStore.state.value.hubId == AstraTravel.HUB_ID) {
+            _uiState.update { it.copy(isCatchLogVisible = true, fishingJournal = fishingService.getJournal()) }
         }
         if (actionId.equals("astra_open_tape_deck", ignoreCase = true)) {
             _uiState.update { it.copy(isTapeDeckVisible = true) }
@@ -1686,7 +1708,8 @@ class ExplorationController(
                 isAstraNavConsoleVisible = true,
                 astraDockedTitle = dock.title.substringAfter(": "),
                 astraDockedWorldId = dock.worldId,
-                astraDestinations = AstraTravel.availableDestinations(sessionStore.state.value)
+                astraDestinations = AstraTravel.availableDestinations(sessionStore.state.value),
+                astraRouteHint = if (isBurgQuestSession) "Inter-world travel is unavailable during this demo. Explore the ship instead." else AstraTravel.navigationHint(sessionStore.state.value)
             ) }
             return
         }
@@ -1787,6 +1810,11 @@ class ExplorationController(
     }
 
     fun launchSimulationCombat(enemyIds: List<String>) {
+        if (com.example.starborn.feature.exploration.presentation.AstraCatalog.availableSimulations(sessionStore.state.value)
+                .none { it.enemyIds == enemyIds }) {
+            postStatus("This simulation unlocks after the crew discovers its campaign encounter.")
+            return
+        }
         dismissSimulationDeck()
         setRecoverableEncounter(EncounterDescriptor(enemyIds.map { EncounterEnemyInstance(enemyId = it) }))
         emitEvent(ExplorationEvent.EnterCombat(enemyIds))
@@ -1811,17 +1839,20 @@ class ExplorationController(
     init {
         viewModelScope.launch(dispatchers.main) {
             sessionStore.state.collect { newState ->
+                scheduleNovaBuildTutorial(newState)
                 sessionStore.takeEquipmentRestoreNotice()?.let(::postStatus)
                 val partyStatus = buildPartyStatusUi(
                     sessionState = newState,
                     charactersById = charactersById,
                     levelingManager = levelingManager,
-                    skillsById = skillsById
+                    skillsById = skillsById,
+                    maxHpFor = { maximumHp(it, newState) }
                 )
                 val progressionSummary = buildProgressionSummaryUi(
                     sessionState = newState,
                     charactersById = charactersById,
-                    levelingManager = levelingManager
+                    levelingManager = levelingManager,
+                    maxHpFor = { maximumHp(it, newState) }
                 )
                 _uiState.update { current ->
                     val overlay = current.skillTreeOverlay?.characterId?.let { characterId ->
@@ -1856,6 +1887,10 @@ class ExplorationController(
                         actions = updatedActions,
                         actionHints = current.currentRoom?.let { buildActionHints(it, updatedActions) } ?: current.actionHints,
                         partyStatus = partyStatus,
+                        partyMemberDetails = current.partyMemberDetails?.let { details ->
+                            val member = partyStatus.members.firstOrNull { it.id == details.id }
+                            details.copy(hpLabel = member?.hpLabel, hpProgress = member?.hpProgress)
+                        },
                         progressionSummary = progressionSummary,
                         equippedItems = newState.equippedItems,
                         unlockedWeapons = newState.unlockedWeapons,
@@ -2175,13 +2210,26 @@ class ExplorationController(
         }
     }
 
+    private fun scheduleNovaBuildTutorial(state: GameSessionState) {
+        com.example.starborn.domain.tutorial.NovaProgressionTutorial.firstAp(state, tutorialsEnabled)?.let { entry ->
+            tutorialManager.showOnce(entry, onDismiss = {
+                tutorialManager.markCompleted(requireNotNull(entry.key))
+                openMenuOverlay(MenuTab.STATS, showTutorial = false)
+                openSkillTree("nova")
+            })
+        }
+    }
+
     private fun buildSkillTreeOverlay(
         characterId: String,
         sessionState: GameSessionState
     ): SkillTreeOverlayUi? {
         val tree = skillTreesByCharacter[characterId] ?: return null
         val character = charactersById[characterId]
-        return buildSkillTreeOverlayUi(tree, character, sessionState, skillsById)
+        return buildSkillTreeOverlayUi(tree, character, sessionState, skillsById)?.copy(
+            tutorialGuide = com.example.starborn.domain.tutorial.NovaProgressionTutorial.treeGuide(sessionState, tutorialsEnabled).takeIf { characterId == "nova" },
+            respecRefund = if (com.example.starborn.domain.leveling.CrewBuildPrototype.isEnabled(sessionState))
+                sessionState.purchasedSkillNodes.filterKeys { com.example.starborn.domain.leveling.CrewBuildPrototype.owners[it] == characterId }.values.sum() else 0)
     }
 
     private fun findSkillNode(characterId: String, nodeId: String): SkillTreeNode? =
@@ -2243,8 +2291,8 @@ class ExplorationController(
                 }
             }.map { normalizeRoomEnemies(it) }
             val players = worldAssets.loadCharacters()
-            val skills = worldAssets.loadSkills()
-            val skillTrees = worldAssets.loadSkillTrees()
+            val skills = worldAssets.loadSkills(sessionStore.state.value.progressionPrototypeVersion).map { com.example.starborn.domain.leveling.CrewBuildPrototype.tune(it, sessionStore.state.value) }
+            val skillTrees = worldAssets.loadSkillTrees(sessionStore.state.value.progressionPrototypeVersion)
             val npcs = worldAssets.loadNpcs()
             val enemies = worldAssets.loadEnemies()
             val tuningPuzzles = worldAssets.loadTuningPuzzles()
@@ -2285,7 +2333,9 @@ class ExplorationController(
                 room.dark == true || booleanValueOf(room.state["dark"]) == true
             }.map { it.id }.toSet()
             nodeIdByRoomId = nodes.flatMap { node -> node.rooms.map { it to node.id } }.toMap()
-            nodeExitResolver = NodeExitResolver(nodes, worldAssets.loadNodeTransitions())
+            areaNodes = nodes.associateBy { it.id }
+            areaEdges = worldAssets.loadNodeTransitions()
+            nodeExitResolver = NodeExitResolver(nodes, areaEdges)
             restoreRoomStates(existingState.roomStates)
             flushPendingUnlockedExits()
             flushPendingUnlockedAreas()
@@ -2356,7 +2406,6 @@ class ExplorationController(
                 markVisited(it.id)
                 markDiscovered(it)
             }
-            blockedCinematicsShown.clear()
             if (preselectedRoomId.isNullOrBlank()) {
                 sessionStore.resetTutorialProgress()
             }
@@ -2382,12 +2431,14 @@ class ExplorationController(
                 sessionState = sessionState,
                 charactersById = charactersById,
                 levelingManager = levelingManager,
-                skillsById = skillsById
+                skillsById = skillsById,
+                maxHpFor = { maximumHp(it, sessionState) }
             )
             val progressionSummary = buildProgressionSummaryUi(
                 sessionState = sessionState,
                 charactersById = charactersById,
-                levelingManager = levelingManager
+                levelingManager = levelingManager,
+                maxHpFor = { maximumHp(it, sessionState) }
             )
             val initialActions = parseActions(initialRoom)
             val initialConnections = initialRoom?.let { visibleConnections(it) }.orEmpty()
@@ -2569,6 +2620,17 @@ class ExplorationController(
         _uiState.update {
             it.copy(
                 currentRoom = nextRoom,
+                areaEntry = destinationNodeId?.takeIf { it != nodeIdByRoomId[currentRoom.id] }
+                    ?.let { areaNodes[it] }?.let { node ->
+                        AreaEntryUi(
+                            id = System.nanoTime(), title = node.title, region = nextHub?.title,
+                            text = areaEdges.firstOrNull { edge ->
+                                edge.fromRoom == currentRoom.id && edge.toRoom == nextRoom.id &&
+                                    edge.direction.equals(normalizedDirection, true)
+                            }?.transitionText,
+                            firstVisit = discoveringDestination
+                        )
+                    },
                 roomTransition = RoomTransitionUi(
                     id = System.nanoTime(),
                     fromRoomId = currentRoom.id,
@@ -2850,6 +2912,23 @@ class ExplorationController(
         if (!rawNpcName.equals(dialogueName, ignoreCase = true)) {
             eventManager.handleTrigger(triggerType, EventPayload.TalkTo(dialogueName))
         }
+    }
+
+    fun openRoomActions() { _uiState.update { it.copy(roomActionsVisible = true) } }
+    fun dismissRoomActions() { _uiState.update { it.copy(roomActionsVisible = false) } }
+    fun dismissRoomObject() { _uiState.update { it.copy(roomObjectOffer = null) } }
+    fun inspectRoomAction(action: RoomAction) {
+        dismissRoomActions()
+        if (_uiState.value.actions.none { it.actionKey() == action.actionKey() }) return
+        val offer = com.example.starborn.feature.exploration.presentation.roomObjectOffer(action)
+        if (offer != null && _uiState.value.actionHints[action.actionKey()]?.locked != true) {
+            _uiState.update { it.copy(roomObjectOffer = offer) }
+        } else onActionSelected(action)
+    }
+    fun confirmRoomObject() {
+        val action = _uiState.value.roomObjectOffer?.action ?: return
+        dismissRoomObject()
+        if (_uiState.value.actions.any { it.actionKey() == action.actionKey() }) onActionSelected(action)
     }
 
     fun onActionSelected(action: RoomAction) {
@@ -3227,6 +3306,47 @@ class ExplorationController(
         }
     }
 
+    fun closeAstraRecreation() { _uiState.update { it.copy(isAstraRecreationVisible = false) } }
+
+    fun openRecreationArcade(id: String) {
+        if (sessionStore.state.value.hubId != AstraTravel.HUB_ID || !_uiState.value.isAstraRecreationVisible) return
+        val game = _uiState.value.astraArcades.firstOrNull { it.id == id } ?: return
+        if (!arcadeService.progress(id).installed) return
+        closeAstraRecreation()
+        handleGenericAction(GenericAction(game.title, "arcade", cabinetId = id))
+    }
+
+    fun openRecreationFilms() {
+        if (sessionStore.state.value.hubId != AstraTravel.HUB_ID || !_uiState.value.isAstraRecreationVisible) return
+        closeAstraRecreation()
+        triggerPlayerAction("astra_open_tape_deck")
+    }
+
+    fun openRecreationPrizes() {
+        if (sessionStore.state.value.hubId != AstraTravel.HUB_ID || !_uiState.value.isAstraRecreationVisible || isBurgQuestSession) return
+        closeAstraRecreation()
+        handleShopAction(ShopAction("arcade prize dispenser", "arcade_prize_shop"))
+    }
+
+    fun selectCargoRecord(section: String) {
+        if (sessionStore.state.value.hubId != AstraTravel.HUB_ID) return
+        val action = when (section) {
+            "cargo" -> "astra_cargo_manifest"
+            "relics" -> "astra_relic_array"
+            "catch" -> "astra_open_catch_log"
+            else -> return
+        }
+        closeAstraFacility()
+        closeCatchLog()
+        triggerPlayerAction(action)
+    }
+
+    fun closeAstraFacility() { _uiState.update { it.copy(astraFacility = null) } }
+
+    fun closeCatchLog() {
+        _uiState.update { it.copy(isCatchLogVisible = false) }
+    }
+
     fun openMilestoneGallery() {
         viewModelScope.launch(dispatchers.main) {
             playUiCue("click")
@@ -3245,7 +3365,7 @@ class ExplorationController(
     private var lastMenuTab: MenuTab = MenuTab.INVENTORY
     private var hasOpenedFieldMenu = false
 
-    fun openMenuOverlay(defaultTab: MenuTab? = null) {
+    fun openMenuOverlay(defaultTab: MenuTab? = null, showTutorial: Boolean = true) {
         viewModelScope.launch(dispatchers.main) {
             playUiCue("menu_open")
             val isTinkeringTut = _uiState.value.isTinkeringTutorialActive
@@ -3254,7 +3374,7 @@ class ExplorationController(
             hasOpenedFieldMenu = true
             lastMenuTab = tab
             _uiState.update { it.copy(isMenuOverlayVisible = true, menuTab = tab, fishingJournal = fishingService.getJournal()) }
-            maybeShowInventoryTutorial(tab)
+            if (showTutorial) maybeShowInventoryTutorial(tab)
             if (tab == MenuTab.FIELD_KIT) {
                 triggerPlayerAction("tinkering_screen_entered")
             }
@@ -3341,8 +3461,8 @@ class ExplorationController(
                     append(" to next")
                 }
             }
-            val maxHp = character.hp.coerceAtLeast(0)
-            val currentHp = (sessionState.partyMemberHp[character.id] ?: maxHp).coerceAtLeast(0)
+            val maxHp = maximumHp(character, sessionState).coerceAtLeast(0)
+            val currentHp = (sessionState.partyMemberHp[character.id] ?: maxHp).coerceIn(0, maxHp)
             val hpLabel = if (maxHp > 0) "$currentHp / $maxHp HP" else null
             val primaryStats = listOf(
                 CharacterStatValueUi("Strength", character.strength.toString()),
@@ -3414,6 +3534,16 @@ class ExplorationController(
         }
     }
 
+    fun resetPrototypeBuild(characterId: String) {
+        viewModelScope.launch(dispatchers.main) {
+            if (sessionStore.resetPrototypeBuild(characterId)) {
+                playUiCue("confirm")
+                postStatus("Build reset. Spent AP returned to the party.")
+                _uiState.update { it.copy(skillTreeOverlay = buildSkillTreeOverlay(characterId, sessionStore.state.value)) }
+            }
+        }
+    }
+
     fun unlockSkillNode(nodeId: String) {
         viewModelScope.launch(dispatchers.main) {
             val overlay = _uiState.value.skillTreeOverlay ?: return@launch
@@ -3439,6 +3569,18 @@ class ExplorationController(
                 return@launch
             }
             val definition = findSkillNode(overlay.characterId, nodeId) ?: return@launch
+            if (com.example.starborn.domain.leveling.NovaBuildPrototype.isEnabled(sessionStore.state.value)) {
+                if (!sessionStore.purchasePrototypeNode(nodeId)) {
+                    postStatus("Purchase unavailable. Check AP and prerequisites.")
+                    return@launch
+                }
+                tutorialManager.markCompleted(com.example.starborn.domain.tutorial.NovaProgressionTutorial.FIRST_AP)
+                promptManager.discardMatching { it.id == com.example.starborn.domain.tutorial.NovaProgressionTutorial.FIRST_AP }
+                playUiCue("confirm")
+                postStatus("Learned ${branchNode.name}")
+                _uiState.update { it.copy(skillTreeOverlay = buildSkillTreeOverlay(overlay.characterId, sessionStore.state.value)) }
+                return@launch
+            }
             val cost = definition.costAp.coerceAtLeast(0)
             if (!sessionStore.spendAp(cost)) {
                 postStatus("Not enough Ability Points.")
@@ -3744,7 +3886,7 @@ class ExplorationController(
         if (tutorialManager.hasCompleted(GEAR_TUTORIAL_ID)) return
         if (_uiState.value.settings.modernFieldMenu) {
             tutorialManager.showOnce(key = GEAR_TUTORIAL_ID, context = "Party",
-                message = "Open Party and choose Nova. Tap Weapon to equip her cutter, then check Armor and available mod slots before heading into the mines. Locked mod slots show their requirements.",
+                message = "Open Party and choose Nova. Select Weapon under Equipment to equip her Mining Pistol, then check Armor and available mod slots before heading into the mines. Locked mod slots show their requirements.",
                 onDismiss = { tutorialManager.markCompleted(GEAR_TUTORIAL_ID) })
             return
         }
@@ -3759,7 +3901,7 @@ class ExplorationController(
                 entry = TutorialEntry(
                     key = GEAR_TUTORIAL_ID,
                     context = "Gear",
-                    message = "Open the Menu and choose Inventory -> Gear to equip Nova's cutter, armor, and mods before heading into the mines."
+                    message = "Open the Menu and choose Inventory -> Gear to equip Nova's Mining Pistol, armor, and mods before heading into the mines."
                 ),
                 allowDuplicates = false,
                 onDismiss = { tutorialManager.markCompleted(GEAR_TUTORIAL_ID) }
@@ -4847,6 +4989,12 @@ class ExplorationController(
 
     private fun applyEncounterClearedStates(room: Room, states: Map<String, Boolean>): Room {
         var updated = room
+        // Repair saves made by the old desktop return path, which recorded the quest victory
+        // but omitted the separate static-enemy cleanup callback.
+        if (room.id == "workshop_yard" && (states["loader_cleared"] == true ||
+                "w1_mq01_faulted_loader_victory" in sessionStore.state.value.completedEvents)) {
+            updated = removeDefeatedEnemies(updated, listOf("faulted_loader"))
+        }
         states.forEach { (key, value) ->
             if (!value) return@forEach
             val enemyIds = defeatedEnemyIdsFromStateKey(key) ?: return@forEach
@@ -5387,7 +5535,7 @@ class ExplorationController(
                                 showInspection(
                                     "Ollie rocks back on his heels beside the cabinet, grease across both gloves. " +
                                         "\"Had to shave three centimeters off the coin box. Worth it. Listen to that thing breathe.\" " +
-                                        "The amber attract screen rolls over, and for once the common room feels built for staying."
+                                        "The amber attract screen rolls over, and for once the recreation deck feels built for staying."
                                 )
                             }
                         }
@@ -5513,6 +5661,7 @@ class ExplorationController(
         viewModelScope.launch(dispatchers.main) {
             _uiState.update {
                 it.copy(
+                    narrationPrompt = null,
                     blockedPrompt = BlockedPrompt(
                         direction = direction,
                         message = message,
@@ -5722,9 +5871,6 @@ class ExplorationController(
             "enemy" -> {
                 val hasEnemies = hasBlockingEnemies(room, normalized)
                 if (hasEnemies) {
-                    if (mode == DirectionEvaluationMode.ATTEMPT) {
-                        handleBlockedDirectionCinematic(room.id, normalized, block)
-                    }
                     DirectionEvaluation(true, block.messageLocked ?: lockedDirectionFallback(normalized, block), block)
                 } else {
                     if (mode == DirectionEvaluationMode.ATTEMPT) {
@@ -5735,17 +5881,11 @@ class ExplorationController(
             }
             "lock", "key", "state" -> {
                 if (!requirementsMet(block.requires)) {
-                    if (mode == DirectionEvaluationMode.ATTEMPT) {
-                        handleBlockedDirectionCinematic(room.id, normalized, block)
-                    }
                     return DirectionEvaluation(true, block.messageLocked ?: lockedDirectionFallback(normalized, block), block)
                 }
                 val keyId = block.keyId?.takeIf { it.isNotBlank() }
                 if (keyId != null && !inventoryService.hasItem(keyId)) {
                     val requirementMessage = block.messageLocked ?: lockedDirectionFallback(normalized, block)
-                    if (mode == DirectionEvaluationMode.ATTEMPT) {
-                        handleBlockedDirectionCinematic(room.id, normalized, block)
-                    }
                     return DirectionEvaluation(true, requirementMessage, block)
                 }
                 if (mode == DirectionEvaluationMode.ATTEMPT) {

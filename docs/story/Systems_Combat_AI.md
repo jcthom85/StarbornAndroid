@@ -1,5 +1,7 @@
 # Systems: Combat AI
 
+> **Implementation reconciliation pending ? October 14, 2026.** Supporting design/authoring material. Current code/assets take precedence for implemented behavior; older Canon, Locked, required, or next-step claims below are not evidence that the game should be changed. Check [current documentation](../README.md) and the live route before use. This banner classifies review status, not the correctness of every passage.
+
 ## Overview
 Enemy AI is driven by **behaviors** (how it thinks), **roles** (what it is), and **context** (current fight state).
 The system scores skill + target pairs and selects the highest‑value action each turn.

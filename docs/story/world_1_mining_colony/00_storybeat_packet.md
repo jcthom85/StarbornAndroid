@@ -1,5 +1,7 @@
 # World 1 Storybeat Packet
 
+> **Implementation reconciliation pending ? October 14, 2026.** Supporting design/authoring material. Current code/assets take precedence for implemented behavior; older Canon, Locked, required, or next-step claims below are not evidence that the game should be changed. Check [current documentation](../../README.md) and the live route before use. This banner classifies review status, not the correctness of every passage.
+
 **Status:** Build Prep
 **Purpose:** This is the working bridge between the World 1 story bible and implementation data. Use it to author `quests.json`, `events.json`, `dialogue.json`, `cinematics.json`, room actions, encounters, rewards, and art prompts.
 

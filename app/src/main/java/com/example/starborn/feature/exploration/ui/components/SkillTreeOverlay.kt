@@ -37,7 +37,8 @@ fun SkillTreeOverlay(
     overlay: SkillTreeOverlayUi,
     theme: Theme?,
     onClose: () -> Unit,
-    onUnlockSkill: (String) -> Unit
+    onUnlockSkill: (String) -> Unit,
+    onResetBuild: () -> Unit = {}
 ) {
     val accentColor = themeColor(theme?.accent, Color(0xFF7BE4FF))
     val borderColor = themeColor(theme?.border, Color.White.copy(alpha = 0.65f))
@@ -54,6 +55,7 @@ fun SkillTreeOverlay(
                 borderColor = borderColor,
                 onClose = onClose,
                 onUnlockSkill = onUnlockSkill,
+                onResetBuild = onResetBuild,
                 showClose = true,
                 modifier = Modifier.align(Alignment.Center)
             )
@@ -69,7 +71,8 @@ fun SkillTreeContent(
     onClose: () -> Unit = {},
     onUnlockSkill: (String) -> Unit,
     showClose: Boolean = false,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onResetBuild: () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
     val portraitPainter = rememberAssetPainter(
@@ -93,6 +96,23 @@ fun SkillTreeContent(
     }
     val selectedNode = selectedBranch?.nodes?.firstOrNull { it.id == selectedNodeId }
         ?: selectedBranch?.nodes?.firstOrNull()
+
+    if (LocalModernFieldMenu.current && !showClose) {
+        Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Text("${overlay.characterName}: Skills", color = FieldMenuDesign.text,
+                style = MaterialTheme.typography.titleSmall)
+            if (overlay.respecRefund > 0) TextButton(onClick = onResetBuild) { Text("Reset build (+${overlay.respecRefund} AP)") }
+            overlay.tutorialGuide?.let { Text(it, color = FieldMenuDesign.textMuted, style = MaterialTheme.typography.bodySmall) }
+            SkillTreeBranchTabs(overlay.branches, selectedBranchIndex, accentColor, borderColor) {
+                selectedBranchIndex = it
+            }
+            if (selectedBranch != null && selectedBranch.nodes.isNotEmpty()) {
+                SkillTreeGrid(selectedBranch, accentColor, selectedNode?.id,
+                    { selectedNodeId = it.id }, onUnlockSkill)
+            } else Text("No skills available for this branch yet.", color = FieldMenuDesign.textMuted)
+        }
+        return
+    }
 
     Surface(
         modifier = modifier
@@ -146,6 +166,8 @@ fun SkillTreeContent(
                         }
                     }
 
+                    if (overlay.respecRefund > 0) TextButton(onClick = onResetBuild) { Text("Reset build (+${overlay.respecRefund} AP)") }
+                    overlay.tutorialGuide?.let { Text(it, color = Color.White, style = MaterialTheme.typography.bodyMedium) }
                     SkillTreeBranchTabs(
                         branches = overlay.branches,
                         selectedIndex = selectedBranchIndex,
@@ -267,9 +289,9 @@ private fun SkillTreeGrid(
                             else -> "Locked · ${node.costAp} AP"
                         }, color = if (node.status.canPurchase) FieldMenuDesign.gold else FieldMenuDesign.textMuted,
                             style = MaterialTheme.typography.bodySmall)
+                        if (selected) SkillTreeNodeDetails(node, accentColor, FieldMenuDesign.border, onUnlock)
                     }
                 }
-                if (selected) SkillTreeNodeDetails(node, accentColor, FieldMenuDesign.border, onUnlock)
             }
         }
         return
@@ -407,6 +429,26 @@ private fun SkillTreeNodeDetails(
     borderColor: Color,
     onUnlock: (String) -> Unit
 ) {
+    if (LocalModernFieldMenu.current && node != null) {
+        Column(Modifier.fillMaxWidth().padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(node.description ?: "Unique ability upgrade.", color = FieldMenuDesign.text,
+                style = MaterialTheme.typography.bodySmall)
+            if (!node.status.unlocked) {
+                if (!node.status.meetsTierRequirement) Text(
+                    "Invest ${node.status.requiredApForTier} AP in this tree to unlock this tier.",
+                    color = FieldMenuDesign.gold, style = MaterialTheme.typography.bodySmall)
+                val missing = node.requirements.filter { it.id in node.status.unmetRequirements }
+                if (missing.isNotEmpty()) Text("Requires: ${missing.joinToString(", ") { it.label }}",
+                    color = FieldMenuDesign.textMuted, style = MaterialTheme.typography.bodySmall)
+                Button(onClick = { onUnlock(node.id) }, enabled = node.status.canPurchase,
+                    modifier = Modifier.fillMaxWidth().heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = FieldMenuDesign.gold, contentColor = FieldMenuDesign.shell)) {
+                    Text(if (node.status.canPurchase) "Unlock (${node.costAp} AP)" else "Locked")
+                }
+            }
+        }
+        return
+    }
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),

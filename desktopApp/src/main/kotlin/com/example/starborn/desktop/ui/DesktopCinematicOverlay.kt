@@ -15,6 +15,9 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.key.*
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.font.FontWeight
@@ -48,17 +51,31 @@ fun DesktopCinematicOverlay(state: CinematicUiState, services: DesktopAppService
         if (state.presentation == CinematicPresentation.ILLUSTRATED) {
             DesktopIllustratedCinematicOverlay(state, onAdvance, onSkip, services)
         } else {
+            val text = state.step.text
+            var revealed by remember(state.sceneId, state.stepIndex) { mutableIntStateOf(0) }
+            val focus = remember { FocusRequester() }
+            val advanceOrReveal = { if (revealed < text.length) revealed = text.length else onAdvance() }
+            LaunchedEffect(state.sceneId, state.stepIndex) {
+                focus.requestFocus()
+                while (revealed < text.length) { delay(28); revealed = (revealed + 1).coerceAtMost(text.length) }
+            }
             LaunchedEffect(state.sceneId, state.stepIndex) {
                 state.step.audioCue?.let { services.audioDriver.executeAll(listOf(AudioCommand.Play(AudioCueType.UI, it))) }
                 state.step.voiceCue?.let { services.audioDriver.executeAll(listOf(AudioCommand.Play(AudioCueType.VOICE, it))) }
                 state.step.durationSeconds?.takeIf { it > 0 }?.let { delay((it * 1000).toLong()); onAdvance() }
             }
-            Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = if (state.backdrop == CinematicBackdrop.BLACK) 1f else .72f)), contentAlignment = Alignment.BottomCenter) {
+            Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = if (state.backdrop == CinematicBackdrop.BLACK) 1f else .72f))
+                .focusRequester(focus).onPreviewKeyEvent { event ->
+                    if (event.key == Key.Enter || event.key == Key.Spacebar) {
+                        if (event.type == KeyEventType.KeyUp) advanceOrReveal()
+                        true
+                    } else false
+                }.focusable().clickable(onClick = advanceOrReveal), contentAlignment = Alignment.BottomCenter) {
                 Surface(Modifier.padding(32.dp).widthIn(max = 960.dp).fillMaxWidth(), color = Color(0xF007111A), shape = RoundedCornerShape(16.dp)) {
                     Column(Modifier.padding(24.dp)) {
                         state.step.speaker?.let { Text(it, color = Color(0xFF7BE8FF)) }
-                        Text(state.step.text, color = Color.White)
-                        Row { TextButton(onClick = onAdvance) { Text("Continue") }; if (state.skippable) TextButton(onClick = onSkip) { Text("Skip") } }
+                        Text(text.take(revealed), color = Color.White)
+                        Row { TextButton(onClick = advanceOrReveal) { Text("Continue") }; if (state.skippable) TextButton(onClick = onSkip) { Text("Skip") } }
                     }
                 }
             }

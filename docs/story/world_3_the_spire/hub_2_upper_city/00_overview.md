@@ -1,13 +1,11 @@
-# World 3: The Spire — Hub 2: Upper City
+# Upper City: implemented hub overview
 
-## Overview
-The "Cloud District" of the Spire. Clean, white, gold, and sterile. This is where the Dominion executives live. It feels like a hospital mixed with a luxury hotel.
+Status: Source-reconciled reference, October 14, 2026. Current code/assets are the implementation baseline. This is a source review, not a fresh playthrough or a claim that every route and device behavior is accepted.
 
-## Key Themes
-- **Wealth Disparity:** Contrast with the slums.
-- **The Heist:** Ocean's Eleven style infiltration.
-- **The Relic:** Finding the second Relic (The Lens).
-- **False Paradise (Breather):** A rooftop Skypark garden where the air is clean, the sun is fake, and the utopia is a costume.
+Guest access, Laundry Service, executive spaces, Archive investigation, Lens theft, prototype work, Skyline Salon mystery, and rooftop escape. Location membership is not an either-Skypark-or-Lounge progression rule.
 
-## Transition Points
-- **To World 4:** Via *The Astra* (Deep-Core Engine hunt).
+Use `hub_6_upper_city` and current node/room records for navigation. The local quest, cast, and location files describe source contracts; they do not authorize new lock schedules, mandatory scenes, or room expansion.
+
+## Sources and maintenance
+
+[rooms](../../../../app/src/main/assets/rooms.json), [quests](../../../../app/src/main/assets/quests.json), [events](../../../../app/src/main/assets/events.json), [dialogue](../../../../app/src/main/assets/dialogue.json), [hub_nodes](../../../../app/src/main/assets/hub_nodes.json). [Documentation index](../../../README.md). Update this reference when its corresponding records change; do not change working game logic to match an older script.

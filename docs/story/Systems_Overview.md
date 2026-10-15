@@ -1,158 +1,67 @@
-Starborn — Systems Overview as We Know It
+# Starborn systems overview
 
-Gameplay, UI, and data architecture snapshot for handoff to a separate LLM.
+Status: Implementation reference, reviewed October 14, 2026. Describes inspected code and data, not release or device acceptance. See [Current State](../CURRENT_STATE.md) and [the index](../README.md).
 
-| Document purpose | Describe Starborn’s gameplay systems and content architecture in clear, implementation-friendly terms. |
-| --- | --- |
-| Platform | Mobile-first (Android initially), portrait orientation; later ports possible. |
-| Engine | Custom made in Kotlin |
-| Design philosophy | Modern text-adventure exploration + JRPG-inspired ATB-based combat, heavily streamlined for mobile UX. |
+## Runtime and platforms
 
-# 1) High-Level Game Loop
+- `gameRuntime/src/main/kotlin/com/example/starborn/` owns shared gameplay controllers, models, events, quests, inventory, crafting, combat, movement, and persistence.
+- `app/src/main/java/com/example/starborn/` contains Android services, navigation/lifecycle wiring, and Compose UI.
+- `desktopApp/src/main/kotlin/com/example/starborn/desktop/` contains Windows services, input, UI, audio, and packaging adapters.
+- `shared/` contains shared Compose resources/presentation infrastructure; not every screen is shared.
+- Content comes from `app/src/main/assets/` and `world_assets/src/main/assets/`. Desktop stages source assets and checks their packaged bytes.
 
-- Navigate room-to-room using swipe gestures that correspond to NSEW
-- Interact via room descriptions (no typing). Tap highlighted words to interact.
-- Discover exits and move between nodes/rooms within a hub/world.
-- Talk to NPCs, accept quests, shop, craft (tinker), and manage inventory.
-- Enter battles (mostly player-initiated). Choose actions/abilities strategically.
-- Gain rewards (items, skills, story milestones), unlocking new areas and systems.
+Inspect live routes before treating a helper, preview, or old ViewModel as production behavior.
 
-# 2) Content Architecture (Data-Driven)
+## Exploration
 
-Starborn is designed to be driven from JSON data: rooms, events, dialogue, items, enemies, quests, battles, and cinematics are intended to be authored via editors that write JSON. The game runtime loads this data to render UI, choices, and encounters.
+Worlds contain hubs, nodes, and rooms. Android uses portrait illustrated rooms, cardinal swipes and visible controls, tappable prose, and authored special exits. Desktop presents shared actions through mouse/keyboard controls and a separate layout.
 
-Known tooling direction: a growing suite of editors and an AI assistant panel to generate content via OpenAI API.
+`RoomPresentation.kt` resolves descriptions, explicit links, and action presentation. Room state, milestones, variants, and gates affect what players see and can do. A generic action can dispatch a substantial event; its type alone does not establish depth.
 
-# 3) Exploration System
+Enemy movement is implemented through `EnemyMovementManager`, `enemy_movement.json`, the exploration controller, and persistent enemy-party state. Not every encounter moves. Check the room, catalog, progression, and visibility/lifecycle gates.
 
-## 3.1 Main Exploration UI
+## Combat
 
-- Screen is portrait. Main text window occupies ~75% of the top portion with the room title above it (stylized pixel font).
-- Room description includes highlighted/interactive words (bold/glow).
-- Tapping a highlighted word opens an action menu (e.g., examine, use, talk, take, toggle), or triggers the action directly if only one logical option exists (accompanied by a narrative popup).
-- Actions can change the room description (stateful text). This is a core exploration pillar: highlighted words are not just buttons, they are ways for the player to change what the room is, what it reveals, or what it proves.
-- Room descriptions can define authored `description_variants` that resolve from persistent room state and milestones. Use them when an interaction changes environmental truth, clue visibility, danger, objective context, or post-quest aftermath.
-- Popups should deliver immediate feedback; the room description should carry the persistent changed state after the popup is dismissed.
-- Discovered exits persist for navigation clarity.
-- No typing: all movement and actions are UI-driven.
+`CombatController`, `CombatEngine`, and `CombatActionProcessor` handle ATB readiness, actions, targeting, cooldowns, statuses, stability, AI, and outcomes. Cooldowns count the acting character's turns. Source abilities use authored acquisition rules. There is no universal enforced six-core-plus-six-Source kit.
 
-## 3.1A Deferred: Dynamic Enemy Movement
+Weakness can increase damage, accelerate active cooldowns, and increase stability damage. Break creates an opening for direct damage. Use the current affinity rules and action processor for exact values.
 
-Dynamic enemy movement is documented as a future exploration system in `docs/story/Systems_Dynamic_Enemy_Movement.md`. It would add bounded enemy patrol/wander/hunter behavior, aggression levels, and UI/audio signaling for enemies entering or leaving rooms.
+HP, equipment, owned supplies, learned abilities, and meals affect encounters. Battles do not reset everyone to an equal full-health baseline. Menus, tutorials, animations, and background state participate in ATB pause handling; independent prompts/minigame timers require separate lifecycle verification.
 
-This is intentionally out of scope for the current World 1 vertical slice. World 1 encounter placement should remain deterministic while the playable slice is finished and stabilized.
+The catalog status Erosion is a damage-over-time effect. It does not establish a persistent hunger/burnout meter reducing field HP or Focus. Narrative Source strain remains a story fact.
 
-## 3.2 World/Hub/Node Structure
+## Progression
 
-The overworld structure is hierarchical: World → Hub → Node → Room. Generally each world will have two hubs. In World 1 there are currently two hubs: the Mining Colony (Hub 1) and the Corporate Outpost (Hub 2). Hub 1 currently has four main nodes: Homestead Quarter, Trade Row, Stellarium Mine, and Maintenance Tunnels (unlocks late and leads onward).
+`LevelingManager` uses `leveling_data.json`; `progression.json` defines level-based skill unlocks. Combat stats derive from character data, equipment, supported passives, and meals. Level is not a general automatic stat-growth multiplier.
 
-# 4) Combat & Skill System (Cooldown-Driven)
+Skill trees use AP, prerequisites, and tier rules. A tree entry or successful purchase does not prove its advertised effect is supported. The October 14 evaluation identified unsupported effects and field/combat HP presentation disagreement. Use `PartyHealth` for effective HP rules and check caller consistency.
 
-Starborn uses a cooldown-based skill system instead of traditional resource pools (MP, mana, stamina, etc.). All skills are available based on cooldown state and tactical conditions, not consumable points.
+A growth curve, replacement skill kit, or respec system is a gameplay change requiring implementation and balance work, not a documentation correction.
 
-**Core Principles:**
-*   **Baseline Equality:** Every encounter starts with the same mechanical baseline.
-*   **Tactical Gating:** Power is gated by player decisions, not attrition.
-*   **Sequencing over Stats:** Strategy and sequencing matter more than luck or stat abuse.
-*   **Earned Power:** Strong actions must be earned within the fight (setup/conditions), not front-loaded.
+## Equipment, food, and crafting
 
-## 4.1 Skill Categories (The "12 Skill" Limit)
+Weapons, armor, accessories, snacks, and gear modifications have ownership, compatibility, unlock, and assignment checks. Use `GearRules`, `ModEquipmentRules`, controllers, and catalogs.
 
-Each character has **12 total skills**, split into two distinct categories:
+- Ordinary healing items consume inventory according to their effects.
+- Equipped snacks supply reusable cooldown abilities. Their target scope is authored, not universally self-only.
+- Prepared meals consume portions and apply party bonuses for three encounters under `MealRules`. Chef selection can change bonuses; replacement and cooking have explicit rules.
+- Tinkering uses recipe discovery, tools, and ingredients through field-menu and authored station routes. Check actual eligibility.
+- Shops calculate prices, gates, stock, and accepted sale items through `ShopController`. Catalog arithmetic alone does not establish campaign affordability.
 
-### A. Core Skills (6 per character)
-Core skills define a character’s identity and combat role.
-*   **Availability:** Always available once learned (governed by cooldowns).
-*   **Function:** Form the backbone of moment-to-moment combat.
-*   **Design:** Designed to interact with enemy states, positioning, turn order, or ally actions.
-*   **No Nukes:** Core skills are intentionally not raw "nukes." Strong effects require setup (e.g., target debuffed, ally acted earlier, defensive stance held). This prevents "open with the best move" syndrome.
+Fishing and six arcade games have shared gameplay and separate presentation. Verify acquisition, cancellation, acknowledgment, and repeat rewards through live routes.
 
-### B. Source Arts (6 per character)
-Source Arts are **Relic-granted abilities**, acquired when the party discovers and interacts with a world Relic.
-*   **Acquisition:** One Relic per world = One new Source Art per character per world.
-*   **Total:** 6 Source Arts per character across the full game.
-*   **Philosophy (No "Ultimates"):**
-    *   They are **Tactical Tools**, not damage spikes.
-    *   Situationally powerful, not universally optimal.
-    *   Designed to change *how* combat is approached, not end it.
-    *   *Example:* A Source Art might reset cooldowns, force enemy turns to skip, or swap positions—powerful, but requires timing.
+## Astra, cinematics, and persistence
 
-## 4.2 Cooldown & Condition Model
+The five-room Astra supports travel, preparation, rest, discoveries, optional activities, and chapter-dependent crew check-ins. [Astra functionality](hub_ship_astra/01_functionality.md) distinguishes facilities from retired proposals. Simulations use normal combat rewards and consumable costs.
 
-All skills use cooldowns, but cooldown alone is not the primary limiter. Skills often require **Conditions** to be effective:
-*   **Enemy State:** Target must be debuffed, charging, or exposed.
-*   **Player State:** User guarded last turn, or repositioned.
-*   **Rhythm:** Skill is stronger if used second in a chain.
+Cinematics include illustrated timed scenes and text/card sequences. Settings include effects quality and accessibility/comfort preferences. Verify each screen consumes them; model fields alone are not acceptance.
 
-**The Rule:** Cooldowns define *when* a skill can be used again. Conditions define *whether* it should be used at all.
+Session state, protobuf persistence, inventory synchronization, pending scenes, and battle checkpoints support save/load and recovery. Serialization parity does not prove every process-death boundary. Check interruption around payout, encounter retirement, progression, puzzles, and scene callbacks.
 
-## 4.3 Encounter Balance
+## Authoring and verification
 
-*   **Standard Enemies:** Allow aggressive openings. Core skills feel responsive. Source Arts provide efficiency.
-*   **Elites:** Punish sloppy sequencing. Require setup before big actions. Source Arts solve specific mechanical problems.
-*   **Bosses:**
-    *   Designed with telegraphed actions and phases.
-    *   Punish premature skill use.
-    *   **Tactical Flow:** Opening with the strongest skill is often suboptimal. Players must prepare the moment. Source Arts are clutch interventions (e.g., interrupting a wipe mechanic).
+Stable content IDs are compatibility contracts. Reuse current IDs and schemas rather than imposing an old naming convention. Preserve event ownership and exact-once rewards; use supported explicit action references when prose labels change.
 
-## 4.4 Sprite Standards
+Checks live in `scripts/`, Android-hosted tests in `app/src/test/`, device tests in `app/src/androidTest/`, and desktop tests in `desktopApp/src/test/`. Record build, command, result, and limits. Historical passing totals do not establish a current green baseline.
 
-Combat character sprites are defined in data (JSON) and rendered using pixel-art assets (PNG).
-*   **Player Characters:** 64x64 or similar standard size.
-*   **Enemies:** Varying sizes based on tier (Standard, Elite, Boss).
-*   **Animations:** Idle (Breathing), Ready (Targeted), Attack, Hit, Death.
-
-## 4.5 The Snack Slot (Combat Consumables)
-(Retained from previous design)
-*   **Structure:** Dedicated equipment slot for one consumable type.
-*   **Mechanic:** Functions as a **Skill with a Cooldown** (e.g., 5 turns).
-*   **Targeting:** Self-only. Prevents item spam and reliance on potion hoarding.
-
----
-
-# 5) Inventory, Equipment, and Shops
-
-- Inventory distinguishes consumables vs equipment.
-- **Equipment Slots (4 per Character):**
-    - **Weapon:** (Attack Power). Has 2 Mod Slots.
-    - **Armor:** (Defense/Health). Has 2 Mod Slots.
-    - **Accessory:** (Passive Stats/Traits).
-    - **Snack:** (Combat Consumable). Self-targeting, Cooldown-based.
-- **Mod Slot Unlock Rule:** Mod slots are locked by default. They are unlocked automatically by **Main Story Milestones** (e.g., reaching a new World or defeating a major Boss), ensuring character power scales with the narrative.
-- Shops and commerce are introduced early in World 1 (Trade Row).
-
-# 6) Crafting: Tinkering
-
-Tinkering is a core crafting system accessible via the **Main Menu** (anytime/Camping), not restricted to physical benches.
-
-**Scope:**
-- **Creating Mods:** Building the item itself to slot into gear.
-- **Puzzle Solving:** Combining Key Items (e.g., "Broken Key" + "Glue").
-- **Field Survival:** Crafting basic supplies.
-
-**World Role:**
-- **World 1:** Tinkering is introduced as repair and trust. Jed teaches Nova to turn the damaged Cryo-Inductor into the Functional Cryo-Inductor, proving she can survive by fixing what Dominion leaves broken.
-- **World 2:** Tinkering becomes field survival and salvage. The player should recover damaged tools, schematics, and living materials, then craft the useful result at a camp or the Astra repair bench.
-- **Later Worlds:** Tinkering should stay story-motivated: infiltration devices in World 3, foundry/ship engineering in World 4, Source/Anchor prototypes in World 5, and legacy/Jed-themed final upgrades in World 6.
-- **Design Rule:** Do not use tinkering as a generic lock-and-key tax. Require it only when the fiction clearly says Nova needs to build, repair, stabilize, or adapt something.
-
-# 7) Progression & Scope (Summary)
-
-*   **Core Skills (6):** Establish consistency and mastery. Learned via leveling/quests.
-*   **Source Arts (6):** Reflect narrative progression and world discovery (Relics).
-*   **Total Complexity:** 12 Active Skills = Readable for mobile, expressive without bloat.
-*   **Pacing:** Because Source Arts arrive gradually (one per world), players learn naturally without overload.
-
-# 8) Tutorials and Pacing (World 1, Hub 1 Plan)
-
-World 1, Hub 1 tutorials should be delivered via a limited number of quests (not excessive). Covered topics include: movement, tapping highlighted words, NPC interaction, item usage, equipping gear, consumables vs equipment, combat consumables, shops/commerce, quest tracking, basic combat, group combat, Synergy skills, and tinkering.
-
-Combat onboarding should stay lean: prioritize Physical/Shock/Burn (+ optional Acid/Corrosion), make Guard Break/Stagger the clear "puzzle key" before the Warden, and delay tactical statuses like Jammed/Marked until World 2 (Zeke joins too late in World 1 to build lessons around them).
-
-# 9) Cinematics and Accessibility
-
-Text-based cinematicare planned using animated 2D text and subtle visual effects (flickering lights, fades). Accessibility settings should exist for these sequences (e.g., reduce motion, reduce flicker, speed controls).
-
-# 10) Visual Framing Rule (Backgrounds)
-
-Background images follow a framing rule: canvas remains 1080x1920 (9:16), but add equal black vertical bars on left and right, each exactly 5/42 of the canvas width (~11.9048%), making the effective inner frame 9:21. Bars are pure black with no detail or text.
+Art framing and sprite workflows belong to the [Art Production Guide](Starborn_Art_Production_Guide.md). The old mandatory black bars, fixed sprite dimensions, universal skill counts, and equal-baseline combat claims are retired.

@@ -1,5 +1,7 @@
 # Starborn - Tutorial Placement Map (Implicit + Explicit)
 
+> **Implementation reconciliation pending ? October 14, 2026.** Supporting design/authoring material. Current code/assets take precedence for implemented behavior; older Canon, Locked, required, or next-step claims below are not evidence that the game should be changed. Check [current documentation](../README.md) and the live route before use. This banner classifies review status, not the correctness of every passage.
+
 This file is the single source of truth for *where* we teach every mechanic, UI convention, and "player literacy" expectation in Starborn - including:
 - Full, gated tutorials
 - Micro-tutorials (one prompt or one line of dialogue)

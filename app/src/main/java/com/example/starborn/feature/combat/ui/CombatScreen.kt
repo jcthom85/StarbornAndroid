@@ -79,6 +79,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -320,6 +321,9 @@ fun CombatScreen(
     val battleUsableItems = remember(inventoryEntries) {
         inventoryEntries.filter { it.isBattleUsableItem() }
     }
+    val inspectedEnemyId by viewModel.inspectedEnemyId.collectAsStateWithLifecycle()
+    var inspectionExpanded by remember(viewModel) { mutableStateOf(false) }
+    DisposableEffect(viewModel) { onDispose { viewModel.dismissEnemyInspection() } }
     val atbMeters by viewModel.atbMeters.collectAsStateWithLifecycle()
     val lungeActorId by viewModel.lungeActorId.collectAsStateWithLifecycle(null)
     val lungeToken by viewModel.lungeToken.collectAsStateWithLifecycle(0L)
@@ -328,6 +332,7 @@ fun CombatScreen(
     val missLungeToken by viewModel.missLungeToken.collectAsStateWithLifecycle(0L)
     val timedPromptState by viewModel.timedPrompt.collectAsStateWithLifecycle()
     val combatTutorial by viewModel.combatTutorial.collectAsStateWithLifecycle()
+    val buildHint by viewModel.buildHint.collectAsStateWithLifecycle()
     val awaitingActionId by viewModel.awaitingAction.collectAsStateWithLifecycle()
     val combatBanner by viewModel.combatBanner.collectAsStateWithLifecycle()
     val isOpMode by viewModel.isOpMode.collectAsStateWithLifecycle()
@@ -556,7 +561,6 @@ fun CombatScreen(
         val handle = navController.previousBackStackEntry?.savedStateHandle
         if (resolved is CombatOutcome.Victory) {
             viewModel.playVictoryMusic()
-            handle?.set("combat_victory", ArrayList(viewModel.encounterEnemyIds))
         }
         val waitMillis = when (resolved) {
             is CombatOutcome.Victory -> 900L
@@ -638,7 +642,7 @@ fun CombatScreen(
         val enemyEntries = enemies.mapIndexed { index, enemy ->
             enemy to enemyCombatantIds.getOrElse(index) { enemy.id }
         }
-        val focusEnemyEntry = selectedEnemyIds.firstOrNull()?.let { id ->
+        val focusEnemyEntry = (inspectedEnemyId ?: selectedEnemyIds.firstOrNull())?.let { id ->
             enemyEntries.firstOrNull { it.second == id }
     } ?: enemyEntries.firstOrNull()
     val focusEnemy = focusEnemyEntry?.first
@@ -665,8 +669,9 @@ fun CombatScreen(
         val menuActorSkills = menuActor?.let { viewModel.skillsForPlayer(it.id) }.orEmpty()
         val victoryEmotes = pendingOutcome is CombatOutcome.Victory
 
-        BackHandler(enabled = showSkillsDialog.value || showItemsDialog.value || pendingTargetRequest != null) {
+        BackHandler(enabled = inspectedEnemyId != null || showSkillsDialog.value || showItemsDialog.value || pendingTargetRequest != null) {
             when {
+                inspectedEnemyId != null -> { inspectionExpanded = false; viewModel.dismissEnemyInspection() }
                 showSkillsDialog.value -> showSkillsDialog.value = false
                 showItemsDialog.value -> showItemsDialog.value = false
                 pendingTargetRequest != null -> {
@@ -723,7 +728,7 @@ fun CombatScreen(
         fun handleEnemyTap(targetId: String) {
             val pending = pendingTargetRequest
             if (pending == null) {
-                if (!combatLocked) viewModel.focusEnemyTarget(targetId)
+                if (!combatLocked) viewModel.inspectEnemy(targetId)
             } else if (pending.accepts(TargetFilter.ENEMY)) {
                 executePendingAction(pending, targetId)
             } else {
@@ -743,6 +748,7 @@ fun CombatScreen(
         fun handlePartyMemberTap(targetId: String) {
             when {
                 allowAllySelection -> handleAllyTap(targetId)
+                pendingTargetRequest == null && !combatLocked && inspectedEnemyId != null -> viewModel.selectReadyPlayer(targetId)
                 pendingTargetRequest == null && !combatLocked && targetId == awaitingActionId ->
                     viewModel.dismissActionMenu(targetId)
                 pendingTargetRequest == null && !combatLocked -> viewModel.selectReadyPlayer(targetId)
@@ -853,10 +859,12 @@ fun CombatScreen(
                 .focusRequester(combatFocusRequester)
                 .focusable()
                 .onKeyEvent { keyEvent ->
+                    if (inspectedEnemyId != null && keyEvent.key !in listOf(Key.ButtonB, Key.Escape, Key.ButtonL1, Key.ButtonR1, Key.Tab)) return@onKeyEvent true
                     if (keyEvent.type == KeyEventType.KeyDown) {
                         when (keyEvent.key) {
                             Key.ButtonB, Key.Escape -> {
                                 when {
+                                    inspectedEnemyId != null -> { inspectionExpanded = false; viewModel.dismissEnemyInspection(); return@onKeyEvent true }
                                     showSkillsDialog.value -> {
                                         showSkillsDialog.value = false
                                         viewModel.onCombatTutorialSkillDialogDismissed()
@@ -870,10 +878,7 @@ fun CombatScreen(
                                         clearPendingRequest()
                                         return@onKeyEvent true
                                     }
-                                    pendingVictoryPayload != null -> {
-                                        advanceVictoryDialog()
-                                        return@onKeyEvent true
-                                    }
+                                    pendingVictoryPayload != null -> return@onKeyEvent true
                                 }
                             }
                             Key.ButtonA, Key.Enter, Key.Spacebar -> {
@@ -927,7 +932,7 @@ fun CombatScreen(
                                     if (livingEnemies.isNotEmpty()) {
                                         val currentIndex = livingEnemies.indexOfFirst { it.second == focusEnemyCombatantId }
                                         val prevIndex = if (currentIndex <= 0) livingEnemies.lastIndex else currentIndex - 1
-                                        viewModel.focusEnemyTarget(livingEnemies[prevIndex].second)
+                                        if (inspectedEnemyId != null) viewModel.inspectEnemy(livingEnemies[prevIndex].second) else viewModel.focusEnemyTarget(livingEnemies[prevIndex].second)
                                         return@onKeyEvent true
                                     }
                                 }
@@ -941,7 +946,7 @@ fun CombatScreen(
                                     if (livingEnemies.isNotEmpty()) {
                                         val currentIndex = livingEnemies.indexOfFirst { it.second == focusEnemyCombatantId }
                                         val nextIndex = if (currentIndex < 0 || currentIndex >= livingEnemies.lastIndex) 0 else currentIndex + 1
-                                        viewModel.focusEnemyTarget(livingEnemies[nextIndex].second)
+                                        if (inspectedEnemyId != null) viewModel.inspectEnemy(livingEnemies[nextIndex].second) else viewModel.focusEnemyTarget(livingEnemies[nextIndex].second)
                                         return@onKeyEvent true
                                     }
                                 }
@@ -1002,7 +1007,7 @@ fun CombatScreen(
             val commandPaletteVisible = commandActor != null &&
                 !combatLocked &&
                 !menuActorCannotAct &&
-                !targetMode
+                !targetMode && inspectedEnemyId == null
             val hasTargets = enemyCombatantIds.any { state.combatants[it]?.isAlive == true }
             val snackBaseLabel = commandActor?.let { actor -> viewModel.snackLabel(actor.id) } ?: "Snack"
             val snackCooldown = commandActor?.let { actor -> viewModel.snackCooldownRemaining(actor.id) } ?: 0
@@ -1115,6 +1120,12 @@ fun CombatScreen(
                             modifier = Modifier.align(Alignment.Center)
                         )
                     }
+                }
+                if (enemyState != null && !combatLocked && combatTutorial == null && (!targetMode || inspectedEnemyId != null)) {
+                    EnemyOverview(focusEnemy, enemyState, environmentSession.knownEnemyWeaknesses[focusEnemy.id].orEmpty(),
+                        inspecting = inspectedEnemyId != null, canInspect = true,
+                        onInspect = { viewModel.inspectEnemy(focusEnemyCombatantId); inspectionExpanded = true },
+                        onClose = { inspectionExpanded = false; viewModel.dismissEnemyInspection() })
                 }
                 Spacer(Modifier.height(8.dp))
                 PartyRoster(
@@ -1242,6 +1253,25 @@ fun CombatScreen(
                         .fillMaxSize()
                         .padding(contentPadding)
                         .zIndex(22f)
+                )
+            }
+            if (inspectionExpanded && inspectedEnemyId != null && enemyState != null) {
+                EnemyInspectionSheet(focusEnemy, enemyState, environmentSession.knownEnemyWeaknesses[focusEnemy.id].orEmpty(),
+                    onClose = { inspectionExpanded = false })
+            }
+            LaunchedEffect(inspectedEnemyId, state.outcome, enemyState?.isAlive) {
+                if (inspectedEnemyId == null) inspectionExpanded = false
+                if (state.outcome != null || enemyState?.isAlive == false) { inspectionExpanded = false; viewModel.dismissEnemyInspection() }
+            }
+            buildHint?.let { hint ->
+                androidx.compose.material3.AlertDialog(
+                    onDismissRequest = viewModel::dismissBuildHint,
+                    modifier = Modifier.clickable(onClick = viewModel::dismissBuildHint),
+                    title = { androidx.compose.material3.Text(hint.context ?: "Nova's build") },
+                    text = { androidx.compose.material3.Text(hint.message) },
+                    confirmButton = { androidx.compose.material3.TextButton(onClick = viewModel::dismissBuildHint) {
+                        androidx.compose.material3.Text("Got it")
+                    } }
                 )
             }
             val victoryPayload = pendingVictoryPayload

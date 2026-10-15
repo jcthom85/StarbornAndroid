@@ -8,6 +8,8 @@ data class Enemy(
     override val id: String,
     override val name: String,
     val tier: String = "common",
+    @Json(name = "combat_size") val combatSize: String = "medium",
+    @Json(name = "combat_width") val combatWidth: Float = 1f,
     val hp: Int,
     val strength: Int,
     val vitality: Int,

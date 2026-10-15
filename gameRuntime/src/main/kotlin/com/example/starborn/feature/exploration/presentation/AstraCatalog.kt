@@ -2,8 +2,41 @@ package com.example.starborn.feature.exploration.presentation
 
 /** Authored Android catalogs, shared without rewriting titles, descriptions or identifiers. */
 data class SimulationProgramDefinition(val title: String, val category: String, val enemyIds: List<String>, val description: String, val accentArgb: Long)
+data class AstraArcadeDefinition(val id: String, val title: String)
 
 object AstraCatalog {
+    val arcades = listOf(
+        AstraArcadeDefinition("deep_mine_asteroid_drill", "Deep Mine Asteroid Drill"),
+        AstraArcadeDefinition("canopy_hopper", "Canopy Hopper"),
+        AstraArcadeDefinition("spire_infiltrator", "Spire Infiltrator"),
+        AstraArcadeDefinition("slag_catcher", "Slag Catcher"),
+        AstraArcadeDefinition("orbital_defense", "Orbital Defense 2000"),
+        AstraArcadeDefinition("harmonic_pulse", "Harmonic Pulse"))
+    const val simulationRules = "Simulations use your current equipment. Standard combat rewards and consumable costs apply; rest in Quarters afterward to recover."
+
+    fun availableSimulations(state: com.example.starborn.domain.session.GameSessionState): List<SimulationProgramDefinition> {
+        fun completed(quest: String) = quest in state.completedQuests || "ms_${quest}_complete" in state.completedMilestones
+        fun defeated(enemy: String): Boolean = when (enemy) {
+            "the_iron_warden" -> "ms_w1_warden_defeated" in state.completedMilestones || completed("w1_mq05")
+            "the_beast" -> "ms_w2_beast_defeated" in state.completedMilestones || completed("w2_mq04") || completed("w2_mq05")
+            "administrator_boss" -> "defeat_administrator" in state.questTasksCompleted["w3_mq15"].orEmpty() || completed("w3_mq15")
+            "titan_walker_boss" -> "ms_w4_titan_defeated" in state.completedMilestones || completed("w4_mq20")
+            "compliance_avatar" -> "ms_w5_avatar_defeated" in state.completedMilestones || completed("w5_mq25")
+            "ascended_vale" -> "defeat_vale" in state.questTasksCompleted["w6_mq30"].orEmpty() || completed("w6_mq30")
+            "ascended_god" -> "defeat_god" in state.questTasksCompleted["w6_mq30"].orEmpty() || completed("w6_mq30")
+            else -> false
+        }
+        return simulations.filter { program -> when (program.category) {
+            "TRAINING PROTOCOLS" -> program.enemyIds != listOf("ruin_guardian") || completed("w2_mq05")
+            "APEX BOSS ARCHIVES" -> program.enemyIds.all(::defeated)
+            else -> when (program.enemyIds) {
+                listOf("magma_drone", "slag_golem", "welder_bot") -> completed("w4_mq20")
+                listOf("riot_guard", "corporate_assassin", "heavy_mech") -> completed("w3_mq15")
+                listOf("elite_guard", "void_turret", "hk_droid") -> completed("w5_mq25")
+                else -> program.enemyIds.all(::defeated)
+            }
+        } }
+    }
     val simulations = listOf(
         SimulationProgramDefinition("Sentinel Target Droid", "TRAINING PROTOCOLS", listOf("sentinel_mki"), "Basic targeting calibration & ATB cadence.", 0xFF00E5FFL),
         SimulationProgramDefinition("Faulted Loader Sub-Routine", "TRAINING PROTOCOLS", listOf("faulted_loader"), "Three-beat armored cycle with exposed Shock openings.", 0xFF00E5FFL),

@@ -10,11 +10,12 @@ import androidx.compose.ui.unit.dp
 @Composable
 internal fun DesktopStationPanes(
     modifier: Modifier = Modifier,
+    stackBelow: androidx.compose.ui.unit.Dp = 700.dp,
     primary: @Composable (Modifier) -> Unit,
     detail: @Composable (Modifier) -> Unit
 ) {
     BoxWithConstraints(modifier.fillMaxSize()) {
-        if (maxWidth < 700.dp) {
+        if (maxWidth < stackBelow) {
             Column(Modifier.fillMaxSize().testTag("station-stacked-panes"), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 primary(Modifier.weight(.32f).fillMaxWidth())
                 detail(Modifier.weight(.68f).fillMaxWidth())

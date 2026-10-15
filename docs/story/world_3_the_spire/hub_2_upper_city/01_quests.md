@@ -1,16 +1,20 @@
-# Quests — World 3, Hub 2: Upper City (The Heist)
+# Upper City: quests
 
-## Main Questline (The Job)
+Status: Source-reconciled reference, October 14, 2026. Current code/assets are the implementation baseline. This is a source review, not a fresh playthrough or a claim that every route and device behavior is accepted.
 
-| ID | Title | Objective | Key Steps | Rewards | Notes |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **MQ_13** | **Social Engineering** | Get access to the Penthouse by becoming invisible to polite cruelty. | 1. Blend in at the **Skypark** and acquire guest access after a public class/race humiliation beat.<br>2. **Zeke & Orion** disable the sensors from the Laundry Node after guest access is secured.<br>3. **Nova & Gh0st** (in disguise) enter the service route and pass scanners.<br>4. Reach the Archive approach. | Disguises | Split party mechanic + mandatory Skypark pressure beat. The player should feel exposed, not merely clever. |
-| **MQ_14** | **The Lens** | Steal the Relic and reveal Nova as an anomaly. | 1. Enter the Archive.<br>2. **Orion** solves the Light Puzzle.<br>3. Zeke warns that the Lens is reading Nova before contact.<br>4. **Acquire: The Lens Relic.**<br>5. **Power: Scan (True Sight).** | **Source Art: Scan** | Point of no return. The Lens should feel like truth plus cost, not just loot. |
-| **MQ_15** | **Burn Notice** | Escape the Spire after the plan collapses into a compliance hunt. | 1. Alarm triggers. Cover is blown.<br>2. Vale/Orbital Compliance overrides local security.<br>3. Fight through the drone test route to the landing pad.<br>4. **Boss: The Administrator.**<br>5. Escape on *The Astra* through a tiny Shield gap. | **World 4 Access** | Combat heavy finale. **Travel Note:** Internal Phase Curtains block land travel to Sector 7; the Lens allows the sub-orbital hop through the Shield. This is survival through a narrow opening, not a clean victory. |
+Guest access, Laundry Service, executive spaces, Archive investigation, Lens theft, prototype work, Skyline Salon mystery, and rooftop escape. Location membership is not an either-Skypark-or-Lounge progression rule.
 
-## Side Quests
+| Quest | Implemented objective | Payout / handoff |
+|---|---|---|
+| `w3_mq13` — Social Engineering | Obtain Skypark guest access, blind Laundry scanners, and use the service route. | 500 XP; MQ14 and Archive reveal. |
+| `w3_mq14` — The Lens | Read the field, shutters, and tethers, resolve the Gallery, and take the Lens. | 550 XP, `the_lens`, and `source_art_scan`; starts MQ15. |
+| `w3_mq15` — Burn Notice | Reach the roof, defeat the Administrator, Scan the window, and launch. | 700 XP; MQ16 and `foundry_slag_landing` handoff. |
+| `w3_sq14` — Corporate Espionage | Copy the concierge credential, steal the ledger, and choose disclosure or private leverage. | 250 XP plus `encrypted_ledger` on disclosure or `phase_rounds` on private leverage. Branch events own actual payout. |
+| `w3_sq15` — Prototype Testing | Inspect targeting bias, run the prototype trial, and scrub its telemetry. | 300 XP and `phase_rounds` after the telemetry step. |
+| `w3_sq16` — Murder in the Skyline Salon | Inspect the glass, terminal timestamps, and comms rig; confront Vance. | 450 XP, `cyano_coolant_injector`, and `skyline_master_passkey` via Vance completion dialogue. |
 
-| ID | Title | Hub | Quest Giver | Objective | Reward | Notes |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **SQ_14** | **Corporate Espionage** | Hub 2 | Datapad / safe | Steal a rival exec's encrypted ledger from a safe. | **Passive: Blackmail** | Shows that Upper City legitimacy is crime with polished stationery. Reward: better shop prices. |
-| **SQ_15** | **Prototype Testing** | Hub 2 | Hacked Lab Terminal | Test a dangerous experimental weapon on drones. | **Weapon Mod: Phase Rounds** | High-risk combat challenge. Reinforces Dominion's disposability logic: anything alive is acceptable loss if the metric improves. |
+Quest ownership by hub is organization, not strict execution order. Respect actual conditions, alternative outcomes, crafting and callback ownership. Old short IDs such as MQ_13/SQ_14 are retired as implementation references.
+
+## Sources and maintenance
+
+[rooms](../../../../app/src/main/assets/rooms.json), [quests](../../../../app/src/main/assets/quests.json), [events](../../../../app/src/main/assets/events.json), [dialogue](../../../../app/src/main/assets/dialogue.json), [hub_nodes](../../../../app/src/main/assets/hub_nodes.json). [Documentation index](../../../README.md). Update this reference when its corresponding records change; do not change working game logic to match an older script.

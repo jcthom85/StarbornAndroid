@@ -3,6 +3,7 @@
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -65,6 +66,10 @@ fun QuestSummaryOverlay(
         }
     }
 
+    androidx.activity.compose.BackHandler(enabled = visible && !isSceneBlocking && summary != null) {
+        visible = false; summary = null
+    }
+
     AnimatedVisibility(
         visible = visible && !isSceneBlocking && summary != null,
         enter = fadeIn(),
@@ -76,6 +81,7 @@ fun QuestSummaryOverlay(
                     .fillMaxWidth(0.92f)
                     .widthIn(max = 520.dp)
                     .padding(16.dp)
+                    .clickable { visible = false; summary = null }
                     .semantics { contentDescription = "Quest Summary Popup" },
                 shape = RoundedCornerShape(14.dp),
                 border = BorderStroke(1.dp, accentColor.copy(alpha = 0.38f)),

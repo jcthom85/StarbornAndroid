@@ -1400,170 +1400,18 @@ fun TinkeringTutorialOverlay(
     accentColor: Color = Color(0xFF7BE8FF),
     modifier: Modifier = Modifier
 ) {
-    val infiniteTransition = rememberInfiniteTransition(label = "tinker_tut_pulse")
-    val borderAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.55f,
-        targetValue = 1.0f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(950, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "borderAlpha"
-    )
-    val glowScale by infiniteTransition.animateFloat(
-        initialValue = 0.92f,
-        targetValue = 1.08f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(950, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "glowScale"
-    )
-
-    val isSynthesis = step == TinkeringTutorialStep.SYNTHESIZE
-    val themeAccent = if (isSynthesis) Color(0xFFFFC857) else accentColor
-
-    val (badgeText, title, instruction) = when (step) {
-        TinkeringTutorialStep.SLOT_BASE -> Triple(
-            "STEP 1 OF 3",
-            "SLOT BASE ITEM",
-            "Tap the Broken Cryo-Inductor in your tray below to mount it into the Base socket."
-        )
-        TinkeringTutorialStep.SLOT_COMPONENT -> Triple(
-            "STEP 2 OF 3",
-            "ADD REPLACEMENT ALLOY",
-            "Tap Scrap Metal in your tray to supply replacement conduit alloy for the cold loop."
-        )
-        TinkeringTutorialStep.SYNTHESIZE -> Triple(
-            "STEP 3 OF 3",
-            "SYNTHESIZE BLUEPRINT",
-            "Reaction detected! Tap the glowing SYNTHESIZE button to seal the cold loop."
-        )
-        TinkeringTutorialStep.COMPLETE -> Triple(
-            "COMPLETE",
-            "REPAIR FINISHED",
-            "Cryo-Inductor restored! Cryo Vent is now online and available in combat."
-        )
-    }
-
-    val currentStepNumber = when (step) {
-        TinkeringTutorialStep.SLOT_BASE -> 1
-        TinkeringTutorialStep.SLOT_COMPONENT -> 2
-        TinkeringTutorialStep.SYNTHESIZE -> 3
-        TinkeringTutorialStep.COMPLETE -> 3
-    }
-
     Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .widthIn(min = 300.dp, max = 560.dp),
-        shape = RoundedCornerShape(18.dp),
-        color = Color(0xFF030910).copy(alpha = 0.98f),
-        border = BorderStroke(1.5.dp, themeAccent.copy(alpha = borderAlpha)),
-        shadowElevation = 24.dp
+        modifier = modifier.fillMaxWidth().widthIn(max = 560.dp),
+        shape = RoundedCornerShape(12.dp), color = FieldMenuDesign.panel,
+        border = BorderStroke(1.dp, accentColor.copy(alpha = .6f))
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    Brush.verticalGradient(
-                        listOf(
-                            themeAccent.copy(alpha = 0.16f),
-                            themeAccent.copy(alpha = 0.03f),
-                            Color.Transparent
-                        )
-                    )
-                )
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 14.dp, vertical = 10.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(32.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(themeAccent.copy(alpha = 0.25f))
-                            .border(1.dp, themeAccent.copy(alpha = 0.75f), RoundedCornerShape(8.dp)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Build,
-                            contentDescription = null,
-                            tint = themeAccent,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
-
-                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Text(
-                                text = "TUTORIAL • $badgeText",
-                                style = MaterialTheme.typography.labelSmall.copy(
-                                    fontSize = 9.5.sp,
-                                    fontWeight = FontWeight.Black,
-                                    letterSpacing = 1.sp
-                                ),
-                                color = themeAccent
-                            )
-
-                            // Segmented Step Progress Pips
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(3.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                (1..3).forEach { index ->
-                                    Box(
-                                        modifier = Modifier
-                                            .width(11.dp)
-                                            .height(3.5.dp)
-                                            .clip(RoundedCornerShape(2.dp))
-                                            .background(
-                                                if (index <= currentStepNumber) themeAccent
-                                                else themeAccent.copy(alpha = 0.22f)
-                                            )
-                                    )
-                                }
-                            }
-                        }
-
-                        Text(
-                            text = title,
-                            style = MaterialTheme.typography.titleSmall.copy(
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 0.5.sp
-                            ),
-                            color = Color.White
-                        )
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .size(10.dp)
-                            .graphicsLayer(scaleX = glowScale, scaleY = glowScale)
-                            .background(themeAccent, CircleShape)
-                    )
-                }
-
-                Text(
-                    text = instruction,
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = 12.sp,
-                        lineHeight = 16.sp
-                    ),
-                    color = Color.White.copy(alpha = 0.92f)
-                )
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text("Tutorial", color = accentColor, style = MaterialTheme.typography.labelMedium)
+                Text(if (step == TinkeringTutorialStep.COMPLETE) "Complete" else "Step ${step.ordinal + 1} of 3", style = MaterialTheme.typography.labelSmall)
             }
+            if (step == TinkeringTutorialStep.SLOT_BASE) Text("Repair the Cryo-Inductor", style = MaterialTheme.typography.titleSmall)
+            Text(com.example.starborn.feature.crafting.tinkeringTutorialInstruction(step, "Synthesize"), style = MaterialTheme.typography.bodyMedium)
         }
     }
 }

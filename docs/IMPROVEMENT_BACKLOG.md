@@ -1,5 +1,7 @@
 # Starborn improvement pass
 
+> **Historical record ? scoped to its recorded build/date.** Start with [the documentation index](README.md) for current orientation. Counts, next-step lists, release details, and imperative instructions below are historical, even where they originally say current or read first. Current code/assets are the implementation baseline. Recheck operational commands before use.
+
 Approved scope: correctness, realistic campaign testing, combat/economy, opening/UI,
 exploration/narrative consistency, and presentation/release verification.
 

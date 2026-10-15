@@ -17,6 +17,7 @@ import com.example.starborn.data.local.UserSettings
 
 @Composable
 internal fun DesktopCombatReadyPrompt(accent: Color, ready: Boolean, settings: UserSettings) {
+    if (!ready) return
     val animate = ready && !settings.disableScreenshake && !settings.disableFlashes
     val alpha = if (animate) {
         val pulse = rememberInfiniteTransition(label = "ready prompt")
@@ -28,7 +29,7 @@ internal fun DesktopCombatReadyPrompt(accent: Color, ready: Boolean, settings: U
     Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 20.dp).testTag("combat-ready-prompt"),
         verticalArrangement = Arrangement.spacedBy(14.dp)) {
         Icon(Icons.Rounded.FlashOn, null, Modifier.size(28.dp), tint = tint.copy(alpha = alpha))
-        Text("Select a ready character", color = if (settings.highContrastMode) Color.White else Color(0xFFF3F4F5),
+        Text(if (ready) "Choose a character" else "Waiting for a turn", color = if (settings.highContrastMode) Color.White else Color(0xFFF3F4F5),
             style = MaterialTheme.typography.headlineSmall.copy(fontSize = 24.sp, lineHeight = 30.sp, fontWeight = FontWeight.Bold))
         Canvas(Modifier.width(64.dp).height(3.dp)) { drawRoundRect(tint.copy(alpha = alpha)) }
     }

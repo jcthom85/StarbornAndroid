@@ -1,5 +1,7 @@
 # World 5: The Void — Hub 1: Dominion Orbital Ring
 
+> **Implementation reconciliation pending ? October 14, 2026.** Supporting design/authoring material. Current code/assets take precedence for implemented behavior; older Canon, Locked, required, or next-step claims below are not evidence that the game should be changed. Check [current documentation](../../../README.md) and the live route before use. This banner classifies review status, not the correctness of every passage.
+
 ## Overview
 The "Halo" of the planet. A massive space station ring where the Dominion's elite live and where Project Harmony is being launched. Gravity is artificial. The silence is deafening.
 

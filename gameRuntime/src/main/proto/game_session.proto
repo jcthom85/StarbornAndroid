@@ -55,6 +55,11 @@ message GameSessionProto {
   string meal_chef_id = 54;
   int32 fishing_clean_catch_progress = 55;
 
+  map<string, EnemyWeaknessesProto> known_enemy_weaknesses = 56;
+  int32 progression_prototype_version = 57;
+  map<string, int32> purchased_skill_nodes = 58;
+  repeated string progression_award_claims = 59;
+
   reserved 19;
   reserved 28, 29, 30, 31;
   reserved "party_member_rp";
@@ -113,4 +118,8 @@ message ActiveMealBuffProto {
   int32 accuracy_bonus = 15;
   int32 evasion_bonus = 16;
   int32 rules_version = 17;
+}
+
+message EnemyWeaknessesProto {
+  repeated string elements = 1;
 }

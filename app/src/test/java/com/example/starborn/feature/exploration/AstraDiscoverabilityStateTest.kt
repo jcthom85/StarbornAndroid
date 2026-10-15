@@ -16,7 +16,19 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class AstraDiscoverabilityStateTest {
-    @Test fun `arcade progression never removes archive or relic references and archive remains repeatable`() {
+    @Test fun `ship rooms have at most three authored interactions and recreation has one entrance`() {
+        val reader = AssetJsonReader(DesktopAssetProvider(), MoshiProvider.instance)
+        val rooms = reader.readList<Room>("rooms.json").filter { it.id.startsWith("astra_") }
+        assertEquals(5, rooms.size)
+        rooms.forEach { assertTrue("${it.id}: ${it.actions.size}", it.actions.size <= 3) }
+        val common = rooms.single { it.id == "astra_common_room" }
+        assertEquals(setOf("central table", "galley kitchenette"), common.actions.map { it["name"] }.toSet())
+        val deck = rooms.single { it.id == "astra_simulation_deck" }
+        assertEquals(1, deck.actions.count { it["action_event"] == "astra_recreation" })
+        assertFalse(rooms.any { room -> room.actions.any { it["type"] == "arcade" } })
+        assertTrue(rooms.single { it.id == "astra_cargo_bay" }.actions.any { it["action_event"] == "astra_cargo_records" })
+    }
+    @Test fun `common room stays focused across arcade progression and film archive remains repeatable`() {
         val reader = AssetJsonReader(DesktopAssetProvider(), MoshiProvider.instance)
         val rooms = reader.readList<Room>("rooms.json")
         val room = rooms.single { it.id == "astra_common_room" }
@@ -42,7 +54,7 @@ class AstraDiscoverabilityStateTest {
             manager.handleTrigger("player_action", EventPayload.Action(event.id))
             assertEquals("Archive replay mask=$mask", 2, executions)
         }
-        assertEquals(5, descriptions.size)
+        assertEquals(1, descriptions.size)
         val cargo = rooms.single { it.id == "astra_cargo_bay" }
         val prose = requireNotNull(resolveRoomDescription(cargo, emptyMap(), emptySet(), false))
         val actions = cargo.actions.map { com.example.starborn.domain.model.GenericAction(it["name"] as String, "generic") }

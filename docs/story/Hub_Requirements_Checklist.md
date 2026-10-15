@@ -1,5 +1,7 @@
 # Hub Requirements Checklist
 
+> **Implementation reconciliation pending ? October 14, 2026.** Supporting design/authoring material. Current code/assets take precedence for implemented behavior; older Canon, Locked, required, or next-step claims below are not evidence that the game should be changed. Check [current documentation](../README.md) and the live route before use. This banner classifies review status, not the correctness of every passage.
+
 This document tracks the **Entry State** (prerequisites) and **Exit State** (deliverables) for every Hub in the game. Use this to ensure narrative continuity and system progression when designing detailed content.
 
 ---

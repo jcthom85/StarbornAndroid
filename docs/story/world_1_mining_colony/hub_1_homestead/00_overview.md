@@ -1,5 +1,7 @@
 # World 1: Mining Colony — Hub 1: Homestead Quarter
 
+> **Implementation reconciliation pending ? October 14, 2026.** Supporting design/authoring material. Current code/assets take precedence for implemented behavior; older Canon, Locked, required, or next-step claims below are not evidence that the game should be changed. Check [current documentation](../../../README.md) and the live route before use. This banner classifies review status, not the correctness of every passage.
+
 ## Overview
 This is the starting hub for Nova. It serves as the onboarding zone where the player learns the basics of movement, interaction, and the world state. The atmosphere is "working class sci-fi" — industrial, lived-in, but relatively safe compared to the mines.
 

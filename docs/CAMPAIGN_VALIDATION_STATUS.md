@@ -1,5 +1,7 @@
 # Campaign validation status — 2026-09-22
 
+> **Historical record ? scoped to its recorded build/date.** Start with [the documentation index](README.md) for current orientation. Counts, next-step lists, release details, and imperative instructions below are historical, even where they originally say current or read first. Current code/assets are the implementation baseline. Recheck operational commands before use.
+
 > **Superseded checkpoint:** See [OVERALL_PLAN_CHECKPOINT.md](OVERALL_PLAN_CHECKPOINT.md) for current world coverage, released versus local changes, and the BurgQuest pause/resume plan. The tables and next steps below record the earlier pre-Avatar-implementation snapshot; their 4/5 Avatar result and Foundry rerun instruction are historical.
 
 This is the current coverage summary, not a claim of complete game QA. All **547 unit tests pass**. Automated main-story/event checks cover Worlds 1–6, including reward delivery, recruitment, journal/save restoration and final completion. Scripted victories used in progression traversal do not prove those battles are balanced; separate production-combat runs supply that evidence.

@@ -74,11 +74,11 @@ internal fun ModernFieldMenu(
             .statusBarsPadding().navigationBarsPadding()
     ) {
         BoxWithConstraints(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)) {
-            val compact = maxWidth < 340.dp || LocalDensity.current.fontScale > 1.2f
+            val compact = maxWidth < 300.dp || LocalDensity.current.fontScale > 1.2f
             val heading: @Composable () -> Unit = {
                 Column {
                     Text(detailTitle ?: tab.fieldTitle(), color = FieldMenuDesign.text,
-                        style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.SemiBold,
+                        style = MaterialTheme.typography.headlineSmall.copy(fontSize = 22.sp, lineHeight = 28.sp), fontWeight = FontWeight.SemiBold,
                         maxLines = if (compact) 2 else 1, overflow = TextOverflow.Ellipsis)
                     Text(credits, color = FieldMenuDesign.gold, style = MaterialTheme.typography.labelMedium)
                 }
@@ -110,8 +110,7 @@ internal fun ModernFieldMenu(
             Text(it, color = FieldMenuDesign.text, style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.fillMaxWidth().semantics { liveRegion = LiveRegionMode.Polite }.padding(horizontal = 16.dp, vertical = 4.dp))
         }
-        tutorialGuide()
-        if (detailTitle == null && tab in listOf(MenuTab.STATS, MenuTab.INVENTORY) && party.members.isNotEmpty()) {
+        if (tab == MenuTab.STATS && party.members.size > 1) {
             Row(
                 Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())
                     .padding(horizontal = 16.dp, vertical = 4.dp),
@@ -127,16 +126,16 @@ internal fun ModernFieldMenu(
                     ) {
                         Row(Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            MemberPortrait(member, Modifier.size(44.dp))
+                            MemberPortrait(member, Modifier.size(if (detailTitle != null) 32.dp else 44.dp))
                             Column(Modifier.widthIn(min = 70.dp, max = 115.dp)) {
                                 Text(member.name, color = if (selected) FieldMenuDesign.gold else FieldMenuDesign.text,
                                     style = MaterialTheme.typography.labelLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                                Text("Lv ${member.level}",
+                                if (detailTitle == null) Text("Lv ${member.level}",
                                     color = FieldMenuDesign.textMuted, style = MaterialTheme.typography.labelSmall,
                                     maxLines = 1, overflow = TextOverflow.Ellipsis)
-                                Text(member.hpLabel ?: "HP unavailable", color = FieldMenuDesign.textMuted,
+                                if (detailTitle == null) Text(member.hpLabel ?: "HP unavailable", color = FieldMenuDesign.textMuted,
                                     style = MaterialTheme.typography.labelSmall)
-                                member.hpProgress?.let { hp ->
+                                if (detailTitle == null) member.hpProgress?.let { hp ->
                                     LinearProgressIndicator(progress = { hp.coerceIn(0f, 1f) },
                                         modifier = Modifier.fillMaxWidth().padding(top = 4.dp).height(3.dp),
                                         color = if (hp < .3f) Color(0xFFFF887F) else Color(0xFF8DD7BD),
@@ -153,7 +152,10 @@ internal fun ModernFieldMenu(
             Column(
                 Modifier.widthIn(max = 760.dp).fillMaxWidth().verticalScroll(scroll).padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) { content() }
+            ) {
+                tutorialGuide()
+                content()
+            }
         }
         HorizontalDivider(color = if (highContrast) Color.White else roomAccent.copy(alpha = .14f))
         if (detailTitle != null) {

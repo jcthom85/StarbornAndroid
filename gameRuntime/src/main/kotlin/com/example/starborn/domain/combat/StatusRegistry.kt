@@ -10,7 +10,10 @@ class StatusRegistry(definitions: List<StatusDefinition> = emptyList()) {
     init {
         val normalized = mutableMapOf<String, StatusDefinition>()
         val aliases = mutableMapOf<String, String>()
-        definitions.forEach { definition ->
+        (definitions + listOf(
+            StatusDefinition("crew_opening", displayName = "Opening", defaultDuration = 2, target = "enemy"),
+            StatusDefinition("crew_aftercare", displayName = "Aftercare", defaultDuration = 2, target = "ally")
+        )).forEach { definition ->
             val key = definition.id.lowercase()
             normalized[key] = definition
             definition.aliases.orEmpty().forEach { alias ->

@@ -1,5 +1,7 @@
 # Overall plan checkpoint — September 23, 2026
 
+> **Historical record ? scoped to its recorded build/date.** Start with [the documentation index](README.md) for current orientation. Counts, next-step lists, release details, and imperative instructions below are historical, even where they originally say current or read first. Current code/assets are the implementation baseline. Recheck operational commands before use.
+
 **Read this first when resuming.** This supersedes older next-step lists in the campaign/Foundry documents. The world balance program is temporarily paused for BurgQuest booth preparation. BurgQuest build 1.3.54 is released to Google Play internal testing; see [the guided sampler record](BURGQUEST_GUIDED_SAMPLER.md). Actual-device/newcomer checks remain. The world-by-world position and combat resume point below are unchanged.
 
 ## Released versus local

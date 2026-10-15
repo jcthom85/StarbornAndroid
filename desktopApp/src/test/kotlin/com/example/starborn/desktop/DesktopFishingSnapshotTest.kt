@@ -81,7 +81,7 @@ class DesktopFishingSnapshotTest {
             // Open Journal Modal
             composeTestRule.onNodeWithTag("journal-toggle-button").performClick()
             composeTestRule.waitForIdle()
-            composeTestRule.onNodeWithText("ABYSSAL FISHING JOURNAL", substring = true).assertExists()
+            composeTestRule.onNode(hasText("CATCH LOG", substring = true) and hasAnyAncestor(isDialog())).assertExists()
 
             // Close Journal
             composeTestRule.onNodeWithText("Close").performClick()

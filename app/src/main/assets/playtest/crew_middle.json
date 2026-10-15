@@ -1,0 +1,1447 @@
+{
+  "worldId": "world_5",
+  "hubId": "hub_9_orbital_ring",
+  "roomId": "orbital_executive_dock",
+  "playerId": "nova",
+  "playerLevel": 9,
+  "playerXp": 11980,
+  "playerAp": 36,
+  "playerCredits": 1152,
+  "partyMemberXp": {
+    "nova": 11980,
+    "zeke": 11980,
+    "orion": 11980,
+    "gh0st": 11980
+  },
+  "partyMemberLevels": {
+    "nova": 9,
+    "zeke": 9,
+    "orion": 9,
+    "gh0st": 9
+  },
+  "partyMemberHp": {
+    "nova": 119,
+    "zeke": 150,
+    "orion": 95,
+    "gh0st": 105
+  },
+  "trackedQuestId": "w5_mq21",
+  "activeQuests": [
+    "w5_mq21"
+  ],
+  "completedQuests": [
+    "w1_mq01",
+    "w1_mq02",
+    "w1_sq03",
+    "w1_mq03",
+    "w1_mq04",
+    "w1_mq05",
+    "w2_mq01",
+    "w2_mq02",
+    "w2_mq03",
+    "w2_mq04",
+    "w2_mq05",
+    "w3_mq11",
+    "w3_mq12",
+    "w3_mq13",
+    "w3_mq14",
+    "w3_mq15",
+    "w4_mq16",
+    "w4_mq17",
+    "w4_mq18",
+    "w4_mq19",
+    "w4_mq20"
+  ],
+  "failedQuests": [],
+  "completedMilestones": [
+    "ms_w1_mq01_fault_visible",
+    "ms_w1_mq01_bunk_light_on",
+    "ms_w1_mq01_safety_fault_inspected",
+    "ms_w1_mq01_jed_talked",
+    "ms_w1_mq01_loader_inspected",
+    "ms_w1_mq01_loader_cleared",
+    "ms_w1_mq01_cryo_repaired",
+    "ms_w1_mq01_cutter_surge",
+    "ms_w1_mq01_complete",
+    "ms_w1_mq02_clearance_ordered",
+    "ms_w1_mq02_hank_denied",
+    "ms_w1_mq02_zeke_override",
+    "ms_w1_mq02_complete",
+    "ms_w1_sq03_started",
+    "ms_w1_sq03_hydraulic_kick_ready",
+    "ms_w1_guardbreak_trained",
+    "ms_w1_guard_drill_won",
+    "ms_w1_mq03_bogs_talked",
+    "ms_mine_power_on",
+    "ms_w1_mq03_echo_marked",
+    "ms_w1_mq03_liner_ground_spent",
+    "ms_w1_mq03_complete",
+    "ms_w1_mq04_complete",
+    "ms_w1_warden_defeated",
+    "ms_w1_zeke_directed_to_pod",
+    "ms_w1_chime_spliced",
+    "ms_w1_mq05_complete",
+    "ms_w2_chime_recovered",
+    "ms_w2_pod_examined",
+    "ms_w2_zeke_stabilized",
+    "ms_w2_mq01_complete",
+    "ms_w2_mq02_complete",
+    "ms_w2_murals_read",
+    "ms_w2_murals_inspected",
+    "ms_w2_stasis_pod_read",
+    "ms_w2_pod_inspected",
+    "ms_w2_stasis_overview_read",
+    "ms_w2_coolant_stabilized",
+    "ms_w2_stasis_awake",
+    "ms_w2_orion_briefed",
+    "ms_w2_bridge_recovered",
+    "ms_w2_mq03_complete",
+    "ms_w2_stalker_confronted",
+    "ms_w2_beast_defeated",
+    "ms_w2_link_unlocked",
+    "ms_w2_mq04_complete",
+    "ms_w2_source_horn_stabilized",
+    "ms_w2_horn_stabilized",
+    "ms_w2_source_cup_grounded",
+    "ms_w2_cup_grounded",
+    "ms_w2_source_pressure_mapped",
+    "ms_w2_pressure_gauge_read",
+    "ms_w2_source_breakers_starved",
+    "ms_w2_breakers_overloaded",
+    "ms_w2_gate_bypassed",
+    "ms_w2_astra_inspected",
+    "ms_w2_conduits_collected",
+    "ms_w2_bridge_installed",
+    "ms_w2_mq05_complete",
+    "ms_w3_safehouse_found",
+    "ms_w3_mq11_complete",
+    "ms_w3_jax_intel",
+    "ms_w3_patrols_mapped",
+    "ms_w3_security_records_pulled",
+    "ms_w3_badges_copied",
+    "ms_w3_disguises_sourced",
+    "ms_w3_blueprints_hacked",
+    "ms_w3_mq12_complete",
+    "ms_w3_guest_profile_accepted",
+    "ms_w3_scanners_blinded",
+    "ms_w3_mq13_complete",
+    "ms_w3_archive_entered",
+    "ms_w3_containment_field_read",
+    "ms_w3_prism_shutters_read",
+    "ms_w3_command_tethers_traced",
+    "ms_w3_prism_solved",
+    "ms_w3_mq14_complete",
+    "ms_w3_mq15_complete",
+    "ms_w4_access_unlocked",
+    "ms_w4_landing_secured",
+    "ms_w4_slag_crossed",
+    "ms_w4_cooling_vents_hacked",
+    "ms_w4_mq16_complete",
+    "ms_w4_phantom_records_found",
+    "ms_w4_springs_regrouped",
+    "ms_w4_mq17_complete",
+    "ms_w4_conveyors_timed",
+    "ms_w4_prototypes_defeated",
+    "ms_w4_matrix_overloaded",
+    "ms_w4_mq18_complete",
+    "ms_w4_pulse_board_read",
+    "ms_w4_grease_route_read",
+    "ms_w4_paddle_thrown",
+    "ms_w4_pistons_starved",
+    "ms_w4_conveyor_puzzle_solved",
+    "ms_w4_anvil_claimed",
+    "ms_w4_mq19_complete",
+    "ms_w4_rylos_confronted",
+    "ms_w4_titan_defeated",
+    "ms_w4_engine_stolen",
+    "ms_w4_arrays_stolen",
+    "ms_w4_mq20_complete",
+    "ms_w5_access_unlocked",
+    "ms_w5_halo_approached"
+  ],
+  "milestoneHistory": [
+    "ms_w4_springs_regrouped",
+    "ms_w4_mq17_complete",
+    "ms_w4_conveyors_timed",
+    "ms_w4_prototypes_defeated",
+    "ms_w4_matrix_overloaded",
+    "ms_w4_mq18_complete",
+    "ms_w4_pulse_board_read",
+    "ms_w4_grease_route_read",
+    "ms_w4_paddle_thrown",
+    "ms_w4_pistons_starved",
+    "ms_w4_conveyor_puzzle_solved",
+    "ms_w4_anvil_claimed",
+    "ms_w4_mq19_complete",
+    "ms_w4_rylos_confronted",
+    "ms_w4_titan_defeated",
+    "ms_w4_engine_stolen",
+    "ms_w4_arrays_stolen",
+    "ms_w4_mq20_complete",
+    "ms_w5_access_unlocked",
+    "ms_w5_halo_approached"
+  ],
+  "learnedSchematics": [
+    "repair_cryo_inductor"
+  ],
+  "unlockedSkills": [
+    "nova_arc_tether",
+    "nova_cryo_vent",
+    "nova_blast_wave",
+    "nova_link",
+    "nova_smoke_bomb",
+    "zeke_bulwark_stance",
+    "orion_nano_repair",
+    "gh0st_venom_edge",
+    "source_art_scan",
+    "gh0st_phase_counter",
+    "source_art_construct",
+    "nova_plasma_burst",
+    "zeke_overload_fists",
+    "orion_disruption_pulse",
+    "gh0st_system_crash",
+    "orion_stasis_stitch"
+  ],
+  "unlockedWeapons": [
+    "zeke_shock_fists",
+    "orion_prism_focus",
+    "gh0st_whisperblade",
+    "mining_pistol"
+  ],
+  "unlockedArmors": [
+    "zeke_surge_harness",
+    "orion_channeler_mantle",
+    "gh0st_phaseweave_jacket",
+    "nova_flux_liner"
+  ],
+  "unlockedAreas": [],
+  "unlockedExits": [
+    "pit_nova_bunk::west",
+    "pit_l2_corridor::east",
+    "workshop_yard::north",
+    "workshop_floor::south",
+    "checkpoint_door::north",
+    "checkpoint_tunnel::south",
+    "admin_elevator::north",
+    "mine_landing::south",
+    "echo_exit::north",
+    "launch_access::south",
+    "launch_lift::north",
+    "launch_checkpoint::south",
+    "launch_checkpoint::north",
+    "launch_bay::south",
+    "launch_bay::north",
+    "launch_pod::south"
+  ],
+  "partyMembers": [
+    "nova",
+    "zeke",
+    "orion",
+    "gh0st"
+  ],
+  "inventory": {
+    "cryo_inductor": 1,
+    "scrap_metal": 5,
+    "mining_pistol": 1,
+    "nova_flux_liner": 2,
+    "ration_pack": 1,
+    "mine_access_badge": 1,
+    "armor_plate": 1,
+    "hydraulic_fluid": 1,
+    "heavy_gear": 1,
+    "beast_meat": 2,
+    "tuning_fork": 1,
+    "wiring_bundle": 2,
+    "battery": 2,
+    "warden_keycard": 1,
+    "ghost_signal_cell": 1,
+    "wooden_rod": 1,
+    "basic_lure": 1,
+    "painkillers": 3,
+    "source_resin": 1,
+    "the_lens": 1,
+    "power_cell": 7,
+    "pure_iron": 4,
+    "heat_liner": 1,
+    "gh0st_override_key": 1,
+    "the_anvil": 1,
+    "deep_core_engine": 1,
+    "phase_cutter_arrays": 1,
+    "composite_plate": 4
+  },
+  "equippedItems": {},
+  "equippedWeapons": {
+    "zeke": "zeke_shock_fists",
+    "orion": "orion_prism_focus",
+    "gh0st": "gh0st_whisperblade",
+    "nova": "mining_pistol"
+  },
+  "equippedArmors": {
+    "zeke": "zeke_surge_harness",
+    "orion": "orion_channeler_mantle",
+    "gh0st": "gh0st_phaseweave_jacket",
+    "nova": "nova_flux_liner"
+  },
+  "tutorialSeen": [
+    "movement",
+    "swipe_move",
+    "scene_market_locator",
+    "source_art_unlock",
+    "world2_debuffs",
+    "link_unlock"
+  ],
+  "tutorialCompleted": [
+    "swipe_move"
+  ],
+  "tutorialRoomsSeen": [
+    "pit_nova_bunk",
+    "pit_L2_corridor",
+    "pit_shaft",
+    "pit_jed_bunk",
+    "pit_L1_landing",
+    "workshop_yard",
+    "workshop_floor",
+    "checkpoint_queue",
+    "checkpoint_bay",
+    "checkpoint_booth",
+    "checkpoint_door",
+    "checkpoint_tunnel",
+    "admin_lobby",
+    "admin_window",
+    "admin_security",
+    "admin_elevator",
+    "mine_landing",
+    "mine_alpha",
+    "mine_junction",
+    "mine_conveyor",
+    "mine_sifter",
+    "mine_shoring",
+    "mine_threshold",
+    "mine_slope",
+    "mine_antechamber",
+    "echo_gap",
+    "echo_walkway",
+    "echo_heart",
+    "echo_exit",
+    "launch_access",
+    "launch_lift",
+    "launch_checkpoint",
+    "launch_bay",
+    "launch_pod",
+    "sector9_crash_site",
+    "sector9_pod_interior",
+    "sector9_landing_stream",
+    "sector9_canopy",
+    "sector9_stream_pools",
+    "sector9_stream_flats",
+    "sector9_stream_cave_entrance",
+    "sector9_stream_cave_depths",
+    "sector9_wilds_thickets",
+    "sector9_wilds_hollow",
+    "sector9_wilds_grave",
+    "sector9_ridge_climb",
+    "sector9_ridge_ledges",
+    "sector9_ridge_overhang",
+    "sector9_canopy_ridge",
+    "sector9_ridge_viewpoint",
+    "sector9_ridge_sniper_perch",
+    "sector9_ridge_crevice",
+    "sector9_ridge_plateau",
+    "sector9_temple_plaza",
+    "sector9_temple_lock_chamber",
+    "sector9_temple_gate",
+    "sector9_hall_of_echoes",
+    "sector9_stasis_chamber",
+    "sector9_stasis_ring_array",
+    "sector9_stasis_observation",
+    "sector9_stasis_coolant_lines",
+    "sector9_foyer_grand_hall",
+    "sector9_source_gate",
+    "sector9_gate_emitter_left",
+    "sector9_gate_emitter_right",
+    "sector9_power_turbine",
+    "sector9_power_manifold",
+    "sector9_power_breaker_deck",
+    "sector9_power_valve",
+    "sector9_hangar_bay",
+    "sector9_landing_brush",
+    "sector9_landing_drop",
+    "spire_sewers_landing",
+    "spire_sewers_scale_01",
+    "spire_runoff_lock",
+    "spire_sewers_passage",
+    "spire_vent_output",
+    "spire_underrail_platform",
+    "spire_the_static",
+    "spire_signal_stairwell",
+    "spire_zekes_apartment",
+    "spire_transit_plaza",
+    "spire_security_kiosk",
+    "spire_checkpoint_queue",
+    "spire_elevator_service_gate",
+    "spire_safehouse_roof",
+    "spire_laundry_service",
+    "spire_staff_checkpoint",
+    "spire_skypark_dome",
+    "spire_prism_gallery",
+    "spire_archive_vault",
+    "spire_donor_gallery",
+    "spire_glasswalk",
+    "spire_skypark_scale_01",
+    "spire_skypark_scale_02",
+    "spire_service_lift",
+    "spire_exec_lounge_bar",
+    "spire_drone_test_alcove",
+    "spire_landing_pad_roof",
+    "foundry_slag_landing",
+    "foundry_slag_river",
+    "foundry_waste_intake",
+    "foundry_service_airlock",
+    "foundry_cooling_springs",
+    "foundry_conveyor_belt",
+    "foundry_conditioning_chamber",
+    "foundry_forge_anvil",
+    "foundry_conveyor_belt_scale_01",
+    "foundry_conveyor_belt_scale_02",
+    "foundry_conveyor_belt_scale_03",
+    "foundry_conveyor_belt_scale_04",
+    "foundry_forge_scale_01",
+    "foundry_forge_control_alcove",
+    "foundry_power_core",
+    "foundry_titan_dock",
+    "orbital_executive_dock"
+  ],
+  "questStageById": {
+    "w1_mq01": "report_to_jed",
+    "w1_mq02": "override_retirement",
+    "w1_mq03": "relic_sync",
+    "w1_sq03": "guard_break_training",
+    "w1_mq04": "cargo_lift_sacrifice",
+    "w1_mq05": "launch_pod",
+    "w2_mq01": "assess_crash_site",
+    "w2_mq02": "reach_temple_gate",
+    "w2_mq03": "override_stasis",
+    "w2_mq04": "canopy_ridge",
+    "w2_mq05": "repair_astra",
+    "w3_mq11": "find_safehouse",
+    "w3_mq12": "assemble_heist",
+    "w3_mq13": "infiltrate_lobby",
+    "w3_mq14": "claim_lens",
+    "w3_mq15": "launch_to_foundry",
+    "w4_mq16": "open_airlock",
+    "w4_mq17": "cooling_springs",
+    "w4_mq18": "matrix_overload",
+    "w4_mq19": "claim_anvil",
+    "w4_mq20": "steal_and_escape",
+    "w5_mq21": "approach"
+  },
+  "questTasksCompleted": {
+    "w1_mq01": [
+      "turn_on_bunk_light",
+      "inspect_safety_fault",
+      "leave_sleeping_level",
+      "find_jed",
+      "talk_to_jed",
+      "equip_starter_gear",
+      "inspect_loader_relay",
+      "clear_faulted_loader",
+      "reach_workshop",
+      "use_tinkering_table",
+      "patch_flux_liner",
+      "confirm_governor_bypass",
+      "test_cutter"
+    ],
+    "w1_mq02": [
+      "approach_admin_gate",
+      "request_clearance",
+      "meet_zeke",
+      "spoof_liability_form",
+      "receive_mine_access_badge"
+    ],
+    "w1_mq03": [
+      "enter_logistics_sector",
+      "talk_to_bogs",
+      "use_deep_elevator",
+      "clear_first_mine_encounter",
+      "restore_deep_mine_power",
+      "reach_architect_threshold",
+      "reach_echo_chamber",
+      "touch_tuning_fork",
+      "survive_source_sync"
+    ],
+    "w1_sq03": [
+      "talk_to_bogs",
+      "learn_hydraulic_kick",
+      "break_training_shield",
+      "rescue_trapped_workers"
+    ],
+    "w1_mq04": [
+      "survive_lockdown_broadcast",
+      "follow_zeke_comms",
+      "reach_cargo_lift",
+      "clear_escape_gauntlet",
+      "receive_chime",
+      "escape_to_launch_bay"
+    ],
+    "w1_mq05": [
+      "fight_through_launch_access",
+      "reach_pod_bay",
+      "survive_warden_intro",
+      "break_warden_guard",
+      "defeat_the_warden",
+      "splice_chime",
+      "launch_from_colony",
+      "hit_planetary_shield"
+    ],
+    "w2_mq01": [
+      "check_on_zeke",
+      "examine_pod",
+      "stabilize_zeke",
+      "follow_stream"
+    ],
+    "w2_mq02": [
+      "clear_canopy_path",
+      "locate_temple_gate",
+      "insert_chime"
+    ],
+    "w2_mq03": [
+      "inspect_murals",
+      "find_stasis_chamber",
+      "align_stasis_rings",
+      "talk_to_orion",
+      "recover_bridge_relic"
+    ],
+    "w2_mq04": [
+      "reach_canopy_ridge",
+      "confront_stalker",
+      "defeat_the_beast",
+      "complete_anchor_drill"
+    ],
+    "w2_mq05": [
+      "bypass_source_gate",
+      "inspect_astra",
+      "collect_power_conduits",
+      "reboot_bridge_relic",
+      "launch_ship"
+    ],
+    "w3_mq11": [
+      "clear_landing",
+      "reach_vent",
+      "find_apartment",
+      "establish_shield"
+    ],
+    "w3_mq12": [
+      "talk_jax",
+      "map_patrols",
+      "interrogate_guard",
+      "copy_badges",
+      "source_disguises",
+      "hack_blueprints",
+      "assemble_table"
+    ],
+    "w3_mq13": [
+      "blend_in",
+      "disable_sensors",
+      "enter_lobby"
+    ],
+    "w3_mq14": [
+      "enter_archive",
+      "solve_light_puzzle",
+      "take_lens"
+    ],
+    "w3_mq15": [
+      "reach_landing_pad",
+      "defeat_administrator",
+      "scan_shield_gap",
+      "launch_astra"
+    ],
+    "w4_mq16": [
+      "land_shelf",
+      "cross_slag_river",
+      "hack_cooling_vents",
+      "enter_airlock"
+    ],
+    "w4_mq17": [
+      "access_phantom_terminal",
+      "regroup_springs"
+    ],
+    "w4_mq18": [
+      "navigate_conveyors",
+      "defeat_prototypes",
+      "overload_matrix"
+    ],
+    "w4_mq19": [
+      "reach_core_chamber",
+      "solve_conveyor_puzzle",
+      "take_anvil"
+    ],
+    "w4_mq20": [
+      "confront_rylos",
+      "defeat_titan_walker",
+      "steal_engine",
+      "steal_arrays",
+      "escape_launch"
+    ],
+    "w5_mq21": [
+      "approach_halo"
+    ]
+  },
+  "completedEvents": [
+    "w1_mq01_inspect_safety_fault",
+    "w1_mq01_leave_sleeping_level",
+    "w1_mq01_find_jed",
+    "w1_mq01_receive_starter_kit",
+    "w1_mq01_route_to_workshop_hint",
+    "w1_mq01_inspect_loader_relay",
+    "w1_mq01_faulted_loader_victory",
+    "w1_mq01_reach_workshop",
+    "w1_mq01_cryo_inductor_repaired",
+    "w1_mq01_patch_flux_liner",
+    "w1_mq01_confirm_governor",
+    "w1_mq01_cutter_surge",
+    "w1_mq02_approach_checkpoint",
+    "w1_mq02_reach_booth",
+    "w1_mq03_logistics_commitment_warning",
+    "w1_mq03_enter_logistics_sector",
+    "w1_sq03_training_victory",
+    "w1_sq03_main_path_return_to_boggs",
+    "w1_sq03_record_drill_admin_security",
+    "w1_mq03_bogs_dialogue_complete",
+    "w1_mq03_enter_deep_mine",
+    "w1_mq03_clear_rock_borer",
+    "w1_mq03_reach_threshold",
+    "w1_mq03_reach_echo_chamber",
+    "w1_mq03_touch_relic",
+    "w1_mq04_start_lockdown",
+    "w1_mq04_enter_exit_tunnel",
+    "w1_mq04_emergency_route_pressure",
+    "w1_mq04_launch_access_pressure",
+    "w1_mq04_lift_pressure",
+    "w1_mq04_reach_lift",
+    "w1_mq04_gauntlet_victory",
+    "w1_mq04_complete",
+    "w1_mq05_checkpoint_victory",
+    "w1_mq05_enter_launch_bay",
+    "w1_mq05_warden_victory",
+    "w1_mq05_splice_chime",
+    "w1_mq05_use_nav_console",
+    "w2_mq01_examine_pod",
+    "w2_mq01_stabilize_zeke",
+    "w2_mq01_explore_stream",
+    "w2_mq02_clear_canopy",
+    "w2_mq02_locate_gate",
+    "w2_mq02_unlock_temple",
+    "w2_mq03_inspect_murals",
+    "w2_mq03_find_stasis",
+    "w2_mq03_inspect_pod",
+    "w2_mq03_read_mural_overview",
+    "w2_mq03_stabilize_coolant",
+    "w2_mq03_apply_alignment",
+    "w2_mq03_talk_to_orion",
+    "w2_mq03_recover_bridge",
+    "w2_camp_ridge_plateau",
+    "w2_mq04_reach_canopy",
+    "w2_mq04_confront",
+    "w2_mq04_victory",
+    "w2_mq04_anchor_drill",
+    "w2_mq05_reach_gate",
+    "w2_mq05_stabilize_horn",
+    "w2_mq05_ground_cup",
+    "w2_mq05_read_pressure_gauge",
+    "w2_mq05_overload_breakers",
+    "w2_mq05_resolve_gate",
+    "w2_mq05_inspect_astra",
+    "w2_mq05_collect_conduits",
+    "w2_mq05_reboot",
+    "w2_mq05_confirm_departure",
+    "w3_mq11_clear_landing",
+    "w3_mq11_reach_vent",
+    "w3_mq11_find_apartment",
+    "w3_mq11_establish_shield",
+    "w3_mq12_talk_jax",
+    "w3_mq12_map_patrols",
+    "w3_mq12_interrogate_guard",
+    "w3_mq12_copy_badges",
+    "w3_mq12_source_disguises",
+    "w3_mq12_hack_blueprints",
+    "w3_mq12_to_w3_mq13",
+    "w3_mq12_assemble_planning",
+    "w3_mq13_blend_in",
+    "w3_mq13_disable_sensors",
+    "w3_mq13_enter_lobby",
+    "w3_mq14_enter_archive",
+    "w3_mq14_read_containment_field",
+    "w3_mq14_read_prism_shutters",
+    "w3_mq14_trace_command_tethers",
+    "w3_mq14_solve_light_puzzle",
+    "w3_mq14_take_lens",
+    "w3_camp_skypark",
+    "w3_mq15_reach_landing_pad",
+    "w3_mq15_rooftop_security_down",
+    "w3_mq15_defeat_administrator",
+    "w3_scan_shield_gap_clear",
+    "w3_mq15_launch_astra",
+    "w4_mq16_land_shelf",
+    "w4_mq16_cross_slag_river",
+    "w4_mq16_hack_cooling_vents",
+    "w4_salvage_pure_iron",
+    "w4_mq16_enter_airlock",
+    "w4_mq17_access_phantom_terminal",
+    "w4_mq17_regroup_springs",
+    "w4_mq18_navigate_conveyors",
+    "w4_mq18_defeat_prototypes",
+    "w4_mq18_overload_matrix",
+    "w4_mq19_read_pulse_board",
+    "w4_mq19_read_grease_marks",
+    "w4_mq19_throw_override_paddle",
+    "w4_mq19_reach_core_chamber",
+    "w4_mq19_starve_breath_pistons",
+    "w4_mq19_open_anvil_cradle",
+    "w4_mq19_take_anvil",
+    "w4_camp_forge_alcove",
+    "w4_mq20_confront_rylos",
+    "w4_mq20_defeat_titan_walker",
+    "w4_mq20_steal_engine",
+    "w4_mq20_steal_arrays",
+    "w4_mq20_escape_launch",
+    "w5_salvage_composite_plate",
+    "w5_mq21_arrive_halo"
+  ],
+  "pendingEventCinematics": [],
+  "pendingBattleJson": "",
+  "roomStates": {
+    "pit_nova_bunk": {
+      "visited": true,
+      "discovered": true,
+      "light_on": true,
+      "dark": false,
+      "fault_visible": true,
+      "conduit_isolated": true
+    },
+    "pit_L2_corridor": {
+      "discovered": true,
+      "visited": true
+    },
+    "pit_shaft": {
+      "visited": true,
+      "discovered": true
+    },
+    "pit_jed_bunk": {
+      "visited": true,
+      "discovered": true
+    },
+    "pit_L1_landing": {
+      "visited": true,
+      "discovered": true
+    },
+    "workshop_yard": {
+      "visited": true,
+      "discovered": true,
+      "encounter_cleared:faulted_loader": true,
+      "loader_cleared": true
+    },
+    "workshop_floor": {
+      "discovered": true,
+      "visited": true,
+      "cryo_inductor_installed": true,
+      "cutter_surge_complete": true
+    },
+    "checkpoint_queue": {
+      "visited": true,
+      "discovered": true
+    },
+    "checkpoint_bay": {
+      "visited": true,
+      "discovered": true
+    },
+    "checkpoint_booth": {
+      "visited": true,
+      "discovered": true
+    },
+    "checkpoint_door": {
+      "visited": true,
+      "discovered": true
+    },
+    "checkpoint_tunnel": {
+      "discovered": true,
+      "visited": true
+    },
+    "admin_lobby": {
+      "visited": true,
+      "discovered": true,
+      "bogs_talked": true
+    },
+    "admin_window": {
+      "visited": true,
+      "discovered": true
+    },
+    "admin_security": {
+      "visited": true,
+      "discovered": true,
+      "encounter_cleared:acoustic_bulwark": true
+    },
+    "admin_elevator": {
+      "mine_map_reveal_pending": false,
+      "visited": true,
+      "discovered": true,
+      "mine_map_reveal_seen": true
+    },
+    "mine_landing": {
+      "discovered": true,
+      "visited": true
+    },
+    "mine_alpha": {
+      "visited": true,
+      "discovered": true,
+      "encounter_cleared:echo_borer|echo_borer": true
+    },
+    "mine_junction": {
+      "visited": true,
+      "discovered": true,
+      "power_on": true
+    },
+    "mine_shunt": {
+      "dark": false,
+      "light_on": true
+    },
+    "mine_conveyor": {
+      "dark": false,
+      "light_on": true,
+      "visited": true,
+      "discovered": true
+    },
+    "mine_checkpoint": {
+      "dark": false,
+      "light_on": true
+    },
+    "mine_sifter": {
+      "dark": false,
+      "light_on": true,
+      "visited": true,
+      "discovered": true
+    },
+    "mine_gas": {
+      "dark": false,
+      "light_on": true
+    },
+    "mine_shoring": {
+      "dark": false,
+      "light_on": true,
+      "visited": true,
+      "discovered": true
+    },
+    "mine_threshold": {
+      "dark": false,
+      "light_on": true,
+      "visited": true,
+      "discovered": true
+    },
+    "mine_slope": {
+      "dark": false,
+      "light_on": true,
+      "visited": true,
+      "discovered": true
+    },
+    "mine_antechamber": {
+      "dark": false,
+      "light_on": true,
+      "visited": true,
+      "discovered": true
+    },
+    "echo_gap": {
+      "visited": true,
+      "discovered": true
+    },
+    "echo_walkway": {
+      "visited": true,
+      "discovered": true
+    },
+    "echo_heart": {
+      "visited": true,
+      "discovered": true,
+      "relic_synced": true
+    },
+    "echo_well": {
+      "dark": false
+    },
+    "echo_memory": {
+      "dark": false
+    },
+    "launch_access": {
+      "discovered": true,
+      "visited": true
+    },
+    "echo_exit": {
+      "visited": true,
+      "discovered": true
+    },
+    "launch_lift": {
+      "visited": true,
+      "discovered": true,
+      "encounter_cleared:acoustic_bulwark|resonance_buoy": true
+    },
+    "launch_checkpoint": {
+      "discovered": true,
+      "visited": true,
+      "encounter_cleared:dominion_dampener|resonance_buoy": true
+    },
+    "launch_bay": {
+      "discovered": true,
+      "visited": true,
+      "encounter_cleared:the_iron_warden": true,
+      "warden_defeated": true
+    },
+    "launch_pod": {
+      "discovered": true,
+      "visited": true
+    },
+    "sector9_crash_site": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_pod_interior": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_landing_stream": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_canopy": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_stream_pools": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_stream_flats": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_stream_cave_entrance": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_stream_cave_depths": {
+      "visited": true,
+      "discovered": true,
+      "encounter_cleared:echo_borer": true
+    },
+    "sector9_wilds_thickets": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_wilds_hollow": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_wilds_grave": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_ridge_climb": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_ridge_ledges": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_ridge_overhang": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_canopy_ridge": {
+      "visited": true,
+      "discovered": true,
+      "hunter_confronted": true,
+      "beast_defeated": true,
+      "anchor_drill_complete": true
+    },
+    "sector9_ridge_viewpoint": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_ridge_sniper_perch": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_ridge_crevice": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_ridge_plateau": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_temple_plaza": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_temple_lock_chamber": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_temple_gate": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_hall_of_echoes": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_stasis_chamber": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_stasis_ring_array": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_stasis_observation": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_stasis_coolant_lines": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_foyer_grand_hall": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_source_gate": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_gate_emitter_left": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_gate_emitter_right": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_power_turbine": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_power_manifold": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_power_breaker_deck": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_power_valve": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_hangar_bay": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_landing_brush": {
+      "visited": true,
+      "discovered": true
+    },
+    "sector9_landing_drop": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_sewers_landing": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_sewers_scale_01": {
+      "visited": true,
+      "discovered": true,
+      "encounter_cleared:sewer_crawler": true
+    },
+    "spire_runoff_lock": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_sewers_passage": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_vent_output": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_underrail_platform": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_the_static": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_signal_stairwell": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_zekes_apartment": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_transit_plaza": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_security_kiosk": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_checkpoint_queue": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_elevator_service_gate": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_safehouse_roof": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_laundry_service": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_staff_checkpoint": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_skypark_dome": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_prism_gallery": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_archive_vault": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_donor_gallery": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_glasswalk": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_skypark_scale_01": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_skypark_scale_02": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_service_lift": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_exec_lounge_bar": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_drone_test_alcove": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_landing_pad_roof": {
+      "visited": true,
+      "discovered": true,
+      "encounter_cleared:aero_drone|heavy_mech": true,
+      "encounter_cleared:administrator_boss|aero_drone": true
+    },
+    "foundry_slag_landing": {
+      "visited": true,
+      "discovered": true
+    },
+    "foundry_slag_river": {
+      "visited": true,
+      "discovered": true
+    },
+    "foundry_waste_intake": {
+      "visited": true,
+      "discovered": true
+    },
+    "foundry_service_airlock": {
+      "visited": true,
+      "discovered": true
+    },
+    "foundry_cooling_springs": {
+      "visited": true,
+      "discovered": true
+    },
+    "foundry_conveyor_belt": {
+      "visited": true,
+      "discovered": true
+    },
+    "foundry_conditioning_chamber": {
+      "visited": true,
+      "discovered": true
+    },
+    "foundry_forge_anvil": {
+      "visited": true,
+      "discovered": true,
+      "anvil_cradle_open": true
+    },
+    "foundry_conveyor_belt_scale_01": {
+      "visited": true,
+      "discovered": true,
+      "pulse_board_read": true
+    },
+    "foundry_conveyor_belt_scale_02": {
+      "visited": true,
+      "discovered": true
+    },
+    "foundry_conveyor_belt_scale_03": {
+      "visited": true,
+      "discovered": true,
+      "grease_route_read": true
+    },
+    "foundry_conveyor_belt_scale_04": {
+      "visited": true,
+      "discovered": true,
+      "paddle_thrown": true
+    },
+    "foundry_forge_scale_01": {
+      "visited": true,
+      "discovered": true,
+      "pistons_starved": true
+    },
+    "foundry_forge_control_alcove": {
+      "visited": true,
+      "discovered": true
+    },
+    "foundry_power_core": {
+      "visited": true,
+      "discovered": true
+    },
+    "foundry_titan_dock": {
+      "visited": true,
+      "discovered": true,
+      "encounter_cleared:titan_walker_boss": true
+    },
+    "orbital_executive_dock": {
+      "visited": true,
+      "discovered": true
+    }
+  },
+  "enemyPartyStates": {
+    "debug_patrol_2": {
+      "roomId": "debug_enemy_party_sizes",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 12000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "debug_patrol_3": {
+      "roomId": "debug_enemy_party_sizes_east",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 12000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "debug_patrol_north_1": {
+      "roomId": "debug_enemy_party_sizes_north",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 10000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "debug_patrol_north_2": {
+      "roomId": "debug_enemy_party_sizes_north",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 14000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "debug_patrol_south_1": {
+      "roomId": "debug_enemy_party_sizes_south",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 11000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "debug_patrol_south_2": {
+      "roomId": "debug_enemy_party_sizes_south",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 15000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w1_deep_mine_pressure_patrol": {
+      "roomId": "mine_conveyor",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 25000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    }
+  },
+  "revealedNodes": [
+    "pit",
+    "workshop",
+    "admin_gate",
+    "admin_concourse",
+    "deep_mine",
+    "echo_chamber",
+    "launch_bay",
+    "sector9_landing",
+    "tideglass_beach",
+    "razor_vine_path",
+    "canopy_ridge",
+    "temple_gate",
+    "hall_of_echoes",
+    "stasis_chamber",
+    "source_gate",
+    "hangar_bay",
+    "spire_sewers",
+    "spire_vent_output",
+    "spire_the_static",
+    "spire_night_market",
+    "spire_transit_plaza",
+    "spire_laundry",
+    "spire_skypark",
+    "spire_archive",
+    "spire_landing_pad",
+    "spire_exec_lounge",
+    "foundry_obsidian_shelf",
+    "foundry_slag_river",
+    "foundry_waste_intake",
+    "foundry_service_airlock",
+    "foundry_cooling_springs",
+    "foundry_conveyor_belt",
+    "foundry_conditioning",
+    "foundry_forge",
+    "foundry_power_core",
+    "foundry_titan_dock",
+    "orbital_executive_dock"
+  ],
+  "unlockedNodes": [
+    "pit",
+    "workshop",
+    "admin_gate",
+    "admin_concourse",
+    "deep_mine",
+    "echo_chamber",
+    "launch_bay",
+    "sector9_landing",
+    "tideglass_beach",
+    "razor_vine_path",
+    "canopy_ridge",
+    "temple_gate",
+    "hall_of_echoes",
+    "stasis_chamber",
+    "source_gate",
+    "hangar_bay",
+    "spire_sewers",
+    "spire_vent_output",
+    "spire_the_static",
+    "spire_night_market",
+    "spire_transit_plaza",
+    "spire_laundry",
+    "spire_skypark",
+    "spire_archive",
+    "spire_landing_pad",
+    "spire_exec_lounge",
+    "foundry_obsidian_shelf",
+    "foundry_slag_river",
+    "foundry_waste_intake",
+    "foundry_service_airlock",
+    "foundry_cooling_springs",
+    "foundry_conveyor_belt",
+    "foundry_conditioning",
+    "foundry_forge",
+    "foundry_power_core",
+    "foundry_titan_dock",
+    "orbital_executive_dock"
+  ],
+  "visitedNodes": [
+    "pit",
+    "workshop",
+    "admin_gate",
+    "admin_concourse",
+    "deep_mine",
+    "echo_chamber",
+    "launch_bay",
+    "sector9_landing",
+    "razor_vine_path",
+    "tideglass_beach",
+    "canopy_ridge",
+    "temple_gate",
+    "hall_of_echoes",
+    "stasis_chamber",
+    "source_gate",
+    "hangar_bay",
+    "spire_sewers",
+    "spire_vent_output",
+    "spire_the_static",
+    "spire_transit_plaza",
+    "spire_laundry",
+    "spire_skypark",
+    "spire_archive",
+    "spire_exec_lounge",
+    "spire_landing_pad",
+    "foundry_obsidian_shelf",
+    "foundry_slag_river",
+    "foundry_waste_intake",
+    "foundry_service_airlock",
+    "foundry_cooling_springs",
+    "foundry_conveyor_belt",
+    "foundry_conditioning",
+    "foundry_forge",
+    "foundry_power_core",
+    "foundry_titan_dock",
+    "orbital_executive_dock"
+  ],
+  "knownEnemyWeaknesses": {
+    "faulted_loader": [
+      "shock"
+    ],
+    "resonance_buoy": [
+      "shock"
+    ],
+    "the_iron_warden": [
+      "shock"
+    ]
+  },
+  "completedNodes": [],
+  "arcadeProgress": {},
+  "mealChefId": "nova",
+  "fishingCleanCatchProgress": 0,
+  "progressionPrototypeVersion": 1,
+  "purchasedSkillNodes": {},
+  "progressionAwardClaims": [
+    "w1_mq01",
+    "w1_sq03",
+    "w1_mq03",
+    "w1_mq05",
+    "w2_mq05",
+    "w3_mq11",
+    "w3_mq13",
+    "w3_mq14",
+    "w3_mq15",
+    "w4_mq16",
+    "w4_mq18",
+    "w4_mq19",
+    "recruit:orion",
+    "recruit:gh0st"
+  ]
+}

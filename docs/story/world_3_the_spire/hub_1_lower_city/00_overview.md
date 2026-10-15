@@ -1,14 +1,11 @@
-# World 3: The Spire — Hub 1: Lower City (The Return)
+# Lower City: implemented hub overview
 
-## Overview
-The "Spire" is a massive vertical city. The Lower City is the foundation—rain-slicked, neon-lit poverty where the workers live. It is surveillance-heavy but chaotic.
+Status: Source-reconciled reference, October 14, 2026. Current code/assets are the implementation baseline. This is a source review, not a fresh playthrough or a claim that every route and device behavior is accepted.
 
-## Key Themes
-- **The Blockade:** The party has a ship (*The Astra*), but cannot leave the planet due to the **Dominion Planetary Shield**.
-- **Anonymity:** Nova is a fugitive here. She must blend in.
-- **The Insider:** Zeke returns home to find his life erased.
-- **Breather:** A loud, colorful Night Market where the Lower City feels alive (not just oppressed).
+Arrival under the Spire, runoff/sewer traversal, The Static and the apartment, market activities, and preparation at Transit Plaza. The crew already travels with Zeke; there is no reunion with a separately waiting Zeke.
 
-## Transition Points
-- **To Upper City:** Restricted elevator access (The primary goal of this Hub).
-- **From Wilds:** Arrival point via Sewer/Smuggler route.
+Use `hub_5_lower_city` and current node/room records for navigation. The local quest, cast, and location files describe source contracts; they do not authorize new lock schedules, mandatory scenes, or room expansion.
+
+## Sources and maintenance
+
+[rooms](../../../../app/src/main/assets/rooms.json), [quests](../../../../app/src/main/assets/quests.json), [events](../../../../app/src/main/assets/events.json), [dialogue](../../../../app/src/main/assets/dialogue.json), [hub_nodes](../../../../app/src/main/assets/hub_nodes.json). [Documentation index](../../../README.md). Update this reference when its corresponding records change; do not change working game logic to match an older script.

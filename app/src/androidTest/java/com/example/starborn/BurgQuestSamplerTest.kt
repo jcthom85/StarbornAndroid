@@ -34,7 +34,8 @@ class BurgQuestSamplerTest {
         var retries = 0
         var finishes = 0
         compose.setContent { StarbornTheme {
-            BurgQuestFinishDialog(ending, { visited++ }, { retries++ }, { finishes++ }, {}, {})
+            BurgQuestFinishDialog(ending, onVisitAstra = { visited++ }, onRetry = { retries++ },
+                onFinish = { finishes++ }, onChoose = {}, onExit = {})
         } }
         listOf(BurgQuestEnding.VICTORY, BurgQuestEnding.DEFEAT, BurgQuestEnding.RETREAT).forEachIndexed { index, result ->
             compose.runOnIdle { ending = result }

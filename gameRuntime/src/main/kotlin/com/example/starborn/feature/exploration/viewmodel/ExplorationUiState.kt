@@ -20,11 +20,14 @@ data class ExplorationUiState(
     val currentHub: Hub? = null,
     val currentRoom: Room? = null,
     val roomTransition: RoomTransitionUi? = null,
+    val areaEntry: AreaEntryUi? = null,
     val availableConnections: Map<String, String?> = emptyMap(),
     val npcs: List<String> = emptyList(),
     val npcPresenceNames: Map<String, String> = emptyMap(),
     val npcPortraitPaths: Map<String, String> = emptyMap(),
     val actions: List<RoomAction> = emptyList(),
+    val roomActionsVisible: Boolean = false,
+    val roomObjectOffer: com.example.starborn.feature.exploration.presentation.RoomObjectOffer? = null,
     val actionHints: Map<String, ActionHintUi> = emptyMap(),
     val enemies: List<String> = emptyList(),
     val enemyTiers: Map<String, String> = emptyMap(),
@@ -70,11 +73,17 @@ data class ExplorationUiState(
     val prompt: UIPrompt? = null,
     val milestoneHistory: List<MilestoneEvent> = emptyList(),
     val isMilestoneGalleryVisible: Boolean = false,
+    val isCatchLogVisible: Boolean = false,
+    val isAstraRecreationVisible: Boolean = false,
+    val astraArcades: List<com.example.starborn.feature.exploration.presentation.AstraArcadeDefinition> = emptyList(),
+    val astraPrizesAvailable: Boolean = true,
+    val astraFacility: com.example.starborn.feature.exploration.presentation.AstraFacilityUi? = null,
     val isMenuOverlayVisible: Boolean = false,
     val menuTab: MenuTab = MenuTab.INVENTORY,
     val togglePrompt: TogglePromptUi? = null,
     val tuningPuzzle: TuningPuzzleUi? = null,
     val isSimulationDeckVisible: Boolean = false,
+    val availableSimulations: List<com.example.starborn.feature.exploration.presentation.SimulationProgramDefinition> = emptyList(),
     val isTapeDeckVisible: Boolean = false,
     val isAstraNavConsoleVisible: Boolean = false,
     val showBurgQuestAstraExitDialog: Boolean = false,
@@ -83,6 +92,7 @@ data class ExplorationUiState(
     val astraDockedWorldId: String? = null,
     val astraTransitTitle: String? = null,
     val astraArrivalTitle: String? = null,
+    val astraRouteHint: String = "",
     val astraDestinations: List<com.example.starborn.domain.session.AstraDestination> = emptyList(),
     val playingTapeId: String? = null,
     val settings: SettingsUiState = SettingsUiState(),
@@ -461,7 +471,9 @@ data class SkillTreeOverlayUi(
     val portraitPath: String?,
     val availableAp: Int,
     val apInvested: Int,
-    val branches: List<SkillTreeBranchUi>
+    val branches: List<SkillTreeBranchUi>,
+    val tutorialGuide: String? = null,
+    val respecRefund: Int = 0
 )
 
 data class SkillTreeBranchUi(
@@ -558,4 +570,12 @@ data class VisualEnemyParty(
     val enteringFrom: String? = null,
     val leavingTo: String? = null,
     val isAggressive: Boolean = false
+)
+
+data class AreaEntryUi(
+    val id: Long,
+    val title: String,
+    val region: String? = null,
+    val text: String? = null,
+    val firstVisit: Boolean = false
 )

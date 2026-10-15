@@ -1,5 +1,7 @@
 # Starborn Narrative Canon Migration Handoff
 
+> **Historical record ? scoped to its recorded build/date.** Start with [the documentation index](../README.md) for current orientation. Counts, next-step lists, release details, and imperative instructions below are historical, even where they originally say current or read first. Current code/assets are the implementation baseline. Recheck operational commands before use.
+
 **Prepared:** July 14, 2026
 **Purpose:** Portable implementation specification for applying this narrative repair to a different, mostly similar Starborn checkout with Codex CLI.
 **Source state:** Based on the uncommitted narrative/runtime diff in `StarbornAndroid`; this is a semantic migration guide, not a patch file.

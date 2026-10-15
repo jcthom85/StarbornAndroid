@@ -143,7 +143,7 @@ class DesktopQuestPresentationTest {
         } finally { services.close(); directory.deleteRecursively() }
     }
 
-    @Test fun journalUsesSharedObjectiveStateAndHasFishingRecordsSection() {
+    @Test fun journalUsesSharedObjectiveStateAndExpandsQuestBackground() {
         val directory = Files.createTempDirectory("starborn-journal-parity-").toFile()
         val services = DesktopAppServices(directory, RecordingAudio())
         try {
@@ -155,14 +155,19 @@ class DesktopQuestPresentationTest {
                 DesktopFieldMenuContent(services, initialTab = DesktopMenuTab.JOURNAL, onOpenFieldKit = {}, onReturnToTitle = {}, onDismiss = {})
             } } }
             compose.waitUntil(10_000) { services.exploration.uiState.value.questDetail?.id == quest.id }
+            compose.onNodeWithText(quest.summary).assertDoesNotExist()
+            compose.onNodeWithText("Quest background").performScrollTo().performClick()
             compose.onNodeWithText(quest.summary).assertExists()
             compose.onNodeWithContentDescription("Completed objective: ${task.text}").assertExists()
             compose.onNodeWithText("Rewards").assertExists()
             capture("journal-quest-details")
-            compose.onNodeWithText("Fishing").performClick()
+            compose.onNodeWithText("Hide quest background").performScrollTo().performClick()
+            compose.onNodeWithText(quest.summary).assertDoesNotExist()
+            // Fishing records are covered through the cargo terminal in DesktopAstraCatchLogTest.
+            compose.onNodeWithText("Fishing").assertDoesNotExist()
+            compose.onNodeWithText("History").performClick()
             compose.waitForIdle()
             compose.runOnIdle { assertNull(services.exploration.uiState.value.questDetail) }
-            assertTrue(compose.onAllNodesWithText("No fishing records yet.").fetchSemanticsNodes().isNotEmpty() || services.exploration.uiState.value.fishingJournal.isNotEmpty())
         } finally { services.close(); directory.deleteRecursively() }
     }
 

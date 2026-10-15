@@ -214,7 +214,7 @@ fun DesktopHubScreen(services: DesktopAppServices, onEnterRoom: (String) -> Unit
                     }
                 }
             }
-            state.lockedPrompt?.let { prompt -> DesktopExplorationModal(prompt.message, runtime::dismissLockedPrompt, prompt.title) {
+            state.lockedPrompt?.let { prompt -> DesktopExplorationModal(prompt.message, runtime::dismissLockedPrompt, prompt.title, tapToDismiss = true) {
                 Button(onClick = runtime::dismissLockedPrompt) { Text("Close") }
             } }
         }

@@ -19,7 +19,8 @@ class DebugScenarioCatalogTest {
         val hubs = org.json.JSONArray(java.io.File(app, "src/main/assets/hubs.json").readText())
         val hubIds = (0 until hubs.length()).map { hubs.getJSONObject(it).getString("id") }.toSet()
         DebugScenarioCatalog.scenarios.forEach {
-            assertTrue("Missing launcher: ${it.id}", it.id in launches || it.id in hubIds)
+            // Rebuilt procedures dispatch through DebugFixtureBuilder before the legacy switch.
+            assertTrue("Missing launcher: ${it.id}", it.procedure != null || it.id in launches || it.id in hubIds)
         }
     }
 

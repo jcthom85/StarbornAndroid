@@ -1,0 +1,110 @@
+[
+  {
+    "original": "data/assistant_briefing.md",
+    "snapshot": "docs/_archive/documentation-reset-2026-10-14/data/assistant_briefing.md",
+    "sha256": "780fc749d6f3127d63e7a2a724f1eb34d7d760ecdb3e07ac79bcb13a0d7cac93",
+    "words": 475
+  },
+  {
+    "original": "docs/story/_Structure_Guide.md",
+    "snapshot": "docs/_archive/documentation-reset-2026-10-14/docs/story/_Structure_Guide.md",
+    "sha256": "cb90ecfcb6b94054322d4c536848eb9e73c42ebd61d4786c65ec44e87e273831",
+    "words": 335
+  },
+  {
+    "original": "docs/story/Starborn_Master_Story.md",
+    "snapshot": "docs/_archive/documentation-reset-2026-10-14/docs/story/Starborn_Master_Story.md",
+    "sha256": "b88c937dea233b039ad26088565d144af3817f26c0d236b7f66b70939b8f8ab4",
+    "words": 3203
+  },
+  {
+    "original": "docs/story/Lore_Bible.md",
+    "snapshot": "docs/_archive/documentation-reset-2026-10-14/docs/story/Lore_Bible.md",
+    "sha256": "ff03999b3c8716119a18cd65fd72dfbc7587da006cf8518308e08508b8145807",
+    "words": 3020
+  },
+  {
+    "original": "docs/story/Characters.md",
+    "snapshot": "docs/_archive/documentation-reset-2026-10-14/docs/story/Characters.md",
+    "sha256": "dab641ec30866de83114f686d799c00265cf59070843520ed5c9e35070a24faf",
+    "words": 1205
+  },
+  {
+    "original": "docs/story/Character_Arcs.md",
+    "snapshot": "docs/_archive/documentation-reset-2026-10-14/docs/story/Character_Arcs.md",
+    "sha256": "d8349bfa763d5c50882957f8d0b2e7ca8001ba80cdfd9230badf321db1071fde",
+    "words": 1275
+  },
+  {
+    "original": "docs/story/Emotional_and_Conflict_Map.md",
+    "snapshot": "docs/_archive/documentation-reset-2026-10-14/docs/story/Emotional_and_Conflict_Map.md",
+    "sha256": "b8f112fcbd1a00b99a0604c978f4b80efdd6525b6efb25b6869d6979d85dc0a4",
+    "words": 1517
+  },
+  {
+    "original": "docs/story/Systems_Overview.md",
+    "snapshot": "docs/_archive/documentation-reset-2026-10-14/docs/story/Systems_Overview.md",
+    "sha256": "1eddb80d654c306545c8d2e41e703f1385feca1181230e0d5af917c5e4627347",
+    "words": 1533
+  },
+  {
+    "original": "docs/story/Content_Standards.md",
+    "snapshot": "docs/_archive/documentation-reset-2026-10-14/docs/story/Content_Standards.md",
+    "sha256": "78c52fd9301839864061651e10879fe0fe5aad9cc11a774da6282f6c803cf556",
+    "words": 1283
+  },
+  {
+    "original": "docs/story/Starborn_Writer_Handbook.md",
+    "snapshot": "docs/_archive/documentation-reset-2026-10-14/docs/story/Starborn_Writer_Handbook.md",
+    "sha256": "1cf7ed049243cec31d2e9d2992556af71a0132722a1c80f058774cb5093d061a",
+    "words": 1127
+  },
+  {
+    "original": "docs/story/hub_ship_astra/00_overview.md",
+    "snapshot": "docs/_archive/documentation-reset-2026-10-14/docs/story/hub_ship_astra/00_overview.md",
+    "sha256": "eec289b21098de2b3c7f2bdcb226a36e5e88efde5b2c82884c7cb5d6669ebe21",
+    "words": 221
+  },
+  {
+    "original": "docs/story/hub_ship_astra/01_functionality.md",
+    "snapshot": "docs/_archive/documentation-reset-2026-10-14/docs/story/hub_ship_astra/01_functionality.md",
+    "sha256": "7bf9a82cdd1dcffdcf7d791ed88bdec6a1b66810e145f1f3e0d75b66dc130314",
+    "words": 462
+  },
+  {
+    "original": "docs/story/hub_ship_astra/03_locations.md",
+    "snapshot": "docs/_archive/documentation-reset-2026-10-14/docs/story/hub_ship_astra/03_locations.md",
+    "sha256": "6c514aa258f82db87bd88a79eda0bb4db9578ef1ebb8eeb733f0160f5bc4ac88",
+    "words": 309
+  },
+  {
+    "original": "codex_handoff.md",
+    "snapshot": "docs/_archive/documentation-reset-2026-10-14/codex_handoff.md",
+    "sha256": "134101a264265629e785286485c748ae4e54485272affb7c431d06e309ed356d",
+    "words": 336
+  },
+  {
+    "original": "antigravity_handoff.md",
+    "snapshot": "docs/_archive/documentation-reset-2026-10-14/antigravity_handoff.md",
+    "sha256": "a7a9226f1d52ec6e84bdb3c6b714c29d4aa8541716088f6cc4e712af19f0216a",
+    "words": 834
+  },
+  {
+    "original": "task.md",
+    "snapshot": "docs/_archive/documentation-reset-2026-10-14/task.md",
+    "sha256": "0f2fdfc3b1f20c040a7ec692a0f36af06a0f41d811c16ed656d95bd94da803a8",
+    "words": 853
+  },
+  {
+    "original": "implementation_plan.md",
+    "snapshot": "docs/_archive/documentation-reset-2026-10-14/implementation_plan.md",
+    "sha256": "0481140683bcc69462d9cb631e3cd07d55bfaea7e0a08207fa8345eca0e4de7e",
+    "words": 502
+  },
+  {
+    "original": "walkthrough.md",
+    "snapshot": "docs/_archive/documentation-reset-2026-10-14/walkthrough.md",
+    "sha256": "b0ce614df2df417e074a0970ae412303ac2d2a24e2b94e8c1e1d4fc835482e53",
+    "words": 347
+  }
+]

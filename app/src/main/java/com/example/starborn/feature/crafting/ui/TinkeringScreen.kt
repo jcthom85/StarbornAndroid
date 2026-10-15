@@ -799,7 +799,7 @@ private fun TinkeringRecipeCard(
                         .semantics { contentDescription = "Craft ${recipe.name}" },
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("Craft")
+                    Text("Synthesize")
                 }
             }
         }
@@ -1002,7 +1002,7 @@ private fun TinkeringBenchCard(
                         contentColor = Color.Black
                     )
                 ) {
-                    Text("Craft", fontWeight = FontWeight.Bold)
+                    Text("Synthesize", fontWeight = FontWeight.Bold)
                 }
             }
         }

@@ -20,7 +20,7 @@ class DesktopAstraCatalogPresentationTest {
         val services = DesktopAppServices(directory)
         try {
             compose.setContent { DesktopStarbornTheme {
-                DesktopRuntimeOverlays(services, services.exploration, ExplorationUiState(isSimulationDeckVisible = true))
+                DesktopRuntimeOverlays(services, services.exploration, ExplorationUiState(isSimulationDeckVisible = true, availableSimulations = AstraCatalog.simulations))
             } }
             val first = AstraCatalog.simulations.first()
             compose.onNodeWithText(first.title).assertExists()

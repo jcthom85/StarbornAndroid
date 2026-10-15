@@ -1,5 +1,7 @@
 # Starborn status and next steps — October 9, 2026
 
+> **Historical record ? scoped to its recorded build/date.** Start with [the documentation index](README.md) for current orientation. Counts, next-step lists, release details, and imperative instructions below are historical, even where they originally say current or read first. Current code/assets are the implementation baseline. Recheck operational commands before use.
+
 Snapshot analysis of the whole project (Android + desktop). Sources: git history through `a787912d` (Oct 8), [OVERALL_PLAN_CHECKPOINT.md](OVERALL_PLAN_CHECKPOINT.md), the `docs/desktop/` pass records, [ENVIRONMENTAL_EFFECTS_PLAN.md](design/ENVIRONMENTAL_EFFECTS_PLAN.md) and its implementation record, and [IMPROVEMENT_BACKLOG.md](IMPROVEMENT_BACKLOG.md).
 
 **Bottom line:** content is essentially complete. The gap is validation by people, on real hardware, end to end, on both platforms.

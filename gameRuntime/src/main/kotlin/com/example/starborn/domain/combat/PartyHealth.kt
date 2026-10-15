@@ -12,7 +12,8 @@ object PartyHealth {
         val owner = player.id.trim().lowercase()
         var vitality = player.vitality
         var bonus = state.activeMealBuff?.hpBonus ?: 0
-        state.unlockedSkills.filter { it.startsWith("${player.id}_") }.forEach { id ->
+        val owned = state.unlockedSkills + if (com.example.starborn.domain.leveling.CrewBuildPrototype.isEnabled(state)) state.purchasedSkillNodes.keys else emptySet()
+        owned.filter { it.startsWith("${player.id}_") }.forEach { id ->
             val effect = nodes[id]?.effect
             if (effect?.type == "buff" && effect.buffType?.trim()?.lowercase() in setOf("vit", "vitality")) {
                 vitality += effect?.value ?: 0

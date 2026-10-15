@@ -1,6 +1,7 @@
 [
   {
     "id": "faulted_loader",
+    "combat_size": "large",
     "name": "Faulted Loader",
     "tier": "common",
     "combat_behavior": "aggressive",
@@ -45,6 +46,7 @@
   },
   {
     "id": "echo_borer",
+    "combat_size": "large",
     "name": "Echo-Borer",
     "tier": "standard",
     "combat_behavior": "aggressive",
@@ -85,6 +87,7 @@
   },
   {
     "id": "siren_skimmer",
+    "combat_size": "small",
     "name": "Siren Skimmer",
     "tier": "standard",
     "combat_behavior": "trickster",
@@ -128,6 +131,7 @@
   },
   {
     "id": "dominion_dampener",
+    "combat_size": "medium",
     "name": "Dominion Dampener",
     "tier": "standard",
     "combat_behavior": "balanced",
@@ -176,6 +180,7 @@
   },
   {
     "id": "acoustic_bulwark",
+    "combat_size": "large",
     "name": "Acoustic Bulwark",
     "tier": "elite",
     "combat_behavior": "defensive",
@@ -222,6 +227,7 @@
   },
   {
     "id": "resonance_buoy",
+    "combat_size": "small",
     "name": "Resonance Buoy",
     "tier": "standard",
     "combat_behavior": "avoidant",
@@ -270,6 +276,7 @@
   },
   {
     "id": "pressure_hauler",
+    "combat_size": "large",
     "name": "Pressure Hauler",
     "tier": "elite",
     "combat_behavior": "smart",
@@ -320,6 +327,7 @@
   },
   {
     "id": "the_iron_warden",
+    "combat_size": "massive",
     "name": "The Iron Warden",
     "tier": "boss",
     "combat_behavior": "oppressive",
@@ -366,6 +374,7 @@
   },
   {
     "id": "shard_hound",
+    "combat_size": "medium",
     "name": "Shard-Hound",
     "tier": "standard",
     "combat_behavior": "aggressive",
@@ -405,6 +414,7 @@
   },
   {
     "id": "spore_spitter",
+    "combat_size": "medium",
     "name": "Spore-Spitter",
     "tier": "standard",
     "combat_behavior": "balanced",
@@ -443,6 +453,7 @@
   },
   {
     "id": "ruin_guardian",
+    "combat_size": "large",
     "name": "Ruin-Guardian",
     "tier": "elite",
     "combat_behavior": "defensive",
@@ -487,6 +498,7 @@
   },
   {
     "id": "razor_vine",
+    "combat_size": "medium",
     "name": "Razor-Vine",
     "tier": "standard",
     "combat_behavior": "aggressive",
@@ -520,6 +532,7 @@
   },
   {
     "id": "stalker_vine",
+    "combat_size": "large",
     "name": "Stalker-Vine",
     "tier": "elite",
     "combat_behavior": "smart",
@@ -554,6 +567,7 @@
   },
   {
     "id": "sentinel_orb",
+    "combat_size": "large",
     "name": "Sentinel Orb",
     "tier": "elite",
     "combat_behavior": "trickster",
@@ -597,6 +611,7 @@
   },
   {
     "id": "the_beast",
+    "combat_size": "massive",
     "name": "The Source Beast",
     "tier": "boss",
     "combat_behavior": "oppressive",
@@ -639,6 +654,7 @@
   },
   {
     "id": "sewer_crawler",
+    "combat_size": "medium",
     "name": "Sewer Crawler",
     "tier": "normal",
     "combat_behavior": "aggressive",
@@ -677,6 +693,7 @@
   },
   {
     "id": "riot_guard",
+    "combat_size": "medium",
     "name": "Riot Guard",
     "tier": "normal",
     "combat_behavior": "defensive",
@@ -716,6 +733,7 @@
   },
   {
     "id": "sentinel_mki",
+    "combat_size": "large",
     "name": "Sentinel Mk. I",
     "tier": "elite",
     "combat_behavior": "oppressive",
@@ -759,6 +777,7 @@
   },
   {
     "id": "aero_drone",
+    "combat_size": "medium",
     "name": "Aero Drone",
     "tier": "standard",
     "combat_behavior": "harrier",
@@ -803,6 +822,7 @@
   },
   {
     "id": "corporate_assassin",
+    "combat_size": "large",
     "name": "Corporate Assassin",
     "tier": "elite",
     "combat_behavior": "aggressive",
@@ -848,6 +868,7 @@
   },
   {
     "id": "heavy_mech",
+    "combat_size": "large",
     "name": "Heavy Mech",
     "tier": "elite",
     "combat_behavior": "tank",
@@ -893,6 +914,7 @@
   },
   {
     "id": "administrator_boss",
+    "combat_size": "massive",
     "name": "The Administrator",
     "tier": "boss",
     "combat_behavior": "summoner",
@@ -938,6 +960,7 @@
   },
   {
     "id": "magma_drone",
+    "combat_size": "medium",
     "name": "Magma Drone",
     "tier": "standard",
     "combat_behavior": "aggressive",
@@ -983,6 +1006,7 @@
   },
   {
     "id": "slag_golem",
+    "combat_size": "large",
     "name": "Slag Golem",
     "tier": "elite",
     "combat_behavior": "aggressive",
@@ -1032,6 +1056,7 @@
   },
   {
     "id": "welder_bot",
+    "combat_size": "medium",
     "name": "Welder Bot",
     "tier": "standard",
     "combat_behavior": "defensive",
@@ -1076,6 +1101,7 @@
   },
   {
     "id": "flame_trooper",
+    "combat_size": "large",
     "name": "Flame Trooper",
     "tier": "elite",
     "combat_behavior": "tank",
@@ -1121,6 +1147,7 @@
   },
   {
     "id": "phantom_prototype",
+    "combat_size": "large",
     "name": "Phantom Prototype",
     "tier": "elite",
     "combat_behavior": "assassin",
@@ -1167,6 +1194,7 @@
   },
   {
     "id": "conveyor_crusher",
+    "combat_size": "medium",
     "name": "Conveyor Crusher",
     "tier": "hazard",
     "combat_behavior": "stationary",
@@ -1203,6 +1231,7 @@
   },
   {
     "id": "titan_walker_boss",
+    "combat_size": "massive",
     "recovery_after": {
       "missile_barrage": "vent_exposure",
       "titan_stomp": "vent_exposure"
@@ -1253,6 +1282,7 @@
   },
   {
     "id": "orbital_fighter",
+    "combat_size": "large",
     "name": "Compliance Fighter",
     "tier": "elite",
     "combat_behavior": "aggressive",
@@ -1294,6 +1324,7 @@
   },
   {
     "id": "compliance_officer",
+    "combat_size": "large",
     "name": "Compliance Officer",
     "tier": "elite",
     "combat_behavior": "aggressive",
@@ -1336,6 +1367,7 @@
   },
   {
     "id": "null_g_drone",
+    "combat_size": "medium",
     "name": "Null-G Drone",
     "tier": "common",
     "combat_behavior": "aggressive",
@@ -1377,6 +1409,7 @@
   },
   {
     "id": "void_turret",
+    "combat_size": "medium",
     "name": "Void Turret",
     "tier": "common",
     "combat_behavior": "stationary",
@@ -1417,6 +1450,7 @@
   },
   {
     "id": "hk_droid",
+    "combat_size": "large",
     "name": "Hunter-Killer Droid",
     "tier": "elite",
     "combat_behavior": "aggressive",
@@ -1454,6 +1488,7 @@
   },
   {
     "id": "elite_guard",
+    "combat_size": "large",
     "name": "Elite Guard",
     "tier": "elite",
     "combat_behavior": "defensive",
@@ -1496,6 +1531,7 @@
   },
   {
     "id": "firewall_construct",
+    "combat_size": "large",
     "name": "Firewall Construct",
     "tier": "elite",
     "combat_behavior": "trickster",
@@ -1538,6 +1574,7 @@
   },
   {
     "id": "compliance_avatar",
+    "combat_size": "massive",
     "recovery_after": {
       "missile_barrage": "avatar_recalibration"
     },
@@ -1588,6 +1625,7 @@
   },
   {
     "id": "manager_projection",
+    "combat_size": "large",
     "name": "The Manager",
     "tier": "elite",
     "combat_behavior": "controller",
@@ -1624,6 +1662,7 @@
   },
   {
     "id": "endless_war_echo",
+    "combat_size": "large",
     "name": "War Echo",
     "tier": "elite",
     "combat_behavior": "aggressive",
@@ -1661,6 +1700,7 @@
   },
   {
     "id": "silent_shore_wraith",
+    "combat_size": "large",
     "name": "Silent Shore",
     "tier": "elite",
     "combat_behavior": "trickster",
@@ -1698,6 +1738,7 @@
   },
   {
     "id": "source_shadow",
+    "combat_size": "medium",
     "name": "Source Shadow",
     "tier": "common",
     "combat_behavior": "aggressive",
@@ -1738,6 +1779,7 @@
   },
   {
     "id": "distorted_sentinel",
+    "combat_size": "medium",
     "name": "Distorted Sentinel",
     "tier": "common",
     "combat_behavior": "trickster",
@@ -1778,6 +1820,7 @@
   },
   {
     "id": "glitch_hound",
+    "combat_size": "medium",
     "name": "Glitch Hound",
     "tier": "common",
     "combat_behavior": "aggressive",
@@ -1818,6 +1861,7 @@
   },
   {
     "id": "memory_leak",
+    "combat_size": "large",
     "name": "Memory Leak",
     "tier": "elite",
     "combat_behavior": "controller",
@@ -1859,6 +1903,7 @@
   },
   {
     "id": "nightmare_guard",
+    "combat_size": "large",
     "name": "Nightmare Guard",
     "tier": "elite",
     "combat_behavior": "defensive",
@@ -1901,6 +1946,7 @@
   },
   {
     "id": "ascended_vale",
+    "combat_size": "massive",
     "name": "The Ascended: Soloist",
     "tier": "boss",
     "combat_behavior": "boss",
@@ -1941,6 +1987,7 @@
   },
   {
     "id": "ascended_god",
+    "combat_size": "massive",
     "opening_skill": "gathering_silence",
     "recovery_after": {
       "reality_break": "gathering_silence",
@@ -1988,6 +2035,7 @@
   },
   {
     "id": "crucible_champion",
+    "combat_size": "massive",
     "name": "Crucible Champion",
     "tier": "boss",
     "combat_behavior": "aggressive",

@@ -15,21 +15,37 @@ class CombatActionProcessor(
     private val consumeItem: ((String) -> ItemUseResult?)? = null,
     private val itemLookup: ((String) -> Item?)? = null,
     private val forcePhysicalHit: (attackerId: String, targetId: String) -> Boolean = { _, _ -> false },
-    private val random: CombatRandom = DefaultCombatRandom
+    private val random: CombatRandom = DefaultCombatRandom,
+    private val explicitStatusSkillIds: Set<String> = emptySet(),
+    private val prototypeMode: Boolean = false
 ) {
 
     fun execute(
         state: CombatState,
         action: CombatAction,
         rewardProvider: () -> CombatReward
+    ): CombatState = executeState(state, action, rewardProvider)
+
+    private fun executeState(
+        initialState: CombatState,
+        action: CombatAction,
+        rewardProvider: () -> CombatReward
     ): CombatState {
+        var state = initialState
         val actorState = state.combatants[action.actorId] ?: return state
         
+        if (!actorState.isAlive) return state
         when (action) {
             is CombatAction.SkillUse -> {
                 val skill = skillLookup(action.skillId) ?: return state
-                if (!CombatPlaytestBridge.isOpMode && actorState.activeCooldowns.getOrDefault(skill.id, 0) > 0) return state
+                if (!CombatPlaytestBridge.isOpMode && actorState.activeCooldowns.getOrDefault(skill.id, 0) > 0 &&
+                    !TalentEffects.canEmergencyCover(state, action.actorId, skill.id, action.targetIds)) return state
                 if (!CombatPlaytestBridge.isOpMode && !checkSkillConditions(action.actorId, skill, state, action.targetIds)) return state
+                if (prototypeMode && skill.id in setOf("gh0st_headshot", com.example.starborn.domain.leveling.CrewBuildPrototype.DISARM_SKILL)) {
+                    val target = action.targetIds.singleOrNull()?.let(state.combatants::get) ?: return state
+                    if (!target.isAlive || target.combatant.side == actorState.combatant.side) return state
+                }
+                if (skill.id in setOf(com.example.starborn.domain.leveling.CrewBuildPrototype.COVER_SKILL, com.example.starborn.domain.leveling.CrewBuildPrototype.TREATMENT_SKILL, com.example.starborn.domain.leveling.CrewBuildPrototype.PATCH_SKILL) && skill.id in explicitStatusSkillIds && !TalentEffects.validSupportTarget(state, action)) return state
             }
             is CombatAction.SnackUse -> {
                 if (!CombatPlaytestBridge.isOpMode && actorState.snackCooldown > 0) return state
@@ -37,8 +53,9 @@ class CombatActionProcessor(
             else -> {}
         }
 
+        state = TalentEffects.recenter(state, action.actorId, statusRegistry)
         val isFriendly = actorState.combatant.side == CombatSide.PLAYER || actorState.combatant.side == CombatSide.ALLY
-        val skipInfo = if (CombatPlaytestBridge.isOpMode && isFriendly) null else skipReason(actorState)
+        val skipInfo = if (CombatPlaytestBridge.isOpMode && isFriendly) null else skipReason(state.combatants.getValue(action.actorId))
         if (skipInfo != null) {
             val skipped = state.copy(
                 log = state.log + CombatLogEntry.TurnSkipped(
@@ -81,7 +98,8 @@ class CombatActionProcessor(
                 advance = false
             )
         }
-        return appendWeaknessRewardIfNeeded(state, action, resolved, beforeLogSize)
+        return TalentEffects.afterDirectAction(state,
+            appendWeaknessRewardIfNeeded(state, action, resolved, beforeLogSize), action, engine)
     }
 
     private fun processBasicAttack(
@@ -161,23 +179,9 @@ class CombatActionProcessor(
             return state.logMiss(action.actorId, targetId)
         }
         val outgoing = adjustOutgoingDamage(attacker, hit.damage)
-        val rawDamage = engine.calculateDamage(attacker, target, outgoing, PHYSICAL_ELEMENT)
-        val critAdjusted = if (hit.critical) {
-            (rawDamage * CombatFormulas.CRIT_DAMAGE_MULT).roundToInt().coerceAtLeast(1)
-        } else rawDamage
         val brokenBonus = qualifiesForBrokenDamageBonus(attacker, target)
-        val breakAdjusted = applyBrokenDamageBonus(critAdjusted, brokenBonus)
-        val finalDamage = adjustIncomingDamage(target, breakAdjusted, PHYSICAL_ELEMENT)
-        val appliedDamage = finalDamage.coerceAtLeast(0)
-        return engine.applyDamage(
-            state = state,
-            attackerId = action.actorId,
-            targetId = targetId,
-            amount = appliedDamage,
-            element = PHYSICAL_ELEMENT,
-            critical = hit.critical,
-            brokenBonus = brokenBonus
-        ).consumeTargetLockIfPresent(targetId)
+        return applyDirectHit(state, action.actorId, targetId, outgoing, PHYSICAL_ELEMENT,
+            hit.critical, brokenBonus).consumeTargetLockIfPresent(targetId)
     }
 
     private fun processChargedSplashAttack(
@@ -334,23 +338,9 @@ class CombatActionProcessor(
 
         val scaledDamage = scaleDamage(hit.damage, multiplier)
         val outgoing = adjustOutgoingDamage(attacker, scaledDamage)
-        val rawDamage = engine.calculateDamage(attacker, target, outgoing, element)
-        val critAdjusted = if (allowCrit && hit.critical) {
-            (rawDamage * CombatFormulas.CRIT_DAMAGE_MULT).roundToInt().coerceAtLeast(1)
-        } else rawDamage
         val brokenBonus = qualifiesForBrokenDamageBonus(attacker, target)
-        val breakAdjusted = applyBrokenDamageBonus(critAdjusted, brokenBonus)
-        val finalDamage = adjustIncomingDamage(target, breakAdjusted, element)
-        val appliedDamage = finalDamage.coerceAtLeast(0)
-        val damaged = engine.applyDamage(
-            state = this,
-            attackerId = attackerId,
-            targetId = targetId,
-            amount = appliedDamage,
-            element = element,
-            critical = allowCrit && hit.critical,
-            brokenBonus = brokenBonus
-        )
+        val damaged = applyDirectHit(this, attackerId, targetId, outgoing, element,
+            allowCrit && hit.critical, brokenBonus)
         val statusId = attacker.combatant.weapon?.statusOnHit
             ?.trim()
             ?.lowercase()
@@ -535,7 +525,8 @@ class CombatActionProcessor(
 
         val skill = skillLookup(action.skillId)
 
-        if (skill != null && attackerState.activeCooldowns.getOrDefault(skill.id, 0) > 0) {
+        if (skill != null && attackerState.activeCooldowns.getOrDefault(skill.id, 0) > 0 &&
+            !TalentEffects.canEmergencyCover(state, attackerId, skill.id, action.targetIds)) {
             return state
         }
 
@@ -554,7 +545,8 @@ class CombatActionProcessor(
         val forceCrit = momentumSpent >= 3
 
         val stateWithCooldown = if (skill != null && skill.cooldown > 0) {
-            val effectiveCooldown = (skill.cooldown - cooldownRefund).coerceAtLeast(0)
+            val emergencyCover = TalentEffects.canEmergencyCover(state, attackerId, skill.id, action.targetIds) && attackerState.activeCooldowns.getOrDefault(skill.id, 0) > 0
+            val effectiveCooldown = (skill.cooldown - if (emergencyCover) 0 else cooldownRefund).coerceAtLeast(0)
             val updatedAttacker = attackerState.copy(
                 activeCooldowns = if (effectiveCooldown > 0) {
                     attackerState.activeCooldowns + (skill.id to effectiveCooldown + 1)
@@ -576,7 +568,8 @@ class CombatActionProcessor(
         val freshAttackerState = stateWithCooldown.combatants[attackerId] ?: attackerState
 
         var working = stateWithCooldown
-        val special = applySkillSpecialCases(working, skill, attackerId)
+        val talentSupport = if (skill?.id in explicitStatusSkillIds) TalentEffects.supportSkill(state, working, action, engine) else null
+        val special = talentSupport?.let { SpecialCaseResult(it, handled = true) } ?: applySkillSpecialCases(working, skill, attackerId)
         working = special.state
 
         if (!special.handled) {
@@ -642,7 +635,8 @@ class CombatActionProcessor(
                             explicitTargets = resolvedTargets,
                             damageMode = mode,
                             forceCrit = forceCrit,
-                            momentumSpent = momentumSpent
+                            momentumSpent = momentumSpent,
+                            skillId = skill?.id
                         )
                     }
                 }
@@ -661,11 +655,14 @@ class CombatActionProcessor(
                         working,
                         descriptor.sourceId,
                         descriptor.targets,
-                        descriptor.definition
+                        descriptor.definition,
+                        skill.id
                     )
                 }
             }
         }
+
+        working = TalentEffects.afterSkill(state, working, action, engine)
 
         return if (momentumSpent > 0) {
             val current = working.combatants[attackerId]
@@ -827,13 +824,32 @@ class CombatActionProcessor(
         return working
     }
 
+    private fun applyDirectHit(
+        state: CombatState, attackerId: String, targetId: String, outgoing: Int, element: String?,
+        critical: Boolean, brokenBonus: Boolean, momentumSpent: Int = 0,
+        skillId: String? = null, minimum: Int = 0
+    ): CombatState {
+        val attacker = state.combatants[attackerId] ?: return state
+        val target = state.combatants[targetId] ?: return state
+        fun resolved(base: Int): Int {
+            val raw = engine.calculateDamage(attacker, target, base, element)
+            val crit = if (critical) (raw * CombatFormulas.CRIT_DAMAGE_MULT).roundToInt().coerceAtLeast(1) else raw
+            return adjustIncomingDamage(target, applyBrokenDamageBonus(crit, brokenBonus), element).coerceAtLeast(minimum)
+        }
+        val hpDamage = resolved((outgoing * TalentEffects.hpMultiplier(attacker, target, skillId, skillId != null && skillLookup(skillId)?.targeting?.contains("all") != true)).roundToInt())
+        val stabilityBase = resolved(outgoing)
+        return engine.applyDamage(state, attackerId, targetId, hpDamage, element, critical, brokenBonus,
+            momentumSpent, stabilityBase, TalentEffects.stabilityMultiplier(attacker, skillId, target, element == PHYSICAL_ELEMENT))
+    }
+
     private fun applyDamage(
         state: CombatState,
         attackerId: String,
         explicitTargets: List<String>,
         damageMode: SkillMode.Damage,
         forceCrit: Boolean = false,
-        momentumSpent: Int = 0
+        momentumSpent: Int = 0,
+        skillId: String? = null
     ): CombatState {
         var working = state
         val attacker = working.combatants[attackerId]
@@ -842,32 +858,24 @@ class CombatActionProcessor(
             val currentAttacker = working.combatants[attackerId] ?: return@forEach
             val targetState = working.combatants[targetId] ?: return@forEach
             val outgoing = adjustOutgoingDamage(currentAttacker, damageMode.baseDamage)
-            val rawDamage = engine.calculateDamage(
-                attackerState = currentAttacker,
-                targetState = targetState,
-                baseDamage = outgoing,
-                element = damageMode.element
-            )
-            val isCrit = forceCrit || targetState.statusEffects.any { status ->
+            var isCrit = forceCrit || targetState.statusEffects.any { status ->
                 statusRegistry.definition(status.id)?.forceCrit == true
             }
-            val critAdjusted = if (isCrit) {
-                (rawDamage * CombatFormulas.CRIT_DAMAGE_MULT).roundToInt().coerceAtLeast(1)
-            } else rawDamage
+            if (skillId == "gh0st_headshot" && skillId in explicitStatusSkillIds) {
+                val forcedHit = forcePhysicalHit(attackerId, targetId)
+                if (!forcedHit && random.nextDouble(0.0, 100.0) > (currentAttacker.accuracyRating() - targetState.evasionRating()).coerceIn(MIN_HIT_CHANCE, MAX_HIT_CHANCE)) {
+                    working = working.logMiss(attackerId, targetId)
+                    return@forEach
+                }
+                val bonus = if (com.example.starborn.domain.leveling.CrewBuildPrototype.STEADY_AIM in currentAttacker.combatant.talents) 5.0 else 0.0
+                isCrit = isCrit || random.nextDouble(0.0, 100.0) <= (currentAttacker.critChance() + bonus).coerceIn(0.0, 100.0)
+            }
             val brokenBonus = qualifiesForBrokenDamageBonus(currentAttacker, targetState)
-            val breakAdjusted = applyBrokenDamageBonus(critAdjusted, brokenBonus)
-            val damage = adjustIncomingDamage(targetState, breakAdjusted, damageMode.element)
-            val finalDamage = if (outgoing > 0 && !targetState.hasBlockingStatus()) damage.coerceAtLeast(1) else damage
-            working = engine.applyDamage(
-                state = working,
-                attackerId = attackerId,
-                targetId = targetId,
-                amount = finalDamage,
-                element = damageMode.element,
-                critical = isCrit,
-                brokenBonus = brokenBonus,
-                momentumSpent = momentumSpent
-            )
+            val minimum = if (outgoing > 0 && !targetState.hasBlockingStatus()) 1 else 0
+            val previousHp = targetState.hp
+            working = applyDirectHit(working, attackerId, targetId, outgoing, damageMode.element,
+                isCrit, brokenBonus, momentumSpent, skillId, minimum)
+            val finalDamage = previousHp - (working.combatants[targetId]?.hp ?: previousHp)
             if (finalDamage > 0) {
                 working = working.consumeForceCritIfPresent(targetId)
             }
@@ -879,19 +887,19 @@ class CombatActionProcessor(
         state: CombatState,
         sourceId: String,
         explicitTargets: List<String>,
-        descriptor: StatusDescriptor
+        descriptor: StatusDescriptor,
+        skillId: String? = null
     ): CombatState {
         var working = state
         val source = working.combatants[sourceId]
         val targets = actionTargets(working, source, explicitTargets, descriptor.targeting.toTargeting())
         targets.forEach { targetId ->
-            working = engine.applyStatus(
-                state = working,
-                targetId = targetId,
-                statusId = descriptor.id,
-                duration = descriptor.duration,
-                stacks = descriptor.stacks
-            )
+            val crew = com.example.starborn.domain.leveling.CrewBuildPrototype
+            val freshWeak = descriptor.id == "weak" && working.combatants[targetId]?.statusEffects?.none { it.id == "weak" } == true
+            val baseDuration = if (skillId == crew.DISARM_SKILL && descriptor.id == "weak") 2 else descriptor.duration
+            val duration = if (freshWeak && crew.STEADY_FIELD in source?.combatant?.talents.orEmpty()) (baseDuration + 1).coerceAtMost(3) else baseDuration
+            working = engine.applyStatus(working, targetId, descriptor.id, duration, descriptor.stacks,
+                sourceId = if (prototypeMode || skillId in explicitStatusSkillIds) sourceId else null)
         }
         return working
     }
@@ -1188,7 +1196,7 @@ class CombatActionProcessor(
         skill.statusApplications.orEmpty().forEach { id ->
             statusRegistry.definition(id)?.let { definitions.putIfAbsent(it.id, it) }
         }
-        skill.combatTags.orEmpty().forEach { tag ->
+        skill.combatTags.orEmpty().filter { skill.id !in explicitStatusSkillIds }.forEach { tag ->
             statusRegistry.definition(tag)?.let { definitions.putIfAbsent(it.id, it) }
         }
         if (attackerState.combatant.side == CombatSide.PLAYER && !isHealSkill(skill)) {

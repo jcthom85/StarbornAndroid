@@ -61,7 +61,18 @@ class WorldAssetDataSource(
 
     fun loadNpcs(): List<Npc> = assetReader.readList("npcs.json")
 
-    fun loadSkills(): List<Skill> = assetReader.readList("skills.json")
+    fun loadCrewCheckpoint(id: String): com.example.starborn.domain.session.GameSessionState? {
+        if (id !in setOf("early", "middle", "late")) return null
+        return assetReader.readObject<com.example.starborn.domain.session.GameSessionState>("playtest/crew_$id.json")?.takeIf {
+            com.example.starborn.domain.leveling.CrewBuildPrototype.isEnabled(it) &&
+                it.partyMembers.containsAll(listOf("nova", "zeke", "orion", "gh0st")) &&
+                it.purchasedSkillNodes.isEmpty() && it.pendingBattleJson.isBlank() && it.battleCheckpoint == null
+        }
+    }
+
+    fun loadSkills(prototypeVersion: Int = 0): List<Skill> = assetReader.readList<Skill>("skills.json") +
+        if (prototypeVersion == com.example.starborn.domain.leveling.NovaBuildPrototype.VERSION)
+            com.example.starborn.domain.leveling.CrewBuildPrototype.skills else emptyList()
 
     fun loadStatuses(): List<StatusDefinition> = assetReader.readList("statuses.json")
 
@@ -71,7 +82,7 @@ class WorldAssetDataSource(
 
     fun loadProgressionData(): ProgressionData? = assetReader.readObject("progression.json")
 
-    fun loadSkillTrees(): List<SkillTreeDefinition> {
+    fun loadSkillTrees(prototypeVersion: Int = 0): List<SkillTreeDefinition> {
         val files = assetReader.list(SKILL_TREE_DIR)
         if (files.isEmpty()) return emptyList()
         val trees = mutableListOf<SkillTreeDefinition>()
@@ -82,11 +93,12 @@ class WorldAssetDataSource(
                 trees += definition
             }
         }
-        return trees
+        return if (prototypeVersion == com.example.starborn.domain.leveling.NovaBuildPrototype.VERSION)
+            trees.filterNot { tree -> com.example.starborn.domain.leveling.CrewBuildPrototype.trees.any { it.character == tree.character } } + com.example.starborn.domain.leveling.CrewBuildPrototype.trees else trees
     }
 
-    fun loadSkillNodes(): Map<String, SkillTreeNode> =
-        loadSkillTrees()
+    fun loadSkillNodes(prototypeVersion: Int = 0): Map<String, SkillTreeNode> =
+        loadSkillTrees(prototypeVersion)
             .flatMap { tree -> tree.branches.values.flatten() }
             .associateBy { node -> node.id }
 

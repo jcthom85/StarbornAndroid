@@ -123,7 +123,8 @@ fun buildInlineActionPlan(
         return null
     }
 
-    actions.filter { it.isInlineDescriptionAction() }.forEach { action ->
+    // Match whole object names before shorter names such as "monitor" can claim their text.
+    actions.filter { it.isInlineDescriptionAction() }.sortedByDescending { it.name.length }.forEach { action ->
         if (action.actionKey() in explicitActions) return@forEach
         val baseName = action.name
         if (baseName.isBlank()) return@forEach
@@ -198,15 +199,7 @@ fun resolveRoomBackground(
     return variant?.backgroundImage ?: room.backgroundImage
 }
 
-private fun RoomAction.isInlineDescriptionAction(): Boolean = when (this) {
-    is ShopAction,
-    is TinkeringAction,
-    is RestStopAction -> false
-    is GenericAction -> !type.equals("fish", ignoreCase = true) &&
-        !type.equals("fishing", ignoreCase = true) &&
-        !type.startsWith("arcade", ignoreCase = true)
-    else -> true
-}
+private fun RoomAction.isInlineDescriptionAction(): Boolean = this !is NpcAction && this !is EnemyAction
 
 private fun rangesOverlap(a: IntRange, b: IntRange): Boolean =
     a.first < b.last && b.first < a.last

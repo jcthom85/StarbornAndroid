@@ -55,6 +55,7 @@ fun SettingsTabContent(
     onLoadGame: () -> Unit,
     onReturnToTitle: (() -> Unit)? = null,
     onDebugTinkeringTutorial: (() -> Unit)? = null,
+    onOpenWalkthrough: (() -> Unit)? = null,
     onEnvironmentalPreview: (() -> Unit)? = null,
     onToggleModernFieldMenu: ((Boolean) -> Unit)? = null
 ) {
@@ -128,13 +129,18 @@ fun SettingsTabContent(
                 onToggleHapticsDisabled = onToggleHapticsDisabled
             )
         }
-        if (onDebugTinkeringTutorial != null) {
+        if (onDebugTinkeringTutorial != null || onOpenWalkthrough != null) {
             MenuSectionCard(
                 title = "Testing & Diagnostics",
                 accentColor = Color(0xFF7BE8FF),
                 borderColor = borderColor
             ) {
-                Button(
+                onOpenWalkthrough?.let { open ->
+                    OutlinedButton(onClick = open, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
+                        Text("Playtest walkthrough")
+                    }
+                }
+                if (onDebugTinkeringTutorial != null) Button(
                     onClick = onDebugTinkeringTutorial,
                     modifier = Modifier.fillMaxWidth().height(48.dp),
                     shape = RoundedCornerShape(12.dp),

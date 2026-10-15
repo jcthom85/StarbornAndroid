@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import com.example.starborn.di.AppServices
 import com.example.starborn.domain.session.GameSessionState
-import com.example.starborn.feature.exploration.ui.buildInlineActionPlan
+import com.example.starborn.feature.exploration.presentation.buildInlineActionPlan
 import com.example.starborn.feature.exploration.ui.hud.RoomDescription
 import com.example.starborn.feature.exploration.viewmodel.ExplorationViewModel
 import com.example.starborn.feature.exploration.viewmodel.ExplorationViewModelFactory

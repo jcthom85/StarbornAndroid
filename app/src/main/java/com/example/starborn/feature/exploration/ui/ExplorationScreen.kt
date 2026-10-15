@@ -177,6 +177,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.drawWithContent
@@ -346,9 +347,14 @@ fun ExplorationScreen(
     onPlayAudio: (String) -> Unit = {},
     fxEvents: Flow<String>? = null,
     onDemoRootBack: (() -> Unit)? = null,
+    hubAreaEntry: com.example.starborn.feature.exploration.viewmodel.AreaEntryUi? = null,
+    onHubAreaEntryFinished: () -> Unit = {},
     isTestSession: Boolean = false
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val areaEntry = uiState.areaEntry ?: hubAreaEntry
+    var finishedAreaEntryId by rememberSaveable { mutableStateOf<Long?>(null) }
+    val areaEntryActive = areaEntry != null && areaEntry.id != finishedAreaEntryId
     val environmentSettings=rememberEnvironmentalSettings()
     val environmentMemory=remember { com.example.starborn.domain.environment.EnvironmentalSceneMemory() }
     val environmentSession by viewModel.environmentalSession.collectAsStateWithLifecycle()
@@ -366,6 +372,7 @@ fun ExplorationScreen(
     var replacingMeal by remember { mutableStateOf(false) }
     val fxBursts = remember { mutableStateListOf<UiFxBurst>() }
     var saveLoadMode by remember { mutableStateOf<String?>(null) } // "save" or "load"
+    var saveDialogBusy by remember { mutableStateOf(false) }
     var walkthroughVisible by rememberSaveable { mutableStateOf(false) }
     var slotSummaries by remember { mutableStateOf<List<SaveSlotSummary>>(emptyList()) }
     var debugWeatherOverride by remember { mutableStateOf<String?>(null) }
@@ -376,9 +383,9 @@ fun ExplorationScreen(
         listOf(null, "dust", "rain", "storm", "snow", "cave_drip", "starfall", "steam", "fog", "gas", "resonance", "sparks")
     }
     val coroutineScope = rememberCoroutineScope()
-    val blockingOverlayActive = environmentalPreview ||
+    val blockingOverlayActive = areaEntryActive || environmentalPreview || restRecoveryNotice != null ||
         walkthroughVisible || uiState.isMenuOverlayVisible ||
-            uiState.togglePrompt != null ||
+            uiState.blockedPrompt != null || uiState.roomActionsVisible || uiState.roomObjectOffer != null || uiState.togglePrompt != null ||
             uiState.tuningPuzzle != null ||
             uiState.activeDialogue != null ||
             uiState.shopGreeting != null ||
@@ -387,15 +394,15 @@ fun ExplorationScreen(
             uiState.skillTreeOverlay != null ||
             uiState.partyMemberDetails != null ||
             uiState.prompt != null ||
-            uiState.isMilestoneGalleryVisible ||
+            uiState.isMilestoneGalleryVisible || uiState.isCatchLogVisible || uiState.astraFacility != null || uiState.isAstraRecreationVisible ||
             uiState.eventAnnouncement != null ||
             uiState.levelUpPrompt != null ||
             uiState.isQuestLogVisible ||
             uiState.isMapLegendVisible ||
             uiState.tutorialState.current != null
     val questDetailBlockingOverlayActive =
-        walkthroughVisible || uiState.isMenuOverlayVisible ||
-            uiState.togglePrompt != null ||
+        restRecoveryNotice != null || walkthroughVisible || uiState.isMenuOverlayVisible ||
+            uiState.blockedPrompt != null || uiState.roomActionsVisible || uiState.roomObjectOffer != null || uiState.togglePrompt != null ||
             uiState.tuningPuzzle != null ||
             uiState.activeDialogue != null ||
             uiState.shopGreeting != null ||
@@ -403,7 +410,7 @@ fun ExplorationScreen(
             uiState.cinematic != null ||
             uiState.skillTreeOverlay != null ||
             uiState.partyMemberDetails != null ||
-            uiState.isMilestoneGalleryVisible ||
+            uiState.isMilestoneGalleryVisible || uiState.isCatchLogVisible || uiState.astraFacility != null || uiState.isAstraRecreationVisible ||
             uiState.eventAnnouncement != null ||
             uiState.levelUpPrompt != null ||
             uiState.isQuestLogVisible ||
@@ -483,12 +490,6 @@ fun ExplorationScreen(
         }
     }
 
-    LaunchedEffect(restRecoveryNotice?.id) {
-        if (restRecoveryNotice != null) {
-            delay(5200L)
-            restRecoveryNotice = null
-        }
-    }
 
     LaunchedEffect(fxEvents) {
         fxEvents?.let { stream ->
@@ -586,15 +587,15 @@ fun ExplorationScreen(
 
     var showExitConfirmDialog by remember { mutableStateOf(false) }
 
-    val isAnyOverlayOpen = uiState.isMenuOverlayVisible ||
+    val isAnyOverlayOpen = restRecoveryNotice != null || uiState.isMenuOverlayVisible ||
         uiState.isTapeDeckVisible ||
         uiState.isSimulationDeckVisible ||
         uiState.isAstraNavConsoleVisible ||
         uiState.showBurgQuestAstraExitDialog ||
-        uiState.isMilestoneGalleryVisible ||
+        uiState.isMilestoneGalleryVisible || uiState.isCatchLogVisible || uiState.astraFacility != null || uiState.isAstraRecreationVisible ||
         uiState.isQuestLogVisible ||
         uiState.skillTreeOverlay != null ||
-        uiState.togglePrompt != null ||
+        uiState.blockedPrompt != null || uiState.roomActionsVisible || uiState.roomObjectOffer != null || uiState.togglePrompt != null ||
         uiState.tuningPuzzle != null ||
         uiState.narrationPrompt != null ||
         uiState.prompt != null ||
@@ -602,12 +603,14 @@ fun ExplorationScreen(
         showExitConfirmDialog ||
         showInventoryTargetDialog
 
-    BackHandler(enabled = true) {
+    fun handleExplorationBack(allowTitleExit: Boolean = false) {
         when {
+            areaEntryActive -> Unit
+            restRecoveryNotice != null -> restRecoveryNotice = null
             showExitConfirmDialog -> showExitConfirmDialog = false
             environmentalPreview -> environmentalPreview = false
             uiState.showBurgQuestAstraExitDialog -> viewModel.dismissBurgQuestAstraExitDialog()
-            saveLoadMode != null -> saveLoadMode = null
+            saveLoadMode != null -> { if (!saveDialogBusy) saveLoadMode = null }
             showInventoryTargetDialog -> {
                 showInventoryTargetDialog = false
                 pendingInventoryItem = null
@@ -615,6 +618,9 @@ fun ExplorationScreen(
             uiState.isTapeDeckVisible -> viewModel.dismissTapeDeck()
             uiState.isSimulationDeckVisible -> viewModel.dismissSimulationDeck()
             uiState.isAstraNavConsoleVisible -> viewModel.dismissAstraNavConsole()
+            uiState.isAstraRecreationVisible -> viewModel.closeAstraRecreation()
+            uiState.astraFacility != null -> viewModel.closeAstraFacility()
+            uiState.isCatchLogVisible -> viewModel.closeCatchLog()
             uiState.isMilestoneGalleryVisible -> viewModel.closeMilestoneGallery()
             uiState.isMapLegendVisible -> viewModel.closeMapLegend()
             uiState.isQuestLogVisible -> viewModel.closeQuestLog()
@@ -623,14 +629,25 @@ fun ExplorationScreen(
             uiState.skillTreeOverlay != null -> viewModel.closeSkillTreeOverlay()
             uiState.eventAnnouncement != null -> viewModel.dismissEventAnnouncement()
             uiState.levelUpPrompt != null -> viewModel.dismissLevelUpPrompt()
+            uiState.blockedPrompt != null -> viewModel.dismissBlockedPrompt()
+            uiState.roomObjectOffer != null -> viewModel.dismissRoomObject()
+            uiState.roomActionsVisible -> viewModel.dismissRoomActions()
             uiState.togglePrompt != null -> viewModel.dismissTogglePrompt()
             uiState.tuningPuzzle != null -> viewModel.dismissTuningPuzzle()
-            uiState.narrationPrompt != null -> viewModel.dismissNarration()
+            uiState.narrationPrompt != null -> { if (uiState.narrationPrompt?.tapToDismiss == true) viewModel.dismissNarration() }
             uiState.prompt != null -> viewModel.dismissPrompt()
             uiState.isMenuOverlayVisible -> viewModel.closeMenuOverlay()
-            else -> if (!blockingOverlayActive) onDemoRootBack?.invoke()
+            else -> if (!blockingOverlayActive && !roomTransitionInProgress && !importantQuestPopupVisible && !uiState.isLoading) {
+                when {
+                    onDemoRootBack != null -> onDemoRootBack()
+                    uiState.canReturnToHub -> viewModel.requestReturnToHub()
+                    allowTitleExit -> showExitConfirmDialog = true
+                }
+            }
         }
     }
+
+    BackHandler(enabled = true) { handleExplorationBack() }
 
     val baseModifier = Modifier.fillMaxSize()
     val swipeGestureModifier = Modifier
@@ -642,7 +659,7 @@ fun ExplorationScreen(
                     },
                     onTap = {
                         if (uiState.narrationPrompt != null) {
-                            viewModel.dismissNarration()
+                            if (uiState.narrationPrompt?.tapToDismiss == true) viewModel.dismissNarration()
                         } else if (uiState.prompt != null) {
                             viewModel.dismissPrompt()
                         }
@@ -683,37 +700,21 @@ fun ExplorationScreen(
             .focusRequester(keyboardFocusRequester)
             .focusable()
             .onKeyEvent { keyEvent ->
+                if (areaEntryActive) return@onKeyEvent true
                 if (keyEvent.type == KeyEventType.KeyDown) {
                     when (keyEvent.key) {
                         Key.ButtonB, Key.Escape -> {
-                            when {
-                                showExitConfirmDialog -> showExitConfirmDialog = false
-                                environmentalPreview -> environmentalPreview = false
-                                saveLoadMode != null -> saveLoadMode = null
-                                uiState.isTapeDeckVisible -> viewModel.dismissTapeDeck()
-                                uiState.isSimulationDeckVisible -> viewModel.dismissSimulationDeck()
-                                uiState.isAstraNavConsoleVisible -> viewModel.dismissAstraNavConsole()
-                                uiState.isMilestoneGalleryVisible -> viewModel.closeMilestoneGallery()
-                                uiState.isMapLegendVisible -> viewModel.closeMapLegend()
-                                uiState.isQuestLogVisible -> viewModel.closeQuestLog()
-                                uiState.questDetail != null -> viewModel.closeQuestDetails()
-                                uiState.partyMemberDetails != null -> viewModel.closePartyMemberDetails()
-                                uiState.skillTreeOverlay != null -> viewModel.closeSkillTreeOverlay()
-                                uiState.eventAnnouncement != null -> viewModel.dismissEventAnnouncement()
-                                uiState.levelUpPrompt != null -> viewModel.dismissLevelUpPrompt()
-                                uiState.togglePrompt != null -> viewModel.dismissTogglePrompt()
-                                uiState.tuningPuzzle != null -> viewModel.dismissTuningPuzzle()
-                                uiState.narrationPrompt != null -> viewModel.dismissNarration()
-                                uiState.prompt != null -> viewModel.dismissPrompt()
-                                uiState.isMenuOverlayVisible -> viewModel.closeMenuOverlay()
-                                else -> showExitConfirmDialog = true
-                            }
+                            handleExplorationBack(allowTitleExit = true)
                             return@onKeyEvent true
                         }
                         Key.ButtonA, Key.Enter, Key.Spacebar -> {
                             when {
+                                restRecoveryNotice != null -> { restRecoveryNotice = null; return@onKeyEvent true }
+                                uiState.levelUpPrompt != null -> { viewModel.dismissLevelUpPrompt(); return@onKeyEvent true }
+                                uiState.eventAnnouncement != null -> { viewModel.dismissEventAnnouncement(); return@onKeyEvent true }
+                                uiState.blockedPrompt != null -> { viewModel.dismissBlockedPrompt(); return@onKeyEvent true }
                                 uiState.narrationPrompt != null -> {
-                                    viewModel.dismissNarration()
+                                    if (uiState.narrationPrompt?.tapToDismiss == true) viewModel.dismissNarration()
                                     return@onKeyEvent true
                                 }
                                 uiState.prompt != null -> {
@@ -947,100 +948,7 @@ fun ExplorationScreen(
         val descriptionForPanel = baseRoomDescription
         val visibleNpcs = if (isRoomDark) emptyList() else uiState.npcs
         val visibleGroundItems = if (isRoomDark) emptyMap() else uiState.groundItems
-        val serviceQuickActions = remember(uiState.actions, uiState.actionHints, currentRoom?.id, inlinePlan, isRoomDark) {
-            if (isRoomDark) return@remember emptyList()
-            val unique = LinkedHashSet<String>()
-            val items = mutableListOf<QuickMenuAction>()
-            uiState.actions.forEach { action ->
-                val hint = uiState.actionHints[action.actionKey()]
-                if (hint?.locked == true) return@forEach
-                when (action) {
-                    is ShopAction -> {
-                        val shopId = action.shopId ?: return@forEach
-                        if (unique.add("shop:$shopId")) {
-                            val label = action.name.takeIf { it.isNotBlank() }?.toActionTitleCase() ?: "Shop"
-                            items += QuickMenuAction(
-                                iconRes = R.drawable.shop_icon,
-                                label = label,
-                                roomAction = action
-                            )
-                        }
-                    }
-                    is TinkeringAction -> {
-                        val key = "tinkering:${action.shopId.orEmpty()}"
-                        if (unique.add(key)) {
-                            val label = action.name.takeIf { it.isNotBlank() }?.toActionTitleCase() ?: "Tinkering"
-                            items += QuickMenuAction(
-                                iconRes = R.drawable.tinkering_icon,
-                                label = label,
-                                roomAction = action
-                            )
-                        }
-                    }
-                    is RestStopAction -> {
-                        val key = "rest:${action.restEvent.orEmpty()}:${action.cookSource.orEmpty()}"
-                        if (unique.add(key)) {
-                            val actionName = action.name.trim()
-                            val label = actionName
-                                .takeUnless { it.equals("bunk", ignoreCase = true) }
-                                ?.takeIf { it.isNotBlank() }
-                                ?.toActionTitleCase()
-                                ?: "Rest"
-                            val detail = actionName
-                                .takeIf {
-                                    it.isNotBlank() &&
-                                        !it.equals("bunk", ignoreCase = true) &&
-                                        !it.equals(label, ignoreCase = true)
-                                }
-                                ?.toActionTitleCase()
-                            items += QuickMenuAction(
-                                imageVector = Icons.Rounded.Hotel,
-                                label = label,
-                                detail = detail,
-                                roomAction = action
-                            )
-                        }
-                    }
-                    is TuningPuzzleAction -> {
-                        val key = "tuning:${action.puzzleId}"
-                        if (unique.add(key)) {
-                            val label = action.name.takeIf { it.isNotBlank() }?.toActionTitleCase() ?: "Tuning"
-                            items += QuickMenuAction(
-                                iconRes = R.drawable.tinkering_icon,
-                                label = label,
-                                roomAction = action
-                            )
-                        }
-                    }
-                    is GenericAction -> {
-                        val type = action.type.lowercase(Locale.getDefault())
-                        if (type.startsWith("arcade")) {
-                            val key = "arcade:${action.name}"
-                            if (unique.add(key)) {
-                                items += QuickMenuAction(
-                                    imageVector = Icons.Rounded.SportsEsports,
-                                    label = action.name.toActionTitleCase(),
-                                    roomAction = action
-                                )
-                            }
-                        } else if (type.contains("fish")) {
-                            val zone = action.zoneId ?: currentRoom?.id.orEmpty()
-                            val key = "fish:$zone"
-                            if (unique.add(key)) {
-                                val label = action.name.takeIf { it.isNotBlank() }?.toActionTitleCase() ?: "Fishing"
-                                items += QuickMenuAction(
-                                    iconRes = R.drawable.fishing_icon,
-                                    label = label,
-                                    roomAction = action
-                                )
-                            }
-                        }
-                    }
-                    else -> Unit
-                }
-            }
-            items
-        }
+        val serviceQuickActions = emptyList<QuickMenuAction>()
         val hasRoomEntities = visibleNpcs.isNotEmpty() ||
             visibleGroundItems.isNotEmpty() ||
             serviceQuickActions.isNotEmpty() ||
@@ -1050,7 +958,10 @@ fun ExplorationScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding()
+            .navigationBarsPadding()
+            .padding(bottom = ExplorationControlSpacing.sceneBottomClearance)
             .padding(horizontal = 24.dp, vertical = 24.dp)
+            .clipToBounds()
         ) {
             ThemeBandOverlay(
                 theme = activeTheme,
@@ -1068,7 +979,8 @@ fun ExplorationScreen(
             Column(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
-                    .fillMaxWidth(0.9f),
+                    .fillMaxWidth(0.9f)
+                    .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 RoomHeaderPanel(
@@ -1096,12 +1008,15 @@ fun ExplorationScreen(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                        TextButton(onClick = viewModel::openRoomActions) { Text("Actions") }
+                    }
                     RoomDescriptionPanel(
                         currentRoom = currentRoom,
                         description = descriptionForPanel,
                         plan = inlinePlan,
                         isDark = isRoomDark,
-                        onAction = { action -> viewModel.onActionSelected(action) },
+                        onAction = { action -> viewModel.inspectRoomAction(action) },
                         onNpcClick = { name -> viewModel.onNpcInteraction(name) },
                         onEnemyClick = { enemyId -> viewModel.engageEnemy(enemyId) },
                         borderColor = panelBorderColor,
@@ -1151,7 +1066,7 @@ fun ExplorationScreen(
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth()
                         .heightIn(min = 250.dp, max = 410.dp)
-                        .padding(start = 4.dp, end = 4.dp, bottom = 64.dp)
+                        .padding(horizontal = 4.dp)
                 )
             }
 
@@ -1189,6 +1104,41 @@ fun ExplorationScreen(
                     .zIndex(40f)
             )
         }
+        uiState.blockedPrompt?.let { prompt ->
+            AlertDialog(onDismissRequest = viewModel::dismissBlockedPrompt,
+                modifier = Modifier.clickable(onClick = viewModel::dismissBlockedPrompt),
+                title = { Text("Route blocked") }, text = { Text(prompt.message) },
+                confirmButton = { TextButton(onClick = viewModel::dismissBlockedPrompt) { Text("OK") } })
+        }
+        if (uiState.roomActionsVisible) {
+            AlertDialog(onDismissRequest = viewModel::dismissRoomActions,
+                title = { Text("Room actions") },
+                text = { Column(Modifier.heightIn(max = 420.dp).verticalScroll(rememberScrollState())) {
+                    uiState.actions.distinctBy { it.actionKey() }.forEach { action ->
+                        TextButton(onClick = { viewModel.inspectRoomAction(action) }, modifier = Modifier.fillMaxWidth()) {
+                            Text(roomActionLabel(action))
+                        }
+                    }
+                    if (!com.example.starborn.feature.exploration.presentation.resolveRoomDarkness(uiState)) {
+                        uiState.npcs.distinct().forEach { npc ->
+                            TextButton(onClick = { viewModel.dismissRoomActions(); viewModel.onNpcInteraction(npc) }, modifier = Modifier.fillMaxWidth()) {
+                                Text("Talk to $npc")
+                            }
+                        }
+                        uiState.enemies.distinct().forEach { enemy ->
+                            TextButton(onClick = { viewModel.dismissRoomActions(); viewModel.engageEnemy(enemy) }, modifier = Modifier.fillMaxWidth()) {
+                                Text("Engage ${uiState.enemyIcons[enemy]?.displayName ?: enemy.replace('_', ' ')}")
+                            }
+                        }
+                    }
+                } }, confirmButton = { TextButton(onClick = viewModel::dismissRoomActions) { Text("Close") } })
+        }
+        uiState.roomObjectOffer?.let { offer ->
+            AlertDialog(onDismissRequest = viewModel::dismissRoomObject,
+                title = { Text(offer.title) }, text = { Text(offer.detail) },
+                confirmButton = { TextButton(onClick = viewModel::confirmRoomObject) { Text(offer.confirmLabel) } },
+                dismissButton = { TextButton(onClick = viewModel::dismissRoomObject) { Text("Back") } })
+        }
         uiState.togglePrompt?.let { prompt ->
             TogglePromptDialog(
                 prompt = prompt,
@@ -1208,6 +1158,7 @@ fun ExplorationScreen(
         }
         if (uiState.isSimulationDeckVisible) {
             SimulationDeckDialog(
+                programs = uiState.availableSimulations,
                 onSelectSimulation = { enemyIds -> viewModel.launchSimulationCombat(enemyIds) },
                 onDismiss = { viewModel.dismissSimulationDeck() },
                 modifier = Modifier.align(Alignment.Center)
@@ -1217,6 +1168,7 @@ fun ExplorationScreen(
             AstraNavConsoleDialog(
                 destinations = uiState.astraDestinations,
                 dockedTitle = uiState.astraDockedTitle,
+                routeHint = uiState.astraRouteHint,
                 dockedWorldId = uiState.astraDockedWorldId,
                 transitTitle = uiState.astraTransitTitle,
                 arrivalTitle = uiState.astraArrivalTitle,
@@ -1358,7 +1310,6 @@ fun ExplorationScreen(
                 trackedQuest = trackedQuest,
                 activeQuests = uiState.questLogActive,
                 completedQuests = uiState.questLogCompleted,
-                fishingJournal = uiState.fishingJournal,
                 minimap = uiState.minimap,
                 fullMap = uiState.fullMap,
                 theme = activeTheme,
@@ -1403,6 +1354,7 @@ fun ExplorationScreen(
                 skillTreeOverlay = uiState.skillTreeOverlay,
                 onCloseSkillTree = { viewModel.closeSkillTreeOverlay() },
                 onUnlockSkill = { viewModel.unlockSkillNode(it) },
+                onResetSkillBuild = viewModel::resetPrototypeBuild,
                 onCloseMapLegend = { viewModel.closeMapLegend() },
                 craftingViewModel = craftingViewModel,
                 onTinkerTutorialStep = { viewModel.onTinkerTutorialStep(it) },
@@ -1452,7 +1404,6 @@ fun ExplorationScreen(
                 )
             }
         }
-        var saveDialogBusy by remember { mutableStateOf(false) }
         var saveDialogError by remember { mutableStateOf<String?>(null) }
         if (saveLoadMode != null) {
             SaveLoadDialog(
@@ -1582,6 +1533,12 @@ fun ExplorationScreen(
             )
         }
 
+        if (areaEntryActive) {
+            AreaEntryOverlay(areaEntry.copy(region = areaEntry.region ?: uiState.currentHub?.title)) {
+                finishedAreaEntryId = areaEntry.id
+                if (areaEntry.id == hubAreaEntry?.id) onHubAreaEntryFinished()
+            }
+        }
         if (fadeOverlayAnim.value > 0.01f && uiState.cinematic == null) {
             Box(
                 modifier = Modifier
@@ -1593,37 +1550,12 @@ fun ExplorationScreen(
         }
 
         if (!uiState.isMenuOverlayVisible && uiState.cinematic == null) {
-            Row(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .navigationBarsPadding()
-                    .fillMaxWidth()
-                    .padding(start = 20.dp, end = 20.dp, bottom = 26.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (uiState.canReturnToHub && uiState.prompt == null && !blockingOverlayActive) {
-                    ReturnHubButton(
-                        destinationName = if (uiState.currentHub?.id == "hub_astra") "Cargo ramp" else uiState.currentHub?.title,
-                        isDisembarking = uiState.currentHub?.id == "hub_astra",
-                        onClick = { viewModel.requestReturnToHub() }
-                    )
-                } else {
-                    Spacer(modifier = Modifier.width(116.dp))
-                }
-                MenuToggleButton(
-                    isOpen = uiState.isMenuOverlayVisible,
-                    isTutorialBeacon = uiState.isTinkeringTutorialActive || uiState.isGearTutorialActive,
-                    onToggle = {
-                        if (uiState.isMenuOverlayVisible) {
-                            viewModel.closeMenuOverlay()
-                        } else {
-                            viewModel.openMenuOverlay()
-                        }
-                    },
-                    enabled = uiState.tuningPuzzle == null && uiState.activeDialogue == null
-                )
-            }
+            ExplorationBottomControls(
+                isTutorialBeacon = uiState.isTinkeringTutorialActive || uiState.isGearTutorialActive,
+                onOpenMenu = { viewModel.openMenuOverlay() },
+                enabled = !blockingOverlayActive && !importantQuestPopupVisible && !roomTransitionInProgress && !uiState.isLoading,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )
         }
 
         uiState.cinematic?.let { cinematic ->
@@ -1643,7 +1575,8 @@ fun ExplorationScreen(
                 overlay = overlay,
                 theme = null,
                 onClose = { viewModel.closeSkillTreeOverlay() },
-                onUnlockSkill = { viewModel.unlockSkillNode(it) }
+                onUnlockSkill = { viewModel.unlockSkillNode(it) },
+                onResetBuild = { viewModel.resetPrototypeBuild(overlay.characterId) }
             )
         }
 
@@ -1709,6 +1642,58 @@ fun ExplorationScreen(
             )
         }
 
+        if (uiState.isAstraRecreationVisible) {
+            com.example.starborn.feature.exploration.ui.components.AstraRecreationDialog(uiState.astraArcades,
+                uiState.astraPrizesAvailable, viewModel::openRecreationArcade, viewModel::openRecreationFilms,
+                viewModel::openRecreationPrizes, viewModel::closeAstraRecreation)
+        }
+
+        uiState.astraFacility?.let { facility ->
+            androidx.compose.ui.window.Dialog(onDismissRequest = viewModel::closeAstraFacility,
+                properties = androidx.compose.ui.window.DialogProperties(usePlatformDefaultWidth = false)) {
+                Surface(Modifier.fillMaxWidth().padding(16.dp), color = FieldMenuDesign.shell,
+                    contentColor = FieldMenuDesign.text, shape = RoundedCornerShape(16.dp)) {
+                    Column(Modifier.heightIn(max = 600.dp).verticalScroll(rememberScrollState()).padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                            Text(facility.title, Modifier.weight(1f), style = MaterialTheme.typography.titleMedium)
+                            TextButton(onClick = viewModel::closeAstraFacility) { Text("Close") }
+                        }
+                        if (facility.title == "Cargo Manifest" || facility.title == "Relic Array") {
+                            com.example.starborn.feature.exploration.ui.components.CargoRecordTabs(
+                                if (facility.title == "Relic Array") "relics" else "cargo", viewModel::selectCargoRecord)
+                        }
+                        facility.entries.forEach { entry ->
+                            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                Text(entry.title + if (entry.isNew) " - New" else "", color = FieldMenuDesign.cyan,
+                                    style = MaterialTheme.typography.titleSmall)
+                                Text(entry.body, style = MaterialTheme.typography.bodyMedium)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (uiState.isCatchLogVisible) {
+            androidx.compose.ui.window.Dialog(onDismissRequest = viewModel::closeCatchLog,
+                properties = androidx.compose.ui.window.DialogProperties(usePlatformDefaultWidth = false)) {
+                Surface(Modifier.fillMaxWidth().padding(16.dp), color = FieldMenuDesign.shell,
+                    contentColor = FieldMenuDesign.text, shape = RoundedCornerShape(16.dp)) {
+                    Column(Modifier.heightIn(max = 600.dp).verticalScroll(rememberScrollState()).padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                            Text("Astra Catch Log", Modifier.weight(1f), style = MaterialTheme.typography.titleMedium)
+                            TextButton(onClick = viewModel::closeCatchLog) { Text("Close") }
+                        }
+                        com.example.starborn.feature.exploration.ui.components.CargoRecordTabs("catch", viewModel::selectCargoRecord)
+                        Text("Cargo Bay specimen archive. Records remain after cooking or selling.", style = MaterialTheme.typography.bodySmall)
+                        com.example.starborn.feature.fishing.ui.FishingJournal(uiState.fishingJournal, initiallyExpanded = true)
+                    }
+                }
+            }
+        }
+
         if (uiState.isMilestoneGalleryVisible) {
             MilestoneGalleryOverlay(
                 history = uiState.milestoneHistory,
@@ -1723,7 +1708,8 @@ fun ExplorationScreen(
                 onDismiss = { viewModel.dismissPrompt() },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 76.dp, start = 16.dp, end = 16.dp)
+                    .navigationBarsPadding()
+                    .padding(bottom = ExplorationControlSpacing.noticeBottomClearance, start = 16.dp, end = 16.dp)
                     .zIndex(200f)
             )
         }
@@ -1741,7 +1727,8 @@ fun ExplorationScreen(
             uiEventBus = uiEventBus,
             modifier = Modifier
                 .align(Alignment.BottomStart)
-                .padding(start = 16.dp, bottom = 32.dp)
+                .navigationBarsPadding()
+                .padding(start = 16.dp, bottom = ExplorationControlSpacing.noticeBottomClearance)
         )
 
         QuestDetailOverlay(
@@ -1810,6 +1797,7 @@ fun ExplorationScreen(
                 onTravel = { direction ->
                     if (!roomTransitionInProgress) viewModel.travel(direction)
                 },
+                bottomClearance = ExplorationControlSpacing.southExitBottomClearance,
                 modifier = Modifier
                     .align(Alignment.Center)
                     .fillMaxSize()
@@ -2405,7 +2393,6 @@ private fun MenuOverlay(
     trackedQuest: QuestSummaryUi?,
     activeQuests: List<QuestSummaryUi>,
     completedQuests: List<QuestSummaryUi>,
-    fishingJournal: List<com.example.starborn.domain.fishing.FishingJournalEntry> = emptyList(),
     minimap: MinimapUiState?,
     fullMap: FullMapUiState?,
     theme: Theme?,
@@ -2435,6 +2422,7 @@ private fun MenuOverlay(
     skillTreeOverlay: SkillTreeOverlayUi?,
     onCloseSkillTree: () -> Unit,
     onUnlockSkill: (String) -> Unit,
+    onResetSkillBuild: (String) -> Unit,
     onCloseMapLegend: () -> Unit,
     craftingViewModel: CraftingViewModel? = null,
     onTinkerTutorialStep: ((com.example.starborn.feature.crafting.TinkeringTutorialStep) -> Unit)? = null,
@@ -2501,7 +2489,6 @@ private fun MenuOverlay(
                         trackedQuest = trackedQuest,
                         activeQuests = activeQuests,
                         completedQuests = completedQuests,
-                        fishingJournal = fishingJournal,
                         minimap = minimap,
                         fullMap = fullMap,
                         settings = settings,
@@ -2563,6 +2550,7 @@ private fun MenuOverlay(
                         onTinkerTutorialStep = onTinkerTutorialStep,
                         onEnvironmentalPreview = onEnvironmentalPreview,
                         onDebugTinkeringTutorial = onDebugTinkeringTutorial,
+                        onOpenWalkthrough = onOpenWalkthrough,
                         onPlayAudio = onPlayAudio,
                         creditsLabel = creditsLabel,
                         isGearTutorialActive = isGearTutorialActive
@@ -2581,6 +2569,7 @@ private fun MenuOverlay(
                         onBack = ::closeDetail,
                         onToggleQuestTracking = onToggleQuestTracking,
                         onUnlockSkill = onUnlockSkill,
+                        onResetSkillBuild = onResetSkillBuild,
                         onUseItem = { item ->
                             onUseInventoryItem(item)
                         }
@@ -2663,27 +2652,29 @@ private fun MenuOverlay(
                             menuScope.launch { sheetScroll.scrollTo(0) }
                             onSelectTab(tab)
                         },
-                        onSelectMember = { selectedPartyId = it },
+                        onSelectMember = { memberId ->
+                            selectedPartyId = memberId
+                            when (detailKind) {
+                                MenuDetailKind.PARTY_MEMBER -> {
+                                    detailId = memberId
+                                    onShowDetails(memberId)
+                                }
+                                MenuDetailKind.SKILL_TREE -> {
+                                    detailId = memberId
+                                    onShowSkillTree(memberId)
+                                }
+                                else -> Unit
+                            }
+                        },
                         onBack = ::closeDetail,
                         onSave = onQuickSave,
                         onClose = { if (detailKind != null) closeDetail(); onClose() },
                         tutorialGuide = {
-                            onOpenWalkthrough?.let { open ->
-                                TextButton(onClick = open, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
-                                    Icon(Icons.Filled.Book, contentDescription = null)
-                                    Spacer(Modifier.width(8.dp))
-                                    Text("Playtest walkthrough")
-                                }
-                            }
                             if (isTinkeringTutorialActive && selectedTab == MenuTab.FIELD_KIT && craftingViewModel != null) {
                                 val craftState by craftingViewModel.uiState.collectAsState()
                                 val step = craftState.tutorialStep
                                 LaunchedEffect(step) {
                                     if (step != null) onPlayAudio("sfx_hub_node_select")
-                                }
-                                if (craftState.isTutorialActive && step != null) {
-                                    TinkeringTutorialOverlay(step = step, accentColor = accentColor,
-                                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp))
                                 }
                             }
                         },
@@ -2773,11 +2764,6 @@ private fun MenuOverlay(
                     }
 
                     if (detailKind == null) {
-                        onOpenWalkthrough?.let { open ->
-                            TextButton(onClick = open, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
-                                Text("Playtest walkthrough")
-                            }
-                        }
                         MenuTabRow(
                             selectedTab = selectedTab,
                             onSelectTab = onSelectTab,
@@ -2917,6 +2903,7 @@ private fun MenuNestedDetailContent(
     onBack: () -> Unit,
     onToggleQuestTracking: (String) -> Unit,
     onUnlockSkill: (String) -> Unit,
+    onResetSkillBuild: (String) -> Unit,
     onUseItem: (InventoryPreviewItemUi) -> Unit
 ) {
     when (detailKind) {
@@ -2954,6 +2941,7 @@ private fun MenuNestedDetailContent(
                 accentColor = accentColor,
                 borderColor = borderColor,
                 onUnlockSkill = onUnlockSkill,
+                onResetBuild = { onResetSkillBuild(skillTreeOverlay.characterId) },
                 modifier = if (LocalModernFieldMenu.current) Modifier else Modifier.heightIn(max = 700.dp)
             )
         } else MenuDetailLoading("Loading skill tree…", accentColor)
@@ -3300,7 +3288,6 @@ private fun MenuTabContentArea(
     trackedQuest: QuestSummaryUi?,
     activeQuests: List<QuestSummaryUi>,
     completedQuests: List<QuestSummaryUi>,
-    fishingJournal: List<com.example.starborn.domain.fishing.FishingJournalEntry> = emptyList(),
     minimap: MinimapUiState?,
     fullMap: FullMapUiState?,
     settings: SettingsUiState,
@@ -3346,6 +3333,7 @@ private fun MenuTabContentArea(
     onTinkerTutorialStep: ((com.example.starborn.feature.crafting.TinkeringTutorialStep) -> Unit)? = null,
     onEnvironmentalPreview: (() -> Unit)? = null,
     onDebugTinkeringTutorial: (() -> Unit)? = null,
+    onOpenWalkthrough: (() -> Unit)? = null,
     onPlayAudio: (String) -> Unit = {},
     creditsLabel: String,
     isGearTutorialActive: Boolean = false,
@@ -3399,8 +3387,7 @@ private fun MenuTabContentArea(
                 completedQuests = completedQuests,
                 accentColor = accentColor,
                 borderColor = borderColor,
-                onQuestSelected = onShowQuestDetails,
-                fishingJournal = fishingJournal
+                onQuestSelected = onShowQuestDetails
             )
             MenuTab.MAP -> MapTabContent(
                 minimap = minimap,
@@ -3463,7 +3450,8 @@ private fun MenuTabContentArea(
                 onLoadGame = onLoadGame,
                 onReturnToTitle = onReturnToTitle,
                 onEnvironmentalPreview = onEnvironmentalPreview,
-                onDebugTinkeringTutorial = onDebugTinkeringTutorial
+                onDebugTinkeringTutorial = onDebugTinkeringTutorial,
+                onOpenWalkthrough = onOpenWalkthrough
             )
         }
     }
@@ -3471,18 +3459,19 @@ private fun MenuTabContentArea(
 
 @Composable
 private fun SimulationDeckDialog(
+    programs: List<com.example.starborn.feature.exploration.presentation.SimulationProgramDefinition>,
     onSelectSimulation: (List<String>) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var selectedCategory by remember { mutableStateOf("THE RESONANCE CRUCIBLE") }
+    var selectedCategory by remember { mutableStateOf("TRAINING PROTOCOLS") }
 
-    val allPrograms = com.example.starborn.feature.exploration.presentation.AstraCatalog.simulations.map {
+    val allPrograms = programs.map {
         SimulationProgram(it.title, it.category, it.enemyIds, it.description, Color(it.accentArgb))
     }
 
     val categories = listOf("THE RESONANCE CRUCIBLE", "APEX BOSS ARCHIVES", "TRAINING PROTOCOLS")
-    val currentPrograms = remember(selectedCategory) {
+    val currentPrograms = remember(selectedCategory, programs) {
         allPrograms.filter { it.category == selectedCategory }
     }
 
@@ -3528,7 +3517,7 @@ private fun SimulationDeckDialog(
                 }
 
                 Text(
-                    text = "Select a combat simulation program or Crucible trial to test party equipment, abilities, and tactical synergies:",
+                    text = com.example.starborn.feature.exploration.presentation.AstraCatalog.simulationRules,
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.White.copy(alpha = 0.75f)
                 )
@@ -3566,6 +3555,7 @@ private fun SimulationDeckDialog(
                     }
                 }
 
+                if (currentPrograms.isEmpty()) Text("More programs unlock as the crew completes campaign encounters.", color = Color.White.copy(alpha = .75f))
                 currentPrograms.forEach { program ->
                     Surface(
                         modifier = Modifier
@@ -3625,6 +3615,7 @@ private data class SimulationProgram(
 
 @Composable
 private fun AstraNavConsoleDialog(
+    routeHint: String,
     destinations: List<com.example.starborn.domain.session.AstraDestination>,
     dockedTitle: String,
     dockedWorldId: String?,
@@ -3635,7 +3626,7 @@ private fun AstraNavConsoleDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Dialog(onDismissRequest = { if (transitTitle == null) onDismiss() }) {
+    Dialog(onDismissRequest = onDismiss) {
         Surface(
             modifier = modifier
                 .fillMaxWidth(0.95f)
@@ -3998,7 +3989,7 @@ fun MenuSectionCard(
 ) {
     if (LocalModernFieldMenu.current) {
         Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            if (title !in setOf("Inventory Overview", "Party Status", "Quest Journal")) {
+            if (title !in setOf("Inventory Overview", "Party Status", "Quest Journal", "Tinkering", "Map")) {
                 Text(title, color = FieldMenuDesign.text, style = MaterialTheme.typography.titleMedium)
             }
             content()
@@ -4341,8 +4332,6 @@ internal fun InteractiveMapPanel(
 ) {
     val modern = LocalModernFieldMenu.current
     val highContrast = LocalFieldMenuHighContrast.current
-    val largeTargets = LocalFieldMenuLargeTargets.current
-    val mapText = if (modern) FieldMenuDesign.text else MaterialTheme.colorScheme.onSurface
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -4371,8 +4360,6 @@ internal fun InteractiveMapPanel(
                         )
                     }
                 } else {
-                    Text("Drag to pan. Pinch to zoom, or use the zoom buttons.",
-                        color = mapText.copy(alpha = .7f), style = MaterialTheme.typography.bodySmall)
                     val cells = fullMap.cells
                     var viewportScale by remember(cells) { mutableStateOf(1f) }
                     var viewportOffset by remember(cells) { mutableStateOf(Offset.Zero) }
@@ -4399,17 +4386,6 @@ internal fun InteractiveMapPanel(
                             .clip(RoundedCornerShape(18.dp))
                             .then(transformModifier)
                     )
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically) {
-                        OutlinedButton(onClick = {
-                            viewportScale = (viewportScale / 1.25f).coerceAtLeast(.4f)
-                            viewportOffset = boundedOffset(viewportOffset, viewportScale)
-                        }, enabled = viewportScale > .4f, modifier = Modifier.heightIn(min = if (largeTargets) 56.dp else 48.dp)) { Text("-", color = mapText) }
-                        Text("${(viewportScale * 100).toInt()}%", color = mapText)
-                        OutlinedButton(onClick = {
-                            viewportScale = (viewportScale * 1.25f).coerceAtMost(4f)
-                        }, enabled = viewportScale < 4f, modifier = Modifier.heightIn(min = if (largeTargets) 56.dp else 48.dp)) { Text("+", color = mapText) }
-                    }
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -4864,7 +4840,7 @@ private const val FULL_MAP_ROWS = 8
 
 
 @Composable
-private fun MenuToggleButton(
+internal fun MenuToggleButton(
     isOpen: Boolean,
     onToggle: () -> Unit,
     modifier: Modifier = Modifier,
@@ -4957,98 +4933,7 @@ private fun MenuToggleButton(
     }
 }
 
-@Composable
-private fun ReturnHubButton(
-    destinationName: String? = null,
-    isDisembarking: Boolean = false,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val accentColor = Color(0xFF00E5FF)
-    val warmColor = Color(0xFFFFC857)
-    Surface(
-        modifier = modifier
-            .height(54.dp)
-            .widthIn(min = 148.dp)
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(14.dp),
-        color = Color(0xFF061018).copy(alpha = 0.75f),
-        border = BorderStroke(1.2.dp, accentColor.copy(alpha = 0.70f))
-    ) {
-        Row(
-            modifier = Modifier
-                .height(54.dp)
-                .background(
-                    Brush.horizontalGradient(
-                        colors = listOf(
-                            accentColor.copy(alpha = 0.22f),
-                            warmColor.copy(alpha = 0.08f),
-                            Color.Transparent
-                        )
-                    )
-                )
-                .padding(horizontal = 14.dp, vertical = 6.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Canvas(
-                modifier = Modifier.size(24.dp)
-            ) {
-                val strokeWidth = 2.2.dp.toPx()
-                drawCircle(
-                    color = accentColor,
-                    radius = size.minDimension * 0.44f,
-                    style = Stroke(width = strokeWidth)
-                )
-                drawCircle(
-                    color = accentColor.copy(alpha = 0.5f),
-                    radius = size.minDimension * 0.22f,
-                    style = Stroke(width = strokeWidth * 0.8f)
-                )
-                drawLine(
-                    color = accentColor,
-                    start = Offset(size.width * 0.5f, size.height * 0.08f),
-                    end = Offset(size.width * 0.5f, size.height * 0.92f),
-                    strokeWidth = strokeWidth * 0.8f,
-                    cap = StrokeCap.Round
-                )
-                drawLine(
-                    color = accentColor,
-                    start = Offset(size.width * 0.08f, size.height * 0.5f),
-                    end = Offset(size.width * 0.92f, size.height * 0.5f),
-                    strokeWidth = strokeWidth * 0.8f,
-                    cap = StrokeCap.Round
-                )
-            }
-            Column(
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = if (isDisembarking) "DISEMBARK" else "OVERWORLD",
-                    color = Color.White.copy(alpha = 0.92f),
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 0.6.sp
-                )
-                destinationName?.takeIf { it.isNotBlank() }?.let { dest ->
-                    Text(
-                        text = dest,
-                        color = accentColor.copy(alpha = 0.82f),
-                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Medium),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            }
-        }
-    }
-}
-
-private data class RestRecoveryNotice(
-    val id: Long,
-    val title: String,
-    val detail: String
-)
+private data class RestRecoveryNotice(val id: Long, val title: String, val detail: String)
 
 @Composable
 private fun RestRecoveryOverlay(
@@ -7538,10 +7423,10 @@ fun TutorialBanner(
     modifier: Modifier = Modifier
 ) {
     PromptBanner(
-        title = "Tutorial",
+        title = prompt.metadata["title"] ?: "Tutorial",
         message = prompt.message,
         accentColor = Color(0xFF7BE8FF),
-        actionLabel = "Continue",
+        actionLabel = prompt.metadata["action_label"] ?: "Continue",
         onAction = onDismiss,
         modifier = modifier,
         tapToDismiss = true
@@ -8037,6 +7922,7 @@ fun LevelUpOverlay(
     modifier: Modifier = Modifier
 ) {
     Surface(
+        onClick = onDismiss,
         modifier = modifier,
         color = Color(0xFF102030).copy(alpha = 0.95f)
     ) {
@@ -8061,6 +7947,7 @@ fun BlockedPromptCard(
     modifier: Modifier = Modifier
 ) {
     Surface(
+        onClick = onDismiss,
         modifier = modifier,
         color = Color(0xFF261818).copy(alpha = 0.92f)
     ) {

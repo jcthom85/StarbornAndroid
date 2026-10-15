@@ -22,7 +22,7 @@ This transcript reflects the exact player experience, including dialogue, room t
 > **[Dialogue]** Zeke: "I put the Chime on navigation without tracing the pair. That's on me. Check the wrecked nav console before the water gets in."
 - **[Action]** `w2_mq01_examine_pod`: Examine the wrecked navigation console and recover the Chime. [Quest: w2_mq01 (assess_crash_site)]
 - **[Action]** `w2_mq01_stabilize_zeke`: Use the emergency medkit from the pod to stabilize Zeke before leaving the crash site. [Quest: w2_mq01 (assess_crash_site)]
-**[Step 7 - Travel]** Entered room: Stream Bank | Prose snippet: "A clear stream of warm glow-water flows east toward the coast. Smooth pebbles line the banks under hanging ferns, where ..." [Quest: w2_mq02 (reach_temple_gate)]
+**[Step 7 - Travel]** Entered room: Stream Bank | Prose snippet: "A clear stream of warm water flows east toward the coast, its glow-water current rippling softly. Smooth pebbles line th..." [Quest: w2_mq02 (reach_temple_gate)]
 > **[Dialogue]** Zeke: "The beacon's pulse is strong, coming from that massive stone gate ahead. But thick razor-vines block the path. Watch your step, Nova."
 **[Step 9 - Travel]** Entered room: Resonant Canopy | Prose snippet: "The canopy of the ruins is covered in giant, crystalline ferns that catch the dim light and buzz with low-frequency stan..." [Quest: w2_mq02 (reach_temple_gate)]
 **[Combat Encounter]** Victory against [stalker_vine] in sector9_canopy
@@ -46,7 +46,7 @@ This transcript reflects the exact player experience, including dialogue, room t
 > **[Dialogue]** Orion: "I cannot stay here counting the years. Take the Bridge. It connects willing carriers, but it needs a physical ground. I will come with you. And that rifle on the ridge has been watching us too long."
 - **[Action]** `w2_mq03_recover_bridge`: Action triggered: w2_mq03_recover_bridge (payload: null) [Quest: w2_mq04 (canopy_ridge)]
 > **[Dialogue]** Zeke: "Keep your voice down. The booth records audio. I can lose a form; losing a recording takes more explaining."
-**[Step 31 - Travel]** Entered room: Canopy Ridge | Prose snippet: "A stone shelf stands above the canopy. Look at Shield from beneath its distant ceiling; a rifle barrel tracks the ridge ..." [Quest: w2_mq04 (canopy_ridge)]
+**[Step 31 - Travel]** Entered room: Canopy Ridge | Prose snippet: "A stone shelf stands above the canopy beneath the distant ceiling of the [action:Look at Shield|Planetary Shield]; a rif..." [Quest: w2_mq04 (canopy_ridge)]
 - **[Action]** `w2_mq04_confront`: Triggered when confronting Gh0st. [Quest: w2_mq04 (canopy_ridge)]
 **[Combat Encounter]** Victory against [the_beast] in sector9_canopy_ridge
 - **[Action]** `w2_mq04_anchor_drill`: Completes grounded Link training after Beast victory, then closes The Hunter and starts Liftoff. [Quest: w2_mq05 (repair_astra)]

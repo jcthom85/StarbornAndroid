@@ -49,7 +49,7 @@ class DesktopCraftingFishingFlowTest {
             compose.setContent { DesktopStarbornTheme(services) {
                 Box(Modifier.size(960.dp, 720.dp)) { DesktopRuntimeGearContent(services, "zeke") }
             } }
-            compose.onNodeWithText("Weapon modification 1").performScrollTo().performClick()
+            compose.onNodeWithText("Weapon mod 1").performScrollTo().performClick()
             compose.onNodeWithText("Equip").performClick()
             compose.onNodeWithText("Move Power Lens Mk. I?").assertExists()
             compose.onNodeWithText("Cancel").performClick()
@@ -126,7 +126,7 @@ class DesktopCraftingFishingFlowTest {
             services.inventoryService.addItem("salvage_lure", 2)
             val before = services.inventoryService.snapshot()
             compose.setContent { DesktopStarbornTheme(services) {
-                Box(Modifier.size(560.dp, 650.dp)) { DesktopTinkeringContent(services) }
+                Box(Modifier.size(480.dp, 650.dp)) { DesktopTinkeringContent(services) }
             } }
             compose.onNodeWithText("Scrap").performClick()
             compose.onNodeWithTag("station-stacked-panes").assertExists()

@@ -109,8 +109,9 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
     var shopId by remember { mutableStateOf<String?>(null) }
     var cookingSource by remember { mutableStateOf<String?>(null) }
     var controlsOpen by remember { mutableStateOf(false) }
-    var actionsOpen by remember { mutableStateOf(false) }
+    val actionsOpen = ui.roomActionsVisible
     var quickLoadOpen by remember { mutableStateOf(false) }
+    var restNotice by remember { mutableStateOf<com.example.starborn.feature.exploration.viewmodel.ExplorationEvent.RestRecovered?>(null) }
     val bindings by services.userSettingsStore.keyBindings.collectAsState(initial = DesktopKeyBindings())
     var environmentPreview by remember { mutableStateOf(false) }
     val questPresentations = services.questPresentations
@@ -127,6 +128,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                 is com.example.starborn.feature.exploration.viewmodel.ExplorationEvent.OpenShop -> shopId = event.shopId
                 is com.example.starborn.feature.exploration.viewmodel.ExplorationEvent.OpenTinkering -> { services.openTinkeringOnNextFieldKit = true; onOpenFieldKit() }
                 is com.example.starborn.feature.exploration.viewmodel.ExplorationEvent.OpenCooking -> cookingSource = event.sourceId ?: "Cooking"
+                is com.example.starborn.feature.exploration.viewmodel.ExplorationEvent.RestRecovered -> restNotice = event
                 is com.example.starborn.feature.exploration.viewmodel.ExplorationEvent.OpenFishing -> {
                     services.activeFishingZone = event.zoneId; onOpenFishing()
                 }
@@ -153,7 +155,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
         }
     }
     val revealingRoom = ui.fadeOverlay?.let { it.toAlpha < it.fromAlpha } == true
-    val sceneBlocked = actionsOpen || quickLoadOpen || environmentPreview || menuOpen || shopId != null || controlsOpen || cookingSource != null || ui.activeDialogue != null || ui.cinematic != null || ui.prompt != null || ui.narrationPrompt != null || ui.togglePrompt != null || ui.tuningPuzzle != null || ui.blockedPrompt != null || ui.shopGreeting != null || ui.eventAnnouncement != null || (ui.forceBlackScreen && !revealingRoom) || ui.isAstraNavConsoleVisible || ui.isSimulationDeckVisible || ui.isTapeDeckVisible || ui.showBurgQuestAstraExitDialog || ui.isMilestoneGalleryVisible || ui.levelUpPrompt != null || ui.skillTreeOverlay != null || ui.questDetail != null || ui.partyMemberDetails != null || ui.tutorialState.current != null
+    val sceneBlocked = ui.roomObjectOffer != null || restNotice != null || actionsOpen || quickLoadOpen || environmentPreview || menuOpen || shopId != null || controlsOpen || cookingSource != null || ui.activeDialogue != null || ui.cinematic != null || ui.prompt != null || ui.narrationPrompt != null || ui.togglePrompt != null || ui.tuningPuzzle != null || ui.blockedPrompt != null || ui.shopGreeting != null || ui.eventAnnouncement != null || (ui.forceBlackScreen && !revealingRoom) || ui.isAstraNavConsoleVisible || ui.isSimulationDeckVisible || ui.isTapeDeckVisible || ui.showBurgQuestAstraExitDialog || ui.isMilestoneGalleryVisible || ui.isCatchLogVisible || ui.astraFacility != null || ui.isAstraRecreationVisible || ui.levelUpPrompt != null || ui.skillTreeOverlay != null || ui.questDetail != null || ui.partyMemberDetails != null || ui.tutorialState.current != null
     val questPopupVisible = !sceneBlocked && questPresentations.important.isNotEmpty()
     val blocked = sceneBlocked || questPopupVisible || moveProgress.value < 1f
     LaunchedEffect(blocked, ui.currentRoom?.id, drawer.panel) {
@@ -168,10 +170,17 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
         if (blocked) return
         ui.availableConnections.entries.firstOrNull { it.key.equals(direction, true) && it.value != null }?.let { runtime.travel(it.key) }
     }
-    fun interactFirst() { if (!blocked) ui.actions.firstOrNull { ui.actionHints[it.actionKey()]?.locked != true }?.let(runtime::onActionSelected) }
+    fun interactFirst() { if (!blocked) ui.actions.firstOrNull { ui.actionHints[it.actionKey()]?.locked != true }?.let(runtime::inspectRoomAction) }
+
+    val acknowledgeForeground: (() -> Unit)? = if (ui.cinematic != null || ui.activeDialogue != null || ui.tuningPuzzle != null) null else when {
+        ui.narrationPrompt != null -> if (ui.narrationPrompt?.tapToDismiss == true) runtime::dismissNarration else null
+        ui.eventAnnouncement != null -> runtime::dismissEventAnnouncement
+        ui.prompt != null -> runtime::dismissPrompt
+        else -> null
+    }
 
     CompositionLocalProvider(LocalExplorationDrawer provides drawer) {
-    BoxWithConstraints(Modifier.fillMaxSize().focusRequester(keyboardFocus).pointerInput(controlsOpen, environmentPreview, drawer.panel, ui.prompt, ui.narrationPrompt, ui.eventAnnouncement) {
+    BoxWithConstraints(Modifier.fillMaxSize().focusRequester(keyboardFocus).pointerInput(controlsOpen, environmentPreview, drawer.panel, ui.prompt, ui.narrationPrompt, ui.eventAnnouncement, ui.activeDialogue, ui.cinematic, ui.tuningPuzzle) {
         awaitPointerEventScope {
             while (true) {
                 val event = awaitPointerEvent()
@@ -180,15 +189,16 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                         controlsOpen -> { controlsOpen = false; event.changes.forEach { it.consume() } }
                         environmentPreview -> { environmentPreview = false; event.changes.forEach { it.consume() } }
                         drawer.panel != null -> { drawer.panel = null; event.changes.forEach { it.consume() } }
-                        ui.prompt != null -> { runtime.dismissPrompt(); event.changes.forEach { it.consume() } }
-                        ui.narrationPrompt != null -> { runtime.dismissNarration(); event.changes.forEach { it.consume() } }
-                        ui.eventAnnouncement != null -> { runtime.dismissEventAnnouncement(); event.changes.forEach { it.consume() } }
+                        acknowledgeForeground != null -> { acknowledgeForeground(); event.changes.forEach { it.consume() } }
                     }
                 }
             }
         }
     }.onPreviewKeyEvent { event ->
-        if (event.type != KeyEventType.KeyDown) false
+        if (acknowledgeForeground != null && event.key in listOf(Key.Enter, Key.Spacebar, Key.Escape)) {
+            if (event.type == KeyEventType.KeyUp) acknowledgeForeground()
+            true
+        } else if (event.type != KeyEventType.KeyDown) false
         else if (menuOpen || questPopupVisible) false
         else if (event.key == Key.Escape && drawer.panel != null) { drawer.panel = null; true }
         else if (event.key == Key.Tab) false
@@ -200,14 +210,6 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                 else -> false
             }
         }
-        else if (event.key == Key.Enter && ui.cinematic == null && ui.tuningPuzzle == null) {
-            when {
-                ui.narrationPrompt != null -> { runtime.dismissNarration(); true }
-                ui.eventAnnouncement != null -> { runtime.dismissEventAnnouncement(); true }
-                ui.prompt != null -> { runtime.dismissPrompt(); true }
-                else -> false
-            }
-        }
         else if (blocked) false else if (event.key == Key.F8 && services.isDebugEnabled) {
             environmentPreview = true; true
         } else when (bindings.actionFor(event)) {
@@ -216,7 +218,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
             DesktopAction.WEST -> { travelIfAvailable("west"); true }
             DesktopAction.EAST -> { travelIfAvailable("east"); true }
             DesktopAction.INTERACT -> { interactFirst(); true }
-            DesktopAction.ACTIONS -> { actionsOpen = true; true }
+            DesktopAction.ACTIONS -> { runtime.openRoomActions(); true }
             DesktopAction.MENU -> { runtime.openMenuOverlay(); true }
             DesktopAction.INVENTORY -> { runtime.openMenuOverlay(com.example.starborn.feature.exploration.viewmodel.MenuTab.INVENTORY); true }
             DesktopAction.MAP -> { runtime.openMenuOverlay(com.example.starborn.feature.exploration.viewmodel.MenuTab.MAP); true }
@@ -226,10 +228,10 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
             null -> false
         }
     }.focusable()) {
-        if (actionsOpen) DesktopRoomInteractionDialog(services, ui, onDismiss = { actionsOpen = false }) { target ->
-            actionsOpen = false
+        if (actionsOpen) DesktopRoomInteractionDialog(services, ui, onDismiss = { runtime.dismissRoomActions() }) { target ->
+            runtime.dismissRoomActions()
             when (target) {
-                is InlineActionTarget.Room -> runtime.onActionSelected(target.action)
+                is InlineActionTarget.Room -> runtime.inspectRoomAction(target.action)
                 is InlineActionTarget.Npc -> runtime.onNpcInteraction(target.name)
                 is InlineActionTarget.Enemy -> runtime.engageEnemy(target.id)
             }
@@ -288,7 +290,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                 },
                 onOpenControls = { controlsOpen = true },
                 onInteractFirst = ::interactFirst,
-                onChooseActions = { actionsOpen = true }
+                onChooseActions = { runtime.openRoomActions() }
             )
         }
         if (ui.forceBlackScreen && ui.fadeOverlay == null) Box(Modifier.fillMaxSize().background(Color.Black))
@@ -304,6 +306,20 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                 services.worldDataSource.environmentalEffectsCatalog,
                 rememberDesktopAssetPainter(room.backgroundImage,services.assetProvider),frames,ui.roomState,ui.completedMilestones,
                 onCopy={clipboard.setText(androidx.compose.ui.text.AnnotatedString(it))},onClose={environmentPreview=false})
+        }
+        ui.roomObjectOffer?.let { offer ->
+            AlertDialog(onDismissRequest = runtime::dismissRoomObject,
+                title = { Text(offer.title) }, text = { Text(offer.detail) },
+                confirmButton = { TextButton(onClick = runtime::confirmRoomObject) { Text(offer.confirmLabel) } },
+                dismissButton = { TextButton(onClick = runtime::dismissRoomObject) { Text("Back") } })
+        }
+        restNotice?.let { notice ->
+            AlertDialog(onDismissRequest = { restNotice = null },
+                modifier = Modifier.informationAcknowledgement { restNotice = null },
+                title = { Text("A Quiet Rest") },
+                text = { Text(listOfNotNull(notice.message?.takeIf { it.isNotBlank() },
+                    if (notice.alreadyFull) "Already at full HP." else "Restored ${notice.restoredHp} HP.").joinToString("\n\n")) },
+                confirmButton = { TextButton(onClick = { restNotice = null }) { Text("Continue") } })
         }
         if (controlsOpen) DesktopControlsDialog(onDismiss = { controlsOpen = false })
         shopId?.let { id -> DesktopShopDialog(services, id) { shopId = null } }
@@ -324,7 +340,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                 onValues = { values -> values.forEach { (id, value) -> runtime.updateTuningSlider(id, value) } })
         }
         ui.blockedPrompt?.let { prompt ->
-            DesktopExplorationModal(prompt.message, runtime::dismissBlockedPrompt) {
+            DesktopExplorationModal(prompt.message, runtime::dismissBlockedPrompt, tapToDismiss = true) {
                 Button(onClick = runtime::dismissBlockedPrompt, modifier = Modifier.align(Alignment.End)) { Text("OK") }
             }
         }

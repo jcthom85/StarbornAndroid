@@ -48,6 +48,7 @@ data class GameSessionState(
     val revealedNodes: Set<String> = emptySet(),
     val unlockedNodes: Set<String> = emptySet(),
     val visitedNodes: Set<String> = emptySet(),
+    val knownEnemyWeaknesses: Map<String, Set<String>> = emptyMap(),
     val completedNodes: Set<String> = emptySet(),
     val astraReturnWorldId: String? = null,
     val astraReturnHubId: String? = null,
@@ -55,7 +56,10 @@ data class GameSessionState(
     val arcadeProgress: Map<String, ArcadeCabinetProgress> = emptyMap(),
     val activeMealBuff: ActiveMealBuff? = null,
     val mealChefId: String = "nova",
-    val fishingCleanCatchProgress: Int = 0
+    val fishingCleanCatchProgress: Int = 0,
+    val progressionPrototypeVersion: Int = 0,
+    val purchasedSkillNodes: Map<String, Int> = emptyMap(),
+    val progressionAwardClaims: Set<String> = emptySet()
 )
 
 data class ActiveMealBuff(
@@ -90,6 +94,9 @@ data class ArcadeCabinetProgress(
 fun GameSessionState.fingerprint(): String {
     val normalizedLocale = Locale.US
     val builder = StringBuilder()
+    builder.append("AP:").append(playerAp).append("|PROGRESSION:").append(progressionPrototypeVersion).append('|')
+    purchasedSkillNodes.toSortedMap().forEach { (id, paid) -> builder.append("PURCHASE:").append(id).append('=').append(paid).append('|') }
+    progressionAwardClaims.sorted().forEach { builder.append("AP_CLAIM:").append(it).append('|') }
     builder.append("MEAL_CHEF:").append(mealChefId).append('|')
     builder.append("FISHING_CLEAN_PROGRESS:").append(fishingCleanCatchProgress).append('|')
     builder.append("MEAL:").append(activeMealBuff).append('|')

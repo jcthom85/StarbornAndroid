@@ -1,5 +1,7 @@
 # World 1 Quest List (Canonical)
 
+> **Implementation reconciliation pending ? October 14, 2026.** Supporting design/authoring material. Current code/assets take precedence for implemented behavior; older Canon, Locked, required, or next-step claims below are not evidence that the game should be changed. Check [current documentation](../../README.md) and the live route before use. This banner classifies review status, not the correctness of every passage.
+
 This file is the single source of truth for World 1 quest IDs, titles, objectives, beats, and rewards.
 Canonical key item name: Mine Access Badge (UI can label it "Mining Pass" if needed, but use one label consistently).
 

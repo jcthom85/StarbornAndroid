@@ -4,6 +4,8 @@ import com.example.starborn.feature.crafting.ui.ModComparisonPanel
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -53,18 +55,52 @@ internal fun ModernTinkerWorkbench(
     onCraft: () -> Unit,
     onLoad: (String) -> Unit
 ) {
+    val resultFocus = remember { BringIntoViewRequester() }
+    LaunchedEffect(tutorialStep, bench.preview?.recipeId) {
+        if (tutorialStep == TinkeringTutorialStep.SYNTHESIZE && bench.preview != null) {
+            withFrameNanos { }; withFrameNanos { }
+            resultFocus.bringIntoView()
+        }
+    }
+    val parts: @Composable () -> Unit = {
+        val options = if (activeSlot == ActiveBenchSlot.BASE) baseItemIds else componentOptions[bench.mainItemId].orEmpty()
+        val materials = inventory.filter { it.quantity > 0 && it.id in options }
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(if (activeSlot == ActiveBenchSlot.BASE) "Base items" else "Compatible components",
+                color = FieldMenuDesign.text, style = MaterialTheme.typography.titleSmall)
+            Text("Used only when you repair or build.",
+                color = secondaryText(), style = MaterialTheme.typography.bodySmall)
+            if (materials.isEmpty()) {
+                Text(if (bench.mainItemId == null && activeSlot != ActiveBenchSlot.BASE) "Choose a base item first."
+                    else if (activeSlot != ActiveBenchSlot.BASE && options.isEmpty() && bench.preview != null)
+                        "This recipe needs no additional components. Build the result below."
+                    else "No matching materials in your inventory. Check Schematics for requirements.",
+                    color = secondaryText(), style = MaterialTheme.typography.bodySmall)
+            }
+            materials.forEach { item ->
+                Surface(onClick = { onItem(item.id) }, modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight()),
+                    color = FieldMenuDesign.elevatedPanel, shape = RoundedCornerShape(10.dp)) {
+                    Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Image(painterResource(previewItemIconRes(item.id)), contentDescription = null, modifier = Modifier.size(32.dp))
+                        Text(item.name, Modifier.weight(1f), color = FieldMenuDesign.text, style = MaterialTheme.typography.bodySmall)
+                        Text("×${item.quantity}", color = secondaryText(), style = MaterialTheme.typography.labelLarge)
+                    }
+                }
+            }
+        }
+    }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         tutorialStep?.let { step ->
-            Surface(color = FieldMenuDesign.gold.copy(alpha = 0.12f), shape = RoundedCornerShape(12.dp),
-                border = BorderStroke(1.dp, FieldMenuDesign.gold)) {
+            Surface(color = FieldMenuDesign.panel, shape = RoundedCornerShape(12.dp),
+                border = BorderStroke(1.dp, accent.copy(alpha = .6f))) {
                 Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("Repair the Cryo-Inductor", style = MaterialTheme.typography.titleSmall, color = FieldMenuDesign.gold)
-                    Text(when (step) {
-                        TinkeringTutorialStep.SLOT_BASE -> "1 of 3 · Choose the Cryo-Inductor as your base item."
-                        TinkeringTutorialStep.SLOT_COMPONENT -> "2 of 3 · Add Scrap Metal to the first component slot."
-                        TinkeringTutorialStep.SYNTHESIZE -> "3 of 3 · Repair the cold loop to unlock Cryo Vent."
-                        TinkeringTutorialStep.COMPLETE -> "Repair complete."
-                    }, style = MaterialTheme.typography.bodySmall, color = FieldMenuDesign.text)
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text("Tutorial", color = accent, style = MaterialTheme.typography.labelMedium)
+                        Text(if (step == TinkeringTutorialStep.COMPLETE) "Complete" else "Step ${step.ordinal + 1} of 3", color = secondaryText(), style = MaterialTheme.typography.labelSmall)
+                    }
+                    if (step == TinkeringTutorialStep.SLOT_BASE) Text("Repair the Cryo-Inductor", color = FieldMenuDesign.text, style = MaterialTheme.typography.titleSmall)
+                    Text(com.example.starborn.feature.crafting.tinkeringTutorialInstruction(step), style = MaterialTheme.typography.bodySmall, color = FieldMenuDesign.text)
                 }
             }
         }
@@ -92,60 +128,44 @@ internal fun ModernTinkerWorkbench(
             ModernTinkerSocket("Base item", bench.mainItemName, activeSlot == ActiveBenchSlot.BASE,
                 tutorialStep == TinkeringTutorialStep.SLOT_BASE, accent,
                 { onSelectSlot(ActiveBenchSlot.BASE) }, { onClearSlot(ActiveBenchSlot.BASE) })
+            if (activeSlot == ActiveBenchSlot.BASE && tutorialStep != TinkeringTutorialStep.SYNTHESIZE) parts()
             // Full-width sockets preserve names and font scaling on narrow phones.
             ModernTinkerSocket("Component 1", bench.componentNames.getOrNull(0), activeSlot == ActiveBenchSlot.COMPONENT_1,
                 tutorialStep == TinkeringTutorialStep.SLOT_COMPONENT, accent,
                 { onSelectSlot(ActiveBenchSlot.COMPONENT_1) }, { onClearSlot(ActiveBenchSlot.COMPONENT_1) })
-            ModernTinkerSocket("Component 2", bench.componentNames.getOrNull(1), activeSlot == ActiveBenchSlot.COMPONENT_2,
-                false, accent, { onSelectSlot(ActiveBenchSlot.COMPONENT_2) }, { onClearSlot(ActiveBenchSlot.COMPONENT_2) })
+            if (activeSlot == ActiveBenchSlot.COMPONENT_1 && tutorialStep != TinkeringTutorialStep.SYNTHESIZE) parts()
+            if (tutorialStep == null) {
+                ModernTinkerSocket("Component 2", bench.componentNames.getOrNull(1), activeSlot == ActiveBenchSlot.COMPONENT_2,
+                    false, accent, { onSelectSlot(ActiveBenchSlot.COMPONENT_2) }, { onClearSlot(ActiveBenchSlot.COMPONENT_2) })
+                if (activeSlot == ActiveBenchSlot.COMPONENT_2) parts()
+            }
         }
         bench.preview?.let { preview ->
             TinkerPanel {
+                Column(Modifier.bringIntoViewRequester(resultFocus), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(if (preview.learned) "Result" else "New discovery", color = accent, style = MaterialTheme.typography.labelMedium)
                 Text(preview.name, color = FieldMenuDesign.text, style = MaterialTheme.typography.titleMedium)
                 Text(preview.resultSummary, color = secondaryText(), style = MaterialTheme.typography.bodySmall)
+                Button(onClick = onCraft, enabled = bench.canCraftSelection,
+                    modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight()),
+                    border = if (tutorialStep == TinkeringTutorialStep.SYNTHESIZE) androidx.compose.foundation.BorderStroke(2.dp, FieldMenuDesign.cyan) else null,
+                    colors = ButtonDefaults.buttonColors(containerColor = FieldMenuDesign.gold, contentColor = FieldMenuDesign.shell)) {
+                    Text("Synthesize", style = MaterialTheme.typography.labelLarge)
+                }
+                }
                 ModComparisonPanel(preview.equipmentComparison)
                 TinkerRequirements(bench.requirements)
                 if (preview.requiresSchematic && !preview.learned) {
                     Text(preview.discoveryHint ?: "Learn this schematic from Inventory first.", color = secondaryText(),
                         style = MaterialTheme.typography.bodySmall)
                 }
-                Button(onClick = onCraft, enabled = bench.canCraftSelection,
-                    modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight()),
-                    colors = ButtonDefaults.buttonColors(containerColor = FieldMenuDesign.gold, contentColor = FieldMenuDesign.shell)) {
-                    Text(if (preview.category == "repair") "Repair" else "Build", style = MaterialTheme.typography.labelLarge)
-                }
+
             }
         } ?: Text(if (bench.mainItemId == null) "Choose a base item to see compatible components."
             else "This combination has no recipe. Try a different component or clear an extra slot.",
             style = MaterialTheme.typography.bodySmall, color = secondaryText())
 
-        val options = if (activeSlot == ActiveBenchSlot.BASE) baseItemIds else componentOptions[bench.mainItemId].orEmpty()
-        val materials = inventory.filter { it.quantity > 0 && it.id in options }
-        TinkerPanel {
-            Text(if (activeSlot == ActiveBenchSlot.BASE) "Base items" else "Compatible components",
-                color = FieldMenuDesign.text, style = MaterialTheme.typography.titleSmall)
-            Text("Select a socket above, then choose a part. Materials are consumed only when you build.",
-                color = secondaryText(), style = MaterialTheme.typography.bodySmall)
-            if (materials.isEmpty()) {
-                Text(if (bench.mainItemId == null && activeSlot != ActiveBenchSlot.BASE) "Choose a base item first."
-                    else if (activeSlot != ActiveBenchSlot.BASE && options.isEmpty() && bench.preview != null)
-                        "This recipe needs no additional components. Build the result above."
-                    else "No matching materials in your inventory. Check Schematics for requirements.",
-                    color = secondaryText(), style = MaterialTheme.typography.bodySmall)
-            }
-            materials.forEach { item ->
-                Surface(onClick = { onItem(item.id) }, modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight()),
-                    color = FieldMenuDesign.elevatedPanel, shape = RoundedCornerShape(10.dp)) {
-                    Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Image(painterResource(previewItemIconRes(item.id)), contentDescription = null, modifier = Modifier.size(32.dp))
-                        Text(item.name, Modifier.weight(1f), color = FieldMenuDesign.text, style = MaterialTheme.typography.bodySmall)
-                        Text("×${item.quantity}", color = secondaryText(), style = MaterialTheme.typography.labelLarge)
-                    }
-                }
-            }
-        }
+
     }
 }
 
@@ -206,7 +226,7 @@ internal fun ModernTinkerSchematics(recipes: List<TinkeringRecipeUi>, unknown: L
                     // Separate full-width actions remain readable with larger system fonts.
                     Button(onClick = { onCraft(recipe.id) }, enabled = recipe.canCraft,
                         modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight())) {
-                        Text(if (recipe.category == "repair") "Repair" else "Build")
+                        Text("Synthesize")
                     }
                     OutlinedButton(onClick = { onLoad(recipe.id) }, modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight())) {
                         Text("Load into workbench")

@@ -14,6 +14,31 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class DebugTestSessionInstrumentedTest {
+    @Test fun crewCheckpointsAndTestSavesLeaveCampaignSlotsUntouched() = runBlocking(Dispatchers.Main) {
+        val context = IsolatedProgressionContext(ApplicationProvider.getApplicationContext<Context>())
+        val campaign = AppServices(context)
+        val test = AppServices(context, isTestSession = true)
+        try {
+            delay(250)
+            assertTrue(campaign.startNewGame())
+            campaign.sessionStore.addCredits(123)
+            campaign.saveSlot(1)
+            campaign.quickSave()
+            val protectedSlot = campaign.slotState(1)
+            val protectedQuick = campaign.quickSaveInfo()?.state
+            for ((id, ap) in listOf("early" to 26, "middle" to 36, "late" to 44)) {
+                assertTrue(test.startDebugScenario("crew_build_$id"))
+                assertEquals(ap, test.sessionStore.state.value.playerAp)
+                assertEquals(4, test.sessionStore.state.value.partyMembers.size)
+                assertTrue(test.sessionStore.state.value.purchasedSkillNodes.isEmpty())
+                test.saveSlot(1)
+                test.quickSave()
+            }
+            assertEquals(protectedSlot, campaign.slotState(1))
+            assertEquals(protectedQuick, campaign.quickSaveInfo()?.state)
+        } finally { campaign.release(); test.release() }
+    }
+
     @Test fun rebuiltFixturesLaunchAndTestSavesNeverReplaceCampaignSaves() = runBlocking(Dispatchers.Main) {
         val context = IsolatedProgressionContext(ApplicationProvider.getApplicationContext<Context>())
         val campaign = AppServices(context)

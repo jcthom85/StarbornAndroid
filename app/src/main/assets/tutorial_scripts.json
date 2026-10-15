@@ -154,7 +154,7 @@
         "id": "gear_equip_basics",
         "steps": [
             {
-                "message": "Open the Menu and choose Inventory -> Gear to equip Nova's cutter, armor, and mods before heading into the mines.",
+                "message": "Open the Menu and choose Inventory -> Gear to equip Nova's Mining Pistol, armor, and mods before heading into the mines.",
                 "context": "Gear"
             }
         ]

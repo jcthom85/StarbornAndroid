@@ -70,6 +70,20 @@ fun PartyMemberDetailsContent(
     showClose: Boolean = false,
     modifier: Modifier = Modifier
 ) {
+    if (LocalModernFieldMenu.current && !showClose) {
+        Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(18.dp)) {
+            Text("${details.name} - Level ${details.level}", color = FieldMenuDesign.text,
+                style = MaterialTheme.typography.titleSmall)
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(details.hpLabel ?: "HP unavailable", color = FieldMenuDesign.textMuted,
+                    style = MaterialTheme.typography.bodySmall)
+                Text(details.xpLabel, color = FieldMenuDesign.textMuted, style = MaterialTheme.typography.bodySmall)
+            }
+            ModernStatSection("Base attributes", details.primaryStats, accentColor)
+            ModernStatSection("Base combat stats", details.combatStats, FieldMenuDesign.gold)
+        }
+        return
+    }
     val scrollState = rememberScrollState()
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -217,7 +231,7 @@ fun PartyMemberDetailsContent(
                 // Primary Attributes Grid
                 if (details.primaryStats.isNotEmpty()) {
                     StatSectionCard(
-                        title = "PRIMARY ATTRIBUTES",
+                        title = "BASE ATTRIBUTES",
                         stats = details.primaryStats,
                         accentColor = accentColor,
                         borderColor = borderColor
@@ -227,7 +241,7 @@ fun PartyMemberDetailsContent(
                 // Combat Stats Grid
                 if (details.combatStats.isNotEmpty()) {
                     StatSectionCard(
-                        title = "COMBAT STATS",
+                        title = "BASE COMBAT STATS",
                         stats = details.combatStats,
                         accentColor = Color(0xFFFFC857),
                         borderColor = borderColor
@@ -354,6 +368,24 @@ private fun StatSectionCard(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ModernStatSection(title: String, stats: List<CharacterStatValueUi>, accent: Color) {
+    if (stats.isEmpty()) return
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(title, color = accent, style = MaterialTheme.typography.titleSmall)
+        stats.forEach { stat ->
+            Row(Modifier.fillMaxWidth().padding(vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                Text(stat.label, Modifier.weight(1f), color = FieldMenuDesign.textMuted,
+                    style = MaterialTheme.typography.bodyMedium)
+                Text(stat.value, color = FieldMenuDesign.text, style = MaterialTheme.typography.bodyMedium)
+            }
+            HorizontalDivider(color = FieldMenuDesign.border.copy(alpha = .25f))
         }
     }
 }

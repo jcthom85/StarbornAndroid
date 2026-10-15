@@ -44,6 +44,9 @@ compose.desktop {
     application {
         javaHome = providers.gradleProperty("starborn.packagingJavaHome").orNull ?: System.getenv("JAVA_HOME")
         jvmArgs += listOf("-Dstarborn.packagedAssets=true")
+        if (providers.gradleProperty("starborn.novaPrototype").orNull == "true" || providers.gradleProperty("starborn.crewPrototype").orNull == "true") {
+            jvmArgs += listOf("-Dstarborn.novaPrototype=true", "-Dstarborn.debug=true")
+        }
         mainClass = "com.example.starborn.desktop.MainKt"
 
         nativeDistributions {

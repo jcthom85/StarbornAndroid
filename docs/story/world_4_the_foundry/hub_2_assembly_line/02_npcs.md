@@ -1,5 +1,7 @@
 # NPCs — World 4: The Foundry (Hub 2: Assembly Line)
 
+> **Implementation reconciliation pending ? October 14, 2026.** Supporting design/authoring material. Current code/assets take precedence for implemented behavior; older Canon, Locked, required, or next-step claims below are not evidence that the game should be changed. Check [current documentation](../../../README.md) and the live route before use. This banner classifies review status, not the correctness of every passage.
+
 ## Major Characters
 
 ### Commander Rylos (The Villain)

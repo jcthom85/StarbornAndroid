@@ -1,0 +1,2964 @@
+{
+  "date": "2026-10-14",
+  "scope": "Markdown in docs/, root Markdown, authoring briefing; docx/xlsx/pdf/csv under docs/. Generated source files, root archives and other binary/media are outside this inventory.",
+  "rule": "Current code/assets are implementation truth. Pending or path-classified rows are triage candidates, not audited defects.",
+  "counts": {
+    "active direction / proposed mechanics": 3,
+    "historical archive": 52,
+    "historical record": 6,
+    "operational reference / pending refresh": 5,
+    "pending binary/table review": 13,
+    "pending source reconciliation": 46,
+    "pending triage": 70,
+    "policy outside cleanup": 1,
+    "redirected": 5,
+    "reviewed foundation": 17,
+    "scoped record / pending triage": 85,
+    "source-reconciled world reference": 24
+  },
+  "documents": [
+    {
+      "path": "PLAYTEST_INSTRUCTIONS.md",
+      "title": "Starborn Playtest Execution Guide",
+      "format": ".md",
+      "words": 396,
+      "status": "operational reference / pending refresh",
+      "basis": "Maintained workflow candidate; not fully executed in this pass.",
+      "next_action": "Check tasks, paths and fixture assumptions before use."
+    },
+    {
+      "path": "PRIVACY_POLICY.md",
+      "title": "Privacy Policy for Starborn",
+      "format": ".md",
+      "words": 401,
+      "status": "policy outside cleanup",
+      "basis": "Policy purpose; no legal/content review performed.",
+      "next_action": "Retain; do not treat creative cleanup as policy revision."
+    },
+    {
+      "path": "README.md",
+      "title": "Starborn",
+      "format": ".md",
+      "words": 89,
+      "status": "reviewed foundation",
+      "basis": "Content/source reconciliation or new maintained index in this pass.",
+      "next_action": "Maintain within stated scope; code/assets remain implementation baseline."
+    },
+    {
+      "path": "antigravity_handoff.md",
+      "title": "Starborn Antigravity CLI Handoff",
+      "format": ".md",
+      "words": 68,
+      "status": "redirected",
+      "basis": "Replaced obsolete root entry point in this pass.",
+      "next_action": "Use current index; original preserved."
+    },
+    {
+      "path": "codex_handoff.md",
+      "title": "Codex CLI Handoff Guide: Starborn Android Port",
+      "format": ".md",
+      "words": 71,
+      "status": "redirected",
+      "basis": "Replaced obsolete root entry point in this pass.",
+      "next_action": "Use current index; original preserved."
+    },
+    {
+      "path": "data/assistant_briefing.md",
+      "title": "Starborn: authoring brief",
+      "format": ".md",
+      "words": 689,
+      "status": "reviewed foundation",
+      "basis": "Content/source reconciliation or new maintained index in this pass.",
+      "next_action": "Maintain within stated scope; code/assets remain implementation baseline."
+    },
+    {
+      "path": "docs/ANTIGRAVITY_ASTRA_HUB_HANDOFF.md",
+      "title": "Antigravity handoff: Astra placement on hub maps",
+      "format": ".md",
+      "words": 803,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/ASTRA_ARCADE_FIX.md",
+      "title": "Astra arcade launch repair — 2026-09-22",
+      "format": ".md",
+      "words": 243,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/ASTRA_HUB_PLACEMENT_PROGRESS.md",
+      "title": "Astra hub placement progress",
+      "format": ".md",
+      "words": 1159,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/AVATAR_BASELINE_35.md",
+      "title": "Avatar baseline: 35 seeds",
+      "format": ".md",
+      "words": 237,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/AVATAR_CANDIDATE_COMPARISON.md",
+      "title": "Avatar candidate comparison — 2026-09-22",
+      "format": ".md",
+      "words": 557,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/AVATAR_RECOVERY_IMPLEMENTATION.md",
+      "title": "Avatar recovery implementation — 2026-09-22",
+      "format": ".md",
+      "words": 237,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/AVATAR_RESPONSE_WINDOW_DIAGNOSTICS.md",
+      "title": "Avatar response-window diagnostics",
+      "format": ".md",
+      "words": 530,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/BURGQUEST_GUIDED_SAMPLER.md",
+      "title": "BurgQuest guided sampler — September 23, 2026",
+      "format": ".md",
+      "words": 919,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/BURGQUEST_PREP_IMPLEMENTATION.md",
+      "title": "BurgQuest focused prep - September 22, 2026",
+      "format": ".md",
+      "words": 1010,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/BURGQUEST_READINESS_REVIEW.md",
+      "title": "BurgQuest readiness review — September 22, 2026",
+      "format": ".md",
+      "words": 665,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/CAMPAIGN_VALIDATION_STATUS.md",
+      "title": "Campaign validation status — 2026-09-22",
+      "format": ".md",
+      "words": 808,
+      "status": "historical record",
+      "basis": "Known dated global checkpoint or migration/runbook; banner added.",
+      "next_action": "Preserve scoped evidence; do not execute old next-step lists."
+    },
+    {
+      "path": "docs/COMBAT_LAYOUT_BURGQUEST.md",
+      "title": "Combat layout and demo controls - September 23, 2026",
+      "format": ".md",
+      "words": 295,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/COMBAT_REVIEW_NEXT_PASS.md",
+      "title": "Next combat review — 2026-09-22",
+      "format": ".md",
+      "words": 411,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/COMBAT_SPENDING_BASELINE.md",
+      "title": "Reproducible combat spending baseline",
+      "format": ".md",
+      "words": 4879,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/CURRENT_STATE.md",
+      "title": "Starborn implementation snapshot",
+      "format": ".md",
+      "words": 831,
+      "status": "reviewed foundation",
+      "basis": "Content/source reconciliation or new maintained index in this pass.",
+      "next_action": "Maintain within stated scope; code/assets remain implementation baseline."
+    },
+    {
+      "path": "docs/DISCOVERABILITY_CLASSIFICATION.md",
+      "title": "Static discoverability residuals",
+      "format": ".md",
+      "words": 326,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/DOCUMENTATION_CLEANUP.md",
+      "title": "Documentation cleanup record",
+      "format": ".md",
+      "words": 1159,
+      "status": "reviewed foundation",
+      "basis": "Content/source reconciliation or new maintained index in this pass.",
+      "next_action": "Maintain within stated scope; code/assets remain implementation baseline."
+    },
+    {
+      "path": "docs/ECONOMY_AUDIT.md",
+      "title": "Shop and crafting audit",
+      "format": ".md",
+      "words": 1353,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/EXPLICIT_ACTION_REFERENCES.md",
+      "title": "Explicit room action references",
+      "format": ".md",
+      "words": 282,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/Elemental Effects.xlsx",
+      "title": "Elemental Effects",
+      "format": ".xlsx",
+      "words": null,
+      "status": "pending binary/table review",
+      "basis": "File inventory only; contents not read in this pass.",
+      "next_action": "Inspect with format-specific workflow before using as current spec."
+    },
+    {
+      "path": "docs/FIELD_MENU_PAGE_AUDIT.md",
+      "title": "Field menu page audit",
+      "format": ".md",
+      "words": 2030,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/FIELD_MENU_REDESIGN.md",
+      "title": "Field menu redesign",
+      "format": ".md",
+      "words": 433,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/FIELD_MENU_RELEASE_1.3.81.md",
+      "title": "Field menu release 1.3.81",
+      "format": ".md",
+      "words": 71,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/FINALE_FAILURE_INVESTIGATION.md",
+      "title": "Finale failure investigation",
+      "format": ".md",
+      "words": 878,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/FINALE_PACING_DIAGNOSTICS.md",
+      "title": "Finale pacing diagnostics — 2026-09-22",
+      "format": ".md",
+      "words": 484,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/FINALE_PRESENTATION_AND_TACTICS.md",
+      "title": "Finale presentation and tactic checks",
+      "format": ".md",
+      "words": 562,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/FINALE_STAGGER_COMPARISON.md",
+      "title": "Finale stagger comparison — 2026-09-22",
+      "format": ".md",
+      "words": 459,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/FOUNDRY_ENEMY_VARIETY_PILOT.md",
+      "title": "Foundry enemy and encounter variety pilot",
+      "format": ".md",
+      "words": 460,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/FOUNDRY_LUNA_RUNBOOK.md",
+      "title": "Foundry continuation for Luna",
+      "format": ".md",
+      "words": 2249,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/FOUNDRY_PLAYTEST_HANDOFF.md",
+      "title": "Foundry playtest and balance-check handoff",
+      "format": ".md",
+      "words": 1881,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/FOUNDRY_PLAYTEST_REPORT.md",
+      "title": "Foundry playtest report",
+      "format": ".md",
+      "words": 5230,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/FOUNDRY_PROGRESSION_AUDIT.md",
+      "title": "Foundry progression audit",
+      "format": ".md",
+      "words": 1209,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/GEMINI_REVIEW_WORKFLOW.md",
+      "title": "Gemini review exports",
+      "format": ".md",
+      "words": 335,
+      "status": "operational reference / pending refresh",
+      "basis": "Maintained workflow candidate; not fully executed in this pass.",
+      "next_action": "Check tasks, paths and fixture assumptions before use."
+    },
+    {
+      "path": "docs/HUB_MAP_VISUAL_PASS.md",
+      "title": "Hub map visual pass — September 24, 2026",
+      "format": ".md",
+      "words": 880,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/HUB_PORTRAIT_CORRECTION.md",
+      "title": "Portrait hub correction — September 24, 2026",
+      "format": ".md",
+      "words": 473,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/IMPROVEMENT_BACKLOG.md",
+      "title": "Starborn improvement pass",
+      "format": ".md",
+      "words": 16255,
+      "status": "historical record",
+      "basis": "Known dated global checkpoint or migration/runbook; banner added.",
+      "next_action": "Preserve scoped evidence; do not execute old next-step lists."
+    },
+    {
+      "path": "docs/MANUAL_ACCEPTANCE.md",
+      "title": "Starborn manual acceptance",
+      "format": ".md",
+      "words": 551,
+      "status": "historical record",
+      "basis": "Known dated global checkpoint or migration/runbook; banner added.",
+      "next_action": "Preserve scoped evidence; do not execute old next-step lists."
+    },
+    {
+      "path": "docs/OVERALL_PLAN_CHECKPOINT.md",
+      "title": "Overall plan checkpoint — September 23, 2026",
+      "format": ".md",
+      "words": 1039,
+      "status": "historical record",
+      "basis": "Known dated global checkpoint or migration/runbook; banner added.",
+      "next_action": "Preserve scoped evidence; do not execute old next-step lists."
+    },
+    {
+      "path": "docs/README.md",
+      "title": "Starborn documentation: start here",
+      "format": ".md",
+      "words": 588,
+      "status": "reviewed foundation",
+      "basis": "Content/source reconciliation or new maintained index in this pass.",
+      "next_action": "Maintain within stated scope; code/assets remain implementation baseline."
+    },
+    {
+      "path": "docs/REMAINING_BOSS_DIAGNOSTICS.md",
+      "title": "Remaining boss diagnostics — 2026-09-22",
+      "format": ".md",
+      "words": 781,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/ROUTE_NARRATIVE_REVIEW.md",
+      "title": "Route and narrative review",
+      "format": ".md",
+      "words": 2731,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/SHARED_ROOM_BACKGROUNDS.md",
+      "title": "Starborn shared room background inventory",
+      "format": ".md",
+      "words": 3993,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/STATUS_AND_NEXT_STEPS_2026-10-09.md",
+      "title": "Starborn status and next steps — October 9, 2026",
+      "format": ".md",
+      "words": 656,
+      "status": "historical record",
+      "basis": "Known dated global checkpoint or migration/runbook; banner added.",
+      "next_action": "Preserve scoped evidence; do not execute old next-step lists."
+    },
+    {
+      "path": "docs/Starborn Visual Design Guide.docx",
+      "title": "Starborn Visual Design Guide",
+      "format": ".docx",
+      "words": null,
+      "status": "pending binary/table review",
+      "basis": "File inventory only; contents not read in this pass.",
+      "next_action": "Inspect with format-specific workflow before using as current spec."
+    },
+    {
+      "path": "docs/Starborn_Easter_Egg_Master_List.md",
+      "title": "1. Immediate Family",
+      "format": ".md",
+      "words": 4333,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/Status Effects.xlsx",
+      "title": "Status Effects",
+      "format": ".xlsx",
+      "words": null,
+      "status": "pending binary/table review",
+      "basis": "File inventory only; contents not read in this pass.",
+      "next_action": "Inspect with format-specific workflow before using as current spec."
+    },
+    {
+      "path": "docs/WEATHER_AUDIT.md",
+      "title": "Weather and Environmental Overlay Audit",
+      "format": ".md",
+      "words": 1712,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/WORLD1_CHARACTER_AND_HUB_PASS.md",
+      "title": "World 1 character and hub pass",
+      "format": ".md",
+      "words": 588,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/WORLD1_COMBAT_PROGRESSION_REVIEW.md",
+      "title": "World 1 combat teaching and progression review",
+      "format": ".md",
+      "words": 735,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/WORLD1_PUZZLE_PASS.md",
+      "title": "World 1 puzzle pass",
+      "format": ".md",
+      "words": 650,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/WORLD2_REFINEMENT_PASS.md",
+      "title": "World 2 refinement pass",
+      "format": ".md",
+      "words": 1029,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/WORLDS_1_2_MAP_RELEASE_1.3.82.md",
+      "title": "Worlds 1–2 and Map release 1.3.82",
+      "format": ".md",
+      "words": 143,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/XP_CURVE_TUNING.md",
+      "title": "XP progression pass",
+      "format": ".md",
+      "words": 326,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/_archive/audio_mixing_plan.md",
+      "title": "Audio Mixing & Runtime Controls",
+      "format": ".md",
+      "words": 440,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/documentation-reset-2026-10-14/README.md",
+      "title": "Documentation before the October 14 reset",
+      "format": ".md",
+      "words": 111,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/documentation-reset-2026-10-14/antigravity_handoff.md",
+      "title": "Starborn Antigravity CLI Handoff",
+      "format": ".md",
+      "words": 834,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/documentation-reset-2026-10-14/codex_handoff.md",
+      "title": "Codex CLI Handoff Guide: Starborn Android Port",
+      "format": ".md",
+      "words": 336,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/documentation-reset-2026-10-14/data/assistant_briefing.md",
+      "title": "Starborn: Project Briefing & Lore",
+      "format": ".md",
+      "words": 475,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/documentation-reset-2026-10-14/docs/story/Character_Arcs.md",
+      "title": "Character Arcs",
+      "format": ".md",
+      "words": 1275,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/documentation-reset-2026-10-14/docs/story/Characters.md",
+      "title": "Starborn — Main Characters",
+      "format": ".md",
+      "words": 1205,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/documentation-reset-2026-10-14/docs/story/Content_Standards.md",
+      "title": "Content Volume Standards (The Golden Ratio)",
+      "format": ".md",
+      "words": 1283,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/documentation-reset-2026-10-14/docs/story/Emotional_and_Conflict_Map.md",
+      "title": "Starborn — Emotional & Conflict Map",
+      "format": ".md",
+      "words": 1517,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/documentation-reset-2026-10-14/docs/story/Lore_Bible.md",
+      "title": "Starborn — Lore Bible",
+      "format": ".md",
+      "words": 3020,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/documentation-reset-2026-10-14/docs/story/Starborn_Master_Story.md",
+      "title": "Starborn — Master Story Bible",
+      "format": ".md",
+      "words": 3203,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/documentation-reset-2026-10-14/docs/story/Starborn_Writer_Handbook.md",
+      "title": "Starborn Writer's Handbook",
+      "format": ".md",
+      "words": 1127,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/documentation-reset-2026-10-14/docs/story/Systems_Overview.md",
+      "title": "1) High-Level Game Loop",
+      "format": ".md",
+      "words": 1533,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/documentation-reset-2026-10-14/docs/story/_Structure_Guide.md",
+      "title": "Starborn Story Documentation System",
+      "format": ".md",
+      "words": 335,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/documentation-reset-2026-10-14/docs/story/hub_ship_astra/00_overview.md",
+      "title": "The Astra — Mobile Hub",
+      "format": ".md",
+      "words": 221,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/documentation-reset-2026-10-14/docs/story/hub_ship_astra/01_functionality.md",
+      "title": "Functionality — The Astra",
+      "format": ".md",
+      "words": 462,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/documentation-reset-2026-10-14/docs/story/hub_ship_astra/03_locations.md",
+      "title": "Locations — The Astra",
+      "format": ".md",
+      "words": 309,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/documentation-reset-2026-10-14/implementation_plan.md",
+      "title": "Implementation Plan: Tinkering & Cooking Systems Upgrade",
+      "format": ".md",
+      "words": 502,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/documentation-reset-2026-10-14/task.md",
+      "title": "Starborn: World 3 Hub 2 Progress Tracker",
+      "format": ".md",
+      "words": 853,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/documentation-reset-2026-10-14/walkthrough.md",
+      "title": "Starborn: World 3 Hub 1 (Lower City) Walkthrough",
+      "format": ".md",
+      "words": 347,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/inventory_crafting_plan.md",
+      "title": "Inventory & Crafting Port Plan",
+      "format": ".md",
+      "words": 364,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/item_effect_handling.md",
+      "title": "Item Effect Handling & Crafting Integration",
+      "format": ".md",
+      "words": 142,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/perf_capture_playbook.md",
+      "title": "Perf Capture Playbook",
+      "format": ".md",
+      "words": 348,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/profiling_reports.md",
+      "title": "Profiling Reports",
+      "format": ".md",
+      "words": 282,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/save_backup_plan.md",
+      "title": "Save & Backup Parity Plan",
+      "format": ".md",
+      "words": 482,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/testing_matrix.md",
+      "title": "Testing Matrix & Execution Notes",
+      "format": ".md",
+      "words": 273,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/README.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 86,
+      "title": "World documents before reconciliation"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/World2_Exploration_Design.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 2079,
+      "title": "World 2 (Sector 9) Exploration Expansion Specification"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/World3_Buildout_Blueprint.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 483,
+      "title": "World 3 Buildout Blueprint"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_2_the_wilds/00_quest_list.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 604,
+      "title": "World 2 Quest List (Canonical)"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_2_the_wilds/00_storybeat_packet.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 1050,
+      "title": "World 2 Storybeat Packet"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_2_the_wilds/00_world_story.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 1342,
+      "title": "World 2: The Wilds — Story Bible"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_2_the_wilds/hub_1_jungle_ruins/00_overview.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 174,
+      "title": "World 2: The Wilds — Hub 1: Jungle Ruins"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_2_the_wilds/hub_1_jungle_ruins/01_quests.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 338,
+      "title": "Quests — World 2: The Wilds (Hub 1: Jungle Ruins)"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_2_the_wilds/hub_1_jungle_ruins/02_npcs.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 293,
+      "title": "NPCs — World 2: The Wilds"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_2_the_wilds/hub_1_jungle_ruins/03_locations.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 893,
+      "title": "Locations — World 2: The Wilds (Hub 3: Jungle Ruins)"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_2_the_wilds/hub_1_jungle_ruins/04_events.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 1683,
+      "title": "Events — World 2: The Wilds"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_2_the_wilds/hub_2_sector_9_ruins/01_quests.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 394,
+      "title": "Quests — World 2: The Wilds (Hub 2: Sector 9 Ruins)"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_2_the_wilds/hub_2_sector_9_ruins/02_npcs.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 279,
+      "title": "NPCs — World 2: The Wilds (Hub 2: Sector 9 Ruins)"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_2_the_wilds/hub_2_sector_9_ruins/03_locations.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 817,
+      "title": "Locations — World 2: The Wilds (Hub 4: Sector 9 Ruins)"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_3_the_spire/hub_1_lower_city/00_overview.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 179,
+      "title": "World 3: The Spire — Hub 1: Lower City (The Return)"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_3_the_spire/hub_1_lower_city/01_quests.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 407,
+      "title": "Quests — World 3, Hub 1: Lower City (The Return)"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_3_the_spire/hub_1_lower_city/02_npcs.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 253,
+      "title": "NPCs — World 3, Hub 1: Lower City"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_3_the_spire/hub_1_lower_city/03_locations.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 332,
+      "title": "Locations — World 3: The Spire (Hub 1: Lower City)"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_3_the_spire/hub_1_lower_city/04_events.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 515,
+      "title": "Events — World 3, Hub 1: Lower City"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_3_the_spire/hub_2_upper_city/00_overview.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 157,
+      "title": "World 3: The Spire — Hub 2: Upper City"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_3_the_spire/hub_2_upper_city/01_quests.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 454,
+      "title": "Quests — World 3, Hub 2: Upper City (The Heist)"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_3_the_spire/hub_2_upper_city/02_npcs.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 422,
+      "title": "NPCs — World 3, Hub 2: Upper City"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_3_the_spire/hub_2_upper_city/03_locations.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 309,
+      "title": "Locations — World 3: The Spire (Hub 2: Upper City)"
+    },
+    {
+      "path": "docs/_archive/world-doc-reconciliation-2026-10-14/docs/story/world_3_the_spire/hub_2_upper_city/04_events.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "historical archive",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring.",
+      "words": 1124,
+      "title": "Events — World 3, Hub 2: Upper City"
+    },
+    {
+      "path": "docs/audio/dynamic_music_looping_and_variation_system.md",
+      "title": "Starborn — Dynamic Music Looping, Multi-Track Variations & Anti-Fatigue System",
+      "format": ".md",
+      "words": 1073,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/audio/elevenlabs_music_generation_bible.md",
+      "title": "Starborn ElevenLabs Music Generation Bible & Production Guide",
+      "format": ".md",
+      "words": 2776,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/audio/sfx_master_specification.md",
+      "title": "Starborn — Sound Effects (SFX) Master Specification & Generation Bible",
+      "format": ".md",
+      "words": 1066,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/audio/soundtrack_master_plan.md",
+      "title": "Starborn Master Soundtrack & Narrative Audio Architecture",
+      "format": ".md",
+      "words": 2083,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/debug-scenario-master-plan.md",
+      "title": "Debug Scenario Rebuild and Full Game Test Master Plan",
+      "format": ".md",
+      "words": 2877,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/debug-scenario-qa.md",
+      "title": "Debug scenario QA",
+      "format": ".md",
+      "words": 578,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/design/16_BIT_PUZZLE_AND_WORLD_MECHANICS_MASTERPLAYBOOK.md",
+      "title": "Starborn: 16-Bit JRPG Puzzle & World Gameplay Quirks Master Playbook",
+      "format": ".md",
+      "words": 1846,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/design/16bit_jrpg_puzzle_compendium.md",
+      "title": "Starborn: 16-Bit JRPG Puzzle Design Compendium & Progression Matrix",
+      "format": ".md",
+      "words": 2046,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/design/ENVIRONMENTAL_EFFECTS_PLAN.md",
+      "title": "Starborn environmental effects: design and implementation plan",
+      "format": ".md",
+      "words": 4323,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/design/SOURCE_LANGUAGE_AND_PUZZLE_REFINEMENT_PLAN.md",
+      "title": "Starborn: lighter Source language and stronger puzzle identity",
+      "format": ".md",
+      "words": 2041,
+      "status": "active direction / proposed mechanics",
+      "basis": "Current user direction; replacements not implemented.",
+      "next_action": "Track editorial work; puzzle changes require scoped implementation."
+    },
+    {
+      "path": "docs/design/PROGRESSION_AND_ABILITY_PLAN.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "active direction / proposed mechanics",
+      "next_action": "Complete capability and AP evidence, then review build designs and migration policy before implementation.",
+      "words": 2253,
+      "title": "Progression and ability plan"
+    },
+    {
+      "path": "docs/design/PROGRESSION_DESIGN_PACKET_CANDIDATE_1.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "active direction / proposed mechanics",
+      "next_action": "Review proposed build effects, AP pacing and migration; static arithmetic is not measured balance.",
+      "words": 4460,
+      "title": "Progression design packet - candidate 1"
+    },
+    {
+      "path": "docs/design/arcade_deep_mine_vertical_slice_plan.md",
+      "title": "Deep Mine Asteroid Drill: Production Vertical Slice",
+      "format": ".md",
+      "words": 1015,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/design/arcade_games_specification.md",
+      "title": "Starborn Arcade Cabinets: Complete Mini-Game Design Specification",
+      "format": ".md",
+      "words": 1683,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/design/environmental-effects/IMPLEMENTATION.md",
+      "title": "Environmental effects: implementation and review",
+      "format": ".md",
+      "words": 1096,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/design/environmental-effects/ROOM_MATRIX.csv",
+      "title": "ROOM_MATRIX",
+      "format": ".csv",
+      "words": null,
+      "status": "pending binary/table review",
+      "basis": "File inventory only; contents not read in this pass.",
+      "next_action": "Inspect with format-specific workflow before using as current spec."
+    },
+    {
+      "path": "docs/desktop/CAMPAIGN_SYSTEMS_ROUTE_AUDIT.md",
+      "title": "Campaign availability and economy audit",
+      "format": ".md",
+      "words": 974,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/COMBAT_ANDROID_DESKTOP_AUDIT.md",
+      "title": "Android / desktop combat audit",
+      "format": ".md",
+      "words": 800,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/COMBAT_CHROME_PASS.md",
+      "title": "Desktop combat presentation pass",
+      "format": ".md",
+      "words": 170,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/COMBAT_CLARITY_PASS.md",
+      "title": "Combat clarity on Android and desktop",
+      "format": ".md",
+      "words": 482,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/COMBAT_LOG_CLARITY.md",
+      "title": "Combat log clarity",
+      "format": ".md",
+      "words": 167,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/desktop/COMBAT_PRESENTATION_AUDIT.md",
+      "title": "Desktop combat presentation audit and first implementation pass",
+      "format": ".md",
+      "words": 597,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/COMBAT_THREE_PANEL.md",
+      "title": "Three-area desktop combat",
+      "format": ".md",
+      "words": 192,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/desktop/COMBAT_UI_REDESIGN.md",
+      "title": "Desktop combat presentation",
+      "format": ".md",
+      "words": 226,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/desktop/CONTENT_PARITY_CLEANUP.md",
+      "title": "Desktop content parity cleanup",
+      "format": ".md",
+      "words": 344,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/CRAFTING_FISHING_PASS.md",
+      "title": "Fishing and crafting usability pass",
+      "format": ".md",
+      "words": 827,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/DESKTOP_ANDROID_PARITY_AUDIT.md",
+      "title": "Desktop versus Android audit",
+      "format": ".md",
+      "words": 2084,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/DESKTOP_COMBAT_PRESENTATION_AUDIT.md",
+      "title": "Desktop combat presentation audit",
+      "format": ".md",
+      "words": 623,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/DESKTOP_DATA_SOURCE_AUDIT.md",
+      "title": "Desktop data-source audit",
+      "format": ".md",
+      "words": 1709,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/DESKTOP_PC_NATIVE_EVALUATION.md",
+      "title": "Desktop port evaluation: PC-native feel vs. Android spirit",
+      "format": ".md",
+      "words": 2267,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/desktop/DESKTOP_POLISH_PASS.md",
+      "title": "Desktop reliability and usability pass",
+      "format": ".md",
+      "words": 320,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/EXPLORATION_HUD_ACQUISITION.md",
+      "title": "Exploration rewards and HUD pass",
+      "format": ".md",
+      "words": 437,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/desktop/EXPLORATION_POLISH_PASS.md",
+      "title": "Exploration polish pass",
+      "format": ".md",
+      "words": 472,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/FIELD_MENU_DESIGN.md",
+      "title": "Desktop field menu",
+      "format": ".md",
+      "words": 399,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/desktop/FIELD_MENU_VISUAL_PASS.md",
+      "title": "Desktop field menu visual pass",
+      "format": ".md",
+      "words": 569,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/FOCUSED_UI_VERIFICATION.md",
+      "title": "Focused desktop UI verification",
+      "format": ".md",
+      "words": 449,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/FOOD_FISHING_ECONOMY_AUDIT.md",
+      "title": "Automated food and fishing economy audit",
+      "format": ".md",
+      "words": 747,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/HUB_NODE_LABELS.md",
+      "title": "Hub node nameplate pass",
+      "format": ".md",
+      "words": 359,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/desktop/HUB_POLISH_PASS.md",
+      "title": "Hub feedback and travel polish",
+      "format": ".md",
+      "words": 363,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/HUB_REDESIGN.md",
+      "title": "Desktop hub redesign",
+      "format": ".md",
+      "words": 350,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/desktop/HUD_JED_REWARD_POLISH.md",
+      "title": "Exploration HUD and Jed reward repair",
+      "format": ".md",
+      "words": 163,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/desktop/INDEPENDENT_EXPLORATION_HUD_PASS.md",
+      "title": "Narrative hierarchy and independent exploration HUD",
+      "format": ".md",
+      "words": 491,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/MAP_ROOM_MOVEMENT_POLISH.md",
+      "title": "Map and room movement polish",
+      "format": ".md",
+      "words": 173,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/desktop/MENU_UI_REDESIGN.md",
+      "title": "Desktop menu and dialogue pass",
+      "format": ".md",
+      "words": 236,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/desktop/NPC_OVERWORLD_PRESENTATION.md",
+      "title": "NPC presence and overworld access",
+      "format": ".md",
+      "words": 129,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/desktop/PC_READINESS_PASS.md",
+      "title": "Desktop readiness pass - October 12, 2026",
+      "format": ".md",
+      "words": 538,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/PORTRAIT_BACKDROP_PASS.md",
+      "title": "Desktop portrait backdrop pass",
+      "format": ".md",
+      "words": 281,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/PUBLIC_CAMPAIGN_BOSSES.md",
+      "title": "Worlds 1-2: real boss and group encounters",
+      "format": ".md",
+      "words": 504,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/PUBLIC_CAMPAIGN_WORLDS_1_2.md",
+      "title": "Public campaign routes: Worlds 1-2",
+      "format": ".md",
+      "words": 504,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/PUBLIC_CAMPAIGN_WORLD_3.md",
+      "title": "World 3 public campaign route",
+      "format": ".md",
+      "words": 511,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/PUBLIC_CAMPAIGN_WORLD_4.md",
+      "title": "World 4 public campaign route",
+      "format": ".md",
+      "words": 426,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/PUBLIC_CAMPAIGN_WORLD_5.md",
+      "title": "World 5 public campaign route",
+      "format": ".md",
+      "words": 569,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/PUBLIC_CAMPAIGN_WORLD_6.md",
+      "title": "World 6 and complete public campaign",
+      "format": ".md",
+      "words": 632,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/QUEST_INFORMATION_PARITY.md",
+      "title": "Quest presentation and information parity",
+      "format": ".md",
+      "words": 475,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/desktop/SNACK_ABILITIES_PUBLIC_ROUTES.md",
+      "title": "Snack ability trials and public procurement routes",
+      "format": ".md",
+      "words": 865,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/desktop/SYSTEMS_REFINEMENT_PASS.md",
+      "title": "Fishing, tinkering and cooking refinement",
+      "format": ".md",
+      "words": 420,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/THREE_PANEL_EXPLORATION_PASS.md",
+      "title": "Three-panel exploration",
+      "format": ".md",
+      "words": 386,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/TITLE_STATUS_CLEANUP.md",
+      "title": "Title and exploration status cleanup",
+      "format": ".md",
+      "words": 156,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/VICTORY_AND_HEADINGS_PASS.md",
+      "title": "Victory and headings presentation pass",
+      "format": ".md",
+      "words": 367,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/desktop/WINDOWS_BUILD.md",
+      "title": "Starborn Windows private builds",
+      "format": ".md",
+      "words": 553,
+      "status": "operational reference / pending refresh",
+      "basis": "Maintained workflow candidate; not fully executed in this pass.",
+      "next_action": "Check tasks, paths and fixture assumptions before use."
+    },
+    {
+      "path": "docs/desktop/WINDOWS_PARITY_PROGRESS.md",
+      "title": "Windows parity implementation",
+      "format": ".md",
+      "words": 344,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/navigation-repair.md",
+      "title": "Navigation repair — 2026-09-14",
+      "format": ".md",
+      "words": 397,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/navigation-topology-audit.md",
+      "title": "Navigation topology and spatial audit",
+      "format": ".md",
+      "words": 4329,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/playtest/WORLDS_1_2_MANUAL_PLAYTEST_CHECKLIST.md",
+      "title": "Worlds 1–2 Manual Playtest Checklist",
+      "format": ".md",
+      "words": 1662,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/playtest/reports/FULL_CAMPAIGN_AUDIT_SUMMARY.md",
+      "title": "Full Campaign Playthrough Narrative & Engine Audit Summary",
+      "format": ".md",
+      "words": 671,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/playtest/reports/WORLD_1_PLAYTHROUGH_AUDIT.md",
+      "title": "Playtest & Narrative Audit Report: The Homestead & Mining Colony (The Pit) (world_1)",
+      "format": ".md",
+      "words": 1802,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/playtest/reports/WORLD_2_PLAYTHROUGH_AUDIT.md",
+      "title": "Playtest & Narrative Audit Report: Sector 9 Uncharted Wilds & Ancient Spire Base (world_2)",
+      "format": ".md",
+      "words": 1142,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/playtest/reports/WORLD_3_PLAYTHROUGH_AUDIT.md",
+      "title": "Playtest & Narrative Audit Report: The Spire: Lower Wards, Underrail & Executive Penthouse (world_3)",
+      "format": ".md",
+      "words": 661,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/playtest/reports/WORLD_4_PLAYTHROUGH_AUDIT.md",
+      "title": "Playtest & Narrative Audit Report: The Foundry: Slag Pits, Assembly Line & Titan Forge (world_4)",
+      "format": ".md",
+      "words": 828,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/playtest/reports/WORLD_5_PLAYTHROUGH_AUDIT.md",
+      "title": "Playtest & Narrative Audit Report: The Void: Dominion Orbital Ring (world_5)",
+      "format": ".md",
+      "words": 915,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/playtest/reports/WORLD_6_PLAYTHROUGH_AUDIT.md",
+      "title": "Playtest & Narrative Audit Report: The Source: Event Horizon & The Singularity (The Finale) (world_6)",
+      "format": ".md",
+      "words": 1012,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/playtest/walkthroughs/WORLD_1_COMPLETIONIST_WALKTHROUGH.md",
+      "title": "World 1: Complete Step-by-Step Walkthrough",
+      "format": ".md",
+      "words": 11722,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/playtest/walkthroughs/WORLD_2_COMPLETIONIST_WALKTHROUGH.md",
+      "title": "World 2: Complete Step-by-Step Walkthrough",
+      "format": ".md",
+      "words": 19457,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/playtest/walkthroughs/WORLD_3_COMPLETIONIST_WALKTHROUGH.md",
+      "title": "World 3 Developer & Playtester Field Guide",
+      "format": ".md",
+      "words": 5646,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/playtest/walkthroughs/WORLD_4_COMPLETIONIST_WALKTHROUGH.md",
+      "title": "Starborn: World 4 (The Foundry) 100% Completionist Walkthrough & Playtester Field Guide",
+      "format": ".md",
+      "words": 3521,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/playtest/walkthroughs/WORLD_5_COMPLETIONIST_WALKTHROUGH.md",
+      "title": "Starborn: World 5 (The Void / The Cradle) 100% Completionist Walkthrough & Playtester Field Guide",
+      "format": ".md",
+      "words": 3532,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/playtest/walkthroughs/WORLD_6_COMPLETIONIST_WALKTHROUGH.md",
+      "title": "Starborn: World 6 (The Source) 100% Completionist Walkthrough & Grand Finale Field Guide",
+      "format": ".md",
+      "words": 3206,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/playtest_guides/STARBORN_MOBILE_PLAYTESTER_FIELD_GUIDE.pdf",
+      "title": "STARBORN_MOBILE_PLAYTESTER_FIELD_GUIDE",
+      "format": ".pdf",
+      "words": null,
+      "status": "pending binary/table review",
+      "basis": "File inventory only; contents not read in this pass.",
+      "next_action": "Inspect with format-specific workflow before using as current spec."
+    },
+    {
+      "path": "docs/playtest_guides/STARBORN_PLAYTEST_GUIDE_WORLD_1.pdf",
+      "title": "STARBORN_PLAYTEST_GUIDE_WORLD_1",
+      "format": ".pdf",
+      "words": null,
+      "status": "pending binary/table review",
+      "basis": "File inventory only; contents not read in this pass.",
+      "next_action": "Inspect with format-specific workflow before using as current spec."
+    },
+    {
+      "path": "docs/playtest_guides/STARBORN_PLAYTEST_GUIDE_WORLD_2.pdf",
+      "title": "STARBORN_PLAYTEST_GUIDE_WORLD_2",
+      "format": ".pdf",
+      "words": null,
+      "status": "pending binary/table review",
+      "basis": "File inventory only; contents not read in this pass.",
+      "next_action": "Inspect with format-specific workflow before using as current spec."
+    },
+    {
+      "path": "docs/playtest_guides/STARBORN_PLAYTEST_GUIDE_WORLD_3.pdf",
+      "title": "STARBORN_PLAYTEST_GUIDE_WORLD_3",
+      "format": ".pdf",
+      "words": null,
+      "status": "pending binary/table review",
+      "basis": "File inventory only; contents not read in this pass.",
+      "next_action": "Inspect with format-specific workflow before using as current spec."
+    },
+    {
+      "path": "docs/playtest_guides/STARBORN_PLAYTEST_GUIDE_WORLD_4.pdf",
+      "title": "STARBORN_PLAYTEST_GUIDE_WORLD_4",
+      "format": ".pdf",
+      "words": null,
+      "status": "pending binary/table review",
+      "basis": "File inventory only; contents not read in this pass.",
+      "next_action": "Inspect with format-specific workflow before using as current spec."
+    },
+    {
+      "path": "docs/playtest_guides/STARBORN_PLAYTEST_GUIDE_WORLD_5.pdf",
+      "title": "STARBORN_PLAYTEST_GUIDE_WORLD_5",
+      "format": ".pdf",
+      "words": null,
+      "status": "pending binary/table review",
+      "basis": "File inventory only; contents not read in this pass.",
+      "next_action": "Inspect with format-specific workflow before using as current spec."
+    },
+    {
+      "path": "docs/playtest_guides/STARBORN_PLAYTEST_GUIDE_WORLD_6.pdf",
+      "title": "STARBORN_PLAYTEST_GUIDE_WORLD_6",
+      "format": ".pdf",
+      "words": null,
+      "status": "pending binary/table review",
+      "basis": "File inventory only; contents not read in this pass.",
+      "next_action": "Inspect with format-specific workflow before using as current spec."
+    },
+    {
+      "path": "docs/playtest_guides/STARBORN_ULTIMATE_MOBILE_PLAYTESTER_HANDBOOK.pdf",
+      "title": "STARBORN_ULTIMATE_MOBILE_PLAYTESTER_HANDBOOK",
+      "format": ".pdf",
+      "words": null,
+      "status": "pending binary/table review",
+      "basis": "File inventory only; contents not read in this pass.",
+      "next_action": "Inspect with format-specific workflow before using as current spec."
+    },
+    {
+      "path": "docs/provision-systems-plan.md",
+      "title": "Fishing, cooking, and tinkering integration",
+      "format": ".md",
+      "words": 368,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/story/Audio_Design_Guide.md",
+      "title": "Starborn — Audio Design Guide",
+      "format": ".md",
+      "words": 2103,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/story/Character_Arcs.md",
+      "title": "Character Arcs",
+      "format": ".md",
+      "words": 1297,
+      "status": "reviewed foundation",
+      "basis": "Content/source reconciliation or new maintained index in this pass.",
+      "next_action": "Maintain within stated scope; code/assets remain implementation baseline."
+    },
+    {
+      "path": "docs/story/Characters.md",
+      "title": "Starborn character reference",
+      "format": ".md",
+      "words": 529,
+      "status": "reviewed foundation",
+      "basis": "Content/source reconciliation or new maintained index in this pass.",
+      "next_action": "Maintain within stated scope; code/assets remain implementation baseline."
+    },
+    {
+      "path": "docs/story/Content_Standards.md",
+      "title": "Starborn content standards",
+      "format": ".md",
+      "words": 502,
+      "status": "reviewed foundation",
+      "basis": "Content/source reconciliation or new maintained index in this pass.",
+      "next_action": "Maintain within stated scope; code/assets remain implementation baseline."
+    },
+    {
+      "path": "docs/story/Easter_Eggs.md",
+      "title": "Easter_Eggs",
+      "format": ".md",
+      "words": 5,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/story/Emotional_and_Conflict_Map.md",
+      "title": "Starborn emotional pacing map",
+      "format": ".md",
+      "words": 446,
+      "status": "reviewed foundation",
+      "basis": "Content/source reconciliation or new maintained index in this pass.",
+      "next_action": "Maintain within stated scope; code/assets remain implementation baseline."
+    },
+    {
+      "path": "docs/story/Encounter_Design_Standard.md",
+      "title": "Starborn Encounter Design Standard",
+      "format": ".md",
+      "words": 2027,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/Enemy_Sprite_Generation_Guide.md",
+      "title": "Starborn Enemy Sprite Generation Guide",
+      "format": ".md",
+      "words": 734,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/story/Fun_Factor_Audit.md",
+      "title": "Starborn Fun-Factor Audit",
+      "format": ".md",
+      "words": 1104,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/story/Hub_Requirements_Checklist.md",
+      "title": "Hub Requirements Checklist",
+      "format": ".md",
+      "words": 970,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/Lore_Bible.md",
+      "title": "Starborn lore and constraints",
+      "format": ".md",
+      "words": 1262,
+      "status": "reviewed foundation",
+      "basis": "Content/source reconciliation or new maintained index in this pass.",
+      "next_action": "Maintain within stated scope; code/assets remain implementation baseline."
+    },
+    {
+      "path": "docs/story/Music_Production_Process.md",
+      "title": "Starborn — Music Production & Leitmotif Process",
+      "format": ".md",
+      "words": 1233,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/story/NARRATIVE_CANON_MIGRATION_HANDOFF.md",
+      "title": "Starborn Narrative Canon Migration Handoff",
+      "format": ".md",
+      "words": 7636,
+      "status": "historical record",
+      "basis": "Known dated global checkpoint or migration/runbook; banner added.",
+      "next_action": "Preserve scoped evidence; do not execute old next-step lists."
+    },
+    {
+      "path": "docs/story/Prose_Audit_2026-07-15.md",
+      "title": "Starborn Player-Facing Prose Audit",
+      "format": ".md",
+      "words": 3687,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/story/Starborn_Art_Production_Guide.md",
+      "title": "Starborn Art Production Guide",
+      "format": ".md",
+      "words": 3246,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/story/Starborn_Master_Story.md",
+      "title": "Starborn master story",
+      "format": ".md",
+      "words": 1605,
+      "status": "reviewed foundation",
+      "basis": "Content/source reconciliation or new maintained index in this pass.",
+      "next_action": "Maintain within stated scope; code/assets remain implementation baseline."
+    },
+    {
+      "path": "docs/story/Starborn_Writer_Handbook.md",
+      "title": "Starborn Writer's Handbook",
+      "format": ".md",
+      "words": 1261,
+      "status": "reviewed foundation",
+      "basis": "Content/source reconciliation or new maintained index in this pass.",
+      "next_action": "Maintain within stated scope; code/assets remain implementation baseline."
+    },
+    {
+      "path": "docs/story/Systems_Combat_AI.md",
+      "title": "Systems: Combat AI",
+      "format": ".md",
+      "words": 521,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/Systems_Combat_Elements.md",
+      "title": "Combat Systems: Elemental Damage Types",
+      "format": ".md",
+      "words": 685,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/Systems_Combat_Mechanics.md",
+      "title": "Combat Mechanics: Elements, Statuses, and Cooldowns",
+      "format": ".md",
+      "words": 905,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/Systems_Dynamic_Enemy_Movement.md",
+      "title": "Dynamic Enemy Movement",
+      "format": ".md",
+      "words": 835,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/Systems_Overview.md",
+      "title": "Starborn systems overview",
+      "format": ".md",
+      "words": 757,
+      "status": "reviewed foundation",
+      "basis": "Content/source reconciliation or new maintained index in this pass.",
+      "next_action": "Maintain within stated scope; code/assets remain implementation baseline."
+    },
+    {
+      "path": "docs/story/Tier1_Tutorial_Decisions.md",
+      "title": "Tier 1 Tutorial Decisions",
+      "format": ".md",
+      "words": 299,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/story/Tutorial_Master_List.md",
+      "title": "Starborn - Master Tutorial List",
+      "format": ".md",
+      "words": 810,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/Tutorial_Placement_Map.md",
+      "title": "Starborn - Tutorial Placement Map (Implicit + Explicit)",
+      "format": ".md",
+      "words": 4659,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/Visual_Prompting_Guide.md",
+      "title": "Starborn — Visual Prompting Guide",
+      "format": ".md",
+      "words": 769,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/story/WORLD1_9_OF_10_PROSE_POLISH_PLAN.md",
+      "title": "World 1 “9/10” Prose Polish Plan",
+      "format": ".md",
+      "words": 1567,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/story/WORLD1_ROUND1_PROSE_CHECKPOINT_2026-07-15.md",
+      "title": "World 1 Round 1 Prose Checkpoint",
+      "format": ".md",
+      "words": 1304,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/story/World Production 8 Week Checklist.csv",
+      "title": "World Production 8 Week Checklist",
+      "format": ".csv",
+      "words": null,
+      "status": "pending binary/table review",
+      "basis": "File inventory only; contents not read in this pass.",
+      "next_action": "Inspect with format-specific workflow before using as current spec."
+    },
+    {
+      "path": "docs/story/World1_Onboarding_Remediation_Plan.md",
+      "title": "World 1 Onboarding Remediation Plan",
+      "format": ".md",
+      "words": 2866,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/story/World1_Session_Handoff_2026-07-31.md",
+      "title": "World 1 Session Handoff — 2026-07-31",
+      "format": ".md",
+      "words": 1230,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/story/World1_Vertical_Slice_Status.md",
+      "title": "World 1 Vertical Slice Status",
+      "format": ".md",
+      "words": 5247,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/story/World2_Exploration_Design.md",
+      "title": "Sector 9 exploration reference",
+      "format": ".md",
+      "words": 171,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/World3_Buildout_Blueprint.md",
+      "title": "Spire implementation reference",
+      "format": ".md",
+      "words": 186,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/_Structure_Guide.md",
+      "title": "Story documentation guide",
+      "format": ".md",
+      "words": 364,
+      "status": "reviewed foundation",
+      "basis": "Content/source reconciliation or new maintained index in this pass.",
+      "next_action": "Maintain within stated scope; code/assets remain implementation baseline."
+    },
+    {
+      "path": "docs/story/_World_Story_Checklists.md",
+      "title": "_World_Story_Checklists",
+      "format": ".md",
+      "words": 1802,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/story/archive/Narrative_Voice_and_Tone_Guide.md",
+      "title": "Starborn — Narrative Voice & Tone Guide",
+      "format": ".md",
+      "words": 982,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/story/archive/Style_Guide.md",
+      "title": "Starborn — Dialogue Style Guide",
+      "format": ".md",
+      "words": 580,
+      "status": "historical archive",
+      "basis": "Archive location; contents not revalidated.",
+      "next_action": "Retain for deliberate historical lookup; exclude from default authoring."
+    },
+    {
+      "path": "docs/story/hub_ship_astra/00_overview.md",
+      "title": "Astra: crew home and mobile hub",
+      "format": ".md",
+      "words": 226,
+      "status": "reviewed foundation",
+      "basis": "Content/source reconciliation or new maintained index in this pass.",
+      "next_action": "Maintain within stated scope; code/assets remain implementation baseline."
+    },
+    {
+      "path": "docs/story/hub_ship_astra/01_functionality.md",
+      "title": "Astra functionality",
+      "format": ".md",
+      "words": 394,
+      "status": "reviewed foundation",
+      "basis": "Content/source reconciliation or new maintained index in this pass.",
+      "next_action": "Maintain within stated scope; code/assets remain implementation baseline."
+    },
+    {
+      "path": "docs/story/hub_ship_astra/03_locations.md",
+      "title": "Astra room map",
+      "format": ".md",
+      "words": 196,
+      "status": "reviewed foundation",
+      "basis": "Content/source reconciliation or new maintained index in this pass.",
+      "next_action": "Maintain within stated scope; code/assets remain implementation baseline."
+    },
+    {
+      "path": "docs/story/hub_ship_astra/04_design_review.md",
+      "title": "Astra design review — October 2026",
+      "format": ".md",
+      "words": 995,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/story/world_1_mining_colony/00_quest_list.md",
+      "title": "World 1 Quest List (Canonical)",
+      "format": ".md",
+      "words": 625,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_1_mining_colony/00_storybeat_packet.md",
+      "title": "World 1 Storybeat Packet",
+      "format": ".md",
+      "words": 2794,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_1_mining_colony/00_world_story.md",
+      "title": "World 1: The Mines — Story Bible",
+      "format": ".md",
+      "words": 6992,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_1_mining_colony/hub_1_homestead/00_overview.md",
+      "title": "World 1: Mining Colony — Hub 1: Homestead Quarter",
+      "format": ".md",
+      "words": 169,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_1_mining_colony/hub_1_homestead/01_quests.md",
+      "title": "Quests - World 1: The Mines (Hub 1: Homestead)",
+      "format": ".md",
+      "words": 704,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_1_mining_colony/hub_1_homestead/02_npcs.md",
+      "title": "NPCs — World 1: The Mines (Hub 1: Homestead)",
+      "format": ".md",
+      "words": 488,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_1_mining_colony/hub_1_homestead/03_locations.md",
+      "title": "Locations — World 1: The Mines (Hub 1: Homestead Quarter)",
+      "format": ".md",
+      "words": 776,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_1_mining_colony/hub_1_homestead/04_events.md",
+      "title": "Events — World 1: The Mines",
+      "format": ".md",
+      "words": 624,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_1_mining_colony/hub_1_homestead/04_production_lock.md",
+      "title": "Hub 1 Production Lock",
+      "format": ".md",
+      "words": 2256,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_1_mining_colony/hub_2_logistics_sector/00_overview.md",
+      "title": "World 1: The Mines — Hub 2: Logistics Sector",
+      "format": ".md",
+      "words": 162,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_1_mining_colony/hub_2_logistics_sector/01_quests.md",
+      "title": "Quests - World 1: The Mines (Hub 2: Logistics & Deep Mine)",
+      "format": ".md",
+      "words": 479,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_1_mining_colony/hub_2_logistics_sector/02_npcs.md",
+      "title": "NPCs — World 1: The Mines (Hub 2: Logistics & Deep Mine)",
+      "format": ".md",
+      "words": 482,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_1_mining_colony/hub_2_logistics_sector/03_locations.md",
+      "title": "Locations — World 1: The Mines (Hub 2: Logistics Sector)",
+      "format": ".md",
+      "words": 714,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_1_mining_colony/hub_2_logistics_sector/04_events.md",
+      "title": "Events — World 1, Hub 2: Logistics Sector",
+      "format": ".md",
+      "words": 447,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_2_the_wilds/00_quest_list.md",
+      "title": "Sector 9 quest and reward reference",
+      "format": ".md",
+      "words": 475,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_2_the_wilds/00_storybeat_packet.md",
+      "title": "Sector 9 progression ownership",
+      "format": ".md",
+      "words": 343,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_2_the_wilds/00_world_story.md",
+      "title": "Sector 9: implemented story reference",
+      "format": ".md",
+      "words": 516,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_2_the_wilds/hub_1_jungle_ruins/00_overview.md",
+      "title": "Jungle Ruins: implemented hub overview",
+      "format": ".md",
+      "words": 129,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_2_the_wilds/hub_1_jungle_ruins/01_quests.md",
+      "title": "Jungle Ruins: quests",
+      "format": ".md",
+      "words": 326,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_2_the_wilds/hub_1_jungle_ruins/02_npcs.md",
+      "title": "Jungle Ruins: people and encounter references",
+      "format": ".md",
+      "words": 302,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_2_the_wilds/hub_1_jungle_ruins/03_locations.md",
+      "title": "Jungle Ruins: node and room map",
+      "format": ".md",
+      "words": 491,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_2_the_wilds/hub_1_jungle_ruins/04_events.md",
+      "title": "Sector 9 scenes and interaction boundaries",
+      "format": ".md",
+      "words": 328,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_2_the_wilds/hub_2_sector_9_ruins/01_quests.md",
+      "title": "Sector 9 Ruins: quests",
+      "format": ".md",
+      "words": 266,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_2_the_wilds/hub_2_sector_9_ruins/02_npcs.md",
+      "title": "Sector 9 Ruins: people and encounter references",
+      "format": ".md",
+      "words": 259,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_2_the_wilds/hub_2_sector_9_ruins/03_locations.md",
+      "title": "Sector 9 Ruins: node and room map",
+      "format": ".md",
+      "words": 454,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_3_the_spire/README.md",
+      "format": ".md",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "status": "source-reconciled world reference",
+      "next_action": "Maintain against source; no new device/route acceptance claimed.",
+      "words": 693,
+      "title": "Spire: implemented world reference"
+    },
+    {
+      "path": "docs/story/world_3_the_spire/hub_1_lower_city/00_overview.md",
+      "title": "Lower City: implemented hub overview",
+      "format": ".md",
+      "words": 131,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_3_the_spire/hub_1_lower_city/01_quests.md",
+      "title": "Lower City: quests",
+      "format": ".md",
+      "words": 280,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_3_the_spire/hub_1_lower_city/02_npcs.md",
+      "title": "Lower City: people and encounter references",
+      "format": ".md",
+      "words": 281,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_3_the_spire/hub_1_lower_city/03_locations.md",
+      "title": "Lower City: node and room map",
+      "format": ".md",
+      "words": 426,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_3_the_spire/hub_1_lower_city/04_events.md",
+      "title": "Lower City progression ownership",
+      "format": ".md",
+      "words": 267,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_3_the_spire/hub_2_upper_city/00_overview.md",
+      "title": "Upper City: implemented hub overview",
+      "format": ".md",
+      "words": 124,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_3_the_spire/hub_2_upper_city/01_quests.md",
+      "title": "Upper City: quests",
+      "format": ".md",
+      "words": 306,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_3_the_spire/hub_2_upper_city/02_npcs.md",
+      "title": "Upper City: people and encounter references",
+      "format": ".md",
+      "words": 309,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_3_the_spire/hub_2_upper_city/03_locations.md",
+      "title": "Upper City: node and room map",
+      "format": ".md",
+      "words": 400,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_3_the_spire/hub_2_upper_city/04_events.md",
+      "title": "Upper City progression ownership",
+      "format": ".md",
+      "words": 291,
+      "status": "source-reconciled world reference",
+      "basis": "Checked current catalog records, event/dialogue/cinematic handoffs, and node membership; source review, not a new playthrough.",
+      "next_action": "Maintain against source; no new device/route acceptance claimed."
+    },
+    {
+      "path": "docs/story/world_4_the_foundry/hub_1_slag_pits/00_overview.md",
+      "title": "World 4: The Foundry — Hub 1: Slag Pits",
+      "format": ".md",
+      "words": 267,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_4_the_foundry/hub_1_slag_pits/01_quests.md",
+      "title": "Quests — World 4: The Foundry (Hub 1: Slag Pits)",
+      "format": ".md",
+      "words": 305,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_4_the_foundry/hub_1_slag_pits/02_npcs.md",
+      "title": "NPCs — World 4: The Foundry",
+      "format": ".md",
+      "words": 256,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_4_the_foundry/hub_1_slag_pits/03_locations.md",
+      "title": "Locations — World 4: The Foundry (Hub 1: The Slag Pits)",
+      "format": ".md",
+      "words": 322,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_4_the_foundry/hub_1_slag_pits/04_events.md",
+      "title": "Events — World 4: The Foundry",
+      "format": ".md",
+      "words": 1262,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_4_the_foundry/hub_2_assembly_line/01_quests.md",
+      "title": "Quests — World 4: The Foundry (Hub 2: Assembly Line)",
+      "format": ".md",
+      "words": 344,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_4_the_foundry/hub_2_assembly_line/02_npcs.md",
+      "title": "NPCs — World 4: The Foundry (Hub 2: Assembly Line)",
+      "format": ".md",
+      "words": 379,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_4_the_foundry/hub_2_assembly_line/03_locations.md",
+      "title": "Locations — World 4: The Foundry (Hub 2: Assembly Line)",
+      "format": ".md",
+      "words": 296,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_5_the_void/hub_1_orbital_ring/00_overview.md",
+      "title": "World 5: The Void — Hub 1: Dominion Orbital Ring",
+      "format": ".md",
+      "words": 264,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_5_the_void/hub_1_orbital_ring/01_quests.md",
+      "title": "Quests — World 5: The Void (Hub 1: Orbital Ring)",
+      "format": ".md",
+      "words": 325,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_5_the_void/hub_1_orbital_ring/02_npcs.md",
+      "title": "NPCs — World 5: The Void",
+      "format": ".md",
+      "words": 274,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_5_the_void/hub_1_orbital_ring/03_locations.md",
+      "title": "Locations — World 5: The Void (Hub 1: The Halo)",
+      "format": ".md",
+      "words": 329,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_5_the_void/hub_1_orbital_ring/04_events.md",
+      "title": "Events — World 5: The Void",
+      "format": ".md",
+      "words": 1604,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_5_the_void/hub_2_deep_ring/01_quests.md",
+      "title": "Quests — World 5: The Void (Hub 2: Deep Ring)",
+      "format": ".md",
+      "words": 309,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_5_the_void/hub_2_deep_ring/02_npcs.md",
+      "title": "NPCs — World 5: The Void (Hub 2: Deep Ring)",
+      "format": ".md",
+      "words": 318,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_5_the_void/hub_2_deep_ring/03_locations.md",
+      "title": "Locations — World 5: The Void (Hub 2: Deep Ring)",
+      "format": ".md",
+      "words": 259,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_6_the_source/hub_1_event_horizon/00_overview.md",
+      "title": "World 6: The Source — Hub 1: Event Horizon",
+      "format": ".md",
+      "words": 137,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_6_the_source/hub_1_event_horizon/01_quests.md",
+      "title": "Quests — World 6: The Source (Hub 1: Event Horizon)",
+      "format": ".md",
+      "words": 332,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_6_the_source/hub_1_event_horizon/02_npcs.md",
+      "title": "NPCs — World 6: The Source",
+      "format": ".md",
+      "words": 181,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_6_the_source/hub_1_event_horizon/03_locations.md",
+      "title": "Locations — World 6: The Source (Hub 1: Event Horizon)",
+      "format": ".md",
+      "words": 173,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_6_the_source/hub_1_event_horizon/04_events.md",
+      "title": "Events — World 6: The Source",
+      "format": ".md",
+      "words": 1920,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_6_the_source/hub_2_singularity/01_quests.md",
+      "title": "Quests — World 6: The Source (Hub 2: Singularity)",
+      "format": ".md",
+      "words": 286,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_6_the_source/hub_2_singularity/02_npcs.md",
+      "title": "NPCs — World 6: The Source (Hub 2: Singularity)",
+      "format": ".md",
+      "words": 333,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/story/world_6_the_source/hub_2_singularity/03_locations.md",
+      "title": "Locations — World 6: The Source (Hub 2: The Singularity)",
+      "format": ".md",
+      "words": 250,
+      "status": "pending source reconciliation",
+      "basis": "Review-status banner added; individual claims not yet audited.",
+      "next_action": "Compare with actual records/routes; correct documents first."
+    },
+    {
+      "path": "docs/testing/AUTOMATED_TESTING_STRATEGY.md",
+      "title": "Starborn Automated Testing Strategy & Gap Roadmap",
+      "format": ".md",
+      "words": 1353,
+      "status": "operational reference / pending refresh",
+      "basis": "Maintained workflow candidate; not fully executed in this pass.",
+      "next_action": "Check tasks, paths and fixture assumptions before use."
+    },
+    {
+      "path": "docs/testing/COOKING_PLAYTEST.md",
+      "title": "Cooking and craftable snacks",
+      "format": ".md",
+      "words": 783,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/testing/FISHING_PLAYTEST.md",
+      "title": "Android fishing pass",
+      "format": ".md",
+      "words": 963,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/testing/GEMINI_HANDOFF.md",
+      "title": "Continue the complete debug scenario rebuild",
+      "format": ".md",
+      "words": 1102,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/testing/IN_GAME_WALKTHROUGHS.md",
+      "title": "In-game playtest walkthroughs",
+      "format": ".md",
+      "words": 576,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/testing/README.md",
+      "title": "Game test suite rebuild",
+      "format": ".md",
+      "words": 915,
+      "status": "operational reference / pending refresh",
+      "basis": "Maintained workflow candidate; not fully executed in this pass.",
+      "next_action": "Check tasks, paths and fixture assumptions before use."
+    },
+    {
+      "path": "docs/testing/NOVA_PROTOTYPE_IMPLEMENTATION.md",
+      "format": ".md",
+      "basis": "Scoped prototype implementation and automated verification record.",
+      "status": "scoped record / pending triage",
+      "next_action": "Retain prototype evidence and update after broader playtests.",
+      "words": 1136,
+      "title": "Nova progression prototype"
+    },
+    {
+      "path": "docs/testing/REGRESSION_REVIEW_2026-10-14.md",
+      "format": ".md",
+      "basis": "Original snapshot retained as historical context.",
+      "status": "scoped record / pending triage",
+      "next_action": "Retain evidence; extract current instructions only after source check.",
+      "words": 644,
+      "title": "Regression review — October 14, 2026"
+    },
+    {
+      "path": "docs/testing/SYSTEMS_QUICK_PLAYTEST.md",
+      "title": "Quick systems playtest",
+      "format": ".md",
+      "words": 606,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/testing/TINKERING_PLAYTEST.md",
+      "title": "Tinkering refinement playtest",
+      "format": ".md",
+      "words": 665,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/testing/WORLD1_LUNA_HANDOFF.md",
+      "title": "World 1 regression test handoff",
+      "format": ".md",
+      "words": 639,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/testing/debug-coverage.md",
+      "title": "Generated debug coverage inventory",
+      "format": ".md",
+      "words": 824,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/testing/debug-replacement-catalog.md",
+      "title": "Replacement coverage catalog",
+      "format": ".md",
+      "words": 1634,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/testing/run-template.md",
+      "title": "Gameplay run",
+      "format": ".md",
+      "words": 152,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/testing/verification-2026-09-15.md",
+      "title": "Initial rebuild verification — 2026-09-15",
+      "format": ".md",
+      "words": 452,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/ui/WORLD1_HUB_MARKER_CHANGE_BASELINE.md",
+      "title": "World 1 Hub Marker Change Baseline",
+      "format": ".md",
+      "words": 749,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/world-one-progression-audit.md",
+      "title": "World 1 progression audit — 2026-09-14",
+      "format": ".md",
+      "words": 1033,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "docs/world_2_completion_plan.md",
+      "title": "Starborn — World 2 Completion Plan",
+      "format": ".md",
+      "words": 557,
+      "status": "pending triage",
+      "basis": "Inventory only; no implementation certification.",
+      "next_action": "Assign purpose, compare source, then retain/consolidate/archive."
+    },
+    {
+      "path": "docs/world_2_completion_progress.md",
+      "title": "Starborn — World 2 Completion Progress",
+      "format": ".md",
+      "words": 588,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "hub_design_audit.md",
+      "title": "Starborn: Comprehensive Hub & World Design Audit",
+      "format": ".md",
+      "words": 1838,
+      "status": "scoped record / pending triage",
+      "basis": "Path/title triage only; not a claim that every statement is stale.",
+      "next_action": "Retain evidence; extract current instructions only after source check."
+    },
+    {
+      "path": "implementation_plan.md",
+      "title": "Implementation Plan: Tinkering & Cooking Systems Upgrade",
+      "format": ".md",
+      "words": 71,
+      "status": "redirected",
+      "basis": "Replaced obsolete root entry point in this pass.",
+      "next_action": "Use current index; original preserved."
+    },
+    {
+      "path": "task.md",
+      "title": "Starborn: World 3 Hub 2 Progress Tracker",
+      "format": ".md",
+      "words": 71,
+      "status": "redirected",
+      "basis": "Replaced obsolete root entry point in this pass.",
+      "next_action": "Use current index; original preserved."
+    },
+    {
+      "path": "walkthrough.md",
+      "title": "Starborn: World 3 Hub 1 (Lower City) Walkthrough",
+      "format": ".md",
+      "words": 72,
+      "status": "redirected",
+      "basis": "Replaced obsolete root entry point in this pass.",
+      "next_action": "Use current index; original preserved."
+    },
+    {
+      "path": "docs/testing/CREW_PROTOTYPE_IMPLEMENTATION.md",
+      "format": ".md",
+      "status": "scoped record / pending triage",
+      "basis": "Full-crew prototype implementation and scoped automated/device evidence.",
+      "next_action": "Compare earned party builds; production migration and human balance remain pending.",
+      "words": 818,
+      "title": "Full-crew progression prototype"
+    },
+    {
+      "path": "docs/testing/CREW_BALANCE_PASS_2026-10-15.md",
+      "format": ".md",
+      "status": "scoped record / pending triage",
+      "basis": "Executed seeded full-crew comparison with retained aggregate evidence; no human balance claim.",
+      "next_action": "Investigate group-encounter pressure and protective-action value using paired changes.",
+      "words": 1166,
+      "title": "Full-crew automated balance pass"
+    },
+    {
+      "path": "docs/testing/CREW_TEMPO_TUNING_2026-10-15.md",
+      "format": ".md",
+      "status": "scoped record / pending triage",
+      "basis": "Executed paired tempo/support probes, fresh-seed validation and scoped prototype implementation.",
+      "next_action": "Manually assess action opportunities and build identity; final AP balance remains pending.",
+      "words": 870,
+      "title": "Crew prototype encounter tempo tuning"
+    },
+    {
+      "path": "docs/testing/EXPLORATION_INTERACTIONS_AND_COMBAT_RETURN_2026-10-15.md",
+      "format": ".md",
+      "status": "scoped record / pending triage",
+      "basis": "Exploration interaction consistency and shared victory persistence repair.",
+      "next_action": "Manual desktop/mobile acceptance of room interactions and blocked-route presentation.",
+      "words": 366,
+      "title": "Exploration interactions and combat return ? October 15, 2026"
+    },
+    {
+      "path": "docs/testing/POPUP_DISMISSAL_AUDIT_2026-10-15.md",
+      "format": ".md",
+      "status": "scoped record / pending triage",
+      "basis": "Cross-platform popup dismissal source audit and focused tutorial UI validation.",
+      "next_action": "Align informational cards, cinematic advancement and result pacing using the audited interaction rules.",
+      "words": 4519,
+      "title": "Popup and dismissal audit ? October 15, 2026"
+    },
+    {
+      "path": "docs/testing/POPUP_ALIGNMENT_AND_BACKDROP_FIX_2026-10-15.md",
+      "format": ".md",
+      "status": "scoped record / pending triage",
+      "basis": "Popup acknowledgement alignment and desktop transition rendering regression evidence.",
+      "next_action": "Manual desktop/mobile acceptance of popup timing and transition appearance.",
+      "words": 687,
+      "title": "Popup alignment and desktop room-transition repair - October 15, 2026"
+    },
+    {
+      "path": "docs/testing/ANDROID_EXPLORATION_NAVIGATION_2026-10-15.md",
+      "format": ".md",
+      "status": "scoped record / pending triage",
+      "basis": "Android one-handed exploration navigation implementation and scoped validation.",
+      "next_action": "Device acceptance of thumb reach, room entities, and Back gesture priority.",
+      "words": 333,
+      "title": "Android exploration navigation - October 15, 2026"
+    }
+  ]
+}

@@ -14,7 +14,7 @@ import com.example.starborn.core.platform.AndroidAssetProvider
 import com.example.starborn.data.assets.AssetJsonReader
 import com.example.starborn.data.assets.WorldAssetDataSource
 import com.example.starborn.feature.exploration.viewmodel.SettingsUiState
-import com.example.starborn.feature.hub.ui.HubMapLayouts
+import com.example.starborn.feature.hub.presentation.HubMapLayouts
 import com.example.starborn.feature.hub.ui.HubScreenContent
 import com.example.starborn.feature.hub.viewmodel.*
 import com.example.starborn.ui.theme.StarbornTheme

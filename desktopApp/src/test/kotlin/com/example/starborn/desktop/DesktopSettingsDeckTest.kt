@@ -66,7 +66,7 @@ class DesktopSettingsDeckTest {
 
             compose.onNodeWithText("Save Archive").performClick()
             compose.waitForIdle()
-            compose.onNodeWithText("Open save archive").assertExists()
+            compose.onNodeWithText("Manage saves").assertExists()
             compose.onNodeWithText("Save and return to title").assertExists()
             compose.onNodeWithText("Save and quit to desktop").performClick()
             compose.waitUntil(5000) { quitRequested }

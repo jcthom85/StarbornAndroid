@@ -62,9 +62,12 @@ fun DesktopPortraitBackdrop(
     content: @Composable BoxWithConstraintsScope.(PortraitBackdropLayout) -> Unit = {}
 ) {
     BoxWithConstraints(modifier.fillMaxSize().clipToBounds().background(if (showExtensions) Color(0xFF04060A) else Color.Transparent)) {
-        val blurredPainter = rememberBlurredBackdropPainter(painter)
-        val extensionPainter = blurredPainter ?: painter
-        val seamPainter = rememberBlurredBackdropPainter(painter, 3f) ?: extensionPainter
+        val blurredPainter = if (showExtensions) rememberBlurredBackdropPainter(painter) else null
+        // Decoding the room can finish before its blur. Never expose sharp mirrored
+        // artwork while the asynchronous blur is pending.
+        val extensionPainter = blurredPainter ?: if (painter is DesktopBitmapPainter)
+            androidx.compose.ui.graphics.painter.ColorPainter(Color(0xFF04060A)) else painter
+        val seamPainter = (if (showExtensions) rememberBlurredBackdropPainter(painter, 3f) else null) ?: extensionPainter
         // A solid loading/fallback color has no detail to blur. Sending it through
         // an unbounded native blur needlessly stalls cold scene renders.
         val extensionModifier = if (painter is DesktopBitmapPainter || painter is androidx.compose.ui.graphics.painter.ColorPainter)
@@ -126,9 +129,12 @@ fun DesktopPortraitBackdrop(
                     topLeft = Offset(center.right, 0f), size = Size(layout.right.width, size.height))
             }
             }
-            if (showCenter) Image(painter, contentDescription,
-                Modifier.offset { IntOffset(center.left.roundToInt(), center.top.roundToInt()) }
-                    .size(with(density) { center.width.toDp() }, with(density) { center.height.toDp() })
+            if (showCenter) Box(Modifier.offset { IntOffset(center.left.roundToInt(), center.top.roundToInt()) }
+                .size(with(density) { center.width.toDp() }, with(density) { center.height.toDp() })
+                .clipToBounds()) {
+                // Keep this viewport fixed while its child moves. A translated image must
+                // never cover the blurred side atmosphere during horizontal travel.
+                Image(painter, contentDescription, Modifier.fillMaxSize()
                     .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen; clip = true }
                     .drawWithContent {
                         drawContent()
@@ -148,6 +154,7 @@ fun DesktopPortraitBackdrop(
                         translationY = if (animateCenter) extensionTranslationY else 0f
                     },
                 contentScale = ContentScale.Fit)
+            }
         }
         content(layout)
     }

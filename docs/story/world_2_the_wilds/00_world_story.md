@@ -1,83 +1,36 @@
-# World 2: The Wilds — Story Bible
+# Sector 9: implemented story reference
 
-**Status:** Canon
-**Setting:** Sector 9 (The Wilds) — A bioluminescent terraforming zone reclaimed by overgrown vegetation and ancient Architect ruins.
-**Tone:** Beautiful but hostile wilderness, mysterious ancient resonance, and physical survival/adaptation.
-**Act:** Act 1 — Assembly
+Status: Source-reconciled reference, October 14, 2026. Current code/assets are the implementation baseline. This is a source review, not a fresh playthrough or a claim that every route and device behavior is accepted.
 
----
+## Identity and actual sequence
 
-## I. World Identity
+Sector 9 contrasts the colony with jungle, coastline, ruined facilities, and the practical task of getting a ship airborne. The current route starts with Nova and injured Zeke. Zeke joined during the colony launch; this is not a solo-Nova start.
 
-### What This World Is About
-World 2 is a beautiful trap. Waking from the pod crash in Sector 9, Nova and Zeke are thrust into an environment where nature has not just reclaimed the concrete ruins of an ancient facility—it has grown around raw, leaking Source energy. The air is thick with spores, and the water glows with mineral-rich bioluminescence (Glow-Water). Everything feels alive, humming at a frequency that vibrates in Nova's teeth.
+1. Check Zeke, examine the pod, recover supplies/Chime, spend the emergency medkit, and reach the stream.
+2. Clear an accepted canopy encounter, reach Temple Gate, and authenticate with the Chime.
+3. Investigate Sanctuary, read the stasis clues, stabilize coolant, resolve pressure/memory/return choices, and speak to Orion. Claim the separate Bridge afterward.
+4. Return to Canopy Ridge for Gh0st and the Beast. Beast victory recruits Gh0st. The subsequent Anchor Drill cinematic callback unlocks Link and finishes The Hunter.
+5. Resolve the Source Gate, inspect the Astra, recover conduits at Pod Fragment, install/power the Bridge, and confirm departure.
+6. The departure scene follows a low service airlane beneath the outer Shield, then makes a hard landing beneath the Spire. It does not launch into orbit and bounce off the outer Shield.
 
-The player should feel the dramatic contrast from World 1's low-ceilinged, industrial cage. Here, the canopy reaches high, the skies roll with heavy mesosphere storms, and the flora is lush and glowing. But the danger is active and physical: feral wildlife, poison thickets, and a relentless hunter (Gh0st) who represents the Dominion's cold grip. The primary struggle shifts from escaping corporate bureaucracy to surviving the elements, mastering the strain of the Source, and gathering the crew needed to fly.
+## Where the logic lives
 
-### Visual Identity
-- **Style Baseline:** Contrast the clean, angular geometry of ancient Architect stone with wild, bioluminescent flora. The environments are lush, graphic, and highly saturated, fitting Starborn's chibi/anime sprites and comic-storybook backgrounds.
-- **Palette:** Bioluminescent blue, emerald green, glowing cyan, deep moss, crystalline silver, and warning splashes of Dominion orange/white on abandoned debris.
-- **Lighting:** Soft bioluminescent glow from moss, ferns, and pools of Glow-Water. High contrast shadows from giant canopy trees. Harsh, crackling lightning in the sky and soft, shifting mural projections in the facility.
-- **Architecture:** Smooth stone pillars and archways that look tuned rather than built. Vines grow over ancient machinery, and natural roots form bridges. Dominion outposts appear as heavy, bolted metal debris—clunky, rusted, and foreign.
+`00_quest_list.md` owns the concise quest/reward map. `00_storybeat_packet.md` maps crucial event/callback ownership. Hub quest, cast, and location files are source references rather than independent scripts. Room/hub placement is not quest chronology: The Hunter belongs to the jungle hub but follows Orion's facility quest.
 
-### Audio Identity (Acoustic Resonance)
-- **The Wilds Ambient:** Warm orchestral pads, woodwinds, and acoustic string swells. Hollow stone archways filter the wind into chords, and stone panels act as acoustic resonators. The sound of running Glow-Water is a soft chord rather than a splash.
-- **The Facility (Sanctuary):** Reserve-cell relays click on in sequence. Pressure builds behind the stasis glass, and instrument bands match the Fork protocol scar in Nova's nerves.
-- **The Shield:** The Planetary Shield emits a high, thin tension chord that ripples across the sky, crackling with defensive discharges whenever something tries to cross the hard deck.
+The Chime authenticates; reserve cells and ship systems supply power. The Bridge is a separate inventory item, later consumed when installed. Gh0st's protective choice remains voluntary. Actual dialogue and cinematics are in the production catalogs; the old repeated weapon-failure and protection-directive scripts are retired.
 
-### Ecology & Lore (The Resonance and the Ice)
-Sector 9 is a demonstration of the **Ocean** and the **Ice** metaphor. The Source is the Ocean, a vast current of resonance that flows through everything. Humans are like blocks of Ice floating on it; they are solid, separate, but destined to melt back into the current upon death.
-- **Erosion:** Channeling the Ocean's current puts immense physical strain on the Ice (the human nervous system). In Sector 9, Nova experiences **Erosion** (burnout/neurological cost) rather than "hunger." To stabilize, she uses **Painkillers** (Neural Stabilizer) to numb the static.
-- **The Anchor Drill:** Orion teaches Nova the Anchor Drill. To avoid melting, she must route the static: she is the Spark who opens the door, Zeke is the Ground who dissipates excess static, Gh0st is the Shield who absorbs the heat, and Orion is the Tuner who shapes the noise into music.
+## Puzzles and side content
 
----
+The stasis and Source Gate sequences are dialogue-choice problems backed by clue milestones and success actions. Ancient Echoes uses three collected/seated crystals and a socket-choice dialogue. These are distinct from the optional three-slider bioluminescent-prism tuning definition. Do not describe all World 2 puzzles as sliders or restore the old C#m7 specification.
 
-## II. Thematic Pillars
+Lost Patrol repairs a Thermal Cutter; Tideglass Day crafts Source Resin; Stolen Tech crafts a Rapid Capacitor. Ancient Echoes grants a Focus Conduit, not Chorus Echo. Botanist grants XP and stabilizers, not a beast-critical passive.
 
-### 1. Survival and Adaptability
-Nova cannot hack or hustle her way out of the jungle. She must learn to navigate the terrain, salvage wreckage, heal Zeke, and fight apex wildlife. She is forced to adapt, shifting from a city scrapper to a wilderness explorer.
+## Editorial direction and retired claims
 
-### 2. The Sound of the Past
-The ruins of Sector 9 are not silent tombs; they are recordings. The murals and stasis pods are tuned to ancient songs. By listening to the resonance, the crew reconstructs the history of the Aethel and learns that the Dominion is trying to build a machine of absolute compliance—the Great Silence.
+Retain beauty, physical danger, displacement, recovery, and emerging trust. The source still includes acoustic names and dense Source prose; this reference does not claim that prose has been rewritten. Future editing should describe observable machinery, terrain, wounds, and choices, using occasional Source imagery.
 
-### 3. Assembly (Grief and Duty)
-The crew is not a happy team; they are a collection of loose ends. Zeke carries guilt for splicing the Chime; Orion wakes to find his civilization dead and is immediate in his grief; Gh0st is haunted by contradictory programming. The thematic journey of World 2 is the transition from individual survival to a functional circuit.
+Retired instructions: persistent Erosion survival management, compulsory neural-stabilizer snack tutorial, fixed self-only five-turn snacks, Gh0st before Orion, Link at the temple gate, forced protection orders, and a second Shield-crash ending. They are old documentation claims, not fixes to apply to the current game.
 
----
+## Sources and maintenance
 
-## III. Story Skeleton — Entry & Exit Beats
-
-### World 2 (Overall)
-
-| | State |
-|---|---|
-| **ENTRY** | Nova and Zeke have survived the crash. They are stranded, injured, and without a ship. Nova's Source Art is raw and unstable, causing painful Erosion. The Dominion's hunter is on their tail. |
-| **EXIT** | The party is assembled. The separate Bridge is installed and authenticated, Link is unlocked after the Anchor Drill, and *The Astra* follows a low-altitude service airlane to the Spire. The outer Shield remains a later problem. |
-| **THE SHIFT** | From "surviving the crash" to "planning a planetary heist." |
-
-### Hub 3: Jungle Ruins (Hub 1 of World 2) — "Survive the Wilds"
-
-| | State |
-|---|---|
-| **ENTRY** | Nova wakes at the crash site. Zeke is injured. The surrounding jungle is hostile. Nova must salvage parts, fight through the thickets, and reach the Canopy. |
-| **MIDPOINT** | Gh0st confronts the crew on Canopy Ridge. Nova's Fork scar trips an Elara-calibrated Source Lock and pauses one trigger. The Beast attacks; Gh0st freely protects the crew. Beast victory recruits him but does not unlock Link or close the quest. |
-| **EXIT** | Nova uses the salvaged Chime to unlock the Temple Gate. They step through the stone threshold into the Sanctuary Facility, leaving the wild canopy behind. |
-| **THE SHIFT** | From "wild survival" to "uncovering the ancient facility." |
-| **WHAT THE PLAYER CARRIES FORWARD** | Gh0st as a temporary ally. The thermal cutter tool. Scavenged parts. Basic understanding of Erosion and stabilization. |
-
-### Hub 4: Sector 9 Ruins (Hub 2 of World 2) — "Wake the Past"
-
-| | State |
-|---|---|
-| **ENTRY** | Entering the cold, silent halls of the Sanctuary. The murals hum with cymatic geometry. The gate to the hangar is blocked by an acoustic energy barrier. |
-| **MIDPOINT** | Sanctuary reserve cells wake Orion after Chime authentication. The crew recovers the separate Bridge. Later, after Beast victory, the Anchor Drill unlocks Link and closes The Hunter. |
-| **EXIT** | Rerouting the breakers in the power grid, they disable the gate barrier. They repair *The Astra*, board her bridge, and launch into the sky, only to be struck by the Planetary Shield's defensive discharge. |
-| **THE SHIFT** | From "rebuilding the ship" to "hitting the ceiling of the world." |
-| **WHAT THE PLAYER CARRIES FORWARD** | Orion and Gh0st as full party members. **Link** Relic (Source Art). The repaired *Astra* as their mobile base. The next goal: reach World 3 (The Spire) to steal the Lens. |
-
----
-
-## IV. Thematic Integration with Mechanics
-- **Erosion System:** Exploration actions and combat turns cause Erosion. Nova must manage her mental/neurological strain by resting at campfires or taking **Painkillers** (Neural Stabilizers).
-- **The Snack Slot:** Each character has 1 Snack Slot for consumables (like Painkillers). Snacks have a 5-turn cooldown in combat and are self-targeted.
-- **Tinkering Tab:** Accessed via the Main Menu, exploration campsites, or the Astra repair bench. World 2 should use tinkering as field survival: Nova repairs damaged Dominion salvage, stabilizes living jungle materials into **Source Resin**, and turns recovered transmitter hardware into the **Rapid Capacitor**.
+[rooms](../../../app/src/main/assets/rooms.json), [quests](../../../app/src/main/assets/quests.json), [events](../../../app/src/main/assets/events.json), [dialogue](../../../app/src/main/assets/dialogue.json), [hub_nodes](../../../app/src/main/assets/hub_nodes.json). [Documentation index](../../README.md). Update this reference when its corresponding records change; do not change working game logic to match an older script.

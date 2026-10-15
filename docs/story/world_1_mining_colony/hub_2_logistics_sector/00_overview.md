@@ -1,5 +1,7 @@
 # World 1: The Mines — Hub 2: Logistics Sector
 
+> **Implementation reconciliation pending ? October 14, 2026.** Supporting design/authoring material. Current code/assets take precedence for implemented behavior; older Canon, Locked, required, or next-step claims below are not evidence that the game should be changed. Check [current documentation](../../../README.md) and the live route before use. This banner classifies review status, not the correctness of every passage.
+
 ## Overview
 Separated from the grime of the Homestead Quarter by a heavy blast door, the Logistics Sector is where Dominion manages the ore—and the people. It is sterile, bureaucratic, and heavily guarded.
 

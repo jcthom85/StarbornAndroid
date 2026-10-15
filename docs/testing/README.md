@@ -1,5 +1,25 @@
 # Game test suite rebuild
 
+[Android exploration navigation](ANDROID_EXPLORATION_NAVIGATION_2026-10-15.md) centers Menu, removes the duplicate exit, reserves room-interaction space, and adds system Back exits from eligible rooms.
+
+[Popup alignment and desktop backdrop repair](POPUP_ALIGNMENT_AND_BACKDROP_FIX_2026-10-15.md) implements the acknowledgement rules and prevents sharp room artwork from leaking into the side atmosphere during travel.
+
+[Popup dismissal audit](POPUP_DISMISSAL_AUDIT_2026-10-15.md) inventories both platforms, identifies alignment candidates, and records tutorial body-tap fixes.
+
+[Exploration interactions and combat return](EXPLORATION_INTERACTIONS_AND_COMBAT_RETURN_2026-10-15.md) records the object interaction rules, shared victory repair and single blocked-route prompt.
+
+[Prototype encounter tempo tuning](CREW_TEMPO_TUNING_2026-10-15.md) selects a scoped adjustment after fresh-seed comparisons; 683 Android-hosted tests and five focused desktop checks pass. Human build-interest and AP balance remain pending.
+
+[Full-crew automated balance pass, October 15](CREW_BALANCE_PASS_2026-10-15.md): 1,728 independent fights plus attrition sequences; encounter spikes and uneven paid value remain under investigation.
+
+The [full-crew prototype](CREW_PROTOTYPE_IMPLEMENTATION.md) now provides all 32 executable nodes, owner-specific resets and 26/36/44-AP campaign-derived checkpoints. Balance and production migration remain pending.
+
+For the October 14 review of catalog and desktop regression failures, see [the regression review](REGRESSION_REVIEW_2026-10-14.md). Its automated results are separate from the in-game acceptance backlog below.
+
+The additional `nova_build_prototype` scenario starts an isolated, earned-AP opening with Nova's new paths. See the [prototype implementation record](NOVA_PROTOTYPE_IMPLEMENTATION.md) for launch instructions, automated evidence and balance limits.
+
+October 15 adds first-AP/first-purchase guidance and contextual perk cues. The same record describes desktop's shared mobile Break visuals and their scoped UI checks.
+
 ## Current implementation
 
 The replacement suite is under construction. There are now 38 entries: the ten below, six fishing locations, two provisioning workbenches, and stocked/zero-credit variants for all ten shops.

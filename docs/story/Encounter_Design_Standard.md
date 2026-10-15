@@ -1,5 +1,7 @@
 # Starborn Encounter Design Standard
 
+> **Implementation reconciliation pending ? October 14, 2026.** Supporting design/authoring material. Current code/assets take precedence for implemented behavior; older Canon, Locked, required, or next-step claims below are not evidence that the game should be changed. Check [current documentation](../README.md) and the live route before use. This banner classifies review status, not the correctness of every passage.
+
 **Status:** Canon authoring standard, derived from the World 1 vertical slice (2026-07-28)
 **Applies to:** All worlds. World 1 is the reference implementation.
 

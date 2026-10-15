@@ -437,7 +437,7 @@ private fun FishingHeaderBar(
                     ) {
                         Text("📖", fontSize = 12.sp)
                         Text(
-                            text = "$journalCount SPECIES",
+                            text = "CATCH LOG ($journalCount)",
                             color = Color(0xFF00FF9D),
                             fontFamily = fonts.orbitron,
                             fontSize = 11.sp,
@@ -1228,7 +1228,7 @@ private fun FishingJournalModal(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "📖 ABYSSAL FISHING JOURNAL",
+                        text = "📖 CATCH LOG",
                         color = Color(0xFF00FF9D),
                         fontFamily = fonts.orbitron,
                         fontWeight = FontWeight.Bold,

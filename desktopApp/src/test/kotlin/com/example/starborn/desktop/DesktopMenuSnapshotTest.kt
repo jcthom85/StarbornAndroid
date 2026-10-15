@@ -38,13 +38,13 @@ class DesktopMenuSnapshotTest {
             } }
             compose.waitUntil(20_000) { !services.exploration.uiState.value.isLoading }
             compose.onRoot().performKeyInput { pressKey(Key.Four) }
-            compose.onNodeWithText("Gold: current room", substring = true).assertExists()
+            compose.onAllNodesWithText("Map").onFirst().assertExists()
             compose.onRoot().performKeyInput { pressKey(Key.One) }
             capture("menu-inventory")
-            compose.onNodeWithText("Search cargo").performTextInput("medkit")
+            compose.onNodeWithText("Search items").performTextInput("medkit")
             assertTrue(compose.onAllNodesWithText(services.itemRepository.findItem("medkit")!!.name).fetchSemanticsNodes().isNotEmpty())
             assertEquals(3, services.sessionStore.state.value.inventory["medkit"])
-            compose.onNodeWithText("Search cargo").performTextClearance()
+            compose.onNodeWithText("Search items").performTextClearance()
             compose.onNodeWithText("USE ITEM").performClick()
             compose.onNodeWithText("Use on Nova").performClick()
             compose.waitUntil(5_000) { services.sessionStore.state.value.inventory["medkit"] == 2 }
@@ -57,7 +57,7 @@ class DesktopMenuSnapshotTest {
             compose.onNodeWithText("Equip").performClick()
             compose.waitUntil(5_000) { services.sessionStore.state.value.equippedWeapons["nova"] == "mining_pistol" }
             capture("menu-equipment")
-            listOf("Journal", "Map", "Stats", "Settings").forEach { tab ->
+            listOf("Journal", "Map", "Party", "Settings").forEach { tab ->
                 compose.onAllNodesWithText(tab).onFirst().performClick()
                 compose.waitForIdle()
                 capture("menu-" + tab.lowercase())
@@ -75,9 +75,9 @@ class DesktopMenuSnapshotTest {
                 }
             }
             compose.onNodeWithText("Voice").assertExists()
-            compose.onAllNodes(hasScrollToNodeAction()).onFirst().performScrollToNode(hasText("Open save archive"))
-            compose.onNodeWithText("Open save archive").assertExists()
-            compose.onNodeWithText("Open save archive").performClick()
+            compose.onAllNodes(hasScrollToNodeAction()).onFirst().performScrollToNode(hasText("Manage saves"))
+            compose.onNodeWithText("Manage saves").assertExists()
+            compose.onNodeWithText("Manage saves").performClick()
             compose.onAllNodesWithText("Save archive").onLast().assertExists()
             compose.onNodeWithText("Close").performClick()
             compose.runOnIdle { narrow.value = true }

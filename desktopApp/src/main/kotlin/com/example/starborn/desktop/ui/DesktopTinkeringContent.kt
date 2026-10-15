@@ -1,6 +1,11 @@
 package com.example.starborn.desktop.ui
 
 import androidx.compose.foundation.*
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,6 +25,8 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
     val catalog = remember(services) { services.itemRepository.allItems().associateBy { it.id } }
     val runtime = remember(services) { CraftingController(services.craftingService, services.inventoryService, services.sessionStore, scope) }
     val state by runtime.uiState.collectAsState()
+    val resultFocus = remember { BringIntoViewRequester() }
+    var detailSize by remember { mutableStateOf(IntSize.Zero) }
     var page by rememberSaveable { mutableStateOf("Workbench") }
     var socket by rememberSaveable { mutableIntStateOf(-1) }
     var query by rememberSaveable { mutableStateOf("") }
@@ -44,7 +51,17 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
         state.tutorialStep?.let { step ->
             services.exploration.onTinkerTutorialStep(step)
             page = "Workbench"
-            socket = if (step == TinkeringTutorialStep.SLOT_COMPONENT) 0 else -1
+            socket = when (step) {
+                TinkeringTutorialStep.SLOT_BASE -> -1
+                TinkeringTutorialStep.SLOT_COMPONENT -> 0
+                else -> 0
+            }
+        }
+    }
+    LaunchedEffect(state.tutorialStep, state.bench.preview?.recipeId, detailSize) {
+        if (state.tutorialStep == TinkeringTutorialStep.SYNTHESIZE && state.bench.preview != null) {
+            withFrameNanos { }; withFrameNanos { }
+            resultFocus.bringIntoView()
         }
     }
     DisposableEffect(runtime) { onDispose { runtime.close(); services.exploration.onTinkeringClosed() } }
@@ -54,20 +71,20 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
         }
         state.lastMessage?.let { Text(it, color = FieldMenuDesign.cyan) }
         state.tutorialStep?.let { step ->
-            Surface(color = FieldMenuDesign.gold.copy(alpha = .12f), shape = RoundedCornerShape(12.dp)) {
-                Column(Modifier.fillMaxWidth().padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("Repair the Cryo-Inductor", color = FieldMenuDesign.gold)
-                    Text(when (step) {
-                        TinkeringTutorialStep.SLOT_BASE -> "1 of 3 - Choose the Cryo-Inductor as your base item."
-                        TinkeringTutorialStep.SLOT_COMPONENT -> "2 of 3 - Add Scrap Metal to the first component slot."
-                        TinkeringTutorialStep.SYNTHESIZE -> "3 of 3 - Repair the cold loop to unlock Cryo Vent."
-                        TinkeringTutorialStep.COMPLETE -> "Repair complete."
-                    })
+            Surface(color = FieldMenuDesign.panel, shape = RoundedCornerShape(12.dp), border = BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = .6f))) {
+                Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text("Tutorial", color = FieldMenuDesign.cyan, style = MaterialTheme.typography.labelMedium)
+                        Text(if (step == TinkeringTutorialStep.COMPLETE) "Complete" else "Step ${step.ordinal + 1} of 3", style = MaterialTheme.typography.labelSmall, color = FieldMenuDesign.textMuted)
+                    }
+                    if (step == TinkeringTutorialStep.SLOT_BASE) Text("Repair the Cryo-Inductor", style = MaterialTheme.typography.titleSmall)
+                    Text(tinkeringTutorialInstruction(step), style = MaterialTheme.typography.bodyMedium)
                 }
             }
         }
+
         when (page) {
-            "Workbench" -> DesktopStationPanes(Modifier.weight(1f), primary = { paneModifier ->
+            "Workbench" -> DesktopStationPanes(Modifier.weight(1f), stackBelow = 500.dp, primary = { paneModifier ->
                 Column(paneModifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(if (socket == -1) "Base items" else "Compatible components", style = MaterialTheme.typography.titleMedium)
                     OutlinedTextField(query, { query = it }, Modifier.fillMaxWidth(), label = { Text("Find a part") }, singleLine = true)
@@ -84,18 +101,26 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
                     }
                 }
             }, detail = { paneModifier ->
-                Column(paneModifier.fillMaxHeight().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Column(paneModifier.fillMaxHeight().onSizeChanged { detailSize = it }, verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Column(Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     DesktopMenuSection("Assembly")
-                    (-1..1).forEach { target ->
+                    Text("Base item + compatible components -> Result", style = MaterialTheme.typography.bodySmall, color = FieldMenuDesign.textMuted)
+                    (-1..if (state.tutorialStep != null) 0 else 1).forEach { target ->
+                        if (target >= 0) Row(Modifier.fillMaxWidth().padding(horizontal = 24.dp), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            HorizontalDivider(Modifier.weight(1f), color = FieldMenuDesign.cyan.copy(alpha = .16f))
+                            Text("+", color = FieldMenuDesign.cyan)
+                            HorizontalDivider(Modifier.weight(1f), color = FieldMenuDesign.cyan.copy(alpha = .16f))
+                        }
+                        val guidedSocket = state.tutorialStep == TinkeringTutorialStep.SLOT_BASE && target == -1 || state.tutorialStep == TinkeringTutorialStep.SLOT_COMPONENT && target == 0
                         val name = if (target == -1) state.bench.mainItemName else state.bench.componentNames.getOrNull(target)
-                        Surface(onClick = { socket = target }, color = FieldMenuDesign.panel, shape = RoundedCornerShape(10.dp),
+                        Surface(onClick = { socket = target }, color = FieldMenuDesign.panel, shape = RoundedCornerShape(4.dp),
                             modifier = Modifier.desktopPointerHover(),
-                            border = BorderStroke(1.dp, if (socket == target) FieldMenuDesign.gold else FieldMenuDesign.cyan.copy(alpha = .18f))) {
+                            border = BorderStroke(1.dp, if (guidedSocket) FieldMenuDesign.gold else if (socket == target && state.tutorialStep != TinkeringTutorialStep.SYNTHESIZE) FieldMenuDesign.cyan else FieldMenuDesign.cyan.copy(alpha = .18f))) {
                             Row(Modifier.fillMaxWidth().padding(14.dp), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
                                 val itemId = if (target == -1) state.bench.mainItemId else state.bench.componentIds.getOrNull(target)
                                 DesktopMenuItemArt(services, catalog[itemId], Modifier.size(56.dp))
                                 Column(Modifier.weight(1f)) {
-                                    Text(if (target == -1) "Base item" else "Component ${target + 1}", color = FieldMenuDesign.gold)
+                                    Text(if (target == -1) "Base item" else "Component ${target + 1}", color = if (socket == target) FieldMenuDesign.gold else FieldMenuDesign.textMuted)
                                     Text(name?.takeIf { it.isNotBlank() } ?: "Choose a part")
                                 }
                                 if (!name.isNullOrBlank()) TextButton(onClick = { if (target == -1) runtime.selectMain(null) else runtime.selectComponent(target, null) }, modifier = Modifier.desktopPointerHover()) { Text("Remove") }
@@ -105,17 +130,24 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
                     state.bench.preview?.let { preview ->
                         DesktopMenuCard(Modifier.fillMaxWidth()) {
                             Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Text("Result", color = FieldMenuDesign.cyan, style = MaterialTheme.typography.labelSmall)
-                                Text(preview.name, style = MaterialTheme.typography.titleLarge, color = FieldMenuDesign.gold)
-                                Text(preview.resultSummary)
+                                Column(Modifier.bringIntoViewRequester(resultFocus).testTag("tinker-tutorial-result"), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    Text("Result", color = FieldMenuDesign.cyan, style = MaterialTheme.typography.labelSmall)
+                                    Text(preview.name, style = MaterialTheme.typography.titleLarge, color = FieldMenuDesign.gold)
+                                    Text(preview.resultSummary)
+                                }
                                 DesktopModComparison(preview.equipmentComparison)
                             }
                         }
-                        if (preview.requiresSchematic && !preview.learned) Text(preview.discoveryHint ?: "Learn this schematic from Inventory first.")
+                        if (preview.requiresSchematic && !preview.learned) Text(preview.discoveryHint ?: "Learn this schematic from Inventory before building.")
+                    }
+                    if (!state.bench.canCraftSelection && state.bench.preview == null) {
+                        Text(if (state.bench.mainItemId == null) "Choose a base item to start." else "Add compatible components to discover a result.", color = FieldMenuDesign.gold)
                     }
                     state.bench.requirements.forEach { Text("${it.label}: ${it.available} / ${it.required}") }
+                    }
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Button(onClick = runtime::craftFromBench, enabled = state.bench.canCraftSelection, modifier = Modifier.desktopPointerHover(state.bench.canCraftSelection)) { Text("Build") }
+                        Button(onClick = runtime::craftFromBench, enabled = state.bench.canCraftSelection, modifier = Modifier.testTag("tinker-build").desktopPointerHover(state.bench.canCraftSelection),
+                            border = if (state.tutorialStep == TinkeringTutorialStep.SYNTHESIZE) BorderStroke(2.dp, FieldMenuDesign.cyan) else null) { Text("Synthesize") }
                         TextButton(onClick = runtime::clearBench, modifier = Modifier.desktopPointerHover()) { Text("Clear") }
                     }
                 }
@@ -124,12 +156,12 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
                 OutlinedTextField(query, { query = it }, Modifier.fillMaxWidth(), label = { Text("Find a schematic") }, singleLine = true)
                 val recipes = (state.learnedRecipes + state.lockedRecipes).filter { it.name.contains(query, true) }
                 val selected = recipes.firstOrNull { it.id == recipeId } ?: recipes.firstOrNull()
-                DesktopStationPanes(Modifier.weight(1f), primary = { paneModifier ->
+                DesktopStationPanes(Modifier.weight(1f), stackBelow = 500.dp, primary = { paneModifier ->
                     LazyColumn(paneModifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         items(state.schematicChoices, key = { "found-${it.id}" }) { item -> OutlinedButton(onClick = { runtime.learnFoundSchematic(item.id) }) { Text("Learn ${item.name}") } }
                         if (recipes.isEmpty()) item { Text("No matching schematics.") }
                         items(recipes, key = { it.id }) { recipe ->
-                            Surface(onClick = { recipeId = recipe.id }, color = if (recipe.id == selected?.id) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel, shape = RoundedCornerShape(10.dp)) {
+                            Surface(onClick = { recipeId = recipe.id }, color = if (recipe.id == selected?.id) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel, shape = RoundedCornerShape(4.dp)) {
                                 Column(Modifier.fillMaxWidth().padding(14.dp)) { Text(recipe.name); Text(if (recipe.learned) "Learned" else "Undiscovered", color = FieldMenuDesign.textMuted) }
                             }
                         }
@@ -142,14 +174,14 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
                             recipe.description?.let { Text(it) }; Text(recipe.resultSummary)
                             DesktopModComparison(recipe.equipmentComparison)
                             recipe.ingredients.forEach { Text("${it.label}: ${it.available} / ${it.required}") }
-                            Button(onClick = { runtime.craft(recipe.id) }, enabled = recipe.canCraft) { Text("Craft") }
+                            Button(onClick = { runtime.craft(recipe.id) }, enabled = recipe.canCraft) { Text("Synthesize") }
                         } else Text(recipe.discoveryHint ?: "Find its schematic")
                     } }
                 })
             }
             else -> {
                 val selected = state.scrapChoices.firstOrNull { it.id == scrapId } ?: state.scrapChoices.firstOrNull()
-                DesktopStationPanes(Modifier.weight(1f), primary = { paneModifier ->
+                DesktopStationPanes(Modifier.weight(1f), stackBelow = 500.dp, primary = { paneModifier ->
                     LazyColumn(paneModifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         if (state.scrapChoices.isEmpty()) item { Text("No equipment available to scrap.", color = FieldMenuDesign.textMuted) }
                         items(state.scrapChoices, key = { it.id }) { item ->

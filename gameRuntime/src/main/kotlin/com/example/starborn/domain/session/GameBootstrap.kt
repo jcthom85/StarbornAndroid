@@ -67,6 +67,10 @@ object GameBootstrap {
         val (armors, equippedArmors) = startingArmors(party, items, false)
         return base.copy(partyMembers = party, playerLevel = previous.playerLevel.coerceAtLeast(base.playerLevel), playerXp = previous.playerXp,
             playerCredits = previous.playerCredits.coerceAtLeast(5000), inventory = previous.inventory,
+            unlockedSkills = previous.unlockedSkills, playerAp = previous.playerAp,
+            learnedSchematics = previous.learnedSchematics,
+            progressionPrototypeVersion = previous.progressionPrototypeVersion,
+            purchasedSkillNodes = previous.purchasedSkillNodes,
             partyMemberLevels = previous.partyMemberLevels.ifEmpty { party.associateWith { base.playerLevel } },
             partyMemberXp = previous.partyMemberXp.ifEmpty { party.associateWith { base.playerXp } },
             unlockedWeapons = previous.unlockedWeapons + weapons, unlockedArmors = previous.unlockedArmors + armors,

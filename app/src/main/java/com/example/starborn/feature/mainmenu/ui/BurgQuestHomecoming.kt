@@ -38,7 +38,8 @@ internal fun BurgQuestHomecoming(audioCuePlayer: AudioCuePlayer, onComplete: () 
     var revealRequest by remember(lineIndex) { mutableIntStateOf(0) }
     val (speaker, text) = homecomingLines[lineIndex]
     val advance: () -> Unit = { if (lineIndex < homecomingLines.lastIndex) lineIndex++ else onComplete() }
-    Dialog(onDismissRequest = onComplete) {
+    Dialog(onDismissRequest = {}, properties = androidx.compose.ui.window.DialogProperties(
+        dismissOnBackPress = false, dismissOnClickOutside = false)) {
         Column(
             modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).testTag("burgquest-homecoming"),
             horizontalAlignment = Alignment.End

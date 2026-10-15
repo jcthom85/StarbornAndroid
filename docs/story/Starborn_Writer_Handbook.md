@@ -1,15 +1,15 @@
 # Starborn Writer's Handbook
 
-**Status:** CANONICAL
+**Status:** Current prose authority; reviewed October 14, 2026. See [the documentation index](../README.md) for responsibilities and evidence status.
 **Purpose:** The source of truth for all player-facing prose.
 
-**Authority:** This document governs prose, dialogue, UI copy, and tonal execution. It is subordinate to the Master Story Bible, Lore Bible, and Character Arcs, and outranks supporting world/hub documents and production assets.
+**Role:** This document governs prose and tonal execution for new editing. Story references supply retained narrative intent; current code/assets establish implemented behavior. Supporting drafts do not override either. Do not change working logic to satisfy an older prose specification.
 
 ## Core Principle
 
 Starborn is a grounded adventure about ordinary people facing corporate violence and cosmic danger. People speak plainly. The world supplies the strangeness.
 
-Target roughly 70-80% concrete industrial language, 15-20% character-specific humor, slang, and personality, and no more than 5-10% overt lyricism. Reserve the strangest language for genuine Source contact and emotionally earned climaxes.
+Most language is concrete. Humor, tenderness, and occasional lyricism earn their place through the situation. Reserve the strangest language for genuine Source contact and emotionally earned climaxes. Percentages are not writing quotas.
 
 Clarity comes before style. A player should understand what physically happened, what a character wants, and what can be done next without translating a metaphor.
 
@@ -75,7 +75,7 @@ Clarity comes before style. A player should understand what physically happened,
 
 - Most room descriptions use two concrete sentences and stay under 45 words.
 - Establish the dominant physical feature, immediate condition, and useful interactables.
-- Room actions must still appear verbatim in active descriptions so they remain tappable.
+- Required actions must remain discoverable in active descriptions and variants. Use supported explicit action references when natural display wording differs from the stable action name; see [Content Standards](Content_Standards.md).
 - A description may contain one memorable comparison when the room marks a major change.
 - Persistent consequences belong in description variants. Immediate motion belongs in interaction feedback.
 - Examine text should reward attention with evidence, character detail, risk, a useful clue, or a changed state. Pure decoration is optional and brief.
@@ -96,6 +96,10 @@ Clarity comes before style. A player should understand what physically happened,
 - Describe the observable effect first: sound drops out, teeth ache, dust lifts, stone changes temperature, geometry shifts.
 - Interpretation comes later and may be wrong. Characters should not immediately explain a mystery in complete technical language.
 - Musical language is occasional vocabulary, not the grammar of every Source scene.
+- Use actual music, industrial sounds, and cultural references where they belong. A familiar relic name does not require a surrounding explanation about chords or frequencies.
+- Nova, Zeke, Gh0st, and Orion should interpret an unfamiliar event differently. Orion's imagery should not become the narrator's universal physics.
+- Describe machinery, meals, modifications, colors, and combat effects through their actual function. Avoid inventing an acoustic explanation when it supplies no useful information.
+- Remove author-facing commentary from game prose, including statements that a room expresses the game's theme or final answer. Show the room and its consequences.
 - Relics do not choose Nova. Strength comes from observation, work, decisions, and relationships.
 
 ## Editing Test

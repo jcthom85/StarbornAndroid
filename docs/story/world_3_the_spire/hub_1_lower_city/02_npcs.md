@@ -1,28 +1,31 @@
-# NPCs — World 3, Hub 1: Lower City
+# Lower City: people and encounter references
 
-## Allies
+Status: Source-reconciled reference, October 14, 2026. Current code/assets are the implementation baseline. This is a source review, not a fresh playthrough or a claim that every route and device behavior is accepted.
 
-### Jax (The Bartender)
-*   **Role:** Information Broker / Shopkeeper.
-*   **Location:** The Static.
-*   **Appearance:** One arm is a heavy-duty cybernetic loader claw. Wears a dirty apron over a flight suit.
-*   **Personality:** Gruff, tired, loyal to credits but hates the "Suits" upstairs.
-*   **Key Line:** "Don't ask what's in the drink. Don't ask who was sitting there yesterday. Rules of the house."
+Jax and Mika appear through conditioned room presence. The district also has fixed local NPCs. Zeke is an existing companion. Earlier scripted barks and appearance notes are not implemented dialogue contracts.
 
-### Mika (The Heart)
-*   **Role:** Street Vendor (Quest Giver).
-*   **Location:** Night Market Alley.
-*   **Appearance:** Teenager with neon hair and a respirator mask around her neck.
-*   **Personality:** Optimistic despite the rain. Represents the "normal people" Nova is saving.
-*   **Key Line:** "Try the skewers! Real protein today, I promise. No recycled paste."
+These are authored fixed and conditional room references. Conditions are reported from data, not evaluated for a particular save. Party recruitment/dialogue is covered in the introductory notes.
 
-### Zeke (The Return)
-*   **Role:** Party Member.
-*   **State of Mind:** **Haunted.** This was his home, and now he's a ghost here. He sees his old life erased.
-*   **Bark:** "They reformatted my drive... I mean, my apartment. They threw out my plants."
+| Person | Room | Placement |
+|---|---|---|
+| `jax` — Jax | `spire_the_static` | requires_milestones: ms_w2_mq05_complete |
+| `musician_chris` — Chris | `spire_old_subway_car` | Fixed reference |
+| `musician_andrew` — Andrew | `spire_old_subway_car` | Fixed reference |
+| `zeke` — Zeke | `spire_zekes_apartment` | requires_milestones: ms_w3_mq11_complete |
+| `contractor_cheno` — Cheno | `spire_rigging_deck` | Fixed reference |
+| `creator_jason` — Jason | `spire_hidden_studio` | Fixed reference |
+| `feline_meeko` — Meeko | `spire_hidden_studio` | Fixed reference |
+| `mika` — Mika | `spire_night_market` | requires_milestones: ms_w2_mq05_complete |
+| `noodle_cook_ren` — Ren | `spire_noodle_row` | Fixed reference |
 
-## Hostiles (Lower City Subset)
+## Encounter references
 
-*   **Riot Guard:** Enforces curfew.
-*   **Sentinel Mk. I:** Guards checkpoints.
-*(See Hub 2 NPCs for full Bestiary details)*
+The room lists and authored spawn events reference the following enemies. Moving encounters, party formations, room overrides, and save state can change the presented fight. Consult current enemy/skill/affinity data and controllers for behavior; the old prose bestiary is retired.
+
+| Enemy ID | Catalog name |
+|---|---|
+| `sewer_crawler` | Sewer Crawler |
+
+## Sources and maintenance
+
+[rooms](../../../../app/src/main/assets/rooms.json), [quests](../../../../app/src/main/assets/quests.json), [events](../../../../app/src/main/assets/events.json), [dialogue](../../../../app/src/main/assets/dialogue.json), [hub_nodes](../../../../app/src/main/assets/hub_nodes.json). [Documentation index](../../../README.md). Update this reference when its corresponding records change; do not change working game logic to match an older script.

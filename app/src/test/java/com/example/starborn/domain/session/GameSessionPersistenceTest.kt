@@ -40,6 +40,25 @@ class GameSessionPersistenceTest {
     }
 
     @Test
+    fun discoveredWeaknessesSurviveCheckpointAndSaveReload() = runBlocking {
+        val store = GameSessionStore()
+        store.armBattle("test-encounter")
+        store.checkpointBattle()
+        store.discoverEnemyWeakness("drone", " SHOCK ")
+        store.discoverEnemyWeakness("drone", "shock")
+        store.discoverEnemyWeakness("drone", "freeze")
+        store.discoverEnemyWeakness("drone", "miss")
+        assertEquals(setOf("shock", "freeze"), store.state.value.knownEnemyWeaknesses["drone"])
+        assertEquals(store.state.value.knownEnemyWeaknesses, store.state.value.battleCheckpoint?.knownEnemyWeaknesses)
+        persistence.writeAutosave(store.state.value)
+        val restored = persistence.readAutosave()!!
+        assertEquals(store.state.value.knownEnemyWeaknesses, restored.knownEnemyWeaknesses)
+        store.restore(restored)
+        assertEquals(setOf("shock", "freeze"), store.state.value.knownEnemyWeaknesses["drone"])
+        assertTrue(store.state.value.knownEnemyWeaknesses["other_drone"].isNullOrEmpty())
+    }
+
+    @Test
     fun servingCompanionAndAllMealStatsRoundTrip() = runBlocking {
         val state = GameSessionState(mealChefId = "zeke", activeMealBuff = ActiveMealBuff(
             recipeId = "feast", recipeName = "Feast", chefId = "zeke", remainingEncounters = 2,

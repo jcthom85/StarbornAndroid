@@ -1,4 +1,6 @@
-﻿# Locations — World 6: The Source (Hub 1: Event Horizon)
+# Locations — World 6: The Source (Hub 1: Event Horizon)
+
+> **Implementation reconciliation pending ? October 14, 2026.** Supporting design/authoring material. Current code/assets take precedence for implemented behavior; older Canon, Locked, required, or next-step claims below are not evidence that the game should be changed. Check [current documentation](../../../README.md) and the live route before use. This banner classifies review status, not the correctness of every passage.
 
 ## Hub Layout
 Reality is a suggestion here. The laws of physics are replaced by the laws of emotion.

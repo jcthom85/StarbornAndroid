@@ -51,7 +51,7 @@ internal fun DesktopMenuItemArt(services: DesktopAppServices, item: Item?, modif
 @Composable
 internal fun DesktopMenuSection(title: String, subtitle: String? = null) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(title, style = MaterialTheme.typography.titleLarge, color = FieldMenuDesign.gold)
+        Text(title, style = MaterialTheme.typography.titleMedium, color = if (LocalTerminalPresentation.current) FieldMenuDesign.text else FieldMenuDesign.gold)
         subtitle?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = FieldMenuDesign.textMuted) }
     }
 }

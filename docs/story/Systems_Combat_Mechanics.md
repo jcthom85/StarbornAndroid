@@ -1,5 +1,7 @@
 # Combat Mechanics: Elements, Statuses, and Cooldowns
 
+> **Implementation reconciliation pending ? October 14, 2026.** Supporting design/authoring material. Current code/assets take precedence for implemented behavior; older Canon, Locked, required, or next-step claims below are not evidence that the game should be changed. Check [current documentation](../README.md) and the live route before use. This banner classifies review status, not the correctness of every passage.
+
 **Status:** Locked
 **Context:** World 1 (Mining Colony) & Global Core Mechanics
 

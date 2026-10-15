@@ -346,7 +346,7 @@ internal fun DesktopSettingsContent(
                 DesktopSettingToggle("Reduce intense screen flashes", userSettings.disableFlashes) {
                     scope.launch { services.userSettingsStore.setFlashesDisabled(it) }
                 }
-                DesktopSettingToggle("Disable screen shake & rumble", userSettings.disableScreenshake) {
+                DesktopSettingToggle("Reduce screen shake & rumble", userSettings.disableScreenshake) {
                     scope.launch { services.userSettingsStore.setScreenshakeDisabled(it) }
                 }
                 DesktopSettingToggle("High contrast interface & text outlines", userSettings.highContrastMode) {
@@ -408,7 +408,7 @@ internal fun DesktopSettingsContent(
                         modifier = Modifier.desktopPointerHover(),
                         colors = ButtonDefaults.buttonColors(containerColor = FieldMenuDesign.gold)
                     ) {
-                        Text("Open save archive", color = Color.Black, fontWeight = FontWeight.Bold)
+                        Text("Manage saves", color = Color.Black, fontWeight = FontWeight.Bold)
                     }
 
                     onReturnToTitle?.let {

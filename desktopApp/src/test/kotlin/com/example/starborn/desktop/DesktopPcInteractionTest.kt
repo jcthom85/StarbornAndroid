@@ -24,6 +24,31 @@ import java.nio.file.Files
 class DesktopPcInteractionTest {
     @get:Rule val compose = createComposeRule()
 
+    @Test fun bunkRestRestoresHealthAndAlwaysShowsConfirmation() {
+        val directory = Files.createTempDirectory("starborn-rest-feedback-").toFile()
+        val services = DesktopAppServices(directory, RecordingAudioDriver())
+        try {
+            runBlocking { services.userSettingsStore.setTutorialsEnabled(false) }
+            assertTrue(services.startDebugScenario("tut_npc_dialogue"))
+            services.sessionStore.restore(services.sessionStore.state.value.copy(roomId = "pit_nova_bunk", partyMemberHp = mapOf("nova" to 20)))
+            compose.setContent { DesktopStarbornTheme(services) {
+                Box(Modifier.size(1280.dp, 800.dp)) { DesktopExplorationScreen(services, {}, {}, {}, {}, {}, {}) }
+            } }
+            compose.waitUntil(10000) { services.exploration.uiState.value.currentRoom?.id == "pit_nova_bunk" }
+            compose.waitForIdle()
+            val rest = services.exploration.uiState.value.actions.filterIsInstance<com.example.starborn.domain.model.RestStopAction>().single()
+            compose.runOnIdle { services.exploration.onActionSelected(rest) }
+            compose.waitUntil(5000) { services.sessionStore.state.value.partyMemberHp.getValue("nova") > 20 }
+            compose.onNodeWithText("A Quiet Rest").assertIsDisplayed()
+            compose.onNodeWithText("Restored 100 HP.", substring = true).assertIsDisplayed()
+            compose.onNodeWithText("Continue").performClick()
+            compose.waitForIdle()
+            compose.runOnIdle { services.exploration.onActionSelected(rest) }
+            compose.waitUntil(5000) { compose.onAllNodesWithText("Already at full HP.", substring = true, useUnmergedTree = true).fetchSemanticsNodes().isNotEmpty() }
+            compose.onNodeWithText("Already at full HP.", substring = true, useUnmergedTree = true).assertIsDisplayed()
+        } finally { services.close(); directory.deleteRecursively() }
+    }
+
     @Test fun failedQuicksaveDoesNotClaimProgressWasSaved() {
         compose.setContent { DesktopStarbornTheme {
             Box(Modifier.width(300.dp)) { DesktopExplorationKeyLegendHud(ExplorationUiState(), blocked = false, onQuickSave = { false }) }
@@ -85,7 +110,7 @@ class DesktopPcInteractionTest {
                 Box(Modifier.size(1920.dp, 1080.dp)) { DesktopExplorationScreen(services, {}, {}, {}, {}, {}, {}) }
             } }
             compose.waitUntil(10000) { services.exploration.uiState.value.currentRoom?.id == "pit_jed_bunk" }
-            compose.onNodeWithTag("key-legend-K").assertIsDisplayed()
+            compose.onNodeWithTag("hud-key-legend").assertDoesNotExist()
             compose.onAllNodes(isRoot())[0].performKeyInput { pressKey(Key.K) }
             compose.onNodeWithText("Room interactions").assertIsDisplayed()
             compose.onNodeWithText("Close").performClick()

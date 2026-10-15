@@ -23,17 +23,26 @@ private val blurredImages = object : LinkedHashMap<Pair<ImageBitmap, Float>, Ima
     override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Pair<ImageBitmap, Float>, ImageBitmap>?) = size > 12
 }
 
+internal val LocalBackdropBlurLoader = staticCompositionLocalOf<suspend (ImageBitmap, Float) -> ImageBitmap> {
+    { bitmap, sigma ->
+        withContext(Dispatchers.IO) {
+            blurMutex.withLock {
+                synchronized(blurredImages) { blurredImages[bitmap to sigma] }
+                    ?: blurBackdropBitmap(bitmap, sigma).also { image ->
+                        synchronized(blurredImages) { blurredImages[bitmap to sigma] = image }
+                    }
+            }
+        }
+    }
+}
+
 /** Blur once at a small resolution; cinematic animation then moves an ordinary bitmap. */
 @Composable
 internal fun rememberBlurredBackdropPainter(painter: Painter, sigma: Float = 16f): Painter? {
     val bitmap = (painter as? DesktopBitmapPainter)?.bitmap ?: return null
-    val blurred by produceState<ImageBitmap?>(null, bitmap, sigma) {
-        value = withContext(Dispatchers.IO) {
-            blurMutex.withLock {
-                blurredImages[bitmap to sigma] ?: blurBackdropBitmap(bitmap, sigma).also { blurredImages[bitmap to sigma] = it }
-            }
-        }
-    }
+    val loader = LocalBackdropBlurLoader.current
+    val cached = remember(bitmap, sigma) { synchronized(blurredImages) { blurredImages[bitmap to sigma] } }
+    val blurred by produceState(cached, bitmap, sigma, loader) { value = loader(bitmap, sigma) }
     return remember(blurred) { blurred?.let(::BitmapPainter) }
 }
 

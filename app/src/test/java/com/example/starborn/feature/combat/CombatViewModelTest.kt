@@ -87,6 +87,53 @@ class CombatViewModelTest {
         Dispatchers.resetMain()
     }
 
+    @Test fun enemyInspectionPausesIndependentlyAndAutomaticFocusDoesNotInspect() = runTest(dispatcher) {
+        val vm = createWeaknessRewardViewModel { testScheduler.currentTime }
+        try {
+            runCurrent()
+            val enemy = vm.enemyCombatantIds.first()
+            fun paused(): Boolean = vm.javaClass.getDeclaredMethod("isAtbPaused").apply { isAccessible = true }.invoke(vm) as Boolean
+            vm.focusEnemyTarget(enemy)
+            assertNull(vm.inspectedEnemyId.value)
+            vm.inspectEnemy("missing")
+            assertNull(vm.inspectedEnemyId.value)
+            vm.inspectEnemy(enemy)
+            assertEquals(enemy, vm.inspectedEnemyId.value)
+            assertTrue(paused())
+            val meters = vm.atbMeters.value
+            testScheduler.advanceTimeBy(1000); runCurrent()
+            assertEquals(meters, vm.atbMeters.value)
+            vm.setBackgroundPaused(true)
+            vm.dismissEnemyInspection()
+            assertNull(vm.inspectedEnemyId.value)
+            assertTrue(paused())
+            vm.setBackgroundPaused(false)
+            assertFalse(paused())
+            testScheduler.advanceTimeBy(1000); runCurrent()
+            assertTrue(meters != vm.atbMeters.value)
+        } finally { vm.close() }
+    }
+
+    @Test fun inspectionTransfersToReadyCharacterWithoutLosingEnemyFocus() = runTest(dispatcher) {
+        val vm = createWeaknessRewardViewModel { testScheduler.currentTime }
+        try {
+            runCurrent()
+            val enemy = vm.enemyCombatantIds.first()
+            // Boundary fixture: the player is ready before opening the inspection.
+            val queue = vm.javaClass.getDeclaredField("readyQueue").apply { isAccessible = true }
+            @Suppress("UNCHECKED_CAST")
+            (queue.get(vm) as MutableList<String>).add("nova")
+            vm.inspectEnemy(enemy)
+            vm.selectReadyPlayer("nova")
+            assertNull(vm.inspectedEnemyId.value)
+            assertEquals("nova", vm.awaitingAction.value)
+            assertTrue(enemy in vm.selectedEnemies.value)
+            vm.inspectEnemy(enemy)
+            vm.dismissEnemyInspection()
+            assertEquals("nova", vm.awaitingAction.value)
+        } finally { vm.close() }
+    }
+
     @Test
     fun consumeLevelUpSummariesClearsQueue() {
         val player = Player(
@@ -1260,8 +1307,25 @@ class CombatViewModelTest {
     }
 
     @Test
+    fun scanDiscoversEnemyWeaknessWithoutDamage() = runTest {
+        val runtime = createWeaknessRewardViewModel()
+        try {
+            val initialHp = runtime.state.value!!.combatants["shock_weak_drone"]!!.hp
+            val field = CombatViewModel::class.java.getDeclaredField("readyQueue").apply { isAccessible = true }
+            @Suppress("UNCHECKED_CAST")
+            (field.get(runtime) as MutableList<String>).add("nova")
+            runtime.selectReadyPlayer("nova")
+            runtime.useSkill(runtime.skillsForPlayer("nova").first { it.id == "source_art_scan" }, listOf("shock_weak_drone"))
+            runCurrent()
+            assertEquals(initialHp, runtime.state.value!!.combatants["shock_weak_drone"]!!.hp)
+            assertEquals(setOf("shock"), runtime.weaknessKnowledge.value.knownEnemyWeaknesses["shock_weak_drone"])
+        } finally { runtime.viewModelScope.cancel() }
+    }
+
+    @Test
     fun weaknessHitShowsCooldownRewardBanner() = runTest {
         val viewModel = createWeaknessRewardViewModel()
+        assertTrue(viewModel.weaknessKnowledge.value.knownEnemyWeaknesses.isEmpty())
         val audioEvents = mutableListOf<CombatFxEvent.Audio>()
         backgroundScope.launch {
             viewModel.fxEvents.collect { event ->
@@ -1284,6 +1348,8 @@ class CombatViewModelTest {
 
         try {
             val banner = viewModel.combatBanner.value
+            assertEquals(setOf("shock"), viewModel.weaknessKnowledge.value.knownEnemyWeaknesses["shock_weak_drone"])
+            assertEquals("shock_weak_drone", viewModel.enemyTypeId("shock_weak_drone"))
             assertEquals("Weakness exploited", banner?.primary)
             assertTrue(banner?.secondary.orEmpty().contains("Shock Probe"))
             assertTrue(banner?.secondary.orEmpty().contains("->"))
@@ -1513,7 +1579,7 @@ class CombatViewModelTest {
         }
     }
 
-    private fun createWeaknessRewardViewModel(): CombatViewModel {
+    private fun createWeaknessRewardViewModel(clock: () -> Long = { 1_000L }): CombatViewModel {
         val player = Player(
             id = "nova",
             name = "Nova",
@@ -1525,7 +1591,7 @@ class CombatViewModelTest {
             agility = 6,
             focus = 5,
             luck = 4,
-            skills = listOf("nova_shock_probe"),
+            skills = listOf("nova_shock_probe", "source_art_scan"),
             miniIconPath = "images/portraits/nova.png"
         )
         val enemy = Enemy(
@@ -1562,10 +1628,13 @@ class CombatViewModelTest {
             description = "A testing spark.",
             combatTags = listOf("shock")
         )
+        val scanSkill = Skill(id = "source_art_scan", name = "Scan", character = player.id,
+            type = "active", basePower = 0, cooldown = 2, description = "Analyze weaknesses",
+            combatTags = listOf("support", "debuff"), statusApplications = listOf("weak"))
         val worldAssets = mock<WorldAssetDataSource> {
             on { loadCharacters() } doReturn listOf(player)
             on { loadEnemies() } doReturn listOf(enemy)
-            on { loadSkills() } doReturn listOf(shockSkill)
+            on { loadSkills() } doReturn listOf(shockSkill, scanSkill)
             on { loadRooms() } doReturn emptyList()
             on { loadSkillNodes() } doReturn emptyMap()
         }
@@ -1574,10 +1643,11 @@ class CombatViewModelTest {
             on { getTheme(any()) } doReturn null
             on { getStyle(any()) } doReturn null
         }
+        val statuses = StatusRegistry(listOf(StatusDefinition("weak", defaultDuration = 2)))
         return CombatViewModel(
             worldAssets = worldAssets,
-            combatEngine = CombatEngine(statusRegistry = StatusRegistry()),
-            statusRegistry = StatusRegistry(),
+            combatEngine = CombatEngine(statusRegistry = statuses),
+            statusRegistry = statuses,
             sessionStore = GameSessionStore(),
             inventoryService = inventoryService,
             itemCatalog = FakeItemCatalog(),
@@ -1596,7 +1666,7 @@ class CombatViewModelTest {
             encounterCoordinator = EncounterCoordinator(),
             enemyIds = listOf(enemy.id),
             tutorialsEnabled = false,
-            elapsedRealtime = { 1_000L }
+            elapsedRealtime = clock
         )
     }
 

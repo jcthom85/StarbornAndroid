@@ -1,5 +1,7 @@
 # Hub 1 Production Lock
 
+> **Implementation reconciliation pending ? October 14, 2026.** Supporting design/authoring material. Current code/assets take precedence for implemented behavior; older Canon, Locked, required, or next-step claims below are not evidence that the game should be changed. Check [current documentation](../../../README.md) and the live route before use. This banner classifies review status, not the correctness of every passage.
+
 This document is the working lock sheet for building Hub 1: Homestead Quarter. Use it to decide which rooms are essential, which rooms can be cut or simplified, and when final room art should begin.
 
 ## Current Lock Status

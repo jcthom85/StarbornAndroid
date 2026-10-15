@@ -76,12 +76,6 @@
         "condition_unmet_message": "A dead pre-Dominion arcade cabinet leans beneath a miner's coat. One amber diagnostic blinks behind the cracked glass."
       },
       {
-        "name": "tables",
-        "type": "rest_stop",
-        "rest_event": "w1_rest_mess_hall",
-        "message": "Nova eats a hot ration and rests at the end of the mess table."
-      },
-      {
         "id": "inspect_ceramic_rooster",
         "name": "ceramic rooster",
         "type": "inspect",
@@ -12968,7 +12962,7 @@
       {
         "name": "Chime",
         "type": "generic",
-        "condition_unmet_message": "The Chime steadies the ship around a low Ocean-note, keeping the crew distinct as Ice inside the current."
+        "action_event": "astra_chime_archive"
       }
     ],
     "npc_presence": [
@@ -12977,6 +12971,14 @@
         "requires_milestones": [
           "ms_w2_mq05_complete"
         ]
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w4_engine_stolen"
+        ],
+        "description": "A cramped cockpit of amber CRTs, exposed wiring, and four mismatched flight seats. The nav console waits beneath a web of handwritten route notes while the Chime hums in its shielded cradle. Blue engine readings hold steady beside the amber navigation display; the recovered Deep-Core unit is now part of the ship."
       }
     ]
   },
@@ -13006,37 +13008,8 @@
     "weather": "industrial",
     "title": "Astra Common Room",
     "background_image": "images/rooms/astra/common_room.webp",
-    "description": "Coffee rings stain the central table. A patched kitchenette faces a couch bolted to the deck, and the shielded relic array occupies one warm corner beside the Great Frontier film archive. This is where the crew stops being a formation and becomes a family.",
-    "description_variants": [
-      {
-        "requires_milestones": [
-          "ms_all_arcade_cabinets_restored"
-        ],
-        "background_image": "images/rooms/astra/common_room_arcade_v1.webp",
-        "description": "Coffee rings stain the central table. Six restored arcade cabinets cast neon ribbons across the deck. The relic array and Great Frontier film archive share a warm corner. The crew stops being a formation and becomes a family."
-      },
-      {
-        "requires_milestones": [
-          "ms_arcade_cabinet_05_repaired"
-        ],
-        "background_image": "images/rooms/astra/common_room_arcade_v1.webp",
-        "description": "Coffee rings stain the central table. Five restored arcade cabinets stand along the bulkhead, casting cobalt and amber reflections across the deck. The relic array and Great Frontier film archive share a warm corner. The crew stops being a formation and becomes a family."
-      },
-      {
-        "requires_milestones": [
-          "ms_arcade_cabinet_03_repaired"
-        ],
-        "background_image": "images/rooms/astra/common_room_arcade_v1.webp",
-        "description": "Coffee rings stain the central table. Deep Mine, Canopy Hopper, and Spire Infiltrator hum in an amber and cyan row beside the kitchenette. The relic array and Great Frontier film archive share a warm corner. The crew stops being a formation and becomes a family."
-      },
-      {
-        "requires_milestones": [
-          "ms_arcade_cabinet_01_repaired"
-        ],
-        "background_image": "images/rooms/astra/common_room_arcade_v1.webp",
-        "description": "Coffee rings stain the central table. Beside the kitchenette, the restored Deep Mine cabinet paints the corner in warm amber light. The relic array and Great Frontier film archive share a warm corner. The crew stops being a formation and becomes a family."
-      }
-    ],
+    "description": "Coffee rings stain the [action:central table|crew table]. A patched [action:galley kitchenette|kitchenette] faces a couch bolted to the deck. This is where the crew eats, argues, and finds a little quiet between missions.",
+    "description_variants": [],
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13053,68 +13026,15 @@
     "state": {},
     "actions": [
       {
-        "name": "relic array",
-        "type": "generic",
-        "condition_unmet_message": "The shielded array can eventually synchronize late-joining crew members with recovered relics."
-      },
-      {
         "name": "central table",
         "type": "generic",
-        "condition_unmet_message": "Meals, arguments, route plans, and the quiet work of becoming a crew all collect here."
+        "action_event": "astra_crew_checkin"
       },
       {
         "name": "galley kitchenette",
         "type": "rest_stop",
         "cook_source": "Kitchen Provisions",
         "message": "A patched electric hotplate and kettle station ready to brew tea and cook nutritious rations for the voyage."
-      },
-      {
-        "name": "Great Frontier film archive",
-        "type": "generic",
-        "action_event": "astra_open_tape_deck",
-        "condition_unmet_message": "A vintage video-cassette cinema deck with amber meters and a widescreen CRT display."
-      },
-      {
-        "name": "Deep Mine Asteroid Drill",
-        "type": "arcade",
-        "show_when_milestone": "ms_arcade_cabinet_01_repaired",
-        "condition_unmet_message": "The restored Hyperion cabinet warms the recreation corner with an amber attract screen."
-      },
-      {
-        "name": "Canopy Hopper",
-        "type": "arcade",
-        "show_when_milestone": "ms_arcade_cabinet_02_repaired",
-        "condition_unmet_message": "The restored Sector 9 pod cabinet glows with emerald swamp phosphor."
-      },
-      {
-        "name": "Spire Infiltrator",
-        "type": "arcade",
-        "show_when_milestone": "ms_arcade_cabinet_03_repaired",
-        "condition_unmet_message": "The restored Spire mainframe cabinet hums with neon cyan overdrive."
-      },
-      {
-        "name": "Slag Catcher",
-        "type": "arcade",
-        "show_when_milestone": "ms_arcade_cabinet_04_repaired",
-        "condition_unmet_message": "The restored Foundry smelter cabinet radiates steady ember heat."
-      },
-      {
-        "name": "Orbital Defense 2000",
-        "type": "arcade",
-        "show_when_milestone": "ms_arcade_cabinet_05_repaired",
-        "condition_unmet_message": "The restored Zenith starfighter cabinet glows with cobalt blue telemetry."
-      },
-      {
-        "name": "Harmonic Pulse",
-        "type": "arcade",
-        "show_when_milestone": "ms_arcade_cabinet_06_repaired",
-        "condition_unmet_message": "The restored Source rhythm cabinet radiates deep harmonic resonance."
-      },
-      {
-        "name": "arcade prize dispenser",
-        "type": "shop",
-        "shop_id": "arcade_prize_shop",
-        "condition_unmet_message": "A retro chrome prize terminal glows with prizes for high arcade scores."
       }
     ],
     "npc_presence": [
@@ -13146,7 +13066,7 @@
     "weather": "industrial",
     "title": "Astra Living Quarters",
     "background_image": "images/rooms/astra/quarters.webp",
-    "description": "A short bunk corridor gives each crew member privacy. Nova's bed is plain but clean, with a handmade paper guardian by the pillow and an astronaut slate on the desk. Oliver the supervisor observes from a soft cushion.",
+    "description": "A short bunk corridor gives each crew member privacy. Nova's bed is plain but clean, with a handmade paper guardian by the pillow and an astronaut slate on the desk. Oliver the supervisor observes from a soft cushion. The [action:crew downtime|bunk corridor] offers a quiet chance to check in with the crew.",
     "npcs": [
       "oliver_supervisor"
     ],
@@ -13168,21 +13088,17 @@
         "condition_unmet_message": "Rest aboard the Astra fully restores the active party."
       },
       {
-        "name": "handmade paper guardian",
+        "name": "crew downtime",
         "type": "generic",
-        "condition_unmet_message": "A small, charming creature lovingly crafted from folded paper, cotton balls, and clear tape. Its hand-drawn smile is fierce and joyful. A tiny penciled note on the back reads: 'To Nova and the crew — Built by Tyson.'"
-      },
+        "action_event": "astra_crew_downtime"
+      }
+    ],
+    "description_variants": [
       {
-        "name": "young astronaut slate",
-        "type": "generic",
-        "condition_unmet_message": "A personal research datapad displaying planetary orbit projections, ancient prehistoric predator skeletons, and tactical defensive shield angles. Scrawled across the top in bright digital marker: 'Cadet Ian — Mission Objective: Explore the stars, defend the home ship, and never leave the crew behind.'"
-      },
-      {
-        "id": "inspect_supervisor_perch",
-        "name": "supervisor cushion",
-        "type": "inspect",
-        "description": "Inspect Oliver's designated supervisory cushion.",
-        "inspect_message": "A velvet thermal cushion claimed by Oliver the moment it was brought aboard. A handwritten shift log sits beside it, meticulously approved with a faint paw print."
+        "requires_milestones": [
+          "ms_w3_mq15_complete"
+        ],
+        "description": "A short bunk corridor gives each crew member privacy. Nova's bed is plain but clean, with a handmade paper guardian by the pillow and an astronaut slate on the desk. Oliver the supervisor observes from a soft cushion. The [action:crew downtime|bunk corridor] offers a quiet chance to check in with the crew. Patched panels and labeled lockers make the corridor feel settled rather than temporary."
       }
     ]
   },
@@ -13200,7 +13116,7 @@
     "weather": "industrial",
     "title": "Astra Cargo Bay",
     "background_image": "images/rooms/astra/cargo_bay.webp",
-    "description": "Cargo nets, sealed crates, and replacement conduits crowd the lower deck. A compact [action:Astra workbench|repair bench] is powered beside a damaged storage terminal. The [action:disembark|cargo ramp] leads back outside; the common room is through the east hatch.",
+    "description": "Cargo nets, sealed crates, and replacement conduits crowd the lower deck. The [action:Astra workbench|repair bench] stands beside a [action:cargo records|records terminal] for shared supplies, the Catch Log, and the shielded relic archive. The [action:disembark|cargo ramp] leads back outside; the common room is through the east hatch.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13214,9 +13130,9 @@
     "state": {},
     "actions": [
       {
-        "name": "storage terminal",
+        "name": "cargo records",
         "type": "generic",
-        "condition_unmet_message": "Long-term cargo storage is still offline while Zeke rebuilds its index."
+        "action_event": "astra_cargo_records"
       },
       {
         "name": "disembark",
@@ -13227,6 +13143,14 @@
         "name": "Astra workbench",
         "type": "tinkering",
         "condition_unmet_message": "A sturdy titanium bench equipped with laser soldering tools and schematic vices."
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w4_engine_stolen"
+        ],
+        "description": "Cargo nets, sealed crates, and replacement conduits crowd the lower deck. The [action:Astra workbench|repair bench] stands beside a [action:cargo records|records terminal] for shared supplies, the Catch Log, and the shielded relic archive. The [action:disembark|cargo ramp] leads back outside; the common room is through the east hatch. Fresh conduits carry the Deep-Core engine's steady power through the lower deck."
       }
     ]
   },
@@ -13256,7 +13180,7 @@
     "weather": "industrial",
     "title": "Astra Simulation Deck",
     "background_image": "images/rooms/astra/simulation_deck.webp",
-    "description": "Cold blue projectors surround a circular training floor. Combat telemetry and recovered cinematic fragments wait behind a half-repaired archive console.",
+    "description": "Cold blue projectors surround a circular training floor. The [action:archive console|training console] runs combat simulations. Beside it, a [action:recreation console|recreation console] opens restored arcade cabinets, the Great Frontier film collection, and the prize dispenser.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13275,6 +13199,25 @@
         "action_event": "astra_launch_simulation",
         "requires_milestone": "ms_w3_mq15_complete",
         "condition_unmet_message": "The simulation projectors need repairs. They will be ready after the escape from the Spire."
+      },
+      {
+        "name": "recreation console",
+        "type": "generic",
+        "action_event": "astra_recreation"
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_all_arcade_cabinets_restored"
+        ],
+        "description": "Cold blue projectors surround a circular training floor. The [action:archive console|training console] runs combat simulations. Beside it, a [action:recreation console|recreation console] opens restored arcade cabinets, the Great Frontier film collection, and the prize dispenser. All six restored cabinets brighten the recreation side of the deck."
+      },
+      {
+        "requires_milestones": [
+          "ms_arcade_cabinet_01_repaired"
+        ],
+        "description": "Cold blue projectors surround a circular training floor. The [action:archive console|training console] runs combat simulations. Beside it, a [action:recreation console|recreation console] opens restored arcade cabinets, the Great Frontier film collection, and the prize dispenser. Restored arcade screens cast warm reflections beside the blue training projectors."
       }
     ]
   },

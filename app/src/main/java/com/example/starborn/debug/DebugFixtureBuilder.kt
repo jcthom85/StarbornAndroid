@@ -7,7 +7,18 @@ object DebugFixtureBuilder {
     fun prepare(services: AppServices, procedure: DebugTestProcedure): Boolean {
         val fixture = procedure.fixture
         if (!services.startNewGame()) return false
-        if (fixture == DebugFixture.OPENING) return true
+        if (procedure.systemMode?.startsWith("crew_checkpoint_") == true) {
+            val id = procedure.systemMode.orEmpty().removePrefix("crew_checkpoint_")
+            val snapshot = services.worldDataSource.loadCrewCheckpoint(id) ?: return false
+            services.clearDebugBootstrap()
+            services.sessionStore.restore(snapshot)
+            return true
+        }
+        if (fixture == DebugFixture.OPENING) {
+            if (procedure.systemMode == "nova_builds") services.sessionStore.restore(
+                services.sessionStore.state.value.copy(progressionPrototypeVersion = 1))
+            return true
+        }
         services.clearDebugBootstrap()
         if (fixture in setOf(DebugFixture.FISHING, DebugFixture.COOKING, DebugFixture.TINKERING, DebugFixture.SHOP)) {
             return DebugSystemFixtureBuilder.prepare(services, procedure)

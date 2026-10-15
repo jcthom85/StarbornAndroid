@@ -1456,7 +1456,7 @@
   {
     "id": "mining_pistol",
     "name": "Mining Pistol",
-    "description": "A Dominion phase cutter with its factory governor deliberately bypassed. The wider sweep makes quota and destabilizes old phase hardware.",
+    "description": "A Dominion phase-cutter sidearm with its factory governor deliberately bypassed. The wider sweep makes quota and destabilizes old phase hardware.",
     "type": "weapon",
     "value": 45,
     "buy_price": 90,
@@ -3538,7 +3538,7 @@
   {
     "id": "item_arcade_token",
     "name": "Arcade Token",
-    "description": "A shiny brass token stamped with the Astra flight insignia. Redeemable at the Common Room prize dispenser.",
+    "description": "A shiny brass token stamped with the Astra flight insignia. Redeemable through the Simulation Deck recreation console.",
     "type": "consumable",
     "value": 25,
     "buy_price": 50,

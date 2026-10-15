@@ -51,17 +51,28 @@ class DesktopCombatFlowTest {
                 composeTestRule.onAllNodesWithTag("combat-action-attack").fetchSemanticsNodes().isNotEmpty()
             }
 
+            // Enemy action cues may appear while Nova's command menu is open.
+            composeTestRule.onNodeWithTag("combat-figure-nova").assertTextContains("CHOOSING")
+            composeTestRule.onNode(hasTestTag("combat-figure-nova") and hasText("ACTING")).assertDoesNotExist()
+            composeTestRule.onNodeWithTag("combat-recent-actions").assertIsDisplayed()
+
             // Verify primary combat action buttons
             composeTestRule.onNodeWithTag("combat-action-attack").assertExists()
             composeTestRule.onNodeWithTag("combat-action-skills").assertExists()
             composeTestRule.onNodeWithTag("combat-action-items").assertExists()
             composeTestRule.onNodeWithTag("combat-action-retreat").assertExists()
 
-            // Verify enemy inspect card affinity radar
+            // Unknown affinities stay hidden until this enemy type has been studied through combat.
             composeTestRule.onNodeWithTag("combat-affinity-radar").assertExists()
+            composeTestRule.onNodeWithText("Not discovered").assertExists()
+            composeTestRule.runOnIdle { services.sessionStore.discoverEnemyWeakness("echo_borer", "shock") }
+            composeTestRule.waitUntil(5_000) {
+                composeTestRule.onAllNodesWithText("Shock").fetchSemanticsNodes().isNotEmpty()
+            }
+            composeTestRule.onAllNodesWithText("Not discovered").assertCountEquals(0)
 
             // Capture preview artifact
-            val artifactsDir = File("C:/Users/jcthomas/.gemini/antigravity-ide/brain/4679957f-9fc8-4b49-a04b-cc85f289b043")
+            val artifactsDir = File("build/reports/combat-clarity")
             artifactsDir.mkdirs()
             val image = composeTestRule.onRoot().captureToImage().asAwtImage()
             ImageIO.write(image, "png", File(artifactsDir, "desktop_combat_preview.png"))

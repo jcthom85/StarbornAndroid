@@ -58,7 +58,7 @@ internal fun DesktopExplorationPromptBanner(services: com.example.starborn.deskt
     val action: String
     val accent: Color
     when (prompt) {
-        is TutorialPrompt -> { title = "Tutorial"; message = prompt.entry.message.adaptInputVocabularyForDesktop(LocalDesktopKeyBindings.current); action = "Continue"; accent = Color(0xFF7BE8FF) }
+        is TutorialPrompt -> { title = prompt.entry.metadata["title"] ?: "Tutorial"; message = prompt.entry.message.adaptInputVocabularyForDesktop(LocalDesktopKeyBindings.current); action = prompt.entry.metadata["action_label"] ?: "Continue"; accent = Color(0xFF7BE8FF) }
         is MilestonePrompt -> { title = null; message = prompt.event.message.adaptInputVocabularyForDesktop(LocalDesktopKeyBindings.current); action = "Dismiss"; accent = Color(0xFFFFD27F) }
         is ItemGrantedPrompt -> {
             title = prompt.itemName + if (prompt.quantity > 1) " x${prompt.quantity}" else ""
@@ -70,8 +70,8 @@ internal fun DesktopExplorationPromptBanner(services: com.example.starborn.deskt
     }
     Surface(
         modifier.widthIn(max = 620.dp).fillMaxWidth()
-            .desktopPointerHover(prompt is ItemBatchGrantedPrompt)
-            .clickable(enabled = prompt is ItemBatchGrantedPrompt, onClick = onDismiss),
+            .desktopPointerHover(prompt is TutorialPrompt || prompt is MilestonePrompt || prompt is ItemBatchGrantedPrompt)
+            .clickable(enabled = prompt is TutorialPrompt || prompt is MilestonePrompt || prompt is ItemBatchGrantedPrompt, onClick = onDismiss),
         shape = RoundedCornerShape(14.dp),
         color = Color(0xFA07111A),
         border = BorderStroke(1.dp, accent.copy(alpha = .6f)),

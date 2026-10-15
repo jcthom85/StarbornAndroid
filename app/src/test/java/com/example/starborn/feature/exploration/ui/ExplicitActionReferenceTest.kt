@@ -11,6 +11,18 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class ExplicitActionReferenceTest {
+    @Test fun `long inspect names and arcade discoveries remain accessible in the prose`() {
+        val short = GenericAction("monitor", "generic")
+        val long = GenericAction("vintage mystery monitor", "inspect")
+        val cabinet = GenericAction("broken Hyperion cabinet", "arcade_discovery")
+        val plan = requireNotNull(buildInlineActionPlan(
+            "A broken Hyperion cabinet stands beside a vintage mystery monitor.", listOf(short, long, cabinet), emptyMap(), null))
+        val linked = plan.segments.map { (it.target as InlineActionTarget.Room).action }
+        assertEquals(listOf(cabinet, long), linked)
+        assertEquals("vintage mystery monitor", plan.description.substring(plan.segments.last().start, plan.segments.last().end))
+        assertFalse(linked.contains(short))
+    }
+
     @Test fun `special travel actions append explicit clickable paths`() {
         val travel = TravelAction("Climb to Lantern Roof", "northeast")
         val plan = requireNotNull(buildInlineActionPlan("Rain drums on the awnings.", listOf(travel), emptyMap(), null))

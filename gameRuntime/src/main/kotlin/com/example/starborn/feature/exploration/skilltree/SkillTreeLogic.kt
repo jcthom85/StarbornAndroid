@@ -57,7 +57,7 @@ fun evaluateNodeStatus(
     apInvested: Int = skillTreeApInvested(tree, unlockedSkills)
 ): SkillNodeStatus {
     val unlocked = unlockedSkills.contains(node.id)
-    val requiredForTier = requiredApForRow(nodeRow(node))
+    val requiredForTier = if (tree.useTierRequirements) requiredApForRow(nodeRow(node)) else 0
     val meetsTier = apInvested >= requiredForTier
     val unmet = unmetRequirements(node, unlockedSkills, completedMilestones)
     val hasAp = availableAp >= max(0, node.costAp)

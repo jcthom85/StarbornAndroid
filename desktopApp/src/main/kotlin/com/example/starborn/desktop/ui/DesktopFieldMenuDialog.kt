@@ -56,7 +56,7 @@ import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import java.util.Locale
 
 enum class DesktopMenuTab(val label: String) {
-    STATS("Stats"),
+    STATS("Party"),
     INVENTORY("Inventory"),
     FIELD_KIT("Tinker"),
     JOURNAL("Journal"),
@@ -88,9 +88,27 @@ fun DesktopFieldMenuDialog(
     }
 }
 
-@OptIn(androidx.compose.ui.ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun DesktopFieldMenuContent(
+    services: DesktopAppServices,
+    initialTab: DesktopMenuTab = DesktopMenuTab.STATS,
+    currentRoomTitle: String? = null,
+    onOpenFieldKit: () -> Unit,
+    onReturnToTitle: () -> Unit,
+    onDismiss: () -> Unit,
+    onOpenControls: (() -> Unit)? = null,
+    onQuitToDesktop: (() -> Unit)? = null
+) {
+    CompositionLocalProvider(LocalTerminalPresentation provides true) {
+        DesktopFieldMenuTheme(services) {
+            DesktopFieldMenuBody(services, initialTab, currentRoomTitle, onOpenFieldKit, onReturnToTitle, onDismiss, onOpenControls, onQuitToDesktop)
+        }
+    }
+}
+
+@OptIn(androidx.compose.ui.ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class)
+@Composable
+private fun DesktopFieldMenuBody(
     services: DesktopAppServices,
     initialTab: DesktopMenuTab = DesktopMenuTab.STATS,
     currentRoomTitle: String? = null,
@@ -112,7 +130,7 @@ fun DesktopFieldMenuContent(
     val pageState = androidx.compose.runtime.saveable.rememberSaveableStateHolder()
     val accent = when (activeTab) {
         DesktopMenuTab.STATS, DesktopMenuTab.JOURNAL -> FieldMenuDesign.gold
-        DesktopMenuTab.FIELD_KIT -> Color(0xFF7EDAB4)
+        DesktopMenuTab.FIELD_KIT -> FieldMenuDesign.cyan
         else -> FieldMenuDesign.cyan
     }
     val entrance = remember { Animatable(1f) }
@@ -144,6 +162,7 @@ fun DesktopFieldMenuContent(
         onDismiss()
         runtime.loadGame(-1)
     }
+    CompositionLocalProvider(LocalTerminalPage provides activeTab) {
     Surface(Modifier.focusRequester(keyboardFocus).onPreviewKeyEvent { event ->
         if (event.type != KeyEventType.KeyDown) false else {
             val index = listOf(Key.One, Key.Two, Key.Three, Key.Four, Key.Five, Key.Six).indexOf(event.key)
@@ -174,10 +193,10 @@ fun DesktopFieldMenuContent(
             select(directTab); true
         } else false
     }.focusable().widthIn(max = 1440.dp).fillMaxWidth(.94f).fillMaxHeight(.92f),
-        shape = RoundedCornerShape(18.dp), color = FieldMenuDesign.shell,
-        border = BorderStroke(1.dp, if (settings.highContrastMode) Color.White else FieldMenuDesign.border)) {
+        shape = RoundedCornerShape(8.dp), color = FieldMenuDesign.shell,
+        border = BorderStroke(1.dp, if (settings.highContrastMode) Color.White else FieldMenuDesign.cyan.copy(alpha = .28f))) {
         BoxWithConstraints(Modifier.fillMaxSize()) {
-            DesktopMenuAtmosphere(Modifier.fillMaxSize(), accent, !settings.highContrastMode && !settings.disableFlashes)
+            if (!settings.highContrastMode) DesktopMenuAtmosphere(Modifier.fillMaxSize(), accent, false, activeTab)
             val compact = maxWidth < 900.dp
             Column(Modifier.fillMaxSize()) {
                 FlowRow(Modifier.fillMaxWidth().background(Brush.horizontalGradient(listOf(accent.copy(alpha = .12f), Color.Transparent)))
@@ -194,9 +213,6 @@ fun DesktopFieldMenuContent(
                         color = FieldMenuDesign.gold, style = MaterialTheme.typography.titleMedium)
                     DesktopTooltip("Quick save game [F5]") {
                         OutlinedButton(onClick = runtime::quickSave, modifier = Modifier.desktopPointerHover()) { Text(if (compact) "Save" else "Quick save") }
-                    }
-                    DesktopTooltip("Settings [Alt+6]") {
-                        IconButton(onClick = { select(DesktopMenuTab.SETTINGS) }, modifier = Modifier.desktopPointerHover()) { Icon(Icons.Default.Settings, "Settings", tint = FieldMenuDesign.textMuted) }
                     }
                     DesktopTooltip("Close menu [Esc]") {
                         IconButton(onClick = onDismiss, modifier = Modifier.desktopPointerHover()) { Icon(Icons.Default.Close, "Close menu", tint = FieldMenuDesign.text) }
@@ -220,7 +236,7 @@ fun DesktopFieldMenuContent(
                             val tabIndex = DesktopMenuTab.entries.indexOf(tab)
                             DesktopTooltip("${tab.label} [Alt+${tabIndex + 1}]") {
                                 Surface(onClick = { select(tab) }, modifier = Modifier.fillMaxWidth().desktopPointerHover().semantics { selected = activeTab == tab },
-                                    shape = RoundedCornerShape(10.dp),
+                                    shape = RoundedCornerShape(6.dp),
                                     border = BorderStroke(1.dp, if (activeTab == tab) accent.copy(alpha = .5f) else Color.Transparent),
                                     color = if (activeTab == tab) accent.copy(alpha = .10f) else Color.Transparent) {
                                     Column(Modifier.padding(horizontal = if (compact) 8.dp else 14.dp, vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -256,6 +272,12 @@ fun DesktopFieldMenuContent(
                                 Text(ui.menuFeedback.orEmpty(), Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 10.dp), color = FieldMenuDesign.cyan, style = MaterialTheme.typography.bodyMedium)
                             }
                         }
+                        if ((ui.skillTreeOverlay != null || ui.partyMemberDetails != null) && ui.partyStatus.members.size > 1) {
+                            DesktopMenuPartyStrip(services, ui.partyStatus.members, memberId, settings.largeTouchTargets) { id ->
+                                selectedMember = id
+                                if (ui.skillTreeOverlay != null) runtime.openSkillTree(id) else runtime.openPartyMemberDetails(id)
+                            }
+                        }
                         if (ui.skillTreeOverlay != null) {
                             TextButton(onClick = runtime::closeSkillTreeOverlay) { Text("Back to Party") }
                             DesktopMenuSkillsContent(services, ui.skillTreeOverlay!!)
@@ -263,7 +285,7 @@ fun DesktopFieldMenuContent(
                             TextButton(onClick = runtime::closePartyMemberDetails) { Text("Back to Party") }
                             DesktopMenuAttributesContent(services, ui.partyMemberDetails!!)
                         } else {
-                            if ((activeTab == DesktopMenuTab.STATS || activeTab == DesktopMenuTab.INVENTORY) && ui.partyStatus.members.size > 1) {
+                            if ((activeTab == DesktopMenuTab.STATS) && ui.partyStatus.members.size > 1) {
                                 DesktopMenuPartyStrip(services, ui.partyStatus.members, memberId, settings.largeTouchTargets) { selectedMember = it }
                             }
                             Box(Modifier.weight(1f).fillMaxWidth().graphicsLayer {
@@ -271,7 +293,7 @@ fun DesktopFieldMenuContent(
                             }) {
                                 pageState.SaveableStateProvider(activeTab.name) { when (activeTab) {
                                     DesktopMenuTab.STATS -> DesktopMenuPartyContent(services, memberId)
-                                    DesktopMenuTab.INVENTORY -> DesktopInventoryTabContent(session, allItems, services)
+                                    DesktopMenuTab.INVENTORY -> DesktopInventoryTabContent(session, allItems, services, memberId)
                                     DesktopMenuTab.FIELD_KIT -> DesktopTinkeringContent(services)
                                     DesktopMenuTab.JOURNAL -> DesktopRuntimeJournalContent(services)
                                     DesktopMenuTab.MAP -> DesktopRuntimeMapContent(services)
@@ -286,17 +308,21 @@ fun DesktopFieldMenuContent(
     }
 }
 
+}
+
 @Composable
 private fun DesktopInventoryTabContent(
     sessionState: com.example.starborn.domain.session.GameSessionState,
     allItems: Map<String, Item>,
-    services: DesktopAppServices
+    services: DesktopAppServices,
+    characterId: String? = null
 ) {
     var category by rememberSaveable { mutableStateOf(InventoryCategory.SUPPLIES) }
     var selectedItemId by rememberSaveable { mutableStateOf<String?>(null) }
     var useItemId by rememberSaveable { mutableStateOf<String?>(null) }
     var search by rememberSaveable { mutableStateOf("") }
     var sort by rememberSaveable { mutableStateOf("Name") }
+    var supplyFilter by rememberSaveable { mutableStateOf("All") }
     val visibleEntries = sessionState.inventory.entries.filter { entry ->
         entry.value > 0 && (allItems[entry.key]?.name ?: entry.key).contains(search, ignoreCase = true)
     }.sortedWith(when (sort) {
@@ -329,7 +355,7 @@ private fun DesktopInventoryTabContent(
         }
 
         if (category != InventoryCategory.GEAR) {
-            OutlinedTextField(search, { search = it }, Modifier.fillMaxWidth(), label = { Text("Search cargo") }, placeholder = { Text("Search cargo") }, singleLine = true)
+            OutlinedTextField(search, { search = it }, Modifier.fillMaxWidth(), label = { Text("Search items") }, placeholder = { Text("Search items") }, singleLine = true)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("Sort:", color = FieldMenuDesign.textMuted)
                 listOf("Name", "Quantity", "Type").forEach { option ->
@@ -339,14 +365,23 @@ private fun DesktopInventoryTabContent(
         }
         when (category) {
             InventoryCategory.GEAR -> {
+                val party by services.exploration.uiState.collectAsState()
+                var gearMemberId by rememberSaveable { mutableStateOf(characterId) }
+                if (party.partyStatus.members.size > 1) DesktopMenuPartyStrip(services, party.partyStatus.members, gearMemberId ?: characterId, false) { gearMemberId = it }
                 Box(Modifier.weight(1f).fillMaxWidth()) {
-                    DesktopRuntimeGearContent(services)
+                    DesktopRuntimeGearContent(services, gearMemberId ?: characterId)
                 }
             }
             InventoryCategory.SUPPLIES -> {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    listOf("All", "Consumables", "Components").forEach { filter ->
+                        FilterChip(supplyFilter == filter, onClick = { supplyFilter = filter }, label = { Text(filter) })
+                    }
+                }
                 val supplies = visibleEntries
                     .filterNot { allItems[it.key]?.type == "key" || allItems[it.key]?.categoryOverride == "key" }
                     .filterNot { allItems[it.key]?.equipment != null }
+                    .filter { supplyFilter == "All" || if (supplyFilter == "Consumables") allItems[it.key]?.type == "consumable" else allItems[it.key]?.type == "component" }
                     .toList()
                 DesktopInventorySplitLayout(
                     services = services,
@@ -426,7 +461,7 @@ private fun DesktopInventorySplitLayout(
                     Text(text = emptyMessage, color = FieldMenuDesign.textMuted, fontSize = 13.sp)
                 }
             } else {
-                LazyVerticalGrid(columns = GridCells.Adaptive(150.dp), state = gridState, modifier = Modifier.weight(1f).fillMaxWidth().onPreviewKeyEvent { event ->
+                LazyVerticalGrid(columns = GridCells.Adaptive(128.dp), state = gridState, modifier = Modifier.weight(1f).fillMaxWidth().onPreviewKeyEvent { event ->
                     val current = entries.indexOfFirst { it.key == activeSelection }.coerceAtLeast(0)
                     val firstRow = gridState.layoutInfo.visibleItemsInfo.firstOrNull()?.row
                     val columns = gridState.layoutInfo.visibleItemsInfo.count { it.row == firstRow }.coerceAtLeast(1)
@@ -457,14 +492,14 @@ private fun DesktopInventorySplitLayout(
                             Surface(onClick = { onSelectItem(entry.key) }, shape = RoundedCornerShape(12.dp),
                                 modifier = Modifier.desktopPointerHover(),
                                 color = if (isSelected) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel,
-                                border = BorderStroke(if (isSelected) 2.dp else 1.dp, if (isSelected) FieldMenuDesign.cyan else FieldMenuDesign.border.copy(alpha = .3f))) {
-                                Column(Modifier.fillMaxWidth().height(150.dp).padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                border = BorderStroke(if (isSelected) 2.dp else 1.dp, if (isSelected) FieldMenuDesign.gold else Color.Transparent)) {
+                                Column(Modifier.fillMaxWidth().height(120.dp).padding(10.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                     Box(Modifier.fillMaxWidth().weight(1f)) {
-                                        DesktopMenuItemArt(services, item, Modifier.align(Alignment.Center).size(64.dp))
+                                        DesktopMenuItemArt(services, item, Modifier.align(Alignment.Center).size(48.dp))
                                         Text("x${entry.value}", Modifier.align(Alignment.TopEnd), color = FieldMenuDesign.gold, style = MaterialTheme.typography.labelLarge)
                                     }
                                     Text(item?.name ?: services.contentName(entry.key), style = MaterialTheme.typography.labelLarge, maxLines = 2,
-                                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis, color = if (isSelected) FieldMenuDesign.cyan else FieldMenuDesign.text)
+                                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis, color = if (isSelected) FieldMenuDesign.gold else FieldMenuDesign.text)
                                     Text(item?.type.orEmpty().replace('_', ' '), style = MaterialTheme.typography.labelSmall, color = FieldMenuDesign.textMuted)
                                 }
                             }
@@ -480,7 +515,7 @@ private fun DesktopInventorySplitLayout(
             modifier = Modifier.weight(1f).fillMaxHeight(),
             shape = RoundedCornerShape(14.dp),
             color = Color(0xFF061018).copy(alpha = 0.90f),
-            border = BorderStroke(1.dp, FieldMenuDesign.border.copy(alpha = 0.45f))
+            border = null
         ) {
             if (selectedItem != null) {
                 Column(
@@ -538,7 +573,7 @@ private fun DesktopInventorySplitLayout(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = FieldMenuDesign.cyan,
+                            containerColor = FieldMenuDesign.gold,
                             contentColor = Color(0xFF040810),
                             disabledContainerColor = Color.White.copy(alpha = 0.08f),
                             disabledContentColor = Color.White.copy(alpha = 0.35f)

@@ -33,6 +33,7 @@ import com.example.starborn.desktop.DesktopAppServices
 import com.example.starborn.domain.model.actionKey
 import com.example.starborn.domain.model.TravelAction
 import com.example.starborn.domain.model.RestStopAction
+import com.example.starborn.domain.model.GenericAction
 import com.example.starborn.feature.exploration.presentation.*
 import com.example.starborn.feature.exploration.viewmodel.ExplorationUiState
 import com.example.starborn.feature.exploration.viewmodel.MinimapUiState
@@ -63,6 +64,10 @@ internal fun unmatchedRoomTargets(ui: ExplorationUiState, plan: InlineActionPlan
         }
     }
 }
+
+/** Unlinked flavor inspections remain in Actions, rather than filling the exploration panel. */
+internal fun contextualRoomTargets(ui: ExplorationUiState, plan: InlineActionPlan?, isDark: Boolean): List<InlineActionTarget> =
+    unmatchedRoomTargets(ui, plan, isDark).filterNot { it is InlineActionTarget.Room }
 
 @Composable
 internal fun DesktopExplorationPanels(
@@ -143,11 +148,16 @@ private fun DesktopNarrativeArea(services: DesktopAppServices, ui: ExplorationUi
                 shape = RoundedCornerShape(12.dp), color = if (settings.highContrastMode) Color.Black else Color(0xEB07111A), border = BorderStroke(1.dp, if (settings.highContrastMode) Color.White else accent.copy(alpha = .24f))) {
                 Column(Modifier.drawBehind { drawRect(accent.copy(alpha = .85f), size = androidx.compose.ui.geometry.Size(3.dp.toPx(), size.height)) }
                     .padding(22.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                    DesktopRoomHeading(if (isDark && ui.currentRoom?.revealTitleWhenDark != true) "Dark room" else ui.currentRoom?.title ?: "Loading?",
-                        if (settings.highContrastMode) Color.White else accent, compact)
+                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                        Box(Modifier.weight(1f)) {
+                            DesktopRoomHeading(if (isDark && ui.currentRoom?.revealTitleWhenDark != true) "Dark room" else ui.currentRoom?.title ?: "Loading?",
+                                if (settings.highContrastMode) Color.White else accent, compact)
+                        }
+                        TextButton(onClick = runtime::openRoomActions, enabled = !blocked) { Text("Actions") }
+                    }
                     DesktopExplorationScrollPane(bodyScroll, Modifier.weight(1f, fill = false).fillMaxWidth()) {
                     RoomDescription(plan, description, isDark, Color(0xFFF0F3F5),
-                        onAction = { if (!blocked) runtime.onActionSelected(it) },
+                        onAction = { if (!blocked) runtime.inspectRoomAction(it) },
                         onNpcClick = { if (!blocked && !isDark) runtime.onNpcInteraction(it) },
                         onEnemyClick = { if (!blocked && !isDark) runtime.engageEnemy(it) }, accentColor = PanelCyan,
                         modifier = Modifier.fillMaxWidth().testTag("narrative-body").semantics {
@@ -173,7 +183,7 @@ private fun DesktopNarrativeArea(services: DesktopAppServices, ui: ExplorationUi
 @Composable
 private fun DesktopContextualControls(services: DesktopAppServices, ui: ExplorationUiState, plan: InlineActionPlan?, isDark: Boolean, blocked: Boolean) {
     val runtime = services.exploration
-    val remaining = unmatchedRoomTargets(ui, plan, isDark).filterNot { it is InlineActionTarget.Npc || it is InlineActionTarget.Enemy && ui.visualEnemyParties.isNotEmpty() }
+    val remaining = contextualRoomTargets(ui, plan, isDark).filterNot { it is InlineActionTarget.Npc || it is InlineActionTarget.Enemy && ui.visualEnemyParties.isNotEmpty() }
     val specialExits = ui.availableConnections.filter { (direction, target) -> target != null && direction.lowercase() !in cardinalDirections &&
         ui.actions.filterIsInstance<TravelAction>().none { it.direction.equals(direction, true) } }
     if (remaining.isEmpty() && (isDark || ui.groundItems.isEmpty()) && specialExits.isEmpty() && (isDark || ui.npcs.isEmpty()) && !ui.canReturnToHub) return
@@ -189,7 +199,7 @@ private fun DesktopContextualControls(services: DesktopAppServices, ui: Explorat
                 Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     remaining.forEach { target ->
                         when (target) {
-                            is InlineActionTarget.Room -> DesktopExplorationActionRow(target.action.name,
+                            is InlineActionTarget.Room -> DesktopExplorationActionRow(target.action.name.replaceFirstChar { it.titlecase() },
                                 when { (target.action as? RestStopAction)?.cookSource != null -> "cook"; target.action is RestStopAction -> "rest"; target.action is TravelAction -> "travel"; else -> "inspect" },
                                 !blocked && ui.actionHints[target.action.actionKey()]?.locked != true) { runtime.onActionSelected(target.action) }
                             is InlineActionTarget.Npc -> Unit
@@ -227,18 +237,6 @@ private fun DesktopIndependentHud(services: DesktopAppServices, ui: ExplorationU
                 DesktopPartyCard(services, ui, blocked, onMenu)
             }
         }
-        DesktopExplorationKeyLegendHud(
-            ui = ui,
-            blocked = blocked,
-            modifier = Modifier.testTag("hud-key-legend"),
-            onInteractFirst = onInteractFirst,
-            onChooseActions = onChooseActions,
-            onOpenMap = { onMenu(DesktopMenuTab.MAP) },
-            onOpenInventory = { onMenu(DesktopMenuTab.INVENTORY) },
-            onQuickSave = { services.exploration.saveGame(-1) },
-            onOpenControls = onOpenControls,
-            onOpenMenu = { onMenu(DesktopMenuTab.STATS) }
-        )
     }
     }
 }

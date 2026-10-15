@@ -116,7 +116,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
     val inventoryService = InventoryService(itemRepository).apply { loadItems() }
     val sessionStore = GameSessionStore().apply {
         configureRestoredHpCeilings { state ->
-            val nodes = worldDataSource.loadSkillNodes()
+            val nodes = worldDataSource.loadSkillNodes(state.progressionPrototypeVersion)
             worldDataSource.loadCharacters().associate { player -> player.id to
                 com.example.starborn.domain.combat.PartyHealth.maxHp(player, state, inventoryService::catalogItem, nodes) }
         }

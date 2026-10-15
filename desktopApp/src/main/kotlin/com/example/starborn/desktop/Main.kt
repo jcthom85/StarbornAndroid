@@ -280,12 +280,9 @@ fun DesktopGameApp(
             DesktopScreenState.COMBAT -> DesktopCombatScreen(
                 services = services,
                 enemyIds = activeCombatEnemies,
-                onVictory = {
+                onVictory = { result ->
                     exitCombatPayload = "" to {
-                        services.exploration.onCombatVictory(com.example.starborn.navigation.CombatResultPayload(
-                            outcome = com.example.starborn.navigation.CombatResultPayload.Outcome.VICTORY,
-                            enemyIds = activeCombatEnemies, roomId = services.sessionStore.state.value.roomId,
-                            sourcePartyId = services.encounterCoordinator.currentSourcePartyId()))
+                        services.exploration.onCombatVictory(result)
                         onScreenStateChange(DesktopScreenState.EXPLORATION)
                         exitingCombatTransition = true
                     }

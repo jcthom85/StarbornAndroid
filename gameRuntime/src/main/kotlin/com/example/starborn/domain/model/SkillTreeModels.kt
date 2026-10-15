@@ -6,7 +6,8 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class SkillTreeDefinition(
     val character: String,
-    val branches: Map<String, List<SkillTreeNode>> = emptyMap()
+    val branches: Map<String, List<SkillTreeNode>> = emptyMap(),
+    val useTierRequirements: Boolean = true
 )
 
 @JsonClass(generateAdapter = true)
@@ -17,7 +18,8 @@ data class SkillTreeNode(
     val costAp: Int = 0,
     val pos: List<Int>? = null,
     val requires: List<String>? = null,
-    val effect: SkillNodeEffect? = null
+    val effect: SkillNodeEffect? = null,
+    val description: String? = null
 )
 
 @JsonClass(generateAdapter = true)

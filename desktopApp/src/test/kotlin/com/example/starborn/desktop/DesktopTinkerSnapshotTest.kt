@@ -54,7 +54,7 @@ class DesktopTinkerSnapshotTest {
             }
             composeTestRule.waitForIdle()
 
-            val artifactsDir = File(System.getProperty("user.home"), ".gemini/antigravity-cli/brain/03813eca-b59d-44ca-9f2d-90a0e5b8e32f")
+            val artifactsDir = File("build/reports/desktop/screenshots")
             artifactsDir.mkdirs()
 
             val node = composeTestRule.onRoot()

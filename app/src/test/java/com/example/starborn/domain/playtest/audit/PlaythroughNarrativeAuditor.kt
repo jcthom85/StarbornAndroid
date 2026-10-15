@@ -241,6 +241,19 @@ class PlaythroughNarrativeAuditor(
 
     fun exportReportToFile(destinationFile: File) {
         destinationFile.parentFile?.mkdirs()
-        destinationFile.writeText(generateReport())
+        // Replacing a complete file also works when Windows has mapped the old report for reading.
+        val target = destinationFile.absoluteFile.toPath()
+        val temporary = java.nio.file.Files.createTempFile(target.parent, ".narrative-report-", ".tmp")
+        try {
+            java.nio.file.Files.write(temporary, generateReport().toByteArray(Charsets.UTF_8))
+            try {
+                java.nio.file.Files.move(temporary, target, java.nio.file.StandardCopyOption.ATOMIC_MOVE,
+                    java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+            } catch (_: java.nio.file.AtomicMoveNotSupportedException) {
+                java.nio.file.Files.move(temporary, target, java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+            }
+        } finally {
+            java.nio.file.Files.deleteIfExists(temporary)
+        }
     }
 }

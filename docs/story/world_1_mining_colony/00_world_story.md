@@ -1,5 +1,7 @@
 # World 1: The Mines — Story Bible
 
+> **Implementation reconciliation pending ? October 14, 2026.** Supporting design/authoring material. Current code/assets take precedence for implemented behavior; older Canon, Locked, required, or next-step claims below are not evidence that the game should be changed. Check [current documentation](../../README.md) and the live route before use. This banner classifies review status, not the correctness of every passage.
+
 **Status:** Canon (Week 1 Monday)
 **Setting:** Stellarium Colony 4 — A Dominion-owned mining operation built into canyon walls on a sealed planet
 **Tone:** Oppressive normalcy. The horror isn't monsters — it's paperwork, quotas, and the quiet knowledge that you're replaceable.

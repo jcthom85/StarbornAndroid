@@ -1,16 +1,19 @@
-# Quests — World 3, Hub 1: Lower City (The Return)
+# Lower City: quests
 
-## Main Questline (The Setup)
+Status: Source-reconciled reference, October 14, 2026. Current code/assets are the implementation baseline. This is a source review, not a fresh playthrough or a claim that every route and device behavior is accepted.
 
-| ID | Title | Objective | Key Steps | Rewards | Notes |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **MQ_11** | **Homecoming** | Secure a base of ops and force Zeke back into the city that erased him. | 1. Land *The Astra* in the hidden sewers.<br>2. Clear the landing zone.<br>3. **Zeke** leads the party to his old apartment (Safehouse).<br>4. **Orion** sets up a Source Shield. | Base Unlocked | The safehouse should feel like an erased life being turned into a weapon, not just a convenient base. |
-| **MQ_12** | **The Plan** | Gather overlooked Lower City intel and convert survival scraps into a real heist. | 1. **Nova** talks to Jax for curfews and context.<br>2. Study patrol timing from the underrail map.<br>3. **Gh0st** pulls security records from the plaza kiosk.<br>4. Copy freight badge patterns at the service gate.<br>5. Source disguise materials from the safehouse roof.<br>6. **Zeke** compiles the blueprints.<br>7. Assemble at the planning table and assign roles. | Blueprint | Heist planning phase. The emotional point is trust: Nova is no longer just reacting; she is coordinating people who can get hurt. |
+Arrival under the Spire, runoff/sewer traversal, The Static and the apartment, market activities, and preparation at Transit Plaza. The crew already travels with Zeke; there is no reunion with a separately waiting Zeke.
 
-## Side Quests
+| Quest | Implemented objective | Payout / handoff |
+|---|---|---|
+| `w3_mq11` — Homecoming | Clear the landing encounter, climb to Vent Output, and establish the apartment shield. | 400 XP; MQ12 and local route reveals. |
+| `w3_mq12` — The Plan | Gather six preparation tasks, then commit the heist at the planning table. | 450 XP; the guarded completion handoff starts MQ13 and warps to Laundry Service. |
+| `w3_sq11` — Neon Fix | Inspect the sign and install a neon sign core. | 200 XP; consumes the installed core. No Streetwise price passive is granted by the completion event. |
+| `w3_sq12` — Cold Case | Recover the erased case number, search security records, and expose the transfer. | 200 XP and `gh0st_intercept`. |
+| `w3_sq13` — Night Market Run | Trace stolen power, reroute it, and restore the market lights. | 200 XP and `neon_band`. |
 
-| ID | Title | Quest Giver | Objective | Rewards | Notes |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **SQ_11** | **Neon Fix** | Jax | Fix the sign so The Static looks open, watched, and ordinary enough to avoid patrol attention. | **Passive: Streetwise** | Lower City safety through camouflage. Better sell prices at shops. |
-| **SQ_12** | **Cold Case** | Gh0st | Find info on his sister (Elara) without waking his old flags. | **Gh0st Skill: Intercept** | Gh0st character development. Dominion erasure becomes personal, not abstract. |
-| **SQ_13** | **Night Market Run** | Mika | Help keep the Night Market lit under Dominion patrol pressure. | **Accessory: Neon Band** | Optional breather. The market is resilience, not just color. Band gives Crit +5%. |
+Quest ownership by hub is organization, not strict execution order. Respect actual conditions, alternative outcomes, crafting and callback ownership. Old short IDs such as MQ_13/SQ_14 are retired as implementation references.
+
+## Sources and maintenance
+
+[rooms](../../../../app/src/main/assets/rooms.json), [quests](../../../../app/src/main/assets/quests.json), [events](../../../../app/src/main/assets/events.json), [dialogue](../../../../app/src/main/assets/dialogue.json), [hub_nodes](../../../../app/src/main/assets/hub_nodes.json). [Documentation index](../../../README.md). Update this reference when its corresponding records change; do not change working game logic to match an older script.

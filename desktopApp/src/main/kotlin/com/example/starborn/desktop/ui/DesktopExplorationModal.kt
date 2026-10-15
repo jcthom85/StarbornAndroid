@@ -14,14 +14,14 @@ import androidx.compose.ui.window.Dialog
 
 /** Inspection-card visuals with real modal focus and the original runtime choices. */
 @Composable
-internal fun DesktopExplorationModal(message: String, onDismiss: () -> Unit, title: String? = null,
+internal fun DesktopExplorationModal(message: String, onDismiss: () -> Unit, title: String? = null, tapToDismiss: Boolean = false,
     actions: @Composable ColumnScope.() -> Unit) {
     val settings = LocalExplorationSettings.current
     val accent = if (settings.highContrastMode) Color.White else Color(0xFF8DE2FF)
     val availableHeight = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() } - 100.dp
     val scroll = rememberScrollState()
     Dialog(onDismissRequest = onDismiss) {
-        Surface(Modifier.padding(20.dp).widthIn(max = 620.dp).fillMaxWidth().heightIn(max = availableHeight.coerceAtLeast(200.dp)),
+        Surface((if (tapToDismiss) Modifier.informationAcknowledgement(onDismiss) else Modifier).padding(20.dp).widthIn(max = 620.dp).fillMaxWidth().heightIn(max = availableHeight.coerceAtLeast(200.dp)),
             color = if (settings.highContrastMode) Color.Black else Color(0xFF050B12), shape = RoundedCornerShape(18.dp),
             border = BorderStroke(1.dp, accent.copy(alpha = .72f)), shadowElevation = 18.dp) {
             Column(Modifier.background(Brush.verticalGradient(listOf(accent.copy(alpha = .12f), Color.Transparent))).padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {

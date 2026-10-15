@@ -1,65 +1,29 @@
-# Functionality — The Astra
+# Astra functionality
 
-## 1. The Relic "Catch-Up" System (Relic Array)
-**Location:** The Common Room (Node 2) - displayed on a workbench or side table.
-**Object:** The Relic Array (Container for collected Echoes).
+Status: Implementation reference, checked October 14, 2026. Primary sources: `rooms.json`, `AstraTravel.kt`, `AstraFacilities.kt`, `AstraCatalog.kt`, and the live exploration controller. UI and native-device acceptance remain separate.
 
-### Narrative Logic
-Relics are dangerous and misunderstood Aethel artifacts. The Array provides a shielded, grounded environment where crew members can safely physically interact with them. This controlled exposure allows late-joining members to "catch up" and unlock the skills the rest of the team gained in the field.
+| Facility | Current behavior | Limits |
+|---|---|---|
+| Bridge navigation | Shows docking context, unlocked destinations, and route guidance | Eligibility follows shared travel rules; BurgQuest restricts inter-world travel |
+| Chime archive | Readable notes gated by recovered information/progress | Not an automatic sequence of voiced Phantom logs |
+| Common Room table | Chapter-dependent crew check-ins with recruited companions and persistent read flags | Short authored entries, not a mandatory travel-banter system |
+| Galley | Opens cooking/preparation through the existing station route | Current recipes, discovery, ingredient, portion, and meal rules apply |
+| Quarters bed | Rest restores effective party maximum HP | No consumable snack-charge system; do not promise a meal reset without implementation |
+| Crew downtime | Chapter-dependent personal entries and keepsakes | Not a separate relationship progression system |
+| Cargo records | Sections for shared supplies, recovered artifacts, and catch records | Shared inventory manifest, not a capacity-limited second bank; relic records do not grant abilities |
+| Astra workbench | Uses the crafting controller and actual inventory/recipes | No separate storage inventory |
+| Cargo ramp | Returns to the recorded docking context or supported fallback | Consult `AstraTravel` for saved/debug-state recovery |
+| Simulation archive | Lists eligible practice, defeated-boss archives, and challenges | Standard combat rewards, damage, and consumable costs apply; controller enforces availability |
+| Recreation console | Opens recovered Great Frontier films, installed arcade cabinets, and prizes | Ownership/installation and demo restrictions apply |
 
-### Mechanic
-1.  Player clicks on the **Relic Array**.
-2.  A menu shows all collected Relics.
-3.  Selecting a Relic shows which characters have **not yet unlocked** their Source Art for it.
-4.  **Action:** "Sync".
-5.  **Result:** Short animation. The character touches the Relic and gains the skill.
+## Contract boundaries
 
-## 2. Navigation & Travel
-**Location:** The Bridge (Node 1).
-**Object:** Nav Console.
+Source abilities retain authored story unlocks. The former touch-a-relic-to-catch-up system was a proposal. The former upgradeable storage bank, guaranteed travel interlude banter, free no-XP practice mode, and recharging snack charges were also proposals or obsolete descriptions.
 
-### Travel Loop
-1.  Player selects "Depart [Current World]."
-2.  **Space Travel Interlude:** A stylized travel screen appears.
-3.  **Banter Event:** A random or scripted conversation plays.
-4.  **Arrival:** Player lands at Hub 1 of the destination World.
+Use the existing five rooms and current panel routes before proposing new destinations. Keep game text honest about what opening a facility does. Verify availability, dismissal, repeat use, costs/rewards, chapter changes, and save/load through each platform's live UI.
 
-## 3. Storage (Cargo Bay)
-**Location:** Cargo Bay (Node 4).
+## Sources and evidence
 
-*   **Bank System:** Allows the player to store items not needed for immediate combat or exploration.
-*   **Capacity:** Upgradeable via "Ship Repair" side quests.
+Gameplay sources are under `gameRuntime/src/main/kotlin/com/example/starborn/feature/exploration/presentation/` and `feature/exploration/viewmodel/ExplorationController.kt`; travel rules are under `domain/session/AstraTravel.kt`. Android and desktop render these through separate overlays/panels.
 
-## 4. Simulation Deck (War Room)
-**Location:** Simulation Deck (Node 5).
-
-*   **Combat Replay:** Access a list of previously defeated enemy groups to test builds or practice mechanics. No XP gain, but allows testing loadouts.
-*   **Cinematics:** Re-watch unlocked story cutscenes.
-
-## 5. The "Rest" State
-**Location:** Living Quarters (Node 3).
-
-*   Sleeping in the bed fully restores **HP** and **Refills Snack Charges**.
-*   This resets any temporary buffs/meals.
-
-## 6. The Phantom Logs (Elara's Echo)
-**Location:** The Chime (Bridge/Common Room).
-**Object:** The Chime (Ghost Signal Cell).
-
-### Mechanic
-*   **Trigger:** AUTOMATIC. Upon departing a World (during the Space Travel Interlude), the Chime activates the ship's PA system.
-*   **Visual Interface:** The ambient amber lights flicker to a cool, sterile blue. The main viewscreen ripples.
-*   **Content:** Elara’s tactical logs mixed with non-mission audio fragments (e.g., Elara humming a tune Gh0st recognizes, complaining about the coffee, or recording a birthday message).
-    *   *Key Log:* A recording of Elara trying to teach a young Gh0st-unit (734) how to tell a joke and failing. "No, 734, the chicken doesn't calculate the road. It just walks."
-
-## 7. Mandatory Campfire Moments
-**Location:** The Common Room.
-**Trigger:** Between Worlds (during the Space Travel Interlude).
-
-### Narrative Logic
-To transition from "allies by circumstance" to "found family," the party must engage in mandatory downtime.
-
-### Late Game Tone Shift (World 5+)
-Once the party enters **The Void (World 5)**, the "Campfire" music shifts from acoustic guitar to a low, resonant drone.
-
-
+Historical implementation notes remain in [the design review](04_design_review.md). For the project-wide source/evidence boundary see [Current State](../../CURRENT_STATE.md).

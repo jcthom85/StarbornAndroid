@@ -47,7 +47,7 @@ internal fun DesktopRuntimeGearContent(services: DesktopAppServices, characterId
         "armor" -> session.equippedArmors[character]
         else -> session.equippedItems["$character:$target"] ?: session.equippedItems[target]
     }
-    fun slotLabel(target: String) = target.replace("_mod", " modification ").replace('_', ' ').replaceFirstChar { it.uppercase() }
+    fun slotLabel(target: String) = target.replace("_mod", " mod ").replace('_', ' ').replaceFirstChar { it.uppercase() }
     val equipped = equippedId(slot)
     val mod = slot in modSlots
     val slotBlockedReason = if (mod) ModEquipmentRules.blockedReason(session, ModLocation(character, slot)) else null
@@ -57,11 +57,23 @@ internal fun DesktopRuntimeGearContent(services: DesktopAppServices, characterId
             (if (mod) it.type == "mod" || it.equipment?.slot == "mod" else GearRules.matchesSlot(it.equipment, slot, character, it.type)) && it.name.contains(search, true)
         }.sortedBy { it.name }
     val selected = owned.firstOrNull { it.id == selection } ?: owned.firstOrNull { it.id == equipped } ?: owned.firstOrNull()
+    var detailsOpen by remember { mutableStateOf(false) }
+    if (detailsOpen && selected != null) AlertDialog(
+        onDismissRequest = { detailsOpen = false }, title = { Text(selected.name) },
+        text = { Column(Modifier.heightIn(max = 400.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            selected.description?.let { Text(it) }
+            Text("Equipment effects", color = FieldMenuDesign.gold)
+            ItemDetails.lines(selected, services::contentName).forEach { Text(it) }
+            equipped?.let { catalog[it] }?.let { current ->
+                Text("Currently equipped: ${current.name}", color = FieldMenuDesign.gold)
+                ItemDetails.lines(current, services::contentName).forEach { Text(it) }
+            }
+        } }, confirmButton = { TextButton(onClick = { detailsOpen = false }) { Text("Close") } })
     BoxWithConstraints(Modifier.fillMaxSize()) {
-    val short = maxHeight < 320.dp
+    val short = maxHeight < 440.dp
     val narrow = maxWidth < 820.dp
-    Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-        Column(Modifier.width(if (narrow) 112.dp else 140.dp).fillMaxHeight().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             (GearRules.equipSlots.toList() + modSlots).forEach { target ->
                 val currentItem = equippedId(target)?.let(catalog::get)
                 DesktopRichTooltip(
@@ -88,14 +100,14 @@ internal fun DesktopRuntimeGearContent(services: DesktopAppServices, characterId
                     maxWidth = 300.dp
                 ) {
                     Surface(onClick = { slot = target }, shape = RoundedCornerShape(10.dp),
-                        modifier = Modifier.fillMaxWidth().desktopPointerHover(),
+                        modifier = Modifier.width(120.dp).desktopPointerHover(),
                         color = if (slot == target) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel,
-                        border = BorderStroke(1.dp, if (slot == target) FieldMenuDesign.gold else FieldMenuDesign.border.copy(alpha = .3f))) {
-                        Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                            DesktopMenuItemArt(services, currentItem, Modifier.size(40.dp), target)
-                            Text(slotLabel(target), color = FieldMenuDesign.gold, style = MaterialTheme.typography.labelLarge)
-                            Text(if (target in modSlots && !GearRules.isModSlotUnlocked(target, session.completedMilestones)) "Locked by story progress"
-                                else currentItem?.name ?: "None", style = MaterialTheme.typography.bodySmall)
+                        border = BorderStroke(1.dp, if (slot == target) FieldMenuDesign.gold else Color.Transparent)) {
+                        Column(Modifier.fillMaxWidth().padding(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            DesktopMenuItemArt(services, currentItem, Modifier.size(20.dp), target)
+                            Text(slotLabel(target), color = FieldMenuDesign.gold, style = MaterialTheme.typography.labelSmall, maxLines = 1)
+                            Text(if (target in modSlots && !GearRules.isModSlotUnlocked(target, session.completedMilestones)) "Locked"
+                                else currentItem?.name ?: "Empty", style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
                         }
                     }
                 }
@@ -157,9 +169,16 @@ internal fun DesktopRuntimeGearContent(services: DesktopAppServices, characterId
                     }
                 }
                 if (slotUnlocked) selected?.let { item ->
-                    Surface(Modifier.weight(1.25f).fillMaxHeight(), color = FieldMenuDesign.panel, shape = RoundedCornerShape(12.dp), border = BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = .16f))) {
-                        Column(Modifier.fillMaxSize().padding(18.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        DesktopMenuScrollPane(Modifier.weight(1f).fillMaxWidth()) {
+                    Surface(Modifier.weight(1.25f).fillMaxHeight(), color = FieldMenuDesign.panel, shape = RoundedCornerShape(6.dp), border = if (com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuHighContrast.current) BorderStroke(1.dp, Color.White) else null) {
+                        Column(Modifier.fillMaxSize().padding(if (short) 8.dp else 18.dp), verticalArrangement = Arrangement.spacedBy(if (short) 4.dp else 10.dp)) {
+                        if (short) {
+                            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                                Text(item.name, Modifier.weight(1f), style = MaterialTheme.typography.labelLarge, maxLines = 1)
+                                TextButton(onClick = { detailsOpen = true }, modifier = Modifier.height(24.dp), contentPadding = PaddingValues(0.dp)) { Text("Details") }
+                            }
+                            ItemDetails.lines(item, services::contentName).firstOrNull { it.startsWith("Damage:") || it.startsWith("Defense:") }?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = FieldMenuDesign.gold) }
+                        }
+                        if (!short) DesktopMenuScrollPane(Modifier.weight(1f).fillMaxWidth()) {
                             DesktopMenuItemArt(services, item, Modifier.size(if (short) 48.dp else 80.dp))
                             Text(item.name, style = MaterialTheme.typography.titleLarge, color = FieldMenuDesign.gold)
                             item.description?.let { Text(it) }
@@ -167,9 +186,11 @@ internal fun DesktopRuntimeGearContent(services: DesktopAppServices, characterId
                             val candidate = item.equipment
                             HorizontalDivider()
                             Text("Compared with ${equipped?.let { catalog[it]?.name } ?: "empty slot"}", style = MaterialTheme.typography.labelLarge)
-                            Text("Item stats (before character bonuses)", style = MaterialTheme.typography.bodySmall, color = FieldMenuDesign.textMuted)
-                            DesktopGearComparison("Damage minimum", candidate?.damageMin?.toDouble(), current?.damageMin?.toDouble())
-                            DesktopGearComparison("Damage maximum", (candidate?.damageMax ?: candidate?.damageMin)?.toDouble(), (current?.damageMax ?: current?.damageMin)?.toDouble())
+                            Text("Equipment effects (before character bonuses)", style = MaterialTheme.typography.bodySmall, color = FieldMenuDesign.textMuted)
+                            candidate?.damageMin?.let { minimum ->
+                                Text("Damage: $minimum-${candidate.damageMax ?: minimum}", color = FieldMenuDesign.gold)
+                                current?.damageMin?.let { old -> Text("Currently: $old-${current.damageMax ?: old}", color = FieldMenuDesign.textMuted, style = MaterialTheme.typography.bodySmall) }
+                            }
                             DesktopGearComparison("Defense", candidate?.defense?.toDouble(), current?.defense?.toDouble(), additive = true)
                             DesktopGearComparison("HP bonus", candidate?.hpBonus?.toDouble(), current?.hpBonus?.toDouble(), additive = true)
                             DesktopGearComparison("Accuracy", candidate?.accuracy, current?.accuracy, percent = true)
@@ -186,7 +207,7 @@ internal fun DesktopRuntimeGearContent(services: DesktopAppServices, characterId
                             }
                         }
                             val unlocked = when (slot) { "weapon" -> item.id in session.unlockedWeapons; "armor" -> item.id in session.unlockedArmors; else -> true }
-                            if (!unlocked) Text("Not unlocked for use yet", color = FieldMenuDesign.gold)
+                            if (!unlocked) Text("Not unlocked for use yet", color = FieldMenuDesign.gold, style = MaterialTheme.typography.labelSmall)
                             Button(onClick = {
                                 val id = item.id.takeUnless { it == equipped }
                                 when {
@@ -195,7 +216,7 @@ internal fun DesktopRuntimeGearContent(services: DesktopAppServices, characterId
                                     slot == "armor" -> services.exploration.equipArmor(character, id)
                                     else -> services.exploration.equipInventoryItem(slot, id, character)
                                 }
-                            }, enabled = unlocked || item.id == equipped, modifier = Modifier.fillMaxWidth().desktopPointerHover(unlocked || item.id == equipped)) { Text(if (item.id == equipped) "Unequip" else "Equip") }
+                            }, enabled = unlocked || item.id == equipped, modifier = Modifier.fillMaxWidth().then(if (short) Modifier.height(40.dp) else Modifier).desktopPointerHover(unlocked || item.id == equipped)) { Text(if (item.id == equipped) "Unequip" else "Equip") }
                         }
                     }
                 }

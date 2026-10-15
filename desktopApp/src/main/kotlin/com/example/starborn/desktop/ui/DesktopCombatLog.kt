@@ -92,7 +92,7 @@ internal fun DesktopCombatLiveFeed(
                         modifier = Modifier.size(15.dp)
                     )
                     Text(
-                        text = "TACTICAL FEED",
+                        text = "Recent actions",
                         color = accentColor,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
@@ -140,7 +140,7 @@ internal fun DesktopCombatLiveFeed(
 
             if (history.isEmpty()) {
                 Text(
-                    text = "Awaiting initial tactical contact...",
+                    text = "No actions yet.",
                     color = Color.White.copy(alpha = 0.5f),
                     fontSize = 11.sp,
                     fontFamily = LocalStarbornFonts.current.orbitron,
@@ -151,7 +151,7 @@ internal fun DesktopCombatLiveFeed(
                     state = listState,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(max = 140.dp),
+                        .heightIn(max = 80.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     items(entries) { entry ->
@@ -239,7 +239,7 @@ internal fun DesktopCombatLogDialog(
                         }
                         Column {
                             Text(
-                                text = "TACTICAL COMBAT CHRONICLE",
+                                text = "Battle log",
                                 color = Color.White,
                                 fontSize = 13.5.sp,
                                 fontWeight = FontWeight.Black,
@@ -247,7 +247,7 @@ internal fun DesktopCombatLogDialog(
                                 letterSpacing = 0.6.sp
                             )
                             Text(
-                                text = "Chronological Round Events & Engagements",
+                                text = "Actions and results",
                                 color = Color.White.copy(alpha = 0.6f),
                                 fontSize = 10.5.sp
                             )

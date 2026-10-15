@@ -50,6 +50,38 @@ class DesktopExplorationPanelsTest {
         assertTrue(unmatchedRoomTargets(ExplorationUiState(), null, false).isEmpty())
     }
 
+    @Test fun messHallKeepsItsInspectionsInProseAndTablesAreOnlyScenery() {
+        val directory = Files.createTempDirectory("starborn-mess-hall-").toFile()
+        val services = DesktopAppServices(directory)
+        try {
+            assertTrue(services.startNewGame())
+            services.sessionStore.restore(services.sessionStore.state.value.copy(roomId = "pit_mess"))
+            compose.waitUntil(10000) { services.exploration.uiState.value.currentRoom?.id == "pit_mess" }
+            val ui = services.exploration.uiState.value
+            assertFalse(ui.actions.any { it is RestStopAction || it.name == "tables" })
+            val plan = requireNotNull(buildInlineActionPlan(ui.currentRoom!!.description, ui.actions, ui.actionHints, ui.currentRoom))
+            val links = plan.segments.mapNotNull { (it.target as? InlineActionTarget.Room)?.action?.name }
+            assertTrue("broken Hyperion cabinet" in links)
+            assertTrue("vintage mystery monitor" in links)
+            assertTrue(contextualRoomTargets(ui, plan, false).none { it is InlineActionTarget.Room })
+            assertTrue(unmatchedRoomTargets(ui, plan, false).any { it is InlineActionTarget.Room && it.action.name == "monitor" })
+            compose.setContent { DesktopStarbornTheme {
+                Box(Modifier.size(1280.dp, 800.dp).testTag("mess-hall-stage")) {
+                    DesktopExplorationPanels(services, ui, portraitBackdropLayout(Size(1280f, 800f), Size(1088f, 1920f)),
+                        ui.currentRoom!!.description, plan, false, false) {}
+                }
+            } }
+            compose.onNodeWithTag("exploration-context").assertDoesNotExist()
+            compose.onAllNodesWithContentDescription("broken Hyperion cabinet", useUnmergedTree = true).onFirst().assertExists()
+            compose.onAllNodesWithContentDescription("vintage mystery monitor", useUnmergedTree = true).onFirst().assertExists()
+            val capture = File("build/reports/desktop/screenshots/mess-hall-clean.png").apply { parentFile.mkdirs() }
+            ImageIO.write(compose.onNodeWithTag("mess-hall-stage").captureToImage().asAwtImage(), "png", capture)
+            services.sessionStore.restore(services.sessionStore.state.value.copy(roomId = "pit_nova_bunk"))
+            compose.waitUntil(10000) { services.exploration.uiState.value.currentRoom?.id == "pit_nova_bunk" }
+            assertTrue(services.exploration.uiState.value.actions.any { it is RestStopAction })
+        } finally { services.close(); directory.deleteRecursively() }
+    }
+
     @Test fun fourRatiosShowNarrativeAndStatusWithoutCoveringWideArtwork() {
         val directory = Files.createTempDirectory("starborn-three-panel-").toFile()
         val services = DesktopAppServices(directory)
@@ -110,8 +142,8 @@ class DesktopExplorationPanelsTest {
             val mapBounds = compose.onNodeWithTag("hud-minimap").fetchSemanticsNode().boundsInRoot
             compose.onNodeWithText("Gh0st").performScrollTo().assertIsDisplayed()
             assertEquals("Scrolling party details must not move the minimap", mapBounds, compose.onNodeWithTag("hud-minimap").fetchSemanticsNode().boundsInRoot)
-            compose.onNodeWithText("Menu [Esc]").performClick()
-            assertEquals(DesktopMenuTab.STATS, selectedTab)
+            compose.onNodeWithTag("hud-key-legend").assertDoesNotExist()
+            compose.onNodeWithText("Menu [Esc]").assertDoesNotExist()
         } finally { services.close(); directory.deleteRecursively() }
     }
 
@@ -120,7 +152,7 @@ class DesktopExplorationPanelsTest {
         val services = DesktopAppServices(directory)
         try {
             assertTrue(services.startNewGame())
-            val locked = GenericAction("sealed locker", "inspect")
+            val locked = GenericAction("sealed locker", "generic", actionEvent = "unlock_locker")
             val room = services.worldDataSource.loadRooms().first { it.id == "pit_nova_bunk" }
             val ui = ExplorationUiState(currentRoom = room, actions = listOf(locked), actionHints = mapOf(locked.actionKey() to ActionHintUi(true, "Requires a key")),
                 availableConnections = mapOf("up" to "upper-level"))
@@ -134,7 +166,8 @@ class DesktopExplorationPanelsTest {
             compose.onNodeWithTag("narrative-body").performSemanticsAction(SemanticsActions.ScrollBy) { it(0f, 10_000f) }
             compose.onNodeWithText(room.title).assertIsDisplayed()
             assertEquals(titleBounds, compose.onNodeWithText(room.title).fetchSemanticsNode().boundsInRoot)
-            compose.onNodeWithText("sealed locker").performScrollTo().assertIsDisplayed().assertIsNotEnabled()
+            compose.onNodeWithText("Sealed locker").assertDoesNotExist()
+            compose.onNodeWithText("Actions").assertIsDisplayed()
             compose.onNodeWithText("up").performScrollTo().assertIsDisplayed().assertIsEnabled()
             compose.onNodeWithText("OBJECTIVE").assertDoesNotExist()
             compose.onNodeWithText("PARTY").assertDoesNotExist()
@@ -160,7 +193,7 @@ class DesktopExplorationPanelsTest {
             compose.onNodeWithText("Engage rat").assertDoesNotExist()
             compose.onAllNodesWithText("Collect", substring = true).assertCountEquals(0)
             compose.onNodeWithTag("travel-west").assertIsNotEnabled()
-            compose.onNodeWithText("locker").assertIsNotEnabled()
+            compose.onNodeWithText("locker").assertDoesNotExist()
             compose.waitUntil(15_000) { !services.exploration.uiState.value.isLoading }
         } finally { services.close(); directory.deleteRecursively() }
     }

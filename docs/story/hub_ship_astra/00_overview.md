@@ -1,23 +1,15 @@
-# The Astra — Mobile Hub
+# Astra: crew home and mobile hub
 
-## Overview
-*The Astra* is a repurposed Dominion geological survey vessel found derelict in The Wilds. It serves as the player's mobile base of operations.
-**Hub Access:**
-*   **Method:** Every Hub Screen (Homestead, Jungle, City) features a distinct image of *The Astra*.
-*   **Interaction:** Tapping this image transitions the player directly into the Astra Hub.
-*   **Restriction:** If the ship is critical or grounded by story events, the image may be locked.
+Status: Current supporting overview, checked against source October 14, 2026. [Functionality](01_functionality.md) owns the implementation summary; [locations](03_locations.md) owns room topology. [Master Story](../Starborn_Master_Story.md) owns ship history and campaign transitions.
 
-## Key Themes
-*   **Safety:** This is the only place where the party can relax. No combat encounters occur here.
-*   **Growth:** This is where the party upgrades gear, manages inventory, and reviews lore.
-*   **Family:** The layout is designed to force interaction. Characters don't hide; they share space.
+The Astra is a derelict Dominion survey vessel recovered in Sector 9 and repaired into the crew's home. It should make recovery, preparation, relationships, and remembered discoveries easy to revisit.
 
-## Visual Style
-*   **Interior:** Retro-futuristic. Analog switches, CRT monitors, exposed wiring. It feels warm (amber lighting).
-*   **Exterior:** Blocky, industrial, painted a faded orange.
+Five connected rooms are sufficient. Prefer more meaningful use of these spaces over extra rooms containing menus. Keep the warm, patched, practical ship identity: CRTs, exposed wiring, repaired fittings, shared meals, and personal possessions.
 
-## Progression Function
-The ship evolves visually and functionally:
-*   **World 2 (The Wilds):** **Found as a wreck.** Repaired just enough to fly ("Limping"). Some nodes (Simulation Deck, Storage) are locked or damaged.
-*   **World 3 (The Spire):** **Fully Repaired.** Reaching the city allows full repairs. The Hub fully opens (Sim Deck, Quarters unlocked). "Homey" decorations appear.
-*   **World 4 (The Foundry):** Upgraded with the Deep-Core Engine (Blue flame).
+The story progresses from atmospheric repair in Sector 9 through Spire work to the Foundry engine upgrade. Exact access, destinations, and facility gates come from `AstraTravel`, room actions, events, and `AstraCatalog`; an overview is not a universal unlock schedule.
+
+The current implementation includes crew check-ins and downtime, cargo/relic/catch records, recovered films, restored arcade access, navigation, crafting, cooking, rest, and gated simulations. This does not establish a separate bank, automatic relic skill synchronization, or mandatory travel conversations.
+
+Simulations launch real combat with normal costs and rewards, so the old claim that no combat occurs aboard the ship is retired. Source implementation has been inspected; full Android/desktop device acceptance is separate.
+
+[The design review](04_design_review.md) records earlier gaps and subsequent changes. Its chronology is evidence, not a second current facility specification.

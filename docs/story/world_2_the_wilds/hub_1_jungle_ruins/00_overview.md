@@ -1,15 +1,11 @@
-# World 2: The Wilds — Hub 1: Jungle Ruins
+# Jungle Ruins: implemented hub overview
 
-## Overview
-Sector 9. A forbidden zone on the planet surface where the terraforming failed—or worked too well. It's a bioluminescent jungle claiming ancient stone ruins.
+Status: Source-reconciled reference, October 14, 2026. Current code/assets are the implementation baseline. This is a source review, not a fresh playthrough or a claim that every route and device behavior is accepted.
 
-## Key Themes
-- **Survival:** Nova and Zeke are out of their element.
-- **The Past:** Discovering the history of the Architects and the Aethel.
-- **Assembly:** Gathering the full party (Orion, Gh0st).
-- **The Signal:** The beacon that pulled them here.
-- **Breathers:** Moments of open sky and calm water (Canopy Ridge, Tideglass Beach) to let the crew feel like people, not just fugitives.
+Crash recovery, wilderness routes, shoreline activities, Temple Gate, and the later Canopy Ridge confrontation. Facility events send the player back here; this is not a self-contained first half completed before Orion.
 
-## Transition Points
-- **From Mines:** Via the Crash Interlude.
-- **To Spire:** Via *The Astra* (Repaired Ship).
+Use `hub_3_sector9` and current node/room records for navigation. The local quest, cast, and location files describe source contracts; they do not authorize new lock schedules, mandatory scenes, or room expansion.
+
+## Sources and maintenance
+
+[rooms](../../../../app/src/main/assets/rooms.json), [quests](../../../../app/src/main/assets/quests.json), [events](../../../../app/src/main/assets/events.json), [dialogue](../../../../app/src/main/assets/dialogue.json), [hub_nodes](../../../../app/src/main/assets/hub_nodes.json). [Documentation index](../../../README.md). Update this reference when its corresponding records change; do not change working game logic to match an older script.

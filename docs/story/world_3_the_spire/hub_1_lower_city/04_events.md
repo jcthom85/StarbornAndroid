@@ -1,44 +1,20 @@
-# Events — World 3, Hub 1: Lower City
+# Lower City progression ownership
 
-## EVT_W3_01: The Meeting
-*   **Trigger:** Entering Zeke's Apartment (MQ_12).
-*   **Action:**
-    *   Nova slips in, weapon drawn.
-    *   Zeke is mid-pack, startled.
-    *   **Zeke:** "You actually made it out."
-    *   **Nova:** "You wiped my file. I figured you owed me a couch."
-    *   **Zeke:** "Welcome to the last safe place I had. Past tense."
+Status: Source-reconciled reference, October 14, 2026. Current code/assets are the implementation baseline. This is a source review, not a fresh playthrough or a claim that every route and device behavior is accepted.
 
-## EVT_W3_01A: Night Market (Optional Breather)
-*   **Trigger:** Visiting Night Market Alley (SQ_13, optional).
-*   **Action:**
-    *   The alley is packed shoulder-to-shoulder. Lanterns swing on frayed wires. Someone is playing a busted synth that still manages to sound like hope.
-    *   A skewer stall hisses and pops in the rain like it’s fighting back.
-    *   **Mika:** "If you’re here to stare, stare somewhere else. If you’re here to eat, pay up."
-    *   Zeke opens his mouth—corporate apology voice already loading—then catches himself.
-    *   **Zeke:** "We’re here to eat. And… maybe help."
-    *   Nova leans in, grinning. "He means ‘maybe help’ like it’s not his love language."
-    *   Orion watches the crowd with something like wonder. "So much noise."
-    *   **Nova:** "Here, it’s just people."
-    *   Gh0st stands a step behind them, helmet down, trying to look like he belongs. He does not.
-    *   A kid points. "Why is that guy shaped like a threat?"
-    *   **Gh0st:** "Because I am."
-    *   Nova elbows him. "Because he’s shy."
-    *   Mika shoves a steaming bowl into Nova’s hands. "Eat first. Then we fix my lights before patrol decides joy is illegal tonight."
-    *   The crew eats standing up in the rain, shoulder-to-shoulder, like it’s a ritual they didn’t know they needed.
+| Event | Trigger in current record | Ownership / effect |
+|---|---|---|
+| `w3_mq11_clear_landing` | type=encounter_victory | Records an accepted victory while MQ11 is active; do not invent a separate mandatory enemy identity. |
+| `w3_mq11_reach_vent` | type=enter_room, room=spire_vent_output | Requires landing task; advances to safehouse stage and reveals The Static. |
+| `w3_mq11_find_apartment` | type=enter_room, room=spire_zekes_apartment | Records finding Zeke's apartment. Zeke is already in the travelling crew. |
+| `w3_mq11_establish_shield` | type=player_action, action=w3_mq11_establish_shield | Finishes MQ11, starts MQ12, reveals market/plaza routes. |
+| `w3_mq12_assemble_planning` | type=player_action, action=w3_mq12_assemble_planning | Requires blueprint task, finishes MQ12. |
+| `w3_mq12_to_w3_mq13` | type=quest_stage_complete, quest_id=w3_mq12 | Guarded completion handoff starts/tracks MQ13, reveals Laundry/Skypark, warps to Laundry. |
 
-## EVT_W3_02: The Elevator Ride
-*   **Trigger:** Completing MQ_13.
-*   **Action:**
-    *   Nova and Zeke stand in the glass elevator rising out of the smog. Orion’s voice is a calm thread in their comms.
-    *   **Visual:** The camera pans up. The grime of the Lower City gives way to the blinding white and gold of the Upper City.
-    *   **Zeke:** "Welcome to Heaven. Don't touch anything, it's expensive."
-    *   Above the skyline, the sky has a second skin: a faint, shimmering lattice curving over the planet.
-    *   A Dominion shuttle punches through it on a timed corridor—ripples bloom and vanish like a silent drum hit.
-    *   Nova watches the ripple fade. "That's the Shield."
-    *   **Zeke:** "Planetary Containment. Keeps the workforce in and the witnesses out."
-    *   **Orion:** "It isn't a wall. It's a phase curtain. Solid most of the time."
-    *   **Orion:** "It opens micro-windows—frequency gaps—for authorized traffic. Without clearance, you don't pass through. You become debris."
-    *   **Nova:** "So we steal clearance."
-    *   **Zeke:** "I can spoof paperwork. I can't spoof physics. The window is moving."
-    *   **Orion:** "The Lens can see it. In real time."
+The preparation tasks are Jax information, patrol mapping, security records, badge copying, disguise materials, and blueprint work. Source their actual locations from the quest and room records. The old reunion scene with a separately waiting Zeke and automatic elevator dialogue are historical scripts, not required runtime events.
+
+Side-quest completion owners include `w3_sq11_install_core`, `w3_sq12_expose_transfer`, and `w3_sq13_restore_market`. The sign quest consumes the core; the latter two deliver Intercept and the Neon Band respectively. Mandatory Night Market banter and a Streetwise price passive are not established by these events.
+
+## Sources and maintenance
+
+[rooms](../../../../app/src/main/assets/rooms.json), [quests](../../../../app/src/main/assets/quests.json), [events](../../../../app/src/main/assets/events.json), [dialogue](../../../../app/src/main/assets/dialogue.json), [hub_nodes](../../../../app/src/main/assets/hub_nodes.json). [Documentation index](../../../README.md). Update this reference when its corresponding records change; do not change working game logic to match an older script.

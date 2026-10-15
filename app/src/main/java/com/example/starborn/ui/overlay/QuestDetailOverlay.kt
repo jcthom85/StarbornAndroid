@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -104,6 +105,11 @@ fun QuestDetailOverlay(
 
     LaunchedEffect(visible, current) {
         onPresentationVisibleChanged(visible && current != null)
+    }
+
+    androidx.activity.compose.BackHandler(enabled = visible && current != null) {
+        visible = false
+        current = if (queue.isNotEmpty()) queue.removeAt(0) else null
     }
 
     AnimatedVisibility(
@@ -206,6 +212,7 @@ private fun QuestDetailCard(
         modifier = Modifier
             .fillMaxWidth(0.92f)
             .widthIn(max = 520.dp)
+            .clickable(onClick = onDismiss)
             .semantics { contentDescription = "Quest Detail Popup" },
         shape = RoundedCornerShape(14.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),

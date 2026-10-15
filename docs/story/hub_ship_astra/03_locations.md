@@ -1,37 +1,15 @@
-# Locations — The Astra
+# Astra room map
 
-## Layout Overview
-The ship is small enough to navigate quickly but detailed enough to feel like a home. It features 5 key nodes.
+Status: Current topology reference, checked against `rooms.json` October 14, 2026. These are five rooms, not five independent hub nodes. [Functionality](01_functionality.md) owns the facility descriptions.
 
-### Node 1: The Bridge (Navigation)
-*   **Description:** A cramped cockpit with four seats and a wide viewscreen. The dashboard is covered in sticky notes and bobbleheads.
-*   **Function:** **Navigation Console**.
-    *   **Travel:** Selects the next World. Exiting via this node places the player at Hub 1 of the destination.
-*   **Narrative:** The command center.
-*   **NPCs:** **Nova** (Pilot seat), **Zeke** (Nav station).
+| Room ID | Connections | Player purpose |
+|---|---|---|
+| `astra_bridge` | South to Common Room | Navigation and Chime archive |
+| `astra_common_room` | North to Bridge; east to Quarters; west to Cargo; south to Simulation Deck | Crew check-in and galley |
+| `astra_quarters` | West to Common Room | Rest and crew downtime |
+| `astra_cargo_bay` | East to Common Room | Cargo records, tinkering, and disembarkation |
+| `astra_simulation_deck` | North to Common Room | Combat archive and recreation console |
 
-### Node 2: The Common Room (Social)
-*   **Description:** The heart of the ship. A central table stained with coffee rings, a kitchenette, and a lounge area.
-*   **Function:** **Campfire Mechanic**. Mandatory party banter and bonding moments occur here.
-*   **Narrative:** The messy, lived-in heart where the crew eats and talks.
-*   **NPCs:** **Orion**, **Gh0st**.
+The cargo records panel contains supply, artifact, and catch sections. Recreation groups films, installed cabinets, and prizes rather than exposing every activity as another room hotspot. Availability and exact labels are resolved by runtime state; preserve legacy action handlers needed by old routes and saves.
 
-### Node 3: Living Quarters (Characters)
-*   **Description:** A hallway with individual bunks/rooms for Nova, Zeke, Orion, and Gh0st.
-*   **Function:** **Character Interaction**.
-    *   **Visit:** Unlike standard NPCs, crew members can be visited in their specific rooms for unique, evolving dialogue.
-    *   **Rest:** Interacting with the beds restores full HP/Snack Charges.
-*   **Unlock:** Fully accessible after World 3 repairs.
-
-### Node 4: Cargo Bay (Storage)
-*   **Description:** A lower-deck storage area filled with crates and nets.
-*   **Function:** **Secondary Inventory**.
-    *   **Storage:** Offload items from the active "backpack" to keep for later (crafting mats, collectibles).
-*   **Unlock:** May be damaged/locked in World 2.
-
-### Node 5: Simulation Deck (The "War Room")
-*   **Description:** A high-tech projection room, contrasting with the rest of the ship's analog feel.
-*   **Function:** **Training & Archives**.
-    *   **War Room Mode:** Replay previous combat encounters for practice.
-    *   **Holodeck Mode:** View unlocked cinematics or "set piece" moments.
-*   **Unlock:** Unlocks after World 3 repairs (implies higher tech level).
+Keep circulation short and make new crew material easy to notice. Existing room variants acknowledge ship repair and activity progress. New artwork, rooms, or lock schedules require their own scoped change; this map does not promise them.

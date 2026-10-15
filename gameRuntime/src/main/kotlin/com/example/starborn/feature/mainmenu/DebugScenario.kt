@@ -31,7 +31,20 @@ object DebugScenarioCatalog {
         scenario("burgfest_story", "The Awakening - Story Preview", "Meet Nova in the unabridged campaign opening. Read at your own pace; combat may take longer than ten minutes to reach.", DebugScenarioCategory.BURGFEST, worldLabel = "World 1: The Mines")
     )
 
-    val scenarios: List<DebugScenario> = burgfestScenarios + listOf(
+    val scenarios: List<DebugScenario> = burgfestScenarios + CrewBuildScenarios.all + listOf(
+        DebugScenario("nova_build_prototype", "Nova / Specializations Prototype",
+            "Play the normal opening with Nova's Saboteur and Improviser paths and earned AP.",
+            DebugScenarioCategory.SYSTEM, DebugScenarioDestination.EXPLORATION, "World 1: The Mines",
+            com.example.starborn.debug.DebugTestProcedure(com.example.starborn.debug.DebugFixture.OPENING,
+                "Normal opening, Nova alone, no bonus AP or resources; prototype saves use the isolated Test Session.",
+                listOf("Complete Wake Up Call to earn 2 AP. Open Party and Nova's Skills.",
+                    "Buy a first specialization node, continue the story and compare combat behavior.",
+                    "Save and reload the test slot. Check purchased nodes, AP and HP; replaying completed actions must not pay twice."),
+                listOf("Purchases have real effects and persist; core quest-earned skills do not count as paid purchases.",
+                    "The two paths cost 10 AP each; final nodes require completing the Foundry."),
+                setOf("quests:w1_mq01", "skill_trees:nova"),
+                "All four trees become available as the crew joins. Legacy-save migration remains pending; balance is under evaluation.",
+                systemMode = "nova_builds")),
         // --- TUTORIAL SCENARIOS ---
         scenario("tut_npc_dialogue", "Tutorial: NPC & Dialogue", "Start in Jed's bunk with the NPC interaction and dialogue prompt.", DebugScenarioCategory.TUTORIAL, worldLabel = "World 1: The Mines"),
         scenario("tut_gear_inventory", "Tutorial: Gear & Inventory", "Start in the workshop yard with unlocked, unequipped starter gear and inventory tutorial.", DebugScenarioCategory.TUTORIAL, worldLabel = "World 1: The Mines"),

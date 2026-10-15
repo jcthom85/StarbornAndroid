@@ -1,68 +1,34 @@
-# NPCs — World 3, Hub 2: Upper City
+# Upper City: people and encounter references
 
-## Major Characters
+Status: Source-reconciled reference, October 14, 2026. Current code/assets are the implementation baseline. This is a source review, not a fresh playthrough or a claim that every route and device behavior is accepted.
 
-### The Administrator (Boss)
-*   **Role:** Dominion Regional Manager.
-*   **Location:** The Landing Pad (MQ_16).
-*   **Appearance:** Tailored suit that integrates with a combat exoskeleton.
-*   **Personality:** Condescending, annoyed rather than angry. Views the heist as an "audit failure."
-*   **Key Line:** "Do you know how much the glass you just broke costs? Deducting it from your bounty."
+Curator and Lab Terminal have milestone-dependent presence; local NPCs include Director Vance and the Skyline suspects. There is no documented generic VIP sighting alert meter in the inspected route; the earlier alert-level proposal is retired.
 
-### VIP Guest (Obstacle)
-*   **Role:** Stealth mechanics.
-*   **Appearance:** Avant-garde fashion, drinking champagne.
-*   **Behavior:** If they see you, they don't attack; they scream "Security!" (Alert Level +1).
-*   **Bark:** "Ugh, a worker? Up here? Someone call maintenance."
+These are authored fixed and conditional room references. Conditions are reported from data, not evaluated for a particular save. Party recruitment/dialogue is covered in the introductory notes.
 
-## Bestiary (World 3)
+| Person | Room | Placement |
+|---|---|---|
+| `botanist_evelyn` — Evelyn | `spire_skypark_dome` | Fixed reference |
+| `entrepreneur_robert` — Robert | `spire_skypark_dome` | Fixed reference |
+| `curator` — Museum Curator | `spire_skypark_dome` | requires_milestones: ms_w3_mq12_complete; forbidden_milestones: ms_w3_mq13_complete |
+| `bartender_dax` — Dax | `spire_skyline_vip_suite` | Fixed reference |
+| `director_vance` — Director Vance | `spire_skyline_vip_suite` | Fixed reference |
+| `dr_lyra` — Dr. Lyra | `spire_skyline_vip_suite` | Fixed reference |
+| `singer_selene` — Selene | `spire_skyline_vip_suite` | Fixed reference |
+| `lab_terminal` — Hacked Lab Terminal | `spire_exec_lounge_bar` | requires_milestones: ms_w3_mq13_complete; forbidden_milestones: ms_w3_prototype_tested |
 
-### Riot Guard (Human - Common)
-*   **Type:** Humanoid / Tank.
-*   **Location:** Lower City / Upper City (Alert).
-*   **Behavior:** Blocks paths. Uses Riot Shield (Must be staggered).
-*   **Weakness:** Impact / Force.
+## Encounter references
 
-### Sentinel Mk. I (Machine - Common)
-*   **Type:** Tech / Ranged.
-*   **Location:** Lower City (Checkpoints).
-*   **Behavior:** Stationary turret mode. Fires suppression bursts.
-*   **Weakness:** Shock / Hacking.
+The room lists and authored spawn events reference the following enemies. Moving encounters, party formations, room overrides, and save state can change the presented fight. Consult current enemy/skill/affinity data and controllers for behavior; the old prose bestiary is retired.
 
-### Aero-Drone (Machine - Common)
-*   **Type:** Tech / Flying.
-*   **Location:** Upper City (Patrol).
-*   **Behavior:** Fast, low HP. Fires "Stun Darts" (paralyze).
-*   **Weakness:** Ranged / AoE.
+| Enemy ID | Catalog name |
+|---|---|
+| `administrator_boss` | The Administrator |
+| `aero_drone` | Aero Drone |
+| `corporate_assassin` | Corporate Assassin |
+| `heavy_mech` | Heavy Mech |
+| `sentinel_mki` | Sentinel Mk. I |
 
-### Corporate Assassin (Human - Elite)
-*   **Type:** Humanoid / Stealth.
-*   **Location:** Upper City (Penthouse).
-*   **Behavior:** Uses "Cloak" (High Evasion). Strikes with high critical damage.
-*   **Weakness:** Source Art: True Sight (Scan).
+## Sources and maintenance
 
-### Heavy Mech (Machine - Elite)
-*   **Type:** Tech / Tank.
-*   **Location:** Upper City (Alert).
-*   **Behavior:** Massive HP. Uses "Flamethrower" (AoE Burn).
-*   **Weakness:** Freeze / Source.
-
-### The Administrator (Boss)
-*   **Type:** Humanoid / Tech.
-*   **Phase 1:** Uses "Bureaucracy" (Summons Drones).
-*   **Phase 2:** Equips Exoskeleton. "Liquidation Mode" (High Dmg Lasers).
-
-## Party Members (Heist Roles)
-
-### Nova (The Face/Wildcard)
-*   **Role:** Improviser.
-*   **State of Mind:** **Cocky.** She thinks she's Robin Hood. This confidence will bite her when the alarm trips.
-
-### Zeke (The Hacker)
-*   **Role:** Tech Support.
-*   **Location:** Laundry Node (Disabling sensors).
-*   **Bark:** "I hate their firewalls. They're so... smug."
-
-### Gh0st (The Muscle)
-*   **Role:** Security Detail (Disguised).
-*   **Bark:** "This suit restricts movement by 12%. Unacceptable."
+[rooms](../../../../app/src/main/assets/rooms.json), [quests](../../../../app/src/main/assets/quests.json), [events](../../../../app/src/main/assets/events.json), [dialogue](../../../../app/src/main/assets/dialogue.json), [hub_nodes](../../../../app/src/main/assets/hub_nodes.json). [Documentation index](../../../README.md). Update this reference when its corresponding records change; do not change working game logic to match an older script.

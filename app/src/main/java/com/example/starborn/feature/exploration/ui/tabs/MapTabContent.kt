@@ -35,13 +35,6 @@ fun MapTabContent(
     ) {
         val fullMapAvailable = fullMap?.cells?.isNotEmpty() == true
         if (fullMapAvailable) {
-            if (LocalModernFieldMenu.current) {
-                Text(
-                    "${fullMap!!.cells.count { it.visited }} rooms visited · ${fullMap.cells.count { it.discovered && !it.visited }} discovered",
-                    color = FieldMenuDesign.textMuted,
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
             InteractiveMapPanel(fullMap = fullMap)
         } else {
             Text(

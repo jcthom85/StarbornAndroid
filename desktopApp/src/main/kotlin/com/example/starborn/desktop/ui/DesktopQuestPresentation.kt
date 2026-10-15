@@ -106,13 +106,16 @@ internal fun DesktopQuestPresentation(services: DesktopAppServices, state: Deskt
         }
     }
     Box(Modifier.fillMaxSize().focusRequester(focus).onPreviewKeyEvent {
-        if (visible && it.type == KeyEventType.KeyDown && (it.key == Key.Enter || it.key == Key.Escape)) { state.dismissImportant(); true } else false
+        if (visible && it.key in listOf(Key.Enter, Key.Spacebar, Key.Escape)) {
+            if (it.type == KeyEventType.KeyUp) state.dismissImportant()
+            true
+        } else false
     }.focusable()) {
         AnimatedVisibility(visible, enter = slideInVertically { it / 3 } + fadeIn(), exit = fadeOut()) {
             Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = .55f))
                 .clickable(interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }, indication = null) {},
                 contentAlignment = Alignment.Center) {
-                Surface(Modifier.padding(24.dp).widthIn(max = 600.dp).fillMaxWidth().heightIn(max = 700.dp), shape = RoundedCornerShape(14.dp), color = FieldMenuDesign.panel,
+                Surface(Modifier.padding(24.dp).clickable(onClick = state::dismissImportant).widthIn(max = 600.dp).fillMaxWidth().heightIn(max = 700.dp), shape = RoundedCornerShape(14.dp), color = FieldMenuDesign.panel,
                     border = BorderStroke(1.dp, accent.copy(alpha = .5f))) {
                     Column(Modifier.background(Brush.horizontalGradient(listOf(accent.copy(alpha = .18f), Color.Transparent)))
                         .drawWithContent {
@@ -168,7 +171,7 @@ internal fun DesktopQuestPresentation(services: DesktopAppServices, state: Deskt
         AnimatedVisibility(showUpdate && updateShowing, Modifier.align(Alignment.TopCenter).padding(top = 20.dp, start = 24.dp, end = 24.dp),
             enter = slideInVertically(tween(220, easing = LinearOutSlowInEasing)) { -it } + fadeIn(tween(220)),
             exit = slideOutVertically(tween(180, easing = FastOutLinearInEasing)) { -it } + fadeOut(tween(180))) {
-            Surface(Modifier.widthIn(max = 560.dp).fillMaxWidth().semantics { liveRegion = LiveRegionMode.Polite }, color = FieldMenuDesign.panel, shape = RoundedCornerShape(12.dp), border = BorderStroke(1.dp, accent.copy(alpha = .5f))) {
+            Surface(Modifier.clickable { updateShowing = false }.widthIn(max = 560.dp).fillMaxWidth().semantics { liveRegion = LiveRegionMode.Polite }, color = FieldMenuDesign.panel, shape = RoundedCornerShape(12.dp), border = BorderStroke(1.dp, accent.copy(alpha = .5f))) {
                 Row(Modifier.padding(18.dp)) {
                     Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         Text("Quest Updated", color = accent, style = MaterialTheme.typography.labelLarge)
@@ -191,8 +194,8 @@ internal fun DesktopQuestPresentation(services: DesktopAppServices, state: Deskt
         }
         val toast = state.toasts.firstOrNull()
         val showToast = toast != null && !sceneBlocked && current == null && update == null
-        LaunchedEffect(toast, showToast) { if (showToast) { delay(4000); if (state.toasts.firstOrNull() == toast) state.toasts.removeAt(0) } }
-        if (showToast) Surface(Modifier.align(Alignment.BottomCenter).padding(24.dp).widthIn(max = 560.dp), color = FieldMenuDesign.panel, shape = RoundedCornerShape(10.dp)) {
+        LaunchedEffect(toast, showToast) { if (showToast) { delay(1800); if (state.toasts.firstOrNull() == toast) state.toasts.removeAt(0) } }
+        if (showToast) Surface(Modifier.align(Alignment.BottomCenter).padding(24.dp).widthIn(max = 560.dp).clickable { if (state.toasts.firstOrNull() == toast) state.toasts.removeAt(0) }, color = FieldMenuDesign.panel, shape = RoundedCornerShape(10.dp)) {
             Text(toast!!.text, Modifier.padding(16.dp).semantics { liveRegion = LiveRegionMode.Polite })
         }
     }

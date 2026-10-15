@@ -51,7 +51,7 @@ internal fun DesktopRoomInteractionDialog(services: DesktopAppServices, ui: Expl
                 LazyColumn(Modifier.weight(1f, fill = false), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     itemsIndexed(targets) { index, target ->
                         val label = when (target) {
-                            is InlineActionTarget.Room -> target.action.name
+                            is InlineActionTarget.Room -> com.example.starborn.feature.exploration.presentation.roomActionLabel(target.action)
                             is InlineActionTarget.Npc -> "Talk to ${target.name}"
                             is InlineActionTarget.Enemy -> "Engage ${target.label}"
                         }

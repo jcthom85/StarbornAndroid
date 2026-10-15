@@ -121,7 +121,7 @@ class DesktopVictoryPresentationTest {
         assertEquals(FontWeight.ExtraBold, results.single().layoutInput.style.fontWeight)
         assertTrue(results.single().lineCount > 1)
         assertFalse(results.single().hasVisualOverflow)
-        compose.onNodeWithText("Select a ready character").assertIsDisplayed()
+        compose.onNodeWithText("Choose a character").assertIsDisplayed()
         capture("room-heading-and-ready")
         compose.runOnIdle { compact.value = true }
         results.clear()

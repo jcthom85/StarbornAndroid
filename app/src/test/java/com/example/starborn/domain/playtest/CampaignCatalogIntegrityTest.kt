@@ -2,6 +2,7 @@ package com.example.starborn.domain.playtest
 
 import com.example.starborn.core.MoshiProvider
 import com.example.starborn.domain.model.*
+import com.example.starborn.feature.exploration.presentation.resolveRoomDescription
 import com.squareup.moshi.Types
 import org.junit.Assert.*
 import org.junit.Test
@@ -124,15 +125,34 @@ class CampaignCatalogIntegrityTest {
         )
         expected.forEach { (roomId, milestone, names) ->
             val room = rooms.getValue(roomId)
-            val completed = room.descriptionVariants.single { milestone in it.requiresMilestones }
+            // Variants can combine milestones or fall back to base prose;
+            // use the same first-match selection as gameplay.
+            val completedDescription = requireNotNull(resolveRoomDescription(room, emptyMap(), setOf(milestone), false))
             names.forEach { name ->
                 assertTrue("$roomId must retain $name after $milestone",
-                    completed.description.contains(name, ignoreCase = true))
+                    completedDescription.contains(name, ignoreCase = true))
                 val action = room.actions.single { it["name"] == name }
                 assertNotEquals("$name must not retire with the unrelated objective",
                     milestone, action["requires_milestone_not_set"])
             }
         }
+    }
+
+    @Test
+    fun `combined local objectives keep persistent interactions without restoring completed tasks`() {
+        val rooms = readList<Room>("rooms.json").associateBy { it.id }
+        val beach = requireNotNull(resolveRoomDescription(rooms.getValue("sector9_beach_pools"), emptyMap(),
+            setOf("ms_w2_flora_weeds_scanned", "ms_w2_tideglass_gathered"), false))
+        assertTrue(beach.contains("luminescent anemones"))
+        assertTrue(beach.contains("[action:tide fishing|fishing]"))
+        assertFalse(beach.contains("[action:gather tideglass"))
+        assertFalse(beach.contains("[action:scan weeds"))
+
+        val stasis = requireNotNull(resolveRoomDescription(rooms.getValue("sector9_stasis_chamber"), emptyMap(),
+            setOf("ms_w2_pod_inspected", "ms_w2_roots_scanned"), false))
+        assertTrue(stasis.contains("root lattice"))
+        assertTrue(stasis.contains("ceiling vent"))
+        assertTrue(stasis.contains("both been mapped"))
     }
 
     @Test

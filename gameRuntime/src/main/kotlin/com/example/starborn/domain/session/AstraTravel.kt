@@ -38,6 +38,12 @@ object AstraTravel {
         return destinations.take(furthest + 1)
     }
 
+    fun navigationHint(state: GameSessionState): String {
+        val available = availableDestinations(state)
+        return if (available.size == destinations.size) "All charted routes are available."
+        else "Continue the main story in ${available.last().title.substringAfter(": ")} to chart another route."
+    }
+
     /** Recover old/debug saves without a docking record; never return to the ship itself. */
     fun dockingLocation(state: GameSessionState, hubs: List<Hub>, nodes: List<HubNode>): AstraDestination {
         val savedRoom = state.astraReturnRoomId

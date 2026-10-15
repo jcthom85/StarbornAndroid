@@ -1,0 +1,2810 @@
+{
+  "date": "2026-10-14",
+  "status": "Source screening for proposed progression plan. Not implementation certification or gameplay balance evidence.",
+  "scope": "100 tree nodes and 43 skill records owned by the four active crew. Ollie excluded as retired companion content. Duplicate IDs across tree/skill records intentionally retain both representations.",
+  "counts": {
+    "passive stat consumer candidate; verify ownership, units and consequence": 30,
+    "catalog entry present; behavior and acquisition overlap require verification": 15,
+    "no matching combat skill definition; inspect possible exploration consumer before disposition": 48,
+    "passive promise lacks complete matching consumer": 7
+  },
+  "tree_costs": {
+    "gh0st": 46,
+    "nova": 66,
+    "orion": 46,
+    "zeke": 66
+  },
+  "enemy_ap_records": [
+    {
+      "id": "administrator_boss",
+      "ap": 2
+    },
+    {
+      "id": "titan_walker_boss",
+      "ap": 3
+    },
+    {
+      "id": "compliance_avatar",
+      "ap": 4
+    },
+    {
+      "id": "ascended_vale",
+      "ap": 5
+    },
+    {
+      "id": "ascended_god",
+      "ap": 8
+    }
+  ],
+  "enemy_ap_sum_single_defeat_each": 22,
+  "tree_nodes": [
+    {
+      "character": "gh0st",
+      "branch": "Sniper",
+      "id": "gh0st_scope",
+      "name": "Scope",
+      "pos": [
+        1,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "buff",
+        "buff_type": "accuracy",
+        "value": 10
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "gh0st",
+      "branch": "Sniper",
+      "id": "gh0st_steady_aim",
+      "name": "Steady Aim",
+      "pos": [
+        0,
+        1
+      ],
+      "cost_ap": 1,
+      "requires": [
+        "gh0st_scope"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "crit_chance",
+        "value": 10
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "gh0st",
+      "branch": "Sniper",
+      "id": "gh0st_headshot",
+      "name": "Headshot",
+      "pos": [
+        2,
+        1
+      ],
+      "cost_ap": 1,
+      "requires": [
+        "gh0st_scope"
+      ],
+      "effect": {
+        "type": "damage",
+        "mult": 1.5
+      },
+      "screening": "catalog entry present; behavior and acquisition overlap require verification",
+      "combat_skill_present": true
+    },
+    {
+      "character": "gh0st",
+      "branch": "Sniper",
+      "id": "gh0st_penetrating_shot",
+      "name": "Penetrating Shot",
+      "pos": [
+        1,
+        2
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "gh0st_steady_aim",
+        "gh0st_headshot"
+      ],
+      "effect": {
+        "type": "damage",
+        "mult": 1.2,
+        "subtype": "piercing"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "gh0st",
+      "branch": "Sniper",
+      "id": "gh0st_venom_edge",
+      "name": "Venom Edge",
+      "pos": [
+        0,
+        3
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "gh0st_penetrating_shot"
+      ],
+      "effect": {
+        "type": "active",
+        "subtype": "erosion"
+      },
+      "screening": "catalog entry present; behavior and acquisition overlap require verification",
+      "combat_skill_present": true
+    },
+    {
+      "character": "gh0st",
+      "branch": "Sniper",
+      "id": "gh0st_crippling_shot",
+      "name": "Crippling Shot",
+      "pos": [
+        2,
+        3
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "gh0st_penetrating_shot"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "debuff_speed",
+        "value": -20
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "gh0st",
+      "branch": "Sniper",
+      "id": "gh0st_system_crash",
+      "name": "System Crash",
+      "pos": [
+        1,
+        4
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "gh0st_venom_edge",
+        "gh0st_crippling_shot"
+      ],
+      "effect": {
+        "type": "active",
+        "subtype": "stun"
+      },
+      "screening": "catalog entry present; behavior and acquisition overlap require verification",
+      "combat_skill_present": true
+    },
+    {
+      "character": "gh0st",
+      "branch": "Sniper",
+      "id": "gh0st_chain_shot",
+      "name": "Chain Shot",
+      "pos": [
+        0,
+        5
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "gh0st_system_crash"
+      ],
+      "effect": {
+        "type": "damage",
+        "mult": 0.8,
+        "subtype": "multi_hit"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "gh0st",
+      "branch": "Sniper",
+      "id": "gh0st_ghost_in_the_machine",
+      "name": "Ghost in the Machine",
+      "pos": [
+        2,
+        5
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "gh0st_system_crash"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "invisibility"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "gh0st",
+      "branch": "Sniper",
+      "id": "gh0st_shadow_flurry",
+      "name": "Shadow Flurry",
+      "pos": [
+        1,
+        5
+      ],
+      "cost_ap": 5,
+      "requires": [
+        "gh0st_chain_shot",
+        "gh0st_ghost_in_the_machine"
+      ],
+      "effect": {
+        "type": "active",
+        "subtype": "bleed"
+      },
+      "screening": "catalog entry present; behavior and acquisition overlap require verification",
+      "combat_skill_present": true
+    },
+    {
+      "character": "gh0st",
+      "branch": "Sabotage",
+      "id": "gh0st_dismantle",
+      "name": "Dismantle",
+      "pos": [
+        1,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "utility",
+        "subtype": "debuff_defense",
+        "value": -10
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "gh0st",
+      "branch": "Sabotage",
+      "id": "gh0st_emp_grenade",
+      "name": "EMP Grenade",
+      "pos": [
+        0,
+        1
+      ],
+      "cost_ap": 1,
+      "requires": [
+        "gh0st_dismantle"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "disable_mechanical"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "gh0st",
+      "branch": "Sabotage",
+      "id": "gh0st_viral_agent",
+      "name": "Viral Agent",
+      "pos": [
+        2,
+        1
+      ],
+      "cost_ap": 1,
+      "requires": [
+        "gh0st_dismantle"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "dot_damage",
+        "value": 5
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "gh0st",
+      "branch": "Sabotage",
+      "id": "gh0st_system_shock",
+      "name": "System Shock",
+      "pos": [
+        1,
+        2
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "gh0st_emp_grenade",
+        "gh0st_viral_agent"
+      ],
+      "effect": {
+        "type": "damage",
+        "mult": 1.5,
+        "subtype": "stun"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "gh0st",
+      "branch": "Sabotage",
+      "id": "gh0st_overload",
+      "name": "Overload",
+      "pos": [
+        0,
+        3
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "gh0st_system_shock"
+      ],
+      "effect": {
+        "type": "damage",
+        "mult": 2.0,
+        "subtype": "aoe_mechanical"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "gh0st",
+      "branch": "Sabotage",
+      "id": "gh0st_logic_bomb",
+      "name": "Logic Bomb",
+      "pos": [
+        2,
+        3
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "gh0st_system_shock"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "debuff_attack",
+        "value": -15
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "gh0st",
+      "branch": "Sabotage",
+      "id": "gh0st_meltdown",
+      "name": "Meltdown",
+      "pos": [
+        1,
+        4
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "gh0st_overload",
+        "gh0st_logic_bomb"
+      ],
+      "effect": {
+        "type": "damage",
+        "mult": 2.5,
+        "subtype": "dot_aoe"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "gh0st",
+      "branch": "Sabotage",
+      "id": "gh0st_cascade_failure",
+      "name": "Cascade Failure",
+      "pos": [
+        0,
+        5
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "gh0st_meltdown"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "spread_debuffs"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "gh0st",
+      "branch": "Sabotage",
+      "id": "gh0st_master_saboteur",
+      "name": "Master Saboteur",
+      "pos": [
+        2,
+        5
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "gh0st_meltdown"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "debuff_duration",
+        "value": 50
+      },
+      "screening": "passive promise lacks complete matching consumer",
+      "combat_skill_present": false
+    },
+    {
+      "character": "gh0st",
+      "branch": "Sabotage",
+      "id": "gh0st_total_system_failure",
+      "name": "Total System Failure",
+      "pos": [
+        1,
+        5
+      ],
+      "cost_ap": 5,
+      "requires": [
+        "gh0st_cascade_failure",
+        "gh0st_master_saboteur"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "instant_kill_mechanical"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Thievery",
+      "id": "nova_light_fingers",
+      "name": "Light Fingers",
+      "pos": [
+        1,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "buff",
+        "buff_type": "steal_rate",
+        "value": 5
+      },
+      "screening": "passive promise lacks complete matching consumer",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Thievery",
+      "id": "nova_quiet_steps",
+      "name": "Quiet Steps",
+      "pos": [
+        0,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "buff",
+        "buff_type": "speed",
+        "value": 5
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Thievery",
+      "id": "nova_keen_sight",
+      "name": "Keen Sight",
+      "pos": [
+        2,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "buff",
+        "buff_type": "accuracy",
+        "value": 5
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Thievery",
+      "id": "nova_lockpicking",
+      "name": "Lockpicking",
+      "pos": [
+        1,
+        1
+      ],
+      "cost_ap": 1,
+      "requires": [
+        "nova_light_fingers"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "unlock"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Thievery",
+      "id": "nova_distraction",
+      "name": "Distraction",
+      "pos": [
+        0,
+        2
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "nova_lockpicking"
+      ],
+      "effect": {
+        "type": "damage",
+        "mult": 1.2
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Thievery",
+      "id": "nova_hydraulic_kick",
+      "name": "Hydraulic Kick",
+      "pos": [
+        2,
+        2
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "nova_lockpicking"
+      ],
+      "effect": {
+        "type": "active",
+        "subtype": "guard_break"
+      },
+      "screening": "catalog entry present; behavior and acquisition overlap require verification",
+      "combat_skill_present": true
+    },
+    {
+      "character": "nova",
+      "branch": "Thievery",
+      "id": "nova_smoke_bomb",
+      "name": "Smoke Bomb",
+      "pos": [
+        1,
+        3
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "nova_distraction",
+        "nova_hydraulic_kick"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "evasion",
+        "value": 10
+      },
+      "screening": "catalog entry present; behavior and acquisition overlap require verification",
+      "combat_skill_present": true
+    },
+    {
+      "character": "nova",
+      "branch": "Thievery",
+      "id": "nova_pickpocket_master",
+      "name": "Pickpocket Master",
+      "pos": [
+        0,
+        4
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "nova_smoke_bomb"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "steal_rate",
+        "value": 15
+      },
+      "screening": "passive promise lacks complete matching consumer",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Thievery",
+      "id": "nova_shadow_escape",
+      "name": "Shadow Escape",
+      "pos": [
+        2,
+        4
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "nova_smoke_bomb"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "escape"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Thievery",
+      "id": "nova_master_thief",
+      "name": "Master Thief",
+      "pos": [
+        1,
+        5
+      ],
+      "cost_ap": 5,
+      "requires": [
+        "nova_shadow_escape",
+        "nova_pickpocket_master"
+      ],
+      "effect": {
+        "type": "damage",
+        "mult": 2.0
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Darkness",
+      "id": "nova_dark_sight",
+      "name": "Dark Sight",
+      "pos": [
+        1,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "buff",
+        "buff_type": "accuracy",
+        "value": 5
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Darkness",
+      "id": "nova_night_cloak",
+      "name": "Night Cloak",
+      "pos": [
+        0,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "buff",
+        "buff_type": "defense",
+        "value": 5
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Darkness",
+      "id": "nova_shadow_blade",
+      "name": "Shadow Blade",
+      "pos": [
+        2,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "damage",
+        "mult": 1.3
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Darkness",
+      "id": "nova_umbral_step",
+      "name": "Umbral Step",
+      "pos": [
+        1,
+        1
+      ],
+      "cost_ap": 1,
+      "requires": [
+        "nova_dark_sight"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "teleport"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Darkness",
+      "id": "nova_fear_aura",
+      "name": "Fear Aura",
+      "pos": [
+        0,
+        2
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "nova_umbral_step"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "evasion",
+        "value": 5
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Darkness",
+      "id": "nova_soul_drain",
+      "name": "Soul Drain",
+      "pos": [
+        2,
+        2
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "nova_umbral_step"
+      ],
+      "effect": {
+        "type": "damage",
+        "mult": 1.6
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Darkness",
+      "id": "nova_dark_pact",
+      "name": "Dark Pact",
+      "pos": [
+        1,
+        3
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "nova_fear_aura",
+        "nova_soul_drain"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "attack",
+        "value": 5
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Darkness",
+      "id": "nova_plasma_burst",
+      "name": "Plasma Burst",
+      "pos": [
+        0,
+        4
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "nova_dark_pact"
+      ],
+      "effect": {
+        "type": "active",
+        "subtype": "burn"
+      },
+      "screening": "catalog entry present; behavior and acquisition overlap require verification",
+      "combat_skill_present": true
+    },
+    {
+      "character": "nova",
+      "branch": "Darkness",
+      "id": "nova_eclipse",
+      "name": "Eclipse",
+      "pos": [
+        2,
+        4
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "nova_dark_pact"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "blind"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Darkness",
+      "id": "nova_lord_of_shadows",
+      "name": "Lord of Shadows",
+      "pos": [
+        1,
+        5
+      ],
+      "cost_ap": 5,
+      "requires": [
+        "nova_plasma_burst",
+        "nova_eclipse"
+      ],
+      "effect": {
+        "type": "damage",
+        "mult": 2.2
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Tinkering",
+      "id": "nova_jury_rig",
+      "name": "Jury Rig",
+      "pos": [
+        1,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "buff",
+        "buff_type": "attack",
+        "value": 3
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Tinkering",
+      "id": "nova_handy_tools",
+      "name": "Handy Tools",
+      "pos": [
+        0,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "utility",
+        "subtype": "repair"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Tinkering",
+      "id": "nova_trap_setting",
+      "name": "Trap Setting",
+      "pos": [
+        2,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "damage",
+        "mult": 1.2
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Tinkering",
+      "id": "nova_gear_upgrade",
+      "name": "Gear Upgrade",
+      "pos": [
+        1,
+        1
+      ],
+      "cost_ap": 1,
+      "requires": [
+        "nova_jury_rig"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "defense",
+        "value": 5
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Tinkering",
+      "id": "nova_hacking",
+      "name": "Hacking",
+      "pos": [
+        0,
+        2
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "nova_gear_upgrade"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "hack"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Tinkering",
+      "id": "nova_remote_mine",
+      "name": "Remote Mine",
+      "pos": [
+        2,
+        2
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "nova_gear_upgrade"
+      ],
+      "effect": {
+        "type": "damage",
+        "mult": 1.4
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Tinkering",
+      "id": "nova_cryo_vent",
+      "name": "Cryo Vent",
+      "pos": [
+        1,
+        3
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "nova_hacking",
+        "nova_remote_mine"
+      ],
+      "effect": {
+        "type": "active",
+        "subtype": "brittle"
+      },
+      "screening": "catalog entry present; behavior and acquisition overlap require verification",
+      "combat_skill_present": true
+    },
+    {
+      "character": "nova",
+      "branch": "Tinkering",
+      "id": "nova_overclock",
+      "name": "Overclock",
+      "pos": [
+        0,
+        4
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "nova_cryo_vent"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "speed",
+        "value": 10
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Tinkering",
+      "id": "nova_drone_swarm",
+      "name": "Drone Swarm",
+      "pos": [
+        2,
+        4
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "nova_cryo_vent"
+      ],
+      "effect": {
+        "type": "damage",
+        "mult": 1.7
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "nova",
+      "branch": "Tinkering",
+      "id": "nova_master_engineer",
+      "name": "Master Engineer",
+      "pos": [
+        1,
+        5
+      ],
+      "cost_ap": 5,
+      "requires": [
+        "nova_overclock",
+        "nova_drone_swarm"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "attack",
+        "value": 15
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "orion",
+      "branch": "Innovation",
+      "id": "orion_innovate",
+      "name": "Innovate",
+      "pos": [
+        1,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "utility",
+        "subtype": "analyze"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "orion",
+      "branch": "Innovation",
+      "id": "orion_med_lab_efficiency",
+      "name": "Med Lab Efficiency",
+      "pos": [
+        0,
+        1
+      ],
+      "cost_ap": 1,
+      "requires": [
+        "orion_innovate"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "healing",
+        "value": 10
+      },
+      "screening": "passive promise lacks complete matching consumer",
+      "combat_skill_present": false
+    },
+    {
+      "character": "orion",
+      "branch": "Innovation",
+      "id": "orion_crafting_bench",
+      "name": "Crafting Bench",
+      "pos": [
+        2,
+        1
+      ],
+      "cost_ap": 1,
+      "requires": [
+        "orion_innovate"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "craft"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "orion",
+      "branch": "Innovation",
+      "id": "orion_advanced_materials",
+      "name": "Advanced Materials",
+      "pos": [
+        1,
+        2
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "orion_med_lab_efficiency",
+        "orion_crafting_bench"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "defense",
+        "value": 10
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "orion",
+      "branch": "Innovation",
+      "id": "orion_nano_repair",
+      "name": "Nano Repair",
+      "pos": [
+        0,
+        3
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "orion_advanced_materials"
+      ],
+      "effect": {
+        "type": "heal",
+        "value": 20
+      },
+      "screening": "catalog entry present; behavior and acquisition overlap require verification",
+      "combat_skill_present": true
+    },
+    {
+      "character": "orion",
+      "branch": "Innovation",
+      "id": "orion_weapon_specialization",
+      "name": "Weapon Specialization",
+      "pos": [
+        2,
+        3
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "orion_advanced_materials"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "attack",
+        "value": 10
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "orion",
+      "branch": "Innovation",
+      "id": "orion_disruption_pulse",
+      "name": "Disruption Pulse",
+      "pos": [
+        1,
+        4
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "orion_nano_repair",
+        "orion_weapon_specialization"
+      ],
+      "effect": {
+        "type": "active",
+        "subtype": "weak"
+      },
+      "screening": "catalog entry present; behavior and acquisition overlap require verification",
+      "combat_skill_present": true
+    },
+    {
+      "character": "orion",
+      "branch": "Innovation",
+      "id": "orion_overcharge",
+      "name": "Overcharge",
+      "pos": [
+        0,
+        5
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "orion_disruption_pulse"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "attack",
+        "value": 20
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "orion",
+      "branch": "Innovation",
+      "id": "orion_stasis_field",
+      "name": "Stasis Field",
+      "pos": [
+        2,
+        5
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "orion_disruption_pulse"
+      ],
+      "effect": {
+        "type": "active",
+        "subtype": "freeze"
+      },
+      "screening": "catalog entry present; behavior and acquisition overlap require verification",
+      "combat_skill_present": true
+    },
+    {
+      "character": "orion",
+      "branch": "Innovation",
+      "id": "orion_master_engineer",
+      "name": "Master Engineer",
+      "pos": [
+        1,
+        5
+      ],
+      "cost_ap": 5,
+      "requires": [
+        "orion_overcharge",
+        "orion_stasis_field"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "ultimate_creation"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "orion",
+      "branch": "Support",
+      "id": "orion_relay_repair",
+      "name": "Relay Repair",
+      "pos": [
+        1,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "heal",
+        "value": 10
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "orion",
+      "branch": "Support",
+      "id": "orion_triage",
+      "name": "Triage",
+      "pos": [
+        0,
+        1
+      ],
+      "cost_ap": 1,
+      "requires": [
+        "orion_relay_repair"
+      ],
+      "effect": {
+        "type": "heal",
+        "value": 15
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "orion",
+      "branch": "Support",
+      "id": "orion_shield_protocol",
+      "name": "Shield Protocol",
+      "pos": [
+        2,
+        1
+      ],
+      "cost_ap": 1,
+      "requires": [
+        "orion_relay_repair"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "defense",
+        "value": 10
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "orion",
+      "branch": "Support",
+      "id": "orion_revive",
+      "name": "Revive",
+      "pos": [
+        1,
+        2
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "orion_triage",
+        "orion_shield_protocol"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "revive"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "orion",
+      "branch": "Support",
+      "id": "orion_cleanse",
+      "name": "Cleanse",
+      "pos": [
+        0,
+        3
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "orion_revive"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "cleanse"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "orion",
+      "branch": "Support",
+      "id": "orion_mass_repair",
+      "name": "Mass Repair",
+      "pos": [
+        2,
+        3
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "orion_revive"
+      ],
+      "effect": {
+        "type": "heal",
+        "value": 15,
+        "subtype": "aoe"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "orion",
+      "branch": "Support",
+      "id": "orion_aegis_protocol",
+      "name": "Aegis Protocol",
+      "pos": [
+        1,
+        4
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "orion_cleanse",
+        "orion_mass_repair"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "defense",
+        "value": 20,
+        "subtype": "aoe"
+      },
+      "screening": "passive promise lacks complete matching consumer",
+      "combat_skill_present": false
+    },
+    {
+      "character": "orion",
+      "branch": "Support",
+      "id": "orion_regeneration_field",
+      "name": "Regeneration Field",
+      "pos": [
+        0,
+        5
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "orion_aegis_protocol"
+      ],
+      "effect": {
+        "type": "heal",
+        "value": 10,
+        "subtype": "hot"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "orion",
+      "branch": "Support",
+      "id": "orion_sanctuary",
+      "name": "Sanctuary",
+      "pos": [
+        2,
+        5
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "orion_aegis_protocol"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "invulnerability"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "orion",
+      "branch": "Support",
+      "id": "orion_guardian_angel",
+      "name": "Guardian Angel",
+      "pos": [
+        1,
+        5
+      ],
+      "cost_ap": 5,
+      "requires": [
+        "orion_regeneration_field",
+        "orion_sanctuary"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "auto_revive"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Human Resources",
+      "id": "zeke_team_meeting",
+      "name": "Team Meeting",
+      "pos": [
+        1,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "buff",
+        "buff_type": "morale",
+        "value": 5
+      },
+      "screening": "passive promise lacks complete matching consumer",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Human Resources",
+      "id": "zeke_training_session",
+      "name": "Training Session",
+      "pos": [
+        0,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "buff",
+        "buff_type": "attack",
+        "value": 5
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Human Resources",
+      "id": "zeke_motivational_speech",
+      "name": "Motivational Speech",
+      "pos": [
+        2,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "buff",
+        "buff_type": "speed",
+        "value": 5
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Human Resources",
+      "id": "zeke_conflict_resolution",
+      "name": "Conflict Resolution",
+      "pos": [
+        1,
+        1
+      ],
+      "cost_ap": 1,
+      "requires": [
+        "zeke_team_meeting"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "peace"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Human Resources",
+      "id": "zeke_benefits_plan",
+      "name": "Benefits Plan",
+      "pos": [
+        0,
+        2
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "zeke_conflict_resolution"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "defense",
+        "value": 5
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Human Resources",
+      "id": "zeke_retention_bonus",
+      "name": "Retention Bonus",
+      "pos": [
+        2,
+        2
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "zeke_conflict_resolution"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "attack",
+        "value": 5
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Human Resources",
+      "id": "zeke_talent_acquisition",
+      "name": "Talent Acquisition",
+      "pos": [
+        1,
+        3
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "zeke_benefits_plan",
+        "zeke_retention_bonus"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "recruit"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Human Resources",
+      "id": "zeke_employee_survey",
+      "name": "Employee Survey",
+      "pos": [
+        0,
+        4
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "zeke_talent_acquisition"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "morale",
+        "value": 10
+      },
+      "screening": "passive promise lacks complete matching consumer",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Human Resources",
+      "id": "zeke_professional_development",
+      "name": "Professional Development",
+      "pos": [
+        2,
+        4
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "zeke_talent_acquisition"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "speed",
+        "value": 10
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Human Resources",
+      "id": "zeke_chief_people_officer",
+      "name": "Chief People Officer",
+      "pos": [
+        1,
+        5
+      ],
+      "cost_ap": 5,
+      "requires": [
+        "zeke_professional_development",
+        "zeke_employee_survey"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "attack",
+        "value": 15
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Administration",
+      "id": "zeke_filing_system",
+      "name": "Filing System",
+      "pos": [
+        1,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "utility",
+        "subtype": "organize"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Administration",
+      "id": "zeke_budgeting",
+      "name": "Budgeting",
+      "pos": [
+        0,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "buff",
+        "buff_type": "defense",
+        "value": 5
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Administration",
+      "id": "zeke_paperwork_mastery",
+      "name": "Paperwork Mastery",
+      "pos": [
+        2,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "buff",
+        "buff_type": "accuracy",
+        "value": 5
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Administration",
+      "id": "zeke_resource_allocation",
+      "name": "Resource Allocation",
+      "pos": [
+        1,
+        1
+      ],
+      "cost_ap": 1,
+      "requires": [
+        "zeke_filing_system"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "allocate"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Administration",
+      "id": "zeke_policy_manual",
+      "name": "Policy Manual",
+      "pos": [
+        0,
+        2
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "zeke_resource_allocation"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "defense",
+        "value": 5
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Administration",
+      "id": "zeke_audit",
+      "name": "Audit",
+      "pos": [
+        2,
+        2
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "zeke_resource_allocation"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "investigate"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Administration",
+      "id": "zeke_signal_jammer",
+      "name": "Signal Jammer",
+      "pos": [
+        1,
+        3
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "zeke_policy_manual",
+        "zeke_audit"
+      ],
+      "effect": {
+        "type": "active",
+        "subtype": "silence"
+      },
+      "screening": "catalog entry present; behavior and acquisition overlap require verification",
+      "combat_skill_present": true
+    },
+    {
+      "character": "zeke",
+      "branch": "Administration",
+      "id": "zeke_office_renovation",
+      "name": "Office Renovation",
+      "pos": [
+        0,
+        4
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "zeke_signal_jammer"
+      ],
+      "effect": {
+        "type": "heal",
+        "value": 10
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Administration",
+      "id": "zeke_process_optimization",
+      "name": "Process Optimization",
+      "pos": [
+        2,
+        4
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "zeke_signal_jammer"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "speed",
+        "value": 10
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Administration",
+      "id": "zeke_executive_order",
+      "name": "Executive Order",
+      "pos": [
+        1,
+        5
+      ],
+      "cost_ap": 5,
+      "requires": [
+        "zeke_process_optimization",
+        "zeke_office_renovation"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "attack",
+        "value": 20
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Operations",
+      "id": "zeke_load_balancing",
+      "name": "Load Balancing",
+      "pos": [
+        1,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "buff",
+        "buff_type": "speed",
+        "value": 5
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Operations",
+      "id": "zeke_workflow_charts",
+      "name": "Workflow Charts",
+      "pos": [
+        0,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "utility",
+        "subtype": "plan"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Operations",
+      "id": "zeke_standard_procedure",
+      "name": "Standard Procedure",
+      "pos": [
+        2,
+        0
+      ],
+      "cost_ap": 1,
+      "requires": [],
+      "effect": {
+        "type": "buff",
+        "buff_type": "defense",
+        "value": 5
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Operations",
+      "id": "zeke_supply_chain",
+      "name": "Supply Chain",
+      "pos": [
+        1,
+        1
+      ],
+      "cost_ap": 1,
+      "requires": [
+        "zeke_load_balancing"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "supply"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Operations",
+      "id": "zeke_quality_assurance",
+      "name": "Quality Assurance",
+      "pos": [
+        0,
+        2
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "zeke_supply_chain"
+      ],
+      "effect": {
+        "type": "buff",
+        "buff_type": "attack",
+        "value": 5
+      },
+      "screening": "passive stat consumer candidate; verify ownership, units and consequence",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Operations",
+      "id": "zeke_logistics",
+      "name": "Logistics",
+      "pos": [
+        2,
+        2
+      ],
+      "cost_ap": 2,
+      "requires": [
+        "zeke_supply_chain"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "move"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Operations",
+      "id": "zeke_bulwark_stance",
+      "name": "Bulwark Stance",
+      "pos": [
+        1,
+        3
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "zeke_quality_assurance",
+        "zeke_logistics"
+      ],
+      "effect": {
+        "type": "active",
+        "subtype": "guard"
+      },
+      "screening": "catalog entry present; behavior and acquisition overlap require verification",
+      "combat_skill_present": true
+    },
+    {
+      "character": "zeke",
+      "branch": "Operations",
+      "id": "zeke_overload_fists",
+      "name": "Overload Fists",
+      "pos": [
+        0,
+        4
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "zeke_bulwark_stance"
+      ],
+      "effect": {
+        "type": "active",
+        "subtype": "shock"
+      },
+      "screening": "catalog entry present; behavior and acquisition overlap require verification",
+      "combat_skill_present": true
+    },
+    {
+      "character": "zeke",
+      "branch": "Operations",
+      "id": "zeke_emergency_protocol",
+      "name": "Emergency Protocol",
+      "pos": [
+        2,
+        4
+      ],
+      "cost_ap": 3,
+      "requires": [
+        "zeke_bulwark_stance"
+      ],
+      "effect": {
+        "type": "utility",
+        "subtype": "panic"
+      },
+      "screening": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "combat_skill_present": false
+    },
+    {
+      "character": "zeke",
+      "branch": "Operations",
+      "id": "zeke_quake_slam",
+      "name": "Quake Slam",
+      "pos": [
+        1,
+        5
+      ],
+      "cost_ap": 5,
+      "requires": [
+        "zeke_overload_fists",
+        "zeke_emergency_protocol"
+      ],
+      "effect": {
+        "type": "active",
+        "subtype": "aoe"
+      },
+      "screening": "catalog entry present; behavior and acquisition overlap require verification",
+      "combat_skill_present": true
+    }
+  ],
+  "playable_skill_records": [
+    {
+      "id": "gh0st_headshot",
+      "name": "Headshot",
+      "character": "gh0st",
+      "type": "active",
+      "max_rank": 5,
+      "description": "Deal 150% ATK as piercing damage.",
+      "combat_tags": [
+        "dmg",
+        "pierce"
+      ],
+      "base_power": 95,
+      "scaling": "atk",
+      "cooldown": 2,
+      "status_applications": []
+    },
+    {
+      "id": "nova_smoke_bomb",
+      "name": "Smoke Bomb",
+      "character": "nova",
+      "type": "active",
+      "base_power": 0,
+      "cooldown": 3,
+      "description": "Increases evasion by 15% for 2 turns.",
+      "combat_tags": [
+        "support"
+      ],
+      "status_applications": [
+        "shield"
+      ]
+    },
+    {
+      "id": "nova_arc_tether",
+      "name": "Arc Tether",
+      "character": "nova",
+      "type": "active",
+      "description": "Lashes a high-voltage wire between target and ground, dealing lightning damage and applying Shock.",
+      "combat_tags": [
+        "shock"
+      ],
+      "base_power": 80,
+      "scaling": "agility",
+      "cooldown": 2,
+      "status_applications": [
+        "shock"
+      ]
+    },
+    {
+      "id": "nova_cryo_vent",
+      "name": "Cryo Vent",
+      "character": "nova",
+      "type": "active",
+      "description": "Purges pressurized coolant through the cutter shroud, freezing armor plates and applying Brittle for 2 turns. Physical attacks deal +50% damage to Brittle targets.",
+      "combat_tags": [
+        "freeze",
+        "setup"
+      ],
+      "base_power": 55,
+      "scaling": "agility",
+      "cooldown": 3,
+      "status_applications": [
+        "brittle"
+      ]
+    },
+    {
+      "id": "nova_plasma_burst",
+      "name": "Plasma Burst",
+      "character": "nova",
+      "type": "active",
+      "description": "Overdrives the cutter nozzle to hose the enemy formation in superheated gas, triggering Meltdown.",
+      "combat_tags": [
+        "burn",
+        "aoe"
+      ],
+      "base_power": 90,
+      "scaling": "agility",
+      "cooldown": 3,
+      "status_applications": [
+        "meltdown"
+      ]
+    },
+    {
+      "id": "nova_rend_round",
+      "name": "Rend Round",
+      "character": "nova",
+      "type": "active",
+      "description": "A barbed flechette round calibrated to bite deep into armor seams. Deals massive bonus damage and Bleed against staggered targets.",
+      "combat_tags": [
+        "dmg"
+      ],
+      "base_power": 110,
+      "scaling": "agility",
+      "cooldown": 2,
+      "status_applications": [
+        "bleed"
+      ],
+      "conditions": [
+        "bonus_if_target_staggered"
+      ]
+    },
+    {
+      "id": "zeke_shatter_blow",
+      "name": "Shatter Blow",
+      "character": "zeke",
+      "type": "active",
+      "description": "A heavy pneumatic piston strike that fractures enemy armor and applies Weak.",
+      "combat_tags": [
+        "dmg"
+      ],
+      "base_power": 90,
+      "scaling": "strength",
+      "cooldown": 2,
+      "status_applications": [
+        "weak"
+      ]
+    },
+    {
+      "id": "zeke_bulwark_stance",
+      "name": "Bulwark Stance",
+      "character": "zeke",
+      "type": "active",
+      "description": "Plants magnetic boots and locks reinforced forearm plates into place, granting Guard and Braced.",
+      "combat_tags": [
+        "support"
+      ],
+      "base_power": 0,
+      "scaling": "strength",
+      "cooldown": 3,
+      "status_applications": [
+        "guard",
+        "braced"
+      ]
+    },
+    {
+      "id": "zeke_overload_fists",
+      "name": "Overload Fists",
+      "character": "zeke",
+      "type": "active",
+      "description": "Shorts maintenance capacitors through his gauntlets, delivering a concussive jolt that shocks the target.",
+      "combat_tags": [
+        "shock"
+      ],
+      "base_power": 120,
+      "scaling": "strength",
+      "cooldown": 2,
+      "status_applications": [
+        "shock"
+      ]
+    },
+    {
+      "id": "zeke_quake_slam",
+      "name": "Quake Slam",
+      "character": "zeke",
+      "type": "active",
+      "description": "Slams the deck with full pneumatic force, sending a shockwave across the enemy line that applies Weak, with devastating bonus damage against stunned targets.",
+      "combat_tags": [
+        "aoe"
+      ],
+      "base_power": 190,
+      "scaling": "strength",
+      "cooldown": 3,
+      "status_applications": [
+        "weak"
+      ],
+      "conditions": [
+        "bonus_if_target_stunned"
+      ]
+    },
+    {
+      "id": "orion_prism_lance",
+      "name": "Prism Lance",
+      "character": "orion",
+      "type": "active",
+      "description": "Channels coherent harmonic light through a focusing crystal, delivering an armor-piercing beam.",
+      "combat_tags": [
+        "acid"
+      ],
+      "base_power": 85,
+      "scaling": "focus",
+      "cooldown": 2,
+      "status_applications": []
+    },
+    {
+      "id": "orion_nano_repair",
+      "name": "Nano Repair",
+      "character": "orion",
+      "type": "active",
+      "description": "Deploys an aerosol of medical nanites that knit flesh and seal torn suits over time.",
+      "combat_tags": [
+        "support"
+      ],
+      "base_power": 0,
+      "scaling": "focus",
+      "cooldown": 3,
+      "status_applications": [
+        "regen"
+      ]
+    },
+    {
+      "id": "orion_disruption_pulse",
+      "name": "Disruption Pulse",
+      "character": "orion",
+      "type": "active",
+      "description": "Emitters pulse an inverted resonance wave that scrambles targeting sensors and leaves all foes Weakened.",
+      "combat_tags": [
+        "aoe"
+      ],
+      "base_power": 0,
+      "scaling": "focus",
+      "cooldown": 3,
+      "status_applications": [
+        "weak"
+      ]
+    },
+    {
+      "id": "orion_stasis_field",
+      "name": "Stasis Field",
+      "character": "orion",
+      "type": "active",
+      "description": "Generates a localized cryogenic dampening sphere that flash-freezes the opposing vanguard.",
+      "combat_tags": [
+        "freeze",
+        "aoe"
+      ],
+      "base_power": 80,
+      "scaling": "focus",
+      "cooldown": 4,
+      "status_applications": [
+        "freeze"
+      ]
+    },
+    {
+      "id": "gh0st_venom_edge",
+      "name": "Venom Edge",
+      "character": "gh0st",
+      "type": "active",
+      "description": "Coats a vibroblade in caustic slag runoff, carving open armor seams and leaving lingering Erosion.",
+      "combat_tags": [
+        "acid"
+      ],
+      "base_power": 110,
+      "scaling": "agility",
+      "cooldown": 2,
+      "status_applications": [
+        "erosion"
+      ]
+    },
+    {
+      "id": "gh0st_system_crash",
+      "name": "System Crash",
+      "character": "gh0st",
+      "type": "active",
+      "description": "Injects an overload virus into target kinetic systems, shutting down their response loop with Stun.",
+      "combat_tags": [
+        "source"
+      ],
+      "base_power": 100,
+      "scaling": "agility",
+      "cooldown": 3,
+      "status_applications": [
+        "stun"
+      ]
+    },
+    {
+      "id": "gh0st_shadow_flurry",
+      "name": "Shadow Flurry",
+      "character": "gh0st",
+      "type": "active",
+      "description": "Steps through blind spots in a blur of blade strikes, leaving the entire enemy squad Bleeding.",
+      "combat_tags": [
+        "aoe"
+      ],
+      "base_power": 90,
+      "scaling": "agility",
+      "cooldown": 3,
+      "status_applications": [
+        "bleed"
+      ]
+    },
+    {
+      "id": "nova_blast_wave",
+      "name": "Blast Wave",
+      "character": "nova",
+      "type": "source_art",
+      "description": "Unleashes a concussive pulse of raw Source kinetic energy, shattering Guard across all enemies and inflicting Stun.",
+      "combat_tags": [
+        "force",
+        "aoe",
+        "guard_break"
+      ],
+      "base_power": 160,
+      "scaling": "agility",
+      "cooldown": 4,
+      "status_applications": [
+        "stun"
+      ]
+    },
+    {
+      "id": "zeke_signal_jammer",
+      "name": "Signal Jammer",
+      "character": "zeke",
+      "type": "source_art",
+      "description": "Floods tactical frequencies with screeching white noise, silencing automated systems and confusing organic targets.",
+      "combat_tags": [
+        "tech",
+        "aoe"
+      ],
+      "base_power": 80,
+      "scaling": "focus",
+      "cooldown": 5,
+      "status_applications": [
+        "silence",
+        "confuse"
+      ]
+    },
+    {
+      "id": "nova_hydraulic_kick",
+      "name": "Hydraulic Kick",
+      "character": "nova",
+      "type": "active",
+      "description": "A reinforced work-boot strike powered by pressurized pneumatic servos. Shatters enemy Guard and leaves the target Weakened.",
+      "combat_tags": [
+        "dmg",
+        "guard_break"
+      ],
+      "base_power": 90,
+      "scaling": "agility",
+      "cooldown": 2,
+      "status_applications": [
+        "weak"
+      ]
+    },
+    {
+      "id": "nova_pulse_grenade",
+      "name": "Pulse Grenade",
+      "character": "nova",
+      "type": "active",
+      "description": "Lobs a repurposed acoustic excavation charge into the enemy squad, dealing physical concussive damage and Staggering the formation.",
+      "combat_tags": [
+        "aoe",
+        "physical"
+      ],
+      "base_power": 85,
+      "scaling": "agility",
+      "cooldown": 3,
+      "status_applications": [
+        "stagger"
+      ]
+    },
+    {
+      "id": "scrap_shot",
+      "name": "Scrap Shot",
+      "character": "nova",
+      "type": "active",
+      "description": "Fires a rapid spray of jagged slag debris from the cutter muzzle. Fast and dependable, but lacks armor penetration.",
+      "combat_tags": [
+        "dmg"
+      ],
+      "base_power": 70,
+      "scaling": "agility",
+      "cooldown": 0,
+      "status_applications": []
+    },
+    {
+      "id": "nova_cheap_shot",
+      "name": "Cheap Shot",
+      "character": "nova",
+      "type": "active",
+      "description": "Kicks up a blinding flurry of metal filings into the target's optics, lowering enemy accuracy and granting bonus Evasion.",
+      "combat_tags": [
+        "debuff"
+      ],
+      "base_power": 0,
+      "scaling": "agility",
+      "cooldown": 0,
+      "status_applications": [
+        "weak"
+      ]
+    },
+    {
+      "id": "zeke_synergy_pitch",
+      "name": "Synergy Pitch",
+      "character": "zeke",
+      "type": "active",
+      "description": "Hurls a deployable hard-light emitter, anchoring an auxiliary kinetic Barrier around a frontline ally.",
+      "combat_tags": [
+        "support"
+      ],
+      "base_power": 0,
+      "scaling": "strength",
+      "cooldown": 0,
+      "status_applications": [
+        "shield"
+      ]
+    },
+    {
+      "id": "orion_stasis_stitch",
+      "name": "Stasis Stitch",
+      "character": "orion",
+      "type": "active",
+      "description": "Directs a tether of repair nanites to stitch torn flesh and weave an emergency sub-dermal shield.",
+      "combat_tags": [
+        "heal",
+        "support"
+      ],
+      "base_power": 40,
+      "scaling": "focus",
+      "cooldown": 0,
+      "status_applications": [
+        "shield"
+      ]
+    },
+    {
+      "id": "gh0st_target_lock",
+      "name": "Target Lock",
+      "character": "gh0st",
+      "type": "active",
+      "description": "Paints the enemy's structural seams with a targeting laser, drastically boosting critical strike vulnerability while raising personal defenses.",
+      "combat_tags": [
+        "debuff",
+        "support"
+      ],
+      "base_power": 0,
+      "scaling": "agility",
+      "cooldown": 0,
+      "status_applications": [
+        "target_lock"
+      ]
+    },
+    {
+      "id": "slide_kick",
+      "name": "Slide Kick",
+      "character": "nova",
+      "type": "active",
+      "description": "Drops low across the metal grating to sweep the target's legs or treads, shattering Guard and causing Stagger.",
+      "combat_tags": [
+        "dmg",
+        "stagger",
+        "guard_break"
+      ],
+      "base_power": 80,
+      "scaling": "agility",
+      "cooldown": 2,
+      "status_applications": [
+        "stagger"
+      ]
+    },
+    {
+      "id": "gh0st_intercept",
+      "name": "Intercept",
+      "character": "gh0st",
+      "type": "active",
+      "description": "Gh0st intercepts attacks targeting an ally, gaining Guard.",
+      "combat_tags": [
+        "defend",
+        "support"
+      ],
+      "base_power": 0,
+      "scaling": "defense",
+      "cooldown": 2,
+      "status_applications": [
+        "guard"
+      ]
+    },
+    {
+      "id": "source_art_scan",
+      "name": "Scan",
+      "character": "nova",
+      "type": "active",
+      "description": "Use the Lens to reveal hidden routes and expose enemy harmonic weaknesses.",
+      "combat_tags": [
+        "support",
+        "debuff"
+      ],
+      "base_power": 0,
+      "scaling": "focus",
+      "cooldown": 2,
+      "status_applications": [
+        "weak"
+      ]
+    },
+    {
+      "id": "gh0st_phase_counter",
+      "name": "Phase Counter",
+      "character": "gh0st",
+      "type": "active",
+      "description": "Gh0st uses the override key discipline to counter an incoming strike and mark the attacker.",
+      "combat_tags": [
+        "counter",
+        "debuff"
+      ],
+      "base_power": 110,
+      "scaling": "atk",
+      "cooldown": 3,
+      "status_applications": [
+        "weak"
+      ]
+    },
+    {
+      "id": "source_art_construct",
+      "name": "Construct",
+      "character": "nova",
+      "type": "active",
+      "description": "Use the Anvil to shape Source intent into a temporary barrier or strike.",
+      "combat_tags": [
+        "support",
+        "dmg"
+      ],
+      "base_power": 130,
+      "scaling": "focus",
+      "cooldown": 3,
+      "status_applications": [
+        "guard"
+      ]
+    },
+    {
+      "id": "gh0st_harden",
+      "name": "Harden",
+      "character": "gh0st",
+      "type": "active",
+      "description": "Gh0st hardens his stance with Phantom combat data, gaining Guard and stability.",
+      "combat_tags": [
+        "defend",
+        "buff"
+      ],
+      "base_power": 0,
+      "scaling": "defense",
+      "cooldown": 3,
+      "status_applications": [
+        "guard"
+      ]
+    },
+    {
+      "id": "corporate_insight",
+      "name": "Corporate Insight",
+      "character": "nova",
+      "type": "passive",
+      "description": "Dominion command patterns expose predictable weaknesses in corporate security units.",
+      "combat_tags": [
+        "buff"
+      ],
+      "base_power": 0,
+      "scaling": "luck",
+      "cooldown": 0,
+      "status_applications": [],
+      "conditions": [
+        "hp_above_50"
+      ]
+    },
+    {
+      "id": "orion_sunbeam",
+      "name": "Sunbeam",
+      "character": "orion",
+      "type": "active",
+      "description": "Orion focuses stored solar energy into a burning Source beam.",
+      "combat_tags": [
+        "dmg"
+      ],
+      "base_power": 145,
+      "scaling": "focus",
+      "cooldown": 3,
+      "status_applications": [
+        "burn"
+      ]
+    },
+    {
+      "id": "source_art_stasis",
+      "name": "Stasis",
+      "character": "nova",
+      "type": "source_art",
+      "description": "Use the Anchor to freeze a target in a fixed moment, stopping even self-repairing machines.",
+      "combat_tags": [
+        "freeze",
+        "control"
+      ],
+      "base_power": 70,
+      "scaling": "focus",
+      "cooldown": 4,
+      "status_applications": [
+        "freeze",
+        "stun"
+      ]
+    },
+    {
+      "id": "data_shield",
+      "name": "Data Shield",
+      "character": "zeke",
+      "type": "passive",
+      "description": "Purged defensive routines harden the party against signal disruption and Silence.",
+      "combat_tags": [
+        "support",
+        "buff"
+      ],
+      "base_power": 0,
+      "scaling": "focus",
+      "cooldown": 0,
+      "status_applications": []
+    },
+    {
+      "id": "nova_legacy",
+      "name": "Legacy",
+      "character": "nova",
+      "type": "passive",
+      "description": "Jed's memory steadies Nova's aim when the cost matters most.",
+      "combat_tags": [
+        "buff"
+      ],
+      "base_power": 0,
+      "scaling": "luck",
+      "cooldown": 0,
+      "status_applications": [],
+      "conditions": [
+        "hp_below_50"
+      ]
+    },
+    {
+      "id": "zeke_unshackled",
+      "name": "Unshackled",
+      "character": "zeke",
+      "type": "passive",
+      "description": "Increases Zeke's Agility and action recovery speed.",
+      "combat_tags": [
+        "buff"
+      ],
+      "base_power": 0,
+      "scaling": "agility",
+      "cooldown": 0,
+      "status_applications": []
+    },
+    {
+      "id": "gh0st_source_balance",
+      "name": "Source Balance",
+      "character": "gh0st",
+      "type": "passive",
+      "description": "A clean carrier signal grants Defense scaling against physical and Source pressure.",
+      "combat_tags": [
+        "defend",
+        "buff"
+      ],
+      "base_power": 0,
+      "scaling": "defense",
+      "cooldown": 0,
+      "status_applications": []
+    },
+    {
+      "id": "orion_ancestral_grace",
+      "name": "Ancestral Grace",
+      "character": "orion",
+      "type": "passive",
+      "description": "The Aethel burial current continuously restores Orion while he remains in the fight.",
+      "combat_tags": [
+        "heal",
+        "buff"
+      ],
+      "base_power": 0,
+      "scaling": "focus",
+      "cooldown": 0,
+      "status_applications": [
+        "regen"
+      ]
+    },
+    {
+      "id": "source_art_tune_world",
+      "name": "Tune World",
+      "character": "nova",
+      "type": "source_art",
+      "description": "Open the Starborn circuit and rewrite one catastrophic resonance through collective intent.",
+      "combat_tags": [
+        "source",
+        "aoe",
+        "support"
+      ],
+      "base_power": 300,
+      "scaling": "focus",
+      "cooldown": 6,
+      "status_applications": [
+        "stun"
+      ]
+    },
+    {
+      "id": "zeke_guardian_covenant",
+      "name": "Guardian Covenant",
+      "character": "zeke",
+      "type": "support",
+      "description": "Apply Shield and Braced across the party through the recovered guardian bus.",
+      "combat_tags": [
+        "support",
+        "buff"
+      ],
+      "base_power": 0,
+      "scaling": "focus",
+      "cooldown": 4,
+      "status_applications": [
+        "shield",
+        "braced"
+      ]
+    },
+    {
+      "id": "nova_link",
+      "targeting": "all_allies",
+      "name": "Link",
+      "character": "nova",
+      "type": "support",
+      "description": "Restore party HP and apply Regen through the Bridge ground. Does not share damage.",
+      "combat_tags": [
+        "source",
+        "heal",
+        "support",
+        "aoe"
+      ],
+      "base_power": 90,
+      "scaling": "focus",
+      "cooldown": 4,
+      "status_applications": [
+        "regen"
+      ]
+    }
+  ],
+  "source_hashes": {
+    "app/src/main/assets/skills.json": "334151ba5e081d572d40229feeeef56bc01381709876abce3f26a489c11c304f",
+    "app/src/main/assets/characters.json": "fca0888018f9f205ef7f988acad36fb583ed37851dcd59e2416e541d83dbde3d",
+    "app/src/main/assets/progression.json": "db4e1d09a8b3c337a65807b655771c05ae859b48f7e648c6a623ca1da885a8ec",
+    "app/src/main/assets/enemies.json": "166a6c061233ea180b6d6c167df980cf7462ce5a4c5865db40b28269917b34b1",
+    "app/src/main/assets/events.json": "a72b42845bdc2a0d00b8807e97363238c7e1f44507d9d049ec5e50bdc4283633",
+    "app/src/main/assets/quests.json": "10a2b5a8c275397a0ec17502ee9b8eddf5f9fc24960926effe5e71fd6f651d26",
+    "app/src/main/assets/dialogue.json": "958a3b716478e0e6ff0c1e88fda6c48f9686385bea6a458039acc3938c6ca068",
+    "app/src/main/assets/skill_trees/gh0st.json": "ebe20a6992c945f877fb98996aecbef68a503ca8c6a206f22fa0bca885661871",
+    "app/src/main/assets/skill_trees/nova.json": "61ddcefd5452d7112e31ab26f58dfb4c0928e5d35ab1c04fa4978e0187c60c21",
+    "app/src/main/assets/skill_trees/orion.json": "3d64e3c33ba7284cdc12c61c98d4efac3d35d8c42508d1fdaa454fd601aae92c",
+    "app/src/main/assets/skill_trees/zeke.json": "c0ac2ad9ecaae4b2ae6ed1427347b9e92fbe7bd883906c3a62bd5adefd1b03c5",
+    "gameRuntime/src/main/kotlin/com/example/starborn/feature/exploration/skilltree/SkillTreeLogic.kt": "29d77da9af2b97df5a2371afaf1854851e416b1440a33ff0df2037c95fbed272",
+    "gameRuntime/src/main/kotlin/com/example/starborn/feature/exploration/viewmodel/ExplorationProgressionFormatter.kt": "a7f143b9690d4526a3c68b669b128786fc200fc3b72d253c942ad0e361fb053c",
+    "gameRuntime/src/main/kotlin/com/example/starborn/feature/combat/viewmodel/CombatController.kt": "9b8b9007b84bfead26928e07f8b7fc253dc84c87597fc344fdbbda3b2fc602b5",
+    "gameRuntime/src/main/kotlin/com/example/starborn/domain/combat/CombatActionProcessor.kt": "0bc476311cc5b200552140bc4415f6eacb0837ca814475673199a3e910da0d1c",
+    "gameRuntime/src/main/kotlin/com/example/starborn/domain/combat/PartyHealth.kt": "15aed7bdbf04250cf72f048083446d5500f867d930669bdf206a8dc5e26da25e",
+    "gameRuntime/src/main/kotlin/com/example/starborn/domain/session/GameBootstrap.kt": "0c93878fd651ffc6fe42274e3b4aa6dac34874233d401fd979d4d5a018657315"
+  }
+}

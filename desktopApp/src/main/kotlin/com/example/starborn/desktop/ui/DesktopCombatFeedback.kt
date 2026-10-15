@@ -299,8 +299,12 @@ internal fun DesktopDamageBubble(
 /** Local, event-specific hits; concurrent damage, status and support cues are kept separately. */
 @Composable
 internal fun DesktopCombatHit(cue: DesktopCombatCue, flashesDisabled: Boolean, modifier: Modifier = Modifier) {
+    if (cue.kind == DesktopCueKind.BREAK) {
+        com.example.starborn.shared.combat.StabilityBreakBurst(cue.token, modifier, flashesDisabled)
+        return
+    }
     val phase = remember(cue.token) { Animatable(0f) }
-    LaunchedEffect(cue.token) { phase.animateTo(1f, tween(600)) }
+    LaunchedEffect(cue.token) { phase.animateTo(1f, tween(if (cue.kind == DesktopCueKind.BREAK) 520 else 600, easing = FastOutSlowInEasing)) }
     if (cue.kind == DesktopCueKind.HIT && cue.style == null) return
     Canvas(modifier) {
         val t = phase.value
@@ -327,11 +331,7 @@ internal fun DesktopCombatHit(cue: DesktopCombatCue, flashesDisabled: Boolean, m
                     drawLine(color, Offset(x, size.height * .8f), Offset(x, size.height * (.8f - t * .6f)), stroke)
                 }
             }
-            DesktopCueKind.BREAK -> repeat(12) { index ->
-                val angle = index * Math.PI / 6
-                val vector = Offset(cos(angle).toFloat(), sin(angle).toFloat())
-                drawLine(color, center + vector * radius, center + vector * (radius + 12.dp.toPx()), stroke)
-            }
+            DesktopCueKind.BREAK -> Unit // Rendered by the shared mobile burst above.
             DesktopCueKind.TELEGRAPH -> {
                 drawCircle(color, size.minDimension * .38f, center, style = Stroke(stroke))
                 drawLine(color, center - Offset(0f, 12.dp.toPx()), center + Offset(0f, 3.dp.toPx()), stroke * 2)

@@ -1,6 +1,7 @@
 package com.example.starborn.domain.playtest
 
 import com.example.starborn.core.DispatcherProvider
+import org.junit.Assert.assertNull
 import com.example.starborn.core.MoshiProvider
 import com.example.starborn.core.platform.DesktopAssetProvider
 import com.example.starborn.data.assets.AssetJsonReader
@@ -112,6 +113,7 @@ class LegalRouteCampaignRunnerTest {
     private val systemsAudit by lazy { CampaignSystemsRouteAudit(AssetJsonReader(DesktopAssetProvider(listOf(assets)), moshi)) }
     private val assistance = mutableListOf<String>()
     private val publicCombats = mutableListOf<String>()
+    private val prototypeSkillsUsed = mutableSetOf<String>()
     private var recordSystemsAudit = false
 
     @Before
@@ -126,6 +128,138 @@ class LegalRouteCampaignRunnerTest {
         testScope.cancel()
         Dispatchers.resetMain()
         saveDir.deleteRecursively()
+    }
+
+    @Test
+    fun crewBuildsAcrossSeedsProduceComparableCombatEvidence() {
+        val reader = AssetJsonReader(DesktopAssetProvider(listOf(assets)), moshi)
+        val middle = requireNotNull(WorldAssetDataSource(reader).loadCrewCheckpoint("middle"))
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = middle)
+        try {
+            val runner = LegalCampaignAgent(h)
+            runner.prepareWorld5Supplies()
+            val prepared = h.saveSlot(8)
+            assertEquals(middle.playerAp, prepared.playerAp)
+            assertTrue(prepared.purchasedSkillNodes.isEmpty())
+            assertEquals(6, prepared.inventory["medkit_plus"])
+            assertEquals(6, prepared.activeMealBuff?.speedBonus)
+            val preparationLog = publicCombats.toList()
+            h.sessionStore.restore(requireNotNull(h.worldDataSource.loadCrewCheckpoint("early")))
+            h.inventoryService.restore(h.sessionStore.state.value.inventory)
+            h.settle()
+            runner.prepareWorld4Rest()
+            val early = h.saveSlot(8)
+            h.sessionStore.restore(requireNotNull(h.worldDataSource.loadCrewCheckpoint("late")))
+            h.inventoryService.restore(h.sessionStore.state.value.inventory)
+            h.settle()
+            h.explorationVm.useInventoryItem("orbital_glimmer_tonic")
+            h.settle()
+            h.restAtVisibleStop()
+            val late = h.saveSlot(8)
+            CrewBalanceExperiment(reader, testDispatcher).run(mapOf("early" to early, "middle" to prepared, "late" to late), preparationLog)
+        } finally { h.close() }
+    }
+
+    @Test
+    fun crewPrototypeProducesEarnedCheckpoints() {
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope, prototypeBranch = null)
+        try {
+            val runner = LegalCampaignAgent(h)
+            runner.playWorld1()
+            runner.playWorld2()
+            runner.playWorld3()
+            val checkpoints = linkedMapOf<String, GameSessionState>()
+            fun capture(id: String, expectedAp: Int) {
+                h.settle()
+                val earned = h.saveSlot(8)
+                var reset = earned.copy(progressionPrototypeVersion = 1,
+                    playerAp = earned.playerAp + h.recordedApPurchases.values.sum(), purchasedSkillNodes = emptyMap(),
+                    unlockedSkills = earned.unlockedSkills - h.recordedApPurchases.keys, progressionAwardClaims = emptySet())
+                reset.completedQuests.forEach { reset = com.example.starborn.domain.leveling.NovaBuildPrototype.awardCompletedQuest(reset, it) }
+                listOf("orion", "gh0st").filter { it in reset.partyMembers }.forEach { reset = com.example.starborn.domain.leveling.NovaBuildPrototype.awardRecruitment(reset, it) }
+                reset = com.example.starborn.domain.leveling.CrewBuildPrototype.grantCore(reset)
+                assertEquals("Earned AP at $id", expectedAp, reset.playerAp)
+                assertTrue(reset.partyMembers.containsAll(listOf("nova", "zeke", "orion", "gh0st")))
+                assertTrue(reset.pendingBattleJson.isBlank())
+                assertNull(reset.battleCheckpoint)
+                checkpoints[id] = reset
+            }
+            capture("early", 26)
+            runner.playWorld4()
+            capture("middle", 36)
+            runner.playWorld5()
+            capture("late", 44)
+            assertTrue("Checkpoint routes must use real combat without assisted actions", assistance.isEmpty())
+            val adapter = moshi.adapter(GameSessionState::class.java).indent("  ")
+            val directory = File(assets, "playtest").apply { mkdirs() }
+            checkpoints.forEach { (id, state) ->
+                val json = adapter.toJson(state)
+                assertEquals(state, adapter.fromJson(json))
+                if (System.getenv("STARBORN_REGENERATE_CREW_CHECKPOINTS") == "1") {
+                    File(directory, "crew_$id.json").writeText(json + "\n")
+                } else {
+                    val packaged = requireNotNull(h.worldDataSource.loadCrewCheckpoint(id))
+                    assertEquals(state.playerAp, packaged.playerAp)
+                    assertEquals(state.partyMemberLevels, packaged.partyMemberLevels)
+                    assertEquals(state.partyMemberXp, packaged.partyMemberXp)
+                    assertEquals(state.completedQuests, packaged.completedQuests)
+                    assertEquals(state.completedMilestones, packaged.completedMilestones)
+                    assertEquals(state.inventory, packaged.inventory)
+                    assertEquals(state.equippedWeapons, packaged.equippedWeapons)
+                    assertEquals(state.equippedArmors, packaged.equippedArmors)
+                }
+            }
+            File("build/reports/progression-prototype/crew-checkpoints.txt").apply {
+                requireNotNull(parentFile).mkdirs()
+                writeText("Derived from the baseline public campaign route through World 5; seed 17; zero assisted actions.\n" +
+                    "Opening fixture: 1 cryo_inductor + 2 scrap_metal for the mandatory recipe; no AP or XP grants.\n" +
+                    "Snapshots refund only the two logged test-route AP purchases and backfill proposed rewards from completed quests/recruitments. These are experimental checkpoints, not prototype-route balance passes.\n" +
+                    checkpoints.entries.joinToString("\n") { (id, s) -> "$id: room=${s.roomId} AP=${s.playerAp} levels=${s.partyMemberLevels} weapons=${s.equippedWeapons} armor=${s.equippedArmors} inventory=${s.inventory}" } +
+                    "\n" + publicCombats.joinToString("\n"))
+            }
+        } finally { h.close() }
+    }
+
+    @Test
+    fun `Nova saboteur earned world one and two route buys and uses real talents`() = playNovaPrototypeRoute("Saboteur")
+
+    @Test
+    fun `Nova improviser earned world one and two route buys and uses real talents`() = playNovaPrototypeRoute("Improviser")
+
+    private fun playNovaPrototypeRoute(branch: String) {
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope, prototypeBranch = branch)
+        try {
+            val agent = LegalCampaignAgent(h)
+            agent.playWorld1()
+            val w1 = h.sessionStore.state.value
+            assertTrue("Existing route includes Heavy Lifting optional training", "w1_sq03" in w1.completedQuests)
+            assertEquals(8, w1.playerAp + w1.purchasedSkillNodes.values.sum())
+            assertEquals(3, w1.purchasedSkillNodes.size)
+            val w1Save = h.saveSlot(8)
+            assertEquals(w1.purchasedSkillNodes, w1Save.purchasedSkillNodes)
+            agent.playWorld2()
+            val after = h.sessionStore.state.value
+            assertTrue("Prototype routes require no assisted actions", assistance.isEmpty())
+            assertEquals(16, after.playerAp + after.purchasedSkillNodes.values.sum())
+            assertEquals(6, after.purchasedSkillNodes.values.sum())
+            val expected = if (branch == "Saboteur") "nova_breaker_bolt" else "nova_scatter_charge"
+            assertTrue("Earned move must be used through public combat controls: $expected", expected in prototypeSkillsUsed)
+            val saved = h.saveSlot(8)
+            val restored = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = saved)
+            try {
+                restored.loadSlot(8)
+                restored.explorationVm.openSkillTree("nova")
+                restored.settle()
+                assertEquals(6, restored.explorationVm.uiState.value.skillTreeOverlay?.apInvested)
+                assertEquals(saved.purchasedSkillNodes, restored.sessionStore.state.value.purchasedSkillNodes)
+            } finally { restored.close() }
+            File("build/reports/progression-prototype/${branch.lowercase()}.txt").apply {
+                parentFile.mkdirs()
+                writeText("Earned World 1/2 prototype route; seed 17; no assisted actions.\n" +
+                    "AP earned=16 (14 main route + 2 optional training), paid=6, available=${after.playerAp}; purchases=${after.purchasedSkillNodes}\n" +
+                    "Publicly used moves=$prototypeSkillsUsed\n" + publicCombats.joinToString("\n"))
+            }
+        } finally { h.close() }
     }
 
     @Test
@@ -854,6 +988,12 @@ class LegalRouteCampaignRunnerTest {
             assertEquals("foundry_slag_landing", harness.sessionStore.state.value.roomId)
         }
 
+        fun prepareWorld4Rest() {
+            performAction("w4_mq16_land_shelf")
+            navigateLegalPath("foundry_obsidian_shelf_scale_02")
+            harness.restAtVisibleStop()
+        }
+
         fun playWorld4() {
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w4_mq16"))
             performAction("w4_mq16_land_shelf")
@@ -913,10 +1053,7 @@ class LegalRouteCampaignRunnerTest {
             assertEquals("orbital_executive_dock", harness.sessionStore.state.value.roomId)
         }
 
-        fun playWorld5() {
-            assertTrue(harness.sessionStore.state.value.activeQuests.contains("w5_mq21"))
-            harness.learnAtVisibleSkillTree("nova", "nova_quiet_steps")
-            harness.learnAtVisibleSkillTree("zeke", "zeke_motivational_speech")
+        fun prepareWorld5Supplies() {
             navigateLegalPath("orbital_customs_lounge")
             harness.explorationVm.equipArmor("orion", "heat_liner")
             harness.settle()
@@ -932,6 +1069,22 @@ class LegalRouteCampaignRunnerTest {
             assertFalse("Eating must consume the purchased portion", harness.inventoryService.hasItem("orbital_glimmer_tonic"))
             harness.restAtVisibleStop()
             navigateLegalPath("orbital_executive_dock")
+        }
+
+        fun playWorld5() {
+            assertTrue(harness.sessionStore.state.value.activeQuests.contains("w5_mq21"))
+            if (harness.sessionStore.state.value.progressionPrototypeVersion == 1) {
+                val crew = com.example.starborn.domain.leveling.CrewBuildPrototype
+                val purchases = listOf("nova" to listOf(com.example.starborn.domain.leveling.NovaBuildPrototype.STEPS),
+                    "zeke" to listOf(crew.COVER, crew.REINFORCED_HARNESS, crew.STEADY_COVER, crew.TRAINING_SESSION),
+                    "orion" to listOf(crew.FIELD_RESILIENCE, crew.FIELD_TREATMENT, crew.TRIAGE, crew.CLEAR_FOCUS),
+                    "gh0st" to listOf(crew.SCOPE, crew.STEADY_AIM, crew.EXECUTE, crew.QUICK_POSITION))
+                purchases.forEach { (owner, ids) -> ids.forEach { harness.learnAtVisibleSkillTree(owner, it) } }
+            } else {
+                harness.learnAtVisibleSkillTree("nova", "nova_quiet_steps")
+                harness.learnAtVisibleSkillTree("zeke", "zeke_motivational_speech")
+            }
+            prepareWorld5Supplies()
             performAction("w5_mq21_force_dock")
             assertFalse("Docking must wait for the real fighter victory", "ms_w5_forced_dock" in harness.sessionStore.state.value.completedMilestones)
             harness.playPublicEncounter("orbital_fighter")
@@ -1079,7 +1232,8 @@ class LegalRouteCampaignRunnerTest {
         private val saveFolder: File,
         private val dispatcher: TestDispatcher,
         private val coroutineScope: CoroutineScope,
-        initialState: GameSessionState? = null
+        initialState: GameSessionState? = null,
+        private val prototypeBranch: String? = null
     ) {
         val moshi = MoshiProvider.instance
         private val reader = AssetJsonReader(DesktopAssetProvider(listOf(assets)), moshi)
@@ -1103,6 +1257,7 @@ class LegalRouteCampaignRunnerTest {
                 worldId = "world_1",
                 hubId = "hub_1_homestead",
                 roomId = "pit_nova_bunk",
+                progressionPrototypeVersion = if (prototypeBranch != null) 1 else 0,
                 playerId = "nova",
                 partyMembers = listOf("nova"),
                 unlockedSkills = setOf("nova_arc_tether"),
@@ -1198,8 +1353,26 @@ class LegalRouteCampaignRunnerTest {
             settle()
         }
 
+        private var lastPrototypeProbe: Triple<Int, Int, Set<String>>? = null
         fun settle() {
             dispatcher.scheduler.runCurrent()
+            val branch = prototypeBranch
+            val snapshot = sessionStore.state.value
+            val probe = Triple(snapshot.playerAp, snapshot.purchasedSkillNodes.size, snapshot.completedMilestones)
+            if (branch != null && probe != lastPrototypeProbe && snapshot.playerAp > 0) {
+                explorationVm.openSkillTree("nova")
+                dispatcher.scheduler.runCurrent()
+                while (true) {
+                    val next = explorationVm.uiState.value.skillTreeOverlay?.branches?.firstOrNull { it.title == branch }
+                        ?.nodes?.firstOrNull { it.status.canPurchase } ?: break
+                    explorationVm.unlockSkillNode(next.id)
+                    dispatcher.scheduler.runCurrent()
+                    check(next.id in sessionStore.state.value.purchasedSkillNodes)
+                }
+                explorationVm.closeSkillTreeOverlay()
+                dispatcher.scheduler.runCurrent()
+                lastPrototypeProbe = sessionStore.state.value.let { Triple(it.playerAp, it.purchasedSkillNodes.size, it.completedMilestones) }
+            }
             if (recordSystemsAudit) systemsAudit.capture(explorationVm, sessionStore, inventoryService, craftingService, assistance.size, coroutineScope)
         }
         fun close() = Unit
@@ -1264,6 +1437,7 @@ class LegalRouteCampaignRunnerTest {
             }
         }
 
+        val recordedApPurchases = linkedMapOf<String, Int>()
         fun learnAtVisibleSkillTree(characterId: String, nodeId: String) {
             explorationVm.openSkillTree(characterId)
             settle()
@@ -1273,8 +1447,9 @@ class LegalRouteCampaignRunnerTest {
             val before = sessionStore.state.value.playerAp
             explorationVm.unlockSkillNode(nodeId)
             settle()
-            assertTrue(nodeId in sessionStore.state.value.unlockedSkills)
+            assertTrue(nodeId in sessionStore.state.value.unlockedSkills || nodeId in sessionStore.state.value.purchasedSkillNodes)
             assertEquals(before - node.costAp, sessionStore.state.value.playerAp)
+            recordedApPurchases[nodeId] = node.costAp
             explorationVm.closeSkillTreeOverlay()
             settle()
             publicCombats += "skillTree=$characterId purchased=$nodeId apSpent=${node.costAp} remainingAp=${sessionStore.state.value.playerAp}"
@@ -1289,14 +1464,15 @@ class LegalRouteCampaignRunnerTest {
             settle()
             com.example.starborn.feature.shop.ShopController(shopId, shopRepository, itemRepository, inventoryService, sessionStore, coroutineScope).use { shop ->
                 val listing = shop.uiState.value.sellInventory.single { it.id == itemId }
-                assertTrue("Owned loot must be sellable", listing.canSell && listing.quantity >= quantity)
+                val sold = if (prototypeBranch != null) minOf(quantity, listing.quantity) else quantity
+                assertTrue("Owned loot must be sellable", listing.canSell && listing.quantity >= sold)
                 val credits = sessionStore.state.value.playerCredits
                 val owned = inventoryService.snapshot()[itemId] ?: 0
-                shop.sellItem(itemId, quantity)
+                shop.sellItem(itemId, sold)
                 settle()
-                assertEquals(owned - quantity, inventoryService.snapshot()[itemId] ?: 0)
-                assertEquals(credits + listing.price * quantity, sessionStore.state.value.playerCredits)
-                publicCombats += "shop=$shopId sold=$itemId quantity=$quantity credits=${listing.price * quantity} remainingCredits=${sessionStore.state.value.playerCredits}"
+                assertEquals(owned - sold, inventoryService.snapshot()[itemId] ?: 0)
+                assertEquals(credits + listing.price * sold, sessionStore.state.value.playerCredits)
+                publicCombats += "shop=$shopId sold=$itemId quantity=$sold credits=${listing.price * sold} remainingCredits=${sessionStore.state.value.playerCredits}"
             }
         }
 
@@ -1385,6 +1561,15 @@ class LegalRouteCampaignRunnerTest {
                             it.quantity > 0 && (it.item.effect?.restoreHp ?: 0) > 0 &&
                                 it.item.type.equals("consumable", ignoreCase = true)
                         }.maxByOrNull { it.item.effect?.restoreHp ?: 0 }
+                        if (prototypeBranch != null && actor == "orion" && wounded != null) {
+                            val recovery = combat.skillsForPlayer(actor).firstOrNull {
+                                it.id in setOf("orion_field_treatment", "orion_stasis_stitch") && combat.canUseSkill(actor, it)
+                            }
+                            if (recovery != null) {
+                                combat.useSkill(recovery, listOf(wounded.combatant.id))
+                                continue
+                            }
+                        }
                         if (support?.id == "nova_link") {
                             combat.useSkill(support)
                             continue
@@ -1397,6 +1582,15 @@ class LegalRouteCampaignRunnerTest {
                         }
                         val target = state.combatants.values.filter { it.combatant.side == com.example.starborn.domain.combat.CombatSide.ENEMY && it.isAlive }
                             .minBy { it.hp }.combatant.id
+                        if (prototypeBranch != null && actor == "nova") {
+                            val preferred = if (livingEnemies.size > 1) "nova_scatter_charge" else "nova_breaker_bolt"
+                            val move = combat.skillsForPlayer(actor).firstOrNull { it.id == preferred && combat.canUseSkill(actor, it) }
+                            if (move != null) {
+                                combat.useSkill(move, if (livingEnemies.size > 1) livingEnemies.map { it.combatant.id } else listOf(target))
+                                prototypeSkillsUsed += preferred
+                                continue
+                            }
+                        }
                         val availableSkills = combat.skillsForPlayer(actor).filter {
                             (it.id in setOf("nova_arc_tether", "nova_blast_wave", "nova_hydraulic_kick", "zeke_shatter_blow", "orion_prism_lance", "gh0st_headshot") ||
                                 ((room.startsWith("orbital") || room.startsWith("deep") || room.startsWith("source")) && it.id in setOf("nova_cryo_vent", "zeke_overload_fists", "gh0st_system_crash", "gh0st_venom_edge")) ||
@@ -1447,7 +1641,6 @@ class LegalRouteCampaignRunnerTest {
                 val knockedOut = state.combatants.values.filter { it.combatant.side == com.example.starborn.domain.combat.CombatSide.PLAYER && !it.isAlive }
                     .map { it.combatant.id }
                 publicCombats += "room=$room enemies=$encounterIds seed=17 damageEvents=${state.log.count { it is com.example.starborn.domain.combat.CombatLogEntry.Damage }} xp=${reward.xp} ap=${reward.ap} credits=${reward.credits} persistedHp=${sessionStore.state.value.partyMemberHp} knockedOut=$knockedOut usedItems=$usedItems"
-                explorationVm.onCombatVictoryEnemiesCleared(combat.encounterEnemyIds)
                 explorationVm.onCombatVictory(CombatResultPayload(
                     outcome = CombatResultPayload.Outcome.VICTORY,
                     enemyIds = combat.encounterEnemyIds,

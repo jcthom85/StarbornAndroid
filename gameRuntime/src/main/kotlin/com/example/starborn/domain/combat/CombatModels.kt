@@ -11,7 +11,8 @@ data class Combatant(
     val skills: List<String> = emptyList(),
     val initiativeModifier: Int = 0,
     val weapon: CombatWeapon? = null,
-    val brokenTurns: Int = 1
+    val brokenTurns: Int = 1,
+    val talents: Set<String> = emptySet()
 )
 
 enum class CombatSide {
@@ -55,7 +56,8 @@ data class CombatantState(
     val weaponCharge: WeaponChargeState? = null,
     val activeCooldowns: Map<String, Int> = emptyMap(),
     val snackCooldown: Int = 0,
-    val momentum: Int = 0
+    val momentum: Int = 0,
+    val talentTriggers: Map<String, Int> = emptyMap()
 ) {
     val isAlive: Boolean get() = hp > 0
 }
@@ -68,7 +70,9 @@ data class ActiveBuff(
 data class StatusEffect(
     val id: String,
     val remainingTurns: Int,
-    val stacks: Int = 1
+    val stacks: Int = 1,
+    val sourceId: String? = null,
+    val potency: Int? = null
 )
 
 data class TurnSlot(

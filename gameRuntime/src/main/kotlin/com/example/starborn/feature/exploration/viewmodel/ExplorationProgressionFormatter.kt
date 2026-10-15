@@ -19,7 +19,8 @@ internal fun buildPartyStatusUi(
     sessionState: GameSessionState,
     charactersById: Map<String, Player>,
     levelingManager: LevelingManager,
-    skillsById: Map<String, Skill>
+    skillsById: Map<String, Skill>,
+    maxHpFor: (Player) -> Int
 ): PartyStatusUi {
     if (charactersById.isEmpty()) return PartyStatusUi()
     val partyIds = when {
@@ -52,11 +53,13 @@ internal fun buildPartyStatusUi(
                 append(" to next")
             }
         }
-        val maxHp = character.hp.coerceAtLeast(0)
-        val currentHp = (sessionState.partyMemberHp[id] ?: maxHp).coerceAtLeast(0)
+        val maxHp = maxHpFor(character).coerceAtLeast(0)
+        val currentHp = (sessionState.partyMemberHp[id] ?: maxHp).coerceIn(0, maxHp)
         val hpLabel = if (maxHp > 0) "$currentHp / $maxHp HP" else null
         val hpProgress = if (maxHp > 0) currentHp.toFloat() / maxHp else null
-        val unlockedSkills = sessionState.unlockedSkills
+        val unlockedSkills = (sessionState.unlockedSkills +
+            if (com.example.starborn.domain.leveling.NovaBuildPrototype.isEnabled(sessionState))
+                com.example.starborn.domain.leveling.CrewBuildPrototype.activeSkills(sessionState.purchasedSkillNodes) + com.example.starborn.domain.leveling.CrewBuildPrototype.coreSkills(sessionState) else emptySet())
             .mapNotNull { skillId -> skillsById[skillId]?.takeIf { it.character == character.id }?.name }
             .sorted()
         PartyMemberStatusUi(
@@ -77,7 +80,8 @@ internal fun buildPartyStatusUi(
 internal fun buildProgressionSummaryUi(
     sessionState: GameSessionState,
     charactersById: Map<String, Player>,
-    levelingManager: LevelingManager
+    levelingManager: LevelingManager,
+    maxHpFor: (Player) -> Int
 ): ProgressionSummaryUi {
     val primaryId = when {
         !sessionState.partyMembers.isNullOrEmpty() -> sessionState.partyMembers.first()
@@ -104,8 +108,8 @@ internal fun buildProgressionSummaryUi(
         val remaining = max(next - xp, 0)
         "$remaining XP to next level"
     }
-    val maxHp = character?.hp?.takeIf { it > 0 } ?: sessionState.partyMemberHp[primaryId] ?: 0
-    val currentHp = sessionState.partyMemberHp[primaryId] ?: maxHp
+    val maxHp = character?.let(maxHpFor)?.coerceAtLeast(0) ?: 0
+    val currentHp = (sessionState.partyMemberHp[primaryId] ?: maxHp).coerceIn(0, maxHp)
     val hpLabel = if (maxHp > 0) "$currentHp / $maxHp HP" else null
     return ProgressionSummaryUi(
         playerLevel = level,
@@ -152,9 +156,11 @@ fun buildSkillTreeOverlayUi(
     val nodes = tree.branches.values.flatten()
     if (nodes.isEmpty()) return null
     val nodesById = nodes.associateBy { it.id }
-    val unlockedForTree = sessionState.unlockedSkills.filter { nodesById.containsKey(it) }.toSet()
+    val recordedUnlocks = if (!tree.useTierRequirements) sessionState.purchasedSkillNodes.keys else sessionState.unlockedSkills
+    val unlockedForTree = recordedUnlocks.filter { nodesById.containsKey(it) }.toSet()
     val availableAp = sessionState.playerAp
-    val apInvested = skillTreeApInvested(tree, unlockedForTree)
+    val apInvested = if (!tree.useTierRequirements) sessionState.purchasedSkillNodes.filterKeys { it in nodesById }.values.sum()
+        else skillTreeApInvested(tree, unlockedForTree)
     val completedMilestones = sessionState.completedMilestones
 
     val branches = tree.branches.entries.mapNotNull { (title, branchNodes) ->
@@ -168,7 +174,7 @@ fun buildSkillTreeOverlayUi(
                 availableAp = availableAp,
                 apInvested = apInvested
             )
-            val combatSkill = skillsById[node.id]
+            val combatSkill = skillsById[node.id] ?: node.effect?.takeIf { it.type == "active" }?.subtype?.let(skillsById::get)
             val category = when {
                 combatSkill != null -> SkillNodeCategory.KEYSTONE
                 node.effect?.type == "active" || node.effect?.type == "keystone" -> SkillNodeCategory.KEYSTONE
@@ -188,7 +194,7 @@ fun buildSkillTreeOverlayUi(
                     targeting = cs.targeting
                 )
             }
-            val desc = combatSkill?.description ?: formatSkillNodeDescription(node.effect)
+            val desc = node.description ?: combatSkill?.description ?: formatSkillNodeDescription(node.effect)
             SkillTreeNodeUi(
                 id = node.id,
                 name = node.name,

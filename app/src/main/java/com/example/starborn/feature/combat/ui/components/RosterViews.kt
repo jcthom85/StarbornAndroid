@@ -643,7 +643,7 @@ fun EnemyRoster(
                                     isSelected = isSelected,
                                     accentColor = labelBorderColor,
                                     barWidth = barWidth,
-                                    weaknesses = enemyWeaknesses(enemy.resistances)
+                                    weaknesses = emptyList()
                                 )
                                 Spacer(modifier = Modifier.height(labelSpacer))
                                 Box(
@@ -1202,7 +1202,7 @@ fun CompositePartStatus(
             isSelected = isSelected,
             accentColor = labelBorderColor,
             barWidth = 90.dp,
-            weaknesses = enemyWeaknesses(entry.enemy.resistances),
+            weaknesses = emptyList(),
             onClick = { if (isAlive) onEnemyTap(combatantId) },
             onLongClick = { if (isAlive) onEnemyLongPress(combatantId) }
         )
@@ -1217,17 +1217,7 @@ fun CompositePartStatus(
     }
 }
 
-private fun enemyWeaknesses(resistances: com.example.starborn.domain.model.Resistances): List<String> = buildList {
-    if ((resistances.burn ?: 0) < 0) add("Burn")
-    if ((resistances.freeze ?: 0) < 0) add("Freeze")
-    if ((resistances.shock ?: 0) < 0) add("Shock")
-    if ((resistances.acid ?: 0) < 0) add("Acid")
-    if ((resistances.radiation ?: 0) < 0) add("Rad")
-    if ((resistances.source ?: 0) < 0) add("Source")
-    if ((resistances.physical ?: 0) < 0) add("Phys")
-}
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun EnemyStatusLabel(
     name: String,

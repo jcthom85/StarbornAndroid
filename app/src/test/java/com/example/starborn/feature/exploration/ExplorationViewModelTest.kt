@@ -738,13 +738,13 @@ class ExplorationViewModelTest {
         assertTrue(normalVm.uiState.value.actions.any { it.name.contains("galley", ignoreCase = true) })
         assertFalse(burgQuestVm.uiState.value.actions.any { it.name.contains("galley", ignoreCase = true) })
 
-        // Normal session has all 6 arcade cabinets; BurgQuest keeps only Deep Mine Asteroid Drill
+        // Cabinets now launch through the simulation deck recreation console,
+        // rather than individual common-room actions. Astra navigation tests cover those routes.
         val arcadeCabinetNames = listOf("Deep Mine Asteroid Drill", "Canopy Hopper", "Spire Infiltrator", "Slag Catcher", "Orbital Defense 2000", "Harmonic Pulse")
         val normalArcadeActions = normalVm.uiState.value.actions.filter { it.name in arcadeCabinetNames }
         val burgQuestArcadeActions = burgQuestVm.uiState.value.actions.filter { it.name in arcadeCabinetNames }
-        assertEquals(6, normalArcadeActions.size)
-        assertEquals(1, burgQuestArcadeActions.size)
-        assertEquals("Deep Mine Asteroid Drill", burgQuestArcadeActions.single().name)
+        assertTrue(normalArcadeActions.isEmpty())
+        assertTrue(burgQuestArcadeActions.isEmpty())
         assertFalse(burgQuestVm.uiState.value.actions.any { it.name.contains("prize", ignoreCase = true) })
         assertTrue(burgQuestVm.uiState.value.isBurgQuestSession)
     }

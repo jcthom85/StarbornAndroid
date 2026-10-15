@@ -104,7 +104,8 @@ class CombatController(
     private val telemetry: PlaytestTelemetry = NoOpPlaytestTelemetry,
     private val elapsedRealtime: () -> Long = { System.nanoTime() / 1_000_000 },
     private val random: CombatRandom = DefaultCombatRandom,
-    parentScope: kotlinx.coroutines.CoroutineScope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main.immediate)
+    parentScope: kotlinx.coroutines.CoroutineScope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main.immediate),
+    private val crewEncounterTempo: com.example.starborn.domain.combat.CrewEncounterTempo = com.example.starborn.domain.combat.CrewEncounterTempo()
 ) : AutoCloseable {
     val viewModelScope = kotlinx.coroutines.CoroutineScope(parentScope.coroutineContext + kotlinx.coroutines.SupervisorJob(parentScope.coroutineContext[kotlinx.coroutines.Job]))
 
@@ -177,6 +178,15 @@ class CombatController(
     val combatBanner: StateFlow<CombatBannerMessage?> = _combatBanner.asStateFlow()
     private val _combatTutorial = MutableStateFlow<CombatTutorialState?>(null)
     val combatTutorial: StateFlow<CombatTutorialState?> = _combatTutorial.asStateFlow()
+    private val _buildHint = MutableStateFlow<com.example.starborn.domain.tutorial.TutorialEntry?>(null)
+    val buildHint: StateFlow<com.example.starborn.domain.tutorial.TutorialEntry?> = _buildHint.asStateFlow()
+
+    fun dismissBuildHint() {
+        val hint = _buildHint.value ?: return
+        hint.key?.let(sessionStore::markTutorialCompleted)
+        _buildHint.value = null
+        if (!isAtbPaused()) tryProcessEnemyTurns()
+    }
     val isOpMode: StateFlow<Boolean> = CombatPlaytestBridge.isOpModeFlow
 
     private val _state = MutableStateFlow<CombatState?>(null)
@@ -189,6 +199,8 @@ class CombatController(
     val enemyCombatantIds: List<String> get() = enemyIdList
     private val _selectedEnemies = MutableStateFlow<Set<String>>(emptySet())
     val selectedEnemies: StateFlow<Set<String>> = _selectedEnemies.asStateFlow()
+    val weaknessKnowledge = sessionStore.state
+    fun enemyTypeId(combatantId: String): String? = enemyDefinitions[combatantId]?.id
     private val _lungeActorId = MutableStateFlow<String?>(null)
     private var lungePauseActive = false
     private var lungeIntroJob: Job? = null
@@ -208,6 +220,22 @@ class CombatController(
     private var atbJob: Job? = null
     private var atbMenuPaused: Boolean = false
     private var backgroundPaused: Boolean = false
+    private val _inspectedEnemyId = MutableStateFlow<String?>(null)
+    val inspectedEnemyId: StateFlow<String?> = _inspectedEnemyId.asStateFlow()
+
+    fun inspectEnemy(enemyId: String) {
+        val state = _state.value ?: return
+        if (state.outcome != null || _timedPrompt.value != null || _combatTutorial.value != null || _buildHint.value != null) return
+        if (enemyId !in enemyIdList || state.combatants[enemyId]?.isAlive != true) return
+        _inspectedEnemyId.value = enemyId
+        focusEnemyTarget(enemyId)
+    }
+
+    fun dismissEnemyInspection() {
+        if (_inspectedEnemyId.value == null) return
+        _inspectedEnemyId.value = null
+        if (!isAtbPaused()) tryProcessEnemyTurns()
+    }
 
     fun setBackgroundPaused(paused: Boolean) {
         backgroundPaused = paused
@@ -221,7 +249,7 @@ class CombatController(
     private var lastErosionWarningCueAtMs: Long = 0L
 
     private fun isAtbPaused(): Boolean =
-        backgroundPaused || atbMenuPaused || atbAnimationPauses > 0 || _combatTutorial.value?.paused == true
+        _inspectedEnemyId.value != null || backgroundPaused || atbMenuPaused || atbAnimationPauses > 0 || _combatTutorial.value?.paused == true || _buildHint.value != null
 
     private fun clearCombatBanner() {
         bannerSession = null
@@ -303,7 +331,10 @@ class CombatController(
         itemCatalog.load()
         val players = worldAssets.loadCharacters()
         val allEnemies = worldAssets.loadEnemies()
-        val allSkills = worldAssets.loadSkills()
+        val progression = sessionStore.state.value
+        val allSkills = worldAssets.loadSkills(progression.progressionPrototypeVersion).map {
+            com.example.starborn.domain.leveling.CrewBuildPrototype.tune(it, progression)
+        }
         val rooms = worldAssets.loadRooms()
 
         sessionStore.checkpointBattle()
@@ -330,7 +361,8 @@ class CombatController(
                 val overrides = pendingSlots.getOrNull(index)?.takeIf { it.enemyId == canonicalId }
                 EncounterEnemySlot(
                     canonicalId = canonicalId,
-                    enemy = enemy.forEncounterRoom(sessionSnapshot.roomId),
+                    enemy = crewEncounterTempo.apply(enemy.forEncounterRoom(sessionSnapshot.roomId),
+                        sessionSnapshot.roomId, sessionSnapshot.progressionPrototypeVersion),
                     hp = overrides?.hp,
                     vitality = overrides?.vitality,
                     stability = overrides?.stability,
@@ -357,7 +389,7 @@ class CombatController(
         }
 
         skillById = allSkills.associateBy { it.id }
-        skillNodesById = worldAssets.loadSkillNodes()
+        skillNodesById = worldAssets.loadSkillNodes(progression.progressionPrototypeVersion)
 
         val activeMeal = sessionSnapshot.activeMealBuff
         playerCombatants = playerParty.map {
@@ -407,6 +439,9 @@ class CombatController(
         initializeAtbMeters()
 
         actionProcessor = CombatActionProcessor(
+            prototypeMode = com.example.starborn.domain.leveling.CrewBuildPrototype.isEnabled(progression),
+            explicitStatusSkillIds = if (com.example.starborn.domain.leveling.NovaBuildPrototype.isEnabled(progression))
+                allSkills.filter { it.character in setOf("nova", "zeke", "orion", "gh0st") }.map { it.id }.toSet() else emptySet(),
             random = random,
             engine = combatEngine,
             statusRegistry = statusRegistry,
@@ -877,6 +912,7 @@ class CombatController(
             updateActiveActorFromQueue(state)
         }
         setAwaitingAction(actorId)
+        _inspectedEnemyId.value = null // The action-menu pause now owns planning.
         when (tutorial?.step) {
             CombatTutorialStep.SELECT_NOVA_ATTACK -> tutorialTracker.setCombatTutorialStep(CombatTutorialStep.CHOOSE_ATTACK)
             CombatTutorialStep.SELECT_NOVA_SKILL -> tutorialTracker.setCombatTutorialStep(CombatTutorialStep.CHOOSE_SKILLS)
@@ -1052,9 +1088,12 @@ class CombatController(
         run {
             val skills = playerSkillsById[playerId].orEmpty()
             if (skills.isEmpty()) return@run emptyList()
-            val allowed = sessionStore.state.value.unlockedSkills + playerDefaultSkillIds[playerId].orEmpty()
+            val snapshot = sessionStore.state.value
+            val talentSkills = if (com.example.starborn.domain.leveling.NovaBuildPrototype.isEnabled(snapshot))
+                com.example.starborn.domain.leveling.CrewBuildPrototype.activeSkills(snapshot.purchasedSkillNodes) + com.example.starborn.domain.leveling.CrewBuildPrototype.coreSkills(snapshot) else emptySet()
+            val allowed = snapshot.unlockedSkills + playerDefaultSkillIds[playerId].orEmpty() + talentSkills
             if (allowed.isEmpty()) {
-                skills
+                if (com.example.starborn.domain.leveling.NovaBuildPrototype.isEnabled(snapshot)) emptyList() else skills
             } else {
                 skills.filter { it.id in allowed }
             }
@@ -1080,7 +1119,8 @@ class CombatController(
         if (isJammed) return "Abilities blocked by status"
 
         // 1. Check Cooldown
-        if (actorState.activeCooldowns.getOrDefault(skill.id, 0) > 0) return "On cooldown"
+        if (actorState.activeCooldowns.getOrDefault(skill.id, 0) > 0 &&
+            !com.example.starborn.domain.combat.TalentEffects.canEmergencyCover(state, actorId, skill.id, null)) return "On cooldown"
         
         val key = "$actorId:${skill.id}"
         
@@ -1673,6 +1713,9 @@ class CombatController(
         if (updated === current) return
         _state.value = updated
         processNewLogEntries(current, updated)
+        if (tutorialsEnabled && _combatTutorial.value == null && _buildHint.value == null) {
+            _buildHint.value = com.example.starborn.domain.tutorial.NovaProgressionTutorial.combatHint(sessionStore.state.value, current, updated)
+        }
         refreshSelection(updated)
         pruneReadyActors(updated)
         updateActiveActorFromQueue(updated)
@@ -1713,6 +1756,11 @@ class CombatController(
                     val showAttackFx = shouldShowAttackFx(entry, currentAction, updated)
                     val targetState = updated.combatants[entry.targetId]
                     val targetDefeated = targetState?.isAlive == false
+                    if (entry.isWeakness && entry.amount > 0 && entry.sourceId in playerIdList) {
+                        enemyDefinitions[entry.targetId]?.let { enemy ->
+                            sessionStore.discoverEnemyWeakness(enemy.id, entry.element ?: "physical")
+                        }
+                    }
                     val fxElement = resolveImpactElement(entry, updated)
                     if (fxElement == "blocked" && entry.sourceId in playerIdList) {
                         maybePlayShieldBlockCue()
@@ -1756,6 +1804,18 @@ class CombatController(
                     setCombatBanner(entry, updated)
                 }
                 is CombatLogEntry.StatusApplied -> {
+                    val scan = currentAction as? CombatAction.SkillUse
+                    if (scan?.skillId == "source_art_scan" && scan.actorId in playerIdList) {
+                        enemyDefinitions[entry.targetId]?.let { enemy ->
+                            val res = enemy.resistances
+                            mapOf("physical" to res.physical, "burn" to res.burn,
+                                "freeze" to res.freeze, "shock" to res.shock,
+                                "acid" to res.acid, "source" to res.source)
+                                .filterValues { (it ?: 0) < 0 }.keys.forEach {
+                                    sessionStore.discoverEnemyWeakness(enemy.id, it)
+                                }
+                        }
+                    }
                     maybePlayErosionWarningCue(entry, updated)
                     emitStatusApplied(entry, actionEffectDelayMs(currentAction))
                     setCombatBanner(entry, updated, currentAction)
@@ -2609,7 +2669,7 @@ class CombatController(
         var critBonus = 0.0
         var flatDamageReduction = 0
 
-        val unlockedSkills = sessionStore.state.value.unlockedSkills
+        val unlockedSkills = sessionStore.state.value.unlockedSkills + sessionStore.state.value.purchasedSkillNodes.keys
         unlockedSkills.forEach { skillId ->
             if (skillId.startsWith("${characterId}_")) {
                 val node = skillNodesById[skillId]
@@ -2741,11 +2801,12 @@ class CombatController(
                 evasionBonus = bonuses.evasionBonus + (mealBuff?.evasionBonus ?: 0).toDouble(),
                 critBonus = bonuses.critBonus + mealCritBonus,
                 flatDamageReduction = bonuses.flatDamageReduction + (mealBuff?.defenseBonus ?: 0),
-                statusResistance = mealResistBonus
+                statusResistance = mealResistBonus + if (com.example.starborn.domain.leveling.CrewBuildPrototype.isEnabled(sessionStore.state.value)) CombatFormulas.generalResistance(adjustedFocus) else 0
             ),
             resistances = ResistanceProfile(),
             skills = skills,
             weapon = resolveCombatWeapon(id, equippedItems, equippedWeapons, unlockedWeapons),
+            talents = com.example.starborn.domain.leveling.CrewBuildPrototype.ownedTalents(sessionStore.state.value, id),
             brokenTurns = 1
         )
         }
@@ -3229,6 +3290,13 @@ class CombatController(
                 }
             }
         }
+    }
+
+    fun skillTargetScopeLabel(skill: Skill): String = when (determineSkillTargeting(skill)) {
+        SkillTargeting.SINGLE_ENEMY -> "One enemy"
+        SkillTargeting.ALL_ENEMIES -> "All enemies"
+        SkillTargeting.ALL_ALLIES -> "All allies"
+        SkillTargeting.SELF -> "Self"
     }
 
     fun targetRequirementFor(skill: Skill): TargetRequirement {

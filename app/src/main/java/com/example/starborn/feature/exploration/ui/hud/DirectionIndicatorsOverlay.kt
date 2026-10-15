@@ -31,7 +31,8 @@ import java.util.Locale
 fun DirectionIndicatorsOverlay(
     indicators: Map<String, DirectionIndicatorUi>,
     onTravel: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    bottomClearance: Dp = 0.dp
 ) {
     if (indicators.isEmpty()) return
     Box(modifier = modifier) {
@@ -39,12 +40,12 @@ fun DirectionIndicatorsOverlay(
             val direction = indicator.direction.lowercase(Locale.getDefault())
             val (alignment, padding) = when (direction) {
                 "north" -> Alignment.TopCenter to PaddingValues(top = 112.dp)
-                "south" -> Alignment.BottomCenter to PaddingValues(bottom = 4.dp)
+                "south" -> Alignment.BottomCenter to PaddingValues(bottom = 4.dp + bottomClearance)
                 "east" -> Alignment.CenterEnd to PaddingValues(end = 4.dp)
                 "west" -> Alignment.CenterStart to PaddingValues(start = 4.dp)
                 "northeast" -> Alignment.TopEnd to PaddingValues(top = 112.dp, end = 4.dp)
-                "southeast" -> Alignment.BottomEnd to PaddingValues(bottom = 4.dp, end = 4.dp)
-                "southwest" -> Alignment.BottomStart to PaddingValues(bottom = 4.dp, start = 4.dp)
+                "southeast" -> Alignment.BottomEnd to PaddingValues(bottom = 4.dp + bottomClearance, end = 4.dp)
+                "southwest" -> Alignment.BottomStart to PaddingValues(bottom = 4.dp + bottomClearance, start = 4.dp)
                 "northwest" -> Alignment.TopStart to PaddingValues(top = 112.dp, start = 4.dp)
                 else -> Alignment.Center to PaddingValues(0.dp)
             }
@@ -91,6 +92,7 @@ fun DirectionIndicatorsOverlay(
                 modifier = Modifier
                     .align(alignment)
                     .padding(padding)
+                    .sizeIn(minWidth = 48.dp, minHeight = 48.dp)
                     .graphicsLayer {
                         this.scaleX = scale
                         this.scaleY = scale
@@ -110,7 +112,8 @@ fun DirectionIndicatorsOverlay(
                     .clickable(
                         enabled = canTravel,
                         onClick = { onTravel(indicator.direction) }
-                    )
+                    ),
+                contentAlignment = Alignment.Center
             ) {
                 DirectionIndicatorIcon(
                     status = indicator.status,

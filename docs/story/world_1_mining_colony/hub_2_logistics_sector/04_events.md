@@ -1,5 +1,7 @@
 # Events — World 1, Hub 2: Logistics Sector
 
+> **Implementation reconciliation pending ? October 14, 2026.** Supporting design/authoring material. Current code/assets take precedence for implemented behavior; older Canon, Locked, required, or next-step claims below are not evidence that the game should be changed. Check [current documentation](../../../README.md) and the live route before use. This banner classifies review status, not the correctness of every passage.
+
 ## EVT_W1_04: The Meeting
 *   **Trigger:** MQ_02 (Approaching Window 4).
 *   **Action:**

@@ -1,137 +1,41 @@
-# Starborn — Main Characters
+# Starborn character reference
 
-## Writing Behavior
-
-The archetype labels below describe combat and arc function, not a dialogue formula. Current prose follows `Starborn_Writer_Handbook.md`.
-
-- Nova watches closely, guards her autonomy, and shows care through action. She is warmer and less certain with people she trusts.
-- Zeke uses policy language when frightened or avoiding responsibility. It falls away as he commits to the crew.
-- Orion is formal because he is displaced and careful. He can be uncertain and does not turn every observation into music.
-- Gh0st's brevity is learned self-erasure. Trust appears through volunteered detail, questions, preferences, and disagreement.
+Status: Current supporting reference, revised October 14, 2026. [Master Story](Starborn_Master_Story.md) owns history and causality; [Character Arcs](Character_Arcs.md) owns emotional development; [Writer's Handbook](Starborn_Writer_Handbook.md) owns voice. Combat abilities and weapons come from current catalogs and runtime.
 
 ## Nova
 
-**Role:** Protagonist / The Spark (Accelerates Team Tempo - Cooldown Reduction)
-**Archetype:** Striker (High-Speed Ranged)
-**Weapon:** Dual Laser Guns
-**Key Relics:** **The Tuning Fork** (Mines) & **The Anchor** (Void)
+A 22-year-old human miner and mechanic accustomed to earning survival through work. She watches machinery and people closely, resists being owned, and takes risks when acceptable procedure leaves her trapped. Jed's care matters because it is specific and habitual.
 
-Nova is a scrappy colony kid with a rogue vibe—steals, hacks, survives. She’s funny, sharp, reckless in a controlled way, and refuses to let Dominion define her life. Story-wise, she’s the "small person vs huge system" lens. When she becomes **imprinted** by the Source, she acts as the **Spark**—the one who opens the door to the energy, trusting her team to keep her from burning out.
-
-**Narrative Arc:**
-- World 1: Survives first contact (Tuning Fork), loses Jed, chooses freedom.
-- World 2: Learns she is a conduit, not a god. "Anchor first."
-- World 3: Leads the Lens heist.
-- World 6: Rejects "perfect contro" (The Anchor) and learns to **close the circuit**, sharing the load to save the world without losing herself.
-
-**Combat Kit (The Spark)**
-**Note: Skills are governed by Cooldowns.**
-Nova focuses on high-speed ranged attacks and mobility. She accelerates team tempo by reducing ally cooldowns.
-*   **Core Skills (6 Total):**
-    *   *Scrap Shot:* Basic laser fire. High speed.
-    *   *Slide Kick:* Low damage, high stagger, breaks guard.
-    *   *Overclock:* Self-buff (Speed up, Defense down).
-    *   *Pulse Grenade:* AoE physical damage.
-    *   *Chain Lightning:* Multi-target energy damage.
-    *   *Hydraulic Kick:* Heavy melee strike. High guard break and stagger.
-*   **Source Arts (6 Relic Skills):**
-    *   *Blast Wave (Tuning Fork - Force):* A massive directional push. Shatters armor.
-    *   *Phase Dash (The Bridge - Connection):* Instantly teleports to strike an enemy (ignoring cover).
-    *   *Laser Focus (The Lens - Vision):* Next attack ignores 100% of enemy Armor/Guard.
-    *   *Shard Storm (The Anvil - Creation):* Constructs 3 floating hard-light daggers that fire when she attacks.
-    *   *Stasis Bolt (The Anchor - Stability):* Completely freezes one target in time for 1 turn.
-    *   *Source Burst (The Source):* Clears all cooldowns for the entire party.
+She speaks practically under pressure. With trusted people she can be warmer, uncertain, impatient, or amused. Mechanical competence does not make her an expert on every alien system. Her Source access comes from the cutter/Fork incident and subsequent learning. Leadership requires trusting others and making room for their choices.
 
 ## Zeke
 
-**Role:** The Insider
-**Archetype:** Melee Brawler / Monk
-**Weapon:** Combat Gauntlets
-**Key Relics:** **The Lens** (Spire)
+A Dominion insider who has helped an abusive system function. Procedure initially protects him and excuses him. Helping Nova costs that protection; joining the crew does not immediately erase fear, habits, or guilt.
 
-Zeke talks like corporate HR software—buzzwords, relentless optimism—because that’s how he coped inside the Dominion machine. Underneath, he’s got suppressed rage. He is the party's eyes, using his Dominion clearance and tech to find weaknesses.
-
-**Narrative Arc:**
-- World 1: Defects from Dominion.
-- World 3: Stops hiding behind the "HR voice" when he wields the Lens.
-- World 6: Accepts he is valuable without being a tool.
-
-**Combat Kit (The Analyst)**
-Zeke fights up close, using data to exploit weak points and destabilize enemies.
-*   **World 1 onboarding note:** Zeke joins at the very end of World 1, so his tactical "deny/setup" layer (Silence/Jam + Mark setup/payoff) should be tutorialized in World 2, not World 1.
-*   **Core Skills (6 Total):**
-    *   *Target Lock:* Marks an enemy (crit setup / lowers evasion).
-    *   *Adrenaline Surge:* Self target Haste/Attack buff.
-    *   *Flashbang:* AoE blind/stun.
-    *   *Corrosive Strike:* Melee damage over time (Acid).
-    *   *Data Siphon:* Steals enemy buffs on hit.
-    *   *Logic Bomb:* Detonates "Target Lock" marks for massive damage.
-*   **Source Arts (6 Relic Skills):**
-    *   *Signal Jammer (Tuning Fork - Force):* AoE Silence. Prevents enemies from using Tech/Arts.
-    *   *Network Patch (The Bridge - Connection):* Spreads a single ally's buffs to the entire party.
-    *   *True Sight (The Lens - Vision):* Reveals all weaknesses + Party deals Guaranteed Crits for 1 turn.
-    *   *Auto-Turret (The Anvil - Creation):* Constructs a drone that deals passive damage every turn.
-    *   *Lag Spike (The Anchor - Stability):* Massively reduces Speed/Turn Order for all enemies.
-    *   *System Reboot (The Source):* Revives a fallen ally with full HP and no cooldown penalty.
+His humor comes from precise familiarity with absurd rules. Under danger he can act decisively. Show growth through what he risks, admits, and accepts from others when he has nothing useful to offer. Avoid an HR joke or declaration of self-worth in every exchange.
 
 ## Orion
 
-**Role:** The Ancient
-**Archetype:** Mage / Caster (Source Channeling)
-**Weapon:** Focus Jewel
-**Key Relics:** **The Bridge** (Wilds)
+An Aethel survivor awakened after twenty years in stasis. He has knowledge, grief, incomplete information, and reasons to avoid the present. Teaching Nova draws him into living relationships.
 
-Orion is the last physical Aethel. He is introspective, earnest, and haunted by the "silence" of his people. He functions as the crew's conscience and medic.
-
-**Narrative Arc:**
-- World 2: Wakes from stasis, becomes the teacher.
-- World 5: Recognizes the "Great Silence" protocol.
-- World 6: Learns the Chorus is still there; chooses the living family.
-
-**Combat Kit (The Guide)**
-Orion channels the Source through his Jewel to damage enemies and heal the team.
-*   **Core Skills (6 Total):**
-    *   *Mend:* Single target heal.
-    *   *Aftertone Pulse:* Light AoE damage + self-heal.
-    *   *Purge:* Removes debuffs.
-    *   *Barrier Field:* Reduces incoming damage for one ally.
-    *   *Chorus Echo:* Heals repeat for 2 turns.
-    *   *Silence Field:* Zone that dampens enemy Source attacks.
-*   **Source Arts (6 Relic Skills):**
-    *   *Shock Pulse (Tuning Fork - Force):* Knocks enemies away from low-HP allies (Disengage).
-    *   *Soul Link (The Bridge - Connection):* Links party HP. Damage is split evenly; Healing is shared.
-    *   *Triage Scan (The Lens - Vision):* Cleanses all Debuffs from party + Heals based on debuffs removed.
-    *   *Sanctuary (The Anvil - Creation):* Constructs a zone on the floor; allies inside regenerate HP.
-    *   *Undo (The Anchor - Stability):* Reverses all damage taken by one ally in the last turn.
-    *   *Symphony (The Source):* Applies "Invulnerable" to the whole party for 1 turn.
+He can use cultural or musical imagery more readily than the others, while practical instructions stay clear. He does not know every Source mystery. Learning the Chorus endures gives him a real choice about belonging; he remains with the living.
 
 ## Gh0st
 
-**Role:** The Hunter
-**Archetype:** Tank / Knight (Melee)
-**Weapon:** Heavy Blade
-**Key Relics:** **The Anvil** (Foundry)
+Unit 734, a manufactured person trained to obey and minimize himself. Dominion used a partial derivative of Elara's neural map; his memories and identity are his own. Their relationship developed through time together.
 
-Gh0st is a defected corporate assassin (Phantom-class). He is cool, efficient, and humorless. He starts as a weapon and learns to be a shield.
+Early brevity reflects training and self-protection. Trust brings questions, preferences, volunteered detail, disagreement, and freely chosen protection. A failsafe creates the opportunity for his first protective choice. Avoid reducing him to an Elara copy, a humorless wall, or a constant declaration of personhood.
 
-**Narrative Arc:**
-- World 2: Hunt becomes protection.
-- World 4: Confronts his creator at the Foundry. Claims the Anvil.
-- World 5-6: Loses Elara, becomes a protector on purpose.
+## Jed
 
-**Combat Kit (The Wall)**
-Gh0st holds the line with his blade and shields, forcing enemies to focus on him.
-*   **Core Skills (6 Total):**
-    *   *Taunt:* Forces enemies to attack Gh0st.
-    *   *Suppression Strike:* Low damage, lowers enemy attack.
-    *   *Harden:* Drastically increases defense for 1 turn.
-    *   *Shock Blade:* Melee range stun/damage.
-    *   *Intercept:* Takes damage meant for another ally.
-    *   *Vengeance:* Deals damage based on missing HP.
-*   **Source Arts (6 Relic Skills):**
-    *   *Seismic Stomp (Tuning Fork - Force):* AoE Stun centred on self. Punishes swarming.
-    *   *Tether (The Bridge - Connection):* Leashes an enemy to Gh0st. They cannot target others or move away.
-    *   *Threat Assessment (The Lens - Vision):* Enters a stance that Auto-Counters the next physical hit with massive damage.
-    *   *Barricade (The Anvil - Creation):* Constructs physical cover (Wall) with its own HP bar.
-    *   *Gravity Well (The Anchor - Stability):* Pulls all enemies to one point and Roots them.
-    *   *Iron Curtain (The Source):* Prevents all allies from falling below 1 HP for 1 turn.
+A mechanic who protects through maintenance, food, preparation, and attention. His conflict with Nova concerns how she spends her tools and body to survive. His sacrifice is his deliberate response to a physical trap. Establish the practical relationship that makes the loss matter.
+
+## Elara, Thorne, and Vale
+
+- Elara is connected to Dominion's living-interface research and to Gh0st through their relationship. Preserve her agency; her importance extends beyond motivating others.
+- Mara Thorne wants monopoly and continued power. Express her justifications through institutional consequences and decisions. Vale deposes her in the Foundry and executes her on the Ring.
+- Arden Vale treats individual suffering as a defect he is entitled to eliminate. Imposing a single will is the final threat. Build his argument through conduct before extended philosophy.
+
+## Combat boundary
+
+This guide retires its proposed six-core/six-Source kits. Use `characters.json`, `skills.json`, `skill_trees/`, `progression.json`, `items.json`, and live controllers. A cataloged effect requires a supported consumer; do not describe missing behavior as working. Role and equipment descriptions must match the actual loadout being discussed.

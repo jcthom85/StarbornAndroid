@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.example.starborn.domain.model.GenericAction
 import com.example.starborn.domain.model.actionKey
-import com.example.starborn.feature.exploration.ui.buildInlineActionPlan
+import com.example.starborn.feature.exploration.presentation.buildInlineActionPlan
 import com.example.starborn.feature.exploration.ui.hud.RoomDescription
 import com.example.starborn.feature.exploration.viewmodel.ActionHintUi
 import org.junit.Assert.assertEquals

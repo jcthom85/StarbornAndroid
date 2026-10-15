@@ -58,7 +58,7 @@ internal fun DesktopRuntimeJournalContent(services: DesktopAppServices) {
     }
     Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            listOf("Active", "Completed", "History", "Milestones", "Fishing").forEach { tab ->
+            listOf("Active", "Completed", "History", "Milestones").forEach { tab ->
                 FilterChip(category == tab, onClick = { category = tab; selectedId = null }, label = { Text(tab) })
             }
         }
@@ -68,7 +68,7 @@ internal fun DesktopRuntimeJournalContent(services: DesktopAppServices) {
                 LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     if (quests.isEmpty()) item { Text("No quests match this view.") }
                     items(quests, key = { it.id }) { quest ->
-                        Surface(Modifier.fillMaxWidth().clickable { selectedId = quest.id }, shape = RoundedCornerShape(12.dp),
+                        Surface(Modifier.fillMaxWidth().clickable { selectedId = quest.id }, shape = RoundedCornerShape(6.dp),
                             color = if (selected?.id == quest.id) Color(0xFF173443) else Color(0xFF101D28),
                             border = BorderStroke(1.dp, if (selected?.id == quest.id) Color(0xFF63E6FF) else Color(0xFF354454))) {
                             Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -85,6 +85,21 @@ internal fun DesktopRuntimeJournalContent(services: DesktopAppServices) {
                             val authored = services.questRepository.questById(quest.id)
                             Text(if (quest.completed) "COMPLETED" else if (quest.id == ui.trackedQuestId) "TRACKED QUEST" else "ACTIVE QUEST", color = FieldMenuDesign.gold, style = MaterialTheme.typography.labelSmall)
                             Text(authored?.title ?: quest.title, style = MaterialTheme.typography.headlineSmall)
+                            ui.questDetail?.takeIf { it.id == quest.id }?.stages?.firstOrNull { it.current }?.let { current ->
+                                Text("Next objective", color = FieldMenuDesign.gold, style = MaterialTheme.typography.titleMedium)
+                                Text(current.title, style = MaterialTheme.typography.titleSmall)
+                                current.description?.takeIf { it.isNotBlank() }?.let { Text(it) }
+                                Text("${current.objectives.count { it.completed }}/${current.objectives.size} objectives complete", style = MaterialTheme.typography.labelSmall, color = FieldMenuDesign.textMuted)
+                                current.objectives.forEach { objective ->
+                                    Row(Modifier.semantics { contentDescription = "${if (objective.completed) "Completed" else "Incomplete"} objective: ${objective.text}" }, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        Icon(if (objective.completed) Icons.Default.CheckCircle else Icons.Default.RadioButtonUnchecked, null, Modifier.size(18.dp), tint = if (objective.completed) FieldMenuDesign.gold else FieldMenuDesign.cyan)
+                                        Text(objective.text, Modifier.weight(1f), color = if (objective.completed) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface)
+                                    }
+                                }
+                            }
+                            var showBackground by rememberSaveable(quest.id) { mutableStateOf(false) }
+                            TextButton(onClick = { showBackground = !showBackground }) { Text(if (showBackground) "Hide quest background" else "Quest background") }
+                            if (showBackground) {
                             val summary = authored?.summary?.takeIf { it.isNotBlank() } ?: quest.summary
                             if (summary.isNotBlank()) Text(summary)
                             authored?.description?.takeIf { it.isNotBlank() && it != summary }?.let { Text(it) }
@@ -92,10 +107,12 @@ internal fun DesktopRuntimeJournalContent(services: DesktopAppServices) {
                                 Text(it, color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontStyle = androidx.compose.ui.text.font.FontStyle.Italic)
                             }
+                            }
                             val detail = ui.questDetail?.takeIf { it.id == quest.id }
                             if (detail == null) Text("Loading quest details...") else {
                                 val stages = detail.stages
                                 if (stages.isNotEmpty()) stages.forEachIndexed { index, stage ->
+                                    if (stage.current) return@forEachIndexed
                                     HorizontalDivider()
                                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                                         Surface(shape = CircleShape, color = if (stage.completed) FieldMenuDesign.gold.copy(alpha = .18f) else if (stage.current) FieldMenuDesign.cyan.copy(alpha = .18f) else FieldMenuDesign.panel,
@@ -138,16 +155,6 @@ internal fun DesktopRuntimeJournalContent(services: DesktopAppServices) {
                     DesktopMenuCard(Modifier.fillMaxWidth()) { Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         entry.questTitle?.let { Text(it, color = MaterialTheme.colorScheme.primary) }
                         Text(entry.message)
-                    } }
-                }
-            } else if (category == "Fishing") {
-                if (ui.fishingJournal.isEmpty()) item { Text("No fishing records yet.") }
-                items(ui.fishingJournal, key = { it.zoneId }) { zone ->
-                    DesktopMenuCard(Modifier.fillMaxWidth()) { Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(zone.name, style = MaterialTheme.typography.titleMedium)
-                        zone.species.forEach { species ->
-                            Text("${if (species.caught) species.name else "Undiscovered species"}: ${if (species.clean) "Clean catch" else if (species.caught) "Caught" else "Not caught"}")
-                        }
                     } }
                 }
             } else {

@@ -1,5 +1,7 @@
 # World 4: The Foundry — Hub 1: Slag Pits
 
+> **Implementation reconciliation pending ? October 14, 2026.** Supporting design/authoring material. Current code/assets take precedence for implemented behavior; older Canon, Locked, required, or next-step claims below are not evidence that the game should be changed. Check [current documentation](../../../README.md) and the live route before use. This banner classifies review status, not the correctness of every passage.
+
 ## Overview
 Sector 7. A geo-thermal power plant built into an active volcanic range. The Dominion uses the heat to forge their war machines—including Gh0st's unit. It is loud, hot, and dangerous. More importantly, it serves as the fabrication site for the **Ascension Cradle**—a massive psionic amplifier prototype intended for the Orbital Ring. The **Deep-Core Engine** being developed here is not just a power source; it is the heart of the Cradle, designed to sustain the "Great Silence."
 

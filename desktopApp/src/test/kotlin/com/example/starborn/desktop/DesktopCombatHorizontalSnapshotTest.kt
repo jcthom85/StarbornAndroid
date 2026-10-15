@@ -39,13 +39,13 @@ class DesktopCombatHorizontalSnapshotTest {
                 if (composeTestRule.onAllNodesWithText("Party defeated").fetchSemanticsNodes().isEmpty()) {
                     composeTestRule.waitUntil(15_000) {
                         composeTestRule.mainClock.advanceTimeBy(100)
-                        composeTestRule.onAllNodesWithText("READY").fetchSemanticsNodes().isNotEmpty() || composeTestRule.onAllNodesWithText("Party defeated").fetchSemanticsNodes().isNotEmpty()
+                        composeTestRule.onAllNodesWithText("CHOOSING").fetchSemanticsNodes().isNotEmpty() || composeTestRule.onAllNodesWithText("Party defeated").fetchSemanticsNodes().isNotEmpty()
                     }
                     if (composeTestRule.onAllNodesWithText("Party defeated").fetchSemanticsNodes().isEmpty()) {
                         inputRoot().performKeyInput { pressKey(Key.Tab) }
                         composeTestRule.onNodeWithTag("combat-action-attack").assertIsEnabled()
                         inputRoot().performKeyInput { pressKey(Key.One) }
-                        composeTestRule.onNodeWithText("Arrows select · Enter confirms · Esc cancels").assertExists()
+                        composeTestRule.onNodeWithTag("combat-selected-target").assertExists()
                         inputRoot().performKeyInput { pressKey(Key.Enter) }
                         composeTestRule.mainClock.advanceTimeBy(1000)
                         Thread.sleep(450)
@@ -78,7 +78,7 @@ class DesktopCombatHorizontalSnapshotTest {
             } }
             composeTestRule.waitUntil(10_000) {
                 composeTestRule.mainClock.advanceTimeBy(100)
-                composeTestRule.onAllNodesWithText("READY").fetchSemanticsNodes().isNotEmpty()
+                composeTestRule.onAllNodesWithText("CHOOSING").fetchSemanticsNodes().isNotEmpty()
             }
             inputRoot().performKeyInput { pressKey(Key.Tab) }
             composeTestRule.onNodeWithTag("combat-action-attack").assertIsEnabled()
@@ -92,7 +92,7 @@ class DesktopCombatHorizontalSnapshotTest {
                 if (composeTestRule.onAllNodesWithText("Spoils Recovered").fetchSemanticsNodes().isEmpty()) {
                     composeTestRule.waitUntil(10_000) {
                         composeTestRule.mainClock.advanceTimeBy(100)
-                        composeTestRule.onAllNodesWithText("READY").fetchSemanticsNodes().isNotEmpty() || composeTestRule.onAllNodesWithText("Spoils Recovered").fetchSemanticsNodes().isNotEmpty()
+                        composeTestRule.onAllNodesWithText("CHOOSING").fetchSemanticsNodes().isNotEmpty() || composeTestRule.onAllNodesWithText("Spoils Recovered").fetchSemanticsNodes().isNotEmpty()
                     }
                     if (composeTestRule.onAllNodesWithText("Spoils Recovered").fetchSemanticsNodes().isEmpty()) {
                         inputRoot().performKeyInput { pressKey(Key.Tab) }
@@ -150,19 +150,19 @@ class DesktopCombatHorizontalSnapshotTest {
             composeTestRule.mainClock.autoAdvance = true
             composeTestRule.waitUntil(10_000) {
                 composeTestRule.mainClock.advanceTimeBy(100)
-                composeTestRule.onAllNodesWithText("READY").fetchSemanticsNodes().isNotEmpty()
+                composeTestRule.onAllNodesWithText("CHOOSING").fetchSemanticsNodes().isNotEmpty()
             }
             inputRoot().performKeyInput { pressKey(Key.Tab) }
             composeTestRule.onNodeWithTag("combat-action-attack").assertIsEnabled()
             inputRoot().performKeyInput { pressKey(Key.One) }
-            composeTestRule.onNodeWithText("Arrows select · Enter confirms · Esc cancels").assertExists()
+            composeTestRule.onNodeWithTag("combat-selected-target").assertExists()
             composeTestRule.runOnIdle { narrow.value = true }
             inputRoot().performKeyInput { pressKey(Key.DirectionDown); pressKey(Key.DirectionDown); pressKey(Key.DirectionDown) }
             composeTestRule.mainClock.advanceTimeBy(800)
             composeTestRule.onNodeWithText("SELECTED TARGET").assertExists()
             ImageIO.write(inputRoot().captureToImage().asAwtImage(), "png", File(artifactsDir, "narrow-combat-target.png"))
             inputRoot().performKeyInput { pressKey(Key.Enter) }
-            composeTestRule.onNodeWithText("Arrows select · Enter confirms · Esc cancels").assertDoesNotExist()
+            composeTestRule.onNodeWithTag("combat-selected-target").assertDoesNotExist()
 
         } finally {
             services.close()

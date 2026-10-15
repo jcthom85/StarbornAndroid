@@ -69,7 +69,9 @@ class CombatEngine(
         element: String?,
         critical: Boolean = false,
         brokenBonus: Boolean = false,
-        momentumSpent: Int = 0
+        momentumSpent: Int = 0,
+        stabilityBaseAmount: Int? = null,
+        stabilityMultiplier: Double = 1.0
     ): CombatState {
         val targetState = state.combatants[targetId] ?: return state
         val tier = resolveAffinityTier(targetState, element)
@@ -89,11 +91,12 @@ class CombatEngine(
         val isWeakness = clamped > 0 && tier == AffinityTier.WEAKNESS
         val newHp = (targetState.hp - clamped).coerceAtLeast(0)
 
+        val stabilityBase = (stabilityBaseAmount ?: clamped).coerceAtLeast(0)
         val stabilityDamage = when {
             opMode && isTargetFriendly -> 0
             opMode && isAttackerFriendly -> 9999
-            isWeakness -> clamped * 2
-            else -> clamped
+            isWeakness -> (stabilityBase * 2 * stabilityMultiplier).roundToInt()
+            else -> (stabilityBase * stabilityMultiplier).roundToInt()
         }
         var newStability = targetState.stability - stabilityDamage
         var breakTurns = targetState.breakTurns
@@ -212,7 +215,9 @@ class CombatEngine(
             (source.combatant.side == CombatSide.ENEMY) != (targetState.combatant.side == CombatSide.ENEMY)
         val resistance = targetState.combatant.stats.statusResistance.coerceIn(0, 100)
         if (hostile && resistance > 0 && random.nextInt(100) < resistance) return state
-        val updatedStatuses = targetState.statusEffects.toMutableList()
+        val updatedStatuses = targetState.statusEffects.filterNot {
+            statusId == "regen" && it.id == com.example.starborn.domain.leveling.CrewBuildPrototype.AFTERCARE_STATUS
+        }.toMutableList()
         val index = updatedStatuses.indexOfFirst { it.id.equals(statusId, ignoreCase = true) }
         val newStatus = if (index >= 0) {
             val existing = updatedStatuses[index]
@@ -334,6 +339,10 @@ class CombatEngine(
         status: StatusEffect
     ): CombatState {
         val current = state.combatants[combatantId] ?: return state
+        if (status.id == com.example.starborn.domain.leveling.CrewBuildPrototype.AFTERCARE_STATUS) {
+            if (!current.isAlive) return state
+            return applyHeal(state, STATUS_SOURCE_PREFIX + status.id, combatantId, status.potency ?: 0)
+        }
         val definition = statusRegistry.definition(status.id) ?: return state
         val tick = definition.tick ?: return state
         val maxHp = current.combatant.stats.maxHp.coerceAtLeast(1)

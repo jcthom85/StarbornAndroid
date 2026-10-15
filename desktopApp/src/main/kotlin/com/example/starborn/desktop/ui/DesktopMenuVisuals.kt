@@ -22,11 +22,19 @@ import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuLargeTarge
 import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import kotlin.math.sin
 
+internal val LocalTerminalPresentation = staticCompositionLocalOf { false }
+internal val LocalTerminalPage = staticCompositionLocalOf { DesktopMenuTab.STATS }
+
 /** The field menu has its own palette; game screens outside it retain their theme. */
 @Composable
 internal fun DesktopFieldMenuTheme(services: DesktopAppServices, content: @Composable () -> Unit) {
     val settings by services.userSettingsStore.settings.collectAsState(initial = com.example.starborn.data.local.UserSettings())
-    val type = desktopStarbornTypography(services)
+    val originalType = desktopStarbornTypography(services)
+    val type = if (!LocalTerminalPresentation.current) originalType else originalType.copy(
+        titleLarge = originalType.titleMedium.copy(fontSize = originalType.titleLarge.fontSize),
+        titleMedium = originalType.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
+        titleSmall = originalType.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
+    )
     val colors = MaterialTheme.colorScheme.copy(
         primary = FieldMenuDesign.gold, onPrimary = FieldMenuDesign.shell,
         secondary = FieldMenuDesign.cyan, onSecondary = FieldMenuDesign.shell,
@@ -44,34 +52,45 @@ internal fun DesktopFieldMenuTheme(services: DesktopAppServices, content: @Compo
 
 @Composable
 internal fun DesktopMenuCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
-    Surface(modifier, color = if (LocalFieldMenuHighContrast.current) Color.Black else FieldMenuDesign.panel, shape = RoundedCornerShape(14.dp),
-        border = BorderStroke(1.dp, if (LocalFieldMenuHighContrast.current) Color.White else FieldMenuDesign.cyan.copy(alpha = .16f))) {
+    Surface(modifier, color = if (LocalFieldMenuHighContrast.current) Color.Black else if (LocalTerminalPresentation.current) when (LocalTerminalPage.current) {
+        DesktopMenuTab.JOURNAL -> Color(0xFF151A1D)
+        DesktopMenuTab.FIELD_KIT -> Color(0xFF0C1B20)
+        DesktopMenuTab.STATS -> Color(0xFF101B22)
+        else -> Color(0xFF0C1821)
+    } else FieldMenuDesign.panel, shape = RoundedCornerShape(if (LocalTerminalPresentation.current) 6.dp else 14.dp),
+        border = if (LocalFieldMenuHighContrast.current) BorderStroke(1.dp, Color.White) else if (LocalTerminalPresentation.current) null else BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = .16f))) {
         Column(content = content)
     }
 }
 
 /** Slow signal lights and etched geometry stay behind the readable content. */
 @Composable
-internal fun DesktopMenuAtmosphere(modifier: Modifier, accent: Color, animate: Boolean) {
-    val transition = rememberInfiniteTransition(label = "menu atmosphere")
-    val phase by transition.animateFloat(0f, 6.28318f,
-        infiniteRepeatable(tween(14000, easing = LinearEasing)), label = "signal drift")
+internal fun DesktopMenuAtmosphere(modifier: Modifier, accent: Color, animate: Boolean, page: DesktopMenuTab = DesktopMenuTab.STATS) {
     Canvas(modifier) {
-        drawRect(Brush.linearGradient(listOf(accent.copy(alpha = .10f), Color.Transparent,
-            FieldMenuDesign.cyan.copy(alpha = .035f)), Offset.Zero, Offset(size.width, size.height)))
-        val step = 48.dp.toPx()
-        var x = 0f
-        while (x < size.width) { drawLine(accent.copy(alpha = .025f), Offset(x, 0f), Offset(x, size.height)); x += step }
-        var y = 0f
-        while (y < size.height) { drawLine(accent.copy(alpha = .025f), Offset(0f, y), Offset(size.width, y)); y += step }
-        val origin = Offset(size.width * .91f, size.height * .1f)
-        listOf(100f, 150f, 205f).forEach { radius ->
-            drawCircle(accent.copy(alpha = .055f), radius.dp.toPx(), origin, style = Stroke(1.dp.toPx()))
+        val pageColor = when (page) {
+            DesktopMenuTab.STATS -> Color(0xFF273023)
+            DesktopMenuTab.JOURNAL -> Color(0xFF302C23)
+            DesktopMenuTab.FIELD_KIT -> Color(0xFF153238)
+            else -> Color(0xFF142B3A)
         }
-        repeat(18) { index ->
-            val alpha = if (animate) .10f + .08f * sin(phase + index).toFloat() else .12f
-            drawCircle(accent.copy(alpha = alpha.coerceAtLeast(.02f)), 1.5.dp.toPx(),
-                Offset(size.width * ((index * 37 % 97) / 100f), size.height * ((index * 23 % 89) / 100f)))
+        drawRect(Brush.linearGradient(listOf(pageColor.copy(alpha = .40f), Color.Transparent),
+            Offset.Zero, Offset(size.width * .65f, size.height)))
+        // Etchings stay in the shell margins, away from text and controls.
+        val inset = 7.dp.toPx()
+        val edge = Color(0xFF9BA9AC).copy(alpha = .18f)
+        repeat(12) { index ->
+            val y = 115.dp.toPx() + index * 37.dp.toPx()
+            if (y < size.height - 30.dp.toPx()) drawLine(edge, Offset(inset, y), Offset(inset + if (index % 3 == 0) 8.dp.toPx() else 4.dp.toPx(), y))
+        }
+        val top = 7.dp.toPx()
+        repeat(5) { index ->
+            val x = size.width - 150.dp.toPx() + index * 22.dp.toPx()
+            drawLine(edge, Offset(x, top), Offset(x + 10.dp.toPx(), top), 1.dp.toPx())
+        }
+        if (page == DesktopMenuTab.FIELD_KIT || page == DesktopMenuTab.MAP) {
+            val corner = Offset(size.width - 12.dp.toPx(), size.height - 12.dp.toPx())
+            drawLine(accent.copy(alpha = .2f), corner - Offset(70.dp.toPx(), 0f), corner)
+            drawLine(accent.copy(alpha = .2f), corner - Offset(0f, 50.dp.toPx()), corner)
         }
     }
 }

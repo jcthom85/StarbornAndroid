@@ -301,8 +301,8 @@ fun FishingRoute(
 }
 
 @Composable
-fun FishingJournal(entries: List<FishingJournalEntry>) {
-    var expanded by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf(false) }
+fun FishingJournal(entries: List<FishingJournalEntry>, initiallyExpanded: Boolean = false) {
+    var expanded by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf(initiallyExpanded) }
     val waters = entries.count { entry -> entry.species.any { it.caught } }
     val cleanWaters = entries.count { entry -> entry.species.any { it.clean } }
     val species = entries.flatMap { it.species }.groupBy { it.itemId }
@@ -310,7 +310,7 @@ fun FishingJournal(entries: List<FishingJournalEntry>) {
     val cleanSpecies = species.values.count { records -> records.any { it.clean } }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         OutlinedButton(onClick = { expanded = !expanded }, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
-            Text("Fishing journal · $caughtSpecies/${species.size} species · $waters/${entries.size} waters")
+            Text("Catch Log · $caughtSpecies/${species.size} species · $waters/${entries.size} waters")
         }
         if (expanded) {
             Text("Collection goals", style = MaterialTheme.typography.titleMedium)
@@ -1015,7 +1015,7 @@ private fun FishingResultSection(
             Text("Added to your inventory.", style = MaterialTheme.typography.bodyMedium)
             catch?.uses?.forEach { Text(it, style = MaterialTheme.typography.bodySmall) }
             catch?.rewards?.forEach { Text(it, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold) }
-            if (catch?.cleanCatch == true) Text("Clean catch recorded in your field journal.")
+            if (catch?.cleanCatch == true) Text("Clean catch recorded in your Catch Log.")
             catch?.cleanCatchProgress?.let { Text("Next clean-catch bonus: $it / 3") }
         }
         FishingJournal(state.journal)

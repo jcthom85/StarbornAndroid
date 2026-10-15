@@ -1,0 +1,2077 @@
+{
+  "date": "2026-10-14",
+  "status": "All 32 nodes implemented in the opt-in full-crew prototype on 2026-10-15; measured balance and production migration remain pending.",
+  "version": "candidate-1",
+  "node_costs": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "nodes": [
+    {
+      "id": "nova_grounded_wire_v2",
+      "character": "nova",
+      "branch": "Saboteur",
+      "rank": 1,
+      "cost_ap": 1,
+      "requires_nodes": [],
+      "requires_milestones": [],
+      "contract": "Arc Tether deals 20% more stability damage. Its HP damage, Shock and cooldown are unchanged.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Grounded Wire"
+    },
+    {
+      "id": "nova_controlled_vent_v2",
+      "character": "nova",
+      "branch": "Saboteur",
+      "rank": 2,
+      "cost_ap": 2,
+      "requires_nodes": [
+        "nova_grounded_wire_v2"
+      ],
+      "requires_milestones": [],
+      "contract": "Cryo Vent base power increases from 55 to 65. It applies Brittle for 2 target turns and does not apply Frozen.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Controlled Vent"
+    },
+    {
+      "id": "nova_breaker_bolt_v2",
+      "character": "nova",
+      "branch": "Saboteur",
+      "rank": 3,
+      "cost_ap": 3,
+      "requires_nodes": [
+        "nova_controlled_vent_v2"
+      ],
+      "requires_milestones": [],
+      "contract": "New active: one enemy; physical; base power 100; agility scaling; cooldown 3 personal turns; 50% more stability damage than its normal resolved hit; no status application.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Breaker Bolt"
+    },
+    {
+      "id": "nova_exposed_seam_v2",
+      "character": "nova",
+      "branch": "Saboteur",
+      "rank": 4,
+      "cost_ap": 4,
+      "requires_nodes": [
+        "nova_breaker_bolt_v2"
+      ],
+      "requires_milestones": [
+        "ms_w4_mq20_complete"
+      ],
+      "contract": "Nova direct hits deal 15% more HP damage to a target with Weak or Brittle. Having both does not double this bonus; no damage-over-time bonus.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Exposed Seam"
+    },
+    {
+      "id": "nova_quiet_steps_v2",
+      "character": "nova",
+      "branch": "Improviser",
+      "rank": 1,
+      "cost_ap": 1,
+      "requires_nodes": [],
+      "requires_milestones": [],
+      "contract": "Permanent +1 Speed, added to the base Speed input once. Does not add Agility or a percentage speed multiplier.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Quiet Steps"
+    },
+    {
+      "id": "nova_scatter_charge_v2",
+      "character": "nova",
+      "branch": "Improviser",
+      "rank": 2,
+      "cost_ap": 2,
+      "requires_nodes": [
+        "nova_quiet_steps_v2"
+      ],
+      "requires_milestones": [],
+      "contract": "New active: all living enemies; physical; base power 60; agility scaling; cooldown 2 personal turns; no status or guard-breaking effect.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Scatter Charge"
+    },
+    {
+      "id": "nova_hot_start_v2",
+      "character": "nova",
+      "branch": "Improviser",
+      "rank": 3,
+      "cost_ap": 3,
+      "requires_nodes": [
+        "nova_scatter_charge_v2"
+      ],
+      "requires_milestones": [],
+      "contract": "Nova direct hits deal 15% more HP damage to a target above 75% HP when that hit is evaluated. No damage-over-time bonus.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Hot Start"
+    },
+    {
+      "id": "nova_keep_moving_v2",
+      "character": "nova",
+      "branch": "Improviser",
+      "rank": 4,
+      "cost_ap": 4,
+      "requires_nodes": [
+        "nova_hot_start_v2"
+      ],
+      "requires_milestones": [
+        "ms_w4_mq20_complete"
+      ],
+      "contract": "After Nova personally defeats at least one enemy with a damaging action, apply Shield to Nova for 1 personal turn. At most once per action and twice per battle; damage-over-time kills do not trigger it.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Keep Moving"
+    },
+    {
+      "id": "zeke_cover_v2",
+      "character": "zeke",
+      "branch": "Protector",
+      "rank": 1,
+      "cost_ap": 1,
+      "requires_nodes": [],
+      "requires_milestones": [],
+      "contract": "New active: one living ally, including Zeke; cooldown 3 personal turns; applies Shield for 2 target turns (25% less incoming damage under the reviewed Shield rule); no heal, damage or interception.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Cover"
+    },
+    {
+      "id": "zeke_reinforced_harness_v2",
+      "character": "zeke",
+      "branch": "Protector",
+      "rank": 2,
+      "cost_ap": 2,
+      "requires_nodes": [
+        "zeke_cover_v2"
+      ],
+      "requires_milestones": [],
+      "contract": "Permanent +1 Vitality. Derived maximum HP and defense change through their shared formulas; no duplicate flat HP bonus.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Reinforced Harness"
+    },
+    {
+      "id": "zeke_steady_cover_v2",
+      "character": "zeke",
+      "branch": "Protector",
+      "rank": 3,
+      "cost_ap": 3,
+      "requires_nodes": [
+        "zeke_reinforced_harness_v2"
+      ],
+      "requires_milestones": [],
+      "contract": "Cover additionally restores 20 stability to its target, capped at that target current maximum. Does not heal HP, remove an existing skip effect or grant a turn.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Steady Cover"
+    },
+    {
+      "id": "zeke_last_line_v2",
+      "character": "zeke",
+      "branch": "Protector",
+      "rank": 4,
+      "cost_ap": 4,
+      "requires_nodes": [
+        "zeke_steady_cover_v2"
+      ],
+      "requires_milestones": [
+        "ms_w4_mq20_complete"
+      ],
+      "contract": "Once per battle, Zeke may cast Cover while it is on cooldown if the selected living ally is below 30% HP at commitment. Spend a normal ATB action, apply ordinary Cover and Steady Cover if learned, and restart Cover's full 3-turn cooldown. Consume the emergency charge only for a valid cast that bypassed an active cooldown. No extra Guard, stronger Shield, heal, free action or stacked Shield copy.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Last Line"
+    },
+    {
+      "id": "zeke_training_session_v2",
+      "character": "zeke",
+      "branch": "Disruptor",
+      "rank": 1,
+      "cost_ap": 1,
+      "requires_nodes": [],
+      "requires_milestones": [],
+      "contract": "Permanent +1 Strength; derived Attack changes through the shared formula.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Training Session"
+    },
+    {
+      "id": "zeke_fault_line_v2",
+      "character": "zeke",
+      "branch": "Disruptor",
+      "rank": 2,
+      "cost_ap": 2,
+      "requires_nodes": [
+        "zeke_training_session_v2"
+      ],
+      "requires_milestones": [],
+      "contract": "Shatter Blow deals 20% more stability damage. Its HP damage, Weak duration and cooldown are unchanged.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Fault Line"
+    },
+    {
+      "id": "zeke_opening_v2",
+      "character": "zeke",
+      "branch": "Disruptor",
+      "rank": 3,
+      "cost_ap": 3,
+      "requires_nodes": [
+        "zeke_fault_line_v2"
+      ],
+      "requires_milestones": [],
+      "contract": "When Shatter Blow successfully applies Weak, also mark that enemy for 2 target turns. The next direct damaging action from another crew member consumes the mark for +10% HP damage against that enemy. One mark per target; reapplication refreshes but does not stack; damage-over-time and Zeke own actions do not consume it.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Opening"
+    },
+    {
+      "id": "zeke_controlled_demolition_v2",
+      "character": "zeke",
+      "branch": "Disruptor",
+      "rank": 4,
+      "cost_ap": 4,
+      "requires_nodes": [
+        "zeke_opening_v2"
+      ],
+      "requires_milestones": [
+        "ms_w4_mq20_complete"
+      ],
+      "contract": "Zeke physical direct hits against an enemy with Weak deal 15% more stability damage. No HP damage bonus, immunity bypass or extra skipped turn.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Controlled Demolition"
+    },
+    {
+      "id": "orion_field_resilience_v2",
+      "character": "orion",
+      "branch": "Field Medic",
+      "rank": 1,
+      "cost_ap": 1,
+      "requires_nodes": [],
+      "requires_milestones": [],
+      "contract": "Permanent +1 Vitality; maximum HP and defense use the shared formulas.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Field Resilience"
+    },
+    {
+      "id": "orion_field_treatment_v2",
+      "character": "orion",
+      "branch": "Field Medic",
+      "rank": 2,
+      "cost_ap": 2,
+      "requires_nodes": [
+        "orion_field_resilience_v2"
+      ],
+      "requires_milestones": [],
+      "contract": "New active: one living ally; cooldown 4 personal turns; restore 20% of target derived maximum HP, rounded down with minimum 1 and capped at missing HP. No Focus multiplier, resurrection or baseline recovery-over-time effect.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Field Treatment"
+    },
+    {
+      "id": "orion_triage_v2",
+      "character": "orion",
+      "branch": "Field Medic",
+      "rank": 3,
+      "cost_ap": 3,
+      "requires_nodes": [
+        "orion_field_treatment_v2"
+      ],
+      "requires_milestones": [],
+      "contract": "Field Treatment restores an additional 5% of target maximum HP when the target is below 35% HP before the cast, for 25% total. Calculate the combined amount once, round down once, and emit one direct-heal event per target.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Triage"
+    },
+    {
+      "id": "orion_aftercare_v2",
+      "character": "orion",
+      "branch": "Field Medic",
+      "rank": 4,
+      "cost_ap": 4,
+      "requires_nodes": [
+        "orion_triage_v2"
+      ],
+      "requires_milestones": [
+        "ms_w4_mq20_complete"
+      ],
+      "contract": "Field Treatment additionally applies Aftercare for 2 target turns: each turn-end restores floor(cast-time target maximum HP / 20), minimum 1, capped at missing HP. Aftercare and Regen share one recovery-over-time slot. Existing Regen has priority and retains its potency and remaining duration; this cast neither extends it nor queues Aftercare. Recasting Aftercare refreshes its own duration to 2 without stacking ticks; a later Regen replaces it. No resurrection, Focus multiplier or post-battle ticking.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Aftercare"
+    },
+    {
+      "id": "orion_clear_focus_v2",
+      "character": "orion",
+      "branch": "Controller",
+      "rank": 1,
+      "cost_ap": 1,
+      "requires_nodes": [],
+      "requires_milestones": [],
+      "contract": "Permanent +1 Focus, using the shared potency/accuracy/critical/resistance formulas exactly once.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Clear Focus"
+    },
+    {
+      "id": "orion_prism_lens_v2",
+      "character": "orion",
+      "branch": "Controller",
+      "rank": 2,
+      "cost_ap": 2,
+      "requires_nodes": [
+        "orion_clear_focus_v2"
+      ],
+      "requires_milestones": [],
+      "contract": "Prism Lance deals 20% more stability damage. Its HP damage, element and cooldown are unchanged.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Prism Lens"
+    },
+    {
+      "id": "orion_safe_exposure_v2",
+      "character": "orion",
+      "branch": "Controller",
+      "rank": 3,
+      "cost_ap": 3,
+      "requires_nodes": [
+        "orion_prism_lens_v2"
+      ],
+      "requires_milestones": [],
+      "contract": "Prism Lance applies Weak for 1 target turn only if the target did not have Weak before the action and is not immune. An existing Weak is neither extended nor replaced by this talent.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Safe Exposure"
+    },
+    {
+      "id": "orion_steady_field_v2",
+      "character": "orion",
+      "branch": "Controller",
+      "rank": 4,
+      "cost_ap": 4,
+      "requires_nodes": [
+        "orion_safe_exposure_v2"
+      ],
+      "requires_milestones": [
+        "ms_w4_mq20_complete"
+      ],
+      "contract": "Weak newly applied by Orion lasts 1 additional target turn, capped at 3. Does not change potency, extend existing effects retroactively, affect Frozen/Stun/Stagger or bypass immunity.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Steady Field"
+    },
+    {
+      "id": "gh0st_scope_v2",
+      "character": "gh0st",
+      "branch": "Precision",
+      "rank": 1,
+      "cost_ap": 1,
+      "requires_nodes": [],
+      "requires_milestones": [],
+      "contract": "Headshot deals 10% more HP damage against a target at or above 75% HP when the hit is evaluated.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Scope"
+    },
+    {
+      "id": "gh0st_steady_aim_v2",
+      "character": "gh0st",
+      "branch": "Precision",
+      "rank": 2,
+      "cost_ap": 2,
+      "requires_nodes": [
+        "gh0st_scope_v2"
+      ],
+      "requires_milestones": [],
+      "contract": "Headshot gains 5 percentage points of critical chance, subject to the normal critical cap. No other action gains this bonus.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Steady Aim"
+    },
+    {
+      "id": "gh0st_execute_v2",
+      "character": "gh0st",
+      "branch": "Precision",
+      "rank": 3,
+      "cost_ap": 3,
+      "requires_nodes": [
+        "gh0st_steady_aim_v2"
+      ],
+      "requires_milestones": [],
+      "contract": "Gh0st single-target direct damaging skills deal 15% more HP damage to targets at or below 30% HP before the hit. No instant kill, boss exemption or damage-over-time bonus.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Execute"
+    },
+    {
+      "id": "gh0st_cool_head_v2",
+      "character": "gh0st",
+      "branch": "Precision",
+      "rank": 4,
+      "cost_ap": 4,
+      "requires_nodes": [
+        "gh0st_execute_v2"
+      ],
+      "requires_milestones": [
+        "ms_w4_mq20_complete"
+      ],
+      "contract": "Landing a basic attack gives Gh0st one steady-shot charge. His next valid Headshot consumes it for +15% direct HP damage, even if that Headshot misses. Charges do not stack and expire at battle end; invalid or canceled actions consume none. Headshot keeps base cooldown 2, with no talent cooldown refund, ATB grant or critical-hit recharge. The shared +25% talent-damage cap includes Scope and Execute.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Cool Head"
+    },
+    {
+      "id": "gh0st_quick_position_v2",
+      "character": "gh0st",
+      "branch": "Tactical",
+      "rank": 1,
+      "cost_ap": 1,
+      "requires_nodes": [],
+      "requires_milestones": [],
+      "contract": "Permanent +1 Agility; Speed/evasion use their shared formulas. No immediate ATB grant.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Quick Position"
+    },
+    {
+      "id": "gh0st_surgical_strike_v2",
+      "character": "gh0st",
+      "branch": "Tactical",
+      "rank": 2,
+      "cost_ap": 2,
+      "requires_nodes": [
+        "gh0st_quick_position_v2"
+      ],
+      "requires_milestones": [],
+      "contract": "Gh0st basic attack deals 20% more stability damage, with no HP damage or extra status bonus.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Surgical Strike"
+    },
+    {
+      "id": "gh0st_disarm_v2",
+      "character": "gh0st",
+      "branch": "Tactical",
+      "rank": 3,
+      "cost_ap": 3,
+      "requires_nodes": [
+        "gh0st_surgical_strike_v2"
+      ],
+      "requires_milestones": [],
+      "contract": "New active: one enemy; physical; base power 60; agility scaling; cooldown 3 personal turns; applies Weak for 2 target turns, respecting immunity. No Stun, silence or instant kill.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Disarm"
+    },
+    {
+      "id": "gh0st_recenter_v2",
+      "character": "gh0st",
+      "branch": "Tactical",
+      "rank": 4,
+      "cost_ap": 4,
+      "requires_nodes": [
+        "gh0st_disarm_v2"
+      ],
+      "requires_milestones": [
+        "ms_w4_mq20_complete"
+      ],
+      "contract": "Once per battle, prevent a scheduled-turn skip caused by Stun or Stagger on Gh0st, removing those two effects from him. Frozen and other unhandled skip effects remain; if any would still skip this turn, do not activate or consume Recenter. Other statuses remain; no bonus action, counterattack, damage or team-wide immunity.",
+      "status": "implemented in opt-in prototype; focused runtime and integration coverage; human balance pending",
+      "name": "Recenter"
+    }
+  ],
+  "world_budgets": [
+    {
+      "world": 1,
+      "increment_before_finale": 6,
+      "cumulative_before_finale": 6,
+      "optional_increment": 2,
+      "sources": [
+        [
+          "w1_mq01",
+          2
+        ],
+        [
+          "w1_mq03",
+          2
+        ],
+        [
+          "w1_mq05",
+          2
+        ]
+      ],
+      "allocation_per_character": {
+        "nova": 3,
+        "zeke": 3,
+        "orion": 0,
+        "gh0st": 0
+      }
+    },
+    {
+      "world": 2,
+      "increment_before_finale": 8,
+      "cumulative_before_finale": 14,
+      "optional_increment": 2,
+      "sources": [
+        [
+          "Orion recruitment",
+          2
+        ],
+        [
+          "Gh0st recruitment",
+          2
+        ],
+        [
+          "w2_mq05",
+          4
+        ]
+      ],
+      "allocation_per_character": {
+        "nova": 3,
+        "zeke": 3,
+        "orion": 3,
+        "gh0st": 3
+      }
+    },
+    {
+      "world": 3,
+      "increment_before_finale": 10,
+      "cumulative_before_finale": 24,
+      "optional_increment": 2,
+      "sources": [
+        [
+          "w3_mq11",
+          2
+        ],
+        [
+          "w3_mq13",
+          2
+        ],
+        [
+          "w3_mq14",
+          2
+        ],
+        [
+          "w3_mq15",
+          2
+        ],
+        [
+          "administrator_boss existing reward",
+          2
+        ]
+      ],
+      "allocation_per_character": {
+        "nova": 6,
+        "zeke": 6,
+        "orion": 6,
+        "gh0st": 6
+      }
+    },
+    {
+      "world": 4,
+      "increment_before_finale": 10,
+      "cumulative_before_finale": 34,
+      "optional_increment": 2,
+      "sources": [
+        [
+          "w4_mq16",
+          2
+        ],
+        [
+          "w4_mq18",
+          2
+        ],
+        [
+          "w4_mq19",
+          3
+        ],
+        [
+          "titan_walker_boss existing reward",
+          3
+        ]
+      ],
+      "allocation_per_character": {
+        "nova": 10,
+        "zeke": 10,
+        "orion": 6,
+        "gh0st": 6
+      }
+    },
+    {
+      "world": 5,
+      "increment_before_finale": 8,
+      "cumulative_before_finale": 42,
+      "optional_increment": 2,
+      "sources": [
+        [
+          "w5_mq22",
+          2
+        ],
+        [
+          "w5_mq24",
+          2
+        ],
+        [
+          "compliance_avatar existing reward",
+          4
+        ]
+      ],
+      "allocation_per_character": {
+        "nova": 10,
+        "zeke": 10,
+        "orion": 10,
+        "gh0st": 10
+      }
+    },
+    {
+      "world": 6,
+      "increment_before_finale": 6,
+      "cumulative_before_finale": 48,
+      "optional_increment": 2,
+      "sources": [
+        [
+          "w6_mq26",
+          2
+        ],
+        [
+          "w6_mq28",
+          2
+        ],
+        [
+          "w6_mq29",
+          2
+        ]
+      ],
+      "allocation_per_character": {
+        "nova": 13,
+        "zeke": 11,
+        "orion": 11,
+        "gh0st": 11
+      }
+    }
+  ],
+  "finale_ap_retained_but_excluded_from_pre_finale_budget": {
+    "ascended_vale": 5,
+    "ascended_god": 8
+  },
+  "old_node_dispositions": [
+    {
+      "id": "gh0st_scope",
+      "character": "gh0st",
+      "old_name": "Scope",
+      "old_cost_ap": 1,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "gh0st_steady_aim",
+      "character": "gh0st",
+      "old_name": "Steady Aim",
+      "old_cost_ap": 1,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "gh0st_headshot",
+      "character": "gh0st",
+      "old_name": "Headshot",
+      "old_cost_ap": 1,
+      "source_screen": "catalog entry present; behavior and acquisition overlap require verification",
+      "proposed_disposition": "Remove AP purchase; preserve earned combat ability and free acquisition."
+    },
+    {
+      "id": "gh0st_penetrating_shot",
+      "character": "gh0st",
+      "old_name": "Penetrating Shot",
+      "old_cost_ap": 2,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "gh0st_venom_edge",
+      "character": "gh0st",
+      "old_name": "Venom Edge",
+      "old_cost_ap": 2,
+      "source_screen": "catalog entry present; behavior and acquisition overlap require verification",
+      "proposed_disposition": "Remove AP purchase; preserve earned combat ability and free acquisition."
+    },
+    {
+      "id": "gh0st_crippling_shot",
+      "character": "gh0st",
+      "old_name": "Crippling Shot",
+      "old_cost_ap": 2,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "gh0st_system_crash",
+      "character": "gh0st",
+      "old_name": "System Crash",
+      "old_cost_ap": 3,
+      "source_screen": "catalog entry present; behavior and acquisition overlap require verification",
+      "proposed_disposition": "Remove AP purchase; preserve earned combat ability and free acquisition."
+    },
+    {
+      "id": "gh0st_chain_shot",
+      "character": "gh0st",
+      "old_name": "Chain Shot",
+      "old_cost_ap": 3,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "gh0st_ghost_in_the_machine",
+      "character": "gh0st",
+      "old_name": "Ghost in the Machine",
+      "old_cost_ap": 3,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "gh0st_shadow_flurry",
+      "character": "gh0st",
+      "old_name": "Shadow Flurry",
+      "old_cost_ap": 5,
+      "source_screen": "catalog entry present; behavior and acquisition overlap require verification",
+      "proposed_disposition": "Remove AP purchase; preserve earned combat ability and free acquisition."
+    },
+    {
+      "id": "gh0st_dismantle",
+      "character": "gh0st",
+      "old_name": "Dismantle",
+      "old_cost_ap": 1,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "gh0st_emp_grenade",
+      "character": "gh0st",
+      "old_name": "EMP Grenade",
+      "old_cost_ap": 1,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "gh0st_viral_agent",
+      "character": "gh0st",
+      "old_name": "Viral Agent",
+      "old_cost_ap": 1,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "gh0st_system_shock",
+      "character": "gh0st",
+      "old_name": "System Shock",
+      "old_cost_ap": 2,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "gh0st_overload",
+      "character": "gh0st",
+      "old_name": "Overload",
+      "old_cost_ap": 2,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "gh0st_logic_bomb",
+      "character": "gh0st",
+      "old_name": "Logic Bomb",
+      "old_cost_ap": 2,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "gh0st_meltdown",
+      "character": "gh0st",
+      "old_name": "Meltdown",
+      "old_cost_ap": 3,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "gh0st_cascade_failure",
+      "character": "gh0st",
+      "old_name": "Cascade Failure",
+      "old_cost_ap": 3,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "gh0st_master_saboteur",
+      "character": "gh0st",
+      "old_name": "Master Saboteur",
+      "old_cost_ap": 3,
+      "source_screen": "passive promise lacks complete matching consumer",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "gh0st_total_system_failure",
+      "character": "gh0st",
+      "old_name": "Total System Failure",
+      "old_cost_ap": 5,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_light_fingers",
+      "character": "nova",
+      "old_name": "Light Fingers",
+      "old_cost_ap": 1,
+      "source_screen": "passive promise lacks complete matching consumer",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_quiet_steps",
+      "character": "nova",
+      "old_name": "Quiet Steps",
+      "old_cost_ap": 1,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_keen_sight",
+      "character": "nova",
+      "old_name": "Keen Sight",
+      "old_cost_ap": 1,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_lockpicking",
+      "character": "nova",
+      "old_name": "Lockpicking",
+      "old_cost_ap": 1,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_distraction",
+      "character": "nova",
+      "old_name": "Distraction",
+      "old_cost_ap": 2,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_hydraulic_kick",
+      "character": "nova",
+      "old_name": "Hydraulic Kick",
+      "old_cost_ap": 2,
+      "source_screen": "catalog entry present; behavior and acquisition overlap require verification",
+      "proposed_disposition": "Remove AP purchase; preserve earned combat ability and free acquisition."
+    },
+    {
+      "id": "nova_smoke_bomb",
+      "character": "nova",
+      "old_name": "Smoke Bomb",
+      "old_cost_ap": 3,
+      "source_screen": "catalog entry present; behavior and acquisition overlap require verification",
+      "proposed_disposition": "Remove AP purchase; preserve earned combat ability and free acquisition."
+    },
+    {
+      "id": "nova_pickpocket_master",
+      "character": "nova",
+      "old_name": "Pickpocket Master",
+      "old_cost_ap": 3,
+      "source_screen": "passive promise lacks complete matching consumer",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_shadow_escape",
+      "character": "nova",
+      "old_name": "Shadow Escape",
+      "old_cost_ap": 3,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_master_thief",
+      "character": "nova",
+      "old_name": "Master Thief",
+      "old_cost_ap": 5,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_dark_sight",
+      "character": "nova",
+      "old_name": "Dark Sight",
+      "old_cost_ap": 1,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_night_cloak",
+      "character": "nova",
+      "old_name": "Night Cloak",
+      "old_cost_ap": 1,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_shadow_blade",
+      "character": "nova",
+      "old_name": "Shadow Blade",
+      "old_cost_ap": 1,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_umbral_step",
+      "character": "nova",
+      "old_name": "Umbral Step",
+      "old_cost_ap": 1,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_fear_aura",
+      "character": "nova",
+      "old_name": "Fear Aura",
+      "old_cost_ap": 2,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_soul_drain",
+      "character": "nova",
+      "old_name": "Soul Drain",
+      "old_cost_ap": 2,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_dark_pact",
+      "character": "nova",
+      "old_name": "Dark Pact",
+      "old_cost_ap": 3,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_plasma_burst",
+      "character": "nova",
+      "old_name": "Plasma Burst",
+      "old_cost_ap": 3,
+      "source_screen": "catalog entry present; behavior and acquisition overlap require verification",
+      "proposed_disposition": "Remove AP purchase; preserve earned combat ability and free acquisition."
+    },
+    {
+      "id": "nova_eclipse",
+      "character": "nova",
+      "old_name": "Eclipse",
+      "old_cost_ap": 3,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_lord_of_shadows",
+      "character": "nova",
+      "old_name": "Lord of Shadows",
+      "old_cost_ap": 5,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_jury_rig",
+      "character": "nova",
+      "old_name": "Jury Rig",
+      "old_cost_ap": 1,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_handy_tools",
+      "character": "nova",
+      "old_name": "Handy Tools",
+      "old_cost_ap": 1,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_trap_setting",
+      "character": "nova",
+      "old_name": "Trap Setting",
+      "old_cost_ap": 1,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_gear_upgrade",
+      "character": "nova",
+      "old_name": "Gear Upgrade",
+      "old_cost_ap": 1,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_hacking",
+      "character": "nova",
+      "old_name": "Hacking",
+      "old_cost_ap": 2,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_remote_mine",
+      "character": "nova",
+      "old_name": "Remote Mine",
+      "old_cost_ap": 2,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_cryo_vent",
+      "character": "nova",
+      "old_name": "Cryo Vent",
+      "old_cost_ap": 3,
+      "source_screen": "catalog entry present; behavior and acquisition overlap require verification",
+      "proposed_disposition": "Remove AP purchase; preserve earned combat ability and free acquisition."
+    },
+    {
+      "id": "nova_overclock",
+      "character": "nova",
+      "old_name": "Overclock",
+      "old_cost_ap": 3,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_drone_swarm",
+      "character": "nova",
+      "old_name": "Drone Swarm",
+      "old_cost_ap": 3,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "nova_master_engineer",
+      "character": "nova",
+      "old_name": "Master Engineer",
+      "old_cost_ap": 5,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "orion_innovate",
+      "character": "orion",
+      "old_name": "Innovate",
+      "old_cost_ap": 1,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "orion_med_lab_efficiency",
+      "character": "orion",
+      "old_name": "Med Lab Efficiency",
+      "old_cost_ap": 1,
+      "source_screen": "passive promise lacks complete matching consumer",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "orion_crafting_bench",
+      "character": "orion",
+      "old_name": "Crafting Bench",
+      "old_cost_ap": 1,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "orion_advanced_materials",
+      "character": "orion",
+      "old_name": "Advanced Materials",
+      "old_cost_ap": 2,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "orion_nano_repair",
+      "character": "orion",
+      "old_name": "Nano Repair",
+      "old_cost_ap": 2,
+      "source_screen": "catalog entry present; behavior and acquisition overlap require verification",
+      "proposed_disposition": "Remove AP purchase; preserve earned combat ability and free acquisition."
+    },
+    {
+      "id": "orion_weapon_specialization",
+      "character": "orion",
+      "old_name": "Weapon Specialization",
+      "old_cost_ap": 2,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "orion_disruption_pulse",
+      "character": "orion",
+      "old_name": "Disruption Pulse",
+      "old_cost_ap": 3,
+      "source_screen": "catalog entry present; behavior and acquisition overlap require verification",
+      "proposed_disposition": "Remove AP purchase; preserve earned combat ability and free acquisition."
+    },
+    {
+      "id": "orion_overcharge",
+      "character": "orion",
+      "old_name": "Overcharge",
+      "old_cost_ap": 3,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "orion_stasis_field",
+      "character": "orion",
+      "old_name": "Stasis Field",
+      "old_cost_ap": 3,
+      "source_screen": "catalog entry present; behavior and acquisition overlap require verification",
+      "proposed_disposition": "Remove AP purchase; preserve earned combat ability and free acquisition."
+    },
+    {
+      "id": "orion_master_engineer",
+      "character": "orion",
+      "old_name": "Master Engineer",
+      "old_cost_ap": 5,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "orion_relay_repair",
+      "character": "orion",
+      "old_name": "Relay Repair",
+      "old_cost_ap": 1,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "orion_triage",
+      "character": "orion",
+      "old_name": "Triage",
+      "old_cost_ap": 1,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "orion_shield_protocol",
+      "character": "orion",
+      "old_name": "Shield Protocol",
+      "old_cost_ap": 1,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "orion_revive",
+      "character": "orion",
+      "old_name": "Revive",
+      "old_cost_ap": 2,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "orion_cleanse",
+      "character": "orion",
+      "old_name": "Cleanse",
+      "old_cost_ap": 2,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "orion_mass_repair",
+      "character": "orion",
+      "old_name": "Mass Repair",
+      "old_cost_ap": 2,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "orion_aegis_protocol",
+      "character": "orion",
+      "old_name": "Aegis Protocol",
+      "old_cost_ap": 3,
+      "source_screen": "passive promise lacks complete matching consumer",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "orion_regeneration_field",
+      "character": "orion",
+      "old_name": "Regeneration Field",
+      "old_cost_ap": 3,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "orion_sanctuary",
+      "character": "orion",
+      "old_name": "Sanctuary",
+      "old_cost_ap": 3,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "orion_guardian_angel",
+      "character": "orion",
+      "old_name": "Guardian Angel",
+      "old_cost_ap": 5,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_team_meeting",
+      "character": "zeke",
+      "old_name": "Team Meeting",
+      "old_cost_ap": 1,
+      "source_screen": "passive promise lacks complete matching consumer",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_training_session",
+      "character": "zeke",
+      "old_name": "Training Session",
+      "old_cost_ap": 1,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_motivational_speech",
+      "character": "zeke",
+      "old_name": "Motivational Speech",
+      "old_cost_ap": 1,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_conflict_resolution",
+      "character": "zeke",
+      "old_name": "Conflict Resolution",
+      "old_cost_ap": 1,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_benefits_plan",
+      "character": "zeke",
+      "old_name": "Benefits Plan",
+      "old_cost_ap": 2,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_retention_bonus",
+      "character": "zeke",
+      "old_name": "Retention Bonus",
+      "old_cost_ap": 2,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_talent_acquisition",
+      "character": "zeke",
+      "old_name": "Talent Acquisition",
+      "old_cost_ap": 3,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_employee_survey",
+      "character": "zeke",
+      "old_name": "Employee Survey",
+      "old_cost_ap": 3,
+      "source_screen": "passive promise lacks complete matching consumer",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_professional_development",
+      "character": "zeke",
+      "old_name": "Professional Development",
+      "old_cost_ap": 3,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_chief_people_officer",
+      "character": "zeke",
+      "old_name": "Chief People Officer",
+      "old_cost_ap": 5,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_filing_system",
+      "character": "zeke",
+      "old_name": "Filing System",
+      "old_cost_ap": 1,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_budgeting",
+      "character": "zeke",
+      "old_name": "Budgeting",
+      "old_cost_ap": 1,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_paperwork_mastery",
+      "character": "zeke",
+      "old_name": "Paperwork Mastery",
+      "old_cost_ap": 1,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_resource_allocation",
+      "character": "zeke",
+      "old_name": "Resource Allocation",
+      "old_cost_ap": 1,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_policy_manual",
+      "character": "zeke",
+      "old_name": "Policy Manual",
+      "old_cost_ap": 2,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_audit",
+      "character": "zeke",
+      "old_name": "Audit",
+      "old_cost_ap": 2,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_signal_jammer",
+      "character": "zeke",
+      "old_name": "Signal Jammer",
+      "old_cost_ap": 3,
+      "source_screen": "catalog entry present; behavior and acquisition overlap require verification",
+      "proposed_disposition": "Remove AP purchase; retain owned ability pending verified World 3 acquisition contract."
+    },
+    {
+      "id": "zeke_office_renovation",
+      "character": "zeke",
+      "old_name": "Office Renovation",
+      "old_cost_ap": 3,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_process_optimization",
+      "character": "zeke",
+      "old_name": "Process Optimization",
+      "old_cost_ap": 3,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_executive_order",
+      "character": "zeke",
+      "old_name": "Executive Order",
+      "old_cost_ap": 5,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_load_balancing",
+      "character": "zeke",
+      "old_name": "Load Balancing",
+      "old_cost_ap": 1,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_workflow_charts",
+      "character": "zeke",
+      "old_name": "Workflow Charts",
+      "old_cost_ap": 1,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_standard_procedure",
+      "character": "zeke",
+      "old_name": "Standard Procedure",
+      "old_cost_ap": 1,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_supply_chain",
+      "character": "zeke",
+      "old_name": "Supply Chain",
+      "old_cost_ap": 1,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_quality_assurance",
+      "character": "zeke",
+      "old_name": "Quality Assurance",
+      "old_cost_ap": 2,
+      "source_screen": "passive stat consumer candidate; verify ownership, units and consequence",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_logistics",
+      "character": "zeke",
+      "old_name": "Logistics",
+      "old_cost_ap": 2,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_bulwark_stance",
+      "character": "zeke",
+      "old_name": "Bulwark Stance",
+      "old_cost_ap": 3,
+      "source_screen": "catalog entry present; behavior and acquisition overlap require verification",
+      "proposed_disposition": "Remove AP purchase; preserve earned combat ability and free acquisition."
+    },
+    {
+      "id": "zeke_overload_fists",
+      "character": "zeke",
+      "old_name": "Overload Fists",
+      "old_cost_ap": 3,
+      "source_screen": "catalog entry present; behavior and acquisition overlap require verification",
+      "proposed_disposition": "Remove AP purchase; preserve earned combat ability and free acquisition."
+    },
+    {
+      "id": "zeke_emergency_protocol",
+      "character": "zeke",
+      "old_name": "Emergency Protocol",
+      "old_cost_ap": 3,
+      "source_screen": "no matching combat skill definition; inspect possible exploration consumer before disposition",
+      "proposed_disposition": "Replace legacy tree record with reviewed v2 choices through one-time full respec compensation; do not silently reassign to a different effect."
+    },
+    {
+      "id": "zeke_quake_slam",
+      "character": "zeke",
+      "old_name": "Quake Slam",
+      "old_cost_ap": 5,
+      "source_screen": "catalog entry present; behavior and acquisition overlap require verification",
+      "proposed_disposition": "Remove AP purchase; preserve earned combat ability and free acquisition."
+    }
+  ],
+  "skill_acquisition_audit": [
+    {
+      "id": "gh0st_headshot",
+      "character": "gh0st",
+      "current_sources": [
+        {
+          "kind": "starter",
+          "character": "gh0st"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "nova_smoke_bomb",
+      "character": "nova",
+      "current_sources": [
+        {
+          "kind": "level",
+          "character": "nova",
+          "level": 6
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "nova_arc_tether",
+      "character": "nova",
+      "current_sources": [
+        {
+          "kind": "starter",
+          "character": "nova"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "nova_cryo_vent",
+      "character": "nova",
+      "current_sources": [
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w1_mq01_cryo_inductor_repaired"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "nova_plasma_burst",
+      "character": "nova",
+      "current_sources": [
+        {
+          "kind": "level",
+          "character": "nova",
+          "level": 9
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "nova_rend_round",
+      "character": "nova",
+      "current_sources": [
+        {
+          "kind": "level",
+          "character": "nova",
+          "level": 12
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "zeke_shatter_blow",
+      "character": "zeke",
+      "current_sources": [
+        {
+          "kind": "starter",
+          "character": "zeke"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "zeke_bulwark_stance",
+      "character": "zeke",
+      "current_sources": [
+        {
+          "kind": "level",
+          "character": "zeke",
+          "level": 6
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "zeke_overload_fists",
+      "character": "zeke",
+      "current_sources": [
+        {
+          "kind": "level",
+          "character": "zeke",
+          "level": 9
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "zeke_quake_slam",
+      "character": "zeke",
+      "current_sources": [
+        {
+          "kind": "level",
+          "character": "zeke",
+          "level": 12
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "orion_prism_lance",
+      "character": "orion",
+      "current_sources": [
+        {
+          "kind": "starter",
+          "character": "orion"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "orion_nano_repair",
+      "character": "orion",
+      "current_sources": [
+        {
+          "kind": "level",
+          "character": "orion",
+          "level": 6
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "orion_disruption_pulse",
+      "character": "orion",
+      "current_sources": [
+        {
+          "kind": "level",
+          "character": "orion",
+          "level": 9
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "orion_stasis_field",
+      "character": "orion",
+      "current_sources": [
+        {
+          "kind": "level",
+          "character": "orion",
+          "level": 12
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "gh0st_venom_edge",
+      "character": "gh0st",
+      "current_sources": [
+        {
+          "kind": "level",
+          "character": "gh0st",
+          "level": 6
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "gh0st_system_crash",
+      "character": "gh0st",
+      "current_sources": [
+        {
+          "kind": "level",
+          "character": "gh0st",
+          "level": 9
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "gh0st_shadow_flurry",
+      "character": "gh0st",
+      "current_sources": [
+        {
+          "kind": "level",
+          "character": "gh0st",
+          "level": 12
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "nova_blast_wave",
+      "character": "nova",
+      "current_sources": [
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w1_mq03_touch_relic"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "zeke_signal_jammer",
+      "character": "zeke",
+      "current_sources": [],
+      "proposed_disposition": "Preserve owned copies. Propose an explicit World 3 earned gadget alongside the Lens handoff, after an exact damage/target/status contract is reviewed and tested. Do not enable a new grant on catalog presence alone.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "nova_hydraulic_kick",
+      "character": "nova",
+      "current_sources": [
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w1_sq03_move_cargo"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "nova_pulse_grenade",
+      "character": "nova",
+      "current_sources": [],
+      "proposed_disposition": "No new grant proposed. Trace remaining runtime/cinematic sources; retire from new acquisition if orphaned, and map any existing owned copy before removing availability.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "scrap_shot",
+      "character": "nova",
+      "current_sources": [],
+      "proposed_disposition": "No new grant proposed. Trace remaining runtime/cinematic sources; retire from new acquisition if orphaned, and map any existing owned copy before removing availability.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "nova_cheap_shot",
+      "character": "nova",
+      "current_sources": [],
+      "proposed_disposition": "No new grant proposed. Trace remaining runtime/cinematic sources; retire from new acquisition if orphaned, and map any existing owned copy before removing availability.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "zeke_synergy_pitch",
+      "character": "zeke",
+      "current_sources": [],
+      "proposed_disposition": "No new grant proposed. Trace remaining runtime/cinematic sources; retire from new acquisition if orphaned, and map any existing owned copy before removing availability.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "orion_stasis_stitch",
+      "character": "orion",
+      "current_sources": [],
+      "proposed_disposition": "Deliberately grant as Field Patch at Orion recruitment, retaining orion_stasis_stitch ID. One living ally; round(18 * (1 + effective Focus * .01)) direct healing capped at missing HP; cooldown 3 personal turns; Shield for 1 target turn. Presentation is practical field care with available medical equipment, not Anchor stasis or a new Aethel nanotechnology origin. This is proposed acquisition/name/tuning, not current behavior.",
+      "verification_status": "consumer/target/description audit still required",
+      "proposed_display_name": "Field Patch"
+    },
+    {
+      "id": "gh0st_target_lock",
+      "character": "gh0st",
+      "current_sources": [],
+      "proposed_disposition": "No new grant proposed. Trace remaining runtime/cinematic sources; retire from new acquisition if orphaned, and map any existing owned copy before removing availability.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "slide_kick",
+      "character": "nova",
+      "current_sources": [],
+      "proposed_disposition": "No new grant proposed. Trace remaining runtime/cinematic sources; retire from new acquisition if orphaned, and map any existing owned copy before removing availability.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "gh0st_intercept",
+      "character": "gh0st",
+      "current_sources": [
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w3_sq12_expose_transfer"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "source_art_scan",
+      "character": "nova",
+      "current_sources": [
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w3_mq14_take_lens"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "gh0st_phase_counter",
+      "character": "gh0st",
+      "current_sources": [
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w4_mq17_regroup_springs"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "source_art_construct",
+      "character": "nova",
+      "current_sources": [
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w4_mq19_take_anvil"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "gh0st_harden",
+      "character": "gh0st",
+      "current_sources": [
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w4_sq19_release_units"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "corporate_insight",
+      "character": "nova",
+      "current_sources": [
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w5_sq21_publish_logs"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "orion_sunbeam",
+      "character": "orion",
+      "current_sources": [
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w5_sq22_restore_gardens"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "source_art_stasis",
+      "character": "nova",
+      "current_sources": [
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w5_mq24_take_anchor"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "data_shield",
+      "character": "zeke",
+      "current_sources": [
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w5_sq24_restore_guardian"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "nova_legacy",
+      "character": "nova",
+      "current_sources": [
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w6_sq26_carry_legacy"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "zeke_unshackled",
+      "character": "zeke",
+      "current_sources": [
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w6_sq27_leave_review"
+        },
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w6_sq27_free_workers"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "gh0st_source_balance",
+      "character": "gh0st",
+      "current_sources": [
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w6_sq28_preserve_song"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "orion_ancestral_grace",
+      "character": "orion",
+      "current_sources": [
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w6_sq29_carry_chorus"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "source_art_tune_world",
+      "character": "nova",
+      "current_sources": [
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w6_mq30_tune_world"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "zeke_guardian_covenant",
+      "character": "zeke",
+      "current_sources": [
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w5_sq24_bind_guardian"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    },
+    {
+      "id": "nova_link",
+      "character": "nova",
+      "current_sources": [
+        {
+          "kind": "event",
+          "catalog": "events.json",
+          "record": "w2_mq04_anchor_drill"
+        }
+      ],
+      "proposed_disposition": "Preserve earned ability and its existing non-AP acquisition; verify effect contract.",
+      "verification_status": "consumer/target/description audit still required"
+    }
+  ],
+  "screening_limits": "Starter/level/explicit event and dialogue unlocks only. Missing sources are not proof of unreachable content. Every active/passive requires executable effect and real-route verification.",
+  "proposed_core_adjustments": [
+    {
+      "id": "orion_stasis_stitch",
+      "reason": "Keep basic recovery available independently of the optional Field Medic tree.",
+      "grant": "Orion recruitment; exact production callback to be verified",
+      "base_power": 18,
+      "target": "one living ally including self",
+      "cooldown": 3,
+      "statuses": [
+        {
+          "id": "shield",
+          "duration": 1
+        }
+      ],
+      "scaling_rule": "Direct heal: round(18 * (1 + effective Focus * .01)); no damage. Shield is 25% incoming reduction under reviewed shared stacking rules.",
+      "proposed_display_name": "Field Patch",
+      "story_contract": "Orion treats wounds and damaged protective gear with available medical equipment. No Aethel technology-origin claim, copied identity, resurrection or Anchor time manipulation. Existing Nano Repair remains separately reviewed."
+    },
+    {
+      "id": "nova_cryo_vent",
+      "reason": "Separate element from applied statuses; current element-tag inference can apply Frozen beyond the described Brittle effect.",
+      "base_power_before_talent": 55,
+      "statuses": [
+        {
+          "id": "brittle",
+          "duration": 2
+        }
+      ],
+      "forbidden_implicit_status": "freeze"
+    }
+  ],
+  "optional_ap_sources": [
+    {
+      "quest_id": "w1_sq03",
+      "ap": 2
+    },
+    {
+      "quest_id": "w2_sq01",
+      "ap": 2
+    },
+    {
+      "quest_id": "w3_sq12",
+      "ap": 2
+    },
+    {
+      "quest_id": "w4_sq19",
+      "ap": 2
+    },
+    {
+      "quest_id": "w5_sq22",
+      "ap": 2
+    },
+    {
+      "quest_id": "w6_sq26",
+      "ap": 2
+    }
+  ],
+  "migration_policy": "Proposed one-time legacy respec compensation equal to old catalog costs of recorded old-tree unlocks, deliberately including ambiguous free grants; not an exact paid-AP refund. Preserve owned combat skills; remove replaced old passive flags; version compensation permanently across NG+. Backfill only proven new quest/recruitment grants, not existing boss rewards.",
+  "design_scope": "32 AP nodes: 5 new actives and 27 passive/augment/conditional purchases. Field Patch uses the existing orion_stasis_stitch ID and is a proposed core grant, not an AP purchase.",
+  "additional_source_hashes": {
+    "app/src/main/assets/statuses.json": "3d4f56bc76909cf69d4c86957252352a992689e4391642383721947087b7601e",
+    "gameRuntime/src/main/kotlin/com/example/starborn/domain/combat/CombatFormulas.kt": "7dc0390f0bf439ccd92f109ae2b18d93adcb57a3d04d7dd17f4bcac1887597ad"
+  },
+  "revision": "story-and-balance-refinement-1",
+  "story_contracts": {
+    "gh0st_recenter_v2": "A recovery routine Gh0st develops and chooses to practice after the Foundry. Automatic trigger represents a practiced response, not a Dominion command, Elara memory, Nova ownership or Source Lock. It does not break Frozen/time stasis.",
+    "orion_field_care": "Field Patch, Field Treatment and Aftercare use grounded medical/repair language and recipient-appropriate care. No new consumable costs or universal nanite/Source explanation. The medical equipment origin is not asserted to be Aethel."
+  },
+  "focused_validation_cases": [
+    {
+      "id": "last_line_commit",
+      "expected": "Only an on-cooldown Cover cast committed below 30% target HP spends the one battle charge; ordinary ready casts do not. Reset cooldown to 3 and spend a normal ATB action."
+    },
+    {
+      "id": "last_line_no_stack",
+      "expected": "No additional Guard or stronger Shield is produced. Refresh one ordinary Shield; invalid/dead/canceled targets spend no emergency charge."
+    },
+    {
+      "id": "recovery_120_hp",
+      "expected": "At unchanged maximum HP 120, Field Treatment restores 24 HP, or 30 below 35% HP. Aftercare adds at most two 6-HP ticks if enough HP is missing. Emergency total is 42 HP, not 56, and cooldown is 4."
+    },
+    {
+      "id": "recovery_family",
+      "expected": "Regen at one remaining turn is not extended, multiplied or followed by queued Aftercare. Identical Aftercare refreshes duration without adding a tick source; battle end clears it."
+    },
+    {
+      "id": "cool_head_rotation",
+      "expected": "A basic hit arms one charge; repeated basics do not stack. A committed Headshot consumes it even on a miss. Base cooldown stays 2; Headshot/crit/weakness reward never arms a new charge."
+    },
+    {
+      "id": "cool_head_damage_cap",
+      "expected": "Scope 10% plus charged Headshot 15% gives 25%; Execute 15% plus charged Headshot 15% is capped at 25%, including allied talent bonuses."
+    },
+    {
+      "id": "recenter_story_and_skip",
+      "expected": "Stun/Stagger-only skip consumes the one charge and removes those effects. Mixed Frozen plus Stun still skips and spends no charge; the routine supplies no extra action or immunity to actual stasis."
+    },
+    {
+      "id": "refined_checkpoint_state",
+      "expected": "Emergency charge, steady-shot charge and Recenter use survive battle checkpoint reload; save/load does not restore spent charges or duplicate recovery ticks."
+    }
+  ],
+  "story_source_hashes": {
+    "docs/story/Lore_Bible.md": "1e3185f3c6d583cde6e23e7f5dcd5abcd9f89fcb08738866d0c78e4bda0dbaa5",
+    "docs/story/Character_Arcs.md": "93bee78dd418895eaffc588c4ca99f53aa1713d1135b9d72ef0be536a5c702a8",
+    "docs/story/Starborn_Master_Story.md": "950bdc627b1c445d9301ab3a227bcba41b0f42a1b877d27247d438740c23e553"
+  },
+  "refinement_summary": {
+    "story": {
+      "gh0st": "Recenter is self-developed and excludes actual stasis.",
+      "orion": "Field Patch, Field Treatment and Aftercare use practical field-care presentation, without an asserted Aethel nanotechnology origin."
+    },
+    "balance": {
+      "last_line": "One ordinary on-cooldown Cover cast, normal action cost, normal mitigation, full cooldown reset.",
+      "field_treatment": "20% direct, 25% in emergency, cooldown 4; Aftercare two 5% ticks, no Regen stacking/extension.",
+      "cool_head": "Base cooldown 2 remains; one basic-hit preparation charge for +15% Headshot damage subject to the shared cap."
+    },
+    "unchanged": {
+      "node_count": 32,
+      "total_tree_ap": 80,
+      "main_pre_finale_ap": 48
+    }
+  },
+  "implementation_record": "docs/testing/CREW_PROTOTYPE_IMPLEMENTATION.md"
+}

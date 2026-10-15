@@ -137,6 +137,8 @@ class CombatViewModel(
     val awaitingAction: StateFlow<String?> get() = runtime.awaitingAction
     val combatBanner: StateFlow<CombatBannerMessage?> get() = runtime.combatBanner
     val combatTutorial: StateFlow<CombatTutorialState?> get() = runtime.combatTutorial
+    val buildHint get() = runtime.buildHint
+    fun dismissBuildHint() = runtime.dismissBuildHint()
     val isOpMode: StateFlow<Boolean> get() = runtime.isOpMode
     val state: StateFlow<CombatState?> get() = runtime.state
     val combatState: CombatState? get() = runtime.combatState
@@ -151,6 +153,9 @@ class CombatViewModel(
     val inventory: StateFlow<List<InventoryEntry>> get() = runtime.inventory
     val atbMeters: StateFlow<Map<String, Float>> get() = runtime.atbMeters
 
+    val inspectedEnemyId get() = runtime.inspectedEnemyId
+    fun inspectEnemy(enemyId: String) = runtime.inspectEnemy(enemyId)
+    fun dismissEnemyInspection() = runtime.dismissEnemyInspection()
     fun setBackgroundPaused(paused: Boolean) = runtime.setBackgroundPaused(paused)
     fun playerAttack(targetIdOverride: String? = null) = runtime.playerAttack(targetIdOverride)
     fun useSkill(skill: Skill, explicitTargets: List<String>? = null) = runtime.useSkill(skill, explicitTargets)

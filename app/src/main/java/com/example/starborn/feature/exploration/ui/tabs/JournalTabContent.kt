@@ -42,8 +42,7 @@ fun JournalTabContent(
     completedQuests: List<QuestSummaryUi>,
     accentColor: Color,
     borderColor: Color,
-    onQuestSelected: (String) -> Unit,
-    fishingJournal: List<com.example.starborn.domain.fishing.FishingJournalEntry> = emptyList()
+    onQuestSelected: (String) -> Unit
 ) {
     var page by rememberSaveable { mutableStateOf(QuestJournalPage.ACTIVE) }
 
@@ -85,11 +84,7 @@ fun JournalTabContent(
             }
         }
     }
-    if (fishingJournal.isNotEmpty()) {
-        MenuSectionCard(title = "Fishing Field Journal", accentColor = accentColor, borderColor = borderColor) {
-            com.example.starborn.feature.fishing.ui.FishingJournal(fishingJournal)
-        }
-    }
+
 }
 
 @Composable

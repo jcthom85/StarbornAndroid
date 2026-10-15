@@ -96,7 +96,7 @@ class DesktopAppServices(
     val inventoryService = InventoryService(itemRepository).apply { loadItems() }
     val sessionStore = GameSessionStore().apply {
         configureRestoredHpCeilings { state ->
-            val nodes = worldDataSource.loadSkillNodes()
+            val nodes = worldDataSource.loadSkillNodes(state.progressionPrototypeVersion)
             worldDataSource.loadCharacters().associate { player -> player.id to
                 com.example.starborn.domain.combat.PartyHealth.maxHp(player, state, inventoryService::catalogItem, nodes) }
         }
@@ -298,7 +298,7 @@ class DesktopAppServices(
         return true
     }
 
-    fun startNewGame(debugFullInventory: Boolean = false): Boolean {
+    fun startNewGame(debugFullInventory: Boolean = false, novaPrototype: Boolean = java.lang.Boolean.getBoolean("starborn.novaPrototype")): Boolean {
         sessionActive = false
         resetExploration()
         lastAutosaveAt = System.currentTimeMillis()
@@ -308,6 +308,7 @@ class DesktopAppServices(
 
         val players = runCatching { worldDataSource.loadCharacters() }.getOrNull().orEmpty()
         val seedState = com.example.starborn.domain.session.GameBootstrap.newGame(players, itemRepository.allItems().toList(), debugFullInventory)
+            .copy(progressionPrototypeVersion = if (novaPrototype) 1 else 0)
         val party = seedState.partyMembers
         val baseLevel = seedState.playerLevel
         inventoryBridge.restore(seedState.migrateOpeningNarrativeState())
@@ -336,6 +337,25 @@ class DesktopAppServices(
     }
 
     fun startDebugScenario(scenarioId: String): Boolean {
+        val checkpointId = com.example.starborn.domain.leveling.CrewBuildPrototype.checkpointScenarios[scenarioId]
+        if (checkpointId != null) {
+            if (!java.lang.Boolean.getBoolean("starborn.novaPrototype") && !com.example.starborn.domain.leveling.CrewBuildPrototype.isEnabled(sessionStore.state.value)) return false
+            val snapshot = worldDataSource.loadCrewCheckpoint(checkpointId) ?: return false
+            resetExploration()
+            cinematicCoordinator.cancelAll()
+            tutorialManager.cancelAllScheduled()
+            promptManager.discardMatching { true }
+            encounterCoordinator.clear()
+            inventoryBridge.restore(snapshot)
+            inventoryService.restore(snapshot.inventory)
+            sessionActive = false
+            playIntroOnStart = false
+            return true
+        }
+        if (scenarioId in setOf(com.example.starborn.domain.leveling.NovaBuildPrototype.SCENARIO, com.example.starborn.domain.leveling.CrewBuildPrototype.SCENARIO)) {
+            // Interactive prototype launches must use the separate prototype save directory.
+            return java.lang.Boolean.getBoolean("starborn.novaPrototype") && startNewGame(novaPrototype = true)
+        }
         val scenario = com.example.starborn.feature.mainmenu.DebugScenarioCatalog.scenarios.firstOrNull { it.id == scenarioId } ?: return false
         val hubs = worldDataSource.loadHubs()
         val nodes = worldDataSource.loadHubNodes()
@@ -492,6 +512,7 @@ class DesktopAppServices(
 
         fun defaultSaveDirectory(): File {
             val target = resolveSaveDirectory()
+            if (java.lang.Boolean.getBoolean("starborn.novaPrototype")) return File(target, "nova-build-prototype")
             val legacy = File(System.getProperty("user.home", "."), ".starborn")
             migrateSaveDirectory(source = legacy, target = target)
             return target

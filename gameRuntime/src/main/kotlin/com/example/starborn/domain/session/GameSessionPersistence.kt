@@ -251,6 +251,9 @@ private fun GameSessionProto.toState(): GameSessionState = GameSessionState(
     playerLevel = playerLevel,
     playerXp = playerXp,
     playerAp = playerAp,
+    progressionPrototypeVersion = progressionPrototypeVersion,
+    purchasedSkillNodes = purchasedSkillNodesMap,
+    progressionAwardClaims = progressionAwardClaimsList.toSet(),
     playerCredits = playerCredits,
     partyMemberXp = partyMemberXpMap,
     partyMemberLevels = partyMemberLevelsMap,
@@ -285,6 +288,7 @@ private fun GameSessionProto.toState(): GameSessionState = GameSessionState(
     revealedNodes = revealedNodesList.toSet(),
     unlockedNodes = unlockedNodesList.toSet(),
     visitedNodes = visitedNodesList.toSet(),
+    knownEnemyWeaknesses = knownEnemyWeaknessesMap.mapValues { it.value.elementsList.toSet() },
     completedNodes = completedNodesList.toSet(),
     astraReturnWorldId = astraReturnWorldId.takeIf { it.isNotBlank() },
     astraReturnHubId = astraReturnHubId.takeIf { it.isNotBlank() },
@@ -350,6 +354,9 @@ private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis())
     playerLevel = this@toProto.playerLevel
     playerXp = this@toProto.playerXp
     playerAp = this@toProto.playerAp
+    progressionPrototypeVersion = this@toProto.progressionPrototypeVersion
+    putAllPurchasedSkillNodes(this@toProto.purchasedSkillNodes)
+    addAllProgressionAwardClaims(this@toProto.progressionAwardClaims)
     playerCredits = this@toProto.playerCredits
     putAllPartyMemberXp(this@toProto.partyMemberXp)
     putAllPartyMemberLevels(this@toProto.partyMemberLevels)
@@ -397,6 +404,10 @@ private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis())
     addAllRevealedNodes(this@toProto.revealedNodes)
     clearUnlockedNodes()
     addAllUnlockedNodes(this@toProto.unlockedNodes)
+    clearKnownEnemyWeaknesses()
+    putAllKnownEnemyWeaknesses(this@toProto.knownEnemyWeaknesses.mapValues { (_, elements) ->
+        com.example.starborn.datastore.EnemyWeaknessesProto.newBuilder().addAllElements(elements.sorted()).build()
+    })
     clearVisitedNodes()
     addAllVisitedNodes(this@toProto.visitedNodes)
     clearCompletedNodes()

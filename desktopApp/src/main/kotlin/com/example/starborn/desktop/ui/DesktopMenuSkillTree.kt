@@ -69,6 +69,15 @@ internal fun DesktopMenuSkillsContent(services: DesktopAppServices, tree: SkillT
     val names = tree.branches.flatMap { it.nodes }.associate { it.id to it.name }
 
     Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        tree.tutorialGuide?.let { guide ->
+            Surface(color = FieldMenuDesign.cyan.copy(alpha = .08f), shape = RoundedCornerShape(8.dp),
+                border = BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = .3f))) {
+                Text(guide, Modifier.padding(12.dp), color = FieldMenuDesign.text, style = MaterialTheme.typography.bodyMedium)
+            }
+        }
+        if (tree.respecRefund > 0) TextButton(onClick = { services.exploration.resetPrototypeBuild(tree.characterId) }) {
+            Text("Reset build (+${tree.respecRefund} AP)")
+        }
         // --- Header Navigation & AP Status ---
         Row(
             Modifier.fillMaxWidth(),
@@ -130,6 +139,7 @@ internal fun DesktopMenuSkillsContent(services: DesktopAppServices, tree: SkillT
         // --- Main Workspace: Graph Canvas + Inspector ---
         BoxWithConstraints(Modifier.weight(1f).fillMaxWidth()) {
             val compact = maxWidth < 680.dp
+            val compactInspectorHeight = minOf(180.dp, maxHeight * .42f)
             val inspectorWidth = if (maxWidth < 950.dp) 260.dp else 320.dp
 
             val graph: @Composable (Modifier) -> Unit = { modifier ->
@@ -304,7 +314,7 @@ internal fun DesktopMenuSkillsContent(services: DesktopAppServices, tree: SkillT
             } else {
                 Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     graph(Modifier.weight(1f).fillMaxWidth())
-                    details(Modifier.height(240.dp).fillMaxWidth())
+                    details(Modifier.height(compactInspectorHeight).fillMaxWidth())
                 }
             }
         }
@@ -384,7 +394,7 @@ private fun DesktopSkillNodeCard(
                         Icon(Icons.Default.CheckCircle, null, Modifier.size(14.dp), tint = FieldMenuDesign.gold)
                     } else if (node.status.canPurchase) {
                         Icon(Icons.Default.Stars, null, Modifier.size(14.dp), tint = FieldMenuDesign.cyan)
-                        Text("${node.costAp} AP", color = FieldMenuDesign.cyan, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                        Text("Available | ${node.costAp} AP", color = FieldMenuDesign.cyan, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                     } else {
                         Icon(Icons.Default.Lock, null, Modifier.size(12.dp), tint = FieldMenuDesign.textMuted)
                         Text("${node.costAp} AP", color = FieldMenuDesign.textMuted, fontSize = 11.sp)
@@ -410,13 +420,13 @@ private fun DesktopSkillNodeCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        if (combat.basePower > 0) "Pwr ${combat.basePower}" else "Support",
+                        if (combat.basePower > 0) "Power ${combat.basePower}" else "Support",
                         color = categoryColor.copy(alpha = 0.85f),
                         fontSize = 10.sp,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        "${combat.cooldown} CD",
+                        "${combat.cooldown} turns",
                         color = FieldMenuDesign.textMuted,
                         fontSize = 10.sp
                     )

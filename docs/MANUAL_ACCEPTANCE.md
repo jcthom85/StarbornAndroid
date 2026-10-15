@@ -1,5 +1,7 @@
 # Starborn manual acceptance
 
+> **Historical record ? scoped to its recorded build/date.** Start with [the documentation index](README.md) for current orientation. Counts, next-step lists, release details, and imperative instructions below are historical, even where they originally say current or read first. Current code/assets are the implementation baseline. Recheck operational commands before use.
+
 Use the new debug APK at `app/build/outputs/apk/debug/app-debug.apk` for these
 checks. It still identifies as 1.3.32 (116), but contains uncommitted changes after
 the Play upload. Play Internal Testing build 116 does not contain these fixes.

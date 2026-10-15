@@ -14,6 +14,17 @@ class GameSessionStore {
     private val _state = MutableStateFlow(GameSessionState())
     val state: StateFlow<GameSessionState> = _state.asStateFlow()
 
+    fun discoverEnemyWeakness(enemyId: String, element: String) {
+        val normalized = element.trim().lowercase(java.util.Locale.ROOT)
+        if (enemyId.isBlank() || normalized !in setOf("physical", "burn", "freeze", "shock", "acid", "source")) return
+        _state.update { state ->
+            val knowledge = state.knownEnemyWeaknesses +
+                (enemyId to (state.knownEnemyWeaknesses[enemyId].orEmpty() + normalized))
+            state.copy(knownEnemyWeaknesses = knowledge,
+                battleCheckpoint = state.battleCheckpoint?.copy(knownEnemyWeaknesses = knowledge))
+        }
+    }
+
     fun armBattle(descriptorJson: String) {
         _state.update { it.copy(pendingBattleJson = descriptorJson) }
     }
@@ -40,7 +51,7 @@ class GameSessionStore {
     fun takeEquipmentRestoreNotice(): String? = equipmentRestoreNotice.also { equipmentRestoreNotice = null }
 
     fun restore(state: GameSessionState) {
-        val base = normalizeArmors(normalizeWeapons(normalizeEquipment(state.withoutRetiredCompanion())))
+        val base = com.example.starborn.domain.leveling.CrewBuildPrototype.grantCore(normalizeArmors(normalizeWeapons(normalizeEquipment(state.withoutRetiredCompanion()))))
         val equipment = ModEquipmentRules.reconcile(base, state)
         val ceilings = if (equipment.partyMemberHp.isEmpty()) emptyMap() else restoredHpCeilings?.invoke(equipment).orEmpty()
         val normalized = equipment.copy(fishingCleanCatchProgress = equipment.fishingCleanCatchProgress.coerceIn(0, 2), partyMemberHp = equipment.partyMemberHp.mapValues { (owner, hp) ->
@@ -113,12 +124,48 @@ class GameSessionStore {
     fun completeQuest(questId: String) {
         if (questId.isBlank()) return
         _state.update {
-            it.copy(
+            com.example.starborn.domain.leveling.NovaBuildPrototype.awardCompletedQuest(it.copy(
                 activeQuests = it.activeQuests - questId,
                 completedQuests = it.completedQuests + questId,
                 failedQuests = it.failedQuests - questId,
                 trackedQuestId = it.trackedQuestId?.takeUnless { tracked -> tracked.equals(questId, ignoreCase = true) }
-            )
+            ), questId)
+        }
+    }
+
+    /** Atomic AP charge and purchase receipt; free skill grants never enter this ledger. */
+    fun purchasePrototypeNode(nodeId: String): Boolean {
+        val catalog = com.example.starborn.domain.leveling.CrewBuildPrototype
+        val node = catalog.nodes[nodeId] ?: return false
+        while (true) {
+            val before = _state.value
+            if (!catalog.isEnabled(before) || nodeId in before.purchasedSkillNodes) return false
+            val owner = catalog.owners.getValue(nodeId)
+            if (owner !in before.partyMembers && !(owner == "nova" && before.partyMembers.isEmpty())) return false
+            val tree = catalog.trees.single { it.character == owner }
+            val status = com.example.starborn.feature.exploration.skilltree.evaluateNodeStatus(node, tree,
+                before.purchasedSkillNodes.keys, before.completedMilestones, before.playerAp,
+                before.purchasedSkillNodes.values.sum())
+            if (!status.canPurchase) return false
+            val after = before.copy(playerAp = before.playerAp - node.costAp,
+                purchasedSkillNodes = before.purchasedSkillNodes + (nodeId to node.costAp))
+            if (_state.compareAndSet(before, after)) return true
+        }
+    }
+
+    /** Free test-session respec refunds only recorded purchases and never changes earned skill grants. */
+    fun resetPrototypeBuild(owner: String? = null): Boolean {
+        val catalog = com.example.starborn.domain.leveling.CrewBuildPrototype
+        while (true) {
+            val before = _state.value
+            if (!catalog.isEnabled(before) || before.pendingBattleJson.isNotBlank()) return false
+            val removed = before.purchasedSkillNodes.filter { (id, _) -> id in catalog.nodes && (owner == null || catalog.owners[id] == owner) }
+            if (removed.isEmpty()) return false
+            val refund = removed.values.sumOf { it.coerceAtLeast(0) }
+            val refunded = before.copy(playerAp = before.playerAp + refund, purchasedSkillNodes = before.purchasedSkillNodes - removed.keys)
+            val ceilings = restoredHpCeilings?.invoke(refunded).orEmpty()
+            val after = refunded.copy(partyMemberHp = refunded.partyMemberHp.mapValues { (id, hp) -> ceilings[id]?.let { hp.coerceIn(0, it) } ?: hp })
+            if (_state.compareAndSet(before, after)) return true
         }
     }
 
@@ -575,12 +622,12 @@ class GameSessionStore {
             val updatedMembers = (state.partyMembers + id).distinct()
             val updatedXp = state.partyMemberXp + (id to state.partyMemberXp.getOrElse(id) { state.playerXp })
             val updatedLevels = state.partyMemberLevels + (id to state.partyMemberLevels.getOrElse(id) { state.playerLevel })
-            state.copy(
+            com.example.starborn.domain.leveling.NovaBuildPrototype.awardRecruitment(state.copy(
                 partyMembers = updatedMembers,
                 partyMemberXp = updatedXp,
                 partyMemberLevels = updatedLevels,
                 partyMemberHp = state.partyMemberHp
-            )
+            ), id).let(com.example.starborn.domain.leveling.CrewBuildPrototype::grantCore)
         }
     }
 

@@ -1,29 +1,26 @@
-# World 2 Quest List (Canonical)
+# Sector 9 quest and reward reference
 
-This file is the single source of truth for World 2 quest IDs, titles, objectives, beats, and rewards.
+Status: Source-reconciled reference, October 14, 2026. Current code/assets are the implementation baseline. This is a source review, not a fresh playthrough or a claim that every route and device behavior is accepted.
 
-## Main Quests (World 2)
+The production catalog contains five main and five side quests. The table distinguishes crafted outputs, dialogue grants, and completion events; do not add the quest metadata rewards again on top of those owners.
 
-| ID | Title | Primary Objective | Key Beats (canonical) | Rewards / Unlocks |
-| :--- | :--- | :--- | :--- | :--- |
-| **w2_mq01** | **A Strange Coast** | Survive the crash site. | Wake in wreckage -> Check injured Zeke -> Recover Chime and emergency kit -> Stabilize Zeke -> Follow glow-water stream. | Chime recovered; opens path to the Wilds |
-| **w2_mq02** | **The Signal** | Track the distress beacon. | Track the pulse through thickets -> Arrive at Temple Gate -> Slot Chime into lock -> Enter Sanctuary. | Opens Sanctuary Facility; unlocks Event EVT_W2_01 |
-| **w2_mq03** | **Sleeping Giant** | Awake the Ancient and recover the Bridge. | Authenticate Temple Gate with Chime -> power Sanctuary from reserve cells -> align stasis rings -> Orion wakes -> recover separate Bridge Echo from sealed cradle. | Orion joins; `bridge_relic`; `ms_w2_bridge_recovered` |
-| **w2_mq04** | **The Hunter** | Deal with the stalker and complete Link training. | Confront Gh0st -> Source Lock pauses one action -> Beast ambush -> Gh0st chooses to protect -> Beast victory recruits Gh0st but does not finish quest -> complete Anchor Drill. | Link unlocks and MQ05 starts only after Anchor Drill callback |
-| **w2_mq05** | **Liftoff** | Repair *The Astra*. | Calibrate coolant lines -> Overload breakers in Power Grid -> Overcome hangar security -> Launch bridge. | Repaired *Astra* accessible; world transition; hit Planetary Shield warning |
+| Quest | Implemented objective | Payout / handoff |
+|---|---|---|
+| `w2_mq01` — A Strange Coast | Check Zeke, examine the pod, use the emergency medkit, and reach the stream. | 150 XP at stream completion; supplies are granted by pod examination, not a second completion payout. |
+| `w2_mq02` — The Signal | Clear an accepted canopy encounter, reach Temple Gate, and use the Chime. | 200 XP; facility access and MQ03. No Link unlock here. |
+| `w2_mq03` — Sleeping Giant | Read the facility clues, wake Orion, speak to him, and recover the separate Bridge. | 250 XP and `bridge_relic`; Orion joins via his conversation before the cradle claim. |
+| `w2_mq04` — The Hunter | Confront Gh0st, defeat the Beast, then complete the grounded drill. | Gh0st joins on Beast victory; drill callback grants `nova_link`, 300 XP, and MQ05. |
+| `w2_mq05` — Liftoff | Resolve the Source Gate, inspect the Astra, retrieve conduits, install the Bridge, and depart. | Departure callback grants 350 XP and starts MQ11 at the Spire. |
+| `w2_sq01` — Botanist | Scan five plants and return through Zeke's completion dialogue. | 100 XP and two painkillers via Zeke dialogue; no Ecological Insight passive grant. |
+| `w2_sq02` — Lost Patrol | Trace three patrol signatures, recover the damaged cutter, and repair it. | Repair produces `thermal_cutter`; completion grants 100 XP. Cache supplies ingredients/schematic and `mod_corrosive_rounds`. |
+| `w2_sq03` — Tideglass Day | Visit Tide Pools, gather the supplied materials, and craft Source Resin. | Craft produces `source_resin`; completion grants 150 XP and two painkillers. |
+| `w2_sq04` — Ancient Echoes | Recover and seat three crystals, then resolve the mural socket choices. | 150 XP and `focus_conduit`; no Chorus Echo skill or second Bridge relic. |
+| `w2_sq05` — Stolen Tech | Blind the vent security, bypass its scan, recover the transmitter, and craft a capacitor. | Craft produces `rapid_capacitor`; completion grants 150 XP. |
 
-## Side Quests (World 2)
+## Interpretation boundaries
 
-| ID | Title | Hub | Quest Giver | Objective | Reward (canonical) |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **w2_sq01** | **Botanist** | Hub 3 | Zeke | Scan 5 unique plant variants in Sector 9. | Passive: **Ecological Insight** (Beast crit chance +10%) |
-| **w2_sq02** | **Lost Patrol** | Hub 3 | Dead Scout | Trace three patrol signals, recover the transceiver and damaged cutter, then repair it. | Weapon Tool: **Thermal Cutter** |
-| **w2_sq03** | **Tideglass Day** | Hub 3 | Orion (at Camp) | Gather tideglass herbs and clean meat, then craft them into stabilized resin. | Weapon Mod: **Source Resin** |
-| **w2_sq04** | **Ancient Echoes** | Hub 4 | Orion | Align standing waves in Archive tuning bay to C#m7. | Orion Skill: **Chorus Echo** (AoE heal/cleanse) |
-| **w2_sq05** | **Stolen Tech** | Hub 4 | Gh0st | Recover the Dominion transmitter core, then assemble the timing crystal into a capacitor. | Weapon Mod: **Rapid Capacitor** (cooldown speed +15%) |
+`quests.json` supplies journal tasks and reward metadata. Events, dialogue triggers, crafting outcomes, and the quest runtime determine actual delivery. Branches and ingredient grants must be inspected before calculating a route budget. An effect's name does not establish a passive bonus or exact numerical value.
 
-## World 2 Mechanical & Tutorial Goals:
-1. **Erosion Management:** Tutorialize the transition from hunger to Erosion (mental strain) and usage of Neural Stabilizers (Painkillers) in the Snack Slot.
-2. **The Anchor Drill:** Combat tutorial showing how Nova links with party members to split/ground Source static.
-3. **Snack Slot Management:** Show that consumables have a 5-turn cooldown in combat and require self-targeting.
-4. **Tinkering:** W2 should make Nova build the useful thing from field salvage: repair the **Thermal Cutter**, craft **Source Resin**, and assemble the **Rapid Capacitor** instead of handing out finished upgrades.
+## Sources and maintenance
+
+[rooms](../../../app/src/main/assets/rooms.json), [quests](../../../app/src/main/assets/quests.json), [events](../../../app/src/main/assets/events.json), [dialogue](../../../app/src/main/assets/dialogue.json), [hub_nodes](../../../app/src/main/assets/hub_nodes.json). [Documentation index](../../README.md). Update this reference when its corresponding records change; do not change working game logic to match an older script.
