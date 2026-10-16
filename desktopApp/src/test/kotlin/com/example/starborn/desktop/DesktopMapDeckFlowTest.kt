@@ -31,7 +31,11 @@ class DesktopMapDeckFlowTest {
                 currentState.copy(
                     roomStates = currentState.roomStates + mapOf(
                         "pit_L2_corridor" to mapOf("visited" to true, "discovered" to true),
-                        "pit_common_room" to mapOf("visited" to true, "discovered" to true)
+                        "pit_L1_landing" to mapOf("visited" to true, "discovered" to true),
+                        "pit_shaft" to mapOf("visited" to true, "discovered" to true),
+                        "pit_mess" to mapOf("visited" to true, "discovered" to true),
+                        "pit_kitchen" to mapOf("visited" to true, "discovered" to true),
+                        "pit_nova_bunk" to (currentState.roomStates["pit_nova_bunk"].orEmpty() + mapOf("visited" to true, "discovered" to true, "light_on" to true, "conduit_isolated" to true))
                     )
                 )
             )
@@ -65,14 +69,17 @@ class DesktopMapDeckFlowTest {
             composeTestRule.onNodeWithTag("map-bottom-legend").assertExists()
 
             // Interact with filter chips
-            composeTestRule.onNodeWithText("Services", substring = true).performClick()
+            composeTestRule.onNode(hasText("Services", substring = true) and hasAnyAncestor(hasTestTag("map-filter-row"))).performClick()
             composeTestRule.waitForIdle()
 
             composeTestRule.onNodeWithText("All Nodes", substring = true).performClick()
             composeTestRule.waitForIdle()
 
+            composeTestRule.onNodeWithTag("map-node-pit_L1_landing").performClick()
+            composeTestRule.onNodeWithText("Exit to Homestead Quarter", substring = true).assertExists()
+
             // Capture preview artifact
-            val artifactsDir = File("C:/Users/jcthomas/.gemini/antigravity-ide/brain/4679957f-9fc8-4b49-a04b-cc85f289b043")
+            val artifactsDir = File("build/reports/map-alignment")
             artifactsDir.mkdirs()
             val image = composeTestRule.onRoot().captureToImage().asAwtImage()
             ImageIO.write(image, "png", File(artifactsDir, "desktop_map_deck_preview.png"))

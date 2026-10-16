@@ -311,8 +311,12 @@ data class MinimapCellUi(
     val services: Set<MinimapService> = emptySet(),
     val isDark: Boolean = false,
     val isPreview: Boolean = false,
-    val nodeExits: List<MapNodeExitUi> = emptyList()
+    val nodeExits: List<MapNodeExitUi> = emptyList(),
+    val title: String = roomId,
+    val hubExit: MapHubExitUi? = null
 )
+
+data class MapHubExitUi(val destinationTitle: String, val blocked: Boolean = false)
 
 data class MapNodeExitUi(
     val direction: String,
@@ -324,6 +328,7 @@ data class MapNodeExitUi(
 enum class MinimapService {
     SHOP,
     COOKING,
+    REST,
     TINKERING,
     EXIT
 }

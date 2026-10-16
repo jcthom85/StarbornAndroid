@@ -1,5 +1,6 @@
 package com.example.starborn.feature.exploration.ui
 
+import com.example.starborn.ui.map.*
 import com.example.starborn.ui.vfx.AndroidRoomEnvironmentalEffects
 import com.example.starborn.ui.vfx.rememberEnvironmentalSettings
 
@@ -122,6 +123,7 @@ import androidx.compose.runtime.collectAsState
 import com.example.starborn.feature.exploration.ui.tabs.TinkeringTutorialOverlay
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
@@ -134,9 +136,6 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.text.rememberTextMeasurer
-import com.example.starborn.feature.exploration.ui.hud.drawFullMapNodeExits
-import com.example.starborn.feature.exploration.ui.hud.drawNodeExitMarker
-import com.example.starborn.feature.exploration.ui.hud.nodeExitDescription
 import com.example.starborn.feature.exploration.viewmodel.MapNodeExitUi
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.RoundRect
@@ -187,6 +186,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.util.lerp
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
@@ -2262,66 +2262,6 @@ private fun QuestObjectiveRow(
     }
 }
 
-private fun DrawScope.drawServiceGlyph(service: MinimapService, centerX: Float, centerY: Float, size: Float) {
-    val center = androidx.compose.ui.geometry.Offset(centerX, centerY)
-    val color = minimapServiceColor(service)
-    when (service) {
-        MinimapService.SHOP -> {
-            drawCircle(color, radius = size, center = center, style = Stroke(width = size * 0.6f))
-            drawLine(
-                color = color,
-                start = center.copy(y = center.y - size * 0.6f),
-                end = center.copy(y = center.y + size * 0.6f),
-                strokeWidth = size * 0.3f
-            )
-        }
-        MinimapService.COOKING -> {
-            val path = Path().apply {
-                moveTo(center.x - size, center.y + size)
-                lineTo(center.x + size, center.y + size)
-                lineTo(center.x, center.y - size)
-                close()
-            }
-            drawPath(path, color)
-        }
-        MinimapService.TINKERING -> {
-            val path = Path().apply {
-                moveTo(center.x, center.y - size)
-                lineTo(center.x + size, center.y)
-                lineTo(center.x, center.y + size)
-                lineTo(center.x - size, center.y)
-                close()
-            }
-            drawPath(path, color, style = Stroke(width = size * 0.3f))
-        }
-        MinimapService.EXIT -> {
-            val strokeWidth = size * 0.45f
-            drawCircle(color, radius = size * 1.15f, center = center, style = Stroke(width = strokeWidth))
-            drawLine(
-                color = color,
-                start = center.copy(y = center.y + size * 0.65f),
-                end = center.copy(y = center.y - size * 0.65f),
-                strokeWidth = strokeWidth,
-                cap = StrokeCap.Round
-            )
-            drawLine(
-                color = color,
-                start = center.copy(y = center.y - size * 0.65f),
-                end = androidx.compose.ui.geometry.Offset(center.x - size * 0.45f, center.y - size * 0.15f),
-                strokeWidth = strokeWidth,
-                cap = StrokeCap.Round
-            )
-            drawLine(
-                color = color,
-                start = center.copy(y = center.y - size * 0.65f),
-                end = androidx.compose.ui.geometry.Offset(center.x + size * 0.45f, center.y - size * 0.15f),
-                strokeWidth = strokeWidth,
-                cap = StrokeCap.Round
-            )
-        }
-    }
-}
-
 fun DrawScope.drawDarkRoomOverlay(
     topLeft: Offset,
     size: Size,
@@ -4286,125 +4226,42 @@ fun ThemedMenuButton(
 }
 
 @Composable
-private fun FullMapCard(
-    fullMap: FullMapUiState?,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .heightIn(min = 220.dp),
-        shape = RoundedCornerShape(20.dp),
-        tonalElevation = 4.dp,
-        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Text(
-                text = "Full Map",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            if (fullMap == null || fullMap.cells.isEmpty()) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp)
-                ) {
-                    Text(
-                        text = "Full map data unavailable yet.",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            } else {
-                FullMapCanvas(fullMap = fullMap)
+internal fun InteractiveMapPanel(fullMap: FullMapUiState?) {
+    val cells = fullMap?.cells.orEmpty()
+    val mapMaxStepPx = with(LocalDensity.current) { 58.dp.toPx() }
+    var selectedId by remember { mutableStateOf<String?>(null) }
+    var viewportScale by remember { mutableFloatStateOf(1f) }
+    var viewportOffset by remember { mutableStateOf(Offset.Zero) }
+    var viewportSize by remember { mutableStateOf(IntSize.Zero) }
+    val selected = cells.firstOrNull { it.roomId == selectedId } ?: cells.firstOrNull { it.isCurrent }
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        if (cells.isEmpty()) Text("Survey more rooms to reveal the map.") else {
+            AreaMapCanvas(cells,
+                modifier = Modifier.fillMaxWidth().height(320.dp).clip(RoundedCornerShape(12.dp))
+                    .onSizeChanged { viewportSize = it }
+                    .pointerInput(cells) { detectTransformGestures { _, pan, zoom, _ ->
+                        viewportScale = (viewportScale * zoom).coerceIn(.5f, 4f)
+                        val next = viewportOffset + pan
+                        viewportOffset = Offset(next.x.coerceIn(-viewportSize.width * viewportScale / 2, viewportSize.width * viewportScale / 2),
+                            next.y.coerceIn(-viewportSize.height * viewportScale / 2, viewportSize.height * viewportScale / 2))
+                    } },
+                scale = viewportScale, offset = viewportOffset, selectedId = selected?.roomId,
+                onSelect = { selectedId = it.roomId })
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                TextButton(onClick = { viewportScale = 1f; viewportOffset = Offset.Zero }, modifier = Modifier.heightIn(min = 48.dp)) { Text("Fit map") }
+                TextButton(onClick = {
+                    selectedId = cells.firstOrNull { it.isCurrent }?.roomId
+                    viewportScale = 1f
+                    val minX = cells.minOf { it.gridX }; val maxX = cells.maxOf { it.gridX }
+                    val minY = cells.minOf { it.gridY }; val maxY = cells.maxOf { it.gridY }
+                    val step = minOf(viewportSize.width.toFloat()/(maxX-minX+3), viewportSize.height.toFloat()/(maxY-minY+3), mapMaxStepPx)
+                    cells.firstOrNull { it.isCurrent }?.let { current ->
+                        viewportOffset = Offset(((minX+maxX)/2f-current.gridX)*step, (current.gridY-(minY+maxY)/2f)*step)
+                    }
+                }, modifier = Modifier.heightIn(min = 48.dp)) { Text("You are here") }
             }
-        }
-    }
-}
-
-@Composable
-internal fun InteractiveMapPanel(
-    fullMap: FullMapUiState?
-) {
-    val modern = LocalModernFieldMenu.current
-    val highContrast = LocalFieldMenuHighContrast.current
-    Box(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Surface(
-            shape = RoundedCornerShape(FieldMenuDesign.cardRadius),
-            tonalElevation = if (modern) 0.dp else 10.dp,
-            color = if (modern && !highContrast) FieldMenuDesign.panel else MaterialTheme.colorScheme.surface.copy(alpha = 0.98f),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(if (modern) 12.dp else 24.dp)
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                if (fullMap == null || fullMap.cells.isEmpty()) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(320.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "Map data unavailable.",
-                            color = if (modern) FieldMenuDesign.textMuted else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                } else {
-                    val cells = fullMap.cells
-                    var viewportScale by remember(cells) { mutableStateOf(1f) }
-                    var viewportOffset by remember(cells) { mutableStateOf(Offset.Zero) }
-                    var viewportSize by remember { mutableStateOf(Offset.Zero) }
-                    fun boundedOffset(value: Offset, scale: Float): Offset {
-                        val limitX = viewportSize.x * .45f * scale.coerceAtLeast(1f)
-                        val limitY = viewportSize.y * .45f * scale.coerceAtLeast(1f)
-                        return Offset(value.x.coerceIn(-limitX, limitX), value.y.coerceIn(-limitY, limitY))
-                    }
-                    val transformModifier = Modifier.pointerInput(cells) {
-                        detectTransformGestures { _, pan, zoom, _ ->
-                            viewportScale = (viewportScale * zoom).coerceIn(0.4f, 4f)
-                            viewportOffset = boundedOffset(viewportOffset + pan, viewportScale)
-                        }
-                    }
-                    FullMapCanvas(
-                        fullMap = fullMap,
-                        scale = viewportScale,
-                        offset = viewportOffset,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(if (modern) 320.dp else 360.dp)
-                            .onSizeChanged { viewportSize = Offset(it.width.toFloat(), it.height.toFloat()) }
-                            .clip(RoundedCornerShape(18.dp))
-                            .then(transformModifier)
-                    )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 12.dp)
-                    ) {
-                        TextButton(
-                            onClick = {
-                                viewportScale = 1f
-                                viewportOffset = Offset.Zero
-                            },
-                            modifier = Modifier.align(Alignment.CenterStart)
-                        ) {
-                            Text("Recenter")
-                        }
-                    }
-                }
-            }
+            selected?.let { MapRoomDetails(it, Modifier.fillMaxWidth().background(MapPalette.background, RoundedCornerShape(12.dp)).padding(14.dp), cells = cells) }
+            Text("Tap a room for details. Pinch to zoom; drag to pan.", style = MaterialTheme.typography.bodySmall, color = MapPalette.preview)
         }
     }
 }
@@ -4419,301 +4276,12 @@ private fun MapLegendOverlay(
     textColor: Color,
     embedded: Boolean = false
 ) {
-    val visitedColor = textColor.copy(alpha = 0.7f)
-    val discoveredColor = textColor.copy(alpha = 0.4f)
-    val unexploredColor = textColor.copy(alpha = 0.16f)
-    val connectionColor = textColor.copy(alpha = 0.5f)
-    val playerIndicatorColor = Color(1f, 0.92f, 0.35f, 1f)
-    val darkOverlayColor = Color.Black.copy(alpha = 0.72f)
-    val darkHatchColor = Color.White.copy(alpha = 0.08f)
-
-    Box(
-        modifier = if (embedded) modifier.fillMaxWidth() else modifier
-            .background(Color.Black.copy(alpha = 0.65f))
-            .padding(horizontal = 24.dp, vertical = 32.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Surface(
-            modifier = Modifier
-                .widthIn(max = 640.dp)
-                .wrapContentHeight(),
-            shape = RoundedCornerShape(if (embedded) FieldMenuDesign.cardRadius else 24.dp),
-            color = panelColor,
-            border = BorderStroke(1.dp, if (embedded && LocalModernFieldMenu.current) Color.White.copy(alpha = .12f) else borderColor),
-            tonalElevation = if (embedded && LocalModernFieldMenu.current) 0.dp else 10.dp
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = if (embedded && LocalModernFieldMenu.current) 12.dp else 24.dp, vertical = 16.dp)
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Text(
-                    text = "Map Legend",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = accentColor
-                )
-                Text(
-                    text = "Symbols for the map and minimap.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = textColor.copy(alpha = 0.78f)
-                )
-
-                LegendEntry(
-                    title = "Current room",
-                    description = "You are here.",
-                    textColor = textColor
-                ) {
-                    LegendCell(
-                        fillColor = accentColor,
-                        borderColor = borderColor
-                    )
-                }
-
-                LegendEntry(
-                    title = "Visited room",
-                    description = "Rooms you've already explored.",
-                    textColor = textColor
-                ) {
-                    LegendCell(
-                        fillColor = visitedColor,
-                        borderColor = borderColor
-                    )
-                }
-
-                LegendEntry(
-                    title = "Discovered room",
-                    description = "Revealed but not yet entered.",
-                    textColor = textColor
-                ) {
-                    LegendCell(
-                        fillColor = discoveredColor,
-                        borderColor = borderColor
-                    )
-                }
-
-                LegendEntry(
-                    title = "Undiscovered slot",
-                    description = "Future cells that appear when paths open.",
-                    textColor = textColor
-                ) {
-                    LegendCell(
-                        fillColor = unexploredColor,
-                        borderColor = borderColor.copy(alpha = 0.4f)
-                    )
-                }
-
-                LegendEntry(
-                    title = "Dark room",
-                    description = "Unlit areas are hatched until you light them.",
-                    textColor = textColor
-                ) {
-                    LegendCell(
-                        fillColor = visitedColor,
-                        borderColor = borderColor,
-                        overlayColor = darkOverlayColor,
-                        hatchColor = darkHatchColor
-                    )
-                }
-
-                LegendEntry(
-                    title = "Connections",
-                    description = "Lines show adjacency between rooms.",
-                    textColor = textColor
-                ) {
-                    LegendConnectionsGraphic(
-                        lineColor = connectionColor,
-                        nodeColor = textColor
-                    )
-                }
-
-                LegendEntry(
-                    title = "Passage to another area",
-                    description = "Gold arrows point out of a room into another area. A padlock means the passage is blocked; double arrows mean up or down. Unknown destinations stay unnamed.",
-                    textColor = textColor
-                ) {
-                    Canvas(Modifier.size(36.dp)) {
-                        drawNodeExitMarker(Offset(size.width * 0.2f, size.height * 0.5f),
-                            MapNodeExitUi("east", "", ""), 0f, size.width * 0.6f)
-                    }
-                }
-
-                LegendEntry(
-                    title = "Player marker",
-                    description = "The glowing dot on the minimap is you.",
-                    textColor = textColor
-                ) {
-                    LegendPlayerMarker(
-                        color = playerIndicatorColor
-                    )
-                }
-
-                LegendEntry(
-                    title = "Minimap grid",
-                    description = "5×5 grid around you with a highlighted center tile.",
-                    textColor = textColor
-                ) {
-                    LegendMiniGrid(
-                        gridColor = textColor.copy(alpha = 0.35f),
-                        dotColor = accentColor
-                    )
-                }
-
-                if (!embedded) {
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Button(
-                        onClick = onClose,
-                        modifier = Modifier.align(Alignment.End),
-                        shape = RoundedCornerShape(999.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = accentColor)
-                    ) {
-                        Text("Close", color = textColor)
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun LegendEntry(
-    title: String,
-    description: String,
-    textColor: Color,
-    leading: @Composable () -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(14.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .size(48.dp)
-                .clip(RoundedCornerShape(12.dp))
-        ) {
-            leading()
-        }
-        Column {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyMedium,
-                color = textColor,
-                fontWeight = FontWeight.SemiBold
-            )
-            Text(
-                text = description,
-                style = MaterialTheme.typography.bodySmall,
-                color = textColor.copy(alpha = 0.74f)
-            )
-        }
-    }
-}
-
-@Composable
-private fun LegendCell(
-    fillColor: Color,
-    borderColor: Color,
-    overlayColor: Color? = null,
-    hatchColor: Color? = null
-) {
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val corner = CornerRadius(10.dp.toPx(), 10.dp.toPx())
-        drawRoundRect(
-            color = fillColor,
-            cornerRadius = corner
-        )
-        drawRoundRect(
-            color = borderColor,
-            cornerRadius = corner,
-            style = Stroke(width = 1.dp.toPx())
-        )
-        if (overlayColor != null && hatchColor != null) {
-            drawDarkRoomOverlay(
-                topLeft = Offset.Zero,
-                size = size,
-                cornerRadius = corner,
-                overlayColor = overlayColor,
-                hatchColor = hatchColor,
-                hatchSpacing = size.width / 3f
-            )
-        }
-    }
-}
-
-@Composable
-private fun LegendConnectionsGraphic(lineColor: Color, nodeColor: Color) {
-    Canvas(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp)
-    ) {
-        val y = size.height / 2f
-        val startX = 6.dp.toPx()
-        val endX = size.width - 6.dp.toPx()
-        drawLine(
-            color = lineColor,
-            start = Offset(startX, y),
-            end = Offset(endX, y),
-            strokeWidth = 4.dp.toPx(),
-            cap = StrokeCap.Round
-        )
-        drawCircle(color = nodeColor, radius = 3.dp.toPx(), center = Offset(startX, y))
-        drawCircle(color = nodeColor, radius = 3.dp.toPx(), center = Offset(endX, y))
-    }
-}
-
-@Composable
-private fun LegendPlayerMarker(color: Color) {
-    Canvas(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(6.dp)
-    ) {
-        val center = Offset(size.width / 2, size.height / 2)
-        drawCircle(color = color.copy(alpha = 0.3f), radius = size.minDimension / 2.8f, center = center)
-        drawCircle(color = color, radius = size.minDimension / 5f, center = center)
-    }
-}
-
-@Composable
-private fun LegendMiniGrid(gridColor: Color, dotColor: Color) {
-    Canvas(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(4.dp)
-    ) {
-        val rows = 3
-        val cols = 3
-        val spacingX = size.width / cols
-        val spacingY = size.height / rows
-        for (i in 0..cols) {
-            val x = i * spacingX
-            drawLine(
-                color = gridColor,
-                start = Offset(x, 0f),
-                end = Offset(x, size.height),
-                strokeWidth = 1.dp.toPx()
-            )
-        }
-        for (j in 0..rows) {
-            val y = j * spacingY
-            drawLine(
-                color = gridColor,
-                start = Offset(0f, y),
-                end = Offset(size.width, y),
-                strokeWidth = 1.dp.toPx()
-            )
-        }
-        for (row in 0 until rows) {
-            for (col in 0 until cols) {
-                val px = col * spacingX + spacingX / 2f
-                val py = row * spacingY + spacingY / 2f
-                drawCircle(
-                    color = if (row == 1 && col == 1) dotColor else gridColor.copy(alpha = 0.8f),
-                    radius = if (row == 1 && col == 1) 3.5.dp.toPx() else 2.2.dp.toPx(),
-                    center = Offset(px, py)
-                )
+    Box(modifier = if (embedded) modifier.fillMaxWidth() else modifier.fillMaxSize().background(Color.Black.copy(alpha = .65f)).padding(24.dp), contentAlignment = Alignment.Center) {
+        Surface(color = MapPalette.background, shape = RoundedCornerShape(16.dp), border = BorderStroke(1.dp, MapPalette.visited.copy(alpha=.4f))) {
+            Column(Modifier.widthIn(max=560.dp).verticalScroll(rememberScrollState()).padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                Text("Map Legend", style = MaterialTheme.typography.titleMedium, color = Color.White)
+                MapLegend()
+                if (!embedded) TextButton(onClick = onClose, modifier = Modifier.align(Alignment.End).heightIn(min=48.dp)) { Text("Close") }
             }
         }
     }
@@ -4726,118 +4294,9 @@ fun FullMapCanvas(
     offset: Offset = Offset.Zero,
     modifier: Modifier = Modifier
 ) {
-    val cells = fullMap.cells
-    val textMeasurer = rememberTextMeasurer()
-    val density = LocalDensity.current
-    val primaryColor = MaterialTheme.colorScheme.primary
-    val visitedColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-    val discoveredColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f)
-    val emptyColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
-    val outlineColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.4f)
-    val connectionColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.45f)
-    val cellSizePx = with(density) { 18.dp.toPx() }
-    val gapPx = with(density) { 6.dp.toPx() }
-    val spacing = cellSizePx + gapPx
-    val minX = cells.minOfOrNull { it.gridX } ?: 0
-    val maxX = cells.maxOfOrNull { it.gridX } ?: 0
-    val minY = cells.minOfOrNull { it.gridY } ?: 0
-    val maxY = cells.maxOfOrNull { it.gridY } ?: 0
-    val widthCells = (maxX - minX + 1).coerceAtLeast(1)
-    val heightCells = (maxY - minY + 1).coerceAtLeast(1)
-    val extraWidth = (FULL_MAP_COLUMNS - widthCells).coerceAtLeast(0)
-    val extraHeight = (FULL_MAP_ROWS - heightCells).coerceAtLeast(0)
-    val displayMinX = minX - (extraWidth + 1) / 2
-    val displayMaxX = maxX + extraWidth / 2
-    val displayMinY = minY - (extraHeight + 1) / 2
-    val displayMaxY = maxY + extraHeight / 2
-
-    val heightDp = with(density) { (spacing * FULL_MAP_ROWS).toDp() }.coerceAtLeast(200.dp)
-    Canvas(
-        modifier = modifier
-            .semantics { contentDescription = "Area map. " + nodeExitDescription(cells) }
-            .fillMaxWidth()
-            .height(heightDp)
-    ) {
-        withTransform({
-            translate(offset.x, offset.y)
-            scale(scale, scale, pivot = Offset(size.width / 2f, size.height / 2f))
-        }) {
-            val originX = (size.width - (displayMaxX - displayMinX + 1) * spacing) / 2f
-            val originY = (size.height - (displayMaxY - displayMinY + 1) * spacing) / 2f
-
-            cells.forEach { cell ->
-                val posX = originX + (cell.gridX - displayMinX) * spacing
-                val posY = originY + (displayMaxY - cell.gridY) * spacing
-                val rectTopLeft = Offset(posX, posY)
-                val fillColor = when {
-                    cell.isCurrent -> primaryColor
-                    cell.visited -> visitedColor
-                    cell.discovered -> discoveredColor
-                    else -> emptyColor
-                }
-                drawRoundRect(
-                    color = fillColor,
-                    topLeft = rectTopLeft,
-                    size = Size(cellSizePx, cellSizePx),
-                    cornerRadius = CornerRadius(6f, 6f)
-                )
-                drawRoundRect(
-                    color = outlineColor,
-                    topLeft = rectTopLeft,
-                    size = Size(cellSizePx, cellSizePx),
-                    style = Stroke(width = 1f)
-                )
-                if (cell.isDark) {
-                    drawDarkRoomOverlay(
-                        topLeft = rectTopLeft,
-                        size = Size(cellSizePx, cellSizePx),
-                        cornerRadius = CornerRadius(6f, 6f),
-                        overlayColor = Color.Black.copy(alpha = 0.65f),
-                        hatchColor = Color.White.copy(alpha = 0.08f),
-                        hatchSpacing = cellSizePx / 3.5f
-                    )
-                }
-            }
-
-            cells.forEach { cell ->
-                val startX = originX + (cell.gridX - displayMinX) * spacing + cellSizePx / 2f
-                val startY = originY + (displayMaxY - cell.gridY) * spacing + cellSizePx / 2f
-                cell.connections.forEach { (direction, targetId) ->
-                    if (direction.equals("east", true) || direction.equals("north", true)) {
-                        val target = cells.firstOrNull { it.roomId == targetId } ?: return@forEach
-                        val endX = originX + (target.gridX - displayMinX) * spacing + cellSizePx / 2f
-                        val endY = originY + (displayMaxY - target.gridY) * spacing + cellSizePx / 2f
-                        drawLine(
-                            color = connectionColor,
-                            start = Offset(startX, startY),
-                            end = Offset(endX, endY),
-                            strokeWidth = 2f,
-                            cap = StrokeCap.Round
-                        )
-                    }
-                }
-            }
-
-            drawFullMapNodeExits(cells, centerOf = { cell ->
-                Offset(originX + (cell.gridX - displayMinX) * spacing + cellSizePx / 2f,
-                    originY + (displayMaxY - cell.gridY) * spacing + cellSizePx / 2f)
-            }, cellSize = cellSizePx, textMeasurer = textMeasurer)
-
-            cells.filter { it.isCurrent }.forEach { cell ->
-                val centerX = originX + (cell.gridX - displayMinX) * spacing + cellSizePx / 2f
-                val centerY = originY + (displayMaxY - cell.gridY) * spacing + cellSizePx / 2f
-                drawCircle(
-                    color = Color.White,
-                    radius = cellSizePx / 6f,
-                    center = Offset(centerX, centerY)
-                )
-            }
-        }
-    }
+    AreaMapCanvas(fullMap.cells, modifier.fillMaxWidth().height(260.dp), scale = scale, offset = offset)
 }
 
-private const val FULL_MAP_COLUMNS = 16
-private const val FULL_MAP_ROWS = 8
 
 
 
@@ -9127,11 +8586,4 @@ private fun fxVisualInfo(fxId: String): FxVisualInfo {
             color = Color(0xFF90CAF9)
         )
     }
-}
-
-private fun minimapServiceColor(service: MinimapService): Color = when (service) {
-    MinimapService.SHOP -> Color(0xFFFFC107)
-    MinimapService.COOKING -> Color(0xFFFF8A65)
-    MinimapService.TINKERING -> Color(0xFFBA68C8)
-    MinimapService.EXIT -> Color(0xFF00E5FF)
 }

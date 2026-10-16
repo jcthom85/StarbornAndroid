@@ -8,6 +8,34 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class MapStateBuilderTest {
+    @Test fun previewAndDarkRoomsHideServicesThreatsAndHubDestinations() {
+        val current = room("current", mapOf("east" to "preview"), listOf(0, 0))
+        val preview = room("preview", emptyMap(), listOf(1, 0))
+        val exit = com.example.starborn.feature.exploration.viewmodel.MapHubExitUi("Homestead Quarter", true)
+        val service = com.example.starborn.feature.exploration.viewmodel.MinimapService.EXIT
+        val mini = MapStateBuilder.buildMinimapState(current, listOf(current, preview), setOf("current"), emptySet(),
+            { false }, { true }, { emptySet() }, { setOf(service) }, hubExit = { exit })
+        assertEquals(exit, mini.cells.first { it.isCurrent }.hubExit)
+        val unknown = mini.cells.first { it.isPreview }
+        assertTrue(unknown.services.isEmpty())
+        assertFalse(unknown.hasEnemies)
+        assertNull(unknown.hubExit)
+        assertEquals("Unexplored room", unknown.title)
+        val full = MapStateBuilder.buildFullMapState(current, listOf(current), setOf("current"), emptySet(),
+            { true }, { true }, { emptySet() }, { setOf(service) }, hubExit = { exit })
+        assertTrue(full.cells.single().services.isEmpty())
+        assertFalse(full.cells.single().hasEnemies)
+        assertNull(full.cells.single().hubExit)
+        assertEquals("Dark room", full.cells.single().title)
+    }
+
+    @Test fun restAndCookingAreSeparateServices() {
+        val shelf = com.example.starborn.domain.model.RestStopAction("sleeping shelf")
+        val rest = com.example.starborn.feature.exploration.viewmodel.MinimapService.REST
+        val cooking = com.example.starborn.feature.exploration.viewmodel.MinimapService.COOKING
+        assertEquals(setOf(rest), mapServicesForActions(listOf(shelf), false, false))
+        assertEquals(setOf(rest, cooking), mapServicesForActions(listOf(shelf.copy(cookSource = "campfire")), false, false))
+    }
     @Test
     fun externalExitsStayVisibleWhenBlockedWithoutAddingRemoteRooms() {
         val current = room("current", mapOf("north" to "remote"), listOf(0, 0))

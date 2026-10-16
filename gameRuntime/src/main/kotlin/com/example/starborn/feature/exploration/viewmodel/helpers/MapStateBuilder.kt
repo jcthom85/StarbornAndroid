@@ -6,6 +6,7 @@ import com.example.starborn.feature.exploration.viewmodel.MinimapService
 import com.example.starborn.feature.exploration.viewmodel.MinimapUiState
 import com.example.starborn.feature.exploration.viewmodel.FullMapUiState
 import com.example.starborn.feature.exploration.viewmodel.MapNodeExitUi
+import com.example.starborn.feature.exploration.viewmodel.MapHubExitUi
 import java.util.Locale
 import kotlin.math.abs
 
@@ -19,7 +20,8 @@ object MapStateBuilder {
         roomHasEnemies: (Room) -> Boolean,
         computeBlockedDirections: (Room) -> Set<String>,
         parseRoomServices: (Room) -> Set<MinimapService>,
-        nodeExits: (Room) -> List<MapNodeExitUi> = { emptyList() }
+        nodeExits: (Room) -> List<MapNodeExitUi> = { emptyList() },
+        hubExit: (Room) -> MapHubExitUi? = { null }
     ): MinimapUiState {
         val currentPos = roomPosition(currentRoom)
         val currentBlocked = computeBlockedDirections(currentRoom)
@@ -66,16 +68,18 @@ object MapStateBuilder {
                 visited = visitedRooms.contains(room.id),
                 discovered = discoveredRooms.contains(room.id),
                 isCurrent = room.id == currentRoom.id,
-                hasEnemies = roomHasEnemies(room),
+                hasEnemies = !isRoomDark(room) && !isPreview && roomHasEnemies(room),
                 blockedDirections = blocked,
                 connections = connections,
                 pathHints = pathHints,
-                services = services,
+                services = if (!isRoomDark(room) && !isPreview) services else emptySet(),
                 isDark = isRoomDark(room),
                 isPreview = isPreview,
                 nodeExits = if (!isPreview && !isRoomDark(room)) {
                     nodeExits(room).map { it.copy(blocked = it.direction in blocked) }
-                } else emptyList()
+                } else emptyList(),
+                title = if (isRoomDark(room) && !room.revealTitleWhenDark) "Dark room" else if (isPreview) "Unexplored room" else room.title,
+                hubExit = if (!isPreview && !isRoomDark(room)) hubExit(room) else null
             )
         }
         return MinimapUiState(cells = cells)
@@ -90,7 +94,8 @@ object MapStateBuilder {
         roomHasEnemies: (Room) -> Boolean,
         computeBlockedDirections: (Room) -> Set<String>,
         parseRoomServices: (Room) -> Set<MinimapService>,
-        nodeExits: (Room) -> List<MapNodeExitUi> = { emptyList() }
+        nodeExits: (Room) -> List<MapNodeExitUi> = { emptyList() },
+        hubExit: (Room) -> MapHubExitUi? = { null }
     ): FullMapUiState {
         val currentPos = roomPosition(currentRoom)
         val cells = roomsInContext.mapNotNull { room ->
@@ -113,14 +118,16 @@ object MapStateBuilder {
                 visited = visitedRooms.contains(room.id),
                 discovered = discoveredRooms.contains(room.id),
                 isCurrent = room.id == currentRoom.id,
-                hasEnemies = roomHasEnemies(room),
+                hasEnemies = !isRoomDark(room) && roomHasEnemies(room),
                 blockedDirections = blocked,
                 connections = connections,
-                services = services,
+                services = if (!isRoomDark(room)) services else emptySet(),
                 isDark = isRoomDark(room),
                 nodeExits = if (!isRoomDark(room)) {
                     nodeExits(room).map { it.copy(blocked = it.direction in blocked) }
-                } else emptyList()
+                } else emptyList(),
+                title = if (isRoomDark(room) && !room.revealTitleWhenDark) "Dark room" else room.title,
+                hubExit = if (!isRoomDark(room)) hubExit(room) else null
             )
         }
         return FullMapUiState(cells = cells)

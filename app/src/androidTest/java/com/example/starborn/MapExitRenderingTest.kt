@@ -59,6 +59,9 @@ class MapExitRenderingTest {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val output = File(context.getExternalFilesDir(null), "map-exit-preview.png")
         output.outputStream().use { compose.onRoot().captureToImage().asAndroidBitmap().compress(Bitmap.CompressFormat.PNG, 100, it) }
+        android.os.ParcelFileDescriptor.AutoCloseInputStream(
+            InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand("cp ${output.absolutePath} /sdcard/Download/map-exit-preview.png")
+        ).use { it.readBytes() }
     }
 
     private fun cell(id: String, x: Int, y: Int, connections: Map<String, String>, vararg exits: MapNodeExitUi) =

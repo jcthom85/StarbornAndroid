@@ -1354,9 +1354,19 @@ class ExplorationController(
         _uiState.update { it.copy(minimap = minimap, fullMap = fullMap) }
     }
 
+    private fun mapHubExit(room: Room): MapHubExitUi? {
+        if (room.id !in entryRoomIds && room.id != "source_new_world_node_scale_final") return null
+        val session = sessionStore.state.value
+        val destination = if (nodeIdByRoomId[room.id] == AstraTravel.NODE_ID) {
+            hubsById[session.astraReturnHubId]?.title ?: "Surface"
+        } else hubsById[session.hubId]?.title ?: "Overworld"
+        return MapHubExitUi(destination, blocked = !canReturnToHub(room))
+    }
+
     private fun buildMinimapState(currentRoom: Room): MinimapUiState {
         return MapStateBuilder.buildMinimapState(
             nodeExits = { nodeExitResolver.exits(it, sessionStore.state.value) },
+            hubExit = ::mapHubExit,
             currentRoom = currentRoom,
             roomsInContext = roomsForMaps(currentRoom),
             visitedRooms = visitedRooms,
@@ -1365,20 +1375,9 @@ class ExplorationController(
             roomHasEnemies = { roomEnemyParties(it).isNotEmpty() },
             computeBlockedDirections = ::computeBlockedDirections,
             parseRoomServices = { room ->
-                val services = mutableSetOf<MinimapService>()
-                if (entryRoomIds.contains(room.id)) {
-                    services += MinimapService.EXIT
-                }
-                parseActions(room).forEach { action ->
-                    when (action) {
-                        is ShopAction -> services += MinimapService.SHOP
-                        is GenericAction -> if (action.actionEvent == "astra_recreation" && !isBurgQuestSession) services += MinimapService.SHOP
-                        is TinkeringAction -> services += MinimapService.TINKERING
-                        is RestStopAction -> services += MinimapService.COOKING
-                        else -> Unit
-                    }
-                }
-                services
+                com.example.starborn.feature.exploration.viewmodel.helpers.mapServicesForActions(
+                    parseActions(room), room.id in entryRoomIds || room.id == "source_new_world_node_scale_final", !isBurgQuestSession)
+
             }
         )
     }
@@ -1386,6 +1385,7 @@ class ExplorationController(
     private fun buildFullMapState(currentRoom: Room): FullMapUiState {
         return MapStateBuilder.buildFullMapState(
             nodeExits = { nodeExitResolver.exits(it, sessionStore.state.value) },
+            hubExit = ::mapHubExit,
             currentRoom = currentRoom,
             roomsInContext = roomsForMaps(currentRoom),
             visitedRooms = visitedRooms,
@@ -1394,20 +1394,9 @@ class ExplorationController(
             roomHasEnemies = { roomEnemyParties(it).isNotEmpty() },
             computeBlockedDirections = ::computeBlockedDirections,
             parseRoomServices = { room ->
-                val services = mutableSetOf<MinimapService>()
-                if (entryRoomIds.contains(room.id)) {
-                    services += MinimapService.EXIT
-                }
-                parseActions(room).forEach { action ->
-                    when (action) {
-                        is ShopAction -> services += MinimapService.SHOP
-                        is GenericAction -> if (action.actionEvent == "astra_recreation" && !isBurgQuestSession) services += MinimapService.SHOP
-                        is TinkeringAction -> services += MinimapService.TINKERING
-                        is RestStopAction -> services += MinimapService.COOKING
-                        else -> Unit
-                    }
-                }
-                services
+                com.example.starborn.feature.exploration.viewmodel.helpers.mapServicesForActions(
+                    parseActions(room), room.id in entryRoomIds || room.id == "source_new_world_node_scale_final", !isBurgQuestSession)
+
             }
         )
     }
