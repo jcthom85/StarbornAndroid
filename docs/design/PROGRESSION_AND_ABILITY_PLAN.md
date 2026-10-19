@@ -1,5 +1,7 @@
 # Progression and ability plan
 
+October 19 update: the owner approved proceeding with the recommended crew structure. See [production adoption](../testing/CREW_PRODUCTION_ADOPTION_2026-10-19.md) for implementation, compensation policy, current verification and remaining manual gates. The plan below records the earlier proposal and historical findings.
+
 October 14, 2026. **Plan with an opt-in Nova prototype implemented.** See the [implementation and verification record](../testing/NOVA_PROTOTYPE_IMPLEMENTATION.md). The remaining crew redesign, production migration and broad balance testing are still pending. Disabling legacy nodes and refunding AP has not been applied to production saves.
 
 ## Outcome

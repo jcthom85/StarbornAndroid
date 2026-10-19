@@ -745,7 +745,7 @@
   },
   {
     "id": "w1_mq01_faulted_loader_victory",
-    "description": "Clearing the loader proves Nova's diagnostic read and opens Jed's workshop.",
+    "description": "Clearing the loader secures the route into Jed's workshop, even if Nova skipped the diagnostic strip.",
     "trigger": {
       "type": "encounter_victory",
       "room": "workshop_yard",
@@ -770,6 +770,11 @@
         "type": "set_quest_task_done",
         "quest_id": "w1_mq01",
         "task_id": "clear_faulted_loader"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq01",
+        "task_id": "inspect_loader_relay"
       },
       {
         "type": "set_milestone",
@@ -965,11 +970,6 @@
         "type": "set_quest_task_done",
         "quest_id": "w1_mq01",
         "task_id": "patch_flux_liner"
-      },
-      {
-        "type": "give_item",
-        "item_id": "nova_flux_liner",
-        "quantity": 1
       },
       {
         "type": "show_message",
@@ -2829,6 +2829,10 @@
         "type": "quest_stage",
         "quest_id": "w1_mq05",
         "stage_id": "reach_pod_bay"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_warden_defeated"
       }
     ],
     "actions": [
@@ -2901,6 +2905,45 @@
         "quest_id": "w1_mq05",
         "to_stage_id": "launch_pod"
       }
+    ]
+  },
+  {
+    "id": "w1_record_warden_victory",
+    "description": "Retains a real Warden victory even before Jed starts The Launch; grants no additional battle rewards.",
+    "trigger": {
+      "type": "encounter_victory",
+      "room": "launch_bay",
+      "enemies": ["the_iron_warden"]
+    },
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "launch_bay",
+        "state_key": "warden_defeated",
+        "value": true
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_warden_defeated"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq05_recover_early_warden_victory",
+    "description": "Recognizes an already defeated Warden when Nova returns after Jed's Chime handoff.",
+    "trigger": {"type": "enter_room", "room": "launch_bay"},
+    "conditions": [
+      {"type": "quest_active", "quest_id": "w1_mq05"},
+      {"type": "milestone_set", "milestone": "ms_w1_warden_defeated"},
+      {"type": "quest_task_not_done", "quest_id": "w1_mq05", "task_id": "defeat_the_warden"}
+    ],
+    "actions": [
+      {"type": "set_quest_task_done", "quest_id": "w1_mq05", "task_id": "fight_through_launch_access"},
+      {"type": "set_quest_task_done", "quest_id": "w1_mq05", "task_id": "reach_pod_bay"},
+      {"type": "set_quest_task_done", "quest_id": "w1_mq05", "task_id": "survive_warden_intro"},
+      {"type": "set_quest_task_done", "quest_id": "w1_mq05", "task_id": "break_warden_guard"},
+      {"type": "set_quest_task_done", "quest_id": "w1_mq05", "task_id": "defeat_the_warden"},
+      {"type": "advance_quest_stage", "quest_id": "w1_mq05", "to_stage_id": "launch_pod"}
     ]
   },
   {

@@ -5,6 +5,7 @@ import com.example.starborn.domain.session.GameSessionPersistence
 import com.example.starborn.domain.session.GameSessionSlotInfo
 import com.example.starborn.domain.session.GameSessionState
 import com.example.starborn.domain.session.migrateOpeningNarrativeState
+import com.example.starborn.domain.session.migrateCrewProgressionState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,7 +67,7 @@ class DesktopSaveManager(
         if (!legacy.exists()) return
         val original = legacy.readText()
         val imported = requireNotNull(legacyAdapter.fromJson(original)) { "Empty legacy save" }
-            .migrateOpeningNarrativeState()
+            .migrateOpeningNarrativeState().migrateCrewProgressionState()
         val backup = File(savesDir, legacy.name + ".pre-migration.bak")
         if (!backup.exists()) legacy.copyTo(backup)
         write(slot, imported)
@@ -90,7 +91,7 @@ class DesktopSaveManager(
         migrateLegacy(slotIndex)
         val info = read(slotIndex)
         check(!existed || info != null) { "Save is unreadable; retained files are available for recovery" }
-        info?.state?.migrateOpeningNarrativeState()
+        info?.state?.migrateOpeningNarrativeState()?.migrateCrewProgressionState()
     }
 
     @Synchronized

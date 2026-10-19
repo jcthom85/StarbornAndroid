@@ -30,7 +30,7 @@
       {
         "id": "report_to_jed",
         "title": "Report to Jed",
-        "description": "Find Jed in his bunk and reach the workshop. After clearing the loader, collect the starter gear and craft the Functional Cryo-Inductor from the menu. Finish by patching the Flux Liner, confirming the governor bypass, and testing the cutter.",
+        "description": "Find Jed in his bunk, collect the starter gear, and clear the route to his workshop. Repair the Cryo-Inductor from the menu before preparing the cutter test.",
         "tasks": [
           {
             "id": "find_jed",
@@ -41,20 +41,20 @@
             "text": "Talk to Jed about the shift."
           },
           {
+            "id": "equip_starter_gear",
+            "text": "Receive your starter gear from Jed."
+          },
+          {
             "id": "reach_workshop",
             "text": "Reach Jed's place."
           },
           {
             "id": "inspect_loader_relay",
-            "text": "Inspect the loader diagnostic strip."
+            "text": "Read the loader diagnostic strip or disable the loader."
           },
           {
             "id": "clear_faulted_loader",
-            "text": "Exploit the loader's exposed Shock weakness."
-          },
-          {
-            "id": "equip_starter_gear",
-            "text": "Receive your starter gear from Jed."
+            "text": "Clear the faulted loader blocking the workshop."
           },
           {
             "id": "use_tinkering_table",

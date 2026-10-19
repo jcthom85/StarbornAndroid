@@ -1,0 +1,7 @@
+Production crew; no seeded inventory/AP; five main quests plus required certification; actual combat; World 2 handoff; AP=8; save parity; assisted actions=0.
+room=workshop_yard enemies=[faulted_loader] seed=17 damageEvents=2 xp=35 ap=0 credits=0 persistedHp={nova=120} knockedOut=[] usedItems={}
+room=admin_security enemies=[acoustic_bulwark] seed=17 damageEvents=1 xp=100 ap=0 credits=40 persistedHp={nova=120} knockedOut=[] usedItems={}
+room=mine_alpha enemies=[echo_borer, echo_borer] seed=17 damageEvents=25 xp=80 ap=0 credits=20 persistedHp={nova=110} knockedOut=[] usedItems={medkit_i=1}
+room=launch_lift enemies=[acoustic_bulwark, resonance_buoy] seed=17 damageEvents=6 xp=130 ap=0 credits=55 persistedHp={nova=120} knockedOut=[] usedItems={}
+room=launch_checkpoint enemies=[dominion_dampener, resonance_buoy] seed=17 damageEvents=7 xp=80 ap=0 credits=40 persistedHp={nova=114} knockedOut=[] usedItems={}
+room=launch_bay enemies=[the_iron_warden] seed=17 damageEvents=14 xp=350 ap=0 credits=225 persistedHp={nova=111} knockedOut=[] usedItems={medkit=1}

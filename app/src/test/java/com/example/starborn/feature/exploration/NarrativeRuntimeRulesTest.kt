@@ -30,6 +30,25 @@ class NarrativeRuntimeRulesTest {
     }
 
     @Test
+    fun bunkPossessionsStayDiscoverableAfterOpeningTheDoorButRemainHiddenInTheDark() {
+        val assets = listOf(java.io.File("app/src/main/assets"), java.io.File("src/main/assets")).first { it.isDirectory }
+        val rooms = org.json.JSONArray(java.io.File(assets, "rooms.json").readText())
+        val room = (0 until rooms.length()).map { rooms.getJSONObject(it) }.first { it.getString("id") == "pit_nova_bunk" }
+        val actions = room.getJSONArray("actions")
+        for (name in listOf("cargo netting", "rusty locker")) {
+            val data = (0 until actions.length()).map { actions.getJSONObject(it) }.single { it.getString("name") == name }
+            val action = data.keys().asSequence().associateWith { data.get(it) }
+            val initial = mapOf("light_on" to false, "conduit_isolated" to false)
+            assertFalse(narrativeActionVisible(action, initial, emptyMap(), emptySet()))
+            assertTrue(narrativeActionVisible(action, initial, mapOf("light_on" to true), emptySet()))
+            assertTrue(narrativeActionVisible(action, initial, mapOf("light_on" to true, "conduit_isolated" to true), emptySet()))
+            assertFalse(narrativeActionVisible(action, initial, mapOf("light_on" to false, "conduit_isolated" to true), emptySet()))
+            val variants = room.getJSONArray("description_variants")
+            for (index in 0 until variants.length()) assertTrue(variants.getJSONObject(index).getString("description").contains(name, ignoreCase = true))
+        }
+    }
+
+    @Test
     fun stateAndMilestoneVisibilityHandlesMissingFalseTrueAndPersistedValues() {
         val action = mapOf<String, Any?>(
             "show_when_state" to "hunter_confronted",

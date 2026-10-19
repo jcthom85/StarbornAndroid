@@ -1,5 +1,9 @@
 # Game test suite rebuild
 
+October 19: [World 1 review](WORLD1_REVIEW_2026-10-19.md) records 71 passing focused host tests, all ten quests and alternate-order escape recovery, plus a successful Android build. Human phone and audiovisual acceptance remain open.
+
+October 19: [crew production adoption](CREW_PRODUCTION_ADOPTION_2026-10-19.md) supersedes the prototype-only and migration-pending statements below. Normal New Game and player-save migration now use crew progression. The continuous production campaign still has an open World 6 acceptance failure; earlier test totals do not certify this rollout.
+
 [Android exploration navigation](ANDROID_EXPLORATION_NAVIGATION_2026-10-15.md) centers Menu, removes the duplicate exit, reserves room-interaction space, and adds system Back exits from eligible rooms.
 
 [Popup alignment and desktop backdrop repair](POPUP_ALIGNMENT_AND_BACKDROP_FIX_2026-10-15.md) implements the acknowledgement rules and prevents sharp room artwork from leaking into the side atmosphere during travel.

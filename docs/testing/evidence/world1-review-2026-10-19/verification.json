@@ -1,0 +1,821 @@
+{
+  "world1_nodes": 10,
+  "world1_rooms": 82,
+  "graph_roots": "all World 1 node entries; locks ignored",
+  "unreachable_from_node_entries": [
+    "launch_rail"
+  ],
+  "missing_connection_targets": [],
+  "backgrounds": [
+    {
+      "room": "admin_deck",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\admin_deck.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "admin_elevator",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\admin_elevator.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "admin_kiosk",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\admin_kiosk.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "admin_lobby",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\admin_lobby.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "admin_lounge",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\admin_lounge.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "admin_office",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\admin_office.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "admin_security",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\admin_security.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "admin_window",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\admin_window.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "checkpoint_bay",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\checkpoint_bay_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "checkpoint_booth",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\checkpoint_booth_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "checkpoint_cell",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\checkpoint_cell_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "checkpoint_door",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\checkpoint_door_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "checkpoint_queue",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\checkpoint_queue_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "checkpoint_tunnel",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\checkpoint_tunnel_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "echo_exit",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\echo_exit.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "echo_gap",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\echo_gap.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "echo_heart",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\echo_heart.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "echo_memory",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\echo_memory.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "echo_walkway",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\echo_walkway.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "echo_well",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\echo_well.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "launch_access",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\launch_access.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "launch_bay",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\launch_bay.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "launch_checkpoint",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\launch_checkpoint.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "launch_fuel",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\launch_fuel.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "launch_gantry",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\launch_gantry.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "launch_lift",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\launch_lift.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "launch_pod",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\launch_pod.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "launch_rail",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\launch_rail.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "medbay_decon",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\medbay_decon_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "medbay_exam1",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\medbay_exam1_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "medbay_exhaust",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\medbay_exhaust_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "medbay_hall",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\medbay_hall_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "medbay_morgue",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\medbay_morgue_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "medbay_storage",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\medbay_storage_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "medbay_vents",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\medbay_vents_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "mine_alpha",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\mine_alpha.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "mine_antechamber",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\mine_antechamber.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "mine_checkpoint",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\mine_checkpoint.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "mine_conveyor",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\mine_conveyor.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "mine_gas",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\mine_gas.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "mine_junction",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\mine_junction.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "mine_landing",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\mine_landing.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "mine_sealed_munitions_vault",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\mine_junction.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "mine_shoring",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\mine_shoring.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "mine_shunt",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\mine_shunt.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "mine_sifter",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\mine_sifter.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "mine_slope",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\mine_slope.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "mine_threshold",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\mine_threshold.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "pit_L1_landing",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\pit_L1_landing_v5.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "pit_L2_corridor",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\pit_L2_corridor_v5.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "pit_jed_bunk",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\pit_jed_bunk_v5.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "pit_kitchen",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\pit_kitchen_v5.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "pit_mess",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\pit_mess_v5.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "pit_nova_bunk",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\pit_nova_bunk_v5.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "pit_shaft",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\pit_shaft_v5.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "pit_showers",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\pit_showers_v5.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "pit_storage",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\pit_storage_v5.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "pit_vents",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\pit_vents_v5.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "server_airlock",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\server_airlock.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "server_aisle1",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\server_aisle.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "server_backup",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\server_backup.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "server_cooling",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\server_cooling.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "server_crawl",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\server_crawl.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "server_hub",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\server_hub.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "server_office",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\server_office.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "trade_bar",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\trade_bar_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "trade_den",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\trade_den_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "trade_entrance",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\trade_entrance_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "trade_gantry",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\trade_gantry_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "trade_locker",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\trade_locker_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "trade_maint",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\trade_maint_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "trade_scrapper",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\trade_scrapper_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "trade_stash",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\trade_stash_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "trade_strip",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\trade_strip_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "workshop_back",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\workshop_back_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "workshop_basement",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\workshop_basement_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "workshop_dock",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\workshop_dock_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "workshop_floor",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\workshop_floor_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "workshop_loft",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\workshop_loft_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "workshop_office",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\workshop_office_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "workshop_shed",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\workshop_shed_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    },
+    {
+      "room": "workshop_yard",
+      "path": "world_assets\\src\\main\\assets\\images\\rooms\\world_1\\workshop_yard_v3.webp",
+      "size": [
+        1088,
+        1920
+      ],
+      "mode": "RGB"
+    }
+  ],
+  "host_test_suites": [
+    {
+      "name": "com.example.starborn.data.assets.IntroCinematicAssetIntegrityTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.dialogue.Hub1CriticalFlowTest",
+      "tests": "15",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.playtest.LegalRouteCampaignRunnerTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.playtest.World1RecentChangesTest",
+      "tests": "14",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.session.CrewProgressionMigrationTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.session.CrewProgressionPacingTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.session.OpeningNarrativeMigrationTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.feature.combat.OpeningCombatRuntimeTest",
+      "tests": "17",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.feature.exploration.NarrativeRuntimeRulesTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "total_host_tests": 71,
+  "apk_sha256": "96131c3f122ee5a886b32f3f330ae7e231c99b533a70914976b8de7941644b01",
+  "limitations": [
+    "Structural graph does not prove gated progression.",
+    "Image metadata does not establish artistic quality.",
+    "Host controller tests do not establish Android runtime acceptance."
+  ]
+}

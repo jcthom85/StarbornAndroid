@@ -44,6 +44,7 @@ import com.example.starborn.domain.model.GameEvent
 import com.example.starborn.domain.model.MilestoneEffects
 import com.example.starborn.domain.model.Player
 import com.example.starborn.domain.session.migrateOpeningNarrativeState
+import com.example.starborn.domain.session.migrateCrewProgressionState
 import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.session.GameSessionPersistence
 import com.example.starborn.domain.session.GameSessionSlotInfo
@@ -228,7 +229,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
             // Only hydrate from persisted session once on startup.
             // If the user starts a new game before the initial read completes, don't overwrite it.
             if (isBurgQuestSession) return@launch // Every visitor starts a fresh fixture.
-            val stored = sessionPersistence.sessionFlow.first().migrateOpeningNarrativeState()
+            val stored = sessionPersistence.sessionFlow.first().migrateOpeningNarrativeState().migrateCrewProgressionState()
             if (sessionStore.state.value.needsFallbackImport()) {
                 sessionStore.restore(stored)
                 inventoryService.restore(stored.inventory)
@@ -497,7 +498,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
 
     suspend fun loadSlot(slot: Int): Boolean {
         val info = resolveSlotInfo(slot) ?: return false
-        val state = info.state.migrateOpeningNarrativeState()
+        val state = info.state.migrateOpeningNarrativeState().migrateCrewProgressionState()
         sessionStore.restore(state)
         inventoryService.restore(state.inventory)
         migrateLegacyWeapons(state)
@@ -516,7 +517,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
 
     suspend fun loadAutosave(): Boolean {
         val info = sessionPersistence.autosaveInfo() ?: return false
-        val state = info.state.migrateOpeningNarrativeState()
+        val state = info.state.migrateOpeningNarrativeState().migrateCrewProgressionState()
         sessionStore.restore(state)
         inventoryService.restore(state.inventory)
         migrateLegacyWeapons(state)
@@ -541,7 +542,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
 
     suspend fun loadQuickSave(): Boolean {
         val info = sessionPersistence.quickSaveInfo() ?: return false
-        val state = info.state.migrateOpeningNarrativeState()
+        val state = info.state.migrateOpeningNarrativeState().migrateCrewProgressionState()
         sessionStore.restore(state)
         inventoryService.restore(state.inventory)
         migrateLegacyWeapons(state)
@@ -563,7 +564,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
     }
 
     suspend fun importLegacySave(file: File): Boolean {
-        val imported = sessionPersistence.importLegacySave(file, itemRepository)?.migrateOpeningNarrativeState() ?: return false
+        val imported = sessionPersistence.importLegacySave(file, itemRepository)?.migrateOpeningNarrativeState()?.migrateCrewProgressionState() ?: return false
         sessionStore.restore(imported)
         inventoryService.restore(imported.inventory)
         migrateLegacyWeapons(imported)
@@ -618,7 +619,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
             val party = seedState.partyMembers
             val baseLevel = seedState.playerLevel
             val weaponSeedIds = players.map { it.id }.ifEmpty { party }
-            sessionStore.restore(seedState.migrateOpeningNarrativeState())
+            sessionStore.restore(seedState.migrateOpeningNarrativeState().migrateCrewProgressionState())
             sessionStore.resetTutorialProgress()
             sessionStore.resetQuestProgress()
             if (debugFullInventory) {
@@ -673,7 +674,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
             itemRepository.load()
             val seedState = com.example.starborn.domain.session.GameBootstrap.newGamePlus(players, itemRepository.allItems().toList(), previousSession)
             val party = seedState.partyMembers
-            sessionStore.restore(seedState.migrateOpeningNarrativeState())
+            sessionStore.restore(seedState.migrateOpeningNarrativeState().migrateCrewProgressionState())
             sessionStore.resetTutorialProgress()
             sessionStore.resetQuestProgress()
 

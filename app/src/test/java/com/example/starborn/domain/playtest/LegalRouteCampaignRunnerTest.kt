@@ -115,6 +115,7 @@ class LegalRouteCampaignRunnerTest {
     private val publicCombats = mutableListOf<String>()
     private val prototypeSkillsUsed = mutableSetOf<String>()
     private var recordSystemsAudit = false
+    private var useProductionCrewRules = false
 
     @Before
     fun setUp() {
@@ -295,6 +296,108 @@ class LegalRouteCampaignRunnerTest {
                 writeText("PASS: public movement, Jed dialogue grant, equipment, authored loader encounter, production ATB and AI, crafting, quest completion, save/reload.\nAssisted actions: 0\n" + publicCombats.joinToString("\n") + "\n")
             }
         } finally { h.close() }
+    }
+
+    @Test
+    fun productionOpeningEarnsItsFirstApAndPreservesItsSingleSuit() = verifyProductionOpening(inspectLoader = true)
+
+    @Test
+    fun productionOpeningCanFinishWhenThePlayerEngagesTheLoaderBeforeReadingItsStrip() = verifyProductionOpening(inspectLoader = false)
+
+    private fun verifyProductionOpening(inspectLoader: Boolean) {
+        useProductionCrewRules = true
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
+        try {
+            assertTrue(h.sessionStore.state.value.inventory.isEmpty())
+            assertEquals(0, h.sessionStore.state.value.playerAp)
+            LegalCampaignAgent(h).playOpening(inspectLoader)
+            val state = h.sessionStore.state.value
+            assertTrue(assistance.isEmpty())
+            assertEquals(2, state.playerAp)
+            assertEquals(1, state.inventory["nova_flux_liner"])
+            assertEquals("nova_flux_liner", state.equippedArmors["nova"])
+            val quest = requireNotNull(h.questRepository.questById("w1_mq01"))
+            assertEquals(quest.stages.flatMap { it.tasks }.map { it.id }.toSet(), state.questTasksCompleted["w1_mq01"])
+            assertEquals(inspectLoader, "ms_w1_mq01_loader_inspected" in state.completedMilestones)
+            val saved = h.saveSlot(7)
+            h.sessionStore.addAp(99)
+            assertEquals(saved, h.loadSlot(7))
+            assertEquals(2, h.sessionStore.state.value.playerAp)
+            val branch = if (inspectLoader) "read-strip" else "fight-first"
+            File("build/reports/world1-opening/$branch.txt").apply {
+                requireNotNull(parentFile).mkdirs()
+                writeText("Production crew; no seeded inventory/AP; real loader victory; first quest and every task complete; AP=2; one Flux Liner; save/reload; assisted actions=0.\n" + publicCombats.joinToString("\n"))
+            }
+        } finally { h.close() }
+    }
+
+    @Test
+    fun productionWorld1ReachesTheWorld2HandoffWithEarnedResourcesAndSaveParity() {
+        useProductionCrewRules = true
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
+        try {
+            assertTrue(h.sessionStore.state.value.inventory.isEmpty())
+            LegalCampaignAgent(h).playWorld1()
+            val state = h.sessionStore.state.value
+            assertTrue(assistance.isEmpty())
+            assertTrue((1..5).all { "w1_mq0$it" in state.completedQuests })
+            assertTrue("w1_sq03" in state.completedQuests)
+            assertEquals(8, state.playerAp) // Six main-route AP plus the required certification's two.
+            assertEquals("sector9_crash_site", state.roomId)
+            assertTrue("w2_mq01" in state.activeQuests)
+            val saved = h.saveSlot(7)
+            h.sessionStore.addAp(99)
+            assertEquals(saved, h.loadSlot(7))
+            assertEquals(8, h.sessionStore.state.value.playerAp)
+            File("build/reports/world1-opening/world1-handoff.txt").apply {
+                requireNotNull(parentFile).mkdirs()
+                writeText("Production crew; no seeded inventory/AP; five main quests plus required certification; actual combat; World 2 handoff; AP=8; save parity; assisted actions=0.\n" + publicCombats.joinToString("\n"))
+            }
+        } finally { h.close() }
+    }
+
+    @Test
+    fun productionWorld1CanRecoverIfTheWardenIsDefeatedBeforeReturningToJed() {
+        useProductionCrewRules = true
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
+        try {
+            LegalCampaignAgent(h).playWorld1(wardenBeforeJed = true)
+            assertEquals("sector9_crash_site", h.sessionStore.state.value.roomId)
+            assertTrue("w1_mq05" in h.sessionStore.state.value.completedQuests)
+            assertTrue(assistance.isEmpty())
+            assertEquals(1, publicCombats.count { it.contains("enemies=[the_iron_warden]") })
+        } finally { h.close() }
+    }
+
+    @Test
+    fun productionWorld1CompletionistRouteFinishesAllTenQuestsAndTheCartDetour() {
+        useProductionCrewRules = true
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
+        try {
+            LegalCampaignAgent(h).playWorld1(completionist = true)
+            val state = h.sessionStore.state.value
+            assertTrue((1..5).all { "w1_mq0$it" in state.completedQuests && "w1_sq0$it" in state.completedQuests })
+            assertEquals("sector9_crash_site", state.roomId)
+            assertEquals(8, state.playerAp)
+            assertTrue(state.roomStates["mine_junction"]?.get("bulkhead_breached") == true)
+            assertTrue(assistance.isEmpty())
+            val saved = h.saveSlot(7)
+            assertEquals(saved, h.loadSlot(7))
+            File("build/reports/world1-opening/completionist-handoff.txt").apply {
+                requireNotNull(parentFile).mkdirs()
+                writeText("Production crew; no seeded inventory/AP; all five main and five side quests; cart vault route; actual combat; World 2 handoff; AP=8; save parity; assisted actions=0. Authored puzzle answers are supplied.\n" + publicCombats.joinToString("\n"))
+            }
+        } finally { h.close() }
+    }
+
+    @Test
+    fun productionCrewCampaignEarnsItsOpeningSuppliesAndReachesCredits() {
+        useProductionCrewRules = true
+        `fresh game legal route traverses Worlds 1 through 6 to ms_game_complete with save reload checkpoints`()
+        File("build/reports/crew-production/campaign.txt").apply {
+            requireNotNull(parentFile).mkdirs()
+            writeText("Crew rules; no seeded Cryo-Inductor or Scrap Metal; all 30 main quests; credits; world-boundary save/reload; zero assisted combat actions.\n" + publicCombats.joinToString("\n"))
+        }
     }
 
     @Test
@@ -732,8 +835,26 @@ class LegalRouteCampaignRunnerTest {
             harness.settle()
         }
 
-        fun playWorld1() {
+        fun playWorld1(wardenBeforeJed: Boolean = false, completionist: Boolean = false) {
             playOpening()
+            if (completionist) {
+                navigateLegalPath("trade_scrapper")
+                talkToNpc("Scrapper")
+                navigateLegalPath("trade_stash")
+                performAction("w1_sq01_open_rebel_cache")
+                navigateLegalPath("trade_scrapper")
+                talkToNpc("Scrapper")
+                assertTrue("w1_sq01" in harness.sessionStore.state.value.completedQuests)
+                navigateLegalPath("medbay_exam1")
+                talkToNpc("Doc")
+                navigateLegalPath("medbay_vents")
+                performAction("w1_sq02_patch_vent")
+                performAction("w1_sq02_reroute_airflow")
+                performAction("w1_sq02_clear_toxic_blockage")
+                navigateLegalPath("medbay_exam1")
+                talkToNpc("Doc")
+                assertTrue("w1_sq02" in harness.sessionStore.state.value.completedQuests)
+            }
 
             // Navigate to Checkpoint Queue
             navigateLegalPath("checkpoint_queue")
@@ -745,10 +866,10 @@ class LegalRouteCampaignRunnerTest {
             assertTrue("w1_mq03 active", harness.sessionStore.state.value.activeQuests.contains("w1_mq03"))
             assertTrue("Mine access badge acquired", (harness.sessionStore.state.value.inventory["mine_access_badge"] ?: 0) >= 1)
 
-            playWorld1AfterCheckpoint()
+            playWorld1AfterCheckpoint(wardenBeforeJed, completionist)
         }
 
-        fun playOpening() {
+        fun playOpening(inspectLoader: Boolean = true) {
             assertEquals("pit_nova_bunk", harness.sessionStore.state.value.roomId)
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w1_mq01"))
 
@@ -765,12 +886,17 @@ class LegalRouteCampaignRunnerTest {
             harness.settle()
             assertEquals("mining_pistol", harness.sessionStore.state.value.equippedWeapons["nova"])
             assertEquals("nova_flux_liner", harness.sessionStore.state.value.equippedArmors["nova"])
-            assertTrue("Cryo inductor received from Jed", (harness.sessionStore.state.value.inventory["cryo_inductor"] ?: 0) >= 1)
+            assertTrue("Cryo-Inductor must persist after Jed's kit: inventory=${harness.inventoryService.snapshot()}, session=${harness.sessionStore.state.value.inventory}",
+                (harness.sessionStore.state.value.inventory["cryo_inductor"] ?: 0) >= 1)
 
             // Navigate to workshop yard and encounter faulted loader
             navigateLegalPath("workshop_yard")
-            performAction("w1_mq01_inspect_loader_relay")
+            assertFalse("Mira must not appear while the faulted loader is active",
+                "mechanic_mira" in harness.explorationVm.uiState.value.npcs)
+            if (inspectLoader) performAction("w1_mq01_inspect_loader_relay")
             harness.playPublicEncounter("faulted_loader")
+            assertTrue("Mira becomes available after the loader is cleared",
+                "mechanic_mira" in harness.explorationVm.uiState.value.npcs)
 
             // Enter workshop floor and craft the functional cryo-inductor via production CraftingService
             navigateLegalPath("workshop_floor")
@@ -783,10 +909,19 @@ class LegalRouteCampaignRunnerTest {
 
         }
 
-        private fun playWorld1AfterCheckpoint() {
+        private fun playWorld1AfterCheckpoint(wardenBeforeJed: Boolean = false, completionist: Boolean = false) {
             // Navigate through checkpoint gate to Admin Lobby
             navigateLegalPath("admin_lobby")
             talkToNpc("Foreman Boggs")
+            if (completionist) {
+                navigateLegalPath("server_hub")
+                performAction("start_hack_sq04")
+                performAction("w1_sq04_thaw_console")
+                performAction("w1_sq04_read_ports")
+                performAction("start_hack_sq04")
+                finishDialogue("board")
+                assertTrue("w1_sq04" in harness.sessionStore.state.value.completedQuests)
+            }
             navigateLegalPath("admin_security")
             harness.playPublicEncounter("acoustic_bulwark")
             navigateLegalPath("admin_lobby")
@@ -798,6 +933,17 @@ class LegalRouteCampaignRunnerTest {
             harness.playPublicEncounter("echo_borer")
             navigateLegalPath("mine_junction")
             performAction("evt_mine_power_on")
+            if (completionist) {
+                navigateLegalPath("mine_shunt")
+                performAction("read_datapad_sq05")
+                assertTrue("w1_sq05" in harness.sessionStore.state.value.completedQuests)
+                navigateLegalPath("mine_junction")
+                performAction("w1_cart_track_diverted")
+                performAction("w1_cart_release")
+                navigateLegalPath("mine_sealed_munitions_vault")
+                harness.explorationVm.collectAllGroundItems()
+                harness.settle()
+            }
 
             // Traverse powered mine rooms to Echo Gap and claim Relic
             navigateLegalPath("echo_gap")
@@ -822,6 +968,15 @@ class LegalRouteCampaignRunnerTest {
             navigateLegalPath("launch_lift")
             harness.restAtVisibleStop()
             harness.playPublicEncounter("acoustic_bulwark")
+            if (wardenBeforeJed) {
+                navigateLegalPath("launch_checkpoint")
+                harness.explorationVm.collectAllGroundItems()
+                harness.settle()
+                harness.playPublicEncounter("dominion_dampener")
+                navigateLegalPath("launch_bay")
+                harness.playPublicEncounter("the_iron_warden")
+                navigateLegalPath("launch_lift")
+            }
             talkToNpc("Jed")
             assertTrue("w1_mq04 completed", harness.sessionStore.state.value.completedQuests.contains("w1_mq04"))
             assertTrue("w1_mq05 active", harness.sessionStore.state.value.activeQuests.contains("w1_mq05"))
@@ -831,12 +986,21 @@ class LegalRouteCampaignRunnerTest {
             navigateLegalPath("launch_checkpoint")
             harness.explorationVm.collectAllGroundItems()
             harness.settle()
-            harness.playPublicEncounter("dominion_dampener")
+            if (!wardenBeforeJed) harness.playPublicEncounter("dominion_dampener")
             navigateLegalPath("launch_bay")
-            talkToNpc("The Warden")
-            harness.playPublicEncounter("the_iron_warden")
+            if (!wardenBeforeJed) {
+                talkToNpc("The Warden")
+                harness.playPublicEncounter("the_iron_warden")
+            }
+            assertTrue("A real Warden victory must be credited even if it preceded Jed's handoff",
+                "ms_w1_warden_defeated" in harness.sessionStore.state.value.completedMilestones)
             talkToNpc("Zeke")
             navigateLegalPath("launch_pod")
+            assertFalse("The rail is a launch sequence, not a walkable pre-launch exit",
+                "north" in harness.explorationVm.uiState.value.availableConnections)
+            harness.explorationVm.travel("north")
+            harness.settle()
+            assertEquals("launch_pod", harness.sessionStore.state.value.roomId)
             talkToNpc("Zeke")
             performAction("use_nav_console")
 
@@ -1143,6 +1307,14 @@ class LegalRouteCampaignRunnerTest {
 
         fun playWorld6() {
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w6_mq26"))
+            if (useProductionCrewRules) {
+                // Spend earned late-game AP through the public tree before the Source fights.
+                // The historical route's two-node build is not a crew campaign allocation.
+                val nova = com.example.starborn.domain.leveling.NovaBuildPrototype
+                listOf(nova.GROUNDED, nova.VENT, nova.BREAKER, nova.SEAM).forEach {
+                    harness.learnAtVisibleSkillTree("nova", it)
+                }
+            }
             harness.explorationVm.useInventoryItem("orbital_glimmer_tonic")
             harness.settle()
             harness.restAtVisibleStop()
@@ -1257,14 +1429,14 @@ class LegalRouteCampaignRunnerTest {
                 worldId = "world_1",
                 hubId = "hub_1_homestead",
                 roomId = "pit_nova_bunk",
-                progressionPrototypeVersion = if (prototypeBranch != null) 1 else 0,
+                progressionPrototypeVersion = if (prototypeBranch != null || useProductionCrewRules) 1 else 0,
                 playerId = "nova",
                 partyMembers = listOf("nova"),
                 unlockedSkills = setOf("nova_arc_tether"),
                 activeQuests = setOf("w1_mq01"),
                 trackedQuestId = "w1_mq01",
                 questStageById = mapOf("w1_mq01" to "wake_in_the_pit"),
-                inventory = mapOf("cryo_inductor" to 1, "scrap_metal" to 2)
+                inventory = if (useProductionCrewRules) emptyMap() else mapOf("cryo_inductor" to 1, "scrap_metal" to 2)
             ))
         }
 
@@ -1272,6 +1444,9 @@ class LegalRouteCampaignRunnerTest {
             loadItems()
             restore(sessionStore.state.value.inventory)
         }
+        // Match player-session publication; historical prepared fixtures keep their original wiring.
+        private val productionInventoryBridge = if (useProductionCrewRules)
+            com.example.starborn.domain.session.SessionInventoryBridge(sessionStore, inventoryService) else null
         val craftingService = CraftingService(craftingDataSource, inventoryService, sessionStore)
         val levelingData = requireNotNull(worldDataSource.loadLevelingData())
         val levelingManager = LevelingManager(levelingData)
@@ -1375,7 +1550,7 @@ class LegalRouteCampaignRunnerTest {
             }
             if (recordSystemsAudit) systemsAudit.capture(explorationVm, sessionStore, inventoryService, craftingService, assistance.size, coroutineScope)
         }
-        fun close() = Unit
+        fun close() { productionInventoryBridge?.close() }
 
         fun saveSlot(slot: Int): GameSessionState = runBlocking {
             persistence.writeSlot(slot, sessionStore.state.value)
@@ -1464,8 +1639,8 @@ class LegalRouteCampaignRunnerTest {
             settle()
             com.example.starborn.feature.shop.ShopController(shopId, shopRepository, itemRepository, inventoryService, sessionStore, coroutineScope).use { shop ->
                 val listing = shop.uiState.value.sellInventory.single { it.id == itemId }
-                val sold = if (prototypeBranch != null) minOf(quantity, listing.quantity) else quantity
-                assertTrue("Owned loot must be sellable", listing.canSell && listing.quantity >= sold)
+                val sold = if (prototypeBranch != null || useProductionCrewRules) minOf(quantity, listing.quantity) else quantity
+                assertTrue("Owned $itemId must be sellable (requested=$quantity, available=${listing.quantity})", listing.canSell && listing.quantity >= sold)
                 val credits = sessionStore.state.value.playerCredits
                 val owned = inventoryService.snapshot()[itemId] ?: 0
                 shop.sellItem(itemId, sold)
@@ -1561,7 +1736,7 @@ class LegalRouteCampaignRunnerTest {
                             it.quantity > 0 && (it.item.effect?.restoreHp ?: 0) > 0 &&
                                 it.item.type.equals("consumable", ignoreCase = true)
                         }.maxByOrNull { it.item.effect?.restoreHp ?: 0 }
-                        if (prototypeBranch != null && actor == "orion" && wounded != null) {
+                        if ((prototypeBranch != null || useProductionCrewRules) && actor == "orion" && wounded != null) {
                             val recovery = combat.skillsForPlayer(actor).firstOrNull {
                                 it.id in setOf("orion_field_treatment", "orion_stasis_stitch") && combat.canUseSkill(actor, it)
                             }
@@ -1582,7 +1757,7 @@ class LegalRouteCampaignRunnerTest {
                         }
                         val target = state.combatants.values.filter { it.combatant.side == com.example.starborn.domain.combat.CombatSide.ENEMY && it.isAlive }
                             .minBy { it.hp }.combatant.id
-                        if (prototypeBranch != null && actor == "nova") {
+                        if ((prototypeBranch != null || useProductionCrewRules) && actor == "nova") {
                             val preferred = if (livingEnemies.size > 1) "nova_scatter_charge" else "nova_breaker_bolt"
                             val move = combat.skillsForPlayer(actor).firstOrNull { it.id == preferred && combat.canUseSkill(actor, it) }
                             if (move != null) {

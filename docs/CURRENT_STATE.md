@@ -1,5 +1,9 @@
 # Starborn implementation snapshot
 
+October 19 World 1 update: [the World 1 review](testing/WORLD1_REVIEW_2026-10-19.md) records opening and escape fixes, early-Warden save recovery, all ten quests completed through a production controller route, 71 passing focused JVM tests and a successful debug APK build. Required certification makes the observed World 1 budget 8 AP. Human phone, audiovisual and broader encounter acceptance remain open.
+
+October 19 progression update: [crew production adoption](testing/CREW_PRODUCTION_ADOPTION_2026-10-19.md) supersedes the legacy-default and migration-pending statements below. The 32-node crew structure now integrates with normal New Game and legacy save migration. Campaign acceptance remains open: the continuous production route currently loses at World 6's memory-fragments encounter after exhausting healing supplies. Final human balance and physical-device acceptance also remain open. Historical test totals below do not certify this change.
+
 Date: October 14, 2026. Source review of the current working tree, which contains ongoing changes. This is not a release manifest, a claim of complete correctness, or a full device playthrough. Start with [the index](README.md).
 
 ## Baseline

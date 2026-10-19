@@ -117,7 +117,7 @@
       {
         "name": "thermal cooker",
         "type": "generic",
-        "condition_unmet_message": "The industrial cooker hums with lukewarm colony broth. Cook Rourke glares if anyone touches the regulator valve."
+      "condition_unmet_message": "The industrial cooker hums with lukewarm colony broth. Cook Vance keeps the regulator low. Use the Field Kit's cooking menu to prepare meals."
       },
       {
         "name": "ingredient hopper",
@@ -323,7 +323,7 @@
     "env": "mine",
     "title": "Nova's Bunk",
     "background_image": "images/rooms/world_1/pit_nova_bunk_v5.webp",
-    "description": "Your bunk is a narrow sleeping shelf in the colony wall. The bunk light hangs above cargo netting and a rusty locker holding your tools, a spare ration, and Jed's small metal carving. A door control panel sits beside the exit, its wiring scorched.",
+    "description": "Your bunk is a narrow sleeping shelf in the colony wall. The bunk light hangs above cargo netting holding your tools, a spare ration, and Jed's small metal carving. A rusty locker stands below it. A door control panel sits beside the exit, its wiring scorched.",
     "reveal_title_when_dark": true,
     "description_dark": "Darkness presses against the narrow sleeping shelf. Only the bunk light switch carries a faint emergency glow. Nova needs some light to find her way out.",
     "description_variants": [
@@ -332,7 +332,7 @@
           "light_on": true,
           "conduit_isolated": true
         },
-        "description": "The bunk light has settled back to a cheap yellow buzz over the narrow sleeping shelf. The damaged circuit is isolated and the door stands open to the west. The closed maintenance ticket remains where Dominion left it."
+        "description": "The bunk light has settled back to a cheap yellow buzz over the narrow sleeping shelf. Cargo netting and a rusty locker crowd the wall. The damaged circuit is isolated and the door stands open to the west. The closed maintenance ticket remains where Dominion left it."
       },
       {
         "requires_state": {
@@ -398,7 +398,20 @@
         "condition_unmet_message": "Turn on the bunk light to see the door controls."
       },
       {
-        "name": "sleeping shelf",
+      "name": "cargo netting",
+      "type": "generic",
+      "action_event": "w1_mq01_check_netting",
+      "show_when_state": "light_on",
+      "condition_unmet_message": "Jed's metal bird is tucked into the cargo netting with Nova's tools and spare ration."
+    },
+    {
+      "name": "rusty locker",
+      "type": "generic",
+      "show_when_state": "light_on",
+      "condition_unmet_message": "Rust gathers around the latch. Lifting the bottom corner keeps the door from scraping the floor."
+    },
+    {
+      "name": "sleeping shelf",
         "type": "rest_stop",
         "rest_event": "w1_rest_nova_bunk",
         "message": "Nova sleeps until the shift alarm. Resting here restores the party."
@@ -626,9 +639,9 @@
     "npc_presence": [
       {
         "npc": "mechanic_mira",
-        "requires_state": {
-          "loader_cleared": true
-        }
+      "requires_milestones": [
+        "ms_w1_mq01_loader_cleared"
+      ]
       }
     ]
   },
@@ -701,7 +714,7 @@
         "action_event": "w1_mq01_cutter_surge",
         "show_when_milestone": "ms_w1_mq01_cryo_repaired",
         "hide_when_state": "cutter_surge_complete",
-        "condition_unmet_message": "Cold loop 68%. Liner grounded. Governor bypass confirmed. Fire one sweep."
+      "condition_unmet_message": "Ground the Flux Liner and confirm the mining cutter bypass before firing a live test sweep."
       }
     ]
   },
@@ -3396,7 +3409,7 @@
       {
         "name": "cargo lift",
         "type": "rest_stop",
-        "message": "Nova takes cover behind the cargo lift hydraulics while Jed braces the manual override, dressing wounds and catching her breath before breaching the checkpoint."
+      "message": "Nova takes cover behind the cargo lift hydraulics, dressing her wounds and catching her breath before the checkpoint."
       }
     ],
     "blocked_directions": {
@@ -3556,8 +3569,7 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "launch_bay",
-      "north": "launch_rail"
+      "south": "launch_bay"
     },
     "pos": [
       0,

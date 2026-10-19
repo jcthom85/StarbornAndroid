@@ -24,9 +24,15 @@ Use document roles rather than one hierarchy for every question:
 
 ## Current work
 
-[The progression and ability plan](design/PROGRESSION_AND_ABILITY_PLAN.md) proposes a coordinated audit and redesign of ability contracts, character builds, AP pacing, effective stats and NG+ compatibility. The owner requested planning before replacing or disabling unfinished nodes. The linked source baseline is screening evidence; production changes under that plan are pending design review.
+October 19: [World 1 review](testing/WORLD1_REVIEW_2026-10-19.md) records opening/escape corrections, early-Warden recovery, all ten quests on a production controller route, 71 focused passing tests, build evidence and remaining human acceptance. World 1 is not yet signed off.
 
-[Build candidate 1](design/PROGRESSION_DESIGN_PACKET_CANDIDATE_1.md) supplies concrete character paths, effects, AP placements, purchase examples and migration proposals. It has checked costs/prerequisites but has not been implemented or balance-tested.
+October 19: [pre-World 1 readiness](testing/PRE_WORLD1_READINESS_2026-10-19.md) records the bounded Android progression smoke pass, copied legacy-save check, and remaining human acceptance before the World 1 review.
+
+October 19: the owner approved adopting the crew progression structure. [The production adoption record](testing/CREW_PRODUCTION_ADOPTION_2026-10-19.md) describes the coordinated New Game/save migration, legacy respec compensation, AP pacing checks and remaining human acceptance. Earlier prototype and design documents retain historical results; use the adoption record for current rollout status.
+
+[The progression and ability plan](design/PROGRESSION_AND_ABILITY_PLAN.md) records the audit and redesign proposal for ability contracts, character builds, AP pacing, effective stats and NG+ compatibility. The owner subsequently approved crew adoption; use the production adoption record above for implementation and acceptance status.
+
+[Build candidate 1](design/PROGRESSION_DESIGN_PACKET_CANDIDATE_1.md) records the proposed character paths, effects, AP placements, purchase examples and migration policy. The crew implementation and combat experiments now have separate evidence; this historical proposal does not establish final balance acceptance.
 
 [Documentation cleanup](DOCUMENTATION_CLEANUP.md) records completed edits, findings, verification, and remaining batches. [The inventory](DOCUMENTATION_INVENTORY.md) covers retained documents and explicitly distinguishes reviewed files from triage candidates.
 

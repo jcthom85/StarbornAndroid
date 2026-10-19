@@ -4,7 +4,7 @@ import com.example.starborn.domain.combat.*
 import com.example.starborn.domain.leveling.NovaBuildPrototype as Nova
 import com.example.starborn.domain.session.GameSessionState
 
-/** Guidance belongs to the executable prototype, never the legacy trees. */
+/** Guidance for crew progression; legacy trees do not use this onboarding. */
 object NovaProgressionTutorial {
     const val FIRST_AP = "tut_nova_first_ap_v1"
     const val GROUNDED = "tut_nova_grounded_combat_v1"

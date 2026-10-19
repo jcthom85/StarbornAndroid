@@ -147,7 +147,16 @@ class Hub1CriticalFlowTest {
         assertTrue(harness.autoStartedDialogueIds.contains("jed_w1_mq01_repair_done_1"))
 
         harness.store.setInventory(state.inventory + ("functional_cryo_inductor" to 1))
+        val starterLiners = harness.store.state.value.inventory["nova_flux_liner"].orZero()
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_cutter_surge"))
+        assertFalse("The live test must wait for both preparations", harness.store.state.value.completedQuests.contains("w1_mq01"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_patch_flux_liner"))
+        assertEquals("Patching repairs Jed's existing armor rather than creating a second suit", starterLiners,
+            harness.store.state.value.inventory["nova_flux_liner"].orZero())
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_patch_flux_liner"))
+        assertEquals(starterLiners, harness.store.state.value.inventory["nova_flux_liner"].orZero())
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_cutter_surge"))
+        assertFalse("Grounding alone must not bypass the governor confirmation", harness.store.state.value.completedQuests.contains("w1_mq01"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_confirm_governor"))
         assertFalse(harness.store.state.value.completedQuests.contains("w1_mq01"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_cutter_surge"))
@@ -166,6 +175,25 @@ class Hub1CriticalFlowTest {
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_shaft"))
         assertTrue(harness.tutorialRequests.contains("menu_save" to "Jed's Place"))
+    }
+
+    @Test
+    fun loaderVictoryResolvesTheDiagnosticObjectiveWithoutInventingAnInspection() {
+        val harness = Hub1Harness(initialState = openingState())
+        fun victory(enemy: String) = harness.events.handleTrigger("encounter_victory",
+            EventPayload.EncounterOutcome(enemyIds = listOf(enemy),
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY, roomId = "workshop_yard"))
+        victory("echo_borer")
+        assertFalse(harness.store.state.value.questTasksCompleted["w1_mq01"].orEmpty().contains("inspect_loader_relay"))
+        victory("faulted_loader")
+        val state = harness.store.state.value
+        assertTrue(state.questTasksCompleted["w1_mq01"].orEmpty().containsAll(listOf("inspect_loader_relay", "clear_faulted_loader")))
+        assertTrue(state.completedMilestones.contains("ms_w1_mq01_loader_cleared"))
+        assertFalse("A victory does not prove the player read the strip", state.completedMilestones.contains("ms_w1_mq01_loader_inspected"))
+        harness.store.setMilestone("ms_w1_mq01_safety_fault_inspected")
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_inspect_loader_relay"))
+        assertTrue("The strip remains available for optional reading after victory",
+            harness.store.state.value.completedMilestones.contains("ms_w1_mq01_loader_inspected"))
     }
 
     @Test

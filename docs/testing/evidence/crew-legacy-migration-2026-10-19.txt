@@ -1,0 +1,2 @@
+Historical copy: version=0; room=pit_nova_bunk; quests=1; AP=0; legacyCredit=0
+Migrated: version=1; AP=4; claims=[recruit:orion, recruit:gh0st]; repeated load preserved AP

@@ -24,8 +24,8 @@ android {
         applicationId = "com.junewiregames.starborn.prealpha"
         minSdk = 26
         targetSdk = 36
-        versionCode = 175
-        versionName = "1.3.91"
+        versionCode = 176
+        versionName = "1.3.92"
 
         // Scenario browser disabled for release/Play builds; enabled in debug builds.
         buildConfigField("boolean", "ENABLE_SCENARIO_MENU", "false")
@@ -155,6 +155,11 @@ dependencies {
 
 tasks.withType<Test>().configureEach {
     inputs.files(fileTree("src/main/assets") { include("*.json") })
+    // Changed experiment parameters must execute fresh fights, not reuse a cached report.
+    listOf("CREW_BALANCE_SEEDS", "CREW_BALANCE_TEMPO", "CREW_BALANCE_TARGETED",
+        "CREW_BALANCE_COVER_POLICY", "CREW_BALANCE_REPORT").forEach { name ->
+        inputs.property(name, providers.environmentVariable(name).orElse(""))
+    }
     val isolatedHome = layout.buildDirectory.dir("test-home")
     val isolatedTmp = layout.buildDirectory.dir("test-tmp")
     systemProperty("user.home", isolatedHome.get().asFile.absolutePath)

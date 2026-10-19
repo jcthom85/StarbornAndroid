@@ -36,6 +36,47 @@ import java.io.File
 class NovaTutorialInstrumentedTest {
     @get:Rule val compose = createComposeRule()
 
+    @Test fun serializedLegacySlotMigratesThroughAndroidServicesWithoutRepeatCredit() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val base = ApplicationProvider.getApplicationContext<Context>()
+        val context = IsolatedProgressionContext(base)
+        val old = com.example.starborn.domain.session.GameSessionState(
+            worldId = "world_1", hubId = "hub_1_homestead", roomId = "workshop_floor",
+            playerId = "nova", partyMembers = listOf("nova"), playerAp = 5, playerCredits = 123,
+            unlockedSkills = setOf("nova_light_fingers", "nova_smoke_bomb"),
+            completedQuests = setOf("w1_mq01"),
+            inventory = mapOf("medkit" to 3, "mining_pistol" to 1, "nova_flux_liner" to 1),
+            unlockedWeapons = setOf("mining_pistol"), equippedWeapons = mapOf("nova" to "mining_pistol"),
+            unlockedArmors = setOf("nova_flux_liner"), equippedArmors = mapOf("nova" to "nova_flux_liner"))
+        val disk = com.example.starborn.domain.session.GameSessionPersistence(File(context.filesDir, "datastore"))
+        runBlocking { disk.persist(old); disk.writeSlot(3, old) }
+        lateinit var services: AppServices
+        instrumentation.runOnMainSync { services = AppServices(context) }
+        try {
+            compose.waitUntil(15000) { services.sessionStore.state.value.progressionPrototypeVersion == Nova.VERSION }
+            runBlocking(kotlinx.coroutines.Dispatchers.Main) { assertTrue(services.loadSlot(3)) }
+            val migrated = services.sessionStore.state.value
+            assertEquals(11, migrated.playerAp) // 5 unused + 4 legacy credit + 2 proven quest AP.
+            // Existing Android gear migration moves owned equipment out of the consumable bag.
+            assertEquals(mapOf("medkit" to 3), migrated.inventory)
+            assertTrue("mining_pistol" in migrated.unlockedWeapons)
+            assertTrue("nova_flux_liner" in migrated.unlockedArmors)
+            assertEquals(old.equippedWeapons, migrated.equippedWeapons)
+            assertEquals(old.equippedArmors, migrated.equippedArmors)
+            assertEquals(old.playerCredits, migrated.playerCredits)
+            assertTrue("nova_smoke_bomb" in migrated.unlockedSkills)
+            assertFalse("nova_light_fingers" in migrated.unlockedSkills)
+            assertTrue("w1_mq01" in migrated.completedQuests)
+            runBlocking(kotlinx.coroutines.Dispatchers.Main) {
+                services.saveSlot(3)
+                assertTrue(services.loadSlot(3))
+            }
+            assertEquals(migrated.playerAp, services.sessionStore.state.value.playerAp)
+            assertEquals(migrated.progressionAwardClaims, services.sessionStore.state.value.progressionAwardClaims)
+            assertEquals(Nova.VERSION, requireNotNull(runBlocking { disk.readSlot(3) }).progressionPrototypeVersion)
+        } finally { instrumentation.runOnMainSync { services.release() } }
+    }
+
     @Test fun crewCheckpointSupportsEveryPhoneTreeAndRefundsOnlyItsOwner() {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val base = ApplicationProvider.getApplicationContext<Context>()
@@ -98,7 +139,8 @@ class NovaTutorialInstrumentedTest {
             runBlocking { kotlinx.coroutines.delay(1000) }
             runBlocking { services.userSettingsStore.setTutorialsEnabled(true) }
             instrumentation.runOnMainSync {
-                assertTrue(services.startDebugScenario(Nova.SCENARIO))
+                // Exercise the production default; completing the quest below is a boundary fixture.
+                assertTrue(services.startNewGame())
                 services.clearDebugBootstrap()
                 vm = ExplorationViewModelFactory(services).create(ExplorationViewModel::class.java)
             }
@@ -143,6 +185,15 @@ class NovaTutorialInstrumentedTest {
             assertEquals(1, services.sessionStore.state.value.playerAp)
             assertTrue(Guide.FIRST_AP in services.sessionStore.state.value.tutorialCompleted)
             compose.waitUntil(5000) { vm.uiState.value.skillTreeOverlay?.tutorialGuide == null }
+            val purchased = services.sessionStore.state.value
+            runBlocking(kotlinx.coroutines.Dispatchers.Main) {
+                services.saveSlot(3)
+                assertTrue(services.sessionStore.resetPrototypeBuild("nova"))
+                assertEquals(2, services.sessionStore.state.value.playerAp)
+                assertTrue(services.loadSlot(3))
+            }
+            assertEquals(purchased.purchasedSkillNodes, services.sessionStore.state.value.purchasedSkillNodes)
+            assertEquals(purchased.playerAp, services.sessionStore.state.value.playerAp)
         } finally {
             instrumentation.runOnMainSync { runCatching { vm.runtime.close() }; services.release() }
         }

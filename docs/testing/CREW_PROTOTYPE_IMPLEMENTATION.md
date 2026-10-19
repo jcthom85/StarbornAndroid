@@ -1,5 +1,7 @@
 # Full-crew progression prototype
 
+October 19 update: [production adoption](CREW_PRODUCTION_ADOPTION_2026-10-19.md) now coordinates the normal New Game and legacy save transition. This document retains the October 15 prototype scope and execution evidence; its migration-pending statements are historical.
+
 [Tempo tuning follow-up](CREW_TEMPO_TUNING_2026-10-15.md): two prototype encounter spikes now use lower enemy base Speed after paired and fresh-seed validation. Support abilities and AP contracts retain their earlier values.
 
 Follow-up: the [automated full-party comparison](CREW_BALANCE_PASS_2026-10-15.md) now covers sixteen seeds, nine encounters, equal-budget allocations, an unspent control and attrition sequences. It identifies difficulty spikes and policy-sensitive perk value; final balance remains open.

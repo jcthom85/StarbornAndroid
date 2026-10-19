@@ -83,6 +83,9 @@ class WorldAssetDataSource(
     fun loadProgressionData(): ProgressionData? = assetReader.readObject("progression.json")
 
     fun loadSkillTrees(prototypeVersion: Int = 0): List<SkillTreeDefinition> {
+        if (prototypeVersion == com.example.starborn.domain.leveling.CrewBuildPrototype.VERSION) {
+            return com.example.starborn.domain.leveling.CrewBuildPrototype.trees
+        }
         val files = assetReader.list(SKILL_TREE_DIR)
         if (files.isEmpty()) return emptyList()
         val trees = mutableListOf<SkillTreeDefinition>()
@@ -93,8 +96,7 @@ class WorldAssetDataSource(
                 trees += definition
             }
         }
-        return if (prototypeVersion == com.example.starborn.domain.leveling.NovaBuildPrototype.VERSION)
-            trees.filterNot { tree -> com.example.starborn.domain.leveling.CrewBuildPrototype.trees.any { it.character == tree.character } } + com.example.starborn.domain.leveling.CrewBuildPrototype.trees else trees
+        return trees
     }
 
     fun loadSkillNodes(prototypeVersion: Int = 0): Map<String, SkillTreeNode> =

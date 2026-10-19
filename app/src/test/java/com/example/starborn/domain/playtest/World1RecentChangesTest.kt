@@ -14,6 +14,25 @@ import com.squareup.moshi.Types
 
 /** Real authored events/dialogue and disk saves; presentation and reward delivery are headless. */
 class World1RecentChangesTest {
+    @Test fun recordedEarlyWardenVictorySurvivesDiskAndRecoversWithoutPayingAgain() {
+        val old = GameSessionState(worldId = "world_1", hubId = "hub_2_logistics", roomId = "launch_bay",
+            activeQuests = setOf("w1_mq05"), questStageById = mapOf("w1_mq05" to "defeat_warden"),
+            playerXp = 400, playerCredits = 225, playerAp = 8,
+            inventory = mapOf("ghost_signal_cell" to 1, "medkit" to 2),
+            roomStates = mapOf("launch_bay" to mapOf("encounter_cleared:the_iron_warden" to true)))
+        val recovered = diskRoundTrip(old).migrateOpeningNarrativeState()
+        val h = Harness(recovered)
+        h.events.handleTrigger("enter_room", EventPayload.EnterRoom("launch_bay"))
+        assertEquals("launch_pod", h.state.questStageById["w1_mq05"])
+        assertTrue("ms_w1_warden_defeated" in h.state.completedMilestones)
+        assertFalse("ms_w1_chime_spliced" in h.state.completedMilestones)
+        assertEquals(old.inventory, h.state.inventory)
+        assertEquals(old.playerXp, h.state.playerXp)
+        assertEquals(old.playerCredits, h.state.playerCredits)
+        assertEquals(old.playerAp, h.state.playerAp)
+        assertEquals(recovered, diskRoundTrip(recovered).migrateOpeningNarrativeState())
+    }
+
     @Test fun retiredRelayEventsCannotGrantRewards() {
         val assets = readAssets<GameEvent>("events.json")
         assertFalse(assets.any { it.id.startsWith("qpack_evt_relay_stage") ||

@@ -3,7 +3,7 @@ package com.example.starborn.domain.leveling
 import com.example.starborn.domain.model.*
 import com.example.starborn.domain.session.GameSessionState
 
-/** All four reviewed builds. Version 1 preserves existing Nova prototype saves. */
+/** Production crew builds. Version 1 preserves existing Nova/crew prototype saves. */
 object CrewBuildPrototype {
     const val VERSION = NovaBuildPrototype.VERSION
     const val SCENARIO = "crew_build_prototype"

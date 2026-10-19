@@ -153,7 +153,7 @@ class GameSessionStore {
         }
     }
 
-    /** Free test-session respec refunds only recorded purchases and never changes earned skill grants. */
+    /** Free crew respec refunds only recorded purchases and never changes earned skill grants. */
     fun resetPrototypeBuild(owner: String? = null): Boolean {
         val catalog = com.example.starborn.domain.leveling.CrewBuildPrototype
         while (true) {
@@ -161,8 +161,9 @@ class GameSessionStore {
             if (!catalog.isEnabled(before) || before.pendingBattleJson.isNotBlank()) return false
             val removed = before.purchasedSkillNodes.filter { (id, _) -> id in catalog.nodes && (owner == null || catalog.owners[id] == owner) }
             if (removed.isEmpty()) return false
-            val refund = removed.values.sumOf { it.coerceAtLeast(0) }
-            val refunded = before.copy(playerAp = before.playerAp + refund, purchasedSkillNodes = before.purchasedSkillNodes - removed.keys)
+            val refund = removed.values.sumOf { it.coerceAtLeast(0).toLong() }
+            val refunded = before.copy(playerAp = (before.playerAp.toLong() + refund).coerceAtMost(Int.MAX_VALUE.toLong()).toInt(),
+                purchasedSkillNodes = before.purchasedSkillNodes - removed.keys)
             val ceilings = restoredHpCeilings?.invoke(refunded).orEmpty()
             val after = refunded.copy(partyMemberHp = refunded.partyMemberHp.mapValues { (id, hp) -> ceilings[id]?.let { hp.coerceIn(0, it) } ?: hp })
             if (_state.compareAndSet(before, after)) return true
@@ -219,7 +220,7 @@ class GameSessionStore {
 
     fun addAp(amount: Int) {
         if (amount <= 0) return
-        _state.update { it.copy(playerAp = it.playerAp + amount) }
+        _state.update { it.copy(playerAp = (it.playerAp.toLong() + amount).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()) }
     }
 
     fun spendAp(amount: Int): Boolean {

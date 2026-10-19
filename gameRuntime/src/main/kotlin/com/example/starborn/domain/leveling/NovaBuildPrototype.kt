@@ -3,7 +3,7 @@ package com.example.starborn.domain.leveling
 import com.example.starborn.domain.model.*
 import com.example.starborn.domain.session.GameSessionState
 
-/** Opt-in test-session catalog. Normal campaigns continue to use their authored trees. */
+/** Nova's crew progression rules. Version 1 is retained for existing prototype saves. */
 object NovaBuildPrototype {
     const val VERSION = 1
     const val SCENARIO = "nova_build_prototype"
@@ -62,13 +62,13 @@ object NovaBuildPrototype {
     fun awardCompletedQuest(state: GameSessionState, questId: String): GameSessionState {
         val amount = questAwards[questId] ?: return state
         if (!isEnabled(state) || questId !in state.completedQuests || questId in state.progressionAwardClaims) return state
-        return state.copy(playerAp = state.playerAp + amount,
+        return state.copy(playerAp = (state.playerAp.toLong() + amount).coerceAtMost(Int.MAX_VALUE.toLong()).toInt(),
             progressionAwardClaims = state.progressionAwardClaims + questId)
     }
 
     fun awardRecruitment(state: GameSessionState, member: String): GameSessionState {
         val claim = "recruit:$member"
         if (!isEnabled(state) || member !in setOf("orion", "gh0st") || claim in state.progressionAwardClaims) return state
-        return state.copy(playerAp = state.playerAp + 2, progressionAwardClaims = state.progressionAwardClaims + claim)
+        return state.copy(playerAp = (state.playerAp.toLong() + 2).coerceAtMost(Int.MAX_VALUE.toLong()).toInt(), progressionAwardClaims = state.progressionAwardClaims + claim)
     }
 }

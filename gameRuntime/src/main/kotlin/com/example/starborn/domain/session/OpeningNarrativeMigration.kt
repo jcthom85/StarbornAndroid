@@ -37,6 +37,7 @@ fun GameSessionState.migrateOpeningNarrativeState(): GameSessionState {
     if ("pit_nova_bunk" in roomStates) migratedRoomStates["pit_nova_bunk"] = migratedBunkState
     val migratedInventory = inventory.toMutableMap()
     val migratedSkills = unlockedSkills.toMutableSet()
+    val migratedQuestStages = questStageById.toMutableMap()
 
     fun backfillMilestone(id: String) {
         if (migratedMilestones.add(id)) migratedHistory.add(id)
@@ -107,6 +108,22 @@ fun GameSessionState.migrateOpeningNarrativeState(): GameSessionState {
         }
     }
 
+    // A boss defeated before Jed's handoff used to disappear without quest credit.
+    // Recover physical evidence only, never XP, currency, drops or launch authorization.
+    val wardenDefeated = "ms_w1_warden_defeated" in migratedMilestones ||
+        migratedRoomStates["launch_bay"]?.get("warden_defeated") == true ||
+        migratedRoomStates["launch_bay"]?.get("encounter_cleared:the_iron_warden") == true
+    if (wardenDefeated) {
+        backfillMilestone("ms_w1_warden_defeated")
+        roomState("launch_bay", "warden_defeated")
+        roomState("launch_bay", "encounter_cleared:the_iron_warden")
+        if ("w1_mq05" in activeQuests && "w1_mq05" !in completedQuests) {
+            listOf("fight_through_launch_access", "reach_pod_bay", "survive_warden_intro",
+                "break_warden_guard", "defeat_the_warden").forEach { task("w1_mq05", it) }
+            migratedQuestStages["w1_mq05"] = "launch_pod"
+        }
+    }
+
     val bridgeInstalled = "ms_w2_bridge_installed" in migratedMilestones ||
         "w2_mq05" in completedQuests ||
         "reboot_bridge_relic" in migratedQuestTasks["w2_mq05"].orEmpty()
@@ -153,12 +170,16 @@ fun GameSessionState.migrateOpeningNarrativeState(): GameSessionState {
     }
 
     return copy(
+        // The old rail room described a flight that had never been launched. Keep its ID
+        // readable for compatibility, but resume those saves at the actual pod controls.
+        roomId = if (roomId == "launch_rail") "launch_pod" else roomId,
         completedEvents = if ("w1_mq05" in activeQuests && "w1_mq05" !in completedQuests &&
             "ms_w1_mq05_complete" !in migratedMilestones && "scene_launch_crash" !in pendingEventCinematics)
             completedEvents - "w1_mq05_use_nav_console" else completedEvents,
         completedMilestones = migratedMilestones,
         milestoneHistory = migratedHistory.distinct(),
         questTasksCompleted = migratedQuestTasks,
+        questStageById = migratedQuestStages,
         roomStates = migratedRoomStates,
         inventory = migratedInventory,
         unlockedSkills = migratedSkills

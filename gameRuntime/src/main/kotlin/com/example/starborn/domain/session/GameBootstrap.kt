@@ -54,6 +54,7 @@ object GameBootstrap {
         val (weapons, equippedWeapons) = startingWeapons(roster, items, debug)
         val (armors, equippedArmors) = startingArmors(roster, items, debug)
         return GameSessionState(worldId = "world_1", hubId = "hub_1_homestead", roomId = "pit_nova_bunk", playerId = playerId,
+            progressionPrototypeVersion = com.example.starborn.domain.leveling.CrewBuildPrototype.VERSION,
             playerLevel = player?.level ?: 1, playerXp = player?.xp ?: 0, partyMembers = party,
             partyMemberLevels = party.associateWith { player?.level ?: 1 }, partyMemberXp = party.associateWith { player?.xp ?: 0 },
             unlockedWeapons = weapons, unlockedArmors = armors, equippedWeapons = equippedWeapons, equippedArmors = equippedArmors,
@@ -61,20 +62,21 @@ object GameBootstrap {
     }
 
     fun newGamePlus(players: List<Player>, items: List<Item>, previous: GameSessionState): GameSessionState {
+        val retained = previous.migrateCrewProgressionState()
         val base = newGame(players, items)
-        val party = previous.partyMembers.ifEmpty { base.partyMembers }
+        val party = retained.partyMembers.ifEmpty { base.partyMembers }
         val (weapons, equippedWeapons) = startingWeapons(party, items, false)
         val (armors, equippedArmors) = startingArmors(party, items, false)
-        return base.copy(partyMembers = party, playerLevel = previous.playerLevel.coerceAtLeast(base.playerLevel), playerXp = previous.playerXp,
-            playerCredits = previous.playerCredits.coerceAtLeast(5000), inventory = previous.inventory,
-            unlockedSkills = previous.unlockedSkills, playerAp = previous.playerAp,
-            learnedSchematics = previous.learnedSchematics,
-            progressionPrototypeVersion = previous.progressionPrototypeVersion,
-            purchasedSkillNodes = previous.purchasedSkillNodes,
-            partyMemberLevels = previous.partyMemberLevels.ifEmpty { party.associateWith { base.playerLevel } },
-            partyMemberXp = previous.partyMemberXp.ifEmpty { party.associateWith { base.playerXp } },
-            unlockedWeapons = previous.unlockedWeapons + weapons, unlockedArmors = previous.unlockedArmors + armors,
-            equippedWeapons = previous.equippedWeapons.ifEmpty { equippedWeapons }, equippedArmors = previous.equippedArmors.ifEmpty { equippedArmors },
-            equippedItems = previous.equippedItems, completedMilestones = setOf("ms_master_protocol_active"))
+        return base.copy(partyMembers = party, playerLevel = retained.playerLevel.coerceAtLeast(base.playerLevel), playerXp = retained.playerXp,
+            playerCredits = retained.playerCredits.coerceAtLeast(5000), inventory = retained.inventory,
+            unlockedSkills = retained.unlockedSkills, playerAp = retained.playerAp,
+            learnedSchematics = retained.learnedSchematics,
+            progressionPrototypeVersion = retained.progressionPrototypeVersion,
+            purchasedSkillNodes = retained.purchasedSkillNodes,
+            partyMemberLevels = retained.partyMemberLevels.ifEmpty { party.associateWith { base.playerLevel } },
+            partyMemberXp = retained.partyMemberXp.ifEmpty { party.associateWith { base.playerXp } },
+            unlockedWeapons = retained.unlockedWeapons + weapons, unlockedArmors = retained.unlockedArmors + armors,
+            equippedWeapons = retained.equippedWeapons.ifEmpty { equippedWeapons }, equippedArmors = retained.equippedArmors.ifEmpty { equippedArmors },
+            equippedItems = retained.equippedItems, completedMilestones = setOf("ms_master_protocol_active"))
     }
 }

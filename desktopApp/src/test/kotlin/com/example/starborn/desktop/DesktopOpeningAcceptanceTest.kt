@@ -18,16 +18,23 @@ class DesktopOpeningAcceptanceTest {
 
     @Test @OptIn(ExperimentalTestApi::class) fun openingActionsDriveAuthoredProgressionAndPersistInventory() {
         val directory = Files.createTempDirectory("starborn-opening-").toFile()
-        val services = DesktopAppServices(directory)
+        val services = DesktopAppServices(directory, RecordingAudioDriver())
         try {
             assertTrue(services.startNewGame())
             assertTrue(services.sessionStore.state.value.inventory.isEmpty())
             assertFalse(services.sessionStore.state.value.equippedWeapons.containsKey("nova"))
+            // This is an interaction test, not real-time prologue playback. Prevent the software
+            // renderer from auto-advancing the full illustrated sequence before setContent returns.
+            compose.mainClock.autoAdvance = false
             compose.setContent { com.example.starborn.desktop.ui.DesktopStarbornTheme { DesktopExplorationScreen(services, {}, {}, {}, {}, {}, {}) } }
             compose.waitUntil(20_000) { !services.exploration.uiState.value.isLoading }
             clearPresentations(services)
+            compose.mainClock.autoAdvance = true
             compose.onNodeWithContentDescription("bunk light", useUnmergedTree = true).performClick()
             compose.waitUntil(5_000) { services.sessionStore.state.value.roomStates["pit_nova_bunk"]?.get("light_on") == true }
+            clearPresentations(services)
+            compose.onAllNodesWithContentDescription("cargo netting", useUnmergedTree = true)[0].performClick()
+            compose.waitUntil(5_000) { "ms_w1_mq01_netting_checked" in services.sessionStore.state.value.completedMilestones }
             clearPresentations(services)
             compose.onAllNodesWithContentDescription("door control panel", useUnmergedTree = true)[0].performClick()
             compose.waitUntil(5_000) { services.sessionStore.state.value.roomStates["pit_nova_bunk"]?.get("conduit_isolated") == true }
@@ -59,7 +66,8 @@ class DesktopOpeningAcceptanceTest {
                 val runtime = services.exploration
                 val state = runtime.uiState.value
                 when {
-                    state.cinematic != null -> runtime.advanceCinematic()
+                    state.cinematic != null -> runtime.skipCinematic()
+                    state.fadeOverlay != null -> runtime.onFadeOverlayFinished(state.fadeOverlay!!.id)
                     state.eventAnnouncement != null -> runtime.dismissEventAnnouncement()
                     state.narrationPrompt != null -> runtime.dismissNarration()
                     state.prompt != null -> runtime.dismissPrompt()

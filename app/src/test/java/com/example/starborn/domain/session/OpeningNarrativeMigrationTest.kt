@@ -6,6 +6,44 @@ import org.junit.Test
 
 class OpeningNarrativeMigrationTest {
     @Test
+    fun earlyWardenEvidenceRepairsOnlyPhysicalAndQuestProgressWithoutRewards() {
+        val old = GameSessionState(roomId = "launch_bay", activeQuests = setOf("w1_mq05"),
+            questStageById = mapOf("w1_mq05" to "defeat_warden"), playerXp = 77, playerCredits = 123,
+            playerAp = 8, inventory = mapOf("ghost_signal_cell" to 1, "medkit" to 2),
+            roomStates = mapOf("launch_bay" to mapOf("encounter_cleared:the_iron_warden" to true)))
+        val changed = old.migrateOpeningNarrativeState()
+        assertTrue("ms_w1_warden_defeated" in changed.completedMilestones)
+        assertTrue(changed.roomStates["launch_bay"]?.get("warden_defeated") == true)
+        assertTrue(changed.questStageById["w1_mq05"] == "launch_pod")
+        assertTrue("defeat_the_warden" in changed.questTasksCompleted["w1_mq05"].orEmpty())
+        assertTrue(changed.inventory == old.inventory && changed.playerXp == old.playerXp &&
+            changed.playerCredits == old.playerCredits && changed.playerAp == old.playerAp)
+        assertFalse("ms_w1_chime_spliced" in changed.completedMilestones)
+        assertFalse("w1_mq05" in changed.completedQuests)
+        assertTrue(changed == changed.migrateOpeningNarrativeState())
+        val unproven = old.copy(roomStates = mapOf("launch_bay" to mapOf("encounter_cleared:echo_borer" to true)))
+            .migrateOpeningNarrativeState()
+        assertFalse("ms_w1_warden_defeated" in unproven.completedMilestones)
+        assertTrue(unproven.questStageById["w1_mq05"] == "defeat_warden")
+        val beforeHandoff = old.copy(activeQuests = setOf("w1_mq04"), questStageById = emptyMap())
+            .migrateOpeningNarrativeState()
+        assertFalse("w1_mq05" in beforeHandoff.activeQuests)
+        assertTrue(beforeHandoff.questTasksCompleted["w1_mq05"].isNullOrEmpty())
+    }
+
+    @Test
+    fun legacyRailSaveResumesAtPodControlsWithoutStartingTheLaunch() {
+        val old = GameSessionState(worldId = "world_1", hubId = "hub_2_logistics", roomId = "launch_rail",
+            activeQuests = setOf("w1_mq05"), inventory = mapOf("ghost_signal_cell" to 1), playerAp = 8)
+        val changed = old.migrateOpeningNarrativeState()
+        assertTrue(changed.roomId == "launch_pod")
+        assertTrue(changed.inventory == old.inventory && changed.playerAp == old.playerAp)
+        assertFalse("w1_mq05" in changed.completedQuests)
+        assertFalse("ms_w1_chime_spliced" in changed.completedMilestones)
+        assertTrue(changed == changed.migrateOpeningNarrativeState())
+    }
+
+    @Test
     fun migratesDiscardedOpeningProgressToGroundedEquivalent() {
         val migrated = GameSessionState(
             completedMilestones = setOf(

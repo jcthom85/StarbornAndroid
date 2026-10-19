@@ -1,0 +1,2 @@
+Production crew; no seeded inventory/AP; real loader victory; first quest and every task complete; AP=2; one Flux Liner; save/reload; assisted actions=0.
+room=workshop_yard enemies=[faulted_loader] seed=17 damageEvents=2 xp=35 ap=0 credits=0 persistedHp={nova=120} knockedOut=[] usedItems={}

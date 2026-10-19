@@ -50,6 +50,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.delay
 import com.example.starborn.domain.session.SessionInventoryBridge
 import com.example.starborn.domain.session.migrateOpeningNarrativeState
+import com.example.starborn.domain.session.migrateCrewProgressionState
 import java.io.File
 
 /**
@@ -72,7 +73,13 @@ class DesktopAppServices(
     val worldDataSource = WorldAssetDataSource(assetReader)
     val characterDefinitions by lazy { worldDataSource.loadCharacters().associateBy { it.id } }
     val enemyDefinitions by lazy { worldDataSource.loadEnemies().associateBy { it.id } }
-    val skillDefinitions by lazy { worldDataSource.loadSkills().associateBy { it.id } }
+    private val baseSkillDefinitions by lazy { worldDataSource.loadSkills(0) }
+    val skillDefinitions: Map<String, com.example.starborn.domain.model.Skill> get() {
+        val state = sessionStore.state.value
+        val crew = com.example.starborn.domain.leveling.CrewBuildPrototype
+        return (baseSkillDefinitions + if (crew.isEnabled(state)) crew.skills else emptyList())
+            .map { crew.tune(it, state) }.associateBy { it.id }
+    }
     val roomDefinitions by lazy { worldDataSource.loadRooms().associateBy { it.id } }
     fun roomTitle(id: String): String = roomDefinitions[id]?.title ?: id
     val worldDefinitions by lazy { worldDataSource.loadWorlds().associateBy { it.id } }
@@ -288,7 +295,7 @@ class DesktopAppServices(
         val previous = completedGameForNewGamePlus() ?: return false
         if (!startNewGame()) return false
         val seed = com.example.starborn.domain.session.GameBootstrap.newGamePlus(worldDataSource.loadCharacters(), itemRepository.allItems().toList(), previous)
-        inventoryBridge.restore(seed.migrateOpeningNarrativeState())
+        inventoryBridge.restore(seed.migrateOpeningNarrativeState().migrateCrewProgressionState())
         sessionStore.resetTutorialProgress()
         sessionStore.resetQuestProgress()
         questRuntimeManager.resetAll()
@@ -299,6 +306,7 @@ class DesktopAppServices(
     }
 
     fun startNewGame(debugFullInventory: Boolean = false, novaPrototype: Boolean = java.lang.Boolean.getBoolean("starborn.novaPrototype")): Boolean {
+        // Keep the named argument for existing workbenches; all new games now use crew rules.
         sessionActive = false
         resetExploration()
         lastAutosaveAt = System.currentTimeMillis()
@@ -308,10 +316,9 @@ class DesktopAppServices(
 
         val players = runCatching { worldDataSource.loadCharacters() }.getOrNull().orEmpty()
         val seedState = com.example.starborn.domain.session.GameBootstrap.newGame(players, itemRepository.allItems().toList(), debugFullInventory)
-            .copy(progressionPrototypeVersion = if (novaPrototype) 1 else 0)
         val party = seedState.partyMembers
         val baseLevel = seedState.playerLevel
-        inventoryBridge.restore(seedState.migrateOpeningNarrativeState())
+        inventoryBridge.restore(seedState.migrateOpeningNarrativeState().migrateCrewProgressionState())
         sessionStore.resetTutorialProgress()
         sessionStore.resetQuestProgress()
         inventoryService.restore(emptyMap())
@@ -402,7 +409,7 @@ class DesktopAppServices(
             equippedWeapons = party.mapNotNull { id -> com.example.starborn.domain.session.GameBootstrap.defaultWeapons[id]?.let { id to it } }.toMap(),
             equippedArmors = party.mapNotNull { id -> com.example.starborn.domain.session.GameBootstrap.defaultArmors[id]?.let { id to it } }.toMap()
         )
-        inventoryBridge.restore(initialState.migrateOpeningNarrativeState())
+        inventoryBridge.restore(initialState.migrateOpeningNarrativeState().migrateCrewProgressionState())
         node?.let { sessionStore.visitNode(it.id) }
         inventoryService.restore(emptyMap())
         inventoryService.addItem("medkit", 5)

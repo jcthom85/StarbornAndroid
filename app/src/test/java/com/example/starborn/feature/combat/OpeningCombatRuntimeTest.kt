@@ -736,8 +736,9 @@ class OpeningCombatRuntimeTest {
             // Retain the opening quest's free armor in the defensive scenario.
             // Assert its authored source rather than charging its shop replacement price.
             val armorReward = reader.readList<com.example.starborn.domain.model.GameEvent>("events.json")
-                .single { it.id == "w1_mq01_patch_flux_liner" }.actions
-                .single { it.type == "give_item" && it.itemId == "nova_flux_liner" }
+                .single { it.id == "w1_mq01_receive_starter_kit" }.actions
+                .single { it.type == "give_reward" }.rewardItems.orEmpty()
+                .single { it.itemId == "nova_flux_liner" }
             assertEquals(1, armorReward.quantity)
             // 1,070 is a scripted battle-credit baseline, assuming no prior spending.
             // Purchased weapons cost 456 (defensive) or 432 + 456 (offensive).
