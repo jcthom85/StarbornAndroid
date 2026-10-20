@@ -1,5 +1,7 @@
 package com.example.starborn.feature.exploration.ui
 
+import com.example.starborn.shared.ui.typewriterText
+
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -218,7 +220,7 @@ fun DialogueOverlay(
                             textAlign = TextAlign.Left
                         )
                         Text(
-                            text = displayedText,
+                            text = typewriterText(fullText, displayedText.length),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface,
                             textAlign = TextAlign.Left

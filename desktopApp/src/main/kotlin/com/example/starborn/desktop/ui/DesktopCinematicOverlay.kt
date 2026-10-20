@@ -1,5 +1,7 @@
 package com.example.starborn.desktop.ui
 
+import com.example.starborn.shared.ui.typewriterText
+
 import androidx.compose.animation.core.*
 import androidx.compose.animation.core.Animatable as CoreAnimatable
 import androidx.compose.foundation.*
@@ -74,7 +76,7 @@ fun DesktopCinematicOverlay(state: CinematicUiState, services: DesktopAppService
                 Surface(Modifier.padding(32.dp).widthIn(max = 960.dp).fillMaxWidth(), color = Color(0xF007111A), shape = RoundedCornerShape(16.dp)) {
                     Column(Modifier.padding(24.dp)) {
                         state.step.speaker?.let { Text(it, color = Color(0xFF7BE8FF)) }
-                        Text(text.take(revealed), color = Color.White)
+                        Text(typewriterText(text, revealed), color = Color.White)
                         Row { TextButton(onClick = advanceOrReveal) { Text("Continue") }; if (state.skippable) TextButton(onClick = onSkip) { Text("Skip") } }
                     }
                 }
@@ -938,7 +940,7 @@ private fun CinematicNarrationCard(
                             .clearAndSetSemantics { }
                     )
                     Text(
-                        text = displayedText,
+                        text = typewriterText(fullText, displayedText.length),
                         color = Color.White.copy(alpha = 0.92f),
                         style = narrationStyle,
                         modifier = Modifier.fillMaxWidth()

@@ -153,7 +153,6 @@ private fun DesktopNarrativeArea(services: DesktopAppServices, ui: ExplorationUi
                             DesktopRoomHeading(if (isDark && ui.currentRoom?.revealTitleWhenDark != true) "Dark room" else ui.currentRoom?.title ?: "Loading?",
                                 if (settings.highContrastMode) Color.White else accent, compact)
                         }
-                        TextButton(onClick = runtime::openRoomActions, enabled = !blocked) { Text("Actions") }
                     }
                     DesktopExplorationScrollPane(bodyScroll, Modifier.weight(1f, fill = false).fillMaxWidth()) {
                     RoomDescription(plan, description, isDark, Color(0xFFF0F3F5),

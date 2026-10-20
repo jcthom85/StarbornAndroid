@@ -1,5 +1,7 @@
 package com.example.starborn.feature.exploration.ui
 
+import com.example.starborn.shared.ui.typewriterText
+
 import com.example.starborn.ui.map.*
 import com.example.starborn.ui.vfx.AndroidRoomEnvironmentalEffects
 import com.example.starborn.ui.vfx.rememberEnvironmentalSettings
@@ -1010,9 +1012,6 @@ fun ExplorationScreen(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                        TextButton(onClick = viewModel::openRoomActions) { Text("Actions") }
-                    }
                     RoomDescriptionPanel(
                         currentRoom = currentRoom,
                         description = descriptionForPanel,
@@ -7652,7 +7651,7 @@ private fun CinematicNarrationCard(
                             .clearAndSetSemantics { }
                     )
                     Text(
-                        text = displayedText,
+                        text = typewriterText(fullText, displayedText.length),
                         color = Color.White.copy(alpha = 0.92f),
                         style = narrationStyle,
                         modifier = Modifier.fillMaxWidth()
