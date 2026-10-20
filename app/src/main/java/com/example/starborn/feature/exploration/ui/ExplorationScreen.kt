@@ -1259,7 +1259,8 @@ fun ExplorationScreen(
             val trackedQuest = uiState.questLogActive.firstOrNull { it.id == uiState.trackedQuestId }
             MenuOverlay(
                 selectedTab = uiState.menuTab,
-                onOpenWalkthrough = if (com.example.starborn.BuildConfig.DEBUG || com.example.starborn.BuildConfig.ENABLE_SCENARIO_MENU) ({ walkthroughVisible = true }) else null,
+                // Bundled guides remain available in normal release builds, independently of debug tools.
+                onOpenWalkthrough = { walkthroughVisible = true },
                 isTinkeringTutorialActive = uiState.isTinkeringTutorialActive,
                 isGearTutorialActive = uiState.isGearTutorialActive,
                 onSelectTab = { viewModel.selectMenuTab(it) },

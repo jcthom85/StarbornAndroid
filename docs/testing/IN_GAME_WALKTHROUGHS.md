@@ -1,9 +1,9 @@
 # In-game playtest walkthroughs
 
-In the internal tester release (built with `-PenablePlaytestScenarios=true`),
-open **Exploration -> Menu -> Playtest walkthrough**. The entry appears in
-both modern and classic field menus. The regular public release hides this
-tester entry.
+Starting with Android **1.3.94 (178)**, open **Exploration -> Menu -> Settings ->
+Testing & Diagnostics -> Playtest walkthrough**. The reader is available in
+normal release builds through both modern and classic field menus. It does not
+require `-PenablePlaytestScenarios=true` and does not enable debug/scenario tools.
 
 ## Using the reader
 
