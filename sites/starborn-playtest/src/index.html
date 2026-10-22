@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10191e">
+  <meta name="description" content="Starborn World 1 and World 2 playtest walkthroughs with search and saved progress.">
+  <title>Starborn · Playtest companion</title>
+  <style>/* GUIDE_STYLES */</style>
+</head>
+<body>
+  <a class="skip" href="#reader">Skip to guide</a>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Starborn guide home"><img class="brand-logo" src="/* GUIDE_LOGO */" alt="Starborn" width="1536" height="1024"><small>PLAYTEST COMPANION</small></a>
+    <div class="worlds" role="group" aria-label="Choose world"><button data-world="1">World 1</button><button data-world="2">World 2</button></div>
+    <button id="theme" class="quiet" aria-label="Switch color theme">Light mode</button>
+  </header>
+  <div class="layout">
+    <aside>
+      <div class="sidebar-top"><p class="eyebrow">FIELD GUIDE / <span id="world-label"></span></p><h1>Your next move.</h1><p class="muted">Every route. Every side quest.<br>A little less getting lost.</p></div>
+      <label class="search-label" for="search">Search both worlds</label>
+      <div class="search-wrap"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Room, quest, item…" autocomplete="off"><kbd>/</kbd></div>
+      <details id="contents" open><summary>Guide contents</summary><nav id="chapters" aria-label="Guide chapters"></nav></details>
+      <div class="sidebar-footer"><span class="signal" aria-hidden="true"></span><span id="offline">Preparing offline access…</span><p>Full spoilers · Source review: Oct 21, 2026<br>Game version 1.3.94 (178)</p></div>
+    </aside>
+    <main id="reader" tabindex="-1">
+      <div class="reading-meta"><span id="chapter-label" class="eyebrow"></span><span id="saved-status" role="status">Progress stays in this browser</span></div>
+      <div id="progress-panel"><div class="progress-info"><span id="progress-text"></span><button id="reset" class="text-button">Reset world progress</button></div><progress id="progress" value="0" max="1" aria-label="World completion"></progress></div>
+      <div id="search-results" hidden><h2>Search results</h2><p id="result-count" class="muted" role="status"></p><div id="results"></div><button id="close-search">Back to guide</button></div>
+      <article id="article"></article>
+      <nav class="page-nav" aria-label="Chapter navigation"><button id="previous">← Previous</button><span id="page-number"></span><button id="next">Next chapter →</button></nav>
+      <footer class="reader-footer">Check steps as you go. Your reading position and checkmarks are saved on this browser.<br>Progress is separate from your game save and other devices.</footer>
+    </main>
+  </div>
+  <noscript>This companion needs JavaScript enabled to display the guides and save progress.</noscript>
+  <script>/* GUIDE_DATA */
+/* GUIDE_APP */</script>
+</body>
+</html>

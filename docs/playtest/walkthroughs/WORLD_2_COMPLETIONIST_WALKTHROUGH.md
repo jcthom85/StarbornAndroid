@@ -1,6 +1,6 @@
 # World 2: Complete Step-by-Step Walkthrough
 
-Reviewed October 2, 2026 against version 1.3.84 (168). Full spoilers. Exact route, all five main quests, all five side quests, every node room, puzzle solutions, recovery instructions and optional content. Repository verified; device playtesting remains necessary.
+Source-reviewed October 21, 2026 against version 1.3.94 (178). Full spoilers. Exact route, all five main quests, all five side quests, every node room, puzzle solutions, recovery instructions and optional content. Repository verified; device playtesting remains necessary.
 
 
 ## 1. How to use this guide
@@ -22,13 +22,19 @@ Start at the World 1 crash transition, or a save at Crash Site with A Strange Co
 **Check before moving on:** You have a starting save, know your rolling slot, and are at Crash Site with the opening quest active.
 
 
+### AP, builds and healing
+
+AP is shared across crew purchases. Review each character's Party skill-tree controls at recruitment and before major fights. Core story/level abilities are separate from paid upgrades. In this world, recruiting Orion and Gh0st awards 2 AP each, Botanist awards 2 AP, and Liftoff awards 4 AP. These are earned awards, not a target for unspent AP: your purchases and earlier save history affect the balance shown. Reset build refunds the selected character's recorded purchases for free outside pending battles; it does not reset other crew builds. Fourth nodes remain locked until World 4 completion.
+
+Orion brings Field Patch when recruited: heal one living ally and add Shield for one turn, with a cooldown of three personal turns. No AP purchase or level-6 unlock is needed for Field Patch. Field Treatment is a separate purchased heal; inspect its actual requirements and description if choosing that path. After Anchor Drill, Nova's Link restores party HP and applies Regen. Keep supplies for emergencies, use rest stops between stretches, and record AP allocation and ability use when evaluating the Beast or later resource pressure.
+
 ## 2. Crash Site: Zeke, the Chime and emergency supplies
 
 Main quest: A Strange Coast. The emergency medkit action is inside Escape Pod Interior. Botanist becomes available only after this main quest completes.
 
 7. At **Crash Site**, talk to **Zeke** and finish the crash conversation. Its last line credits Check on Zeke and establishes his party membership. Read the navigation-pair explanation before inspecting the console.
 
-8. At **Crash Site**, inspect **navigation console**. Recover Chime (`ghost_signal_cell`), Medkit, Ration Pack, Wooden Rod and Basic Lure. This ordinary campaign kit enables later fishing.
+8. At **Crash Site**, inspect **navigation console**. Recover Chime (`ghost_signal_cell`), Medkit, Ration Pack, Field Rod and Plain Chime Lure. This ordinary campaign kit enables later fishing.
 
 9. From **Crash Site**, go **north** to **Escape Pod Interior** (`sector9_pod_interior`).
 
@@ -142,7 +148,7 @@ Botanist weeds are at actual Tide Pools. The prism grants Bioluminescent Focus, 
 
 57. At **Tide Pools**, use **scan weeds** for Botanist; read **pools** and **luminescent anemones**. Leave **gather tideglass** until Orion gives its quest.
 
-58. At **Tide Pools**, use **tide fishing**, set up the Wooden Rod and Basic Lure as its interface requires, and complete a catch. Follow fight feedback: ease reeling when strain rises, then resume when the fish settles. Confirm catch inventory and journal discovery. The vault lure is an optional upgrade.
+58. At **Tide Pools**, use **tide fishing**, set up the Field Rod and Plain Chime Lure as its interface requires, and complete a catch. Follow fight feedback: ease reeling when strain rises, then resume when the fish settles. Confirm catch inventory and journal discovery. The vault lure is an optional upgrade.
 
 59. At **Tide Pools**, return for missing native species if pursuing the whole fishing journal. Follow the displayed journal milestones and claim its actual rewards. Random species are not guaranteed on a particular cast or required for World 2 main-quest completion.
 
@@ -160,7 +166,7 @@ Botanist weeds are at actual Tide Pools. The prism grants Bioluminescent Focus, 
 
 66. From **Sea Cavern**, go **north** to **Sunken Obelisk** (`sector9_beach_pillar`).
 
-67. At **Sunken Obelisk**, read **resonant pillar**, then return south to Sea Cavern.
+67. At **Sunken Obelisk**, read **resonant pillar**.
 
 68. From **Sunken Obelisk**, go **south** to **Sea Cavern** (`sector9_beach_cave`) -> **east** to **Hidden Grotto** (`sector9_beach_grotto`).
 
@@ -280,7 +286,7 @@ Visit temple wings now for coverage, then return after accepting Ancient Echoes 
 
 119. From **Stone Courtyard**, go **north** to **Outer Guard Post** (`sector9_temple_vestibule`).
 
-120. At **Outer Guard Post**, read **sanitation console**; return south.
+120. At **Outer Guard Post**, read **sanitation console**.
 
 121. From **Outer Guard Post**, go **south** to **Stone Courtyard** (`sector9_temple_plaza`) -> **east** to **Resonator Chamber** (`sector9_temple_lock_chamber`).
 
@@ -309,7 +315,7 @@ Waking the pod, talking to Orion and recovering the separate Bridge are three di
 
 130. From **Hall of Echoes**, go **south** to **Stasis Chamber** (`sector9_stasis_chamber`).
 
-131. At **Stasis Chamber**, inspect **stasis pod** for the pressure-shell clue and **root lattice** for Botanist's fifth scan. Talk to **Zeke** until his completion line awards **100 event XP + Painkillers x2**. Scanning five alone is not the turn-in.
+131. At **Stasis Chamber**, inspect **stasis pod** for the pressure-shell clue and **root lattice** for Botanist's fifth scan. Talk to **Zeke** until his completion line awards **100 event XP + Neural Stabilizer x2**. Scanning five alone is not the turn-in.
 
 132. From **Stasis Chamber**, go **east** to **Ring Array** (`sector9_stasis_ring_array`).
 
@@ -337,11 +343,11 @@ Waking the pod, talking to Orion and recovering the separate Bridge are three di
 
 144. At **Stasis Chamber**, talk to **Orion**, finishing the whole awakening exchange and Nova/Zeke responses. His final invitation recruits him, credits Talk to Orion and reveals **sealed Bridge cradle**.
 
-145. At **Stasis Chamber**, open **sealed Bridge cradle**. Receive **Bridge Echo** (`bridge_relic`); Sleeping Giant completes for **250 event XP** and The Hunter starts. Check inventory.
+145. At **Stasis Chamber**, open **sealed Bridge cradle**. Receive **The Bridge** (`bridge_relic`); Sleeping Giant completes for **250 event XP** and The Hunter starts. Check inventory.
 
 146. At **Stasis Chamber**, talk to **Orion** again and accept **Tideglass Day** with **Let's go.** Repeat and accept **Ancient Echoes** with **I can help with that.** Both require MQ03 complete; finish any higher-priority conversation first.
 
-147. Save here. Confirm Orion in the party, Bridge in inventory, Botanist complete, and both Orion side quests active. This is a useful checkpoint before optional sweeps and Beast.
+147. Save here. Confirm Orion in the party, Bridge in inventory, Botanist complete, and both Orion side quests active. Review Orion's **Field Patch**: a core single-ally heal with a one-turn Shield, a three-personal-turn cooldown and no resurrection. It is available after recruitment without an AP purchase. Inspect affordable crew upgrades and record your allocation before optional sweeps and Beast.
 
 **Check before moving on:** Orion awake AND recruited; separate Bridge recovered; MQ03 complete; Hunter active; Botanist complete; Tideglass Day and Ancient Echoes accepted.
 
@@ -400,7 +406,7 @@ West/east crystals are outside Sanctuary in the Temple tuner wings; north is Aco
 
 172. From **Access Shaft**, go **south** to **T-Junction Wiring** (`sector9_conduit_junction`) -> **west** to **Maintenance Conduit** (`sector9_conduit_crawlspace`) -> **west** to **Hangar Portal** (`sector9_foyer_vault_door`) -> **west** to **Right Archives** (`sector9_foyer_right_gallery`) -> **north** to **Sanctuary Grand Hall** (`sector9_foyer_grand_hall`) -> **west** to **Temple Gate** (`sector9_temple_gate`) -> **west** to **Resonator Chamber** (`sector9_temple_lock_chamber`) -> **north** to **Left Tuner Column** (`sector9_temple_left_wing`).
 
-173. At **Left Tuner Column**, use **western resonance crystal** to credit west; return south to Resonator Chamber.
+173. At **Left Tuner Column**, use **western resonance crystal** to credit west.
 
 174. From **Left Tuner Column**, go **south** to **Resonator Chamber** (`sector9_temple_lock_chamber`) -> **south** to **Right Tuner Column** (`sector9_temple_right_wing`).
 
@@ -441,7 +447,7 @@ This quest uses Tinkering, not Cooking. Re-enter actual Tide Pools after accepti
 
 189. At **Tide Pools**, open **Menu -> Tinkering**, learn Source Resin through Found schematics or use its blueprint in Items. Select **Source Resin Mod** and craft from **Herb x1 + Beast Meat x1** while the quest is active and Collect food done.
 
-190. At **Tide Pools**, confirm Source Resin in inventory and quest completion for **150 event XP + Painkillers x2**. Cooking Tideglass Delight, opening the grotto cache or possessing old resin does not satisfy the craft task.
+190. At **Tide Pools**, confirm Source Resin in inventory and quest completion for **150 event XP + Neural Stabilizer x2**. Cooking Tideglass Delight, opening the grotto cache or possessing old resin does not satisfy the craft task.
 
 191. From **Tide Pools**, go **south** to **Beach Transition** (`sector9_stream_tidepools`) -> **south** to **Resonant Falls** (`sector9_stream_falls`).
 
@@ -458,13 +464,13 @@ Return to the ridge with Orion and Bridge. Beast victory recruits Gh0st; drill c
 
 194. At **Canopy Ridge**, use **Confront stalker** and finish Gh0st's dialogue. This records confrontation and reveals **Face the Beast**. Earlier scouting did not do this.
 
-195. At **Canopy Ridge**, heal, check equipped gear/abilities, then use **Face the Beast**. For balance evaluation fight with normal campaign gear and OP disabled. Record battle time, damage, healing pressure, telegraph readability and any party deaths.
+195. At **Canopy Ridge**, heal, check equipped gear/abilities and record AP purchases, then use **Face the Beast**. During combat, use Orion's **Field Patch** to support a living ally as needed; healing consumes an action and its cooldown still matters. For balance evaluation fight with normal campaign gear and OP disabled. Record battle time, damage, healing pressure, telegraph readability and any party deaths.
 
 196. At **Canopy Ridge**, if defeated or retreating, return and use **Face the Beast** again. The fight repeats until victory; defeat/retreat should not mark the boss defeated or grant Hunter completion XP.
 
 197. At **Canopy Ridge**, after victory confirm **Gh0st joins**, **Anchor Drill** appears and the Hunter remains active. Do not leave thinking Link already unlocked.
 
-198. At **Canopy Ridge**, use **Anchor Drill** and finish its cinematic. Confirm **Nova Link**, Hunter completion for **300 event XP**, and Liftoff starts. A saved pending scene should resume with one completion payout.
+198. At **Canopy Ridge**, use **Anchor Drill** and finish its cinematic. Confirm **Nova Link**, Hunter completion for **300 event XP**, and Liftoff starts. Link restores party HP and applies Regen; it does not share damage. A saved pending scene should resume with one completion payout.
 
 199. At **Canopy Ridge**, talk to **Gh0st** until he offers **Stolen Tech**; accept **I'll fetch it.** Its offer requires Hunter complete, so a conversation immediately after Beast but before the drill is too early.
 
@@ -479,7 +485,7 @@ There is no real-time countdown. A correct mask latches until you cross. Follow 
 
 201. From **Canopy Ridge**, go **east** to **Shield Viewpoint** (`sector9_ridge_viewpoint`) -> **north** to **Sniper Lookout** (`sector9_ridge_sniper_perch`) -> **east** to **High Pass** (`sector9_ridge_crevice`) -> **east** to **Sanctuary Outlook** (`sector9_ridge_plateau`) -> **east** to **Stone Courtyard** (`sector9_temple_plaza`) -> **east** to **Resonator Chamber** (`sector9_temple_lock_chamber`) -> **east** to **Temple Gate** (`sector9_temple_gate`) -> **east** to **Sanctuary Grand Hall** (`sector9_foyer_grand_hall`) -> **east** to **Hall of Echoes** (`sector9_hall_of_echoes`) -> **south** to **Stasis Chamber** (`sector9_stasis_chamber`).
 
-202. At **Stasis Chamber**, inspect **ceiling vent** for context. Its recovery event requires grid and guard bypass; early inspection cannot replace them.
+202. At **Stasis Chamber**, inspect **ceiling vent** for context. It describes the route toward High Gantry and Infiltration Hatch; it does not recover the transmitter. Continue to the actual case at Transmitter Site after the bypass sequence.
 
 203. From **Stasis Chamber**, go **east** to **Ring Array** (`sector9_stasis_ring_array`) -> **north** to **Observation Deck** (`sector9_stasis_observation`) -> **north** to **Infiltration Hatch** (`sector9_vents_access_grate`) -> **west** to **High Gantry** (`sector9_vents_gantry`).
 
@@ -491,7 +497,7 @@ There is no real-time countdown. A correct mask latches until you cross. Follow 
 
 207. From **Infiltration Hatch**, go **north** to **Transmitter Site** (`sector9_vents_tech_alcove`).
 
-208. At **Transmitter Site**, use **case** for **Dominion Transmitter Core + Rapid Capacitor schematic + Wiring Bundle + Scrap Metal**. The Stasis ceiling vent shares this recovery trigger; the guarded sequence prevents duplicate recovery.
+208. At **Transmitter Site**, use **case** for **Dominion Transmitter Core + Rapid Capacitor schematic + Wiring Bundle + Scrap Metal**. The Stasis ceiling vent is descriptive only. Recover the core here after completing the grid and guard bypass; the guarded sequence prevents duplicate recovery.
 
 209. At **Transmitter Site**, open **Menu -> Tinkering**, learn Rapid Capacitor schematic, select **Rapid Capacitor Mod**, and craft **Dominion Transmitter Core x1 + Scrap Metal x1 + Wiring Bundle x1**.
 
@@ -553,7 +559,7 @@ Inspect the ship first to unlock its salvage shortcut. Launch happens in Hangar 
 
 231. At **Pod Fragment**, use **return to Astra** to go directly to Hangar Bay.
 
-232. At **Hangar Bay**, use **bridge relic** with conduits recovered, Bridge Echo and Chime present. Installation consumes the Bridge; authentication checks and retains the Chime. Confirm Reboot Bridge relic done.
+232. At **Hangar Bay**, use **bridge relic** with conduits recovered, the Bridge and Chime present. Installation consumes the Bridge; authentication checks and retains the Chime. Confirm Reboot Bridge relic done.
 
 233. From **Hangar Bay**, go **south** to **Freight Lift** (`sector9_hangar_staging`).
 
@@ -569,7 +575,7 @@ Inspect the ship first to unlock its salvage shortcut. Launch happens in Hangar 
 
 239. From **Control Console**, go **south** to **Fuel Intake Lines** (`sector9_hangar_fuel_lines`).
 
-240. At **Fuel Intake Lines**, inspect **conduit bus**, then return north.
+240. At **Fuel Intake Lines**, inspect **conduit bus**.
 
 241. From **Fuel Intake Lines**, go **north** to **Control Console** (`sector9_hangar_tower`) -> **north** to **Launch Blast Shield** (`sector9_hangar_lock`).
 
@@ -589,15 +595,15 @@ Inspect the ship first to unlock its salvage shortcut. Launch happens in Hangar 
 
 249. From **Shield Threshold**, go **east** to **Security Buoy** (`sector9_sky_sensor_buoy`).
 
-250. At **Security Buoy**, read **security scan preview**, then return west.
+250. At **Security Buoy**, read **security scan preview**.
 
 251. From **Security Buoy**, go **west** to **Shield Threshold** (`sector9_sky_shield_threshold`) -> **north** to **Barrier Controller** (`sector9_sky_barrier_core`).
 
-252. At **Barrier Controller**, read **guidance interference model**, then return south.
+252. At **Barrier Controller**, read **guidance interference model**.
 
 253. From **Barrier Controller**, go **south** to **Shield Threshold** (`sector9_sky_shield_threshold`) -> **west** to **Pushback Node** (`sector9_sky_hard_deck`).
 
-254. At **Pushback Node**, read **altitude limiter**, then return east and retrace south.
+254. At **Pushback Node**, read **altitude limiter**.
 
 255. From **Pushback Node**, go **east** to **Shield Threshold** (`sector9_sky_shield_threshold`) -> **south** to **Mesosphere Storm** (`sector9_sky_mesosphere`) -> **south** to **The Sky** (`sector9_the_sky`) -> **south** to **Launch Blast Shield** (`sector9_hangar_lock`) -> **south** to **Control Console** (`sector9_hangar_tower`) -> **west** to **Maintenance Catwalks** (`sector9_hangar_scaffolding`) -> **south** to **Hangar Bay** (`sector9_hangar_bay`).
 
@@ -1318,8 +1324,7 @@ A circular room gathers around a single humming stasis pod. A root lattice pulse
 - Event `w2_mq03_inspect_pod`: Requires quest active w2_mq03; milestone not set ms_w2_stasis_pod_read. Result/clue: The pod is not a prison. It is a pressure shell, keeping Orion's memories distinct while the Source pushes at them from every side.
 - **root lattice** (generic): Feedback: Objective completed. Display/action rules: `{"requires_milestone_not_set": "ms_w2_roots_scanned"}`.
 - Event `w2_sq01_scan_roots`: Requires quest active w2_sq01; quest task not done w2_sq01/scan_flora_5. Result/clue: You scan the ancient roots. The deep resonance suggests they are drawing power directly from the facility core.
-- **ceiling vent** (generic): Feedback: The ventilation shaft is too narrow for comfort, but its scrape marks are newer than the dust.
-- Event `w2_sq05_find_transmitter`: Requires quest active w2_sq05; quest task not done w2_sq05/recover_transmitter; quest task done w2_sq05/hack_security_grid; quest task done w2_sq05/bypass_guard_systems. Effects: Dominion Transmitter Core (`dominion_transmitter_core`) x1; Schematic: Rapid Capacitor (`schematic_rapid_capacitor`) x1; Wiring Bundle (`wiring_bundle`) x1; Scrap Metal (`scrap_metal`) x1. Result/clue: Beyond the disabled grid, you recover the transmitter core. Gh0st strips the timing crystal and sends you a capacitor schematic terse enough to count as a threat.
+- **ceiling vent** (generic): Descriptive inspection only. Feedback: The ventilation shaft above leads toward the high gantry and infiltration hatch; its scrape marks are newer than the dust.
 - **sealed Bridge cradle** (generic): Feedback: Talk to Orion before opening the separate Bridge cradle. Display/action rules: `{"show_when_milestone": "ms_w2_orion_briefed", "requires_milestone_not_set": "ms_w2_bridge_recovered"}`.
 - Event `w2_mq03_recover_bridge`: Requires quest active w2_mq03; quest task done w2_mq03/talk_to_orion; quest task not done w2_mq03/recover_bridge_relic. Effects: The Bridge (`bridge_relic`) x1; 250 event XP; completes w2_mq03; starts w2_mq04. Result/clue: Quest Complete: Sleeping Giant  The sealed cradle releases a cold, unpowered Bridge into Nova's hands. Orion joins the crew. A hunter is still watching Canopy Ridge.
 
@@ -1586,6 +1591,8 @@ Push through the hostile canopy, find the Temple Gate, and use the recovered Chi
 
 Power Sanctuary from reserve cells, wake Orion after Chime authentication, and recover the separate Bridge Echo.
 
+The quest description uses the older phrase Bridge Echo; the current inventory name is The Bridge (`bridge_relic`).
+
 **Ancient Geometry**
 - [ ] In the Hall of Echoes, examine the shifting light murals above the empty crystal shadows. (`inspect_murals`)
 - [ ] From the Hall of Echoes, head south to Orion's Stasis Chamber. (`find_stasis_chamber`)
@@ -1769,10 +1776,10 @@ Use the guide to observe the actual game, not to assume presentation and combat 
 
 ## 19. Review sources and limits
 
-This replaces the older field guide's stale puzzle matrices, cooking quest instructions, launch-room claims and speculative economy targets. No game code or assets were changed.
+Source-reviewed October 21. This corrects stale names, transmitter ownership and duplicate return instructions, and adds current crew preparation guidance. Room prose below is a reference summary; current action labels and prerequisites take precedence. No gameplay code or assets were changed.
 
 - Primary sources: `rooms.json`, `hub_nodes.json`, `quests.json`, `events.json`, `dialogue.json`, `tuning_puzzles.json`, `recipes_tinkering.json` and `items.json` in `app/src/main/assets`.
-- Cross-checks: `docs/WORLD2_REFINEMENT_PASS.md`, World2RefinementTest source, and current menu schematic controls. Test source was read; no game tests ran for this documentation work.
+- Cross-checks: current crew progression and skill tuning, `docs/WORLD2_REFINEMENT_PASS.md`, and menu schematic controls. The October 21 audit passed 43 focused JVM tests, including World 1's production completionist route and World 2 progression/recovery checks. This is not a complete World 2 phone playthrough.
 - Routes derive from current room connections; cutter shortcuts are excluded before repair and sluice south explicitly requires drained state. Device navigation, touch targets, scenes and difficulty need playtesting.
 - No fixed arrival levels, total XP, credit budgets, guaranteed random drops or unsupported permanent quest-failure claims. Direct event XP differs from battle XP.
 - Covers all 93 node rooms and ten quests. Every random fish, arcade restoration and cooking experiment are separate system collection goals, not hidden chapter prerequisites.

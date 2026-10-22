@@ -1,6 +1,6 @@
 # World 1: Complete Step-by-Step Walkthrough
 
-**Reviewed against the repository on October 2, 2026. Version 1.3.84 (168).**
+**Source-reviewed October 21, 2026 against version 1.3.94 (178).**
 
 Full spoilers. This is a route you can follow from a fresh New Game through the crash into World 2, including all five World 1 side quests, room interactions, collectibles, and optional puzzles. Directions and action names come from current assets; checks describe what should happen, not proof that every interaction has been played on a phone.
 
@@ -26,13 +26,19 @@ All five main quests are mandatory. **Heavy Lifting** is filed as a side quest, 
 
 The lift descent is **not a demonstrated permanent point of no return**. The authored lift has a return connection. Finish upper-colony content first for convenience, rather than because this guide claims it becomes permanently inaccessible. Completing the Fork starts the escape story; finish your completionist sweep before that transition. The navigation console at the end launches the World 2 transition.
 
+### AP and combat preparation
+
+Normal New Game uses the current crew builds. Open the Party skill-tree controls to inspect upgrades and their AP costs. AP is a shared budget across the crew; core story abilities such as Cryo Vent, Hydraulic Kick and Blast Wave unlock separately from purchases. Wake Up Call, required Heavy Lifting certification, The Echo and The Launch each award 2 AP: 8 earned AP across World 1 before spending. Check your purchases and remaining AP when comparing playtest runs.
+
+At the workshop checkpoint, after certification and before the Fork/Warden, review equipment, healing supplies and affordable purchases. Read each node's current effect rather than assuming all upgrades increase damage. Reset build refunds that character's recorded purchases for free outside pending battles; other characters' purchases remain. Save before comparing builds and record the allocation so a difficulty report can be reproduced. Fourth nodes are gated until World 4 completion.
+
 ## 1. Wake up, meet Jed, and sweep The Pit
 
 **Main quest: Wake Up Call (`w1_mq01`).** Start: Nova's Bunk (`pit_nova_bunk`).
 
 1. Watch or skip the intro, then wait for the bunk fade to finish. Turn on **bunk light**.
 2. Inspect **door control panel** while the light is on. This isolates the conduit and opens the exit. If the panel is unavailable, confirm the light is on; do not turn it off yet.
-3. Inspect **bunk** if you want to rest. Resting is optional and restores the party; dismiss its prompt fully.
+3. Inspect **cargo netting** and **rusty locker** while the light is on. Use **sleeping shelf** if you want to rest. Resting is optional and restores the party; dismiss its prompt fully.
 4. Go **west** to Pod Row (`pit_L2_corridor`). Inspect **sleeping pods** and **posters**.
 5. Go **west** to Supply Closet (`pit_storage`). Turn on **emergency breaker** before attempting the **loose floor panel**. Inspect the panel for the first VHS tape; also inspect **filter units**. Return **east** to Pod Row.
 6. Go **south** to Lift Shaft (`pit_shaft`). Inspect **ladder** and **pipe**.
@@ -64,7 +70,7 @@ Start: Scrap Yard (`workshop_yard`).
 11. Go **east** to Tool Shed (`workshop_shed`). Loot **toolbox**. Go **south** to Flooded Basement (`workshop_basement`), turn on **workbench power switch**, then loot **components chest**. Return **north**.
 12. Go **east** to Loading Dock (`workshop_dock`), then **east** to Back Alley (`workshop_back`). Loot **salvage dolly**; inspect the remaining lore actions. Return **west**, **west**, **west** to Jed's Shutter, then **south** to Scrap Yard.
 13. The Loading Dock's **loader / cargo rail** actions are optional Heavy Lifting practice, not the cutter's main quest actions. Do not expect those to certify you before the training quest is active.
-14. Save now. Return to the hub map from Scrap Yard and choose **Trade Row**.
+14. Review Nova's skill tree and the 2 AP earned from Wake Up Call. Buy an affordable upgrade if desired and record the choice; core story abilities do not require an AP purchase. Save now. Return to the hub map from Scrap Yard and choose **Trade Row**.
 
 **Check before leaving:** repaired inductor owned, Cryo Vent available, Wake Up Call completed. The new tinkering interface may show fewer components after crafting because you consumed them; do not craft the repair again to chase a missing dialogue step.
 
@@ -74,7 +80,7 @@ Start: Trade Row Gate (`trade_entrance`).
 
 1. Go **north** to Market Strip (`trade_strip`), then **north** to Scrapper's Stall (`trade_scrapper`). Talk to **Scrapper** until **The Scavenger's Stash (`w1_sq01`)** starts.
 2. You may inspect **Contraband** shop. Purchasing is optional; keep useful healing supplies and do not spend quest ingredients just to match a supposed credit benchmark.
-3. Go **east** to Cold Locker (`trade_locker`) and inspect **security locker**. The current authored action opens the cache directly and grants **2 Pulse Grenades + 1 Painkillers**. It is not the old frequency puzzle. Return **west**.
+3. Go **east** to Cold Locker (`trade_locker`) and inspect **security locker**. The current authored action opens the cache directly and grants **2 Pulse Grenades + 1 Neural Stabilizer**. It is not the old frequency puzzle. Return **west**.
 4. Go **south** to Market Strip, then **east** to The Hidden Stash (`trade_stash`). Open **rebel cache**. Inspect **security field** for context; there is no separate required disarm sequence before the current container interaction.
 5. Return **west** to Market Strip, then **north** to Scrapper. Talk through the turn-in: the quest grants **80 XP + 2 Pulse Grenades**, separate from any container contents. Confirm the quest is Completed.
 6. Return **south** to Market Strip. Go **west** to Upper Gantry (`trade_gantry`), inspect every listed action, then return **east**.
@@ -121,7 +127,7 @@ Start: Concourse Lobby (`admin_lobby`).
 1. Talk to **Foreman Boggs**. His initial review sends you to the shield drill and starts **Heavy Lifting: Required Training (`w1_sq03`)**. Finish all lines so registration fires.
 2. Go **east** to Customer Service (`admin_window`), then **east** to Security Post (`admin_security`). Complete the registered **Acoustic Bulwark shield-training fight**. Hydraulic Kick should be unlocked by the drill registration; read its Guard Break description and use it to pressure the shield.
 3. If no training fight/ability appears, return **west, west** to Boggs and finish his training reminder, then revisit the Security Post. Inspecting the decorative shield trainer alone is not the certification reward.
-4. After victory, check Heavy Lifting is Completed and the training has logged. Its authored reward is **100 XP, Heavy Gear, and Hydraulic Fluid**.
+4. After victory, check Heavy Lifting is Completed and the training has logged. Its authored reward is **100 XP, Heavy Gear, and Hydraulic Fluid**, plus **2 AP** under the current crew progression rules. Review affordable upgrades before descending.
 5. Return **west** to Customer Service, then **west** to Concourse Lobby. Talk to **Boggs again**. This second full conversation authorizes the Deep Mine and reveals/unlocks its node. Training victory alone is not the final authorization conversation.
 6. Sweep the Concourse: go **north** to Observation Deck (`admin_deck`), then **north** to Foreman's Office (`admin_office`); inspect its room actions and return **south**.
 7. Go **east** to Information Kiosk (`admin_kiosk`), then **north** to Staff Lounge (`admin_lounge`). Use **executive dispenser** and read **datapad**; inspect **chairs**. Return **south** to the kiosk, then **south** to Customer Service and **west** to the lobby. Inspect **call queue terminal** while passing Customer Service.
@@ -253,7 +259,9 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 - **West gate:** Nova needs the bunk light on and the door opened before she can leave. Required state: pit_nova_bunk: light_on = True; pit_nova_bunk: conduit_isolated = True.
 - **bunk light**: Toggle: Turn on / Turn off. Leave the relevant light or power on while exploring. In-room feedback: The wall switch is cold under your fingers.
 - **door control panel**: Inspect/select this action. Requires: `ms_w1_mq01_fault_visible`. Appears with room state: `light_on`. Hides after room state: `conduit_isolated`. In-room feedback: Turn on the bunk light to see the door controls.
-- **bunk**: Rest/recovery interaction; finish or dismiss its prompt before moving.
+- **cargo netting**: Inspect while the light is on. Records the possessions inspection and describes Nova's tools, ration and Jed's metal bird; it does not grant another starter kit.
+- **rusty locker**: Inspect while the light is on for room context.
+- **sleeping shelf**: Rest/recovery interaction; finish or dismiss its prompt before moving.
 
 #### Supply Closet (`pit_storage`)
 
@@ -280,7 +288,7 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 #### Ration Sink (`pit_kitchen`)
 
 - **Exits:** West to Mess Hall (`pit_mess`).
-- **thermal cooker**: Inspect/select this action. In-room feedback: The industrial cooker hums with lukewarm colony broth. Cook Rourke glares if anyone touches the regulator valve.
+- **thermal cooker**: Inspect/select this action. In-room feedback: The industrial cooker hums with lukewarm colony broth. Cook Vance keeps the regulator low. Use the Field Kit's cooking menu to prepare meals.
 - **ingredient hopper**: Inspect/select this action. One-time until: `ms_w1_kitchen_hopper_looted`. Authored outcomes (when event gates are met): 2 x Herb. In-room feedback: The ingredient hopper is scraped clean.
 
 #### Vent Crawl (`pit_vents`)
@@ -312,8 +320,8 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 
 - **Exits:** South to Scrap Yard (`workshop_yard`); North to Jed's Office (`workshop_office`); East to Tool Shed (`workshop_shed`); West to Parts Loft (`workshop_loft`).
 - **mining cutter**: Inspect/select this action. Appears after: `ms_w1_mq01_cryo_repaired`. In-room feedback: The factory governor blocks the sweep Nova needs for quota. The bypass lead is exposed and waiting for her confirmation.
-- **Flux Liner**: Inspect/select this action. Appears after: `ms_w1_mq01_cryo_repaired`. Authored outcomes (when event gates are met): 1 x Flux Liner. In-room feedback: Patch the suit link and clamp the sacrificial strip to the floor ground.
-- **live cutter test**: Inspect/select this action. Appears after: `ms_w1_mq01_cryo_repaired`. Hides after room state: `cutter_surge_complete`. Authored outcomes (when event gates are met): 2 x Ration Pack; 1 x Medkit I; 50 XP; Complete w1_mq01; Start w1_mq02; Open Jed dialogue. In-room feedback: Cold loop 68%. Liner grounded. Governor bypass confirmed. Fire one sweep.
+- **Flux Liner**: Inspect/select this action. Appears after: `ms_w1_mq01_cryo_repaired`. Patches the existing starter liner and completes its preparation task; no additional liner is granted. In-room feedback: Patch the suit link and clamp the sacrificial strip to the floor ground.
+- **live cutter test**: Inspect/select this action. Appears after: `ms_w1_mq01_cryo_repaired`. Hides after room state: `cutter_surge_complete`. Authored outcomes (when event gates are met): 2 x Ration Pack; 1 x Medkit I; 50 XP; Complete w1_mq01; Start w1_mq02; Open Jed dialogue. In-room feedback: Ground the Flux Liner and confirm the mining cutter bypass before firing a live test sweep.
 
 #### Jed's Office (`workshop_office`)
 
@@ -563,7 +571,7 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 
 - **Exits:** North to Aisle 01 (`server_aisle1`); East to Crawlspace 4 (`server_crawl`).
 - **emergency locker**: Inspect/select this action. One-time until: `ms_w1_server_airlock_locker_looted`. Authored outcomes (when event gates are met): 1 x Medkit; 1 x Wiring Bundle. In-room feedback: The emergency locker has been emptied.
-- **inner door**: Inspect/select this action. In-room feedback: Heavy and reinforced. It keeps the sub-zero chill sealed inside Sector 4.
+- **inner door**: Inspect/select this action. In-room feedback: Heavy and reinforced. It keeps the sub-zero chill sealed inside the server core.
 
 #### Aisle 01 (`server_aisle1`)
 
@@ -783,12 +791,14 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 
 #### The Pod Core (`launch_pod`)
 
-- **Exits:** South to Pod Bay (`launch_bay`); North to Launch Rail (`launch_rail`).
+- **Exits:** South to Pod Bay (`launch_bay`). Launch through the navigation console after Zeke's splice conversation; there is no north travel exit.
 - **pod**: Inspect/select this action. In-room feedback: The metal walls feel thin enough to poke a finger through.
 - **navigation console**: Inspect/select this action. In-room feedback: The pod capacitors can power a launch. Jed's Chime fits the old authorization port; Zeke is checking how it connects to navigation.
 - **speaker**: Inspect/select this action. In-room feedback: The countdown is deafening in the small space.
 
 #### Launch Rail (`launch_rail`)
+
+Legacy room retained for save compatibility, not reachable through the current normal route. Exclude it from the completionist room sweep. The launch cinematic transitions from The Pod Core to World 2; do not search for a missing north exit.
 
 - **Exits:** South to The Pod Core (`launch_pod`).
 - **rail**: Inspect/select this action. In-room feedback: A blur of motion and magnetic discharge.
@@ -812,10 +822,10 @@ These are the current authored objective strings. Compare with the route above i
 
 - [ ] Find Jed in his bunk. (`find_jed`)
 - [ ] Talk to Jed about the shift. (`talk_to_jed`)
-- [ ] Reach Jed's place. (`reach_workshop`)
-- [ ] Inspect the loader diagnostic strip. (`inspect_loader_relay`)
-- [ ] Exploit the loader's exposed Shock weakness. (`clear_faulted_loader`)
 - [ ] Receive your starter gear from Jed. (`equip_starter_gear`)
+- [ ] Reach Jed's place. (`reach_workshop`)
+- [ ] Read the loader diagnostic strip or disable the loader. (`inspect_loader_relay`)
+- [ ] Clear the faulted loader blocking the workshop. (`clear_faulted_loader`)
 - [ ] Tinker the Functional Cryo-Inductor from the menu. (`use_tinkering_table`)
 - [ ] Patch the Flux Liner and clamp its sacrificial ground strip. (`patch_flux_liner`)
 - [ ] Deliberately confirm the cutter governor bypass. (`confirm_governor_bypass`)
@@ -974,4 +984,4 @@ At each phase checkpoint, record: room, party HP, level, credits, healing suppli
 
 ## 16. Source and review limits
 
-Reviewed against current `rooms.json`, `quests.json`, `events.json`, `dialogue.json`, `hub_nodes.json`, `recipes_tinkering.json`, `tuning_puzzles.json`, and the exploration return-to-hub/travel implementation. Main route follows authored event prerequisites and current quest sequence. The room appendix is generated from the same assets to avoid silently omitting interactions. No game code, assets, or tests were changed/run for this documentation review. Device behavior, moving encounters, reward presentation, and pacing still need playtesting.
+Source-reviewed October 21 against `rooms.json`, `quests.json`, `events.json`, `dialogue.json`, `hub_nodes.json`, `recipes_tinkering.json`, `tuning_puzzles.json`, current crew progression rules and the exploration return-to-hub/travel implementation. Main route follows authored event prerequisites and current quest sequence. The room appendix covers all 82 catalog definitions, including the explicitly excluded legacy Launch Rail; it is a maintained snapshot, not a live view of the assets. The accompanying audit passed 43 focused JVM tests, including a production World 1 completionist route and World 2 progression/recovery checks. No gameplay code or assets were changed. Device behavior, moving encounters, reward presentation, and pacing still need playtesting; this is not complete phone acceptance.

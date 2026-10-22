@@ -1,0 +1,108 @@
+Read docs/story/NARRATIVE_CANON_MIGRATION_HANDOFF.md completely before making any changes.
+
+  Treat the document’s migration invariants, sequencing requirements, and acceptance criteria as the requested change set. After migration, the four in-repository authority documents remain canonical.
+
+  This is a different and possibly newer version of Starborn. Begin by inspecting:
+
+  - git status and the existing diff;
+  - the story bibles and their current authority structure;
+  - active dialogue, cinematics, quests, events, rooms, items, and milestones;
+  - save/progression systems;
+  - relevant runtime APIs;
+  - unit, integration, and device tests;
+  - available validation scripts.
+
+  Run and record a pre-change validation baseline. Preserve all unrelated work. Never reset, clean, stash, checkout, overwrite whole files, copy credentials, or replace newer content merely because the
+  handoff’s source version differs.
+
+  Implement the migration semantically in this order:
+
+  1. Canon authority documents.
+  2. Supporting character, world, quest, and hub documents.
+  3. Active player-facing narrative assets and progression.
+  4. Required save migrations and idempotent backfills.
+  5. Only the runtime support this version actually lacks.
+  6. Unit, integration, and device/playtest coverage.
+
+  Complete the fuller intended opening, not merely the partial implementation described in the old source assets. The finished playable sequence must show:
+
+  - quota pressure motivating Nova;
+  - Cryo-Inductor and Flux Liner preparation;
+  - Nova deliberately performing or explicitly confirming the cutter governor bypass;
+  - the live cutter test;
+  - the buried-conduit surge;
+  - the Tuning Fork waking;
+  - Nova’s fault/operator record being logged;
+  - the later 87 kHz / 68% / 180-degree counter-tune;
+  - the cutter–suit–operator calibration handshake;
+  - the Cryo-Inductor fusing;
+  - only the Flux Liner’s sacrificial ground strip being spent;
+  - Nova receiving the protocol mark without ancestry, prior exposure, prophecy, or memory loss.
+
+  Preserve asynchronous quest ordering, existing completion milestones, inventory consequences, unlocks, and node transitions exactly as required by the handoff. Do not allow crafting to complete Wake
+  Up Call early, Beast victory to unlock Link early, or old saves to become blocked by newly required tasks.
+
+  In addition to the structural migration, perform a complete player-facing tone and naturalism pass.
+
+  The current prose is frequently too flowery, self-consciously poetic, and eager to announce its themes. Retain the “Blue Collar Cosmic” identity, but apply this tonal distribution:
+
+  - roughly 70–80% concrete industrial language;
+  - roughly 15–20% character-specific humor, slang, and personality;
+  - no more than 5–10% overt lyricism, reserved for Orion, the Source, major revelations, and emotionally earned climaxes.
+
+  Tone rules:
+
+  - Mechanism before metaphor.
+  - Prefer heat, pressure, weight, voltage, noise, tools, debt, injury, and observable behavior.
+  - Use no more than one strong figurative image in an ordinary descriptive beat.
+  - Remove stacked metaphors and repeated poetic restatements.
+  - Avoid constant personification of rooms, machines, geometry, signals, and the sky.
+  - Remove “trailer line” writing that exists mainly to sound quotable.
+  - Do not make quest logs, room descriptions, system messages, and every character share the same lyrical voice.
+  - Let Nova sound tactile, sharp, practical, and mechanically fluent.
+  - Let Jed express care through repairs, food, warnings, and preparation.
+  - Preserve Zeke’s corporate-HR cadence as humor and armor.
+  - Keep Gh0st clipped, literal, and action-led.
+  - Let Orion carry more lyricism than the others, but keep his immediate instructions intelligible.
+  - Reserve the strangest language for genuine Source contact.
+  - Replace defensive player-facing phrases such as “not another Echo,” “not judging her,” or “not a memory in Nova” with concrete observations that demonstrate the corrected rule.
+  - Keep explicit negative guardrails in internal authority documents when needed for canon precision.
+  - Do not flatten distinctive lines that already work. “It is off. That hum is not mine.” is the tonal benchmark: concise, physical, character-specific, and unsettling.
+
+  Do not solve overwriting by making everything terse. Preserve humor, warmth, atmosphere, and emotional rhythm. The goal is restraint and voice differentiation, not sterile minimalism.
+
+  After each implementation layer:
+
+  - inspect git status and the diff;
+  - validate the affected JSON/data;
+  - run relevant reference and content checks;
+  - compile;
+  - run targeted tests.
+
+  At completion:
+
+  - run all repository validators;
+  - run git diff --check;
+  - compile the application;
+  - run targeted and full unit suites;
+  - run save-migration/resume tests;
+  - run the three handoff-identified Maestro flows;
+  - add and run a World 2 confrontation → Beast → Anchor Drill → Link flow when a device is available;
+  - search all active content for the forbidden contradictions in the handoff;
+  - perform a consecutive read-through of the complete playable opening;
+  - perform a final voice audit by speaker and text type.
+
+  Do not claim a test or device flow passed unless it was actually run.
+
+  When finished, report:
+
+  1. Files changed.
+  2. Canon and progression changes implemented.
+  3. Adaptations required for this repository version.
+  4. Save migrations/backfills added.
+  5. Runtime behavior added or reused.
+  6. Tone problems found and the principles used to revise them.
+  7. Validation and test results, separating pre-existing failures from new regressions.
+  8. Any remaining active contradictions, unportable changes, or device tests that could not be run.
+
+  The crucial addition is the explicit tone pass. Without that, Codex may implement the structural handoff correctly while preserving the same over-written prose in the other version.

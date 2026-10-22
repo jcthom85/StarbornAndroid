@@ -1,4 +1,5 @@
 *.iml
+/.idea/modules.xml
 .git
 .gradle
 .gradle-home/
