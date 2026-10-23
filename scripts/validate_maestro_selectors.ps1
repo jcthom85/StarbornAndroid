@@ -73,8 +73,8 @@ $normalizedHaystack = ConvertTo-RenderedReferenceText $normalizedHaystack
 # Expand only the cooldown formatter's actual template, not an allowlist of
 # expected labels. Copy changes still invalidate old selectors. Numerical
 # correctness remains covered by AbilityCooldownLabelTest and device flows.
-$cooldownSource = Get-Content (Join-Path $root "app/src/main/java/com/example/starborn/ui/dialogs/AbilityCooldownLabel.kt") -Raw
-$cooldownTemplate = [regex]::Match($cooldownSource, '"\$\{turns\(effective\)\}([^"\r\n]*)"')
+$cooldownSource = Get-Content (Join-Path $root "gameRuntime/src/main/kotlin/com/example/starborn/domain/combat/CombatClarity.kt") -Raw
+$cooldownTemplate = [regex]::Match($cooldownSource, '"\$\{countLabel\(effective\)\}([^"\r\n]*)"')
 if ($cooldownTemplate.Success) {
     $cooldownSuffix = $cooldownTemplate.Groups[1].Value
     $normalizedHaystack += "`n1 turn$cooldownSuffix`n2 turns$cooldownSuffix"
@@ -83,7 +83,14 @@ if ($cooldownTemplate.Success) {
 $findings = New-Object System.Collections.Generic.List[string]
 $checked = 0
 
-foreach ($flow in Get-ChildItem -Path $flowDir -Filter *.yaml) {
+function Test-AuthoredSelector([string]$Probe) {
+    if ($normalizedHaystack.Contains($Probe)) { return $true }
+    # Selectors are regex: apostrophe wildcards and alternatives are legitimate.
+    try { return [regex]::IsMatch($normalizedHaystack, $Probe, [System.Text.RegularExpressions.RegexOptions]::CultureInvariant, [TimeSpan]::FromSeconds(1)) }
+    catch { return $false }
+}
+
+foreach ($flow in Get-ChildItem -Path $flowDir -Filter *.yaml -Recurse) {
     $lines = Get-Content $flow.FullName
     for ($i = 0; $i -lt $lines.Count; $i++) {
         $line = $lines[$i]
@@ -118,7 +125,7 @@ foreach ($flow in Get-ChildItem -Path $flowDir -Filter *.yaml) {
                 if ($seg.Length -lt 12) { continue }
                 if ($seg -notmatch '\s') { continue }
                 $checked++
-                if (-not $normalizedHaystack.Contains($seg)) {
+                if (-not (Test-AuthoredSelector $seg)) {
                     $findings.Add("$($flow.Name) line $($i + 1): selector segment not found in any authored asset -- `"$seg`"")
                 }
             }
@@ -130,14 +137,14 @@ foreach ($flow in Get-ChildItem -Path $flowDir -Filter *.yaml) {
         $composed = $false
         foreach ($prefix in @(
             "Item acquired:", "Acquired ", "Craft ", "Dismiss ", "Engage ",
-            "Save Slot", "Load Slot", "Details for ", "Travel ", "Enter "
+            "Save Slot", "Load Slot", "Details for ", "Travel ", "Enter ", "Auto-Fill "
         )) {
             if ($probe.StartsWith($prefix)) { $composed = $true; break }
         }
         if ($composed) { continue }
 
         $checked++
-        if ($normalizedHaystack.Contains($probe)) { continue }
+        if (Test-AuthoredSelector $probe) { continue }
 
         $rel = $flow.Name
         $findings.Add("$rel line $($i + 1): selector text not found in any authored asset -- `"$probe`"")

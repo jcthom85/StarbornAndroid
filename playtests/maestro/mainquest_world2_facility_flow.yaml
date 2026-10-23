@@ -1,6 +1,7 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: true
 - extendedWaitUntil:
     visible: "Debug Scenarios"
@@ -14,6 +15,7 @@ appId: com.junewiregames.starborn.prealpha
 - inputText: "Sector 9 Ruins"
 - hideKeyboard
 - tapOn: "World 2 / Sector 9 Ruins"
+- runFlow: _shared/confirm_scenario.yaml
 - extendedWaitUntil:
     visible: "Sector 9 Ruins"
     timeout: 30000
@@ -605,7 +607,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 
 # 17. Go to Source Gate via HUB
-- tapOn: "HUB"
+- back
 - extendedWaitUntil:
     visible: "Sector 9 Ruins"
     timeout: 15000
@@ -702,9 +704,9 @@ appId: com.junewiregames.starborn.prealpha
 - assertVisible: "root pressure gauge"
 - tapOn: "root pressure gauge"
 - extendedWaitUntil:
-    visible: "The root pressure gauge reveals the trick.*"
+    visible: "The root pressure gauge reads BLEED, STARVE, RESOLVE.*"
     timeout: 15000
-- tapOn: ".*The root pressure gauge reveals the trick.*"
+- tapOn: ".*The root pressure gauge reads BLEED, STARVE, RESOLVE.*"
 
 # 19. Return to the Source Gate and resolve the acoustic lock
 - assertVisible: "Travel west"
@@ -747,7 +749,6 @@ appId: com.junewiregames.starborn.prealpha
 - tapOn: "Dialogue Popup. Tap to continue"
 - tapOn: "Open the root relief into the grounded receiver."
 - tapOn: "Isolate the lock supply; keep the relief path open."
-- tapOn: "Let Orion resolve the remaining chord."
 - extendedWaitUntil:
     visible: "The horn steadies.*"
     timeout: 15000

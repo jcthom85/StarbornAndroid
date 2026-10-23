@@ -1,0 +1,17 @@
+appId: ${APP_ID}
+---
+- runFlow: reach_jed.yaml
+- repeat:
+    times: 6
+    commands:
+      - tapOn: "Dialogue Popup. Tap to continue"
+- extendedWaitUntil:
+    visible: "Item acquired: Mining Pistol.*"
+    timeout: 15000
+- tapOn: "Item acquired: Mining Pistol.*"
+- tapOn: "Item acquired: Flux Liner.*"
+- tapOn: "Item acquired: Cryo-Inductor.*"
+- tapOn: "Item acquired: Scrap Metal.*"
+- tapOn: "Item acquired: Ration Pack.*"
+- assertVisible: "Show me how to equip"
+- assertVisible: "Later"

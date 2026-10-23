@@ -1,4 +1,4 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 # Verifies inline room-description keywords are discoverable and tappable,
 # including "netting" — which must remain reachable after the bunk light is on,
@@ -8,6 +8,7 @@ appId: com.junewiregames.starborn.prealpha
 # onboarding pass removed those interruptions), so this lands in the bunk and
 # goes straight to the keywords.
 - launchApp:
+    permissions: {}
     clearState: true
 - extendedWaitUntil:
     visible: "New Game"
@@ -35,11 +36,11 @@ appId: com.junewiregames.starborn.prealpha
     visible: "The cargo netting holds.*"
     timeout: 10000
 - tapOn: ".*The cargo netting holds.*"
-- tapOn: "scorched conduit"
+- tapOn: "door control panel"
 - extendedWaitUntil:
-    visible: ".*Three repair requests.*closed automatically.*"
+    visible: ".*three repair requests.*closed automatically.*"
     timeout: 15000
-- tapOn: ".*Three repair requests.*closed automatically.*"
+- tapOn: ".*three repair requests.*closed automatically.*"
 - extendedWaitUntil:
     visible: "Swipe toward any open exit to move.*"
     timeout: 15000

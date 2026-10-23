@@ -1,5 +1,7 @@
 # Game test suite rebuild
 
+[Maestro setup and coverage](maestro.md) explains the pinned Windows runner, isolated Android app, fresh-clone setup, and which flows need live validation.
+
 October 19: [World 1 review](WORLD1_REVIEW_2026-10-19.md) records 71 passing focused host tests, all ten quests and alternate-order escape recovery, plus a successful Android build. Human phone and audiovisual acceptance remain open.
 
 October 19: [crew production adoption](CREW_PRODUCTION_ADOPTION_2026-10-19.md) supersedes the prototype-only and migration-pending statements below. Normal New Game and player-save migration now use crew progression. The continuous production campaign still has an open World 6 acceptance failure; earlier test totals do not certify this rollout.

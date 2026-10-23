@@ -1,4 +1,4 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 # Requires Nova's Abilities dialog open with Arc Tether on cooldown.
 # Both command windows can occur in this full-party debug setup.

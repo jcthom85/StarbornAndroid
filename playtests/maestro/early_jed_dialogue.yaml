@@ -1,4 +1,4 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 # Verifies the route from Nova's bunk to Jed and his opening dialogue.
 #
@@ -6,6 +6,7 @@ appId: com.junewiregames.starborn.prealpha
 # New Game, and the canon migration rewrote Jed's greeting. The room route
 # below matches the one exercised by fun_opening_mastery.yaml.
 - launchApp:
+    permissions: {}
     clearState: true
 - extendedWaitUntil:
     visible: "New Game"
@@ -23,11 +24,11 @@ appId: com.junewiregames.starborn.prealpha
     visible: ".*The bunk light coughs on.*"
     timeout: 10000
 - tapOn: ".*The bunk light coughs on.*"
-- tapOn: "scorched conduit"
+- tapOn: "door control panel"
 - extendedWaitUntil:
-    visible: ".*Three repair requests.*closed automatically.*"
+    visible: ".*three repair requests.*closed automatically.*"
     timeout: 15000
-- tapOn: ".*Three repair requests.*closed automatically.*"
+- tapOn: ".*three repair requests.*closed automatically.*"
 - extendedWaitUntil:
     visible: "Swipe toward any open exit to move.*"
     timeout: 15000
@@ -46,7 +47,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - tapOn: "Jed"
 - extendedWaitUntil:
-    visible: ".*look awful.*"
+    visible: "You look like you slept inside the ventilation shaft.*"
     timeout: 15000
 - assertVisible: "Jed"
 - takeScreenshot: early-jed-dialogue

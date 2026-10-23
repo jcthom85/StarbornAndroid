@@ -1,4 +1,4 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 # Verifies early exploration: swipe navigation between rooms and the field menu
 # open/close cycle.
@@ -8,6 +8,7 @@ appId: com.junewiregames.starborn.prealpha
 # plays and drops the player straight into the bunk. The movement tutorial
 # fires only after acting on the bunk light and the conduit.
 - launchApp:
+    permissions: {}
     clearState: true
 - extendedWaitUntil:
     visible: "New Game"
@@ -25,11 +26,11 @@ appId: com.junewiregames.starborn.prealpha
     visible: ".*The bunk light coughs on.*"
     timeout: 10000
 - tapOn: ".*The bunk light coughs on.*"
-- tapOn: "scorched conduit"
+- tapOn: "door control panel"
 - extendedWaitUntil:
-    visible: ".*Three repair requests.*closed automatically.*"
+    visible: ".*three repair requests.*closed automatically.*"
     timeout: 15000
-- tapOn: ".*Three repair requests.*closed automatically.*"
+- tapOn: ".*three repair requests.*closed automatically.*"
 - extendedWaitUntil:
     visible: "Swipe toward any open exit to move.*"
     timeout: 15000

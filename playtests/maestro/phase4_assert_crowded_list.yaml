@@ -1,4 +1,4 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 # Requires the charged abilities dialog open. Name and controls may occupy
 # different viewports at large fonts; check each deliberately.

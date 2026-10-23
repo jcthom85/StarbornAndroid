@@ -1,6 +1,7 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: true
 - extendedWaitUntil:
     visible: "New Game"
@@ -20,6 +21,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Scavenger's Stash"
     timeout: 15000
 - tapOn: "Scavenger's Stash"
+- runFlow: _shared/confirm_scenario.yaml
 - extendedWaitUntil:
     visible: "Scrapper's Stall"
     timeout: 90000

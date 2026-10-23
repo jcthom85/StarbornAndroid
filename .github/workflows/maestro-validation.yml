@@ -1,0 +1,20 @@
+name: Maestro flow validation
+on:
+  push:
+    paths: ['playtests/maestro/**', 'scripts/*maestro*', 'scripts/explicit_action_references.ps1', 'app/src/main/**', 'gameRuntime/src/**', 'shared/src/**', 'package*.json', '.github/workflows/maestro-validation.yml']
+  pull_request:
+    paths: ['playtests/maestro/**', 'scripts/*maestro*', 'scripts/explicit_action_references.ps1', 'app/src/main/**', 'gameRuntime/src/**', 'shared/src/**', 'package*.json', '.github/workflows/maestro-validation.yml']
+jobs:
+  structure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: node scripts/validate-maestro.cjs
+      - name: Check authored prose selectors
+        shell: pwsh
+        run: ./scripts/validate_maestro_selectors.ps1 -Strict

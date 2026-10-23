@@ -1,0 +1,10 @@
+appId: ${APP_ID}
+---
+- runFlow: _shared/receive_starter_kit.yaml
+- tapOn: "Later"
+- assertNotVisible: "Show me how to equip"
+- assertVisible: "Jed's Bunk"
+- tapOn: "Travel east"
+- assertVisible: "Lift Shaft"
+- assertNotVisible: "Show me how to equip"
+- takeScreenshot: opening-equipment-deferred

@@ -1,7 +1,8 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 # Replaces the unsaved debug session, but does not clear app data or save slots.
 - launchApp:
+    permissions: {}
     clearState: false
 - extendedWaitUntil:
     visible: "Debug Scenarios"

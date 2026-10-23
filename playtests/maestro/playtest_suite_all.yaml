@@ -1,4 +1,4 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 # ==========================================================
 # Master Playtest Suite: Worlds 1 through 6 & Systems

@@ -1,22 +1,17 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: true
 - extendedWaitUntil:
     visible: "Debug Scenarios"
     timeout: 60000
 - tapOn: "Debug Scenarios"
-- extendedWaitUntil:
-    visible: "Content"
-    timeout: 10000
-- tapOn: "Content"
-- scrollUntilVisible:
-    element:
-      text: "Transit Checkpoint"
-    direction: DOWN
-    timeout: 10000
-    visibilityPercentage: 70
+- tapOn: "Search world, quest, room, or system"
+- inputText: "Transit Checkpoint"
+- hideKeyboard
 - tapOn: "Transit Checkpoint"
+- runFlow: _shared/confirm_scenario.yaml
 - extendedWaitUntil:
     visible: "Shift Queue"
     timeout: 15000
@@ -36,7 +31,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - tapOn: "Guard Hank"
 - extendedWaitUntil:
-    visible: "Badge."
+    visible: "Badge on the reader.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
@@ -44,7 +39,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: "No badge, no entry. Try the booth."
+    visible: "Rejected. Don.t make me read the reason out loud.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
@@ -58,38 +53,38 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - tapOn: "Zeke"
 - extendedWaitUntil:
-    visible: "Name, ID, clearance... Oh. You."
+    visible: "Name, ID, clearance... Nova.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: "I need the pass. Shift starts in ten."
+    visible: "Hank rejected my badge.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: "Right. One moment."
+    visible: "Probably. Give me a moment.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*mandatory retirement.*"
+    visible: "Mandatory retirement.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: "What does that mean?"
+    visible: "Retirement.*Jed.s been here twice as long.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: "They kill you and reclaim the cost."
+    visible: "Everything they can reclaim.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: "I can change the cause. It has to blame the grid, not you."
+    visible: "I can redirect the review to Logistics.*"
     timeout: 10000
 - extendedWaitUntil:
     visible: ".*Grid Instability.*"
     timeout: 10000
 - tapOn: ".*Grid Instability.*"
 - extendedWaitUntil:
-    visible: ".*Take the badge.*"
+    visible: "Grid Instability. Submitted.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
@@ -133,7 +128,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 2000
 - tapOn: "Boggs"
 - extendedWaitUntil:
-    visible: ".*temporary badge landed on my review queue.*"
+    visible: "Nova. I moved your temporary badge to the top of the queue.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:

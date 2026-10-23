@@ -1,6 +1,7 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: true
 - extendedWaitUntil:
     visible: "Debug Scenarios"
@@ -19,6 +20,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Full Inventory"
     timeout: 15000
 - tapOn: "Full Inventory"
+- runFlow: _shared/confirm_scenario.yaml
 - extendedWaitUntil:
     visible: "Nova's Bunk"
     timeout: 90000

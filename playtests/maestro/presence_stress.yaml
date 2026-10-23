@@ -1,6 +1,7 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: true
 - extendedWaitUntil:
     visible: "New Game"
@@ -20,6 +21,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Presence Stress"
     timeout: 15000
 - tapOn: "Presence Stress"
+- runFlow: _shared/confirm_scenario.yaml
 - extendedWaitUntil:
     visible: "Presence Stress Test"
     timeout: 90000

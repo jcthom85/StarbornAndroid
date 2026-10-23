@@ -1,9 +1,10 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 # ==========================================================
 # Playtest Flow 03: World 3 Ancient Spires Infiltration
 # ==========================================================
 - launchApp:
+    permissions: {}
     clearState: true
 
 # 1. Title Screen -> Debug Scenarios -> W3 / Checkpoint Infiltration

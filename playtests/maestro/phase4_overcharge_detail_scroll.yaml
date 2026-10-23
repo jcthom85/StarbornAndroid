@@ -1,4 +1,4 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 # Checkpoint helper: requires max-charge Arc Tether details already open.
 - assertVisible: "Arc Tether"

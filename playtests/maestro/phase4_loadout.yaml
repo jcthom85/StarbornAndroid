@@ -1,8 +1,9 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 # Retains app data; replaces only the unsaved debug session.
 # Run at normal or enlarged system font scale; restore the setting externally.
 - launchApp:
+    permissions: {}
     clearState: false
 - extendedWaitUntil:
     visible: "Debug Scenarios"

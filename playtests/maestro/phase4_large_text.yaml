@@ -1,4 +1,4 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 # Precondition: set the emulator's system font_scale to 2.0 before launching.
 # Restore its original value after the run, including on failure.

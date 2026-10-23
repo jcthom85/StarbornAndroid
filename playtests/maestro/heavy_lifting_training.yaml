@@ -1,6 +1,7 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: false
 - extendedWaitUntil:
     visible: "New Game"
@@ -20,6 +21,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Heavy Lifting"
     timeout: 15000
 - tapOn: "Heavy Lifting"
+- runFlow: _shared/confirm_scenario.yaml
 - extendedWaitUntil:
     visible: "Loading Dock"
     timeout: 15000

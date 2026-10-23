@@ -1,4 +1,4 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 # Checkpoint helper: Nova command menu at maximum charge; no launch/reset.
 - tapOn: "Abilities"

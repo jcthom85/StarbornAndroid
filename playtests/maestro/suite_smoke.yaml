@@ -1,0 +1,5 @@
+appId: ${APP_ID}
+---
+- runFlow: smoke_launch.yaml
+- runFlow: fun_opening_hook.yaml
+- runFlow: opening_equipment.yaml

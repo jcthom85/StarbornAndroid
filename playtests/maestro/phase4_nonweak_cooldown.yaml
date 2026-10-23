@@ -1,7 +1,8 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 # Debug session only; retain app data and save slots. Echo-Borer resists Shock.
 - launchApp:
+    permissions: {}
     clearState: false
 - extendedWaitUntil:
     visible: "Debug Scenarios"

@@ -1,0 +1,13 @@
+appId: ${APP_ID}
+---
+- runFlow: ../fun_opening_hook.yaml
+- tapOn: "Travel west"
+- assertVisible: "Pod Row"
+- tapOn: "Travel south"
+- assertVisible: "Lift Shaft"
+- tapOn: "Travel west"
+- assertVisible: "Jed's Bunk"
+- tapOn: "Jed"
+- extendedWaitUntil:
+    visible: "You look like you slept inside the ventilation shaft.*"
+    timeout: 15000

@@ -1,6 +1,7 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: true
 - extendedWaitUntil:
     visible: "Debug Scenarios"
@@ -14,6 +15,7 @@ appId: com.junewiregames.starborn.prealpha
 - inputText: "Sector 9 Ruins"
 - hideKeyboard
 - tapOn: "World 2 / Sector 9 Ruins"
+- runFlow: _shared/confirm_scenario.yaml
 - extendedWaitUntil:
     visible: "Sector 9 Ruins"
     timeout: 30000
@@ -108,6 +110,7 @@ appId: com.junewiregames.starborn.prealpha
 
 # Source Gate environmental chain starts from a post-Hunter checkpoint.
 - launchApp:
+    permissions: {}
     clearState: true
 - extendedWaitUntil:
     visible: "Debug Scenarios"
@@ -121,6 +124,7 @@ appId: com.junewiregames.starborn.prealpha
 - inputText: "Source Gate"
 - hideKeyboard
 - tapOn: "W2 / Source Gate"
+- runFlow: _shared/confirm_scenario.yaml
 - extendedWaitUntil:
     visible: ".*A massive barrier of energy blocks the way.*"
     timeout: 30000
@@ -131,9 +135,9 @@ appId: com.junewiregames.starborn.prealpha
 - assertVisible: "acoustic lock"
 - tapOn: "acoustic lock"
 - extendedWaitUntil:
-    visible: "The acoustic lock will not resolve until.*"
+    visible: "The acoustic lock howls in three clashing bands.*"
     timeout: 15000
-- tapOn: ".*The acoustic lock will not resolve until.*"
+- tapOn: ".*The acoustic lock howls in three clashing bands.*"
 - assertVisible: "Travel west"
 - tapOn: "Travel west"
 - extendedWaitUntil:
@@ -210,9 +214,9 @@ appId: com.junewiregames.starborn.prealpha
 - assertVisible: "root pressure gauge"
 - tapOn: "root pressure gauge"
 - extendedWaitUntil:
-    visible: "The root pressure gauge reveals the trick.*"
+    visible: "The root pressure gauge reads BLEED, STARVE, RESOLVE.*"
     timeout: 15000
-- tapOn: ".*The root pressure gauge reveals the trick.*"
+- tapOn: ".*The root pressure gauge reads BLEED, STARVE, RESOLVE.*"
 - assertVisible: "Travel west"
 - tapOn: "Travel west"
 - extendedWaitUntil:

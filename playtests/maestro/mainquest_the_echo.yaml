@@ -1,6 +1,7 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: false
 - extendedWaitUntil:
     visible: "New Game"
@@ -25,6 +26,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "The Echo: Deep Mine"
     timeout: 10000
 - tapOn: "The Echo: Deep Mine"
+- runFlow: _shared/confirm_scenario.yaml
 - extendedWaitUntil:
     visible: "Concourse Lobby"
     timeout: 90000

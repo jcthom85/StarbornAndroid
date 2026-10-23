@@ -5,9 +5,10 @@
 # Uses Nova's Bunk, which starts dark with the bunk light off. Enters through the
 # Wake Up Call scenario rather than New Game so the ~45s prologue is skipped.
 # Previously this flow targeted a "Dark Room" debug fixture that no longer exists.
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: false
 - extendedWaitUntil:
     visible: "New Game"
@@ -21,20 +22,21 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - tapOn: "Search world, quest, room, or system"
 - eraseText
-- inputText: "Wake Up"
+- inputText: "Opening / Wake Up Call"
+- hideKeyboard
 - runScript: sleep.js
 - extendedWaitUntil:
-    visible: "Wake Up Call"
+    visible: "Opening / Wake Up Call"
     timeout: 15000
-- tapOn: "Wake Up Call"
+- tapOn: "Opening / Wake Up Call"
+- runFlow: _shared/confirm_scenario.yaml
 - extendedWaitUntil:
     visible: "Nova's Bunk"
     timeout: 90000
 # Authored dark copy renders, not the engine fallback.
-- assertVisible: ".*Nova can find the bunk edge and door switch without light.*"
+- assertVisible: "Darkness presses against the narrow sleeping shelf.*"
 - assertNotVisible: "It's too dark to make out the room."
 # Actions named in description_dark stay reachable while unlit.
-- assertVisible: "netting"
 - assertVisible: "bunk light"
 - takeScreenshot: dark-room-visibility
 # Lighting the room swaps to the lit description.
@@ -44,7 +46,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 15000
 - tapOn: ".*The bunk light coughs on.*"
 - extendedWaitUntil:
-    visible: ".*scorched conduit spits blue-white sparks.*"
+    visible: ".*door control panel spits blue-white sparks.*"
     timeout: 15000
 - assertNotVisible: ".*find the bunk edge, netting, and door switch without light.*"
 - takeScreenshot: dark-room-lit

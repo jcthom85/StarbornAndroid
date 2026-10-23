@@ -1,7 +1,8 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 # Full-inventory debug checkpoint; app data and save slots retained.
 - launchApp:
+    permissions: {}
     clearState: false
 - extendedWaitUntil:
     visible: "Debug Scenarios"

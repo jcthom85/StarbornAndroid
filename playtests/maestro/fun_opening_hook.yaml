@@ -1,8 +1,7 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
-- runFlow: start_new_game.yaml
-- assertNotVisible: "???"
-- assertVisible: "Nova can find the bunk edge.*bunk light switch.*"
+- runFlow: start_new_game_skip_intro.yaml
+- assertVisible: "Darkness presses against the narrow sleeping shelf.*"
 - assertVisible: "bunk light"
 - takeScreenshot: fun-opening-identified-nova
 - tapOn: "bunk light"
@@ -11,15 +10,15 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: ".*The bunk light coughs on.*"
 - extendedWaitUntil:
-    visible: ".*scorched conduit.*"
+    visible: ".*door control panel.*"
     timeout: 10000
 - takeScreenshot: fun-opening-suppressed-fault
-- tapOn: "scorched conduit"
+- tapOn: "door control panel"
 - extendedWaitUntil:
-    visible: ".*Three repair requests.*closed automatically.*"
+    visible: ".*three repair requests.*closed automatically.*"
     timeout: 15000
 - takeScreenshot: fun-opening-cover-up
-- tapOn: ".*Three repair requests.*closed automatically.*"
+- tapOn: ".*three repair requests.*closed automatically.*"
 - extendedWaitUntil:
     visible: "Swipe toward any open exit to move.*"
     timeout: 10000

@@ -1,6 +1,7 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
-- launchApp
+- launchApp:
+    permissions: {}
 - extendedWaitUntil:
     visible: "Debug Scenarios"
     timeout: 60000

@@ -5,9 +5,10 @@
 # w1_mq03_reach_threshold, launch_bay by w1_mq04_complete) and by the time both
 # are set the player is inside the escape sequence with no route back to the
 # hub map.
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: true
 - extendedWaitUntil:
     visible: "New Game"
@@ -27,6 +28,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Hub 2 Overview"
     timeout: 15000
 - tapOn: "Hub 2 Overview"
+- runFlow: _shared/confirm_scenario.yaml
 # Seeding the MQ03/MQ04 milestones (needed to reveal every node) also fires the
 # quest-start card and a gate message on entry. Clear whatever stacks up before
 # asserting the room.

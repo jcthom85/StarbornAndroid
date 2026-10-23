@@ -1,6 +1,7 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: true
 - extendedWaitUntil:
     visible: "New Game"
@@ -23,6 +24,7 @@ appId: com.junewiregames.starborn.prealpha
 # a "Dark Room" fixture that no longer exists; dark-room rendering is covered by
 # dark_room_visibility.yaml. Wait for the patrol to find the player and engage.
 - tapOn: "Dynamic Patrol"
+- runFlow: _shared/confirm_scenario.yaml
 - extendedWaitUntil:
     visible: "Conveyor Belt"
     timeout: 90000

@@ -1,4 +1,4 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - runFlow: fun_opening_mastery.yaml
 - tapOn: "Tap to continue"
@@ -12,13 +12,12 @@ appId: com.junewiregames.starborn.prealpha
     commands:
       - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: "Main Bench"
+    visible: "Jed's Shutter"
     timeout: 15000
 - assertVisible: "Flux Liner"
 - tapOn: "Flux Liner"
 - tapOn:
     point: "50%,55%"
-- tapOn: "Item acquired: Flux Liner.*"
 - assertVisible: "mining cutter"
 - tapOn: "mining cutter"
 - extendedWaitUntil:
@@ -27,7 +26,7 @@ appId: com.junewiregames.starborn.prealpha
 - tapOn: ".*Factory sweep limit: 61 kHz.*"
 - tapOn: "live cutter test"
 - extendedWaitUntil:
-    visible: ".*Flux Liner's ground strip.*Governor: bypassed.*"
+    visible: ".*Flux Liner's ground strip.*governor bypass.*"
     timeout: 15000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:
@@ -45,12 +44,12 @@ appId: com.junewiregames.starborn.prealpha
 - tapOn:
     point: "50%,85%"
 - extendedWaitUntil:
-    visible: ".*It is off. That hum is not mine.*"
+    visible: ".*I have. Jed... it.s still answering.*"
     timeout: 10000
 - tapOn:
     point: "50%,85%"
 - extendedWaitUntil:
-    visible: ".*CUTTER FAULT 4C-117.*attaches operator NOVA VANCE.*"
+    visible: ".*CUTTER FAULT 4C-117.*NOVA VANCE.*"
     timeout: 15000
 - tapOn: "Tap to continue.*"
 - extendedWaitUntil:

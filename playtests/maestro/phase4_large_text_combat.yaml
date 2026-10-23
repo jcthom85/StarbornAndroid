@@ -1,4 +1,4 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 # Precondition: system font_scale 2.0; restore original externally on completion/failure.
 # Uses unsaved debug sessions; no save-slot or app-data reset.

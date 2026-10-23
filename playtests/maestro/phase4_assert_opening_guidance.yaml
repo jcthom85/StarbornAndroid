@@ -1,4 +1,4 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 # Requires Wake Up Call details open at the top.
 - assertVisible: "Quest Details"

@@ -1,6 +1,7 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: false
 - extendedWaitUntil:
     visible: "New Game"
@@ -20,6 +21,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Resume MQ04 during the escape.*"
     timeout: 10000
 - tapOn: "Resume MQ04 during the escape.*"
+- runFlow: _shared/confirm_scenario.yaml
 - extendedWaitUntil:
     visible: "Maintenance Access"
     timeout: 15000

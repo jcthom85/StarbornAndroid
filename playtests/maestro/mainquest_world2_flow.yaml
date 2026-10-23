@@ -1,6 +1,7 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: false
 - extendedWaitUntil:
     visible: "Debug Scenarios"
@@ -18,9 +19,9 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 10000
 - tapOn: "World 2 / Jungle Ruins"
 - extendedWaitUntil:
-    visible: "Launch test"
+    visible: "Launch / Reset"
     timeout: 10000
-- tapOn: "Launch test"
+- tapOn: "Launch / Reset"
 - extendedWaitUntil:
     visible: "Jungle Ruins"
     timeout: 30000
@@ -38,15 +39,15 @@ appId: com.junewiregames.starborn.prealpha
 - assertVisible: "Zeke"
 - tapOn: "Zeke"
 - extendedWaitUntil:
-    visible: "Nova... *cough*... My head feels like a reactor breach. Are you intact?"
+    visible: "Nova? Say something. Anything. I cannot see you through this cracked visor."
     timeout: 15000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: "I'm fine, Zeke. The pod took the brunt of the impact. How are you holding up?"
+    visible: "Here. Keep still. You are bleeding through the suit."
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*suit's recycler is still pumping.*"
+    visible: "Recycler is running.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:

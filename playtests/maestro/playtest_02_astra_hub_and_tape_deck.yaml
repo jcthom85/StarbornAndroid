@@ -1,9 +1,10 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 # ==========================================================
 # Playtest Flow 02: Astra Home Base & Analog Tape Deck
 # ==========================================================
 - launchApp:
+    permissions: {}
     clearState: true
 
 # 1. Title Screen -> Debug Scenarios -> Red Alert

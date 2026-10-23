@@ -1,6 +1,7 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: true
 - extendedWaitUntil:
     visible: "Debug Scenarios"
@@ -14,6 +15,7 @@ appId: com.junewiregames.starborn.prealpha
 - inputText: "Jungle Ruins"
 - hideKeyboard
 - tapOn: "World 2 / Jungle Ruins"
+- runFlow: _shared/confirm_scenario.yaml
 - extendedWaitUntil:
     visible: "Jungle Ruins"
     timeout: 30000
@@ -26,7 +28,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 30000
 - assertVisible: "Travel south"
 - takeScreenshot: world2-crash-site-navigation
-- tapOn: "HUB"
+- back
 - extendedWaitUntil:
     visible: "Jungle Ruins"
     timeout: 15000
@@ -36,7 +38,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Resonant Canopy"
     timeout: 15000
 - takeScreenshot: world2-canopy-enemy-layout
-- tapOn: "HUB"
+- back
 - extendedWaitUntil:
     visible: "Jungle Ruins"
     timeout: 15000
@@ -46,7 +48,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Mist Pools"
     timeout: 15000
 - assertNotVisible: "Nova's Bunk"
-- tapOn: "HUB"
+- back
 - extendedWaitUntil:
     visible: "Jungle Ruins"
     timeout: 15000
@@ -55,7 +57,7 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Canopy Ridge"
     timeout: 15000
-- tapOn: "HUB"
+- back
 - extendedWaitUntil:
     visible: "Jungle Ruins"
     timeout: 15000
@@ -64,7 +66,7 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Temple Gate"
     timeout: 15000
-- tapOn: "HUB"
+- back
 - extendedWaitUntil:
     visible: "Jungle Ruins"
     timeout: 15000

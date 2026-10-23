@@ -1,6 +1,7 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: true
 - extendedWaitUntil:
     visible: "Debug Scenarios"
@@ -14,6 +15,7 @@ appId: com.junewiregames.starborn.prealpha
 - inputText: "W1 Rest"
 - hideKeyboard
 - tapOn: "Hub QA / W1 Rest"
+- runFlow: _shared/confirm_scenario.yaml
 - extendedWaitUntil:
     visible: "Rest action"
     timeout: 30000

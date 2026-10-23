@@ -1,0 +1,25 @@
+appId: ${APP_ID}
+---
+# Fresh production opening: rewards stay unequipped until the player acts.
+- runFlow: _shared/receive_starter_kit.yaml
+- tapOn: "Show me how to equip"
+- assertVisible: "Party"
+- assertVisible: ".*Mining Pistol.*"
+- takeScreenshot: opening-equipment-guidance
+- scrollUntilVisible:
+    element: "Weapon"
+    direction: DOWN
+- tapOn: "Weapon"
+- assertVisible: "Equipped: Empty"
+- tapOn: "Mining Pistol"
+- tapOn: "Equip selected item"
+- assertVisible: "Mining Pistol"
+- scrollUntilVisible:
+    element: "Armor"
+    direction: DOWN
+- tapOn: "Armor"
+- assertVisible: "Equipped: Empty"
+- tapOn: "Flux Liner"
+- tapOn: "Equip selected item"
+- assertVisible: "Flux Liner"
+- takeScreenshot: opening-equipment-complete

@@ -1,4 +1,4 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - runFlow: phase4_overcharge.yaml
 - tapOn: "Back to Abilities"

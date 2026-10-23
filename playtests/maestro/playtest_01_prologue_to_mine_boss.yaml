@@ -1,9 +1,10 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 # ==========================================================
 # Playtest Flow 01: Prologue to First Mine Boss (World 1)
 # ==========================================================
 - launchApp:
+    permissions: {}
     clearState: true
 
 # 1. Main Title -> Launch Debug Scenario: The Echo / Deep Mine

@@ -1,6 +1,7 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: true
 - extendedWaitUntil:
     visible: "New Game"
@@ -21,7 +22,7 @@ appId: com.junewiregames.starborn.prealpha
     timeout: 12000
 - takeScreenshot: intro-narration-caption
 - extendedWaitUntil:
-    visible: ".*Broadcast my identity.*Draw it away.*"
+    visible: ".*Broadcast my identity.*Get it away from them.*"
     timeout: 20000
 - takeScreenshot: intro-unknown-dialogue
 # The cold open runs ~34.5s (it gained the Chorus beat, the threat beat, and the

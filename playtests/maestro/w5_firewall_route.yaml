@@ -1,6 +1,7 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: true
 - extendedWaitUntil:
     visible: "Debug Scenarios"
@@ -14,6 +15,7 @@ appId: com.junewiregames.starborn.prealpha
 - inputText: "Core Firewall"
 - hideKeyboard
 - tapOn: "W5 / Core Firewall"
+- runFlow: _shared/confirm_scenario.yaml
 - extendedWaitUntil:
     visible: "Server Farm"
     timeout: 30000

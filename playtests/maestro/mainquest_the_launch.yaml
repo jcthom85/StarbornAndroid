@@ -1,6 +1,7 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: false
 - extendedWaitUntil:
     visible: "New Game"
@@ -20,6 +21,7 @@ appId: com.junewiregames.starborn.prealpha
     visible: "Resume MQ05 in the launch bay.*"
     timeout: 10000
 - tapOn: "Resume MQ05 in the launch bay.*"
+- runFlow: _shared/confirm_scenario.yaml
 - extendedWaitUntil:
     visible: "Pod Bay"
     timeout: 15000

@@ -1,6 +1,7 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: true
 - extendedWaitUntil:
     visible: "Debug Scenarios"
@@ -14,6 +15,7 @@ appId: com.junewiregames.starborn.prealpha
 - inputText: "Sector 9 Ruins"
 - hideKeyboard
 - tapOn: "World 2 / Sector 9 Ruins"
+- runFlow: _shared/confirm_scenario.yaml
 - extendedWaitUntil:
     visible: "Sector 9 Ruins"
     timeout: 30000
@@ -22,7 +24,7 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Hall of Echoes"
     timeout: 15000
-- tapOn: "HUB"
+- back
 - extendedWaitUntil:
     visible: "Sector 9 Ruins"
     timeout: 15000
@@ -31,7 +33,7 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Stasis Chamber"
     timeout: 15000
-- tapOn: "HUB"
+- back
 - extendedWaitUntil:
     visible: "Sector 9 Ruins"
     timeout: 15000
@@ -40,7 +42,7 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Source Gate"
     timeout: 15000
-- tapOn: "HUB"
+- back
 - extendedWaitUntil:
     visible: "Sector 9 Ruins"
     timeout: 15000
@@ -49,7 +51,7 @@ appId: com.junewiregames.starborn.prealpha
 - extendedWaitUntil:
     visible: "Hangar Bay"
     timeout: 15000
-- tapOn: "HUB"
+- back
 - extendedWaitUntil:
     visible: "Sector 9 Ruins"
     timeout: 15000

@@ -1,6 +1,7 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 - launchApp:
+    permissions: {}
     clearState: true
 - extendedWaitUntil:
     visible: "Debug Scenarios"
@@ -15,6 +16,7 @@ appId: com.junewiregames.starborn.prealpha
     commands:
       - tapOn: "Cancel"
 - tapOn: "W2 / Hunter Canopy"
+- runFlow: _shared/confirm_scenario.yaml
 - extendedWaitUntil:
     visible: ".*first clean angle on the stalker.*"
     timeout: 15000
@@ -26,15 +28,15 @@ appId: com.junewiregames.starborn.prealpha
 - assertNotVisible: "Anchor Drill"
 - tapOn: "Confront stalker"
 - extendedWaitUntil:
-    visible: ".*My orders are simple: erase the anomaly.*"
+    visible: "Stop there. Hands away from the Chime.*"
     timeout: 15000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*The Warden sent us.*"
+    visible: "Then your channel is late.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:
-    visible: ".*System logic loop detected.*"
+    visible: "No confirmation. No reply.*"
     timeout: 10000
 - tapOn: "Dialogue Popup. Tap to continue"
 - extendedWaitUntil:

@@ -1,7 +1,8 @@
-appId: com.junewiregames.starborn.prealpha
+appId: ${APP_ID}
 ---
 # Uses a debug scenario; retains numbered saves and does not clear app data.
 - launchApp:
+    permissions: {}
     clearState: false
 - extendedWaitUntil:
     visible: "New Game"
@@ -11,6 +12,7 @@ appId: com.junewiregames.starborn.prealpha
 - inputText: "First Combat"
 - runScript: sleep.js
 - tapOn: "The Echo: First Combat"
+- runFlow: _shared/confirm_scenario.yaml
 - extendedWaitUntil:
     visible: "Elevator Landing"
     timeout: 90000
@@ -26,12 +28,14 @@ appId: com.junewiregames.starborn.prealpha
 - pressKey: HOME
 - runScript: sleep.js
 - launchApp:
+    permissions: {}
     stopApp: false
 - extendedWaitUntil:
     visible: "Echo-Borer"
     timeout: 30000
 - stopApp
 - launchApp:
+    permissions: {}
     clearState: false
 - extendedWaitUntil:
     visible: "Load Game"
