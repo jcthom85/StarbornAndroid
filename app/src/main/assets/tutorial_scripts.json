@@ -154,7 +154,7 @@
         "id": "gear_equip_basics",
         "steps": [
             {
-                "message": "Open the Menu and choose Inventory -> Gear to equip Nova's Mining Pistol, armor, and mods before heading into the mines.",
+                "message": "Equip Nova's Mining Pistol and Flux Liner using the equipment controls. In the current menu, open Party and select Weapon, then Armor. Legacy menus place these controls in Inventory > Gear. Reading this message does not equip gear.",
                 "context": "Gear"
             }
         ]

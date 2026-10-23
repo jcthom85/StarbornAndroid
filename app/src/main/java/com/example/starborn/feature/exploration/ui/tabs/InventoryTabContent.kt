@@ -248,7 +248,8 @@ fun InventoryTabContent(
                 onEquipWeapon = onEquipWeapon,
                 resolveWeaponItem = resolveWeaponItem,
                 onEquipArmor = onEquipArmor,
-                resolveArmorItem = resolveArmorItem
+                resolveArmorItem = resolveArmorItem,
+                isGearTutorialActive = isGearTutorialActive
             )
             InventoryCarouselPage.KEY_ITEMS -> InventoryItemsPreview(
                 items = keyItems,
@@ -693,7 +694,8 @@ internal fun InventoryEquipmentPreview(
     onEquipWeapon: (String, String?) -> Unit,
     resolveWeaponItem: (String) -> Item?,
     onEquipArmor: (String, String?) -> Unit,
-    resolveArmorItem: (String) -> Item?
+    resolveArmorItem: (String) -> Item?,
+    isGearTutorialActive: Boolean = false
 ) {
     var gearPicker by remember { mutableStateOf<Pair<String, String>?>(null) }
     var modPicker by remember { mutableStateOf<Pair<String, String>?>(null) }
@@ -765,6 +767,12 @@ internal fun InventoryEquipmentPreview(
         return
     }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        if (isGearTutorialActive) Text(
+            text = com.example.starborn.domain.tutorial.OpeningEquipmentGuide.instruction(!equippedWeapons["nova"].isNullOrBlank()),
+            color = accentColor,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+        )
         partyMembers.forEach { member ->
             val portraitPainter = rememberAssetPainter(member.portraitPath, painterResource(R.drawable.main_menu_background))
             Column(
@@ -838,6 +846,8 @@ internal fun InventoryEquipmentPreview(
                             }
                         }
                         GearSlotTile(
+                            isTutorialTarget = isGearTutorialActive && normalizedMemberId == "nova" &&
+                                normalized == (if (equippedWeapons["nova"].isNullOrBlank()) "weapon" else "armor"),
                             slot = normalized,
                             equippedName = equippedName,
                             modsLocked = modSlots.isNotEmpty() && equippedId.isBlank(),
@@ -971,6 +981,7 @@ internal fun InventoryEquipmentPreview(
 
 @Composable
 private fun GearSlotTile(
+    isTutorialTarget: Boolean = false,
     slot: String,
     equippedName: String,
     modsLocked: Boolean,
@@ -993,7 +1004,8 @@ private fun GearSlotTile(
             .clip(shape)
             .clickable { onSelectSlot() },
         color = background,
-        border = BorderStroke(1.dp, if (LocalModernFieldMenu.current) Color.White.copy(alpha = 0.10f) else borderColor.copy(alpha = 0.5f))
+        border = BorderStroke(if (isTutorialTarget) 2.dp else 1.dp,
+            if (isTutorialTarget) accentColor else if (LocalModernFieldMenu.current) Color.White.copy(alpha = 0.10f) else borderColor.copy(alpha = 0.5f))
     ) {
         Column(
             modifier = Modifier

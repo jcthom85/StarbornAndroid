@@ -57,6 +57,7 @@ internal fun DesktopExplorationPromptBanner(services: com.example.starborn.deskt
     val message: String
     val action: String
     val accent: Color
+    val primaryAction = (prompt as? TutorialPrompt)?.primaryAction
     when (prompt) {
         is TutorialPrompt -> { title = prompt.entry.metadata["title"] ?: "Tutorial"; message = prompt.entry.message.adaptInputVocabularyForDesktop(LocalDesktopKeyBindings.current); action = prompt.entry.metadata["action_label"] ?: "Continue"; accent = Color(0xFF7BE8FF) }
         is MilestonePrompt -> { title = null; message = prompt.event.message.adaptInputVocabularyForDesktop(LocalDesktopKeyBindings.current); action = "Dismiss"; accent = Color(0xFFFFD27F) }
@@ -71,7 +72,7 @@ internal fun DesktopExplorationPromptBanner(services: com.example.starborn.deskt
     Surface(
         modifier.widthIn(max = 620.dp).fillMaxWidth()
             .desktopPointerHover(prompt is TutorialPrompt || prompt is MilestonePrompt || prompt is ItemBatchGrantedPrompt)
-            .clickable(enabled = prompt is TutorialPrompt || prompt is MilestonePrompt || prompt is ItemBatchGrantedPrompt, onClick = onDismiss),
+            .clickable(enabled = primaryAction == null && (prompt is TutorialPrompt || prompt is MilestonePrompt || prompt is ItemBatchGrantedPrompt), onClick = onDismiss),
         shape = RoundedCornerShape(14.dp),
         color = Color(0xFA07111A),
         border = BorderStroke(1.dp, accent.copy(alpha = .6f)),
@@ -81,7 +82,12 @@ internal fun DesktopExplorationPromptBanner(services: com.example.starborn.deskt
             title?.let { Text(it, color = accent, style = MaterialTheme.typography.titleMedium) }
             if (message.isNotBlank()) Text(message, Modifier.heightIn(max = 180.dp).verticalScroll(rememberScrollState()),
                 color = Color.White, style = MaterialTheme.typography.bodyLarge)
-            TextButton(onClick = onDismiss, Modifier.align(Alignment.End).desktopPointerHover()) { Text(action, color = accent) }
+            Row(Modifier.align(Alignment.End)) {
+                if (primaryAction != null) TextButton(onClick = onDismiss, Modifier.desktopPointerHover()) {
+                    Text((prompt as TutorialPrompt).entry.metadata["dismiss_label"] ?: "Later", color = accent)
+                }
+                TextButton(onClick = primaryAction ?: onDismiss, Modifier.desktopPointerHover()) { Text(action, color = accent) }
+            }
         }
     }
 }

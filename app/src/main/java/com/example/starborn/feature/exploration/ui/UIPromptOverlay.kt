@@ -19,6 +19,7 @@ fun UIPromptOverlay(
             TutorialBanner(
                 prompt = prompt.entry,
                 onDismiss = onDismiss,
+                onPrimaryAction = prompt.primaryAction,
                 modifier = modifier
             )
         }

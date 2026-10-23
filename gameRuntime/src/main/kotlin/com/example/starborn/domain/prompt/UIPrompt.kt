@@ -11,7 +11,8 @@ interface UIPrompt {
 
 data class TutorialPrompt(
     val entry: TutorialEntry,
-    private val onDismissCallback: (() -> Unit)? = null
+    private val onDismissCallback: (() -> Unit)? = null,
+    val primaryAction: (() -> Unit)? = null
 ) : UIPrompt {
     override val id: String = entry.key ?: "tutorial_${entry.hashCode()}"
 

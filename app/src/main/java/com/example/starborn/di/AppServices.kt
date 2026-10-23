@@ -272,7 +272,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
         if (!ownerId.isNullOrBlank()) {
             val normalizedOwner = ownerId.lowercase(Locale.getDefault())
             val equipped = sessionStore.state.value.equippedWeapons[normalizedOwner]
-            if (equipped.isNullOrBlank()) {
+            if (equipped.isNullOrBlank() && com.example.starborn.domain.tutorial.OpeningEquipmentGuide.shouldAutoEquip(sessionStore.state.value, normalizedOwner, weaponId)) {
                 sessionStore.setEquippedWeapon(ownerId, weaponId)
             }
         }
@@ -288,7 +288,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
         if (!ownerId.isNullOrBlank()) {
             val normalizedOwner = ownerId.lowercase(Locale.getDefault())
             val equipped = sessionStore.state.value.equippedArmors[normalizedOwner]
-            if (equipped.isNullOrBlank()) {
+            if (equipped.isNullOrBlank() && com.example.starborn.domain.tutorial.OpeningEquipmentGuide.shouldAutoEquip(sessionStore.state.value, normalizedOwner, item.id)) {
                 sessionStore.setEquippedArmor(ownerId, item.id)
             }
         }

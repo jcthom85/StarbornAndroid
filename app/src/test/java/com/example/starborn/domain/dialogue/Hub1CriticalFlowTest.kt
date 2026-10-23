@@ -104,6 +104,7 @@ class Hub1CriticalFlowTest {
         state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w1_mq01"].orEmpty().contains("talk_to_jed"))
         assertTrue(state.questTasksCompleted["w1_mq01"].orEmpty().contains("equip_starter_gear"))
+        assertTrue("New kits opt into manual equipment", com.example.starborn.domain.tutorial.OpeningEquipmentGuide.MANUAL_KIT in state.completedMilestones)
         assertTrue(state.inventory["cryo_inductor"].orZero() >= 1)
         assertTrue(state.inventory["nova_flux_liner"].orZero() >= 1)
         assertTrue(state.inventory["scrap_metal"].orZero() >= 2)

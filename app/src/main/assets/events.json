@@ -12575,6 +12575,10 @@
     },
     "actions": [
       {
+        "type": "set_milestone",
+        "milestone": "ms_w1_manual_starter_equipment"
+      },
+      {
         "type": "give_reward",
         "items": [
           {

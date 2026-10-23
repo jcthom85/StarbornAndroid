@@ -73,6 +73,9 @@ internal fun DesktopRuntimeGearContent(services: DesktopAppServices, characterId
     val short = maxHeight < 440.dp
     val narrow = maxWidth < 820.dp
     Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        if (character == "nova" && services.exploration.uiState.value.isGearTutorialActive) {
+            Text(com.example.starborn.domain.tutorial.OpeningEquipmentGuide.instruction(session), color = FieldMenuDesign.gold)
+        }
         Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             (GearRules.equipSlots.toList() + modSlots).forEach { target ->
                 val currentItem = equippedId(target)?.let(catalog::get)

@@ -3360,7 +3360,8 @@ private fun MenuTabContentArea(
                         onEquipWeapon = onEquipWeapon,
                         resolveWeaponItem = resolveWeaponItem,
                         onEquipArmor = onEquipArmor,
-                        resolveArmorItem = resolveArmorItem
+                        resolveArmorItem = resolveArmorItem,
+                        isGearTutorialActive = isGearTutorialActive && member?.id == "nova"
                     )
                 }
             } else {
@@ -6848,16 +6849,19 @@ private fun DarkRoomAtmosphereOverlay(
 fun TutorialBanner(
     prompt: com.example.starborn.domain.tutorial.TutorialEntry,
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onPrimaryAction: (() -> Unit)? = null
 ) {
     PromptBanner(
         title = prompt.metadata["title"] ?: "Tutorial",
         message = prompt.message,
         accentColor = Color(0xFF7BE8FF),
         actionLabel = prompt.metadata["action_label"] ?: "Continue",
-        onAction = onDismiss,
+        onAction = onPrimaryAction ?: onDismiss,
         modifier = modifier,
-        tapToDismiss = true
+        tapToDismiss = onPrimaryAction == null,
+        secondaryActionLabel = if (onPrimaryAction != null) prompt.metadata["dismiss_label"] ?: "Later" else null,
+        onSecondaryAction = onDismiss
     )
 }
 
@@ -7056,7 +7060,9 @@ private fun PromptBanner(
     onAction: () -> Unit,
     modifier: Modifier = Modifier,
     showTitle: Boolean = true,
-    tapToDismiss: Boolean = false
+    tapToDismiss: Boolean = false,
+    secondaryActionLabel: String? = null,
+    onSecondaryAction: (() -> Unit)? = null
 ) {
     val shape = RoundedCornerShape(if (showTitle) 24.dp else 18.dp)
     val badgeLabel = title.uppercase(Locale.getDefault())
@@ -7172,6 +7178,9 @@ private fun PromptBanner(
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        if (secondaryActionLabel != null && onSecondaryAction != null) {
+                            TextButton(onClick = onSecondaryAction) { Text(secondaryActionLabel, color = accentColor) }
+                        }
                         Button(
                             onClick = onAction,
                             colors = ButtonDefaults.buttonColors(

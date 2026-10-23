@@ -1,5 +1,7 @@
 package com.example.starborn.feature.exploration.viewmodel
 
+import com.example.starborn.domain.tutorial.OpeningEquipmentGuide
+
 import com.example.starborn.domain.model.forEncounterRoom
 import com.example.starborn.feature.exploration.viewmodel.helpers.*
 
@@ -1890,11 +1892,10 @@ class ExplorationController(
                         isTinkeringTutorialActive = tutorialsEnabled &&
                             "ms_w1_mq01_workshop_briefed" in newState.completedMilestones &&
                             "ms_w1_mq01_cryo_repaired" !in newState.completedMilestones,
-                        isGearTutorialActive = tutorialsEnabled &&
-                            "ms_w1_mq01_jed_talked" in newState.completedMilestones &&
-                            newState.equippedWeapons["nova"].isNullOrBlank()
+                        isGearTutorialActive = tutorialsEnabled && OpeningEquipmentGuide.needsGuidance(newState)
                     )
                 }
+                maybeOfferOpeningEquipment(newState)
                 val isTinkeringTutActive = tutorialsEnabled &&
                     "ms_w1_mq01_workshop_briefed" in newState.completedMilestones &&
                     "ms_w1_mq01_cryo_repaired" !in newState.completedMilestones
@@ -3813,7 +3814,8 @@ class ExplorationController(
         if (tutorialsEnabled == enabled) return
         tutorialsEnabled = enabled
         _uiState.update { state ->
-            state.copy(settings = state.settings.copy(tutorialsEnabled = enabled))
+            state.copy(settings = state.settings.copy(tutorialsEnabled = enabled),
+                isGearTutorialActive = enabled && OpeningEquipmentGuide.needsGuidance(sessionStore.state.value))
         }
         if (!enabled) {
             tutorialManager.cancelAllTutorials()
@@ -3867,35 +3869,43 @@ class ExplorationController(
         }
     }
 
+    private fun maybeOfferOpeningEquipment(session: GameSessionState) {
+        if (OpeningEquipmentGuide.MANUAL_KIT !in session.completedMilestones ||
+            !OpeningEquipmentGuide.needsGuidance(session) || tutorialManager.hasSeen(OpeningEquipmentGuide.OFFER)) return
+        sessionStore.markTutorialSeen(OpeningEquipmentGuide.OFFER)
+        // Appended after all reward cards; choosing Later never completes the tutorial.
+        promptManager.enqueue(com.example.starborn.domain.prompt.TutorialPrompt(
+            entry = TutorialEntry(
+                key = OpeningEquipmentGuide.OFFER,
+                context = "Equipment",
+                message = "Jed gave you a Mining Pistol and Flux Liner. They are ready to equip in Party before you face the loader.",
+                metadata = mapOf("title" to "New equipment", "action_label" to
+                    if (tutorialsEnabled) "Show me how to equip" else "Open equipment", "dismiss_label" to "Later")
+            ),
+            primaryAction = {
+                promptManager.dismissCurrent()
+                openMenuOverlay(if (_uiState.value.settings.modernFieldMenu) MenuTab.STATS else MenuTab.INVENTORY, showTutorial = false)
+            }
+        ))
+    }
+
+    private fun completeOpeningEquipmentTutorial() {
+        val session = sessionStore.state.value
+        if (OpeningEquipmentGuide.hasKit(session) && OpeningEquipmentGuide.isEquipped(session) &&
+            !tutorialManager.hasCompleted(GEAR_TUTORIAL_ID)) {
+            tutorialManager.completeAndDismiss(GEAR_TUTORIAL_ID)
+            promptManager.discardMatching { it.id == OpeningEquipmentGuide.OFFER }
+            postStatus("Weapon and armor equipped. Your loadout is ready.")
+        }
+    }
+
     private fun maybeShowGearTutorial() {
         if (!tutorialsEnabled) return
         val session = sessionStore.state.value
-        val hasStarterKit = "ms_w1_mq01_jed_talked" in session.completedMilestones
-        if (!hasStarterKit || (!_uiState.value.settings.modernFieldMenu && !session.equippedWeapons["nova"].isNullOrBlank())) return
-        if (tutorialManager.hasCompleted(GEAR_TUTORIAL_ID)) return
-        if (_uiState.value.settings.modernFieldMenu) {
-            tutorialManager.showOnce(key = GEAR_TUTORIAL_ID, context = "Party",
-                message = "Open Party and choose Nova. Select Weapon under Equipment to equip her Mining Pistol, then check Armor and available mod slots before heading into the mines. Locked mod slots show their requirements.",
-                onDismiss = { tutorialManager.markCompleted(GEAR_TUTORIAL_ID) })
-            return
-        }
-        val scheduled = tutorialManager.playScript(
-            scriptId = GEAR_TUTORIAL_ID,
-            allowDuplicates = false
-        ) {
-            tutorialManager.markCompleted(GEAR_TUTORIAL_ID)
-        }
-        if (!scheduled) {
-            tutorialManager.showOnce(
-                entry = TutorialEntry(
-                    key = GEAR_TUTORIAL_ID,
-                    context = "Gear",
-                    message = "Open the Menu and choose Inventory -> Gear to equip Nova's Mining Pistol, armor, and mods before heading into the mines."
-                ),
-                allowDuplicates = false,
-                onDismiss = { tutorialManager.markCompleted(GEAR_TUTORIAL_ID) }
-            )
-        }
+        if (!OpeningEquipmentGuide.needsGuidance(session) || tutorialManager.hasSeen(GEAR_TUTORIAL_ID)) return
+        val destination = if (_uiState.value.settings.modernFieldMenu) "Party" else "Inventory > Gear"
+        tutorialManager.showOnce(key = GEAR_TUTORIAL_ID, context = "Equipment",
+            message = "Open $destination and choose Nova. ${OpeningEquipmentGuide.instruction(session)} Locked mod slots show their requirements.")
     }
 
     fun setVignetteEnabled(enabled: Boolean) {
@@ -4504,6 +4514,7 @@ class ExplorationController(
         val item = inventoryService.itemDetail(resolvedWeaponId) ?: return
         if (!isWeaponForCharacter(item, normalizedCharacter)) return
         sessionStore.setEquippedWeapon(normalizedCharacter, resolvedWeaponId)
+        if (normalizedCharacter == "nova") completeOpeningEquipmentTutorial()
         telemetry.record("reward_equipped", mapOf("slot_id" to "weapon", "item_id" to resolvedWeaponId, "character_id" to normalizedCharacter))
     }
 
@@ -4523,6 +4534,7 @@ class ExplorationController(
         if (!isArmorItem(item)) return
         if (!isArmorForCharacter(item, normalizedCharacter)) return
         sessionStore.setEquippedArmor(normalizedCharacter, resolvedArmorId)
+        if (normalizedCharacter == "nova") completeOpeningEquipmentTutorial()
         telemetry.record("reward_equipped", mapOf("slot_id" to "armor", "item_id" to resolvedArmorId, "character_id" to normalizedCharacter))
     }
 

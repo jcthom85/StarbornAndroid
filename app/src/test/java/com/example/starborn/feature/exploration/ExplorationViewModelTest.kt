@@ -215,6 +215,8 @@ class ExplorationViewModelTest {
         val viewModel = createViewModel()
         val promptManager = getPrivateField<UIPromptManager>(viewModel, "promptManager")
         val sessionStore = getPrivateField<GameSessionStore>(viewModel, "sessionStore")
+        sessionStore.unlockWeapon("mining_pistol")
+        sessionStore.unlockArmor("nova_flux_liner")
         sessionStore.setMilestone("ms_w1_mq01_jed_talked")
 
         viewModel.openMenuOverlay(MenuTab.INVENTORY)
@@ -238,7 +240,91 @@ class ExplorationViewModelTest {
         assertTrue(state.tutorialSeen.contains("bag_basics"))
         assertTrue(state.tutorialCompleted.contains("bag_basics"))
         assertTrue(state.tutorialSeen.contains("gear_equip_basics"))
-        assertTrue(state.tutorialCompleted.contains("gear_equip_basics"))
+        assertFalse("Reading instructions is not equipping", state.tutorialCompleted.contains("gear_equip_basics"))
+    }
+
+    private fun prepareManualStarterKit(viewModel: ExplorationViewModel) {
+        dispatcher.scheduler.advanceUntilIdle()
+        val store = getPrivateField<GameSessionStore>(viewModel, "sessionStore")
+        val inventory = getPrivateField<InventoryService>(viewModel, "inventoryService")
+        val weapon = com.example.starborn.domain.model.Item("mining_pistol", "Mining Pistol", type = "gun",
+            equipment = com.example.starborn.domain.model.Equipment("weapon", weaponType = "gun"))
+        val armor = com.example.starborn.domain.model.Item("nova_flux_liner", "Flux Liner", type = "armor_nova",
+            equipment = com.example.starborn.domain.model.Equipment("armor"))
+        whenever(inventory.itemDetail("mining_pistol")).thenReturn(weapon)
+        whenever(inventory.itemDetail("nova_flux_liner")).thenReturn(armor)
+        store.startQuest("w1_mq01")
+        store.unlockWeapon("mining_pistol")
+        store.unlockArmor("nova_flux_liner")
+        store.setMilestone(com.example.starborn.domain.tutorial.OpeningEquipmentGuide.MANUAL_KIT)
+        store.setMilestone("ms_w1_mq01_jed_talked")
+        dispatcher.scheduler.advanceUntilIdle()
+    }
+
+    @Test fun openingEquipmentOfferOpensPartyAndRequiresBothActualEquipActions() {
+        val vm = createViewModel()
+        prepareManualStarterKit(vm)
+        val prompts = getPrivateField<UIPromptManager>(vm, "promptManager")
+        val store = getPrivateField<GameSessionStore>(vm, "sessionStore")
+        val offer = prompts.state.value.current as TutorialPrompt
+        assertEquals("opening_gear_offer", offer.entry.key)
+        assertEquals("Show me how to equip", offer.entry.metadata["action_label"])
+        assertTrue(vm.uiState.value.isGearTutorialActive)
+        requireNotNull(offer.primaryAction).invoke()
+        dispatcher.scheduler.advanceUntilIdle()
+        assertTrue(vm.uiState.value.isMenuOverlayVisible)
+        assertEquals(MenuTab.STATS, vm.uiState.value.menuTab)
+        assertFalse("gear_equip_basics" in store.state.value.tutorialCompleted)
+        vm.equipWeapon("nova", "not_owned")
+        assertFalse("gear_equip_basics" in store.state.value.tutorialCompleted)
+        vm.equipWeapon("nova", "mining_pistol")
+        dispatcher.scheduler.advanceUntilIdle()
+        assertEquals("mining_pistol", store.state.value.equippedWeapons["nova"])
+        assertTrue(vm.uiState.value.isGearTutorialActive)
+        assertFalse("gear_equip_basics" in store.state.value.tutorialCompleted)
+        vm.equipArmor("nova", "nova_flux_liner")
+        dispatcher.scheduler.advanceUntilIdle()
+        assertEquals("nova_flux_liner", store.state.value.equippedArmors["nova"])
+        assertTrue("gear_equip_basics" in store.state.value.tutorialCompleted)
+        assertFalse(vm.uiState.value.isGearTutorialActive)
+    }
+
+    @Test fun laterDefersEquipmentTeachingWithoutCompletingOrRepeatingTheOffer() {
+        val vm = createViewModel()
+        prepareManualStarterKit(vm)
+        val prompts = getPrivateField<UIPromptManager>(vm, "promptManager")
+        val store = getPrivateField<GameSessionStore>(vm, "sessionStore")
+        prompts.dismissCurrent()
+        store.setMilestone("unrelated_update")
+        dispatcher.scheduler.advanceUntilIdle()
+        assertNull(prompts.state.value.current)
+        assertTrue("opening_gear_offer" in store.state.value.tutorialSeen)
+        assertFalse("gear_equip_basics" in store.state.value.tutorialCompleted)
+        vm.openMenuOverlay(MenuTab.STATS)
+        dispatcher.scheduler.advanceUntilIdle()
+        prompts.dismissCurrent() // Bag instructions.
+        dispatcher.scheduler.advanceUntilIdle()
+        assertEquals("gear_equip_basics", (prompts.state.value.current as TutorialPrompt).entry.key)
+        prompts.dismissCurrent()
+        dispatcher.scheduler.advanceUntilIdle()
+        assertFalse("gear_equip_basics" in store.state.value.tutorialCompleted)
+        vm.equipArmor("nova", "nova_flux_liner") // Either order is valid.
+        vm.equipWeapon("nova", "mining_pistol")
+        dispatcher.scheduler.advanceUntilIdle()
+        assertTrue("gear_equip_basics" in store.state.value.tutorialCompleted)
+    }
+
+    @Test fun disabledTutorialsStillOfferEquipmentWithoutAnInstructionalOverlay() {
+        val vm = createViewModel(initialSettings = UserSettings(tutorialsEnabled = false))
+        prepareManualStarterKit(vm)
+        val prompts = getPrivateField<UIPromptManager>(vm, "promptManager")
+        val offer = prompts.state.value.current as TutorialPrompt
+        assertEquals("Open equipment", offer.entry.metadata["action_label"])
+        requireNotNull(offer.primaryAction).invoke()
+        dispatcher.scheduler.advanceUntilIdle()
+        assertTrue(vm.uiState.value.isMenuOverlayVisible)
+        assertFalse(vm.uiState.value.isGearTutorialActive)
+        assertNull(prompts.state.value.current)
     }
 
     @Test
@@ -465,7 +551,8 @@ class ExplorationViewModelTest {
 
     private fun createViewModel(
         dialogueService: DialogueService = mock<DialogueService>(),
-        isBurgQuestSession: Boolean = false
+        isBurgQuestSession: Boolean = false,
+        initialSettings: UserSettings = UserSettings()
     ): ExplorationViewModel {
         val worldAssets = mock<WorldAssetDataSource> {
             on { loadRooms() } doReturn emptyList()
@@ -510,7 +597,7 @@ class ExplorationViewModelTest {
         val environmentThemeManager = EnvironmentThemeManager(themeRepository)
         val encounterCoordinator = com.example.starborn.domain.combat.EncounterCoordinator()
         val saveRepository = mock<GameSaveRepository>()
-        val userSettingsFlow = MutableStateFlow(UserSettings())
+        val userSettingsFlow = MutableStateFlow(initialSettings)
         val userSettingsStore = mock<UserSettingsStore> {
             on { settings } doReturn userSettingsFlow
         }
