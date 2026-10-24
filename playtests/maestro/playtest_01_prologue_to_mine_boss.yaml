@@ -7,15 +7,18 @@ appId: ${APP_ID}
     permissions: {}
     clearState: true
 
-# 1. Main Title -> Launch Debug Scenario: The Echo / Deep Mine
+# Historical checkpoint menu inspection. Does not play the prologue or fight a boss.
+# Superseded for World 1 acceptance by world1/campaign.yaml.
+# 1. Launch the historical Echo checkpoint
 - extendedWaitUntil:
-    visible: "Debug Scenarios"
+    visible: "(Debug|Playtest) Scenarios"
     timeout: 15000
-- tapOn: "Debug Scenarios"
+- tapOn: "(Debug|Playtest) Scenarios"
 - scrollUntilVisible:
     element: "The Echo: Deep Mine"
     direction: DOWN
 - tapOn: "The Echo: Deep Mine"
+- runFlow: _shared/confirm_scenario.yaml
 
 # 2. Enter Deep Mine and verify exploration HUD & room title
 - extendedWaitUntil:

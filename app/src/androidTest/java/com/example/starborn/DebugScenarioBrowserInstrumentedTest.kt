@@ -2,6 +2,8 @@ package com.example.starborn
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.assertIsDisplayed
@@ -20,9 +22,10 @@ class DebugScenarioBrowserInstrumentedTest {
                 DebugScenarioDialog(onLaunch = { launched = it.id }, onDismiss = {}, testSession = true)
             }
         }
-        compose.onNodeWithText("Tinkering / Exact Cryo Requirements").performClick()
+        compose.onNodeWithTag("scenario-search").performTextInput("recipe_cryo_exact")
+        compose.onNodeWithTag("scenario-recipe_cryo_exact").performClick()
         compose.onNodeWithText("Steps").assertIsDisplayed()
-        compose.onNodeWithText("Launch test").performClick()
+        compose.onNodeWithText("Launch / Reset").performClick()
         compose.runOnIdle { assertEquals("recipe_cryo_exact", launched) }
     }
 }

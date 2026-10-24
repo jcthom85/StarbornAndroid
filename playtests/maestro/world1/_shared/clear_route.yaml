@@ -1,0 +1,30 @@
+appId: ${APP_ID}
+---
+# Fight a patrol when it blocks the requested exit; optional visible enemies
+# are not a prerequisite for travelling. Encounters use normal combat.
+- repeat:
+    times: 5
+    while:
+      visible:
+        id: travel-blocked-enemy-${DIRECTION}
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: engage-acoustic_bulwark
+          file: fight.yaml
+          env:
+            ENEMY: acoustic_bulwark
+            GUIDED: "true"
+            SKILL: Hydraulic Kick
+      - runFlow:
+          when:
+            visible:
+              id: travel-blocked-enemy-${DIRECTION}
+            notVisible:
+              id: engage-acoustic_bulwark
+          file: fight.yaml
+          env:
+            ENEMY: .*
+            GUIDED: "true"
+            SKILL: Arc Tether

@@ -1,0 +1,71 @@
+appId: ${APP_ID}
+env:
+  SKILL: ${SKILL || "Arc Tether"}
+  GUIDED: ${GUIDED || "false"}
+  STOP_ID: ${STOP_ID || "__no_stop__"}
+---
+# Opening a ready actor's menu pauses ATB before optional tutorial probes.
+- runFlow:
+    when:
+      true: ${GUIDED === "true"}
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: combat-ready-nova
+              selected: false
+          commands:
+            - tapOn:
+                id: combat-ready-nova
+                selected: false
+- runFlow:
+    when:
+      true: ${GUIDED === "true"}
+    file: combat_tutorial.yaml
+- runFlow:
+    when:
+      true: ${GUIDED === "true"}
+      visible: Tap Nova when her action is ready.
+    file: attack.yaml
+    env:
+      MODE: basic
+- runFlow:
+    when:
+      true: ${GUIDED === "true"}
+    file: combat_tutorial.yaml
+- runFlow: open_command.yaml
+- tapOn:
+    id: combat-command-abilities
+- scrollUntilVisible:
+    element:
+      id: combat-skill-${SKILL}
+    direction: DOWN
+    timeout: 15000
+    centerElement: false
+- tapOn:
+    id: combat-skill-${SKILL}
+- runFlow: select_target.yaml
+- runFlow:
+    when:
+      true: ${GUIDED === "true"}
+    file: combat_tutorial.yaml
+# Mirror the public controller policy: normal healing and enabled abilities.
+- repeat:
+    times: 40
+    commands:
+      - runFlow:
+          file: attack.yaml
+          env:
+            MODE: auto
+    while:
+      visible:
+        id: combat-target-.*
+- extendedWaitUntil:
+    visible:
+      id: combat-spoils-continue
+    timeout: 60000
+- runFlow:
+    file: drain.yaml
+    env:
+      STOP_ID: ${STOP_ID}
+- runFlow: close_guidance.yaml

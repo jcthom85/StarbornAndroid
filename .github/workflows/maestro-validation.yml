@@ -1,9 +1,9 @@
 name: Maestro flow validation
 on:
   push:
-    paths: ['playtests/maestro/**', 'scripts/*maestro*', 'scripts/explicit_action_references.ps1', 'app/src/main/**', 'gameRuntime/src/**', 'shared/src/**', 'package*.json', '.github/workflows/maestro-validation.yml']
+    paths: ['playtests/maestro/**', 'scripts/*maestro*', 'scripts/world1_checkpoints.py', 'scripts/validate_enemy_sprite_bounds.*', 'scripts/validate_world1_content.ps1', 'scripts/validate_narrative_prose.ps1', 'world_assets/src/main/assets/images/enemies/**', 'scripts/test_maestro_runner.py', 'app/src/debug/assets/playtest/world1/**', 'app/src/test/**', 'app/src/androidTest/**', 'scripts/explicit_action_references.ps1', 'app/src/main/**', 'gameRuntime/src/**', 'shared/src/**', 'package*.json', '.github/workflows/maestro-validation.yml']
   pull_request:
-    paths: ['playtests/maestro/**', 'scripts/*maestro*', 'scripts/explicit_action_references.ps1', 'app/src/main/**', 'gameRuntime/src/**', 'shared/src/**', 'package*.json', '.github/workflows/maestro-validation.yml']
+    paths: ['playtests/maestro/**', 'scripts/*maestro*', 'scripts/world1_checkpoints.py', 'scripts/validate_enemy_sprite_bounds.*', 'scripts/validate_world1_content.ps1', 'scripts/validate_narrative_prose.ps1', 'world_assets/src/main/assets/images/enemies/**', 'scripts/test_maestro_runner.py', 'app/src/debug/assets/playtest/world1/**', 'app/src/test/**', 'app/src/androidTest/**', 'scripts/explicit_action_references.ps1', 'app/src/main/**', 'gameRuntime/src/**', 'shared/src/**', 'package*.json', '.github/workflows/maestro-validation.yml']
 jobs:
   structure:
     runs-on: ubuntu-latest
@@ -13,6 +13,12 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m unittest discover -s scripts -p test_maestro_runner.py
+      - run: python scripts/world1_checkpoints.py
+      - run: python scripts/validate_enemy_sprite_bounds.py
       - run: npm ci --ignore-scripts
       - run: node scripts/validate-maestro.cjs
       - name: Check authored prose selectors

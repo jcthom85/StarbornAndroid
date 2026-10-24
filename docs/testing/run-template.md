@@ -9,6 +9,10 @@
 - Seed, if supported:
 - Tutorials, audio, accessibility settings:
 - Starting save / resources / loadout:
+- Suite / individual flow and artifact run directory:
+- Installed package version; local APK hash (identify if installed hash was not verified):
+- Font scale / animation settings:
+- Clean run 1 / clean run 2 references (same installed build):
 - Status: NOT RUN / PASSED / FAILED / BLOCKED
 
 ## Actions and observations

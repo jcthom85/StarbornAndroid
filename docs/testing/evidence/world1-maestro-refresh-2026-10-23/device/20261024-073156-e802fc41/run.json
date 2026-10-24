@@ -1,0 +1,41 @@
+{
+  "started": "2026-10-24T11:31:56Z",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "maestro": "2.11.0",
+  "appId": "com.junewiregames.starborn.prealpha.playtest",
+  "kind": "device-test",
+  "suite": "smoke",
+  "arguments": [
+    "test",
+    "/Users/jason/Developer/StarbornAndroid/playtests/maestro/suite_smoke.yaml"
+  ],
+  "commit": "e24e69fac58e5d9125279bf2a5e8c8ef783bf5e5",
+  "dirty": true,
+  "flowTreeSha256": "a99cc9c4ee28a4e6872e8dcea42d4bab11f3bbab010f1dcf95efe727bf300bc2",
+  "runnerSha256": "cdfd1d37de2c3ca5a33f6912f95d5b09ff8367fc3185b02356094bf08bd0f69e",
+  "status": "passed",
+  "device": {
+    "model": "sdk_gphone64_arm64",
+    "android": "17",
+    "api": "37",
+    "serial": "emulator-5554"
+  },
+  "package": [
+    "versionCode=178 minSdk=26 targetSdk=36",
+    "versionName=1.3.94-playtest",
+    "lastUpdateTime=2026-10-24 00:23:11"
+  ],
+  "display": "Physical size: 1080x2400",
+  "fontScale": "1.0",
+  "animations": {
+    "window_animation_scale": "0",
+    "transition_animation_scale": "0",
+    "animator_duration_scale": "0"
+  },
+  "gameSettingsNote": "Record in-game audio, tutorials and accessibility settings in the run template; device settings alone do not capture them.",
+  "localApkSha256": "9bd3d139d1c37947adb7162b3c2b0fc4cd3b3de6463b4f303554dd69a398d519",
+  "localApkNote": "Local build hash; installed version is recorded separately, not assumed identical.",
+  "exitCode": 0,
+  "finished": "2026-10-24T11:35:13Z",
+  "elapsedSeconds": 197.36
+}

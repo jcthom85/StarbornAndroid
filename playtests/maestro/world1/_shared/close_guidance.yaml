@@ -1,0 +1,8 @@
+appId: ${APP_ID}
+---
+# The first earned-AP tutorial legitimately opens Party; resume exploration without spending AP.
+- runFlow:
+    when:
+      visible: Close field menu
+    commands:
+      - tapOn: Close field menu

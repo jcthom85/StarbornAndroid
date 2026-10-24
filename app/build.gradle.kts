@@ -12,6 +12,7 @@ plugins {
 
 android {
     namespace = "com.example.starborn"
+    testBuildType = providers.gradleProperty("androidTestBuildType").getOrElse("debug")
     compileSdk = 36
     val keystoreProperties = Properties().apply {
         val propertiesFile = rootProject.file("keystore.properties")
@@ -91,6 +92,11 @@ android {
         getByName("playtest") {
             assets.srcDirs("src/debug/assets", "../world_assets/src/main/assets")
         }
+        getByName("release") {
+            if (providers.gradleProperty("enablePlaytestScenarios").orNull?.toBooleanStrictOrNull() == true) {
+                assets.srcDir("src/debug/assets")
+            }
+        }
     }
     assetPacks += listOf(":world_assets")
 }
@@ -133,6 +139,7 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    "playtestImplementation"(libs.androidx.compose.ui.test.manifest)
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
@@ -174,7 +181,8 @@ tasks.withType<Test>().configureEach {
 }
 
 val isWindowsHost = System.getProperty("os.name").lowercase().contains("windows")
-val powerShellExecutable = if (isWindowsHost) "powershell" else "pwsh"
+val powerShellExecutable = providers.gradleProperty("starbornPowerShell").orNull
+    ?: if (isWindowsHost) "powershell" else "pwsh"
 val powerShellBaseArgs = if (isWindowsHost) {
     listOf("-NoProfile", "-ExecutionPolicy", "Bypass", "-File")
 } else {
@@ -293,8 +301,8 @@ val validateWorld1Assets = tasks.register("validateWorld1Assets") {
 }
 
 afterEvaluate {
-    val testDebugUnitTest = tasks.named<Test>("testDebugUnitTest")
     tasks.register<Test>("runAssetIntegrity") {
+        val testDebugUnitTest = tasks.named<Test>("test${android.testBuildType.replaceFirstChar { it.uppercase() }}UnitTest")
         description = "Runs DataIntegrityTest to validate events, cinematics, and tutorial assets."
         group = "verification"
         dependsOn(validateWorld1Assets)

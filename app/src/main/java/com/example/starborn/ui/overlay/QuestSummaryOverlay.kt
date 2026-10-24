@@ -1,5 +1,6 @@
 ﻿package com.example.starborn.ui.overlay
 
+import com.example.starborn.ui.components.maestroTag
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -110,6 +111,7 @@ fun QuestSummaryOverlay(
                     )
                     data.entries.forEach { entry ->
                         QuestSummaryEntryRow(
+                            questId = entry.questId,
                             type = entry.type,
                             questTitle = entry.questTitle,
                             objectiveTitle = entry.objectiveTitle,
@@ -126,7 +128,7 @@ fun QuestSummaryOverlay(
                             visible = false
                             summary = null
                         },
-                        modifier = Modifier.align(Alignment.End),
+                        modifier = Modifier.maestroTag("quest-summary-continue").align(Alignment.End),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = accentColor.copy(alpha = 0.22f),
@@ -143,6 +145,7 @@ fun QuestSummaryOverlay(
 
 @Composable
 private fun QuestSummaryEntryRow(
+    questId: String,
     type: SummaryType,
     questTitle: String,
     objectiveTitle: String?,
@@ -163,7 +166,7 @@ private fun QuestSummaryEntryRow(
         SummaryType.FAILED -> "Failed"
     }
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().maestroTag("quest-summary-${type.name.lowercase()}-$questId"),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

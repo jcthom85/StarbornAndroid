@@ -1,0 +1,404 @@
+{
+  "date": "2026-10-23",
+  "commit": "e24e69fac58e5d9125279bf2a5e8c8ef783bf5e5",
+  "dirtyWorktree": true,
+  "fullHostSuite": {
+    "tests": 717,
+    "failures": 2,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 715,
+    "failingCases": [
+      {
+        "class": "com.example.starborn.domain.playtest.LegalRouteCampaignRunnerTest",
+        "test": "crewPrototypeProducesEarnedCheckpoints",
+        "message": "java.lang.AssertionError: expected:<[ms_w1_mq01_fault_visible, ms_w1_mq01_bunk_light_on, ms_w1_mq01_safety_fault_inspected, ms_w1_manual_starter_equipment, ms_w1_mq01_jed_talked, ms_w1_mq01_loader_inspected, ms_w1_mq01_loader_cleared, ms_w1_mq01_cryo_repaired, ms_w1_mq01_cutter_surge, ms_w1_mq01_complete, ms_w1_mq02_clearance_ordered, ms_w1_mq02_hank_denied, ms_w1_mq02_zeke_override, ms_w1_mq02_complete, ms_w1_sq03_started, ms_w1_sq03_hydraulic_kick_ready, ms_w1_guardbreak_trained, ms_w1_guard_d"
+      },
+      {
+        "class": "com.example.starborn.domain.playtest.LegalRouteCampaignRunnerTest",
+        "test": "productionCrewCampaignEarnsItsOpeningSuppliesAndReachesCredits",
+        "message": "java.lang.IllegalStateException: Public combat failed in source_memory_fragments: Defeat(cause=null); log=[ActionQueued(turn=5, actorId=distorted_sentinel, action=BasicAttack(actorId=distorted_sentinel, targetId=orion)), Damage(turn=5, sourceId=distorted_sentinel, targetId=orion, amount=36, element=physical, critical=false, isWeakness=false, isBrokenBonus=false, momentumSpent=0), ActionQueued(turn=5, actorId=distorted_sentinel, action=SkillUse(actorId=distorted_sentinel, skillId=glitch_bolt, tar"
+      }
+    ],
+    "note": "Rerun includes the final checkpoint migration, startup prompt, combat HP/selected semantics and tagged controls."
+  },
+  "focusedHostSuite": {
+    "tests": 27,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "androidInstrumentation": {
+    "tests": 3,
+    "failures": 0,
+    "cases": [
+      "DebugScenarioBrowserInstrumentedTest.testInstructionsAreReviewableBeforeLaunch",
+      "DebugTestSessionInstrumentedTest.earnedWorld1CheckpointsPreserveProgressAndSeparateSaves",
+      "DebugTestSessionInstrumentedTest.recipeBoundariesPreserveExactStockAcrossSaveLoad"
+    ],
+    "note": "Rerun on the final APK after combat HP/selected semantics and checkpoint migration changes: all three focused cases pass."
+  },
+  "lint": {
+    "errors": 0,
+    "warnings": 363,
+    "hints": 9
+  },
+  "world1Assets": {
+    "rooms": 82,
+    "nodes": 10,
+    "warnings": 7,
+    "status": "passed"
+  },
+  "narrativeStyle": {
+    "errors": 126,
+    "warnings": 54,
+    "status": "failed",
+    "note": "Existing global dialogue/room word limits remain enforced; obsolete opening literal checks reconciled to current facts."
+  },
+  "device": {
+    "model": "Medium Phone emulator",
+    "api": 37,
+    "serial": "emulator-5554"
+  },
+  "acceptance": {
+    "windowsExecution": "not run",
+    "phone": "not run",
+    "twoConsecutiveNamedSuitePasses": true,
+    "recoveryTwoConsecutiveSameBuildPasses": true,
+    "recoveryApkSha256": "9bd3d139d1c37947adb7162b3c2b0fc4cd3b3de6463b4f303554dd69a398d519",
+    "recoveryFinalBuildRepeatPasses": true,
+    "note": "All four named suites passed twice consecutively with frozen inputs. Windows execution, phone acceptance and broader host/narrative gates remain open.",
+    "finalQueue": "playtests/artifacts/maestro/acceptance-queue-20261024/queue.json",
+    "finalQueueStatus": "passed",
+    "emulator": "passed",
+    "completed": "2026-10-24T14:05:26Z"
+  },
+  "deviceRuns": [
+    {
+      "run": "20261023-183540-dd65a439",
+      "flow": "smoke_launch.yaml",
+      "result": "passed",
+      "note": "Individual title/scenario smoke only; not the smoke suite."
+    },
+    {
+      "run": "20261023-195445-4bd689cd",
+      "flow": "world1/stash.yaml",
+      "result": "passed",
+      "durationSeconds": 190
+    },
+    {
+      "run": "20261023-194837-df3a3a48",
+      "flow": "suite_smoke.yaml",
+      "result": "failed",
+      "reason": "Exact Scrap Metal assertion did not allow quantity suffix; selector subsequently corrected."
+    },
+    {
+      "run": "20261023-200035-d6e6d3a3",
+      "suite": "smoke",
+      "result": "passed",
+      "durationSeconds": 335,
+      "note": "One clean run; second consecutive acceptance run pending."
+    },
+    {
+      "run": "20261023-200631-7919107e",
+      "suite": "campaign",
+      "result": "failed",
+      "durationSeconds": 861,
+      "reason": "Loader tutorial requires Engage before ATB readiness; combat helper subsequently corrected."
+    },
+    {
+      "run": "20261023-203342-9643af75",
+      "flow": "world1/_shared/battle.yaml",
+      "result": "passed",
+      "durationSeconds": 75,
+      "note": "Isolated actual loader combat from the failed campaign state; not a clean campaign pass."
+    },
+    {
+      "run": "20261023-204850-70cbae06",
+      "flow": "world1/resume_after_opening.yaml",
+      "result": "failed",
+      "durationSeconds": 1164,
+      "note": "Earned continuation: MQ01 completion, MQ02 and Heavy Lifting passed; stopped before mine descent. Does not count as a fresh campaign pass."
+    },
+    {
+      "run": "20261023-211015-3e9e778a",
+      "flow": "world1/resume_at_descent.yaml",
+      "result": "failed",
+      "reason": "Plan mine descent inline hit box extends below the nested prose viewport; adding explicit scroll before tap."
+    },
+    {
+      "run": "20261023-212932-a74e44a8",
+      "flow": "world1/resume_at_descent.yaml",
+      "result": "failed",
+      "durationSeconds": 311,
+      "note": "Reached mine_landing, completed real mine battle and reached Conveyor Belt; travel selector failed. Not a campaign pass."
+    },
+    {
+      "run": "20261023-213659-4920854b",
+      "flow": "world1/resume_at_conveyor.yaml",
+      "result": "failed",
+      "reason": "Exit selector still failed; subsequent screenshot showed defeat after the failed run remained idle. Continued diagnosis did not resolve travel."
+    },
+    {
+      "run": "20261023-213934-5acbf234",
+      "suite": "recovery",
+      "result": "failed",
+      "durationSeconds": 64,
+      "reason": "Save dialog closed successfully, but SAVE DATA also matches the underlying Settings heading; corrected assertion to Close save menu absence."
+    },
+    {
+      "run": "20261023-214145-88cc7d1b",
+      "suite": "recovery",
+      "result": "passed",
+      "durationSeconds": 111.45,
+      "localApkSha256": "67fd2d95c474b2bd4fc88e2b26f8b4f1b7fe3a4c4b33c14209a054984427a2a0",
+      "note": "Changed opening state, move/manual reload, force-stop and title load all passed. Repeat same-build run pending."
+    },
+    {
+      "run": "20261023-214340-7538a6aa",
+      "suite": "recovery",
+      "result": "passed",
+      "durationSeconds": 110.71,
+      "localApkSha256": "67fd2d95c474b2bd4fc88e2b26f8b4f1b7fe3a4c4b33c14209a054984427a2a0",
+      "note": "Second consecutive recovery pass on the same APK."
+    },
+    {
+      "run": "20261023-214549-4beb447a",
+      "suite": "focused",
+      "result": "failed",
+      "reason": "Emulator disconnected during System Flush; Maestro DeviceServerDiedException. Stash subflow completed before disconnect. Not an accepted focused run."
+    },
+    {
+      "run": "20261023-215245-82803b8b",
+      "flow": "independent focused diagnosis (eight cases)",
+      "result": "failed",
+      "passedCases": {
+        "certification": 257,
+        "protocol": 237,
+        "lost_shift": 98,
+        "cart": 192,
+        "menus": 39
+      },
+      "failedCases": {
+        "flush": "Defeat after the overly broad patrol helper forced optional combat.",
+        "craft_exact": "Synthetic opening setup left MENU disabled.",
+        "craft_missing": "Same synthetic opening setup issue."
+      },
+      "note": "Diagnosis only: helper source changed during this batch. These results do not certify the revised helpers or a clean named suite."
+    },
+    {
+      "run": "20261023-222225-d9c67639",
+      "flow": "flush + craft_exact + craft_missing",
+      "result": "failed",
+      "passedCases": {
+        "flush": 606
+      },
+      "failedCases": [
+        "craft_exact",
+        "craft_missing"
+      ],
+      "reason": "Crafting exposed a production initialization race: the AP tutorial remained active while its rendered prompt was reset to null. Fixed and covered by the host regression; UI retry pending."
+    },
+    {
+      "run": "20261023-224108-72171576",
+      "flow": "craft_exact + craft_missing",
+      "result": "passed",
+      "note": "Both recipe UI cases pass after startup prompt preservation and explicit component selection.",
+      "localApkSha256": "2fd0bdfbc820cab5633982c95e74e6f789500697661d9fa7657521df37366c5e",
+      "flowTreeSha256": "33ef277ddb8a47ab6015146b4a4e22574b631344429acbb63506ac7fc3529efe"
+    },
+    {
+      "run": "20261023-224259-13e530e6",
+      "suite": "campaign",
+      "result": "failed",
+      "durationSeconds": 1972,
+      "passedChapters": [
+        "01_opening",
+        "02_clearance",
+        "03_certification",
+        "04_echo",
+        "05_escape"
+      ],
+      "reason": "Chapter 06 attempted a second cargo-lift rest action whose inline link is no longer exposed after the Jed sequence. Scroll search then moved to the checkpoint. Removed that redundant rest; fresh full rerun pending."
+    },
+    {
+      "run": "20261023-231939-9ba0ac62",
+      "result": "failed",
+      "diagnosisOnly": true,
+      "reason": "Launch continuation defeated before Nova became ready; recovery supply usage was missing."
+    },
+    {
+      "run": "20261023-232402-65d5f8ec",
+      "result": "failed",
+      "diagnosisOnly": true,
+      "reason": "Checkpoint defeat after healing; default target order left the support drone alive."
+    },
+    {
+      "run": "20261023-233211-bd9d48af",
+      "result": "failed",
+      "diagnosisOnly": true,
+      "reason": "Checkpoint victory passed; a second Ration Pack opened an unhandled meal-replacement dialog."
+    },
+    {
+      "run": "20261023-233916-9aaf15aa",
+      "result": "failed",
+      "diagnosisOnly": true,
+      "reason": "Boss abilities lacked Hydraulic Kick until normal save migration; checkpoint restore was corrected and Android parity regression passes."
+    },
+    {
+      "run": "20261023-234424-55510baa",
+      "result": "failed",
+      "diagnosisOnly": true,
+      "reason": "Checkpoint passed; basic-heavy policy lost the Warden fight at 140 HP."
+    },
+    {
+      "run": "20261023-235955-95c1031c",
+      "result": "failed",
+      "diagnosisOnly": true,
+      "reason": "Adaptive abilities, visible HP reads and actual Medkit I healing worked; selecting an already active actor closed the command menu and caused Items lookup failure."
+    },
+    {
+      "run": "20261024-002407-029998fe",
+      "flow": "world1/06_launch.yaml from earned campaign_w1_mq05 checkpoint",
+      "result": "passed",
+      "diagnosisOnly": true,
+      "durationSeconds": 898.67,
+      "apkSha256": "9bd3d139d1c37947adb7162b3c2b0fc4cd3b3de6463b4f303554dd69a398d519",
+      "flowTreeSha256": "a6b4694f24e68db95739d14f20ad6e74d6dd8e5e66ad045ba9436e55e4dfb853",
+      "note": "Checkpoint and Warden normal victories, owned recovery items, Zeke/pod/console and World 2 crash-site assertions all passed. Completionist starting state; not a fresh campaign pass."
+    },
+    {
+      "run": "20261024-004023-5e8bff61",
+      "result": "failed",
+      "diagnosisOnly": true,
+      "durationSeconds": 1953.83,
+      "apkSha256": "9bd3d139d1c37947adb7162b3c2b0fc4cd3b3de6463b4f303554dd69a398d519",
+      "flowTreeSha256": "a6b4694f24e68db95739d14f20ad6e74d6dd8e5e66ad045ba9436e55e4dfb853",
+      "note": "Fresh campaign passed chapters 01\u201304, then stopped at an unhandled A Quiet Rest overlay before the lift security battle. Added its explicit required dismissal."
+    },
+    {
+      "run": "20261024-071201-d78a2ba4",
+      "result": "passed",
+      "diagnosisOnly": true,
+      "durationSeconds": 1052.67,
+      "apkSha256": "9bd3d139d1c37947adb7162b3c2b0fc4cd3b3de6463b4f303554dd69a398d519",
+      "flowTreeSha256": "a99cc9c4ee28a4e6872e8dcea42d4bab11f3bbab010f1dcf95efe727bf300bc2",
+      "note": "Continuation from that fresh-route rest screen passed the lift fight, Jed, checkpoint and Warden victories, pod console and World 2 arrival using existing earned supplies; no fixture/reset/grants. Not a clean uninterrupted campaign run."
+    },
+    {
+      "suite": "smoke",
+      "attempt": 1,
+      "exitCode": 0,
+      "run": "20261024-073156-e802fc41",
+      "status": "passed",
+      "elapsedSeconds": 197.36,
+      "note": "Final frozen-input acceptance queue; clean named-suite pass."
+    },
+    {
+      "suite": "smoke",
+      "attempt": 2,
+      "exitCode": 0,
+      "run": "20261024-073514-5ec01fb4",
+      "status": "passed",
+      "elapsedSeconds": 200.49,
+      "note": "Final frozen-input acceptance queue; clean named-suite pass."
+    },
+    {
+      "suite": "recovery",
+      "attempt": 1,
+      "exitCode": 0,
+      "run": "20261024-073835-9d277f69",
+      "status": "passed",
+      "elapsedSeconds": 108.76,
+      "note": "Final frozen-input acceptance queue; clean named-suite pass."
+    },
+    {
+      "suite": "recovery",
+      "attempt": 2,
+      "exitCode": 0,
+      "run": "20261024-074024-93dd3d2e",
+      "status": "passed",
+      "elapsedSeconds": 108.91,
+      "note": "Final frozen-input acceptance queue; clean named-suite pass."
+    },
+    {
+      "suite": "focused",
+      "attempt": 1,
+      "exitCode": 0,
+      "run": "20261024-074213-df6094b8",
+      "status": "passed",
+      "elapsedSeconds": 1280.46,
+      "note": "Final frozen-input acceptance queue; clean named-suite pass."
+    },
+    {
+      "suite": "focused",
+      "attempt": 2,
+      "exitCode": 0,
+      "run": "20261024-080335-ca5ce83f",
+      "status": "passed",
+      "elapsedSeconds": 1383.34,
+      "note": "Final frozen-input acceptance queue; clean named-suite pass."
+    },
+    {
+      "suite": "campaign",
+      "attempt": 1,
+      "exitCode": 0,
+      "run": "20261024-082639-b0d031fd",
+      "status": "passed",
+      "elapsedSeconds": 2974.08,
+      "note": "Final frozen-input acceptance queue; clean named-suite pass."
+    },
+    {
+      "suite": "campaign",
+      "attempt": 2,
+      "exitCode": 0,
+      "run": "20261024-091614-116bf968",
+      "status": "passed",
+      "elapsedSeconds": 2952.48,
+      "note": "Final frozen-input acceptance queue; clean named-suite pass."
+    }
+  ],
+  "runnerSafeguards": {
+    "tests": 9,
+    "failures": 0
+  },
+  "spriteBounds": {
+    "sprites": 24,
+    "status": "passed"
+  },
+  "additionalInstrumentationChecks": [
+    {
+      "case": "DebugTestSessionInstrumentedTest.rebuiltFixturesLaunchAndTestSavesNeverReplaceCampaignSaves",
+      "tests": 1,
+      "failures": 1,
+      "reason": "Stopped at unrelated campaign_w4_crucible before reaching recipe assertions."
+    },
+    {
+      "case": "DebugTestSessionInstrumentedTest.recipeBoundariesPreserveExactStockAcrossSaveLoad",
+      "tests": 1,
+      "failures": 0,
+      "note": "Direct execution of the existing recipe assertion block: exact and missing stock, refusal without consumption, successful craft and save/reload parity."
+    }
+  ],
+  "startupPromptRegression": {
+    "tests": 22,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "note": "Regression first reproduced a queued tutorial disappearing during initial screen-state construction, then passed with current prompt/tutorial state preserved. Entire ExplorationViewModelTest class passes."
+  },
+  "lastUpdated": "2026-10-24",
+  "currentAutomation": {
+    "apkSha256": "9bd3d139d1c37947adb7162b3c2b0fc4cd3b3de6463b4f303554dd69a398d519",
+    "flowTreeSha256": "a99cc9c4ee28a4e6872e8dcea42d4bab11f3bbab010f1dcf95efe727bf300bc2",
+    "acceptance": "emulator-repeat-passed",
+    "note": "All eight final named-suite runs passed. suites.json acceptance metadata was updated afterward; tested-suites.json preserves the exact executed manifest, and all YAML/toolchain hashes remain unchanged.",
+    "runnerSha256": "cdfd1d37de2c3ca5a33f6912f95d5b09ff8367fc3185b02356094bf08bd0f69e"
+  },
+  "powerShellWrapper": {
+    "platform": "macOS PowerShell 7",
+    "maestro": "2.11.0",
+    "result": "passed",
+    "note": "Wrapper invocation only; does not certify Windows execution."
+  }
+}

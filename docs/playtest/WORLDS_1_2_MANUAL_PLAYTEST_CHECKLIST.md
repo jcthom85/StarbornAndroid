@@ -1,5 +1,7 @@
 ﻿# Worlds 1–2 Manual Playtest Checklist
 
+For World 1 release acceptance, also complete the [current dedicated checklist](WORLD1_ACCEPTANCE_CHECKLIST.md).
+
 A player-facing review checklist for the current campaign. Use it during one long run or split it into two sessions. This is not a completionist route or a scripted pass/fail test: play naturally, pause when something feels confusing or especially good, and write down what happened.
 
 World 2's current interaction and recovery changes are summarized in [World 2 Refinement Pass](../WORLD2_REFINEMENT_PASS.md). The older [World 1 field guide](walkthroughs/WORLD_1_COMPLETIONIST_WALKTHROUGH.md) and [World 2 field guide](walkthroughs/WORLD_2_COMPLETIONIST_WALKTHROUGH.md) contain route detail, but their old level, reward, and release benchmarks should not be treated as current acceptance criteria.

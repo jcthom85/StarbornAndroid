@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Medium_Phone_API_37.0" tests="1" failures="0" time="1048.618" timestamp="2026-10-24T07:12:05">
+    <testcase id="resume_from_lift_rest" name="resume_from_lift_rest" classname="resume_from_lift_rest" file="playtests/artifacts/maestro/diagnostic-flows-2026-10-23/resume_from_lift_rest.yaml" time="1048.559" timestamp="2026-10-24T07:12:05" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

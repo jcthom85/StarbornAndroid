@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "suites": {
+    "smoke": {
+      "flow": "suite_smoke.yaml",
+      "description": "Title, fresh opening interactions, manual starter equipment and deferral",
+      "status": "emulator-repeat-passed",
+      "evidence": [
+        "20261024-073156-e802fc41",
+        "20261024-073514-5ec01fb4"
+      ],
+      "note": "Two consecutive API 37 emulator passes on the frozen final APK and automation. Windows execution and human phone acceptance remain unverified."
+    },
+    "campaign": {
+      "flow": "world1/campaign.yaml",
+      "description": "Continuous New Game through World 2 handoff with actual combat and earned resources",
+      "status": "emulator-repeat-passed",
+      "evidence": [
+        "20261024-082639-b0d031fd",
+        "20261024-091614-116bf968"
+      ],
+      "note": "Two consecutive API 37 emulator passes on the frozen final APK and automation. Windows execution and human phone acceptance remain unverified."
+    },
+    "focused": {
+      "flow": "world1/focused.yaml",
+      "description": "All World 1 side quests, cart vault, crafting boundaries and menu sweep",
+      "status": "emulator-repeat-passed",
+      "evidence": [
+        "20261024-074213-df6094b8",
+        "20261024-080335-ca5ce83f"
+      ],
+      "note": "Two consecutive API 37 emulator passes on the frozen final APK and automation. Windows execution and human phone acceptance remain unverified."
+    },
+    "recovery": {
+      "flow": "world1/recovery.yaml",
+      "description": "Changed opening state, manual load and force-stop/relaunch",
+      "status": "emulator-repeat-passed",
+      "evidence": [
+        "20261024-073835-9d277f69",
+        "20261024-074024-93dd3d2e"
+      ],
+      "note": "Two consecutive API 37 emulator passes on the frozen final APK and automation. Windows execution and human phone acceptance remain unverified."
+    }
+  },
+  "policy": "Only named suite entrypoints are supported. Everything outside their transitive dependency graph is historical, not accepted regression coverage. Status changes require saved run evidence; static checks do not certify UI behavior."
+}

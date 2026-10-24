@@ -1,5 +1,6 @@
 package com.example.starborn.feature.combat.ui.components
 
+import com.example.starborn.ui.components.maestroTag
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
@@ -17,6 +18,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
@@ -136,11 +140,12 @@ fun PartyRoster(
                             val readyToAct = atbProgress >= 0.999f
 
                             val baseModifier = Modifier.width(if (compact) 140.dp else barWidth + 12.dp)
+                                .semantics { selected = isActive }
                             val canTap = onMemberTap != null && isAlive && (readyToAct || allowNonReadySelection)
                             val interactiveModifier = if (canTap) {
-                                baseModifier.clickable { onMemberTap(member.id) }
+                                baseModifier.maestroTag("combat-ready-${member.id}").clickable { onMemberTap(member.id) }
                             } else {
-                                baseModifier
+                                baseModifier.maestroTag("combat-party-${member.id}")
                             }
                             val damageFlash = rememberDamageFlash(member.id, combatState.log)
                             val hitPulse = rememberHitPulse(member.id, combatState.log)
@@ -306,6 +311,8 @@ fun PartyRoster(
                                         background = Color.Black.copy(alpha = 0.5f),
                                         height = 12.dp,
                                         modifier = Modifier.width(barWidth)
+                                            .maestroTag("combat-hp-${member.id}")
+                                            .semantics { contentDescription = "HP $currentHp/$maxHp" }
                                     )
                                     MomentumGauge(
                                         momentum = memberState?.momentum ?: 0,
@@ -598,6 +605,7 @@ fun EnemyRoster(
                         val enemyMissToken = if (combatantId == missLungeActorId) missLungeToken else null
                         val enemyInteractionSource = remember(combatantId) { MutableInteractionSource() }
                         val cardModifier = Modifier
+                            .maestroTag("combat-enemy-$combatantId")
                             .width(cardSize)
                             .graphicsLayer {
                                 translationX = damageShake * with(density) { 6.dp.toPx() }
@@ -1188,7 +1196,7 @@ fun CompositePartStatus(
     val isActive = combatantId == activeId
     val isSelected = combatantId in selectedEnemyIds
     val atbProgress = atbMeters[combatantId] ?: 0f
-    Box(contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier.maestroTag("combat-enemy-$combatantId"), contentAlignment = Alignment.Center) {
         EnemyStatusLabel(
             name = entry.enemy.name,
             currentHp = currentHp,
@@ -1275,6 +1283,7 @@ fun EnemyStatusLabel(
         shape = RoundedCornerShape(14.dp),
         border = BorderStroke(1.dp, borderColor),
         modifier = interactionModifier
+            .maestroTag(if (isAlive) "combat-target-$name" else "combat-defeated-$name")
             .height(if (hasWeaknesses) 80.dp else 68.dp)
             .alpha(if (isAlive) 1f else 0.45f)
     ) {

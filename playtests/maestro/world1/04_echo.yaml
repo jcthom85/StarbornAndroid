@@ -1,0 +1,9 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: west
+      ROOM: admin_elevator
+- runFlow: _shared/enter_mine.yaml
+- runFlow: _shared/mine_to_fork.yaml

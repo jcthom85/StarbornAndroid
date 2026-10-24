@@ -1,0 +1,52 @@
+appId: ${APP_ID}
+---
+- tapOn:
+    id: combat-command-abilities
+- evalScript: ${output.ability = ""}
+- runFlow:
+    when:
+      true: ${output.ability === ""}
+      visible:
+        id: combat-skill-${SKILL}
+        enabled: true
+    commands:
+      - evalScript: ${output.ability = SKILL}
+- runFlow:
+    when:
+      true: ${output.ability === ""}
+      visible:
+        id: combat-skill-Arc Tether
+        enabled: true
+    commands:
+      - evalScript: ${output.ability = "Arc Tether"}
+- runFlow:
+    when:
+      true: ${output.ability === ""}
+      visible:
+        id: combat-skill-Hydraulic Kick
+        enabled: true
+    commands:
+      - evalScript: ${output.ability = "Hydraulic Kick"}
+- runFlow:
+    when:
+      true: ${output.ability === ""}
+      visible:
+        id: combat-skill-Blast Wave
+        enabled: true
+    commands:
+      - evalScript: ${output.ability = "Blast Wave"}
+- runFlow:
+    when:
+      true: ${output.ability !== ""}
+    commands:
+      - tapOn:
+          id: combat-skill-${output.ability}
+          enabled: true
+      - runFlow: select_target.yaml
+      - evalScript: ${output.turnUsed = true}
+- runFlow:
+    when:
+      true: ${output.ability === ""}
+    commands:
+      - tapOn:
+          id: combat-abilities-close

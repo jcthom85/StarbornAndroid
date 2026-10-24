@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import com.example.starborn.feature.exploration.viewmodel.DirectionIndicatorUi
 import com.example.starborn.feature.exploration.viewmodel.DirectionIndicatorStatus
+import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import java.util.Locale
 
 @Composable
@@ -101,6 +103,13 @@ fun DirectionIndicatorsOverlay(
                         this.translationY = nudgeY
                     }
                     .clearAndSetSemantics {
+                        testTagsAsResourceId = true
+                        testTag = when (indicator.status) {
+                            DirectionIndicatorStatus.UNEXPLORED, DirectionIndicatorStatus.EXPLORED -> "travel-$direction"
+                            DirectionIndicatorStatus.ENEMY -> "travel-blocked-enemy-$direction"
+                            DirectionIndicatorStatus.LOCKED -> "travel-locked-$direction"
+                            DirectionIndicatorStatus.NEARBY_THREAT -> "travel-threat-$direction"
+                        }
                         contentDescription = actionLabel
                         if (canTravel) {
                             onClick(label = actionLabel) {

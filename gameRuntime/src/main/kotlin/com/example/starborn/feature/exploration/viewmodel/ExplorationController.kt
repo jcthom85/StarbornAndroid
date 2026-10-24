@@ -2447,6 +2447,10 @@ class ExplorationController(
             _uiState.update {
                 ExplorationUiState(
                     isLoading = false,
+                    // Prompt collectors can emit before asset loading finishes. Preserve
+                    // their current state so initialization cannot hide a blocking tutorial.
+                    prompt = promptManager.state.value.current,
+                    tutorialState = tutorialManager.runtimeState.value,
                     currentWorld = initialWorld,
                     currentHub = initialHub,
                     currentRoom = initialRoom,

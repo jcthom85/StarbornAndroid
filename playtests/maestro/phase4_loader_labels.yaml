@@ -5,9 +5,9 @@ appId: ${APP_ID}
     permissions: {}
     clearState: false
 - extendedWaitUntil:
-    visible: "Debug Scenarios"
+    visible: "(Debug|Playtest) Scenarios"
     timeout: 60000
-- tapOn: "Debug Scenarios"
+- tapOn: "(Debug|Playtest) Scenarios"
 - scrollUntilVisible:
     element: "Tutorial: Gear & Inventory"
     direction: DOWN

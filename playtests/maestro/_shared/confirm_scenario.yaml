@@ -1,6 +1,8 @@
 appId: ${APP_ID}
 ---
 - extendedWaitUntil:
-    visible: "Launch / Reset"
+    visible:
+      id: "scenario-launch"
     timeout: 15000
-- tapOn: "Launch / Reset"
+- tapOn:
+    id: "scenario-launch"

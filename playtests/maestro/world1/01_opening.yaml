@@ -1,0 +1,34 @@
+appId: ${APP_ID}
+---
+- runFlow: ../opening_equipment.yaml
+- tapOn: Close field menu
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: east
+      ROOM: pit_shaft
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: south
+      ROOM: pit_L1_landing
+- back
+- runFlow: _shared/drain.yaml
+- tapOn: Enter Jed's Workshop
+- tapOn: Enter
+- runFlow: _shared/drain.yaml
+- extendedWaitUntil:
+    visible:
+      id: room-workshop_yard
+    timeout: 20000
+- runFlow:
+    file: _shared/action.yaml
+    env:
+      ACTION: loader diagnostic strip
+- runFlow:
+    file: _shared/fight.yaml
+    env:
+      ENEMY: faulted_loader
+      GUIDED: "true"
+      SKILL: Arc Tether
+- runFlow: _shared/opening_workshop.yaml

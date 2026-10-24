@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Medium_Phone_API_37.0" tests="8" failures="3" time="1282.79" timestamp="2026-10-23T21:52:50">
+    <testcase id="flush" name="flush" classname="flush" file="playtests/maestro/world1/flush.yaml" time="350.239" timestamp="2026-10-23T21:52:50" status="ERROR">
+      <failure>Assertion is false: id: combat-ready-nova|combat-spoils-continue is visible</failure>
+    </testcase>
+    <testcase id="certification" name="certification" classname="certification" file="playtests/maestro/world1/certification.yaml" time="257.359" timestamp="2026-10-23T21:58:41" status="SUCCESS"/>
+    <testcase id="protocol" name="protocol" classname="protocol" file="playtests/maestro/world1/protocol.yaml" time="237.451" timestamp="2026-10-23T22:02:58" status="SUCCESS"/>
+    <testcase id="lost_shift" name="lost_shift" classname="lost_shift" file="playtests/maestro/world1/lost_shift.yaml" time="98.158" timestamp="2026-10-23T22:06:55" status="SUCCESS"/>
+    <testcase id="cart" name="cart" classname="cart" file="playtests/maestro/world1/cart.yaml" time="191.519" timestamp="2026-10-23T22:08:34" status="SUCCESS"/>
+    <testcase id="craft_exact" name="craft_exact" classname="craft_exact" file="playtests/maestro/world1/craft_exact.yaml" time="54.552" timestamp="2026-10-23T22:11:45" status="ERROR">
+      <failure>Element not found: Text matching regex: Tinker</failure>
+    </testcase>
+    <testcase id="craft_missing" name="craft_missing" classname="craft_missing" file="playtests/maestro/world1/craft_missing.yaml" time="54.203" timestamp="2026-10-23T22:12:40" status="ERROR">
+      <failure>Element not found: Text matching regex: Tinker</failure>
+    </testcase>
+    <testcase id="menus" name="menus" classname="menus" file="playtests/maestro/world1/menus.yaml" time="39.177" timestamp="2026-10-23T22:13:34" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

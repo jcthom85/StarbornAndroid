@@ -1,5 +1,6 @@
 package com.example.starborn.ui.dialogs
 
+import com.example.starborn.ui.components.maestroTag
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -168,7 +169,7 @@ fun SkillsDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = onDismiss) {
+            TextButton(onClick = onDismiss, modifier = Modifier.maestroTag("combat-abilities-close")) {
                 Icon(
                     imageVector = Icons.Filled.Close,
                     contentDescription = null,
@@ -300,7 +301,7 @@ private fun AbilityRowActions(
             tint = accent
         )
     }
-    Button(onClick = onUse, enabled = canUse) {
+    Button(onClick = onUse, enabled = canUse, modifier = Modifier.maestroTag("combat-skill-$skillName")) {
         Text(if (cooldownRemaining > 0) cooldownRemaining.toString() else "Use")
     }
 }

@@ -67,7 +67,7 @@ class CampaignEventIntegrationTest {
             assertEquals(4625 + rewards.sumOf { it.xp }, checkpoint.playerXp)
             assertEquals(rewards.sumOf { it.ap }, checkpoint.playerAp)
             assertEquals(rewards.sumOf { it.credits }, checkpoint.playerCredits)
-            assertEquals(2, checkpoint.inventory["nova_flux_liner"])
+            assertEquals(1, checkpoint.inventory["nova_flux_liner"])
             assertTrue("Battle rewards must contribute to progression", rewards.sumOf { it.xp } > 0)
             println("BATTLE_EARNED_CHECKPOINT xp=${checkpoint.playerXp} level=${checkpoint.playerLevel} ap=${checkpoint.playerAp} credits=${checkpoint.playerCredits} inventory=${checkpoint.inventory.toSortedMap()}")
             var beforeTitan: GameSessionState? = null
@@ -285,8 +285,8 @@ class CampaignEventIntegrationTest {
             for (play in listOf<(PlaytestHarness) -> Unit>(::playWorld1, ::playWorld2, ::playWorld3)) {
                 play(harness)
                 val restored = harness.roundTripSave(harness.store.state.value)
-                // Starter-kit reward bundle and later patch action each grant one.
-                assertEquals("Both authored opening armor grants survive each world boundary", 2, restored.inventory["nova_flux_liner"])
+                // Jed grants one suit; patching it must preserve ownership without duplicating it.
+                assertEquals("The single starter suit survives each world boundary", 1, restored.inventory["nova_flux_liner"])
                 harness.close()
                 harness = PlaytestHarness(restored)
             }

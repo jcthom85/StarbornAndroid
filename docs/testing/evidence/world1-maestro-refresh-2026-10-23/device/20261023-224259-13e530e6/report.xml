@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Medium_Phone_API_37.0" tests="1" failures="1" time="1968.179" timestamp="2026-10-23T22:43:03">
+    <testcase id="campaign" name="campaign" classname="campaign" file="playtests/maestro/world1/campaign.yaml" time="1968.019" timestamp="2026-10-23T22:43:03" status="ERROR">
+      <failure>No visible element found: id: room-action-cargo lift</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

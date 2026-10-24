@@ -1,0 +1,17 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    file: _shared/launch_scenario.yaml
+    env:
+      SCENARIO: campaign_w1_sq05
+      ROOM: mine_shunt
+- runFlow:
+    file: _shared/action.yaml
+    env:
+      ACTION: crew datapad
+      STOP_ID: quest-continue-completed-w1_sq05|quest-summary-completed-w1_sq05
+- runFlow:
+    file: _shared/complete.yaml
+    env:
+      QUEST: w1_sq05
+- takeScreenshot: world1-lost-shift

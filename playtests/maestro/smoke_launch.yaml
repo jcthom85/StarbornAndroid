@@ -7,10 +7,10 @@ appId: ${APP_ID}
     visible: "New Game"
     timeout: 90000
 - assertVisible: "New Game"
-- assertVisible: "Debug Scenarios"
+- assertVisible: "(Debug|Playtest) Scenarios"
 - assertVisible: "Load Game"
 - assertVisible: "Settings"
-- tapOn: "Debug Scenarios"
+- tapOn: "(Debug|Playtest) Scenarios"
 - extendedWaitUntil:
     visible: "Search world, quest, room, or system"
     timeout: 15000

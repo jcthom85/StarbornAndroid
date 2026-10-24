@@ -1,0 +1,15 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    file: _shared/launch_scenario.yaml
+    env:
+      SCENARIO: recipe_cryo_missing
+      ROOM: workshop_floor
+- tapOn: MENU
+- runFlow: _shared/drain.yaml
+- tapOn: Tinker
+- tapOn: Cryo-Inductor
+- assertNotVisible:
+    text: Synthesize
+    enabled: true
+- takeScreenshot: world1-craft-missing

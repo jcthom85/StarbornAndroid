@@ -7,9 +7,9 @@ appId: ${APP_ID}
     visible: "New Game"
     timeout: 60000
 - extendedWaitUntil:
-    visible: "Debug Scenarios"
+    visible: "(Debug|Playtest) Scenarios"
     timeout: 10000
-- tapOn: "Debug Scenarios"
+- tapOn: "(Debug|Playtest) Scenarios"
 - extendedWaitUntil:
     visible: "Search world, quest, room, or system"
     timeout: 15000

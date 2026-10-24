@@ -1,0 +1,26 @@
+appId: ${APP_ID}
+---
+- tapOn: MENU
+- tapOn: Settings
+- scrollUntilVisible:
+    element: Load
+    direction: DOWN
+    timeout: 15000
+    centerElement: false
+- tapOn: Load
+- scrollUntilVisible:
+    element:
+      id: load-slot-1
+    direction: DOWN
+    timeout: 15000
+    centerElement: false
+- tapOn:
+    id: load-slot-1
+- runFlow:
+    when:
+      visible: Load Save Slot 1.*
+    commands:
+      - tapOn: Confirm
+- runFlow:
+    file: drain.yaml
+- runFlow: close_guidance.yaml

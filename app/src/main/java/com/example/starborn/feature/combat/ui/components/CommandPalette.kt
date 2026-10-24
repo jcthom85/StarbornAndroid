@@ -1,5 +1,6 @@
 package com.example.starborn.feature.combat.ui.components
 
+import com.example.starborn.ui.components.maestroTag
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
@@ -317,6 +318,7 @@ fun CombatCommandButton(
             tonalElevation = if (enabled) 4.dp else 0.dp,
             modifier = Modifier
                 .fillMaxWidth()
+                .maestroTag("combat-command-${label.lowercase()}")
                 .alpha(if (enabled) 1f else 0.45f)
                 .clickable(
                     enabled = enabled,
@@ -499,7 +501,7 @@ fun CombatItemsDialog(
                                 Button(
                                     onClick = { onItemSelected(entry) },
                                     enabled = entry.quantity > 0,
-                                    modifier = Modifier.widthIn(min = 76.dp)
+                                    modifier = Modifier.widthIn(min = 76.dp).maestroTag("combat-item-${entry.item.id}")
                                 ) {
                                     Text("Use")
                                 }
@@ -510,7 +512,7 @@ fun CombatItemsDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = onDismiss) {
+            TextButton(onClick = onDismiss, modifier = Modifier.maestroTag("combat-items-close")) {
                 Icon(
                     imageVector = Icons.Filled.Close,
                     contentDescription = null,

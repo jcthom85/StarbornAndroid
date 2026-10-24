@@ -1,5 +1,6 @@
 package com.example.starborn.feature.exploration.ui.components
 
+import com.example.starborn.ui.components.maestroTag
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -80,6 +81,7 @@ fun EventAnnouncementOverlay(
                     scaleY = entranceProgress.value
                     alpha = entranceAlpha.value
                 }
+                .maestroTag("event-advance")
                 .semantics { contentDescription = "Event Announcement. Tap to continue" }
                 .clickable(onClick = onDismiss),
             shape = RoundedCornerShape(6.dp),

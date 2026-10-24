@@ -1,0 +1,7 @@
+
+com.example.starborn.DebugTestSessionInstrumentedTest:..
+com.example.starborn.DebugScenarioBrowserInstrumentedTest:.
+
+Time: 4.609
+
+OK (3 tests)

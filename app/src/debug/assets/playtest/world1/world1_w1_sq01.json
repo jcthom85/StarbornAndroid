@@ -1,0 +1,295 @@
+{
+  "worldId": "world_1",
+  "hubId": "hub_1_homestead",
+  "roomId": "trade_scrapper",
+  "playerId": "nova",
+  "playerLevel": 1,
+  "playerXp": 85,
+  "playerAp": 2,
+  "playerCredits": 0,
+  "partyMemberXp": {
+    "nova": 85
+  },
+  "partyMemberLevels": {
+    "nova": 1
+  },
+  "partyMemberHp": {
+    "nova": 120
+  },
+  "trackedQuestId": "w1_mq02",
+  "activeQuests": [
+    "w1_mq02"
+  ],
+  "completedQuests": [
+    "w1_mq01"
+  ],
+  "failedQuests": [],
+  "completedMilestones": [
+    "ms_w1_mq01_fault_visible",
+    "ms_w1_mq01_bunk_light_on",
+    "ms_w1_mq01_safety_fault_inspected",
+    "ms_w1_manual_starter_equipment",
+    "ms_w1_mq01_jed_talked",
+    "ms_w1_mq01_loader_inspected",
+    "ms_w1_mq01_loader_cleared",
+    "ms_w1_mq01_cryo_repaired",
+    "ms_w1_mq01_cutter_surge",
+    "ms_w1_mq01_complete",
+    "ms_w1_mq02_clearance_ordered"
+  ],
+  "milestoneHistory": [
+    "ms_w1_mq01_fault_visible",
+    "ms_w1_mq01_bunk_light_on",
+    "ms_w1_mq01_safety_fault_inspected",
+    "ms_w1_manual_starter_equipment",
+    "ms_w1_mq01_jed_talked",
+    "ms_w1_mq01_loader_inspected",
+    "ms_w1_mq01_loader_cleared",
+    "ms_w1_mq01_cryo_repaired",
+    "ms_w1_mq01_cutter_surge",
+    "ms_w1_mq01_complete",
+    "ms_w1_mq02_clearance_ordered"
+  ],
+  "learnedSchematics": [
+    "repair_cryo_inductor"
+  ],
+  "unlockedSkills": [
+    "nova_arc_tether",
+    "nova_cryo_vent"
+  ],
+  "unlockedWeapons": [
+    "zeke_shock_fists",
+    "orion_prism_focus",
+    "gh0st_whisperblade",
+    "mining_pistol"
+  ],
+  "unlockedArmors": [
+    "zeke_surge_harness",
+    "orion_channeler_mantle",
+    "gh0st_phaseweave_jacket",
+    "nova_flux_liner"
+  ],
+  "unlockedAreas": [],
+  "unlockedExits": [
+    "pit_nova_bunk::west",
+    "pit_l2_corridor::east",
+    "workshop_yard::north",
+    "workshop_floor::south"
+  ],
+  "partyMembers": [
+    "nova"
+  ],
+  "inventory": {
+    "mining_pistol": 1,
+    "nova_flux_liner": 1,
+    "scrap_metal": 2,
+    "ration_pack": 3,
+    "functional_cryo_inductor": 1,
+    "medkit_i": 1
+  },
+  "equippedItems": {},
+  "equippedWeapons": {
+    "zeke": "zeke_shock_fists",
+    "orion": "orion_prism_focus",
+    "gh0st": "gh0st_whisperblade",
+    "nova": "mining_pistol"
+  },
+  "equippedArmors": {
+    "zeke": "zeke_surge_harness",
+    "orion": "orion_channeler_mantle",
+    "gh0st": "gh0st_phaseweave_jacket",
+    "nova": "nova_flux_liner"
+  },
+  "tutorialSeen": [
+    "movement",
+    "swipe_move",
+    "opening_gear_offer",
+    "gear_equip_basics",
+    "scene_market_locator",
+    "tut_nova_first_ap_v1"
+  ],
+  "tutorialCompleted": [
+    "swipe_move",
+    "gear_equip_basics"
+  ],
+  "tutorialRoomsSeen": [
+    "pit_nova_bunk",
+    "pit_L2_corridor",
+    "pit_shaft",
+    "pit_jed_bunk",
+    "pit_L1_landing",
+    "workshop_yard",
+    "workshop_floor",
+    "trade_entrance",
+    "trade_strip",
+    "trade_scrapper"
+  ],
+  "questStageById": {
+    "w1_mq01": "report_to_jed",
+    "w1_mq02": "reach_checkpoint"
+  },
+  "questTasksCompleted": {
+    "w1_mq01": [
+      "turn_on_bunk_light",
+      "inspect_safety_fault",
+      "leave_sleeping_level",
+      "find_jed",
+      "talk_to_jed",
+      "equip_starter_gear",
+      "inspect_loader_relay",
+      "clear_faulted_loader",
+      "reach_workshop",
+      "use_tinkering_table",
+      "patch_flux_liner",
+      "confirm_governor_bypass",
+      "test_cutter"
+    ]
+  },
+  "completedEvents": [
+    "w1_mq01_inspect_safety_fault",
+    "w1_mq01_leave_sleeping_level",
+    "w1_mq01_find_jed",
+    "w1_mq01_receive_starter_kit",
+    "w1_mq01_route_to_workshop_hint",
+    "w1_mq01_inspect_loader_relay",
+    "w1_mq01_faulted_loader_victory",
+    "w1_mq01_reach_workshop",
+    "w1_mq01_cryo_inductor_repaired",
+    "w1_mq01_patch_flux_liner",
+    "w1_mq01_confirm_governor",
+    "w1_mq01_cutter_surge"
+  ],
+  "pendingEventCinematics": [],
+  "pendingBattleJson": "",
+  "roomStates": {
+    "pit_nova_bunk": {
+      "visited": true,
+      "discovered": true,
+      "light_on": true,
+      "dark": false,
+      "fault_visible": true,
+      "conduit_isolated": true
+    },
+    "pit_L2_corridor": {
+      "discovered": true,
+      "visited": true
+    },
+    "pit_shaft": {
+      "visited": true,
+      "discovered": true
+    },
+    "pit_jed_bunk": {
+      "visited": true,
+      "discovered": true
+    },
+    "pit_L1_landing": {
+      "visited": true,
+      "discovered": true
+    },
+    "workshop_yard": {
+      "visited": true,
+      "discovered": true,
+      "encounter_cleared:faulted_loader": true,
+      "loader_cleared": true
+    },
+    "workshop_floor": {
+      "discovered": true,
+      "visited": true,
+      "cryo_inductor_installed": true,
+      "cutter_surge_complete": true
+    },
+    "trade_entrance": {
+      "visited": true,
+      "discovered": true
+    },
+    "trade_strip": {
+      "visited": true,
+      "discovered": true
+    },
+    "trade_scrapper": {
+      "visited": true,
+      "discovered": true
+    }
+  },
+  "enemyPartyStates": {
+    "debug_patrol_2": {
+      "roomId": "debug_enemy_party_sizes",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 12000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "debug_patrol_3": {
+      "roomId": "debug_enemy_party_sizes_east",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 12000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "debug_patrol_north_1": {
+      "roomId": "debug_enemy_party_sizes_north",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 10000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "debug_patrol_north_2": {
+      "roomId": "debug_enemy_party_sizes_north",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 14000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "debug_patrol_south_1": {
+      "roomId": "debug_enemy_party_sizes_south",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 11000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "debug_patrol_south_2": {
+      "roomId": "debug_enemy_party_sizes_south",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 15000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    }
+  },
+  "revealedNodes": [
+    "pit",
+    "workshop",
+    "admin_gate",
+    "trade_row"
+  ],
+  "unlockedNodes": [
+    "pit",
+    "workshop",
+    "admin_gate",
+    "trade_row"
+  ],
+  "visitedNodes": [
+    "pit",
+    "workshop",
+    "trade_row"
+  ],
+  "knownEnemyWeaknesses": {
+    "faulted_loader": [
+      "shock"
+    ]
+  },
+  "completedNodes": [],
+  "arcadeProgress": {},
+  "mealChefId": "nova",
+  "fishingCleanCatchProgress": 0,
+  "progressionPrototypeVersion": 1,
+  "purchasedSkillNodes": {},
+  "progressionAwardClaims": [
+    "w1_mq01"
+  ]
+}

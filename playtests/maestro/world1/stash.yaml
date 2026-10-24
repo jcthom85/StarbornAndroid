@@ -1,0 +1,45 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    file: _shared/launch_scenario.yaml
+    env:
+      SCENARIO: campaign_w1_sq01
+      ROOM: trade_scrapper
+- runFlow:
+    file: _shared/talk.yaml
+    env:
+      NPC: scrapper
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: south
+      ROOM: trade_strip
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: east
+      ROOM: trade_stash
+- runFlow:
+    file: _shared/action.yaml
+    env:
+      ACTION: rebel cache
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: west
+      ROOM: trade_strip
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: north
+      ROOM: trade_scrapper
+- runFlow:
+    file: _shared/talk.yaml
+    env:
+      NPC: scrapper
+      STOP_ID: quest-continue-completed-w1_sq01|quest-summary-completed-w1_sq01
+- runFlow:
+    file: _shared/complete.yaml
+    env:
+      QUEST: w1_sq01
+- takeScreenshot: world1-stash

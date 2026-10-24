@@ -1,0 +1,9 @@
+appId: ${APP_ID}
+---
+# These are CombatTutorialCopy labels wired to onCombatTutorialContinue, not debug victory.
+- repeat:
+    times: 4
+    while:
+      visible: Engage|Start Training|Exploit Weakness|Break The Guard|Finish Combat|Finish The Fight
+    commands:
+      - tapOn: Engage|Start Training|Exploit Weakness|Break The Guard|Finish Combat|Finish The Fight

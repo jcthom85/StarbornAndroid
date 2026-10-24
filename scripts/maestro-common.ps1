@@ -1,3 +1,4 @@
+# Legacy Windows helpers retained for local integrations. Public wrappers use maestro_runner.py.
 $ErrorActionPreference = 'Stop'
 
 function Get-StarbornMaestroConfig {

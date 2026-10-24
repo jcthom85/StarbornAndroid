@@ -1,0 +1,40 @@
+appId: ${APP_ID}
+---
+- launchApp:
+    permissions: {}
+    clearState: true
+- extendedWaitUntil:
+    visible:
+      id: title-scenarios
+    timeout: 90000
+- tapOn:
+    id: title-scenarios
+- extendedWaitUntil:
+    visible:
+      id: scenario-search
+    timeout: 20000
+- tapOn:
+    id: scenario-search
+- inputText: ${SCENARIO}
+- hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: scenario-${SCENARIO}
+    direction: DOWN
+    timeout: 15000
+    centerElement: false
+- tapOn:
+    id: scenario-${SCENARIO}
+- extendedWaitUntil:
+    visible:
+      id: scenario-launch
+    timeout: 20000
+- tapOn:
+    id: scenario-launch
+- extendedWaitUntil:
+    visible:
+      id: room-${ROOM}
+    timeout: 90000
+- runFlow:
+    file: drain.yaml
+- runFlow: close_guidance.yaml

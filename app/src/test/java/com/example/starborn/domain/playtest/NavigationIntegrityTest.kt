@@ -37,7 +37,7 @@ class NavigationIntegrityTest {
     @Test
     fun everyExitReturnsInTheOppositeDirectionExceptNamedShortcuts() {
         val exceptions = mutableMapOf<String, String>()
-        rooms.values.forEach { source ->
+        rooms.values.filterNot { it.id == "launch_rail" }.forEach { source ->
             source.connections.forEach { (direction, targetId) ->
                 val target = rooms.getValue(targetId)
                 if (MapStateBuilder.reciprocalDirection(source, direction, target) == null) {
@@ -49,6 +49,12 @@ class NavigationIntegrityTest {
             }
         }
         assertEquals(oneWayExits, exceptions)
+    }
+
+    @Test
+    fun retainedLaunchRailCannotBeEnteredThroughAPlayableExit() {
+        assertEquals(mapOf("south" to "launch_pod"), rooms.getValue("launch_rail").connections)
+        assertTrue(rooms.values.none { "launch_rail" in it.connections.values })
     }
 
     @Test

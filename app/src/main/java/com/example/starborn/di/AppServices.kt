@@ -559,6 +559,16 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
         sessionPersistence.clearQuickSave()
     }
 
+    /** Apply the same migrations and ownership normalization as a player save load. */
+    internal fun restoreDebugCheckpoint(state: GameSessionState) {
+        check(com.example.starborn.BuildConfig.ENABLE_SCENARIO_MENU)
+        val migrated = state.migrateOpeningNarrativeState().migrateCrewProgressionState()
+        sessionStore.restore(migrated)
+        inventoryService.restore(migrated.inventory)
+        migrateLegacyWeapons(migrated)
+        migrateLegacyArmors(migrated)
+    }
+
     fun syncInventoryFromSession() {
         inventoryService.restore(sessionStore.state.value.inventory)
     }

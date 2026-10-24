@@ -1,0 +1,78 @@
+appId: ${APP_ID}
+---
+# Red Alert ends at the lift; its earlier rest interaction is no longer exposed.
+- assertVisible:
+    id: room-launch_lift
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: north
+      ROOM: launch_checkpoint
+- tapOn: Pick up Medkit I
+- runFlow: _shared/drain.yaml
+- tapOn: Pick up Ration Pack
+- runFlow: _shared/drain.yaml
+- runFlow:
+    file: _shared/use_recovery_item.yaml
+    env:
+      ITEM: Medkit
+- runFlow:
+    file: _shared/use_recovery_item.yaml
+    env:
+      ITEM: Ration Pack
+- runFlow:
+    file: _shared/fight.yaml
+    env:
+      ENEMY: dominion_dampener
+      SKILL: Arc Tether
+- runFlow:
+    file: _shared/use_recovery_item.yaml
+    env:
+      ITEM: Medkit I
+- runFlow:
+    file: _shared/use_recovery_item.yaml
+    env:
+      ITEM: Ration Pack
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: north
+      ROOM: launch_bay
+- runFlow:
+    file: _shared/talk.yaml
+    env:
+      NPC: the_warden
+- runFlow:
+    file: _shared/fight.yaml
+    env:
+      ENEMY: the_iron_warden
+      SKILL: Arc Tether
+- runFlow:
+    file: _shared/talk.yaml
+    env:
+      NPC: zeke
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: north
+      ROOM: launch_pod
+- assertNotVisible: Travel north
+- runFlow:
+    file: _shared/talk.yaml
+    env:
+      NPC: zeke
+- runFlow:
+    file: _shared/action.yaml
+    env:
+      ACTION: navigation console
+      STOP_ID: quest-continue-completed-w1_mq05|quest-summary-completed-w1_mq05
+- runFlow:
+    file: _shared/complete.yaml
+    env:
+      QUEST: w1_mq05
+- extendedWaitUntil:
+    visible:
+      id: room-sector9_crash_site
+    timeout: 60000
+- assertVisible: Zeke
+- takeScreenshot: world1-world2-handoff

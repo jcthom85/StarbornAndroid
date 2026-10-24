@@ -1,0 +1,24 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    file: ../fun_opening_hook.yaml
+- tapOn: MENU
+- assertVisible: Party
+- tapOn: Items
+- tapOn: Tinker
+- tapOn: Journal
+- tapOn: Map
+- assertVisible: Map Legend
+- tapOn: Settings
+- scrollUntilVisible:
+    element: Quick Save
+    direction: DOWN
+    timeout: 15000
+    centerElement: false
+- tapOn: Quick Save
+- tapOn: Close field menu
+- extendedWaitUntil:
+    visible:
+      id: room-pit_nova_bunk
+    timeout: 20000
+- takeScreenshot: world1-menus

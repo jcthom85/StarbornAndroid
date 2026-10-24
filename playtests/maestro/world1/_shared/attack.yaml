@@ -1,0 +1,35 @@
+appId: ${APP_ID}
+env:
+  MODE: ${MODE || "auto"}
+---
+- extendedWaitUntil:
+    visible:
+      id: combat-ready-nova|combat-spoils-continue
+    timeout: 45000
+- runFlow:
+    when:
+      visible:
+        id: combat-ready-nova
+    commands:
+      - runFlow: open_command.yaml
+      - copyTextFrom:
+          id: combat-hp-nova
+      - evalScript: ${output.novaHp = maestro.copiedText.match(/([0-9]+)\/([0-9]+)/)}
+      - assertTrue: ${output.novaHp != null && Number(output.novaHp[2]) > 0}
+      - evalScript: ${output.novaHpRatio = Number(output.novaHp[1]) / Number(output.novaHp[2])}
+      - evalScript: ${output.turnUsed = false}
+      - runFlow:
+          when:
+            true: ${MODE !== "basic" && output.novaHpRatio < 0.65}
+          file: heal_in_combat.yaml
+      - runFlow:
+          when:
+            true: ${MODE !== "basic" && !output.turnUsed}
+          file: use_available_ability.yaml
+      - runFlow:
+          when:
+            true: ${!output.turnUsed}
+          commands:
+            - tapOn:
+                id: combat-command-attack
+            - runFlow: select_target.yaml

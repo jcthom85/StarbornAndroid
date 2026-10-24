@@ -1,0 +1,46 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: south
+      ROOM: workshop_yard
+- back
+- runFlow:
+    file: _shared/drain.yaml
+- tapOn: Enter Transit Checkpoint
+- tapOn: Enter
+- runFlow:
+    file: _shared/drain.yaml
+- extendedWaitUntil:
+    visible:
+      id: room-checkpoint_queue
+    timeout: 20000
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: north
+      ROOM: checkpoint_bay
+- runFlow:
+    file: _shared/talk.yaml
+    env:
+      NPC: guard_hank
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: east
+      ROOM: checkpoint_booth
+- runFlow:
+    file: _shared/talk.yaml
+    env:
+      NPC: zeke
+- tapOn: .*Grid Instability.*
+- runFlow:
+    file: _shared/drain.yaml
+    env:
+      STOP_ID: quest-continue-completed-w1_mq02|quest-summary-completed-w1_mq02
+- runFlow:
+    file: _shared/complete.yaml
+    env:
+      QUEST: w1_mq02
+- takeScreenshot: world1-mq02-complete

@@ -1,0 +1,33 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    file: _shared/launch_scenario.yaml
+    env:
+      SCENARIO: campaign_w1_sq03
+      ROOM: admin_lobby
+- runFlow:
+    file: _shared/talk.yaml
+    env:
+      NPC: foreman_bogs
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: east
+      ROOM: admin_window
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: east
+      ROOM: admin_security
+- runFlow:
+    file: _shared/fight.yaml
+    env:
+      ENEMY: acoustic_bulwark
+      GUIDED: "true"
+      SKILL: Hydraulic Kick
+      STOP_ID: quest-continue-completed-w1_sq03|quest-summary-completed-w1_sq03
+- runFlow:
+    file: _shared/complete.yaml
+    env:
+      QUEST: w1_sq03
+- takeScreenshot: world1-certification

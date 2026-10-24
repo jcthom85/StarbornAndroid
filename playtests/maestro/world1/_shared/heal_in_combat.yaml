@@ -1,0 +1,56 @@
+appId: ${APP_ID}
+---
+- tapOn:
+    id: combat-command-items
+- evalScript: ${output.healItem = ""}
+- runFlow:
+    when:
+      true: ${output.healItem === ""}
+      visible:
+        id: combat-item-medkit_plus
+        enabled: true
+    commands:
+      - evalScript: ${output.healItem = "medkit_plus"}
+- runFlow:
+    when:
+      true: ${output.healItem === ""}
+      visible:
+        id: combat-item-medkit_i
+        enabled: true
+    commands:
+      - evalScript: ${output.healItem = "medkit_i"}
+- runFlow:
+    when:
+      true: ${output.healItem === ""}
+      visible:
+        id: combat-item-medkit
+        enabled: true
+    commands:
+      - evalScript: ${output.healItem = "medkit"}
+- runFlow:
+    when:
+      true: ${output.healItem === ""}
+      visible:
+        id: combat-item-ration_pack
+        enabled: true
+    commands:
+      - evalScript: ${output.healItem = "ration_pack"}
+- runFlow:
+    when:
+      true: ${output.healItem !== ""}
+    commands:
+      - tapOn:
+          id: combat-item-${output.healItem}
+      - runFlow:
+          when:
+            true: ${output.healItem !== "ration_pack"}
+          commands:
+            - tapOn:
+                id: combat-ready-nova|combat-party-nova
+      - evalScript: ${output.turnUsed = true}
+- runFlow:
+    when:
+      true: ${output.healItem === ""}
+    commands:
+      - tapOn:
+          id: combat-items-close

@@ -1,5 +1,6 @@
 package com.example.starborn.feature.combat.ui.components
 
+import com.example.starborn.ui.components.maestroTag
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
@@ -167,6 +168,7 @@ fun VictoryDialog(
                         contentColor = Color.Black
                     ),
                     modifier = Modifier
+                        .maestroTag("combat-spoils-continue")
                         .fillMaxWidth()
                         .height(50.dp)
                 ) {

@@ -1,0 +1,701 @@
+{
+  "worldId": "world_1",
+  "hubId": "hub_2_logistics",
+  "roomId": "launch_lift",
+  "playerId": "nova",
+  "playerLevel": 4,
+  "playerXp": 1270,
+  "playerAp": 6,
+  "playerCredits": 115,
+  "partyMemberXp": {
+    "nova": 1270
+  },
+  "partyMemberLevels": {
+    "nova": 4
+  },
+  "partyMemberHp": {
+    "nova": 120
+  },
+  "trackedQuestId": "w1_mq05",
+  "activeQuests": [
+    "w1_mq05"
+  ],
+  "completedQuests": [
+    "w1_mq01",
+    "w1_sq01",
+    "w1_sq02",
+    "w1_mq02",
+    "w1_sq04",
+    "w1_sq03",
+    "w1_sq05",
+    "w1_mq03",
+    "w1_mq04"
+  ],
+  "failedQuests": [],
+  "completedMilestones": [
+    "ms_w1_mq01_fault_visible",
+    "ms_w1_mq01_bunk_light_on",
+    "ms_w1_mq01_safety_fault_inspected",
+    "ms_w1_manual_starter_equipment",
+    "ms_w1_mq01_jed_talked",
+    "ms_w1_mq01_loader_inspected",
+    "ms_w1_mq01_loader_cleared",
+    "ms_w1_mq01_cryo_repaired",
+    "ms_w1_mq01_cutter_surge",
+    "ms_w1_mq01_complete",
+    "ms_w1_mq02_clearance_ordered",
+    "ms_w1_sq01_started",
+    "ms_w1_sq01_cache_opened",
+    "ms_w1_sq01_complete",
+    "ms_w1_sq02_started",
+    "ms_w1_sq02_vent_patched",
+    "ms_w1_sq02_complete",
+    "ms_w1_mq02_hank_denied",
+    "ms_w1_mq02_zeke_override",
+    "ms_w1_mq02_complete",
+    "ms_w1_sq03_started",
+    "ms_w1_sq03_hydraulic_kick_ready",
+    "ms_w1_guardbreak_trained",
+    "ms_w1_guard_drill_won",
+    "ms_w1_mq03_bogs_talked",
+    "ms_mine_power_on",
+    "ms_w1_sq05_completed",
+    "ms_w1_cart_route_set",
+    "ms_w1_cart_track_diverted",
+    "ms_w1_mq03_echo_marked",
+    "ms_w1_mq03_liner_ground_spent",
+    "ms_w1_mq03_complete",
+    "ms_w1_mq04_complete"
+  ],
+  "milestoneHistory": [
+    "ms_w1_sq01_complete",
+    "ms_w1_sq02_started",
+    "ms_w1_sq02_vent_patched",
+    "ms_w1_sq02_complete",
+    "ms_w1_mq02_hank_denied",
+    "ms_w1_mq02_zeke_override",
+    "ms_w1_mq02_complete",
+    "ms_w1_sq03_started",
+    "ms_w1_sq03_hydraulic_kick_ready",
+    "ms_w1_guardbreak_trained",
+    "ms_w1_guard_drill_won",
+    "ms_w1_mq03_bogs_talked",
+    "ms_mine_power_on",
+    "ms_w1_sq05_completed",
+    "ms_w1_cart_route_set",
+    "ms_w1_cart_track_diverted",
+    "ms_w1_mq03_echo_marked",
+    "ms_w1_mq03_liner_ground_spent",
+    "ms_w1_mq03_complete",
+    "ms_w1_mq04_complete"
+  ],
+  "learnedSchematics": [
+    "repair_cryo_inductor"
+  ],
+  "unlockedSkills": [
+    "nova_arc_tether",
+    "nova_cryo_vent",
+    "nova_blast_wave"
+  ],
+  "unlockedWeapons": [
+    "zeke_shock_fists",
+    "orion_prism_focus",
+    "gh0st_whisperblade",
+    "mining_pistol"
+  ],
+  "unlockedArmors": [
+    "zeke_surge_harness",
+    "orion_channeler_mantle",
+    "gh0st_phaseweave_jacket",
+    "nova_flux_liner"
+  ],
+  "unlockedAreas": [],
+  "unlockedExits": [
+    "pit_nova_bunk::west",
+    "pit_l2_corridor::east",
+    "workshop_yard::north",
+    "workshop_floor::south",
+    "checkpoint_door::north",
+    "checkpoint_tunnel::south",
+    "admin_elevator::north",
+    "mine_landing::south",
+    "mine_junction::west",
+    "mine_sealed_munitions_vault::east",
+    "echo_exit::north",
+    "launch_access::south",
+    "launch_lift::north",
+    "launch_checkpoint::south"
+  ],
+  "partyMembers": [
+    "nova"
+  ],
+  "inventory": {
+    "mining_pistol": 1,
+    "nova_flux_liner": 1,
+    "scrap_metal": 2,
+    "ration_pack": 9,
+    "medkit_i": 4,
+    "pulse_grenade": 3,
+    "mod_corrosive_rounds": 1,
+    "mine_access_badge": 1,
+    "circuit_board": 1,
+    "armor_plate": 1,
+    "hydraulic_fluid": 1,
+    "heavy_gear": 1,
+    "beast_meat": 1,
+    "recoil_dampener": 1,
+    "crew_datapad": 1,
+    "tuning_fork": 1,
+    "wiring_bundle": 1,
+    "battery": 1,
+    "ghost_signal_cell": 1,
+    "medkit": 1
+  },
+  "equippedItems": {},
+  "equippedWeapons": {
+    "zeke": "zeke_shock_fists",
+    "orion": "orion_prism_focus",
+    "gh0st": "gh0st_whisperblade",
+    "nova": "mining_pistol"
+  },
+  "equippedArmors": {
+    "zeke": "zeke_surge_harness",
+    "orion": "orion_channeler_mantle",
+    "gh0st": "gh0st_phaseweave_jacket",
+    "nova": "nova_flux_liner"
+  },
+  "tutorialSeen": [
+    "movement",
+    "swipe_move",
+    "opening_gear_offer",
+    "gear_equip_basics",
+    "scene_market_locator",
+    "tut_nova_first_ap_v1",
+    "source_art_unlock"
+  ],
+  "tutorialCompleted": [
+    "swipe_move",
+    "gear_equip_basics"
+  ],
+  "tutorialRoomsSeen": [
+    "pit_nova_bunk",
+    "pit_L2_corridor",
+    "pit_shaft",
+    "pit_jed_bunk",
+    "pit_L1_landing",
+    "workshop_yard",
+    "workshop_floor",
+    "trade_entrance",
+    "trade_strip",
+    "trade_scrapper",
+    "trade_stash",
+    "medbay_hall",
+    "medbay_exam1",
+    "medbay_vents",
+    "checkpoint_queue",
+    "checkpoint_bay",
+    "checkpoint_booth",
+    "checkpoint_door",
+    "checkpoint_tunnel",
+    "admin_lobby",
+    "server_airlock",
+    "server_aisle1",
+    "server_hub",
+    "admin_window",
+    "admin_security",
+    "admin_elevator",
+    "mine_landing",
+    "mine_alpha",
+    "mine_junction",
+    "mine_shunt",
+    "mine_sealed_munitions_vault",
+    "mine_conveyor",
+    "mine_sifter",
+    "mine_shoring",
+    "mine_threshold",
+    "mine_slope",
+    "mine_antechamber",
+    "echo_gap",
+    "echo_walkway",
+    "echo_heart",
+    "echo_exit",
+    "launch_access",
+    "launch_lift"
+  ],
+  "questStageById": {
+    "w1_mq01": "report_to_jed",
+    "w1_mq02": "override_retirement",
+    "w1_sq01": "return_to_scrapper",
+    "w1_sq02": "doc_turn_in",
+    "w1_mq03": "relic_sync",
+    "w1_sq03": "guard_break_training",
+    "w1_sq04": "find_rebel_terminal",
+    "w1_sq05": "trace_missing_shift",
+    "w1_mq04": "cargo_lift_sacrifice",
+    "w1_mq05": "reach_pod_bay"
+  },
+  "questTasksCompleted": {
+    "w1_mq01": [
+      "turn_on_bunk_light",
+      "inspect_safety_fault",
+      "leave_sleeping_level",
+      "find_jed",
+      "talk_to_jed",
+      "equip_starter_gear",
+      "inspect_loader_relay",
+      "clear_faulted_loader",
+      "reach_workshop",
+      "use_tinkering_table",
+      "patch_flux_liner",
+      "confirm_governor_bypass",
+      "test_cutter"
+    ],
+    "w1_sq01": [
+      "find_hidden_stash",
+      "open_rebel_cache",
+      "return_cache_proof"
+    ],
+    "w1_sq02": [
+      "enter_ventilation_hub",
+      "inspect_cracked_vent",
+      "reroute_airflow",
+      "clear_toxic_blockage",
+      "return_to_doc"
+    ],
+    "w1_mq02": [
+      "approach_admin_gate",
+      "request_clearance",
+      "meet_zeke",
+      "spoof_liability_form",
+      "receive_mine_access_badge"
+    ],
+    "w1_mq03": [
+      "enter_logistics_sector",
+      "talk_to_bogs",
+      "use_deep_elevator",
+      "clear_first_mine_encounter",
+      "restore_deep_mine_power",
+      "reach_architect_threshold",
+      "reach_echo_chamber",
+      "touch_tuning_fork",
+      "survive_source_sync"
+    ],
+    "w1_sq03": [
+      "talk_to_bogs",
+      "learn_hydraulic_kick",
+      "break_training_shield",
+      "rescue_trapped_workers"
+    ],
+    "w1_sq04": [
+      "enter_server_room",
+      "locate_hacked_terminal",
+      "restore_protocol_spoof",
+      "apply_access_override"
+    ],
+    "w1_sq05": [
+      "find_collapsed_tunnel",
+      "recover_datapad",
+      "read_final_letter"
+    ],
+    "w1_mq04": [
+      "survive_lockdown_broadcast",
+      "follow_zeke_comms",
+      "reach_cargo_lift",
+      "clear_escape_gauntlet",
+      "receive_chime",
+      "escape_to_launch_bay"
+    ]
+  },
+  "completedEvents": [
+    "w1_mq01_inspect_safety_fault",
+    "w1_mq01_leave_sleeping_level",
+    "w1_mq01_find_jed",
+    "w1_mq01_receive_starter_kit",
+    "w1_mq01_route_to_workshop_hint",
+    "w1_mq01_inspect_loader_relay",
+    "w1_mq01_faulted_loader_victory",
+    "w1_mq01_reach_workshop",
+    "w1_mq01_cryo_inductor_repaired",
+    "w1_mq01_patch_flux_liner",
+    "w1_mq01_confirm_governor",
+    "w1_mq01_cutter_surge",
+    "w1_sq01_find_stash",
+    "w1_sq01_open_rebel_cache",
+    "w1_sq02_enter_vents",
+    "w1_sq02_patch_vent",
+    "w1_sq02_reroute_airflow",
+    "w1_sq02_clear_toxic_blockage",
+    "w1_mq02_approach_checkpoint",
+    "w1_mq02_reach_booth",
+    "w1_mq03_logistics_commitment_warning",
+    "w1_mq03_enter_logistics_sector",
+    "w1_sq04_locate_terminal",
+    "w1_sq04_thaw_console_controls",
+    "w1_sq04_compile_spoof",
+    "w1_sq03_training_victory",
+    "w1_sq03_main_path_return_to_boggs",
+    "w1_sq03_record_drill_admin_security",
+    "w1_mq03_bogs_dialogue_complete",
+    "w1_mq03_enter_deep_mine",
+    "w1_mq03_clear_rock_borer",
+    "w1_sq05_start_shunt",
+    "w1_sq05_read_datapad",
+    "w1_cart_release",
+    "w1_mq03_reach_threshold",
+    "w1_mq03_reach_echo_chamber",
+    "w1_mq03_touch_relic",
+    "w1_mq04_start_lockdown",
+    "w1_mq04_enter_exit_tunnel",
+    "w1_mq04_emergency_route_pressure",
+    "w1_mq04_launch_access_pressure",
+    "w1_mq04_lift_pressure",
+    "w1_mq04_reach_lift",
+    "w1_mq04_gauntlet_victory",
+    "w1_mq04_complete"
+  ],
+  "pendingEventCinematics": [],
+  "pendingBattleJson": "",
+  "roomStates": {
+    "pit_nova_bunk": {
+      "visited": true,
+      "discovered": true,
+      "light_on": true,
+      "dark": false,
+      "fault_visible": true,
+      "conduit_isolated": true
+    },
+    "pit_L2_corridor": {
+      "discovered": true,
+      "visited": true
+    },
+    "pit_shaft": {
+      "visited": true,
+      "discovered": true
+    },
+    "pit_jed_bunk": {
+      "visited": true,
+      "discovered": true
+    },
+    "pit_L1_landing": {
+      "visited": true,
+      "discovered": true
+    },
+    "workshop_yard": {
+      "visited": true,
+      "discovered": true,
+      "encounter_cleared:faulted_loader": true,
+      "loader_cleared": true
+    },
+    "workshop_floor": {
+      "discovered": true,
+      "visited": true,
+      "cryo_inductor_installed": true,
+      "cutter_surge_complete": true
+    },
+    "trade_entrance": {
+      "visited": true,
+      "discovered": true
+    },
+    "trade_strip": {
+      "visited": true,
+      "discovered": true
+    },
+    "trade_scrapper": {
+      "visited": true,
+      "discovered": true
+    },
+    "trade_stash": {
+      "visited": true,
+      "discovered": true,
+      "rebel_cache_opened": true
+    },
+    "medbay_hall": {
+      "visited": true,
+      "discovered": true
+    },
+    "medbay_exam1": {
+      "visited": true,
+      "discovered": true
+    },
+    "medbay_vents": {
+      "visited": true,
+      "discovered": true,
+      "vent_inspected": true,
+      "airflow_rerouted": true,
+      "toxic_blockage_cleared": true
+    },
+    "checkpoint_queue": {
+      "visited": true,
+      "discovered": true
+    },
+    "checkpoint_bay": {
+      "visited": true,
+      "discovered": true
+    },
+    "checkpoint_booth": {
+      "visited": true,
+      "discovered": true
+    },
+    "checkpoint_door": {
+      "visited": true,
+      "discovered": true
+    },
+    "checkpoint_tunnel": {
+      "discovered": true,
+      "visited": true
+    },
+    "admin_lobby": {
+      "visited": true,
+      "discovered": true,
+      "bogs_talked": true
+    },
+    "server_airlock": {
+      "visited": true,
+      "discovered": true
+    },
+    "server_aisle1": {
+      "visited": true,
+      "discovered": true
+    },
+    "server_hub": {
+      "visited": true,
+      "discovered": true,
+      "rebel_terminal_found": true,
+      "console_thawed": true,
+      "override_applied": true
+    },
+    "admin_window": {
+      "visited": true,
+      "discovered": true
+    },
+    "admin_security": {
+      "visited": true,
+      "discovered": true,
+      "encounter_cleared:acoustic_bulwark": true
+    },
+    "admin_elevator": {
+      "mine_map_reveal_pending": false,
+      "visited": true,
+      "discovered": true,
+      "mine_map_reveal_seen": true
+    },
+    "mine_landing": {
+      "discovered": true,
+      "visited": true
+    },
+    "mine_alpha": {
+      "visited": true,
+      "discovered": true,
+      "encounter_cleared:echo_borer|echo_borer": true
+    },
+    "mine_junction": {
+      "visited": true,
+      "discovered": true,
+      "power_on": true,
+      "track_diverted": true,
+      "bulkhead_breached": true
+    },
+    "mine_shunt": {
+      "dark": false,
+      "light_on": true,
+      "visited": true,
+      "discovered": true
+    },
+    "mine_conveyor": {
+      "dark": false,
+      "light_on": true,
+      "visited": true,
+      "discovered": true
+    },
+    "mine_checkpoint": {
+      "dark": false,
+      "light_on": true
+    },
+    "mine_sifter": {
+      "dark": false,
+      "light_on": true,
+      "visited": true,
+      "discovered": true
+    },
+    "mine_gas": {
+      "dark": false,
+      "light_on": true
+    },
+    "mine_shoring": {
+      "dark": false,
+      "light_on": true,
+      "visited": true,
+      "discovered": true
+    },
+    "mine_threshold": {
+      "dark": false,
+      "light_on": true,
+      "visited": true,
+      "discovered": true
+    },
+    "mine_slope": {
+      "dark": false,
+      "light_on": true,
+      "visited": true,
+      "discovered": true
+    },
+    "mine_antechamber": {
+      "dark": false,
+      "light_on": true,
+      "visited": true,
+      "discovered": true
+    },
+    "mine_sealed_munitions_vault": {
+      "discovered": true,
+      "visited": true
+    },
+    "echo_gap": {
+      "visited": true,
+      "discovered": true
+    },
+    "echo_walkway": {
+      "visited": true,
+      "discovered": true
+    },
+    "echo_heart": {
+      "visited": true,
+      "discovered": true,
+      "relic_synced": true
+    },
+    "echo_well": {
+      "dark": false
+    },
+    "echo_memory": {
+      "dark": false
+    },
+    "launch_access": {
+      "discovered": true,
+      "visited": true
+    },
+    "echo_exit": {
+      "visited": true,
+      "discovered": true
+    },
+    "launch_lift": {
+      "visited": true,
+      "discovered": true,
+      "encounter_cleared:acoustic_bulwark|resonance_buoy": true
+    },
+    "launch_checkpoint": {
+      "discovered": true
+    }
+  },
+  "enemyPartyStates": {
+    "debug_patrol_2": {
+      "roomId": "debug_enemy_party_sizes",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 12000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "debug_patrol_3": {
+      "roomId": "debug_enemy_party_sizes_east",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 12000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "debug_patrol_north_1": {
+      "roomId": "debug_enemy_party_sizes_north",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 10000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "debug_patrol_north_2": {
+      "roomId": "debug_enemy_party_sizes_north",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 14000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "debug_patrol_south_1": {
+      "roomId": "debug_enemy_party_sizes_south",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 11000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "debug_patrol_south_2": {
+      "roomId": "debug_enemy_party_sizes_south",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 15000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w1_deep_mine_pressure_patrol": {
+      "roomId": "mine_conveyor",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 25000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    }
+  },
+  "revealedNodes": [
+    "pit",
+    "workshop",
+    "admin_gate",
+    "trade_row",
+    "med_bay",
+    "admin_concourse",
+    "server_room",
+    "deep_mine",
+    "echo_chamber",
+    "launch_bay"
+  ],
+  "unlockedNodes": [
+    "pit",
+    "workshop",
+    "admin_gate",
+    "trade_row",
+    "med_bay",
+    "admin_concourse",
+    "server_room",
+    "deep_mine",
+    "echo_chamber",
+    "launch_bay"
+  ],
+  "visitedNodes": [
+    "pit",
+    "workshop",
+    "trade_row",
+    "med_bay",
+    "admin_gate",
+    "admin_concourse",
+    "server_room",
+    "deep_mine",
+    "echo_chamber",
+    "launch_bay"
+  ],
+  "knownEnemyWeaknesses": {
+    "faulted_loader": [
+      "shock"
+    ],
+    "resonance_buoy": [
+      "shock"
+    ]
+  },
+  "completedNodes": [],
+  "arcadeProgress": {},
+  "mealChefId": "nova",
+  "fishingCleanCatchProgress": 0,
+  "progressionPrototypeVersion": 1,
+  "purchasedSkillNodes": {},
+  "progressionAwardClaims": [
+    "w1_mq01",
+    "w1_sq03",
+    "w1_mq03"
+  ]
+}

@@ -478,6 +478,23 @@ foreach ($room in $world1Rooms) {
     }
 }
 
+# The launch rail is retained solely for legacy-save relocation. It must stay unreachable
+# from playable rooms; normal navigation uses the pod authorization cinematic.
+if ($roomsById.ContainsKey("launch_rail")) {
+    $rail = $roomsById["launch_rail"]
+    $railConnections = @($rail.connections.PSObject.Properties)
+    if ($railConnections.Count -ne 1 -or (Get-RoomConnection $rail "south") -ne "launch_pod") {
+        $errors.Add("Legacy launch_rail must retain only its south connection to launch_pod.")
+    }
+    foreach ($candidate in $rooms) {
+        foreach ($connection in @($candidate.connections.PSObject.Properties)) {
+            if ([string]$connection.Value -eq "launch_rail") {
+                $errors.Add("Legacy launch_rail must have no playable inbound exit; found '$($candidate.id)'.")
+            }
+        }
+    }
+}
+
 $cardinalDirections = @("north", "south", "east", "west")
 foreach ($node in $world1Nodes) {
     $nodeRoomIds = New-Object System.Collections.Generic.HashSet[string]
@@ -514,13 +531,14 @@ foreach ($node in $world1Nodes) {
     }
 
     foreach ($roomId in @($nodeRoomIds)) {
-        if ($roomsById.ContainsKey($roomId) -and -not $visited.Contains($roomId)) {
+        if ($roomId -ne "launch_rail" -and $roomsById.ContainsKey($roomId) -and -not $visited.Contains($roomId)) {
             $errors.Add("World 1 node '$($node.id)' room '$roomId' is not reachable from entry_room '$entryRoomId' through node-local connections.")
         }
     }
 }
 
 foreach ($room in $world1Rooms) {
+    if ($room.id -eq "launch_rail") { continue } # Compatibility shape is checked explicitly above.
     if ($null -eq $room.connections) { continue }
     foreach ($entry in $room.connections.PSObject.Properties) {
         $direction = [string]$entry.Name

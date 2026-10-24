@@ -1,0 +1,42 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: north
+      ROOM: echo_exit
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: north
+      ROOM: launch_access
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: north
+      ROOM: launch_lift
+- runFlow:
+    file: _shared/action.yaml
+    env:
+      ACTION: cargo lift
+- extendedWaitUntil:
+    visible: Tap anywhere to continue
+    timeout: 15000
+- assertVisible: A Quiet Rest
+- tapOn: Tap anywhere to continue
+- runFlow: _shared/drain.yaml
+- runFlow:
+    file: _shared/fight.yaml
+    env:
+      ENEMY: acoustic_bulwark
+      SKILL: Hydraulic Kick
+- runFlow:
+    file: _shared/talk.yaml
+    env:
+      NPC: jed
+      STOP_ID: quest-continue-completed-w1_mq04|quest-summary-completed-w1_mq04
+- runFlow:
+    file: _shared/complete.yaml
+    env:
+      QUEST: w1_mq04
+- takeScreenshot: world1-mq04-complete

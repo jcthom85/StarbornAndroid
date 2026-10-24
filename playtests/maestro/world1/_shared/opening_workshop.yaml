@@ -1,0 +1,38 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    file: travel.yaml
+    env:
+      DIRECTION: north
+      ROOM: workshop_floor
+- tapOn: MENU
+- tapOn: Tinker
+- tapOn: Cryo-Inductor
+- tapOn: Scrap Metal
+- scrollUntilVisible:
+    element: Synthesize
+    direction: DOWN
+    timeout: 15000
+- tapOn: Synthesize
+- assertVisible: "Cold loop: 68%.*"
+- runFlow: drain.yaml
+- runFlow: close_guidance.yaml
+- runFlow: drain.yaml
+- runFlow:
+    file: action.yaml
+    env:
+      ACTION: Flux Liner
+- runFlow:
+    file: action.yaml
+    env:
+      ACTION: mining cutter
+- runFlow:
+    file: action.yaml
+    env:
+      ACTION: live cutter test
+      STOP_ID: quest-continue-completed-w1_mq01|quest-summary-completed-w1_mq01
+- runFlow:
+    file: complete.yaml
+    env:
+      QUEST: w1_mq01
+- takeScreenshot: world1-mq01-complete

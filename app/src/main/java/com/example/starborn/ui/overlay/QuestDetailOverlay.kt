@@ -1,5 +1,6 @@
 ﻿package com.example.starborn.ui.overlay
 
+import com.example.starborn.ui.components.maestroTag
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
@@ -347,6 +348,7 @@ private fun QuestDetailCard(
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(
                     onClick = onDismiss,
+                    modifier = Modifier.maestroTag("quest-continue-${detail.type.name.lowercase()}-${detail.questId}"),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = accent.copy(alpha = 0.22f),

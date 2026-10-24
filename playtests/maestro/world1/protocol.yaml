@@ -1,0 +1,33 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    file: _shared/launch_scenario.yaml
+    env:
+      SCENARIO: campaign_w1_sq04
+      ROOM: server_hub
+- runFlow:
+    file: _shared/action.yaml
+    env:
+      ACTION: terminal
+- runFlow:
+    file: _shared/action.yaml
+    env:
+      ACTION: console
+- runFlow:
+    file: _shared/action.yaml
+    env:
+      ACTION: output ports
+- runFlow:
+    file: _shared/action.yaml
+    env:
+      ACTION: terminal
+- tapOn: .*[Bb]oard.*
+- runFlow:
+    file: _shared/drain.yaml
+    env:
+      STOP_ID: quest-continue-completed-w1_sq04|quest-summary-completed-w1_sq04
+- runFlow:
+    file: _shared/complete.yaml
+    env:
+      QUEST: w1_sq04
+- takeScreenshot: world1-protocol

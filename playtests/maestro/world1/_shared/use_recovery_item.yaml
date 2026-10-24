@@ -1,0 +1,29 @@
+appId: ${APP_ID}
+---
+- runFlow: drain.yaml
+- tapOn: MENU
+- runFlow: drain.yaml
+- tapOn: Items
+- scrollUntilVisible:
+    element: ${ITEM}
+    direction: DOWN
+    timeout: 15000
+- tapOn: ${ITEM}
+- extendedWaitUntil:
+    visible:
+      text: Use Item
+      enabled: true
+    timeout: 15000
+- tapOn: Use Item
+- runFlow:
+    when:
+      visible: Replace your meal.*
+    commands:
+      - tapOn: Replace meal
+- runFlow:
+    when:
+      visible: Choose who receives the effect.
+    commands:
+      - tapOn: Nova
+- tapOn: Close field menu
+- runFlow: drain.yaml

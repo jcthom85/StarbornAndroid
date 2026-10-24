@@ -1,0 +1,14 @@
+appId: ${APP_ID}
+---
+- runFlow: close_guidance.yaml
+- extendedWaitUntil:
+    visible:
+      id: quest-continue-completed-${QUEST}|quest-summary-completed-${QUEST}
+    timeout: 30000
+- assertVisible:
+    id: quest-continue-completed-${QUEST}|quest-summary-completed-${QUEST}
+- tapOn:
+    id: quest-continue-completed-${QUEST}|quest-summary-continue
+- runFlow:
+    file: drain.yaml
+- runFlow: close_guidance.yaml

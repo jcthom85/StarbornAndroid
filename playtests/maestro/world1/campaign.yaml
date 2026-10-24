@@ -1,0 +1,14 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    file: 01_opening.yaml
+- runFlow:
+    file: 02_clearance.yaml
+- runFlow:
+    file: 03_certification.yaml
+- runFlow:
+    file: 04_echo.yaml
+- runFlow:
+    file: 05_escape.yaml
+- runFlow:
+    file: 06_launch.yaml

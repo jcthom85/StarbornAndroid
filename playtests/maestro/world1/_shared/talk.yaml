@@ -1,0 +1,14 @@
+appId: ${APP_ID}
+env:
+  STOP_ID: ${STOP_ID || "__no_stop__"}
+---
+- extendedWaitUntil:
+    visible:
+      id: npc-${NPC}
+    timeout: 15000
+- tapOn:
+    id: npc-${NPC}
+- runFlow:
+    file: drain.yaml
+    env:
+      STOP_ID: ${STOP_ID}

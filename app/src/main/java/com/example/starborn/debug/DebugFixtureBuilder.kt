@@ -43,11 +43,8 @@ object DebugFixtureBuilder {
             ))
             return true
         }
-        val quest = requireNotNull(services.questRepository.questById("w1_mq01"))
-        val stage = quest.stages.first { it.id == "report_to_jed" }
-        check(stage.tasks.any { it.id == "use_tinkering_table" }) { "Opening crafting checkpoint has changed" }
-        val completedTasks = quest.stages.takeWhile { it.id != stage.id }.flatMap { it.tasks }.map { it.id } +
-            stage.tasks.takeWhile { it.id != "use_tinkering_table" }.map { it.id }
+        // The recipe boundary needs a usable story context, not a partial opening.
+        val baseline = services.worldDataSource.loadWorld1Checkpoint("w1_mq02") ?: return false
         val recipe = services.craftingService.tinkeringRecipes.first { it.id == "repair_cryo_inductor" }
         val stock = services.craftingService.ingredientsFor(recipe).toMutableMap()
         recipe.tools.forEach { stock[it] = maxOf(stock[it] ?: 0, 1) }
@@ -55,16 +52,13 @@ object DebugFixtureBuilder {
             check(stock.remove("scrap_metal") != null) { "Cryo recipe no longer requires scrap" }
         }
         val store = services.sessionStore
-        store.restore(store.state.value.copy(
-            roomId = "workshop_floor",
-            questStageById = mapOf(quest.id to stage.id),
-            questTasksCompleted = mapOf(quest.id to completedTasks.toSet()),
-            completedMilestones = setOf("ms_w1_mq01_jed_talked", "ms_w1_mq01_workshop_briefed",
-                "ms_w1_mq01_loader_inspected", "ms_w1_mq01_loader_cleared"),
-            roomStates = mapOf("workshop_yard" to mapOf("loader_cleared" to true)),
-            visitedNodes = setOf("pit", "workshop"),
-            revealedNodes = setOf("pit", "workshop"),
-            unlockedNodes = setOf("pit", "workshop"),
+        store.restore(baseline.copy(
+            equippedItems = emptyMap(),
+            equippedWeapons = emptyMap(),
+            equippedArmors = emptyMap(),
+            unlockedWeapons = emptySet(),
+            unlockedArmors = emptySet(),
+            playerCredits = 0,
             inventory = stock
         ))
         services.inventoryService.restore(stock)

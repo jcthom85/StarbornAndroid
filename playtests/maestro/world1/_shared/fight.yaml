@@ -1,0 +1,18 @@
+appId: ${APP_ID}
+env:
+  SKILL: ${SKILL || "Arc Tether"}
+  GUIDED: ${GUIDED || "false"}
+  STOP_ID: ${STOP_ID || "__no_stop__"}
+---
+- extendedWaitUntil:
+    visible:
+      id: engage-${ENEMY}
+    timeout: 15000
+- tapOn:
+    id: engage-${ENEMY}
+- runFlow:
+    file: battle.yaml
+    env:
+      SKILL: ${SKILL}
+      GUIDED: ${GUIDED}
+      STOP_ID: ${STOP_ID}

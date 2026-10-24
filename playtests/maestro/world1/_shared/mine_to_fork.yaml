@@ -1,0 +1,81 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    file: travel.yaml
+    env:
+      DIRECTION: north
+      ROOM: mine_alpha
+- runFlow:
+    file: fight.yaml
+    env:
+      ENEMY: echo_borer
+      SKILL: Arc Tether
+- runFlow:
+    file: travel.yaml
+    env:
+      DIRECTION: north
+      ROOM: mine_junction
+- runFlow:
+    file: action.yaml
+    env:
+      ACTION: junction breaker box
+- runFlow:
+    file: travel.yaml
+    env:
+      DIRECTION: east
+      ROOM: mine_conveyor
+- runFlow:
+    file: travel.yaml
+    env:
+      DIRECTION: north
+      ROOM: mine_sifter
+- runFlow:
+    file: travel.yaml
+    env:
+      DIRECTION: north
+      ROOM: mine_shoring
+- runFlow:
+    file: travel.yaml
+    env:
+      DIRECTION: north
+      ROOM: mine_threshold
+- runFlow:
+    file: travel.yaml
+    env:
+      DIRECTION: west
+      ROOM: mine_slope
+- runFlow:
+    file: travel.yaml
+    env:
+      DIRECTION: north
+      ROOM: mine_antechamber
+- runFlow:
+    file: travel.yaml
+    env:
+      DIRECTION: north
+      ROOM: echo_gap
+- runFlow:
+    file: travel.yaml
+    env:
+      DIRECTION: north
+      ROOM: echo_walkway
+- runFlow:
+    file: travel.yaml
+    env:
+      DIRECTION: north
+      ROOM: echo_heart
+- runFlow:
+    file: action.yaml
+    env:
+      ACTION: tuning fork
+- runFlow:
+    file: counter_tune.yaml
+- runFlow:
+    file: drain.yaml
+    env:
+      STOP_ID: quest-continue-completed-w1_mq03|quest-summary-completed-w1_mq03
+- runFlow:
+    file: complete.yaml
+    env:
+      QUEST: w1_mq03
+- takeScreenshot: world1-mq03-complete

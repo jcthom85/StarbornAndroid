@@ -1,0 +1,24 @@
+appId: ${APP_ID}
+---
+# Scroll the nested room prose so the final path link is inside its clipped viewport.
+- swipe:
+    start: 50%, 42%
+    end: 50%, 24%
+    duration: 700
+- runFlow:
+    file: action.yaml
+    env:
+      ACTION: Plan mine descent
+- extendedWaitUntil:
+    visible: Enter Deep Mine
+    timeout: 20000
+- runFlow:
+    file: drain.yaml
+- tapOn: Enter Deep Mine
+- tapOn: Descend
+- runFlow:
+    file: drain.yaml
+- extendedWaitUntil:
+    visible:
+      id: room-mine_landing
+    timeout: 20000

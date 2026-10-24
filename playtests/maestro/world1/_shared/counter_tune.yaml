@@ -1,0 +1,32 @@
+appId: ${APP_ID}
+---
+- scrollUntilVisible:
+    element: Faster
+    direction: DOWN
+    timeout: 15000
+    centerElement: false
+- repeat:
+    times: 35
+    commands:
+      - tapOn: Faster
+- tapOn: Hold sweep
+- scrollUntilVisible:
+    element: More cooling
+    direction: DOWN
+    timeout: 15000
+    centerElement: false
+- repeat:
+    times: 33
+    commands:
+      - tapOn: More cooling
+- tapOn: Hold cold loop
+- scrollUntilVisible:
+    element: Turn right
+    direction: DOWN
+    timeout: 15000
+    centerElement: false
+- repeat:
+    times: 36
+    commands:
+      - tapOn: Turn right
+- tapOn: Engage handshake

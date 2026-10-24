@@ -1,0 +1,15 @@
+appId: ${APP_ID}
+---
+- runFlow: clear_route.yaml
+- extendedWaitUntil:
+    visible:
+      id: travel-${DIRECTION}
+    timeout: 20000
+- tapOn:
+    id: travel-${DIRECTION}
+- runFlow:
+    file: drain.yaml
+- extendedWaitUntil:
+    visible:
+      id: room-${ROOM}
+    timeout: 20000

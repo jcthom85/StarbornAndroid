@@ -81,6 +81,24 @@ class ExplorationViewModelTest {
     }
 
     @Test
+    fun initialLoadKeepsQueuedTutorialVisibleAndDismissible() {
+        val viewModel = createViewModel()
+        val prompts = getPrivateField<UIPromptManager>(viewModel, "promptManager")
+        val tutorial = TutorialPrompt(com.example.starborn.domain.tutorial.TutorialEntry(
+            key = "startup_guard", context = "Startup", message = "Review this queued tutorial."
+        ))
+        prompts.enqueue(tutorial)
+        dispatcher.scheduler.advanceUntilIdle()
+
+        assertFalse(viewModel.uiState.value.isLoading)
+        assertEquals(tutorial, viewModel.uiState.value.prompt)
+        viewModel.dismissPrompt()
+        dispatcher.scheduler.advanceUntilIdle()
+        assertNull(viewModel.uiState.value.prompt)
+        assertNull(viewModel.uiState.value.tutorialState.current)
+    }
+
+    @Test
     fun returningFromFishingDoesNotDuplicateSecuredCatch() {
         val viewModel = createViewModel()
         val inventory = getPrivateField<InventoryService>(viewModel, "inventoryService")

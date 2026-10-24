@@ -1,0 +1,22 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    file: _shared/launch_scenario.yaml
+    env:
+      SCENARIO: recipe_cryo_exact
+      ROOM: workshop_floor
+- tapOn: MENU
+- runFlow: _shared/drain.yaml
+- tapOn: Tinker
+- tapOn: Cryo-Inductor
+- tapOn: Choose a part
+- tapOn: Scrap Metal
+- scrollUntilVisible:
+    element: Synthesize
+    direction: DOWN
+    timeout: 15000
+- tapOn: Synthesize
+- assertVisible:
+    id: crafting-feedback
+    text: "The Cryo-Inductor locks into the cutter.*"
+- takeScreenshot: world1-craft-exact

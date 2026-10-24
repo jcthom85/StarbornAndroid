@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Medium_Phone_API_37.0" tests="1" failures="0" time="894.492" timestamp="2026-10-24T00:24:11">
+    <testcase id="launch_from_earned_checkpoint" name="launch_from_earned_checkpoint" classname="launch_from_earned_checkpoint" file="playtests/artifacts/maestro/diagnostic-flows-2026-10-23/launch_from_earned_checkpoint.yaml" time="894.425" timestamp="2026-10-24T00:24:11" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

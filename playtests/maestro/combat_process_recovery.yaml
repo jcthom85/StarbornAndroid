@@ -7,7 +7,7 @@ appId: ${APP_ID}
 - extendedWaitUntil:
     visible: "New Game"
     timeout: 60000
-- tapOn: "Debug Scenarios"
+- tapOn: "(Debug|Playtest) Scenarios"
 - tapOn: "Search world, quest, room, or system"
 - inputText: "First Combat"
 - runScript: sleep.js

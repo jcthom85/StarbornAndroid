@@ -1,5 +1,6 @@
 package com.example.starborn.feature.exploration.ui.hud
 
+import com.example.starborn.ui.components.maestroTag
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutLinearInEasing
@@ -268,6 +269,11 @@ private fun SinglePlanDescription(
                         width = with(LocalDensity.current) { hitBox.width.toDp() },
                         height = with(LocalDensity.current) { hitBox.height.toDp() }
                     )
+                    .maestroTag(when (val target = segment.target) {
+                        is InlineActionTarget.Room -> "room-action-${target.action.name}"
+                        is InlineActionTarget.Npc -> "npc-${target.name}"
+                        is InlineActionTarget.Enemy -> "engage-${target.id}"
+                    })
                     .semantics {
                         contentDescription = label
                         if (!segment.locked) {

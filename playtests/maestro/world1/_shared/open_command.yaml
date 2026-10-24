@@ -1,0 +1,19 @@
+appId: ${APP_ID}
+---
+- extendedWaitUntil:
+    visible:
+      id: combat-ready-nova
+    timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: combat-ready-nova
+        selected: false
+    commands:
+      - tapOn:
+          id: combat-ready-nova
+          selected: false
+- extendedWaitUntil:
+    visible:
+      id: combat-command-attack|combat-command-abilities
+    timeout: 20000

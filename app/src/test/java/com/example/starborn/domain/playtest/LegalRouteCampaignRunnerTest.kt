@@ -112,6 +112,7 @@ class LegalRouteCampaignRunnerTest {
     private lateinit var saveDir: File
     private val systemsAudit by lazy { CampaignSystemsRouteAudit(AssetJsonReader(DesktopAssetProvider(listOf(assets)), moshi)) }
     private val assistance = mutableListOf<String>()
+    private var exportWorld1Checkpoints = false
     private val publicCombats = mutableListOf<String>()
     private val prototypeSkillsUsed = mutableSetOf<String>()
     private var recordSystemsAudit = false
@@ -374,6 +375,8 @@ class LegalRouteCampaignRunnerTest {
         useProductionCrewRules = true
         val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
         try {
+            exportWorld1Checkpoints = true
+            File("build/reports/world1-checkpoints").deleteRecursively()
             LegalCampaignAgent(h).playWorld1(completionist = true)
             val state = h.sessionStore.state.value
             assertTrue((1..5).all { "w1_mq0$it" in state.completedQuests && "w1_sq0$it" in state.completedQuests })
@@ -387,6 +390,33 @@ class LegalRouteCampaignRunnerTest {
                 requireNotNull(parentFile).mkdirs()
                 writeText("Production crew; no seeded inventory/AP; all five main and five side quests; cart vault route; actual combat; World 2 handoff; AP=8; save parity; assisted actions=0. Authored puzzle answers are supplied.\n" + publicCombats.joinToString("\n"))
             }
+            File("build/reports/world1-checkpoints/passed.json").writeText(
+                "{\"test\":\"productionWorld1CompletionistRouteFinishesAllTenQuestsAndTheCartDetour\",\"roomId\":\"sector9_crash_site\",\"assistedActions\":0}")
+        } finally { h.close() }
+    }
+
+    @Test
+    fun earnedWorld1LaunchCheckpointResumesThroughActualCombatAndSaveReload() {
+        useProductionCrewRules = true
+        val reader = AssetJsonReader(DesktopAssetProvider(listOf(assets, File(root, "app/src/debug/assets"))), moshi)
+        val source = WorldAssetDataSource(reader)
+        val ids = listOf("w1_mq02", "w1_mq03", "w1_mq04", "w1_mq05", "w1_sq01", "w1_sq02", "w1_sq03", "w1_sq04", "w1_sq05", "w1_minecart_puzzle")
+        ids.forEach { id ->
+            val checkpoint = requireNotNull(source.loadWorld1Checkpoint(id)) { "Missing earned checkpoint: $id" }
+            assertTrue(checkpoint.completedQuests.contains("w1_mq01"))
+            assertEquals("mining_pistol", checkpoint.equippedWeapons["nova"])
+            assertEquals("nova_flux_liner", checkpoint.equippedArmors["nova"])
+            assertFalse("Target must not already be completed: $id", id in checkpoint.completedQuests)
+        }
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope,
+            initialState = requireNotNull(source.loadWorld1Checkpoint("w1_mq05")))
+        try {
+            LegalCampaignAgent(h).finishWorld1Launch()
+            assertTrue(assistance.isEmpty())
+            assertEquals(1, publicCombats.count { it.contains("enemies=[the_iron_warden]") })
+            assertEquals("sector9_crash_site", h.sessionStore.state.value.roomId)
+            val saved = h.saveSlot(7)
+            assertEquals(saved, h.loadSlot(7))
         } finally { h.close() }
     }
 
@@ -835,10 +865,24 @@ class LegalRouteCampaignRunnerTest {
             harness.settle()
         }
 
+        private fun captureWorld1Checkpoint(id: String) {
+            if (!exportWorld1Checkpoints) return
+            val snapshot = harness.saveSlot(8)
+            check(snapshot.pendingBattleJson.isBlank() && snapshot.battleCheckpoint == null)
+            val directory = File("build/reports/world1-checkpoints").apply { mkdirs() }
+            val sourceDigests = assets.listFiles().orEmpty().filter { it.extension == "json" }.sortedBy { it.name }.associate {
+                it.name to java.security.MessageDigest.getInstance("SHA-256").digest(it.readBytes()).joinToString("") { byte -> "%02x".format(byte) }
+            }
+            File(directory, "sources.json").writeText(moshi.adapter(Map::class.java).indent("  ").toJson(sourceDigests))
+            File(directory, "world1_$id.json").writeText(moshi.adapter(GameSessionState::class.java).indent("  ").toJson(snapshot))
+        }
+
         fun playWorld1(wardenBeforeJed: Boolean = false, completionist: Boolean = false) {
             playOpening()
+            captureWorld1Checkpoint("w1_mq02")
             if (completionist) {
                 navigateLegalPath("trade_scrapper")
+                captureWorld1Checkpoint("w1_sq01")
                 talkToNpc("Scrapper")
                 navigateLegalPath("trade_stash")
                 performAction("w1_sq01_open_rebel_cache")
@@ -846,6 +890,7 @@ class LegalRouteCampaignRunnerTest {
                 talkToNpc("Scrapper")
                 assertTrue("w1_sq01" in harness.sessionStore.state.value.completedQuests)
                 navigateLegalPath("medbay_exam1")
+                captureWorld1Checkpoint("w1_sq02")
                 talkToNpc("Doc")
                 navigateLegalPath("medbay_vents")
                 performAction("w1_sq02_patch_vent")
@@ -866,6 +911,7 @@ class LegalRouteCampaignRunnerTest {
             assertTrue("w1_mq03 active", harness.sessionStore.state.value.activeQuests.contains("w1_mq03"))
             assertTrue("Mine access badge acquired", (harness.sessionStore.state.value.inventory["mine_access_badge"] ?: 0) >= 1)
 
+            captureWorld1Checkpoint("w1_mq03")
             playWorld1AfterCheckpoint(wardenBeforeJed, completionist)
         }
 
@@ -912,9 +958,11 @@ class LegalRouteCampaignRunnerTest {
         private fun playWorld1AfterCheckpoint(wardenBeforeJed: Boolean = false, completionist: Boolean = false) {
             // Navigate through checkpoint gate to Admin Lobby
             navigateLegalPath("admin_lobby")
+            captureWorld1Checkpoint("w1_sq03")
             talkToNpc("Foreman Boggs")
             if (completionist) {
                 navigateLegalPath("server_hub")
+                captureWorld1Checkpoint("w1_sq04")
                 performAction("start_hack_sq04")
                 performAction("w1_sq04_thaw_console")
                 performAction("w1_sq04_read_ports")
@@ -935,9 +983,11 @@ class LegalRouteCampaignRunnerTest {
             performAction("evt_mine_power_on")
             if (completionist) {
                 navigateLegalPath("mine_shunt")
+                captureWorld1Checkpoint("w1_sq05")
                 performAction("read_datapad_sq05")
                 assertTrue("w1_sq05" in harness.sessionStore.state.value.completedQuests)
                 navigateLegalPath("mine_junction")
+                captureWorld1Checkpoint("w1_minecart_puzzle")
                 performAction("w1_cart_track_diverted")
                 performAction("w1_cart_release")
                 navigateLegalPath("mine_sealed_munitions_vault")
@@ -964,6 +1014,7 @@ class LegalRouteCampaignRunnerTest {
             assertTrue("w1_mq03 completed", harness.sessionStore.state.value.completedQuests.contains("w1_mq03"))
             assertTrue("w1_mq04 active", harness.sessionStore.state.value.activeQuests.contains("w1_mq04"))
 
+            captureWorld1Checkpoint("w1_mq04")
             // Escape lockdown to launch lift
             navigateLegalPath("launch_lift")
             harness.restAtVisibleStop()
@@ -981,6 +1032,11 @@ class LegalRouteCampaignRunnerTest {
             assertTrue("w1_mq04 completed", harness.sessionStore.state.value.completedQuests.contains("w1_mq04"))
             assertTrue("w1_mq05 active", harness.sessionStore.state.value.activeQuests.contains("w1_mq05"))
 
+            captureWorld1Checkpoint("w1_mq05")
+            finishWorld1Launch(wardenBeforeJed)
+        }
+
+        fun finishWorld1Launch(wardenBeforeJed: Boolean = false) {
             // Launch Bay confrontation
             harness.restAtVisibleStop()
             navigateLegalPath("launch_checkpoint")

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "suites": {
+    "smoke": {
+      "flow": "suite_smoke.yaml",
+      "description": "Title, fresh opening interactions, manual starter equipment and deferral",
+      "status": "unverified"
+    },
+    "campaign": {
+      "flow": "world1/campaign.yaml",
+      "description": "Continuous New Game through World 2 handoff with actual combat and earned resources",
+      "status": "unverified"
+    },
+    "focused": {
+      "flow": "world1/focused.yaml",
+      "description": "All World 1 side quests, cart vault, crafting boundaries and menu sweep",
+      "status": "unverified"
+    },
+    "recovery": {
+      "flow": "world1/recovery.yaml",
+      "description": "Changed opening state, manual load and force-stop/relaunch",
+      "status": "emulator-repeat-passed",
+      "evidence": [
+        "20261023-214145-88cc7d1b",
+        "20261023-214340-7538a6aa"
+      ],
+      "note": "Two consecutive API 37 emulator passes on the same APK. Phone lifecycle acceptance remains pending."
+    }
+  },
+  "policy": "Only named suite entrypoints are supported. Everything outside their transitive dependency graph is historical, not accepted regression coverage. Status changes require saved run evidence; static checks do not certify UI behavior."
+}

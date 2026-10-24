@@ -1,5 +1,7 @@
 # Game test suite rebuild
 
+October 23: [World 1 testing workflow](WORLD1_PLAYTEST.md) provides named Maestro suites, Mac/Windows commands, earned checkpoints and the phone checklist. [Refresh results](WORLD1_MAESTRO_REFRESH_2026-10-23.md) explicitly records unverified device coverage.
+
 [Maestro setup and coverage](maestro.md) explains the pinned Windows runner, isolated Android app, fresh-clone setup, and which flows need live validation.
 
 October 19: [World 1 review](WORLD1_REVIEW_2026-10-19.md) records 71 passing focused host tests, all ten quests and alternate-order escape recovery, plus a successful Android build. Human phone and audiovisual acceptance remain open.
@@ -28,7 +30,7 @@ October 15 adds first-AP/first-purchase guidance and contextual perk cues. The s
 
 ## Current implementation
 
-The replacement suite is under construction. There are now 38 entries: the ten below, six fishing locations, two provisioning workbenches, and stocked/zero-credit variants for all ten shops.
+The replacement suite is under construction. The original rebuild began with 38 entries (the catalog has since expanded; use `DebugTestRegistry.allScenarios` for the current list): the ten below, six fishing locations, two provisioning workbenches, and stocked/zero-credit variants for all ten shops.
 
 | ID | Starting point | Scope |
 | --- | --- | --- |
@@ -51,13 +53,13 @@ The opening uses the production New Game path. Recipe boundaries specify prerequ
 
 ## How to use
 
-1. Install the rebuilt debug APK. Open **Debug Scenarios** from the title screen.
+1. Install the isolated playtest APK. Open **Playtest Scenarios** from the title screen.
 2. Select an entry to review starting conditions, steps, pass criteria, and limitations.
-3. **Launch test** opens a separate Test Session. Its session file, autosave, quicksave, numbered slots, and save backups use `files/debug-test-session/datastore`.
-4. For recovery tests, load the test slot rather than launching the scenario again. After relaunching the app, choose **Resume Test Saves**, then **Load Test Save**.
-5. To restart a fixture, return to the test title screen and launch it again. **Exit Test Session** returns to the previous activity.
+3. **Launch / Reset** opens the selected Test Session. Its session file, autosave, quicksave, numbered slots, and save backups use `files/debug-test-session/datastore`.
+4. For recovery tests, load the test slot rather than launching the scenario again. After relaunching the isolated playtest app, choose **Load Game**. In the regular debug app, use **Resume Playtest Saves** first when returning to its separate session.
+5. To restart a fixture, return to the test title screen and launch it again. **Return to Main Game** returns to the previous activity when that option is available.
 
-Normal campaign saves continue using `files/datastore`. Audio/accessibility/tutorial settings are currently shared; record them for a run and enable tutorials when testing their triggers. Launching another fixture replaces the current test session and may update its autosave; preserve useful test checkpoints in numbered test slots.
+Normal campaign saves continue using `files/datastore`. Audio/accessibility/tutorial settings are shared between sessions within the same app package; record them for a run and enable tutorials when testing their triggers. Launching another fixture replaces the current test session and may update its autosave; preserve useful test checkpoints in numbered test slots.
 
 The legacy filter keeps old shortcuts available during replacement. They have not earned acceptance in the new suite. Their removal is gated on replacement gameplay evidence and caller migration. Release builds no longer expose the scenario menu.
 

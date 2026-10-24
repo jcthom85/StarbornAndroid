@@ -1,0 +1,27 @@
+appId: ${APP_ID}
+---
+- tapOn: MENU
+- tapOn: Settings
+- scrollUntilVisible:
+    element: Save
+    direction: DOWN
+    timeout: 15000
+    centerElement: false
+- tapOn: Save
+- scrollUntilVisible:
+    element:
+      id: save-slot-1
+    direction: DOWN
+    timeout: 15000
+    centerElement: false
+- tapOn:
+    id: save-slot-1
+- runFlow:
+    when:
+      visible: Overwrite Save Slot 1.*
+    commands:
+      - tapOn: Confirm
+- extendedWaitUntil:
+    notVisible: Close save menu
+    timeout: 30000
+- tapOn: Close field menu

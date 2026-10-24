@@ -3,9 +3,9 @@ appId: ${APP_ID}
 - launchApp:
     permissions: {}
 - extendedWaitUntil:
-    visible: "Debug Scenarios"
+    visible: "(Debug|Playtest) Scenarios"
     timeout: 60000
-- tapOn: "Debug Scenarios"
+- tapOn: "(Debug|Playtest) Scenarios"
 - scrollUntilVisible:
     element: "Fun Audit / The HR Record"
     direction: DOWN

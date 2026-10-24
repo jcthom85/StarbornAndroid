@@ -1,5 +1,6 @@
 package com.example.starborn.ui.components
 
+import com.example.starborn.ui.components.maestroTag
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -364,6 +365,7 @@ private fun SaveSlotRow(
                         enabled = !busy,
                         modifier = Modifier
                             .widthIn(min = 112.dp).heightIn(min = if (largeTargets) 56.dp else 48.dp)
+                            .maestroTag("save-slot-${summary.slot}")
                             .semantics { contentDescription = "Save $slotLabel" },
                         colors = ButtonDefaults.buttonColors(containerColor = accent, contentColor = Color.Black)
                     ) {
@@ -376,6 +378,7 @@ private fun SaveSlotRow(
                         enabled = !summary.isEmpty && !busy,
                         modifier = Modifier
                             .widthIn(min = 112.dp).heightIn(min = if (largeTargets) 56.dp else 48.dp)
+                            .maestroTag("load-slot-${summary.slot}")
                             .semantics { contentDescription = "Load $slotLabel" },
                         colors = ButtonDefaults.buttonColors(containerColor = accent, contentColor = Color.Black)
                     ) {

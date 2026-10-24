@@ -16,7 +16,7 @@ No blocking or warning-level issues detected during this run.
 
 This transcript reflects the exact player experience, including dialogue, room travel, and quest updates in chronological order:
 
-**[Step 1 - Travel]** Entered room: Nova's Bunk | Prose snippet: "Your bunk is a narrow sleeping shelf in the colony wall. The bunk light hangs above cargo netting and a rusty locker hol..." [Quest: w1_mq01 (wake_in_the_pit)]
+**[Step 1 - Travel]** Entered room: Nova's Bunk | Prose snippet: "Your bunk is a narrow sleeping shelf in the colony wall. The bunk light hangs above cargo netting holding your tools, a ..." [Quest: w1_mq01 (wake_in_the_pit)]
 - **[Action]** `w1_mq01_turn_on_bunk_light`: Turns on Nova's bunk light and reveals a dangerous, suppressed maintenance fault. [Quest: w1_mq01 (wake_in_the_pit)]
 - **[Action]** `w1_mq01_inspect_safety_fault`: Nova isolates the live conduit and confirms Dominion suppressed repeated repair requests. [Quest: w1_mq01 (wake_in_the_pit)]
 **[Step 4 - Travel]** Entered room: Jed's Bunk | Prose snippet: "Jed has filled his pod with manuals, gadgets, and half-built repairs. A narrow strip of mattress remains clear beside hi..." [Quest: w1_mq01 (wake_in_the_pit)]

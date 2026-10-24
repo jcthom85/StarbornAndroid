@@ -1,0 +1,20 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    file: stash.yaml
+- runFlow:
+    file: flush.yaml
+- runFlow:
+    file: certification.yaml
+- runFlow:
+    file: protocol.yaml
+- runFlow:
+    file: lost_shift.yaml
+- runFlow:
+    file: cart.yaml
+- runFlow:
+    file: craft_exact.yaml
+- runFlow:
+    file: craft_missing.yaml
+- runFlow:
+    file: menus.yaml

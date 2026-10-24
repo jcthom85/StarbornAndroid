@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Medium_Phone_API_37.0" tests="2" failures="0" time="98.199" timestamp="2026-10-23T22:41:11">
+    <testcase id="craft_exact" name="craft_exact" classname="craft_exact" file="playtests/maestro/world1/craft_exact.yaml" time="52.462" timestamp="2026-10-23T22:41:11" status="SUCCESS"/>
+    <testcase id="craft_missing" name="craft_missing" classname="craft_missing" file="playtests/maestro/world1/craft_missing.yaml" time="45.719" timestamp="2026-10-23T22:42:04" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

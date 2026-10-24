@@ -1,0 +1,19 @@
+╭───────────────────────────────────────────────────────────────────────────────────────────────╮
+│                                                                                               │
+│   Get results faster by executing flows in parallel on Maestro Cloud virtual devices. Run:    │
+│   maestro cloud app_file flows_folder/                                                        │
+│                                                                                               │
+╰───────────────────────────────────────────────────────────────────────────────────────────────╯
+
+
+Waiting for flows to complete...
+[Failed] flush (5m 50s) (Assertion is false: id: combat-ready-nova|combat-spoils-continue is visible)
+[Passed] certification (4m 17s)
+[Passed] protocol (3m 57s)
+[Passed] lost_shift (1m 38s)
+[Passed] cart (3m 12s)
+[Failed] craft_exact (55s) (Element not found: Text matching regex: Tinker)
+[Failed] craft_missing (54s) (Element not found: Text matching regex: Tinker)
+[Passed] menus (39s)
+
+3/8 Flows Failed

@@ -1,5 +1,6 @@
 package com.example.starborn.feature.crafting.ui
 
+import com.example.starborn.ui.components.maestroTag
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.widthIn
@@ -1437,6 +1438,7 @@ private fun CraftAnnouncementOverlay(
             modifier = Modifier
                 .fillMaxWidth()
                 .widthIn(max = 540.dp)
+                .maestroTag("tinkering-result-continue")
                 .semantics { contentDescription = "Tinkering result. Tap to continue" }
                 .clickable(onClick = onDismiss),
             shape = RoundedCornerShape(6.dp),

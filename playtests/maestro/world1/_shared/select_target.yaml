@@ -1,0 +1,16 @@
+appId: ${APP_ID}
+---
+- extendedWaitUntil:
+    visible:
+      id: combat-target-.*
+    timeout: 20000
+- evalScript: ${output.world1TargetId = "combat-target-.*"}
+- runFlow:
+    when:
+      visible:
+        id: combat-target-Resonance Buoy
+    commands:
+      - evalScript: ${output.world1TargetId = "combat-target-Resonance Buoy"}
+- tapOn:
+    id: ${output.world1TargetId}
+    index: 0

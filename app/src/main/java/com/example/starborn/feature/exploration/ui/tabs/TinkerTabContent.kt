@@ -1,5 +1,7 @@
 package com.example.starborn.feature.exploration.ui.tabs
 
+import com.example.starborn.ui.components.maestroTag
+
 import com.example.starborn.feature.crafting.ui.ModComparisonPanel
 
 import androidx.compose.animation.core.*
@@ -120,7 +122,7 @@ fun TinkerTabContent(
             state.lastMessage?.let { message ->
                 Surface(color = FieldMenuDesign.elevatedPanel, shape = RoundedCornerShape(12.dp)) {
                     Row(Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Text(message, Modifier.weight(1f).semantics { liveRegion = LiveRegionMode.Polite },
+                        Text(message, Modifier.weight(1f).maestroTag("crafting-feedback").semantics { liveRegion = LiveRegionMode.Polite },
                             color = FieldMenuDesign.text, style = MaterialTheme.typography.bodySmall)
                         IconButton(onClick = craftingViewModel::dismissFeedback) {
                             Icon(Icons.Default.Close, contentDescription = "Dismiss crafting message", tint = FieldMenuDesign.textMuted)

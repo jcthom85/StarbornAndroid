@@ -1,0 +1,47 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    file: _shared/launch_scenario.yaml
+    env:
+      SCENARIO: campaign_w1_minecart_puzzle
+      ROOM: mine_junction
+- runFlow:
+    file: _shared/action.yaml
+    env:
+      ACTION: switch rails
+- runFlow:
+    file: _shared/action.yaml
+    env:
+      ACTION: track diverter lever
+- runFlow:
+    file: _shared/action.yaml
+    env:
+      ACTION: wheel brake
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: west
+      ROOM: mine_sealed_munitions_vault
+- runFlow:
+    file: _shared/action.yaml
+    env:
+      ACTION: dominion munitions cache
+- runFlow:
+    when:
+      visible: Pick up all nearby items
+    commands:
+      - tapOn: Pick up all nearby items
+      - runFlow:
+          file: _shared/drain.yaml
+- takeScreenshot: world1-cart-vault
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: east
+      ROOM: mine_junction
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: west
+      ROOM: mine_sealed_munitions_vault
+- assertVisible: shattered ore cart

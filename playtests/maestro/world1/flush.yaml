@@ -1,0 +1,53 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    file: _shared/launch_scenario.yaml
+    env:
+      SCENARIO: campaign_w1_sq02
+      ROOM: medbay_exam1
+- runFlow:
+    file: _shared/talk.yaml
+    env:
+      NPC: doc
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: south
+      ROOM: medbay_hall
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: east
+      ROOM: medbay_vents
+- runFlow:
+    file: _shared/action.yaml
+    env:
+      ACTION: vent
+- runFlow:
+    file: _shared/action.yaml
+    env:
+      ACTION: fans
+- runFlow:
+    file: _shared/action.yaml
+    env:
+      ACTION: toxic blockage
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: west
+      ROOM: medbay_hall
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: north
+      ROOM: medbay_exam1
+- runFlow:
+    file: _shared/talk.yaml
+    env:
+      NPC: doc
+      STOP_ID: quest-continue-completed-w1_sq02|quest-summary-completed-w1_sq02
+- runFlow:
+    file: _shared/complete.yaml
+    env:
+      QUEST: w1_sq02
+- takeScreenshot: world1-flush

@@ -61,6 +61,15 @@ class WorldAssetDataSource(
 
     fun loadNpcs(): List<Npc> = assetReader.readList("npcs.json")
 
+    /** Debug-only assets captured by the earned World 1 completionist route. */
+    fun loadWorld1Checkpoint(id: String): com.example.starborn.domain.session.GameSessionState? {
+        if (id !in setOf("w1_mq02", "w1_mq03", "w1_mq04", "w1_mq05", "w1_sq01", "w1_sq02", "w1_sq03", "w1_sq04", "w1_sq05", "w1_minecart_puzzle")) return null
+        return assetReader.readObject<com.example.starborn.domain.session.GameSessionState>("playtest/world1/world1_$id.json")?.takeIf {
+            it.worldId == "world_1" && it.partyMembers == listOf("nova") &&
+                it.pendingBattleJson.isBlank() && it.battleCheckpoint == null
+        }
+    }
+
     fun loadCrewCheckpoint(id: String): com.example.starborn.domain.session.GameSessionState? {
         if (id !in setOf("early", "middle", "late")) return null
         return assetReader.readObject<com.example.starborn.domain.session.GameSessionState>("playtest/crew_$id.json")?.takeIf {

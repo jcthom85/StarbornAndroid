@@ -1,0 +1,34 @@
+appId: ${APP_ID}
+env:
+  STOP_ID: ${STOP_ID || "__no_stop__"}
+---
+# Gameplay swipes can travel. Missing links must fail without scrolling into another room.
+- extendedWaitUntil:
+    visible:
+      id: room-action-${ACTION}
+    timeout: 15000
+- tapOn:
+    id: room-action-${ACTION}
+- runFlow:
+    when:
+      visible:
+        id: room-offer-confirm
+    commands:
+      - tapOn:
+          id: room-offer-confirm
+- runFlow:
+    file: drain.yaml
+    env:
+      STOP_ID: ${STOP_ID}
+- runFlow:
+    when:
+      visible:
+        id: room-toggle-enable
+        enabled: true
+    commands:
+      - tapOn:
+          id: room-toggle-enable
+      - runFlow:
+          file: drain.yaml
+          env:
+            STOP_ID: ${STOP_ID}

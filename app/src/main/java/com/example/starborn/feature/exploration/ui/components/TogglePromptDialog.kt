@@ -1,5 +1,6 @@
 package com.example.starborn.feature.exploration.ui.components
 
+import com.example.starborn.ui.components.maestroTag
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.AlertDialog
@@ -23,6 +24,7 @@ fun TogglePromptDialog(
         primaryLabel = prompt.enableLabel,
         secondaryLabel = prompt.disableLabel,
         dismissLabel = "Cancel",
+        primaryTag = "room-toggle-enable",
         primaryEnabled = !prompt.isOn,
         secondaryEnabled = prompt.isOn,
         onPrimary = { onSelect(true) },
@@ -43,6 +45,7 @@ fun ChoicePromptDialog(
     onSecondary: () -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
+    primaryTag: String = "choice-primary",
     primaryEnabled: Boolean = true,
     secondaryEnabled: Boolean = true
 ) {
@@ -55,6 +58,7 @@ fun ChoicePromptDialog(
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 TextButton(
                     onClick = onPrimary,
+                    modifier = Modifier.maestroTag(primaryTag),
                     enabled = primaryEnabled
                 ) {
                     Text(primaryLabel)

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.feature.exploration.ExplorationViewModelTest" tests="22" skipped="0" failures="0" errors="0" timestamp="2026-10-24T02:38:50.554Z" hostname="V52076.vims.edu" time="0.891">
+  <properties/>
+  <testcase name="openingInventoryTabBeforeJedDoesNotQueueBagTutorial" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.537"/>
+  <testcase name="returningFromFishingDoesNotDuplicateSecuredCatch" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.005"/>
+  <testcase name="astraBridgeRejectsFutureRoutesAndPersistsSuccessfulTransit" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.221"/>
+  <testcase name="astraStayAboardKeepsNewDockForCargoRamp" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.023"/>
+  <testcase name="burgQuestSessionPreventsAstraDisembarkAndShowsPopup" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.011"/>
+  <testcase name="enqueueLevelUpsPromotesSequentially" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.003"/>
+  <testcase name="astraRampActionRecoversMissingDockAndBoardingCanBeRepeated" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.014"/>
+  <testcase name="fullMapCellsCoverEntireNodeAndPreserveDiscoveryState" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.002"/>
+  <testcase name="closingFieldMenuClearsMenuOwnedNestedPresentation" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.002"/>
+  <testcase name="openingEquipmentOfferOpensPartyAndRequiresBothActualEquipActions" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.006"/>
+  <testcase name="burgQuestSessionHidesGalleyKitchenetteInCommonRoom" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.023"/>
+  <testcase name="restPartyRestoresCurrentPartyHpToMax" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.002"/>
+  <testcase name="laterDefersEquipmentTeachingWithoutCompletingOrRepeatingTheOffer" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.004"/>
+  <testcase name="disabledTutorialsStillOfferEquipmentWithoutAnInstructionalOverlay" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.002"/>
+  <testcase name="astraCurrentWorldCannotResetExactBoardingLocation" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.008"/>
+  <testcase name="openingInventoryTabAfterJedQueuesBagTutorial" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.002"/>
+  <testcase name="initialLoadKeepsQueuedTutorialVisibleAndDismissible" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.001"/>
+  <testcase name="unlockingOneWayExitDoesNotUnlockAnotherRoomsReturnSlot" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.002"/>
+  <testcase name="astraDeckIsConnectedAndOnlyCargoRampDisembarksToExactBoardingRoom" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.013"/>
+  <testcase name="unlockedExitClearsBlockedDirection" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.002"/>
+  <testcase name="tutorialScriptsTriggeredForQuestStage" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.003"/>
+  <testcase name="dialogueMusicLifecycleTransientAndPersistent" classname="com.example.starborn.feature.exploration.ExplorationViewModelTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[WARNING: A Java agent has been loaded dynamically (/Users/jason/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.14.9/dfb8707031008535048bad2b69735f46d0b6c5e5/byte-buddy-agent-1.14.9.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>

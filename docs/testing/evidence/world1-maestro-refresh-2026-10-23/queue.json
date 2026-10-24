@@ -1,0 +1,67 @@
+{
+  "status": "passed",
+  "device": "emulator-5554",
+  "started": "2026-10-24T11:31:55Z",
+  "apkSha256": "9bd3d139d1c37947adb7162b3c2b0fc4cd3b3de6463b4f303554dd69a398d519",
+  "flowTreeSha256": "a99cc9c4ee28a4e6872e8dcea42d4bab11f3bbab010f1dcf95efe727bf300bc2",
+  "runnerSha256": "cdfd1d37de2c3ca5a33f6912f95d5b09ff8367fc3185b02356094bf08bd0f69e",
+  "runs": [
+    {
+      "suite": "smoke",
+      "attempt": 1,
+      "exitCode": 0,
+      "run": "20261024-073156-e802fc41",
+      "status": "passed"
+    },
+    {
+      "suite": "smoke",
+      "attempt": 2,
+      "exitCode": 0,
+      "run": "20261024-073514-5ec01fb4",
+      "status": "passed"
+    },
+    {
+      "suite": "recovery",
+      "attempt": 1,
+      "exitCode": 0,
+      "run": "20261024-073835-9d277f69",
+      "status": "passed"
+    },
+    {
+      "suite": "recovery",
+      "attempt": 2,
+      "exitCode": 0,
+      "run": "20261024-074024-93dd3d2e",
+      "status": "passed"
+    },
+    {
+      "suite": "focused",
+      "attempt": 1,
+      "exitCode": 0,
+      "run": "20261024-074213-df6094b8",
+      "status": "passed"
+    },
+    {
+      "suite": "focused",
+      "attempt": 2,
+      "exitCode": 0,
+      "run": "20261024-080335-ca5ce83f",
+      "status": "passed"
+    },
+    {
+      "suite": "campaign",
+      "attempt": 1,
+      "exitCode": 0,
+      "run": "20261024-082639-b0d031fd",
+      "status": "passed"
+    },
+    {
+      "suite": "campaign",
+      "attempt": 2,
+      "exitCode": 0,
+      "run": "20261024-091614-116bf968",
+      "status": "passed"
+    }
+  ],
+  "finished": "2026-10-24T14:05:26Z"
+}

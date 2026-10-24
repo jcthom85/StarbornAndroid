@@ -1,0 +1,44 @@
+appId: ${APP_ID}
+---
+- runFlow:
+    file: ../fun_opening_hook.yaml
+- runFlow:
+    file: _shared/save.yaml
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: west
+      ROOM: pit_L2_corridor
+- runFlow:
+    file: _shared/load.yaml
+- extendedWaitUntil:
+    visible:
+      id: room-pit_nova_bunk
+    timeout: 20000
+- assertNotVisible: "Darkness presses against the narrow sleeping shelf.*"
+- stopApp
+- launchApp:
+    permissions: {}
+    clearState: false
+- extendedWaitUntil:
+    visible:
+      id: title-load-game
+    timeout: 90000
+- tapOn:
+    id: title-load-game
+- scrollUntilVisible:
+    element:
+      id: load-slot-1
+    direction: DOWN
+    timeout: 15000
+    centerElement: false
+- tapOn:
+    id: load-slot-1
+- runFlow:
+    file: _shared/drain.yaml
+- extendedWaitUntil:
+    visible:
+      id: room-pit_nova_bunk
+    timeout: 20000
+- assertVisible: Travel west
+- takeScreenshot: world1-restart-recovery

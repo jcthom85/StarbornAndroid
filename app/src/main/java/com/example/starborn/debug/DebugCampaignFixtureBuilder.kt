@@ -3,13 +3,17 @@ package com.example.starborn.debug
 import com.example.starborn.di.AppServices
 
 /**
- * Builds realistic, verified campaign checkpoints across all 6 worlds and side quests.
- * Sets believable progression, inventory, party members, skills, and prerequisite milestones.
+ * Loads earned World 1 checkpoints. Other worlds retain unverified synthetic setups.
  */
 object DebugCampaignFixtureBuilder {
 
     fun prepare(services: AppServices, procedure: DebugTestProcedure): Boolean {
         val questId = procedure.targetId ?: return false
+        if (questId.startsWith("w1_")) {
+            val checkpoint = services.worldDataSource.loadWorld1Checkpoint(questId) ?: return false
+            services.restoreDebugCheckpoint(checkpoint)
+            return true
+        }
         val quest = services.questRepository.questById(questId)
         val roomId = DebugCampaignScenarios.startRooms[questId] ?: return false
         val room = services.worldDataSource.loadRooms().firstOrNull { it.id == roomId } ?: return false

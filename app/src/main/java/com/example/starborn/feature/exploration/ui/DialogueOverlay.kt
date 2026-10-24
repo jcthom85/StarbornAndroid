@@ -1,5 +1,6 @@
 package com.example.starborn.feature.exploration.ui
 
+import com.example.starborn.ui.components.maestroTag
 import com.example.starborn.shared.ui.typewriterText
 
 import androidx.compose.animation.core.LinearEasing
@@ -130,6 +131,7 @@ fun DialogueOverlay(
     val tapInteraction = remember { MutableInteractionSource() }
     val containerModifier = Modifier
         .fillMaxWidth()
+        .maestroTag(if (tapToAdvanceAllowed) "dialogue-advance" else "dialogue-choice-prompt")
         .semantics { contentDescription = if (tapToAdvanceAllowed) "Dialogue Popup. Tap to continue" else "Dialogue Popup" }
         .let { base ->
             if (tapToAdvanceAllowed) {

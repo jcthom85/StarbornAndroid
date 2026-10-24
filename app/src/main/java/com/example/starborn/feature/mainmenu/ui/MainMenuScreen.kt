@@ -1,5 +1,6 @@
 package com.example.starborn.feature.mainmenu.ui
 
+import com.example.starborn.ui.components.maestroTag
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -794,7 +795,7 @@ internal fun DebugScenarioDialog(
     val filtered = remember(query, category) {
         DebugTestRegistry.allScenarios.filter { scenario ->
             (category == null || scenario.category == category) &&
-                (query.isBlank() || listOf(scenario.title, scenario.description, scenario.worldLabel)
+                (query.isBlank() || listOf(scenario.id, scenario.title, scenario.description, scenario.worldLabel)
                     .any { it.contains(query, ignoreCase = true) })
         }
     }
@@ -864,7 +865,7 @@ internal fun DebugScenarioDialog(
                             onValueChange = { query = it },
                             label = { Text("Search world, quest, room, or system", maxLines = 1, overflow = TextOverflow.Ellipsis) },
                             singleLine = true,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth().maestroTag("scenario-search")
                         )
                     }
                     item {
@@ -885,6 +886,7 @@ internal fun DebugScenarioDialog(
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .maestroTag("scenario-${scenario.id}")
                                 .clickable { selectedScenario = scenario }
                                 .background(TitleCyan.copy(alpha = 0.07f), RoundedCornerShape(10.dp))
                                 .padding(12.dp)
@@ -909,7 +911,8 @@ internal fun DebugScenarioDialog(
             val scenarioForReview = selectedScenario
             if (scenarioForReview != null) {
                 Button(
-                    onClick = { onLaunch(scenarioForReview) }
+                    onClick = { onLaunch(scenarioForReview) },
+                    modifier = Modifier.maestroTag("scenario-launch")
                 ) {
                     Text("Launch / Reset")
                 }
@@ -1174,6 +1177,12 @@ private fun StarbornTitleButton(
     )
 
     val buttonModifier = modifier
+        .maestroTag(when (text) {
+            "New Game" -> "title-new-game"
+            "Playtest Scenarios" -> "title-scenarios"
+            "Load Game" -> "title-load-game"
+            else -> "title-${text.lowercase().replace(' ', '-')}"
+        })
         .fillMaxWidth()
         .height(if (primary) 60.dp else 56.dp)
         .graphicsLayer {

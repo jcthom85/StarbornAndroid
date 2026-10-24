@@ -4,9 +4,9 @@ appId: ${APP_ID}
     permissions: {}
     clearState: true
 - extendedWaitUntil:
-    visible: "Debug Scenarios"
+    visible: "(Debug|Playtest) Scenarios"
     timeout: 60000
-- tapOn: "Debug Scenarios"
+- tapOn: "(Debug|Playtest) Scenarios"
 - extendedWaitUntil:
     visible: "Search world, quest, room, or system"
     timeout: 10000

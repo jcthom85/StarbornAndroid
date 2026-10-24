@@ -1,5 +1,7 @@
 # Starborn Automated Testing Strategy & Gap Roadmap
 
+Historical strategy and implementation claims below are not current device acceptance evidence. Use [the World 1 workflow](WORLD1_PLAYTEST.md) and [current results](WORLD1_MAESTRO_REFRESH_2026-10-23.md) for supported commands, coverage and unresolved acceptance.
+
 > **Reference Document:** Created on 2026-09-16 to track prioritized automated testing gaps and the implementation roadmap across balance, progression, narrative pacing, audio, and content verification.
 
 ---

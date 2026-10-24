@@ -1,0 +1,16 @@
+appId: ${APP_ID}
+env:
+  STOP_ID: ${STOP_ID || "__no_stop__"}
+---
+- waitForAnimationToEnd:
+    timeout: 1000
+- repeat:
+    times: 80
+    while:
+      visible:
+        id: dialogue-advance|cinematic-advance|narration-continue|prompt-continue|tutorial-dismiss|event-advance|item-granted-continue|quest-continue-.*|quest-summary-continue|combat-spoils-continue|level-up-continue|tinkering-result-continue
+      notVisible:
+        id: ${STOP_ID}
+    commands:
+      - tapOn:
+          id: dialogue-advance|cinematic-advance|narration-continue|prompt-continue|tutorial-dismiss|event-advance|item-granted-continue|quest-continue-.*|quest-summary-continue|combat-spoils-continue|level-up-continue|tinkering-result-continue

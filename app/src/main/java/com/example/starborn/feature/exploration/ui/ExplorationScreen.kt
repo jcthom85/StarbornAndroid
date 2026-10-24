@@ -1,5 +1,6 @@
 package com.example.starborn.feature.exploration.ui
 
+import com.example.starborn.ui.components.maestroTag
 import com.example.starborn.shared.ui.typewriterText
 
 import com.example.starborn.ui.map.*
@@ -982,6 +983,7 @@ fun ExplorationScreen(
             if (uiState.currentRoom != null && !uiState.isLoading) {
             Column(
                 modifier = Modifier
+                    .maestroTag("room-${uiState.currentRoom?.id.orEmpty()}")
                     .align(Alignment.TopCenter)
                     .fillMaxWidth(0.9f)
                     .verticalScroll(rememberScrollState()),
@@ -1118,7 +1120,7 @@ fun ExplorationScreen(
                 title = { Text("Room actions") },
                 text = { Column(Modifier.heightIn(max = 420.dp).verticalScroll(rememberScrollState())) {
                     uiState.actions.distinctBy { it.actionKey() }.forEach { action ->
-                        TextButton(onClick = { viewModel.inspectRoomAction(action) }, modifier = Modifier.fillMaxWidth()) {
+                        TextButton(onClick = { viewModel.inspectRoomAction(action) }, modifier = Modifier.fillMaxWidth().maestroTag("room-action-${action.name}")) {
                             Text(roomActionLabel(action))
                         }
                     }
@@ -5377,6 +5379,7 @@ private fun NpcPresenceChip(
                 alpha = animAlpha
                 translationY = animOffsetY * density
             }
+            .maestroTag("npc-$npc")
             .semantics { contentDescription = "Talk to $label" }
     ) {
         Row(
@@ -6171,6 +6174,7 @@ private fun EnemyPartyStandee(
         modifier = modifier
             .width(size)
             .height(size + 28.dp)
+            .maestroTag("engage-$enemyId")
             .semantics { contentDescription = "Engage ${icon?.displayName ?: enemyDisplayLabel(enemyId)}" }
             .clickable(
                 interactionSource = interactionSource,
@@ -6861,7 +6865,8 @@ fun TutorialBanner(
         modifier = modifier,
         tapToDismiss = onPrimaryAction == null,
         secondaryActionLabel = if (onPrimaryAction != null) prompt.metadata["dismiss_label"] ?: "Later" else null,
-        onSecondaryAction = onDismiss
+        onSecondaryAction = onDismiss,
+        primaryTag = if (onPrimaryAction == null) "prompt-continue" else "tutorial-action"
     )
 }
 
@@ -6920,6 +6925,7 @@ fun ItemGrantedBanner(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .widthIn(min = 300.dp, max = 560.dp)
+            .maestroTag("item-granted-continue")
             .semantics {
                 contentDescription = "Item acquired: $itemLabel. Tap to continue."
             },
@@ -7062,7 +7068,8 @@ private fun PromptBanner(
     showTitle: Boolean = true,
     tapToDismiss: Boolean = false,
     secondaryActionLabel: String? = null,
-    onSecondaryAction: (() -> Unit)? = null
+    onSecondaryAction: (() -> Unit)? = null,
+    primaryTag: String = "prompt-continue"
 ) {
     val shape = RoundedCornerShape(if (showTitle) 24.dp else 18.dp)
     val badgeLabel = title.uppercase(Locale.getDefault())
@@ -7179,10 +7186,11 @@ private fun PromptBanner(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         if (secondaryActionLabel != null && onSecondaryAction != null) {
-                            TextButton(onClick = onSecondaryAction) { Text(secondaryActionLabel, color = accentColor) }
+                            TextButton(onClick = onSecondaryAction, modifier = Modifier.maestroTag("tutorial-dismiss")) { Text(secondaryActionLabel, color = accentColor) }
                         }
                         Button(
                             onClick = onAction,
+                            modifier = Modifier.maestroTag(primaryTag),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = accentColor,
                                 contentColor = Color.Black.copy(alpha = 0.85f)
@@ -7234,7 +7242,7 @@ private fun PromptBanner(
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.weight(1f)
                     )
-                    TextButton(onClick = onAction) {
+                    TextButton(onClick = onAction, modifier = Modifier.maestroTag(primaryTag)) {
                         Text(
                             text = actionLabel.uppercase(Locale.getDefault()),
                             color = accentColor,
@@ -7342,6 +7350,7 @@ fun NarrationCard(
             if (actions != null) actions() else TextButton(
                 onClick = onDismiss,
                 modifier = Modifier
+                    .maestroTag("narration-continue")
                     .align(Alignment.End)
                     .defaultMinSize(minWidth = 92.dp),
                 colors = ButtonDefaults.textButtonColors(contentColor = accentColor)
@@ -7375,7 +7384,7 @@ fun LevelUpOverlay(
             if (prompt.statChanges.isNotEmpty()) {
                 prompt.statChanges.forEach { Text("${it.label}: ${it.value}", color = Color.White.copy(alpha = 0.85f)) }
             }
-            Button(onClick = onDismiss, modifier = Modifier.align(Alignment.End)) { Text("Continue") }
+            Button(onClick = onDismiss, modifier = Modifier.maestroTag("level-up-continue").align(Alignment.End)) { Text("Continue") }
         }
     }
 }
@@ -7545,6 +7554,7 @@ fun CinematicOverlay(
         modifier = modifier
             .fillMaxSize()
             .background(Color.Black.copy(alpha = scrimAlpha))
+            .maestroTag("cinematic-advance")
             .clickable(
                 interactionSource = tapInteraction,
                 indication = null
@@ -7996,6 +8006,7 @@ private fun IllustratedCinematicOverlay(
         Modifier
     } else {
         Modifier
+            .maestroTag("cinematic-advance")
             .semantics {
                 contentDescription = buildString {
                     state.step.speaker?.takeIf { it.isNotBlank() }?.let { append("$it. ") }

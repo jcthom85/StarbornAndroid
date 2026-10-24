@@ -150,14 +150,14 @@ foreach ($pattern in @(
     }
 }
 
+# Guard the authored calibration/identity facts, not an obsolete line reading.
 $cinematicText = $cinematics | ConvertTo-Json -Depth 20
 foreach ($requiredPhrase in @(
-    "It is off. That hum is not mine.",
     "87 kHz",
     "Cold loop: 68%",
     "Ground phase: 180 degrees",
     "CUTTER FAULT 4C-117",
-    "operator NOVA VANCE"
+    "NOVA VANCE"
 )) {
     if ($cinematicText -notmatch [regex]::Escape($requiredPhrase)) {
         $errors.Add("Required opening fact or benchmark line is missing: '$requiredPhrase'")

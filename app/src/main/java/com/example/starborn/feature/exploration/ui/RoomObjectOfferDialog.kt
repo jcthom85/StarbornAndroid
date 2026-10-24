@@ -1,5 +1,6 @@
 package com.example.starborn.feature.exploration.ui
 
+import com.example.starborn.ui.components.maestroTag
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -23,7 +24,7 @@ fun RoomObjectOfferDialog(offer: RoomObjectOffer, theme: Theme?, onConfirm: () -
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     TextButton(onClick = onDismiss, modifier = Modifier.heightIn(min = 48.dp),
                         colors = ButtonDefaults.textButtonColors(contentColor = accent)) { Text("Back") }
-                    Button(onClick = onConfirm, modifier = Modifier.heightIn(min = 48.dp),
+                    Button(onClick = onConfirm, modifier = Modifier.maestroTag("room-offer-confirm").heightIn(min = 48.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = accent, contentColor = Color(0xFF050B12))) {
                         Text(offer.confirmLabel)
                     }

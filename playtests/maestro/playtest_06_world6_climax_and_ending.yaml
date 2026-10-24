@@ -9,9 +9,9 @@ appId: ${APP_ID}
 
 # 1. Title Screen -> Debug Scenarios -> W6 / Finale
 - extendedWaitUntil:
-    visible: "Debug Scenarios"
+    visible: "(Debug|Playtest) Scenarios"
     timeout: 15000
-- tapOn: "Debug Scenarios"
+- tapOn: "(Debug|Playtest) Scenarios"
 - scrollUntilVisible:
     element: "W6 / Finale"
     direction: DOWN
