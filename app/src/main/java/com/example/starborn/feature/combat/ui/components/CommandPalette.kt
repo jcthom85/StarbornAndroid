@@ -110,6 +110,7 @@ fun CommandPalette(
     onSnack: () -> Unit,
     canRetreat: Boolean = true,
     onRetreat: () -> Unit,
+    onInspectEnemy: (() -> Unit)? = null,
     highContrastMode: Boolean,
     largeTouchTargets: Boolean,
     theme: Theme?,
@@ -122,6 +123,7 @@ fun CommandPalette(
     var showSnackDetails by remember(actor.id) { mutableStateOf(false) }
     AnimatedVisibility(
         visible = visible,
+        modifier = modifier,
         enter = fadeIn() + slideInVertically(initialOffsetY = { full -> full }),
         exit = fadeOut() + slideOutVertically(targetOffsetY = { full -> full / 2 })
     ) {
@@ -132,7 +134,7 @@ fun CommandPalette(
         val accentColor = themeColor(theme?.accent, Color(0xFFFF6A5F))
         val isTargetMode = !targetInstruction.isNullOrBlank()
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 14.dp, vertical = 4.dp)
         ) {
@@ -201,6 +203,35 @@ fun CommandPalette(
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text(text = "Cancel", color = Color.White)
+                            }
+                        } else if (onInspectEnemy != null) {
+                            Surface(
+                                color = Color(0xFF1E2534),
+                                shape = RoundedCornerShape(10.dp),
+                                border = BorderStroke(1.dp, borderColor.copy(alpha = 0.55f)),
+                                modifier = Modifier
+                                    .maestroTag("combat-command-inspect")
+                                    .clickable(onClick = onInspectEnemy)
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(5.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Rounded.Info,
+                                        contentDescription = "Inspect enemy",
+                                        tint = accentColor,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Text(
+                                        text = "Inspect",
+                                        style = MaterialTheme.typography.labelMedium.copy(
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = Color.White
+                                        )
+                                    )
+                                }
                             }
                         }
                     }

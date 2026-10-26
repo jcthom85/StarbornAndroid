@@ -32,6 +32,7 @@ class FishingViewModel(
     val runtime = FishingController(fishingService, zoneId, random, parentScope = viewModelScope)
     val uiState get() = runtime.uiState
     val events get() = runtime.events
+    fun catchDisplayName(itemId: String): String = runtime.catchDisplayName(itemId)
     fun setGyroAvailable(enabled: Boolean) = runtime.setGyroAvailable(enabled)
     fun selectRod(rod: FishingRod) = runtime.selectRod(rod)
     fun selectLure(lure: FishingLure) = runtime.selectLure(lure)

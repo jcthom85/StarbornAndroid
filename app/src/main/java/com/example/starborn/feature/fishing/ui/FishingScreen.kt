@@ -1,6 +1,7 @@
 package com.example.starborn.feature.fishing.ui
 
 import com.example.starborn.domain.fishing.handlingSummary
+import com.example.starborn.domain.fishing.catchSummary
 
 import android.hardware.SensorManager
 import androidx.compose.animation.core.animateFloatAsState
@@ -98,7 +99,8 @@ fun FishingScreen(
     highContrastMode: Boolean,
     largeTouchTargets: Boolean,
     disableHaptics: Boolean = false,
-    onFishingCue: (String) -> Unit = {}
+    onFishingCue: (String) -> Unit = {},
+    onCatchResult: (FishingResultPayload) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val active = uiState.fishingState in setOf(FishingState.WAITING, FishingState.HOOKSET, FishingState.REELING)
@@ -107,6 +109,20 @@ fun FishingScreen(
     LaunchedEffect(uiState.fishingState) {
         pageScroll.scrollTo(0)
         fightScroll.scrollTo(0)
+        if (uiState.fishingState == FishingState.RESULT) {
+            val catch = uiState.lastCatchResult
+            val resultType = uiState.lastResult ?: MinigameResult.FAIL
+            val success = resultType != MinigameResult.FAIL && (catch?.quantity ?: 0) > 0
+            onCatchResult(
+                FishingResultPayload(
+                    itemId = catch?.itemId?.takeIf { it.isNotBlank() },
+                    quantity = catch?.quantity,
+                    message = catch?.message,
+                    success = success,
+                    secured = catch?.secured == true
+                )
+            )
+        }
     }
     val zone = uiState.currentZone
     val buttonHeight = if (largeTouchTargets) 52.dp else 0.dp
@@ -192,6 +208,8 @@ fun FishingScreen(
                 FishingHero(
                     zone = zone,
                     state = uiState.fishingState,
+                    journal = uiState.journal,
+                    itemDisplayName = viewModel::catchDisplayName,
                     highContrastMode = highContrastMode
                 )
                 FishingPhaseStepper(state = uiState.fishingState, highContrastMode = highContrastMode)
@@ -211,11 +229,31 @@ fun FishingScreen(
                     when (uiState.fishingState) {
                         FishingState.SETUP -> Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                             if (uiState.needsReelBriefing) {
-                                Text("Your first cast", style = MaterialTheme.typography.titleMedium)
-                                Text("Tap Strike when the bite arrives. Reel while the fish is calm; release before its surge. Your first bite waits for you to tap Strike, then pauses for a safe reel explanation.")
+                                Surface(
+                                    shape = RoundedCornerShape(12.dp),
+                                    color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.55f),
+                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.45f))
+                                ) {
+                                    Column(
+                                        modifier = Modifier.padding(12.dp),
+                                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                                    ) {
+                                        Text(
+                                            "Tutorial · Fishing",
+                                            style = MaterialTheme.typography.labelLarge,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.primary
+                                        )
+                                        Text(
+                                            "Tap Strike when the bite arrives. Reel while the fish is calm; release before its surge. Your first bite waits for you to tap Strike, then pauses for a safe reel explanation.",
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+                                    }
+                                }
                             }
                             FishingSetupSection(
                                 state = uiState,
+                                itemDisplayName = viewModel::catchDisplayName,
                                 onSelectRod = viewModel::selectRod,
                                 onSelectLure = viewModel::selectLure,
                                 onSelectSensitivity = viewModel::selectSensitivity,
@@ -232,6 +270,12 @@ fun FishingScreen(
                         }
 
                         FishingState.READY -> Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                            Text(
+                                "Tutorial · Reeling & Surges",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
                             Text("Your line is set — take your time", style = MaterialTheme.typography.titleLarge)
                             Text("Hold the reel during CALM or RECOVERY. Watch PULL and your tension. When SURGE COMING appears, release and give the fish slack until it settles.")
                             Text("Slack protects your progress during a surge. Reeling safely and giving slack through surges tire the fish. Keeping tension safe and giving slack through surges earns a clean catch.")
@@ -287,7 +331,8 @@ fun FishingRoute(
     highContrastMode: Boolean,
     largeTouchTargets: Boolean,
     disableHaptics: Boolean = false,
-    onFishingCue: (String) -> Unit = {}
+    onFishingCue: (String) -> Unit = {},
+    onCatchResult: (FishingResultPayload) -> Unit = {}
 ) {
     FishingScreen(
         viewModel = viewModel,
@@ -296,7 +341,8 @@ fun FishingRoute(
         highContrastMode = highContrastMode,
         largeTouchTargets = largeTouchTargets,
         disableHaptics = disableHaptics,
-        onFishingCue = onFishingCue
+        onFishingCue = onFishingCue,
+        onCatchResult = onCatchResult
     )
 }
 
@@ -336,8 +382,13 @@ fun FishingJournal(entries: List<FishingJournalEntry>, initiallyExpanded: Boolea
 private fun FishingHero(
     zone: com.example.starborn.domain.fishing.FishingZone?,
     state: FishingState,
+    journal: List<FishingJournalEntry>,
+    itemDisplayName: (String) -> String,
     highContrastMode: Boolean
 ) {
+    val zoneJournal = remember(zone?.id, journal) {
+        journal.firstOrNull { it.zoneId == zone?.id }?.species?.associateBy { it.itemId }.orEmpty()
+    }
     val gradient = Brush.linearGradient(
         colors = if (highContrastMode) {
             listOf(Color(0xFF0A1320), Color(0xFF11263A))
@@ -355,7 +406,7 @@ private fun FishingHero(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(gradient)
-                .padding(horizontal = 16.dp, vertical = 14.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Row(
@@ -377,23 +428,18 @@ private fun FishingHero(
                             style = MaterialTheme.typography.bodySmall,
                             color = Color.White.copy(alpha = 0.78f)
                         )
-                        Text(
-                            text = "Current phase: ${state.label()}",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = Color.White.copy(alpha = 0.82f)
-                        )
                     }
                     Image(
                         painter = painterResource(R.drawable.item_icon_fishing),
                         contentDescription = null,
                         contentScale = ContentScale.Fit,
                         modifier = Modifier
-                            .height(48.dp)
+                            .height(40.dp)
                             .padding(start = 8.dp)
                     )
                 }
 
-                // Native Species Preview in this Water Body
+                // Native Species & Salvage Preview in this Water Body
                 val catches = zone?.catches.orEmpty()
                 if (catches.isNotEmpty()) {
                     Row(
@@ -409,9 +455,22 @@ private fun FishingHero(
                             color = if (highContrastMode) Color(0xFF8AC4FF) else MaterialTheme.colorScheme.primary
                         )
                         catches.forEach { catchDef ->
-                            val fishName = catchDef.itemId.replace('_', ' ')
-                                .split(' ')
-                                .joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
+                            val record = zoneJournal[catchDef.itemId]
+                            val isNative = catchDef.isNativeFish()
+                            val isDiscovered = !isNative || record?.caught == true
+                            val fishName = if (isDiscovered) {
+                                itemDisplayName(catchDef.itemId).ifBlank {
+                                    catchDef.itemId.replace('_', ' ').split(' ').joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
+                                }
+                            } else {
+                                "???"
+                            }
+                            val statusGlyph = when {
+                                !isNative -> "◇"
+                                record?.clean == true -> "★"
+                                record?.caught == true -> "✓"
+                                else -> "🐟"
+                            }
                             Surface(
                                 shape = RoundedCornerShape(8.dp),
                                 color = Color.Black.copy(alpha = 0.35f),
@@ -423,9 +482,9 @@ private fun FishingHero(
                                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                                 ) {
                                     Text(
-                                        text = "${if (catchDef.isNativeFish()) "🐟" else "◇"} $fishName",
+                                        text = "$statusGlyph $fishName",
                                         style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp),
-                                        color = Color.White.copy(alpha = 0.9f)
+                                        color = if (isDiscovered) Color.White.copy(alpha = 0.9f) else Color.White.copy(alpha = 0.65f)
                                     )
                                     val rarityColor = when (catchDef.rarity) {
                                         com.example.starborn.domain.fishing.FishingRarity.COMMON -> Color(0xFFAAAAAA)
@@ -502,6 +561,7 @@ private fun FishingState.label(): String = when (this) {
 @Composable
 private fun FishingSetupSection(
     state: FishingUiState,
+    itemDisplayName: (String) -> String,
     onSelectRod: (com.example.starborn.domain.fishing.FishingRod) -> Unit,
     onSelectLure: (com.example.starborn.domain.fishing.FishingLure) -> Unit,
     onSelectSensitivity: (com.example.starborn.feature.fishing.viewmodel.HookSensitivity) -> Unit,
@@ -513,13 +573,27 @@ private fun FishingSetupSection(
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text(
-            text = "Gear Loadout",
-            style = MaterialTheme.typography.titleMedium,
-            color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Button(
+                onClick = onStart,
+                enabled = state.selectedRod != null && state.selectedLure != null,
+                modifier = Modifier.weight(1f).heightIn(min = maxOf(buttonHeight, 48.dp))
+            ) {
+                Text("Cast Line", fontWeight = FontWeight.Bold)
+            }
+            OutlinedButton(
+                onClick = onCancel,
+                modifier = Modifier.heightIn(min = maxOf(buttonHeight, 48.dp))
+            ) {
+                Text("Leave")
+            }
+        }
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text("Select Rod", style = MaterialTheme.typography.labelLarge)
             if (state.availableRods.isEmpty()) {
@@ -567,14 +641,7 @@ private fun FishingSetupSection(
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     state.availableLures.forEach { lure ->
-                        val formattedAttracts = lure.attracts.joinToString { raw ->
-                            raw.replace('_', ' ').split(' ').joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
-                        }.ifBlank { "General fish" }
-                        val subtitle = buildString {
-                            append("Favors: $formattedAttracts")
-                            if ((lure.zoneBonuses[state.currentZone?.id] ?: 0) > 0 && state.currentZone?.catches?.any { it.itemId in lure.attracts } == true) append(" - Local match")
-                            if (lure.rarityBonus > 0) append(" - +${(lure.rarityBonus * 100).toInt()}% rare catch weight")
-                        }
+                        val subtitle = lure.catchSummary(state.currentZone, itemDisplayName)
                         GearCard(
                             title = lure.name,
                             subtitle = subtitle,
@@ -640,15 +707,6 @@ private fun FishingSetupSection(
                         }
                     }
                 }
-            }
-        }
-
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Button(onClick = onStart, enabled = state.selectedRod != null && state.selectedLure != null, modifier = Modifier.heightIn(min = buttonHeight)) {
-                Text("Cast Line")
-            }
-            OutlinedButton(onClick = onCancel, modifier = Modifier.heightIn(min = buttonHeight)) {
-                Text("Back")
             }
         }
     }

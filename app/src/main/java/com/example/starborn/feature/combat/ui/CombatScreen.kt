@@ -322,7 +322,6 @@ fun CombatScreen(
         inventoryEntries.filter { it.isBattleUsableItem() }
     }
     val inspectedEnemyId by viewModel.inspectedEnemyId.collectAsStateWithLifecycle()
-    var inspectionExpanded by remember(viewModel) { mutableStateOf(false) }
     DisposableEffect(viewModel) { onDispose { viewModel.dismissEnemyInspection() } }
     val atbMeters by viewModel.atbMeters.collectAsStateWithLifecycle()
     val lungeActorId by viewModel.lungeActorId.collectAsStateWithLifecycle(null)
@@ -671,7 +670,7 @@ fun CombatScreen(
 
         BackHandler(enabled = inspectedEnemyId != null || showSkillsDialog.value || showItemsDialog.value || pendingTargetRequest != null) {
             when {
-                inspectedEnemyId != null -> { inspectionExpanded = false; viewModel.dismissEnemyInspection() }
+                inspectedEnemyId != null -> viewModel.dismissEnemyInspection()
                 showSkillsDialog.value -> showSkillsDialog.value = false
                 showItemsDialog.value -> showItemsDialog.value = false
                 pendingTargetRequest != null -> {
@@ -864,7 +863,7 @@ fun CombatScreen(
                         when (keyEvent.key) {
                             Key.ButtonB, Key.Escape -> {
                                 when {
-                                    inspectedEnemyId != null -> { inspectionExpanded = false; viewModel.dismissEnemyInspection(); return@onKeyEvent true }
+                                    inspectedEnemyId != null -> { viewModel.dismissEnemyInspection(); return@onKeyEvent true }
                                     showSkillsDialog.value -> {
                                         showSkillsDialog.value = false
                                         viewModel.onCombatTutorialSkillDialogDismissed()
@@ -1089,8 +1088,8 @@ fun CombatScreen(
                             delayedDeathTargets = delayedDeathTargets,
                             onEnemyTap = { handleEnemyTap(it) },
                             onEnemyLongPress = {
-                                if (pendingTargetRequest == null && !combatLocked) {
-                                    viewModel.toggleEnemyTarget(it)
+                                if (!combatLocked) {
+                                    viewModel.inspectEnemy(it)
                                 }
                             },
                             atbMeters = atbMeters,
@@ -1101,7 +1100,8 @@ fun CombatScreen(
                             onLungeFinished = viewModel::onLungeFinished,
                             onMissLungeFinished = viewModel::onMissLungeFinished,
                             showTargetPrompt = false,
-                            lungeStyle = lungeStyle
+                            lungeStyle = lungeStyle,
+                            knownEnemyWeaknesses = environmentSession.knownEnemyWeaknesses
                         )
                         }
                     }
@@ -1120,12 +1120,6 @@ fun CombatScreen(
                             modifier = Modifier.align(Alignment.Center)
                         )
                     }
-                }
-                if (enemyState != null && !combatLocked && combatTutorial == null && (!targetMode || inspectedEnemyId != null)) {
-                    EnemyOverview(focusEnemy, enemyState, environmentSession.knownEnemyWeaknesses[focusEnemy.id].orEmpty(),
-                        inspecting = inspectedEnemyId != null, canInspect = true,
-                        onInspect = { viewModel.inspectEnemy(focusEnemyCombatantId); inspectionExpanded = true },
-                        onClose = { inspectionExpanded = false; viewModel.dismissEnemyInspection() })
                 }
                 Spacer(Modifier.height(8.dp))
                 PartyRoster(
@@ -1223,6 +1217,9 @@ fun CombatScreen(
                     pendingInstruction = null
                     viewModel.attemptRetreat()
                 },
+                onInspectEnemy = if (hasTargets && combatTutorial == null) {
+                    { viewModel.inspectEnemy(focusEnemyCombatantId) }
+                } else null,
                 highContrastMode = highContrastMode,
                 largeTouchTargets = largeTouchTargets,
                 theme = viewModel.theme,
@@ -1232,7 +1229,7 @@ fun CombatScreen(
                     .align(Alignment.BottomCenter)
                     .navigationBarsPadding()
                     .padding(contentPadding)
-                    .padding(bottom = 176.dp)
+                    .padding(bottom = if (compactCrew) 104.dp else 136.dp)
                     .zIndex(6f)
             )
             outcomeFx?.let { OutcomeOverlay(it, playerParty) }
@@ -1255,13 +1252,40 @@ fun CombatScreen(
                         .zIndex(22f)
                 )
             }
-            if (inspectionExpanded && inspectedEnemyId != null && enemyState != null) {
-                EnemyInspectionSheet(focusEnemy, enemyState, environmentSession.knownEnemyWeaknesses[focusEnemy.id].orEmpty(),
-                    onClose = { inspectionExpanded = false })
+            if (inspectedEnemyId != null && enemyState != null) {
+                val livingEnemies = enemyEntries.filter { entry ->
+                    val combatant = state.combatants[entry.second]
+                    combatant == null || combatant.hp > 0
+                }.ifEmpty { enemyEntries }
+                val currentEnemyIdx = livingEnemies.indexOfFirst { it.second == focusEnemyCombatantId }.coerceAtLeast(0)
+                EnemyInspectionSheet(
+                    enemy = focusEnemy,
+                    state = enemyState,
+                    knownWeaknesses = environmentSession.knownEnemyWeaknesses[focusEnemy.id].orEmpty(),
+                    onClose = { viewModel.dismissEnemyInspection() },
+                    theme = viewModel.theme,
+                    highContrastMode = highContrastMode,
+                    enemyIndex = currentEnemyIdx,
+                    enemyCount = livingEnemies.size,
+                    onPreviousEnemy = if (livingEnemies.size > 1) {
+                        {
+                            val prevIdx = if (currentEnemyIdx <= 0) livingEnemies.lastIndex else currentEnemyIdx - 1
+                            viewModel.inspectEnemy(livingEnemies[prevIdx].second)
+                        }
+                    } else null,
+                    onNextEnemy = if (livingEnemies.size > 1) {
+                        {
+                            val nextIdx = if (currentEnemyIdx >= livingEnemies.lastIndex) 0 else currentEnemyIdx + 1
+                            viewModel.inspectEnemy(livingEnemies[nextIdx].second)
+                        }
+                    } else null,
+                    modifier = Modifier.zIndex(25f)
+                )
             }
             LaunchedEffect(inspectedEnemyId, state.outcome, enemyState?.isAlive) {
-                if (inspectedEnemyId == null) inspectionExpanded = false
-                if (state.outcome != null || enemyState?.isAlive == false) { inspectionExpanded = false; viewModel.dismissEnemyInspection() }
+                if (state.outcome != null || enemyState?.isAlive == false) {
+                    viewModel.dismissEnemyInspection()
+                }
             }
             buildHint?.let { hint ->
                 com.example.starborn.feature.combat.ui.components.CombatBuildHintOverlay(

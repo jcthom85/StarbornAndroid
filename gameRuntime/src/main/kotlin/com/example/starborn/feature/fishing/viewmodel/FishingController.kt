@@ -74,6 +74,8 @@ class FishingController(
         }
     }
 
+    fun catchDisplayName(itemId: String): String = fishingService.catchDisplayName(itemId)
+
     fun setGyroAvailable(enabled: Boolean) {
         gyroAvailable = enabled
         _uiState.update { it.copy(motionSupported = enabled) }

@@ -87,7 +87,7 @@ internal fun DesktopFishingContent(services: DesktopAppServices, runtime: Fishin
         }
     }
 
-    fun acknowledgeCatch() {
+    fun acknowledgeCatch(leaveAfter: Boolean = false) {
         state.lastCatchResult?.let { result ->
             services.exploration.onFishingResult(
                 FishingResultPayload(
@@ -100,6 +100,7 @@ internal fun DesktopFishingContent(services: DesktopAppServices, runtime: Fishin
             )
         }
         runtime.resetFishing()
+        if (leaveAfter) onClose()
     }
 
     var spaceHeld by remember { mutableStateOf(false) }
@@ -122,6 +123,8 @@ internal fun DesktopFishingContent(services: DesktopAppServices, runtime: Fishin
                 if (event.key == Key.Escape && event.type == KeyEventType.KeyDown) {
                     if (state.fishingState == FishingState.WAITING) {
                         runtime.cancelWaiting()
+                    } else if (state.fishingState == FishingState.RESULT) {
+                        acknowledgeCatch(leaveAfter = true)
                     } else {
                         runtime.cancelFishing()
                         onClose()
@@ -225,7 +228,8 @@ internal fun DesktopFishingContent(services: DesktopAppServices, runtime: Fishin
                         FishingResultView(
                             result = state.lastCatchResult,
                             minigameResult = state.lastResult,
-                            onContinue = ::acknowledgeCatch
+                            onContinue = { acknowledgeCatch(leaveAfter = false) },
+                            onLeave = { acknowledgeCatch(leaveAfter = true) }
                         )
                     }
                 }
@@ -1110,7 +1114,8 @@ private fun FishingReelingCockpit(
 private fun FishingResultView(
     result: com.example.starborn.domain.fishing.FishingResult?,
     minigameResult: MinigameResult?,
-    onContinue: () -> Unit
+    onContinue: () -> Unit,
+    onLeave: () -> Unit = {}
 ) {
     val fonts = LocalStarbornFonts.current
     val isSuccess = minigameResult != MinigameResult.FAIL
@@ -1175,25 +1180,48 @@ private fun FishingResultView(
             }
             Spacer(Modifier.height(30.dp))
 
-            Button(
-                onClick = onContinue,
-                shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isSuccess) Color(0xFFFFD54F) else Color(0xFF1E3A52),
-                    contentColor = if (isSuccess) Color(0xFF07121E) else Color.White
-                ),
-                modifier = Modifier
-                    .width(260.dp)
-                    .height(50.dp)
-                    .desktopPointerHover()
-                    .testTag("fishing-continue-button")
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "CONTINUE [Spacebar]",
-                    fontFamily = fonts.orbitron,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 13.sp
-                )
+                Button(
+                    onClick = onContinue,
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isSuccess) Color(0xFFFFD54F) else Color(0xFF1E3A52),
+                        contentColor = if (isSuccess) Color(0xFF07121E) else Color.White
+                    ),
+                    modifier = Modifier
+                        .width(240.dp)
+                        .height(50.dp)
+                        .desktopPointerHover()
+                        .testTag("fishing-continue-button")
+                ) {
+                    Text(
+                        text = "FISH AGAIN [Spacebar]",
+                        fontFamily = fonts.orbitron,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 13.sp
+                    )
+                }
+
+                OutlinedButton(
+                    onClick = onLeave,
+                    shape = RoundedCornerShape(8.dp),
+                    border = BorderStroke(1.dp, Color(0xFF6F90A6)),
+                    modifier = Modifier
+                        .height(50.dp)
+                        .desktopPointerHover()
+                        .testTag("fishing-leave-button")
+                ) {
+                    Text(
+                        text = "LEAVE [Esc]",
+                        color = Color(0xFFC7DEEC),
+                        fontFamily = fonts.orbitron,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 12.sp
+                    )
+                }
             }
         }
     }
@@ -1287,7 +1315,7 @@ private fun FishingJournalModal(
                                             horizontalArrangement = Arrangement.SpaceBetween
                                         ) {
                                             Text(
-                                                text = sp.name,
+                                                text = if (sp.caught) sp.name else "Undiscovered species",
                                                 color = if (sp.caught) Color.White else Color(0xFF6F8F9F),
                                                 fontWeight = FontWeight.SemiBold,
                                                 fontSize = 13.sp
@@ -1346,7 +1374,7 @@ private fun FishingBottomKeyLegend(
                     FishingState.HOOKSET -> DesktopKeyBadge("Space", "Strike / Hook", highlighted = true)
                     FishingState.READY -> DesktopKeyBadge("Space", "Engage Reel", highlighted = true)
                     FishingState.REELING -> DesktopKeyBadge("Hold Space", "Winch Reel (Release to Slacken)", highlighted = true)
-                    FishingState.RESULT -> DesktopKeyBadge("Space", "Continue", highlighted = true)
+                    FishingState.RESULT -> DesktopKeyBadge("Space", "Fish Again", highlighted = true)
                 }
             }
 

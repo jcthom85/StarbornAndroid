@@ -583,12 +583,12 @@ internal fun CampaignNavigationHost(
                 FishingRoute(
                     viewModel = fishingViewModel,
                     onBack = { navController.popBackStack() },
-                    onFinish = { result ->
-                        if (result != null) {
-                            navController.previousBackStackEntry
-                                ?.savedStateHandle
-                                ?.set("fishing_result", result)
-                        }
+                    onCatchResult = { result ->
+                        navController.previousBackStackEntry
+                            ?.savedStateHandle
+                            ?.set("fishing_result", result)
+                    },
+                    onFinish = {
                         navController.popBackStack()
                     },
                     highContrastMode = userSettings.highContrastMode,

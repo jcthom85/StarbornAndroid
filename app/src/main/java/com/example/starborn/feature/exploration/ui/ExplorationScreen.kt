@@ -1147,7 +1147,7 @@ fun ExplorationScreen(
                 prompt = prompt,
                 onSelect = { enable -> viewModel.onTogglePromptSelection(enable) },
                 onDismiss = { viewModel.dismissTogglePrompt() },
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center).zIndex(45f)
             )
         }
         uiState.tuningPuzzle?.let { puzzle ->
@@ -1156,7 +1156,7 @@ fun ExplorationScreen(
                 onSliderChange = { sliderId, value -> viewModel.updateTuningSlider(sliderId, value) },
                 onSubmit = { viewModel.submitTuningPuzzle() },
                 onDismiss = { viewModel.dismissTuningPuzzle() },
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center).zIndex(45f)
             )
         }
         if (uiState.isSimulationDeckVisible) {
@@ -1164,7 +1164,7 @@ fun ExplorationScreen(
                 programs = uiState.availableSimulations,
                 onSelectSimulation = { enemyIds -> viewModel.launchSimulationCombat(enemyIds) },
                 onDismiss = { viewModel.dismissSimulationDeck() },
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center).zIndex(45f)
             )
         }
         if (uiState.isAstraNavConsoleVisible) {
@@ -1180,7 +1180,7 @@ fun ExplorationScreen(
                     viewModel.travelToWorldFromAstra(worldId, hubId, roomId, nodeId)
                 },
                 onDismiss = { viewModel.dismissAstraNavConsole() },
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center).zIndex(45f)
             )
         }
         if (uiState.isTapeDeckVisible) {
@@ -1190,7 +1190,7 @@ fun ExplorationScreen(
                 onPlayTrack = { tapeId, cueId -> viewModel.playTapeTrack(tapeId, cueId) },
                 onStopTrack = { viewModel.stopTapeTrack() },
                 onDismiss = { viewModel.dismissTapeDeck() },
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center).zIndex(45f)
             )
         }
         uiState.activeDialogue?.let { dialogue ->
@@ -1217,6 +1217,7 @@ fun ExplorationScreen(
                     .align(Alignment.BottomCenter)
                     .navigationBarsPadding()
                     .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 24.dp)
+                    .zIndex(50f)
             )
         }
 
@@ -1225,7 +1226,7 @@ fun ExplorationScreen(
                 greeting = greeting,
                 onChoice = { viewModel.onShopChoiceSelected(it) },
                 onDismiss = { viewModel.dismissShopGreeting() },
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center).zIndex(45f)
             )
         }
 
@@ -1611,6 +1612,7 @@ fun ExplorationScreen(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .padding(24.dp)
+                    .zIndex(65f)
             )
         }
 
@@ -1628,7 +1630,7 @@ fun ExplorationScreen(
                 onSelectQuest = { questId ->
                     viewModel.openQuestDetails(questId)
                 },
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center).zIndex(45f)
             )
         }
 
@@ -1713,7 +1715,7 @@ fun ExplorationScreen(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .navigationBarsPadding()
-                    .padding(bottom = ExplorationControlSpacing.noticeBottomClearance, start = 16.dp, end = 16.dp)
+                    .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 24.dp)
                     .zIndex(200f)
             )
         }
@@ -1733,6 +1735,7 @@ fun ExplorationScreen(
                 .align(Alignment.BottomStart)
                 .navigationBarsPadding()
                 .padding(start = 16.dp, bottom = ExplorationControlSpacing.noticeBottomClearance)
+                .zIndex(180f)
         )
 
         QuestDetailOverlay(
@@ -1777,7 +1780,7 @@ fun ExplorationScreen(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .padding(horizontal = 20.dp, vertical = 16.dp)
-                    .zIndex(2f)
+                    .zIndex(55f)
             )
         }
 

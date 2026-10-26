@@ -115,6 +115,11 @@ class CraftingService(
         val gear = tinkeringRecipes.filter { itemId in ingredientsFor(it) || itemId in it.tools }.map { it.name }
         if (meals.isNotEmpty()) add("Cooking: ${meals.take(3).joinToString()}${if (meals.size > 3) " and more" else ""}")
         if (gear.isNotEmpty()) add("Tinkering: ${gear.take(3).joinToString()}${if (gear.size > 3) " and more" else ""}")
+        val rawSalvage = rawSalvageReturns[itemId].orEmpty().filterValues { it > 0 }
+        if (rawSalvage.isNotEmpty()) {
+            val parts = rawSalvage.entries.joinToString { (partId, qty) -> "$qty × ${inventoryService.itemDisplayName(partId)}" }
+            add("Scrap at Tinker station: yields $parts.")
+        }
         cookingRecipes.filter { recipe ->
             itemId in recipe.ingredients && isRecipeDiscovered(recipe) &&
                 !(recipe.category == "snack" && inventoryService.hasItem(recipe.result))
@@ -226,7 +231,8 @@ class CraftingService(
     private val rawSalvageReturns: Map<String, Map<String, Int>> = mapOf(
         "armor_plate" to mapOf("scrap_metal" to 2, "ballistic_weave" to 1),
         "battery_pack" to mapOf("wiring_bundle" to 1),
-        "power_cell" to mapOf("wiring_bundle" to 1, "scrap_metal" to 1)
+        "power_cell" to mapOf("wiring_bundle" to 1, "scrap_metal" to 1),
+        "old_boot" to mapOf("scrap_metal" to 1)
     )
 
     fun salvageFor(itemId: String): Map<String, Int> {

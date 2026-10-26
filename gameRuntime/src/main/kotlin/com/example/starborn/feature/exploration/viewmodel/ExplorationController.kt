@@ -3208,13 +3208,6 @@ class ExplorationController(
         }
         emitAudioCommands(audioRouter.restoreLayer(AudioCueType.MUSIC))
         emitAudioCommands(audioRouter.restoreLayer(AudioCueType.AMBIENT))
-        if (tutorialsEnabled) {
-            if (result.success) {
-                tutorialManager.playScript("fishing_success")
-            } else {
-                tutorialManager.playScript("fishing_failure")
-            }
-        }
     }
 
     fun openMapLegend() {

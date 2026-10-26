@@ -472,7 +472,8 @@ fun EnemyRoster(
     onLungeFinished: (Long) -> Unit,
     onMissLungeFinished: (Long) -> Unit,
     showTargetPrompt: Boolean = false,
-    lungeStyle: AttackLungeStyle = AttackLungeStyle.MELEE
+    lungeStyle: AttackLungeStyle = AttackLungeStyle.MELEE,
+    knownEnemyWeaknesses: Map<String, Set<String>> = emptyMap()
 ) {
     if (enemies.isEmpty()) return
     val compositeGroup = enemies.firstOrNull()?.composite?.group
@@ -504,7 +505,8 @@ fun EnemyRoster(
             onLungeFinished = onLungeFinished,
             onMissLungeFinished = onMissLungeFinished,
             showTargetPrompt = showTargetPrompt,
-            lungeStyle = lungeStyle
+            lungeStyle = lungeStyle,
+            knownEnemyWeaknesses = knownEnemyWeaknesses
         )
         return
     }
@@ -651,7 +653,7 @@ fun EnemyRoster(
                                     isSelected = isSelected,
                                     accentColor = labelBorderColor,
                                     barWidth = barWidth,
-                                    weaknesses = emptyList()
+                                    weaknesses = knownEnemyWeaknesses[enemy.id].orEmpty().sorted()
                                 )
                                 Spacer(modifier = Modifier.height(labelSpacer))
                                 Box(
@@ -833,7 +835,8 @@ fun CompositeEnemyRoster(
     onLungeFinished: (Long) -> Unit,
     onMissLungeFinished: (Long) -> Unit,
     showTargetPrompt: Boolean = false,
-    lungeStyle: AttackLungeStyle = AttackLungeStyle.MELEE
+    lungeStyle: AttackLungeStyle = AttackLungeStyle.MELEE,
+    knownEnemyWeaknesses: Map<String, Set<String>> = emptyMap()
 ) {
     if (enemies.isEmpty()) return
     val entries = enemies.mapIndexedNotNull { index, enemy ->
@@ -936,7 +939,8 @@ fun CompositeEnemyRoster(
                             atbMeters = atbMeters,
                             labelBorderColor = labelBorderColor,
                             onEnemyTap = onEnemyTap,
-                            onEnemyLongPress = onEnemyLongPress
+                            onEnemyLongPress = onEnemyLongPress,
+                            weaknesses = knownEnemyWeaknesses[entry.enemy.id].orEmpty().sorted()
                         )
                     }
                 }
@@ -1165,7 +1169,8 @@ fun CompositeEnemyRoster(
                             atbMeters = atbMeters,
                             labelBorderColor = labelBorderColor,
                             onEnemyTap = onEnemyTap,
-                            onEnemyLongPress = onEnemyLongPress
+                            onEnemyLongPress = onEnemyLongPress,
+                            weaknesses = knownEnemyWeaknesses[entry.enemy.id].orEmpty().sorted()
                         )
                     }
                 }
@@ -1184,7 +1189,8 @@ fun CompositePartStatus(
     atbMeters: Map<String, Float>,
     labelBorderColor: Color,
     onEnemyTap: (String) -> Unit,
-    onEnemyLongPress: (String) -> Unit
+    onEnemyLongPress: (String) -> Unit,
+    weaknesses: List<String> = emptyList()
 ) {
     val combatantId = entry.combatantId
     val enemyState = combatState.combatants[combatantId]
@@ -1210,7 +1216,7 @@ fun CompositePartStatus(
             isSelected = isSelected,
             accentColor = labelBorderColor,
             barWidth = 90.dp,
-            weaknesses = emptyList(),
+            weaknesses = weaknesses,
             onClick = { if (isAlive) onEnemyTap(combatantId) },
             onLongClick = { if (isAlive) onEnemyLongPress(combatantId) }
         )
