@@ -24,6 +24,8 @@ data class StatusDefinition(
     val incomingMultiplierPhysical: Double? = null,
     @Json(name = "flat_defense_bonus")
     val flatDefenseBonus: Int? = null,
+    @Json(name = "prevent_stagger")
+    val preventStagger: Boolean? = null,
     @Json(name = "block_skills")
     val blockSkills: Boolean? = null,
     @Json(name = "force_crit")

@@ -1328,6 +1328,26 @@
         "name": "power cells",
         "type": "generic",
         "condition_unmet_message": "Standard issue cells with the Dominion logos scratched off."
+      },
+      {
+        "name": "Colony Commissary",
+        "type": "shop",
+        "shop_id": "general_store"
+      },
+      {
+        "name": "Blades & Blasters",
+        "type": "shop",
+        "shop_id": "weapon_shop"
+      },
+      {
+        "name": "The Aegis",
+        "type": "shop",
+        "shop_id": "armor_shop"
+      },
+      {
+        "name": "Trinkets & Tech",
+        "type": "shop",
+        "shop_id": "accessory_shop"
       }
     ]
   },

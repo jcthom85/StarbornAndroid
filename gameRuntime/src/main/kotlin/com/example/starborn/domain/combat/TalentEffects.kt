@@ -9,9 +9,12 @@ object TalentEffects {
     fun hpMultiplier(attacker: CombatantState, target: CombatantState, skillId: String? = null, singleTargetSkill: Boolean = false): Double {
         val owned = attacker.combatant.talents
         val maxHp = target.combatant.stats.maxHp.toLong()
+        val attackerMaxHp = attacker.combatant.stats.maxHp.toLong().coerceAtLeast(1L)
         var bonus = 0.0
         if (Nova.SEAM in owned && target.statusEffects.any { it.id == "weak" || it.id == "brittle" }) bonus += .15
         if (Nova.START in owned && target.hp.toLong() * 4 > maxHp * 3) bonus += .15
+        if (Crew.CORPORATE_INSIGHT in owned && attacker.hp.toLong() * 2 > attackerMaxHp) bonus += .10
+        if (Crew.NOVA_LEGACY in owned && attacker.hp.toLong() * 2 < attackerMaxHp) bonus += .15
         if (Crew.SCOPE in owned && skillId == "gh0st_headshot" && target.hp.toLong() * 4 >= maxHp * 3) bonus += .10
         if (Crew.EXECUTE in owned && singleTargetSkill && target.hp.toLong() * 10 <= maxHp * 3) bonus += .15
         if (Crew.COOL_HEAD in owned && skillId == "gh0st_headshot" && attacker.talentTriggers.getOrDefault(Crew.COOL_HEAD, 0) > 0) bonus += .15

@@ -495,7 +495,13 @@ class CombatController(
                     val maxHp = combatantState.combatant.stats.maxHp
                     val persistedHp = sessionSnapshot.partyMemberHp[id] ?: maxHp
                     val initialHp = persistedHp.coerceIn(1, maxHp)
-                    combatantState.copy(hp = initialHp)
+                    val initialStatuses = if (com.example.starborn.domain.leveling.CrewBuildPrototype.ORION_ANCESTRAL_GRACE in combatantState.combatant.talents &&
+                        combatantState.statusEffects.none { it.id == "regen" }) {
+                        combatantState.statusEffects + StatusEffect(id = "regen", remainingTurns = 3, stacks = 1, sourceId = id)
+                    } else {
+                        combatantState.statusEffects
+                    }
+                    combatantState.copy(hp = initialHp, statusEffects = initialStatuses)
                 } else {
                     combatantState
                 }
@@ -1087,6 +1093,7 @@ class CombatController(
     fun skillsForPlayer(playerId: String): List<Skill> =
         run {
             val skills = playerSkillsById[playerId].orEmpty()
+                .filterNot { it.type.equals("passive", ignoreCase = true) }
             if (skills.isEmpty()) return@run emptyList()
             val snapshot = sessionStore.state.value
             val talentSkills = if (com.example.starborn.domain.leveling.NovaBuildPrototype.isEnabled(snapshot))
@@ -2732,6 +2739,16 @@ class CombatController(
             }
         }
 
+        if (characterId.equals("zeke", ignoreCase = true) &&
+            com.example.starborn.domain.leveling.CrewBuildPrototype.ZEKE_UNSHACKLED in sessionStore.state.value.unlockedSkills) {
+            agility += 3
+            speed += 2
+        }
+        if (characterId.equals("gh0st", ignoreCase = true) &&
+            com.example.starborn.domain.leveling.CrewBuildPrototype.GH0ST_SOURCE_BALANCE in sessionStore.state.value.unlockedSkills) {
+            flatDamageReduction += 5
+        }
+
         return EquipmentBonuses(
             hpBonus = hpBonus,
             strength = strength,
@@ -2804,7 +2821,12 @@ class CombatController(
                 flatDamageReduction = bonuses.flatDamageReduction + (mealBuff?.defenseBonus ?: 0),
                 statusResistance = mealResistBonus + if (com.example.starborn.domain.leveling.CrewBuildPrototype.isEnabled(sessionStore.state.value)) CombatFormulas.generalResistance(adjustedFocus) else 0
             ),
-            resistances = ResistanceProfile(),
+            resistances = if (id.equals("gh0st", ignoreCase = true) &&
+                com.example.starborn.domain.leveling.CrewBuildPrototype.GH0ST_SOURCE_BALANCE in sessionStore.state.value.unlockedSkills) {
+                ResistanceProfile(source = 25)
+            } else {
+                ResistanceProfile()
+            },
             skills = skills,
             weapon = resolveCombatWeapon(id, equippedItems, equippedWeapons, unlockedWeapons),
             talents = com.example.starborn.domain.leveling.CrewBuildPrototype.ownedTalents(sessionStore.state.value, id),

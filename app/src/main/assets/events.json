@@ -1602,6 +1602,10 @@
         "task_id": "learn_hydraulic_kick"
       },
       {
+        "type": "unlock_skill",
+        "skill_id": "nova_hydraulic_kick"
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w1_sq03",
         "task_id": "break_training_shield"
@@ -15712,6 +15716,10 @@
         "task_id": "learn_hydraulic_kick"
       },
       {
+        "type": "unlock_skill",
+        "skill_id": "nova_hydraulic_kick"
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w1_sq03",
         "task_id": "break_training_shield"
@@ -15774,6 +15782,10 @@
         "task_id": "learn_hydraulic_kick"
       },
       {
+        "type": "unlock_skill",
+        "skill_id": "nova_hydraulic_kick"
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w1_sq03",
         "task_id": "break_training_shield"
@@ -15834,6 +15846,10 @@
         "type": "set_quest_task_done",
         "quest_id": "w1_sq03",
         "task_id": "learn_hydraulic_kick"
+      },
+      {
+        "type": "unlock_skill",
+        "skill_id": "nova_hydraulic_kick"
       },
       {
         "type": "set_quest_task_done",

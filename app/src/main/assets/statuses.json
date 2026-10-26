@@ -28,7 +28,11 @@
       "min": 1,
       "element": "burn"
     },
-    "target": "enemy"
+    "target": "enemy",
+    "aliases": [
+      "burn",
+      "burning"
+    ]
   },
   {
     "id": "erosion",
@@ -41,7 +45,11 @@
       "element": "acid",
       "ramp_up": true
     },
-    "target": "enemy"
+    "target": "enemy",
+    "aliases": [
+      "acid",
+      "corrode"
+    ]
   },
   {
     "id": "brittle",
@@ -55,7 +63,11 @@
     "name": "Short",
     "default_duration": 1,
     "skip_reason": "is shorting out",
-    "target": "enemy"
+    "target": "enemy",
+    "aliases": [
+      "shock",
+      "shocked"
+    ]
   },
   {
     "id": "stun",
@@ -83,6 +95,14 @@
     "name": "Guarding",
     "default_duration": 1,
     "incoming_multiplier": 0.5,
+    "prevent_stagger": true,
+    "target": "ally"
+  },
+  {
+    "id": "braced",
+    "name": "Braced",
+    "default_duration": 2,
+    "flat_defense_bonus": 4,
     "prevent_stagger": true,
     "target": "ally"
   },
@@ -180,6 +200,9 @@
     "name": "Marked",
     "default_duration": 2,
     "force_crit": true,
-    "target": "enemy"
+    "target": "enemy",
+    "aliases": [
+      "target_lock"
+    ]
   }
 ]

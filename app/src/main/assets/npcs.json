@@ -410,6 +410,12 @@
         "label": "Talk",
         "type": "talk",
         "dialogue_id": "mechanic_mira_default_talk"
+      },
+      {
+        "label": "Shop",
+        "type": "shop",
+        "shop_id": "mechanic_shop",
+        "dialogue_id": "mechanic_mira_default_talk"
       }
     ]
   },

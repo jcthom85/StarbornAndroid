@@ -1110,7 +1110,10 @@ class CombatActionProcessor(
             focus = effectiveStat("focus"),
             luck = effectiveStat("luck")
         )
-        return (base + combatant.stats.critBonus + buffs).coerceIn(0.0, 100.0)
+        val maxHp = combatant.stats.maxHp.toLong().coerceAtLeast(1L)
+        val passiveCritBonus = (if (com.example.starborn.domain.leveling.CrewBuildPrototype.CORPORATE_INSIGHT in combatant.talents && hp.toLong() * 2 > maxHp) 10.0 else 0.0) +
+            (if (com.example.starborn.domain.leveling.CrewBuildPrototype.NOVA_LEGACY in combatant.talents && hp.toLong() * 2 < maxHp) 15.0 else 0.0)
+        return (base + combatant.stats.critBonus + buffs + passiveCritBonus).coerceIn(0.0, 100.0)
     }
 
     private fun opposingSide(side: CombatSide): CombatSide =
@@ -1196,9 +1199,11 @@ class CombatActionProcessor(
         skill.statusApplications.orEmpty().forEach { id ->
             statusRegistry.definition(id)?.let { definitions.putIfAbsent(it.id, it) }
         }
-        skill.combatTags.orEmpty().filter { skill.id !in explicitStatusSkillIds }.forEach { tag ->
-            statusRegistry.definition(tag)?.let { definitions.putIfAbsent(it.id, it) }
-        }
+        skill.combatTags.orEmpty()
+            .filter { skill.id !in explicitStatusSkillIds && it.lowercase() !in ELEMENT_TAGS }
+            .forEach { tag ->
+                statusRegistry.definition(tag)?.let { definitions.putIfAbsent(it.id, it) }
+            }
         if (attackerState.combatant.side == CombatSide.PLAYER && !isHealSkill(skill)) {
             val weaponStatusId = attackerState.combatant.weapon?.statusOnHit?.trim()?.lowercase()
             val weaponStatusChance = attackerState.combatant.weapon?.statusChance ?: 0.0
@@ -1556,7 +1561,7 @@ class CombatActionProcessor(
             "strength" to setOf("str", "atk", "attack"),
             "vitality" to setOf("vit"),
             "agility" to setOf("agi"),
-            "focus" to setOf("fcs", "foc", "int", "psi"),
+            "focus" to setOf("fcs", "foc", "int", "psi", "tech"),
             "luck" to setOf("lck"),
             "speed" to setOf("spd"),
             "accuracy" to setOf("acc"),

@@ -222,4 +222,40 @@ class CrewTalentCombatTest {
         assertTrue(frozen.log.any { it is CombatLogEntry.TurnSkipped })
         assertFalse(Crew.RECENTER in frozen.combatants.getValue("gh0st").talentTriggers)
     }
+
+    @Test fun questPassivesAndBracedStatusWorkProperlyInCombat() {
+        // 1. Corporate Insight (> 50% HP) & Nova Legacy (< 50% HP)
+        val highHpBase = cast(encounter("nova"), "nova", "nova_arc_tether")
+        val highHpInsight = cast(encounter("nova", setOf(Crew.CORPORATE_INSIGHT)), "nova", "nova_arc_tether")
+        assertEquals((hit(highHpBase) * 1.1).roundToInt(), hit(highHpInsight))
+
+        val lowHpState = encounter("nova").let { s ->
+            s.copy(combatants = s.combatants + ("nova" to s.combatants.getValue("nova").copy(hp = 400)))
+        }
+        val lowHpLegacyState = encounter("nova", setOf(Crew.NOVA_LEGACY)).let { s ->
+            s.copy(combatants = s.combatants + ("nova" to s.combatants.getValue("nova").copy(hp = 400)))
+        }
+        assertEquals((hit(cast(lowHpState, "nova", "nova_arc_tether")) * 1.15).roundToInt(),
+            hit(cast(lowHpLegacyState, "nova", "nova_arc_tether")))
+
+        // 2. Data Shield blocks hostile silence, jammed, and short for party members
+        val shieldedParty = encounter("zeke", setOf(Crew.DATA_SHIELD))
+        for (blockedStatus in listOf("silence", "jammed", "short")) {
+            val afterStatus = engine.applyStatus(shieldedParty, "ally", blockedStatus, 2, sourceId = "target")
+            assertNull(status(afterStatus, "ally", blockedStatus))
+        }
+
+        // 3. Braced status is registered, adds +4 flat defense, and blocks hostile stagger/stun
+        assertNotNull(registry.definition("braced"))
+        val bracedParty = engine.applyStatus(encounter("zeke"), "zeke", "braced", 2, sourceId = "zeke")
+        assertNotNull(status(bracedParty, "zeke", "braced"))
+        val afterStagger = engine.applyStatus(bracedParty, "zeke", "stagger", 1, sourceId = "target")
+        assertNull(status(afterStagger, "zeke", "stagger"))
+
+        // 4. Harden grants Guard, Shield, and Braced
+        val hardened = cast(encounter("gh0st"), "gh0st", "gh0st_harden", "gh0st")
+        assertNotNull(status(hardened, "gh0st", "guard"))
+        assertNotNull(status(hardened, "gh0st", "shield"))
+        assertNotNull(status(hardened, "gh0st", "braced"))
+    }
 }

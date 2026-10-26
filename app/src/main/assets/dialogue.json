@@ -765,7 +765,7 @@
     "id": "bogs_w1_sq03_intro_3",
     "speaker": "Foreman Boggs",
     "text": "Then move the pile. Finish the shield drill while you're there.",
-    "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started,player_action:w1_sq03_register_drill"
+    "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_quest_task_done:w1_sq03:learn_hydraulic_kick,unlock_skill:nova_hydraulic_kick,set_milestone:ms_w1_sq03_started,set_milestone:ms_w1_sq03_hydraulic_kick_ready,player_action:w1_sq03_register_drill"
   },
   {
     "id": "bogs_w1_sq03_complete",
@@ -1860,9 +1860,15 @@
     "text": "Eat up. It is synthetic paste, but it will keep your boots moving under heavy gravity. If you scrape any dried herbs out of the hopper, use the thermal cooker to simmer your dry ration packs into hot soup before a shift."
   },
   {
+    "id": "mechanic_mira_sq05_turnin",
+    "speaker": "Mira",
+    "condition": "milestone:ms_w1_sq05_completed",
+    "text": "You went into Side Shunt 4? That datapad... those were my shift mates. Dominion sealed the bulkhead and marked them as 'equipment loss.' Keep that Recoil Dampener bolted tight, Nova. Don't let them bury you down here too."
+  },
+  {
     "id": "mechanic_mira_default_talk",
     "speaker": "Mira",
-    "text": "Watch your fingers near the loader tracks. Dominion does not issue replacement knuckles. Jed's inside checking the cutter calibrations, but if you're looking for scrap tips, don't touch anything glowing red."
+    "text": "Watch your fingers near the loader tracks. Dominion does not issue replacement knuckles. Jed's inside checking the cutter calibrations, and if you ever get power back to the deep mine junction, check on the lost shift in Side Shunt 4."
   },
   {
     "id": "kaelen_intro",
@@ -3273,7 +3279,7 @@
     "speaker": "Foreman Boggs",
     "text": "The drill frame logged your run already. I can attach that result to your certification.",
     "condition": "quest_completed:w1_mq01,quest_not_started:w1_sq03,milestone:ms_w1_guard_drill_won",
-    "trigger": "start_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_milestone:ms_w1_sq03_started,set_milestone:ms_w1_sq03_hydraulic_kick_ready,player_action:w1_sq03_register_drill",
+    "trigger": "start_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_quest_task_done:w1_sq03:learn_hydraulic_kick,unlock_skill:nova_hydraulic_kick,set_milestone:ms_w1_sq03_started,set_milestone:ms_w1_sq03_hydraulic_kick_ready,player_action:w1_sq03_register_drill",
     "next": "bogs_w1_sq03_registered_result"
   },
   {
@@ -3281,7 +3287,7 @@
     "speaker": "Foreman Boggs",
     "text": "Your drill result is in the frame log. Give me a second to register your certification.",
     "condition": "quest_active:w1_sq03,milestone:ms_w1_guard_drill_won,milestone_not_set:ms_w1_guardbreak_trained",
-    "trigger": "player_action:w1_sq03_register_drill",
+    "trigger": "set_quest_task_done:w1_sq03:learn_hydraulic_kick,unlock_skill:nova_hydraulic_kick,set_milestone:ms_w1_sq03_hydraulic_kick_ready,player_action:w1_sq03_register_drill",
     "next": "bogs_w1_sq03_registered_result"
   },
   {

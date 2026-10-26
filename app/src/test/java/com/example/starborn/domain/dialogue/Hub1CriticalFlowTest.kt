@@ -174,8 +174,8 @@ class Hub1CriticalFlowTest {
         assertTrue(harness.autoStartedDialogueIds.contains("jed_w1_mq02_handoff_1"))
         assertTrue(harness.narrationMessages.none { it.contains("Transit Checkpoint") })
 
-        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("pit_shaft"))
-        assertTrue(harness.tutorialRequests.contains("menu_save" to "Jed's Place"))
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("workshop_yard"))
+        assertTrue(harness.tutorialRequests.contains("menu_save" to "Save"))
     }
 
     @Test

@@ -3,7 +3,7 @@
     "id": "salvage_lure",
     "name": "Magnetic Salvage Lure",
     "description": "A weighted magnet that favors scrap, wiring, and small components. Select it at a fishing spot to trade some fish catches for tinkering supplies.",
-    "type": "accessory",
+    "type": "lure",
     "value": 60,
     "rarity": "uncommon"
   },
@@ -90,7 +90,7 @@
     "id": "bioluminescent_lure",
     "name": "Bioluminescent Lure",
     "description": "A glowing swamp lure recovered from Canopy Hopper mastery. Attracts rare nocturnal and deep-water fish.",
-    "type": "accessory",
+    "type": "lure",
     "value": 900,
     "rarity": "epic",
     "unsellable": true
@@ -112,21 +112,6 @@
     "value": 0,
     "rarity": "rare",
     "unsellable": true
-  },
-  {
-    "id": "phase_rounds",
-    "name": "Phase Rounds Mod",
-    "description": "Cabinet reward ammo mod that phase-shifts kinetic rounds through robotic shielding, ignoring 25% armor.",
-    "type": "accessory",
-    "value": 750,
-    "rarity": "rare",
-    "equipment": {
-      "slot": "accessory",
-      "stat_mods": {
-        "accuracy": 3,
-        "str": 2
-      }
-    }
   },
   {
     "id": "cyber_visor",
@@ -3826,9 +3811,19 @@
     "id": "cyano_coolant_injector",
     "name": "Cyano-Coolant Injector",
     "description": "A weapon modification re-engineered from Director Vance's sabotaged comms core. Infuses strikes with freezing cyano-coolant, dealing +15 Freeze damage and raising posture stagger.",
-    "type": "accessory",
+    "type": "mod",
     "value": 350,
-    "rarity": "rare"
+    "rarity": "rare",
+    "equipment": {
+      "slot": "mod",
+      "attack_element": "freeze",
+      "stat_mods": {
+        "focus": 4,
+        "accuracy": 3
+      },
+      "status_on_hit": "freeze",
+      "status_chance": 20
+    }
   },
   {
     "id": "crucible_forge_plate",

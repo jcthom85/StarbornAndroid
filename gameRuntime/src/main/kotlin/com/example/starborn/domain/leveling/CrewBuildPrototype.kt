@@ -36,6 +36,20 @@ object CrewBuildPrototype {
     const val TREATMENT_SKILL = "orion_field_treatment"
     const val DISARM_SKILL = "gh0st_disarm"
     const val PATCH_SKILL = "orion_stasis_stitch"
+    const val CORPORATE_INSIGHT = "corporate_insight"
+    const val DATA_SHIELD = "data_shield"
+    const val NOVA_LEGACY = "nova_legacy"
+    const val ZEKE_UNSHACKLED = "zeke_unshackled"
+    const val GH0ST_SOURCE_BALANCE = "gh0st_source_balance"
+    const val ORION_ANCESTRAL_GRACE = "orion_ancestral_grace"
+    val PASSIVE_SKILLS = setOf(
+        CORPORATE_INSIGHT,
+        DATA_SHIELD,
+        NOVA_LEGACY,
+        ZEKE_UNSHACKLED,
+        GH0ST_SOURCE_BALANCE,
+        ORION_ANCESTRAL_GRACE
+    )
     const val OPENING_STATUS = "crew_opening"
     const val AFTERCARE_STATUS = "crew_aftercare"
 
@@ -97,7 +111,15 @@ object CrewBuildPrototype {
         nodes[id]?.effect?.takeIf { it.type == "active" }?.subtype
     }.toSet()
     fun ownedTalents(state: GameSessionState, owner: String): Set<String> =
-        if (isEnabled(state)) state.purchasedSkillNodes.keys.filter { owners[it] == owner }.toSet() else emptySet()
+        (if (isEnabled(state)) state.purchasedSkillNodes.keys.filter { owners[it] == owner }.toSet() else emptySet()) +
+            buildSet {
+                if (owner == "nova" && CORPORATE_INSIGHT in state.unlockedSkills) add(CORPORATE_INSIGHT)
+                if (owner == "nova" && NOVA_LEGACY in state.unlockedSkills) add(NOVA_LEGACY)
+                if (owner == "zeke" && DATA_SHIELD in state.unlockedSkills) add(DATA_SHIELD)
+                if (owner == "zeke" && ZEKE_UNSHACKLED in state.unlockedSkills) add(ZEKE_UNSHACKLED)
+                if (owner == "gh0st" && GH0ST_SOURCE_BALANCE in state.unlockedSkills) add(GH0ST_SOURCE_BALANCE)
+                if (owner == "orion" && ORION_ANCESTRAL_GRACE in state.unlockedSkills) add(ORION_ANCESTRAL_GRACE)
+            }
     fun coreSkills(state: GameSessionState): Set<String> =
         if (isEnabled(state) && "orion" in state.partyMembers) setOf(PATCH_SKILL) else emptySet()
     fun grantCore(state: GameSessionState) = state.copy(unlockedSkills = state.unlockedSkills + coreSkills(state))

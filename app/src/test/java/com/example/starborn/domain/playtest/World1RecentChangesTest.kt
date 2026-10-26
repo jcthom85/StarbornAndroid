@@ -245,6 +245,7 @@ class World1RecentChangesTest {
     private fun assertCertified(h: Harness) {
         assertTrue("w1_sq03" in h.state.completedQuests)
         assertTrue("ms_w1_guardbreak_trained" in h.state.completedMilestones)
+        assertTrue("nova_hydraulic_kick" in h.state.unlockedSkills)
         assertEquals(1, h.state.inventory["heavy_gear"])
         assertEquals(1, h.state.inventory["hydraulic_fluid"])
     }

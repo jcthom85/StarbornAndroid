@@ -92,9 +92,12 @@ class CombatEngine(
         val newHp = (targetState.hp - clamped).coerceAtLeast(0)
 
         val stabilityBase = (stabilityBaseAmount ?: clamped).coerceAtLeast(0)
+        val stabilityProtected = isTargetFriendly &&
+            targetState.statusEffects.any { statusRegistry.definition(it.id)?.preventStagger == true }
         val stabilityDamage = when {
             opMode && isTargetFriendly -> 0
             opMode && isAttackerFriendly -> 9999
+            stabilityProtected -> 0
             isWeakness -> (stabilityBase * 2 * stabilityMultiplier).roundToInt()
             else -> (stabilityBase * stabilityMultiplier).roundToInt()
         }
@@ -204,21 +207,34 @@ class CombatEngine(
         stacks: Int = 1,
         sourceId: String? = null
     ): CombatState {
+        val definition = statusRegistry.definition(statusId)
+        val canonicalId = definition?.id ?: statusId
         val resolvedDuration = when {
             duration > 0 -> duration
-            else -> statusRegistry.definition(statusId)?.defaultDuration ?: DEFAULT_STATUS_DURATION
+            else -> definition?.defaultDuration ?: DEFAULT_STATUS_DURATION
         }
         if (resolvedDuration <= 0) return state
         val targetState = state.combatants[targetId] ?: return state
         val source = sourceId?.let { state.combatants[it] }
         val hostile = source != null &&
             (source.combatant.side == CombatSide.ENEMY) != (targetState.combatant.side == CombatSide.ENEMY)
+        if (hostile && canonicalId in setOf("stagger", "stun") &&
+            targetState.statusEffects.any { statusRegistry.definition(it.id)?.preventStagger == true }) {
+            return state
+        }
+        if (hostile && canonicalId in setOf("silence", "jammed", "short") &&
+            state.combatants.values.any {
+                it.isAlive && it.combatant.side == targetState.combatant.side &&
+                    com.example.starborn.domain.leveling.CrewBuildPrototype.DATA_SHIELD in it.combatant.talents
+            }) {
+            return state
+        }
         val resistance = targetState.combatant.stats.statusResistance.coerceIn(0, 100)
         if (hostile && resistance > 0 && random.nextInt(100) < resistance) return state
         val updatedStatuses = targetState.statusEffects.filterNot {
-            statusId == "regen" && it.id == com.example.starborn.domain.leveling.CrewBuildPrototype.AFTERCARE_STATUS
+            canonicalId == "regen" && it.id == com.example.starborn.domain.leveling.CrewBuildPrototype.AFTERCARE_STATUS
         }.toMutableList()
-        val index = updatedStatuses.indexOfFirst { it.id.equals(statusId, ignoreCase = true) }
+        val index = updatedStatuses.indexOfFirst { it.id.equals(canonicalId, ignoreCase = true) }
         val newStatus = if (index >= 0) {
             val existing = updatedStatuses[index]
             existing.copy(
@@ -227,7 +243,7 @@ class CombatEngine(
             )
         } else {
             StatusEffect(
-                id = statusId,
+                id = canonicalId,
                 remainingTurns = resolvedDuration,
                 stacks = stacks.coerceAtLeast(1)
             )
@@ -243,7 +259,7 @@ class CombatEngine(
         val logEntry = CombatLogEntry.StatusApplied(
             turn = state.round,
             targetId = targetId,
-            statusId = statusId,
+            statusId = canonicalId,
             stacks = newStatus.stacks
         )
         return updatedState.copy(log = updatedState.log + logEntry)
