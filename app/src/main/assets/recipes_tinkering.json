@@ -243,58 +243,27 @@
     "discovery_hint": "Start with the damaged device. Its repair needs scrap metal."
   },
   {
-    "id": "repaired_projector",
-    "name": "Repaired Projector",
-    "category": "repair",
-    "method": "repair",
-    "base": "broken_projector",
+    "id": "gadget_pulse_grenade",
+    "name": "Pulse Grenade",
+    "category": "gear",
+    "method": "assemble",
+    "base": "battery",
     "components": [
-      "circuit_board"
+      "scrap_metal",
+      "wiring_bundle"
     ],
     "ingredients": {
-      "broken_projector": 1,
-      "circuit_board": 1
+      "battery": 1,
+      "scrap_metal": 1,
+      "wiring_bundle": 1
     },
-    "result": "repaired_projector",
-    "description": "Replace the cracked controller board and restore the school's projector.",
-    "success_message": "You repaired Schoolteacher Kasey's projector.",
-    "discovery_hint": "Start with the damaged device. Its repair needs circuit board."
-  },
-  {
-    "id": "repaired_arcade_display",
-    "name": "Repaired Arcade Display",
-    "category": "repair",
-    "method": "repair",
-    "base": "broken_arcade_display",
-    "components": [
-      "nano_filament"
-    ],
-    "ingredients": {
-      "broken_arcade_display": 1,
-      "nano_filament": 1
-    },
-    "result": "repaired_arcade_display",
-    "description": "Thread nano-filament through the dead pixel lattice.",
-    "success_message": "You repaired Sam and Ellie's arcade display.",
-    "discovery_hint": "Start with the damaged device. Its repair needs nano filament."
-  },
-  {
-    "id": "repaired_coffee_grinder",
-    "name": "Repaired Coffee Grinder",
-    "category": "repair",
-    "method": "repair",
-    "base": "broken_coffee_grinder",
-    "components": [
-      "scrap_metal"
-    ],
-    "ingredients": {
-      "broken_coffee_grinder": 1,
+    "result": "pulse_grenade",
+    "description": "Wire a charged battery cell into a scrap casing to assemble an electromagnetic pulse grenade.",
+    "success_message": "You assemble a live Pulse Grenade ready to fry drone circuits and shatter barriers.",
+    "salvage": {
       "scrap_metal": 1
     },
-    "result": "repaired_coffee_grinder",
-    "description": "Re-seat the grinder teeth and patch the cracked drive housing.",
-    "success_message": "You repaired Maddie's coffee grinder.",
-    "discovery_hint": "Start with the damaged device. Its repair needs scrap metal."
+    "discovery_hint": "Start with battery. Try scrap metal, wiring bundle."
   },
   {
     "id": "mod_source_resin",

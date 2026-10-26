@@ -34,11 +34,7 @@ class CombatTutorialTracker(
         when (current.step) {
             CombatTutorialStep.BRIEF -> {
                 primeTutorialTurn()
-                if (current.tutorialType == CombatTutorialType.LOADER_WEAKNESS) {
-                    setCombatTutorialStep(CombatTutorialStep.SELECT_NOVA_SKILL)
-                } else {
-                    setCombatTutorialStep(CombatTutorialStep.SELECT_NOVA_ATTACK)
-                }
+                setCombatTutorialStep(CombatTutorialStep.SELECT_NOVA_ATTACK)
             }
             CombatTutorialStep.BLOCKED_EXPLANATION -> {
                 primeTutorialTurn()

@@ -767,12 +767,37 @@ internal fun InventoryEquipmentPreview(
         return
     }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        if (isGearTutorialActive) Text(
-            text = com.example.starborn.domain.tutorial.OpeningEquipmentGuide.instruction(!equippedWeapons["nova"].isNullOrBlank()),
-            color = accentColor,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
-        )
+        if (isGearTutorialActive) {
+            val weaponEquipped = !equippedWeapons["nova"].isNullOrBlank()
+            Surface(
+                color = FieldMenuDesign.panel,
+                shape = RoundedCornerShape(12.dp),
+                border = BorderStroke(1.dp, accentColor.copy(alpha = 0.6f)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Tutorial", color = accentColor, style = MaterialTheme.typography.labelMedium)
+                        Text(
+                            text = if (weaponEquipped) "Step 2 of 2" else "Step 1 of 2",
+                            color = FieldMenuDesign.textMuted,
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                    Text(
+                        text = com.example.starborn.domain.tutorial.OpeningEquipmentGuide.instruction(weaponEquipped),
+                        color = FieldMenuDesign.text,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
+        }
         partyMembers.forEach { member ->
             val portraitPainter = rememberAssetPainter(member.portraitPath, painterResource(R.drawable.main_menu_background))
             Column(

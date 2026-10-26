@@ -1262,7 +1262,22 @@ class CombatViewModelTest {
         viewModel.skipCombatTutorial()
         assertEquals(CombatTutorialStep.BRIEF, viewModel.combatTutorial.value?.step)
 
-        // Continue to select Nova
+        // Continue to select Nova for basic Attack first
+        viewModel.onCombatTutorialContinue()
+        assertEquals(CombatTutorialStep.SELECT_NOVA_ATTACK, viewModel.combatTutorial.value?.step)
+        assertFalse(viewModel.isCombatTutorialCommandEnabled("Attack"))
+        assertFalse(viewModel.isCombatTutorialCommandEnabled("Retreat"))
+
+        viewModel.selectReadyPlayer("nova")
+        assertEquals(CombatTutorialStep.CHOOSE_ATTACK, viewModel.combatTutorial.value?.step)
+        assertTrue(viewModel.isCombatTutorialCommandEnabled("Attack"))
+        assertFalse(viewModel.isCombatTutorialCommandEnabled("Skills"))
+        assertTrue(viewModel.onCombatTutorialCommand("Attack"))
+        assertEquals(CombatTutorialStep.TARGET_BASIC_ATTACK, viewModel.combatTutorial.value?.step)
+        viewModel.playerAttack("faulted_loader")
+        assertEquals(CombatTutorialStep.BLOCKED_EXPLANATION, viewModel.combatTutorial.value?.step)
+
+        // Continue after Momentum explanation -> select Nova for Arc Tether
         viewModel.onCombatTutorialContinue()
         assertEquals(CombatTutorialStep.SELECT_NOVA_SKILL, viewModel.combatTutorial.value?.step)
         assertFalse(viewModel.isCombatTutorialCommandEnabled("Attack"))

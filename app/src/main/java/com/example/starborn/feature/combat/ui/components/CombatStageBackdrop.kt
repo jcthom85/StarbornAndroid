@@ -202,6 +202,70 @@ fun CombatPlaytestControls(
 }
 
 @Composable
+fun CombatBuildHintOverlay(
+    title: String,
+    message: String,
+    theme: Theme?,
+    highContrastMode: Boolean,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val accent = themeColor(theme?.accent, Color(0xFF7BE4FF))
+    val border = themeColor(theme?.border, Color(0xFF5CCBE8))
+    val panel = themeColor(theme?.bg, Color(0xFF061018))
+    androidx.activity.compose.BackHandler(onBack = onDismiss)
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+        Surface(
+            onClick = onDismiss,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
+            shape = RoundedCornerShape(16.dp),
+            color = panel.copy(alpha = if (highContrastMode) 0.98f else 0.94f),
+            border = BorderStroke(1.dp, border.copy(alpha = 0.72f)),
+            shadowElevation = 12.dp
+        ) {
+            Column(
+                modifier = Modifier.padding(18.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontFamily = CombatNameFont,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = Color.White
+                )
+                Text(
+                    text = message,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.White.copy(alpha = 0.88f)
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Button(
+                        onClick = onDismiss,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = accent.copy(alpha = 0.92f),
+                            contentColor = Color(0xFF041018)
+                        )
+                    ) {
+                        Text(
+                            text = "Got it",
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun CombatTutorialOverlay(
     tutorial: CombatTutorialState,
     theme: Theme?,

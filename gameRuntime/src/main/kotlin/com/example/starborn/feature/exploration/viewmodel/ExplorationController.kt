@@ -688,26 +688,9 @@ class ExplorationController(
         val quantity: Int = 1
     )
 
-    private val itemPopupByMilestone: Map<String, ItemPopupSpec> = mapOf(
-        "ms_ellie_display_collected" to ItemPopupSpec(
-            title = "Ellie",
-            itemId = "broken_arcade_display"
-        ),
-        "ms_maddie_grinder_collected" to ItemPopupSpec(
-            title = "Maddie",
-            itemId = "broken_coffee_grinder"
-        ),
-        "ms_kasey_projector_collected" to ItemPopupSpec(
-            title = "Schoolteacher Kasey",
-            itemId = "broken_projector"
-        )
-    )
+    private val itemPopupByMilestone: Map<String, ItemPopupSpec> = emptyMap()
 
-    private val oneTimeGiftMilestoneByItemId: Map<String, String> = mapOf(
-        "broken_arcade_display" to "ms_ellie_display_collected",
-        "broken_coffee_grinder" to "ms_maddie_grinder_collected",
-        "broken_projector" to "ms_kasey_projector_collected"
-    )
+    private val oneTimeGiftMilestoneByItemId: Map<String, String> = emptyMap()
     private val acknowledgedMilestones: MutableSet<String> = mutableSetOf()
     private val unlockedDirections: MutableMap<String, MutableSet<String>> = mutableMapOf()
     private val unlockedAreaIds: MutableSet<String> = mutableSetOf()
@@ -3833,6 +3816,9 @@ class ExplorationController(
         if (!tutorialsEnabled) return
         if (tab != MenuTab.INVENTORY && !(tab == MenuTab.STATS && _uiState.value.settings.modernFieldMenu)) return
         val session = sessionStore.state.value
+        if (_uiState.value.settings.modernFieldMenu && tab == MenuTab.STATS && OpeningEquipmentGuide.needsGuidance(session)) {
+            return
+        }
         val receivedStarterSupplies =
             "ms_w1_mq01_jed_talked" in session.completedMilestones ||
                 "w1_mq01" in session.completedQuests

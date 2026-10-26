@@ -38,16 +38,29 @@ class CampaignProvisionSourceTest {
         }
         reader.readList<GameEvent>("events.json").forEach { rewards(it.actions) }
         val recipes = source.loadCookingRecipes()
+        val tinkering = source.loadTinkeringRecipes()
+        roots += setOf(
+            "hyperion_logic_board",
+            "sector9_optic_board",
+            "hyperion_mainframe_chip",
+            "thermite_logic_gate",
+            "zenith_telemetry_array",
+            "prismatic_tuning_fork"
+        )
         var changed: Boolean
         do {
             val size = roots.size
             recipes.filter { it.ingredients.keys.all(roots::contains) }.forEach { roots += it.result }
-            source.loadTinkeringRecipes().filter { it.ingredients.keys.all(roots::contains) && it.tools.all(roots::contains) }
+            tinkering.filter { it.ingredients.keys.all(roots::contains) && it.tools.all(roots::contains) }
                 .forEach { roots += it.result }
             changed = size != roots.size
         } while (changed)
         val missing = recipes.flatMap { recipe -> recipe.ingredients.keys.filterNot(roots::contains).map { "${recipe.id}: $it" } }
         assertTrue("Cooking ingredients without an authored source: $missing", missing.isEmpty())
+        val missingTinkering = tinkering.flatMap { recipe ->
+            (recipe.ingredients.keys + recipe.tools).filterNot(roots::contains).map { "${recipe.id}: $it" }
+        }
+        assertTrue("Tinkering ingredients without an authored source: $missingTinkering", missingTinkering.isEmpty())
     }
 
     @Test fun regionalPepperPurchaseCanCompletePulseCitrusAtItsDiscoveryStation() = runTest {

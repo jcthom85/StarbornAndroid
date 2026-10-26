@@ -1,6 +1,7 @@
 package com.example.starborn.feature.crafting.ui
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,12 +14,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.starborn.domain.crafting.CraftingOutcome
 import com.example.starborn.domain.crafting.CraftingService
 import com.example.starborn.domain.crafting.MealRules
 import com.example.starborn.domain.inventory.ItemUseController
 import com.example.starborn.domain.inventory.InventoryService
+import com.example.starborn.feature.exploration.ui.components.previewItemIconRes
 import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import kotlinx.coroutines.launch
 
@@ -42,6 +45,7 @@ fun CookingScreen(
     var category by rememberSaveable { mutableStateOf("meal") }
     var query by rememberSaveable { mutableStateOf("") }
     var readyOnly by rememberSaveable { mutableStateOf(false) }
+    var showAllRecipes by rememberSaveable { mutableStateOf(false) }
     var feedback by rememberSaveable { mutableStateOf<String?>(null) }
     var pendingMeal by remember { mutableStateOf<(() -> Unit)?>(null) }
     var preparing by remember { mutableStateOf(false) }
@@ -58,9 +62,23 @@ fun CookingScreen(
     val muted = if (highContrastMode) text else FieldMenuDesign.textMuted
     val orange = Color(0xFFFFBD80)
     val actionHeight = if (largeTouchTargets) 56.dp else 48.dp
-    val recipes = craftingService.cookingRecipes.filter {
-        it.category == category && it.name.contains(query.trim(), true) && (!readyOnly || craftingService.canCook(it))
-    }.sortedByDescending { craftingService.canCook(it) }
+    val allCategoryRecipes = remember(inventory, session, category, query, readyOnly) {
+        craftingService.cookingRecipes.filter {
+            it.category == category && it.name.contains(query.trim(), true) && (!readyOnly || craftingService.canCook(it))
+        }.sortedWith(
+            compareByDescending<com.example.starborn.domain.model.CookingRecipe> { craftingService.canCook(it) }
+                .thenByDescending { craftingService.isRecipeRelevant(it) }
+        )
+    }
+    val recipes = remember(allCategoryRecipes, query, showAllRecipes, readyOnly) {
+        if (query.isNotBlank() || showAllRecipes || readyOnly) {
+            allCategoryRecipes
+        } else {
+            val relevant = allCategoryRecipes.filter { craftingService.isRecipeRelevant(it) }
+            relevant.ifEmpty { allCategoryRecipes }
+        }
+    }
+    val hiddenCount = (allCategoryRecipes.size - recipes.size).coerceAtLeast(0)
 
     Scaffold(modifier = modifier.fillMaxSize(), containerColor = FieldMenuDesign.shell,
         snackbarHost = { SnackbarHost(snackbar) }) { padding ->
@@ -146,37 +164,98 @@ fun CookingScreen(
             }
             items(recipes, key = { it.id }) { recipe ->
                 var batch by rememberSaveable(recipe.id) { mutableStateOf(1) }
+                var showDetails by rememberSaveable(recipe.id) { mutableStateOf(false) }
                 val snack = recipe.category == "snack"
                 val discovered = craftingService.isRecipeDiscovered(recipe)
                 val owned = snack && inventory.any { it.item.id == recipe.result && it.quantity > 0 }
+                val canCook = craftingService.canCook(recipe, if (snack) 1 else batch)
+                val resultItem = inventoryService.itemDetail(recipe.result)
                 CookingPanel(highContrastMode) {
-                    Text(recipe.name, color = text, style = MaterialTheme.typography.titleMedium)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(previewItemIconRes(recipe.result)),
+                            contentDescription = null,
+                            modifier = Modifier.size(36.dp)
+                        )
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(recipe.name, color = text, style = MaterialTheme.typography.titleMedium)
+                            if (discovered) {
+                                Text(
+                                    text = if (snack) "Equippable combat snack" else "Yield: ${recipe.resultQuantity * batch} portion${if (recipe.resultQuantity * batch == 1) "" else "s"} · +15% masterwork chance",
+                                    color = muted,
+                                    style = MaterialTheme.typography.labelSmall
+                                )
+                            }
+                        }
+                        if (discovered) {
+                            TextButton(onClick = { showDetails = !showDetails }) {
+                                Text(if (showDetails) "Less" else "Details", color = orange, style = MaterialTheme.typography.labelMedium)
+                            }
+                        }
+                    }
                     if (!discovered) {
                         Text("Recipe undiscovered", color = orange, style = MaterialTheme.typography.labelLarge)
                         Text(recipe.discoveryHint ?: "Find its cooking station.", color = muted, style = MaterialTheme.typography.bodySmall)
                     } else {
-                        recipe.description?.let { Text(it, color = muted, style = MaterialTheme.typography.bodySmall) }
-                        Text(craftingService.mealEffects(recipe), color = orange, style = MaterialTheme.typography.bodySmall)
-                        if (session.activeMealBuff != null) craftingService.mealComparison(recipe)?.let { Text(it, color = text, style = MaterialTheme.typography.bodySmall) }
-                        Text(if (snack) "Creates one equippable snack" else "Yield: ${recipe.resultQuantity * batch} portions · 15% bonus-portion chance per batch unit",
-                            color = muted, style = MaterialTheme.typography.labelMedium)
-                        if (!snack) FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                            listOf(1, 2, 3, 5).forEach { amount ->
-                                OutlinedButton(onClick = { batch = amount }, modifier = Modifier.heightIn(min = actionHeight),
-                                    border = BorderStroke(1.dp, if (batch == amount) orange else muted)) { Text("×$amount", color = text) }
-                            }
+                        val headlineEffect = if (!snack && resultItem != null) {
+                            val hpPart = resultItem.effect?.restoreHp?.let { "Restores $it HP · " }.orEmpty()
+                            val buffSummary = MealRules.summary(MealRules.buff(resultItem, selectedChef))
+                            "${hpPart}Well-Fed (3 battles): $buffSummary"
+                        } else {
+                            craftingService.mealEffects(recipe).lineSequence().firstOrNull().orEmpty()
                         }
-                        Text("Ingredients consumed", color = text, style = MaterialTheme.typography.labelLarge)
-                        recipe.ingredients.forEach { (id, quantity) ->
-                            val required = quantity * if (snack) 1 else batch
-                            val available = craftingService.availableForCraft(id)
-                            Text("${inventoryService.itemDisplayName(id)} · $available/$required", style = MaterialTheme.typography.bodySmall,
-                                color = if (available >= required) muted else Color(0xFFFFAA90))
+                        Text(headlineEffect, color = orange, style = MaterialTheme.typography.bodySmall)
+                        if (showDetails) {
+                            recipe.description?.let { Text(it, color = muted, style = MaterialTheme.typography.bodySmall) }
+                            Text(craftingService.mealEffects(recipe), color = muted, style = MaterialTheme.typography.bodySmall)
+                        }
+                        if (session.activeMealBuff != null) {
+                            craftingService.mealComparison(recipe)?.let { Text(it, color = text, style = MaterialTheme.typography.bodySmall) }
+                        }
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            recipe.ingredients.forEach { (id, quantity) ->
+                                val required = quantity * if (snack) 1 else batch
+                                val available = craftingService.availableForCraft(id)
+                                val hasEnough = available >= required
+                                Surface(
+                                    color = FieldMenuDesign.elevatedPanel,
+                                    shape = RoundedCornerShape(8.dp),
+                                    border = BorderStroke(1.dp, if (hasEnough) FieldMenuDesign.border else Color(0xFFFFAA90).copy(alpha = 0.6f))
+                                ) {
+                                    Text(
+                                        text = "${inventoryService.itemDisplayName(id)} $available/$required",
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = if (hasEnough) text else Color(0xFFFFAA90)
+                                    )
+                                }
+                            }
                         }
                         craftingService.sharedIngredientNotes(recipe).forEach { note ->
                             Text(note, color = muted, style = MaterialTheme.typography.labelMedium)
                         }
-                        val canCook = craftingService.canCook(recipe, if (snack) 1 else batch)
+                        if (!snack) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Text("Batch:", color = muted, style = MaterialTheme.typography.labelMedium)
+                                listOf(1, 2, 3, 5).forEach { amount ->
+                                    OutlinedButton(
+                                        onClick = { batch = amount },
+                                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                                        modifier = Modifier.heightIn(min = 36.dp),
+                                        border = BorderStroke(1.dp, if (batch == amount) orange else muted)
+                                    ) {
+                                        Text("×$amount", color = text, style = MaterialTheme.typography.labelMedium)
+                                    }
+                                }
+                            }
+                        }
                         if (!snack && onCookAndEat != null) {
                             fun prepare(replace: Boolean) {
                                 preparing = true
@@ -213,6 +292,24 @@ fun CookingScreen(
                             colors = ButtonDefaults.buttonColors(containerColor = orange, contentColor = FieldMenuDesign.shell)) {
                             Text(if (owned) "Already owned · equip from Items" else if (snack) "Craft snack" else "Cook ${recipe.resultQuantity * batch} portions")
                         }
+                    }
+                }
+            }
+            if (query.isBlank() && !readyOnly && (hiddenCount > 0 || showAllRecipes)) {
+                item {
+                    OutlinedButton(
+                        onClick = { showAllRecipes = !showAllRecipes },
+                        modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight),
+                        border = BorderStroke(1.dp, muted)
+                    ) {
+                        Text(
+                            text = if (showAllRecipes) {
+                                "Show relevant recipes only"
+                            } else {
+                                "Show all ${allCategoryRecipes.size} recipes ($hiddenCount more from other sectors & waters)"
+                            },
+                            color = text
+                        )
                     }
                 }
             }

@@ -2093,13 +2093,20 @@
   {
     "id": "ration_soup",
     "name": "Ration Soup",
-    "description": "A warmed ration broth with enough herbs to taste alive. Restores 60 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion's perk.",
+    "description": "A warmed ration broth with enough herbs to taste alive. Restores 60 HP to one ally. Eat before combat for a three-battle party meal bonus (+3 Defense) and your serving companion's perk. In combat: Defense +3 for 2 turns to one ally.",
     "type": "consumable",
     "value": 45,
     "buy_price": 90,
     "rarity": "common",
     "effect": {
-      "restore_hp": 60
+      "restore_hp": 60,
+      "buffs": [
+        {
+          "stat": "defense",
+          "value": 3,
+          "duration": 2
+        }
+      ]
     },
     "resale_value": 41
   },
@@ -2239,7 +2246,7 @@
   {
     "id": "power_cell",
     "name": "Power Cell",
-    "description": "A charged cell that fuels field gadgets.",
+    "description": "A charged energy cell. Can be scrapped in Tinker for Wiring Bundles and Scrap Metal.",
     "type": "component",
     "value": 30,
     "buy_price": 60,
@@ -2251,7 +2258,7 @@
     "aliases": [
       "catalyst"
     ],
-    "description": "Stabilizes volatile mixtures when crafting first-aid kits.",
+    "description": "Reagent-grade clinical stabilizer prized by wetland researchers and field medics.",
     "type": "component",
     "value": 18,
     "buy_price": 36,
@@ -2772,7 +2779,7 @@
   {
     "id": "armor_plate",
     "name": "Armor Plate",
-    "description": "A thick sheet of composite armor plating.",
+    "description": "A thick sheet of composite armor plating. Can be scrapped in Tinker for Scrap Metal and Ballistic Weave.",
     "type": "component",
     "value": 50,
     "buy_price": 100,
@@ -2781,7 +2788,7 @@
   {
     "id": "battery",
     "name": "Battery",
-    "description": "A standard energy cell for powering small electronics.",
+    "description": "A standard energy cell used on the Tinker Workbench to assemble Pulse Grenades.",
     "type": "component",
     "value": 30,
     "buy_price": 60,
@@ -2923,6 +2930,7 @@
     "type": "mod",
     "value": 420,
     "buy_price": 840,
+    "resale_value": 120,
     "rarity": "epic",
     "equipment": {
       "slot": "mod",

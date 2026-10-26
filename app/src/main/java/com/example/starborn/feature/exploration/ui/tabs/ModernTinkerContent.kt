@@ -56,6 +56,9 @@ internal fun ModernTinkerWorkbench(
     onLoad: (String) -> Unit
 ) {
     val resultFocus = remember { BringIntoViewRequester() }
+    var pickerOpen by remember(bench.mainItemId, bench.componentIds, bench.preview?.recipeId) {
+        mutableStateOf(bench.preview == null)
+    }
     LaunchedEffect(tutorialStep, bench.preview?.recipeId) {
         if (tutorialStep == TinkeringTutorialStep.SYNTHESIZE && bench.preview != null) {
             withFrameNanos { }; withFrameNanos { }
@@ -109,8 +112,8 @@ internal fun ModernTinkerWorkbench(
                 Text("Ready to build", style = MaterialTheme.typography.titleSmall, color = FieldMenuDesign.text)
                 val ready = recipes.filter { it.canCraft }.take(3)
                 if (ready.isEmpty()) {
-                    Text("Open Schematics to check your recipes and missing materials.", color = secondaryText(),
-                        style = MaterialTheme.typography.bodySmall)
+                    Text("Slot a Base item below (like Scrap Metal, Ballistic Weave, Focusing Lens, or Battery) to discover Weapon & Armor Mods and field gadgets, or check Schematics for discovery clues.",
+                        color = secondaryText(), style = MaterialTheme.typography.bodySmall)
                 } else ready.forEach { recipe ->
                     OutlinedButton(onClick = { onLoad(recipe.id) }, modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight())) {
                         Text(recipe.name, style = MaterialTheme.typography.bodySmall)
@@ -122,22 +125,22 @@ internal fun ModernTinkerWorkbench(
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Text("Assembly", Modifier.weight(1f), style = MaterialTheme.typography.titleSmall, color = FieldMenuDesign.text)
                 if (bench.mainItemId != null || bench.componentIds.isNotEmpty()) {
-                    TextButton(onClick = onClear, modifier = Modifier.heightIn(min = actionHeight())) { Text("Clear") }
+                    TextButton(onClick = { pickerOpen = true; onClear() }, modifier = Modifier.heightIn(min = actionHeight())) { Text("Clear") }
                 }
             }
-            ModernTinkerSocket("Base item", bench.mainItemName, activeSlot == ActiveBenchSlot.BASE,
+            ModernTinkerSocket("Base item", bench.mainItemName, activeSlot == ActiveBenchSlot.BASE && pickerOpen,
                 tutorialStep == TinkeringTutorialStep.SLOT_BASE, accent,
-                { onSelectSlot(ActiveBenchSlot.BASE) }, { onClearSlot(ActiveBenchSlot.BASE) })
-            if (activeSlot == ActiveBenchSlot.BASE && tutorialStep != TinkeringTutorialStep.SYNTHESIZE) parts()
+                { pickerOpen = true; onSelectSlot(ActiveBenchSlot.BASE) }, { pickerOpen = true; onClearSlot(ActiveBenchSlot.BASE) })
+            if (activeSlot == ActiveBenchSlot.BASE && pickerOpen && tutorialStep != TinkeringTutorialStep.SYNTHESIZE) parts()
             // Full-width sockets preserve names and font scaling on narrow phones.
-            ModernTinkerSocket("Component 1", bench.componentNames.getOrNull(0), activeSlot == ActiveBenchSlot.COMPONENT_1,
+            ModernTinkerSocket("Component 1", bench.componentNames.getOrNull(0), activeSlot == ActiveBenchSlot.COMPONENT_1 && pickerOpen,
                 tutorialStep == TinkeringTutorialStep.SLOT_COMPONENT, accent,
-                { onSelectSlot(ActiveBenchSlot.COMPONENT_1) }, { onClearSlot(ActiveBenchSlot.COMPONENT_1) })
-            if (activeSlot == ActiveBenchSlot.COMPONENT_1 && tutorialStep != TinkeringTutorialStep.SYNTHESIZE) parts()
+                { pickerOpen = true; onSelectSlot(ActiveBenchSlot.COMPONENT_1) }, { pickerOpen = true; onClearSlot(ActiveBenchSlot.COMPONENT_1) })
+            if (activeSlot == ActiveBenchSlot.COMPONENT_1 && pickerOpen && tutorialStep != TinkeringTutorialStep.SYNTHESIZE) parts()
             if (tutorialStep == null) {
-                ModernTinkerSocket("Component 2", bench.componentNames.getOrNull(1), activeSlot == ActiveBenchSlot.COMPONENT_2,
-                    false, accent, { onSelectSlot(ActiveBenchSlot.COMPONENT_2) }, { onClearSlot(ActiveBenchSlot.COMPONENT_2) })
-                if (activeSlot == ActiveBenchSlot.COMPONENT_2) parts()
+                ModernTinkerSocket("Component 2", bench.componentNames.getOrNull(1), activeSlot == ActiveBenchSlot.COMPONENT_2 && pickerOpen,
+                    false, accent, { pickerOpen = true; onSelectSlot(ActiveBenchSlot.COMPONENT_2) }, { pickerOpen = true; onClearSlot(ActiveBenchSlot.COMPONENT_2) })
+                if (activeSlot == ActiveBenchSlot.COMPONENT_2 && pickerOpen) parts()
             }
         }
         bench.preview?.let { preview ->
@@ -207,6 +210,7 @@ internal fun ModernTinkerSchematics(recipes: List<TinkeringRecipeUi>, unknown: L
     onLoad: (String) -> Unit, onCraft: (String) -> Unit) {
     var query by rememberSaveable { mutableStateOf("") }
     var showDiscoveries by rememberSaveable { mutableStateOf(false) }
+    var showAllClues by rememberSaveable { mutableStateOf(false) }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         OutlinedTextField(query, { query = it }, modifier = Modifier.fillMaxWidth(), singleLine = true,
             label = { Text("Find a schematic") })
@@ -235,16 +239,28 @@ internal fun ModernTinkerSchematics(recipes: List<TinkeringRecipeUi>, unknown: L
             }
         }
         if (unknown.isNotEmpty()) {
+            val matchingUnknown = unknown.filter { it.name.contains(query.trim(), ignoreCase = true) }
+            val relevantUnknown = matchingUnknown.filter { it.isRelevantDiscovery }
+            val visibleUnknown = if (query.isNotBlank() || showAllClues || relevantUnknown.isEmpty()) matchingUnknown else relevantUnknown
+            val hiddenClueCount = (matchingUnknown.size - visibleUnknown.size).coerceAtLeast(0)
             OutlinedButton(onClick = { showDiscoveries = !showDiscoveries }, modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight())) {
-                Text(if (showDiscoveries) "Hide discovery clues" else "Discovery clues · ${unknown.size}")
+                Text(if (showDiscoveries) "Hide discovery clues" else "Discovery clues · ${visibleUnknown.size}")
             }
-            if (showDiscoveries) unknown.filter { it.name.contains(query.trim(), ignoreCase = true) }.forEach { recipe ->
-                TinkerPanel {
-                    Text(recipe.name, color = FieldMenuDesign.text, style = MaterialTheme.typography.titleSmall)
-                    Text(if (recipe.requiresSchematic) "Requires a schematic" else "Discover at the workbench",
-                        color = FieldMenuDesign.gold, style = MaterialTheme.typography.labelMedium)
-                    Text(recipe.discoveryHint ?: "Try combining the base item with compatible components.",
-                        color = secondaryText(), style = MaterialTheme.typography.bodySmall)
+            if (showDiscoveries) {
+                visibleUnknown.forEach { recipe ->
+                    TinkerPanel {
+                        Text(recipe.name, color = FieldMenuDesign.text, style = MaterialTheme.typography.titleSmall)
+                        Text(if (recipe.requiresSchematic) "Requires a schematic" else "Discover at the workbench",
+                            color = FieldMenuDesign.gold, style = MaterialTheme.typography.labelMedium)
+                        Text(recipe.discoveryHint ?: "Try combining the base item with compatible components.",
+                            color = secondaryText(), style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+                if (query.isBlank() && (hiddenClueCount > 0 || (showAllClues && relevantUnknown.isNotEmpty() && relevantUnknown.size < matchingUnknown.size))) {
+                    OutlinedButton(onClick = { showAllClues = !showAllClues }, modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight())) {
+                        Text(if (showAllClues) "Show only clues for owned base parts (${relevantUnknown.size})"
+                            else "Show all ${matchingUnknown.size} discovery clues (+$hiddenClueCount locked)")
+                    }
                 }
             }
         }

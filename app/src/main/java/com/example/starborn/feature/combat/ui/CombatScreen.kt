@@ -1264,14 +1264,16 @@ fun CombatScreen(
                 if (state.outcome != null || enemyState?.isAlive == false) { inspectionExpanded = false; viewModel.dismissEnemyInspection() }
             }
             buildHint?.let { hint ->
-                androidx.compose.material3.AlertDialog(
-                    onDismissRequest = viewModel::dismissBuildHint,
-                    modifier = Modifier.clickable(onClick = viewModel::dismissBuildHint),
-                    title = { androidx.compose.material3.Text(hint.context ?: "Nova's build") },
-                    text = { androidx.compose.material3.Text(hint.message) },
-                    confirmButton = { androidx.compose.material3.TextButton(onClick = viewModel::dismissBuildHint) {
-                        androidx.compose.material3.Text("Got it")
-                    } }
+                com.example.starborn.feature.combat.ui.components.CombatBuildHintOverlay(
+                    title = hint.context ?: "Nova's build",
+                    message = hint.message,
+                    theme = viewModel.theme,
+                    highContrastMode = highContrastMode,
+                    onDismiss = viewModel::dismissBuildHint,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(contentPadding)
+                        .zIndex(22f)
                 )
             }
             val victoryPayload = pendingVictoryPayload

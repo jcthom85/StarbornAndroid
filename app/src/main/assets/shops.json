@@ -306,9 +306,11 @@
         "burn_salve",
         "antidote_flask",
         "ration_pack",
+        "herb",
         "power_cell",
         "scrap_metal",
         "wiring_bundle",
+        "focusing_lens",
         "foundry_smoked_brisket"
       ],
       "rules": {
@@ -319,6 +321,11 @@
         "medkit": {
           "milestones": [
             "ms_w1_mq03_complete"
+          ]
+        },
+        "focusing_lens": {
+          "milestones": [
+            "ms_w1_mq02_complete"
           ]
         }
       }

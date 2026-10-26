@@ -26,6 +26,16 @@ class CraftingService(
         sessionStore.state.value.roomId == recipe.discoveryRoom ||
         sessionStore.state.value.roomStates[recipe.discoveryRoom]?.get("cooking_discovered") == true
 
+    fun isRecipeRelevant(recipe: CookingRecipe): Boolean {
+        if (recipe.id in setOf("provision_ration_soup", "provision_field_ration_press", "provision_spiced_ration_cache")) return true
+        if (canCook(recipe)) return true
+        if (inventoryService.hasItem(recipe.result)) return true
+        if (recipe.discoveryRoom != null) return isRecipeDiscovered(recipe)
+        val commonStaples = setOf("herb", "ration_pack")
+        val keyIngredients = (recipe.ingredients.keys - commonStaples).ifEmpty { recipe.ingredients.keys }
+        return keyIngredients.any { availableForCraft(it) > 0 || inventoryService.hasItem(it) }
+    }
+
     fun mealComparison(recipe: CookingRecipe): String? {
         if (recipe.category != "meal" || !isRecipeDiscovered(recipe)) return null
         val item = inventoryService.catalogItem(recipe.result) ?: return null
@@ -85,7 +95,8 @@ class CraftingService(
                 }).joinToString("\n")
         }
         val scope = if (effect.target in listOf("party", "all_allies")) "all allies" else "one ally"
-        val chef = sessionStore.state.value.mealChefId.takeIf { it in availableChefs() }
+        val chefs = availableChefs()
+        val chef = sessionStore.state.value.mealChefId.takeIf { it in chefs } ?: chefs.firstOrNull()
         val serving = MealRules.buff(item, chef)
         val combatBuffs = (effect.buffs.orEmpty() + listOfNotNull(effect.singleBuff)).joinToString(" · ") {
             "${MealRules.bonusLabel(it.stat, it.value)} (${it.duration ?: 1} turns)"
@@ -212,15 +223,27 @@ class CraftingService(
         return CraftingOutcome.Success(addedId, "Crafted ${recipe.name}")
     }
 
+    private val rawSalvageReturns: Map<String, Map<String, Int>> = mapOf(
+        "armor_plate" to mapOf("scrap_metal" to 2, "ballistic_weave" to 1),
+        "battery_pack" to mapOf("wiring_bundle" to 1),
+        "power_cell" to mapOf("wiring_bundle" to 1, "scrap_metal" to 1)
+    )
+
     fun salvageFor(itemId: String): Map<String, Int> {
         val item = inventoryService.catalogItem(itemId) ?: return emptyMap()
         val session = sessionStore.state.value
         if (item.unsellable || item.type.equals("quest", true) ||
             ((item.id in session.equippedItems.values || item.id in session.equippedWeapons.values || item.id in session.equippedArmors.values) && availableForCraft(item.id) <= 0)) return emptyMap()
-        val recipe = tinkeringRecipes.firstOrNull { it.result == item.id } ?: return emptyMap()
-        val salvage = recipe.salvage.filterValues { it > 0 }
-        if (salvage.keys.any { inventoryService.catalogItem(it) == null }) return emptyMap()
+        val recipeSalvage = tinkeringRecipes.firstOrNull { it.result == item.id }?.salvage.orEmpty()
+        val salvage = (recipeSalvage.ifEmpty { rawSalvageReturns[item.id].orEmpty() }).filterValues { it > 0 }
+        if (salvage.isEmpty() || salvage.keys.any { inventoryService.catalogItem(it) == null }) return emptyMap()
         return salvage
+    }
+
+    fun isTinkeringDiscoveryRelevant(recipe: TinkeringRecipe): Boolean {
+        if (recipe.requiresSchematic) return false
+        val base = recipe.base?.takeIf { it.isNotBlank() } ?: return false
+        return availableForCraft(base) > 0
     }
 
     fun availableForCraft(itemId: String): Int {

@@ -24,11 +24,11 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The squad retreats to regroup after the defeat."
+        "text": "You pull back to catch your breath and regroup after the defeat."
       },
       {
         "type": "narration",
-        "text": "Patch up, recharge shields, and consider buffing allies before re-engaging. Status items and defensive skills can swing the next encounter."
+        "text": "Check your gear and supplies before re-engaging. Exploiting enemy weaknesses, using Snacks, and timing defensive skills can swing the next encounter."
       }
     ]
   },

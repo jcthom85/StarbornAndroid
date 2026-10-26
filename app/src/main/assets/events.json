@@ -822,7 +822,7 @@
     "description": "Shows the save tutorial after Nova leaves Jed's place with Shift Clearance active.",
     "trigger": {
       "type": "enter_room",
-      "room": "pit_shaft"
+      "room": "workshop_yard"
     },
     "conditions": [
       {
@@ -842,7 +842,7 @@
       {
         "type": "system_tutorial",
         "scene_id": "menu_save",
-        "context": "Jed's Place"
+        "context": "Save"
       }
     ]
   },
@@ -931,11 +931,6 @@
         "room_id": "workshop_floor",
         "state_key": "cryo_inductor_installed",
         "value": true
-      },
-      {
-        "type": "narrate",
-        "message": "Cold loop: 68%. Before the live test, ground the Flux Liner and confirm the governor bypass.",
-        "tap_to_dismiss": true
       },
       {
         "type": "start_dialogue",
@@ -1181,6 +1176,35 @@
         "type": "set_quest_task_done",
         "quest_id": "w1_mq02",
         "task_id": "approach_admin_gate"
+      }
+    ]
+  },
+  {
+    "id": "w1_mq02_mod_slots_tutorial",
+    "description": "Explains Weapon Mod slots and Tinkering mod/gadget discovery once Nova reaches the Transit Checkpoint.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "checkpoint_queue"
+    },
+    "conditions": [
+      {
+        "type": "quest_completed",
+        "quest_id": "w1_mq01"
+      },
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq02"
+      },
+      {
+        "type": "tutorial_not_completed",
+        "tutorial_id": "mod_slots_basics"
+      }
+    ],
+    "actions": [
+      {
+        "type": "system_tutorial",
+        "scene_id": "mod_slots_basics",
+        "context": "Tinker"
       }
     ]
   },
@@ -2058,10 +2082,6 @@
         "type": "if_milestone_not_set",
         "milestone": "ms_tutorial_encounter_defeat",
         "do": [
-          {
-            "type": "show_message",
-            "message": "You were overwhelmed. Try using shields, items, or a different approach."
-          },
           {
             "type": "play_cinematic",
             "scene_id": "scene_encounter_defeat_tip"
@@ -13133,38 +13153,6 @@
     ]
   },
   {
-    "id": "w1_cook_ration_soup",
-    "description": "Brews hot ration soup in the mess kitchen.",
-    "trigger": {
-      "type": "player_action",
-      "action": "w1_cook_ration_soup"
-    },
-    "conditions": [
-      {
-        "type": "has_item",
-        "item_id": "ration_pack",
-        "quantity": 1
-      }
-    ],
-    "repeatable": true,
-    "actions": [
-      {
-        "type": "take_item",
-        "item_id": "ration_pack",
-        "quantity": 1
-      },
-      {
-        "type": "give_item",
-        "item_id": "ration_soup",
-        "quantity": 1
-      },
-      {
-        "type": "show_message",
-        "message": "Nova simmers a hot bowl of ration soup using a ration pack and kitchen seasonings."
-      }
-    ]
-  },
-  {
     "id": "w1_loot_kitchen_hopper",
     "description": "Gathers herbs from the mess kitchen hopper.",
     "trigger": {
@@ -13181,7 +13169,7 @@
       {
         "type": "give_item",
         "item_id": "herb",
-        "quantity": 2
+        "quantity": 4
       },
       {
         "type": "set_milestone",
@@ -13189,7 +13177,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova gathers 2 dried herbs from the bottom of the hopper."
+        "message": "Nova gathers 4 dried herbs from the bottom of the hopper."
       }
     ]
   },
@@ -13565,7 +13553,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova clears the dust tarp from Jed's loft bench, uncovering a customized weapon mod."
+        "message": "Nova clears the dust tarp from Jed's loft bench, uncovering a calibrated targeting sight and workshop scrap."
       }
     ]
   },
@@ -13643,7 +13631,7 @@
     "actions": [
       {
         "type": "give_item",
-        "item_id": "cryo_inductor",
+        "item_id": "focusing_lens",
         "quantity": 1
       },
       {
@@ -13657,7 +13645,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova unlatches the thermal casing, retrieving an insulated sub-zero core."
+        "message": "Nova unlatches the optical thermal casing, retrieving a calibrated focusing lens and circuit board."
       }
     ]
   },

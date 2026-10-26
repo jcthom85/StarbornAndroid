@@ -8,7 +8,7 @@ object CombatTutorialCopy {
         val isLoader = tutorial.tutorialType == CombatTutorialType.LOADER_WEAKNESS
         return when (tutorial.step) {
             CombatTutorialStep.BRIEF -> "Combat Tutorial"
-            CombatTutorialStep.BLOCKED_EXPLANATION -> "Direct Hit: Blocked"
+            CombatTutorialStep.BLOCKED_EXPLANATION -> if (isLoader) "Momentum Built" else "Direct Hit: Blocked"
             CombatTutorialStep.SUCCESS -> if (isLoader) "Stability Broken!" else "Guard Broken"
         else -> "Combat Tutorial"
         }
@@ -18,11 +18,11 @@ object CombatTutorialCopy {
         return when (tutorial.step) {
             CombatTutorialStep.BRIEF ->
             if (isLoader)
-                "When Nova is ready, tap her, choose Abilities, then Arc Tether. Select the Faulted Loader to exploit its Shock weakness."
+                "Start with a basic Attack to build Momentum, then use Arc Tether to exploit the Faulted Loader's Shock weakness and break its Stability."
             else
                 "That trainer eats direct hits. First, test the shield, then break its guard with Hydraulic Kick."
             CombatTutorialStep.SELECT_NOVA_ATTACK -> "Tap Nova when her action is ready."
-            CombatTutorialStep.CHOOSE_ATTACK -> "Choose Attack. First, test the shield."
+            CombatTutorialStep.CHOOSE_ATTACK -> if (isLoader) "Choose Attack to strike and build Momentum." else "Choose Attack. First, test the shield."
             CombatTutorialStep.TARGET_BASIC_ATTACK -> if (isLoader) "Choose the Faulted Loader." else "Choose the Shield Trainer."
             CombatTutorialStep.AWAIT_BASIC_RESULT -> if (isLoader) "Watch the standard Attack connect." else "Watch how the shield handles a direct hit."
             CombatTutorialStep.BLOCKED_EXPLANATION ->

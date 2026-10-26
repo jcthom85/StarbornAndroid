@@ -49,7 +49,8 @@ data class TinkeringRecipeUi(
     val resultSummary: String = "",
     val requiresSchematic: Boolean = false,
     val discoveryHint: String? = null,
-    val equipmentComparison: List<ModSlotComparison> = emptyList()
+    val equipmentComparison: List<ModSlotComparison> = emptyList(),
+    val isRelevantDiscovery: Boolean = false
 )
 
 data class TinkeringBenchState(
@@ -88,7 +89,8 @@ data class TinkeringPreview(
     val resultSummary: String = "",
     val requiresSchematic: Boolean = false,
     val discoveryHint: String? = null,
-    val equipmentComparison: List<ModSlotComparison> = emptyList()
+    val equipmentComparison: List<ModSlotComparison> = emptyList(),
+    val isRelevantDiscovery: Boolean = false
 )
 
 enum class TinkeringFilter { ALL, REPAIR, GEAR }
@@ -497,7 +499,8 @@ class CraftingController(
             resultSummary = craftingService.resultSummary(this),
             equipmentComparison = craftingService.equipmentComparison(result),
             requiresSchematic = requiresSchematic,
-            discoveryHint = discoveryHint
+            discoveryHint = discoveryHint,
+            isRelevantDiscovery = craftingService.isTinkeringDiscoveryRelevant(this)
         )
 
 }

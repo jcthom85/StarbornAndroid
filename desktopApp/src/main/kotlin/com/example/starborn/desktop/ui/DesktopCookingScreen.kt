@@ -46,6 +46,7 @@ fun DesktopCookingScreen(
     var category by rememberSaveable { mutableStateOf("meal") }
     var query by rememberSaveable { mutableStateOf("") }
     var readyOnly by rememberSaveable { mutableStateOf(false) }
+    var showAllRecipes by rememberSaveable { mutableStateOf(false) }
     var feedback by rememberSaveable { mutableStateOf<String?>(null) }
     var pendingMeal by remember { mutableStateOf<(() -> Unit)?>(null) }
     var preparing by remember { mutableStateOf(false) }
@@ -62,9 +63,23 @@ fun DesktopCookingScreen(
     val muted = if (highContrastMode) text else FieldMenuDesign.textMuted
     val orange = Color(0xFFFFBD80)
     val actionHeight = if (largeTouchTargets) 56.dp else 48.dp
-    val recipes = craftingService.cookingRecipes.filter {
-        it.category == category && it.name.contains(query.trim(), true) && (!readyOnly || craftingService.canCook(it))
-    }.sortedByDescending { craftingService.canCook(it) }
+    val allCategoryRecipes = remember(inventory, session, category, query, readyOnly) {
+        craftingService.cookingRecipes.filter {
+            it.category == category && it.name.contains(query.trim(), true) && (!readyOnly || craftingService.canCook(it))
+        }.sortedWith(
+            compareByDescending<CookingRecipe> { craftingService.canCook(it) }
+                .thenByDescending { craftingService.isRecipeRelevant(it) }
+        )
+    }
+    val recipes = remember(allCategoryRecipes, query, showAllRecipes, readyOnly) {
+        if (query.isNotBlank() || showAllRecipes || readyOnly) {
+            allCategoryRecipes
+        } else {
+            val relevant = allCategoryRecipes.filter { craftingService.isRecipeRelevant(it) }
+            relevant.ifEmpty { allCategoryRecipes }
+        }
+    }
+    val hiddenCount = (allCategoryRecipes.size - recipes.size).coerceAtLeast(0)
 
     var selectedRecipeId by rememberSaveable { mutableStateOf<String?>(null) }
     val selectedRecipe = recipes.firstOrNull { it.id == selectedRecipeId } ?: recipes.firstOrNull()
@@ -255,6 +270,24 @@ fun DesktopCookingScreen(
                                     color = muted, style = MaterialTheme.typography.labelMedium)
                             }
                         }
+                    }
+                }
+            }
+            if (query.isBlank() && !readyOnly && (hiddenCount > 0 || showAllRecipes)) {
+                item {
+                    OutlinedButton(
+                        onClick = { showAllRecipes = !showAllRecipes },
+                        modifier = Modifier.fillMaxWidth().desktopPointerHover().heightIn(min = actionHeight),
+                        border = BorderStroke(1.dp, muted)
+                    ) {
+                        Text(
+                            text = if (showAllRecipes) {
+                                "Show relevant recipes only"
+                            } else {
+                                "Show all ${allCategoryRecipes.size} recipes ($hiddenCount more from other sectors & waters)"
+                            },
+                            color = text
+                        )
                     }
                 }
             }

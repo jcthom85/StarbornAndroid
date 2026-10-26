@@ -6856,8 +6856,11 @@ fun TutorialBanner(
     modifier: Modifier = Modifier,
     onPrimaryAction: (() -> Unit)? = null
 ) {
+    val resolvedTitle = prompt.metadata["title"]
+        ?: prompt.context?.takeIf { it.isNotBlank() }?.let { "Tutorial · $it" }
+        ?: "Tutorial"
     PromptBanner(
-        title = prompt.metadata["title"] ?: "Tutorial",
+        title = resolvedTitle,
         message = prompt.message,
         accentColor = Color(0xFF7BE8FF),
         actionLabel = prompt.metadata["action_label"] ?: "Continue",

@@ -153,8 +153,13 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
                 }
             })
             "Schematics" -> {
+                var showAllClues by rememberSaveable { mutableStateOf(false) }
                 OutlinedTextField(query, { query = it }, Modifier.fillMaxWidth(), label = { Text("Find a schematic") }, singleLine = true)
-                val recipes = (state.learnedRecipes + state.lockedRecipes).filter { it.name.contains(query, true) }
+                val matchingLocked = state.lockedRecipes.filter { it.name.contains(query, true) }
+                val relevantLocked = matchingLocked.filter { it.isRelevantDiscovery }
+                val visibleLocked = if (query.isNotBlank() || showAllClues || relevantLocked.isEmpty()) matchingLocked else relevantLocked
+                val hiddenClueCount = (matchingLocked.size - visibleLocked.size).coerceAtLeast(0)
+                val recipes = state.learnedRecipes.filter { it.name.contains(query, true) } + visibleLocked
                 val selected = recipes.firstOrNull { it.id == recipeId } ?: recipes.firstOrNull()
                 DesktopStationPanes(Modifier.weight(1f), stackBelow = 500.dp, primary = { paneModifier ->
                     LazyColumn(paneModifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -163,6 +168,14 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
                         items(recipes, key = { it.id }) { recipe ->
                             Surface(onClick = { recipeId = recipe.id }, color = if (recipe.id == selected?.id) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel, shape = RoundedCornerShape(4.dp)) {
                                 Column(Modifier.fillMaxWidth().padding(14.dp)) { Text(recipe.name); Text(if (recipe.learned) "Learned" else "Undiscovered", color = FieldMenuDesign.textMuted) }
+                            }
+                        }
+                        if (query.isBlank() && (hiddenClueCount > 0 || (showAllClues && relevantLocked.isNotEmpty() && relevantLocked.size < matchingLocked.size))) {
+                            item(key = "toggle-clues") {
+                                OutlinedButton(onClick = { showAllClues = !showAllClues }, modifier = Modifier.fillMaxWidth()) {
+                                    Text(if (showAllClues) "Show only clues for owned base parts (${relevantLocked.size})"
+                                        else "Show all ${matchingLocked.size} discovery clues (+$hiddenClueCount locked)")
+                                }
                             }
                         }
                     }

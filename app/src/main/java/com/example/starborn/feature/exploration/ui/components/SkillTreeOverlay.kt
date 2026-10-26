@@ -102,7 +102,22 @@ fun SkillTreeContent(
             Text("${overlay.characterName}: Skills", color = FieldMenuDesign.text,
                 style = MaterialTheme.typography.titleSmall)
             if (overlay.respecRefund > 0) TextButton(onClick = onResetBuild) { Text("Reset build (+${overlay.respecRefund} AP)") }
-            overlay.tutorialGuide?.let { Text(it, color = FieldMenuDesign.textMuted, style = MaterialTheme.typography.bodySmall) }
+            overlay.tutorialGuide?.let { guide ->
+                Surface(
+                    color = FieldMenuDesign.panel,
+                    shape = RoundedCornerShape(12.dp),
+                    border = BorderStroke(1.dp, accentColor.copy(alpha = 0.6f)),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth().padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Text("Tutorial", color = accentColor, style = MaterialTheme.typography.labelMedium)
+                        Text(guide, color = FieldMenuDesign.text, style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+            }
             SkillTreeBranchTabs(overlay.branches, selectedBranchIndex, accentColor, borderColor) {
                 selectedBranchIndex = it
             }
@@ -167,7 +182,22 @@ fun SkillTreeContent(
                     }
 
                     if (overlay.respecRefund > 0) TextButton(onClick = onResetBuild) { Text("Reset build (+${overlay.respecRefund} AP)") }
-                    overlay.tutorialGuide?.let { Text(it, color = Color.White, style = MaterialTheme.typography.bodyMedium) }
+                    overlay.tutorialGuide?.let { guide ->
+                        Surface(
+                            color = FieldMenuDesign.panel,
+                            shape = RoundedCornerShape(12.dp),
+                            border = BorderStroke(1.dp, accentColor.copy(alpha = 0.6f)),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth().padding(12.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Text("Tutorial", color = accentColor, style = MaterialTheme.typography.labelMedium)
+                                Text(guide, color = FieldMenuDesign.text, style = MaterialTheme.typography.bodySmall)
+                            }
+                        }
+                    }
                     SkillTreeBranchTabs(
                         branches = overlay.branches,
                         selectedIndex = selectedBranchIndex,

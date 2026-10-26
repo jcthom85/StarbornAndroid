@@ -49,8 +49,8 @@
         "id": "scene_market_locator",
         "steps": [
             {
-                "message": "Head out of the Pit toward Jed. Tap highlighted exits or swipe toward open connections to keep moving.",
-                "context": "Homestead"
+                "message": "Head out of the Pit toward Jed's Workshop. Tap highlighted exits or swipe toward open connections to keep moving.",
+                "context": "Navigation"
             }
         ]
     },
@@ -81,7 +81,7 @@
         "id": "menu_save",
         "steps": [
             {
-                "message": "Open the menu to save your progress. In Settings, use Quick Save for a quick checkpoint, or Save Game to choose a manual save slot.",
+                "message": "Open the menu to save your progress. Tap the Save icon in the top-right corner for a quick checkpoint, or open Settings > Save Game to choose a manual save slot.",
                 "context": "Save"
             }
         ]
@@ -154,8 +154,17 @@
         "id": "gear_equip_basics",
         "steps": [
             {
-                "message": "Equip Nova's Mining Pistol and Flux Liner using the equipment controls. In the current menu, open Party and select Weapon, then Armor. Legacy menus place these controls in Inventory > Gear. Reading this message does not equip gear.",
-                "context": "Gear"
+                "message": "Open Party and select Nova's Weapon and Armor slots to equip her Mining Pistol and Flux Liner.",
+                "context": "Equipment"
+            }
+        ]
+    },
+    {
+        "id": "mod_slots_basics",
+        "steps": [
+            {
+                "message": "Weapon Mod slots are now unlocked in Party. Combine Scrap Metal, Ballistic Weave, Focusing Lenses, or Batteries on the Tinker Workbench to craft mods and Pulse Grenades.",
+                "context": "Tinker"
             }
         ]
     },

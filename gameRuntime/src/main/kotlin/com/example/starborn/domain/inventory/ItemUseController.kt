@@ -119,7 +119,8 @@ class ItemUseController(
     }
 
     private fun applyMealBuff(item: com.example.starborn.domain.model.Item) {
-        val chef = sessionStore.state.value.mealChefId.takeIf { it in craftingService.availableChefs() }
+        val chefs = craftingService.availableChefs()
+        val chef = sessionStore.state.value.mealChefId.takeIf { it in chefs } ?: chefs.firstOrNull()
         sessionStore.applyMealBuff(MealRules.buff(item, chef))
     }
 

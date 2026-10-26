@@ -1764,13 +1764,14 @@ class CombatController(
                     val fxElement = resolveImpactElement(entry, updated)
                     if (fxElement == "blocked" && entry.sourceId in playerIdList) {
                         maybePlayShieldBlockCue()
-                        val tutorial = _combatTutorial.value
-                        if (tutorial?.step == CombatTutorialStep.AWAIT_BASIC_RESULT &&
-                            entry.sourceId == COMBAT_TUTORIAL_PLAYER_ID &&
-                            entry.targetId == tutorial.targetId
-                        ) {
-                            tutorialTracker.setCombatTutorialStep(CombatTutorialStep.BLOCKED_EXPLANATION)
-                        }
+                    }
+                    val tutorialAfterBasic = _combatTutorial.value
+                    if (tutorialAfterBasic?.step == CombatTutorialStep.AWAIT_BASIC_RESULT &&
+                        entry.sourceId == COMBAT_TUTORIAL_PLAYER_ID &&
+                        entry.targetId == tutorialAfterBasic.targetId &&
+                        (fxElement == "blocked" || tutorialAfterBasic.tutorialType == CombatTutorialType.LOADER_WEAKNESS)
+                    ) {
+                        tutorialTracker.setCombatTutorialStep(CombatTutorialStep.BLOCKED_EXPLANATION)
                     }
                     if (shouldEmitShieldBreak(entry, currentAction, previous, updated)) {
                         emitShieldBreak(entry.targetId, effectDelayMs)

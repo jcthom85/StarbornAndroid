@@ -1857,7 +1857,7 @@
   {
     "id": "cook_vance_default_talk",
     "speaker": "Rourke",
-    "text": "Eat up. It is synthetic paste, but it will keep your boots moving under heavy gravity."
+    "text": "Eat up. It is synthetic paste, but it will keep your boots moving under heavy gravity. If you scrape any dried herbs out of the hopper, use the thermal cooker to simmer your dry ration packs into hot soup before a shift."
   },
   {
     "id": "mechanic_mira_default_talk",
@@ -2940,7 +2940,7 @@
       },
       {
         "id": "pam_opt_family",
-        "text": "You must be proud of Megan and Cameron.",
+        "text": "Do you have family out beyond this sector?",
         "next": "pam_family_reply"
       },
       {
@@ -2965,7 +2965,7 @@
   {
     "id": "pam_family_reply",
     "speaker": "Pam",
-    "text": "Proud? Those two are my whole life! Megan's out there running clinical science on the coast, smart as a whip and taking care of everybody. And Cameron's working sixty hours a week on the high-pressure pipes, just like his father Sherman used to do. Sherman would be bursting with pride if he could see them. Between them, my grandbabies, and those sweet dogs Kodi and Bella, I've got plenty to be thankful for.",
+    "text": "My kids Megan and Cameron are my whole life! They got transferred off-sector—Megan's out there running clinical science on the coast, smart as a whip and taking care of everybody. And Cameron's working sixty hours a week on the high-pressure pipes, just like his father Sherman used to do. Sherman would be bursting with pride if he could see them. Between them, my grandbabies, and those sweet dogs Kodi and Bella, I've got plenty to be thankful for.",
     "next": "pam_default_talk"
   },
   {

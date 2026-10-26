@@ -116,8 +116,9 @@
     "actions": [
       {
         "name": "thermal cooker",
-        "type": "generic",
-      "condition_unmet_message": "The industrial cooker hums with lukewarm colony broth. Cook Vance keeps the regulator low. Use the Field Kit's cooking menu to prepare meals."
+        "type": "rest_stop",
+        "cook_source": "Thermal Cooker",
+        "message": "The industrial cooker hums with steady heat. Cook Rourke keeps the regulator low, but there's enough burner space to prepare a meal."
       },
       {
         "name": "ingredient hopper",
