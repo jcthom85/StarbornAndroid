@@ -11,7 +11,7 @@ import com.example.starborn.feature.exploration.viewmodel.ExplorationController
 import com.example.starborn.feature.exploration.viewmodel.ExplorationUiState
 
 @Composable
-internal fun DesktopRuntimeOverlays(services: DesktopAppServices, runtime: ExplorationController, ui: ExplorationUiState) {
+internal fun DesktopRuntimeOverlays(services: DesktopAppServices, runtime: ExplorationController, ui: ExplorationUiState, externalModal: Boolean = false) {
     if (ui.showBurgQuestAstraExitDialog) AlertDialog(
         onDismissRequest = runtime::dismissBurgQuestAstraExitDialog,
         title = { Text("Explore the Astra") },
@@ -111,7 +111,7 @@ internal fun DesktopRuntimeOverlays(services: DesktopAppServices, runtime: Explo
                 item { TextButton(onClick = runtime::stopTapeTrack) { Text("Stop") } }
             }
         }, confirmButton = { TextButton(onClick = runtime::dismissTapeDeck) { Text("Close") } })
-    ui.levelUpPrompt?.let { level -> AlertDialog(onDismissRequest = runtime::dismissLevelUpPrompt,
+    ui.levelUpPrompt?.takeIf { com.example.starborn.feature.exploration.presentation.canPresentLevelUp(ui, externalModal) }?.let { level -> AlertDialog(onDismissRequest = runtime::dismissLevelUpPrompt,
         modifier = Modifier.informationAcknowledgement(runtime::dismissLevelUpPrompt),
         title = { Text("${level.characterName} · Level ${level.newLevel}") }, text = { Column {
             level.statChanges.forEach { Text("${it.label}: ${it.value}") }

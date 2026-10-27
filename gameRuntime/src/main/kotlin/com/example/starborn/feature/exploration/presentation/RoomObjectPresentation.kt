@@ -4,6 +4,9 @@ import com.example.starborn.domain.model.*
 
 data class RoomObjectOffer(val action: RoomAction, val title: String, val detail: String, val confirmLabel: String)
 
+/** Rest and cooking are explicit service controls; room prose remains descriptive. */
+fun restStopServiceLabel(action: RestStopAction): String = if (action.cookSource != null) "Cook" else "Rest"
+
 fun roomActionLabel(action: RoomAction): String = when (action) {
     is RestStopAction -> if (action.cookSource != null) "Cook at ${action.name}" else "Rest at ${action.name}"
     is ShopAction -> "Visit ${action.name}"

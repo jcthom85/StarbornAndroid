@@ -42,11 +42,15 @@
 *   **Vibe:** Overworked, cynical, smoking a vapor-pen.
 *   **Quote:** "I fix bones, not systems. But if you clear those vents, I'll rig your rounds with acid."
 
-### Sam & Ellie (The Cooks)
-*   **Role:** Background flavor. They feed Nova when she's broke.
-*   **Location:** The Pit (Mess Hall).
-*   **Function:** Narrative depth.
-*   **Bark:** "Eat up, kid. Dominion doesn't charge for the gristle."
+### Pam (Mess-Hall Manager)
+*   **Location:** The Pit (Mess Hall, `pit_mess`).
+*   **Function:** Runs the serving counter, looks after the miners, shares colony conversation, and offers her one-time skillet biscuit gift.
+*   **Vibe:** Blunt, protective mountain matriarch. Uses the name Pam throughout the game.
+
+### Rourke (Ration Cook)
+*   **Location:** The Pit (Ration Sink, `pit_kitchen`), east of the mess hall.
+*   **Function:** Handles everyday food preparation and points players toward the thermal cooker. Player cooking uses the separate Cook control.
+*   **Vibe:** Dry-witted and resourceful; makes limited supplies work.
 
 ### Foreman Bogs
 *   **Role:** Shift Supervisor.

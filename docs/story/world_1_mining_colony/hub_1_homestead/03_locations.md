@@ -15,8 +15,8 @@ Nodes unlock in Stages. Nodes in the same Stage are available simultaneously.
 *   **Description:** A dense cluster of sleeping pods and communal mess halls. The air smells of recycled ozone and unwashed bodies.
 *   **Rooms (10):**
     1.  **Pit Landing (pit_L1_landing):** Entry/exit point used by the Hub 1 map.
-    2.  **Mess Hall (pit_mess):** Large social space; community flavor and possible Zeke volunteer beat.
-    3.  **Ration Sink (pit_kitchen):** Small flavor room off the mess hall.
+    2.  **Mess Hall (pit_mess):** Communal dining and conversation; Pam runs the serving counter and looks after the miners.
+    3.  **Ration Sink (pit_kitchen):** Working kitchen east of the mess hall; Rourke handles food preparation and the separate Cook control opens the thermal cooker.
     4.  **Lift Shaft (pit_shaft):** A vertical room connecting L1 and L2.
     5.  **Pod Row (pit_L2_corridor):** Hallway lined with pods.
     6.  **Nova's Bunk (pit_nova_bunk):** The new-game story start (Player's pod), not a hub-map entry point.

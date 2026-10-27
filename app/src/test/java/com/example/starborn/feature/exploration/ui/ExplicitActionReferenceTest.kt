@@ -2,6 +2,7 @@ package com.example.starborn.feature.exploration.ui
 
 import com.example.starborn.feature.exploration.presentation.*
 
+import com.example.starborn.domain.model.RestStopAction
 import com.example.starborn.domain.model.GenericAction
 import com.example.starborn.domain.model.TravelAction
 import com.example.starborn.domain.model.actionKey
@@ -11,6 +12,22 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class ExplicitActionReferenceTest {
+    @Test fun `rest controls never turn bed or cooking prose into actions but quest objects stay clickable`() {
+        val bed = RestStopAction("bunk", restEvent = "rest_event")
+        val cooker = RestStopAction("campfire", cookSource = "Campfire")
+        val diary = GenericAction("bedside diary", "generic", actionEvent = "quest_clue")
+        val actions = listOf(bed, cooker, diary)
+        val plan = requireNotNull(buildInlineActionPlan(
+            "The bunk faces the campfire and a bedside diary.", actions, emptyMap(), null))
+        assertEquals(listOf(InlineActionTarget.Room(diary)), plan.segments.map { it.target })
+        val explicit = requireNotNull(buildInlineActionPlan(
+            "A [action:bunk|bunk] beside a [action:campfire|campfire].", actions, emptyMap(), null))
+        assertEquals("A bunk beside a campfire.", explicit.description)
+        assertTrue(explicit.segments.isEmpty())
+        assertEquals("Rest", restStopServiceLabel(bed))
+        assertEquals("Cook", restStopServiceLabel(cooker))
+    }
+
     @Test fun `long inspect names and arcade discoveries remain accessible in the prose`() {
         val short = GenericAction("monitor", "generic")
         val long = GenericAction("vintage mystery monitor", "inspect")

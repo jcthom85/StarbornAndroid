@@ -1,13 +1,5 @@
 package com.example.starborn.ui.overlay
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -39,11 +31,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -57,13 +44,9 @@ import androidx.compose.ui.unit.dp
 import com.example.starborn.ui.events.QuestBannerType
 import com.example.starborn.ui.events.QuestObjectiveStatus
 import com.example.starborn.ui.events.QuestObjectiveRole
-import com.example.starborn.ui.events.UiEvent
-import com.example.starborn.ui.events.UiEventBus
 import com.example.starborn.ui.haptics.HapticType
 import com.example.starborn.ui.haptics.Haptics
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
-import java.util.concurrent.ConcurrentHashMap
 
 private data class Banner(
     val type: QuestBannerType,
@@ -77,100 +60,28 @@ private const val QUEST_BANNER_AUTO_DISMISS_MS = 3_200L
 
 @Composable
 fun QuestBannerOverlay(
-    uiEventBus: UiEventBus,
+    state: com.example.starborn.ui.events.QuestPresentationState,
     accentColor: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    deferShowing: Boolean = false
 ) {
-    val queue = remember { mutableStateListOf<Banner>() }
-    var current by remember { mutableStateOf<Banner?>(null) }
-    var isShowing by remember { mutableStateOf(false) }
-    val recent = remember { ConcurrentHashMap<String, Long>() }
-    val dedupeWindowMs = 2000L
+    val current = state.updates.firstOrNull()
+    val visible = current != null && !deferShowing && state.important.isEmpty()
     val context = LocalContext.current
-
-    LaunchedEffect(uiEventBus) {
-        uiEventBus.events.collectLatest { ev ->
-            if (ev is UiEvent.ShowQuestBanner) {
-                if (ev.type != QuestBannerType.PROGRESS && ev.type != QuestBannerType.NEW) return@collectLatest
-                val key = "${ev.type}_${ev.questId}"
-                val now = System.currentTimeMillis()
-                val last = recent[key]
-                if (last == null || now - last > dedupeWindowMs) {
-                    recent[key] = now
-                    queue.add(Banner(ev.type, ev.questId, ev.questTitle, ev.objectives, ev.remainingObjectiveCount))
-                }
-            }
-        }
-    }
-
-    LaunchedEffect(queue.size, current, isShowing) {
-        if (current == null && queue.isNotEmpty()) {
-            current = queue.removeAt(0)
-            isShowing = true
-        }
-    }
-
-    LaunchedEffect(current) {
-        current?.let { banner ->
-            val type = when (banner.type) {
-                QuestBannerType.NEW -> HapticType.TICK
-                QuestBannerType.COMPLETED -> HapticType.SUCCESS
-                QuestBannerType.FAILED -> HapticType.ALERT
-                QuestBannerType.PROGRESS -> HapticType.TICK
-            }
-            Haptics.pulse(context, type)
-        }
-    }
-
-    LaunchedEffect(current, isShowing) {
-        val banner = current
-        if (banner != null && isShowing) {
+    fun dismiss() { if (state.updates.firstOrNull() == current) state.updates.removeAt(0) }
+    LaunchedEffect(current, visible) {
+        if (visible) {
+            Haptics.pulse(context, HapticType.TICK)
             delay(QUEST_BANNER_AUTO_DISMISS_MS)
-            if (current == banner && isShowing) {
-                isShowing = false
-            }
+            dismiss()
         }
     }
-
-    LaunchedEffect(isShowing) {
-        if (!isShowing && current != null) {
-            delay(180)
-            current = null
-        }
-    }
-
-    val visible = isShowing && current != null
-
-    if (visible && current?.type == QuestBannerType.NEW) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.35f))
-                .clickable(onClick = { isShowing = false })
-        )
-    }
-
-    Box(
-        modifier = modifier
-            .statusBarsPadding()
-            .padding(top = 12.dp, start = 16.dp, end = 16.dp),
+    if (visible && current != null) Box(
+        modifier = modifier.statusBarsPadding().padding(top = 12.dp, start = 16.dp, end = 16.dp),
         contentAlignment = Alignment.TopCenter
     ) {
-        AnimatedVisibility(
-            visible = visible,
-            enter = slideInVertically(animationSpec = tween(220, easing = LinearOutSlowInEasing)) { -it } +
-                fadeIn(animationSpec = tween(220)),
-            exit = slideOutVertically(animationSpec = tween(180, easing = FastOutLinearInEasing)) { -it } +
-                fadeOut(animationSpec = tween(180))
-        ) {
-            current?.let { banner ->
-                QuestBannerCard(
-                    banner = banner,
-                    accentColor = accentColor,
-                    onDismiss = { isShowing = false }
-                )
-            }
-        }
+        QuestBannerCard(Banner(current.type, current.questId, current.questTitle,
+            current.objectives, current.remainingObjectiveCount), accentColor, ::dismiss)
     }
 }
 

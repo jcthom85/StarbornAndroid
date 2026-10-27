@@ -156,8 +156,16 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
     }
     val revealingRoom = ui.fadeOverlay?.let { it.toAlpha < it.fromAlpha } == true
     val sceneBlocked = ui.roomObjectOffer != null || restNotice != null || actionsOpen || quickLoadOpen || environmentPreview || menuOpen || shopId != null || controlsOpen || cookingSource != null || ui.activeDialogue != null || ui.cinematic != null || ui.prompt != null || ui.narrationPrompt != null || ui.togglePrompt != null || ui.tuningPuzzle != null || ui.blockedPrompt != null || ui.shopGreeting != null || ui.eventAnnouncement != null || (ui.forceBlackScreen && !revealingRoom) || ui.isAstraNavConsoleVisible || ui.isSimulationDeckVisible || ui.isTapeDeckVisible || ui.showBurgQuestAstraExitDialog || ui.isMilestoneGalleryVisible || ui.isCatchLogVisible || ui.astraFacility != null || ui.isAstraRecreationVisible || ui.levelUpPrompt != null || ui.skillTreeOverlay != null || ui.questDetail != null || ui.partyMemberDetails != null || ui.tutorialState.current != null
+    val queuedNotice = explorationNotice(ui, restNotice != null || actionsOpen || quickLoadOpen || environmentPreview ||
+        menuOpen || shopId != null || controlsOpen || cookingSource != null || moveProgress.value < 1f)
     val questPopupVisible = !sceneBlocked && questPresentations.important.isNotEmpty()
     val blocked = sceneBlocked || questPopupVisible || moveProgress.value < 1f
+    val externalNoticeBlocker = questPopupVisible || restNotice != null || actionsOpen || quickLoadOpen || environmentPreview ||
+        menuOpen || shopId != null || controlsOpen || cookingSource != null
+    LaunchedEffect(externalNoticeBlocker) { runtime.setNoticePresentationBlocked("desktop-presentation", externalNoticeBlocker) }
+    DisposableEffect(runtime) {
+        onDispose { runtime.setNoticePresentationBlocked("desktop-presentation", false) }
+    }
     LaunchedEffect(blocked, ui.currentRoom?.id, drawer.panel) {
         runtime.setExplorationInteractionBlocked(blocked)
         if (!blocked) {
@@ -172,10 +180,10 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
     }
     fun interactFirst() { if (!blocked) ui.actions.firstOrNull { ui.actionHints[it.actionKey()]?.locked != true }?.let(runtime::inspectRoomAction) }
 
-    val acknowledgeForeground: (() -> Unit)? = if (ui.cinematic != null || ui.activeDialogue != null || ui.tuningPuzzle != null) null else when {
-        ui.narrationPrompt != null -> if (ui.narrationPrompt?.tapToDismiss == true) runtime::dismissNarration else null
-        ui.eventAnnouncement != null -> runtime::dismissEventAnnouncement
-        ui.prompt != null -> runtime::dismissPrompt
+    val acknowledgeForeground: (() -> Unit)? = when {
+        queuedNotice == ExplorationNotice.NARRATION -> if (ui.narrationPrompt?.tapToDismiss == true) runtime::dismissNarration else null
+        queuedNotice == ExplorationNotice.ANNOUNCEMENT -> runtime::dismissEventAnnouncement
+        queuedNotice == ExplorationNotice.PROMPT -> { { runtime.dismissPrompt(ui.prompt?.id) } }
         else -> null
     }
 
@@ -317,7 +325,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                 }
             }
         }
-        restNotice?.let { notice ->
+        restNotice?.takeIf { ui.activeDialogue == null && ui.cinematic == null && ui.shopGreeting == null }?.let { notice ->
             AlertDialog(onDismissRequest = { restNotice = null },
                 modifier = Modifier.informationAcknowledgement { restNotice = null },
                 title = { Text("A Quiet Rest") },
@@ -363,7 +371,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                 if (greeting.choices.isEmpty()) Button(onClick = runtime::enterPendingShop, modifier = Modifier.align(Alignment.End)) { Text("Enter shop") }
             }
         }
-        ui.activeDialogue?.let { dialogue ->
+        ui.activeDialogue?.takeIf { ui.cinematic == null }?.let { dialogue ->
             Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = .62f))
                 .clickable(interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }, indication = null) {}, contentAlignment = Alignment.BottomCenter) {
                 DesktopAuthoredDialogueOverlay(services = services, dialogue = dialogue, choices = ui.dialogueChoices,
@@ -380,15 +388,15 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
         ui.cinematic?.let { cinematic ->
             DesktopCinematicOverlay(cinematic, services, runtime::advanceCinematic, runtime::skipCinematic)
         }
-        if (ui.cinematic == null && ui.activeDialogue == null && ui.tuningPuzzle == null) {
+        if (queuedNotice != ExplorationNotice.NONE) {
             // One foreground inspection at a time. Supporting notifications stay banners.
             val narration = ui.narrationPrompt
             val announcement = ui.eventAnnouncement
             when {
-                narration != null -> DesktopInspectionPrompt(narration.message, runtime::dismissNarration, narration.tapToDismiss)
-                announcement != null -> DesktopInspectionPrompt(announcement.message, runtime::dismissEventAnnouncement,
+                queuedNotice == ExplorationNotice.NARRATION && narration != null -> DesktopInspectionPrompt(narration.message, runtime::dismissNarration, narration.tapToDismiss)
+                queuedNotice == ExplorationNotice.ANNOUNCEMENT && announcement != null -> DesktopInspectionPrompt(announcement.message, runtime::dismissEventAnnouncement,
                     true, announcement.title, Color(announcement.accentColor))
-                ui.prompt != null -> DesktopExplorationPromptBanner(services, requireNotNull(ui.prompt), runtime::dismissPrompt,
+                queuedNotice == ExplorationNotice.PROMPT && ui.prompt != null -> DesktopExplorationPromptBanner(services, requireNotNull(ui.prompt), { runtime.dismissPrompt(ui.prompt?.id) },
                     Modifier.align(Alignment.BottomCenter).padding(horizontal = 24.dp, vertical = 76.dp))
             }
         }
@@ -404,7 +412,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                         charactersProvider = { services.characterDefinitions }).cookAndEat(recipe, chef, batch, replace)
                 }, characterName = { services.characterDefinitions[it]?.name ?: it })
         }
-        DesktopRuntimeOverlays(services, runtime, ui)
+        DesktopRuntimeOverlays(services, runtime, ui, restNotice != null || actionsOpen || quickLoadOpen || environmentPreview || menuOpen || shopId != null || controlsOpen || cookingSource != null)
         DesktopQuestPresentation(services, questPresentations, sceneBlocked) { questId ->
             runtime.openQuestDetails(questId)
             runtime.openMenuOverlay(com.example.starborn.feature.exploration.viewmodel.MenuTab.JOURNAL)

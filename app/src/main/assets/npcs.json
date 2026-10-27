@@ -772,12 +772,11 @@
     "name": "Pam",
     "aliases": [
       "pam",
-      "gaga",
       "pamela"
     ],
-    "role": "Feisty Colony Matriarch",
-    "description": "A sharp-tongued, fiercely loyal mountain matriarch who doesn't take guff from anyone, least of all Dominion overseers. Known for her ceramic rooster figurines, her blunt honesty, and her bottomless love for her family, grandbabies, and dogs.",
-    "portrait": "images/npcs/vance.webp",
+    "role": "Mess-Hall Manager",
+    "description": "A sharp-tongued, fiercely loyal mountain matriarch who runs the mess hall, serves the miners, and makes sure nobody leaves hungry. Her skillet biscuits are a personal specialty; Rourke handles the everyday kitchen. Known for her ceramic rooster figurines, blunt honesty, and love for her family and dogs.",
+    "portrait": "images/npcs/pam.png",
     "dialogue": {},
     "interactions": [
       {

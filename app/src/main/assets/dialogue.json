@@ -2937,7 +2937,7 @@
   {
     "id": "pam_default_talk",
     "speaker": "Pam",
-    "text": "Sit down and eat before you collapse, Nova. You look like a gust of solar wind could blow you into the next crater. I'm Pam—everyone around here calls me Gaga. What do you need, and don't dance around it.",
+    "text": "Sit down and eat before you collapse, Nova. You look like a gust of solar wind could blow you into the next crater. I'm Pam. I run this hall; Rourke keeps the kitchen going. What do you need, and don't dance around it.",
     "options": [
       {
         "id": "pam_opt_rooster",
@@ -2959,6 +2959,10 @@
         "text": "Got anything warm to take into the deep shafts?",
         "condition": "milestone_not_set:ms_pam_biscuits_received",
         "next": "pam_biscuits_reply"
+      },
+      {
+        "id": "pam_opt_leave",
+        "text": "Thanks, Pam. I'll let you get back to it."
       }
     ]
   },

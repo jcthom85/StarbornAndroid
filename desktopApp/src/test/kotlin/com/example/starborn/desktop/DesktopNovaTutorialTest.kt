@@ -30,6 +30,21 @@ class DesktopNovaTutorialTest {
         try {
             services.startNewGame(novaPrototype = true)
             runBlocking { withTimeout(10000) { services.exploration.uiState.first { !it.isLoading } } }
+            // Complete opening presentation callbacks before testing in-world AP guidance.
+            // The guide must now wait behind an actual cinematic/fade, even without a rendered screen.
+            repeat(20) {
+                compose.runOnIdle {
+                    val ui = services.exploration.uiState.value
+                    when {
+                        ui.cinematic != null -> services.exploration.skipCinematic()
+                        ui.fadeOverlay != null -> services.exploration.onFadeOverlayFinished(ui.fadeOverlay!!.id)
+                        ui.narrationPrompt != null -> services.exploration.dismissNarration()
+                        ui.eventAnnouncement != null -> services.exploration.dismissEventAnnouncement()
+                    }
+                }
+                compose.waitForIdle()
+            }
+            assertFalse(services.exploration.uiState.value.forceBlackScreen)
             services.tutorialManager.cancelAllScheduled()
             services.promptManager.discardMatching { true }
             runBlocking { services.userSettingsStore.setTutorialsEnabled(true) }

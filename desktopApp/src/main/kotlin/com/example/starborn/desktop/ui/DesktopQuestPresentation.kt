@@ -27,44 +27,6 @@ import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import com.example.starborn.ui.events.*
 import kotlinx.coroutines.delay
 
-/** Survives exploration leaving composition (combat, hubs and side activities). */
-class DesktopQuestPresentationState {
-    sealed interface Important {
-        data class Detail(val event: UiEvent.ShowQuestDetail) : Important
-        data class Summary(val event: UiEvent.ShowQuestSummary) : Important
-    }
-    val important = mutableStateListOf<Important>()
-    val updates = mutableStateListOf<UiEvent.ShowQuestBanner>()
-    val toasts = mutableStateListOf<UiEvent.ShowToast>()
-    private val recentUpdates = mutableMapOf<String, Long>()
-    private val started = mutableSetOf<Important>()
-    var journalBadge by mutableIntStateOf(0)
-        private set
-
-    fun accept(event: UiEvent, now: Long = System.nanoTime() / 1_000_000) {
-        when (event) {
-            is UiEvent.ShowQuestDetail -> if (important.none {
-                it is Important.Detail && it.event.questId == event.questId && it.event.type == event.type
-            }) important.add(Important.Detail(event))
-            is UiEvent.ShowQuestSummary -> if (event.entries.isNotEmpty() && important.none { it is Important.Summary && it.event == event }) important.add(Important.Summary(event))
-            is UiEvent.ShowQuestBanner -> if (event.type == QuestBannerType.PROGRESS) {
-                val key = "${event.type}:${event.questId}"
-                if (recentUpdates[key]?.let { now - it <= 2000 } != true) {
-                    recentUpdates[key] = now
-                    updates.add(event)
-                }
-                recentUpdates.entries.removeAll { now - it.value > 2000 }
-            }
-            is UiEvent.ShowToast -> if (toasts.none { it.id == event.id && it.text == event.text }) toasts.add(event)
-            is UiEvent.JournalBadgeDelta -> journalBadge = (journalBadge + event.delta).coerceAtLeast(0)
-        }
-    }
-    fun markStarted(entry: Important) = started.add(entry)
-    fun dismissImportant() { important.firstOrNull()?.let { started.remove(it); important.removeAt(0) } }
-    fun readJournal() { journalBadge = 0 }
-    fun clear() { important.clear(); updates.clear(); toasts.clear(); recentUpdates.clear(); started.clear(); journalBadge = 0 }
-}
-
 private fun questHeading(type: QuestBannerType) = when (type) {
     QuestBannerType.NEW -> "New Quest"
     QuestBannerType.COMPLETED -> "Quest Completed"
@@ -73,10 +35,11 @@ private fun questHeading(type: QuestBannerType) = when (type) {
 }
 
 @Composable
-internal fun DesktopQuestPresentation(services: DesktopAppServices, state: DesktopQuestPresentationState,
+internal fun DesktopQuestPresentation(services: DesktopAppServices, state: QuestPresentationState,
     sceneBlocked: Boolean, onDetails: (String) -> Unit) {
     val current = state.important.firstOrNull()
     val visible = current != null && !sceneBlocked
+    fun dismissCurrent() { current?.let(state::dismissImportant) }
     val focus = remember { FocusRequester() }
     val ui by services.exploration.uiState.collectAsState()
     val accent = ui.theme?.accent?.takeIf { it.size >= 3 }?.let { Color(it[0], it[1], it[2], it.getOrElse(3) { 1f }) } ?: Color(0xFF80E0FF)
@@ -85,7 +48,7 @@ internal fun DesktopQuestPresentation(services: DesktopAppServices, state: Deskt
         if (visible && current != null) {
             withFrameNanos { }
             focus.requestFocus()
-            if (state.markStarted(current) && current is DesktopQuestPresentationState.Important.Detail) {
+            if (state.markStarted(current) && current is QuestPresentationState.Important.Detail) {
                 services.exploration.playQuestPresentationCue(when (current.event.type) {
                     QuestBannerType.NEW -> "quest_new"
                     QuestBannerType.COMPLETED -> "quest_complete"
@@ -97,7 +60,7 @@ internal fun DesktopQuestPresentation(services: DesktopAppServices, state: Deskt
     }
     val sweep = remember(current) { Animatable(-1.55f) }
     LaunchedEffect(current, visible, settings.disableFlashes) {
-        if (visible && !settings.disableFlashes && current is DesktopQuestPresentationState.Important.Detail && current.event.type == QuestBannerType.NEW) {
+        if (visible && !settings.disableFlashes && current is QuestPresentationState.Important.Detail && current.event.type == QuestBannerType.NEW) {
             while (true) {
                 sweep.snapTo(-1.55f)
                 sweep.animateTo(2.55f, tween(2300, easing = LinearEasing))
@@ -107,34 +70,34 @@ internal fun DesktopQuestPresentation(services: DesktopAppServices, state: Deskt
     }
     Box(Modifier.fillMaxSize().focusRequester(focus).onPreviewKeyEvent {
         if (visible && it.key in listOf(Key.Enter, Key.Spacebar, Key.Escape)) {
-            if (it.type == KeyEventType.KeyUp) state.dismissImportant()
+            if (it.type == KeyEventType.KeyUp) dismissCurrent()
             true
         } else false
     }.focusable()) {
-        AnimatedVisibility(visible, enter = slideInVertically { it / 3 } + fadeIn(), exit = fadeOut()) {
+        if (visible) {
             Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = .55f))
                 .clickable(interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }, indication = null) {},
                 contentAlignment = Alignment.Center) {
-                Surface(Modifier.padding(24.dp).clickable(onClick = state::dismissImportant).widthIn(max = 600.dp).fillMaxWidth().heightIn(max = 700.dp), shape = RoundedCornerShape(14.dp), color = FieldMenuDesign.panel,
+                Surface(Modifier.padding(24.dp).clickable(onClick = ::dismissCurrent).widthIn(max = 600.dp).fillMaxWidth().heightIn(max = 700.dp), shape = RoundedCornerShape(14.dp), color = FieldMenuDesign.panel,
                     border = BorderStroke(1.dp, accent.copy(alpha = .5f))) {
                     Column(Modifier.background(Brush.horizontalGradient(listOf(accent.copy(alpha = .18f), Color.Transparent)))
                         .drawWithContent {
                             drawContent()
-                            if (!settings.disableFlashes && current is DesktopQuestPresentationState.Important.Detail && current.event.type == QuestBannerType.NEW) {
+                            if (!settings.disableFlashes && current is QuestPresentationState.Important.Detail && current.event.type == QuestBannerType.NEW) {
                                 val x = size.width * sweep.value
                                 drawRect(Brush.linearGradient(listOf(Color.Transparent, Color.White.copy(alpha = .10f), Color.Transparent), Offset(x - size.width * .2f, 0f), Offset(x + size.width * .2f, size.height)))
                             }
                         }.padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                        val detail = (current as? DesktopQuestPresentationState.Important.Detail)?.event
+                        val detail = (current as? QuestPresentationState.Important.Detail)?.event
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(when (detail?.type) { QuestBannerType.NEW -> Icons.Default.Star; QuestBannerType.FAILED -> Icons.Default.Warning; else -> Icons.Default.CheckCircle }, null, tint = accent)
                             Spacer(Modifier.width(10.dp))
                             Text(detail?.type?.let(::questHeading) ?: "Quest Summary", Modifier.weight(1f), color = accent, style = MaterialTheme.typography.titleMedium)
-                            IconButton(onClick = state::dismissImportant) { Icon(Icons.Default.Close, "Dismiss quest popup") }
+                            IconButton(onClick = ::dismissCurrent) { Icon(Icons.Default.Close, "Dismiss quest popup") }
                         }
                         Column(Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                             when (current) {
-                                is DesktopQuestPresentationState.Important.Detail -> {
+                                is QuestPresentationState.Important.Detail -> {
                                     Text(current.event.questTitle, style = MaterialTheme.typography.headlineSmall)
                                     Text(current.event.summary)
                                     current.event.objectives.forEach { line ->
@@ -144,19 +107,19 @@ internal fun DesktopQuestPresentation(services: DesktopAppServices, state: Deskt
                                         }
                                     }
                                 }
-                                is DesktopQuestPresentationState.Important.Summary -> current.event.entries.forEach { entry ->
+                                is QuestPresentationState.Important.Summary -> current.event.entries.forEach { entry ->
                                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                         Text("${entry.type.name.lowercase().replaceFirstChar { it.uppercase() }} · ${entry.questTitle}", color = accent)
                                         entry.objectiveTitle?.let { Text(it) }
-                                        TextButton(onClick = { state.dismissImportant(); onDetails(entry.questId) }) { Text("Details") }
+                                        TextButton(onClick = { dismissCurrent(); onDetails(entry.questId) }) { Text("Details") }
                                     }
                                 }
                                 null -> Unit
                             }
                         }
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                            detail?.let { TextButton(onClick = { state.dismissImportant(); onDetails(it.questId) }) { Text("Details") } }
-                            Button(onClick = state::dismissImportant) { Text("Continue") }
+                            detail?.let { TextButton(onClick = { dismissCurrent(); onDetails(it.questId) }) { Text("Details") } }
+                            Button(onClick = ::dismissCurrent) { Text("Continue") }
                         }
                     }
                 }

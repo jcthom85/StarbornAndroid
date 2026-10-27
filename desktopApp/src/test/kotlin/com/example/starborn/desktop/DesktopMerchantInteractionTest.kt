@@ -1,6 +1,15 @@
 package com.example.starborn.desktop
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.asAwtImage
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
+import com.example.starborn.desktop.ui.*
+import javax.imageio.ImageIO
+import java.io.File
 import com.example.starborn.domain.model.ShopAction
 import com.example.starborn.feature.exploration.presentation.InlineActionTarget
 import com.example.starborn.feature.exploration.presentation.buildInlineActionPlan
@@ -37,6 +46,61 @@ class DesktopMerchantInteractionTest {
             services.close()
             directory.deleteRecursively()
         }
+    }
+
+    @Test fun pamPortraitAndDialogueHoldFocusUntilRewardCanBeRead() = withMerchant("pit_mess") { s ->
+        val runtime = s.exploration
+        s.questPresentations.clear()
+        runtime.onNpcInteraction("matriarch_pam")
+        compose.waitUntil(5000) { runtime.uiState.value.activeDialogue != null }
+        assertEquals("images/npcs/pam.png", runtime.uiState.value.activeDialogue?.portrait)
+        assertFalse(s.worldDataSource.loadNpcs().first { it.id == "matriarch_pam" }.aliases.any { it.equals("gaga", true) })
+        s.promptManager.enqueue(com.example.starborn.domain.prompt.ItemGrantedPrompt("Deferred test reward", 1))
+        compose.setContent { DesktopStarbornTheme(s) {
+            Box(Modifier.size(1280.dp, 800.dp)) { DesktopExplorationScreen(s, {}, {}, {}, {}, {}, {}) }
+        } }
+        compose.mainClock.advanceTimeBy(12000)
+        compose.onNodeWithText("Deferred test reward", substring = true).assertDoesNotExist()
+        val output = File("build/reports/popup-flow").apply { mkdirs() }
+        ImageIO.write(compose.onRoot().captureToImage().asAwtImage(), "png", File(output, "pam-dialogue.png"))
+        compose.runOnIdle { runtime.onDialogueChoiceSelected("pam_opt_leave") }
+        compose.waitUntil(5000) { runtime.uiState.value.prompt is com.example.starborn.domain.prompt.ItemGrantedPrompt }
+        compose.onNodeWithText("Deferred test reward", substring = true).assertIsDisplayed()
+        ImageIO.write(compose.onRoot().captureToImage().asAwtImage(), "png", File(output, "reward-after-dialogue.png"))
+    }
+
+    @Test fun pamConversationLoopsAndExitsAndGivesBiscuitsOnlyOnce() = withMerchant("pit_mess") { s ->
+        val runtime = s.exploration
+        val count = s.inventoryService.snapshot()["gagas_skillet_biscuits"] ?: 0
+        runtime.onNpcInteraction("matriarch_pam")
+        assertEquals("pam_default_talk", runtime.uiState.value.activeDialogue?.line?.id)
+        assertFalse(runtime.uiState.value.activeDialogue!!.line.text.contains("Gaga", true))
+        runtime.onDialogueChoiceSelected("pam_opt_rooster")
+        runtime.advanceDialogue()
+        assertEquals("pam_default_talk", runtime.uiState.value.activeDialogue?.line?.id)
+        runtime.onDialogueChoiceSelected("pam_opt_biscuits")
+        assertEquals("pam_biscuits_reply", runtime.uiState.value.activeDialogue?.line?.id)
+        runtime.advanceDialogue()
+        assertEquals(count + 1, s.inventoryService.snapshot()["gagas_skillet_biscuits"] ?: 0)
+        assertTrue("ms_pam_biscuits_received" in s.sessionStore.state.value.completedMilestones)
+        assertFalse(runtime.uiState.value.dialogueChoices.any { it.id == "pam_opt_biscuits" })
+        runtime.onDialogueChoiceSelected("pam_opt_leave")
+        assertNull(runtime.uiState.value.activeDialogue)
+        runtime.onNpcInteraction("Pam")
+        assertFalse(runtime.uiState.value.dialogueChoices.any { it.id == "pam_opt_biscuits" })
+        runtime.onDialogueChoiceSelected("pam_opt_leave")
+        assertEquals(count + 1, s.inventoryService.snapshot()["gagas_skillet_biscuits"] ?: 0)
+        assertEquals("Pam's Mountain Skillet Biscuits", s.inventoryService.itemDisplayName("gagas_skillet_biscuits"))
+    }
+
+    @Test fun inspectionsQueueWithoutOverwritingEachOther() = withMerchant("pit_mess") { s ->
+        s.exploration.showInspection("First inspection")
+        s.exploration.showInspection("Second inspection")
+        compose.waitUntil(5000) { s.exploration.uiState.value.narrationPrompt?.message == "First inspection" }
+        s.exploration.dismissNarration()
+        compose.waitUntil(5000) { s.exploration.uiState.value.narrationPrompt?.message == "Second inspection" }
+        s.exploration.dismissNarration()
+        compose.waitUntil(5000) { s.exploration.uiState.value.narrationPrompt == null }
     }
 
     @Test fun marketHasOneMerchantAndProseOpensTheSameTradeMenu() = withMerchant("trade_strip") { s ->

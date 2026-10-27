@@ -199,6 +199,7 @@ fun resolveRoomBackground(
     return variant?.backgroundImage ?: room.backgroundImage
 }
 
+// Rest/cooking are service controls, including explicit markers; never duplicate them in prose.
 private fun RoomAction.isInlineDescriptionAction(): Boolean =
     this !is NpcAction && this !is EnemyAction && this !is RestStopAction && !hideInline
 

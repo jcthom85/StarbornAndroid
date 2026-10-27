@@ -1,14 +1,9 @@
 ﻿package com.example.starborn.ui.overlay
 
 import com.example.starborn.ui.components.maestroTag
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -42,11 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
@@ -62,13 +53,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.starborn.ui.events.QuestBannerType
 import com.example.starborn.ui.events.UiEvent
-import com.example.starborn.ui.events.UiEventBus
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun QuestDetailOverlay(
-    uiEventBus: UiEventBus,
+    state: com.example.starborn.ui.events.QuestPresentationState,
     gradientColor: Color,
     outlineColor: Color,
     deferShowing: Boolean = false,
@@ -77,65 +66,37 @@ fun QuestDetailOverlay(
     onPresentationStarted: (QuestBannerType) -> Unit = {},
     onShowDetails: (String) -> Unit
 ) {
-    val queue = remember { mutableStateListOf<UiEvent.ShowQuestDetail>() }
-    var current by remember { mutableStateOf<UiEvent.ShowQuestDetail?>(null) }
-    var visible by remember { mutableStateOf(false) }
-
-    LaunchedEffect(uiEventBus) {
-        uiEventBus.events.collectLatest { event ->
-            if (event is UiEvent.ShowQuestDetail) {
-                val alreadyPending =
-                    current?.questId == event.questId && current?.type == event.type ||
-                        queue.any { it.questId == event.questId && it.type == event.type }
-                if (alreadyPending) return@collectLatest
-                if (current == null) {
-                    current = event
-                } else {
-                    queue.add(event)
-                }
-            }
+    val current = state.important.firstOrNull()
+    val visible = current != null && !deferShowing
+    LaunchedEffect(current, visible) {
+        onPresentationVisibleChanged(visible)
+        if (visible && current != null && state.markStarted(current) &&
+            current is com.example.starborn.ui.events.QuestPresentationState.Important.Detail) {
+            onPresentationStarted(current.event.type)
         }
     }
-
-    LaunchedEffect(current, deferShowing, visible) {
-        if (current != null && !visible && !deferShowing) {
-            onPresentationStarted(current!!.type)
-            visible = true
-        }
+    androidx.compose.runtime.DisposableEffect(Unit) {
+        onDispose { onPresentationVisibleChanged(false) }
     }
-
-    LaunchedEffect(visible, current) {
-        onPresentationVisibleChanged(visible && current != null)
-    }
-
-    androidx.activity.compose.BackHandler(enabled = visible && current != null) {
-        visible = false
-        current = if (queue.isNotEmpty()) queue.removeAt(0) else null
-    }
-
-    AnimatedVisibility(
-        visible = visible && current != null,
-        enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
-        exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
+    fun dismiss() { current?.let(state::dismissImportant) }
+    androidx.activity.compose.BackHandler(enabled = visible) { dismiss() }
+    // Unmount immediately when a scene takes focus; an exit animation must not cover dialogue.
+    if (visible) Box(
+        modifier = modifier.fillMaxSize().background(Color.Black.copy(alpha = .55f))
+            .clickable(interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }, indication = null) {}
+            .padding(horizontal = 24.dp, vertical = 48.dp),
+        contentAlignment = Alignment.Center
     ) {
-        Box(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp, vertical = 48.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            current?.let { detail ->
-                QuestDetailCard(
-                    detail = detail,
-                    gradientColor = gradientColor,
-                    outlineColor = outlineColor,
-                    onDismiss = {
-                        visible = false
-                        current = if (queue.isNotEmpty()) queue.removeAt(0) else null
-                    },
-                    onShowDetails = onShowDetails
-                )
-            }
+        when (current) {
+            is com.example.starborn.ui.events.QuestPresentationState.Important.Detail -> QuestDetailCard(
+                detail = current.event, gradientColor = gradientColor, outlineColor = outlineColor,
+                onDismiss = ::dismiss,
+                onShowDetails = onShowDetails)
+            is com.example.starborn.ui.events.QuestPresentationState.Important.Summary -> QuestSummaryCard(
+                data = current.event, accentColor = gradientColor,
+                onDismiss = ::dismiss,
+                onShowDetails = { id -> dismiss(); onShowDetails(id) })
+            null -> Unit
         }
     }
 }

@@ -376,6 +376,7 @@ internal fun CampaignNavigationHost(
                     viewModel = explorationViewModel,
                     audioCuePlayer = services.audioCuePlayer,
                     uiEventBus = services.uiEventBus,
+                    questPresentations = services.questPresentations,
                     modifier = Modifier.scale(pulseScale.value),
                     onEnemySelected = { enemyIds ->
                         if (enemyIds.isEmpty() || combatTransitionVisible) return@ExplorationScreen

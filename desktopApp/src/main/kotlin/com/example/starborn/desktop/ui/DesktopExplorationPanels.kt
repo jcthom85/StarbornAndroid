@@ -57,7 +57,7 @@ internal fun unmatchedRoomTargets(ui: ExplorationUiState, plan: InlineActionPlan
     val npcs = represented.filterIsInstance<InlineActionTarget.Npc>().map { it.name }.toSet()
     val enemies = represented.filterIsInstance<InlineActionTarget.Enemy>().map { it.id }.toSet()
     return buildList {
-        ui.actions.distinctBy { it.actionKey() }.filterNot { it.actionKey() in actionKeys || (it is RestStopAction && it.name.equals("bunk", true)) }.forEach { add(InlineActionTarget.Room(it)) }
+        ui.actions.distinctBy { it.actionKey() }.filterNot { it.actionKey() in actionKeys }.forEach { add(InlineActionTarget.Room(it)) }
         if (!isDark) {
             ui.npcs.distinct().filterNot { it in npcs }.forEach { add(InlineActionTarget.Npc(it)) }
             ui.enemies.distinct().filterNot { it in enemies }.forEach { add(InlineActionTarget.Enemy(it, it.replace('_', ' '))) }
@@ -184,14 +184,32 @@ private fun DesktopNarrativeArea(services: DesktopAppServices, ui: ExplorationUi
 private fun DesktopContextualControls(services: DesktopAppServices, ui: ExplorationUiState, plan: InlineActionPlan?, isDark: Boolean, blocked: Boolean) {
     val runtime = services.exploration
     val remaining = contextualRoomTargets(ui, plan, isDark).filterNot { it is InlineActionTarget.Npc || it is InlineActionTarget.Enemy && ui.visualEnemyParties.isNotEmpty() }
+    val restStops = if (isDark) emptyList() else ui.actions.filterIsInstance<RestStopAction>().distinctBy { it.actionKey() }
     val specialExits = ui.availableConnections.filter { (direction, target) -> target != null && direction.lowercase() !in cardinalDirections &&
         ui.actions.filterIsInstance<TravelAction>().none { it.direction.equals(direction, true) } }
-    if (remaining.isEmpty() && (isDark || ui.groundItems.isEmpty()) && specialExits.isEmpty() && (isDark || ui.npcs.isEmpty()) && !ui.canReturnToHub) return
+    if (remaining.isEmpty() && restStops.isEmpty() && (isDark || ui.groundItems.isEmpty()) && specialExits.isEmpty() && (isDark || ui.npcs.isEmpty()) && !ui.canReturnToHub) return
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         if (ui.canReturnToHub) DesktopOverworldGateway(ui, blocked, runtime::requestReturnToHub)
         if (!isDark && ui.npcs.isNotEmpty()) {
             Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).testTag("npc-presence"), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 ui.npcs.distinct().forEach { npc -> DesktopNpcPresenceChip(services, ui, npc, blocked) }
+            }
+        }
+        if (restStops.isNotEmpty()) {
+            Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).testTag("rest-services"),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                restStops.forEach { action ->
+                    OutlinedButton(
+                        onClick = { runtime.inspectRoomAction(action) },
+                        enabled = !blocked && ui.actionHints[action.actionKey()]?.locked != true,
+                        modifier = Modifier.heightIn(min = 48.dp).testTag("rest-service-${action.actionKey()}")
+                    ) {
+                        Icon(if (action.cookSource != null) Icons.Rounded.Restaurant else Icons.Rounded.Hotel,
+                            null, Modifier.size(18.dp))
+                        Spacer(Modifier.width(8.dp))
+                        Text(restStopServiceLabel(action))
+                    }
+                }
             }
         }
         if (remaining.isNotEmpty() || (!isDark && ui.groundItems.isNotEmpty()) || specialExits.isNotEmpty()) {

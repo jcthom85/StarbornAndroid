@@ -128,15 +128,14 @@ class DesktopExplorationReturnTest {
             Box(Modifier.size(1280.dp, 800.dp)) { DesktopExplorationScreen(s, {}, {}, {}, {}, {}, {}) }
         } }
         compose.onNodeWithTag("hud-key-legend").assertDoesNotExist()
-        compose.onNodeWithText("Actions").performClick()
-        compose.onNodeWithText("Rest at sleeping shelf", substring = true).performClick()
+        compose.onNodeWithTag("rest-services").onChildren().filter(hasText("Rest")).onFirst().performClick()
         compose.onNodeWithText("A place to rest and recover the party's HP.").assertIsDisplayed()
         assertEquals(20, s.sessionStore.state.value.partyMemberHp["nova"])
         compose.onNodeWithText("Back").performClick()
         assertEquals(20, s.sessionStore.state.value.partyMemberHp["nova"])
         val rest = s.exploration.uiState.value.actions.filterIsInstance<RestStopAction>().single()
         compose.runOnIdle { s.exploration.inspectRoomAction(rest) }
-        compose.onNodeWithText("Rest").performClick()
+        compose.onNode(hasText("Rest") and hasAnyAncestor(isDialog())).performClick()
         compose.waitUntil(5000) { s.sessionStore.state.value.partyMemberHp.getValue("nova") > 20 }
         compose.onNodeWithText("A Quiet Rest").assertIsDisplayed()
     }

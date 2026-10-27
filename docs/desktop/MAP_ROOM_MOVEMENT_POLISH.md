@@ -17,3 +17,9 @@ The shared Android/desktop minimap keeps its size and five-by-five neighborhood 
 Full maps retain service icons and destination details. Android now shows every service instead of silently selecting one; desktop uses the shared room and threat markers. Full-map exit arrows use cyan (lavender when blocked). The legend describes both views, and accessibility descriptions retain service and exit information. Navigation, gates, and discovery rules are unchanged.
 
 Validation: Android and desktop compilation, map/merchant regression tests, and rendered previews at 78 dp and 164 dp. Preview artifacts are generated under `desktopApp/build/reports/map-readability/`; the desktop map flow preview is under `desktopApp/build/reports/map-alignment/`.
+
+## Rest and cooking controls
+
+Rest spots use a dedicated **Rest** control below the room description on both platforms. Beds, shelters, and cooking stations remain plain prose, including authored action markers. Cooking stays a separate **Cook** control with its own icon. Desktop keeps its existing confirmation before executing the activity, and the Actions menu remains available as a fallback. Darkness and blocked overlays hide or disable the controls as appropriate.
+
+This standard changes presentation only: room data, authored rest events, recovery, quest triggers, camp supplies, and cooking discovery remain intact. Regression coverage exercises all 14 authored rest spots and 14 cooking stations, including camp reward deduplication, the bunk state flag and light requirement, and canceling confirmation without recovery.

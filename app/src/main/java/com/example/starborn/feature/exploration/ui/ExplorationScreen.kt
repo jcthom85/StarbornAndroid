@@ -102,6 +102,7 @@ import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.material.icons.rounded.AutoAwesome
+import androidx.compose.material.icons.rounded.Restaurant
 import androidx.compose.material.icons.rounded.Hotel
 import androidx.compose.material.icons.rounded.SportsEsports
 import androidx.compose.material.icons.outlined.RadioButtonUnchecked
@@ -306,7 +307,6 @@ import com.example.starborn.ui.events.QuestBannerType
 import com.example.starborn.ui.overlay.ProgressToastOverlay
 import com.example.starborn.ui.overlay.QuestBannerOverlay
 import com.example.starborn.ui.overlay.QuestDetailOverlay
-import com.example.starborn.ui.overlay.QuestSummaryOverlay
 import com.example.starborn.ui.theme.MinimapTextStyle
 import com.example.starborn.ui.theme.themeColor
 import kotlin.math.min
@@ -341,6 +341,7 @@ fun ExplorationScreen(
     viewModel: ExplorationViewModel,
     audioCuePlayer: AudioCuePlayer,
     uiEventBus: UiEventBus,
+    questPresentations: com.example.starborn.ui.events.QuestPresentationState,
     modifier: Modifier = Modifier,
     craftingViewModel: CraftingViewModel? = null,
     onEnemySelected: (List<String>) -> Unit = {},
@@ -426,6 +427,20 @@ fun ExplorationScreen(
             uiState.prompt != null ||
             uiState.tutorialState.current != null
 
+    val queuedNotice = explorationNotice(uiState,
+        externalModal = areaEntryActive || environmentalPreview || restRecoveryNotice != null || walkthroughVisible ||
+            saveLoadMode != null || showInventoryTargetDialog)
+
+    LaunchedEffect(importantQuestPopupVisible, areaEntryActive, environmentalPreview, restRecoveryNotice, walkthroughVisible,
+        saveLoadMode, showInventoryTargetDialog) {
+        viewModel.setNoticePresentationBlocked("android-presentation",
+            importantQuestPopupVisible || areaEntryActive || environmentalPreview || restRecoveryNotice != null ||
+                walkthroughVisible || saveLoadMode != null || showInventoryTargetDialog)
+    }
+    DisposableEffect(viewModel) {
+        onDispose { viewModel.setNoticePresentationBlocked("android-presentation", false) }
+    }
+
     DisposableEffect(Unit) {
         viewModel.setExplorationVisible(true)
         viewModel.setExplorationInteractionBlocked(false)
@@ -435,8 +450,8 @@ fun ExplorationScreen(
         }
     }
 
-    LaunchedEffect(blockingOverlayActive) {
-        viewModel.setExplorationInteractionBlocked(blockingOverlayActive)
+    LaunchedEffect(blockingOverlayActive, importantQuestPopupVisible) {
+        viewModel.setExplorationInteractionBlocked(blockingOverlayActive || importantQuestPopupVisible)
     }
 
     LaunchedEffect(Unit) {
@@ -635,16 +650,16 @@ fun ExplorationScreen(
             uiState.questDetail != null -> viewModel.closeQuestDetails()
             uiState.partyMemberDetails != null -> viewModel.closePartyMemberDetails()
             uiState.skillTreeOverlay != null -> viewModel.closeSkillTreeOverlay()
-            uiState.eventAnnouncement != null -> viewModel.dismissEventAnnouncement()
-            uiState.levelUpPrompt != null -> viewModel.dismissLevelUpPrompt()
+            queuedNotice == ExplorationNotice.ANNOUNCEMENT -> viewModel.dismissEventAnnouncement()
+            uiState.levelUpPrompt != null && canPresentLevelUp(uiState, restRecoveryNotice != null) -> viewModel.dismissLevelUpPrompt()
             uiState.shopGreeting != null -> viewModel.dismissShopGreeting()
             uiState.blockedPrompt != null -> viewModel.dismissBlockedPrompt()
             uiState.roomObjectOffer != null -> viewModel.dismissRoomObject()
             uiState.roomActionsVisible -> viewModel.dismissRoomActions()
             uiState.togglePrompt != null -> viewModel.dismissTogglePrompt()
             uiState.tuningPuzzle != null -> viewModel.dismissTuningPuzzle()
-            uiState.narrationPrompt != null -> { if (uiState.narrationPrompt?.tapToDismiss == true) viewModel.dismissNarration() }
-            uiState.prompt != null -> viewModel.dismissPrompt()
+            queuedNotice == ExplorationNotice.NARRATION -> { if (uiState.narrationPrompt?.tapToDismiss == true) viewModel.dismissNarration() }
+            queuedNotice == ExplorationNotice.PROMPT -> viewModel.dismissPrompt(uiState.prompt?.id)
             uiState.isMenuOverlayVisible -> viewModel.closeMenuOverlay()
             else -> if (!blockingOverlayActive && !roomTransitionInProgress && !importantQuestPopupVisible && !uiState.isLoading) {
                 when {
@@ -660,17 +675,17 @@ fun ExplorationScreen(
 
     val baseModifier = Modifier.fillMaxSize()
     val swipeGestureModifier = Modifier
-        .pointerInput(uiState.availableConnections, uiState.blockedDirections, blockingOverlayActive, roomTransitionInProgress) {
+        .pointerInput(uiState.availableConnections, uiState.blockedDirections, blockingOverlayActive, roomTransitionInProgress, queuedNotice, uiState.prompt?.id) {
             if (blockingOverlayActive || roomTransitionInProgress) {
                 detectTapGestures(
                     onPress = {
                         tryAwaitRelease()
                     },
                     onTap = {
-                        if (uiState.narrationPrompt != null) {
+                        if (queuedNotice == ExplorationNotice.NARRATION) {
                             if (uiState.narrationPrompt?.tapToDismiss == true) viewModel.dismissNarration()
-                        } else if (uiState.prompt != null) {
-                            viewModel.dismissPrompt()
+                        } else if (queuedNotice == ExplorationNotice.PROMPT) {
+                            viewModel.dismissPrompt(uiState.prompt?.id)
                         }
                     }
                 )
@@ -710,6 +725,7 @@ fun ExplorationScreen(
             .focusable()
             .onKeyEvent { keyEvent ->
                 if (areaEntryActive) return@onKeyEvent true
+                if (uiState.activeDialogue != null || uiState.cinematic != null || importantQuestPopupVisible) return@onKeyEvent false
                 if (keyEvent.type == KeyEventType.KeyDown) {
                     when (keyEvent.key) {
                         Key.ButtonB, Key.Escape -> {
@@ -719,15 +735,15 @@ fun ExplorationScreen(
                         Key.ButtonA, Key.Enter, Key.Spacebar -> {
                             when {
                                 restRecoveryNotice != null -> { restRecoveryNotice = null; return@onKeyEvent true }
-                                uiState.levelUpPrompt != null -> { viewModel.dismissLevelUpPrompt(); return@onKeyEvent true }
-                                uiState.eventAnnouncement != null -> { viewModel.dismissEventAnnouncement(); return@onKeyEvent true }
+                                uiState.levelUpPrompt != null && canPresentLevelUp(uiState, restRecoveryNotice != null) -> { viewModel.dismissLevelUpPrompt(); return@onKeyEvent true }
+                                queuedNotice == ExplorationNotice.ANNOUNCEMENT -> { viewModel.dismissEventAnnouncement(); return@onKeyEvent true }
                                 uiState.blockedPrompt != null -> { viewModel.dismissBlockedPrompt(); return@onKeyEvent true }
-                                uiState.narrationPrompt != null -> {
+                                queuedNotice == ExplorationNotice.NARRATION -> {
                                     if (uiState.narrationPrompt?.tapToDismiss == true) viewModel.dismissNarration()
                                     return@onKeyEvent true
                                 }
-                                uiState.prompt != null -> {
-                                    viewModel.dismissPrompt()
+                                queuedNotice == ExplorationNotice.PROMPT -> {
+                                    viewModel.dismissPrompt(uiState.prompt?.id)
                                     return@onKeyEvent true
                                 }
                                 !blockingOverlayActive && !roomTransitionInProgress && !uiState.isMenuOverlayVisible -> {
@@ -970,10 +986,10 @@ fun ExplorationScreen(
                             imageVector = Icons.Filled.ShoppingCart
                         )
                         is RestStopAction -> QuickMenuAction(
-                            label = if (action.cookSource != null) "Cook" else "Rest",
+                            label = restStopServiceLabel(action),
                             detail = null,
                             roomAction = action,
-                            imageVector = Icons.Rounded.Hotel
+                            imageVector = if (action.cookSource != null) Icons.Rounded.Restaurant else Icons.Rounded.Hotel
                         )
                         is TinkeringAction -> QuickMenuAction(
                             label = action.name.replaceFirstChar { it.titlecase() },
@@ -1125,14 +1141,14 @@ fun ExplorationScreen(
         }
 
         RestRecoveryOverlay(
-            notice = restRecoveryNotice,
+            notice = restRecoveryNotice.takeIf { uiState.activeDialogue == null && uiState.cinematic == null && uiState.shopGreeting == null },
             accentColor = actionAccentColor,
             onDismiss = { restRecoveryNotice = null },
             modifier = Modifier
                 .fillMaxSize()
                 .zIndex(46f)
         )
-        uiState.narrationPrompt?.let { narration ->
+        uiState.narrationPrompt?.takeIf { queuedNotice == ExplorationNotice.NARRATION }?.let { narration ->
             InspectionOverlay(
                 prompt = narration,
                 theme = activeTheme,
@@ -1228,7 +1244,7 @@ fun ExplorationScreen(
                 modifier = Modifier.align(Alignment.Center).zIndex(45f)
             )
         }
-        uiState.activeDialogue?.let { dialogue ->
+        uiState.activeDialogue?.takeIf { uiState.cinematic == null }?.let { dialogue ->
             DialogueOverlay(
                 dialogue = dialogue,
                 choices = uiState.dialogueChoices,
@@ -1629,7 +1645,7 @@ fun ExplorationScreen(
             )
         }
 
-        uiState.eventAnnouncement?.let { announcement ->
+        uiState.eventAnnouncement?.takeIf { queuedNotice == ExplorationNotice.ANNOUNCEMENT }?.let { announcement ->
             EventAnnouncementOverlay(
                 announcement = announcement,
                 theme = activeTheme,
@@ -1640,7 +1656,7 @@ fun ExplorationScreen(
             )
         }
 
-        uiState.levelUpPrompt?.let { prompt ->
+        uiState.levelUpPrompt?.takeIf { canPresentLevelUp(uiState, restRecoveryNotice != null || areaEntryActive || environmentalPreview || saveLoadMode != null || showInventoryTargetDialog) }?.let { prompt ->
             LevelUpOverlay(
                 prompt = prompt,
                 onDismiss = { viewModel.dismissLevelUpPrompt() },
@@ -1743,10 +1759,11 @@ fun ExplorationScreen(
             )
         }
 
-        if (uiState.eventAnnouncement == null && !importantQuestPopupVisible) {
+        if (queuedNotice == ExplorationNotice.PROMPT) {
+            val displayedPrompt = uiState.prompt
             UIPromptOverlay(
-                prompt = uiState.prompt,
-                onDismiss = { viewModel.dismissPrompt() },
+                prompt = displayedPrompt,
+                onDismiss = { viewModel.dismissPrompt(displayedPrompt?.id) },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .navigationBarsPadding()
@@ -1756,7 +1773,8 @@ fun ExplorationScreen(
         }
 
         QuestBannerOverlay(
-            uiEventBus = uiEventBus,
+            state = questPresentations,
+            deferShowing = blockingOverlayActive || importantQuestPopupVisible,
             accentColor = questAccentColor,
             modifier = Modifier
                 .align(Alignment.TopCenter)
@@ -1765,7 +1783,8 @@ fun ExplorationScreen(
         )
 
         ProgressToastOverlay(
-            uiEventBus = uiEventBus,
+            state = questPresentations,
+            deferShowing = blockingOverlayActive || importantQuestPopupVisible,
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .navigationBarsPadding()
@@ -1774,10 +1793,10 @@ fun ExplorationScreen(
         )
 
         QuestDetailOverlay(
-            uiEventBus = uiEventBus,
+            state = questPresentations,
             gradientColor = questAccentColor,
             outlineColor = panelBorderColor,
-            deferShowing = questDetailBlockingOverlayActive,
+            deferShowing = questDetailBlockingOverlayActive || areaEntryActive || environmentalPreview || saveLoadMode != null || showInventoryTargetDialog,
             onPresentationVisibleChanged = { importantQuestPopupVisible = it },
             onPresentationStarted = { type ->
                 val cueKey = when (type) {
@@ -1794,17 +1813,7 @@ fun ExplorationScreen(
             modifier = Modifier.zIndex(30f)
         )
 
-        QuestSummaryOverlay(
-            uiEventBus = uiEventBus,
-            isSceneBlocking = blockingOverlayActive,
-            accentColor = questAccentColor,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .zIndex(30f),
-            onShowDetails = { questId ->
-                viewModel.openQuestDetails(questId)
-            }
-        )
+
 
         uiState.questDetail?.takeUnless { uiState.isMenuOverlayVisible }?.let { detail ->
             QuestDetailSheet(

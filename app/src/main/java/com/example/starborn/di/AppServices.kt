@@ -152,6 +152,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
     val audioRouter = AudioRouter(audioBindings, audioCatalog)
     val uiFxBus = UiFxBus()
     val uiEventBus = UiEventBus()
+    val questPresentations = com.example.starborn.ui.events.QuestPresentationState()
     private var dialogueTriggerListener: ((String) -> Boolean)? = null
     val fishingService = FishingService(fishingDataSource, inventoryService, sessionStore = sessionStore, craftingService = craftingService)
     val tutorialScripts = TutorialScriptRepository(assetReader)
@@ -216,6 +217,9 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
     val tutorialManager = TutorialRuntimeManager(sessionStore, promptManager, tutorialScripts, runtimeScope)
 
     init {
+        runtimeScope.launch(kotlinx.coroutines.Dispatchers.Main.immediate, start = kotlinx.coroutines.CoroutineStart.UNDISPATCHED) {
+            uiEventBus.events.collect { questPresentations.accept(it) }
+        }
         inventoryService.addOnItemAddedListener { itemId, quantity ->
             if (quantity > 0) {
                 handleWeaponUnlockFromItem(itemId, quantity)
@@ -500,6 +504,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
         val info = resolveSlotInfo(slot) ?: return false
         val state = info.state.migrateOpeningNarrativeState().migrateCrewProgressionState()
         sessionStore.restore(state)
+        questPresentations.clear()
         inventoryService.restore(state.inventory)
         migrateLegacyWeapons(state)
         migrateLegacyArmors(state)
@@ -519,6 +524,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
         val info = sessionPersistence.autosaveInfo() ?: return false
         val state = info.state.migrateOpeningNarrativeState().migrateCrewProgressionState()
         sessionStore.restore(state)
+        questPresentations.clear()
         inventoryService.restore(state.inventory)
         migrateLegacyWeapons(state)
         migrateLegacyArmors(state)
@@ -544,6 +550,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
         val info = sessionPersistence.quickSaveInfo() ?: return false
         val state = info.state.migrateOpeningNarrativeState().migrateCrewProgressionState()
         sessionStore.restore(state)
+        questPresentations.clear()
         inventoryService.restore(state.inventory)
         migrateLegacyWeapons(state)
         migrateLegacyArmors(state)
@@ -564,6 +571,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
         check(com.example.starborn.BuildConfig.ENABLE_SCENARIO_MENU)
         val migrated = state.migrateOpeningNarrativeState().migrateCrewProgressionState()
         sessionStore.restore(migrated)
+        questPresentations.clear()
         inventoryService.restore(migrated.inventory)
         migrateLegacyWeapons(migrated)
         migrateLegacyArmors(migrated)
@@ -576,6 +584,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
     suspend fun importLegacySave(file: File): Boolean {
         val imported = sessionPersistence.importLegacySave(file, itemRepository)?.migrateOpeningNarrativeState()?.migrateCrewProgressionState() ?: return false
         sessionStore.restore(imported)
+        questPresentations.clear()
         inventoryService.restore(imported.inventory)
         migrateLegacyWeapons(imported)
         migrateLegacyArmors(imported)
@@ -650,6 +659,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
                 seedDefaultArmorsForCharacters(weaponSeedIds)
                 unlockStartingSkillsForParty(party, players, baseLevel)
             }
+            questPresentations.clear()
             questRuntimeManager.resetAll()
             playtestTelemetry.startSession(if (debugFullInventory) "debug_full_inventory" else "new_game")
             sessionStore.startQuest(com.example.starborn.domain.session.GameBootstrap.startingQuest, track = true)
@@ -691,6 +701,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
             inventoryService.restore(previousSession.inventory)
             sessionStore.setInventory(previousSession.inventory)
 
+            questPresentations.clear()
             questRuntimeManager.resetAll()
             playtestTelemetry.startSession("new_game_plus_master")
             sessionStore.startQuest(com.example.starborn.domain.session.GameBootstrap.startingQuest, track = true)

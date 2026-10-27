@@ -88,6 +88,110 @@ class UIPromptManagerTest {
         assertTrue(manager.state.value.current is ItemGrantedPrompt)
     }
 
+    @Test fun `modal blockers wait for every owner and preserve queued tutorials and rewards`() {
+        val manager = UIPromptManager()
+        manager.setPresentationBlocked("dialogue", true)
+        manager.setPresentationBlocked("inspection", true)
+        manager.enqueue(itemPrompt("Biscuits", "gift", 1, 1))
+        manager.enqueue(TutorialPrompt(com.example.starborn.domain.tutorial.TutorialEntry(
+            key = "help", message = "Help", context = "System")))
+        org.junit.Assert.assertNull(manager.state.value.current)
+        manager.setPresentationBlocked("dialogue", false)
+        org.junit.Assert.assertNull(manager.state.value.current)
+        manager.setPresentationBlocked("inspection", false)
+        assertTrue(manager.state.value.current is TutorialPrompt)
+        manager.dismissCurrent()
+        assertEquals("Biscuits", (manager.state.value.current as ItemGrantedPrompt).itemName)
+    }
+
+    @Test fun `stale dismiss and unrelated collect all cannot skip a visible prompt`() {
+        val manager = UIPromptManager()
+        val first = itemPrompt("First", "one", 1, 1)
+        val second = itemPrompt("Second", "two", 1, 1)
+        manager.enqueue(first)
+        manager.enqueue(second)
+        manager.dismissCurrent(first.id)
+        manager.dismissCurrent(first.id)
+        manager.dismissItemSequence("one")
+        assertEquals(second, manager.state.value.current)
+    }
+
+    @Test fun `dismiss callback can enqueue the next prompt without losing it`() {
+        val manager = UIPromptManager()
+        val next = itemPrompt("Next", "two", 1, 1)
+        manager.enqueue(ItemGrantedPrompt("First", 1, onDismissCallback = { manager.enqueue(next) }))
+        manager.dismissCurrent()
+        assertEquals(next, manager.state.value.current)
+    }
+
+    @Test fun `Jed equipment offer follows every starter kit card`() {
+        val manager = UIPromptManager()
+        manager.setPresentationBlocked("dialogue", true)
+        val pistol = itemPrompt("Mining Pistol", "kit", 1, 3)
+        val armor = itemPrompt("Flux Liner", "kit", 2, 3)
+        val core = itemPrompt("Cryo-Inductor", "kit", 3, 3)
+        manager.enqueue(pistol); manager.enqueue(armor); manager.enqueue(core)
+        val offer = TutorialPrompt(com.example.starborn.domain.tutorial.TutorialEntry(
+            key = "opening_gear_offer", message = "Equip the kit", context = "Equipment"), afterRewards = true)
+        manager.enqueue(offer)
+        manager.setPresentationBlocked("dialogue", false)
+        for (reward in listOf(pistol, armor, core)) {
+            assertEquals(reward, manager.state.value.current)
+            manager.dismissCurrent(reward.id)
+        }
+        assertEquals(offer, manager.state.value.current)
+    }
+
+    @Test fun `reward group finishes before a tutorial arriving after its first card`() {
+        val manager = UIPromptManager()
+        val first = itemPrompt("Pistol", "kit", 1, 3)
+        val second = itemPrompt("Liner", "kit", 2, 3)
+        val third = itemPrompt("Parts", "kit", 3, 3)
+        manager.enqueue(first); manager.enqueue(second); manager.enqueue(third)
+        val guide = TutorialPrompt(com.example.starborn.domain.tutorial.TutorialEntry(
+            key = "later-guide", message = "A guide", context = "System"))
+        manager.enqueue(guide)
+        for (card in listOf(first, second, third)) {
+            assertEquals(card, manager.state.value.current)
+            manager.dismissCurrent(card.id)
+        }
+        assertEquals(guide, manager.state.value.current)
+    }
+
+    @Test fun `dialogue before receipt holds the entire group and mid-group pause preserves its remainder`() {
+        val manager = UIPromptManager()
+        manager.setPresentationBlocked("dialogue", true)
+        val first = itemPrompt("Pistol", "kit", 1, 2)
+        val second = itemPrompt("Liner", "kit", 2, 2)
+        manager.enqueue(first); manager.enqueue(second)
+        org.junit.Assert.assertNull(manager.state.value.current)
+        manager.setPresentationBlocked("dialogue", false)
+        assertEquals(first, manager.state.value.current)
+        manager.setPresentationBlocked("inspection", true)
+        manager.dismissCurrent(first.id)
+        val guide = TutorialPrompt(com.example.starborn.domain.tutorial.TutorialEntry(
+            key = "guide", message = "A guide", context = "System"))
+        manager.enqueue(guide)
+        org.junit.Assert.assertNull(manager.state.value.current)
+        manager.setPresentationBlocked("inspection", false)
+        assertEquals(second, manager.state.value.current)
+        manager.dismissCurrent(second.id)
+        assertEquals(guide, manager.state.value.current)
+    }
+
+    @Test fun `individual item grants from the same busy period also stay together`() {
+        val manager = UIPromptManager()
+        val first = ItemGrantedPrompt("Rations", 2)
+        val second = ItemGrantedPrompt("Medkit", 1)
+        val tutorial = TutorialPrompt(com.example.starborn.domain.tutorial.TutorialEntry(
+            key = "guide", message = "A guide", context = "System"))
+        manager.enqueue(first); manager.enqueue(second); manager.enqueue(tutorial)
+        manager.dismissCurrent(first.id)
+        assertEquals(second, manager.state.value.current)
+        manager.dismissCurrent(second.id)
+        assertEquals(tutorial, manager.state.value.current)
+    }
+
     private fun itemPrompt(
         name: String,
         sequenceId: String,

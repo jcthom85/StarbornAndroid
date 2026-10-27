@@ -39,7 +39,7 @@
     "env": "mine",
     "title": "Mess Hall",
     "background_image": "images/rooms/world_1/pit_mess_v5.webp",
-    "description": "Bolted tables and crooked amber lights turn dinner into another shift. Miners trade jokes near a broken Hyperion cabinet while a ceramic rooster stands on the shelf beside a vintage mystery monitor. Gaga ensures everyone eats before returning to the dark.",
+    "description": "Bolted tables and crooked amber lights turn dinner into another shift. [npc:Pam] works the serving counter, making sure nobody leaves hungry. A ceramic rooster watches over the tables beside a vintage mystery monitor, while a broken Hyperion cabinet gathers miners' coats.",
     "description_variants": [
       {
         "requires_milestones": [
@@ -80,7 +80,7 @@
         "name": "ceramic rooster",
         "type": "inspect",
         "description": "Inspect the ceramic rooster figurine perched on the mess counter.",
-        "inspect_message": "A hand-painted ceramic rooster proudly perches on the shelf above the mess counter. Placed there by Gaga to add some feisty country pride to the cold subterranean rock."
+        "inspect_message": "A hand-painted ceramic rooster proudly perches on the shelf above the mess counter. Placed there by Pam to add some feisty country pride to the cold subterranean rock."
       },
       {
         "id": "inspect_mystery_monitor",
@@ -101,7 +101,7 @@
     "env": "mine",
     "title": "Ration Sink",
     "background_image": "images/rooms/world_1/pit_kitchen_v5.webp",
-    "description": "The mess kitchen smells of scorched grease and stale broth. An industrial thermal cooker sits on the counter beside a dented ingredient hopper.",
+    "description": "Scorched grease and simmering broth warm the cramped kitchen behind the mess hall. [npc:Rourke] tends an industrial thermal cooker beside a dented ingredient hopper, stretching the colony's supplies into another shift's meals.",
     "npcs": [],
     "items": [],
     "enemies": [],

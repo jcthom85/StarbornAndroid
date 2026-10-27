@@ -24,7 +24,8 @@ class DialogueService(
 
     fun startDialogue(speaker: String): DialogueSession? {
         val entries = dialogueBySpeaker[speaker.lowercase(Locale.getDefault())] ?: return null
-        val candidates = entries.filter { it.id !in referencedNextIds }
+        // Default greetings can be referenced by looping conversation topics and still be entry points.
+        val candidates = entries.filter { it.id !in referencedNextIds || it.id.endsWith("_default_talk") }
         val (conditioned, unconditioned) = candidates.partition { !it.condition.isNullOrBlank() }
         // Continue an eligible quest before offering another one. Preserve author
         // order within each group; an old optional offer must not hide progress.

@@ -136,7 +136,7 @@ class DesktopAppServices(
 
     val uiFxBus = UiFxBus()
     val uiEventBus = UiEventBus()
-    val questPresentations = com.example.starborn.desktop.ui.DesktopQuestPresentationState()
+    val questPresentations = com.example.starborn.ui.events.QuestPresentationState()
     val promptManager = UIPromptManager()
 
     val fishingService = FishingService(fishingDataSource, inventoryService, sessionStore = sessionStore, craftingService = craftingService)

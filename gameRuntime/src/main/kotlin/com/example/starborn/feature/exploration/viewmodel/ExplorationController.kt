@@ -1,5 +1,6 @@
 package com.example.starborn.feature.exploration.viewmodel
 
+import com.example.starborn.feature.exploration.presentation.hasModalScene
 import com.example.starborn.domain.tutorial.OpeningEquipmentGuide
 
 import com.example.starborn.domain.model.forEncounterRoom
@@ -720,6 +721,8 @@ class ExplorationController(
     private var userVoiceVolume: Float = 1f
     private var isVignetteEnabled: Boolean = true
     private val eventAnnouncementQueue: ArrayDeque<EventAnnouncementUi> = ArrayDeque()
+    private val narrationQueue = ArrayDeque<NarrationPrompt>()
+    private val pendingDialogueNpcs = ArrayDeque<String>()
     private var nextEventAnnouncementId: Long = 0L
 
     override fun close() {
@@ -728,6 +731,8 @@ class ExplorationController(
         dialogueTriggerBinder(null)
         cinematicCoordinator.setCallbacks()
         viewModelScope.coroutineContext[Job]?.cancel()
+        promptManager.setPresentationBlocked("exploration-scene", false)
+        promptManager.setToastsSuspended(false)
     }
 
     fun setExplorationVisible(visible: Boolean) {
@@ -870,7 +875,9 @@ class ExplorationController(
     }
 
     fun dismissEventAnnouncement() {
+        val expected = _uiState.value.eventAnnouncement ?: return
         viewModelScope.launch(dispatchers.main) {
+            if (_uiState.value.eventAnnouncement != expected) return@launch
             val next = if (eventAnnouncementQueue.isNotEmpty()) eventAnnouncementQueue.removeFirst() else null
             _uiState.update { it.copy(eventAnnouncement = next) }
         }
@@ -2121,6 +2128,14 @@ class ExplorationController(
         }
 
         viewModelScope.launch(dispatchers.main) {
+            uiState.collect { ui ->
+                promptManager.setPresentationBlocked("exploration-scene",
+                    ui.hasModalScene() ||
+                        ui.narrationPrompt != null || ui.eventAnnouncement != null)
+            }
+        }
+
+        viewModelScope.launch(dispatchers.main) {
             promptManager.state.collect { promptState ->
                 _uiState.update { it.copy(prompt = promptState.current) }
             }
@@ -2207,11 +2222,20 @@ class ExplorationController(
     private fun scheduleNovaBuildTutorial(state: GameSessionState) {
         if (activeDialogueSession != null || _uiState.value.activeDialogue != null) return
         com.example.starborn.domain.tutorial.NovaProgressionTutorial.firstAp(state, tutorialsEnabled)?.let { entry ->
-            tutorialManager.showOnce(entry, onDismiss = {
-                tutorialManager.markCompleted(requireNotNull(entry.key))
-                openMenuOverlay(MenuTab.STATS, showTutorial = false)
-                openSkillTree("nova")
-            })
+            val key = requireNotNull(entry.key)
+            val prompts = promptManager.state.value
+            if (prompts.current?.id == key || prompts.queue.any { it.id == key }) return
+            sessionStore.markTutorialSeen(key)
+            promptManager.enqueue(TutorialPrompt(
+                entry = entry,
+                onDismissCallback = { tutorialManager.markCompleted(key) },
+                primaryAction = {
+                    promptManager.dismissCurrent(key)
+                    openMenuOverlay(MenuTab.STATS, showTutorial = false)
+                    openSkillTree("nova")
+                },
+                afterRewards = true
+            ))
         }
     }
 
@@ -2411,6 +2435,8 @@ class ExplorationController(
             }
             acknowledgedMilestones.clear()
             eventAnnouncementQueue.clear()
+            narrationQueue.clear()
+            pendingDialogueNpcs.clear()
             nextEventAnnouncementId = 0L
 
             sessionStore.setWorld(initialWorld?.id)
@@ -2781,6 +2807,10 @@ class ExplorationController(
     }
 
     private fun startImmediateDialogue(npcName: String): Boolean {
+        if (activeDialogueSession != null) {
+            if (pendingDialogueNpcs.none { it.equals(npcName, true) }) pendingDialogueNpcs.addLast(npcName)
+            return true
+        }
         val dialogueName = resolveNpcDialogueName(npcName)
         val session = dialogueService.startDialogue(dialogueName) ?: return false
         activeDialogueSession = session
@@ -2837,6 +2867,7 @@ class ExplorationController(
         val session = activeDialogueSession ?: return
         if (session.choices().isNotEmpty()) return
         val nextLine = session.advance()
+        if (activeDialogueSession !== session) return
         if (nextLine == null) {
             val npcName = activeDialogueNpcName
             activeDialogueSession = null
@@ -2850,7 +2881,10 @@ class ExplorationController(
             dialogueMusicActive = false
             if (!npcName.isNullOrBlank()) {
                 handleNpcTrigger("dialogue_closed", npcName, resolveNpcDialogueName(npcName))
-                offerNpcTrade(npcName)
+                while (activeDialogueSession == null && pendingDialogueNpcs.isNotEmpty()) {
+                    startImmediateDialogue(pendingDialogueNpcs.removeFirst())
+                }
+                if (activeDialogueSession == null) offerNpcTrade(npcName)
             }
             scheduleNovaBuildTutorial(sessionStore.state.value)
         } else {
@@ -2879,6 +2913,7 @@ class ExplorationController(
         )
         playUiCue("confirm")
         val nextLine = session.choose(optionId)
+        if (activeDialogueSession !== session) return
         if (nextLine == null) {
             val npcName = activeDialogueNpcName
             activeDialogueSession = null
@@ -2892,7 +2927,10 @@ class ExplorationController(
             dialogueMusicActive = false
             if (!npcName.isNullOrBlank()) {
                 handleNpcTrigger("dialogue_closed", npcName, resolveNpcDialogueName(npcName))
-                offerNpcTrade(npcName)
+                while (activeDialogueSession == null && pendingDialogueNpcs.isNotEmpty()) {
+                    startImmediateDialogue(pendingDialogueNpcs.removeFirst())
+                }
+                if (activeDialogueSession == null) offerNpcTrade(npcName)
             }
             scheduleNovaBuildTutorial(sessionStore.state.value)
         } else {
@@ -3213,9 +3251,12 @@ class ExplorationController(
         startCinematic(sceneId)
     }
 
-    fun dismissPrompt() {
-        promptManager.dismissCurrent()
+    fun setNoticePresentationBlocked(owner: String, blocked: Boolean) {
+        promptManager.setPresentationBlocked(owner, blocked)
     }
+
+    fun dismissPrompt() { promptManager.dismissCurrent() }
+    fun dismissPrompt(expectedId: String?) { promptManager.dismissCurrent(expectedId) }
 
     fun onTinkerTutorialStep(step: com.example.starborn.feature.crafting.TinkeringTutorialStep) {
         // In-context tutorial guide banner renders directly within the Workbench interface
@@ -3243,8 +3284,11 @@ class ExplorationController(
     }
 
     fun dismissNarration() {
+        val expected = _uiState.value.narrationPrompt ?: return
         viewModelScope.launch(dispatchers.main) {
-            _uiState.update { it.copy(narrationPrompt = null) }
+            if (_uiState.value.narrationPrompt != expected) return@launch
+            val next = if (narrationQueue.isEmpty()) null else narrationQueue.removeFirst()
+            _uiState.update { it.copy(narrationPrompt = next) }
         }
     }
 
@@ -3921,9 +3965,10 @@ class ExplorationController(
                     if (tutorialsEnabled) "Show me how to equip" else "Open equipment", "dismiss_label" to "Later")
             ),
             primaryAction = {
-                promptManager.dismissCurrent()
+                promptManager.dismissCurrent(OpeningEquipmentGuide.OFFER)
                 openMenuOverlay(if (_uiState.value.settings.modernFieldMenu) MenuTab.STATS else MenuTab.INVENTORY, showTutorial = false)
-            }
+            },
+            afterRewards = true
         ))
     }
 
@@ -5683,9 +5728,9 @@ class ExplorationController(
 
     private fun showNarration(message: String, tapToDismiss: Boolean) {
         viewModelScope.launch(dispatchers.main) {
-            _uiState.update {
-                it.copy(narrationPrompt = NarrationPrompt(message, tapToDismiss))
-            }
+            val prompt = NarrationPrompt(message, tapToDismiss)
+            if (_uiState.value.narrationPrompt == null) _uiState.update { it.copy(narrationPrompt = prompt) }
+            else if (_uiState.value.narrationPrompt != prompt && narrationQueue.lastOrNull() != prompt) narrationQueue.addLast(prompt)
         }
     }
 
@@ -5703,7 +5748,6 @@ class ExplorationController(
         viewModelScope.launch(dispatchers.main) {
             _uiState.update {
                 it.copy(
-                    narrationPrompt = null,
                     blockedPrompt = BlockedPrompt(
                         direction = direction,
                         message = message,

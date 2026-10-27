@@ -28,25 +28,25 @@ class DesktopQuestQueueTest {
     private fun detail(id: String, type: QuestBannerType = QuestBannerType.NEW) = UiEvent.ShowQuestDetail(id, type, "Original title $id", "Original summary", listOf("Original objective"))
 
     @Test fun importantEventsKeepOrderAndDeduplicatePendingQuestTypes() {
-        val state = DesktopQuestPresentationState()
+        val state = QuestPresentationState()
         state.accept(detail("a")); state.accept(detail("a")); state.accept(detail("a", QuestBannerType.COMPLETED)); state.accept(detail("b"))
         assertEquals(3, state.important.size)
-        assertEquals(QuestBannerType.NEW, (state.important.first() as DesktopQuestPresentationState.Important.Detail).event.type)
+        assertEquals(QuestBannerType.NEW, (state.important.first() as QuestPresentationState.Important.Detail).event.type)
         state.dismissImportant()
-        assertEquals(QuestBannerType.COMPLETED, (state.important.first() as DesktopQuestPresentationState.Important.Detail).event.type)
+        assertEquals(QuestBannerType.COMPLETED, (state.important.first() as QuestPresentationState.Important.Detail).event.type)
     }
 
     @Test fun progressPreservesObjectivesRolesAndCountAndUsesTwoSecondDedupe() {
-        val state = DesktopQuestPresentationState()
+        val state = QuestPresentationState()
         val event = UiEvent.ShowQuestBanner(QuestBannerType.PROGRESS, "a", "Original title", listOf(QuestObjectiveStatus("o", "Original objective", true, QuestObjectiveRole.JUST_COMPLETED)), 4)
         state.accept(event, 0); state.accept(event, 1000); state.accept(event, 2001)
-        assertEquals(listOf(event, event), state.updates.toList())
+        assertEquals(listOf(event), state.updates.toList())
         state.accept(UiEvent.ShowQuestBanner(QuestBannerType.NEW, "a", "Original title"))
         assertTrue(state.important.isEmpty())
     }
 
     @Test fun summaryToastBadgeAndResetRemainSeparate() {
-        val state = DesktopQuestPresentationState()
+        val state = QuestPresentationState()
         val summary = UiEvent.ShowQuestSummary(listOf(QuestSummaryEntry("a", SummaryType.COMPLETED, "Original title")))
         state.accept(summary); state.accept(summary); state.accept(UiEvent.ShowToast("toast", "Original toast"))
         state.accept(UiEvent.JournalBadgeDelta(2)); assertEquals(2, state.journalBadge)
@@ -55,8 +55,27 @@ class DesktopQuestQueueTest {
         state.clear(); assertTrue(state.important.isEmpty()); assertTrue(state.toasts.isEmpty())
     }
 
+    @Test fun completingQuestDropsObsoleteUpdatesAndRejectsLateProgress() {
+        val state = QuestPresentationState()
+        state.accept(UiEvent.ShowQuestBanner(QuestBannerType.PROGRESS, "first", "Old objective"), 0)
+        state.accept(UiEvent.ShowQuestBanner(QuestBannerType.PROGRESS, "second", "Other quest"), 0)
+        state.accept(detail("first", QuestBannerType.COMPLETED))
+        state.accept(UiEvent.ShowQuestBanner(QuestBannerType.PROGRESS, "first", "Late stale objective"), 5000)
+        assertEquals(listOf("second"), state.updates.map { it.questId })
+        assertEquals(1, state.important.size)
+    }
+
+    @Test fun staleQuestDismissDoesNotSkipNextCard() {
+        val state = QuestPresentationState()
+        state.accept(detail("first")); state.accept(detail("second"))
+        val old = state.important.first()
+        state.dismissImportant(old)
+        state.dismissImportant(old)
+        assertEquals("second", (state.important.single() as QuestPresentationState.Important.Detail).event.questId)
+    }
+
     @Test fun eachVisibleCardStartsOnlyOnceUntilDismissed() {
-        val state = DesktopQuestPresentationState()
+        val state = QuestPresentationState()
         state.accept(detail("a", QuestBannerType.FAILED))
         val current = state.important.first()
         assertTrue(state.markStarted(current)); assertFalse(state.markStarted(current))
@@ -79,7 +98,7 @@ class DesktopQuestPresentationTest {
         val directory = Files.createTempDirectory("starborn-quest-ui-").toFile()
         val audio = RecordingAudio()
         val services = DesktopAppServices(directory, audio)
-        val presentations = DesktopQuestPresentationState()
+        val presentations = QuestPresentationState()
         val blocked = mutableStateOf(true)
         val narrow = mutableStateOf(false)
         var opened: String? = null
@@ -108,7 +127,7 @@ class DesktopQuestPresentationTest {
             compose.onNodeWithText("Quest Completed").assertIsDisplayed()
             capture("quest-completed-narrow")
             compose.onRoot().performKeyInput { pressKey(Key.Escape) }
-            compose.runOnIdle { assertEquals(emptyList<DesktopQuestPresentationState.Important>(), presentations.important.toList()) }
+            compose.runOnIdle { assertEquals(emptyList<QuestPresentationState.Important>(), presentations.important.toList()) }
             compose.waitUntil(5000) { audio.commands.filterIsInstance<AudioCommand.Play>().any { it.cueId == "quest_complete_stinger" } }
             compose.runOnIdle { assertEquals(1, audio.commands.filterIsInstance<AudioCommand.Play>().count { it.cueId == "quest_new_stinger" }) }
         } finally { services.close(); directory.deleteRecursively() }
@@ -117,7 +136,7 @@ class DesktopQuestPresentationTest {
     @Test fun updatesRenderTypedObjectiveRolesAndDismissWithoutImportantCard() {
         val directory = Files.createTempDirectory("starborn-quest-update-").toFile()
         val services = DesktopAppServices(directory, RecordingAudio())
-        val presentations = DesktopQuestPresentationState()
+        val presentations = QuestPresentationState()
         try {
             compose.mainClock.autoAdvance = false
             compose.setContent { DesktopStarbornTheme { Box(Modifier.size(1280.dp, 720.dp)) {
@@ -140,6 +159,44 @@ class DesktopQuestPresentationTest {
             compose.mainClock.advanceTimeBy(250)
             compose.waitForIdle()
             compose.runOnIdle { assertTrue(presentations.updates.isEmpty()) }
+        } finally { services.close(); directory.deleteRecursively() }
+    }
+
+    @Test fun passiveNoticesWaitForDialogueAndResumeWithTheirFullReadingTime() {
+        val directory = Files.createTempDirectory("starborn-notice-timers-").toFile()
+        val services = DesktopAppServices(directory, RecordingAudio())
+        val presentations = QuestPresentationState()
+        val blocked = mutableStateOf(true)
+        try {
+            compose.mainClock.autoAdvance = false
+            compose.setContent { DesktopStarbornTheme { Box(Modifier.size(1280.dp, 720.dp)) {
+                DesktopQuestPresentation(services, presentations, blocked.value) {}
+            } } }
+            compose.runOnIdle {
+                presentations.accept(UiEvent.ShowQuestBanner(QuestBannerType.PROGRESS, "a", "Deferred update"))
+                presentations.accept(UiEvent.ShowToast("credits", "+25 Credits"))
+            }
+            compose.mainClock.advanceTimeBy(10000)
+            compose.onNodeWithText("Deferred update").assertDoesNotExist()
+            compose.onNodeWithText("+25 Credits").assertDoesNotExist()
+            compose.runOnIdle { assertEquals(1, presentations.updates.size); assertEquals(1, presentations.toasts.size); blocked.value = false }
+            compose.mainClock.advanceTimeBy(350)
+            compose.onNodeWithText("Deferred update").assertIsDisplayed()
+            compose.onNodeWithText("+25 Credits").assertDoesNotExist()
+            compose.runOnIdle { blocked.value = true }
+            compose.mainClock.advanceTimeBy(10000)
+            compose.runOnIdle { assertEquals(1, presentations.updates.size); blocked.value = false }
+            compose.mainClock.advanceTimeBy(350)
+            compose.onNodeWithText("Deferred update").assertIsDisplayed()
+            compose.mainClock.advanceTimeBy(3500)
+            compose.onNodeWithText("+25 Credits").assertIsDisplayed()
+            compose.runOnIdle { blocked.value = true }
+            compose.mainClock.advanceTimeBy(10000)
+            compose.runOnIdle { assertEquals(1, presentations.toasts.size); blocked.value = false }
+            compose.mainClock.advanceTimeBy(500)
+            compose.onNodeWithText("+25 Credits").assertIsDisplayed()
+            compose.mainClock.advanceTimeBy(2000)
+            compose.runOnIdle { assertTrue(presentations.toasts.isEmpty()) }
         } finally { services.close(); directory.deleteRecursively() }
     }
 
