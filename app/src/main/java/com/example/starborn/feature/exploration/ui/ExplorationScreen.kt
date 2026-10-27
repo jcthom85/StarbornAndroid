@@ -2352,8 +2352,9 @@ fun DrawScope.drawDarkRoomOverlay(
 
 
 @Composable
-private fun MenuOverlay(
+internal fun MenuOverlay(
     selectedTab: MenuTab,
+    onOpenRegionMap: (() -> Unit)? = null,
     onOpenWalkthrough: (() -> Unit)? = null,
     onSelectTab: (MenuTab) -> Unit,
     onClose: () -> Unit,
@@ -2468,7 +2469,13 @@ private fun MenuOverlay(
     val activePartyId = selectedPartyId?.takeIf { id -> partyStatus.members.any { it.id == id } }
         ?: partyStatus.members.firstOrNull()?.id
     val pageContent: @Composable () -> Unit = {
-                    if (detailKind == null) MenuTabContentArea(
+                    if (detailKind == null && selectedTab == MenuTab.MAP && onOpenRegionMap != null) {
+                        Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                            Text("Region map", style = MaterialTheme.typography.headlineSmall)
+                            Text("Return to the region map to select a destination. Your current selection is preserved.")
+                            Button(onClick = onOpenRegionMap) { Text("Return to region map") }
+                        }
+                    } else if (detailKind == null) MenuTabContentArea(
                         tab = selectedTab,
                         modern = settings.modernFieldMenu,
                         selectedMemberId = activePartyId,

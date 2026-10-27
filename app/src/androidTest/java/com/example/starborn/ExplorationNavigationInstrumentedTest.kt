@@ -74,7 +74,7 @@ class ExplorationNavigationInstrumentedTest {
             }
             compose.waitUntil(15000) {vm.uiState.value.currentRoom?.id=="pit_L1_landing" && !vm.uiState.value.isLoading}
             compose.runOnUiThread {services.tutorialManager.cancelAllScheduled();services.promptManager.discardMatching {true}}
-            compose.setContent {StarbornTheme {ExplorationScreen(vm,services.audioCuePlayer,services.uiEventBus,onReturnToHub={exits++},isTestSession=true)}}
+            compose.setContent {StarbornTheme {ExplorationScreen(vm,services.audioCuePlayer,services.uiEventBus,services.questPresentations,onReturnToHub={exits++},isTestSession=true)}}
             // Finish the entry title before testing Back at the room root.
             compose.waitUntil(10000) {vm.uiState.value.canReturnToHub}
             compose.mainClock.advanceTimeBy(1500)

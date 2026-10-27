@@ -44,10 +44,16 @@ fun DesktopHubScreen(services: DesktopAppServices, onEnterRoom: (String) -> Unit
         var regionBounds by remember { mutableStateOf(androidx.compose.ui.geometry.Rect.Zero) }
         var destinationBounds by remember { mutableStateOf(androidx.compose.ui.geometry.Rect.Zero) }
         var region by remember { mutableStateOf(false) }
-        var settingsOpen by remember { mutableStateOf(false) }
         LaunchedEffect(saveRequested, exploration.statusMessage) {
             if (saveRequested && exploration.statusMessage != null) { delay(6000); saveRequested = false }
         }
+        fun openFieldMenu(tab: com.example.starborn.feature.exploration.viewmodel.MenuTab? = null, quest: String? = null) {
+            services.exploration.openMenuOverlay(tab, showTutorial = false)
+            quest?.let { services.exploration.openQuestDetails(it) }
+            menu = true
+        }
+        fun closeFieldMenu() { services.exploration.closeMenuOverlay(); menu = false }
+        DisposableEffect(services) { onDispose { services.exploration.closeMenuOverlay() } }
         val focus = remember { FocusRequester() }
         val selected = state.nodes.firstOrNull { it.id == state.selectedNodeId }
         val returnAvailable = session.roomId?.let { it in services.roomDefinitions } == true
@@ -88,19 +94,18 @@ fun DesktopHubScreen(services: DesktopAppServices, onEnterRoom: (String) -> Unit
             state.hub?.id?.let { services.audioDriver.executeAll(services.audioRouter.commandsForRoom(hubId = it, roomId = null)) }
             region = false
         }
-        LaunchedEffect(menu, settingsOpen, region, state.lockedPrompt) {
-            if (!menu && !settingsOpen && !region && state.lockedPrompt == null) focus.requestFocus()
+        LaunchedEffect(menu, region, state.lockedPrompt) {
+            if (!menu && !region && state.lockedPrompt == null) focus.requestFocus()
         }
         Box(Modifier.fillMaxSize().background(Color(0xFF04060A)).focusRequester(focus).onPreviewKeyEvent { event ->
-            if (event.type != KeyEventType.KeyDown) false else when(event.key) {
+            if (menu || event.type != KeyEventType.KeyDown) false else when(event.key) {
                 Key.Escape -> { when {
                     state.lockedPrompt != null -> runtime.dismissLockedPrompt()
-                    settingsOpen -> settingsOpen = false
-                    menu -> menu = false
+                    menu -> closeFieldMenu()
                     region -> region = false
                     returnAvailable -> goBack()
                 }; true }
-                Key.I -> { if (!settingsOpen && state.lockedPrompt == null) menu = !menu; true }
+                Key.I -> { if (state.lockedPrompt == null) { if (menu) closeFieldMenu() else openFieldMenu() }; true }
                 Key.F5 -> { saveRequested = true; services.exploration.clearStatusMessage(); services.exploration.quickSave(); true }
                 else -> false
             }
@@ -123,7 +128,10 @@ fun DesktopHubScreen(services: DesktopAppServices, onEnterRoom: (String) -> Unit
                             Text(hub.title, style = MaterialTheme.typography.headlineMedium, color = accent)
                             Text(hub.description, style = MaterialTheme.typography.bodyLarge, color = Color.White)
                         }
-                        state.trackedQuest?.let { HubQuestCard(it, accent) }
+                        state.trackedQuest?.let { quest ->
+                            Box(Modifier.clickable { openFieldMenu(com.example.starborn.feature.exploration.viewmodel.MenuTab.JOURNAL, quest.id) }
+                                .testTag("hub-tracked-quest")) { HubQuestCard(quest, accent) }
+                        }
                     }
                 }
                 BoxWithConstraints(Modifier.fillMaxSize()) {
@@ -160,7 +168,7 @@ fun DesktopHubScreen(services: DesktopAppServices, onEnterRoom: (String) -> Unit
                                 DesktopExplorationScrollPane(rememberScrollState(), Modifier.weight(1f).fillMaxWidth()) {
                                     selected?.let { node -> Box(Modifier.onGloballyPositioned { destinationBounds = it.boundsInRoot() }) { HubDestinationCard(node, accent) { enter(node) } } }
                                 }
-                                HubMenuButton(accent) { menu = true }
+                                HubMenuButton(accent) { openFieldMenu() }
                             }
                         }
                     }
@@ -168,7 +176,7 @@ fun DesktopHubScreen(services: DesktopAppServices, onEnterRoom: (String) -> Unit
                 if (!outerWide) {
                         Row(Modifier.align(Alignment.TopCenter).padding(10.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             DesktopHubControl("Region",Icons.Rounded.Info,{ region = !region },accent=accent)
-                            HubMenuButton(accent) { menu = true }
+                            HubMenuButton(accent) { openFieldMenu() }
                         }
                         selected?.let { node ->
                             DesktopExplorationScrollPane(rememberScrollState(), Modifier.align(Alignment.BottomCenter)
@@ -192,26 +200,30 @@ fun DesktopHubScreen(services: DesktopAppServices, onEnterRoom: (String) -> Unit
                     Text(message, Modifier.padding(12.dp), color = Color.White)
                 }
             }
-            if (menu) DesktopExplorationModal("", { menu = false }, "Menu") {
-                state.trackedQuest?.let { HubQuestCard(it, Color(0xFF7BE4FF)) }
-                if (saveRequested) exploration.statusMessage?.let { Text(it, color = Color.White) }
-                OutlinedButton(onClick = { saveRequested = true; services.exploration.clearStatusMessage(); services.exploration.quickSave() }, modifier = Modifier.fillMaxWidth()) { Text("Quick save") }
-                OutlinedButton(onClick = { menu = false; settingsOpen = true }, modifier = Modifier.fillMaxWidth()) { Text("Settings") }
-                OutlinedButton(onClick = { saveRequested = true; services.exploration.clearStatusMessage(); services.exploration.quickSaveAndReturnToTitle(onReturnToTitle) }, modifier = Modifier.fillMaxWidth()) { Text("Return to title") }
-                TextButton(onClick = { menu = false }, modifier = Modifier.fillMaxWidth()) { Text("Close") }
-            }
-            if (settingsOpen) Dialog(onDismissRequest = { settingsOpen = false }, properties = DialogProperties(usePlatformDefaultWidth = false)) {
-                DesktopFieldMenuTheme(services) {
-                    Surface(Modifier.fillMaxWidth(.9f).fillMaxHeight(.9f), color = Color(0xFF040A10), shape = RoundedCornerShape(16.dp)) {
-                        Column(Modifier.padding(20.dp)) {
-                            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                                Text("Settings", Modifier.weight(1f), style = MaterialTheme.typography.headlineSmall)
-                                TextButton(onClick = { settingsOpen = false }) { Text("Close") }
-                            }
-                            DesktopSettingsContent(services, LocalExplorationSettings.current, state.hub?.title,
-                                { services.exploration.quickSaveAndReturnToTitle(onReturnToTitle) }, onQuitToDesktop = onQuitToDesktop)
-                        }
-                    }
+            if (menu) DesktopFieldMenuDialog(
+                services = services,
+                initialTab = DesktopMenuTab.valueOf(exploration.menuTab.name),
+                currentRoomTitle = state.hub?.title,
+                onOpenFieldKit = { services.exploration.selectMenuTab(com.example.starborn.feature.exploration.viewmodel.MenuTab.FIELD_KIT) },
+                onReturnToTitle = { services.exploration.quickSaveAndReturnToTitle(onReturnToTitle) },
+                onDismiss = ::closeFieldMenu,
+                onQuitToDesktop = onQuitToDesktop,
+                onOpenRegionMap = ::closeFieldMenu,
+                onQuickLoad = {
+                    if (services.loadSlot(-1, resetRuntime = false)) {
+                        closeFieldMenu()
+                        services.sessionStore.state.value.roomId?.let(onEnterRoom)
+                    } else services.exploration.showStatusMessage("Load failed. Try again.")
+                }
+            )
+            if (menu) exploration.activeDialogue?.let { dialogue ->
+                Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = .72f)).clickable(
+                    interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }, indication = null) {},
+                    contentAlignment = Alignment.BottomCenter) {
+                    DesktopAuthoredDialogueOverlay(services, dialogue, exploration.dialogueChoices,
+                        services.exploration::advanceDialogue, services.exploration::onDialogueChoiceSelected,
+                        services.exploration::onDialogueVoiceRequested,
+                        modifier = Modifier.padding(24.dp).widthIn(max = 960.dp).fillMaxWidth())
                 }
             }
             state.lockedPrompt?.let { prompt -> DesktopExplorationModal(prompt.message, runtime::dismissLockedPrompt, prompt.title, tapToDismiss = true) {

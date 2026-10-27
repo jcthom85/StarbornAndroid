@@ -233,8 +233,29 @@ internal fun CampaignNavigationHost(
                     services.sessionStore
                 )
             )
+            var hubSaveFeedback by remember { mutableStateOf<String?>(null) }
+            LaunchedEffect(hubSaveFeedback) { if (hubSaveFeedback != null) { kotlinx.coroutines.delay(3000); hubSaveFeedback = null } }
             HubScreen(
                 viewModel = hubViewModel,
+                saveFeedback = hubSaveFeedback,
+                fieldMenuContent = { tab, quest, dismiss ->
+                    // Release the menu controller when its host closes, before exploration resumes.
+                    val menuOwner = remember { object : androidx.lifecycle.ViewModelStoreOwner {
+                        override val viewModelStore = androidx.lifecycle.ViewModelStore()
+                    } }
+                    DisposableEffect(menuOwner) { onDispose { menuOwner.viewModelStore.clear() } }
+                    val menuViewModel: ExplorationViewModel = viewModel(viewModelStoreOwner = menuOwner,
+                        factory = ExplorationViewModelFactory(services, hubMenu = true))
+                    val craftingViewModel: CraftingViewModel = viewModel(viewModelStoreOwner = menuOwner, factory = CraftingViewModelFactory(
+                        services.craftingService, services.inventoryService, services.sessionStore))
+                    com.example.starborn.feature.hub.ui.HubFieldMenu(menuViewModel, craftingViewModel, tab, quest,
+                        onDismiss = dismiss,
+                        onReturnToTitle = { menuOwner.viewModelStore.clear(); navController.navigate(MainMenu.route) { popUpTo(0) { inclusive = true } } },
+                        onLoad = { slot -> if (slot == -1) services.loadQuickSave() else services.loadSlot(slot) },
+                        onLoaded = { menuOwner.viewModelStore.clear(); navController.navigate(if (services.sessionStore.state.value.roomId == null) Hub.route else Exploration.route) {
+                            popUpTo(Hub.route) { inclusive = true }; launchSingleTop = true
+                        } })
+                },
                 userSettings = userSettings,
                 onMusicVolumeChange = { value ->
                     settingsScope.launch { services.userSettingsStore.setMusicVolume(value) }
@@ -252,7 +273,9 @@ internal fun CampaignNavigationHost(
                     settingsScope.launch { services.userSettingsStore.setVignetteEnabled(enabled) }
                 },
                 onQuickSave = {
-                    settingsScope.launch { services.quickSave() }
+                    settingsScope.launch {
+                        hubSaveFeedback = if (services.quickSave()) "Saved." else "Save failed. Try again."
+                    }
                 },
                 onPlayAudio = { cue ->
                     services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue))

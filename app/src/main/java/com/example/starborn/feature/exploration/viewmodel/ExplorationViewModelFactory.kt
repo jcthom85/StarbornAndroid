@@ -7,7 +7,8 @@ import com.example.starborn.di.AppServices
 import com.example.starborn.domain.session.GameSaveRepository
 
 class ExplorationViewModelFactory(
-    private val services: AppServices
+    private val services: AppServices,
+    private val hubMenu: Boolean = false
 ) : ViewModelProvider.Factory {
 
     constructor(context: Context) : this(AppServices(context))
@@ -16,6 +17,7 @@ class ExplorationViewModelFactory(
         if (modelClass.isAssignableFrom(ExplorationViewModel::class.java)) {
             val saveRepository = GameSaveRepository(services)
             return ExplorationViewModel(
+                hubMenu = hubMenu,
                 worldAssets = services.worldDataSource,
                 sessionStore = services.sessionStore,
                 dialogueService = services.dialogueService,
@@ -38,8 +40,8 @@ class ExplorationViewModelFactory(
                 encounterCoordinator = services.encounterCoordinator,
                 eventDefinitions = services.events,
                 userSettingsStore = services.userSettingsStore,
-                bootstrapCinematics = services.drainPendingCinematics(),
-                bootstrapActions = services.drainPendingPlayerActions(),
+                bootstrapCinematics = if (hubMenu) emptyList() else services.drainPendingCinematics(),
+                bootstrapActions = if (hubMenu) emptyList() else services.drainPendingPlayerActions(),
                 telemetry = services.playtestTelemetry,
                 dialogueTriggerBinder = services::setDialogueTriggerListener,
                 isBurgQuestSession = services.isBurgQuestSession

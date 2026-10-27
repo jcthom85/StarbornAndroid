@@ -60,7 +60,7 @@ class MobileFieldMenuReviewTest {
         compose.setContent {
             val density = LocalDensity.current
             CompositionLocalProvider(LocalDensity provides Density(density.density, scale)) {
-                StarbornTheme { ExplorationScreen(vm, services.audioCuePlayer, services.uiEventBus, craftingViewModel = crafting) }
+                StarbornTheme { ExplorationScreen(vm, services.audioCuePlayer, services.uiEventBus, services.questPresentations, craftingViewModel = crafting) }
             }
         }
         try {

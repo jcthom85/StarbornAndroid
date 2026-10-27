@@ -264,7 +264,8 @@ class ExplorationController(
     private val telemetry: PlaytestTelemetry = NoOpPlaytestTelemetry,
     private val dialogueTriggerBinder: (((String) -> Boolean)?) -> Unit = {},
     private val isBurgQuestSession: Boolean = false,
-    parentScope: CoroutineScope = CoroutineScope(kotlinx.coroutines.Dispatchers.Main.immediate)
+    parentScope: CoroutineScope = CoroutineScope(kotlinx.coroutines.Dispatchers.Main.immediate),
+    private val hubMenu: Boolean = false
 ) : AutoCloseable {
     val viewModelScope = CoroutineScope(parentScope.coroutineContext + kotlinx.coroutines.SupervisorJob(parentScope.coroutineContext[Job]))
     private val arcadeService = ArcadeService(sessionStore, inventoryService)
@@ -1937,7 +1938,7 @@ class ExplorationController(
                     }
                 }
                 val currentRoomId = _uiState.value.currentRoom?.id
-                if (!_uiState.value.isLoading && newState.roomId != null && newState.roomId != currentRoomId) {
+                if (!hubMenu && !_uiState.value.isLoading && newState.roomId != null && newState.roomId != currentRoomId) {
                     newState.roomId?.let(::warpToRoom)
                 }
             }
@@ -2383,7 +2384,9 @@ class ExplorationController(
                 preselectedHubId?.let { id -> hubs.firstOrNull { it.id == id } }
                     ?: initialWorld?.let { world -> hubs.firstOrNull { it.worldId == world.id } }
                     ?: hubs.firstOrNull()
-            val initialRoomBase =
+            // A hub save has no room. Menu access must not silently enter the opening bunk.
+            val resumingOnHub = hubMenu || (preselectedRoomId == null && preselectedHubId != null)
+            val initialRoomBase = if (resumingOnHub) null else
                 preselectedRoomId?.let { id -> roomsById[id] }
                     ?: rooms.firstOrNull { it.id.equals("pit_nova_bunk", ignoreCase = true) }
                     ?: rooms.firstOrNull()
@@ -2430,7 +2433,7 @@ class ExplorationController(
                 markVisited(it.id)
                 markDiscovered(it)
             }
-            if (preselectedRoomId.isNullOrBlank()) {
+            if (preselectedRoomId.isNullOrBlank() && !resumingOnHub) {
                 sessionStore.resetTutorialProgress()
             }
             acknowledgedMilestones.clear()
@@ -2439,10 +2442,12 @@ class ExplorationController(
             pendingDialogueNpcs.clear()
             nextEventAnnouncementId = 0L
 
-            sessionStore.setWorld(initialWorld?.id)
-            sessionStore.setHub(initialHub?.id)
-            sessionStore.setRoom(initialRoom?.id)
-            markContainingNodeVisited(initialRoom?.id, nodeIdByRoomId, sessionStore)
+            if (!hubMenu) {
+                sessionStore.setWorld(initialWorld?.id)
+                sessionStore.setHub(initialHub?.id)
+                sessionStore.setRoom(initialRoom?.id)
+                markContainingNodeVisited(initialRoom?.id, nodeIdByRoomId, sessionStore)
+            }
             sessionStore.setPlayer(player?.id)
             val resolvedPlayerLevel = sessionSnapshot.partyMemberLevels[player?.id] ?: player?.level ?: 1
             val resolvedPlayerXp = sessionSnapshot.partyMemberXp[player?.id] ?: player?.xp ?: 0
@@ -2560,7 +2565,7 @@ class ExplorationController(
             playRoomAudio(initialHub?.id, initialRoom?.id)
             updateMinimap(initialRoom)
             val recoveringBattle = sessionStore.state.value.pendingBattleJson.takeIf { it.isNotBlank() }
-            if (recoveringBattle != null) {
+            if (!hubMenu && recoveringBattle != null) {
                 val descriptor = runCatching { battleDescriptorAdapter.fromJson(recoveringBattle) }.getOrNull()
                 if (descriptor != null && descriptor.enemies.isNotEmpty()) {
                     encounterCoordinator.setPendingEncounter(descriptor)
@@ -2568,12 +2573,12 @@ class ExplorationController(
                 } else {
                     postStatus("The interrupted encounter could not be restored. Load an earlier save.")
                 }
-            } else {
+            } else if (!hubMenu) {
                 eventManager.resumePendingCinematics()
                 initialRoom?.let { eventManager.handleTrigger("enter_room", EventPayload.EnterRoom(it.id)) }
             }
-            processBootstrapQueues()
-            if (movementCatalog.parties.isNotEmpty()) {
+            if (!hubMenu) processBootstrapQueues()
+            if (!hubMenu && movementCatalog.parties.isNotEmpty()) {
                 startEnemyMovementTicker()
             }
         }

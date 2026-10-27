@@ -76,14 +76,16 @@ fun DesktopFieldMenuDialog(
     onReturnToTitle: () -> Unit,
     onDismiss: () -> Unit,
     onOpenControls: (() -> Unit)? = null,
-    onQuitToDesktop: (() -> Unit)? = null
+    onQuitToDesktop: (() -> Unit)? = null,
+    onOpenRegionMap: (() -> Unit)? = null,
+    onQuickLoad: (() -> Unit)? = null
 ) {
     Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = .72f))
         .clickable(interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }, indication = null) {},
         contentAlignment = Alignment.Center) {
         DesktopFieldMenuTheme(services) {
             DesktopFieldMenuContent(services, initialTab, currentRoomTitle, onOpenFieldKit,
-                onReturnToTitle, onDismiss, onOpenControls, onQuitToDesktop)
+                onReturnToTitle, onDismiss, onOpenControls, onQuitToDesktop, onOpenRegionMap, onQuickLoad)
         }
     }
 }
@@ -97,11 +99,13 @@ fun DesktopFieldMenuContent(
     onReturnToTitle: () -> Unit,
     onDismiss: () -> Unit,
     onOpenControls: (() -> Unit)? = null,
-    onQuitToDesktop: (() -> Unit)? = null
+    onQuitToDesktop: (() -> Unit)? = null,
+    onOpenRegionMap: (() -> Unit)? = null,
+    onQuickLoad: (() -> Unit)? = null
 ) {
     CompositionLocalProvider(LocalTerminalPresentation provides true) {
         DesktopFieldMenuTheme(services) {
-            DesktopFieldMenuBody(services, initialTab, currentRoomTitle, onOpenFieldKit, onReturnToTitle, onDismiss, onOpenControls, onQuitToDesktop)
+            DesktopFieldMenuBody(services, initialTab, currentRoomTitle, onOpenFieldKit, onReturnToTitle, onDismiss, onOpenControls, onQuitToDesktop, onOpenRegionMap, onQuickLoad)
         }
     }
 }
@@ -116,7 +120,9 @@ private fun DesktopFieldMenuBody(
     onReturnToTitle: () -> Unit,
     onDismiss: () -> Unit,
     onOpenControls: (() -> Unit)? = null,
-    onQuitToDesktop: (() -> Unit)? = null
+    onQuitToDesktop: (() -> Unit)? = null,
+    onOpenRegionMap: (() -> Unit)? = null,
+    onQuickLoad: (() -> Unit)? = null
 ) {
     var activeTab by rememberSaveable { mutableStateOf(initialTab) }
     var quickLoadOpen by remember { mutableStateOf(false) }
@@ -160,7 +166,7 @@ private fun DesktopFieldMenuBody(
     if (quickLoadOpen) DesktopQuickLoadDialog(services, onDismiss = { quickLoadOpen = false }) {
         quickLoadOpen = false
         onDismiss()
-        runtime.loadGame(-1)
+        if (onQuickLoad != null) onQuickLoad() else runtime.loadGame(-1)
     }
     CompositionLocalProvider(LocalTerminalPage provides activeTab) {
     Surface(Modifier.focusRequester(keyboardFocus).onPreviewKeyEvent { event ->
@@ -296,7 +302,12 @@ private fun DesktopFieldMenuBody(
                                     DesktopMenuTab.INVENTORY -> DesktopInventoryTabContent(session, allItems, services, memberId)
                                     DesktopMenuTab.FIELD_KIT -> DesktopTinkeringContent(services)
                                     DesktopMenuTab.JOURNAL -> DesktopRuntimeJournalContent(services)
-                                    DesktopMenuTab.MAP -> DesktopRuntimeMapContent(services)
+                                    DesktopMenuTab.MAP -> if (onOpenRegionMap == null) DesktopRuntimeMapContent(services) else Column(
+                                        verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                                        Text("Region map", style = MaterialTheme.typography.headlineSmall)
+                                        Text("Return to the region map to select a destination. Your current selection is preserved.")
+                                        Button(onClick = onOpenRegionMap) { Text("Return to region map") }
+                                    }
                                     DesktopMenuTab.SETTINGS -> DesktopSettingsContent(services, settings, currentRoomTitle, onReturnToTitle, onOpenControls, onQuitToDesktop)
                                 } }
                             }

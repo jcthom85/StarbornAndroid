@@ -52,6 +52,8 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.rounded.Save
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -90,6 +92,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.starborn.data.local.UserSettings
+import com.example.starborn.feature.exploration.viewmodel.MenuTab
 import com.example.starborn.feature.exploration.viewmodel.SettingsUiState
 import com.example.starborn.feature.hub.viewmodel.HubLockedPrompt
 import com.example.starborn.feature.hub.viewmodel.HubNodeUi
@@ -111,7 +114,9 @@ fun HubScreen(
     onPlayAudio: (String) -> Unit = {},
     onEnterNode: (HubNodeUi) -> Unit,
     onReturnToTitle: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    saveFeedback: String? = null,
+    fieldMenuContent: (@Composable (MenuTab?, String?, () -> Unit) -> Unit)? = null
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     androidx.compose.runtime.LaunchedEffect(uiState.newlyUnlockedNodeId) {
@@ -148,7 +153,9 @@ fun HubScreen(
         onQuickSave = onQuickSave,
         onPlayAudio = onPlayAudio,
         onReturnToTitle = onReturnToTitle,
-        modifier = modifier
+        modifier = modifier,
+        saveFeedback = saveFeedback,
+        fieldMenuContent = fieldMenuContent
     )
 }
 
@@ -167,11 +174,20 @@ internal fun HubScreenContent(
     onQuickSave: () -> Unit,
     onPlayAudio: (String) -> Unit = {},
     onReturnToTitle: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    saveFeedback: String? = null,
+    fieldMenuContent: (@Composable (MenuTab?, String?, () -> Unit) -> Unit)? = null
 ) {
     val backgroundPainter = rememberHubBackgroundPainter(uiState.backgroundImage)
     var menuVisible by remember { mutableStateOf(false) }
-    val panelReserve = (164f * LocalDensity.current.fontScale.coerceIn(1f, 1.5f)).dp
+    var menuTab by remember { mutableStateOf<MenuTab?>(null) }
+    var menuQuest by remember { mutableStateOf<String?>(null) }
+    var panelHeight by remember { mutableStateOf(220.dp) }
+    val density = LocalDensity.current
+    val panelReserve = panelHeight
+    fun openMenu(tab: MenuTab? = null, questId: String? = null) {
+        menuTab = tab; menuQuest = questId; menuVisible = true
+    }
     val selectedNode = remember(uiState.nodes, uiState.selectedNodeId) {
         uiState.nodes.firstOrNull { it.id == uiState.selectedNodeId } ?: uiState.nodes.firstOrNull()
     }
@@ -226,48 +242,36 @@ internal fun HubScreenContent(
                 )
         )
 
-        HubHeader(
-            title = uiState.hub?.title ?: "Region",
-            subtitle = uiState.hub?.description ?: "Select a destination to continue your journey.",
-            trackedQuest = uiState.trackedQuest,
-            statusMessage = uiState.statusMessage,
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .statusBarsPadding()
-                .padding(start = 20.dp, top = 18.dp, end = 88.dp)
-        )
-
-        Row(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .statusBarsPadding()
-                .padding(top = 18.dp, end = 18.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            HubQuickSaveButton(
-                onClick = onQuickSave
-            )
-            HubMenuButton(
-                onClick = { menuVisible = true }
-            )
-        }
-
-        val astraAccess = uiState.nodes.firstOrNull { it.id == "astra_access" }
-        if (astraAccess != null && HubMapLayouts.all[uiState.hub?.id]?.astraDock == null) {
-            TextButton(onClick = { onEnterSelectedNode(astraAccess) },
-                modifier = Modifier.align(Alignment.TopEnd).statusBarsPadding()
-                    .padding(top = 72.dp, end = 8.dp).width(80.dp)
-                    .semantics { contentDescription = "Enter The Astra" }) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(Modifier.align(Alignment.TopCenter).fillMaxWidth().statusBarsPadding()
+            .padding(horizontal = 16.dp, vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(uiState.hub?.title ?: "Region", Modifier.weight(1f), color = Color.White,
+                    style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold,
+                    maxLines = 2, overflow = TextOverflow.Ellipsis)
+                IconButton(onClick = onQuickSave, modifier = Modifier.size(48.dp)) {
+                    Icon(Icons.Rounded.Save, "Quick save", tint = Color(0xFF7BE4FF))
+                }
+                HubMenuButton(onClick = { openMenu() })
+            }
+            HubHeader(title = "", subtitle = uiState.hub?.description.orEmpty(), trackedQuest = uiState.trackedQuest,
+                statusMessage = saveFeedback ?: uiState.statusMessage,
+                onQuestClick = { uiState.trackedQuest?.let { openMenu(MenuTab.JOURNAL, it.id) } },
+                modifier = Modifier.fillMaxWidth())
+            val astraAccess = uiState.nodes.firstOrNull { it.id == "astra_access" }
+            if (astraAccess != null && HubMapLayouts.all[uiState.hub?.id]?.astraDock == null) {
+                TextButton(onClick = { onEnterSelectedNode(astraAccess) },
+                    modifier = Modifier.align(Alignment.End).heightIn(min = 48.dp)
+                        .semantics { contentDescription = "Enter The Astra" }) {
                     rememberHubNodePainter("images/nodes/astra_ship_map_v2.webp")?.let {
                         Image(it, null, modifier = Modifier.size(28.dp))
+                        Spacer(Modifier.width(8.dp))
                     }
-                    Text("The Astra", color = Color(0xFFBFEFFF), textAlign = TextAlign.Center,
-                        fontSize = 11.sp, lineHeight = 13.sp)
+                    Text("The Astra", color = Color(0xFFBFEFFF))
                 }
             }
         }
+
 
         selectedNode?.let { node ->
             HubDestinationPanel(
@@ -276,13 +280,14 @@ internal fun HubScreenContent(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .navigationBarsPadding()
-                    .padding(horizontal = 16.dp, vertical = 18.dp)
-                    .heightIn(max = panelReserve - 36.dp)
-                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                    .onSizeChanged { panelHeight = with(density) { it.height.toDp() } }
             )
         }
 
-        if (menuVisible) {
+        if (menuVisible && fieldMenuContent != null) {
+            fieldMenuContent(menuTab, menuQuest) { menuVisible = false }
+        } else if (menuVisible) {
             HubMenuOverlay(
                 settings = settings,
                 trackedQuest = uiState.trackedQuest,
@@ -314,13 +319,14 @@ private fun HubHeader(
     subtitle: String,
     trackedQuest: HubQuestUi?,
     statusMessage: String?,
+    onQuestClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.widthIn(max = 430.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(
+        if (title.isNotBlank()) Text(
             text = title,
             style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
             color = Color.White,
@@ -336,6 +342,7 @@ private fun HubHeader(
         )
         trackedQuest?.let { quest ->
             Surface(
+                onClick = onQuestClick,
                 shape = RoundedCornerShape(8.dp),
                 color = Color(0xE50A1018),
                 border = BorderStroke(1.dp, Color(0xFF7BE4FF).copy(alpha = 0.36f))
@@ -391,46 +398,13 @@ private fun HubHeader(
 }
 
 @Composable
-private fun HubQuickSaveButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        onClick = onClick,
-        modifier = modifier.semantics { contentDescription = "Quick Save" },
-        shape = RoundedCornerShape(12.dp),
-        color = Color(0xE0060B12),
-        border = BorderStroke(1.dp, Color(0xFF7BE4FF).copy(alpha = 0.42f)),
-        shadowElevation = 8.dp
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.Save,
-                contentDescription = null,
-                tint = Color(0xFF7BE4FF),
-                modifier = Modifier.size(18.dp)
-            )
-            Text(
-                text = "Save",
-                color = Color.White,
-                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
-            )
-        }
-    }
-}
-
-@Composable
 private fun HubMenuButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
         onClick = onClick,
-        modifier = modifier.semantics { contentDescription = "Open menu" },
+        modifier = modifier.heightIn(min = 48.dp).semantics { contentDescription = "Open menu" },
         shape = RoundedCornerShape(12.dp),
         color = Color(0xE0060B12),
         border = BorderStroke(1.dp, Color(0xFF7BE4FF).copy(alpha = 0.42f)),
@@ -462,102 +436,33 @@ private fun HubDestinationPanel(
     onEnter: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val accent = when {
-        !node.canEnter -> Color(0xFFFF8A65)
-        node.completed -> Color(0xFF8EF6B3)
-        else -> Color(0xFF7BE4FF)
-    }
-    Surface(
-        modifier = modifier
-            .widthIn(max = 620.dp)
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        color = Color(0xF2071018),
-        border = BorderStroke(1.dp, accent.copy(alpha = 0.28f)),
-        shadowElevation = 8.dp
-    ) {
-        BoxWithConstraints(
-            modifier = Modifier
-                .background(
-                    Brush.verticalGradient(
-                        listOf(
-                            accent.copy(alpha = 0.12f),
-                            Color.Transparent
-                        )
-                    )
-                )
-                .padding(16.dp)
-        ) {
-            val stacked = maxWidth < 260.dp
-            val detail = when {
-                !node.canEnter -> node.lockReason ?: node.lockedPreview ?: node.description
-                    ?: "Find a story reason to go here first."
-                else -> node.description
+    val accent = if (!node.canEnter) Color(0xFFFFB394) else Color(0xFF7BE4FF)
+    val detail = if (!node.canEnter) node.lockReason ?: node.lockedPreview ?: node.description else node.description
+    var detailsOpen by remember(node.id) { mutableStateOf(false) }
+    val status = when { !node.canEnter -> "Locked"; node.completed -> "Completed"; node.visited -> "Visited"; else -> "Available" }
+    Surface(modifier.widthIn(max = 620.dp).fillMaxWidth(), shape = RoundedCornerShape(16.dp),
+        color = Color(0xF2071018), border = BorderStroke(1.dp, accent.copy(alpha = .4f))) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f)) {
+                    Text(node.title, color = Color.White, style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                    Text(status, color = accent, style = MaterialTheme.typography.labelSmall)
+                }
+                if (!detail.isNullOrBlank()) TextButton(onClick = { detailsOpen = true }) { Text("Details") }
             }
-            val description: @Composable (Modifier) -> Unit = { contentModifier ->
-                Column(modifier = contentModifier.heightIn(max = 84.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(
-                        text = node.title,
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                        color = Color.White
-                    )
-                    if (!detail.isNullOrBlank()) {
-                        Text(
-                            text = detail,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Color(0xFFB8C6D2)
-                        )
-                    }
-                }
-            }
-            val enterButton: @Composable (Modifier) -> Unit = { buttonModifier ->
-                Surface(
-                    modifier = buttonModifier,
-                    onClick = onEnter,
-                    enabled = node.canEnter,
-                    shape = RoundedCornerShape(12.dp),
-                    color = if (node.canEnter) accent else Color.White.copy(alpha = 0.08f),
-                    border = BorderStroke(1.5.dp, if (node.canEnter) Color.White.copy(alpha = 0.7f) else Color.White.copy(alpha = 0.15f)),
-                    shadowElevation = if (node.canEnter) 8.dp else 0.dp
-                ) {
-                    Row(
-                        modifier = Modifier.heightIn(min = 48.dp)
-                            .padding(horizontal = 18.dp, vertical = 10.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = if (node.canEnter) Icons.Filled.PlayArrow else Icons.Filled.Lock,
-                            contentDescription = null,
-                            tint = if (node.canEnter) Color(0xFF040A12) else Color.White.copy(alpha = 0.55f),
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Text(
-                            text = when {
-                                !node.canEnter -> "Locked"
-                                node.id == "deep_mine" && !node.visited -> "Descend"
-                                else -> "Enter"
-                            },
-                            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Black),
-                            color = if (node.canEnter) Color(0xFF040A12) else Color.White.copy(alpha = 0.55f)
-                        )
-                    }
-                }
-            }
-            if (stacked) {
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    description(Modifier.fillMaxWidth())
-                    enterButton(Modifier.fillMaxWidth())
-                }
-            } else {
-                Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                    description(Modifier.weight(1f))
-                    enterButton(Modifier)
-                }
+            if (!detail.isNullOrBlank()) Text(detail, color = Color(0xFFB8C6D2),
+                style = MaterialTheme.typography.bodySmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
+            Button(onClick = onEnter, enabled = node.canEnter, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
+                Text(if (!node.canEnter) "Locked" else if (node.id == "deep_mine" && !node.visited) "Descend" else "Enter ${node.title}")
             }
         }
     }
+    if (detailsOpen) AlertDialog(onDismissRequest = { detailsOpen = false },
+        title = { Text(node.title) }, text = { Text(detail.orEmpty(), Modifier.verticalScroll(rememberScrollState())) },
+        confirmButton = { TextButton(onClick = { detailsOpen = false }) { Text("Close") } })
 }
+
 
 @Composable
 private fun HubMenuOverlay(

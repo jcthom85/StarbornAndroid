@@ -157,12 +157,14 @@ class ExplorationViewModel(
     dispatchers: DispatcherProvider = DefaultDispatcherProvider,
     telemetry: PlaytestTelemetry = NoOpPlaytestTelemetry,
     dialogueTriggerBinder: (((String) -> Boolean)?) -> Unit = {},
-    isBurgQuestSession: Boolean = false
+    isBurgQuestSession: Boolean = false,
+    hubMenu: Boolean = false
 ) : ViewModel() {
     val environmentalAssets = worldAssets
     val environmentalSession = sessionStore.state
     val runtime = ExplorationController(
         worldAssets = worldAssets,
+        hubMenu = hubMenu,
         sessionStore = sessionStore,
         dialogueService = dialogueService,
         inventoryService = inventoryService,
@@ -255,7 +257,7 @@ class ExplorationViewModel(
     fun closeCatchLog() = runtime.closeCatchLog()
     fun openMilestoneGallery() = runtime.openMilestoneGallery()
     fun closeMilestoneGallery() = runtime.closeMilestoneGallery()
-    fun openMenuOverlay(defaultTab: MenuTab? = null) = runtime.openMenuOverlay(defaultTab)
+    fun openMenuOverlay(defaultTab: MenuTab? = null, showTutorial: Boolean = true) = runtime.openMenuOverlay(defaultTab, showTutorial)
     fun closeMenuOverlay() = runtime.closeMenuOverlay()
     fun requestReturnToHub() = runtime.requestReturnToHub()
     fun openRoomActions() = runtime.openRoomActions()
