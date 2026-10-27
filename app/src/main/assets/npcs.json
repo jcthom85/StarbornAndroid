@@ -33,6 +33,7 @@
   },
   {
     "id": "scrapper",
+    "trade_after_dialogue": true,
     "name": "Scrapper",
     "aliases": [],
     "role": "Fence",
@@ -895,6 +896,26 @@
         "label": "Talk",
         "type": "talk",
         "dialogue_id": "brutus_dialogue_initial"
+      }
+    ]
+  },
+  {
+    "id": "shopkeep",
+    "trade_after_dialogue": true,
+    "name": "Shopkeep",
+    "aliases": [
+      "Colony Commissary"
+    ],
+    "role": "Merchant",
+    "description": "The Colony Commissary merchant keeps the strip stocked with supplies and emergency fixes.",
+    "portrait": "images/npcs/shopkeep.webp",
+    "dialogue": {},
+    "interactions": [
+      {
+        "label": "Trade",
+        "type": "shop",
+        "shop_id": "general_store",
+        "dialogue_id": ""
       }
     ]
   }

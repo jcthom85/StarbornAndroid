@@ -295,6 +295,7 @@ class ExplorationController(
     private var skillsById: Map<String, Skill> = emptyMap()
     private var enemyById: Map<String, Enemy> = emptyMap()
     private var enemyTierById: Map<String, String> = emptyMap()
+    private var merchantShopByDialogueName: Map<String, String> = emptyMap()
     private var npcDialogueNameByKey: Map<String, String> = emptyMap()
     private var skillTreesByCharacter: Map<String, SkillTreeDefinition> = emptyMap()
     private var tutorialsEnabled: Boolean = true
@@ -1348,6 +1349,16 @@ class ExplorationController(
         return MapHubExitUi(destination, blocked = !canReturnToHub(room))
     }
 
+    private fun mapServicesForRoom(room: Room): Set<MinimapService> {
+        val services = com.example.starborn.feature.exploration.viewmodel.helpers.mapServicesForActions(
+            parseActions(room), room.id in entryRoomIds || room.id == "source_new_world_node_scale_final", !isBurgQuestSession)
+        val hasMerchant = visibleNpcsForRoom(room).any { npc ->
+            merchantShopByDialogueName[resolveNpcDialogueName(npc).lowercase(Locale.getDefault())]
+                ?.let { shopRepository.shopById(it) } != null
+        }
+        return if (hasMerchant) services + MinimapService.SHOP else services
+    }
+
     private fun buildMinimapState(currentRoom: Room): MinimapUiState {
         return MapStateBuilder.buildMinimapState(
             nodeExits = { nodeExitResolver.exits(it, sessionStore.state.value) },
@@ -1359,11 +1370,7 @@ class ExplorationController(
             isRoomDark = ::isRoomDark,
             roomHasEnemies = { roomEnemyParties(it).isNotEmpty() },
             computeBlockedDirections = ::computeBlockedDirections,
-            parseRoomServices = { room ->
-                com.example.starborn.feature.exploration.viewmodel.helpers.mapServicesForActions(
-                    parseActions(room), room.id in entryRoomIds || room.id == "source_new_world_node_scale_final", !isBurgQuestSession)
-
-            }
+            parseRoomServices = ::mapServicesForRoom
         )
     }
 
@@ -1378,11 +1385,7 @@ class ExplorationController(
             isRoomDark = ::isRoomDark,
             roomHasEnemies = { roomEnemyParties(it).isNotEmpty() },
             computeBlockedDirections = ::computeBlockedDirections,
-            parseRoomServices = { room ->
-                com.example.starborn.feature.exploration.viewmodel.helpers.mapServicesForActions(
-                    parseActions(room), room.id in entryRoomIds || room.id == "source_new_world_node_scale_final", !isBurgQuestSession)
-
-            }
+            parseRoomServices = ::mapServicesForRoom
         )
     }
 
@@ -2312,6 +2315,11 @@ class ExplorationController(
                 }
             }
 
+            merchantShopByDialogueName = npcs.filter { it.tradeAfterDialogue }.mapNotNull { npc ->
+                npc.interactions.firstOrNull { it.type.equals("shop", true) && !it.shopId.isNullOrBlank() }
+                    ?.shopId?.let { npc.name.lowercase(Locale.getDefault()) to it }
+            }.toMap()
+
             roomsById = rooms.associateBy { it.id }
             hubsById = hubs.associateBy { it.id }
             val movementCatalog = worldAssets.loadEnemyMovement() ?: EnemyMovementCatalog()
@@ -2808,7 +2816,9 @@ class ExplorationController(
                 dialogueChoices = session?.choices()?.map { option ->
                     DialogueChoiceUi(option.id, option.text)
                 } ?: emptyList(),
-                statusMessage = session?.let { null } ?: "No dialogue available for $dialogueName yet."
+                statusMessage = if (session != null || merchantShopByDialogueName.containsKey(dialogueName.lowercase(Locale.getDefault()))) {
+                    null
+                } else "No dialogue available for $dialogueName yet."
             )
         }
         session?.current()?.voiceCue?.let { playVoiceCue(it) }
@@ -2817,6 +2827,9 @@ class ExplorationController(
         handleNpcTrigger("npc_interaction", npcName, dialogueName)
         if (session == null) {
             handleNpcTrigger("dialogue_closed", npcName, dialogueName)
+            activeDialogueNpcName = null
+            promptManager.setToastsSuspended(false)
+            offerNpcTrade(npcName)
         }
     }
 
@@ -2837,6 +2850,7 @@ class ExplorationController(
             dialogueMusicActive = false
             if (!npcName.isNullOrBlank()) {
                 handleNpcTrigger("dialogue_closed", npcName, resolveNpcDialogueName(npcName))
+                offerNpcTrade(npcName)
             }
             scheduleNovaBuildTutorial(sessionStore.state.value)
         } else {
@@ -2878,6 +2892,7 @@ class ExplorationController(
             dialogueMusicActive = false
             if (!npcName.isNullOrBlank()) {
                 handleNpcTrigger("dialogue_closed", npcName, resolveNpcDialogueName(npcName))
+                offerNpcTrade(npcName)
             }
             scheduleNovaBuildTutorial(sessionStore.state.value)
         } else {
@@ -2902,6 +2917,23 @@ class ExplorationController(
     fun playQuestPresentationCue(key: String) {
         if (key.isBlank()) return
         playUiCue(key)
+    }
+
+    /** Offer commerce only after authored dialogue has executed its quest triggers. */
+    private fun offerNpcTrade(npcName: String) {
+        val dialogueName = resolveNpcDialogueName(npcName)
+        val shopId = merchantShopByDialogueName[dialogueName.lowercase(Locale.getDefault())] ?: return
+        val room = _uiState.value.currentRoom ?: return
+        if (visibleNpcsForRoom(room).none { resolveNpcDialogueName(it).equals(dialogueName, true) }) return
+        // Rooms with a standalone shop action keep their existing access rules until migrated.
+        if (room.actions.any { it["type"] == "shop" && it["shop_id"] == shopId }) return
+        val shop = shopRepository.shopById(shopId) ?: return
+        showShopGreeting(shop, shop.greeting ?: "Take a look at what I have in stock.")
+        _uiState.update { state ->
+            state.copy(shopGreeting = state.shopGreeting?.copy(
+                shopName = dialogueName
+            ))
+        }
     }
 
     private fun resolveNpcDialogueName(npcName: String): String {
@@ -5359,7 +5391,7 @@ class ExplorationController(
     }
 
     private fun showShopGreeting(shop: ShopDefinition, fallbackGreeting: String) {
-        val session = ShopDialogueSessionManager.createSession(shop, fallbackGreeting)
+        val session = ShopDialogueSessionManager.createSession(shop, fallbackGreeting).copy(tradeLabel = "Trade")
         activeShopDialogue = session
         _uiState.update {
             it.copy(

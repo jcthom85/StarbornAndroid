@@ -9,3 +9,11 @@ October 7, 2026.
 - Transforms apply to the sharp portrait artwork and reflected extensions together. HUD geometry stays stationary, with a portrait layout fallback while the incoming bitmap loads. Movement input is gated during the short room transition.
 
 Desktop compilation and portable packaging are recorded in `tmp/map-room-polish-build.log` and `tmp/map-room-polish-package.log`. No gameplay tests were added or run for this pass. Native map composition, fade-time bunk-light interaction and repeated room traversal still require playtesting.
+
+## October 27, 2026: map readability
+
+The shared Android/desktop minimap keeps its size and five-by-five neighborhood but now emphasizes room positions and routes. Removed the background grid, service icons, stacked exit glyphs, and enemy rings. Exit rooms use one diamond; threats use a small red dot; blocked connections use a gap and crossbar. Gold identifies the current room, cyan identifies exits, and lavender marks blocked routes.
+
+Full maps retain service icons and destination details. Android now shows every service instead of silently selecting one; desktop uses the shared room and threat markers. Full-map exit arrows use cyan (lavender when blocked). The legend describes both views, and accessibility descriptions retain service and exit information. Navigation, gates, and discovery rules are unchanged.
+
+Validation: Android and desktop compilation, map/merchant regression tests, and rendered previews at 78 dp and 164 dp. Preview artifacts are generated under `desktopApp/build/reports/map-readability/`; the desktop map flow preview is under `desktopApp/build/reports/map-alignment/`.

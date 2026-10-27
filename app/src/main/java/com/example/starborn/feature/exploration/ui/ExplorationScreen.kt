@@ -637,6 +637,7 @@ fun ExplorationScreen(
             uiState.skillTreeOverlay != null -> viewModel.closeSkillTreeOverlay()
             uiState.eventAnnouncement != null -> viewModel.dismissEventAnnouncement()
             uiState.levelUpPrompt != null -> viewModel.dismissLevelUpPrompt()
+            uiState.shopGreeting != null -> viewModel.dismissShopGreeting()
             uiState.blockedPrompt != null -> viewModel.dismissBlockedPrompt()
             uiState.roomObjectOffer != null -> viewModel.dismissRoomObject()
             uiState.roomActionsVisible -> viewModel.dismissRoomActions()
@@ -8528,37 +8529,47 @@ fun ShopGreetingOverlay(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        modifier = modifier,
-        color = Color.Black.copy(alpha = 0.88f)
-    ) {
-        Column(
-            modifier = Modifier.padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            modifier = modifier.widthIn(max = 480.dp).heightIn(max = 600.dp),
+            color = Color.Black.copy(alpha = 0.88f)
         ) {
-            Text(greeting.shopName, color = Color.White, style = MaterialTheme.typography.titleMedium)
-            greeting.lines.forEach { line ->
-                Column(horizontalAlignment = Alignment.Start) {
-                    line.speaker?.let { Text(it, color = Color.White.copy(alpha = 0.75f)) }
-                    Text(line.text, color = Color.White)
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()).padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                greeting.portraitPath?.let { portrait ->
+                    Image(
+                        painter = rememberAssetPainter(portrait, fallback = painterResource(R.drawable.shop_icon)),
+                        contentDescription = greeting.shopName,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.size(64.dp).clip(CircleShape)
+                    )
+                }
+                Text(greeting.shopName, color = Color.White, style = MaterialTheme.typography.titleMedium)
+                greeting.lines.forEach { line ->
+                    Column(horizontalAlignment = Alignment.Start) {
+                        line.speaker?.let { Text(it, color = Color.White.copy(alpha = 0.75f)) }
+                        Text(line.text, color = Color.White)
+                    }
+                }
+                greeting.choices.forEach { choice ->
+                    Button(
+                        onClick = { onChoice(choice.id) },
+                        enabled = choice.enabled
+                    ) {
+                        Text(choice.label)
+                    }
+                    if (!choice.enabled && choice.action == ShopDialogueAction.SMALLTALK) {
+                        Text("Already discussed", color = Color.White.copy(alpha = 0.6f), style = MaterialTheme.typography.labelSmall)
+                    }
                 }
             }
-            greeting.choices.forEach { choice ->
-                Button(
-                    onClick = { onChoice(choice.id) },
-                    enabled = choice.enabled
-                ) {
-                    Text(choice.label)
-                }
-                if (!choice.enabled && choice.action == ShopDialogueAction.SMALLTALK) {
-                    Text("Already discussed", color = Color.White.copy(alpha = 0.6f), style = MaterialTheme.typography.labelSmall)
-                }
-            }
-            Button(onClick = onDismiss, modifier = Modifier.align(Alignment.End)) { Text("Close") }
         }
     }
 }
+
 
 private data class UiFxBurst(
     val id: Long,

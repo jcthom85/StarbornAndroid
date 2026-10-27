@@ -350,6 +350,13 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
         }
         ui.shopGreeting?.let { greeting ->
             DesktopExplorationModal(greeting.lines.joinToString("\n") { it.text }, runtime::dismissShopGreeting) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    greeting.portraitPath?.let { portrait ->
+                        Image(rememberDesktopAssetPainter(portrait, services.assetProvider), greeting.shopName,
+                            Modifier.size(64.dp).clip(CircleShape), contentScale = ContentScale.Crop)
+                    }
+                    Text(greeting.shopName, color = Color.White, style = MaterialTheme.typography.titleMedium)
+                }
                 greeting.choices.forEach { choice ->
                     DesktopExplorationActionRow(choice.label, "inspect", choice.enabled) { runtime.onShopChoiceSelected(choice.id) }
                 }

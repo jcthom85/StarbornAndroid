@@ -13,12 +13,16 @@ data class Npc(
     val description: String? = null,
     val id: String? = null,
     val portrait: String? = null,
-    val emotes: Map<String, String> = emptyMap()
+    val emotes: Map<String, String> = emptyMap(),
+    @Json(name = "trade_after_dialogue")
+    val tradeAfterDialogue: Boolean = false
 )
 
 data class Interaction(
     val label: String,
     val type: String,
     @Json(name = "dialogue_id")
-    val dialogueId: String
+    val dialogueId: String,
+    @Json(name = "shop_id")
+    val shopId: String? = null
 )

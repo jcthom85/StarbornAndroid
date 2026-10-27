@@ -1305,8 +1305,10 @@
     "env": "market",
     "title": "Market Strip",
     "background_image": "images/rooms/world_1/trade_strip_v3.webp",
-    "description": "Makeshift stalls crowd the corridor with patched tarps, power cells, and noodles fried in questionable oil. Four merchants line the strip: the Colony Commissary for general supplies, Blades & Blasters for weapons, The Aegis for protective armor, and Trinkets & Tech for accessories. Scrapper's stall sits north behind a curtain of hanging cables, and a scanner-dead corner waits to the east.",
-    "npcs": [],
+    "description": "Makeshift stalls crowd the corridor with patched tarps, power cells, and noodles fried in questionable oil. [npc:Shopkeep] runs the Colony Commissary, stocking general supplies and emergency fixes. Scrapper's stall sits north behind a curtain of hanging cables, and a scanner-dead corner waits to the east.",
+    "npcs": [
+      "shopkeep"
+    ],
     "items": [],
     "enemies": [],
     "connections": {
@@ -1330,26 +1332,6 @@
         "name": "power cells",
         "type": "generic",
         "condition_unmet_message": "Standard issue cells with the Dominion logos scratched off."
-      },
-      {
-        "name": "Colony Commissary",
-        "type": "shop",
-        "shop_id": "general_store"
-      },
-      {
-        "name": "Blades & Blasters",
-        "type": "shop",
-        "shop_id": "weapon_shop"
-      },
-      {
-        "name": "The Aegis",
-        "type": "shop",
-        "shop_id": "armor_shop"
-      },
-      {
-        "name": "Trinkets & Tech",
-        "type": "shop",
-        "shop_id": "accessory_shop"
       }
     ]
   },
@@ -1358,7 +1340,7 @@
     "env": "market",
     "title": "Scrapper's Stall",
     "background_image": "images/rooms/world_1/trade_scrapper_v3.webp",
-    "description": "Salvaged armaments and modified equipment crowd Scrapper's reinforced stall. Contraband and a datapad sit under the counter within easy reach.",
+    "description": "Salvaged armaments and modified equipment crowd Scrapper's reinforced stall. [npc:Scrapper] keeps contraband and a datapad under the counter within easy reach.",
     "npcs": [
       "scrapper"
     ],
@@ -1378,12 +1360,6 @@
         "name": "datapad",
         "type": "generic",
         "condition_unmet_message": "Encrypted and password-protected. Scrapper's ledger lists black-market contraband serial numbers."
-      },
-      {
-        "name": "Contraband",
-        "type": "shop",
-        "shop_id": "scrappers_contraband",
-        "dialogue_id": "scrapper_shop_intro"
       }
     ]
   },

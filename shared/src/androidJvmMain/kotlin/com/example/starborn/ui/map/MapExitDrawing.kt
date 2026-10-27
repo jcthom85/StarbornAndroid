@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.example.starborn.feature.exploration.viewmodel.MapNodeExitUi
 import com.example.starborn.feature.exploration.viewmodel.MinimapCellUi
 
-val NodeExitColor = Color(0xFFFFC857)
+val NodeExitColor = MapPalette.gateway
 
 fun nodeExitDescription(cells: List<MinimapCellUi>): String = cells.flatMap { it.nodeExits }
     .joinToString(". ") { "${it.direction} to ${it.destinationTitle}${if (it.blocked) ", blocked" else ""}" }
@@ -42,7 +42,7 @@ fun DrawScope.drawNodeExitMarker(center: Offset, exit: MapNodeExitUi, radius: Fl
     val normal = Offset(-vector.y, vector.x)
     val tip = center + vector * (radius + length)
     val start = center + vector * radius
-    val color = if (exit.blocked) NodeExitColor.copy(alpha = 0.75f) else NodeExitColor
+    val color = if (exit.blocked) MapPalette.blocked else NodeExitColor
     val stroke = 1.5.dp.toPx()
     drawLine(color, start, tip, stroke, StrokeCap.Round)
     val wing = length * 0.35f
@@ -76,6 +76,7 @@ fun DrawScope.drawFullMapNodeExits(
     }.toMutableList()
     cells.forEach { cell ->
         cell.nodeExits.forEach { exit ->
+            val exitColor = if (exit.blocked) MapPalette.blocked else NodeExitColor
             val tip = drawNodeExitMarker(centerOf(cell), exit, cellSize * 0.55f, 12.dp.toPx())
             val direction = when (exit.direction) {
                 "up" -> "Up · "
@@ -84,7 +85,7 @@ fun DrawScope.drawFullMapNodeExits(
             }
             val text = textMeasurer.measure(
                 AnnotatedString(direction + exit.destinationTitle + if (exit.blocked) " (blocked)" else ""),
-                style = TextStyle(color = NodeExitColor, fontSize = 10.sp, fontWeight = FontWeight.Medium),
+                style = TextStyle(color = exitColor, fontSize = 10.sp, fontWeight = FontWeight.Medium),
                 constraints = Constraints(maxWidth = 128.dp.roundToPx())
             )
             val padding = 4.dp.toPx()
@@ -112,9 +113,9 @@ fun DrawScope.drawFullMapNodeExits(
             val label = bounds.firstOrNull { candidate -> occupied.none { it.overlaps(candidate) } } ?: bounds.first()
             occupied.add(label.inflate(2.dp.toPx()))
             val anchor = Offset(tip.x.coerceIn(label.left, label.right), tip.y.coerceIn(label.top, label.bottom))
-            drawLine(NodeExitColor.copy(alpha = 0.55f), tip, anchor, 1.dp.toPx())
+            drawLine(exitColor.copy(alpha = 0.55f), tip, anchor, 1.dp.toPx())
             drawRoundRect(Color(0xFF061018).copy(alpha = 0.96f), label.topLeft, label.size, CornerRadius(padding))
-            drawRoundRect(NodeExitColor.copy(alpha = 0.4f), label.topLeft, label.size, CornerRadius(padding), style = Stroke(1.dp.toPx()))
+            drawRoundRect(exitColor.copy(alpha = 0.4f), label.topLeft, label.size, CornerRadius(padding), style = Stroke(1.dp.toPx()))
             drawText(text, topLeft = label.topLeft + Offset(padding, padding))
         }
     }

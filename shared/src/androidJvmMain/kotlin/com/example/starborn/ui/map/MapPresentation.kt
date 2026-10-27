@@ -30,11 +30,11 @@ import kotlin.math.abs
 /** The same room states, symbols and legend are used by Android and desktop. */
 object MapPalette {
     val current = Color(0xFFFFC857)
-    val visited = Color(0xFF8FD9FF)
-    val discovered = Color(0xFF687985)
+    val visited = Color(0xFF7797AB)
+    val discovered = Color(0xFF405462)
     val preview = Color(0xFFADB5BB)
     val gateway = Color(0xFF00E5FF)
-    val blocked = Color(0xFFFFB454)
+    val blocked = Color(0xFFC5B3DE)
     val threat = Color(0xFFFF746D)
     val background = Color(0xFF061018)
     fun room(cell: MinimapCellUi) = when {
@@ -65,6 +65,7 @@ fun mapRoomDescription(cell: MinimapCellUi): String = buildList {
     add(cell.title)
     add(when { cell.isCurrent -> "You are here"; cell.isPreview -> "Unexplored"; cell.visited -> "Visited"; else -> "Discovered" })
     if (cell.hasEnemies) add("Enemies present")
+    if (cell.blockedDirections.isNotEmpty()) add("Blocked paths: ${cell.blockedDirections.joinToString()}")
     addAll(cell.services.filterNot { it == MinimapService.EXIT }.map(::mapServiceLabel))
     cell.hubExit?.let { add("Exit to ${it.destinationTitle}${if (it.blocked) " (blocked)" else ""}") }
     addAll(cell.nodeExits.map { "${it.direction} to ${it.destinationTitle}${if (it.blocked) ", blocked" else ""}" })
@@ -73,12 +74,19 @@ fun mapRoomDescription(cell: MinimapCellUi): String = buildList {
 @Composable
 fun MapLegend(modifier: Modifier = Modifier) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        Text("Gold: you are here · Cyan: visited · Gray: discovered", style = MaterialTheme.typography.bodySmall, color = Color.White)
+        Text("Gold: you are here · Blue-gray: visited · Dim: discovered", style = MaterialTheme.typography.bodySmall, color = Color.White)
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-            Icon(Icons.AutoMirrored.Filled.ExitToApp, null, Modifier.size(18.dp), tint = MapPalette.gateway)
-            Text("Hub exit · Amber lock: blocked · Red ring: enemies", style = MaterialTheme.typography.bodySmall, color = Color.White)
+            Canvas(Modifier.size(18.dp)) {
+                val center = Offset(size.width / 2, size.height / 2)
+                val r = size.minDimension * .35f
+                drawPath(Path().apply {
+                    moveTo(center.x, center.y - r); lineTo(center.x + r, center.y)
+                    lineTo(center.x, center.y + r); lineTo(center.x - r, center.y); close()
+                }, MapPalette.gateway, style = Stroke(1.5.dp.toPx()))
+            }
+            Text("Cyan diamond: exit room · Red dot: enemies", style = MaterialTheme.typography.bodySmall, color = Color.White)
         }
-        Text("Area arrows lead to another area. Hatched rooms are dark; faint rooms are previews.", style = MaterialTheme.typography.bodySmall, color = MapPalette.preview)
+        Text("Minimap: routes and nearby rooms. Lavender bar: blocked route.\nFull map: service icons, exit destinations, and locks. Hatched rooms are dark; faint rooms are previews.", style = MaterialTheme.typography.bodySmall, color = MapPalette.preview)
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             listOf(MinimapService.SHOP, MinimapService.REST, MinimapService.COOKING, MinimapService.TINKERING).forEach { service ->
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -104,7 +112,7 @@ fun MapRoomDetails(cell: MinimapCellUi, modifier: Modifier = Modifier, cells: Li
                 Text(mapServiceLabel(service), style = MaterialTheme.typography.labelSmall, color = Color.White)
             } }
         }
-        cell.nodeExits.forEach { Text("${it.direction.replaceFirstChar { c -> c.uppercase() }}: ${it.destinationTitle}${if (it.blocked) " — blocked" else ""}", color = MapPalette.blocked, style = MaterialTheme.typography.bodySmall) }
+        cell.nodeExits.forEach { Text("${it.direction.replaceFirstChar { c -> c.uppercase() }}: ${it.destinationTitle}${if (it.blocked) " — blocked" else ""}", color = if (it.blocked) MapPalette.blocked else MapPalette.gateway, style = MaterialTheme.typography.bodySmall) }
         if (cell.blockedDirections.isNotEmpty()) Text("Blocked paths: ${cell.blockedDirections.joinToString()}", color = MapPalette.blocked, style = MaterialTheme.typography.bodySmall)
         if (cells.isNotEmpty()) cell.connections.forEach { (direction, id) ->
             val destination = cells.firstOrNull { it.roomId == id }?.title ?: "Unexplored room"
@@ -115,40 +123,51 @@ fun MapRoomDetails(cell: MinimapCellUi, modifier: Modifier = Modifier, cells: Li
     }
 }
 
-fun DrawScope.drawMapFeatures(cell: MinimapCellUi, center: Offset, radius: Float, servicePainters: Map<MinimapService, Painter>) {
-    if (cell.isDark || cell.isPreview) return
-    if (cell.hasEnemies) drawCircle(MapPalette.threat, radius + 2.dp.toPx(), center, style = Stroke(1.5.dp.toPx()))
-    cell.hubExit?.let { exit ->
-        // Doorframe and outward arrow: independent of room state and area-transition arrows.
-        val r = radius.coerceAtLeast(4.dp.toPx()) * .65f
-        val p = center + Offset(radius + r + 3.dp.toPx(), -radius)
-        val stroke = 1.4.dp.toPx()
-        drawLine(MapPalette.gateway, p + Offset(-r, r), p + Offset(-r, -r), stroke)
-        drawLine(MapPalette.gateway, p + Offset(-r, -r), p + Offset(r * .3f, -r), stroke)
-        drawLine(MapPalette.gateway, p + Offset(-r, r), p + Offset(r * .3f, r), stroke)
-        drawLine(MapPalette.gateway, p, p + Offset(r, 0f), stroke)
-        drawLine(MapPalette.gateway, p + Offset(r, 0f), p + Offset(r * .5f, -r * .5f), stroke)
-        drawLine(MapPalette.gateway, p + Offset(r, 0f), p + Offset(r * .5f, r * .5f), stroke)
-        if (exit.blocked) drawMapLock(p + Offset(r + 2.dp.toPx(), r + 3.dp.toPx()))
-    }
-    val services = cell.services.filterNot { it == MinimapService.EXIT }
-    // Prioritize key services (SHOP > TINKERING > REST > COOKING) and display primary icon to prevent dot clutter
-    val primaryService = services.minByOrNull { service ->
-        when (service) {
-            MinimapService.SHOP -> 0
-            MinimapService.TINKERING -> 1
-            MinimapService.REST -> 2
-            MinimapService.COOKING -> 3
-            else -> 4
+/** Exit rooms use one diamond, regardless of how many area or hub exits they offer. */
+fun mapRoomHasExit(cell: MinimapCellUi): Boolean =
+    !cell.isDark && !cell.isPreview && (cell.hubExit != null || cell.nodeExits.isNotEmpty())
+
+fun DrawScope.drawMapRoom(cell: MinimapCellUi, center: Offset, radius: Float, selected: Boolean = false) {
+    val color = MapPalette.room(cell).copy(alpha = if (cell.isPreview) .35f else 1f)
+    if (mapRoomHasExit(cell)) {
+        val diamond = Path().apply {
+            moveTo(center.x, center.y - radius)
+            lineTo(center.x + radius, center.y)
+            lineTo(center.x, center.y + radius)
+            lineTo(center.x - radius, center.y)
+            close()
         }
+        drawPath(diamond, if (cell.isCurrent) MapPalette.current else MapPalette.background)
+        drawPath(diamond, if (cell.isCurrent) MapPalette.current else MapPalette.gateway,
+            style = Stroke((radius * .3f).coerceAtMost(1.5.dp.toPx())))
+    } else {
+        drawCircle(color, radius, center)
     }
-    primaryService?.let { service ->
-        val p = center + Offset(0f, radius + 5.dp.toPx())
-        val iconSize = 9.dp.toPx()
-        val iconColor = if (service == MinimapService.SHOP) Color(0xFFFFCA28) else MapPalette.visited
+    if (cell.isDark) drawMapDarkHatch(center, radius)
+    if (selected) drawCircle(Color.White, radius + 3.dp.toPx(), center, style = Stroke(1.dp.toPx()))
+    if (cell.isCurrent) drawCircle(Color.White, radius * .3f, center)
+}
+
+fun DrawScope.drawMapThreat(cell: MinimapCellUi, center: Offset, radius: Float) {
+    if (!cell.hasEnemies || cell.isDark || cell.isPreview) return
+    val p = center + Offset(radius * .85f, -radius * .85f)
+    val dot = (radius * .42f).coerceAtMost(3.dp.toPx())
+    drawCircle(MapPalette.background, dot * 1.45f, p)
+    drawCircle(MapPalette.threat, dot, p)
+}
+
+/** Service details belong to the full map; keep all services instead of silently choosing one. */
+fun DrawScope.drawMapFeatures(cell: MinimapCellUi, center: Offset, radius: Float, servicePainters: Map<MinimapService, Painter>, availableWidth: Float = radius * 4f) {
+    if (cell.isDark || cell.isPreview) return
+    val services = MinimapService.entries.filter { it != MinimapService.EXIT && it in cell.services }
+    if (services.isEmpty()) return
+    val iconSize = minOf(11.dp.toPx(), availableWidth / (services.size * 1.2f - .2f))
+    val spacing = iconSize * 1.2f
+    services.forEachIndexed { index, service ->
+        val p = center + Offset((index - (services.size - 1) / 2f) * spacing, radius + iconSize / 2 + 3.dp.toPx())
         translate(p.x - iconSize / 2, p.y - iconSize / 2) {
             with(servicePainters.getValue(service)) {
-                draw(Size(iconSize, iconSize), colorFilter = ColorFilter.tint(iconColor))
+                draw(Size(iconSize, iconSize), colorFilter = ColorFilter.tint(MapPalette.visited))
             }
         }
     }
@@ -197,14 +216,6 @@ fun AreaMapCanvas(cells: List<MinimapCellUi>, modifier: Modifier = Modifier, min
         val maxY = visible.maxOfOrNull { it.gridY } ?: 0
         val step = if (minimap) size.minDimension / 6.4f else minOf(size.width / (maxX-minX+3), size.height / (maxY-minY+3)).coerceAtMost(58.dp.toPx()) * scale
         val mid = Offset(size.width/2,size.height/2) + offset
-        if (minimap) {
-            for (i in 0..5) {
-                val position = (i - 2.5f) * step
-                val gridColor = MapPalette.visited.copy(alpha = .10f)
-                drawLine(gridColor, mid + Offset(position, -2.5f * step), mid + Offset(position, 2.5f * step))
-                drawLine(gridColor, mid + Offset(-2.5f * step, position), mid + Offset(2.5f * step, position))
-            }
-        }
         fun point(cell: MinimapCellUi) = if (minimap) mid + Offset(cell.offsetX*step,-cell.offsetY*step)
             else mid + Offset((cell.gridX-(minX+maxX)/2f)*step, ((minY+maxY)/2f-cell.gridY)*step)
         val drawnCenters = visible.associate { it.roomId to point(it) }
@@ -216,23 +227,30 @@ fun AreaMapCanvas(cells: List<MinimapCellUi>, modifier: Modifier = Modifier, min
             if (edges.add(setOf(cell.roomId,id))) {
                 val blocked = direction in cell.blockedDirections || other.connections.any { (d,target) -> target==cell.roomId && d in other.blockedDirections }
                 val a=point(cell); val b=point(other)
-                drawLine(if (blocked) MapPalette.blocked else MapPalette.visited.copy(alpha=.35f), a,b,1.5.dp.toPx(), StrokeCap.Round,
-                    pathEffect = if (blocked) PathEffect.dashPathEffect(floatArrayOf(5.dp.toPx(),4.dp.toPx())) else null)
-                if (blocked) drawMapLock((a+b)/2f)
+                if (minimap && blocked) {
+                    val midpoint = (a + b) / 2f
+                    val vector = (b - a) / (b - a).getDistance().coerceAtLeast(1f)
+                    val normal = Offset(-vector.y, vector.x)
+                    val gap = step * .12f
+                    val lineWidth = (step * .07f).coerceAtMost(1.5.dp.toPx())
+                    drawLine(MapPalette.visited.copy(alpha = .55f), a, midpoint - vector * gap, lineWidth)
+                    drawLine(MapPalette.visited.copy(alpha = .55f), midpoint + vector * gap, b, lineWidth)
+                    drawLine(MapPalette.blocked, midpoint - normal * step * .13f,
+                        midpoint + normal * step * .13f, lineWidth, StrokeCap.Round)
+                } else {
+                    drawLine(if (blocked) MapPalette.blocked else MapPalette.visited.copy(alpha = .55f), a, b,
+                        if (minimap) (step * .07f).coerceAtMost(1.5.dp.toPx()) else 1.5.dp.toPx(), StrokeCap.Round,
+                        pathEffect = if (blocked) PathEffect.dashPathEffect(floatArrayOf(5.dp.toPx(),4.dp.toPx())) else null)
+                    if (blocked) drawMapLock((a+b)/2f)
+                }
             }
         } } }
         visible.forEach { cell ->
-            val p=point(cell); val radius=step*(if (cell.isCurrent) .22f else .16f)
-            if (cell.roomId==selectedId) drawCircle(Color.White, radius+4.dp.toPx(),p, style=Stroke(1.5.dp.toPx()))
-            drawCircle(MapPalette.room(cell).copy(alpha=if(cell.isPreview) .4f else 1f),radius,p)
-            if(cell.isDark) drawMapDarkHatch(p, radius)
-            drawMapFeatures(cell,p,radius,servicePainters)
-            if(minimap) cell.nodeExits.forEach { drawNodeExitMarker(p,it,radius,step*.3f) }
-            if(cell.isCurrent) {
-                drawLine(MapPalette.current,p-Offset(radius*.5f,0f),p+Offset(radius*.5f,0f),2.dp.toPx())
-                drawLine(MapPalette.current,p-Offset(0f,radius*.5f),p+Offset(0f,radius*.5f),2.dp.toPx())
-                drawCircle(Color.White, radius*.23f,p)
-            }
+            val p = point(cell)
+            val radius = step * (if (cell.isCurrent) .25f else if (mapRoomHasExit(cell)) .21f else .16f)
+            drawMapRoom(cell, p, radius, selected = !minimap && cell.roomId == selectedId)
+            drawMapThreat(cell, p, radius)
+            if (!minimap) drawMapFeatures(cell, p, radius, servicePainters, availableWidth = step * .8f)
         }
         if (!minimap) drawFullMapNodeExits(visible, ::point, step*.32f, textMeasurer)
     }

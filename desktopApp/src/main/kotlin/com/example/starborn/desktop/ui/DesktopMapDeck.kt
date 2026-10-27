@@ -22,6 +22,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -652,42 +653,20 @@ private fun DesktopMapCanvas(
                                     ) {}
                                 }
 
-                                // Waypoint Node Center
-                                Surface(
-                                    modifier = Modifier.size((34 * zoom).dp),
-                                    shape = CircleShape,
-                                    color = if (isTargetSelected) nodeColor.copy(alpha = .32f * opacity) else Color(0xFF0F1E29).copy(alpha = opacity),
-                                    border = BorderStroke(
-                                        width = if (cell.isCurrent || isTargetSelected) 2.5.dp else 1.2.dp,
-                                        color = if (isTargetSelected) Color.White else nodeColor.copy(alpha = opacity)
-                                    ),
-                                    shadowElevation = if (isTargetSelected) 6.dp else 0.dp
-                                ) {
-                                    Box(contentAlignment = Alignment.Center) {
-                                        val icon = if (cell.isCurrent) Icons.Default.PersonPinCircle else Icons.Default.Room
-
-                                        if (cell.isDark) Canvas(Modifier.fillMaxSize()) {
-                                            drawMapDarkHatch(Offset(size.width/2, size.height/2), size.minDimension/2)
-                                        } else Icon(
-                                            icon,
-                                            contentDescription = null,
-                                            modifier = Modifier.size((18 * zoom).dp),
-                                            tint = (if (isTargetSelected) Color.White else nodeColor).copy(alpha = opacity)
-                                        )
-                                    }
-                                }
-                                if (cell.hasEnemies) Canvas(Modifier.size((40 * zoom).dp)) {
-                                    drawCircle(MapPalette.threat, size.minDimension / 2 - 1.dp.toPx(), style = Stroke(1.5.dp.toPx()))
+                                Canvas(Modifier.size((34 * zoom).dp).graphicsLayer { alpha = opacity }) {
+                                    val center = Offset(size.width / 2, size.height / 2)
+                                    val radius = size.minDimension * .38f
+                                    drawMapRoom(cell, center, radius, selected = isTargetSelected)
+                                    drawMapThreat(cell, center, radius)
                                 }
                             }
 
                             // Waypoint Title Label
                             val roomTitle = cell.title
                             Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-                                if (cell.hasEnemies) Icon(Icons.Default.Warning, "Enemies present", Modifier.size(14.dp), tint = MapPalette.threat)
-                                cell.services.forEach { service ->
+                                cell.services.filterNot { it == MinimapService.EXIT }.forEach { service ->
                                     Icon(mapServiceIcon(service), mapServiceLabel(service), Modifier.size(14.dp),
-                                        tint = if (service == MinimapService.EXIT) MapPalette.gateway else MapPalette.visited)
+                                        tint = MapPalette.visited)
                                 }
                                 if (cell.hubExit?.blocked == true) Icon(Icons.Default.Lock, "Hub exit blocked", Modifier.size(12.dp), tint = MapPalette.blocked)
                                 if (cell.isDark) Text("Dark", color = MapPalette.discovered, fontSize = 10.sp)

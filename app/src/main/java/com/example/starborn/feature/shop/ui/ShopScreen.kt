@@ -789,8 +789,8 @@ private fun ShopDialogueBar(
     largeTouchTargets: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val line = lines.lastOrNull() ?: return
-    val speaker = line.speaker?.takeIf { it.isNotBlank() } ?: shopName.ifBlank { "Shopkeeper" }
+    val line = lines.lastOrNull()
+    val speaker = line?.speaker?.takeIf { it.isNotBlank() } ?: shopName.ifBlank { "Shopkeeper" }
     val portraitSize = if (largeTouchTargets) 68.dp else 60.dp
     val portraitPainter = rememberAssetPainter(
         portraitPath,
@@ -835,7 +835,7 @@ private fun ShopDialogueBar(
                             .background(colors.accent.copy(alpha = 0.78f))
                     )
                     Text(
-                        text = line.text,
+                        text = line?.text ?: "Browse the stock or sell your supplies.",
                         style = MaterialTheme.typography.bodyLarge,
                         color = Color.White.copy(alpha = 0.96f),
                         maxLines = 4,
