@@ -121,6 +121,8 @@ class DesktopExplorationReturnTest {
     }
 
     @Test fun roomActivitiesRequireAChoiceAndShortcutLegendIsAbsent() = withRoom("pit_nova_bunk") { s ->
+        s.sessionStore.setRoomState("pit_nova_bunk", "light_on", true)
+        s.sessionStore.setRoomState("pit_nova_bunk", "dark", false)
         s.sessionStore.updatePartyVitals(mapOf("nova" to 20))
         compose.setContent { DesktopStarbornTheme(s) {
             Box(Modifier.size(1280.dp, 800.dp)) { DesktopExplorationScreen(s, {}, {}, {}, {}, {}, {}) }

@@ -199,7 +199,8 @@ fun resolveRoomBackground(
     return variant?.backgroundImage ?: room.backgroundImage
 }
 
-private fun RoomAction.isInlineDescriptionAction(): Boolean = this !is NpcAction && this !is EnemyAction
+private fun RoomAction.isInlineDescriptionAction(): Boolean =
+    this !is NpcAction && this !is EnemyAction && this !is RestStopAction && !hideInline
 
 private fun rangesOverlap(a: IntRange, b: IntRange): Boolean =
     a.first < b.last && b.first < a.last

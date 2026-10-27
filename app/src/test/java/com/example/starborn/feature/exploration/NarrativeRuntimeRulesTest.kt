@@ -94,4 +94,30 @@ class NarrativeRuntimeRulesTest {
         assertTrue(narrativeActionVisible(action, emptyMap(), emptyMap(), emptySet()))
         assertFalse(narrativeActionVisible(action, emptyMap(), emptyMap(), setOf("ms_w1_jed_bunk_tools_looted")))
     }
+
+    @Test
+    fun bunkSleepingShelfRequiresLight() {
+        val assets = listOf(java.io.File("app/src/main/assets"), java.io.File("src/main/assets")).first { it.isDirectory }
+        val rooms = org.json.JSONArray(java.io.File(assets, "rooms.json").readText())
+        val room = (0 until rooms.length()).map { rooms.getJSONObject(it) }.first { it.getString("id") == "pit_nova_bunk" }
+        val actions = room.getJSONArray("actions")
+        val shelf = (0 until actions.length()).map { actions.getJSONObject(it) }.single { it.getString("name") == "sleeping shelf" }
+        val action = shelf.keys().asSequence().associateWith { shelf.get(it) }
+        val initial = mapOf("light_on" to false, "conduit_isolated" to false)
+        assertFalse(narrativeActionVisible(action, initial, emptyMap(), emptySet()))
+        assertFalse(narrativeActionVisible(action, initial, mapOf("light_on" to false), emptySet()))
+        assertTrue(narrativeActionVisible(action, initial, mapOf("light_on" to true), emptySet()))
+    }
+
+    @Test
+    fun bunkInlineActionsAreLimitedToBunkLightAndDoorControlPanel() {
+        val assets = listOf(java.io.File("app/src/main/assets"), java.io.File("src/main/assets")).first { it.isDirectory }
+        val rooms = org.json.JSONArray(java.io.File(assets, "rooms.json").readText())
+        val room = (0 until rooms.length()).map { rooms.getJSONObject(it) }.first { it.getString("id") == "pit_nova_bunk" }
+        val actions = room.getJSONArray("actions")
+        for (name in listOf("cargo netting", "rusty locker")) {
+            val data = (0 until actions.length()).map { actions.getJSONObject(it) }.single { it.getString("name") == name }
+            assertTrue(data.optBoolean("hide_inline", false))
+        }
+    }
 }

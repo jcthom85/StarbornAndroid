@@ -76,7 +76,10 @@ class DesktopExplorationPanelsTest {
             compose.onAllNodesWithContentDescription("vintage mystery monitor", useUnmergedTree = true).onFirst().assertExists()
             val capture = File("build/reports/desktop/screenshots/mess-hall-clean.png").apply { parentFile.mkdirs() }
             ImageIO.write(compose.onNodeWithTag("mess-hall-stage").captureToImage().asAwtImage(), "png", capture)
-            services.sessionStore.restore(services.sessionStore.state.value.copy(roomId = "pit_nova_bunk"))
+            services.sessionStore.restore(services.sessionStore.state.value.copy(
+                roomId = "pit_nova_bunk",
+                roomStates = services.sessionStore.state.value.roomStates + ("pit_nova_bunk" to mapOf("light_on" to true, "dark" to false))
+            ))
             compose.waitUntil(10000) { services.exploration.uiState.value.currentRoom?.id == "pit_nova_bunk" }
             assertTrue(services.exploration.uiState.value.actions.any { it is RestStopAction })
         } finally { services.close(); directory.deleteRecursively() }

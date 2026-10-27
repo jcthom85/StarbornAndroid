@@ -30,7 +30,11 @@ class DesktopPcInteractionTest {
         try {
             runBlocking { services.userSettingsStore.setTutorialsEnabled(false) }
             assertTrue(services.startDebugScenario("tut_npc_dialogue"))
-            services.sessionStore.restore(services.sessionStore.state.value.copy(roomId = "pit_nova_bunk", partyMemberHp = mapOf("nova" to 20)))
+            services.sessionStore.restore(services.sessionStore.state.value.copy(
+                roomId = "pit_nova_bunk",
+                partyMemberHp = mapOf("nova" to 20),
+                roomStates = services.sessionStore.state.value.roomStates + ("pit_nova_bunk" to mapOf("light_on" to true, "dark" to false))
+            ))
             compose.setContent { DesktopStarbornTheme(services) {
                 Box(Modifier.size(1280.dp, 800.dp)) { DesktopExplorationScreen(services, {}, {}, {}, {}, {}, {}) }
             } }

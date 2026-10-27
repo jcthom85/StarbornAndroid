@@ -403,17 +403,20 @@
         "type": "generic",
         "action_event": "w1_mq01_check_netting",
         "show_when_state": "light_on",
+        "hide_inline": true,
         "condition_unmet_message": "Jed's metal bird is tucked into the cargo netting with Nova's tools and spare ration."
       },
       {
         "name": "rusty locker",
         "type": "generic",
         "show_when_state": "light_on",
+        "hide_inline": true,
         "condition_unmet_message": "Rust gathers around the latch. Lifting the bottom corner keeps the door from scraping the floor."
       },
       {
         "name": "sleeping shelf",
         "type": "rest_stop",
+        "show_when_state": "light_on",
         "rest_event": "w1_rest_nova_bunk",
         "message": "Nova sleeps until the shift alarm. Resting here restores the party."
       }

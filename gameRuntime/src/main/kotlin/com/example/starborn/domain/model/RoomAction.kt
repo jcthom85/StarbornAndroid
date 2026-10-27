@@ -4,6 +4,7 @@ import com.squareup.moshi.Json
 
 sealed interface RoomAction {
     val name: String
+    val hideInline: Boolean get() = false
 }
 
 data class ToggleAction(
@@ -19,7 +20,9 @@ data class ToggleAction(
     @Json(name = "action_event_on")
     val actionEventOn: String?,
     @Json(name = "action_event_off")
-    val actionEventOff: String?
+    val actionEventOff: String?,
+    @Json(name = "hide_inline")
+    override val hideInline: Boolean = false
 ) : RoomAction
 
 data class TinkeringAction(
@@ -106,7 +109,9 @@ data class GenericAction(
     @Json(name = "condition_unmet_message")
     val conditionUnmetMessage: String? = null,
     @Json(name = "cabinet_id")
-    val cabinetId: String? = null
+    val cabinetId: String? = null,
+    @Json(name = "hide_inline")
+    override val hideInline: Boolean = false
 ) : RoomAction
 
 fun RoomAction.actionKey(): String = when (this) {

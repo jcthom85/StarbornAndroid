@@ -956,31 +956,35 @@ fun ExplorationScreen(
         val descriptionForPanel = baseRoomDescription
         val visibleNpcs = if (isRoomDark) emptyList() else uiState.npcs
         val visibleGroundItems = if (isRoomDark) emptyMap() else uiState.groundItems
-        val serviceQuickActions = remember(uiState.actions) {
-            uiState.actions.filter { it is ShopAction || it is RestStopAction || it is TinkeringAction }.map { action ->
-                when (action) {
-                    is ShopAction -> QuickMenuAction(
-                        label = action.name.replaceFirstChar { it.titlecase() },
-                        detail = "Shop",
-                        roomAction = action,
-                        imageVector = Icons.Filled.ShoppingCart
-                    )
-                    is RestStopAction -> QuickMenuAction(
-                        label = action.name.replaceFirstChar { it.titlecase() },
-                        detail = if (action.cookSource != null) "Cooking" else "Rest",
-                        roomAction = action,
-                        imageVector = Icons.Rounded.Hotel
-                    )
-                    is TinkeringAction -> QuickMenuAction(
-                        label = action.name.replaceFirstChar { it.titlecase() },
-                        detail = "Workbench",
-                        roomAction = action,
-                        imageVector = Icons.Filled.Build
-                    )
-                    else -> QuickMenuAction(
-                        label = action.name.replaceFirstChar { it.titlecase() },
-                        roomAction = action
-                    )
+        val serviceQuickActions = remember(uiState.actions, isRoomDark) {
+            if (isRoomDark) {
+                emptyList()
+            } else {
+                uiState.actions.filter { it is ShopAction || it is RestStopAction || it is TinkeringAction }.map { action ->
+                    when (action) {
+                        is ShopAction -> QuickMenuAction(
+                            label = action.name.replaceFirstChar { it.titlecase() },
+                            detail = "Shop",
+                            roomAction = action,
+                            imageVector = Icons.Filled.ShoppingCart
+                        )
+                        is RestStopAction -> QuickMenuAction(
+                            label = if (action.cookSource != null) "Cook" else "Rest",
+                            detail = null,
+                            roomAction = action,
+                            imageVector = Icons.Rounded.Hotel
+                        )
+                        is TinkeringAction -> QuickMenuAction(
+                            label = action.name.replaceFirstChar { it.titlecase() },
+                            detail = "Workbench",
+                            roomAction = action,
+                            imageVector = Icons.Filled.Build
+                        )
+                        else -> QuickMenuAction(
+                            label = action.name.replaceFirstChar { it.titlecase() },
+                            roomAction = action
+                        )
+                    }
                 }
             }
         }

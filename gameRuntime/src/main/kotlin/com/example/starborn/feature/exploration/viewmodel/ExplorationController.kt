@@ -1822,6 +1822,15 @@ class ExplorationController(
     init {
         viewModelScope.launch(dispatchers.main) {
             sessionStore.state.collect { newState ->
+                newState.roomStates.forEach { (rId, flags) ->
+                    val existing = roomStates.getOrPut(rId) { mutableMapOf() }
+                    flags.forEach { (k, v) ->
+                        if (existing[k] != v) {
+                            existing[k] = v
+                            updateRoomModelState(rId, k, v)
+                        }
+                    }
+                }
                 scheduleNovaBuildTutorial(newState)
                 sessionStore.takeEquipmentRestoreNotice()?.let(::postStatus)
                 val partyStatus = buildPartyStatusUi(
@@ -6040,7 +6049,8 @@ class ExplorationController(
                     actionEventOn = action["action_event_on"].asStringOrNull()?.takeIf { it.isNotBlank() }
                         ?: action["action_event"].asStringOrNull()?.takeIf { it.isNotBlank() },
                     actionEventOff = action["action_event_off"].asStringOrNull()?.takeIf { it.isNotBlank() }
-                        ?: action["action_event"].asStringOrNull()?.takeIf { it.isNotBlank() }
+                        ?: action["action_event"].asStringOrNull()?.takeIf { it.isNotBlank() },
+                    hideInline = action["hide_inline"] as? Boolean ?: false
                 )
                 "container" -> ContainerAction(
                     name = name,
@@ -6086,14 +6096,15 @@ class ExplorationController(
                     conditionUnmetMessage = action["condition_unmet_message"].asStringOrNull()
                         ?: action["inspect_message"].asStringOrNull()
                         ?: action["message"].asStringOrNull()
-                        ?: action["description"].asStringOrNull()
+                        ?: action["description"].asStringOrNull(),
+                    hideInline = action["hide_inline"] as? Boolean ?: false
                 )
             }
         }
         val travelActions = room.specialExits.mapNotNull { (direction, label) ->
             val normalized = direction.lowercase(Locale.getDefault())
             label.takeIf { it.isNotBlank() }
-                ?.takeIf { getConnection(room, normalized) != null }
+                ?.takeIf { visibleConnections(room).containsKey(normalized) }
                 ?.let {
                     val travelLabel = if (room.id == "admin_elevator" && normalized == "north" &&
                         "deep_mine" in sessionStore.state.value.visitedNodes
@@ -6105,6 +6116,13 @@ class ExplorationController(
     }
 
     private fun isActionVisible(room: Room, action: Map<String, Any?>): Boolean {
+        if (isRoomDark(room)) {
+            val type = (action["type"] as? String)?.lowercase(Locale.getDefault())
+            if (type == "rest_stop" || type == "rest" || type == "camp" || type == "cookfire" ||
+                type == "shop" || type == "tinkering") {
+                return false
+            }
+        }
         if (isBurgQuestSession && room.id == "astra_common_room") {
             val name = (action["name"] as? String)?.lowercase(Locale.getDefault()).orEmpty()
             if (name.contains("galley") || name.contains("kitchen")) return false
