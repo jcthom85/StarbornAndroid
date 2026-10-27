@@ -44,7 +44,7 @@ This transcript reflects the exact player experience, including dialogue, room t
 > **[Dialogue]** Guard Hank: "Badge on the reader. I've had enough arguments for one morning."
 > **[Dialogue]** Nova: "Morning to you too."
 > **[Dialogue]** Guard Hank: "Rejected. Don't make me read the reason out loud. Booth's east of here; Zeke handles the forms."
-**[Step 29 - Travel]** Entered room: Zeke's Booth | Prose snippet: "Zeke's window sits behind reinforced glass, surrounded by badge readers and liability screens. The booth speaker crackle..." [Quest: w1_mq02 (override_retirement)]
+**[Step 29 - Travel]** Entered room: Zeke's Booth | Prose snippet: "Zeke's window sits behind reinforced glass, surrounded by badge readers, a discarded document locker, and liability scre..." [Quest: w1_mq02 (override_retirement)]
 > **[Dialogue]** Zeke: "Name, ID, clearance... Nova? You're early. Usually I get three complaints before someone I like."
 > **[Dialogue]** Nova: "Hank rejected my badge. I've got ten minutes before they dock my shift. Can you fix it?"
 > **[Dialogue]** Zeke: "Probably. Give me a moment. That flag should be yellow. Why is it..."

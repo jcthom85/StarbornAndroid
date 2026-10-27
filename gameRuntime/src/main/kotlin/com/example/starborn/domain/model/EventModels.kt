@@ -32,7 +32,9 @@ data class EventTrigger(
     val enemies: List<String>? = null,
     val item: String? = null,
     @Json(name = "item_id")
-    val itemId: String? = null
+    val itemId: String? = null,
+    @Json(name = "item_type")
+    val itemType: String? = null
 )
 
 data class EventAction(
@@ -60,6 +62,8 @@ data class EventAction(
     val item: String? = null,
     @Json(name = "item_id")
     val itemId: String? = null,
+    @Json(name = "item_type")
+    val itemType: String? = null,
     @Json(name = "skill_id")
     val skillId: String? = null,
     val quantity: Int? = null,

@@ -71,8 +71,16 @@ internal fun DesktopMenuSkillsContent(services: DesktopAppServices, tree: SkillT
     Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         tree.tutorialGuide?.let { guide ->
             Surface(color = FieldMenuDesign.cyan.copy(alpha = .08f), shape = RoundedCornerShape(8.dp),
-                border = BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = .3f))) {
-                Text(guide, Modifier.padding(12.dp), color = FieldMenuDesign.text, style = MaterialTheme.typography.bodyMedium)
+                border = BorderStroke(1.5.dp, FieldMenuDesign.cyan)) {
+                Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Box(Modifier.background(FieldMenuDesign.cyan.copy(alpha = 0.2f), RoundedCornerShape(4.dp)).padding(horizontal = 6.dp, vertical = 2.dp)) {
+                            Text("NEW", color = FieldMenuDesign.cyan, style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                        }
+                        Text("[Field] Tutorial", color = FieldMenuDesign.cyan, style = MaterialTheme.typography.labelMedium)
+                    }
+                    Text(guide, color = FieldMenuDesign.text, style = MaterialTheme.typography.bodyMedium)
+                }
             }
         }
         if (tree.respecRefund > 0) TextButton(onClick = { services.exploration.resetPrototypeBuild(tree.characterId) }) {

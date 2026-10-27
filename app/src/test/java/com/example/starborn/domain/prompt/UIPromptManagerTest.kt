@@ -42,6 +42,52 @@ class UIPromptManagerTest {
         assertEquals(2, current.sequenceTotal)
     }
 
+    @Test
+    fun `tutorials take priority over queued item toasts`() {
+        val manager = UIPromptManager()
+        // First item occupies current
+        manager.enqueue(itemPrompt("Scrap Metal", "s1", 1, 1))
+        // Next items are queued
+        manager.enqueue(itemPrompt("Ration Pack", "s2", 1, 1))
+        manager.enqueue(TutorialPrompt(com.example.starborn.domain.tutorial.TutorialEntry(
+            key = "combat_guide",
+            message = "Combat rules",
+            context = "Combat"
+        )))
+
+        // Dismiss current item -> Tutorial must be next due to higher priority
+        manager.dismissCurrent()
+        assertTrue(manager.state.value.current is TutorialPrompt)
+    }
+
+    @Test
+    fun `suspending toasts pauses item toasts while allowing tutorials`() {
+        val manager = UIPromptManager()
+        manager.setToastsSuspended(true)
+
+        manager.enqueue(itemPrompt("Scrap Metal", "s1", 1, 1))
+        // Item is suspended, current remains null
+        org.junit.Assert.assertNull(manager.state.value.current)
+        assertEquals(1, manager.state.value.queue.size)
+
+        // Tutorial can still promote while toasts are suspended
+        manager.enqueue(TutorialPrompt(com.example.starborn.domain.tutorial.TutorialEntry(
+            key = "nav_guide",
+            message = "Navigate",
+            context = "Navigation"
+        )))
+        assertTrue(manager.state.value.current is TutorialPrompt)
+
+        // Dismiss tutorial
+        manager.dismissCurrent()
+        // Item is still suspended
+        org.junit.Assert.assertNull(manager.state.value.current)
+
+        // Resume toasts -> item is promoted
+        manager.setToastsSuspended(false)
+        assertTrue(manager.state.value.current is ItemGrantedPrompt)
+    }
+
     private fun itemPrompt(
         name: String,
         sequenceId: String,

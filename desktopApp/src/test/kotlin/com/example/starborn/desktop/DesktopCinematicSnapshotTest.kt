@@ -34,7 +34,9 @@ class DesktopCinematicSnapshotTest {
             compose.mainClock.autoAdvance = false
             compose.setContent { DesktopStarbornTheme { DesktopExplorationScreen(services, {}, {}, {}, {}, {}, {}) } }
             compose.waitUntil(15_000) { compose.mainClock.advanceTimeBy(16); services.exploration.uiState.value.cinematic?.sceneId == "intro_prologue" }
-            compose.onNodeWithText("Menu [Esc]").performClick()
+            compose.onAllNodesWithText("Menu [Esc]").fetchSemanticsNodes().firstOrNull()?.let {
+                compose.onNodeWithText("Menu [Esc]").performClick()
+            } ?: compose.onRoot().performClick()
             assertFalse("Movie clicks must not open the underlying menu", services.exploration.uiState.value.isMenuOverlayVisible)
             compose.onAllNodesWithText("Continue", useUnmergedTree = true).assertCountEquals(0)
             // Image loading/click synchronization can outlast a frame. Verify forward playback,

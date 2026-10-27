@@ -17,6 +17,7 @@ import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -90,7 +91,7 @@ fun QuestBannerOverlay(
     LaunchedEffect(uiEventBus) {
         uiEventBus.events.collectLatest { ev ->
             if (ev is UiEvent.ShowQuestBanner) {
-                if (ev.type != QuestBannerType.PROGRESS) return@collectLatest
+                if (ev.type != QuestBannerType.PROGRESS && ev.type != QuestBannerType.NEW) return@collectLatest
                 val key = "${ev.type}_${ev.questId}"
                 val now = System.currentTimeMillis()
                 val last = recent[key]
@@ -140,6 +141,15 @@ fun QuestBannerOverlay(
 
     val visible = isShowing && current != null
 
+    if (visible && current?.type == QuestBannerType.NEW) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.35f))
+                .clickable(onClick = { isShowing = false })
+        )
+    }
+
     Box(
         modifier = modifier
             .statusBarsPadding()
@@ -171,9 +181,9 @@ private fun QuestBannerCard(
     onDismiss: () -> Unit
 ) {
     val accent = when (banner.type) {
-        QuestBannerType.NEW -> accentColor
+        QuestBannerType.NEW -> Color(0xFFFFB300)
         QuestBannerType.COMPLETED -> accentColor.copy(alpha = 0.9f)
-        QuestBannerType.FAILED -> accentColor.copy(alpha = 0.8f)
+        QuestBannerType.FAILED -> Color(0xFFFF5252)
         QuestBannerType.PROGRESS -> accentColor.copy(alpha = 0.85f)
     }
     val heading = when (banner.type) {
@@ -241,7 +251,7 @@ private fun QuestBannerCard(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                if (banner.type == QuestBannerType.PROGRESS && banner.objectives.isNotEmpty()) {
+                if ((banner.type == QuestBannerType.PROGRESS || banner.type == QuestBannerType.NEW) && banner.objectives.isNotEmpty()) {
                     banner.objectives.forEach { objective ->
                         BannerObjectiveRow(objective = objective, accentColor = accent)
                     }

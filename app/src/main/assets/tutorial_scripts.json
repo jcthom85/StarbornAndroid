@@ -108,7 +108,7 @@
         "id": "party_basics",
         "steps": [
             {
-                "message": "Tap a portrait to switch the active character. Each party member has unique skills.",
+                "message": "Tap a portrait to switch the active character. Each party member has unique abilities.",
                 "context": "Combat"
             }
         ]
@@ -145,7 +145,7 @@
         "id": "snack_slot",
         "steps": [
             {
-                "message": "Snacks are reusable combat tools. Use them like skills - they recharge after a cooldown.",
+                "message": "Snacks are reusable combat tools. Use them like abilities - they recharge after a cooldown.",
                 "context": "Combat"
             }
         ]

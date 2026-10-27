@@ -4,6 +4,8 @@ import com.example.starborn.feature.crafting.ui.ModComparisonPanel
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.layout.*
@@ -96,10 +98,19 @@ internal fun ModernTinkerWorkbench(
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         tutorialStep?.let { step ->
             Surface(color = FieldMenuDesign.panel, shape = RoundedCornerShape(12.dp),
-                border = BorderStroke(1.dp, accent.copy(alpha = .6f))) {
+                border = BorderStroke(1.5.dp, FieldMenuDesign.cyan)) {
                 Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("Tutorial", color = accent, style = MaterialTheme.typography.labelMedium)
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Box(
+                                modifier = Modifier
+                                    .background(FieldMenuDesign.cyan.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
+                                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                            ) {
+                                Text("NEW", color = FieldMenuDesign.cyan, style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                            }
+                            Text("[Field] Tutorial", color = accent, style = MaterialTheme.typography.labelMedium)
+                        }
                         Text(if (step == TinkeringTutorialStep.COMPLETE) "Complete" else "Step ${step.ordinal + 1} of 3", color = secondaryText(), style = MaterialTheme.typography.labelSmall)
                     }
                     if (step == TinkeringTutorialStep.SLOT_BASE) Text("Repair the Cryo-Inductor", color = FieldMenuDesign.text, style = MaterialTheme.typography.titleSmall)

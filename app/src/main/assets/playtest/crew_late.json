@@ -6,7 +6,7 @@
   "playerLevel": 11,
   "playerXp": 20060,
   "playerAp": 44,
-  "playerCredits": 228,
+  "playerCredits": 155,
   "partyMemberXp": {
     "nova": 20060,
     "zeke": 20060,
@@ -20,10 +20,10 @@
     "gh0st": 11
   },
   "partyMemberHp": {
-    "nova": 120,
-    "zeke": 71,
-    "orion": 1,
-    "gh0st": 105
+    "nova": 108,
+    "zeke": 150,
+    "orion": 135,
+    "gh0st": 69
   },
   "trackedQuestId": "w6_mq26",
   "activeQuests": [
@@ -62,6 +62,7 @@
     "ms_w1_mq01_fault_visible",
     "ms_w1_mq01_bunk_light_on",
     "ms_w1_mq01_safety_fault_inspected",
+    "ms_w1_manual_starter_equipment",
     "ms_w1_mq01_jed_talked",
     "ms_w1_mq01_loader_inspected",
     "ms_w1_mq01_loader_cleared",
@@ -216,6 +217,7 @@
   "unlockedSkills": [
     "nova_arc_tether",
     "nova_cryo_vent",
+    "nova_hydraulic_kick",
     "nova_blast_wave",
     "nova_link",
     "nova_smoke_bomb",
@@ -272,17 +274,18 @@
   ],
   "inventory": {
     "cryo_inductor": 1,
-    "scrap_metal": 5,
+    "scrap_metal": 6,
     "mining_pistol": 1,
-    "nova_flux_liner": 2,
+    "nova_flux_liner": 1,
+    "ration_pack": 2,
     "mine_access_badge": 1,
     "armor_plate": 1,
     "hydraulic_fluid": 1,
     "heavy_gear": 1,
-    "beast_meat": 2,
+    "beast_meat": 3,
     "tuning_fork": 1,
-    "wiring_bundle": 2,
-    "battery": 2,
+    "wiring_bundle": 3,
+    "battery": 1,
     "warden_keycard": 1,
     "ghost_signal_cell": 1,
     "wooden_rod": 1,
@@ -296,9 +299,8 @@
     "the_anvil": 1,
     "deep_core_engine": 1,
     "phase_cutter_arrays": 1,
-    "power_cell": 4,
     "anchor_relic": 1,
-    "medkit_plus": 6,
+    "medkit_plus": 7,
     "orbital_glimmer_tonic": 3
   },
   "equippedItems": {},
@@ -317,13 +319,17 @@
   "tutorialSeen": [
     "movement",
     "swipe_move",
+    "gear_equip_basics",
     "scene_market_locator",
+    "menu_save",
+    "mod_slots_basics",
     "source_art_unlock",
     "world2_debuffs",
     "link_unlock"
   ],
   "tutorialCompleted": [
-    "swipe_move"
+    "swipe_move",
+    "gear_equip_basics"
   ],
   "tutorialRoomsSeen": [
     "pit_nova_bunk",
@@ -678,7 +684,9 @@
     "w1_mq01_patch_flux_liner",
     "w1_mq01_confirm_governor",
     "w1_mq01_cutter_surge",
+    "w1_mq02_save_prompt_after_workshop",
     "w1_mq02_approach_checkpoint",
+    "w1_mq02_mod_slots_tutorial",
     "w1_mq02_reach_booth",
     "w1_mq03_logistics_commitment_warning",
     "w1_mq03_enter_logistics_sector",
@@ -702,6 +710,7 @@
     "w1_mq05_checkpoint_victory",
     "w1_mq05_enter_launch_bay",
     "w1_mq05_warden_victory",
+    "w1_record_warden_victory",
     "w1_mq05_splice_chime",
     "w1_mq05_use_nav_console",
     "w2_mq01_examine_pod",
@@ -753,6 +762,7 @@
     "w3_mq14_read_prism_shutters",
     "w3_mq14_trace_command_tethers",
     "w3_mq14_solve_light_puzzle",
+    "w1_mod_acquired_tutorial",
     "w3_mq14_take_lens",
     "w3_camp_skypark",
     "w3_mq15_reach_landing_pad",

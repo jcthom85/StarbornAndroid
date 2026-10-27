@@ -120,7 +120,6 @@ fun CommandPalette(
     modifier: Modifier = Modifier
 ) {
     if (actor == null) return
-    var showSnackDetails by remember(actor.id) { mutableStateOf(false) }
     AnimatedVisibility(
         visible = visible,
         modifier = modifier,
@@ -285,13 +284,6 @@ fun CommandPalette(
                                     }
                                 }
                             }
-                        }
-                        if (snackPreview.isNotBlank()) {
-                            TextButton(onClick = { showSnackDetails = !showSnackDetails }) {
-                                Text(if (showSnackDetails) "Hide snack details" else "Snack details · uses one action")
-                            }
-                            if (showSnackDetails) Text(snackPreview, style = MaterialTheme.typography.bodySmall,
-                                modifier = Modifier.fillMaxWidth().heightIn(max = 128.dp).verticalScroll(rememberScrollState()))
                         }
                     }
                 }

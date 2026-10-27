@@ -14,8 +14,8 @@ object NovaProgressionTutorial {
     fun firstAp(session: GameSessionState, enabled: Boolean): TutorialEntry? =
         if (enabled && Nova.isEnabled(session) && session.playerAp > 0 && session.purchasedSkillNodes.isEmpty() &&
             FIRST_AP !in session.tutorialCompleted) TutorialEntry(FIRST_AP, "Ability Points",
-            "Ability Points (AP) are your party's shared budget for specializations. Story and level abilities are learned separately.\n\nEach starting perk costs 1 AP. Compare both paths, choose freely, or save your points. Return any time through Party > Nova > Skills.",
-            mapOf("title" to "Shape Nova's build", "action_label" to "View Nova's Skills")) else null
+            "Ability Points (AP) are your party's shared budget for specializations. Story and level abilities are learned separately.\n\nEach starting perk costs 1 AP. Compare both paths, choose freely, or save your points. Return any time through Party > Nova > Abilities.",
+            mapOf("title" to "Shape Nova's build", "action_label" to "View Nova's Abilities")) else null
 
     fun treeGuide(session: GameSessionState, enabled: Boolean): String? =
         if (enabled && Nova.isEnabled(session) && session.purchasedSkillNodes.isEmpty()) TREE_MESSAGE else null

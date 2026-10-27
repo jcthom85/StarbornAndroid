@@ -904,7 +904,7 @@ fun CombatScreen(
                             }
                             Key.ButtonX -> {
                                 if (menuActor != null && !combatLocked && !menuActorCannotAct && menuActorSkills.isNotEmpty()) {
-                                    if (viewModel.isCombatTutorialCommandEnabled("Skills")) {
+                                    if (viewModel.isCombatTutorialCommandEnabled("Abilities")) {
                                         showSkillsDialog.value = !showSkillsDialog.value
                                         pendingTargetRequest = null
                                         pendingInstruction = null
@@ -1158,7 +1158,7 @@ fun CombatScreen(
                 atbProgress = commandActor?.let { atbMeters[it.id] } ?: 0f,
                 momentum = commandActor?.let { viewModel.momentumFor(it.id) } ?: 0,
                 canAttack = hasTargets && viewModel.isCombatTutorialCommandEnabled("Attack"),
-                hasSkills = menuActorSkills.isNotEmpty() && viewModel.isCombatTutorialCommandEnabled("Skills"),
+                hasSkills = menuActorSkills.isNotEmpty() && viewModel.isCombatTutorialCommandEnabled("Abilities"),
                 hasItems = battleUsableItems.isNotEmpty() && viewModel.isCombatTutorialCommandEnabled("Items"),
                 onAttack = {
                     if (viewModel.onCombatTutorialCommand("Attack")) {
@@ -1166,7 +1166,7 @@ fun CombatScreen(
                     }
                 },
                 onSkills = {
-                    if (viewModel.onCombatTutorialCommand("Skills")) {
+                    if (viewModel.onCombatTutorialCommand("Abilities")) {
                         showSkillsDialog.value = true
                         pendingTargetRequest = null
                         pendingInstruction = null
@@ -1471,14 +1471,14 @@ internal fun CombatImpactBanner(
 
         Row(
             modifier = Modifier
-                .padding(start = 12.dp, end = 16.dp, top = 6.dp, bottom = 6.dp),
+                .padding(start = 14.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Box(
                 modifier = Modifier
                     .width(4.dp)
-                    .height(32.dp)
+                    .heightIn(min = 32.dp)
                     .clip(RoundedCornerShape(2.dp))
                     .background(accent)
             )
@@ -1506,8 +1506,13 @@ internal fun CombatImpactBanner(
                     overflow = TextOverflow.Ellipsis
                 )
                 message.secondary?.takeIf { it.isNotBlank() }?.let { detail ->
-                    Text(text = detail, style = secondaryStyle, color = Color.White.copy(alpha = 0.9f),
-                        maxLines = 2, overflow = TextOverflow.Ellipsis)
+                    Text(
+                        text = detail,
+                        style = secondaryStyle.copy(fontSize = 13.sp, lineHeight = 16.sp),
+                        color = Color.White.copy(alpha = 0.9f),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
         }

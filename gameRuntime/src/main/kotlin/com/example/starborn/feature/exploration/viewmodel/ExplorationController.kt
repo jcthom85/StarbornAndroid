@@ -1567,6 +1567,15 @@ class ExplorationController(
         reward.credits?.takeIf { it > 0 }?.let { amount ->
             sessionStore.addCredits(amount)
             parts.add("$amount credits")
+            promptManager.enqueue(
+                ItemGrantedPrompt(
+                    itemName = "+$amount Credits",
+                    quantity = 1,
+                    itemId = "currency_credits",
+                    description = "Dominion scrip added to colony ledger.",
+                    category = "currency"
+                )
+            )
         }
         val aggregatedItems = linkedMapOf<String, Int>()
         reward.items.filter { it.itemId.isNotBlank() }.forEach { item ->
@@ -2184,6 +2193,7 @@ class ExplorationController(
     }
 
     private fun scheduleNovaBuildTutorial(state: GameSessionState) {
+        if (activeDialogueSession != null || _uiState.value.activeDialogue != null) return
         com.example.starborn.domain.tutorial.NovaProgressionTutorial.firstAp(state, tutorialsEnabled)?.let { entry ->
             tutorialManager.showOnce(entry, onDismiss = {
                 tutorialManager.markCompleted(requireNotNull(entry.key))
@@ -2758,6 +2768,7 @@ class ExplorationController(
         val session = dialogueService.startDialogue(dialogueName) ?: return false
         activeDialogueSession = session
         activeDialogueNpcName = npcName
+        promptManager.setToastsSuspended(true)
         lastDialogueVoiceCue = null
         _uiState.update {
             it.copy(
@@ -2779,6 +2790,7 @@ class ExplorationController(
         val session = dialogueService.startDialogue(dialogueName)
         activeDialogueSession = session
         activeDialogueNpcName = npcName
+        promptManager.setToastsSuspended(true)
         playUiCue("click")
         lastDialogueVoiceCue = null
         _uiState.update {
@@ -2808,6 +2820,7 @@ class ExplorationController(
             activeDialogueSession = null
             activeDialogueNpcName = null
             _uiState.update { it.copy(activeDialogue = null, dialogueChoices = emptyList()) }
+            promptManager.setToastsSuspended(false)
             lastDialogueVoiceCue = null
             if (dialogueMusicActive && !dialogueMusicPersistent) {
                 playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
@@ -2816,6 +2829,7 @@ class ExplorationController(
             if (!npcName.isNullOrBlank()) {
                 handleNpcTrigger("dialogue_closed", npcName, resolveNpcDialogueName(npcName))
             }
+            scheduleNovaBuildTutorial(sessionStore.state.value)
         } else {
             _uiState.update {
                 it.copy(
@@ -2847,6 +2861,7 @@ class ExplorationController(
             activeDialogueSession = null
             activeDialogueNpcName = null
             _uiState.update { it.copy(activeDialogue = null, dialogueChoices = emptyList()) }
+            promptManager.setToastsSuspended(false)
             lastDialogueVoiceCue = null
             if (dialogueMusicActive && !dialogueMusicPersistent) {
                 playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
@@ -2855,6 +2870,7 @@ class ExplorationController(
             if (!npcName.isNullOrBlank()) {
                 handleNpcTrigger("dialogue_closed", npcName, resolveNpcDialogueName(npcName))
             }
+            scheduleNovaBuildTutorial(sessionStore.state.value)
         } else {
             _uiState.update {
                 it.copy(
@@ -3354,6 +3370,7 @@ class ExplorationController(
     fun closeMenuOverlay() {
         viewModelScope.launch(dispatchers.main) {
             playUiCue("menu_close")
+            promptManager.setToastsSuspended(false)
             _uiState.update {
                 it.copy(
                     isMenuOverlayVisible = false,
@@ -3809,9 +3826,6 @@ class ExplorationController(
         if (!tutorialsEnabled) return
         if (tab != MenuTab.INVENTORY && !(tab == MenuTab.STATS && _uiState.value.settings.modernFieldMenu)) return
         val session = sessionStore.state.value
-        if (_uiState.value.settings.modernFieldMenu && tab == MenuTab.STATS && OpeningEquipmentGuide.needsGuidance(session)) {
-            return
-        }
         val receivedStarterSupplies =
             "ms_w1_mq01_jed_talked" in session.completedMilestones ||
                 "w1_mq01" in session.completedQuests
@@ -4554,6 +4568,9 @@ class ExplorationController(
                 "room_id" to _uiState.value.currentRoom?.id
             )
         )
+        if (normalized.equals("functional_cryo_inductor", ignoreCase = true)) {
+            closeMenuOverlay()
+        }
         triggerPlayerAction("tinkering_craft", normalized)
         if (normalized.equals(ArcadeIds.REPAIRED_CORE, ignoreCase = true) && arcadeService.completeDeepMineRepair()) {
             postStatus("The Hyperion cabinet wakes with an amber pulse. Ollie whistles: transport to the Astra is handled.")

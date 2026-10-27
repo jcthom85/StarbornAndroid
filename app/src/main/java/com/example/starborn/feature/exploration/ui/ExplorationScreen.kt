@@ -94,6 +94,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.EmojiEvents
@@ -234,6 +236,7 @@ import com.example.starborn.domain.model.actionKey
 import com.example.starborn.domain.model.serviceTag
 import com.example.starborn.domain.theme.defaultWeatherForEnvironment
 import com.example.starborn.domain.tutorial.TutorialEntry
+import com.example.starborn.domain.tutorial.formattedTitle
 import com.example.starborn.ui.background.rememberAssetPainter
 import com.example.starborn.ui.components.ItemTargetSelectionDialog
 import com.example.starborn.ui.components.SaveLoadDialog
@@ -953,7 +956,34 @@ fun ExplorationScreen(
         val descriptionForPanel = baseRoomDescription
         val visibleNpcs = if (isRoomDark) emptyList() else uiState.npcs
         val visibleGroundItems = if (isRoomDark) emptyMap() else uiState.groundItems
-        val serviceQuickActions = emptyList<QuickMenuAction>()
+        val serviceQuickActions = remember(uiState.actions) {
+            uiState.actions.filter { it is ShopAction || it is RestStopAction || it is TinkeringAction }.map { action ->
+                when (action) {
+                    is ShopAction -> QuickMenuAction(
+                        label = action.name.replaceFirstChar { it.titlecase() },
+                        detail = "Shop",
+                        roomAction = action,
+                        imageVector = Icons.Filled.ShoppingCart
+                    )
+                    is RestStopAction -> QuickMenuAction(
+                        label = action.name.replaceFirstChar { it.titlecase() },
+                        detail = if (action.cookSource != null) "Cooking" else "Rest",
+                        roomAction = action,
+                        imageVector = Icons.Rounded.Hotel
+                    )
+                    is TinkeringAction -> QuickMenuAction(
+                        label = action.name.replaceFirstChar { it.titlecase() },
+                        detail = "Workbench",
+                        roomAction = action,
+                        imageVector = Icons.Filled.Build
+                    )
+                    else -> QuickMenuAction(
+                        label = action.name.replaceFirstChar { it.titlecase() },
+                        roomAction = action
+                    )
+                }
+            }
+        }
         val hasRoomEntities = visibleNpcs.isNotEmpty() ||
             visibleGroundItems.isNotEmpty() ||
             serviceQuickActions.isNotEmpty() ||
@@ -5454,9 +5484,15 @@ private fun NpcPresenceChip(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+                val isVendor = npc.contains("scrapper", ignoreCase = true) ||
+                    npc.contains("vendor", ignoreCase = true) ||
+                    npc.contains("merchant", ignoreCase = true) ||
+                    npc.contains("mechanic", ignoreCase = true) ||
+                    npc.contains("armorer", ignoreCase = true) ||
+                    npc.contains("weaponsmith", ignoreCase = true)
                 Text(
-                    text = "Talk",
-                    color = accentColor.copy(alpha = 0.86f),
+                    text = if (isVendor) "Talk • 🛒 Shop" else "Talk",
+                    color = if (isVendor) Color(0xFFFFCA28) else accentColor.copy(alpha = 0.86f),
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontSize = 10.sp,
                         fontWeight = FontWeight.SemiBold
@@ -6859,9 +6895,7 @@ fun TutorialBanner(
     modifier: Modifier = Modifier,
     onPrimaryAction: (() -> Unit)? = null
 ) {
-    val resolvedTitle = prompt.metadata["title"]
-        ?: prompt.context?.takeIf { it.isNotBlank() }?.let { "Tutorial · $it" }
-        ?: "Tutorial"
+    val resolvedTitle = prompt.formattedTitle()
     PromptBanner(
         title = resolvedTitle,
         message = prompt.message,
@@ -6897,7 +6931,7 @@ fun MilestoneBanner(
 private fun itemCategoryAccentColor(category: String?): Color {
     val norm = category?.lowercase(Locale.getDefault())?.trim().orEmpty()
     return when {
-        norm.contains("key") || norm.contains("relic") || norm.contains("core") || norm.contains("quest") -> Color(0xFFFFD54F) // Golden Amber
+        norm.contains("key") || norm.contains("relic") || norm.contains("core") || norm.contains("quest") || norm.contains("currency") || norm.contains("credit") -> Color(0xFFFFD54F) // Golden Amber
         norm.contains("weapon") || norm.contains("gun") || norm.contains("sword") || norm.contains("armor") || norm.contains("gear") || norm.contains("accessory") -> Color(0xFF7BE8FF) // Cyber Cyan
         norm.contains("consumable") || norm.contains("food") || norm.contains("ration") || norm.contains("heal") || norm.contains("stim") || norm.contains("firstaid") -> Color(0xFF81C784) // Medical Jade
         norm.contains("void") || norm.contains("erosion") || norm.contains("anomaly") -> Color(0xFFCE93D8) // Void Violet
@@ -6933,7 +6967,7 @@ fun ItemGrantedBanner(
             .widthIn(min = 300.dp, max = 560.dp)
             .maestroTag("item-granted-continue")
             .semantics {
-                contentDescription = "Item acquired: $itemLabel. Tap to continue."
+                contentDescription = "Item acquired: $itemLabel. Tap to continue. Tap for next."
             },
         color = Color(0xFF060B13).copy(alpha = 0.98f),
         contentColor = Color.White,
@@ -6975,13 +7009,6 @@ fun ItemGrantedBanner(
                             color = accentColor
                         )
                     }
-                }
-                if (hasSequence) {
-                    Text(
-                        text = "${prompt.sequenceIndex} / ${prompt.sequenceTotal}",
-                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                        color = Color.White.copy(alpha = 0.68f)
-                    )
                 }
             }
             Row(
@@ -7028,17 +7055,6 @@ fun ItemGrantedBanner(
                         )
                     }
                 }
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = if (prompt.sequenceIndex < prompt.sequenceTotal) "Tap for next" else "Tap to continue",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.White.copy(alpha = 0.52f)
-                )
             }
         }
     }

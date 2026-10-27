@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Starborn — World 1 Playtesting Field Guide</title>
+  <style>
+    :root {
+      --bg-base: #090d14;
+      --bg-surface: #111827;
+      --bg-card: #162032;
+      --bg-card-hover: #1c2940;
+      --border-color: #24344d;
+      --border-subtle: #1e2c40;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --cyan: #38bdf8;
+      --cyan-glow: rgba(56, 189, 248, 0.15);
+      --amber: #fbbf24;
+      --amber-glow: rgba(251, 191, 36, 0.15);
+      --emerald: #34d399;
+      --emerald-glow: rgba(52, 211, 153, 0.15);
+      --purple: #c084fc;
+      --purple-glow: rgba(192, 132, 252, 0.15);
+      --rose: #fb7185;
+      --rose-glow: rgba(251, 113, 133, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      padding: 2.5rem 1.5rem 5rem;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    /* Header & Branding */
+    header {
+      background: linear-gradient(135deg, rgba(22, 32, 50, 0.95), rgba(17, 24, 39, 0.98));
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--cyan-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--cyan), var(--amber), var(--purple));
+    }
+
+    .badge-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      border: 1px solid transparent;
+    }
+
+    .badge-cyan { background: var(--cyan-glow); color: var(--cyan); border-color: rgba(56, 189, 248, 0.3); }
+    .badge-amber { background: var(--amber-glow); color: var(--amber); border-color: rgba(251, 191, 36, 0.3); }
+    .badge-emerald { background: var(--emerald-glow); color: var(--emerald); border-color: rgba(52, 211, 153, 0.3); }
+    .badge-purple { background: var(--purple-glow); color: var(--purple); border-color: rgba(192, 132, 252, 0.3); }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .progress-container {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 999px;
+      height: 8px;
+      overflow: hidden;
+      margin-top: 1.25rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .progress-bar {
+      background: linear-gradient(90deg, var(--cyan), var(--emerald));
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 0.35rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    button {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s;
+    }
+
+    button:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--cyan);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* Executive Callout */
+    .callout {
+      background: rgba(17, 24, 39, 0.7);
+      border-left: 4px solid var(--cyan);
+      border-radius: 0 12px 12px 0;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+      border-top: 1px solid var(--border-subtle);
+      border-right: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .callout-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--cyan);
+      margin-bottom: 0.25rem;
+    }
+
+    .callout p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    /* Session Cards */
+    .session-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .session-card:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    }
+
+    .session-header {
+      padding: 1.5rem 1.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(22, 32, 50, 0.6);
+    }
+
+    .session-day-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .session-day {
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .session-1-color { color: var(--cyan); }
+    .session-2-color { color: var(--amber); }
+    .session-3-color { color: var(--purple); }
+
+    .session-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .session-time-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .session-body {
+      padding: 1.75rem;
+    }
+
+    /* Nav Target Grids */
+    .nav-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .nav-box {
+      background: rgba(9, 13, 20, 0.7);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+
+    .nav-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: var(--text-dim);
+      margin-bottom: 0.25rem;
+    }
+
+    .nav-val {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .room-tag {
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.75rem;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      color: var(--cyan);
+    }
+
+    /* Checklist & Story Steps */
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 1.25rem 0 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .step-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      padding: 0.85rem 1rem;
+      background: rgba(17, 24, 39, 0.4);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      transition: background 0.15s;
+    }
+
+    .step-item:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .step-item input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--text-dim);
+      border-radius: 6px;
+      margin-top: 0.2rem;
+      cursor: pointer;
+      display: grid;
+      place-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .step-item input[type="checkbox"]:checked {
+      background-color: var(--emerald);
+      border-color: var(--emerald);
+    }
+
+    .step-item input[type="checkbox"]:checked::before {
+      content: "✔";
+      font-size: 12px;
+      color: #090d14;
+      font-weight: 900;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-weight: 600;
+      color: #fff;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .step-item input[type="checkbox"]:checked ~ .step-content .step-title {
+      text-decoration: line-through;
+      color: var(--text-dim);
+    }
+
+    .step-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .step-item input[type="checkbox"]:checked ~ .step-content .step-desc {
+      opacity: 0.6;
+    }
+
+    /* Checkpoint Stop Box */
+    .stop-banner {
+      margin-top: 1.5rem;
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .stop-session-1 {
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .stop-session-2 {
+      background: rgba(251, 191, 36, 0.12);
+      border: 1px solid rgba(251, 191, 36, 0.4);
+    }
+
+    .stop-session-3 {
+      background: rgba(192, 132, 252, 0.12);
+      border: 1px solid rgba(192, 132, 252, 0.4);
+    }
+
+    .stop-icon {
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+
+    .stop-info h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.2rem;
+    }
+
+    .stop-info p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Notes / Discrepancies Grid */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .note-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .note-card-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--rose);
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .note-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* Summary Table */
+    .table-container {
+      overflow-x: auto;
+      margin-top: 1.25rem;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    th {
+      background: rgba(22, 32, 50, 0.9);
+      color: var(--text-dim);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-main);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: #fff;
+        color: #000;
+        padding: 0;
+      }
+      header, .session-card, .callout, .note-card, .nav-box, .stop-banner {
+        border-color: #ccc !important;
+        background: #fff !important;
+        color: #000 !important;
+        box-shadow: none !important;
+      }
+      h1, .session-title, .step-title, h3, h4, .nav-val {
+        color: #000 !important;
+      }
+      .step-desc, .subtitle, p, td {
+        color: #333 !important;
+      }
+      .controls, .progress-container, .progress-text {
+        display: none !important;
+      }
+      .session-card {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Header -->
+    <header>
+      <div class="badge-bar">
+        <span class="badge badge-cyan">Device: Pixel 8a</span>
+        <span class="badge badge-amber">Schedule: Mon – Wed (3 Days)</span>
+        <span class="badge badge-emerald">Scope: Full World 1 (81 Rooms)</span>
+        <span class="badge badge-purple">Budget: ~3 to 3.5 Hours Total</span>
+      </div>
+      <h1><span>⚡</span> Starborn — World 1 Playtesting Guide</h1>
+      <p class="subtitle">Structured 3-session manual playthrough optimized for natural story progression, balanced duration, and clean save checkpoints.</p>
+
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="progress-text">
+        <span>Completion Progress</span>
+        <span id="progressPercent">0%</span>
+      </div>
+
+      <div class="controls">
+        <button onclick="resetCheckboxes()">↺ Reset Checkboxes</button>
+        <button onclick="window.print()">🖨️ Print / Save as PDF</button>
+      </div>
+    </header>
+
+    <!-- Executive Overview -->
+    <div class="callout">
+      <div class="callout-title">Session Pacing Reality</div>
+      <p>A thorough completionist run of World 1 takes <strong>3 hours to 3 hours 30 minutes</strong>. Each session below is budgeted for <strong>~55 to 70 minutes</strong>. Do not rush: take time to inspect flavor text, test touch targets, verify journal steps, and check mobile menu responsiveness.</p>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MONDAY: SESSION 1 -->
+    <!-- ========================================== -->
+    <div class="session-card">
+      <div class="session-header">
+        <div class="session-day-wrap">
+          <span class="session-day session-1-color">Monday — Session 1</span>
+          <div class="session-title">The Worker's Cage & Civilian Hubs</div>
+        </div>
+        <span class="session-time-badge badge-cyan">⏱️ ~55–65 min</span>
+      </div>
+
+      <div class="session-body">
+        <div class="nav-grid">
+          <div class="nav-box">
+            <div class="nav-label">Starting Point</div>
+            <div class="nav-val">Nova's Bunk <span class="room-tag">pit_nova_bunk</span></div>
+          </div>
+          <div class="nav-box">
+            <div class="nav-label">Target Stopping Point</div>
+            <div class="nav-val">Concourse Lobby <span class="room-tag">admin_lobby</span></div>
+          </div>
+        </div>
+
+        <h3>Key Objectives & Progression Steps</h3>
+        <ul class="step-list">
+          <li class="step-item">
+            <input type="checkbox" id="m1" onchange="updateProgress()">
+            <div class="step-content">
+              <div class="step-title">The Pit Onboarding & Lore Sweep</div>
+              <div class="step-desc">Watch opening scene, turn on bunk light, isolate conduit to open door. Sweep corridor, loot Supply Closet for <strong>Film 01: Unpayable Debt (VHS 1)</strong>. Talk to Jed in his bunk and complete starter equipment tutorial (equip Mining Pistol & Flux Liner). Discover the broken arcade cabinet in Mess Hall and loot shower steam valves.</div>
+            </div>
+          </li>
+          <li class="step-item">
+            <input type="checkbox" id="m2" onchange="updateProgress()">
+            <div class="step-content">
+              <div class="step-title">Jed's Workshop & Cutter Surge (Wake Up Call — w1_mq01)</div>
+              <div class="step-desc">Inspect loader diagnostic strip, defeat Faulted Loader in Scrap Yard. Open <em>Menu > Tinkering</em> to craft <strong>Functional Cryo-Inductor</strong> (unlocks <em>Cryo Vent</em>). Patch Flux Liner ground strip, confirm cutter governor bypass, fire live cutter test surge. Sweep workshop for <strong>Film 02 (VHS 2)</strong> in Jed's Office, mod bench in Parts Loft, and Flooded Basement chest.</div>
+            </div>
+          </li>
+          <li class="step-item">
+            <input type="checkbox" id="m3" onchange="updateProgress()">
+            <div class="step-content">
+              <div class="step-title">Trade Row Sweep (The Scavenger's Stash — w1_sq01)</div>
+              <div class="step-desc">Meet Scrapper at his stall to start quest. Loot Cold Locker and open rebel cache in The Hidden Stash. Turn in to Scrapper for 80 XP + 2 Pulse Grenades. Explore Recyc Bar (talk to Miner Bill, inspect jukebox), Card Den, and balance Pump Passage valve.</div>
+            </div>
+          </li>
+          <li class="step-item">
+            <input type="checkbox" id="m4" onchange="updateProgress()">
+            <div class="step-content">
+              <div class="step-title">Med-Bay Sweep (System Flush — w1_sq02)</div>
+              <div class="step-desc">Meet Doc in Exam Room 1 to start quest. Loot cryogenic locker in Med Supply Closet. Defeat 2 Siren Skimmers in Ventilation Hub. Clear vents in strict sequence: <strong>Inspect Vent → Reroute Fans → Clear Toxic Blockage</strong>. Turn in to Doc for Corrosive Rounds mod. Sweep Decon Lock and The Morgue.</div>
+            </div>
+          </li>
+          <li class="step-item">
+            <input type="checkbox" id="m5" onchange="updateProgress()">
+            <div class="step-content">
+              <div class="step-title">Transit Checkpoint & Clearance (Shift Clearance — w1_mq02)</div>
+              <div class="step-desc">Pass Shift Queue to Search Bay; talk to Guard Hank to trigger clearance rejection. Enter Zeke's Booth; select <strong>"Grid Instability"</strong> to spoof paperwork. Receive <strong>Mine Access Badge</strong>. Step through Blast Door A into Logistics.</div>
+            </div>
+          </li>
+        </ul>
+
+        <div class="stop-banner stop-session-1">
+          <div class="stop-icon">🛑</div>
+          <div class="stop-info">
+            <h4>Monday Checkpoint Stop Sign</h4>
+            <p><strong>Walkthrough Section 5 complete.</strong> Stop in <strong>Concourse Lobby (<code>admin_lobby</code>)</strong> right after crossing Blast Door A. Open <em>MENU > Save</em> in a safe slot.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TUESDAY: SESSION 2 -->
+    <!-- ========================================== -->
+    <div class="session-card">
+      <div class="session-header">
+        <div class="session-day-wrap">
+          <span class="session-day session-2-color">Tuesday — Session 2</span>
+          <div class="session-title">Corporate Infiltration & The Deep Mine</div>
+        </div>
+        <span class="session-time-badge badge-amber">⏱️ ~60–70 min</span>
+      </div>
+
+      <div class="session-body">
+        <div class="nav-grid">
+          <div class="nav-box">
+            <div class="nav-label">Starting Point</div>
+            <div class="nav-val">Concourse Lobby <span class="room-tag">admin_lobby</span></div>
+          </div>
+          <div class="nav-box">
+            <div class="nav-label">Target Stopping Point</div>
+            <div class="nav-val">The Heart <span class="room-tag">echo_heart</span></div>
+          </div>
+        </div>
+
+        <h3>Key Objectives & Progression Steps</h3>
+        <ul class="step-list">
+          <li class="step-item">
+            <input type="checkbox" id="t1" onchange="updateProgress()">
+            <div class="step-content">
+              <div class="step-title">Guard Break Certification (Heavy Lifting — w1_sq03)</div>
+              <div class="step-desc">Talk to Foreman Boggs in Concourse Lobby. Head east through Customer Service to Security Post. Defeat Acoustic Bulwark in shield drill; learn and execute <em>Hydraulic Kick</em> (Guard Break) for 100 XP, Heavy Gear, and 2 AP. Return to Boggs to authorize Deep Mine elevator. Sweep Observation Deck, Foreman's Office, and Staff Lounge.</div>
+            </div>
+          </li>
+          <li class="step-item">
+            <input type="checkbox" id="t2" onchange="updateProgress()">
+            <div class="step-content">
+              <div class="step-title">Server Room Infiltration (Protocol Override — w1_sq04)</div>
+              <div class="step-desc">Enter Server Room, defeat Resonance Buoys in Aisle 01. In The Core Hub, interact with terminal to discover quest, thaw console, read output ports warning, then re-engage terminal and choose: <strong>"Write to the removable circuit board"</strong> (awards Circuit Board + 110 XP). Sweep Backup Storage and Admin Office.</div>
+            </div>
+          </li>
+          <li class="step-item">
+            <input type="checkbox" id="t3" onchange="updateProgress()">
+            <div class="step-content">
+              <div class="step-title">Deep Mine Descent & Restoring Power</div>
+              <div class="step-desc">Head to Elevator Lobby, choose "Plan mine descent", descend to Elevator Landing (note: drain pool fishing is locked until World 2). Fight 2 Echo Borers in Main Tunnel Alpha. Reach Cavern Junction and flip breaker to <strong>"Restore power"</strong>.</div>
+            </div>
+          </li>
+          <li class="step-item">
+            <input type="checkbox" id="t4" onchange="updateProgress()">
+            <div class="step-content">
+              <div class="step-title">The Lost Shift (w1_sq05) & Ore-Cart Breach</div>
+              <div class="step-desc">Backtrack to Side Shunt 4 with power restored; inspect crew datapad and read miner's final letter (awards Recoil Dampener + 120 XP). Return to Cavern Junction: set lever to <strong>"Divert Track West"</strong>, release wheel brake to breach Sealed Munitions Stash. Loot cache for <strong>Thermite Core Mod</strong>. Clear optional Riot Control Post detour.</div>
+            </div>
+          </li>
+          <li class="step-item">
+            <input type="checkbox" id="t5" onchange="updateProgress()">
+            <div class="step-content">
+              <div class="step-title">Threshold to The Architect Core</div>
+              <div class="step-desc">Crawl through Conveyor Belt, Ore Sifter, Deep Shoring, Ancient Threshold, Long Slope, and Echo Antechamber. Step through Geometric Gap and Silent Walkway into The Heart (<code>echo_heart</code>). Inspect geometry. Do NOT touch the tuning fork yet!</div>
+            </div>
+          </li>
+        </ul>
+
+        <div class="stop-banner stop-session-2">
+          <div class="stop-icon">⚠️</div>
+          <div class="stop-info">
+            <h4>Tuesday Checkpoint: Pre-Fork Save Alert!</h4>
+            <p><strong>Walkthrough Section 9 complete.</strong> Stand in <strong>The Heart (<code>echo_heart</code>)</strong> before touching the tuning fork. Tuning the Fork permanently locks down the colony into Red Alert. <strong>Save into a DEDICATED SLOT that you will NOT overwrite!</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- WEDNESDAY: SESSION 3 -->
+    <!-- ========================================== -->
+    <div class="session-card">
+      <div class="session-header">
+        <div class="session-day-wrap">
+          <span class="session-day session-3-color">Wednesday — Session 3</span>
+          <div class="session-title">Relic Sync, Red Alert & Colony Escape</div>
+        </div>
+        <span class="session-time-badge badge-purple">⏱️ ~55–65 min</span>
+      </div>
+
+      <div class="session-body">
+        <div class="nav-grid">
+          <div class="nav-box">
+            <div class="nav-label">Starting Point</div>
+            <div class="nav-val">The Heart <span class="room-tag">echo_heart</span></div>
+          </div>
+          <div class="nav-box">
+            <div class="nav-label">World Completion Milestone</div>
+            <div class="nav-val">Sector 9 Crash Site <span class="room-tag">sector9_crash_site</span></div>
+          </div>
+        </div>
+
+        <h3>Key Objectives & Progression Steps</h3>
+        <ul class="step-list">
+          <li class="step-item">
+            <input type="checkbox" id="w1" onchange="updateProgress()">
+            <div class="step-content">
+              <div class="step-title">Counter-Tuning the Fork (The Echo — w1_mq03)</div>
+              <div class="step-desc">Engage tuning fork in The Heart. Solve 3 waveform stages: <strong>Phase Sweep to 87 kHz</strong> (±2) → Hold; <strong>Cold Loop wave height to 68%</strong> (±3%) → Hold; <strong>Ground Phase to 180°</strong> (±6°) → Engage handshake. Inductor fuses, <em>Blast Wave</em> unlocks, recover <strong>Tuning Fork</strong>. Sweep newly lit Harmonic Well and Signal Alcove.</div>
+            </div>
+          </li>
+          <li class="step-item">
+            <input type="checkbox" id="w2" onchange="updateProgress()">
+            <div class="step-content">
+              <div class="step-title">Red Alert Lockdown & Maintenance Access (w1_mq04)</div>
+              <div class="step-desc">Alarms sound across the colony. Exit north through Emergency Exit into Zeke's comms route. Defeat Siren Skimmer + Echo Borer in Maintenance Access; sweep Refueling Bay.</div>
+            </div>
+          </li>
+          <li class="step-item">
+            <input type="checkbox" id="w3" onchange="updateProgress()">
+            <div class="step-content">
+              <div class="step-title">Cargo Lift & Jed's Sacrifice</div>
+              <div class="step-desc">Enter Cargo Lift, defeat Acoustic Bulwark + Resonance Buoy. Talk to Jed to trigger his sacrifice sequence: Jed holds off security and gives Nova <strong>Jed's Chime (Ghost Signal Cell)</strong> + supplies before sealing the doors. Rest at lift; save in active slot.</div>
+            </div>
+          </li>
+          <li class="step-item">
+            <input type="checkbox" id="w4" onchange="updateProgress()">
+            <div class="step-content">
+              <div class="step-title">Security Checkpoint B & The Iron Warden Boss (w1_mq05)</div>
+              <div class="step-desc">Defeat Dampener + Buoy at Security Checkpoint B. Enter Pod Bay, talk to Zeke, then face <strong>The Iron Warden</strong>. Exploit <em>Cryo Vent</em> Brittle status, pressure Guard with <em>Hydraulic Kick</em>, detonate with <em>Blast Wave</em>, and maintain healing.</div>
+            </div>
+          </li>
+          <li class="step-item">
+            <input type="checkbox" id="w5" onchange="updateProgress()">
+            <div class="step-content">
+              <div class="step-title">Chime Splice & Colony Launch</div>
+              <div class="step-desc">Post-fight: talk to Zeke in Pod Bay, then follow him into The Pod Core (<code>launch_pod</code>). Talk to Zeke <em>again</em> to splice the Chime into navigation; Zeke joins the party. Interact with the <strong>navigation console</strong> to launch pod. Slam into Planetary Shield and crash in World 2!</div>
+            </div>
+          </li>
+        </ul>
+
+        <div class="stop-banner stop-session-3">
+          <div class="stop-icon">🚀</div>
+          <div class="stop-info">
+            <h4>Wednesday World 1 Completion Verified!</h4>
+            <p><strong>Walkthrough Section 11 complete.</strong> Arrival confirmed at <strong>Crash Site (<code>sector9_crash_site</code>)</strong> in World 2. Quest <code>w1_mq05</code> Completed; <code>w2_mq01</code> (A Strange Coast) active. Zeke is in your party.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Practical Playtest Notes / Discrepancies -->
+    <h3 style="margin-top: 2rem;">⚠️ Critical Playtest Notes & Implementation Gotchas</h3>
+    <div class="notes-grid">
+      <div class="note-card">
+        <div class="note-card-title"><span>🔒</span> Locked Drain Pool Fishing</div>
+        <p>In Elevator Landing (<code>mine_landing</code>), the drain pool mentions fishing. This is strictly locked until you examine the pod in World 2. Do not hunt for a fishing rod in World 1.</p>
+      </div>
+      <div class="note-card">
+        <div class="note-card-title"><span>💾</span> Pre-Fork Save Discipline</div>
+        <p>Tuning the Fork at the end of Session 2 triggers Red Alert lockdown, permanently changing room states. Keep your pre-Fork save file in a separate slot so you can reload upper colony content if needed.</p>
+      </div>
+      <div class="note-card">
+        <div class="note-card-title"><span>🗣️</span> Two-Step Zeke Chime Dialogue</div>
+        <p>After the Warden dies, talk to Zeke in Pod Bay <em>first</em>, then follow him into The Pod Core and talk to him <em>second</em>. Touching the navigation console before the second talk will display a locked error.</p>
+      </div>
+      <div class="note-card">
+        <div class="note-card-title"><span>🚪</span> Hub Map Return Rule</div>
+        <p>The "Return to Map" button only works from designated entrance rooms (Pit Landing, Scrap Yard, Trade Row Gate, Triage Hall, Shift Queue, Concourse Lobby). Walk to the entrance room first.</p>
+      </div>
+    </div>
+
+    <!-- Summary Table -->
+    <h3 style="margin-top: 2.5rem;">📋 Master Schedule Cheat Sheet</h3>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Session</th>
+            <th>Arc Focus</th>
+            <th>Starting Room</th>
+            <th>Ending / Safe Save Room</th>
+            <th>Walkthrough Milestones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong class="session-1-color">Mon (S1)</strong></td>
+            <td>Pit Onboarding, Cutter Repair, Civilian Hubs & Checkpoint</td>
+            <td>Nova's Bunk (<code>pit_nova_bunk</code>)</td>
+            <td>Concourse Lobby (<code>admin_lobby</code>)</td>
+            <td>Section 5 Complete (Badge acquired, Shift Clearance done)</td>
+          </tr>
+          <tr>
+            <td><strong class="session-2-color">Tue (S2)</strong></td>
+            <td>Shield Training, Server Infiltration, Deep Mine & Relic Room</td>
+            <td>Concourse Lobby (<code>admin_lobby</code>)</td>
+            <td>The Heart (<code>echo_heart</code>)</td>
+            <td>Section 9 Complete (Pre-Fork Checklist verified)</td>
+          </tr>
+          <tr>
+            <td><strong class="session-3-color">Wed (S3)</strong></td>
+            <td>Fork Tuning, Red Alert Gauntlet, Iron Warden Boss & Pod Launch</td>
+            <td>The Heart (<code>echo_heart</code>)</td>
+            <td>Crash Site (<code>sector9_crash_site</code>)</td>
+            <td>Section 11 Complete (World 2 Arrival, Zeke recruited)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <script>
+    const checkboxIds = ['m1', 'm2', 'm3', 'm4', 'm5', 't1', 't2', 't3', 't4', 't5', 'w1', 'w2', 'w3', 'w4', 'w5'];
+
+    function loadState() {
+      checkboxIds.forEach(id => {
+        const checked = localStorage.getItem('starborn_w1_' + id) === 'true';
+        const el = document.getElementById(id);
+        if (el) el.checked = checked;
+      });
+      updateProgress();
+    }
+
+    function updateProgress() {
+      let checkedCount = 0;
+      checkboxIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.checked) {
+          checkedCount++;
+          localStorage.setItem('starborn_w1_' + id, 'true');
+        } else {
+          localStorage.setItem('starborn_w1_' + id, 'false');
+        }
+      });
+      const pct = Math.round((checkedCount / checkboxIds.length) * 100);
+      document.getElementById('progressBar').style.width = pct + '%';
+      document.getElementById('progressPercent').innerText = pct + '% (' + checkedCount + '/' + checkboxIds.length + ')';
+    }
+
+    function resetCheckboxes() {
+      if (confirm('Reset all playtesting checkboxes?')) {
+        checkboxIds.forEach(id => {
+          localStorage.removeItem('starborn_w1_' + id);
+          const el = document.getElementById(id);
+          if (el) el.checked = false;
+        });
+        updateProgress();
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', loadState);
+  </script>
+</body>
+</html>

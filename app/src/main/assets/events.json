@@ -968,7 +968,7 @@
       },
       {
         "type": "show_message",
-        "message": "Jed crimps the suit link. Nova clamps the replaceable ground strip to the floor bus."
+        "message": "Ground bus routing: Nova locks the suit-linked Flux Liner's sacrificial copper strap to the shop's bedrock ground lug. The circuit analyzer ticks solid green—power spikes are safely shunted."
       }
     ]
   },
@@ -1002,7 +1002,7 @@
       },
       {
         "type": "show_message",
-        "message": "Factory sweep limit: 61 kHz. Nova moves the bypass lead by hand and confirms the unrestricted phase range."
+        "message": "Diagnostic phase tuning: Factory sweep limit (61 kHz) bypassed. Nova manually trims the induction coil potentiometer to 84 kHz—the cutter emitter crackles with a steady, high-frequency blue ionization."
       }
     ]
   },
@@ -1176,6 +1176,27 @@
         "type": "set_quest_task_done",
         "quest_id": "w1_mq02",
         "task_id": "approach_admin_gate"
+      }
+    ]
+  },
+  {
+    "id": "w1_mod_acquired_tutorial",
+    "description": "Explains Weapon Mod slots immediately upon acquiring a weapon mod.",
+    "trigger": {
+      "type": "item_acquired",
+      "item_type": "mod"
+    },
+    "conditions": [
+      {
+        "type": "tutorial_not_completed",
+        "tutorial_id": "mod_slots_basics"
+      }
+    ],
+    "actions": [
+      {
+        "type": "system_tutorial",
+        "scene_id": "mod_slots_basics",
+        "context": "Tinker"
       }
     ]
   },
@@ -1358,7 +1379,7 @@
       },
       {
         "type": "show_message",
-        "message": "The crack is not the real problem. Pressure is backing up behind the fans, forcing poison through every weak seam."
+        "message": "Diagnostic reading: Intake manifold cracked under 140 PSI backpressure. Until the mechanical diverter reroutes the airflow toward the exhaust stack, sealing the seam will just rupture adjacent seals."
       }
     ]
   },
@@ -1429,7 +1450,7 @@
       },
       {
         "type": "show_message",
-        "message": "The fans grind into reverse. Green haze pulls away from the med-bay and gathers around the cracked vent."
+        "message": "Mechanical diverter engaged: Nova throws the pneumatic bypass lever. With a heavy CLANG, the diverter baffle swings toward the exhaust stack, pulling the caustic haze away from the clinic intake."
       }
     ]
   },
@@ -1504,7 +1525,7 @@
       },
       {
         "type": "show_message",
-        "message": "The blockage tears free. Clean airflow returns to the med-bay."
+        "message": "Blockage extracted: With the diverter holding suction away, Nova levers the crystallized toxic sludge from the intake grille. Nominal airflow returns to Doc's clinic."
       }
     ]
   },
@@ -14041,6 +14062,16 @@
         "type": "give_item",
         "item_id": "vhs_tape_02",
         "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_tape_02_found"
+      },
+      {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_ui_item_pickup",
+        "fade_ms": 0
       },
       {
         "type": "show_message",

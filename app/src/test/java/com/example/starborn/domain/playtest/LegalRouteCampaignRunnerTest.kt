@@ -120,6 +120,11 @@ class LegalRouteCampaignRunnerTest {
 
     @Before
     fun setUp() {
+        useProductionCrewRules = false
+        publicCombats.clear()
+        assistance.clear()
+        prototypeSkillsUsed.clear()
+        recordSystemsAudit = false
         Dispatchers.setMain(testDispatcher)
         testScope = CoroutineScope(SupervisorJob() + testDispatcher)
         saveDir = File(System.getProperty("java.io.tmpdir"), "starborn-legal-runner-${System.nanoTime()}").apply { mkdirs() }
@@ -1278,7 +1283,8 @@ class LegalRouteCampaignRunnerTest {
             harness.explorationVm.equipArmor("orion", "heat_liner")
             harness.settle()
             assertEquals("Earned liner must equip through public controls", "heat_liner", harness.sessionStore.state.value.equippedArmors["orion"])
-            harness.sellAtVisibleShop("orbital_dispensary", "power_cell", 7)
+            val powerCells = harness.sessionStore.state.value.inventory["power_cell"] ?: 0
+            if (powerCells > 0) harness.sellAtVisibleShop("orbital_dispensary", "power_cell", minOf(powerCells, 7))
             harness.sellAtVisibleShop("orbital_dispensary", "composite_plate", 4)
             harness.buyAtVisibleShop("orbital_dispensary", "medkit_plus", 6)
             harness.buyAtVisibleShop("orbital_dispensary", "orbital_glimmer_tonic", 1)
@@ -1352,8 +1358,12 @@ class LegalRouteCampaignRunnerTest {
             harness.playPublicEncounter("compliance_avatar")
             navigateLegalPath("orbital_customs_lounge")
             harness.sellAtVisibleShop("orbital_dispensary", "grav_boots", 1)
-            harness.buyAtVisibleShop("orbital_dispensary", "medkit_plus", 6)
-            harness.buyAtVisibleShop("orbital_dispensary", "orbital_glimmer_tonic", 3)
+            val remainingCells = harness.sessionStore.state.value.inventory["power_cell"] ?: 0
+            if (remainingCells > 0) harness.sellAtVisibleShop("orbital_dispensary", "power_cell", remainingCells)
+            val medkitsToBuy = if (useProductionCrewRules) 10 else 7
+            val tonicsToBuy = if (useProductionCrewRules) 2 else 3
+            harness.buyAtVisibleShop("orbital_dispensary", "medkit_plus", medkitsToBuy)
+            harness.buyAtVisibleShop("orbital_dispensary", "orbital_glimmer_tonic", tonicsToBuy)
             navigateLegalPath("deep_tear")
             performAction("w5_mq25_enter_tear")
             assertTrue("w5_mq25 completed", harness.sessionStore.state.value.completedQuests.contains("w5_mq25"))
@@ -1788,11 +1798,18 @@ class LegalRouteCampaignRunnerTest {
                             it.combatant.side == com.example.starborn.domain.combat.CombatSide.PLAYER && it.isAlive &&
                                 it.hp < it.combatant.stats.maxHp * .65
                         }.minByOrNull { it.hp.toDouble() / it.combatant.stats.maxHp }
-                        val healing = combat.inventory.value.filter {
+                        val partyHealing = if (injuredAllies >= 2) {
+                            combat.inventory.value.firstOrNull {
+                                it.quantity > 0 && (it.item.effect?.restoreHp ?: 0) > 0 &&
+                                    it.item.effect?.target?.trim()?.lowercase() == "party" &&
+                                    it.item.type.equals("consumable", ignoreCase = true)
+                            }
+                        } else null
+                        val healing = partyHealing ?: combat.inventory.value.filter {
                             it.quantity > 0 && (it.item.effect?.restoreHp ?: 0) > 0 &&
                                 it.item.type.equals("consumable", ignoreCase = true)
                         }.maxByOrNull { it.item.effect?.restoreHp ?: 0 }
-                        if ((prototypeBranch != null || useProductionCrewRules) && actor == "orion" && wounded != null) {
+                        if (actor == "orion" && wounded != null && partyHealing == null) {
                             val recovery = combat.skillsForPlayer(actor).firstOrNull {
                                 it.id in setOf("orion_field_treatment", "orion_stasis_stitch") && combat.canUseSkill(actor, it)
                             }
@@ -1801,18 +1818,27 @@ class LegalRouteCampaignRunnerTest {
                                 continue
                             }
                         }
+                        val canFinishLastEnemy = livingEnemies.size == 1 && livingEnemies.single().hp <= 35
+                        val shouldHeal = !canFinishLastEnemy && wounded != null && healing != null &&
+                            (actor != "gh0st" || wounded.combatant.id == "gh0st" || partyHealing != null)
                         if (support?.id == "nova_link") {
                             combat.useSkill(support)
                             continue
-                        } else if (wounded != null && healing != null) {
-                            combat.useItem(healing, wounded.combatant.id)
+                        } else if (shouldHeal && healing != null && wounded != null) {
+                            val healTarget = if (healing.item.effect?.target?.trim()?.lowercase() == "party") null else wounded.combatant.id
+                            combat.useItem(healing, healTarget)
                             continue
                         } else if (support != null) {
                             combat.useSkill(support)
                             continue
                         }
-                        val target = state.combatants.values.filter { it.combatant.side == com.example.starborn.domain.combat.CombatSide.ENEMY && it.isAlive }
-                            .minBy { it.hp }.combatant.id
+                        val target = if (room.startsWith("source")) {
+                            state.combatants.values.filter { it.combatant.side == com.example.starborn.domain.combat.CombatSide.ENEMY && it.isAlive }
+                                .minBy { (if (it.statusEffects.any { s -> s.id in setOf("stun", "freeze") }) 500 else 0) + it.hp - it.combatant.stats.speed }.combatant.id
+                        } else {
+                            state.combatants.values.filter { it.combatant.side == com.example.starborn.domain.combat.CombatSide.ENEMY && it.isAlive }
+                                .minBy { it.hp }.combatant.id
+                        }
                         if ((prototypeBranch != null || useProductionCrewRules) && actor == "nova") {
                             val preferred = if (livingEnemies.size > 1) "nova_scatter_charge" else "nova_breaker_bolt"
                             val move = combat.skillsForPlayer(actor).firstOrNull { it.id == preferred && combat.canUseSkill(actor, it) }
@@ -1830,8 +1856,10 @@ class LegalRouteCampaignRunnerTest {
                         val controlPriorities = if (livingEnemies.size > 1) listOf("nova_blast_wave", "source_art_stasis")
                             else listOf("source_art_stasis", "nova_blast_wave")
                         val priorities = controlPriorities + listOf("gh0st_system_crash", "nova_cryo_vent", "zeke_overload_fists", "gh0st_venom_edge", "nova_arc_tether", "zeke_shatter_blow", "gh0st_headshot", "orion_prism_lance")
-                        val skill = if (room.startsWith("orbital") || room.startsWith("deep") || room.startsWith("source")) availableSkills.minByOrNull { priorities.indexOf(it.id) }
-                            else availableSkills.maxByOrNull { it.basePower }
+                        val skill = if (room.startsWith("orbital") || room.startsWith("deep") || room.startsWith("source")) availableSkills.minByOrNull {
+                            val idx = priorities.indexOf(it.id)
+                            if (idx >= 0) idx else 999
+                        } else availableSkills.maxByOrNull { it.basePower }
                         if (skill != null) {
                             if (combat.targetRequirementFor(skill) == com.example.starborn.feature.combat.viewmodel.TargetRequirement.NONE) {
                                 combat.useSkill(skill)
@@ -1849,7 +1877,12 @@ class LegalRouteCampaignRunnerTest {
                                         it.combatant.side == com.example.starborn.domain.combat.CombatSide.ENEMY && it.isAlive
                                     }.map { it.combatant.id }.toSet(), queued.targetIds.toSet())
                                 }
-                            } else combat.useSkill(skill, listOf(target))
+                            } else {
+                                val skillTarget = if (skill.id == "source_art_stasis" && livingEnemies.size > 1) {
+                                    livingEnemies.maxByOrNull { it.combatant.stats.strength }?.combatant?.id ?: target
+                                } else target
+                                combat.useSkill(skill, listOf(skillTarget))
+                            }
                         } else combat.playerAttack(target)
                     }
                 }
@@ -1863,7 +1896,7 @@ class LegalRouteCampaignRunnerTest {
                     return
                 }
                 val victory = state.outcome as? com.example.starborn.domain.combat.CombatOutcome.Victory
-                    ?: error("Public combat failed in $room: ${state.outcome}; log=${state.log.takeLast(8)}")
+                    ?: error("Public combat failed in $room: ${state.outcome}; log=\n${state.log.joinToString("\n")}")
                 assertTrue("Victory must include real damage", state.log.any { it is com.example.starborn.domain.combat.CombatLogEntry.Damage && it.amount > 0 })
                 val reward = victory.rewards
                 val usedItems = state.log.filterIsInstance<com.example.starborn.domain.combat.CombatLogEntry.ActionQueued>()

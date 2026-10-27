@@ -231,7 +231,7 @@ internal fun ModernPartyPage(
     }
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         OutlinedButton(onClick = { onDetails(member.id) }, modifier = Modifier.weight(1f).heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp)) { Text("Attributes") }
-        Button(onClick = { onSkills(member.id) }, modifier = Modifier.weight(1f).heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp)) { Text("Skills") }
+        Button(onClick = { onSkills(member.id) }, modifier = Modifier.weight(1f).heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp)) { Text("Abilities") }
     }
     Text("Equipment", color = FieldMenuDesign.text, style = MaterialTheme.typography.titleMedium)
     equipment()

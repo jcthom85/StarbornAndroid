@@ -122,22 +122,29 @@ internal fun DesktopExplorationScrollPane(state: ScrollState, modifier: Modifier
 @Composable
 internal fun DesktopExplorationActionRow(label: String, kind: String, enabled: Boolean, onClick: () -> Unit) {
     val settings = LocalExplorationSettings.current
-    val accent = if (kind == "enemy") Color(0xFFFF8A80) else Color(0xFF63E6FF)
+    val isShop = kind == "shop"
+    val accent = when (kind) {
+        "enemy" -> Color(0xFFFF8A80)
+        "shop" -> Color(0xFFFFCA28)
+        else -> Color(0xFF63E6FF)
+    }
     val icon = when (kind) {
         "cook" -> androidx.compose.material.icons.Icons.Rounded.Restaurant
         "rest" -> androidx.compose.material.icons.Icons.Rounded.Hotel
         "travel" -> androidx.compose.material.icons.Icons.Rounded.ArrowForward
         "enemy" -> androidx.compose.material.icons.Icons.Rounded.Warning
         "item" -> androidx.compose.material.icons.Icons.Rounded.Inventory2
+        "shop" -> androidx.compose.material.icons.Icons.Rounded.ShoppingCart
         else -> androidx.compose.material.icons.Icons.Rounded.Search
     }
+    val displayLabel = if (isShop && !label.startsWith("[")) "[ 🛒 Shop ] $label" else label
     Surface(onClick = onClick, enabled = enabled,
         modifier = Modifier.fillMaxWidth().heightIn(min = if (settings.largeTouchTargets) 56.dp else 44.dp).explorationFeedback(enabled, accent),
         color = if (settings.highContrastMode) Color.Black else Color(0xFF0B1A24), shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
         border = BorderStroke(1.dp, if (settings.highContrastMode) Color.White else accent.copy(alpha = if (enabled) .3f else .12f))) {
         Row(Modifier.padding(horizontal = 12.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Icon(icon, null, Modifier.size(20.dp), tint = accent.copy(alpha = if (enabled) 1f else .35f))
-            Text(label, Modifier.weight(1f), color = Color.White.copy(alpha = if (enabled) 1f else .45f), style = MaterialTheme.typography.labelLarge)
+            Text(displayLabel, Modifier.weight(1f), color = Color.White.copy(alpha = if (enabled) 1f else .45f), style = MaterialTheme.typography.labelLarge)
         }
     }
 }

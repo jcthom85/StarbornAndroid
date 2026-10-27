@@ -399,20 +399,20 @@
         "condition_unmet_message": "Turn on the bunk light to see the door controls."
       },
       {
-      "name": "cargo netting",
-      "type": "generic",
-      "action_event": "w1_mq01_check_netting",
-      "show_when_state": "light_on",
-      "condition_unmet_message": "Jed's metal bird is tucked into the cargo netting with Nova's tools and spare ration."
-    },
-    {
-      "name": "rusty locker",
-      "type": "generic",
-      "show_when_state": "light_on",
-      "condition_unmet_message": "Rust gathers around the latch. Lifting the bottom corner keeps the door from scraping the floor."
-    },
-    {
-      "name": "sleeping shelf",
+        "name": "cargo netting",
+        "type": "generic",
+        "action_event": "w1_mq01_check_netting",
+        "show_when_state": "light_on",
+        "condition_unmet_message": "Jed's metal bird is tucked into the cargo netting with Nova's tools and spare ration."
+      },
+      {
+        "name": "rusty locker",
+        "type": "generic",
+        "show_when_state": "light_on",
+        "condition_unmet_message": "Rust gathers around the latch. Lifting the bottom corner keeps the door from scraping the floor."
+      },
+      {
+        "name": "sleeping shelf",
         "type": "rest_stop",
         "rest_event": "w1_rest_nova_bunk",
         "message": "Nova sleeps until the shift alarm. Resting here restores the party."
@@ -755,8 +755,7 @@
       {
         "name": "diagnostic bench drawer",
         "type": "generic",
-        "action_event": "find_vhs_tape_02",
-        "condition_unmet_message": "An old diagnostic bench with a sealed drawer."
+        "condition_unmet_message": "An old diagnostic bench with a sealed drawer. Jed keeps his spare soldering tips and calibration logs inside."
       }
     ]
   },
@@ -1303,7 +1302,7 @@
     "env": "market",
     "title": "Market Strip",
     "background_image": "images/rooms/world_1/trade_strip_v3.webp",
-    "description": "Makeshift stalls crowd the corridor with patched tarps, power cells, and noodles fried in questionable oil. Scrapper's stall sits north behind a curtain of hanging cables, and a scanner-dead corner waits to the east.",
+    "description": "Makeshift stalls crowd the corridor with patched tarps, power cells, and noodles fried in questionable oil. Four merchants line the strip: the Colony Commissary for general supplies, Blades & Blasters for weapons, The Aegis for protective armor, and Trinkets & Tech for accessories. Scrapper's stall sits north behind a curtain of hanging cables, and a scanner-dead corner waits to the east.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1670,7 +1669,7 @@
     "env": "mine",
     "title": "Zeke's Booth",
     "background_image": "images/rooms/world_1/checkpoint_booth_v3.webp",
-    "description": "Zeke's window sits behind reinforced glass, surrounded by badge readers and liability screens. The booth speaker crackles above the document slot.",
+    "description": "Zeke's window sits behind reinforced glass, surrounded by badge readers, a discarded document locker, and liability screens. The booth speaker crackles above the document slot.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -1693,6 +1692,13 @@
         "name": "speaker",
         "type": "generic",
         "condition_unmet_message": "A cheap, buzzing intercom. It's the only way to talk to the clerks."
+      },
+      {
+        "name": "discarded document locker",
+        "type": "generic",
+        "action_event": "find_vhs_tape_02",
+        "requires_milestone_not_set": "ms_tape_02_found",
+        "condition_unmet_message": "The transit locker is empty except for shredded manifests."
       }
     ],
     "npc_presence": [

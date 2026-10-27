@@ -191,15 +191,17 @@ private fun SinglePlanDescription(
         buildAnnotatedString {
             append(plan.description)
             plan.segments.forEach { segment ->
-                val (color, weight, decoration) = when (segment.target) {
+                val target = segment.target
+                val (color, weight, decoration) = when (target) {
                     is InlineActionTarget.Npc -> Triple(Color.White, FontWeight.Bold, TextDecoration.Underline)
                     is InlineActionTarget.Enemy -> Triple(enemyAccent, FontWeight.SemiBold, TextDecoration.Underline)
                     is InlineActionTarget.Room -> {
-                        val clr = if (segment.locked) disabledColor else highlightColor
+                        val isShop = target.action is com.example.starborn.domain.model.ShopAction
+                        val clr = if (segment.locked) disabledColor else if (isShop) Color(0xFFFFCA28) else highlightColor
                         Triple(clr, FontWeight.Bold, if (segment.locked) TextDecoration.None else TextDecoration.Underline)
                     }
                 }
-                val backgroundColor = when (segment.target) {
+                val backgroundColor = when (target) {
                     is InlineActionTarget.Npc -> accentColor.copy(alpha = if (isDark) 0.34f else 0.26f)
                     else -> Color.Transparent
                 }

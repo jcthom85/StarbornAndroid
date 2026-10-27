@@ -772,7 +772,7 @@ internal fun InventoryEquipmentPreview(
             Surface(
                 color = FieldMenuDesign.panel,
                 shape = RoundedCornerShape(12.dp),
-                border = BorderStroke(1.dp, accentColor.copy(alpha = 0.6f)),
+                border = BorderStroke(1.5.dp, FieldMenuDesign.cyan),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
@@ -781,9 +781,19 @@ internal fun InventoryEquipmentPreview(
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("Tutorial", color = accentColor, style = MaterialTheme.typography.labelMedium)
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Box(
+                                modifier = Modifier
+                                    .background(FieldMenuDesign.cyan.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
+                                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                            ) {
+                                Text("NEW", color = FieldMenuDesign.cyan, style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                            }
+                            Text("[Field] Tutorial", color = accentColor, style = MaterialTheme.typography.labelMedium)
+                        }
                         Text(
                             text = if (weaponEquipped) "Step 2 of 2" else "Step 1 of 2",
                             color = FieldMenuDesign.textMuted,

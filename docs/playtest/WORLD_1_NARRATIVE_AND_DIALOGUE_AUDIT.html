@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Starborn — World 1 Narrative & Dialogue Audit</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface-border: #30363d;
+      --text-main: #c9d1d9;
+      --text-bright: #f0f6fc;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-glow: rgba(88, 166, 255, 0.15);
+      --amber: #d29922;
+      --amber-bg: rgba(210, 153, 34, 0.1);
+      --red: #f85149;
+      --red-bg: rgba(248, 81, 73, 0.1);
+      --green: #3fb950;
+      --green-bg: rgba(63, 185, 80, 0.1);
+      --purple: #bc8cff;
+      --code-bg: #090d13;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    [data-theme="light"] {
+      --bg: #f6f8fa;
+      --surface: #ffffff;
+      --surface-border: #d0d7de;
+      --text-main: #24292f;
+      --text-bright: #0969da;
+      --text-muted: #57606a;
+      --accent: #0969da;
+      --accent-glow: rgba(9, 105, 218, 0.1);
+      --amber: #9a6700;
+      --amber-bg: #fff8c5;
+      --red: #cf222e;
+      --red-bg: #ffebe9;
+      --green: #1a7f37;
+      --green-bg: #dafbe1;
+      --purple: #8250df;
+      --code-bg: #f6f8fa;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      position: relative;
+    }
+
+    .badge-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      letter-spacing: 0.05em;
+    }
+    .badge-primary { background: var(--accent-glow); color: var(--accent); border: 1px solid var(--accent); }
+    .badge-amber { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber); }
+
+    h1 {
+      font-size: 2.2rem;
+      color: var(--text-bright);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--surface-border);
+      padding-top: 1.25rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .action-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    button.btn {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      color: var(--text-bright);
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.5rem 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.15s ease-in-out;
+    }
+    button.btn:hover {
+      background: var(--surface-border);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    button.btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    button.btn-primary:hover {
+      opacity: 0.9;
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .view-tabs {
+      display: flex;
+      background: var(--bg);
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      padding: 0.2rem;
+      gap: 0.2rem;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.35rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: var(--surface);
+      color: var(--text-bright);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* Views */
+    .view-panel { display: none; }
+    .view-panel.active { display: block; }
+
+    /* Score Grid */
+    .scores-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .score-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      position: relative;
+    }
+    .score-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.5rem;
+    }
+    .score-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-bright);
+    }
+    .score-val {
+      font-size: 1.4rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: var(--accent);
+    }
+    .score-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Top 10 Table */
+    .table-container {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      overflow-x: auto;
+      margin-bottom: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--surface-border);
+    }
+    th {
+      background: rgba(0,0,0,0.15);
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+    tr:last-child td { border-bottom: none; }
+    .tag-p1 { color: var(--red); background: var(--red-bg); padding: 0.15rem 0.4rem; border-radius: 4px; font-weight: 600; font-family: var(--font-mono); font-size: 0.8rem; }
+    .tag-p2 { color: var(--amber); background: var(--amber-bg); padding: 0.15rem 0.4rem; border-radius: 4px; font-weight: 600; font-family: var(--font-mono); font-size: 0.8rem; }
+    .tag-p3 { color: var(--green); background: var(--green-bg); padding: 0.15rem 0.4rem; border-radius: 4px; font-weight: 600; font-family: var(--font-mono); font-size: 0.8rem; }
+
+    /* Findings Cards */
+    .finding-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      margin-bottom: 1.25rem;
+      padding: 1.5rem;
+      transition: border-color 0.15s ease;
+    }
+    .finding-card:hover {
+      border-color: var(--accent);
+    }
+    .finding-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+      gap: 1rem;
+    }
+    .finding-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-bright);
+    }
+    .finding-meta {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      font-family: var(--font-mono);
+      background: var(--code-bg);
+      padding: 0.4rem 0.6rem;
+      border-radius: 4px;
+      word-break: break-all;
+    }
+    .finding-body {
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+    .finding-body p { margin-bottom: 0.75rem; }
+    .finding-body strong { color: var(--text-bright); }
+
+    .diff-box {
+      background: var(--code-bg);
+      border: 1px solid var(--surface-border);
+      border-radius: 6px;
+      padding: 0.9rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      margin: 0.8rem 0;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    .diff-del { color: var(--red); background: var(--red-bg); display: block; padding: 0.2rem 0.4rem; border-radius: 3px; margin-bottom: 0.2rem; }
+    .diff-add { color: var(--green); background: var(--green-bg); display: block; padding: 0.2rem 0.4rem; border-radius: 3px; }
+
+    /* Section Headers */
+    .section-title {
+      font-size: 1.5rem;
+      color: var(--text-bright);
+      margin: 2rem 0 1rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--surface-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .filter-btn {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      color: var(--text-muted);
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* Raw Textareas */
+    .raw-viewer {
+      width: 100%;
+      height: 700px;
+      background: var(--code-bg);
+      border: 1px solid var(--surface-border);
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      padding: 1.25rem;
+      border-radius: 8px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--green);
+      color: #fff;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease-in-out;
+      z-index: 100;
+    }
+    .toast.show { opacity: 1; }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="badge-bar">
+      <span class="badge badge-primary">Audit Deliverable</span>
+      <span class="badge badge-amber">World 1: The Mines</span>
+      <span class="badge">Starborn JRPG</span>
+    </div>
+    <h1>World 1 Narrative & Dialogue Audit</h1>
+    <p class="subtitle">Comprehensive developmental edit & evaluation of dialogue, prose, characterization, continuity, and staging across Stellarium Colony 4.</p>
+
+    <div class="toolbar">
+      <div class="view-tabs">
+        <button class="tab-btn active" onclick="switchView('rendered')">Interactive View</button>
+        <button class="tab-btn" onclick="switchView('markdown')">Raw Markdown</button>
+        <button class="tab-btn" onclick="switchView('json')">Structured JSON</button>
+      </div>
+
+      <div class="action-group">
+        <button class="btn btn-primary" onclick="copyMarkdown()">📋 Copy Full Markdown</button>
+        <button class="btn" onclick="copyJSON()">📦 Copy Structured JSON</button>
+        <button class="btn" onclick="toggleTheme()">🌓 Theme</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- VIEW 1: RENDERED REPORT -->
+  <div id="view-rendered" class="view-panel active">
+
+    <!-- Executive Assessment Card -->
+    <div class="finding-card" style="border-left: 4px solid var(--accent);">
+      <h2 style="color:var(--text-bright); margin-bottom:0.75rem;">1. Executive Assessment</h2>
+      <p style="margin-bottom:0.75rem;">World 1 of <strong>Starborn</strong> (<em>Stellarium Colony 4: "The Mines"</em>) has an exceptionally strong narrative backbone. Its inciting incident is rooted in <strong>labor, maintenance, and physical causality</strong> rather than generic chosen-one tropes. Nova deliberately confirms her cutter's governor bypass at <code>87 kHz</code> to beat quota, sparking a breaker surge (<code>68% cold loop, 180° ground</code>) that flags her file for recycling and wakes the buried Tuning Fork.</p>
+      <p style="margin-bottom:0.75rem;">The core main-path cast (<strong>Nova, Jed, Zeke, Doc, Scrapper</strong>) speaks in crisp, subtext-rich blue-collar voices. However, <strong>staging and state-gating contradictions during Act 2's lockdown</strong>, an orphaned side-quest objective (<code>w1_sq03</code>), and a silent mid-act Zeke placement in Logistics weaken the emotional payoff of the climax.</p>
+    </div>
+
+    <!-- Category Scores -->
+    <h2 class="section-title">2. Category Scores (1–10)</h2>
+    <div class="scores-grid">
+      <div class="score-card">
+        <div class="score-top"><span class="score-title">A. Dialogue Quality</span><span class="score-val">8.5</span></div>
+        <p class="score-desc">Main path is crisp, terse, and subtext-rich. Minus points for verbose Easter egg lines and occasional mechanical tooltips in speech.</p>
+      </div>
+      <div class="score-card">
+        <div class="score-top"><span class="score-title">B. Characterization</span><span class="score-val">8.5</span></div>
+        <p class="score-desc">Strong distinct voices. Zeke has a missing conversational bridge in <code>admin_window</code> before the escape.</p>
+      </div>
+      <div class="score-card">
+        <div class="score-top"><span class="score-title">C. Story Structure & Pacing</span><span class="score-val">7.5</span></div>
+        <p class="score-desc">Act 1 setup is 10/10. Act 2 climax loses tension due to lack of a Red Alert backtrack gate and split <code>w1_sq03</code> tasks.</p>
+      </div>
+      <div class="score-card">
+        <div class="score-top"><span class="score-title">D. Emotional Impact</span><span class="score-val">7.5</span></div>
+        <p class="score-desc">Jed's written farewell and Lost Shift datapad are powerful, but Jed's sacrifice in <code>launch_lift</code> suffers from idle enemy overlap and sudden vanishing.</p>
+      </div>
+      <div class="score-card">
+        <div class="score-top"><span class="score-title">E. Humor & Personality</span><span class="score-val">8.5</span></div>
+        <p class="score-desc">Gallows workplace humor (<code>CLOSED: WITHIN QUOTA</code>, Hank's door philosophy, Scrapper's fence talk) lands naturally.</p>
+      </div>
+      <div class="score-card">
+        <div class="score-top"><span class="score-title">F. Prose & Worldbuilding</span><span class="score-val">8.5</span></div>
+        <p class="score-desc">82 rooms offer concrete, tactile descriptions with post-surge room reactivity. A few minor POV shifts ("you" vs. "Nova").</p>
+      </div>
+      <div class="score-card">
+        <div class="score-top"><span class="score-title">G. Narrative Continuity</span><span class="score-val">6.5</span></div>
+        <p class="score-desc">Core 87/68/180° chain is rock solid, but Orion's prologue portrait spoiler, Gaga's meta talk, and unkept SQ04 admin promises drag continuity down.</p>
+      </div>
+    </div>
+
+    <!-- Top 10 High Impact Table -->
+    <h2 class="section-title">3. Top 10 Highest-Impact Improvements</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>ID</th>
+            <th>Improvement Summary</th>
+            <th>Priority</th>
+            <th>Effort</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1</strong></td>
+            <td><code>P1-1</code></td>
+            <td><strong>Re-stage Jed's Sacrifice in <code>launch_lift</code>:</strong> Fix pre-fight contradictory wrench bark & prevent Jed from vanishing while Nova stands on lift.</td>
+            <td><span class="tag-p1">P1</span></td>
+            <td>Medium</td>
+            <td><button class="btn" style="padding:0.2rem 0.5rem; font-size:0.75rem;" onclick="scrollToFinding('P1-1')">View</button></td>
+          </tr>
+          <tr>
+            <td><strong>2</strong></td>
+            <td><code>P1-2</code></td>
+            <td><strong>Enforce Red Alert Lockdown Gate:</strong> Prevent backtracking from <code>echo_heart</code>/<code>launch_access</code> to a peaceful peacetime Homestead.</td>
+            <td><span class="tag-p1">P1</span></td>
+            <td>Low-Med</td>
+            <td><button class="btn" style="padding:0.2rem 0.5rem; font-size:0.75rem;" onclick="scrollToFinding('P1-2')">View</button></td>
+          </tr>
+          <tr>
+            <td><strong>3</strong></td>
+            <td><code>P1-3</code></td>
+            <td><strong>Fix Prologue Orion Portrait Spoiler & 8s Dead Air:</strong> Remove <code>orion_angry.png</code> from <code>"???"</code> dialogue and trim 8.0s empty fade-in.</td>
+            <td><span class="tag-p1">P1</span></td>
+            <td>Low</td>
+            <td><button class="btn" style="padding:0.2rem 0.5rem; font-size:0.75rem;" onclick="scrollToFinding('P1-3')">View</button></td>
+          </tr>
+          <tr>
+            <td><strong>4</strong></td>
+            <td><code>P1-4</code></td>
+            <td><strong>Add Zeke Dialogue in <code>admin_window</code>:</strong> Bridge his arc from shaking clerk to comms hacker while waiting in Customer Service.</td>
+            <td><span class="tag-p1">P1</span></td>
+            <td>Low</td>
+            <td><button class="btn" style="padding:0.2rem 0.5rem; font-size:0.75rem;" onclick="scrollToFinding('P1-4')">View</button></td>
+          </tr>
+          <tr>
+            <td><strong>5</strong></td>
+            <td><code>P2-1</code></td>
+            <td><strong>Unify <code>w1_sq03</code> (Heavy Lifting) Narrative:</strong> Reconcile Boggs's Hub 2 shield drill with orphaned "trapped workers" text in Hub 1.</td>
+            <td><span class="tag-p2">P2</span></td>
+            <td>Low-Med</td>
+            <td><button class="btn" style="padding:0.2rem 0.5rem; font-size:0.75rem;" onclick="scrollToFinding('P2-1')">View</button></td>
+          </tr>
+          <tr>
+            <td><strong>6</strong></td>
+            <td><code>P2-2</code></td>
+            <td><strong>Fulfill SQ04 Rebel Admin Override & Cut "Chorus":</strong> Make recovered key grant actual security payoff and cut premature Aethel term.</td>
+            <td><span class="tag-p2">P2</span></td>
+            <td>Low-Med</td>
+            <td><button class="btn" style="padding:0.2rem 0.5rem; font-size:0.75rem;" onclick="scrollToFinding('P2-2')">View</button></td>
+          </tr>
+          <tr>
+            <td><strong>7</strong></td>
+            <td><code>P2-3</code></td>
+            <td><strong>Stage Lockdown Broadcast (Warden / PA Clash):</strong> Replace system toast with Warden's purge order and cold orbital PA override.</td>
+            <td><span class="tag-p2">P2</span></td>
+            <td>Low</td>
+            <td><button class="btn" style="padding:0.2rem 0.5rem; font-size:0.75rem;" onclick="scrollToFinding('P2-3')">View</button></td>
+          </tr>
+          <tr>
+            <td><strong>8</strong></td>
+            <td><code>P2-4</code></td>
+            <td><strong>Ground Gaga's Talk & Fix "Cook Vance / Rourke":</strong> Align Gaga's dialogue with Pit isolation and eliminate triple "Vance" naming collision.</td>
+            <td><span class="tag-p2">P2</span></td>
+            <td>Low</td>
+            <td><button class="btn" style="padding:0.2rem 0.5rem; font-size:0.75rem;" onclick="scrollToFinding('P2-4')">View</button></td>
+          </tr>
+          <tr>
+            <td><strong>9</strong></td>
+            <td><code>P2-6</code></td>
+            <td><strong>Add Sector 4 Gh0st Boot Prints & Zeke Notice:</strong> Fulfill foreshadowing inventory from story bible with zero code overhead.</td>
+            <td><span class="tag-p2">P2</span></td>
+            <td>Low</td>
+            <td><button class="btn" style="padding:0.2rem 0.5rem; font-size:0.75rem;" onclick="scrollToFinding('P2-6')">View</button></td>
+          </tr>
+          <tr>
+            <td><strong>10</strong></td>
+            <td><code>P3-1</code></td>
+            <td><strong>Standardize POV ("Nova" vs. "You") & Polish Inspects:</strong> Remove 2nd-person drift in Echo Chamber and clean generic clichés.</td>
+            <td><span class="tag-p3">P3</span></td>
+            <td>Low</td>
+            <td><button class="btn" style="padding:0.2rem 0.5rem; font-size:0.75rem;" onclick="scrollToFinding('P3-1')">View</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Findings Section -->
+    <div class="section-title">
+      <span>4. Detailed Findings & Recommendations</span>
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterFindings('all')">All</button>
+        <button class="filter-btn" onclick="filterFindings('P1')">P1 (Foundational)</button>
+        <button class="filter-btn" onclick="filterFindings('P2')">P2 (Important)</button>
+        <button class="filter-btn" onclick="filterFindings('P3')">P3 (Polish)</button>
+      </div>
+    </div>
+
+    <!-- P1-1 -->
+    <div class="finding-card item-finding" data-priority="P1" id="finding-P1-1">
+      <div class="finding-header">
+        <div>
+          <span class="tag-p1">P1</span>
+          <span class="finding-title" style="margin-left:0.5rem;">Jed Sacrifice Staging & Contradictory Dialogue in <code>launch_lift</code></span>
+        </div>
+        <button class="btn" style="padding:0.25rem 0.6rem; font-size:0.75rem;" onclick="copyCardText('finding-P1-1')">Copy</button>
+      </div>
+      <div class="finding-meta">rooms.json:3361-3432 | dialogue.json:191-235, 351-359 | events.json:2619-2786</div>
+      <div class="finding-body">
+        <p><strong>The Problem:</strong> When Nova enters <code>launch_lift</code> during <code>w1_mq04</code>, hostile units (<code>acoustic_bulwark</code> + <code>resonance_buoy</code>) are active on the platform. If the player taps Jed before clearing them, Jed delivers <code>jed_w1_launch_lift_idle</code>: <em>"Go, Nova! I've got the manual bypass wedged with my wrench. If I step away, the lift locks down. Get to the Launch Bay!"</em> This contradicts the fact that North is blocked, he hasn't given her the Chime yet, and he later says <em>"I've tried the wrench already... it bent."</em> Furthermore, after the handoff completes, Jed vanishes from the room while Nova is still standing on the lift platform.</p>
+        <p><strong>Recommendation:</strong> Re-key the idle dialogue to reflect the active fight, and have <code>w1_mq04_complete</code> warp the lift car into <code>launch_checkpoint</code> as the blast doors seal between them so Nova physically leaves Jed behind as the lift ascends.</p>
+        <div class="diff-box"><span class="diff-del">- Jed: "Go, Nova! I've got the manual bypass wedged with my wrench. If I step away, the lift locks down. Get to the Launch Bay!"</span><span class="diff-add">+ Jed: "Clear that shield unit off the platform, Nova! The brake pawl's sheared—my wrench bent trying to wedge it, so I'm holding the lever by hand!"</span></div>
+      </div>
+    </div>
+
+    <!-- P1-2 -->
+    <div class="finding-card item-finding" data-priority="P1" id="finding-P1-2">
+      <div class="finding-header">
+        <div>
+          <span class="tag-p1">P1</span>
+          <span class="finding-title" style="margin-left:0.5rem;">Unrestricted Backtracking to Peacetime Homestead During Red Alert</span>
+        </div>
+        <button class="btn" style="padding:0.25rem 0.6rem; font-size:0.75rem;" onclick="copyCardText('finding-P1-2')">Copy</button>
+      </div>
+      <div class="finding-meta">rooms.json:38-98, 2889-2962 | events.json:2560-2617 | 00_world_story.md:511</div>
+      <div class="finding-body">
+        <p><strong>The Problem:</strong> Once <code>ms_w1_mq03_complete</code> fires, event narration announces that containment blast doors are sealing in sequence behind Nova. Yet none of the backward room exits or hub node travel are locked. A player backtracking during Red Alert or after Jed's death finds miners eating soup in the mess hall and Guard Hank calmly checking shift badges.</p>
+        <p><strong>Recommendation:</strong> Enforce the Point-of-No-Return at <code>echo_heart</code> (south to <code>echo_walkway</code>) and <code>launch_access</code> (south to <code>echo_exit</code>) with a locked message: <em>"The containment bulkhead is sealed behind Nova. The only open route is forward through the maintenance strobes toward the Launch Bay."</em></p>
+      </div>
+    </div>
+
+    <!-- P1-3 -->
+    <div class="finding-card item-finding" data-priority="P1" id="finding-P1-3">
+      <div class="finding-header">
+        <div>
+          <span class="tag-p1">P1</span>
+          <span class="finding-title" style="margin-left:0.5rem;">Prologue Portrait Spoils Mystery & 8s Dead Air on New Game</span>
+        </div>
+        <button class="btn" style="padding:0.25rem 0.6rem; font-size:0.75rem;" onclick="copyCardText('finding-P1-3')">Copy</button>
+      </div>
+      <div class="finding-meta">cinematics.json:604-619, 647-662 (intro_prologue) | cinematics.json:266-278 (new_game_fade_in)</div>
+      <div class="finding-body">
+        <p><strong>The Problem:</strong> In <code>intro_prologue</code>, text uses <code>"speaker": "???"</code> to keep the 20-year sleeper mysterious until World 2. But steps 4 & 7 attach <code>orion_angry.png</code> and <code>orion_worried.png</code>, spoiling his face over custom plates. Directly after, <code>new_game_fade_in</code> has an 8.0-second empty step with no audio or caption, feeling like an app freeze.</p>
+        <p><strong>Recommendation:</strong> Remove <code>portrait</code> from steps 4 and 7 of <code>intro_prologue</code>, and reduce <code>new_game_fade_in</code> duration from 8.0s to 1.5–2.0s with an ambient vent hum.</p>
+      </div>
+    </div>
+
+    <!-- P1-4 -->
+    <div class="finding-card item-finding" data-priority="P1" id="finding-P1-4">
+      <div class="finding-header">
+        <div>
+          <span class="tag-p1">P1</span>
+          <span class="finding-title" style="margin-left:0.5rem;">Zeke Silent in <code>admin_window</code> Between MQ02 and MQ04</span>
+        </div>
+        <button class="btn" style="padding:0.25rem 0.6rem; font-size:0.75rem;" onclick="copyCardText('finding-P1-4')">Copy</button>
+      </div>
+      <div class="finding-meta">rooms.json:1868-1918 (admin_window) | dialogue.json:565-573</div>
+      <div class="finding-body">
+        <p><strong>The Problem:</strong> Zeke is placed inside Customer Service (<code>admin_window</code>) after saving Nova in <code>w1_mq02</code>. When the player walks past him to reach the Security Post, tapping Zeke only outputs his generic fallback line: <em>"Give me a moment. I like to know what a switch does before someone makes me press it."</em></p>
+        <p><strong>Recommendation:</strong> Add a 3-line dialogue explaining that he is pretending to audit transfer records while quietly mapping the service lift and comm bypasses for Nova.</p>
+        <div class="diff-box"><span class="diff-add">+ Zeke: "Don't stand too close to the glass. I told my supervisor I needed the Sector 4 maintenance maps from Customer Service to reconcile your transfer."
++ Nova: "You're still at a desk? The camera in the booth already logged you."
++ Zeke: "If I bolt before the shift audit runs, security flags us both immediately. Finish Boggs's errand—I'm keeping a comm line and the service lift routing open from this terminal just in case."</span></div>
+      </div>
+    </div>
+
+    <!-- P2-1 -->
+    <div class="finding-card item-finding" data-priority="P2" id="finding-P2-1">
+      <div class="finding-header">
+        <div>
+          <span class="tag-p2">P2</span>
+          <span class="finding-title" style="margin-left:0.5rem;"><code>w1_sq03</code> ("Heavy Lifting") Split Between Two Conflicting Hub Narratives</span>
+        </div>
+        <button class="btn" style="padding:0.25rem 0.6rem; font-size:0.75rem;" onclick="copyCardText('finding-P2-1')">Copy</button>
+      </div>
+      <div class="finding-meta">quests.json:500-565 | dialogue.json:677-775 | rooms.json:902-962, 1919-1974</div>
+      <div class="finding-body">
+        <p><strong>The Problem:</strong> Boggs starts <code>w1_sq03</code> in Hub 2's lobby and immediately auto-unlocks <code>nova_hydraulic_kick</code> for a drill in <code>admin_security</code>, skipping Stage 1. Yet the quest task is still titled <code>rescue_trapped_workers</code>, and in Hub 1's <code>workshop_dock</code>, the cargo rail says the loader freed "trapped workers" that never appear in the room text.</p>
+        <p><strong>Recommendation:</strong> Unify the quest around Boggs's mandatory shield certification in Hub 2, and clean up the phantom "trapped workers" text on the dock rail in Hub 1.</p>
+      </div>
+    </div>
+
+    <!-- P2-2 -->
+    <div class="finding-card item-finding" data-priority="P2" id="finding-P2-2">
+      <div class="finding-header">
+        <div>
+          <span class="tag-p2">P2</span>
+          <span class="finding-title" style="margin-left:0.5rem;"><code>w1_sq04</code> Breaks Admin Access Promise & Prematurely Drops "Chorus"</span>
+        </div>
+        <button class="btn" style="padding:0.25rem 0.6rem; font-size:0.75rem;" onclick="copyCardText('finding-P2-2')">Copy</button>
+      </div>
+      <div class="finding-meta">quests.json:567-610 | cinematics.json:523-539 | events.json:15628-15685</div>
+      <div class="finding-body">
+        <p><strong>The Problem:</strong> Quest text promises: <em>"...leave with admin access that can shave time off future security work."</em> The quest only awards 1x circuit board. Furthermore, the terminal cinematic drops the word <em>"Chorus"</em>—an Aethel Source concept from World 2+—into a local colony union rebel terminal.</p>
+        <p><strong>Recommendation:</strong> Replace "Chorus" with colony-grounded resistance stakes, and have Zeke acknowledge the recovered spoof during the escape or pre-solve a parameter in <code>w1_chime_spoof</code>.</p>
+      </div>
+    </div>
+
+    <!-- P2-4 -->
+    <div class="finding-card item-finding" data-priority="P2" id="finding-P2-4">
+      <div class="finding-header">
+        <div>
+          <span class="tag-p2">P2</span>
+          <span class="finding-title" style="margin-left:0.5rem;">Pam ("Gaga") in <code>pit_mess</code> Breaks World 1 Isolation & Cook Naming Collision</span>
+        </div>
+        <button class="btn" style="padding:0.25rem 0.6rem; font-size:0.75rem;" onclick="copyCardText('finding-P2-4')">Copy</button>
+      </div>
+      <div class="finding-meta">dialogue.json:2932-2983 | rooms.json:38-135 | npcs.json:379-396</div>
+      <div class="finding-body">
+        <p><strong>The Problem:</strong> Gaga speaks about Megan on the coast (World 2 Sector 9) and Cameron at the Foundry (World 4) as if Nova already knows them, breaking the isolated Pit premise. In addition, <code>pit_kitchen</code>'s cook is named "Cook Vance" in JSON, displays as "Rourke" in dialogue, and shares a surname with protagonist Nova Vance.</p>
+        <p><strong>Recommendation:</strong> Rename the cook to Rourke consistently, and frame Gaga's family as transferred off-sector so she is telling Nova about them for the first time.</p>
+        <div class="diff-box"><span class="diff-del">- Nova: "You must be proud of Megan and Cameron."
+- Gaga: "Lord, yes. Megan's out there running clinical science on the coast..."</span><span class="diff-add">+ Nova: "Your kids still transferred off-sector?"
++ Gaga: "Transferred and thriving. Megan's running clinical science out on the coast—sharpest mind you'll ever meet, even if she forgets to drink water."
++ Gaga: "And Cameron's pulling sixty-hour weeks on the high-pressure pipes, tough as iron. If you ever get out from under this rock, tell them Gaga said to eat."</span></div>
+      </div>
+    </div>
+
+    <!-- P3-1 -->
+    <div class="finding-card item-finding" data-priority="P3" id="finding-P3-1">
+      <div class="finding-header">
+        <div>
+          <span class="tag-p3">P3</span>
+          <span class="finding-title" style="margin-left:0.5rem;">Second-Person POV Drift in <code>echo_walkway</code> & Ore Cart Events</span>
+        </div>
+        <button class="btn" style="padding:0.25rem 0.6rem; font-size:0.75rem;" onclick="copyCardText('finding-P3-1')">Copy</button>
+      </div>
+      <div class="finding-meta">rooms.json:2963-3002 | events.json:15404-15599</div>
+      <div class="finding-body">
+        <p><strong>The Problem:</strong> <code>echo_walkway</code> shifts to 2nd-person (<em>"yet you feel no fear of falling"</em>, <em>"your footsteps"</em>), while adjacent rooms use 3rd-person <em>"Nova"</em>. The ore cart switch events also mix <em>"You pull the lever"</em> with <em>"Nova holds the brake"</em>.</p>
+        <p><strong>Recommendation:</strong> Standardize all room and puzzle copy to 3rd-person Nova and concrete sensory detail.</p>
+      </div>
+    </div>
+
+    <!-- Recommendations for Future Worlds -->
+    <h2 class="section-title">7. Future Worlds Guidance (Worlds 3–6)</h2>
+    <div class="finding-card">
+      <h3 style="color:var(--text-bright); margin-bottom:0.5rem;">Principles to Carry Forward</h3>
+      <ul style="margin-left:1.25rem; margin-bottom:1rem;">
+        <li><strong>Physical Causality Over Relic Magic:</strong> Future Echo Relics (The Lens, Anvil, Anchor, Key) should derive puzzle tuning parameters from concrete heist/engineering actions earlier in that world, just like <code>87 kHz / 68% / 180°</code>.</li>
+        <li><strong>Systemic Horror via Paperwork:</strong> Retain Dominion's evil as spreadsheets, quotas, and transit passes before boss fights occur.</li>
+        <li><strong>Restraint in Affection:</strong> Characters show love through their craft (Zeke spoofing clearances, Orion regulating coolant, Gh0st watching blind spots).</li>
+      </ul>
+      <h3 style="color:var(--text-bright); margin-bottom:0.5rem;">What NOT to Duplicate</h3>
+      <ul style="margin-left:1.25rem;">
+        <li><strong>Do not repeat the "accidental fugitive" arc:</strong> In Worlds 3–5, Nova should be a deliberate instigator, not an accidental breaker-surger.</li>
+        <li><strong>Do not keep Zeke panicked:</strong> By World 3 (The Spire), Zeke should weaponize his insider bureaucracy fluency.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- VIEW 2: RAW MARKDOWN -->
+  <div id="view-markdown" class="view-panel">
+    <textarea id="raw-markdown-area" class="raw-viewer" readonly></textarea>
+  </div>
+
+  <!-- VIEW 3: STRUCTURED JSON -->
+  <div id="view-json" class="view-panel">
+    <textarea id="raw-json-area" class="raw-viewer" readonly></textarea>
+  </div>
+</div>
+
+<div id="toast" class="toast">Copied to clipboard!</div>
+
+<!-- EMBEDDED CANONICAL MARKDOWN SOURCE -->
+<script id="embedded-markdown" type="text/markdown">
+# Starborn — World 1 ("The Mines") Narrative & Dialogue Audit
+
+## 1. Executive Assessment
+World 1 of Starborn (Stellarium Colony 4: "The Mines") has a remarkably strong narrative backbone grounded in labor, maintenance, and physical causality. Nova deliberately confirms her cutter's governor bypass at 87 kHz to beat quota, sparking a breaker surge (68% cold loop, 180° ground) that flags her file for recycling, wakes the buried Tuning Fork, and sets up the climax.
+
+The core main-path cast (Nova, Jed, Zeke, Doc, Scrapper) speaks in sharp, economical, subtext-rich voices. However, the seams between narrative design and room/event staging currently undermine World 1's climax and several secondary beats: spatial/continuity contradictions in launch_lift during Jed's sacrifice, unrestricted backtracking during Red Alert, an orphaned side quest (w1_sq03), an unfulfilled admin override promise in w1_sq04, and a silent Zeke in admin_window.
+
+## 2. Category Scores
+- Dialogue Quality: 8.5/10 (Terse, subtext-driven, zero lore-dumps; slight Easter egg verbosity)
+- Characterization: 8.5/10 (Distinct blue-collar voices; Zeke missing mid-act window beat)
+- Story Structure & Pacing: 7.5/10 (Act 1 setup is 10/10; climax lacks lockdown backtrack gate)
+- Emotional Impact: 7.5/10 (Jed farewell & Lost Shift moving; lift staging has vanish bug)
+- Humor & Personality: 8.5/10 (Dry gallows workplace wit without puncturing stakes)
+- Prose & Worldbuilding: 8.5/10 (Tactile 82 rooms with reactive surge variants)
+- Narrative Continuity: 6.5/10 (Core 87/68/180 chain great; prologue portrait spoiler & meta dialogue break continuity)
+
+## 3. Top 10 Highest-Impact Improvements
+1. [P1] Re-stage Jed's Sacrifice in launch_lift: Fix pre-fight contradictory wrench bark & lift vanish bug.
+2. [P1] Enforce Red Alert Lockdown Gate: Prevent backtracking from echo_heart to peacetime Homestead.
+3. [P1] Fix Prologue Orion Portrait Spoiler & 8s Dead Air: Remove orion_angry.png from "???" steps; trim 8.0s fade-in.
+4. [P1] Add Zeke Dialogue in admin_window: Bridge arc from trembling clerk to proactive comms hacker.
+5. [P2] Unify w1_sq03 (Heavy Lifting) Narrative: Reconcile Boggs's shield drill with orphaned dock cargo text.
+6. [P2] Fulfill SQ04 Rebel Admin Override & Cut "Chorus": Make key pay off in security work; cut premature Aethel term.
+7. [P2] Stage Lockdown Broadcast (Warden / PA Clash): Replace system toast with Warden purge & Vale cold override.
+8. [P2] Ground Gaga's Talk & Fix "Cook Vance / Rourke": Frame family as off-sector; fix cook naming collision.
+9. [P2] Add Sector 4 Gh0st Boot Prints & Zeke Notice: Fulfill foreshadowing inventory from story bible.
+10. [P3] Standardize POV ("Nova" vs. "You") & Polish Inspects: Clean 2nd-person drift in echo_walkway.
+
+## 4. Key Findings Summary
+### [P1-1] Jed Sacrifice Staging & Dialogue in launch_lift (rooms.json:3361-3432, dialogue.json:191-235)
+Jed stands idle next to live enemies, tells Nova he wedged the bypass with his wrench (contradicting his later dialogue saying the wrench bent), and vanishes immediately upon handoff while Nova stands on the platform. Fix: Re-key idle bark to active fight, and warp lift car to launch_checkpoint on handoff as blast door seals.
+
+### [P1-2] Unrestricted Backtracking During Red Alert (rooms.json:2889-2962, events.json:2560-2617)
+Event narration says blast doors are slamming shut, but player can walk South back into a peaceful Homestead mess hall. Fix: Lock backward exit from echo_heart / launch_access with bulkhead sealed copy.
+
+### [P1-3] Prologue Orion Portrait Spoiler & 8s Dead Air (cinematics.json:266-278, 604-662)
+"speaker": "???" uses orion_angry.png / orion_worried.png, spoiling identity. new_game_fade_in sits on blank screen for 8s. Fix: Remove portraits, trim fade-in to 1.5s.
+
+### [P1-4] Zeke Silent in admin_window (rooms.json:1868-1918, dialogue.json:565-573)
+Zeke is in Customer Service between MQ02 and MQ04 with only generic fallback dialogue. Fix: Add 3-line exchange where he pretends to audit records while secretly routing the lift bypass.
+
+### [P2-1] w1_sq03 Split Identity (quests.json:500-565, dialogue.json:677-775, rooms.json:902-962)
+Boggs starts quest at Stage 2 in Hub 2 lobby, but task is still named "rescue_trapped_workers" and dock cargo rail in Hub 1 has orphaned rescue text. Fix: Unify around Boggs's Hub 2 shield certification.
+
+### [P2-2] w1_sq04 Unfulfilled Promise & "Chorus" Drop (quests.json:567-610, cinematics.json:523-539)
+Promises admin access that shaves time off future security work, but only awards a 10-credit circuit board. Drops "Chorus" prematurely. Fix: Replace "Chorus" with labor rebel stakes; let key bypass an interlock in the climax.
+
+### [P2-4] Gaga Meta Dialogue & "Cook Vance" Collision (dialogue.json:2932-2983, rooms.json:38-135, npcs.json:379-396)
+Gaga speaks about World 2 coast and World 4 Foundry as if Nova knows them. Cook is named "Cook Vance" in JSON, "Rourke" in dialogue, and Vance is Nova's last name. Fix: Rename cook to Rourke; frame kids as transferred off-sector.
+
+## 5. Narrative Strengths Worth Preserving
+- Causal Spine (87 kHz / 68% / 180°): Player's workshop maintenance actions physically provide the puzzle solution and save Nova's life in the climax.
+- Opening Economy & Surge Reactivity: CLOSED: WITHIN QUOTA and post-surge room descriptions make the colony feel alive.
+- Paperwork Murder Scene: Form-filling in checkpoint_booth establishes institutional evil through bureaucracy.
+- Names vs. Numbers: Scrapper, Doc, and the Lost Shift datapad emphasize keeping names against Dominion asset numbers.
+
+## 6. Recommendations for Future Worlds (Worlds 3-6)
+- Carry Forward: Concrete physical causality in relic puzzles, institutional evil via everyday systems, affection through craft/restraint, and environmental reactivity.
+- Do Not Duplicate: Accidental fugitive / home hub collapse template (Nova should be an active instigator in Worlds 3-5), panicked clerk mode for Zeke (he should become an insider con artist in the Spire), or confining later worlds to rust-and-grime.
+</script>
+
+<!-- EMBEDDED STRUCTURED JSON DATA -->
+<script id="embedded-json" type="application/json">
+{
+  "report_title": "Starborn — World 1 Narrative & Dialogue Audit",
+  "world": "World 1: Stellarium Colony 4 ('The Mines')",
+  "executive_summary": "World 1 has an exceptionally strong causal backbone (87 kHz / 68% / 180°) and sharp character voices. Key priority fixes focus on climax staging in launch_lift, enforcing the Red Alert lockdown gate, fixing the prologue portrait spoiler, adding Zeke's middle dialogue beat, and reconciling split side-quest tasks.",
+  "category_scores": {
+    "dialogue_quality": { "score": 8.5, "max": 10, "notes": "Terse, subtext-rich, zero RPG lore dumps" },
+    "characterization": { "score": 8.5, "max": 10, "notes": "Distinct voices; Zeke missing admin_window beat" },
+    "story_structure_pacing": { "score": 7.5, "max": 10, "notes": "Act 1 is 10/10; climax lacks lockdown backtrack gate" },
+    "emotional_impact": { "score": 7.5, "max": 10, "notes": "Jed farewell strong; lift staging has vanish bug" },
+    "humor_personality": { "score": 8.5, "max": 10, "notes": "Gallows workplace wit lands naturally" },
+    "prose_worldbuilding": { "score": 8.5, "max": 10, "notes": "Tactile 82 rooms with reactive surge variants" },
+    "narrative_continuity": { "score": 6.5, "max": 10, "notes": "Core 87/68/180 great; prologue spoiler & meta dialogue break continuity" }
+  },
+  "top_improvements": [
+    { "rank": 1, "id": "P1-1", "priority": "P1", "effort": "Medium", "summary": "Re-stage Jed sacrifice in launch_lift & fix lift vanish bug" },
+    { "rank": 2, "id": "P1-2", "priority": "P1", "effort": "Low-Med", "summary": "Enforce Red Alert lockdown gate preventing peacetime backtracking" },
+    { "rank": 3, "id": "P1-3", "priority": "P1", "effort": "Low", "summary": "Fix prologue Orion portrait spoiler and trim 8s blank fade-in" },
+    { "rank": 4, "id": "P1-4", "priority": "P1", "effort": "Low", "summary": "Add Zeke dialogue in admin_window (Customer Service)" },
+    { "rank": 5, "id": "P2-1", "priority": "P2", "effort": "Low-Med", "summary": "Unify w1_sq03 Heavy Lifting tasks between Hub 1 dock and Hub 2 drill" },
+    { "rank": 6, "id": "P2-2", "priority": "P2", "effort": "Low-Med", "summary": "Fulfill w1_sq04 admin override promise and cut premature 'Chorus' lore" },
+    { "rank": 7, "id": "P2-3", "priority": "P2", "effort": "Low", "summary": "Stage lockdown broadcast with Warden purge & Vale PA override" },
+    { "rank": 8, "id": "P2-4", "priority": "P2", "effort": "Low", "summary": "Ground Gaga's talk in Pit isolation & fix Cook Vance / Rourke collision" },
+    { "rank": 9, "id": "P2-6", "priority": "P2", "effort": "Low", "summary": "Add Sector 4 Gh0st boot prints and Zeke notice in Hub 1" },
+    { "rank": 10, "id": "P3-1", "priority": "P3", "effort": "Low", "summary": "Standardize third-person POV ('Nova') across Echo Chamber & cart events" }
+  ]
+}
+</script>
+
+<script>
+  // Initialize Raw Textareas from Embedded Scripts
+  document.addEventListener("DOMContentLoaded", function() {
+    const md = document.getElementById("embedded-markdown").textContent.trim();
+    const js = document.getElementById("embedded-json").textContent.trim();
+    document.getElementById("raw-markdown-area").value = md;
+    document.getElementById("raw-json-area").value = js;
+  });
+
+  function switchView(viewName) {
+    document.querySelectorAll(".view-panel").forEach(p => p.classList.remove("active"));
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    
+    document.getElementById("view-" + viewName).classList.add("active");
+    event.target.classList.add("active");
+  }
+
+  function filterFindings(priority) {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    event.target.classList.add("active");
+
+    const cards = document.querySelectorAll(".item-finding");
+    cards.forEach(card => {
+      if (priority === "all" || card.getAttribute("data-priority") === priority) {
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+    });
+  }
+
+  function scrollToFinding(id) {
+    const el = document.getElementById("finding-" + id);
+    if (el) {
+      filterFindings("all");
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      el.style.borderColor = "var(--accent)";
+      setTimeout(() => { el.style.borderColor = ""; }, 2000);
+    }
+  }
+
+  function showToast(msg) {
+    const toast = document.getElementById("toast");
+    toast.textContent = msg || "Copied to clipboard!";
+    toast.classList.add("show");
+    setTimeout(() => { toast.classList.remove("show"); }, 2000);
+  }
+
+  function copyMarkdown() {
+    const md = document.getElementById("embedded-markdown").textContent.trim();
+    navigator.clipboard.writeText(md).then(() => {
+      showToast("Full Markdown copied!");
+    });
+  }
+
+  function copyJSON() {
+    const js = document.getElementById("embedded-json").textContent.trim();
+    navigator.clipboard.writeText(js).then(() => {
+      showToast("Structured JSON copied!");
+    });
+  }
+
+  function copyCardText(cardId) {
+    const card = document.getElementById(cardId);
+    if (card) {
+      navigator.clipboard.writeText(card.innerText).then(() => {
+        showToast("Finding copied!");
+      });
+    }
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute("data-theme");
+    const next = current === "light" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", next);
+  }
+</script>
+
+</body>
+</html>

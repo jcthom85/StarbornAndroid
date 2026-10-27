@@ -134,7 +134,7 @@ class CombatTutorialTracker(
                 setCombatTutorialStep(CombatTutorialStep.TARGET_BASIC_ATTACK)
                 true
             }
-            command.equals("Skills", ignoreCase = true) &&
+            (command.equals("Skills", ignoreCase = true) || command.equals("Abilities", ignoreCase = true)) &&
                 tutorial.step == CombatTutorialStep.CHOOSE_SKILLS -> {
                 setCombatTutorialStep(CombatTutorialStep.CHOOSE_HYDRAULIC_KICK)
                 true
@@ -176,7 +176,7 @@ class CombatTutorialTracker(
         val step = getCombatTutorial()?.step ?: return true
         return when (step) {
             CombatTutorialStep.CHOOSE_ATTACK -> command.equals("Attack", ignoreCase = true)
-            CombatTutorialStep.CHOOSE_SKILLS -> command.equals("Skills", ignoreCase = true)
+            CombatTutorialStep.CHOOSE_SKILLS -> command.equals("Skills", ignoreCase = true) || command.equals("Abilities", ignoreCase = true)
             else -> false
         }
     }

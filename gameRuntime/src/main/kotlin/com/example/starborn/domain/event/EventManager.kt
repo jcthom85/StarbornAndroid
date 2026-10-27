@@ -102,10 +102,14 @@ class EventManager(
             "item_acquired" -> {
                 val itemPayload = (payload as? EventPayload.ItemAcquired)?.itemId
                 val triggerItem = trigger.itemId ?: trigger.item
-                if (triggerItem.isNullOrBlank()) {
-                    itemPayload != null
-                } else {
+                val triggerType = trigger.itemType
+                if (!triggerItem.isNullOrBlank()) {
                     triggerItem.equals(itemPayload, ignoreCase = true)
+                } else if (!triggerType.isNullOrBlank()) {
+                    val isMod = itemPayload != null && (itemPayload.contains("mod") || itemPayload.contains("lens") || itemPayload.contains("core") || itemPayload.contains("grip"))
+                    triggerType.equals("mod", ignoreCase = true) && isMod
+                } else {
+                    itemPayload != null
                 }
             }
             else -> true

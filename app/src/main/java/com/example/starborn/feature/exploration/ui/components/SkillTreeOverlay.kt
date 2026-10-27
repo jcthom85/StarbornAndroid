@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -106,14 +107,23 @@ fun SkillTreeContent(
                 Surface(
                     color = FieldMenuDesign.panel,
                     shape = RoundedCornerShape(12.dp),
-                    border = BorderStroke(1.dp, accentColor.copy(alpha = 0.6f)),
+                    border = BorderStroke(1.5.dp, FieldMenuDesign.cyan),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(
                         modifier = Modifier.fillMaxWidth().padding(12.dp),
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        Text("Tutorial", color = accentColor, style = MaterialTheme.typography.labelMedium)
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Box(
+                                modifier = Modifier
+                                    .background(FieldMenuDesign.cyan.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
+                                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                            ) {
+                                Text("NEW", color = FieldMenuDesign.cyan, style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                            }
+                            Text("[Field] Tutorial", color = FieldMenuDesign.cyan, style = MaterialTheme.typography.labelMedium)
+                        }
                         Text(guide, color = FieldMenuDesign.text, style = MaterialTheme.typography.bodySmall)
                     }
                 }
@@ -186,14 +196,23 @@ fun SkillTreeContent(
                         Surface(
                             color = FieldMenuDesign.panel,
                             shape = RoundedCornerShape(12.dp),
-                            border = BorderStroke(1.dp, accentColor.copy(alpha = 0.6f)),
+                            border = BorderStroke(1.5.dp, FieldMenuDesign.cyan),
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Column(
                                 modifier = Modifier.fillMaxWidth().padding(12.dp),
                                 verticalArrangement = Arrangement.spacedBy(6.dp)
                             ) {
-                                Text("Tutorial", color = accentColor, style = MaterialTheme.typography.labelMedium)
+                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    Box(
+                                        modifier = Modifier
+                                            .background(FieldMenuDesign.cyan.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
+                                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                                    ) {
+                                        Text("NEW", color = FieldMenuDesign.cyan, style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                                    }
+                                    Text("[Field] Tutorial", color = FieldMenuDesign.cyan, style = MaterialTheme.typography.labelMedium)
+                                }
                                 Text(guide, color = FieldMenuDesign.text, style = MaterialTheme.typography.bodySmall)
                             }
                         }

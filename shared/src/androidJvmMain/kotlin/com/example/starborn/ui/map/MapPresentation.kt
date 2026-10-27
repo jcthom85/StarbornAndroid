@@ -131,13 +131,24 @@ fun DrawScope.drawMapFeatures(cell: MinimapCellUi, center: Offset, radius: Float
         drawLine(MapPalette.gateway, p + Offset(r, 0f), p + Offset(r * .5f, r * .5f), stroke)
         if (exit.blocked) drawMapLock(p + Offset(r + 2.dp.toPx(), r + 3.dp.toPx()))
     }
-    val services = cell.services.filterNot { it == MinimapService.EXIT }.take(3)
-    services.forEachIndexed { i, service ->
-        val p = center + Offset((i - (services.size - 1) / 2f) * 10.dp.toPx(), radius + 6.dp.toPx())
-        val iconSize = 8.dp.toPx()
+    val services = cell.services.filterNot { it == MinimapService.EXIT }
+    // Prioritize key services (SHOP > TINKERING > REST > COOKING) and display primary icon to prevent dot clutter
+    val primaryService = services.minByOrNull { service ->
+        when (service) {
+            MinimapService.SHOP -> 0
+            MinimapService.TINKERING -> 1
+            MinimapService.REST -> 2
+            MinimapService.COOKING -> 3
+            else -> 4
+        }
+    }
+    primaryService?.let { service ->
+        val p = center + Offset(0f, radius + 5.dp.toPx())
+        val iconSize = 9.dp.toPx()
+        val iconColor = if (service == MinimapService.SHOP) Color(0xFFFFCA28) else MapPalette.visited
         translate(p.x - iconSize / 2, p.y - iconSize / 2) {
             with(servicePainters.getValue(service)) {
-                draw(Size(iconSize, iconSize), colorFilter = ColorFilter.tint(MapPalette.visited))
+                draw(Size(iconSize, iconSize), colorFilter = ColorFilter.tint(iconColor))
             }
         }
     }

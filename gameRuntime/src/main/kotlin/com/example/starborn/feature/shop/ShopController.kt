@@ -211,10 +211,15 @@ class ShopController(
             val state = sessionStore.state.value
             val reserved = (state.equippedItems.values + state.equippedWeapons.values + state.equippedArmors.values).count { it == item.id }
             val available = (entry.quantity - reserved).coerceAtLeast(0)
-            val canSell = available > 0 && !item.unsellable && !isBlacklisted && typeAllowed && price > 0
+            val isQuestOrKeyItem = item.unsellable ||
+                item.type.equals("quest", ignoreCase = true) ||
+                item.type.equals("key_item", ignoreCase = true) ||
+                item.categoryOverride.equals("quest", ignoreCase = true)
+            val canSell = available > 0 && !isQuestOrKeyItem && !isBlacklisted && typeAllowed && price > 0
             val reason = when {
                 available <= 0 -> "All copies are equipped."
                 item.unsellable -> "Cannot sell this item."
+                isQuestOrKeyItem -> "Cannot sell quest items."
                 isBlacklisted -> "Dealer won't take this."
                 !typeAllowed -> "Dealer isn't buying this category."
                 price <= 0 -> "No resale value."

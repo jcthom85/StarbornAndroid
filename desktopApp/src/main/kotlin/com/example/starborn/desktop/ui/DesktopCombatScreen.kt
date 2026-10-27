@@ -962,7 +962,7 @@ DesktopBattleFormation(party, services, Modifier.fillMaxWidth().weight(if (wide)
                 kotlinx.coroutines.delay(if (outcome is CombatOutcome.Defeat) 750L else 600L)
                 if (outcome is CombatOutcome.Defeat) onDefeat() else onFlee()
             }
-            DesktopCombatOutcomeOverlay(outcome, party, services)
+            DesktopCombatOutcomeOverlay(outcome, party, services, onContinue = if (outcome is CombatOutcome.Defeat) onDefeat else onFlee)
         }
     }
 }

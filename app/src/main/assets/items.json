@@ -991,7 +991,8 @@
     "type": "key_item",
     "value": 0,
     "buy_price": 0,
-    "rarity": "common"
+    "rarity": "common",
+    "unsellable": true
   },
   {
     "id": "digital_watch",
@@ -1410,7 +1411,8 @@
     "type": "key_item",
     "value": 0,
     "buy_price": 0,
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "unsellable": true
   },
   {
     "id": "latte",
@@ -1602,7 +1604,8 @@
     ],
     "type": "quest",
     "description": "A magnetic keychit stamped with Dominion safety chevrons and Zeke's unauthorized substation override. Grants access to the deep mine blast doors.",
-    "value": 0
+    "value": 0,
+    "unsellable": true
   },
   {
     "id": "tuning_fork",
@@ -1615,7 +1618,8 @@
     "type": "key_item",
     "description": "Architect Echo #1. A bifurcated spire of warm, seamless black alloy. It awoke when Nova bypassed the factory governor on her cutter, vibrating with a subsonic frequency that rattles bone.",
     "value": 0,
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "unsellable": true
   },
   {
     "id": "ghost_signal_cell",
@@ -1628,7 +1632,8 @@
     "type": "key_item",
     "description": "Orion's antique brass Chime. Launched from Sector 9 twenty years ago, its etched acoustic pins authenticate compatible starship launch telemetry and navigation arrays.",
     "value": 0,
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "unsellable": true
   },
   {
     "id": "mod_corrosive_rounds",
@@ -1690,7 +1695,8 @@
     ],
     "type": "quest",
     "description": "A heavy magnetic containment cell recovered from an abandoned generator nest. Still ticks with residual electromagnetic potential.",
-    "value": 0
+    "value": 0,
+    "unsellable": true
   },
   {
     "id": "herb",
@@ -2873,7 +2879,8 @@
     "type": "key_item",
     "value": 0,
     "buy_price": 0,
-    "rarity": "rare"
+    "rarity": "rare",
+    "unsellable": true
   },
   {
     "id": "source_resin",
@@ -3239,7 +3246,8 @@
     "description": "Architect Echo #2. It coordinates distinct willing signals without merging them and requires Astra power plus a recognized identity.",
     "type": "key_item",
     "value": 0,
-    "rarity": "mythic"
+    "rarity": "mythic",
+    "unsellable": true
   },
   {
     "id": "thermal_cutter",
@@ -3263,7 +3271,8 @@
     ],
     "type": "key_item",
     "value": 100,
-    "rarity": "rare"
+    "rarity": "rare",
+    "unsellable": true
   },
   {
     "id": "vhs_tape_02",
@@ -3278,7 +3287,8 @@
     ],
     "type": "key_item",
     "value": 100,
-    "rarity": "rare"
+    "rarity": "rare",
+    "unsellable": true
   },
   {
     "id": "vhs_tape_03",
@@ -3293,7 +3303,8 @@
     ],
     "type": "key_item",
     "value": 100,
-    "rarity": "rare"
+    "rarity": "rare",
+    "unsellable": true
   },
   {
     "id": "vhs_tape_04",
@@ -3308,7 +3319,8 @@
     ],
     "type": "key_item",
     "value": 100,
-    "rarity": "rare"
+    "rarity": "rare",
+    "unsellable": true
   },
   {
     "id": "vhs_tape_05",
@@ -3323,7 +3335,8 @@
     ],
     "type": "key_item",
     "value": 100,
-    "rarity": "rare"
+    "rarity": "rare",
+    "unsellable": true
   },
   {
     "id": "vhs_tape_06",
@@ -3338,7 +3351,8 @@
     ],
     "type": "key_item",
     "value": 100,
-    "rarity": "rare"
+    "rarity": "rare",
+    "unsellable": true
   },
   {
     "id": "vhs_tape_07",
@@ -3353,7 +3367,8 @@
     ],
     "type": "key_item",
     "value": 100,
-    "rarity": "rare"
+    "rarity": "rare",
+    "unsellable": true
   },
   {
     "id": "vhs_tape_08",
@@ -3368,7 +3383,8 @@
     ],
     "type": "key_item",
     "value": 100,
-    "rarity": "rare"
+    "rarity": "rare",
+    "unsellable": true
   },
   {
     "id": "vhs_tape_09",
@@ -3383,7 +3399,8 @@
     ],
     "type": "key_item",
     "value": 100,
-    "rarity": "rare"
+    "rarity": "rare",
+    "unsellable": true
   },
   {
     "id": "vhs_tape_10",
@@ -3397,7 +3414,8 @@
     ],
     "type": "key_item",
     "value": 100,
-    "rarity": "rare"
+    "rarity": "rare",
+    "unsellable": true
   },
   {
     "id": "thermite_core_mod",

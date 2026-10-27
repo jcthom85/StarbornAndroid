@@ -7,10 +7,10 @@ object CombatTutorialCopy {
     fun title(tutorial: CombatTutorialState): String {
         val isLoader = tutorial.tutorialType == CombatTutorialType.LOADER_WEAKNESS
         return when (tutorial.step) {
-            CombatTutorialStep.BRIEF -> "Combat Tutorial"
-            CombatTutorialStep.BLOCKED_EXPLANATION -> if (isLoader) "Momentum Built" else "Direct Hit: Blocked"
-            CombatTutorialStep.SUCCESS -> if (isLoader) "Stability Broken!" else "Guard Broken"
-        else -> "Combat Tutorial"
+            CombatTutorialStep.BRIEF -> "[Combat] Combat Tutorial"
+            CombatTutorialStep.BLOCKED_EXPLANATION -> if (isLoader) "[Combat] Momentum Built" else "[Combat] Direct Hit: Blocked"
+            CombatTutorialStep.SUCCESS -> if (isLoader) "[Combat] Stability Broken!" else "[Combat] Guard Broken"
+            else -> "[Combat] Combat Tutorial"
         }
     }
     fun message(tutorial: CombatTutorialState): String {

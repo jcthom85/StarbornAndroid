@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.starborn.domain.prompt.*
+import com.example.starborn.domain.tutorial.formattedTitle
 
 /** Android's inspection card treatment, with the authored message supplied unchanged. */
 @Composable
@@ -59,11 +60,11 @@ internal fun DesktopExplorationPromptBanner(services: com.example.starborn.deskt
     val accent: Color
     val primaryAction = (prompt as? TutorialPrompt)?.primaryAction
     when (prompt) {
-        is TutorialPrompt -> { title = prompt.entry.metadata["title"] ?: "Tutorial"; message = prompt.entry.message.adaptInputVocabularyForDesktop(LocalDesktopKeyBindings.current); action = prompt.entry.metadata["action_label"] ?: "Continue"; accent = Color(0xFF7BE8FF) }
+        is TutorialPrompt -> { title = prompt.entry.formattedTitle(); message = prompt.entry.message.adaptInputVocabularyForDesktop(LocalDesktopKeyBindings.current); action = prompt.entry.metadata["action_label"] ?: "Continue"; accent = Color(0xFF7BE8FF) }
         is MilestonePrompt -> { title = null; message = prompt.event.message.adaptInputVocabularyForDesktop(LocalDesktopKeyBindings.current); action = "Dismiss"; accent = Color(0xFFFFD27F) }
         is ItemGrantedPrompt -> {
             title = prompt.itemName + if (prompt.quantity > 1) " x${prompt.quantity}" else ""
-            message = prompt.description.orEmpty() + if (prompt.sequenceTotal > 1) "\n${prompt.sequenceIndex} / ${prompt.sequenceTotal}" else ""
+            message = prompt.description.orEmpty()
             action = "Continue"; accent = Color(0xFF7BE8FF)
         }
         is ItemBatchGrantedPrompt -> { title = null; message = "Acquired ${prompt.summary}"; action = "Dismiss"; accent = Color(0xFF7BE8FF) }

@@ -153,6 +153,7 @@ private fun DesktopNarrativeArea(services: DesktopAppServices, ui: ExplorationUi
                             DesktopRoomHeading(if (isDark && ui.currentRoom?.revealTitleWhenDark != true) "Dark room" else ui.currentRoom?.title ?: "Loading?",
                                 if (settings.highContrastMode) Color.White else accent, compact)
                         }
+                        TextButton(onClick = runtime::openRoomActions, enabled = !blocked) { Text("Actions") }
                     }
                     DesktopExplorationScrollPane(bodyScroll, Modifier.weight(1f, fill = false).fillMaxWidth()) {
                     RoomDescription(plan, description, isDark, Color(0xFFF0F3F5),
@@ -199,7 +200,7 @@ private fun DesktopContextualControls(services: DesktopAppServices, ui: Explorat
                     remaining.forEach { target ->
                         when (target) {
                             is InlineActionTarget.Room -> DesktopExplorationActionRow(target.action.name.replaceFirstChar { it.titlecase() },
-                                when { (target.action as? RestStopAction)?.cookSource != null -> "cook"; target.action is RestStopAction -> "rest"; target.action is TravelAction -> "travel"; else -> "inspect" },
+                                when { (target.action as? RestStopAction)?.cookSource != null -> "cook"; target.action is RestStopAction -> "rest"; target.action is TravelAction -> "travel"; target.action is com.example.starborn.domain.model.ShopAction -> "shop"; else -> "inspect" },
                                 !blocked && ui.actionHints[target.action.actionKey()]?.locked != true) { runtime.onActionSelected(target.action) }
                             is InlineActionTarget.Npc -> Unit
                             is InlineActionTarget.Enemy -> DesktopExplorationActionRow("Engage ${services.enemyDefinitions[target.id]?.name ?: target.label}", "enemy", !blocked) { runtime.engageEnemy(target.id) }
@@ -318,7 +319,9 @@ private fun BoxScope.DesktopRoomNavigation(ui: ExplorationUiState, layout: Portr
 @Composable
 private fun DesktopNpcPresenceChip(services: DesktopAppServices, ui: ExplorationUiState, npc: String, blocked: Boolean) {
     val key = npc.trim().lowercase(java.util.Locale.ROOT)
-    val label = ui.npcPresenceNames[key] ?: npc
+    val baseLabel = ui.npcPresenceNames[key] ?: npc
+    val isVendor = key.contains("scrapper") || key.contains("vendor") || key.contains("merchant") || key.contains("mechanic") || key.contains("armorer") || key.contains("weaponsmith")
+    val label = if (isVendor && !baseLabel.contains("Shop")) "$baseLabel [ 🛒 Shop ]" else baseLabel
     val portrait = ui.npcPortraitPaths[key]
     Surface(onClick = { services.exploration.onNpcInteraction(npc) }, enabled = !blocked,
         modifier = Modifier.explorationFeedback(!blocked).widthIn(min = 152.dp, max = 208.dp).height(if (LocalExplorationSettings.current.largeTouchTargets) 64.dp else 54.dp)

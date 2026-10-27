@@ -237,13 +237,21 @@ internal fun HubScreenContent(
                 .padding(start = 20.dp, top = 18.dp, end = 88.dp)
         )
 
-        HubMenuButton(
-            onClick = { menuVisible = true },
+        Row(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .statusBarsPadding()
-                .padding(top = 20.dp, end = 18.dp)
-        )
+                .padding(top = 18.dp, end = 18.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            HubQuickSaveButton(
+                onClick = onQuickSave
+            )
+            HubMenuButton(
+                onClick = { menuVisible = true }
+            )
+        }
 
         val astraAccess = uiState.nodes.firstOrNull { it.id == "astra_access" }
         if (astraAccess != null && HubMapLayouts.all[uiState.hub?.id]?.astraDock == null) {
@@ -383,6 +391,39 @@ private fun HubHeader(
 }
 
 @Composable
+private fun HubQuickSaveButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        onClick = onClick,
+        modifier = modifier.semantics { contentDescription = "Quick Save" },
+        shape = RoundedCornerShape(12.dp),
+        color = Color(0xE0060B12),
+        border = BorderStroke(1.dp, Color(0xFF7BE4FF).copy(alpha = 0.42f)),
+        shadowElevation = 8.dp
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Rounded.Save,
+                contentDescription = null,
+                tint = Color(0xFF7BE4FF),
+                modifier = Modifier.size(18.dp)
+            )
+            Text(
+                text = "Save",
+                color = Color.White,
+                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
+            )
+        }
+    }
+}
+
+@Composable
 private fun HubMenuButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -395,14 +436,23 @@ private fun HubMenuButton(
         border = BorderStroke(1.dp, Color(0xFF7BE4FF).copy(alpha = 0.42f)),
         shadowElevation = 8.dp
     ) {
-        Icon(
-            imageVector = Icons.Filled.Menu,
-            contentDescription = null,
-            tint = Color(0xFF7BE4FF),
-            modifier = Modifier
-                .padding(12.dp)
-                .size(22.dp)
-        )
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Menu,
+                contentDescription = null,
+                tint = Color(0xFF7BE4FF),
+                modifier = Modifier.size(18.dp)
+            )
+            Text(
+                text = "Menu",
+                color = Color.White,
+                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
+            )
+        }
     }
 }
 
@@ -466,19 +516,21 @@ private fun HubDestinationPanel(
                     onClick = onEnter,
                     enabled = node.canEnter,
                     shape = RoundedCornerShape(12.dp),
-                    color = if (node.canEnter) accent else Color.White.copy(alpha = 0.06f)
+                    color = if (node.canEnter) accent else Color.White.copy(alpha = 0.08f),
+                    border = BorderStroke(1.5.dp, if (node.canEnter) Color.White.copy(alpha = 0.7f) else Color.White.copy(alpha = 0.15f)),
+                    shadowElevation = if (node.canEnter) 8.dp else 0.dp
                 ) {
                     Row(
                         modifier = Modifier.heightIn(min = 48.dp)
-                            .padding(horizontal = 14.dp, vertical = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
+                            .padding(horizontal = 18.dp, vertical = 10.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
                             imageVector = if (node.canEnter) Icons.Filled.PlayArrow else Icons.Filled.Lock,
                             contentDescription = null,
-                            tint = if (node.canEnter) Color(0xFF071018) else Color.White.copy(alpha = 0.55f),
-                            modifier = Modifier.size(17.dp)
+                            tint = if (node.canEnter) Color(0xFF040A12) else Color.White.copy(alpha = 0.55f),
+                            modifier = Modifier.size(20.dp)
                         )
                         Text(
                             text = when {
@@ -486,8 +538,8 @@ private fun HubDestinationPanel(
                                 node.id == "deep_mine" && !node.visited -> "Descend"
                                 else -> "Enter"
                             },
-                            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
-                            color = if (node.canEnter) Color(0xFF071018) else Color.White.copy(alpha = 0.55f)
+                            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Black),
+                            color = if (node.canEnter) Color(0xFF040A12) else Color.White.copy(alpha = 0.55f)
                         )
                     }
                 }

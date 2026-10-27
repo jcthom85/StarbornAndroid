@@ -308,7 +308,9 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                 onCopy={clipboard.setText(androidx.compose.ui.text.AnnotatedString(it))},onClose={environmentPreview=false})
         }
         ui.roomObjectOffer?.let { offer ->
-            DesktopExplorationModal(offer.detail, runtime::dismissRoomObject, title = offer.title) {
+            val isShop = offer.action is com.example.starborn.domain.model.ShopAction
+            val displayTitle = if (isShop && !offer.title.startsWith("[")) "[ 🛒 Shop ] ${offer.title}" else offer.title
+            DesktopExplorationModal(offer.detail, runtime::dismissRoomObject, title = displayTitle) {
                 Row(Modifier.align(Alignment.End), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     TextButton(onClick = runtime::dismissRoomObject) { Text("Back") }
                     Button(onClick = runtime::confirmRoomObject) { Text(offer.confirmLabel) }

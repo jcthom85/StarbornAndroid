@@ -15,9 +15,27 @@ class UIPromptManager {
 
     private val lock = Any()
     private val queue: ArrayDeque<UIPrompt> = ArrayDeque()
+    private var isToastsSuspended = false
+
+    private fun promptPriority(prompt: UIPrompt): Int = when (prompt) {
+        is TutorialPrompt -> 300
+        is MilestonePrompt -> 200
+        is ItemGrantedPrompt, is ItemBatchGrantedPrompt -> 100
+        else -> 0
+    }
 
     private val _state = MutableStateFlow(UIPromptState())
     val state: StateFlow<UIPromptState> = _state.asStateFlow()
+
+    fun setToastsSuspended(suspended: Boolean) {
+        synchronized(lock) {
+            if (isToastsSuspended == suspended) return
+            isToastsSuspended = suspended
+            if (!isToastsSuspended && _state.value.current == null) {
+                promoteNextLocked()
+            }
+        }
+    }
 
     fun enqueue(prompt: UIPrompt, allowDuplicates: Boolean = false) {
         synchronized(lock) {
@@ -27,9 +45,22 @@ class UIPromptManager {
                     return
                 }
             }
-            queue.addLast(prompt)
+            val pPriority = promptPriority(prompt)
+            var insertIndex = queue.size
+            for ((index, item) in queue.withIndex()) {
+                if (promptPriority(item) < pPriority) {
+                    insertIndex = index
+                    break
+                }
+            }
+            val list = queue.toMutableList()
+            list.add(insertIndex, prompt)
+            queue.clear()
+            queue.addAll(list)
             if (_state.value.current == null) {
                 promoteNextLocked()
+            } else {
+                _state.update { it.copy(queue = queue.toList()) }
             }
         }
     }
@@ -75,8 +106,24 @@ class UIPromptManager {
     }
 
     private fun promoteNextLocked() {
-        val next = if (queue.isEmpty()) null else queue.removeFirst()
+        if (queue.isEmpty()) {
+            _state.update { it.copy(current = null, queue = emptyList()) }
+            return
+        }
+        val nextIndex = if (isToastsSuspended) {
+            queue.indexOfFirst { it !is ItemGrantedPrompt && it !is ItemBatchGrantedPrompt }
+        } else {
+            0
+        }
+        if (nextIndex < 0) {
+            _state.update { it.copy(current = null, queue = queue.toList()) }
+            return
+        }
+        val list = queue.toMutableList()
+        val next = list.removeAt(nextIndex)
+        queue.clear()
+        queue.addAll(list)
         _state.update { it.copy(current = next, queue = queue.toList()) }
-        next?.onShow()
+        next.onShow()
     }
 }

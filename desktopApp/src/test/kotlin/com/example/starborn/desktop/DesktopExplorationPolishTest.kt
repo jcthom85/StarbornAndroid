@@ -126,10 +126,19 @@ class DesktopExplorationPolishTest {
                 services.userSettingsStore.setEnvironmentalEffectsQuality(com.example.starborn.data.local.EnvironmentalEffectsQuality.OFF)
             }
             assertTrue(services.startDebugScenario("tut_npc_dialogue"))
+            var controlsOpen by mutableStateOf(false)
             compose.setContent {
                 Box(Modifier.size(1920.dp, 1080.dp)) {
                     DesktopStarbornTheme {
-                        DesktopExplorationScreen(services, {}, {}, {}, {}, {}, {})
+                        DesktopExplorationKeyLegendHud(
+                            ui = services.exploration.uiState.value,
+                            blocked = false,
+                            onQuickSave = { services.saveManager.saveGame(-1, services.sessionStore.state.value) },
+                            onOpenControls = { controlsOpen = true }
+                        )
+                        if (controlsOpen) {
+                            DesktopControlsDialog(onDismiss = { controlsOpen = false })
+                        }
                     }
                 }
             }

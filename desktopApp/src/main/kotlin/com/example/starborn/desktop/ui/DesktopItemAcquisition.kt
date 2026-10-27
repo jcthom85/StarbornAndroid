@@ -23,7 +23,7 @@ import java.util.Locale
 private fun itemCategoryAccentColor(category: String?): Color {
     val norm = category?.lowercase(Locale.getDefault())?.trim().orEmpty()
     return when {
-        norm.contains("key") || norm.contains("relic") || norm.contains("core") || norm.contains("quest") -> Color(0xFFFFD54F) // Golden Amber
+        norm.contains("key") || norm.contains("relic") || norm.contains("core") || norm.contains("quest") || norm.contains("currency") || norm.contains("credit") -> Color(0xFFFFD54F) // Golden Amber
         norm.contains("weapon") || norm.contains("gun") || norm.contains("sword") || norm.contains("armor") || norm.contains("gear") || norm.contains("accessory") -> Color(0xFF7BE8FF) // Cyber Cyan
         norm.contains("consumable") || norm.contains("food") || norm.contains("ration") || norm.contains("heal") || norm.contains("stim") || norm.contains("firstaid") -> Color(0xFF81C784) // Medical Jade
         norm.contains("void") || norm.contains("erosion") || norm.contains("anomaly") -> Color(0xFFCE93D8) // Void Violet
@@ -101,13 +101,6 @@ internal fun DesktopItemGrantedBanner(
                         )
                     }
                 }
-                if (hasSequence) {
-                    Text(
-                        text = "${prompt.sequenceIndex} / ${prompt.sequenceTotal}",
-                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                        color = Color.White.copy(alpha = 0.68f)
-                    )
-                }
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -153,17 +146,6 @@ internal fun DesktopItemGrantedBanner(
                         )
                     }
                 }
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = if (prompt.sequenceIndex < prompt.sequenceTotal) "Next ▸" else "Continue",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.White.copy(alpha = 0.52f)
-                )
             }
         }
     }

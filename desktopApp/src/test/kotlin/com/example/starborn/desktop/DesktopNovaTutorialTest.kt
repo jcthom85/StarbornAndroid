@@ -53,9 +53,9 @@ class DesktopNovaTutorialTest {
                 prompt.current?.let { DesktopExplorationPromptBanner(services, it, services.exploration::dismissPrompt) }
             }
         } }
-        compose.onNodeWithText("Shape Nova's build").assertIsDisplayed()
+        compose.onNodeWithText("[System] Shape Nova's build").assertIsDisplayed()
         screenshot("first-ap")
-        compose.onNodeWithText("View Nova's Skills").performClick()
+        compose.onNodeWithText("View Nova's Abilities").performClick()
         compose.waitUntil(5000) { services.exploration.uiState.value.skillTreeOverlay?.tutorialGuide != null }
         compose.onNodeWithText(Guide.TREE_MESSAGE).assertIsDisplayed()
         assertNull(services.promptManager.state.value.current)

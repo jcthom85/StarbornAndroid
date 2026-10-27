@@ -338,13 +338,13 @@ fun CombatTutorialOverlay(
     } else {
         Box(
             modifier = modifier,
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.TopCenter
         ) {
             Surface(
                 modifier = Modifier
                     .wrapContentWidth()
                     .widthIn(min = 240.dp, max = 480.dp)
-                    .padding(horizontal = 20.dp),
+                    .padding(horizontal = 20.dp, vertical = 64.dp),
                 shape = RoundedCornerShape(999.dp),
                 color = panel.copy(alpha = if (highContrastMode) 0.98f else 0.92f),
                 border = BorderStroke(1.2.dp, accent.copy(alpha = 0.85f)),

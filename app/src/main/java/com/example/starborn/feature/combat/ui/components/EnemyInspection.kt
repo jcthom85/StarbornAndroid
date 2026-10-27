@@ -289,7 +289,7 @@ fun EnemyInspectionSheet(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = "INTEGRITY",
+                                    text = "HP",
                                     style = MaterialTheme.typography.labelSmall.copy(
                                         fontFamily = CombatNameFont,
                                         color = Color.White.copy(alpha = 0.7f)
@@ -331,7 +331,7 @@ fun EnemyInspectionSheet(
                                         modifier = Modifier.size(14.dp)
                                     )
                                     Text(
-                                        text = if (isBroken) "STABILITY BROKEN" else "STABILITY GAUGE",
+                                        text = if (isBroken) "STABILITY BROKEN" else "STABILITY",
                                         style = MaterialTheme.typography.labelSmall.copy(
                                             fontFamily = CombatNameFont,
                                             color = if (isBroken) Color(0xFFFF8A80) else Color.White.copy(alpha = 0.7f)
@@ -371,23 +371,32 @@ fun EnemyInspectionSheet(
                 // Discovered Weaknesses Section
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(
-                        text = "Discovered weaknesses",
+                        text = "Weaknesses & Resistances",
                         style = MaterialTheme.typography.titleSmall.copy(
                             fontFamily = CombatNameFont,
                             color = accent
                         )
                     )
-                    if (knownWeaknesses.isEmpty()) {
-                        Text(
-                            text = "Unknown. Try different attacks to discover weaknesses.",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.White.copy(alpha = 0.85f)
-                        )
-                    } else {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (knownWeaknesses.isEmpty()) {
+                            Surface(
+                                color = Color.White.copy(alpha = 0.08f),
+                                shape = RoundedCornerShape(999.dp),
+                                border = BorderStroke(1.dp, Color.White.copy(alpha = 0.25f))
+                            ) {
+                                Text(
+                                    text = "[ ? ] Undiscovered",
+                                    style = MaterialTheme.typography.labelMedium.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White.copy(alpha = 0.7f)
+                                    ),
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp)
+                                )
+                            }
+                        } else {
                             knownWeaknesses.sorted().forEach { element ->
                                 Surface(
                                     color = Color(0xFFFFD54F).copy(alpha = 0.16f),
@@ -404,19 +413,30 @@ fun EnemyInspectionSheet(
                                     )
                                 }
                             }
+                            if (knownWeaknesses.size < 2) {
+                                Surface(
+                                    color = Color.White.copy(alpha = 0.08f),
+                                    shape = RoundedCornerShape(999.dp),
+                                    border = BorderStroke(1.dp, Color.White.copy(alpha = 0.25f))
+                                ) {
+                                    Text(
+                                        text = "[ ? ]",
+                                        style = MaterialTheme.typography.labelMedium.copy(
+                                            fontWeight = FontWeight.Bold,
+                                            color = Color.White.copy(alpha = 0.6f)
+                                        ),
+                                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                                    )
+                                }
+                            }
                         }
                     }
-                    Text(
-                        text = "Undiscovered weaknesses and resistances are not revealed by inspection.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.62f)
-                    )
                 }
 
                 // Active Statuses & Buffs Section
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(
-                        text = "Active effects",
+                        text = "Active Effects",
                         style = MaterialTheme.typography.titleSmall.copy(
                             fontFamily = CombatNameFont,
                             color = accent

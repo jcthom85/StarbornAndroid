@@ -468,6 +468,7 @@ private fun ChoiceTagChip(tag: ChoiceTag) {
         ChoiceTag.QUEST -> "Quest" to Color(0xFF43A047)
         ChoiceTag.TUTORIAL -> "Tutorial" to Color(0xFF1E88E5)
         ChoiceTag.MILESTONE -> "Milestone" to Color(0xFF7E57C2)
+        ChoiceTag.SHOP -> "🛒 Shop" to Color(0xFFFFB300)
     }
     AssistChip(
         onClick = {},
@@ -485,7 +486,7 @@ private data class ParsedChoiceLabel(
     val tags: List<ChoiceTag>
 )
 
-private enum class ChoiceTag { QUEST, TUTORIAL, MILESTONE }
+private enum class ChoiceTag { QUEST, TUTORIAL, MILESTONE, SHOP }
 
 private fun parseChoiceLabel(raw: String): ParsedChoiceLabel {
     var remaining = raw.trim()
@@ -503,6 +504,7 @@ private fun parseChoiceLabel(raw: String): ParsedChoiceLabel {
             "quest" in lowered -> tags += ChoiceTag.QUEST
             "tutorial" in lowered -> tags += ChoiceTag.TUTORIAL
             "milestone" in lowered -> tags += ChoiceTag.MILESTONE
+            "shop" in lowered || "trade" in lowered || "contraband" in lowered || "wares" in lowered -> tags += ChoiceTag.SHOP
         }
     }
     val cleaned = remaining.removePrefix("-").trimStart()
@@ -513,6 +515,7 @@ private fun String.toChoiceTag(): ChoiceTag? = when (this.lowercase(Locale.getDe
     "quest" -> ChoiceTag.QUEST
     "tutorial" -> ChoiceTag.TUTORIAL
     "milestone" -> ChoiceTag.MILESTONE
+    "shop", "trade" -> ChoiceTag.SHOP
     else -> null
 }
 

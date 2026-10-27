@@ -59,10 +59,7 @@ fun EnemyStatusRail(
     maxVisible: Int = 3
 ) {
     val entries = statusChipsFor(statuses, buffs)
-    var showDetails by remember { mutableStateOf(false) }
-    LaunchedEffect(entries.isEmpty()) { if (entries.isEmpty()) showDetails = false }
     if (entries.isEmpty()) return
-    if (showDetails) StatusDetailsDialog(entries) { showDetails = false }
     val visible = entries.take(maxVisible.coerceAtLeast(1))
     val overflow = entries.size - visible.size
     Surface(
@@ -70,7 +67,7 @@ fun EnemyStatusRail(
         contentColor = Color.White,
         shape = RoundedCornerShape(999.dp),
         border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f)),
-        modifier = modifier.clickable(onClickLabel = "View all effects") { showDetails = true }
+        modifier = modifier
             .semantics { contentDescription = entries.joinToString("; ") { it.description } }
     ) {
         Row(
@@ -157,12 +154,9 @@ fun EnemyStatusPip(chip: StatusChip) {
 @Composable
 fun StatusBadges(statuses: List<StatusEffect>, buffs: List<ActiveBuff>) {
     val entries = statusChipsFor(statuses, buffs)
-    var showDetails by remember { mutableStateOf(false) }
-    LaunchedEffect(entries.isEmpty()) { if (entries.isEmpty()) showDetails = false }
     if (entries.isEmpty()) return
-    if (showDetails) StatusDetailsDialog(entries) { showDetails = false }
     LazyRow(
-        modifier = Modifier.widthIn(max = 1200.dp).clickable(onClickLabel = "View all effects") { showDetails = true }
+        modifier = Modifier.widthIn(max = 1200.dp)
             .semantics { contentDescription = entries.joinToString("; ") { it.description } },
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         contentPadding = PaddingValues(horizontal = 2.dp)

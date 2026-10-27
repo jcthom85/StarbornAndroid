@@ -179,6 +179,45 @@ class Hub1CriticalFlowTest {
     }
 
     @Test
+    fun puzzleRoomDepartureDoesNotSoftlockWakeUpCall() {
+        val harness = Hub1Harness(initialState = openingState())
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("novus_bunk"))
+        harness.events.handleTrigger("encounter_victory",
+            EventPayload.EncounterOutcome(enemyIds = listOf("faulted_loader"),
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY, roomId = "workshop_yard"))
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("workshop_floor"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("tinkering_craft", "functional_cryo_inductor"))
+        harness.store.setInventory(harness.store.state.value.inventory + ("functional_cryo_inductor" to 1))
+
+        // Leave to workshop_loft mid-puzzle
+        harness.store.setRoom("workshop_loft")
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("workshop_loft"))
+        assertEquals("workshop_loft", harness.store.state.value.roomId)
+
+        // Return to workshop_floor
+        harness.store.setRoom("workshop_floor")
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("workshop_floor"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_patch_flux_liner"))
+
+        // Leave to workshop_office mid-puzzle
+        harness.store.setRoom("workshop_office")
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("workshop_office"))
+        assertEquals("workshop_office", harness.store.state.value.roomId)
+
+        // Return to workshop_floor
+        harness.store.setRoom("workshop_floor")
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("workshop_floor"))
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_confirm_governor"))
+
+        // Final surge completes quest cleanly without softlock
+        harness.events.handleTrigger("player_action", EventPayload.Action("w1_mq01_cutter_surge"))
+        val state = harness.store.state.value
+        assertTrue("Wake Up Call must complete even after departures", state.completedQuests.contains("w1_mq01"))
+        assertTrue(state.completedMilestones.contains("ms_w1_mq01_cutter_surge"))
+        assertTrue(state.completedMilestones.contains("ms_w1_mq01_complete"))
+    }
+
+    @Test
     fun loaderVictoryResolvesTheDiagnosticObjectiveWithoutInventingAnInspection() {
         val harness = Hub1Harness(initialState = openingState())
         fun victory(enemy: String) = harness.events.handleTrigger("encounter_victory",

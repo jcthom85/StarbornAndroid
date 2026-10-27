@@ -1405,11 +1405,20 @@ fun TinkeringTutorialOverlay(
     Surface(
         modifier = modifier.fillMaxWidth().widthIn(max = 560.dp),
         shape = RoundedCornerShape(12.dp), color = FieldMenuDesign.panel,
-        border = BorderStroke(1.dp, accentColor.copy(alpha = .6f))
+        border = BorderStroke(1.5.dp, FieldMenuDesign.cyan)
     ) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("Tutorial", color = accentColor, style = MaterialTheme.typography.labelMedium)
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Box(
+                        modifier = Modifier
+                            .background(FieldMenuDesign.cyan.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
+                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                    ) {
+                        Text("NEW", color = FieldMenuDesign.cyan, style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold))
+                    }
+                    Text("[Field] Tutorial", color = accentColor, style = MaterialTheme.typography.labelMedium)
+                }
                 Text(if (step == TinkeringTutorialStep.COMPLETE) "Complete" else "Step ${step.ordinal + 1} of 3", style = MaterialTheme.typography.labelSmall)
             }
             if (step == TinkeringTutorialStep.SLOT_BASE) Text("Repair the Cryo-Inductor", style = MaterialTheme.typography.titleSmall)
