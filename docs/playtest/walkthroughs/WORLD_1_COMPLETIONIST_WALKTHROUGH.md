@@ -8,6 +8,16 @@ Full spoilers. This is a route you can follow from a fresh New Game through the 
 
 Follow sections 1-11 in order. Each numbered instruction gives you a destination or action. The **Check before leaving** paragraphs are stop signs: resolve missing progress before advancing. Section 12 is the exhaustive room reference; consult the entry for your current room when you want every inspection, connection, gate, and authored reward. Section 13 lists journal objectives verbatim.
 
+### Playtest Schedule: 3-Part Partition (Monday – Wednesday)
+
+For manual playtesting across 3 days (~55–70 minutes each), this walkthrough aligns directly with `docs/playtest/WORLD_1_PLAYTEST_SESSION_PLAN.md`:
+
+| Session | Name & Focus | Walkthrough Sections | Start Location | Stop & Safe Save Point |
+|---|---|---|---|---|
+| **Part 1 (Monday)** | *The Worker's Cage & Civilian Hubs* | **Sections 1 – 5** | Nova's Bunk (`pit_nova_bunk`) | Concourse Lobby (`admin_lobby`) after crossing Blast Door A |
+| **Part 2 (Tuesday)** | *Corporate Infiltration & The Deep Mine* | **Sections 6 – 9** | Concourse Lobby (`admin_lobby`) | The Heart (`echo_heart`) right before the Tuning Fork |
+| **Part 3 (Wednesday)** | *Relic Sync, Red Alert & Escape* | **Sections 10 – 11** | The Heart (`echo_heart`) | Sector 9 Crash Site (`sector9_crash_site`) in World 2 |
+
 - Directions are map directions: north/up, south/down, east/right, west/left. Use the arrows or directional movement controls.
 - Room names are followed by internal IDs so you can identify the exact location in screenshots or reports.
 - **Talk** means select the NPC and advance through the whole conversation until exploration controls return. Rewards often fire on the final line.
@@ -31,6 +41,9 @@ The lift descent is **not a demonstrated permanent point of no return**. The aut
 Normal New Game uses the current crew builds. Open the Party skill-tree controls to inspect upgrades and their AP costs. AP is a shared budget across the crew; core story abilities such as Cryo Vent, Hydraulic Kick and Blast Wave unlock separately from purchases. Wake Up Call, required Heavy Lifting certification, The Echo and The Launch each award 2 AP: 8 earned AP across World 1 before spending. Check your purchases and remaining AP when comparing playtest runs.
 
 At the workshop checkpoint, after certification and before the Fork/Warden, review equipment, healing supplies and affordable purchases. Read each node's current effect rather than assuming all upgrades increase damage. Reset build refunds that character's recorded purchases for free outside pending battles; other characters' purchases remain. Save before comparing builds and record the allocation so a difficulty report can be reproduced. Fourth nodes are gated until World 4 completion.
+
+# PART 1: The Worker's Cage & Civilian Hubs (Monday Session)
+> **Session 1 Scope:** Sections 1 – 5 | **Estimated Duration:** ~55–65 min | **Target Stop:** Concourse Lobby (`admin_lobby`)
 
 ## 1. Wake up, meet Jed, and sweep The Pit
 
@@ -118,7 +131,18 @@ Start: Triage Hall (`medbay_hall`).
 5. Go **west** to Search Bay, **north** to Blast Door A (`checkpoint_door`), then **north** through Transit Tunnel (`checkpoint_tunnel`) to **Concourse Lobby (`admin_lobby`)**. Inspect each intermediate room's interactions as you pass.
 6. Entering Logistics starts **The Echo (`w1_mq03`)** if it has not already started. The Transit Checkpoint and Admin Concourse remain connected; you do not need to wait for a new-node animation at every doorway.
 
+> [!IMPORTANT]
+> **🛑 STOP SIGN — END OF PART 1 (MONDAY SESSION):**
+> - **Check Journal:** `w1_mq01` and `w1_mq02` Complete. `w1_sq01` (Scavenger's Stash) and `w1_sq02` (System Flush) Complete.
+> - **Active Objective:** `The Echo (w1_mq03)` -> *Report to Foreman Boggs in the Concourse Lobby*.
+> - **Safe Save:** Open Field Menu (`MENU > Save`) in Concourse Lobby (`admin_lobby`).
+
 **If the gate rejects you:** finish Hank's rejection first, choose Grid Instability with Zeke, and finish Zeke's final lines. Having visited the booth without completing the override is not enough.
+
+---
+
+# PART 2: Corporate Infiltration, The Deep Mine & Ancient Secrets (Tuesday Session)
+> **Session 2 Scope:** Sections 6 – 9 | **Estimated Duration:** ~60–70 min | **Target Stop:** The Heart (`echo_heart`) before the Tuning Fork
 
 ## 6. Certify Guard Break and get the lift authorized
 
@@ -196,6 +220,17 @@ Start: Cavern Junction (`mine_junction`).
 - Cart vault opened and looted; Riot Control Post detour completed if following 100% room coverage.
 - Party healed, equipment reviewed, useful healing items and grenades retained.
 - Pre-Fork save preserved. Do not overwrite it with your escape checkpoint.
+
+> [!IMPORTANT]
+> **🛑 STOP SIGN — END OF PART 2 (TUESDAY SESSION):**
+> - **Check Journal:** `w1_sq03` (Heavy Lifting), `w1_sq04` (Protocol Override), and `w1_sq05` (The Lost Shift) Complete. Cart munitions vault looted.
+> - **Active Objective:** `The Echo (w1_mq03)` -> *Calibrate the harmonic tuning fork in The Heart*.
+> - **Safe Save:** Make a dedicated save in a separate slot right in front of the Tuning Fork in The Heart (`echo_heart`).
+
+---
+
+# PART 3: Relic Sync, The Red Alert Gauntlet & Escape (Wednesday Session)
+> **Session 3 Scope:** Sections 10 – 11 | **Estimated Duration:** ~55–65 min | **Target Stop:** Sector 9 Crash Site (`sector9_crash_site`) in World 2
 
 ## 10. Counter-Tune the Fork and follow Red Alert
 
