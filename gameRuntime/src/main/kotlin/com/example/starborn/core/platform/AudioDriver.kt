@@ -15,5 +15,8 @@ interface AudioDriver {
 
     fun setUserGain(type: AudioCueType, gain: Float)
 
+    /** Clear session-only music positions when loading a save or starting a new game. */
+    fun resetMusicPlayback() {}
+
     fun release()
 }

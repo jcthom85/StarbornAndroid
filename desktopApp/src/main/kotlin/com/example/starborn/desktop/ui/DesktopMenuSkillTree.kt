@@ -34,6 +34,14 @@ private const val ROW_STEP_DP = 140
 
 @Composable
 internal fun DesktopMenuSkillsContent(services: DesktopAppServices, tree: SkillTreeOverlayUi) {
+    var confirmRespec by rememberSaveable(tree.characterId) { mutableStateOf(false) }
+    if (confirmRespec) AlertDialog(onDismissRequest = { confirmRespec = false },
+        containerColor = FieldMenuDesign.panel, titleContentColor = FieldMenuDesign.text,
+        textContentColor = FieldMenuDesign.textMuted,
+        title = { Text("Respec ${tree.characterName}?") },
+        text = { Text("Refund ${tree.respecRefund} AP and clear this character's build choices.") },
+        confirmButton = { TextButton(onClick = { confirmRespec = false; services.exploration.resetPrototypeBuild(tree.characterId) }) { Text("Respec Character") } },
+        dismissButton = { TextButton(onClick = { confirmRespec = false }) { Text("Cancel") } })
     var branchId by rememberSaveable(tree.characterId) { mutableStateOf(tree.branches.firstOrNull()?.id) }
     val branch = tree.branches.firstOrNull { it.id == branchId } ?: tree.branches.firstOrNull()
     var selectedId by rememberSaveable(tree.characterId, branchId) { mutableStateOf<String?>(null) }
@@ -83,8 +91,10 @@ internal fun DesktopMenuSkillsContent(services: DesktopAppServices, tree: SkillT
                 }
             }
         }
-        if (tree.respecRefund > 0) TextButton(onClick = { services.exploration.resetPrototypeBuild(tree.characterId) }) {
-            Text("Reset build (+${tree.respecRefund} AP)")
+        if (tree.respecRefund > 0) OutlinedButton(onClick = { confirmRespec = true }, modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = FieldMenuDesign.cyan),
+            border = BorderStroke(1.dp, FieldMenuDesign.border)) {
+            Text("Respec Character · Refund ${tree.respecRefund} AP")
         }
         // --- Header Navigation & AP Status ---
         Row(

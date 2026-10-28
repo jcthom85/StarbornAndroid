@@ -1067,6 +1067,11 @@ fun CombatScreen(
                                 )
                             }
                         )
+                        combatTutorial?.takeUnless { it.showsModal }?.let { tutorial ->
+                            CombatTutorialOverlay(tutorial, viewModel.theme, highContrastMode,
+                                viewModel::onCombatTutorialContinue, viewModel::skipCombatTutorial,
+                                Modifier.testTag("combat-tutorial-guidance"))
+                        }
                         com.example.starborn.feature.combat.ui.components.EnemyFormationViewport(
                             Modifier.fillMaxWidth().weight(1f).testTag("combat-enemies")
                         ) {
@@ -1239,7 +1244,7 @@ fun CombatScreen(
                     onTap = { viewModel.registerTimedPromptTap() }
                 )
             }
-            combatTutorial?.let { tutorial ->
+            combatTutorial?.takeIf { it.showsModal }?.let { tutorial ->
                 CombatTutorialOverlay(
                     tutorial = tutorial,
                     theme = viewModel.theme,

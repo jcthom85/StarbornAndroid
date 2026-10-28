@@ -556,7 +556,7 @@ private fun DesktopInventorySplitLayout(
                                     color = Color.White
                                 )
                                 Text(
-                                    text = selectedItem.type.uppercase(Locale.getDefault()),
+                                    text = if (com.example.starborn.domain.inventory.FieldItemRules.isCombatOnly(selectedItem, services.craftingService.isPreparedMeal(selectedItem.id))) "COMBAT CONSUMABLE" else selectedItem.type.uppercase(Locale.getDefault()),
                                     style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                     color = FieldMenuDesign.cyan
                                 )
@@ -580,7 +580,7 @@ private fun DesktopInventorySplitLayout(
                     // Key items have no field action.
                     if (allowUse && selectedItem.effect != null) Button(
                         onClick = { onUseItem(selectedItem.id) },
-                        enabled = allowUse && selectedItem.effect != null,
+                        enabled = allowUse && selectedItem.effect != null && !com.example.starborn.domain.inventory.FieldItemRules.isCombatOnly(selectedItem, services.craftingService.isPreparedMeal(selectedItem.id)),
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(
@@ -590,7 +590,7 @@ private fun DesktopInventorySplitLayout(
                             disabledContentColor = Color.White.copy(alpha = 0.35f)
                         )
                     ) {
-                        Text(text = if (selectedItem.effect != null) "USE ITEM" else "CANNOT USE IN FIELD", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        Text(text = if (com.example.starborn.domain.inventory.FieldItemRules.isCombatOnly(selectedItem, services.craftingService.isPreparedMeal(selectedItem.id))) "COMBAT ONLY" else if (selectedItem.effect != null) "USE ITEM" else "CANNOT USE IN FIELD", fontWeight = FontWeight.Bold, fontSize = 12.sp)
                     }
                 }
             } else {

@@ -58,7 +58,6 @@ import kotlin.math.sin
 internal fun HubMapScene(
     hubId: String?, background: Painter, nodes: List<HubNodeUi>, selectedId: String?, trackedQuest: HubQuestUi?,
     onSelect: (HubNodeUi) -> Unit, onEnter: (HubNodeUi) -> Unit, modifier: Modifier = Modifier,
-    bottomReserve: androidx.compose.ui.unit.Dp = 190.dp,
     newlyUnlockedNodeId: String? = null
 ) {
     val layout = HubMapLayouts.all[hubId] ?: return
@@ -66,7 +65,7 @@ internal fun HubMapScene(
         val density = LocalDensity.current
         val intrinsic = background.intrinsicSize
         val aspect = if (intrinsic.width > 0 && intrinsic.height > 0) intrinsic.width / intrinsic.height else 9f / 16f
-        val transform = HubMapTransform.cover(constraints.maxWidth.toFloat(), constraints.maxHeight.toFloat(), aspect)
+        val transform = HubMapTransform.fit(constraints.maxWidth.toFloat(), constraints.maxHeight.toFloat(), aspect)
         val mapWidth = with(density) { transform.width.toDp() }
         val viewportWidth = maxWidth
         val viewportWidthPx = constraints.maxWidth.toFloat()
@@ -93,7 +92,11 @@ internal fun HubMapScene(
         )
 
         Box(Modifier.fillMaxSize().clipToBounds()) {
-            Image(background, null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+            // Draw the same image rectangle used to transform every destination anchor.
+            Image(background, null, contentScale = ContentScale.FillBounds, modifier = Modifier
+                .offset { IntOffset(transform.offsetX.roundToInt(), transform.offsetY.roundToInt()) }
+                .wrapContentSize(Alignment.TopStart, unbounded = true)
+                .requiredSize(mapWidth, with(density) { transform.imageHeight.toDp() }))
 
             // --- Layer 1: Ground Contact Shadows & Selection Sonar Rings ---
             Canvas(Modifier.fillMaxSize()) {
@@ -321,9 +324,9 @@ internal fun HubMapScene(
                 val labelX = (transform.x(nodeX + site.labelDx) - with(density) { labelWidth.toPx() } / 2)
                     .coerceIn(0f, (viewportWidthPx - with(density) { labelWidth.toPx() }).coerceAtLeast(0f))
 
-                val panelTopPx = viewportHeightPx - with(density) { bottomReserve.toPx() }
+                val panelTopPx = viewportHeightPx
                 val flipAbove = site.labelDy < 0f || (site.labelDy == 0f && (
-                    anchorY + with(density) { 36.dp.toPx() } > panelTopPx || nodeY >= 0.72f
+                    anchorY + with(density) { 52.dp.toPx() } > panelTopPx
                 ))
 
                 val defaultPillHeightPx = with(density) { 26.dp.roundToPx() }

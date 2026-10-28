@@ -25,6 +25,50 @@ class DesktopAudioDriverPipelineTest {
     }
 
     @Test
+    fun explorationResumesCombatRestartsAndSessionResetClearsPositions() {
+        driver.release()
+        val clips = java.util.concurrent.CopyOnWriteArrayList<TestAudioClip>()
+        driver = DesktopAudioDriver(assetProvider, prewarmDefaults = false, clipFactory = {
+            TestAudioClip().also { clips.add(it) }.clip
+        })
+        fun play(cue: String, restart: Boolean = false): TestAudioClip {
+            val count = clips.size
+            driver.execute(AudioCommand.Play(AudioCueType.MUSIC, cue, loop = true, fadeMs = 0,
+                restartFromBeginning = restart))
+            await { clips.size > count && driver.isPlaying(AudioCueType.MUSIC, cue) && clips.last().running }
+            return clips.last()
+        }
+        fun stop(cue: String) {
+            driver.execute(AudioCommand.Stop(AudioCueType.MUSIC, cue, fadeMs = 0))
+            await { !driver.isPlaying(AudioCueType.MUSIC, cue) }
+        }
+        val exploration = play("music_title_theme")
+        exploration.positionMicros = 12_000_000L
+        stop("music_title_theme")
+        val battle = play("music_w1_combat", restart = true)
+        assertEquals(0L, battle.positionMicros)
+        battle.positionMicros = 8_000_000L
+        stop("music_w1_combat")
+        val returned = play("music_title_theme")
+        assertEquals(12_000_000L, returned.positionMicros)
+        driver.setBackgroundPaused(true)
+        await { !returned.running }
+        driver.setBackgroundPaused(false)
+        await { returned.running }
+        assertEquals(12_000_000L, returned.positionMicros)
+        stop("music_title_theme")
+        val nextBattle = play("music_w1_combat", restart = true)
+        assertEquals(0L, nextBattle.positionMicros)
+        nextBattle.positionMicros = 5_000_000L
+        val restarted = play("music_w1_combat", restart = true)
+        assertTrue(nextBattle.closed)
+        assertEquals(0L, restarted.positionMicros)
+        driver.resetMusicPlayback()
+        val fresh = play("music_title_theme")
+        assertEquals(0L, fresh.positionMicros)
+    }
+
+    @Test
     fun prewarmLoadsCommonSfxCuesIntoPcmCache() {
         // Allow background prewarm worker a brief moment to process the cues
         val deadline = System.currentTimeMillis() + 3000L

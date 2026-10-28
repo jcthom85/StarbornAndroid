@@ -12,6 +12,7 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
@@ -30,6 +31,26 @@ class InventoryServiceTest {
         )
         inventoryService = InventoryService(catalog)
         inventoryService.loadItems()
+    }
+
+    @Test
+    fun stackedRewardsPublishFreshCountsWithoutMutatingPreviouslyPublishedEntries() = kotlinx.coroutines.test.runTest {
+        val observed = mutableListOf<Int>()
+        val collector = backgroundScope.launch(kotlinx.coroutines.test.UnconfinedTestDispatcher(testScheduler)) {
+            inventoryService.state.collect { entries ->
+                observed += entries.firstOrNull { it.item.id == "latte" }?.quantity ?: 0
+            }
+        }
+        inventoryService.addItem("latte")
+        val firstPublished = inventoryService.state.value
+        repeat(4) { inventoryService.addItem("latte") }
+        assertEquals(listOf(0, 1, 2, 3, 4, 5), observed)
+        assertEquals(1, firstPublished.single().quantity)
+        inventoryService.removeItem("latte")
+        inventoryService.useItem("latte")
+        assertEquals(listOf(0, 1, 2, 3, 4, 5, 4, 3), observed)
+        assertEquals(3, inventoryService.snapshot()["latte"])
+        collector.cancel()
     }
 
     @Test

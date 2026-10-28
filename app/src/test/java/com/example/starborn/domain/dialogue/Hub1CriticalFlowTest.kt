@@ -469,6 +469,8 @@ class Hub1CriticalFlowTest {
 
         state = harness.store.state.value
         assertTrue(state.activeQuests.contains("w1_sq05"))
+        assertTrue("Quest presentation owns the acquisition notice; no extra generic popup",
+            harness.messages.none { it.contains("Quest started: The Lost Shift", ignoreCase = true) })
         assertEquals("w1_sq05", state.trackedQuestId)
         assertTrue(state.questTasksCompleted["w1_sq05"].orEmpty().contains("find_collapsed_tunnel"))
 

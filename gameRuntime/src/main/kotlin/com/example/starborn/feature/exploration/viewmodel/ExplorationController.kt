@@ -330,7 +330,8 @@ class ExplorationController(
                     type = item?.type ?: "misc",
                     description = item?.description,
                     effect = item?.effect,
-                    equipment = item?.equipment
+                    equipment = item?.equipment,
+                    combatOnly = item?.let { com.example.starborn.domain.inventory.FieldItemRules.isCombatOnly(it, craftingService.isPreparedMeal(it.id)) } ?: false
                 )
             }
             .sortedBy { it.name.lowercase(Locale.getDefault()) }
@@ -1956,7 +1957,8 @@ class ExplorationController(
                             type = entry.item.type,
                             description = entry.item.description,
                             effect = entry.item.effect,
-                            equipment = entry.item.equipment
+                            equipment = entry.item.equipment,
+                            combatOnly = com.example.starborn.domain.inventory.FieldItemRules.isCombatOnly(entry.item, craftingService.isPreparedMeal(entry.item.id))
                         )
                     }
                 _uiState.update { it.copy(inventoryPreview = preview) }
@@ -1976,7 +1978,8 @@ class ExplorationController(
                             type = entry.item.type,
                             description = entry.item.description,
                             effect = entry.item.effect,
-                            equipment = entry.item.equipment
+                            equipment = entry.item.equipment,
+                            combatOnly = com.example.starborn.domain.inventory.FieldItemRules.isCombatOnly(entry.item, craftingService.isPreparedMeal(entry.item.id))
                         )
                     }
             _uiState.update { it.copy(inventoryPreview = initialPreview) }

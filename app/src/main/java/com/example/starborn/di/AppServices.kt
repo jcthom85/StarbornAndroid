@@ -503,6 +503,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
     suspend fun loadSlot(slot: Int): Boolean {
         val info = resolveSlotInfo(slot) ?: return false
         val state = info.state.migrateOpeningNarrativeState().migrateCrewProgressionState()
+        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main.immediate) { resetSessionMusic() }
         sessionStore.restore(state)
         questPresentations.clear()
         inventoryService.restore(state.inventory)
@@ -523,6 +524,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
     suspend fun loadAutosave(): Boolean {
         val info = sessionPersistence.autosaveInfo() ?: return false
         val state = info.state.migrateOpeningNarrativeState().migrateCrewProgressionState()
+        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main.immediate) { resetSessionMusic() }
         sessionStore.restore(state)
         questPresentations.clear()
         inventoryService.restore(state.inventory)
@@ -549,6 +551,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
     suspend fun loadQuickSave(): Boolean {
         val info = sessionPersistence.quickSaveInfo() ?: return false
         val state = info.state.migrateOpeningNarrativeState().migrateCrewProgressionState()
+        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main.immediate) { resetSessionMusic() }
         sessionStore.restore(state)
         questPresentations.clear()
         inventoryService.restore(state.inventory)
@@ -624,8 +627,14 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
         return isPartyEmpty && noProgress && noInventory
     }
 
+    private fun resetSessionMusic() {
+        audioCuePlayer.execute(audioRouter.reset())
+        audioCuePlayer.resetMusicPlayback()
+    }
+
     fun startNewGame(debugFullInventory: Boolean = false): Boolean {
         return runCatching {
+            resetSessionMusic()
             bootstrapCinematics.clear()
             bootstrapPlayerActions.clear()
             promptManager.dismissCurrent()

@@ -770,7 +770,7 @@
   {
     "id": "bogs_w1_sq03_complete",
     "speaker": "Foreman Boggs",
-    "text": "Route's clear. Training is logged. Report when you're ready for Sector 4.",
+    "text": "Cargo route's clear. Your shield certification is logged. Check your journal for the next assignment.",
     "condition": "quest_completed:w1_sq03"
   },
   {

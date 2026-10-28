@@ -56,7 +56,7 @@ compose.desktop {
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.Exe
             )
             packageName = "Starborn"
-            packageVersion = "1.3.99"
+            packageVersion = "1.3.100"
             description = "Starborn - Sci-Fi Turn-Based RPG"
             vendor = "June Wire Games"
             windows {

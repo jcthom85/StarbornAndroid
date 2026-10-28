@@ -73,15 +73,7 @@ fun JournalTabContent(
                     trackedQuestId = trackedQuest?.id
                 )
             }
-            QuestJournalPage.COMPLETED -> {
-                QuestListPanel(
-                    quests = completedQuests,
-                    emptyMessage = "No completed quests yet.",
-                    accentColor = accentColor,
-                    borderColor = borderColor,
-                    onQuestSelected = onQuestSelected
-                )
-            }
+            QuestJournalPage.COMPLETED -> CompletedQuestGroups(completedQuests, accentColor, borderColor, onQuestSelected)
         }
     }
 
@@ -351,5 +343,30 @@ fun QuestJournalSectionCard(
             )
             content()
         }
+    }
+}
+
+
+@Composable
+fun CompletedQuestGroups(quests: List<QuestSummaryUi>, accentColor: Color, borderColor: Color,
+    onQuestSelected: (String) -> Unit) {
+    var expanded by rememberSaveable { mutableStateOf(listOf<String>()) }
+    if (quests.isEmpty()) Text("No completed quests yet.", color = Color.White.copy(alpha = .75f))
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        quests.groupBy { com.example.starborn.feature.exploration.presentation.QuestJournalGrouping.group(it.id) }
+            .toSortedMap(compareBy<String> { it == "Other quests" }.thenBy { it }).forEach { (group, entries) ->
+                val open = group in expanded
+                Surface(onClick = { expanded = if (open) expanded - group else expanded + group },
+                    modifier = Modifier.fillMaxWidth(), color = FieldMenuDesign.panel, shape = RoundedCornerShape(12.dp),
+                    border = BorderStroke(1.dp, borderColor.copy(alpha = .4f))) {
+                    Row(Modifier.padding(14.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text("$group (${entries.size})", color = accentColor)
+                        Text(if (open) "Collapse" else "Expand", color = Color.White)
+                    }
+                }
+                if (open) entries.sortedBy { it.title }.forEach { quest ->
+                    key(quest.id) { QuestJournalRow(quest, accentColor, borderColor, { onQuestSelected(quest.id) }) }
+                }
+            }
     }
 }

@@ -7,6 +7,22 @@ import org.junit.Test
 class AudioRouterTest {
 
     @Test
+    fun newFightsExplicitlyRestartEvenWhenTheSameTrackIsAlreadySelected() {
+        val router = AudioRouter(AudioBindings(music = mapOf("hub" to "exploration")))
+        val explore = router.commandsForRoom("hub", "room").filterIsInstance<AudioCommand.Play>().single()
+        assertEquals(false, explore.restartFromBeginning)
+        assertEquals(emptyList<AudioCommand>(), router.commandsForRoom("hub", "next_room"))
+        repeat(2) {
+            val battle = router.commandsForLayerOverride(AudioCueType.MUSIC, "combat", loop = true,
+                restartFromBeginning = true).filterIsInstance<AudioCommand.Play>().single()
+            assertEquals(true, battle.restartFromBeginning)
+        }
+        val returned = router.commandsForRoom("hub", "room").filterIsInstance<AudioCommand.Play>().single()
+        assertEquals("exploration", returned.cueId)
+        assertEquals(false, returned.restartFromBeginning)
+    }
+
+    @Test
     fun commandsForRoomSwitchesMusicAndAmbientLayers() {
         val bindings = AudioBindings(
             music = mapOf(

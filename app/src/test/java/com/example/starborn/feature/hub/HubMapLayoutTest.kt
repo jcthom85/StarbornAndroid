@@ -40,4 +40,14 @@ class HubMapLayoutTest {
             assertEquals(1088f / 1920f, fit.width / fit.imageHeight, .001f)
         }
     }
+    @Test fun `destination area fits between controls at compact and enlarged text heights`() {
+        listOf(360f to 320f, 400f to 580f, 800f to 650f).forEach { (width, height) ->
+            val fit = HubMapTransform.fit(width, height, 1088f / 1920f)
+            assertTrue(fit.x(0f) >= -.001f && fit.x(1f) <= width + .001f)
+            assertTrue(fit.y(.14f) >= -.001f && fit.y(.9f) <= height + .001f)
+            assertEquals(width / 2, fit.x(.5f), .001f)
+            assertEquals(1088f / 1920f, fit.width / fit.imageHeight, .001f)
+        }
+    }
+
 }

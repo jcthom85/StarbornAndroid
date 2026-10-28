@@ -336,37 +336,11 @@ fun CombatTutorialOverlay(
             }
         }
     } else {
-        Box(
-            modifier = modifier,
-            contentAlignment = Alignment.TopCenter
-        ) {
-            Surface(
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .widthIn(min = 240.dp, max = 480.dp)
-                    .padding(horizontal = 20.dp, vertical = 64.dp),
-                shape = RoundedCornerShape(999.dp),
-                color = panel.copy(alpha = if (highContrastMode) 0.98f else 0.92f),
-                border = BorderStroke(1.2.dp, accent.copy(alpha = 0.85f)),
-                shadowElevation = 10.dp
-            ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 18.dp, vertical = 9.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(8.dp)
-                            .background(accent, RoundedCornerShape(999.dp))
-                    )
-                    Text(
-                        text = message,
-                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-                        color = Color.White
-                    )
-                }
-            }
+        Surface(modifier = modifier.fillMaxWidth().padding(vertical = 4.dp),
+            shape = RoundedCornerShape(12.dp), color = panel.copy(alpha = .96f),
+            border = BorderStroke(1.dp, accent.copy(alpha = .65f))) {
+            Text(message, Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+                color = Color.White, style = MaterialTheme.typography.bodyMedium)
         }
     }
 }

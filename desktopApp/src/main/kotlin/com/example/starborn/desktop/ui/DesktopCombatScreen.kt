@@ -427,6 +427,10 @@ private fun DesktopCombatContent(
                         banner?.secondary?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
                     }
                 }
+                tutorial?.takeUnless { it.showsModal }?.let { training ->
+                    DesktopCombatTutorialOverlay(training, Color(0xFF7BE4FF), settings.highContrastMode,
+                        runtime::onCombatTutorialContinue, runtime::skipCombatTutorial)
+                }
                 val focused = enemies.firstOrNull { it.combatant.id == inspectedEnemyId }
                 focused?.let { target -> DesktopMenuCard(Modifier.fillMaxWidth()) {
                     Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -937,7 +941,7 @@ DesktopBattleFormation(party, services, Modifier.fillMaxWidth().weight(if (wide)
             onDismiss = { showLog = false },
             accentColor = commandAccent
         )
-        tutorial?.let { training ->
+        tutorial?.takeIf { it.showsModal }?.let { training ->
             DesktopCombatTutorialOverlay(training, commandAccent, settings.highContrastMode,
                 runtime::onCombatTutorialContinue, runtime::skipCombatTutorial)
         }

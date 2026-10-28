@@ -63,8 +63,13 @@ class HubFieldMenuTest {
                 compose.runOnIdle { scale = font }
                 compose.onNodeWithContentDescription("Quick save").assertIsDisplayed()
                 compose.onNodeWithText("Menu").assertIsDisplayed()
-                compose.onNodeWithText("Enter Med-Bay").assertIsDisplayed()
+                compose.onNodeWithTag("hub-enter-destination").assertIsDisplayed()
                 capture("hub-$font")
+                compose.onNodeWithText("A place to recover and prepare for the road ahead.").assertDoesNotExist()
+                compose.onNodeWithText("Details").performClick()
+                compose.onNodeWithText("A place to recover and prepare for the road ahead.").assertIsDisplayed()
+                compose.onNodeWithText("Close").performClick()
+                compose.onNodeWithTag("hub-enter-destination").assertIsDisplayed()
                 compose.onNodeWithText("Menu").performClick()
                 compose.waitUntil(5000) { vm.uiState.value.isMenuOverlayVisible }
                 for (tab in listOf(MenuTab.STATS, MenuTab.INVENTORY, MenuTab.FIELD_KIT, MenuTab.JOURNAL, MenuTab.SETTINGS, MenuTab.MAP)) {
@@ -73,7 +78,7 @@ class HubFieldMenuTest {
                     capture("hub-$font-${tab.name}")
                 }
                 compose.onNodeWithText("Return to region map").performClick()
-                compose.onNodeWithText("Enter Med-Bay").assertIsDisplayed()
+                compose.onNodeWithTag("hub-enter-destination").assertIsDisplayed()
                 compose.onNodeWithText("Wake-Up Call").performClick()
                 compose.waitUntil(5000) { vm.uiState.value.questDetail?.id == "w1_mq01" }
                 capture("hub-$font-quest")
@@ -123,7 +128,7 @@ class HubFieldMenuTest {
             androidx.test.espresso.Espresso.pressBack()
             compose.onNodeWithText("Menu").assertIsDisplayed()
             assertNull(services.sessionStore.state.value.roomId)
-            compose.onNode(hasText("Enter ", substring = true) and hasClickAction()).performClick()
+            compose.onNodeWithTag("hub-enter-destination").performClick()
             compose.waitUntil(15000) { compose.onAllNodesWithTag("exploration-menu-button").fetchSemanticsNodes().isNotEmpty() }
             assertNotNull(services.sessionStore.state.value.roomId)
 

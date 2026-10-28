@@ -243,7 +243,8 @@ data class InventoryPreviewItemUi(
     val type: String,
     val description: String? = null,
     val effect: ItemEffect? = null,
-    val equipment: Equipment? = null
+    val equipment: Equipment? = null,
+    val combatOnly: Boolean = false
 )
 
 data class CinematicUiState(

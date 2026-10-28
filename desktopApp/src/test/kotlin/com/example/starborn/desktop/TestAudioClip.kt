@@ -8,6 +8,7 @@ internal class TestAudioClip {
     @Volatile var open = false
     @Volatile var running = false
     @Volatile var closed = false
+    @Volatile var positionMicros = 0L
     val gain = object : FloatControl(Type.MASTER_GAIN, -80f, 6f, .1f, 1, 0f, "dB") {}
     val clip: Clip = Proxy.newProxyInstance(Clip::class.java.classLoader, arrayOf(Clip::class.java)) { proxy, method, args ->
         when (method.name) {
@@ -26,7 +27,9 @@ internal class TestAudioClip {
             "getControls" -> arrayOf(gain)
             "getFrameLength" -> 44100
             "getFramePosition" -> 0
-            "getLongFramePosition", "getMicrosecondLength", "getMicrosecondPosition" -> 0L
+            "getMicrosecondPosition" -> positionMicros
+            "setMicrosecondPosition" -> { positionMicros = args!![0] as Long; null }
+            "getLongFramePosition", "getMicrosecondLength" -> 0L
             "hashCode" -> System.identityHashCode(proxy)
             "equals" -> proxy === args?.firstOrNull()
             "toString" -> "TestAudioClip"

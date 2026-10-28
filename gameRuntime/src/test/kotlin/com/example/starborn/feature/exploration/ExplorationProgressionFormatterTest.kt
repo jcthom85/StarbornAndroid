@@ -52,7 +52,8 @@ class ExplorationProgressionFormatterTest {
             sessionState = session,
             charactersById = mapOf("nova" to player),
             levelingManager = levelingManager,
-            skillsById = emptyMap()
+            skillsById = emptyMap(),
+            maxHpFor = { it.hp }
         )
         assertEquals(1, status.members.size)
         assertEquals("72 / 120 HP", status.members.first().hpLabel)
@@ -74,7 +75,8 @@ class ExplorationProgressionFormatterTest {
         val summary = buildProgressionSummaryUi(
             sessionState = session,
             charactersById = mapOf("nova" to player),
-            levelingManager = levelingManager
+            levelingManager = levelingManager,
+            maxHpFor = { it.hp }
         )
         assertNotNull(summary.hpLabel)
         assertEquals("80 / 120 HP", summary.hpLabel)

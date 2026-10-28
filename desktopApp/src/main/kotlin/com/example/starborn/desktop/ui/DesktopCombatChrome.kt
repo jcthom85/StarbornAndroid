@@ -62,8 +62,8 @@ internal fun DesktopCombatTutorialOverlay(
             }
         }
     } else {
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Surface(Modifier.widthIn(max = 480.dp).padding(horizontal = 20.dp),
+        Box(Modifier.fillMaxWidth()) {
+            Surface(Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(999.dp), color = panel,
                 border = BorderStroke(1.2.dp, border), shadowElevation = 10.dp) {
                 Row(Modifier.padding(horizontal = 18.dp, vertical = 9.dp),

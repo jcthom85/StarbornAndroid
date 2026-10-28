@@ -1,6 +1,7 @@
 package com.example.starborn
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import com.example.starborn.domain.combat.*
@@ -32,10 +33,30 @@ class EnemyInspectionInstrumentedTest {
         var closed=0
         compose.setContent {MaterialTheme {EnemyInspectionSheet(enemy,state,setOf("burn"),{closed++})}}
         compose.onNodeWithText("Burn").assertIsDisplayed()
+        compose.onNodeWithText("HP", substring = false).assertDoesNotExist()
+        compose.onNodeWithText("STABILITY", substring = false).assertDoesNotExist()
+        compose.onNodeWithText("Combat paused").assertDoesNotExist()
+        compose.onNodeWithText("Deplete Stability", substring = true).assertDoesNotExist()
         compose.onAllNodesWithText("Shock",substring=true).assertCountEquals(0)
         compose.onNodeWithText("Drone").performTouchInput {click()}
         compose.runOnIdle {assertEquals(0,closed)}
         compose.onNodeWithText("Close").performScrollTo().performClick()
         compose.runOnIdle {assertEquals(1,closed)}
     }
+    @Test fun inspectionLeavesBattlefieldTargetsTappableAndKeepsArrowSelection() {
+        var targetTaps = 0
+        var next = 0
+        compose.setContent { MaterialTheme {
+            androidx.compose.foundation.layout.Box(androidx.compose.ui.Modifier.fillMaxSize()) {
+                androidx.compose.material3.Button(onClick = { targetTaps++ }) { androidx.compose.material3.Text("Battlefield enemy") }
+                EnemyInspectionSheet(enemy, state, emptySet(), {}, enemyCount = 2,
+                    onPreviousEnemy = {}, onNextEnemy = { next++ })
+            }
+        } }
+        compose.onNodeWithText("Battlefield enemy").performClick()
+        compose.runOnIdle { assertEquals(1, targetTaps) }
+        compose.onNodeWithContentDescription("Next enemy").performClick()
+        compose.runOnIdle { assertEquals(1, next) }
+    }
+
 }

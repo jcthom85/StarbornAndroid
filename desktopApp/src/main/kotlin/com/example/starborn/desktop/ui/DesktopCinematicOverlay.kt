@@ -869,11 +869,6 @@ private fun CinematicNarrationCard(
         ),
         label = "cinematicGlowPulse"
     )
-    val hintAlpha by animateFloatAsState(
-        targetValue = if (revealFinished) 1f else 0f,
-        animationSpec = tween(durationMillis = 500),
-        label = "cinematicHintAlpha"
-    )
     val accentColor = Color(0xFF7BE8FF)
     val cardShape = RoundedCornerShape(28.dp)
     val narrationStyle = MaterialTheme.typography.bodyLarge.copy(
@@ -946,27 +941,7 @@ private fun CinematicNarrationCard(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-                if (showTapToContinue) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .alpha(hintAlpha)
-                            .then(if (revealFinished) Modifier else Modifier.clearAndSetSemantics { }),
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "✦  ",
-                            color = accentColor.copy(alpha = 0.35f),
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                        Text(
-                            text = if (isLastStep) "Click or Enter to continue" else "Click or Enter to continue ▸",
-                            color = accentColor.copy(alpha = 0.5f),
-                            style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.sp)
-                        )
-                    }
-                }
+
                 CinematicAccentBar(accentColor)
             }
         }

@@ -3367,10 +3367,6 @@
         "type": "set_quest_task_done",
         "quest_id": "w1_sq05",
         "task_id": "find_collapsed_tunnel"
-      },
-      {
-        "type": "show_message",
-        "message": "Quest started: The Lost Shift."
       }
     ]
   },

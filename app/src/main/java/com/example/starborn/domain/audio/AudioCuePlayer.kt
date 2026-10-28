@@ -208,12 +208,21 @@ class AudioCuePlayer(
         setLayerGainImmediate(type, command.gain)
         player.prepare()
         if (type == AudioCueType.MUSIC && command.loop) {
-            val savedPos = musicTrackPositions[cueId] ?: 0L
-            if (savedPos > 0L) {
-                player.seekTo(savedPos)
-            }
+            if (command.restartFromBeginning) musicTrackPositions.remove(cueId)
+            val startPosition = if (command.restartFromBeginning) 0L else musicTrackPositions[cueId] ?: 0L
+            player.seekTo(startPosition)
         }
-        player.playWhenReady = true
+        player.playWhenReady = !pausedForBackground
+        if (pausedForBackground) resumeMusicAfterBackground = true
+    }
+
+    override fun resetMusicPlayback() {
+        cancelFade(AudioCueType.MUSIC)
+        musicPlayer.stop()
+        musicPlayer.clearMediaItems()
+        currentMusicCue = null
+        musicTrackPositions.clear()
+        resumeMusicAfterBackground = false
     }
 
     private fun playAmbientStreaming(cueId: String, command: AudioCommand.Play) {

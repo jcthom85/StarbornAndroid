@@ -1720,6 +1720,10 @@ class CombatController(
         if (updated === current) return
         _state.value = updated
         processNewLogEntries(current, updated)
+        if (updated.outcome != null && _combatTutorial.value != null) {
+            tutorialExplanationJob?.cancel()
+            tutorialTracker.completeCombatTutorial()
+        }
         if (tutorialsEnabled && _combatTutorial.value == null && _buildHint.value == null) {
             _buildHint.value = com.example.starborn.domain.tutorial.NovaProgressionTutorial.combatHint(sessionStore.state.value, current, updated)
         }
@@ -1778,7 +1782,7 @@ class CombatController(
                         entry.targetId == tutorialAfterBasic.targetId &&
                         (fxElement == "blocked" || tutorialAfterBasic.tutorialType == CombatTutorialType.LOADER_WEAKNESS)
                     ) {
-                        tutorialTracker.setCombatTutorialStep(CombatTutorialStep.BLOCKED_EXPLANATION)
+                        scheduleTutorialExplanation(tutorialAfterBasic, CombatTutorialStep.BLOCKED_EXPLANATION, effectDelayMs)
                     }
                     if (shouldEmitShieldBreak(entry, currentAction, previous, updated)) {
                         emitShieldBreak(entry.targetId, effectDelayMs)
@@ -1789,7 +1793,7 @@ class CombatController(
                         entry.sourceId == COMBAT_TUTORIAL_PLAYER_ID &&
                         entry.targetId == tutorial.targetId
                     ) {
-                        tutorialTracker.setCombatTutorialStep(CombatTutorialStep.SUCCESS)
+                        scheduleTutorialExplanation(tutorial, CombatTutorialStep.SUCCESS, effectDelayMs)
                     }
                     emitImpact(entry, fxElement, showAttackFx, targetDefeated, effectDelayMs)
                     setCombatBanner(entry, updated)
@@ -3456,6 +3460,19 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
         viewModelScope.coroutineContext[kotlinx.coroutines.Job]?.cancel()
     }
 
+    private var tutorialExplanationJob: kotlinx.coroutines.Job? = null
+
+    private fun scheduleTutorialExplanation(expected: CombatTutorialState, next: CombatTutorialStep, effectDelayMs: Long) {
+        tutorialExplanationJob?.cancel()
+        tutorialExplanationJob = viewModelScope.launch {
+            // Leave the impact, block badge and break effect visible before explaining them.
+            delay(effectDelayMs + 1100L)
+            if (_combatTutorial.value == expected && _state.value?.outcome == null) {
+                tutorialTracker.setCombatTutorialStep(next)
+            }
+        }
+    }
+
     private fun playUiCue(key: String) {
         emitAudio(audioRouter.commandsForUi(key))
     }
@@ -3518,7 +3535,8 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
             layer = AudioCueType.MUSIC,
             cueId = trackId,
             fadeMs = 0L,
-            loop = true
+            loop = true,
+            restartFromBeginning = true
         )
         emitAudio(commands)
     }

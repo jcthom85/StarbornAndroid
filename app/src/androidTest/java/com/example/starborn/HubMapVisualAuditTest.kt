@@ -52,8 +52,8 @@ class HubMapVisualAuditTest {
                 }
             }
         }
-        listOf("normal", "compact", "large_text", "locked_quest", "before_astra").forEach { mode ->
-            compose.runOnIdle { displayScale = if (mode == "compact") 1.15f else 1f; fontScale = if (mode == "large_text") 1.4f else 1f }
+        listOf("normal", "compact", "large_text", "large_text_quest", "locked_quest", "before_astra").forEach { mode ->
+            compose.runOnIdle { displayScale = if (mode == "compact") 1.15f else 1f; fontScale = if (mode.startsWith("large_text")) 1.4f else 1f }
             hubs.forEach { hub ->
                 val hubNodes = nodes.filter { it.hubId == hub.id }.map { node ->
                     HubNodeUi(node.id, node.title, node.entryRoom, node.position.centerX, node.position.centerY,
@@ -66,15 +66,33 @@ class HubMapVisualAuditTest {
                     iconPath = "images/nodes/astra_ship_map_v2.webp",
                     description = "Return to the crew's ship. Use the bridge console to set course for another world."))
                 compose.runOnIdle { state = HubUiState(false, hub, hubNodes, hub.backgroundImage, hubNodes.first().id,
-                    trackedQuest = if (mode == "locked_quest") HubQuestUi("audit", "Find the way forward", "Explore ${hubNodes.first().title}", null) else null) }
+                    trackedQuest = if (mode == "locked_quest" || mode == "large_text_quest") HubQuestUi("audit", "Find the way forward", "Explore ${hubNodes.first().title}", null) else null) }
                 compose.waitForIdle()
-                hubNodes.forEach { node -> compose.onNodeWithContentDescription("Enter ${node.title}").assertIsDisplayed() }
+                val header = compose.onNodeWithTag("hub-header").fetchSemanticsNode().boundsInRoot
+                val map = compose.onNodeWithTag("hub-map-viewport").fetchSemanticsNode().boundsInRoot
+                val card = compose.onNodeWithTag("hub-destination-card").fetchSemanticsNode().boundsInRoot
+                assertTrue("Map below header: $mode ${hub.id}", map.top >= header.bottom)
+                assertTrue("Map above card: $mode ${hub.id}", map.bottom <= card.top)
+                hubNodes.forEach { node ->
+                    val target = compose.onNodeWithContentDescription("Enter ${node.title}")
+                    target.assertIsDisplayed()
+                    val bounds = target.fetchSemanticsNode().boundsInRoot
+                    assertTrue("Uncovered target ${node.id}: $mode", bounds.top >= header.bottom && bounds.bottom <= card.top)
+                    target.performClick()
+                    compose.waitUntil(2000) { state.selectedNodeId == node.id }
+                    compose.runOnIdle { assertEquals("Tappable ${node.id}: $mode", node.id, state.selectedNodeId) }
+                }
+                compose.runOnIdle { state = state.copy(selectedNodeId = hubNodes.first().id) }
                 val layout = HubMapLayouts.all[hub.id]
                 hubNodes.filter { node ->
                     val site = if (node.id == "astra_access") layout?.astraDock else layout?.sites?.get(node.id)
                     (site?.artworkWidth ?: 0f) > 0f && !node.iconPath.isNullOrBlank()
                 }.forEach { node ->
-                    compose.onNodeWithContentDescription("Artwork: ${node.title}").assertIsDisplayed()
+                    val artwork = compose.onNodeWithContentDescription("Artwork: ${node.title}")
+                    artwork.assertIsDisplayed()
+                    val bounds = artwork.fetchSemanticsNode().boundsInRoot
+                    assertTrue("Uncovered artwork ${node.id}: $mode", bounds.top >= header.bottom && bounds.bottom <= card.top)
+
                 }
                 val first = compose.onNodeWithContentDescription("Enter ${hubNodes.first().title}").fetchSemanticsNode().boundsInRoot
                 compose.runOnIdle { state = state.copy(selectedNodeId = hubNodes.last().id) }

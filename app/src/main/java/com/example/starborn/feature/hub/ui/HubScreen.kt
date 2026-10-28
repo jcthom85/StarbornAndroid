@@ -79,9 +79,8 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -182,9 +181,6 @@ internal fun HubScreenContent(
     var menuVisible by remember { mutableStateOf(false) }
     var menuTab by remember { mutableStateOf<MenuTab?>(null) }
     var menuQuest by remember { mutableStateOf<String?>(null) }
-    var panelHeight by remember { mutableStateOf(220.dp) }
-    val density = LocalDensity.current
-    val panelReserve = panelHeight
     fun openMenu(tab: MenuTab? = null, questId: String? = null) {
         menuTab = tab; menuQuest = questId; menuVisible = true
     }
@@ -211,20 +207,6 @@ internal fun HubScreenContent(
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
-        if (!uiState.isLoading) {
-            HubMapScene(
-                hubId = uiState.hub?.id,
-                background = backgroundPainter,
-                nodes = uiState.nodes,
-                selectedId = uiState.selectedNodeId,
-                trackedQuest = uiState.trackedQuest,
-                newlyUnlockedNodeId = uiState.newlyUnlockedNodeId,
-                onSelect = onNodeFocused,
-                onEnter = onEnterSelectedNode,
-                bottomReserve = panelReserve + 24.dp,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
         HubAtmosphereCanvas(
             modifier = Modifier.fillMaxSize()
         )
@@ -234,55 +216,76 @@ internal fun HubScreenContent(
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
-                            Color.Black.copy(alpha = 0.42f),
-                            Color.Transparent,
-                            Color.Black.copy(alpha = 0.58f)
+                            Color.Black.copy(alpha = 0.72f),
+                            Color.Black.copy(alpha = 0.65f),
+                            Color.Black.copy(alpha = 0.78f)
                         )
                     )
                 )
         )
 
-        Column(Modifier.align(Alignment.TopCenter).fillMaxWidth().statusBarsPadding()
-            .padding(horizontal = 16.dp, vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(uiState.hub?.title ?: "Region", Modifier.weight(1f), color = Color.White,
-                    style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold,
-                    maxLines = 2, overflow = TextOverflow.Ellipsis)
-                IconButton(onClick = onQuickSave, modifier = Modifier.size(48.dp)) {
-                    Icon(Icons.Rounded.Save, "Quick save", tint = Color(0xFF7BE4FF))
-                }
-                HubMenuButton(onClick = { openMenu() })
-            }
-            HubHeader(title = "", subtitle = uiState.hub?.description.orEmpty(), trackedQuest = uiState.trackedQuest,
-                statusMessage = saveFeedback ?: uiState.statusMessage,
-                onQuestClick = { uiState.trackedQuest?.let { openMenu(MenuTab.JOURNAL, it.id) } },
-                modifier = Modifier.fillMaxWidth())
-            val astraAccess = uiState.nodes.firstOrNull { it.id == "astra_access" }
-            if (astraAccess != null && HubMapLayouts.all[uiState.hub?.id]?.astraDock == null) {
-                TextButton(onClick = { onEnterSelectedNode(astraAccess) },
-                    modifier = Modifier.align(Alignment.End).heightIn(min = 48.dp)
-                        .semantics { contentDescription = "Enter The Astra" }) {
-                    rememberHubNodePainter("images/nodes/astra_ship_map_v2.webp")?.let {
-                        Image(it, null, modifier = Modifier.size(28.dp))
-                        Spacer(Modifier.width(8.dp))
+        // Header, map and destination controls occupy separate layout space.
+        Column(Modifier.fillMaxSize()) {
+            Column(Modifier.fillMaxWidth().testTag("hub-header").statusBarsPadding()
+                .padding(horizontal = 16.dp, vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(uiState.hub?.title ?: "Region", Modifier.weight(1f), color = Color.White,
+                        style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold,
+                        maxLines = 2, overflow = TextOverflow.Ellipsis)
+                    IconButton(onClick = onQuickSave, modifier = Modifier.size(48.dp)) {
+                        Icon(Icons.Rounded.Save, "Quick save", tint = Color(0xFF7BE4FF))
                     }
-                    Text("The Astra", color = Color(0xFFBFEFFF))
+                    HubMenuButton(onClick = { openMenu() })
+                }
+                HubHeader(title = "", subtitle = uiState.hub?.description.orEmpty(), trackedQuest = uiState.trackedQuest,
+                    statusMessage = saveFeedback ?: uiState.statusMessage,
+                    onQuestClick = { uiState.trackedQuest?.let { openMenu(MenuTab.JOURNAL, it.id) } },
+                    modifier = Modifier.fillMaxWidth())
+                val astraAccess = uiState.nodes.firstOrNull { it.id == "astra_access" }
+                if (astraAccess != null && HubMapLayouts.all[uiState.hub?.id]?.astraDock == null) {
+                    TextButton(onClick = { onEnterSelectedNode(astraAccess) },
+                        modifier = Modifier.align(Alignment.End).heightIn(min = 48.dp)
+                            .semantics { contentDescription = "Enter The Astra" }) {
+                        rememberHubNodePainter("images/nodes/astra_ship_map_v2.webp")?.let {
+                            Image(it, null, modifier = Modifier.size(28.dp))
+                            Spacer(Modifier.width(8.dp))
+                        }
+                        Text("The Astra", color = Color(0xFFBFEFFF))
+                    }
                 }
             }
-        }
 
+            Box(Modifier.weight(1f).fillMaxWidth().padding(horizontal = 12.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color(0xFF071018))
+                .border(1.dp, Color(0xFF7BE4FF).copy(alpha = .22f), RoundedCornerShape(16.dp))
+                .testTag("hub-map-viewport")) {
+                if (!uiState.isLoading) {
+                    HubMapScene(
+                        hubId = uiState.hub?.id,
+                        background = backgroundPainter,
+                        nodes = uiState.nodes,
+                        selectedId = uiState.selectedNodeId,
+                        trackedQuest = uiState.trackedQuest,
+                        newlyUnlockedNodeId = uiState.newlyUnlockedNodeId,
+                        onSelect = onNodeFocused,
+                        onEnter = onEnterSelectedNode,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
 
-        selectedNode?.let { node ->
-            HubDestinationPanel(
-                node = node,
-                onEnter = { onEnterSelectedNode(node) },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .navigationBarsPadding()
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
-                    .onSizeChanged { panelHeight = with(density) { it.height.toDp() } }
-            )
+            selectedNode?.let { node ->
+                HubDestinationPanel(
+                    node = node,
+                    onEnter = { onEnterSelectedNode(node) },
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .navigationBarsPadding()
+                        .padding(horizontal = 16.dp, vertical = 12.dp)
+                )
+            }
         }
 
         if (menuVisible && fieldMenuContent != null) {
@@ -440,25 +443,26 @@ private fun HubDestinationPanel(
     val detail = if (!node.canEnter) node.lockReason ?: node.lockedPreview ?: node.description else node.description
     var detailsOpen by remember(node.id) { mutableStateOf(false) }
     val status = when { !node.canEnter -> "Locked"; node.completed -> "Completed"; node.visited -> "Visited"; else -> "Available" }
-    Surface(modifier.widthIn(max = 620.dp).fillMaxWidth(), shape = RoundedCornerShape(16.dp),
+    Surface(modifier.testTag("hub-destination-card").widthIn(max = 620.dp).fillMaxWidth(), shape = RoundedCornerShape(16.dp),
         color = Color(0xF2071018), border = BorderStroke(1.dp, accent.copy(alpha = .4f))) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     Text(node.title, color = Color.White, style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                        fontWeight = FontWeight.Bold, minLines = 2, maxLines = 2, overflow = TextOverflow.Ellipsis)
                     Text(status, color = accent, style = MaterialTheme.typography.labelSmall)
                 }
                 if (!detail.isNullOrBlank()) TextButton(onClick = { detailsOpen = true }) { Text("Details") }
             }
-            if (!detail.isNullOrBlank()) Text(detail, color = Color(0xFFB8C6D2),
-                style = MaterialTheme.typography.bodySmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
-            Button(onClick = onEnter, enabled = node.canEnter, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
-                Text(if (!node.canEnter) "Locked" else if (node.id == "deep_mine" && !node.visited) "Descend" else "Enter ${node.title}")
+            Button(onClick = onEnter, enabled = node.canEnter, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).testTag("hub-enter-destination")) {
+                Text(if (!node.canEnter) "Locked" else if (node.id == "deep_mine" && !node.visited) "Descend" else "Enter")
             }
         }
     }
     if (detailsOpen) AlertDialog(onDismissRequest = { detailsOpen = false },
+        containerColor = Color(0xFF071018), titleContentColor = Color.White,
+        textContentColor = Color(0xFFB8C6D2), shape = RoundedCornerShape(16.dp),
+        modifier = Modifier.border(1.dp, accent.copy(alpha = .4f), RoundedCornerShape(16.dp)),
         title = { Text(node.title) }, text = { Text(detail.orEmpty(), Modifier.verticalScroll(rememberScrollState())) },
         confirmButton = { TextButton(onClick = { detailsOpen = false }) { Text("Close") } })
 }

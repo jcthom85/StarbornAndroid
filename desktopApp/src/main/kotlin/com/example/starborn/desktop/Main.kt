@@ -167,7 +167,11 @@ private fun launchDesktop() = application {
         val currentSettings by services.userSettingsStore.settings.collectAsState(initial = UserSettings())
         val isForeground = LocalWindowInfo.current.isWindowFocused && !windowState.isMinimized
         LaunchedEffect(isForeground, currentSettings.muteWhenUnfocused) {
-            (services.audioDriver as? DesktopAudioDriver)?.setMuted(!isForeground && currentSettings.muteWhenUnfocused)
+            (services.audioDriver as? DesktopAudioDriver)?.let { driver ->
+                val background = !isForeground && currentSettings.muteWhenUnfocused
+                driver.setMuted(background)
+                driver.setBackgroundPaused(background)
+            }
         }
         val baseDensity = androidx.compose.ui.platform.LocalDensity.current
         val effectiveDensity = remember(baseDensity, currentSettings.uiScale, windowState.size) {

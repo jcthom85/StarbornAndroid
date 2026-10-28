@@ -377,7 +377,7 @@ private fun InventoryItemsPreview(
     }
     val itemRow: @Composable (InventoryPreviewItemUi) -> Unit = { item ->
             val modernMenuRow = LocalModernFieldMenu.current
-            val isUsable = onItemClick != null && item.effect != null
+            val isUsable = onItemClick != null && item.effect != null && !item.combatOnly
             val shape = RoundedCornerShape(18.dp)
             val iconRes = remember(item.id + item.type) { previewItemIconRes(item.type) }
             Row(
@@ -417,7 +417,7 @@ private fun InventoryItemsPreview(
                             horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                             Text(
-                                text = item.type.readableInventoryLabel(),
+                                text = (if (item.combatOnly) "Combat Consumable" else item.type.readableInventoryLabel()),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Color.White.copy(alpha = if (isUsable) 0.7f else 0.5f)
                             )
@@ -539,7 +539,7 @@ fun InventoryItemDetailsContent(
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Text(
-                                text = item.type.readableInventoryLabel().uppercase(Locale.getDefault()),
+                                text = (if (item.combatOnly) "Combat Consumable" else item.type.readableInventoryLabel()).uppercase(Locale.getDefault()),
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                 color = accentColor.copy(alpha = 0.9f)
                             )
@@ -565,13 +565,13 @@ fun InventoryItemDetailsContent(
                         PreviewDetailRow(label, value, accentColor)
                     }
                 }
-                if (onUse != null) Row(
+                if (onUse != null || item.combatOnly) Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
                     Button(
                         onClick = { onUse?.invoke() },
-                        enabled = onUse != null,
+                        enabled = onUse != null && !item.combatOnly,
                         modifier = Modifier.fillMaxWidth().heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp),
                         shape = RoundedCornerShape(10.dp),
                         colors = ButtonDefaults.buttonColors(
@@ -581,7 +581,7 @@ fun InventoryItemDetailsContent(
                             disabledContentColor = Color.White.copy(alpha = 0.38f)
                         )
                     ) {
-                        Text("Use Item")
+                        Text(if (item.combatOnly) "Combat only" else "Use Item")
                     }
                 }
             }

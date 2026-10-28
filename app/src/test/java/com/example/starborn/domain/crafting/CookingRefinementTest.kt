@@ -32,6 +32,17 @@ class CookingRefinementTest {
     private val use = ItemUseController(inventory, crafting, store,
         skillNodesProvider = { assets.loadSkillNodes() }, charactersProvider = { characters })
 
+    @Test fun combatOnlyClassificationMatchesFieldUseWithoutBlockingMealsOrMedicine() = runTest {
+        val coffee = items.getValue("black_coffee")
+        assertTrue(FieldItemRules.isCombatOnly(coffee, crafting.isPreparedMeal(coffee.id)))
+        inventory.addItem(coffee.id, 2)
+        val failed = use.useItem(coffee.id)
+        assertTrue(failed is ItemUseController.Result.Failure)
+        assertEquals(2, inventory.snapshot()[coffee.id])
+        assertFalse(FieldItemRules.isCombatOnly(items.getValue("glowfish_broth"), true))
+        assertFalse(FieldItemRules.isCombatOnly(items.getValue("medkit_i"), false))
+    }
+
     @Test fun mealComparisonIncludesBonusesLostWhenReplacingAndDoesNotAlterTheMeal() {
         val current = MealRules.buff(items.getValue("glowfish_broth"), "nova").copy(remainingEncounters = 1)
         val proposed = MealRules.buff(items.getValue("ration_pack"), "nova")

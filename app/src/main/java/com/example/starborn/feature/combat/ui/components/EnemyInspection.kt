@@ -113,20 +113,14 @@ fun EnemyInspectionSheet(
         "elite", "miniboss" -> "ELITE HOSTILE"
         else -> "HOSTILE UNIT"
     }
-    val backdropInteraction = remember { MutableInteractionSource() }
     val cardInteraction = remember { MutableInteractionSource() }
 
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(Color.Black.copy(alpha = 0.68f))
-            .clickable(
-                interactionSource = backdropInteraction,
-                indication = null,
-                onClick = onClose
-            )
             .padding(horizontal = 16.dp, vertical = 24.dp),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.BottomCenter
     ) {
         Surface(
             modifier = Modifier
@@ -151,7 +145,7 @@ fun EnemyInspectionSheet(
                     .padding(horizontal = 20.dp, vertical = 18.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
-                // Header: Tier pill + Combat paused badge + Enemy switcher
+                // Header: threat classification and explicit close.
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -189,21 +183,10 @@ fun EnemyInspectionSheet(
                                 )
                             }
                         }
-                        Surface(
-                            color = Color.White.copy(alpha = 0.08f),
-                            shape = RoundedCornerShape(999.dp)
-                        ) {
-                            Text(
-                                text = "Combat paused",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = Color.White.copy(alpha = 0.78f),
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
-                            )
-                        }
                     }
                     IconButton(
                         onClick = onClose,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(48.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Close,
@@ -235,7 +218,7 @@ fun EnemyInspectionSheet(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(2.dp)
                         ) {
-                            IconButton(onClick = onPreviousEnemy, modifier = Modifier.size(32.dp)) {
+                            IconButton(onClick = onPreviousEnemy, modifier = Modifier.size(48.dp)) {
                                 Icon(
                                     imageVector = Icons.Rounded.ChevronLeft,
                                     contentDescription = "Previous enemy",
@@ -249,7 +232,7 @@ fun EnemyInspectionSheet(
                                     color = Color.White.copy(alpha = 0.85f)
                                 )
                             )
-                            IconButton(onClick = onNextEnemy, modifier = Modifier.size(32.dp)) {
+                            IconButton(onClick = onNextEnemy, modifier = Modifier.size(48.dp)) {
                                 Icon(
                                     imageVector = Icons.Rounded.ChevronRight,
                                     contentDescription = "Next enemy",
@@ -289,13 +272,6 @@ fun EnemyInspectionSheet(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = "HP",
-                                    style = MaterialTheme.typography.labelSmall.copy(
-                                        fontFamily = CombatNameFont,
-                                        color = Color.White.copy(alpha = 0.7f)
-                                    )
-                                )
-                                Text(
                                     text = "HP ${state.hp}/${maxHp}",
                                     style = MaterialTheme.typography.labelMedium.copy(
                                         fontFamily = CombatNameFont,
@@ -320,24 +296,6 @@ fun EnemyInspectionSheet(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Icon(
-                                        imageVector = if (isBroken) Icons.Rounded.FlashOn else Icons.Rounded.Bolt,
-                                        contentDescription = null,
-                                        tint = if (isBroken) Color(0xFFFF8A80) else Color(0xFFB39DDB),
-                                        modifier = Modifier.size(14.dp)
-                                    )
-                                    Text(
-                                        text = if (isBroken) "STABILITY BROKEN" else "STABILITY",
-                                        style = MaterialTheme.typography.labelSmall.copy(
-                                            fontFamily = CombatNameFont,
-                                            color = if (isBroken) Color(0xFFFF8A80) else Color.White.copy(alpha = 0.7f)
-                                        )
-                                    )
-                                }
                                 Text(
                                     text = "Stability ${state.stability}/${maxStability}",
                                     style = MaterialTheme.typography.labelMedium.copy(
@@ -355,15 +313,8 @@ fun EnemyInspectionSheet(
                                 height = 7.dp,
                                 modifier = Modifier.fillMaxWidth()
                             )
-                            Text(
-                                text = if (isBroken) {
-                                    "Broken • ${state.breakTurns} turns remaining (+25% direct damage taken)"
-                                } else {
-                                    "Deplete Stability to cause a Break and create an opening for follow-up attacks."
-                                },
-                                style = MaterialTheme.typography.bodySmall,
-                                color = if (isBroken) Color(0xFFFFAB91) else Color.White.copy(alpha = 0.72f)
-                            )
+                            if (isBroken) Text("Broken · ${state.breakTurns} turns remaining",
+                                style = MaterialTheme.typography.bodySmall, color = Color(0xFFFFAB91))
                         }
                     }
                 }

@@ -45,6 +45,7 @@ internal fun DesktopRuntimeJournalContent(services: DesktopAppServices) {
     val runtime = services.exploration
     val ui by runtime.uiState.collectAsState()
     var category by rememberSaveable { mutableStateOf(if (ui.questDetail?.completed == true) "Completed" else "Active") }
+    var expandedGroups by rememberSaveable { mutableStateOf(listOf<String>()) }
     var query by rememberSaveable { mutableStateOf("") }
     var selectedId by rememberSaveable { mutableStateOf(ui.questDetail?.id) }
     val quests = (if (category == "Completed") ui.questLogCompleted else ui.questLogActive)
@@ -67,18 +68,33 @@ internal fun DesktopRuntimeJournalContent(services: DesktopAppServices) {
             Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
                 LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     if (quests.isEmpty()) item { Text("No quests match this view.") }
-                    items(quests, key = { it.id }) { quest ->
-                        Surface(Modifier.fillMaxWidth().clickable { selectedId = quest.id }, shape = RoundedCornerShape(6.dp),
-                            color = if (selected?.id == quest.id) Color(0xFF173443) else Color(0xFF101D28),
-                            border = BorderStroke(1.dp, if (selected?.id == quest.id) Color(0xFF63E6FF) else Color(0xFF354454))) {
-                            Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                Text(quest.title, style = MaterialTheme.typography.titleSmall)
-                                Text(if (quest.completed) "Completed" else if (quest.id == ui.trackedQuestId) "TRACKED" else "Stage ${quest.stageIndex + 1} of ${quest.totalStages}",
-                                    color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelSmall)
+                    val groups = if (category == "Completed") quests.groupBy {
+                        com.example.starborn.feature.exploration.presentation.QuestJournalGrouping.group(it.id)
+                    }.toSortedMap() else mapOf("Active" to quests)
+                    groups.forEach { (group, groupQuests) ->
+                        val open = category != "Completed" || query.isNotBlank() || group in expandedGroups
+                        if (category == "Completed") item(key = "group-$group") {
+                            OutlinedButton(onClick = { expandedGroups = if (group in expandedGroups) expandedGroups - group else expandedGroups + group },
+                                modifier = Modifier.fillMaxWidth()) {
+                                Text("$group (${groupQuests.size}) · ${if (open) "Collapse" else "Expand"}")
+                            }
+                        }
+                        if (open) {
+                            items(groupQuests, key = { it.id }) { quest ->
+                                Surface(Modifier.fillMaxWidth().clickable { selectedId = quest.id }, shape = RoundedCornerShape(6.dp),
+                                    color = if (selected?.id == quest.id) Color(0xFF173443) else Color(0xFF101D28),
+                                    border = BorderStroke(1.dp, if (selected?.id == quest.id) Color(0xFF63E6FF) else Color(0xFF354454))) {
+                                    Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                        Text(quest.title, style = MaterialTheme.typography.titleSmall)
+                                        Text(if (quest.completed) "Completed" else if (quest.id == ui.trackedQuestId) "TRACKED" else "Stage ${quest.stageIndex + 1} of ${quest.totalStages}",
+                                            color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelSmall)
+                                    }
+                                }
                             }
                         }
                     }
                 }
+
                 selected?.let { quest ->
                     DesktopMenuCard(Modifier.weight(1.4f).fillMaxHeight()) {
                         DesktopMenuScrollPane(Modifier.fillMaxSize().padding(18.dp)) {

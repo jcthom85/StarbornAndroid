@@ -84,7 +84,11 @@ class CombatTutorialTracker(
             if (COMBAT_TUTORIAL_SKILL_ID !in sessionStore.state.value.unlockedSkills) {
                 sessionStore.unlockSkill(COMBAT_TUTORIAL_SKILL_ID)
             }
+            // This drill must survive Hydraulic Kick so a follow-up attack demonstrates the opening.
+            val trainingHp = maxOf(target.combatant.stats.maxHp, 240)
             val shieldedTarget = target.copy(
+                combatant = target.combatant.copy(stats = target.combatant.stats.copy(maxHp = trainingHp)),
+                hp = trainingHp,
                 statusEffects = target.statusEffects
                     .filterNot { it.id.equals("invulnerable", ignoreCase = true) } +
                     StatusEffect(id = "invulnerable", remainingTurns = 99)

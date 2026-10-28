@@ -208,12 +208,13 @@ class AudioRouter(
         gain: Float? = null,
         fadeMs: Long? = null,
         loop: Boolean? = null,
-        stop: Boolean = false
+        stop: Boolean = false,
+        restartFromBeginning: Boolean = false
     ): List<AudioCommand> {
         val commands = mutableListOf<AudioCommand>()
         val resolvedFade = fadeMs ?: defaultFadeMs
         when (layer) {
-            AudioCueType.MUSIC -> commands += overrideMusicLayer(cueId, gain, resolvedFade, loop, stop)
+            AudioCueType.MUSIC -> commands += overrideMusicLayer(cueId, gain, resolvedFade, loop, stop, restartFromBeginning)
             AudioCueType.AMBIENT -> commands += overrideAmbientLayer(cueId, gain, resolvedFade, loop, stop)
             AudioCueType.UI, AudioCueType.BATTLE, AudioCueType.VOICE -> {
                 val normalized = cueId.normalize() ?: return emptyList()
@@ -235,7 +236,8 @@ class AudioRouter(
         gain: Float?,
         fadeMs: Long,
         loop: Boolean?,
-        stop: Boolean
+        stop: Boolean,
+        restartFromBeginning: Boolean
     ): List<AudioCommand> {
         val commands = mutableListOf<AudioCommand>()
         val normalized = cueId.normalize()
@@ -253,7 +255,7 @@ class AudioRouter(
                 }
             }
             normalized != null -> {
-                if (normalized != currentMusic) {
+                if (normalized != currentMusic || restartFromBeginning) {
                     currentMusic?.let { prev ->
                         commands += AudioCommand.Stop(
                             AudioCueType.MUSIC,
@@ -267,7 +269,8 @@ class AudioRouter(
                         normalized,
                         loop = loop ?: meta?.loop ?: true,
                         fadeMs = meta?.fadeInMs ?: fadeMs,
-                        gain = gain ?: meta?.gain ?: 1f
+                        gain = gain ?: meta?.gain ?: 1f,
+                        restartFromBeginning = restartFromBeginning
                     )
                     currentMusic = normalized
                     musicGain = 1f

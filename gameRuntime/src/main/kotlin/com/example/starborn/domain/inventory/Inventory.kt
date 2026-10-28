@@ -54,8 +54,8 @@ class InventoryService(
     fun addItem(idOrAlias: String, quantity: Int = 1) {
         if (quantity == 0) return
         val item = resolveItem(idOrAlias) ?: return
-        val entry = items.getOrPut(item.id) { InventoryEntry(item, 0) }
-        entry.quantity += quantity
+        val entry = items[item.id] ?: InventoryEntry(item, 0)
+        items[item.id] = entry.copy(quantity = entry.quantity + quantity)
         if (quantity > 0) {
             notifyItemAdded(item.id, quantity)
         }
@@ -170,9 +170,11 @@ class InventoryService(
 
     private fun removeItemById(itemId: String, quantity: Int) {
         val entry = items[itemId] ?: return
-        entry.quantity = (entry.quantity - quantity).coerceAtLeast(0)
-        if (entry.quantity == 0) {
+        val remaining = (entry.quantity - quantity).coerceAtLeast(0)
+        if (remaining == 0) {
             items.remove(itemId)
+        } else {
+            items[itemId] = entry.copy(quantity = remaining)
         }
         publish()
     }
@@ -271,7 +273,7 @@ class InventoryService(
 
 data class InventoryEntry(
     val item: Item,
-    var quantity: Int
+    val quantity: Int
 )
 
 sealed interface ItemUseResult {

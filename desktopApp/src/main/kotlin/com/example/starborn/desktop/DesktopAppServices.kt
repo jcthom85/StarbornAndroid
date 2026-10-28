@@ -309,6 +309,7 @@ class DesktopAppServices(
         // Keep the named argument for existing workbenches; all new games now use crew rules.
         sessionActive = false
         resetExploration()
+        resetSessionMusic()
         lastAutosaveAt = System.currentTimeMillis()
         promptManager.dismissCurrent()
         tutorialManager.cancelAllScheduled()
@@ -418,8 +419,14 @@ class DesktopAppServices(
         return true
     }
 
+    private fun resetSessionMusic() {
+        audioDriver.executeAll(audioRouter.reset())
+        audioDriver.resetMusicPlayback()
+    }
+
     fun loadSlot(slotIndex: Int, resetRuntime: Boolean = true): Boolean {
         val loaded = saveManager.loadGame(slotIndex) ?: return false
+        resetSessionMusic()
         if (resetRuntime) resetExploration()
         sessionActive = false
         lastAutosaveAt = System.currentTimeMillis()

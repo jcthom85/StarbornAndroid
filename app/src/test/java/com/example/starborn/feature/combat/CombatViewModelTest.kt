@@ -1200,7 +1200,7 @@ class CombatViewModelTest {
     }
 
     @Test
-    fun heavyLiftingTutorialGuidesBlockedHitThenGuardBreak() {
+    fun heavyLiftingTutorialGuidesBlockedHitThenGuardBreak() = runTest(dispatcher) {
         val fixture = createHeavyLiftingTutorialViewModel()
         val viewModel = fixture.viewModel
 
@@ -1212,6 +1212,9 @@ class CombatViewModelTest {
         assertEquals(CombatTutorialStep.CHOOSE_ATTACK, viewModel.combatTutorial.value?.step)
         assertTrue(viewModel.onCombatTutorialCommand("Attack"))
         viewModel.playerAttack("acoustic_bulwark")
+        assertEquals(CombatTutorialStep.AWAIT_BASIC_RESULT, viewModel.combatTutorial.value?.step)
+        runCurrent()
+        testScheduler.advanceTimeBy(1100); runCurrent()
         assertEquals(CombatTutorialStep.BLOCKED_EXPLANATION, viewModel.combatTutorial.value?.step)
 
         viewModel.onCombatTutorialContinue()
@@ -1222,10 +1225,34 @@ class CombatViewModelTest {
         val hydraulicKick = viewModel.skillsForPlayer("nova").first { it.id == COMBAT_TUTORIAL_SKILL_ID }
         viewModel.useSkill(hydraulicKick, listOf("acoustic_bulwark"))
 
+        assertEquals(CombatTutorialStep.AWAIT_SHIELD_BREAK, viewModel.combatTutorial.value?.step)
+        assertTrue(viewModel.combatState!!.combatants.getValue("acoustic_bulwark").isAlive)
+        assertFalse(viewModel.combatState!!.combatants.getValue("acoustic_bulwark").statusEffects.any { it.id == "invulnerable" })
+        runCurrent()
+        testScheduler.advanceTimeBy(3000); runCurrent()
         assertEquals(CombatTutorialStep.SUCCESS, viewModel.combatTutorial.value?.step)
         viewModel.onCombatTutorialContinue()
         assertNull(viewModel.combatTutorial.value)
         assertTrue(COMBAT_BASICS_TUTORIAL_ID in fixture.sessionStore.state.value.tutorialCompleted)
+        viewModel.close()
+    }
+
+    @Test
+    fun endingBattleDuringTutorialClearsPendingExplanationAndRecordsCompletion() = runTest(dispatcher) {
+        val fixture = createHeavyLiftingTutorialViewModel()
+        val vm = fixture.viewModel
+        try {
+            vm.onCombatTutorialContinue()
+            vm.selectReadyPlayer("nova")
+            vm.onCombatTutorialCommand("Attack")
+            vm.playerAttack("acoustic_bulwark")
+            assertEquals(CombatTutorialStep.AWAIT_BASIC_RESULT, vm.combatTutorial.value?.step)
+            vm.toggleOpMode()
+            vm.instaWinBattle()
+            runCurrent(); testScheduler.advanceTimeBy(2000); runCurrent()
+            assertNull(vm.combatTutorial.value)
+            assertTrue(COMBAT_BASICS_TUTORIAL_ID in fixture.sessionStore.state.value.tutorialCompleted)
+        } finally { vm.close() }
     }
 
     @Test
@@ -1248,7 +1275,7 @@ class CombatViewModelTest {
     }
 
     @Test
-    fun faultedLoaderTutorialGuidesArcTetherWeaknessAndPreventsSkipping() {
+    fun faultedLoaderTutorialGuidesArcTetherWeaknessAndPreventsSkipping() = runTest(dispatcher) {
         val fixture = createLoaderTutorialViewModel()
         val viewModel = fixture.viewModel
 
@@ -1275,6 +1302,8 @@ class CombatViewModelTest {
         assertTrue(viewModel.onCombatTutorialCommand("Attack"))
         assertEquals(CombatTutorialStep.TARGET_BASIC_ATTACK, viewModel.combatTutorial.value?.step)
         viewModel.playerAttack("faulted_loader")
+        assertEquals(CombatTutorialStep.AWAIT_BASIC_RESULT, viewModel.combatTutorial.value?.step)
+        runCurrent(); testScheduler.advanceTimeBy(1100); runCurrent()
         assertEquals(CombatTutorialStep.BLOCKED_EXPLANATION, viewModel.combatTutorial.value?.step)
 
         // Continue after Momentum explanation -> select Nova for Arc Tether
@@ -1314,11 +1343,14 @@ class CombatViewModelTest {
         val arcTether = viewModel.skillsForPlayer("nova").first { it.id == COMBAT_LOADER_SKILL_ID }
         viewModel.useSkill(arcTether, listOf("faulted_loader"))
 
-        // Completes Arc Tether hit -> SUCCESS modal
+        // Leave the hit visible before the SUCCESS modal.
+        assertEquals(CombatTutorialStep.AWAIT_SHIELD_BREAK, viewModel.combatTutorial.value?.step)
+        runCurrent(); testScheduler.advanceTimeBy(3000); runCurrent()
         assertEquals(CombatTutorialStep.SUCCESS, viewModel.combatTutorial.value?.step)
         viewModel.onCombatTutorialContinue()
         assertNull(viewModel.combatTutorial.value)
         assertTrue(COMBAT_LOADER_TUTORIAL_ID in fixture.sessionStore.state.value.tutorialCompleted)
+        viewModel.close()
     }
 
     @Test

@@ -10,7 +10,8 @@ sealed interface AudioCommand {
         val fadeMs: Long = DEFAULT_FADE_MS,
         val gain: Float = 1f,
         val triggerHaptic: Boolean = false,
-        val pitch: Float = 1f
+        val pitch: Float = 1f,
+        val restartFromBeginning: Boolean = false
     ) : AudioCommand
 
     data class Stop(

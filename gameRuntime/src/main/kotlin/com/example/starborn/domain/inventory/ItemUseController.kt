@@ -49,8 +49,8 @@ class ItemUseController(
         if (item.type.equals("snack", true) || item.equipment?.slot?.equals("snack", true) == true) {
             return Result.Failure("Equip ${item.name} as a snack to use its cooldown ability in combat.")
         }
-        if ((effect.damage ?: 0) > 0 || (!isMeal && (effect.singleBuff != null || !effect.buffs.isNullOrEmpty()))) {
-            return Result.Failure("Use ${item.name} in combat. It does not replace your meal.")
+        if (FieldItemRules.isCombatOnly(effect, isMeal)) {
+            return Result.Failure("${item.name} can only be used during combat.")
         }
         if (isMeal && sessionStore.state.value.activeMealBuff != null && !replaceMeal) {
             return Result.Failure("Eating this replaces your active meal. Confirm replacement first.")

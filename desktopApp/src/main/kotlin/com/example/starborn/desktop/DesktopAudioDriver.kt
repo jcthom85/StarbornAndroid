@@ -52,6 +52,8 @@ class DesktopAudioDriver(
     private val reported = ConcurrentHashMap.newKeySet<String>()
     private val musicGeneration = AtomicLong(0)
     private var pendingMusicCue: String? = null // Owned by musicWorker.
+    private val musicPositions = mutableMapOf<String, Long>() // Owned by musicWorker.
+    private var backgroundPaused = false // Owned by musicWorker.
 
     @Volatile private var masterGain: Float = 1f
     @Volatile private var isMuted: Boolean = false
@@ -120,6 +122,7 @@ class DesktopAudioDriver(
             pendingMusicCue = null
         }
         val playing = active.remove(key) ?: return
+        if (command.type == AudioCueType.MUSIC) musicPositions[key.second] = playing.clip.microsecondPosition
         if (command.fadeMs > 0) {
             fadingOutClips.add(playing.clip)
             fade(command.type, playing, 0f, command.fadeMs) {
@@ -134,6 +137,31 @@ class DesktopAudioDriver(
                 playing.clip.stop()
                 playing.clip.close()
             } catch (_: Exception) {}
+        }
+    }
+
+    override fun resetMusicPlayback() {
+        enqueue(musicWorker) {
+            musicGeneration.incrementAndGet()
+            pendingMusicCue = null
+            active.entries.filter { it.key.first == AudioCueType.MUSIC }.forEach { (key, playing) ->
+                if (active.remove(key, playing)) {
+                    playing.clip.stop()
+                    playing.clip.close()
+                }
+            }
+            musicPositions.clear()
+        }
+    }
+
+    fun setBackgroundPaused(paused: Boolean) {
+        enqueue(musicWorker) {
+            if (backgroundPaused == paused) return@enqueue
+            backgroundPaused = paused
+            active.entries.filter { it.key.first == AudioCueType.MUSIC }.forEach { (_, playing) ->
+                if (paused) playing.clip.stop()
+                else if (playing.loop) playing.clip.loop(Clip.LOOP_CONTINUOUSLY) else playing.clip.start()
+            }
         }
     }
 
@@ -212,7 +240,7 @@ class DesktopAudioDriver(
         if (cue.isEmpty()) return
         val key = command.type to cue
         val existing = active[key]
-        if (command.loop && existing?.loop == true && existing.clip.isRunning) return
+        if (!command.restartFromBeginning && command.loop && existing?.loop == true && existing.clip.isRunning) return
 
         if (command.type == AudioCueType.MUSIC) {
             playMusicCrossfaded(command, key, cue)
@@ -222,7 +250,7 @@ class DesktopAudioDriver(
     }
 
     private fun playMusicCrossfaded(command: AudioCommand.Play, key: Pair<AudioCueType, String>, cue: String) {
-        if (command.loop && pendingMusicCue == cue) return
+        if (!command.restartFromBeginning && command.loop && pendingMusicCue == cue) return
         val currentGen = musicGeneration.incrementAndGet()
         pendingMusicCue = cue
 
@@ -230,6 +258,7 @@ class DesktopAudioDriver(
         val outgoing = active.entries.filter { it.key.first == AudioCueType.MUSIC && it.key != key }
         outgoing.forEach { (oldKey, oldPlaying) ->
             if (active.remove(oldKey, oldPlaying)) {
+                musicPositions[oldKey.second] = oldPlaying.clip.microsecondPosition
                 val fadeOutMs = if (command.fadeMs > 0) command.fadeMs else 400L
                 fadingOutClips.add(oldPlaying.clip)
                 fade(AudioCueType.MUSIC, oldPlaying, 0f, fadeOutMs) {
@@ -244,6 +273,7 @@ class DesktopAudioDriver(
 
         // If same track was active but non-looping or restarting:
         active.remove(key)?.let { oldSame ->
+            musicPositions[cue] = oldSame.clip.microsecondPosition
             try {
                 oldSame.clip.stop()
                 oldSame.clip.close()
@@ -307,7 +337,12 @@ class DesktopAudioDriver(
                             val playing = Playing(readyClip, command.gain, command.loop, envelope = startEnvelope)
                             active[key] = playing
                             applyGain(AudioCueType.MUSIC, playing)
-                            if (command.loop) readyClip.loop(Clip.LOOP_CONTINUOUSLY) else readyClip.start()
+                            if (command.restartFromBeginning) musicPositions.remove(cue)
+                            readyClip.microsecondPosition = if (command.loop && !command.restartFromBeginning)
+                                musicPositions[cue] ?: 0L else 0L
+                            if (!backgroundPaused) {
+                                if (command.loop) readyClip.loop(Clip.LOOP_CONTINUOUSLY) else readyClip.start()
+                            }
                             if (command.fadeMs > 0) {
                                 fade(AudioCueType.MUSIC, playing, 1f, command.fadeMs)
                             }

@@ -75,6 +75,21 @@ fun SkillTreeContent(
     modifier: Modifier = Modifier,
     onResetBuild: () -> Unit = {}
 ) {
+    var confirmRespec by rememberSaveable(overlay.characterId) { mutableStateOf(false) }
+    val respecControl: @Composable () -> Unit = {
+        if (overlay.respecRefund > 0) OutlinedButton(onClick = { confirmRespec = true }, modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = FieldMenuDesign.cyan),
+            border = BorderStroke(1.dp, FieldMenuDesign.border)) {
+            Text("Respec Character · Refund ${overlay.respecRefund} AP")
+        }
+    }
+    if (confirmRespec) AlertDialog(onDismissRequest = { confirmRespec = false },
+        containerColor = FieldMenuDesign.panel, titleContentColor = FieldMenuDesign.text,
+        textContentColor = FieldMenuDesign.textMuted,
+        title = { Text("Respec ${overlay.characterName}?") },
+        text = { Text("Refund ${overlay.respecRefund} AP and clear this character's build choices.") },
+        confirmButton = { TextButton(onClick = { confirmRespec = false; onResetBuild() }) { Text("Respec Character", color = FieldMenuDesign.cyan) } },
+        dismissButton = { TextButton(onClick = { confirmRespec = false }) { Text("Cancel", color = FieldMenuDesign.textMuted) } })
     val scrollState = rememberScrollState()
     val portraitPainter = rememberAssetPainter(
         imagePath = overlay.portraitPath,
@@ -102,7 +117,7 @@ fun SkillTreeContent(
         Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text("${overlay.characterName}: Skills", color = FieldMenuDesign.text,
                 style = MaterialTheme.typography.titleSmall)
-            if (overlay.respecRefund > 0) TextButton(onClick = onResetBuild) { Text("Reset build (+${overlay.respecRefund} AP)") }
+            respecControl()
             overlay.tutorialGuide?.let { guide ->
                 Surface(
                     color = FieldMenuDesign.panel,
@@ -191,7 +206,7 @@ fun SkillTreeContent(
                         }
                     }
 
-                    if (overlay.respecRefund > 0) TextButton(onClick = onResetBuild) { Text("Reset build (+${overlay.respecRefund} AP)") }
+                    respecControl()
                     overlay.tutorialGuide?.let { guide ->
                         Surface(
                             color = FieldMenuDesign.panel,

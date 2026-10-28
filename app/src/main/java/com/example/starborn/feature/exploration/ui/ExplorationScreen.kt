@@ -2921,7 +2921,7 @@ private fun MenuNestedDetailContent(
                 item = detailItem,
                 accentColor = accentColor,
                 borderColor = borderColor,
-                onUse = detailItem.effect?.takeIf { detailItem.quantity > 0 }?.let { { onUseItem(detailItem) } }
+                onUse = detailItem.effect?.takeIf { detailItem.quantity > 0 && !detailItem.combatOnly }?.let { { onUseItem(detailItem) } }
             )
         } else MenuDetailLoading("Item details unavailable.", accentColor)
 
@@ -4824,23 +4824,9 @@ private fun QuestJournalOverlay(
                         if (completedQuests.isNotEmpty()) {
                             item {
                                 QuestJournalSectionCard(title = "Completed Quests") {
-                                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                        completedQuests.take(8).forEach { quest ->
-                                            QuestJournalRow(
-                                                quest = quest,
-                                                accentColor = accentColor,
-                                                borderColor = accentColor.copy(alpha = 0.34f),
-                                                onClick = { onSelectQuest(quest.id) }
-                                            )
-                                        }
-                                        if (completedQuests.size > 8) {
-                                            Text(
-                                                text = "+${completedQuests.size - 8} more",
-                                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp),
-                                                color = Color.White.copy(alpha = 0.6f)
-                                            )
-                                        }
-                                    }
+                                    com.example.starborn.feature.exploration.ui.tabs.CompletedQuestGroups(
+                                        completedQuests, accentColor, accentColor.copy(alpha = .34f), onSelectQuest)
+
                                 }
                             }
                         } else {
@@ -7643,11 +7629,6 @@ private fun CinematicNarrationCard(
         ),
         label = "cinematicGlowPulse"
     )
-    val hintAlpha by animateFloatAsState(
-        targetValue = if (revealFinished) 1f else 0f,
-        animationSpec = tween(durationMillis = 500),
-        label = "cinematicHintAlpha"
-    )
     val accentColor = Color(0xFF7BE8FF)
     val cardShape = RoundedCornerShape(28.dp)
     val narrationStyle = MaterialTheme.typography.bodyLarge.copy(
@@ -7720,27 +7701,7 @@ private fun CinematicNarrationCard(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-                if (showTapToContinue) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .alpha(hintAlpha)
-                            .then(if (revealFinished) Modifier else Modifier.clearAndSetSemantics { }),
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "✦  ",
-                            color = accentColor.copy(alpha = 0.35f),
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                        Text(
-                            text = if (isLastStep) "Tap to continue" else "Tap to continue ▸",
-                            color = accentColor.copy(alpha = 0.5f),
-                            style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.sp)
-                        )
-                    }
-                }
+
                 CinematicAccentBar(accentColor)
             }
         }
