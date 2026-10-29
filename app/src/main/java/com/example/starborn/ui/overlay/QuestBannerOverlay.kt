@@ -3,6 +3,8 @@ package com.example.starborn.ui.overlay
 import androidx.compose.foundation.background
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
@@ -29,10 +31,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -110,10 +117,18 @@ private fun QuestBannerCard(
         QuestBannerType.PROGRESS -> Icons.Filled.CheckCircle
     }
 
+    var swipeDistance by remember(banner.questId, banner.type) { mutableStateOf(0f) }
     Card(
         modifier = Modifier
             .fillMaxWidth(0.92f)
             .widthIn(max = 500.dp)
+            .graphicsLayer { translationX = swipeDistance }
+            .pointerInput(banner.questId, banner.type) {
+                detectHorizontalDragGestures(onDragStart = { swipeDistance = 0f },
+                    onDragCancel = { swipeDistance = 0f },
+                    onDragEnd = { if (kotlin.math.abs(swipeDistance) >= 56.dp.toPx()) onDismiss() else swipeDistance = 0f },
+                    onHorizontalDrag = { change, amount -> change.consume(); swipeDistance += amount })
+            }
             .draggable(
                 state = rememberDraggableState { delta ->
                     if (delta < -12f) onDismiss()

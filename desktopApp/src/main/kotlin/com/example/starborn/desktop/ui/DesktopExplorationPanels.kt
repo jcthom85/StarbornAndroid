@@ -191,8 +191,15 @@ private fun DesktopContextualControls(services: DesktopAppServices, ui: Explorat
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         if (ui.canReturnToHub) DesktopOverworldGateway(ui, blocked, runtime::requestReturnToHub)
         if (!isDark && ui.npcs.isNotEmpty()) {
-            Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).testTag("npc-presence"), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                ui.npcs.distinct().forEach { npc -> DesktopNpcPresenceChip(services, ui, npc, blocked) }
+            val npcScroll = rememberScrollState()
+            Box(Modifier.fillMaxWidth()) {
+                Row(Modifier.fillMaxWidth().horizontalScroll(npcScroll).padding(end = 24.dp).testTag("npc-presence"),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    ui.npcs.distinct().forEach { npc -> DesktopNpcPresenceChip(services, ui, npc, blocked) }
+                }
+                if (npcScroll.value < npcScroll.maxValue) Text("›", color = Color.White,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.align(Alignment.CenterEnd).background(PanelInk).padding(horizontal = 4.dp))
             }
         }
         if (restStops.isNotEmpty()) {

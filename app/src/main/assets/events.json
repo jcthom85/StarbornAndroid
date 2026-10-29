@@ -2595,9 +2595,8 @@
         "task_id": "follow_zeke_comms"
       },
       {
-        "type": "narrate",
-        "message": "Zeke's voice catches over the comms. 'Nova? Good. I found a maintenance route. Follow the red strobes to the cargo lift. I'm keeping it open.'",
-        "tap_to_dismiss": true
+        "type": "start_dialogue",
+        "npc": "line:w1_comms_exit"
       }
     ]
   },
@@ -2654,9 +2653,8 @@
         "fade_ms": 0
       },
       {
-        "type": "narrate",
-        "message": "A blast door slams behind Nova. Zeke breathes close to his microphone. 'Lift gate's open. Please tell me you're on this side of it.'",
-        "tap_to_dismiss": true
+        "type": "start_dialogue",
+        "npc": "line:w1_comms_access"
       }
     ]
   },
@@ -2681,9 +2679,8 @@
     ],
     "actions": [
       {
-        "type": "narrate",
-        "message": "Emergency power shakes the lift under Nova's feet. Zeke comes back over the comms. 'That's the car. Clear the platform. Jed's at the bypass; he said to get you across.'",
-        "tap_to_dismiss": true
+        "type": "start_dialogue",
+        "npc": "line:w1_comms_lift"
       }
     ]
   },

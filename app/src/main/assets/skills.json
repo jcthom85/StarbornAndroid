@@ -463,7 +463,7 @@
     "name": "Sonic Shriek",
     "character": "siren_skimmer",
     "type": "enemy",
-    "description": "Shrill cry that overloads suit optics and disorients foes.",
+    "description": "Shrill cry that briefly disrupts suit optics, reducing accuracy for one turn.",
     "combat_tags": [
       "debuff"
     ],
@@ -471,7 +471,7 @@
     "scaling": "focus",
     "cooldown": 2,
     "status_applications": [
-      "blind",
+      "dazzled",
       "weak"
     ]
   },

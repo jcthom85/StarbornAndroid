@@ -151,7 +151,7 @@ internal fun DesktopDamageBubble(
             scaleAnim.animateTo(1.0f, tween(durationMillis = 180, easing = EaseOutBack))
         }
         launch {
-            progress.animateTo(1f, tween(durationMillis = 750, easing = LinearEasing))
+            progress.animateTo(1f, tween(durationMillis = if (cue.isGuardBreak) 1800 else 750, easing = LinearEasing))
         }
     }
 
@@ -170,7 +170,8 @@ internal fun DesktopDamageBubble(
     }
     val currentY = v0 * t + 0.5f * gravity * (t * t)
     val currentX = driftX * (1f - (1f - t) * (1f - t))
-    val currentAlpha = if (t < 0.45f) 1f else (1f - (t - 0.45f) / 0.55f).coerceIn(0f, 1f)
+    val fadeStart = if (cue.isGuardBreak) .75f else .45f
+    val currentAlpha = if (t < fadeStart) 1f else (1f - (t - fadeStart) / (1f - fadeStart)).coerceIn(0f, 1f)
 
     val headline = when {
         isMiss -> "MISS!"

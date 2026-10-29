@@ -58,7 +58,7 @@ internal fun DesktopItemGrantedBanner(
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .widthIn(max = 560.dp).fillMaxWidth()
             .semantics {
-                contentDescription = "Item acquired: $itemLabel. Continue."
+                contentDescription = if (prompt.category == "consumed") "Item used: $itemLabel. Removed from inventory." else "Item acquired: $itemLabel."
             },
         color = Color(0xFF060B13).copy(alpha = 0.98f),
         contentColor = Color.White,
@@ -95,7 +95,7 @@ internal fun DesktopItemGrantedBanner(
                             .padding(horizontal = 8.dp, vertical = 3.dp)
                     ) {
                         Text(
-                            text = "ITEM ACQUIRED",
+                            text = if (prompt.category == "consumed") "ITEM USED" else "ITEM ACQUIRED",
                             style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.1.sp, fontWeight = FontWeight.Bold),
                             color = accentColor
                         )

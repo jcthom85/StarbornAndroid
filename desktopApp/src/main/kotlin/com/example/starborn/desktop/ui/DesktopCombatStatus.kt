@@ -61,7 +61,7 @@ internal fun describeStatus(id: String, services: DesktopAppServices): StatusEff
         )
         key in setOf("erosion", "acid", "corrosion", "corroded") -> StatusEffectInfo(
             title = "CORROSION",
-            summary = "Acidic wash melting hull plating. Incoming physical and direct damage increased.",
+            summary = "Acid damage over time. Corrosive Rounds deals 8 damage per turn for 3 turns; Erosion scales with maximum HP.",
             isDebuff = true,
             accent = Color(0xFF6AE6A0),
             icon = Icons.Rounded.Science

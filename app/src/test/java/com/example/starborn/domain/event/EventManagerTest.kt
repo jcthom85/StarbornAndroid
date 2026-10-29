@@ -13,6 +13,27 @@ import org.junit.Test
 class EventManagerTest {
 
     @Test
+    fun repeatedRecruitmentDoesNotAnnounceOrModifyAnExistingPartyMember() {
+        val store = GameSessionStore()
+        val announcements = mutableListOf<String>()
+        val manager = EventManager(events = emptyList(), sessionStore = store,
+            eventHooks = EventHooks(onPartyMemberJoined = { announcements.add(it) }))
+        val recruit = listOf(EventAction(type = "add_party_member", itemId = "zeke"))
+        manager.performActions(recruit)
+        val recruited = store.state.value
+        repeat(3) { manager.performActions(recruit) }
+        assertEquals(listOf("zeke"), announcements)
+        assertEquals(recruited, store.state.value)
+        // Loading an existing party must also remain quiet, regardless of event history.
+        val reloaded = GameSessionStore().apply { restore(recruited) }
+        EventManager(events = emptyList(), sessionStore = reloaded,
+            eventHooks = EventHooks(onPartyMemberJoined = { announcements.add(it) }))
+            .performActions(recruit)
+        assertEquals(listOf("zeke"), announcements)
+        assertEquals(1, reloaded.state.value.partyMembers.count { it == "zeke" })
+    }
+
+    @Test
     fun triggerEligibilityChecksGatesWithoutExecutingAndRejectsCompletedEvents() {
         val store = GameSessionStore()
         val manager = EventManager(

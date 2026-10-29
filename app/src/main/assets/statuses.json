@@ -204,5 +204,23 @@
     "aliases": [
       "target_lock"
     ]
-  }
+  },
+{
+  "id": "dazzled",
+  "name": "Optics Static",
+  "default_duration": 1,
+  "accuracy_multiplier": 0.9,
+  "target": "enemy"
+},
+{
+  "id": "corrosion",
+  "name": "Corrosion",
+  "default_duration": 3,
+  "tick": {
+    "mode": "damage",
+    "amount": 8,
+    "element": "acid"
+  },
+  "target": "enemy"
+}
 ]

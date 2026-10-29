@@ -34,7 +34,8 @@ fun DirectionIndicatorsOverlay(
     indicators: Map<String, DirectionIndicatorUi>,
     onTravel: (String) -> Unit,
     modifier: Modifier = Modifier,
-    bottomClearance: Dp = 0.dp
+    bottomClearance: Dp = 0.dp,
+    enabled: Boolean = true
 ) {
     if (indicators.isEmpty()) return
     Box(modifier = modifier) {
@@ -98,7 +99,7 @@ fun DirectionIndicatorsOverlay(
                     .graphicsLayer {
                         this.scaleX = scale
                         this.scaleY = scale
-                        this.alpha = alpha
+                        this.alpha = alpha * if (enabled) 1f else .5f
                         this.translationX = nudgeX
                         this.translationY = nudgeY
                     }
@@ -111,7 +112,7 @@ fun DirectionIndicatorsOverlay(
                             DirectionIndicatorStatus.NEARBY_THREAT -> "travel-threat-$direction"
                         }
                         contentDescription = actionLabel
-                        if (canTravel) {
+                        if (canTravel && enabled) {
                             onClick(label = actionLabel) {
                                 onTravel(indicator.direction)
                                 true
@@ -119,7 +120,7 @@ fun DirectionIndicatorsOverlay(
                         }
                     }
                     .clickable(
-                        enabled = canTravel,
+                        enabled = canTravel && enabled,
                         onClick = { onTravel(indicator.direction) }
                     ),
                 contentAlignment = Alignment.Center

@@ -96,3 +96,36 @@ This transcript reflects the exact player experience, including dialogue, room t
 > **[Dialogue]** Zeke: "Authorization accepted. Power's holding. I can launch us, but I can't promise where we'll land. I'd like to be honest about one form today."
 > **[Dialogue]** Nova: "You came with me when staying would've been safer. I'm not leaving you wherever we land. Start the launch sequence."
 - **[Action]** `use_nav_console`: Action triggered: use_nav_console (payload: null) [Quest: w2_mq01 (assess_crash_site)]
+
+
+## Part 3 critical fixes — October 29, 2026
+
+- CB-01: Recruitment events now announce only newly added party members. Repeated crash-site conversations and loaded saves retain Zeke without repeating recruitment feedback or changing his progression.
+- CB-02: Cargo Lift recovery is framed as emergency dressings in a shielded service recess during hydraulic repressurization. Both room descriptions explain the short pause; the recovery notice now uses the authored rest message.
+- CB-03: Guard Break damage callouts last 1.8 seconds, remaining fully opaque through the first 75% of their lifetime. Android and desktop animation/removal timings agree.
+- CB-04: The existing Supplies filter is explicitly labelled Consumables in both layouts; its existing medicine, consumable, meal, and snack coverage is retained.
+- CB-05: The launch cinematic keeps a single music cue. Room audio cannot replace an active cinematic's music, and crash-site dialogue no longer restarts the crash track on every conversation. Sound effects remain separate.
+
+Automated checks cover recruitment replay/load behavior, World 1 dialogue flow, data integrity, audio routing, rest behavior, and combat presentation. The Guard Break preview is captured at one second. Phone playtesting is still needed to assess the ending's audible pacing.
+
+
+## Part 3 important considerations — October 29, 2026
+
+| ID | Implementation |
+|---|---|
+| IC-01 | Calibration explicitly leaves the burned core in the cradle. A priority ITEM USED notice confirms removal of the Functional Cryo-Inductor before unlock tutorials and rewards. |
+| IC-02 | Emergency Exit, Maintenance Access, and Cargo Lift use explicit scripted Zeke dialogue with a radio portrait. These calls cannot replace his normal NPC or quest greetings. |
+| IC-03 | Tap-dismissable narration omits Continue; explicit choices retain their controls. |
+| IC-04 | Sonic Shriek now causes one-turn Optics Static (90% accuracy multiplier), instead of two-turn Blind (50%). Other Blind sources and baseline accuracy are unchanged. |
+| IC-05 | Presence rows have wider spacing, reserved trailing space, and a visible overflow chevron; Android retains its edge fades. |
+| IC-06 | The Maintenance Access call establishes Jed heading for the manual bypass, and the Cargo Lift call confirms he is holding it with his wrench before his existing handoff dialogue. |
+| IC-07 | Quest-update banners track horizontal drags and dismiss left or right; the accessible close button remains. |
+| IC-08 | Ability rows use a labelled Details control with a 48 dp minimum target and a simpler rounded details header. |
+| IC-09 | Damage ability strength is shown as percentage attack scaling, healing as base HP, and support effects as Utility. Overcharge labels use those same units. |
+| IC-10 | Corrosive Rounds uses fixed Corrosion (8 acid damage per enemy turn for 3 turns) instead of percentage-based Erosion. Its 25% proc chance and strength bonus remain. Other Erosion sources and boss statistics are unchanged. |
+| IC-11 | Recruitment retains the important announcement presentation, with rounded corners and no continuation hint. The critical-pass idempotent recruitment fix remains in place. |
+| IC-12 | Android direction arrows and the overworld gateway remain visible during dialogue, with travel disabled until the conversation releases input. |
+
+Balance evidence: a seeded sample of 2,000 representative basic attacks produced 1,815 hits normally, 886 under Blind, and 1,622 under Optics Static. The authored status engine deals 75 HP over three Erosion ticks against a 250-HP target, versus 24 HP with the new weapon Corrosion; the latter remains 24 HP against a 1,000-HP target. These isolate the mechanics and do not replace a full boss difficulty playtest.
+
+The future inter-world cinematic idea remains deferred. The revised phone layout, comms pacing, and Warden difficulty need a device acceptance pass before calling the playtest findings closed.

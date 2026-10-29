@@ -461,7 +461,7 @@
       },
       {
         "type": "narration",
-        "text": "The Cryo-Inductor fuses with a sharp pop. The Flux Liner carries the discharge into the floor, burning its sacrificial ground strip open. Nova's knees strike the stone.",
+        "text": "The functional Cryo-Inductor fuses with a sharp pop. Its last charge is spent; the burned core stays sealed inside the cradle. The Flux Liner carries the discharge into the floor, burning its sacrificial ground strip open. Nova's knees strike the stone.",
         "audio_cue": "sfx_combat_plasma_arc"
       },
       {
@@ -498,8 +498,7 @@
         "speaker": "Zeke",
         "emote": "worried",
         "text": "It won't let me turn! Nova, I can't get us clear!",
-        "audio_cue": "sfx_security_lockdown",
-        "music_cue": "music_cinematic_crash"
+        "audio_cue": "sfx_security_lockdown"
       },
       {
         "type": "dialogue",

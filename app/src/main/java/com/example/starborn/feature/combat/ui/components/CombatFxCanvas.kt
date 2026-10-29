@@ -907,7 +907,7 @@ fun DamageNumberBubble(
         launch {
             progress.animateTo(
                 targetValue = 1f,
-                animationSpec = tween(durationMillis = 720, easing = LinearEasing)
+                animationSpec = tween(durationMillis = if (fx.isGuardBreak) 1800 else 720, easing = LinearEasing)
             )
         }
     }
@@ -929,10 +929,11 @@ fun DamageNumberBubble(
     val currentY = v0 * t + 0.5f * gravity * (t * t)
     val currentX = driftX * (1f - (1f - t) * (1f - t)) // Smooth initial drift
 
-    val currentAlpha = if (t < 0.42f) {
+    val fadeStart = if (fx.isGuardBreak) .75f else .42f
+    val currentAlpha = if (t < fadeStart) {
         1f
     } else {
-        (1f - (t - 0.42f) / 0.58f).coerceIn(0f, 1f)
+        (1f - (t - fadeStart) / (1f - fadeStart)).coerceIn(0f, 1f)
     }
 
     val headline = when {

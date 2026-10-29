@@ -22,10 +22,17 @@ class DialogueService(
         }
     }
 
+    /** Scripted radio calls enter a specific line without changing the NPC's normal greeting. */
+    fun startDialogueAt(lineId: String): DialogueSession? {
+        val line = dialogueById[lineId] ?: return null
+        if (!conditionEvaluator.isConditionMet(line.condition)) return null
+        return DialogueSession(dialogueById, line, conditionEvaluator, triggerHandler)
+    }
+
     fun startDialogue(speaker: String): DialogueSession? {
         val entries = dialogueBySpeaker[speaker.lowercase(Locale.getDefault())] ?: return null
         // Default greetings can be referenced by looping conversation topics and still be entry points.
-        val candidates = entries.filter { it.id !in referencedNextIds || it.id.endsWith("_default_talk") }
+        val candidates = entries.filter { !it.scriptedOnly && (it.id !in referencedNextIds || it.id.endsWith("_default_talk")) }
         val (conditioned, unconditioned) = candidates.partition { !it.condition.isNullOrBlank() }
         // Continue an eligible quest before offering another one. Preserve author
         // order within each group; an old optional offer must not hide progress.

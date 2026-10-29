@@ -34,6 +34,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -42,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.starborn.data.local.Theme
 import com.example.starborn.domain.model.Player
+import com.example.starborn.feature.combat.presentation.abilityPowerLabel
 import com.example.starborn.domain.model.Skill
 import com.example.starborn.feature.combat.viewmodel.CombatViewModel
 import com.example.starborn.feature.combat.viewmodel.TargetRequirement
@@ -294,12 +297,8 @@ private fun AbilityRowActions(
     onDetails: () -> Unit,
     onUse: () -> Unit
 ) {
-    IconButton(onClick = onDetails) {
-        Icon(
-            imageVector = Icons.Outlined.Info,
-            contentDescription = "Details for $skillName",
-            tint = accent
-        )
+    TextButton(onClick = onDetails, modifier = Modifier.heightIn(min = 48.dp).semantics { contentDescription = "Details for $skillName" }) {
+        Text("Details", color = accent)
     }
     Button(onClick = onUse, enabled = canUse, modifier = Modifier.maestroTag("combat-skill-$skillName")) {
         Text(if (cooldownRemaining > 0) cooldownRemaining.toString() else "Use")
@@ -325,14 +324,7 @@ private fun AbilityDetailsDialog(
         containerColor = panel.copy(alpha = if (highContrastMode) 1f else 0.98f),
         titleContentColor = Color.White,
         textContentColor = Color.White.copy(alpha = 0.88f),
-        shape = RoundedCornerShape(18.dp),
-        icon = {
-            Icon(
-                imageVector = Icons.Rounded.AutoAwesome,
-                contentDescription = null,
-                tint = accent
-            )
-        },
+        shape = RoundedCornerShape(24.dp),
         title = {
             Text(
                 text = skill.name,
@@ -431,8 +423,8 @@ private fun AbilityDetailsDialog(
                             AbilityDetailLine("Type", skill.type.toDisplayLabel())
                             AbilityDetailLine("Target selection", abilityTargetLabel(targetRequirement))
                             AbilityDetailLine(
-                                "Power",
-                                skill.basePower.takeIf { it > 0 }?.toString() ?: "Utility"
+                                "Effect strength",
+                                abilityPowerLabel(skill, momentum) + ". Final results depend on stats, bonuses, and defenses."
                             )
                             AbilityDetailLine(
                                 "Scaling",
@@ -551,21 +543,7 @@ private fun abilitySummary(
 ): String {
     val parts = buildList {
         if (skill.id == "nova_link") add("Heals party + Regen")
-        if (skill.basePower > 0) {
-            val powerText = if (momentum > 0) {
-                val mult = when (momentum) {
-                    1 -> 1.25
-                    2 -> 1.50
-                    3 -> 1.80
-                    else -> 1.0
-                }
-                val boosted = (skill.basePower * mult).toInt()
-                "${skill.basePower} (${boosted}⚡) power"
-            } else {
-                "${skill.basePower} power"
-            }
-            add(powerText)
-        }
+        add(abilityPowerLabel(skill, momentum))
         skill.scaling?.takeIf { it.isNotBlank() }?.let { add(it.toDisplayLabel()) }
         add(abilityCooldownLabel(skill.cooldown, cooldownRemaining, momentum))
         val isHeal = skill.type.equals("heal", ignoreCase = true) ||

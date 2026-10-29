@@ -1,5 +1,7 @@
 package com.example.starborn.desktop
 
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.asAwtImage
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -14,6 +16,24 @@ import javax.imageio.ImageIO
 
 class DesktopCombatClarityTest {
     @get:Rule val compose = createComposeRule()
+
+    @Test fun guardBreakCalloutRemainsReadableAfterOneSecond() {
+        compose.mainClock.autoAdvance = false
+        compose.setContent { DesktopStarbornTheme {
+            androidx.compose.foundation.layout.Box(
+                androidx.compose.ui.Modifier.size(360.dp, 240.dp),
+                contentAlignment = androidx.compose.ui.Alignment.Center
+            ) {
+                com.example.starborn.desktop.ui.DesktopDamageBubble(
+                    com.example.starborn.desktop.ui.DesktopCombatCue(1, "enemy", "12", androidx.compose.ui.graphics.Color.White,
+                        amount = 12, isGuardBreak = true))
+            }
+        } }
+        compose.mainClock.advanceTimeBy(1000)
+        compose.onNodeWithText("GUARD BREAK!").assertIsDisplayed()
+        val output = File("build/reports/combat-clarity").apply { mkdirs() }
+        ImageIO.write(compose.onRoot().captureToImage().asAwtImage(), "png", File(output, "guard-break-one-second.png"))
+    }
 
     @Test fun liveFeedFollowsNewEntriesWhenTheRetainedHistoryIsFull() {
         val history = androidx.compose.runtime.mutableStateListOf<String>()

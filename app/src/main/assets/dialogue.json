@@ -885,7 +885,7 @@
     "id": "zeke_w2_crash_4",
     "speaker": "Zeke",
     "text": "I put the Chime on navigation without tracing the pair. That's on me. Check the wrecked nav console before the water gets in.",
-    "trigger": "music_persist:music_cinematic_crash,set_quest_task_done:w2_mq01:check_on_zeke,recruit:zeke"
+    "trigger": "set_quest_task_done:w2_mq01:check_on_zeke,recruit:zeke"
   },
   {
     "id": "zeke_w2_crash_repeat_1",
@@ -3589,5 +3589,26 @@
     "speaker": "Orion",
     "text": "I cannot stay here counting the years. Take the Bridge. It connects willing carriers, but it needs a physical ground. I will come with you. And that rifle on the ridge has been watching us too long.",
     "trigger": "player_action:w2_mq03_talk_to_orion"
+  },
+  {
+    "id": "w1_comms_exit",
+    "scripted_only": true,
+    "speaker": "Zeke",
+    "portrait": "images/npcs/comms_radio.png",
+    "text": "Nova? It's Zeke. I found a maintenance route. Follow the red strobes to the cargo lift. I'm keeping it open."
+  },
+  {
+    "id": "w1_comms_access",
+    "scripted_only": true,
+    "speaker": "Zeke",
+    "portrait": "images/npcs/comms_radio.png",
+    "text": "Lift gate's open. Please tell me you're on this side of it. Jed's headed for the manual bypass; he's going to hold it while I bring the car across."
+  },
+  {
+    "id": "w1_comms_lift",
+    "scripted_only": true,
+    "speaker": "Zeke",
+    "portrait": "images/npcs/comms_radio.png",
+    "text": "That's the car. Clear the platform. Jed's at the bypass with his wrench. He said to get you across."
   }
 ]

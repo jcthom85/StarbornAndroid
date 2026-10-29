@@ -67,7 +67,7 @@ private enum class SuppliesFilter(val label: String) {
     ALL("All"),
     INGREDIENTS("Food & Fish"),
     COMPONENTS("Crafting Mats"),
-    CONSUMABLES("Combat Items")
+    CONSUMABLES("Consumables")
 }
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -173,7 +173,7 @@ fun InventoryTabContent(
                                 SuppliesFilter.ALL -> "All"
                                 SuppliesFilter.INGREDIENTS -> "Food"
                                 SuppliesFilter.COMPONENTS -> "Materials"
-                                SuppliesFilter.CONSUMABLES -> "Combat"
+                                SuppliesFilter.CONSUMABLES -> "Consumables"
                             }
                             Surface(
                                 modifier = Modifier.weight(1f).clip(RoundedCornerShape(12.dp))

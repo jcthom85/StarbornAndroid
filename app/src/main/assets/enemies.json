@@ -126,7 +126,7 @@
         "chance": 0.35
       }
     ],
-    "description": "Fast airborne controller. Its shriek applies Blind. Too quick to reliably shoot, but Freeze collapses the steam sac and drops it.",
+    "description": "Fast airborne controller. Its shriek briefly disrupts suit optics. Too quick to reliably shoot, but Freeze collapses the steam sac and drops it.",
     "portrait": "images/enemies/siren_skimmer_combat.png"
   },
   {

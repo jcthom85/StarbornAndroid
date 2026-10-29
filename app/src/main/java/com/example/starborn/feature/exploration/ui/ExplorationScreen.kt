@@ -1087,7 +1087,8 @@ fun ExplorationScreen(
                             npcPortraitPaths = uiState.npcPortraitPaths,
                             groundItems = visibleGroundItems,
                             serviceActions = serviceQuickActions,
-                            canReturnToHub = uiState.canReturnToHub && !blockingOverlayActive,
+                            canReturnToHub = uiState.canReturnToHub,
+                            gatewayEnabled = !blockingOverlayActive && !importantQuestPopupVisible,
                             sectorTitle = if (uiState.currentHub?.id == "hub_astra") "Cargo ramp" else uiState.currentHub?.title,
                             isDisembarking = uiState.currentHub?.id == "hub_astra",
                             onReturnToHub = { viewModel.requestReturnToHub() },
@@ -1842,9 +1843,10 @@ fun ExplorationScreen(
                 com.example.starborn.ui.vfx.rememberAndroidEnvironmentSteam(true),uiState.roomState,uiState.completedMilestones,
                 onCopy={clipboard.setText(androidx.compose.ui.text.AnnotatedString(it))},onClose={environmentalPreview=false})
         }
-        if (!blockingOverlayActive && !showInventoryTargetDialog && saveLoadMode == null) {
+        if ((!blockingOverlayActive || uiState.activeDialogue != null) && !showInventoryTargetDialog && saveLoadMode == null) {
             DirectionIndicatorsOverlay(
                 indicators = uiState.directionIndicators,
+                enabled = !blockingOverlayActive && !importantQuestPopupVisible && !roomTransitionInProgress,
                 onTravel = { direction ->
                     if (!roomTransitionInProgress) viewModel.travel(direction)
                 },
@@ -5022,6 +5024,7 @@ private fun RoomEntitySection(
     groundItems: Map<String, Int>,
     serviceActions: List<QuickMenuAction> = emptyList(),
     canReturnToHub: Boolean = false,
+    gatewayEnabled: Boolean = true,
     sectorTitle: String? = null,
     isDisembarking: Boolean = false,
     onReturnToHub: () -> Unit = {},
@@ -5058,7 +5061,8 @@ private fun RoomEntitySection(
                     sectorTitle = sectorTitle,
                     isDisembarking = isDisembarking,
                     isDark = isDark,
-                    onClick = onReturnToHub
+                    onClick = onReturnToHub,
+                    enabled = gatewayEnabled
                 )
             }
             if (npcs.isNotEmpty()) {
@@ -5230,6 +5234,7 @@ private fun OverworldGatewayCard(
     isDisembarking: Boolean = false,
     isDark: Boolean,
     onClick: () -> Unit,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     val shape = RoundedCornerShape(10.dp)
@@ -5243,10 +5248,10 @@ private fun OverworldGatewayCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(shape)
-            .clickable(onClick = onClick)
+            .clickable(enabled = enabled, onClick = onClick)
             .clearAndSetSemantics {
                 contentDescription = if (isDisembarking) "Disembark from the Astra" else "Exit to $destination"
-                onClick(label = if (isDisembarking) "Disembark" else "Exit to $destination") {
+                if (enabled) onClick(label = if (isDisembarking) "Disembark" else "Exit to $destination") {
                     onClick()
                     true
                 }
@@ -5360,12 +5365,15 @@ private fun PresenceRailRow(
         Row(
             modifier = Modifier
                 .horizontalScroll(scrollState)
-                .padding(end = 4.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                .padding(end = 20.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.Top
         ) {
             content()
         }
+        if (scrollState.value < scrollState.maxValue) Text("›",
+            color = Color.White, style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.align(Alignment.CenterEnd).background(Color(0xFF050A10)).padding(horizontal = 3.dp))
     }
 }
 
@@ -6974,7 +6982,7 @@ fun ItemGrantedBanner(
             .widthIn(min = 300.dp, max = 560.dp)
             .maestroTag("item-granted-continue")
             .semantics {
-                contentDescription = "Item acquired: $itemLabel. Tap to continue. Tap for next."
+                contentDescription = if (prompt.category == "consumed") "Item used: $itemLabel. Removed from inventory." else "Item acquired: $itemLabel."
             },
         color = Color(0xFF060B13).copy(alpha = 0.98f),
         contentColor = Color.White,
@@ -7011,7 +7019,7 @@ fun ItemGrantedBanner(
                             .padding(horizontal = 8.dp, vertical = 3.dp)
                     ) {
                         Text(
-                            text = "ITEM ACQUIRED",
+                            text = if (prompt.category == "consumed") "ITEM USED" else "ITEM ACQUIRED",
                             style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.1.sp, fontWeight = FontWeight.Bold),
                             color = accentColor
                         )
@@ -7376,7 +7384,7 @@ fun NarrationCard(
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
-            if (actions != null) actions() else TextButton(
+            if (actions != null) actions() else if (!prompt.tapToDismiss) TextButton(
                 onClick = onDismiss,
                 modifier = Modifier
                     .maestroTag("narration-continue")

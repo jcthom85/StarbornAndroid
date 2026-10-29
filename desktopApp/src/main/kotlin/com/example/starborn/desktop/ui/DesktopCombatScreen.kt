@@ -141,7 +141,7 @@ private fun DesktopCombatContent(
             element = element
         )
         cues.add(cue)
-        scope.launch { delay(1500); cues.remove(cue) }
+        scope.launch { delay(if (cue.isGuardBreak) 1900L else 1500L); cues.remove(cue) }
     }
     val keyboardFocus = remember { FocusRequester() }
     var keyboardTarget by remember { mutableStateOf(0) }

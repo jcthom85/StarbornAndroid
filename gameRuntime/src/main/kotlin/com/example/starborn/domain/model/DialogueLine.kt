@@ -12,6 +12,8 @@ data class DialogueLine(
     val options: List<DialogueOption>? = null,
     val emote: String? = null,
     val portrait: String? = null,
+    @Json(name = "scripted_only")
+    val scriptedOnly: Boolean = false,
     @Json(name = "voice")
     val voiceCue: String? = null,
     @Json(name = "music")

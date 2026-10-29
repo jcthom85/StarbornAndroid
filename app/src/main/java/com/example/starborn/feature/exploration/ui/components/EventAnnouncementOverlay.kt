@@ -82,9 +82,9 @@ fun EventAnnouncementOverlay(
                     alpha = entranceAlpha.value
                 }
                 .maestroTag("event-advance")
-                .semantics { contentDescription = "Event Announcement. Tap to continue" }
+                .semantics { contentDescription = "Event Announcement" }
                 .clickable(onClick = onDismiss),
-            shape = RoundedCornerShape(6.dp),
+            shape = RoundedCornerShape(20.dp),
             border = BorderStroke(
                 1.2.dp,
                 Brush.linearGradient(
@@ -178,17 +178,6 @@ fun EventAnnouncementOverlay(
                             }
                         }
                     }
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Tap to continue",
-                        style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 0.8.sp),
-                        color = accentColor.copy(alpha = 0.55f)
-                    )
                 }
                 Box(
                     modifier = Modifier

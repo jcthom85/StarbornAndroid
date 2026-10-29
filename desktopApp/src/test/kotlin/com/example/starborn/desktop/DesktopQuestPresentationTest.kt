@@ -159,6 +159,16 @@ class DesktopQuestPresentationTest {
             compose.mainClock.advanceTimeBy(250)
             compose.waitForIdle()
             compose.runOnIdle { assertTrue(presentations.updates.isEmpty()) }
+            for (left in listOf(true, false)) {
+                compose.runOnIdle { presentations.accept(UiEvent.ShowQuestBanner(QuestBannerType.PROGRESS,
+                    "swipe-$left", "Swipe this update")) }
+                compose.mainClock.advanceTimeBy(300)
+                compose.onNodeWithText("Quest Updated").performTouchInput {
+                    if (left) swipeLeft() else swipeRight()
+                }
+                compose.mainClock.advanceTimeBy(400)
+                compose.runOnIdle { assertTrue("Swipe dismisses the update", presentations.updates.isEmpty()) }
+            }
         } finally { services.close(); directory.deleteRecursively() }
     }
 

@@ -1638,7 +1638,7 @@
   {
     "id": "mod_corrosive_rounds",
     "name": "Corrosive Rounds",
-    "description": "An illegal munitions mod scavenged from an enforcer's sidearm. Micro-injectors coat plasma slugs in acid capable of dissolving composite armor plates.",
+    "description": "An illegal munitions mod scavenged from an enforcer's sidearm. Micro-injectors coat plasma slugs in acid. Hits have a 25% chance to inflict Corrosion: 8 acid damage per turn for 3 turns.",
     "type": "mod",
     "value": 250,
     "buy_price": 500,
@@ -1648,7 +1648,7 @@
       "stat_mods": {
         "strength": 3
       },
-      "status_on_hit": "erosion",
+      "status_on_hit": "corrosion",
       "status_chance": 25
     }
   },

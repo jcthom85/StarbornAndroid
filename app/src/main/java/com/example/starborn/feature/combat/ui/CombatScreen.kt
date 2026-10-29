@@ -402,7 +402,7 @@ fun CombatScreen(
                         )
                         damageFx += fx
                         launch {
-                            delay(720)
+                            delay(if (fx.isGuardBreak) 1800L else 720L)
                             damageFx.remove(fx)
                         }
                         if (event.showAttackFx) {

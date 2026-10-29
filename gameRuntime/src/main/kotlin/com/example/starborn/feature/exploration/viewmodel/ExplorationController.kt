@@ -451,7 +451,10 @@ class ExplorationController(
                 } else {
                     val name = inventoryService.itemDisplayName(itemId)
                     inventoryService.removeItem(itemId, normalizedQuantity)
-                    postStatus("Gave $normalizedQuantity x $name")
+                    postStatus(if (itemId == "functional_cryo_inductor") "Used $normalizedQuantity x $name" else "Gave $normalizedQuantity x $name")
+                    if (itemId == "functional_cryo_inductor") promptManager.enqueue(ItemGrantedPrompt(
+                        itemName = name, quantity = normalizedQuantity, itemId = itemId,
+                        category = "consumed", description = "Spent during calibration. Removed from inventory."))
                     refreshCurrentRoomBlockedDirections()
                     true
                 }
@@ -826,6 +829,8 @@ class ExplorationController(
     }
 
     private fun playRoomAudio(hubId: String?, roomId: String?) {
+        // The cinematic owns the music layer until its playback has actually ended.
+        if (cinematicMusicActive && _uiState.value.cinematic != null) return
         val room = roomId?.let { roomsById[it] } ?: _uiState.value.currentRoom
         val weatherId = room?.weather?.takeUnless { it.isBlank() }
         val suppressMusic = shouldSuppressRoomMusic(room)
@@ -2820,7 +2825,9 @@ class ExplorationController(
             return true
         }
         val dialogueName = resolveNpcDialogueName(npcName)
-        val session = dialogueService.startDialogue(dialogueName) ?: return false
+        val session = if (npcName.startsWith("line:")) dialogueService.startDialogueAt(npcName.removePrefix("line:"))
+            else dialogueService.startDialogue(dialogueName)
+        if (session == null) return false
         activeDialogueSession = session
         activeDialogueNpcName = npcName
         promptManager.setToastsSuspended(true)
@@ -5392,7 +5399,7 @@ class ExplorationController(
             _uiState.value.currentRoom?.id?.let { sessionStore.setRoomState(it, "cooking_discovered", true) }
             emitEvent(ExplorationEvent.OpenCooking(action.cookSource ?: action.name))
         } else {
-            action.restEvent?.takeIf { it.isNotBlank() }?.let { triggerPlayerAction(it) } ?: handleRestParty()
+            action.restEvent?.takeIf { it.isNotBlank() }?.let { triggerPlayerAction(it) } ?: handleRestParty(action.message)
         }
     }
 

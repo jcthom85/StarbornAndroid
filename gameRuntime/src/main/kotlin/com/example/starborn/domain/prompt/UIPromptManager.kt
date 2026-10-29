@@ -23,7 +23,8 @@ class UIPromptManager {
     private fun promptPriority(prompt: UIPrompt): Int = when (prompt) {
         is TutorialPrompt -> if (prompt.afterRewards) 50 else 300
         is MilestonePrompt -> 200
-        is ItemGrantedPrompt, is ItemBatchGrantedPrompt -> 100
+        is ItemGrantedPrompt -> if (prompt.category == "consumed") 350 else 100
+        is ItemBatchGrantedPrompt -> 100
         else -> 0
     }
 
@@ -155,7 +156,7 @@ class UIPromptManager {
         }
         val list = queue.toMutableList()
         val next = list.removeAt(nextIndex)
-        if (next is ItemGrantedPrompt) {
+        if (next is ItemGrantedPrompt && next.category != "consumed") {
             activeItemSequence = next.sequenceId
             activeUngroupedItems = next.sequenceId == null
         }

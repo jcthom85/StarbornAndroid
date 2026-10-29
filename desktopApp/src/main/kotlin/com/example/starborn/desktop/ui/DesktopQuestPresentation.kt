@@ -3,6 +3,8 @@ package com.example.starborn.desktop.ui
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -15,6 +17,7 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
@@ -128,13 +131,19 @@ internal fun DesktopQuestPresentation(services: DesktopAppServices, state: Quest
         val update = state.updates.firstOrNull()
         val showUpdate = update != null && !sceneBlocked && current == null
         var updateShowing by remember(update) { mutableStateOf(true) }
+        var updateSwipe by remember(update) { mutableFloatStateOf(0f) }
         LaunchedEffect(update, showUpdate) {
             if (showUpdate) { delay(3200); updateShowing = false }
         }
         AnimatedVisibility(showUpdate && updateShowing, Modifier.align(Alignment.TopCenter).padding(top = 20.dp, start = 24.dp, end = 24.dp),
             enter = slideInVertically(tween(220, easing = LinearOutSlowInEasing)) { -it } + fadeIn(tween(220)),
             exit = slideOutVertically(tween(180, easing = FastOutLinearInEasing)) { -it } + fadeOut(tween(180))) {
-            Surface(Modifier.clickable { updateShowing = false }.widthIn(max = 560.dp).fillMaxWidth().semantics { liveRegion = LiveRegionMode.Polite }, color = FieldMenuDesign.panel, shape = RoundedCornerShape(12.dp), border = BorderStroke(1.dp, accent.copy(alpha = .5f))) {
+            Surface(Modifier.graphicsLayer { translationX = updateSwipe }.pointerInput(update) {
+                detectHorizontalDragGestures(onDragStart = { updateSwipe = 0f },
+                    onDragCancel = { updateSwipe = 0f },
+                    onDragEnd = { if (kotlin.math.abs(updateSwipe) >= 56.dp.toPx()) updateShowing = false else updateSwipe = 0f },
+                    onHorizontalDrag = { change, amount -> change.consume(); updateSwipe += amount })
+            }.clickable { updateShowing = false }.widthIn(max = 560.dp).fillMaxWidth().semantics { liveRegion = LiveRegionMode.Polite }, color = FieldMenuDesign.panel, shape = RoundedCornerShape(12.dp), border = BorderStroke(1.dp, accent.copy(alpha = .5f))) {
                 Row(Modifier.padding(18.dp)) {
                     Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         Text("Quest Updated", color = accent, style = MaterialTheme.typography.labelLarge)

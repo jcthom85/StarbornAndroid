@@ -37,7 +37,7 @@ internal fun DesktopInspectionPrompt(message: String, onDismiss: () -> Unit, tap
                     Text(message.adaptInputVocabularyForDesktop(LocalDesktopKeyBindings.current), Modifier.weight(1f).heightIn(max = 400.dp).verticalScroll(rememberScrollState()),
                         color = Color.White, fontSize = 18.sp, lineHeight = 28.sp)
                 }
-                TextButton(onClick = onDismiss, modifier = Modifier.align(Alignment.End).desktopPointerHover()) { Text("Continue", color = accent) }
+                if (!tapToDismiss) TextButton(onClick = onDismiss, modifier = Modifier.align(Alignment.End).desktopPointerHover()) { Text("Continue", color = accent) }
             }
         }
     }

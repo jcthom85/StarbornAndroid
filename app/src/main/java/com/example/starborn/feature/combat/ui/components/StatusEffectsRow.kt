@@ -227,9 +227,9 @@ private fun statusEffectSummary(statusId: String): String? =
         "shock", "static" -> "Deals electric damage and slows turn recovery"
         "freeze", "frozen" -> "Immobilizes target until thawed or struck"
         "wet", "water" -> "Increases vulnerability to Shock and Freeze"
-        "acid", "poison", "erosion", "bleed" -> "Deals corrosive damage over time and weakens armor"
+        "acid", "poison", "erosion", "corrosion", "bleed" -> "Deals damage over time"
         "stun", "stagger" -> "Skips the next turn"
-        "blind" -> "Reduces attack accuracy"
+        "blind", "dazzled" -> "Reduces attack accuracy"
         "shield", "guard", "invulnerable" -> "Reduces incoming damage"
         "weak", "brittle", "exposed", "discord" -> "Increases damage taken from attacks"
         "regen", "heal" -> "Restores HP at the end of each turn"
@@ -260,9 +260,9 @@ fun iconForStatus(statusId: String): ImageVector {
         "shock", "static" -> Icons.Rounded.Bolt
         "freeze", "frozen" -> Icons.Rounded.AcUnit
         "wet", "water" -> Icons.Rounded.WaterDrop
-        "acid", "poison", "erosion", "bleed" -> Icons.Rounded.Science
+        "acid", "poison", "erosion", "corrosion", "bleed" -> Icons.Rounded.Science
         "stun", "stagger" -> Icons.Rounded.Star
-        "blind" -> Icons.Rounded.VisibilityOff
+        "blind", "dazzled" -> Icons.Rounded.VisibilityOff
         "shield", "guard", "invulnerable" -> Icons.Rounded.Shield
         "weak", "brittle", "exposed", "discord" -> Icons.Rounded.BrokenImage
         "regen", "heal" -> Icons.Rounded.AutoAwesome
@@ -287,10 +287,10 @@ fun colorForStatus(statusId: String): Color {
         "burn", "meltdown" -> Color(0xFFFF5722)
         "shock", "static", "overdrive" -> Color(0xFFFFC107)
         "freeze", "frozen" -> Color(0xFF03A9F4)
-        "acid", "poison", "erosion" -> Color(0xFF8BC34A)
+        "acid", "poison", "erosion", "corrosion" -> Color(0xFF8BC34A)
         "bleed" -> Color(0xFFE91E63)
         "stun", "stagger" -> Color(0xFF9C27B0)
-        "blind" -> Color(0xFF607D8B)
+        "blind", "dazzled" -> Color(0xFF607D8B)
         "shield", "guard", "invulnerable", "regen" -> Color(0xFF4CAF50)
         "weak", "brittle", "exposed" -> Color(0xFF795548)
         else -> Color(0xFF9E9E9E)

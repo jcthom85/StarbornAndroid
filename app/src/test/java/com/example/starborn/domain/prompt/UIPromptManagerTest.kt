@@ -6,6 +6,20 @@ import org.junit.Test
 
 class UIPromptManagerTest {
 
+    @Test fun `consumption feedback follows the scene before unlock tutorials and rewards`() {
+        val manager = UIPromptManager()
+        manager.setPresentationBlocked("scene", true)
+        val used = ItemGrantedPrompt("Functional Cryo-Inductor", 1, category = "consumed")
+        manager.enqueue(used)
+        manager.enqueue(TutorialPrompt(com.example.starborn.domain.tutorial.TutorialEntry(
+            key = "unlock", message = "New ability unlocked.", context = "Combat")))
+        manager.enqueue(ItemGrantedPrompt("Tuning Fork", 1))
+        manager.setPresentationBlocked("scene", false)
+        assertEquals(used, manager.state.value.current)
+        manager.dismissCurrent(used.id)
+        assertTrue(manager.state.value.current is TutorialPrompt)
+    }
+
     @Test
     fun `collect all removes only the matching item sequence`() {
         val manager = UIPromptManager()

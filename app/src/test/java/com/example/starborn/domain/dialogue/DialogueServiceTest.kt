@@ -10,6 +10,20 @@ import org.junit.Test
 class DialogueServiceTest {
 
     @Test
+    fun `scripted comms enter explicitly without replacing NPC greetings or quest dialogue`() {
+        val radio = DialogueLine(id = "w1_comms_exit", speaker = "Zeke", text = "Follow the red strobes.",
+            portrait = "images/npcs/comms_radio.png", scriptedOnly = true)
+        val normal = DialogueLine(id = "zeke_default_talk", speaker = "Zeke", text = "Hello")
+        val service = DialogueService(listOf(radio, normal), DialogueConditionEvaluator { true }, DialogueTriggerHandler {})
+        assertEquals(normal, service.startDialogue("Zeke")?.current())
+        val session = service.startDialogueAt(radio.id)
+        assertEquals(radio, session?.current())
+        session?.advance()
+        assertTrue(session?.isFinished() == true)
+        assertEquals(normal, service.startDialogue("Zeke")?.current())
+    }
+
+    @Test
     fun `eligible active quest dialogue precedes older optional offers`() {
         val lines = listOf(
             DialogueLine(id = "offer", speaker = "Zeke", text = "Optional quest", condition = "quest_not_started:side"),

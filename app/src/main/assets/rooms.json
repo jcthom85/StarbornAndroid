@@ -3368,7 +3368,7 @@
     "env": "logistics",
     "title": "Cargo Lift",
     "background_image": "images/rooms/world_1/launch_lift.webp",
-    "description": "A heavy industrial platform bucks beside a manual override panel. A bulwark plants itself across the loading edge with a buoy circling above its shoulder, tagging the car for whoever comes next. The hydraulics strain under emergency power while security shutters cycle against the override.",
+    "description": "A heavy industrial platform bucks beside a manual override panel. A bulwark plants itself across the loading edge with a buoy circling above its shoulder, tagging the car for whoever comes next. The hydraulics strain under emergency power while security shutters cycle against the override. A shielded service recess holds emergency dressings; the pressure gauge marks the short wait before the lift can move.",
     "description_variants": [
       {
         "requires_milestones": [
@@ -3377,7 +3377,7 @@
         "forbidden_milestones": [
           "ms_w1_mq04_complete"
         ],
-        "description": "The cargo lift bucks under emergency power. The manual override panel sits open at the platform edge, and the hydraulics strain as the security shutters cycle against it. Whatever is coming is coming through that door."
+        "description": "The cargo lift bucks under emergency power. The manual override panel sits open at the platform edge, and the hydraulics strain as the security shutters cycle against it. A shielded service recess holds emergency dressings for the brief wait while lift pressure rebuilds. Whatever is coming is coming through that door."
       }
     ],
     "npcs": [],
@@ -3413,9 +3413,9 @@
         "condition_unmet_message": "The hydraulics are failing under the strain of the lockdown, but they are still moving."
       },
       {
-        "name": "cargo lift",
+        "name": "service recess",
         "type": "rest_stop",
-      "message": "Nova takes cover behind the cargo lift hydraulics, dressing her wounds and catching her breath before the checkpoint."
+      "message": "While the lift pressure rebuilds, Nova ducks into the shielded service recess and uses its emergency dressings to patch up the crew. The pause lasts only until the pressure gauge turns green."
       }
     ],
     "blocked_directions": {
