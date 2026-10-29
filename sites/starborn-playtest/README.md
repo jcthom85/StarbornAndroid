@@ -21,6 +21,13 @@ the companion does not mean its gameplay instructions have been revalidated.
 
 ## Publication
 
+Live reader: https://jcthom85.github.io/StarbornAndroid/#world-2/
+
+Pushing a walkthrough change to `main` does **not** update the live reader. Rebuild and publish `gh-pages` as well. The October 29 refresh includes World 2's corrected NPC/quest route and Botanist report task. Direct `#world-1/` and `#world-2/` links select that world even on a fresh browser visit.
+
+Before publishing, serve `dist/` locally and run `node sites/starborn-playtest/check.mjs <url>`. It checks direct World 2 entry, current guide data, saved progress, search, mobile layout and offline reading. Chrome is detected for macOS/Windows; set `CHROME_PATH` to override its executable.
+
+
 `publish.mjs` rebuilds the companion, commits only the generated static files to
 the repository's `gh-pages` branch, pushes that branch and configures GitHub Pages
 if needed. It requires Node, Git and an authenticated `gh` CLI. It never stages or

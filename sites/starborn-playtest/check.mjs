@@ -7,7 +7,8 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 const url = process.argv[2] || 'http://127.0.0.1:4173/';
 const profile = await mkdtemp(path.join(tmpdir(), 'starborn-guide-qa-'));
-const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', ['--headless=new', '--remote-debugging-port=9427', `--user-data-dir=${profile}`, '--no-first-run', '--no-default-browser-check', 'about:blank'], { stdio: 'ignore', windowsHide: true });
+const chromePath = process.env.CHROME_PATH || (process.platform === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : process.platform === 'win32' ? 'C:/Program Files/Google/Chrome/Application/chrome.exe' : 'google-chrome');
+const chrome = spawn(chromePath, ['--headless=new', '--remote-debugging-port=9427', `--user-data-dir=${profile}`, '--no-first-run', '--no-default-browser-check', 'about:blank'], { stdio: 'ignore', windowsHide: true });
 let socket;
 try {
   let targets;
@@ -30,11 +31,14 @@ try {
   await send('Runtime.enable');
   await send('Page.enable');
   await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
-  await send('Page.navigate', { url });
+  await send('Page.navigate', { url: url.replace(/#.*$/, '') + '#world-2/' });
   async function waitFor(expression) { for (let i = 0; i < 100; i++) { if (await evaluate(expression)) return; await new Promise(resolve => setTimeout(resolve, 100)); } throw new Error(`Timed out: ${expression}`); }
   await waitFor('document.querySelector("#article h2") !== null');
   await waitFor('document.querySelector(".brand-logo")?.naturalWidth > 0');
   assert.equal(await evaluate('GUIDES.length'), 2);
+  assert.equal(await evaluate('world'), 2, 'world-2 root link selects World 2 on a fresh visit');
+  assert.equal(await evaluate('GUIDES[1].sections.some(s => s.blocks.some(b => b.text.includes("report_to_zeke")))'), true, 'World 2 includes the current Botanist return task');
+  await evaluate('switchWorld(1)');
   assert.equal(await evaluate('document.documentElement.scrollWidth <= innerWidth'), true, 'desktop has no horizontal overflow');
   const desktopShot = await send('Page.captureScreenshot', { format: 'png' });
   const desktopScreenshot = path.join(profile, 'desktop.png');
@@ -73,6 +77,6 @@ try {
   await waitFor('document.querySelector("#article h2") !== null');
   assert.equal(await evaluate('GUIDES.length'), 2, 'both worlds available after offline reload');
   assert.deepEqual(errors, [], 'no uncaught browser errors');
-  console.log(JSON.stringify({ passed: ['logo loaded', 'desktop layout', 'checkmarks persist', 'position restored', 'search', 'cross-world navigation', 'theme', 'mobile layout', 'offline reload', 'no browser errors'], screenshot, desktopScreenshot }, null, 2));
+  console.log(JSON.stringify({ passed: ['World 2 root link', 'current Botanist return task', 'logo loaded', 'desktop layout', 'checkmarks persist', 'position restored', 'search', 'cross-world navigation', 'theme', 'mobile layout', 'offline reload', 'no browser errors'], screenshot, desktopScreenshot }, null, 2));
   await send('Browser.close');
 } finally { socket?.close(); chrome.kill(); }

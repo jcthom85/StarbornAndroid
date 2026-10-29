@@ -1,4 +1,4 @@
-const CACHE = 'starborn-guide-1f35fab8bc81';
+const CACHE = 'starborn-guide-ae34d9802e08';
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(['./', './index.html'])).then(() => self.skipWaiting())));
 self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('starborn-guide-') && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())));
 self.addEventListener('fetch', event => {

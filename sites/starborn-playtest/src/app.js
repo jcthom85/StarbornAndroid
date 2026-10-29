@@ -117,10 +117,10 @@ function search() {
   }).join('');
 }
 function route() {
-  const match = /^#world-([12])\/chapter-(\d+)(?:\/([a-f0-9]+))?$/.exec(location.hash);
+  const match = /^#world-([12])(?:\/chapter-(\d+)(?:\/([a-f0-9]+))?|\/?)$/.exec(location.hash);
   if (!match) return false;
   world = Number(match[1]);
-  const index = Number(match[2]) - 1;
+  const index = match[2] ? Number(match[2]) - 1 : progressState().section;
   if (index < 0 || index >= guide().sections.length) return false;
   const p = progressState();
   showSection(index, { scroll: p.section === index && !match[3] ? p.scroll : 0, block: match[3] });
