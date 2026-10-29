@@ -40,6 +40,7 @@
     "ms_w1_mq01_complete",
     "ms_w1_mq02_clearance_ordered",
     "ms_w1_sq01_started",
+    "ms_w1_mq02_jed_advised",
     "ms_w1_sq01_cache_opened",
     "ms_w1_sq01_complete",
     "ms_w1_sq02_started",
@@ -50,7 +51,6 @@
     "ms_w1_mq02_complete"
   ],
   "milestoneHistory": [
-    "ms_w1_mq01_fault_visible",
     "ms_w1_mq01_bunk_light_on",
     "ms_w1_mq01_safety_fault_inspected",
     "ms_w1_manual_starter_equipment",
@@ -62,6 +62,7 @@
     "ms_w1_mq01_complete",
     "ms_w1_mq02_clearance_ordered",
     "ms_w1_sq01_started",
+    "ms_w1_mq02_jed_advised",
     "ms_w1_sq01_cache_opened",
     "ms_w1_sq01_complete",
     "ms_w1_sq02_started",
@@ -132,7 +133,9 @@
     "opening_gear_offer",
     "gear_equip_basics",
     "scene_market_locator",
-    "tut_nova_first_ap_v1"
+    "menu_save",
+    "tut_nova_first_ap_v1",
+    "mod_slots_basics"
   ],
   "tutorialCompleted": [
     "swipe_move",
@@ -219,13 +222,16 @@
     "w1_mq01_patch_flux_liner",
     "w1_mq01_confirm_governor",
     "w1_mq01_cutter_surge",
+    "w1_mq02_save_prompt_after_workshop",
     "w1_sq01_find_stash",
     "w1_sq01_open_rebel_cache",
     "w1_sq02_enter_vents",
     "w1_sq02_patch_vent",
     "w1_sq02_reroute_airflow",
     "w1_sq02_clear_toxic_blockage",
+    "w1_mod_acquired_tutorial",
     "w1_mq02_approach_checkpoint",
+    "w1_mq02_mod_slots_tutorial",
     "w1_mq02_reach_booth",
     "w1_mq03_logistics_commitment_warning",
     "w1_mq03_enter_logistics_sector"

@@ -514,8 +514,9 @@ class ExplorationController(
                 }
             },
             onMilestoneSet = { milestone ->
-                if (milestone.equals("ms_lights_out_complete", ignoreCase = true)) {
-                    finishInitialFade(reason = "lights_out_complete")
+                if (milestone.equals("ms_lights_out_complete", ignoreCase = true) ||
+                    milestone.equals("ms_w1_mq01_fault_visible", ignoreCase = true)) {
+                    finishInitialFade()
                 }
                 milestoneManager.handleMilestone(milestone, null)
                 milestoneManager.applyEffectsFor(milestone)
@@ -721,6 +722,8 @@ class ExplorationController(
     private var dialogueMusicPersistent: Boolean = false
     private var initialFadePrimed: Boolean = startWithBlackScreen
     private val pendingFadeCallbacks: MutableMap<Long, () -> Unit> = mutableMapOf()
+    private var initialFadeCompletionJob: Job? = null
+    private var pendingInitialFadeCompletion: (() -> Unit)? = null
     private var userMusicVolume: Float = 1f
     private var userSfxVolume: Float = 1f
     private var userVoiceVolume: Float = 1f
@@ -1225,28 +1228,32 @@ class ExplorationController(
         if (consumedInitialFade) {
             initialFadePrimed = false
             promotePendingInitialQuestPresentation()
-            pendingCallback?.let { callback ->
-                viewModelScope.launch(dispatchers.main) {
-                    delay(2200L)
-                    callback()
-                }
+            pendingInitialFadeCompletion = pendingCallback
+            initialFadeCompletionJob = viewModelScope.launch(dispatchers.main) {
+                delay(2200L)
+                val callback = pendingInitialFadeCompletion
+                pendingInitialFadeCompletion = null
+                initialFadeCompletionJob = null
+                callback?.invoke()
             }
         } else {
             pendingCallback?.invoke()
         }
     }
 
-    private fun finishInitialFade(reason: String? = null) {
-        val currentId = _uiState.value.fadeOverlay?.id
-        if (currentId != null) {
-            onFadeOverlayFinished(currentId)
-            return
-        }
-        if (initialFadePrimed || _uiState.value.forceBlackScreen) {
-            initialFadePrimed = false
-            _uiState.update { it.copy(forceBlackScreen = false, fadeOverlay = null) }
-            promotePendingInitialQuestPresentation()
-        }
+    private fun finishInitialFade() {
+        // The light is an explicit request to see the room now, including when
+        // the visual fade has ended but its presentation pause is still pending.
+        if (!initialFadePrimed && !_uiState.value.forceBlackScreen && pendingInitialFadeCompletion == null) return
+        initialFadeCompletionJob?.cancel()
+        initialFadeCompletionJob = null
+        val callback = pendingInitialFadeCompletion
+            ?: _uiState.value.fadeOverlay?.id?.let(pendingFadeCallbacks::remove)
+        pendingInitialFadeCompletion = null
+        initialFadePrimed = false
+        _uiState.update { it.copy(forceBlackScreen = false, fadeOverlay = null) }
+        callback?.invoke()
+        promotePendingInitialQuestPresentation()
     }
 
     private fun shouldDeferInitialQuestPresentation(questId: String): Boolean {

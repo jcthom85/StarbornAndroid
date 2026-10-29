@@ -893,6 +893,10 @@
           {
             "id": "scan_flora_5",
             "text": "In Stasis Chamber, scan the ancient root lattice."
+          },
+          {
+            "id": "report_to_zeke",
+            "text": "Return to Zeke with the five plant scans."
           }
         ]
       }

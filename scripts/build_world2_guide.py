@@ -56,14 +56,18 @@ def build_world2_pdf(output_pdf=OUTPUT):
     lines = SOURCE.read_text(encoding="utf-8").splitlines()
     story.append(Paragraph(inline(lines[0].lstrip("# ")), styles["Title"]))
     story.append(Paragraph("Detailed route, puzzle solutions, side quests and all-room reference", styles["Body"]))
-    story.append(Paragraph("Reviewed October 2, 2026 | Version 1.3.84 (168)<br/>Full spoilers | Repository review; device playtesting remains necessary", styles["Body"]))
+    review = re.search(r"Source-reviewed (.+?) against version ([\d.]+) \((\d+)\)", lines[2])
+    if review is None:
+        raise ValueError("Guide must declare its source-review date and version")
+    review_date, version, version_code = review.groups()
+    story.append(Paragraph(f"Reviewed {review_date} | Version {version} ({version_code})<br/>Full spoilers | Repository review; device playtesting remains necessary", styles["Body"]))
     story.append(Spacer(1, 18))
     story.append(Paragraph("Keep this open while playing. Follow the route in order and stop at each completion check. Use the contents and PDF bookmarks to jump to your current room or quest.", styles["Body"]))
     story.append(PageBreak())
     story.append(Paragraph("Contents", styles["Title"]))
     toc = TableOfContents()
-    toc.levelStyles = [ParagraphStyle("TOC0", fontName=heavy, fontSize=10, leading=14, spaceBefore=6),
-                       ParagraphStyle("TOC1", fontName=font, fontSize=9, leading=12, leftIndent=14)]
+    toc.levelStyles = [ParagraphStyle("TOC0", fontName=heavy, fontSize=9.5, leading=12, spaceBefore=4),
+                       ParagraphStyle("TOC1", fontName=font, fontSize=8.5, leading=11, leftIndent=14)]
     story.append(toc)
     story.append(PageBreak())
     first_section = next(i for i, line in enumerate(lines) if line.startswith("## "))
@@ -83,7 +87,7 @@ def build_world2_pdf(output_pdf=OUTPUT):
         canvas.line(40, 36, 572, 36)
         canvas.setFont(font, 8)
         canvas.setFillColor(colors.HexColor("#44616b"))
-        canvas.drawString(40, 24, "STARBORN | World 2 walkthrough | 1.3.84 | October 2, 2026")
+        canvas.drawString(40, 24, f"STARBORN | World 2 walkthrough | {version} | {review_date}")
         canvas.drawRightString(572, 24, str(doc.page))
         canvas.restoreState()
     output = Path(output_pdf)

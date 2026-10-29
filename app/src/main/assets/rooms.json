@@ -9222,6 +9222,17 @@
     "background_image": "images/rooms/world_2/landing_stream.webp",
     "description": "A clear stream of warm water flows east toward the coast, its glow-water current rippling softly. Smooth pebbles line the banks under hanging ferns, where a half-submerged river silt cache is lodged among the roots.",
     "npcs": [],
+    "npc_presence": [
+      {
+        "npc": "zeke",
+        "requires_milestones": [
+          "ms_w2_mq01_complete"
+        ],
+        "forbidden_milestones": [
+          "ms_w2_mq02_complete"
+        ]
+      }
+    ],
     "items": [],
     "enemies": [],
     "connections": {
@@ -10813,6 +10824,17 @@
       }
     ],
     "npcs": [],
+    "npc_presence": [
+      {
+        "npc": "gh0st",
+        "requires_milestones": [
+          "ms_w2_beast_defeated"
+        ],
+        "forbidden_milestones": [
+          "ms_w2_mq05_complete"
+        ]
+      }
+    ],
     "items": [],
     "enemies": [],
     "connections": {
@@ -11203,6 +11225,19 @@
     "npcs": [],
     "items": [],
     "enemies": [],
+    "blocked_directions": {
+      "east": {
+        "type": "state",
+        "requires": [
+          {
+            "room_id": "sector9_temple_gate",
+            "state_key": "temple_open",
+            "value": true
+          }
+        ],
+        "message_locked": "The Temple Gate is sealed. Use the Chime at the stone lock after clearing the canopy route."
+      }
+    },
     "connections": {
       "west": "sector9_temple_lock_chamber",
       "east": "sector9_foyer_grand_hall"
@@ -11910,7 +11945,7 @@
           "ms_w2_mq01_complete"
         ],
         "forbidden_milestones": [
-          "ms_w2_mq03_complete"
+          "ms_w2_mq05_complete"
         ]
       },
       {
@@ -12376,6 +12411,19 @@
     "npcs": [],
     "items": [],
     "enemies": [],
+    "blocked_directions": {
+      "east": {
+        "type": "state",
+        "requires": [
+          {
+            "room_id": "sector9_source_gate",
+            "state_key": "barrier_resolved",
+            "value": true
+          }
+        ],
+        "message_locked": "The Source Gate barrier blocks the hangar. Prepare its four feeds, then resolve the acoustic lock."
+      }
+    },
     "connections": {
       "north": "sector9_stasis_chamber",
       "west": "sector9_gate_emitter_left",

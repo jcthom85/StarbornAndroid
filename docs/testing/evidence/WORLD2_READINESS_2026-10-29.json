@@ -1,0 +1,146 @@
+{
+  "date": "2026-10-29",
+  "base_commit": "cb4c2cf390f50702c85c5a9b40af8ec4970ab518",
+  "working_tree": "uncommitted follow-up; includes earlier Charlie/checkpoint changes",
+  "scope": "World 2 plus explicitly requested World 1 bunk fade; stop at World 2 departure destination",
+  "tests": [
+    {
+      "name": "com.example.starborn.data.DataIntegrityTest",
+      "tests": "30",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.dialogue.DialogueServiceTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.event.EventManagerTest",
+      "tests": "15",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.inventory.InventoryAndConsumableBoundaryTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.playtest.LegalRouteCampaignRunnerTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.playtest.World2RefinementTest",
+      "tests": "16",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.prompt.UIPromptManagerTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.quest.QuestRuntimeManagerTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.session.OpeningNarrativeMigrationTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.feature.exploration.WorldTwoDiscoverabilityStateTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "totals": {
+    "tests": 110,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "source_json_sha256": {
+    "audio_bindings.json": "7878c0e36c350a2fe66df6b1d92d71ef9060f3e7d56a87ef9b5b3d212bfbb3e7",
+    "audio_catalog.json": "b1270577bfaa4911698a048af76237d31b34cf02d448e85f7f3e5f549cca42b0",
+    "autosave.json": "4ff62b24a5fcad6db4c8ca88f50caae5165141e926937d8db608e217a2c20959",
+    "characters.json": "f0eb93eeb29b032bd141df33ab930156d4eecdf79ea4ce5cd75860cef25f00f7",
+    "cinematics.json": "e4da9a374925f8d0dd0d2909713b139d1113c427dc82b5cf1eb6db0efa7261ed",
+    "dialogue.json": "a9f4c29678856bc3f4e151bce83607911dbfaad4f4ff874f8dfe192c31c0b7bc",
+    "dialogue_voice_profiles.json": "f9e65af637be268d3348a89d3eca2db68019847e678227d61321a937c947e642",
+    "enemies.json": "eaf0b8cfe35e181071c187b443d9531c76c7e5aa783792a61a64da93f32ef641",
+    "enemy_movement.json": "a7219c4b818d71a4de5d5189cab589fc8194e38992d9473e33358e474ebcabd3",
+    "environmental_effects.json": "64406ba7c1a9146f8552a3eabf316cbc5a4d36fa22eeb5eabaa83735a67afd44",
+    "events.json": "90863285799349b0081d00f88e64e851562616966f8aacc207acb8c5b1b943af",
+    "hub_node_descriptions.json": "f3b343ed432e0d241761d8a042a8ee786fdeccb64f37a87d71167ca18758a2aa",
+    "hub_node_locked_previews.json": "215436cfd45066539a62ea9aab14774d3e4938afbf1e9c4c77890f7c2507c4e6",
+    "hub_nodes.json": "9643f6da453ac1ae32476f1688de11ba2c72052e49017cb6ac8364ad0cf03346",
+    "hubs.json": "334ceda4a513e903bf877f402c136ea7a1843754a00e6980d9b478cdd9f11569",
+    "items.json": "4d1839eaaaac61b4bc75a4f6004ee89ec0ae12fb0ba53afb04d7c699393dd32f",
+    "leveling_data.json": "fe1cb7bb7d9d74e8a9f14c77fff68f9d7bcb9dcd3c0471fd44d5f0e4b70d9fb7",
+    "milestones.json": "023b688fece2040e1da366fb3970878fdc59c2dbfc97987b9df15e5660e577e2",
+    "node_transitions.json": "e3eb7409404757978850bbdf57290a44cbfd774d34df690f292dc3cf9730de02",
+    "npcs.json": "b0ee4dfdb55d387181b408a873dff35c10afbbd44867dd86804285d5659256ec",
+    "progression.json": "8be386cfcb42105556a3b2b9cd5f0f87a09cf8cbe0ba09f41c54c6ca901c6f5f",
+    "quests.json": "009e672853fe70fe100dc56336d107a3bc27e7746cd45c14ce2cc772fb219f1c",
+    "quests_base.json": "1310af04f0712958e6196ed2e5b5b9ed1a9b6192bc39bd99764e9337fe7ee055",
+    "recipes_cooking.json": "27b0edf7489947c3b7c7b623c70a9b8e40bdde6f58ec78496b0f08bfb5cc98a5",
+    "recipes_fishing.json": "3533ffe4dd422d5fe88abf57f2b9ef820f0d7eb7ac24b0b7ae4addd70159c869",
+    "recipes_tinkering.json": "b25885982acbd0fbb6be03733eb3899a15eee3cb7036eb7a537de0c3aad33805",
+    "rooms.json": "3df616a2473923d93204df5942e7e45e9d6a3512ee71ab45a494ef9a364899e7",
+    "save1.json": "624357fa23165a92327567932acd397cf3c9ee7bad72699a95030564021cc3a3",
+    "save2.json": "36b96e8740be355a8d3dc9429073863822de076637c98bc822c4bd5df5fa370c",
+    "save3.json": "905eca9107f36c6ea9881d79c0fe62774adad927c428fcc5d23da6c627668e72",
+    "sfx.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+    "sfx_meta.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+    "shops.json": "e2a9d44818f89ec262ea9eac18b828dac42f5a7645ffabe3178e2c71bda553e9",
+    "skills.json": "776174891eff97ee44ab218d1273a720eed160c63999e898481e2deae85a3134",
+    "statuses.json": "a42ecf6bc1c0daf55a4510e15a80820d08380b7a6f5dc59ef6cb2cd28d51b07c",
+    "theme_styles.json": "2c72dedc17096ecb69faeeae1898bc6b3d8a789589efe28665393d2a7e372e30",
+    "themes.json": "3791656ced44b01c235844e22639803019c52fde9f82b85809dc921a835e18e6",
+    "tuning_puzzles.json": "0d5e0d9a8efcb66234846286c80a9d7490edacefc35a2c25ef5250640f16ff77",
+    "tutorial_scripts.json": "0ff2aa8319d34960b477d34150bd22b8a540413856808a95840f9c16a18d85de",
+    "worlds.json": "71bcfb0710f6f306fa131cb21998e82def11aa0e53fe11041775592fbea84af5"
+  },
+  "route_evidence": {
+    "earned-completionist-route": "All ten World 2 quests passed with earned resources and actual crafts. No World 3 traversal.\nLevel: 6; XP: 3990; AP: 18; party: [nova, zeke, orion, gh0st]\nroom=workshop_yard enemies=[faulted_loader] seed=17 damageEvents=2 xp=35 ap=0 credits=0 persistedHp={nova=120} knockedOut=[] usedItems={}\nroom=admin_security enemies=[acoustic_bulwark] seed=17 damageEvents=1 xp=100 ap=0 credits=40 persistedHp={nova=120} knockedOut=[] usedItems={}\nroom=mine_alpha enemies=[echo_borer, echo_borer] seed=17 damageEvents=18 xp=80 ap=0 credits=20 persistedHp={nova=94} knockedOut=[] usedItems={}\nroom=launch_lift enemies=[acoustic_bulwark, resonance_buoy] seed=17 damageEvents=10 xp=130 ap=0 credits=55 persistedHp={nova=113} knockedOut=[] usedItems={}\nroom=launch_checkpoint enemies=[dominion_dampener, resonance_buoy] seed=17 damageEvents=12 xp=80 ap=0 credits=40 persistedHp={nova=102} knockedOut=[] usedItems={}\nroom=launch_bay enemies=[the_iron_warden] seed=17 damageEvents=11 xp=350 ap=0 credits=225 persistedHp={nova=97} knockedOut=[] usedItems={}\nroom=sector9_canopy enemy=stalker_vine seed=17 outcome=retreat; enemy remains undefeated\nroom=sector9_stream_cave_depths enemies=[echo_borer] seed=17 damageEvents=8 xp=40 ap=0 credits=10 persistedHp={nova=97, zeke=150} knockedOut=[] usedItems={}\nroom=sector9_canopy_ridge enemies=[the_beast] seed=17 damageEvents=33 xp=500 ap=0 credits=250 persistedHp={nova=78, zeke=150, orion=95} knockedOut=[] usedItems={ration_pack=1, medkit=1, medkit_i=1}\nAssistance: []\n",
+    "earned-main-route": "World 2 main route and departure/save parity passed. No World 3 traversal.\nParty: [nova, zeke, orion, gh0st]; level: 6; XP: 3340; AP: 16\nroom=workshop_yard enemies=[faulted_loader] seed=17 damageEvents=2 xp=35 ap=0 credits=0 persistedHp={nova=120} knockedOut=[] usedItems={}\nroom=admin_security enemies=[acoustic_bulwark] seed=17 damageEvents=1 xp=100 ap=0 credits=40 persistedHp={nova=120} knockedOut=[] usedItems={}\nroom=mine_alpha enemies=[echo_borer, echo_borer] seed=17 damageEvents=18 xp=80 ap=0 credits=20 persistedHp={nova=94} knockedOut=[] usedItems={}\nroom=launch_lift enemies=[acoustic_bulwark, resonance_buoy] seed=17 damageEvents=10 xp=130 ap=0 credits=55 persistedHp={nova=113} knockedOut=[] usedItems={}\nroom=launch_checkpoint enemies=[dominion_dampener, resonance_buoy] seed=17 damageEvents=12 xp=80 ap=0 credits=40 persistedHp={nova=102} knockedOut=[] usedItems={}\nroom=launch_bay enemies=[the_iron_warden] seed=17 damageEvents=11 xp=350 ap=0 credits=225 persistedHp={nova=97} knockedOut=[] usedItems={}\nroom=sector9_canopy enemy=stalker_vine seed=17 outcome=retreat; enemy remains undefeated\nroom=sector9_stream_cave_depths enemies=[echo_borer] seed=17 damageEvents=8 xp=40 ap=0 credits=10 persistedHp={nova=97, zeke=150} knockedOut=[] usedItems={}\nroom=sector9_canopy_ridge enemies=[the_beast] seed=17 damageEvents=33 xp=500 ap=0 credits=250 persistedHp={nova=78, zeke=150, orion=95} knockedOut=[] usedItems={ration_pack=1, medkit=1, medkit_i=1}\nAssistance: []\n"
+  },
+  "limits": [
+    "No fresh phone or Maestro execution in this assessment",
+    "No World 3 quest traversal",
+    "Fixed seed 17, supplied puzzle answers and accelerated presentation",
+    "Optional route does not automatically fight every room enemy",
+    "Two existing mocked ExplorationViewModelTest tutorial failures also reproduced with the unchanged HEAD controller; excluded from passing focused batch"
+  ],
+  "build": {
+    "apk": "app/build/outputs/apk/debug/app-debug.apk",
+    "sha256": "5908e30d6dd13aea7fb45edc9381ce48881dd02a7ef6f39a2278c3119bb4bbe0",
+    "version_name": "1.3.100",
+    "version_code": 184,
+    "assemble_debug": "PASS",
+    "desktop_compile_kotlin": "PASS",
+    "pixel_install": "NOT PERFORMED"
+  }
+}

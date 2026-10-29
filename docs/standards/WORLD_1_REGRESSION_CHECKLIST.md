@@ -32,7 +32,7 @@ Companion to [World 1 functional standards](WORLD_1_FUNCTIONAL_STANDARDS.md). Ba
 | R17 — NAR/audio; P2 CB-02; P3 CB-05 | Listen to back-to-back fights: combat starts at beginning, exploration resumes appropriately. Play launch/crash at slow reading speed and rapid advance/skip. Check music ownership and launch/impact SFX that have duplicate authored dispatch sources. | Recording with cue timestamps; note overlaps/restarts/volume jumps. |
 | R18 — handoff; P3 CB-01 | Arrive in World 2 after normal launch: World 1 complete, `w2_mq01` active/tracked, Zeke remains in roster. Finish opening dialogue; talk repeatedly, save/load, talk again. No repeated recruitment, XP/AP or item grants. | Roster/quest/resource comparison and announcement count. |
 | R19 — optional completion | Finish Stash, System Flush, certification, Protocol Override and Lost Shift; cart vault once. Revisit turn-ins/save/load. Reward equals actual inventory/XP/AP changes; no duplicate Lost Shift start notice; unopened branches do not block main route accidentally. | Completionist log and ledger; optional versus required classification. |
-| R20 — later-world dialogue sentinel | Charlie before trust, each intermediate trust state, and after gift: find an exit from every choice menu. Repeat gift selection/revisit. Current baseline has no Leave path and is expected to fail this case. | Record known defect W1-STD-02; do not label it fixed. Audit equivalent NPC loops in Worlds 2–6. |
+| R20 — later-world dialogue sentinel | Charlie before trust, each intermediate trust state, and after gift: find an exit from every choice menu. Repeat gift selection/revisit. October 29 follow-up adds an unconditional step-away choice; verify it closes the actual phone UI without changing trust or granting rewards. | Host exit/reward tests pass; record device result separately for W1-STD-02. Audit equivalent NPC loops in Worlds 2–6. |
 
 Run R07–R12 on desktop as well as Android when claiming cross-platform acceptance. Windows remains a separate execution environment. Repeat critical boundaries with large text/large targets and fast taps; do not infer accessibility from default-size screenshots.
 
@@ -64,7 +64,7 @@ python3 scripts/world1_checkpoints.py
 
 At assessment: Gradle selection passed **118 cases**; checkpoint validation reported **stale source hashes**. The earned-route tests use fixed policies/seeds, supplied puzzle answers and accelerated presentation. Static integrity tests check references/rules but do not execute every UI combination or prove every dialogue loop exits.
 
-Before focused Maestro runs, reconcile/regenerate stale earned fixtures using the workflow in [WORLD1_PLAYTEST.md](../testing/WORLD1_PLAYTEST.md). Do not run `--import-earned` casually: it writes shipped checkpoint assets and is outside this documentation-only audit. Then use the isolated `.playtest` package and all four named suites; two consecutive clean runs on the same build are the existing automation acceptance policy. Source changes invalidate old receipts even if display version is unchanged.
+The October 29 follow-up regenerated all ten earned fixtures and passed freshness validation. For future content changes, regenerate using the workflow in [WORLD1_PLAYTEST.md](../testing/WORLD1_PLAYTEST.md). `--import-earned` writes shipped checkpoint assets; use only captures from a freshly passing production route. Then use the isolated `.playtest` package and all four named suites; two consecutive clean runs on the same build are the existing automation acceptance policy. Source changes invalidate old receipts even if display version is unchanged.
 
 Add focused Android instrumentation for navigation disabled semantics, narrow/enlarged-font ability details, swipe threshold/animation and dialogue reveal. Run actual audio-player instrumentation when claiming track-position correctness. These were not rerun in this assessment.
 
@@ -79,3 +79,21 @@ Add focused Android instrumentation for navigation disabled semantics, narrow/en
 - [ ] For each standard exported to Worlds 2–6, record its evidence and any intentional creative exception.
 
 A world can be the best available reference while these gates remain open. “All documented fixes implemented” is not a substitute for this closure record.
+
+## Next Pixel session — focused order
+
+The October 29 Charlie/checkpoint follow-up passed four dialogue tests and the earned completionist route; all ten checkpoint hashes match current content. These host results do not check the boxes above.
+
+1. **R20:** At Charlie in Overgrown Glade, step away immediately, revisit, advance trust, and step away between stages. After receiving the stone, play/cuddle and leave again; revisit and save/load. Check that navigation returns and the gift does not repeat. Existing trust is preserved; use a separate save to cover earlier stages if needed.
+2. **R08–R11, R15:** Use the Heart checkpoint for consumption/notice order, then escape for radio dialogue, Jed's handoff, rest and popup behavior. Try swiping both directions and fast taps.
+3. **R12–R14:** Read Guard Break, inspect abilities, then fight Warden with an earned build. Record Corrosive Rounds, turn count and perceived challenge.
+4. **R17–R18:** Listen through launch/crash, finish arrival dialogue, talk to Zeke repeatedly and save/load. Verify uninterrupted party membership and no repeat recruitment/rewards.
+5. **R03 and R07:** Spot-check Scrapper quest/trade exits, crowded rails, and navigation visibility while talking. Mark anything not exercised NOT RUN.
+
+Install the normal debug app as an update to preserve personal saves. Checkpoint scenarios create/reset a test session; save personal progress first and use separate slots. Reset-based Maestro automation belongs only in the isolated `.playtest` package.
+
+### Installed build for this session
+
+October 29, 2026: normal debug package `com.junewiregames.starborn.prealpha`, version 1.3.100 (184), built from `cb4c2cf3` plus the uncommitted Charlie/checkpoint follow-up. Installed with `adb install -r` on Pixel 8a / Android 17; existing app data was not cleared. Package update timestamp: `2026-10-29 14:13:37` (device-reported). Cold launch returned `Status: ok` and the app process was present. Local APK SHA-256: `7d98a6406bd057c55a9d9dca56c17ba542307d071ce02cd311b4380edf20285d`.
+
+Fresh preflight: five selected host tests passed; ten earned checkpoints validated; Maestro structure passed (132 flows, 301 references). The escape flow now selects the current **Rest action** service instead of the removed cargo-lift description link. Maestro was structurally validated, not executed on the phone. All focused human acceptance cases remain NOT RUN pending this session.

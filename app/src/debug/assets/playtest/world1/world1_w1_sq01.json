@@ -106,6 +106,7 @@
     "opening_gear_offer",
     "gear_equip_basics",
     "scene_market_locator",
+    "menu_save",
     "tut_nova_first_ap_v1"
   ],
   "tutorialCompleted": [
@@ -157,7 +158,8 @@
     "w1_mq01_cryo_inductor_repaired",
     "w1_mq01_patch_flux_liner",
     "w1_mq01_confirm_governor",
-    "w1_mq01_cutter_surge"
+    "w1_mq01_cutter_surge",
+    "w1_mq02_save_prompt_after_workshop"
   ],
   "pendingEventCinematics": [],
   "pendingBattleJson": "",

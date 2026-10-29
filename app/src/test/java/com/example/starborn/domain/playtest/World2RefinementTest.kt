@@ -14,6 +14,94 @@ import java.io.File
 import java.nio.file.Files
 
 class World2RefinementTest {
+    @Test fun orionStillOffersBothSideQuestsAfterTheHangarIsInspected() {
+        val h = Harness(GameSessionState(activeQuests = setOf("w2_mq05"),
+            completedQuests = setOf("w2_mq01", "w2_mq03", "w2_mq04"),
+            completedMilestones = setOf("ms_w2_mq03_complete", "ms_w2_mq04_complete", "ms_w2_gate_bypassed"),
+            questTasksCompleted = mapOf("w2_mq05" to setOf("bypass_source_gate", "inspect_astra"))))
+        val tideglass = requireNotNull(h.dialogue.startDialogue("Orion"))
+        assertEquals("orion_w2_sq03_intro_1", tideglass.current()?.id)
+        tideglass.choose("orion_w2_sq03_accept")
+        val echoes = requireNotNull(h.dialogue.startDialogue("Orion"))
+        assertEquals("orion_w2_sq04_intro_1", echoes.current()?.id)
+        echoes.choose("orion_w2_sq04_accept")
+        assertTrue(h.state.activeQuests.containsAll(listOf("w2_mq05", "w2_sq03", "w2_sq04")))
+    }
+
+    @Test fun kaelenFavorRequiresTheFullBundleAndPaysOnlyOnce() {
+        val asked = setOf("ms_kaelen_favor_asked", "ms_kaelen_talked")
+        val h = Harness(GameSessionState(completedMilestones = asked,
+            inventory = mapOf("herb" to 1, "beast_meat" to 1)))
+        h.action("w2_kaelen_favor_turnin")
+        assertEquals(mapOf("herb" to 1, "beast_meat" to 1), h.state.inventory)
+        assertEquals(0, h.state.playerXp)
+        assertFalse("ms_kaelen_favor_completed" in h.state.completedMilestones)
+        h.store.setInventory(mapOf("herb" to 2, "beast_meat" to 1))
+        h.action("w2_kaelen_favor_turnin")
+        assertEquals(mapOf("precision_sight" to 1), h.state.inventory)
+        assertEquals(150, h.state.playerXp)
+        assertEquals(200, h.state.playerCredits)
+        val rewarded = h.state
+        h.action("w2_kaelen_favor_turnin")
+        assertEquals(rewarded, h.state)
+    }
+
+    @Test fun solvedGateStatesRestoreForExistingSavesWithoutRewards() {
+        for ((room, milestone, key) in listOf(
+            Triple("sector9_temple_gate", "ms_w2_mq02_complete", "temple_open"),
+            Triple("sector9_source_gate", "ms_w2_gate_bypassed", "barrier_resolved"))) {
+            val unsolved = Harness(GameSessionState(roomId = room))
+            unsolved.events.handleTrigger("enter_room", EventPayload.EnterRoom(room))
+            assertFalse(unsolved.state.roomStates[room]?.get(key) == true)
+            val solved = Harness(GameSessionState(roomId = room, completedMilestones = setOf(milestone)))
+            repeat(2) { solved.events.handleTrigger("enter_room", EventPayload.EnterRoom(room)) }
+            assertEquals(true, solved.state.roomStates[room]?.get(key))
+            assertEquals(0, solved.state.playerXp)
+            assertTrue(solved.state.inventory.isEmpty())
+        }
+    }
+
+    @Test fun localConversationLoopsHaveAnExitBeforeAndAfterTheirFavors() {
+        for ((speaker, leave) in listOf("David" to "david_opt_leave", "Penny" to "penny_opt_leave",
+            "Megan" to "megan_opt_leave")) {
+            for (milestones in listOf(emptySet(), setOf("ms_penny_wrestle_completed",
+                "ms_megan_wetland_favor_asked", "ms_megan_wetland_favor_completed"))) {
+                val h = Harness(GameSessionState(completedMilestones = milestones))
+                val session = requireNotNull(h.dialogue.startDialogue(speaker))
+                assertTrue(session.choices().any { it.id == leave })
+                val before = h.state
+                session.choose(leave)
+                assertTrue(session.isFinished())
+                assertEquals(before, h.state)
+            }
+        }
+        val h = Harness(GameSessionState())
+        val penny = requireNotNull(h.dialogue.startDialogue("Penny"))
+        penny.choose("penny_opt_wrestle"); penny.advance(); penny.choose("penny_opt_leave")
+        repeat(2) {
+            val again = requireNotNull(h.dialogue.startDialogue("Penny"))
+            assertFalse(again.choices().any { it.id == "penny_opt_wrestle" })
+            again.choose("penny_opt_play_again"); again.advance(); again.choose("penny_opt_leave")
+            assertTrue(again.isFinished())
+        }
+        assertEquals(1, h.state.inventory["pennys_herder_bandana"])
+        assertEquals(50, h.state.playerXp)
+    }
+
+    @Test fun kaelenHazardRemindersDoNotRepeatFirstMeetingSupplies() {
+        val h = Harness(GameSessionState())
+        val first = requireNotNull(h.dialogue.startDialogue("Scout Kaelen"))
+        first.choose("kaelen_opt_advice"); first.advance(); first.advance()
+        assertTrue(first.isFinished())
+        repeat(3) {
+            val reminder = requireNotNull(h.dialogue.startDialogue("Scout Kaelen"))
+            reminder.choose("kaelen_opt_remind_advice"); reminder.advance()
+            assertTrue(reminder.isFinished())
+        }
+        assertEquals(1, h.state.inventory["antidote_flask"])
+        assertEquals(1, h.state.inventory["ration_pack"])
+    }
+
     @Test fun beastCanRetryAfterDefeatRetreatAndAnOldConsumedEvent() {
         val h = Harness(GameSessionState(activeQuests = setOf("w2_mq04"),
             questTasksCompleted = mapOf("w2_mq04" to setOf("confront_stalker")),
@@ -211,6 +299,14 @@ class World2RefinementTest {
             onSpawnEncounter = { _, _ -> spawns++ },
             onPlayCinematic = { id, done -> scenes[id] = done },
             onGiveXp = { store.addXp(it) },
+            onReward = { reward -> reward.credits?.let(store::addCredits) },
+            onTakeItem = { id, qty ->
+                val count = state.inventory.getOrDefault(id, 0)
+                if (count < qty) false else {
+                    store.setInventory(if (count == qty) state.inventory - id else state.inventory + (id to count - qty))
+                    true
+                }
+            },
             onGiveItem = { id, qty -> store.setInventory(state.inventory + (id to (state.inventory.getOrDefault(id, 0) + qty))) },
             onQuestTaskUpdated = { q, t -> if (q != null && t != null) store.setQuestTaskCompleted(q, t, true) },
             onQuestStageAdvanced = { q, s -> if (q != null && s != null) store.setQuestStage(q, s) },

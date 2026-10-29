@@ -14,7 +14,7 @@
     "nova": 4
   },
   "partyMemberHp": {
-    "nova": 110
+    "nova": 94
   },
   "trackedQuestId": "w1_mq04",
   "activeQuests": [
@@ -44,6 +44,7 @@
     "ms_w1_mq01_complete",
     "ms_w1_mq02_clearance_ordered",
     "ms_w1_sq01_started",
+    "ms_w1_mq02_jed_advised",
     "ms_w1_sq01_cache_opened",
     "ms_w1_sq01_complete",
     "ms_w1_sq02_started",
@@ -93,6 +94,7 @@
   "unlockedSkills": [
     "nova_arc_tether",
     "nova_cryo_vent",
+    "nova_hydraulic_kick",
     "nova_blast_wave"
   ],
   "unlockedWeapons": [
@@ -130,7 +132,7 @@
     "nova_flux_liner": 1,
     "scrap_metal": 2,
     "ration_pack": 7,
-    "medkit_i": 4,
+    "medkit_i": 5,
     "pulse_grenade": 3,
     "mod_corrosive_rounds": 1,
     "mine_access_badge": 1,
@@ -138,7 +140,7 @@
     "armor_plate": 1,
     "hydraulic_fluid": 1,
     "heavy_gear": 1,
-    "beast_meat": 1,
+    "beast_meat": 2,
     "recoil_dampener": 1,
     "crew_datapad": 1,
     "tuning_fork": 1
@@ -162,7 +164,9 @@
     "opening_gear_offer",
     "gear_equip_basics",
     "scene_market_locator",
+    "menu_save",
     "tut_nova_first_ap_v1",
+    "mod_slots_basics",
     "source_art_unlock"
   ],
   "tutorialCompleted": [
@@ -302,13 +306,16 @@
     "w1_mq01_patch_flux_liner",
     "w1_mq01_confirm_governor",
     "w1_mq01_cutter_surge",
+    "w1_mq02_save_prompt_after_workshop",
     "w1_sq01_find_stash",
     "w1_sq01_open_rebel_cache",
     "w1_sq02_enter_vents",
     "w1_sq02_patch_vent",
     "w1_sq02_reroute_airflow",
     "w1_sq02_clear_toxic_blockage",
+    "w1_mod_acquired_tutorial",
     "w1_mq02_approach_checkpoint",
+    "w1_mq02_mod_slots_tutorial",
     "w1_mq02_reach_booth",
     "w1_mq03_logistics_commitment_warning",
     "w1_mq03_enter_logistics_sector",

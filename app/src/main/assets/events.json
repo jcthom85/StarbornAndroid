@@ -3720,6 +3720,12 @@
     ],
     "actions": [
       {
+        "type": "set_room_state",
+        "room_id": "sector9_temple_gate",
+        "state_key": "temple_open",
+        "value": true
+      },
+      {
         "type": "audio_layer",
         "layer": "stinger",
         "cue_id": "sfx_w2_chime_gate",
@@ -16144,6 +16150,12 @@
     ],
     "actions": [
       {
+        "type": "set_room_state",
+        "room_id": "sector9_source_gate",
+        "state_key": "barrier_resolved",
+        "value": true
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w2_mq05",
         "task_id": "bypass_source_gate"
@@ -16296,12 +16308,6 @@
         "scene_id": "scene_w2_astra_departure",
         "on_complete": [
           {
-            "type": "audio_layer",
-            "layer": "stinger",
-            "cue_id": "sfx_w2_astra_launch",
-            "fade_ms": 0
-          },
-          {
             "type": "set_quest_task_done",
             "quest_id": "w2_mq05",
             "task_id": "launch_ship"
@@ -16396,5 +16402,138 @@
       }
     ],
     "repeatable": true
+  },
+  {
+    "id": "w2_restore_temple_open",
+    "repeatable": true,
+    "trigger": {
+      "type": "enter_room",
+      "room": "sector9_temple_gate"
+    },
+    "conditions": [
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_mq02_complete"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "sector9_temple_gate",
+        "state_key": "temple_open",
+        "value": true
+      }
+    ]
+  },
+  {
+    "id": "w2_restore_barrier_resolved",
+    "repeatable": true,
+    "trigger": {
+      "type": "enter_room",
+      "room": "sector9_source_gate"
+    },
+    "conditions": [
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w2_gate_bypassed"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "sector9_source_gate",
+        "state_key": "barrier_resolved",
+        "value": true
+      }
+    ]
+  },
+  {
+    "id": "w2_kaelen_favor_turnin",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_kaelen_favor_turnin"
+    },
+    "conditions": [
+      {
+        "type": "milestone_set",
+        "milestone": "ms_kaelen_favor_asked"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_kaelen_favor_completed"
+      },
+      {
+        "type": "item",
+        "item_id": "herb",
+        "quantity": 2
+      },
+      {
+        "type": "item",
+        "item_id": "beast_meat",
+        "quantity": 1
+      }
+    ],
+    "actions": [
+      {
+        "type": "take_required_item",
+        "item_id": "herb",
+        "quantity": 2
+      },
+      {
+        "type": "take_required_item",
+        "item_id": "beast_meat",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "precision_sight",
+        "quantity": 1
+      },
+      {
+        "type": "give_xp",
+        "xp": 150
+      },
+      {
+        "type": "give_reward",
+        "credits": 200
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_kaelen_favor_completed"
+      },
+      {
+        "type": "show_message",
+        "message": "Kaelen: Real greens and roasted beast meat? By the stars, that smells better than anything Dominion ever packed into a ration tube. A deal's a deal. Here\u2014take this Precision Sight from my optic rig. It'll keep your shots centered when the wind whips across the ridge."
+      }
+    ]
+  },
+  {
+    "id": "w2_kaelen_favor_missing_herbs",
+    "repeatable": true,
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_kaelen_favor_turnin"
+    },
+    "conditions": [
+      {
+        "type": "milestone_set",
+        "milestone": "ms_kaelen_favor_asked"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_kaelen_favor_completed"
+      },
+      {
+        "type": "item_not",
+        "item_id": "herb",
+        "quantity": 2
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "Kaelen still needs two herbs and one cut of beast meat. Bring the full bundle before trading for the Precision Sight."
+      }
+    ]
   }
 ]

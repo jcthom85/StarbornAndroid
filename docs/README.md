@@ -25,6 +25,10 @@ Use document roles rather than one hierarchy for every question:
 
 ## Current work
 
+World 2 playtesting: use the [current completionist walkthrough](playtest/walkthroughs/WORLD_2_COMPLETIONIST_WALKTHROUGH.md) or its [downloadable PDF](playtest_guides/STARBORN_PLAYTEST_GUIDE_WORLD_2.pdf), refreshed October 29 for version 1.3.100 (184). The guide documents known limitations separately from verified routes.
+
+October 29: [World 2 readiness assessment](testing/WORLD2_READINESS_2026-10-29.md) compares the current chapter with World 1's functional standards, records bounded fixes and earned-route evidence, and provides a [focused phone checklist](playtest/WORLD_2_FOCUSED_CHECKLIST.md). Phone acceptance and the shared Rapid Capacitor wording decision remain open.
+
 October 19: [World 1 review](testing/WORLD1_REVIEW_2026-10-19.md) records opening/escape corrections, early-Warden recovery, all ten quests on a production controller route, 71 focused passing tests, build evidence and remaining human acceptance. World 1 is not yet signed off.
 
 October 19: [pre-World 1 readiness](testing/PRE_WORLD1_READINESS_2026-10-19.md) records the bounded Android progression smoke pass, copied legacy-save check, and remaining human acceptance before the World 1 review.

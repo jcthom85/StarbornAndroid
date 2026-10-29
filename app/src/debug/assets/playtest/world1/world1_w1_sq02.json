@@ -37,6 +37,7 @@
     "ms_w1_mq01_complete",
     "ms_w1_mq02_clearance_ordered",
     "ms_w1_sq01_started",
+    "ms_w1_mq02_jed_advised",
     "ms_w1_sq01_cache_opened",
     "ms_w1_sq01_complete"
   ],
@@ -53,6 +54,7 @@
     "ms_w1_mq01_complete",
     "ms_w1_mq02_clearance_ordered",
     "ms_w1_sq01_started",
+    "ms_w1_mq02_jed_advised",
     "ms_w1_sq01_cache_opened",
     "ms_w1_sq01_complete"
   ],
@@ -113,6 +115,7 @@
     "opening_gear_offer",
     "gear_equip_basics",
     "scene_market_locator",
+    "menu_save",
     "tut_nova_first_ap_v1"
   ],
   "tutorialCompleted": [
@@ -174,6 +177,7 @@
     "w1_mq01_patch_flux_liner",
     "w1_mq01_confirm_governor",
     "w1_mq01_cutter_surge",
+    "w1_mq02_save_prompt_after_workshop",
     "w1_sq01_find_stash",
     "w1_sq01_open_rebel_cache"
   ],

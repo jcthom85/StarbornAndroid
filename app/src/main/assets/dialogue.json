@@ -906,20 +906,6 @@
     "condition": "quest_active:w2_mq01,quest_task_done:w2_mq01:stabilize_zeke,quest_task_not_done:w2_mq01:follow_stream"
   },
   {
-    "id": "zeke_w2_post_orion_idle",
-    "speaker": "Zeke",
-    "emote": "worried",
-    "text": "He asked what happened to the people who were supposed to wake him. I could tell him what the records say. I cannot make myself call it a retirement.",
-    "condition": "milestone:ms_w2_mq03_complete,milestone_not_set:ms_w2_mq04_complete"
-  },
-  {
-    "id": "zeke_w2_post_ghost_idle",
-    "speaker": "Zeke",
-    "emote": "worried",
-    "text": "He waited for the ground lead, then offered his hand. A Dominion weapon chose to help. I am still keeping the wrench nearby, but... I noticed.",
-    "condition": "milestone:ms_w2_mq04_complete,milestone_not_set:ms_w2_mq05_complete"
-  },
-  {
     "id": "zeke_astra_bridge_idle",
     "speaker": "Zeke",
     "emote": "confident",
@@ -956,7 +942,7 @@
     "speaker": "Zeke",
     "text": "Five specimens, five responses. They follow vibration, not our heat. Good. We can choose where to make noise. Take these stabilizers; I saved two from the kit.",
     "condition": "quest_active:w2_sq01,quest_task_done:w2_sq01:scan_flora_1,quest_task_done:w2_sq01:scan_flora_2,quest_task_done:w2_sq01:scan_flora_3,quest_task_done:w2_sq01:scan_flora_4,quest_task_done:w2_sq01:scan_flora_5",
-    "trigger": "give_xp:100,complete_quest:w2_sq01,give_item:painkillers*2"
+    "trigger": "set_quest_task_done:w2_sq01:report_to_zeke,give_xp:100,complete_quest:w2_sq01,give_item:painkillers*2"
   },
   {
     "id": "zeke_w2_sq01_intro_1",
@@ -976,6 +962,20 @@
     ]
   },
   {
+    "id": "zeke_w2_post_orion_idle",
+    "speaker": "Zeke",
+    "emote": "worried",
+    "text": "He asked what happened to the people who were supposed to wake him. I could tell him what the records say. I cannot make myself call it a retirement.",
+    "condition": "milestone:ms_w2_mq03_complete,milestone_not_set:ms_w2_mq04_complete"
+  },
+  {
+    "id": "zeke_w2_post_ghost_idle",
+    "speaker": "Zeke",
+    "emote": "worried",
+    "text": "He waited for the ground lead, then offered his hand. A Dominion weapon chose to help. I am still keeping the wrench nearby, but... I noticed.",
+    "condition": "milestone:ms_w2_mq04_complete,milestone_not_set:ms_w2_mq05_complete"
+  },
+  {
     "id": "orion_w2_mq05_gate_1",
     "speaker": "Orion",
     "text": "Four feeds hold the barrier: horn vibration, an ungrounded cup, root pressure, and live breakers. Fix those first.",
@@ -985,7 +985,7 @@
     "id": "orion_w2_mq05_gate_success",
     "speaker": "Orion",
     "text": "There. The system can breathe again, and the barrier has nothing left to hold.",
-    "condition": "quest_active:w2_mq05,quest_task_done:w2_mq05:bypass_source_gate",
+    "condition": "quest_active:w2_mq05,quest_task_done:w2_mq05:bypass_source_gate,quest_task_not_done:w2_mq05:inspect_astra",
     "trigger": "player_action:w2_mq05_bypass_gate"
   },
   {
@@ -1918,7 +1918,12 @@
     "trigger": "give_item:antidote_flask,give_item:ration_pack,set_milestone:ms_kaelen_talked"
   },
   {
-    "id": "kaelen_repeat",
+    "id": "kaelen_repeat_advice",
+    "speaker": "Scout Kaelen",
+    "text": "Stay clear of the razor-vines unless you have a thermal blade or a cauterizing torch. Cold steel just pops their spore pods, and the neurotoxin will melt your lungs. And if you hear low hums in the mist\u2014run. The Beast patrols the high ridge, and it hunts by acoustics."
+  },
+  {
+    "id": "kaelen_repeat_default_talk",
     "speaker": "Scout Kaelen",
     "text": "Keep your boots dry and your blade sharp, Nova. The tide turns fast on this coast.",
     "condition": "milestone:ms_kaelen_talked",
@@ -1944,7 +1949,7 @@
       {
         "id": "kaelen_opt_remind_advice",
         "text": "Remind me about the coastal hazards.",
-        "next": "kaelen_advice_reply"
+        "next": "kaelen_repeat_advice"
       }
     ]
   },
@@ -1998,21 +2003,21 @@
     "speaker": "Scout Kaelen",
     "text": "Managing, but my rations are down to dry kelp and mineral silt. My knee took a bad torque during the crash, so hunting shard-hounds in the thickets is out. If you bring me 2 herbs and 1 cut of beast meat, I'll tune your weapon with my sniper division's custom precision sight.",
     "trigger": "set_milestone:ms_kaelen_favor_asked",
-    "next": "kaelen_repeat"
+    "next": "kaelen_repeat_default_talk"
   },
   {
     "id": "kaelen_favor_turnin",
     "speaker": "Scout Kaelen",
-    "text": "Real greens and roasted beast meat? By the stars, that smells better than anything Dominion ever packed into a ration tube. A deal's a deal. Here—take this Precision Sight from my optic rig. It'll keep your shots centered when the wind whips across the ridge.",
-    "trigger": "take_item:herb*2,take_item:beast_meat*1,give_item:precision_sight,give_xp:150,give_credits:200,set_milestone:ms_kaelen_favor_completed",
-    "next": "kaelen_repeat"
+    "text": "Let's check the supplies first. I need two herbs and one cut of beast meat for the sight.",
+    "trigger": "player_action:w2_kaelen_favor_turnin",
+    "next": "kaelen_repeat_default_talk"
   },
   {
     "id": "kaelen_patrol_acknowledged",
     "speaker": "Scout Kaelen",
     "text": "That cutter... it belonged to Sergeant Leto. So none of them made it out of the glade. I suspected as much when their telemetry flatlined six months ago, but hearing it hurts all the same. Thank you for putting their memory to rest, Nova. Leto would want that cutter in the hands of someone fighting the real enemy. Take this spare battery and salvage.",
     "trigger": "give_item:battery_pack,give_item:scrap_metal*3,give_xp:120,set_milestone:ms_kaelen_patrol_acknowledged",
-    "next": "kaelen_repeat"
+    "next": "kaelen_repeat_default_talk"
   },
   {
     "id": "forge_hand_rylan_default_talk",
@@ -2318,6 +2323,10 @@
         "id": "david_opt_nancy",
         "text": "How do you keep this whole camp running so neatly?",
         "next": "david_nancy_reply"
+      },
+      {
+        "id": "david_opt_leave",
+        "text": "Thanks, David. I should get going."
       }
     ]
   },
@@ -2543,6 +2552,10 @@
         "text": "[Sit on the moss and let Charlie curl up beside you]",
         "condition": "milestone:ms_charlie_trust_3",
         "next": "charlie_cuddle_reply"
+      },
+      {
+        "id": "charlie_opt_leave",
+        "text": "[Give Charlie some space and step away]"
       }
     ]
   },
@@ -2729,6 +2742,10 @@
         "id": "penny_opt_soothe",
         "text": "[Give Penny gentle ear scratches and reassure her the pack is safe]",
         "next": "penny_soothe_reply"
+      },
+      {
+        "id": "penny_opt_leave",
+        "text": "[Let Penny settle back beside the campfire]"
       }
     ]
   },
@@ -2787,6 +2804,10 @@
         "text": "I've brought the chemical catalyst and nano-filaments for the filters.",
         "condition": "milestone:ms_megan_wetland_favor_asked,milestone_not_set:ms_megan_wetland_favor_completed,item:chemical_catalyst,item:nano_filament",
         "next": "megan_favor_turnin"
+      },
+      {
+        "id": "megan_opt_leave",
+        "text": "Thanks, Megan. I should get going."
       }
     ]
   },

@@ -105,8 +105,7 @@
     "swipe_move",
     "opening_gear_offer",
     "gear_equip_basics",
-    "scene_market_locator",
-    "tut_nova_first_ap_v1"
+    "scene_market_locator"
   ],
   "tutorialCompleted": [
     "swipe_move",

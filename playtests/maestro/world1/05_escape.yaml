@@ -15,10 +15,11 @@ appId: ${APP_ID}
     env:
       DIRECTION: north
       ROOM: launch_lift
-- runFlow:
-    file: _shared/action.yaml
-    env:
-      ACTION: cargo lift
+# Rest is a dedicated service button, not a room-description link.
+- extendedWaitUntil:
+    visible: Rest action
+    timeout: 15000
+- tapOn: Rest action
 - extendedWaitUntil:
     visible: Tap anywhere to continue
     timeout: 15000

@@ -401,6 +401,88 @@ class LegalRouteCampaignRunnerTest {
     }
 
     @Test
+    fun bunkLightImmediatelyEndsOpeningFadeAndItsPresentationPause() {
+        for (afterNaturalFade in listOf(false, true)) {
+            val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope, openingFade = true)
+            try {
+                val fade = requireNotNull(h.explorationVm.uiState.value.fadeOverlay)
+                assertTrue(h.explorationVm.uiState.value.forceBlackScreen)
+                if (afterNaturalFade) {
+                    h.explorationVm.onFadeOverlayFinished(fade.id)
+                    h.settle()
+                }
+                val beforeTap = testDispatcher.scheduler.currentTime
+                val light = h.explorationVm.uiState.value.actions.single { it.name == "bunk light" }
+                h.explorationVm.onActionSelected(light)
+                h.settle()
+                assertEquals("Light must not wait for fade or its 2.2 second pause",
+                    beforeTap, testDispatcher.scheduler.currentTime)
+                assertNull(h.explorationVm.uiState.value.fadeOverlay)
+                assertFalse(h.explorationVm.uiState.value.forceBlackScreen)
+                assertTrue(h.explorationVm.uiState.value.narrationPrompt?.message
+                    ?.startsWith("The bunk light coughs on") == true)
+                assertTrue("West door lock appears with the lit room",
+                    "west" in h.explorationVm.uiState.value.blockedDirections)
+                val lit = h.sessionStore.state.value
+                // An obsolete renderer completion must not restart or repeat the opening.
+                h.explorationVm.onFadeOverlayFinished(fade.id)
+                h.settle()
+                assertEquals(lit, h.sessionStore.state.value)
+            } finally { h.close() }
+        }
+    }
+
+    @Test
+    fun productionWorld2ReachesItsDepartureWithEarnedCrewAndSaveParity() {
+        useProductionCrewRules = true
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
+        try {
+            val agent = LegalCampaignAgent(h)
+            agent.playWorld1()
+            agent.playWorld2()
+            val state = h.saveSlot(7)
+            assertEquals("spire_sewers_landing", state.roomId)
+            assertTrue(state.completedQuests.containsAll((1..5).map { "w2_mq%02d".format(it) }))
+            assertTrue(state.partyMembers.containsAll(listOf("nova", "zeke", "orion", "gh0st")))
+            assertTrue("nova_link" in state.unlockedSkills)
+            assertTrue("ms_w2_bridge_installed" in state.completedMilestones)
+            assertFalse(state.inventory.containsKey("bridge_relic"))
+            assertTrue("w3_mq11" in state.activeQuests)
+            assertEquals("w3_mq11", state.trackedQuestId)
+            assertTrue(state.pendingEventCinematics.isEmpty())
+            assertTrue("World 2 requires no assisted actions", assistance.isEmpty())
+            assertEquals(state, h.loadSlot(7))
+            File("build/reports/world2-readiness/earned-main-route.txt").apply {
+                requireNotNull(parentFile).mkdirs()
+                writeText("World 2 main route and departure/save parity passed. No World 3 traversal.\n" +
+                    "Party: ${state.partyMembers}; level: ${state.playerLevel}; XP: ${state.playerXp}; AP: ${state.playerAp}\n" +
+                    publicCombats.joinToString("\n") + "\nAssistance: $assistance\n")
+            }
+        } finally { h.close() }
+    }
+
+    @Test
+    fun productionWorld2CompletionistRouteFinishesAllTenQuests() {
+        useProductionCrewRules = true
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
+        try {
+            val agent = LegalCampaignAgent(h)
+            agent.playWorld1()
+            agent.playWorld2(completionist = true)
+            val state = h.saveSlot(7)
+            assertTrue(state.completedQuests.containsAll((1..5).flatMap { listOf("w2_mq%02d".format(it), "w2_sq%02d".format(it)) }))
+            assertTrue("No assisted movement, actions or combat", assistance.isEmpty())
+            assertEquals(state, h.loadSlot(7))
+            File("build/reports/world2-readiness/earned-completionist-route.txt").apply {
+                requireNotNull(parentFile).mkdirs()
+                writeText("All ten World 2 quests passed with earned resources and actual crafts. No World 3 traversal.\n" +
+                    "Level: ${state.playerLevel}; XP: ${state.playerXp}; AP: ${state.playerAp}; party: ${state.partyMembers}\n" +
+                    publicCombats.joinToString("\n") + "\nAssistance: $assistance\n")
+            }
+        } finally { h.close() }
+    }
+
+    @Test
     fun earnedWorld1LaunchCheckpointResumesThroughActualCombatAndSaveReload() {
         useProductionCrewRules = true
         val reader = AssetJsonReader(DesktopAssetProvider(listOf(assets, File(root, "app/src/debug/assets"))), moshi)
@@ -1070,7 +1152,7 @@ class LegalRouteCampaignRunnerTest {
             assertTrue("w2_mq01 active", harness.sessionStore.state.value.activeQuests.contains("w2_mq01"))
         }
 
-        fun playWorld2() {
+        fun playWorld2(completionist: Boolean = false) {
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w2_mq01"))
             talkToNpc("Zeke")
             performAction("w2_mq01_examine_pod")
@@ -1079,13 +1161,18 @@ class LegalRouteCampaignRunnerTest {
             navigateLegalPath("sector9_landing_stream")
             assertTrue("w2_mq01 completed", harness.sessionStore.state.value.completedQuests.contains("w2_mq01"))
 
-            // MQ02: The Signal
+            // MQ02: The Signal; the dialogue must be reachable from the actual NPC rail.
+            assertTrue("Zeke visible at Stream Bank", "zeke" in harness.explorationVm.uiState.value.npcs)
             talkToNpc("Zeke")
             navigateLegalPath("sector9_canopy")
             harness.playPublicEncounter("stalker_vine", retreat = true)
             navigateLegalPath("sector9_stream_cave_depths")
             harness.playPublicEncounter("echo_borer")
             navigateLegalPath("sector9_temple_gate")
+            harness.explorationVm.travel("east")
+            harness.settle()
+            assertEquals("Temple Gate must physically block entry before authentication",
+                "sector9_temple_gate", harness.sessionStore.state.value.roomId)
             performAction("w2_mq02_use_chime")
             assertTrue("w2_mq02 completed", harness.sessionStore.state.value.completedQuests.contains("w2_mq02"))
             assertTrue("w2_mq03 active", harness.sessionStore.state.value.activeQuests.contains("w2_mq03"))
@@ -1108,6 +1195,8 @@ class LegalRouteCampaignRunnerTest {
             assertTrue("Orion joins party", harness.sessionStore.state.value.partyMembers.contains("orion"))
             assertTrue("w2_mq04 active", harness.sessionStore.state.value.activeQuests.contains("w2_mq04"))
 
+            if (completionist) completeWorld2EarlySideQuests()
+
             // MQ04: The Hunter (Source Beast & Gh0st joins)
             navigateLegalPath("sector9_ridge_plateau")
             harness.restAtVisibleStop()
@@ -1115,13 +1204,34 @@ class LegalRouteCampaignRunnerTest {
             performAction("w2_mq04_confront")
             performAction("w2_mq04_beast_ambush")
             harness.playPublicEncounter("the_beast", pending = true)
+            assertTrue("Recruited Gh0st visible for later Stolen Tech offer",
+                "gh0st" in harness.explorationVm.uiState.value.npcs)
             performAction("w2_mq04_anchor_drill")
             assertTrue("w2_mq04 completed", harness.sessionStore.state.value.completedQuests.contains("w2_mq04"))
             assertTrue("Gh0st joins party", harness.sessionStore.state.value.partyMembers.contains("gh0st"))
             assertTrue("w2_mq05 active", harness.sessionStore.state.value.activeQuests.contains("w2_mq05"))
 
+            if (completionist) {
+                assertTrue("Gh0st must be tappable for Stolen Tech", "gh0st" in harness.explorationVm.uiState.value.npcs)
+                talkToNpc("Gh0st", "ghost_w2_sq05_accept")
+                navigateLegalPath("sector9_vents_gantry")
+                performAction("w2_sq05_hack_grid"); finishDialogue("correct")
+                navigateLegalPath("sector9_vents_access_grate")
+                performAction("w2_sq05_bypass_guards")
+                navigateLegalPath("sector9_vents_tech_alcove")
+                performAction("w2_sq05_search_vents")
+                harness.explorationVm.useInventoryItem("schematic_rapid_capacitor")
+                harness.settle()
+                craftItem("mod_rapid_capacitor", "rapid_capacitor")
+                assertTrue("w2_sq05" in harness.sessionStore.state.value.completedQuests)
+            }
+
             // MQ05: Liftoff to Spire
             navigateLegalPath("sector9_source_gate")
+            harness.explorationVm.travel("east")
+            harness.settle()
+            assertEquals("Source Gate must physically block entry before its puzzle",
+                "sector9_source_gate", harness.sessionStore.state.value.roomId)
             navigateLegalPath("sector9_gate_emitter_left")
             performAction("w2_mq05_stabilize_horn")
             navigateLegalPath("sector9_gate_emitter_right")
@@ -1146,6 +1256,48 @@ class LegalRouteCampaignRunnerTest {
             }
             assertTrue("w2_mq05 completed", harness.sessionStore.state.value.completedQuests.contains("w2_mq05"))
             assertEquals("spire_sewers_landing", harness.sessionStore.state.value.roomId)
+        }
+
+        private fun completeWorld2EarlySideQuests() {
+            navigateLegalPath("sector9_stasis_chamber")
+            assertTrue("Botanist giver remains reachable", "zeke" in harness.explorationVm.uiState.value.npcs)
+            talkToNpc("Zeke", "zeke_w2_sq01_accept")
+            navigateLegalPath("sector9_source_gate")
+            assertTrue("Orion offers optional quests before Hunter completion", "orion" in harness.explorationVm.uiState.value.npcs)
+            talkToNpc("Orion", "orion_w2_sq03_accept")
+            talkToNpc("Orion", "orion_w2_sq04_accept")
+            assertTrue("Optional offers should start all three quests; active=${harness.sessionStore.state.value.activeQuests}",
+                harness.sessionStore.state.value.activeQuests.containsAll(listOf("w2_sq01", "w2_sq03", "w2_sq04")))
+            navigateLegalPath("sector9_crash_site"); performAction("w2_sq01_scan_moss")
+            navigateLegalPath("sector9_canopy")
+            performAction("w2_sq01_scan_ferns"); performAction("w2_sq01_scan_spores")
+            performAction("w2_sq02_trace_alpha")
+            navigateLegalPath("sector9_wilds_hollow"); performAction("w2_sq02_trace_beta")
+            navigateLegalPath("sector9_ridge_sniper_perch"); performAction("w2_sq02_trace_gamma")
+            // Take the long loop; the east Canopy Walk shortcut still needs the cutter we are repairing.
+            navigateLegalPath("sector9_wilds_archway")
+            navigateLegalPath("sector9_wilds_dense_brush")
+            navigateLegalPath("sector9_wilds_clearance"); performAction("w2_sq02_recover_transceiver")
+            harness.explorationVm.useInventoryItem("schematic_thermal_cutter"); harness.settle()
+            craftItem("repair_thermal_cutter", "thermal_cutter")
+            navigateLegalPath("sector9_beach_pools")
+            performAction("w2_sq01_scan_weeds"); performAction("w2_sq03_gather_tideglass")
+            harness.explorationVm.useInventoryItem("schematic_source_resin"); harness.settle()
+            craftItem("mod_source_resin", "source_resin")
+            navigateLegalPath("sector9_temple_left_wing"); performAction("w2_sq04_crystal_west")
+            navigateLegalPath("sector9_temple_right_wing"); performAction("w2_sq04_crystal_east")
+            navigateLegalPath("sector9_hall_acoustics_lab"); performAction("w2_sq04_crystal_north")
+            navigateLegalPath("sector9_hall_of_echoes"); performAction("w2_sq04_complete"); finishDialogue("correct")
+            navigateLegalPath("sector9_stasis_chamber"); performAction("w2_sq01_scan_roots")
+            assertTrue("Botanist must remain active until its reward turn-in", "w2_sq01" in harness.sessionStore.state.value.activeQuests)
+            val beforeTurnIn = harness.sessionStore.state.value.playerXp
+            val beforeStabilizers = harness.sessionStore.state.value.inventory.getOrDefault("painkillers", 0)
+            talkToNpc("Zeke")
+            assertEquals(beforeTurnIn + 100, harness.sessionStore.state.value.playerXp)
+            assertEquals(beforeStabilizers + 2, harness.sessionStore.state.value.inventory["painkillers"])
+            talkToNpc("Zeke")
+            assertEquals("Botanist XP pays once", beforeTurnIn + 100, harness.sessionStore.state.value.playerXp)
+            assertTrue(harness.sessionStore.state.value.completedQuests.containsAll((1..4).map { "w2_sq%02d".format(it) }))
         }
 
         fun playWorld3() {
@@ -1471,7 +1623,8 @@ class LegalRouteCampaignRunnerTest {
         private val dispatcher: TestDispatcher,
         private val coroutineScope: CoroutineScope,
         initialState: GameSessionState? = null,
-        private val prototypeBranch: String? = null
+        private val prototypeBranch: String? = null,
+        openingFade: Boolean = false
     ) {
         val moshi = MoshiProvider.instance
         private val reader = AssetJsonReader(DesktopAssetProvider(listOf(assets)), moshi)
@@ -1578,6 +1731,7 @@ class LegalRouteCampaignRunnerTest {
             encounterCoordinator = encounterCoordinator,
             userSettingsStore = userSettingsStore,
             eventDefinitions = rawEvents,
+            bootstrapActions = if (openingFade) listOf("new_game_spawn_player_and_fade") else emptyList(),
             dispatchers = dispatcherProvider,
             telemetry = NoOpPlaytestTelemetry,
             dialogueTriggerBinder = { listener -> dialogueTriggerListener = listener }

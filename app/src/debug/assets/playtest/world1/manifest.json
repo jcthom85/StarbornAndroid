@@ -11,93 +11,93 @@
     "audio_catalog.json": "b1270577bfaa4911698a048af76237d31b34cf02d448e85f7f3e5f549cca42b0",
     "autosave.json": "4ff62b24a5fcad6db4c8ca88f50caae5165141e926937d8db608e217a2c20959",
     "characters.json": "f0eb93eeb29b032bd141df33ab930156d4eecdf79ea4ce5cd75860cef25f00f7",
-    "cinematics.json": "1d8b924d43749df9a32d65157cf5281cf0653f9dab00e6ee414f678c5bd9b712",
-    "dialogue.json": "d09975d7e1b90953f635434abd953fd97412f4d8bc4e7c3e3f55ef52be5655da",
+    "cinematics.json": "e4da9a374925f8d0dd0d2909713b139d1113c427dc82b5cf1eb6db0efa7261ed",
+    "dialogue.json": "a9f4c29678856bc3f4e151bce83607911dbfaad4f4ff874f8dfe192c31c0b7bc",
     "dialogue_voice_profiles.json": "f9e65af637be268d3348a89d3eca2db68019847e678227d61321a937c947e642",
-    "enemies.json": "34cefcab8cfb7ce63557b0a2aa92fee825966e06f9aa413ea929911ca91ba459",
+    "enemies.json": "eaf0b8cfe35e181071c187b443d9531c76c7e5aa783792a61a64da93f32ef641",
     "enemy_movement.json": "a7219c4b818d71a4de5d5189cab589fc8194e38992d9473e33358e474ebcabd3",
     "environmental_effects.json": "64406ba7c1a9146f8552a3eabf316cbc5a4d36fa22eeb5eabaa83735a67afd44",
-    "events.json": "17f9734d047b05fb95a5942d0b8747924454c15d8f691e870db1990b16ad2970",
+    "events.json": "90863285799349b0081d00f88e64e851562616966f8aacc207acb8c5b1b943af",
     "hub_node_descriptions.json": "f3b343ed432e0d241761d8a042a8ee786fdeccb64f37a87d71167ca18758a2aa",
     "hub_node_locked_previews.json": "215436cfd45066539a62ea9aab14774d3e4938afbf1e9c4c77890f7c2507c4e6",
     "hub_nodes.json": "9643f6da453ac1ae32476f1688de11ba2c72052e49017cb6ac8364ad0cf03346",
     "hubs.json": "334ceda4a513e903bf877f402c136ea7a1843754a00e6980d9b478cdd9f11569",
-    "items.json": "1612fd7e7be9e01a7fa76ecd9f99d008e451f3b0954976a5bc58dd0742deb00e",
+    "items.json": "4d1839eaaaac61b4bc75a4f6004ee89ec0ae12fb0ba53afb04d7c699393dd32f",
     "leveling_data.json": "fe1cb7bb7d9d74e8a9f14c77fff68f9d7bcb9dcd3c0471fd44d5f0e4b70d9fb7",
     "milestones.json": "023b688fece2040e1da366fb3970878fdc59c2dbfc97987b9df15e5660e577e2",
     "node_transitions.json": "e3eb7409404757978850bbdf57290a44cbfd774d34df690f292dc3cf9730de02",
-    "npcs.json": "94ec58f5af0e6ac391bc7722a437b8aaa39ebca258785035121063ac83f1768b",
+    "npcs.json": "b0ee4dfdb55d387181b408a873dff35c10afbbd44867dd86804285d5659256ec",
     "progression.json": "8be386cfcb42105556a3b2b9cd5f0f87a09cf8cbe0ba09f41c54c6ca901c6f5f",
-    "quests.json": "e36f5f2200b936748a6a4dc738bc1edf9eeb3f5ecac56381e3c83046eb274af4",
+    "quests.json": "009e672853fe70fe100dc56336d107a3bc27e7746cd45c14ce2cc772fb219f1c",
     "quests_base.json": "1310af04f0712958e6196ed2e5b5b9ed1a9b6192bc39bd99764e9337fe7ee055",
     "recipes_cooking.json": "27b0edf7489947c3b7c7b623c70a9b8e40bdde6f58ec78496b0f08bfb5cc98a5",
     "recipes_fishing.json": "3533ffe4dd422d5fe88abf57f2b9ef820f0d7eb7ac24b0b7ae4addd70159c869",
-    "recipes_tinkering.json": "d1e7776753c3d78a21d2267698713ba51bf048948fa03595fad82af39b9032f8",
-    "rooms.json": "65772ace64d4198d1200423f4ac13ded8bf2642f2a80cb1fa1b68798d0755fcb",
+    "recipes_tinkering.json": "b25885982acbd0fbb6be03733eb3899a15eee3cb7036eb7a537de0c3aad33805",
+    "rooms.json": "3df616a2473923d93204df5942e7e45e9d6a3512ee71ab45a494ef9a364899e7",
     "save1.json": "624357fa23165a92327567932acd397cf3c9ee7bad72699a95030564021cc3a3",
     "save2.json": "36b96e8740be355a8d3dc9429073863822de076637c98bc822c4bd5df5fa370c",
     "save3.json": "905eca9107f36c6ea9881d79c0fe62774adad927c428fcc5d23da6c627668e72",
     "sfx.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
     "sfx_meta.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
-    "shops.json": "529beb04e770a0bdda2e7b5d553f4b98f4547a87982717c126b0f437c79aae94",
-    "skills.json": "334151ba5e081d572d40229feeeef56bc01381709876abce3f26a489c11c304f",
-    "statuses.json": "5ac293e88f7f0e9aa9be538a9019c8b974a2dc03a2afdd69ee30569a079733dd",
+    "shops.json": "e2a9d44818f89ec262ea9eac18b828dac42f5a7645ffabe3178e2c71bda553e9",
+    "skills.json": "776174891eff97ee44ab218d1273a720eed160c63999e898481e2deae85a3134",
+    "statuses.json": "a42ecf6bc1c0daf55a4510e15a80820d08380b7a6f5dc59ef6cb2cd28d51b07c",
     "theme_styles.json": "2c72dedc17096ecb69faeeae1898bc6b3d8a789589efe28665393d2a7e372e30",
     "themes.json": "3791656ced44b01c235844e22639803019c52fde9f82b85809dc921a835e18e6",
     "tuning_puzzles.json": "0d5e0d9a8efcb66234846286c80a9d7490edacefc35a2c25ef5250640f16ff77",
-    "tutorial_scripts.json": "06e898562979d8dc189dc59916af8b221f47a29adce843599c145435ba8cfce0",
+    "tutorial_scripts.json": "0ff2aa8319d34960b477d34150bd22b8a540413856808a95840f9c16a18d85de",
     "worlds.json": "71bcfb0710f6f306fa131cb21998e82def11aa0e53fe11041775592fbea84af5"
   },
   "checkpoints": {
     "w1_mq02": {
       "file": "world1_w1_mq02.json",
       "roomId": "workshop_floor",
-      "sha256": "a4a7068d83a7521a47114403a9ade7099571e7f9105efdf5d88bc13a53c76bbc"
+      "sha256": "80f4717a5a6cf99e246c765451cd15a1dad68d063b03bb53c26ae7f7f7060fe0"
     },
     "w1_mq03": {
       "file": "world1_w1_mq03.json",
       "roomId": "checkpoint_booth",
-      "sha256": "da1cd7be08befc14cd5dacd6c4c624276787dccef8d9c0c0cf0f6eccff70c22d"
+      "sha256": "37eb0fe2c1bfd819cdae3d6d3c27ee6343f9544ca8078dfa94a9e49b53f6f1a1"
     },
     "w1_mq04": {
       "file": "world1_w1_mq04.json",
       "roomId": "echo_heart",
-      "sha256": "c90fc129ae5a66810035a40644780b970843d571260485dd832187b22eb60932"
+      "sha256": "06db34cdc37560a423460dc76e5d80392bac7776a50f25dc9cadaa283a7bd52c"
     },
     "w1_mq05": {
       "file": "world1_w1_mq05.json",
       "roomId": "launch_lift",
-      "sha256": "a9c2145ab86f8cb693e91bd1a7863c21366320accae94752f76d46c8b6f78bc0"
+      "sha256": "0589cc1609ebdd938fb957a44d92c6478c46fdd9e06601e54316a26ce6e1f325"
     },
     "w1_sq01": {
       "file": "world1_w1_sq01.json",
       "roomId": "trade_scrapper",
-      "sha256": "c4436bcd9ef2b9ca2b5bffdb571fde9c0ad7283a7f6ea7521c2a34acbd0d63e8"
+      "sha256": "d96a78939703def53c7e0b5b6bbce1074c7a92b12e7b7cb80140f934a887a34d"
     },
     "w1_sq02": {
       "file": "world1_w1_sq02.json",
       "roomId": "medbay_exam1",
-      "sha256": "75c7b256c3888fcb155e990f102e09fe5b660c5d1ef083e91865a1f4ee1adc37"
+      "sha256": "df9f8d2c200165b732f80bb644692785f4568381b8ccff168c50ecf4451b103c"
     },
     "w1_sq03": {
       "file": "world1_w1_sq03.json",
       "roomId": "admin_lobby",
-      "sha256": "69ba3bf7618164d0e323f50ceab9791fae342f3472f86da99658910680478a29"
+      "sha256": "8626ced9c99c3b65b11487b8fc4fe07e8b098c15bd873804bcc3bc23cd6449d5"
     },
     "w1_sq04": {
       "file": "world1_w1_sq04.json",
       "roomId": "server_hub",
-      "sha256": "20eb912bc9b555abe6d51d3f25caef6d1f7bb30e1481e02286a39b41174e0835"
+      "sha256": "dc90bcf1c1741ca04591f1efb16c1f40bf9ee0d7289695b7c62f23c39bf9c49e"
     },
     "w1_sq05": {
       "file": "world1_w1_sq05.json",
       "roomId": "mine_shunt",
-      "sha256": "f3001d65b9476dbaf1afa6b5df84923e63260d48536a654db8d18c27f612a4f7"
+      "sha256": "f7c597bcdfddb9584e0f7c478dc8b06a1210a92577a12c2589fb799ccc4bbd85"
     },
     "w1_minecart_puzzle": {
       "file": "world1_w1_minecart_puzzle.json",
       "roomId": "mine_junction",
-      "sha256": "e5eb76cbeeda7fa9ac50424dd113c3acc0a60a0ef630b7a6abeecfbd53ecdf94"
+      "sha256": "27c4d433411325a3918ffb803142dec78293e35c75cb520c671eeac356270cbc"
     }
   }
 }
