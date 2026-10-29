@@ -20,6 +20,7 @@ Use document roles rather than one hierarchy for every question:
 | How do we author world content? | [Story structure guide](story/_Structure_Guide.md), relevant world files and production records | Many local drafts still await reconciliation |
 | How do we produce artwork? | [Art Production Guide](story/Starborn_Art_Production_Guide.md), [Enemy Sprite Guide](story/Enemy_Sprite_Generation_Guide.md) | Asset-specific production rules, not general lore direction |
 | How do we test/package? | [Testing guide](testing/README.md), [Windows build guide](desktop/WINDOWS_BUILD.md), current Gradle tasks and scripts | Check current command/fixture compatibility before execution |
+| How do we assess Worlds 2–6 against World 1? | [World 1 functional standards](standards/WORLD_1_FUNCTIONAL_STANDARDS.md), [focused regression checklist](standards/WORLD_1_REGRESSION_CHECKLIST.md) | October 29 code/test assessment; open defects and device acceptance remain explicit |
 | What did a past pass establish? | Dated reports in this tree | Evidence applies to its build, fixture, and scope; old next-step lists are historical |
 
 ## Current work
