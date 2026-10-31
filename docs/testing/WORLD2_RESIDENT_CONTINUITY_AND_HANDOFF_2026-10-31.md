@@ -26,3 +26,9 @@ All items from the consolidated Part 1 considerations are implemented except act
 The Pixel installation is tracked in the evidence manifest. Physical playtesting is still required for subjective animation/audio acceptance and fishing feel. Installing a build does not certify those checks. No player saves were cleared.
 
 Recommended checks: talk to David/Megan/Kaelen and leave; complete Megan's favor once; revisit after reload; play with the unseen Charlie; catch a fish and confirm one inventory award; open a narrated container; authenticate and walk through the Temple Gate; listen to transitions/rest/Sentinel cues.
+
+### Publication and installation outcome
+
+Implementation committed and pushed to `main` as `ce27bd40`. The updated walkthrough was published to the existing `gh-pages` branch (`78b1f7fe25d57cafc49e74b97aa57843fee32890`); the live page was fetched and verified byte-for-byte against the local build, including Tidewatch and the unseen Charlie instructions.
+
+The paired Pixel 8a (serial `46121JEKB11849`) was found over wireless ADB. Its full APK transfer was unusually slow; fast deployment fell back to the same full transfer. Both attempts were stopped, and USB was requested. **No successful installation is claimed.** The prior app installation and player saves remain. The completed APK is `app/build/outputs/apk/debug/app-debug.apk`; USB installation and the player's focused checks remain outstanding.
