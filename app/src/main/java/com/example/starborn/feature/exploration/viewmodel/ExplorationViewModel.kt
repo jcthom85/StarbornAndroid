@@ -220,6 +220,8 @@ class ExplorationViewModel(
     fun playTapeTrack(tapeId: String, trackCueId: String) = runtime.playTapeTrack(tapeId, trackCueId)
     fun stopTapeTrack() = runtime.stopTapeTrack()
     fun travel(direction: String) = runtime.travel(direction)
+    fun inspectGladeBall() = runtime.inspectGladeBall()
+    fun cancelGladeBallPlay() = runtime.cancelGladeBallPlay()
     fun playWithGladeBall() = runtime.playWithGladeBall()
     fun onNpcInteraction(npcName: String) = runtime.onNpcInteraction(npcName)
     fun advanceDialogue() = runtime.advanceDialogue()

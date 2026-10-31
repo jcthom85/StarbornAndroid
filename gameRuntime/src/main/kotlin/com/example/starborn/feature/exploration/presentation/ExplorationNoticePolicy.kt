@@ -4,7 +4,7 @@ import com.example.starborn.feature.exploration.viewmodel.ExplorationUiState
 
 /** Queued notices never compete with an activity, conversation, or modal choice. */
 fun ExplorationUiState.hasModalScene(): Boolean =
-    isLoading || forceBlackScreen || activeDialogue != null || cinematic != null || shopGreeting != null ||
+    gladeBallAnimating || isLoading || forceBlackScreen || activeDialogue != null || cinematic != null || shopGreeting != null ||
         roomActionsVisible || roomObjectOffer != null || blockedPrompt != null || togglePrompt != null ||
         tuningPuzzle != null || isMenuOverlayVisible || skillTreeOverlay != null || partyMemberDetails != null ||
         levelUpPrompt != null || questDetail != null || isQuestLogVisible || isMapLegendVisible ||

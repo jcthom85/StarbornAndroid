@@ -407,13 +407,13 @@ fun ExplorationScreen(
             gateRevealActive = true
             if (!uiState.settings.disableScreenshake) {
                 gateRevealProgress.snapTo(0f)
-                gateRevealProgress.animateTo(1f, tween(1200, easing = FastOutSlowInEasing))
+                gateRevealProgress.animateTo(1f, tween(2400, easing = androidx.compose.animation.core.LinearEasing))
             }
             gateRevealActive = false
         } else previousGateOpen = open
     }
     val coroutineScope = rememberCoroutineScope()
-    val blockingOverlayActive = gateRevealActive || areaEntryActive || environmentalPreview || restRecoveryNotice != null ||
+    val blockingOverlayActive = uiState.gladeBallAnimating || gateRevealActive || areaEntryActive || environmentalPreview || restRecoveryNotice != null ||
         walkthroughVisible || uiState.isMenuOverlayVisible ||
             uiState.blockedPrompt != null || uiState.roomActionsVisible || uiState.roomObjectOffer != null || uiState.togglePrompt != null ||
             uiState.tuningPuzzle != null ||
@@ -431,7 +431,7 @@ fun ExplorationScreen(
             uiState.isMapLegendVisible ||
             uiState.tutorialState.current != null
     val questDetailBlockingOverlayActive =
-        restRecoveryNotice != null || walkthroughVisible || uiState.isMenuOverlayVisible ||
+        gateRevealActive || uiState.gladeBallAnimating || restRecoveryNotice != null || walkthroughVisible || uiState.isMenuOverlayVisible ||
             uiState.blockedPrompt != null || uiState.roomActionsVisible || uiState.roomObjectOffer != null || uiState.togglePrompt != null ||
             uiState.tuningPuzzle != null ||
             uiState.activeDialogue != null ||
@@ -449,7 +449,7 @@ fun ExplorationScreen(
             uiState.tutorialState.current != null
 
     val queuedNotice = explorationNotice(uiState,
-        externalModal = areaEntryActive || environmentalPreview || restRecoveryNotice != null || walkthroughVisible ||
+        externalModal = gateRevealActive || areaEntryActive || environmentalPreview || restRecoveryNotice != null || walkthroughVisible ||
             saveLoadMode != null || showInventoryTargetDialog)
 
     LaunchedEffect(importantQuestPopupVisible, areaEntryActive, environmentalPreview, restRecoveryNotice, walkthroughVisible,
@@ -1157,35 +1157,6 @@ fun ExplorationScreen(
             }
 
 
-            if (uiState.currentRoom?.id == com.example.starborn.feature.exploration.presentation.GLADE_BALL_ROOM && !isRoomDark) {
-                com.example.starborn.ui.exploration.GladePuffball(
-                    trust = com.example.starborn.feature.exploration.presentation.gladeBallTrust(uiState.completedMilestones),
-                    feedback = uiState.gladeBallFeedback,
-                    enabled = !blockingOverlayActive && !importantQuestPopupVisible && !roomTransitionInProgress,
-                    reducedMotion = uiState.settings.disableScreenshake,
-                    onPlay = viewModel::playWithGladeBall,
-                    modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(horizontal = 20.dp, vertical = 10.dp)
-                )
-            }
-
-            if (gateRevealActive) {
-                Box(Modifier.fillMaxSize().pointerInput(Unit) {
-                    awaitPointerEventScope {
-                        while (true) awaitPointerEvent().changes.forEach { it.consume() }
-                    }
-                }) {
-                    if (!uiState.settings.disableScreenshake) Canvas(Modifier.fillMaxSize()) {
-                        val retreat = size.width * 0.5f * gateRevealProgress.value
-                        val slab = Color(0xFF27332F)
-                        drawRect(slab, Offset(-retreat, 0f), Size(size.width * 0.5f, size.height))
-                        drawRect(slab, Offset(size.width * 0.5f + retreat, 0f), Size(size.width * 0.5f, size.height))
-                        val seam = Color(0xFFAACAC0).copy(alpha = 0.5f)
-                        drawLine(seam, Offset(size.width * 0.5f - retreat, 0f), Offset(size.width * 0.5f - retreat, size.height), 2.dp.toPx())
-                        drawLine(seam, Offset(size.width * 0.5f + retreat, 0f), Offset(size.width * 0.5f + retreat, size.height), 2.dp.toPx())
-                    }
-                }
-            }
-
             if (approachingCombat) {
                 Surface(
                     modifier = Modifier.align(Alignment.Center).padding(24.dp),
@@ -1211,6 +1182,26 @@ fun ExplorationScreen(
                         .zIndex(8f)
                 )
             }
+        }
+
+        if (uiState.currentRoom?.id == com.example.starborn.feature.exploration.presentation.GLADE_BALL_ROOM && !isRoomDark) {
+            com.example.starborn.ui.exploration.GladePuffball(
+                trust = com.example.starborn.feature.exploration.presentation.gladeBallTrust(uiState.completedMilestones),
+                playToken = uiState.gladeBallPlayToken,
+                enabled = !blockingOverlayActive && !importantQuestPopupVisible && !roomTransitionInProgress,
+                reducedMotion = uiState.settings.disableScreenshake,
+                onInspect = viewModel::inspectGladeBall, onPlayFinished = viewModel::playWithGladeBall,
+                onCancel = viewModel::cancelGladeBallPlay,
+                modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().navigationBarsPadding()
+                    .padding(bottom = ExplorationControlSpacing.sceneBottomClearance + 24.dp)
+            )
+        }
+        if (gateRevealActive) {
+            com.example.starborn.ui.exploration.TempleGateReveal(
+                gateRevealProgress.value, uiState.settings.disableFlashes,
+                Modifier.fillMaxSize().zIndex(45f).pointerInput(Unit) {
+                    awaitPointerEventScope { while (true) awaitPointerEvent().changes.forEach { it.consume() } }
+                })
         }
 
         RestRecoveryOverlay(
@@ -1729,7 +1720,7 @@ fun ExplorationScreen(
             )
         }
 
-        uiState.levelUpPrompt?.takeIf { canPresentLevelUp(uiState, restRecoveryNotice != null || areaEntryActive || environmentalPreview || saveLoadMode != null || showInventoryTargetDialog) }?.let { prompt ->
+        uiState.levelUpPrompt?.takeIf { canPresentLevelUp(uiState, gateRevealActive || restRecoveryNotice != null || areaEntryActive || environmentalPreview || saveLoadMode != null || showInventoryTargetDialog) }?.let { prompt ->
             LevelUpOverlay(
                 prompt = prompt,
                 onDismiss = { viewModel.dismissLevelUpPrompt() },

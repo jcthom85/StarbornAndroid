@@ -2872,18 +2872,38 @@ class ExplorationController(
 
     private var gladePlayRepeat = 0
 
-    fun playWithGladeBall() {
+    fun inspectGladeBall() {
         if (_uiState.value.currentRoom?.id != com.example.starborn.feature.exploration.presentation.GLADE_BALL_ROOM ||
-            explorationInteractionBlocked || _uiState.value.isLoading) return
+            explorationInteractionBlocked || _uiState.value.isLoading || _uiState.value.gladeBallAnimating) return
         val trust = com.example.starborn.feature.exploration.presentation.gladeBallTrust(sessionStore.state.value.completedMilestones)
-        _uiState.update { it.copy(gladeBallFeedback = com.example.starborn.feature.exploration.presentation.gladeBallReaction(trust, gladePlayRepeat)) }
+        _uiState.update { it.copy(roomObjectOffer = com.example.starborn.feature.exploration.presentation.RoomObjectOffer(
+            GenericAction("spore puffball", "glade_puffball"), "Spore puffball",
+            if (trust == 0) "A velvety puffball rests outside the mossy hollow. Something rustles beneath the log, waiting."
+            else "The familiar puffball waits at your boots. A quiet rustle comes from the ferns.",
+            if (trust == 1) "Give it a gentle toss" else "Roll it back")) }
+    }
+
+    fun cancelGladeBallPlay() {
+        _uiState.update { it.copy(gladeBallAnimating = false) }
+        setNoticePresentationBlocked("glade-play", false)
+    }
+
+    fun playWithGladeBall() {
+        if (!_uiState.value.gladeBallAnimating) return
+        if (_uiState.value.currentRoom?.id != com.example.starborn.feature.exploration.presentation.GLADE_BALL_ROOM || _uiState.value.isLoading) {
+            cancelGladeBallPlay(); return
+        }
+        val trust = com.example.starborn.feature.exploration.presentation.gladeBallTrust(sessionStore.state.value.completedMilestones)
+        // Use the standard inspection popup, with rewards held until its dismissal.
+        showInspection(com.example.starborn.feature.exploration.presentation.gladeBallReaction(trust, gladePlayRepeat))
         if (trust == 3) gladePlayRepeat = (gladePlayRepeat + 1) % 3
         if (trust < 3) triggerPlayerAction("w2_charlie_puffball_${trust + 1}")
+        cancelGladeBallPlay()
     }
 
     fun onNpcInteraction(npcName: String) {
         if (npcName.lowercase(Locale.ROOT) in setOf("charlie", "creature_charlie", "glade creature")) {
-            playWithGladeBall()
+            inspectGladeBall()
             return
         }
         RuntimeLog.debug(LOG_TAG, "NPC interaction: $npcName (quest=${sessionStore.state.value.activeQuests.joinToString()})")
@@ -3053,6 +3073,14 @@ class ExplorationController(
     }
     fun confirmRoomObject() {
         val action = _uiState.value.roomObjectOffer?.action ?: return
+        if (action is GenericAction && action.type == "glade_puffball") {
+            if (_uiState.value.currentRoom?.id != com.example.starborn.feature.exploration.presentation.GLADE_BALL_ROOM || _uiState.value.isLoading || _uiState.value.gladeBallAnimating) {
+                dismissRoomObject(); return
+            }
+            setNoticePresentationBlocked("glade-play", true)
+            _uiState.update { it.copy(roomObjectOffer = null, gladeBallAnimating = true, gladeBallPlayToken = it.gladeBallPlayToken + 1) }
+            return
+        }
         dismissRoomObject()
         if (_uiState.value.actions.any { it.actionKey() == action.actionKey() }) onActionSelected(action)
     }

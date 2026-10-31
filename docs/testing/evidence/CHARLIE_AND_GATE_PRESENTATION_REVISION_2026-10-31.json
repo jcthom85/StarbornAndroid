@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-31",
+  "validation": {
+    "host": {
+      "tests": 45,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "desktop": {
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "assets_changed": false,
+  "pixel_installation": "not_installed_no_device_connected",
+  "source_sha256": {
+    "shared/src/androidJvmMain/kotlin/com/example/starborn/ui/exploration/GladePuffball.kt": "5131d90d63d495e04f05f371e4473d75ed69bbb0292c82e81e9c91fb57f1f7b1",
+    "shared/src/androidJvmMain/kotlin/com/example/starborn/ui/exploration/TempleGateReveal.kt": "c4182de6a7ebe245d62d9f53310de55109af7469b34de9a6337d80ca8dd5c5b6",
+    "app/src/main/java/com/example/starborn/feature/exploration/ui/ExplorationScreen.kt": "524e66529a1ea9c389d6fb1e86a477cd8e168cf84692224f4d8dc02cb81f5933",
+    "gameRuntime/src/main/kotlin/com/example/starborn/feature/exploration/viewmodel/ExplorationController.kt": "2fe474c9dfc6e5913af52278f08b978119976e0c72a6e4ab3c5250175dc63422"
+  },
+  "apk_sha256": "dcce5d72422c8ed80b77b4555ae60cdea80c59f25319604d5d4ca76c9ff2ed0f"
+}

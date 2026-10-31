@@ -1,0 +1,1751 @@
+{
+  "date": "2026-10-31",
+  "scope": "Read-only World 2 action-word review; assets left unchanged.",
+  "rooms": 93,
+  "actions": 164,
+  "types": {
+    "generic": 121,
+    "arcade_discovery": 1,
+    "inspect": 19,
+    "container": 9,
+    "rest_stop": 9,
+    "shop": 2,
+    "toggle": 1,
+    "fishing": 1,
+    "tuning_puzzle": 1
+  },
+  "passive_generic_or_inspect": 85,
+  "event_actions": 55,
+  "explicit_active_quest_visibility": 7,
+  "placeholder_completed_fallbacks": 24,
+  "actions_detail": [
+    {
+      "room_id": "sector9_crash_site",
+      "room": "Crash Site",
+      "name": "wreckage",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The pod's thrusters are completely fused. It won't fly again.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_crash_site",
+      "room": "Crash Site",
+      "name": "navigation console",
+      "type": "generic",
+      "action_event": "w2_mq01_examine_pod",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_mq01"
+      ]
+    },
+    {
+      "room_id": "sector9_crash_site",
+      "room": "Crash Site",
+      "name": "glow-water",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The water is warm and vibrates with a gentle frequency. It feels soothing to touch.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_crash_site",
+      "room": "Crash Site",
+      "name": "moss",
+      "type": "generic",
+      "action_event": "w2_sq01_scan_moss",
+      "quest_visibility": "w2_sq01",
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_sq01"
+      ]
+    },
+    {
+      "room_id": "sector9_pod_interior",
+      "room": "Escape Pod Interior",
+      "name": "locker",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "A basic emergency kit contains field dressings and mineral water.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_pod_interior",
+      "room": "Escape Pod Interior",
+      "name": "emergency medkit",
+      "type": "generic",
+      "action_event": "w2_mq01_stabilize_zeke",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_mq01"
+      ]
+    },
+    {
+      "room_id": "sector9_pod_interior",
+      "room": "Escape Pod Interior",
+      "name": "waterlogged survival console",
+      "type": "arcade_discovery",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "An emerald optic board glimmers in the waterproof survival pod console.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_landing_brush",
+      "room": "Scorched Brush",
+      "name": "charred starleaf",
+      "type": "generic",
+      "action_event": "w2_forage_herb_landing",
+      "quest_visibility": null,
+      "fallback": "Already harvested.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_landing_brush",
+      "room": "Scorched Brush",
+      "name": "muddy clearing",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Torn soil and crushed ferns mark the escape pod's violent deceleration trench.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_landing_glade",
+      "room": "Overgrown Glade",
+      "name": "luminous mushrooms",
+      "type": "generic",
+      "action_event": "w2_forage_herb_glade",
+      "quest_visibility": null,
+      "fallback": "Already harvested.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_landing_glade",
+      "room": "Overgrown Glade",
+      "name": "broadleaf canopy",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Giant fronds filter the alien sunlight into a dappled teal glow, humming with ambient spore drift.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_landing_glade",
+      "room": "Overgrown Glade",
+      "name": "mossy hollow",
+      "type": "inspect",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_landing_stream",
+      "room": "Stream Bank",
+      "name": "glow-water current",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The current carries warm notes through the roots, like the Ocean breathing under the swamp.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_landing_stream",
+      "room": "Stream Bank",
+      "name": "smooth pebbles",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Water-rounded quartz crystals and silt shards coat the riverbank, warm to the touch.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_landing_stream",
+      "room": "Stream Bank",
+      "name": "river silt cache",
+      "type": "container",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_landing_perimeter",
+      "room": "Security Perimeter",
+      "name": "drone",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The chassis is crushed, but its recording cells hum faintly.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_landing_perimeter",
+      "room": "Security Perimeter",
+      "name": "scanner lens",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The fractured optics still flicker with faint infrared sweeps, tracking heat signatures across the brush.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_landing_drop",
+      "room": "Pod Fragment",
+      "name": "power conduits",
+      "type": "generic",
+      "action_event": "w2_mq05_collect_conduits",
+      "quest_visibility": "w2_mq05",
+      "fallback": "Salvaging power conduits from the pod wreckage...",
+      "event_active_quest_requirements": [
+        "w2_mq05"
+      ]
+    },
+    {
+      "room_id": "sector9_landing_drop",
+      "room": "Pod Fragment",
+      "name": "cargo panel",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Reinforced alloy stenciled with Dominion emergency release instructions. The hydraulic latch is crushed shut.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_landing_drop",
+      "room": "Pod Fragment",
+      "name": "return to Astra",
+      "type": "generic",
+      "action_event": "w2_mq05_return_to_hangar",
+      "quest_visibility": null,
+      "fallback": "Follow the opened service route back to the Astra.",
+      "event_active_quest_requirements": [
+        "w2_mq05"
+      ]
+    },
+    {
+      "room_id": "sector9_stream_pools",
+      "room": "Mist Pools",
+      "name": "reed bulbs",
+      "type": "generic",
+      "action_event": "w2_forage_herb_reeds",
+      "quest_visibility": null,
+      "fallback": "Already harvested.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_pools",
+      "room": "Mist Pools",
+      "name": "still basins",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Bioluminescent water settles into mirror-like pools reflecting the misty canopy above.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_wetlands",
+      "room": "Resonant Sedge",
+      "name": "spore warning",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Amber sacs inflate along the path. Aethel markers identify the cloud as neurotoxic and harmful to Erosion control.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_wetlands",
+      "room": "Resonant Sedge",
+      "name": "wind-sung reeds",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Hollow reed stalks whistle with harmonic frequencies as the coastal breeze passes through them.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_wetlands",
+      "room": "Resonant Sedge",
+      "name": "submerged emergency locker",
+      "type": "container",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_flats",
+      "room": "Crystalline Flats",
+      "name": "half-sunken causeway",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Carved stones under the mud form an Aethel causeway aimed toward the Sanctuary Facility.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_flats",
+      "room": "Crystalline Flats",
+      "name": "crystalline sand",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Fine blue silica crunches underfoot, sparkling with residual energy discharged by the tide.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_falls",
+      "room": "Resonant Falls",
+      "name": "sheltered cookfire",
+      "type": "rest_stop",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_falls",
+      "room": "Resonant Falls",
+      "name": "recess shelter",
+      "type": "rest_stop",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_falls",
+      "room": "Resonant Falls",
+      "name": "provisions counter",
+      "type": "shop",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_falls",
+      "room": "Resonant Falls",
+      "name": "penny camp bed",
+      "type": "inspect",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_tidepools",
+      "room": "Beach Transition",
+      "name": "tidepool crawler",
+      "type": "generic",
+      "action_event": "w2_forage_meat_tidepool",
+      "quest_visibility": null,
+      "fallback": "Already harvested.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_tidepools",
+      "room": "Beach Transition",
+      "name": "star crystals",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Faceted mineral clusters grow in geometric clusters around the warm tide pools.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_cave_entrance",
+      "room": "Cavern Entrance",
+      "name": "cave glyphs",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "A light-mural maps surface water into the facility cooling system, joining swamp and Sanctuary as one machine.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_cave_entrance",
+      "room": "Cavern Entrance",
+      "name": "waterfall curtain",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "A sheet of rushing water masks the cave mouth in a cool, misty spray.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_cave_depths",
+      "room": "Glow-Moss Cavern",
+      "name": "echo nest",
+      "type": "generic",
+      "action_event": "w2_forage_meat_cave",
+      "quest_visibility": null,
+      "fallback": "Already harvested.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_cave_depths",
+      "room": "Glow-Moss Cavern",
+      "name": "glowing moss",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Thick velvet sheets of cyan moss illuminate the stone chamber in soothing ambient light.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_cave_depths",
+      "room": "Glow-Moss Cavern",
+      "name": "waterproof cargo case",
+      "type": "generic",
+      "action_event": "find_vhs_tape_03",
+      "quest_visibility": null,
+      "fallback": "A buoyant cargo canister washed against the glow-moss rocks.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_sunken_passage",
+      "room": "Waterlogged Tunnel",
+      "name": "ancient sluice wheel",
+      "type": "toggle",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Heavy brass spokes connect to ancient hydraulic gates below.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_sunken_passage",
+      "room": "Waterlogged Tunnel",
+      "name": "drowned console",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The Aethel console still projects one phrase: THE OCEAN ENTERS THROUGH EVERY CRACK.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stream_sunken_passage",
+      "room": "Waterlogged Tunnel",
+      "name": "warm current",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Subterranean runoff warms the passage, carrying faint mineral notes from deep below.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_sunken_aethel_vault",
+      "room": "Submerged Aethel Vault",
+      "name": "precursor reliquary",
+      "type": "container",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_sunken_aethel_vault",
+      "room": "Submerged Aethel Vault",
+      "name": "living coral",
+      "type": "inspect",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_beach_cliffs",
+      "room": "Beach Cliffs",
+      "name": "signal reflection",
+      "type": "generic",
+      "action_event": "w2_sq02_trace_cliffs",
+      "quest_visibility": null,
+      "fallback": "Three distant beacon reflections stutter across the tideglass. One carries a Dominion patrol code.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_beach_cliffs",
+      "room": "Beach Cliffs",
+      "name": "basalt cliffs",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Sheer volcanic columns rise against the tidal surf, worn smooth by centuries of mineral spray.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_beach_cliffs",
+      "room": "Beach Cliffs",
+      "name": "driftwood marker",
+      "type": "inspect",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_beach_cliffs",
+      "room": "Beach Cliffs",
+      "name": "weathered elephant toy",
+      "type": "inspect",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_beach_cove",
+      "room": "Sandy Cove",
+      "name": "campfire",
+      "type": "rest_stop",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The fire burns with a warm, steady glow, throwing long shadows on the stone walls.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_beach_cove",
+      "room": "Sandy Cove",
+      "name": "warm sand",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Deep volcanic sand retains daytime heat, sheltered from high winds by coastal bluffs.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_beach_pools",
+      "room": "Tide Pools",
+      "name": "pools",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The water hums with a deep subsonic tone, washing away local static.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_beach_pools",
+      "room": "Tide Pools",
+      "name": "tide fishing",
+      "type": "fishing",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The tide pools are calm enough for fishing.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_beach_pools",
+      "room": "Tide Pools",
+      "name": "bioluminescent weeds",
+      "type": "generic",
+      "action_event": "w2_sq01_scan_weeds",
+      "quest_visibility": "w2_sq01",
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_sq01"
+      ]
+    },
+    {
+      "room_id": "sector9_beach_pools",
+      "room": "Tide Pools",
+      "name": "tideglass growth",
+      "type": "generic",
+      "action_event": "w2_sq03_gather_tideglass",
+      "quest_visibility": "w2_sq03",
+      "fallback": "Glowing tideglass skewers are harvested from the shore.",
+      "event_active_quest_requirements": [
+        "w2_sq03"
+      ]
+    },
+    {
+      "room_id": "sector9_beach_pools",
+      "room": "Tide Pools",
+      "name": "luminescent anemones",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Delicate tidepool flora pulse in rhythmic intervals synchronized with the distant barrier frequency.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_beach_cargo",
+      "room": "Beached Cargo Wreck",
+      "name": "crates",
+      "type": "container",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_beach_cargo",
+      "room": "Beached Cargo Wreck",
+      "name": "rusted hull",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Barnacles and salt crystals encrust the shipping container's battered exterior.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_beach_cave",
+      "room": "Sea Cavern",
+      "name": "mineral shelter",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Old bedroll hooks and a soot-blackened ceiling mark a patrol shelter abandoned in a hurry.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_beach_cave",
+      "room": "Sea Cavern",
+      "name": "tide-worn chest",
+      "type": "container",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_beach_pillar",
+      "room": "Sunken Obelisk",
+      "name": "resonant pillar",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Touching the pillar sends a clean note through the beach and answers a deeper tone beneath the facility.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_beach_grotto",
+      "room": "Hidden Grotto",
+      "name": "cache",
+      "type": "generic",
+      "action_event": "w2_sq03_gather_relic",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_beach_grotto",
+      "room": "Hidden Grotto",
+      "name": "sea-worn arches",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Twin stone arches form a natural amphitheater where incoming waves echo in deep hollow notes.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_beach_grotto",
+      "room": "Hidden Grotto",
+      "name": "bioluminescent prism",
+      "type": "tuning_puzzle",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The ancient crystal prism glows faintly in the sea cavern mist.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_beach_dunes",
+      "room": "Star-Sand Dunes",
+      "name": "burrowing grazer",
+      "type": "generic",
+      "action_event": "w2_forage_meat_dunes",
+      "quest_visibility": null,
+      "fallback": "Already harvested.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_beach_dunes",
+      "room": "Star-Sand Dunes",
+      "name": "wind-sculpted ridges",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Shifting blue dunes create sweeping wave patterns across the coastal expanse.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_canopy",
+      "room": "Resonant Canopy",
+      "name": "low-frequency hum",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Their leaves vibrate like harp strings when touched, ringing out a quiet chord.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_canopy",
+      "room": "Resonant Canopy",
+      "name": "crystalline ferns",
+      "type": "generic",
+      "action_event": "w2_sq01_scan_ferns",
+      "quest_visibility": "w2_sq01",
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_sq01"
+      ]
+    },
+    {
+      "room_id": "sector9_canopy",
+      "room": "Resonant Canopy",
+      "name": "drifting spores",
+      "type": "generic",
+      "action_event": "w2_sq01_scan_spores",
+      "quest_visibility": "w2_sq01",
+      "fallback": "The razor-vine spores vibrate with high energy.",
+      "event_active_quest_requirements": [
+        "w2_sq01"
+      ]
+    },
+    {
+      "room_id": "sector9_canopy",
+      "room": "Resonant Canopy",
+      "name": "Scavenge remains",
+      "type": "generic",
+      "action_event": "w2_sq02_trace_alpha",
+      "quest_visibility": null,
+      "fallback": "A fallen Dominion scout lies tangled in the vines.",
+      "event_active_quest_requirements": [
+        "w2_sq02"
+      ]
+    },
+    {
+      "room_id": "sector9_wilds_thickets",
+      "room": "Spore Thickets",
+      "name": "distress signature alpha",
+      "type": "generic",
+      "action_event": "w2_sq02_trace_alpha",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_sq02"
+      ]
+    },
+    {
+      "room_id": "sector9_wilds_nest",
+      "room": "Hound Nest",
+      "name": "shard-hound remains",
+      "type": "generic",
+      "action_event": "w2_forage_meat_nest",
+      "quest_visibility": null,
+      "fallback": "Already harvested.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_wilds_nest",
+      "room": "Hound Nest",
+      "name": "trampled supply pack",
+      "type": "container",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_wilds_hollow",
+      "room": "Poison Hollow",
+      "name": "distress signature beta",
+      "type": "generic",
+      "action_event": "w2_sq02_trace_beta",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_sq02"
+      ]
+    },
+    {
+      "room_id": "sector9_wilds_hollow",
+      "room": "Poison Hollow",
+      "name": "ancient stump",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "A hollowed tree trunk large enough to shelter an expedition team from sudden squalls.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_wilds_grave",
+      "room": "Patrol Graveyard",
+      "name": "transceiver",
+      "type": "inspect",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "A fallen soldier holds an encrypted datapad, repair notes, and a damaged Thermal Cutter.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_wilds_overlook",
+      "room": "Canopy Edge",
+      "name": "canopy route",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "From here the luminous waterways reveal a continuous route from crash site to temple ruins.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_wilds_overlook",
+      "room": "Canopy Edge",
+      "name": "canopy vista",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "From this high vantage, the vast swamp stretches to the coastal horizon under a double ring of starlight.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_wilds_canopy_walk",
+      "room": "Hanging Root Bridge",
+      "name": "razor-vine shortcut",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The Thermal Cutter burns a clean path through the razor-vines, reopening the old canopy loop.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_wilds_canopy_walk",
+      "room": "Hanging Root Bridge",
+      "name": "aerial root bridges",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Thick braided roots stretch between ancient trees, forming natural elevated catwalks.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_wilds_archway",
+      "room": "Architect Gateway",
+      "name": "Aethel boundary stones",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The archway translates swamp resonance into geometric light, the first threshold of the Sanctuary.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_wilds_dense_brush",
+      "room": "Beast Run",
+      "name": "toxic bloom",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "A violet bloom exhales corrosive spores. Holding your breath, you mark a safer return path.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_wilds_dense_brush",
+      "room": "Beast Run",
+      "name": "lost surveyor pack",
+      "type": "container",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_wilds_clearance",
+      "room": "Burned Glade",
+      "name": "patrol transceiver",
+      "type": "generic",
+      "action_event": "w2_sq02_recover_transceiver",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_sq02"
+      ]
+    },
+    {
+      "room_id": "sector9_wilds_clearance",
+      "room": "Burned Glade",
+      "name": "shattered trunks",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Felled timber and torn roots show signs of recent heavy kinetic impacts.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_wilds_lookout",
+      "room": "Hunter's Blind",
+      "name": "heat ring cookfire",
+      "type": "rest_stop",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_wilds_lookout",
+      "room": "Hunter's Blind",
+      "name": "ridge campsite",
+      "type": "rest_stop",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_ridge_climb",
+      "room": "Vine Climb",
+      "name": "medic satchel",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The satchel is empty except for notes describing Neural Stabilizers as temporary anchors against Erosion.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_ridge_ledges",
+      "room": "Windy Ledges",
+      "name": "blue-frond cluster",
+      "type": "generic",
+      "action_event": "w2_forage_herb_ridge",
+      "quest_visibility": null,
+      "fallback": "Already harvested.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_ridge_overhang",
+      "room": "Beast Lair Approach",
+      "name": "weathered mural",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Rain exposes a mural: human figures rendered as ice, listening to the vast Ocean beneath them.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_canopy_ridge",
+      "room": "Canopy Ridge",
+      "name": "Look at Shield",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The Planetary Shield curves across the sky, pulsing in a timed pattern.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_canopy_ridge",
+      "room": "Canopy Ridge",
+      "name": "Confront stalker",
+      "type": "generic",
+      "action_event": "w2_mq04_confront",
+      "quest_visibility": null,
+      "fallback": "Confront the hunter waiting in the shadows.",
+      "event_active_quest_requirements": [
+        "w2_mq04"
+      ]
+    },
+    {
+      "room_id": "sector9_canopy_ridge",
+      "room": "Canopy Ridge",
+      "name": "Face the Beast",
+      "type": "generic",
+      "action_event": "w2_mq04_beast_ambush",
+      "quest_visibility": null,
+      "fallback": "The Beast tears through the brush while Gh0st's trigger channel remains empty.",
+      "event_active_quest_requirements": [
+        "w2_mq04"
+      ]
+    },
+    {
+      "room_id": "sector9_canopy_ridge",
+      "room": "Canopy Ridge",
+      "name": "Anchor Drill",
+      "type": "generic",
+      "action_event": "w2_mq04_anchor_drill",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_mq04"
+      ]
+    },
+    {
+      "room_id": "sector9_ridge_viewpoint",
+      "room": "Shield Viewpoint",
+      "name": "facility sightline",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Sterile white towers emerge from living green. Root and conduit follow the same branching pattern.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_ridge_sniper_perch",
+      "room": "Sniper Lookout",
+      "name": "distress signature gamma",
+      "type": "generic",
+      "action_event": "w2_sq02_trace_gamma",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_sq02"
+      ]
+    },
+    {
+      "room_id": "sector9_ridge_crevice",
+      "room": "High Pass",
+      "name": "razor-vine cache",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The Thermal Cutter parts the thorn mat without bursting its toxic seed pods, exposing an old supply niche.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_ridge_crevice",
+      "room": "High Pass",
+      "name": "fault line",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "A jagged split in the bedrock reveals strata rich in conducting crystal veins.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_ridge_plateau",
+      "room": "Sanctuary Outlook",
+      "name": "stone cookfire",
+      "type": "rest_stop",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_ridge_plateau",
+      "room": "Sanctuary Outlook",
+      "name": "plateau camp",
+      "type": "rest_stop",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_ridge_plateau",
+      "room": "Sanctuary Outlook",
+      "name": "ridge overlook cache",
+      "type": "generic",
+      "action_event": "find_vhs_tape_04",
+      "quest_visibility": null,
+      "fallback": "A stone cache overlooking the dark canopy and ocean swells.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_temple_plaza",
+      "room": "Stone Courtyard",
+      "name": "processional mural",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Light figures carry bowls of Ocean-water inward while crystalline human shapes carry memory outward.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_temple_plaza",
+      "room": "Stone Courtyard",
+      "name": "flagstone courtyard",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Weathered geometric tiles align toward the temple portal with uncanny precision.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_temple_vestibule",
+      "room": "Outer Guard Post",
+      "name": "sanitation console",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The console once stripped toxic spores from pilgrims before admitting them to the Sanctuary.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_temple_lock_chamber",
+      "room": "Resonator Chamber",
+      "name": "Sentinel Scraps",
+      "type": "shop",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_temple_left_wing",
+      "room": "Left Tuner Column",
+      "name": "western resonance crystal",
+      "type": "generic",
+      "action_event": "w2_sq04_crystal_west",
+      "quest_visibility": null,
+      "fallback": "A violet crystal stores the low harmony missing from the stasis mural.",
+      "event_active_quest_requirements": [
+        "w2_sq04"
+      ]
+    },
+    {
+      "room_id": "sector9_temple_right_wing",
+      "room": "Right Tuner Column",
+      "name": "eastern resonance crystal",
+      "type": "generic",
+      "action_event": "w2_sq04_crystal_east",
+      "quest_visibility": null,
+      "fallback": "A cyan crystal holds the answering harmonic from the facility east wing.",
+      "event_active_quest_requirements": [
+        "w2_sq04"
+      ]
+    },
+    {
+      "room_id": "sector9_temple_gate",
+      "room": "Temple Gate",
+      "name": "stone lock",
+      "type": "generic",
+      "action_event": "w2_mq02_use_chime",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_mq02"
+      ]
+    },
+    {
+      "room_id": "sector9_foyer_grand_hall",
+      "room": "Sanctuary Grand Hall",
+      "name": "welcome console",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Aethel text calls this place a shore: a safe edge where minds of Ice could approach the Ocean.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_foyer_left_gallery",
+      "room": "Left Reliquary",
+      "name": "botanical research log",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The log confirms the swamp was cultivated to filter Source resonance, not allowed to overtake the facility.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_foyer_right_gallery",
+      "room": "Right Archives",
+      "name": "light-mural procession",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Sterile panels bloom into wetland colors as you pass, erasing the boundary between vault and jungle.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_foyer_security_hub",
+      "room": "Dominion Outpost",
+      "name": "terminal",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Hacking the security database reports status: LOCKDOWN.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_foyer_vault_door",
+      "room": "Hangar Portal",
+      "name": "security palimpsest",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Layered warnings describe resonance overload as Erosion and prescribe chemical neural stabilization.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_conduit_crawlspace",
+      "room": "Maintenance Conduit",
+      "name": "maintenance spores",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Bioluminescent fungus feeds on warm conduit leakage. Its spores numb exposed skin.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_conduit_junction",
+      "room": "T-Junction Wiring",
+      "name": "service map",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The map reveals a return duct linking the Hall of Echoes to the foyer security hub.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_conduit_breaker_room",
+      "room": "Breaker Deck",
+      "name": "breakers",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Flipping the auxiliary breaker alignment...",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_conduit_breaker_room",
+      "room": "Breaker Deck",
+      "name": "technician toolbox",
+      "type": "container",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_conduit_access_shaft",
+      "room": "Access Shaft",
+      "name": "shaft shortcut",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The Thermal Cutter clears roots fused around the access ladder, reopening the climb into the vents.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_hall_of_echoes",
+      "room": "Hall of Echoes",
+      "name": "murals",
+      "type": "generic",
+      "action_event": "w2_mq03_inspect_murals",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_mq03"
+      ]
+    },
+    {
+      "room_id": "sector9_hall_of_echoes",
+      "room": "Hall of Echoes",
+      "name": "central relief",
+      "type": "generic",
+      "action_event": "w2_sq04_complete",
+      "quest_visibility": null,
+      "fallback": "The central relief hums out of tune. It needs the west, east, and north crystal voices seated before the mural chord can hold.",
+      "event_active_quest_requirements": [
+        "w2_sq04"
+      ]
+    },
+    {
+      "room_id": "sector9_hall_echo_alcoves",
+      "room": "Echo Alcoves",
+      "name": "choir alcove log",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Each alcove preserved one voice so no single mind had to hold the Ocean alone.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_hall_acoustics_lab",
+      "room": "Acoustics Lab",
+      "name": "northern resonance crystal",
+      "type": "generic",
+      "action_event": "w2_sq04_crystal_north",
+      "quest_visibility": null,
+      "fallback": "A gold crystal vibrates at the mural alignment frequency.",
+      "event_active_quest_requirements": [
+        "w2_sq04"
+      ]
+    },
+    {
+      "room_id": "sector9_hall_reflection_pool",
+      "room": "Cymatic Basin",
+      "name": "reflection pool",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Your reflection fractures into ice-bright facets while the water beneath remains a single dark Ocean.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_archive_vault",
+      "room": "Archive Vault",
+      "name": "Aethel extinction log",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The final entry rejects conquest: pain came from treating the Source as an object rather than an Ocean.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_archive_reading_room",
+      "room": "Interface Console",
+      "name": "research terminal",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "A clinical note defines Erosion as cognitive shear caused by incompatible resonance memories.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_archive_tuning_bay",
+      "room": "Tuning Matrix",
+      "name": "resonator columns",
+      "type": "generic",
+      "action_event": "w2_sq04_complete",
+      "quest_visibility": null,
+      "fallback": "The columns answer with three missing tones. Seat the west, east, and north crystal voices before asking them to carry the mural chord.",
+      "event_active_quest_requirements": [
+        "w2_sq04"
+      ]
+    },
+    {
+      "room_id": "sector9_archive_secret_stash",
+      "room": "Hidden Reliquary",
+      "name": "pedestal",
+      "type": "generic",
+      "action_event": "w2_sq04_decode_bridge_record",
+      "quest_visibility": null,
+      "fallback": "The Bridge calibration record lists consent checks, separate carriers, and a mandatory ground.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_archive_secret_stash",
+      "room": "Hidden Reliquary",
+      "name": "relic coffer",
+      "type": "container",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stasis_chamber",
+      "room": "Stasis Chamber",
+      "name": "stasis pod",
+      "type": "generic",
+      "action_event": "w2_mq03_inspect_pod",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_mq03"
+      ]
+    },
+    {
+      "room_id": "sector9_stasis_chamber",
+      "room": "Stasis Chamber",
+      "name": "root lattice",
+      "type": "generic",
+      "action_event": "w2_sq01_scan_roots",
+      "quest_visibility": "w2_sq01",
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_sq01"
+      ]
+    },
+    {
+      "room_id": "sector9_stasis_chamber",
+      "room": "Stasis Chamber",
+      "name": "ceiling vent",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "The ventilation shaft above leads toward the high gantry and infiltration hatch; its scrape marks are newer than the dust.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_stasis_chamber",
+      "room": "Stasis Chamber",
+      "name": "sealed Bridge cradle",
+      "type": "generic",
+      "action_event": "w2_mq03_recover_bridge",
+      "quest_visibility": null,
+      "fallback": "Talk to Orion before opening the separate Bridge cradle.",
+      "event_active_quest_requirements": [
+        "w2_mq03"
+      ]
+    },
+    {
+      "room_id": "sector9_stasis_ring_array",
+      "room": "Ring Array",
+      "name": "ring console",
+      "type": "generic",
+      "action_event": "w2_mq03_align_complete",
+      "quest_visibility": null,
+      "fallback": "The rings refuse to move until all four alignment frequencies are in phase.",
+      "event_active_quest_requirements": [
+        "w2_mq03"
+      ]
+    },
+    {
+      "room_id": "sector9_stasis_coolant_lines",
+      "room": "Coolant Lines",
+      "name": "coolant garden",
+      "type": "generic",
+      "action_event": "w2_mq03_stabilize_coolant",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_mq03"
+      ]
+    },
+    {
+      "room_id": "sector9_stasis_observation",
+      "room": "Observation Deck",
+      "name": "stasis mural overview",
+      "type": "generic",
+      "action_event": "w2_mq03_read_mural_overview",
+      "quest_visibility": null,
+      "fallback": "Three empty sockets surround the chamber mural, each showing how one ring protects memory from pressure.",
+      "event_active_quest_requirements": [
+        "w2_mq03"
+      ]
+    },
+    {
+      "room_id": "sector9_vents_gantry",
+      "room": "High Gantry",
+      "name": "security grid",
+      "type": "generic",
+      "action_event": "w2_sq05_hack_grid",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_sq05"
+      ]
+    },
+    {
+      "room_id": "sector9_vents_access_grate",
+      "room": "Infiltration Hatch",
+      "name": "guard-system bypass",
+      "type": "generic",
+      "action_event": "w2_sq05_bypass_guards",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_sq05"
+      ]
+    },
+    {
+      "room_id": "sector9_vents_tech_alcove",
+      "room": "Transmitter Site",
+      "name": "case",
+      "type": "generic",
+      "action_event": "w2_sq05_search_vents",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_sq05"
+      ]
+    },
+    {
+      "room_id": "sector9_power_turbine",
+      "room": "Source Dynamo",
+      "name": "turbine inscription",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Power was tuned like music here; every machine was expected to harmonize with the living swamp.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_power_turbine",
+      "room": "Source Dynamo",
+      "name": "dynamo housing",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Massive induction coils rotate smoothly despite heavy mineral patina along the shaft.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_power_manifold",
+      "room": "Distribution Manifold",
+      "name": "manifold cooker",
+      "type": "rest_stop",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_power_manifold",
+      "room": "Distribution Manifold",
+      "name": "facility camp station",
+      "type": "rest_stop",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_power_breaker_deck",
+      "room": "Generator Controls",
+      "name": "generator breakers",
+      "type": "generic",
+      "action_event": "w2_mq05_overload_breakers",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_mq05"
+      ]
+    },
+    {
+      "room_id": "sector9_power_breaker_deck",
+      "room": "Generator Controls",
+      "name": "bus bar array",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "High-voltage conduit rails hum with power diverted from the primary sector core.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_power_valve",
+      "room": "Purge Valve",
+      "name": "root pressure gauge",
+      "type": "generic",
+      "action_event": "w2_mq05_read_pressure_gauge",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_mq05"
+      ]
+    },
+    {
+      "room_id": "sector9_source_gate",
+      "room": "Source Gate",
+      "name": "acoustic lock",
+      "type": "generic",
+      "action_event": "w2_mq05_bypass_gate",
+      "quest_visibility": null,
+      "fallback": "Prepare all four feeds first: brace the horn, ground the cup, read root pressure, and isolate the breakers.",
+      "event_active_quest_requirements": [
+        "w2_mq05"
+      ]
+    },
+    {
+      "room_id": "sector9_gate_emitter_left",
+      "room": "Harmonic Horn",
+      "name": "emitter memory",
+      "type": "generic",
+      "action_event": "w2_mq05_stabilize_horn",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_mq05"
+      ]
+    },
+    {
+      "room_id": "sector9_gate_emitter_right",
+      "room": "Resonance Cup",
+      "name": "emitter service log",
+      "type": "generic",
+      "action_event": "w2_mq05_ground_cup",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_mq05"
+      ]
+    },
+    {
+      "room_id": "sector9_hangar_bay",
+      "room": "Hangar Bay",
+      "name": "dark console",
+      "type": "generic",
+      "action_event": "w2_mq05_inspect_astra",
+      "quest_visibility": null,
+      "fallback": "Objective completed.",
+      "event_active_quest_requirements": [
+        "w2_mq05"
+      ]
+    },
+    {
+      "room_id": "sector9_hangar_bay",
+      "room": "Hangar Bay",
+      "name": "bridge relic",
+      "type": "generic",
+      "action_event": "w2_mq05_reboot",
+      "quest_visibility": null,
+      "fallback": "The Astra needs her power conduits restored first. Once the Bridge has ship current, the Chime can authenticate Orion at the console.",
+      "event_active_quest_requirements": [
+        "w2_mq05"
+      ]
+    },
+    {
+      "room_id": "sector9_hangar_bay",
+      "room": "Hangar Bay",
+      "name": "launch cradle",
+      "type": "generic",
+      "action_event": "w2_mq05_launch",
+      "quest_visibility": null,
+      "fallback": "The launch cradle will not release the Astra until the bridge relic is awake.",
+      "event_active_quest_requirements": [
+        "w2_mq05"
+      ]
+    },
+    {
+      "room_id": "sector9_hangar_bay",
+      "room": "Hangar Bay",
+      "name": "salvage return route",
+      "type": "generic",
+      "action_event": "w2_mq05_return_to_pod",
+      "quest_visibility": null,
+      "fallback": "The service hatch follows the conduit route back toward the crashed pod.",
+      "event_active_quest_requirements": [
+        "w2_mq05"
+      ]
+    },
+    {
+      "room_id": "sector9_hangar_scaffolding",
+      "room": "Maintenance Catwalks",
+      "name": "hangar overlook",
+      "type": "generic",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": "Vines lace the roof while immaculate Aethel rails descend below, a final union of wild growth and design.",
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_hangar_staging",
+      "room": "Freight Lift",
+      "name": "cargo restraints",
+      "type": "inspect",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_hangar_tower",
+      "room": "Control Console",
+      "name": "airlane chart",
+      "type": "inspect",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_hangar_fuel_lines",
+      "room": "Fuel Intake Lines",
+      "name": "conduit bus",
+      "type": "inspect",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_hangar_lock",
+      "room": "Launch Blast Shield",
+      "name": "launch safety panel",
+      "type": "inspect",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_the_sky",
+      "room": "The Sky",
+      "name": "airlane preview",
+      "type": "inspect",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_sky_mesosphere",
+      "room": "Mesosphere Storm",
+      "name": "storm overlay",
+      "type": "inspect",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_sky_shield_threshold",
+      "room": "Shield Threshold",
+      "name": "shield ceiling overlay",
+      "type": "inspect",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_sky_sensor_buoy",
+      "room": "Security Buoy",
+      "name": "security scan preview",
+      "type": "inspect",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_sky_barrier_core",
+      "room": "Barrier Controller",
+      "name": "guidance interference model",
+      "type": "inspect",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_sky_hard_deck",
+      "room": "Pushback Node",
+      "name": "altitude limiter",
+      "type": "inspect",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_coastal_research_station",
+      "room": "Tidewatch Station",
+      "name": "wetland telemetry array",
+      "type": "inspect",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_coastal_research_station",
+      "room": "Tidewatch Station",
+      "name": "forensic research slate",
+      "type": "inspect",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    },
+    {
+      "room_id": "sector9_coastal_research_station",
+      "room": "Tidewatch Station",
+      "name": "solar coffee press",
+      "type": "inspect",
+      "action_event": null,
+      "quest_visibility": null,
+      "fallback": null,
+      "event_active_quest_requirements": []
+    }
+  ],
+  "source_sha256": {
+    "app/src/main/assets/rooms.json": "4a3c5cc3a20dd72d5091cd6194399ab9887cd56d94026b3b7ed81b07d1722797",
+    "app/src/main/assets/events.json": "21dbbf3ee19ab33e79a45466cb715a21e4cef042c43f741ac0d145bec168377d"
+  }
+}

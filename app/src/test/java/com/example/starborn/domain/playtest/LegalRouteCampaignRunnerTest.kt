@@ -555,12 +555,28 @@ class LegalRouteCampaignRunnerTest {
                 h.explorationVm.setExplorationVisible(true)
                 h.explorationVm.setExplorationInteractionBlocked(false)
                 assertFalse(h.explorationVm.uiState.value.npcs.any { it.contains("charlie", true) })
-                repeat(3 - initialTrust) { h.explorationVm.playWithGladeBall(); h.settle() }
+                fun play() {
+                    h.explorationVm.inspectGladeBall(); h.settle()
+                    assertTrue("Use the existing room-object popup", h.explorationVm.uiState.value.roomObjectOffer != null)
+                    val before = h.sessionStore.state.value.playerXp
+                    h.explorationVm.confirmRoomObject(); h.settle()
+                    assertTrue(h.explorationVm.uiState.value.gladeBallAnimating)
+                    assertEquals("No reward before the return", before, h.sessionStore.state.value.playerXp)
+                    h.explorationVm.playWithGladeBall(); h.settle()
+                    assertTrue("Use the standard inspection popup", h.explorationVm.uiState.value.narrationPrompt != null)
+                    assertNull("Reward must wait for inspection dismissal", h.explorationVm.uiState.value.prompt)
+                    h.explorationVm.dismissNarration(); h.settle()
+                    while (h.explorationVm.uiState.value.prompt != null) { h.explorationVm.dismissPrompt(); h.settle() }
+                }
+                h.explorationVm.inspectGladeBall(); h.settle()
+                h.explorationVm.dismissRoomObject(); h.settle()
+                assertEquals("Back must not advance trust", xp, h.sessionStore.state.value.playerXp)
+                repeat(3 - initialTrust) { play() }
                 assertEquals("Starting trust $initialTrust", 120, h.sessionStore.state.value.playerXp)
                 assertEquals(1, h.inventoryService.snapshot()["charlies_comfort_stone"])
                 assertTrue(h.explorationVm.uiState.value.activeDialogue == null)
                 val snapshot = h.sessionStore.state.value
-                repeat(3) { h.explorationVm.playWithGladeBall(); h.settle() }
+                repeat(3) { play() }
                 assertEquals(snapshot.inventory, h.sessionStore.state.value.inventory)
                 assertEquals(snapshot.playerXp, h.sessionStore.state.value.playerXp)
                 val restored = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = h.saveSlot(9))
@@ -568,6 +584,8 @@ class LegalRouteCampaignRunnerTest {
                     restored.explorationVm.setExplorationInteractionBlocked(false)
                     restored.explorationVm.onNpcInteraction("Charlie"); restored.settle()
                     assertNull(restored.explorationVm.uiState.value.activeDialogue)
+                    assertTrue(restored.explorationVm.uiState.value.roomObjectOffer != null)
+                    restored.explorationVm.dismissRoomObject(); restored.settle()
                     assertEquals(1, restored.inventoryService.snapshot()["charlies_comfort_stone"])
                     assertEquals(120, restored.sessionStore.state.value.playerXp)
                     restored.sessionStore.setRoom("sector9_crash_site"); restored.settle()

@@ -304,9 +304,10 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
         if (room?.id == com.example.starborn.feature.exploration.presentation.GLADE_BALL_ROOM && !isDark) {
             com.example.starborn.ui.exploration.GladePuffball(
                 trust = com.example.starborn.feature.exploration.presentation.gladeBallTrust(ui.completedMilestones),
-                feedback = ui.gladeBallFeedback, enabled = !blocked,
-                reducedMotion = settings.disableScreenshake, onPlay = runtime::playWithGladeBall,
-                modifier = Modifier.align(Alignment.BottomCenter).padding(24.dp).widthIn(max = 520.dp)
+                playToken = ui.gladeBallPlayToken, enabled = !blocked,
+                reducedMotion = settings.disableScreenshake, onInspect = runtime::inspectGladeBall,
+                onPlayFinished = runtime::playWithGladeBall, onCancel = runtime::cancelGladeBallPlay,
+                modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(bottom = 24.dp)
             )
         }
         if (ui.forceBlackScreen && ui.fadeOverlay == null) Box(Modifier.fillMaxSize().background(Color.Black))

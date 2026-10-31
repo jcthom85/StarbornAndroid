@@ -31,32 +31,47 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 /** A quiet, finite animation: no portrait, idle loop, timer challenge or motion-only control. */
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun GladePuffball(
     trust: Int,
-    feedback: String?,
+    playToken: Int,
     enabled: Boolean,
     reducedMotion: Boolean,
-    onPlay: () -> Unit,
+    onInspect: () -> Unit,
+    onPlayFinished: () -> Unit,
+    onCancel: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var choices by remember { mutableStateOf(false) }
     var busy by remember { mutableStateOf(false) }
+    var lastToken by remember { mutableStateOf(playToken) }
     val roll = remember { Animatable(if (reducedMotion) 1f else 0f) }
-    val scope = rememberCoroutineScope()
+    val finish by rememberUpdatedState(onPlayFinished)
+    val cancel by rememberUpdatedState(onCancel)
+    DisposableEffect(Unit) { onDispose { cancel() } }
     LaunchedEffect(Unit) {
         busy = true
         if (!reducedMotion) roll.animateTo(1f, tween(1100))
         busy = false
     }
-    Surface(modifier.widthIn(max = 520.dp), shape = RoundedCornerShape(18.dp),
-        color = Color.Transparent, contentColor = Color(0xFFE6EAD6)) {
-        Column(Modifier.padding(horizontal = 16.dp, vertical = 10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            BoxWithConstraints(Modifier.fillMaxWidth().height(86.dp)) {
-                val travel = maxWidth / 2 + 40.dp
-                val u = roll.value
-                val bounce = if (reducedMotion) 0f else abs(sin(u * PI * 3)).toFloat() * (1f - u).coerceIn(0f, 1f) * 22f
+    LaunchedEffect(playToken) {
+        if (playToken == lastToken) return@LaunchedEffect
+        lastToken = playToken
+        busy = true
+        if (!reducedMotion) {
+            roll.animateTo(2f, tween(380))
+            roll.snapTo(0f)
+            delay(if (trust == 0) 650L else 150L)
+            roll.animateTo(if (trust == 0) 1f else 1.08f, tween(if (trust == 0) 1350 else if (trust == 1) 900 else 650))
+            if (trust > 0) roll.animateTo(1f, tween(180))
+        }
+        busy = false
+        finish()
+    }
+    // The lane uses the scene width. Only the ball receives input; the lane never clips it.
+    BoxWithConstraints(modifier.fillMaxWidth().height(112.dp).testTag("glade-puffball-lane")) {
+        val travel = maxWidth / 2 + 64.dp
+        val u = roll.value
+        val bounce = if (reducedMotion) 0f else abs(sin(u * PI * 3)).toFloat() * (1f - u).coerceIn(0f, 1f) * 22f
                 Canvas(Modifier.align(Alignment.BottomCenter)
                     .offset(x = travel * (1f - u), y = (-bounce).dp)
                     .size(64.dp)
@@ -64,7 +79,7 @@ fun GladePuffball(
                     .rotate(if (reducedMotion) 0f else (1f - u) * 300f)
                     .testTag("glade-puffball")
                     .semantics { contentDescription = if (trust == 0) "Spore puffball. Tap to play gently." else "Charlie's puffball. Tap to play." }
-                    .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, enabled = enabled && !busy) { choices = !choices }) {
+                    .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, enabled = enabled && !busy) { onInspect() }) {
                     val c = center
                     val radius = size.minDimension * .32f
                     drawCircle(Color(0xFFB4A9BE).copy(alpha = .12f), radius * 1.25f, c)
@@ -82,33 +97,5 @@ fun GladePuffball(
                             c + Offset(cos(a) * d, sin(a) * d))
                     }
                 }
-            }
-            Text(if (trust == 0) "A puffball rolls out of the ferns." else "A familiar puffball waits in the moss.",
-                style = MaterialTheme.typography.bodySmall, modifier = Modifier.background(Color(0xD6102421), RoundedCornerShape(10.dp)).padding(horizontal = 10.dp, vertical = 5.dp))
-            feedback?.let {
-                Text(it, style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = 8.dp).background(Color(0xED102421), RoundedCornerShape(12.dp)).padding(12.dp).semantics { liveRegion = LiveRegionMode.Polite })
-            }
-            if (choices) {
-                FlowRow(modifier = Modifier.background(Color(0xED102421), RoundedCornerShape(12.dp)), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    TextButton(enabled = enabled && !busy, modifier = Modifier.testTag("glade-play"), onClick = {
-                        choices = false
-                        scope.launch {
-                            busy = true
-                            if (!reducedMotion) {
-                                roll.animateTo(2f, tween(380))
-                                roll.snapTo(0f)
-                                delay(if (trust == 0) 650L else 150L)
-                                roll.animateTo(if (trust == 0) 1f else 1.08f, tween(if (trust == 0) 1350 else if (trust == 1) 900 else 650))
-                                if (trust > 0) roll.animateTo(1f, tween(180))
-                            }
-                            onPlay()
-                            busy = false
-                        }
-                    }) { Text(if (trust == 1) "Give it a gentle toss" else "Roll it back", color = Color(0xFFEACB91)) }
-                    TextButton(onClick = { choices = false }) { Text("Leave it be", color = Color(0xFFD0D9CA)) }
-                }
-            }
-        }
     }
 }
