@@ -1,0 +1,68 @@
+{
+  "baseline": "ae32b9d1",
+  "date": "2026-10-29",
+  "source_sha256": {
+    "app/src/main/assets/rooms.json": "3df616a2473923d93204df5942e7e45e9d6a3512ee71ab45a494ef9a364899e7",
+    "app/src/main/assets/quests.json": "009e672853fe70fe100dc56336d107a3bc27e7746cd45c14ce2cc772fb219f1c",
+    "app/src/main/assets/events.json": "90863285799349b0081d00f88e64e851562616966f8aacc207acb8c5b1b943af",
+    "app/src/main/assets/dialogue.json": "a9f4c29678856bc3f4e151bce83607911dbfaad4f4ff874f8dfe192c31c0b7bc",
+    "app/src/main/assets/npcs.json": "b0ee4dfdb55d387181b408a873dff35c10afbbd44867dd86804285d5659256ec",
+    "app/src/main/assets/items.json": "4d1839eaaaac61b4bc75a4f6004ee89ec0ae12fb0ba53afb04d7c699393dd32f",
+    "app/src/main/assets/enemies.json": "eaf0b8cfe35e181071c187b443d9531c76c7e5aa783792a61a64da93f32ef641",
+    "app/src/main/assets/shops.json": "e2a9d44818f89ec262ea9eac18b828dac42f5a7645ffabe3178e2c71bda553e9",
+    "app/src/main/assets/hub_nodes.json": "9643f6da453ac1ae32476f1688de11ba2c72052e49017cb6ac8364ad0cf03346",
+    "app/src/main/assets/hubs.json": "334ceda4a513e903bf877f402c136ea7a1843754a00e6980d9b478cdd9f11569",
+    "app/src/main/assets/worlds.json": "71bcfb0710f6f306fa131cb21998e82def11aa0e53fe11041775592fbea84af5",
+    "gameRuntime/src/main/kotlin/com/example/starborn/domain/dialogue/DialogueTriggerLogic.kt": "ed61466c736b81322b49e8a651b6493caeaf3b90ce7587847c46aeac7387ec43",
+    "app/src/main/java/com/example/starborn/di/AppServices.kt": "a39af647addf8a14b5646fc04490615c042f5e7c3b7714c03e0d82c5e40e3b60",
+    "gameRuntime/src/main/kotlin/com/example/starborn/feature/exploration/viewmodel/ExplorationController.kt": "fea9b8f0a98d4fa53bfffa4ad5537dcb42c5bb875d5afabe099b3d65a7a2e5e8"
+  },
+  "host_tests": [
+    {
+      "name": "com.example.starborn.data.DataIntegrityTest",
+      "tests": "30",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.di.DialogueTriggerHandlingTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.feature.exploration.WorldTwoDiscoverabilityStateTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.dialogue.Hub3CriticalFlowTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.audio.AudioRouterTest",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.session.OpeningNarrativeMigrationTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.playtest.World2RefinementTest",
+      "tests": "16",
+      "failures": "0",
+      "errors": "0"
+    }
+  ],
+  "production_dialogue_probe": "W2 crash after finished intro | com.example.starborn.domain.dialogue.DialogueTriggerLogicKt | zeke_w2_crash_1\nW2 crash after finished intro | com.example.starborn.di.AppServicesKt | zeke_w2_crash_1\nW2 Orion before alignment | com.example.starborn.domain.dialogue.DialogueTriggerLogicKt | orion_w2_awakening_1\nW2 Orion before alignment | com.example.starborn.di.AppServicesKt | orion_w2_awakening_1\nW2 Botanist zero scans | com.example.starborn.domain.dialogue.DialogueTriggerLogicKt | zeke_w2_sq01_turnin_1\nW2 Botanist zero scans | com.example.starborn.di.AppServicesKt | zeke_w2_sq01_turnin_1\nW2 optional offers after Astra inspected | com.example.starborn.domain.dialogue.DialogueTriggerLogicKt | orion_w2_mq05_gate_1\nW2 optional offers after Astra inspected | com.example.starborn.di.AppServicesKt | orion_w2_mq05_gate_1\nW3 Vance before investigation/evidence | com.example.starborn.domain.dialogue.DialogueTriggerLogicKt | director_vance_default_talk\nW3 Vance before investigation/evidence | com.example.starborn.di.AppServicesKt | director_vance_default_talk\nW3 safehouse entry before finding apartment | com.example.starborn.domain.dialogue.DialogueTriggerLogicKt | zeke_default_talk\nW3 safehouse entry before finding apartment | com.example.starborn.di.AppServicesKt | zeke_default_talk\n",
+  "probe_limits": "Real catalog/DialogueService and both compiled production condition predicates; trigger handler inert. Source confirms consequence; no phone reproduction.",
+  "runtime_playtest_performed": false,
+  "gameplay_changes": []
+}

@@ -33,7 +33,7 @@ internal fun DesktopRuntimeStatsContent(services: DesktopAppServices) {
                 if (skill != null) {
                     Text(skill.name, color = Color.White)
                     Text(skill.description)
-                    Text("${com.example.starborn.feature.combat.presentation.abilityPowerLabel(skill)} \u00B7 Cooldown: ${skill.cooldown} turns")
+                    Text("Cooldown: ${skill.cooldown} turns")
                     skill.targeting?.let { Text("Target: ${it.replace('_', ' ')}") }
                     skill.usesPerBattle?.let { Text("Uses per battle: $it") }
                     skill.statusApplications.orEmpty().forEach { Text("Status: ${services.contentName(it)}") }

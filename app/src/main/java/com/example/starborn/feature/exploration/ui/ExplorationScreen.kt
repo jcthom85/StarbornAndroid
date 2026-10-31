@@ -391,8 +391,29 @@ fun ExplorationScreen(
     val weatherCycles = remember {
         listOf(null, "dust", "rain", "storm", "snow", "cave_drip", "starfall", "steam", "fog", "gas", "resonance", "sparks")
     }
+    var approachingCombat by remember { mutableStateOf(false) }
+    val hostileApproachScale by animateFloatAsState(
+        targetValue = if (approachingCombat && !uiState.settings.disableScreenshake) 1.05f else 1f,
+        animationSpec = tween(300), label = "hostileApproach")
+    var gateRevealActive by remember { mutableStateOf(false) }
+    val gateRevealProgress = remember { CoreAnimatable(1f) }
+    var previousGateOpen by remember(uiState.currentRoom?.id) {
+        mutableStateOf(uiState.roomState["temple_open"] == true)
+    }
+    LaunchedEffect(uiState.currentRoom?.id, uiState.roomState["temple_open"]) {
+        val open = uiState.roomState["temple_open"] == true
+        if (uiState.currentRoom?.id == "sector9_temple_gate" && open && !previousGateOpen) {
+            previousGateOpen = true
+            gateRevealActive = true
+            if (!uiState.settings.disableScreenshake) {
+                gateRevealProgress.snapTo(0f)
+                gateRevealProgress.animateTo(1f, tween(1200, easing = FastOutSlowInEasing))
+            }
+            gateRevealActive = false
+        } else previousGateOpen = open
+    }
     val coroutineScope = rememberCoroutineScope()
-    val blockingOverlayActive = areaEntryActive || environmentalPreview || restRecoveryNotice != null ||
+    val blockingOverlayActive = gateRevealActive || areaEntryActive || environmentalPreview || restRecoveryNotice != null ||
         walkthroughVisible || uiState.isMenuOverlayVisible ||
             uiState.blockedPrompt != null || uiState.roomActionsVisible || uiState.roomObjectOffer != null || uiState.togglePrompt != null ||
             uiState.tuningPuzzle != null ||
@@ -450,16 +471,24 @@ fun ExplorationScreen(
         }
     }
 
-    LaunchedEffect(blockingOverlayActive, importantQuestPopupVisible) {
-        viewModel.setExplorationInteractionBlocked(blockingOverlayActive || importantQuestPopupVisible)
+    LaunchedEffect(blockingOverlayActive, importantQuestPopupVisible, approachingCombat) {
+        viewModel.setExplorationInteractionBlocked(blockingOverlayActive || importantQuestPopupVisible || approachingCombat)
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(viewModel, uiState.currentWorld?.id) {
         viewModel.events.collect { event ->
             when (event) {
-                is ExplorationEvent.EnterCombat -> onEnemySelected(event.enemyIds)
+                is ExplorationEvent.EnterCombat -> {
+                    if (uiState.currentWorld?.id == "world_2") {
+                        approachingCombat = true
+                        viewModel.setExplorationInteractionBlocked(true)
+                        delay(350L)
+                    }
+                    onEnemySelected(event.enemyIds)
+                    approachingCombat = false
+                }
                 is ExplorationEvent.PlayCinematic -> Unit
-                is ExplorationEvent.ShowMessage -> viewModel.showInspection(event.message)
+                is ExplorationEvent.ShowMessage -> Unit
                 is ExplorationEvent.ShowToast -> uiEventBus.tryEmit(
                     UiEvent.ShowToast(
                         id = event.id,
@@ -962,12 +991,13 @@ fun ExplorationScreen(
         } else {
             themeColor(activeTheme?.fg, Color.White.copy(alpha = 0.92f))
         }
-        val inlinePlan = remember(baseRoomDescription, uiState.actions, actionHints, currentRoom) {
+        val inlinePlan = remember(baseRoomDescription, uiState.actions, actionHints, currentRoom, uiState.roomState) {
             buildInlineActionPlan(
                 description = baseRoomDescription,
                 actions = uiState.actions,
                 hints = actionHints,
-                room = currentRoom
+                room = currentRoom,
+                inspectionState = uiState.roomState
             )
         }
         val descriptionForPanel = baseRoomDescription
@@ -1116,8 +1146,9 @@ fun ExplorationScreen(
                     accentColor = actionAccentColor,
                     isDark = isRoomDark,
                     roomId = uiState.currentRoom?.id,
-                    onPartyClick = { enemyId -> viewModel.engageEnemy(enemyId) },
+                    onPartyClick = { enemyId -> if (!approachingCombat) viewModel.engageEnemy(enemyId) },
                     modifier = Modifier
+                        .graphicsLayer { scaleX = hostileApproachScale; scaleY = hostileApproachScale }
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth()
                         .heightIn(min = 250.dp, max = 410.dp)
@@ -1125,6 +1156,47 @@ fun ExplorationScreen(
                 )
             }
 
+
+            if (uiState.currentRoom?.id == com.example.starborn.feature.exploration.presentation.GLADE_BALL_ROOM && !isRoomDark) {
+                com.example.starborn.ui.exploration.GladePuffball(
+                    trust = com.example.starborn.feature.exploration.presentation.gladeBallTrust(uiState.completedMilestones),
+                    feedback = uiState.gladeBallFeedback,
+                    enabled = !blockingOverlayActive && !importantQuestPopupVisible && !roomTransitionInProgress,
+                    reducedMotion = uiState.settings.disableScreenshake,
+                    onPlay = viewModel::playWithGladeBall,
+                    modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(horizontal = 20.dp, vertical = 10.dp)
+                )
+            }
+
+            if (gateRevealActive) {
+                Box(Modifier.fillMaxSize().pointerInput(Unit) {
+                    awaitPointerEventScope {
+                        while (true) awaitPointerEvent().changes.forEach { it.consume() }
+                    }
+                }) {
+                    if (!uiState.settings.disableScreenshake) Canvas(Modifier.fillMaxSize()) {
+                        val retreat = size.width * 0.5f * gateRevealProgress.value
+                        val slab = Color(0xFF27332F)
+                        drawRect(slab, Offset(-retreat, 0f), Size(size.width * 0.5f, size.height))
+                        drawRect(slab, Offset(size.width * 0.5f + retreat, 0f), Size(size.width * 0.5f, size.height))
+                        val seam = Color(0xFFAACAC0).copy(alpha = 0.5f)
+                        drawLine(seam, Offset(size.width * 0.5f - retreat, 0f), Offset(size.width * 0.5f - retreat, size.height), 2.dp.toPx())
+                        drawLine(seam, Offset(size.width * 0.5f + retreat, 0f), Offset(size.width * 0.5f + retreat, size.height), 2.dp.toPx())
+                    }
+                }
+            }
+
+            if (approachingCombat) {
+                Surface(
+                    modifier = Modifier.align(Alignment.Center).padding(24.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    color = Color(0xFF24191D),
+                    border = BorderStroke(1.dp, Color(0xFFE5A36B))
+                ) {
+                    Text("Hostiles closing in", modifier = Modifier.padding(20.dp),
+                        color = Color(0xFFFFD8B0), style = MaterialTheme.typography.titleMedium)
+                }
+            }
 
             if (isWeatherLab) {
                 WeatherLabPanel(
@@ -5161,7 +5233,7 @@ private fun ServicePresenceChip(
         color = Color(0xFF071018).copy(alpha = if (isDark) 0.86f else 0.72f),
         border = BorderStroke(1.dp, accentColor.copy(alpha = if (isDark) 0.58f else 0.46f)),
         modifier = modifier
-            .widthIn(min = 132.dp)
+            .widthIn(min = 72.dp)
             .height(46.dp)
             .clip(shape)
             .clickable(onClick = onClick)
@@ -5421,7 +5493,7 @@ private fun NpcPresenceChip(
             accentColor.copy(alpha = if (isDark) (0.68f + 0.30f * halo).coerceAtMost(1f) else (0.54f + 0.38f * halo).coerceAtMost(1f))
         ),
         modifier = Modifier
-            .widthIn(min = 136.dp, max = 176.dp)
+            .widthIn(min = 80.dp, max = 176.dp)
             .height(46.dp)
             .graphicsLayer {
                 alpha = animAlpha
@@ -6292,7 +6364,7 @@ private fun EnemyPartyStandee(
                     border = BorderStroke(1.dp, Color(0xFFEF4444).copy(alpha = 0.85f))
                 ) {
                     Text(
-                        text = "⚔ FIGHT",
+                        text = "HOSTILE",
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold,

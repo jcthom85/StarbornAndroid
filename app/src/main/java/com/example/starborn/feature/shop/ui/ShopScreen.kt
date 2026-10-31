@@ -50,6 +50,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.spring
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -179,7 +182,15 @@ private fun ShopScreen(
     ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) { data ->
+                Surface(color = Color(0xFF07121C), shape = RoundedCornerShape(14.dp),
+                    border = BorderStroke(1.dp, Color(0xFFFFCF7B)), modifier = Modifier.padding(12.dp)) {
+                    Row(Modifier.padding(horizontal = 16.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Text(data.visuals.message, Modifier.weight(1f), color = Color(0xFFE9F0F2))
+                        TextButton(onClick = { data.dismiss() }) { Text("Dismiss", color = Color(0xFFFFCF7B)) }
+                    }
+                }
+            } },
             containerColor = Color.Transparent,
             topBar = {
                 StationHeader(
@@ -789,120 +800,13 @@ private fun ShopDialogueBar(
     largeTouchTargets: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val line = lines.lastOrNull()
-    val speaker = line?.speaker?.takeIf { it.isNotBlank() } ?: shopName.ifBlank { "Shopkeeper" }
-    val portraitSize = if (largeTouchTargets) 68.dp else 60.dp
-    val portraitPainter = rememberAssetPainter(
-        portraitPath,
-        fallback = painterResource(R.drawable.main_menu_background)
-    )
-    Box(modifier = modifier.padding(top = portraitSize * 0.42f)) {
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = colors.panel,
-            contentColor = Color.White,
-            shadowElevation = 10.dp,
-            tonalElevation = 3.dp,
-            shape = RoundedCornerShape(18.dp),
-            border = BorderStroke(1.dp, colors.accent.copy(alpha = 0.42f))
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        Brush.horizontalGradient(
-                            colors = listOf(
-                                colors.accent.copy(alpha = 0.14f),
-                                colors.accentAlt.copy(alpha = 0.06f),
-                                Color.Transparent
-                            )
-                        )
-                    )
-                    .padding(start = 18.dp, top = 40.dp, end = 18.dp, bottom = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(3.dp)
-                            .fillMaxHeight()
-                            .clip(RoundedCornerShape(999.dp))
-                            .background(colors.accent.copy(alpha = 0.78f))
-                    )
-                    Text(
-                        text = line?.text ?: "Browse the stock or sell your supplies.",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White.copy(alpha = 0.96f),
-                        maxLines = 4,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            }
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.TopStart)
-                .offset(x = 14.dp, y = (-portraitSize * 0.42f)),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (!portraitPath.isNullOrBlank()) {
-                Surface(
-                    modifier = Modifier.size(portraitSize),
-                    color = Color(0xFF080C11),
-                    shape = RoundedCornerShape(12.dp),
-                    tonalElevation = 1.dp,
-                    shadowElevation = 4.dp,
-                    border = BorderStroke(1.dp, colors.accent.copy(alpha = 0.55f))
-                ) {
-                    Image(
-                        painter = portraitPainter,
-                        contentDescription = speaker,
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            } else {
-                Surface(
-                    modifier = Modifier.size(portraitSize),
-                    color = Color(0xFF080C11),
-                    shape = RoundedCornerShape(12.dp),
-                    tonalElevation = 1.dp,
-                    shadowElevation = 4.dp,
-                    border = BorderStroke(1.dp, colors.accent.copy(alpha = 0.55f))
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        val initial = speaker.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
-                        Text(
-                            text = initial,
-                            style = MaterialTheme.typography.titleMedium,
-                            color = Color.White
-                        )
-                    }
-                }
-            }
-            Surface(
-                color = Color(0xE6080C11),
-                shape = RoundedCornerShape(999.dp),
-                border = BorderStroke(1.dp, colors.accent.copy(alpha = 0.28f))
-            ) {
-                Text(
-                    text = speaker,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = colors.accent,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-        }
-    }
+    val line = lines.lastOrNull() ?: return
+    val speaker = line.speaker?.takeIf { it.isNotBlank() } ?: shopName.ifBlank { "Shopkeeper" }
+    com.example.starborn.feature.exploration.ui.DialogueOverlay(
+        dialogue = com.example.starborn.feature.exploration.viewmodel.DialogueUi(
+            com.example.starborn.domain.model.DialogueLine(id = line.id, speaker = speaker, text = line.text),
+            portrait = portraitPath, voiceCue = null),
+        choices = emptyList(), onAdvance = {}, onChoice = {}, onPlayVoice = {}, modifier = modifier)
 }
 
 @Composable

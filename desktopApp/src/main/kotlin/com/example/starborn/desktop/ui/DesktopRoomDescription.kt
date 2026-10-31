@@ -200,16 +200,16 @@ private fun SinglePlanDescription(
             plan.segments.forEach { segment ->
                 val target = segment.target
                 val (color, weight, decoration) = when (target) {
-                    is InlineActionTarget.Npc -> Triple(Color.White, FontWeight.Bold, TextDecoration.Underline)
+                    is InlineActionTarget.Npc -> Triple(highlightColor, FontWeight.SemiBold, TextDecoration.Underline)
                     is InlineActionTarget.Enemy -> Triple(enemyAccent, FontWeight.SemiBold, TextDecoration.Underline)
                     is InlineActionTarget.Room -> {
                         val isShop = target.action is com.example.starborn.domain.model.ShopAction
-                        val clr = if (segment.locked) disabledColor else if (isShop) Color(0xFFFFCA28) else highlightColor
-                        Triple(clr, FontWeight.Bold, if (segment.locked) TextDecoration.None else TextDecoration.Underline)
+                        val clr = if (segment.locked || segment.inspected) disabledColor else if (isShop) Color(0xFFFFCA28) else highlightColor
+                        Triple(clr, if (segment.inspected) FontWeight.Normal else FontWeight.Bold, if (segment.locked) TextDecoration.None else TextDecoration.Underline)
                     }
                 }
                 val backgroundColor = when (target) {
-                    is InlineActionTarget.Npc -> accentColor.copy(alpha = if (isDark) 0.34f else 0.26f)
+                    is InlineActionTarget.Npc -> Color.Transparent
                     else -> Color.Transparent
                 }
                 addStyle(

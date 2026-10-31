@@ -410,7 +410,7 @@ internal fun DesktopVictoryLevelUpCard(
                             tint = Color(0xFFFFE082)
                         )
                         Text(
-                            text = if (summary.unlockedSkills.size == 1) "New Skill" else "New Skills",
+                            text = if (summary.unlockedSkills.size == 1) "New Ability" else "New Abilities",
                             style = MaterialTheme.typography.labelLarge,
                             color = Color(0xFFFFE082)
                         )

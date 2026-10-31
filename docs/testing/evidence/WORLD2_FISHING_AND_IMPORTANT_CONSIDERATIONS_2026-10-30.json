@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-30",
+  "unit_results": {
+    "host": {
+      "tests": 141,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "desktop": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "android_instrumentation": {
+    "fishing_and_ability_tests": 3,
+    "dialogue_tests": 1,
+    "result": "passed",
+    "device": "API 37 arm64 emulator; not Pixel 8a"
+  },
+  "apk": "app/build/outputs/apk/debug/app-debug.apk",
+  "apk_sha256": "92df8fb486e7aea6fa87ad90e0dccafb884d70df0c55510bf4f5b2a15b3d524f",
+  "source_sha256": {
+    "app/src/main/java/com/example/starborn/feature/fishing/ui/FishingScreen.kt": "12bb82a0a538daa51a9ff030190dfbdee788aa6da94f1596370996a59c575493",
+    "shared/src/androidJvmMain/kotlin/com/example/starborn/ui/fishing/FishingWaterScene.kt": "346204c13eae234ebce93f2fd2e39525752ff1ed502c7c383ce1b7723e9305e9",
+    "gameRuntime/src/main/kotlin/com/example/starborn/feature/exploration/viewmodel/ExplorationController.kt": "d5199d71343d9c59207537fc4d1855d6e3677989c81ca2a3c35271a4f4090ff5",
+    "app/src/main/java/com/example/starborn/feature/exploration/ui/DialogueOverlay.kt": "b15909f8b286b274cbc4bedfad5d66e264fb94d032175ccf3074f1df51ab2da0"
+  }
+}

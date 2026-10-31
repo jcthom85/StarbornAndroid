@@ -563,7 +563,7 @@
     "credit_reward": 0,
     "drops": [],
     "description": "Healing biological vine structure.",
-    "portrait": "images/enemies/siren_skimmer_combat.png"
+    "portrait": "images/enemies/stalker_vine_combat.png"
   },
   {
     "id": "sentinel_orb",

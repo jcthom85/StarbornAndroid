@@ -253,7 +253,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
         val description = if (ui.isBurgQuestSession && room?.id == "astra_common_room")
             com.example.starborn.feature.exploration.presentation.BurgQuestPresentation.commonRoomDescription
             else resolveRoomDescription(room, ui.roomState, ui.completedMilestones, isDark)
-        val inlinePlan = remember(description, ui.actions, ui.actionHints, room) { buildInlineActionPlan(description, ui.actions, ui.actionHints, room) }
+        val inlinePlan = remember(description, ui.actions, ui.actionHints, room, ui.roomState) { buildInlineActionPlan(description, ui.actions, ui.actionHints, room, ui.roomState) }
         DesktopRoomTransitionBackdrop(services, ui, moveProgress.value,
             resolveRoomBackground(room, ui.roomState, ui.completedMilestones)) { layout ->
             if (isDark) Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = .85f)))
@@ -299,6 +299,14 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                 onOpenControls = { controlsOpen = true },
                 onInteractFirst = ::interactFirst,
                 onChooseActions = { runtime.openRoomActions() }
+            )
+        }
+        if (room?.id == com.example.starborn.feature.exploration.presentation.GLADE_BALL_ROOM && !isDark) {
+            com.example.starborn.ui.exploration.GladePuffball(
+                trust = com.example.starborn.feature.exploration.presentation.gladeBallTrust(ui.completedMilestones),
+                feedback = ui.gladeBallFeedback, enabled = !blocked,
+                reducedMotion = settings.disableScreenshake, onPlay = runtime::playWithGladeBall,
+                modifier = Modifier.align(Alignment.BottomCenter).padding(24.dp).widthIn(max = 520.dp)
             )
         }
         if (ui.forceBlackScreen && ui.fadeOverlay == null) Box(Modifier.fillMaxSize().background(Color.Black))

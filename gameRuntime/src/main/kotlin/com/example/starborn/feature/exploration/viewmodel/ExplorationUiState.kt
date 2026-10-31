@@ -40,6 +40,7 @@ data class ExplorationUiState(
     val dialogueChoices: List<DialogueChoiceUi> = emptyList(),
     val activeMeal: com.example.starborn.domain.session.ActiveMealBuff? = null,
     val statusMessage: String? = null,
+    val gladeBallFeedback: String? = null,
     val menuFeedback: String? = null,
     val blockedPrompt: BlockedPrompt? = null,
     val activeQuests: Set<String> = emptySet(),
@@ -314,7 +315,9 @@ data class MinimapCellUi(
     val isPreview: Boolean = false,
     val nodeExits: List<MapNodeExitUi> = emptyList(),
     val title: String = roomId,
-    val hubExit: MapHubExitUi? = null
+    val hubExit: MapHubExitUi? = null,
+    // Relative target positions for paths continuing outside the minimap's dot viewport.
+    val continuationOffsets: Map<String, Pair<Int, Int>> = emptyMap()
 )
 
 data class MapHubExitUi(val destinationTitle: String, val blocked: Boolean = false)

@@ -117,7 +117,7 @@
         "id": "world2_debuffs",
         "steps": [
             {
-                "message": "World 2 enemies disrupt more than HP. If a status chip appears on a party member, slow down and read it before choosing the next action.",
+                "message": "Enemies can disrupt more than HP. If a status chip appears on a party member, slow down and read it before choosing the next action.",
                 "context": "Combat"
             },
             {

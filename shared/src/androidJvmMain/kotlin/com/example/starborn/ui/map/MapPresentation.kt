@@ -245,12 +245,31 @@ fun AreaMapCanvas(cells: List<MinimapCellUi>, modifier: Modifier = Modifier, min
                 }
             }
         } } }
+        // Keep long paths visible even when their destination dot is outside this window.
+        // Only existing local connections supply geometry; no remote room features are exposed.
+        if (minimap) clipRect {
+            visible.forEach { cell ->
+                cell.continuationOffsets.forEach { (direction, target) ->
+                    val a = point(cell)
+                    val targetPoint = mid + Offset(target.first * step, -target.second * step)
+                    val delta = targetPoint - a
+                    val b = a + delta * (maxOf(size.width, size.height) * 2f / delta.getDistance().coerceAtLeast(1f))
+                    val blocked = direction in cell.blockedDirections
+                    drawLine(if (blocked) MapPalette.blocked else MapPalette.visited.copy(alpha = .55f),
+                        a, b, (step * .07f).coerceAtMost(1.5.dp.toPx()), StrokeCap.Round,
+                        pathEffect = if (blocked) PathEffect.dashPathEffect(floatArrayOf(5.dp.toPx(), 4.dp.toPx())) else null)
+                }
+            }
+        }
         visible.forEach { cell ->
             val p = point(cell)
             val radius = step * (if (cell.isCurrent) .25f else if (mapRoomHasExit(cell)) .21f else .16f)
             drawMapRoom(cell, p, radius, selected = !minimap && cell.roomId == selectedId)
             drawMapThreat(cell, p, radius)
             if (!minimap) drawMapFeatures(cell, p, radius, servicePainters, availableWidth = step * .8f)
+            else cell.nodeExits.forEach { exit ->
+                drawNodeExitMarker(p, exit, radius, step * .48f)
+            }
         }
         if (!minimap) drawFullMapNodeExits(visible, ::point, step*.32f, textMeasurer)
     }

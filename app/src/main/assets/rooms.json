@@ -643,9 +643,9 @@
     "npc_presence": [
       {
         "npc": "mechanic_mira",
-      "requires_milestones": [
-        "ms_w1_mq01_loader_cleared"
-      ]
+        "requires_milestones": [
+          "ms_w1_mq01_loader_cleared"
+        ]
       }
     ]
   },
@@ -718,7 +718,7 @@
         "action_event": "w1_mq01_cutter_surge",
         "show_when_milestone": "ms_w1_mq01_cryo_repaired",
         "hide_when_state": "cutter_surge_complete",
-      "condition_unmet_message": "Ground the Flux Liner and confirm the mining cutter bypass before firing a live test sweep."
+        "condition_unmet_message": "Ground the Flux Liner and confirm the mining cutter bypass before firing a live test sweep."
       }
     ]
   },
@@ -3415,7 +3415,7 @@
       {
         "name": "service recess",
         "type": "rest_stop",
-      "message": "While the lift pressure rebuilds, Nova ducks into the shielded service recess and uses its emergency dressings to patch up the crew. The pause lasts only until the pressure gauge turns green."
+        "message": "While the lift pressure rebuilds, Nova ducks into the shielded service recess and uses its emergency dressings to patch up the crew. The pause lasts only until the pressure gauge turns green."
       }
     ],
     "blocked_directions": {
@@ -5124,7 +5124,8 @@
           "battery"
         ],
         "already_open_message": "The black-box safe is open, its magnetic tumblers depolarized.",
-        "popup_title": "Black-Box Safe"
+        "popup_title": "Black-Box Safe",
+        "discovery_message": "You open the safe and lift the secured components from their protective housing."
       },
       {
         "name": "holographic projector",
@@ -5724,7 +5725,8 @@
           "composite_plate"
         ],
         "already_open_message": "The crucible safe is open, its volcanic slag seals cracked.",
-        "popup_title": "Precursor Crucible"
+        "popup_title": "Precursor Crucible",
+        "discovery_message": "You reach into the cooled crucible and separate the intact components from the surrounding residue."
       },
       {
         "name": "smelting anvil",
@@ -7396,7 +7398,8 @@
           "circuit_board"
         ],
         "already_open_message": "The sub-vault lies open, its vacuum seals hissing faint vapor into the void.",
-        "popup_title": "Experimental AI Sub-Vault"
+        "popup_title": "Experimental AI Sub-Vault",
+        "discovery_message": "The sub-vault opens onto padded equipment bays. You recover the components that survived the breach."
       },
       {
         "name": "shattered canopy",
@@ -9002,7 +9005,7 @@
     "weather": "fog",
     "title": "Crash Site",
     "background_image": "images/rooms/world_2/crash_site.webp",
-    "description": "The escape pod wreckage sits half-submerged in warm glow-water. A scorched navigation console ticks under an open panel. Zeke coughs on the hull while scan moss vibrates along the seams.",
+    "description": "The escape pod wreckage sits half-submerged in warm glow-water. A scorched navigation console ticks under an open panel. Zeke checks a split suit seam beside the hull while moss vibrates along the seams.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9036,11 +9039,13 @@
         "condition_unmet_message": "The water is warm and vibrates with a gentle frequency. It feels soothing to touch."
       },
       {
-        "name": "scan moss",
+        "name": "moss",
         "type": "generic",
         "action_event": "w2_sq01_scan_moss",
         "condition_unmet_message": "Objective completed.",
-        "requires_milestone_not_set": "ms_w2_flora_moss_scanned"
+        "requires_milestone_not_set": "ms_w2_flora_moss_scanned",
+        "show_when_quest_active": "w2_sq01",
+        "hide_when_event_completed": "w2_sq01_scan_moss"
       }
     ],
     "npc_presence": [
@@ -9059,7 +9064,7 @@
         "requires_milestones": [
           "ms_w2_mq01_complete"
         ],
-        "description": "The escape pod wreckage has cooled in the glow-water. Zeke is stable, the navigation console is dead, and the scan moss registers a clean signal inland."
+        "description": "The escape pod wreckage has cooled in the glow-water. Zeke's suit is sealed, the navigation console is dead, and the moss registers a clean signal inland."
       },
       {
         "requires_milestones": [
@@ -9071,7 +9076,7 @@
         "requires_milestones": [
           "ms_w2_pod_examined"
         ],
-        "description": "The escape pod wreckage sits wedged into the swamp silt and glow-water, trailing steam into the humid air. The impact telemetry has been extracted from the dark navigation console. Scan moss vibrates along the hull seams."
+        "description": "The escape pod wreckage sits wedged into the swamp silt and glow-water, trailing steam into the humid air. The impact telemetry has been extracted from the dark navigation console. Moss vibrates along the hull seams."
       }
     ]
   },
@@ -9169,10 +9174,8 @@
     "weather": "fog",
     "title": "Overgrown Glade",
     "background_image": "images/rooms/world_2/landing_glade.webp",
-    "description": "A dense grove of giant ferns forms a broadleaf canopy overhead, filtering the dim sky into a green haze. Luminous mushrooms grow in thick clumps along a decaying log beside a small mossy hollow.",
-    "npcs": [
-      "creature_charlie"
-    ],
+    "description": "A broadleaf canopy filters the sky into green haze. Luminous mushrooms cluster along a decaying log. Beneath it, a mossy hollow rustles; a velvety spore puffball rolls out and settles near your boots.",
+    "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
@@ -9202,7 +9205,7 @@
         "name": "mossy hollow",
         "type": "inspect",
         "description": "Inspect the cozy hollow nestled beneath the decaying log.",
-        "inspect_message": "A soft burrow lined with damp fern moss. Several dozen velvety, rounded spore puff balls are neatly clustered inside, clearly saved for playtime."
+        "inspect_message": "A soft hollow beneath the log. Velvety spore puffballs lie tucked into the moss. Something rustles deeper inside, then falls quiet."
       }
     ],
     "description_variants": [
@@ -9210,7 +9213,7 @@
         "requires_milestones": [
           "ms_w2_herb_glade_foraged"
         ],
-        "description": "A quiet clearing beneath a broadleaf canopy, lit by dim bioluminescence. The harvested mushroom stalks fade back into the dark moss beside a small mossy hollow."
+        "description": "A broadleaf canopy shelters the quiet clearing. Harvested mushroom stalks fade into the moss beside a decaying log. A velvety spore puffball rests outside the mossy hollow beneath it."
       }
     ]
   },
@@ -9265,7 +9268,8 @@
           "scrap_metal"
         ],
         "already_open_message": "The silt cache has been cleared of useful salvage.",
-        "popup_title": "River Silt Cache"
+        "popup_title": "River Silt Cache",
+        "discovery_message": "You loosen the silt around a buried field case. Its seal has kept the river out of the supplies inside."
       }
     ]
   },
@@ -9306,7 +9310,7 @@
     "weather": "fog",
     "title": "Pod Fragment",
     "background_image": "images/rooms/world_2/landing_drop.webp",
-    "description": "A metal cargo panel from the escape pod has sheared off and sits wedged in the mud. Underneath it, salvage conduits, empty battery cells, and diagnostic wires lie scattered.",
+    "description": "A metal cargo panel from the escape pod has sheared off and sits wedged in the mud. Underneath it, power conduits, empty battery cells, and diagnostic wires lie scattered.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9320,11 +9324,14 @@
     "state": {},
     "actions": [
       {
-        "name": "salvage conduits",
+        "name": "power conduits",
         "type": "generic",
         "action_event": "w2_mq05_collect_conduits",
         "condition_unmet_message": "Salvaging power conduits from the pod wreckage...",
-        "requires_milestone_not_set": "ms_w2_conduits_collected"
+        "requires_milestone_not_set": "ms_w2_conduits_collected",
+        "show_when_quest_active": "w2_mq05",
+        "show_when_milestone": "ms_w2_astra_inspected",
+        "hide_when_event_completed": "w2_mq05_collect_conduits"
       },
       {
         "name": "cargo panel",
@@ -9435,7 +9442,20 @@
           "chemical_catalyst"
         ],
         "already_open_message": "The emergency locker stands open, draining brackish water into the sedge.",
-        "popup_title": "Emergency Locker"
+        "popup_title": "Emergency Locker",
+        "discovery_message": "You lever the locker above the waterline and release its latch. Brackish water drains away from a sealed inner compartment."
+      }
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "spore_spitter",
+        "extra_drops": [
+          {
+            "id": "herb",
+            "chance": 1.0,
+            "quantity": 1
+          }
+        ]
       }
     ]
   },
@@ -9603,10 +9623,11 @@
     "weather": "cave_drip",
     "title": "Glow-Moss Cavern",
     "background_image": "images/rooms/world_2/stream_cave_depths.webp",
-    "description": "A quiet cavern chamber lit blue by thick sheets of glowing moss. A waterproof cargo case rests against the rocks. An echo nest rings the far wall, and the damp stone carries the waterfall in a hollow rhythm.",
+    "description": "A quiet cavern chamber lit blue by thick sheets of glowing moss. A waterproof cargo case rests against the rocks. Two Echo-Borers scrape around an echo nest, their crystalline claws clicking against the cold stone.",
     "npcs": [],
     "items": [],
     "enemies": [
+      "echo_borer",
       "echo_borer"
     ],
     "connections": {
@@ -9645,6 +9666,12 @@
         ],
         "description": "A cavern opening where deep seismic hums vibrate through the stone. Glowing moss lights a waterproof cargo case against the rocks. The echo nest is cleared."
       }
+    ],
+    "enemy_parties": [
+      [
+        "echo_borer",
+        "echo_borer"
+      ]
     ]
   },
   {
@@ -9742,7 +9769,8 @@
           "bioluminescent_lure"
         ],
         "already_open_message": "The reliquary is open, its ancient brass seals broken.",
-        "popup_title": "Precursor Reliquary"
+        "popup_title": "Precursor Reliquary",
+        "discovery_message": "The brass seals yield under steady pressure. You lift the lid and ease the preserved contents from their fitted recesses."
       },
       {
         "name": "living coral",
@@ -9843,7 +9871,7 @@
     "weather": "fog",
     "title": "Tide Pools",
     "background_image": "images/rooms/world_2/beach_pools.webp",
-    "description": "Glowing tide pools collect in the sand around luminescent anemones, calm enough for [action:tide fishing|fishing] beneath the pale blue fog. Bioluminescent [action:scan weeds|weeds] pulse near the shore where you can [action:gather tideglass|gather tideglass] for Orion's recipe.",
+    "description": "Glowing tide pools collect in the sand around luminescent anemones, calm enough for [action:tide fishing|fishing] beneath the pale blue fog. Bioluminescent weeds pulse beside a tideglass growth along the shore.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9871,18 +9899,22 @@
         "condition_unmet_message": "The tide pools are calm enough for fishing."
       },
       {
-        "name": "scan weeds",
+        "name": "bioluminescent weeds",
         "type": "generic",
         "action_event": "w2_sq01_scan_weeds",
         "condition_unmet_message": "Objective completed.",
-        "requires_milestone_not_set": "ms_w2_flora_weeds_scanned"
+        "requires_milestone_not_set": "ms_w2_flora_weeds_scanned",
+        "show_when_quest_active": "w2_sq01",
+        "hide_when_event_completed": "w2_sq01_scan_weeds"
       },
       {
-        "name": "gather tideglass",
+        "name": "tideglass growth",
         "type": "generic",
         "action_event": "w2_sq03_gather_tideglass",
         "condition_unmet_message": "Glowing tideglass skewers are harvested from the shore.",
-        "requires_milestone_not_set": "ms_w2_tideglass_gathered"
+        "requires_milestone_not_set": "ms_w2_tideglass_gathered",
+        "show_when_quest_active": "w2_sq03",
+        "hide_when_event_completed": "w2_sq03_gather"
       },
       {
         "name": "luminescent anemones",
@@ -9902,13 +9934,13 @@
         "requires_milestones": [
           "ms_w2_flora_weeds_scanned"
         ],
-        "description": "Shallow tidal pools glisten around luminescent anemones, calm enough for [action:tide fishing|fishing] against the volcanic sand. The bioluminescent weeds have been cataloged, and you can [action:gather tideglass|gather tideglass] along the shore for Orion's recipe."
+        "description": "Shallow tide pools glisten around luminescent anemones, calm enough for [action:tide fishing|fishing]. The weeds have been cataloged; a tideglass growth still glows along the shore."
       },
       {
         "requires_milestones": [
           "ms_w2_tideglass_gathered"
         ],
-        "description": "Glowing tide pools collect in the sand around luminescent anemones, calm enough for [action:tide fishing|fishing] beneath the pale blue fog. Bioluminescent [action:scan weeds|weeds] pulse near the shore where the tideglass was harvested."
+        "description": "Glowing tide pools collect around luminescent anemones, calm enough for [action:tide fishing|fishing]. Bioluminescent weeds pulse near the bare patch where the tideglass was harvested."
       }
     ]
   },
@@ -9943,7 +9975,8 @@
           "nano_filament"
         ],
         "already_open_message": "The beached shipping crates have been salvaged.",
-        "popup_title": "Beached Crates"
+        "popup_title": "Beached Crates",
+        "discovery_message": "You pry apart the warped shipping panels. Beneath the soaked packing, a few sealed supplies are still usable."
       },
       {
         "name": "rusted hull",
@@ -9988,7 +10021,8 @@
           "burn_salve"
         ],
         "already_open_message": "The tide-worn chest is empty save for a crust of dried sea salt.",
-        "popup_title": "Tide-Worn Chest"
+        "popup_title": "Tide-Worn Chest",
+        "discovery_message": "You work the salt-stiff latch free. The chest opens with a scrape, revealing dry bundles beneath its weathered lid."
       }
     ]
   },
@@ -10121,11 +10155,12 @@
     "weather": "resonance",
     "title": "Resonant Canopy",
     "background_image": "images/rooms/world_2/resonant_canopy.webp",
-    "description": "The canopy of the ruins is covered in giant, crystalline ferns that catch the dim light and buzz with low-frequency standing waves. You can [action:Scan ferns|scan the ferns] or [action:Scan spores|scan the drifting spores] for harmonic readings, or [action:Scavenge remains|scavenge the remains] of a fallen scout tangled nearby.",
+    "description": "Crystalline ferns hum above a Stalker-Vine feeding a Spore-Spitter through its roots. Drifting spores catch the light. The remains of a fallen scout lie tangled nearby; you can [action:Scavenge remains|scavenge the remains]. A low-frequency hum runs through the branches.",
     "npcs": [],
     "items": [],
     "enemies": [
-      "stalker_vine"
+      "stalker_vine",
+      "spore_spitter"
     ],
     "connections": {
       "north": "sector9_crash_site",
@@ -10138,22 +10173,26 @@
     "state": {},
     "actions": [
       {
-        "name": "ferns",
+        "name": "low-frequency hum",
         "type": "generic",
         "condition_unmet_message": "Their leaves vibrate like harp strings when touched, ringing out a quiet chord."
       },
       {
-        "name": "Scan ferns",
+        "name": "crystalline ferns",
         "type": "generic",
         "action_event": "w2_sq01_scan_ferns",
         "condition_unmet_message": "Objective completed.",
-        "requires_milestone_not_set": "ms_w2_flora_ferns_scanned"
+        "requires_milestone_not_set": "ms_w2_flora_ferns_scanned",
+        "show_when_quest_active": "w2_sq01",
+        "hide_when_event_completed": "w2_sq01_scan_ferns"
       },
       {
-        "name": "Scan spores",
+        "name": "drifting spores",
         "type": "generic",
         "action_event": "w2_sq01_scan_spores",
-        "condition_unmet_message": "The razor-vine spores vibrate with high energy."
+        "condition_unmet_message": "The razor-vine spores vibrate with high energy.",
+        "show_when_quest_active": "w2_sq01",
+        "hide_when_event_completed": "w2_sq01_scan_spores"
       },
       {
         "name": "Scavenge remains",
@@ -10164,7 +10203,8 @@
     ],
     "enemy_parties": [
       [
-        "stalker_vine"
+        "stalker_vine",
+        "spore_spitter"
       ]
     ],
     "description_variants": [
@@ -10172,7 +10212,21 @@
         "requires_milestones": [
           "ms_w2_flora_ferns_scanned"
         ],
-        "description": "The canopy is covered in giant, crystalline ferns that hum in low frequency. With the fern survey logged, you can still [action:Scan spores|scan the drifting spores] or [action:Scavenge remains|scavenge the remains] of the fallen scout tangled nearby."
+        "description": "Crystalline ferns carry a low-frequency hum through the canopy. The fern survey is logged, but drifting spores still catch the light above the fallen scout. You can [action:Scavenge remains|scavenge the remains] tangled in the roots."
+      }
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "stalker_vine",
+        "hp": 60,
+        "vitality": 4,
+        "stability": 60
+      },
+      {
+        "enemy_id": "spore_spitter",
+        "hp": 30,
+        "vitality": 3,
+        "stability": 30
       }
     ]
   },
@@ -10241,10 +10295,11 @@
     "weather": "resonance",
     "title": "Hound Nest",
     "background_image": "images/rooms/world_2/wilds_nest.webp",
-    "description": "A shallow den trampled into the briars. Shard-hound tracks crisscross the mud around shard-hound remains and a trampled supply pack dragged beneath the thorns.",
+    "description": "Two Shard-Hounds circle a shallow den, crystalline spines raised. Shard-hound tracks crisscross the mud around shard-hound remains and a trampled supply pack dragged beneath the thorns.",
     "npcs": [],
     "items": [],
     "enemies": [
+      "shard_hound",
       "shard_hound"
     ],
     "connections": {
@@ -10273,7 +10328,8 @@
           "energy_core"
         ],
         "already_open_message": "The torn fabric holds only shredded padding and animal hair.",
-        "popup_title": "Trampled Pack"
+        "popup_title": "Trampled Pack",
+        "discovery_message": "You pull the torn pack clear of the thorns. Its padded inner pockets have survived the hounds."
       }
     ],
     "description_variants": [
@@ -10282,6 +10338,35 @@
           "ms_w2_meat_nest_foraged"
         ],
         "description": "A clearing surrounded by jagged stone slabs where a trampled supply pack lies caught in the briars. The shard-hound nest is picked clean of salvageable cuts."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "shard_hound",
+        "shard_hound"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "shard_hound",
+        "occurrence": 1,
+        "hp": 40,
+        "stability": 28,
+        "vitality": 3,
+        "extra_drops": [
+          {
+            "id": "beast_meat",
+            "chance": 1.0,
+            "quantity": 1
+          }
+        ]
+      },
+      {
+        "enemy_id": "shard_hound",
+        "occurrence": 2,
+        "hp": 40,
+        "stability": 28,
+        "vitality": 3
       }
     ]
   },
@@ -10364,8 +10449,7 @@
     "actions": [
       {
         "name": "transceiver",
-        "type": "generic",
-        "action_event": "w2_sq02_trace_beta",
+        "type": "inspect",
         "condition_unmet_message": "A fallen soldier holds an encrypted datapad, repair notes, and a damaged Thermal Cutter."
       }
     ]
@@ -10475,9 +10559,7 @@
     "description": "A massive, partially collapsed archway of smooth Architect stone rises above Aethel boundary stones. Faint cymatic glyphs flicker along the edges, pulsing in slow cycles.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "shard_hound"
-    ],
+    "enemies": [],
     "connections": {
       "north": "sector9_wilds_canopy_walk",
       "east": "sector9_wilds_dense_brush"
@@ -10537,7 +10619,8 @@
           "ration_pack"
         ],
         "already_open_message": "The torn nylon pack has been looted.",
-        "popup_title": "Surveyor Pack"
+        "popup_title": "Surveyor Pack",
+        "discovery_message": "You unfasten the mud-caked pack. The outer fabric is ruined, but its emergency supplies are still sealed."
       }
     ]
   },
@@ -10691,9 +10774,7 @@
     "description": "High stone shelves swept by cold upper-atmosphere wind. A blue-frond cluster clings to a sheltered crack. The ambient sound of the winds whistling through the gaps forms a low chord.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "echo_borer"
-    ],
+    "enemies": [],
     "connections": {
       "south": "sector9_ridge_climb",
       "north": "sector9_ridge_overhang"
@@ -11043,7 +11124,8 @@
         "name": "ridge overlook cache",
         "type": "generic",
         "action_event": "find_vhs_tape_04",
-        "condition_unmet_message": "A stone cache overlooking the dark canopy and ocean swells."
+        "condition_unmet_message": "A stone cache overlooking the dark canopy and ocean swells.",
+        "hide_when_event_completed": "find_vhs_tape_04"
       }
     ]
   },
@@ -11056,9 +11138,7 @@
     "description": "A symmetric flagstone courtyard spreads before the gate beneath a processional mural. Geometric lines are carved into the ground, pulsing with a faint blue light.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "spore_spitter"
-    ],
+    "enemies": [],
     "connections": {
       "west": "sector9_ridge_plateau",
       "east": "sector9_temple_lock_chamber",
@@ -11261,7 +11341,7 @@
         "requires_milestones": [
           "ms_w2_mq02_complete"
         ],
-        "description": "The Temple Gate stands open, its cymatic patterns still glowing around the unsealed stone lock. The resonator hums with a frequency that feels less like machinery than memory."
+        "description": "The stone slabs have withdrawn into the cliff. Cool, dry air flows from the passage east into Sanctuary. Cymatic patterns still glow around the unsealed stone lock."
       }
     ]
   },
@@ -11332,6 +11412,18 @@
       [
         "ruin_guardian"
       ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "ruin_guardian",
+        "extra_drops": [
+          {
+            "id": "scrap_metal",
+            "chance": 1.0,
+            "quantity": 1
+          }
+        ]
+      }
     ]
   },
   {
@@ -11469,6 +11561,18 @@
       [
         "sentinel_orb"
       ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "sentinel_orb",
+        "extra_drops": [
+          {
+            "id": "wiring_bundle",
+            "chance": 1.0,
+            "quantity": 1
+          }
+        ]
+      }
     ]
   },
   {
@@ -11504,7 +11608,8 @@
           "pure_iron"
         ],
         "already_open_message": "The toolbox has been cleared of spare components.",
-        "popup_title": "Technician Toolbox"
+        "popup_title": "Technician Toolbox",
+        "discovery_message": "You lift the toolbox lid and slide out its fitted tray. Spare components remain secured beneath it."
       }
     ]
   },
@@ -11886,7 +11991,8 @@
           "energy_core"
         ],
         "already_open_message": "The velvet-lined relic coffer is empty.",
-        "popup_title": "Relic Coffer"
+        "popup_title": "Relic Coffer",
+        "discovery_message": "You open the coffer carefully. Its lining separates a handful of delicate components, still undisturbed."
       }
     ]
   },
@@ -11922,7 +12028,9 @@
         "type": "generic",
         "action_event": "w2_sq01_scan_roots",
         "condition_unmet_message": "Objective completed.",
-        "requires_milestone_not_set": "ms_w2_roots_scanned"
+        "requires_milestone_not_set": "ms_w2_roots_scanned",
+        "show_when_quest_active": "w2_sq01",
+        "hide_when_event_completed": "w2_sq01_scan_roots"
       },
       {
         "name": "ceiling vent",
@@ -12179,6 +12287,18 @@
           "ms_w2_grid_hacked"
         ],
         "description": "A catwalk overlooking the stasis chamber. The security laser grid has been spliced and deactivated."
+      }
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "sentinel_orb",
+        "extra_drops": [
+          {
+            "id": "battery",
+            "chance": 1.0,
+            "quantity": 1
+          }
+        ]
       }
     ]
   },
@@ -13388,7 +13508,8 @@
           "pulse_grenade"
         ],
         "popup_title": "Smuggler's Dead Drop",
-        "already_open_message": "The smuggler stash has already been emptied."
+        "already_open_message": "The smuggler stash has already been emptied.",
+        "discovery_message": "You draw the concealed package out of its hiding place and unwrap the usable supplies."
       },
       {
         "name": "chute",
@@ -13500,7 +13621,8 @@
           "ration_pack"
         ],
         "popup_title": "Abandoned Courier Satchel",
-        "already_open_message": "The courier satchel has already been emptied."
+        "already_open_message": "The courier satchel has already been emptied.",
+        "discovery_message": "You open the satchel and check its sealed pockets before packing the contents away."
       },
       {
         "name": "fire escape",
@@ -13635,7 +13757,8 @@
           "battery_pack"
         ],
         "popup_title": "Black Market Safe",
-        "already_open_message": "The black market safe has already been emptied."
+        "already_open_message": "The black market safe has already been emptied.",
+        "discovery_message": "You swing the safe door aside. The compact equipment inside has been carefully packed for transport."
       },
       {
         "name": "slide",
@@ -13767,7 +13890,8 @@
           "nano_filament"
         ],
         "popup_title": "Flooded Maintenance Locker",
-        "already_open_message": "The maintenance locker has already been emptied."
+        "already_open_message": "The maintenance locker has already been emptied.",
+        "discovery_message": "You open the locker and pull the spare components from their retaining clips."
       },
       {
         "name": "ladder",
@@ -13879,7 +14003,8 @@
           "circuit_board"
         ],
         "popup_title": "Abandoned Transit Lockbox",
-        "already_open_message": "The transit lockbox has already been emptied."
+        "already_open_message": "The transit lockbox has already been emptied.",
+        "discovery_message": "You lift the lockbox lid and remove the components secured beneath its document tray."
       },
       {
         "name": "turnstile",
@@ -14008,7 +14133,8 @@
           "medkit_plus"
         ],
         "popup_title": "Directorate Courier Case",
-        "already_open_message": "The tailored uniform case has already been emptied."
+        "already_open_message": "The tailored uniform case has already been emptied.",
+        "discovery_message": "You open the fitted case and fold back its protective lining to reach the equipment."
       },
       {
         "name": "chute",
@@ -14140,7 +14266,8 @@
           "herbal_poultice"
         ],
         "popup_title": "Synthetics Research Cache",
-        "already_open_message": "The botanical vault has already been emptied."
+        "already_open_message": "The botanical vault has already been emptied.",
+        "discovery_message": "You open the vault and recover the supplies protected inside its storage compartment."
       },
       {
         "name": "spiral",
@@ -14262,7 +14389,8 @@
           "circuit_board"
         ],
         "popup_title": "Scholar Research Datacache",
-        "already_open_message": "The encrypted datacache has already been emptied."
+        "already_open_message": "The encrypted datacache has already been emptied.",
+        "discovery_message": "You open the cache housing and detach the physical components from its insulated mounts."
       },
       {
         "name": "lift",
@@ -14452,7 +14580,8 @@
           "black_coffee"
         ],
         "popup_title": "Director's Private Safe",
-        "already_open_message": "The executive safe has already been emptied."
+        "already_open_message": "The executive safe has already been emptied.",
+        "discovery_message": "The heavy safe door swings open. You collect the small reserve tucked into its inner shelf."
       },
       {
         "name": "elevator",
@@ -14600,7 +14729,8 @@
           "battery_pack"
         ],
         "popup_title": "Cargo Shuttle Avionics Crate",
-        "already_open_message": "The avionics crate has already been emptied."
+        "already_open_message": "The avionics crate has already been emptied.",
+        "discovery_message": "You lift the crate lid and release the straps holding the spare equipment in place."
       },
       {
         "name": "ladder",
@@ -17197,7 +17327,8 @@
           "focus_matrix"
         ],
         "popup_title": "Root Access Recovery Unit",
-        "already_open_message": "The admin crypt terminal has already been emptied."
+        "already_open_message": "The admin crypt terminal has already been emptied.",
+        "discovery_message": "You open the terminal housing and detach the usable components from their mounts."
       },
       {
         "name": "slide",
@@ -17541,7 +17672,8 @@
           "astral_thread"
         ],
         "popup_title": "Elara's Personal Resonance Cache",
-        "already_open_message": "The resonance anchor safe has already been emptied."
+        "already_open_message": "The resonance anchor safe has already been emptied.",
+        "discovery_message": "You ease open the safe and lift its protected contents clear of the anchor housing."
       },
       {
         "name": "anchor cable",
@@ -17836,7 +17968,8 @@
           "bulwark_layer"
         ],
         "popup_title": "Vale's Vanguard Cache",
-        "already_open_message": "The command dais locker has already been emptied."
+        "already_open_message": "The command dais locker has already been emptied.",
+        "discovery_message": "You pull the locker drawer out from beneath the dais and recover its stored equipment."
       },
       {
         "name": "lift",
@@ -18090,7 +18223,8 @@
           "astral_thread"
         ],
         "popup_title": "Crystallized Anomaly Shard",
-        "already_open_message": "The anomaly fracture has already been emptied."
+        "already_open_message": "The anomaly fracture has already been emptied.",
+        "discovery_message": "You reach into the fracture. The loose fragments hold their shape as you draw them back into your hands."
       },
       {
         "name": "reality slipstream",
@@ -18364,7 +18498,8 @@
           "stability_gyro_mod"
         ],
         "popup_title": "Zeke's Severance Record",
-        "already_open_message": "The freedom filing case has already been emptied."
+        "already_open_message": "The freedom filing case has already been emptied.",
+        "discovery_message": "You open the filing case. Beneath the papers, something solid remains for you to carry away."
       },
       {
         "name": "door",
@@ -18482,7 +18617,8 @@
           "precision_core"
         ],
         "popup_title": "Gh0st's Uncorrupted Partition",
-        "already_open_message": "The sister memory core has already been emptied."
+        "already_open_message": "The sister memory core has already been emptied.",
+        "discovery_message": "You cup the memory core and lift the tangible fragments resting within its glow."
       },
       {
         "name": "clean signal",
@@ -18603,7 +18739,8 @@
           "phase_rounds"
         ],
         "popup_title": "Orion's Resonant Shell",
-        "already_open_message": "The tide glass shell has already been emptied."
+        "already_open_message": "The tide glass shell has already been emptied.",
+        "discovery_message": "You part the shell and gather the fragments held inside its translucent folds."
       },
       {
         "name": "harmonic wave",
@@ -19232,7 +19369,8 @@
           "cyber_visor"
         ],
         "popup_title": "The Free Mind Archive",
-        "already_open_message": "The unthroned ledger has already been emptied."
+        "already_open_message": "The unthroned ledger has already been emptied.",
+        "discovery_message": "You open the ledger. The fragments caught between its pages settle into your hands."
       },
       {
         "name": "circuit",
@@ -19518,7 +19656,8 @@
           "burn_salve"
         ],
         "popup_title": "Emergency Survival Pod",
-        "already_open_message": "The heat-sealed container has already been emptied."
+        "already_open_message": "The heat-sealed container has already been emptied.",
+        "discovery_message": "You release the cooled catches and open the container. Its sealed supplies have survived the heat."
       },
       {
         "name": "slide",
@@ -19568,7 +19707,8 @@
           "pure_iron"
         ],
         "popup_title": "Foreman's Smelter Toolbox",
-        "already_open_message": "The smelter toolbox has already been emptied."
+        "already_open_message": "The smelter toolbox has already been emptied.",
+        "discovery_message": "You open the toolbox and lift the usable parts from their fitted slots."
       },
       {
         "name": "catwalk",
@@ -19635,7 +19775,8 @@
           "burn_salve"
         ],
         "popup_title": "Pressurized Coolant Canister",
-        "already_open_message": "The coolant reserve has already been emptied."
+        "already_open_message": "The coolant reserve has already been emptied.",
+        "discovery_message": "You open the reserve compartment and recover the equipment stored behind its insulated panel."
       },
       {
         "name": "drain",
@@ -19686,7 +19827,8 @@
           "nano_filament"
         ],
         "popup_title": "Scrap Sorter Salvage Bin",
-        "already_open_message": "The salvage bin has already been emptied."
+        "already_open_message": "The salvage bin has already been emptied.",
+        "discovery_message": "You sort through the bin, setting aside the pieces that have survived the waste stream."
       },
       {
         "name": "ladder",
@@ -19733,7 +19875,8 @@
           "circuit_board"
         ],
         "popup_title": "Dominion Line-Tech Locker",
-        "already_open_message": "The technician locker has already been emptied."
+        "already_open_message": "The technician locker has already been emptied.",
+        "discovery_message": "You open the locker and unclip the spare parts secured against its back wall."
       },
       {
         "name": "hatch",
@@ -19783,7 +19926,8 @@
           "mod_corrosive_rounds"
         ],
         "popup_title": "Automated Assembly Crate",
-        "already_open_message": "The assembly cache has already been emptied."
+        "already_open_message": "The assembly cache has already been emptied.",
+        "discovery_message": "You lift the cache cover and separate usable components from the packing material."
       },
       {
         "name": "slide",
@@ -19832,7 +19976,8 @@
           "battery_pack"
         ],
         "popup_title": "Stress-Test Prototype Locker",
-        "already_open_message": "The stress-test locker has already been emptied."
+        "already_open_message": "The stress-test locker has already been emptied.",
+        "discovery_message": "You open the test locker and retrieve the equipment secured in its padded compartments."
       },
       {
         "name": "valve",
@@ -19880,7 +20025,8 @@
           "precision_core"
         ],
         "popup_title": "Old Forge Master Crate",
-        "already_open_message": "The master smith crate has already been emptied."
+        "already_open_message": "The master smith crate has already been emptied.",
+        "discovery_message": "You open the crate and draw the precision parts out of their protective wrapping."
       },
       {
         "name": "flue",
@@ -19931,7 +20077,8 @@
           "focus_matrix"
         ],
         "popup_title": "Lead-Lined Core Component Case",
-        "already_open_message": "The shielded core case has already been emptied."
+        "already_open_message": "The shielded core case has already been emptied.",
+        "discovery_message": "You release the case catches and lift the protected components from their insulated cradle."
       },
       {
         "name": "lift",
@@ -19979,7 +20126,8 @@
           "bulwark_layer"
         ],
         "popup_title": "Heavy Walker Repair Pod",
-        "already_open_message": "The titan maintenance pod has already been emptied."
+        "already_open_message": "The titan maintenance pod has already been emptied.",
+        "discovery_message": "You open the maintenance pod and recover the spare equipment held behind its service panel."
       },
       {
         "name": "scaffolding",
@@ -20026,7 +20174,8 @@
           "phase_rounds"
         ],
         "popup_title": "Directorate Diplomatic Pouch",
-        "already_open_message": "The diplomatic courier case has already been emptied."
+        "already_open_message": "The diplomatic courier case has already been emptied.",
+        "discovery_message": "You open the courier case and lift the equipment from its fitted protective lining."
       },
       {
         "name": "chute",
@@ -20075,7 +20224,8 @@
           "cyber_visor"
         ],
         "popup_title": "Concourse Display Locker",
-        "already_open_message": "The luxury display locker has already been emptied."
+        "already_open_message": "The luxury display locker has already been emptied.",
+        "discovery_message": "You open the display locker and detach its remaining equipment from the mounts."
       },
       {
         "name": "express escalator",
@@ -20122,7 +20272,8 @@
           "tideglass_delight"
         ],
         "popup_title": "Orbital Hydroponic Cache",
-        "already_open_message": "The hydroponic canister has already been emptied."
+        "already_open_message": "The hydroponic canister has already been emptied.",
+        "discovery_message": "You release the canister lid and recover the supplies stored in its dry compartment."
       },
       {
         "name": "stairwell",
@@ -20171,7 +20322,8 @@
           "impact_node"
         ],
         "popup_title": "Enforcer Quick-Armory Locker",
-        "already_open_message": "The tactical enforcer armory has already been emptied."
+        "already_open_message": "The tactical enforcer armory has already been emptied.",
+        "discovery_message": "You open the armory compartment and unclip the equipment still secured inside."
       },
       {
         "name": "hatch",
@@ -20218,7 +20370,8 @@
           "battery_pack"
         ],
         "popup_title": "EVA Emergency Salvage Pack",
-        "already_open_message": "The eva engineer pack has already been emptied."
+        "already_open_message": "The eva engineer pack has already been emptied.",
+        "discovery_message": "You unfasten the pack and check the sealed equipment pockets before taking their contents."
       },
       {
         "name": "guide",
@@ -20273,7 +20426,8 @@
           "tideglass_delight"
         ],
         "popup_title": "Crew's Shared Memory Chest",
-        "already_open_message": "The hearth memory chest has already been emptied."
+        "already_open_message": "The hearth memory chest has already been emptied.",
+        "discovery_message": "You open the chest beside the remembered warmth. Its contents feel solid beneath your hands."
       },
       {
         "name": "trail",
@@ -20321,7 +20475,8 @@
           "thermal_solder_gun"
         ],
         "popup_title": "Jed & Nova's First Toolbox",
-        "already_open_message": "The first shift locker has already been emptied."
+        "already_open_message": "The first shift locker has already been emptied.",
+        "discovery_message": "You pull open the familiar locker and gather the things that have held their shape inside."
       },
       {
         "name": "echo",
@@ -20376,7 +20531,8 @@
           "focus_matrix"
         ],
         "popup_title": "Unbreakable Covenant Cache",
-        "already_open_message": "The covenant beacon has already been emptied."
+        "already_open_message": "The covenant beacon has already been emptied.",
+        "discovery_message": "You reach into the beacon glow and lift out the fragments gathered around its center."
       },
       {
         "name": "light beam",
@@ -20433,7 +20589,8 @@
           "bulwark_layer"
         ],
         "popup_title": "Reliquary of Scars",
-        "already_open_message": "The survivor reliquary has already been emptied."
+        "already_open_message": "The survivor reliquary has already been emptied.",
+        "discovery_message": "You open the reliquary and carefully lift its protected fragments from their resting place."
       },
       {
         "name": "slide",
@@ -20488,7 +20645,8 @@
           "foundry_crucible_lining"
         ],
         "popup_title": "Seed of the New Chorus",
-        "already_open_message": "The chorus harmony seed has already been emptied."
+        "already_open_message": "The chorus harmony seed has already been emptied.",
+        "discovery_message": "You hold the seed as its outer layers part, leaving tangible fragments in your palms."
       },
       {
         "name": "echo",
@@ -20547,7 +20705,8 @@
           "black_coffee"
         ],
         "popup_title": "Fresh Dawn Provisions",
-        "already_open_message": "The morning provision basket has already been emptied."
+        "already_open_message": "The morning provision basket has already been emptied.",
+        "discovery_message": "You unfold the basket covering and gather the provisions waiting beneath it."
       }
     ],
     "special_exits": {}
@@ -20710,9 +20869,9 @@
     "id": "sector9_coastal_research_station",
     "env": "swamp",
     "weather": "fog",
-    "title": "Coastal Resilience Station",
+    "title": "Tidewatch Station",
     "background_image": "images/rooms/world_2/stream_pools.webp",
-    "description": "A weather-hardened eco-station perches over tidal wetlands and sea bluffs. Acoustic sediment sensors pulse against the marsh silt, while a wetland telemetry array maps coastal marsh restoration and water filtration under the salty ocean breeze. On the clinician's desk, a forensic research slate rests beside a warm solar coffee press.",
+    "description": "An old monitoring station overlooks the tidal wetlands. Patched pipes feed the camp's water filters. A wetland telemetry array still tracks the coast; Megan's forensic research slate and a warm solar coffee press share a well-scrubbed desk.",
     "npcs": [
       "clinician_megan"
     ],
@@ -20734,14 +20893,14 @@
         "name": "wetland telemetry array",
         "type": "inspect",
         "description": "Inspect the coastal marsh and water filtration telemetry monitors.",
-        "inspect_message": "A bank of holographic water-quality sensors and tidal gauges monitoring marsh vegetation density and sediment stability across Sector 9's coastline. An IT tech's sticky note reads: 'If the telemetry drops, check the grounding wire before calling Jason.'"
+        "inspect_message": "Old gauges track tides and sediment. New wiring connects the station to the camp's filtration system. A faded note reads: 'If the telemetry drops, check the grounding wire before calling Jason.'"
       },
       {
         "id": "inspect_forensic_slate",
         "name": "forensic research slate",
         "type": "inspect",
         "description": "Inspect the clinical evidence and contaminant analysis slate.",
-        "inspect_message": "A diagnostic terminal analyzing trace contaminants and environmental trauma with the meticulous rigor of a courtroom forensic dossier. Redlined notes identify upstream industrial run-off."
+        "inspect_message": "Megan's sample notes compare filter residue, water clarity and reports of irritated eyes at the falls. She has marked an upstream runoff pattern for further investigation."
       },
       {
         "id": "inspect_solar_coffee",

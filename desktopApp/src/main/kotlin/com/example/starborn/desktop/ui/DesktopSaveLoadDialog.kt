@@ -55,7 +55,7 @@ fun DesktopSaveLoadDialog(services: DesktopAppServices, initialMode: SaveDialogM
                 }
                 LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     val slots = if (mode == SaveDialogMode.LOAD) listOf(0, -1, 1, 2, 3) else listOf(-1, 1, 2, 3)
-                    slots.forEach { slot -> item {
+                    slots.sortedWith(compareBy<Int> { if (it == 0) 0 else if (it == -1) 1 else 2 }.thenBy { it }).forEach { slot -> item {
                         val meta = metas[slot]
                         val name = when (slot) { -1 -> "Quick save"; 0 -> "Autosave"; else -> "Slot $slot" }
                         DesktopMenuCard(Modifier.fillMaxWidth()) { Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {

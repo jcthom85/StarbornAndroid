@@ -68,6 +68,10 @@ fun QuestDetailOverlay(
 ) {
     val current = state.important.firstOrNull()
     val visible = current != null && !deferShowing
+    val entrance = remember(current) { Animatable(0f) }
+    LaunchedEffect(current, visible) {
+        if (visible) { entrance.snapTo(0f); entrance.animateTo(1f, tween(650)) }
+    }
     LaunchedEffect(current, visible) {
         onPresentationVisibleChanged(visible)
         if (visible && current != null && state.markStarted(current) &&
@@ -82,7 +86,7 @@ fun QuestDetailOverlay(
     androidx.activity.compose.BackHandler(enabled = visible) { dismiss() }
     // Unmount immediately when a scene takes focus; an exit animation must not cover dialogue.
     if (visible) Box(
-        modifier = modifier.fillMaxSize().background(Color.Black.copy(alpha = .55f))
+        modifier = modifier.fillMaxSize().graphicsLayer { alpha = entrance.value }.background(Color.Black.copy(alpha = .65f))
             .clickable(interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }, indication = null) {}
             .padding(horizontal = 24.dp, vertical = 48.dp),
         contentAlignment = Alignment.Center

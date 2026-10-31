@@ -198,7 +198,7 @@ fun SaveLoadDialog(
                         .fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    items(slots) { summary ->
+                    items(slots.sortedWith(compareBy<SaveSlotSummary> { if (it.isAutosave) 0 else if (it.isQuickSave) 1 else 2 }.thenBy { it.slot })) { summary ->
                         SaveSlotRow(
                             summary = summary,
                             isSave = isSave,

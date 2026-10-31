@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-30",
+  "scope": "World 2 Part 1 first-half critical fixes, excluding resident backstories (#7)",
+  "test_results": [
+    {
+      "name": "com.example.starborn.domain.playtest.LegalRouteCampaignRunnerTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.fishing.FishingRefinementTest",
+      "tests": "19",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.dialogue.DialogueServiceTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.data.DataIntegrityTest",
+      "tests": "30",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.feature.exploration.WorldTwoDiscoverabilityStateTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.feature.exploration.ui.RoomDescriptionResolverTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.feature.exploration.ui.InspectionReadStateTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.di.DialogueConditionRegressionTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.feature.exploration.viewmodel.helpers.MapStateBuilderTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.fishing.FishingServiceTest",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.playtest.World2RefinementTest",
+      "tests": "16",
+      "failures": "0",
+      "errors": "0"
+    }
+  ],
+  "test_count": 117,
+  "android_debug_build": "passed",
+  "desktop_compile": "passed",
+  "phone_validation": "pending; no ADB device connected",
+  "new_attachment": "categorized only; overlapping fixes identified in notes",
+  "apk_sha256": "406487101c0342ef4d38c86d97a0f2bc70e1f81759cf368d2dcb70d23e28397b"
+}

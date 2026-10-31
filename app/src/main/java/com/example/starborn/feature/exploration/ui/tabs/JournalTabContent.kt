@@ -354,7 +354,7 @@ fun CompletedQuestGroups(quests: List<QuestSummaryUi>, accentColor: Color, borde
     if (quests.isEmpty()) Text("No completed quests yet.", color = Color.White.copy(alpha = .75f))
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         quests.groupBy { com.example.starborn.feature.exploration.presentation.QuestJournalGrouping.group(it.id) }
-            .toSortedMap(compareBy<String> { it == "Other quests" }.thenBy { it }).forEach { (group, entries) ->
+            .toSortedMap(com.example.starborn.feature.exploration.presentation.QuestJournalGrouping.comparator).forEach { (group, entries) ->
                 val open = group in expanded
                 Surface(onClick = { expanded = if (open) expanded - group else expanded + group },
                     modifier = Modifier.fillMaxWidth(), color = FieldMenuDesign.panel, shape = RoundedCornerShape(12.dp),

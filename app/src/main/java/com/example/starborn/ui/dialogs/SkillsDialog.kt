@@ -218,71 +218,20 @@ internal fun AbilityRow(
     onUse: () -> Unit
 ) {
     val stackActions = LocalDensity.current.fontScale >= 1.5f
-    val rowBorder = when {
-        highlighted -> accent
-        momentum >= 3 -> Color(0xFFFFD700).copy(alpha = 0.7f)
-        momentum > 0 -> Color(0xFF00E5FF).copy(alpha = 0.6f)
-        else -> border.copy(alpha = 0.34f)
-    }
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        color = when {
-            highlighted -> accent.copy(alpha = if (highContrastMode) 0.18f else 0.12f)
-            momentum >= 3 -> Color(0xFFFFD700).copy(alpha = 0.08f)
-            momentum > 0 -> Color(0xFF00E5FF).copy(alpha = 0.06f)
-            else -> Color.White.copy(alpha = if (highContrastMode) 0.10f else 0.07f)
-        },
-        border = BorderStroke(if (highlighted || momentum > 0) 1.5.dp else 1.dp, rowBorder)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 10.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Text(
-                        text = skill.name,
-                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
-                        color = if (canUse) Color.White else Color.White.copy(alpha = 0.62f)
-                    )
-                    Text(
-                        text = abilitySummary(skill, cooldownRemaining, momentum, infusedElement, infusedStatus),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = if (cooldownRemaining > 0) {
-                            Color(0xFFFFC857)
-                        } else {
-                            accent.copy(alpha = 0.88f)
-                        }
-                    )
-                    if (unavailableReason != null) {
-                        Text(
-                            text = unavailableReason,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Color(0xFFFFC857)
-                        )
-                    }
-                }
-                if (!stackActions) {
-                    AbilityRowActions(skill.name, cooldownRemaining, canUse, accent, onDetails, onUse)
-                }
+    Surface(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(14.dp),
+        color = if (highlighted) accent.copy(alpha = .12f) else Color.White.copy(alpha = .06f),
+        border = BorderStroke(1.dp, if (highlighted) accent else border.copy(alpha = .35f))) {
+        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Text(skill.name, Modifier.weight(1f), style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold, color = if (canUse) Color.White else Color.White.copy(alpha = .65f))
+                if (!stackActions) AbilityRowActions(skill.name, cooldownRemaining, canUse, accent, onDetails, onUse)
             }
-            if (stackActions) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    AbilityRowActions(skill.name, cooldownRemaining, canUse, accent, onDetails, onUse)
-                }
+            Text(abilitySummary(skill, cooldownRemaining, momentum, infusedElement, infusedStatus),
+                style = MaterialTheme.typography.bodySmall, color = accent.copy(alpha = .9f))
+            unavailableReason?.let { Text(it, style = MaterialTheme.typography.labelSmall, color = Color(0xFFFFC857)) }
+            if (stackActions) Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                AbilityRowActions(skill.name, cooldownRemaining, canUse, accent, onDetails, onUse)
             }
         }
     }
@@ -424,7 +373,7 @@ private fun AbilityDetailsDialog(
                             AbilityDetailLine("Target selection", abilityTargetLabel(targetRequirement))
                             AbilityDetailLine(
                                 "Effect strength",
-                                abilityPowerLabel(skill, momentum) + ". Final results depend on stats, bonuses, and defenses."
+                                "Results depend on your stats, bonuses, and the target's defenses."
                             )
                             AbilityDetailLine(
                                 "Scaling",
@@ -543,7 +492,6 @@ private fun abilitySummary(
 ): String {
     val parts = buildList {
         if (skill.id == "nova_link") add("Heals party + Regen")
-        add(abilityPowerLabel(skill, momentum))
         skill.scaling?.takeIf { it.isNotBlank() }?.let { add(it.toDisplayLabel()) }
         add(abilityCooldownLabel(skill.cooldown, cooldownRemaining, momentum))
         val isHeal = skill.type.equals("heal", ignoreCase = true) ||

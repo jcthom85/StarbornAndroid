@@ -46,6 +46,10 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
@@ -131,6 +135,15 @@ fun DialogueOverlay(
     val tapInteraction = remember { MutableInteractionSource() }
     val containerModifier = Modifier
         .fillMaxWidth()
+        .pointerInput(fullText, revealFinished) {
+            if (!revealFinished) awaitEachGesture {
+                awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+                var event = awaitPointerEvent(PointerEventPass.Initial)
+                while (event.changes.any { it.pressed }) event = awaitPointerEvent(PointerEventPass.Initial)
+                event.changes.forEach { it.consume() }
+                revealedCount = fullText.length
+            }
+        }
         .maestroTag(if (tapToAdvanceAllowed) "dialogue-advance" else "dialogue-choice-prompt")
         .semantics { contentDescription = if (tapToAdvanceAllowed) "Dialogue Popup. Tap to continue" else "Dialogue Popup" }
         .let { base ->
@@ -233,6 +246,8 @@ fun DialogueOverlay(
                 if (choices.isNotEmpty()) {
                     Column(
                         modifier = Modifier
+                            .heightIn(max = 220.dp)
+                            .verticalScroll(rememberScrollState())
                             .alpha(if (revealFinished) 1f else 0f)
                             .then(
                                 if (revealFinished) Modifier
@@ -245,7 +260,7 @@ fun DialogueOverlay(
                             style = MaterialTheme.typography.labelSmall,
                             color = accentColor.copy(alpha = 0.8f)
                         )
-                        choices.forEachIndexed { index, choice ->
+                        choices.sortedBy { if (it.id.endsWith("_leave")) 0 else 1 }.forEachIndexed { index, choice ->
                             val parsed = remember(choice.label) { parseChoiceLabel(choice.label) }
                             DialogueChoiceButton(
                                 index = index + 1,
@@ -447,6 +462,7 @@ private fun DialogueChoiceButton(
 @Composable
 private fun ChoiceTagChip(tag: ChoiceTag) {
     val (label, color) = when (tag) {
+        ChoiceTag.ACTION -> "Action" to Color(0xFFB9DCD5)
         ChoiceTag.QUEST -> "Quest" to Color(0xFF43A047)
         ChoiceTag.TUTORIAL -> "Tutorial" to Color(0xFF1E88E5)
         ChoiceTag.MILESTONE -> "Milestone" to Color(0xFF7E57C2)
@@ -468,7 +484,7 @@ private data class ParsedChoiceLabel(
     val tags: List<ChoiceTag>
 )
 
-private enum class ChoiceTag { QUEST, TUTORIAL, MILESTONE, SHOP }
+private enum class ChoiceTag { QUEST, TUTORIAL, MILESTONE, SHOP, ACTION }
 
 private fun parseChoiceLabel(raw: String): ParsedChoiceLabel {
     var remaining = raw.trim()
@@ -477,7 +493,13 @@ private fun parseChoiceLabel(raw: String): ParsedChoiceLabel {
     while (true) {
         val match = bracketRegex.find(remaining) ?: break
         val tagText = match.groupValues[1].trim().lowercase(Locale.getDefault())
-        tagText.toChoiceTag()?.let { tags += it }
+        val tag = tagText.toChoiceTag()
+        if (tag == null) {
+            tags += ChoiceTag.ACTION
+            remaining = listOf(match.groupValues[1].trim(), remaining.removeRange(match.range).trim()).filter { it.isNotBlank() }.joinToString(" ")
+            break
+        }
+        tags += tag
         remaining = remaining.removeRange(match.range).trimStart()
     }
     if (tags.isEmpty()) {
@@ -494,6 +516,7 @@ private fun parseChoiceLabel(raw: String): ParsedChoiceLabel {
 }
 
 private fun String.toChoiceTag(): ChoiceTag? = when (this.lowercase(Locale.getDefault())) {
+    "action" -> ChoiceTag.ACTION
     "quest" -> ChoiceTag.QUEST
     "tutorial" -> ChoiceTag.TUTORIAL
     "milestone" -> ChoiceTag.MILESTONE
@@ -508,6 +531,7 @@ internal enum class DialogueVoiceProfile(private val cuePrefix: String?) {
     GH0ST("voice_murmur_male"),
     FEMALE("voice_murmur_female"),
     MALE("voice_murmur_male"),
+    MACHINE("voice_murmur_machine"),
     NONE(null);
 
     fun randomCue(random: Random): String {
@@ -544,10 +568,11 @@ internal enum class DialogueVoiceProfile(private val cuePrefix: String?) {
                 "sima",
                 "schoolteacher kasey" -> FEMALE
 
+                "sentinel-3" -> MACHINE
+
                 "system",
                 "lab terminal",
-                "maintenance bot",
-                "sentinel-3" -> NONE
+                "maintenance bot" -> NONE
 
                 "vale",
                 "arden vale" -> MALE

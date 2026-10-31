@@ -111,8 +111,11 @@ internal fun ModernFieldMenu(
                 modifier = Modifier.fillMaxWidth().semantics { liveRegion = LiveRegionMode.Polite }.padding(horizontal = 16.dp, vertical = 4.dp))
         }
         if (tab == MenuTab.STATS && party.members.size > 1) {
+            val memberScroll = rememberScrollState()
+            if (memberScroll.maxValue > 0) Text("Swipe to choose a companion  ›", color = FieldMenuDesign.textMuted,
+                style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(horizontal = 16.dp))
             Row(
-                Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())
+                Modifier.fillMaxWidth().horizontalScroll(memberScroll)
                     .padding(horizontal = 16.dp, vertical = 4.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -127,7 +130,7 @@ internal fun ModernFieldMenu(
                         Row(Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             MemberPortrait(member, Modifier.size(if (detailTitle != null) 32.dp else 44.dp))
-                            Column(Modifier.widthIn(min = 70.dp, max = 115.dp)) {
+                            Column(Modifier.widthIn(min = 54.dp, max = 96.dp)) {
                                 Text(member.name, color = if (selected) FieldMenuDesign.gold else FieldMenuDesign.text,
                                     style = MaterialTheme.typography.labelLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
                                 if (detailTitle == null) Text("Lv ${member.level}",

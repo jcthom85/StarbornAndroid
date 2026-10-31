@@ -30,11 +30,11 @@ Orion brings Field Patch when recruited: heal one living ally and add Shield for
 
 ### Optional local NPC rewards and known checks
 
-Charlie, David, Penny and Megan now have explicit ways to end their looping conversations. Use the step-away/leave option and confirm movement returns. Charlie's three trust steps give 25 + 35 + 60 XP and one Comfort Stone total; repeat play/cuddle must not repeat the gift. Penny's first wrestle gives one Pack-Guardian Bandana and 50 XP; later play gives no extra reward.
+David, Penny and Megan have explicit ways to end their looping conversations. Use leave and confirm movement returns. Charlie is unseen: interact with the glade's puffball instead of an NPC. Three patient play beats give 25 + 35 + 60 XP and one Comfort Stone total; later play must not repeat either reward. Leave it be must not advance trust. Penny's first wrestle gives one Pack-Guardian Bandana and 50 XP; later play gives no extra reward.
 
 At Sandy Cove, Kaelen gives one ration and antidote on the first meeting. Revisit for his favor: two Herbs + one Beast Meat buys one Precision Sight, 150 XP and 200 credits. One herb must not pay out or consume a partial bundle. Hazard reminders must not repeat first-meeting supplies. After repairing the patrol cutter, his acknowledgement grants a Battery Pack, three Scrap Metal and 120 XP once. There is no journal quest for these local favors.
 
-At Coastal Resilience Station, Megan asks for one Chemical Catalyst and one Nano Filament. Bring both for her Clinical Bio-Scanner, 200 XP and 250 credits once. Catalyst is in the Resonant Sedge locker; Nano Filament is in the Beached Cargo Wreck crates. Preserve these if doing her favor. Leave her conversation afterward.
+At Tidewatch Station, Megan asks for one Chemical Catalyst and one Nano Filament. Bring both for her Field Bio-Scanner, 200 XP and 250 credits once. Catalyst is in the Resonant Sedge locker; Nano Filament is in the Beached Cargo Wreck crates. Preserve these if doing her favor. Leave her conversation afterward.
 
 These extras are separate from the ten journal quests and from the 650 direct XP awarded by World 2's five side quests. Record their rewards separately. If a recipe or NPC input is unavailable, preserve the save instead of inventing a reward or using instant victory to hide the missing step.
 
@@ -54,11 +54,11 @@ Main quest: A Strange Coast. The emergency medkit action is inside Escape Pod In
 
 12. From **Escape Pod Interior**, go **south** to **Crash Site** (`sector9_crash_site`).
 
-13. At **Crash Site**, read **wreckage** and **glow-water**. Leave scan moss for after Botanist starts; its event requires that active side quest.
+13. At **Crash Site**, read **wreckage** and **glow-water**. Leave moss for after Botanist starts; its event requires that active side quest.
 
 14. From **Crash Site**, go **west** to **Overgrown Glade** (`sector9_landing_glade`).
 
-15. At **Overgrown Glade**, harvest **luminous mushrooms** for Herb, then inspect **broadleaf canopy** and **mossy hollow**. Use **Charlie -> Interact** for his optional conversation.
+15. At **Overgrown Glade**, harvest **luminous mushrooms** for Herb, then inspect **broadleaf canopy** and **mossy hollow**. Wait for the **spore puffball** to roll in. Tap it, then **Roll it back**. Continue with a gentle toss and another roll to earn trust. Charlie stays off-screen; his name emerges in the first response. Try **Leave it be** without advancing trust, and return after a save/load. Repeat play after the comfort stone must grant no more items or XP.
 
 16. From **Overgrown Glade**, go **north** to **Security Perimeter** (`sector9_landing_perimeter`).
 
@@ -72,7 +72,7 @@ Main quest: A Strange Coast. The emergency medkit action is inside Escape Pod In
 
 21. From **Stream Bank**, go **west** to **Crash Site** (`sector9_crash_site`).
 
-22. At **Crash Site**, note **scan moss** for the later Botanist sweep. Without the active side quest it will not credit a scan; leave it for the return trip.
+22. At **Crash Site**, note **moss** for the later Botanist sweep. Without the active side quest it will not credit a scan; leave it for the return trip.
 
 23. From **Crash Site**, go **east** to **Stream Bank** (`sector9_landing_stream`) -> **south** to **Scorched Brush** (`sector9_landing_brush`).
 
@@ -80,7 +80,7 @@ Main quest: A Strange Coast. The emergency medkit action is inside Escape Pod In
 
 25. From **Scorched Brush**, go **east** to **Pod Fragment** (`sector9_landing_drop`).
 
-26. At **Pod Fragment**, inspect **cargo panel**. Note **salvage conduits** for the late Astra repair, but collection needs Liftoff and Astra inspection. Merely finding this room now does not collect them.
+26. At **Pod Fragment**, inspect **cargo panel**. Note **power conduits** for the late Astra repair, but collection needs Liftoff and Astra inspection. Merely finding this room now does not collect them.
 
 27. From **Pod Fragment**, go **west** to **Scorched Brush** (`sector9_landing_brush`) -> **north** to **Stream Bank** (`sector9_landing_stream`).
 
@@ -97,7 +97,7 @@ Explore the coast before the temple. Tideglass Day is a later Orion quest; visit
 
 30. From **Mist Pools**, go **south** to **Resonant Sedge** (`sector9_stream_wetlands`).
 
-31. At **Resonant Sedge**, clear Spore-Spitter if encountered, read **spore warning** and **wind-sung reeds**, and open **submerged emergency locker** for Antidote Flask and Pure Iron.
+31. At **Resonant Sedge**, clear Spore-Spitter if encountered (guaranteed Herb), read **spore warning** and **wind-sung reeds**, and open **submerged emergency locker** for Antidote Flask and Pure Iron.
 
 32. From **Resonant Sedge**, go **north** to **Mist Pools** (`sector9_stream_pools`) -> **east** to **Crystalline Flats** (`sector9_stream_flats`).
 
@@ -109,7 +109,7 @@ Explore the coast before the temple. Tideglass Day is a later Orion quest; visit
 
 36. From **Cavern Entrance**, go **north** to **Glow-Moss Cavern** (`sector9_stream_cave_depths`).
 
-37. At **Glow-Moss Cavern**, clear Echo-Borer, harvest **echo nest** for Beast Meat, read **glowing moss**, and interact with **waterproof cargo case** for VHS discovery. Check its collectible feedback rather than expecting food.
+37. At **Glow-Moss Cavern**, clear the two-Echo-Borer encounter, harvest **echo nest** for Beast Meat, read **glowing moss**, and interact with **waterproof cargo case** for VHS discovery. Check its collectible feedback rather than expecting food.
 
 38. From **Glow-Moss Cavern**, go **east** to **Waterlogged Tunnel** (`sector9_stream_sunken_passage`).
 
@@ -125,7 +125,7 @@ Explore the coast before the temple. Tideglass Day is a later Orion quest; visit
 
 44. From **Waterlogged Tunnel**, go **west** to **Glow-Moss Cavern** (`sector9_stream_cave_depths`) -> **south** to **Cavern Entrance** (`sector9_stream_cave_entrance`) -> **south** to **Crystalline Flats** (`sector9_stream_flats`) -> **east** to **Resonant Falls** (`sector9_stream_falls`).
 
-45. At **Resonant Falls**, choose **Rest** (the recess shelter) to recover and finish its camp sequence. **Sheltered cookfire** provides cooking, **provisions counter** opens the shop, and **penny camp bed** is an optional inspection. Talk to **David** and use **Penny -> Greet** for their camp conversations. Check actual party recovery rather than assuming every campfire heals.
+45. At **Resonant Falls**, choose **Rest** (the recess shelter) to recover and finish its camp sequence. **Sheltered cookfire** provides cooking, **provisions counter** opens the shop, and **penny camp bed** is an optional inspection. Talk to **David** and use **Penny -> Greet** for their camp conversations. REST remains unlimited, including at full health; it restores HP without creating medical supplies. Cooking is a separate action.
 
 46. At **Resonant Falls**, open the cooking source to discover regional recipes if evaluating cooking. Cook one affordable meal if desired, while preserving quest materials. Eating outside combat and using a meal in combat have different effects; keep observations separate.
 
@@ -142,21 +142,21 @@ Botanist weeds are at actual Tide Pools. The prism grants Bioluminescent Focus, 
 
 49. At **Beach Transition**, harvest **tidepool crawler** for Beast Meat and inspect **star crystals**.
 
-50. From **Beach Transition**, go **east** to **Coastal Resilience Station** (`sector9_coastal_research_station`).
+50. From **Beach Transition**, go **east** to **Tidewatch Station** (`sector9_coastal_research_station`).
 
-51. At **Coastal Resilience Station**, inspect **wetland telemetry array**, **forensic research slate** and **solar coffee press**. Use **Megan -> Consult** and finish her local conversation. This is optional environmental writing.
+51. At **Tidewatch Station**, inspect **wetland telemetry array**, **forensic research slate** and **solar coffee press**. Use **Megan -> Consult** and finish her local conversation. Ask about the coastal survivors and the water filters. Her optional filter favor retains the same materials and one-time reward.
 
-52. From **Coastal Resilience Station**, go **south** to **Beach Cliffs** (`sector9_beach_cliffs`).
+52. From **Tidewatch Station**, go **south** to **Beach Cliffs** (`sector9_beach_cliffs`).
 
 53. At **Beach Cliffs**, read **signal reflection**, **basalt cliffs**, **driftwood marker** and **weathered elephant toy**. The patrol reflection does not replace alpha, beta or gamma.
 
-54. From **Beach Cliffs**, go **north** to **Coastal Resilience Station** (`sector9_coastal_research_station`) -> **north** to **Sandy Cove** (`sector9_beach_cove`).
+54. From **Beach Cliffs**, go **north** to **Tidewatch Station** (`sector9_coastal_research_station`) -> **north** to **Sandy Cove** (`sector9_beach_cove`).
 
 55. At **Sandy Cove**, read **warm sand** and open **campfire** for cooking if desired. Talk to **Scout Kaelen** and finish his optional beach conversation. Cooking-source access is separate from a named rest event.
 
 56. From **Sandy Cove**, go **west** to **Tide Pools** (`sector9_beach_pools`).
 
-57. At **Tide Pools**, read **pools** and **luminescent anemones**. Note **scan weeds** for Botanist after acceptance; leave **gather tideglass** until Orion gives Tideglass Day. Neither future quest is credited just by visiting now.
+57. At **Tide Pools**, read **pools** and **luminescent anemones**. Note **bioluminescent weeds** for Botanist after acceptance; leave **tideglass growth** until Orion gives Tideglass Day. Neither future quest is credited just by visiting now.
 
 58. At **Tide Pools**, use **tide fishing**, set up the Field Rod and Plain Chime Lure as its interface requires, and complete a catch. Follow fight feedback: ease reeling when strain rises, then resume when the fish settles. Confirm catch inventory and journal discovery. The vault lure is an optional upgrade.
 
@@ -199,7 +199,7 @@ Both fern and spore scans are in Resonant Canopy. Reach gamma before recovering 
 
 74. From **Crash Site**, go **south** to **Resonant Canopy** (`sector9_canopy`).
 
-75. At **Resonant Canopy**, clear Stalker-Vine. This can credit The Signal canopy-clear task and reveal ridge/temple nodes. Read **ferns**, note **Scan ferns** and **Scan spores** for after Botanist acceptance, and use **Scavenge remains** to start/advance Lost Patrol alpha. An Echo-Borer victory elsewhere is also accepted for The Signal; record whether that alternative is clear.
+75. At **Resonant Canopy**, clear the Stalker-Vine / Spore-Spitter pair (focus the healer first). This can credit The Signal canopy-clear task and reveal ridge/temple nodes. Read **low-frequency hum**, note **crystalline ferns** and **drifting spores** for after Botanist acceptance, and use **Scavenge remains** to start/advance Lost Patrol alpha. An Echo-Borer victory elsewhere is also accepted for The Signal; record whether that alternative is clear.
 
 76. From **Resonant Canopy**, go **south** to **Spore Thickets** (`sector9_wilds_thickets`).
 
@@ -207,7 +207,7 @@ Both fern and spore scans are in Resonant Canopy. Reach gamma before recovering 
 
 78. From **Spore Thickets**, go **east** to **Hound Nest** (`sector9_wilds_nest`).
 
-79. At **Hound Nest**, clear Shard-Hound if encountered, harvest **shard-hound remains**, and open **trampled supply pack** for Beast Meat, Wiring Bundle and Energy Core.
+79. At **Hound Nest**, clear the two-Shard-Hound pack if encountered, harvest **shard-hound remains**, and open **trampled supply pack** for Beast Meat, Wiring Bundle and Energy Core.
 
 80. From **Hound Nest**, go **west** to **Spore Thickets** (`sector9_wilds_thickets`) -> **south** to **Poison Hollow** (`sector9_wilds_hollow`).
 
@@ -227,7 +227,7 @@ Both fern and spore scans are in Resonant Canopy. Reach gamma before recovering 
 
 88. From **Hanging Root Bridge**, go **south** to **Architect Gateway** (`sector9_wilds_archway`).
 
-89. At **Architect Gateway**, clear Shard-Hound and read **Aethel boundary stones**.
+89. At **Architect Gateway**, read **Aethel boundary stones**; the hounds now hold Hound Nest.
 
 90. From **Architect Gateway**, go **east** to **Beast Run** (`sector9_wilds_dense_brush`).
 
@@ -247,7 +247,7 @@ Both fern and spore scans are in Resonant Canopy. Reach gamma before recovering 
 
 98. From **Vine Climb**, go **north** to **Windy Ledges** (`sector9_ridge_ledges`).
 
-99. At **Windy Ledges**, clear Echo-Borer and harvest **blue-frond cluster** for Herb.
+99. At **Windy Ledges**, harvest **blue-frond cluster**; the borers now hold Glow-Moss Cavern for Herb.
 
 100. From **Windy Ledges**, go **north** to **Beast Lair Approach** (`sector9_ridge_overhang`).
 
@@ -288,11 +288,11 @@ Both fern and spore scans are in Resonant Canopy. Reach gamma before recovering 
 
 ## 6. Temple Gate and Sanctuary entry
 
-Visit temple wings now for coverage, then return after accepting Ancient Echoes for their actual crystal tasks. First entry uses stone lock and warps directly to Hall of Echoes.
+Visit temple wings now for coverage, then return after accepting Ancient Echoes for their actual crystal tasks. First entry uses stone lock to open the gate; walk east through Sanctuary Grand Hall to Hall of Echoes.
 
 117. From **Sanctuary Outlook**, go **east** to **Stone Courtyard** (`sector9_temple_plaza`).
 
-118. At **Stone Courtyard**, clear Spore-Spitter, then read **processional mural** and **flagstone courtyard**.
+118. At **Stone Courtyard**, read **processional mural**; the spitter now supports the vine at Resonant Canopy. Read **flagstone courtyard** too.
 
 119. From **Stone Courtyard**, go **north** to **Outer Guard Post** (`sector9_temple_vestibule`).
 
@@ -312,7 +312,7 @@ Visit temple wings now for coverage, then return after accepting Ancient Echoes 
 
 127. From **Right Tuner Column**, go **north** to **Resonator Chamber** (`sector9_temple_lock_chamber`) -> **east** to **Temple Gate** (`sector9_temple_gate`).
 
-128. At **Temple Gate**, try east before authentication: the sealed gate must block travel. Then use **stone lock** after Clear canopy path and Locate Temple Gate are checked. The Signal completes for **200 event XP**, Sleeping Giant starts, and you warp to Hall of Echoes. On revisiting, the opened gate must remain passable after reload.
+128. At **Temple Gate**, try east before authentication: the sealed gate must block travel. Then use **stone lock** after Clear canopy path and Locate Temple Gate are checked. The Signal completes for **200 event XP**, Sleeping Giant starts, and the stone slabs open in place. Walk **east** to **Sanctuary Grand Hall**, then **east** to **Hall of Echoes**. On revisiting, the opened gate must remain passable after reload.
 
 **Check before moving on:** MQ02 complete, Sleeping Giant active, current room Hall of Echoes. Keep the Chime for later authentication. Gate opening is not Astra departure.
 
@@ -384,7 +384,7 @@ West/east crystals are outside Sanctuary in the Temple tuner wings; north is Aco
 
 156. From **Sanctuary Grand Hall**, go **north** to **Left Reliquary** (`sector9_foyer_left_gallery`).
 
-157. At **Left Reliquary**, clear Ruin-Guardian if encountered and read **botanical research log**.
+157. At **Left Reliquary**, clear Ruin-Guardian if encountered (guaranteed Scrap Metal), and read **botanical research log**.
 
 158. From **Left Reliquary**, go **west** to **Dominion Outpost** (`sector9_foyer_security_hub`).
 
@@ -451,9 +451,9 @@ West/east crystals are outside Sanctuary in the Temple tuner wings; north is Aco
 
 This quest uses Tinkering, not Cooking. Re-enter actual Tide Pools after accepting it even if you explored the beach earlier.
 
-187. From **Hidden Reliquary**, go **west** to **Tuning Matrix** (`sector9_archive_tuning_bay`) -> **north** to **Interface Console** (`sector9_archive_reading_room`) -> **west** to **Archive Vault** (`sector9_archive_vault`) -> **west** to **Hall of Echoes** (`sector9_hall_of_echoes`) -> **west** to **Sanctuary Grand Hall** (`sector9_foyer_grand_hall`) -> **west** to **Temple Gate** (`sector9_temple_gate`) -> **west** to **Resonator Chamber** (`sector9_temple_lock_chamber`) -> **west** to **Stone Courtyard** (`sector9_temple_plaza`) -> **west** to **Sanctuary Outlook** (`sector9_ridge_plateau`) -> **west** to **High Pass** (`sector9_ridge_crevice`) -> **west** to **Sniper Lookout** (`sector9_ridge_sniper_perch`) -> **south** to **Shield Viewpoint** (`sector9_ridge_viewpoint`) -> **west** to **Canopy Ridge** (`sector9_canopy_ridge`) -> **south** to **Beast Lair Approach** (`sector9_ridge_overhang`) -> **south** to **Windy Ledges** (`sector9_ridge_ledges`) -> **south** to **Vine Climb** (`sector9_ridge_climb`) -> **west** to **Patrol Graveyard** (`sector9_wilds_grave`) -> **north** to **Poison Hollow** (`sector9_wilds_hollow`) -> **north** to **Spore Thickets** (`sector9_wilds_thickets`) -> **north** to **Resonant Canopy** (`sector9_canopy`) -> **north** to **Crash Site** (`sector9_crash_site`) -> **east** to **Stream Bank** (`sector9_landing_stream`) -> **east** to **Mist Pools** (`sector9_stream_pools`) -> **east** to **Crystalline Flats** (`sector9_stream_flats`) -> **east** to **Resonant Falls** (`sector9_stream_falls`) -> **north** to **Beach Transition** (`sector9_stream_tidepools`) -> **north** to **Tide Pools** (`sector9_beach_pools`). Stop at **Resonant Canopy** for **Scan ferns** AND **Scan spores**, and at **Crash Site** for **scan moss**, now that Botanist is active. These actions do not require another battle.
+187. From **Hidden Reliquary**, go **west** to **Tuning Matrix** (`sector9_archive_tuning_bay`) -> **north** to **Interface Console** (`sector9_archive_reading_room`) -> **west** to **Archive Vault** (`sector9_archive_vault`) -> **west** to **Hall of Echoes** (`sector9_hall_of_echoes`) -> **west** to **Sanctuary Grand Hall** (`sector9_foyer_grand_hall`) -> **west** to **Temple Gate** (`sector9_temple_gate`) -> **west** to **Resonator Chamber** (`sector9_temple_lock_chamber`) -> **west** to **Stone Courtyard** (`sector9_temple_plaza`) -> **west** to **Sanctuary Outlook** (`sector9_ridge_plateau`) -> **west** to **High Pass** (`sector9_ridge_crevice`) -> **west** to **Sniper Lookout** (`sector9_ridge_sniper_perch`) -> **south** to **Shield Viewpoint** (`sector9_ridge_viewpoint`) -> **west** to **Canopy Ridge** (`sector9_canopy_ridge`) -> **south** to **Beast Lair Approach** (`sector9_ridge_overhang`) -> **south** to **Windy Ledges** (`sector9_ridge_ledges`) -> **south** to **Vine Climb** (`sector9_ridge_climb`) -> **west** to **Patrol Graveyard** (`sector9_wilds_grave`) -> **north** to **Poison Hollow** (`sector9_wilds_hollow`) -> **north** to **Spore Thickets** (`sector9_wilds_thickets`) -> **north** to **Resonant Canopy** (`sector9_canopy`) -> **north** to **Crash Site** (`sector9_crash_site`) -> **east** to **Stream Bank** (`sector9_landing_stream`) -> **east** to **Mist Pools** (`sector9_stream_pools`) -> **east** to **Crystalline Flats** (`sector9_stream_flats`) -> **east** to **Resonant Falls** (`sector9_stream_falls`) -> **north** to **Beach Transition** (`sector9_stream_tidepools`) -> **north** to **Tide Pools** (`sector9_beach_pools`). Stop at **Resonant Canopy** for **crystalline ferns** AND **drifting spores**, and at **Crash Site** for **moss**, now that Botanist is active. These actions do not require another battle.
 
-188. At **Tide Pools**, let entry credit **Visit Tide Pools**, then use **gather tideglass**. Receive **Herb x1 + Beast Meat x1 + Source Resin schematic**. It supplies exact crafting ingredients even if earlier food was used. Also use **scan weeds** for Botanist. Together with roots, ferns, spores and moss, this is the fifth scan; the quest must stay active until you report to Zeke.
+188. At **Tide Pools**, let entry credit **Visit Tide Pools**, then use **tideglass growth**. Receive **Herb x1 + Beast Meat x1 + Source Resin schematic**. It supplies exact crafting ingredients even if earlier food was used. Also use **bioluminescent weeds** for Botanist. Together with roots, ferns, spores and moss, this is the fifth scan; the quest must stay active until you report to Zeke.
 
 189. At **Tide Pools**, open **Menu -> Tinkering**, learn Source Resin through Found schematics or use its blueprint in Items. Select **Source Resin Mod** and craft from **Herb x1 + Beast Meat x1** while the quest is active and Collect food done.
 
@@ -565,7 +565,7 @@ Inspect the ship first to unlock its salvage shortcut. Launch happens in Hangar 
 
 229. At **Hangar Bay**, use **salvage return route** to travel directly to **Pod Fragment**. It requires Liftoff and Astra inspection.
 
-230. At **Pod Fragment**, use **salvage conduits** now. Confirm Collect power conduits checked; this stores quest progress rather than an ordinary stackable conduit inventory item.
+230. At **Pod Fragment**, use **power conduits** now. Confirm Collect power conduits checked; this stores quest progress rather than an ordinary stackable conduit inventory item.
 
 231. At **Pod Fragment**, use **return to Astra** to go directly to Hangar Bay.
 
@@ -649,7 +649,7 @@ Entry: **Crash Site** (`sector9_crash_site`). Entry policy: hub; return policy: 
 
 #### Crash Site (`sector9_crash_site`)
 
-The escape pod wreckage sits half-submerged in warm glow-water. A scorched navigation console ticks under an open panel. Zeke coughs on the hull while scan moss vibrates along the seams.
+The escape pod wreckage sits half-submerged in warm glow-water. A scorched navigation console ticks under an open panel. Zeke checks a split suit seam beside the hull while moss vibrates along the seams.
 
 - **Exits:** **north** -> Escape Pod Interior (`sector9_pod_interior`); **south** -> Resonant Canopy (`sector9_canopy`); **west** -> Overgrown Glade (`sector9_landing_glade`); **east** -> Stream Bank (`sector9_landing_stream`).
 - **NPC:** Zeke (`zeke`); requires milestones ms_w1_mq05_complete; absent after ms_w2_mq01_complete. While visible, quest dialogue eligibility still applies.
@@ -659,7 +659,7 @@ The escape pod wreckage sits half-submerged in warm glow-water. A scorched navig
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_pod_examined"}`.
 - Event `w2_mq01_examine_pod` prerequisites: `[{"type": "quest_active", "quest_id": "w2_mq01"}, {"type": "quest_task_done", "quest_id": "w2_mq01", "task_id": "check_on_zeke"}, {"type": "quest_task_not_done", "quest_id": "w2_mq01", "task_id": "examine_pod"}]`. See the numbered route for its quest/reward sequence.
 - **glow-water** (generic; object: glow-water): The water is warm and vibrates with a gentle frequency. It feels soothing to touch.
-- **scan moss** (generic; object: scan moss): Objective completed.
+- **moss** (generic; object: moss): Objective completed.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_flora_moss_scanned"}`.
 - Event `w2_sq01_scan_moss` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq01"}, {"type": "quest_task_not_done", "quest_id": "w2_sq01", "task_id": "scan_flora_3"}]`. See the numbered route for its quest/reward sequence.
 
@@ -689,10 +689,10 @@ Shattered vines and charred branches litter the muddy clearing where the pod plo
 
 #### Overgrown Glade (`sector9_landing_glade`)
 
-A dense grove of giant ferns forms a broadleaf canopy overhead, filtering the dim sky into a green haze. Luminous mushrooms grow in thick clumps along a decaying log beside a small mossy hollow.
+A broadleaf canopy filters the sky into green haze. Luminous mushrooms cluster along a decaying log. Beneath it, a mossy hollow rustles; a velvety spore puffball rolls out and settles near your boots.
 
 - **Exits:** **east** -> Crash Site (`sector9_crash_site`); **north** -> Security Perimeter (`sector9_landing_perimeter`).
-- **NPC:** Charlie (`creature_charlie`).
+- **Puffball interaction:** Charlie remains off-screen. No NPC chip, portrait or conversation panel. Tap the animated ball for gentle play or Leave it be.
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **luminous mushrooms** (generic; object: luminous mushrooms): Already harvested.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_herb_glade_foraged"}`.
@@ -710,6 +710,7 @@ A clear stream of warm water flows east toward the coast, its glow-water current
 - **glow-water current** (generic; object: glow-water current): The current carries warm notes through the roots, like the Ocean breathing under the swamp.
 - **smooth pebbles** (generic; object: smooth pebbles): Water-rounded quartz crystals and silt shards coat the riverbank, warm to the touch.
 - **river silt cache** (container; object: river silt cache): Open once for Herbal Poultice, Scrap Metal. Persisted state: `w2_landing_stream_cache_opened`.
+- Discovery before rewards: You loosen the silt around a buried field case. Its seal has kept the river out of the supplies inside.
 
 #### Security Perimeter (`sector9_landing_perimeter`)
 
@@ -722,11 +723,11 @@ A smashed Dominion surveillance drone lies wedged between two stone blocks. Its 
 
 #### Pod Fragment (`sector9_landing_drop`)
 
-A metal cargo panel from the escape pod has sheared off and sits wedged in the mud. Underneath it, salvage conduits, empty battery cells, and diagnostic wires lie scattered.
+A metal cargo panel from the escape pod has sheared off and sits wedged in the mud. Underneath it, power conduits, empty battery cells, and diagnostic wires lie scattered.
 
 - **Exits:** **west** -> Scorched Brush (`sector9_landing_brush`).
 - **Direct encounters:** none; action-spawned encounters are separate.
-- **salvage conduits** (generic; object: salvage conduits): Salvaging power conduits from the pod wreckage...
+- **power conduits** (generic; object: power conduits): Salvaging power conduits from the pod wreckage...
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_conduits_collected"}`.
 - Event `w2_mq05_collect_conduits` prerequisites: `[{"type": "quest_active", "quest_id": "w2_mq05"}, {"type": "quest_task_done", "quest_id": "w2_mq05", "task_id": "inspect_astra"}, {"type": "quest_task_not_done", "quest_id": "w2_mq05", "task_id": "collect_power_conduits"}]`. See the numbered route for its quest/reward sequence.
 - **cargo panel** (generic; object: cargo panel): Reinforced alloy stenciled with Dominion emergency release instructions. The hydraulic latch is crushed shut.
@@ -740,15 +741,15 @@ Entry: **Resonant Canopy** (`sector9_canopy`). Entry policy: transition; return 
 
 #### Resonant Canopy (`sector9_canopy`)
 
-The canopy of the ruins is covered in giant, crystalline ferns that catch the dim light and buzz with low-frequency standing waves. You can scan the ferns or scan the drifting spores for harmonic readings, or scavenge the remains of a fallen scout tangled nearby.
+Crystalline ferns hum above a Stalker-Vine feeding a Spore-Spitter through its roots. Drifting spores catch the light. The remains of a fallen scout lie tangled nearby; you can scavenge the remains. A low-frequency hum runs through the branches.
 
 - **Exits:** **north** -> Crash Site (`sector9_crash_site`); **south** -> Spore Thickets (`sector9_wilds_thickets`).
-- **Direct encounters:** stalker_vine.
-- **ferns** (generic; object: ferns): Their leaves vibrate like harp strings when touched, ringing out a quiet chord.
-- **Scan ferns** (generic; object: Scan ferns): Objective completed.
+- **Direct encounters:** stalker_vine + spore_spitter; action-spawned encounters are separate.
+- **low-frequency hum** (generic; object: low-frequency hum): Their leaves vibrate like harp strings when touched, ringing out a quiet chord.
+- **crystalline ferns** (generic; object: crystalline ferns): Objective completed.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_flora_ferns_scanned"}`.
 - Event `w2_sq01_scan_ferns` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq01"}, {"type": "quest_task_not_done", "quest_id": "w2_sq01", "task_id": "scan_flora_1"}]`. See the numbered route for its quest/reward sequence.
-- **Scan spores** (generic; object: Scan spores): The razor-vine spores vibrate with high energy.
+- **drifting spores** (generic; object: drifting spores): The razor-vine spores vibrate with high energy.
 - Event `w2_sq01_scan_spores` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq01"}, {"type": "quest_task_not_done", "quest_id": "w2_sq01", "task_id": "scan_flora_4"}]`. See the numbered route for its quest/reward sequence.
 - **Scavenge remains** (generic; object: Scavenge remains): A fallen Dominion scout lies tangled in the vines.
 - Event `w2_sq02_start_trace_alpha` prerequisites: `[{"type": "quest_not_started", "quest_id": "w2_sq02"}]`. See the numbered route for its quest/reward sequence.
@@ -759,7 +760,7 @@ The canopy of the ruins is covered in giant, crystalline ferns that catch the di
 A dense tangle of glowing vines and thorned thickets. The air is thick with purple spores, and distress signature alpha repeats under the static hiss.
 
 - **Exits:** **north** -> Resonant Canopy (`sector9_canopy`); **east** -> Hound Nest (`sector9_wilds_nest`); **south** -> Poison Hollow (`sector9_wilds_hollow`).
-- **Direct encounters:** razor_vine.
+- **Direct encounters:** razor_vine; action-spawned encounters are separate.
 - **distress signature alpha** (generic; object: distress signature alpha): Objective completed.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_beacon_alpha_traced"}`.
 - Event `w2_sq02_start_trace_alpha` prerequisites: `[{"type": "quest_not_started", "quest_id": "w2_sq02"}]`. See the numbered route for its quest/reward sequence.
@@ -767,14 +768,15 @@ A dense tangle of glowing vines and thorned thickets. The air is thick with purp
 
 #### Hound Nest (`sector9_wilds_nest`)
 
-A shallow den trampled into the briars. Shard-hound tracks crisscross the mud around shard-hound remains and a trampled supply pack dragged beneath the thorns.
+Two Shard-Hounds circle a shallow den, crystalline spines raised. Shard-hound tracks crisscross the mud around shard-hound remains and a trampled supply pack dragged beneath the thorns.
 
 - **Exits:** **west** -> Spore Thickets (`sector9_wilds_thickets`).
-- **Direct encounters:** shard_hound.
+- **Direct encounters:** shard_hound + shard_hound; action-spawned encounters are separate.
 - **shard-hound remains** (generic; object: shard-hound remains): Already harvested.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_meat_nest_foraged"}`.
 - Event `w2_forage_meat_nest` prerequisites: `[{"type": "milestone_not_set", "milestone": "ms_w2_meat_nest_foraged"}]`. See the numbered route for its quest/reward sequence.
 - **trampled supply pack** (container; object: trampled supply pack): Open once for Beast Meat, Wiring Bundle, Energy Core. Persisted state: `w2_hound_nest_pack_opened`.
+- Discovery before rewards: You pull the torn pack clear of the thorns. Its padded inner pockets have survived the hounds.
 
 #### Poison Hollow (`sector9_wilds_hollow`)
 
@@ -820,7 +822,7 @@ Aerial root bridges woven from giant tree roots hang over the gorge. They sway i
 A massive, partially collapsed archway of smooth Architect stone rises above Aethel boundary stones. Faint cymatic glyphs flicker along the edges, pulsing in slow cycles.
 
 - **Exits:** **north** -> Hanging Root Bridge (`sector9_wilds_canopy_walk`); **east** -> Beast Run (`sector9_wilds_dense_brush`).
-- **Direct encounters:** shard_hound.
+- **Direct encounters:** none; action-spawned encounters are separate.
 - **Aethel boundary stones** (generic; object: Aethel boundary stones): The archway translates swamp resonance into geometric light, the first threshold of the Sanctuary.
 
 #### Beast Run (`sector9_wilds_dense_brush`)
@@ -831,6 +833,7 @@ A wide trail of trampled vines and broken tree trunks skirts a violet toxic bloo
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **toxic bloom** (generic; object: toxic bloom): A violet bloom exhales corrosive spores. Holding your breath, you mark a safer return path.
 - **lost surveyor pack** (container; object: lost surveyor pack): Open once for Antidote Flask, Medkit+, Ration Pack. Persisted state: `w2_surveyor_pack_opened`.
+- Discovery before rewards: You unfasten the mud-caked pack. The outer fabric is ruined, but its emergency supplies are still sealed.
 
 #### Burned Glade (`sector9_wilds_clearance`)
 
@@ -862,7 +865,7 @@ Entry: **Mist Pools** (`sector9_stream_pools`). Entry policy: transition; return
 Deep wetlands where the glowing water pools into wide, still basins. Reed bulbs push through the mineral fog, and a Siren Skimmer darts through the mist with a shrill, disorienting cry.
 
 - **Exits:** **west** -> Stream Bank (`sector9_landing_stream`); **east** -> Crystalline Flats (`sector9_stream_flats`); **south** -> Resonant Sedge (`sector9_stream_wetlands`).
-- **Direct encounters:** siren_skimmer.
+- **Direct encounters:** siren_skimmer; action-spawned encounters are separate.
 - **reed bulbs** (generic; object: reed bulbs): Already harvested.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_herb_reeds_foraged"}`.
 - Event `w2_forage_herb_reeds` prerequisites: `[{"type": "milestone_not_set", "milestone": "ms_w2_herb_reeds_foraged"}]`. See the numbered route for its quest/reward sequence.
@@ -873,10 +876,11 @@ Deep wetlands where the glowing water pools into wide, still basins. Reed bulbs 
 Dense sedge grasses with hollow, fluted stalks rise from the swamp. A handwritten spore warning sign leans in the muck as wind-sung reeds whistle in harmonic chords near a submerged emergency locker.
 
 - **Exits:** **north** -> Mist Pools (`sector9_stream_pools`).
-- **Direct encounters:** spore_spitter.
+- **Direct encounters:** spore_spitter; action-spawned encounters are separate.
 - **spore warning** (generic; object: spore warning): Amber sacs inflate along the path. Aethel markers identify the cloud as neurotoxic and harmful to Erosion control.
 - **wind-sung reeds** (generic; object: wind-sung reeds): Hollow reed stalks whistle with harmonic frequencies as the coastal breeze passes through them.
 - **submerged emergency locker** (container; object: submerged emergency locker): Open once for Antidote Flask, Pure Iron, Chemical Catalyst. Persisted state: `w2_wetlands_locker_opened`.
+- Discovery before rewards: You lever the locker above the waterline and release its latch. Brackish water drains away from a sealed inner compartment.
 
 #### Crystalline Flats (`sector9_stream_flats`)
 
@@ -904,7 +908,7 @@ The stream cascades over stone pillars. Behind the falling water, a sheltered co
 
 The stream widens into brackish coastal pools. A tidepool crawler is trapped near the shallow margins where star crystals settle.
 
-- **Exits:** **south** -> Resonant Falls (`sector9_stream_falls`); **north** -> Tide Pools (`sector9_beach_pools`); **east** -> Coastal Resilience Station (`sector9_coastal_research_station`).
+- **Exits:** **south** -> Resonant Falls (`sector9_stream_falls`); **north** -> Tide Pools (`sector9_beach_pools`); **east** -> Tidewatch Station (`sector9_coastal_research_station`).
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **tidepool crawler** (generic; object: tidepool crawler): Already harvested.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_meat_tidepool_foraged"}`.
@@ -922,10 +926,10 @@ A dark cavern opens behind a waterfall curtain beneath the main shelf. Wet mist 
 
 #### Glow-Moss Cavern (`sector9_stream_cave_depths`)
 
-A quiet cavern chamber lit blue by thick sheets of glowing moss. A waterproof cargo case rests against the rocks. An echo nest rings the far wall, and the damp stone carries the waterfall in a hollow rhythm.
+A quiet cavern chamber lit blue by thick sheets of glowing moss. A waterproof cargo case rests against the rocks. Two Echo-Borers scrape around an echo nest, their crystalline claws clicking against the cold stone.
 
 - **Exits:** **south** -> Cavern Entrance (`sector9_stream_cave_entrance`); **east** -> Waterlogged Tunnel (`sector9_stream_sunken_passage`).
-- **Direct encounters:** echo_borer.
+- **Direct encounters:** echo_borer + echo_borer; action-spawned encounters are separate.
 - **echo nest** (generic; object: echo nest): Already harvested.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_meat_cave_foraged"}`.
 - Event `w2_forage_meat_cave` prerequisites: `[{"type": "milestone_not_set", "milestone": "ms_w2_meat_cave_foraged"}]`. See the numbered route for its quest/reward sequence.
@@ -948,7 +952,7 @@ A narrow tunnel where the cavern roof dips close to the glowing water. A warm cu
 
 High basalt cliffs overlook the beach, where a sun-bleached driftwood marker and a weathered elephant toy rest in a warm hollow near the edge. Below, a signal reflection stutters across the glowing shoreline of Tideglass Beach.
 
-- **Exits:** **west** -> Resonant Falls (`sector9_stream_falls`); **north** -> Coastal Resilience Station (`sector9_coastal_research_station`).
+- **Exits:** **west** -> Resonant Falls (`sector9_stream_falls`); **north** -> Tidewatch Station (`sector9_coastal_research_station`).
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **signal reflection** (generic; object: signal reflection): Three distant beacon reflections stutter across the tideglass. One carries a Dominion patrol code.
 - Event `w2_sq02_trace_cliffs` prerequisites: `[]`. See the numbered route for its quest/reward sequence.
@@ -960,7 +964,7 @@ High basalt cliffs overlook the beach, where a sun-bleached driftwood marker and
 
 A sheltered, sandy beach protected by tall stone walls. The warm sand is dry, making it a safe place to set up a campfire and rest. Stranded scout Kaelen tends a low grill over the flames.
 
-- **Exits:** **south** -> Coastal Resilience Station (`sector9_coastal_research_station`); **west** -> Tide Pools (`sector9_beach_pools`).
+- **Exits:** **south** -> Tidewatch Station (`sector9_coastal_research_station`); **west** -> Tide Pools (`sector9_beach_pools`).
 - **NPC:** Scout Kaelen (`scout_kaelen`).
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **Cook** (rest_stop; object: campfire): The sheltered beach fire is ready for cooking. Cooking source: Campfire.
@@ -968,16 +972,16 @@ A sheltered, sandy beach protected by tall stone walls. The warm sand is dry, ma
 
 #### Tide Pools (`sector9_beach_pools`)
 
-Glowing tide pools collect in the sand around luminescent anemones, calm enough for fishing beneath the pale blue fog. Bioluminescent weeds pulse near the shore where you can gather tideglass for Orion's recipe.
+Glowing tide pools collect in the sand around luminescent anemones, calm enough for fishing beneath the pale blue fog. Bioluminescent weeds pulse beside a tideglass growth along the shore.
 
 - **Exits:** **east** -> Sandy Cove (`sector9_beach_cove`); **west** -> Beached Cargo Wreck (`sector9_beach_cargo`); **north** -> Sea Cavern (`sector9_beach_cave`); **south** -> Beach Transition (`sector9_stream_tidepools`).
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **pools** (generic; object: pools): The water hums with a deep subsonic tone, washing away local static.
 - **tide fishing** (fishing; object: tide fishing): The tide pools are calm enough for fishing.
-- **scan weeds** (generic; object: scan weeds): Objective completed.
+- **bioluminescent weeds** (generic; object: bioluminescent weeds): Objective completed.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_flora_weeds_scanned"}`.
 - Event `w2_sq01_scan_weeds` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq01"}, {"type": "quest_task_not_done", "quest_id": "w2_sq01", "task_id": "scan_flora_2"}]`. See the numbered route for its quest/reward sequence.
-- **gather tideglass** (generic; object: gather tideglass): Glowing tideglass skewers are harvested from the shore.
+- **tideglass growth** (generic; object: tideglass growth): Glowing tideglass skewers are harvested from the shore.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_tideglass_gathered"}`.
 - Event `w2_sq03_gather` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq03"}, {"type": "quest_task_done", "quest_id": "w2_sq03", "task_id": "visit_beach"}, {"type": "quest_task_not_done", "quest_id": "w2_sq03", "task_id": "collect_food"}]`. See the numbered route for its quest/reward sequence.
 - **luminescent anemones** (generic; object: luminescent anemones): Delicate tidepool flora pulse in rhythmic intervals synchronized with the distant barrier frequency.
@@ -989,6 +993,7 @@ A Dominion cargo container lies split open on the sand, its rusted hull stripped
 - **Exits:** **east** -> Tide Pools (`sector9_beach_pools`); **north** -> Star-Sand Dunes (`sector9_beach_dunes`).
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **crates** (container; object: crates): Open once for Scrap Metal, Composite Plate, Hydraulic Fluid, Nano Filament. Persisted state: `w2_beach_crates_opened`.
+- Discovery before rewards: You pry apart the warped shipping panels. Beneath the soaked packing, a few sealed supplies are still usable.
 - **rusted hull** (generic; object: rusted hull): Barnacles and salt crystals encrust the shipping container's battered exterior.
 
 #### Sea Cavern (`sector9_beach_cave`)
@@ -999,6 +1004,7 @@ A high-ceilinged cavern carved by the waves. Abandoned bedroll hooks mark a mine
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **mineral shelter** (generic; object: mineral shelter): Old bedroll hooks and a soot-blackened ceiling mark a patrol shelter abandoned in a hurry.
 - **tide-worn chest** (container; object: tide-worn chest): Open once for Bioluminescent Lure, Tideglass Delight, Cooling Burn Salve. Persisted state: `w2_sea_cavern_chest_opened`.
+- Discovery before rewards: You work the salt-stiff latch free. The chest opens with a scrape, revealing dry bundles beneath its weathered lid.
 
 #### Sunken Obelisk (`sector9_beach_pillar`)
 
@@ -1032,16 +1038,16 @@ Wind-sculpted ridges of fine crystalline sand sparkle in the dim light. A burrow
 - Event `w2_forage_meat_dunes` prerequisites: `[{"type": "milestone_not_set", "milestone": "ms_w2_meat_dunes_foraged"}]`. See the numbered route for its quest/reward sequence.
 - **wind-sculpted ridges** (generic; object: wind-sculpted ridges): Shifting blue dunes create sweeping wave patterns across the coastal expanse.
 
-#### Coastal Resilience Station (`sector9_coastal_research_station`)
+#### Tidewatch Station (`sector9_coastal_research_station`)
 
-A weather-hardened eco-station perches over tidal wetlands and sea bluffs. Acoustic sediment sensors pulse against the marsh silt, while a wetland telemetry array maps coastal marsh restoration and water filtration under the salty ocean breeze. On the clinician's desk, a forensic research slate rests beside a warm solar coffee press.
+An old monitoring station overlooks the tidal wetlands. Patched pipes feed the camp's water filters. A wetland telemetry array still tracks the coast; Megan's forensic research slate and a warm solar coffee press share a well-scrubbed desk.
 
 - **Exits:** **west** -> Beach Transition (`sector9_stream_tidepools`); **south** -> Beach Cliffs (`sector9_beach_cliffs`); **north** -> Sandy Cove (`sector9_beach_cove`).
 - **NPC:** Megan (`clinician_megan`).
 - **Direct encounters:** none; action-spawned encounters are separate.
-- **wetland telemetry array** (inspect; object: wetland telemetry array): A bank of holographic water-quality sensors and tidal gauges monitoring marsh vegetation density and sediment stability across Sector 9's coastline. An IT tech's sticky note reads: 'If the telemetry drops, check the grounding wire before calling Jason.'
-- **forensic research slate** (inspect; object: forensic research slate): A diagnostic terminal analyzing trace contaminants and environmental trauma with the meticulous rigor of a courtroom forensic dossier. Redlined notes identify upstream industrial run-off.
-- **solar coffee press** (inspect; object: solar coffee press): A warm glass carafe of dark roast coffee sitting on a solar heater beside a handwritten note: 'Drink water, stretch your back, and stop reading autopsy reports at 2 AM.'
+- **wetland telemetry array** (inspect; object: Old gauges track tides and sediment. New wiring connects the station to the camp's filtration system. A faded note reads: 'If the telemetry drops, check the grounding wire before calling Jason.'
+- **forensic research slate** (inspect; object: Megan's sample notes compare filter residue, water clarity and reports of irritated eyes at the falls. She has marked an upstream runoff pattern for further investigation.
+- **solar coffee press** (inspect; object: A warm glass carafe of dark roast coffee sitting on a solar heater beside a handwritten note: 'Drink water, stretch your back, and stop reading autopsy reports at 2 AM.'
 
 #### Submerged Aethel Vault (`sector9_sunken_aethel_vault`)
 
@@ -1050,6 +1056,7 @@ Ancient basalt pillars support a domed chamber carved from living coral. Drainag
 - **Exits:** **north** -> Waterlogged Tunnel (`sector9_stream_sunken_passage`).
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **precursor reliquary** (container; object: precursor reliquary): Open once for Tidal Resonator, Astral Thread, Bioluminescent Lure. Persisted state: `w2_sunken_vault_chest_opened`.
+- Discovery before rewards: The brass seals yield under steady pressure. You lift the lid and ease the preserved contents from their fitted recesses.
 - **living coral** (inspect; object: living coral): Deep cyan and amber polyps pulse gently in time with the tide, calcified around Aethel harmonic conductors that have survived centuries under water.
 
 ### Canopy Ridge (`canopy_ridge`)
@@ -1069,7 +1076,7 @@ A sheer cliff wall covered in thick, climbable root-vines. A medic satchel hangs
 High stone shelves swept by cold upper-atmosphere wind. A blue-frond cluster clings to a sheltered crack. The ambient sound of the winds whistling through the gaps forms a low chord.
 
 - **Exits:** **south** -> Vine Climb (`sector9_ridge_climb`); **north** -> Beast Lair Approach (`sector9_ridge_overhang`).
-- **Direct encounters:** echo_borer.
+- **Direct encounters:** none; action-spawned encounters are separate.
 - **blue-frond cluster** (generic; object: blue-frond cluster): Already harvested.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_herb_ridge_foraged"}`.
 - Event `w2_forage_herb_ridge` prerequisites: `[{"type": "milestone_not_set", "milestone": "ms_w2_herb_ridge_foraged"}]`. See the numbered route for its quest/reward sequence.
@@ -1147,7 +1154,7 @@ Entry: **Temple Gate** (`sector9_temple_gate`). Entry policy: transition; return
 A symmetric flagstone courtyard spreads before the gate beneath a processional mural. Geometric lines are carved into the ground, pulsing with a faint blue light.
 
 - **Exits:** **west** -> Sanctuary Outlook (`sector9_ridge_plateau`); **east** -> Resonator Chamber (`sector9_temple_lock_chamber`); **north** -> Outer Guard Post (`sector9_temple_vestibule`).
-- **Direct encounters:** spore_spitter.
+- **Direct encounters:** none; action-spawned encounters are separate.
 - **processional mural** (generic; object: processional mural): Light figures carry bowls of Ocean-water inward while crystalline human shapes carry memory outward.
 - **flagstone courtyard** (generic; object: flagstone courtyard): Weathered geometric tiles align toward the temple portal with uncanny precision.
 
@@ -1216,7 +1223,7 @@ A colossal foyer of clean, ancient geometry surrounds a welcome console. The air
 A wide alcove showing cracked Architect resonance crystals displayed on stone pedestals beside a botanical research log. The crystals hum in discord.
 
 - **Exits:** **south** -> Sanctuary Grand Hall (`sector9_foyer_grand_hall`); **west** -> Dominion Outpost (`sector9_foyer_security_hub`).
-- **Direct encounters:** ruin_guardian.
+- **Direct encounters:** ruin_guardian; action-spawned encounters are separate.
 - **botanical research log** (generic; object: botanical research log): The log confirms the swamp was cultivated to filter Source resonance, not allowed to overtake the facility.
 
 #### Right Archives (`sector9_foyer_right_gallery`)
@@ -1256,7 +1263,7 @@ A dark, cramped ventilation crawlspace filled with bundles of thick optical wire
 A junction point inside the crawlspace. A service map marks wire channels splitting off to the stasis deck and generator breakers.
 
 - **Exits:** **west** -> Maintenance Conduit (`sector9_conduit_crawlspace`); **north** -> Access Shaft (`sector9_conduit_access_shaft`); **south** -> Breaker Deck (`sector9_conduit_breaker_room`).
-- **Direct encounters:** sentinel_orb.
+- **Direct encounters:** sentinel_orb; action-spawned encounters are separate.
 - **service map** (generic; object: service map): The map reveals a return duct linking the Hall of Echoes to the foyer security hub.
 
 #### Breaker Deck (`sector9_conduit_breaker_room`)
@@ -1267,6 +1274,7 @@ An auxiliary generator cabin. Offline breakers hum with static, ready to be flip
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **breakers** (generic; object: breakers): Flipping the auxiliary breaker alignment...
 - **technician toolbox** (container; object: technician toolbox): Open once for Rapid Capacitor, Wiring Bundle, Pure Iron. Persisted state: `w2_breaker_toolbox_opened`.
+- Discovery before rewards: You lift the toolbox lid and slide out its fitted tray. Spare components remain secured beneath it.
 
 #### Access Shaft (`sector9_conduit_access_shaft`)
 
@@ -1303,7 +1311,7 @@ Small side alcoves designed for private study. A choir alcove log projects shift
 A laboratory bay containing Dominion logging sensors focused on cymatic pool fluctuations. The northern resonance crystal hums inside a sealed acoustic rack.
 
 - **Exits:** **south** -> Echo Alcoves (`sector9_hall_echo_alcoves`).
-- **Direct encounters:** spore_spitter.
+- **Direct encounters:** spore_spitter; action-spawned encounters are separate.
 - **northern resonance crystal** (generic; object: northern resonance crystal): A gold crystal vibrates at the mural alignment frequency.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_crystal_north_seated"}`.
 - Event `w2_sq04_crystal_north` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq04"}, {"type": "quest_task_not_done", "quest_id": "w2_sq04", "task_id": "crystal_north"}]`. See the numbered route for its quest/reward sequence.
@@ -1352,6 +1360,7 @@ A labeled calibration record sits behind the opened pedestal glass. Its diagrams
 - **pedestal** (generic; object: pedestal): The Bridge calibration record lists consent checks, separate carriers, and a mandatory ground.
 - Event `w2_sq04_decode_bridge_record` prerequisites: `[{"type": "quest_completed", "quest_id": "w2_sq04"}, {"type": "milestone_not_set", "milestone": "ms_w2_bridge_record_decoded"}]`. See the numbered route for its quest/reward sequence.
 - **relic coffer** (container; object: relic coffer): Open once for Astral Thread, Bioluminescent Focus, Energy Core. Persisted state: `w2_relic_coffer_opened`.
+- Discovery before rewards: You open the coffer carefully. Its lining separates a handful of delicate components, still undisturbed.
 
 ### Stasis Chamber (`stasis_chamber`)
 
@@ -1411,7 +1420,7 @@ Walkway gantries suspended high above the stasis pod. A security grid sweeps acr
 
 - **Exits:** **south** -> Access Shaft (`sector9_conduit_access_shaft`); **east** -> Infiltration Hatch (`sector9_vents_access_grate`).
 - **South lock:** Razor-vines choke the shaft. The barbed stems will burst into toxic spores if cut cold. Requires `thermal_cutter`; consumed: False.
-- **Direct encounters:** sentinel_orb.
+- **Direct encounters:** sentinel_orb; action-spawned encounters are separate.
 - **security grid** (generic; object: security grid): Objective completed.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_grid_hacked"}`.
 - Event `w2_sq05_hack_grid` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq05"}, {"type": "quest_task_not_done", "quest_id": "w2_sq05", "task_id": "hack_security_grid"}]`. See the numbered route for its quest/reward sequence.
@@ -1678,13 +1687,13 @@ Confront Gh0st, survive the Beast, then finish Orion's grounded Anchor Drill bef
 
 ### Liftoff (`w2_mq05`)
 
-Settle the Source Gate, salvage conduits, install the Bridge, authenticate Orion with the Chime, and fly low to the Spire.
+Settle the Source Gate, power conduits, install the Bridge, authenticate Orion with the Chime, and fly low to the Spire.
 
 **Rebuild the Circuit**
 
 - [ ] Resolve the Source Gate's horn, cup, roots, and breakers. (`bypass_source_gate`)
 - [ ] Inspect the Astra's dark console. (`inspect_astra`)
-- [ ] Return to the Pod Fragment and recover the salvage conduits from the wreckage. (`collect_power_conduits`)
+- [ ] Return to the Pod Fragment and recover the power conduits from the wreckage. (`collect_power_conduits`)
 - [ ] At the Hangar Bay, use the recovered conduits to install the Bridge and authenticate Orion with the Chime. (`reboot_bridge_relic`)
 - [ ] Release the Astra from the launch cradle. (`launch_ship`)
 

@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-31",
+  "tests": {
+    "tests": 64,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "apk_sha256": "eb1226e78889bac3191be913b88cf5805d0f20fad26ffb165d4a579f30a15c85",
+  "source_sha256": {
+    "app/src/main/assets/dialogue.json": "c2fd013e35b210624b3e751bad8b86b2c752ebdeb367828277897626a000658a",
+    "app/src/main/assets/npcs.json": "3db06297ca81628168645f5232cb19b4efdc5060b4e2ad76e0402d77953c5320",
+    "app/src/main/assets/rooms.json": "4a3c5cc3a20dd72d5091cd6194399ab9887cd56d94026b3b7ed81b07d1722797",
+    "app/src/main/assets/items.json": "08df961b82a496535a7bfa5e547857d9dcb4015b871a1e8f63554d5a0d937863"
+  },
+  "pixel_installation": {
+    "status": "in_progress",
+    "model": "Pixel 8a",
+    "serial": "46121JEKB11849",
+    "transport": "paired wireless ADB"
+  },
+  "manual_acceptance": "Pending player checks; no runtime certification implied."
+}

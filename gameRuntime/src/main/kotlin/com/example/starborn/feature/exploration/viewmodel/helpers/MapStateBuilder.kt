@@ -32,6 +32,7 @@ object MapStateBuilder {
             normalized to dest
         }.toMap()
 
+        val positions = roomsInContext.associate { it.id to roomPosition(it) }
         val cells = roomsInContext.mapNotNull { room ->
             val pos = roomPosition(room)
             val dx = pos.first - currentPos.first
@@ -79,7 +80,12 @@ object MapStateBuilder {
                     nodeExits(room).map { it.copy(blocked = it.direction in blocked) }
                 } else emptyList(),
                 title = if (isRoomDark(room) && !room.revealTitleWhenDark) "Dark room" else if (isPreview) "Unexplored room" else room.title,
-                hubExit = if (!isPreview && !isRoomDark(room)) hubExit(room) else null
+                hubExit = if (!isPreview && !isRoomDark(room)) hubExit(room) else null,
+                continuationOffsets = if (!isRoomDark(room) && !isPreview) connections.mapNotNull { (direction, id) ->
+                    val target = positions[id] ?: return@mapNotNull null
+                    val offset = target.first - currentPos.first to target.second - currentPos.second
+                    if (abs(offset.first) > 2 || abs(offset.second) > 2) direction to offset else null
+                }.toMap() else emptyMap()
             )
         }
         return MinimapUiState(cells = cells)

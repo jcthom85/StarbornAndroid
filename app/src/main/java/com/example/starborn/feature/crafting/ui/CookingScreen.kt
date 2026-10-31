@@ -41,7 +41,6 @@ fun CookingScreen(
     val inventory by inventoryService.state.collectAsState()
     val session by craftingService.sessionState.collectAsState()
     val scope = rememberCoroutineScope()
-    val snackbar = remember { SnackbarHostState() }
     var category by rememberSaveable { mutableStateOf("meal") }
     var query by rememberSaveable { mutableStateOf("") }
     var readyOnly by rememberSaveable { mutableStateOf(false) }
@@ -81,7 +80,7 @@ fun CookingScreen(
     val hiddenCount = (allCategoryRecipes.size - recipes.size).coerceAtLeast(0)
 
     Scaffold(modifier = modifier.fillMaxSize(), containerColor = FieldMenuDesign.shell,
-        snackbarHost = { SnackbarHost(snackbar) }) { padding ->
+        snackbarHost = {}) { padding ->
         LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)) {
             item {
@@ -154,9 +153,13 @@ fun CookingScreen(
                 }
             }
             feedback?.let { message -> item {
-                CookingPanel(highContrastMode) {
-                    Text(message, color = text, style = MaterialTheme.typography.bodySmall)
-                    TextButton(onClick = { feedback = null }, modifier = Modifier.heightIn(min = actionHeight)) { Text("Dismiss") }
+                Surface(Modifier.fillMaxWidth(), color = FieldMenuDesign.panel, shape = RoundedCornerShape(14.dp),
+                    border = BorderStroke(1.dp, orange.copy(alpha = .65f))) {
+                    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text("At the cookfire", color = orange, style = MaterialTheme.typography.titleSmall)
+                        Text(message, color = text, style = MaterialTheme.typography.bodyMedium)
+                        TextButton(onClick = { feedback = null }, modifier = Modifier.heightIn(min = actionHeight)) { Text("Done", color = orange) }
+                    }
                 }
             } }
             if (recipes.isEmpty()) item {
@@ -270,7 +273,7 @@ fun CookingScreen(
                                             is ItemUseController.Result.Failure -> result.message
                                         }
                                         feedback = message
-                                        scope.launch { snackbar.showSnackbar(message) }
+                                        Unit
                                     } finally { preparing = false }
                                 }
                             }
@@ -286,7 +289,7 @@ fun CookingScreen(
                             val outcome = craftingService.cookMeal(recipe.id, selectedChef, if (snack) 1 else batch)
                             feedback = outcome.message
                             if (outcome is CraftingOutcome.Success) onPlayAudio("cooking_sizzle")
-                            scope.launch { snackbar.showSnackbar(outcome.message ?: "Cooking complete.") }
+                            Unit
                         }, enabled = canCook && !preparing,
                             modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight),
                             colors = ButtonDefaults.buttonColors(containerColor = orange, contentColor = FieldMenuDesign.shell)) {

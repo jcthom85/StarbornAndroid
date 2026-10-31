@@ -3641,7 +3641,7 @@
   {
     "id": "charlies_comfort_stone",
     "name": "Charlie's Comfort Stone",
-    "description": "A warm, river-polished stone wrapped in glowing blue fern silk, gifted by a shy creature whose trust was earned one baby step at a time. Emits a soothing ambient hum. \"Trust takes time, but once given, it is absolute.\"",
+    "description": "A smooth, warm stone uncovered beneath the glade moss during a game of puffball. Charlie nudged it out alongside the returning ball. Its gentle hum recalls a friendship built one patient roll at a time.",
     "type": "accessory",
     "value": 400,
     "rarity": "rare",
@@ -3705,8 +3705,8 @@
   },
   {
     "id": "megans_clinical_scanner",
-    "name": "Megan's Clinical Bio-Scanner",
-    "description": "A surgical-grade diagnostic scanner loaded with forensic pathology protocols, tidal water metrics, and a warm reminder to stay hydrated. Calibrated with absolute precision. \"The details never lie, and the truth always holds the line.\"",
+    "name": "Megan's Field Bio-Scanner",
+    "description": "A carefully maintained field scanner for monitoring vital signs and physical strain. Megan has marked its case with a reminder to stay hydrated.",
     "type": "accessory",
     "value": 650,
     "rarity": "rare",

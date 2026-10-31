@@ -2520,60 +2520,12 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
     }
 }
 
+// Keep Android's entry point aligned with the shared runtime used on desktop.
 internal fun isDialogueConditionMet(
     condition: String?,
     state: GameSessionState,
     inventoryService: InventoryService
-): Boolean {
-    if (condition.isNullOrBlank()) return true
-    val tokens = condition.split(',').map { it.trim() }.filter { it.isNotEmpty() }
-    for (token in tokens) {
-        val parts = token.split(':', limit = 2)
-        if (parts.isEmpty()) continue
-        val type = parts[0].trim().lowercase()
-        val value = parts.getOrNull(1)?.trim().orEmpty()
-        val met = when (type) {
-            "quest" -> value in state.activeQuests || value in state.completedQuests
-            "quest_active" -> value in state.activeQuests
-            "quest_completed" -> value in state.completedQuests
-            "quest_not_started" -> value.isNotBlank() &&
-                value !in state.activeQuests &&
-                value !in state.completedQuests &&
-                value !in state.failedQuests
-            "quest_failed" -> value in state.failedQuests
-            "quest_stage" -> {
-                val (questId, stageId) = parseQuestStageCondition(value)
-                questId != null && stageId != null &&
-                    state.questStageById[questId]?.equals(stageId, ignoreCase = true) == true
-            }
-            "quest_stage_not" -> {
-                val (questId, stageId) = parseQuestStageCondition(value)
-                questId == null || stageId == null ||
-                    state.questStageById[questId]?.equals(stageId, ignoreCase = true) != true
-            }
-            "room" -> value.isNotBlank() && value == state.roomId
-            "milestone" -> value in state.completedMilestones
-            "milestone_not_set" -> value !in state.completedMilestones
-            "item" -> value.isNotBlank() && inventoryService.hasItem(value)
-            "item_not" -> value.isNotBlank() && !inventoryService.hasItem(value)
-            "event_completed" -> value in state.completedEvents
-            "event_not_completed" -> value.isNotBlank() && value !in state.completedEvents
-            "tutorial_completed" -> value in state.tutorialCompleted
-            "tutorial_not_completed" -> value.isNotBlank() && value !in state.tutorialCompleted
-            else -> true
-        }
-        if (!met) return false
-    }
-    return true
-}
-
-private fun parseQuestStageCondition(raw: String): Pair<String?, String?> {
-    if (raw.isBlank()) return null to null
-    val parts = raw.split(':', limit = 2)
-    val questId = parts.getOrNull(0)?.trim().takeUnless { it.isNullOrEmpty() }
-    val stageId = parts.getOrNull(1)?.trim().takeUnless { it.isNullOrEmpty() }
-    return questId to stageId
-}
+): Boolean = com.example.starborn.domain.dialogue.isDialogueConditionMet(condition, state, inventoryService)
 
 internal fun handleDialogueTrigger(
     trigger: String,

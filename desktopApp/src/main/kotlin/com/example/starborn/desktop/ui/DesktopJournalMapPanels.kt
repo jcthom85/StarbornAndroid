@@ -70,7 +70,7 @@ internal fun DesktopRuntimeJournalContent(services: DesktopAppServices) {
                     if (quests.isEmpty()) item { Text("No quests match this view.") }
                     val groups = if (category == "Completed") quests.groupBy {
                         com.example.starborn.feature.exploration.presentation.QuestJournalGrouping.group(it.id)
-                    }.toSortedMap() else mapOf("Active" to quests)
+                    }.toSortedMap(com.example.starborn.feature.exploration.presentation.QuestJournalGrouping.comparator) else mapOf("Active" to quests)
                     groups.forEach { (group, groupQuests) ->
                         val open = category != "Completed" || query.isNotBlank() || group in expandedGroups
                         if (category == "Completed") item(key = "group-$group") {

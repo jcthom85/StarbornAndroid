@@ -128,7 +128,7 @@ internal fun DesktopMenuAttributesContent(services: DesktopAppServices, details:
                     Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         Text(skill.name, color = FieldMenuDesign.gold)
                         Text(skill.description)
-                        Text("${com.example.starborn.feature.combat.presentation.abilityPowerLabel(skill)} · Cooldown: ${skill.cooldown} turns", style = MaterialTheme.typography.bodySmall)
+                        Text("Cooldown: ${skill.cooldown} turns", style = MaterialTheme.typography.bodySmall)
                         skill.targeting?.let { Text("Target: ${it.replace('_', ' ')}") }
                         skill.usesPerBattle?.let { Text("Uses per battle: $it") }
                         skill.statusApplications.orEmpty().forEach { Text("Status: ${services.contentName(it)}") }

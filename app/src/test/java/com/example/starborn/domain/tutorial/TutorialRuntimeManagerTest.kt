@@ -20,6 +20,12 @@ import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TutorialRuntimeManagerTest {
+    @Test fun tutorialHeadingsUseReadablePlayerFacingNames() {
+        assertEquals("Combat Tutorial", TutorialEntry(key = null, message = "Read statuses", context = "Combat").formattedTitle())
+        assertEquals("Combat Tutorial", TutorialEntry(key = null, context = null, message = "Read statuses", metadata = mapOf("title" to "[Combat] Combat")).formattedTitle())
+        assertEquals("Tutorial", TutorialEntry(key = null, context = null, message = "Help").formattedTitle())
+    }
+
 
     private val dispatcher = StandardTestDispatcher()
 

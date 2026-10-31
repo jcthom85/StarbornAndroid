@@ -32,8 +32,8 @@
       "id": "music_zeke_theme",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1000,
-      "fade_out_ms": 1000,
+      "fade_in_ms": 1100,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "character",
@@ -61,7 +61,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "character",
@@ -75,7 +75,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "world_1",
@@ -89,7 +89,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "world_1",
@@ -102,8 +102,8 @@
       "id": "music_w1_combat",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 0,
-      "fade_out_ms": 800,
+      "fade_in_ms": 1100,
+      "fade_out_ms": 1100,
       "gain": 1.0,
       "tags": [
         "world_1",
@@ -142,8 +142,8 @@
       "id": "music_w2_combat",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 0,
-      "fade_out_ms": 800,
+      "fade_in_ms": 1100,
+      "fade_out_ms": 1100,
       "gain": 1.0,
       "tags": [
         "world_2",
@@ -156,7 +156,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "world_3",
@@ -169,8 +169,8 @@
       "id": "music_w3_combat",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 0,
-      "fade_out_ms": 800,
+      "fade_in_ms": 1100,
+      "fade_out_ms": 1100,
       "gain": 1.0,
       "tags": [
         "world_3",
@@ -183,7 +183,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "world_4",
@@ -196,8 +196,8 @@
       "id": "music_w4_combat",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 0,
-      "fade_out_ms": 800,
+      "fade_in_ms": 1100,
+      "fade_out_ms": 1100,
       "gain": 1.0,
       "tags": [
         "world_4",
@@ -223,8 +223,8 @@
       "id": "music_w5_combat",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 0,
-      "fade_out_ms": 800,
+      "fade_in_ms": 1100,
+      "fade_out_ms": 1100,
       "gain": 1.0,
       "tags": [
         "world_5",
@@ -250,8 +250,8 @@
       "id": "music_w6_combat",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 0,
-      "fade_out_ms": 800,
+      "fade_in_ms": 1100,
+      "fade_out_ms": 1100,
       "gain": 1,
       "tags": [
         "world_6",
@@ -398,8 +398,8 @@
       "id": "music_victory_theme",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 500,
-      "fade_out_ms": 800,
+      "fade_in_ms": 1100,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "victory",
@@ -666,7 +666,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "great_frontier",
@@ -679,7 +679,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "great_frontier",
@@ -692,7 +692,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "great_frontier",
@@ -705,7 +705,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "great_frontier",
@@ -718,7 +718,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "great_frontier",
@@ -731,7 +731,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "great_frontier",
@@ -744,7 +744,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "great_frontier",
@@ -757,7 +757,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "great_frontier",
@@ -770,7 +770,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "great_frontier",
@@ -783,7 +783,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "great_frontier",
@@ -810,7 +810,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "astra",
@@ -849,7 +849,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "world_1",
@@ -877,7 +877,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "world_3",
@@ -891,7 +891,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "world_4",
@@ -905,7 +905,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.8,
       "tags": [
         "world_5",
@@ -932,8 +932,8 @@
       "id": "music_w1_boss_warden",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 600,
-      "fade_out_ms": 800,
+      "fade_in_ms": 1100,
+      "fade_out_ms": 1100,
       "gain": 1.0,
       "tags": [
         "world_1",
@@ -945,8 +945,8 @@
       "id": "music_w2_boss_guardian",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 600,
-      "fade_out_ms": 800,
+      "fade_in_ms": 1100,
+      "fade_out_ms": 1100,
       "gain": 1.0,
       "tags": [
         "world_2",
@@ -958,8 +958,8 @@
       "id": "music_w3_boss_phantom",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 600,
-      "fade_out_ms": 800,
+      "fade_in_ms": 1100,
+      "fade_out_ms": 1100,
       "gain": 1.0,
       "tags": [
         "world_3",
@@ -971,8 +971,8 @@
       "id": "music_w4_boss_titan",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 600,
-      "fade_out_ms": 800,
+      "fade_in_ms": 1100,
+      "fade_out_ms": 1100,
       "gain": 1.0,
       "tags": [
         "world_4",
@@ -984,8 +984,8 @@
       "id": "music_w6_boss_final",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 600,
-      "fade_out_ms": 800,
+      "fade_in_ms": 1100,
+      "fade_out_ms": 1100,
       "gain": 1.0,
       "tags": [
         "world_6",
@@ -1010,8 +1010,8 @@
       "id": "music_cinematic_crash",
       "type": "music",
       "loop": false,
-      "fade_in_ms": 300,
-      "fade_out_ms": 800,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1200,
       "gain": 0.9,
       "tags": [
         "cinematic",
@@ -1064,7 +1064,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1000,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "fishing",
@@ -1077,8 +1077,8 @@
       "id": "music_arcade_cabinet",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 800,
-      "fade_out_ms": 800,
+      "fade_in_ms": 1100,
+      "fade_out_ms": 1100,
       "gain": 0.88,
       "tags": [
         "arcade",
@@ -1091,8 +1091,8 @@
       "id": "music_tinkering_focus",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1000,
-      "fade_out_ms": 1000,
+      "fade_in_ms": 1100,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "crafting",
@@ -1105,8 +1105,8 @@
       "id": "music_cooking_kitchen",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 800,
-      "fade_out_ms": 800,
+      "fade_in_ms": 1100,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "cooking",
@@ -1119,8 +1119,8 @@
       "id": "music_shop_cozy",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1000,
-      "fade_out_ms": 1000,
+      "fade_in_ms": 1100,
+      "fade_out_ms": 1100,
       "gain": 0.85,
       "tags": [
         "shop",
@@ -2206,6 +2206,37 @@
       "fade_in_ms": 0,
       "fade_out_ms": 200,
       "duration_ms": 1600
+    },
+    {
+      "id": "sfx_rest_chime",
+      "category": "ui",
+      "priority": 3,
+      "gain": 0.72,
+      "duration_ms": 1450
+    },
+    {
+      "id": "voice_murmur_machine_01",
+      "category": "voice",
+      "gain": 0.5,
+      "duration_ms": 110
+    },
+    {
+      "id": "voice_murmur_machine_02",
+      "category": "voice",
+      "gain": 0.5,
+      "duration_ms": 110
+    },
+    {
+      "id": "voice_murmur_machine_03",
+      "category": "voice",
+      "gain": 0.5,
+      "duration_ms": 110
+    },
+    {
+      "id": "voice_murmur_machine_04",
+      "category": "voice",
+      "gain": 0.5,
+      "duration_ms": 110
     }
   ]
 }

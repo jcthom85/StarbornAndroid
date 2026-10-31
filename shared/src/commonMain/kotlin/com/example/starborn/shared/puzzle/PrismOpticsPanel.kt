@@ -18,9 +18,12 @@ import androidx.compose.ui.unit.dp
 fun PrismOpticsPanel(dials: List<SignalDial>, onChange: (String, Float) -> Unit,
     onCapture: () -> Unit, modifier: Modifier = Modifier) {
     val optics = PrismOptics(dials)
-    Column(modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text("Guide light through the prism into the circular receiver. Close the colored fringe, then balance the glow.")
-        Canvas(Modifier.fillMaxWidth().height(180.dp).semantics { contentDescription = optics.feedback }) {
+    Surface(modifier, shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+        color = Color(0xFF081923), contentColor = Color(0xFFE5F1F3)) {
+    Column(Modifier.fillMaxWidth().heightIn(max = 440.dp).padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(Modifier.weight(1f, fill = false).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Text("Bring the light into focus at the circular receiver.")
+        Canvas(Modifier.fillMaxWidth().height(108.dp).semantics { contentDescription = optics.feedback }) {
             drawRect(Color(0xFF081923))
             val prism = Offset(size.width * .25f, size.height * .72f)
             val receiver = Offset(size.width * .72f, size.height * .25f)
@@ -40,10 +43,16 @@ fun PrismOpticsPanel(dials: List<SignalDial>, onChange: (String, Float) -> Unit,
         }
         Text(optics.feedback, style = MaterialTheme.typography.bodyMedium)
         for ((dial, label) in listOf(optics.angle to "Refraction", optics.focus to "Crystal spacing", optics.glow to "Glow")) {
-            Text(label, style = MaterialTheme.typography.labelLarge)
+            Row(Modifier.fillMaxWidth(), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+            Text(label, modifier = Modifier.width(78.dp), style = MaterialTheme.typography.labelMedium)
             Slider(value = dial.value, onValueChange = { onChange(dial.id, it) }, valueRange = dial.min..dial.max,
-                modifier = Modifier.semantics { contentDescription = "$label control" })
+                modifier = Modifier.weight(1f).semantics { contentDescription = "$label control" },
+                colors = SliderDefaults.colors(thumbColor = Color(0xFFFFDA8A), activeTrackColor = Color(0xFF7FE6FF)))
+            }
         }
-        Button(onClick = onCapture, enabled = optics.ready, modifier = Modifier.fillMaxWidth()) { Text("Capture light") }
+        }
+        Button(onClick = onCapture, enabled = optics.ready, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFDA8A), contentColor = Color(0xFF081923))) { Text("Capture light") }
     }
+}
 }

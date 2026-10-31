@@ -1,0 +1,351 @@
+{
+  "date": "2026-10-29",
+  "baseline": "ae32b9d1",
+  "phone_playtest_performed": false,
+  "gameplay_changes": [],
+  "worlds": {
+    "4": {
+      "room_count": 74,
+      "node_count": 10,
+      "action_count": 198,
+      "rooms_with_variants": 19,
+      "rooms_with_enemies": 33,
+      "quests": [
+        {
+          "id": "w4_mq16",
+          "title": "Into the Fire"
+        },
+        {
+          "id": "w4_mq17",
+          "title": "Ghost in the Machine"
+        },
+        {
+          "id": "w4_sq16",
+          "title": "Sabotage"
+        },
+        {
+          "id": "w4_sq17",
+          "title": "Lost Worker"
+        },
+        {
+          "id": "w4_sq18",
+          "title": "The Scrap Heap"
+        },
+        {
+          "id": "w4_mq18",
+          "title": "The Assembly"
+        },
+        {
+          "id": "w4_mq19",
+          "title": "The Anvil"
+        },
+        {
+          "id": "w4_mq20",
+          "title": "Meltdown"
+        },
+        {
+          "id": "w4_sq19",
+          "title": "Quality Control"
+        },
+        {
+          "id": "w4_sq20",
+          "title": "Overclocked"
+        },
+        {
+          "id": "w4_sq_crucible",
+          "title": "The Scrapper's Crucible"
+        }
+      ],
+      "visual_reference_count": 86,
+      "missing_visual_references": [],
+      "identical_description_groups": [],
+      "static_paths_without_authored_blocked_direction": {
+        "foundry_conveyor_belt => foundry_titan_dock": [
+          "foundry_conveyor_belt",
+          "foundry_conditioning_chamber",
+          "foundry_power_core",
+          "foundry_titan_dock"
+        ]
+      }
+    },
+    "5": {
+      "room_count": 81,
+      "node_count": 9,
+      "action_count": 198,
+      "rooms_with_variants": 18,
+      "rooms_with_enemies": 40,
+      "quests": [
+        {
+          "id": "w5_mq21",
+          "title": "Docking Procedure"
+        },
+        {
+          "id": "w5_mq22",
+          "title": "Zero G"
+        },
+        {
+          "id": "w5_sq21",
+          "title": "Employee of the Month"
+        },
+        {
+          "id": "w5_sq22",
+          "title": "Solar Maintenance"
+        },
+        {
+          "id": "w5_sq23",
+          "title": "Vacuum Seal"
+        },
+        {
+          "id": "w5_mq23",
+          "title": "The Core Approach"
+        },
+        {
+          "id": "w5_mq24",
+          "title": "The Anchor"
+        },
+        {
+          "id": "w5_mq25",
+          "title": "Critical Mass"
+        },
+        {
+          "id": "w5_sq24",
+          "title": "Ghost in the Shell"
+        },
+        {
+          "id": "w5_sq25",
+          "title": "Admin Privileges"
+        }
+      ],
+      "visual_reference_count": 92,
+      "missing_visual_references": [],
+      "identical_description_groups": [
+        [
+          "orbital_executive_dock_scale_01",
+          "orbital_grand_concourse_scale_01",
+          "orbital_solarium_scale_01",
+          "orbital_security_hub_scale_01",
+          "orbital_service_shaft_scale_01",
+          "deep_server_farm_scale_01"
+        ],
+        [
+          "orbital_executive_dock_scale_03",
+          "orbital_grand_concourse_scale_03",
+          "orbital_solarium_scale_03",
+          "orbital_security_hub_scale_03",
+          "orbital_service_shaft_scale_03",
+          "deep_server_farm_scale_03"
+        ],
+        [
+          "orbital_executive_dock_scale_04",
+          "orbital_grand_concourse_scale_04",
+          "orbital_solarium_scale_04",
+          "orbital_security_hub_scale_04",
+          "orbital_service_shaft_scale_04"
+        ],
+        [
+          "orbital_executive_dock_scale_05",
+          "orbital_grand_concourse_scale_05",
+          "orbital_solarium_scale_05",
+          "orbital_security_hub_scale_05",
+          "orbital_service_shaft_scale_05"
+        ],
+        [
+          "orbital_executive_dock_scale_06",
+          "orbital_grand_concourse_scale_06",
+          "orbital_solarium_scale_06",
+          "orbital_security_hub_scale_06",
+          "orbital_service_shaft_scale_06"
+        ],
+        [
+          "orbital_grand_concourse_scale_02",
+          "orbital_solarium_scale_02",
+          "orbital_security_hub_scale_02",
+          "orbital_service_shaft_scale_02",
+          "deep_server_farm_scale_02"
+        ]
+      ],
+      "static_paths_without_authored_blocked_direction": {
+        "orbital_executive_dock => deep_tear": [
+          "orbital_executive_dock",
+          "orbital_grand_concourse",
+          "orbital_security_hub",
+          "orbital_service_shaft",
+          "orbital_server_farm",
+          "deep_anchor_chamber",
+          "deep_throne_room",
+          "deep_tear"
+        ],
+        "orbital_executive_dock => orbital_customs_lounge": [
+          "orbital_executive_dock",
+          "orbital_grand_concourse",
+          "orbital_customs_lounge"
+        ]
+      }
+    },
+    "6": {
+      "room_count": 65,
+      "node_count": 10,
+      "action_count": 150,
+      "rooms_with_variants": 11,
+      "rooms_with_enemies": 17,
+      "quests": [
+        {
+          "id": "w6_mq26",
+          "title": "Fractured Minds"
+        },
+        {
+          "id": "w6_mq27",
+          "title": "The Echo of the Mines"
+        },
+        {
+          "id": "w6_mq28",
+          "title": "The Crossing"
+        },
+        {
+          "id": "w6_sq26",
+          "title": "Jed's Echo"
+        },
+        {
+          "id": "w6_sq27",
+          "title": "The HR Record"
+        },
+        {
+          "id": "w6_sq28",
+          "title": "Elara's Song"
+        },
+        {
+          "id": "w6_mq29",
+          "title": "The Spire of Thought"
+        },
+        {
+          "id": "w6_mq30",
+          "title": "The Final Note"
+        },
+        {
+          "id": "w6_sq29",
+          "title": "The Aethel Grave"
+        },
+        {
+          "id": "w6_sq30",
+          "title": "The Final Scavenge"
+        }
+      ],
+      "visual_reference_count": 77,
+      "missing_visual_references": [],
+      "identical_description_groups": [],
+      "static_paths_without_authored_blocked_direction": {
+        "source_campfire => source_memory_fragments": [
+          "source_campfire",
+          "source_echo_mines",
+          "source_echo_workbench",
+          "source_echo_patrol",
+          "source_echo_elevator",
+          "source_memory_bridge",
+          "source_memory_bridge_span",
+          "source_memory_threshold",
+          "source_memory_stair",
+          "source_memory_fragments"
+        ],
+        "source_campfire => source_center": [
+          "source_campfire",
+          "source_echo_mines",
+          "source_echo_workbench",
+          "source_echo_patrol",
+          "source_echo_elevator",
+          "source_memory_bridge",
+          "source_memory_bridge_span",
+          "source_memory_threshold",
+          "source_memory_stair",
+          "source_memory_fragments",
+          "source_spire_thought",
+          "source_spire_archive",
+          "source_spire_arena",
+          "source_center"
+        ],
+        "source_center => source_new_world": [
+          "source_center",
+          "source_new_world"
+        ]
+      }
+    }
+  },
+  "source_sha256": {
+    "app/src/main/assets/rooms.json": "3df616a2473923d93204df5942e7e45e9d6a3512ee71ab45a494ef9a364899e7",
+    "app/src/main/assets/hub_nodes.json": "9643f6da453ac1ae32476f1688de11ba2c72052e49017cb6ac8364ad0cf03346",
+    "app/src/main/assets/hubs.json": "334ceda4a513e903bf877f402c136ea7a1843754a00e6980d9b478cdd9f11569",
+    "app/src/main/assets/quests.json": "009e672853fe70fe100dc56336d107a3bc27e7746cd45c14ce2cc772fb219f1c",
+    "app/src/main/assets/events.json": "90863285799349b0081d00f88e64e851562616966f8aacc207acb8c5b1b943af",
+    "app/src/main/assets/dialogue.json": "a9f4c29678856bc3f4e151bce83607911dbfaad4f4ff874f8dfe192c31c0b7bc",
+    "app/src/main/assets/items.json": "4d1839eaaaac61b4bc75a4f6004ee89ec0ae12fb0ba53afb04d7c699393dd32f",
+    "app/src/main/assets/enemies.json": "eaf0b8cfe35e181071c187b443d9531c76c7e5aa783792a61a64da93f32ef641",
+    "app/src/main/assets/tuning_puzzles.json": "0d5e0d9a8efcb66234846286c80a9d7490edacefc35a2c25ef5250640f16ff77",
+    "app/src/main/assets/themes.json": "3791656ced44b01c235844e22639803019c52fde9f82b85809dc921a835e18e6",
+    "app/src/main/assets/theme_styles.json": "2c72dedc17096ecb69faeeae1898bc6b3d8a789589efe28665393d2a7e372e30",
+    "gameRuntime/src/main/kotlin/com/example/starborn/domain/event/EventManager.kt": "4611fb57a49744573fdbcd9f894c2fd28136cc3ae40441d8014922437b150d1f",
+    "gameRuntime/src/main/kotlin/com/example/starborn/domain/dialogue/DialogueTriggerLogic.kt": "ed61466c736b81322b49e8a651b6493caeaf3b90ce7587847c46aeac7387ec43",
+    "gameRuntime/src/main/kotlin/com/example/starborn/feature/exploration/viewmodel/ExplorationController.kt": "fea9b8f0a98d4fa53bfffa4ad5537dcb42c5bb875d5afabe099b3d65a7a2e5e8",
+    "app/src/main/java/com/example/starborn/di/AppServices.kt": "a39af647addf8a14b5646fc04490615c042f5e7c3b7714c03e0d82c5e40e3b60",
+    "app/src/test/java/com/example/starborn/domain/playtest/LegalRouteCampaignRunnerTest.kt": "3a94a4bca74f4b0a39eb851222b629fd53b2ab8ad2014051b1506c4d5ba92d9e"
+  },
+  "tests": [
+    {
+      "name": "com.example.starborn.domain.playtest.LegalRouteCampaignRunnerTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.leveling.CampaignXpCurveTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.playtest.CampaignEventIntegrationTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.dialogue.Hub6CriticalFlowTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.dialogue.Hub5CriticalFlowTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.dialogue.Hub4CriticalFlowTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.cinematic.CinematicSkipInvariantTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.playtest.CampaignCatalogIntegrityTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.playtest.CampaignProvisionSourceTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0"
+    }
+  ],
+  "dialogue_probe": "W4 Rylan fresh interaction | com.example.starborn.domain.dialogue.DialogueTriggerLogicKt | forge_hand_rylan_default_talk\n  option=rylan_opt_favor_offer returned=forge_hand_rylan_default_talk\n  option=rylan_opt_forge_intel returned=forge_hand_rylan_default_talk\nW4 Rylan fresh interaction | com.example.starborn.di.AppServicesKt | forge_hand_rylan_default_talk\n  option=rylan_opt_favor_offer returned=forge_hand_rylan_default_talk\n  option=rylan_opt_forge_intel returned=forge_hand_rylan_default_talk\nW4 Cameron fresh interaction | com.example.starborn.domain.dialogue.DialogueTriggerLogicKt | pipefitter_cameron_default_talk\n  option=cameron_opt_shift returned=pipefitter_cameron_default_talk\n  option=cameron_opt_father returned=pipefitter_cameron_default_talk\n  option=cameron_opt_racing returned=pipefitter_cameron_default_talk\n  option=cameron_opt_family returned=pipefitter_cameron_default_talk\n  option=cameron_opt_smokey returned=pipefitter_cameron_default_talk\n  option=cameron_opt_favor_offer returned=pipefitter_cameron_default_talk\nW4 Cameron fresh interaction | com.example.starborn.di.AppServicesKt | pipefitter_cameron_default_talk\n  option=cameron_opt_shift returned=pipefitter_cameron_default_talk\n  option=cameron_opt_father returned=pipefitter_cameron_default_talk\n  option=cameron_opt_racing returned=pipefitter_cameron_default_talk\n  option=cameron_opt_family returned=pipefitter_cameron_default_talk\n  option=cameron_opt_smokey returned=pipefitter_cameron_default_talk\n  option=cameron_opt_favor_offer returned=pipefitter_cameron_default_talk\nW5 Charles fresh interaction | com.example.starborn.domain.dialogue.DialogueTriggerLogicKt | analyst_charles_default_talk\n  option=charles_opt_mmo returned=analyst_charles_default_talk\n  option=charles_opt_critique returned=analyst_charles_default_talk\n  option=charles_opt_frontier returned=analyst_charles_default_talk\n  option=charles_opt_ethics returned=analyst_charles_default_talk\n  option=charles_opt_favor_offer returned=analyst_charles_default_talk\nW5 Charles fresh interaction | com.example.starborn.di.AppServicesKt | analyst_charles_default_talk\n  option=charles_opt_mmo returned=analyst_charles_default_talk\n  option=charles_opt_critique returned=analyst_charles_default_talk\n  option=charles_opt_frontier returned=analyst_charles_default_talk\n  option=charles_opt_ethics returned=analyst_charles_default_talk\n  option=charles_opt_favor_offer returned=analyst_charles_default_talk\nW5 Maintenance Bot after completed quest | com.example.starborn.domain.dialogue.DialogueTriggerLogicKt | maintenance_bot_w5_sq22_intro\nW5 Maintenance Bot after completed quest | com.example.starborn.di.AppServicesKt | maintenance_bot_w5_sq22_intro\n",
+  "event_probe": "Crucible first start eligible=true\nCrucible same round restart eligible=false\nAfter ONLY round one victory milestones=[ms_crucible_round1_cleared, ms_crucible_round2_cleared, ms_crucible_round3_cleared]\nCompleted event receipts=[w4_crucible_spawn_round_1, w4_crucible_victory_round_1, w4_crucible_victory_round_2, w4_crucible_victory_round_3]\n",
+  "probe_limits": "Compiled production services and real asset catalogs. Dialogue triggers inert. Event spawn/message hooks default no-op; real milestone and event receipt state. No phone reproduction or real Crucible combat.",
+  "earned_campaign_trace": "Crew rules; no seeded Cryo-Inductor or Scrap Metal; all 30 main quests; credits; world-boundary save/reload; zero assisted combat actions.\nroom=workshop_yard enemies=[faulted_loader] seed=17 damageEvents=2 xp=35 ap=0 credits=0 persistedHp={nova=120} knockedOut=[] usedItems={}\nroom=admin_security enemies=[acoustic_bulwark] seed=17 damageEvents=1 xp=100 ap=0 credits=40 persistedHp={nova=120} knockedOut=[] usedItems={}\nroom=mine_alpha enemies=[echo_borer, echo_borer] seed=17 damageEvents=18 xp=80 ap=0 credits=20 persistedHp={nova=94} knockedOut=[] usedItems={}\nroom=launch_lift enemies=[acoustic_bulwark, resonance_buoy] seed=17 damageEvents=10 xp=130 ap=0 credits=55 persistedHp={nova=113} knockedOut=[] usedItems={}\nroom=launch_checkpoint enemies=[dominion_dampener, resonance_buoy] seed=17 damageEvents=12 xp=80 ap=0 credits=40 persistedHp={nova=102} knockedOut=[] usedItems={}\nroom=launch_bay enemies=[the_iron_warden] seed=17 damageEvents=11 xp=350 ap=0 credits=225 persistedHp={nova=97} knockedOut=[] usedItems={}\nroom=sector9_canopy enemy=stalker_vine seed=17 outcome=retreat; enemy remains undefeated\nroom=sector9_stream_cave_depths enemies=[echo_borer] seed=17 damageEvents=8 xp=40 ap=0 credits=10 persistedHp={nova=97, zeke=150} knockedOut=[] usedItems={}\nroom=sector9_canopy_ridge enemies=[the_beast] seed=17 damageEvents=33 xp=500 ap=0 credits=250 persistedHp={nova=78, zeke=150, orion=95} knockedOut=[] usedItems={ration_pack=1, medkit=1, medkit_i=1}\nroom=spire_sewers_scale_01 enemies=[sewer_crawler] seed=17 damageEvents=23 xp=80 ap=0 credits=20 persistedHp={nova=84, zeke=143, orion=76, gh0st=92} knockedOut=[] usedItems={medkit_i=1}\nshop=upper_city_lounge bought=medkit quantity=6 cost=408 remainingCredits=252\nroom=spire_landing_pad_roof enemies=[aero_drone, heavy_mech] seed=17 damageEvents=35 xp=270 ap=0 credits=160 persistedHp={nova=118, zeke=149, orion=91, gh0st=99} knockedOut=[] usedItems={medkit=2}\nroom=spire_landing_pad_roof enemies=[administrator_boss, aero_drone] seed=17 damageEvents=56 xp=490 ap=2 credits=340 persistedHp={nova=117, zeke=140, orion=85, gh0st=105} knockedOut=[] usedItems={medkit=4, medkit_i=3, ration_pack=2}\nroom=foundry_titan_dock enemies=[titan_walker_boss] seed=17 damageEvents=41 xp=600 ap=3 credits=400 persistedHp={nova=120, zeke=109, orion=95, gh0st=105} knockedOut=[] usedItems={}\nskillTree=nova purchased=nova_quiet_steps_v2 apSpent=1 remainingAp=35\nskillTree=zeke purchased=zeke_cover_v2 apSpent=1 remainingAp=34\nskillTree=zeke purchased=zeke_reinforced_harness_v2 apSpent=2 remainingAp=32\nskillTree=zeke purchased=zeke_steady_cover_v2 apSpent=3 remainingAp=29\nskillTree=zeke purchased=zeke_training_session_v2 apSpent=1 remainingAp=28\nskillTree=orion purchased=orion_field_resilience_v2 apSpent=1 remainingAp=27\nskillTree=orion purchased=orion_field_treatment_v2 apSpent=2 remainingAp=25\nskillTree=orion purchased=orion_triage_v2 apSpent=3 remainingAp=22\nskillTree=orion purchased=orion_clear_focus_v2 apSpent=1 remainingAp=21\nskillTree=gh0st purchased=gh0st_scope_v2 apSpent=1 remainingAp=20\nskillTree=gh0st purchased=gh0st_steady_aim_v2 apSpent=2 remainingAp=18\nskillTree=gh0st purchased=gh0st_execute_v2 apSpent=3 remainingAp=15\nskillTree=gh0st purchased=gh0st_quick_position_v2 apSpent=1 remainingAp=14\nshop=orbital_dispensary sold=power_cell quantity=6 credits=180 remainingCredits=1332\nshop=orbital_dispensary sold=composite_plate quantity=4 credits=112 remainingCredits=1444\nshop=orbital_dispensary bought=medkit_plus quantity=6 cost=978 remainingCredits=466\nshop=orbital_dispensary bought=orbital_glimmer_tonic quantity=1 cost=375 remainingCredits=91\nroom=orbital_executive_dock enemies=[orbital_fighter, orbital_fighter] seed=17 damageEvents=46 xp=480 ap=0 credits=280 persistedHp={nova=120, zeke=105, orion=108, gh0st=105} knockedOut=[] usedItems={medkit_plus=6}\nroom=orbital_grand_concourse enemies=[compliance_officer] seed=17 damageEvents=12 xp=260 ap=0 credits=180 persistedHp={nova=120, zeke=118, orion=108, gh0st=105} knockedOut=[] usedItems={}\nroom=deep_firewall_gamma enemies=[firewall_construct] seed=17 damageEvents=26 xp=390 ap=0 credits=250 persistedHp={nova=120, zeke=160, orion=145, gh0st=84} knockedOut=[] usedItems={medkit_i=1, ration_pack=1}\nroom=deep_tear enemies=[compliance_avatar] seed=17 damageEvents=29 xp=750 ap=4 credits=500 persistedHp={nova=120, zeke=128, orion=145, gh0st=33} knockedOut=[] usedItems={ration_pack=4}\nshop=orbital_dispensary sold=grav_boots quantity=1 credits=1000 remainingCredits=2301\nshop=orbital_dispensary sold=power_cell quantity=6 credits=180 remainingCredits=2481\nshop=orbital_dispensary bought=medkit_plus quantity=10 cost=1630 remainingCredits=851\nshop=orbital_dispensary bought=orbital_glimmer_tonic quantity=2 cost=750 remainingCredits=101\nskillTree=nova purchased=nova_grounded_wire_v2 apSpent=1 remainingAp=21\nskillTree=nova purchased=nova_controlled_vent_v2 apSpent=2 remainingAp=19\nskillTree=nova purchased=nova_breaker_bolt_v2 apSpent=3 remainingAp=16\nskillTree=nova purchased=nova_exposed_seam_v2 apSpent=4 remainingAp=12\nroom=source_zeke_review_loop enemies=[manager_projection] seed=17 damageEvents=23 xp=420 ap=0 credits=0 persistedHp={nova=84, zeke=160, orion=145, gh0st=105} knockedOut=[] usedItems={}\nroom=source_gh0st_nightmare_node_scale_01 enemies=[endless_war_echo] seed=17 damageEvents=30 xp=330 ap=0 credits=0 persistedHp={nova=120, zeke=160, orion=145, gh0st=81} knockedOut=[] usedItems={medkit_plus=4}\nroom=source_orion_tide_well enemies=[silent_shore_wraith] seed=17 damageEvents=24 xp=400 ap=0 credits=0 persistedHp={nova=93, zeke=160, orion=145, gh0st=105} knockedOut=[] usedItems={medkit_plus=2}\nroom=source_memory_fragments enemies=[source_shadow, distorted_sentinel, glitch_hound] seed=17 damageEvents=28 xp=810 ap=0 credits=0 persistedHp={nova=101, zeke=160, orion=145, gh0st=95} knockedOut=[] usedItems={medkit_plus=3, ration_pack=2}\nroom=source_spire_arena enemies=[memory_leak, nightmare_guard] seed=17 damageEvents=29 xp=960 ap=0 credits=0 persistedHp={nova=106, zeke=137, orion=112, gh0st=66} knockedOut=[] usedItems={medkit_plus=1}\nroom=source_center enemies=[ascended_vale] seed=17 damageEvents=27 xp=900 ap=5 credits=0 persistedHp={nova=88, zeke=142, orion=137, gh0st=97} knockedOut=[] usedItems={ration_pack=1}\nroom=source_center_node_scale_03 enemies=[ascended_god] seed=17 damageEvents=41 xp=1500 ap=8 credits=0 persistedHp={nova=118, zeke=160, orion=141, gh0st=103} knockedOut=[] usedItems={ration_pack=1}",
+  "assistance_trace": "\n"
+}

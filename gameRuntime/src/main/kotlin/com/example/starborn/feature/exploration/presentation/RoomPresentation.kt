@@ -15,7 +15,8 @@ data class InlineActionSegment(
     val target: InlineActionTarget,
     val start: Int,
     val end: Int,
-    val locked: Boolean
+    val locked: Boolean,
+    val inspected: Boolean = false
 )
 
 data class InlineActionPlan(
@@ -27,7 +28,8 @@ fun buildInlineActionPlan(
     description: String?,
     actions: List<RoomAction>,
     hints: Map<String, ActionHintUi>,
-    room: Room?
+    room: Room?,
+    inspectionState: Map<String, Boolean> = emptyMap()
 ): InlineActionPlan? {
     if (description.isNullOrBlank()) return null
     val travelActions = actions.filterIsInstance<TravelAction>()
@@ -159,7 +161,12 @@ fun buildInlineActionPlan(
     // Keep cleaned marker text even when its action is hidden or unresolved.
     if (segments.isEmpty() && parsedDescription == sourceDescription) return null
     segments.sortBy { it.start }
-    return InlineActionPlan(description = parsedDescription, segments = segments)
+    val decorated = segments.map { segment ->
+        val action = (segment.target as? InlineActionTarget.Room)?.action
+        segment.copy(inspected = action?.let { inspectionReceiptKey(it, description) }
+            ?.let { inspectionState[it] == true } == true)
+    }
+    return InlineActionPlan(description = parsedDescription, segments = decorated)
 }
 
 fun resolveRoomDescription(
@@ -218,4 +225,13 @@ fun resolveRoomDarkness(ui: com.example.starborn.feature.exploration.viewmodel.E
     }
     if (room?.id !in ui.darkCapableRooms || (room?.id in ui.generatorLitRooms && ui.mineGeneratorOnline)) dark = false
     return dark
+}
+
+/** Only passive inspections get read receipts. Functional controls retain their normal appearance. */
+fun inspectionReceiptKey(action: RoomAction, description: String?): String? {
+    val generic = action as? GenericAction ?: return null
+    if (!generic.actionEvent.isNullOrBlank() || generic.type.lowercase() !in setOf("generic", "inspect")) return null
+    val content = "${generic.name}\n${generic.conditionUnmetMessage}\n${description.orEmpty()}"
+    val digest = java.security.MessageDigest.getInstance("SHA-256").digest(content.toByteArray(Charsets.UTF_8))
+    return "inspection_read_" + digest.joinToString("") { "%02x".format(it) }
 }

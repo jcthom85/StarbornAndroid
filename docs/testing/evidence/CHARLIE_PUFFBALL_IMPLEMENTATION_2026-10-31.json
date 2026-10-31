@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-31",
+  "source_sha256": {
+    "shared/src/androidJvmMain/kotlin/com/example/starborn/ui/exploration/GladePuffball.kt": "fed763bb44f54a2db488cea50380037dd54c04d1a95e6a5ae1ab80d8c34a20a8",
+    "gameRuntime/src/main/kotlin/com/example/starborn/feature/exploration/presentation/GladeBall.kt": "68be79f6a570b0338b39e998b47a8cd6bb5e003fd3ec1a4804ed0b06808ace02",
+    "app/src/main/assets/rooms.json": "9f8efa3707f077208d6f5b79f41a7f5bca4c95847afe318983fb50977da705e8",
+    "app/src/main/assets/events.json": "21dbbf3ee19ab33e79a45466cb715a21e4cef042c43f741ac0d145bec168377d",
+    "app/src/main/assets/items.json": "c6d08d2cb5da07a2113396ccf535eec684ee61c660137338eaacc6f8635ccb9b"
+  },
+  "validation": {
+    "host": {
+      "tests": 35,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "desktop": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "physical_device_tested": false,
+  "apk_sha256": "0e4f1b24558562a52a196eb6350bfac1293b7bb4985472b8f326e109109f699b"
+}

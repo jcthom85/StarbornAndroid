@@ -562,7 +562,7 @@ fun CombatScreen(
             viewModel.playVictoryMusic()
         }
         val waitMillis = when (resolved) {
-            is CombatOutcome.Victory -> 900L
+            is CombatOutcome.Victory -> 2000L
             is CombatOutcome.Defeat -> 750L
             CombatOutcome.Retreat -> 600L
         }

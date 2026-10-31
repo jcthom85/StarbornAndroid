@@ -73,6 +73,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -433,6 +435,196 @@ class LegalRouteCampaignRunnerTest {
     }
 
     @Test
+    fun world2SecondHalfTransceiverInspectsAndCollectedCacheRetiresAcrossReload() {
+        useProductionCrewRules = true
+        fun state(room: String) = GameSessionState(worldId = "world_2", hubId = "hub_3_sector9",
+            roomId = room, playerId = "nova", partyMembers = listOf("nova", "zeke"))
+        for (active in listOf(false, true)) {
+            val seed = state("sector9_wilds_grave").copy(activeQuests = if (active) setOf("w2_sq02") else emptySet())
+            val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = seed)
+            try {
+                val action = h.explorationVm.uiState.value.actions.single { it.name == "transceiver" }
+                h.explorationVm.onActionSelected(action); h.settle()
+                assertTrue("Context inspection must present text", h.explorationVm.uiState.value.narrationPrompt?.message?.isNotBlank() == true)
+                assertFalse("Context must not skip Signal Hollow's quest step",
+                    "trace_beta" in h.sessionStore.state.value.questTasksCompleted["w2_sq02"].orEmpty())
+                assertTrue(h.inventoryService.snapshot().isEmpty())
+            } finally { h.close() }
+        }
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope,
+            initialState = state("sector9_ridge_plateau"))
+        try {
+            val action = h.explorationVm.uiState.value.actions.single { it.name == "ridge overlook cache" }
+            h.explorationVm.onActionSelected(action); h.settle()
+            assertEquals(1, h.inventoryService.snapshot()["vhs_tape_04"])
+            assertTrue("Discovery text must present before obtained-item prompts", h.explorationVm.uiState.value.narrationPrompt != null)
+            assertNull("No reward flash before discovery dismissal", h.explorationVm.uiState.value.prompt)
+            h.explorationVm.dismissNarration(); h.settle()
+            assertTrue("Obtained item follows discovery dismissal", h.explorationVm.uiState.value.prompt != null)
+            assertFalse(h.explorationVm.uiState.value.actions.any { it.name == action.name })
+            val awarded = h.inventoryService.snapshot()
+            h.explorationVm.onActionSelected(action); h.settle()
+            assertEquals(awarded, h.inventoryService.snapshot())
+            val restored = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = h.saveSlot(9))
+            try {
+                assertFalse("Depleted cache must stay retired after reload", restored.explorationVm.uiState.value.actions.any { it.name == action.name })
+            } finally { restored.close() }
+        } finally { h.close() }
+    }
+
+    @Test
+    fun world2Part1RestGatesAndReadStateSurviveRepeatUseAndReload() {
+        useProductionCrewRules = true
+        fun state(room: String) = GameSessionState(worldId = "world_2", hubId = "hub_3_sector9",
+            roomId = room, playerId = "nova", partyMembers = listOf("nova", "zeke"),
+            partyMemberHp = mapOf("nova" to 1, "zeke" to 1))
+        val camps = listOf("sector9_stream_falls", "sector9_wilds_lookout", "sector9_ridge_plateau", "sector9_power_manifold",
+            "spire_skypark_scale_02", "spire_night_market_scale_01", "foundry_obsidian_shelf_scale_02",
+            "foundry_forge_control_alcove", "orbital_customs_lounge", "deep_anchor_chamber_scale_04")
+        for (room in camps) {
+            val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = state(room).let { seed ->
+                val reader = AssetJsonReader(DesktopAssetProvider(listOf(assets)), MoshiProvider.instance)
+                val node = reader.readList<com.example.starborn.domain.model.HubNode>("hub_nodes.json").first { room in it.rooms }
+                seed.copy(worldId = reader.readList<com.example.starborn.domain.model.Hub>("hubs.json").first { it.id == node.hubId }.worldId, hubId = node.hubId)
+            })
+            val notices = mutableListOf<com.example.starborn.feature.exploration.viewmodel.ExplorationEvent.RestRecovered>()
+            val listener = testScope.launch { h.explorationVm.events.collect { event ->
+                if (event is com.example.starborn.feature.exploration.viewmodel.ExplorationEvent.RestRecovered) notices += event
+            } }
+            h.settle()
+            try {
+                val rest = h.explorationVm.uiState.value.actions.filterIsInstance<com.example.starborn.domain.model.RestStopAction>()
+                    .first { it.cookSource == null && it.restEvent != null }
+                h.explorationVm.onActionSelected(rest); h.settle()
+                val firstHp = h.sessionStore.state.value.partyMemberHp
+                val supplies = h.inventoryService.snapshot()
+                assertEquals("Rest should not create medical supplies", 0, supplies.getOrDefault("painkillers", 0))
+                assertTrue(firstHp.values.all { it > 1 })
+                h.sessionStore.updatePartyVitals(mapOf("nova" to 1, "zeke" to 1)); h.settle()
+                h.explorationVm.onActionSelected(rest); h.settle()
+                assertEquals("Repeated REST at $room", firstHp, h.sessionStore.state.value.partyMemberHp)
+                assertEquals("First-visit supplies must not be farmed", supplies, h.inventoryService.snapshot())
+                h.explorationVm.onActionSelected(rest); h.settle()
+                assertEquals(supplies, h.inventoryService.snapshot())
+                assertEquals("Every rest must acknowledge the action", 3, notices.size)
+                assertTrue("Full-health rest still reports normally", notices.last().alreadyFull)
+            } finally { listener.cancel(); h.close() }
+        }
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope,
+            initialState = state("sector9_stream_sunken_passage"))
+        try {
+            assertTrue("south" in h.explorationVm.uiState.value.blockedDirections)
+            val wheel = h.explorationVm.uiState.value.actions.filterIsInstance<com.example.starborn.domain.model.ToggleAction>().single()
+            repeat(2) {
+                h.explorationVm.onActionSelected(wheel); h.settle(); h.explorationVm.onTogglePromptSelection(true); h.settle()
+                assertFalse("south" in h.explorationVm.uiState.value.blockedDirections)
+                h.explorationVm.onActionSelected(wheel); h.settle(); h.explorationVm.onTogglePromptSelection(false); h.settle()
+                assertTrue("south" in h.explorationVm.uiState.value.blockedDirections)
+                h.explorationVm.travel("south"); h.settle()
+                assertEquals("sector9_stream_sunken_passage", h.sessionStore.state.value.roomId)
+            }
+            h.sessionStore.unlockExit("sector9_stream_sunken_passage", "south"); h.settle()
+            val saved = h.saveSlot(9)
+            val restored = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = saved)
+            try { assertTrue("Legacy permanent receipt must not bypass a closed sluice", "south" in restored.explorationVm.uiState.value.blockedDirections) }
+            finally { restored.close() }
+        } finally { h.close() }
+        val crash = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = state("sector9_crash_site"))
+        try {
+            assertFalse(crash.explorationVm.uiState.value.actions.any { it.name.equals("moss", true) })
+            crash.sessionStore.startQuest("w2_sq01"); crash.settle()
+            assertTrue(crash.explorationVm.uiState.value.actions.any { it.name.equals("moss", true) })
+            val inspect = crash.explorationVm.uiState.value.actions.single { it.name == "wreckage" }
+            crash.explorationVm.onActionSelected(inspect); crash.settle()
+            assertTrue(crash.sessionStore.state.value.roomStates["sector9_crash_site"].orEmpty().keys.any { it.startsWith("inspection_read_") })
+            val saved = crash.saveSlot(9)
+            assertEquals(saved, crash.loadSlot(9))
+        } finally { crash.close() }
+    }
+
+    @Test
+    fun unseenCharlieResumesLegacyTrustAndRewardsOnlyOnceAcrossReload() {
+        for (initialTrust in 0..3) {
+            val xp = listOf(0, 25, 60, 120)[initialTrust]
+            val seed = GameSessionState(worldId = "world_2", hubId = "hub_3_sector9",
+                roomId = "sector9_landing_glade", playerId = "nova", partyMembers = listOf("nova", "zeke"),
+                playerXp = xp, partyMemberXp = mapOf("nova" to xp, "zeke" to xp), completedMilestones = (1..initialTrust).map { "ms_charlie_trust_$it" }.toSet(),
+                inventory = if (initialTrust == 3) mapOf("charlies_comfort_stone" to 1) else emptyMap())
+            val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = seed)
+            try {
+                h.explorationVm.setExplorationVisible(true)
+                h.explorationVm.setExplorationInteractionBlocked(false)
+                assertFalse(h.explorationVm.uiState.value.npcs.any { it.contains("charlie", true) })
+                repeat(3 - initialTrust) { h.explorationVm.playWithGladeBall(); h.settle() }
+                assertEquals("Starting trust $initialTrust", 120, h.sessionStore.state.value.playerXp)
+                assertEquals(1, h.inventoryService.snapshot()["charlies_comfort_stone"])
+                assertTrue(h.explorationVm.uiState.value.activeDialogue == null)
+                val snapshot = h.sessionStore.state.value
+                repeat(3) { h.explorationVm.playWithGladeBall(); h.settle() }
+                assertEquals(snapshot.inventory, h.sessionStore.state.value.inventory)
+                assertEquals(snapshot.playerXp, h.sessionStore.state.value.playerXp)
+                val restored = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = h.saveSlot(9))
+                try {
+                    restored.explorationVm.setExplorationInteractionBlocked(false)
+                    restored.explorationVm.onNpcInteraction("Charlie"); restored.settle()
+                    assertNull(restored.explorationVm.uiState.value.activeDialogue)
+                    assertEquals(1, restored.inventoryService.snapshot()["charlies_comfort_stone"])
+                    assertEquals(120, restored.sessionStore.state.value.playerXp)
+                    restored.sessionStore.setRoom("sector9_crash_site"); restored.settle()
+                    restored.explorationVm.playWithGladeBall(); restored.settle()
+                    assertEquals(120, restored.sessionStore.state.value.playerXp)
+                } finally { restored.close() }
+            } finally { h.close() }
+        }
+    }
+
+    @Test
+    fun sanctuaryJournalKeepsUnknownOccupantAndFutureStageOutOfTheOpening() {
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = GameSessionState(
+            worldId = "world_2", hubId = "hub_3_sector9", roomId = "sector9_temple_gate",
+            playerId = "nova", partyMembers = listOf("nova", "zeke"), activeQuests = setOf("w2_mq03")))
+        try {
+            h.explorationVm.openQuestDetails("w2_mq03"); h.settle()
+            val detail = requireNotNull(h.explorationVm.uiState.value.questDetail)
+            assertEquals(listOf("investigate_murals"), detail.stages.map { it.id })
+            val visible = listOf(detail.summary, detail.description.orEmpty(), detail.stageDescription.orEmpty()) + detail.objectives.map { it.text }
+            assertFalse(visible.joinToString(" ").contains("Orion"))
+            assertFalse(visible.joinToString(" ").contains("Bridge Echo"))
+            assertTrue(detail.objectives.any { it.text.contains("Hall of Echoes") })
+            assertTrue(detail.objectives.any { it.text.contains("Stasis Chamber") })
+        } finally { h.close() }
+    }
+
+    @Test
+    fun authoredContainersNarrateBeforeRewardsAndDoNotPayTwice() {
+        val reader = AssetJsonReader(DesktopAssetProvider(listOf(assets)), MoshiProvider.instance)
+        val rooms = reader.readList<Room>("rooms.json")
+        val cases = rooms.filter { room -> room.actions.any { it["discovery_message"] != null } }
+        assertEquals("Every audited later-world container has authored narration", 51, cases.sumOf { room -> room.actions.count { it["discovery_message"] != null } })
+        val runtimeSamples = setOf("sector9_stream_wetlands", "sector9_sunken_aethel_vault",
+            "spire_black_site_lab", "foundry_subterranean_smelter", "orbital_breached_avionics_lab",
+            "source_campfire_node_scale_final")
+        for (room in cases.filter { it.id in runtimeSamples }) {
+            val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = GameSessionState(
+                worldId = "world_2", hubId = "hub_3_sector9", roomId = room.id,
+                playerId = "nova", partyMembers = listOf("nova", "zeke")))
+            try {
+                val action = h.explorationVm.uiState.value.actions.filterIsInstance<com.example.starborn.domain.model.ContainerAction>()
+                    .firstOrNull { !it.discoveryMessage.isNullOrBlank() } ?: error("Missing container in ${room.id}")
+                h.explorationVm.onActionSelected(action); h.settle()
+                assertEquals(room.id, action.discoveryMessage, h.explorationVm.uiState.value.narrationPrompt?.message)
+                assertNull("No item flash before narration at ${room.id}", h.explorationVm.uiState.value.prompt)
+                val awarded = h.inventoryService.snapshot()
+                for (id in action.items) assertEquals("${room.id}: $id", action.items.count { it == id }, awarded[id])
+                h.explorationVm.dismissNarration(); h.settle()
+                assertTrue("Items follow narration at ${room.id}", h.explorationVm.uiState.value.prompt != null)
+                h.explorationVm.onActionSelected(action); h.settle()
+                assertEquals("Container cannot pay twice at ${room.id}", awarded, h.inventoryService.snapshot())
+            } finally { h.close() }
+        }
+    }
+
+    @Test
     fun productionWorld2ReachesItsDepartureWithEarnedCrewAndSaveParity() {
         useProductionCrewRules = true
         val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
@@ -458,6 +650,31 @@ class LegalRouteCampaignRunnerTest {
                     "Party: ${state.partyMembers}; level: ${state.playerLevel}; XP: ${state.playerXp}; AP: ${state.playerAp}\n" +
                     publicCombats.joinToString("\n") + "\nAssistance: $assistance\n")
             }
+        } finally { h.close() }
+    }
+
+    @Test
+    fun productionWorld2CanReplaceASpentEmergencyMedkitBeforeTreatingZeke() {
+        useProductionCrewRules = true
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
+        try {
+            val runner = LegalCampaignAgent(h)
+            runner.playWorld1()
+            runner.talkToNpc("Zeke")
+            runner.performAction("w2_mq01_examine_pod")
+            // Adverse save state: the player used their ordinary healing supplies before treatment.
+            h.inventoryService.removeItem("medkit", h.inventoryService.snapshot().getValue("medkit"))
+            h.settle()
+            assertFalse(h.inventoryService.hasItem("medkit"))
+            runner.navigateLegalPath("sector9_stream_falls")
+            assertTrue("Treatment must still be pending", "w2_mq01" in h.sessionStore.state.value.activeQuests)
+            h.buyAtVisibleShop("davids_provisions", "medkit", 1)
+            runner.navigateLegalPath("sector9_pod_interior")
+            runner.performAction("w2_mq01_stabilize_zeke")
+            assertFalse(h.inventoryService.hasItem("medkit"))
+            runner.navigateLegalPath("sector9_landing_stream")
+            assertTrue("Replacement must let the earned route continue", "w2_mq01" in h.sessionStore.state.value.completedQuests)
+            assertTrue("w2_mq02" in h.sessionStore.state.value.activeQuests)
         } finally { h.close() }
     }
 
@@ -1177,6 +1394,10 @@ class LegalRouteCampaignRunnerTest {
             assertTrue("w2_mq02 completed", harness.sessionStore.state.value.completedQuests.contains("w2_mq02"))
             assertTrue("w2_mq03 active", harness.sessionStore.state.value.activeQuests.contains("w2_mq03"))
 
+            assertEquals("Opening the gate must not teleport the crew", "sector9_temple_gate", harness.sessionStore.state.value.roomId)
+            harness.explorationVm.travel("east"); harness.settle()
+            assertEquals("sector9_foyer_grand_hall", harness.sessionStore.state.value.roomId)
+            navigateLegalPath("sector9_hall_of_echoes")
             // MQ03: Sleeping Giant (Orion joins)
             performAction("w2_mq03_inspect_murals")
             navigateLegalPath("sector9_stasis_chamber")
@@ -2070,42 +2291,8 @@ class LegalRouteCampaignRunnerTest {
             } finally { combat.close() }
         }
 
-        private fun conditionEvaluator(raw: String?, state: GameSessionState): Boolean {
-            if (raw.isNullOrBlank()) return true
-            return raw.split(',').map { it.trim() }.filter { it.isNotEmpty() }.all { token ->
-                val parts = token.split(':', limit = 2)
-                val type = parts[0].trim().lowercase(Locale.getDefault())
-                val value = parts.getOrNull(1)?.trim().orEmpty()
-                when (type) {
-                    "room" -> state.roomId?.equals(value, ignoreCase = true) == true
-                    "room_not" -> state.roomId?.equals(value, ignoreCase = true) != true
-                    "milestone", "milestone_set" -> value in state.completedMilestones
-                    "milestone_not_set" -> value !in state.completedMilestones
-                    "quest", "quest_active" -> value in state.activeQuests
-                    "quest_not_started" -> value.isNotBlank() &&
-                        value !in state.activeQuests &&
-                        value !in state.completedQuests &&
-                        value !in state.failedQuests
-                    "quest_completed" -> value in state.completedQuests
-                    "quest_not_completed" -> value !in state.completedQuests
-                    "quest_stage", "quest_stage_not" -> {
-                        val p = value.split(':', limit = 2)
-                        val matches = p.size == 2 && state.questStageById[p[0]] == p[1]
-                        if (type == "quest_stage") matches else !matches
-                    }
-                    "quest_task_done" -> {
-                        val p = value.split(':', limit = 2)
-                        p.size == 2 && state.questTasksCompleted[p[0]].orEmpty().contains(p[1])
-                    }
-                    "quest_task_not_done" -> {
-                        val p = value.split(':', limit = 2)
-                        p.size == 2 && !state.questTasksCompleted[p[0]].orEmpty().contains(p[1])
-                    }
-                    "item" -> (state.inventory[value] ?: 0) > 0
-                    "item_not" -> (state.inventory[value] ?: 0) <= 0
-                    else -> error("Unsupported dialogue condition in campaign test: " + token)
-                }
-            }
-        }
+        private fun conditionEvaluator(raw: String?, state: GameSessionState): Boolean =
+            com.example.starborn.domain.dialogue.isDialogueConditionMet(raw, state, inventoryService)
+
     }
 }

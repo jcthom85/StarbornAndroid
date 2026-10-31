@@ -1,0 +1,7 @@
+# Stalker-Vine combat asset
+
+Created with the built-in image-generation tool using the existing Siren Skimmer sprite as a style reference only. The original bat asset is preserved. Saved to `world_assets/src/main/assets/images/enemies/stalker_vine_combat.png`; `enemies.json` now uses that asset for Stalker-Vine.
+
+## Generation prompt
+
+Use case: game-asset. Create one original Starborn RPG combat enemy sprite named Stalker-Vine. The attached image is STYLE REFERENCE ONLY: match its clean hand-painted cel-shaded sci-fi fantasy combat illustration, crisp dark contours, readable luminous accents and polished game-asset finish. Replace the bat subject entirely with an elite biological plant organism: a rooted twisting mass of thick dark emerald vines, hooked thorn tendrils, overlapping waxy leaves, one prominent closed seedpod-like core glowing gently acid-lime with cyan veins. It heals neighboring flora and constricts foes. It must read instantly as a dangerous vine plant, not an animal, not a bat, no wings, no legs, no mechanical armor. Front three-quarter combat presentation, full creature visible centered with generous clear margins, roots grounded along bottom, tendrils curling upward and outward in a compact readable silhouette. One subject only, no lettering, no environment, no floor, no cast shadow, no frame. Genuine transparent background; do not bake in a black background. Keep sprite suitable for a square enemy portrait and full-body battle display.

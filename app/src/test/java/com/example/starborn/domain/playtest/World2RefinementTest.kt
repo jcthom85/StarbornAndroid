@@ -28,6 +28,33 @@ class World2RefinementTest {
         assertTrue(h.state.activeQuests.containsAll(listOf("w2_mq05", "w2_sq03", "w2_sq04")))
     }
 
+    @Test fun meganWaterFilterFavorRequiresBothMaterialsAndPaysOnceAfterReload() {
+        for (materials in listOf(mapOf("chemical_catalyst" to 1), mapOf("nano_filament" to 1),
+            mapOf("chemical_catalyst" to 1, "nano_filament" to 1))) {
+            val h = Harness(GameSessionState(inventory = materials))
+            val conversation = requireNotNull(h.dialogue.startDialogue("Megan"))
+            conversation.choose("megan_opt_favor_offer"); conversation.advance()
+            val complete = materials.size == 2
+            assertEquals(complete, conversation.choices().any { it.id == "megan_opt_favor_turnin" })
+            if (complete) {
+                conversation.choose("megan_opt_favor_turnin"); conversation.advance()
+                assertEquals(mapOf("megans_clinical_scanner" to 1), h.state.inventory)
+                assertEquals(200, h.state.playerXp)
+                assertEquals(250, h.state.playerCredits)
+                val restored = Harness(roundTrip(h.state))
+                val again = requireNotNull(restored.dialogue.startDialogue("Megan"))
+                assertFalse(again.choices().any { it.id == "megan_opt_favor_turnin" })
+                again.choose("megan_opt_leave")
+                assertEquals(h.state, restored.state)
+            } else {
+                assertEquals(materials, h.state.inventory)
+                assertEquals(0, h.state.playerXp)
+                conversation.choose("megan_opt_leave")
+            }
+            assertTrue(conversation.isFinished() || complete)
+        }
+    }
+
     @Test fun kaelenFavorRequiresTheFullBundleAndPaysOnlyOnce() {
         val asked = setOf("ms_kaelen_favor_asked", "ms_kaelen_talked")
         val h = Harness(GameSessionState(completedMilestones = asked,
@@ -314,20 +341,11 @@ class World2RefinementTest {
         ))
         init {
             dialogue = DialogueService(readW2<DialogueLine>("dialogue.json"), DialogueConditionEvaluator { raw ->
-                raw.isNullOrBlank() || raw.split(',').all { token ->
-                    val type = token.substringBefore(':').trim()
-                    val value = token.substringAfter(':').trim()
-                    when (type) {
-                        "quest_active" -> value in state.activeQuests
-                        "quest_completed" -> value in state.completedQuests
-                        "quest_not_started" -> value !in state.activeQuests && value !in state.completedQuests && value !in state.failedQuests
-                        "quest_task_done" -> value.substringAfter(':') in state.questTasksCompleted[value.substringBefore(':')].orEmpty()
-                        "quest_task_not_done" -> value.substringAfter(':') !in state.questTasksCompleted[value.substringBefore(':')].orEmpty()
-                        "milestone", "milestone_set" -> value in state.completedMilestones
-                        "milestone_not_set" -> value !in state.completedMilestones
-                        else -> false
-                    }
-                }
+                val inventory = com.example.starborn.domain.inventory.InventoryService(object : com.example.starborn.domain.inventory.ItemCatalog {
+                    override fun load() = Unit
+                    override fun findItem(idOrAlias: String): Item? = null
+                }).apply { restore(this@Harness.state.inventory) }
+                isDialogueConditionMet(raw, state, inventory)
             }, DialogueTriggerHandler { events.performActions(DialogueTriggerParser.parse(it)) })
         }
         fun action(id: String) = events.handleTrigger("player_action", EventPayload.Action(id))

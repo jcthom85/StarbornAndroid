@@ -75,7 +75,9 @@ data class ContainerAction(
     @Json(name = "already_open_message")
     val alreadyOpenMessage: String? = null,
     @Json(name = "popup_title")
-    val popupTitle: String? = null
+    val popupTitle: String? = null,
+    @Json(name = "discovery_message")
+    val discoveryMessage: String? = null
 ) : RoomAction
 
 data class NpcAction(

@@ -711,12 +711,10 @@
     "name": "Megan",
     "aliases": [
       "megan",
-      "doctor megan",
-      "clinician megan",
-      "dr megan"
+      "clinician megan"
     ],
-    "role": "Chief Clinical & Forensic Officer",
-    "description": "The brilliant, grounded heart of the coastal station. Balancing meticulous clinical expertise with a sharp investigative mind for environmental forensics, Megan heals injured explorers, analyzes ecosystem anomalies like a courtroom prosecutor, and keeps the entire colony functioning.",
+    "role": "Clinical Hygiene and Sanitation Specialist",
+    "description": "Megan maintains Tidewatch's water filters and provides practical clinical care for the coastal survivors. Her clinical hygiene background and interest in forensics make her patient with details and cautious about conclusions.",
     "portrait": "images/npcs/doc.webp",
     "dialogue": {},
     "interactions": [

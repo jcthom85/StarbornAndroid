@@ -652,8 +652,8 @@
   {
     "id": "w2_mq01",
     "title": "A Strange Coast",
-    "summary": "The pod crashed in the overgrown ruins of Sector 9. Keep Zeke alive, recover the Chime, and find a safer route away from the wreck.",
-    "description": "Check on Zeke, recover the Chime and emergency supplies from the pod, stabilize him, then follow the glow-water stream toward shelter.",
+    "summary": "The pod has crashed in Sector 9. Check on Zeke and find a way to leave the wreck safely.",
+    "description": "Secure the crash site, check the damaged pod and follow the stream toward shelter.",
     "flavor": "The air smells of ozone and crushed green ferns. The metal hull is cold.",
     "giver": "Zeke",
     "hub_id": "hub_3_sector9",
@@ -673,7 +673,7 @@
           },
           {
             "id": "stabilize_zeke",
-            "text": "Use the emergency medkit to stabilize Zeke."
+            "text": "Use the medkit's sealant and pressure tape to patch Zeke's suit."
           },
           {
             "id": "follow_stream",
@@ -728,8 +728,8 @@
   {
     "id": "w2_mq03",
     "title": "Sleeping Giant",
-    "summary": "Someone has been asleep inside Sanctuary for twenty years, and the facility will not wake him without the right chord.",
-    "description": "Power Sanctuary from reserve cells, wake Orion after Chime authentication, and recover the separate Bridge Echo.",
+    "summary": "The gate has opened onto an unfamiliar facility. Its murals may explain the signal.",
+    "description": "Investigate the murals and follow the facility clues deeper into Sanctuary.",
     "flavor": "Twenty years of sleep, waiting for a chord that never came.",
     "giver": "Orion",
     "hub_id": "hub_4_facility",
@@ -745,7 +745,7 @@
           },
           {
             "id": "find_stasis_chamber",
-            "text": "From the Hall of Echoes, head south to Orion's Stasis Chamber."
+            "text": "From the Hall of Echoes, investigate the Stasis Chamber to the south."
           }
         ]
       },
@@ -756,15 +756,15 @@
         "tasks": [
           {
             "id": "align_stasis_rings",
-            "text": "Read the chamber clues, then route pressure, memory and return at the Ring Array."
+            "text": "Use the chamber clues to stabilize the Ring Array."
           },
           {
             "id": "talk_to_orion",
-            "text": "Return to Stasis Chamber and talk to the awakened Orion."
+            "text": "Speak with the occupant once the stasis chamber is stable."
           },
           {
             "id": "recover_bridge_relic",
-            "text": "After talking to Orion, open the sealed Bridge cradle in Stasis Chamber."
+            "text": "After speaking with the occupant, inspect the sealed cradle in the chamber."
           }
         ]
       }
@@ -779,8 +779,8 @@
   {
     "id": "w2_mq04",
     "title": "The Hunter",
-    "summary": "Gh0st can still fire after the failsafe pauses him. What he does next must be his choice.",
-    "description": "Confront Gh0st, survive the Beast, then finish Orion's grounded Anchor Drill before Link unlocks.",
+    "summary": "A hunter waits on Canopy Ridge. Follow the trail and find out what is driving the pursuit.",
+    "description": "Reach the ridge and confront the hunter. Stay ready for whatever follows.",
     "flavor": "No command attached. The next move is his.",
     "giver": "Gh0st",
     "hub_id": "hub_3_sector9",
@@ -800,11 +800,11 @@
           },
           {
             "id": "defeat_the_beast",
-            "text": "Put down the mutated Source Beast."
+            "text": "Survive the confrontation on the ridge."
           },
           {
             "id": "complete_anchor_drill",
-            "text": "Complete Orion's cutter-Bridge grounding drill."
+            "text": "Regroup with Orion after the confrontation."
           }
         ]
       }
@@ -819,8 +819,8 @@
   {
     "id": "w2_mq05",
     "title": "Liftoff",
-    "summary": "The Astra needs its Bridge mounted, powered, and authenticated before it can take the low service airlane.",
-    "description": "Settle the Source Gate, salvage conduits, install the Bridge, authenticate Orion with the Chime, and fly low to the Spire.",
+    "summary": "The Astra is here, but its systems are dark. Find a way to make the ship ready for departure.",
+    "description": "Resolve the gate, inspect the ship and use what you learn to restore its systems.",
     "flavor": "Old frame. New wiring. Keep it below the hard deck.",
     "giver": "Orion",
     "hub_id": "hub_4_facility",
@@ -832,7 +832,7 @@
         "tasks": [
           {
             "id": "bypass_source_gate",
-            "text": "Resolve the Source Gate's horn, cup, roots, and breakers."
+            "text": "Find a way through the Source Gate."
           },
           {
             "id": "inspect_astra",
@@ -911,8 +911,8 @@
   {
     "id": "w2_sq02",
     "title": "Lost Patrol",
-    "summary": "Trace a lost patrol through three distress signatures, recover its transceiver, and repair its Thermal Cutter.",
-    "description": "Locate the logs of a lost squad in the Sector 9 ruins and turn their damaged cutter into a useful field tool.",
+    "summary": "Three distress signatures may lead to a lost patrol. Follow their trail.",
+    "description": "Trace the patrol signatures and discover what became of the missing squad.",
     "flavor": "The patrol left three distress signatures and no survivors.",
     "giver": "Dead Soldier",
     "hub_id": "hub_3_sector9",
@@ -943,11 +943,11 @@
         "tasks": [
           {
             "id": "recover_transceiver",
-            "text": "Recover the patrol transceiver in Burned Glade, along with the damaged Thermal Cutter."
+            "text": "Follow the combined patrol vector to the cache in Burned Glade."
           },
           {
             "id": "repair_thermal_cutter",
-            "text": "Repair the Thermal Cutter at a tinkering station."
+            "text": "Restore the damaged tool at a tinkering station."
           }
         ]
       }

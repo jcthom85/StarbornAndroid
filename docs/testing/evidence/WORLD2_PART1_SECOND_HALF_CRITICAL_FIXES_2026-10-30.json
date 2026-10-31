@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-30",
+  "tests": [
+    {
+      "name": "com.example.starborn.domain.playtest.LegalRouteCampaignRunnerTest",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.fishing.FishingRefinementTest",
+      "tests": "19",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.dialogue.DialogueServiceTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.data.DataIntegrityTest",
+      "tests": "30",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.feature.exploration.WorldTwoDiscoverabilityStateTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.feature.exploration.ui.RoomDescriptionResolverTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.feature.exploration.ui.InspectionReadStateTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.di.DialogueConditionRegressionTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.feature.exploration.viewmodel.helpers.MapStateBuilderTest",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.fishing.FishingServiceTest",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.playtest.World2RefinementTest",
+      "tests": "16",
+      "failures": "0",
+      "errors": "0"
+    }
+  ],
+  "test_count": 119,
+  "android_debug_build": "passed",
+  "desktop_compile": "passed",
+  "apk_sha256": "456d06be0a0f8f8ce33f6e4aa055407a1554f9946a893e05d7a038326d8f3b61",
+  "device_install": "not performed; no device connected",
+  "fishing_setup_changes_in_this_pass": false
+}

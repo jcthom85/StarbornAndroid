@@ -51,6 +51,7 @@ class Hub2CriticalFlowTest {
         assertTrue(harness.store.state.value.questTasksCompleted["w2_mq02"].orEmpty().contains("clear_canopy_path"))
 
         // Reach Temple Gate
+        harness.store.setRoom("sector9_temple_gate")
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("sector9_temple_gate"))
         assertTrue(harness.store.state.value.questTasksCompleted["w2_mq02"].orEmpty().contains("locate_temple_gate"))
 
@@ -60,10 +61,12 @@ class Hub2CriticalFlowTest {
         assertTrue(state.completedQuests.contains("w2_mq02"))
         assertTrue(state.questTasksCompleted["w2_mq02"].orEmpty().contains("insert_chime"))
         assertTrue(state.completedMilestones.contains("ms_w2_mq02_complete"))
-        assertEquals("sector9_hall_of_echoes", state.roomId)
+        assertEquals("sector9_temple_gate", state.roomId)
         assertTrue(state.activeQuests.contains("w2_mq03"))
 
         // --- MQ03: Sleeping Giant ---
+        // The player walks through the opened gate to the Hall of Echoes.
+        harness.store.setRoom("sector9_hall_of_echoes")
         // Inspect murals in Hall of Echoes
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq03_inspect_murals"))
         assertTrue(harness.store.state.value.questTasksCompleted["w2_mq03"].orEmpty().contains("inspect_murals"))

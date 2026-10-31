@@ -232,6 +232,55 @@ class MultiEncounterAttritionGauntletTest {
         }
     }
 
+    @Test
+    fun world2AuthoredPairsAreSurvivableForNovaAndZekeWithoutGrinding() {
+        val rooms = assets.loadRooms().associateBy { it.id }
+        val ids = listOf("sector9_stream_cave_depths", "sector9_canopy", "sector9_wilds_nest")
+        for (seed in 1..5) {
+            for (roomId in ids) {
+                val party = listOf("nova", "zeke")
+                val session = GameSessionStore().apply { restore(GameSessionState(
+                    worldId = "world_2", roomId = roomId, playerId = "nova",
+                    partyMembers = party, playerLevel = 8,
+                    partyMemberLevels = party.associateWith { 8 }, playerCredits = 50,
+                    inventory = mapOf("medkit" to 3),
+                    equippedWeapons = mapOf("nova" to "nova_laser_blaster", "zeke" to "zeke_shock_fists"),
+                    unlockedSkills = setOf("nova_arc_tether", "zeke_shatter_blow", "zeke_bulwark_stance", "zeke_overload_fists")
+                )) }
+                val formation = requireNotNull(rooms.getValue(roomId).enemyParties).single()
+                val result = runEncounter(session, formation.first(), seed, formation = formation)
+                assertEquals("$roomId seed=$seed", "victory", result.outcome)
+                assertTrue("$roomId should not demand a healing stockpile on seed $seed", result.medkitsSpent <= 1)
+                if (roomId == "sector9_wilds_nest") {
+                    assertTrue("Hound pack must provide guaranteed meat", (session.state.value.inventory["beast_meat"] ?: 0) >= 1)
+                }
+                println("W2_PAIR room=$roomId seed=$seed medkits=${result.medkitsSpent} hp=${result.remainingHp}")
+            }
+        }
+    }
+
+    @Test
+    fun world2SalvageComesFromActualVictoriesWithoutLuckyDrops() {
+        val cases = listOf(
+            Triple("sector9_foyer_left_gallery", "ruin_guardian", "scrap_metal"),
+            Triple("sector9_conduit_junction", "sentinel_orb", "wiring_bundle"),
+            Triple("sector9_vents_gantry", "sentinel_orb", "battery"),
+            Triple("sector9_stream_wetlands", "spore_spitter", "herb")
+        )
+        for ((room, enemy, material) in cases) for (seed in 1..3) {
+            val party = listOf("nova", "zeke", "orion")
+            val session = GameSessionStore().apply { restore(GameSessionState(
+                worldId = "world_2", roomId = room, partyMembers = party, playerId = "nova",
+                playerLevel = 9, partyMemberLevels = party.associateWith { 9 },
+                inventory = mapOf("medkit" to 3),
+                equippedWeapons = mapOf("nova" to "nova_laser_blaster", "zeke" to "zeke_shock_fists", "orion" to "orion_prism_lance"),
+                unlockedSkills = setOf("nova_arc_tether", "zeke_shatter_blow", "zeke_overload_fists", "orion_prism_lance")
+            )) }
+            assertEquals("$room seed=$seed", "victory", runEncounter(session, enemy, seed).outcome)
+            assertTrue("$material must be delivered after $room", (session.state.value.inventory[material] ?: 0) >= 1)
+        }
+    }
+
     // =========================================================================
     // Core Headless Encounter Simulation Engine
     // =========================================================================
@@ -249,9 +298,10 @@ class MultiEncounterAttritionGauntletTest {
         enemyId: String,
         seed: Int,
         skillAware: Boolean = true,
-        defensive: Boolean = false
+        defensive: Boolean = false,
+        formation: List<String> = listOf(enemyId)
     ): AttritionResult {
-        val vm = createCombat(session, listOf(enemyId), SeededCombatRandom(seed))
+        val vm = createCombat(session, formation, SeededCombatRandom(seed))
         val beforeCredits = session.state.value.playerCredits
         val beforeMedkits = session.state.value.inventory["medkit"] ?: 0
         var medkitsSpent = 0
@@ -410,7 +460,20 @@ class MultiEncounterAttritionGauntletTest {
             audioRouter = AudioRouter(AudioBindings()),
             themeRepository = themes,
             environmentThemeManager = EnvironmentThemeManager(themes),
-            encounterCoordinator = EncounterCoordinator(),
+            encounterCoordinator = EncounterCoordinator().apply {
+                val room = assets.loadRooms().firstOrNull { it.id == session.state.value.roomId }
+                val counts = mutableMapOf<String, Int>()
+                setPendingEncounter(EncounterDescriptor(enemyIds.map { id ->
+                    val occurrence = (counts[id] ?: 0) + 1
+                    counts[id] = occurrence
+                    val local = room?.enemyInstances.orEmpty().firstOrNull {
+                        it.enemyId == id && (it.occurrence == null || it.occurrence == occurrence)
+                    }
+                    EncounterEnemyInstance(enemyId = id, hp = local?.hp, vitality = local?.vitality,
+                        stability = local?.stability, overrideDrops = local?.overrideDrops,
+                        extraDrops = local?.extraDrops.orEmpty())
+                }))
+            },
             enemyIds = enemyIds,
             tutorialsEnabled = false,
             elapsedRealtime = { dispatcher.scheduler.currentTime },

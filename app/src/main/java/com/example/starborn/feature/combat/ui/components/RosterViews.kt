@@ -1290,7 +1290,7 @@ fun EnemyStatusLabel(
         border = BorderStroke(1.dp, borderColor),
         modifier = interactionModifier
             .maestroTag(if (isAlive) "combat-target-$name" else "combat-defeated-$name")
-            .height(if (hasWeaknesses) 80.dp else 68.dp)
+            .heightIn(min = if (hasWeaknesses) 96.dp else 84.dp)
             .alpha(if (isAlive) 1f else 0.45f)
     ) {
         Column(
@@ -1298,10 +1298,9 @@ fun EnemyStatusLabel(
             verticalArrangement = Arrangement.spacedBy(2.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
+            Column(
                 modifier = Modifier.width(barWidth),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                horizontalAlignment = Alignment.Start
             ) {
                 Text(
                     text = titleCaseName(name),
@@ -1311,9 +1310,7 @@ fun EnemyStatusLabel(
                         fontSize = 10.sp,
                         lineHeight = 12.sp
                     ),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f, fill = false)
+                    modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(

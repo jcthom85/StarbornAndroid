@@ -6,4 +6,4 @@ data class FishingResultPayload(
     val message: String?,
     val success: Boolean,
     val secured: Boolean = false
-)
+) : java.io.Serializable

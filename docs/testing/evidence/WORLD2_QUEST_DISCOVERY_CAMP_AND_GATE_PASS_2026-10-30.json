@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-30",
+  "tests": {
+    "tests": 65,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "test_classes": {
+    "com.example.starborn.domain.playtest.LegalRouteCampaignRunnerTest": 7,
+    "com.example.starborn.data.DataIntegrityTest": 30,
+    "com.example.starborn.feature.exploration.WorldTwoDiscoverabilityStateTest": 10,
+    "com.example.starborn.domain.dialogue.Hub2CriticalFlowTest": 2,
+    "com.example.starborn.domain.playtest.World2RefinementTest": 16
+  },
+  "authored_discovery_containers": 51,
+  "runtime_container_samples": 6,
+  "removed_camp_stabilizer_grants": 10,
+  "apk_sha256": "5b6d668bdc8e42f32d34b6d2b748a020779fa4d59e9dc802461c2728c44f817d",
+  "source_sha256": {
+    "app/src/main/assets/rooms.json": "d38b5e1f90fabd75c4826c86ccd1cb2d2ee04f8d0f99352614b769ae3a79ef96",
+    "app/src/main/assets/events.json": "404dd5bf25fd0f8b96f9e41c55206cea5349d6e7ec1e7bdbbf459ab153ffbf2a",
+    "app/src/main/assets/quests.json": "91442d244044598363c585cf46a9ef8c9e83cb557f1d7ebf779a797d618791ec",
+    "gameRuntime/src/main/kotlin/com/example/starborn/domain/model/RoomAction.kt": "c5cb69d5772143c40d47b883ab8d4ebce3108003128351f5c9153659ebbcf56b",
+    "gameRuntime/src/main/kotlin/com/example/starborn/feature/exploration/viewmodel/ExplorationController.kt": "7c458a015a97cac2c075cd435dd9ce86fe5dc7deb421800fb95f4a4b39e2cc2e",
+    "app/src/main/java/com/example/starborn/feature/exploration/ui/ExplorationScreen.kt": "9baefc48913a682ce18063a96e5f1a53c8999fe40ed674b7a51fe97a2213c974"
+  },
+  "limits": [
+    "Gate animation/audio not accepted on physical Pixel.",
+    "All containers audited in data; six representative controller samples tested.",
+    "Earlier full asset validation blocked by absent pwsh.",
+    "Walkthrough site rebuilt locally; not published."
+  ]
+}

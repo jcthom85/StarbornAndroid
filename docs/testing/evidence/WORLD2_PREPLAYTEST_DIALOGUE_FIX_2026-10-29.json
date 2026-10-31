@@ -1,0 +1,67 @@
+{
+  "baseline": "ae32b9d1 plus uncommitted dialogue fix",
+  "date": "2026-10-29",
+  "tests": [
+    {
+      "name": "com.example.starborn.domain.playtest.LegalRouteCampaignRunnerTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.dialogue.DialogueServiceTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.data.DataIntegrityTest",
+      "tests": "30",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.di.DialogueTriggerHandlingTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.feature.exploration.WorldTwoDiscoverabilityStateTest",
+      "tests": "10",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.di.DialogueConditionRegressionTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.playtest.World2RefinementTest",
+      "tests": "16",
+      "failures": "0",
+      "errors": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.dialogue.DialogueEventIntegrationTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0"
+    }
+  ],
+  "production_probe_after_fix": "W2 crash after finished intro | com.example.starborn.domain.dialogue.DialogueTriggerLogicKt | zeke_w2_crash_repeat_1\nW2 crash after finished intro | com.example.starborn.di.AppServicesKt | zeke_w2_crash_repeat_1\nW2 Orion before alignment | com.example.starborn.domain.dialogue.DialogueTriggerLogicKt | orion_default_talk\nW2 Orion before alignment | com.example.starborn.di.AppServicesKt | orion_default_talk\nW2 Botanist zero scans | com.example.starborn.domain.dialogue.DialogueTriggerLogicKt | zeke_w2_post_orion_idle\nW2 Botanist zero scans | com.example.starborn.di.AppServicesKt | zeke_w2_post_orion_idle\nW2 optional offers after Astra inspected | com.example.starborn.domain.dialogue.DialogueTriggerLogicKt | orion_w2_sq03_intro_1\nW2 optional offers after Astra inspected | com.example.starborn.di.AppServicesKt | orion_w2_sq03_intro_1\nW3 Vance before investigation/evidence | com.example.starborn.domain.dialogue.DialogueTriggerLogicKt | NO DIALOGUE\nW3 Vance before investigation/evidence | com.example.starborn.di.AppServicesKt | NO DIALOGUE\nW3 safehouse entry before finding apartment | com.example.starborn.domain.dialogue.DialogueTriggerLogicKt | zeke_default_talk\nW3 safehouse entry before finding apartment | com.example.starborn.di.AppServicesKt | zeke_default_talk\n",
+  "apk": "app/build/outputs/apk/debug/app-debug.apk",
+  "apk_sha256": "5490630fb30816f578d0cb575936bc5d3379415a9c7c0152e68c3bd31a7a08c1",
+  "device_install": {
+    "serial": "46121JEKB11849",
+    "model": "Pixel 8a",
+    "result": "adb install -r: Success",
+    "package": "com.junewiregames.starborn.prealpha",
+    "version_name": "1.3.100",
+    "version_code": 184,
+    "last_update_device_time": "2026-10-29 17:37:14",
+    "data_preserved": true
+  }
+}

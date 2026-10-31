@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-30",
+  "world2_static_encounters": {
+    "singles": 7,
+    "pairs": 3,
+    "enemy_count": 13,
+    "xp": 870
+  },
+  "test_results": {
+    "tests": 61,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "pair_simulations": 15,
+  "guaranteed_material_simulations": 12,
+  "simulation_log": "W2_PAIR room=sector9_stream_cave_depths seed=1 medkits=0 hp={nova=104, zeke=126}\nW2_PAIR room=sector9_canopy seed=1 medkits=1 hp={nova=116, zeke=117}\nW2_PAIR room=sector9_wilds_nest seed=1 medkits=1 hp={nova=48, zeke=133}\nW2_PAIR room=sector9_stream_cave_depths seed=2 medkits=0 hp={nova=88, zeke=120}\nW2_PAIR room=sector9_canopy seed=2 medkits=0 hp={nova=110, zeke=122}\nW2_PAIR room=sector9_wilds_nest seed=2 medkits=1 hp={nova=83, zeke=126}\nW2_PAIR room=sector9_stream_cave_depths seed=3 medkits=0 hp={nova=96, zeke=128}\nW2_PAIR room=sector9_canopy seed=3 medkits=0 hp={nova=110, zeke=115}\nW2_PAIR room=sector9_wilds_nest seed=3 medkits=1 hp={nova=103, zeke=73}\nW2_PAIR room=sector9_stream_cave_depths seed=4 medkits=0 hp={nova=112, zeke=126}\nW2_PAIR room=sector9_canopy seed=4 medkits=0 hp={nova=110, zeke=125}\nW2_PAIR room=sector9_wilds_nest seed=4 medkits=1 hp={nova=99, zeke=94}\nW2_PAIR room=sector9_stream_cave_depths seed=5 medkits=0 hp={nova=96, zeke=126}\nW2_PAIR room=sector9_canopy seed=5 medkits=0 hp={nova=110, zeke=116}\nW2_PAIR room=sector9_wilds_nest seed=5 medkits=0 hp={nova=62, zeke=78}\n",
+  "asset_integrity_limit": "Gradle runAssetIntegrity cannot launch pwsh; DataIntegrityTest passed in targeted suite.",
+  "source_sha256": {
+    "app/src/main/assets/rooms.json": "04d6efc1899d3b5f01a78944504861689a679e314b135eef5f2fe3d16a0e6ce9",
+    "app/src/main/java/com/example/starborn/feature/exploration/ui/ExplorationScreen.kt": "07f4b2b1199ed4ed8809ff74a596a6396cdfb645f1232766a9b60875b3a89fe1",
+    "app/src/test/java/com/example/starborn/feature/combat/MultiEncounterAttritionGauntletTest.kt": "ff01f72035b3c1386f347031588d644927ccdc878c08823b4b77c50be27d46a3"
+  }
+}

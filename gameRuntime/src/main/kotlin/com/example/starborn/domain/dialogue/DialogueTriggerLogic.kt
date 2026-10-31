@@ -16,12 +16,13 @@ fun isDialogueConditionMet(
     for (token in tokens) {
         val parts = token.split(':', limit = 2)
         if (parts.isEmpty()) continue
-        val type = parts[0].trim().lowercase()
+        val type = parts[0].trim().lowercase(Locale.ROOT)
         val value = parts.getOrNull(1)?.trim().orEmpty()
         val met = when (type) {
             "quest" -> value in state.activeQuests || value in state.completedQuests
             "quest_active" -> value in state.activeQuests
             "quest_completed" -> value in state.completedQuests
+            "quest_not_completed" -> value.isNotBlank() && value !in state.completedQuests
             "quest_not_started" -> value.isNotBlank() &&
                 value !in state.activeQuests &&
                 value !in state.completedQuests &&
@@ -37,8 +38,13 @@ fun isDialogueConditionMet(
                 questId == null || stageId == null ||
                     state.questStageById[questId]?.equals(stageId, ignoreCase = true) != true
             }
+            "quest_task_done", "quest_task_not_done" -> {
+                val (questId, taskId) = parseQuestStageCondition(value)
+                questId != null && taskId != null &&
+                    ((taskId in state.questTasksCompleted[questId].orEmpty()) == (type == "quest_task_done"))
+            }
             "room" -> value.isNotBlank() && value == state.roomId
-            "milestone" -> value in state.completedMilestones
+            "milestone", "milestone_set" -> value in state.completedMilestones
             "milestone_not_set" -> value !in state.completedMilestones
             "item" -> value.isNotBlank() && inventoryService.hasItem(value)
             "item_not" -> value.isNotBlank() && !inventoryService.hasItem(value)
@@ -46,7 +52,7 @@ fun isDialogueConditionMet(
             "event_not_completed" -> value.isNotBlank() && value !in state.completedEvents
             "tutorial_completed" -> value in state.tutorialCompleted
             "tutorial_not_completed" -> value.isNotBlank() && value !in state.tutorialCompleted
-            else -> true
+            else -> false
         }
         if (!met) return false
     }

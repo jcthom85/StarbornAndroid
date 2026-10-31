@@ -1,5 +1,8 @@
 package com.example.starborn.feature.exploration.viewmodel
 
+import com.example.starborn.feature.exploration.presentation.resolveRoomDescription
+import com.example.starborn.feature.exploration.presentation.inspectionReceiptKey
+
 import com.example.starborn.feature.exploration.presentation.hasModalScene
 import com.example.starborn.domain.tutorial.OpeningEquipmentGuide
 
@@ -401,6 +404,8 @@ class ExplorationController(
                 if (!isQuestCompletionStatusMessage(message)) {
                     postStatus(message)
                 }
+                val narrative = if (isQuestCompletionStatusMessage(message)) message.substringAfter("\n\n", "").trim() else message
+                if (narrative.isNotBlank()) showNarration(narrative, tapToDismiss = true)
                 emitEvent(ExplorationEvent.ShowMessage(message))
             },
             onReward = { reward ->
@@ -629,6 +634,17 @@ class ExplorationController(
     }
 
     private var roomsById: Map<String, Room> = emptyMap()
+    // Toggle-operated gates remain live, even for saves with an old permanent unlock receipt.
+    private val reversibleBlocks by lazy {
+        val authored = worldAssets.loadRooms()
+        val switches = authored.flatMap { room -> room.actions.orEmpty().mapNotNull { action ->
+            if ((action["type"] as? String).equals("toggle", true))
+                (action["state_key"] as? String)?.let { room.id to it } else null
+        } }.toSet()
+        authored.associate { room -> room.id to room.blockedDirections.orEmpty().filterValues { block ->
+            block.requires.orEmpty().any { it.roomId to it.stateKey in switches }
+        } }
+    }
     private var hubsById: Map<String, Hub> = emptyMap()
     private var worldsById: Map<String, World> = emptyMap()
     private var tuningPuzzlesById: Map<String, TuningPuzzle> = emptyMap()
@@ -1007,7 +1023,7 @@ class ExplorationController(
         }.toMap()
         if (restoredHp.isEmpty()) return
         sessionStore.updatePartyVitals(restoredHp)
-        emitAudioCommands(audioRouter.commandsForUi("sfx_bunk_light_on"))
+        emitAudioCommands(audioRouter.commandsForUi("sfx_rest_chime"))
         val resolvedMessage = message?.takeIf { it.isNotBlank() } ?: computeRestBanter(state)
         emitEvent(
             ExplorationEvent.RestRecovered(
@@ -2454,6 +2470,7 @@ class ExplorationController(
             acknowledgedMilestones.clear()
             eventAnnouncementQueue.clear()
             narrationQueue.clear()
+            promptManager.setPresentationBlocked("narration", false)
             pendingDialogueNpcs.clear()
             nextEventAnnouncementId = 0L
 
@@ -2853,7 +2870,22 @@ class ExplorationController(
         return true
     }
 
+    private var gladePlayRepeat = 0
+
+    fun playWithGladeBall() {
+        if (_uiState.value.currentRoom?.id != com.example.starborn.feature.exploration.presentation.GLADE_BALL_ROOM ||
+            explorationInteractionBlocked || _uiState.value.isLoading) return
+        val trust = com.example.starborn.feature.exploration.presentation.gladeBallTrust(sessionStore.state.value.completedMilestones)
+        _uiState.update { it.copy(gladeBallFeedback = com.example.starborn.feature.exploration.presentation.gladeBallReaction(trust, gladePlayRepeat)) }
+        if (trust == 3) gladePlayRepeat = (gladePlayRepeat + 1) % 3
+        if (trust < 3) triggerPlayerAction("w2_charlie_puffball_${trust + 1}")
+    }
+
     fun onNpcInteraction(npcName: String) {
+        if (npcName.lowercase(Locale.ROOT) in setOf("charlie", "creature_charlie", "glade creature")) {
+            playWithGladeBall()
+            return
+        }
         RuntimeLog.debug(LOG_TAG, "NPC interaction: $npcName (quest=${sessionStore.state.value.activeQuests.joinToString()})")
         val dialogueName = resolveNpcDialogueName(npcName)
         val session = dialogueService.startDialogue(dialogueName)
@@ -3047,6 +3079,8 @@ class ExplorationController(
             updateActionHints(_uiState.value.currentRoom)
             return
         }
+        promptManager.setPresentationBlocked("room-action", true)
+        try {
         when (action) {
             is TravelAction -> travel(action.direction)
             is ToggleAction -> handleToggleAction(action)
@@ -3062,6 +3096,7 @@ class ExplorationController(
             is GenericAction -> handleGenericAction(action)
             else -> Unit
         }
+        } finally { promptManager.setPresentationBlocked("room-action", false) }
         updateActionHints(_uiState.value.currentRoom)
     }
 
@@ -3311,6 +3346,7 @@ class ExplorationController(
             if (_uiState.value.narrationPrompt != expected) return@launch
             val next = if (narrationQueue.isEmpty()) null else narrationQueue.removeFirst()
             _uiState.update { it.copy(narrationPrompt = next) }
+            if (next == null) promptManager.setPresentationBlocked("narration", false)
         }
     }
 
@@ -5406,7 +5442,13 @@ class ExplorationController(
             _uiState.value.currentRoom?.id?.let { sessionStore.setRoomState(it, "cooking_discovered", true) }
             emitEvent(ExplorationEvent.OpenCooking(action.cookSource ?: action.name))
         } else {
-            action.restEvent?.takeIf { it.isNotBlank() }?.let { triggerPlayerAction(it) } ?: handleRestParty(action.message)
+            val eventId = action.restEvent?.takeIf { it.isNotBlank() }
+            if (eventId != null && eventManager.canHandleTrigger("player_action", EventPayload.Action(eventId))) {
+                triggerPlayerAction(eventId)
+            } else {
+                // A camp's first-visit supplies are one-time; resting itself never is.
+                handleRestParty(action.message)
+            }
         }
     }
 
@@ -5667,8 +5709,18 @@ class ExplorationController(
                 }
                 val eventId = action.actionEvent?.takeIf { it.isNotBlank() }
                 if (eventId == null) {
+                    val room = _uiState.value.currentRoom
+                    val description = resolveRoomDescription(room, _uiState.value.roomState,
+                        sessionStore.state.value.completedMilestones, room?.let(::isRoomDark) == true)
+                    inspectionReceiptKey(action, description)?.let { key ->
+                        room?.id?.let { setRoomStateValue(it, key, true) }
+                    }
                     showInspection(status)
                 } else {
+                    if (eventId == "w2_sq02_trace_cliffs" && !eventManager.canHandleTrigger("player_action", EventPayload.Action(eventId))) {
+                        showInspection(status)
+                        return
+                    }
                     val actionNameLower = action.name.lowercase(Locale.getDefault())
                     val eventLower = eventId.lowercase(Locale.getDefault())
                     when {
@@ -5749,6 +5801,7 @@ class ExplorationController(
 
 
     private fun showNarration(message: String, tapToDismiss: Boolean) {
+        promptManager.setPresentationBlocked("narration", true)
         viewModelScope.launch(dispatchers.main) {
             val prompt = NarrationPrompt(message, tapToDismiss)
             if (_uiState.value.narrationPrompt == null) _uiState.update { it.copy(narrationPrompt = prompt) }
@@ -5859,6 +5912,7 @@ class ExplorationController(
             return
         }
 
+        action.discoveryMessage?.takeIf { it.isNotBlank() }?.let(::showInspection)
         stateKey?.let { setRoomStateValue(roomId, it, true) }
 
         val validItems = action.items.filter { it.isNotBlank() }
@@ -5894,7 +5948,7 @@ class ExplorationController(
                 "Found $prefix and $suffix in the $containerTitle."
             }
         }
-        postStatus(message)
+        if (action.discoveryMessage.isNullOrBlank()) postStatus(message)
 
         triggerPlayerAction(action.actionEvent?.takeIf { it.isNotBlank() })
         updateActionHints(_uiState.value.currentRoom)
@@ -5920,6 +5974,7 @@ class ExplorationController(
         val blocks = room.blockedDirections ?: return
         blocks.forEach { (direction, block) ->
             val normalized = direction.lowercase(Locale.getDefault())
+            if (reversibleBlocks[roomId]?.containsKey(normalized) == true) return@forEach
             if (isDirectionUnlocked(roomId, normalized)) return@forEach
             when (block.type.lowercase(Locale.getDefault())) {
                 "lock", "key", "state" -> {
@@ -5968,10 +6023,11 @@ class ExplorationController(
         mode: DirectionEvaluationMode
     ): DirectionEvaluation {
         val normalized = direction.lowercase(Locale.getDefault())
-        if (isDirectionUnlocked(room.id, normalized)) {
+        val reversible = reversibleBlocks[room.id]?.get(normalized)
+        if (reversible == null && isDirectionUnlocked(room.id, normalized)) {
             return DirectionEvaluation(blocked = false)
         }
-        val block = room.blockedDirections?.get(normalized)
+        val block = reversible ?: room.blockedDirections?.get(normalized)
         if (block == null) {
             return DirectionEvaluation(blocked = false)
         }
@@ -6062,6 +6118,9 @@ class ExplorationController(
         silent: Boolean
     ): String? {
         val normalized = direction.lowercase(Locale.getDefault())
+        if (reversibleBlocks[roomId]?.containsKey(normalized) == true) {
+            return block?.messageUnlock?.takeUnless { silent }
+        }
         val unlocked = unlockedDirections.getOrPut(roomId) { mutableSetOf() }
         if (!unlocked.add(normalized)) {
             return null
@@ -6156,7 +6215,8 @@ class ExplorationController(
                     items = action["items"]?.asListOrNull() ?: emptyList(),
                     actionEvent = action["action_event"].asStringOrNull(),
                     alreadyOpenMessage = action["already_open_message"].asStringOrNull(),
-                    popupTitle = action["popup_title"].asStringOrNull()
+                    popupTitle = action["popup_title"].asStringOrNull(),
+                    discoveryMessage = action["discovery_message"].asStringOrNull()
                 )
                 "tinkering" -> TinkeringAction(
                     name = name,
@@ -6229,6 +6289,10 @@ class ExplorationController(
             if (name.contains("arcade prize")) return false
         }
         val session = sessionStore.state.value
+        val activeQuest = action["show_when_quest_active"] as? String
+        if (activeQuest != null && activeQuest !in session.activeQuests) return false
+        val completedEvent = action["hide_when_event_completed"] as? String
+        if (completedEvent != null && completedEvent in session.completedEvents) return false
         return narrativeActionVisible(
             action = action,
             staticState = room.state.mapValues { (_, value) -> value as? Boolean ?: false },

@@ -2955,7 +2955,9 @@
     "trigger": {
       "type": "encounter_victory",
       "room": "launch_bay",
-      "enemies": ["the_iron_warden"]
+      "enemies": [
+        "the_iron_warden"
+      ]
     },
     "actions": [
       {
@@ -2973,19 +2975,56 @@
   {
     "id": "w1_mq05_recover_early_warden_victory",
     "description": "Recognizes an already defeated Warden when Nova returns after Jed's Chime handoff.",
-    "trigger": {"type": "enter_room", "room": "launch_bay"},
+    "trigger": {
+      "type": "enter_room",
+      "room": "launch_bay"
+    },
     "conditions": [
-      {"type": "quest_active", "quest_id": "w1_mq05"},
-      {"type": "milestone_set", "milestone": "ms_w1_warden_defeated"},
-      {"type": "quest_task_not_done", "quest_id": "w1_mq05", "task_id": "defeat_the_warden"}
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq05"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w1_warden_defeated"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_mq05",
+        "task_id": "defeat_the_warden"
+      }
     ],
     "actions": [
-      {"type": "set_quest_task_done", "quest_id": "w1_mq05", "task_id": "fight_through_launch_access"},
-      {"type": "set_quest_task_done", "quest_id": "w1_mq05", "task_id": "reach_pod_bay"},
-      {"type": "set_quest_task_done", "quest_id": "w1_mq05", "task_id": "survive_warden_intro"},
-      {"type": "set_quest_task_done", "quest_id": "w1_mq05", "task_id": "break_warden_guard"},
-      {"type": "set_quest_task_done", "quest_id": "w1_mq05", "task_id": "defeat_the_warden"},
-      {"type": "advance_quest_stage", "quest_id": "w1_mq05", "to_stage_id": "launch_pod"}
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq05",
+        "task_id": "fight_through_launch_access"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq05",
+        "task_id": "reach_pod_bay"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq05",
+        "task_id": "survive_warden_intro"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq05",
+        "task_id": "break_warden_guard"
+      },
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w1_mq05",
+        "task_id": "defeat_the_warden"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w1_mq05",
+        "to_stage_id": "launch_pod"
+      }
     ]
   },
   {
@@ -3489,7 +3528,7 @@
   },
   {
     "id": "w2_mq01_stabilize_zeke",
-    "description": "Use the emergency medkit from the pod to stabilize Zeke before leaving the crash site.",
+    "description": "Use bio-sealant and pressure tape from the medkit to repair Zeke's breached suit.",
     "trigger": {
       "type": "player_action",
       "action": "w2_mq01_stabilize_zeke"
@@ -3527,7 +3566,7 @@
       },
       {
         "type": "show_message",
-        "message": "You seal Zeke's worst cuts and steady his breathing. He can move again, but the crash site is no place to stay."
+        "message": "You bridge the split seam with pressure tape and bio-sealant from the medkit. Zeke tests the seal: no leaks. His suit is ready for the swamp."
       },
       {
         "type": "set_milestone",
@@ -3612,7 +3651,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: A Strange Coast\n\nWith Zeke stable and the Chime recovered, the wreck stops being shelter and starts being a signal flare. The glow-water carries a clean pulse east, deep into Sector 9."
+        "message": "Quest Complete: A Strange Coast\n\nWith Zeke's suit sealed and the Chime recovered, the wreck stops being shelter and starts being a signal flare. The glow-water carries a clean pulse east, deep into Sector 9."
       }
     ]
   },
@@ -3757,10 +3796,6 @@
         "node_id": "hall_of_echoes"
       },
       {
-        "type": "warp",
-        "room_id": "sector9_hall_of_echoes"
-      },
-      {
         "type": "start_quest",
         "quest_id": "w2_mq03"
       },
@@ -3770,7 +3805,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Signal\n\nNova slots the Chime into the gate. The distress pulse becomes a voice-shaped chord, and the stone opens onto a facility built to preserve someone from the old world."
+        "message": "Quest Complete: The Signal\n\nThe Chime answers the distress pulse. Dust shakes from the lintel as the stone slabs withdraw into the cliff. Cool air moves through the opening; a dry passage leads east into Sanctuary."
       }
     ]
   },
@@ -3838,7 +3873,7 @@
       },
       {
         "type": "show_message",
-        "message": "The stasis pod bears Orion's name. Its ring array is still protecting him, but the safeties are waiting for proof: mural pattern, pod pressure, overview sockets, and coolant flow all have to agree before the chamber will risk waking him."
+        "message": "The stasis pod's ring array is still protecting its occupant, but the safeties are waiting for proof: mural pattern, pod pressure, overview sockets, and coolant flow all have to agree before the chamber will risk waking the sleeper."
       }
     ]
   },
@@ -11586,13 +11621,8 @@
         "type": "rest_party"
       },
       {
-        "type": "give_item",
-        "item_id": "painkillers",
-        "quantity": 1
-      },
-      {
         "type": "show_message",
-        "message": "The falls mask the campfire. Food, quiet, and a Neural Stabilizer ease the pressure of Erosion."
+        "message": "The falls mask the campfire. The sheltered fire gives the crew time to rest."
       }
     ]
   },
@@ -11606,11 +11636,6 @@
     "actions": [
       {
         "type": "rest_party"
-      },
-      {
-        "type": "give_item",
-        "item_id": "painkillers",
-        "quantity": 1
       },
       {
         "type": "show_message",
@@ -11630,11 +11655,6 @@
         "type": "rest_party"
       },
       {
-        "type": "give_item",
-        "item_id": "painkillers",
-        "quantity": 1
-      },
-      {
         "type": "show_message",
         "message": "The party rests, cooks, and listens until the Ocean feels distant enough to bear."
       }
@@ -11652,13 +11672,8 @@
         "type": "rest_party"
       },
       {
-        "type": "give_item",
-        "item_id": "painkillers",
-        "quantity": 1
-      },
-      {
         "type": "show_message",
-        "message": "The sterile heat plate becomes a campsite; the Neural Stabilizer anchors your mind while you rest."
+        "message": "The sterile heat plate becomes a campsite; the crew settles beside it until their strength returns."
       }
     ]
   },
@@ -13894,11 +13909,6 @@
         "type": "rest_party"
       },
       {
-        "type": "give_item",
-        "item_id": "painkillers",
-        "quantity": 1
-      },
-      {
         "type": "show_message",
         "message": "Resting above the spire rain restores party stamina and clears combat fatigue."
       }
@@ -13914,11 +13924,6 @@
     "actions": [
       {
         "type": "rest_party"
-      },
-      {
-        "type": "give_item",
-        "item_id": "painkillers",
-        "quantity": 1
       },
       {
         "type": "show_message",
@@ -13938,11 +13943,6 @@
         "type": "rest_party"
       },
       {
-        "type": "give_item",
-        "item_id": "painkillers",
-        "quantity": 1
-      },
-      {
         "type": "show_message",
         "message": "Shielded from furnace slag, your squad cools down and recovers from combat fatigue."
       }
@@ -13958,11 +13958,6 @@
     "actions": [
       {
         "type": "rest_party"
-      },
-      {
-        "type": "give_item",
-        "item_id": "painkillers",
-        "quantity": 1
       },
       {
         "type": "show_message",
@@ -13982,11 +13977,6 @@
         "type": "rest_party"
       },
       {
-        "type": "give_item",
-        "item_id": "painkillers",
-        "quantity": 1
-      },
-      {
         "type": "show_message",
         "message": "Plush seating in the silent customs lounge provides vital rest before the deep void ring."
       }
@@ -14002,11 +13992,6 @@
     "actions": [
       {
         "type": "rest_party"
-      },
-      {
-        "type": "give_item",
-        "item_id": "painkillers",
-        "quantity": 1
       },
       {
         "type": "show_message",
@@ -14094,7 +14079,7 @@
       },
       {
         "type": "show_message",
-        "message": "Recovered Film 03, 'Showdown in the Rain,' from The Great Frontier movie collection."
+        "message": "The cargo case's waterproof seal gives with a soft pop. A dry film sleeve rests inside, untouched by the cavern water."
       }
     ]
   },
@@ -16503,7 +16488,7 @@
       },
       {
         "type": "show_message",
-        "message": "Kaelen: Real greens and roasted beast meat? By the stars, that smells better than anything Dominion ever packed into a ration tube. A deal's a deal. Here\u2014take this Precision Sight from my optic rig. It'll keep your shots centered when the wind whips across the ridge."
+        "message": "Kaelen: Real greens and roasted beast meat? By the stars, that smells better than anything Dominion ever packed into a ration tube. A deal's a deal. Here—take this Precision Sight from my optic rig. It'll keep your shots centered when the wind whips across the ridge."
       }
     ]
   },
@@ -16533,6 +16518,88 @@
       {
         "type": "show_message",
         "message": "Kaelen still needs two herbs and one cut of beast meat. Bring the full bundle before trading for the Precision Sight."
+      }
+    ]
+  },
+  {
+    "id": "w2_charlie_puffball_1",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_charlie_puffball_1"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_charlie_trust_1"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_charlie_trust_1"
+      },
+      {
+        "type": "give_xp",
+        "xp": 25
+      }
+    ]
+  },
+  {
+    "id": "w2_charlie_puffball_2",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_charlie_puffball_2"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_charlie_trust_2"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_charlie_trust_1"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_charlie_trust_2"
+      },
+      {
+        "type": "give_xp",
+        "xp": 35
+      }
+    ]
+  },
+  {
+    "id": "w2_charlie_puffball_3",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_charlie_puffball_3"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_charlie_trust_3"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_charlie_trust_2"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_charlie_trust_3"
+      },
+      {
+        "type": "give_xp",
+        "xp": 60
+      },
+      {
+        "type": "give_item",
+        "item_id": "charlies_comfort_stone",
+        "quantity": 1
       }
     ]
   }

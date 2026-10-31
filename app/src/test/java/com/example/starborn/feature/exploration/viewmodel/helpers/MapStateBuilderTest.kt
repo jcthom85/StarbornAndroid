@@ -8,6 +8,21 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class MapStateBuilderTest {
+    @Test fun longConnectionsContinueBeyondEitherEndOfTheMinimapWindow() {
+        val west = room("cavern", mapOf("east" to "tunnel"), listOf(3, 3))
+        val east = room("tunnel", mapOf("west" to "cavern"), listOf(6, 3))
+        for ((current, direction, expected) in listOf(
+            Triple(west, "east", 3 to 0), Triple(east, "west", -3 to 0))) {
+            val mini = MapStateBuilder.buildMinimapState(current, listOf(west, east),
+                setOf(west.id, east.id), emptySet(), { false }, { false }, { emptySet() }, { emptySet() })
+            assertEquals(listOf(current.id), mini.cells.map { it.roomId })
+            assertEquals(mapOf(direction to expected), mini.cells.single().continuationOffsets)
+        }
+        val dark = MapStateBuilder.buildMinimapState(west, listOf(west, east),
+            setOf(west.id, east.id), emptySet(), { true }, { false }, { emptySet() }, { emptySet() })
+        assertTrue(dark.cells.single().continuationOffsets.isEmpty())
+    }
+
     @Test fun previewAndDarkRoomsHideServicesThreatsAndHubDestinations() {
         val current = room("current", mapOf("east" to "preview"), listOf(0, 0))
         val preview = room("preview", emptyMap(), listOf(1, 0))
