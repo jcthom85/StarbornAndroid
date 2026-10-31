@@ -6,6 +6,7 @@ import com.example.starborn.di.AppServices
 import com.example.starborn.data.local.Theme
 import com.example.starborn.domain.session.GameSessionSlotInfo
 import com.example.starborn.domain.session.GameSessionState
+import com.example.starborn.domain.session.SessionSaveRepository
 import com.example.starborn.domain.session.GameSaveRepository.Companion.AUTOSAVE_SLOT
 import com.example.starborn.domain.session.GameSaveRepository.Companion.QUICKSAVE_SLOT
 import java.time.Instant
@@ -50,7 +51,7 @@ class MainMenuViewModel(
         viewModelScope.launch {
             val quicksave = runCatching { services.quickSaveInfo() }.getOrNull().toQuickSaveSummary()
             val autosave = runCatching { services.autosaveInfo() }.getOrNull().toAutosaveSummary()
-            val summaries = (1..MAX_SLOTS).map { slot ->
+            val summaries = SessionSaveRepository.MANUAL_SLOTS.map { slot ->
                 val info = runCatching { services.slotInfo(slot) }.getOrNull()
                 info.toSummary(slot)
             }
@@ -354,7 +355,6 @@ class MainMenuViewModel(
     }
 
     companion object {
-        private const val MAX_SLOTS = 3
         private const val MAIN_MENU_THEME_ID = "starborn"
         private const val DEFAULT_THEME_ID = "default"
     }
