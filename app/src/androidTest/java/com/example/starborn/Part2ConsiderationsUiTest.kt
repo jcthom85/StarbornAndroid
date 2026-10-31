@@ -38,13 +38,13 @@ class Part2ConsiderationsUiTest {
         compose.setContent { LargeText { Column(Modifier.fillMaxSize()) {
             CompletedQuestGroups(quests, Color.Cyan, Color.Gray) { selected = it }
         } } }
-        compose.onNodeWithText("World 1 (10)").performClick()
+        compose.onNodeWithText("The Mines (10)").performClick()
         compose.onNodeWithText("Finished quest 10").performClick()
         compose.runOnIdle { assertEquals("w1_sq10", selected) }
-        compose.onNodeWithText("World 1 (10)").performClick()
+        compose.onNodeWithText("The Mines (10)").performClick()
         compose.onNodeWithText("Finished quest 10").assertDoesNotExist()
         capture("completed-quests")
-        compose.onNodeWithText("World 2 (1)").performClick()
+        compose.onNodeWithText("Sector 9 (1)").performClick()
         compose.onNodeWithText("Forest quest").assertExists()
     }
 

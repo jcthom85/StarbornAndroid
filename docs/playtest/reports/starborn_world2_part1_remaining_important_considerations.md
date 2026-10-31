@@ -2,6 +2,9 @@
 
 October 30, 2026. Consolidated from both transcript halves, with duplicate observations combined. Updated after the approved fishing and important-considerations implementation: **33 addressed; active-quest organization ignored for now. Residents/Megan completed October 31.** Critical fixes are tracked separately; resident backstory/placement (#7) was completed October 31.
 
+
+**Acceptance clarification — October 31:** “Addressed” below means implemented, not certified on the Pixel. Automated verification and the remaining device checks are tracked in [the second-pass report](../../testing/WORLD2_SECOND_PASS_2026-10-31.md). The previous “completed/final” handoffs do not certify later revisions. Image replacements remain deferred by request.
+
 ## Complete status list
 
 | ID | Consideration | Original decision / scope | Current status |
@@ -36,7 +39,7 @@ October 30, 2026. Consolidated from both transcript halves, with duplicate obser
 | IC-28 | Aggression and encounter-initiation animation | Discuss desired enemy behavior, warning/approach feedback and player control before changing aggression globally. | **Addressed:** World 2 keeps player-initiated static fights, with a brief approach cue; existing timed patrol behavior remains unchanged. |
 | IC-29 | Camp first-visit supplies | Understand whether the Neural Stabilizer grant belongs at camps. Repeated REST no longer repeats these grants; whether the initial gift is appropriate remains open. | **Addressed:** Removed ten automatic camp stabilizer gifts in Worlds 2–5; unlimited HP rest and earned medical supplies retained. |
 | IC-30 | Sentinel-3 voice treatment | Replace placeholder-looking bracketed tone directions with suitable machine sounds while retaining accessible text. | **Addressed:** Machine murmurs replace bracketed tone directions; readable text retained. |
-| IC-31 | Temple-to-Hall reveal | Workshop an entry/gate-opening effect that feels physical and remarkable, rather than implying teleportation. | **Addressed:** Gate opens in place with Chime sound and a short stone-slide animation, then normal eastward travel; no forced warp. |
+| IC-31 | Temple-to-Hall reveal | Workshop an entry/gate-opening effect that feels physical and remarkable, rather than implying teleportation. | **Addressed:** Gate opens in place with Chime sound and a 2.4-second full-scene magical resonance reveal, then normal eastward travel; no forced warp. |
 | IC-32 | Fishing design pass | Discuss portrait-oriented playfield, controls, tutorial, contrast, accessibility and catch/result flow. Design subsequently approved by the user. | **Addressed:** Portrait Android fishing, swipe/button hook, contextual tutorial and clear result. |
 | IC-33 | Signal Reflection at Beach Cliffs | Verify the action's purpose and feedback before deciding it needs a change. | **Addressed:** Contextual fallback when the optional quest event is inactive. |
 | IC-34 | Natural scan-object wording | Functional quest gating is fixed; decide whether descriptive nouns such as ferns/spores should replace scan instructions in the underlying prose. Work through wording together. | **Addressed:** World 2 scan/gather/salvage actions use natural object labels and prose; original quest/event IDs and visibility gates retained. |

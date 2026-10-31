@@ -1,5 +1,6 @@
 package com.example.starborn.feature.exploration.presentation
 
+import com.example.starborn.domain.prompt.isFieldMenuInstruction
 import com.example.starborn.feature.exploration.viewmodel.ExplorationUiState
 
 /** Queued notices never compete with an activity, conversation, or modal choice. */
@@ -14,6 +15,8 @@ fun ExplorationUiState.hasModalScene(): Boolean =
 enum class ExplorationNotice { NONE, NARRATION, ANNOUNCEMENT, PROMPT }
 
 fun explorationNotice(ui: ExplorationUiState, externalModal: Boolean = false): ExplorationNotice = when {
+    !externalModal && ui.isMenuOverlayVisible && ui.prompt.isFieldMenuInstruction() &&
+        !ui.copy(isMenuOverlayVisible = false).hasModalScene() && ui.narrationPrompt == null && ui.eventAnnouncement == null -> ExplorationNotice.PROMPT
     externalModal || ui.hasModalScene() -> ExplorationNotice.NONE
     ui.narrationPrompt != null -> ExplorationNotice.NARRATION
     ui.eventAnnouncement != null -> ExplorationNotice.ANNOUNCEMENT

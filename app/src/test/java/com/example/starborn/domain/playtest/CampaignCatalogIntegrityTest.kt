@@ -57,7 +57,7 @@ class CampaignCatalogIntegrityTest {
             "sector9_wilds_hollow" to "ancient stump",
             "sector9_wilds_clearance" to "shattered trunks",
             "sector9_ridge_plateau" to "ridge overlook cache",
-            "sector9_beach_pools" to "gather tideglass",
+            "sector9_beach_pools" to "tideglass growth",
             "sector9_beach_pools" to "luminescent anemones",
             "sector9_beach_grotto" to "cache",
             "sector9_beach_grotto" to "sea-worn arches",
@@ -79,8 +79,8 @@ class CampaignCatalogIntegrityTest {
             "sector9_hangar_scaffolding" to "hangar overlook",
             "sector9_crash_site" to "wreckage",
             "sector9_crash_site" to "glow-water",
-            "sector9_crash_site" to "scan moss",
-            "sector9_canopy" to "Scan spores",
+            "sector9_crash_site" to "moss",
+            "sector9_canopy" to "drifting spores",
             "sector9_canopy" to "Scavenge remains",
             "sector9_canopy_ridge" to "Look at Shield",
             "sector9_stasis_chamber" to "stasis pod",
@@ -104,14 +104,14 @@ class CampaignCatalogIntegrityTest {
             Triple("sector9_stream_cave_depths", "ms_w2_meat_cave_foraged", listOf("glowing moss", "waterproof cargo case")),
             Triple("sector9_wilds_hollow", "ms_w2_beacon_beta_traced", listOf("ancient stump")),
             Triple("sector9_wilds_clearance", "ms_w2_transceiver_recovered", listOf("shattered trunks")),
-            Triple("sector9_beach_pools", "ms_w2_flora_weeds_scanned", listOf("gather tideglass", "luminescent anemones")),
+            Triple("sector9_beach_pools", "ms_w2_flora_weeds_scanned", listOf("tideglass growth", "luminescent anemones")),
             Triple("sector9_beach_grotto", "ms_w2_grotto_relic_gathered", listOf("sea-worn arches", "bioluminescent prism")),
             Triple("sector9_power_breaker_deck", "ms_w2_source_breakers_starved", listOf("bus bar array")),
             Triple("sector9_power_breaker_deck", "ms_w2_breakers_overloaded", listOf("bus bar array")),
-            Triple("sector9_crash_site", "ms_w2_mq01_complete", listOf("wreckage", "glow-water", "scan moss")),
+            Triple("sector9_crash_site", "ms_w2_mq01_complete", listOf("wreckage", "glow-water", "moss")),
             Triple("sector9_crash_site", "ms_w2_flora_moss_scanned", listOf("wreckage", "glow-water")),
-            Triple("sector9_crash_site", "ms_w2_pod_examined", listOf("wreckage", "glow-water", "scan moss")),
-            Triple("sector9_canopy", "ms_w2_flora_ferns_scanned", listOf("Scan spores", "Scavenge remains")),
+            Triple("sector9_crash_site", "ms_w2_pod_examined", listOf("wreckage", "glow-water", "moss")),
+            Triple("sector9_canopy", "ms_w2_flora_ferns_scanned", listOf("drifting spores", "Scavenge remains")),
             Triple("sector9_stasis_chamber", "ms_w2_mq03_complete", listOf("root lattice", "ceiling vent")),
             Triple("sector9_stasis_chamber", "ms_w2_roots_scanned", listOf("stasis pod", "ceiling vent")),
             Triple("sector9_stasis_chamber", "ms_w2_pod_inspected", listOf("root lattice", "ceiling vent")),
@@ -145,7 +145,7 @@ class CampaignCatalogIntegrityTest {
             setOf("ms_w2_flora_weeds_scanned", "ms_w2_tideglass_gathered"), false))
         assertTrue(beach.contains("luminescent anemones"))
         assertTrue(beach.contains("[action:tide fishing|fishing]"))
-        assertFalse(beach.contains("[action:gather tideglass"))
+        assertFalse(beach.contains("[action:tideglass growth"))
         assertFalse(beach.contains("[action:scan weeds"))
 
         val stasis = requireNotNull(resolveRoomDescription(rooms.getValue("sector9_stasis_chamber"), emptyMap(),

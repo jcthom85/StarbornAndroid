@@ -1,0 +1,102 @@
+[
+  {
+    "path": "world_assets/src/main/assets/images/npcs/penny_portrait.png",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "visibleBoundsAtAlpha8": [
+      63,
+      29,
+      1226,
+      1240
+    ],
+    "bottomPadding": 0.011164274322169059,
+    "sha256": "a025dfe96ad4431067a4ac9a7c3766928f57587fc43084bf15578f09b7afd5cd"
+  },
+  {
+    "path": "world_assets/src/main/assets/images/enemies/razor_vine_combat.png",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "visibleBoundsAtAlpha8": [
+      22,
+      22,
+      1244,
+      1232
+    ],
+    "bottomPadding": 0.017543859649122806,
+    "sha256": "747a12eed7ee25af198052239053d1f302f6f9f535d531fe0912e5a125723796"
+  },
+  {
+    "path": "world_assets/src/main/assets/images/enemies/stalker_vine_combat.png",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "visibleBoundsAtAlpha8": [
+      36,
+      32,
+      1228,
+      1233
+    ],
+    "bottomPadding": 0.01674641148325359,
+    "sha256": "04f18b835c4b4325c6c9193285a92cf5b67a93083fe6c3ac962261f3ad28d082"
+  },
+  {
+    "path": "world_assets/src/main/assets/images/enemies/ruin_guardian_combat.png",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "visibleBoundsAtAlpha8": [
+      36,
+      18,
+      988,
+      1004
+    ],
+    "bottomPadding": 0.01953125,
+    "sha256": "8a1665a87b112659287ab72488dc19fb3951a5466abd95f6cac250256c08d69b"
+  },
+  {
+    "path": "world_assets/src/main/assets/images/enemies/sentinel_orb_combat.png",
+    "dimensions": [
+      1024,
+      1024
+    ],
+    "mode": "RGBA",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "visibleBoundsAtAlpha8": [
+      150,
+      173,
+      874,
+      1004
+    ],
+    "bottomPadding": 0.01953125,
+    "sha256": "c26a053dd6a79fc4d9e7eff45f989c7beee081bdd3e61011afb2e184027314ae"
+  }
+]

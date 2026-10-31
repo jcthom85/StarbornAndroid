@@ -1,0 +1,52 @@
+{
+  "versionName": "1.3.102",
+  "versionCode": 186,
+  "apkSha256": "88562ed289e94c9f12e0bdb037eb2eac418cdbef2a51ee7d4e15ca87f264bbee",
+  "assets": [
+    {
+      "apkEntry": "assets/images/npcs/penny_portrait.png",
+      "matchesSource": true,
+      "decodedSize": [
+        1254,
+        1254
+      ],
+      "decodedMode": "RGBA"
+    },
+    {
+      "apkEntry": "assets/images/enemies/razor_vine_combat.png",
+      "matchesSource": true,
+      "decodedSize": [
+        1254,
+        1254
+      ],
+      "decodedMode": "RGBA"
+    },
+    {
+      "apkEntry": "assets/images/enemies/stalker_vine_combat.png",
+      "matchesSource": true,
+      "decodedSize": [
+        1254,
+        1254
+      ],
+      "decodedMode": "RGBA"
+    },
+    {
+      "apkEntry": "assets/images/enemies/ruin_guardian_combat.png",
+      "matchesSource": true,
+      "decodedSize": [
+        1024,
+        1024
+      ],
+      "decodedMode": "RGBA"
+    },
+    {
+      "apkEntry": "assets/images/enemies/sentinel_orb_combat.png",
+      "matchesSource": true,
+      "decodedSize": [
+        1024,
+        1024
+      ],
+      "decodedMode": "RGBA"
+    }
+  ]
+}

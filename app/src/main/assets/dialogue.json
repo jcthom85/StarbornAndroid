@@ -1087,7 +1087,7 @@
     "id": "ghost_confrontation_3",
     "speaker": "Gh0st",
     "text": "No confirmation. No reply. I have never... Hold position. Something is moving behind you.",
-    "trigger": "music_restore,set_quest_task_done:w2_mq04:confront_stalker"
+    "trigger": "music_restore,player_action:w2_mq04_confront_finished"
   },
   {
     "id": "ghost_w2_sq05_intro_1",

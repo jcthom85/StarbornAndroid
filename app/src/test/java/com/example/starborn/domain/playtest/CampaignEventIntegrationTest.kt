@@ -431,6 +431,7 @@ class CampaignEventIntegrationTest {
         // MQ04: The Hunter (Defeat Source Beast & Gh0st joins)
         agent.navigateTo("sector9_canopy_ridge")
         agent.executeAction("w2_mq04_confront")
+        agent.talkTo("Gh0st")
         agent.winEncounter(listOf("the_beast"), "sector9_canopy_ridge")
         agent.executeAction("w2_mq04_anchor_drill")
 

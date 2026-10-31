@@ -11,6 +11,10 @@ data class UIPromptState(
     val queue: List<UIPrompt> = emptyList()
 )
 
+/** Only instructions for this menu may appear over it; rewards still wait. */
+fun UIPrompt?.isFieldMenuInstruction(): Boolean =
+    this is TutorialPrompt && entry.key in setOf("bag_basics", "gear_equip_basics")
+
 class UIPromptManager {
 
     private val lock = Any()
@@ -45,7 +49,7 @@ class UIPromptManager {
     fun setPresentationBlocked(owner: String, blocked: Boolean) {
         synchronized(lock) {
             val changed = if (blocked) presentationBlockers.add(owner) else presentationBlockers.remove(owner)
-            if (changed && presentationBlockers.isEmpty() && _state.value.current == null) promoteNextLocked()
+            if (changed && _state.value.current == null) promoteNextLocked()
         }
     }
 
@@ -123,7 +127,8 @@ class UIPromptManager {
     }
 
     private fun promoteNextLocked() {
-        if (presentationBlockers.isNotEmpty()) {
+        val menuOnly = presentationBlockers == setOf("field-menu")
+        if (presentationBlockers.isNotEmpty() && !menuOnly) {
             _state.update { it.copy(current = null, queue = queue.toList()) }
             return
         }
@@ -145,6 +150,7 @@ class UIPromptManager {
             activeUngroupedItems = false
         }
         val nextIndex = when {
+            menuOnly -> queue.indexOfFirst { it.isFieldMenuInstruction() }
             groupIndex >= 0 && isToastsSuspended -> -1
             groupIndex >= 0 -> groupIndex
             isToastsSuspended -> queue.indexOfFirst { it !is ItemGrantedPrompt && it !is ItemBatchGrantedPrompt }

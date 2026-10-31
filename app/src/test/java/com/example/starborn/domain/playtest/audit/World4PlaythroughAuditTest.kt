@@ -328,7 +328,7 @@ class World4PlaythroughAuditTest {
         assertEquals("orbital_executive_dock", store.state.value.roomId)
 
         // Export report
-        val reportFile = File(root, "docs/playtest/reports/WORLD_4_PLAYTHROUGH_AUDIT.md")
+        val reportFile = File(root, "app/build/reports/playthrough-audit/WORLD_4_PLAYTHROUGH_AUDIT.md")
         auditor.exportReportToFile(reportFile)
         println("Audited World 4 Playthrough report exported to: ${reportFile.absolutePath}")
     }

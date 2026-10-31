@@ -20,7 +20,7 @@ class RoomPopupStyleInstrumentedTest {
         compose.setContent { MaterialTheme {
             InspectionOverlay(NarrationPrompt("The door control panel needs attention.",true),null,{closed++},Modifier.fillMaxSize())
         } }
-        compose.onNodeWithText("Continue").assertIsDisplayed()
+        compose.onNodeWithText("Continue").assertDoesNotExist()
         compose.onAllNodesWithText("Route blocked").assertCountEquals(0)
         compose.onNodeWithText("The door control panel needs attention.").performTouchInput {click()}
         compose.runOnIdle {assertEquals(1,closed)}

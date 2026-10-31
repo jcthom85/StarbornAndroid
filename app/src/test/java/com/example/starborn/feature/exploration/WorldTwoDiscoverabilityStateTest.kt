@@ -81,8 +81,10 @@ class WorldTwoDiscoverabilityStateTest {
         assertEquals(partial, store.state.value) // No active quest: visible does not mean usable.
         store.startQuest("w2_mq04")
         dispatch(store, "w2_mq04_confront")
+        assertFalse("Starting the conversation is not completion", "ms_w2_stalker_confronted" in store.state.value.completedMilestones)
+        assertFalse("Repeatable entry stays restartable until its dialogue completes", "w2_mq04_confront" in store.state.value.completedEvents)
+        dispatch(store, "w2_mq04_confront_finished")
         assertTrue("ms_w2_stalker_confronted" in store.state.value.completedMilestones)
-        assertTrue("w2_mq04_confront" in store.state.value.completedEvents)
     }
 
     @Test fun `ridge task migration restores each corresponding flag independently`() {

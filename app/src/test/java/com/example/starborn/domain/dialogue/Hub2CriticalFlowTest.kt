@@ -122,10 +122,11 @@ class Hub2CriticalFlowTest {
         // Confront Gh0st
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq04_confront"))
         assertEquals("Gh0st", harness.startedDialogues.lastOrNull())
+        assertFalse(harness.store.state.value.questTasksCompleted["w2_mq04"].orEmpty().contains("confront_stalker"))
+        val ghostTalk = requireNotNull(harness.dialogue.startDialogue("Gh0st"))
+        assertEquals("ghost_confrontation_1", ghostTalk.current()?.id)
+        ghostTalk.finishWithChoice("")
         assertTrue(harness.store.state.value.questTasksCompleted["w2_mq04"].orEmpty().contains("confront_stalker"))
-        val ghostTalk = harness.dialogue.startDialogue("Gh0st")
-        assertNotNull(ghostTalk)
-        assertEquals("ghost_default_talk", ghostTalk?.current()?.id)
 
         // Defeat mutated Source Beast
         harness.store.setRoom("sector9_canopy_ridge")

@@ -292,6 +292,7 @@ class World2PlaythroughAuditTest {
         // 4. MQ04: The Hunter (Defeat Source Beast & Recruit Gh0st)
         navigate("sector9_canopy_ridge")
         doAction("w2_mq04_confront")
+        talk("Gh0st")
         combat(listOf("the_beast"), "sector9_canopy_ridge")
         doAction("w2_mq04_anchor_drill")
 
@@ -320,7 +321,7 @@ class World2PlaythroughAuditTest {
         assertEquals("spire_sewers_landing", store.state.value.roomId)
 
         // Export report
-        val reportFile = File(root, "docs/playtest/reports/WORLD_2_PLAYTHROUGH_AUDIT.md")
+        val reportFile = File(root, "app/build/reports/playthrough-audit/WORLD_2_PLAYTHROUGH_AUDIT.md")
         auditor.exportReportToFile(reportFile)
         println("Audited World 2 Playthrough report exported to: ${reportFile.absolutePath}")
     }

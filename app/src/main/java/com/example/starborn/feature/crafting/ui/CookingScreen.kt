@@ -11,11 +11,15 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import com.example.starborn.feature.exploration.ui.NarrationCard
+import com.example.starborn.feature.exploration.viewmodel.NarrationPrompt
 import com.example.starborn.domain.crafting.CraftingOutcome
 import com.example.starborn.domain.crafting.CraftingService
 import com.example.starborn.domain.crafting.MealRules
@@ -55,6 +59,21 @@ fun CookingScreen(
             confirmButton = { TextButton(onClick = { pendingMeal = null; action() }) { Text("Replace meal") } },
             dismissButton = { TextButton(onClick = { pendingMeal = null }) { Text("Cancel") } })
     }
+    feedback?.let { message ->
+        Dialog(onDismissRequest = { feedback = null }) {
+            NarrationCard(
+                prompt = NarrationPrompt(message, tapToDismiss = false),
+                theme = null,
+                onDismiss = { feedback = null },
+                title = "At the cookfire",
+                actions = {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                        TextButton(onClick = { feedback = null }, modifier = Modifier.heightIn(min = 48.dp)) { Text("Done") }
+                    }
+                }
+            )
+        }
+    }
     val chefs = craftingService.availableChefs()
     val selectedChef = session.mealChefId.takeIf { it in chefs } ?: chefs.firstOrNull()
     val text = FieldMenuDesign.text
@@ -81,7 +100,7 @@ fun CookingScreen(
 
     Scaffold(modifier = modifier.fillMaxSize(), containerColor = FieldMenuDesign.shell,
         snackbarHost = {}) { padding ->
-        LazyColumn(Modifier.fillMaxSize().padding(padding), contentPadding = PaddingValues(16.dp),
+        LazyColumn(Modifier.testTag("cooking-recipes").fillMaxSize().padding(padding), contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)) {
             item {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -152,16 +171,6 @@ fun CookingScreen(
                     Switch(readyOnly, { readyOnly = it })
                 }
             }
-            feedback?.let { message -> item {
-                Surface(Modifier.fillMaxWidth(), color = FieldMenuDesign.panel, shape = RoundedCornerShape(14.dp),
-                    border = BorderStroke(1.dp, orange.copy(alpha = .65f))) {
-                    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text("At the cookfire", color = orange, style = MaterialTheme.typography.titleSmall)
-                        Text(message, color = text, style = MaterialTheme.typography.bodyMedium)
-                        TextButton(onClick = { feedback = null }, modifier = Modifier.heightIn(min = actionHeight)) { Text("Done", color = orange) }
-                    }
-                }
-            } }
             if (recipes.isEmpty()) item {
                 Text("No recipes match. Try another category, search, or filter.", color = muted, style = MaterialTheme.typography.bodySmall)
             }
@@ -291,7 +300,7 @@ fun CookingScreen(
                             if (outcome is CraftingOutcome.Success) onPlayAudio("cooking_sizzle")
                             Unit
                         }, enabled = canCook && !preparing,
-                            modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight),
+                            modifier = Modifier.testTag("cook-${recipe.id}").fillMaxWidth().heightIn(min = actionHeight),
                             colors = ButtonDefaults.buttonColors(containerColor = orange, contentColor = FieldMenuDesign.shell)) {
                             Text(if (owned) "Already owned · equip from Items" else if (snack) "Craft snack" else "Cook ${recipe.resultQuantity * batch} portions")
                         }

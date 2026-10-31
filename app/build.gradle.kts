@@ -25,8 +25,8 @@ android {
         applicationId = "com.junewiregames.starborn.prealpha"
         minSdk = 26
         targetSdk = 36
-        versionCode = 184
-        versionName = "1.3.100"
+        versionCode = 186
+        versionName = "1.3.102"
 
         // Scenario browser disabled for release/Play builds; enabled in debug builds.
         buildConfigField("boolean", "ENABLE_SCENARIO_MENU", "false")
@@ -161,6 +161,7 @@ dependencies {
 }
 
 tasks.withType<Test>().configureEach {
+    maxHeapSize = "2g"
     inputs.files(fileTree("src/main/assets") { include("*.json") })
     // Changed experiment parameters must execute fresh fights, not reuse a cached report.
     listOf("CREW_BALANCE_SEEDS", "CREW_BALANCE_TEMPO", "CREW_BALANCE_TARGETED",

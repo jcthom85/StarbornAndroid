@@ -310,7 +310,7 @@ class World3PlaythroughAuditTest {
         assertEquals("foundry_slag_landing", store.state.value.roomId)
 
         // Export report
-        val reportFile = File(root, "docs/playtest/reports/WORLD_3_PLAYTHROUGH_AUDIT.md")
+        val reportFile = File(root, "app/build/reports/playthrough-audit/WORLD_3_PLAYTHROUGH_AUDIT.md")
         auditor.exportReportToFile(reportFile)
         println("Audited World 3 Playthrough report exported to: ${reportFile.absolutePath}")
     }

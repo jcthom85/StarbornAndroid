@@ -361,7 +361,7 @@ class World6PlaythroughAuditTest {
         assertTrue("Tune World skill unlocked", store.state.value.unlockedSkills.contains("source_art_tune_world"))
 
         // Export report
-        val reportFile = File(root, "docs/playtest/reports/WORLD_6_PLAYTHROUGH_AUDIT.md")
+        val reportFile = File(root, "app/build/reports/playthrough-audit/WORLD_6_PLAYTHROUGH_AUDIT.md")
         auditor.exportReportToFile(reportFile)
         println("Audited World 6 Playthrough report exported to: ${reportFile.absolutePath}")
     }

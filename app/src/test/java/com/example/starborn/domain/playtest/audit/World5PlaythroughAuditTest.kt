@@ -340,7 +340,7 @@ class World5PlaythroughAuditTest {
         assertTrue("w6_mq26 active", store.state.value.activeQuests.contains("w6_mq26"))
 
         // Export report
-        val reportFile = File(root, "docs/playtest/reports/WORLD_5_PLAYTHROUGH_AUDIT.md")
+        val reportFile = File(root, "app/build/reports/playthrough-audit/WORLD_5_PLAYTHROUGH_AUDIT.md")
         auditor.exportReportToFile(reportFile)
         println("Audited World 5 Playthrough report exported to: ${reportFile.absolutePath}")
     }

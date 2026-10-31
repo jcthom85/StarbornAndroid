@@ -3971,7 +3971,29 @@
       {
         "type": "start_dialogue",
         "npc": "Gh0st"
+      }
+    ],
+    "repeatable": true
+  },
+  {
+    "id": "w2_mq04_confront_finished",
+    "description": "Completes the confrontation only after its final dialogue line is dismissed.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_mq04_confront_finished"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq04"
       },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w2_mq04",
+        "task_id": "confront_stalker"
+      }
+    ],
+    "actions": [
       {
         "type": "set_quest_task_done",
         "quest_id": "w2_mq04",

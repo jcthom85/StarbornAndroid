@@ -30,7 +30,7 @@ Orion brings Field Patch when recruited: heal one living ally and add Shield for
 
 ### Optional local NPC rewards and known checks
 
-David, Penny and Megan have explicit ways to end their looping conversations. Use leave and confirm movement returns. Charlie is unseen: interact with the glade's puffball instead of an NPC. Three patient play beats give 25 + 35 + 60 XP and one Comfort Stone total; later play must not repeat either reward. Leave it be must not advance trust. Penny's first wrestle gives one Pack-Guardian Bandana and 50 XP; later play gives no extra reward.
+David, Penny and Megan have explicit ways to end their looping conversations. Use leave and confirm movement returns. Charlie is unseen: interact with the glade's puffball instead of an NPC. Three patient play beats give 25 + 35 + 60 XP and one Comfort Stone total; later play must not repeat either reward. Back must not advance trust. Penny's first wrestle gives one Pack-Guardian Bandana and 50 XP; later play gives no extra reward.
 
 At Sandy Cove, Kaelen gives one ration and antidote on the first meeting. Revisit for his favor: two Herbs + one Beast Meat buys one Precision Sight, 150 XP and 200 credits. One herb must not pay out or consume a partial bundle. Hazard reminders must not repeat first-meeting supplies. After repairing the patrol cutter, his acknowledgement grants a Battery Pack, three Scrap Metal and 120 XP once. There is no journal quest for these local favors.
 
@@ -58,7 +58,7 @@ Main quest: A Strange Coast. The emergency medkit action is inside Escape Pod In
 
 14. From **Crash Site**, go **west** to **Overgrown Glade** (`sector9_landing_glade`).
 
-15. At **Overgrown Glade**, harvest **luminous mushrooms** for Herb, then inspect **broadleaf canopy** and **mossy hollow**. Wait for the **spore puffball** to roll in. Tap it, then **Roll it back**. Continue with a gentle toss and another roll to earn trust. Charlie stays off-screen; his name emerges in the first response. Try **Leave it be** without advancing trust, and return after a save/load. Repeat play after the comfort stone must grant no more items or XP.
+15. At **Overgrown Glade**, harvest **luminous mushrooms** for Herb, then inspect **broadleaf canopy** and **mossy hollow**. Wait for the **spore puffball** to roll in. Tap it, then **Roll it back**. Continue with a gentle toss and another roll to earn trust. Charlie stays off-screen; his name emerges in the first response. Try **Back** without advancing trust, and return after a save/load. Repeat play after the comfort stone must grant no more items or XP.
 
 16. From **Overgrown Glade**, go **north** to **Security Perimeter** (`sector9_landing_perimeter`).
 
@@ -692,7 +692,7 @@ Shattered vines and charred branches litter the muddy clearing where the pod plo
 A broadleaf canopy filters the sky into green haze. Luminous mushrooms cluster along a decaying log. Beneath it, a mossy hollow rustles; a velvety spore puffball rolls out and settles near your boots.
 
 - **Exits:** **east** -> Crash Site (`sector9_crash_site`); **north** -> Security Perimeter (`sector9_landing_perimeter`).
-- **Puffball interaction:** Charlie remains off-screen. No NPC chip, portrait or conversation panel. Tap the animated ball for gentle play or Leave it be.
+- **Puffball interaction:** Charlie remains off-screen. No NPC chip, portrait or conversation panel. Tap the animated ball for gentle play or Back.
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **luminous mushrooms** (generic; object: luminous mushrooms): Already harvested.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_herb_glade_foraged"}`.

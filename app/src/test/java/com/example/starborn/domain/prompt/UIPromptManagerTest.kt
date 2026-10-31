@@ -6,6 +6,27 @@ import org.junit.Test
 
 class UIPromptManagerTest {
 
+    @Test fun fieldMenuAllowsItsInstructionsButDefersRewardsAndUnrelatedTutorials() {
+        val manager = UIPromptManager()
+        manager.setPresentationBlocked("field-menu", true)
+        val reward = ItemGrantedPrompt("Reward", 1)
+        manager.enqueue(reward)
+        manager.enqueue(TutorialPrompt(com.example.starborn.domain.tutorial.TutorialEntry(key = "unrelated", context = "Other", message = "Later")))
+        assertEquals(null, manager.state.value.current)
+        manager.setPresentationBlocked("dialogue", true)
+        val instruction = TutorialPrompt(com.example.starborn.domain.tutorial.TutorialEntry(key = "bag_basics", context = "Items", message = "Open Items"))
+        manager.enqueue(instruction)
+        assertEquals(null, manager.state.value.current)
+        manager.setPresentationBlocked("dialogue", false)
+        assertEquals(instruction, manager.state.value.current)
+        manager.dismissCurrent()
+        assertEquals(null, manager.state.value.current)
+        manager.setPresentationBlocked("field-menu", false)
+        assertTrue(manager.state.value.current is TutorialPrompt)
+        manager.dismissCurrent()
+        assertEquals(reward, manager.state.value.current)
+    }
+
     @Test fun `consumption feedback follows the scene before unlock tutorials and rewards`() {
         val manager = UIPromptManager()
         manager.setPresentationBlocked("scene", true)

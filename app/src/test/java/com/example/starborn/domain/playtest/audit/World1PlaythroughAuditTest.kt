@@ -327,7 +327,7 @@ class World1PlaythroughAuditTest {
         assertTrue("World 2 must be activated", store.state.value.activeQuests.contains("w2_mq01"))
 
         // Export report
-        val reportFile = File(root, "docs/playtest/reports/WORLD_1_PLAYTHROUGH_AUDIT.md")
+        val reportFile = File(root, "app/build/reports/playthrough-audit/WORLD_1_PLAYTHROUGH_AUDIT.md")
         auditor.exportReportToFile(reportFile)
         println("Audited World 1 Playthrough report exported to: ${reportFile.absolutePath}")
     }

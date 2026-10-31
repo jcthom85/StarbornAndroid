@@ -228,10 +228,11 @@ fun resolveRoomDarkness(ui: com.example.starborn.feature.exploration.viewmodel.E
 }
 
 /** Only passive inspections get read receipts. Functional controls retain their normal appearance. */
+@Suppress("UNUSED_PARAMETER") // Keep call sites compatible; unrelated room prose is not inspection information.
 fun inspectionReceiptKey(action: RoomAction, description: String?): String? {
     val generic = action as? GenericAction ?: return null
     if (!generic.actionEvent.isNullOrBlank() || generic.type.lowercase() !in setOf("generic", "inspect")) return null
-    val content = "${generic.name}\n${generic.conditionUnmetMessage}\n${description.orEmpty()}"
+    val content = "${generic.name}\n${generic.conditionUnmetMessage}"
     val digest = java.security.MessageDigest.getInstance("SHA-256").digest(content.toByteArray(Charsets.UTF_8))
     return "inspection_read_" + digest.joinToString("") { "%02x".format(it) }
 }

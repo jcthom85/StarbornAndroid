@@ -10,6 +10,16 @@ class ExplorationNoticePolicyTest {
     private val ui = ExplorationUiState(isLoading = false, forceBlackScreen = false,
         narrationPrompt = NarrationPrompt("Inspection", true), prompt = ItemGrantedPrompt("Reward", 1))
 
+    @Test fun onlyRelevantInstructionCanAppearOverFieldMenu() {
+        val menu = ui.copy(isMenuOverlayVisible = true, narrationPrompt = null,
+            prompt = com.example.starborn.domain.prompt.TutorialPrompt(com.example.starborn.domain.tutorial.TutorialEntry(
+                key = "gear_equip_basics", context = "Equipment", message = "Choose equipment")))
+        assertEquals(ExplorationNotice.PROMPT, explorationNotice(menu))
+        assertEquals(ExplorationNotice.NONE, explorationNotice(menu, externalModal = true))
+        assertEquals(ExplorationNotice.NONE, explorationNotice(menu.copy(roomActionsVisible = true)))
+        assertEquals(ExplorationNotice.NONE, explorationNotice(menu.copy(prompt = ItemGrantedPrompt("Reward", 1))))
+    }
+
     @Test fun inspectionPrecedesRewardAndModalScenesHideBoth() {
         assertEquals(ExplorationNotice.NARRATION, explorationNotice(ui))
         assertEquals(ExplorationNotice.PROMPT, explorationNotice(ui.copy(narrationPrompt = null)))

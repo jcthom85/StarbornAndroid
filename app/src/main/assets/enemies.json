@@ -494,7 +494,7 @@
       }
     ],
     "description": "Shielded ancient sentinel. Weak to shock.",
-    "portrait": "images/enemies/acoustic_bulwark_combat.png"
+    "portrait": "images/enemies/ruin_guardian_combat.png"
   },
   {
     "id": "razor_vine",
@@ -528,7 +528,7 @@
     "credit_reward": 0,
     "drops": [],
     "description": "Overgrown thorn hazard. Extremely weak to fire.",
-    "portrait": "images/enemies/siren_skimmer_combat.png"
+    "portrait": "images/enemies/razor_vine_combat.png"
   },
   {
     "id": "stalker_vine",
@@ -607,7 +607,7 @@
       }
     ],
     "description": "Hovering defense drone. Blinds targets.",
-    "portrait": "images/enemies/resonance_buoy_combat.png"
+    "portrait": "images/enemies/sentinel_orb_combat.png"
   },
   {
     "id": "the_beast",

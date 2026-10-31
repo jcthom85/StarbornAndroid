@@ -405,11 +405,14 @@ fun ExplorationScreen(
         if (uiState.currentRoom?.id == "sector9_temple_gate" && open && !previousGateOpen) {
             previousGateOpen = true
             gateRevealActive = true
-            if (!uiState.settings.disableScreenshake) {
-                gateRevealProgress.snapTo(0f)
-                gateRevealProgress.animateTo(1f, tween(2400, easing = androidx.compose.animation.core.LinearEasing))
+            try {
+                if (!uiState.settings.disableScreenshake) {
+                    gateRevealProgress.snapTo(0f)
+                    gateRevealProgress.animateTo(1f, tween(2400, easing = androidx.compose.animation.core.LinearEasing))
+                }
+            } finally {
+                gateRevealActive = false
             }
-            gateRevealActive = false
         } else previousGateOpen = open
     }
     val coroutineScope = rememberCoroutineScope()

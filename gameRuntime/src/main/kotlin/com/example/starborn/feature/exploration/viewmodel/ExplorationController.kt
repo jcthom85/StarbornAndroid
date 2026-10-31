@@ -756,6 +756,7 @@ class ExplorationController(
         cinematicCoordinator.setCallbacks()
         viewModelScope.coroutineContext[Job]?.cancel()
         promptManager.setPresentationBlocked("exploration-scene", false)
+        promptManager.setPresentationBlocked("field-menu", false)
         promptManager.setToastsSuspended(false)
     }
 
@@ -2161,8 +2162,9 @@ class ExplorationController(
 
         viewModelScope.launch(dispatchers.main) {
             uiState.collect { ui ->
+                promptManager.setPresentationBlocked("field-menu", ui.isMenuOverlayVisible)
                 promptManager.setPresentationBlocked("exploration-scene",
-                    ui.hasModalScene() ||
+                    ui.copy(isMenuOverlayVisible = false).hasModalScene() ||
                         ui.narrationPrompt != null || ui.eventAnnouncement != null)
             }
         }
@@ -5749,6 +5751,11 @@ class ExplorationController(
                         showInspection(status)
                         return
                     }
+                    // Placeholder success text is not evidence that a quest/task event can run.
+                    if (status == "Objective completed." && !eventManager.canHandleTrigger("player_action", EventPayload.Action(eventId))) {
+                        showInspection("There is nothing more to do here right now.")
+                        return
+                    }
                     val actionNameLower = action.name.lowercase(Locale.getDefault())
                     val eventLower = eventId.lowercase(Locale.getDefault())
                     when {
@@ -5770,7 +5777,8 @@ class ExplorationController(
                             emitAudioCommands(audioRouter.commandsForUi("sfx_datapad_read"))
                         }
                     }
-                    postStatus(status)
+                    // The authored event owns success feedback once eligible.
+                    if (status != "Objective completed.") postStatus(status)
                     triggerPlayerAction(eventId)
                 }
             }

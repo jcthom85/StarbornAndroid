@@ -821,7 +821,7 @@ class OpeningCombatRuntimeTest {
                     val payload = com.example.starborn.domain.event.EventPayload.Action(event.id)
                     val suppliesBefore = session.state.value.inventory["painkillers"] ?: 0
                     manager.handleTrigger("player_action", payload)
-                    assertEquals(suppliesBefore + 1, session.state.value.inventory["painkillers"])
+                    assertEquals("REST must not create stabilizers", suppliesBefore, session.state.value.inventory.getOrDefault("painkillers", 0))
                     val recovered = session.state.value
                     manager.handleTrigger("player_action", payload)
                     assertEquals("Camp reward must not repeat", recovered, session.state.value)

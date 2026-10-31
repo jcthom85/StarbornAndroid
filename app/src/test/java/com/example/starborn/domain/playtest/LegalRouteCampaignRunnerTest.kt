@@ -122,6 +122,7 @@ class LegalRouteCampaignRunnerTest {
 
     @Before
     fun setUp() {
+        com.example.starborn.domain.combat.CombatPlaytestBridge.reset()
         useProductionCrewRules = false
         publicCombats.clear()
         assistance.clear()
@@ -435,6 +436,48 @@ class LegalRouteCampaignRunnerTest {
     }
 
     @Test
+    fun world2InterruptedConfrontationCanRestartAfterSaveReload() {
+        useProductionCrewRules = true
+        val initial = GameSessionState(worldId = "world_2", hubId = "hub_3_sector9",
+            roomId = "sector9_canopy_ridge", playerId = "nova", partyMembers = listOf("nova", "zeke", "orion"),
+            activeQuests = setOf("w2_mq04"), completedMilestones = setOf("ms_w2_mq03_complete"),
+            completedEvents = setOf("w2_mq04_confront")) // Also accept an older interrupted entry receipt.
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = initial)
+        try {
+            LegalCampaignAgent(h).performAction("w2_mq04_confront")
+            assertNotNull(h.explorationVm.uiState.value.activeDialogue)
+            assertFalse("confront_stalker" in h.sessionStore.state.value.questTasksCompleted["w2_mq04"].orEmpty())
+            val restored = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = h.saveSlot(9))
+            try {
+                val agent = LegalCampaignAgent(restored)
+                agent.performAction("w2_mq04_confront")
+                assertNotNull(restored.explorationVm.uiState.value.activeDialogue)
+                agent.finishDialogue("")
+                val state = restored.sessionStore.state.value
+                assertTrue("confront_stalker" in state.questTasksCompleted["w2_mq04"].orEmpty())
+                assertEquals(true, state.roomStates["sector9_canopy_ridge"]?.get("hunter_confronted"))
+                assertTrue("ms_w2_stalker_confronted" in state.completedMilestones)
+            } finally { restored.close() }
+        } finally { h.close() }
+    }
+
+    @Test
+    fun world2IneligibleObjectiveActionDoesNotClaimCompletion() {
+        useProductionCrewRules = true
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope,
+            initialState = GameSessionState(worldId = "world_2", hubId = "hub_3_sector9",
+                roomId = "sector9_canopy_ridge", playerId = "nova", partyMembers = listOf("nova", "zeke")))
+        try {
+            h.explorationVm.onActionSelected(com.example.starborn.domain.model.GenericAction(
+                "stalker", "generic", actionEvent = "w2_mq04_confront", conditionUnmetMessage = "Objective completed."))
+            h.settle()
+            assertEquals("There is nothing more to do here right now.", h.explorationVm.uiState.value.narrationPrompt?.message)
+            assertNull(h.explorationVm.uiState.value.activeDialogue)
+            assertFalse("ms_w2_stalker_confronted" in h.sessionStore.state.value.completedMilestones)
+        } finally { h.close() }
+    }
+
+    @Test
     fun world2SecondHalfTransceiverInspectsAndCollectedCacheRetiresAcrossReload() {
         useProductionCrewRules = true
         fun state(room: String) = GameSessionState(worldId = "world_2", hubId = "hub_3_sector9",
@@ -494,7 +537,8 @@ class LegalRouteCampaignRunnerTest {
             h.settle()
             try {
                 val rest = h.explorationVm.uiState.value.actions.filterIsInstance<com.example.starborn.domain.model.RestStopAction>()
-                    .first { it.cookSource == null && it.restEvent != null }
+                    .firstOrNull { it.cookSource == null && it.restEvent != null }
+                    ?: error("No REST action in $room; visible=${h.explorationVm.uiState.value.actions}; current=${h.explorationVm.uiState.value.currentRoom?.id}")
                 h.explorationVm.onActionSelected(rest); h.settle()
                 val firstHp = h.sessionStore.state.value.partyMemberHp
                 val supplies = h.inventoryService.snapshot()
@@ -672,6 +716,25 @@ class LegalRouteCampaignRunnerTest {
     }
 
     @Test
+    fun productionWorld2OptionalPairsCanBeDefeatedWithEarnedCrewAndResources() {
+        useProductionCrewRules = true
+        for (seed in listOf(1, 2, 3, 4, 5, 17)) {
+            publicCombats.clear()
+            val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
+            try {
+                val agent = LegalCampaignAgent(h)
+                agent.playWorld1()
+                agent.playWorld2(defeatOptionalPairs = true, pairSeed = seed)
+                assertTrue(assistance.isEmpty())
+                File("build/reports/world2-readiness/earned-optional-pairs-$seed.txt").apply {
+                    requireNotNull(parentFile).mkdirs()
+                    writeText("Production crew rules; earned resources; all three authored pairs; pair seed $seed.\n" + publicCombats.joinToString("\n"))
+                }
+            } finally { h.close() }
+        }
+    }
+
+    @Test
     fun productionWorld2CanReplaceASpentEmergencyMedkitBeforeTreatingZeke() {
         useProductionCrewRules = true
         val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
@@ -693,6 +756,34 @@ class LegalRouteCampaignRunnerTest {
             runner.navigateLegalPath("sector9_landing_stream")
             assertTrue("Replacement must let the earned route continue", "w2_mq01" in h.sessionStore.state.value.completedQuests)
             assertTrue("w2_mq02" in h.sessionStore.state.value.activeQuests)
+        } finally { h.close() }
+    }
+
+    @Test
+    fun productionWorld2CanEarnAMedkitReplacementFromZeroCredits() {
+        useProductionCrewRules = true
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
+        try {
+            val runner = LegalCampaignAgent(h)
+            runner.playWorld1()
+            runner.talkToNpc("Zeke")
+            runner.performAction("w2_mq01_examine_pod")
+            h.inventoryService.removeItem("medkit", h.inventoryService.snapshot().getOrDefault("medkit", 0))
+            h.sessionStore.restore(h.sessionStore.state.value.copy(playerCredits = 0))
+            h.settle()
+            runner.navigateLegalPath("sector9_stream_falls")
+            h.restAtVisibleStop()
+            for ((room, enemy) in listOf("sector9_canopy" to "stalker_vine",
+                "sector9_wilds_nest" to "shard_hound", "sector9_stream_cave_depths" to "echo_borer")) {
+                runner.navigateLegalPath(room)
+                h.playPublicEncounter(enemy)
+            }
+            runner.navigateLegalPath("sector9_stream_falls")
+            h.buyAtVisibleShop("davids_provisions", "medkit", 1)
+            runner.navigateLegalPath("sector9_pod_interior")
+            runner.performAction("w2_mq01_stabilize_zeke")
+            runner.navigateLegalPath("sector9_landing_stream")
+            assertTrue("A spent medkit and empty wallet must remain recoverable", "w2_mq01" in h.sessionStore.state.value.completedQuests)
         } finally { h.close() }
     }
 
@@ -1387,7 +1478,7 @@ class LegalRouteCampaignRunnerTest {
             assertTrue("w2_mq01 active", harness.sessionStore.state.value.activeQuests.contains("w2_mq01"))
         }
 
-        fun playWorld2(completionist: Boolean = false) {
+        fun playWorld2(completionist: Boolean = false, defeatOptionalPairs: Boolean = false, pairSeed: Int = 17) {
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w2_mq01"))
             talkToNpc("Zeke")
             performAction("w2_mq01_examine_pod")
@@ -1400,9 +1491,13 @@ class LegalRouteCampaignRunnerTest {
             assertTrue("Zeke visible at Stream Bank", "zeke" in harness.explorationVm.uiState.value.npcs)
             talkToNpc("Zeke")
             navigateLegalPath("sector9_canopy")
-            harness.playPublicEncounter("stalker_vine", retreat = true)
+            harness.playPublicEncounter("stalker_vine", retreat = !defeatOptionalPairs, seed = pairSeed)
+            if (defeatOptionalPairs) {
+                navigateLegalPath("sector9_wilds_nest")
+                harness.playPublicEncounter("shard_hound", seed = pairSeed)
+            }
             navigateLegalPath("sector9_stream_cave_depths")
-            harness.playPublicEncounter("echo_borer")
+            harness.playPublicEncounter("echo_borer", seed = pairSeed)
             navigateLegalPath("sector9_temple_gate")
             harness.explorationVm.travel("east")
             harness.settle()
@@ -1441,6 +1536,9 @@ class LegalRouteCampaignRunnerTest {
             harness.restAtVisibleStop()
             navigateLegalPath("sector9_canopy_ridge")
             performAction("w2_mq04_confront")
+            assertFalse("Starting dialogue must not credit the confrontation", "ms_w2_stalker_confronted" in harness.sessionStore.state.value.completedMilestones)
+            finishDialogue("")
+            assertTrue("Finishing dialogue credits the confrontation", "ms_w2_stalker_confronted" in harness.sessionStore.state.value.completedMilestones)
             performAction("w2_mq04_beast_ambush")
             harness.playPublicEncounter("the_beast", pending = true)
             assertTrue("Recruited Gh0st visible for later Stolen Tech offer",
@@ -2110,7 +2208,7 @@ class LegalRouteCampaignRunnerTest {
             }
         }
 
-        fun playPublicEncounter(enemyId: String, retreat: Boolean = false, pending: Boolean = false) {
+        fun playPublicEncounter(enemyId: String, retreat: Boolean = false, pending: Boolean = false, seed: Int = 17) {
             val room = requireNotNull(sessionStore.state.value.roomId)
             if (!pending) {
                 assertTrue("Enemy must be present before engagement in $room", enemyId in explorationVm.uiState.value.enemies)
@@ -2124,7 +2222,7 @@ class LegalRouteCampaignRunnerTest {
             val registry = StatusRegistry(worldDataSource.loadStatuses())
             val combat = CombatViewModel(
                 worldAssets = worldDataSource,
-                combatEngine = CombatEngine(statusRegistry = registry, random = kotlin.random.Random(17)),
+                combatEngine = CombatEngine(statusRegistry = registry, random = kotlin.random.Random(seed)),
                 statusRegistry = registry,
                 sessionStore = sessionStore,
                 inventoryService = inventoryService,
@@ -2138,7 +2236,7 @@ class LegalRouteCampaignRunnerTest {
                 enemyIds = encounterIds,
                 tutorialsEnabled = false,
                 elapsedRealtime = { dispatcher.scheduler.currentTime },
-                random = SeededCombatRandom(17)
+                random = SeededCombatRandom(seed)
             )
             try {
                 combat.onScreenReady()
@@ -2285,7 +2383,7 @@ class LegalRouteCampaignRunnerTest {
                     explorationVm.onCombatRetreat(combat.encounterEnemyIds)
                     settle()
                     assertTrue("Retreat must preserve the undefeated enemy", enemyId in explorationVm.uiState.value.enemies)
-                    publicCombats += "room=$room enemy=$enemyId seed=17 outcome=retreat; enemy remains undefeated"
+                    publicCombats += "room=$room enemy=$enemyId seed=$seed outcome=retreat; enemy remains undefeated"
                     return
                 }
                 val victory = state.outcome as? com.example.starborn.domain.combat.CombatOutcome.Victory
@@ -2297,7 +2395,7 @@ class LegalRouteCampaignRunnerTest {
                     .groupingBy { it }.eachCount()
                 val knockedOut = state.combatants.values.filter { it.combatant.side == com.example.starborn.domain.combat.CombatSide.PLAYER && !it.isAlive }
                     .map { it.combatant.id }
-                publicCombats += "room=$room enemies=$encounterIds seed=17 damageEvents=${state.log.count { it is com.example.starborn.domain.combat.CombatLogEntry.Damage }} xp=${reward.xp} ap=${reward.ap} credits=${reward.credits} persistedHp=${sessionStore.state.value.partyMemberHp} knockedOut=$knockedOut usedItems=$usedItems"
+                publicCombats += "room=$room enemies=$encounterIds seed=$seed damageEvents=${state.log.count { it is com.example.starborn.domain.combat.CombatLogEntry.Damage }} xp=${reward.xp} ap=${reward.ap} credits=${reward.credits} persistedHp=${sessionStore.state.value.partyMemberHp} knockedOut=$knockedOut usedItems=$usedItems"
                 explorationVm.onCombatVictory(CombatResultPayload(
                     outcome = CombatResultPayload.Outcome.VICTORY,
                     enemyIds = combat.encounterEnemyIds,

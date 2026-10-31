@@ -4,14 +4,14 @@
   "roomId": "source_campfire",
   "playerId": "nova",
   "playerLevel": 11,
-  "playerXp": 20060,
+  "playerXp": 20100,
   "playerAp": 44,
-  "playerCredits": 155,
+  "playerCredits": 165,
   "partyMemberXp": {
-    "nova": 20060,
-    "zeke": 20060,
-    "orion": 20060,
-    "gh0st": 20060
+    "nova": 20100,
+    "zeke": 20100,
+    "orion": 20100,
+    "gh0st": 20100
   },
   "partyMemberLevels": {
     "nova": 11,
@@ -249,8 +249,6 @@
   ],
   "unlockedAreas": [],
   "unlockedExits": [
-    "pit_nova_bunk::west",
-    "pit_l2_corridor::east",
     "workshop_yard::north",
     "workshop_floor::south",
     "checkpoint_door::north",
@@ -264,7 +262,11 @@
     "launch_checkpoint::north",
     "launch_bay::south",
     "launch_bay::north",
-    "launch_pod::south"
+    "launch_pod::south",
+    "sector9_temple_gate::east",
+    "sector9_foyer_grand_hall::west",
+    "sector9_source_gate::east",
+    "sector9_hangar_bay::west"
   ],
   "partyMembers": [
     "nova",
@@ -282,7 +284,7 @@
     "armor_plate": 1,
     "hydraulic_fluid": 1,
     "heavy_gear": 1,
-    "beast_meat": 3,
+    "beast_meat": 4,
     "tuning_fork": 1,
     "wiring_bundle": 3,
     "battery": 1,
@@ -290,7 +292,6 @@
     "ghost_signal_cell": 1,
     "wooden_rod": 1,
     "basic_lure": 1,
-    "painkillers": 4,
     "source_resin": 1,
     "the_lens": 1,
     "pure_iron": 4,
@@ -388,12 +389,12 @@
     "sector9_temple_plaza",
     "sector9_temple_lock_chamber",
     "sector9_temple_gate",
+    "sector9_foyer_grand_hall",
     "sector9_hall_of_echoes",
     "sector9_stasis_chamber",
     "sector9_stasis_ring_array",
     "sector9_stasis_observation",
     "sector9_stasis_coolant_lines",
-    "sector9_foyer_grand_hall",
     "sector9_source_gate",
     "sector9_gate_emitter_left",
     "sector9_gate_emitter_right",
@@ -729,7 +730,7 @@
     "w2_mq03_recover_bridge",
     "w2_camp_ridge_plateau",
     "w2_mq04_reach_canopy",
-    "w2_mq04_confront",
+    "w2_mq04_confront_finished",
     "w2_mq04_victory",
     "w2_mq04_anchor_drill",
     "w2_mq05_reach_gate",
@@ -829,8 +830,8 @@
       "conduit_isolated": true
     },
     "pit_L2_corridor": {
-      "discovered": true,
-      "visited": true
+      "visited": true,
+      "discovered": true
     },
     "pit_shaft": {
       "visited": true,
@@ -1036,7 +1037,7 @@
     "sector9_stream_cave_depths": {
       "visited": true,
       "discovered": true,
-      "encounter_cleared:echo_borer": true
+      "encounter_cleared:echo_borer|echo_borer": true
     },
     "sector9_wilds_thickets": {
       "visited": true,
@@ -1095,7 +1096,12 @@
     },
     "sector9_temple_gate": {
       "visited": true,
-      "discovered": true
+      "discovered": true,
+      "temple_open": true
+    },
+    "sector9_foyer_grand_hall": {
+      "discovered": true,
+      "visited": true
     },
     "sector9_hall_of_echoes": {
       "visited": true,
@@ -1117,13 +1123,10 @@
       "visited": true,
       "discovered": true
     },
-    "sector9_foyer_grand_hall": {
-      "visited": true,
-      "discovered": true
-    },
     "sector9_source_gate": {
       "visited": true,
-      "discovered": true
+      "discovered": true,
+      "barrier_resolved": true
     },
     "sector9_gate_emitter_left": {
       "visited": true,
@@ -1150,8 +1153,8 @@
       "discovered": true
     },
     "sector9_hangar_bay": {
-      "visited": true,
-      "discovered": true
+      "discovered": true,
+      "visited": true
     },
     "sector9_landing_brush": {
       "visited": true,

@@ -696,7 +696,7 @@
     ],
     "role": "Loyal Pack Guardian",
     "description": "A big, sweet, shaggy black-and-white Sheepadoodle with boundless love and an unstoppable instinct to keep the whole family together. Penny greets every friend with high-energy wrestling matches, circles the party to ensure no one is left behind, and crashes into deep naps the second her shift is done.",
-    "portrait": "images/characters/orion_portrait.png",
+    "portrait": "images/npcs/penny_portrait.png",
     "dialogue": {},
     "interactions": [
       {

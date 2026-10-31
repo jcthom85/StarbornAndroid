@@ -18,7 +18,7 @@ class InspectionReadStateTest {
             requireNotNull(buildInlineActionPlan(text, listOf(a), emptyMap(), null, mapOf(key to true)))
         assertTrue(plan().segments.single().inspected)
         assertFalse(plan(action.copy(conditionUnmetMessage = "Its signal has changed.")).segments.single().inspected)
-        assertFalse(plan(text = "The moss dims.").segments.single().inspected)
+        assertTrue("Unrelated room prose must not reset an unchanged inspection", plan(text = "The moss dims.").segments.single().inspected)
         assertNull(inspectionReceiptKey(action.copy(actionEvent = "scan_moss"), "The moss glows."))
         assertNull(inspectionReceiptKey(ToggleAction("valve", "open", null, "Open", "Close", null, null), "valve"))
     }

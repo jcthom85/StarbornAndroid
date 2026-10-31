@@ -84,6 +84,7 @@ class CombatViewModelTest {
 
     @After
     fun tearDown() {
+        com.example.starborn.domain.combat.CombatPlaytestBridge.reset()
         Dispatchers.resetMain()
     }
 

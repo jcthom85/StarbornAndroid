@@ -111,8 +111,6 @@
   ],
   "unlockedAreas": [],
   "unlockedExits": [
-    "pit_nova_bunk::west",
-    "pit_l2_corridor::east",
     "workshop_yard::north",
     "workshop_floor::south",
     "checkpoint_door::north",
@@ -348,8 +346,8 @@
       "conduit_isolated": true
     },
     "pit_L2_corridor": {
-      "discovered": true,
-      "visited": true
+      "visited": true,
+      "discovered": true
     },
     "pit_shaft": {
       "visited": true,

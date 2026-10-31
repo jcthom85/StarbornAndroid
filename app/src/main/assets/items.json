@@ -2902,7 +2902,7 @@
   {
     "id": "rapid_capacitor",
     "name": "Rapid Capacitor",
-    "description": "Overclocked capacitor that speeds up skill cooling cycles.",
+    "description": "Overclocked capacitor that boosts Speed and Agility.",
     "type": "mod",
     "value": 300,
     "buy_price": 600,
