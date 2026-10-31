@@ -14,12 +14,18 @@
     "app/src/main/assets/items.json": "08df961b82a496535a7bfa5e547857d9dcb4015b871a1e8f63554d5a0d937863"
   },
   "pixel_installation": {
-    "status": "awaiting_usb",
+    "status": "installed",
     "model": "Pixel 8a",
     "serial": "46121JEKB11849",
-    "transport": "paired wireless ADB",
-    "reason": "Wireless full transfer was too slow; fast-deploy attempt fell back to full transfer. Both attempts were stopped without reporting success. USB connection requested.",
-    "previous_installation": "Existing app and saves retained; latest build not installed."
+    "transport": "USB",
+    "method": "adb push, checksum verification, then pm install -r -t",
+    "version_name": "1.3.100",
+    "version_code": 184,
+    "device_last_update_time": "2026-10-31 12:33:47",
+    "device_apk_sha256": "eb1226e78889bac3191be913b88cf5805d0f20fad26ffb165d4a579f30a15c85",
+    "result": "Success",
+    "temporary_apk_removed": true,
+    "prior_attempts": "Wireless transfer stopped for low throughput; initial USB streamed install failed. Local installation from verified copied APK succeeded."
   },
   "manual_acceptance": "Pending player checks; no runtime certification implied.",
   "published_walkthrough": {

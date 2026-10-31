@@ -31,4 +31,6 @@ Recommended checks: talk to David/Megan/Kaelen and leave; complete Megan's favor
 
 Implementation committed and pushed to `main` as `ce27bd40`. The updated walkthrough was published to the existing `gh-pages` branch (`78b1f7fe25d57cafc49e74b97aa57843fee32890`); the live page was fetched and verified byte-for-byte against the local build, including Tidewatch and the unseen Charlie instructions.
 
-The paired Pixel 8a (serial `46121JEKB11849`) was found over wireless ADB. Its full APK transfer was unusually slow; fast deployment fell back to the same full transfer. Both attempts were stopped, and USB was requested. **No successful installation is claimed.** The prior app installation and player saves remain. The completed APK is `app/build/outputs/apk/debug/app-debug.apk`; USB installation and the player's focused checks remain outstanding.
+The Pixel 8a (serial `46121JEKB11849`) is now **successfully updated over USB** to the finished APK, version 1.3.100 (184). After wireless and streamed-install problems, the APK was copied to the phone, its SHA-256 matched the recorded build, and `pm install -r -t` returned `Success`. Package metadata reports `lastUpdateTime=2026-10-31 12:33:47`. The temporary APK was removed afterward. The update preserved app data; no saves were cleared.
+
+Only the player's focused runtime checks remain. Installation is verified; subjective gameplay, animation and audio acceptance are not implied.
