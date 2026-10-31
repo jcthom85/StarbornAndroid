@@ -1,5 +1,7 @@
 package com.example.starborn.desktop.ui
 
+import com.example.starborn.domain.session.SessionSaveRepository
+
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -59,7 +61,7 @@ fun DesktopMainMenuScreen(
     var showSettingsDialog by remember { mutableStateOf(false) }
     var showNewGameConfirm by remember { mutableStateOf(false) }
     var latestSlotInfo by remember(services) {
-        mutableStateOf((-1..3).mapNotNull { slot -> services.saveManager.getSlotMetadata(slot) }.maxByOrNull { it.timestamp })
+        mutableStateOf((SessionSaveRepository.ALL_SLOTS).mapNotNull { slot -> services.saveManager.getSlotMetadata(slot) }.maxByOrNull { it.timestamp })
     }
     var latestSlot by remember(services) { mutableStateOf(latestSlotInfo?.slotIndex) }
     var newGamePlusUnlocked by remember(services) { mutableStateOf(services.completedGameForNewGamePlus() != null) }
@@ -67,7 +69,7 @@ fun DesktopMainMenuScreen(
     val saveError by services.saveManager.lastError.collectAsState()
     LaunchedEffect(services) {
         val meta = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-            (-1..3).mapNotNull { slot -> services.saveManager.getSlotMetadata(slot) }.maxByOrNull { it.timestamp }
+            (SessionSaveRepository.ALL_SLOTS).mapNotNull { slot -> services.saveManager.getSlotMetadata(slot) }.maxByOrNull { it.timestamp }
         }
         latestSlotInfo = meta
         latestSlot = meta?.slotIndex

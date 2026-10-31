@@ -40,6 +40,25 @@ class GameSessionPersistenceTest {
     }
 
     @Test
+    fun tenNumberedPlaytestSavesStayIndependentFromAutosaveAndQuicksave() = runBlocking {
+        val states = SessionSaveRepository.MANUAL_SLOTS.associateWith { slot ->
+            GameSessionState(roomId = "playtest_room_$slot", playerCredits = slot * 10)
+        }
+        states.forEach { (slot, state) -> persistence.writeSlot(slot, state) }
+        val auto = GameSessionState(roomId = "autosave_room")
+        val quick = GameSessionState(roomId = "quicksave_room")
+        persistence.writeAutosave(auto)
+        persistence.writeQuickSave(quick)
+        assertEquals((1..10).toList(), states.keys.toList())
+        states.forEach { (slot, state) -> assertEquals(state, persistence.readSlot(slot)) }
+        persistence.clearSlot(10)
+        assertEquals(null, persistence.readSlot(10))
+        assertEquals(states[3], persistence.readSlot(3))
+        assertEquals(auto, persistence.readAutosave())
+        assertEquals(quick, persistence.readQuickSave())
+    }
+
+    @Test
     fun discoveredWeaknessesSurviveCheckpointAndSaveReload() = runBlocking {
         val store = GameSessionStore()
         store.armBattle("test-encounter")

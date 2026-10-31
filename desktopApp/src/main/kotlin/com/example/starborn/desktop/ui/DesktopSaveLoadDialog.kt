@@ -1,5 +1,7 @@
 package com.example.starborn.desktop.ui
 
+import com.example.starborn.domain.session.SessionSaveRepository
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,8 +32,8 @@ fun DesktopSaveLoadDialog(services: DesktopAppServices, initialMode: SaveDialogM
     var confirmation by remember { mutableStateOf<Pair<String, () -> Unit>?>(null) }
     suspend fun refresh() {
         withContext(Dispatchers.IO) {
-            occupied = (-1..3).filter(services.saveManager::hasSave).toSet()
-            metas = (-1..3).associateWith(services.saveManager::getSlotMetadata)
+            occupied = (SessionSaveRepository.ALL_SLOTS).filter(services.saveManager::hasSave).toSet()
+            metas = (SessionSaveRepository.ALL_SLOTS).associateWith(services.saveManager::getSlotMetadata)
         }
     }
     LaunchedEffect(services) { refresh() }
@@ -54,7 +56,7 @@ fun DesktopSaveLoadDialog(services: DesktopAppServices, initialMode: SaveDialogM
                     TextButton(onClick = onDismiss, enabled = !busy, modifier = Modifier.desktopPointerHover()) { Text("Close") }
                 }
                 LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    val slots = if (mode == SaveDialogMode.LOAD) listOf(0, -1, 1, 2, 3) else listOf(-1, 1, 2, 3)
+                    val slots = if (mode == SaveDialogMode.LOAD) listOf(0, -1) + SessionSaveRepository.MANUAL_SLOTS else listOf(-1) + SessionSaveRepository.MANUAL_SLOTS
                     slots.sortedWith(compareBy<Int> { if (it == 0) 0 else if (it == -1) 1 else 2 }.thenBy { it }).forEach { slot -> item {
                         val meta = metas[slot]
                         val name = when (slot) { -1 -> "Quick save"; 0 -> "Autosave"; else -> "Slot $slot" }

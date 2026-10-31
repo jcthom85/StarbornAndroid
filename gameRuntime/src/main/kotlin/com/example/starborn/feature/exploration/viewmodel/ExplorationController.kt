@@ -3846,7 +3846,7 @@ class ExplorationController(
 
     fun placeholderSaveSlots(): List<SaveSlotSummary> = buildList {
         add(null.toSummary(SessionSaveRepository.QUICKSAVE_SLOT, isQuick = true))
-        (1..3).forEach { slot ->
+        (SessionSaveRepository.MANUAL_SLOTS).forEach { slot ->
             add(null.toSummary(slot, isQuick = false))
         }
     }

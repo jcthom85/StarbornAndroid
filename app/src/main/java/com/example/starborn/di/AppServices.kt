@@ -1,5 +1,7 @@
 package com.example.starborn.di
 
+import com.example.starborn.domain.session.SessionSaveRepository
+
 import android.content.Context
 import com.example.starborn.core.MoshiProvider
 import com.example.starborn.data.assets.AssetJsonReader
@@ -176,7 +178,7 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
     companion object {
         private const val AUTOSAVE_INTERVAL_MS = 90_000L
         private const val AUTOSAVE_SLOT = 0
-        private const val MAX_MANUAL_SAVE_SLOT = 3
+        private const val MAX_MANUAL_SAVE_SLOT = SessionSaveRepository.MANUAL_SLOT_COUNT
         private const val GAME_COMPLETE_MILESTONE = "ms_game_complete"
         private val SAMPLE_PARTY = setOf("nova", "zeke", "orion", "gh0st")
         private const val SAMPLE_WORLD_ID = "nova_prime"

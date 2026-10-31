@@ -1,5 +1,7 @@
 package com.example.starborn.desktop
 
+import com.example.starborn.domain.session.SessionSaveRepository
+
 import com.example.starborn.core.MoshiProvider
 import com.example.starborn.domain.session.GameSessionPersistence
 import com.example.starborn.domain.session.GameSessionSlotInfo
@@ -39,7 +41,7 @@ class DesktopSaveManager(
     private val _lastError = MutableStateFlow<String?>(null)
     val lastError = _lastError.asStateFlow()
 
-    private fun validateSlot(slot: Int) = require(slot in -1..3) { "Invalid save slot: $slot" }
+    private fun validateSlot(slot: Int) = require(slot in SessionSaveRepository.ALL_SLOTS) { "Invalid save slot: $slot" }
     private fun newFile(slot: Int) = File(savesDir, when (slot) {
         -1 -> "game_session_quicksave.pb"
         0 -> "game_session_autosave.pb"

@@ -4,7 +4,7 @@ import com.example.starborn.di.AppServices
 
 class GameSaveRepository(private val services: AppServices) : SessionSaveRepository {
 
-    private val slotIndices = 1..3
+    private val slotIndices = SessionSaveRepository.MANUAL_SLOTS
 
     override suspend fun slotInfos(): List<Pair<Int, GameSessionSlotInfo?>> {
         return slotIndices.map { slot ->

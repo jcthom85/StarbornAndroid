@@ -1,5 +1,7 @@
 package com.example.starborn.desktop
 
+import com.example.starborn.domain.session.SessionSaveRepository
+
 import com.example.starborn.core.MoshiProvider
 import com.example.starborn.core.platform.AssetProvider
 import com.example.starborn.core.platform.AudioDriver
@@ -201,8 +203,8 @@ class DesktopAppServices(
     var activeArcadeCabinet: String? = null
     var openTinkeringOnNextFieldKit = false
 
-    private val runtimeSaves = object : com.example.starborn.domain.session.SessionSaveRepository {
-        override suspend fun slotInfos() = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { (1..3).map { it to saveManager.slotInfo(it) } }
+    private val runtimeSaves = object : SessionSaveRepository {
+        override suspend fun slotInfos() = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { (SessionSaveRepository.MANUAL_SLOTS).map { it to saveManager.slotInfo(it) } }
         override suspend fun save(slot: Int) {
             val snapshot = inventoryBridge.snapshot()
             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
@@ -282,12 +284,12 @@ class DesktopAppServices(
     }
 
     fun hasExistingSave(): Boolean {
-        return (-1..3).any { saveManager.hasSave(it) }
+        return (SessionSaveRepository.ALL_SLOTS).any { saveManager.hasSave(it) }
     }
 
     fun completedGameForNewGamePlus(): GameSessionState? {
         sessionStore.state.value.takeIf { "ms_game_complete" in it.completedMilestones }?.let { return it }
-        return (-1..3).mapNotNull { saveManager.slotInfo(it) }
+        return (SessionSaveRepository.ALL_SLOTS).mapNotNull { saveManager.slotInfo(it) }
             .filter { "ms_game_complete" in it.state.completedMilestones }.maxByOrNull { it.savedAtMillis ?: 0L }?.state
     }
 
