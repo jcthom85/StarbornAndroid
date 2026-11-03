@@ -58,7 +58,7 @@ class EnvironmentalEffectsTest {
     }
     @Test fun novaLightConditionAndSaveStateRemainAuthoritative() {
         assertTrue(effects(room).isEmpty())
-        assertEquals(1,resolver.resolve(room,mapOf("light_on" to true),emptySet(),settings).size)
+        assertEquals(setOf("lamp_dust", "bunk_lamplight"),resolver.resolve(room,mapOf("light_on" to true),emptySet(),settings).map { it.id }.toSet())
     }
     @Test fun qualityAndAccessibilityApplyTogether() {
         val r=fixture(RoomEffectBinding("field","field.resonance"),RoomEffectBinding("gas","atmosphere.gas"))
@@ -146,5 +146,53 @@ class EnvironmentalEffectsTest {
     @Test fun preferenceValueDefaultsAndRoundTrips() {
         EnvironmentalEffectsQuality.entries.forEach {assertEquals(it,EnvironmentalEffectsQuality.fromId(it.name))}
         assertEquals(EnvironmentalEffectsQuality.FULL,EnvironmentalEffectsQuality.fromId("future"))
+    }
+
+    @Test fun localizedLightingProfilesRespectRoomStateQualityAndBounds() {
+        val ids = setOf("pit_nova_bunk", "sector9_landing_glade", "source_campfire")
+        data.loadRooms().filter { it.id in ids }.forEach { room ->
+            val lit = resolver.resolve(room, mapOf("light_on" to true), emptySet(), settings)
+                .filter { it.presetId.startsWith("lighting.") }
+            assertTrue(room.id, lit.isNotEmpty())
+            assertTrue(lit.all { it.space == "scene" && it.emitters.size in 1..8 })
+            assertTrue(lit.all { !it.preset.color.any { c -> !c.isFinite() } })
+            assertTrue(resolver.resolve(room, mapOf("light_on" to true), emptySet(), settings.copy(environmentalEffectsQuality = EnvironmentalEffectsQuality.OFF)).isEmpty())
+            val reduced = resolver.resolve(room, mapOf("light_on" to true), emptySet(), settings.copy(environmentalEffectsQuality = EnvironmentalEffectsQuality.REDUCED))
+            assertTrue(reduced.all { !it.flashes && !it.fieldMotion })
+            assertTrue(resolver.resolve(room, mapOf("light_on" to true), emptySet(), settings, combat = true).none { it.presetId.startsWith("lighting.") })
+            val contrast = resolver.resolve(room, mapOf("light_on" to true), emptySet(), settings.copy(highContrastMode = true)).filter { it.presetId.startsWith("lighting.") }
+            assertTrue(contrast.all { it.alpha == .45f })
+        }
+        assertTrue(resolver.resolve(room, mapOf("light_on" to false), emptySet(), settings).isEmpty())
+    }
+
+    @Test fun lightWavesAreGentleIndependentAndSteadyWhenAccessibilityDisablesAnimation() {
+        listOf("lamplight", "bioluminescence", "firelight").forEach { style ->
+            val values = (0..1200).map { localizedLightStrength(style, it * .025f, 31, 0, true) }
+            assertTrue(values.all { it.isFinite() && it in .5f..1f })
+            assertTrue(values.zipWithNext().all { (a, b) -> kotlin.math.abs(a-b) < .03f })
+            assertTrue(values.max() - values.min() > .02f)
+            assertEquals(localizedLightStrength(style, 0f, 31, 0, false), localizedLightStrength(style, 200f, 31, 0, false), 0f)
+        }
+        assertNotEquals(localizedLightStrength("bioluminescence", 4f, 31, 0, true), localizedLightStrength("bioluminescence", 4f, 31, 1, true))
+    }
+
+    @Test fun malformedSurfaceMasksAreRejectedRatherThanDrawingAcrossTheScene() {
+        val bad = RoomEffectBinding("bad-mask", "lighting.songfire", emitters = listOf(EffectEmitter()),
+            lightSurfaces = listOf(EffectLightSurface(listOf(EffectLightPoint(Float.NaN, .5f), EffectLightPoint(.5f,.6f), EffectLightPoint(.2f,.2f)))))
+        assertTrue(effects(fixture(bad)).isEmpty())
+        assertTrue(resolver.validateRoom(fixture(bad)).any { "light surface" in it })
+    }
+
+    @Test fun lightMotionHasPhysicalRolesAndStopsWithAccessibilitySettings() {
+        val settled = localizedLightMotion("lamplight", 5f, 31, 0, true)
+        assertEquals(0f, settled.x, 0f); assertEquals(0f, settled.y, 0f)
+        assertEquals(1f, settled.scaleX, 0f)
+        assertTrue(localizedLightMotion("lamplight", .3f, 31, 0, true).strength < settled.strength - .15f)
+        for (style in listOf("firelight", "canopy")) {
+            assertNotEquals(localizedLightMotion(style, 1f, 31, 0, true).x, localizedLightMotion(style, 4f, 31, 0, true).x)
+            assertEquals(localizedLightMotion(style, 0f, 31, 0, false), localizedLightMotion(style, 9f, 31, 0, false))
+        }
+        assertTrue(localizedLightMotion("bioluminescence", 1f, 31, 0, true).scaleX in .88f..1.12f)
     }
 }

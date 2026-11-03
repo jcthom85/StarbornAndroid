@@ -1,0 +1,71 @@
+pit_mess	0	generic	monitor		gated=false	hideInline=false
+pit_nova_bunk	0	generic	cargo netting	w1_mq01_check_netting	gated=true	hideInline=true
+pit_nova_bunk	0	generic	rusty locker		gated=true	hideInline=true
+pit_nova_bunk	1	generic	door control panel	w1_mq01_inspect_safety_fault	gated=true	hideInline=false
+pit_nova_bunk	1	generic	cargo netting	w1_mq01_check_netting	gated=true	hideInline=true
+pit_nova_bunk	1	generic	rusty locker		gated=true	hideInline=true
+pit_nova_bunk	2	generic	door control panel	w1_mq01_inspect_safety_fault	gated=true	hideInline=false
+pit_nova_bunk	2	generic	cargo netting	w1_mq01_check_netting	gated=true	hideInline=true
+pit_nova_bunk	2	generic	rusty locker		gated=true	hideInline=true
+pit_nova_bunk	3	generic	cargo netting	w1_mq01_check_netting	gated=true	hideInline=true
+pit_nova_bunk	3	generic	rusty locker		gated=true	hideInline=true
+workshop_floor	1	generic	live cutter test	w1_mq01_cutter_surge	gated=true	hideInline=false
+mine_shunt	0	generic	crew datapad	read_datapad_sq05	gated=true	hideInline=false
+mine_junction	1	generic	wheel brake	w1_cart_release	gated=true	hideInline=false
+launch_bay	1	generic	cargo rails		gated=false	hideInline=false
+launch_bay	1	generic	escape pod		gated=false	hideInline=false
+launch_bay	2	generic	cargo rails		gated=false	hideInline=false
+launch_bay	2	generic	escape pod		gated=false	hideInline=false
+debug_enemy_party_sizes	0	shop	Contraband		gated=false	hideInline=false
+spire_exec_lounge_bar	0	shop	concierge terminal		gated=false	hideInline=false
+spire_archive_vault	0	generic	scan tether-lines	w3_scan_archive_tethers	gated=false	hideInline=false
+spire_archive_vault	2	generic	scan tether-lines	w3_scan_archive_tethers	gated=false	hideInline=false
+spire_prism_gallery	0	generic	scan alarm chords	w3_scan_prism_alarm_chords	gated=false	hideInline=false
+spire_prism_gallery	2	generic	scan alarm chords	w3_scan_prism_alarm_chords	gated=false	hideInline=false
+spire_drone_test_alcove	0	generic	scan targeting paths	w3_scan_drone_paths	gated=false	hideInline=false
+sector9_pod_interior	1	generic	emergency medkit	w2_mq01_stabilize_zeke	gated=true	hideInline=false
+sector9_landing_brush	1	generic	charred starleaf	w2_forage_herb_landing	gated=true	hideInline=false
+sector9_landing_glade	1	generic	luminous mushrooms	w2_forage_herb_glade	gated=true	hideInline=false
+sector9_landing_drop	0	generic	return to Astra	w2_mq05_return_to_hangar	gated=true	hideInline=false
+sector9_stream_pools	1	generic	reed bulbs	w2_forage_herb_reeds	gated=true	hideInline=false
+sector9_stream_falls	0	shop	provisions counter		gated=false	hideInline=false
+sector9_stream_tidepools	1	generic	tidepool crawler	w2_forage_meat_tidepool	gated=true	hideInline=false
+sector9_beach_pools	1	generic	tideglass growth	w2_sq03_gather_tideglass	gated=true	hideInline=false
+sector9_beach_pools	2	generic	bioluminescent weeds	w2_sq01_scan_weeds	gated=true	hideInline=false
+sector9_beach_pools	3	generic	tideglass growth	w2_sq03_gather_tideglass	gated=true	hideInline=false
+sector9_beach_dunes	1	generic	burrowing grazer	w2_forage_meat_dunes	gated=true	hideInline=false
+sector9_wilds_nest	1	generic	shard-hound remains	w2_forage_meat_nest	gated=true	hideInline=false
+sector9_wilds_clearance	1	generic	patrol transceiver	w2_sq02_recover_transceiver	gated=true	hideInline=false
+sector9_canopy_ridge	0	generic	Face the Beast	w2_mq04_beast_ambush	gated=true	hideInline=false
+sector9_canopy_ridge	0	generic	Anchor Drill	w2_mq04_anchor_drill	gated=true	hideInline=false
+sector9_canopy_ridge	1	generic	Face the Beast	w2_mq04_beast_ambush	gated=true	hideInline=false
+sector9_canopy_ridge	2	generic	Face the Beast	w2_mq04_beast_ambush	gated=true	hideInline=false
+sector9_canopy_ridge	2	generic	Anchor Drill	w2_mq04_anchor_drill	gated=true	hideInline=false
+sector9_canopy_ridge	3	generic	Confront stalker	w2_mq04_confront	gated=true	hideInline=false
+sector9_canopy_ridge	3	generic	Anchor Drill	w2_mq04_anchor_drill	gated=true	hideInline=false
+sector9_canopy_ridge	4	generic	Confront stalker	w2_mq04_confront	gated=true	hideInline=false
+sector9_canopy_ridge	4	generic	Face the Beast	w2_mq04_beast_ambush	gated=true	hideInline=false
+sector9_canopy_ridge	5	generic	Confront stalker	w2_mq04_confront	gated=true	hideInline=false
+sector9_canopy_ridge	5	generic	Face the Beast	w2_mq04_beast_ambush	gated=true	hideInline=false
+sector9_canopy_ridge	6	generic	Confront stalker	w2_mq04_confront	gated=true	hideInline=false
+sector9_canopy_ridge	6	generic	Face the Beast	w2_mq04_beast_ambush	gated=true	hideInline=false
+sector9_canopy_ridge	6	generic	Anchor Drill	w2_mq04_anchor_drill	gated=true	hideInline=false
+sector9_temple_lock_chamber	0	shop	Sentinel Scraps		gated=false	hideInline=false
+sector9_stasis_chamber	0	generic	sealed Bridge cradle	w2_mq03_recover_bridge	gated=true	hideInline=false
+sector9_stasis_chamber	2	generic	sealed Bridge cradle	w2_mq03_recover_bridge	gated=true	hideInline=false
+sector9_stasis_chamber	3	generic	stasis pod	w2_mq03_inspect_pod	gated=true	hideInline=false
+sector9_stasis_chamber	3	generic	sealed Bridge cradle	w2_mq03_recover_bridge	gated=true	hideInline=false
+sector9_stasis_chamber	4	generic	stasis pod	w2_mq03_inspect_pod	gated=true	hideInline=false
+sector9_stasis_chamber	4	generic	sealed Bridge cradle	w2_mq03_recover_bridge	gated=true	hideInline=false
+sector9_stasis_chamber	5	generic	sealed Bridge cradle	w2_mq03_recover_bridge	gated=true	hideInline=false
+sector9_stasis_ring_array	1	generic	ring console	w2_mq03_align_complete	gated=true	hideInline=false
+sector9_stasis_ring_array	3	generic	ring console	w2_mq03_align_complete	gated=true	hideInline=false
+sector9_stasis_coolant_lines	1	generic	coolant garden	w2_mq03_stabilize_coolant	gated=true	hideInline=false
+sector9_vents_gantry	1	generic	security grid	w2_sq05_hack_grid	gated=true	hideInline=false
+sector9_vents_access_grate	1	generic	guard-system bypass	w2_sq05_bypass_guards	gated=true	hideInline=false
+sector9_gate_emitter_left	1	generic	emitter memory	w2_mq05_stabilize_horn	gated=true	hideInline=false
+sector9_gate_emitter_right	1	generic	emitter service log	w2_mq05_ground_cup	gated=true	hideInline=false
+sector9_hangar_bay	0	generic	salvage return route	w2_mq05_return_to_pod	gated=true	hideInline=false
+sector9_hangar_bay	1	generic	dark console	w2_mq05_inspect_astra	gated=true	hideInline=false
+sector9_hangar_bay	1	generic	salvage return route	w2_mq05_return_to_pod	gated=true	hideInline=false
+sector9_hangar_bay	2	generic	dark console	w2_mq05_inspect_astra	gated=true	hideInline=false

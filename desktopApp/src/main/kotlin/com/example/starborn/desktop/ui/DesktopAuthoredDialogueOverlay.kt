@@ -77,7 +77,9 @@ fun DesktopAuthoredDialogueOverlay(
     onAdvance: () -> Unit,
     onChoice: (String) -> Unit,
     onPlayVoice: (String) -> Unit,
-    onPlayMurmur: (String) -> Unit = {},
+    onPlayMurmur: (String) -> Unit = { cue ->
+        services.audioDriver.execute(com.example.starborn.domain.audio.AudioCommand.Play(com.example.starborn.domain.audio.AudioCueType.VOICE, cue))
+    },
     onPlayMurmurWithPitch: ((String, Float) -> Unit)? = null,
     onRevealFinished: () -> Unit = {},
     revealAllRequest: Int = 0,
@@ -198,7 +200,7 @@ fun DesktopAuthoredDialogueOverlay(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         SpeakerName(
-                            name = line.speaker,
+                            name = dialogue.displaySpeaker ?: line.speaker,
                             accentColor = accentColor
                         )
                         Spacer(modifier = Modifier.weight(1f))
@@ -293,11 +295,11 @@ fun DesktopAuthoredDialogueOverlay(
                 ) {
                     PortraitCard(
                         painter = portraitPainter,
-                        speaker = line.speaker,
+                        speaker = dialogue.displaySpeaker ?: line.speaker,
                         accentColor = accentColor
                     )
                     SpeakerName(
-                        name = line.speaker,
+                        name = dialogue.displaySpeaker ?: line.speaker,
                         accentColor = accentColor
                     )
                 }
@@ -529,6 +531,7 @@ internal enum class DialogueVoiceProfile(
     GH0ST("voice_murmur_gh0st", basePitch = 1.22f),
     FEMALE("voice_murmur_female", basePitch = 1.08f),
     MALE("voice_murmur_male", basePitch = 0.94f),
+    MACHINE("voice_murmur_machine"),
     NONE(null);
 
     fun randomCue(random: Random): String {
@@ -588,9 +591,10 @@ internal enum class DialogueVoiceProfile(
                 "schoolteacher kasey" -> FEMALE
 
                 "system",
-                "lab terminal",
+                "lab terminal" -> NONE
+
                 "maintenance bot",
-                "sentinel-3" -> NONE
+                "sentinel-3" -> MACHINE
 
                 "vale",
                 "arden vale" -> MALE

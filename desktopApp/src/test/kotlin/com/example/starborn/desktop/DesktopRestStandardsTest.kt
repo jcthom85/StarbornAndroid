@@ -102,10 +102,12 @@ class DesktopRestStandardsTest {
                         action.restEvent?.let { event ->
                             if (event.contains("_camp_")) {
                                 assertTrue("$event still executes", event in s.sessionStore.state.value.completedEvents)
-                                assertEquals("$event preserves camp supplies", supplies + 1,
+                                assertEquals("$event does not invent camp supplies", supplies,
                                     s.inventoryService.snapshot()["painkillers"] ?: 0)
+                                s.sessionStore.updatePartyVitals(mapOf("nova" to 20))
                                 runtime.onActionSelected(action)
-                                assertEquals("$event must not duplicate camp rewards", supplies + 1,
+                                compose.waitUntil(5000) { (s.sessionStore.state.value.partyMemberHp["nova"] ?: 0) > 20 }
+                                assertEquals("$event repeated rest must not create supplies", supplies,
                                     s.inventoryService.snapshot()["painkillers"] ?: 0)
                             }
                         }

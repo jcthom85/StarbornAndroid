@@ -204,21 +204,28 @@ private fun ModernTinkerSocket(label: String, name: String?, selected: Boolean, 
 
 @Composable
 private fun TinkerRequirements(requirements: List<TinkeringRequirementStatus>) {
-    Text("Materials and tools", color = FieldMenuDesign.text, style = MaterialTheme.typography.labelLarge)
-    requirements.forEach { requirement ->
-        val tool = requirement.label.startsWith("Tool: ")
-        Text("${requirement.label.removePrefix("Tool: ")} · ${requirement.available}/${requirement.required}" +
-            if (tool) " · reusable" else " · consumed",
-            color = if (requirement.available >= requirement.required) secondaryText() else Color(0xFFFFAA90),
-            style = MaterialTheme.typography.bodySmall)
+    val materials = requirements.filterNot { it.label.startsWith("Tool: ") }
+    val tools = requirements.filter { it.label.startsWith("Tool: ") }
+    if (materials.isNotEmpty()) {
+        Text("Materials · consumed", color = FieldMenuDesign.text, style = MaterialTheme.typography.labelLarge)
+        materials.forEach { requirement ->
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(requirement.label, Modifier.weight(1f), color = FieldMenuDesign.text, style = MaterialTheme.typography.bodySmall)
+                Text("${requirement.available} / ${requirement.required}",
+                    color = if (requirement.available >= requirement.required) secondaryText() else Color(0xFFFFAA90),
+                    style = MaterialTheme.typography.bodySmall)
+            }
+        }
     }
-    Text("Equipped items are reserved. Unequip them before using them as materials.",
-        color = secondaryText(), style = MaterialTheme.typography.labelMedium)
+    if (tools.isNotEmpty()) Text("Tools · reusable: " + tools.joinToString { it.label.removePrefix("Tool: ") +
+        if (it.available < it.required) " (missing)" else " ✓" }, color = secondaryText(), style = MaterialTheme.typography.bodySmall)
+    Text("Equipped items are reserved.", color = secondaryText(), style = MaterialTheme.typography.labelSmall)
+
 }
 
 @Composable
 internal fun ModernTinkerSchematics(recipes: List<TinkeringRecipeUi>, unknown: List<TinkeringRecipeUi>,
-    onLoad: (String) -> Unit, onCraft: (String) -> Unit) {
+    onLoad: (String) -> Unit, onCraft: (String) -> Unit, onViewed: (String) -> Unit = {}) {
     var query by rememberSaveable { mutableStateOf("") }
     var showDiscoveries by rememberSaveable { mutableStateOf(false) }
     var showAllClues by rememberSaveable { mutableStateOf(false) }
@@ -234,17 +241,36 @@ internal fun ModernTinkerSchematics(recipes: List<TinkeringRecipeUi>, unknown: L
         shown.forEach { recipe ->
             key(recipe.id) {
                 TinkerPanel {
-                    Text(recipe.name, color = FieldMenuDesign.text, style = MaterialTheme.typography.titleMedium)
-                    Text(recipe.resultSummary, color = secondaryText(), style = MaterialTheme.typography.bodySmall)
-                    ModComparisonPanel(recipe.equipmentComparison)
-                    TinkerRequirements(recipe.ingredients)
-                    // Separate full-width actions remain readable with larger system fonts.
-                    Button(onClick = { onCraft(recipe.id) }, enabled = recipe.canCraft,
+                    var expanded by rememberSaveable(recipe.id) { mutableStateOf(false) }
+                    TextButton(onClick = { expanded = !expanded; if (expanded) onViewed(recipe.id) },
                         modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight())) {
-                        Text("Synthesize")
+                        Text(recipe.name + if (recipe.isNew) "  · NEW" else "", Modifier.weight(1f),
+                            color = FieldMenuDesign.text, style = MaterialTheme.typography.titleMedium)
+                        Text(if (expanded) "−" else "+", color = FieldMenuDesign.cyan)
                     }
-                    OutlinedButton(onClick = { onLoad(recipe.id) }, modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight())) {
-                        Text("Load into workbench")
+                    Text(tinkeringEffectSummary(recipe), color = secondaryText(), style = MaterialTheme.typography.bodySmall)
+                    if (expanded) {
+                        TinkerRequirements(recipe.ingredients)
+                        Text(tinkeringAvailability(recipe), color = if (recipe.canCraft) FieldMenuDesign.cyan else Color(0xFFFFAA90),
+                            style = MaterialTheme.typography.bodySmall)
+                        Button(onClick = { onCraft(recipe.id) }, enabled = recipe.canCraft,
+                            colors = ButtonDefaults.buttonColors(disabledContainerColor = FieldMenuDesign.elevatedPanel,
+                                disabledContentColor = secondaryText()),
+                            modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight())) { Text("Synthesize") }
+                        OutlinedButton(onClick = { onLoad(recipe.id) }, modifier = Modifier.fillMaxWidth().heightIn(min = actionHeight())) {
+                            Text("Load into workbench")
+                        }
+                        var notes by remember { mutableStateOf(false) }
+                        TextButton(onClick = { notes = !notes }) { Text(if (notes) "Hide assembly notes" else "Assembly notes") }
+                        if (notes) {
+                            recipe.description?.let { Text(it, color = secondaryText(), style = MaterialTheme.typography.bodySmall) }
+                            Text(recipe.resultSummary, color = secondaryText(), style = MaterialTheme.typography.bodySmall)
+                        }
+                        if (recipe.equipmentComparison.isNotEmpty()) {
+                            var compare by remember { mutableStateOf(false) }
+                            TextButton(onClick = { compare = !compare }) { Text(if (compare) "Hide equipment comparison" else "Compare equipment") }
+                            if (compare) ModComparisonPanel(recipe.equipmentComparison)
+                        }
                     }
                 }
             }

@@ -128,8 +128,8 @@ private fun DesktopBattleFigure(
         else -> Color(0xFF425566)
     }
     val status: @Composable () -> Unit = {
-Column(Modifier.height(if (enemySide) 56.dp else 68.dp).fillMaxWidth().padding(horizontal = 4.dp), verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.Top), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(state.combatant.name, color = Color.White, fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+Column(Modifier.heightIn(min = if (enemySide) 56.dp else 68.dp).fillMaxWidth().padding(horizontal = 4.dp), verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.Top), horizontalAlignment = Alignment.CenterHorizontally) {
+            com.example.starborn.ui.menu.ReadableEnemyName(state.combatant.name, baseSize = 11)
             LinearProgressIndicator(progress = { readiness }, modifier = Modifier.fillMaxWidth().height(4.dp), color = Color(0xFF2F9BE8), trackColor = Color(0xCC070B12))
             LinearProgressIndicator(progress = { hp.coerceIn(0f, 1f) }, modifier = Modifier.fillMaxWidth().height(4.dp), color = Color(0xFFFF4D59), trackColor = Color(0xCC070B12))
             if (enemySide) Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {

@@ -229,7 +229,8 @@ fun TinkerTabContent(
                         },
                         onCraftDirect = { recipeId ->
                             craftingViewModel.craft(recipeId)
-                        }
+                        },
+                        onViewed = craftingViewModel::markSchematicViewed
                     )
                 }
                 TinkerTabMode.SCRAP -> {
@@ -1023,10 +1024,11 @@ private fun SchematicsCatalogPanel(
     accentColor: Color,
     borderColor: Color,
     onLoadRecipe: (String) -> Unit,
-    onCraftDirect: (String) -> Unit
+    onCraftDirect: (String) -> Unit,
+    onViewed: (String) -> Unit
 ) {
     if (LocalModernFieldMenu.current) {
-        ModernTinkerSchematics(recipes, lockedRecipes, onLoadRecipe, onCraftDirect)
+        ModernTinkerSchematics(recipes, lockedRecipes, onLoadRecipe, onCraftDirect, onViewed)
         return
     }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {

@@ -453,7 +453,7 @@ This quest uses Tinkering, not Cooking. Re-enter actual Tide Pools after accepti
 
 187. From **Hidden Reliquary**, go **west** to **Tuning Matrix** (`sector9_archive_tuning_bay`) -> **north** to **Interface Console** (`sector9_archive_reading_room`) -> **west** to **Archive Vault** (`sector9_archive_vault`) -> **west** to **Hall of Echoes** (`sector9_hall_of_echoes`) -> **west** to **Sanctuary Grand Hall** (`sector9_foyer_grand_hall`) -> **west** to **Temple Gate** (`sector9_temple_gate`) -> **west** to **Resonator Chamber** (`sector9_temple_lock_chamber`) -> **west** to **Stone Courtyard** (`sector9_temple_plaza`) -> **west** to **Sanctuary Outlook** (`sector9_ridge_plateau`) -> **west** to **High Pass** (`sector9_ridge_crevice`) -> **west** to **Sniper Lookout** (`sector9_ridge_sniper_perch`) -> **south** to **Shield Viewpoint** (`sector9_ridge_viewpoint`) -> **west** to **Canopy Ridge** (`sector9_canopy_ridge`) -> **south** to **Beast Lair Approach** (`sector9_ridge_overhang`) -> **south** to **Windy Ledges** (`sector9_ridge_ledges`) -> **south** to **Vine Climb** (`sector9_ridge_climb`) -> **west** to **Patrol Graveyard** (`sector9_wilds_grave`) -> **north** to **Poison Hollow** (`sector9_wilds_hollow`) -> **north** to **Spore Thickets** (`sector9_wilds_thickets`) -> **north** to **Resonant Canopy** (`sector9_canopy`) -> **north** to **Crash Site** (`sector9_crash_site`) -> **east** to **Stream Bank** (`sector9_landing_stream`) -> **east** to **Mist Pools** (`sector9_stream_pools`) -> **east** to **Crystalline Flats** (`sector9_stream_flats`) -> **east** to **Resonant Falls** (`sector9_stream_falls`) -> **north** to **Beach Transition** (`sector9_stream_tidepools`) -> **north** to **Tide Pools** (`sector9_beach_pools`). Stop at **Resonant Canopy** for **crystalline ferns** AND **drifting spores**, and at **Crash Site** for **moss**, now that Botanist is active. These actions do not require another battle.
 
-188. At **Tide Pools**, let entry credit **Visit Tide Pools**, then use **tideglass growth**. Receive **Herb x1 + Beast Meat x1 + Source Resin schematic**. It supplies exact crafting ingredients even if earlier food was used. Also use **bioluminescent weeds** for Botanist. Together with roots, ferns, spores and moss, this is the fifth scan; the quest must stay active until you report to Zeke.
+188. At **Tide Pools**, let entry credit **Visit Tide Pools**, then use **tideglass growth**. Receive **Herb x1 + Beast Meat x1 + Source Resin schematic**. It supplies exact crafting ingredients even if earlier food was used. Also use **bioluminescent weeds** for Botanist. Together with roots, ferns, spores and moss, this is the fifth scan. Dismiss the scan description, then finish the normal Zeke conversation that opens beside you. Confirm **100 XP + Neural Stabilizer x2 + one 2-AP award**, with no return to Stasis required. Repeating a scan or reloading must not pay again.
 
 189. At **Tide Pools**, open **Menu -> Tinkering**, learn Source Resin through Found schematics or use its blueprint in Items. Select **Source Resin Mod** and craft from **Herb x1 + Beast Meat x1** while the quest is active and Collect food done.
 
@@ -478,9 +478,9 @@ Return to the ridge with Orion and Bridge. Beast victory recruits Gh0st; drill c
 
 196. At **Canopy Ridge**, if defeated or retreating, return and use **Face the Beast** again. The fight repeats until victory; defeat/retreat should not mark the boss defeated or grant Hunter completion XP.
 
-197. At **Canopy Ridge**, after victory confirm **Gh0st joins**, **Anchor Drill** appears and the Hunter remains active. Do not leave thinking Link already unlocked.
+197. At **Canopy Ridge**, after victory confirm **Anchor Drill** appears and the Hunter remains active. Gh0st has not formally joined yet; take a moment to regroup. Do not leave thinking Link already unlocked.
 
-198. At **Canopy Ridge**, use **Anchor Drill** and finish its cinematic. Confirm **Nova Link**, Hunter completion for **300 event XP**, and Liftoff starts. Link restores party HP and applies Regen; it does not share damage. A saved pending scene should resume with one completion payout.
+198. At **Canopy Ridge**, use **Anchor Drill** and finish its cinematic. Gh0st explains his choice to warn Nova and agrees to accompany the crew in search of answers about the silent command channel. Confirm **Gh0st joins once**, **Nova Link**, Hunter completion for **300 event XP**, and Liftoff starts. Link restores party HP and applies Regen; it does not share damage. A saved pending scene should resume with one completion payout.
 
 199. At **Canopy Ridge**, talk to **Gh0st** until he offers **Stolen Tech**; accept **I'll fetch it.** Its offer requires Hunter complete, so a conversation immediately after Beast but before the drill is too early.
 
@@ -493,7 +493,7 @@ Return to the ridge with Orion and Bridge. Beast victory recruits Gh0st; drill c
 
 There is no real-time countdown. A correct mask latches until you cross. Follow the sequence even if you looted a premade capacitor.
 
-201. From **Canopy Ridge**, go **east** to **Shield Viewpoint** (`sector9_ridge_viewpoint`) -> **north** to **Sniper Lookout** (`sector9_ridge_sniper_perch`) -> **east** to **High Pass** (`sector9_ridge_crevice`) -> **east** to **Sanctuary Outlook** (`sector9_ridge_plateau`) -> **east** to **Stone Courtyard** (`sector9_temple_plaza`) -> **east** to **Resonator Chamber** (`sector9_temple_lock_chamber`) -> **east** to **Temple Gate** (`sector9_temple_gate`) -> **east** to **Sanctuary Grand Hall** (`sector9_foyer_grand_hall`) -> **east** to **Hall of Echoes** (`sector9_hall_of_echoes`) -> **south** to **Stasis Chamber** (`sector9_stasis_chamber`). At Stasis, talk to **Zeke** to finish Botanist\'s **Return to Zeke** task. Record **100 XP + Neural Stabilizer x2 + one 2-AP award**. Talk again/reload: no repeat payout. Five scans alone must not complete the quest.
+201. From **Canopy Ridge**, go **east** to **Shield Viewpoint** (`sector9_ridge_viewpoint`) -> **north** to **Sniper Lookout** (`sector9_ridge_sniper_perch`) -> **east** to **High Pass** (`sector9_ridge_crevice`) -> **east** to **Sanctuary Outlook** (`sector9_ridge_plateau`) -> **east** to **Stone Courtyard** (`sector9_temple_plaza`) -> **east** to **Resonator Chamber** (`sector9_temple_lock_chamber`) -> **east** to **Temple Gate** (`sector9_temple_gate`) -> **east** to **Sanctuary Grand Hall** (`sector9_foyer_grand_hall`) -> **east** to **Hall of Echoes** (`sector9_hall_of_echoes`) -> **south** to **Stasis Chamber** (`sector9_stasis_chamber`). Botanist should already be complete after the fifth-scan conversation. If checking an older save with all five scans but no completion, dismiss any pending narration and finish Zeke's review; do not repeat rewards.
 
 202. At **Stasis Chamber**, inspect **ceiling vent** for context. It describes the route toward High Gantry and Infiltration Hatch; it does not recover the transmitter. Continue to the actual case at Transmitter Site after the bypass sequence.
 
@@ -563,11 +563,11 @@ Inspect the ship first to unlock its salvage shortcut. Launch happens in Hangar 
 
 228. At **Hangar Bay**, use **dark console** to inspect Astra. Read the failed-power explanation; **salvage return route** appears.
 
-229. At **Hangar Bay**, use **salvage return route** to travel directly to **Pod Fragment**. It requires Liftoff and Astra inspection.
+229. At **Hangar Bay**, use **salvage return route**. On its first use, read the passage description and choose **Follow the passage**; dismissing the popup keeps you here. Arrive at **Pod Fragment** with a destination cue. Later uses of this direction travel directly. It requires Liftoff and Astra inspection.
 
 230. At **Pod Fragment**, use **power conduits** now. Confirm Collect power conduits checked; this stores quest progress rather than an ordinary stackable conduit inventory item.
 
-231. At **Pod Fragment**, use **return to Astra** to go directly to Hangar Bay.
+231. At **Pod Fragment**, use **return to Astra**. This direction has its own first-use passage confirmation, then returns to Hangar Bay with a destination cue. Both confirmations persist in the save; loading an earlier save restores its own confirmation state.
 
 232. At **Hangar Bay**, use **bridge relic** with conduits recovered, the Bridge and Chime present. Installation consumes the Bridge; authentication checks and retains the Chime. Confirm Reboot Bridge relic done.
 
@@ -630,9 +630,9 @@ Finish local errands before confirming departure. The current repository does no
 
 258. Make a separate predeparture save and keep it during World 3 testing. Record actual party level, credits, XP, equipment and consumables for comparing runs; no invented arrival targets are required.
 
-259. At **Hangar Bay**, use **launch cradle** and choose **Finish exploring Sector 9.** once if testing cancellation. Ship should stay grounded, Liftoff active and repairs intact.
+259. At **Hangar Bay**, use **launch cradle** to board the repaired Astra. Arrive in **Astra Cargo Bay** (`astra_cargo_bay`), then go **east** to **Astra Common Room** (`astra_common_room`) -> **north** to **Astra Bridge** (`astra_bridge`). Use **nav console** and choose **Stay docked for now.** once. Liftoff stays active and repairs remain intact. To finish local errands, return **south** to the common room -> **west** to the cargo bay, then use **cargo ramp** to return to Hangar Bay.
 
-260. At **Hangar Bay**, when ready use **launch cradle** again and choose **Release the cradle and depart.** Finish the cinematic. Astra follows the low service airlane beneath the Shield; local interference brings the crew down near the Spire.
+260. When ready, board from Hangar Bay again if necessary, reach the Astra Bridge and use **nav console**. Choose **Close the ramp, release the cradle and depart.** Finish the cinematic. Astra follows the low service airlane beneath the Shield; local interference brings the crew down near the Spire. Saving and loading aboard before departure must preserve the Hangar Bay docking location and the first-flight confirmation.
 
 261. Verify arrival at `spire_sewers_landing`, Liftoff completion for **350 event XP**, and World 3 quest `w3_mq11` active. These effects occur after the cinematic finishes, once. Keep your Sector 9 save.
 
@@ -660,7 +660,7 @@ The escape pod wreckage sits half-submerged in warm glow-water. A scorched navig
 - Event `w2_mq01_examine_pod` prerequisites: `[{"type": "quest_active", "quest_id": "w2_mq01"}, {"type": "quest_task_done", "quest_id": "w2_mq01", "task_id": "check_on_zeke"}, {"type": "quest_task_not_done", "quest_id": "w2_mq01", "task_id": "examine_pod"}]`. See the numbered route for its quest/reward sequence.
 - **glow-water** (generic; object: glow-water): The water is warm and vibrates with a gentle frequency. It feels soothing to touch.
 - **moss** (generic; object: moss): Objective completed.
-- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_flora_moss_scanned"}`.
+- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_flora_moss_scanned", "show_when_quest_active": "w2_sq01", "hide_when_event_completed": "w2_sq01_scan_moss"}`.
 - Event `w2_sq01_scan_moss` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq01"}, {"type": "quest_task_not_done", "quest_id": "w2_sq01", "task_id": "scan_flora_3"}]`. See the numbered route for its quest/reward sequence.
 
 #### Escape Pod Interior (`sector9_pod_interior`)
@@ -692,13 +692,12 @@ Shattered vines and charred branches litter the muddy clearing where the pod plo
 A broadleaf canopy filters the sky into green haze. Luminous mushrooms cluster along a decaying log. Beneath it, a mossy hollow rustles; a velvety spore puffball rolls out and settles near your boots.
 
 - **Exits:** **east** -> Crash Site (`sector9_crash_site`); **north** -> Security Perimeter (`sector9_landing_perimeter`).
-- **Puffball interaction:** Charlie remains off-screen. No NPC chip, portrait or conversation panel. Tap the animated ball for gentle play or Back.
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **luminous mushrooms** (generic; object: luminous mushrooms): Already harvested.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_herb_glade_foraged"}`.
 - Event `w2_forage_herb_glade` prerequisites: `[{"type": "milestone_not_set", "milestone": "ms_w2_herb_glade_foraged"}]`. See the numbered route for its quest/reward sequence.
 - **broadleaf canopy** (generic; object: broadleaf canopy): Giant fronds filter the alien sunlight into a dappled teal glow, humming with ambient spore drift.
-- **mossy hollow** (inspect; object: mossy hollow): A soft burrow lined with damp fern moss. Several dozen velvety, rounded spore puff balls are neatly clustered inside, clearly saved for playtime.
+- **mossy hollow** (inspect; object: mossy hollow): A soft hollow beneath the log. Velvety spore puffballs lie tucked into the moss. Something rustles deeper inside, then falls quiet.
 
 #### Stream Bank (`sector9_landing_stream`)
 
@@ -710,7 +709,6 @@ A clear stream of warm water flows east toward the coast, its glow-water current
 - **glow-water current** (generic; object: glow-water current): The current carries warm notes through the roots, like the Ocean breathing under the swamp.
 - **smooth pebbles** (generic; object: smooth pebbles): Water-rounded quartz crystals and silt shards coat the riverbank, warm to the touch.
 - **river silt cache** (container; object: river silt cache): Open once for Herbal Poultice, Scrap Metal. Persisted state: `w2_landing_stream_cache_opened`.
-- Discovery before rewards: You loosen the silt around a buried field case. Its seal has kept the river out of the supplies inside.
 
 #### Security Perimeter (`sector9_landing_perimeter`)
 
@@ -728,7 +726,7 @@ A metal cargo panel from the escape pod has sheared off and sits wedged in the m
 - **Exits:** **west** -> Scorched Brush (`sector9_landing_brush`).
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **power conduits** (generic; object: power conduits): Salvaging power conduits from the pod wreckage...
-- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_conduits_collected"}`.
+- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_conduits_collected", "show_when_quest_active": "w2_mq05", "show_when_milestone": "ms_w2_astra_inspected", "hide_when_event_completed": "w2_mq05_collect_conduits"}`.
 - Event `w2_mq05_collect_conduits` prerequisites: `[{"type": "quest_active", "quest_id": "w2_mq05"}, {"type": "quest_task_done", "quest_id": "w2_mq05", "task_id": "inspect_astra"}, {"type": "quest_task_not_done", "quest_id": "w2_mq05", "task_id": "collect_power_conduits"}]`. See the numbered route for its quest/reward sequence.
 - **cargo panel** (generic; object: cargo panel): Reinforced alloy stenciled with Dominion emergency release instructions. The hydraulic latch is crushed shut.
 - **return to Astra** (generic; object: return to Astra): Follow the opened service route back to the Astra.
@@ -744,12 +742,13 @@ Entry: **Resonant Canopy** (`sector9_canopy`). Entry policy: transition; return 
 Crystalline ferns hum above a Stalker-Vine feeding a Spore-Spitter through its roots. Drifting spores catch the light. The remains of a fallen scout lie tangled nearby; you can scavenge the remains. A low-frequency hum runs through the branches.
 
 - **Exits:** **north** -> Crash Site (`sector9_crash_site`); **south** -> Spore Thickets (`sector9_wilds_thickets`).
-- **Direct encounters:** stalker_vine + spore_spitter; action-spawned encounters are separate.
+- **Direct encounters:** stalker_vine, spore_spitter.
 - **low-frequency hum** (generic; object: low-frequency hum): Their leaves vibrate like harp strings when touched, ringing out a quiet chord.
 - **crystalline ferns** (generic; object: crystalline ferns): Objective completed.
-- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_flora_ferns_scanned"}`.
+- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_flora_ferns_scanned", "show_when_quest_active": "w2_sq01", "hide_when_event_completed": "w2_sq01_scan_ferns"}`.
 - Event `w2_sq01_scan_ferns` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq01"}, {"type": "quest_task_not_done", "quest_id": "w2_sq01", "task_id": "scan_flora_1"}]`. See the numbered route for its quest/reward sequence.
 - **drifting spores** (generic; object: drifting spores): The razor-vine spores vibrate with high energy.
+- Action visibility/requirements: `{"show_when_quest_active": "w2_sq01", "hide_when_event_completed": "w2_sq01_scan_spores"}`.
 - Event `w2_sq01_scan_spores` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq01"}, {"type": "quest_task_not_done", "quest_id": "w2_sq01", "task_id": "scan_flora_4"}]`. See the numbered route for its quest/reward sequence.
 - **Scavenge remains** (generic; object: Scavenge remains): A fallen Dominion scout lies tangled in the vines.
 - Event `w2_sq02_start_trace_alpha` prerequisites: `[{"type": "quest_not_started", "quest_id": "w2_sq02"}]`. See the numbered route for its quest/reward sequence.
@@ -760,7 +759,7 @@ Crystalline ferns hum above a Stalker-Vine feeding a Spore-Spitter through its r
 A dense tangle of glowing vines and thorned thickets. The air is thick with purple spores, and distress signature alpha repeats under the static hiss.
 
 - **Exits:** **north** -> Resonant Canopy (`sector9_canopy`); **east** -> Hound Nest (`sector9_wilds_nest`); **south** -> Poison Hollow (`sector9_wilds_hollow`).
-- **Direct encounters:** razor_vine; action-spawned encounters are separate.
+- **Direct encounters:** razor_vine.
 - **distress signature alpha** (generic; object: distress signature alpha): Objective completed.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_beacon_alpha_traced"}`.
 - Event `w2_sq02_start_trace_alpha` prerequisites: `[{"type": "quest_not_started", "quest_id": "w2_sq02"}]`. See the numbered route for its quest/reward sequence.
@@ -771,12 +770,11 @@ A dense tangle of glowing vines and thorned thickets. The air is thick with purp
 Two Shard-Hounds circle a shallow den, crystalline spines raised. Shard-hound tracks crisscross the mud around shard-hound remains and a trampled supply pack dragged beneath the thorns.
 
 - **Exits:** **west** -> Spore Thickets (`sector9_wilds_thickets`).
-- **Direct encounters:** shard_hound + shard_hound; action-spawned encounters are separate.
+- **Direct encounters:** shard_hound, shard_hound.
 - **shard-hound remains** (generic; object: shard-hound remains): Already harvested.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_meat_nest_foraged"}`.
 - Event `w2_forage_meat_nest` prerequisites: `[{"type": "milestone_not_set", "milestone": "ms_w2_meat_nest_foraged"}]`. See the numbered route for its quest/reward sequence.
 - **trampled supply pack** (container; object: trampled supply pack): Open once for Beast Meat, Wiring Bundle, Energy Core. Persisted state: `w2_hound_nest_pack_opened`.
-- Discovery before rewards: You pull the torn pack clear of the thorns. Its padded inner pockets have survived the hounds.
 
 #### Poison Hollow (`sector9_wilds_hollow`)
 
@@ -785,7 +783,7 @@ A low-lying hollow filled with a thick, stagnant layer of toxic purple spores ar
 - **Exits:** **north** -> Spore Thickets (`sector9_wilds_thickets`); **south** -> Patrol Graveyard (`sector9_wilds_grave`).
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **distress signature beta** (generic; object: distress signature beta): Objective completed.
-- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_beacon_beta_traced"}`.
+- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_beacon_beta_traced", "show_when_quest_active": "w2_sq02"}`.
 - Event `w2_sq02_trace_beta` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq02"}, {"type": "quest_task_not_done", "quest_id": "w2_sq02", "task_id": "trace_beta"}]`. See the numbered route for its quest/reward sequence.
 - **ancient stump** (generic; object: ancient stump): A hollowed tree trunk large enough to shelter an expedition team from sudden squalls.
 
@@ -795,8 +793,7 @@ The rusted remains of a Dominion scouting squad lie scattered among the vines. T
 
 - **Exits:** **north** -> Poison Hollow (`sector9_wilds_hollow`); **east** -> Vine Climb (`sector9_ridge_climb`); **south** -> Canopy Edge (`sector9_wilds_overlook`).
 - **Direct encounters:** none; action-spawned encounters are separate.
-- **transceiver** (generic; object: transceiver): A fallen soldier holds an encrypted datapad, repair notes, and a damaged Thermal Cutter.
-- Event `w2_sq02_trace_beta` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq02"}, {"type": "quest_task_not_done", "quest_id": "w2_sq02", "task_id": "trace_beta"}]`. See the numbered route for its quest/reward sequence.
+- **transceiver** (inspect; object: transceiver): A fallen soldier holds an encrypted datapad, repair notes, and a damaged Thermal Cutter.
 
 #### Canopy Edge (`sector9_wilds_overlook`)
 
@@ -833,7 +830,6 @@ A wide trail of trampled vines and broken tree trunks skirts a violet toxic bloo
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **toxic bloom** (generic; object: toxic bloom): A violet bloom exhales corrosive spores. Holding your breath, you mark a safer return path.
 - **lost surveyor pack** (container; object: lost surveyor pack): Open once for Antidote Flask, Medkit+, Ration Pack. Persisted state: `w2_surveyor_pack_opened`.
-- Discovery before rewards: You unfasten the mud-caked pack. The outer fabric is ruined, but its emergency supplies are still sealed.
 
 #### Burned Glade (`sector9_wilds_clearance`)
 
@@ -842,7 +838,7 @@ An open clearing ringed by shattered trunks and burned clean by old energy disch
 - **Exits:** **south** -> Beast Run (`sector9_wilds_dense_brush`); **north** -> Hunter's Blind (`sector9_wilds_lookout`).
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **patrol transceiver** (generic; object: patrol transceiver): Objective completed.
-- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_transceiver_recovered"}`.
+- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_transceiver_recovered", "show_when_quest_active": "w2_sq02", "show_when_event_available": true}`.
 - Event `w2_sq02_recover_transceiver` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq02"}, {"type": "quest_task_not_done", "quest_id": "w2_sq02", "task_id": "recover_transceiver"}, {"type": "quest_task_done", "quest_id": "w2_sq02", "task_id": "trace_alpha"}, {"type": "quest_task_done", "quest_id": "w2_sq02", "task_id": "trace_beta"}, {"type": "quest_task_done", "quest_id": "w2_sq02", "task_id": "trace_gamma"}]`. See the numbered route for its quest/reward sequence.
 - **shattered trunks** (generic; object: shattered trunks): Felled timber and torn roots show signs of recent heavy kinetic impacts.
 
@@ -865,7 +861,7 @@ Entry: **Mist Pools** (`sector9_stream_pools`). Entry policy: transition; return
 Deep wetlands where the glowing water pools into wide, still basins. Reed bulbs push through the mineral fog, and a Siren Skimmer darts through the mist with a shrill, disorienting cry.
 
 - **Exits:** **west** -> Stream Bank (`sector9_landing_stream`); **east** -> Crystalline Flats (`sector9_stream_flats`); **south** -> Resonant Sedge (`sector9_stream_wetlands`).
-- **Direct encounters:** siren_skimmer; action-spawned encounters are separate.
+- **Direct encounters:** siren_skimmer.
 - **reed bulbs** (generic; object: reed bulbs): Already harvested.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_herb_reeds_foraged"}`.
 - Event `w2_forage_herb_reeds` prerequisites: `[{"type": "milestone_not_set", "milestone": "ms_w2_herb_reeds_foraged"}]`. See the numbered route for its quest/reward sequence.
@@ -876,11 +872,10 @@ Deep wetlands where the glowing water pools into wide, still basins. Reed bulbs 
 Dense sedge grasses with hollow, fluted stalks rise from the swamp. A handwritten spore warning sign leans in the muck as wind-sung reeds whistle in harmonic chords near a submerged emergency locker.
 
 - **Exits:** **north** -> Mist Pools (`sector9_stream_pools`).
-- **Direct encounters:** spore_spitter; action-spawned encounters are separate.
+- **Direct encounters:** spore_spitter.
 - **spore warning** (generic; object: spore warning): Amber sacs inflate along the path. Aethel markers identify the cloud as neurotoxic and harmful to Erosion control.
 - **wind-sung reeds** (generic; object: wind-sung reeds): Hollow reed stalks whistle with harmonic frequencies as the coastal breeze passes through them.
 - **submerged emergency locker** (container; object: submerged emergency locker): Open once for Antidote Flask, Pure Iron, Chemical Catalyst. Persisted state: `w2_wetlands_locker_opened`.
-- Discovery before rewards: You lever the locker above the waterline and release its latch. Brackish water drains away from a sealed inner compartment.
 
 #### Crystalline Flats (`sector9_stream_flats`)
 
@@ -929,7 +924,7 @@ A dark cavern opens behind a waterfall curtain beneath the main shelf. Wet mist 
 A quiet cavern chamber lit blue by thick sheets of glowing moss. A waterproof cargo case rests against the rocks. Two Echo-Borers scrape around an echo nest, their crystalline claws clicking against the cold stone.
 
 - **Exits:** **south** -> Cavern Entrance (`sector9_stream_cave_entrance`); **east** -> Waterlogged Tunnel (`sector9_stream_sunken_passage`).
-- **Direct encounters:** echo_borer + echo_borer; action-spawned encounters are separate.
+- **Direct encounters:** echo_borer, echo_borer.
 - **echo nest** (generic; object: echo nest): Already harvested.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_meat_cave_foraged"}`.
 - Event `w2_forage_meat_cave` prerequisites: `[{"type": "milestone_not_set", "milestone": "ms_w2_meat_cave_foraged"}]`. See the numbered route for its quest/reward sequence.
@@ -954,8 +949,7 @@ High basalt cliffs overlook the beach, where a sun-bleached driftwood marker and
 
 - **Exits:** **west** -> Resonant Falls (`sector9_stream_falls`); **north** -> Tidewatch Station (`sector9_coastal_research_station`).
 - **Direct encounters:** none; action-spawned encounters are separate.
-- **signal reflection** (generic; object: signal reflection): Three distant beacon reflections stutter across the tideglass. One carries a Dominion patrol code.
-- Event `w2_sq02_trace_cliffs` prerequisites: `[]`. See the numbered route for its quest/reward sequence.
+- **signal reflection** (generic; object: signal reflection): Tideglass reflections corroborate the patrol vector toward the ridge.
 - **basalt cliffs** (generic; object: basalt cliffs): Sheer volcanic columns rise against the tidal surf, worn smooth by centuries of mineral spray.
 - **driftwood marker** (inspect; object: driftwood marker): A weathered piece of sea-bleached driftwood planted in the cliffside grass, carved with two simple words: 'GO BEACH.' Beside it, petrified in the stone sand, are small, playful paw prints leading toward the warmest patch of afternoon sun.
 - **weathered elephant toy** (inspect; object: weathered elephant toy): A small, resilient fabric elephant toy tucked into a sunny hollow in the basalt rock. Softened by years of affection, it rests peacefully beside the driftwood marker, looking out over the quiet tide.
@@ -979,10 +973,10 @@ Glowing tide pools collect in the sand around luminescent anemones, calm enough 
 - **pools** (generic; object: pools): The water hums with a deep subsonic tone, washing away local static.
 - **tide fishing** (fishing; object: tide fishing): The tide pools are calm enough for fishing.
 - **bioluminescent weeds** (generic; object: bioluminescent weeds): Objective completed.
-- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_flora_weeds_scanned"}`.
+- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_flora_weeds_scanned", "show_when_quest_active": "w2_sq01", "hide_when_event_completed": "w2_sq01_scan_weeds"}`.
 - Event `w2_sq01_scan_weeds` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq01"}, {"type": "quest_task_not_done", "quest_id": "w2_sq01", "task_id": "scan_flora_2"}]`. See the numbered route for its quest/reward sequence.
 - **tideglass growth** (generic; object: tideglass growth): Glowing tideglass skewers are harvested from the shore.
-- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_tideglass_gathered"}`.
+- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_tideglass_gathered", "show_when_quest_active": "w2_sq03", "hide_when_event_completed": "w2_sq03_gather", "show_when_event_available": true}`.
 - Event `w2_sq03_gather` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq03"}, {"type": "quest_task_done", "quest_id": "w2_sq03", "task_id": "visit_beach"}, {"type": "quest_task_not_done", "quest_id": "w2_sq03", "task_id": "collect_food"}]`. See the numbered route for its quest/reward sequence.
 - **luminescent anemones** (generic; object: luminescent anemones): Delicate tidepool flora pulse in rhythmic intervals synchronized with the distant barrier frequency.
 
@@ -993,7 +987,6 @@ A Dominion cargo container lies split open on the sand, its rusted hull stripped
 - **Exits:** **east** -> Tide Pools (`sector9_beach_pools`); **north** -> Star-Sand Dunes (`sector9_beach_dunes`).
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **crates** (container; object: crates): Open once for Scrap Metal, Composite Plate, Hydraulic Fluid, Nano Filament. Persisted state: `w2_beach_crates_opened`.
-- Discovery before rewards: You pry apart the warped shipping panels. Beneath the soaked packing, a few sealed supplies are still usable.
 - **rusted hull** (generic; object: rusted hull): Barnacles and salt crystals encrust the shipping container's battered exterior.
 
 #### Sea Cavern (`sector9_beach_cave`)
@@ -1004,7 +997,6 @@ A high-ceilinged cavern carved by the waves. Abandoned bedroll hooks mark a mine
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **mineral shelter** (generic; object: mineral shelter): Old bedroll hooks and a soot-blackened ceiling mark a patrol shelter abandoned in a hurry.
 - **tide-worn chest** (container; object: tide-worn chest): Open once for Bioluminescent Lure, Tideglass Delight, Cooling Burn Salve. Persisted state: `w2_sea_cavern_chest_opened`.
-- Discovery before rewards: You work the salt-stiff latch free. The chest opens with a scrape, revealing dry bundles beneath its weathered lid.
 
 #### Sunken Obelisk (`sector9_beach_pillar`)
 
@@ -1045,9 +1037,9 @@ An old monitoring station overlooks the tidal wetlands. Patched pipes feed the c
 - **Exits:** **west** -> Beach Transition (`sector9_stream_tidepools`); **south** -> Beach Cliffs (`sector9_beach_cliffs`); **north** -> Sandy Cove (`sector9_beach_cove`).
 - **NPC:** Megan (`clinician_megan`).
 - **Direct encounters:** none; action-spawned encounters are separate.
-- **wetland telemetry array** (inspect; object: Old gauges track tides and sediment. New wiring connects the station to the camp's filtration system. A faded note reads: 'If the telemetry drops, check the grounding wire before calling Jason.'
-- **forensic research slate** (inspect; object: Megan's sample notes compare filter residue, water clarity and reports of irritated eyes at the falls. She has marked an upstream runoff pattern for further investigation.
-- **solar coffee press** (inspect; object: A warm glass carafe of dark roast coffee sitting on a solar heater beside a handwritten note: 'Drink water, stretch your back, and stop reading autopsy reports at 2 AM.'
+- **wetland telemetry array** (inspect; object: wetland telemetry array): Old gauges track tides and sediment. New wiring connects the station to the camp's filtration system. A faded note reads: 'If the telemetry drops, check the grounding wire before calling Jason.'
+- **forensic research slate** (inspect; object: forensic research slate): Megan's sample notes compare filter residue, water clarity and reports of irritated eyes at the falls. She has marked an upstream runoff pattern for further investigation.
+- **solar coffee press** (inspect; object: solar coffee press): A warm glass carafe of dark roast coffee sitting on a solar heater beside a handwritten note: 'Drink water, stretch your back, and stop reading autopsy reports at 2 AM.'
 
 #### Submerged Aethel Vault (`sector9_sunken_aethel_vault`)
 
@@ -1056,7 +1048,6 @@ Ancient basalt pillars support a domed chamber carved from living coral. Drainag
 - **Exits:** **north** -> Waterlogged Tunnel (`sector9_stream_sunken_passage`).
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **precursor reliquary** (container; object: precursor reliquary): Open once for Tidal Resonator, Astral Thread, Bioluminescent Lure. Persisted state: `w2_sunken_vault_chest_opened`.
-- Discovery before rewards: The brass seals yield under steady pressure. You lift the lid and ease the preserved contents from their fitted recesses.
 - **living coral** (inspect; object: living coral): Deep cyan and amber polyps pulse gently in time with the tide, calcified around Aethel harmonic conductors that have survived centuries under water.
 
 ### Canopy Ridge (`canopy_ridge`)
@@ -1122,7 +1113,7 @@ A narrow shelf near the summit offering a perfect view of the Canopy Ridge. Dist
 - **Exits:** **south** -> Shield Viewpoint (`sector9_ridge_viewpoint`); **east** -> High Pass (`sector9_ridge_crevice`).
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **distress signature gamma** (generic; object: distress signature gamma): Objective completed.
-- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_beacon_gamma_traced"}`.
+- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_beacon_gamma_traced", "show_when_quest_active": "w2_sq02"}`.
 - Event `w2_sq02_trace_gamma` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq02"}, {"type": "quest_task_not_done", "quest_id": "w2_sq02", "task_id": "trace_gamma"}]`. See the numbered route for its quest/reward sequence.
 
 #### High Pass (`sector9_ridge_crevice`)
@@ -1143,6 +1134,7 @@ A high stone plateau directly facing the Temple facades. A ridge overlook cache 
 - **Cook** (rest_stop; object: stone cookfire): The warm stone plateau makes an ideal spot to boil water and cook restorative fish stew. Cooking source: Campfire.
 - **Rest** (rest_stop; object: plateau camp): Shared rest and quiet contemplation on the warm stone restore focus before the temple. Rest event: `w2_camp_ridge_plateau`.
 - **ridge overlook cache** (generic; object: ridge overlook cache): A stone cache overlooking the dark canopy and ocean swells.
+- Action visibility/requirements: `{"hide_when_event_completed": "find_vhs_tape_04"}`.
 - Event `find_vhs_tape_04` prerequisites: `[]`. See the numbered route for its quest/reward sequence.
 
 ### Temple Gate (`temple_gate`)
@@ -1223,7 +1215,7 @@ A colossal foyer of clean, ancient geometry surrounds a welcome console. The air
 A wide alcove showing cracked Architect resonance crystals displayed on stone pedestals beside a botanical research log. The crystals hum in discord.
 
 - **Exits:** **south** -> Sanctuary Grand Hall (`sector9_foyer_grand_hall`); **west** -> Dominion Outpost (`sector9_foyer_security_hub`).
-- **Direct encounters:** ruin_guardian; action-spawned encounters are separate.
+- **Direct encounters:** ruin_guardian.
 - **botanical research log** (generic; object: botanical research log): The log confirms the swamp was cultivated to filter Source resonance, not allowed to overtake the facility.
 
 #### Right Archives (`sector9_foyer_right_gallery`)
@@ -1263,7 +1255,7 @@ A dark, cramped ventilation crawlspace filled with bundles of thick optical wire
 A junction point inside the crawlspace. A service map marks wire channels splitting off to the stasis deck and generator breakers.
 
 - **Exits:** **west** -> Maintenance Conduit (`sector9_conduit_crawlspace`); **north** -> Access Shaft (`sector9_conduit_access_shaft`); **south** -> Breaker Deck (`sector9_conduit_breaker_room`).
-- **Direct encounters:** sentinel_orb; action-spawned encounters are separate.
+- **Direct encounters:** sentinel_orb.
 - **service map** (generic; object: service map): The map reveals a return duct linking the Hall of Echoes to the foyer security hub.
 
 #### Breaker Deck (`sector9_conduit_breaker_room`)
@@ -1274,7 +1266,6 @@ An auxiliary generator cabin. Offline breakers hum with static, ready to be flip
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **breakers** (generic; object: breakers): Flipping the auxiliary breaker alignment...
 - **technician toolbox** (container; object: technician toolbox): Open once for Rapid Capacitor, Wiring Bundle, Pure Iron. Persisted state: `w2_breaker_toolbox_opened`.
-- Discovery before rewards: You lift the toolbox lid and slide out its fitted tray. Spare components remain secured beneath it.
 
 #### Access Shaft (`sector9_conduit_access_shaft`)
 
@@ -1311,7 +1302,7 @@ Small side alcoves designed for private study. A choir alcove log projects shift
 A laboratory bay containing Dominion logging sensors focused on cymatic pool fluctuations. The northern resonance crystal hums inside a sealed acoustic rack.
 
 - **Exits:** **south** -> Echo Alcoves (`sector9_hall_echo_alcoves`).
-- **Direct encounters:** spore_spitter; action-spawned encounters are separate.
+- **Direct encounters:** spore_spitter.
 - **northern resonance crystal** (generic; object: northern resonance crystal): A gold crystal vibrates at the mural alignment frequency.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_crystal_north_seated"}`.
 - Event `w2_sq04_crystal_north` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq04"}, {"type": "quest_task_not_done", "quest_id": "w2_sq04", "task_id": "crystal_north"}]`. See the numbered route for its quest/reward sequence.
@@ -1360,7 +1351,6 @@ A labeled calibration record sits behind the opened pedestal glass. Its diagrams
 - **pedestal** (generic; object: pedestal): The Bridge calibration record lists consent checks, separate carriers, and a mandatory ground.
 - Event `w2_sq04_decode_bridge_record` prerequisites: `[{"type": "quest_completed", "quest_id": "w2_sq04"}, {"type": "milestone_not_set", "milestone": "ms_w2_bridge_record_decoded"}]`. See the numbered route for its quest/reward sequence.
 - **relic coffer** (container; object: relic coffer): Open once for Astral Thread, Bioluminescent Focus, Energy Core. Persisted state: `w2_relic_coffer_opened`.
-- Discovery before rewards: You open the coffer carefully. Its lining separates a handful of delicate components, still undisturbed.
 
 ### Stasis Chamber (`stasis_chamber`)
 
@@ -1378,10 +1368,10 @@ A circular room gathers around a single humming stasis pod. A root lattice pulse
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_pod_inspected"}`.
 - Event `w2_mq03_inspect_pod` prerequisites: `[{"type": "quest_active", "quest_id": "w2_mq03"}, {"type": "milestone_not_set", "milestone": "ms_w2_stasis_pod_read"}]`. See the numbered route for its quest/reward sequence.
 - **root lattice** (generic; object: root lattice): Objective completed.
-- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_roots_scanned"}`.
+- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_roots_scanned", "show_when_quest_active": "w2_sq01", "hide_when_event_completed": "w2_sq01_scan_roots"}`.
 - Event `w2_sq01_scan_roots` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq01"}, {"type": "quest_task_not_done", "quest_id": "w2_sq01", "task_id": "scan_flora_5"}]`. See the numbered route for its quest/reward sequence.
 - **ceiling vent** (generic; object: ceiling vent): The ventilation shaft above leads toward the high gantry and infiltration hatch; its scrape marks are newer than the dust.
-- **sealed Bridge cradle** (generic; object: sealed Bridge cradle): Talk to Orion before opening the separate Bridge cradle.
+- **sealed Bridge cradle** (generic; object: sealed Bridge cradle): Speak to the awakened stranger before opening the separate Bridge cradle.
 - Action visibility/requirements: `{"show_when_milestone": "ms_w2_orion_briefed", "requires_milestone_not_set": "ms_w2_bridge_recovered"}`.
 - Event `w2_mq03_recover_bridge` prerequisites: `[{"type": "quest_active", "quest_id": "w2_mq03"}, {"type": "quest_task_done", "quest_id": "w2_mq03", "task_id": "talk_to_orion"}, {"type": "quest_task_not_done", "quest_id": "w2_mq03", "task_id": "recover_bridge_relic"}]`. See the numbered route for its quest/reward sequence.
 
@@ -1420,9 +1410,9 @@ Walkway gantries suspended high above the stasis pod. A security grid sweeps acr
 
 - **Exits:** **south** -> Access Shaft (`sector9_conduit_access_shaft`); **east** -> Infiltration Hatch (`sector9_vents_access_grate`).
 - **South lock:** Razor-vines choke the shaft. The barbed stems will burst into toxic spores if cut cold. Requires `thermal_cutter`; consumed: False.
-- **Direct encounters:** sentinel_orb; action-spawned encounters are separate.
+- **Direct encounters:** sentinel_orb.
 - **security grid** (generic; object: security grid): Objective completed.
-- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_grid_hacked"}`.
+- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_grid_hacked", "show_when_quest_active": "w2_sq05"}`.
 - Event `w2_sq05_hack_grid` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq05"}, {"type": "quest_task_not_done", "quest_id": "w2_sq05", "task_id": "hack_security_grid"}]`. See the numbered route for its quest/reward sequence.
 
 #### Infiltration Hatch (`sector9_vents_access_grate`)
@@ -1432,7 +1422,7 @@ A ventilation access grate has been sliced open from the inside. Scrap metal sha
 - **Exits:** **west** -> High Gantry (`sector9_vents_gantry`); **north** -> Transmitter Site (`sector9_vents_tech_alcove`); **south** -> Observation Deck (`sector9_stasis_observation`).
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **guard-system bypass** (generic; object: guard-system bypass): Objective completed.
-- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_guards_bypassed"}`.
+- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_guards_bypassed", "show_when_quest_active": "w2_sq05"}`.
 - Event `w2_sq05_bypass_guards` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq05"}, {"type": "quest_task_not_done", "quest_id": "w2_sq05", "task_id": "bypass_guard_systems"}, {"type": "quest_task_done", "quest_id": "w2_sq05", "task_id": "hack_security_grid"}]`. See the numbered route for its quest/reward sequence.
 
 #### Transmitter Site (`sector9_vents_tech_alcove`)
@@ -1442,7 +1432,7 @@ A narrow tech alcove behind the pipes. A locked case contains a stolen Dominion 
 - **Exits:** **south** -> Infiltration Hatch (`sector9_vents_access_grate`).
 - **Direct encounters:** none; action-spawned encounters are separate.
 - **case** (generic; object: case): Objective completed.
-- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_vent_case_looted"}`.
+- Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_vent_case_looted", "show_when_quest_active": "w2_sq05", "show_when_event_available": true}`.
 - Event `w2_sq05_find_transmitter` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq05"}, {"type": "quest_task_not_done", "quest_id": "w2_sq05", "task_id": "recover_transmitter"}, {"type": "quest_task_done", "quest_id": "w2_sq05", "task_id": "hack_security_grid"}, {"type": "quest_task_done", "quest_id": "w2_sq05", "task_id": "bypass_guard_systems"}]`. See the numbered route for its quest/reward sequence.
 
 ### Source Gate (`source_gate`)
@@ -1536,8 +1526,8 @@ A vast underground cavern opens to the sky. The Astra sits silent on the launch 
 - Event `w2_mq05_inspect_astra` prerequisites: `[{"type": "quest_active", "quest_id": "w2_mq05"}, {"type": "quest_task_done", "quest_id": "w2_mq05", "task_id": "bypass_source_gate"}, {"type": "quest_task_not_done", "quest_id": "w2_mq05", "task_id": "inspect_astra"}]`. See the numbered route for its quest/reward sequence.
 - **bridge relic** (generic; object: bridge relic): The Astra needs her power conduits restored first. Once the Bridge has ship current, the Chime can authenticate Orion at the console.
 - Event `w2_mq05_reboot` prerequisites: `[{"type": "quest_active", "quest_id": "w2_mq05"}, {"type": "quest_task_done", "quest_id": "w2_mq05", "task_id": "collect_power_conduits"}, {"type": "quest_task_not_done", "quest_id": "w2_mq05", "task_id": "reboot_bridge_relic"}, {"type": "item", "item_id": "bridge_relic", "quantity": 1}, {"type": "item", "item_id": "ghost_signal_cell", "quantity": 1}]`. See the numbered route for its quest/reward sequence.
-- **launch cradle** (generic; object: launch cradle): The launch cradle will not release the Astra until the bridge relic is awake.
-- Event `w2_mq05_launch` prerequisites: `[{"type": "quest_active", "quest_id": "w2_mq05"}, {"type": "quest_task_done", "quest_id": "w2_mq05", "task_id": "reboot_bridge_relic"}, {"type": "quest_task_not_done", "quest_id": "w2_mq05", "task_id": "launch_ship"}]`. See the numbered route for its quest/reward sequence.
+- **launch cradle** (generic; object: launch cradle): The Astra must have power before you can board her for departure.
+- Event `w2_mq05_launch` prerequisites: `[{"type": "quest_active", "quest_id": "w2_mq05"}, {"type": "quest_task_done", "quest_id": "w2_mq05", "task_id": "reboot_bridge_relic"}, {"type": "quest_task_not_done", "quest_id": "w2_mq05", "task_id": "launch_ship"}, {"type": "in_room", "room_id": "sector9_hangar_bay"}]`. See the numbered route for its quest/reward sequence.
 - **salvage return route** (generic; object: salvage return route): The service hatch follows the conduit route back toward the crashed pod.
 - Action visibility/requirements: `{"show_when_milestone": "ms_w2_astra_inspected", "requires_milestone_not_set": "ms_w2_conduits_collected"}`.
 - Event `w2_mq05_return_to_pod` prerequisites: `[{"type": "quest_active", "quest_id": "w2_mq05"}, {"type": "quest_task_done", "quest_id": "w2_mq05", "task_id": "inspect_astra"}, {"type": "quest_task_not_done", "quest_id": "w2_mq05", "task_id": "collect_power_conduits"}]`. See the numbered route for its quest/reward sequence.
@@ -1640,13 +1630,13 @@ Current authored task text. Complete required turn-ins and verify actual rewards
 
 ### A Strange Coast (`w2_mq01`)
 
-Check on Zeke, recover the Chime and emergency supplies from the pod, stabilize him, then follow the glow-water stream toward shelter.
+Secure the crash site, check the damaged pod and follow the stream toward shelter.
 
 **Assess the Crash**
 
 - [ ] Talk to Zeke at the pod wreckage. (`check_on_zeke`)
 - [ ] Examine the wrecked navigation console. (`examine_pod`)
-- [ ] Use the emergency medkit to stabilize Zeke. (`stabilize_zeke`)
+- [ ] Use the medkit's sealant and pressure tape to patch Zeke's suit. (`stabilize_zeke`)
 - [ ] Follow the glow-water stream into the ruins. (`follow_stream`)
 
 ### The Signal (`w2_mq02`)
@@ -1661,41 +1651,41 @@ Push through the hostile canopy, find the Temple Gate, and use the recovered Chi
 
 ### Sleeping Giant (`w2_mq03`)
 
-Power Sanctuary from reserve cells, wake Orion after Chime authentication, and recover the separate Bridge Echo.
+Investigate the murals and follow the facility clues deeper into Sanctuary.
 
 **Ancient Geometry**
 
 - [ ] In the Hall of Echoes, examine the shifting light murals above the empty crystal shadows. (`inspect_murals`)
-- [ ] From the Hall of Echoes, head south to Orion's Stasis Chamber. (`find_stasis_chamber`)
+- [ ] From the Hall of Echoes, investigate the Stasis Chamber to the south. (`find_stasis_chamber`)
 
 **Awaken the Tuner**
 
-- [ ] Read the chamber clues, then route pressure, memory and return at the Ring Array. (`align_stasis_rings`)
-- [ ] Return to Stasis Chamber and talk to the awakened Orion. (`talk_to_orion`)
-- [ ] After talking to Orion, open the sealed Bridge cradle in Stasis Chamber. (`recover_bridge_relic`)
+- [ ] Use the chamber clues to stabilize the Ring Array. (`align_stasis_rings`)
+- [ ] Speak with the occupant once the stasis chamber is stable. (`talk_to_orion`)
+- [ ] After speaking with the occupant, inspect the sealed cradle in the chamber. (`recover_bridge_relic`)
 
 ### The Hunter (`w2_mq04`)
 
-Confront Gh0st, survive the Beast, then finish Orion's grounded Anchor Drill before Link unlocks.
+Reach the ridge and confront the hunter. Stay ready for whatever follows.
 
 **Confrontation**
 
 - [ ] Travel to the wind-swept Canopy Ridge. (`reach_canopy_ridge`)
 - [ ] Confront the hunter waiting in the shadows. (`confront_stalker`)
-- [ ] Put down the mutated Source Beast. (`defeat_the_beast`)
-- [ ] Complete Orion's cutter-Bridge grounding drill. (`complete_anchor_drill`)
+- [ ] Survive the confrontation on the ridge. (`defeat_the_beast`)
+- [ ] Regroup with Orion after the confrontation. (`complete_anchor_drill`)
 
 ### Liftoff (`w2_mq05`)
 
-Settle the Source Gate, power conduits, install the Bridge, authenticate Orion with the Chime, and fly low to the Spire.
+Resolve the gate, inspect the ship and use what you learn to restore its systems.
 
 **Rebuild the Circuit**
 
-- [ ] Resolve the Source Gate's horn, cup, roots, and breakers. (`bypass_source_gate`)
+- [ ] Find a way through the Source Gate. (`bypass_source_gate`)
 - [ ] Inspect the Astra's dark console. (`inspect_astra`)
-- [ ] Return to the Pod Fragment and recover the power conduits from the wreckage. (`collect_power_conduits`)
+- [ ] Return to the Pod Fragment and recover the salvage conduits from the wreckage. (`collect_power_conduits`)
 - [ ] At the Hangar Bay, use the recovered conduits to install the Bridge and authenticate Orion with the Chime. (`reboot_bridge_relic`)
-- [ ] Release the Astra from the launch cradle. (`launch_ship`)
+- [ ] Board the Astra from the Hangar Bay, then depart using the bridge nav console. (`launch_ship`)
 
 ### Botanist (`w2_sq01`)
 
@@ -1708,11 +1698,11 @@ Find and scan unique flora in Sector 9.
 - [ ] At Crash Site, scan the moss clinging to the pod wreckage. (`scan_flora_3`)
 - [ ] In Resonant Canopy, scan the razor-vine spores. (`scan_flora_4`)
 - [ ] In Stasis Chamber, scan the ancient root lattice. (`scan_flora_5`)
-- [ ] Return to Zeke with the five plant scans. (`report_to_zeke`)
+- [ ] Review the five plant scans with Zeke beside you. (`report_to_zeke`)
 
 ### Lost Patrol (`w2_sq02`)
 
-Locate the logs of a lost squad in the Sector 9 ruins and turn their damaged cutter into a useful field tool.
+Trace the patrol signatures and discover what became of the missing squad.
 
 **Broken Signals**
 
@@ -1722,8 +1712,8 @@ Locate the logs of a lost squad in the Sector 9 ruins and turn their damaged cut
 
 **Dominion Downfall**
 
-- [ ] Recover the patrol transceiver in Burned Glade, along with the damaged Thermal Cutter. (`recover_transceiver`)
-- [ ] Repair the Thermal Cutter at a tinkering station. (`repair_thermal_cutter`)
+- [ ] Follow the combined patrol vector to the cache in Burned Glade. (`recover_transceiver`)
+- [ ] Restore the damaged tool at a tinkering station. (`repair_thermal_cutter`)
 
 ### Tideglass Day (`w2_sq03`)
 
@@ -1834,7 +1824,7 @@ After bypass inspect Hangar dark console, use salvage return route, collect cond
 
 ### Bridge reboot or launch does nothing
 
-Conduits must be collected; retain bridge_relic and ghost_signal_cell before installation. Hangar bridge relic, then launch cradle. Preview rooms never launch. Preserve inconsistent older saves instead of editing state.
+Conduits must be collected; retain bridge_relic and ghost_signal_cell before installation. Hangar bridge relic, then launch cradle to board. Walk to the Astra bridge and use nav console to confirm the first departure. Preview rooms never launch. Preserve inconsistent older saves instead of editing state.
 
 ### World 3 transition pending
 

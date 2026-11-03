@@ -50,7 +50,8 @@ data class TinkeringRecipeUi(
     val requiresSchematic: Boolean = false,
     val discoveryHint: String? = null,
     val equipmentComparison: List<ModSlotComparison> = emptyList(),
-    val isRelevantDiscovery: Boolean = false
+    val isRelevantDiscovery: Boolean = false,
+    val isNew: Boolean = false
 )
 
 data class TinkeringBenchState(
@@ -90,7 +91,8 @@ data class TinkeringPreview(
     val requiresSchematic: Boolean = false,
     val discoveryHint: String? = null,
     val equipmentComparison: List<ModSlotComparison> = emptyList(),
-    val isRelevantDiscovery: Boolean = false
+    val isRelevantDiscovery: Boolean = false,
+    val isNew: Boolean = false
 )
 
 enum class TinkeringFilter { ALL, REPAIR, GEAR }
@@ -260,7 +262,12 @@ class CraftingController(
         craft(recipeId)
     }
 
+    fun markSchematicViewed(recipeId: String) {
+        if (recipeId in sessionStore.state.value.learnedSchematics) sessionStore.markSchematicViewed(recipeId)
+    }
+
     fun autoFill(recipeId: String) {
+        markSchematicViewed(recipeId)
         val recipe = craftingService.tinkeringRecipes.find { it.id == recipeId } ?: return
         val newBench = benchFromRecipe(recipe)
         val (isTut, step) = evaluateTutorialStep(newBench)
@@ -500,6 +507,7 @@ class CraftingController(
             equipmentComparison = craftingService.equipmentComparison(result),
             requiresSchematic = requiresSchematic,
             discoveryHint = discoveryHint,
+            isNew = learned && id !in sessionStore.state.value.viewedSchematics,
             isRelevantDiscovery = craftingService.isTinkeringDiscoveryRelevant(this)
         )
 

@@ -84,7 +84,9 @@ internal class CrewBalanceExperiment(private val reader: AssetJsonReader, privat
         prepared.forEach { (id, snapshot) ->
             assertTrue(snapshot.pendingBattleJson.isBlank())
             assertNull(snapshot.battleCheckpoint)
-            assertEquals(checkpoints.getValue(id).playerAp + if (id == "early") 2 else 0, snapshot.playerAp)
+            // Preparation only lands, walks and rests. Loading the early checkpoint must
+            // not inherit later quest tasks and earn a phantom completion/level-up.
+            assertEquals(checkpoints.getValue(id).playerAp, snapshot.playerAp)
             File(output, "prepared-$id.json").writeText(adapter.toJson(snapshot))
         }
         File(output, "preparation.txt").writeText("Public movement, equip, sale, purchase, meal consumption and rest from packaged middle checkpoint.\n" + preparationLog.joinToString("\n"))

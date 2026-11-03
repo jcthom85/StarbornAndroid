@@ -7,6 +7,7 @@ import com.example.starborn.datastore.GameSessionProto
 import com.example.starborn.datastore.EnemyPartyStateProto
 import com.example.starborn.datastore.InventoryEntryProto
 import com.example.starborn.datastore.QuestTaskListProto
+import com.example.starborn.datastore.RoomGroundItemsProto
 import com.example.starborn.datastore.RoomStateProto
 import com.example.starborn.datastore.ArcadeProgressProto
 import com.example.starborn.domain.inventory.GearRules
@@ -265,6 +266,7 @@ private fun GameSessionProto.toState(): GameSessionState = GameSessionState(
     completedMilestones = completedMilestonesList.toSet(),
     milestoneHistory = milestoneHistoryList,
     learnedSchematics = learnedSchematicsList.toSet(),
+    viewedSchematics = viewedSchematicsList.toSet(),
     unlockedSkills = unlockedSkillsList.toSet(),
     unlockedWeapons = unlockedWeaponsList.toSet(),
     unlockedArmors = unlockedArmorsList.toSet(),
@@ -302,6 +304,9 @@ private fun GameSessionProto.toState(): GameSessionState = GameSessionState(
             claimedTiers = progress.claimedTiersList.filter { it.isNotBlank() }.toSet(),
             playCount = progress.playCount.coerceAtLeast(0)
         )
+    },
+    roomGroundItems = roomGroundItemsMap.filterKeys { it.isNotBlank() }.mapValues { (_, room) ->
+        room.itemsMap.filter { (id, quantity) -> id.isNotBlank() && quantity > 0 }
     },
     roomStates = roomStatesMap
         .filterKeys { it.isNotBlank() }
@@ -370,6 +375,7 @@ private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis())
     clearMilestoneHistory()
     addAllMilestoneHistory(this@toProto.milestoneHistory)
     addAllLearnedSchematics(this@toProto.learnedSchematics)
+    addAllViewedSchematics(this@toProto.viewedSchematics)
     addAllUnlockedSkills(this@toProto.unlockedSkills)
     addAllUnlockedWeapons(this@toProto.unlockedWeapons)
     addAllUnlockedArmors(this@toProto.unlockedArmors)
@@ -430,6 +436,11 @@ private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis())
                     .build()
             )
         }
+    }
+    clearRoomGroundItems()
+    this@toProto.roomGroundItems.forEach { (roomId, items) ->
+        if (roomId.isNotBlank()) putRoomGroundItems(roomId,
+            RoomGroundItemsProto.newBuilder().putAllItems(items.filter { (id, count) -> id.isNotBlank() && count > 0 }).build())
     }
     clearRoomStates()
     this@toProto.roomStates.forEach { (roomId, states) ->

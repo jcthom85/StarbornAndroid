@@ -34,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.starborn.data.local.UserSettings
 import com.example.starborn.desktop.DesktopAppServices
+import com.example.starborn.desktop.DesktopBuildInfo
+import androidx.compose.ui.platform.testTag
 import com.example.starborn.domain.audio.AudioCueType
 import com.example.starborn.feature.mainmenu.DebugScenario
 import com.example.starborn.feature.mainmenu.DebugScenarioCatalog
@@ -348,6 +350,10 @@ fun DesktopMainMenuScreen(
         }
 
         // Dialogs
+        Text(DesktopBuildInfo.DISPLAY_LABEL,
+            modifier = Modifier.align(Alignment.BottomStart).padding(16.dp).testTag("desktop-build-label"),
+            color = TitleMutedText, style = MaterialTheme.typography.labelSmall)
+
         if (showNewGameConfirm) {
             AlertDialog(
                 onDismissRequest = { showNewGameConfirm = false },

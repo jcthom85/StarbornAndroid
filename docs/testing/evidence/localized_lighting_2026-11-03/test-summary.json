@@ -1,0 +1,24 @@
+{
+  "environment": {
+    "tests": 24,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "desktop_render": {
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "android_host": {
+    "tests": 783,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "android_instrumentation": {
+    "tests": 1,
+    "failures": 0
+  }
+}

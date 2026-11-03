@@ -99,6 +99,7 @@
     "ms_w2_stasis_overview_read",
     "ms_w2_coolant_stabilized",
     "ms_w2_stasis_awake",
+    "ms_w2_orion_identified",
     "ms_w2_orion_briefed",
     "ms_w2_bridge_recovered",
     "ms_w2_mq03_complete",
@@ -405,6 +406,9 @@
     "sector9_hangar_bay",
     "sector9_landing_brush",
     "sector9_landing_drop",
+    "astra_cargo_bay",
+    "astra_common_room",
+    "astra_bridge",
     "spire_sewers_landing",
     "spire_sewers_scale_01",
     "spire_runoff_lock",
@@ -1164,6 +1168,18 @@
       "visited": true,
       "discovered": true
     },
+    "astra_cargo_bay": {
+      "visited": true,
+      "discovered": true
+    },
+    "astra_common_room": {
+      "visited": true,
+      "discovered": true
+    },
+    "astra_bridge": {
+      "visited": true,
+      "discovered": true
+    },
     "spire_sewers_landing": {
       "visited": true,
       "discovered": true
@@ -1410,6 +1426,9 @@
       "discovered": true
     }
   },
+  "roomGroundItems": {
+    "launch_checkpoint": {}
+  },
   "enemyPartyStates": {
     "debug_patrol_2": {
       "roomId": "debug_enemy_party_sizes",
@@ -1485,6 +1504,7 @@
     "stasis_chamber",
     "source_gate",
     "hangar_bay",
+    "astra_bridge_node",
     "spire_sewers",
     "spire_vent_output",
     "spire_the_static",
@@ -1533,6 +1553,7 @@
     "stasis_chamber",
     "source_gate",
     "hangar_bay",
+    "astra_bridge_node",
     "spire_sewers",
     "spire_vent_output",
     "spire_the_static",
@@ -1581,6 +1602,7 @@
     "stasis_chamber",
     "source_gate",
     "hangar_bay",
+    "astra_bridge_node",
     "spire_sewers",
     "spire_vent_output",
     "spire_the_static",
@@ -1623,6 +1645,9 @@
     ]
   },
   "completedNodes": [],
+  "astraReturnWorldId": "world_2",
+  "astraReturnHubId": "hub_4_facility",
+  "astraReturnRoomId": "sector9_hangar_bay",
   "arcadeProgress": {},
   "mealChefId": "nova",
   "fishingCleanCatchProgress": 0,

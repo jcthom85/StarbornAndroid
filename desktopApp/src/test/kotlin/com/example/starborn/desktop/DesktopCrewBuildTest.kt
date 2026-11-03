@@ -81,7 +81,12 @@ class DesktopCrewBuildTest {
         } } }
         waitFor { s.exploration.uiState.value.skillTreeOverlay?.respecRefund == 20 }
         screenshot("gh0st-tree")
-        compose.onNodeWithText("Reset build (+20 AP)").performClick()
+        compose.onNodeWithText("Respec Character · Refund 20 AP").performClick()
+        compose.onNodeWithText("Cancel").performClick()
+        assertEquals(32, store.state.value.purchasedSkillNodes.size)
+        assertEquals(0, store.state.value.playerAp)
+        compose.onNodeWithText("Respec Character · Refund 20 AP").performClick()
+        compose.onNodeWithText("Respec Character").performClick()
         waitFor { store.state.value.purchasedSkillNodes.size == 24 }
         assertEquals(20, store.state.value.playerAp)
         assertTrue("gh0st_headshot" in store.state.value.unlockedSkills)

@@ -7,7 +7,7 @@
 
 ## 1. Executive Playtest Overview
 
-This field guide is an authoritative 100% completionist walkthrough and adversarial QA verification checklist for **World 3: The Spire**. It tracks the narrative journey from the emergency sewer landing beneath the sprawling vertical metropolis, through assembling a high-stakes heist with Lower City fixers, infiltrating the gilded heights of the Upper City disguised as maintenance and executive guests, breaching the deep corporate Archive to liberate **The Lens** (Architect Echo #3), and fighting through rooftop lockdown against **The Administrator** to launch the *Astra* toward the Foundry.
+This field guide is an authoritative 100% completionist walkthrough and adversarial QA verification checklist for **World 3: The Spire**. It tracks the narrative journey from the emergency sewer landing beneath the sprawling vertical metropolis, through assembling a high-stakes heist with Lower City fixers, infiltrating the gilded heights of the Upper City disguised as maintenance and executive guests, breaching the deep corporate Archive to liberate **The Lens** (Architect Echo #3), and fighting through rooftop lockdown against **Administrator** to launch the *Astra* toward the Foundry.
 
 Keep this document open on a secondary screen while running the game on a physical test device or emulator.
 
@@ -36,7 +36,7 @@ Track your party status at each major milestone boundary. If your party levels, 
 > Extracting **The Lens** (`the_lens`) from the containment field inside `spire_archive_vault` trips the Spire's master security grid, transitions Upper City into full red-alert lockdown, and permanently spawns hostile patrols (Aero Drones, Corporate Assassins). Finish your Skypark stroll, the Exec Lounge ledger theft (`w3_sq14`), and the Drone Test Alcove weapon trial (`w3_sq15`) before unsealing the relic!
 
 > [!CAUTION] **Point of No Return #3 (Astra Liftoff to World 4):**  
-> Defeating **The Administrator** on the Landing Pad Roof (`spire_landing_pad_roof`) and scanning the Shield Gap activates `w3_mq15_launch`. The *Astra* punches through the planetary shield into orbit toward **World 4: The Foundry** (`hub_7_slag_pits`). All uncompleted Spire side quests will be permanently locked out!
+> Defeating **Administrator** on the Landing Pad Roof (`spire_landing_pad_roof`) and scanning the Shield Gap activates `w3_mq15_launch`. The *Astra* punches through the planetary shield into orbit toward **World 4: The Foundry** (`hub_7_slag_pits`). All uncompleted Spire side quests will be permanently locked out!
 
 ---
 
@@ -44,7 +44,7 @@ Track your party status at each major milestone boundary. If your party levels, 
 The Combat Stage Backdrop features on-screen playtest controls to accelerate QA runs:
 - `[ ⚡ OP ]` / `[ ⚡ OP: ON ]`: **Real-Time OP Mode Toggle**. Instantly grants the party invulnerability, sets outgoing basic and skill damage to 9,999, guarantees critical hits, bypasses ability cooldowns, and shatters enemy guard barriers on first touch.
   - *Usage Guideline:* Use OP Mode when testing exploration flow, dialogue tree continuity, and room transitions to bypass routine trash encounters in seconds.
-  - *Balancing Guideline:* **Disable OP Mode** during designated combat audit checkpoints (e.g., Corporate Assassin in `spire_archive_vault` and the climax boss encounter against **The Administrator** on the Landing Pad Roof) to assess true ATB pace, summon control, and guard break balance.
+  - *Balancing Guideline:* **Disable OP Mode** during designated combat audit checkpoints (e.g., Corporate Assassin in `spire_archive_vault` and the climax boss encounter against **Administrator** on the Landing Pad Roof) to assess true ATB pace, summon control, and guard break balance.
 - `[ 💥 Win ]`: **Insta-Win Kill Switch**. Immediately wipes all active enemy combatants and triggers the victory fanfare and rewards screen. Perfect for clearing test encounters without waiting for animation frames.
 
 ---
@@ -214,7 +214,7 @@ Interact with the Chrono-Flux console in `spire_prism_gallery`:
 
 ### Phase 5 Objective Summary
 - Ascend from the Drone Test Alcove to the exterior Landing Pad Roof (`spire_landing_pad_roof`).
-- Engage the Spire's apex machine authority: **The Administrator** supported by an Aero Drone and Heavy Mech.
+- Engage the Spire's apex machine authority: **Administrator** supported by an Aero Drone and Heavy Mech.
 - Exploit Shock vulnerabilities and The Lens's harmonic scanning to break the Administrator's shield lattice.
 - Scan the planetary defense shield to identify the frequency launch window (`w3_mq15`).
 - Board the *Astra*, disengage clamps, and launch through the shield gap toward **World 4: The Foundry**!
@@ -330,11 +330,11 @@ Interact with the Chrono-Flux console in `spire_prism_gallery`:
 | **Aero Drone** | Standard | 120 | 80 | Shock | Physical (-10%) | Shock +30% | Stun Pulse, Evasive Maneuver | Power Cell, Wiring Bundle |
 | **Corporate Assassin**| Elite | 260 | 100 | Physical | **Shock (-50%)** | Physical +10% | Critical Lunge, Smoke Step | Medkit, Battery Pack |
 | **Heavy Mech** | Elite | 240 | 160 | Burn | **Shock (-30%)** | Burn +40%, Phys +20% | Flame Sweep, Guard Protocol | Scrap Metal, Power Cell |
-| **The Administrator** | **Boss** | **420** | **220** | **Source** | **Shock (-50%)** | Source +30%, Phys +10%| Mandatory Happiness, Summon, Laser | Power Cell x2, 2 AP |
+| **Administrator** | **Boss** | **420** | **220** | **Source** | **Shock (-50%)** | Source +30%, Phys +10%| Mandatory Happiness, Summon, Laser | Power Cell x2, 2 AP |
 
 ---
 
-### Boss Guide: The Administrator (`administrator_boss`)
+### Boss Guide: Administrator (`administrator_boss`)
 
 #### Encounter Dynamics
 - **Location:** Landing Pad Roof (`spire_landing_pad_roof`).

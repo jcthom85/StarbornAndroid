@@ -441,6 +441,16 @@ class EventManager(
                     true
                 }
                 "rebuild_ui", "wait_for_draw" -> true
+                "board_astra" -> {
+                    if (state.hubId != com.example.starborn.domain.session.AstraTravel.HUB_ID) {
+                        sessionStore.setAstraReturnLocation(state.worldId, state.hubId, state.roomId)
+                        sessionStore.setWorld(com.example.starborn.domain.session.AstraTravel.WORLD_ID)
+                        sessionStore.setHub(com.example.starborn.domain.session.AstraTravel.HUB_ID)
+                        sessionStore.setRoom(com.example.starborn.domain.session.AstraTravel.ENTRY_ROOM_ID)
+                        sessionStore.visitNode(com.example.starborn.domain.session.AstraTravel.NODE_ID)
+                    }
+                    true
+                }
                 "set_room", "warp" -> {
                     action.roomId?.let {
                         sessionStore.setRoom(it)
@@ -477,6 +487,7 @@ class EventManager(
                     condition.milestone !in state.completedMilestones
                 "milestone_set" -> condition.milestone.isNullOrBlank() ||
                     condition.milestone in state.completedMilestones
+                "in_room" -> condition.roomId?.let { it == state.roomId } ?: false
                 "quest_active" -> condition.questId?.let { state.activeQuests.contains(it) } ?: false
                 "quest_not_started" -> condition.questId?.let { questId ->
                     questId !in state.activeQuests &&

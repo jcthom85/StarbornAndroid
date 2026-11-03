@@ -42,7 +42,6 @@ fun DesktopCookingScreen(
     val inventory by inventoryService.state.collectAsState()
     val session by craftingService.sessionState.collectAsState()
     val scope = rememberCoroutineScope()
-    val snackbar = remember { SnackbarHostState() }
     var category by rememberSaveable { mutableStateOf("meal") }
     var query by rememberSaveable { mutableStateOf("") }
     var readyOnly by rememberSaveable { mutableStateOf(false) }
@@ -50,12 +49,25 @@ fun DesktopCookingScreen(
     var feedback by rememberSaveable { mutableStateOf<String?>(null) }
     var pendingMeal by remember { mutableStateOf<(() -> Unit)?>(null) }
     var preparing by remember { mutableStateOf(false) }
-    pendingMeal?.let { action ->
-        AlertDialog(onDismissRequest = { pendingMeal = null },
-            title = { Text("Replace your active meal?") },
-            text = { Text("Cook and eat one portion. This replaces your current meal bonus; extra portions stay in inventory.") },
-            confirmButton = { TextButton(onClick = { pendingMeal = null; action() }) { Text("Replace meal") } },
-            dismissButton = { TextButton(onClick = { pendingMeal = null }) { Text("Cancel") } })
+    val popupSettings = LocalExplorationSettings.current.copy(
+        highContrastMode = highContrastMode, largeTouchTargets = largeTouchTargets)
+    CompositionLocalProvider(LocalExplorationSettings provides popupSettings) {
+        pendingMeal?.let { action ->
+            DesktopExplorationModal(
+                "Cook and eat one portion. This replaces your current meal bonus; extra portions stay in inventory.",
+                { pendingMeal = null }, title = "Replace your active meal?") {
+                Row(Modifier.align(Alignment.End), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    TextButton(onClick = { pendingMeal = null }) { Text("Cancel") }
+                    Button(onClick = { pendingMeal = null; action() }) { Text("Replace meal") }
+                }
+            }
+        }
+        feedback?.let { message ->
+            DesktopExplorationModal(message, { feedback = null }, title = "At the cookfire") {
+                TextButton(onClick = { feedback = null },
+                    modifier = Modifier.heightIn(min = if (largeTouchTargets) 56.dp else 48.dp)) { Text("Done") }
+            }
+        }
     }
     val chefs = craftingService.availableChefs()
     val selectedChef = session.mealChefId.takeIf { it in chefs } ?: chefs.firstOrNull()
@@ -136,7 +148,6 @@ fun DesktopCookingScreen(
                                     is ItemUseController.Result.Failure -> result.message
                                 }
                                 feedback = message
-                                scope.launch { snackbar.showSnackbar(message) }
                             } finally { preparing = false }
                         }
                     }
@@ -152,9 +163,8 @@ fun DesktopCookingScreen(
                     val outcome = craftingService.cookMeal(recipe.id, selectedChef, if (snack) 1 else batch)
                     feedback = outcome.message
                     if (outcome is CraftingOutcome.Success) onPlayAudio("cooking_sizzle")
-                    scope.launch { snackbar.showSnackbar(outcome.message ?: "Cooking complete.") }
                 }, enabled = canCook && !preparing,
-                    modifier = Modifier.fillMaxWidth().desktopPointerHover(canCook).heightIn(min = actionHeight),
+                    modifier = Modifier.testTag("cook-${recipe.id}").fillMaxWidth().desktopPointerHover(canCook).heightIn(min = actionHeight),
                     colors = ButtonDefaults.buttonColors(containerColor = orange, contentColor = FieldMenuDesign.shell)) {
                     Text(if (owned) "Already owned · equip from Items" else if (snack) "Craft snack" else "Cook ${recipe.resultQuantity * batch} portions")
                 }
@@ -234,12 +244,6 @@ fun DesktopCookingScreen(
                     Switch(readyOnly, { readyOnly = it })
                 }
             }
-            feedback?.let { message -> item {
-                CookingPanel(highContrastMode) {
-                    Text(message, color = text, style = MaterialTheme.typography.bodySmall)
-                    TextButton(onClick = { feedback = null }, modifier = Modifier.heightIn(min = actionHeight)) { Text("Dismiss") }
-                }
-            } }
             if (recipes.isEmpty()) item {
                 Text("No recipes match. Try another category, search, or filter.", color = muted, style = MaterialTheme.typography.bodySmall)
             }
@@ -294,7 +298,7 @@ fun DesktopCookingScreen(
         }
     }
     Scaffold(modifier = modifier.fillMaxSize(), containerColor = FieldMenuDesign.shell,
-        snackbarHost = { SnackbarHost(snackbar) }) { padding ->
+        snackbarHost = {}) { padding ->
         BoxWithConstraints(Modifier.fillMaxSize().padding(padding)) {
             if (maxWidth >= 900.dp) {
                 DesktopStationPanes(Modifier.padding(16.dp), primary = { paneModifier ->

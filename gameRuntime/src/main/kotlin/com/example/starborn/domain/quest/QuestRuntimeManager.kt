@@ -85,6 +85,21 @@ class QuestRuntimeManager(
     private val stageProgress: MutableMap<String, String> = mutableMapOf()
     private val completedTasks: MutableMap<String, MutableSet<String>> = mutableMapOf()
     private val recentLog: ArrayDeque<QuestLogEntry> = ArrayDeque()
+    private var observedRestorationVersion = sessionStore.restorationVersion
+
+    // Restoring an earlier save replaces progress, including absent task entries.
+    // Call under mutex before reading cached progress, even if the collector has not run yet.
+    private fun synchronizeRestoredProgress() {
+        val version = sessionStore.restorationVersion
+        if (version == observedRestorationVersion) return
+        observedRestorationVersion = version
+        stageProgress.clear()
+        completedTasks.clear()
+        recentLog.clear()
+        val restored = sessionStore.state.value
+        stageProgress.putAll(restored.questStageById)
+        restored.questTasksCompleted.forEach { (id, tasks) -> completedTasks[id] = tasks.toMutableSet() }
+    }
     private val questCompletionListeners: MutableSet<(String) -> Unit> = mutableSetOf()
 
     private val _state = MutableStateFlow(QuestRuntimeState())
@@ -92,9 +107,11 @@ class QuestRuntimeManager(
 
     init {
         scope.launch {
-            sessionStore.state.collect { session ->
+            sessionStore.state.collect { _ ->
                 val seededStages = mutableListOf<Pair<String, String>>()
                 mutex.withLock {
+                    synchronizeRestoredProgress()
+                    val session = sessionStore.state.value
                     val trackedIds = session.activeQuests + session.completedQuests
                     // Remove data for quests that are no longer tracked.
                     stageProgress.keys.retainAll(trackedIds)
@@ -163,6 +180,7 @@ class QuestRuntimeManager(
     fun setStage(questId: String, stageId: String) {
         scope.launch {
             mutex.withLock {
+                synchronizeRestoredProgress()
                 val previous = stageProgress[questId]
                 if (previous == stageId) return@withLock
                 stageProgress[questId] = stageId
@@ -178,6 +196,7 @@ class QuestRuntimeManager(
         scope.launch {
             val newlyCompleted = mutableListOf<String>()
             mutex.withLock {
+                synchronizeRestoredProgress()
                 if (sessionStore.state.value.completedQuests.contains(questId)) return@withLock
                 val tasks = completedTasks.getOrPut(questId) { mutableSetOf() }
                 if (tasks.add(taskId)) {

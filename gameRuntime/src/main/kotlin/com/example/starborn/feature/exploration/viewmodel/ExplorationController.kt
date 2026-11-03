@@ -657,6 +657,8 @@ class ExplorationController(
     private var themeByRoomId: Map<String, Theme?> = emptyMap()
     private var themeStyleByRoomId: Map<String, ThemeStyle?> = emptyMap()
     private val roomStates: MutableMap<String, MutableMap<String, Boolean>> = mutableMapOf()
+    private var authoredRoomsById: Map<String, Room> = emptyMap()
+    private var observedRestorationVersion = sessionStore.restorationVersion
     private val roomGroundItems: MutableMap<String, MutableMap<String, Int>> = mutableMapOf()
     private val visitedRooms: MutableSet<String> = mutableSetOf()
     private val discoveredRooms: MutableSet<String> = mutableSetOf()
@@ -1546,7 +1548,7 @@ class ExplorationController(
     private fun BlockedDirection.toIndicatorStatus(): DirectionIndicatorStatus? =
         when (type.lowercase(Locale.getDefault())) {
             "enemy" -> DirectionIndicatorStatus.ENEMY
-            "lock", "key" -> DirectionIndicatorStatus.LOCKED
+            "lock", "key", "state" -> DirectionIndicatorStatus.LOCKED
             else -> null
         }
 
@@ -1581,7 +1583,9 @@ class ExplorationController(
         return DialogueUi(
             line = line,
             portrait = portrait,
-            voiceCue = line.voiceCue
+            voiceCue = line.voiceCue,
+            displaySpeaker = if (line.speaker.equals("Orion", true) &&
+                !orionIdentityKnown(sessionStore.state.value)) "???" else null
         )
     }
 
@@ -1727,6 +1731,13 @@ class ExplorationController(
             _uiState.update { it.copy(isTapeDeckVisible = true) }
         }
         if (actionId.equals("astra_nav_console", ignoreCase = true)) {
+            val flight = sessionStore.state.value
+            if (firstAstraDeparturePending(flight)) {
+                if (flight.roomId == "astra_bridge" && "reboot_bridge_relic" in flight.questTasksCompleted["w2_mq05"].orEmpty()) {
+                    startImmediateDialogue("line:w2_departure_entry")
+                } else postStatus("Restore the Astra's systems before plotting departure.")
+                return
+            }
             val dock = AstraTravel.dockingLocation(sessionStore.state.value, worldAssets.loadHubs(), worldAssets.loadHubNodes())
             _uiState.update { it.copy(
                 isAstraNavConsoleVisible = true,
@@ -1765,6 +1776,10 @@ class ExplorationController(
                 return@launch
             }
             val session = sessionStore.state.value
+            if (firstAstraDeparturePending(session)) {
+                postStatus("Use the bridge nav console to prepare the first departure.")
+                return@launch
+            }
             val destination = AstraTravel.availableDestinations(session).firstOrNull {
                 it.worldId == worldId && it.hubId == hubId && it.roomId == roomId && it.nodeId == nodeId
             }
@@ -1863,6 +1878,9 @@ class ExplorationController(
     init {
         viewModelScope.launch(dispatchers.main) {
             sessionStore.state.collect { newState ->
+                if (observedRestorationVersion != sessionStore.restorationVersion && authoredRoomsById.isNotEmpty()) {
+                    synchronizeRestoredWorld(newState)
+                }
                 newState.roomStates.forEach { (rId, flags) ->
                     val existing = roomStates.getOrPut(rId) { mutableMapOf() }
                     flags.forEach { (k, v) ->
@@ -1917,6 +1935,8 @@ class ExplorationController(
                         questLogActive = activeJournal,
                         questLogCompleted = completedJournal,
                         npcs = visibleNpcs,
+                        npcPresenceNames = current.npcPresenceNames + ("orion" to
+                            if (orionIdentityKnown(newState)) "Orion" else "???"),
                         actions = updatedActions,
                         actionHints = current.currentRoom?.let { buildActionHints(it, updatedActions) } ?: current.actionHints,
                         partyStatus = partyStatus,
@@ -1936,6 +1956,10 @@ class ExplorationController(
                             "ms_w1_mq01_cryo_repaired" !in newState.completedMilestones,
                         isGearTutorialActive = tutorialsEnabled && OpeningEquipmentGuide.needsGuidance(newState)
                     )
+                }
+                viewModelScope.launch(dispatchers.main) {
+                    kotlinx.coroutines.yield()
+                    maybeReviewBotanistScans()
                 }
                 maybeOfferOpeningEquipment(newState)
                 val isTinkeringTutActive = tutorialsEnabled &&
@@ -2378,7 +2402,8 @@ class ExplorationController(
                     ?.shopId?.let { npc.name.lowercase(Locale.getDefault()) to it }
             }.toMap()
 
-            roomsById = rooms.associateBy { it.id }
+            authoredRoomsById = rooms.associateBy { it.id }
+            roomsById = authoredRoomsById
             hubsById = hubs.associateBy { it.id }
             val movementCatalog = worldAssets.loadEnemyMovement() ?: EnemyMovementCatalog()
             enemyMovementManager = EnemyMovementManager(movementCatalog, rooms).also { manager ->
@@ -2450,7 +2475,8 @@ class ExplorationController(
                 registerEmotes(npc.emotes, *keys.toTypedArray())
             }
             val npcPortraitPaths = buildNpcPortraitMap(npcs)
-            val npcPresenceNames = buildNpcPresenceNameMap(npcs)
+            val npcPresenceNames = buildNpcPresenceNameMap(npcs) +
+                ("orion" to if (orionIdentityKnown(sessionStore.state.value)) "Orion" else "???")
 
             visitedRooms.clear()
             discoveredRooms.clear()
@@ -2533,6 +2559,9 @@ class ExplorationController(
                     npcs = visibleNpcsForRoom(initialRoom, sessionState.completedMilestones),
                     npcPresenceNames = npcPresenceNames,
                     npcPortraitPaths = npcPortraitPaths,
+                    npcTradeKeys = npcDialogueNameByKey.filterValues { name ->
+                        merchantShopByDialogueName[name.lowercase(Locale.getDefault())]?.let { shopRepository.shopById(it) } != null
+                    }.keys.toSet(),
                     actions = initialActions,
                     actionHints = buildActionHints(initialRoom, initialActions),
                     enemies = initialRoom?.let { roomEnemyParties(it).flatten() }.orEmpty(),
@@ -2758,6 +2787,26 @@ class ExplorationController(
         reconcileMovementAfterRoomChange(nextRoom.id)
     }
 
+    private fun orionIdentityKnown(state: GameSessionState): Boolean =
+        "w2_mq03" !in state.activeQuests || "ms_w2_orion_identified" in state.completedMilestones ||
+            "ms_w2_orion_briefed" in state.completedMilestones || "w2_mq03" in state.completedQuests
+
+    private fun firstAstraDeparturePending(state: GameSessionState): Boolean =
+        "w2_mq05" in state.activeQuests && "w2_mq05" !in state.completedQuests &&
+            "ms_w2_mq05_complete" !in state.completedMilestones
+
+    private fun maybeReviewBotanistScans() {
+        val state = sessionStore.state.value
+        val ui = _uiState.value
+        if ("w2_sq01" !in state.activeQuests || "w2_sq01" in state.completedQuests ||
+            ui.isLoading || ui.currentRoom == null || ui.narrationPrompt != null ||
+            ui.cinematic != null || activeDialogueSession != null) return
+        val tasks = state.questTasksCompleted["w2_sq01"].orEmpty()
+        if ((1..5).all { "scan_flora_$it" in tasks } && "report_to_zeke" !in tasks) {
+            startImmediateDialogue("line:zeke_w2_sq01_turnin_1")
+        }
+    }
+
     private fun visibleNpcsForRoom(room: Room?, completedMilestones: Set<String> = sessionStore.state.value.completedMilestones): List<String> {
         if (room == null) return emptyList()
         val npcs = room.npcs.toMutableList()
@@ -2808,10 +2857,16 @@ class ExplorationController(
             darkRoomEntryDirection.remove(nextRoom.id)
         }
 
+        val previousRoom = _uiState.value.currentRoom
+        val servicePassage = setOf(previousRoom?.id, nextRoom.id) == setOf("sector9_hangar_bay", "sector9_landing_drop")
         val nextActions = parseActions(nextRoom)
         val sessionState = sessionStore.state.value
         _uiState.update { current ->
             current.copy(
+                areaEntry = if (servicePassage) AreaEntryUi(System.nanoTime(), nextRoom.title, nextHub?.title,
+                    "Maintenance passage from ${previousRoom?.title}", false) else current.areaEntry,
+                roomTransition = if (servicePassage) RoomTransitionUi(System.nanoTime(), previousRoom!!.id,
+                    nextRoom.id, "passage", previousRoom.backgroundImage) else current.roomTransition,
                 currentRoom = nextRoom,
                 currentHub = nextHub ?: current.currentHub,
                 currentWorld = nextWorld ?: current.currentWorld,
@@ -2963,6 +3018,7 @@ class ExplorationController(
                 if (activeDialogueSession == null) offerNpcTrade(npcName)
             }
             scheduleNovaBuildTutorial(sessionStore.state.value)
+            maybeReviewBotanistScans()
         } else {
             _uiState.update {
                 it.copy(
@@ -3009,6 +3065,7 @@ class ExplorationController(
                 if (activeDialogueSession == null) offerNpcTrade(npcName)
             }
             scheduleNovaBuildTutorial(sessionStore.state.value)
+            maybeReviewBotanistScans()
         } else {
             _uiState.update {
                 it.copy(
@@ -3084,10 +3141,30 @@ class ExplorationController(
             return
         }
         dismissRoomObject()
-        if (_uiState.value.actions.any { it.actionKey() == action.actionKey() }) onActionSelected(action)
+        if (_uiState.value.actions.any { it.actionKey() == action.actionKey() }) {
+            val route = (action as? GenericAction)?.actionEvent
+            if (route in serviceRoutes && eventManager.canHandleTrigger("player_action", EventPayload.Action(route!!))) {
+                _uiState.value.currentRoom?.id?.let { setRoomStateValue(it, "route_confirmed_$route", true) }
+            }
+            onActionSelected(action)
+        }
     }
 
+    private val serviceRoutes = mapOf(
+        "w2_mq05_return_to_pod" to ("Pod Fragment" to "The maintenance passage follows the old conduit run back to the crashed pod. You can recover the conduits there."),
+        "w2_mq05_return_to_hangar" to ("Hangar Bay" to "The maintenance passage climbs back to the Astra's launch hangar.")
+    )
+
     fun onActionSelected(action: RoomAction) {
+        val routeId = (action as? GenericAction)?.actionEvent
+        val route = serviceRoutes[routeId]
+        if (route != null && _uiState.value.actions.any { it.actionKey() == action.actionKey() } &&
+            eventManager.canHandleTrigger("player_action", EventPayload.Action(routeId!!)) &&
+            _uiState.value.roomState["route_confirmed_$routeId"] != true) {
+            _uiState.update { it.copy(roomObjectOffer = com.example.starborn.feature.exploration.presentation.RoomObjectOffer(
+                action, "Passage to ${route.first}", route.second, "Follow the passage")) }
+            return
+        }
         val actionHint = _uiState.value.actionHints[action.actionKey()]
         telemetry.record(
             "room_action_selected",
@@ -3376,7 +3453,10 @@ class ExplorationController(
             if (_uiState.value.narrationPrompt != expected) return@launch
             val next = if (narrationQueue.isEmpty()) null else narrationQueue.removeFirst()
             _uiState.update { it.copy(narrationPrompt = next) }
-            if (next == null) promptManager.setPresentationBlocked("narration", false)
+            if (next == null) {
+                promptManager.setPresentationBlocked("narration", false)
+                maybeReviewBotanistScans()
+            }
         }
     }
 
@@ -3799,6 +3879,7 @@ class ExplorationController(
                     val label = if (slot == SessionSaveRepository.QUICKSAVE_SLOT) "quicksave" else "slot $slot"
                     val message = if (success) "Loaded $label." else "Load failed."
                     withContext(dispatchers.main) {
+                        if (success) synchronizeRestoredWorld(sessionStore.state.value)
                         postStatus(message)
                         val targetRoomId = sessionStore.state.value.roomId
                         if (targetRoomId != null) {
@@ -4793,6 +4874,7 @@ class ExplorationController(
         if (items.isEmpty()) {
             roomGroundItems.remove(roomId)
         }
+        sessionStore.setRoomGroundItems(roomId, items.toMap())
         _uiState.update {
             it.copy(groundItems = getGroundItemsSnapshot(roomId))
         }
@@ -4814,6 +4896,7 @@ class ExplorationController(
         }
         items.clear()
         roomGroundItems.remove(roomId)
+        sessionStore.setRoomGroundItems(roomId, emptyMap())
         _uiState.update {
             it.copy(groundItems = emptyMap())
         }
@@ -4874,16 +4957,56 @@ class ExplorationController(
     }
 
     private fun initializeGroundItems(rooms: List<Room>) {
+        roomGroundItems.clear()
+        val saved = sessionStore.state.value.roomGroundItems
         rooms.forEach { room ->
-            if (room.items.isNotEmpty()) {
-                val counts = roomGroundItems.getOrPut(room.id) { mutableMapOf() }
-                room.items.forEach { itemId ->
-                    if (itemId.isNotBlank()) {
-                        counts[itemId] = (counts[itemId] ?: 0) + 1
-                    }
-                }
-            }
+            val items = saved[room.id] ?: room.items.filter { it.isNotBlank() }.groupingBy { it }.eachCount()
+            if (room.id in saved || items.isNotEmpty()) roomGroundItems[room.id] = items.toMutableMap()
         }
+    }
+
+    /** A load replaces caches; it must not union future progress into an earlier save. */
+    private fun synchronizeRestoredWorld(state: GameSessionState) {
+        observedRestorationVersion = sessionStore.restorationVersion
+        roomsById = authoredRoomsById
+        restoreRoomStates(state.roomStates)
+        initializeRoomStates(authoredRoomsById.values.toList())
+        sanitizeDarkStates()
+        applyRoomStatesToRooms()
+        unlockedExitKeys.clear(); unlockedExitKeys.addAll(state.unlockedExits)
+        pendingUnlockedExitKeys.clear(); pendingUnlockedExitKeys.addAll(state.unlockedExits)
+        unlockedAreaIds.clear(); unlockedAreaIds.addAll(state.unlockedAreas)
+        pendingUnlockedAreas.clear(); pendingUnlockedAreas.addAll(state.unlockedAreas)
+        initializeGroundItems(authoredRoomsById.values.toList())
+        unlockedDirections.clear()
+        initializeUnlockedDirections(authoredRoomsById.values.toList())
+        visitedRooms.clear(); discoveredRooms.clear(); darkRoomEntryDirection.clear()
+        state.roomStates.forEach { (id, flags) ->
+            if (flags["visited"] == true) visitedRooms.add(id)
+            if (flags["discovered"] == true) discoveredRooms.add(id)
+        }
+        roomsByEnvironment = roomsById.values.groupBy { environmentKey(it.env) }
+        roomsByNodeId = areaNodes.mapValues { (_, node) -> node.rooms.mapNotNull { roomsById[it] } }
+        enemyMovementManager?.restore(state.enemyPartyStates, state)
+        activeDialogueSession = null; activeDialogueNpcName = null
+        pendingDialogueNpcs.clear(); eventAnnouncementQueue.clear(); narrationQueue.clear()
+        promptManager.discardMatching { true }
+        promptManager.setToastsSuspended(false)
+        promptManager.setPresentationBlocked("narration", false)
+        // Keep a changed location detectable by the normal session observer, which warps it once.
+        val room = _uiState.value.currentRoom?.id?.let { roomsById[it] }
+        _uiState.update { current -> current.copy(
+            currentRoom = room, roomState = room?.id?.let { roomStates[it]?.toMap() }.orEmpty(),
+            groundItems = getGroundItemsSnapshot(room?.id), activeDialogue = null, dialogueChoices = emptyList(),
+            roomObjectOffer = null, narrationPrompt = null, eventAnnouncement = null,
+            tuningPuzzle = null, togglePrompt = null, blockedPrompt = null, shopGreeting = null,
+            completedMilestones = state.completedMilestones,
+            actions = room?.let(::parseActions).orEmpty(),
+            availableConnections = room?.let(::visibleConnections).orEmpty(),
+            blockedDirections = room?.let(::computeBlockedDirections).orEmpty(),
+            directionIndicators = room?.let(::buildDirectionIndicators).orEmpty()
+        ) }
+        updateMinimap(room)
     }
 
     private fun initializeUnlockedDirections(rooms: List<Room>) {
@@ -5817,6 +5940,7 @@ class ExplorationController(
         val normalizedQuantity = quantity.coerceAtLeast(1)
         val items = roomGroundItems.getOrPut(targetRoomId) { mutableMapOf() }
         items[itemId] = (items[itemId] ?: 0) + normalizedQuantity
+        sessionStore.setRoomGroundItems(targetRoomId, items.toMap())
 
         val message = if (normalizedQuantity > 1) {
             "${inventoryService.itemDisplayName(itemId)} ×$normalizedQuantity has appeared nearby."
@@ -6325,6 +6449,10 @@ class ExplorationController(
             if (name.contains("arcade prize")) return false
         }
         val session = sessionStore.state.value
+        if (action["show_when_event_available"] == true) {
+            val event = action["action_event"] as? String ?: return false
+            if (!eventManager.canHandleTrigger("player_action", EventPayload.Action(event))) return false
+        }
         val activeQuest = action["show_when_quest_active"] as? String
         if (activeQuest != null && activeQuest !in session.activeQuests) return false
         val completedEvent = action["hide_when_event_completed"] as? String

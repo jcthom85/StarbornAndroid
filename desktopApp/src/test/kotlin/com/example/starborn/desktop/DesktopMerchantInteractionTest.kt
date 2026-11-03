@@ -169,4 +169,19 @@ class DesktopMerchantInteractionTest {
         assertEquals(grenades + 2, s.inventoryService.snapshot()["pulse_grenade"] ?: 0)
         assertNotNull(runtime.uiState.value.shopGreeting)
     }
+
+    @Test fun miraKeepsDialogueWithoutAnUnreachableTradePromise() = withMerchant("workshop_yard") { s ->
+        val runtime = s.exploration
+        val mira = s.worldDataSource.loadNpcs().single { it.id == "mechanic_mira" }
+        assertEquals(listOf("talk"), mira.interactions.map { it.type })
+        assertFalse("mechanic_mira" in runtime.uiState.value.npcTradeKeys)
+        assertFalse("mira" in runtime.uiState.value.npcTradeKeys)
+        assertTrue("scrapper" in runtime.uiState.value.npcTradeKeys)
+        runtime.onNpcInteraction("mechanic_mira")
+        compose.waitUntil(5000) { runtime.uiState.value.activeDialogue != null }
+        assertTrue(runtime.uiState.value.dialogueChoices.isEmpty())
+        repeat(10) { if (runtime.uiState.value.activeDialogue != null) runtime.advanceDialogue() }
+        compose.waitUntil(5000) { runtime.uiState.value.activeDialogue == null }
+        assertNull(runtime.uiState.value.shopGreeting)
+    }
 }

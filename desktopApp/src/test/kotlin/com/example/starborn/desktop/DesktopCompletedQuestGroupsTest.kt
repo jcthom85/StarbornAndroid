@@ -24,15 +24,15 @@ class DesktopCompletedQuestGroupsTest {
             } } }
             compose.waitUntil(15000) { !services.exploration.uiState.value.isLoading }
             compose.onAllNodesWithText("Completed", substring = false).onFirst().performClick()
-            compose.onNodeWithText("World 1 (1) · Expand").performClick()
-            compose.onNodeWithText("World 1 (1) · Collapse").assertExists()
+            compose.onNodeWithText("The Mines (1) · Expand").performClick()
+            compose.onNodeWithText("The Mines (1) · Collapse").assertExists()
             val title = requireNotNull(services.questRepository.questById("w1_sq01")).title
             compose.onAllNodesWithText(title).onFirst().performClick()
             compose.waitUntil(5000) { services.exploration.uiState.value.questDetail?.id == "w1_sq01" }
-            compose.onNodeWithText("World 1 (1) · Collapse").performClick()
-            compose.onNodeWithText("World 1 (1) · Expand").assertExists()
-            compose.onNodeWithText("World 2 (1) · Expand").performClick()
-            compose.onNodeWithText("World 2 (1) · Collapse").assertExists()
+            compose.onNodeWithText("The Mines (1) · Collapse").performClick()
+            compose.onNodeWithText("The Mines (1) · Expand").assertExists()
+            compose.onNodeWithText("Sector 9 (1) · Expand").performClick()
+            compose.onNodeWithText("Sector 9 (1) · Collapse").assertExists()
         } finally { services.close(); directory.deleteRecursively() }
     }
 }

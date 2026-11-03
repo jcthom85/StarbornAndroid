@@ -111,15 +111,13 @@ internal fun ModernFieldMenu(
                 modifier = Modifier.fillMaxWidth().semantics { liveRegion = LiveRegionMode.Polite }.padding(horizontal = 16.dp, vertical = 4.dp))
         }
         if (tab == MenuTab.STATS && party.members.size > 1) {
-            val memberScroll = rememberScrollState()
-            if (memberScroll.maxValue > 0) Text("Swipe to choose a companion  ›", color = FieldMenuDesign.textMuted,
-                style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(horizontal = 16.dp))
-            Row(
-                Modifier.fillMaxWidth().horizontalScroll(memberScroll)
-                    .padding(horizontal = 16.dp, vertical = 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                party.members.forEach { member ->
+            com.example.starborn.ui.menu.OverflowPartyRow(
+                keys = party.members.map { it.id }, selectedKey = selectedMemberId,
+                itemWidth = if (detailTitle != null) 136.dp else 160.dp,
+                background = FieldMenuDesign.panel,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+            ) { index ->
+                    val member = party.members[index]
                     val selected = member.id == selectedMemberId
                     Surface(
                         onClick = { onSelectMember(member.id) },
@@ -147,7 +145,6 @@ internal fun ModernFieldMenu(
                             }
                         }
                     }
-                }
             }
         }
         HorizontalDivider(color = if (highContrast) Color.White else roomAccent.copy(alpha = .18f))

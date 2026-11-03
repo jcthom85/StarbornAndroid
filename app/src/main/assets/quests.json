@@ -731,7 +731,7 @@
     "summary": "The gate has opened onto an unfamiliar facility. Its murals may explain the signal.",
     "description": "Investigate the murals and follow the facility clues deeper into Sanctuary.",
     "flavor": "Twenty years of sleep, waiting for a chord that never came.",
-    "giver": "Orion",
+    "giver": "Sanctuary records",
     "hub_id": "hub_4_facility",
     "stages": [
       {
@@ -848,7 +848,7 @@
           },
           {
             "id": "launch_ship",
-            "text": "Release the Astra from the launch cradle."
+            "text": "Board the Astra from the Hangar Bay, then depart using the bridge nav console."
           }
         ]
       }
@@ -896,7 +896,7 @@
           },
           {
             "id": "report_to_zeke",
-            "text": "Return to Zeke with the five plant scans."
+            "text": "Review the five plant scans with Zeke beside you."
           }
         ]
       }
@@ -1742,7 +1742,7 @@
     "id": "w4_mq18",
     "title": "The Assembly",
     "summary": "Fight through the Foundry production floor and break the Phantom fabrication line blocking the engine route.",
-    "description": "Read the Assembly line, survive Phantom Prototype waves, and overload the fabrication matrix feeding Gh0st's mass-production successors.",
+    "description": "Read the Assembly line, survive waves of Phantom prototypes, and overload the fabrication matrix feeding Gh0st's mass-production successors.",
     "flavor": "The machine of war sounds like work until it starts printing faces.",
     "giver": "Gh0st",
     "hub_id": "hub_8_assembly_line",
@@ -1758,7 +1758,7 @@
           },
           {
             "id": "defeat_prototypes",
-            "text": "Survive the Phantom Prototype wave."
+            "text": "Survive the Phantom wave."
           }
         ]
       },

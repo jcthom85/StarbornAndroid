@@ -39,6 +39,7 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -551,7 +552,8 @@ fun EnemyRoster(
                     (rowWidth - columnSpacing * (maxColumnsForSizing - 1)) / maxColumnsForSizing
                 val cardSize = baseCardSize.coerceAtMost(maxCardSizeForLayout)
                 val portraitSize = cardSize * 0.88f
-                val barWidth = cardSize * 0.72f
+                // The label may use its full row slot; sprite size remains independent.
+                val barWidth = ((boxWidth - columnSpacing * (columns - 1)) / columns - 16.dp).coerceAtMost(224.dp)
                 val innerPadding = if (cardSize < 150.dp) 6.dp else 10.dp
                 val rowOffset = if (rowIndex == 0 && rows.size > 1) (-12).dp else 0.dp
                 Row(
@@ -1290,53 +1292,48 @@ fun EnemyStatusLabel(
         border = BorderStroke(1.dp, borderColor),
         modifier = interactionModifier
             .maestroTag(if (isAlive) "combat-target-$name" else "combat-defeated-$name")
-            .heightIn(min = if (hasWeaknesses) 96.dp else 84.dp)
+            .heightIn(min = if (hasWeaknesses) 112.dp else 96.dp)
             .alpha(if (isAlive) 1f else 0.45f)
     ) {
         Column(
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp),
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
+            verticalArrangement = Arrangement.spacedBy(3.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Column(
                 modifier = Modifier.width(barWidth),
                 horizontalAlignment = Alignment.Start
             ) {
+                com.example.starborn.ui.menu.ReadableEnemyName(titleCaseName(name),
+                    modifier = Modifier.fillMaxWidth().maestroTag("enemy-label-name-$name"))
+                Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = titleCaseName(name),
+                    text = "HP $currentHp / $maxHp",
                     style = MaterialTheme.typography.labelSmall.copy(
-                        fontFamily = CombatNameFont,
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 10.sp,
-                        lineHeight = 12.sp
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = "$currentHp/$maxHp",
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontFamily = CombatNameFont,
+                        fontFamily = FontFamily.SansSerif,
                         fontWeight = FontWeight.SemiBold,
-                        fontSize = 8.sp,
-                        lineHeight = 10.sp
+                        fontSize = 11.sp,
+                        lineHeight = 14.sp,
+                        fontFeatureSettings = "tnum"
                     ),
-                    color = Color.White.copy(alpha = 0.85f),
-                    maxLines = 1
+                    color = Color(0xFFD6E0E7),
+                    modifier = Modifier.fillMaxWidth().maestroTag("enemy-label-hp-$name"),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
-            AtbBar(
-                progress = atbProgress,
-                modifier = Modifier.width(barWidth),
-                color = if (isActive) Color(0xFFFFD36E) else Color(0xFFFF9F43)
-            )
             StatBar(
                 current = currentHp,
                 max = maxHp,
                 color = Color(0xFFFF5252),
                 background = Color.Black.copy(alpha = 0.5f),
-                height = 6.dp,
+                height = 7.dp,
                 modifier = Modifier.width(barWidth)
+            )
+            AtbBar(
+                progress = atbProgress,
+                modifier = Modifier.width(barWidth).height(3.dp),
+                color = if (isActive) Color(0xFFFFD36E) else Color(0xFFFF9F43)
             )
             Row(
                 modifier = Modifier.width(barWidth),
@@ -1363,10 +1360,11 @@ fun EnemyStatusLabel(
                 Text(
                     text = "WEAK: $weakText",
                     style = MaterialTheme.typography.labelSmall.copy(
-                        fontFamily = CombatNameFont,
+                        fontFamily = FontFamily.SansSerif,
                         fontWeight = FontWeight.Medium,
-                        fontSize = 8.sp,
-                        lineHeight = 10.sp
+                        fontSize = 11.sp,
+                        lineHeight = 14.sp,
+                        fontFeatureSettings = "tnum"
                     ),
                     color = Color(0xFFFFD54F).copy(alpha = 0.92f),
                     maxLines = 1,

@@ -319,6 +319,102 @@
         "requires_state": {
           "light_on": true
         }
+      },
+      {
+        "id": "bunk_lamplight",
+        "preset": "lighting.bunk_warmth",
+        "intensity": 0.9,
+        "space": "scene",
+        "requires_state": {
+          "light_on": true
+        },
+        "in_combat": false,
+        "dark_visibility": "hidden",
+        "emitters": [
+          {
+            "x": 0.465,
+            "y": 0.173,
+            "radius": 0.085
+          },
+          {
+            "x": 0.12,
+            "y": 0.19,
+            "radius": 0.065
+          },
+          {
+            "x": 0.63,
+            "y": 0.374,
+            "radius": 0.035
+          }
+        ],
+        "light_surfaces": [
+          {
+            "points": [
+              {
+                "x": 0.23,
+                "y": 0.2
+              },
+              {
+                "x": 0.75,
+                "y": 0.2
+              },
+              {
+                "x": 0.72,
+                "y": 0.27
+              },
+              {
+                "x": 0.24,
+                "y": 0.27
+              }
+            ],
+            "source": 0,
+            "strength": 0.7
+          },
+          {
+            "points": [
+              {
+                "x": 0.28,
+                "y": 0.414
+              },
+              {
+                "x": 0.68,
+                "y": 0.419
+              },
+              {
+                "x": 0.73,
+                "y": 0.465
+              },
+              {
+                "x": 0.28,
+                "y": 0.466
+              }
+            ],
+            "source": 2,
+            "strength": 0.8
+          },
+          {
+            "points": [
+              {
+                "x": 0.27,
+                "y": 0.645
+              },
+              {
+                "x": 0.73,
+                "y": 0.645
+              },
+              {
+                "x": 0.87,
+                "y": 0.92
+              },
+              {
+                "x": 0.1,
+                "y": 0.92
+              }
+            ],
+            "source": 0,
+            "strength": 0.8
+          }
+        ]
       }
     ],
     "env": "mine",
@@ -3940,7 +4036,7 @@
     "weather": "cave_drip",
     "title": "Sewer Passage",
     "background_image": "images/rooms/world_3/spire_sewers_passage.webp",
-    "description": "A long concrete sewer passage carries warm runoff under the Spire. Water drips from rusted vent pipes overhead while the tunnel splits toward maintenance heat, rainlight, and the guarded city above.",
+    "description": "A long concrete sewer passage carries [action:runoff fishing|warm runoff] under the Spire. Water drips from rusted vent pipes overhead while the tunnel splits toward maintenance heat, rainlight, and the guarded city above.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4004,7 +4100,7 @@
     "weather": "rain",
     "title": "Vent Output",
     "background_image": "images/rooms/world_3/spire_vent_output.webp",
-    "description": "The vent output coughs the crew into acid rain and neon exhaust. Trash piles clog the curb, and Rain Gutter Alley vanishes west between buildings that lean like they are tired.",
+    "description": "The vent output coughs the crew into acid rain and neon exhaust. [action:trash pile|Trash piles] clog the curb, and Rain Gutter Alley vanishes west between buildings that lean like they are tired.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4158,7 +4254,7 @@
     "env": "neon",
     "title": "Old Subway Car",
     "background_image": "images/rooms/world_3/spire_old_subway_car.webp",
-    "description": "The Static spills into an old subway car bolted beside the bar. Torn booth seats, stickered windows, and a silent jukebox make the car half studio. Chris tunes an audio board while Andrew rests his guitar. A reinforced door opens to the rigging deck.",
+    "description": "The Static spills into an old subway car bolted beside the bar. Torn booth seats, stickered windows, and a silent jukebox make the car half studio. Chris tunes an audio board while Andrew rests his guitar. A reinforced door opens to the rigging deck. A Wayfarer tour poster curls above a No Charge tape beside the audio board.",
     "npcs": [
       "musician_chris",
       "musician_andrew"
@@ -4929,7 +5025,7 @@
     "env": "neon",
     "title": "Skypark Dome",
     "background_image": "images/rooms/world_3/spire_skypark_dome.webp",
-    "description": "The Skypark Dome offers fake sun and blooming orchids under polished glass. Evelyn sings jazz while pruning glowing blossoms, and Robert demonstrates his industrial cleaning rigs with silent theatrical flair.",
+    "description": "The Skypark Dome offers fake sun and blooming orchids under polished glass. Evelyn sings jazz while pruning glowing blossoms, and Robert demonstrates his industrial cleaning rigs with silent theatrical flair. A guest registry tracks arrivals beside a jazz conservatory planter and an industrial vortex buffer.",
     "npcs": [
       "botanist_evelyn",
       "entrepreneur_robert"
@@ -4949,13 +5045,13 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Skypark Dome's fake sun shines on perfect trees while the guest registry quietly logs a forged success. Beyond the glasswalk, blind scanner coverage gives the crew seconds to turn politeness into trespass.",
+        "description": "The Skypark Dome's fake sun shines on perfect trees while the guest registry quietly logs a forged success. Beyond the glasswalk, blind scanner coverage gives the crew seconds to turn politeness into trespass. The jazz conservatory planter and industrial vortex buffer remain beside the registry.",
         "requires_milestones": [
           "ms_w3_scanners_blinded"
         ]
       },
       {
-        "description": "The Skypark Dome offers fake sun, perfect trees, and a guest registry that has decided Nova belongs as long as she keeps smiling. The glasswalk curves along the edge, making the Lower City decorative enough for rich people to ignore.",
+        "description": "The Skypark Dome offers fake sun, perfect trees, and a guest registry that has decided Nova belongs as long as she keeps smiling. The glasswalk curves along the edge, making the Lower City decorative enough for rich people to ignore. The jazz conservatory planter and industrial vortex buffer remain beside the registry.",
         "requires_milestones": [
           "ms_w3_guest_profile_accepted"
         ]
@@ -5142,7 +5238,7 @@
     "weather": "rain",
     "title": "Exec Lounge",
     "background_image": "images/rooms/world_3/spire_exec_lounge_bar.webp",
-    "description": "The Exec Lounge floats on a grav-platform above a silent atrium. A private safe hides behind sculpture, a concierge credential mirror flashes beside the terminal, and every booth looks designed for blackmail.",
+    "description": "The Exec Lounge floats on a grav-platform above a silent atrium. A private safe hides behind sculpture, a concierge credential mirror flashes beside the terminal, and every booth looks designed for blackmail. A VIP vector arcade cabinet stands behind the velvet curtain.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -5762,7 +5858,7 @@
     "weather": "steam",
     "title": "Cooling Springs",
     "background_image": "images/rooms/world_4/foundry_cooling_springs.webp",
-    "description": "Factory noise fades in this hidden maintenance pocket. A steam pool and cooling basin collect mineral runoff; a magma regulator pulses beside a salvaged cooling bypass. A worker tablet lies wrapped in a coolant-stained scarf beside the pool.",
+    "description": "Factory noise fades in this hidden maintenance pocket. A steam pool and [action:cooling basin fishing|cooling basin] collect mineral runoff; a magma regulator pulses beside a salvaged cooling bypass. A worker tablet lies wrapped in a coolant-stained scarf beside the pool.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -5779,26 +5875,26 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The worker tablet's last ping has gone quiet. Gh0st's override key and recovered coolant rig cannot make the factory merciful. The magma regulator and salvaged cooling bypass remain beside the steam pool, no longer a hiding place.",
+        "description": "The worker tablet's last ping has gone quiet. Gh0st's override key and recovered coolant rig cannot make the factory merciful. The magma regulator and salvaged cooling bypass remain beside the steam pool, no longer a hiding place. Ripples move through the [action:cooling basin fishing|cooling basin].",
         "requires_milestones": [
           "ms_w4_springs_regrouped",
           "ms_w4_worker_traced"
         ]
       },
       {
-        "description": "The cooling springs are quiet after the worker tablet's last ping. The engineer is gone, but the recovered coolant rig makes the maintenance pocket feel less like a dead end. The magma regulator and salvaged cooling bypass remain beside the steam pool.",
+        "description": "The cooling springs are quiet after the worker tablet's last ping. The engineer is gone, but the recovered coolant rig makes the maintenance pocket feel less like a dead end. The magma regulator and salvaged cooling bypass remain beside the steam pool. Ripples move through the [action:cooling basin fishing|cooling basin].",
         "requires_milestones": [
           "ms_w4_worker_traced"
         ]
       },
       {
-        "description": "Gh0st's override key is in Nova's kit; the factory waits beyond the airlock. The springs offer no hiding place. A magma regulator and salvaged cooling bypass flank the steam pool. A worker tablet lies wrapped in a coolant-stained scarf.",
+        "description": "Gh0st's override key is in Nova's kit; the factory waits beyond the airlock. The springs offer no hiding place. A magma regulator and salvaged cooling bypass flank the steam pool. A worker tablet lies wrapped in a coolant-stained scarf. Ripples move through the [action:cooling basin fishing|cooling basin].",
         "requires_milestones": [
           "ms_w4_springs_regrouped"
         ]
       },
       {
-        "description": "Steam curls around Gh0st as he weighs the Phantom records, refusing to let them define him. The magma regulator and salvaged cooling bypass flank the steam pool. A worker tablet lies wrapped in a coolant-stained scarf.",
+        "description": "Steam curls around Gh0st as he weighs the Phantom records, refusing to let them define him. The magma regulator and salvaged cooling bypass flank the steam pool. A worker tablet lies wrapped in a coolant-stained scarf. Ripples move through the [action:cooling basin fishing|cooling basin].",
         "requires_milestones": [
           "ms_w4_phantom_records_found"
         ]
@@ -6304,7 +6400,7 @@
     "weather": "sparks",
     "title": "Reject Bay",
     "background_image": "images/rooms/world_4/foundry_reject_bay.webp",
-    "description": "Defective units are dumped into a low bay before the furnace eats them. A rejected droid still twitches when the conveyor shudders, hands opening and closing around nothing.",
+    "description": "Defective units are dumped into a low bay before the furnace eats them. A rejected droid still twitches when the conveyor shudders, hands opening and closing around nothing. A scorched smelter console rests against the bay wall.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -6320,7 +6416,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Reject Bay is quieter now. A rejected droid twitches among the defective units, but no longer toward the furnace; Gh0st's override leaves them holding onto the small, stubborn spark Dominion called a defect.",
+        "description": "The Reject Bay is quieter now. A rejected droid twitches among the defective units, but no longer toward the furnace; Gh0st's override leaves them holding onto the small, stubborn spark Dominion called a defect. A scorched smelter console rests against the bay wall.",
         "requires_milestones": [
           "ms_w4_defective_units_spared"
         ]
@@ -6977,7 +7073,7 @@
     "env": "void",
     "title": "Customs Lounge",
     "background_image": "images/rooms/world_5/orbital_customs_lounge.webp",
-    "description": "A silent lounge waits behind velvet queue ropes and biometric gates. An automated commissary terminal hums on the wall beside an executive galley recycler and lounge seating. A customs observation console rests in the waiting niche beside an analyst's glowing slate.",
+    "description": "A silent lounge waits behind velvet queue ropes and biometric gates. An automated commissary terminal hums on the wall beside an executive galley recycler and lounge seating. A customs observation console rests in the waiting niche beside an [action:encrypted slate|analyst's glowing slate].",
     "npcs": [
       "analyst_charles"
     ],
@@ -7036,7 +7132,7 @@
     "env": "void",
     "title": "Solarium",
     "background_image": "images/rooms/world_5/orbital_solarium.webp",
-    "description": "Real soil, tropical trees, and a fake beach sit beneath a fusion lamp and mirror array. The fruit is rotting in a paradise built for executives. A panel sets garden light priority, while a solarium tide cache rests beneath artificial coral ledges.",
+    "description": "Real soil, tropical trees, and a fake beach sit beneath a fusion lamp and mirror array. The fruit is rotting in a paradise built for executives. A panel sets garden light priority, while a solarium tide cache rests beneath artificial coral ledges. Water laps the [action:false tide fishing|artificial shoreline].",
     "npcs": [
       "maintenance_bot"
     ],
@@ -7057,13 +7153,13 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Solarium mirror array burns clean again. The false sun is still false, but its light no longer feeds void-moss across the executive trees. A panel sets garden light priority above the fake beach, where a solarium tide cache rests beneath artificial coral ledges.",
+        "description": "The Solarium mirror array burns clean again. The false sun is still false, but its light no longer feeds void-moss across the executive trees. A panel sets garden light priority above the fake beach, where a solarium tide cache rests beneath artificial coral ledges. Water laps the [action:false tide fishing|artificial shoreline].",
         "requires_milestones": [
           "ms_w5_solar_maintenance_complete"
         ]
       },
       {
-        "description": "The fake beach has been crossed. Its sand keeps the shape of Nova's hand like paradise is trying to remember being real. The mirror array hangs above a panel for garden light priority, and a solarium tide cache rests beneath artificial coral ledges.",
+        "description": "The fake beach has been crossed. Its sand keeps the shape of Nova's hand like paradise is trying to remember being real. The mirror array hangs above a panel for garden light priority, and a solarium tide cache rests beneath artificial coral ledges. Water laps the [action:false tide fishing|artificial shoreline].",
         "requires_milestones": [
           "ms_w5_solarium_crossed"
         ]
@@ -7340,7 +7436,7 @@
         "requires_state": {
           "magnetic_anchor_engaged": true
         },
-        "description": "Three maintenance tubes converge in the zero-G junction. The magnetic clamp hums with high amperage, holding a dense cluster of tungsten plating rigid across the eastern tube opening."
+        "description": "Three maintenance tubes converge in the zero-G junction. The [action:magnetic clamp console|magnetic clamp] hums with high amperage, holding a dense cluster of tungsten plating rigid across the eastern tube opening. A display tracks patrol timing beside a gyroscope stabilizer."
       }
     ],
     "actions": [
@@ -7375,7 +7471,7 @@
     "env": "void",
     "title": "Breached Avionics Lab",
     "background_image": "images/rooms/world_5/orbital_zero_g_junction.webp",
-    "description": "Cold stellar light floods through a shattered observation canopy. Frozen liquid coolant beads drift above abandoned quantum mainframes, where an emergency AI sub-vault remains sealed.",
+    "description": "Cold stellar light floods through a [action:shattered canopy|shattered observation canopy]. Frozen liquid coolant beads drift above abandoned quantum mainframes, where an [action:experimental ai sub-vault|emergency AI sub-vault] remains sealed.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -7973,6 +8069,111 @@
         "id": "resonance",
         "preset": "field.resonance",
         "intensity": 0.18
+      },
+      {
+        "id": "songfire_reflection",
+        "preset": "lighting.songfire",
+        "intensity": 0.95,
+        "space": "scene",
+        "in_combat": false,
+        "dark_visibility": "emissive",
+        "emitters": [
+          {
+            "x": 0.5,
+            "y": 0.445,
+            "radius": 0.135
+          }
+        ],
+        "light_surfaces": [
+          {
+            "points": [
+              {
+                "x": 0.22,
+                "y": 0.5
+              },
+              {
+                "x": 0.77,
+                "y": 0.5
+              },
+              {
+                "x": 0.77,
+                "y": 0.59
+              },
+              {
+                "x": 0.22,
+                "y": 0.59
+              }
+            ],
+            "source": 0,
+            "strength": 0.85
+          },
+          {
+            "points": [
+              {
+                "x": 0.16,
+                "y": 0.396
+              },
+              {
+                "x": 0.27,
+                "y": 0.388
+              },
+              {
+                "x": 0.32,
+                "y": 0.44
+              },
+              {
+                "x": 0.19,
+                "y": 0.449
+              }
+            ],
+            "source": 0,
+            "strength": 0.55
+          },
+          {
+            "points": [
+              {
+                "x": 0.72,
+                "y": 0.39
+              },
+              {
+                "x": 0.84,
+                "y": 0.397
+              },
+              {
+                "x": 0.81,
+                "y": 0.451
+              },
+              {
+                "x": 0.68,
+                "y": 0.438
+              }
+            ],
+            "source": 0,
+            "strength": 0.55
+          },
+          {
+            "points": [
+              {
+                "x": 0.34,
+                "y": 0.62
+              },
+              {
+                "x": 0.66,
+                "y": 0.62
+              },
+              {
+                "x": 0.74,
+                "y": 0.72
+              },
+              {
+                "x": 0.26,
+                "y": 0.72
+              }
+            ],
+            "source": 0,
+            "strength": 0.5
+          }
+        ]
       }
     ],
     "env": "source",
@@ -8393,7 +8594,7 @@
     "weather": "dust",
     "title": "Jed's Echo Bench",
     "background_image": "images/rooms/world_6/source_echo_workbench.webp",
-    "description": "Jed's old workbench sits under shelter plastic and mine dust. A Jed echo waits beside it. The tools are wrong for this place, but the care in their arrangement is exact.",
+    "description": "Jed's old workbench sits under shelter plastic and mine dust. A Jed echo waits beside it. The tools are wrong for this place, but the care in their arrangement is exact. A crystalline arcade console glows beside the bench.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9215,6 +9416,159 @@
         ],
         "description": "A broadleaf canopy shelters the quiet clearing. Harvested mushroom stalks fade into the moss beside a decaying log. A velvety spore puffball rests outside the mossy hollow beneath it."
       }
+    ],
+    "environmental_effects": [
+      {
+        "id": "glade_cyan_caps",
+        "preset": "lighting.living_moss",
+        "intensity": 0.84,
+        "space": "scene",
+        "in_combat": false,
+        "dark_visibility": "emissive",
+        "emitters": [
+          {
+            "x": 0.8,
+            "y": 0.433,
+            "radius": 0.08
+          },
+          {
+            "x": 0.744,
+            "y": 0.478,
+            "radius": 0.045
+          },
+          {
+            "x": 0.933,
+            "y": 0.555,
+            "radius": 0.06
+          },
+          {
+            "x": 0.85,
+            "y": 0.606,
+            "radius": 0.05
+          }
+        ],
+        "light_surfaces": [
+          {
+            "points": [
+              {
+                "x": 0.54,
+                "y": 0.495
+              },
+              {
+                "x": 0.94,
+                "y": 0.52
+              },
+              {
+                "x": 0.91,
+                "y": 0.58
+              },
+              {
+                "x": 0.57,
+                "y": 0.556
+              }
+            ],
+            "source": 0,
+            "strength": 0.65
+          },
+          {
+            "points": [
+              {
+                "x": 0.57,
+                "y": 0.625
+              },
+              {
+                "x": 0.91,
+                "y": 0.625
+              },
+              {
+                "x": 0.91,
+                "y": 0.67
+              },
+              {
+                "x": 0.46,
+                "y": 0.67
+              }
+            ],
+            "source": 3,
+            "strength": 0.65
+          }
+        ]
+      },
+      {
+        "id": "glade_violet_caps",
+        "preset": "lighting.violet_caps",
+        "intensity": 0.76,
+        "space": "scene",
+        "in_combat": false,
+        "dark_visibility": "emissive",
+        "emitters": [
+          {
+            "x": 0.744,
+            "y": 0.59,
+            "radius": 0.055
+          },
+          {
+            "x": 0.94,
+            "y": 0.656,
+            "radius": 0.055
+          }
+        ]
+      },
+      {
+        "id": "canopy_on_path",
+        "preset": "lighting.canopy_dapple",
+        "intensity": 0.9,
+        "space": "scene",
+        "in_combat": false,
+        "dark_visibility": "hidden",
+        "emitters": [
+          {
+            "x": 0.46,
+            "y": 0.13,
+            "radius": 0.04
+          }
+        ],
+        "light_surfaces": [
+          {
+            "source": 0,
+            "strength": 0.9,
+            "points": [
+              {
+                "x": 0.36,
+                "y": 0.61
+              },
+              {
+                "x": 0.53,
+                "y": 0.61
+              },
+              {
+                "x": 0.6,
+                "y": 0.69
+              },
+              {
+                "x": 0.66,
+                "y": 0.78
+              },
+              {
+                "x": 0.57,
+                "y": 0.89
+              },
+              {
+                "x": 0.3,
+                "y": 0.89
+              },
+              {
+                "x": 0.22,
+                "y": 0.76
+              },
+              {
+                "x": 0.26,
+                "y": 0.68
+              }
+            ]
+          }
+        ]
+      }
     ]
   },
   {
@@ -9805,8 +10159,7 @@
       {
         "name": "signal reflection",
         "type": "generic",
-        "action_event": "w2_sq02_trace_cliffs",
-        "condition_unmet_message": "Three distant beacon reflections stutter across the tideglass. One carries a Dominion patrol code."
+        "condition_unmet_message": "Tideglass reflections corroborate the patrol vector toward the ridge."
       },
       {
         "name": "basalt cliffs",
@@ -9914,7 +10267,8 @@
         "condition_unmet_message": "Glowing tideglass skewers are harvested from the shore.",
         "requires_milestone_not_set": "ms_w2_tideglass_gathered",
         "show_when_quest_active": "w2_sq03",
-        "hide_when_event_completed": "w2_sq03_gather"
+        "hide_when_event_completed": "w2_sq03_gather",
+        "show_when_event_available": true
       },
       {
         "name": "luminescent anemones",
@@ -10402,7 +10756,8 @@
         "type": "generic",
         "action_event": "w2_sq02_trace_beta",
         "condition_unmet_message": "Objective completed.",
-        "requires_milestone_not_set": "ms_w2_beacon_beta_traced"
+        "requires_milestone_not_set": "ms_w2_beacon_beta_traced",
+        "show_when_quest_active": "w2_sq02"
       },
       {
         "name": "ancient stump",
@@ -10656,7 +11011,9 @@
         "type": "generic",
         "action_event": "w2_sq02_recover_transceiver",
         "condition_unmet_message": "Objective completed.",
-        "requires_milestone_not_set": "ms_w2_transceiver_recovered"
+        "requires_milestone_not_set": "ms_w2_transceiver_recovered",
+        "show_when_quest_active": "w2_sq02",
+        "show_when_event_available": true
       },
       {
         "name": "shattered trunks",
@@ -11030,7 +11387,8 @@
         "type": "generic",
         "action_event": "w2_sq02_trace_gamma",
         "condition_unmet_message": "Objective completed.",
-        "requires_milestone_not_set": "ms_w2_beacon_gamma_traced"
+        "requires_milestone_not_set": "ms_w2_beacon_gamma_traced",
+        "show_when_quest_active": "w2_sq02"
       }
     ],
     "description_variants": [
@@ -11341,7 +11699,15 @@
         "requires_milestones": [
           "ms_w2_mq02_complete"
         ],
-        "description": "The stone slabs have withdrawn into the cliff. Cool, dry air flows from the passage east into Sanctuary. Cymatic patterns still glow around the unsealed stone lock."
+        "description": "The stone slabs have withdrawn into the cliff. Cool, dry air flows from the passage east into Sanctuary. Cymatic patterns still glow around the unsealed stone lock.",
+        "background_image": "images/rooms/world_2/temple_gate_open.png"
+      },
+      {
+        "description": "The stone slabs have withdrawn into the cliff. Cool, dry air flows from the passage east into Sanctuary. Cymatic patterns still glow around the unsealed stone lock.",
+        "background_image": "images/rooms/world_2/temple_gate_open.png",
+        "requires_state": {
+          "temple_open": true
+        }
       }
     ]
   },
@@ -12043,7 +12409,7 @@
         "action_event": "w2_mq03_recover_bridge",
         "show_when_milestone": "ms_w2_orion_briefed",
         "requires_milestone_not_set": "ms_w2_bridge_recovered",
-        "condition_unmet_message": "Talk to Orion before opening the separate Bridge cradle."
+        "condition_unmet_message": "Speak to the awakened stranger before opening the separate Bridge cradle."
       }
     ],
     "npc_presence": [
@@ -12069,12 +12435,22 @@
     "description_variants": [
       {
         "requires_milestones": [
-          "ms_w2_stasis_awake"
+          "ms_w2_stasis_awake",
+          "ms_w2_orion_identified"
         ],
         "forbidden_milestones": [
           "ms_w2_mq03_complete"
         ],
         "description": "Orion sits beside the open stasis pod, watching its separate memory bands settle. Talk to Orion. A sealed Bridge cradle waits nearby; the root lattice and ceiling vent remain within reach."
+      },
+      {
+        "requires_milestones": [
+          "ms_w2_stasis_awake"
+        ],
+        "forbidden_milestones": [
+          "ms_w2_mq03_complete"
+        ],
+        "description": "The stranger sits beside the open stasis pod, watching its separate memory bands settle. He looks up as you approach. A sealed Bridge cradle waits nearby; the root lattice and ceiling vent remain within reach."
       },
       {
         "requires_milestones": [
@@ -12145,7 +12521,7 @@
         "forbidden_milestones": [
           "ms_w2_mq03_complete"
         ],
-        "description": "The aligned rings carry pressure safely around the memory shell. Orion is awake. Return west to Stasis Chamber to talk to him and open the separate Bridge cradle."
+        "description": "The aligned rings carry pressure safely around the memory shell. The pod occupant is awake. Return west to Stasis Chamber to talk to him and open the separate Bridge cradle."
       },
       {
         "requires_milestones": [
@@ -12264,7 +12640,8 @@
         "type": "generic",
         "action_event": "w2_sq05_hack_grid",
         "condition_unmet_message": "Objective completed.",
-        "requires_milestone_not_set": "ms_w2_grid_hacked"
+        "requires_milestone_not_set": "ms_w2_grid_hacked",
+        "show_when_quest_active": "w2_sq05"
       }
     ],
     "blocked_directions": {
@@ -12327,7 +12704,8 @@
         "type": "generic",
         "action_event": "w2_sq05_bypass_guards",
         "condition_unmet_message": "Objective completed.",
-        "requires_milestone_not_set": "ms_w2_guards_bypassed"
+        "requires_milestone_not_set": "ms_w2_guards_bypassed",
+        "show_when_quest_active": "w2_sq05"
       }
     ],
     "description_variants": [
@@ -12362,7 +12740,9 @@
         "type": "generic",
         "action_event": "w2_sq05_search_vents",
         "condition_unmet_message": "Objective completed.",
-        "requires_milestone_not_set": "ms_w2_vent_case_looted"
+        "requires_milestone_not_set": "ms_w2_vent_case_looted",
+        "show_when_quest_active": "w2_sq05",
+        "show_when_event_available": true
       }
     ],
     "description_variants": [
@@ -12731,7 +13111,7 @@
         "name": "launch cradle",
         "type": "generic",
         "action_event": "w2_mq05_launch",
-        "condition_unmet_message": "The launch cradle will not release the Astra until the bridge relic is awake."
+        "condition_unmet_message": "The Astra must have power before you can board her for departure."
       },
       {
         "name": "salvage return route",
@@ -12759,6 +13139,15 @@
           "ms_w2_mq05_complete"
         ],
         "description": "The Astra's launch cradle is empty. Scorched conduits, cracked scaffolding, and a cooling bridge relic mark the place where the crew clawed a route back to the sky."
+      },
+      {
+        "requires_milestones": [
+          "ms_w2_bridge_installed"
+        ],
+        "forbidden_milestones": [
+          "ms_w2_mq05_complete"
+        ],
+        "description": "Amber lights trace the Astra's hull. The Bridge is installed and the cargo ramp is down. Board the Astra from the launch cradle; her nav console awaits on the bridge. The salvage return route remains behind you."
       },
       {
         "requires_milestones": [
@@ -20661,7 +21050,7 @@
     "env": "source",
     "title": "Source Morning Street",
     "background_image": "images/rooms/world_6/source_new_world_node_scale_final.webp",
-    "description": "A morning street outside the diner carries repair crews, bad jokes, and weather nobody scheduled. A terminal offers to call Astra shuttle. The repair crews and real weather make the ending feel lived in instead of merely won. A morning provision basket sits packed for the journey ahead. A one-way alley leads directly back to the entrance.",
+    "description": "A morning street outside the diner carries repair crews, bad jokes, and weather nobody scheduled. A terminal offers to call Astra shuttle. The repair crews and real weather make the ending feel lived in instead of merely won. A morning provision basket sits packed for the journey ahead. A one-way alley leads directly back to the entrance. An ether well ripples beside the street.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -20717,7 +21106,7 @@
     "weather": "rain",
     "title": "Bridgman Rigging Deck",
     "background_image": "images/rooms/world_3/spire_landing_pad_roof.webp",
-    "description": "High-tension cables and hydraulic winch drums span the structural gap beneath the entertainment level. Work lights illuminate steel trusses, speaker stacks, and heavy tow rigs. Contractor Cheno studies a holographic load schematic, his broad shoulders dusted with truss grease.",
+    "description": "High-tension cables and hydraulic winch drums span the structural gap beneath the entertainment level. Work lights illuminate steel trusses, speaker stacks, and [action:heavy winch rig|heavy tow rigs]. Contractor Cheno studies a [action:rigging schematic|holographic load schematic], his broad shoulders dusted with truss grease. A cider mug and framed family holopic sit beneath the work lights.",
     "npcs": [
       "contractor_cheno"
     ],
@@ -20762,7 +21151,7 @@
     "env": "industrial",
     "title": "High-Pressure Pipe Gallery",
     "background_image": "images/rooms/world_4/foundry_service_airlock.webp",
-    "description": "Superheated steam hisses through massive overhead conduits in a pressurized gallery. Checkered racing pennants hang above a pipe bench stacked with flanging tools and leather gloves. A scuffed baseball rests in a tool rack.",
+    "description": "Superheated steam hisses through massive overhead conduits in a pressurized gallery. Checkered racing pennants hang above a pipe bench stacked with flanging tools and leather gloves. A scuffed baseball rests in a tool rack. A family photo and leather dog collar hang beside the bypass manifold.",
     "npcs": [
       "pipefitter_cameron"
     ],
@@ -20819,7 +21208,7 @@
     "env": "city",
     "title": "Secret Signal Workshop",
     "background_image": "images/rooms/world_3/spire_the_static.webp",
-    "description": "Tucked behind acoustic baffles, a cluttered studio hums with glowing CRT monitors and tube amplifiers. A miniature galaxy simulation rotates silently. Meeko the charcoal cat lounges like an executive boss while Jason solders circuit boards.",
+    "description": "Tucked behind acoustic baffles, a cluttered studio hums with glowing CRT monitors and [action:amplifier roost|tube amplifiers]. A miniature [action:galaxy terminal|galaxy simulation] rotates silently. Meeko the charcoal cat lounges like an executive boss while Jason solders [action:workbench clutter|circuit boards]. A music workstation is wedged between the monitors.",
     "npcs": [
       "creator_jason",
       "feline_meeko"
@@ -20917,7 +21306,7 @@
     "weather": "rain",
     "title": "Skyline VIP Salon",
     "background_image": "images/rooms/world_3/spire_exec_lounge_bar.webp",
-    "description": "Plush velvet stanchions divide the glowing skyline salon from the rain-swept spires outside. Holographic chandeliers illuminate four stranded patrons around an automated crime-scene barrier. Emergency sirens pulse against the soundproof glass.",
+    "description": "Plush velvet stanchions divide the glowing skyline salon from the rain-swept spires outside. Holographic chandeliers illuminate four stranded patrons around an automated crime-scene barrier. Emergency sirens pulse against the soundproof glass. A dispenser log and security terminal wait beside the barrier.",
     "npcs": [
       "bartender_dax",
       "director_vance",
@@ -20937,7 +21326,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The emergency sirens have quieted. Director Vance sits slumped under guard, while the remaining patrons sip their drinks in subdued relief. The golden skyline shines through the rain outside.",
+        "description": "The emergency sirens have quieted. Director Vance sits slumped under guard, while the remaining patrons sip their drinks in subdued relief. The golden skyline shines through the rain outside. The crime-scene barrier, dispenser log, and security terminal remain in place.",
         "requires_milestones": [
           "ms_w3_sq16_complete"
         ]
@@ -20970,7 +21359,7 @@
     "weather": "rain",
     "title": "Syndicate Booth",
     "background_image": "images/rooms/world_3/spire_archive_vault.webp",
-    "description": "A private booth of curved mahogany overlooks the neon clouds. Auditor Malick slumps lifeless across the table beside a crystal glass. An executive comms rig lies open near the victim's splayed fingers.",
+    "description": "A private booth of curved mahogany overlooks the neon clouds. Auditor Malick slumps lifeless across the table beside a crystal glass. An executive comms rig lies open near the victim's splayed fingers. The auditor's datapad lies beside the comms rig.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -21009,7 +21398,7 @@
     "weather": "gas",
     "title": "The Scrapper's Crucible",
     "background_image": "images/rooms/world_4/foundry_intake_overlook.webp",
-    "description": "A sunken iron amphitheater enclosed by heavy blast cages and molten slag sluices. Pitmaster Brutus monitors telemetry above scorched titanium, orchestrating brutal machine combat for rogue loaders and eager betters.",
+    "description": "A sunken iron amphitheater enclosed by heavy [action:blast cage|blast cages] and [action:molten sluices|molten slag sluices]. Pitmaster Brutus monitors telemetry above scorched titanium, orchestrating brutal machine combat for rogue loaders and eager betters. A victor podium rises below an announcer horn.",
     "npcs": [
       "pitmaster_brutus"
     ],
@@ -21027,7 +21416,7 @@
     },
     "description_variants": [
       {
-        "description": "Sawdust and molten slag sizzle across the floor. With the Champion felled, rogue loader units raise their hydro-claws in cheer while Brutus grins from the victor's podium.",
+        "description": "Sawdust and molten slag sizzle across the floor. With the Champion felled, rogue loader units raise their hydro-claws in cheer while Brutus grins from the [action:victor podium|victor's podium]. [action:blast cage|Blast cages] enclose molten sluices below an announcer horn.",
         "requires_milestones": [
           "ms_w4_crucible_champion"
         ]

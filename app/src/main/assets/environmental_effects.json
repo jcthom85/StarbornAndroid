@@ -974,6 +974,81 @@
       ],
       "angle": -70,
       "priority": "accent"
+    },
+    "lighting.bunk_warmth": {
+      "primitive": "light",
+      "style": "lamplight",
+      "category": "light",
+      "intensity": 0.6,
+      "space": "scene",
+      "color": [
+        1,
+        0.63,
+        0.24,
+        0.78
+      ],
+      "rate": 0,
+      "priority": "ambient"
+    },
+    "lighting.living_moss": {
+      "primitive": "light",
+      "style": "bioluminescence",
+      "category": "light",
+      "intensity": 0.6,
+      "space": "scene",
+      "color": [
+        0.13,
+        1,
+        0.83,
+        0.7
+      ],
+      "rate": 0,
+      "priority": "ambient"
+    },
+    "lighting.violet_caps": {
+      "primitive": "light",
+      "style": "bioluminescence",
+      "category": "light",
+      "intensity": 0.6,
+      "space": "scene",
+      "color": [
+        0.66,
+        0.23,
+        1,
+        0.68
+      ],
+      "rate": 0,
+      "priority": "ambient"
+    },
+    "lighting.songfire": {
+      "primitive": "light",
+      "style": "firelight",
+      "category": "light",
+      "intensity": 0.6,
+      "space": "scene",
+      "color": [
+        0.08,
+        0.72,
+        1,
+        0.76
+      ],
+      "rate": 0,
+      "priority": "ambient"
+    },
+    "lighting.canopy_dapple": {
+      "primitive": "light",
+      "style": "canopy",
+      "category": "light",
+      "intensity": 0.9,
+      "space": "scene",
+      "color": [
+        0.92,
+        1,
+        0.68,
+        0.58
+      ],
+      "rate": 0,
+      "priority": "ambient"
     }
   }
 }

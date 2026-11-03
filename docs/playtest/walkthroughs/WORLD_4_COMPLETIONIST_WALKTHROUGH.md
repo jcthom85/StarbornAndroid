@@ -85,10 +85,10 @@ flowchart LR
 ```
 
 ### Role Breakdown:
-* **Nova (Tactical Shock & Plasma):** The primary vanguard. Her `nova_arc_tether` exploits the pervasive Shock vulnerabilities of Magma Drones, Welder Bots, Phantom Prototypes, and the Titan Walker. Equipping the newly crafted Thermal Shield dampens ambient slag damage.
+* **Nova (Tactical Shock & Plasma):** The primary vanguard. Her `nova_arc_tether` exploits the pervasive Shock vulnerabilities of Magma Drones, Welder Bots, Phantom prototypes, and the Titan Walker. Equipping the newly crafted Thermal Shield dampens ambient slag damage.
 * **Zeke (Kinetic Breaker):** Hits machines with `zeke_shatter_blow` to crack stability meters and stagger high-defense loaders like the Slag Golem and Flame Trooper.
 * **Orion (Harmonic Support & Armor Buff):** Mitigates intense burn damage with `orion_harmonic_dampener`. His `orion_prism_lance` deals unblockable Source energy damage, ignoring heavy armor plates.
-* **Gh0st (Stealth Sniper & Shield Piercer):** Uses `ghost_null_shot` to punch straight through high-tech force barriers. Crucial against Phantom Prototypes that attempt to cloak.
+* **Gh0st (Stealth Sniper & Shield Piercer):** Uses `ghost_null_shot` to punch straight through high-tech force barriers. Crucial against Phantom prototypes that attempt to cloak.
 
 ---
 
@@ -176,7 +176,7 @@ sequenceDiagram
     Crew->>Belt: Enter Main Assembly
     Belt->>Crew: ⚠️ Combat: Welder Bot & Magma Drone
     Crew->>Belt: Action "belt timing console" (Time the Presses)
-    Belt->>Crew: ⚠️ Combat: Phantom Prototype Wave
+    Belt->>Crew: ⚠️ Combat: Phantom Wave
     Crew->>Belt: Action "matrix overload" (MQ18 Overload)
     Belt->>Reject: Explore West to Reject Bay
     Reject->>Crew: Repair Arcade Cabinet #4 & Inspect Sentient Units (SQ19)
@@ -184,7 +184,7 @@ sequenceDiagram
 
 ### Phase 3 Critical Steps:
 * **The Welder Bot Priority Rule:** In any encounter featuring a `welder_bot`, target it down immediately! Its `field_weld` ability will restore 60+ HP to its allies. Use Nova's Shock Tether to stun it before it casts.
-* **Phantom Prototype Cloaking:** The prototype cloaks on Turn 2, raising evasion by 40%. Have Gh0st cast `null_shot` or Nova use an AoE grenade to break the cloak state.
+* **Phantom Cloaking:** The prototype cloaks on Turn 2, raising evasion by 40%. Have Gh0st cast `null_shot` or Nova use an AoE grenade to break the cloak state.
 * **Reject Bay Secrets (`foundry_reject_bay`):**
   * Repair **Arcade Cabinet #4** (`scorched smelter console`) with 1 Power Cell and 2 Scrap Metal.
   * Talk to the twitching defective unit to initiate **`w4_sq19` (Quality Control)**.
@@ -340,7 +340,7 @@ flowchart TD
 | Magma Drone       | 90  | 60  | 14  | Brn | Shock: -30%, Physical: -10%. Fast burn harasser.  |
 | Welder Bot        | 170 | 100 | 9   | Brn | Shock: -20%. High priority: casts Field Weld!     |
 | Flame Trooper     | 260 | 140 | 7   | Brn | Source: -20%. Heavy armor-lock; cone flamethrower.|
-| Phantom Prototype | 230 | 120 | 20  | Src | Shock: -30%. High speed; cloaks on Turn 2.        |
+| Phantom | 230 | 120 | 20  | Src | Shock: -30%. High speed; cloaks on Turn 2.        |
 | Slag Golem        | 380 | 180 | 5   | Brn | Freeze: -40%, Shock: -20%. 1-turn recovery window |
 | Crucible Champion | 480 | 220 | 8   | Brn | Freeze: -40%, Shock: -25%. Undefeated Arena Boss.  |
 | Conveyor Crusher  | 999 | 999 | 1   | Phy | Stationary hazard. Hack console to bypass.        |

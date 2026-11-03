@@ -5,6 +5,21 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class OpeningNarrativeMigrationTest {
+    @Test fun tideglassRepairUsesEventReceiptsWithoutGrantingRewards() {
+        val old = GameSessionState(activeQuests = setOf("w2_sq03"),
+            completedEvents = setOf("w2_sq03_visit"), inventory = mapOf("source_resin" to 1), playerXp = 17)
+        val repaired = old.migrateOpeningNarrativeState()
+        assertTrue(repaired.questTasksCompleted["w2_sq03"] == setOf("visit_beach"))
+        assertTrue(repaired.inventory == old.inventory && repaired.playerXp == old.playerXp)
+        assertTrue(repaired == repaired.migrateOpeningNarrativeState())
+        val withoutEvidence = old.copy(completedEvents = emptySet()).migrateOpeningNarrativeState()
+        assertTrue(withoutEvidence.questTasksCompleted["w2_sq03"].isNullOrEmpty())
+        val gathered = old.copy(completedEvents = setOf("w2_sq03_gather")).migrateOpeningNarrativeState()
+        assertTrue("collect_food" in gathered.questTasksCompleted["w2_sq03"].orEmpty())
+        assertTrue("ms_w2_tideglass_gathered" in gathered.completedMilestones)
+        assertTrue(gathered.inventory == old.inventory)
+    }
+
     @Test
     fun earlyWardenEvidenceRepairsOnlyPhysicalAndQuestProgressWithoutRewards() {
         val old = GameSessionState(roomId = "launch_bay", activeQuests = setOf("w1_mq05"),

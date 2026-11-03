@@ -203,7 +203,7 @@ class World2RefinementTest {
         assertFalse("bridge_relic" in h.state.inventory)
         val resumed = Harness(roundTrip(h.state).migrateOpeningNarrativeState())
         val talk = requireNotNull(resumed.dialogue.startDialogue("Orion"))
-        repeat(6) { talk.advance() }
+        repeat(7) { talk.advance() }
         assertTrue("orion" in resumed.state.partyMembers)
         assertFalse("w2_mq03" in resumed.state.completedQuests)
         resumed.action("w2_mq03_recover_bridge")
@@ -260,11 +260,16 @@ class World2RefinementTest {
     }
 
     @Test fun departureCanBeCancelledAndPendingDepartureResumesWithoutDuplicateRewards() {
-        val h = Harness(GameSessionState(activeQuests = setOf("w2_mq05"),
+        val h = Harness(GameSessionState(roomId = "sector9_hangar_bay", activeQuests = setOf("w2_mq05"),
             questTasksCompleted = mapOf("w2_mq05" to setOf("reboot_bridge_relic"))))
-        h.action("w2_mq05_launch"); requireNotNull(h.pending).choose("stay")
+        h.action("w2_mq05_launch")
+        assertEquals("astra_cargo_bay", h.state.roomId)
+        assertNull(h.pending)
+        h.store.setRoom("astra_bridge")
+        h.pending = h.dialogue.startDialogue("Astra Navigation")
+        requireNotNull(h.pending).choose("stay")
         assertTrue(h.scenes.isEmpty())
-        h.action("w2_mq05_launch"); requireNotNull(h.pending).choose("depart")
+        h.pending = h.dialogue.startDialogue("Astra Navigation"); requireNotNull(h.pending).choose("depart")
         assertFalse("w2_mq05" in h.state.completedQuests)
         assertEquals(0, h.state.playerXp)
         val resumed = Harness(roundTrip(h.state))

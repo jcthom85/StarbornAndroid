@@ -3,6 +3,7 @@ package com.example.starborn.desktop
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.*
+import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -25,7 +26,7 @@ import com.example.starborn.domain.inventory.ItemUseController
 import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, ExperimentalTestApi::class)
 class DesktopCraftingFishingFlowTest {
     @get:Rule val compose = createComposeRule()
 
@@ -105,7 +106,8 @@ class DesktopCraftingFishingFlowTest {
             } }
             compose.onNodeWithText("Find a recipe").performScrollTo().performTextInput(recipe.name)
             compose.onAllNodesWithText("Cook and eat one portion").onFirst().performScrollTo().performClick()
-            compose.onNodeWithText("Replace your active meal?").assertExists()
+            compose.onNodeWithText("Replace your active meal?").assertIsDisplayed()
+            capture("cooking-replacement-high-contrast", dialog = true)
             compose.onNodeWithText("Cancel").performClick()
             assertEquals(before, services.inventoryService.snapshot())
             capture("cooking-compact")
@@ -114,6 +116,8 @@ class DesktopCraftingFishingFlowTest {
             val ingredient = recipe.ingredients.entries.first()
             compose.waitUntil(5000) { services.inventoryService.snapshot()[ingredient.key] == ingredient.value }
             assertTrue(services.sessionStore.state.value.activeMealBuff != null)
+            compose.onNodeWithText("At the cookfire").assertIsDisplayed()
+            compose.onNodeWithText("Done").performClick()
             compose.onAllNodesWithText("Cook and eat one portion").onFirst().assertIsEnabled()
         } finally { services.close(); directory.deleteRecursively() }
     }
@@ -151,6 +155,7 @@ class DesktopCraftingFishingFlowTest {
                 services.exploration.requestEquipInventoryMod("weapon_mod1", "power_lens_mk_i", "nova"))
             compose.onNodeWithText("Schematics").performClick()
             compose.onNodeWithText("Find a schematic").performTextInput(recipe.name)
+            compose.onNodeWithText("Compare equipment").performScrollTo().performClick()
             compose.onNodeWithText("Focus -2", substring = true).assertExists()
             capture("tinkering-schematics-compact")
         } finally { services.close(); directory.deleteRecursively() }
@@ -200,7 +205,7 @@ class DesktopCraftingFishingFlowTest {
                     Box(Modifier.size(960.dp, 720.dp)) { DesktopFishingContent(services, runtime) {} }
                 }
             } }
-            compose.onNodeWithTag("cast-line-button").performClick()
+            compose.onRoot().performKeyInput { pressKey(Key.Spacebar) }
             scope.runCurrent()
             compose.runOnIdle { foreground = false }
             compose.waitForIdle()
@@ -211,10 +216,22 @@ class DesktopCraftingFishingFlowTest {
             scope.advanceTimeBy(3_600); scope.runCurrent(); compose.waitForIdle()
             assertEquals(FishingState.HOOKSET, runtime.uiState.value.fishingState)
             compose.onNodeWithText("Your first bite - take your time.", substring = true).assertExists()
-            runtime.onHookButtonPressed(); scope.runCurrent()
-            runtime.beginReeling(); scope.runCurrent()
-            runtime.onReelPressed()
-            scope.advanceTimeBy(240); scope.runCurrent()
+            compose.onRoot().performKeyInput { pressKey(Key.Spacebar) }
+            scope.runCurrent(); compose.waitForIdle()
+            assertEquals(FishingState.READY, runtime.uiState.value.fishingState)
+            compose.onRoot().performKeyInput { pressKey(Key.Spacebar) }
+            scope.runCurrent(); compose.waitForIdle()
+            assertEquals(FishingState.REELING, runtime.uiState.value.fishingState)
+            compose.onRoot().performKeyInput { keyDown(Key.Spacebar) }
+            scope.advanceTimeBy(240); scope.runCurrent(); compose.waitForIdle()
+            assertTrue(requireNotNull(runtime.uiState.value.reelState).isReeling)
+            compose.onRoot().performKeyInput { keyUp(Key.Spacebar) }
+            scope.advanceTimeBy(FishingFight.TICK_MS); scope.runCurrent(); compose.waitForIdle()
+            assertFalse(requireNotNull(runtime.uiState.value.reelState).isReeling)
+            compose.onRoot().performKeyInput { keyDown(Key.Spacebar) }
+            scope.advanceTimeBy(FishingFight.TICK_MS); scope.runCurrent(); compose.waitForIdle()
+            assertTrue(requireNotNull(runtime.uiState.value.reelState).isReeling)
+            compose.onRoot().performKeyInput { keyUp(Key.Spacebar) }
             compose.runOnIdle { foreground = false }; compose.waitForIdle()
             val pausedReel = runtime.uiState.value.reelState
             scope.advanceTimeBy(5_000); scope.runCurrent()

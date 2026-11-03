@@ -28,8 +28,9 @@ internal fun DesktopMenuPartyStrip(services: DesktopAppServices, members: List<P
     selectedId: String?, largeTargets: Boolean, onSelect: (String) -> Unit) {
     BoxWithConstraints(Modifier.fillMaxWidth()) {
     val compact = maxWidth < 800.dp && !largeTargets
-    Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-        members.forEach { member ->
+    com.example.starborn.ui.menu.OverflowPartyRow(members.map { it.id }, selectedId,
+        if (largeTargets) 240.dp else if (compact) 150.dp else 210.dp, FieldMenuDesign.panel) { index ->
+            val member = members[index]
             Surface(onClick = { onSelect(member.id) }, shape = RoundedCornerShape(6.dp),
                 modifier = Modifier.desktopPointerHover(),
                 color = if (selectedId == member.id) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel,
@@ -47,7 +48,6 @@ internal fun DesktopMenuPartyStrip(services: DesktopAppServices, members: List<P
                     }
                 }
             }
-        }
     }
 }
 }

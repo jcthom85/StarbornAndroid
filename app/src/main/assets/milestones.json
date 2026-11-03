@@ -778,7 +778,7 @@
   {
     "id": "ms_w4_prototypes_defeated",
     "name": "Prototypes Defeated",
-    "description": "You defeated the Phantom Prototype wave.",
+    "description": "You defeated the Phantom wave.",
     "toast": "Prototype wave defeated."
   },
   {

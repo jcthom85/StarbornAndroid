@@ -25,6 +25,7 @@ data class ExplorationUiState(
     val npcs: List<String> = emptyList(),
     val npcPresenceNames: Map<String, String> = emptyMap(),
     val npcPortraitPaths: Map<String, String> = emptyMap(),
+    val npcTradeKeys: Set<String> = emptySet(),
     val actions: List<RoomAction> = emptyList(),
     val roomActionsVisible: Boolean = false,
     val roomObjectOffer: com.example.starborn.feature.exploration.presentation.RoomObjectOffer? = null,
@@ -287,7 +288,8 @@ data class CinematicStepUi(
 data class DialogueUi(
     val line: com.example.starborn.domain.model.DialogueLine,
     val portrait: String?,
-    val voiceCue: String?
+    val voiceCue: String?,
+    val displaySpeaker: String? = null
 )
 
 data class MinimapUiState(

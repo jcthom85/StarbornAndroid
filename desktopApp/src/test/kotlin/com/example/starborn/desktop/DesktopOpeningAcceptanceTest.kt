@@ -33,9 +33,8 @@ class DesktopOpeningAcceptanceTest {
             compose.onNodeWithContentDescription("bunk light", useUnmergedTree = true).performClick()
             compose.waitUntil(5_000) { services.sessionStore.state.value.roomStates["pit_nova_bunk"]?.get("light_on") == true }
             clearPresentations(services)
-            compose.onAllNodesWithContentDescription("cargo netting", useUnmergedTree = true)[0].performClick()
-            compose.waitUntil(5_000) { "ms_w1_mq01_netting_checked" in services.sessionStore.state.value.completedMilestones }
-            clearPresentations(services)
+            // Optional hidden inspection is not required for the authored opening route.
+            compose.onNodeWithContentDescription("cargo netting", useUnmergedTree = true).assertDoesNotExist()
             compose.onAllNodesWithContentDescription("door control panel", useUnmergedTree = true)[0].performClick()
             compose.waitUntil(5_000) { services.sessionStore.state.value.roomStates["pit_nova_bunk"]?.get("conduit_isolated") == true }
             clearPresentations(services)

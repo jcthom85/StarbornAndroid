@@ -9,6 +9,9 @@ import com.squareup.moshi.Json
 data class EffectRegion(val x: Float = 0f, val y: Float = 0f, val width: Float = 1f, val height: Float = 1f)
 data class EffectEmitter(val x: Float = .5f, val y: Float = .75f,
     @Json(name = "angle_degrees") val angleDegrees: Float = -90f, val radius: Float = .03f)
+/** A soft light mask clipped to a painted surface; source links its brightness to an emitter. */
+data class EffectLightPoint(val x: Float, val y: Float)
+data class EffectLightSurface(val points: List<EffectLightPoint> = emptyList(), val source: Int = 0, val strength: Float = .5f)
 data class RoomEffectBinding(val id: String = "", val preset: String = "", val intensity: Float? = null,
     val space: String? = null, val region: EffectRegion? = null, val emitters: List<EffectEmitter>? = null,
     @Json(name = "requires_state") val requiresState: Map<String, Boolean> = emptyMap(),
@@ -16,7 +19,8 @@ data class RoomEffectBinding(val id: String = "", val preset: String = "", val i
     @Json(name = "requires_milestones") val requiresMilestones: List<String> = emptyList(),
     @Json(name = "forbidden_milestones") val forbiddenMilestones: List<String> = emptyList(),
     @Json(name = "in_combat") val inCombat: Boolean = true,
-    @Json(name = "dark_visibility") val darkVisibility: String = "dim")
+    @Json(name = "dark_visibility") val darkVisibility: String = "dim",
+    @Json(name = "light_surfaces") val lightSurfaces: List<EffectLightSurface> = emptyList())
 data class EnvironmentalPreset(val primitive: String = "", val style: String = "", val category: String = "atmosphere",
     val intensity: Float = .25f, val space: String = "viewport", val color: List<Float> = listOf(.8f,.9f,1f,.5f),
     val size: List<Float> = listOf(.001f,.003f), val speed: List<Float> = listOf(.01f,.04f),
@@ -36,7 +40,7 @@ data class EnvironmentalEffectCatalog(@Json(name = "schema_version") val schemaV
         val primitives = setOf("precipitation", "motes", "haze", "jet", "sparks", "light", "field")
         private val styles=mapOf("precipitation" to setOf("drip","rain","snow","storm"),"motes" to setOf("ash","dust","embers","gravity","spores","starfall"),
             "haze" to setOf("fog","gas","smoke"),"sparks" to setOf("arc","sparks"),"jet" to setOf("steam"),
-            "light" to setOf("flicker","pulse","scanner","shaft"),"field" to setOf("resonance"))
+            "light" to setOf("flicker","pulse","scanner","shaft","lamplight","bioluminescence","firelight","canopy"),"field" to setOf("resonance"))
         private fun rangeValid(v: List<Float>, positive: Boolean = false) = v.size == 2 && v.all { it.isFinite() } && v[0] >= 0f && v[1] >= v[0] && (!positive || v[0] > 0f)
         fun presetErrors(p: EnvironmentalPreset): List<String> = buildList {
             if(p.primitive !in primitives) add("unknown primitive ${p.primitive}")
@@ -58,7 +62,7 @@ data class EnvironmentalEffectCatalog(@Json(name = "schema_version") val schemaV
 }
 data class ResolvedEnvironmentalEffect(val id: String, val presetId: String, val preset: EnvironmentalPreset,
     val intensity: Float, val space: String, val region: EffectRegion, val emitters: List<EffectEmitter>,
-    val alpha: Float, val speedScale: Float, val seed: Int, val flashes: Boolean, val fieldMotion: Boolean)
+    val alpha: Float, val speedScale: Float, val seed: Int, val flashes: Boolean, val fieldMotion: Boolean, val lightSurfaces: List<EffectLightSurface> = emptyList())
 
 class EnvironmentalEffectResolver(private val catalog: EnvironmentalEffectCatalog, private val report: (String)->Unit = {}) {
     private val reported = mutableSetOf<String>()
@@ -81,6 +85,14 @@ class EnvironmentalEffectResolver(private val catalog: EnvironmentalEffectCatalo
         if(b.region != null && !EnvironmentalEffectCatalog.regionValid(b.region)) add("invalid region")
         if(b.emitters?.any { !EnvironmentalEffectCatalog.emitterValid(it) } == true) add("invalid emitters")
         if(p?.primitive in setOf("jet","sparks") && (b.emitters ?: p?.emitters).isNullOrEmpty()) add("source-bound effect needs emitters")
+        if(b.lightSurfaces.size > 8) add("maximum eight light surfaces")
+        val sources = b.emitters ?: p?.emitters.orEmpty()
+        if((p != null && isLocalizedLightStyle(p.style)) && sources.size !in 1..8) add("localized light needs one to eight sources")
+        if(b.lightSurfaces.any { surface ->
+            surface.source !in sources.indices || !surface.strength.isFinite() || surface.strength !in 0f..1f ||
+                surface.points.size !in 3..12 || surface.points.any { !it.x.isFinite() || !it.y.isFinite() || it.x !in 0f..1f || it.y !in 0f..1f } ||
+                surface.points.map { it.x }.distinct().size < 2 || surface.points.map { it.y }.distinct().size < 2
+        }) add("invalid light surface")
         if(b.darkVisibility !in setOf("dim","emissive","hidden")) add("invalid dark visibility")
     }
     fun resolve(room: Room?, roomState: Map<String,Boolean>, milestones: Set<String>, settings: UserSettings,
@@ -99,12 +111,12 @@ class EnvironmentalEffectResolver(private val catalog: EnvironmentalEffectCatalo
             val p=catalog.presets.getValue(b.preset)
             val reduced=settings.environmentalEffectsQuality==EnvironmentalEffectsQuality.REDUCED
             val alpha=(if(dark) when(b.darkVisibility) { "hidden"->0f;"emissive"->.35f;else->.15f } else 1f)*
-                (if(combat) .65f else 1f)*(if(settings.highContrastMode && p.primitive=="haze") .5f else 1f)
+                (if(combat) .65f else 1f)*(if(settings.highContrastMode && p.primitive=="haze") .5f else if(settings.highContrastMode && isLocalizedLightStyle(p.style)) .45f else 1f)
             val flashes=!settings.disableFlashes && !reduced && !suppressAccents
             if((b.intensity ?: p.intensity)==0f || alpha==0f || (p.style=="arc" && !flashes)) return@mapNotNull null
             ResolvedEnvironmentalEffect(b.id,b.preset,p,b.intensity ?: p.intensity,b.space ?: p.space,b.region ?: EffectRegion(),
                 b.emitters ?: p.emitters,alpha,if(reduced) .35f else 1f,(room.id+":"+b.id+":"+catalog.schemaVersion).hashCode(),
-                flashes,!settings.disableScreenshake && !reduced && !suppressAccents)
+                flashes,!settings.disableScreenshake && !reduced && !suppressAccents,b.lightSurfaces)
         }
     }
 }

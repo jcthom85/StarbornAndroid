@@ -24,6 +24,7 @@ data class GameSessionState(
     val completedMilestones: Set<String> = emptySet(),
     val milestoneHistory: List<String> = emptyList(),
     val learnedSchematics: Set<String> = emptySet(),
+    val viewedSchematics: Set<String> = emptySet(),
     val unlockedSkills: Set<String> = emptySet(),
     val unlockedWeapons: Set<String> = emptySet(),
     val unlockedArmors: Set<String> = emptySet(),
@@ -44,6 +45,7 @@ data class GameSessionState(
     val pendingBattleJson: String = "",
     val battleCheckpoint: GameSessionState? = null,
     val roomStates: Map<String, Map<String, Boolean>> = emptyMap(),
+    val roomGroundItems: Map<String, Map<String, Int>> = emptyMap(),
     val enemyPartyStates: Map<String, EnemyPartyRuntimeState> = emptyMap(),
     val revealedNodes: Set<String> = emptySet(),
     val unlockedNodes: Set<String> = emptySet(),
@@ -173,6 +175,12 @@ fun GameSessionState.fingerprint(): String {
     }
     pendingEventCinematics.sorted().forEach { builder.append("PENDING_SCENE:").append(it).append('|') }
     builder.append("BATTLE:").append(pendingBattleJson).append('|')
+    viewedSchematics.sorted().forEach { builder.append("SCHEMATIC_VIEWED:").append(it).append('|') }
+    roomGroundItems.toSortedMap().forEach { (room, items) ->
+        builder.append("GROUND:").append(room).append('[')
+        items.toSortedMap().forEach { (item, count) -> builder.append(item).append('=').append(count).append(';') }
+        builder.append("]|")
+    }
     roomStates.entries.sortedBy { it.key.lowercase(normalizedLocale) }.forEach { (roomId, states) ->
         if (roomId.isBlank() || states.isEmpty()) return@forEach
         builder.append("ROOM:")

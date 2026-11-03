@@ -451,7 +451,10 @@ class CampaignEventIntegrationTest {
         agent.executeAction("w2_mq05_inspect_astra")
         agent.executeAction("w2_mq05_collect_conduits")
         agent.executeAction("w2_mq05_reboot")
+        harness.store.setRoom("sector9_hangar_bay")
         agent.executeAction("w2_mq05_launch")
+        assertEquals("astra_cargo_bay", harness.store.state.value.roomId)
+        harness.store.setRoom("astra_bridge")
         agent.solvePuzzle("Astra Navigation", "depart")
 
         state = harness.store.state.value

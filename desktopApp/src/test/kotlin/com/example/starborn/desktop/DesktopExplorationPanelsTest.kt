@@ -25,6 +25,34 @@ import javax.imageio.ImageIO
 class DesktopExplorationPanelsTest {
     @get:Rule val compose = createComposeRule()
 
+    @Test fun servicePillsMatchAndroidAndDoNotNeedAnActionsLink() {
+        val directory = Files.createTempDirectory("starborn-service-parity").toFile()
+        val services = DesktopAppServices(directory, RecordingAudioDriver())
+        val room = services.roomDefinitions.getValue("sector9_stream_falls")
+        val shop = ShopAction("provisions counter", "davids_provisions")
+        val bench = TinkeringAction("repair bench")
+        val rest = RestStopAction("recess shelter")
+        val ui = ExplorationUiState(currentRoom = room, actions = listOf(shop, bench, rest))
+        try {
+            assertTrue(services.startNewGame())
+            services.sessionStore.restore(services.sessionStore.state.value.copy(
+                worldId = "world_2", hubId = "hub_3_sector9", roomId = room.id))
+            compose.setContent { DesktopStarbornTheme(services) { DesktopExplorationTheme(services) {
+                Box(Modifier.size(1280.dp, 800.dp)) {
+                    DesktopExplorationPanels(services, ui, portraitBackdropLayout(Size(1280f,800f),Size(1088f,1920f)),
+                        "Water falls around the camp.", null, false, false) {}
+                }
+            } } }
+            compose.onNodeWithText("Actions").assertDoesNotExist()
+            compose.onNodeWithText("Provisions counter").assertIsDisplayed().assertIsEnabled()
+            compose.onNodeWithText("Repair bench").assertIsDisplayed().assertIsEnabled()
+            compose.onNodeWithText("Rest").assertIsDisplayed().assertIsEnabled()
+            compose.waitUntil(5000) { services.exploration.uiState.value.actions.any { it.actionKey() == shop.actionKey() } }
+            compose.onNodeWithText("Provisions counter").performClick()
+            compose.waitUntil(5000) { services.exploration.uiState.value.roomObjectOffer?.action == shop }
+        } finally { services.close(); directory.deleteRecursively() }
+    }
+
     @Test fun panelBreakpointsRespectImageGeometryAndDensity() {
         val image = Size(1088f, 1920f)
         assertTrue(hasThreePanelSpace(portraitBackdropLayout(Size(1920f, 1080f), image), 1f))
@@ -150,7 +178,7 @@ class DesktopExplorationPanelsTest {
         } finally { services.close(); directory.deleteRecursively() }
     }
 
-    @Test fun longNarrativeScrollsToLockedFallbackAndSpecialExit() {
+    @Test fun longNarrativeScrollsToLockedInlineObjectAndSpecialExit() {
         val directory = Files.createTempDirectory("starborn-long-narrative-").toFile()
         val services = DesktopAppServices(directory)
         try {
@@ -162,7 +190,8 @@ class DesktopExplorationPanelsTest {
             compose.setContent { DesktopStarbornTheme {
                 Box(Modifier.size(1024.dp, 576.dp)) {
                     DesktopExplorationPanels(services, ui, portraitBackdropLayout(Size(1024f, 576f), Size(1088f, 1920f)),
-                        "A long room description. ".repeat(100), null, false, false) {}
+                        "A long room description. ".repeat(100) + "The sealed locker is at the end.",
+                        buildInlineActionPlan("A long room description. ".repeat(100) + "The sealed locker is at the end.", ui.actions, ui.actionHints, room), false, false) {}
                 }
             } }
             val titleBounds = compose.onNodeWithText(room.title).fetchSemanticsNode().boundsInRoot
@@ -170,7 +199,8 @@ class DesktopExplorationPanelsTest {
             compose.onNodeWithText(room.title).assertIsDisplayed()
             assertEquals(titleBounds, compose.onNodeWithText(room.title).fetchSemanticsNode().boundsInRoot)
             compose.onNodeWithText("Sealed locker").assertDoesNotExist()
-            compose.onNodeWithText("Actions").assertIsDisplayed()
+            compose.onNodeWithText("Actions").assertDoesNotExist()
+            compose.onAllNodesWithContentDescription("sealed locker", useUnmergedTree = true).onFirst().assertIsNotEnabled()
             compose.onNodeWithText("up").performScrollTo().assertIsDisplayed().assertIsEnabled()
             compose.onNodeWithText("OBJECTIVE").assertDoesNotExist()
             compose.onNodeWithText("PARTY").assertDoesNotExist()

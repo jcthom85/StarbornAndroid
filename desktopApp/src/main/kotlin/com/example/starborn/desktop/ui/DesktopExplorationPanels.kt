@@ -34,6 +34,9 @@ import com.example.starborn.domain.model.actionKey
 import com.example.starborn.domain.model.TravelAction
 import com.example.starborn.domain.model.RestStopAction
 import com.example.starborn.domain.model.GenericAction
+import com.example.starborn.domain.model.ShopAction
+import com.example.starborn.domain.model.TinkeringAction
+import com.example.starborn.domain.model.isRoomServiceAction
 import com.example.starborn.feature.exploration.presentation.*
 import com.example.starborn.feature.exploration.viewmodel.ExplorationUiState
 import com.example.starborn.feature.exploration.viewmodel.MinimapUiState
@@ -136,14 +139,12 @@ private fun DesktopNarrativeArea(services: DesktopAppServices, ui: ExplorationUi
     val bodyScroll = remember(ui.currentRoom?.id) { ScrollState(0) }
     val contextScroll = remember(ui.currentRoom?.id) { ScrollState(0) }
     val contentAlpha = if (transitionProgress < 1f) (transitionProgress / 0.85f).coerceIn(0f, 1f) else 1f
-    val contentSlideY = if (transitionProgress < 1f) ((1f - transitionProgress) * 10f).dp else 0.dp
     BoxWithConstraints(modifier) {
         val narrativeHeightLimit = maxHeight * .6f
         Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Surface(Modifier.fillMaxWidth().heightIn(max = narrativeHeightLimit).testTag("exploration-narrative")
                 .graphicsLayer {
                     alpha = contentAlpha
-                    translationY = contentSlideY.toPx()
                 },
                 shape = RoundedCornerShape(12.dp), color = if (settings.highContrastMode) Color.Black else Color(0xEB07111A), border = BorderStroke(1.dp, if (settings.highContrastMode) Color.White else accent.copy(alpha = .24f))) {
                 Column(Modifier.drawBehind { drawRect(accent.copy(alpha = .85f), size = androidx.compose.ui.geometry.Size(3.dp.toPx(), size.height)) }
@@ -153,9 +154,9 @@ private fun DesktopNarrativeArea(services: DesktopAppServices, ui: ExplorationUi
                             DesktopRoomHeading(if (isDark && ui.currentRoom?.revealTitleWhenDark != true) "Dark room" else ui.currentRoom?.title ?: "Loading?",
                                 if (settings.highContrastMode) Color.White else accent, compact)
                         }
-                        TextButton(onClick = runtime::openRoomActions, enabled = !blocked) { Text("Actions") }
                     }
                     DesktopExplorationScrollPane(bodyScroll, Modifier.weight(1f, fill = false).fillMaxWidth()) {
+                    key(ui.currentRoom?.id) {
                     RoomDescription(plan, description, isDark, Color(0xFFF0F3F5),
                         onAction = { if (!blocked) runtime.inspectRoomAction(it) },
                         onNpcClick = { if (!blocked && !isDark) runtime.onNpcInteraction(it) },
@@ -164,6 +165,7 @@ private fun DesktopNarrativeArea(services: DesktopAppServices, ui: ExplorationUi
                             scrollBy { _, y -> bodyScroll.dispatchRawDelta(y) != 0f }
                         },
                         textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 17.sp, lineHeight = 26.sp))
+                    }
                     }
                 }
             }
@@ -184,10 +186,10 @@ private fun DesktopNarrativeArea(services: DesktopAppServices, ui: ExplorationUi
 private fun DesktopContextualControls(services: DesktopAppServices, ui: ExplorationUiState, plan: InlineActionPlan?, isDark: Boolean, blocked: Boolean) {
     val runtime = services.exploration
     val remaining = contextualRoomTargets(ui, plan, isDark).filterNot { it is InlineActionTarget.Npc || it is InlineActionTarget.Enemy && ui.visualEnemyParties.isNotEmpty() }
-    val restStops = if (isDark) emptyList() else ui.actions.filterIsInstance<RestStopAction>().distinctBy { it.actionKey() }
+    val serviceActions = if (isDark) emptyList() else ui.actions.filter { it.isRoomServiceAction() }.distinctBy { it.actionKey() }
     val specialExits = ui.availableConnections.filter { (direction, target) -> target != null && direction.lowercase() !in cardinalDirections &&
         ui.actions.filterIsInstance<TravelAction>().none { it.direction.equals(direction, true) } }
-    if (remaining.isEmpty() && restStops.isEmpty() && (isDark || ui.groundItems.isEmpty()) && specialExits.isEmpty() && (isDark || ui.npcs.isEmpty()) && !ui.canReturnToHub) return
+    if (remaining.isEmpty() && serviceActions.isEmpty() && (isDark || ui.groundItems.isEmpty()) && specialExits.isEmpty() && (isDark || ui.npcs.isEmpty()) && !ui.canReturnToHub) return
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         if (ui.canReturnToHub) DesktopOverworldGateway(ui, blocked, runtime::requestReturnToHub)
         if (!isDark && ui.npcs.isNotEmpty()) {
@@ -202,19 +204,23 @@ private fun DesktopContextualControls(services: DesktopAppServices, ui: Explorat
                     modifier = Modifier.align(Alignment.CenterEnd).background(PanelInk).padding(horizontal = 4.dp))
             }
         }
-        if (restStops.isNotEmpty()) {
+        if (serviceActions.isNotEmpty()) {
             Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).testTag("rest-services"),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                restStops.forEach { action ->
+                serviceActions.forEach { action ->
                     OutlinedButton(
                         onClick = { runtime.inspectRoomAction(action) },
                         enabled = !blocked && ui.actionHints[action.actionKey()]?.locked != true,
                         modifier = Modifier.heightIn(min = 48.dp).testTag("rest-service-${action.actionKey()}")
                     ) {
-                        Icon(if (action.cookSource != null) Icons.Rounded.Restaurant else Icons.Rounded.Hotel,
-                            null, Modifier.size(18.dp))
+                        Icon(when {
+                            action is ShopAction -> Icons.Rounded.ShoppingCart
+                            action is TinkeringAction -> Icons.Rounded.Build
+                            action is RestStopAction && action.cookSource != null -> Icons.Rounded.Restaurant
+                            else -> Icons.Rounded.Hotel
+                        }, null, Modifier.size(18.dp))
                         Spacer(Modifier.width(8.dp))
-                        Text(restStopServiceLabel(action))
+                        Text(if (action is RestStopAction) restStopServiceLabel(action) else action.name.replaceFirstChar { it.titlecase() })
                     }
                 }
             }

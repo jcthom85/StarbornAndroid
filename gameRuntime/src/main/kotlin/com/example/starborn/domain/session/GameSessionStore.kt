@@ -50,6 +50,9 @@ class GameSessionStore {
 
     fun takeEquipmentRestoreNotice(): String? = equipmentRestoreNotice.also { equipmentRestoreNotice = null }
 
+    private val restorationCounter = java.util.concurrent.atomic.AtomicLong(0)
+    val restorationVersion: Long get() = restorationCounter.get()
+
     fun restore(state: GameSessionState) {
         val base = com.example.starborn.domain.leveling.CrewBuildPrototype.grantCore(normalizeArmors(normalizeWeapons(normalizeEquipment(state.withoutRetiredCompanion()))))
         val equipment = ModEquipmentRules.reconcile(base, state)
@@ -61,6 +64,7 @@ class GameSessionStore {
             "Mod assignments adjusted to match owned copies and available slots."
             else if (normalized.partyMemberHp != equipment.partyMemberHp)
                 "Loaded health was capped at the current maximum after equipment changes." else null
+        restorationCounter.incrementAndGet()
         if (_state.value == normalized) return
         _state.value = normalized
     }
@@ -494,6 +498,13 @@ class GameSessionStore {
         _state.update { it.copy(inventory = normalized) }
     }
 
+    /** Empty room entries are intentional receipts: no authored loot remains there. */
+    fun setRoomGroundItems(roomId: String, items: Map<String, Int>) {
+        if (roomId.isBlank()) return
+        val remaining = items.filter { (id, quantity) -> id.isNotBlank() && quantity > 0 }
+        _state.update { current -> current.copy(roomGroundItems = current.roomGroundItems + (roomId to remaining)) }
+    }
+
     fun setRoomState(roomId: String, stateKey: String, value: Boolean) {
         val normalizedRoomId = roomId.trim()
         val normalizedKey = stateKey.trim()
@@ -513,6 +524,10 @@ class GameSessionStore {
         _state.update { current ->
             if (current.enemyPartyStates == states) current else current.copy(enemyPartyStates = states)
         }
+    }
+
+    fun markSchematicViewed(id: String) {
+        if (id.isNotBlank()) _state.update { it.copy(viewedSchematics = it.viewedSchematics + id) }
     }
 
     fun markEventCompleted(eventId: String) {

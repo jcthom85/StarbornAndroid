@@ -154,13 +154,15 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
             moveProgress.animateTo(1f, tween(300, easing = FastOutSlowInEasing))
         }
     }
+    val gateReveal = com.example.starborn.ui.exploration.rememberTempleGateReveal(
+        ui.currentRoom?.id, ui.roomState["temple_open"] == true, settings.disableScreenshake)
     val revealingRoom = ui.fadeOverlay?.let { it.toAlpha < it.fromAlpha } == true
-    val sceneBlocked = ui.roomObjectOffer != null || restNotice != null || actionsOpen || quickLoadOpen || environmentPreview || menuOpen || shopId != null || controlsOpen || cookingSource != null || ui.activeDialogue != null || ui.cinematic != null || ui.prompt != null || ui.narrationPrompt != null || ui.togglePrompt != null || ui.tuningPuzzle != null || ui.blockedPrompt != null || ui.shopGreeting != null || ui.eventAnnouncement != null || (ui.forceBlackScreen && !revealingRoom) || ui.isAstraNavConsoleVisible || ui.isSimulationDeckVisible || ui.isTapeDeckVisible || ui.showBurgQuestAstraExitDialog || ui.isMilestoneGalleryVisible || ui.isCatchLogVisible || ui.astraFacility != null || ui.isAstraRecreationVisible || ui.levelUpPrompt != null || ui.skillTreeOverlay != null || ui.questDetail != null || ui.partyMemberDetails != null || ui.tutorialState.current != null
-    val queuedNotice = explorationNotice(ui, restNotice != null || actionsOpen || quickLoadOpen || environmentPreview ||
+    val sceneBlocked = gateReveal.active || ui.roomObjectOffer != null || restNotice != null || actionsOpen || quickLoadOpen || environmentPreview || menuOpen || shopId != null || controlsOpen || cookingSource != null || ui.activeDialogue != null || ui.cinematic != null || ui.prompt != null || ui.narrationPrompt != null || ui.togglePrompt != null || ui.tuningPuzzle != null || ui.blockedPrompt != null || ui.shopGreeting != null || ui.eventAnnouncement != null || (ui.forceBlackScreen && !revealingRoom) || ui.isAstraNavConsoleVisible || ui.isSimulationDeckVisible || ui.isTapeDeckVisible || ui.showBurgQuestAstraExitDialog || ui.isMilestoneGalleryVisible || ui.isCatchLogVisible || ui.astraFacility != null || ui.isAstraRecreationVisible || ui.levelUpPrompt != null || ui.skillTreeOverlay != null || ui.questDetail != null || ui.partyMemberDetails != null || ui.tutorialState.current != null
+    val queuedNotice = explorationNotice(ui, gateReveal.active || restNotice != null || actionsOpen || quickLoadOpen || environmentPreview ||
         menuOpen || shopId != null || controlsOpen || cookingSource != null || moveProgress.value < 1f)
     val questPopupVisible = !sceneBlocked && questPresentations.important.isNotEmpty()
     val blocked = sceneBlocked || questPopupVisible || moveProgress.value < 1f
-    val externalNoticeBlocker = questPopupVisible || restNotice != null || actionsOpen || quickLoadOpen || environmentPreview ||
+    val externalNoticeBlocker = gateReveal.active || questPopupVisible || restNotice != null || actionsOpen || quickLoadOpen || environmentPreview ||
         menuOpen || shopId != null || controlsOpen || cookingSource != null
     LaunchedEffect(externalNoticeBlocker) { runtime.setNoticePresentationBlocked("desktop-presentation", externalNoticeBlocker) }
     DisposableEffect(runtime) {
@@ -310,6 +312,12 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                 modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(bottom = 24.dp)
             )
         }
+        if (gateReveal.active) {
+            com.example.starborn.ui.exploration.TempleGateReveal(gateReveal.progress, settings.disableFlashes,
+                Modifier.fillMaxSize().zIndex(45f).pointerInput(Unit) {
+                    awaitPointerEventScope { while (true) awaitPointerEvent().changes.forEach { it.consume() } }
+                }, closedPainter = rememberDesktopAssetPainter(com.example.starborn.ui.exploration.TEMPLE_GATE_CLOSED_ART, services.assetProvider))
+        }
         if (ui.forceBlackScreen && ui.fadeOverlay == null) Box(Modifier.fillMaxSize().background(Color.Black))
         if (ui.fadeOverlay != null) Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = fadeAlpha.value.coerceIn(0f, 1f))))
         if (menuOpen) DesktopFieldMenuDialog(services = services, currentRoomTitle = room?.title, initialTab = DesktopMenuTab.valueOf(ui.menuTab.name),
@@ -335,12 +343,12 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
             }
         }
         restNotice?.takeIf { ui.activeDialogue == null && ui.cinematic == null && ui.shopGreeting == null }?.let { notice ->
-            AlertDialog(onDismissRequest = { restNotice = null },
-                modifier = Modifier.informationAcknowledgement { restNotice = null },
-                title = { Text("A Quiet Rest") },
-                text = { Text(listOfNotNull(notice.message?.takeIf { it.isNotBlank() },
-                    if (notice.alreadyFull) "Already at full HP." else "Restored ${notice.restoredHp} HP.").joinToString("\n\n")) },
-                confirmButton = { TextButton(onClick = { restNotice = null }) { Text("Continue") } })
+            DesktopExplorationModal(
+                listOfNotNull(notice.message?.takeIf { it.isNotBlank() },
+                    if (notice.alreadyFull) "Already at full HP." else "Restored ${notice.restoredHp} HP.").joinToString("\n\n"),
+                { restNotice = null }, title = "A Quiet Rest", tapToDismiss = true) {
+                TextButton(onClick = { restNotice = null }) { Text("Continue") }
+            }
         }
         if (controlsOpen) DesktopControlsDialog(onDismiss = { controlsOpen = false })
         shopId?.let { id -> DesktopShopDialog(services, id) { shopId = null } }

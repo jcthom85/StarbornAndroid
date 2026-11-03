@@ -313,7 +313,10 @@ class World2PlaythroughAuditTest {
         doAction("w2_mq05_inspect_astra")
         doAction("w2_mq05_collect_conduits")
         doAction("w2_mq05_reboot")
+        store.setRoom("sector9_hangar_bay")
         doAction("w2_mq05_launch")
+        assertEquals("astra_cargo_bay", store.state.value.roomId)
+        store.setRoom("astra_bridge")
         talk("Astra Navigation", "depart")
 
         assertTrue("w2_mq05 must be completed", store.state.value.completedQuests.contains("w2_mq05"))

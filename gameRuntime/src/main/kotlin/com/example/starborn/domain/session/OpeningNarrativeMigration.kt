@@ -124,6 +124,18 @@ fun GameSessionState.migrateOpeningNarrativeState(): GameSessionState {
         }
     }
 
+    // Recover task receipts lost by the old quest cache after loading an earlier save.
+    // Inventory is not evidence: resin and herbs can come from unrelated sources.
+    if ("w2_sq03" in activeQuests || "w2_sq03" in completedQuests) {
+        if ("w2_sq03_visit" in completedEvents) task("w2_sq03", "visit_beach")
+        if ("w2_sq03_gather" in completedEvents || "ms_w2_tideglass_gathered" in migratedMilestones) {
+            task("w2_sq03", "visit_beach")
+            task("w2_sq03", "collect_food")
+            backfillMilestone("ms_w2_tideglass_gathered")
+        }
+        if ("w2_sq03_craft_source_resin" in completedEvents) task("w2_sq03", "craft_source_resin")
+    }
+
     val bridgeInstalled = "ms_w2_bridge_installed" in migratedMilestones ||
         "w2_mq05" in completedQuests ||
         "reboot_bridge_relic" in migratedQuestTasks["w2_mq05"].orEmpty()
@@ -143,6 +155,7 @@ fun GameSessionState.migrateOpeningNarrativeState(): GameSessionState {
         backfillMilestone("ms_w2_stasis_awake")
     }
     if ("talk_to_orion" in migratedQuestTasks["w2_mq03"].orEmpty() || "w2_mq03" in completedQuests) {
+        backfillMilestone("ms_w2_orion_identified")
         backfillMilestone("ms_w2_orion_briefed")
     }
 

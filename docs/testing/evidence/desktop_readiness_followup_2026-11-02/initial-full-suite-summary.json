@@ -1,0 +1,576 @@
+[
+  {
+    "suite": "com.example.starborn.desktop.DesktopAstraCatchLogTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopMapReadabilityTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopCombatFormationTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopQuestQueueTest",
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopPcInteractionTest",
+    "tests": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopMenuSnapshotTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopCraftingFishingFlowTest",
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopExplorationSnapshotTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopTinkerSnapshotTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopRestStandardsTest",
+    "tests": 2,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopPartThreePresentationTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopCombatFlowTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopJedPopupFlowTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopPortraitBackdropTest",
+    "tests": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.FoodAtbBalanceAuditTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.SnackAbilityAuditTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopTinkeringTutorialReviewTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopArcadeSnapshotTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopActionReachabilityAuditTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopAudioOwnershipTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopCoffeeRewardTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopCombatClarityTest",
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopFieldKitFlowTest",
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopVictoryPresentationTest",
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopOpeningAcceptanceTest",
+    "tests": 1,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.TypewriterLayoutTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopCombatMusicPolicyTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopRewardGearTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopAstraCatalogPresentationTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopCombatActionStateTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopDialogueMurmurPitchTest",
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopRoomEntryRegressionTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.AstraFacilitiesTest",
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopHubMenuTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopFormationLayoutTest",
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.GladePuffballPresentationTest",
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopEnvironmentalEffectsTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopTutorialDismissalTest",
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopStabilityBreakTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopWorldsDataAndEncounterPipelineTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopCrewBuildTest",
+    "tests": 2,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopCombatHorizontalSnapshotTest",
+    "tests": 3,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopMapDeckFlowTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopFishingSnapshotTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.FishingEconomyAuditTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopMenuReviewTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopPresentationParityTest",
+    "tests": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopAudioDriverPipelineTest",
+    "tests": 7,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopJedDialogueSnapshotTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopCompletedQuestGroupsTest",
+    "tests": 1,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopWorld1BossAndTransitionTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopSettingsDeckTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopKeyBindingsTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopVisualSnapshotTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopHubRedesignTest",
+    "tests": 9,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopSkillTreeIntegrationTest",
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopHubLabelLayoutTest",
+    "tests": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopTitleLayoutTest",
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopCinematicSnapshotTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopExplorationReturnTest",
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.FoodBalanceAuditTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopExplorationPanelsTest",
+    "tests": 7,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopEarlyGameFlowTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopPersistenceMigrationTest",
+    "tests": 7,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopPolishGateTest",
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopContentConsistencyTest",
+    "tests": 7,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopPopupAlignmentTest",
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopQuestPresentationTest",
+    "tests": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopFullAudioAndSaveAuditTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopNovaTutorialTest",
+    "tests": 3,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopPackagedAssetsTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopBackdropLoadingTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopShopFlowTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopStatsSnapshotTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopHubPolishTest",
+    "tests": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopCrewProgressionMigrationTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.FishingPortraitPresentationTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopRoomAndHubTransitionTest",
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopJournalSnapshotTest",
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopMerchantInteractionTest",
+    "tests": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopNovaPrototypeTest",
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "com.example.starborn.desktop.DesktopExplorationPolishTest",
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+]

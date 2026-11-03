@@ -149,6 +149,7 @@ internal fun DesktopFishingContent(services: DesktopAppServices, runtime: Fishin
                             }
                         }
                         KeyEventType.KeyUp -> {
+                            spaceHeld = false
                             if (state.fishingState == FishingState.REELING) {
                                 runtime.onReelReleased()
                             }

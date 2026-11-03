@@ -161,6 +161,7 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
                 val hiddenClueCount = (matchingLocked.size - visibleLocked.size).coerceAtLeast(0)
                 val recipes = state.learnedRecipes.filter { it.name.contains(query, true) } + visibleLocked
                 val selected = recipes.firstOrNull { it.id == recipeId } ?: recipes.firstOrNull()
+                LaunchedEffect(selected?.id) { selected?.takeIf { it.learned }?.let { runtime.markSchematicViewed(it.id) } }
                 DesktopStationPanes(Modifier.weight(1f), stackBelow = 500.dp, primary = { paneModifier ->
                     LazyColumn(paneModifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         items(state.schematicChoices, key = { "found-${it.id}" }) { item -> OutlinedButton(onClick = { runtime.learnFoundSchematic(item.id) }) { Text("Learn ${item.name}") } }
@@ -183,11 +184,31 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
                     selected?.let { recipe -> Column(paneModifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         DesktopMenuSection(recipe.name)
                         if (recipe.learned) {
-                            DesktopMenuItemArt(services, catalog[recipe.resultId], Modifier.size(96.dp))
-                            recipe.description?.let { Text(it) }; Text(recipe.resultSummary)
-                            DesktopModComparison(recipe.equipmentComparison)
-                            recipe.ingredients.forEach { Text("${it.label}: ${it.available} / ${it.required}") }
-                            Button(onClick = { runtime.craft(recipe.id) }, enabled = recipe.canCraft) { Text("Synthesize") }
+                            DesktopMenuItemArt(services, catalog[recipe.resultId], Modifier.size(48.dp))
+                            Text(tinkeringEffectSummary(recipe))
+                            Text("Materials · owned / required", style = MaterialTheme.typography.titleSmall)
+                            recipe.ingredients.filterNot { it.label.startsWith("Tool: ") }.forEach { requirement ->
+                                Row(Modifier.fillMaxWidth()) {
+                                    Text(requirement.label, Modifier.weight(1f))
+                                    Text("${requirement.available} / ${requirement.required}", color =
+                                        if (requirement.available >= requirement.required) FieldMenuDesign.textMuted else FieldMenuDesign.gold)
+                                }
+                            }
+                            val tools = recipe.ingredients.filter { it.label.startsWith("Tool: ") }
+                            if (tools.isNotEmpty()) Text("Reusable tools: " + tools.joinToString { it.label.removePrefix("Tool: ") +
+                                if (it.available < it.required) " (missing)" else " ✓" })
+                            Text(tinkeringAvailability(recipe), color = if (recipe.canCraft) FieldMenuDesign.cyan else FieldMenuDesign.gold)
+                            Button(onClick = { runtime.craft(recipe.id) }, enabled = recipe.canCraft,
+                                colors = ButtonDefaults.buttonColors(disabledContainerColor = FieldMenuDesign.elevatedPanel,
+                                    disabledContentColor = FieldMenuDesign.textMuted)) { Text("Synthesize") }
+                            var notes by remember(recipe.id) { mutableStateOf(false) }
+                            TextButton(onClick = { notes = !notes }) { Text(if (notes) "Hide assembly notes" else "Assembly notes") }
+                            if (notes) { recipe.description?.let { Text(it) }; Text(recipe.resultSummary) }
+                            if (recipe.equipmentComparison.isNotEmpty()) {
+                                var comparison by remember(recipe.id) { mutableStateOf(false) }
+                                TextButton(onClick = { comparison = !comparison }) { Text(if (comparison) "Hide equipment comparison" else "Compare equipment") }
+                                if (comparison) DesktopModComparison(recipe.equipmentComparison)
+                            }
                         } else Text(recipe.discoveryHint ?: "Find its schematic")
                     } }
                 })

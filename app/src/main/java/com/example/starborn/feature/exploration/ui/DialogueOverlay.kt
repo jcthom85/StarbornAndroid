@@ -193,7 +193,7 @@ fun DialogueOverlay(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         SpeakerName(
-                            name = line.speaker,
+                            name = dialogue.displaySpeaker ?: line.speaker,
                             accentColor = accentColor
                         )
                         Spacer(modifier = Modifier.weight(1f))
@@ -290,11 +290,11 @@ fun DialogueOverlay(
                 ) {
                     PortraitCard(
                         painter = portraitPainter,
-                        speaker = line.speaker,
+                        speaker = dialogue.displaySpeaker ?: line.speaker,
                         accentColor = accentColor
                     )
                     SpeakerName(
-                        name = line.speaker,
+                        name = dialogue.displaySpeaker ?: line.speaker,
                         accentColor = accentColor
                     )
                 }

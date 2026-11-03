@@ -125,6 +125,7 @@ class WorldTwoDiscoverabilityStateTest {
         }
         dispatch(store, "w2_mq05_launch")
         assertFalse("w2_mq05" in store.state.value.completedQuests)
+        store.setRoom("astra_bridge")
         dispatch(store, "w2_mq05_confirm_departure")
         val state = store.state.value.migrateOpeningNarrativeState()
         assertTrue("w2_mq05" in state.completedQuests)

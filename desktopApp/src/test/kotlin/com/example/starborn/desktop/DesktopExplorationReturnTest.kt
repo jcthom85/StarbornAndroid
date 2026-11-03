@@ -138,5 +138,11 @@ class DesktopExplorationReturnTest {
         compose.onNode(hasText("Rest") and hasAnyAncestor(isDialog())).performClick()
         compose.waitUntil(5000) { s.sessionStore.state.value.partyMemberHp.getValue("nova") > 20 }
         compose.onNodeWithText("A Quiet Rest").assertIsDisplayed()
+        compose.onNodeWithText("Continue").performClick()
+        compose.onNodeWithText("A Quiet Rest").assertDoesNotExist()
+        compose.runOnIdle { s.exploration.inspectRoomAction(rest) }
+        compose.onNode(hasText("Rest") and hasAnyAncestor(isDialog())).performClick()
+        compose.onNodeWithText("A Quiet Rest").assertIsDisplayed()
+        compose.onNodeWithText("Already at full HP.", substring = true).assertIsDisplayed()
     }
 }

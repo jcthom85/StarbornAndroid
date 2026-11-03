@@ -1,0 +1,14 @@
+{
+  "app": {
+    "tests": 783,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "desktopApp": {
+    "tests": 32,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

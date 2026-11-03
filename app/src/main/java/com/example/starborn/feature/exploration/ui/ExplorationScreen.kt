@@ -223,6 +223,7 @@ import com.example.starborn.domain.model.ContainerAction
 import com.example.starborn.domain.model.EventReward
 import com.example.starborn.data.local.Theme
 import com.example.starborn.domain.model.Room
+import com.example.starborn.domain.model.isRoomServiceAction
 import com.example.starborn.domain.model.RoomAction
 import com.example.starborn.domain.model.RestStopAction
 import com.example.starborn.domain.model.ShopAction
@@ -395,26 +396,9 @@ fun ExplorationScreen(
     val hostileApproachScale by animateFloatAsState(
         targetValue = if (approachingCombat && !uiState.settings.disableScreenshake) 1.05f else 1f,
         animationSpec = tween(300), label = "hostileApproach")
-    var gateRevealActive by remember { mutableStateOf(false) }
-    val gateRevealProgress = remember { CoreAnimatable(1f) }
-    var previousGateOpen by remember(uiState.currentRoom?.id) {
-        mutableStateOf(uiState.roomState["temple_open"] == true)
-    }
-    LaunchedEffect(uiState.currentRoom?.id, uiState.roomState["temple_open"]) {
-        val open = uiState.roomState["temple_open"] == true
-        if (uiState.currentRoom?.id == "sector9_temple_gate" && open && !previousGateOpen) {
-            previousGateOpen = true
-            gateRevealActive = true
-            try {
-                if (!uiState.settings.disableScreenshake) {
-                    gateRevealProgress.snapTo(0f)
-                    gateRevealProgress.animateTo(1f, tween(2400, easing = androidx.compose.animation.core.LinearEasing))
-                }
-            } finally {
-                gateRevealActive = false
-            }
-        } else previousGateOpen = open
-    }
+    val gateReveal = com.example.starborn.ui.exploration.rememberTempleGateReveal(
+        uiState.currentRoom?.id, uiState.roomState["temple_open"] == true, uiState.settings.disableScreenshake)
+    val gateRevealActive = gateReveal.active
     val coroutineScope = rememberCoroutineScope()
     val blockingOverlayActive = uiState.gladeBallAnimating || gateRevealActive || areaEntryActive || environmentalPreview || restRecoveryNotice != null ||
         walkthroughVisible || uiState.isMenuOverlayVisible ||
@@ -1010,7 +994,7 @@ fun ExplorationScreen(
             if (isRoomDark) {
                 emptyList()
             } else {
-                uiState.actions.filter { it is ShopAction || it is RestStopAction || it is TinkeringAction }.map { action ->
+                uiState.actions.filter { it.isRoomServiceAction() }.map { action ->
                     when (action) {
                         is ShopAction -> QuickMenuAction(
                             label = action.name.replaceFirstChar { it.titlecase() },
@@ -1118,6 +1102,7 @@ fun ExplorationScreen(
                             npcs = visibleNpcs,
                             npcPresenceNames = uiState.npcPresenceNames,
                             npcPortraitPaths = uiState.npcPortraitPaths,
+                            npcTradeKeys = uiState.npcTradeKeys,
                             groundItems = visibleGroundItems,
                             serviceActions = serviceQuickActions,
                             canReturnToHub = uiState.canReturnToHub,
@@ -1201,10 +1186,11 @@ fun ExplorationScreen(
         }
         if (gateRevealActive) {
             com.example.starborn.ui.exploration.TempleGateReveal(
-                gateRevealProgress.value, uiState.settings.disableFlashes,
+                gateReveal.progress, uiState.settings.disableFlashes,
                 Modifier.fillMaxSize().zIndex(45f).pointerInput(Unit) {
                     awaitPointerEventScope { while (true) awaitPointerEvent().changes.forEach { it.consume() } }
-                })
+                }, closedPainter = rememberRoomBackgroundPainter(com.example.starborn.ui.exploration.TEMPLE_GATE_CLOSED_ART),
+                cropArtwork = true)
         }
 
         RestRecoveryOverlay(
@@ -4729,7 +4715,7 @@ private fun String.toActionTitleCase(): String {
         }
 }
 
-private data class QuickMenuAction(
+internal data class QuickMenuAction(
     @DrawableRes val iconRes: Int? = null,
     val imageVector: ImageVector? = null,
     val label: String,
@@ -5082,11 +5068,14 @@ private fun CompactServiceChip(
 }
 
 
+private val PresenceChipMinWidth = 100.dp
+
 @Composable
-private fun RoomEntitySection(
+internal fun RoomEntitySection(
     npcs: List<String>,
     npcPresenceNames: Map<String, String>,
     npcPortraitPaths: Map<String, String>,
+    npcTradeKeys: Set<String> = emptySet(),
     groundItems: Map<String, Int>,
     serviceActions: List<QuickMenuAction> = emptyList(),
     canReturnToHub: Boolean = false,
@@ -5138,6 +5127,7 @@ private fun RoomEntitySection(
                             npc = npc,
                             label = npcPresenceNames[npc.normalizedNpcKey()] ?: npcDisplayLabel(npc),
                             portraitPath = npcPortraitPaths[npc.normalizedNpcKey()],
+                            offersTrade = npc.normalizedNpcKey() in npcTradeKeys,
                             accentColor = accentColor,
                             borderColor = borderColor,
                             isDark = isDark,
@@ -5227,8 +5217,8 @@ private fun ServicePresenceChip(
         color = Color(0xFF071018).copy(alpha = if (isDark) 0.86f else 0.72f),
         border = BorderStroke(1.dp, accentColor.copy(alpha = if (isDark) 0.58f else 0.46f)),
         modifier = modifier
-            .widthIn(min = 72.dp)
-            .height(46.dp)
+            .widthIn(min = PresenceChipMinWidth)
+            .heightIn(min = 46.dp)
             .clip(shape)
             .clickable(onClick = onClick)
             .clearAndSetSemantics {
@@ -5270,7 +5260,6 @@ private fun ServicePresenceChip(
                 }
             }
             Column(
-                modifier = Modifier.weight(1f, fill = false),
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
@@ -5448,6 +5437,7 @@ private fun NpcPresenceChip(
     npc: String,
     label: String,
     portraitPath: String?,
+    offersTrade: Boolean,
     accentColor: Color,
     borderColor: Color,
     isDark: Boolean,
@@ -5487,8 +5477,8 @@ private fun NpcPresenceChip(
             accentColor.copy(alpha = if (isDark) (0.68f + 0.30f * halo).coerceAtMost(1f) else (0.54f + 0.38f * halo).coerceAtMost(1f))
         ),
         modifier = Modifier
-            .widthIn(min = 80.dp, max = 176.dp)
-            .height(46.dp)
+            .widthIn(min = PresenceChipMinWidth)
+            .heightIn(min = 46.dp)
             .graphicsLayer {
                 alpha = animAlpha
                 translationY = animOffsetY * density
@@ -5548,7 +5538,6 @@ private fun NpcPresenceChip(
                 }
             }
             Column(
-                modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
@@ -5565,15 +5554,9 @@ private fun NpcPresenceChip(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                val isVendor = npc.contains("scrapper", ignoreCase = true) ||
-                    npc.contains("vendor", ignoreCase = true) ||
-                    npc.contains("merchant", ignoreCase = true) ||
-                    npc.contains("mechanic", ignoreCase = true) ||
-                    npc.contains("armorer", ignoreCase = true) ||
-                    npc.contains("weaponsmith", ignoreCase = true)
                 Text(
-                    text = if (isVendor) "Talk • 🛒 Shop" else "Talk",
-                    color = if (isVendor) Color(0xFFFFCA28) else accentColor.copy(alpha = 0.86f),
+                    text = if (offersTrade) "Talk • 🛒 Shop" else "Talk",
+                    color = if (offersTrade) Color(0xFFFFCA28) else accentColor.copy(alpha = 0.86f),
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontSize = 10.sp,
                         fontWeight = FontWeight.SemiBold
@@ -5610,8 +5593,8 @@ private fun FindPresenceChip(
             if (isEquipment) accentColor.copy(alpha = if (isDark) 0.62f else 0.50f) else borderColor.copy(alpha = if (isDark) 0.38f else 0.28f)
         ),
         modifier = Modifier
-            .widthIn(min = 136.dp, max = 188.dp)
-            .height(46.dp)
+            .widthIn(min = PresenceChipMinWidth)
+            .heightIn(min = 46.dp)
             .semantics {
                 contentDescription = if (quantity > 1) {
                     "Pick up $quantity $name"
@@ -5650,7 +5633,6 @@ private fun FindPresenceChip(
                 }
             }
             Column(
-                modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.Center
             ) {
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -5659,8 +5641,7 @@ private fun FindPresenceChip(
                         color = Color.White,
                         style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f)
+                        overflow = TextOverflow.Ellipsis
                     )
                     if (quantity > 1) EntityCountPill("x$quantity", accentColor)
                 }

@@ -1217,6 +1217,11 @@ class LegalRouteCampaignRunnerTest {
             }
             if (matchingAction != null) {
                 harness.explorationVm.onActionSelected(matchingAction)
+                if (matchingAction is com.example.starborn.domain.model.GenericAction &&
+                    matchingAction.actionEvent in setOf("w2_mq05_return_to_pod", "w2_mq05_return_to_hangar") &&
+                    harness.explorationVm.uiState.value.roomObjectOffer != null) {
+                    harness.explorationVm.confirmRoomObject()
+                }
             } else {
                 error("No visible action $actionId in ${harness.sessionStore.state.value.roomId}")
             }
@@ -1586,6 +1591,10 @@ class LegalRouteCampaignRunnerTest {
             performAction("w2_mq05_return_to_hangar")
             performAction("w2_mq05_reboot")
             performAction("w2_mq05_launch")
+            assertEquals("astra_cargo_bay", harness.sessionStore.state.value.roomId)
+            travelDirection("east")
+            travelDirection("north")
+            performAction("astra_nav_console")
             finishDialogue("depart")
             while (harness.cinematicCoordinator.state.value != null) {
                 harness.explorationVm.skipCinematic()
@@ -1629,7 +1638,11 @@ class LegalRouteCampaignRunnerTest {
             assertTrue("Botanist must remain active until its reward turn-in", "w2_sq01" in harness.sessionStore.state.value.activeQuests)
             val beforeTurnIn = harness.sessionStore.state.value.playerXp
             val beforeStabilizers = harness.sessionStore.state.value.inventory.getOrDefault("painkillers", 0)
-            talkToNpc("Zeke")
+            while (harness.explorationVm.uiState.value.narrationPrompt != null) {
+                harness.explorationVm.dismissNarration(); harness.settle()
+            }
+            assertEquals("zeke_w2_sq01_turnin_1", harness.explorationVm.uiState.value.activeDialogue?.line?.id)
+            finishDialogue("")
             assertEquals(beforeTurnIn + 100, harness.sessionStore.state.value.playerXp)
             assertEquals(beforeStabilizers + 2, harness.sessionStore.state.value.inventory["painkillers"])
             talkToNpc("Zeke")

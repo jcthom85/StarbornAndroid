@@ -3839,7 +3839,7 @@
       },
       {
         "type": "show_message",
-        "message": "The murals are not decoration. They show a stasis system built around memory, identity, and a tuner named Orion. The rings protect the mind by letting pressure move around it instead of through it. The central relief repeats three shapes: memory, pressure, return."
+        "message": "The murals are not decoration. They show a stasis system built around memory, identity, and the tuner sealed inside. The rings protect the mind by letting pressure move around it instead of through it. The central relief repeats three shapes: memory, pressure, return."
       },
       {
         "type": "set_milestone",
@@ -4076,10 +4076,6 @@
         "task_id": "defeat_the_beast"
       },
       {
-        "type": "add_party_member",
-        "item_id": "gh0st"
-      },
-      {
         "type": "set_room_state",
         "room_id": "sector9_canopy_ridge",
         "state_key": "beast_defeated",
@@ -4087,7 +4083,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Beast is down. Gh0st checks his trigger, then lowers the rifle. No command attached. Orion points to the Bridge: training comes next."
+        "message": "The Beast folds into the broken roots. Gh0st keeps the rifle trained on it until the last movement stops, then lowers the barrel. For a moment, nobody speaks. Orion lays the Bridge ground lead on the stone. Regroup with him when you are ready."
       },
       {
         "type": "set_milestone",
@@ -4123,6 +4119,10 @@
         "type": "play_cinematic",
         "scene_id": "scene_anchor_drill",
         "on_complete": [
+          {
+            "type": "add_party_member",
+            "item_id": "gh0st"
+          },
           {
             "type": "set_quest_task_done",
             "quest_id": "w2_mq04",
@@ -4397,12 +4397,19 @@
         "type": "quest_task_not_done",
         "quest_id": "w2_mq05",
         "task_id": "launch_ship"
+      },
+      {
+        "type": "in_room",
+        "room_id": "sector9_hangar_bay"
       }
     ],
     "actions": [
       {
-        "type": "start_dialogue",
-        "npc": "Astra Navigation"
+        "type": "board_astra"
+      },
+      {
+        "type": "show_message",
+        "message": "The cargo ramp rings beneath your boots. Inside, amber consoles warm to life and the Astra's low engine hum replaces the hangar echoes. The bridge is through the common room; use its nav console when you are ready to leave."
       }
     ],
     "repeatable": true
@@ -6943,7 +6950,7 @@
   },
   {
     "id": "w4_mq18_defeat_prototypes",
-    "description": "Defeat Phantom Prototype wave.",
+    "description": "Defeat Phantom wave.",
     "trigger": {
       "type": "player_action",
       "action": "w4_mq18_defeat_prototypes"
@@ -12431,7 +12438,7 @@
       },
       {
         "type": "show_message",
-        "message": "The pod is not a prison. It is a pressure shell, keeping Orion's memories distinct while the Source pushes at them from every side."
+        "message": "The pod is not a prison. It is a pressure shell, keeping the occupant's memories distinct while the Source pushes at them from every side."
       },
       {
         "type": "set_milestone",
@@ -16017,7 +16024,7 @@
       },
       {
         "type": "show_message",
-        "message": "The pressure ring opens its outer bypass. Memory stays on its own band; return waits for the coolant to settle. Orion opens his eyes. Return to the Stasis Chamber and talk to him."
+        "message": "The pressure ring opens its outer bypass. Memory stays on its own band; return waits for the coolant to settle. The stranger opens his eyes. Return to the Stasis Chamber and talk to him."
       }
     ]
   },
@@ -16307,6 +16314,10 @@
         "type": "quest_task_not_done",
         "quest_id": "w2_mq05",
         "task_id": "launch_ship"
+      },
+      {
+        "type": "in_room",
+        "room_id": "astra_bridge"
       }
     ],
     "actions": [

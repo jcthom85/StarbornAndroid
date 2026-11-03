@@ -139,3 +139,6 @@ fun RoomAction.serviceTag(): String? = when (this) {
     is TravelAction -> null
     else -> null
 }
+
+/** Services live in the room entity strip rather than requiring a description link. */
+fun RoomAction.isRoomServiceAction(): Boolean = this is ShopAction || this is RestStopAction || this is TinkeringAction

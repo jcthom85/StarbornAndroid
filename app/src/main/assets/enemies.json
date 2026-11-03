@@ -915,7 +915,7 @@
   {
     "id": "administrator_boss",
     "combat_size": "massive",
-    "name": "The Administrator",
+    "name": "Administrator",
     "tier": "boss",
     "combat_behavior": "summoner",
     "combat_role": "boss",
@@ -1148,7 +1148,7 @@
   {
     "id": "phantom_prototype",
     "combat_size": "large",
-    "name": "Phantom Prototype",
+    "name": "Phantom",
     "tier": "elite",
     "combat_behavior": "assassin",
     "combat_role": "striker",
@@ -1780,7 +1780,7 @@
   {
     "id": "distorted_sentinel",
     "combat_size": "medium",
-    "name": "Distorted Sentinel",
+    "name": "Warped Sentinel",
     "tier": "common",
     "combat_behavior": "trickster",
     "combat_role": "controller",

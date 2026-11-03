@@ -940,7 +940,7 @@
   {
     "id": "zeke_w2_sq01_turnin_1",
     "speaker": "Zeke",
-    "text": "Five specimens, five responses. They follow vibration, not our heat. Good. We can choose where to make noise. Take these stabilizers; I saved two from the kit.",
+    "text": "That is all five. Ferns, weeds, moss, spores, roots—each handles the same signal differently. We have a map of what this place is doing now. Nice work, Nova.",
     "condition": "quest_active:w2_sq01,quest_task_done:w2_sq01:scan_flora_1,quest_task_done:w2_sq01:scan_flora_2,quest_task_done:w2_sq01:scan_flora_3,quest_task_done:w2_sq01:scan_flora_4,quest_task_done:w2_sq01:scan_flora_5",
     "trigger": "set_quest_task_done:w2_sq01:report_to_zeke,give_xp:100,complete_quest:w2_sq01,give_item:painkillers*2"
   },
@@ -1080,14 +1080,15 @@
   {
     "id": "ghost_confrontation_2",
     "speaker": "Player",
-    "text": "Then your channel is late. We broke out of the colony. Look at us before you pull that trigger.",
+    "text": "Then look at us before you pull that trigger. We broke out of the colony. Who is answering you now?",
     "next": "ghost_confrontation_3"
   },
   {
     "id": "ghost_confrontation_3",
     "speaker": "Gh0st",
-    "text": "No confirmation. No reply. I have never... Hold position. Something is moving behind you.",
-    "trigger": "music_restore,player_action:w2_mq04_confront_finished"
+    "text": "No confirmation. No reply. I have never had to decide what follows silence.",
+    "trigger": null,
+    "next": "ghost_confrontation_pause"
   },
   {
     "id": "ghost_w2_sq05_intro_1",
@@ -1966,7 +1967,20 @@
       {
         "id": "echo_opt_stasis",
         "text": "Who is asleep in the Stasis Chamber?",
-        "next": "echo_stasis_reply"
+        "next": "echo_stasis_reply",
+        "condition": "milestone_not_set:ms_w2_stasis_awake"
+      },
+      {
+        "id": "echo_opt_awake_unknown",
+        "text": "We opened the pod. What were its safeguards for?",
+        "condition": "milestone:ms_w2_stasis_awake,milestone_not_set:ms_w2_orion_identified",
+        "next": "echo_awake_reply"
+      },
+      {
+        "id": "echo_opt_orion_awake",
+        "text": "We woke Orion. What do the records say about him?",
+        "condition": "milestone:ms_w2_orion_identified",
+        "next": "echo_orion_reply"
       },
       {
         "id": "echo_opt_curfew",
@@ -1984,13 +1998,13 @@
   {
     "id": "echo_stasis_reply",
     "speaker": "Caretaker Echo",
-    "text": "Subject: Orion. Navigator Caste, First Division. Orion was synchronized to the orbital cradle to await a valid Harmonic Chime. Forcing the pod without proper frequency calibration will result in neural shear.",
+    "text": "Navigator Caste, First Division. The stasis shell keeps the sleeper's memory bands separate while pressure passes around them. Forcing the pod without calibration risks neural shear.",
     "next": "echo_conclude"
   },
   {
     "id": "echo_curfew_reply",
     "speaker": "Caretaker Echo",
-    "text": "The Sky Barrier requires a three-point harmonic bypass. The Source Gate emitters must be grounded, and the Astra launch cradle charged with pure resonance.",
+    "text": "The Source Gate protects the hangar approach. Ground its emitters and restore power to the Astra before releasing the launch cradle. These are local departure procedures; they do not provide passage through the outer Planetary Shield.",
     "next": "echo_conclude"
   },
   {
@@ -3323,6 +3337,7 @@
   {
     "id": "w2_stasis_entry",
     "speaker": "Stasis Console",
+    "portrait": "images/npcs/lab_terminal.webp",
     "text": "The pod is ready. Set pressure, memory, then return. The mural shows an outer pressure bypass; separate memory bands protect the sleeper.",
     "condition": "quest_active:w2_mq03,quest_task_not_done:w2_mq03:align_stasis_rings",
     "next": "w2_stasis_1"
@@ -3330,6 +3345,7 @@
   {
     "id": "w2_stasis_1",
     "speaker": "Stasis Console",
+    "portrait": "images/npcs/lab_terminal.webp",
     "text": "Pressure ring: the Source is pushing against the pod. Where should it go?",
     "options": [
       {
@@ -3351,12 +3367,14 @@
   {
     "id": "w2_stasis_1_retry",
     "speaker": "Stasis Console",
-    "text": "The pod isolates memories from pressure. Use the outer bypass; forcing current through Orion would hurt him.",
+    "portrait": "images/npcs/lab_terminal.webp",
+    "text": "The pod isolates memories from pressure. Use the outer bypass; forcing current through the sleeper would hurt him.",
     "next": "w2_stasis_1"
   },
   {
     "id": "w2_stasis_2",
     "speaker": "Stasis Console",
+    "portrait": "images/npcs/lab_terminal.webp",
     "text": "Memory ring: the separate carrier bands are holding. How should they connect?",
     "options": [
       {
@@ -3378,12 +3396,14 @@
   {
     "id": "w2_stasis_2_retry",
     "speaker": "Stasis Console",
+    "portrait": "images/npcs/lab_terminal.webp",
     "text": "The mural preserves distinct voices. A louder merged signal would erase the separation the pod protects.",
     "next": "w2_stasis_2"
   },
   {
     "id": "w2_stasis_3",
     "speaker": "Stasis Console",
+    "portrait": "images/npcs/lab_terminal.webp",
     "text": "Return ring: the coolant is stable. Complete the waking circuit.",
     "options": [
       {
@@ -3405,13 +3425,14 @@
   {
     "id": "w2_stasis_3_retry",
     "speaker": "Stasis Console",
-    "text": "Closing the bypass would put pressure back through Orion. Keep relief open while return reconnects.",
+    "portrait": "images/npcs/lab_terminal.webp",
+    "text": "Closing the bypass would put pressure back through the sleeper. Keep relief open while return reconnects.",
     "next": "w2_stasis_3"
   },
   {
     "id": "orion_w2_awakening_2",
     "speaker": "Orion",
-    "text": "Twenty years on the pod clock. I remember lying down. Someone promised to wake me before the evening tide.",
+    "text": "Twenty years. I sealed the pod to keep the signal alive. I thought I would hear the evening tide again.",
     "next": "orion_w2_awakening_zeke"
   },
   {
@@ -3423,6 +3444,7 @@
   {
     "id": "w2_gate_entry",
     "speaker": "Source Gate Console",
+    "portrait": "images/npcs/lab_terminal.webp",
     "text": "The grounded receiver is ready. The gauge reads BLEED, then STARVE. Once pressure falls and the lock loses power, Orion can settle the remaining chord.",
     "condition": "quest_active:w2_mq05,quest_task_not_done:w2_mq05:bypass_source_gate",
     "next": "w2_gate_1"
@@ -3430,6 +3452,7 @@
   {
     "id": "w2_gate_1",
     "speaker": "Source Gate Console",
+    "portrait": "images/npcs/lab_terminal.webp",
     "text": "Route 1: living roots are under pressure. Select the relief path.",
     "options": [
       {
@@ -3451,12 +3474,14 @@
   {
     "id": "w2_gate_1_retry",
     "speaker": "Source Gate Console",
+    "portrait": "images/npcs/lab_terminal.webp",
     "text": "The horn amplifies pressure. Route relief into the grounded cup so the roots can breathe.",
     "next": "w2_gate_1"
   },
   {
     "id": "w2_gate_2",
     "speaker": "Source Gate Console",
+    "portrait": "images/npcs/lab_terminal.webp",
     "text": "Relief is flowing into the receiver. The breaker still feeds the lock. Choose the final switch position.",
     "options": [
       {
@@ -3478,12 +3503,14 @@
   {
     "id": "w2_gate_2_retry",
     "speaker": "Source Gate Console",
+    "portrait": "images/npcs/lab_terminal.webp",
     "text": "More power makes the barrier clamp harder. Isolate its feed while preserving root relief.",
     "next": "w2_gate_2"
   },
   {
     "id": "w2_mural_entry",
     "speaker": "Mural Array",
+    "portrait": "images/npcs/lab_terminal.webp",
     "text": "The west crystal carries the low support voice, east the answering voice, north the high stabilizer. Three sockets show a foundation, paired arcs, and a star.",
     "condition": "quest_active:w2_sq04,quest_task_not_done:w2_sq04:mural_tuning",
     "next": "w2_mural_1"
@@ -3491,6 +3518,7 @@
   {
     "id": "w2_mural_1",
     "speaker": "Mural Array",
+    "portrait": "images/npcs/lab_terminal.webp",
     "text": "Foundation socket: which crystal supports the chorus?",
     "options": [
       {
@@ -3512,12 +3540,14 @@
   {
     "id": "w2_mural_1_retry",
     "speaker": "Mural Array",
+    "portrait": "images/npcs/lab_terminal.webp",
     "text": "The west voice supports the others. The bright north voice belongs to the star socket.",
     "next": "w2_mural_1"
   },
   {
     "id": "w2_mural_2",
     "speaker": "Mural Array",
+    "portrait": "images/npcs/lab_terminal.webp",
     "text": "The remaining sockets show paired arcs and a star.",
     "options": [
       {
@@ -3539,12 +3569,14 @@
   {
     "id": "w2_mural_2_retry",
     "speaker": "Mural Array",
+    "portrait": "images/npcs/lab_terminal.webp",
     "text": "East answers in paired arcs. North stabilizes the chorus from the star socket.",
     "next": "w2_mural_2"
   },
   {
     "id": "w2_vent_entry",
     "speaker": "Vent Scanner",
+    "portrait": "images/npcs/lab_terminal.webp",
     "text": "Two narrow scan pulses are followed by a long maintenance gap. The console can latch a mask to one part of that pattern.",
     "condition": "quest_active:w2_sq05,quest_task_not_done:w2_sq05:hack_security_grid",
     "next": "w2_vent_1"
@@ -3552,6 +3584,7 @@
   {
     "id": "w2_vent_1",
     "speaker": "Vent Scanner",
+    "portrait": "images/npcs/lab_terminal.webp",
     "text": "Choose the mask timing before crossing the hatch.",
     "options": [
       {
@@ -3573,6 +3606,7 @@
   {
     "id": "w2_vent_1_retry",
     "speaker": "Vent Scanner",
+    "portrait": "images/npcs/lab_terminal.webp",
     "text": "The narrow pulses are active scans. Use the long maintenance gap; a wrong choice leaves you at the console without raising an alert.",
     "next": "w2_vent_1"
   },
@@ -3580,24 +3614,25 @@
     "id": "w2_departure_entry",
     "speaker": "Astra Navigation",
     "condition": "quest_active:w2_mq05,quest_task_not_done:w2_mq05:launch_ship",
-    "text": "Departure leaves Sector 9 behind. Finish any local quests and exploration before releasing the cradle. Orion has plotted a low service airlane to the Spire, beneath the outer Planetary Shield.",
+    "text": "All four flight seats are ready. The cargo ramp is still down if you need to finish anything in Sector 9. Orion has plotted a low service airlane to the Spire, beneath the outer Planetary Shield.",
     "options": [
       {
         "id": "depart",
-        "text": "Release the cradle and depart.",
+        "text": "Close the ramp, release the cradle and depart.",
         "trigger": "player_action:w2_mq05_confirm_departure"
       },
       {
         "id": "stay",
-        "text": "Finish exploring Sector 9."
+        "text": "Stay docked for now."
       }
-    ]
+    ],
+    "portrait": "images/npcs/lab_terminal.webp"
   },
   {
     "id": "orion_w2_awakening_nova",
     "speaker": "Nova",
     "text": "We just got here. I am Nova. The clock says twenty years. Is there someone we should look for?",
-    "next": "orion_w2_awakening_2"
+    "next": "orion_w2_identity"
   },
   {
     "id": "orion_w2_awakening_zeke",
@@ -3631,5 +3666,36 @@
     "speaker": "Zeke",
     "portrait": "images/npcs/comms_radio.png",
     "text": "That's the car. Clear the platform. Jed's at the bypass with his wrench. He said to get you across."
+  },
+  {
+    "id": "orion_w2_identity",
+    "speaker": "Orion",
+    "text": "Orion. My name is Orion. You opened the pod?",
+    "next": "orion_w2_awakening_2",
+    "trigger": "set_milestone:ms_w2_orion_identified"
+  },
+  {
+    "id": "ghost_confrontation_pause",
+    "speaker": "Nova",
+    "text": "Then keep the rifle down while you decide. We are trying to leave this place alive.",
+    "next": "ghost_confrontation_warning"
+  },
+  {
+    "id": "ghost_confrontation_warning",
+    "speaker": "Gh0st",
+    "text": "Wait. Something is moving behind you. Get clear of the roots.",
+    "trigger": "music_restore,player_action:w2_mq04_confront_finished"
+  },
+  {
+    "id": "echo_awake_reply",
+    "speaker": "Caretaker Echo",
+    "text": "The shell preserves separate memory bands. The outer bypass carries pressure around the sleeper; it must remain open during waking. This archive records the safeguards, not the occupant's present condition.",
+    "next": "echo_conclude"
+  },
+  {
+    "id": "echo_orion_reply",
+    "speaker": "Caretaker Echo",
+    "text": "Orion. Navigator Caste, First Division. The archived calibration assigns him a distinct carrier band. That separation protects his memories; preserving it matters beyond the pod. My records cannot tell you what he remembers now.",
+    "next": "echo_conclude"
   }
 ]

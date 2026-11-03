@@ -139,7 +139,7 @@ class Hub2CriticalFlowTest {
         )
         state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w2_mq04"].orEmpty().contains("defeat_the_beast"))
-        assertTrue(state.partyMembers.contains("gh0st"))
+        assertFalse(state.partyMembers.contains("gh0st"))
         assertFalse(state.completedQuests.contains("w2_mq04"))
         assertFalse(state.completedMilestones.contains("ms_w2_mq04_complete"))
         assertFalse(state.unlockedSkills.contains("nova_link"))
@@ -199,8 +199,11 @@ class Hub2CriticalFlowTest {
         assertTrue(harness.store.state.value.inventory["bridge_relic"] == null)
         assertTrue(harness.store.state.value.inventory["ghost_signal_cell"].orZero() == 1)
 
-        // Launch ship (Astra) -> warps to the sky, complete quest, collisions, warps to admin lobby
+        // Board first; departure is confirmed on the bridge.
+        harness.store.setRoom("sector9_hangar_bay")
         harness.events.handleTrigger("player_action", EventPayload.Action("w2_mq05_launch"))
+        assertEquals("astra_cargo_bay", harness.store.state.value.roomId)
+        harness.store.setRoom("astra_bridge")
         requireNotNull(harness.dialogue.startDialogue("Astra Navigation")).finishWithChoice("depart")
         state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w2_mq05"].orEmpty().contains("launch_ship"))

@@ -36,10 +36,9 @@ internal fun DesktopRoomTransitionBackdrop(
 
     BoxWithConstraints(Modifier.fillMaxSize().clipToBounds()) {
         val density = LocalDensity.current
-        val intrinsic = painter.intrinsicSize
-        val stableImageSize = if (intrinsic.width.isFinite() && intrinsic.height.isFinite() && intrinsic.width > 0 && intrinsic.height > 0) intrinsic
-            else outgoing.intrinsicSize.takeIf { it.width.isFinite() && it.height.isFinite() && it.width > 0 && it.height > 0 } ?: Size(9f, 16f)
-        val layout = portraitBackdropLayout(with(density) { Size(maxWidth.toPx(), maxHeight.toPx()) }, stableImageSize)
+        // Room artwork uses a portrait frame. Asset decoding must not resize the HUD
+        // or switch between compact/wide panels after the room has appeared.
+        val layout = portraitBackdropLayout(with(density) { Size(maxWidth.toPx(), maxHeight.toPx()) }, Size(1088f, 1920f))
         val moving = ui.roomTransition?.fromBackgroundImage != null && progress < 1f
         val clampedProgress = progress.coerceIn(0f, 1f)
         // Smooth hermite curve for tactile, fluid deceleration

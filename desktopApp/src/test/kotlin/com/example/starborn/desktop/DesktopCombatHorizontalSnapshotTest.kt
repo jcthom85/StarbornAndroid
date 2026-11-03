@@ -104,11 +104,11 @@ class DesktopCombatHorizontalSnapshotTest {
                     }
                 }
             }
-            composeTestRule.onNodeWithText("Spoils Recovered").assertExists()
             composeTestRule.waitUntil(5_000) {
                 composeTestRule.mainClock.advanceTimeBy(100)
                 composeTestRule.onAllNodesWithText("Spoils Recovered").fetchSemanticsNodes().isNotEmpty()
             }
+            composeTestRule.onNodeWithText("Spoils Recovered").assertIsDisplayed()
             composeTestRule.mainClock.advanceTimeBy(300)
             composeTestRule.onNodeWithText("Continue").performClick()
             assertTrue(continued)

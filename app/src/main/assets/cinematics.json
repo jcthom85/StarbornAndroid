@@ -746,6 +746,26 @@
     "title": "Anchor Drill",
     "steps": [
       {
+        "type": "dialogue",
+        "speaker": "Gh0st",
+        "text": "The order is still there. The voice behind it is not. I warned you about that thing because I chose to."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "text": "You can come with us. The rifle stays off our backs."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Gh0st",
+        "text": "Agreed. I need to know why the channel went silent. Your route may lead to an answer."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Orion",
+        "text": "Then start here. The Bridge needs willing hands, not another command."
+      },
+      {
         "type": "narration",
         "text": "Nova opens the Bridge alone. Heat climbs her arm and her knees buckle.",
         "audio_cue": "sfx_combat_plasma_arc",
@@ -769,7 +789,7 @@
       },
       {
         "type": "narration",
-        "text": "Orion holds the counter-tone. The current divides across four willing contacts, and Zeke's wound steadies.",
+        "text": "Orion holds the counter-tone. The current divides across four willing contacts, and Nova's shaking hand steadies.",
         "audio_cue": "wpn_orion_bowl_resonance"
       },
       {

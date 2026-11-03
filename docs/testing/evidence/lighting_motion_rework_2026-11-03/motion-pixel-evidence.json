@@ -1,0 +1,14 @@
+{
+  "pit_nova_bunk": {
+    "previous_max_percent_pixels_changing_by_8_or_more": 0.0,
+    "reworked_max_percent_pixels_changing_by_8_or_more": 20.66
+  },
+  "sector9_landing_glade": {
+    "previous_max_percent_pixels_changing_by_8_or_more": 0.06,
+    "reworked_max_percent_pixels_changing_by_8_or_more": 5.87
+  },
+  "source_campfire": {
+    "previous_max_percent_pixels_changing_by_8_or_more": 0.26,
+    "reworked_max_percent_pixels_changing_by_8_or_more": 8.2
+  }
+}

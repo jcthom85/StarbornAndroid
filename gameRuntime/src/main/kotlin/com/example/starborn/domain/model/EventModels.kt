@@ -127,7 +127,9 @@ data class EventCondition(
     @Json(name = "event_id")
     val eventId: String? = null,
     @Json(name = "tutorial_id")
-    val tutorialId: String? = null
+    val tutorialId: String? = null,
+    @Json(name = "room_id")
+    val roomId: String? = null
 )
 
 data class EventReward(

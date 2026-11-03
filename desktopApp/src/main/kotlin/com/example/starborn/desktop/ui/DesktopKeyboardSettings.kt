@@ -49,7 +49,7 @@ internal fun DesktopKeyboardSettings(services: DesktopAppServices) {
     var message by remember { mutableStateOf<String?>(null) }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text("Exploration key bindings", style = MaterialTheme.typography.titleSmall)
-        Text("Choose a key to change it. Arrow keys, Esc, Tab, and Enter remain available for navigation.",
+        Text("Choose a key to change it. These bindings apply to exploration. Combat, fishing, and menu shortcuts use the fixed keys in the controls guide. Arrow keys, Esc, Tab, and Enter remain available for navigation.",
             style = MaterialTheme.typography.bodySmall)
         DesktopAction.entries.forEach { action ->
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,

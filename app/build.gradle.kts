@@ -25,8 +25,8 @@ android {
         applicationId = "com.junewiregames.starborn.prealpha"
         minSdk = 26
         targetSdk = 36
-        versionCode = 188
-        versionName = "1.3.104"
+        versionCode = providers.gradleProperty("starborn.versionCode").get().toInt()
+        versionName = providers.gradleProperty("starborn.versionName").get()
 
         // Scenario browser disabled for release/Play builds; enabled in debug builds.
         buildConfigField("boolean", "ENABLE_SCENARIO_MENU", "false")

@@ -31,6 +31,7 @@ class CraftingViewModel(
     fun learnFoundSchematic(itemId: String) = runtime.learnFoundSchematic(itemId)
     fun craft(id: String) = runtime.craft(id)
     fun craftFromBench() = runtime.craftFromBench()
+    fun markSchematicViewed(recipeId: String) = runtime.markSchematicViewed(recipeId)
     fun autoFill(recipeId: String) = runtime.autoFill(recipeId)
     fun autoFillBest() = runtime.autoFillBest()
     fun clearBench() = runtime.clearBench()

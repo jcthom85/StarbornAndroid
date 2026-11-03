@@ -113,9 +113,14 @@ internal fun Modifier.explorationFeedback(enabled: Boolean = true, accent: Color
 @Composable
 internal fun DesktopExplorationScrollPane(state: ScrollState, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     Box(modifier) {
-        Box(Modifier.fillMaxWidth().padding(end = if (state.maxValue > 0) 10.dp else 0.dp).verticalScroll(state)) { content() }
-        if (state.maxValue > 0) VerticalScrollbar(rememberScrollbarAdapter(state), Modifier.align(Alignment.CenterEnd).fillMaxHeight().width(7.dp),
-            style = LocalScrollbarStyle.current.copy(unhoverColor = Color(0xFF63E6FF).copy(alpha = .4f), hoverColor = Color(0xFF63E6FF)))
+        // Reserve the gutter before scroll measurement; adding it later reflows text.
+        Box(Modifier.fillMaxWidth().padding(end = 10.dp).verticalScroll(state)) { content() }
+        // Scrollbars are an overlay, never a child that determines the pane's height.
+        // A new ScrollState initially reports a nonzero maximum before its first measure.
+        if (state.maxValue > 0) Box(Modifier.matchParentSize()) {
+            VerticalScrollbar(rememberScrollbarAdapter(state), Modifier.align(Alignment.CenterEnd).fillMaxHeight().width(7.dp),
+                style = LocalScrollbarStyle.current.copy(unhoverColor = Color(0xFF63E6FF).copy(alpha = .4f), hoverColor = Color(0xFF63E6FF)))
+        }
     }
 }
 

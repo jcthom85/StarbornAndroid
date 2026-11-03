@@ -40,6 +40,35 @@ dependencies {
     testImplementation(compose.desktop.uiTestJUnit4)
 }
 
+val desktopBuildInfoDirectory = layout.buildDirectory.dir("generated/sources/buildInfo/kotlin")
+val generateDesktopBuildInfo = tasks.register("generateDesktopBuildInfo") {
+    val releaseVersion = providers.gradleProperty("starborn.versionName")
+    val releaseCode = providers.gradleProperty("starborn.versionCode")
+    val revision = providers.exec {
+        workingDir(rootProject.projectDir)
+        commandLine("git", "describe", "--always", "--dirty")
+    }.standardOutput.asText.map { it.trim() }
+    inputs.property("releaseVersion", releaseVersion)
+    inputs.property("releaseCode", releaseCode)
+    inputs.property("revision", revision)
+    outputs.dir(desktopBuildInfoDirectory)
+    doLast {
+        val file = desktopBuildInfoDirectory.get().file("com/example/starborn/desktop/DesktopBuildInfo.kt").asFile
+        file.parentFile.mkdirs()
+        file.writeText("""
+            package com.example.starborn.desktop
+            object DesktopBuildInfo {
+                const val VERSION_NAME = "${releaseVersion.get()}"
+                const val VERSION_CODE = ${releaseCode.get()}
+                const val SOURCE_REVISION = "${revision.get()}"
+                const val DISPLAY_LABEL = "Desktop ${releaseVersion.get()} · build ${releaseCode.get()} · ${revision.get()}"
+            }
+        """.trimIndent() + "\n")
+    }
+}
+kotlin.sourceSets.getByName("main").kotlin.srcDir(desktopBuildInfoDirectory)
+tasks.named("compileKotlin") { dependsOn(generateDesktopBuildInfo) }
+
 compose.desktop {
     application {
         javaHome = providers.gradleProperty("starborn.packagingJavaHome").orNull ?: System.getenv("JAVA_HOME")
@@ -56,7 +85,7 @@ compose.desktop {
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.Exe
             )
             packageName = "Starborn"
-            packageVersion = "1.3.100"
+            packageVersion = providers.gradleProperty("starborn.versionName").get()
             description = "Starborn - Sci-Fi Turn-Based RPG"
             vendor = "June Wire Games"
             windows {

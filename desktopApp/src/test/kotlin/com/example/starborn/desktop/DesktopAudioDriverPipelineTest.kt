@@ -24,6 +24,13 @@ class DesktopAudioDriverPipelineTest {
         driver.release()
     }
 
+    @Test fun npcMurmurAssetsDecodeAndStartWithPitch() {
+        for (cue in listOf("voice_murmur_male_01", "voice_murmur_female_01", "voice_murmur_nova_01", "voice_murmur_zeke_01", "voice_murmur_machine_01")) {
+            driver.execute(AudioCommand.Play(AudioCueType.VOICE, cue, pitch = .9f))
+            await { driver.isPlaying(AudioCueType.VOICE, cue) }
+        }
+    }
+
     @Test
     fun explorationResumesCombatRestartsAndSessionResetClearsPositions() {
         driver.release()

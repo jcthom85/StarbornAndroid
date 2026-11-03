@@ -60,6 +60,9 @@ message GameSessionProto {
   map<string, int32> purchased_skill_nodes = 58;
   repeated string progression_award_claims = 59;
 
+  map<string, RoomGroundItemsProto> room_ground_items = 60;
+  repeated string viewed_schematics = 61;
+
   reserved 19;
   reserved 28, 29, 30, 31;
   reserved "party_member_rp";
@@ -122,4 +125,8 @@ message ActiveMealBuffProto {
 
 message EnemyWeaknessesProto {
   repeated string elements = 1;
+}
+
+message RoomGroundItemsProto {
+  map<string, int32> items = 1;
 }

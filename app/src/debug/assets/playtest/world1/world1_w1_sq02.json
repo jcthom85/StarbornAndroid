@@ -61,6 +61,7 @@
   "learnedSchematics": [
     "repair_cryo_inductor"
   ],
+  "viewedSchematics": [],
   "unlockedSkills": [
     "nova_arc_tether",
     "nova_cryo_vent"
@@ -244,6 +245,7 @@
       "discovered": true
     }
   },
+  "roomGroundItems": {},
   "enemyPartyStates": {
     "debug_patrol_2": {
       "roomId": "debug_enemy_party_sizes",

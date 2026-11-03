@@ -37,6 +37,16 @@ fun EnvironmentalEffectsOverlay(roomId: String, effects: List<ResolvedEnvironmen
         effects.forEach { e -> if(e.preset !in brushes) brushes[e.preset]=Brush.radialGradient(
             listOf(Color(e.preset.color[0],e.preset.color[1],e.preset.color[2],.5f),Color.Transparent),Offset.Zero,1f) }
     }
+    val lightBrushes = remember(roomId) { mutableMapOf<EnvironmentalPreset, Brush>() }
+    SideEffect {
+        effects.filter { it.preset.primitive == "light" }.forEach { e ->
+            lightBrushes.getOrPut(e.preset) {
+                val c = e.preset.color
+                Brush.radialGradient(listOf(Color(c[0], c[1], c[2], c[3]), Color(c[0], c[1], c[2], c[3] * .35f), Color.Transparent), Offset.Zero, 1f)
+            }
+        }
+    }
+    val shadowBrush = remember { Brush.radialGradient(listOf(Color(0xB503241F), Color.Transparent), Offset.Zero, 1f) }
     val path=remember { Path() }
     LaunchedEffect(simulation,effects,paused) {
         simulation.update(effects)
@@ -141,6 +151,9 @@ fun EnvironmentalEffectsOverlay(roomId: String, effects: List<ResolvedEnvironmen
                         }
                     }
                     "light" -> {
+                        if (isLocalizedLightStyle(preset.style)) {
+                            drawLocalizedLighting(effect, layer.time, alpha, geometry, lightBrushes[preset], shadowBrush, path)
+                        } else {
                         val r=effect.region
                         val source=effect.emitters.firstOrNull()
                         val point=Offset(geometry.x(source?.x ?: r.x+r.width/2,effect.space),geometry.y(source?.y ?: r.y+r.height/2,effect.space))
@@ -158,6 +171,7 @@ fun EnvironmentalEffectsOverlay(roomId: String, effects: List<ResolvedEnvironmen
                             }
                         } else veil(point,geometry.spaceWidth(effect.space)*r.width*.55f,geometry.spaceHeight(effect.space)*r.height*.5f,
                             effect.intensity*.18f*wave)
+                        }
                     }
                     "sparks" -> if(preset.style=="arc" && effect.flashes && layer.burst>0f) {
                         effect.emitters.take(2).forEach { source ->
