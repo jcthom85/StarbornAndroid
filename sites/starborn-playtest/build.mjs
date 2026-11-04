@@ -6,18 +6,21 @@ import path from 'node:path';
 const home = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(home, '../..');
 const guides = [];
-for (const world of [1, 2]) {
+for (const world of [1, 2, 3]) {
   const source = await readFile(path.join(root, `docs/playtest/walkthroughs/WORLD_${world}_COMPLETIONIST_WALKTHROUGH.md`), 'utf8');
   const sections = [];
   let section = { title: 'Before you start', blocks: [] };
   let paragraph = [];
+  let nextStep = 0;
   const flush = () => {
     if (!paragraph.length) return;
     const text = paragraph.join(' ');
     const heading = /^(#{3,4}) /.exec(text);
     const step = /^(\d+)\. /.exec(text);
+    const checklist = world === 3 && /^- \[ \] /.test(text);
+    if (step) nextStep = Math.max(nextStep, Number(step[1]));
     const id = createHash('sha256').update(`${section.title}\n${text}`).digest('hex').slice(0, 16);
-    section.blocks.push({ id, text: heading ? text.slice(heading[0].length) : text, heading: heading?.[1].length || 0, step: step ? Number(step[1]) : null });
+    section.blocks.push({ id, text: heading ? text.slice(heading[0].length) : text, heading: heading?.[1].length || 0, step: step ? Number(step[1]) : checklist ? ++nextStep : null });
     paragraph = [];
   };
   for (const raw of source.split(/\r?\n/)) {

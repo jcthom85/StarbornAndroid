@@ -5,7 +5,7 @@ let state;
 try { state = JSON.parse(localStorage.getItem(STORE)) || {}; } catch { state = {}; storageAvailable = false; }
 if (!state || typeof state !== 'object' || Array.isArray(state)) state = {};
 state.worlds ||= {};
-let world = state.world === 2 ? 2 : 1;
+let world = GUIDES.some(g => g.world === state.world) ? state.world : 1;
 let sectionIndex = 0;
 let restoring = false;
 let scrollTimer;
@@ -58,7 +58,7 @@ function showSection(index, { scroll = 0, block = null, focus = false } = {}) {
     if (b.heading) return `<h${b.heading} id="${b.id}">${inline(b.text)}</h${b.heading}>`;
     if (b.step !== null) {
       const checked = p.checked.includes(b.id);
-      return `<label id="${b.id}" class="step${checked ? ' checked' : ''}"><input type="checkbox" data-step="${b.id}" aria-label="Complete step ${b.step}" ${checked ? 'checked' : ''}><span><span class="step-number">${String(b.step).padStart(2, '0')}</span>${inline(b.text.replace(/^\d+\. /, ''))}</span></label>`;
+      return `<label id="${b.id}" class="step${checked ? ' checked' : ''}"><input type="checkbox" data-step="${b.id}" aria-label="Complete step ${b.step}" ${checked ? 'checked' : ''}><span><span class="step-number">${String(b.step).padStart(2, '0')}</span>${inline(b.text.replace(/^\d+\. |^- \[ \] /, ''))}</span></label>`;
     }
     const bullet = b.text.startsWith('- ');
     const checkpoint = /^\*\*Check before/i.test(b.text);
@@ -110,15 +110,16 @@ function search() {
     if (terms.every(t => plain(s.title).toLocaleLowerCase().includes(t))) matches.push({ world: g.world, si, title: s.title, text: 'Open this chapter', id: '' });
     for (const b of s.blocks) if (terms.every(t => plain(b.text).toLocaleLowerCase().includes(t))) matches.push({ world: g.world, si, title: s.title, text: plain(b.text), id: b.id });
   }
-  $('#result-count').textContent = matches.length ? `${matches.length} matches across both worlds${matches.length > 100 ? ' · Showing the first 100. Refine your search for more.' : ''}` : 'No matches. Try a room name, quest, item, or internal ID.';
+  $('#result-count').textContent = matches.length ? `${matches.length} matches across all worlds${matches.length > 100 ? ' · Showing the first 100. Refine your search for more.' : ''}` : 'No matches. Try a room name, quest, item, or internal ID.';
   $('#results').innerHTML = matches.slice(0, 100).map(m => {
     const at = Math.max(0, m.text.toLocaleLowerCase().indexOf(terms[0]) - 70);
     return `<button data-result-world="${m.world}" data-result-section="${m.si}" data-result-block="${m.id}"><small>WORLD ${m.world} · ${escape(m.title)}</small><p>${at ? '…' : ''}${escape(m.text.slice(at, at + 280))}${m.text.length > at + 280 ? '…' : ''}</p></button>`;
   }).join('');
 }
 function route() {
-  const match = /^#world-([12])(?:\/chapter-(\d+)(?:\/([a-f0-9]+))?|\/?)$/.exec(location.hash);
+  const match = /^#world-(\d+)(?:\/chapter-(\d+)(?:\/([a-f0-9]+))?|\/?)$/.exec(location.hash);
   if (!match) return false;
+  if (!GUIDES.some(g => g.world === Number(match[1]))) return false;
   world = Number(match[1]);
   const index = match[2] ? Number(match[2]) - 1 : progressState().section;
   if (index < 0 || index >= guide().sections.length) return false;

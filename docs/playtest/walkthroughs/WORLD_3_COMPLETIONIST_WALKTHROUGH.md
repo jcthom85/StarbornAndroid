@@ -2,15 +2,107 @@
 
 Updated November 4, 2026 from the runtime catalogs. The main route is covered by earned campaign tests; optional branches and device presentation still require human playtesting. This replaces the earlier guide whose reward tables, orbital-flight claims and permanent lockouts were not reliable.
 
-## Main route
+## Homecoming
 
-1. Clear the sewer landing, follow the sewer/vent route to Zeke’s apartment, then talk to the visible Zeke to establish the safehouse.
-2. Get Jax’s codes at The Static. Map Underrail patrols, obtain security records at the Security Kiosk, copy badges at the Service Gate, gather disguises on the safehouse roof, then hack the apartment workstation and assemble the planning table.
-3. Blend in at Skypark Dome, disable the Laundry sensors, then enter the lobby.
-4. At Archive Vault read the containment field and trace command tethers; read the Prism Gallery shutters and resolve its light puzzle. Return to the Lens relic to finish the acquisition and warning sequence.
-5. Prepare healing and rest before the roof encounters. Defeat Administrator, scan the Shield gap and use the launch action. The Foundry is the next destination; this does not yet cross the outer Planetary Shield into high orbit.
+1. From **Sewer Landing Pad**, go **north** to **Pump Gallery** (`spire_sewers_scale_01`).
 
-Keep a predeparture save. Astra return travel exists for unlocked destinations; do not treat every incomplete quest as permanently lost. Early legitimate boss victories are recovered when their objective prerequisites become eligible, without repeating combat drops.
+2. Defeat the **Sewer Crawler** party at **Pump Gallery**. Other parties in the same room are separate encounters.
+
+3. From **Pump Gallery**, go **south** to **Sewer Landing Pad** (`spire_sewers_landing`) → **east** to **Runoff Lock** (`spire_runoff_lock`) → **east** to **Sewer Passage** (`spire_sewers_passage`) → **north** to **Vent Output** (`spire_vent_output`).
+
+4. From **Vent Output**, go **east** to **Underrail Platform** (`spire_underrail_platform`) → **east** to **The Static** (`spire_the_static`) → **north** to **Signal Stairwell** (`spire_signal_stairwell`) → **north** to **Zeke's Apartment** (`spire_zekes_apartment`).
+
+5. Talk to **Zeke** at **Zeke's Apartment** and finish the conversation.
+
+## Heist preparation
+
+6. From **Zeke's Apartment**, go **south** to **Signal Stairwell** (`spire_signal_stairwell`) → **south** to **The Static** (`spire_the_static`).
+
+7. Talk to **Jax** at **The Static** and finish the conversation; choose the request for codes.
+
+8. From **The Static**, go **west** to **Underrail Platform** (`spire_underrail_platform`).
+
+9. At **Underrail Platform**, use **patrol timing**. Finish its dialogue or feedback before moving on.
+
+10. From **Underrail Platform**, go **down** to **Transit Plaza** (`spire_transit_plaza`) → **south** to **Security Kiosk** (`spire_security_kiosk`).
+
+11. At **Security Kiosk**, use **security terminal**. Finish its dialogue or feedback before moving on.
+
+12. From **Security Kiosk**, go **north** to **Transit Plaza** (`spire_transit_plaza`) → **east** to **Checkpoint Queue** (`spire_checkpoint_queue`) → **north** to **Elevator Service Gate** (`spire_elevator_service_gate`).
+
+13. At **Elevator Service Gate**, use **freight badges**. Finish its dialogue or feedback before moving on.
+
+14. From **Elevator Service Gate**, go **south** to **Checkpoint Queue** (`spire_checkpoint_queue`) → **west** to **Transit Plaza** (`spire_transit_plaza`) → **north** to **The Static** (`spire_the_static`) → **north** to **Signal Stairwell** (`spire_signal_stairwell`) → **north** to **Zeke's Apartment** (`spire_zekes_apartment`) → **north** to **Safehouse Roof** (`spire_safehouse_roof`).
+
+15. At **Safehouse Roof**, use **laundry lines**. Finish its dialogue or feedback before moving on.
+
+16. From **Safehouse Roof**, go **south** to **Zeke's Apartment** (`spire_zekes_apartment`).
+
+17. At **Zeke's Apartment**, use **workstation**. Finish its dialogue or feedback before moving on.
+
+18. At **Zeke's Apartment**, use **planning table**. Finish its dialogue or feedback before moving on.
+
+## Upper City infiltration
+
+19. From **Zeke's Apartment**, go **south** to **Signal Stairwell**, then **south** to **The Static**. Return to the regional/world map, select **Upper City**, then enter **Skypark** to reach **Skypark Dome** (`spire_skypark_dome`).
+
+20. At **Skypark Dome**, use **guest registry**. Finish its dialogue or feedback before moving on.
+
+21. From **Skypark Dome**, go **west** to **Staff Checkpoint** (`spire_staff_checkpoint`) → **south** to **Laundry Service** (`spire_laundry_service`).
+
+22. At **Laundry Service**, use **sensor console**. Finish its dialogue or feedback before moving on.
+
+23. At **Laundry Service**, use **service chute**. Finish its dialogue or feedback before moving on.
+
+## The Lens
+
+24. From **Laundry Service**, go **east** to **Prism Gallery** (`spire_prism_gallery`) → **east** to **Archive Vault** (`spire_archive_vault`).
+
+25. At **Archive Vault**, use **containment field**. Finish its dialogue or feedback before moving on.
+
+26. From **Archive Vault**, go **west** to **Prism Gallery** (`spire_prism_gallery`).
+
+27. At **Prism Gallery**, use **prism shutters**. Finish its dialogue or feedback before moving on.
+
+28. From **Prism Gallery**, go **east** to **Archive Vault** (`spire_archive_vault`).
+
+29. At **Archive Vault**, use **command tether-lines**. Finish its dialogue or feedback before moving on.
+
+30. From **Archive Vault**, go **west** to **Prism Gallery** (`spire_prism_gallery`).
+
+31. At **Prism Gallery**, use **braided chord**. Finish its dialogue or feedback before moving on.
+
+32. From **Prism Gallery**, go **east** to **Archive Vault** (`spire_archive_vault`).
+
+33. Use **lens relic** and finish the warning/acquisition sequence. Confirm **The Lens** is in inventory and the next main quest starts.
+
+## Rooftop escape
+
+34. From **Archive Vault**, go **north** to **Donor Gallery** (`spire_donor_gallery`) → **west** to **Glasswalk** (`spire_glasswalk`) → **west** to **Skypark Dome** (`spire_skypark_dome`) → **north** to **Orchid Walk** (`spire_skypark_scale_01`) → **north** to **Registry Pavilion** (`spire_skypark_scale_02`).
+
+35. Use **Rest** at **Registry Pavilion** before continuing.
+
+36. From **Registry Pavilion**, go **south** to **Orchid Walk** (`spire_skypark_scale_01`) → **south** to **Skypark Dome** (`spire_skypark_dome`) → **south** to **Service Lift** (`spire_service_lift`) → **southeast** to **Exec Lounge** (`spire_exec_lounge_bar`).
+
+37. Review healing supplies at **Upper City Lounge**. The tested earned route bought six Medkits here; your needs depend on your current supplies and build.
+
+38. From **Exec Lounge**, go **northeast** to **Archive Vault** (`spire_archive_vault`) → **east** to **Drone Test Alcove** (`spire_drone_test_alcove`) → **east** to **Landing Pad Roof** (`spire_landing_pad_roof`).
+
+39. Defeat the **Aero Drone, Heavy Mech** party at **Landing Pad Roof**. Other parties in the same room are separate encounters.
+
+40. From **Landing Pad Roof**, go **west** to **Drone Test Alcove** (`spire_drone_test_alcove`) → **west** to **Archive Vault** (`spire_archive_vault`) → **north** to **Donor Gallery** (`spire_donor_gallery`) → **west** to **Glasswalk** (`spire_glasswalk`) → **west** to **Skypark Dome** (`spire_skypark_dome`) → **north** to **Orchid Walk** (`spire_skypark_scale_01`) → **north** to **Registry Pavilion** (`spire_skypark_scale_02`).
+
+41. Use **Rest** at **Registry Pavilion** before continuing.
+
+42. From **Registry Pavilion**, go **south** to **Orchid Walk** (`spire_skypark_scale_01`) → **south** to **Skypark Dome** (`spire_skypark_dome`) → **south** to **Service Lift** (`spire_service_lift`) → **down** to **Archive Vault** (`spire_archive_vault`) → **east** to **Drone Test Alcove** (`spire_drone_test_alcove`) → **east** to **Landing Pad Roof** (`spire_landing_pad_roof`).
+
+43. Defeat the **Administrator, Aero Drone** party at **Landing Pad Roof**. Other parties in the same room are separate encounters.
+
+44. At **Landing Pad Roof**, use **shield window**. Finish its dialogue or feedback before moving on.
+
+45. At **Landing Pad Roof**, use **launch window**. Finish its dialogue or feedback before moving on.
+
+Keep a separate predeparture save. Departure goes to the Foundry below the outer Planetary Shield; high-orbit hardware is still missing. Return travel to unlocked destinations exists.
 
 ## Optional-quest checks
 
@@ -20,7 +112,7 @@ Keep a predeparture save. Astra return travel exists for unlocked destinations; 
 
 ## Current journal objectives
 
-### Homecoming (`w3_mq11`)
+## Homecoming (`w3_mq11`)
 
 Avoid Dominion surveillance by landing in the sewers, clear the landing zone, climb into the Lower City, and let Zeke turn his old apartment into a safehouse before the city notices he came home.
 
@@ -34,7 +126,7 @@ Avoid Dominion surveillance by landing in the sewers, clear the landing zone, cl
 - [ ] Locate Zeke's apartment inside The Static block. (`find_apartment`)
 - [ ] Let Orion shield Zeke's apartment from Dominion scans. (`establish_shield`)
 
-### The Plan (`w3_mq12`)
+## The Plan (`w3_mq12`)
 
 Use Jax's curfew schedules, Gh0st's security pull, Zeke's elevator blueprints, patrol timing, service gate badges, and safehouse disguise materials to build a plan that depends on the crew trusting each other under pressure.
 
@@ -51,7 +143,7 @@ Use Jax's curfew schedules, Gh0st's security pull, Zeke's elevator blueprints, p
 
 - [ ] Use the planning table to assign roles, commit the crew, and launch the heist. (`assemble_table`)
 
-### Neon Fix (`w3_sq11`)
+## Neon Fix (`w3_sq11`)
 
 Inspect the flickering sign at The Static and install a replacement neon sign core.
 
@@ -60,7 +152,7 @@ Inspect the flickering sign at The Static and install a replacement neon sign co
 - [ ] Inspect the flickering sign outside The Static. (`inspect_sign`)
 - [ ] Install the replacement neon sign core. (`install_core`)
 
-### Cold Case (`w3_sq12`)
+## Cold Case (`w3_sq12`)
 
 Examine terminal records in the Transit Plaza to find clues about Elara.
 
@@ -70,7 +162,7 @@ Examine terminal records in the Transit Plaza to find clues about Elara.
 - [ ] Use the case number at the Security Kiosk to search Dominion records. (`access_terminal`)
 - [ ] Expose where security transferred the missing witness. (`expose_transfer`)
 
-### Night Market Run (`w3_sq13`)
+## Night Market Run (`w3_sq13`)
 
 Search the alleyways and fix the flickering lanterns to light up the market.
 
@@ -80,7 +172,7 @@ Search the alleyways and fix the flickering lanterns to light up the market.
 - [ ] Reroute executive sign power into the market grid. (`reroute_power`)
 - [ ] Relight the market and reveal the hidden stalls. (`fix_market_lights`)
 
-### Social Engineering (`w3_mq13`)
+## Social Engineering (`w3_mq13`)
 
 Move through Laundry Service, borrow the shape of workers the city refuses to see, pass the Staff Checkpoint, endure the Skypark's perfect contempt, blind scanner coverage, and send Nova and Gh0st through the service chute toward the Archive.
 
@@ -93,7 +185,7 @@ Move through Laundry Service, borrow the shape of workers the city refuses to se
 
 - [ ] Use the service chute to pass into the Archive approach in disguise. (`enter_lobby`)
 
-### The Lens (`w3_mq14`)
+## The Lens (`w3_mq14`)
 
 Enter the Archive, read the vault's light machinery with Orion and Zeke, and take the Lens knowing the relic will expose more than the crew planned to steal.
 
@@ -106,7 +198,7 @@ Enter the Archive, read the vault's light machinery with Orion and Zeke, and tak
 
 - [ ] Take the Lens relic after Zeke's warning and survive the alarm. (`take_lens`)
 
-### Burn Notice (`w3_mq15`)
+## Burn Notice (`w3_mq15`)
 
 Fight through the lockdown, cross the drone test alcove, defeat the Administrator on the landing pad, and use the Lens to time the Astra through the Shield toward the Foundry before Vale's compliance net closes.
 
@@ -120,7 +212,7 @@ Fight through the lockdown, cross the drone test alcove, defeat the Administrato
 
 - [ ] Send the Astra through the Shield window. (`launch_astra`)
 
-### Corporate Espionage (`w3_sq14`)
+## Corporate Espionage (`w3_sq14`)
 
 Lift a rival executive ledger from a private safe and turn their secrets into leverage.
 
@@ -130,7 +222,7 @@ Lift a rival executive ledger from a private safe and turn their secrets into le
 - [ ] Use the credential on the private safe in Exec Lounge to steal the encrypted ledger. (`steal_ledger`)
 - [ ] Choose whether to publish the ledger or weaponize it privately. (`leak_ledger`)
 
-### Prototype Testing (`w3_sq15`)
+## Prototype Testing (`w3_sq15`)
 
 Inspect its targeting bias, calibrate the prototype rack, and scrub the telemetry before claiming Phase Rounds.
 
@@ -140,7 +232,7 @@ Inspect its targeting bias, calibrate the prototype rack, and scrub the telemetr
 - [ ] Calibrate the prototype rack in Drone Test Alcove against the recorded drone targets. (`test_weapon`)
 - [ ] Scrub Nova's calibration signature from the test telemetry. (`scrub_telemetry`)
 
-### Murder in the Skyline Salon (`w3_sq16`)
+## Murder in the Skyline Salon (`w3_sq16`)
 
 Examine the poisoned glass, inspect the automated lounge access logs, interrogate the four trapped suspects, and expose the killer to lift the lockdown.
 
@@ -156,7 +248,7 @@ Examine the poisoned glass, inspect the automated lounge access logs, interrogat
 
 ## Room reference
 
-Base descriptions and actions are listed below; milestone variants and visibility conditions change during play. Rest and Cook use their standard service controls. Use the in-game map for positioning.
+Base descriptions and interactions are shown below. Milestone conditions change what is currently visible. Use the in-game map for positioning. Rest and Cook use service controls.
 
 ### Vent Output
 
@@ -216,6 +308,8 @@ The Static is a dark dive bar built around an old subway car. Neon signs pulse e
 
 Exits: west → Underrail Platform, east → Old Subway Car, north → Signal Stairwell, south → Transit Plaza, northeast → Back Bar Ledger.
 
+NPCs: Jax (appears when ms_w2_mq05_complete).
+
 Interactions: sign.
 
 #### Old Subway Car (`spire_old_subway_car`)
@@ -223,6 +317,8 @@ Interactions: sign.
 The Static spills into an old subway car bolted beside the bar. Torn booth seats, stickered windows, and a silent jukebox make the car half studio. Chris tunes an audio board while Andrew rests his guitar. A reinforced door opens to the rigging deck. A Wayfarer tour poster curls above a No Charge tape beside the audio board.
 
 Exits: west → The Static, east → Bridgman Rigging Deck.
+
+NPCs: Chris, Andrew.
 
 Interactions: silent jukebox, stickered windows, Wayfarer tour poster, No Charge tape.
 
@@ -239,6 +335,8 @@ Interactions: antenna wire, mail slots, chrono coil console.
 Zeke's old apartment is sparse enough to feel erased. A workstation hums on a table with his deleted employee ghost still buried inside it, a planning table waits under bad light, and roof access opens toward the impossible skyline.
 
 Exits: south → Signal Stairwell, north → Safehouse Roof.
+
+NPCs: Zeke (appears when ms_w3_safehouse_found).
 
 Interactions: workstation, planning table.
 
@@ -280,6 +378,8 @@ High-tension cables and hydraulic winch drums span the structural gap beneath th
 
 Exits: west → Old Subway Car, east → Secret Signal Workshop.
 
+NPCs: Cheno.
+
 Interactions: rigging schematic, cider mug, heavy winch rig, framed family holopic.
 
 #### Secret Signal Workshop (`spire_hidden_studio`)
@@ -287,6 +387,8 @@ Interactions: rigging schematic, cider mug, heavy winch rig, framed family holop
 Tucked behind acoustic baffles, a cluttered studio hums with glowing CRT monitors and [action:amplifier roost|tube amplifiers]. A miniature [action:galaxy terminal|galaxy simulation] rotates silently. Meeko the charcoal cat lounges like an executive boss while Jason solders [action:workbench clutter|circuit boards]. A music workstation is wedged between the monitors.
 
 Exits: west → Bridgman Rigging Deck.
+
+NPCs: Jason, Meeko.
 
 Interactions: galaxy terminal, music workstation, workbench clutter, amplifier roost.
 
@@ -298,6 +400,8 @@ The Night Market insists on being heard. Lanterns swing over food steam, Noodle 
 
 Exits: west → Checkpoint Queue, east → Noodle Row, north → Lantern Bridge, south → Backstreet Clinic, northeast → Lantern Roof.
 
+NPCs: Mika (appears when ms_w2_mq05_complete).
+
 Interactions: lanterns, market registry broadcast.
 
 #### Noodle Row (`spire_noodle_row`)
@@ -305,6 +409,8 @@ Interactions: lanterns, market registry broadcast.
 Noodle Row steams under plastic awnings. The soup counter never stops moving, with Chef Ren dishing out hot bowls and news to anyone with coin. The rain drums steadily against the vinyl above.
 
 Exits: west → Night Market.
+
+NPCs: Ren.
 
 Interactions: soup counter, plastic awnings.
 
@@ -530,6 +636,8 @@ The Skypark Dome offers fake sun and blooming orchids under polished glass. Evel
 
 Exits: south → Service Lift, west → Staff Checkpoint, east → Glasswalk, north → Orchid Walk.
 
+NPCs: Evelyn, Robert, Museum Curator (appears when ms_w3_mq12_complete).
+
 Interactions: guest registry, jazz conservatory planter, industrial vortex buffer.
 
 #### Glasswalk (`spire_glasswalk`)
@@ -586,6 +694,8 @@ Plush velvet stanchions divide the glowing skyline salon from the rain-swept spi
 
 Exits: west → Donor Gallery, north → Syndicate Booth.
 
+NPCs: Dax, Director Vance, Dr. Lyra, Selene.
+
 Interactions: crime-scene barrier, dispenser log, security terminal.
 
 #### Syndicate Booth (`spire_vip_private_booth`)
@@ -603,6 +713,8 @@ Interactions: crystal glass, executive comms rig, auditor's datapad.
 The Exec Lounge floats on a grav-platform above a silent atrium. A private safe hides behind sculpture, a concierge credential mirror flashes beside the terminal, and every booth looks designed for blackmail. A VIP vector arcade cabinet stands behind the velvet curtain.
 
 Exits: north → Uniform Sorting, northwest → Service Lift, northeast → Archive Vault, south → Velvet Hall.
+
+NPCs: Hacked Lab Terminal (appears when ms_w3_mq13_complete).
 
 Interactions: private safe, concierge credential mirror, concierge terminal, VIP vector arcade cabinet.
 

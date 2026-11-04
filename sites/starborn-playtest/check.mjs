@@ -35,9 +35,20 @@ try {
   async function waitFor(expression) { for (let i = 0; i < 100; i++) { if (await evaluate(expression)) return; await new Promise(resolve => setTimeout(resolve, 100)); } throw new Error(`Timed out: ${expression}`); }
   await waitFor('document.querySelector("#article h2") !== null');
   await waitFor('document.querySelector(".brand-logo")?.naturalWidth > 0');
-  assert.equal(await evaluate('GUIDES.length'), 2);
+  assert.equal(await evaluate('GUIDES.length'), 3);
   assert.equal(await evaluate('world'), 2, 'world-2 root link selects World 2 on a fresh visit');
   assert.equal(await evaluate('GUIDES[1].sections.some(s => s.blocks.some(b => b.text.includes("report_to_zeke")))'), true, 'World 2 includes the current Botanist return task');
+  await send('Page.navigate', { url: url.replace(/#.*$/, '') + '#world-3/' });
+  await waitFor('typeof world !== "undefined" && world === 3 && document.querySelector("#article h2") !== null');
+  assert.equal(await evaluate('GUIDES[2].sections.some(s => s.blocks.some(b => b.text.includes("recover_bridge_relic")))'), false);
+  assert.equal(await evaluate('GUIDES[2].sections.some(s => s.blocks.some(b => b.text.includes("defeat_administrator")))'), true, 'World 3 current quest catalog');
+  await evaluate('showSection(GUIDES[2].sections.findIndex(s => s.title.includes("Homecoming (")))');
+  await waitFor('restoring === false && document.querySelector("input[data-step]") !== null');
+  const world3Step = await evaluate('document.querySelector("input[data-step]").dataset.step');
+  await evaluate('document.querySelector("input[data-step]").click()');
+  await send('Page.reload');
+  await waitFor('typeof world !== "undefined" && world === 3 && document.querySelector("input[data-step]")?.checked === true');
+  assert.equal(await evaluate(`JSON.parse(localStorage.getItem(STORE)).worlds[3].checked.includes('${world3Step}')`), true, 'World 3 saved checklist');
   await evaluate('switchWorld(1)');
   assert.equal(await evaluate('document.documentElement.scrollWidth <= innerWidth'), true, 'desktop has no horizontal overflow');
   const desktopShot = await send('Page.captureScreenshot', { format: 'png' });
@@ -70,13 +81,19 @@ try {
   await writeFile(screenshot, Buffer.from(shot.data, 'base64'));
   await send('Emulation.setDeviceMetricsOverride', { width: 320, height: 740, deviceScaleFactor: 1, mobile: true });
   assert.equal(await evaluate('document.documentElement.scrollWidth <= innerWidth'), true, 'narrow phone has no horizontal overflow');
+  await evaluate('switchWorld(3); showSection(1)');
+  await waitFor('restoring === false');
+  assert.equal(await evaluate('document.documentElement.scrollWidth <= innerWidth'), true, 'World 3 narrow phone layout');
+  const world3Shot = await send('Page.captureScreenshot', { format: 'png' });
+  const world3Screenshot = path.join(profile, 'world3-mobile.png');
+  await writeFile(world3Screenshot, Buffer.from(world3Shot.data, 'base64'));
   await waitFor('document.querySelector("#offline").textContent.includes("Ready")');
   await send('Network.enable');
   await send('Network.emulateNetworkConditions', { offline: true, latency: 0, downloadThroughput: 0, uploadThroughput: 0 });
   await send('Page.reload');
   await waitFor('document.querySelector("#article h2") !== null');
-  assert.equal(await evaluate('GUIDES.length'), 2, 'both worlds available after offline reload');
+  assert.equal(await evaluate('GUIDES.length'), 3, 'all three worlds available after offline reload');
   assert.deepEqual(errors, [], 'no uncaught browser errors');
-  console.log(JSON.stringify({ passed: ['World 2 root link', 'current Botanist return task', 'logo loaded', 'desktop layout', 'checkmarks persist', 'position restored', 'search', 'cross-world navigation', 'theme', 'mobile layout', 'offline reload', 'no browser errors'], screenshot, desktopScreenshot }, null, 2));
+  console.log(JSON.stringify({ passed: ['World 3 direct link and saved checklist', 'World 2 root link', 'current Botanist return task', 'logo loaded', 'desktop layout', 'checkmarks persist', 'position restored', 'search', 'cross-world navigation', 'theme', 'mobile layout', 'offline reload', 'no browser errors'], screenshot, desktopScreenshot, world3Screenshot }, null, 2));
   await send('Browser.close');
 } finally { socket?.close(); chrome.kill(); }

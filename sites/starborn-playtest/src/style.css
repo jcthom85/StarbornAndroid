@@ -6,3 +6,5 @@
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important}}
 .topbar{height:120px}.brand{flex-direction:column;gap:0;line-height:1}.brand-logo{display:block;width:145px;height:auto;object-fit:contain}.brand>small{margin:0 0 6px;font-size:8px;letter-spacing:1.6px}aside{top:120px;height:calc(100dvh - 120px)}html{scroll-padding-top:135px}
 @media(max-width:760px){.topbar{height:100px}.brand-logo{width:clamp(84px,29vw,116px)}.brand>small{font-size:7px;letter-spacing:1px;margin-bottom:5px}aside{height:auto}html{scroll-padding-top:115px}}
+
+@media(max-width:760px){.topbar{height:auto;min-height:77px;padding-top:8px;padding-bottom:8px}.brand{flex:1}.worlds{order:3;width:100%;justify-content:center}.worlds button{flex:1}.quiet{order:2}html{scroll-padding-top:120px}}
