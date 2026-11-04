@@ -136,6 +136,8 @@ fun GameSessionState.migrateOpeningNarrativeState(): GameSessionState {
         if ("w2_sq03_craft_source_resin" in completedEvents) task("w2_sq03", "craft_source_resin")
     }
 
+    if ("ms_game_complete" in migratedMilestones) roomState("source_center", "ending_complete")
+
     val bridgeInstalled = "ms_w2_bridge_installed" in migratedMilestones ||
         "w2_mq05" in completedQuests ||
         "reboot_bridge_relic" in migratedQuestTasks["w2_mq05"].orEmpty()

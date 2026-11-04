@@ -1486,16 +1486,16 @@
   {
     "id": "w3_sq15",
     "title": "Prototype Testing",
-    "summary": "Test a dangerous experimental weapon on Upper City drones.",
-    "description": "Use a hacked lab terminal to run a weapon trial against Dominion drones and claim the Phase Rounds mod.",
+    "summary": "Calibrate a recovered prototype using the Upper City test records.",
+    "description": "Inspect its targeting bias, calibrate the prototype rack, and scrub the telemetry before claiming Phase Rounds.",
     "flavor": "Quality assurance is easier when the product hates you back.",
     "giver": "Hacked Lab Terminal",
     "hub_id": "hub_6_upper_city",
     "stages": [
       {
         "id": "weapon_trial",
-        "title": "Weapon Trial",
-        "description": "Run the prototype against drones in the Archive test alcove.",
+        "title": "Prototype Calibration",
+        "description": "Use the recorded drone tests to correct the targeting profile.",
         "tasks": [
           {
             "id": "scan_targeting",
@@ -1503,11 +1503,11 @@
           },
           {
             "id": "test_weapon",
-            "text": "Use the prototype rack in Drone Test Alcove to test the corrected weapon on security drones."
+            "text": "Calibrate the prototype rack in Drone Test Alcove against the recorded drone targets."
           },
           {
             "id": "scrub_telemetry",
-            "text": "Scrub Nova's combat signature from the test telemetry."
+            "text": "Scrub Nova's calibration signature from the test telemetry."
           }
         ]
       }
@@ -1742,7 +1742,7 @@
     "id": "w4_mq18",
     "title": "The Assembly",
     "summary": "Fight through the Foundry production floor and break the Phantom fabrication line blocking the engine route.",
-    "description": "Read the Assembly line, survive waves of Phantom prototypes, and overload the fabrication matrix feeding Gh0st's mass-production successors.",
+    "description": "Read the Assembly line and its conditioning records, then overload the fabrication matrix feeding Gh0st's mass-production successors.",
     "flavor": "The machine of war sounds like work until it starts printing faces.",
     "giver": "Gh0st",
     "hub_id": "hub_8_assembly_line",
@@ -1758,7 +1758,7 @@
           },
           {
             "id": "defeat_prototypes",
-            "text": "Survive the Phantom wave."
+            "text": "Review the Phantom conditioning records in Conditioning Chamber."
           }
         ]
       },
@@ -1929,16 +1929,16 @@
   {
     "id": "w4_sq20",
     "title": "Overclocked",
-    "summary": "Survive three overclocked test chamber waves.",
-    "description": "Survive an overclocked Forge hazard trial and prove Nova's new Construct discipline can hold under pressure.",
+    "summary": "Map and calibrate the Forge hazard program.",
+    "description": "Review the hazard cycle map, calibrate the test terminal against it, and recover the overclock profile.",
     "flavor": "The Foundry's safety protocol is a waiver it signs for you.",
     "giver": "Lab Terminal",
     "hub_id": "hub_8_assembly_line",
     "stages": [
       {
         "id": "test_waves",
-        "title": "Construct Trial",
-        "description": "Use the Foundry's own hazard program as practice before the Titan fight.",
+        "title": "Hazard Calibration",
+        "description": "Use the recorded heat cycles to tune the hazard program.",
         "tasks": [
           {
             "id": "map_hazards",
@@ -1946,7 +1946,7 @@
           },
           {
             "id": "survive_waves",
-            "text": "Use the test chamber terminal in The Forge and survive three overclocked hazard waves."
+            "text": "Calibrate the test chamber terminal in The Forge using the mapped heat cycles."
           },
           {
             "id": "steal_overclock",

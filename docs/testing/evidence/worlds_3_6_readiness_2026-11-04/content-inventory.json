@@ -1,0 +1,79 @@
+{
+  "3": {
+    "rooms": 70,
+    "nodes": 10,
+    "main_quests": 5,
+    "side_quests": 6,
+    "actions": 194,
+    "duplicate_description_groups": []
+  },
+  "4": {
+    "rooms": 74,
+    "nodes": 10,
+    "main_quests": 5,
+    "side_quests": 6,
+    "actions": 198,
+    "duplicate_description_groups": []
+  },
+  "5": {
+    "rooms": 81,
+    "nodes": 9,
+    "main_quests": 5,
+    "side_quests": 5,
+    "actions": 198,
+    "duplicate_description_groups": [
+      [
+        "orbital_executive_dock_scale_01",
+        "orbital_grand_concourse_scale_01",
+        "orbital_solarium_scale_01",
+        "orbital_security_hub_scale_01",
+        "orbital_service_shaft_scale_01",
+        "deep_server_farm_scale_01"
+      ],
+      [
+        "orbital_executive_dock_scale_03",
+        "orbital_grand_concourse_scale_03",
+        "orbital_solarium_scale_03",
+        "orbital_security_hub_scale_03",
+        "orbital_service_shaft_scale_03",
+        "deep_server_farm_scale_03"
+      ],
+      [
+        "orbital_executive_dock_scale_04",
+        "orbital_grand_concourse_scale_04",
+        "orbital_solarium_scale_04",
+        "orbital_security_hub_scale_04",
+        "orbital_service_shaft_scale_04"
+      ],
+      [
+        "orbital_executive_dock_scale_05",
+        "orbital_grand_concourse_scale_05",
+        "orbital_solarium_scale_05",
+        "orbital_security_hub_scale_05",
+        "orbital_service_shaft_scale_05"
+      ],
+      [
+        "orbital_executive_dock_scale_06",
+        "orbital_grand_concourse_scale_06",
+        "orbital_solarium_scale_06",
+        "orbital_security_hub_scale_06",
+        "orbital_service_shaft_scale_06"
+      ],
+      [
+        "orbital_grand_concourse_scale_02",
+        "orbital_solarium_scale_02",
+        "orbital_security_hub_scale_02",
+        "orbital_service_shaft_scale_02",
+        "deep_server_farm_scale_02"
+      ]
+    ]
+  },
+  "6": {
+    "rooms": 65,
+    "nodes": 10,
+    "main_quests": 5,
+    "side_quests": 5,
+    "actions": 150,
+    "duplicate_description_groups": []
+  }
+}

@@ -519,6 +519,7 @@ class ExplorationController(
                 }
             },
             onMilestoneSet = { milestone ->
+                if (milestone == "ms_game_complete") sessionStore.setRoomState("source_center", "ending_complete", true)
                 if (milestone.equals("ms_lights_out_complete", ignoreCase = true) ||
                     milestone.equals("ms_w1_mq01_fault_visible", ignoreCase = true)) {
                     finishInitialFade()
@@ -1753,6 +1754,8 @@ class ExplorationController(
             return
         }
         if (actionId.equals("source_board_astra", ignoreCase = true)) {
+            if (sessionStore.state.value.roomId?.startsWith("source_") == true &&
+                "ms_game_complete" !in sessionStore.state.value.completedMilestones) return
             boardAstraFromWorld()
         }
         eventManager.handleTrigger("player_action", EventPayload.Action(actionId, itemId))
@@ -1961,6 +1964,8 @@ class ExplorationController(
                     kotlinx.coroutines.yield()
                     maybeReviewBotanistScans()
                 }
+                eventManager.reconcileRecordedVictories()
+                viewModelScope.launch(dispatchers.main) { kotlinx.coroutines.yield(); recoverNeonCore() }
                 maybeOfferOpeningEquipment(newState)
                 val isTinkeringTutActive = tutorialsEnabled &&
                     "ms_w1_mq01_workshop_briefed" in newState.completedMilestones &&
@@ -2790,6 +2795,17 @@ class ExplorationController(
     private fun orionIdentityKnown(state: GameSessionState): Boolean =
         "w2_mq03" !in state.activeQuests || "ms_w2_orion_identified" in state.completedMilestones ||
             "ms_w2_orion_briefed" in state.completedMilestones || "w2_mq03" in state.completedQuests
+
+    private fun recoverNeonCore() {
+        val state = sessionStore.state.value
+        if ("w3_sq11" !in state.activeQuests || "install_core" in state.questTasksCompleted["w3_sq11"].orEmpty() ||
+            "ms_w3_neon_core_recovered" in state.completedMilestones || inventoryService.hasItem("neon_sign_core")) return
+        if (state.roomStates["spire_exec_lounge_scale_02"].orEmpty().any { (key,value) ->
+            value && key.startsWith("encounter_cleared:") && "sentinel_mki" in key.removePrefix("encounter_cleared:").split('|') }) {
+            sessionStore.setMilestone("ms_w3_neon_core_recovered")
+            inventoryService.addItem("neon_sign_core",1)
+        }
+    }
 
     private fun firstAstraDeparturePending(state: GameSessionState): Boolean =
         "w2_mq05" in state.activeQuests && "w2_mq05" !in state.completedQuests &&

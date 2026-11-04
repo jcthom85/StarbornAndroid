@@ -5313,7 +5313,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Neon Fix\n\nThe sign flickers and flares back to life, bathing the subway car in neon purple. The bar looks watched, open, and ordinary again, which is the safest kind of lie. Jax grunts in approval and promises a permanent shop discount."
+        "message": "Quest Complete: Neon Fix\n\nThe sign flickers and flares back to life, bathing the subway car in neon purple. The bar looks watched, open, and ordinary again, which is the safest kind of lie. Jax grunts in approval and slides the reward across the counter."
       }
     ]
   },
@@ -6102,7 +6102,8 @@
         "type": "show_message",
         "message": "The Administrator frame collapses, still smiling through sparking teeth. The Shield window opens for less than a second, and Nova can finally see exactly how small freedom is."
       }
-    ]
+    ],
+    "recover_recorded_victory": true
   },
   {
     "id": "w3_mq15_launch_needs_scan",
@@ -6294,7 +6295,7 @@
       },
       {
         "type": "show_message",
-        "message": "Side Quest Started: Prototype Testing\n\nThe lab terminal offers a Dominion weapon trial with no ethical waiver, no safety stop, and a reward cache still attached. The drones are already marked expendable."
+        "message": "Side Quest Started: Prototype Testing\n\nThe lab terminal holds recorded drone tests and a targeting profile that needs correction. Its reward cache remains attached to the calibration program."
       }
     ]
   },
@@ -6333,7 +6334,7 @@
       },
       {
         "type": "show_message",
-        "message": "The corrected prototype breaks the drones, then uploads Nova's firing signature to Security. The roof relay can still scrub the telemetry."
+        "message": "Nova aligns the rack with the recorded drone targets. The corrected targeting profile holds, but the terminal logs her calibration signature. The roof relay can scrub that telemetry."
       }
     ]
   },
@@ -6988,7 +6989,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Phantom wave drops one by one. Gh0st says nothing, but his blade shakes once before going still."
+        "message": "The conditioning records show Phantom units failing one after another. Gh0st studies the familiar faces, then identifies the fabrication matrix feeding the line."
       }
     ]
   },
@@ -7432,7 +7433,8 @@
         "type": "show_message",
         "message": "The Titan Walker buckles into the platform. Gh0st lowers his blade. Choice is the point."
       }
-    ]
+    ],
+    "recover_recorded_victory": true
   },
   {
     "id": "w4_mq20_steal_engine",
@@ -7664,7 +7666,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova survives the mapped heat cycle. The chamber's overclock profile remains in the control alcove, ready to become an advantage."
+        "message": "Nova calibrates the terminal against the mapped heat cycle. The overclock profile is ready to recover from the control alcove."
       }
     ]
   },
@@ -7741,7 +7743,8 @@
         "type": "show_message",
         "message": "The last fighter shears away under the Phase-Cutter Arrays. Zeke does not ask permission; he drives the damaged Astra straight at the Executive Dock before Compliance can rebuild the screen."
       }
-    ]
+    ],
+    "recover_recorded_victory": true
   },
   {
     "id": "w5_mq21_force_dock",
@@ -7915,7 +7918,8 @@
         "type": "show_message",
         "message": "The Security Hub falls quiet. Every red lens stays open, but the core lift lock drops from DENIED to ROUTE EXPOSED."
       }
-    ]
+    ],
+    "recover_recorded_victory": true
   },
   {
     "id": "w5_mq22_traverse_shaft",
@@ -8451,7 +8455,8 @@
         "type": "show_message",
         "message": "Quest Complete: The Core Approach\n\nThe construct shatters into dead glyphs. The Anchor Chamber opens, and Gh0st hears Elara through the system Vale stole. Thorne's route worked, but every open door now points at the person Dominion turned into infrastructure."
       }
-    ]
+    ],
+    "recover_recorded_victory": true
   },
   {
     "id": "w5_mq24_enter_chamber",
@@ -8708,7 +8713,8 @@
         "type": "show_message",
         "message": "The Avatar loses cohesion. Gravity stutters, the Ring splits, and the Tear pulls every loose fragment upward. Vale is already beyond it with Elara's signal bleeding through the static."
       }
-    ]
+    ],
+    "recover_recorded_victory": true
   },
   {
     "id": "w5_mq25_enter_tear",
@@ -8936,7 +8942,8 @@
         "type": "show_message",
         "message": "Zeke stops performing the smile the loop demands. I quit. The cubicles shatter into burning checklists."
       }
-    ]
+    ],
+    "recover_recorded_victory": true
   },
   {
     "id": "w6_mq26_rescue_gh0st",
@@ -8968,7 +8975,8 @@
         "type": "show_message",
         "message": "Stasis interrupts the kill-suite. Gh0st crushes the override key and drops the rifle. No more orders."
       }
-    ]
+    ],
+    "recover_recorded_victory": true
   },
   {
     "id": "w6_mq26_rescue_orion",
@@ -9000,7 +9008,8 @@
         "type": "show_message",
         "message": "Orion hums a question into the black water. A chorus answers from below: We are here."
       }
-    ]
+    ],
+    "recover_recorded_victory": true
   },
   {
     "id": "w6_mq26_reassemble",
@@ -9962,7 +9971,8 @@
         "quest_id": "w6_mq29",
         "to_stage_id": "spire_arena"
       }
-    ]
+    ],
+    "recover_recorded_victory": true
   },
   {
     "id": "w6_mq29_memory_guard",
@@ -10000,7 +10010,8 @@
         "type": "show_message",
         "message": "The nightmare faces dissolve. Memory remains, but it no longer gets a vote."
       }
-    ]
+    ],
+    "recover_recorded_victory": true
   },
   {
     "id": "w6_mq29_reach_center",
@@ -10127,7 +10138,8 @@
         "type": "show_message",
         "message": "Vale's human outline cracks like porcelain. Blinding geometry unfolds from inside it. The Silence begins."
       }
-    ]
+    ],
+    "recover_recorded_victory": true
   },
   {
     "id": "w6_mq30_defeat_god",
@@ -10169,7 +10181,8 @@
         "type": "show_message",
         "message": "The god-form collapses, but the universe keeps breaking. Vale's code still blocks the signal, and the Key will only answer a circuit, not a ruler."
       }
-    ]
+    ],
+    "recover_recorded_victory": true
   },
   {
     "id": "w6_mq30_tune_world",
@@ -10762,7 +10775,7 @@
       },
       {
         "type": "show_message",
-        "message": "The prototype quietly prioritizes workers over drones. Nova reverses the bias before touching the trigger."
+        "message": "The prototype quietly prioritizes workers over drones. Nova reverses the bias before calibrating the rack."
       }
     ]
   },
@@ -11088,7 +11101,7 @@
       },
       {
         "type": "show_message",
-        "message": "The hazard sequence repeats: heat, pressure, silence. Nova marks the safe beat before starting the trial."
+        "message": "The hazard sequence repeats: heat, pressure, silence. Nova marks the safe beat for the terminal calibration."
       }
     ]
   },
@@ -15194,9 +15207,20 @@
     },
     "actions": [
       {
+        "type": "set_milestone",
+        "milestone": "ms_crucible_round1_started"
+      },
+      {
         "type": "spawn_encounter",
         "encounter_id": "magma_drone,magma_drone,welder_bot",
         "room_id": "foundry_crucible_arena"
+      }
+    ],
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_crucible_round1_cleared"
       }
     ]
   },
@@ -15226,6 +15250,16 @@
         "type": "show_message",
         "message": "Round 1 cleared! The crowd of rogue loaders clatters in approval. Speak to Pitmaster Brutus when you are ready to face Round 2."
       }
+    ],
+    "conditions": [
+      {
+        "type": "milestone_set",
+        "milestone": "ms_crucible_round1_started"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_crucible_round1_cleared"
+      }
     ]
   },
   {
@@ -15237,9 +15271,24 @@
     },
     "actions": [
       {
+        "type": "set_milestone",
+        "milestone": "ms_crucible_round2_started"
+      },
+      {
         "type": "spawn_encounter",
         "encounter_id": "slag_golem,welder_bot",
         "room_id": "foundry_crucible_arena"
+      }
+    ],
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_crucible_round2_cleared"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_crucible_round1_cleared"
       }
     ]
   },
@@ -15268,6 +15317,16 @@
         "type": "show_message",
         "message": "Round 2 cleared! The Slag Golem collapses into cooling cinders. Speak to Brutus when you are prepared to face the Crucible Champion!"
       }
+    ],
+    "conditions": [
+      {
+        "type": "milestone_set",
+        "milestone": "ms_crucible_round2_started"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_crucible_round2_cleared"
+      }
     ]
   },
   {
@@ -15279,9 +15338,24 @@
     },
     "actions": [
       {
+        "type": "set_milestone",
+        "milestone": "ms_crucible_round3_started"
+      },
+      {
         "type": "spawn_encounter",
         "encounter_id": "crucible_champion,magma_drone",
         "room_id": "foundry_crucible_arena"
+      }
+    ],
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_crucible_round3_cleared"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_crucible_round2_cleared"
       }
     ]
   },
@@ -15304,6 +15378,16 @@
       {
         "type": "show_message",
         "message": "CHAMPIONSHIP VICTORY! The Crucible Champion shuts down with a shudder of steam. Speak to Pitmaster Brutus to claim your legendary prize!"
+      }
+    ],
+    "conditions": [
+      {
+        "type": "milestone_set",
+        "milestone": "ms_crucible_round3_started"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_crucible_round3_cleared"
       }
     ]
   },

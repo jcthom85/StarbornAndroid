@@ -1,0 +1,130 @@
+{
+  "public_early_path_w4_mq18": {
+    "start": "foundry_conveyor_belt",
+    "trace": [
+      "foundry_conditioning_chamber",
+      "foundry_power_core",
+      "foundry_titan_dock"
+    ],
+    "blocked": "none",
+    "target": "foundry_titan_dock"
+  },
+  "early_clear_w4_mq20": {
+    "enemy_still_available": false,
+    "clear_receipts": {
+      "visited": true,
+      "discovered": true,
+      "encounter_cleared:titan_walker_boss": true
+    },
+    "objective_credited_after_accept_and_reload": true
+  },
+  "public_early_path_w5_mq21": {
+    "start": "orbital_executive_dock",
+    "trace": [
+      "orbital_grand_concourse",
+      "orbital_security_hub",
+      "orbital_service_shaft",
+      "orbital_server_farm",
+      "deep_mainframe_nave"
+    ],
+    "blocked": "deep_mainframe_nave -> east -> deep_firewall_alpha",
+    "target": "deep_firewall_gamma"
+  },
+  "w3_safehouse": {
+    "visible_npcs": ["zeke"],
+    "actions": [
+      "workstation",
+      "planning table"
+    ],
+    "tasks": ["find_apartment"]
+  },
+  "dialogue_Charles": {
+    "has_terminal_path_in_current_state": true,
+    "visible_npcs": ["analyst_charles"],
+    "root": "analyst_charles_default_talk"
+  },
+  "dialogue_Rylan": {
+    "has_terminal_path_in_current_state": true,
+    "visible_npcs": ["forge_hand_rylan"],
+    "root": "forge_hand_rylan_default_talk"
+  },
+  "crucible_after_round1": [
+    "ms_crucible_round1_started",
+    "ms_crucible_round1_cleared"
+  ],
+  "early_clear_w6_mq30": {
+    "enemy_still_available": false,
+    "clear_receipts": {
+      "visited": true,
+      "discovered": true,
+      "encounter_cleared:ascended_vale": true
+    },
+    "objective_credited_after_accept_and_reload": true
+  },
+  "public_early_path_w3_mq14": {
+    "start": "spire_archive_vault",
+    "trace": [
+      "spire_drone_test_alcove",
+      "spire_landing_pad_roof"
+    ],
+    "blocked": "none",
+    "target": "spire_landing_pad_roof"
+  },
+  "public_early_path_w6_mq26": {
+    "start": "source_campfire",
+    "trace": [
+      "source_echo_mines",
+      "source_echo_workbench",
+      "source_echo_patrol",
+      "source_echo_elevator",
+      "source_memory_bridge",
+      "source_memory_bridge_span",
+      "source_memory_threshold",
+      "source_memory_stair",
+      "source_memory_fragments",
+      "source_spire_thought",
+      "source_spire_archive",
+      "source_spire_arena",
+      "source_center"
+    ],
+    "blocked": "source_center -> east -> source_new_world",
+    "target": "source_new_world"
+  },
+  "crucible_round1_retry_available": true,
+  "early_clear_both_firewall_sources": {
+    "remaining_current_enemies": [],
+    "clear_receipts": {
+      "deep_firewall_gamma": {
+        "visited": true,
+        "encounter_cleared:firewall_construct": true,
+        "discovered": true
+      },
+      "deep_server_farm_scale_02": {
+        "visited": true,
+        "encounter_cleared:firewall_construct": true,
+        "discovered": true
+      }
+    },
+    "credited_after_accept_and_reload": true
+  },
+  "early_clear_w3_mq15": {
+    "enemy_still_available": false,
+    "clear_receipts": {
+      "visited": true,
+      "discovered": true,
+      "encounter_cleared:administrator_boss|aero_drone": true
+    },
+    "objective_credited_after_accept_and_reload": true
+  },
+  "pre_ending_east_from_center": "source_center",
+  "cameron_one_plate": {
+    "turnin_offered": false,
+    "reward_granted": false,
+    "completed_milestone": false
+  },
+  "dialogue_Cameron": {
+    "has_terminal_path_in_current_state": true,
+    "visible_npcs": ["pipefitter_cameron"],
+    "root": "pipefitter_cameron_default_talk"
+  }
+}

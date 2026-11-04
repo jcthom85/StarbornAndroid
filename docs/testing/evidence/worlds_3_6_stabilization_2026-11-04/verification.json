@@ -1,0 +1,22 @@
+{
+  "full_android_host": {
+    "tests": 786,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "note": "Full-suite count recorded before the subsequent focused run replaced the XML reports; command output preserved in full-test-run.txt."
+  },
+  "limits": [
+    "Controller early-victory checks inject combat results, not played boss fights.",
+    "Device acceptance and real Crucible retreat/re-entry remain required.",
+    "World 5 side-room repetition was not rewritten."
+  ],
+  "final_desktop": {
+    "tests": 13,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "subsequent_android": "Earned World 1 completionist route rerun after final copy changes; passed.",
+  "apk_build": "assembleDebug passed; not installed"
+}

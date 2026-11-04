@@ -1426,7 +1426,7 @@
     "id": "lab_terminal_w3_sq15_intro",
     "speaker": "Lab Terminal",
     "condition": "quest_not_completed:w3_sq15",
-    "text": "Prototype trial armed. Warning: liability has been transferred to the test subject.",
+    "text": "Recorded drone targets loaded. Apply the corrected calibration profile; the terminal will log the operator signature.",
     "trigger": "player_action:w3_sq15_test_weapon"
   },
   {
@@ -2060,6 +2060,10 @@
         "id": "rylan_opt_forge_intel",
         "text": "What can you tell me about the heat deeper in the Foundry?",
         "next": "rylan_forge_intel"
+      },
+      {
+        "id": "forge_hand_rylan_default_talk_leave",
+        "text": "I should get going."
       }
     ]
   },
@@ -2412,8 +2416,12 @@
       {
         "id": "cameron_opt_favor_turnin",
         "text": "I found the composite plates and hydraulic fluid for the manifold.",
-        "condition": "milestone:ms_cameron_pipe_favor_asked,milestone_not_set:ms_cameron_pipe_favor_completed,item:composite_plate,item:hydraulic_fluid",
+        "condition": "milestone:ms_cameron_pipe_favor_asked,milestone_not_set:ms_cameron_pipe_favor_completed,item:composite_plate*2,item:hydraulic_fluid",
         "next": "cameron_favor_turnin"
+      },
+      {
+        "id": "pipefitter_cameron_default_talk_leave",
+        "text": "I should get going."
       }
     ]
   },
@@ -2489,8 +2497,12 @@
       {
         "id": "charles_opt_favor_turnin",
         "text": "I've brought the circuit boards and focusing lens for your network tap.",
-        "condition": "milestone:ms_charles_analytics_favor_asked,milestone_not_set:ms_charles_analytics_favor_completed,item:circuit_board,item:focusing_lens",
+        "condition": "milestone:ms_charles_analytics_favor_asked,milestone_not_set:ms_charles_analytics_favor_completed,item:circuit_board*2,item:focusing_lens",
         "next": "charles_favor_turnin"
+      },
+      {
+        "id": "analyst_charles_default_talk_leave",
+        "text": "I should get going."
       }
     ]
   },

@@ -13,7 +13,9 @@ data class GameEvent(
     val onMessage: String? = null,
     @Json(name = "off_message")
     val offMessage: String? = null,
-    val message: String? = null
+    val message: String? = null,
+    @Json(name = "recover_recorded_victory")
+    val recoverRecordedVictory: Boolean = false
 )
 
 data class EventTrigger(

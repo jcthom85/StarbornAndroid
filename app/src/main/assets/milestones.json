@@ -611,7 +611,7 @@
   {
     "id": "ms_w3_streetwise_unlocked",
     "name": "Streetwise",
-    "description": "Jax granted you a discount in the local shops for repairing The Static's sign.",
+    "description": "You repaired The Static's sign and earned Jax's gratitude.",
     "toast": "Jax's favor complete."
   },
   {
@@ -777,9 +777,9 @@
   },
   {
     "id": "ms_w4_prototypes_defeated",
-    "name": "Prototypes Defeated",
-    "description": "You defeated the Phantom wave.",
-    "toast": "Prototype wave defeated."
+    "name": "Conditioning Records",
+    "description": "You reviewed the Phantom conditioning failures.",
+    "toast": "Conditioning records reviewed."
   },
   {
     "id": "ms_w4_matrix_overloaded",
@@ -855,9 +855,9 @@
   },
   {
     "id": "ms_w4_hazard_trial_cleared",
-    "name": "Hazard Trial Cleared",
-    "description": "You survived the overclocked Forge hazard waves.",
-    "toast": "Hazard trial cleared."
+    "name": "Hazard Calibration",
+    "description": "You calibrated the Forge hazard program against its mapped heat cycles.",
+    "toast": "Hazard calibration complete."
   },
   {
     "id": "ms_w4_overclocked_complete",
@@ -1233,9 +1233,9 @@
   },
   {
     "id": "ms_w3_prototype_trial_complete",
-    "name": "Prototype Trial",
-    "description": "The corrected prototype survived its drone trial.",
-    "toast": "Prototype trial complete."
+    "name": "Prototype Calibrated",
+    "description": "The prototype targeting profile matches the recorded drone tests.",
+    "toast": "Prototype calibration complete."
   },
   {
     "id": "ms_w4_worker_ping_traced",

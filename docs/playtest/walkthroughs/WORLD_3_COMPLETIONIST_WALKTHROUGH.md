@@ -1,428 +1,740 @@
-# World 3 Developer & Playtester Field Guide
-**The Spire: Lower City, Upper City, The Archive & The Grand Heist**  
-*Target Release:* `v1.3.74+ (versionCode 158+)`  
-*Scope:* 100% Completionist Audit (Quests, Exploration, Lore, Audio/Visuals, Economy & Combat)
-
----
-
-## 1. Executive Playtest Overview
-
-This field guide is an authoritative 100% completionist walkthrough and adversarial QA verification checklist for **World 3: The Spire**. It tracks the narrative journey from the emergency sewer landing beneath the sprawling vertical metropolis, through assembling a high-stakes heist with Lower City fixers, infiltrating the gilded heights of the Upper City disguised as maintenance and executive guests, breaching the deep corporate Archive to liberate **The Lens** (Architect Echo #3), and fighting through rooftop lockdown against **Administrator** to launch the *Astra* toward the Foundry.
-
-Keep this document open on a secondary screen while running the game on a physical test device or emulator.
-
----
-
-### Master Progression & Economy Benchmark Curve
-Track your party status at each major milestone boundary. If your party levels, credits, or key items deviate substantially without deliberate testing deviations, log the anomaly in the Friction Log.
-
-| Phase | Milestone Boundary | Target Level | Expected XP | Expected Credits | Active Party | Key Gear & Consumables |
-| :--- | :--- | :---: | :---: | :---: | :--- | :--- |
-| **Start** | Sewer Landing beneath Spire | **5–6** | ~2,850 | 1,400–1,800 | Nova, Zeke, Orion, Gh0st | Phase-Cutter, Bridge Echo, Source Resin Mod, Rapid Capacitor, 3x Medkit I |
-| **Phase 1** | The Static Reached & Shielded | **6** | ~3,300 | 1,700–2,100 | Full Squad | Neon Sign Core, 2x Beast Meat, 2x Herb, Comet Gummies |
-| **Phase 2** | The Heist Assembled (Lower City) | **6–7** | ~4,000 | 2,200–2,800 | Full Squad | Freight Badges, Disguise Linens, Wayfarer's Plectrum, Cheno's Carabiner, Meeko's Mafia Jack |
-| **Phase 3** | Upper City Breached & Skypark Audited | **7** | ~4,700 | 2,900–3,500 | Full Squad | Skypark Guest Access, Mimi's Jazz Bloom, Robert's Buffer Core, Encrypted Ledger |
-| **Phase 4** | Chrono-Flux Solved & The Lens Claimed | **7–8** | ~5,500 | 3,600–4,200 | Full Squad | **The Lens** (`the_lens`), SysAdmin Keycard, Restored Spire Infiltrator Core |
-| **Phase 5** | The Administrator Defeated & Liftoff | **8** | ~6,200+ | 4,200–5,000+ | Full Squad | Overclocked Lens Mod, Power Cells x4, Full Consumable Stacks |
-
----
-
-### Critical Points of No Return
-
-> [!WARNING] **Point of No Return #1 (The Planning Table Commitment):**  
-> Committing the heist plan at the planning table inside Zeke's safehouse (`spire_the_static`) locks in your crew assignments and triggers the transition into `hub_6_upper_city` via the Laundry Service chute. Complete all Lower City side quests (`w3_sq11`, `w3_sq13`), investigate the Old Subway Car (`spire_old_subway_car`), visit Cheno's Rigging Deck (`spire_rigging_deck`), and explore Jason's Hidden Studio (`spire_hidden_studio`) before launching the heist!
-
-> [!WARNING] **Point of No Return #2 (Taking The Lens in the Archive Vault):**  
-> Extracting **The Lens** (`the_lens`) from the containment field inside `spire_archive_vault` trips the Spire's master security grid, transitions Upper City into full red-alert lockdown, and permanently spawns hostile patrols (Aero Drones, Corporate Assassins). Finish your Skypark stroll, the Exec Lounge ledger theft (`w3_sq14`), and the Drone Test Alcove weapon trial (`w3_sq15`) before unsealing the relic!
-
-> [!CAUTION] **Point of No Return #3 (Astra Liftoff to World 4):**  
-> Defeating **Administrator** on the Landing Pad Roof (`spire_landing_pad_roof`) and scanning the Shield Gap activates `w3_mq15_launch`. The *Astra* punches through the planetary shield into orbit toward **World 4: The Foundry** (`hub_7_slag_pits`). All uncompleted Spire side quests will be permanently locked out!
-
----
-
-### ⚡ Playtest OP Mode & Instant Victory Verification Tools
-The Combat Stage Backdrop features on-screen playtest controls to accelerate QA runs:
-- `[ ⚡ OP ]` / `[ ⚡ OP: ON ]`: **Real-Time OP Mode Toggle**. Instantly grants the party invulnerability, sets outgoing basic and skill damage to 9,999, guarantees critical hits, bypasses ability cooldowns, and shatters enemy guard barriers on first touch.
-  - *Usage Guideline:* Use OP Mode when testing exploration flow, dialogue tree continuity, and room transitions to bypass routine trash encounters in seconds.
-  - *Balancing Guideline:* **Disable OP Mode** during designated combat audit checkpoints (e.g., Corporate Assassin in `spire_archive_vault` and the climax boss encounter against **Administrator** on the Landing Pad Roof) to assess true ATB pace, summon control, and guard break balance.
-- `[ 💥 Win ]`: **Insta-Win Kill Switch**. Immediately wipes all active enemy combatants and triggers the victory fanfare and rewards screen. Perfect for clearing test encounters without waiting for animation frames.
-
----
-
-## 2. Recommended Party Progression, Skills & Tuning
-
-### Party Roles in The Spire
-```mermaid
-flowchart TD
-    subgraph Frontline & Posture Control
-        N["Nova (Level 6–8)<br>Arc Tether (Shock/Stun)<br>Cryo Vent (Freeze/Brittle)<br>The Lens (Harmonic Posture Shatter)"]
-        Z["Zeke (Level 6–8)<br>Shatter Blow (Kinetic/Guard Break)<br>Executive Order & Armor Hardening"]
-    end
-    subgraph Energy & Ranged Precision
-        O["Orion (Level 6–8)<br>Prism Lance (Source Energy Beam)<br>Acoustic Harmonizer (Party Shield)"]
-        G["Gh0st (Level 6–8)<br>Null Shot (Shield Pierce)<br>EMP Burst (Drone Disruption)"]
-    end
-    N <-->|Shock Overload| Z
-    Z <-->|Posture Shatter| O
-    O <-->|Harmonic Pin| G
-    G <-->|Drone Jam| N
-```
-
-- **Nova (Tactical Vanguard):** Central disruptor. Shock damage from `nova_arc_tether` is exceptionally potent in World 3 because every Dominion machine (Aero Drone, Sentinel Mk. I, Heavy Mech, and The Administrator) possesses a **-30% to -50% Shock vulnerability**. Once **The Lens** is acquired in Phase 4, Nova gains active harmonic scanning, revealing posture vulnerabilities and shield gaps.
-- **Zeke (Kinetic Striker & Former Bureaucrat):** High emotional stakes in World 3. Zeke knows the Spire's corporate codes and security protocols. In combat, `zeke_shatter_blow` breaks heavy mech stabilizers and strips guard layers from Corporate Assassins.
-- **Orion (Source Harmonizer):** Counters high-speed corporate evasion using `orion_prism_lance` to deal unblockable energy damage.
-- **Gh0st (Covert Sniper):** Uses `ghost_null_shot` to punch directly through Sentinel and Administrator energy barriers, bypassing overshields.
-
----
-
-## 3. Phase 1: Infiltration & The Lower City (Hub 5: Lower City)
-
-### Phase 1 Objective Summary
-- Land the *Astra* safely inside the subterranean drainage basin beneath the Spire (`spire_sewers_landing`).
-- Fight through toxic run-off tunnels and clear hostile Sewer Crawlers (`w3_mq11`).
-- Ascend via the Vent Output conduit into The Static block.
-- Locate Zeke's old Lower City safehouse apartment (`spire_the_static`).
-- Have Orion tune acoustic dampeners to shield the apartment from Dominion surveillance sweeps.
-- Meet Jax at The Static bar counter, learn curfew timing, and establish the base of operations.
-
----
-
-### Phase 1 Verification Matrix
-
-| Room & ID | Actions & Interactions | Expected Engine State & Rewards | Visual, Audio & UX Checks |
-| :--- | :--- | :--- :--- | :--- |
-| **Sewer Landing**<br>`spire_sewers_landing` | 1. Disembark from the *Astra*<br>2. Inspect `sludge sluice`<br>3. ⚠️ **Combat: Sewer Crawler** | `w3_mq11` begins.<br>Combat victory.<br>Loot: **Wiring Bundle x1**, 80 XP. | • Toxic green sewer water shader.<br>• Distant hum of Spire atmospheric scrubbers.<br>• Verify Astra is anchored cleanly in background. |
-| **Sewer Runoff**<br>`spire_sewer_runoff` | Inspect `deep runoff channel`.<br>Optional: Fish in the toxic run-off (`fish_spire_runoff`). | Catch: **Sludge Pike**, **Glow-Eel**.<br>Requires tuned fishing lure. | • Water surface ripple and reflection caustic overlays.<br>• Fishing tension bar responsiveness. |
-| **Filter Grate**<br>`spire_filter_grate` | 1. ⚠️ **Combat: Sewer Crawler x2**<br>2. Action `inspect filter grate` | Grate unlatched.<br>Opens path east to Vent Output. | • Clanking metal latch audio effect.<br>• Acid spit telegraph clarity. |
-| **Pump Gallery**<br>`spire_sewers_scale_01` | Inspect `pressure map` & `pump controls`. | Reveals maintenance bypasses for Hub 5. | • Hydraulic pump rhythmic thumping soundscape. |
-| **Filter Sluice**<br>`spire_sewers_scale_02` | Action `retrieve caught badge` | Stash looted: **Old Dominion Badge x1**. | • Subtle shimmer indicator on submerged item. |
-| **Ratline Nook**<br>`spire_sewers_scale_03` | Loot `maintenance locker` (`w3_loot_sewer_locker`) | Loot: **Scrap Metal x3**, **Medkit I x1**. | • Locker door squeak sfx. |
-| **Vent Output**<br>`spire_vent_output` | Action `climb ventilation ladder` | Advances **`w3_mq11`**.<br>Exits sewers into Lower City streets. | • Ambient wind roar transitioning to city neon buzz. |
-| **Condensate Run**<br>`spire_vent_output_scale_01` | Inspect `condensate run` & `scan drip`. | Ambient industrial moisture lore. | • Water droplet impact audio ticks. |
-| **Maintenance Crawl**<br>`spire_vent_output_scale_02` | Inspect `old stencil` | Reads: *"BROADCAST TRUTH — CH. 440"*. | • Faded graffiti stencil decal contrast check. |
-| **Rain Grate Overlook**<br>`spire_vent_output_scale_03` | Loot `smuggler stash` | Loot: **Credits x150**, **Comet Gummies x2**. | • Overlook panorama of neon city towers in rain. |
-| **The Static**<br>`spire_the_static` | 1. Talk to **Jax** behind the bar<br>2. Action `examine neon sign` (`w3_sq11`)<br>3. Walk to Zeke's Apartment | `w3_mq11` advances.<br>`w3_sq11` (Neon Fix) offered.<br>Zeke safehouse discovered. | • Neon bar interior lighting with warm amber accents.<br>• Lo-fi synth radio track playing softly. |
-| **Zeke's Apartment**<br>`spire_back_room` | 1. Action `establish shield` (Orion)<br>2. Inspect `workstation`<br>3. Inspect `planning table` | Completes **`w3_mq11`** (**300 XP**).<br>Unlocks **`w3_mq12`** (The Plan).<br>Apartment shielded (`ms_w3_safehouse_shielded`). | • Acoustic shield activation shimmer VFX.<br>• Quest complete banner animation. |
-
----
-
-## 4. Phase 2: Assembling The Heist (Hub 5: Lower City)
-
-### Phase 2 Objective Summary
-- Talk to Jax at The Static to obtain patrol schedules and curfew times (`w3_mq12`).
-- Case the Lower City: study the Underrail map in Transit Plaza (`spire_transit_plaza`).
-- Interrogate/inspect the Security Kiosk for guard rotation logs (`spire_security_kiosk`).
-- Copy freight badge patterns at the Elevator Service Gate (`spire_elevator_service_gate`).
-- Source disguise linens from safehouse rooftop laundry lines (`spire_rooftop`).
-- Return to Zeke's Apartment workstation to assemble the service route blueprints.
-- Meet at the Planning Table to commit the squad and launch the heist!
-
----
-
-### Phase 2 Verification Matrix
-
-| Room & ID | Actions & Interactions | Expected Engine State & Rewards | Visual, Audio & UX Checks |
-| :--- | :--- | :--- :--- | :--- |
-| **The Static Alley**<br>`spire_alley` | ⚠️ **Combat: Sentinel Mk. I** | Sentinel defeated.<br>Loot: **Neon Sign Core** (Drops 100% if `w3_sq11` active!), **Battery x1**. | • Drone hover thruster hum.<br>• Shock vulnerability visual feedback. |
-| **Old Subway Car**<br>`spire_old_subway_car`<br>*pos: [3, 1]* | 1. Talk to **Chris** & **Andrew**<br>2. Inspect `tour poster`<br>3. Action `tune acoustic broadcast` | **Personal Easter Egg Quest**.<br>Rewards: **Wayfarer's Resonance Plectrum** (+5 Focus, +3 Agility, +2 Vitality), **250 XP**! | • Warm acoustic guitar & tube amp audio bed.<br>• Authentic band history dialogue. |
-| **Bridgman Rigging Deck**<br>`spire_rigging_deck`<br>*pos: [4, 1]* | 1. Talk to **Cheno**<br>2. Inspect `framed family holopic`<br>3. Action `turn in heavy gear & wiring` | **Personal Easter Egg Favor**.<br>Rewards: **Cheno's Heavy Carabiner** (+4 Def, +4 Stb, +2 Vit), **Credits x300**, **250 XP**! | • Hydraulic winch soundscape and crane cables.<br>• Emotional dialogue on Angela, Raegan, & Brody. |
-| **Secret Signal Workshop**<br>`spire_hidden_studio`<br>*pos: [5, 1]* | 1. Talk to **Jason**<br>2. Talk to **Meeko** (`feline_meeko`)<br>3. Inspect `galaxy terminal`<br>4. Inspect `tube amplifier roost` | **Personal Easter Egg Workshop**.<br>Rewards: **The Builder's Harmonic Resonator** & **Meeko's Gold-Plated Audio Jack** (+5 Stb, +4 Def, +3 Vit)! | • CRT phosphor glow and glowing vacuum tubes.<br>• Meeko executive producer idle purr. |
-| **Night Market**<br>`spire_night_market` | 1. Talk to **Mika** (`w3_sq13`)<br>2. Visit **Noodle Row** (`spire_noodle_row`)<br>3. Rest at cookfire | `w3_sq13` begins.<br>Noodle vendor **Ren** sells Hot Broth.<br>Rest restores 100% party HP. | • Sizzling wok audio and neon lantern glow.<br>• Ambient crowd murmurs. |
-| **Lantern Roof**<br>`spire_night_market_scale_01` | Action `reroute sign power` (`w3_sq13`) | Advances `w3_sq13`.<br>Relights the Night Market lanterns. | • Circuit breaker spark and overhead light string power-on animation. |
-| **Spice Alley**<br>`spire_night_market_scale_02` | Action `trade spices for supplies` | Trade: 1x Herb -> **Spicy Chili Paste x2**. | • Spice merchant market stalls. |
-| **Rain Cache**<br>`spire_night_market_scale_03` | Unlock `black market safe` | Loot: **Film 05: The Black City** (`vhs_tape_05`), **Credits x250**. | • Great Frontier VHS discovery popup! |
-| **Transit Plaza**<br>`spire_transit_plaza` | Inspect `elevator controls` & `patrol schedules` | `w3_mq12` intel gathered.<br>Elevator leads to Upper City. | • Massive transit board arrival/departure chime. |
-| **Security Kiosk**<br>`spire_security_kiosk` | Action `pull case records` (`w3_mq12` / `w3_sq12`) | Security records downloaded.<br>Advances `w3_mq12` & `w3_sq12`. | • Terminal typing sfx and green text scroll. |
-| **Elevator Service Gate**<br>`spire_elevator_service_gate` | Action `copy freight badges` (`w3_mq12`) | Freight badge encryption copied.<br>Advances `w3_mq12`. | • Holographic scanner copying beep. |
-| **Safehouse Roof**<br>`spire_rooftop` | Action `gather disguise linens` (`w3_mq12`) | Disguise materials collected.<br>All 6 intel tasks completed! | • Rain whipping across clotheslines. |
-| **Planning Table**<br>`spire_the_static` | Action `Commit to the Heist` | Completes **`w3_mq12`** (**400 XP**).<br>Launches **`w3_mq13`** (Social Engineering).<br>Transitions to Upper City! | • Dramatic heist commitment musical stinger.<br>• Full party approval dialogue. |
-
----
-
-## 5. Phase 3: Breaching The Upper City (Hub 6: Upper City)
-
-### Phase 3 Objective Summary
-- Disguised in freshly pressed utility uniforms, emerge through the Laundry Service chute into `hub_6_upper_city` (`spire_laundry_service`).
-- Navigate past automated uniform sorters, disable laundry sensors, and bypass the Staff Checkpoint (`w3_mq13`).
-- Enter the Skypark Dome: pass through the Guest Registry and blend into high society without alerting executive security.
-- Meet Evelyn (Jazz Botanist) tending jazz-tuned orchids and Robert (Industrial Mop Mogul) practicing mime choreography.
-- Infiltrate the Exec Lounge: copy concierge credentials from the mirror and extract the encrypted ledger (`w3_sq14`).
-
----
-
-### Phase 3 Verification Matrix
-
-| Room & ID | Actions & Interactions | Expected Engine State & Rewards | Visual, Audio & UX Checks |
-| :--- | :--- | :--- | :--- |
-| **Laundry Service**<br>`spire_laundry_service` | 1. Emerge from chute<br>2. Action `disable sensors` (Zeke & Orion) | Sensory grid blinded.<br>Advances **`w3_mq13`**. | • High-pressure steam bursts & rhythmic pressing irons.<br>• Audio dampener activation sfx. |
-| **Uniform Sorting**<br>`spire_uniform_sorting` | 1. Inspect `uniform racks`<br>2. Inspect `erased memorial name` (`w3_sq12`) | Case #8841-E recovered for Gh0st's cold case (`w3_sq12`). | • Conveyor belt clicking loops.<br>• Text clarity on small mobile displays. |
-| **Service Lift**<br>`spire_service_lift` | Action `override lift panel` | Opens express lift to Skypark Dome. | • Heavy industrial elevator ascending rumble. |
-| **Staff Checkpoint**<br>`spire_staff_checkpoint` | Action `scan freight badge` | Staff checkpoint cleared in disguise. | • Green badge confirmation chime. |
-| **Skypark Dome**<br>`spire_skypark_dome` | 1. Action `blend in at registry`<br>2. Talk to **Evelyn** (`botanist_evelyn`)<br>3. Talk to **Robert** (`entrepreneur_robert`) | Completes **`w3_mq13`** (**350 XP**).<br>Starts **`w3_mq14`** (The Lens).<br>Awards: **Mimi's Jazz Bloom** & **Robert's Buffer Core**! | • Opulent glass dome with cascading waterfalls and flowers.<br>• Bebop jazz music drifting from magnetic speakers. |
-| **Orchid Walk**<br>`spire_skypark_scale_01` | Inspect `hydroponic mist nozzle` | Lore on climate-controlled luxury flora. | • Fine mist particle effects. |
-| **Registry Pavilion**<br>`spire_skypark_scale_02` | Action `Rest at Pavilion` | **Party Restored to 100% HP**.<br>Reward: **Painkillers x1**. | • Soft harp strings resting music bed. |
-| **Glass Lawn**<br>`spire_skypark_scale_03` | Loot `botanical vault` | Loot: **Herb x3**, **Credits x200**. | • Vault opening animation. |
-| **Exec Lounge**<br>`spire_exec_lounge_bar` | 1. Action `copy credential from mirror`<br>2. Action `open private safe` (`w3_sq14`)<br>3. Play **VIP Vector Arcade** | Encrypted Ledger recovered (`encrypted_ledger`).<br>Completes **`w3_sq14`** (**250 XP**).<br>Unlocks **Spire Infiltrator** minigame! | • Gilded velvet booths & clinking champagne flutes.<br>• Vector wireframe arcade screen glow. |
-| **Ledger Office**<br>`spire_exec_lounge_scale_04` | Inspect `executive desk` | Documents on Director Thorne's secret mining quotas. | • Holographic desk terminal. |
-| **Private Booth**<br>`spire_exec_lounge_scale_02` | ⚠️ **Combat: Sentinel Mk. I** | Sentinel neutralized before alarm triggers. | • Suppressed combat audio in luxury lounge. |
-| **Donor Gallery**<br>`spire_donor_gallery` | 1. Inspect `donor wall`<br>2. Inspect `portrait plaques`<br>3. Toggle `laser grid console` (`w3_laser_grid_bypassed`) | Realigns optical prisms.<br>Sets `laser_grid_bypassed = true`.<br>Awards milestone **`ms_w3_laser_grid_bypassed`**.<br>Unlocks northern corridor to Black-Site Lab! | • Crimson security laser grid spanning corridor.<br>• Blue prism alignment chime and laser dissipation VFX. |
-| **Black-Site Lab**<br>`spire_black_site_lab` | 1. Loot `black-box safe` (`w3_black_site_safe_opened`)<br>2. Inspect `holographic projector` | Safe looted: **Syndicate Overclock Mod** (`syndicate_overclock_mod`), **Circuit Board x1**, **Battery x1**.<br>Lore on Dominion urban pacification drones. | • Cold neon backlighting cryogenic stasis cylinders.<br>• Flickering holographic projector blueprints. |
-| **Skyline VIP Salon**<br>`spire_skyline_vip_suite` | 1. East from Donor Gallery<br>2. Inspect `crime-scene barrier`<br>3. Inspect `dispenser log`<br>4. Inspect `security terminal`<br>5. Interrogate 4 suspects | Initiates **`w3_sq16`** (Murder in the Skyline Salon).<br>Gathers dispenser and timestamp clues.<br>Exposes Vance's lie. | • Velvet stanchions & emergency flashing strobes.<br>• Four stranded suspects around locked salon. |
-| **Syndicate Booth**<br>`spire_vip_private_booth` | 1. North from VIP Salon<br>2. Inspect `crystal glass`<br>3. Inspect `executive comms rig`<br>4. Inspect `auditor's datapad` | Chemical analysis: Cyano-Coolant 9.<br>Rig shows missing coolant core.<br>Datapad reveals Vance's embezzlement motive. | • Dead auditor slumped over crystal glass.<br>• High-tension noir detective background cue. |
-| **Vance Confrontation**<br>`director_vance` | 1. Select dialogue option confronting Vance with timestamp and coolant clues<br>2. Extract confession | Completes **`w3_sq16`** (**450 XP**).<br>Rewards: **Cyano-Coolant Injector** & **Skyline Master Passkey**!<br>Lockdown lifted. | • Dramatic vocal breakdown from arrogant director.<br>• Quest complete fanfare & ambient sirens cease. |
-
----
-
-## 6. Phase 4: The Archive Heist & The Lens (Hub 6: Upper City)
-
-### Phase 4 Objective Summary
-- Move from the Skypark across the service catwalks into the high-security Archive sector.
-- Solve the Chrono-Flux tuning puzzle in the Prism Gallery (`spire_prism_gallery`) to align the optical shutters.
-- Infiltrate the Archive Vault (`spire_archive_vault`).
-- Overcome the stealth ambush by the **Corporate Assassin**.
-- Deactivate the containment field and extract **The Lens** (`the_lens`).
-- Trigger sector-wide lockdown alarm and fight through the Drone Test Alcove!
-
----
-
-### Phase 4 Verification Matrix
-
-| Room & ID | Actions & Interactions | Expected Engine State & Rewards | Visual, Audio & UX Checks |
-| :--- | :--- | :--- | :--- |
-| **Prism Gallery**<br>`spire_prism_gallery` | 1. Inspect `prism shutters`<br>2. Action `Synchronize Chrono Coils` | Launches **Chrono-Flux Tuning Puzzle**!<br>Alignment solved.<br>Opens Archive Vault door. | • Optical laser refraction prisms and blue crystal lenses.<br>• Frequency hum shifts pitch during slider calibration. |
-| **Catalog Atrium**<br>`spire_archive_scale_01` | Inspect `index terminal` | Archive database on Architect artifacts. | • Monumental library holo-stacks. |
-| **Prism Service Bay**<br>`spire_archive_scale_02` | Loot `lens polishing cloth` | Loot: **Focusing Lens x1**, **Scrap Metal x2**. | • Component discovery sound. |
-| **Alarm Spine**<br>`spire_archive_scale_03` | Inspect `red conduits` | Note dormant security cables. | • Pulsing warning circuit lighting. |
-| **Archive Vault**<br>`spire_archive_vault` | 1. ⚠️ **Combat: Corporate Assassin**<br>2. Inspect `containment field`<br>3. Action `Claim The Lens` | Boss combat victory.<br>**The Lens** recovered (`the_lens`)!<br>Completes **`w3_mq14`** (**500 XP**).<br>Starts **`w3_mq15`** (Burn Notice).<br>Full lockdown triggers! | • Assassin smoke step and stealth lunge telegraphs.<br>• Dramatic blinding flash when The Lens connects to Nova.<br>• Klaxon sirens and red emergency strobe lighting. |
-| **Drone Test Alcove**<br>`spire_drone_test_alcove` | 1. ⚠️ **Combat: Aero Drone x2**<br>2. Action `scan prototype targeting` (`w3_sq15`)<br>3. Action `test weapon on drones`<br>4. Action `scrub telemetry` | Completes **`w3_sq15`** (**250 XP**).<br>Rewards: **SysAdmin Keycard**, **Power Cell x1**.<br>Opens path to rooftop landing pad! | • Flying drones launching from wall racks.<br>• EMP weapon discharge VFX. |
-
----
-
-### The Prism Gallery Chrono-Flux Puzzle (Exact Solution)
-Interact with the Chrono-Flux console in `spire_prism_gallery`:
-
-```
-[Slider 1] Damping Ratio (damping)    : Set to 45%     (Target: 45 | Tolerance: ±4)
-[Slider 2] Harmonic Pitch (pitch)     : Set to 108 Hz   (Target: 108 | Tolerance: ±3)
-[Slider 3] Phase Dilation (dilation)  : Set to 240 ms   (Target: 240 | Tolerance: ±6)
-```
-*Result:* The optical shutters lock in phase, the containment laser beams refract through the prism array, and the massive vault door slides open with an authoritative pneumatic hiss.
-
----
-
-## 7. Phase 5: Climax, The Administrator & Liftoff (Hub 6: Upper City)
-
-### Phase 5 Objective Summary
-- Ascend from the Drone Test Alcove to the exterior Landing Pad Roof (`spire_landing_pad_roof`).
-- Engage the Spire's apex machine authority: **Administrator** supported by an Aero Drone and Heavy Mech.
-- Exploit Shock vulnerabilities and The Lens's harmonic scanning to break the Administrator's shield lattice.
-- Scan the planetary defense shield to identify the frequency launch window (`w3_mq15`).
-- Board the *Astra*, disengage clamps, and launch through the shield gap toward **World 4: The Foundry**!
-
----
-
-### Phase 5 Verification Matrix
-
-| Room & ID | Actions & Interactions | Expected Engine State & Rewards | Visual, Audio & UX Checks |
-| :--- | :--- | :--- | :--- |
-| **Fuel Bridge**<br>`spire_landing_pad_scale_01` | ⚠️ **Combat: Aero Drone** | Drone destroyed.<br>Path cleared onto the gantry. | • High wind shear audio bed and rain streaks. |
-| **Shield Sightline**<br>`spire_landing_pad_scale_02` | Inspect `shield gap shimmer` | Visual telegraph of shield pulse frequency. | • Massive sky-spanning shield hexagon grid shimmer. |
-| **Drone Wreck Roof**<br>`spire_landing_pad_scale_03` | ⚠️ **Combat: Corporate Assassin** | Assassin neutralized.<br>Loot: **Medkit x1**, **Battery Pack x1**. | • Rooftop puddles reflecting lightning and neon signs. |
-| **Boarding Causeway**<br>`spire_landing_pad_scale_04` | Inspect `avionics crate` | Loot: **Power Cell x2**, **Credits x300**. | • Crate hatch open animation. |
-| **Landing Pad Roof**<br>`spire_landing_pad_roof` | 1. ⚠️ **CLIMAX BOSS BATTLE: The Administrator**<br>   *(supported by Aero Drone & Heavy Mech)*<br>2. Action `Scan Shield Gap` (The Lens)<br>3. Action `Launch Astra to Foundry` | **The Administrator Defeated**!<br>Rewards: **400 XP**, **300 Credits**, **2 AP**, **Power Cell x2**.<br>Shield gap identified.<br>Completes **`w3_mq15`** (**600 XP**).<br>**World 3 Cleared**! Warps to World 4. | • Climax boss battle orchestral track.<br>• Administrator laser lattice telegraph grid.<br>• Cinematic Astra liftoff cutscene into outer atmosphere! |
-
----
-
-## 8. Complete Side Quests & Personal Easter Eggs Guide
-
-### Side Quest 11: Neon Fix
-- **Quest Giver:** Jax behind the bar at The Static (`spire_the_static`).
-- **Objective:** Repair the buzzing, broken neon sign outside the bar to stop attracting Dominion security patrols.
-- **Walkthrough:**
-  1. Inspect the flickering sign outside in `spire_alley`.
-  2. Defeat the patrolling **Sentinel Mk. I** in the alley to recover the **Neon Sign Core** (`neon_sign_core`).
-  3. Install the replacement core into the sign housing.
-- **Rewards:** **Credits x200**, **150 XP**, **Neon Band** (Accessory: +4 Focus, +5% Crit Rate).
-
-### Side Quest 12: Cold Case
-- **Quest Giver:** Gh0st (triggered upon examining the case files at `spire_security_kiosk`).
-- **Objective:** Investigate what happened to Gh0st's sister Elara when she was disappeared by Spire security.
-- **Walkthrough:**
-  1. In `spire_uniform_sorting`, inspect the erased memorial name to recover Case #8841-E.
-  2. Use the terminal at `spire_security_kiosk` to query Case #8841-E.
-  3. Discover that Elara was transferred off-world to the Deep Ring anchor chamber.
-- **Rewards:** **250 XP**, unlocks Gh0st's companion trust dialogue and reveals World 5 lore.
-
-### Side Quest 13: Night Market Run
-- **Quest Giver:** Mika in `spire_night_market`.
-- **Objective:** Relight the market's festive string lanterns after a corporate power theft.
-- **Walkthrough:**
-  1. Ascend to `spire_night_market_scale_01` (Lantern Roof).
-  2. Overload the corporate executive advertisement feed and splice power into the market grid.
-  3. Return to Mika as the market lights up in brilliant red, gold, and turquoise.
-- **Rewards:** **Credits x250**, **150 XP**, **Comet Gummies x3**, unlocks Ren's secret noodle recipes.
-
-### Side Quest 14: Corporate Espionage
-- **Quest Giver:** Discovered via the concierge mirror in `spire_exec_lounge_bar`.
-- **Objective:** Steal an encrypted executive ledger containing evidence of illegal labor quotas and off-world bribes.
-- **Walkthrough:**
-  1. Examine the concierge credential mirror in the Exec Lounge to copy the master security key.
-  2. Access the private safe in `spire_exec_lounge_bar`.
-  3. Extract the **Encrypted Ledger** (`encrypted_ledger`).
-  4. Choose whether to leak it to Lower City activists or blackmail the Administrator.
-- **Rewards:** **Credits x350**, **250 XP**, **Cyber Visor** (+10% Crit Chance).
-
-### Side Quest 15: Prototype Testing
-- **Quest Giver:** Automated console in `spire_drone_test_alcove`.
-- **Objective:** Test an experimental energy disruptor weapon on live target drones.
-- **Walkthrough:**
-  1. Scan the prototype's hidden targeting bias at `spire_drone_test_alcove`.
-  2. Activate the combat simulation and destroy 2 waves of Aero Drones.
-  3. Scrub Nova's biometric signature from the telemetry log.
-- **Rewards:** **Power Cell x2**, **250 XP**, **SysAdmin Keycard**.
-
----
-
-### Master Personal Easter Eggs Guide (World 3)
-
-#### 1. The Wayfarer Acoustic Broadcast & Chris & Andrew
-- **Location:** Old Subway Car (`spire_old_subway_car`) at coordinates `pos: [3, 1]`.
-- **Characters:** **Chris** (`musician_chris`) and **Andrew** (`musician_andrew`).
-- **Narrative Subtext:** Sincere side quest honoring Jason's youth band (*No Charge / The Wayfarer*). Chris (bass) and Andrew (lead guitar) share memories of late-night tours, carrying amps through snowstorms, and tuning frequencies.
-- **Reward:** **Wayfarer's Resonance Plectrum** (`wayfarer_plectrum`: +5 Focus, +3 Agility, +2 Vitality).
-
-#### 2. Chief Contractor Cheno & Bridgman Rigging Deck
-- **Location:** Bridgman Rigging Deck (`spire_rigging_deck`) at `pos: [4, 1]`.
-- **Character:** **Contractor Cheno** (`contractor_cheno`).
-- **Inspectables:**
-  - `rigging schematic`: Load blueprints marked with Cheno's red grease pencil note: *"HOLD FAST."*
-  - `cider mug`: Smelling of spiced autumn cider (a nod to his wife Angela).
-  - `framed family holopic`: Cheno smiling beside his wife Angela, daughter Raegan striking a dance pose singing *"hee-hee"*, and varsity football player son Brody.
-- **Favor Turn-In:** Handing over 2x Heavy Gear and 2x Wiring Bundle reinforces the center truss.
-- **Reward:** **Cheno's Heavy Carabiner** (`cheno_carabiner`: +4 Defense, +4 Stability, +2 Vitality).
-
-#### 3. Jason's Secret Signal Workshop & Meeko the Mafioso Cat
-- **Location:** Hidden Studio (`spire_hidden_studio`) at `pos: [5, 1]`, behind Bridgman Rigging Deck.
-- **Characters:** **Creator Jason** (`creator_jason`) and **Meeko** (`feline_meeko`).
-- **Inspectables:**
-  - `galaxy terminal`: A CRT simulation displaying: *"Revision 2.0 — Keep the heart, polish the edges."*
-  - `amplifier roost`: A 100W hand-wired vacuum tube guitar amplifier where Meeko perches as Studio Executive Producer.
-- **Dialogue & Interaction:** Jason chuckles when asked what he is making (*"Which thing?"*). Meeko ignores baby talk, nods at respectful business peers, and sighs at soldering smoke.
-- **Rewards:** **The Builder's Harmonic Resonator** & **Meeko's Gold-Plated Audio Jack** (`meekos_mafia_jack`: +5 Stability, +4 Defense, +3 Vitality).
-
-#### 4. Evelyn (Mimi) & Robert in the Skypark Dome
-- **Location:** Skypark Dome (`spire_skypark_dome`).
-- **Characters:** **Evelyn** (`botanist_evelyn`) and **Robert** (`entrepreneur_robert`).
-- **Interactions:**
-  - Evelyn hums jazz riffs and tends blue-lipped orchids tuned to cool jazz frequencies, expressing love for grandsons Tyson and Ian. Awards **Mimi's Jazz Hummingbird Orchid** (`mimis_jazz_bloom`: +5 Vitality, +4 Focus, +3 Defense).
-  - Robert demonstrates his custom industrial cleaning equipment with theatrical silent mime choreography. Awards **Robert's Gyroscopic Buffer Core** (`roberts_buffer_core`: +6 Stability, +4 Defense, +2 Agility).
-
----
-
-## 9. Bestiary, Boss Mechanics & Enemy Strategy Guide
-
-### Enemy Statistics Table
-
-| Enemy | Tier | HP | Stability | Element | Weakness | Resistance | Primary Attacks | Key Drops |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :--- |
-| **Sewer Crawler** | Normal | 220 | 192 | Physical | Cryo / Shock | Physical +10% | Toxic Bite, Acid Splash | Wiring Bundle (30%) |
-| **Sentinel Mk. I** | Elite | 200 | 130 | Shock | Physical (-10%) | Shock +30% | Arc Spark, Undermine | Neon Sign Core, Battery |
-| **Aero Drone** | Standard | 120 | 80 | Shock | Physical (-10%) | Shock +30% | Stun Pulse, Evasive Maneuver | Power Cell, Wiring Bundle |
-| **Corporate Assassin**| Elite | 260 | 100 | Physical | **Shock (-50%)** | Physical +10% | Critical Lunge, Smoke Step | Medkit, Battery Pack |
-| **Heavy Mech** | Elite | 240 | 160 | Burn | **Shock (-30%)** | Burn +40%, Phys +20% | Flame Sweep, Guard Protocol | Scrap Metal, Power Cell |
-| **Administrator** | **Boss** | **420** | **220** | **Source** | **Shock (-50%)** | Source +30%, Phys +10%| Mandatory Happiness, Summon, Laser | Power Cell x2, 2 AP |
-
----
-
-### Boss Guide: Administrator (`administrator_boss`)
-
-#### Encounter Dynamics
-- **Location:** Landing Pad Roof (`spire_landing_pad_roof`).
-- **Minions:** Enters combat accompanied by 1x **Aero Drone** (harrier/stunner) and 1x **Heavy Mech** (armored flamethrower tank).
-- **Core Mechanics:**
-  1. *Mandatory Happiness:* High-intensity psychic dampener that applies **Disorient** and delays party ATB bars. Counter by having Orion cast party shield and equipping high-focus accessories.
-  2. *Laser Lattice:* A multi-target energy grid that charges over 1 full turn. Scan reveals safe coordinates—use Nova's guard break to interrupt the channel!
-  3. *Drone Summon:* Re-summons Aero Drones if the field is cleared without breaking the Administrator's posture.
-
-#### Optimal Battle Strategy
-1. **Turn 1 (Drone Neutralization):** Immediately target the Aero Drone with physical kinetic strikes from Zeke to eliminate the threat of Stun Pulse.
-2. **Turn 2 (Shock Overload on Heavy Mech):** Unleash Nova's `nova_arc_tether`. Heavy Mechs suffer -30% Shock resistance—the tether shatters its armor plates in two hits.
-3. **Turn 3–4 (Administrator Shield Shatter):** The Administrator has a massive **-50% Shock vulnerability**. Nova's Arc Tether and Gh0st's EMP shots will melt its 220 stability gauge.
-4. **Stagger Window (2 Broken Turns):** When broken, all attacks deal 200% critical damage. Chain Orion's `orion_prism_lance` and Zeke's `zeke_shatter_blow` to finish the fight!
-
----
-
-## 10. Master Item, Weapon & Equipment Directory
-
-### World 3 Unique Accessories & Relics
-
-| Item ID | Item Name | Type | Rarity | Primary Stat Mods | Acquisition Source |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| `the_lens` | **The Lens** | Relic | Relic | Special: Revealing Harmonics | Main Quest `w3_mq14` (Archive Vault) |
-| `cheno_carabiner` | **Cheno's Heavy Carabiner** | Accessory | Rare | +4 Def, +4 Stb, +2 Vit | Bridgman Rigging Deck favor quest |
-| `wayfarer_plectrum` | **Wayfarer's Resonance Plectrum** | Accessory | Rare | +5 Foc, +3 Agi, +2 Vit | Old Subway Car acoustic quest |
-| `meekos_mafia_jack` | **Meeko's Gold-Plated Audio Jack** | Accessory | Rare | +5 Stb, +4 Def, +3 Vit | Jason's Hidden Studio (Meeko) |
-| `mimis_jazz_bloom` | **Mimi's Jazz Hummingbird Orchid** | Accessory | Rare | +5 Vit, +4 Foc, +3 Def | Skypark Dome (Evelyn) |
-| `roberts_buffer_core`| **Robert's Gyroscopic Buffer Core** | Accessory | Rare | +6 Stb, +4 Def, +2 Agi | Skypark Dome (Robert) |
-| `cyber_visor` | **ICE Breaker Cyber Visor** | Accessory | Rare | +10% Critical Hit Chance | Exec Lounge side quest `w3_sq14` |
-| `syndicate_overclock_mod` | **Syndicate Overclock Mod** | Mod (Suit/Core) | Epic | +6 Agi, +6 Foc, +35 HP | Executive Black-Site Lab safe (Donor Gallery) |
-| `cyano_coolant_injector`| **Cyano-Coolant Injector** | Accessory | Rare | +15 Freeze Dmg, +10% Stagger | Skyline VIP Murder Mystery `w3_sq16` |
-| `skyline_master_passkey`| **Skyline Master Passkey** | Key Item | Epic | Unlocks Upper City Private Salons | Skyline VIP Murder Mystery `w3_sq16` |
-| `neon_band` | **Neon Band** | Accessory | Uncommon | +4 Focus, +5% Crit Rate | Night Market side quest `w3_sq11` |
-| `comet_gummies` | **Comet Gummies** | Snack | Uncommon | Heals 120 HP, +15% Speed (3 turns) | Night Market food stalls |
-| `vhs_tape_05` | **Film 05: The Black City** | Key Item | Rare | Great Frontier screening media | Night Market rain cache safe |
-
----
-
-## 11. Master NPC Directory & Dialogue Tree Reference
-
-| NPC ID | Name | Voice Profile | Location | Key Dialogue Nodes |
-| :--- | :--- | :--- | :--- | :--- |
-| `contractor_cheno` | **Cheno** | male | `spire_rigging_deck` | `cheno_default_talk`, `cheno_who_reply`, `cheno_music_reply`, `cheno_friends_reply`, `cheno_family_reply`, `cheno_favor_offer`, `cheno_favor_turnin` |
-| `musician_chris` | **Chris** | male | `spire_old_subway_car` | `chris_default_talk`, `chris_tour_reply`, `chris_music_reply`, `chris_cheno_reply`, `chris_tuning_offer`, `chris_tuning_turnin` |
-| `musician_andrew` | **Andrew** | male | `spire_old_subway_car` | `andrew_default_talk`, `andrew_guitar_reply`, `andrew_warmth_reply` |
-| `creator_jason` | **Jason** | male | `spire_hidden_studio` | `creator_jason_default_talk`, `jason_projects_reply`, `jason_meeko_reply` |
-| `feline_meeko` | **Meeko** | none | `spire_hidden_studio` | `meeko_default_talk`, `meeko_inspect_reply` |
-| `botanist_evelyn` | **Evelyn** | female | `spire_skypark_dome` | `evelyn_default_talk`, `evelyn_jazz_reply`, `evelyn_gardening_reply`, `evelyn_family_reply` |
-| `entrepreneur_robert` | **Robert** | male | `spire_skypark_dome` | `robert_default_talk`, `robert_mime_reply`, `robert_mop_reply` |
-| `noodle_cook_ren` | **Ren** | male | `spire_noodle_row` | `shop_noodle_row` (vendor interaction) |
-| `bartender_dax` | **Dax** | male | `spire_skyline_vip_suite` | `dax_default_talk`, `dax_default_talk_2`, `dax_default_talk_3` |
-| `director_vance` | **Director Vance**| male | `spire_skyline_vip_suite` | `director_vance_default_talk`, `vance_confession_1`, `vance_confession_2`, `vance_confession_3` |
-| `dr_lyra` | **Dr. Lyra** | female | `spire_skyline_vip_suite` | `dr_lyra_default_talk` |
-| `singer_selene` | **Selene** | female | `spire_skyline_vip_suite` | `singer_selene_default_talk` |
-
----
-
-## 12. Adversarial Playtest QA Verification Checklist
-
-Execute these validation checks during your manual playthrough:
-
-- [ ] **Sewer Water Transition:** Entering `spire_sewers_landing` displays toxic green caustic water shader without clipping the *Astra* background art.
-- [ ] **Acoustic Shielding Audio:** Activating Orion's safehouse shield in `spire_back_room` suppresses ambient city siren sound effects inside the room.
-- [ ] **Personal Easter Egg Discovery:**
-  - [ ] Moving east from `spire_rooftop` into `spire_old_subway_car` plays the acoustic guitar background track.
-  - [ ] Moving east from `spire_old_subway_car` into `spire_rigging_deck` reveals Cheno and the family holopic inspectable.
-  - [ ] Moving east from `spire_rigging_deck` into `spire_hidden_studio` reveals Jason, Meeko, and the CRT galaxy terminal.
-  - [ ] Talking to Meeko displays dignified partner dialogue and grants `meekos_mafia_jack`.
-- [ ] **Skyline VIP Murder Mystery (`w3_sq16`):**
-  - [ ] Moving east from `spire_donor_gallery` enters `spire_skyline_vip_suite` at `pos: [4, 0]`.
-  - [ ] Inspecting `dispenser log` confirms pure drink pour at 21:15.
-  - [ ] Entering `spire_vip_private_booth` at `pos: [4, 1]` reveals Auditor Malick.
-  - [ ] Inspecting `crystal glass`, `executive comms rig`, and `auditor's datapad` unlocks the confrontation branch.
-  - [ ] Confronting Director Vance extracts the full confession, grants `cyano_coolant_injector`, `skyline_master_passkey`, and 450 XP, and completes `w3_sq16`.
-- [ ] **Laser Grid Security Matrix:** In `spire_donor_gallery`, toggle `laser grid console` to realign optical prisms. Verify northern corridor unseals, `spire_black_site_lab` is accessible at `pos: [3, 1]`, and looting `black-box safe` awards `syndicate_overclock_mod`.
-- [ ] **Chrono-Flux Slider Alignment:** In `spire_prism_gallery`, setting sliders to 45 / 108 / 240 correctly unlatches the Archive Vault and persists across save/reload.
-- [ ] **The Lens Acquisition Alarm:** Looting `the_lens` triggers immediate red-alert strobe overlay and transitions audio to high-tempo escape cue.
-- [ ] **Administrator Boss Balance:** Without OP Mode, verify that Shock abilities deal +50% bonus damage and that staggering the boss lasts 2 full turns.
-- [ ] **Liftoff Transition:** Triggering the Astra launch cleanly completes World 3, displays the chapter complete banner, and transitions the party into World 4 (`hub_7_slag_pits`).
-
----
-
-## 13. Campaign Debug Scenarios Quick Reference
-
-Launch these debug states from the in-game debug menu to jump directly to specific encounters and puzzles:
-
-| Scenario ID | Name | Target Room | Notes |
-| :--- | :--- | :--- | :--- |
-| `campaign_w3_laser_puzzle` | **Laser Grid Matrix** | `spire_donor_gallery` | Tests optical prism console toggle, northern corridor lock, and Black-Site Lab looting. |
+# World 3 completionist playtest guide
+
+Updated November 4, 2026 from the runtime catalogs. The main route is covered by earned campaign tests; optional branches and device presentation still require human playtesting. This replaces the earlier guide whose reward tables, orbital-flight claims and permanent lockouts were not reliable.
+
+## Main route
+
+1. Clear the sewer landing, follow the sewer/vent route to Zeke’s apartment, then talk to the visible Zeke to establish the safehouse.
+2. Get Jax’s codes at The Static. Map Underrail patrols, obtain security records at the Security Kiosk, copy badges at the Service Gate, gather disguises on the safehouse roof, then hack the apartment workstation and assemble the planning table.
+3. Blend in at Skypark Dome, disable the Laundry sensors, then enter the lobby.
+4. At Archive Vault read the containment field and trace command tethers; read the Prism Gallery shutters and resolve its light puzzle. Return to the Lens relic to finish the acquisition and warning sequence.
+5. Prepare healing and rest before the roof encounters. Defeat Administrator, scan the Shield gap and use the launch action. The Foundry is the next destination; this does not yet cross the outer Planetary Shield into high orbit.
+
+Keep a predeparture save. Astra return travel exists for unlocked destinations; do not treat every incomplete quest as permanently lost. Early legitimate boss victories are recovered when their objective prerequisites become eligible, without repeating combat drops.
+
+## Optional-quest checks
+
+- Neon Fix: Sentinel Mk. I in Private Booth drops the Neon Sign Core reliably. An older cleared encounter with a missing core can recover it while the quest is active. Install the core once. There is no implemented permanent price discount; that old promise has been removed.
+- Prototype Testing is a calibration task using recorded drone targets, not a spawned combat trial. Keep any independent room enemies separate from the calibration objective. Phase Rounds is the existing reward; inspect its actual equipment slot.
+- Use the current journal tasks below for the other investigations, favors and branch decisions. Test exclusive outcomes on separate saves.
+
+## Current journal objectives
+
+### Homecoming (`w3_mq11`)
+
+Avoid Dominion surveillance by landing in the sewers, clear the landing zone, climb into the Lower City, and let Zeke turn his old apartment into a safehouse before the city notices he came home.
+
+**Securing the Sewers**
+
+- [ ] Clear local hostile forces at the landing pad. (`clear_landing`)
+- [ ] Follow the run-off tunnels up to the Vent Output. (`reach_vent`)
+
+**Zeke's Safehouse**
+
+- [ ] Locate Zeke's apartment inside The Static block. (`find_apartment`)
+- [ ] Let Orion shield Zeke's apartment from Dominion scans. (`establish_shield`)
+
+### The Plan (`w3_mq12`)
+
+Use Jax's curfew schedules, Gh0st's security pull, Zeke's elevator blueprints, patrol timing, service gate badges, and safehouse disguise materials to build a plan that depends on the crew trusting each other under pressure.
+
+**Intelligence Gathering**
+
+- [ ] Get curfew schedules from Jax at The Static. (`talk_jax`)
+- [ ] Study patrol timing from the underrail map. (`map_patrols`)
+- [ ] Pull security records from the Security Kiosk in Transit Plaza. (`interrogate_guard`)
+- [ ] At the Elevator Service Gate, copy the freight badge patterns. (`copy_badges`)
+- [ ] Source disguise materials from the safehouse roof laundry lines. (`source_disguises`)
+- [ ] At Zeke's Apartment, build the service-elevator route at his workstation. (`hack_blueprints`)
+
+**The Assembly**
+
+- [ ] Use the planning table to assign roles, commit the crew, and launch the heist. (`assemble_table`)
+
+### Neon Fix (`w3_sq11`)
+
+Inspect the flickering sign at The Static and install a replacement neon sign core.
+
+**Sign Repair**
+
+- [ ] Inspect the flickering sign outside The Static. (`inspect_sign`)
+- [ ] Install the replacement neon sign core. (`install_core`)
+
+### Cold Case (`w3_sq12`)
+
+Examine terminal records in the Transit Plaza to find clues about Elara.
+
+**Database Breach**
+
+- [ ] Recover the erased case number from the memorial in Uniform Sorting. (`find_case_number`)
+- [ ] Use the case number at the Security Kiosk to search Dominion records. (`access_terminal`)
+- [ ] Expose where security transferred the missing witness. (`expose_transfer`)
+
+### Night Market Run (`w3_sq13`)
+
+Search the alleyways and fix the flickering lanterns to light up the market.
+
+**Lighting the Market**
+
+- [ ] Trace who is siphoning power from the Night Market. (`trace_power_theft`)
+- [ ] Reroute executive sign power into the market grid. (`reroute_power`)
+- [ ] Relight the market and reveal the hidden stalls. (`fix_market_lights`)
+
+### Social Engineering (`w3_mq13`)
+
+Move through Laundry Service, borrow the shape of workers the city refuses to see, pass the Staff Checkpoint, endure the Skypark's perfect contempt, blind scanner coverage, and send Nova and Gh0st through the service chute toward the Archive.
+
+**Guest Access**
+
+- [ ] Survive the Skypark guest registry and acquire guest access. (`blend_in`)
+- [ ] Have Zeke and Orion blind the scanner grid from Laundry Service. (`disable_sensors`)
+
+**Pass the Scanners**
+
+- [ ] Use the service chute to pass into the Archive approach in disguise. (`enter_lobby`)
+
+### The Lens (`w3_mq14`)
+
+Enter the Archive, read the vault's light machinery with Orion and Zeke, and take the Lens knowing the relic will expose more than the crew planned to steal.
+
+**Archive Infiltration**
+
+- [ ] Enter the Archive vault from the service route. (`enter_archive`)
+- [ ] Make the containment field, shutters, and tether-lines agree. (`solve_light_puzzle`)
+
+**Claim the Relic**
+
+- [ ] Take the Lens relic after Zeke's warning and survive the alarm. (`take_lens`)
+
+### Burn Notice (`w3_mq15`)
+
+Fight through the lockdown, cross the drone test alcove, defeat the Administrator on the landing pad, and use the Lens to time the Astra through the Shield toward the Foundry before Vale's compliance net closes.
+
+**Escape Lockdown**
+
+- [ ] Cut through the drone test alcove and reach the landing pad under alarm. (`reach_landing_pad`)
+- [ ] Break the Administrator's rooftop lockdown. (`defeat_administrator`)
+- [ ] Use Scan to read the Shield's launch window. (`scan_shield_gap`)
+
+**Slip the Shield**
+
+- [ ] Send the Astra through the Shield window. (`launch_astra`)
+
+### Corporate Espionage (`w3_sq14`)
+
+Lift a rival executive ledger from a private safe and turn their secrets into leverage.
+
+**Private Safe**
+
+- [ ] At Exec Lounge, copy the concierge credential from the mirror. (`copy_concierge_key`)
+- [ ] Use the credential on the private safe in Exec Lounge to steal the encrypted ledger. (`steal_ledger`)
+- [ ] Choose whether to publish the ledger or weaponize it privately. (`leak_ledger`)
+
+### Prototype Testing (`w3_sq15`)
+
+Inspect its targeting bias, calibrate the prototype rack, and scrub the telemetry before claiming Phase Rounds.
+
+**Prototype Calibration**
+
+- [ ] In Drone Test Alcove, scan the prototype's hidden targeting bias. (`scan_targeting`)
+- [ ] Calibrate the prototype rack in Drone Test Alcove against the recorded drone targets. (`test_weapon`)
+- [ ] Scrub Nova's calibration signature from the test telemetry. (`scrub_telemetry`)
+
+### Murder in the Skyline Salon (`w3_sq16`)
+
+Examine the poisoned glass, inspect the automated lounge access logs, interrogate the four trapped suspects, and expose the killer to lift the lockdown.
+
+**Crime Scene Investigation**
+
+- [ ] Inspect Auditor Malick's poisoned glass in the Syndicate Booth. (`inspect_glass`)
+- [ ] Inspect the lounge security terminal timestamp log. (`inspect_terminal`)
+- [ ] Inspect the sabotaged executive comms rig. (`inspect_rig`)
+
+**Expose the Killer**
+
+- [ ] Confront Director Vance with the contradictory timestamp log. (`expose_vance`)
+
+## Room reference
+
+Base descriptions and actions are listed below; milestone variants and visibility conditions change during play. Rest and Cook use their standard service controls. Use the in-game map for positioning.
+
+### Vent Output
+
+#### Vent Output (`spire_vent_output`)
+
+The vent output coughs the crew into acid rain and neon exhaust. [action:trash pile|Trash piles] clog the curb, and Rain Gutter Alley vanishes west between buildings that lean like they are tired.
+
+Exits: south → Sewer Passage, west → Rain Gutter Alley, east → Underrail Platform, north → Condensate Run.
+
+Interactions: trash pile.
+
+#### Rain Gutter Alley (`spire_rain_gutter_alley`)
+
+Rainwater sheets through Rain Gutter Alley in oily ribbons. A patrol mirror hangs above a cracked stairwell, giving the alley eyes even when no guard is present.
+
+Exits: east → Vent Output.
+
+Interactions: patrol mirror, cracked stairwell.
+
+#### Underrail Platform (`spire_underrail_platform`)
+
+An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is scratched with routes, curfews, patrol timing, and warnings written in marker.
+
+Exits: west → Vent Output, east → The Static, down → Transit Plaza.
+
+Interactions: underrail map, patrol timing.
+
+#### Condensate Run (`spire_vent_output_scale_01`)
+
+A condensate run channels warm rainwater down the back of the Vent Output. The scan drip under the pipe maps footsteps from the street above, while the rust initials prove lower-city kids have used this route for years.
+
+Exits: south → Vent Output, north → Maintenance Crawl.
+
+Interactions: condensate run, scan drip.
+
+#### Maintenance Crawl (`spire_vent_output_scale_02`)
+
+A maintenance crawl squeezes between coolant pipes and old warning paint. The old stencil says unauthorized workers become infrastructure, and the pipe gap is just wide enough for a desperate crew.
+
+Exits: south → Condensate Run, north → Rain Grate Overlook.
+
+Interactions: maintenance crawl, old stencil.
+
+#### Rain Grate Overlook (`spire_vent_output_scale_03`)
+
+A rain grate opens above the lower street where upper runoff falls clean before hitting rust. The upper runoff and patrol reflection make the route feel watched from both directions. Tucked behind the grating sits a hidden smuggler stash. A one-way chute leads directly back to the entrance.
+
+Exits: south → Maintenance Crawl.
+
+Interactions: rain grate, upper runoff, smuggler stash, chute.
+
+### The Static
+
+#### The Static (`spire_the_static`)
+
+The Static is a dark dive bar built around an old subway car. Neon signs pulse erratically, the sign outside keeps failing, and the signal stairwell behind the bar hums with pirate broadcasts.
+
+Exits: west → Underrail Platform, east → Old Subway Car, north → Signal Stairwell, south → Transit Plaza, northeast → Back Bar Ledger.
+
+Interactions: sign.
+
+#### Old Subway Car (`spire_old_subway_car`)
+
+The Static spills into an old subway car bolted beside the bar. Torn booth seats, stickered windows, and a silent jukebox make the car half studio. Chris tunes an audio board while Andrew rests his guitar. A reinforced door opens to the rigging deck. A Wayfarer tour poster curls above a No Charge tape beside the audio board.
+
+Exits: west → The Static, east → Bridgman Rigging Deck.
+
+Interactions: silent jukebox, stickered windows, Wayfarer tour poster, No Charge tape.
+
+#### Signal Stairwell (`spire_signal_stairwell`)
+
+A signal stairwell climbs behind The Static, each landing crowded with antenna wire and old mail slots. The whole shaft hums with pirate broadcasts. A chrono coil console hums on the landing, monitoring temporal flux lines.
+
+Exits: south → The Static, north → Zeke's Apartment.
+
+Interactions: antenna wire, mail slots, chrono coil console.
+
+#### Zeke's Apartment (`spire_zekes_apartment`)
+
+Zeke's old apartment is sparse enough to feel erased. A workstation hums on a table with his deleted employee ghost still buried inside it, a planning table waits under bad light, and roof access opens toward the impossible skyline.
+
+Exits: south → Signal Stairwell, north → Safehouse Roof.
+
+Interactions: workstation, planning table.
+
+#### Safehouse Roof (`spire_safehouse_roof`)
+
+The safehouse roof is barely larger than the apartment below it. A skyline of corporate towers rises beyond laundry lines full of patched coats and disguise materials, and the shield shimmer turns the clouds into a visible cage.
+
+Exits: south → Zeke's Apartment.
+
+Interactions: skyline, laundry lines.
+
+#### Back Bar Ledger (`spire_the_static_scale_01`)
+
+The Static's back bar hides cracked glasses, ration labels, and a favor slate no customer admits to reading. A chipped tumbler sits beside the slate, marked with names Jax only says after closing.
+
+Exits: southwest → The Static, north → Roof Stairwell.
+
+Interactions: back bar, favor slate.
+
+#### Roof Stairwell (`spire_the_static_scale_02`)
+
+Concrete roof stairs climb past curfew chalk and old burn marks from drone sweeps. The curfew chalk changes every night, but the scorch line never moves.
+
+Exits: south → Back Bar Ledger, north → Tenant Shrine.
+
+Interactions: roof stairs, curfew chalk.
+
+#### Tenant Shrine (`spire_the_static_scale_03`)
+
+A tenant shrine of folded notices, dead neon, and cheap candles turns eviction paperwork into a memorial wall. The dead neon still flickers when transit drones pass overhead. A discarded courier satchel lies forgotten in the corner. A one-way fire escape leads directly back to the entrance.
+
+Exits: south → Roof Stairwell.
+
+Interactions: tenant shrine, folded notices, courier satchel, fire escape.
+
+#### Bridgman Rigging Deck (`spire_rigging_deck`)
+
+High-tension cables and hydraulic winch drums span the structural gap beneath the entertainment level. Work lights illuminate steel trusses, speaker stacks, and [action:heavy winch rig|heavy tow rigs]. Contractor Cheno studies a [action:rigging schematic|holographic load schematic], his broad shoulders dusted with truss grease. A cider mug and framed family holopic sit beneath the work lights.
+
+Exits: west → Old Subway Car, east → Secret Signal Workshop.
+
+Interactions: rigging schematic, cider mug, heavy winch rig, framed family holopic.
+
+#### Secret Signal Workshop (`spire_hidden_studio`)
+
+Tucked behind acoustic baffles, a cluttered studio hums with glowing CRT monitors and [action:amplifier roost|tube amplifiers]. A miniature [action:galaxy terminal|galaxy simulation] rotates silently. Meeko the charcoal cat lounges like an executive boss while Jason solders [action:workbench clutter|circuit boards]. A music workstation is wedged between the monitors.
+
+Exits: west → Bridgman Rigging Deck.
+
+Interactions: galaxy terminal, music workstation, workbench clutter, amplifier roost.
+
+### Night Market
+
+#### Night Market (`spire_night_market`)
+
+The Night Market insists on being heard. Lanterns swing over food steam, Noodle Row shouts through rain, and a lantern bridge crosses the drain like stubborn stars. A market registry broadcast crackles from a speaker above the stalls.
+
+Exits: west → Checkpoint Queue, east → Noodle Row, north → Lantern Bridge, south → Backstreet Clinic, northeast → Lantern Roof.
+
+Interactions: lanterns, market registry broadcast.
+
+#### Noodle Row (`spire_noodle_row`)
+
+Noodle Row steams under plastic awnings. The soup counter never stops moving, with Chef Ren dishing out hot bowls and news to anyone with coin. The rain drums steadily against the vinyl above.
+
+Exits: west → Night Market.
+
+Interactions: soup counter, plastic awnings.
+
+#### Lantern Bridge (`spire_lantern_bridge`)
+
+A narrow lantern bridge crosses above the market drain. Paper charms flutter from the rail, each one carrying a name, a debt, or a prayer. An executive power siphon runs along a bright cable toward a billboard.
+
+Exits: south → Night Market.
+
+Interactions: paper charms, market drain, executive power siphon.
+
+#### Backstreet Clinic (`spire_backstreet_clinic`)
+
+The backstreet clinic is one room behind a noodle stall, lit by battery lamps and stubborn mercy. A triage curtain gives patients more dignity than privacy.
+
+Exits: north → Night Market.
+
+Interactions: triage curtain, battery lamps.
+
+#### Lantern Roof (`spire_night_market_scale_01`)
+
+String lights cross the lantern roof in careful knots above the Night Market. The anchor knots keep them up when patrol drones skim too low, and the lantern shadows hide handoffs under color. A vendor lockbox is chained beneath the string lights.
+
+Exits: southwest → Night Market, north → Spice Alley.
+
+Interactions: lantern roof, anchor knots, lantern roof kitchen, market refuge, vendor lockbox.
+
+#### Spice Alley (`spire_night_market_scale_02`)
+
+Spice alley smells like heat, fried protein, and ozone. Vendor codes are scratched under every awning, telling locals which stalls sell food, data, or silence. A vendor ledger sits weighted down by an iron hex nut.
+
+Exits: south → Lantern Roof, north → Rain Cache.
+
+Interactions: spice alley, vendor codes, vendor ledger.
+
+#### Rain Cache (`spire_night_market_scale_03`)
+
+A rain cache beneath a torn canopy keeps wrapped tools dry beside counterfeit guest pins. The guest pins are cheap, but the route printed on the underside is current. A heavy black market safe rests under a tarp. A one-way slide leads directly back to the entrance.
+
+Exits: south → Spice Alley.
+
+Interactions: rain cache, wrapped tools, black market safe, slide.
+
+### The Sewers
+
+#### Sewer Landing Pad (`spire_sewers_landing`)
+
+The Astra sits powered down beside a sewer landing pad, its hull reflecting algae-glow and warning strobes from the runoff lock ahead. The air is damp, smelling of ozone, old pipes, and a city trying not to notice you arrived.
+
+Exits: east → Runoff Lock, north → Pump Gallery.
+
+Interactions: astra.
+
+#### Runoff Lock (`spire_runoff_lock`)
+
+A rusted runoff lock divides the sewer landing from the city drains. Green water slaps against a sealed floodgate while a ladder cage climbs into steam.
+
+Exits: west → Sewer Landing Pad, east → Sewer Passage, north → Maintenance Sluice.
+
+Interactions: floodgate, ladder cage.
+
+#### Sewer Passage (`spire_sewers_passage`)
+
+A long concrete sewer passage carries [action:runoff fishing|warm runoff] under the Spire. Water drips from rusted vent pipes overhead while the tunnel splits toward maintenance heat, rainlight, and the guarded city above.
+
+Exits: west → Runoff Lock, north → Vent Output, east → Transit Plaza.
+
+Interactions: vent pipes, runoff fishing.
+
+#### Maintenance Sluice (`spire_maintenance_sluice`)
+
+The maintenance sluice runs above the main tunnel, narrow and hot with valve heat. A maintenance panel blinks beside a pipe map nobody has updated in years.
+
+Exits: south → Runoff Lock.
+
+Interactions: maintenance panel, pipe map.
+
+#### Pump Gallery (`spire_sewers_scale_01`)
+
+The pump gallery beats under the city like a bad heart. A pressure map flashes routes the official grid denies exist, and the pump rhythm covers small mistakes.
+
+Exits: south → Sewer Landing Pad, north → Filter Sluice.
+
+Interactions: pump gallery, pressure map.
+
+#### Filter Sluice (`spire_sewers_scale_02`)
+
+A filter sluice strains glittering trash from black water. A caught badge spins behind the grate, too damaged to pass but clean enough to copy. A drainage marker glows faintly above the water line.
+
+Exits: south → Pump Gallery, north → Ratline Nook.
+
+Interactions: filter sluice, caught badge, drainage marker.
+
+#### Ratline Nook (`spire_sewers_scale_03`)
+
+A dry ratline nook branches away from the main sewer. Chalk arrows mark which exits are watched this week, and the dry ledge smells faintly of smoke and noodle broth. A rusted maintenance locker clings to the wet brickwork. A one-way ladder leads directly back to the entrance.
+
+Exits: south → Filter Sluice.
+
+Interactions: ratline nook, chalk arrows, maintenance locker, ladder.
+
+### Transit Plaza
+
+#### Transit Plaza (`spire_transit_plaza`)
+
+Transit Plaza spreads beneath the Great Elevator, all surveillance glass, guard lanes, and crowded hesitation. The elevator controls tower above a checkpoint queue where fear moves faster than the line, while a security kiosk glows under the stairs.
+
+Exits: north → The Static, west → Sewer Passage, east → Checkpoint Queue, south → Security Kiosk, northeast → Ad Bay.
+
+Interactions: elevator controls.
+
+#### Checkpoint Queue (`spire_checkpoint_queue`)
+
+The checkpoint queue snakes between metal rails and glass cameras. A queue display assigns wait times, threat scores, and fines before anyone reaches a guard.
+
+Exits: west → Transit Plaza, east → Night Market, north → Elevator Service Gate.
+
+Interactions: queue display, glass cameras.
+
+#### Security Kiosk (`spire_security_kiosk`)
+
+A security kiosk sits under the plaza stairs, unattended because the guards trust the software more than each other. The security terminal and case records glow behind cracked glass. A public kiosk relay waits beside the record display.
+
+Exits: north → Transit Plaza.
+
+Interactions: security terminal, case records, public kiosk relay.
+
+#### Elevator Service Gate (`spire_elevator_service_gate`)
+
+A side service gate hides in the shadow of the Great Elevator. Freight crews pass through with eyes down, freight badges out, and no interest in heroics.
+
+Exits: south → Checkpoint Queue.
+
+Interactions: service gate, freight badges.
+
+#### Ad Bay (`spire_transit_plaza_scale_01`)
+
+The ad bay projects a smiling loop of citizens thanking Dominion for clean air. The smiling loop glitches whenever a real worker walks past, and the dead speaker clicks through missing applause.
+
+Exits: southwest → Transit Plaza, north → Ticket Shadow.
+
+Interactions: ad bay, smiling loop.
+
+#### Ticket Shadow (`spire_transit_plaza_scale_02`)
+
+A ticket shadow behind the fare kiosk keeps commuters out of scanner sight for three blessed seconds. The fare kiosk accepts payment faster than guilt, but its blind spot is real.
+
+Exits: south → Ad Bay, north → Underrail Map Room.
+
+Interactions: ticket shadow, fare kiosk.
+
+#### Underrail Map Room (`spire_transit_plaza_scale_03`)
+
+The underrail map room stores obsolete route boards and a service legend that still matches the staff tunnels. A taped transfer notice explains why Dominion forgot to update the old map. An abandoned transit lockbox sits beneath a broken arrivals board. A one-way turnstile leads directly back to the entrance.
+
+Exits: south → Ticket Shadow.
+
+Interactions: underrail map, service legend, transit lockbox, turnstile.
+
+### Laundry Service
+
+#### Laundry Service (`spire_laundry_service`)
+
+Laundry Service runs beneath the Cloud District, packed with steam pipes, cleaning bots, a sensor console, and a service chute for invisible workers. Uniform sorting and the staff checkpoint turn labor into security theater.
+
+Exits: north → Staff Checkpoint, east → Prism Gallery, south → Uniform Sorting, west → Steam Rack.
+
+Interactions: sensor console, service chute.
+
+#### Uniform Sorting (`spire_uniform_sorting`)
+
+Uniform sorting smells like detergent and fear. Uniform racks roll in strict rows, and laundry tags mark each sleeve for a life the Upper City will never notice. An erased memorial name leaves a polished scar on a transit plaque.
+
+Exits: north → Laundry Service, east → Service Lift, south → Exec Lounge.
+
+Interactions: uniform racks, laundry tags, erased memorial name.
+
+#### Service Lift (`spire_service_lift`)
+
+A service lift rises through the bones of the Upper City. A worker network uplink can publish the ledger, while a private dead drop can turn it into a precise weapon against one executive. The lift panel flickers beside a rattling inspection hatch.
+
+Exits: west → Uniform Sorting, north → Skypark Dome, down → Archive Vault, southeast → Exec Lounge.
+
+Interactions: lift panel, inspection hatch, worker network uplink, private dead drop.
+
+#### Staff Checkpoint (`spire_staff_checkpoint`)
+
+The staff checkpoint is clean, bright, and cruelly polite. A badge scanner chirps at every worker while a wall display grades smiles for guest readiness.
+
+Exits: south → Laundry Service, east → Skypark Dome.
+
+Interactions: badge scanner, wall display.
+
+#### Steam Rack (`spire_laundry_scale_01`)
+
+The steam rack turns executive uniforms ghost-white. Badge thread glints inside the cuffs, and the hiss of pressurized water makes the room safe for whispered planning.
+
+Exits: east → Laundry Service, north → Press Line.
+
+Interactions: steam rack, badge thread.
+
+#### Press Line (`spire_laundry_scale_02`)
+
+The press line stamps every guest crease to the same perfect angle. A guest crease becomes a social password here, and the heat plate can make cheap cloth look expensive from scanner distance.
+
+Exits: south → Steam Rack, north → Service Bin.
+
+Interactions: press line, guest crease.
+
+#### Service Bin (`spire_laundry_scale_03`)
+
+A service bin overflows with ruined napkins, broken jewelry, and a discarded pass snapped in half. The discarded pass is dead, but its route stamp is still readable. A tailored uniform case has been hidden inside an air intake. A one-way chute leads directly back to the entrance.
+
+Exits: south → Press Line.
+
+Interactions: service bin, discarded pass, tailored uniform case, chute.
+
+### Skypark
+
+#### Skypark Dome (`spire_skypark_dome`)
+
+The Skypark Dome offers fake sun and blooming orchids under polished glass. Evelyn sings jazz while pruning glowing blossoms, and Robert demonstrates his industrial cleaning rigs with silent theatrical flair. A guest registry tracks arrivals beside a jazz conservatory planter and an industrial vortex buffer.
+
+Exits: south → Service Lift, west → Staff Checkpoint, east → Glasswalk, north → Orchid Walk.
+
+Interactions: guest registry, jazz conservatory planter, industrial vortex buffer.
+
+#### Glasswalk (`spire_glasswalk`)
+
+The glasswalk curves along the dome edge with the whole Lower City visible far below. A camera seam runs under the handrail like a vein.
+
+Exits: west → Skypark Dome, east → Donor Gallery, down → Archive Vault.
+
+Interactions: camera seam, handrail.
+
+#### Donor Gallery (`spire_donor_gallery`)
+
+Executive portraits line the marble hall. A donor wall and portrait plaques praise private contracts, while a crimson laser grid console seals the northern private corridor.
+
+Exits: west → Glasswalk, south → Archive Vault, east → Skyline VIP Salon, north → Executive Black-Site Lab.
+
+Interactions: laser grid console, donor wall, portrait plaques.
+
+#### Executive Black-Site Lab (`spire_black_site_lab`)
+
+Cold neon backlights row upon row of cryogenic stasis cylinders and prototype server banks. An executive black-box safe rests sealed beneath a humming quantum holographic projector.
+
+Exits: south → Donor Gallery.
+
+Interactions: black-box safe, holographic projector.
+
+#### Orchid Walk (`spire_skypark_scale_01`)
+
+The orchid walk blooms under artificial rain. A donor plaque thanks families who bought their way above the smog, while root sensors drink more clean water than Trade Row sees in a week. A hydroponic mist nozzle hisses fine vapor into the humid breeze.
+
+Exits: south → Skypark Dome, north → Registry Pavilion.
+
+Interactions: orchid walk, donor plaque, hydroponic mist nozzle.
+
+#### Registry Pavilion (`spire_skypark_scale_02`)
+
+A registry pavilion floats over the park with a guest ledger projected in polite gold. The guest ledger shows which false identity can survive the next checkpoint. A pavilion bench cache is tucked beneath the seating.
+
+Exits: south → Orchid Walk, north → Glass Lawn.
+
+Interactions: registry pavilion, guest ledger, skypark cookfire, pavilion shelter, pavilion bench cache.
+
+#### Glass Lawn (`spire_skypark_scale_03`)
+
+The glass lawn is transparent all the way down to the city it refuses to see. Scanner mist drifts between ornamental trees, checking posture, fabric, and fear. A locked botanical vault is embedded in the synthetic root bed. A one-way spiral leads directly back to the entrance.
+
+Exits: south → Registry Pavilion.
+
+Interactions: glass lawn, scanner mist, botanical vault, spiral.
+
+#### Skyline VIP Salon (`spire_skyline_vip_suite`)
+
+Plush velvet stanchions divide the glowing skyline salon from the rain-swept spires outside. Holographic chandeliers illuminate four stranded patrons around an automated crime-scene barrier. Emergency sirens pulse against the soundproof glass. A dispenser log and security terminal wait beside the barrier.
+
+Exits: west → Donor Gallery, north → Syndicate Booth.
+
+Interactions: crime-scene barrier, dispenser log, security terminal.
+
+#### Syndicate Booth (`spire_vip_private_booth`)
+
+A private booth of curved mahogany overlooks the neon clouds. Auditor Malick slumps lifeless across the table beside a crystal glass. An executive comms rig lies open near the victim's splayed fingers. The auditor's datapad lies beside the comms rig.
+
+Exits: south → Skyline VIP Salon.
+
+Interactions: crystal glass, executive comms rig, auditor's datapad.
+
+### Exec Lounge
+
+#### Exec Lounge (`spire_exec_lounge_bar`)
+
+The Exec Lounge floats on a grav-platform above a silent atrium. A private safe hides behind sculpture, a concierge credential mirror flashes beside the terminal, and every booth looks designed for blackmail. A VIP vector arcade cabinet stands behind the velvet curtain.
+
+Exits: north → Uniform Sorting, northwest → Service Lift, northeast → Archive Vault, south → Velvet Hall.
+
+Interactions: private safe, concierge credential mirror, concierge terminal, VIP vector arcade cabinet.
+
+#### Velvet Hall (`spire_exec_lounge_scale_01`)
+
+A velvet hall swallows footsteps with expensive sound baffles. The sound baffles make every conversation private until someone pays more. Sticky crystallized liquor glazes the tabletop.
+
+Exits: north → Exec Lounge, east → Private Booth.
+
+Interactions: velvet hall, sound baffles, crystallized liquor.
+
+#### Private Booth (`spire_exec_lounge_scale_02`)
+
+A private booth overlooks the atrium. A half-empty glass sweats beside a terminal still logged into a director account. The safe keypad is scorched and dead.
+
+Exits: west → Velvet Hall, north → Blackmail Balcony.
+
+Interactions: private booth, half-empty glass, safe keypad.
+
+#### Blackmail Balcony (`spire_exec_lounge_scale_03`)
+
+The blackmail balcony angles every table toward a camera seam disguised as decorative brass. The camera seam records everything except ownership.
+
+Exits: south → Private Booth, north → Ledger Office.
+
+Interactions: blackmail balcony, camera seam.
+
+#### Ledger Office (`spire_exec_lounge_scale_04`)
+
+A ledger office behind the lounge safe stores an encrypted ledger under layers of concierge niceties. The encrypted ledger hums with executive panic.
+
+Exits: south → Blackmail Balcony, north → Service Dumbwaiter.
+
+Interactions: ledger office, encrypted ledger.
+
+#### Service Dumbwaiter (`spire_exec_lounge_scale_05`)
+
+A Service Dumbwaiter drops toward the kitchen levels with a silver tray still balanced inside. The silver tray reflects the patrol outside better than the room's polished cameras. A discreet executive safe gleams behind the mirrored mahogany. A one-way elevator leads directly back to the entrance.
+
+Exits: south → Ledger Office.
+
+Interactions: Service Dumbwaiter, silver tray, executive safe, elevator.
+
+### The Archive
+
+#### Prism Gallery (`spire_prism_gallery`)
+
+The Prism Gallery bends Archive light into audible color. Prism shutters split the containment field into three bands, and a braided chord sleeps inside the glass until the room's evidence agrees.
+
+Exits: west → Laundry Service, east → Archive Vault.
+
+Interactions: prism shutters, braided chord, scan alarm chords.
+
+#### Archive Vault (`spire_archive_vault`)
+
+The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field that hums toward Nova before she touches it. Command tether-lines vanish into the glass, routing power back toward the Prism Gallery.
+
+Exits: west → Prism Gallery, north → Donor Gallery, southwest → Exec Lounge, east → Drone Test Alcove, northeast → Catalog Atrium.
+
+Interactions: containment field, lens relic, command tether-lines, scan tether-lines.
+
+#### Drone Test Alcove (`spire_drone_test_alcove`)
+
+Scratched glass and warning tape seal the alcove. A prototype rack waits beside sleeping security drones, their dormant sensor paths revealed by the Lens. A flight telemetry log flashes on the rack screen. A prototype targeting audit waits on the calibration screen.
+
+Exits: west → Archive Vault, east → Landing Pad Roof.
+
+Interactions: prototype rack, prototype targeting audit, security drones, scan targeting paths, flight telemetry log.
+
+#### Catalog Atrium (`spire_archive_scale_01`)
+
+The catalog atrium sings file numbers in a soft index choir. Each note points to a life Dominion turned into property, and the index choir never wonders who is listening. An index terminal flashes amber in the dark.
+
+Exits: southwest → Archive Vault, north → Prism Service Bay.
+
+Interactions: catalog atrium, index choir, index terminal.
+
+#### Prism Service Bay (`spire_archive_scale_02`)
+
+The prism service bay stores a light wrench and replacement lenses for the gallery array. The light wrench proves the holy-looking Archive still needs maintenance. A lens polishing cloth lies on the technician's tray.
+
+Exits: south → Catalog Atrium, north → Alarm Spine.
+
+Interactions: prism service bay, light wrench, lens polishing cloth.
+
+#### Alarm Spine (`spire_archive_scale_03`)
+
+The alarm spine runs behind the vault in red conduits. Every conduit is labeled with a consequence instead of a destination, and the red conduits pulse faster when Nova gets close. An encrypted datacache hums softly inside a book press. A one-way lift leads directly back to the entrance.
+
+Exits: south → Prism Service Bay.
+
+Interactions: alarm spine, red conduits, encrypted datacache, lift.
+
+### Landing Pad
+
+#### Landing Pad Roof (`spire_landing_pad_roof`)
+
+The roof shudders under violent wind and red lockdown light. The Astra waits across the pad while the Planetary Shield rotates overhead in heavy resonance bands, guarding the sky. The flight display marks a shield window and a launch window beside a test telemetry relay.
+
+Exits: west → Drone Test Alcove, north → Fuel Bridge.
+
+Interactions: shield window, launch window, test telemetry relay.
+
+#### Fuel Bridge (`spire_landing_pad_scale_01`)
+
+A fuel bridge rattles between the roof and the Astra. Wind shear shoves rain sideways through warning lights and reveals the Shield rhythm in the clouds.
+
+Exits: south → Landing Pad Roof, north → Shield Sightline.
+
+Interactions: fuel bridge, wind shear.
+
+#### Shield Sightline (`spire_landing_pad_scale_02`)
+
+The shield sightline lines up with a tiny gap shimmer rotating through the storm. The gap shimmer lasts less than a breath.
+
+Exits: south → Fuel Bridge, north → Drone Wreck Roof.
+
+Interactions: shield sightline, gap shimmer.
+
+#### Drone Wreck Roof (`spire_landing_pad_scale_03`)
+
+A drone wreck skids across the roof, its broken rotor still trying to obey a command that no longer matters. The broken rotor twitches whenever the alarm network speaks.
+
+Exits: south → Shield Sightline, north → Boarding Causeway.
+
+Interactions: drone wreck, broken rotor.
+
+#### Boarding Causeway (`spire_landing_pad_scale_04`)
+
+The boarding causeway stretches toward the Astra hatch under lockdown strobes. The Astra hatch light blinks like a heartbeat through rain and warning static. A forgotten avionics crate sits strapped against the wind break. A one-way ladder leads directly back to the entrance.
+
+Exits: south → Drone Wreck Roof.
+
+Interactions: boarding causeway, Astra hatch, avionics crate, ladder.
 

@@ -765,7 +765,7 @@
     "drops": [
       {
         "id": "neon_sign_core",
-        "chance": 0.5
+        "chance": 1.0
       },
       {
         "id": "battery",

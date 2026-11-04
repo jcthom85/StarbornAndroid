@@ -4391,7 +4391,7 @@
       {
         "npc": "zeke",
         "requires_milestones": [
-          "ms_w3_mq11_complete"
+          "ms_w3_safehouse_found"
         ],
         "forbidden_milestones": []
       }
@@ -9163,7 +9163,20 @@
         ],
         "description": "The white ocean is no longer silent. Countless voices move through it like tidewater, separate and connected by choice. The shared tuning focus remains where Vale tried to silence them."
       }
-    ]
+    ],
+    "blocked_directions": {
+      "east": {
+        "type": "lock",
+        "requires": [
+          {
+            "room_id": "source_center",
+            "state_key": "ending_complete",
+            "value": true
+          }
+        ],
+        "message_locked": "The white horizon has no path yet. Finish the confrontation and restore the separate voices first."
+      }
+    }
   },
   {
     "id": "source_new_world",

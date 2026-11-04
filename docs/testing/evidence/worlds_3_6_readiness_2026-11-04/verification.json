@@ -1,0 +1,55 @@
+{
+  "baseline": "e9bcfd06b7907ff26539759d6fc2fd810134edc7",
+  "date": "2026-11-04",
+  "sha256": {
+    "app/src/main/assets/rooms.json": "bd5245c414f433991e72ca2ead561e0f667ea24b8a7fdcd69c43bfa2f2a04aa3",
+    "app/src/main/assets/hub_nodes.json": "9643f6da453ac1ae32476f1688de11ba2c72052e49017cb6ac8364ad0cf03346",
+    "app/src/main/assets/quests.json": "b85cf869db69221f5563df79a0348d1ed0d4d4ce23b23d0887ad20394e40f173",
+    "app/src/main/assets/events.json": "b25d1ecd49627a8fbeecf984c8345c1a55a95f85b8a8a8d0b2b9a5f451283c4a",
+    "app/src/main/assets/dialogue.json": "c8a7633f9e970258a7a3ef0f6ef7ed9a1a202397dc46bef8ba5ef14ab65db91a",
+    "app/src/main/assets/enemies.json": "1958255d86e2a5ee089f00ce7968db209891017a966b3248310ba873b1c3e012",
+    "app/src/main/assets/items.json": "de961142752034be8e4d05bf6de8db0e89ac3e78b38c6adda183a04db30f159c",
+    "app/src/main/assets/npcs.json": "8390c1ddfa31f5b1b3fce3e432675930a00bd0de908d1b8bf4b38ab73dba6d3a",
+    "gameRuntime/src/main/kotlin/com/example/starborn/feature/exploration/viewmodel/ExplorationController.kt": "d0e1a9614ba4fec0d7c8417a5ee4565dcac64be05485d8a79069428240718079",
+    "gameRuntime/src/main/kotlin/com/example/starborn/domain/event/EventManager.kt": "32b67db0f23c8f892fa4982b4d91d97f2a9f46203ac5fd9b34a85d0b731f3732",
+    "gameRuntime/src/main/kotlin/com/example/starborn/domain/dialogue/DialogueTriggerLogic.kt": "40ed1752ec87bb7281811666a64627b0734aef7fbd2afcbbaa9102a1cd358773",
+    "gameRuntime/src/main/kotlin/com/example/starborn/domain/session/OpeningNarrativeMigration.kt": "626bec83d624f6365d99c0788581cf51fb4e658a5814374be3fbc7e1b927eea1"
+  },
+  "limits": [
+    "No device playthrough; no gameplay edits.",
+    "Early-clear probes inject victory outcomes through the real controller, not played combat.",
+    "Public-movement probes use seeded room/quest states and actual travel calls.",
+    "The observation probe passes by recording observations, not by certifying fixes."
+  ],
+  "android_host": {
+    "tests": 785,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "desktop_observation_probe": {
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "checked_visual_references": {
+    "scope": "world-owned rooms/nodes/hubs and placed NPC/static enemy image references; not every scripted asset or audiovisual certification",
+    "3": {
+      "references": 94,
+      "missing": 0
+    },
+    "4": {
+      "references": 91,
+      "missing": 0
+    },
+    "5": {
+      "references": 104,
+      "missing": 0
+    },
+    "6": {
+      "references": 85,
+      "missing": 0
+    }
+  }
+}

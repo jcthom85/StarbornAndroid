@@ -63,6 +63,30 @@ class EventManager(
         }
     }
 
+    /** Re-run only opted-in objective handlers, never combat payouts, once their gates become eligible. */
+    fun reconcileRecordedVictories() {
+        for (event in events.filter { it.recoverRecordedVictory }) {
+            val state = sessionStore.state.value
+            if (event.id in state.completedEvents || !conditionsSatisfied(event.conditions, state)) continue
+            val receipt = state.roomStates.entries.firstOrNull { (room, flags) ->
+                flags.any { (key, value) -> value && key.startsWith("encounter_cleared:") &&
+                    matchesTrigger(event.trigger, EventPayload.EncounterOutcome(
+                        key.removePrefix("encounter_cleared:").split('|'), EventPayload.EncounterOutcome.Outcome.VICTORY, room), state) }
+            }
+            if (receipt != null && executeActions(event.actions)) {
+                // The runtime quest hook may be asynchronous. Persist recovered objective credit
+                // before its receipt so an immediate save cannot retain only the receipt.
+                event.actions.filter { it.type == "set_quest_task_done" }.forEach { action ->
+                    val quest = action.questId
+                    val task = action.taskId
+                    if (quest != null && task != null) sessionStore.setQuestTaskCompleted(quest, task, true)
+                }
+                sessionStore.markEventCompleted(event.id)
+                eventHooks.onEventCompleted(event.id)
+            }
+        }
+    }
+
     fun performActions(actions: List<EventAction>) {
         if (actions.isEmpty()) return
         executeActions(actions)

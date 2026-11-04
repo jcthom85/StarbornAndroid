@@ -46,7 +46,11 @@ fun isDialogueConditionMet(
             "room" -> value.isNotBlank() && value == state.roomId
             "milestone", "milestone_set" -> value in state.completedMilestones
             "milestone_not_set" -> value !in state.completedMilestones
-            "item" -> value.isNotBlank() && inventoryService.hasItem(value)
+            "item" -> {
+                val id = value.substringBefore('*')
+                val quantity = value.substringAfter('*', "1").toIntOrNull() ?: Int.MAX_VALUE
+                id.isNotBlank() && quantity > 0 && inventoryService.hasItem(id, quantity)
+            }
             "item_not" -> value.isNotBlank() && !inventoryService.hasItem(value)
             "event_completed" -> value in state.completedEvents
             "event_not_completed" -> value.isNotBlank() && value !in state.completedEvents
