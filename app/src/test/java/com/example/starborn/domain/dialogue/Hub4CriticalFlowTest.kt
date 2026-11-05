@@ -282,7 +282,9 @@ class Hub4CriticalFlowTest {
 }
 
 private fun DialogueSession.advanceUntilFinished() {
-    while (!isFinished()) {
-        advance()
+    repeat(30) {
+        if (isFinished()) return
+        if (choices().isEmpty()) advance() else choose(choices().single { it.id == "correct" }.id)
     }
+    error("Dialogue did not finish")
 }

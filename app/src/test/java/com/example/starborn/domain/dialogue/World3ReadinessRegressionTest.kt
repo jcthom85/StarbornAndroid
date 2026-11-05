@@ -41,6 +41,84 @@ class World3ReadinessRegressionTest {
         }
     }
 
+    @Test fun coverStoryAllowsRecoveryAndLeavingBeforeGuestAccess() {
+        for (wrong in listOf("cover_emergency", "cover_delivery")) {
+            val h = Harness()
+            h.store.startQuest("w3_mq13")
+            var session = requireNotNull(h.dialogue.startDialogue("Museum Curator"))
+            session.advance(); session.advance()
+            assertEquals("w3_cover_order", session.current()?.id)
+            session.choose(wrong); session.advance()
+            assertEquals("w3_cover_recover", session.current()?.id)
+            assertFalse("blend_in" in h.store.state.value.questTasksCompleted["w3_mq13"].orEmpty())
+            session.choose("w3_cover_recovery_leave")
+            assertTrue(session.isFinished())
+            h.store.restore(h.store.state.value)
+            session = requireNotNull(h.dialogue.startDialogue("Museum Curator"))
+            session.advance(); session.advance(); session.choose("correct")
+            session.advance(); session.advance()
+            assertTrue(session.isFinished())
+            assertTrue("blend_in" in h.store.state.value.questTasksCompleted["w3_mq13"].orEmpty())
+        }
+    }
+
+    @Test fun murderRequiresPlayerDeductionAndWrongClaimsGiveNoCompletionOrRewards() {
+        val h = Harness()
+        listOf("w3_sq16_inspect_glass", "w3_sq16_inspect_terminal", "w3_sq16_inspect_rig").forEach(h::act)
+        var session = requireNotNull(h.dialogue.startDialogue("Director Vance"))
+        session.choose("vance_confront_evidence")
+        for (wrong in listOf("case_coolant_time", "case_drink_time")) {
+            session.choose(wrong); session.advance()
+            assertEquals("w3_case_alibi_question", session.current()?.id)
+            assertFalse("w3_sq16" in h.store.state.value.completedQuests)
+            assertTrue(h.inventory.snapshot().isEmpty())
+        }
+        session.choose("w3_case_alibi_leave")
+        assertTrue(session.isFinished())
+        h.store.restore(h.store.state.value)
+        session = requireNotNull(h.dialogue.startDialogue("Director Vance"))
+        session.choose("vance_confront_evidence"); session.choose("correct"); session.advance()
+        assertEquals("w3_case_physical_question", session.current()?.id)
+        for (wrong in listOf("case_badge_again", "case_dispenser_clean")) {
+            session.choose(wrong); session.advance()
+            assertEquals("w3_case_physical_question", session.current()?.id)
+            assertFalse("w3_sq16" in h.store.state.value.completedQuests)
+        }
+        session.choose("correct"); session.advance(); session.advance()
+        assertTrue(session.isFinished())
+        assertTrue("w3_sq16" in h.store.state.value.completedQuests)
+        assertEquals(450, h.store.state.value.playerXp)
+        assertEquals(1, h.inventory.snapshot()["cyano_coolant_injector"])
+        assertFalse("ms_w3_sq16_datapad_inspected" in h.store.state.value.completedMilestones)
+        requireNotNull(h.dialogue.startDialogue("Director Vance")).advance()
+        assertEquals(450, h.store.state.value.playerXp)
+    }
+
+    @Test fun ledgerReceiptsRemainBranchSpecificAcrossRestoreAndNeverRepeatRewards() {
+        for (branch in listOf("w3_sq14_leak_ledger", "w3_sq14_weaponize_ledger")) {
+            val h = Harness()
+            h.store.setRoom("spire_service_lift")
+            h.store.startQuest("w3_sq14")
+            h.store.setMilestone("ms_w3_ledger_stolen")
+            h.act("w3_read_ledger_receipts")
+            assertTrue(h.messages.last().contains("Neither transmission"))
+            h.act(branch)
+            val earned = h.store.state.value
+            val inventory = h.inventory.snapshot()
+            val expected = if (branch == "w3_sq14_leak_ledger") "workers comparing" else "No worker-network publication"
+            repeat(2) {
+                h.store.restore(h.store.state.value)
+                h.act("w3_read_ledger_receipts")
+                assertTrue(h.messages.last().contains(expected))
+                assertEquals(earned.playerXp, h.store.state.value.playerXp)
+                assertEquals(inventory, h.inventory.snapshot())
+            }
+            h.act(if (branch == "w3_sq14_leak_ledger") "w3_sq14_weaponize_ledger" else "w3_sq14_leak_ledger")
+            assertEquals(earned.playerXp, h.store.state.value.playerXp)
+            assertEquals(inventory, h.inventory.snapshot())
+        }
+    }
+
     @Test fun canonicalNpcNamesOpenConversationsAndPrototypeRequiresAudit() {
         val h = Harness()
         h.store.startQuest("w3_mq13")
@@ -112,7 +190,12 @@ class World3ReadinessRegressionTest {
         val vance = requireNotNull(h.dialogue.startDialogue("Director Vance"))
         assertEquals("director_vance_default_talk", vance.current()?.id)
         vance.choose("vance_confront_evidence")
-        while (!vance.isFinished()) vance.advance()
+        repeat(12) {
+            if (!vance.isFinished()) {
+                if (vance.choices().isEmpty()) vance.advance() else vance.choose("correct")
+            }
+        }
+        assertTrue(vance.isFinished())
         val xp = h.store.state.value.playerXp
         requireNotNull(h.dialogue.startDialogue("Director Vance")).advance()
         assertEquals(xp, h.store.state.value.playerXp)

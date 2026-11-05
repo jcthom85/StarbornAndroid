@@ -1320,7 +1320,7 @@
         "tasks": [
           {
             "id": "blend_in",
-            "text": "Survive the Skypark guest registry and acquire guest access."
+            "text": "At the Skypark guest registry, maintain the scheduled air-filter inspection cover and acquire guest access."
           },
           {
             "id": "disable_sensors",
@@ -2858,7 +2858,7 @@
         "tasks": [
           {
             "id": "expose_vance",
-            "text": "Confront Director Vance with the contradictory timestamp log."
+            "text": "Challenge Vance's alibi using the access log, then connect his equipment to the poison."
           }
         ]
       }

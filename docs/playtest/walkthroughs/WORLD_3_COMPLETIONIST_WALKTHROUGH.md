@@ -1,14 +1,14 @@
 # World 3 completionist playtest guide
 
-Updated November 5, 2026 for the repaired World 3 navigation build. Earlier builds may still show diagonal Paths links and different room approaches. Use the November 5 navigation build with this guide.
+Updated November 5, 2026 for the World 3 design pass: playable registry cover, murder deduction, and persistent side-quest outcomes. This pass follows release 1.3.108; use a build containing these additions. Earlier builds have different dialogue and presentation.
 
 The main route and all six optional quests are covered by earned campaign tests, including both ledger outcomes and save/reload. Phone presentation, pacing and discovery still need human playtesting. Full spoilers follow.
 
 ## Navigation
 
-World 3 has a complete NSEW walking network with immediate opposite-direction returns. Named vertical alternatives appear as tappable **Paths** links, rather than compass swipes. No diagonal exits are used. The back-bar passage is east of The Static, Lantern Roof is north beyond Lantern Bridge, Ad Bay is south beyond Security Kiosk, and the catalog wing extends south from Archive Vault. Optional tapped return shortcuts remain conveniences; every branch can also be retraced by swiping. The heist transfer, cleared city lift, black-site laser console and world departure retain their quest rules.
+World 3 has a complete NSEW walking network with immediate opposite-direction returns. Named vertical alternatives appear as dedicated travel buttons beneath the Android description; desktop retains tappable Paths links. No diagonal exits are used. The back-bar passage is east of The Static, Lantern Roof is north beyond Lantern Bridge, Ad Bay is south beyond Security Kiosk, and the catalog wing extends south from Archive Vault. Optional tapped return shortcuts remain conveniences; every branch can also be retraced by swiping. The heist transfer, cleared city lift, black-site laser console and world departure retain their quest rules.
 
-Two physical shortcuts are available in both directions: the **platform stairs** connect Underrail Platform with Transit Plaza, and the separate **inspection lift** connects Service Lift with Archive Vault. Tap their named Paths links at either landing. The inspection cage does not replace the main city lift panel or its clearance rule. Glasswalk reaches the Archive by walking east to Donor Gallery, then south; it has no unexplained one-way drop. The numbered walkthrough below uses the NSEW route so either approach remains usable.
+Two physical shortcuts are available in both directions: the **platform stairs** connect Underrail Platform with Transit Plaza, and the separate **inspection lift** connects Service Lift with Archive Vault. Use their named travel controls at either landing. The inspection cage does not replace the main city lift panel or its clearance rule. Glasswalk reaches the Archive by walking east to Donor Gallery, then south; it has no unexplained one-way drop. The numbered walkthrough below uses the NSEW route so either approach remains usable.
 
 ## Under the Radar
 
@@ -54,7 +54,7 @@ Two physical shortcuts are available in both directions: the **platform stairs**
 
 19. Committing the planning table brings the crew to **Laundry Service**. Go **north** to **Staff Checkpoint** (`spire_staff_checkpoint`) → **east** to **Skypark Dome** (`spire_skypark_dome`).
 
-20. At **Skypark Dome**, use **guest registry**. Finish its dialogue or feedback before moving on.
+20. At **Skypark Dome**, use **guest registry**. Maintain your cover: choose **Scheduled air-filter inspection** when the Curator asks for the work order. A wrong claim prompts a recoverable follow-up; correct the request or step away and retry. The Staff Checkpoint badge scanner and Uniform Sorting laundry tags preserve the work-order reminder for returning saves. Finish the conversation to acquire guest access.
 
 21. From **Skypark Dome**, go **west** to **Staff Checkpoint** (`spire_staff_checkpoint`) → **south** to **Laundry Service** (`spire_laundry_service`).
 
@@ -130,19 +130,19 @@ At Uniform Sorting, inspect the **erased memorial name**. Use the Service Lift p
 
 ### Night Market Run
 
-At Lantern Bridge, inspect the **executive power siphon**. Return south to Night Market and reroute the **lanterns**, either through the object or Mika’s eligible conversation. Then use **market registry broadcast**. The reward is 200 XP and one Neon Band (+2 Focus and +5 percentage points of critical chance). Existing saves with an already-ready grid can finish the broadcast.
+At Lantern Bridge, inspect the **executive power siphon**. Return south to Night Market and reroute the **lanterns**, either through the object or Mika’s eligible conversation. Then use **market registry broadcast**. The reward is 200 XP and one Neon Band (+2 Focus and +5 percentage points of critical chance). Existing saves with an already-ready grid can finish the broadcast. Revisit Mika and inspect **open stalls** afterward: vendors have returned, the billboard is dark, and the occupied-stall registry persists.
 
 ### Corporate Espionage
 
-At Exec Lounge, copy the **concierge credential mirror**, then use the **private safe**. At Service Lift, choose **worker network uplink** for publication or **private dead drop** for private leverage. Both pay 250 XP. Publication grants the Encrypted Ledger evidence item; private leverage grants Phase Rounds. A completed quest cannot grant the other outcome. Keep separate saves to compare choices.
+At Exec Lounge, copy the **concierge credential mirror**, then use the **private safe**. At Service Lift, choose **worker network uplink** for publication or **private dead drop** for private leverage. Both pay 250 XP. Publication grants the Encrypted Ledger evidence item; private leverage grants Phase Rounds. A completed quest cannot grant the other outcome. Keep separate saves to compare choices. Inspect **ledger receipts** at Service Lift before or after choosing: publication produces worker-network replies; private leverage produces a private acknowledgment. Both transmission controls retire after the choice, and rereading receipts grants no additional rewards.
 
 ### Prototype Testing
 
-At Drone Test Alcove, inspect **prototype targeting audit**, then calibrate **prototype rack**. At Landing Pad Roof, use **test telemetry relay**. This is calibration against recorded targets, separate from actual rooftop encounters. Completion pays 300 XP and Phase Rounds: an accessory supplying +2 Agility and +2 Focus. It does not convert weapon attacks to Source. Completing both this quest and the private-leverage branch legitimately grants two copies.
+At Drone Test Alcove, inspect **prototype targeting audit**, then calibrate **prototype rack**. At Landing Pad Roof, use **test telemetry relay**. This is calibration against recorded targets, separate from actual rooftop encounters. Completion pays 300 XP and Phase Rounds: an accessory supplying +2 Agility and +2 Focus. It does not convert weapon attacks to Source. Calibration demonstrates the corrected profile against a recorded worker silhouette and armed drone; inspect **trial replay** afterward to revisit the result. Completing both this quest and the private-leverage branch legitimately grants two copies.
 
 ### Murder in the Skyline Salon
 
-At Skyline VIP Salon, inspect **crime-scene barrier** and question Dax, Vance, Lyra and Selene. Vance has an alibi before evidence and a nonrewarding response after completion. Inspect the salon’s **dispenser log** and **security terminal**. In Syndicate Booth, inspect **crystal glass**, **executive comms rig**, and **auditor’s datapad**. Return to Vance and confront him after the three required evidence inspections. Earlier evidence survives save/reload even if discovered before touching the barrier. The public exit remains open.
+At Skyline VIP Salon, inspect **crime-scene barrier** and question Dax, Vance, Lyra and Selene. Vance has an alibi before evidence and a nonrewarding response after completion. Inspect the salon’s **dispenser log** and **security terminal**. In Syndicate Booth, inspect **crystal glass**, **executive comms rig**, and **auditor’s datapad**. Return to Vance after the three required evidence inspections and choose to review his alibi. First identify **the 21:14 booth badge entry** as the contradiction to his claim that he stayed at his table. When he blames a logging fault, present **the coolant in the glass matching the missing core in his comms rig** as independent physical evidence. Wrong claims receive specific rebuttals and can be reconsidered; either question also permits leaving. The datapad supplies optional motive context, but is not required and is not cited as discovered evidence if unread. Earlier evidence survives save/reload even if discovered before touching the barrier. The public exit remains open.
 
 Completion pays 450 XP, one Cyano-Coolant Injector and one Skyline Master Passkey. The passkey is evidence. The injector supplies +4 Focus, +3 Accuracy, Freeze weapon conversion where the weapon/mod element rules permit it, and a 20% freeze-on-hit chance. No repeated reward follows reopening the completed conversation or reloading.
 
@@ -218,7 +218,7 @@ Move through Laundry Service, borrow the shape of workers the city refuses to se
 
 **Guest Access**
 
-- [ ] Survive the Skypark guest registry and acquire guest access. (`blend_in`)
+- [ ] At the Skypark guest registry, maintain the scheduled air-filter inspection cover and acquire guest access. (`blend_in`)
 - [ ] Have Zeke and Orion blind the scanner grid from Laundry Service. (`disable_sensors`)
 
 **Pass the Scanners**
@@ -284,7 +284,7 @@ Examine the poisoned glass and access logs, question the four patrons, and confr
 
 **Expose the Killer**
 
-- [ ] Confront Director Vance with the contradictory timestamp log. (`expose_vance`)
+- [ ] Challenge Vance's alibi using the access log, then connect his equipment to the poison. (`expose_vance`)
 
 ## Room reference
 
@@ -432,7 +432,7 @@ The Night Market insists on being heard. Lanterns swing over food steam, Noodle 
 
 Exits: west → Checkpoint Queue, east → Noodle Row, north → Lantern Bridge, south → Backstreet Clinic.
 
-Interactions: lanterns, market registry broadcast.
+Interactions: lanterns, market registry broadcast, open stalls.
 
 #### Noodle Row (`spire_noodle_row`)
 
@@ -620,17 +620,17 @@ Interactions: uniform racks, laundry tags, erased memorial name.
 
 #### Service Lift (`spire_service_lift`)
 
-A service lift rises through the bones of the Upper City. A worker network uplink can publish the ledger, while a private dead drop can turn it into a precise weapon against one executive. The lift panel offers a return to Lower City’s Transit Plaza beside a rattling inspection hatch. Beyond the inspection hatch, a separate inspection lift travels down to Archive Vault and returns to this landing. The lift panel still controls the cleared route to Lower City.
+A service lift rises through the bones of the Upper City. A worker network uplink can publish the ledger, while a private dead drop can turn it into a precise weapon against one executive. The lift panel offers a return to Lower City’s Transit Plaza beside a rattling inspection hatch. Beyond the inspection hatch, a separate inspection lift travels down to Archive Vault and returns to this landing. The lift panel still controls the cleared route to Lower City. A ledger receipts screen records replies beside the uplink.
 
 Exits: west → Uniform Sorting, north → Skypark Dome.
 
 Tapped Paths: **Ride the inspection lift to the Archive** (down → Archive Vault). Works in both directions.
 
-Interactions: lift panel, inspection hatch, worker network uplink, private dead drop.
+Interactions: lift panel, inspection hatch, worker network uplink, private dead drop, ledger receipts.
 
 #### Staff Checkpoint (`spire_staff_checkpoint`)
 
-The staff checkpoint is clean, bright, and cruelly polite. A badge scanner chirps at every worker while a wall display grades smiles for guest readiness.
+The staff checkpoint is clean, bright, and cruelly polite. A badge scanner chirps at every worker while a wall display grades smiles for guest readiness. A copied service order hangs beside the badge scanner.
 
 Exits: south → Laundry Service, east → Skypark Dome.
 
@@ -806,11 +806,11 @@ Interactions: containment field, lens relic, command tether-lines, scan tether-l
 
 #### Drone Test Alcove (`spire_drone_test_alcove`)
 
-Scratched glass and warning tape seal the alcove. A prototype rack waits beside sleeping security drones, their dormant sensor paths revealed by the Lens. A flight telemetry log flashes on the rack screen. A prototype targeting audit waits on the calibration screen.
+Scratched glass and warning tape seal the alcove. A prototype rack waits beside sleeping security drones, their dormant sensor paths revealed by the Lens. A flight telemetry log flashes on the rack screen. A prototype targeting audit waits on the calibration screen. A trial replay screen waits beside the rack.
 
 Exits: west → Archive Vault, east → Landing Pad Roof.
 
-Interactions: prototype rack, prototype targeting audit, security drones, scan targeting paths, flight telemetry log.
+Interactions: prototype rack, prototype targeting audit, security drones, scan targeting paths, flight telemetry log, trial replay.
 
 #### Catalog Atrium (`spire_archive_scale_01`)
 

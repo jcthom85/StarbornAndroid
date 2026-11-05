@@ -1,0 +1,9 @@
+{
+  "tests": 813,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "source": "Observed from app/build/test-results/testDebugUnitTest XML after full run, before focused rerun replaced the result directory.",
+  "command_log": "full-host-and-initial-desktop.log",
+  "scope": "Includes productionWorld3CompletionistRoutesVerifyBothLedgerOutcomesAndReloads and full earned campaign checks."
+}

@@ -1,0 +1,71 @@
+{
+  "full_host_tests": 813,
+  "full_host_failures": 0,
+  "final_focused_suites": [
+    {
+      "module": "app",
+      "suite": "com.example.starborn.data.DataIntegrityTest",
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "app",
+      "suite": "com.example.starborn.feature.exploration.WorldThreeDiscoverabilityStateTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "app",
+      "suite": "com.example.starborn.domain.dialogue.World3ReadinessRegressionTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "desktopApp",
+      "suite": "com.example.starborn.desktop.World3PublicInteractionTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "desktopApp",
+      "suite": "com.example.starborn.desktop.DesktopContentConsistencyTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "desktopApp",
+      "suite": "com.example.starborn.desktop.World3NavigationPublicTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "final_focused_tests": 63,
+  "apk_asset_parity": {
+    "dialogue.json": true,
+    "events.json": true,
+    "milestones.json": true,
+    "quests.json": true,
+    "rooms.json": true
+  },
+  "apk_sha256": "245a350123bcfa0392ca1eb6df8af4283a8f28da8fddfd075be1644405f3eb05",
+  "reader": {
+    "rooms": 70,
+    "source_revision_matches": true,
+    "new_solution_guidance": true
+  },
+  "phone_installed": false,
+  "committed_or_pushed": false,
+  "phone_acceptance": "pending"
+}

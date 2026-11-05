@@ -25,7 +25,12 @@ class World3PublicInteractionTest {
 
     private fun restore(s: DesktopAppServices, state: GameSessionState) {
         compose.runOnIdle { s.sessionStore.restore(state) }
-        compose.waitUntil(10000) { !s.exploration.uiState.value.isLoading && s.exploration.uiState.value.currentRoom?.id == state.roomId }
+        compose.waitUntil(10000) {
+            val ui = s.exploration.uiState.value
+            val restored = s.sessionStore.state.value
+            !ui.isLoading && ui.currentRoom?.id == state.roomId &&
+                ui.completedMilestones == restored.completedMilestones && ui.completedQuests == restored.completedQuests
+        }
         dismissNarration(s)
     }
 
@@ -52,6 +57,66 @@ class World3PublicInteractionTest {
             compose.waitForIdle()
         }
         error("World 3 dialogue did not finish")
+    }
+
+    @Test fun coverStoryRecoversAfterWrongAnswerLeaveAndSaveReload() = runWith { s ->
+        restore(s, s.sessionStore.state.value.copy(worldId = "world_3", hubId = "hub_6_upper_city", roomId = "spire_skypark_dome",
+            activeQuests = setOf("w3_mq13"), completedQuests = setOf("w3_mq12"), completedEvents = emptySet(),
+            completedMilestones = setOf("ms_w3_mq12_complete"), questTasksCompleted = emptyMap()))
+        act(s, "w3_mq13_review_guest_access")
+        repeat(2) { compose.runOnIdle { s.exploration.advanceDialogue() }; compose.waitForIdle() }
+        assertEquals("w3_cover_order", s.exploration.uiState.value.activeDialogue?.line?.id)
+        compose.runOnIdle { s.exploration.onDialogueChoiceSelected("cover_emergency") }
+        compose.runOnIdle { s.exploration.advanceDialogue() }
+        assertFalse("blend_in" in s.sessionStore.state.value.questTasksCompleted["w3_mq13"].orEmpty())
+        compose.runOnIdle { s.exploration.onDialogueChoiceSelected("w3_cover_recovery_leave") }
+        assertNull(s.exploration.uiState.value.activeDialogue)
+        assertTrue(s.saveManager.saveGame(9, s.sessionStore.state.value))
+        assertTrue(compose.runOnIdle { s.loadSlot(9) })
+        compose.waitUntil(10000) { !s.exploration.uiState.value.isLoading }
+        dismissNarration(s)
+        act(s, "w3_mq13_review_guest_access"); finish(s)
+        assertTrue("blend_in" in s.sessionStore.state.value.questTasksCompleted["w3_mq13"].orEmpty())
+    }
+
+    @Test fun localQuestConsequencesStayVisibleWithoutPayingAgain() = runWith { s ->
+        val base = s.sessionStore.state.value.copy(worldId = "world_3", hubId = "hub_6_upper_city",
+            roomId = "spire_service_lift", activeQuests = setOf("w3_sq14"), completedQuests = setOf("w3_mq12"),
+            completedMilestones = setOf("ms_w3_mq12_complete", "ms_w3_ledger_stolen"), completedEvents = emptySet())
+        for (branch in listOf("w3_sq14_leak_ledger", "w3_sq14_weaponize_ledger")) {
+            restore(s, base)
+            act(s, branch); dismissNarration(s)
+            compose.waitUntil(5000) { "w3_sq14" in s.sessionStore.state.value.completedQuests }
+            val before = s.sessionStore.state.value
+            compose.waitUntil(5000) { s.exploration.uiState.value.completedMilestones == before.completedMilestones }
+            assertFalse("branch=$branch milestones=${before.completedMilestones} actions=${s.exploration.uiState.value.actions.map { it.name }}",
+                s.exploration.uiState.value.actions.any { it.name in setOf("worker network uplink", "private dead drop") })
+            assertTrue(s.saveManager.saveGame(9, before))
+            assertTrue(compose.runOnIdle { s.loadSlot(9) })
+            compose.waitUntil(10000) { !s.exploration.uiState.value.isLoading }
+            dismissNarration(s)
+            repeat(2) {
+                act(s, "w3_read_ledger_receipts")
+                compose.waitUntil(5000) { s.exploration.uiState.value.narrationPrompt != null }
+                val message = s.exploration.uiState.value.narrationPrompt!!.message
+                assertTrue(message.contains(if (branch == "w3_sq14_leak_ledger") "workers comparing" else "No worker-network publication"))
+                dismissNarration(s)
+            }
+            assertEquals(before.inventory, s.sessionStore.state.value.inventory)
+            assertEquals(before.playerXp, s.sessionStore.state.value.playerXp)
+        }
+        for ((room, milestone, name) in listOf(
+            Triple("spire_night_market", "ms_w3_market_lit", "open stalls"),
+            Triple("spire_drone_test_alcove", "ms_w3_prototype_trial_complete", "trial replay"))) {
+            restore(s, base.copy(roomId = room, completedMilestones = base.completedMilestones))
+            assertFalse(s.exploration.uiState.value.actions.any { it.name == name })
+            restore(s, base.copy(roomId = room, completedMilestones = base.completedMilestones + milestone))
+            val action = s.exploration.uiState.value.actions.single { it.name == name }
+            compose.runOnIdle { s.exploration.onActionSelected(action) }
+            compose.waitUntil(5000) { s.exploration.uiState.value.narrationPrompt != null }
+            assertTrue(s.exploration.uiState.value.narrationPrompt!!.message.isNotBlank())
+            dismissNarration(s)
+        }
     }
 
     @Test fun guestRegistryDeliversCuratorSceneThroughVisibleAction() = runWith { s ->

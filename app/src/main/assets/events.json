@@ -6400,7 +6400,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova aligns the rack with the recorded drone targets. The corrected targeting profile holds, but the terminal logs her calibration signature. The roof relay can scrub that telemetry."
+        "message": "Nova runs the corrected profile against the recorded trial. A maintenance worker silhouette crosses the lane: the targeting bracket opens and lets it pass. An armed drone rises behind it: the bracket closes, and the burst strikes the drone's weapon mount. The replay freezes on the unharmed worker. Then a red line appears—OPERATOR SIGNATURE RECORDED. The Landing Pad Roof relay can scrub it."
       }
     ]
   },
@@ -10757,7 +10757,7 @@
       },
       {
         "type": "show_message",
-        "message": "Warm light exposes every hidden stall before patrols can declare them abandoned. Neon Band acquired."
+        "message": "Mika reads the stall names into the registry as warm light runs down both sides of the alley. Shutters lift; a vendor carries her stock back outside. Above Lantern Bridge, the executive billboard goes black. The patrol display changes from ABANDONED to OCCUPIED. Mika presses the Neon Band into Nova's palm. 'Now they have to admit we're here.'"
       }
     ]
   },
@@ -10840,7 +10840,7 @@
       },
       {
         "type": "show_message",
-        "message": "Every worker terminal receives the accounts at once. The Upper City runs on crimes with better stationery."
+        "message": "The uplink copies the accounts to the worker network. Replies arrive floor by floor: withheld wages, invented deductions, matching signatures. A laundry crew flags an account for a shared claim. Gh0st keeps a copy of the Encrypted Ledger. The evidence is public now; what the workers do with it belongs to them."
       }
     ]
   },
@@ -12991,7 +12991,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova keeps the workers out of the blast radius and feeds one executive's private security profile into a dead drop. Phase Rounds acquired."
+        "message": "The dead drop sends one executive a private copy of his own security purchases. A reply arrives without a name: an equipment locker releases the Phase Rounds, and the message deletes itself. The other accounts remain private. Nova has bought immediate leverage; the workers receive no ledger to use for themselves."
       }
     ]
   },
@@ -15297,7 +15297,7 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke cross-references the access logs: Director Vance's executive comms unit vented coolant at 21:12, and his badge pinged the Syndicate Booth sensor at 21:14! He lied about never leaving his table."
+        "message": "Access log, corner-table reader: Vance's badge registered at 21:00. Syndicate Booth reader: the same badge registered at 21:14. Equipment log: his comms unit vented coolant at 21:12. The entries are separate records; the terminal offers no reconstruction of the crime."
       }
     ]
   },
@@ -15320,7 +15320,7 @@
       },
       {
         "type": "show_message",
-        "message": "The portable comms unit stamped with Director Vance's procurement crest is missing its primary Cyano-Coolant 9 core. The empty bracket is still frosted with residue."
+        "message": "The comms rig bears Vance's procurement crest. Its Cyano-Coolant 9 core bracket is empty, with fresh frost around the release catch. This is a physical inspection, separate from the terminal's timestamps."
       }
     ]
   },
@@ -17246,6 +17246,62 @@
       {
         "type": "start_dialogue",
         "npc": "line:w5_bulkheads_first"
+      }
+    ]
+  },
+  {
+    "id": "w3_read_ledger_receipts",
+    "repeatable": true,
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_read_ledger_receipts"
+    },
+    "conditions": [
+      {
+        "type": "in_room",
+        "room_id": "spire_service_lift"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w3_ledger_stolen"
+      }
+    ],
+    "actions": [
+      {
+        "type": "if_milestone_set",
+        "milestone": "ms_w3_blackmail_unlocked",
+        "do": [
+          {
+            "type": "show_message",
+            "message": "The ledger receipts show workers comparing deductions and sharing copies beyond the Spire's local network. The laundry crew has preserved the account behind its claim. Publication cannot promise a victory, but the evidence is no longer held by one person."
+          }
+        ]
+      },
+      {
+        "type": "if_milestone_set",
+        "milestone": "ms_w3_ledger_weaponized",
+        "do": [
+          {
+            "type": "show_message",
+            "message": "The ledger receipts contain a single private acknowledgment and the released equipment locker number. No worker-network publication appears. The executive knows someone has a copy; the people in the accounts still do not."
+          }
+        ]
+      },
+      {
+        "type": "if_milestone_not_set",
+        "milestone": "ms_w3_blackmail_unlocked",
+        "do": [
+          {
+            "type": "if_milestone_not_set",
+            "milestone": "ms_w3_ledger_weaponized",
+            "do": [
+              {
+                "type": "show_message",
+                "message": "The ledger receipts are empty. The worker network uplink will publish every account; the private dead drop trades one executive's exposure for equipment. Neither transmission has been sent."
+              }
+            ]
+          }
+        ]
       }
     ]
   }

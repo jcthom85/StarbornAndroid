@@ -4469,7 +4469,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Night Market insists on being heard. Repaired lanterns swing over food steam, Noodle Row shouts through rain, and a lantern bridge crosses the drain like stubborn stars. A market registry broadcast crackles from a speaker above the stalls.",
+        "description": "The Night Market is open along both sides of the alley. Repaired lanterns shine over unpacked stock, Mika calls orders toward Noodle Row, and the market registry broadcast now lists every occupied stall. Beyond the lantern bridge, the executive billboard is dark. The open stalls crowd beneath the restored lights.",
         "requires_milestones": [
           "ms_w3_market_lit"
         ]
@@ -4495,6 +4495,15 @@
         ],
         "condition_unmet_message": "The registry still calls the dark stalls abandoned.",
         "hide_when_event_completed": "w3_sq13_restore_market"
+      },
+      {
+        "name": "open stalls",
+        "type": "inspect",
+        "requires_milestones": [
+          "ms_w3_market_lit"
+        ],
+        "condition_unmet_message": "Vendors are setting goods outside again. Their names remain on the occupied-stall register. Someone has turned a packing crate into an extra seat beneath the repaired lanterns.",
+        "show_when_milestone": "ms_w3_market_lit"
       }
     ],
     "npc_presence": [
@@ -4910,7 +4919,7 @@
       {
         "name": "laundry tags",
         "type": "generic",
-        "condition_unmet_message": "The laundry tags expose which staff routes reach the Archive level."
+        "condition_unmet_message": "The laundry tags match your copied work order: scheduled Skypark air-filter inspection. The staff route leads through the registry."
       },
       {
         "name": "erased memorial name",
@@ -4926,7 +4935,7 @@
     "env": "neon",
     "title": "Service Lift",
     "background_image": "images/rooms/world_3/spire_service_lift.webp",
-    "description": "A service lift rises through the bones of the Upper City. A worker network uplink can publish the ledger, while a private dead drop can turn it into a precise weapon against one executive. The lift panel offers a return to Lower City’s Transit Plaza beside a rattling inspection hatch. Beyond the inspection hatch, a separate inspection lift travels down to Archive Vault and returns to this landing. The lift panel still controls the cleared route to Lower City.",
+    "description": "A service lift rises through the bones of the Upper City. A worker network uplink can publish the ledger, while a private dead drop can turn it into a precise weapon against one executive. The lift panel offers a return to Lower City’s Transit Plaza beside a rattling inspection hatch. Beyond the inspection hatch, a separate inspection lift travels down to Archive Vault and returns to this landing. The lift panel still controls the cleared route to Lower City. A ledger receipts screen records replies beside the uplink.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -4942,7 +4951,33 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The service lift judders between lockdown floors. The lift panel retains the cleared freight route down to Transit Plaza, and the inspection hatch rattles like the city is trying to shake the crew loose. A worker network uplink and a private dead drop remain accessible beside the panel. Beyond the inspection hatch, a separate inspection lift travels down to Archive Vault and returns to this landing. The lift panel still controls the cleared route to Lower City.",
+        "description": "The service lift judders between lockdown floors. The lift panel retains the cleared freight route down to Transit Plaza, and the inspection hatch rattles like the city is trying to shake the crew loose. The worker network uplink and private dead drop remain powered beside the panel, with their transmission controls closed. Beyond the inspection hatch, a separate inspection lift travels down to Archive Vault and returns to this landing. The lift panel still controls the cleared route to Lower City. A ledger receipts screen records replies beside the uplink. Worker replies scroll across the ledger receipts screen; the published accounts are being copied and compared.",
+        "requires_milestones": [
+          "ms_w3_mq14_complete",
+          "ms_w3_blackmail_unlocked"
+        ]
+      },
+      {
+        "description": "A service lift rises through the bones of the Upper City. The worker network uplink and private dead drop show the ledger transmission as closed. The lift panel offers a return to Lower City’s Transit Plaza beside a rattling inspection hatch. Beyond the inspection hatch, a separate inspection lift travels down to Archive Vault and returns to this landing. The lift panel still controls the cleared route to Lower City. A ledger receipts screen records replies beside the uplink. Worker replies scroll across the ledger receipts screen; the published accounts are being copied and compared.",
+        "requires_milestones": [
+          "ms_w3_blackmail_unlocked"
+        ]
+      },
+      {
+        "description": "The service lift judders between lockdown floors. The lift panel retains the cleared freight route down to Transit Plaza, and the inspection hatch rattles like the city is trying to shake the crew loose. The worker network uplink and private dead drop remain powered beside the panel, with their transmission controls closed. Beyond the inspection hatch, a separate inspection lift travels down to Archive Vault and returns to this landing. The lift panel still controls the cleared route to Lower City. A ledger receipts screen records replies beside the uplink. The ledger receipts screen holds one private acknowledgment. The worker-network publication queue remains empty.",
+        "requires_milestones": [
+          "ms_w3_mq14_complete",
+          "ms_w3_ledger_weaponized"
+        ]
+      },
+      {
+        "description": "A service lift rises through the bones of the Upper City. The worker network uplink and private dead drop show the ledger transmission as closed. The lift panel offers a return to Lower City’s Transit Plaza beside a rattling inspection hatch. Beyond the inspection hatch, a separate inspection lift travels down to Archive Vault and returns to this landing. The lift panel still controls the cleared route to Lower City. A ledger receipts screen records replies beside the uplink. The ledger receipts screen holds one private acknowledgment. The worker-network publication queue remains empty.",
+        "requires_milestones": [
+          "ms_w3_ledger_weaponized"
+        ]
+      },
+      {
+        "description": "The service lift judders between lockdown floors. The lift panel retains the cleared freight route down to Transit Plaza, and the inspection hatch rattles like the city is trying to shake the crew loose. A worker network uplink and a private dead drop remain accessible beside the panel. Beyond the inspection hatch, a separate inspection lift travels down to Archive Vault and returns to this landing. The lift panel still controls the cleared route to Lower City. A ledger receipts screen records replies beside the uplink.",
         "requires_milestones": [
           "ms_w3_mq14_complete"
         ]
@@ -4971,7 +5006,11 @@
           "ms_w3_ledger_stolen"
         ],
         "condition_unmet_message": "The uplink can publish evidence only after Nova has the ledger.",
-        "hide_when_event_completed": "w3_sq14_leak_ledger"
+        "hide_when_event_completed": "w3_sq14_leak_ledger",
+        "forbidden_milestones": [
+          "ms_w3_blackmail_unlocked",
+          "ms_w3_ledger_weaponized"
+        ]
       },
       {
         "name": "private dead drop",
@@ -4981,7 +5020,20 @@
           "ms_w3_ledger_stolen"
         ],
         "condition_unmet_message": "The dead drop needs the stolen ledger before it can isolate one executive's security profile.",
-        "hide_when_event_completed": "w3_sq14_weaponize_ledger"
+        "hide_when_event_completed": "w3_sq14_weaponize_ledger",
+        "forbidden_milestones": [
+          "ms_w3_blackmail_unlocked",
+          "ms_w3_ledger_weaponized"
+        ]
+      },
+      {
+        "name": "ledger receipts",
+        "type": "generic",
+        "action_event": "w3_read_ledger_receipts",
+        "requires_milestones": [
+          "ms_w3_ledger_stolen"
+        ],
+        "condition_unmet_message": "The receipt screen is waiting for a ledger transmission."
       }
     ],
     "special_exits": {
@@ -4993,7 +5045,7 @@
     "env": "neon",
     "title": "Staff Checkpoint",
     "background_image": "images/rooms/world_3/spire_staff_checkpoint.webp",
-    "description": "The staff checkpoint is clean, bright, and cruelly polite. A badge scanner chirps at every worker while a wall display grades smiles for guest readiness.",
+    "description": "The staff checkpoint is clean, bright, and cruelly polite. A badge scanner chirps at every worker while a wall display grades smiles for guest readiness. A copied service order hangs beside the badge scanner.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -5024,7 +5076,7 @@
       {
         "name": "badge scanner",
         "type": "generic",
-        "condition_unmet_message": "The badge scanner cares about uniforms, posture, and timing. It does not care about truth."
+        "condition_unmet_message": "The copied work order reads: scheduled Skypark air-filter inspection. Emergency repairs require an incident number. Guest deliveries go through the concierge. The scanner accepts the badges; the registry may still ask what you're here to do."
       },
       {
         "name": "wall display",
@@ -5440,7 +5492,7 @@
     "env": "neon",
     "title": "Drone Test Alcove",
     "background_image": "images/rooms/world_3/spire_drone_test_alcove.webp",
-    "description": "Scratched glass and warning tape seal the alcove. A prototype rack waits beside sleeping security drones, their dormant sensor paths revealed by the Lens. A flight telemetry log flashes on the rack screen. A prototype targeting audit waits on the calibration screen.",
+    "description": "Scratched glass and warning tape seal the alcove. A prototype rack waits beside sleeping security drones, their dormant sensor paths revealed by the Lens. A flight telemetry log flashes on the rack screen. A prototype targeting audit waits on the calibration screen. A trial replay screen waits beside the rack.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -5455,7 +5507,20 @@
     "state": {},
     "description_variants": [
       {
-        "description": "Red warning tape snaps in fanwash as security drones twitch awake. The prototype rack holds a flight telemetry log and a prototype targeting audit. Scan targeting paths to trace lines of fire across Nova's ribs.",
+        "description": "Red warning tape snaps in fanwash as security drones twitch awake. The prototype rack holds a flight telemetry log and a prototype targeting audit. Scan targeting paths to trace lines of fire across Nova's ribs. A trial replay screen waits beside the rack. The corrected trial replay shows an unharmed worker silhouette beside a disabled armed-drone target.",
+        "requires_milestones": [
+          "ms_w3_mq14_complete",
+          "ms_w3_prototype_trial_complete"
+        ]
+      },
+      {
+        "description": "Scratched glass and warning tape seal the alcove. A prototype rack waits beside sleeping security drones, their dormant sensor paths revealed by the Lens. A flight telemetry log flashes on the rack screen. A prototype targeting audit waits on the calibration screen. A trial replay screen waits beside the rack. The corrected trial replay shows an unharmed worker silhouette beside a disabled armed-drone target.",
+        "requires_milestones": [
+          "ms_w3_prototype_trial_complete"
+        ]
+      },
+      {
+        "description": "Red warning tape snaps in fanwash as security drones twitch awake. The prototype rack holds a flight telemetry log and a prototype targeting audit. Scan targeting paths to trace lines of fire across Nova's ribs. A trial replay screen waits beside the rack.",
         "requires_milestones": [
           "ms_w3_mq14_complete"
         ]
@@ -5494,6 +5559,15 @@
         "name": "flight telemetry log",
         "type": "generic",
         "condition_unmet_message": "Recorded drone flight telemetry showing high combat lethality during initial trials."
+      },
+      {
+        "name": "trial replay",
+        "type": "inspect",
+        "requires_milestones": [
+          "ms_w3_prototype_trial_complete"
+        ],
+        "condition_unmet_message": "RECORDED TRIAL: a maintenance worker silhouette passes untouched. The corrected rack tracks the armed drone behind it and strikes the weapon mount. No live targets were used. The replay preserves the result after operator telemetry is scrubbed.",
+        "show_when_milestone": "ms_w3_prototype_trial_complete"
       }
     ]
   },
@@ -21459,7 +21533,7 @@
         "name": "security terminal",
         "type": "generic",
         "action_event": "w3_sq16_inspect_terminal",
-        "condition_unmet_message": "Terminal logs show Director Vance's keycard pinged the Syndicate Booth sensor at 21:14, and his comms unit vented coolant at 21:12.",
+        "condition_unmet_message": "Separate access and equipment timestamps can be compared with the patrons' alibis.",
         "inspect_after_completion": true
       }
     ]

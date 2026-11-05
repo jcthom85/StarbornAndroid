@@ -1257,14 +1257,14 @@
     "id": "w3_mq12_workstation_dialogue",
     "speaker": "System",
     "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:map_patrols,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:copy_badges,quest_task_done:w3_mq12:source_disguises,quest_task_not_done:w3_mq12:hack_blueprints",
-    "text": "Zeke's workstation combines the stolen schedules, copied service badges, and disguise notes into a freight-elevator clearance. The Dominion menus work just like the mine checkpoint; the identities on these badges belong to this building's service crew.",
+    "text": "Zeke's workstation combines the stolen schedules, copied service badges, and disguise notes into a freight-elevator clearance. The Dominion menus work just like the mine checkpoint; the identities on these badges belong to this building's service crew. The copied work order is for a scheduled Skypark air-filter inspection. Emergency repairs need a separate incident number; guest deliveries use the public concierge.",
     "trigger": "player_action:w3_mq12_hack_blueprints"
   },
   {
     "id": "w3_mq12_planning_table_dialogue",
     "speaker": "System",
     "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:map_patrols,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:copy_badges,quest_task_done:w3_mq12:source_disguises,quest_task_done:w3_mq12:hack_blueprints,quest_task_not_done:w3_mq12:assemble_table",
-    "text": "The route is ready: return to Transit Plaza in the copied uniforms, use the freight badges at the service elevator, and ride up to the Upper City laundry intake. Zeke will send the Astra's autopilot clearance to move to the rooftop pad while the crew travels on foot. Once you leave this table, the heist begins.",
+    "text": "The route is ready: return to Transit Plaza in the copied uniforms, use the freight badges at the service elevator, and ride up to the Upper City laundry intake. Zeke will send the Astra's autopilot clearance to move to the rooftop pad while the crew travels on foot. Once you leave this table, the heist begins. Your cover is the scheduled Skypark air-filter inspection. Keep to the work order if anyone asks.",
     "options": [
       {
         "id": "w3_mq12_assemble_confirm",
@@ -1288,12 +1288,12 @@
     "id": "curator_w3_mq13_insult",
     "speaker": "Museum Curator",
     "text": "A Starborn stray in guest light. Control your pet, or I will call sanitation and security in whichever order is more entertaining.",
-    "next": "zeke_w3_mq13_cover"
+    "next": "w3_cover_order"
   },
   {
     "id": "zeke_w3_mq13_cover",
     "speaker": "Zeke",
-    "text": "Maintenance crew, sir. If you want to report us, the staff checkpoint can verify our clearance. Of course, they'll need to know why you stopped a scheduled service round.",
+    "text": "Zeke keeps his voice low as the registry clears. 'Right order, right badges. Same trick as the mine checkpoint: give the system a story its own forms already believe.'",
     "trigger": "player_action:w3_mq13_blend_in"
   },
   {
@@ -3196,8 +3196,8 @@
     "options": [
       {
         "id": "vance_confront_evidence",
-        "text": "Your comms unit is missing its coolant vial—and your badge pinged Malick's booth at 21:14.",
-        "next": "vance_confession_1"
+        "text": "Let's check your alibi against the records.",
+        "next": "w3_case_alibi_question"
       },
       {
         "id": "vance_confront_leave",
@@ -3209,18 +3209,18 @@
     "id": "vance_confession_1",
     "speaker": "Director Vance",
     "text": "What?! That's... that is an outrageous fabrication! A timestamp glitch in the logging firmware!",
-    "next": "vance_confession_2"
+    "next": "w3_case_physical_question"
   },
   {
     "id": "vance_confession_2",
-    "speaker": "Player",
-    "text": "Cyano-Coolant 9 in the glass. The exact refrigerant missing from your comms core. Malick's datapad says he was submitting your embezzlement audit in the morning. Give it up, Vance.",
+    "speaker": "Nova",
+    "text": "The access record puts you in the booth. Cyano-Coolant 9 is in Malick's glass, and its core is missing from the comms rig bearing your crest. A logging fault doesn't empty a coolant bracket.",
     "next": "vance_confession_3"
   },
   {
     "id": "vance_confession_3",
     "speaker": "Director Vance",
-    "text": "...Fine! The sanctimonious little bureaucrat was going to ruin me! Forty years climbing the Spire, destroyed over scrap manifests! Take the passkey and lift this lockdown—security will hear about this!",
+    "text": "...Fine! Malick was going to file the scrap-contract audit in the morning. Forty years climbing the Spire, destroyed over manifests! I took the coolant from my rig. Take the passkey—security can hear the rest from your recorder.",
     "trigger": "give_xp:450,give_item:cyano_coolant_injector,give_item:skyline_master_passkey,complete_quest:w3_sq16,set_milestone:ms_w3_sq16_complete"
   },
   {
@@ -3994,5 +3994,153 @@
     "id": "jax_w3_mq11_shelter_offer",
     "speaker": "Jax",
     "text": "Then get off the street. There's an empty apartment above the bar. The last tenants left when the sweeps started; I've kept the power on. You can catch your breath there. Keep the stairs clear and trouble away from my customers. That's the deal."
+  },
+  {
+    "id": "w3_cover_order",
+    "speaker": "Museum Curator",
+    "text": "The Curator blocks the registry with one immaculate sleeve. 'Maintenance, then? State your work order. I will not have contractors wandering through the orchids.'",
+    "options": [
+      {
+        "id": "correct",
+        "text": "Scheduled air-filter inspection.",
+        "next": "w3_cover_service_verified"
+      },
+      {
+        "id": "cover_emergency",
+        "text": "Emergency glass repair.",
+        "next": "w3_cover_emergency_rebuttal"
+      },
+      {
+        "id": "cover_delivery",
+        "text": "Private delivery for a guest.",
+        "next": "w3_cover_delivery_rebuttal"
+      },
+      {
+        "id": "w3_cover_leave",
+        "text": "Step away from the registry."
+      }
+    ]
+  },
+  {
+    "id": "w3_cover_emergency_rebuttal",
+    "speaker": "Museum Curator",
+    "text": "'An emergency? There is no damage report. Incident number?' Zeke taps the folded service order in Nova's hand. The copied clearance authorizes scheduled work. You can correct the request or step away.",
+    "next": "w3_cover_recover"
+  },
+  {
+    "id": "w3_cover_delivery_rebuttal",
+    "speaker": "Museum Curator",
+    "text": "'Guest deliveries use the concierge. You are wearing maintenance uniforms.' The Curator waits, enjoying this. The folded service order is still in Nova's hand; the cover can be recovered.",
+    "next": "w3_cover_recover"
+  },
+  {
+    "id": "w3_cover_recover",
+    "speaker": "Nova",
+    "text": "The service order lists the crew's actual cover: scheduled Skypark air-filter inspection. What do you tell the Curator?",
+    "options": [
+      {
+        "id": "correct",
+        "text": "Correct the request: scheduled air-filter inspection.",
+        "next": "w3_cover_service_verified"
+      },
+      {
+        "id": "w3_cover_recovery_leave",
+        "text": "Step away and review the service order."
+      }
+    ]
+  },
+  {
+    "id": "w3_cover_service_verified",
+    "speaker": "Museum Curator",
+    "text": "The registry matches the work order to your copied badges. 'Air filters. Of course. Try not to touch anything a guest might see.' The Curator moves his sleeve. For once, all that preparation looks like ordinary work.",
+    "next": "zeke_w3_mq13_cover"
+  },
+  {
+    "id": "w3_case_alibi_question",
+    "speaker": "Nova",
+    "text": "Vance claims he remained at his corner table from 21:00 onward. Which record contradicts that claim?",
+    "options": [
+      {
+        "id": "correct",
+        "text": "His badge entered the Syndicate Booth at 21:14.",
+        "next": "vance_confession_1"
+      },
+      {
+        "id": "case_coolant_time",
+        "text": "His comms unit vented coolant at 21:12.",
+        "next": "w3_case_remote_rebuttal"
+      },
+      {
+        "id": "case_drink_time",
+        "text": "The dispenser poured a drink at 21:15.",
+        "next": "w3_case_dispenser_rebuttal"
+      },
+      {
+        "id": "w3_case_alibi_leave",
+        "text": "Review the evidence before continuing."
+      }
+    ]
+  },
+  {
+    "id": "w3_case_remote_rebuttal",
+    "speaker": "Director Vance",
+    "text": "'A unit can vent while I sit beside it. That says nothing about where I went.' The equipment timestamp alone does not contradict his location. The access log records movement.",
+    "next": "w3_case_alibi_question"
+  },
+  {
+    "id": "w3_case_dispenser_rebuttal",
+    "speaker": "Director Vance",
+    "text": "'The bar pours drinks all evening. Was I supposed to stop it?' The dispenser record describes the drink, not Vance's movements.",
+    "next": "w3_case_alibi_question"
+  },
+  {
+    "id": "w3_case_physical_question",
+    "speaker": "Nova",
+    "text": "Vance blames the badge ping on a logging fault. Which evidence independently connects his equipment to the poison?",
+    "options": [
+      {
+        "id": "correct",
+        "text": "Coolant in the glass matches the missing core in his comms rig.",
+        "next": "vance_confession_2"
+      },
+      {
+        "id": "case_badge_again",
+        "text": "The badge timestamp repeats his name.",
+        "next": "w3_case_same_record_rebuttal"
+      },
+      {
+        "id": "case_dispenser_clean",
+        "text": "The dispenser poured the drink without additives.",
+        "next": "w3_case_clean_rebuttal"
+      },
+      {
+        "id": "w3_case_physical_leave",
+        "text": "Step back and compare the evidence."
+      }
+    ]
+  },
+  {
+    "id": "w3_case_same_record_rebuttal",
+    "speaker": "Director Vance",
+    "text": "'You are reading the same log twice.' Repeating the disputed record does not answer his objection. The glass and the rig provide a separate physical connection.",
+    "next": "w3_case_physical_question"
+  },
+  {
+    "id": "w3_case_clean_rebuttal",
+    "speaker": "Director Vance",
+    "text": "'Then accuse whoever touched it afterward.' A clean dispenser narrows when the poison was added, but it does not identify its source. Compare the residue in the glass with the missing component.",
+    "next": "w3_case_physical_question"
+  },
+  {
+    "id": "mika_w3_market_restored",
+    "speaker": "Mika",
+    "text": "Look—every stall has its own light again. The registry lists us as occupied, and the billboard upstairs has gone dark. That's three excuses the patrols can't use tonight. Your skewer's getting cold.",
+    "condition": "quest_completed:w3_sq13,milestone_set:ms_w3_market_lit"
+  },
+  {
+    "id": "lab_w3_trial_replay",
+    "speaker": "Hacked Lab Terminal",
+    "text": "Corrected trial retained: the worker-shaped maintenance target crosses unharmed; the armed drone target takes the burst. Operator telemetry has been scrubbed from the roof relay. Calibration reward already issued.",
+    "condition": "quest_completed:w3_sq15,milestone_set:ms_w3_prototype_tested"
   }
 ]

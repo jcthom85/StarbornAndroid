@@ -657,9 +657,9 @@
   },
   {
     "id": "ms_w3_blackmail_unlocked",
-    "name": "Blackmail Leverage",
-    "description": "You stole an executive ledger and gained leverage over Upper City prices.",
-    "toast": "Blackmail unlocked."
+    "name": "Ledger Published",
+    "description": "You published the executive accounts to the worker network.",
+    "toast": "Ledger published."
   },
   {
     "id": "ms_w3_prototype_tested",
