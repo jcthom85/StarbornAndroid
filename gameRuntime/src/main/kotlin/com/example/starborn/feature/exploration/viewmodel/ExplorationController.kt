@@ -1585,6 +1585,7 @@ class ExplorationController(
             line = line,
             portrait = portrait,
             voiceCue = line.voiceCue,
+            canDismiss = !activeDialogueNpcName.isNullOrBlank() && !activeDialogueNpcName.orEmpty().startsWith("line:"),
             displaySpeaker = if (line.speaker.equals("Orion", true) &&
                 !orionIdentityKnown(sessionStore.state.value)) "???" else null
         )
@@ -3011,6 +3012,24 @@ class ExplorationController(
             promptManager.setToastsSuspended(false)
             offerNpcTrade(npcName)
         }
+    }
+
+    /** Cancel an NPC conversation without executing the current line's completion trigger. */
+    fun dismissDialogue() {
+        if (_uiState.value.activeDialogue?.canDismiss != true) return
+        activeDialogueSession = null
+        activeDialogueNpcName = null
+        val queuedScenes = pendingDialogueNpcs.filter { it.startsWith("line:") }
+        pendingDialogueNpcs.clear()
+        _uiState.update { it.copy(activeDialogue = null, dialogueChoices = emptyList()) }
+        promptManager.setToastsSuspended(false)
+        lastDialogueVoiceCue = null
+        if (dialogueMusicActive && !dialogueMusicPersistent) {
+            playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
+        }
+        dialogueMusicActive = false
+        // Preserve already-requested story sequences; canceling chatter must not consume their events.
+        queuedScenes.forEach(::startImmediateDialogue)
     }
 
     fun advanceDialogue() {

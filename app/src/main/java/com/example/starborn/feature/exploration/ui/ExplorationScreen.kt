@@ -651,6 +651,7 @@ fun ExplorationScreen(
 
     fun handleExplorationBack(allowTitleExit: Boolean = false) {
         when {
+            uiState.cinematic == null && uiState.activeDialogue?.canDismiss == true -> viewModel.dismissDialogue()
             areaEntryActive -> Unit
             restRecoveryNotice != null -> restRecoveryNotice = null
             showExitConfirmDialog -> showExitConfirmDialog = false
@@ -1310,6 +1311,7 @@ fun ExplorationScreen(
                 dialogue = dialogue,
                 choices = uiState.dialogueChoices,
                 onAdvance = { viewModel.advanceDialogue() },
+                onDismiss = { viewModel.dismissDialogue() },
                 onChoice = { viewModel.onDialogueChoiceSelected(it) },
                 onPlayVoice = { viewModel.onDialogueVoiceRequested(it) },
                 onPlayMurmur = { cueId ->

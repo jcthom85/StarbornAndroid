@@ -215,6 +215,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
         else if (ui.activeDialogue != null) {
             val index = listOf(Key.One, Key.Two, Key.Three, Key.Four, Key.Five, Key.Six, Key.Seven, Key.Eight, Key.Nine).indexOf(event.key)
             when {
+                event.key == Key.Escape && ui.activeDialogue?.canDismiss == true -> { runtime.dismissDialogue(); true }
                 dialogueRevealed && index >= 0 && index < ui.dialogueChoices.size -> { runtime.onDialogueChoiceSelected(ui.dialogueChoices[index].id); true }
                 event.key == Key.Enter -> { if (!dialogueRevealed) dialogueRevealRequest++ else if (ui.dialogueChoices.isEmpty()) runtime.advanceDialogue(); true }
                 else -> false

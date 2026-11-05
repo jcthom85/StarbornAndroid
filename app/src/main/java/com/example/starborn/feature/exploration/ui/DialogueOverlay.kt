@@ -1,6 +1,11 @@
 package com.example.starborn.feature.exploration.ui
 
 import com.example.starborn.ui.components.maestroTag
+import androidx.activity.compose.BackHandler
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.VolumeUp
 import com.example.starborn.shared.ui.typewriterText
 
 import androidx.compose.animation.core.LinearEasing
@@ -56,6 +61,9 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -75,6 +83,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import com.example.starborn.feature.exploration.viewmodel.DialogueChoiceUi
 import com.example.starborn.feature.exploration.viewmodel.DialogueUi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.Locale
 import kotlin.random.Random
 
@@ -89,12 +98,17 @@ fun DialogueOverlay(
     onRevealFinished: () -> Unit = {},
     revealAllRequest: Int = 0,
     canDismissByTap: Boolean = true,
+    onDismiss: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
+    BackHandler(enabled = dialogue.canDismiss && onDismiss != null) { onDismiss?.invoke() }
     val line = dialogue.line
     val fullText = remember(line.text) { line.text.replace('[', ' ').replace(']', ' ').trim() }
     val textScroll = rememberScrollState()
     val choiceScroll = rememberScrollState()
+    val scrollScope = androidx.compose.runtime.rememberCoroutineScope()
+    var textLayout by remember(line.id, fullText) { androidx.compose.runtime.mutableStateOf<TextLayoutResult?>(null) }
+    var textViewportHeight by remember { mutableIntStateOf(0) }
     LaunchedEffect(line.id, fullText) {
         textScroll.scrollTo(0)
         choiceScroll.scrollTo(0)
@@ -102,6 +116,11 @@ fun DialogueOverlay(
     var revealedCount by remember(line.id, fullText) { mutableIntStateOf(0) }
     val revealFinished = revealedCount >= fullText.length
     val displayedText = fullText.take(revealedCount.coerceIn(0, fullText.length))
+    val lastVisibleCharacter = displayedText.indexOfLast { !it.isWhitespace() }
+    val showTextCue = textScroll.canScrollForward && textViewportHeight > 0 &&
+        lastVisibleCharacter >= 0 && textLayout?.let { layout ->
+            layout.getLineBottom(layout.getLineForOffset(lastVisibleCharacter)) > textScroll.value + textViewportHeight + 1f
+        } == true
     val voiceProfile = remember(line.speaker) { DialogueVoiceProfile.forSpeaker(line.speaker) }
     val latestOnPlayMurmur by rememberUpdatedState(onPlayMurmur)
     val latestOnRevealFinished by rememberUpdatedState(onRevealFinished)
@@ -144,15 +163,6 @@ fun DialogueOverlay(
     val tapInteraction = remember { MutableInteractionSource() }
     val containerModifier = Modifier
         .fillMaxWidth()
-        .pointerInput(fullText, revealFinished) {
-            if (!revealFinished) awaitEachGesture {
-                awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
-                var event = awaitPointerEvent(PointerEventPass.Initial)
-                while (event.changes.any { it.pressed }) event = awaitPointerEvent(PointerEventPass.Initial)
-                event.changes.forEach { it.consume() }
-                revealedCount = fullText.length
-            }
-        }
         .maestroTag(if (tapToAdvanceAllowed) "dialogue-advance" else "dialogue-choice-prompt")
         .semantics { contentDescription = if (tapToAdvanceAllowed) "Dialogue Popup. Tap to continue" else "Dialogue Popup" }
         .let { base ->
@@ -172,9 +182,7 @@ fun DialogueOverlay(
             }
         }
     val hasVoice = !dialogue.voiceCue.isNullOrBlank()
-    val showPortrait = portraitPath != null
-    val topPadding = if (showPortrait) (PortraitSize * 0.62f) else 0.dp
-    val contentTopPadding = if (showPortrait) 42.dp else 16.dp
+    val maximumCardHeight = (LocalConfiguration.current.screenHeightDp.dp - 160.dp).coerceAtLeast(240.dp)
 
     Box(
         modifier = modifier
@@ -182,7 +190,7 @@ fun DialogueOverlay(
             .padding(16.dp)
     ) {
         Surface(
-            modifier = containerModifier.padding(top = topPadding),
+            modifier = containerModifier,
             color = surfaceColor,
             contentColor = MaterialTheme.colorScheme.onSurface,
             shadowElevation = 6.dp,
@@ -193,31 +201,40 @@ fun DialogueOverlay(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 18.dp, top = contentTopPadding, end = 20.dp, bottom = 20.dp),
+                    .heightIn(max = maximumCardHeight)
+                    .padding(horizontal = 16.dp, vertical = 14.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                if (!showPortrait) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        SpeakerName(
-                            name = dialogue.displaySpeaker ?: line.speaker,
-                            accentColor = accentColor
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        if (hasVoice) {
-                            VoicePulseChip(
-                                onClick = { onPlayVoice(dialogue.voiceCue.orEmpty()) },
-                                accentColor = accentColor
-                            )
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    if (portraitPath != null) PortraitCard(portraitPainter,
+                        dialogue.displaySpeaker ?: line.speaker, accentColor)
+                    SpeakerName(dialogue.displaySpeaker ?: line.speaker, accentColor, Modifier.weight(1f))
+                    if (hasVoice && dialogue.canDismiss) {
+                        IconButton(onClick = { onPlayVoice(dialogue.voiceCue.orEmpty()) }) {
+                            Icon(Icons.Default.VolumeUp, "Replay voice", tint = accentColor)
                         }
                     }
+                    if (dialogue.canDismiss && onDismiss != null) {
+                        Surface(onClick = onDismiss, shape = RoundedCornerShape(10.dp),
+                            color = accentColor.copy(alpha = .12f),
+                            border = BorderStroke(1.dp, accentColor.copy(alpha = .5f)),
+                            modifier = Modifier.heightIn(min = 48.dp).maestroTag("dialogue-leave")
+                                .semantics { contentDescription = "Leave conversation" }) {
+                            Box(Modifier.padding(horizontal = 12.dp), contentAlignment = Alignment.Center) {
+                                Text("Leave", color = accentColor, style = MaterialTheme.typography.labelLarge)
+                            }
+                        }
+                    }
+                    if (hasVoice && !dialogue.canDismiss) VoicePulseChip(
+                        onClick = { onPlayVoice(dialogue.voiceCue.orEmpty()) }, accentColor = accentColor)
                 }
 
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .weight(1f, fill = false)
+                        .heightIn(max = 240.dp)
                         .height(IntrinsicSize.Min),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
@@ -228,21 +245,26 @@ fun DialogueOverlay(
                             .clip(RoundedCornerShape(999.dp))
                             .background(accentColor.copy(alpha = 0.7f))
                     )
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .heightIn(max = 240.dp)
+                    Box(Modifier.weight(1f).heightIn(max = 240.dp)) {
+                        Box(Modifier.fillMaxWidth().onSizeChanged { textViewportHeight = it.height }
                             .verticalScroll(textScroll)
-                    ) {
-                        Text(
-                            text = fullText,
-                            modifier = Modifier
-                                .alpha(0f)
-                                .clearAndSetSemantics { },
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            textAlign = TextAlign.Left
-                        )
+                            .pointerInput(fullText, revealFinished) {
+                                if (!revealFinished) awaitEachGesture {
+                                    val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+                                    var moved = false
+                                    var event = awaitPointerEvent(PointerEventPass.Initial)
+                                    while (true) {
+                                        if (event.changes.any { (it.position - down.position).getDistance() > viewConfiguration.touchSlop }) moved = true
+                                        if (event.changes.none { it.pressed }) break
+                                        event = awaitPointerEvent(PointerEventPass.Initial)
+                                    }
+                                    if (!moved) {
+                                        event.changes.forEach { it.consume() }
+                                        revealedCount = fullText.length
+                                    }
+                                }
+                            }
+                        ) {
                         Text(
                             text = typewriterText(buildAnnotatedString {
                                 append(fullText)
@@ -258,18 +280,19 @@ fun DialogueOverlay(
                             }, displayedText.length),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface,
-                            textAlign = TextAlign.Left
+                            textAlign = TextAlign.Left,
+                            onTextLayout = { textLayout = it }
                         )
+                        }
+                        ScrollContinuationCue(showTextCue, accentColor, "Scroll for more dialogue", "dialogue-more-text",
+                            onClick = { scrollScope.launch {
+                                textScroll.animateScrollTo((textScroll.value + textViewportHeight * .7f).toInt().coerceAtMost(textScroll.maxValue))
+                            } }, modifier = Modifier.align(Alignment.BottomCenter))
                     }
                 }
 
-                if (textScroll.canScrollForward) {
-                    Text("↓ More dialogue", style = MaterialTheme.typography.labelSmall,
-                        color = accentColor,
-                        modifier = Modifier)
-                }
-
                 if (choices.isNotEmpty()) {
+                    Box(Modifier.fillMaxWidth().weight(1f, fill = false).heightIn(max = 220.dp)) {
                     Column(
                         modifier = Modifier
                             .heightIn(max = 220.dp)
@@ -297,45 +320,16 @@ fun DialogueOverlay(
                             )
                         }
                     }
-                    if (choiceScroll.canScrollForward) {
-                        Text("↓ More responses", style = MaterialTheme.typography.labelSmall, color = accentColor)
+                    ScrollContinuationCue(revealFinished && choiceScroll.maxValue != Int.MAX_VALUE && choiceScroll.viewportSize > 0 && choiceScroll.canScrollForward, accentColor,
+                        "Scroll for more responses", "dialogue-more-responses",
+                        onClick = { scrollScope.launch {
+                            choiceScroll.animateScrollTo((choiceScroll.value + choiceScroll.viewportSize * .7f).toInt().coerceAtMost(choiceScroll.maxValue))
+                        } }, modifier = Modifier.align(Alignment.BottomCenter))
                     }
                 }
             }
         }
 
-        if (portraitPath != null) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.TopStart)
-                    .offset(x = 16.dp, y = (-8).dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    PortraitCard(
-                        painter = portraitPainter,
-                        speaker = dialogue.displaySpeaker ?: line.speaker,
-                        accentColor = accentColor
-                    )
-                    SpeakerName(
-                        name = dialogue.displaySpeaker ?: line.speaker,
-                        accentColor = accentColor
-                    )
-                }
-                Spacer(modifier = Modifier.weight(1f))
-                if (hasVoice) {
-                    VoicePulseChip(
-                        onClick = { onPlayVoice(dialogue.voiceCue.orEmpty()) },
-                        accentColor = accentColor,
-                        modifier = Modifier.padding(end = 16.dp)
-                    )
-                }
-            }
-        }
     }
 }
 
@@ -624,4 +618,4 @@ private fun revealDelayMs(char: Char): Long = when (char) {
     else -> 26L
 }
 
-private val PortraitSize = 80.dp
+private val PortraitSize = 64.dp

@@ -281,6 +281,17 @@ fun DesktopAuthoredDialogueOverlay(
             }
         }
 
+        if (dialogue.canDismiss) {
+            Surface(onClick = { services.exploration.dismissDialogue() },
+                shape = RoundedCornerShape(10.dp), color = surfaceColor,
+                border = BorderStroke(1.dp, accentColor.copy(alpha = .6f)),
+                modifier = Modifier.align(Alignment.TopEnd).padding(top = topPadding + 8.dp, end = 12.dp).heightIn(min = 48.dp)) {
+                Box(Modifier.padding(horizontal = 16.dp), contentAlignment = Alignment.Center) {
+                    Text("Leave", color = accentColor, style = MaterialTheme.typography.labelLarge)
+                }
+            }
+        }
+
         if (portraitPath != null) {
             Row(
                 modifier = Modifier

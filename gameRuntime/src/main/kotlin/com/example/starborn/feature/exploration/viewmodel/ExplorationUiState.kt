@@ -289,7 +289,8 @@ data class DialogueUi(
     val line: com.example.starborn.domain.model.DialogueLine,
     val portrait: String?,
     val voiceCue: String?,
-    val displaySpeaker: String? = null
+    val displaySpeaker: String? = null,
+    val canDismiss: Boolean = false
 )
 
 data class MinimapUiState(

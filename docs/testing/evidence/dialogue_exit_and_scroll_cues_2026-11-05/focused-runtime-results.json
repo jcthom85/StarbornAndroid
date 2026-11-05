@@ -1,0 +1,26 @@
+[
+  {
+    "module": "app",
+    "suite": "com.example.starborn.domain.dialogue.DialogueServiceTest",
+    "tests": 6,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "module": "app",
+    "suite": "com.example.starborn.di.DialogueTriggerHandlingTest",
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "module": "desktopApp",
+    "suite": "com.example.starborn.desktop.World2ExplorationPolishTest",
+    "tests": 7,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+]

@@ -1,6 +1,8 @@
 package com.example.starborn.feature.exploration.ui.hud
 
 import com.example.starborn.ui.components.maestroTag
+import com.example.starborn.feature.exploration.ui.ScrollContinuationCue
+import kotlinx.coroutines.launch
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutLinearInEasing
@@ -315,6 +317,7 @@ fun RoomDescriptionPanel(
 ) {
     if (currentRoom == null && description.isNullOrBlank()) return
     val scrollState = rememberScrollState()
+    val scrollScope = rememberCoroutineScope()
     LaunchedEffect(currentRoom?.id) {
         scrollState.scrollTo(0)
     }
@@ -381,8 +384,8 @@ fun RoomDescriptionPanel(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f, fill = false)
-                    .verticalScroll(scrollState)
             ) {
+                Box(Modifier.fillMaxWidth().verticalScroll(scrollState).maestroTag("room-description-scroll")) {
                 RoomDescription(
                     plan = plan,
                     description = description,
@@ -394,10 +397,12 @@ fun RoomDescriptionPanel(
                     accentColor = accentColor,
                     modifier = Modifier.fillMaxWidth()
                 )
-            }
-            if (scrollState.canScrollForward) {
-                Text("↓ More description", color = accentColor,
-                    style = MaterialTheme.typography.labelSmall)
+                }
+                ScrollContinuationCue(scrollState.maxValue != Int.MAX_VALUE && scrollState.viewportSize > 0 && scrollState.canScrollForward, accentColor,
+                    "Scroll for more room description", "room-description-more",
+                    onClick = { scrollScope.launch {
+                        scrollState.animateScrollTo((scrollState.value + scrollState.viewportSize * .7f).toInt().coerceAtMost(scrollState.maxValue))
+                    } }, modifier = Modifier.align(Alignment.BottomCenter))
             }
             travelActions.forEach { action ->
                 Surface(onClick = { onAction(action) },

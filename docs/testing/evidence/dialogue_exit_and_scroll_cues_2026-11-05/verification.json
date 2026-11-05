@@ -1,0 +1,31 @@
+{
+  "android_instrumentation": {
+    "tests": 6,
+    "result": "OK (6 tests)",
+    "device": "Isolated Android 17 ARM phone emulator",
+    "touch_injection": true,
+    "covers": [
+      "Evelyn and Robert authored goodbye touch targets",
+      "Fixed Leave while revealing at 1.4x font scale",
+      "Android Back cancellation",
+      "Reserved response-area reveal tap",
+      "Cue appears only after revealed text overflows",
+      "Response cue waits for revealed responses",
+      "Short description has no cue; long description cue disappears at end"
+    ]
+  },
+  "focused_runtime": "BUILD SUCCESSFUL: World3PublicInteractionTest, including later-world residents, World 6 companions, gift cancellation and queued scripted interaction preservation",
+  "host_dialogue_tests": 8,
+  "world2_compatibility_tests": 7,
+  "world2_compatibility_failures": 0,
+  "dialogue_graph": {
+    "lines": 488,
+    "without_ending_path": 0
+  },
+  "apk_build": "BUILD SUCCESSFUL",
+  "apk_sha256": "f8007ab874c1ecc3ff166d30249e380cfea473b887db6319a17bbba144d4ca31",
+  "pixel_connected": false,
+  "pixel_installed": false,
+  "version_bumped": false,
+  "committed_or_pushed": false
+}

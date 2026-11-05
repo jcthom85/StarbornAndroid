@@ -225,6 +225,7 @@ class ExplorationViewModel(
     fun playWithGladeBall() = runtime.playWithGladeBall()
     fun onNpcInteraction(npcName: String) = runtime.onNpcInteraction(npcName)
     fun advanceDialogue() = runtime.advanceDialogue()
+    fun dismissDialogue() = runtime.dismissDialogue()
     fun onDialogueChoiceSelected(optionId: String) = runtime.onDialogueChoiceSelected(optionId)
     fun onDialogueVoiceRequested(cueId: String) = runtime.onDialogueVoiceRequested(cueId)
     fun playQuestPresentationCue(key: String) = runtime.playQuestPresentationCue(key)
