@@ -25,6 +25,8 @@ Live reader: https://jcthom85.github.io/StarbornAndroid/#world-2/
 
 Pushing a walkthrough change to `main` does **not** update the live reader. Rebuild and publish `gh-pages` as well. The November 4 refresh adds World 3's current main route, eleven quest checklists and seventy-room reference, and refreshes Worlds 1 and 2 from their maintained sources. Direct `#world-1/`, `#world-2/` and `#world-3/` links select that world even on a fresh browser visit.
 
+The November 5 World 3 refresh follows the NSEW navigation repair: all seventy room references, the heist and rooftop routes, optional-quest returns and Lens puzzle guidance match that build. Older game installations can still have different paths. Direct link: https://jcthom85.github.io/StarbornAndroid/#world-3/
+
 Before publishing, serve `dist/` locally and run `node sites/starborn-playtest/check.mjs <url>`. It checks direct World 2 entry, current guide data, saved progress, search, mobile layout and offline reading. Chrome is detected for macOS/Windows; set `CHROME_PATH` to override its executable.
 
 
