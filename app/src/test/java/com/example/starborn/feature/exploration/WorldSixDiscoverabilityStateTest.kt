@@ -210,6 +210,7 @@ class WorldSixDiscoverabilityStateTest {
                         val done = bits and 2 != 0
                         val complete = bits and 4 != 0
                         val seed = GameSessionStore().apply {
+                            setRoom(room.id)
                             milestones.forEach(::setMilestone)
                             if (ready) {
                                 startQuest("w6_mq30")
@@ -223,7 +224,7 @@ class WorldSixDiscoverabilityStateTest {
                         }.state.value
                         val store = GameSessionStore().apply { restore(seed.migrateOpeningNarrativeState()) }
                         val expected = when (name) {
-                            "w6_mq30_confront_vale", "w6_mq30_tune_world" -> ready && !done
+                            "w6_mq30_confront_vale_scene", "w6_mq30_tune_world" -> ready && !done
                             "w6_sq28_elara_song" -> !complete
                             "w6_sq28_break_command" -> keys[3] in milestones && keys[4] !in milestones
                             "w6_sq28_preserve_song" -> keys[4] in milestones && !complete
@@ -239,7 +240,7 @@ class WorldSixDiscoverabilityStateTest {
                             assertTrue(prose.contains(action["name"] as String, true))
                             store.restore(store.state.value.migrateOpeningNarrativeState())
                             manager.handleTrigger("player_action", EventPayload.Action(name))
-                            assertEquals("Replay $name", 1, executions)
+                            assertEquals("Replay $name", if (name == "w6_mq30_confront_vale_scene") 2 else 1, executions)
                         }
                     }
                 }

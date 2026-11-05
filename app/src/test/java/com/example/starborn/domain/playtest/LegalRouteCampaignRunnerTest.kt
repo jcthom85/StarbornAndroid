@@ -117,6 +117,7 @@ class LegalRouteCampaignRunnerTest {
     private var exportWorld1Checkpoints = false
     private val publicCombats = mutableListOf<String>()
     private val prototypeSkillsUsed = mutableSetOf<String>()
+    private val world3RewardObservations = mutableListOf<String>()
     private var recordSystemsAudit = false
     private var useProductionCrewRules = false
 
@@ -125,6 +126,7 @@ class LegalRouteCampaignRunnerTest {
         com.example.starborn.domain.combat.CombatPlaytestBridge.reset()
         useProductionCrewRules = false
         publicCombats.clear()
+        world3RewardObservations.clear()
         assistance.clear()
         prototypeSkillsUsed.clear()
         recordSystemsAudit = false
@@ -809,6 +811,91 @@ class LegalRouteCampaignRunnerTest {
     }
 
     @Test
+    fun productionWorld3CompletionistRoutesVerifyBothLedgerOutcomesAndReloads() {
+        useProductionCrewRules = true
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
+        try {
+            val agent = LegalCampaignAgent(h)
+            agent.playWorld1()
+            agent.playWorld2(completionist = true)
+            val arrival = h.saveSlot(6)
+            val branches = mutableListOf<String>()
+            for (weaponize in listOf(false, true)) {
+                h.loadSlot(6)
+                assertEquals(arrival.inventory, h.sessionStore.state.value.inventory)
+                agent.playWorld3(completionist = true, weaponizeLedger = weaponize)
+                val state = h.saveSlot(7)
+                assertEquals("foundry_slag_landing", state.roomId)
+                assertTrue(state.completedQuests.containsAll((11..16).map { "w3_sq$it" }))
+                assertTrue(state.completedQuests.containsAll((11..15).map { "w3_mq$it" }))
+                assertEquals(if (weaponize) 2 else 1, state.inventory["phase_rounds"])
+                assertEquals(if (weaponize) 0 else 1, state.inventory["encrypted_ledger"] ?: 0)
+                assertEquals(weaponize, "ms_w3_ledger_weaponized" in state.completedMilestones)
+                assertEquals(!weaponize, "ms_w3_blackmail_unlocked" in state.completedMilestones)
+                assertEquals(1, state.inventory["neon_band"])
+                assertEquals(1, state.inventory["cyano_coolant_injector"])
+                assertEquals(1, state.inventory["skyline_master_passkey"])
+                assertEquals(0, state.inventory["neon_sign_core"] ?: 0)
+                assertTrue("gh0st_intercept" in state.unlockedSkills)
+                h.loadSlot(7)
+                assertEquals(state.inventory, h.sessionStore.state.value.inventory)
+                assertEquals(state.playerXp, h.sessionStore.state.value.playerXp)
+                assertEquals(state.playerAp, h.sessionStore.state.value.playerAp)
+                assertEquals(state.questTasksCompleted, h.sessionStore.state.value.questTasksCompleted)
+                branches += "branch=${if (weaponize) "private leverage" else "public disclosure"}; all 11 W3 quests; " +
+                    "level=${state.playerLevel}; XP=${state.playerXp}; AP=${state.playerAp}; credits=${state.playerCredits}; " +
+                    "inventory=${state.inventory}; skills=${state.unlockedSkills}; tasks=${state.questTasksCompleted.filterKeys { it.startsWith("w3_") }}"
+            }
+            assertTrue("Completionist routes must use earned resources and public actions", assistance.isEmpty())
+            File("build/reports/world3-readiness/earned-completionist-routes.txt").apply {
+                requireNotNull(parentFile).mkdirs()
+                writeText("Production crew; earned W1/W2 arrival; real combat; both ledger outcomes from the same saved arrival; no injected inventory or victory.\n" +
+                    branches.joinToString("\n") + "\n" + world3RewardObservations.joinToString("\n") + "\n" + publicCombats.joinToString("\n") + "\nAssistance: $assistance\n")
+            }
+        } finally { h.close() }
+    }
+
+    @Test
+    fun productionWorlds456CompletionistRoutesVerifyBranchesAndCredits() {
+        useProductionCrewRules = true
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
+        try {
+            val agent = LegalCampaignAgent(h)
+            agent.playWorld1(); agent.playWorld2(completionist = true); agent.playWorld3(completionist = true)
+            h.saveSlot(6)
+            val snapshots = mutableListOf<String>()
+            for (alternate in listOf(false, true)) {
+                h.loadSlot(6)
+                agent.playWorld4(completionist = true, alternate = alternate)
+                assertTrue(h.sessionStore.state.value.completedQuests.containsAll((16..20).map { "w4_sq$it" } + "w4_sq_crucible"))
+                assertEquals(alternate, "ms_w4_units_defend_workers" in h.sessionStore.state.value.completedMilestones)
+                snapshots += "W4 alternate=$alternate XP=${h.sessionStore.state.value.playerXp} AP=${h.sessionStore.state.value.playerAp} credits=${h.sessionStore.state.value.playerCredits}"
+                agent.playWorld5(completionist = true, alternate = alternate)
+                assertTrue(h.sessionStore.state.value.completedQuests.containsAll((21..25).map { "w5_sq$it" }))
+                assertEquals(alternate, "ms_w5_guardian_covenant" in h.sessionStore.state.value.completedMilestones)
+                snapshots += "W5 alternate=$alternate XP=${h.sessionStore.state.value.playerXp} AP=${h.sessionStore.state.value.playerAp} credits=${h.sessionStore.state.value.playerCredits}"
+                agent.playWorld6(completionist = true, alternate = alternate)
+                val end = h.saveSlot(7)
+                assertTrue(end.completedQuests.containsAll((26..30).map { "w6_sq$it" }))
+                assertEquals(alternate, "ms_w6_workers_unshackled" in end.completedMilestones)
+                assertTrue("ms_game_complete" in end.completedMilestones)
+                assertTrue("ms_credits_seen" in end.completedMilestones)
+                h.loadSlot(7)
+                assertEquals(end.inventory, h.sessionStore.state.value.inventory)
+                assertEquals(end.playerXp, h.sessionStore.state.value.playerXp)
+                assertEquals(end.playerAp, h.sessionStore.state.value.playerAp)
+                snapshots += "W6 alternate=$alternate XP=${end.playerXp} AP=${end.playerAp} credits=${end.playerCredits}; quests=${end.completedQuests}; items=${end.inventory}; skills=${end.unlockedSkills}"
+            }
+            assertTrue("All routes require public actions and earned resources", assistance.isEmpty())
+            File("build/reports/worlds456-readiness/earned-completionist-routes.txt").apply {
+                requireNotNull(parentFile).mkdirs()
+                writeText("Production crew; real combat; earned W4 arrival; complementary Quality Control/guardian/HR branches; known answers and seed 17.\n" +
+                    snapshots.joinToString("\n") + "\n" + world3RewardObservations.joinToString("\n") + "\n" + publicCombats.joinToString("\n") + "\nAssistance: $assistance\n")
+            }
+        } finally { h.close() }
+    }
+
+    @Test
     fun earnedWorld1LaunchCheckpointResumesThroughActualCombatAndSaveReload() {
         useProductionCrewRules = true
         val reader = AssetJsonReader(DesktopAssetProvider(listOf(assets, File(root, "app/src/debug/assets"))), moshi)
@@ -1138,6 +1225,9 @@ class LegalRouteCampaignRunnerTest {
 
         fun travelDirection(direction: String) {
             val beforeRoom = harness.explorationVm.uiState.value.currentRoom?.id
+            if (beforeRoom?.let { it.startsWith("spire_") || it.startsWith("foundry_") || it.startsWith("orbital_") || it.startsWith("deep_") || it.startsWith("source_") } == true) {
+                assertTrue("Earned World 3–6 walking routes must use NSEW movement", direction in setOf("north", "south", "east", "west"))
+            }
             harness.explorationVm.travel(direction)
             harness.settle()
             if (harness.sessionStore.state.value.roomStates["admin_elevator"]
@@ -1151,6 +1241,13 @@ class LegalRouteCampaignRunnerTest {
             check(afterRoom != null && afterRoom != beforeRoom) {
                 "travel($direction) failed from room '$beforeRoom': blocked or no connection. status=${harness.explorationVm.uiState.value.statusMessage}; prompt=${harness.explorationVm.uiState.value.blockedPrompt}; session=${harness.sessionStore.state.value.roomId}; hub=${harness.sessionStore.state.value.hubId}; pending=${harness.sessionStore.state.value.roomStates["admin_elevator"]}; visited=${harness.sessionStore.state.value.visitedNodes}"
             }
+        }
+
+        private fun useNamedVerticalRoute(direction: String, expectedRoom: String) {
+            val action = harness.explorationVm.uiState.value.actions.filterIsInstance<com.example.starborn.domain.model.TravelAction>()
+                .single { it.direction == direction }
+            harness.explorationVm.onActionSelected(action); harness.settle()
+            assertEquals("Named travel must reach its stated landing", expectedRoom, harness.sessionStore.state.value.roomId)
         }
 
         fun navigateLegalPath(targetRoomId: String) {
@@ -1423,8 +1520,15 @@ class LegalRouteCampaignRunnerTest {
             harness.settle()
             val puzzle = requireNotNull(harness.explorationVm.uiState.value.tuningPuzzle)
             puzzle.sliders.forEach { harness.explorationVm.updateTuningSlider(it.id, it.target) }
+            val beforeEnding = harness.sessionStore.state.value
             harness.explorationVm.submitTuningPuzzle()
             harness.settle()
+            if (completionist) {
+                assertNotNull("Final note must be pending before credits", harness.cinematicCoordinator.state.value)
+                assertEquals("Ending XP waits for completion", beforeEnding.playerXp, harness.sessionStore.state.value.playerXp)
+                harness.saveSlot(8); harness.loadSlot(8)
+                assertNotNull("Pending finale survives reload", harness.cinematicCoordinator.state.value)
+            }
             while (harness.cinematicCoordinator.state.value != null) {
                 harness.explorationVm.skipCinematic()
                 harness.settle()
@@ -1650,7 +1754,7 @@ class LegalRouteCampaignRunnerTest {
             assertTrue(harness.sessionStore.state.value.completedQuests.containsAll((1..4).map { "w2_sq%02d".format(it) }))
         }
 
-        fun playWorld3() {
+        fun playWorld3(completionist: Boolean = false, weaponizeLedger: Boolean = false) {
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w3_mq11"))
             navigateLegalPath("spire_sewers_scale_01")
             harness.playPublicEncounter("sewer_crawler")
@@ -1660,11 +1764,29 @@ class LegalRouteCampaignRunnerTest {
             assertTrue("w3_mq11 completed", harness.sessionStore.state.value.completedQuests.contains("w3_mq11"))
             assertTrue("w3_mq12 active", harness.sessionStore.state.value.activeQuests.contains("w3_mq12"))
 
+            if (completionist) {
+                navigateLegalPath("spire_the_static")
+                performAction("w3_sq11_inspect_sign")
+                navigateLegalPath("spire_lantern_bridge")
+                performAction("w3_sq13_trace_power_theft")
+                navigateLegalPath("spire_night_market")
+                performAction("w3_sq13_fix_market_lights")
+                val marketBefore = harness.sessionStore.state.value
+                performAction("w3_sq13_restore_market")
+                assertWorld3Payout(marketBefore, "w3_sq13", 200)
+                verifyWorld3RewardPersistence("w3_sq13", "w3_sq13_restore_market")
+            }
+
             // MQ12: Heist Prep
             navigateLegalPath("spire_the_static")
             talkToNpc("Jax", "jax_w3_mq12_request_codes")
             navigateLegalPath("spire_underrail_platform")
             performAction("w3_mq12_map_patrols")
+            if (completionist && weaponizeLedger) {
+                useNamedVerticalRoute("down", "spire_transit_plaza")
+                useNamedVerticalRoute("up", "spire_underrail_platform")
+                useNamedVerticalRoute("down", "spire_transit_plaza")
+            }
             navigateLegalPath("spire_security_kiosk")
             performAction("w3_mq12_interrogate_guard")
             navigateLegalPath("spire_elevator_service_gate")
@@ -1679,12 +1801,20 @@ class LegalRouteCampaignRunnerTest {
             // Upper City Infiltration
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w3_mq13"))
             navigateLegalPath("spire_skypark_dome")
-            performAction("w3_mq13_blend_in")
+            performAction("w3_mq13_review_guest_access")
+            finishDialogue("correct")
             navigateLegalPath("spire_laundry_service")
             performAction("w3_mq13_disable_sensors")
             performAction("w3_mq13_enter_lobby")
             assertTrue("w3_mq13 completed", harness.sessionStore.state.value.completedQuests.contains("w3_mq13"))
             assertTrue("w3_mq14 active", harness.sessionStore.state.value.activeQuests.contains("w3_mq14"))
+
+            if (completionist) completeWorld3OptionalQuests(weaponizeLedger)
+            if (completionist && weaponizeLedger) {
+                navigateLegalPath("spire_service_lift")
+                useNamedVerticalRoute("down", "spire_archive_vault")
+                useNamedVerticalRoute("up", "spire_service_lift")
+            }
 
             navigateLegalPath("spire_archive_vault")
             performAction("w3_mq14_read_containment_field")
@@ -1693,9 +1823,11 @@ class LegalRouteCampaignRunnerTest {
             navigateLegalPath("spire_archive_vault")
             performAction("w3_mq14_trace_command_tethers")
             navigateLegalPath("spire_prism_gallery")
-            performAction("w3_mq14_solve_light_puzzle")
+            performAction("w3_mq14_route_prisms")
+            finishDialogue("correct")
             navigateLegalPath("spire_archive_vault")
-            talkToNpc("Zeke")
+            performAction("w3_mq14_review_lens")
+            finishDialogue("correct")
             assertTrue("w3_mq14 completed", harness.sessionStore.state.value.completedQuests.contains("w3_mq14"))
             assertTrue("The Lens acquired", (harness.sessionStore.state.value.inventory["the_lens"] ?: 0) >= 1)
 
@@ -1704,7 +1836,8 @@ class LegalRouteCampaignRunnerTest {
             navigateLegalPath("spire_exec_lounge_bar")
             harness.buyAtVisibleShop("upper_city_lounge", "medkit", 6)
             navigateLegalPath("spire_landing_pad_roof")
-            harness.playPublicEncounter("heavy_mech")
+            if (completionist) harness.verifyWorld3RewardEquipment()
+            harness.playPublicEncounter("heavy_mech", verifyIntercept = completionist)
             navigateLegalPath("spire_skypark_scale_02")
             harness.restAtVisibleStop()
             navigateLegalPath("spire_landing_pad_roof")
@@ -1715,13 +1848,261 @@ class LegalRouteCampaignRunnerTest {
             assertEquals("foundry_slag_landing", harness.sessionStore.state.value.roomId)
         }
 
+        private fun assertWorld3Payout(before: GameSessionState, questId: String, xp: Int) {
+            val after = harness.sessionStore.state.value
+            assertEquals("$questId exact XP", before.playerXp + xp, after.playerXp)
+            assertEquals("$questId exact AP", before.playerAp + if (questId == "w3_sq12") 2 else 0, after.playerAp)
+            world3RewardObservations += "$questId payout: XP=$xp; AP=${after.playerAp - before.playerAp}; inventory delta=" +
+                (after.inventory.keys + before.inventory.keys).associateWith { (after.inventory[it] ?: 0) - (before.inventory[it] ?: 0) }.filterValues { it != 0 }
+        }
+
+        private fun verifyWorld3RewardPersistence(questId: String, repeatEvent: String? = null) {
+            assertTrue("$questId must complete through its public route", questId in harness.sessionStore.state.value.completedQuests)
+            val before = harness.saveSlot(8)
+            repeatEvent?.let { event ->
+                val visible = harness.explorationVm.uiState.value.actions.filterIsInstance<com.example.starborn.domain.model.GenericAction>()
+                    .firstOrNull { it.actionEvent == event }
+                if (visible != null) { harness.explorationVm.onActionSelected(visible); harness.settle() }
+            }
+            assertEquals("$questId must not pay twice", before.inventory, harness.sessionStore.state.value.inventory)
+            assertEquals(before.playerXp, harness.sessionStore.state.value.playerXp)
+            assertEquals(before.playerAp, harness.sessionStore.state.value.playerAp)
+            harness.loadSlot(8)
+            assertEquals("$questId inventory after restore", before.inventory, harness.sessionStore.state.value.inventory)
+            assertEquals(before.playerXp, harness.sessionStore.state.value.playerXp)
+            assertEquals(before.playerAp, harness.sessionStore.state.value.playerAp)
+            assertEquals(before.questTasksCompleted, harness.sessionStore.state.value.questTasksCompleted)
+            assertEquals(before.completedMilestones, harness.sessionStore.state.value.completedMilestones)
+            assertEquals(before.completedQuests, harness.sessionStore.state.value.completedQuests)
+        }
+
+        private fun completeWorld3OptionalQuests(weaponizeLedger: Boolean) {
+            // The actual Neon Core source is upstairs: earn the drop, then return to Jax.
+            navigateLegalPath("spire_skypark_scale_02")
+            harness.restAtVisibleStop()
+            navigateLegalPath("spire_exec_lounge_scale_02")
+            harness.playPublicEncounter("sentinel_mki")
+            assertTrue(harness.inventoryService.hasItem("neon_sign_core"))
+            navigateLegalPath("spire_service_lift")
+            performAction("w3_return_to_lower_city")
+            navigateLegalPath("spire_the_static")
+            assertTrue("Jax must be visible for turn-in", "jax" in harness.explorationVm.uiState.value.npcs)
+            val neonBefore = harness.sessionStore.state.value
+            talkToNpc("jax", "jax_w3_sq11_install")
+            assertWorld3Payout(neonBefore, "w3_sq11", 200)
+            verifyWorld3RewardPersistence("w3_sq11")
+            val paid = harness.sessionStore.state.value
+            talkToNpc("jax")
+            assertEquals(paid.playerXp, harness.sessionStore.state.value.playerXp)
+            assertEquals(paid.inventory, harness.sessionStore.state.value.inventory)
+
+            navigateLegalPath("spire_transit_plaza")
+            performAction("w3_mq12_use_elevator")
+            // Discover the case upstairs, then use the cleared service lift back to the kiosk.
+            navigateLegalPath("spire_uniform_sorting")
+            performAction("w3_sq12_find_case_number")
+            val caseFound = harness.saveSlot(8)
+            harness.loadSlot(8)
+            assertTrue("ms_w3_case_number_found" in harness.sessionStore.state.value.completedMilestones)
+            assertEquals(caseFound.questTasksCompleted, harness.sessionStore.state.value.questTasksCompleted)
+            navigateLegalPath("spire_service_lift")
+            performAction("w3_return_to_lower_city")
+            navigateLegalPath("spire_security_kiosk")
+            performAction("w3_sq12_access_terminal")
+            val coldBefore = harness.sessionStore.state.value
+            performAction("w3_sq12_expose_transfer")
+            assertWorld3Payout(coldBefore, "w3_sq12", 200)
+            verifyWorld3RewardPersistence("w3_sq12", "w3_sq12_expose_transfer")
+            navigateLegalPath("spire_transit_plaza")
+            performAction("w3_mq12_use_elevator")
+
+            navigateLegalPath("spire_exec_lounge_bar")
+            performAction("w3_sq14_copy_concierge_key")
+            performAction("w3_sq14_steal_ledger")
+            val stolen = harness.saveSlot(8)
+            harness.loadSlot(8)
+            assertEquals(stolen.questTasksCompleted, harness.sessionStore.state.value.questTasksCompleted)
+            navigateLegalPath("spire_service_lift")
+            val selected = if (weaponizeLedger) "w3_sq14_weaponize_ledger" else "w3_sq14_leak_ledger"
+            val ledgerBefore = harness.sessionStore.state.value
+            performAction(selected)
+            assertWorld3Payout(ledgerBefore, "w3_sq14", 250)
+            verifyWorld3RewardPersistence("w3_sq14", selected)
+            val chosen = harness.sessionStore.state.value
+            val opposite = if (weaponizeLedger) "w3_sq14_leak_ledger" else "w3_sq14_weaponize_ledger"
+            harness.explorationVm.uiState.value.actions.filterIsInstance<com.example.starborn.domain.model.GenericAction>()
+                .firstOrNull { it.actionEvent == opposite }?.let { harness.explorationVm.onActionSelected(it); harness.settle() }
+            assertEquals("Ledger outcomes must be exclusive", chosen.inventory, harness.sessionStore.state.value.inventory)
+            assertEquals(chosen.playerXp, harness.sessionStore.state.value.playerXp)
+
+            navigateLegalPath("spire_drone_test_alcove")
+            performAction("w3_sq15_scan_targeting")
+            performAction("w3_sq15_test_weapon")
+            navigateLegalPath("spire_landing_pad_roof")
+            val prototypeBefore = harness.sessionStore.state.value
+            performAction("w3_sq15_scrub_telemetry")
+            assertWorld3Payout(prototypeBefore, "w3_sq15", 300)
+            verifyWorld3RewardPersistence("w3_sq15", "w3_sq15_scrub_telemetry")
+
+            navigateLegalPath("spire_skyline_vip_suite")
+            performAction("w3_sq16_start")
+            for (npc in listOf("bartender_dax", "director_vance", "dr_lyra", "singer_selene")) {
+                assertTrue("Suspect must be visible: $npc", npc in harness.explorationVm.uiState.value.npcs)
+                talkToNpc(npc)
+            }
+            performAction("w3_sq16_inspect_dispenser")
+            performAction("w3_sq16_inspect_terminal")
+            navigateLegalPath("spire_vip_private_booth")
+            performAction("w3_sq16_inspect_glass")
+            performAction("w3_sq16_inspect_rig")
+            performAction("w3_sq16_inspect_datapad")
+            harness.saveSlot(8); harness.loadSlot(8)
+            navigateLegalPath("spire_skyline_vip_suite")
+            val murderBefore = harness.sessionStore.state.value
+            talkToNpc("director_vance", "vance_confront_evidence")
+            assertWorld3Payout(murderBefore, "w3_sq16", 450)
+            verifyWorld3RewardPersistence("w3_sq16")
+            val closed = harness.sessionStore.state.value
+            talkToNpc("director_vance")
+            assertEquals(closed.playerXp, harness.sessionStore.state.value.playerXp)
+            assertEquals(closed.inventory, harness.sessionStore.state.value.inventory)
+        }
+
+        private fun completeLateSide(quest: String, room: String, event: String, xp: Int) {
+            navigateLegalPath(room)
+            val before = harness.sessionStore.state.value
+            performAction(event)
+            val after = harness.sessionStore.state.value
+            assertTrue("$quest completion", quest in after.completedQuests)
+            assertEquals("$quest XP", before.playerXp + xp, after.playerXp)
+            val ap = com.example.starborn.domain.leveling.NovaBuildPrototype.questAwards[quest] ?: 0
+            assertEquals("$quest AP", before.playerAp + ap, after.playerAp)
+            world3RewardObservations += "$quest XP=$xp AP=$ap items=" + (after.inventory.keys + before.inventory.keys)
+                .associateWith { (after.inventory[it] ?: 0) - (before.inventory[it] ?: 0) }.filterValues { it != 0 }
+            val opposite = mapOf(
+                "w4_sq19_release_units" to "w4_sq19_defend_workers", "w4_sq19_defend_workers" to "w4_sq19_release_units",
+                "w5_sq24_restore_guardian" to "w5_sq24_bind_guardian", "w5_sq24_bind_guardian" to "w5_sq24_restore_guardian",
+                "w6_sq27_leave_review" to "w6_sq27_free_workers", "w6_sq27_free_workers" to "w6_sq27_leave_review"
+            )[event]
+            if (opposite != null) {
+                performAction(opposite)
+                assertEquals("Opposite branch cannot change payout", after.inventory, harness.sessionStore.state.value.inventory)
+                assertEquals(after.playerXp, harness.sessionStore.state.value.playerXp)
+                assertEquals(after.playerAp, harness.sessionStore.state.value.playerAp)
+                assertEquals(after.unlockedSkills, harness.sessionStore.state.value.unlockedSkills)
+                assertEquals(after.completedMilestones, harness.sessionStore.state.value.completedMilestones)
+            }
+            verifyWorld3RewardPersistence(quest, event)
+        }
+
+        private fun completeFoundryEarlyQuestsAndCrucible() {
+            navigateLegalPath("foundry_slag_river"); performAction("w4_sq16_destroy_crate_alpha")
+            navigateLegalPath("foundry_waste_intake"); performAction("w4_sq16_destroy_crate_beta")
+            completeLateSide("w4_sq16", "foundry_service_airlock", "w4_sq16_destroy_crate_gamma", 350)
+            navigateLegalPath("foundry_waste_intake"); performAction("w4_sq17_trace_ping")
+            navigateLegalPath("foundry_cooling_springs"); performAction("w4_sq17_find_worker")
+            completeLateSide("w4_sq17", "foundry_service_airlock", "w4_sq17_vent_safe_route", 300)
+            navigateLegalPath("foundry_waste_intake"); performAction("w4_sq18_stop_intake"); performAction("w4_sq18_salvage_mechs")
+            completeLateSide("w4_sq18", "foundry_cooling_springs", "w4_sq18_build_bypass", 300)
+            for ((round, enemy) in listOf(1 to "magma_drone", 2 to "slag_golem", 3 to "crucible_champion")) {
+                navigateLegalPath("foundry_obsidian_shelf_scale_02"); harness.restAtVisibleStop()
+                navigateLegalPath("foundry_crucible_arena")
+                assertTrue("Brutus must be visible", "pitmaster_brutus" in harness.explorationVm.uiState.value.npcs)
+                talkToNpc("pitmaster_brutus", "opt_brutus_start_round$round")
+                assertTrue("Arena must start real combat", harness.sessionStore.state.value.pendingBattleJson.isNotBlank())
+                if (round == 1) {
+                    harness.playPublicEncounter(enemy, pending = true, retreat = true)
+                    assertFalse("Retreat cannot clear a round", "ms_crucible_round1_cleared" in harness.sessionStore.state.value.completedMilestones)
+                    harness.saveSlot(8); harness.loadSlot(8)
+                    talkToNpc("pitmaster_brutus", "opt_brutus_start_round1")
+                    assertTrue("Brutus must restart a retreated round", harness.sessionStore.state.value.pendingBattleJson.isNotBlank())
+                }
+                harness.playPublicEncounter(enemy, pending = true)
+                assertTrue("ms_crucible_round${round}_cleared" in harness.sessionStore.state.value.completedMilestones)
+                if (round < 3) assertFalse("ms_crucible_round${round + 1}_cleared" in harness.sessionStore.state.value.completedMilestones)
+                harness.saveSlot(8); harness.loadSlot(8)
+            }
+            val before = harness.sessionStore.state.value
+            talkToNpc("pitmaster_brutus")
+            assertTrue("w4_sq_crucible" in harness.sessionStore.state.value.completedQuests)
+            assertEquals(before.playerXp + 500, harness.sessionStore.state.value.playerXp)
+            assertEquals(before.playerCredits + 350, harness.sessionStore.state.value.playerCredits)
+            assertEquals(1, harness.sessionStore.state.value.inventory["crucible_forge_plate"])
+            verifyWorld3RewardPersistence("w4_sq_crucible")
+            val claimed = harness.sessionStore.state.value
+            talkToNpc("pitmaster_brutus")
+            assertEquals(claimed.inventory, harness.sessionStore.state.value.inventory)
+            assertEquals(claimed.playerXp, harness.sessionStore.state.value.playerXp)
+            assertEquals(claimed.playerCredits, harness.sessionStore.state.value.playerCredits)
+        }
+
+        private fun completeFoundryAssemblyQuests(alternate: Boolean) {
+            navigateLegalPath("foundry_reject_bay"); performAction("w4_sq19_read_rejection_codes")
+            navigateLegalPath("foundry_conveyor_belt"); performAction("w4_sq19_reprogram_units")
+            completeLateSide("w4_sq19", "foundry_conveyor_belt", if (alternate) "w4_sq19_defend_workers" else "w4_sq19_release_units", 400)
+            navigateLegalPath("foundry_forge_control_alcove"); performAction("w4_sq20_map_hazards")
+            navigateLegalPath("foundry_forge_anvil"); performAction("w4_sq20_survive_waves")
+            completeLateSide("w4_sq20", "foundry_forge_control_alcove", "w4_sq20_steal_overclock", 450)
+        }
+
+        private fun completeVoidOptionalQuests(alternate: Boolean) {
+            val quests = listOf<() -> Unit>(
+                {
+                    navigateLegalPath("orbital_security_hub"); performAction("w5_sq21_find_redactions")
+                    navigateLegalPath("orbital_grand_concourse"); performAction("w5_sq21_director_logs")
+                    completeLateSide("w5_sq21", "orbital_grand_concourse", "w5_sq21_publish_logs", 400)
+                },
+                {
+                    navigateLegalPath("orbital_mirror_walk"); performAction("w5_sq22_trace_false_sun"); performAction("w5_sq22_realign_mirrors")
+                    completeLateSide("w5_sq22", "orbital_solarium", "w5_sq22_restore_gardens", 400)
+                },
+                {
+                    navigateLegalPath("orbital_executive_dock"); performAction("w5_sq23_map_pressure_loss"); performAction("w5_sq23_route_bulkheads")
+                    finishDialogue("correct")
+                    completeLateSide("w5_sq23", "orbital_executive_dock", "w5_sq23_reopen_dock", 450)
+                },
+                {
+                    navigateLegalPath("orbital_server_farm"); performAction("w5_sq24_trace_purge")
+                    navigateLegalPath("deep_backup_rack"); performAction("w5_sq24_recover_backup")
+                    completeLateSide("w5_sq24", "orbital_server_farm", if (alternate) "w5_sq24_bind_guardian" else "w5_sq24_restore_guardian", 500)
+                },
+                {
+                    navigateLegalPath("deep_sysadmin_nest"); performAction("w5_sq25_find_keycard")
+                    assertTrue("Admin key can be found before the Firewall fight", harness.inventoryService.hasItem("sysadmin_keycard"))
+                }
+            )
+            (if (alternate) quests.reversed() else quests).forEach { it() }
+        }
+
+        private fun completeSourceNightmareQuests(alternate: Boolean) {
+            navigateLegalPath("source_zeke_nightmare"); performAction("w6_sq27_delete_record")
+            navigateLegalPath("source_zeke_review_loop"); performAction("w6_sq27_revoke_record")
+            completeLateSide("w6_sq27", "source_zeke_break_room", if (alternate) "w6_sq27_free_workers" else "w6_sq27_leave_review", 600)
+            navigateLegalPath("source_gh0st_nightmare"); performAction("w6_sq28_elara_song")
+            navigateLegalPath("source_gh0st_kill_suite"); performAction("w6_sq28_break_command")
+            completeLateSide("w6_sq28", "source_gh0st_elara_signal", "w6_sq28_preserve_song", 600)
+            navigateLegalPath("source_orion_chorus"); performAction("w6_sq26_jed_echo")
+            navigateLegalPath("source_echo_workbench"); performAction("w6_sq26_hear_lesson")
+            completeLateSide("w6_sq26", "source_echo_patrol", "w6_sq26_carry_legacy", 600)
+        }
+
+        private fun completeSourceAscentQuests() {
+            navigateLegalPath("source_memory_threshold"); performAction("w6_sq29_aethel_grave")
+            navigateLegalPath("source_memory_stair"); performAction("w6_sq29_tune_grave")
+            completeLateSide("w6_sq29", "source_memory_fragments", "w6_sq29_carry_chorus", 750)
+            navigateLegalPath("source_spire_thought"); performAction("w6_sq30_final_scavenge")
+            navigateLegalPath("source_spire_archive"); performAction("w6_sq30_detach_hull")
+            completeLateSide("w6_sq30", "source_spire_arena", "w6_sq30_fit_hull", 800)
+            navigateLegalPath("source_memory_stair")
+        }
+
         fun prepareWorld4Rest() {
             performAction("w4_mq16_land_shelf")
             navigateLegalPath("foundry_obsidian_shelf_scale_02")
             harness.restAtVisibleStop()
         }
 
-        fun playWorld4() {
+        fun playWorld4(completionist: Boolean = false, alternate: Boolean = false) {
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w4_mq16"))
             performAction("w4_mq16_land_shelf")
             navigateLegalPath("foundry_slag_river")
@@ -1731,9 +2112,32 @@ class LegalRouteCampaignRunnerTest {
             navigateLegalPath("foundry_service_airlock")
             performAction("w4_mq16_enter_airlock")
             navigateLegalPath("foundry_waste_intake")
-            performAction("w4_mq17_access_phantom_terminal")
+            performAction("w4_mq17_access_phantom_terminal_scene")
+            finishDialogue("correct")
             navigateLegalPath("foundry_cooling_springs")
-            performAction("w4_mq17_regroup_springs")
+            if (completionist && !alternate) completeFoundryEarlyQuestsAndCrucible()
+            navigateLegalPath("foundry_cooling_springs")
+            performAction("w4_mq17_regroup_springs_scene")
+            finishDialogue("correct")
+            if (completionist) {
+                val afterSprings = harness.sessionStore.state.value
+                assertEquals(true, afterSprings.roomStates["foundry_pipe_gallery"]?.get("assembly_route_open"))
+                navigateLegalPath("foundry_reject_bay"); travelDirection("west")
+                assertEquals("foundry_pipe_gallery", harness.sessionStore.state.value.roomId)
+                assertEquals("hub_7_slag_pits", harness.sessionStore.state.value.hubId)
+                harness.saveSlot(8); harness.loadSlot(8)
+                navigateLegalPath("foundry_cooling_springs")
+                if (alternate) completeFoundryEarlyQuestsAndCrucible()
+                navigateLegalPath("foundry_pipe_gallery"); travelDirection("east")
+                assertEquals("foundry_reject_bay", harness.sessionStore.state.value.roomId)
+                assertEquals("hub_8_assembly_line", harness.sessionStore.state.value.hubId)
+                assertTrue("w4_mq18" in harness.sessionStore.state.value.activeQuests)
+                if (!alternate) {
+                    assertEquals(afterSprings.playerXp, harness.sessionStore.state.value.playerXp)
+                    assertEquals(afterSprings.inventory, harness.sessionStore.state.value.inventory)
+                }
+                world3RewardObservations += "Foundry return corridor passed: real Assembly-to-Slag Pits-to-Assembly walk, save/reload; delayed early quests and Crucible=$alternate."
+            }
             navigateLegalPath("foundry_conveyor_belt")
             performAction("w4_mq18_navigate_conveyors")
             navigateLegalPath("foundry_conditioning_chamber")
@@ -1741,6 +2145,7 @@ class LegalRouteCampaignRunnerTest {
             navigateLegalPath("foundry_forge_anvil")
             performAction("w4_mq18_overload_matrix")
 
+            if (completionist) completeFoundryAssemblyQuests(alternate)
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w4_mq19"))
             navigateLegalPath("foundry_conveyor_belt_scale_01")
             performAction("w4_mq19_read_pulse_board")
@@ -1761,7 +2166,8 @@ class LegalRouteCampaignRunnerTest {
             navigateLegalPath("foundry_forge_control_alcove")
             harness.restAtVisibleStop()
             navigateLegalPath("foundry_titan_dock")
-            talkToNpc("Rylos")
+            performAction("w4_mq20_confront_rylos_scene")
+            finishDialogue("correct")
             harness.playPublicEncounter("titan_walker_boss")
             assertTrue("Real Titan victory must advance the quest", "ms_w4_titan_defeated" in harness.sessionStore.state.value.completedMilestones)
             performAction("w4_mq20_escape_launch")
@@ -1799,7 +2205,7 @@ class LegalRouteCampaignRunnerTest {
             navigateLegalPath("orbital_executive_dock")
         }
 
-        fun playWorld5() {
+        fun playWorld5(completionist: Boolean = false, alternate: Boolean = false) {
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w5_mq21"))
             if (harness.sessionStore.state.value.progressionPrototypeVersion == 1) {
                 val crew = com.example.starborn.domain.leveling.CrewBuildPrototype
@@ -1825,10 +2231,17 @@ class LegalRouteCampaignRunnerTest {
             harness.playPublicEncounter("compliance_officer")
             navigateLegalPath("orbital_service_shaft")
             performAction("w5_mq22_traverse_shaft")
+            if (completionist && alternate) {
+                useNamedVerticalRoute("down", "orbital_server_farm")
+                useNamedVerticalRoute("up", "orbital_service_shaft")
+                useNamedVerticalRoute("down", "orbital_server_farm")
+            }
             navigateLegalPath("orbital_server_farm")
             performAction("w5_mq22_access_mainframe")
             navigateLegalPath("deep_mainframe_nave")
-            performAction("w5_mq22_find_thorne")
+            performAction("w5_mq22_find_thorne_scene")
+            finishDialogue("correct")
+            if (completionist) completeVoidOptionalQuests(alternate)
 
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w5_mq23"))
             navigateLegalPath("orbital_server_farm")
@@ -1840,19 +2253,43 @@ class LegalRouteCampaignRunnerTest {
             navigateLegalPath("deep_firewall_gamma")
             performAction("w5_mq23_firewall_gamma")
             assertTrue("Firewall controls alone must not complete the quest", "w5_mq23" in harness.sessionStore.state.value.activeQuests)
+            navigateLegalPath("orbital_server_farm")
+            harness.explorationVm.travel("east"); harness.settle()
+            assertEquals("Anchor entry requires the actual Construct victory", "orbital_server_farm", harness.sessionStore.state.value.roomId)
+            assertFalse(harness.sessionStore.state.value.roomStates["deep_anchor_chamber"]?.get("firewall_access_open") == true)
+            harness.explorationVm.dismissBlockedPrompt(); harness.settle()
+            navigateLegalPath("deep_firewall_gamma")
             harness.playPublicEncounter("firewall_construct")
             assertTrue("w5_mq23 completed", harness.sessionStore.state.value.completedQuests.contains("w5_mq23"))
             assertTrue("w5_mq24 active", harness.sessionStore.state.value.activeQuests.contains("w5_mq24"))
+            assertEquals(true, harness.sessionStore.state.value.roomStates["deep_anchor_chamber"]?.get("firewall_access_open"))
+            if (completionist) {
+                val clear = harness.sessionStore.state.value
+                if (alternate) {
+                    useNamedVerticalRoute("down", "deep_anchor_chamber")
+                    useNamedVerticalRoute("up", "deep_firewall_gamma")
+                }
+                navigateLegalPath("orbital_customs_lounge"); harness.restAtVisibleStop()
+                harness.saveSlot(8); harness.loadSlot(8)
+                navigateLegalPath("orbital_server_farm")
+                assertEquals("hub_10_deep_ring", harness.sessionStore.state.value.hubId)
+                assertEquals(clear.playerXp, harness.sessionStore.state.value.playerXp)
+                assertEquals(clear.inventory, harness.sessionStore.state.value.inventory)
+                world3RewardObservations += "Ring return path passed: real Construct victory, walk up through SysAdmin Nest and Zero-G Junction to Customs, rest/save/reload, then walk back to the cleared Anchor entrance."
+            }
 
             navigateLegalPath("deep_anchor_chamber")
-            performAction("w5_mq24_find_elara")
+            performAction("w5_mq24_find_elara_scene")
+            finishDialogue("correct")
             performAction("w5_mq24_take_anchor")
             assertTrue("w5_mq24 completed", harness.sessionStore.state.value.completedQuests.contains("w5_mq24"))
             assertTrue("The Anchor acquired", (harness.sessionStore.state.value.inventory["anchor_relic"] ?: 0) >= 1)
             assertTrue("w5_mq25 active", harness.sessionStore.state.value.activeQuests.contains("w5_mq25"))
 
             navigateLegalPath("deep_throne_room")
-            performAction("w5_mq25_soloist")
+            if (completionist) completeLateSide("w5_sq25", "deep_throne_room", "w5_sq25_open_armory", 550)
+            performAction("w5_mq25_soloist_scene")
+            finishDialogue("correct")
             navigateLegalPath("deep_tear")
             performAction("w5_mq25_enter_tear")
             assertEquals("The breach must wait for the Avatar victory", "deep_tear", harness.sessionStore.state.value.roomId)
@@ -1873,7 +2310,7 @@ class LegalRouteCampaignRunnerTest {
             assertEquals("source_campfire", harness.sessionStore.state.value.roomId)
         }
 
-        fun playWorld6() {
+        fun playWorld6(completionist: Boolean = false, alternate: Boolean = false) {
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w6_mq26"))
             if (useProductionCrewRules) {
                 // Spend earned late-game AP through the public tree before the Source fights.
@@ -1886,18 +2323,14 @@ class LegalRouteCampaignRunnerTest {
             harness.explorationVm.useInventoryItem("orbital_glimmer_tonic")
             harness.settle()
             harness.restAtVisibleStop()
-            navigateLegalPath("source_zeke_review_loop")
-            harness.playPublicEncounter("manager_projection")
-            navigateLegalPath("source_campfire")
-            harness.restAtVisibleStop()
-            navigateLegalPath("source_gh0st_nightmare_node_scale_01")
-            harness.playPublicEncounter("endless_war_echo")
-            navigateLegalPath("source_campfire")
-            harness.restAtVisibleStop()
-            navigateLegalPath("source_orion_tide_well")
-            harness.playPublicEncounter("silent_shore_wraith")
-            navigateLegalPath("source_campfire")
+            val nightmares = listOf("source_zeke_review_loop" to "manager_projection",
+                "source_gh0st_nightmare_node_scale_01" to "endless_war_echo", "source_orion_tide_well" to "silent_shore_wraith")
+            for ((room, enemy) in if (alternate) nightmares.reversed() else nightmares) {
+                navigateLegalPath(room); harness.playPublicEncounter(enemy)
+                navigateLegalPath("source_campfire"); harness.restAtVisibleStop()
+            }
             performAction("w6_mq26_reassemble")
+            if (completionist) completeSourceNightmareQuests(alternate)
 
             navigateLegalPath("source_echo_mines")
             navigateLegalPath("source_echo_patrol")
@@ -1920,6 +2353,7 @@ class LegalRouteCampaignRunnerTest {
             performAction("w6_mq29_refuse_astra_revision")
             performAction("w6_mq29_refuse_foundry_revision")
             performAction("w6_mq29_climb_stair")
+            if (completionist) completeSourceAscentQuests()
             navigateLegalPath("source_memory_fragments")
             harness.playPublicEncounter("source_shadow")
             navigateLegalPath("source_memory_bridge_span")
@@ -1932,7 +2366,8 @@ class LegalRouteCampaignRunnerTest {
             assertTrue("w6_mq30 active", harness.sessionStore.state.value.activeQuests.contains("w6_mq30"))
 
             // Finale: Confront Vale, defeat Ascended Vale & Ascended God
-            performAction("w6_mq30_confront_vale")
+            performAction("w6_mq30_confront_vale_scene")
+            finishDialogue("correct")
             val lockedTuning = harness.explorationVm.uiState.value.actions.single {
                 it is com.example.starborn.domain.model.TuningPuzzleAction && it.puzzleId == "source_harmonic_focus"
             }
@@ -1940,6 +2375,7 @@ class LegalRouteCampaignRunnerTest {
             harness.settle()
             assertTrue("Final tuning must remain locked before both victories", harness.explorationVm.uiState.value.tuningPuzzle == null)
             assertFalse("Premature tuning must not complete the game", "ms_game_complete" in harness.sessionStore.state.value.completedMilestones)
+            if (completionist) harness.verifyStarbornRewardEquipment()
             harness.playPublicEncounter("ascended_vale")
             harness.explorationVm.onActionSelected(lockedTuning)
             harness.settle()
@@ -1957,14 +2393,23 @@ class LegalRouteCampaignRunnerTest {
             requireNotNull(harness.explorationVm.uiState.value.tuningPuzzle).sliders.forEach {
                 harness.explorationVm.updateTuningSlider(it.id, it.target)
             }
+            val beforeEnding = harness.sessionStore.state.value
             harness.explorationVm.submitTuningPuzzle()
             harness.settle()
+            if (completionist) {
+                assertNotNull("Final note must be pending before credits", harness.cinematicCoordinator.state.value)
+                assertEquals("Ending XP waits for completion", beforeEnding.playerXp, harness.sessionStore.state.value.playerXp)
+                harness.saveSlot(8); harness.loadSlot(8)
+                assertNotNull("Pending finale survives reload", harness.cinematicCoordinator.state.value)
+            }
             while (harness.cinematicCoordinator.state.value != null) {
                 harness.explorationVm.skipCinematic()
                 harness.settle()
             }
 
             assertTrue("w6_mq30 completed", harness.sessionStore.state.value.completedQuests.contains("w6_mq30"))
+            assertEquals("Finale pays exactly once", beforeEnding.playerXp + 3000, harness.sessionStore.state.value.playerXp)
+            assertTrue("ms_credits_seen" in harness.sessionStore.state.value.completedMilestones)
         }
     }
 
@@ -2146,6 +2591,7 @@ class LegalRouteCampaignRunnerTest {
                 if (current == targetRoomId) return currentPath
                 val room = roomsById[current] ?: continue
                 for ((dir, nextRoom) in room.connections) {
+                    if ((current.startsWith("spire_") || current.startsWith("foundry_") || current.startsWith("orbital_") || current.startsWith("deep_") || current.startsWith("source_")) && dir !in setOf("north", "south", "east", "west")) continue
                     if (nextRoom !in visited && nextRoom in roomsById) {
                         visited.add(nextRoom)
                         queue.add(nextRoom to (currentPath + (dir to nextRoom)))
@@ -2221,19 +2667,81 @@ class LegalRouteCampaignRunnerTest {
             }
         }
 
-        fun playPublicEncounter(enemyId: String, retreat: Boolean = false, pending: Boolean = false, seed: Int = 17) {
-            val room = requireNotNull(sessionStore.state.value.roomId)
-            if (!pending) {
-                assertTrue("Enemy must be present before engagement in $room", enemyId in explorationVm.uiState.value.enemies)
-                explorationVm.engageEnemy(enemyId)
-                settle()
+        fun verifyWorld3RewardEquipment() {
+            // Compare the same earned checkpoint using ordinary equipment controls and save/load.
+            explorationVm.equipInventoryItem("accessory", null, "orion")
+            explorationVm.equipInventoryItem("accessory", null, "gh0st")
+            explorationVm.equipInventoryMod("weapon_mod1", null, "nova")
+            explorationVm.equipInventoryMod("weapon_mod2", null, "nova")
+            settle()
+            saveSlot(5)
+            fun inspect(): Map<String, com.example.starborn.domain.combat.Combatant> {
+                assertTrue("heavy_mech" in explorationVm.uiState.value.enemies)
+                explorationVm.engageEnemy("heavy_mech"); settle()
+                val descriptor = requireNotNull(moshi.adapter(com.example.starborn.domain.combat.EncounterDescriptor::class.java)
+                    .fromJson(sessionStore.state.value.pendingBattleJson))
+                val combat = publicCombat(descriptor.enemies.map { it.enemyId }, 17)
+                try {
+                    combat.onScreenReady()
+                    assertTrue("Earned Intercept must appear in Gh0st's combat menu", combat.skillsForPlayer("gh0st").any { it.id == "gh0st_intercept" })
+                    return requireNotNull(combat.combatState).combatants.mapValues { it.value.combatant }
+                } finally { combat.close() }
             }
-            val descriptor = requireNotNull(moshi.adapter(com.example.starborn.domain.combat.EncounterDescriptor::class.java)
-                .fromJson(sessionStore.state.value.pendingBattleJson))
-            val encounterIds = descriptor.enemies.map { it.enemyId }
-            assertTrue("Public encounter must include $enemyId", enemyId in encounterIds)
+            val baseline = inspect()
+            loadSlot(5)
+            explorationVm.equipInventoryItem("accessory", "neon_band", "orion")
+            explorationVm.equipInventoryItem("accessory", "phase_rounds", "gh0st")
+            explorationVm.equipInventoryMod("weapon_mod1", "cyano_coolant_injector", "nova")
+            settle()
+            assertEquals("neon_band", sessionStore.state.value.equippedItems["orion:accessory"])
+            assertEquals("phase_rounds", sessionStore.state.value.equippedItems["gh0st:accessory"])
+            assertEquals("cyano_coolant_injector", sessionStore.state.value.equippedItems["nova:weapon_mod1"])
+            saveSlot(5)
+            val equipped = inspect()
+            assertEquals(baseline.getValue("orion").stats.focus + 2, equipped.getValue("orion").stats.focus)
+            assertEquals(baseline.getValue("orion").stats.critBonus + 5.0, equipped.getValue("orion").stats.critBonus, 0.001)
+            assertEquals(baseline.getValue("gh0st").stats.agility + 2, equipped.getValue("gh0st").stats.agility)
+            assertEquals(baseline.getValue("gh0st").stats.focus + 2, equipped.getValue("gh0st").stats.focus)
+            assertEquals("Accessory must not promise a weapon conversion it does not supply", baseline.getValue("gh0st").weapon?.attack?.element,
+                equipped.getValue("gh0st").weapon?.attack?.element)
+            assertEquals(baseline.getValue("nova").stats.focus + 4, equipped.getValue("nova").stats.focus)
+            assertEquals(baseline.getValue("nova").stats.accuracyBonus + 3.0, equipped.getValue("nova").stats.accuracyBonus, 0.001)
+            assertEquals("freeze", equipped.getValue("nova").weapon?.attack?.element)
+            assertEquals("freeze", equipped.getValue("nova").weapon?.statusOnHit)
+            assertEquals(20.0, requireNotNull(equipped.getValue("nova").weapon).statusChance, 0.001)
+            world3RewardObservations += "Equipment combat deltas passed: Neon Band Focus+2/Crit+5; Phase Rounds Agility+2/Focus+2; " +
+                "Coolant Focus+4/Accuracy+3/Freeze element/20% freeze-on-hit; Phase weapon element=${equipped.getValue("gh0st").weapon?.attack?.element}"
+            loadSlot(5) // Restore the pre-engagement save, keeping legally equipped rewards.
+        }
+
+        fun verifyStarbornRewardEquipment() {
+            explorationVm.equipInventoryItem("accessory", null, "nova"); settle()
+            saveSlot(5)
+            fun inspect(): com.example.starborn.domain.combat.Combatant {
+                explorationVm.engageEnemy("ascended_vale"); settle()
+                val descriptor = requireNotNull(moshi.adapter(com.example.starborn.domain.combat.EncounterDescriptor::class.java)
+                    .fromJson(sessionStore.state.value.pendingBattleJson))
+                val combat = publicCombat(descriptor.enemies.map { it.enemyId }, 17)
+                try { combat.onScreenReady(); return requireNotNull(combat.combatState).combatants.getValue("nova").combatant }
+                finally { combat.close() }
+            }
+            val baseline = inspect(); loadSlot(5)
+            explorationVm.equipInventoryItem("accessory", "starborn_mod", "nova"); settle()
+            assertEquals("starborn_mod", sessionStore.state.value.equippedItems["nova:accessory"])
+            saveSlot(5)
+            val equipped = inspect()
+            assertEquals(baseline.stats.strength + 5, equipped.stats.strength)
+            assertEquals(baseline.stats.focus + 5, equipped.stats.focus)
+            assertEquals(baseline.stats.luck + 3, equipped.stats.luck)
+            assertEquals(baseline.stats.critBonus + 15.0, equipped.stats.critBonus, 0.001)
+            assertEquals(baseline.weapon?.attack?.element, equipped.weapon?.attack?.element)
+            loadSlot(5)
+            world3RewardObservations += "Starborn earned accessory verified in actual combat setup: Strength+5, Focus+5, Luck+3, crit+15 percentage points; weapon element unchanged."
+        }
+
+        private fun publicCombat(encounterIds: List<String>, seed: Int): CombatViewModel {
             val registry = StatusRegistry(worldDataSource.loadStatuses())
-            val combat = CombatViewModel(
+            return CombatViewModel(
                 worldAssets = worldDataSource,
                 combatEngine = CombatEngine(statusRegistry = registry, random = kotlin.random.Random(seed)),
                 statusRegistry = registry,
@@ -2251,6 +2759,20 @@ class LegalRouteCampaignRunnerTest {
                 elapsedRealtime = { dispatcher.scheduler.currentTime },
                 random = SeededCombatRandom(seed)
             )
+        }
+
+        fun playPublicEncounter(enemyId: String, retreat: Boolean = false, pending: Boolean = false, seed: Int = 17, verifyIntercept: Boolean = false) {
+            val room = requireNotNull(sessionStore.state.value.roomId)
+            if (!pending) {
+                assertTrue("Enemy must be present before engagement in $room", enemyId in explorationVm.uiState.value.enemies)
+                explorationVm.engageEnemy(enemyId)
+                settle()
+            }
+            val descriptor = requireNotNull(moshi.adapter(com.example.starborn.domain.combat.EncounterDescriptor::class.java)
+                .fromJson(sessionStore.state.value.pendingBattleJson))
+            val encounterIds = descriptor.enemies.map { it.enemyId }
+            assertTrue("Public encounter must include $enemyId", enemyId in encounterIds)
+            val combat = publicCombat(encounterIds, seed)
             try {
                 combat.onScreenReady()
                 File("build/reports/campaign-systems/encounter-$enemyId-before.txt").apply {
@@ -2263,6 +2785,7 @@ class LegalRouteCampaignRunnerTest {
                     assertEquals("Authored HP and vitality overrides must reach combat", com.example.starborn.domain.combat.CombatFormulas.maxHp(45, 1),
                         requireNotNull(combat.combatState).combatants.values.single { it.combatant.side == com.example.starborn.domain.combat.CombatSide.ENEMY }.hp)
                 }
+                var interceptUsed = false
                 for (tick in 0 until 4800) {
                     dispatcher.scheduler.advanceTimeBy(50)
                     dispatcher.scheduler.runCurrent()
@@ -2279,6 +2802,14 @@ class LegalRouteCampaignRunnerTest {
                         val actor = requireNotNull(combat.awaitingAction.value)
                         val active = state.combatants.getValue(actor)
                         val livingEnemies = state.combatants.values.filter { it.combatant.side == com.example.starborn.domain.combat.CombatSide.ENEMY && it.isAlive }
+                        if (verifyIntercept && actor == "gh0st" && !interceptUsed) {
+                            val intercept = combat.skillsForPlayer(actor).single { it.id == "gh0st_intercept" }
+                            if (combat.canUseSkill(actor, intercept)) {
+                                combat.useSkill(intercept)
+                                interceptUsed = true
+                                continue
+                            }
+                        }
                         val controlId = when {
                             (room.startsWith("orbital") || room.startsWith("deep") || room.startsWith("source")) && actor == "orion" && livingEnemies.any { enemy -> enemy.statusEffects.none { it.id == "weak" } } -> "orion_disruption_pulse"
                             else -> null
@@ -2395,7 +2926,8 @@ class LegalRouteCampaignRunnerTest {
                     assertEquals("Optional encounter must retreat through public command", com.example.starborn.domain.combat.CombatOutcome.Retreat, state.outcome)
                     explorationVm.onCombatRetreat(combat.encounterEnemyIds)
                     settle()
-                    assertTrue("Retreat must preserve the undefeated enemy", enemyId in explorationVm.uiState.value.enemies)
+                    if (!pending) assertTrue("Retreat must preserve the undefeated enemy", enemyId in explorationVm.uiState.value.enemies)
+                    assertTrue("Retreat must release the pending battle", sessionStore.state.value.pendingBattleJson.isBlank())
                     publicCombats += "room=$room enemy=$enemyId seed=$seed outcome=retreat; enemy remains undefeated"
                     return
                 }
@@ -2406,6 +2938,12 @@ class LegalRouteCampaignRunnerTest {
                 val usedItems = state.log.filterIsInstance<com.example.starborn.domain.combat.CombatLogEntry.ActionQueued>()
                     .mapNotNull { (it.action as? com.example.starborn.domain.combat.CombatAction.ItemUse)?.itemId }
                     .groupingBy { it }.eachCount()
+                if (verifyIntercept) {
+                    assertTrue("Earned Intercept must execute in actual combat", interceptUsed)
+                    assertTrue(state.log.filterIsInstance<com.example.starborn.domain.combat.CombatLogEntry.StatusApplied>()
+                        .any { it.targetId == "gh0st" && it.statusId == "guard" })
+                    world3RewardObservations += "Intercept executed in earned rooftop combat; Guard applied to Gh0st."
+                }
                 val knockedOut = state.combatants.values.filter { it.combatant.side == com.example.starborn.domain.combat.CombatSide.PLAYER && !it.isAlive }
                     .map { it.combatant.id }
                 publicCombats += "room=$room enemies=$encounterIds seed=$seed damageEvents=${state.log.count { it is com.example.starborn.domain.combat.CombatLogEntry.Damage }} xp=${reward.xp} ap=${reward.ap} credits=${reward.credits} persistedHp=${sessionStore.state.value.partyMemberHp} knockedOut=$knockedOut usedItems=$usedItems"

@@ -162,3 +162,16 @@ private fun loadAssetImage(
         AssetImageCache.put(imagePath, bitmap)
     }
 }
+
+/** Warm only adjacent room art; cancellation stops work when the player moves again. */
+@Composable
+fun PrefetchRoomBackgrounds(paths: List<String>) {
+    val context = LocalContext.current.applicationContext
+    LaunchedEffect(paths) {
+        paths.distinct().forEach { path ->
+            if (AssetImageCache[path] == null) {
+                withContext(Dispatchers.IO) { loadAssetImage(context, path) }
+            }
+        }
+    }
+}

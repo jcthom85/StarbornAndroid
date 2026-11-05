@@ -1,0 +1,25 @@
+{
+  "room_records": 477,
+  "changed_room_ids": [
+    "mine_sealed_munitions_vault",
+    "spire_black_site_lab",
+    "foundry_subterranean_smelter",
+    "orbital_breached_avionics_lab",
+    "sector9_sunken_aethel_vault",
+    "spire_rigging_deck",
+    "foundry_pipe_gallery",
+    "spire_hidden_studio",
+    "sector9_coastal_research_station",
+    "spire_skyline_vip_suite",
+    "spire_vip_private_booth",
+    "foundry_crucible_arena"
+  ],
+  "only_background_image_fields_changed": true,
+  "original_reference_images_preserved": true,
+  "unique_background_paths": 477,
+  "shared_paths": [],
+  "byte_identical_background_groups": [],
+  "decoded_pixel_identical_background_groups": [],
+  "all_referenced_backgrounds_found_and_decoded": true,
+  "new_webp_total_bytes": 3304090
+}

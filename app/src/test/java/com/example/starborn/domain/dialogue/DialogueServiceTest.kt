@@ -13,6 +13,43 @@ import org.junit.Test
 class DialogueServiceTest {
 
     @Test
+    fun `every authored dialogue graph has a route to an ending`() {
+        val assets = listOf(File("src/main/assets"), File("app/src/main/assets")).first { it.exists() }
+        val type = Types.newParameterizedType(List::class.java, DialogueLine::class.java)
+        val lines = requireNotNull(MoshiProvider.instance.adapter<List<DialogueLine>>(type)
+            .fromJson(File(assets, "dialogue.json").readText()))
+        val terminating = mutableSetOf<String>()
+        do {
+            val previous = terminating.size
+            lines.forEach { line ->
+                val targets = line.options?.takeIf { it.isNotEmpty() }?.map { it.next } ?: listOf(line.next)
+                if (targets.any { it == null || it in terminating }) terminating += line.id
+            }
+        } while (previous != terminating.size)
+        assertEquals("Dialogue graphs without an exit: ${lines.filter { it.id !in terminating }.map { it.id }}",
+            lines.size, terminating.size)
+    }
+
+    @Test
+    fun `resident looping conversations can leave before and after receiving gifts`() {
+        val assets = listOf(File("src/main/assets"), File("app/src/main/assets")).first { it.exists() }
+        val type = Types.newParameterizedType(List::class.java, DialogueLine::class.java)
+        val lines = requireNotNull(MoshiProvider.instance.adapter<List<DialogueLine>>(type)
+            .fromJson(File(assets, "dialogue.json").readText()))
+        for (who in listOf("evelyn", "robert", "cheno", "chris", "andrew", "creator_jason", "oliver", "meeko")) {
+            val root = lines.single { it.id == "${who}_default_talk" }
+            for (giftReceived in listOf(false, true)) {
+                val session = DialogueSession(lines.associateBy { it.id }, root,
+                    DialogueConditionEvaluator { condition -> condition.isNullOrBlank() ||
+                        (!giftReceived && condition.startsWith("milestone_not_set:")) }, DialogueTriggerHandler { })
+                assertTrue("${who} goodbye must remain unconditional", session.choices().any { it.id == "${who}_leave" })
+                session.choose("${who}_leave")
+                assertTrue("${who} conversation should close", session.isFinished())
+            }
+        }
+    }
+
+    @Test
     fun `Charlie can leave at every trust stage and earns his gift only once`() {
         val assets = listOf(File("src/main/assets"), File("app/src/main/assets"))
             .first { it.exists() }

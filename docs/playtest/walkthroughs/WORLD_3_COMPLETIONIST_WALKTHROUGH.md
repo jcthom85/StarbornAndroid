@@ -6,7 +6,9 @@ The main route and all six optional quests are covered by earned campaign tests,
 
 ## Navigation
 
-All ordinary World 3 room travel uses NSEW swipes with immediate opposite-direction returns. The back-bar passage is east of The Static, Lantern Roof is north beyond Lantern Bridge, Ad Bay is south beyond Security Kiosk, and the catalog wing extends south from Archive Vault. Optional tapped return shortcuts remain conveniences; every branch can also be retraced by swiping. The heist transfer, cleared city lift, black-site laser console and world departure retain their quest rules.
+World 3 has a complete NSEW walking network with immediate opposite-direction returns. Named vertical alternatives appear as tappable **Paths** links, rather than compass swipes. No diagonal exits are used. The back-bar passage is east of The Static, Lantern Roof is north beyond Lantern Bridge, Ad Bay is south beyond Security Kiosk, and the catalog wing extends south from Archive Vault. Optional tapped return shortcuts remain conveniences; every branch can also be retraced by swiping. The heist transfer, cleared city lift, black-site laser console and world departure retain their quest rules.
+
+Two physical shortcuts are available in both directions: the **platform stairs** connect Underrail Platform with Transit Plaza, and the separate **inspection lift** connects Service Lift with Archive Vault. Tap their named Paths links at either landing. The inspection cage does not replace the main city lift panel or its clearance rule. Glasswalk reaches the Archive by walking east to Donor Gallery, then south; it has no unexplained one-way drop. The numbered walkthrough below uses the NSEW route so either approach remains usable.
 
 ## Under the Radar
 
@@ -308,9 +310,11 @@ Interactions: patrol mirror, cracked stairwell.
 
 #### Underrail Platform (`spire_underrail_platform`)
 
-An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is scratched with routes, curfews, patrol timing, and warnings written in marker.
+An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is scratched with routes, curfews, patrol timing, and warnings written in marker. Platform stairs descend to Transit Plaza and remain open for the climb back.
 
 Exits: west → Vent Output, east → The Static.
+
+Tapped Paths: **Take the platform stairs to Transit Plaza** (down → Transit Plaza). Works in both directions.
 
 Interactions: underrail map, patrol timing.
 
@@ -540,9 +544,11 @@ Interactions: ratline nook, chalk arrows, maintenance locker, ladder.
 
 #### Transit Plaza (`spire_transit_plaza`)
 
-Transit Plaza spreads beneath the Great Elevator, all surveillance glass, guard lanes, and crowded hesitation. The elevator controls tower above a checkpoint queue where fear moves faster than the line, while a security kiosk glows under the stairs.
+Transit Plaza spreads beneath the Great Elevator, all surveillance glass, guard lanes, and crowded hesitation. The elevator controls tower above a checkpoint queue where fear moves faster than the line, while a security kiosk glows under the stairs. The platform stairs climb to Underrail, with a direct return down to the plaza.
 
 Exits: north → The Static, west → Sewer Passage, east → Checkpoint Queue, south → Security Kiosk.
+
+Tapped Paths: **Climb the platform stairs to Underrail** (up → Underrail Platform). Works in both directions.
 
 Interactions: elevator controls.
 
@@ -614,9 +620,11 @@ Interactions: uniform racks, laundry tags, erased memorial name.
 
 #### Service Lift (`spire_service_lift`)
 
-A service lift rises through the bones of the Upper City. A worker network uplink can publish the ledger, while a private dead drop can turn it into a precise weapon against one executive. The lift panel offers a return to Lower City’s Transit Plaza beside a rattling inspection hatch.
+A service lift rises through the bones of the Upper City. A worker network uplink can publish the ledger, while a private dead drop can turn it into a precise weapon against one executive. The lift panel offers a return to Lower City’s Transit Plaza beside a rattling inspection hatch. Beyond the inspection hatch, a separate inspection lift travels down to Archive Vault and returns to this landing. The lift panel still controls the cleared route to Lower City.
 
 Exits: west → Uniform Sorting, north → Skypark Dome.
+
+Tapped Paths: **Ride the inspection lift to the Archive** (down → Archive Vault). Works in both directions.
 
 Interactions: lift panel, inspection hatch, worker network uplink, private dead drop.
 
@@ -664,7 +672,7 @@ Interactions: guest registry, jazz conservatory planter, industrial vortex buffe
 
 #### Glasswalk (`spire_glasswalk`)
 
-The glasswalk curves along the dome edge with the whole Lower City visible far below. A camera seam runs under the handrail like a vein.
+The glasswalk curves along the dome edge with the whole Lower City visible far below. A camera seam runs under the handrail like a vein. The Archive approach continues east through Donor Gallery, then south down the stairs.
 
 Exits: west → Skypark Dome, east → Donor Gallery.
 
@@ -788,9 +796,11 @@ Interactions: prism shutters, braided chord, scan alarm chords.
 
 #### Archive Vault (`spire_archive_vault`)
 
-The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field that hums toward Nova before she touches it. Command tether-lines vanish into the glass, routing power back toward the Prism Gallery. The catalog wing opens south through Catalog Atrium, with a clear return to the vault.
+The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field that hums toward Nova before she touches it. Command tether-lines vanish into the glass, routing power back toward the Prism Gallery. The catalog wing opens south through Catalog Atrium, with a clear return to the vault. An inspection lift returns up to Service Lift and can be ridden back down to the vault.
 
 Exits: west → Prism Gallery, north → Donor Gallery, east → Drone Test Alcove, south → Catalog Atrium.
+
+Tapped Paths: **Ride the inspection lift to Service Lift** (up → Service Lift). Works in both directions.
 
 Interactions: containment field, lens relic, command tether-lines, scan tether-lines.
 

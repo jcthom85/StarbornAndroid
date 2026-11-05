@@ -1,0 +1,79 @@
+{
+  "tests": [
+    {
+      "suite": "com.example.starborn.domain.playtest.NavigationIntegrityTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.example.starborn.domain.dialogue.DialogueServiceTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.example.starborn.data.DataIntegrityTest",
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.example.starborn.feature.exploration.WorldThreeDiscoverabilityStateTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.example.starborn.feature.exploration.ui.RoomDescriptionResolverTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.example.starborn.domain.dialogue.Hub3CriticalFlowTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.example.starborn.desktop.DesktopContentConsistencyTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.example.starborn.desktop.World3NavigationPublicTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.example.starborn.domain.environment.EnvironmentalEffectsTest",
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "total_tests": 95,
+  "failures": 0,
+  "errors": 0,
+  "apk_asset_parity": {
+    "rooms.json": true,
+    "dialogue.json": true,
+    "events.json": true,
+    "hub_nodes.json": true
+  },
+  "apk_sha256": "1e03e64cb23d143cacd42c8a6542663244035a88b4b29f2f0ca31a26d55be33a",
+  "phone_install": false,
+  "phone_performance_and_visual_acceptance": "pending"
+}

@@ -224,15 +224,15 @@ object DebugCampaignScenarios {
             setOf("rooms:sector9_stream_sunken_passage", "rooms:sector9_sunken_aethel_vault", "items:tidal_resonator_mod", "events:w2_sluice_drained")),
 
         // World 3 Main Quests
-        entry("campaign_w3_mq11", "w3_mq11", "MQ11: Homecoming", "World 3: The Spire", DebugScenarioCategory.STORY, "spire_sewers_landing",
+        entry("campaign_w3_mq11", "w3_mq11", "MQ11: Under the Radar", "World 3: The Spire", DebugScenarioCategory.STORY, "spire_sewers_landing",
             "Spire Sewers Landing beneath the lower city; full crew disembarked from Astra.",
             listOf("Engage and neutralize the hostile sewer crawler ambushes.",
                 "Navigate the effluent maintenance conduits to Vent Output.",
                 "Infiltrate the lower city through the service grates.",
-                "Reach Zeke's safehouse apartment and establish the operational base."),
+                "Reach the Static Safehouse and establish the operational base."),
             listOf("Sewer crawler battles test party status recovery and team synergy.",
                 "Vent output exit transitions legally to lower city streets.",
-                "Safehouse arrival unlocks Lower City hub nodes and completes Homecoming."),
+                "Safehouse arrival unlocks Lower City hub nodes and completes Under the Radar."),
             setOf("quests:w3_mq11", "enemies:sewer_crawler")),
 
         entry("campaign_w3_mq12", "w3_mq12", "MQ12: The Plan", "World 3: The Spire", DebugScenarioCategory.STORY, "spire_zekes_apartment",
@@ -240,7 +240,7 @@ object DebugCampaignScenarios {
             listOf("Speak with Jax at The Static bar to gather security patrol schedules.",
                 "Interrogate a corrupt guard at the security kiosk and copy access badges.",
                 "Source high-society Upper City disguises from the laundry service.",
-                "Assemble the heist plan at Zeke's apartment table."),
+                "Assemble the heist plan at the safehouse planning table."),
             listOf("Multiple dialogue investigation paths update heist prep progress.",
                 "Disguise and badge acquisition update quest task flags.",
                 "Heist planning assembly completes The Plan and opens Upper City access."),

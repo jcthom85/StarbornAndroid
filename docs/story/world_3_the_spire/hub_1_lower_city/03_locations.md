@@ -30,7 +30,7 @@ Use current room connections, action conditions, node transitions, and progressi
 - `spire_the_static` — The Static
 - `spire_old_subway_car` — Old Subway Car
 - `spire_signal_stairwell` — Signal Stairwell
-- `spire_zekes_apartment` — Zeke's Apartment
+- `spire_zekes_apartment` — Static Safehouse
 - `spire_safehouse_roof` — Safehouse Roof
 - `spire_the_static_scale_01` — Back Bar Ledger
 - `spire_the_static_scale_02` — Roof Stairwell

@@ -6,7 +6,7 @@ Arrival under the Spire, runoff/sewer traversal, The Static and the apartment, m
 
 | Quest | Implemented objective | Payout / handoff |
 |---|---|---|
-| `w3_mq11` — Homecoming | Clear the landing encounter, climb to Vent Output, and establish the apartment shield. | 400 XP; MQ12 and local route reveals. |
+| `w3_mq11` — Under the Radar | Clear the landing encounter, climb to Vent Output, and establish the apartment shield. | 400 XP; MQ12 and local route reveals. |
 | `w3_mq12` — The Plan | Gather six preparation tasks, then commit the heist at the planning table. | 450 XP; the guarded completion handoff starts MQ13 and warps to Laundry Service. |
 | `w3_sq11` — Neon Fix | Inspect the sign and install a neon sign core. | 200 XP; consumes the installed core. No Streetwise price passive is granted by the completion event. |
 | `w3_sq12` — Cold Case | Recover the erased case number, search security records, and expose the transfer. | 200 XP and `gh0st_intercept`. |

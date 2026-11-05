@@ -99,24 +99,6 @@
     "transition_text": "Travel to Anchor Chamber."
   },
   {
-    "id": "deep_firewall_gamma__down__deep_anchor_chamber",
-    "from_node": "deep_server_farm",
-    "from_room": "deep_firewall_gamma",
-    "direction": "down",
-    "to_node": "deep_anchor_chamber",
-    "to_room": "deep_anchor_chamber",
-    "transition_text": "Travel to Anchor Chamber."
-  },
-  {
-    "id": "deep_server_farm__up__orbital_service_shaft",
-    "from_node": "deep_server_farm",
-    "from_room": "orbital_server_farm",
-    "direction": "up",
-    "to_node": "orbital_service_shaft",
-    "to_room": "orbital_service_shaft",
-    "transition_text": "Travel to Service Shaft."
-  },
-  {
     "id": "deep_tear__west__deep_throne_room",
     "from_node": "deep_tear",
     "from_room": "deep_tear",
@@ -198,15 +180,6 @@
     "transition_text": "Travel to The Forge."
   },
   {
-    "id": "foundry_cooling_springs__southeast__foundry_waste_intake",
-    "from_node": "foundry_cooling_springs",
-    "from_room": "foundry_cooling_springs",
-    "direction": "southeast",
-    "to_node": "foundry_waste_intake",
-    "to_room": "foundry_waste_intake",
-    "transition_text": "Travel to Waste Intake."
-  },
-  {
     "id": "foundry_cooling_springs__north__foundry_obsidian_shelf",
     "from_node": "foundry_cooling_springs",
     "from_room": "foundry_cooling_springs",
@@ -214,15 +187,6 @@
     "to_node": "foundry_obsidian_shelf",
     "to_room": "foundry_slag_landing",
     "transition_text": "Travel to Obsidian Shelf."
-  },
-  {
-    "id": "foundry_forge__southeast__foundry_power_core",
-    "from_node": "foundry_forge",
-    "from_room": "foundry_forge_anvil",
-    "direction": "southeast",
-    "to_node": "foundry_power_core",
-    "to_room": "foundry_power_core",
-    "transition_text": "Travel to Power Core."
   },
   {
     "id": "foundry_forge__north__foundry_conveyor_belt",
@@ -259,15 +223,6 @@
     "to_node": "foundry_titan_dock",
     "to_room": "foundry_titan_dock",
     "transition_text": "Travel to Titan Dock."
-  },
-  {
-    "id": "foundry_power_core__northwest__foundry_forge",
-    "from_node": "foundry_power_core",
-    "from_room": "foundry_power_core",
-    "direction": "northwest",
-    "to_node": "foundry_forge",
-    "to_room": "foundry_forge_anvil",
-    "transition_text": "Travel to The Forge."
   },
   {
     "id": "foundry_power_core__west__foundry_conditioning",
@@ -322,15 +277,6 @@
     "to_node": "foundry_service_airlock",
     "to_room": "foundry_service_airlock",
     "transition_text": "Travel to Service Airlock."
-  },
-  {
-    "id": "foundry_waste_intake__northwest__foundry_cooling_springs",
-    "from_node": "foundry_waste_intake",
-    "from_room": "foundry_waste_intake",
-    "direction": "northwest",
-    "to_node": "foundry_cooling_springs",
-    "to_room": "foundry_cooling_springs",
-    "transition_text": "Travel to Cooling Springs."
   },
   {
     "id": "foundry_waste_intake__west__foundry_slag_river",
@@ -441,15 +387,6 @@
     "transition_text": "Travel to Service Shaft."
   },
   {
-    "id": "orbital_security_hub__northwest__orbital_solarium",
-    "from_node": "orbital_security_hub",
-    "from_room": "orbital_security_hub",
-    "direction": "northwest",
-    "to_node": "orbital_solarium",
-    "to_room": "orbital_solarium",
-    "transition_text": "Travel to Solarium."
-  },
-  {
     "id": "orbital_security_hub__west__orbital_grand_concourse",
     "from_node": "orbital_security_hub",
     "from_room": "orbital_security_hub",
@@ -459,28 +396,10 @@
     "transition_text": "Travel to Grand Concourse."
   },
   {
-    "id": "orbital_service_shaft__down__deep_server_farm",
-    "from_node": "orbital_service_shaft",
-    "from_room": "orbital_service_shaft",
-    "direction": "down",
-    "to_node": "deep_server_farm",
-    "to_room": "orbital_server_farm",
-    "transition_text": "Travel to Server Farm."
-  },
-  {
     "id": "orbital_service_shaft__west__orbital_security_hub",
     "from_node": "orbital_service_shaft",
     "from_room": "orbital_service_shaft",
     "direction": "west",
-    "to_node": "orbital_security_hub",
-    "to_room": "orbital_security_hub",
-    "transition_text": "Travel to Security Hub."
-  },
-  {
-    "id": "orbital_solarium__southeast__orbital_security_hub",
-    "from_node": "orbital_solarium",
-    "from_room": "orbital_solarium",
-    "direction": "southeast",
     "to_node": "orbital_security_hub",
     "to_room": "orbital_security_hub",
     "transition_text": "Travel to Security Hub."
@@ -538,42 +457,6 @@
     "to_node": "razor_vine_path",
     "to_room": "sector9_canopy",
     "transition_text": "Travel to Razor-Vine Path."
-  },
-  {
-    "id": "source_campfire_node__north__source_gh0st_nightmare_node",
-    "from_node": "source_campfire_node",
-    "from_room": "source_campfire",
-    "direction": "north",
-    "to_node": "source_gh0st_nightmare_node",
-    "to_room": "source_gh0st_nightmare",
-    "transition_text": "Travel to Endless War."
-  },
-  {
-    "id": "source_campfire_node__northeast__source_orion_nightmare_node",
-    "from_node": "source_campfire_node",
-    "from_room": "source_campfire",
-    "direction": "northeast",
-    "to_node": "source_orion_nightmare_node",
-    "to_room": "source_orion_nightmare",
-    "transition_text": "Travel to Silent Shore."
-  },
-  {
-    "id": "source_campfire_node__northwest__source_zeke_nightmare_node",
-    "from_node": "source_campfire_node",
-    "from_room": "source_campfire",
-    "direction": "northwest",
-    "to_node": "source_zeke_nightmare_node",
-    "to_room": "source_zeke_nightmare",
-    "transition_text": "Travel to Infinite Cubicle."
-  },
-  {
-    "id": "source_campfire_node__south__source_echo_mines_node",
-    "from_node": "source_campfire_node",
-    "from_room": "source_campfire",
-    "direction": "south",
-    "to_node": "source_echo_mines_node",
-    "to_room": "source_echo_mines",
-    "transition_text": "Travel to Echo of the Mines."
   },
   {
     "id": "source_center_node__east__source_new_world_node",
@@ -693,15 +576,6 @@
     "transition_text": "Travel to The Center."
   },
   {
-    "id": "source_orion_nightmare_node__southwest__source_campfire_node",
-    "from_node": "source_orion_nightmare_node",
-    "from_room": "source_orion_nightmare",
-    "direction": "southwest",
-    "to_node": "source_campfire_node",
-    "to_room": "source_campfire",
-    "transition_text": "Travel to The Campfire."
-  },
-  {
     "id": "source_spire_thought_node__east__source_center_node",
     "from_node": "source_spire_thought_node",
     "from_room": "source_spire_arena",
@@ -718,15 +592,6 @@
     "to_node": "source_memory_stair_node",
     "to_room": "source_memory_fragments",
     "transition_text": "Travel to Memory Stair."
-  },
-  {
-    "id": "source_zeke_nightmare_node__southeast__source_campfire_node",
-    "from_node": "source_zeke_nightmare_node",
-    "from_room": "source_zeke_nightmare",
-    "direction": "southeast",
-    "to_node": "source_campfire_node",
-    "to_room": "source_campfire",
-    "transition_text": "Travel to The Campfire."
   },
   {
     "id": "stasis_chamber__east__source_gate",
@@ -810,15 +675,6 @@
     "transition_text": "Travel to Skypark."
   },
   {
-    "id": "spire_archive__spire_archive_vault__southwest__spire_exec_lounge",
-    "from_node": "spire_archive",
-    "from_room": "spire_archive_vault",
-    "direction": "southwest",
-    "to_node": "spire_exec_lounge",
-    "to_room": "spire_exec_lounge_bar",
-    "transition_text": "Travel to Exec Lounge."
-  },
-  {
     "id": "spire_transit_plaza__spire_checkpoint_queue__east__spire_night_market",
     "from_node": "spire_transit_plaza",
     "from_room": "spire_checkpoint_queue",
@@ -853,33 +709,6 @@
     "to_node": "spire_laundry",
     "to_room": "spire_uniform_sorting",
     "transition_text": "Travel to Laundry Service."
-  },
-  {
-    "id": "spire_exec_lounge__spire_exec_lounge_bar__northwest__spire_laundry",
-    "from_node": "spire_exec_lounge",
-    "from_room": "spire_exec_lounge_bar",
-    "direction": "northwest",
-    "to_node": "spire_laundry",
-    "to_room": "spire_service_lift",
-    "transition_text": "Travel to Laundry Service."
-  },
-  {
-    "id": "spire_exec_lounge__spire_exec_lounge_bar__northeast__spire_archive",
-    "from_node": "spire_exec_lounge",
-    "from_room": "spire_exec_lounge_bar",
-    "direction": "northeast",
-    "to_node": "spire_archive",
-    "to_room": "spire_archive_vault",
-    "transition_text": "Travel to The Archive."
-  },
-  {
-    "id": "spire_skypark__spire_glasswalk__down__spire_archive",
-    "from_node": "spire_skypark",
-    "from_room": "spire_glasswalk",
-    "direction": "down",
-    "to_node": "spire_archive",
-    "to_room": "spire_archive_vault",
-    "transition_text": "Travel to The Archive."
   },
   {
     "id": "spire_landing_pad__spire_landing_pad_roof__west__spire_archive",
@@ -925,24 +754,6 @@
     "to_node": "spire_skypark",
     "to_room": "spire_skypark_dome",
     "transition_text": "Travel to Skypark."
-  },
-  {
-    "id": "spire_laundry__spire_service_lift__down__spire_archive",
-    "from_node": "spire_laundry",
-    "from_room": "spire_service_lift",
-    "direction": "down",
-    "to_node": "spire_archive",
-    "to_room": "spire_archive_vault",
-    "transition_text": "Travel to The Archive."
-  },
-  {
-    "id": "spire_laundry__spire_service_lift__southeast__spire_exec_lounge",
-    "from_node": "spire_laundry",
-    "from_room": "spire_service_lift",
-    "direction": "southeast",
-    "to_node": "spire_exec_lounge",
-    "to_room": "spire_exec_lounge_bar",
-    "transition_text": "Travel to Exec Lounge."
   },
   {
     "id": "spire_sewers__spire_sewers_passage__north__spire_vent_output",
@@ -1035,15 +846,6 @@
     "transition_text": "Travel to The Static."
   },
   {
-    "id": "spire_vent_output__spire_underrail_platform__down__spire_transit_plaza",
-    "from_node": "spire_vent_output",
-    "from_room": "spire_underrail_platform",
-    "direction": "down",
-    "to_node": "spire_transit_plaza",
-    "to_room": "spire_transit_plaza",
-    "transition_text": "Travel to Transit Plaza."
-  },
-  {
     "id": "spire_laundry__spire_uniform_sorting__south__spire_exec_lounge",
     "from_node": "spire_laundry",
     "from_room": "spire_uniform_sorting",
@@ -1060,5 +862,167 @@
     "to_node": "spire_sewers",
     "to_room": "spire_sewers_passage",
     "transition_text": "Travel to The Sewers."
+  },
+  {
+    "id": "foundry_service_airlock__foundry_pipe_gallery__east__foundry_conveyor_belt",
+    "from_node": "foundry_service_airlock",
+    "from_room": "foundry_pipe_gallery",
+    "direction": "east",
+    "to_node": "foundry_conveyor_belt",
+    "to_room": "foundry_reject_bay",
+    "transition_text": "Follow the cleared maintenance corridor into the Assembly reject bay."
+  },
+  {
+    "id": "foundry_conveyor_belt__foundry_reject_bay__west__foundry_service_airlock",
+    "from_node": "foundry_conveyor_belt",
+    "from_room": "foundry_reject_bay",
+    "direction": "west",
+    "to_node": "foundry_service_airlock",
+    "to_room": "foundry_pipe_gallery",
+    "transition_text": "Return through the maintenance corridor to the Pipe Gallery and Slag Pits."
+  },
+  {
+    "id": "orbital_service_shaft__orbital_zero_g_junction__south__deep_server_farm",
+    "from_node": "orbital_service_shaft",
+    "from_room": "orbital_zero_g_junction",
+    "direction": "south",
+    "to_node": "deep_server_farm",
+    "to_room": "deep_sysadmin_nest",
+    "transition_text": "Follow the marked maintenance tube between Zero-G Junction and the SysAdmin station."
+  },
+  {
+    "id": "deep_server_farm__deep_sysadmin_nest__north__orbital_service_shaft",
+    "from_node": "deep_server_farm",
+    "from_room": "deep_sysadmin_nest",
+    "direction": "north",
+    "to_node": "orbital_service_shaft",
+    "to_room": "orbital_zero_g_junction",
+    "transition_text": "Follow the marked maintenance tube between Zero-G Junction and the SysAdmin station."
+  },
+  {
+    "id": "spire_vent_output__spire_underrail_platform__down__spire_transit_plaza",
+    "from_node": "spire_vent_output",
+    "from_room": "spire_underrail_platform",
+    "direction": "down",
+    "to_node": "spire_transit_plaza",
+    "to_room": "spire_transit_plaza",
+    "transition_text": "Take the platform stairs to Transit Plaza."
+  },
+  {
+    "id": "spire_transit_plaza__spire_transit_plaza__up__spire_vent_output",
+    "from_node": "spire_transit_plaza",
+    "from_room": "spire_transit_plaza",
+    "direction": "up",
+    "to_node": "spire_vent_output",
+    "to_room": "spire_underrail_platform",
+    "transition_text": "Climb the platform stairs to Underrail."
+  },
+  {
+    "id": "spire_laundry__spire_service_lift__down__spire_archive",
+    "from_node": "spire_laundry",
+    "from_room": "spire_service_lift",
+    "direction": "down",
+    "to_node": "spire_archive",
+    "to_room": "spire_archive_vault",
+    "transition_text": "Ride the inspection lift to the Archive."
+  },
+  {
+    "id": "spire_archive__spire_archive_vault__up__spire_laundry",
+    "from_node": "spire_archive",
+    "from_room": "spire_archive_vault",
+    "direction": "up",
+    "to_node": "spire_laundry",
+    "to_room": "spire_service_lift",
+    "transition_text": "Ride the inspection lift to Service Lift."
+  },
+  {
+    "id": "orbital_service_shaft__orbital_service_shaft__down__deep_server_farm",
+    "from_node": "orbital_service_shaft",
+    "from_room": "orbital_service_shaft",
+    "direction": "down",
+    "to_node": "deep_server_farm",
+    "to_room": "orbital_server_farm",
+    "transition_text": "Descend the cables to Server Farm."
+  },
+  {
+    "id": "deep_server_farm__orbital_server_farm__up__orbital_service_shaft",
+    "from_node": "deep_server_farm",
+    "from_room": "orbital_server_farm",
+    "direction": "up",
+    "to_node": "orbital_service_shaft",
+    "to_room": "orbital_service_shaft",
+    "transition_text": "Climb the cables to Service Shaft."
+  },
+  {
+    "id": "deep_server_farm__deep_firewall_gamma__down__deep_anchor_chamber",
+    "from_node": "deep_server_farm",
+    "from_room": "deep_firewall_gamma",
+    "direction": "down",
+    "to_node": "deep_anchor_chamber",
+    "to_room": "deep_anchor_chamber",
+    "transition_text": "Ride the access lift to the Anchor Chamber."
+  },
+  {
+    "id": "deep_anchor_chamber__deep_anchor_chamber__up__deep_server_farm",
+    "from_node": "deep_anchor_chamber",
+    "from_room": "deep_anchor_chamber",
+    "direction": "up",
+    "to_node": "deep_server_farm",
+    "to_room": "deep_firewall_gamma",
+    "transition_text": "Ride the access lift to Firewall Gamma."
+  },
+  {
+    "id": "source_campfire_node__source_campfire__west__source_zeke_nightmare_node",
+    "from_node": "source_campfire_node",
+    "from_room": "source_campfire",
+    "direction": "west",
+    "to_node": "source_zeke_nightmare_node",
+    "to_room": "source_zeke_nightmare",
+    "transition_text": "You follow the west path to Infinite Cubicle."
+  },
+  {
+    "id": "source_campfire_node__source_campfire__north__source_gh0st_nightmare_node",
+    "from_node": "source_campfire_node",
+    "from_room": "source_campfire",
+    "direction": "north",
+    "to_node": "source_gh0st_nightmare_node",
+    "to_room": "source_gh0st_nightmare",
+    "transition_text": "You follow the north path to Endless War."
+  },
+  {
+    "id": "source_campfire_node__source_campfire__south__source_echo_mines_node",
+    "from_node": "source_campfire_node",
+    "from_room": "source_campfire",
+    "direction": "south",
+    "to_node": "source_echo_mines_node",
+    "to_room": "source_echo_mines",
+    "transition_text": "You follow the south path to Echo of the Mines."
+  },
+  {
+    "id": "source_campfire_node__source_campfire_node_scale_01__east__source_orion_nightmare_node",
+    "from_node": "source_campfire_node",
+    "from_room": "source_campfire_node_scale_01",
+    "direction": "east",
+    "to_node": "source_orion_nightmare_node",
+    "to_room": "source_orion_nightmare",
+    "transition_text": "You follow the east path to Silent Shore."
+  },
+  {
+    "id": "source_orion_nightmare_node__source_orion_nightmare__west__source_campfire_node",
+    "from_node": "source_orion_nightmare_node",
+    "from_room": "source_orion_nightmare",
+    "direction": "west",
+    "to_node": "source_campfire_node",
+    "to_room": "source_campfire_node_scale_01",
+    "transition_text": "You follow the west path to Blue Ash Circle."
+  },
+  {
+    "id": "source_zeke_nightmare_node__source_zeke_nightmare__east__source_campfire_node",
+    "from_node": "source_zeke_nightmare_node",
+    "from_room": "source_zeke_nightmare",
+    "direction": "east",
+    "to_node": "source_campfire_node",
+    "to_room": "source_campfire",
+    "transition_text": "You follow the east path to The Campfire."
   }
 ]

@@ -40,7 +40,11 @@ class SpecialExitIntegrityTest {
                 .map { (direction, target) -> Triple(room, direction, target) }
         }
 
-        assertEquals("The reviewed exception budget changed", 38, exceptional.size)
+        val vertical = exceptional.filter { it.second in setOf("up", "down") }
+        assertEquals("Four reviewed two-way vertical alternatives", NavigationIntegrityTest.namedVerticalExits,
+            vertical.associate { (room, direction, target) -> (room.id to direction) to target })
+        val diagonal = exceptional.filter { it.second !in setOf("up", "down") }
+        assertTrue("Diagonal exits are prohibited throughout the game", diagonal.isEmpty())
         exceptional.forEach { (room, direction, targetId) ->
             assertFalse("${room.id}:$direction needs a visible travel label", room.specialExits[direction].isNullOrBlank())
             val target = byId[targetId]

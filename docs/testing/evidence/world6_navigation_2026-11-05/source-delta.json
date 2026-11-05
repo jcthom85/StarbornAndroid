@@ -1,0 +1,987 @@
+{
+  "room_changes": {
+    "source_campfire": {
+      "description_variants": {
+        "before": [
+          {
+            "requires_milestones": [
+              "ms_w6_mq26_complete"
+            ],
+            "description": "The song-fire burns steady now. Zeke, Gh0st, and Orion are back in the circuit, and the Key waits in Nova's hand like a warm star with sharp edges."
+          }
+        ],
+        "after": [
+          {
+            "requires_milestones": [
+              "ms_w6_mq26_complete"
+            ],
+            "description": "The song-fire burns steady now. Zeke, Gh0st, and Orion are back in the circuit, and the Key waits in Nova's hand like a warm star with sharp edges. Zeke's cubicles lie west, Gh0st's war corridor north, and Orion's shore east through Blue Ash Circle. The mine echo opens south. Each path can be retraced to this fire."
+          }
+        ]
+      },
+      "connections": {
+        "before": {
+          "northwest": "source_zeke_nightmare",
+          "north": "source_gh0st_nightmare",
+          "northeast": "source_orion_nightmare",
+          "south": "source_echo_mines",
+          "east": "source_campfire_node_scale_01"
+        },
+        "after": {
+          "west": "source_zeke_nightmare",
+          "north": "source_gh0st_nightmare",
+          "south": "source_echo_mines",
+          "east": "source_campfire_node_scale_01"
+        }
+      },
+      "description": {
+        "before": "The song-fire burns again, rebuilt from blue waveforms on an island of memory. Three unstable paths pull away from the flame, each tuned to a missing crew member.",
+        "after": "The song-fire burns again, rebuilt from blue waveforms on an island of memory. Three unstable paths pull away from the flame, each tuned to a missing crew member. Zeke's cubicles lie west, Gh0st's war corridor north, and Orion's shore east through Blue Ash Circle. The mine echo opens south. Each path can be retraced to this fire."
+      },
+      "special_exits": {
+        "before": {
+          "northwest": "Enter Zeke's Infinite Cubicle",
+          "northeast": "Enter Orion's Silent Shore"
+        },
+        "after": {}
+      }
+    },
+    "source_zeke_nightmare": {
+      "description": {
+        "before": "Identical desks stretch beyond sight beneath fluorescent panels. A backup lattice recreates Zeke's file in every cubicle while another version of him smiles through evaluation.",
+        "after": "Identical desks stretch beyond sight beneath fluorescent panels. A backup lattice recreates Zeke's file in every cubicle while another version of him smiles through evaluation. The review loop continues west; the eastern path returns to the Campfire. A northern aisle leads deeper into the cubicles."
+      },
+      "special_exits": {
+        "before": {
+          "southeast": "Return to the Campfire"
+        },
+        "after": {}
+      },
+      "description_variants": {
+        "before": [
+          {
+            "requires_milestones": [
+              "ms_w6_mq26_complete"
+            ],
+            "description": "The cubicles are still here, but the fluorescents have gone soft. A backup lattice keeps rebuilding Zeke's file beside the nameplate he left face-down."
+          }
+        ],
+        "after": [
+          {
+            "requires_milestones": [
+              "ms_w6_mq26_complete"
+            ],
+            "description": "The cubicles are still here, but the fluorescents have gone soft. A backup lattice keeps rebuilding Zeke's file beside the nameplate he left face-down. The review loop continues west; the eastern path returns to the Campfire. A northern aisle leads deeper into the cubicles."
+          }
+        ]
+      },
+      "connections": {
+        "before": {
+          "southeast": "source_campfire",
+          "east": "source_zeke_review_loop",
+          "north": "source_zeke_nightmare_node_scale_01"
+        },
+        "after": {
+          "east": "source_campfire",
+          "west": "source_zeke_review_loop",
+          "north": "source_zeke_nightmare_node_scale_01"
+        }
+      }
+    },
+    "source_zeke_review_loop": {
+      "description": {
+        "before": "A conference table repeats into itself. An authorization chain rewrites the criteria every time Zeke meets them, and the Manager projection marks him down anyway.",
+        "after": "A conference table repeats into itself. An authorization chain rewrites the criteria every time Zeke meets them, and the Manager projection marks him down anyway. The eastern aisle returns to Infinite Cubicle; the break room lies south."
+      },
+      "pos": {
+        "before": [
+          0,
+          -1
+        ],
+        "after": [
+          -2,
+          -1
+        ]
+      },
+      "connections": {
+        "before": {
+          "west": "source_zeke_nightmare",
+          "south": "source_zeke_break_room"
+        },
+        "after": {
+          "south": "source_zeke_break_room",
+          "east": "source_zeke_nightmare"
+        }
+      }
+    },
+    "source_zeke_break_room": {
+      "pos": {
+        "before": [
+          0,
+          -2
+        ],
+        "after": [
+          -2,
+          -2
+        ]
+      }
+    },
+    "source_orion_nightmare": {
+      "description_variants": {
+        "before": [
+          {
+            "requires_milestones": [
+              "ms_w6_mq26_complete"
+            ],
+            "description": "The black ocean answers in low harmonics now. Orion stands at the shore as a survivor, not a monument."
+          }
+        ],
+        "after": [
+          {
+            "requires_milestones": [
+              "ms_w6_mq26_complete"
+            ],
+            "description": "The black ocean answers in low harmonics now. Orion stands at the shore as a survivor, not a monument. West, Blue Ash Circle leads back to the Campfire. The Tide-Well lies east, while the northern path follows the shore's echoes."
+          }
+        ]
+      },
+      "connections": {
+        "before": {
+          "southwest": "source_campfire",
+          "east": "source_orion_tide_well",
+          "north": "source_orion_nightmare_node_scale_01"
+        },
+        "after": {
+          "west": "source_campfire_node_scale_01",
+          "east": "source_orion_tide_well",
+          "north": "source_orion_nightmare_node_scale_01"
+        }
+      },
+      "description": {
+        "before": "A black ocean lies perfectly still beneath an empty sky. Every Aethel note dies at the waterline before Orion can hear an answer.",
+        "after": "A black ocean lies perfectly still beneath an empty sky. Every Aethel note dies at the waterline before Orion can hear an answer. West, Blue Ash Circle leads back to the Campfire. The Tide-Well lies east, while the northern path follows the shore's echoes."
+      },
+      "special_exits": {
+        "before": {
+          "southwest": "Return to the Campfire"
+        },
+        "after": {}
+      }
+    },
+    "source_memory_bridge": {
+      "description": {
+        "before": "A platform of static extends over the raw Source. Zeke's anchor, Gh0st's anchor, Orion's anchor, and Nova's anchor wait where the unfinished bridge should be.",
+        "after": "A platform of static extends over the raw Source. Zeke's anchor, Gh0st's anchor, Orion's anchor, and Nova's anchor wait where the unfinished bridge should be. The eastern crossing cannot bear the crew until all four anchors are set and the unfinished bridge is built. The mine elevator remains west; the memory path north can be retraced."
+      },
+      "blocked_directions": {
+        "before": null,
+        "after": {
+          "east": {
+            "type": "lock",
+            "requires": [
+              {
+                "room_id": "source_memory_bridge",
+                "state_key": "bridge_built",
+                "value": true
+              }
+            ],
+            "message_locked": "Set all four crew anchors and use the unfinished bridge before crossing east."
+          }
+        }
+      }
+    },
+    "source_memory_threshold": {
+      "description": {
+        "before": "The bridge narrows into a singularity threshold, a bright wound in the sky. Names beneath the light answer one another. Vale's perfect world waits beyond it, polished clean of grief and therefore empty.",
+        "after": "The bridge narrows into a singularity threshold, a bright wound in the sky. Names beneath the light answer one another. Vale's perfect world waits beyond it, polished clean of grief and therefore empty. The eastern crossing opens when the crew shares its promise on the span and uses the singularity threshold. The western span remains the way back to rest."
+      },
+      "blocked_directions": {
+        "before": null,
+        "after": {
+          "east": {
+            "type": "lock",
+            "requires": [
+              {
+                "room_id": "source_memory_threshold",
+                "state_key": "crossing_open",
+                "value": true
+              }
+            ],
+            "message_locked": "Share the campfire promise on the span, then use the singularity threshold to cross together."
+          }
+        }
+      }
+    },
+    "source_memory_stair": {
+      "description": {
+        "before": "Jed's door opens into Astra wreckage, Spire glass, Foundry catwalk, and Ring metal arranged around the memory stair. An Aethel grave waits among the fragments.",
+        "after": "Jed's door opens into Astra wreckage, Spire glass, Foundry catwalk, and Ring metal arranged around the memory stair. An Aethel grave waits among the fragments. The eastern ascent will not hold until Nova refuses all three revisions and climbs the memory stair. West leads back through the threshold to the shared span."
+      },
+      "blocked_directions": {
+        "before": null,
+        "after": {
+          "east": {
+            "type": "lock",
+            "requires": [
+              {
+                "room_id": "source_memory_stair",
+                "state_key": "ascent_open",
+                "value": true
+              }
+            ],
+            "message_locked": "Refuse Jed\u2019s door, the Astra wreckage and the Foundry catwalk, then climb the memory stair before heading east."
+          }
+        }
+      }
+    },
+    "source_spire_arena": {
+      "blocked_directions": {
+        "before": null,
+        "after": {
+          "east": {
+            "type": "lock",
+            "requires": [
+              {
+                "room_id": "source_spire_arena",
+                "state_key": "center_path_open",
+                "value": true
+              }
+            ],
+            "message_locked": "The Memory Leak and Nightmare Guard still defend the path to the Center. Break the memory defenses before crossing east."
+          }
+        }
+      },
+      "description_variants": {
+        "before": [
+          {
+            "requires_milestones": [
+              "ms_w6_final_scavenge_complete"
+            ],
+            "description": "The future hull fragment braces the arena's weakest seam beside an empty armor socket. It is protection built from a warning, not proof of a fixed ending."
+          }
+        ],
+        "after": [
+          {
+            "requires_milestones": [
+              "ms_w6_final_scavenge_complete"
+            ],
+            "description": "The future hull fragment braces the arena's weakest seam beside an empty armor socket. It is protection built from a warning, not proof of a fixed ending. The eastern path to the Center lies behind the memory defenders; defeat them to clear it. The western archive route remains open for retreat."
+          }
+        ]
+      },
+      "description": {
+        "before": "The archive folds into a hard circular arena with an empty armor socket at its weakest seam. The Source stops tempting Nova with revision and starts defending the lie by force.",
+        "after": "The archive folds into a hard circular arena with an empty armor socket at its weakest seam. The Source stops tempting Nova with revision and starts defending the lie by force. The eastern path to the Center lies behind the memory defenders; defeat them to clear it. The western archive route remains open for retreat."
+      }
+    },
+    "source_new_world": {
+      "description": {
+        "before": "Morning reaches the Colony through an open regional corridor. At Zeke's diner, Nova remembers the beach photograph while her tuning hand trembles against its frame.",
+        "after": "Morning reaches the Colony through an open regional corridor. At Zeke's diner, Nova remembers the beach photograph while her tuning hand trembles against its frame. West reopens the remembered Center for revisiting the Source; north follows the street past the diner."
+      },
+      "description_variants": {
+        "before": [
+          {
+            "requires_milestones": [
+              "ms_game_complete"
+            ],
+            "description": "Sunlight spills across the counter at Zeke's diner. Outside, the bells of an unscripted morning echo down the street while Nova rests her hand against the beach photograph."
+          }
+        ],
+        "after": [
+          {
+            "requires_milestones": [
+              "ms_game_complete"
+            ],
+            "description": "Sunlight spills across the counter at Zeke's diner. Outside, the bells of an unscripted morning echo down the street while Nova rests her hand against the beach photograph. West reopens the remembered Center for revisiting the Source; north follows the street past the diner."
+          }
+        ]
+      }
+    },
+    "sector9_hangar_bay": {
+      "actions": {
+        "before": [
+          {
+            "name": "dark console",
+            "type": "generic",
+            "action_event": "w2_mq05_inspect_astra",
+            "condition_unmet_message": "Objective completed.",
+            "requires_milestone_not_set": "ms_w2_astra_inspected"
+          },
+          {
+            "name": "bridge relic",
+            "type": "generic",
+            "action_event": "w2_mq05_reboot",
+            "condition_unmet_message": "The Astra needs her power conduits restored first. Once the Bridge has ship current, the Chime can authenticate Orion at the console."
+          },
+          {
+            "name": "launch cradle",
+            "type": "generic",
+            "action_event": "w2_mq05_launch",
+            "condition_unmet_message": "The Astra must have power before you can board her for departure."
+          },
+          {
+            "name": "salvage return route",
+            "type": "generic",
+            "action_event": "w2_mq05_return_to_pod",
+            "show_when_milestone": "ms_w2_astra_inspected",
+            "requires_milestone_not_set": "ms_w2_conduits_collected",
+            "condition_unmet_message": "The service hatch follows the conduit route back toward the crashed pod."
+          }
+        ],
+        "after": [
+          {
+            "name": "dark console",
+            "type": "generic",
+            "action_event": "w2_mq05_inspect_astra",
+            "condition_unmet_message": "Objective completed.",
+            "requires_milestone_not_set": "ms_w2_astra_inspected",
+            "forbidden_milestones": [
+              "ms_w2_bridge_installed",
+              "ms_w2_mq05_complete"
+            ]
+          },
+          {
+            "name": "bridge relic",
+            "type": "generic",
+            "action_event": "w2_mq05_reboot",
+            "condition_unmet_message": "The Astra needs her power conduits restored first. Once the Bridge has ship current, the Chime can authenticate Orion at the console."
+          },
+          {
+            "name": "launch cradle",
+            "type": "generic",
+            "action_event": "w2_mq05_launch",
+            "condition_unmet_message": "The Astra must have power before you can board her for departure."
+          },
+          {
+            "name": "salvage return route",
+            "type": "generic",
+            "action_event": "w2_mq05_return_to_pod",
+            "show_when_milestone": "ms_w2_astra_inspected",
+            "requires_milestone_not_set": "ms_w2_conduits_collected",
+            "condition_unmet_message": "The service hatch follows the conduit route back toward the crashed pod."
+          }
+        ]
+      }
+    },
+    "source_campfire_node_scale_01": {
+      "description": {
+        "before": "Blue ash drifts around the Campfire in rings that never close. The open ring leaves space for each missing voice instead of smoothing them into one flame.",
+        "after": "Blue ash drifts around the Campfire in rings that never close. The open ring leaves space for each missing voice instead of smoothing them into one flame. The Campfire lies west and Orion's Silent Shore east; north, the ash path continues toward Three Dark Paths. Both shores lead back through this circle."
+      },
+      "connections": {
+        "before": {
+          "west": "source_campfire",
+          "north": "source_campfire_node_scale_02"
+        },
+        "after": {
+          "west": "source_campfire",
+          "north": "source_campfire_node_scale_02",
+          "east": "source_orion_nightmare"
+        }
+      }
+    },
+    "source_spire_thought_node_scale_04": {
+      "description": {
+        "before": "A throne-shaped absence waits at the top of the thought spiral. The absence brightens when Nova refuses to sit, leaving room for a circuit instead of a ruler. An unthroned ledger rests where a ruler was meant to sit.",
+        "after": "A throne-shaped absence waits at the top of the thought spiral. The absence brightens when Nova refuses to sit, leaving room for a circuit instead of a ruler. An unthroned ledger rests where a ruler was meant to sit. An open return circuit leads back to the Spire of Thought."
+      },
+      "actions": {
+        "before": [
+          {
+            "name": "throne-shaped absence",
+            "type": "generic",
+            "condition_unmet_message": "The Source offers power in the shape people expect. Nova lets it stay empty."
+          },
+          {
+            "name": "circuit",
+            "type": "generic",
+            "condition_unmet_message": "The answer needs connection, not command."
+          },
+          {
+            "name": "unthroned ledger",
+            "type": "container",
+            "state_key": "source_spire_thought_node_scale_04_cache_opened",
+            "items": [
+              "astral_thread",
+              "cyber_visor"
+            ],
+            "popup_title": "The Free Mind Archive",
+            "already_open_message": "The unthroned ledger has already been emptied.",
+            "discovery_message": "You open the ledger. The fragments caught between its pages settle into your hands."
+          },
+          {
+            "name": "circuit",
+            "type": "generic",
+            "action_event": "warp_source_spire_thought_node_scale_04_to_entry"
+          }
+        ],
+        "after": [
+          {
+            "name": "throne-shaped absence",
+            "type": "generic",
+            "condition_unmet_message": "The Source offers power in the shape people expect. Nova lets it stay empty."
+          },
+          {
+            "name": "circuit",
+            "type": "generic",
+            "condition_unmet_message": "The answer needs connection, not command."
+          },
+          {
+            "name": "unthroned ledger",
+            "type": "container",
+            "state_key": "source_spire_thought_node_scale_04_cache_opened",
+            "items": [
+              "astral_thread",
+              "cyber_visor"
+            ],
+            "popup_title": "The Free Mind Archive",
+            "already_open_message": "The unthroned ledger has already been emptied.",
+            "discovery_message": "You open the ledger. The fragments caught between its pages settle into your hands."
+          },
+          {
+            "name": "return circuit",
+            "type": "generic",
+            "action_event": "warp_source_spire_thought_node_scale_04_to_entry"
+          }
+        ]
+      }
+    },
+    "source_new_world_node_scale_final": {
+      "description": {
+        "before": "A morning street outside the diner carries repair crews, bad jokes, and weather nobody scheduled. A terminal offers to call Astra shuttle. The repair crews and real weather make the ending feel lived in instead of merely won. A morning provision basket sits packed for the journey ahead. A one-way alley leads directly back to the entrance. An ether well ripples beside the street.",
+        "after": "A morning street outside the diner carries repair crews, bad jokes, and weather nobody scheduled. A terminal offers to call Astra shuttle. The repair crews and real weather make the ending feel lived in instead of merely won. A morning provision basket sits packed for the journey ahead. The southern street returns past Open Window toward the diner. An ether well ripples beside the street."
+      }
+    }
+  },
+  "event_changes": {
+    "w6_mq28_build_bridge": {
+      "before": {
+        "id": "w6_mq28_build_bridge",
+        "description": "Make the bridge hold with memories no one carries alone.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w6_mq28_build_bridge"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq28"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_bridge_zeke_anchor"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_bridge_ghost_anchor"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_bridge_orion_anchor"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_bridge_nova_anchor"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w6_mq28",
+            "task_id": "build_bridge"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_mq28",
+            "task_id": "build_bridge"
+          },
+          {
+            "type": "show_message",
+            "message": "Tideglass sand, Foundry heat, Spire rain, the Astra's engine note, and the Colony's first real morning become solid sections of bridge. Every piece holds because someone else remembers it too."
+          }
+        ]
+      },
+      "after": {
+        "id": "w6_mq28_build_bridge",
+        "description": "Make the bridge hold with memories no one carries alone.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w6_mq28_build_bridge"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq28"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_bridge_zeke_anchor"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_bridge_ghost_anchor"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_bridge_orion_anchor"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_bridge_nova_anchor"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w6_mq28",
+            "task_id": "build_bridge"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_room_state",
+            "room_id": "source_memory_bridge",
+            "state_key": "bridge_built",
+            "value": true
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_mq28",
+            "task_id": "build_bridge"
+          },
+          {
+            "type": "show_message",
+            "message": "Tideglass sand, Foundry heat, Spire rain, the Astra's engine note, and the Colony's first real morning become solid sections of bridge. Every piece holds because someone else remembers it too."
+          }
+        ]
+      }
+    },
+    "w6_mq28_reach_singularity": {
+      "before": {
+        "id": "w6_mq28_reach_singularity",
+        "description": "Cross only when every voice is present.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w6_mq28_reach_singularity"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq28"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w6_mq28",
+            "task_id": "final_banter"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w6_mq28",
+            "task_id": "reach_singularity"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_mq28",
+            "task_id": "reach_singularity"
+          },
+          {
+            "type": "give_xp",
+            "xp": 1500
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w6_mq28"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_mq28_complete"
+          },
+          {
+            "type": "warp",
+            "room_id": "source_memory_stair"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w6_mq29"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w6_mq29"
+          },
+          {
+            "type": "show_message",
+            "message": "Quest Complete: The Crossing\n\nThe bridge reaches the Memory Stair. Vale offers Nova a perfect world without grief, without Jed's death, without every scar that taught the crew to choose each other. She lets the image fade. Love that cannot survive truth is not love."
+          }
+        ]
+      },
+      "after": {
+        "id": "w6_mq28_reach_singularity",
+        "description": "Cross only when every voice is present.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w6_mq28_reach_singularity"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq28"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w6_mq28",
+            "task_id": "final_banter"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w6_mq28",
+            "task_id": "reach_singularity"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_room_state",
+            "room_id": "source_memory_threshold",
+            "state_key": "crossing_open",
+            "value": true
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_mq28",
+            "task_id": "reach_singularity"
+          },
+          {
+            "type": "give_xp",
+            "xp": 1500
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w6_mq28"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_mq28_complete"
+          },
+          {
+            "type": "warp",
+            "room_id": "source_memory_stair"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w6_mq29"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w6_mq29"
+          },
+          {
+            "type": "show_message",
+            "message": "Quest Complete: The Crossing\n\nThe bridge reaches the Memory Stair. Vale offers Nova a perfect world without grief, without Jed's death, without every scar that taught the crew to choose each other. She lets the image fade. Love that cannot survive truth is not love."
+          }
+        ]
+      }
+    },
+    "w6_mq29_climb_stair": {
+      "before": {
+        "id": "w6_mq29_climb_stair",
+        "description": "Begin the final ascent.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w6_mq29_climb_stair"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq29"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_refused_jed_revision"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_refused_astra_revision"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_refused_foundry_revision"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w6_mq29",
+            "task_id": "climb_stair"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_mq29",
+            "task_id": "climb_stair"
+          },
+          {
+            "type": "show_message",
+            "message": "The stair climbs through every world the crew survived. Vale offers polished revisions: a kinder mine, a safer jungle, a cleaner Spire, a Foundry without screaming, a Ring without bodies. Nova keeps the scars because they belong to real people."
+          }
+        ]
+      },
+      "after": {
+        "id": "w6_mq29_climb_stair",
+        "description": "Begin the final ascent.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w6_mq29_climb_stair"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq29"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_refused_jed_revision"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_refused_astra_revision"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_refused_foundry_revision"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w6_mq29",
+            "task_id": "climb_stair"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_room_state",
+            "room_id": "source_memory_stair",
+            "state_key": "ascent_open",
+            "value": true
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_mq29",
+            "task_id": "climb_stair"
+          },
+          {
+            "type": "show_message",
+            "message": "The stair climbs through every world the crew survived. Vale offers polished revisions: a kinder mine, a safer jungle, a cleaner Spire, a Foundry without screaming, a Ring without bodies. Nova keeps the scars because they belong to real people."
+          }
+        ]
+      }
+    },
+    "w6_mq29_memory_guard": {
+      "before": {
+        "id": "w6_mq29_memory_guard",
+        "description": "Break the last defenses made from stolen memory.",
+        "trigger": {
+          "type": "encounter_victory",
+          "enemies": [
+            "memory_leak",
+            "nightmare_guard"
+          ]
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq29"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w6_mq29",
+            "task_id": "defeat_shadow_wave"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w6_mq29",
+            "task_id": "defeat_memory_guard"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_mq29",
+            "task_id": "defeat_memory_guard"
+          },
+          {
+            "type": "show_message",
+            "message": "The nightmare faces dissolve. Memory remains, but it no longer gets a vote."
+          }
+        ],
+        "recover_recorded_victory": true
+      },
+      "after": {
+        "id": "w6_mq29_memory_guard",
+        "description": "Break the last defenses made from stolen memory.",
+        "trigger": {
+          "type": "encounter_victory",
+          "enemies": [
+            "memory_leak",
+            "nightmare_guard"
+          ]
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq29"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w6_mq29",
+            "task_id": "defeat_shadow_wave"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w6_mq29",
+            "task_id": "defeat_memory_guard"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_room_state",
+            "room_id": "source_spire_arena",
+            "state_key": "center_path_open",
+            "value": true
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_mq29",
+            "task_id": "defeat_memory_guard"
+          },
+          {
+            "type": "show_message",
+            "message": "The nightmare faces dissolve. Memory remains, but it no longer gets a vote."
+          }
+        ],
+        "recover_recorded_victory": true
+      }
+    }
+  },
+  "removed_transitions": [
+    {
+      "id": "source_campfire_node__north__source_gh0st_nightmare_node",
+      "from_node": "source_campfire_node",
+      "from_room": "source_campfire",
+      "direction": "north",
+      "to_node": "source_gh0st_nightmare_node",
+      "to_room": "source_gh0st_nightmare",
+      "transition_text": "Travel to Endless War."
+    },
+    {
+      "id": "source_campfire_node__northeast__source_orion_nightmare_node",
+      "from_node": "source_campfire_node",
+      "from_room": "source_campfire",
+      "direction": "northeast",
+      "to_node": "source_orion_nightmare_node",
+      "to_room": "source_orion_nightmare",
+      "transition_text": "Travel to Silent Shore."
+    },
+    {
+      "id": "source_campfire_node__northwest__source_zeke_nightmare_node",
+      "from_node": "source_campfire_node",
+      "from_room": "source_campfire",
+      "direction": "northwest",
+      "to_node": "source_zeke_nightmare_node",
+      "to_room": "source_zeke_nightmare",
+      "transition_text": "Travel to Infinite Cubicle."
+    },
+    {
+      "id": "source_campfire_node__south__source_echo_mines_node",
+      "from_node": "source_campfire_node",
+      "from_room": "source_campfire",
+      "direction": "south",
+      "to_node": "source_echo_mines_node",
+      "to_room": "source_echo_mines",
+      "transition_text": "Travel to Echo of the Mines."
+    },
+    {
+      "id": "source_orion_nightmare_node__southwest__source_campfire_node",
+      "from_node": "source_orion_nightmare_node",
+      "from_room": "source_orion_nightmare",
+      "direction": "southwest",
+      "to_node": "source_campfire_node",
+      "to_room": "source_campfire",
+      "transition_text": "Travel to The Campfire."
+    },
+    {
+      "id": "source_zeke_nightmare_node__southeast__source_campfire_node",
+      "from_node": "source_zeke_nightmare_node",
+      "from_room": "source_zeke_nightmare",
+      "direction": "southeast",
+      "to_node": "source_campfire_node",
+      "to_room": "source_campfire",
+      "transition_text": "Travel to The Campfire."
+    }
+  ],
+  "added_transitions": [
+    {
+      "id": "source_campfire_node__source_campfire__west__source_zeke_nightmare_node",
+      "from_node": "source_campfire_node",
+      "from_room": "source_campfire",
+      "direction": "west",
+      "to_node": "source_zeke_nightmare_node",
+      "to_room": "source_zeke_nightmare",
+      "transition_text": "You follow the west path to Infinite Cubicle."
+    },
+    {
+      "id": "source_campfire_node__source_campfire__north__source_gh0st_nightmare_node",
+      "from_node": "source_campfire_node",
+      "from_room": "source_campfire",
+      "direction": "north",
+      "to_node": "source_gh0st_nightmare_node",
+      "to_room": "source_gh0st_nightmare",
+      "transition_text": "You follow the north path to Endless War."
+    },
+    {
+      "id": "source_campfire_node__source_campfire__south__source_echo_mines_node",
+      "from_node": "source_campfire_node",
+      "from_room": "source_campfire",
+      "direction": "south",
+      "to_node": "source_echo_mines_node",
+      "to_room": "source_echo_mines",
+      "transition_text": "You follow the south path to Echo of the Mines."
+    },
+    {
+      "id": "source_campfire_node__source_campfire_node_scale_01__east__source_orion_nightmare_node",
+      "from_node": "source_campfire_node",
+      "from_room": "source_campfire_node_scale_01",
+      "direction": "east",
+      "to_node": "source_orion_nightmare_node",
+      "to_room": "source_orion_nightmare",
+      "transition_text": "You follow the east path to Silent Shore."
+    },
+    {
+      "id": "source_orion_nightmare_node__source_orion_nightmare__west__source_campfire_node",
+      "from_node": "source_orion_nightmare_node",
+      "from_room": "source_orion_nightmare",
+      "direction": "west",
+      "to_node": "source_campfire_node",
+      "to_room": "source_campfire_node_scale_01",
+      "transition_text": "You follow the west path to Blue Ash Circle."
+    },
+    {
+      "id": "source_zeke_nightmare_node__source_zeke_nightmare__east__source_campfire_node",
+      "from_node": "source_zeke_nightmare_node",
+      "from_room": "source_zeke_nightmare",
+      "direction": "east",
+      "to_node": "source_campfire_node",
+      "to_room": "source_campfire",
+      "transition_text": "You follow the east path to The Campfire."
+    }
+  ],
+  "checks": {
+    "all_world3_4_5_data_preserved": true,
+    "all_other_world_rooms_preserved_except_world2_dark_console_visibility": true,
+    "quest_definitions_identical": true,
+    "room_ids_node_ownership_items_enemies_preserved": true,
+    "world6_action_events_and_named_return_destinations_preserved": true,
+    "no_throne_return_label_disambiguated": true,
+    "event_conditions_rewards_warps_preserved": true,
+    "no_diagonal_connections_in_any_world": true,
+    "all_playable_room_connections_reciprocal": true,
+    "all_65_room_references_match_assets": true
+  }
+}

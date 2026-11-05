@@ -41,6 +41,7 @@ class WorldFourCoolingDiscoverabilityTest {
                             it.type == "milestone_not_set" && it.milestone in milestones
                         }
                         val store = GameSessionStore().apply {
+                            setRoom(room.id)
                             milestones.forEach(::setMilestone)
                             // Seed only authored positive prerequisites; completion tasks remain absent.
                             event.conditions.orEmpty().forEach { c ->

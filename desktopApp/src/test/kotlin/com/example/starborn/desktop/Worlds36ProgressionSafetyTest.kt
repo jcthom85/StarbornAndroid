@@ -26,26 +26,26 @@ class Worlds36ProgressionSafetyTest {
         val s = DesktopAppServices(dir, RecordingAudioDriver())
         try {
             runBlocking { s.userSettingsStore.setTutorialsEnabled(false) }
-            assertTrue(s.startDebugScenario("tut_npc_dialogue"))
+            assertTrue(compose.runOnIdle { s.startDebugScenario("tut_npc_dialogue") })
             compose.waitUntil(10000) { !s.exploration.uiState.value.isLoading }
             block(s)
-        } finally { s.close(); dir.deleteRecursively() }
+        } finally { compose.runOnIdle { s.close() }; dir.deleteRecursively() }
     }
     @Test fun recordCurrentRuntimeReadiness() {
         services { s ->
-            s.sessionStore.restore(s.sessionStore.state.value.copy(roomId="spire_zekes_apartment", activeQuests=setOf("w3_mq11"), completedQuests=emptySet(),
-                questStageById=mapOf("w3_mq11" to "find_safehouse"), completedMilestones=emptySet(), completedEvents=emptySet(), questTasksCompleted=emptyMap()))
+            compose.runOnIdle { s.sessionStore.restore(s.sessionStore.state.value.copy(roomId="spire_zekes_apartment", activeQuests=setOf("w3_mq11"), completedQuests=emptySet(),
+                questStageById=mapOf("w3_mq11" to "find_safehouse"), completedMilestones=emptySet(), completedEvents=emptySet(), questTasksCompleted=emptyMap())) }
             compose.waitUntil(10000) { s.exploration.uiState.value.currentRoom?.id=="spire_zekes_apartment" }
-            while(s.exploration.uiState.value.narrationPrompt!=null) { s.exploration.dismissNarration(); compose.waitForIdle() }
+            while(s.exploration.uiState.value.narrationPrompt!=null) { compose.runOnIdle { s.exploration.dismissNarration() }; compose.waitForIdle() }
             observations["w3_safehouse"] = mapOf("visible_npcs" to s.exploration.uiState.value.npcs,
                 "active_dialogue" to s.exploration.uiState.value.activeDialogue?.line?.id, "tasks" to s.sessionStore.state.value.questTasksCompleted["w3_mq11"],
                 "actions" to s.exploration.uiState.value.actions.map{it.name})
-            s.exploration.onNpcInteraction("zeke")
+            compose.runOnIdle { s.exploration.onNpcInteraction("zeke") }
             compose.waitUntil(5000) { s.exploration.uiState.value.activeDialogue?.line?.id == "zeke_w3_mq11_safehouse_intro" }
             for ((room,npc) in listOf("foundry_lava_tube_bypass" to "Rylan", "foundry_pipe_gallery" to "Cameron", "orbital_customs_lounge" to "Charles")) {
-                s.sessionStore.restore(s.sessionStore.state.value.copy(roomId=room, activeQuests=emptySet(), completedQuests=emptySet(), completedMilestones=emptySet(), completedEvents=emptySet()))
+                compose.runOnIdle { s.sessionStore.restore(s.sessionStore.state.value.copy(roomId=room, activeQuests=emptySet(), completedQuests=emptySet(), completedMilestones=emptySet(), completedEvents=emptySet())) }
                 compose.waitUntil(5000) { s.exploration.uiState.value.currentRoom?.id==room }
-                s.exploration.onNpcInteraction(npc)
+                compose.runOnIdle { s.exploration.onNpcInteraction(npc) }
                 compose.waitUntil(5000) { s.exploration.uiState.value.activeDialogue!=null }
                 val root=s.exploration.uiState.value.activeDialogue!!.line
                 val lines=reader.readList<DialogueLine>("dialogue.json").associateBy{it.id}
@@ -66,32 +66,32 @@ class Worlds36ProgressionSafetyTest {
             )) {
                 val ids=enemies.split(',')
                 val targetEnemy=ids.first()
-                s.sessionStore.restore(s.sessionStore.state.value.copy(roomId=room, activeQuests=emptySet(), completedQuests=emptySet(), completedEvents=emptySet(),
-                    completedMilestones=emptySet(), roomStates=emptyMap(),questTasksCompleted=emptyMap(),questStageById=emptyMap()))
+                compose.runOnIdle { s.sessionStore.restore(s.sessionStore.state.value.copy(roomId=room, activeQuests=emptySet(), completedQuests=emptySet(), completedEvents=emptySet(),
+                    completedMilestones=emptySet(), roomStates=emptyMap(),questTasksCompleted=emptyMap(),questStageById=emptyMap())) }
                 compose.waitUntil(5000) { s.exploration.uiState.value.currentRoom?.id==room }
-                s.exploration.onCombatVictory(CombatResultPayload(CombatResultPayload.Outcome.VICTORY,enemyIds=ids,roomId=room))
+                compose.runOnIdle { s.exploration.onCombatVictory(CombatResultPayload(CombatResultPayload.Outcome.VICTORY,enemyIds=ids,roomId=room)) }
                 compose.waitUntil(5000) { targetEnemy !in s.exploration.uiState.value.enemies }
                 s.sessionStore.startQuest(quest)
                 if(quest=="w6_mq30") s.sessionStore.setQuestTaskCompleted(quest,"confront_vale",true)
-                assertTrue(s.saveManager.saveGame(9,s.sessionStore.state.value));assertTrue(s.loadSlot(9))
+                assertTrue(s.saveManager.saveGame(9,s.sessionStore.state.value));assertTrue(compose.runOnIdle { s.loadSlot(9) })
                 compose.waitUntil(10000) { !s.exploration.uiState.value.isLoading }
                 observations["early_clear_$quest"]=mapOf("enemy_still_available" to (targetEnemy in s.exploration.uiState.value.enemies),
                     "objective_credited_after_accept_and_reload" to (task in s.sessionStore.state.value.questTasksCompleted[quest].orEmpty()),
                     "clear_receipts" to s.sessionStore.state.value.roomStates[room])
             }
             // Clearing both available Firewall sources early must not strand the later objective.
-            s.sessionStore.restore(s.sessionStore.state.value.copy(roomId="deep_firewall_gamma",activeQuests=emptySet(),completedQuests=emptySet(),
-                completedEvents=emptySet(),completedMilestones=emptySet(),roomStates=emptyMap(),questTasksCompleted=emptyMap(),questStageById=emptyMap()))
+            compose.runOnIdle { s.sessionStore.restore(s.sessionStore.state.value.copy(roomId="deep_firewall_gamma",activeQuests=emptySet(),completedQuests=emptySet(),
+                completedEvents=emptySet(),completedMilestones=emptySet(),roomStates=emptyMap(),questTasksCompleted=emptyMap(),questStageById=emptyMap())) }
             compose.waitUntil(5000) { s.exploration.uiState.value.currentRoom?.id=="deep_firewall_gamma" }
             for (r in listOf("deep_firewall_gamma","deep_server_farm_scale_02")) {
                 s.sessionStore.setRoom(r)
                 compose.waitUntil(5000) { s.exploration.uiState.value.currentRoom?.id==r }
-                s.exploration.onCombatVictory(CombatResultPayload(CombatResultPayload.Outcome.VICTORY,enemyIds=listOf("firewall_construct"),roomId=r))
+                compose.runOnIdle { s.exploration.onCombatVictory(CombatResultPayload(CombatResultPayload.Outcome.VICTORY,enemyIds=listOf("firewall_construct"),roomId=r)) }
                 compose.waitUntil(5000) { "firewall_construct" !in s.exploration.uiState.value.enemies }
             }
             s.sessionStore.startQuest("w5_mq23")
             s.sessionStore.setQuestTaskCompleted("w5_mq23","firewall_gamma",true)
-            assertTrue(s.saveManager.saveGame(9,s.sessionStore.state.value));assertTrue(s.loadSlot(9))
+            assertTrue(s.saveManager.saveGame(9,s.sessionStore.state.value));assertTrue(compose.runOnIdle { s.loadSlot(9) })
             compose.waitUntil(10000) { !s.exploration.uiState.value.isLoading }
             observations["early_clear_both_firewall_sources"]=mapOf("remaining_current_enemies" to s.exploration.uiState.value.enemies,
                 "credited_after_accept_and_reload" to ("defeat_construct" in s.sessionStore.state.value.questTasksCompleted["w5_mq23"].orEmpty()),
@@ -109,44 +109,44 @@ class Worlds36ProgressionSafetyTest {
             for ((start,target,quest) in listOf(Triple("spire_archive_vault","spire_landing_pad_roof","w3_mq14"),
                 Triple("foundry_conveyor_belt","foundry_titan_dock","w4_mq18"),Triple("orbital_executive_dock","deep_firewall_gamma","w5_mq21"),
                 Triple("source_campfire","source_new_world","w6_mq26"))) {
-                s.sessionStore.restore(s.sessionStore.state.value.copy(roomId=start,activeQuests=setOf(quest),completedQuests=emptySet(),
-                    completedMilestones=emptySet(),completedEvents=emptySet(),roomStates=emptyMap(),questTasksCompleted=emptyMap(),questStageById=emptyMap()))
+                compose.runOnIdle { s.sessionStore.restore(s.sessionStore.state.value.copy(roomId=start,activeQuests=setOf(quest),completedQuests=emptySet(),
+                    completedMilestones=emptySet(),completedEvents=emptySet(),roomStates=emptyMap(),questTasksCompleted=emptyMap(),questStageById=emptyMap())) }
                 compose.waitUntil(5000) { s.exploration.uiState.value.currentRoom?.id==start }
                 val trace=mutableListOf<String>();var blocked:String?=null
                 for ((direction,next) in requireNotNull(path(start,target))) {
-                    while(s.exploration.uiState.value.narrationPrompt!=null) { s.exploration.dismissNarration();compose.waitForIdle() }
+                    while(s.exploration.uiState.value.narrationPrompt!=null) { compose.runOnIdle { s.exploration.dismissNarration() };compose.waitForIdle() }
                     val before=s.sessionStore.state.value.roomId
-                    s.exploration.travel(direction);compose.waitForIdle()
+                    compose.runOnIdle { s.exploration.travel(direction) };compose.waitForIdle()
                     if(s.sessionStore.state.value.roomId!=next) { blocked="$before -> $direction -> $next";break }
                     trace+=next
                 }
                 observations["public_early_path_$quest"]=mapOf("start" to start,"target" to target,"trace" to trace,"blocked" to (blocked?:"none"))
             }
-            s.sessionStore.restore(s.sessionStore.state.value.copy(roomId="source_center",activeQuests=setOf("w6_mq26"),completedQuests=emptySet(),completedMilestones=emptySet(),roomStates=emptyMap()))
+            compose.runOnIdle { s.sessionStore.restore(s.sessionStore.state.value.copy(roomId="source_center",activeQuests=setOf("w6_mq26"),completedQuests=emptySet(),completedMilestones=emptySet(),roomStates=emptyMap())) }
             compose.waitUntil(5000) { s.exploration.uiState.value.currentRoom?.id=="source_center" }
-            s.exploration.travel("east")
+            compose.runOnIdle { s.exploration.travel("east") }
             compose.waitForIdle()
             assertEquals("source_center", s.sessionStore.state.value.roomId)
             observations["pre_ending_east_from_center"]=s.sessionStore.state.value.roomId
             // Actual production predicate/menu + trigger execution with insufficient quantity.
             s.inventoryService.restore(mapOf("composite_plate" to 1,"hydraulic_fluid" to 1))
-            s.sessionStore.restore(s.sessionStore.state.value.copy(roomId="foundry_pipe_gallery",completedMilestones=setOf("ms_cameron_pipe_favor_asked"),inventory=s.inventoryService.snapshot()))
+            compose.runOnIdle { s.sessionStore.restore(s.sessionStore.state.value.copy(roomId="foundry_pipe_gallery",completedMilestones=setOf("ms_cameron_pipe_favor_asked"),inventory=s.inventoryService.snapshot())) }
             compose.waitUntil(5000) { s.exploration.uiState.value.currentRoom?.id=="foundry_pipe_gallery" }
-            s.exploration.onNpcInteraction("Cameron")
+            compose.runOnIdle { s.exploration.onNpcInteraction("Cameron") }
             compose.waitUntil(5000) { s.exploration.uiState.value.activeDialogue!=null }
             val offered=s.exploration.uiState.value.dialogueChoices.any { it.id=="cameron_opt_favor_turnin" }
-            if(offered) { s.exploration.onDialogueChoiceSelected("cameron_opt_favor_turnin");s.exploration.advanceDialogue() }
+            if(offered) { compose.runOnIdle { s.exploration.onDialogueChoiceSelected("cameron_opt_favor_turnin") };compose.runOnIdle { s.exploration.advanceDialogue() } }
             observations["cameron_one_plate"]=mapOf("turnin_offered" to offered,"reward_granted" to s.inventoryService.hasItem("camerons_pipe_wrench"),
                 "completed_milestone" to ("ms_cameron_pipe_favor_completed" in s.sessionStore.state.value.completedMilestones))
         }
         services { s ->
             s.inventoryService.restore(emptyMap())
-            s.sessionStore.restore(s.sessionStore.state.value.copy(roomId="spire_the_static", activeQuests=setOf("w3_sq11"),
+            compose.runOnIdle { s.sessionStore.restore(s.sessionStore.state.value.copy(roomId="spire_the_static", activeQuests=setOf("w3_sq11"),
                 completedQuests=emptySet(),completedMilestones=emptySet(),questTasksCompleted=emptyMap(),inventory=emptyMap(),
-                roomStates=mapOf("spire_exec_lounge_scale_02" to mapOf("encounter_cleared:sentinel_mki" to true))))
+                roomStates=mapOf("spire_exec_lounge_scale_02" to mapOf("encounter_cleared:sentinel_mki" to true)))) }
             compose.waitUntil(10000) { s.inventoryService.hasItem("neon_sign_core") }
             assertEquals(1,s.inventoryService.snapshot()["neon_sign_core"])
-            assertTrue(s.saveManager.saveGame(9,s.sessionStore.state.value));assertTrue(s.loadSlot(9))
+            assertTrue(s.saveManager.saveGame(9,s.sessionStore.state.value));assertTrue(compose.runOnIdle { s.loadSlot(9) })
             compose.waitUntil(10000) { !s.exploration.uiState.value.isLoading }
             assertEquals(1,s.inventoryService.snapshot()["neon_sign_core"])
         }

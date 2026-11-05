@@ -11,7 +11,7 @@ These are authored fixed and conditional room references. Conditions are reporte
 | `jax` — Jax | `spire_the_static` | requires_milestones: ms_w2_mq05_complete |
 | `musician_chris` — Chris | `spire_old_subway_car` | Fixed reference |
 | `musician_andrew` — Andrew | `spire_old_subway_car` | Fixed reference |
-| `zeke` — Zeke | `spire_zekes_apartment` | requires_milestones: ms_w3_mq11_complete |
+| `zeke` — Zeke | `spire_zekes_apartment` (Static Safehouse) | requires_milestones: ms_w3_safehouse_found |
 | `contractor_cheno` — Cheno | `spire_rigging_deck` | Fixed reference |
 | `creator_jason` — Jason | `spire_hidden_studio` | Fixed reference |
 | `feline_meeko` — Meeko | `spire_hidden_studio` | Fixed reference |

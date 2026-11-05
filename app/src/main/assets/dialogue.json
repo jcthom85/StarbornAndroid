@@ -1125,16 +1125,23 @@
     "text": "My blades are quiet, but my sensors are alert."
   },
   {
+    "id": "jax_w3_mq11_shelter",
+    "speaker": "Jax",
+    "condition": "quest_active:w3_mq11,quest_task_done:w3_mq11:reach_vent,quest_task_not_done:w3_mq11:find_apartment",
+    "text": "Easy. You're dripping sewer water on my floor, and you've checked the door three times. I'm Jax. This is The Static; people come here to get out of the patrols' way. What happened?",
+    "next": "jax_w3_mq11_nova_intro"
+  },
+  {
     "id": "zeke_w3_mq11_safehouse_intro",
     "speaker": "Zeke",
     "condition": "quest_active:w3_mq11,quest_stage:w3_mq11:find_safehouse,quest_task_not_done:w3_mq11:establish_shield",
-    "text": "Welcome to my safehouse. They scrubbed my lease, work history, and access tags. But the pipes still know me; the walls carry my wiring.",
+    "text": "Jax found us a roof, and the terminal works. Same Dominion service menus we had back home in the mines. I can ground the wiring, but I can't hide us from the scans.",
     "next": "zeke_w3_mq11_safehouse_next"
   },
   {
     "id": "zeke_w3_mq11_safehouse_next",
     "speaker": "Nova",
-    "text": "Then we use what they forgot to erase. Orion, shield the room. If the city hears us breathing, the heist dies before it starts.",
+    "text": "Then we make this room safe. Zeke, check the ground. Orion, can you shield us from the scans before we start planning?",
     "next": "zeke_w3_mq11_safehouse_end"
   },
   {
@@ -1151,7 +1158,7 @@
     "options": [
       {
         "id": "jax_w3_mq12_request_codes",
-        "text": "Yes, Zeke said you have the schedules.",
+        "text": "We need a way past the patrols. Can you help?",
         "next": "w3_mq12_jax_success"
       }
     ]
@@ -1166,7 +1173,7 @@
     "id": "w3_sq11_jax_intro",
     "speaker": "Jax",
     "condition": "quest_not_started:w3_sq11,quest_completed:w3_mq11",
-    "text": "The neon sign outside is dead. Patrols ignore places that look open and watched. Bring me a neon core for good pay.",
+    "text": "The sign’s core is burnt out. An Upper City Sentinel carries the same power core; look in the private booths beyond the Exec Lounge when your route takes you upstairs. Bring one back and we can keep the bar looking open.",
     "options": [
       {
         "id": "jax_w3_sq11_accept",
@@ -1236,7 +1243,7 @@
   {
     "id": "w3_sq13_mika_lights",
     "speaker": "Mika",
-    "condition": "quest_active:w3_sq13,quest_task_not_done:w3_sq13:fix_market_lights",
+    "condition": "quest_active:w3_sq13,quest_task_not_done:w3_sq13:fix_market_lights,milestone_set:ms_w3_market_siphon_traced,milestone_not_set:ms_w3_market_grid_ready",
     "text": "Just redirect the primary power coupling to light them up. Nothing heroic. Just enough glow to remind people the market is still ours.",
     "options": [
       {
@@ -1250,39 +1257,43 @@
     "id": "w3_mq12_workstation_dialogue",
     "speaker": "System",
     "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:map_patrols,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:copy_badges,quest_task_done:w3_mq12:source_disguises,quest_task_not_done:w3_mq12:hack_blueprints",
-    "text": "Zeke's workstation accepts the stolen timing, badges, and disguise notes. His restored employee profile compiles into a service-elevator route.",
+    "text": "Zeke's workstation combines the stolen schedules, copied service badges, and disguise notes into a freight-elevator clearance. The Dominion menus work just like the mine checkpoint; the identities on these badges belong to this building's service crew.",
     "trigger": "player_action:w3_mq12_hack_blueprints"
   },
   {
     "id": "w3_mq12_planning_table_dialogue",
     "speaker": "System",
     "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:map_patrols,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:copy_badges,quest_task_done:w3_mq12:source_disguises,quest_task_done:w3_mq12:hack_blueprints,quest_task_not_done:w3_mq12:assemble_table",
-    "text": "The planning table maps the infiltration route: patrol timing, badges, and disguises align into a clear path upward.",
+    "text": "The route is ready: return to Transit Plaza in the copied uniforms, use the freight badges at the service elevator, and ride up to the Upper City laundry intake. Zeke will send the Astra's autopilot clearance to move to the rooftop pad while the crew travels on foot. Once you leave this table, the heist begins.",
     "options": [
       {
         "id": "w3_mq12_assemble_confirm",
-        "text": "Coordinate heist plan.",
+        "text": "Commit the plan and take the service elevator upstairs.",
         "trigger": "player_action:w3_mq12_assemble_planning"
+      },
+      {
+        "id": "w3_mq12_planning_leave",
+        "text": "Keep preparing. Leave the table for now."
       }
     ]
   },
   {
     "id": "curator_w3_mq13_intro",
-    "speaker": "Curator",
+    "speaker": "Museum Curator",
     "condition": "quest_active:w3_mq13,quest_task_not_done:w3_mq13:blend_in",
     "text": "Fascinating refraction. Sector 9 lineage? No, not lineage. Salvage.",
     "next": "curator_w3_mq13_insult"
   },
   {
     "id": "curator_w3_mq13_insult",
-    "speaker": "Curator",
+    "speaker": "Museum Curator",
     "text": "A Starborn stray in guest light. Control your pet, or I will call sanitation and security in whichever order is more entertaining.",
     "next": "zeke_w3_mq13_cover"
   },
   {
     "id": "zeke_w3_mq13_cover",
     "speaker": "Zeke",
-    "text": "Sir, this commemorative installation is delicate. Touch it again and I will have to file paperwork neither of us wants to read.",
+    "text": "Maintenance crew, sir. If you want to report us, the staff checkpoint can verify our clearance. Of course, they'll need to know why you stopped a scheduled service round.",
     "trigger": "player_action:w3_mq13_blend_in"
   },
   {
@@ -1295,7 +1306,7 @@
   {
     "id": "zeke_w3_mq13_console_end",
     "speaker": "Zeke",
-    "text": "You deleted my employee ID? Fine. I am deleting your admin privileges. Resignation accepted.",
+    "text": "Same permissions menu as the mine checkpoint. Except this time, I'm revoking your access. Scanners disabled.",
     "trigger": "player_action:w3_mq13_disable_sensors"
   },
   {
@@ -1333,7 +1344,8 @@
   {
     "id": "thorne_w3_mq14_trap_vale",
     "speaker": "Thorne",
-    "text": "He is coming, and leaves no survivors. You cannot let him find you. He isn't city security—he's what city security fears."
+    "text": "He is coming, and leaves no survivors. You cannot let him find you. He isn't city security—he's what city security fears.",
+    "next": "vale_w3_mq15_override"
   },
   {
     "id": "vale_w3_mq15_override",
@@ -1350,7 +1362,7 @@
     "id": "zeke_w3_post_shield_idle",
     "speaker": "Zeke",
     "emote": "worried",
-    "text": "This safehouse smells like ozone and recycled steam. They erased my name, but the conduits still bleed into my old terminals.",
+    "text": "Jax gave us a roof; Orion made it quiet. Now I need enough service records to turn this terminal into a way upstairs.",
     "condition": "milestone:ms_w3_mq11_complete,milestone_not_set:ms_w3_mq12_complete"
   },
   {
@@ -1424,8 +1436,8 @@
   },
   {
     "id": "lab_terminal_w3_sq15_intro",
-    "speaker": "Lab Terminal",
-    "condition": "quest_not_completed:w3_sq15",
+    "speaker": "Hacked Lab Terminal",
+    "condition": "quest_active:w3_sq15,milestone_set:ms_w3_prototype_bias_scanned,quest_task_not_done:w3_sq15:test_weapon",
     "text": "Recorded drone targets loaded. Apply the corrected calibration profile; the terminal will log the operator signature.",
     "trigger": "player_action:w3_sq15_test_weapon"
   },
@@ -1736,12 +1748,13 @@
     "speaker": "Vale",
     "condition": "quest_active:w6_mq30,quest_task_not_done:w6_mq30:confront_vale",
     "text": "Thorne wanted to bottle the ocean. I will break the glass. No bodies to starve, no minds to break. Why fight for friction?",
-    "trigger": "music_silence_persist,player_action:w6_mq30_confront_vale"
+    "trigger": "music_silence_persist,player_action:w6_mq30_confront_vale",
+    "next": "nova_w6_final_answer"
   },
   {
     "id": "nova_w6_final_answer",
     "speaker": "Nova",
-    "condition": "quest_active:w6_mq30,quest_task_done:w6_mq30:confront_vale,quest_task_not_done:w6_mq30:defeat_vale",
+    "condition": "quest_active:w6_mq30",
     "text": "You are not saving them. You are building a mass grave and calling the silence peace."
   },
   {
@@ -1753,7 +1766,7 @@
   {
     "id": "zeke_w6_post_mines_idle",
     "speaker": "Zeke",
-    "text": "Seeing your old colony made me sick. Vale tried to sugarcoat the dirt and grease that forged you.",
+    "text": "Seeing our old colony made me sick. Vale tried to sugarcoat the place we both had to escape.",
     "condition": "milestone:ms_w6_mq27_complete,milestone_not_set:ms_w6_mq28_complete"
   },
   {
@@ -2130,6 +2143,10 @@
         "text": "I brought the heavy gears and wiring bundles for the center truss.",
         "condition": "milestone:ms_cheno_rigging_favor_asked,milestone_not_set:ms_cheno_rigging_favor_completed,item:heavy_gear,item:wiring_bundle",
         "next": "cheno_favor_turnin"
+      },
+      {
+        "id": "cheno_leave",
+        "text": "I'll see you around. Take care."
       }
     ]
   },
@@ -2196,6 +2213,10 @@
         "id": "chris_opt_writing",
         "text": "What are the lyrics you're working on?",
         "next": "chris_writing_reply"
+      },
+      {
+        "id": "chris_leave",
+        "text": "I'll see you around. Take care."
       }
     ]
   },
@@ -2255,6 +2276,10 @@
         "text": "Play something for the room.",
         "condition": "milestone:ms_wayfarer_broadcast_completed",
         "next": "andrew_listen_reply"
+      },
+      {
+        "id": "andrew_leave",
+        "text": "I'll see you around. Take care."
       }
     ]
   },
@@ -2653,6 +2678,10 @@
         "id": "jason_opt_meeko",
         "text": "Who's the hefty charcoal cat glaring at me from the tube amp?",
         "next": "jason_meeko_reply"
+      },
+      {
+        "id": "creator_jason_leave",
+        "text": "I'll see you around. Take care."
       }
     ]
   },
@@ -2713,6 +2742,10 @@
         "text": "[Offer respectful chin scratches]",
         "condition": "milestone:ms_oliver_tag_received",
         "next": "oliver_pat_again_reply"
+      },
+      {
+        "id": "oliver_leave",
+        "text": "I'll see you around. Take care."
       }
     ]
   },
@@ -2900,6 +2933,10 @@
         "text": "Your orchids look exceptionally vibrant.",
         "condition": "milestone_not_set:ms_evelyn_bloom_received",
         "next": "evelyn_favor_reply"
+      },
+      {
+        "id": "evelyn_leave",
+        "text": "I'll let you get back to it. Take care."
       }
     ]
   },
@@ -2953,6 +2990,10 @@
         "text": "Your industrial equipment is seriously impressive.",
         "condition": "milestone_not_set:ms_robert_core_received",
         "next": "robert_gift_reply"
+      },
+      {
+        "id": "robert_leave",
+        "text": "I'll let you get back to it. Take care."
       }
     ]
   },
@@ -3070,6 +3111,10 @@
         "id": "meeko_opt_habits",
         "text": "[Inquire about Jason's working habits]",
         "next": "meeko_habits_reply"
+      },
+      {
+        "id": "meeko_leave",
+        "text": "[Step back and say goodbye.]"
       }
     ]
   },
@@ -3261,7 +3306,7 @@
   {
     "id": "brutus_dialogue_rules",
     "speaker": "Pitmaster Brutus",
-    "text": "Three waves. No ref timeouts, no Dominion safety net. Wave one tests your speed against aerial stingers. Wave two brings out the heavy molten haulers. Wave three is my reigning undefeated Champion. Survive all three, and the Crucible Forge-Plate is yours.",
+    "text": "Three rounds. First: two Magma Drones and a Welder Bot. Second: a Slag Golem with a welder keeping it running. Third: my Champion with a drone escort. Withdraw if you must; only victory clears a round. Rest between bouts, then ask me to start the next. Clear all three and claim the Forge-Plate, 350 credits, and 500 XP.",
     "options": [
       {
         "id": "opt_brutus_rules_accept",
@@ -3709,5 +3754,245 @@
     "speaker": "Caretaker Echo",
     "text": "Orion. Navigator Caste, First Division. The archived calibration assigns him a distinct carrier band. That separation protects his memories; preserving it matters beyond the pod. My records cannot tell you what he remembers now.",
     "next": "echo_conclude"
+  },
+  {
+    "id": "mika_w3_trace_hint",
+    "speaker": "Mika",
+    "condition": "quest_active:w3_sq13,milestone_not_set:ms_w3_market_siphon_traced,milestone_not_set:ms_w3_market_grid_ready",
+    "text": "The cable runs over Lantern Bridge toward an executive billboard. Follow the power siphon before touching the lantern coupling."
+  },
+  {
+    "id": "lab_w3_calibration_hint",
+    "speaker": "Hacked Lab Terminal",
+    "condition": "quest_not_completed:w3_sq15,milestone_not_set:ms_w3_prototype_bias_scanned",
+    "text": "Target profile not reviewed. Inspect the prototype targeting audit at Drone Test Alcove before calibrating the rack."
+  },
+  {
+    "id": "vance_initial_alibi",
+    "speaker": "Director Vance",
+    "condition": "milestone_not_set:ms_w3_sq16_complete",
+    "text": "I've been at my corner table on an encrypted call since 21:00. My comms logs will confirm it. Ask someone whose time you can afford."
+  },
+  {
+    "id": "vance_case_closed",
+    "speaker": "Director Vance",
+    "condition": "milestone_set:ms_w3_sq16_complete",
+    "text": "Vance watches the security recorder in silence. His surrendered passkey lies in your kit; his confession is already on file."
+  },
+  {
+    "id": "w3_prism_route_entry",
+    "speaker": "Prism Controls",
+    "condition": "quest_active:w3_mq14,quest_task_not_done:w3_mq14:solve_light_puzzle",
+    "text": "The Lens is still under pressure. Choose where to send the relief flow.",
+    "options": [
+      {
+        "id": "correct",
+        "text": "Open the relief socket into blue RETURN.",
+        "next": "w3_prism_isolate_feed"
+      },
+      {
+        "id": "feed",
+        "text": "Send relief back into red FEED.",
+        "next": "w3_prism_pressure_retry"
+      },
+      {
+        "id": "audit",
+        "text": "Vent pressure into gold AUTHORIZATION.",
+        "next": "w3_prism_audit_retry"
+      },
+      {
+        "id": "leave",
+        "text": "Leave the controls."
+      }
+    ]
+  },
+  {
+    "id": "w3_prism_isolate_feed",
+    "speaker": "Prism Controls",
+    "text": "The return now carries pressure away from the Lens. Which shutter should be closed?",
+    "options": [
+      {
+        "id": "return",
+        "text": "Close blue RETURN.",
+        "next": "w3_prism_return_retry"
+      },
+      {
+        "id": "correct",
+        "text": "Close red FEED; keep blue RETURN open.",
+        "next": "w3_prism_authorization"
+      },
+      {
+        "id": "leave",
+        "text": "Release the handles and step away."
+      }
+    ]
+  },
+  {
+    "id": "w3_prism_authorization",
+    "speaker": "Prism Controls",
+    "text": "Pressure is relieved and the feed is isolated. The gold tether still reports containment to the Administrator.",
+    "options": [
+      {
+        "id": "cut",
+        "text": "Cut the gold tether.",
+        "next": "w3_prism_audit_retry"
+      },
+      {
+        "id": "correct",
+        "text": "Copy the local hold signal, then disconnect the audit.",
+        "trigger": "player_action:w3_mq14_solve_light_puzzle"
+      },
+      {
+        "id": "leave",
+        "text": "Release the handles and step away."
+      }
+    ]
+  },
+  {
+    "id": "w3_prism_pressure_retry",
+    "speaker": "Prism Controls",
+    "text": "Pressure rises at the Lens. The safety latch restores the controls before containment can rupture. The relief needs a channel that carries flow away.",
+    "next": "w3_prism_route_entry"
+  },
+  {
+    "id": "w3_prism_return_retry",
+    "speaker": "Prism Controls",
+    "text": "The return closes and pressure stops draining. The safety latch resets all three handles. Keep the relief path open while isolating its supply.",
+    "next": "w3_prism_route_entry"
+  },
+  {
+    "id": "w3_prism_audit_retry",
+    "speaker": "Prism Controls",
+    "text": "The audit continuity lamp turns amber. The safety latch resets the handles without sending an alarm. The gold circuit needs a local substitute for its reporting signal.",
+    "next": "w3_prism_route_entry"
+  },
+  {
+    "id": "curator_w3_guest_accepted",
+    "speaker": "Museum Curator",
+    "condition": "quest_active:w3_mq13,quest_task_done:w3_mq13:blend_in",
+    "text": "Your registry entry is adequate. Keep the service corridors clear for the paying guests."
+  },
+  {
+    "id": "lab_w3_telemetry_hint",
+    "speaker": "Hacked Lab Terminal",
+    "condition": "quest_active:w3_sq15,quest_task_done:w3_sq15:test_weapon",
+    "text": "Calibration accepted. Operator telemetry awaits removal at the Landing Pad Roof test relay."
+  },
+  {
+    "id": "mika_w3_broadcast_hint",
+    "speaker": "Mika",
+    "condition": "quest_active:w3_sq13,milestone_set:ms_w3_market_grid_ready",
+    "text": "The lanterns have power. Use the market registry broadcast above the stalls so patrols stop listing us as abandoned."
+  },
+  {
+    "id": "w5_bulkheads_first",
+    "speaker": "Dock Interlock",
+    "scripted_only": true,
+    "text": "Pressure map: RED CARPET SEAM → DOCKING COLLAR → OBSERVATION GLASS. The interlock will simulate each command before releasing a bulkhead. Which breach do you isolate first?",
+    "options": [
+      {
+        "id": "correct",
+        "text": "Isolate the red carpet seam.",
+        "next": "w5_bulkheads_second"
+      },
+      {
+        "id": "collar",
+        "text": "Seal the docking collar.",
+        "next": "w5_bulkheads_retry"
+      },
+      {
+        "id": "glass",
+        "text": "Seal the observation glass.",
+        "next": "w5_bulkheads_retry"
+      },
+      {
+        "id": "leave",
+        "text": "Leave the controls.",
+        "next": "w5_bulkheads_leave"
+      }
+    ]
+  },
+  {
+    "id": "w5_bulkheads_second",
+    "speaker": "Dock Interlock",
+    "scripted_only": true,
+    "text": "The carpet seam is isolated in the simulation. Pressure still falls at the collar. What closes next?",
+    "options": [
+      {
+        "id": "correct",
+        "text": "Seal the docking collar.",
+        "next": "w5_bulkheads_third"
+      },
+      {
+        "id": "glass",
+        "text": "Seal the observation glass.",
+        "next": "w5_bulkheads_retry"
+      },
+      {
+        "id": "reset",
+        "text": "Start over.",
+        "next": "w5_bulkheads_first"
+      }
+    ]
+  },
+  {
+    "id": "w5_bulkheads_third",
+    "speaker": "Dock Interlock",
+    "scripted_only": true,
+    "text": "The collar holds. One breach remains against open space.",
+    "options": [
+      {
+        "id": "correct",
+        "text": "Seal the observation glass.",
+        "next": "w5_bulkheads_success"
+      },
+      {
+        "id": "release",
+        "text": "Release the carpet bulkhead.",
+        "next": "w5_bulkheads_retry"
+      }
+    ]
+  },
+  {
+    "id": "w5_bulkheads_retry",
+    "speaker": "Dock Interlock",
+    "scripted_only": true,
+    "text": "The simulation flashes red: that sequence would shift the pressure loss into an unsealed compartment. No bulkhead moves. Check the map and try again.",
+    "options": [
+      {
+        "id": "retry",
+        "text": "Reset the simulation.",
+        "next": "w5_bulkheads_first"
+      },
+      {
+        "id": "leave",
+        "text": "Leave the controls.",
+        "next": "w5_bulkheads_leave"
+      }
+    ]
+  },
+  {
+    "id": "w5_bulkheads_success",
+    "speaker": "Dock Interlock",
+    "scripted_only": true,
+    "text": "Sequence verified. Applying all three seals. Dock pressure is stable. Access priority is a separate control; the workers are still locked out.",
+    "trigger": "player_action:w5_sq23_vacuum_seal"
+  },
+  {
+    "id": "w5_bulkheads_leave",
+    "speaker": "Dock Interlock",
+    "scripted_only": true,
+    "text": "Simulation suspended. No pressure controls changed."
+  },
+  {
+    "id": "jax_w3_mq11_nova_intro",
+    "speaker": "Nova",
+    "text": "Nova. We came from the mining colony. We need somewhere to stop moving before those patrols find us.",
+    "next": "jax_w3_mq11_shelter_offer"
+  },
+  {
+    "id": "jax_w3_mq11_shelter_offer",
+    "speaker": "Jax",
+    "text": "Then get off the street. There's an empty apartment above the bar. The last tenants left when the sweeps started; I've kept the power on. You can catch your breath there. Keep the stairs clear and trouble away from my customers. That's the deal."
   }
 ]

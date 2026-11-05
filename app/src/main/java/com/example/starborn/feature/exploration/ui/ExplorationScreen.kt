@@ -589,6 +589,13 @@ fun ExplorationScreen(
         completedMilestones = uiState.completedMilestones
     )
     val backgroundPainter = rememberRoomBackgroundPainter(resolvedBackgroundPath)
+    com.example.starborn.ui.background.PrefetchRoomBackgrounds(
+        remember(uiState.currentRoom?.id, uiState.completedMilestones) {
+            uiState.currentRoom?.connections?.values.orEmpty().mapNotNull { id ->
+                environmentRooms[id]?.let { next -> resolveRoomBackground(next, emptyMap(), uiState.completedMilestones) }
+            }
+        }
+    )
     val roomTransition = uiState.roomTransition
     val outgoingBackgroundPath = roomTransition?.fromBackgroundImage
     var roomTransitionActive by remember { mutableStateOf(false) }
@@ -981,7 +988,7 @@ fun ExplorationScreen(
         val inlinePlan = remember(baseRoomDescription, uiState.actions, actionHints, currentRoom, uiState.roomState) {
             buildInlineActionPlan(
                 description = baseRoomDescription,
-                actions = uiState.actions,
+                actions = uiState.actions.filterNot { it is TravelAction },
                 hints = actionHints,
                 room = currentRoom,
                 inspectionState = uiState.roomState
@@ -1085,6 +1092,7 @@ fun ExplorationScreen(
                     RoomDescriptionPanel(
                         currentRoom = currentRoom,
                         description = descriptionForPanel,
+                        travelActions = uiState.actions.filterIsInstance<TravelAction>(),
                         plan = inlinePlan,
                         isDark = isRoomDark,
                         onAction = { action -> viewModel.inspectRoomAction(action) },

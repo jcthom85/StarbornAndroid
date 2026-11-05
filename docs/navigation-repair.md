@@ -1,5 +1,17 @@
 # Navigation repair — 2026-09-14
 
+World 6 is now reviewed: [November 5 Source navigation report](testing/WORLD6_NAVIGATION_2026-11-05.md). The last four diagonal direction entries are removed; the full-game direction policy retains reviewed named vertical routes in Worlds 3 and 5.
+
+
+November 5 follow-up: [named travel review](testing/NAMED_TRAVEL_REVIEW_2026-11-05.md). Diagonals remain prohibited; reviewed stairs, lifts and cables may supplement the NSEW walking network. Historical findings below predate that correction.
+
+
+World 5 update, November 5, 2026: Ring travel is now reciprocal NSEW, with a reversible Zero-G/SysAdmin approach and a story-cleared Anchor entrance. See [the World 5 navigation pass](testing/WORLD5_NAVIGATION_2026-11-05.md).
+
+World 4 update, November 5, 2026: the Foundry now uses reciprocal NSEW local routes and a story-cleared maintenance corridor for return travel. See [the World 4 navigation pass](testing/WORLD4_NAVIGATION_2026-11-05.md).
+
+World 3 update, November 5, 2026: local movement now uses reciprocal NSEW connections; its old diagonal passages and three one-way descents are superseded. See [the World 3 navigation pass](testing/WORLD3_NAVIGATION_2026-11-05.md). The earlier findings below remain historical.
+
 Implemented the corrections identified in the [baseline audit](navigation-topology-audit.md).
 
 ## Result
@@ -13,7 +25,7 @@ Implemented the corrections identified in the [baseline audit](navigation-topolo
 
 The stream/beach loop in Sector 9 could not fit a consistent compass layout with its original direction labels. Cliffs↔Cove now uses north/south; Cove↔Pools and Pools↔Cargo have their east/west labels reversed at both ends. No connections or gates were removed. World 2 remains entirely cardinal.
 
-Room coordinates were repacked to eliminate reversed directions and reduce oversized gaps. The Static, Signal Stairwell, Zeke's Apartment, and Safehouse Roof now increase Y going north. Some longer corridors remain; the minimap still uses its existing two-cell display radius.
+Room coordinates were repacked to eliminate reversed directions and reduce oversized gaps. The Static, Signal Stairwell, Static Safehouse, and Safehouse Roof now increase Y going north. Some longer corridors remain; the minimap still uses its existing two-cell display radius.
 
 ## Progression preservation
 

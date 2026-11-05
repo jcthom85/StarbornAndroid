@@ -65,7 +65,7 @@ The crew powers the Bridge/Astra installation with salvaged conduits and ship cu
 
 ## World 3: Spire
 
-The Astra can fly, but Dominion barriers restrict its route. Reconnaissance, disguises, credentials, favors, and service access build the Lens heist. Zeke's history complicates his usefulness and fear; Nova must coordinate rather than solve every problem herself.
+The Astra can fly, but Dominion barriers restrict its route. Reconnaissance, disguises, credentials, favors, and service access build the Lens heist. Zeke's home is the mining colony, not the Spire. Jax offers the crew an abandoned apartment above The Static; Zeke checks its wiring and Orion shields it. Zeke applies his Dominion checkpoint experience to the city's procedures, using the crew's gathered records rather than personal city access. Nova must coordinate rather than solve every problem herself.
 
 The Lens responds to the Fork's protocol mark and reveals phase structures, including a seam through the internal curtain toward the Foundry. Contact brings risk and exposure rather than instant expertise.
 

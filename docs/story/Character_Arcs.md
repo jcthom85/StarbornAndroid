@@ -33,7 +33,7 @@ This document outlines the emotional journeys and structural development of the 
 | :--- | :--- | :--- |
 | **1: The Mines** | Complicit. Watching Nova on screens. "Just doing my job." | **The Turn:** Deletes the footage of Nova. Physically leaves his safe booth to help her, burning his entire career/life in 5 minutes. |
 | **2: The Wilds** | Useless. He blames himself for the unverified navigation splice and tries to earn his place through repairs. | **The Growth:** He grounds Nova during the Anchor Drill and learns that care and belonging are not conditional on technical utility. |
-| **3: The Spire** | Haunted. Back in civilization, he’s terrified of being recognized. | **The Confrontation:** Has to bluff a Dominion guard using his old "HR voice." He realizes he can use his past as a weapon, not just a shame. |
+| **3: The Spire** | Exposed. Far from his home in the mines, he fears Dominion surveillance. Familiar procedures give him a way to help. | **The Confrontation:** Uses his checkpoint voice and the crew’s gathered credentials to bluff city security. His bureaucratic experience helps without making the Spire his former home. |
 | **4: The Foundry** | Angry. Sees how the sausage is made (Gh0st’s creation). | **The Bond:** He connects with Gh0st—the "software guy" understanding the "hardware guy." He hacks the assembly line to save Gh0st. |
 | **5: The Void** | Regret. Sees the full scale of what he helped build. | **Low Point:** He is locked out of the system by Vale. His "Insider" status means nothing. He feels he has nothing left to offer. |
 | **6: The Source** | Resolved. He stops looking for a system to validate him. | **Climax:** When the interfaces reject him, he manually keeps the failing ground path open. |

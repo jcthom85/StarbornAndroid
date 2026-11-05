@@ -1,0 +1,193 @@
+{
+  "verified_at_utc": "2026-11-05T16:25:35.346135+00:00",
+  "scope": "World 2 obsolete console action; World 6 cardinal navigation, story crossings, legacy returns and named travel",
+  "results": {
+    "android_host": {
+      "tests": 808,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "focused_desktop": {
+      "tests": 41,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "skipped_tests": [],
+  "expanded_desktop_before_final_label_fix": {
+    "tests": 266,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 1
+  },
+  "expanded_findings": {
+    "failure": "No Throne duplicate circuit name intercepted the travel link; repaired and retested through actual link/action identity",
+    "skip": "World2Part2PersistenceTest.copiedPlaytestSaveCanGatherWithoutInventingCraftCredit: external copied-save fixture absent"
+  },
+  "world6": {
+    "rooms": 65,
+    "directed_connections": 128,
+    "diagonal_connections": 0,
+    "physical_one_way_connections": 0,
+    "named_repeatable_returns": [
+      {
+        "source": "source_zeke_nightmare_node_scale_03",
+        "control": "door",
+        "event": "warp_source_zeke_nightmare_node_scale_03_to_entry",
+        "destination": "source_zeke_nightmare"
+      },
+      {
+        "source": "source_gh0st_nightmare_node_scale_03",
+        "control": "clean signal",
+        "event": "warp_source_gh0st_nightmare_node_scale_03_to_entry",
+        "destination": "source_gh0st_nightmare"
+      },
+      {
+        "source": "source_orion_nightmare_node_scale_03",
+        "control": "harmonic wave",
+        "event": "warp_source_orion_nightmare_node_scale_03_to_entry",
+        "destination": "source_orion_nightmare"
+      },
+      {
+        "source": "source_spire_thought_node_scale_04",
+        "control": "return circuit",
+        "event": "warp_source_spire_thought_node_scale_04_to_entry",
+        "destination": "source_spire_thought"
+      },
+      {
+        "source": "source_campfire_node_scale_final",
+        "control": "trail",
+        "event": "warp_source_campfire_node_scale_final_to_entry",
+        "destination": "source_campfire"
+      },
+      {
+        "source": "source_echo_mines_node_scale_final",
+        "control": "echo",
+        "event": "warp_source_echo_mines_node_scale_final_to_entry",
+        "destination": "source_echo_mines"
+      },
+      {
+        "source": "source_memory_bridge_node_scale_final",
+        "control": "light beam",
+        "event": "warp_source_memory_bridge_node_scale_final_to_entry",
+        "destination": "source_memory_bridge"
+      },
+      {
+        "source": "source_memory_stair_node_scale_final",
+        "control": "slide",
+        "event": "warp_source_memory_stair_node_scale_final_to_entry",
+        "destination": "source_memory_stair"
+      },
+      {
+        "source": "source_center_node_scale_final",
+        "control": "echo",
+        "event": "warp_source_center_node_scale_final_to_entry",
+        "destination": "source_center"
+      }
+    ]
+  },
+  "preservation_checks": "See source-delta.json; compared with start-of-task snapshot, not HEAD",
+  "apk": {
+    "path": "app/build/outputs/apk/debug/app-debug.apk",
+    "size_bytes": 1296079921,
+    "sha256": "cbcd615bf8faa374efea1d282e93417a8f1dd6b2681264252585880ca6f751eb",
+    "json_catalogs_match_source": {
+      "dialogue_voice_profiles.json": true,
+      "recipes_tinkering.json": true,
+      "environmental_effects.json": true,
+      "quests.json": true,
+      "events.json": true,
+      "tutorial_scripts.json": true,
+      "sfx.json": true,
+      "items.json": true,
+      "recipes_cooking.json": true,
+      "save2.json": true,
+      "milestones.json": true,
+      "characters.json": true,
+      "dialogue.json": true,
+      "sfx_meta.json": true,
+      "save3.json": true,
+      "rooms.json": true,
+      "statuses.json": true,
+      "enemies.json": true,
+      "recipes_fishing.json": true,
+      "cinematics.json": true,
+      "autosave.json": true,
+      "progression.json": true,
+      "npcs.json": true,
+      "node_transitions.json": true,
+      "hubs.json": true,
+      "quests_base.json": true,
+      "hub_nodes.json": true,
+      "audio_bindings.json": true,
+      "hub_node_descriptions.json": true,
+      "save1.json": true,
+      "leveling_data.json": true,
+      "shops.json": true,
+      "tuning_puzzles.json": true,
+      "themes.json": true,
+      "worlds.json": true,
+      "theme_styles.json": true,
+      "enemy_movement.json": true,
+      "audio_catalog.json": true,
+      "skills.json": true,
+      "hub_node_locked_previews.json": true
+    }
+  },
+  "source_sha256": {
+    "app/src/main/assets/dialogue_voice_profiles.json": "271afea3082b7f98e64857d743c9eb9e6196b8f81515b98364a93e1d90b843e4",
+    "app/src/main/assets/recipes_tinkering.json": "b25885982acbd0fbb6be03733eb3899a15eee3cb7036eb7a537de0c3aad33805",
+    "app/src/main/assets/environmental_effects.json": "86823b1331d667b440c14cc06814d222fa85206f7afeb4cbd7a29f4e271ed667",
+    "app/src/main/assets/quests.json": "1809d0b7e462ba39bcc9449f2e932582e23a8fd82fb33a2ceaaf03f013ea8a26",
+    "app/src/main/assets/events.json": "82ae99f94e15712c080454457a7a0ef4a4ef0f54d5328179db9f5fa62af8e972",
+    "app/src/main/assets/tutorial_scripts.json": "2587ea8db9b8167fee8f4de25f28b2219c2525aa3bbdeaa336a4fa09eea7c16d",
+    "app/src/main/assets/sfx.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+    "app/src/main/assets/items.json": "1e0b65fc5b471b2a0542c71a0515b839310b8c7e3458a893b08d767ec85c4311",
+    "app/src/main/assets/recipes_cooking.json": "27b0edf7489947c3b7c7b623c70a9b8e40bdde6f58ec78496b0f08bfb5cc98a5",
+    "app/src/main/assets/save2.json": "36b96e8740be355a8d3dc9429073863822de076637c98bc822c4bd5df5fa370c",
+    "app/src/main/assets/milestones.json": "c37b906e6f34d710a3657269da44093c6dd30360c8cf32b83738320aa32239c7",
+    "app/src/main/assets/characters.json": "f0eb93eeb29b032bd141df33ab930156d4eecdf79ea4ce5cd75860cef25f00f7",
+    "app/src/main/assets/dialogue.json": "86e176990e9fb7d4670a4d374d5e9916025c78b13921d3b9379351c407e8b565",
+    "app/src/main/assets/sfx_meta.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+    "app/src/main/assets/save3.json": "905eca9107f36c6ea9881d79c0fe62774adad927c428fcc5d23da6c627668e72",
+    "app/src/main/assets/rooms.json": "3c4991ec74361563f62dbc4c573d05d39d44555f34ca11ac5286412cd8e64224",
+    "app/src/main/assets/statuses.json": "a42ecf6bc1c0daf55a4510e15a80820d08380b7a6f5dc59ef6cb2cd28d51b07c",
+    "app/src/main/assets/enemies.json": "438e64941b9046666975416c284da44394e352263cf3933e2802fad4247c0278",
+    "app/src/main/assets/recipes_fishing.json": "3533ffe4dd422d5fe88abf57f2b9ef820f0d7eb7ac24b0b7ae4addd70159c869",
+    "app/src/main/assets/cinematics.json": "3323d7e562420face092c3dfeaafa4ea84063065ce88f1b63f502605d50eba18",
+    "app/src/main/assets/autosave.json": "4ff62b24a5fcad6db4c8ca88f50caae5165141e926937d8db608e217a2c20959",
+    "app/src/main/assets/progression.json": "8be386cfcb42105556a3b2b9cd5f0f87a09cf8cbe0ba09f41c54c6ca901c6f5f",
+    "app/src/main/assets/npcs.json": "6687a9145ff8c3232faacc71d261505386993d78d50dc30d282f97bd8ed68c02",
+    "app/src/main/assets/node_transitions.json": "8ea52592f78b31531086400d810f35cc8b18048fcac46dff2c6ed41e23498109",
+    "app/src/main/assets/hubs.json": "334ceda4a513e903bf877f402c136ea7a1843754a00e6980d9b478cdd9f11569",
+    "app/src/main/assets/quests_base.json": "1310af04f0712958e6196ed2e5b5b9ed1a9b6192bc39bd99764e9337fe7ee055",
+    "app/src/main/assets/hub_nodes.json": "9643f6da453ac1ae32476f1688de11ba2c72052e49017cb6ac8364ad0cf03346",
+    "app/src/main/assets/audio_bindings.json": "7878c0e36c350a2fe66df6b1d92d71ef9060f3e7d56a87ef9b5b3d212bfbb3e7",
+    "app/src/main/assets/hub_node_descriptions.json": "f3b343ed432e0d241761d8a042a8ee786fdeccb64f37a87d71167ca18758a2aa",
+    "app/src/main/assets/save1.json": "624357fa23165a92327567932acd397cf3c9ee7bad72699a95030564021cc3a3",
+    "app/src/main/assets/leveling_data.json": "fe1cb7bb7d9d74e8a9f14c77fff68f9d7bcb9dcd3c0471fd44d5f0e4b70d9fb7",
+    "app/src/main/assets/shops.json": "e2a9d44818f89ec262ea9eac18b828dac42f5a7645ffabe3178e2c71bda553e9",
+    "app/src/main/assets/tuning_puzzles.json": "0d5e0d9a8efcb66234846286c80a9d7490edacefc35a2c25ef5250640f16ff77",
+    "app/src/main/assets/themes.json": "3791656ced44b01c235844e22639803019c52fde9f82b85809dc921a835e18e6",
+    "app/src/main/assets/worlds.json": "71bcfb0710f6f306fa131cb21998e82def11aa0e53fe11041775592fbea84af5",
+    "app/src/main/assets/theme_styles.json": "2c72dedc17096ecb69faeeae1898bc6b3d8a789589efe28665393d2a7e372e30",
+    "app/src/main/assets/enemy_movement.json": "a7219c4b818d71a4de5d5189cab589fc8194e38992d9473e33358e474ebcabd3",
+    "app/src/main/assets/audio_catalog.json": "f76c571c73a802dcde690232b46febba2e2cef52f9d0ce1963812a700bc1f43b",
+    "app/src/main/assets/skills.json": "3fe9d0f064f687cc7e780e65d0f547e31ffe52047bb0ac0df9cdc0ac1b5e438f",
+    "app/src/main/assets/hub_node_locked_previews.json": "215436cfd45066539a62ea9aab14774d3e4938afbf1e9c4c77890f7c2507c4e6",
+    "gameRuntime/src/main/kotlin/com/example/starborn/domain/session/OpeningNarrativeMigration.kt": "ba18758258ef3e8b11d251ce83c12cb85ecbc13484086efa5e2dd66d49299afe",
+    "desktopApp/src/test/kotlin/com/example/starborn/desktop/World6NavigationPublicTest.kt": "38b2e176149ec35510ac1d3861e41eedc2a71cad6b808a716a9da448b295d913",
+    "app/src/test/java/com/example/starborn/domain/session/OpeningNarrativeMigrationTest.kt": "84d7da43ec8cf790ff28b73527f4c7dce52b008da5a95b667acd13e7406521e7",
+    "app/src/test/java/com/example/starborn/feature/exploration/WorldTwoDiscoverabilityStateTest.kt": "571085bbd4cbf97d02f010ab826d1cd5cbeaf4e7427d20b03692b75524af52a5",
+    "app/src/test/java/com/example/starborn/domain/playtest/NavigationIntegrityTest.kt": "08d58362e0df20dc4a60d33096fc7098e5b2ba2884362793d9b35048f6e77c48",
+    "app/src/test/java/com/example/starborn/domain/playtest/SpecialExitIntegrityTest.kt": "4d7d576b4449f1fff1d19a8c113a614a1000ef29d41ae48d8115c89b6612539a",
+    "app/src/test/java/com/example/starborn/domain/playtest/LegalRouteCampaignRunnerTest.kt": "7fe4f095f1d046f94a27b6f9e64eee1e8c7f8bbb67297be2e717c29a860a109a",
+    "navigation_audit.py": "7285b848cc9e3e0fd1f1eef191e898c92f6587351b6e9dc258673779ff70f899",
+    "docs/playtest/walkthroughs/WORLD_6_COMPLETIONIST_WALKTHROUGH.md": "042d62e64b3bb3e590af949e48ba8c0bd309248c79c3c766c198cc40711001e6"
+  },
+  "installed": false,
+  "published": false,
+  "human_phone_acceptance": false
+}

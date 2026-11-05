@@ -75,7 +75,7 @@ object DebugScenarioCatalog {
         scenario("w2_astra_repair", "W2 / Astra Repair", "Resume Liftoff in the hangar after recruiting the full crew.", DebugScenarioCategory.STORY, worldLabel = "World 2: Sector 9"),
 
         // World 3
-        scenario("w3_sewers_entry", "W3 / Sewers Entry", "Start Homecoming beneath the Spire at the runoff locks.", DebugScenarioCategory.STORY, worldLabel = "World 3: The Spire"),
+        scenario("w3_sewers_entry", "W3 / Sewers Entry", "Start Under the Radar beneath the Spire at the runoff locks.", DebugScenarioCategory.STORY, worldLabel = "World 3: The Spire"),
         scenario("w3_safehouse_plan", "W3 / Safehouse Plan", "Resume The Plan from Zeke's safehouse.", DebugScenarioCategory.STORY, worldLabel = "World 3: The Spire"),
         scenario("w3_checkpoint_infiltration", "W3 / Checkpoint Infiltration", "Resume Social Engineering at the Upper City service route.", DebugScenarioCategory.STORY, worldLabel = "World 3: The Spire"),
         scenario("w3_lens_archive", "W3 / Lens Archive", "Resume The Lens inside the Archive approach.", DebugScenarioCategory.STORY, worldLabel = "World 3: The Spire"),

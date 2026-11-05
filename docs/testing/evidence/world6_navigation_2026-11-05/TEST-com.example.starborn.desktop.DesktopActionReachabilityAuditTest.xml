@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.desktop.DesktopActionReachabilityAuditTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-05T16:24:20.702Z" hostname="V52076.vims.edu" time="0.464">
+  <properties/>
+  <testcase name="usableFunctionalObjectsHaveSharedDescriptionLinksAcrossAuthoredVariants" classname="com.example.starborn.desktop.DesktopActionReachabilityAuditTest" time="0.431"/>
+  <testcase name="inventoryActionsMissingFromRoomProse" classname="com.example.starborn.desktop.DesktopActionReachabilityAuditTest" time="0.03"/>
+  <system-out><![CDATA[Rooms=477; conservative unmatched room/description/action combinations=136
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

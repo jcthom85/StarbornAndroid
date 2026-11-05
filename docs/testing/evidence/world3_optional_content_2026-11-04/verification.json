@@ -1,0 +1,50 @@
+{
+  "android_host": {
+    "tests": 794,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "focused_desktop": {
+    "tests": 14,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "apk_build": "assembleDebug passed; not installed",
+  "apk_sha256": "c2e3d0e2914d5f37633d6b96ac79ff1d430b7e289d0fe178fd9c77cbc1dc6b84",
+  "source_sha256": {
+    "app/src/main/assets/events.json": "448544df86252edd8843629f25b6e2f0898f0839bc01a273315e2e3b492060f5",
+    "app/src/main/assets/rooms.json": "8e683d54f440876c64cb538829e4016eb9f8958dfc53bef92d591ab8dd61aa68",
+    "app/src/main/assets/quests.json": "7fdde66cf93fd68e066960dcccea9ae2f66c04514aff2a2dd89432918b425982",
+    "app/src/main/assets/items.json": "a3476b5ab0e8efb662c4a80a76097dd42e65602afff4e54b7f2a75a99c22c876",
+    "gameRuntime/src/main/kotlin/com/example/starborn/feature/exploration/presentation/ItemDetails.kt": "42a5f46bb30e3ef85630d11b9f5c096470c103bda7d83e945cae8cde46160ee6"
+  },
+  "earned_routes": {
+    "quests_per_branch": 11,
+    "side_quests_per_branch": 6,
+    "branches": [
+      "public disclosure",
+      "private leverage"
+    ],
+    "combat_seed": 17,
+    "synthetic_victories": 0,
+    "assisted_actions": 0,
+    "limits": "Virtual time, known answers and a fixed policy; no phone acceptance."
+  },
+  "guide_browser": [
+    "World 3 direct link and saved checklist",
+    "World 2 root link",
+    "current Botanist return task",
+    "logo loaded",
+    "desktop layout",
+    "checkmarks persist",
+    "position restored",
+    "search",
+    "cross-world navigation",
+    "theme",
+    "mobile layout",
+    "offline reload",
+    "no browser errors"
+  ]
+}

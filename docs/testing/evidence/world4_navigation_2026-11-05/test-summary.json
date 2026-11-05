@@ -1,0 +1,2309 @@
+{
+  "android_host": {
+    "totals": {
+      "tests": 803,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "suites": [
+      {
+        "name": "com.example.starborn.ExampleUnitTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "addition_isCorrect"
+        ]
+      },
+      {
+        "name": "com.example.starborn.data.DataIntegrityTest",
+        "tests": 30,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "dialogueVoiceProfilesCoverAuthoredSpeakers",
+          "allQuestsProvideInWorldSpatialDirectionAndLandmarks",
+          "runtimeRoomsDeserializeWithRequiredFields",
+          "worldThreeHubStartsMatchStoryEntryPoints",
+          "worldThreePrismGalleryUsesEnvironmentalActions",
+          "worldOneBunkTeachesLightBeforeMovementWithoutExtraObjectGate",
+          "playCinematicActionsReferenceExistingScenes",
+          "questReferencesAreValid",
+          "messHallHyperionCabinetDisappearsAfterDiscovery",
+          "runtimeThemesUseRgbaArrays",
+          "milestoneExitUnlocksReferenceValidRooms",
+          "restStopRoomActionsReferenceValidEvents",
+          "questDialogueAvoidsMonotonousRoboticTemplates",
+          "shopItemsAndMilestonesAreValid",
+          "systemTutorialActionsReferenceScripts",
+          "worldTwoRoomsFormReciprocalNavigationGraphs",
+          "roomActionLabelsUseWorldNounsInsteadOfMetaPuzzleTerms",
+          "questTutorialIdsAndSystemTutorialActionsReferenceScripts",
+          "lateWorldPuzzleBeatsUseWorldSystems",
+          "tuningPuzzleRoomActionsReferenceValidDefinitionsAndEvents",
+          "worldThreeHasBuiltoutRoomGraph",
+          "cardDenDiceTableDisappearsAfterGamblingReward",
+          "roomsHaveOneNodeOwnerAndCrossNodeExitsHaveTransitions",
+          "allHubNodeEntriesExistAndBelongToTheirNodes",
+          "worldTwoPuzzleBeatsUseEnvironmentalChains",
+          "securityPostIsTheOnlyShieldTrainerTutorialEncounter",
+          "worldOneRoomActionNamesAppearInDescriptions",
+          "dialogueTriggersAndConditionsDoNotContainDanglingReferences",
+          "forgePuzzleSliceUsesEnvironmentalActions",
+          "hubOneNodesUsePublicThresholdRoomsAsEntries"
+        ]
+      },
+      {
+        "name": "com.example.starborn.data.DialogEventsLoadingTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "eventsJsonLoadsAndRunsSimpleTrigger",
+          "dialogueJsonLoadsAndStartsSession",
+          "craftingRecipesLoad"
+        ]
+      },
+      {
+        "name": "com.example.starborn.data.EnemyAssetLoadingTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "enemiesJson_parsesWithDefaults"
+        ]
+      },
+      {
+        "name": "com.example.starborn.data.EnemyDropIntegrityTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "allEnemyDropsResolveToCatalogItems"
+        ]
+      },
+      {
+        "name": "com.example.starborn.data.ProgressionIntegrityTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "levelRewardsAreReachableDistinctAndOwnedByTheirCharacter"
+        ]
+      },
+      {
+        "name": "com.example.starborn.data.assets.CinematicMusicIntegrityTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "allCinematicMusicCuesResolveToCatalogTracks"
+        ]
+      },
+      {
+        "name": "com.example.starborn.data.assets.GeneratorLightingIntegrityTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "generatorLightsTheMineAndNothingElse",
+          "envScopingWouldReachPastTheMineWhichIsWhyTheRuleIsNodeScoped"
+        ]
+      },
+      {
+        "name": "com.example.starborn.data.assets.IntroCinematicAssetIntegrityTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "illustratedIntroHasCompleteReadableSequenceAndResolvablePanels"
+        ]
+      },
+      {
+        "name": "com.example.starborn.debug.DebugFixtureValidatorTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "validIdsInTheWrongLocationAreRejected",
+          "freshFixtureCannotInheritRecoveryOrInvalidInventory"
+        ]
+      },
+      {
+        "name": "com.example.starborn.di.DialogueConditionRegressionTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "botanistCannotTurnInUntilEverySpecimenIsScanned",
+          "allAuthoredDialogueConditionsHaveAnImplementedVocabulary",
+          "authoredTaskAndEvidenceConditionsUseRealStateOnBothPlatforms",
+          "completedCrashIntroductionDoesNotReplay",
+          "orionOffersOptionalQuestAfterAstraInspection"
+        ]
+      },
+      {
+        "name": "com.example.starborn.di.DialogueTriggerHandlingTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "setMilestoneTriggerRunsMilestoneCallback",
+          "startQuestTriggerTracksNewlyAssignedQuest"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.audio.AudioLifecycleAndDuckingTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "roomToRoomTransition_stopsPreviousAmbienceAndFadesInNewAmbience",
+          "voiceoverController_ducksMusicDuringDialogue_andRestoresAfterExpiry",
+          "battleCueDoesNotCancelIntentionalCinematicDucking",
+          "audioLifecycle_pauseForBackground_setsResumeFlags_andResumeRestoresCleanly",
+          "battleCuesLeaveMusicAtItsAuthoredLevel"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.audio.AudioRouterTest",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "voiceoverPlanDoesNotDuckLayersByDefault",
+          "newFightsExplicitlyRestartEvenWhenTheSameTrackIsAlreadySelected",
+          "suppressedRoomStopsATrackACinematicStarted",
+          "resonanceBattleEventsRouteToBattleCues",
+          "commandsForRoomSwitchesMusicAndAmbientLayers",
+          "voiceoverPlanCanDuckLayersWhenRequested",
+          "commandsForLayerOverrideStopsMusicImmediately"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.audio.VoiceoverControllerTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "enqueue plays cues sequentially and restores layers"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.cinematic.CinematicCoordinatorTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "cancellationDoesNotCompleteOrPromoteAbandonedScenes",
+          "skipCompletesActiveSceneOnceAndPromotesQueuedScene"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.cinematic.CinematicModelsTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "illustratedValuesParseAllAuthoredPresentationOptions",
+          "legacyValuesKeepCardPresentationAndSafeMotionDefaults"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.cinematic.CinematicSkipInvariantTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "allCinematicScenesAreValidAndNonEmpty",
+          "skipPromotesQueuedScenesAndCompletesBothCleanly",
+          "skipImmediatelyFiresCompletionCallbackForEveryAuthoredScene",
+          "allCinematicReferencesInEventsResolveToAuthoredScenes",
+          "immediateSkipProducesIdenticalSessionStateToFullPlayback"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.combat.BrokenDamageBonusTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "hit that creates break does not receive the damage bonus",
+          "direct attack deals 25 percent more damage to an already broken target"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.combat.CombatActionValidationTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "skill condition target_stunned is validated",
+          "skill condition hp_below_50 is validated",
+          "skill condition weapon type equipped is validated",
+          "snack on cooldown is blocked",
+          "skill on cooldown is blocked"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.combat.CombatClarityTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "equippedAbilitiesExplainActualEffectsCostScopeAndRemainingCooldown",
+          "signedBuffAmountsPercentUnitsAndOwnerTurnsStayDistinct",
+          "combatLogDistinguishesBuffAmountsFromStatusStacks"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.combat.CombatDamageTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "physical damage applies resistance",
+          "element damage uses specific resistance"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.combat.CombatOpModeTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "when OP Mode is active player deals 9999 damage and breaks stability",
+          "insta win instantly defeats all enemies and triggers victory outcome",
+          "when OP Mode is active player is invulnerable to enemy damage and stability damage",
+          "when OP Mode is disabled normal damage math applies",
+          "when OP Mode is active ally is also invulnerable to enemy damage",
+          "toggleOpMode flips state and fires flow"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.combat.CombatSkillTargetingTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "enemy targeted status applies to selected enemy",
+          "ally targeted status applies to the player when no explicit target provided"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.combat.CombatStatusTickTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "poison status deals damage over time",
+          "regen status restores health over time"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.combat.CrewEncounterTempoTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "prototypeEncounterChangesOnlyBaseSpeedAndKeepsDistinctEnemyRoles",
+          "ordinaryCampaignsOtherRoomsAndUnrelatedEnemiesKeepAuthoredStats"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.combat.CrewTalentCombatTest",
+        "tests": 13,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "fieldPatchIsCoreRecoveryWithOneTurnShieldAndFocusOnly",
+          "coolHeadChargesOnlyOnLandedBasicAndSpendsOnValidHeadshotIncludingMiss",
+          "questPassivesAndBracedStatusWorkProperlyInCombat",
+          "precisionThresholdsAndCriticalBonusAreSpecificToHeadshot",
+          "coverProtectsOneLivingAllyRestoresCappedStabilityAndUsesOrdinaryCooldown",
+          "safeExposureAndSteadyFieldOnlyAffectNewWeakAndRespectImmunity",
+          "openingRefreshesWithoutStackingWaitsForAnotherCrewAndNeverAmplifiesDot",
+          "lastLineRequiresCooldownAndStrictEmergencyAtCommitAndOnlyBypassesOnce",
+          "surgicalStrikeChangesOnlyBasicStabilityAndDisarmAppliesExactlyTwoTurnsWeak",
+          "fieldTreatmentRoundsCombinedTriageOnceIgnoresFocusAndDoesNotRevive",
+          "stabilityTalentsDoNotIncreaseHpAndDemolitionAddsToFaultLine",
+          "aftercareHasTwoCastTimeTicksAndRegenOwnsTheSingleRecoverySlot",
+          "recenterPreventsOneStunOrStaggerSkipButDoesNotConsumeAgainstMixedFreeze"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.combat.FunAuditReportTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "generate synthetic combat smoke report and catalog skill audit"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.combat.NovaTalentCombatTest",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "hpTalentsCapAtTwentyFivePercentWithoutIncreasingStability",
+          "cryoVentAppliesBrittleWithoutImplicitFreeze",
+          "groundedWireChangesOnlyArcTetherStability",
+          "damageOverTimeAndNoKillDoNotProcKeepMoving",
+          "breakerBoltDealsIndependentFiftyPercentStabilityBonus",
+          "scatterChargeDamagesEveryEnemyAndHasNoStatuses",
+          "groundedTutorialRequiresARealQualifyingHitAndAcknowledgmentPreventsRepeats",
+          "keepMovingIsOncePerActionAndTwicePerBattle",
+          "quietStepsTutorialFollowsNovaActionAndFirstApGuideRespectsOwnershipAndSettings"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.combat.PartThreeBalanceTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "corrosiveRoundsNoLongerScalesItsDamageWithBossHealth",
+          "skimmerOpticsDisruptionIsBriefWithoutChangingBaselineAccuracyOrBlind"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.combat.PartyHealthTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "Nova resting ceiling includes combat vitality and armor health"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.combat.SnackAbilityContractTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "refreshedBuffLogReportsTheRetainedDurationAndNewAmount",
+          "cometCritBuffIncreasesNormalWeaponCritsAcrossMatchedSeeds",
+          "snackBuffsSurviveActivationAndEnemyTurnsAndExpireAfterTheAdvertisedPersonalTurns"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.combat.SnackUseTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "snack damage reduces user hp",
+          "snack restore heals the user",
+          "snack buff applies a temporary buff to self",
+          "snack cooldown uses item effect cooldown",
+          "snack is applied to self even if action target is specified elsewhere"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.combat.WeaponAttackStyleTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "charged splash weapon attack requires a charge turn",
+          "all-enemies weapon attack processes each enemy"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.combat.WeaponMomentumAndOverchargeTest",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "cooldown refund applies at 2 or 3 momentum",
+          "ability use consumes all momentum and resets to 0",
+          "basic attack increments player momentum up to cap of 3",
+          "physical skill inherits weapon element and weapon mod status",
+          "ability damage scales with momentum tier",
+          "explicit skill element is not overridden by weapon element",
+          "enemy attacks do not generate momentum",
+          "heal skill scales with momentum and logs momentumSpent",
+          "3 momentum forces critical hit and logs momentumSpent"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.crafting.CookingRefinementTest",
+        "tests": 15,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "trailMixKeepsItsAbilityAndRestoredHealthDoesNotExceedTheNewCeiling",
+          "snacksAndStimulantsCannotConsumeOrOverwriteMealsFromInventory",
+          "healingHonorsEquipmentCeilingAndNeverLowersHp",
+          "statusResistanceProtectsAgainstHostileEffectsButNotFriendlyEffects",
+          "modComparisonUsesRealSlotsAndShowsTradeoffs",
+          "cookAndEatRejectsSnacksWithoutSpendingMaterials",
+          "salvageProtectsQuestToolsAndEquippedModsAndUsesExplicitReturns",
+          "combatOnlyClassificationMatchesFieldUseWithoutBlockingMealsOrMedicine",
+          "cookAndEatChecksReplacementBeforeSpendingIngredients",
+          "spicedRationsHaveCorrectBaseYieldAndBatchCosts",
+          "regionalDiscoveryPersistsAndSnackCraftingDoesNotDuplicateOwnedAbility",
+          "percentageBonusesAndServingPerksUseCombatUnits",
+          "combatMealAppliesHealingAndBuffWithoutWellFed",
+          "mealComparisonIncludesBonusesLostWhenReplacingAndDoesNotAlterTheMeal",
+          "replacementNeedsConfirmationAndDoesNotSpendFoodOnCancel"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.crafting.CraftingServiceTest",
+        "tests": 13,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "batchCookingConsumesScaledIngredientsAndMultipliesYield",
+          "cookMeal_consumes_ingredients_and_adds_meal",
+          "learnSchematicPersistsToSessionStore",
+          "craftProvisionFailsWithoutConsumingWhenMissingIngredients",
+          "craftProvisionConsumesIngredientsAndAddsResult",
+          "craftGearModConsumesComponentsAndGrantsResult",
+          "craftRecipeWithoutToolsStillSucceeds",
+          "cookingStoresServingPreferenceWithoutGrantingAnUneatenMealBuff",
+          "craftTinkeringAddsResultAndConsumesParts",
+          "oversizedAndInvalidCookingBatchesLeaveInventoryUnchanged",
+          "ingredientAliasesCannotSpendTheSameStockTwice",
+          "isSchematicLearnedReflectsExistingSessionState",
+          "learnSchematicReturnsFalseWhenAlreadyKnown"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.crafting.ProvisionIntegrationTest",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "salvageIsOptionalAndEveryCatchHasARealItem",
+          "allAuthoredFoodStatsSurviveConsumptionAndMealsReplaceRatherThanStack",
+          "repeatedFishingKeepsEveryCatchBeforeReturning",
+          "salvageLureAndZoneBonusChangeActualCatchOdds",
+          "unrecruitedChefCannotGrantPerksOrSpendIngredients",
+          "everyAuthoredRecipeCanLoadRefreshAndCraftFromBench",
+          "caughtFishCanBecomeAMealWhoseEffectsAndChefApplyOnlyWhenEaten"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.dialogue.DialogueEventIntegrationTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "dialogueTriggersUpdateSessionStateThroughEventManager",
+          "dialogueAudioTriggersDispatchToAudioLayerCommandHook"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.dialogue.DialogueServiceTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "Charlie can leave at every trust stage and earns his gift only once",
+          "scripted comms enter explicitly without replacing NPC greetings or quest dialogue",
+          "choices gate progression until selected",
+          "eligible active quest dialogue precedes older optional offers"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.dialogue.DialogueTriggerParserTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "ignoresEmptyValues",
+          "parsesItemQuantities",
+          "parsesMultipleActions",
+          "parsesCreditsAsRewardAction",
+          "parsesMusicAndPersistentMusicActions",
+          "parsesSilenceAndRestoreActions"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.dialogue.Hub10CriticalFlowTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "singularitySideQuestRewardsResolve",
+          "singularityMainQuestCompletesCampaignAndCredits"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.dialogue.Hub1CriticalFlowTest",
+        "tests": 16,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "scavengersStashMakesTradeRowPlayable",
+          "world1CriticalPathReachesCrashSiteAfterLaunch",
+          "paperworkDenialZekeOverrideAndBadgeGateProgress",
+          "protocolOverrideTerminalCompletesServerRoomSideQuest",
+          "mandatoryGuardBreakTrainingReturnsToBoggsForDeepMineAuthorization",
+          "world1CriticalPathResumesAfterSaveAtLaunchLockdown",
+          "openingSafetyFaultPrecedesMovementAndDefersJournal",
+          "lostShiftStartsAtMineShuntAndCompletesFromDatapad",
+          "hotspotTutorialIsSkippedIfBunkLightTurnsOnBeforeFadeCompletes",
+          "bogsRedirectsToHeavyLiftingBeforeDeepMineIfGuardBreakIsUntrained",
+          "puzzleRoomDepartureDoesNotSoftlockWakeUpCall",
+          "heavyLiftingStartsAtDockAndCompletesOnRiotGuardVictory",
+          "loaderVictoryResolvesTheDiagnosticObjectiveWithoutInventingAnInspection",
+          "wakeUpCallCompletesFromBunkToJedToCryoInductorRepair",
+          "systemFlushMakesMedBayPlayable",
+          "sector9CrashSiteAndStrangeCoastQuestFlow"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.dialogue.Hub2CriticalFlowTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "world2SideQuestsFlows",
+          "world2MainQuestProgressionsEndToEnd"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.dialogue.Hub3CriticalFlowTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "resumedSafehouseSetupDoesNotRequireNewJaxOffer",
+          "world3SideQuestsFlows",
+          "world3MainQuestProgressionsEndToEnd"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.dialogue.Hub4CriticalFlowTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "upperCityMainQuestProgressionsEndToEnd",
+          "upperCitySideQuestFlows"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.dialogue.Hub5CriticalFlowTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "foundrySlagPitsMainQuestProgressionsEndToEnd",
+          "foundrySideQuestFlows"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.dialogue.Hub6CriticalFlowTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "assemblyLineSideQuestFlows",
+          "assemblyLineMainQuestProgressionsEndToEnd"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.dialogue.Hub7CriticalFlowTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "orbitalRingMainQuestProgressionsEndToEnd",
+          "orbitalRingSideQuestFlows"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.dialogue.Hub8CriticalFlowTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "deepRingMainQuestProgressionsEndToEnd",
+          "deepRingSideQuestFlows"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.dialogue.Hub9CriticalFlowTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "eventHorizonClosureSideQuests",
+          "eventHorizonMainQuestProgressionsEndToEnd"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.dialogue.World3ReadinessRegressionTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "canonicalNpcNamesOpenConversationsAndPrototypeRequiresAudit",
+          "marketDialogueCannotSkipInvestigationAndLegacyGridCanStillFinish",
+          "roomAndElevatorFeedbackReflectCompletedWork",
+          "prismRequiresCluesWrongRoutesResetAndLeavingAllowsRetryAcrossRestore",
+          "suspectGivesAlibiBeforeEvidenceAndConfessionCannotRepeat",
+          "returnRoutesWorkRepeatedlyIncludingOldCompletedReceipts"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.dialogue.Worlds456ReadinessRegressionTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "allTwentyEightLateReturnShortcutsWorkWithLegacyReceipts",
+          "overclockCalibrationRequiresTheMapAndPaysOnlyAfterRecovery",
+          "authoredSceneOpenersRequireTheirPhysicalRoomAndDoNotAwardOnOpen",
+          "displayNameFallbackPreservesNormalConditionalEntrySelection"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.economy.CampaignEconomyStarvationTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "campaignEconomy_cleanProgression_neverFallsIntoDeficit",
+          "shopCatalog_allStockedItems_havePositivePrices_andNoArbitrage"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.event.EventManagerTest",
+        "tests": 15,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "playCinematicExecutesFollowUpActions",
+          "playCinematicTriggersHook",
+          "startQuestActionTracksNewlyAssignedQuest",
+          "giveRewardDelegatesCreditsAndXpToHook",
+          "nodeProgressActionsDelegateToHooks",
+          "encounterVictoryCanBeScopedToRoom",
+          "laterEventsInSameTriggerSeeStateChangedByEarlierEvents",
+          "nonRepeatableEventRunsOnce",
+          "audioLayerActionDelegatesToHook",
+          "triggerEligibilityChecksGatesWithoutExecutingAndRejectsCompletedEvents",
+          "legacyQuestCompleteShowMessageIsSuppressed",
+          "repeatedRecruitmentDoesNotAnnounceOrModifyAnExistingPartyMember",
+          "systemTutorialActionInvokesHookWithContext",
+          "questStageConditionMatches",
+          "takeItemDelegatesToHook"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.fishing.FishingPresentationTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "firstBiteAndReelLessonAreExplicitlyUnhurried",
+          "dangerOverridesReelingAdviceAndNeverDependsOnlyOnColor",
+          "onlyDeliberateUpwardSwipesSetTheHook"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.fishing.FishingRefinementTest",
+        "tests": 19,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "releasingDuringSurgeProtectsProgressAndRecoversTension",
+          "rewardsAndRecordsArePerCatchAndDoNotRepeat",
+          "invalidZoneCannotCreateJournalProgress",
+          "firstHookPausesForBriefingAndCancelPreservesIt",
+          "cleanCatchBonusPersistsAcrossOrdinaryCatchesWatersAndSpeciesAndCannotRepeat",
+          "everyAuthoredRodCanLandEveryBehaviorByReadingTheFish",
+          "repeatedRealCastsRecordBeforeReturningToExploration",
+          "strongestRodStillRequiresGivingSlack",
+          "everyFishingGearHasACampaignSourceOrReachableCraft",
+          "backgroundPausesHookAndReelTimers",
+          "noInputEventuallyLosesTheFish",
+          "salvageAndInvalidWatersCannotEarnCleanProgress",
+          "backgroundPausesWaitingWithoutStartingTheHookWindow",
+          "repeatedSpeciesAcrossWatersDoesNotCountAsThreeCleanSpecies",
+          "seededRhythmsKeepEveryRodCatchableAndWarningsReadable",
+          "craftingSalvageLureRetainsTheStarterLure",
+          "everyZoneUsesAnExistingBackgroundAsset",
+          "masterAnglerRequiresNativeFishInAllSixZones",
+          "rareRhythmsVaryBetweenSeedsButReplayExactlyAndCommonRhythmsStayFixed"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.fishing.FishingServiceTest",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "getCatchResult returns null for empty zone",
+          "failed catch has zero quantity",
+          "getFishingZone returns formatted name",
+          "prepareEncounter and resolveEncounter reuse same catch",
+          "getAvailableLures filters inventory",
+          "getFishingZone returns null when missing",
+          "minigame difficulty derived from rod power",
+          "success catch returns quantity and flavor text",
+          "getAvailableRods filters inventory"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.inventory.GearRulesTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "character armor remains restricted to its owner",
+          "generic earned armor fits all party members but not other slots"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.inventory.InventoryAndConsumableBoundaryTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "mealBuff_multipleApplicationsInARow_doesNotStackInfinitely_replacesCleanly",
+          "inventory_consumeItems_atomicRollbackOnPartialDeficit",
+          "questItemGrants_neverDropWhenInventoryHasManyItems",
+          "mealBuff_encounterProgression_decrementsUntilExpiry_andClears",
+          "inventory_zeroAndNegativeQuantityGuards_doesNotCorruptInventory"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.inventory.InventoryServiceTest",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "stackedRewardsPublishFreshCountsWithoutMutatingPreviouslyPublishedEntries",
+          "useItemAppliesBuffs",
+          "snapshotRemainsSafeWhileInventoryMutates",
+          "useItemRestoresResources",
+          "useItemConsumesSchematicAndReturnsResult",
+          "addItemNotifiesListeners",
+          "useItemReturnsNullWhenNotOwned"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.inventory.ModEquipmentRulesTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "restorePreservesQuantitiesAndPrefersExplicitBindingsOverLegacyClones",
+          "invalidLockedAndParentlessDestinationsRejectWithoutMutation",
+          "copiesEquipIndependentlyAndTransferRequiresAnExplicitSource",
+          "sameCharacterMovesRatherThanStacksAndStaleTransfersDoNotMutate",
+          "weaponElementOverridesModsAndFirstWeaponModOverridesSecond",
+          "spareCopiesCanBeCraftedOrScrappedWithoutTouchingAssignedCopies"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.leveling.CampaignXpCurveTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "main quest progression retains later skill tiers for later worlds"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.leveling.ExplorationXpAwarderTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "missing companion XP is seeded once and absent members receive nothing",
+          "loaded XP catches up without a battle and known skills are preserved",
+          "recruited companion retains catchup and earns its own skills after resume",
+          "quest XP immediately crosses multiple levels and unlocks skills",
+          "awarding XP never lowers an existing level",
+          "subthreshold and nonpositive awards do not grant premature unlocks"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.leveling.LevelingManagerTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "xpForSource returns source specific values",
+          "levelBounds exposes start and next thresholds",
+          "levelForXp returns correct level thresholds"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.milestone.MilestoneRuntimeManagerTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "unlockExitEffectUpdatesSessionStore",
+          "applyEffectsForDirectMilestoneUnlocksAbility"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.movement.EnemyMovementManagerTest",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "retreatGraceSuppressesAggressionUntilExpired",
+          "defeatedPartyIsRemovedAndPersistedStateRestoresExactly",
+          "leavingRoomResetsAggressionCountdown",
+          "aggressivePartyCountsDownAndAutoEngages",
+          "patrolMovesAlongRouteAndReversesAtEndpoint",
+          "inactiveQuestDoesNotExposeOrAdvanceParty",
+          "patrolWaitsWhenDestinationAlreadyHasFiveEnemyParties"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.node.NodeProgressionEvaluatorTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "revealedNodeUnlocksWhenMilestoneIsCompleted",
+          "hiddenTransitionNodeCannotBeEnteredFromHubUntilVisited"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.pacing.NarrativePacingAndTonalLinterTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "breatherBeats_mandatoryBreathersPrecedeActClimaxes",
+          "sacredMoments_zeroHumorPermittedNearPivotalBeats",
+          "questCadence_noDegenerateOneTaskMainQuests",
+          "conflictDensity_allWorldsMaintainAuthoredCombatPresence",
+          "tonalWhiplash_noGriefToHumorTransitionsWithoutBufferBeats"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.CampaignCatalogIntegrityTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "dunes retain ridge discovery after harvesting without advertising the retired grazer",
+          "reviewed world two persistent interactions remain named after local objectives",
+          "reviewed world two interactions are named in room prose",
+          "main quest catalog contains thirty quests with valid encounter references",
+          "verify enemy skills and combat readiness across all campaign encounters",
+          "combined local objectives keep persistent interactions without restoring completed tasks",
+          "ridge keeps shield inspection across stages without reopening retired objectives",
+          "verify all key debug scenario rooms resolve cleanly"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.CampaignEventIntegrationTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "room connection targets exist in the catalog",
+          "all thirty main quests complete through continuous events with save resume between worlds",
+          "event earned pre World four armor can be equipped and preserved without buying replacement",
+          "scripted campaign includes production rewards and saves a pre Titan checkpoint",
+          "partial main quest objectives resume from disk in every world"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.CampaignProvisionSourceTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "regionalPepperPurchaseCanCompletePulseCitrusAtItsDiscoveryStation",
+          "cookingIngredientsHaveExternalSourcesInsteadOfDependingOnTheirOwnRecipes",
+          "starterGearAndAnEarlierPurchasedBaseCanProduceTheResinUpgrade"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.CounterTuneSignalTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "canonicalCalibrationCancelsTheEntireTrace",
+          "diagnosticDirectionsAgreeWithTraceAdjustments",
+          "tolerancesAreInclusiveAndRejectJustOutsideValues",
+          "stagesRequirePreviouslyMatchedSignalsAndCannotHandshakeEarly"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.EconomyCatalogTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "stock resolves and direct cross shop resale cannot generate credits",
+          "shop funded crafting chains have no positive expected resale profit",
+          "returning from combat reports already awarded loot without granting it again",
+          "regional salvage funds both recipes and cannot be collected twice after restore",
+          "recipe quantities and outputs are valid catalog entries",
+          "renewable fishing catches use bounded explicit resale values"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.LegalRouteCampaignRunnerTest",
+        "tests": 30,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "crewPrototypeProducesEarnedCheckpoints",
+          "productionWorlds456CompletionistRoutesVerifyBranchesAndCredits",
+          "unseenCharlieResumesLegacyTrustAndRewardsOnlyOnceAcrossReload",
+          "world2InterruptedConfrontationCanRestartAfterSaveReload",
+          "productionWorld2CanEarnAMedkitReplacementFromZeroCredits",
+          "productionOpeningEarnsItsFirstApAndPreservesItsSingleSuit",
+          "productionWorld2CompletionistRouteFinishesAllTenQuests",
+          "authoredContainersNarrateBeforeRewardsAndDoNotPayTwice",
+          "world2IneligibleObjectiveActionDoesNotClaimCompletion",
+          "productionWorld2CanReplaceASpentEmergencyMedkitBeforeTreatingZeke",
+          "earnedWorld1LaunchCheckpointResumesThroughActualCombatAndSaveReload",
+          "sanctuaryJournalKeepsUnknownOccupantAndFutureStageOutOfTheOpening",
+          "world2SecondHalfTransceiverInspectsAndCollectedCacheRetiresAcrossReload",
+          "productionWorld1CompletionistRouteFinishesAllTenQuestsAndTheCartDetour",
+          "Nova improviser earned world one and two route buys and uses real talents",
+          "productionWorld2ReachesItsDepartureWithEarnedCrewAndSaveParity",
+          "productionWorld2OptionalPairsCanBeDefeatedWithEarnedCrewAndResources",
+          "public gear controls reject unowned gear and incompatible character weapons",
+          "Nova saboteur earned world one and two route buys and uses real talents",
+          "opening route earns combat victory and survives reload without assisted actions",
+          "productionWorld3CompletionistRoutesVerifyBothLedgerOutcomesAndReloads",
+          "crewBuildsAcrossSeedsProduceComparableCombatEvidence",
+          "unlocked public route buys a base catches components crafts and sells after Astra return",
+          "fresh game legal route traverses Worlds 1 through 6 to ms_game_complete with save reload checkpoints",
+          "bunkLightImmediatelyEndsOpeningFadeAndItsPresentationPause",
+          "productionWorld1CanRecoverIfTheWardenIsDefeatedBeforeReturningToJed",
+          "productionCrewCampaignEarnsItsOpeningSuppliesAndReachesCredits",
+          "productionOpeningCanFinishWhenThePlayerEngagesTheLoaderBeforeReadingItsStrip",
+          "productionWorld1ReachesTheWorld2HandoffWithEarnedResourcesAndSaveParity",
+          "world2Part1RestGatesAndReadStateSurviveRepeatUseAndReload"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.NavigationIntegrityTest",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "retainedLaunchRailCannotBeEnteredThroughAPlayableExit",
+          "worldThreeOrdinaryRoutesAreCardinalAndEveryRoomHasAnImmediateReturn",
+          "everyNodeMapAgreesWithItsCompassWithoutOverlappingRooms",
+          "worldFourRoutesAreCardinalReciprocalAndKeepEveryRoom",
+          "everyExitReturnsInTheOppositeDirectionExceptNamedShortcuts",
+          "bothWorldThreeFloorsRemainFullyWalkableWithoutBypassingTheHeistTransfer",
+          "cardinalArrivalsNeverCompeteForTheSameReturnSlot"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.QuestPayoutIntegrityTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "every quest completion path pays its advertised XP",
+          "inspecting grotto cache leaves the separate prism reward unsolved",
+          "world two film caches grant once including after session restore",
+          "scanning beach weeds does not prevent the separate tideglass quest payout",
+          "corporate espionage endings are mutually exclusive after restoring state",
+          "advertised item rewards match completion or prerequisite grants"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.SpecialExitIntegrityTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "ordinary world two movement is entirely cardinal",
+          "travel metadata names real connections and covers exceptional connections",
+          "world two landing positions align with cardinal links",
+          "every exceptional connection has a named reciprocal interaction"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.WeatherCatalogIntegrityTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "authored weather uses only rendered overlay ids",
+          "campaign environments do not infer weather",
+          "representative exposed and hazard rooms retain audited effects",
+          "sealed and sheltered rooms remain free of overlays"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.World1RecentChangesTest",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "oldClearedTrainerSaveRecoversWithoutRepeatingFight",
+          "oldCartBreachSurvivesResetSwitchMigration",
+          "partialProtocolSaveCanReopenChoiceAndFinish",
+          "registeringWithoutADrillResultDoesNotGrantCertification",
+          "cartAllowsCorrectRouteWithoutInspectionAndStaysOpenOnDisk",
+          "earlyDrillVictoryRegistersThroughBoggsOnce",
+          "protocolRequiresThawAndWrongOutputsOrDisconnectDoNotReward",
+          "oldCompletedCertificationMigrationDoesNotPayAgain",
+          "inspectingRailsDoesNotPermitAnUnroutedCartRelease",
+          "recordedEarlyWardenVictorySurvivesDiskAndRecoversWithoutPayingAgain",
+          "normalAndLegacyDrillsCompleteOnlyInTheirRooms",
+          "authoredRiotObjectiveIsOptionalAndThresholdAdvancesWithoutIt",
+          "trainerPresentationChangesNoCombatStatsOrRewards",
+          "retiredRelayEventsCannotGrantRewards"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.World2RefinementTest",
+        "tests": 17,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "solvedGateStatesRestoreForExistingSavesWithoutRewards",
+          "orionStillOffersBothSideQuestsAfterTheHangarIsInspected",
+          "kaelenHazardRemindersDoNotRepeatFirstMeetingSupplies",
+          "stasisRequiresCluesDecisionsConversationAndSeparateBridgeRecovery",
+          "tideglassDiscoveryUsesTheActualTidePools",
+          "migrationRepairsPrematureFlagsWithoutErasingEarnedProgress",
+          "kaelenFavorRequiresTheFullBundleAndPaysOnlyOnce",
+          "ventPatternRequiresTheMaintenanceGapAndThenAllowsTheHatch",
+          "sourceGateSupportsWrongChoicesClosingAndReopeningWithoutOpeningEarly",
+          "meganWaterFilterFavorRequiresBothMaterialsAndPaysOnceAfterReload",
+          "prismVisualsAgreeWithAuthoredSubmissionTolerances",
+          "drillFinishesOnlyAfterItsSceneAndResumesFromDiskOnce",
+          "optionalMuralNeedsCrystalsAndCorrectSocketDecisions",
+          "departureCanBeCancelledAndPendingDepartureResumesWithoutDuplicateRewards",
+          "beastCanRetryAfterDefeatRetreatAndAnOldConsumedEvent",
+          "localConversationLoopsHaveAnExitBeforeAndAfterTheirFavors",
+          "salvageReturnRouteRequiresDiscoveryAndRecoveredConduits"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.WorldOneProgressionAuditTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "cutter test refuses missing parts without consuming event then permits retry",
+          "completed fork migration consumes at most one spare coil across reloads",
+          "migration reopens stuck launch but preserves pending and completed launches",
+          "missing chime and failed consumption cannot grant splice milestone",
+          "relic cinematic resumes followup after restore",
+          "early console tap stays retryable after restore",
+          "sold opening part is restored once and parts are unsellable",
+          "launch with chime first reaches world two and grants once"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.Worlds36SafetyTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "arenaRequiresOrderedRoundsAndAllowsRetryWithoutCrossCredit"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.audit.World1PlaythroughAuditTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "play World 1 beginning to end and generate narrative audit report"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.audit.World2PlaythroughAuditTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "play World 2 beginning to end and generate narrative audit report"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.audit.World3PlaythroughAuditTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "play World 3 beginning to end and generate narrative audit report"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.audit.World4PlaythroughAuditTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "play World 4 beginning to end and generate narrative audit report"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.audit.World5PlaythroughAuditTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "play World 5 beginning to end and generate narrative audit report"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.playtest.audit.World6PlaythroughAuditTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "play World 6 beginning to end and generate narrative audit report"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.prompt.UIPromptManagerTest",
+        "tests": 13,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "dismiss callback can enqueue the next prompt without losing it",
+          "modal blockers wait for every owner and preserve queued tutorials and rewards",
+          "suspending toasts pauses item toasts while allowing tutorials",
+          "stale dismiss and unrelated collect all cannot skip a visible prompt",
+          "fieldMenuAllowsItsInstructionsButDefersRewardsAndUnrelatedTutorials",
+          "reward group finishes before a tutorial arriving after its first card",
+          "consumption feedback follows the scene before unlock tutorials and rewards",
+          "dismissing one acquisition advances within its sequence",
+          "collect all removes only the matching item sequence",
+          "individual item grants from the same busy period also stay together",
+          "Jed equipment offer follows every starter kit card",
+          "dialogue before receipt holds the entire group and mid-group pause preserves its remainder",
+          "tutorials take priority over queued item toasts"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.quest.InteractiveQuestBranchTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "ghostInTheShell_branchB_crewCovenantGuardianCovenant",
+          "ghostInTheShell_branchA_restoreIndependentGuardianDataShield",
+          "corporateEspionage_branchB_weaponizeLedgerForPhaseRounds",
+          "theHRRecord_branchB_broadcastRevocationFreeAllWorkers",
+          "theHRRecord_branchA_leaveReviewRoomDeleteBackups",
+          "qualityControl_branchA_releaseUnitsIntoWorkerTunnels",
+          "qualityControl_branchB_lineDefendersForRapidCapacitor",
+          "corporateEspionage_branchA_leakLedgerToWorkerTerminals"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.quest.QuestRuntimeManagerTest",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "progressBannerListsCompletedObjectiveNextObjectiveAndRemainingCount",
+          "skippedOptionalTaskIsNotMarkedCompletedWhenQuestEnds",
+          "completedOptionalTaskRemainsCompletedAndDoesNotFinishRequiredTask",
+          "stageAdvancementUpdatesState",
+          "finalTaskCompletionDoesNotEmitProgressBanner",
+          "markQuestCompletedMovesQuestToCompletedSessionState",
+          "optionalObjectiveDoesNotBlockStageProgression"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.quest.SideQuestPermutationIndependenceTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "world1_sideQuest_reverseOrder_sq05_and_sq04_before_sq01",
+          "auditAllWorlds_noCrossSideQuestDependencyLeaks",
+          "world6_sideQuestPermutations_forwardReverseAndShuffled_completeIndependently",
+          "world5_sideQuestPermutations_forwardReverseAndShuffled_completeIndependently",
+          "world4_sideQuestPermutations_forwardReverseAndShuffled_completeIndependently",
+          "world3_sideQuestPermutations_forwardReverseAndShuffled_completeIndependently"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.session.AstraTravelTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "disembark preserves exact boarding room and repairs inconsistent location ids",
+          "story milestones unlock routes without revealing future worlds",
+          "navigation targets match authored world hub node and room ownership",
+          "ship rooms share one node and all reach the cargo ramp",
+          "missing invalid and self referencing docks recover to an unlocked landing"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.session.CrewProgressionMigrationTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "battleRollbackAndEverySaveKindKeepMigrationIdempotent",
+          "largeCreditBalanceDoesNotOverflowDuringCompensationOrBackfill",
+          "freshGamesUseOnlyTheFourCrewTreesWithNoSeededApOrPurchases",
+          "completedRecruitmentSurvivesTemporaryPartySeparationWithoutInventingARecruit",
+          "frozenCompatibilityTableMatchesHistoricalCatalogAndKeepsRealAbilities",
+          "previousClaimsPrototypeReceiptsAndFutureVersionsAreNotPaidAgain",
+          "ngPlusMigratesOnceAndCarriesBuildButStartsNewCampaignClaims",
+          "compensationPreservesCoreSkillsAndBackfillsOnlyProvenNewAwards"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.session.CrewProgressionPacingTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "coreCampaignAndRequiredTrainingPayForOneSpecializationPerCrewBeforeTheFinale",
+          "remainingSideQuestAwardsAddTenApWithoutTurningRepeatableCombatIntoApFarming"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.session.GameSessionPersistenceTest",
+        "tests": 26,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "enemyPartyMovementStateRoundTripsWithoutAdvancingTime",
+          "chainedBattleKeepsNextEncounterWhenPreviousVictoryIsAcknowledged",
+          "everyAuthoredPendingCinematicCanRestartFromSavedSceneId",
+          "interruptedBattleSavesCheckpointUntilRewardsAndProgressionAreFinished",
+          "questProgressPersistsAcrossSaves",
+          "world1LaunchStatePersistsAcrossSlotAndAutosave",
+          "corruptAutosaveRecoversBackupOnFirstRead",
+          "clearedSlotCannotRecoverDeletedProgress",
+          "interruptedCinematicRestartsAfterDiskRestoreWithoutReplayingEarlierRewards",
+          "slotWritesCreateBackups",
+          "importLegacySave_capturesQuestAndMilestoneProgress",
+          "legacyModImportKeepsExplicitAssignmentsAheadOfPartyWideDefaults",
+          "unrecoverableSlotReportsCorruptionWithoutErasingEvidence",
+          "corruptSlotRecoversNewestReadableBackupAndRepairsPrimary",
+          "nodeProgressAndAstraReturnLocationPersist",
+          "clearingAutomaticSavesRemovesRecoveryCopies",
+          "quickSaveRoundTrip",
+          "servingCompanionAndAllMealStatsRoundTrip",
+          "unrecoverableAutosaveRetainsDamagedBytesAndAllowsNewSave",
+          "independentModBindingsAndOldDefaultCleanProgressRoundTrip",
+          "arcadeProgressPersistsWithoutDuplicatingClaims",
+          "tenNumberedPlaytestSavesStayIndependentFromAutosaveAndQuicksave",
+          "fishingJournalAndRewardMilestonesRoundTrip",
+          "tutorialAndUnlockStatePersists",
+          "slotInfo_returnsTimestampForSavedSlot",
+          "discoveredWeaknessesSurviveCheckpointAndSaveReload"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.session.GameSessionStateTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "fingerprintStableWhenQuestOrderingChanges",
+          "fingerprintChangesWhenStateDiffers"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.session.GameSessionStoreTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "visitingNodeAlsoRevealsAndUnlocksIt",
+          "unlockExitNormalizesKey"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.session.NewGamePlusContractEnforcementTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "ngPlus_resetsStoryProgress_whilePreservingLevelsCreditsAndEquipment",
+          "ngPlus_playthrough_world1_fullLoop_progressesWithoutStallOrPrematureCompletions",
+          "ngPlus_world2_sideQuestsAndDialogue_remainPristineAndUnblocked"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.session.NovaPrototypeProgressionTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "actualProtobufAndNgPlusPreserveBuildAndResetCampaignClaims",
+          "earnedAwardsAndPurchasesAreIdempotentAndFreeSkillsAreSeparate",
+          "recruitmentClaimsAwardOnceWithoutPayingForPartyRestoration",
+          "capstonesRequireFoundryAndNormalSessionsCannotBuyPrototypeNodes"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.session.OpeningNarrativeMigrationTest",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "derivesWorldTwoRidgeAndBridgeStateIdempotently",
+          "legacyRailSaveResumesAtPodControlsWithoutStartingTheLaunch",
+          "migratesDiscardedOpeningProgressToGroundedEquivalent",
+          "foundryReturnRouteBackfillsFromStoryEvidenceWithoutMovingOrPayingAgain",
+          "backfillsCompletedForkHandshakeWithoutDuplicatingRewards",
+          "tideglassRepairUsesEventReceiptsWithoutGrantingRewards",
+          "earlyWardenEvidenceRepairsOnlyPhysicalAndQuestProgressWithoutRewards"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.session.ProcessDeathAndRestorationTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "processDeath_midCombat_restoresPristinePreBattleCheckpoint",
+          "serialization_multipleCycles_isStrictlyIdempotent",
+          "processDeath_fullCampaignState_restoresAllProgressionAndBuffsLosslessly"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.session.RetiredCompanionMigrationTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "authoredPlayableRosterAndEquipmentExcludeOllie",
+          "oldPartyAndCheckpointRetireOllieWithoutLosingItemsOrStory",
+          "oldOllieLeaderFallsBackToNovaAndCannotBeRecruitedAgain"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.telemetry.PlaytestTelemetryTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "recordsQuestDurationCombatRetriesAndFunScoreWithoutNarrativeText",
+          "rejectsScoresOutsideTheFivePointScale"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.tutorial.OpeningEquipmentGuideTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "manualKitPolicyDoesNotChangeOtherRewardsOrRecruitedCharacters",
+          "legacyEquippedSaveKeepsItsLoadoutAndDoesNotNeedTheNewGuide"
+        ]
+      },
+      {
+        "name": "com.example.starborn.domain.tutorial.TutorialRuntimeManagerTest",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "showOnceEnqueuesSinglePrompt",
+          "showOnceInvokesDismissCallback",
+          "completingQueuedTutorialDoesNotDismissUnrelatedCurrentPrompt",
+          "shippedDelayedEventScriptsKeepOrderForFastAndSlowReaders",
+          "cancellingTutorialsPreservesRewardsAndDoesNotCompleteSkippedSteps",
+          "runtimeStateReflectsPersistedSessionData",
+          "tutorialHeadingsUseReadablePlayerFacingNames",
+          "completingScriptDiscardsQueuedStepsButKeepsUnrelatedPrompt",
+          "playScriptQueuesStepsAndInvokesCompletion",
+          "cancellingQueuedTutorialsPreservesActiveReward"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.arcade.domain.ArcadeServiceTest",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "orbitalDefenseDiscoveryAndRewardsAreClaimedOnce",
+          "restoringAllCabinets_triggersMasterMilestone",
+          "canopyHopperDiscoveryAndRewardsAreClaimedOnce",
+          "tokensAreAwardedOnScoreSubmission",
+          "harmonicPulseDiscoveryAndRewardsAreClaimedOnce",
+          "discoveryIsIdempotent",
+          "slagCatcherDiscoveryAndRewardsAreClaimedOnce",
+          "spireInfiltratorDiscoveryAndRewardsAreClaimedOnce",
+          "scoreRewardsAreCumulativeAndClaimedOnce"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.arcade.games.canopyhopper.CanopyHopperEngineTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "reset_restoresFreshRun",
+          "fixedStepSimulation_isDeterministicAcrossCadences",
+          "forwardHop_increasesScore"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.arcade.games.deepmine.DeepMineEngineTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "uncontrolledProbe_eventuallyCrashes",
+          "reset_restoresFreshRun",
+          "fixedStepSimulation_isDeterministicAcrossRenderCadences"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.arcade.games.harmonicpulse.HarmonicPulseEngineTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "fixedStepSimulation_isDeterministic",
+          "reset_restoresFreshTrack"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.arcade.games.orbitaldefense.OrbitalDefenseEngineTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "fixedStepSimulation_isDeterministic",
+          "firingProjectiles_createsBullets",
+          "reset_restoresFreshDefenseSector"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.arcade.games.slagcatcher.SlagCatcherEngineTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "fixedStepSimulation_isDeterministic",
+          "directTouchInput_steersPaddle",
+          "reset_restoresFreshShift"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.arcade.games.spireinfiltrator.SpireInfiltratorEngineTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "fixedStepSimulation_isDeterministic",
+          "movingAndEatingNode_increasesScore",
+          "reset_restoresFreshInfiltrationRun"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.combat.CombatViewModelTest",
+        "tests": 21,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "readyEnemyCannotActWhilePlayerCommandMenuIsOpen",
+          "duplicateEnemyIdsCreateUniqueCombatantIdsAndCanonicalResults",
+          "weaknessHitShowsCooldownRewardBanner",
+          "consumeLevelUpSummariesClearsQueue",
+          "testPassiveSkillTreeStatBonusesAreAppliedToCombatant",
+          "dismissingPlayerCommandMenuDefersReadyEnemyAction",
+          "lootDropsAreAddedToInventoryOnVictory",
+          "scanDiscoversEnemyWeaknessWithoutDamage",
+          "enemyBasicActionClearsConsecutiveSkillPenalty",
+          "victoryRewardSkipsDropsWhenChanceFails",
+          "encounterExtraDropsAreGrantedToSpecificInstance",
+          "faultedLoaderTutorialGuidesArcTetherWeaknessAndPreventsSkipping",
+          "encounterOverrideDropsReplaceBaseTable",
+          "victoryRewardCanonicalizesLootIds",
+          "authoredFoundryRepairTargetsSquadAndCoolingTargetsCaster",
+          "inspectionTransfersToReadyCharacterWithoutLosingEnemyFocus",
+          "enemyInspectionPausesIndependentlyAndAutomaticFocusDoesNotInspect",
+          "heavyLiftingTutorialGuidesBlockedHitThenGuardBreak",
+          "readyEnemyCanActBehindReadyPlayerWhenMenuIsNotOpen",
+          "heavyLiftingTutorialPausePreventsReadyEnemyTurn",
+          "endingBattleDuringTutorialClearsPendingExplanationAndRecordsCompletion"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.combat.EnemyNameWidthAuditTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "measureEveryEnemyUsingAndroidSansSerifSemibold"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.combat.EnemySupportDecisionTest",
+        "tests": 13,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "healing rejects explicit enemy targets",
+          "repair on cooldown is excluded from enemy decisions",
+          "Avatar recalibrates only after barrage without damage or permanent recovery loop",
+          "duplicate golems recover independently and jammed recovery cannot bypass skill gates",
+          "wounded support AI repairs itself and processor heals the enemy",
+          "Titan vents after either heavy attack and exposes only itself",
+          "welder repairs living squad members not opponents and respects finite supplies",
+          "authored jammed status blocks enemy support skills",
+          "protected wounded enemy attacks instead of refreshing basic defense",
+          "support AI does not waste repair at full health",
+          "final boss opens and recovers with a non damaging setup action",
+          "radiator exposure reduces physical defense with identical damage rolls",
+          "party ration ignores single selection heals living allies and consumes once"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.combat.FoundryCombatDriverTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "completeFoundryFightsAndExportEvidence"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.combat.FoundryLoadoutsTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "purchasedFixtureUsesCompatibleAvailableGearAndEarnedSkills",
+          "apBracketSpendsOnlyAdministratorRewardOnLegalRootNodes"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.combat.FoundryProgressionAuditTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "mainQuestXpListingsReconcileWithCallbacksAndDialogue",
+          "lowerXpFixtureDoesNotGrantLevelNineSkills",
+          "newlyRecruitedMemberInheritsLeaderProgressAndEarnsSubsequentXp",
+          "authoredCutterCallbackAwardsXpOnlyAfterCompletionAndOnlyOnce"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.combat.FoundryStatusTimingAuditTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "disruptionSurvivesAllyActionsAndCrashSkipsExactlyOneEnemyTurn",
+          "selfEffectsRefreshWithoutImmediateTickAndPersistAcrossOtherActors"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.combat.MultiEncounterAttritionGauntletTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "world2AuthoredPairsAreSurvivableForNovaAndZekeWithoutGrinding",
+          "world2UndercityGauntlet_isBeatableWithoutStarvation",
+          "world4FoundryGauntlet_withAuthoredCampRest_beatsTitanWalkerAcrossAllSeeds",
+          "world1MiningDepthsGauntlet_isBeatableWithoutStarvation",
+          "world2SalvageComesFromActualVictoriesWithoutLuckyDrops"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.combat.OpeningCombatRuntimeTest",
+        "tests": 17,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "jammed and silence block skills with status explanation and recover when removed",
+          "starting skill command is accepted by production combat runtime",
+          "finale enemy applies authored status and combat turns expire it",
+          "wounded authored support enemy heals through production ATB and targeting",
+          "unavailable skill explanations match availability gates",
+          "workshop loft reward survives restore and applies only to its equipped owner",
+          "superseded lunges own only one pause and ignore stale completion",
+          "seeded basic attack spending scenarios replay exactly",
+          "budget equipped skill policy carries resources through a constructed encounter sequence",
+          "world four party exposes earned skill tiers against Titan Walker",
+          "world four Orion can execute his level nine command through production ATB",
+          "BurgQuest exact curated combat fixtures resolve across seeds",
+          "authored group support reaches living party members without helping enemies or reviving allies",
+          "combat rewards preserve a level earned under the previous curve",
+          "opening fixture uses solo Nova and only her starting skill",
+          "production ATB lets the loader act without player input",
+          "background pause freezes ATB and foreground resumes it"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.crafting.CraftingViewModelTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "tutorialStepsThroughSlotBaseSlotComponentAndSynthesize"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.enemy.EnemyPresentationSizingTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "raw enemy tiers resolve to three presentation classes",
+          "combat scale increases with threat class",
+          "exploration scale increases with threat class"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.AstraDiscoverabilityStateTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "common room stays focused across arcade progression and film archive remains repeatable",
+          "ship rooms have at most three authored interactions and recreation has one entrance"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.ExplorationNoticePolicyTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "onlyRelevantInstructionCanAppearOverFieldMenu",
+          "inspectionPrecedesRewardAndModalScenesHideBoth"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.ExplorationViewModelTest",
+        "tests": 22,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "openingInventoryTabBeforeJedDoesNotQueueBagTutorial",
+          "returningFromFishingDoesNotDuplicateSecuredCatch",
+          "astraBridgeRejectsFutureRoutesAndPersistsSuccessfulTransit",
+          "astraStayAboardKeepsNewDockForCargoRamp",
+          "burgQuestSessionPreventsAstraDisembarkAndShowsPopup",
+          "enqueueLevelUpsPromotesSequentially",
+          "astraRampActionRecoversMissingDockAndBoardingCanBeRepeated",
+          "fullMapCellsCoverEntireNodeAndPreserveDiscoveryState",
+          "closingFieldMenuClearsMenuOwnedNestedPresentation",
+          "openingEquipmentOfferOpensPartyAndRequiresBothActualEquipActions",
+          "burgQuestSessionHidesGalleyKitchenetteInCommonRoom",
+          "restPartyRestoresCurrentPartyHpToMax",
+          "laterDefersEquipmentTeachingWithoutCompletingOrRepeatingTheOffer",
+          "disabledTutorialsStillOfferEquipmentWithoutAnInstructionalOverlay",
+          "astraCurrentWorldCannotResetExactBoardingLocation",
+          "openingInventoryTabAfterJedQueuesBagTutorial",
+          "initialLoadKeepsQueuedTutorialVisibleAndDismissible",
+          "unlockingOneWayExitDoesNotUnlockAnotherRoomsReturnSlot",
+          "astraDeckIsConnectedAndOnlyCargoRampDisembarksToExactBoardingRoom",
+          "unlockedExitClearsBlockedDirection",
+          "tutorialScriptsTriggeredForQuestStage",
+          "dialogueMusicLifecycleTransientAndPersistent"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.NarrativeRuntimeRulesTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "milestoneNegationHidesExhaustedActions",
+          "authoredBunkPanelIsHiddenUntilLitAndAfterOpening",
+          "stateAndMilestoneVisibilityHandlesMissingFalseTrueAndPersistedValues",
+          "bunkSleepingShelfRequiresLight",
+          "bunkInlineActionsAreLimitedToBunkLightAndDoorControlPanel",
+          "bunkPossessionsStayDiscoverableAfterOpeningTheDoorButRemainHiddenInTheDark"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.WorldFiveDiscoverabilityStateTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "quest terminology names authored world five rooms and actions",
+          "deep station references survive independent milestones and event task retirement",
+          "firewall partial saves retain usable references and completed tasks prevent replay",
+          "graviton puzzle stays discoverable across independent anchor progress and retires when solved",
+          "world five completion events exclusively own successor handoffs",
+          "concourse mirror and security references respect independent action gates and event history",
+          "remaining orbital rooms preserve actionable prose and retire completed events after restore",
+          "dock and gallery retain usable references across independent pressure and quest progress"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.WorldFourCoolingDiscoverabilityTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "cooling and core variants preserve usable references in partial milestone states",
+          "cooling and decon prose names visible actions"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.WorldFourDiscoverabilityStateTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "conveyor and conditioning descriptions retain interactions across independent milestones",
+          "overlook forge controls and reject bay retain inspection references",
+          "quest terminology names authored world four rooms and actions"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.WorldOneDiscoverabilityStateTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "shunt datapad is named whenever power and quest gates expose it",
+          "launch journal distinguishes Zeke handoff from console activation",
+          "dark and partial states retain references for executable interactions",
+          "clearance instructions name the hub destination and pre-badge booth route",
+          "mine instructions distinguish elevator route from bulwark detour"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.WorldSixDiscoverabilityStateTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "memory references survive quest retirement and independent Aethel milestones",
+          "Jed legacy references survive independent milestones and retired tasks",
+          "world six completion events exclusively own successor handoffs",
+          "quest terminology names authored world six rooms and actions",
+          "finale and Gh0st references remain reachable in independent milestone and task states",
+          "remaining Source references preserve partial progress and intentional epilogue replay"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.WorldThreeDiscoverabilityStateTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "reviewed rooms name visible actions across milestone combinations",
+          "quest terminology names authored world three rooms and actions",
+          "scan omissions before Lens milestone are blocked and completion prose exposes them"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.WorldTwoDiscoverabilityStateTest",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "side quest journal locations match authored world two actions",
+          "main quest journal names world two handoff rooms and authored actions",
+          "completed ridge quest repairs absent flags but milestone alone does not",
+          "confirmed launch without inspection leaves console visible but its event unusable",
+          "ridge migrated partial states name every visible executable objective",
+          "ridge description priority covers every raw flag and milestone combination",
+          "ridge progressive states expose exactly the current objective and shield",
+          "emitter events select completed prose and retire their actions together",
+          "all emitter milestone combinations distinguish visibility from event usability",
+          "ridge task migration restores each corresponding flag independently"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.ui.DialogueVoiceProfileTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "nonCoreSpeakersStillUseFallbackProfiles",
+          "corePartySpeakersUseCharacterMurmurProfiles",
+          "characterMurmursKeepStableCuePrefixes"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.ui.ExplicitActionReferenceTest",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "shipped debug pilot resolves custom label to authored action",
+          "special travel actions append explicit clickable paths",
+          "explicit labels choose exact targets and preserve lock hints",
+          "hidden unknown and ambiguous references remain plain text without accidental fallback",
+          "long inspect names and arcade discoveries remain accessible in the prose",
+          "rest controls never turn bed or cooking prose into actions but quest objects stay clickable",
+          "legacy matching NPC markers and repeated explicit labels coexist"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.ui.InspectionReadStateTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "passiveInspectionsPersistButChangedInformationBecomesUnread",
+          "journalUsesActualCampaignNames",
+          "fishingCatchCanCrossAndroidSavedStateAndSerializationWithoutLosingDeliveryFlags"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.ui.RoomDescriptionResolverTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "darkDescriptionTakesPriorityOverVariants",
+          "fallsBackToBaseDescriptionWhenNoVariantMatches",
+          "selectsFirstMatchingStateVariant",
+          "selectsMilestoneVariantAndHonorsForbiddenMilestones",
+          "milestoneVariantCanReplaceRoomBackground"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.ui.menu.FieldMenuDesignTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "fieldMenuUsesStableSystemPalette"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.ui.tabs.LoadoutPresentationTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "missing equipment explains why mods cannot be used",
+          "equipped or non mod slots do not show missing equipment hint"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.viewmodel.ExplorationNodeVisitTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "enteringAdminLobbyMakesTransitionNodeAvailableForHubReturn",
+          "roomWithoutHubNodeDoesNotChangeProgression"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.viewmodel.helpers.MapStateBuilderTest",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "externalExitsStayVisibleWhenBlockedWithoutAddingRemoteRooms",
+          "previewAndDarkRoomsHideServicesThreatsAndHubDestinations",
+          "buildMinimapState_showsOpenCurrentRoomNeighborsAsPreviewWithoutDiscoveringThem",
+          "oneWayArrivalDoesNotInventAReturnHint",
+          "buildMinimapState_doesNotPreviewBlockedCurrentRoomNeighbors",
+          "reciprocalDirectionDoesNotShareAnUnrelatedDestinationsGate",
+          "undiscoveredPreviewAndDarkRoomsDoNotRevealTheirExternalExits",
+          "restAndCookingAreSeparateServices",
+          "longConnectionsContinueBeyondEitherEndOfTheMinimapWindow"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.exploration.viewmodel.helpers.NodeExitResolverTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "hidden destination is anonymous until revealed or visited",
+          "stale intra node and missing destination records produce no marker",
+          "one way connection does not imply a return exit",
+          "all authored node transitions resolve without importing neighboring rooms"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.hub.HubAstraTravelTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "map boarding and disembarking preserve the regional map",
+          "legacy ship hub always has a usable disembark option",
+          "regional boarding enters cargo ramp and returns to the exact location"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.hub.HubMapLayoutTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "every hub and destination has an authored visible ground anchor",
+          "portrait map fills the screen with no letterboxing and matching anchor transform",
+          "destination area fits between controls at compact and enlarged text heights"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.mainmenu.BurgQuestDemoTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "fixed loadouts resolve assets and discard inherited debug grants",
+          "showcase catalog is honest and combat comes first",
+          "sampler and standalone launches preserve scenario ids without sharing homecoming intent"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.mainmenu.DebugScenarioCatalogTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "catalog covers every authored hub and each scenario category",
+          "literal granted items exist and recipe sandboxes have valid ingredients",
+          "literal seeded rooms and quest stages exist",
+          "every menu entry has a launcher or authored hub",
+          "scenario ids are unique and searchable fields are populated"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.mainmenu.MainMenuSaveSlotsTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "titleLoadGameListsAndLoadsTheTenthNumberedSave"
+        ]
+      },
+      {
+        "name": "com.example.starborn.feature.shop.ShopViewModelTest",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "aliasGateUsesCurrentMilestonesWithoutWaitingForCollectors",
+          "explicitResaleValueDoesNotChangePurchasePrice",
+          "repeatedSalesWithoutCollectorUpdatesCannotPayTwice",
+          "unstockedCatalogItemCannotBePurchased",
+          "buyItemConsumesCreditsAndAddsInventory",
+          "saleCannotOverflowCreditBalanceOrConsumeStock",
+          "sellItemRestoresCreditsAndRemovesInventory",
+          "purchaseByAliasImmediatelyPersistsInventory",
+          "overflowingPurchaseDoesNotGrantFreeItems",
+          "sellItemHonorsUnsellableFlag"
+        ]
+      },
+      {
+        "name": "com.example.starborn.navigation.ScreenAwakePolicyTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "everyGameplayDestinationKeepsScreenAwake",
+          "mainMenuAndUnresolvedRoutesFollowDeviceTimeout"
+        ]
+      },
+      {
+        "name": "com.example.starborn.ui.dialogs.AbilityCooldownLabelTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "overchargePreviewMatchesOneTurnRefund",
+          "activeCooldownIsNotReducedByCurrentMomentum",
+          "availableAbilityDescribesCooldownAfterUse"
+        ]
+      },
+      {
+        "name": "com.example.starborn.ui.dialogs.AbilityPowerLabelTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "damagePowerDescribesTheMultiplierRatherThanPromisingFlatDamage",
+          "healingAndUtilityUseTheirActualUnits"
+        ]
+      },
+      {
+        "name": "com.example.starborn.ui.dialogs.AbilityTargetLabelTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "labelsDescribeSelectionWithoutGuessingEffectRecipients"
+        ]
+      },
+      {
+        "name": "com.example.starborn.ui.navigation.BackButtonTrappingTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "combatBackHandler_whenModalOrTargetingActive_cancelsPromptWithoutLeavingBattle",
+          "explorationBackHandler_unwindsDialoguePromptBeforeMenuOverlay",
+          "combatRootBackHandler_isAlwaysTrapped_preventingMidFightBackstackExit",
+          "shopBackHandler_unwindsPendingTransactionDialogsBeforePoppingShop",
+          "explorationBackHandler_unwindsInventoryTargetingBeforeOverlay",
+          "explorationBackHandler_unwindsDeepNestedModalsStrictlyInPriorityOrder"
+        ]
+      }
+    ]
+  },
+  "focused_desktop": {
+    "totals": {
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "suites": [
+      {
+        "name": "com.example.starborn.desktop.DesktopContentConsistencyTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "desktopStartsFromSharedAndroidPolicy",
+          "sharedAstraCatalogIsCompleteAndReferencesAuthoredEntities",
+          "debugStartingGearUsesOriginalItems",
+          "itemDetailsDoNotInventAbsentValues",
+          "desktopNewGamePlusStartsOriginalQuestAfterRestoringItsSeed",
+          "itemDetailsUseProductionPercentagePointsForWorldThreeRewards",
+          "itemDetailsIncludeCombatPropertiesAndResolveAuthoredNames",
+          "newGamePlusPreservesProgressionAndResetsStory"
+        ]
+      },
+      {
+        "name": "com.example.starborn.desktop.World3NavigationPublicTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "everyWorldThreeRoomCanBeWalkedIntoAndBackOutThroughCardinalControls",
+          "blackSiteLaserGateStillRequiresItsConsoleAndAllowsReturnAfterReload",
+          "savesInsideFormerDiagonalBranchesReloadWithWorkingSwipeReturns"
+        ]
+      },
+      {
+        "name": "com.example.starborn.desktop.World3PublicInteractionTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "prismRetrySaveLoadAndLensWarningLeadToOneAwardAndEscalation",
+          "earlyMurderEvidenceSurvivesEarlierTimelineReloadAndPaysOnce",
+          "serviceLiftMakesBothDelayedQuestReturnsPossibleAcrossSaveLoad",
+          "mikaCannotSkipTraceAndLegacyShortcutCanBeUsedTwice",
+          "guestRegistryDeliversCuratorSceneThroughVisibleAction"
+        ]
+      },
+      {
+        "name": "com.example.starborn.desktop.World4NavigationPublicTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "springsStoryOpensPermanentWalkbackAndLegacyReloadKeepsItWithoutAnotherReward",
+          "allSeventyFourFoundryRoomsHaveWorkingCardinalReturnTravel",
+          "formerDiagonalBranchesReloadWithImmediateCardinalReturns",
+          "optionalSmelterKeepsItsCoolantGateAndSavedReturn"
+        ]
+      },
+      {
+        "name": "com.example.starborn.desktop.Worlds36ProgressionSafetyTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "recordCurrentRuntimeReadiness"
+        ]
+      },
+      {
+        "name": "com.example.starborn.desktop.Worlds456PublicInteractionTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          "crucibleDefeatCallbackAndReloadAllowTheSameRoundToRestart",
+          "pendingEndingResumesAfterFreshRuntimeAndCreditsCannotPayTwice",
+          "fullNpcNamesResolveThorneAndValeAtTheirCurrentQuestScenes",
+          "bulkheadMistakeLeaveAndReloadPreserveRetryWithoutAwardingProgress",
+          "phantomSceneAndSpringsConversationAwardTheKeyOnlyAfterDialogue"
+        ]
+      }
+    ]
+  }
+}

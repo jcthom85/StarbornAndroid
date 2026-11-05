@@ -1,0 +1,3468 @@
+{
+  "rooms": {
+    "foundry_cooling_springs": {
+      "before": {
+        "id": "foundry_cooling_springs",
+        "environmental_effects": [
+          {
+            "id": "vent_mist",
+            "preset": "machinery.vent_mist",
+            "intensity": 0.3,
+            "emitters": [
+              {
+                "x": 0.18,
+                "y": 0.68,
+                "angle_degrees": -78
+              },
+              {
+                "x": 0.78,
+                "y": 0.69,
+                "angle_degrees": -104
+              }
+            ]
+          }
+        ],
+        "env": "foundry",
+        "weather": "steam",
+        "title": "Cooling Springs",
+        "background_image": "images/rooms/world_4/foundry_cooling_springs.webp",
+        "description": "Factory noise fades in this hidden maintenance pocket. A steam pool and [action:cooling basin fishing|cooling basin] collect mineral runoff; a magma regulator pulses beside a salvaged cooling bypass. A worker tablet lies wrapped in a coolant-stained scarf beside the pool.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "foundry_slag_landing",
+          "south": "foundry_lava_tube_bypass",
+          "southeast": "foundry_waste_intake",
+          "west": "foundry_cooling_springs_scale_01"
+        },
+        "pos": [
+          1,
+          2
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The worker tablet's last ping has gone quiet. Gh0st's override key and recovered coolant rig cannot make the factory merciful. The magma regulator and salvaged cooling bypass remain beside the steam pool, no longer a hiding place. Ripples move through the [action:cooling basin fishing|cooling basin].",
+            "requires_milestones": [
+              "ms_w4_springs_regrouped",
+              "ms_w4_worker_traced"
+            ]
+          },
+          {
+            "description": "The cooling springs are quiet after the worker tablet's last ping. The engineer is gone, but the recovered coolant rig makes the maintenance pocket feel less like a dead end. The magma regulator and salvaged cooling bypass remain beside the steam pool. Ripples move through the [action:cooling basin fishing|cooling basin].",
+            "requires_milestones": [
+              "ms_w4_worker_traced"
+            ]
+          },
+          {
+            "description": "Gh0st's override key is in Nova's kit; the factory waits beyond the airlock. The springs offer no hiding place. A magma regulator and salvaged cooling bypass flank the steam pool. A worker tablet lies wrapped in a coolant-stained scarf. Ripples move through the [action:cooling basin fishing|cooling basin].",
+            "requires_milestones": [
+              "ms_w4_springs_regrouped"
+            ]
+          },
+          {
+            "description": "Steam curls around Gh0st as he weighs the Phantom records, refusing to let them define him. The magma regulator and salvaged cooling bypass flank the steam pool. A worker tablet lies wrapped in a coolant-stained scarf. Ripples move through the [action:cooling basin fishing|cooling basin].",
+            "requires_milestones": [
+              "ms_w4_phantom_records_found"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "steam pool",
+            "type": "generic",
+            "action_event": "w4_mq17_regroup_springs_scene",
+            "condition_unmet_message": "A rare quiet pocket in the Foundry heat."
+          },
+          {
+            "name": "worker tablet",
+            "type": "generic",
+            "action_event": "w4_sq17_find_worker",
+            "requires_milestones": [
+              "ms_w4_worker_ping_traced"
+            ],
+            "condition_unmet_message": "The cracked tablet pings from beside a maintenance pool, wrapped in a scarf that smells faintly of coolant."
+          },
+          {
+            "name": "salvaged cooling bypass",
+            "type": "generic",
+            "action_event": "w4_sq18_build_bypass",
+            "requires_milestones": [
+              "ms_w4_mechs_salvaged"
+            ],
+            "condition_unmet_message": "The springs need intact actuators before Nova can build a bypass."
+          },
+          {
+            "name": "cooling basin fishing",
+            "type": "fishing",
+            "zone_id": "foundry_cooling_runoff",
+            "condition_unmet_message": "A blue condensation basin where heat-resistant fish gather."
+          },
+          {
+            "name": "magma regulator",
+            "type": "tuning_puzzle",
+            "puzzle_id": "w4_magma_conduit_tune",
+            "requires_milestone_not_set": "ms_relic_w4_magma_solved",
+            "condition_unmet_message": "Superheated magma pulses through heavy adamantine valves."
+          }
+        ],
+        "special_exits": {
+          "southeast": "Take the passage to Waste Intake"
+        }
+      },
+      "after": {
+        "id": "foundry_cooling_springs",
+        "environmental_effects": [
+          {
+            "id": "vent_mist",
+            "preset": "machinery.vent_mist",
+            "intensity": 0.3,
+            "emitters": [
+              {
+                "x": 0.18,
+                "y": 0.68,
+                "angle_degrees": -78
+              },
+              {
+                "x": 0.78,
+                "y": 0.69,
+                "angle_degrees": -104
+              }
+            ]
+          }
+        ],
+        "env": "foundry",
+        "weather": "steam",
+        "title": "Cooling Springs",
+        "background_image": "images/rooms/world_4/foundry_cooling_springs.webp",
+        "description": "Factory noise fades in this hidden maintenance pocket. A steam pool and [action:cooling basin fishing|cooling basin] collect mineral runoff; a magma regulator pulses beside a salvaged cooling bypass. A worker tablet lies wrapped in a coolant-stained scarf beside the pool.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "foundry_slag_landing",
+          "south": "foundry_lava_tube_bypass",
+          "west": "foundry_cooling_springs_scale_01"
+        },
+        "pos": [
+          1,
+          2
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The worker tablet's last ping has gone quiet. Gh0st's override key and recovered coolant rig cannot make the factory merciful. The magma regulator and salvaged cooling bypass remain beside the steam pool, no longer a hiding place. Ripples move through the [action:cooling basin fishing|cooling basin].",
+            "requires_milestones": [
+              "ms_w4_springs_regrouped",
+              "ms_w4_worker_traced"
+            ]
+          },
+          {
+            "description": "The cooling springs are quiet after the worker tablet's last ping. The engineer is gone, but the recovered coolant rig makes the maintenance pocket feel less like a dead end. The magma regulator and salvaged cooling bypass remain beside the steam pool. Ripples move through the [action:cooling basin fishing|cooling basin].",
+            "requires_milestones": [
+              "ms_w4_worker_traced"
+            ]
+          },
+          {
+            "description": "Gh0st's override key is in Nova's kit; the factory waits beyond the airlock. The springs offer no hiding place. A magma regulator and salvaged cooling bypass flank the steam pool. A worker tablet lies wrapped in a coolant-stained scarf. Ripples move through the [action:cooling basin fishing|cooling basin].",
+            "requires_milestones": [
+              "ms_w4_springs_regrouped"
+            ]
+          },
+          {
+            "description": "Steam curls around Gh0st as he weighs the Phantom records, refusing to let them define him. The magma regulator and salvaged cooling bypass flank the steam pool. A worker tablet lies wrapped in a coolant-stained scarf. Ripples move through the [action:cooling basin fishing|cooling basin].",
+            "requires_milestones": [
+              "ms_w4_phantom_records_found"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "steam pool",
+            "type": "generic",
+            "action_event": "w4_mq17_regroup_springs_scene",
+            "condition_unmet_message": "A rare quiet pocket in the Foundry heat."
+          },
+          {
+            "name": "worker tablet",
+            "type": "generic",
+            "action_event": "w4_sq17_find_worker",
+            "requires_milestones": [
+              "ms_w4_worker_ping_traced"
+            ],
+            "condition_unmet_message": "The cracked tablet pings from beside a maintenance pool, wrapped in a scarf that smells faintly of coolant."
+          },
+          {
+            "name": "salvaged cooling bypass",
+            "type": "generic",
+            "action_event": "w4_sq18_build_bypass",
+            "requires_milestones": [
+              "ms_w4_mechs_salvaged"
+            ],
+            "condition_unmet_message": "The springs need intact actuators before Nova can build a bypass."
+          },
+          {
+            "name": "cooling basin fishing",
+            "type": "fishing",
+            "zone_id": "foundry_cooling_runoff",
+            "condition_unmet_message": "A blue condensation basin where heat-resistant fish gather."
+          },
+          {
+            "name": "magma regulator",
+            "type": "tuning_puzzle",
+            "puzzle_id": "w4_magma_conduit_tune",
+            "requires_milestone_not_set": "ms_relic_w4_magma_solved",
+            "condition_unmet_message": "Superheated magma pulses through heavy adamantine valves."
+          }
+        ]
+      }
+    },
+    "foundry_waste_intake": {
+      "before": {
+        "id": "foundry_waste_intake",
+        "env": "foundry",
+        "special_exits": {
+          "northeast": "Descend into Crusher Throat",
+          "northwest": "Return to Cooling Springs"
+        },
+        "weather": "gas",
+        "title": "Waste Intake",
+        "background_image": "images/rooms/world_4/foundry_waste_intake.webp",
+        "description": "Pistons hammer scrap toward the factory interior. Cooling vent controls flank a waste intake brake beneath a worker maintenance ping. Thermal glass shields a Project Phantom terminal; ammo crate beta, a scrap mech pile and a wrecked loader stash crowd the lava's edge.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "slag_golem",
+          "magma_drone"
+        ],
+        "enemy_parties": [
+          [
+            "slag_golem"
+          ],
+          [
+            "slag_golem",
+            "magma_drone"
+          ]
+        ],
+        "connections": {
+          "west": "foundry_slag_river",
+          "north": "foundry_intake_overlook",
+          "northwest": "foundry_cooling_springs",
+          "east": "foundry_service_airlock",
+          "northeast": "foundry_waste_intake_scale_01"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Project Phantom terminal stands open; ammo crate beta is gone. The stripped scrap mech pile cools by a wrecked loader stash. Dominion's intake keeps hammering. Cooling vent controls flank a waste intake brake beneath a worker maintenance ping.",
+            "requires_milestones": [
+              "ms_w4_phantom_records_found",
+              "ms_w4_crate_beta_destroyed",
+              "ms_w4_mechs_salvaged"
+            ]
+          },
+          {
+            "description": "Pistons grind ammo crate beta into slag. Cooling vent controls flank a waste intake brake beneath a worker maintenance ping. Thermal glass shields a Project Phantom terminal; a scrap mech pile and a wrecked loader stash crowd the lava's edge.",
+            "requires_milestones": [
+              "ms_w4_crate_beta_destroyed"
+            ]
+          },
+          {
+            "description": "The scrap mech pile is stripped. Cooling vent controls flank a waste intake brake beneath a worker maintenance ping. Thermal glass shields a Project Phantom terminal; ammo crate beta and a wrecked loader stash remain beside the hammering pistons.",
+            "requires_milestones": [
+              "ms_w4_mechs_salvaged"
+            ]
+          },
+          {
+            "description": "The Project Phantom terminal exposes Elara and Gh0st's past. Pistons keep hammering beside ammo crate beta, a scrap mech pile and a wrecked loader stash. Cooling vent controls flank a waste intake brake beneath a worker maintenance ping.",
+            "requires_milestones": [
+              "ms_w4_phantom_records_found"
+            ]
+          },
+          {
+            "description": "Hacked vents cool the airlock; pistons expose a Project Phantom terminal every three seconds. Cooling vent controls flank a waste intake brake beneath a worker maintenance ping. Ammo crate beta, a scrap mech pile and a wrecked loader stash crowd the intake.",
+            "requires_milestones": [
+              "ms_w4_cooling_vents_hacked"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "cooling vent controls",
+            "type": "generic",
+            "action_event": "w4_mq16_hack_cooling_vents",
+            "condition_unmet_message": "Vent controls cycle scalding air through the service airlock."
+          },
+          {
+            "name": "worker maintenance ping",
+            "type": "generic",
+            "action_event": "w4_sq17_trace_ping",
+            "condition_unmet_message": "A weak maintenance ping repeats beneath the intake alarms."
+          },
+          {
+            "name": "waste intake brake",
+            "type": "generic",
+            "action_event": "w4_sq18_stop_intake",
+            "condition_unmet_message": "The brake can jam the intake long enough to salvage the wrecks."
+          },
+          {
+            "name": "project phantom terminal",
+            "type": "generic",
+            "action_event": "w4_mq17_access_phantom_terminal_scene",
+            "condition_unmet_message": "A classified terminal waits behind cracked thermal glass."
+          },
+          {
+            "name": "ammo crate beta",
+            "type": "generic",
+            "action_event": "w4_sq16_destroy_crate_beta",
+            "condition_unmet_message": "A crate of shaped charges sits too close to the intake pistons, marked with the same resistance scratch."
+          },
+          {
+            "name": "scrap mech pile",
+            "type": "generic",
+            "action_event": "w4_sq18_salvage_mechs",
+            "requires_milestones": [
+              "ms_w4_intake_jammed"
+            ],
+            "condition_unmet_message": "Three destroyed mechs lie half-melted in the lava-flow debris, still full of parts the Foundry wants erased."
+          },
+          {
+            "name": "wrecked loader stash",
+            "type": "generic",
+            "action_event": "find_vhs_tape_07",
+            "condition_unmet_message": "A heat-scorched salvage compartment inside a ruined loader mech."
+          }
+        ],
+        "enemy_flavor": {
+          "slag_golem": "A slag golem drags itself out of the intake channel, armor still molten at the seams."
+        }
+      },
+      "after": {
+        "id": "foundry_waste_intake",
+        "env": "foundry",
+        "weather": "gas",
+        "title": "Waste Intake",
+        "background_image": "images/rooms/world_4/foundry_waste_intake.webp",
+        "description": "Pistons hammer scrap toward the factory interior. Cooling vent controls flank a waste intake brake beneath a worker maintenance ping. Thermal glass shields a Project Phantom terminal; ammo crate beta, a scrap mech pile and a wrecked loader stash crowd the lava's edge. The crusher passage descends south; Intake Overlook and the Crucible approach remain north.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "slag_golem",
+          "magma_drone"
+        ],
+        "enemy_parties": [
+          [
+            "slag_golem"
+          ],
+          [
+            "slag_golem",
+            "magma_drone"
+          ]
+        ],
+        "connections": {
+          "west": "foundry_slag_river",
+          "north": "foundry_intake_overlook",
+          "east": "foundry_service_airlock",
+          "south": "foundry_waste_intake_scale_01"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Project Phantom terminal stands open; ammo crate beta is gone. The stripped scrap mech pile cools by a wrecked loader stash. Dominion's intake keeps hammering. Cooling vent controls flank a waste intake brake beneath a worker maintenance ping. The crusher passage descends south; Intake Overlook and the Crucible approach remain north.",
+            "requires_milestones": [
+              "ms_w4_phantom_records_found",
+              "ms_w4_crate_beta_destroyed",
+              "ms_w4_mechs_salvaged"
+            ]
+          },
+          {
+            "description": "Pistons grind ammo crate beta into slag. Cooling vent controls flank a waste intake brake beneath a worker maintenance ping. Thermal glass shields a Project Phantom terminal; a scrap mech pile and a wrecked loader stash crowd the lava's edge. The crusher passage descends south; Intake Overlook and the Crucible approach remain north.",
+            "requires_milestones": [
+              "ms_w4_crate_beta_destroyed"
+            ]
+          },
+          {
+            "description": "The scrap mech pile is stripped. Cooling vent controls flank a waste intake brake beneath a worker maintenance ping. Thermal glass shields a Project Phantom terminal; ammo crate beta and a wrecked loader stash remain beside the hammering pistons. The crusher passage descends south; Intake Overlook and the Crucible approach remain north.",
+            "requires_milestones": [
+              "ms_w4_mechs_salvaged"
+            ]
+          },
+          {
+            "description": "The Project Phantom terminal exposes Elara and Gh0st's past. Pistons keep hammering beside ammo crate beta, a scrap mech pile and a wrecked loader stash. Cooling vent controls flank a waste intake brake beneath a worker maintenance ping. The crusher passage descends south; Intake Overlook and the Crucible approach remain north.",
+            "requires_milestones": [
+              "ms_w4_phantom_records_found"
+            ]
+          },
+          {
+            "description": "Hacked vents cool the airlock; pistons expose a Project Phantom terminal every three seconds. Cooling vent controls flank a waste intake brake beneath a worker maintenance ping. Ammo crate beta, a scrap mech pile and a wrecked loader stash crowd the intake. The crusher passage descends south; Intake Overlook and the Crucible approach remain north.",
+            "requires_milestones": [
+              "ms_w4_cooling_vents_hacked"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "cooling vent controls",
+            "type": "generic",
+            "action_event": "w4_mq16_hack_cooling_vents",
+            "condition_unmet_message": "Vent controls cycle scalding air through the service airlock."
+          },
+          {
+            "name": "worker maintenance ping",
+            "type": "generic",
+            "action_event": "w4_sq17_trace_ping",
+            "condition_unmet_message": "A weak maintenance ping repeats beneath the intake alarms."
+          },
+          {
+            "name": "waste intake brake",
+            "type": "generic",
+            "action_event": "w4_sq18_stop_intake",
+            "condition_unmet_message": "The brake can jam the intake long enough to salvage the wrecks."
+          },
+          {
+            "name": "project phantom terminal",
+            "type": "generic",
+            "action_event": "w4_mq17_access_phantom_terminal_scene",
+            "condition_unmet_message": "A classified terminal waits behind cracked thermal glass."
+          },
+          {
+            "name": "ammo crate beta",
+            "type": "generic",
+            "action_event": "w4_sq16_destroy_crate_beta",
+            "condition_unmet_message": "A crate of shaped charges sits too close to the intake pistons, marked with the same resistance scratch."
+          },
+          {
+            "name": "scrap mech pile",
+            "type": "generic",
+            "action_event": "w4_sq18_salvage_mechs",
+            "requires_milestones": [
+              "ms_w4_intake_jammed"
+            ],
+            "condition_unmet_message": "Three destroyed mechs lie half-melted in the lava-flow debris, still full of parts the Foundry wants erased."
+          },
+          {
+            "name": "wrecked loader stash",
+            "type": "generic",
+            "action_event": "find_vhs_tape_07",
+            "condition_unmet_message": "A heat-scorched salvage compartment inside a ruined loader mech."
+          }
+        ],
+        "enemy_flavor": {
+          "slag_golem": "A slag golem drags itself out of the intake channel, armor still molten at the seams."
+        }
+      }
+    },
+    "foundry_conveyor_belt": {
+      "before": {
+        "id": "foundry_conveyor_belt",
+        "env": "foundry",
+        "special_exits": {
+          "northeast": "Climb to Timing Tower"
+        },
+        "weather": "sparks",
+        "title": "Conveyor Belt",
+        "background_image": "images/rooms/world_4/foundry_conveyor_belt.webp",
+        "description": "Conveyor belts carry half-assembled droids under hammering presses. A belt timing console marks the rhythm. A rejected droid waits between two choices: the conveyor release lock opens the worker tunnels, while the worker defense relay lets the waking units stay and protect the line.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "welder_bot",
+          "magma_drone",
+          "phantom_prototype"
+        ],
+        "enemy_parties": [
+          [
+            "welder_bot",
+            "magma_drone"
+          ],
+          [
+            "phantom_prototype"
+          ]
+        ],
+        "connections": {
+          "north": "foundry_belt_service_walk",
+          "west": "foundry_reject_bay",
+          "east": "foundry_conditioning_chamber",
+          "south": "foundry_forge_anvil",
+          "northeast": "foundry_conveyor_belt_scale_01"
+        },
+        "pos": [
+          0,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The fabrication matrix has gone silent. The conveyor belt still moves, but the factory floor has lost the rhythm that made new Phantom shells. A belt timing console overlooks a rejected droid, the conveyor release lock, and the worker defense relay.",
+            "requires_milestones": [
+              "ms_w4_matrix_overloaded"
+            ]
+          },
+          {
+            "description": "Broken Phantom prototypes lie among half-built shells. Gh0st keeps his eyes on the belt instead of the faces Dominion tried to stamp into obedience. A belt timing console overlooks a rejected droid, the conveyor release lock, and the worker defense relay.",
+            "requires_milestones": [
+              "ms_w4_prototypes_defeated"
+            ]
+          },
+          {
+            "description": "The belt timing is yours. Presses still slam and shields still move, but Nova has marked safe steps in the rhythm. A belt timing console overlooks a rejected droid, the conveyor release lock, and the worker defense relay.",
+            "requires_milestones": [
+              "ms_w4_conveyors_timed"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "belt timing console",
+            "type": "generic",
+            "action_event": "w4_mq18_navigate_conveyors",
+            "condition_unmet_message": "The belts move in brutal industrial rhythm."
+          },
+          {
+            "name": "rejected droid",
+            "type": "generic",
+            "action_event": "w4_sq19_reprogram_units",
+            "requires_milestones": [
+              "ms_w4_rejection_codes_read"
+            ],
+            "condition_unmet_message": "A defective droid sits on the conveyor, waiting for code overrides."
+          },
+          {
+            "name": "conveyor release lock",
+            "type": "generic",
+            "action_event": "w4_sq19_release_units",
+            "requires_milestones": [
+              "ms_w4_defective_units_spared"
+            ],
+            "condition_unmet_message": "The conveyor still cages every unit Gh0st repairs."
+          },
+          {
+            "name": "worker defense relay",
+            "type": "generic",
+            "action_event": "w4_sq19_defend_workers",
+            "requires_milestones": [
+              "ms_w4_defective_units_spared"
+            ],
+            "condition_unmet_message": "The relay needs conscious units before it can accept volunteers."
+          }
+        ],
+        "enemy_flavor": {
+          "phantom_prototype": "A proto-Gh0st unit blinks into view with an energy blade already raised."
+        }
+      },
+      "after": {
+        "id": "foundry_conveyor_belt",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Conveyor Belt",
+        "background_image": "images/rooms/world_4/foundry_conveyor_belt.webp",
+        "description": "Conveyor belts carry half-assembled droids under hammering presses. A belt timing console marks the rhythm. A rejected droid waits between two choices: the conveyor release lock opens the worker tunnels, while the worker defense relay lets the waking units stay and protect the line. The service walk north leads onward to Timing Tower.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "welder_bot",
+          "magma_drone",
+          "phantom_prototype"
+        ],
+        "enemy_parties": [
+          [
+            "welder_bot",
+            "magma_drone"
+          ],
+          [
+            "phantom_prototype"
+          ]
+        ],
+        "connections": {
+          "north": "foundry_belt_service_walk",
+          "west": "foundry_reject_bay",
+          "east": "foundry_conditioning_chamber",
+          "south": "foundry_forge_anvil"
+        },
+        "pos": [
+          0,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The fabrication matrix has gone silent. The conveyor belt still moves, but the factory floor has lost the rhythm that made new Phantom shells. A belt timing console overlooks a rejected droid, the conveyor release lock, and the worker defense relay. The service walk north leads onward to Timing Tower.",
+            "requires_milestones": [
+              "ms_w4_matrix_overloaded"
+            ]
+          },
+          {
+            "description": "Broken Phantom prototypes lie among half-built shells. Gh0st keeps his eyes on the belt instead of the faces Dominion tried to stamp into obedience. A belt timing console overlooks a rejected droid, the conveyor release lock, and the worker defense relay. The service walk north leads onward to Timing Tower.",
+            "requires_milestones": [
+              "ms_w4_prototypes_defeated"
+            ]
+          },
+          {
+            "description": "The belt timing is yours. Presses still slam and shields still move, but Nova has marked safe steps in the rhythm. A belt timing console overlooks a rejected droid, the conveyor release lock, and the worker defense relay. The service walk north leads onward to Timing Tower.",
+            "requires_milestones": [
+              "ms_w4_conveyors_timed"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "belt timing console",
+            "type": "generic",
+            "action_event": "w4_mq18_navigate_conveyors",
+            "condition_unmet_message": "The belts move in brutal industrial rhythm."
+          },
+          {
+            "name": "rejected droid",
+            "type": "generic",
+            "action_event": "w4_sq19_reprogram_units",
+            "requires_milestones": [
+              "ms_w4_rejection_codes_read"
+            ],
+            "condition_unmet_message": "A defective droid sits on the conveyor, waiting for code overrides."
+          },
+          {
+            "name": "conveyor release lock",
+            "type": "generic",
+            "action_event": "w4_sq19_release_units",
+            "requires_milestones": [
+              "ms_w4_defective_units_spared"
+            ],
+            "condition_unmet_message": "The conveyor still cages every unit Gh0st repairs."
+          },
+          {
+            "name": "worker defense relay",
+            "type": "generic",
+            "action_event": "w4_sq19_defend_workers",
+            "requires_milestones": [
+              "ms_w4_defective_units_spared"
+            ],
+            "condition_unmet_message": "The relay needs conscious units before it can accept volunteers."
+          }
+        ],
+        "enemy_flavor": {
+          "phantom_prototype": "A proto-Gh0st unit blinks into view with an energy blade already raised."
+        }
+      }
+    },
+    "foundry_belt_service_walk": {
+      "before": {
+        "id": "foundry_belt_service_walk",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Service Walk",
+        "background_image": "images/rooms/world_4/foundry_belt_service_walk.webp",
+        "description": "A narrow service walk runs above the conveyor feed. Warning lamps blink in strict sequence, spelling out when the crushers fall and when a person can move.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "welder_bot"
+        ],
+        "connections": {
+          "south": "foundry_conveyor_belt"
+        },
+        "pos": [
+          0,
+          2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "warning lamps",
+            "type": "generic",
+            "action_event": "w4_mq18_navigate_conveyors",
+            "condition_unmet_message": "The warning lamps turn the conveyor into a readable, dangerous rhythm."
+          }
+        ]
+      },
+      "after": {
+        "id": "foundry_belt_service_walk",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Service Walk",
+        "background_image": "images/rooms/world_4/foundry_belt_service_walk.webp",
+        "description": "A narrow service walk runs above the conveyor feed. Warning lamps blink in strict sequence, spelling out when the crushers fall and when a person can move. The tower steps continue north to Timing Tower; the conveyor floor is back to the south.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "welder_bot"
+        ],
+        "connections": {
+          "south": "foundry_conveyor_belt",
+          "north": "foundry_conveyor_belt_scale_01"
+        },
+        "pos": [
+          0,
+          2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "warning lamps",
+            "type": "generic",
+            "action_event": "w4_mq18_navigate_conveyors",
+            "condition_unmet_message": "The warning lamps turn the conveyor into a readable, dangerous rhythm."
+          }
+        ]
+      }
+    },
+    "foundry_reject_bay": {
+      "before": {
+        "id": "foundry_reject_bay",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Reject Bay",
+        "background_image": "images/rooms/world_4/foundry_reject_bay.webp",
+        "description": "Defective units are dumped into a low bay before the furnace eats them. A rejected droid still twitches when the conveyor shudders, hands opening and closing around nothing. A scorched smelter console rests against the bay wall.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "phantom_prototype"
+        ],
+        "connections": {
+          "east": "foundry_conveyor_belt"
+        },
+        "pos": [
+          -1,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Reject Bay is quieter now. A rejected droid twitches among the defective units, but no longer toward the furnace; Gh0st's override leaves them holding onto the small, stubborn spark Dominion called a defect. A scorched smelter console rests against the bay wall.",
+            "requires_milestones": [
+              "ms_w4_defective_units_spared"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "rejected droid",
+            "type": "generic",
+            "action_event": "w4_sq19_read_rejection_codes",
+            "condition_unmet_message": "A rejected droid twitches beside a bin of defective units."
+          },
+          {
+            "name": "scorched smelter console",
+            "type": "arcade_discovery",
+            "hide_when_milestone": "ms_arcade_cabinet_04_repaired",
+            "condition_unmet_message": "A heavy ceramic arcade console sits amidst discarded machine scrap. A thermite logic gate still holds shift records."
+          }
+        ]
+      },
+      "after": {
+        "id": "foundry_reject_bay",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Reject Bay",
+        "background_image": "images/rooms/world_4/foundry_reject_bay.webp",
+        "description": "Defective units are dumped into a low bay before the furnace eats them. A rejected droid still twitches when the conveyor shudders, hands opening and closing around nothing. A scorched smelter console rests against the bay wall. The western maintenance shutter leads back to the Pipe Gallery and the Slag Pits. The conveyor floor is east.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "phantom_prototype"
+        ],
+        "connections": {
+          "east": "foundry_conveyor_belt",
+          "west": "foundry_pipe_gallery"
+        },
+        "pos": [
+          -1,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Reject Bay is quieter now. A rejected droid twitches among the defective units, but no longer toward the furnace; Gh0st's override leaves them holding onto the small, stubborn spark Dominion called a defect. A scorched smelter console rests against the bay wall. The western maintenance shutter leads back to the Pipe Gallery and the Slag Pits. The conveyor floor is east.",
+            "requires_milestones": [
+              "ms_w4_defective_units_spared"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "rejected droid",
+            "type": "generic",
+            "action_event": "w4_sq19_read_rejection_codes",
+            "condition_unmet_message": "A rejected droid twitches beside a bin of defective units."
+          },
+          {
+            "name": "scorched smelter console",
+            "type": "arcade_discovery",
+            "hide_when_milestone": "ms_arcade_cabinet_04_repaired",
+            "condition_unmet_message": "A heavy ceramic arcade console sits amidst discarded machine scrap. A thermite logic gate still holds shift records."
+          }
+        ],
+        "blocked_directions": {
+          "west": {
+            "type": "lock",
+            "requires": [
+              {
+                "room_id": "foundry_pipe_gallery",
+                "state_key": "assembly_route_open",
+                "value": true
+              }
+            ],
+            "message_locked": "The Assembly maintenance shutter is sealed. Recover Project Phantom and regroup with Gh0st at Cooling Springs before opening this route.",
+            "message_unlock": "The cleared maintenance corridor connects the Pipe Gallery and Reject Bay. The route stays open for the return trip."
+          }
+        }
+      }
+    },
+    "foundry_forge_anvil": {
+      "before": {
+        "id": "foundry_forge_anvil",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "The Forge",
+        "background_image": "images/rooms/world_4/foundry_forge_anvil.webp",
+        "description": "A massive hammer shapes ore around the anvil cradle, teaching metal to obey. The anvil relic glows inside its mount. A fabrication matrix panel overlooks the hammer lane, with a test chamber terminal beside it.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "conveyor_crusher"
+        ],
+        "connections": {
+          "north": "foundry_conveyor_belt",
+          "west": "foundry_forge_control_alcove",
+          "southeast": "foundry_power_core",
+          "south": "foundry_forge_scale_01"
+        },
+        "pos": [
+          1,
+          2
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Anvil cradle is empty and the test chamber terminal has gone dark after the overclocked trial. The Forge no longer sounds confident; it sounds robbed. A fabrication matrix panel overlooks the hammer lane. Scorch marks trace the anvil relic's former seat.",
+            "requires_milestones": [
+              "ms_w4_anvil_claimed",
+              "ms_w4_hazard_trial_cleared"
+            ]
+          },
+          {
+            "description": "The Anvil cradle is empty. The hammer still falls, but the Forge sounds hollow. A fabrication matrix panel overlooks the hammer lane. Scorch marks trace the anvil relic's former seat. A test chamber terminal waits beside the lane.",
+            "requires_milestones": [
+              "ms_w4_anvil_claimed"
+            ]
+          },
+          {
+            "description": "Belt plates lock safely; breath pistons starve. The Anvil cradle opens like an unclenching hand, the anvil relic casting Nova's shadow up the hammer wall. A fabrication matrix panel overlooks the hammer lane beside a test chamber terminal.",
+            "requires_milestones": [
+              "ms_w4_conveyor_puzzle_solved"
+            ]
+          },
+          {
+            "description": "The fabrication matrix is disrupted; mapped belt rhythms, crawl marks and the override paddle reveal a safe lane. Breath pistons still overheat the Anvil cradle. The anvil relic glows inside its mount; a test chamber terminal waits nearby.",
+            "requires_milestones": [
+              "ms_w4_paddle_thrown"
+            ],
+            "forbidden_milestones": [
+              "ms_w4_conveyor_puzzle_solved"
+            ]
+          },
+          {
+            "description": "The Forge bucks without the fabrication matrix feeding it clean instructions. The Anvil cradle is exposed, but the moving plates still protect it with industrial indifference. The anvil relic glows inside the mount. A test chamber terminal waits beside the lane.",
+            "requires_milestones": [
+              "ms_w4_matrix_overloaded"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "fabrication matrix",
+            "type": "generic",
+            "action_event": "w4_mq18_overload_matrix",
+            "condition_unmet_message": "The fabrication matrix feeds the conveyor floor with Phantom shells."
+          },
+          {
+            "name": "anvil cradle",
+            "type": "generic",
+            "action_event": "w4_mq19_open_anvil_cradle",
+            "requires_milestones": [
+              "ms_w4_pulse_board_read",
+              "ms_w4_grease_route_read",
+              "ms_w4_paddle_thrown",
+              "ms_w4_pistons_starved"
+            ],
+            "condition_unmet_message": "The cradle will not open until the belt rhythm, crawl window, override paddle, and breath pistons all agree."
+          },
+          {
+            "name": "anvil relic",
+            "type": "generic",
+            "action_event": "w4_mq19_take_anvil",
+            "condition_unmet_message": "The Anvil waits in the hammer cradle, hot enough to glow without flame."
+          },
+          {
+            "name": "test chamber terminal",
+            "type": "generic",
+            "action_event": "w4_sq20_survive_waves",
+            "requires_milestones": [
+              "ms_w4_hazards_mapped"
+            ],
+            "condition_unmet_message": "Read the hazard cycle map in Control Alcove before calibrating this terminal."
+          }
+        ],
+        "special_exits": {
+          "southeast": "Take the passage to the Power Core"
+        }
+      },
+      "after": {
+        "id": "foundry_forge_anvil",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "The Forge",
+        "background_image": "images/rooms/world_4/foundry_forge_anvil.webp",
+        "description": "A massive hammer shapes ore around the anvil cradle, teaching metal to obey. The anvil relic glows inside its mount. A fabrication matrix panel overlooks the hammer lane, with a test chamber terminal beside it.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "conveyor_crusher"
+        ],
+        "connections": {
+          "north": "foundry_conveyor_belt",
+          "west": "foundry_forge_control_alcove",
+          "south": "foundry_forge_scale_01"
+        },
+        "pos": [
+          1,
+          2
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Anvil cradle is empty and the test chamber terminal has gone dark after the overclocked trial. The Forge no longer sounds confident; it sounds robbed. A fabrication matrix panel overlooks the hammer lane. Scorch marks trace the anvil relic's former seat.",
+            "requires_milestones": [
+              "ms_w4_anvil_claimed",
+              "ms_w4_hazard_trial_cleared"
+            ]
+          },
+          {
+            "description": "The Anvil cradle is empty. The hammer still falls, but the Forge sounds hollow. A fabrication matrix panel overlooks the hammer lane. Scorch marks trace the anvil relic's former seat. A test chamber terminal waits beside the lane.",
+            "requires_milestones": [
+              "ms_w4_anvil_claimed"
+            ]
+          },
+          {
+            "description": "Belt plates lock safely; breath pistons starve. The Anvil cradle opens like an unclenching hand, the anvil relic casting Nova's shadow up the hammer wall. A fabrication matrix panel overlooks the hammer lane beside a test chamber terminal.",
+            "requires_milestones": [
+              "ms_w4_conveyor_puzzle_solved"
+            ]
+          },
+          {
+            "description": "The fabrication matrix is disrupted; mapped belt rhythms, crawl marks and the override paddle reveal a safe lane. Breath pistons still overheat the Anvil cradle. The anvil relic glows inside its mount; a test chamber terminal waits nearby.",
+            "requires_milestones": [
+              "ms_w4_paddle_thrown"
+            ],
+            "forbidden_milestones": [
+              "ms_w4_conveyor_puzzle_solved"
+            ]
+          },
+          {
+            "description": "The Forge bucks without the fabrication matrix feeding it clean instructions. The Anvil cradle is exposed, but the moving plates still protect it with industrial indifference. The anvil relic glows inside the mount. A test chamber terminal waits beside the lane.",
+            "requires_milestones": [
+              "ms_w4_matrix_overloaded"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "fabrication matrix",
+            "type": "generic",
+            "action_event": "w4_mq18_overload_matrix",
+            "condition_unmet_message": "The fabrication matrix feeds the conveyor floor with Phantom shells."
+          },
+          {
+            "name": "anvil cradle",
+            "type": "generic",
+            "action_event": "w4_mq19_open_anvil_cradle",
+            "requires_milestones": [
+              "ms_w4_pulse_board_read",
+              "ms_w4_grease_route_read",
+              "ms_w4_paddle_thrown",
+              "ms_w4_pistons_starved"
+            ],
+            "condition_unmet_message": "The cradle will not open until the belt rhythm, crawl window, override paddle, and breath pistons all agree."
+          },
+          {
+            "name": "anvil relic",
+            "type": "generic",
+            "action_event": "w4_mq19_take_anvil",
+            "condition_unmet_message": "The Anvil waits in the hammer cradle, hot enough to glow without flame."
+          },
+          {
+            "name": "test chamber terminal",
+            "type": "generic",
+            "action_event": "w4_sq20_survive_waves",
+            "requires_milestones": [
+              "ms_w4_hazards_mapped"
+            ],
+            "condition_unmet_message": "Read the hazard cycle map in Control Alcove before calibrating this terminal."
+          }
+        ]
+      }
+    },
+    "foundry_power_core": {
+      "before": {
+        "id": "foundry_power_core",
+        "env": "foundry",
+        "special_exits": {
+          "northeast": "Climb to Turbine Balcony",
+          "northwest": "Return to the Forge"
+        },
+        "weather": "sparks",
+        "title": "Power Core",
+        "background_image": "images/rooms/world_4/foundry_power_core.webp",
+        "description": "The Deep-Core Engine pulses in the center of the factory, feeding heat and psionic current into a cradle mount built for something far larger than a ship. The engine mount connects to the core's thermal clamps. Phase-Cutter Arrays occupy the adjoining rack.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "flame_trooper",
+          "phantom_prototype"
+        ],
+        "connections": {
+          "north": "foundry_engine_service_ring",
+          "west": "foundry_conditioning_chamber",
+          "northwest": "foundry_forge_anvil",
+          "east": "foundry_titan_dock",
+          "northeast": "foundry_power_core_scale_01"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Power Core is stripped: engine gone, Phase-Cutter Arrays gone, alarms climbing into panic. The Astra can reach high orbit now if the crew can launch before the factory seals. The engine mount connects to the core's thermal clamps.",
+            "requires_milestones": [
+              "ms_w4_arrays_stolen"
+            ]
+          },
+          {
+            "description": "The engine cradle is torn open. Without the Deep-Core Engine, the Foundry pulses unevenly, and Vale's Ascension Cradle timeline just lost its heart. The engine mount connects to the core's thermal clamps. Phase-Cutter Arrays occupy the adjoining rack.",
+            "requires_milestones": [
+              "ms_w4_engine_stolen"
+            ]
+          },
+          {
+            "description": "The Titan Walker is down, and the Power Core no longer has a champion. Thermal clamps still grip the Deep-Core Engine while Phase-Cutter Arrays wait in a rack beside the cradle. The engine mount connects to the core's thermal clamps.",
+            "requires_milestones": [
+              "ms_w4_titan_defeated"
+            ]
+          },
+          {
+            "description": "The Deep-Core Engine hammers while the Anvil burns in Nova's kit. The theft is finally possible; every alarm is about to become honest. The engine mount connects to the core's thermal clamps. Phase-Cutter Arrays occupy the adjoining rack.",
+            "requires_milestones": [
+              "ms_w4_anvil_claimed"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "engine mount",
+            "type": "generic",
+            "action_event": "w4_mq20_steal_engine",
+            "condition_unmet_message": "The Deep-Core Engine is locked under thermal clamps."
+          },
+          {
+            "name": "phase-cutter arrays",
+            "type": "generic",
+            "action_event": "w4_mq20_steal_arrays",
+            "condition_unmet_message": "A rack of ship-scale Phase-Cutter Arrays is wired to the engine cradle."
+          }
+        ]
+      },
+      "after": {
+        "id": "foundry_power_core",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Power Core",
+        "background_image": "images/rooms/world_4/foundry_power_core.webp",
+        "description": "The Deep-Core Engine pulses in the center of the factory, feeding heat and psionic current into a cradle mount built for something far larger than a ship. The engine mount connects to the core's thermal clamps. Phase-Cutter Arrays occupy the adjoining rack. The southern stair leads to Turbine Balcony; Engine Service Ring remains north.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "flame_trooper",
+          "phantom_prototype"
+        ],
+        "connections": {
+          "north": "foundry_engine_service_ring",
+          "west": "foundry_conditioning_chamber",
+          "east": "foundry_titan_dock",
+          "south": "foundry_power_core_scale_01"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Power Core is stripped: engine gone, Phase-Cutter Arrays gone, alarms climbing into panic. The Astra can reach high orbit now if the crew can launch before the factory seals. The engine mount connects to the core's thermal clamps. The southern stair leads to Turbine Balcony; Engine Service Ring remains north.",
+            "requires_milestones": [
+              "ms_w4_arrays_stolen"
+            ]
+          },
+          {
+            "description": "The engine cradle is torn open. Without the Deep-Core Engine, the Foundry pulses unevenly, and Vale's Ascension Cradle timeline just lost its heart. The engine mount connects to the core's thermal clamps. Phase-Cutter Arrays occupy the adjoining rack. The southern stair leads to Turbine Balcony; Engine Service Ring remains north.",
+            "requires_milestones": [
+              "ms_w4_engine_stolen"
+            ]
+          },
+          {
+            "description": "The Titan Walker is down, and the Power Core no longer has a champion. Thermal clamps still grip the Deep-Core Engine while Phase-Cutter Arrays wait in a rack beside the cradle. The engine mount connects to the core's thermal clamps. The southern stair leads to Turbine Balcony; Engine Service Ring remains north.",
+            "requires_milestones": [
+              "ms_w4_titan_defeated"
+            ]
+          },
+          {
+            "description": "The Deep-Core Engine hammers while the Anvil burns in Nova's kit. The theft is finally possible; every alarm is about to become honest. The engine mount connects to the core's thermal clamps. Phase-Cutter Arrays occupy the adjoining rack. The southern stair leads to Turbine Balcony; Engine Service Ring remains north.",
+            "requires_milestones": [
+              "ms_w4_anvil_claimed"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "engine mount",
+            "type": "generic",
+            "action_event": "w4_mq20_steal_engine",
+            "condition_unmet_message": "The Deep-Core Engine is locked under thermal clamps."
+          },
+          {
+            "name": "phase-cutter arrays",
+            "type": "generic",
+            "action_event": "w4_mq20_steal_arrays",
+            "condition_unmet_message": "A rack of ship-scale Phase-Cutter Arrays is wired to the engine cradle."
+          }
+        ]
+      }
+    },
+    "foundry_waste_intake_scale_01": {
+      "before": {
+        "id": "foundry_waste_intake_scale_01",
+        "env": "foundry",
+        "special_exits": {
+          "southwest": "Return to Waste Intake"
+        },
+        "weather": "gas",
+        "title": "Crusher Throat",
+        "background_image": "images/rooms/world_4/foundry_waste_intake_scale_01.webp",
+        "description": "The crusher throat opens below the intake platform. A jammed tooth holds back a mountain of rejected parts. A chipped crusher tooth groans against jammed titanium.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "southwest": "foundry_waste_intake",
+          "north": "foundry_waste_intake_scale_02"
+        },
+        "pos": [
+          3,
+          2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "crusher throat",
+            "type": "generic",
+            "condition_unmet_message": "The throat eats whole machines and complains only when they fight back."
+          },
+          {
+            "name": "jammed tooth",
+            "type": "generic",
+            "condition_unmet_message": "The tooth is cracked by something too large to be scrap."
+          },
+          {
+            "name": "crusher tooth",
+            "type": "generic",
+            "condition_unmet_message": "A hardened carbide wedge chipped by the reinforced armor of a military chassis."
+          }
+        ]
+      },
+      "after": {
+        "id": "foundry_waste_intake_scale_01",
+        "env": "foundry",
+        "weather": "gas",
+        "title": "Crusher Throat",
+        "background_image": "images/rooms/world_4/foundry_waste_intake_scale_01.webp",
+        "description": "The crusher throat opens below the intake platform. A jammed tooth holds back a mountain of rejected parts. A chipped crusher tooth groans against jammed titanium. The platform at Waste Intake is north; Records Shed continues south.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "foundry_waste_intake",
+          "south": "foundry_waste_intake_scale_02"
+        },
+        "pos": [
+          2,
+          0
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "crusher throat",
+            "type": "generic",
+            "condition_unmet_message": "The throat eats whole machines and complains only when they fight back."
+          },
+          {
+            "name": "jammed tooth",
+            "type": "generic",
+            "condition_unmet_message": "The tooth is cracked by something too large to be scrap."
+          },
+          {
+            "name": "crusher tooth",
+            "type": "generic",
+            "condition_unmet_message": "A hardened carbide wedge chipped by the reinforced armor of a military chassis."
+          }
+        ]
+      }
+    },
+    "foundry_waste_intake_scale_02": {
+      "before": {
+        "id": "foundry_waste_intake_scale_02",
+        "env": "foundry",
+        "weather": "gas",
+        "title": "Records Shed",
+        "background_image": "images/rooms/world_4/foundry_waste_intake_scale_02.webp",
+        "description": "A records shed lists Phantom labels on crates that officially never existed. The Phantom labels use budget codes instead of names.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "welder_bot"
+        ],
+        "connections": {
+          "south": "foundry_waste_intake_scale_01",
+          "north": "foundry_waste_intake_scale_03"
+        },
+        "pos": [
+          3,
+          3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "records shed",
+            "type": "generic",
+            "condition_unmet_message": "The shed smells like hot dust and erased accountability."
+          },
+          {
+            "name": "Phantom labels",
+            "type": "generic",
+            "condition_unmet_message": "The labels use budget codes instead of names."
+          }
+        ]
+      },
+      "after": {
+        "id": "foundry_waste_intake_scale_02",
+        "env": "foundry",
+        "weather": "gas",
+        "title": "Records Shed",
+        "background_image": "images/rooms/world_4/foundry_waste_intake_scale_02.webp",
+        "description": "A records shed lists Phantom labels on crates that officially never existed. The Phantom labels use budget codes instead of names.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "welder_bot"
+        ],
+        "connections": {
+          "north": "foundry_waste_intake_scale_01",
+          "south": "foundry_waste_intake_scale_03"
+        },
+        "pos": [
+          2,
+          -1
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "records shed",
+            "type": "generic",
+            "condition_unmet_message": "The shed smells like hot dust and erased accountability."
+          },
+          {
+            "name": "Phantom labels",
+            "type": "generic",
+            "condition_unmet_message": "The labels use budget codes instead of names."
+          }
+        ]
+      }
+    },
+    "foundry_waste_intake_scale_03": {
+      "before": {
+        "id": "foundry_waste_intake_scale_03",
+        "env": "foundry",
+        "weather": "gas",
+        "title": "Magnet Ramp",
+        "background_image": "images/rooms/world_4/foundry_waste_intake_scale_03.webp",
+        "description": "A magnet ramp drags loose filings uphill in glittering streams toward the sorting drums. The loose filings point toward live current under the floor.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "slag_golem"
+        ],
+        "connections": {
+          "south": "foundry_waste_intake_scale_02",
+          "north": "foundry_waste_intake_scale_04"
+        },
+        "pos": [
+          3,
+          4
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "magnet ramp",
+            "type": "generic",
+            "condition_unmet_message": "The ramp makes metal behave like weather."
+          },
+          {
+            "name": "loose filings",
+            "type": "generic",
+            "condition_unmet_message": "The filings point toward live current under the floor."
+          }
+        ]
+      },
+      "after": {
+        "id": "foundry_waste_intake_scale_03",
+        "env": "foundry",
+        "weather": "gas",
+        "title": "Magnet Ramp",
+        "background_image": "images/rooms/world_4/foundry_waste_intake_scale_03.webp",
+        "description": "A magnet ramp drags loose filings uphill in glittering streams toward the sorting drums. The loose filings point toward live current under the floor.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "slag_golem"
+        ],
+        "connections": {
+          "north": "foundry_waste_intake_scale_02",
+          "south": "foundry_waste_intake_scale_04"
+        },
+        "pos": [
+          2,
+          -2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "magnet ramp",
+            "type": "generic",
+            "condition_unmet_message": "The ramp makes metal behave like weather."
+          },
+          {
+            "name": "loose filings",
+            "type": "generic",
+            "condition_unmet_message": "The filings point toward live current under the floor."
+          }
+        ]
+      }
+    },
+    "foundry_waste_intake_scale_04": {
+      "before": {
+        "id": "foundry_waste_intake_scale_04",
+        "env": "foundry",
+        "weather": "gas",
+        "title": "Intake Catwalk",
+        "background_image": "images/rooms/world_4/foundry_waste_intake_scale_04.webp",
+        "description": "An intake catwalk sways above the waste pit on braces patched with hurry and prayer. The sway braces were signed by workers who expected them to fail.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "foundry_waste_intake_scale_03",
+          "north": "foundry_waste_intake_scale_final"
+        },
+        "pos": [
+          3,
+          5
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "intake catwalk",
+            "type": "generic",
+            "condition_unmet_message": "The catwalk moves too much, but the view is useful."
+          },
+          {
+            "name": "sway braces",
+            "type": "generic",
+            "condition_unmet_message": "The braces were signed by workers who expected them to fail."
+          }
+        ]
+      },
+      "after": {
+        "id": "foundry_waste_intake_scale_04",
+        "env": "foundry",
+        "weather": "gas",
+        "title": "Intake Catwalk",
+        "background_image": "images/rooms/world_4/foundry_waste_intake_scale_04.webp",
+        "description": "An intake catwalk sways above the waste pit on braces patched with hurry and prayer. The sway braces were signed by workers who expected them to fail.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "foundry_waste_intake_scale_03",
+          "south": "foundry_waste_intake_scale_final"
+        },
+        "pos": [
+          2,
+          -3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "intake catwalk",
+            "type": "generic",
+            "condition_unmet_message": "The catwalk moves too much, but the view is useful."
+          },
+          {
+            "name": "sway braces",
+            "type": "generic",
+            "condition_unmet_message": "The braces were signed by workers who expected them to fail."
+          }
+        ]
+      }
+    },
+    "foundry_conveyor_belt_scale_01": {
+      "before": {
+        "id": "foundry_conveyor_belt_scale_01",
+        "env": "foundry",
+        "special_exits": {
+          "southwest": "Return to Conveyor Belt"
+        },
+        "weather": "sparks",
+        "title": "Timing Tower",
+        "background_image": "images/rooms/world_4/foundry_conveyor_belt_scale_01.webp",
+        "description": "A timing tower ticks above the conveyor, its pulse board turning worker mistakes into production data. The pulse board predicts crush points before they happen. A belt speed dial is locked in place with a security seal.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "southwest": "foundry_conveyor_belt",
+          "north": "foundry_conveyor_belt_scale_02"
+        },
+        "pos": [
+          1,
+          2
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The timing tower keeps ticking, but the pulse board now carries Nova's chalk marks across the fatal beats. The crusher rhythm is readable enough to use. A security seal still holds the belt speed dial in place.",
+            "requires_milestones": [
+              "ms_w4_pulse_board_read"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "timing tower",
+            "type": "generic",
+            "condition_unmet_message": "The tower controls rhythm more than speed."
+          },
+          {
+            "name": "pulse board",
+            "type": "generic",
+            "action_event": "w4_mq19_read_pulse_board",
+            "condition_unmet_message": "The board predicts crush points before they happen."
+          },
+          {
+            "name": "belt speed dial",
+            "type": "generic",
+            "condition_unmet_message": "A lockable governor dial set to maximum feed rate."
+          }
+        ]
+      },
+      "after": {
+        "id": "foundry_conveyor_belt_scale_01",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Timing Tower",
+        "background_image": "images/rooms/world_4/foundry_conveyor_belt_scale_01.webp",
+        "description": "A timing tower ticks above the conveyor, its pulse board turning worker mistakes into production data. The pulse board predicts crush points before they happen. A belt speed dial is locked in place with a security seal. Steps south return to Service Walk; Reject Chute continues north.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "foundry_belt_service_walk",
+          "north": "foundry_conveyor_belt_scale_02"
+        },
+        "pos": [
+          0,
+          3
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The timing tower keeps ticking, but the pulse board now carries Nova's chalk marks across the fatal beats. The crusher rhythm is readable enough to use. A security seal still holds the belt speed dial in place. Steps south return to Service Walk; Reject Chute continues north.",
+            "requires_milestones": [
+              "ms_w4_pulse_board_read"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "timing tower",
+            "type": "generic",
+            "condition_unmet_message": "The tower controls rhythm more than speed."
+          },
+          {
+            "name": "pulse board",
+            "type": "generic",
+            "action_event": "w4_mq19_read_pulse_board",
+            "condition_unmet_message": "The board predicts crush points before they happen."
+          },
+          {
+            "name": "belt speed dial",
+            "type": "generic",
+            "condition_unmet_message": "A lockable governor dial set to maximum feed rate."
+          }
+        ]
+      }
+    },
+    "foundry_conveyor_belt_scale_02": {
+      "before": {
+        "id": "foundry_conveyor_belt_scale_02",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Reject Chute",
+        "background_image": "images/rooms/world_4/foundry_conveyor_belt_scale_02.webp",
+        "description": "A reject chute spits scrap rain into a pit where defective parts keep twitching. The scrap rain hides small parts worth stealing.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "welder_bot"
+        ],
+        "connections": {
+          "south": "foundry_conveyor_belt_scale_01",
+          "north": "foundry_conveyor_belt_scale_03"
+        },
+        "pos": [
+          1,
+          3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "reject chute",
+            "type": "generic",
+            "condition_unmet_message": "The chute is where failed machines go before they become useful again."
+          },
+          {
+            "name": "scrap rain",
+            "type": "generic",
+            "condition_unmet_message": "The rain hides small parts worth stealing."
+          }
+        ]
+      },
+      "after": {
+        "id": "foundry_conveyor_belt_scale_02",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Reject Chute",
+        "background_image": "images/rooms/world_4/foundry_conveyor_belt_scale_02.webp",
+        "description": "A reject chute spits scrap rain into a pit where defective parts keep twitching. The scrap rain hides small parts worth stealing.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "welder_bot"
+        ],
+        "connections": {
+          "south": "foundry_conveyor_belt_scale_01",
+          "north": "foundry_conveyor_belt_scale_03"
+        },
+        "pos": [
+          0,
+          4
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "reject chute",
+            "type": "generic",
+            "condition_unmet_message": "The chute is where failed machines go before they become useful again."
+          },
+          {
+            "name": "scrap rain",
+            "type": "generic",
+            "condition_unmet_message": "The rain hides small parts worth stealing."
+          }
+        ]
+      }
+    },
+    "foundry_conveyor_belt_scale_03": {
+      "before": {
+        "id": "foundry_conveyor_belt_scale_03",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Roller Underpass",
+        "background_image": "images/rooms/world_4/foundry_conveyor_belt_scale_03.webp",
+        "description": "A roller underpass runs beneath the belt through grease marks and warning paint. The grease marks show where previous crews crawled.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "slag_golem"
+        ],
+        "connections": {
+          "south": "foundry_conveyor_belt_scale_02",
+          "north": "foundry_conveyor_belt_scale_04"
+        },
+        "pos": [
+          1,
+          4
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The roller underpass is still low and loud, but the grease marks now form a route: three breaths under the belt, then stop before the red scrape.",
+            "requires_milestones": [
+              "ms_w4_grease_route_read"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "roller underpass",
+            "type": "generic",
+            "condition_unmet_message": "The underpass is low, loud, and safer than the belt surface."
+          },
+          {
+            "name": "grease marks",
+            "type": "generic",
+            "action_event": "w4_mq19_read_grease_marks",
+            "condition_unmet_message": "The marks show where previous crews crawled."
+          }
+        ]
+      },
+      "after": {
+        "id": "foundry_conveyor_belt_scale_03",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Roller Underpass",
+        "background_image": "images/rooms/world_4/foundry_conveyor_belt_scale_03.webp",
+        "description": "A roller underpass runs beneath the belt through grease marks and warning paint. The grease marks show where previous crews crawled.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "slag_golem"
+        ],
+        "connections": {
+          "south": "foundry_conveyor_belt_scale_02",
+          "north": "foundry_conveyor_belt_scale_04"
+        },
+        "pos": [
+          0,
+          5
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The roller underpass is still low and loud, but the grease marks now form a route: three breaths under the belt, then stop before the red scrape.",
+            "requires_milestones": [
+              "ms_w4_grease_route_read"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "roller underpass",
+            "type": "generic",
+            "condition_unmet_message": "The underpass is low, loud, and safer than the belt surface."
+          },
+          {
+            "name": "grease marks",
+            "type": "generic",
+            "action_event": "w4_mq19_read_grease_marks",
+            "condition_unmet_message": "The marks show where previous crews crawled."
+          }
+        ]
+      }
+    },
+    "foundry_conveyor_belt_scale_04": {
+      "before": {
+        "id": "foundry_conveyor_belt_scale_04",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Control Perch",
+        "background_image": "images/rooms/world_4/foundry_conveyor_belt_scale_04.webp",
+        "description": "A control perch hangs over the belt with an override paddle locked behind mesh. The override paddle can pause one section if the mesh comes loose.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "foundry_conveyor_belt_scale_03",
+          "north": "foundry_conveyor_belt_scale_final"
+        },
+        "pos": [
+          1,
+          5
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The control perch hangs over a quieter belt lane. The override paddle is down, shuddering against the mesh, and one section of crusher teeth keeps missing its bite.",
+            "requires_milestones": [
+              "ms_w4_paddle_thrown"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "control perch",
+            "type": "generic",
+            "condition_unmet_message": "The perch was built for supervisors, not saboteurs."
+          },
+          {
+            "name": "override paddle",
+            "type": "generic",
+            "action_event": "w4_mq19_throw_override_paddle",
+            "condition_unmet_message": "The paddle can pause one section if the mesh comes loose."
+          }
+        ]
+      },
+      "after": {
+        "id": "foundry_conveyor_belt_scale_04",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Control Perch",
+        "background_image": "images/rooms/world_4/foundry_conveyor_belt_scale_04.webp",
+        "description": "A control perch hangs over the belt with an override paddle locked behind mesh. The override paddle can pause one section if the mesh comes loose.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "foundry_conveyor_belt_scale_03",
+          "north": "foundry_conveyor_belt_scale_final"
+        },
+        "pos": [
+          0,
+          6
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The control perch hangs over a quieter belt lane. The override paddle is down, shuddering against the mesh, and one section of crusher teeth keeps missing its bite.",
+            "requires_milestones": [
+              "ms_w4_paddle_thrown"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "control perch",
+            "type": "generic",
+            "condition_unmet_message": "The perch was built for supervisors, not saboteurs."
+          },
+          {
+            "name": "override paddle",
+            "type": "generic",
+            "action_event": "w4_mq19_throw_override_paddle",
+            "condition_unmet_message": "The paddle can pause one section if the mesh comes loose."
+          }
+        ]
+      }
+    },
+    "foundry_power_core_scale_01": {
+      "before": {
+        "id": "foundry_power_core_scale_01",
+        "env": "foundry",
+        "special_exits": {
+          "southwest": "Return to Power Core"
+        },
+        "weather": "sparks",
+        "title": "Turbine Balcony",
+        "background_image": "images/rooms/world_4/foundry_power_core_scale_01.webp",
+        "description": "A turbine balcony hangs over spin blur so fast the air becomes a wall. The spin blur hides which blades are damaged. A turbine tachometer vibrates violently against its bracket.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "southwest": "foundry_power_core",
+          "north": "foundry_power_core_scale_02"
+        },
+        "pos": [
+          3,
+          2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "turbine balcony",
+            "type": "generic",
+            "condition_unmet_message": "The balcony vibrates through teeth and boot soles."
+          },
+          {
+            "name": "spin blur",
+            "type": "generic",
+            "condition_unmet_message": "The blur hides which blades are damaged."
+          },
+          {
+            "name": "turbine tachometer",
+            "type": "generic",
+            "condition_unmet_message": "A mechanical dial pinned past redline, measuring thousands of RPM."
+          }
+        ]
+      },
+      "after": {
+        "id": "foundry_power_core_scale_01",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Turbine Balcony",
+        "background_image": "images/rooms/world_4/foundry_power_core_scale_01.webp",
+        "description": "A turbine balcony hangs over spin blur so fast the air becomes a wall. The spin blur hides which blades are damaged. A turbine tachometer vibrates violently against its bracket. The stair north returns to Power Core; the maintenance route continues south toward Engine Cradle.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "foundry_power_core",
+          "south": "foundry_power_core_scale_02"
+        },
+        "pos": [
+          2,
+          0
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "turbine balcony",
+            "type": "generic",
+            "condition_unmet_message": "The balcony vibrates through teeth and boot soles."
+          },
+          {
+            "name": "spin blur",
+            "type": "generic",
+            "condition_unmet_message": "The blur hides which blades are damaged."
+          },
+          {
+            "name": "turbine tachometer",
+            "type": "generic",
+            "condition_unmet_message": "A mechanical dial pinned past redline, measuring thousands of RPM."
+          }
+        ]
+      }
+    },
+    "foundry_power_core_scale_02": {
+      "before": {
+        "id": "foundry_power_core_scale_02",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Engine Cradle",
+        "background_image": "images/rooms/world_4/foundry_power_core_scale_02.webp",
+        "description": "The engine cradle grips the Deep-Core Engine with mount clamps bigger than mining rigs. The mount clamps loosen when the core output spikes.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "magma_drone"
+        ],
+        "connections": {
+          "south": "foundry_power_core_scale_01",
+          "north": "foundry_power_core_scale_03"
+        },
+        "pos": [
+          3,
+          3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "engine cradle",
+            "type": "generic",
+            "condition_unmet_message": "The cradle was designed to keep theft impossible."
+          },
+          {
+            "name": "mount clamps",
+            "type": "generic",
+            "condition_unmet_message": "The clamps loosen when the core output spikes."
+          }
+        ]
+      },
+      "after": {
+        "id": "foundry_power_core_scale_02",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Engine Cradle",
+        "background_image": "images/rooms/world_4/foundry_power_core_scale_02.webp",
+        "description": "The engine cradle grips the Deep-Core Engine with mount clamps bigger than mining rigs. The mount clamps loosen when the core output spikes.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "magma_drone"
+        ],
+        "connections": {
+          "north": "foundry_power_core_scale_01",
+          "south": "foundry_power_core_scale_03"
+        },
+        "pos": [
+          2,
+          -1
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "engine cradle",
+            "type": "generic",
+            "condition_unmet_message": "The cradle was designed to keep theft impossible."
+          },
+          {
+            "name": "mount clamps",
+            "type": "generic",
+            "condition_unmet_message": "The clamps loosen when the core output spikes."
+          }
+        ]
+      }
+    },
+    "foundry_power_core_scale_03": {
+      "before": {
+        "id": "foundry_power_core_scale_03",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Array Lockers",
+        "background_image": "images/rooms/world_4/foundry_power_core_scale_03.webp",
+        "description": "Array lockers line the core wall under phase seals and red theft warnings. The phase seals flicker whenever the Anvil wakes.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "foundry_power_core_scale_02",
+          "north": "foundry_power_core_scale_04"
+        },
+        "pos": [
+          3,
+          4
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "array lockers",
+            "type": "generic",
+            "condition_unmet_message": "The lockers contain the parts the Astra needs to climb."
+          },
+          {
+            "name": "phase seals",
+            "type": "generic",
+            "condition_unmet_message": "The seals flicker whenever the Anvil wakes."
+          }
+        ]
+      },
+      "after": {
+        "id": "foundry_power_core_scale_03",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Array Lockers",
+        "background_image": "images/rooms/world_4/foundry_power_core_scale_03.webp",
+        "description": "Array lockers line the core wall under phase seals and red theft warnings. The phase seals flicker whenever the Anvil wakes.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "foundry_power_core_scale_02",
+          "south": "foundry_power_core_scale_04"
+        },
+        "pos": [
+          2,
+          -2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "array lockers",
+            "type": "generic",
+            "condition_unmet_message": "The lockers contain the parts the Astra needs to climb."
+          },
+          {
+            "name": "phase seals",
+            "type": "generic",
+            "condition_unmet_message": "The seals flicker whenever the Anvil wakes."
+          }
+        ]
+      }
+    },
+    "foundry_power_core_scale_04": {
+      "before": {
+        "id": "foundry_power_core_scale_04",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Coolant Choir",
+        "background_image": "images/rooms/world_4/foundry_power_core_scale_04.webp",
+        "description": "Blue pipes carry coolant under core pressure, knocking against their clamps in a coolant choir. Flow drops sharply at a damaged valve. A pressure relief lever is clamped in the open position.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "foundry_power_core_scale_03",
+          "north": "foundry_power_core_scale_final"
+        },
+        "pos": [
+          3,
+          5
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "coolant choir",
+            "type": "generic",
+            "condition_unmet_message": "The pipes are the only reason the room has not become a crater."
+          },
+          {
+            "name": "blue pipes",
+            "type": "generic",
+            "condition_unmet_message": "The chord falls flat near a damaged valve."
+          },
+          {
+            "name": "pressure relief lever",
+            "type": "generic",
+            "condition_unmet_message": "A heavy steel handle wired shut with copper safety wire."
+          }
+        ]
+      },
+      "after": {
+        "id": "foundry_power_core_scale_04",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Coolant Choir",
+        "background_image": "images/rooms/world_4/foundry_power_core_scale_04.webp",
+        "description": "Blue pipes carry coolant under core pressure, knocking against their clamps in a coolant choir. Flow drops sharply at a damaged valve. A pressure relief lever is clamped in the open position.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "foundry_power_core_scale_03",
+          "south": "foundry_power_core_scale_final"
+        },
+        "pos": [
+          2,
+          -3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "coolant choir",
+            "type": "generic",
+            "condition_unmet_message": "The pipes are the only reason the room has not become a crater."
+          },
+          {
+            "name": "blue pipes",
+            "type": "generic",
+            "condition_unmet_message": "The chord falls flat near a damaged valve."
+          },
+          {
+            "name": "pressure relief lever",
+            "type": "generic",
+            "condition_unmet_message": "A heavy steel handle wired shut with copper safety wire."
+          }
+        ]
+      }
+    },
+    "foundry_obsidian_shelf_scale_final": {
+      "before": {
+        "id": "foundry_obsidian_shelf_scale_final",
+        "env": "foundry",
+        "weather": "dust",
+        "title": "Foundry Emergency Marker",
+        "background_image": "images/rooms/world_4/foundry_obsidian_shelf_scale_final.webp",
+        "description": "An emergency marker blinks above the black glass, its cracked beacon still guiding crews through heat that management calls acceptable. The cracked beacon and shift tally make the landing shelf feel like part of a working disaster. A heat-sealed container rests half-buried in volcanic slag. A one-way slide leads directly back to the entrance.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "foundry_obsidian_shelf_scale_04"
+        },
+        "pos": [
+          -1,
+          5
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "cracked beacon",
+            "type": "generic",
+            "condition_unmet_message": "The beacon blinks through heat haze in a pattern workers could follow when the official lights failed."
+          },
+          {
+            "name": "shift tally",
+            "type": "generic",
+            "condition_unmet_message": "Names and counts scratch across the metal: proof that someone kept track even when Dominion did not."
+          },
+          {
+            "name": "heat-sealed container",
+            "type": "container",
+            "state_key": "foundry_obsidian_shelf_scale_final_cache_opened",
+            "items": [
+              "pure_iron",
+              "burn_salve"
+            ],
+            "popup_title": "Emergency Survival Pod",
+            "already_open_message": "The heat-sealed container has already been emptied.",
+            "discovery_message": "You release the cooled catches and open the container. Its sealed supplies have survived the heat."
+          },
+          {
+            "name": "slide",
+            "type": "generic",
+            "action_event": "warp_foundry_obsidian_shelf_scale_final_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "foundry_obsidian_shelf_scale_final",
+        "env": "foundry",
+        "weather": "dust",
+        "title": "Foundry Emergency Marker",
+        "background_image": "images/rooms/world_4/foundry_obsidian_shelf_scale_final.webp",
+        "description": "An emergency marker blinks above the black glass, its cracked beacon still guiding crews through heat that management calls acceptable. The cracked beacon and shift tally make the landing shelf feel like part of a working disaster. A heat-sealed container rests half-buried in volcanic slag. An optional return slide leads directly back to the entrance. You can also walk back through the room corridors.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "foundry_obsidian_shelf_scale_04"
+        },
+        "pos": [
+          -1,
+          5
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "cracked beacon",
+            "type": "generic",
+            "condition_unmet_message": "The beacon blinks through heat haze in a pattern workers could follow when the official lights failed."
+          },
+          {
+            "name": "shift tally",
+            "type": "generic",
+            "condition_unmet_message": "Names and counts scratch across the metal: proof that someone kept track even when Dominion did not."
+          },
+          {
+            "name": "heat-sealed container",
+            "type": "container",
+            "state_key": "foundry_obsidian_shelf_scale_final_cache_opened",
+            "items": [
+              "pure_iron",
+              "burn_salve"
+            ],
+            "popup_title": "Emergency Survival Pod",
+            "already_open_message": "The heat-sealed container has already been emptied.",
+            "discovery_message": "You release the cooled catches and open the container. Its sealed supplies have survived the heat."
+          },
+          {
+            "name": "slide",
+            "type": "generic",
+            "action_event": "warp_foundry_obsidian_shelf_scale_final_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to the area entrance. You can also retrace the room corridors using NSEW swipes."
+          }
+        ]
+      }
+    },
+    "foundry_slag_river_scale_final": {
+      "before": {
+        "id": "foundry_slag_river_scale_final",
+        "env": "foundry",
+        "weather": "dust",
+        "title": "Foundry River Control",
+        "background_image": "images/rooms/world_4/foundry_slag_river_scale_final.webp",
+        "description": "A river control booth watches slag levels with a burned console and a rescue hook nobody officially issued. The burned console and rescue hook explain how workers survive routes the map calls closed. A heavy smelter toolbox sits bolted beside the sluice valve. A one-way catwalk leads directly back to the entrance.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "magma_drone"
+        ],
+        "connections": {
+          "south": "foundry_slag_river_scale_04"
+        },
+        "pos": [
+          2,
+          2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "burned console",
+            "type": "generic",
+            "condition_unmet_message": "The console is scorched around the manual controls, where somebody chose a person over procedure."
+          },
+          {
+            "name": "rescue hook",
+            "type": "generic",
+            "condition_unmet_message": "The hook is unlogged, practical, and worn smooth by hands that were not supposed to need saving."
+          },
+          {
+            "name": "smelter toolbox",
+            "type": "container",
+            "state_key": "foundry_slag_river_scale_final_cache_opened",
+            "items": [
+              "foundry_crucible_lining",
+              "pure_iron"
+            ],
+            "popup_title": "Foreman's Smelter Toolbox",
+            "already_open_message": "The smelter toolbox has already been emptied.",
+            "discovery_message": "You open the toolbox and lift the usable parts from their fitted slots."
+          },
+          {
+            "name": "catwalk",
+            "type": "generic",
+            "action_event": "warp_foundry_slag_river_scale_final_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "foundry_slag_river_scale_final",
+        "env": "foundry",
+        "weather": "dust",
+        "title": "Foundry River Control",
+        "background_image": "images/rooms/world_4/foundry_slag_river_scale_final.webp",
+        "description": "A river control booth watches slag levels with a burned console and a rescue hook nobody officially issued. The burned console and rescue hook explain how workers survive routes the map calls closed. A heavy smelter toolbox sits bolted beside the sluice valve. An optional return catwalk leads directly back to the entrance. You can also walk back through the room corridors.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "magma_drone"
+        ],
+        "connections": {
+          "south": "foundry_slag_river_scale_04"
+        },
+        "pos": [
+          2,
+          2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "burned console",
+            "type": "generic",
+            "condition_unmet_message": "The console is scorched around the manual controls, where somebody chose a person over procedure."
+          },
+          {
+            "name": "rescue hook",
+            "type": "generic",
+            "condition_unmet_message": "The hook is unlogged, practical, and worn smooth by hands that were not supposed to need saving."
+          },
+          {
+            "name": "smelter toolbox",
+            "type": "container",
+            "state_key": "foundry_slag_river_scale_final_cache_opened",
+            "items": [
+              "foundry_crucible_lining",
+              "pure_iron"
+            ],
+            "popup_title": "Foreman's Smelter Toolbox",
+            "already_open_message": "The smelter toolbox has already been emptied.",
+            "discovery_message": "You open the toolbox and lift the usable parts from their fitted slots."
+          },
+          {
+            "name": "catwalk",
+            "type": "generic",
+            "action_event": "warp_foundry_slag_river_scale_final_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to the area entrance. You can also retrace the room corridors using NSEW swipes."
+          }
+        ]
+      }
+    },
+    "foundry_cooling_springs_scale_final": {
+      "before": {
+        "id": "foundry_cooling_springs_scale_final",
+        "environmental_effects": [
+          {
+            "id": "vent_mist",
+            "preset": "machinery.vent_mist",
+            "intensity": 0.3,
+            "emitters": [
+              {
+                "x": 0.18,
+                "y": 0.32,
+                "angle_degrees": -78
+              },
+              {
+                "x": 0.82,
+                "y": 0.39,
+                "angle_degrees": -105
+              }
+            ]
+          }
+        ],
+        "env": "foundry",
+        "weather": "steam",
+        "title": "Foundry Blue Steam Pocket",
+        "background_image": "images/rooms/world_4/foundry_cooling_springs_scale_final.webp",
+        "description": "A blue steam pocket gathers under patched pipes, turning heat into a temporary hiding place. The patched pipes and cool residue show the Foundry being fought by its own workers. An insulated coolant reserve hums with frosty condensation. A one-way drain leads directly back to the entrance.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "foundry_cooling_springs_scale_04"
+        },
+        "pos": [
+          0,
+          6
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "patched pipes",
+            "type": "generic",
+            "condition_unmet_message": "The patches are ugly and effective, rerouting cold flow through gaps the Foundry never planned for."
+          },
+          {
+            "name": "cool residue",
+            "type": "generic",
+            "condition_unmet_message": "Blue residue clings to the pipe seams, a small refusal of all this furnace logic."
+          },
+          {
+            "name": "coolant reserve",
+            "type": "container",
+            "state_key": "foundry_cooling_springs_scale_final_cache_opened",
+            "items": [
+              "thermal_solder_gun",
+              "burn_salve"
+            ],
+            "popup_title": "Pressurized Coolant Canister",
+            "already_open_message": "The coolant reserve has already been emptied.",
+            "discovery_message": "You open the reserve compartment and recover the equipment stored behind its insulated panel."
+          },
+          {
+            "name": "drain",
+            "type": "generic",
+            "action_event": "warp_foundry_cooling_springs_scale_final_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "foundry_cooling_springs_scale_final",
+        "environmental_effects": [
+          {
+            "id": "vent_mist",
+            "preset": "machinery.vent_mist",
+            "intensity": 0.3,
+            "emitters": [
+              {
+                "x": 0.18,
+                "y": 0.32,
+                "angle_degrees": -78
+              },
+              {
+                "x": 0.82,
+                "y": 0.39,
+                "angle_degrees": -105
+              }
+            ]
+          }
+        ],
+        "env": "foundry",
+        "weather": "steam",
+        "title": "Foundry Blue Steam Pocket",
+        "background_image": "images/rooms/world_4/foundry_cooling_springs_scale_final.webp",
+        "description": "A blue steam pocket gathers under patched pipes, turning heat into a temporary hiding place. The patched pipes and cool residue show the Foundry being fought by its own workers. An insulated coolant reserve hums with frosty condensation. An optional return drain leads directly back to the entrance. You can also walk back through the room corridors.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "foundry_cooling_springs_scale_04"
+        },
+        "pos": [
+          0,
+          6
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "patched pipes",
+            "type": "generic",
+            "condition_unmet_message": "The patches are ugly and effective, rerouting cold flow through gaps the Foundry never planned for."
+          },
+          {
+            "name": "cool residue",
+            "type": "generic",
+            "condition_unmet_message": "Blue residue clings to the pipe seams, a small refusal of all this furnace logic."
+          },
+          {
+            "name": "coolant reserve",
+            "type": "container",
+            "state_key": "foundry_cooling_springs_scale_final_cache_opened",
+            "items": [
+              "thermal_solder_gun",
+              "burn_salve"
+            ],
+            "popup_title": "Pressurized Coolant Canister",
+            "already_open_message": "The coolant reserve has already been emptied.",
+            "discovery_message": "You open the reserve compartment and recover the equipment stored behind its insulated panel."
+          },
+          {
+            "name": "drain",
+            "type": "generic",
+            "action_event": "warp_foundry_cooling_springs_scale_final_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to the area entrance. You can also retrace the room corridors using NSEW swipes."
+          }
+        ]
+      }
+    },
+    "foundry_waste_intake_scale_final": {
+      "before": {
+        "id": "foundry_waste_intake_scale_final",
+        "env": "foundry",
+        "weather": "gas",
+        "title": "Foundry Sorter Spine",
+        "background_image": "images/rooms/world_4/foundry_waste_intake_scale_final.webp",
+        "description": "A sorter spine rattles behind the intake with rejected parts climbing toward another chance at violence. The sorter spine and reject ledger make the waste system feel alive and complicit. A reinforced salvage bin caught against the intake teeth holds uncrushed gear. A one-way ladder leads directly back to the entrance.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "welder_bot",
+          "magma_drone"
+        ],
+        "connections": {
+          "south": "foundry_waste_intake_scale_04"
+        },
+        "pos": [
+          3,
+          6
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "sorter spine",
+            "type": "generic",
+            "condition_unmet_message": "The spine sorts ruined parts by usefulness, never asking what ruined them."
+          },
+          {
+            "name": "reject ledger",
+            "type": "generic",
+            "condition_unmet_message": "The ledger calls every failed unit recoverable material. It never uses the word body."
+          },
+          {
+            "name": "salvage bin",
+            "type": "container",
+            "state_key": "foundry_waste_intake_scale_final_cache_opened",
+            "items": [
+              "pure_iron",
+              "nano_filament"
+            ],
+            "popup_title": "Scrap Sorter Salvage Bin",
+            "already_open_message": "The salvage bin has already been emptied.",
+            "discovery_message": "You sort through the bin, setting aside the pieces that have survived the waste stream."
+          },
+          {
+            "name": "ladder",
+            "type": "generic",
+            "action_event": "warp_foundry_waste_intake_scale_final_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "foundry_waste_intake_scale_final",
+        "env": "foundry",
+        "weather": "gas",
+        "title": "Foundry Sorter Spine",
+        "background_image": "images/rooms/world_4/foundry_waste_intake_scale_final.webp",
+        "description": "A sorter spine rattles behind the intake with rejected parts climbing toward another chance at violence. The sorter spine and reject ledger make the waste system feel alive and complicit. A reinforced salvage bin caught against the intake teeth holds uncrushed gear. An optional return ladder leads directly back to the entrance. You can also walk back through the room corridors.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "welder_bot",
+          "magma_drone"
+        ],
+        "connections": {
+          "north": "foundry_waste_intake_scale_04"
+        },
+        "pos": [
+          2,
+          -4
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "sorter spine",
+            "type": "generic",
+            "condition_unmet_message": "The spine sorts ruined parts by usefulness, never asking what ruined them."
+          },
+          {
+            "name": "reject ledger",
+            "type": "generic",
+            "condition_unmet_message": "The ledger calls every failed unit recoverable material. It never uses the word body."
+          },
+          {
+            "name": "salvage bin",
+            "type": "container",
+            "state_key": "foundry_waste_intake_scale_final_cache_opened",
+            "items": [
+              "pure_iron",
+              "nano_filament"
+            ],
+            "popup_title": "Scrap Sorter Salvage Bin",
+            "already_open_message": "The salvage bin has already been emptied.",
+            "discovery_message": "You sort through the bin, setting aside the pieces that have survived the waste stream."
+          },
+          {
+            "name": "ladder",
+            "type": "generic",
+            "action_event": "warp_foundry_waste_intake_scale_final_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to the area entrance. You can also retrace the room corridors using NSEW swipes."
+          }
+        ]
+      }
+    },
+    "foundry_service_airlock_scale_final": {
+      "before": {
+        "id": "foundry_service_airlock_scale_final",
+        "env": "foundry",
+        "title": "Foundry Seal Backroom",
+        "background_image": "images/rooms/world_4/foundry_service_airlock_scale_final.webp",
+        "description": "A seal backroom stores pressure masks beside handwritten cycling rules. The pressure masks and cycling rules make the airlock feel maintained by people who expect the official procedure to fail. A stamped technician locker remains locked against the heat. A one-way hatch leads directly back to the entrance.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "foundry_service_airlock_scale_04"
+        },
+        "pos": [
+          3,
+          6
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "pressure masks",
+            "type": "generic",
+            "condition_unmet_message": "The masks hang low enough for workers to grab while running."
+          },
+          {
+            "name": "cycling rules",
+            "type": "generic",
+            "condition_unmet_message": "The handwritten rules contradict the posted procedure in every way that would keep someone alive."
+          },
+          {
+            "name": "technician locker",
+            "type": "container",
+            "state_key": "foundry_service_airlock_scale_final_cache_opened",
+            "items": [
+              "pure_iron",
+              "circuit_board"
+            ],
+            "popup_title": "Dominion Line-Tech Locker",
+            "already_open_message": "The technician locker has already been emptied.",
+            "discovery_message": "You open the locker and unclip the spare parts secured against its back wall."
+          },
+          {
+            "name": "hatch",
+            "type": "generic",
+            "action_event": "warp_foundry_service_airlock_scale_final_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "foundry_service_airlock_scale_final",
+        "env": "foundry",
+        "title": "Foundry Seal Backroom",
+        "background_image": "images/rooms/world_4/foundry_service_airlock_scale_final.webp",
+        "description": "A seal backroom stores pressure masks beside handwritten cycling rules. The pressure masks and cycling rules make the airlock feel maintained by people who expect the official procedure to fail. A stamped technician locker remains locked against the heat. An optional return hatch leads directly back to the entrance. You can also walk back through the room corridors.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "foundry_service_airlock_scale_04"
+        },
+        "pos": [
+          3,
+          6
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "pressure masks",
+            "type": "generic",
+            "condition_unmet_message": "The masks hang low enough for workers to grab while running."
+          },
+          {
+            "name": "cycling rules",
+            "type": "generic",
+            "condition_unmet_message": "The handwritten rules contradict the posted procedure in every way that would keep someone alive."
+          },
+          {
+            "name": "technician locker",
+            "type": "container",
+            "state_key": "foundry_service_airlock_scale_final_cache_opened",
+            "items": [
+              "pure_iron",
+              "circuit_board"
+            ],
+            "popup_title": "Dominion Line-Tech Locker",
+            "already_open_message": "The technician locker has already been emptied.",
+            "discovery_message": "You open the locker and unclip the spare parts secured against its back wall."
+          },
+          {
+            "name": "hatch",
+            "type": "generic",
+            "action_event": "warp_foundry_service_airlock_scale_final_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to the area entrance. You can also retrace the room corridors using NSEW swipes."
+          }
+        ]
+      }
+    },
+    "foundry_conveyor_belt_scale_final": {
+      "before": {
+        "id": "foundry_conveyor_belt_scale_final",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Foundry Belt Nerve",
+        "background_image": "images/rooms/world_4/foundry_conveyor_belt_scale_final.webp",
+        "description": "A belt nerve junction pulses beneath the conveyor, matching every crush cycle to a production target. The nerve junction and target counter turn traversal into readable machinery. An assembly cache has been knocked onto an inspection shelf. A one-way slide leads directly back to the entrance.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "conveyor_crusher"
+        ],
+        "connections": {
+          "south": "foundry_conveyor_belt_scale_04"
+        },
+        "pos": [
+          1,
+          6
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "nerve junction",
+            "type": "generic",
+            "condition_unmet_message": "The junction pulses in time with the crushers, turning the whole belt into one exposed nerve."
+          },
+          {
+            "name": "target counter",
+            "type": "generic",
+            "condition_unmet_message": "The counter values throughput over survival. Nova can still use its rhythm against the line."
+          },
+          {
+            "name": "assembly cache",
+            "type": "container",
+            "state_key": "foundry_conveyor_belt_scale_final_cache_opened",
+            "items": [
+              "pure_iron",
+              "mod_corrosive_rounds"
+            ],
+            "popup_title": "Automated Assembly Crate",
+            "already_open_message": "The assembly cache has already been emptied.",
+            "discovery_message": "You lift the cache cover and separate usable components from the packing material."
+          },
+          {
+            "name": "slide",
+            "type": "generic",
+            "action_event": "warp_foundry_conveyor_belt_scale_final_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "foundry_conveyor_belt_scale_final",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Foundry Belt Nerve",
+        "background_image": "images/rooms/world_4/foundry_conveyor_belt_scale_final.webp",
+        "description": "A belt nerve junction pulses beneath the conveyor, matching every crush cycle to a production target. The nerve junction and target counter turn traversal into readable machinery. An assembly cache has been knocked onto an inspection shelf. An optional return slide leads directly back to the entrance. You can also walk back through the room corridors.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "conveyor_crusher"
+        ],
+        "connections": {
+          "south": "foundry_conveyor_belt_scale_04"
+        },
+        "pos": [
+          0,
+          7
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "nerve junction",
+            "type": "generic",
+            "condition_unmet_message": "The junction pulses in time with the crushers, turning the whole belt into one exposed nerve."
+          },
+          {
+            "name": "target counter",
+            "type": "generic",
+            "condition_unmet_message": "The counter values throughput over survival. Nova can still use its rhythm against the line."
+          },
+          {
+            "name": "assembly cache",
+            "type": "container",
+            "state_key": "foundry_conveyor_belt_scale_final_cache_opened",
+            "items": [
+              "pure_iron",
+              "mod_corrosive_rounds"
+            ],
+            "popup_title": "Automated Assembly Crate",
+            "already_open_message": "The assembly cache has already been emptied.",
+            "discovery_message": "You lift the cache cover and separate usable components from the packing material."
+          },
+          {
+            "name": "slide",
+            "type": "generic",
+            "action_event": "warp_foundry_conveyor_belt_scale_final_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to the area entrance. You can also retrace the room corridors using NSEW swipes."
+          }
+        ]
+      }
+    },
+    "foundry_conditioning_scale_final": {
+      "before": {
+        "id": "foundry_conditioning_scale_final",
+        "env": "foundry",
+        "title": "Foundry Defect Choir",
+        "background_image": "images/rooms/world_4/foundry_conditioning_scale_final.webp",
+        "description": "A defect choir of rejected units clicks behind glass, half-awake and waiting for a command that may never come. The defect choir and glass seam deepen the question of what the Foundry throws away. A hardened stress-test locker survived the pressure cycles. A one-way valve leads directly back to the entrance.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "phantom_prototype"
+        ],
+        "connections": {
+          "south": "foundry_conditioning_scale_04"
+        },
+        "pos": [
+          2,
+          2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "defect choir",
+            "type": "generic",
+            "condition_unmet_message": "The rejected units click in uneven rhythm, each delay sounding almost like resistance."
+          },
+          {
+            "name": "glass seam",
+            "type": "generic",
+            "condition_unmet_message": "The glass seam is weakest where too many hands have struck it from the inside."
+          },
+          {
+            "name": "stress-test locker",
+            "type": "container",
+            "state_key": "foundry_conditioning_scale_final_cache_opened",
+            "items": [
+              "stability_gyro_mod",
+              "battery_pack"
+            ],
+            "popup_title": "Stress-Test Prototype Locker",
+            "already_open_message": "The stress-test locker has already been emptied.",
+            "discovery_message": "You open the test locker and retrieve the equipment secured in its padded compartments."
+          },
+          {
+            "name": "valve",
+            "type": "generic",
+            "action_event": "warp_foundry_conditioning_scale_final_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "foundry_conditioning_scale_final",
+        "env": "foundry",
+        "title": "Foundry Defect Choir",
+        "background_image": "images/rooms/world_4/foundry_conditioning_scale_final.webp",
+        "description": "A defect choir of rejected units clicks behind glass, half-awake and waiting for a command that may never come. The defect choir and glass seam deepen the question of what the Foundry throws away. A hardened stress-test locker survived the pressure cycles. An optional return valve leads directly back to the entrance. You can also walk back through the room corridors.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "phantom_prototype"
+        ],
+        "connections": {
+          "south": "foundry_conditioning_scale_04"
+        },
+        "pos": [
+          2,
+          2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "defect choir",
+            "type": "generic",
+            "condition_unmet_message": "The rejected units click in uneven rhythm, each delay sounding almost like resistance."
+          },
+          {
+            "name": "glass seam",
+            "type": "generic",
+            "condition_unmet_message": "The glass seam is weakest where too many hands have struck it from the inside."
+          },
+          {
+            "name": "stress-test locker",
+            "type": "container",
+            "state_key": "foundry_conditioning_scale_final_cache_opened",
+            "items": [
+              "stability_gyro_mod",
+              "battery_pack"
+            ],
+            "popup_title": "Stress-Test Prototype Locker",
+            "already_open_message": "The stress-test locker has already been emptied.",
+            "discovery_message": "You open the test locker and retrieve the equipment secured in its padded compartments."
+          },
+          {
+            "name": "valve",
+            "type": "generic",
+            "action_event": "warp_foundry_conditioning_scale_final_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to the area entrance. You can also retrace the room corridors using NSEW swipes."
+          }
+        ]
+      }
+    },
+    "foundry_forge_scale_final": {
+      "before": {
+        "id": "foundry_forge_scale_final",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Foundry Relic Draft",
+        "background_image": "images/rooms/world_4/foundry_forge_scale_final.webp",
+        "description": "A relic draft moves through the Forge before the fire does, tugging ash toward the Anvil's old imprint. The relic draft and ash trail make the Forge feel older than Dominion's machinery. A heat-blackened master smith crate sits beside the flue.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "foundry_forge_scale_04"
+        },
+        "pos": [
+          2,
+          4
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "relic draft",
+            "type": "generic",
+            "condition_unmet_message": "The draft moves toward the Anvil's imprint before the fire catches up."
+          },
+          {
+            "name": "ash trail",
+            "type": "generic",
+            "condition_unmet_message": "The ash curls in old patterns, older than Dominion and less obedient."
+          },
+          {
+            "name": "master smith crate",
+            "type": "container",
+            "state_key": "foundry_forge_scale_final_cache_opened",
+            "items": [
+              "pure_iron",
+              "precision_core"
+            ],
+            "popup_title": "Old Forge Master Crate",
+            "already_open_message": "The master smith crate has already been emptied.",
+            "discovery_message": "You open the crate and draw the precision parts out of their protective wrapping."
+          },
+          {
+            "name": "flue",
+            "type": "generic",
+            "action_event": "warp_foundry_forge_scale_final_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "foundry_forge_scale_final",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Foundry Relic Draft",
+        "background_image": "images/rooms/world_4/foundry_forge_scale_final.webp",
+        "description": "A relic draft moves through the Forge before the fire does, tugging ash toward the Anvil's old imprint. The relic draft and ash trail make the Forge feel older than Dominion's machinery. A heat-blackened master smith crate sits beside the flue.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "foundry_forge_scale_04"
+        },
+        "pos": [
+          2,
+          4
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "relic draft",
+            "type": "generic",
+            "condition_unmet_message": "The draft moves toward the Anvil's imprint before the fire catches up."
+          },
+          {
+            "name": "ash trail",
+            "type": "generic",
+            "condition_unmet_message": "The ash curls in old patterns, older than Dominion and less obedient."
+          },
+          {
+            "name": "master smith crate",
+            "type": "container",
+            "state_key": "foundry_forge_scale_final_cache_opened",
+            "items": [
+              "pure_iron",
+              "precision_core"
+            ],
+            "popup_title": "Old Forge Master Crate",
+            "already_open_message": "The master smith crate has already been emptied.",
+            "discovery_message": "You open the crate and draw the precision parts out of their protective wrapping."
+          },
+          {
+            "name": "flue",
+            "type": "generic",
+            "action_event": "warp_foundry_forge_scale_final_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to the area entrance. You can also retrace the room corridors using NSEW swipes."
+          }
+        ]
+      }
+    },
+    "foundry_power_core_scale_final": {
+      "before": {
+        "id": "foundry_power_core_scale_final",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Foundry Core Shadow",
+        "background_image": "images/rooms/world_4/foundry_power_core_scale_final.webp",
+        "description": "A core shadow falls across the engine clamps in a shape too sharp for the room's lighting. The core shadow and clamp gauge foreshadow the theft that will make the Astra climb. A lead-lined shielded core case is clipped to the reactor frame. A one-way lift leads directly back to the entrance.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "slag_golem",
+          "welder_bot"
+        ],
+        "connections": {
+          "south": "foundry_power_core_scale_04"
+        },
+        "pos": [
+          3,
+          6
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "core shadow",
+            "type": "generic",
+            "condition_unmet_message": "The shadow cuts across the clamps at the exact angle Nova will need for the theft."
+          },
+          {
+            "name": "clamp gauge",
+            "type": "generic",
+            "condition_unmet_message": "The gauge measures thermal grip, but its redline also marks when the engine is movable."
+          },
+          {
+            "name": "shielded core case",
+            "type": "container",
+            "state_key": "foundry_power_core_scale_final_cache_opened",
+            "items": [
+              "pure_iron",
+              "focus_matrix"
+            ],
+            "popup_title": "Lead-Lined Core Component Case",
+            "already_open_message": "The shielded core case has already been emptied.",
+            "discovery_message": "You release the case catches and lift the protected components from their insulated cradle."
+          },
+          {
+            "name": "lift",
+            "type": "generic",
+            "action_event": "warp_foundry_power_core_scale_final_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "foundry_power_core_scale_final",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Foundry Core Shadow",
+        "background_image": "images/rooms/world_4/foundry_power_core_scale_final.webp",
+        "description": "A core shadow falls across the engine clamps in a shape too sharp for the room's lighting. The core shadow and clamp gauge foreshadow the theft that will make the Astra climb. A lead-lined shielded core case is clipped to the reactor frame. An optional return lift leads directly back to the entrance. You can also walk back through the room corridors.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "slag_golem",
+          "welder_bot"
+        ],
+        "connections": {
+          "north": "foundry_power_core_scale_04"
+        },
+        "pos": [
+          2,
+          -4
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "core shadow",
+            "type": "generic",
+            "condition_unmet_message": "The shadow cuts across the clamps at the exact angle Nova will need for the theft."
+          },
+          {
+            "name": "clamp gauge",
+            "type": "generic",
+            "condition_unmet_message": "The gauge measures thermal grip, but its redline also marks when the engine is movable."
+          },
+          {
+            "name": "shielded core case",
+            "type": "container",
+            "state_key": "foundry_power_core_scale_final_cache_opened",
+            "items": [
+              "pure_iron",
+              "focus_matrix"
+            ],
+            "popup_title": "Lead-Lined Core Component Case",
+            "already_open_message": "The shielded core case has already been emptied.",
+            "discovery_message": "You release the case catches and lift the protected components from their insulated cradle."
+          },
+          {
+            "name": "lift",
+            "type": "generic",
+            "action_event": "warp_foundry_power_core_scale_final_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to the area entrance. You can also retrace the room corridors using NSEW swipes."
+          }
+        ]
+      }
+    },
+    "foundry_titan_dock_scale_final": {
+      "before": {
+        "id": "foundry_titan_dock_scale_final",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Foundry Last Gantry",
+        "background_image": "images/rooms/world_4/foundry_titan_dock_scale_final.webp",
+        "description": "A last gantry shakes over the Titan dock, pointed directly at the escape route. The last gantry and release bolt turn the boss arena into a place built for a desperate exit. A magnetic titan maintenance pod is tethered beneath the crane. A one-way scaffolding leads directly back to the entrance.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "foundry_titan_dock_scale_04"
+        },
+        "pos": [
+          4,
+          5
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "last gantry",
+            "type": "generic",
+            "condition_unmet_message": "The gantry points away from the dock like somebody already imagined the retreat."
+          },
+          {
+            "name": "release bolt",
+            "type": "generic",
+            "condition_unmet_message": "The bolt is painted emergency yellow under a layer of old slag dust."
+          },
+          {
+            "name": "titan maintenance pod",
+            "type": "container",
+            "state_key": "foundry_titan_dock_scale_final_cache_opened",
+            "items": [
+              "pure_iron",
+              "bulwark_layer"
+            ],
+            "popup_title": "Heavy Walker Repair Pod",
+            "already_open_message": "The titan maintenance pod has already been emptied.",
+            "discovery_message": "You open the maintenance pod and recover the spare equipment held behind its service panel."
+          },
+          {
+            "name": "scaffolding",
+            "type": "generic",
+            "action_event": "warp_foundry_titan_dock_scale_final_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "foundry_titan_dock_scale_final",
+        "env": "foundry",
+        "weather": "sparks",
+        "title": "Foundry Last Gantry",
+        "background_image": "images/rooms/world_4/foundry_titan_dock_scale_final.webp",
+        "description": "A last gantry shakes over the Titan dock, pointed directly at the escape route. The last gantry and release bolt turn the boss arena into a place built for a desperate exit. A magnetic titan maintenance pod is tethered beneath the crane. An optional return scaffolding leads directly back to the entrance. You can also walk back through the room corridors.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "foundry_titan_dock_scale_04"
+        },
+        "pos": [
+          4,
+          5
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "last gantry",
+            "type": "generic",
+            "condition_unmet_message": "The gantry points away from the dock like somebody already imagined the retreat."
+          },
+          {
+            "name": "release bolt",
+            "type": "generic",
+            "condition_unmet_message": "The bolt is painted emergency yellow under a layer of old slag dust."
+          },
+          {
+            "name": "titan maintenance pod",
+            "type": "container",
+            "state_key": "foundry_titan_dock_scale_final_cache_opened",
+            "items": [
+              "pure_iron",
+              "bulwark_layer"
+            ],
+            "popup_title": "Heavy Walker Repair Pod",
+            "already_open_message": "The titan maintenance pod has already been emptied.",
+            "discovery_message": "You open the maintenance pod and recover the spare equipment held behind its service panel."
+          },
+          {
+            "name": "scaffolding",
+            "type": "generic",
+            "action_event": "warp_foundry_titan_dock_scale_final_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to the area entrance. You can also retrace the room corridors using NSEW swipes."
+          }
+        ]
+      }
+    },
+    "foundry_pipe_gallery": {
+      "before": {
+        "id": "foundry_pipe_gallery",
+        "env": "industrial",
+        "title": "High-Pressure Pipe Gallery",
+        "background_image": "images/rooms/world_4/foundry_service_airlock.webp",
+        "description": "Superheated steam hisses through massive overhead conduits in a pressurized gallery. Checkered racing pennants hang above a pipe bench stacked with flanging tools and leather gloves. A scuffed baseball rests in a tool rack. A family photo and leather dog collar hang beside the bypass manifold.",
+        "npcs": [
+          "pipefitter_cameron"
+        ],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "foundry_decon_chamber"
+        },
+        "pos": [
+          5,
+          1
+        ],
+        "state": {},
+        "actions": [
+          {
+            "id": "inspect_racing_pennants",
+            "name": "racing pennants",
+            "type": "inspect",
+            "description": "Inspect the checkered racing banners and speed decals.",
+            "inspect_message": "Twin checkered racing flags and a gold number 24 decal are stuck to the conduit shroud above the workbench, honoring late-night speedway runs."
+          },
+          {
+            "id": "inspect_pipe_bench",
+            "name": "pipe bench",
+            "type": "inspect",
+            "description": "Inspect the pipe-fitting workbench and tools.",
+            "inspect_message": "Tungsten flanging dies and heavy pipe cutters sit beside a well-oiled composite baseball bat and a pair of worn leather work gloves stamped with the initials S.T."
+          },
+          {
+            "id": "inspect_family_photo",
+            "name": "family photo",
+            "type": "inspect",
+            "description": "Inspect the snapshot clipped to the magnetic toolbox.",
+            "inspect_message": "A holo-snapshot is clipped to the toolbox lid: three smiling young girls in softball caps with a note: 'Be careful at work, Daddy! Love Lily, Emma & Hannah.'"
+          },
+          {
+            "id": "inspect_bypass_manifold",
+            "name": "bypass manifold",
+            "type": "inspect",
+            "description": "Inspect the twin-loop steam bypass manifold.",
+            "inspect_message": "A massive twin-loop steam manifold engineered to absorb thermal shock without shedding system pressure, welded with immaculate precision."
+          },
+          {
+            "id": "inspect_smokey_collar",
+            "name": "leather dog collar",
+            "type": "inspect",
+            "description": "Inspect the worn leather collar hung from the workbench peg.",
+            "inspect_message": "A soft, worn leather collar looped over a brass peg beside Sherman's gloves. An engraved brass tag reads: 'Smokey — Good boy for thirteen years. Rest easy, pal.'"
+          }
+        ]
+      },
+      "after": {
+        "id": "foundry_pipe_gallery",
+        "env": "industrial",
+        "title": "High-Pressure Pipe Gallery",
+        "background_image": "images/rooms/world_4/foundry_service_airlock.webp",
+        "description": "Superheated steam hisses through massive overhead conduits in a pressurized gallery. Checkered racing pennants hang above a pipe bench stacked with flanging tools and leather gloves. A scuffed baseball rests in a tool rack. A family photo and leather dog collar hang beside the bypass manifold. An Assembly maintenance shutter stands at the east end, leading to Reject Bay. Once the crew clears it after Cooling Springs, the corridor stays open in both directions.",
+        "npcs": [
+          "pipefitter_cameron"
+        ],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "foundry_decon_chamber",
+          "east": "foundry_reject_bay"
+        },
+        "pos": [
+          5,
+          1
+        ],
+        "state": {},
+        "actions": [
+          {
+            "id": "inspect_racing_pennants",
+            "name": "racing pennants",
+            "type": "inspect",
+            "description": "Inspect the checkered racing banners and speed decals.",
+            "inspect_message": "Twin checkered racing flags and a gold number 24 decal are stuck to the conduit shroud above the workbench, honoring late-night speedway runs."
+          },
+          {
+            "id": "inspect_pipe_bench",
+            "name": "pipe bench",
+            "type": "inspect",
+            "description": "Inspect the pipe-fitting workbench and tools.",
+            "inspect_message": "Tungsten flanging dies and heavy pipe cutters sit beside a well-oiled composite baseball bat and a pair of worn leather work gloves stamped with the initials S.T."
+          },
+          {
+            "id": "inspect_family_photo",
+            "name": "family photo",
+            "type": "inspect",
+            "description": "Inspect the snapshot clipped to the magnetic toolbox.",
+            "inspect_message": "A holo-snapshot is clipped to the toolbox lid: three smiling young girls in softball caps with a note: 'Be careful at work, Daddy! Love Lily, Emma & Hannah.'"
+          },
+          {
+            "id": "inspect_bypass_manifold",
+            "name": "bypass manifold",
+            "type": "inspect",
+            "description": "Inspect the twin-loop steam bypass manifold.",
+            "inspect_message": "A massive twin-loop steam manifold engineered to absorb thermal shock without shedding system pressure, welded with immaculate precision."
+          },
+          {
+            "id": "inspect_smokey_collar",
+            "name": "leather dog collar",
+            "type": "inspect",
+            "description": "Inspect the worn leather collar hung from the workbench peg.",
+            "inspect_message": "A soft, worn leather collar looped over a brass peg beside Sherman's gloves. An engraved brass tag reads: 'Smokey — Good boy for thirteen years. Rest easy, pal.'"
+          }
+        ],
+        "blocked_directions": {
+          "east": {
+            "type": "lock",
+            "requires": [
+              {
+                "room_id": "foundry_pipe_gallery",
+                "state_key": "assembly_route_open",
+                "value": true
+              }
+            ],
+            "message_locked": "The Assembly maintenance shutter is sealed. Recover Project Phantom and regroup with Gh0st at Cooling Springs before opening this route.",
+            "message_unlock": "The cleared maintenance corridor connects the Pipe Gallery and Reject Bay. The route stays open for the return trip."
+          }
+        }
+      }
+    }
+  },
+  "events": {
+    "w4_mq17_regroup_springs": {
+      "before": {
+        "id": "w4_mq17_regroup_springs",
+        "description": "Regroup after Project Phantom truth.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w4_mq17_regroup_springs"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w4_mq17"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w4_mq17",
+            "task_id": "access_phantom_terminal"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w4_mq17",
+            "task_id": "regroup_springs"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w4_mq17",
+            "task_id": "regroup_springs"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w4_springs_regrouped"
+          },
+          {
+            "type": "give_item",
+            "item_id": "gh0st_override_key",
+            "quantity": 1
+          },
+          {
+            "type": "unlock_skill",
+            "skill_id": "gh0st_phase_counter"
+          },
+          {
+            "type": "give_xp",
+            "xp": 800
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w4_mq17"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w4_mq17_complete"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w4_mq18"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w4_mq18"
+          },
+          {
+            "type": "warp",
+            "room_id": "foundry_conveyor_belt"
+          },
+          {
+            "type": "show_message",
+            "message": "Quest Complete: Ghost in the Machine\n\nGh0st gives Nova his override key. The first time was programming. The second time is choice. The Assembly floor is still making more bodies for the same crime."
+          }
+        ]
+      },
+      "after": {
+        "id": "w4_mq17_regroup_springs",
+        "description": "Regroup after Project Phantom truth.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w4_mq17_regroup_springs"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w4_mq17"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w4_mq17",
+            "task_id": "access_phantom_terminal"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w4_mq17",
+            "task_id": "regroup_springs"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w4_mq17",
+            "task_id": "regroup_springs"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w4_springs_regrouped"
+          },
+          {
+            "type": "give_item",
+            "item_id": "gh0st_override_key",
+            "quantity": 1
+          },
+          {
+            "type": "unlock_skill",
+            "skill_id": "gh0st_phase_counter"
+          },
+          {
+            "type": "give_xp",
+            "xp": 800
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w4_mq17"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w4_mq17_complete"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w4_mq18"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w4_mq18"
+          },
+          {
+            "type": "set_room_state",
+            "room_id": "foundry_pipe_gallery",
+            "state_key": "assembly_route_open",
+            "value": true
+          },
+          {
+            "type": "warp",
+            "room_id": "foundry_conveyor_belt"
+          },
+          {
+            "type": "show_message",
+            "message": "Quest Complete: Ghost in the Machine\n\nGh0st gives Nova his override key. The first time was programming. The second time is choice. The Assembly floor is still making more bodies for the same crime. The Pipe Gallery maintenance shutter is now cleared; the crew can return from Reject Bay to the Slag Pits."
+          }
+        ]
+      }
+    }
+  },
+  "removed_transitions": [
+    {
+      "id": "foundry_cooling_springs__southeast__foundry_waste_intake",
+      "from_node": "foundry_cooling_springs",
+      "from_room": "foundry_cooling_springs",
+      "direction": "southeast",
+      "to_node": "foundry_waste_intake",
+      "to_room": "foundry_waste_intake",
+      "transition_text": "Travel to Waste Intake."
+    },
+    {
+      "id": "foundry_forge__southeast__foundry_power_core",
+      "from_node": "foundry_forge",
+      "from_room": "foundry_forge_anvil",
+      "direction": "southeast",
+      "to_node": "foundry_power_core",
+      "to_room": "foundry_power_core",
+      "transition_text": "Travel to Power Core."
+    },
+    {
+      "id": "foundry_power_core__northwest__foundry_forge",
+      "from_node": "foundry_power_core",
+      "from_room": "foundry_power_core",
+      "direction": "northwest",
+      "to_node": "foundry_forge",
+      "to_room": "foundry_forge_anvil",
+      "transition_text": "Travel to The Forge."
+    },
+    {
+      "id": "foundry_waste_intake__northwest__foundry_cooling_springs",
+      "from_node": "foundry_waste_intake",
+      "from_room": "foundry_waste_intake",
+      "direction": "northwest",
+      "to_node": "foundry_cooling_springs",
+      "to_room": "foundry_cooling_springs",
+      "transition_text": "Travel to Cooling Springs."
+    }
+  ],
+  "added_transitions": [
+    {
+      "id": "foundry_service_airlock__foundry_pipe_gallery__east__foundry_conveyor_belt",
+      "from_node": "foundry_service_airlock",
+      "from_room": "foundry_pipe_gallery",
+      "direction": "east",
+      "to_node": "foundry_conveyor_belt",
+      "to_room": "foundry_reject_bay",
+      "transition_text": "Follow the cleared maintenance corridor into the Assembly reject bay."
+    },
+    {
+      "id": "foundry_conveyor_belt__foundry_reject_bay__west__foundry_service_airlock",
+      "from_node": "foundry_conveyor_belt",
+      "from_room": "foundry_reject_bay",
+      "direction": "west",
+      "to_node": "foundry_service_airlock",
+      "to_room": "foundry_pipe_gallery",
+      "transition_text": "Return through the maintenance corridor to the Pipe Gallery and Slag Pits."
+    }
+  ]
+}

@@ -359,5 +359,5 @@ flowchart LR
 
 ### World 1-Specific Choices NOT to Duplicate Mechanically
 1. **Do Not Repeat the "Accidental Fugitive / Collapsing Home Hub" Arc:** World 1 is about losing the only home Nova has ever known through a shortcut gone wrong. In Worlds 3–5, the crew of the *Astra* arrives with deliberate agency (heisting the Lens, sabotaging the Foundry core, infiltrating the Ring). Let Nova shift from *reactive survivor* to *deliberate instigator*.
-2. **Do Not Keep Zeke in "Panicked Clerk" Mode Past World 2:** By World 3 (The Spire—his old corporate habitat), Zeke's voice should evolve from trembling complicity into weaponized institutional fluency, actively conning and dismantling Dominion procedure.
+2. **Do Not Keep Zeke in "Panicked Clerk" Mode Past World 2:** By World 3 (The Spire—an unfamiliar city using familiar Dominion procedures), Zeke's voice should evolve from trembling complicity into weaponized institutional fluency, actively conning and dismantling Dominion procedure.
 3. **Do Not Confine Later Worlds to Subterranean Rust-and-Grime:** Preserve the crew's blue-collar perspective, but let it clash against vastly different visual and social palettes (neon cyberpunk stratification in World 3, industrial crucible scale in World 4, sterile executive luxury in World 5).

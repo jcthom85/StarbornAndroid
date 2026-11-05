@@ -60,6 +60,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -89,7 +92,13 @@ fun DialogueOverlay(
     modifier: Modifier = Modifier
 ) {
     val line = dialogue.line
-    val fullText = line.text
+    val fullText = remember(line.text) { line.text.replace('[', ' ').replace(']', ' ').trim() }
+    val textScroll = rememberScrollState()
+    val choiceScroll = rememberScrollState()
+    LaunchedEffect(line.id, fullText) {
+        textScroll.scrollTo(0)
+        choiceScroll.scrollTo(0)
+    }
     var revealedCount by remember(line.id, fullText) { mutableIntStateOf(0) }
     val revealFinished = revealedCount >= fullText.length
     val displayedText = fullText.take(revealedCount.coerceIn(0, fullText.length))
@@ -223,7 +232,7 @@ fun DialogueOverlay(
                         modifier = Modifier
                             .weight(1f)
                             .heightIn(max = 240.dp)
-                            .verticalScroll(rememberScrollState())
+                            .verticalScroll(textScroll)
                     ) {
                         Text(
                             text = fullText,
@@ -235,7 +244,18 @@ fun DialogueOverlay(
                             textAlign = TextAlign.Left
                         )
                         Text(
-                            text = typewriterText(fullText, displayedText.length),
+                            text = typewriterText(buildAnnotatedString {
+                                append(fullText)
+                                // Keep narration distinct from speech without displaying authoring brackets.
+                                val leadingSpace = line.text.length - line.text.trimStart().length
+                                val offset = leadingSpace + if (line.text.trimStart().startsWith("[")) 1 else 0
+                                Regex("\\[[^\\]]+]").findAll(line.text).forEach { match ->
+                                    val start = (match.range.first - offset).coerceIn(0, length)
+                                    val end = (match.range.last + 1 - offset).coerceIn(start, length)
+                                    addStyle(SpanStyle(fontStyle = FontStyle.Italic,
+                                        color = accentColor.copy(alpha = .85f)), start, end)
+                                }
+                            }, displayedText.length),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface,
                             textAlign = TextAlign.Left
@@ -243,27 +263,32 @@ fun DialogueOverlay(
                     }
                 }
 
+                if (textScroll.canScrollForward) {
+                    Text("↓ More dialogue", style = MaterialTheme.typography.labelSmall,
+                        color = accentColor,
+                        modifier = Modifier)
+                }
+
                 if (choices.isNotEmpty()) {
                     Column(
                         modifier = Modifier
                             .heightIn(max = 220.dp)
-                            .verticalScroll(rememberScrollState())
+                            .verticalScroll(choiceScroll)
                             .alpha(if (revealFinished) 1f else 0f)
                             .then(
                                 if (revealFinished) Modifier
                                 else Modifier.clearAndSetSemantics { }
                             ),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         Text(
                             text = "Responses",
                             style = MaterialTheme.typography.labelSmall,
                             color = accentColor.copy(alpha = 0.8f)
                         )
-                        choices.sortedBy { if (it.id.endsWith("_leave")) 0 else 1 }.forEachIndexed { index, choice ->
+                        choices.sortedBy { if (it.id.endsWith("_leave")) 0 else 1 }.forEach { choice ->
                             val parsed = remember(choice.label) { parseChoiceLabel(choice.label) }
                             DialogueChoiceButton(
-                                index = index + 1,
                                 choice = choice,
                                 parsed = parsed,
                                 onChoice = onChoice,
@@ -271,6 +296,9 @@ fun DialogueOverlay(
                                 enabled = revealFinished
                             )
                         }
+                    }
+                    if (choiceScroll.canScrollForward) {
+                        Text("↓ More responses", style = MaterialTheme.typography.labelSmall, color = accentColor)
                     }
                 }
             }
@@ -424,7 +452,6 @@ private fun PortraitCard(
 
 @Composable
 private fun DialogueChoiceButton(
-    index: Int,
     choice: DialogueChoiceUi,
     parsed: ParsedChoiceLabel,
     onChoice: (String) -> Unit,
@@ -440,17 +467,18 @@ private fun DialogueChoiceButton(
         shape = RoundedCornerShape(14.dp)
     ) {
         Column(
-            modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 9.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Text(
-                text = "$index. ${parsed.text}",
-                style = MaterialTheme.typography.bodyLarge,
+                text = parsed.text,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontStyle = if (ChoiceTag.ACTION in parsed.tags) FontStyle.Italic else FontStyle.Normal),
                 color = MaterialTheme.colorScheme.onSurface
             )
-            if (parsed.tags.isNotEmpty()) {
+            if (parsed.tags.any { it != ChoiceTag.ACTION }) {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    parsed.tags.forEach { tag ->
+                    parsed.tags.filter { it != ChoiceTag.ACTION }.forEach { tag ->
                         ChoiceTagChip(tag)
                     }
                 }

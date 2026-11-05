@@ -44,7 +44,8 @@ try {
   assert.equal(await evaluate('GUIDES[2].sections.some(s => s.blocks.some(b => b.text.includes("defeat_administrator")))'), true, 'World 3 current quest catalog');
   assert.equal(await evaluate('GUIDES[2].sections.some(s => s.title === "Navigation")'), true, 'World 3 navigation revision is present');
   assert.equal(await evaluate('GUIDES[2].sections.flatMap(s => s.blocks).filter(b => b.text.startsWith("Exits:")).length'), 70, 'World 3 includes all seventy room exit references');
-  assert.equal(await evaluate('GUIDES[2].sections.flatMap(s => s.blocks).filter(b => b.text.startsWith("Exits:")).some(b => /\\b(northeast|northwest|southeast|southwest|up|down) →/.test(b.text))'), false, 'World 3 room references use NSEW');
+  assert.equal(await evaluate('GUIDES[2].sections.flatMap(s => s.blocks).filter(b => b.text.startsWith("Tapped Paths:")).length'), 4, "World 3 names both ends of its stairs and inspection lift");
+  assert.equal(await evaluate('GUIDES[2].sections.flatMap(s => s.blocks).filter(b => b.text.startsWith("Exits:")).some(b => /\\b(northeast|northwest|southeast|southwest) →/.test(b.text))'), false, 'World 3 room references contain no diagonals');
   await evaluate('showSection(GUIDES[2].sections.findIndex(s => s.title.includes("Under the Radar (")))');
   await waitFor('restoring === false && document.querySelector("input[data-step]") !== null');
   const world3Step = await evaluate('document.querySelector("input[data-step]").dataset.step');

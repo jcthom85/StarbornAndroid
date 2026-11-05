@@ -1,0 +1,141 @@
+{
+  "counts": {
+    "rooms": 477,
+    "edges": 949,
+    "transitions": 114,
+    "bad_by_world": {
+      "world_1": 1
+    }
+  },
+  "bad": [
+    {
+      "world": "world_1",
+      "source": "launch_rail",
+      "direction": "south",
+      "target": "launch_pod",
+      "expected": "north",
+      "opposite_target": null,
+      "actual_return": [],
+      "return_path": null,
+      "source_gate": null,
+      "opposite_gate": null,
+      "dark": false
+    }
+  ],
+  "funnels": [],
+  "transition_nonreciprocal": [],
+  "transition_disagreements": [],
+  "spatial": [],
+  "duplicate_rooms": [],
+  "world_counts": {
+    "unassigned": {
+      "rooms": 7,
+      "edges": 8,
+      "bad": 0,
+      "funnels": 0
+    },
+    "world_1": {
+      "rooms": 82,
+      "edges": 153,
+      "bad": 1,
+      "funnels": 0
+    },
+    "world_2": {
+      "rooms": 93,
+      "edges": 196,
+      "bad": 0,
+      "funnels": 0
+    },
+    "world_3": {
+      "rooms": 70,
+      "edges": 146,
+      "bad": 0,
+      "funnels": 0
+    },
+    "world_4": {
+      "rooms": 74,
+      "edges": 146,
+      "bad": 0,
+      "funnels": 0
+    },
+    "world_5": {
+      "rooms": 81,
+      "edges": 164,
+      "bad": 0,
+      "funnels": 0
+    },
+    "world_6": {
+      "rooms": 65,
+      "edges": 128,
+      "bad": 0,
+      "funnels": 0
+    },
+    "world_astra": {
+      "rooms": 5,
+      "edges": 8,
+      "bad": 0,
+      "funnels": 0
+    }
+  },
+  "ownership_errors": [
+    "weather_lab",
+    "debug_presence_stress",
+    "debug_enemy_party_sizes",
+    "debug_enemy_party_sizes_west",
+    "debug_enemy_party_sizes_north",
+    "debug_enemy_party_sizes_south",
+    "debug_enemy_party_sizes_east"
+  ],
+  "transition_metadata_errors": [],
+  "duplicate_transition_keys": [],
+  "duplicate_transition_ids": [],
+  "missing_transition_records": [],
+  "coordinate_collisions": [],
+  "unexpected_nonreciprocal": [],
+  "world_three_non_cardinal": [
+    [
+      "spire_underrail_platform",
+      "down",
+      "spire_transit_plaza"
+    ],
+    [
+      "spire_transit_plaza",
+      "up",
+      "spire_underrail_platform"
+    ],
+    [
+      "spire_service_lift",
+      "down",
+      "spire_archive_vault"
+    ],
+    [
+      "spire_archive_vault",
+      "up",
+      "spire_service_lift"
+    ]
+  ],
+  "world_four_non_cardinal": [],
+  "world_five_non_cardinal": [
+    [
+      "orbital_service_shaft",
+      "down",
+      "orbital_server_farm"
+    ],
+    [
+      "orbital_server_farm",
+      "up",
+      "orbital_service_shaft"
+    ],
+    [
+      "deep_firewall_gamma",
+      "down",
+      "deep_anchor_chamber"
+    ],
+    [
+      "deep_anchor_chamber",
+      "up",
+      "deep_firewall_gamma"
+    ]
+  ],
+  "reviewed_direction_policy_errors": []
+}

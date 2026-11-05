@@ -33,7 +33,7 @@ class Hub3CriticalFlowTest {
         assertTrue(state.activeQuests.contains("w3_mq11"))
         assertEquals("spire_sewers_landing", state.roomId)
 
-        // --- MQ11: Homecoming ---
+        // --- MQ11: Under the Radar ---
         // 1. Defeat sewer crawler at landing pad
         harness.events.handleTrigger(
             "encounter_victory",
@@ -51,7 +51,17 @@ class Hub3CriticalFlowTest {
         // Verify stage advanced to find_safehouse
         assertEquals("find_safehouse", state.questStageById["w3_mq11"])
 
-        // 3. Find Zeke's apartment
+        // Jax offers shelter when the crew passes his bar; the offer never credits MQ12 intel.
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("spire_the_static"))
+        assertEquals(listOf("Jax"), harness.startedDialogues)
+        val shelter = harness.dialogue.startDialogue("Jax")
+        assertEquals("jax_w3_mq11_shelter", shelter?.current()?.id)
+        shelter?.advanceUntilFinished()
+        assertFalse(harness.store.state.value.questTasksCompleted["w3_mq12"].orEmpty().contains("talk_jax"))
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("spire_the_static"))
+        assertEquals(1, harness.startedDialogues.size)
+
+        // 3. Find the borrowed safehouse
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("spire_zekes_apartment"))
         assertTrue(harness.store.state.value.questTasksCompleted["w3_mq11"].orEmpty().contains("find_apartment"))
 
@@ -74,6 +84,8 @@ class Hub3CriticalFlowTest {
         assertTrue(state.completedQuests.contains("w3_mq11"))
         assertTrue(state.completedMilestones.contains("ms_w3_mq11_complete"))
         assertTrue(state.activeQuests.contains("w3_mq12"))
+        assertTrue("Safehouse completion must explain the shield, not lose its narrative to legacy popup suppression",
+            harness.messages.any { it.contains("quiet Source shield") })
         assertEquals("w3_mq12", state.trackedQuestId)
 
         // --- MQ12: The Plan ---
@@ -107,6 +119,7 @@ class Hub3CriticalFlowTest {
 
         // 7. Assemble at planning table
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq12_assemble_planning"))
+        assertTrue("Heist departure must explain actual travel", harness.messages.any { it.contains("crew rides the service lift") })
         state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w3_mq12"].orEmpty().contains("assemble_table"))
         assertTrue(state.completedQuests.contains("w3_mq12"))
@@ -188,12 +201,34 @@ class Hub3CriticalFlowTest {
         assertTrue(state.inventory["phase_rounds"].orZero() >= 1)
     }
 
+    @Test
+    fun resumedSafehouseSetupDoesNotRequireNewJaxOffer() {
+        // A save made at the apartment before this revision must still finish MQ11.
+        val harness = Hub3Harness(GameSessionState(
+            worldId = "world_3",
+            roomId = "spire_zekes_apartment",
+            activeQuests = setOf("w3_mq11"),
+            questStageById = mapOf("w3_mq11" to "find_safehouse"),
+            questTasksCompleted = mapOf("w3_mq11" to setOf("clear_landing", "reach_vent", "find_apartment")),
+            completedMilestones = setOf("ms_w3_safehouse_found")
+        ))
+        val setup = harness.dialogue.startDialogue("Zeke")
+        assertEquals("zeke_w3_mq11_safehouse_intro", setup?.current()?.id)
+        setup?.advanceUntilFinished()
+        assertTrue("w3_mq11" in harness.store.state.value.completedQuests)
+        assertTrue("w3_mq12" in harness.store.state.value.activeQuests)
+        harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("spire_the_static"))
+        assertTrue(harness.startedDialogues.isEmpty())
+        assertEquals("w3_mq12_jax_intro", harness.dialogue.startDialogue("Jax")?.current()?.id)
+    }
+
     private class Hub3Harness(initialState: GameSessionState? = null) {
         val store = GameSessionStore()
         val events: EventManager
         val dialogue: DialogueService
         val messages = mutableListOf<String>()
         val startedQuests = mutableListOf<String>()
+        val startedDialogues = mutableListOf<String>()
 
         init {
             initialState?.let(store::restore)
@@ -202,6 +237,7 @@ class Hub3CriticalFlowTest {
                 sessionStore = store,
                 eventHooks = EventHooks(
                     onMessage = { messages += it },
+                    onStartDialogue = { startedDialogues += it },
                     onQuestStarted = { questId -> questId?.let(startedQuests::add) },
                     onSystemTutorial = { _, _, _, done -> done() },
                     onQuestTaskUpdated = { questId, taskId ->

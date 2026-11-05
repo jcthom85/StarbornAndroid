@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.starborn.domain.model.Room
+import com.example.starborn.domain.model.TravelAction
 import com.example.starborn.domain.model.RoomAction
 import kotlin.math.roundToInt
 import com.example.starborn.feature.exploration.presentation.*
@@ -302,6 +303,7 @@ fun RoomDescriptionPanel(
     currentRoom: Room?,
     description: String?,
     plan: InlineActionPlan?,
+    travelActions: List<TravelAction> = emptyList(),
     isDark: Boolean,
     textColor: Color,
     onAction: (RoomAction) -> Unit,
@@ -392,6 +394,20 @@ fun RoomDescriptionPanel(
                     accentColor = accentColor,
                     modifier = Modifier.fillMaxWidth()
                 )
+            }
+            if (scrollState.canScrollForward) {
+                Text("↓ More description", color = accentColor,
+                    style = MaterialTheme.typography.labelSmall)
+            }
+            travelActions.forEach { action ->
+                Surface(onClick = { onAction(action) },
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+                    shape = RoundedCornerShape(10.dp),
+                    color = accentColor.copy(alpha = .12f),
+                    border = BorderStroke(1.dp, accentColor.copy(alpha = .4f))) {
+                    Text(action.name, modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+                        color = accentColor, style = MaterialTheme.typography.bodyMedium)
+                }
             }
         }
     }

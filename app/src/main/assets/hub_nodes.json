@@ -250,7 +250,10 @@
     "entry_policy": "hub",
     "return_policy": "entry",
     "unlock_conditions": [
-      { "type": "milestone", "id": "ms_w1_mq03_bogs_talked" }
+      {
+        "type": "milestone",
+        "id": "ms_w1_mq03_bogs_talked"
+      }
     ]
   },
   {
@@ -775,7 +778,7 @@
     "id": "spire_laundry",
     "world_id": "world_3",
     "hub_id": "hub_6_upper_city",
-    "title": "Laundry Service",
+    "title": "Service Quarters",
     "entry_room": "spire_laundry_service",
     "icon_image": "images/nodes/world_3/spire_laundry.webp",
     "pos_hint": {

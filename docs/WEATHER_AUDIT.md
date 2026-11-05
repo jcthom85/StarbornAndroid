@@ -114,7 +114,7 @@ Recommended groups:
 | `rain` | `spire_vent_output`, `spire_rain_gutter_alley`, `spire_underrail_platform`, exposed Transit Plaza routes, `spire_night_market`, `spire_noodle_row`, `spire_lantern_bridge`, `spire_safehouse_roof`, exposed Exec Lounge areas | Rain is visible in the art or explicitly authored around the player. |
 | `storm` | `spire_landing_pad_roof` and its exposed approach rooms | Heavy rain plus violent wind at the finale pad. |
 | `steam` | `spire_laundry_service`, steam-rack/pressurized-water subrooms | Immediate industrial steam. |
-| none | Static bar/subway interior, Zeke's apartment, clinic, security kiosk, service interiors, Skypark Dome, Archive/Prism interiors | Rain is outside glass, artificial scenery, or absent. |
+| none | Static bar/subway interior, the Static Safehouse, clinic, security kiosk, service interiors, Skypark Dome, Archive/Prism interiors | Rain is outside glass, artificial scenery, or absent. |
 
 Room-level assignments are required because several backgrounds are reused for
 both exposed and interior subrooms.

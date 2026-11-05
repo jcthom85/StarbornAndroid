@@ -55,7 +55,7 @@ proven by these static checks.
 
 Reviewed all main- and side-quest task labels against World 3 room titles and
 inline actions. Corrected nine ambiguous labels: MQ12 now names Security Kiosk,
-Elevator Service Gate and Zeke's Apartment; SQ12 names the memorial in Uniform
+Elevator Service Gate and Static Safehouse; SQ12 names the memorial in Uniform
 Sorting and the Security Kiosk; SQ14 names Exec Lounge's concierge credential
 mirror and private safe; SQ15 names Drone Test Alcove and its prototype rack.
 

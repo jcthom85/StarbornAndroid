@@ -60,7 +60,7 @@ fun EnvironmentalEffectsOverlay(roomId: String, effects: List<ResolvedEnvironmen
             var previous=withFrameNanos { it }
             while(simulation.layers.isNotEmpty()) {
                 withFrameNanos { now ->
-                    if(now-previous>=16_000_000L) {
+                    if(now > previous) {
                         val started=if(costCallback!=null) System.nanoTime() else 0L
                         simulation.advance((now-previous)/1_000_000_000f,currentGeometry)
                         if(started!=0L) costCallback?.invoke(System.nanoTime()-started)

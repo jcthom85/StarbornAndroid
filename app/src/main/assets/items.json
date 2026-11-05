@@ -2995,7 +2995,7 @@
   {
     "id": "hacked_blueprints",
     "name": "Hacked Blueprints",
-    "description": "Blueprints of the Great Elevator's security grid, hacked from Zeke's workstation.",
+    "description": "Blueprints of the Great Elevator's security grid, assembled by Zeke at the Static Safehouse workstation.",
     "type": "quest",
     "value": 0,
     "rarity": "uncommon",
@@ -3022,14 +3022,13 @@
   {
     "id": "phase_rounds",
     "name": "Phase Rounds",
-    "description": "Experimental ammunition that flickers through armor plating before collapsing back into force.",
+    "description": "An experimental targeting accessory recovered from executive security. Equip it for +2 Agility and +2 Focus.",
     "type": "accessory",
     "value": 700,
     "buy_price": 1400,
     "rarity": "epic",
     "equipment": {
       "slot": "accessory",
-      "attack_element": "source",
       "stat_mods": {
         "agility": 2,
         "focus": 2
@@ -3065,14 +3064,13 @@
   {
     "id": "explosive_tip",
     "name": "Explosive Tip",
-    "description": "A weapon mod that adds volatile impact charges to precision shots.",
+    "description": "An accessory built around impact-charge hardware. Grants +2 Strength and +1 Luck.",
     "type": "accessory",
     "value": 850,
     "buy_price": 1700,
     "rarity": "epic",
     "equipment": {
       "slot": "accessory",
-      "attack_element": "burn",
       "stat_mods": {
         "strength": 2,
         "luck": 1
@@ -3125,14 +3123,13 @@
   {
     "id": "thermal_clip",
     "name": "Thermal Clip",
-    "description": "A weapon mod that channels Foundry heat into ammunition for burn damage.",
+    "description": "A heat-stabilized ammunition accessory. Grants +2 Strength and +1 Focus.",
     "type": "accessory",
     "value": 900,
     "buy_price": 1800,
     "rarity": "epic",
     "equipment": {
       "slot": "accessory",
-      "attack_element": "burn",
       "stat_mods": {
         "strength": 2,
         "focus": 1
@@ -3193,14 +3190,13 @@
   {
     "id": "void_clip",
     "name": "Void Clip",
-    "description": "A weapon mod that phases a portion of each shot through conventional armor.",
+    "description": "A phase-calibrated ammunition accessory. Grants +2 Strength and +2 Focus.",
     "type": "accessory",
     "value": 1200,
     "buy_price": 2400,
     "rarity": "epic",
     "equipment": {
       "slot": "accessory",
-      "attack_element": "source",
       "stat_mods": {
         "strength": 2,
         "focus": 2
@@ -3219,15 +3215,14 @@
   {
     "id": "starborn_mod",
     "name": "Starborn",
-    "description": "An impossible weapon mod forged from the Astra's future hull. It converts shared resonance into overwhelming impact.",
+    "description": "An accessory forged from the Astra's future hull. Grants +5 Strength, +5 Focus, +3 Luck, and +15 percentage points of critical chance.",
     "type": "accessory",
     "value": 5000,
     "buy_price": 10000,
     "rarity": "legendary",
     "equipment": {
       "slot": "accessory",
-      "attack_element": "source",
-      "crit_rate": 0.15,
+      "crit_rate": 15.0,
       "stat_mods": {
         "strength": 5,
         "focus": 5,
@@ -3819,7 +3814,7 @@
   {
     "id": "skyline_master_passkey",
     "name": "Skyline Master Passkey",
-    "description": "An executive-tier crystalline passkey surrendered by Director Vance. It grants unrestricted transit through Upper City private salons.",
+    "description": "The executive passkey Vance surrendered with his confession. Kept as evidence of the Skyline Salon case.",
     "type": "quest",
     "value": 0,
     "rarity": "epic",
@@ -3828,7 +3823,7 @@
   {
     "id": "cyano_coolant_injector",
     "name": "Cyano-Coolant Injector",
-    "description": "A weapon modification re-engineered from Director Vance's sabotaged comms core. Infuses strikes with freezing cyano-coolant, dealing +15 Freeze damage and raising posture stagger.",
+    "description": "A weapon mod recovered from Vance’s comms core. Adds Freeze to otherwise untyped basic weapon attacks, a 20% freeze-on-hit chance, +4 Focus and +3 Accuracy.",
     "type": "mod",
     "value": 350,
     "rarity": "rare",

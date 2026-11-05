@@ -19,6 +19,15 @@ import org.junit.Test
 class WorldTwoDiscoverabilityStateTest {
     private val reader = AssetJsonReader(DesktopAssetProvider(), MoshiProvider.instance)
 
+    @Test fun `powered or departed Astra retires dark console even without the older inspection receipt`() {
+        val room = reader.readList<Room>("rooms.json").single { it.id == "sector9_hangar_bay" }
+        val console = room.actions.single { it["name"] == "dark console" }
+        assertTrue(narrativeActionVisible(console, emptyMap(), emptyMap(), emptySet()))
+        for (milestone in listOf("ms_w2_astra_inspected", "ms_w2_bridge_installed", "ms_w2_mq05_complete")) {
+            assertFalse(narrativeActionVisible(console, emptyMap(), emptyMap(), setOf(milestone)))
+        }
+    }
+
     @Test fun `side quest journal locations match authored world two actions`() {
         val rooms = reader.readList<Room>("rooms.json").associateBy { it.id }
         val quests = reader.readList<com.example.starborn.domain.model.Quest>("quests.json").associateBy { it.id }
@@ -118,7 +127,7 @@ class WorldTwoDiscoverabilityStateTest {
         }
     }
 
-    @Test fun `confirmed launch without inspection leaves console visible but its event unusable`() {
+    @Test fun `confirmed launch retires console without inventing an inspection receipt`() {
         val store = GameSessionStore().apply {
             startQuest("w2_mq05")
             setQuestTaskCompleted("w2_mq05", "reboot_bridge_relic", true)
@@ -132,7 +141,7 @@ class WorldTwoDiscoverabilityStateTest {
         assertFalse("ms_w2_astra_inspected" in state.completedMilestones)
         val room = reader.readList<Room>("rooms.json").single { it.id == "sector9_hangar_bay" }
         val console = room.actions.single { it["name"] == "dark console" }
-        assertTrue(narrativeActionVisible(console, emptyMap(), emptyMap(), state.completedMilestones))
+        assertFalse(narrativeActionVisible(console, emptyMap(), emptyMap(), state.completedMilestones))
         assertFalse(requireNotNull(resolveRoomDescription(room, emptyMap(), state.completedMilestones, false))
             .contains("dark console", true))
         store.restore(state)

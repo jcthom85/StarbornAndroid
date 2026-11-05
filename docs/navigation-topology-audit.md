@@ -1,5 +1,17 @@
 # Navigation topology and spatial audit
 
+World 6 is now reviewed: [November 5 Source navigation report](testing/WORLD6_NAVIGATION_2026-11-05.md). The last four diagonal direction entries are removed; the full-game direction policy retains reviewed named vertical routes in Worlds 3 and 5.
+
+
+November 5 follow-up: [named travel review](testing/NAMED_TRAVEL_REVIEW_2026-11-05.md). Diagonals remain prohibited; reviewed stairs, lifts and cables may supplement the NSEW walking network. Historical findings below predate that correction.
+
+
+World 5 update, November 5, 2026: Ring travel is now reciprocal NSEW, with a reversible Zero-G/SysAdmin approach and a story-cleared Anchor entrance. See [the World 5 navigation pass](testing/WORLD5_NAVIGATION_2026-11-05.md).
+
+World 4 update, November 5, 2026: the Foundry now uses reciprocal NSEW local routes and a story-cleared maintenance corridor for return travel. See [the World 4 navigation pass](testing/WORLD4_NAVIGATION_2026-11-05.md).
+
+World 3 update, November 5, 2026: local movement now uses reciprocal NSEW connections; its old diagonal passages and three one-way descents are superseded. See [the World 3 navigation pass](testing/WORLD3_NAVIGATION_2026-11-05.md). The earlier findings below remain historical.
+
 This is the baseline audit recorded on 2026-09-14, before the navigation repair. Its counts and recommendations describe the original assets. See [navigation-repair.md](navigation-repair.md) for the implemented corrections and validation. Run `python navigation_audit.py --check` or `--json` against the current assets to inspect the repaired graph.
 
 ## Findings and scope
@@ -98,7 +110,7 @@ Quest dependencies: w2_mq03_inspect_murals sets ms_w2_murals_read and ms_w2_mura
 
 Underrail SOUTH→Transit Plaza is the only non-reciprocal edge in the named Lower City cluster. Plaza NORTH→Static is valid and must remain. Static WEST→Underrail returns by a second step. Sewers Passage EAST↔Plaza WEST and Sewers Passage NORTH↔Vent Output SOUTH are reciprocal; Static and Underrail also have a reciprocal east/west connection. There is no broken sewer return.
 
-Spatial defects remain: Vent Output EAST→Underrail moves (0,-1); the Static→Signal Stairwell→Zeke's Apartment→Safehouse Roof northbound chain decreases Y at every step. Transit Plaza's eastbound Checkpoint Queue is displaced (2,-1), and its southbound Security Kiosk is displaced (1,0). Fix local node coordinates without changing these routes.
+Spatial defects remain: Vent Output EAST→Underrail moves (0,-1); the Static→Signal Stairwell→Static Safehouse→Safehouse Roof northbound chain decreases Y at every step. Transit Plaza's eastbound Checkpoint Queue is displaced (2,-1), and its southbound Security Kiosk is displaced (1,0). Fix local node coordinates without changing these routes.
 
 There is no room ID or room title “Penthouse” in rooms.json. The penthouse is narrative language in w3_mq13 for the Laundry/Staff Checkpoint/Skypark/Archive infiltration. Its actual abnormalities are the six Upper City exits in the inventory.
 
@@ -310,4 +322,4 @@ The following events were cross-referenced through affected/focus room IDs, node
 | find_vhs_tape_07 | {"type":"player_action","action":"find_vhs_tape_07"} | none |
 | find_vhs_tape_09 | {"type":"player_action","action":"find_vhs_tape_09"} | none |
 
-Linked quest definitions reviewed: `w2_mq02` (The Signal), `w2_mq03` (Sleeping Giant), `w2_mq05` (Liftoff), `w2_sq04` (Ancient Echoes), `w3_mq11` (Homecoming), `w3_mq12` (The Plan), `w3_sq11` (Neon Fix), `w3_sq12` (Cold Case), `w3_mq13` (Social Engineering), `w3_mq14` (The Lens), `w3_mq15` (Burn Notice), `w3_sq14` (Corporate Espionage), `w4_mq16` (Into the Fire), `w4_mq17` (Ghost in the Machine), `w4_sq16` (Sabotage), `w4_sq17` (Lost Worker), `w4_sq18` (The Scrap Heap), `w4_mq18` (The Assembly), `w4_mq19` (The Anvil), `w4_mq20` (Meltdown), `w4_sq20` (Overclocked), `w5_mq22` (Zero G), `w5_sq21` (Employee of the Month), `w5_sq22` (Solar Maintenance), `w5_mq23` (The Core Approach), `w5_mq24` (The Anchor), `w5_mq25` (Critical Mass).
+Linked quest definitions reviewed: `w2_mq02` (The Signal), `w2_mq03` (Sleeping Giant), `w2_mq05` (Liftoff), `w2_sq04` (Ancient Echoes), `w3_mq11` (Under the Radar), `w3_mq12` (The Plan), `w3_sq11` (Neon Fix), `w3_sq12` (Cold Case), `w3_mq13` (Social Engineering), `w3_mq14` (The Lens), `w3_mq15` (Burn Notice), `w3_sq14` (Corporate Espionage), `w4_mq16` (Into the Fire), `w4_mq17` (Ghost in the Machine), `w4_sq16` (Sabotage), `w4_sq17` (Lost Worker), `w4_sq18` (The Scrap Heap), `w4_mq18` (The Assembly), `w4_mq19` (The Anvil), `w4_mq20` (Meltdown), `w4_sq20` (Overclocked), `w5_mq22` (Zero G), `w5_sq21` (Employee of the Month), `w5_sq22` (Solar Maintenance), `w5_mq23` (The Core Approach), `w5_mq24` (The Anchor), `w5_mq25` (Critical Mass).

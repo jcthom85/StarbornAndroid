@@ -1,0 +1,3011 @@
+{
+  "rooms": {
+    "spire_underrail_platform": {
+      "before": {
+        "id": "spire_underrail_platform",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Underrail Platform",
+        "background_image": "images/rooms/world_3/spire_underrail_platform.webp",
+        "description": "An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is scratched with routes, curfews, patrol timing, and warnings written in marker.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_vent_output",
+          "east": "spire_the_static",
+          "down": "spire_transit_plaza"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is now scarred with Nova's route marks, patrol timing windows, and a service-gap path toward the Great Elevator.",
+            "requires_milestones": [
+              "ms_w3_patrols_mapped"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "underrail map",
+            "type": "generic",
+            "condition_unmet_message": "The underrail map shows which transit lines still run, which ones are watched, and which ones ate people."
+          },
+          {
+            "name": "patrol timing",
+            "type": "generic",
+            "action_event": "w3_mq12_map_patrols",
+            "condition_unmet_message": "The patrol timing is written into the underrail map in marker, shortcuts, and fear."
+          }
+        ],
+        "special_exits": {
+          "down": "Descend to Transit Plaza (one way)"
+        }
+      },
+      "after": {
+        "id": "spire_underrail_platform",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Underrail Platform",
+        "background_image": "images/rooms/world_3/spire_underrail_platform.webp",
+        "description": "An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is scratched with routes, curfews, patrol timing, and warnings written in marker.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_vent_output",
+          "east": "spire_the_static"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is now scarred with Nova's route marks, patrol timing windows, and a service-gap path toward the Great Elevator.",
+            "requires_milestones": [
+              "ms_w3_patrols_mapped"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "underrail map",
+            "type": "generic",
+            "condition_unmet_message": "The underrail map shows which transit lines still run, which ones are watched, and which ones ate people."
+          },
+          {
+            "name": "patrol timing",
+            "type": "generic",
+            "action_event": "w3_mq12_map_patrols",
+            "condition_unmet_message": "The patrol timing is written into the underrail map in marker, shortcuts, and fear."
+          }
+        ]
+      }
+    },
+    "spire_the_static": {
+      "before": {
+        "id": "spire_the_static",
+        "env": "neon",
+        "special_exits": {
+          "northeast": "Check the Back Bar Ledger"
+        },
+        "title": "The Static",
+        "background_image": "images/rooms/world_3/spire_the_static.webp",
+        "description": "The Static is a dark dive bar built around an old subway car. Neon signs pulse erratically, the sign outside keeps failing, and the signal stairwell behind the bar hums with pirate broadcasts.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_underrail_platform",
+          "east": "spire_old_subway_car",
+          "north": "spire_signal_stairwell",
+          "south": "spire_transit_plaza",
+          "northeast": "spire_the_static_scale_01"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Static is a dark dive bar built around an old subway car. The repaired sign outside throws enough neon to make patrols look bored, and the signal stairwell behind the bar hums with pirate broadcasts.",
+            "requires_milestones": [
+              "ms_w3_streetwise_unlocked"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "sign",
+            "type": "generic",
+            "action_event": "w3_sq11_inspect_sign",
+            "condition_unmet_message": "The bar's neon sign. It buzzes loudly but is mostly dark."
+          }
+        ],
+        "npc_presence": [
+          {
+            "npc": "jax",
+            "requires_milestones": [
+              "ms_w2_mq05_complete"
+            ],
+            "forbidden_milestones": []
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_the_static",
+        "env": "neon",
+        "title": "The Static",
+        "background_image": "images/rooms/world_3/spire_the_static.webp",
+        "description": "The Static is a dark dive bar built around an old subway car. Neon signs pulse erratically, the sign outside keeps failing, and the signal stairwell behind the bar hums with pirate broadcasts. The subway car lies east through the back-bar passage; the signal stairwell remains north.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_underrail_platform",
+          "east": "spire_the_static_scale_01",
+          "north": "spire_signal_stairwell",
+          "south": "spire_transit_plaza"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Static is a dark dive bar built around an old subway car. The repaired sign outside throws enough neon to make patrols look bored, and the signal stairwell behind the bar hums with pirate broadcasts. The subway car lies east through the back-bar passage; the signal stairwell remains north.",
+            "requires_milestones": [
+              "ms_w3_streetwise_unlocked"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "sign",
+            "type": "generic",
+            "action_event": "w3_sq11_inspect_sign",
+            "condition_unmet_message": "The bar's neon sign. It buzzes loudly but is mostly dark."
+          }
+        ],
+        "npc_presence": [
+          {
+            "npc": "jax",
+            "requires_milestones": [
+              "ms_w2_mq05_complete"
+            ],
+            "forbidden_milestones": []
+          }
+        ]
+      }
+    },
+    "spire_old_subway_car": {
+      "before": {
+        "id": "spire_old_subway_car",
+        "env": "neon",
+        "title": "Old Subway Car",
+        "background_image": "images/rooms/world_3/spire_old_subway_car.webp",
+        "description": "The Static spills into an old subway car bolted beside the bar. Torn booth seats, stickered windows, and a silent jukebox make the car half studio. Chris tunes an audio board while Andrew rests his guitar. A reinforced door opens to the rigging deck. A Wayfarer tour poster curls above a No Charge tape beside the audio board.",
+        "npcs": [
+          "musician_chris",
+          "musician_andrew"
+        ],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_the_static",
+          "east": "spire_rigging_deck"
+        },
+        "pos": [
+          3,
+          1
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "silent jukebox",
+            "type": "generic",
+            "condition_unmet_message": "The silent jukebox has no power, but every title card is a protest song Dominion tried to erase."
+          },
+          {
+            "name": "stickered windows",
+            "type": "generic",
+            "condition_unmet_message": "The stickered windows turn patrol lights into broken color."
+          },
+          {
+            "name": "Wayfarer tour poster",
+            "type": "generic",
+            "condition_unmet_message": "A screen-printed tour poster for 'THE WAYFARER' taped inside the subway window. It lists dates across Aethelgard Outpost, Tideglass Coast, The Static, and Zenith Orbital. A faint note in the margin reads: 'Sound: Cheno. Bass: Chris. Guitar: Andrew.'"
+          },
+          {
+            "name": "No Charge tape",
+            "type": "generic",
+            "condition_unmet_message": "A well-loved magnetic cassette with handwritten track titles. The plastic is scuffed from a hundred late-night road trips, but the tape ribbon inside is pristine."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_old_subway_car",
+        "env": "neon",
+        "title": "Old Subway Car",
+        "background_image": "images/rooms/world_3/spire_old_subway_car.webp",
+        "description": "The Static spills into an old subway car bolted beside the bar. Torn booth seats, stickered windows, and a silent jukebox make the car half studio. Chris tunes an audio board while Andrew rests his guitar. A reinforced door opens to the rigging deck. A Wayfarer tour poster curls above a No Charge tape beside the audio board. The back-bar passage returns west to The Static.",
+        "npcs": [
+          "musician_chris",
+          "musician_andrew"
+        ],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_the_static_scale_01",
+          "east": "spire_rigging_deck"
+        },
+        "pos": [
+          4,
+          1
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "silent jukebox",
+            "type": "generic",
+            "condition_unmet_message": "The silent jukebox has no power, but every title card is a protest song Dominion tried to erase."
+          },
+          {
+            "name": "stickered windows",
+            "type": "generic",
+            "condition_unmet_message": "The stickered windows turn patrol lights into broken color."
+          },
+          {
+            "name": "Wayfarer tour poster",
+            "type": "generic",
+            "condition_unmet_message": "A screen-printed tour poster for 'THE WAYFARER' taped inside the subway window. It lists dates across Aethelgard Outpost, Tideglass Coast, The Static, and Zenith Orbital. A faint note in the margin reads: 'Sound: Cheno. Bass: Chris. Guitar: Andrew.'"
+          },
+          {
+            "name": "No Charge tape",
+            "type": "generic",
+            "condition_unmet_message": "A well-loved magnetic cassette with handwritten track titles. The plastic is scuffed from a hundred late-night road trips, but the tape ribbon inside is pristine."
+          }
+        ]
+      }
+    },
+    "spire_night_market": {
+      "before": {
+        "id": "spire_night_market",
+        "environmental_effects": [
+          {
+            "id": "market_rain",
+            "preset": "weather.rain",
+            "intensity": 0.5,
+            "space": "viewport"
+          }
+        ],
+        "env": "neon",
+        "special_exits": {
+          "northeast": "Climb to Lantern Roof"
+        },
+        "weather": "rain",
+        "title": "Night Market",
+        "background_image": "images/rooms/world_3/spire_night_market.webp",
+        "description": "The Night Market insists on being heard. Lanterns swing over food steam, Noodle Row shouts through rain, and a lantern bridge crosses the drain like stubborn stars. A market registry broadcast crackles from a speaker above the stalls.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_checkpoint_queue",
+          "east": "spire_noodle_row",
+          "north": "spire_lantern_bridge",
+          "south": "spire_backstreet_clinic",
+          "northeast": "spire_night_market_scale_01"
+        },
+        "pos": [
+          3,
+          2
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Night Market insists on being heard. Repaired lanterns swing over food steam, Noodle Row shouts through rain, and a lantern bridge crosses the drain like stubborn stars. A market registry broadcast crackles from a speaker above the stalls.",
+            "requires_milestones": [
+              "ms_w3_market_lit"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "lanterns",
+            "type": "generic",
+            "action_event": "w3_sq13_fix_market_lights",
+            "requires_milestones": [
+              "ms_w3_market_siphon_traced"
+            ],
+            "condition_unmet_message": "String lights hung across the alley. Some are flickering out."
+          },
+          {
+            "name": "market registry broadcast",
+            "type": "generic",
+            "action_event": "w3_sq13_restore_market",
+            "requires_milestones": [
+              "ms_w3_market_grid_ready"
+            ],
+            "condition_unmet_message": "The registry still calls the dark stalls abandoned."
+          }
+        ],
+        "npc_presence": [
+          {
+            "npc": "mika",
+            "requires_milestones": [
+              "ms_w2_mq05_complete"
+            ],
+            "forbidden_milestones": []
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_night_market",
+        "environmental_effects": [
+          {
+            "id": "market_rain",
+            "preset": "weather.rain",
+            "intensity": 0.5,
+            "space": "viewport"
+          }
+        ],
+        "env": "neon",
+        "weather": "rain",
+        "title": "Night Market",
+        "background_image": "images/rooms/world_3/spire_night_market.webp",
+        "description": "The Night Market insists on being heard. Lanterns swing over food steam, Noodle Row shouts through rain, and a lantern bridge crosses the drain like stubborn stars. A market registry broadcast crackles from a speaker above the stalls.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_checkpoint_queue",
+          "east": "spire_noodle_row",
+          "north": "spire_lantern_bridge",
+          "south": "spire_backstreet_clinic"
+        },
+        "pos": [
+          3,
+          2
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Night Market insists on being heard. Repaired lanterns swing over food steam, Noodle Row shouts through rain, and a lantern bridge crosses the drain like stubborn stars. A market registry broadcast crackles from a speaker above the stalls.",
+            "requires_milestones": [
+              "ms_w3_market_lit"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "lanterns",
+            "type": "generic",
+            "action_event": "w3_sq13_fix_market_lights",
+            "requires_milestones": [
+              "ms_w3_market_siphon_traced"
+            ],
+            "condition_unmet_message": "String lights hung across the alley. Some are flickering out."
+          },
+          {
+            "name": "market registry broadcast",
+            "type": "generic",
+            "action_event": "w3_sq13_restore_market",
+            "requires_milestones": [
+              "ms_w3_market_grid_ready"
+            ],
+            "condition_unmet_message": "The registry still calls the dark stalls abandoned."
+          }
+        ],
+        "npc_presence": [
+          {
+            "npc": "mika",
+            "requires_milestones": [
+              "ms_w2_mq05_complete"
+            ],
+            "forbidden_milestones": []
+          }
+        ]
+      }
+    },
+    "spire_lantern_bridge": {
+      "before": {
+        "id": "spire_lantern_bridge",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Lantern Bridge",
+        "background_image": "images/rooms/world_3/spire_lantern_bridge.webp",
+        "description": "A narrow lantern bridge crosses above the market drain. Paper charms flutter from the rail, each one carrying a name, a debt, or a prayer. An executive power siphon runs along a bright cable toward a billboard.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_night_market"
+        },
+        "pos": [
+          3,
+          3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "paper charms",
+            "type": "generic",
+            "condition_unmet_message": "The paper charms are cheap, handmade, and treated with more respect than any Dominion permit."
+          },
+          {
+            "name": "market drain",
+            "type": "generic",
+            "condition_unmet_message": "The market drain carries spilled rain and contraband wrappers toward the old sewer channels."
+          },
+          {
+            "name": "executive power siphon",
+            "type": "generic",
+            "action_event": "w3_sq13_trace_power_theft",
+            "condition_unmet_message": "A bright cable steals market current for an executive billboard."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_lantern_bridge",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Lantern Bridge",
+        "background_image": "images/rooms/world_3/spire_lantern_bridge.webp",
+        "description": "A narrow lantern bridge crosses above the market drain. Paper charms flutter from the rail, each one carrying a name, a debt, or a prayer. An executive power siphon runs along a bright cable toward a billboard. Steps at the north end climb onto Lantern Roof; the market is back to the south.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_night_market",
+          "north": "spire_night_market_scale_01"
+        },
+        "pos": [
+          3,
+          3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "paper charms",
+            "type": "generic",
+            "condition_unmet_message": "The paper charms are cheap, handmade, and treated with more respect than any Dominion permit."
+          },
+          {
+            "name": "market drain",
+            "type": "generic",
+            "condition_unmet_message": "The market drain carries spilled rain and contraband wrappers toward the old sewer channels."
+          },
+          {
+            "name": "executive power siphon",
+            "type": "generic",
+            "action_event": "w3_sq13_trace_power_theft",
+            "condition_unmet_message": "A bright cable steals market current for an executive billboard."
+          }
+        ]
+      }
+    },
+    "spire_transit_plaza": {
+      "before": {
+        "id": "spire_transit_plaza",
+        "env": "neon",
+        "special_exits": {
+          "northeast": "Enter the Ad Bay"
+        },
+        "weather": "rain",
+        "title": "Transit Plaza",
+        "background_image": "images/rooms/world_3/spire_transit_plaza.webp",
+        "description": "Transit Plaza spreads beneath the Great Elevator, all surveillance glass, guard lanes, and crowded hesitation. The elevator controls tower above a checkpoint queue where fear moves faster than the line, while a security kiosk glows under the stairs.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_the_static",
+          "west": "spire_sewers_passage",
+          "east": "spire_checkpoint_queue",
+          "south": "spire_security_kiosk",
+          "northeast": "spire_transit_plaza_scale_01"
+        },
+        "pos": [
+          2,
+          2
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "Transit Plaza spreads beneath the Great Elevator with copied badge timing, pulled security records, and mapped patrol gaps hiding inside its clean routines. The elevator controls still look impossible until the planning table makes those pieces into one route.",
+            "requires_milestones": [
+              "ms_w3_badges_copied",
+              "ms_w3_security_records_pulled",
+              "ms_w3_patrols_mapped"
+            ]
+          },
+          {
+            "description": "Transit Plaza spreads beneath the Great Elevator, all surveillance glass, guard lanes, and crowded hesitation. The elevator controls still tower above the checkpoint queue, but the security kiosk now carries Gh0st's pull marks in the system.",
+            "requires_milestones": [
+              "ms_w3_security_records_pulled"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "elevator controls",
+            "type": "generic",
+            "action_event": "w3_mq12_use_elevator",
+            "condition_unmet_message": "The elevator controls require high-level Spire authorization, which is just another way to say the city decides who gets to rise."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_transit_plaza",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Transit Plaza",
+        "background_image": "images/rooms/world_3/spire_transit_plaza.webp",
+        "description": "Transit Plaza spreads beneath the Great Elevator, all surveillance glass, guard lanes, and crowded hesitation. The elevator controls tower above a checkpoint queue where fear moves faster than the line, while a security kiosk glows under the stairs.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_the_static",
+          "west": "spire_sewers_passage",
+          "east": "spire_checkpoint_queue",
+          "south": "spire_security_kiosk"
+        },
+        "pos": [
+          2,
+          2
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "Transit Plaza spreads beneath the Great Elevator with copied badge timing, pulled security records, and mapped patrol gaps hiding inside its clean routines. The elevator controls still look impossible until the planning table makes those pieces into one route.",
+            "requires_milestones": [
+              "ms_w3_badges_copied",
+              "ms_w3_security_records_pulled",
+              "ms_w3_patrols_mapped"
+            ]
+          },
+          {
+            "description": "Transit Plaza spreads beneath the Great Elevator, all surveillance glass, guard lanes, and crowded hesitation. The elevator controls still tower above the checkpoint queue, but the security kiosk now carries Gh0st's pull marks in the system.",
+            "requires_milestones": [
+              "ms_w3_security_records_pulled"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "elevator controls",
+            "type": "generic",
+            "action_event": "w3_mq12_use_elevator",
+            "condition_unmet_message": "The elevator controls require high-level Spire authorization, which is just another way to say the city decides who gets to rise."
+          }
+        ]
+      }
+    },
+    "spire_security_kiosk": {
+      "before": {
+        "id": "spire_security_kiosk",
+        "env": "neon",
+        "title": "Security Kiosk",
+        "background_image": "images/rooms/world_3/spire_security_kiosk.webp",
+        "description": "A security kiosk sits under the plaza stairs, unattended because the guards trust the software more than each other. The security terminal and case records glow behind cracked glass. A public kiosk relay waits beside the record display.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_transit_plaza"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The security kiosk sits under the plaza stairs with its software pride wounded. The security terminal still glows behind cracked glass, and the case records show fresh extraction marks from Gh0st's search. A public kiosk relay waits beside the record display.",
+            "requires_milestones": [
+              "ms_w3_security_records_pulled"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "security terminal",
+            "type": "generic",
+            "action_event": "w3_mq12_interrogate_guard",
+            "condition_unmet_message": "You search the security terminal for shift rotations, extraction codes, and elevator routing."
+          },
+          {
+            "name": "case records",
+            "type": "generic",
+            "action_event": "w3_sq12_access_terminal",
+            "requires_milestones": [
+              "ms_w3_case_number_found"
+            ],
+            "condition_unmet_message": "The case records include sealed entries Gh0st can pull apart for traces of Elara."
+          },
+          {
+            "name": "public kiosk relay",
+            "type": "generic",
+            "action_event": "w3_sq12_expose_transfer",
+            "requires_milestones": [
+              "ms_w3_cold_case_records_found"
+            ],
+            "condition_unmet_message": "The relay can publish a deleted transfer only after Gh0st finds it."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_security_kiosk",
+        "env": "neon",
+        "title": "Security Kiosk",
+        "background_image": "images/rooms/world_3/spire_security_kiosk.webp",
+        "description": "A security kiosk sits under the plaza stairs, unattended because the guards trust the software more than each other. The security terminal and case records glow behind cracked glass. A public kiosk relay waits beside the record display. An under-stairs corridor continues south into Ad Bay; the plaza is back to the north.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_transit_plaza",
+          "south": "spire_transit_plaza_scale_01"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The security kiosk sits under the plaza stairs with its software pride wounded. The security terminal still glows behind cracked glass, and the case records show fresh extraction marks from Gh0st's search. A public kiosk relay waits beside the record display. An under-stairs corridor continues south into Ad Bay; the plaza is back to the north.",
+            "requires_milestones": [
+              "ms_w3_security_records_pulled"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "security terminal",
+            "type": "generic",
+            "action_event": "w3_mq12_interrogate_guard",
+            "condition_unmet_message": "You search the security terminal for shift rotations, extraction codes, and elevator routing."
+          },
+          {
+            "name": "case records",
+            "type": "generic",
+            "action_event": "w3_sq12_access_terminal",
+            "requires_milestones": [
+              "ms_w3_case_number_found"
+            ],
+            "condition_unmet_message": "The case records include sealed entries Gh0st can pull apart for traces of Elara."
+          },
+          {
+            "name": "public kiosk relay",
+            "type": "generic",
+            "action_event": "w3_sq12_expose_transfer",
+            "requires_milestones": [
+              "ms_w3_cold_case_records_found"
+            ],
+            "condition_unmet_message": "The relay can publish a deleted transfer only after Gh0st finds it."
+          }
+        ]
+      }
+    },
+    "spire_service_lift": {
+      "before": {
+        "id": "spire_service_lift",
+        "env": "neon",
+        "title": "Service Lift",
+        "background_image": "images/rooms/world_3/spire_service_lift.webp",
+        "description": "A service lift rises through the bones of the Upper City. A worker network uplink can publish the ledger, while a private dead drop can turn it into a precise weapon against one executive. The lift panel offers a return to Lower City’s Transit Plaza beside a rattling inspection hatch.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_uniform_sorting",
+          "north": "spire_skypark_dome",
+          "down": "spire_archive_vault",
+          "southeast": "spire_exec_lounge_bar"
+        },
+        "pos": [
+          1,
+          0
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The service lift judders between lockdown floors. The lift panel retains the cleared freight route down to Transit Plaza, and the inspection hatch rattles like the city is trying to shake the crew loose. A worker network uplink and a private dead drop remain accessible beside the panel.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "lift panel",
+            "type": "generic",
+            "condition_unmet_message": "The service-lift panel needs the freight clearance established by the heist plan.",
+            "action_event": "w3_return_to_lower_city",
+            "requires_milestones": [
+              "ms_w3_mq12_complete"
+            ]
+          },
+          {
+            "name": "inspection hatch",
+            "type": "generic",
+            "condition_unmet_message": "The inspection hatch is narrow enough for Gh0st and worrying enough for everyone else."
+          },
+          {
+            "name": "worker network uplink",
+            "type": "generic",
+            "action_event": "w3_sq14_leak_ledger",
+            "requires_milestones": [
+              "ms_w3_ledger_stolen"
+            ],
+            "condition_unmet_message": "The uplink can publish evidence only after Nova has the ledger."
+          },
+          {
+            "name": "private dead drop",
+            "type": "generic",
+            "action_event": "w3_sq14_weaponize_ledger",
+            "requires_milestones": [
+              "ms_w3_ledger_stolen"
+            ],
+            "condition_unmet_message": "The dead drop needs the stolen ledger before it can isolate one executive's security profile."
+          }
+        ],
+        "special_exits": {
+          "southeast": "Take the passage to the Exec Lounge",
+          "down": "Take the chute to the Archive (one way)"
+        }
+      },
+      "after": {
+        "id": "spire_service_lift",
+        "env": "neon",
+        "title": "Service Lift",
+        "background_image": "images/rooms/world_3/spire_service_lift.webp",
+        "description": "A service lift rises through the bones of the Upper City. A worker network uplink can publish the ledger, while a private dead drop can turn it into a precise weapon against one executive. The lift panel offers a return to Lower City’s Transit Plaza beside a rattling inspection hatch.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_uniform_sorting",
+          "north": "spire_skypark_dome"
+        },
+        "pos": [
+          1,
+          0
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The service lift judders between lockdown floors. The lift panel retains the cleared freight route down to Transit Plaza, and the inspection hatch rattles like the city is trying to shake the crew loose. A worker network uplink and a private dead drop remain accessible beside the panel.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "lift panel",
+            "type": "generic",
+            "condition_unmet_message": "The service-lift panel needs the freight clearance established by the heist plan.",
+            "action_event": "w3_return_to_lower_city",
+            "requires_milestones": [
+              "ms_w3_mq12_complete"
+            ]
+          },
+          {
+            "name": "inspection hatch",
+            "type": "generic",
+            "condition_unmet_message": "The inspection hatch is narrow enough for Gh0st and worrying enough for everyone else."
+          },
+          {
+            "name": "worker network uplink",
+            "type": "generic",
+            "action_event": "w3_sq14_leak_ledger",
+            "requires_milestones": [
+              "ms_w3_ledger_stolen"
+            ],
+            "condition_unmet_message": "The uplink can publish evidence only after Nova has the ledger."
+          },
+          {
+            "name": "private dead drop",
+            "type": "generic",
+            "action_event": "w3_sq14_weaponize_ledger",
+            "requires_milestones": [
+              "ms_w3_ledger_stolen"
+            ],
+            "condition_unmet_message": "The dead drop needs the stolen ledger before it can isolate one executive's security profile."
+          }
+        ]
+      }
+    },
+    "spire_glasswalk": {
+      "before": {
+        "id": "spire_glasswalk",
+        "env": "neon",
+        "title": "Glasswalk",
+        "background_image": "images/rooms/world_3/spire_glasswalk.webp",
+        "description": "The glasswalk curves along the dome edge with the whole Lower City visible far below. A camera seam runs under the handrail like a vein.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_skypark_dome",
+          "east": "spire_donor_gallery",
+          "down": "spire_archive_vault"
+        },
+        "pos": [
+          2,
+          0
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "camera seam",
+            "type": "generic",
+            "condition_unmet_message": "The camera seam is nearly invisible until you know where expensive paranoia hides."
+          },
+          {
+            "name": "handrail",
+            "type": "generic",
+            "condition_unmet_message": "The handrail is warm, spotless, and probably listening."
+          }
+        ],
+        "special_exits": {
+          "down": "Descend to the Archive (one way)"
+        }
+      },
+      "after": {
+        "id": "spire_glasswalk",
+        "env": "neon",
+        "title": "Glasswalk",
+        "background_image": "images/rooms/world_3/spire_glasswalk.webp",
+        "description": "The glasswalk curves along the dome edge with the whole Lower City visible far below. A camera seam runs under the handrail like a vein.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_skypark_dome",
+          "east": "spire_donor_gallery"
+        },
+        "pos": [
+          2,
+          0
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "camera seam",
+            "type": "generic",
+            "condition_unmet_message": "The camera seam is nearly invisible until you know where expensive paranoia hides."
+          },
+          {
+            "name": "handrail",
+            "type": "generic",
+            "condition_unmet_message": "The handrail is warm, spotless, and probably listening."
+          }
+        ]
+      }
+    },
+    "spire_exec_lounge_bar": {
+      "before": {
+        "id": "spire_exec_lounge_bar",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Exec Lounge",
+        "background_image": "images/rooms/world_3/spire_exec_lounge_bar.webp",
+        "description": "The Exec Lounge floats on a grav-platform above a silent atrium. A private safe hides behind sculpture, a concierge credential mirror flashes beside the terminal, and every booth looks designed for blackmail. A VIP vector arcade cabinet stands behind the velvet curtain.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_uniform_sorting",
+          "northwest": "spire_service_lift",
+          "northeast": "spire_archive_vault",
+          "south": "spire_exec_lounge_scale_01"
+        },
+        "pos": [
+          1,
+          2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "private safe",
+            "type": "generic",
+            "action_event": "w3_sq14_steal_ledger",
+            "requires_milestones": [
+              "ms_w3_concierge_key_copied"
+            ],
+            "condition_unmet_message": "A private executive safe hidden behind a decorative gravity-well sculpture."
+          },
+          {
+            "name": "concierge credential mirror",
+            "type": "generic",
+            "action_event": "w3_sq14_copy_concierge_key",
+            "condition_unmet_message": "The mirror flashes the concierge terminal's next rotating credential."
+          },
+          {
+            "name": "concierge terminal",
+            "type": "shop",
+            "shop_id": "upper_city_lounge",
+            "dialogue_id": "upper_city_lounge_shop_intro",
+            "condition_unmet_message": "A silent concierge terminal offering premium equipment with premium contempt."
+          },
+          {
+            "name": "VIP vector arcade cabinet",
+            "type": "arcade_discovery",
+            "hide_when_milestone": "ms_arcade_cabinet_03_repaired",
+            "condition_unmet_message": "A sleek chrome arcade console sits behind the velvet curtain. An overclocked mainframe chip hums with high-speed ICE cycles."
+          }
+        ],
+        "npc_presence": [
+          {
+            "npc": "lab_terminal",
+            "requires_milestones": [
+              "ms_w3_mq13_complete"
+            ],
+            "forbidden_milestones": [
+              "ms_w3_prototype_tested"
+            ]
+          }
+        ],
+        "special_exits": {
+          "northwest": "Return to the Service Lift",
+          "northeast": "Take the passage to the Archive"
+        }
+      },
+      "after": {
+        "id": "spire_exec_lounge_bar",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Exec Lounge",
+        "background_image": "images/rooms/world_3/spire_exec_lounge_bar.webp",
+        "description": "The Exec Lounge floats on a grav-platform above a silent atrium. A private safe hides behind sculpture, a concierge credential mirror flashes beside the terminal, and every booth looks designed for blackmail. A VIP vector arcade cabinet stands behind the velvet curtain.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_uniform_sorting",
+          "south": "spire_exec_lounge_scale_01"
+        },
+        "pos": [
+          1,
+          2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "private safe",
+            "type": "generic",
+            "action_event": "w3_sq14_steal_ledger",
+            "requires_milestones": [
+              "ms_w3_concierge_key_copied"
+            ],
+            "condition_unmet_message": "A private executive safe hidden behind a decorative gravity-well sculpture."
+          },
+          {
+            "name": "concierge credential mirror",
+            "type": "generic",
+            "action_event": "w3_sq14_copy_concierge_key",
+            "condition_unmet_message": "The mirror flashes the concierge terminal's next rotating credential."
+          },
+          {
+            "name": "concierge terminal",
+            "type": "shop",
+            "shop_id": "upper_city_lounge",
+            "dialogue_id": "upper_city_lounge_shop_intro",
+            "condition_unmet_message": "A silent concierge terminal offering premium equipment with premium contempt."
+          },
+          {
+            "name": "VIP vector arcade cabinet",
+            "type": "arcade_discovery",
+            "hide_when_milestone": "ms_arcade_cabinet_03_repaired",
+            "condition_unmet_message": "A sleek chrome arcade console sits behind the velvet curtain. An overclocked mainframe chip hums with high-speed ICE cycles."
+          }
+        ],
+        "npc_presence": [
+          {
+            "npc": "lab_terminal",
+            "requires_milestones": [
+              "ms_w3_mq13_complete"
+            ],
+            "forbidden_milestones": [
+              "ms_w3_prototype_tested"
+            ]
+          }
+        ]
+      }
+    },
+    "spire_archive_vault": {
+      "before": {
+        "id": "spire_archive_vault",
+        "env": "neon",
+        "special_exits": {
+          "northeast": "Enter Catalog Atrium",
+          "southwest": "Return to the Exec Lounge"
+        },
+        "title": "Archive Vault",
+        "background_image": "images/rooms/world_3/spire_archive_vault.webp",
+        "description": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field that hums toward Nova before she touches it. Command tether-lines vanish into the glass, routing power back toward the Prism Gallery.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "corporate_assassin"
+        ],
+        "connections": {
+          "west": "spire_prism_gallery",
+          "north": "spire_donor_gallery",
+          "southwest": "spire_exec_lounge_bar",
+          "east": "spire_drone_test_alcove",
+          "northeast": "spire_archive_scale_01"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "Crystal stacks strobe red with alarm text. The empty containment field screams around the stolen lens relic. Command tether-lines cross the glass from the Administrator's system; scan tether-lines to follow their deeper geometry.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          },
+          {
+            "description": "Indexed crystal stacks rise above a glass floor two hundred stories high. The Lens hangs unsupported after the resolved prism route drops containment. The lens relic hangs above the idle containment field, with command tether-lines still running back toward the gallery.",
+            "requires_milestones": [
+              "ms_w3_prism_solved"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "containment field",
+            "type": "generic",
+            "action_event": "w3_mq14_read_containment_field",
+            "condition_unmet_message": "The field is not a lock so much as a museum label backed by lethal power."
+          },
+          {
+            "name": "lens relic",
+            "type": "generic",
+            "action_event": "w3_mq14_review_lens",
+            "condition_unmet_message": "The Lens floats inside the containment field. Its Echo rises when Nova's calibrated cutter-suit signal reaches the glass."
+          },
+          {
+            "name": "command tether-lines",
+            "type": "generic",
+            "action_event": "w3_mq14_trace_command_tethers",
+            "condition_unmet_message": "The tether-lines route the containment field through the Prism Gallery instead of the vault door."
+          },
+          {
+            "name": "scan tether-lines",
+            "type": "generic",
+            "action_event": "w3_scan_archive_tethers",
+            "condition_unmet_message": "Without the Lens, the Archive's deeper structure is only glass, light, and ownership."
+          }
+        ],
+        "enemy_flavor": {
+          "corporate_assassin": "A corporate assassin flickers between shard stacks, waiting for the alarm to justify murder."
+        }
+      },
+      "after": {
+        "id": "spire_archive_vault",
+        "env": "neon",
+        "title": "Archive Vault",
+        "background_image": "images/rooms/world_3/spire_archive_vault.webp",
+        "description": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field that hums toward Nova before she touches it. Command tether-lines vanish into the glass, routing power back toward the Prism Gallery. The catalog wing opens south through Catalog Atrium, with a clear return to the vault.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "corporate_assassin"
+        ],
+        "connections": {
+          "west": "spire_prism_gallery",
+          "north": "spire_donor_gallery",
+          "east": "spire_drone_test_alcove",
+          "south": "spire_archive_scale_01"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "Crystal stacks strobe red with alarm text. The empty containment field screams around the stolen lens relic. Command tether-lines cross the glass from the Administrator's system; scan tether-lines to follow their deeper geometry. The catalog wing opens south through Catalog Atrium, with a clear return to the vault.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          },
+          {
+            "description": "Indexed crystal stacks rise above a glass floor two hundred stories high. The Lens hangs unsupported after the resolved prism route drops containment. The lens relic hangs above the idle containment field, with command tether-lines still running back toward the gallery. The catalog wing opens south through Catalog Atrium, with a clear return to the vault.",
+            "requires_milestones": [
+              "ms_w3_prism_solved"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "containment field",
+            "type": "generic",
+            "action_event": "w3_mq14_read_containment_field",
+            "condition_unmet_message": "The field is not a lock so much as a museum label backed by lethal power."
+          },
+          {
+            "name": "lens relic",
+            "type": "generic",
+            "action_event": "w3_mq14_review_lens",
+            "condition_unmet_message": "The Lens floats inside the containment field. Its Echo rises when Nova's calibrated cutter-suit signal reaches the glass."
+          },
+          {
+            "name": "command tether-lines",
+            "type": "generic",
+            "action_event": "w3_mq14_trace_command_tethers",
+            "condition_unmet_message": "The tether-lines route the containment field through the Prism Gallery instead of the vault door."
+          },
+          {
+            "name": "scan tether-lines",
+            "type": "generic",
+            "action_event": "w3_scan_archive_tethers",
+            "condition_unmet_message": "Without the Lens, the Archive's deeper structure is only glass, light, and ownership."
+          }
+        ],
+        "enemy_flavor": {
+          "corporate_assassin": "A corporate assassin flickers between shard stacks, waiting for the alarm to justify murder."
+        }
+      }
+    },
+    "spire_vent_output_scale_03": {
+      "before": {
+        "id": "spire_vent_output_scale_03",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Rain Grate Overlook",
+        "background_image": "images/rooms/world_3/spire_vent_output_scale_03.webp",
+        "description": "A rain grate opens above the lower street where upper runoff falls clean before hitting rust. The upper runoff and patrol reflection make the route feel watched from both directions. Tucked behind the grating sits a hidden smuggler stash. A one-way chute leads directly back to the entrance.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_vent_output_scale_02"
+        },
+        "pos": [
+          1,
+          4
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "rain grate",
+            "type": "generic",
+            "condition_unmet_message": "The grate gives the crew a quiet look at patrol rhythm without stepping into the street."
+          },
+          {
+            "name": "upper runoff",
+            "type": "generic",
+            "condition_unmet_message": "The runoff smells filtered before the city dirt catches it."
+          },
+          {
+            "name": "smuggler stash",
+            "type": "container",
+            "state_key": "spire_vent_output_scale_03_cache_opened",
+            "items": [
+              "circuit_board",
+              "pulse_grenade"
+            ],
+            "popup_title": "Smuggler's Dead Drop",
+            "already_open_message": "The smuggler stash has already been emptied.",
+            "discovery_message": "You draw the concealed package out of its hiding place and unwrap the usable supplies."
+          },
+          {
+            "name": "chute",
+            "type": "generic",
+            "action_event": "warp_spire_vent_output_scale_03_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "spire_vent_output_scale_03",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Rain Grate Overlook",
+        "background_image": "images/rooms/world_3/spire_vent_output_scale_03.webp",
+        "description": "A rain grate opens above the lower street where upper runoff falls clean before hitting rust. The upper runoff and patrol reflection make the route feel watched from both directions. Tucked behind the grating sits a hidden smuggler stash. An optional return chute leads directly back to the entrance. The room corridor also remains open for walking back.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_vent_output_scale_02"
+        },
+        "pos": [
+          1,
+          4
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "rain grate",
+            "type": "generic",
+            "condition_unmet_message": "The grate gives the crew a quiet look at patrol rhythm without stepping into the street."
+          },
+          {
+            "name": "upper runoff",
+            "type": "generic",
+            "condition_unmet_message": "The runoff smells filtered before the city dirt catches it."
+          },
+          {
+            "name": "smuggler stash",
+            "type": "container",
+            "state_key": "spire_vent_output_scale_03_cache_opened",
+            "items": [
+              "circuit_board",
+              "pulse_grenade"
+            ],
+            "popup_title": "Smuggler's Dead Drop",
+            "already_open_message": "The smuggler stash has already been emptied.",
+            "discovery_message": "You draw the concealed package out of its hiding place and unwrap the usable supplies."
+          },
+          {
+            "name": "chute",
+            "type": "generic",
+            "action_event": "warp_spire_vent_output_scale_03_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to Vent Output. You can also retrace the room corridors with NSEW swipes."
+          }
+        ]
+      }
+    },
+    "spire_the_static_scale_01": {
+      "before": {
+        "id": "spire_the_static_scale_01",
+        "env": "neon",
+        "special_exits": {
+          "southwest": "Return to The Static"
+        },
+        "title": "Back Bar Ledger",
+        "background_image": "images/rooms/world_3/spire_the_static_scale_01.webp",
+        "description": "The Static's back bar hides cracked glasses, ration labels, and a favor slate no customer admits to reading. A chipped tumbler sits beside the slate, marked with names Jax only says after closing.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "southwest": "spire_the_static",
+          "north": "spire_the_static_scale_02"
+        },
+        "pos": [
+          3,
+          2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "back bar",
+            "type": "generic",
+            "condition_unmet_message": "The back bar is where Jax keeps the real accounts."
+          },
+          {
+            "name": "favor slate",
+            "type": "generic",
+            "condition_unmet_message": "The favor slate lists names in shorthand only locals understand."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_the_static_scale_01",
+        "env": "neon",
+        "title": "Back Bar Ledger",
+        "background_image": "images/rooms/world_3/spire_the_static_scale_01.webp",
+        "description": "The Static's back bar hides cracked glasses, ration labels, and a favor slate no customer admits to reading. A chipped tumbler sits beside the slate, marked with names Jax only says after closing. The main bar is west, the subway car east, and the roof stairwell north.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_the_static",
+          "east": "spire_old_subway_car",
+          "north": "spire_the_static_scale_02"
+        },
+        "pos": [
+          3,
+          1
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "back bar",
+            "type": "generic",
+            "condition_unmet_message": "The back bar is where Jax keeps the real accounts."
+          },
+          {
+            "name": "favor slate",
+            "type": "generic",
+            "condition_unmet_message": "The favor slate lists names in shorthand only locals understand."
+          }
+        ]
+      }
+    },
+    "spire_the_static_scale_02": {
+      "before": {
+        "id": "spire_the_static_scale_02",
+        "env": "neon",
+        "title": "Roof Stairwell",
+        "background_image": "images/rooms/world_3/spire_the_static_scale_02.webp",
+        "description": "Concrete roof stairs climb past curfew chalk and old burn marks from drone sweeps. The curfew chalk changes every night, but the scorch line never moves.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_the_static_scale_01",
+          "north": "spire_the_static_scale_03"
+        },
+        "pos": [
+          3,
+          3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "roof stairs",
+            "type": "generic",
+            "condition_unmet_message": "The stairs are ugly, exposed, and faster than the official route."
+          },
+          {
+            "name": "curfew chalk",
+            "type": "generic",
+            "condition_unmet_message": "The chalk is local infrastructure: temporary, illegal, and more useful than the city map."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_the_static_scale_02",
+        "env": "neon",
+        "title": "Roof Stairwell",
+        "background_image": "images/rooms/world_3/spire_the_static_scale_02.webp",
+        "description": "Concrete roof stairs climb past curfew chalk and old burn marks from drone sweeps. The curfew chalk changes every night, but the scorch line never moves.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_the_static_scale_01",
+          "north": "spire_the_static_scale_03"
+        },
+        "pos": [
+          3,
+          2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "roof stairs",
+            "type": "generic",
+            "condition_unmet_message": "The stairs are ugly, exposed, and faster than the official route."
+          },
+          {
+            "name": "curfew chalk",
+            "type": "generic",
+            "condition_unmet_message": "The chalk is local infrastructure: temporary, illegal, and more useful than the city map."
+          }
+        ]
+      }
+    },
+    "spire_the_static_scale_03": {
+      "before": {
+        "id": "spire_the_static_scale_03",
+        "env": "neon",
+        "title": "Tenant Shrine",
+        "background_image": "images/rooms/world_3/spire_the_static_scale_03.webp",
+        "description": "A tenant shrine of folded notices, dead neon, and cheap candles turns eviction paperwork into a memorial wall. The dead neon still flickers when transit drones pass overhead. A discarded courier satchel lies forgotten in the corner. A one-way fire escape leads directly back to the entrance.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_the_static_scale_02"
+        },
+        "pos": [
+          3,
+          4
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "tenant shrine",
+            "type": "generic",
+            "condition_unmet_message": "The shrine is small enough to hide, which is the point."
+          },
+          {
+            "name": "folded notices",
+            "type": "generic",
+            "condition_unmet_message": "The notices are all stamped by different departments and the same contempt."
+          },
+          {
+            "name": "courier satchel",
+            "type": "container",
+            "state_key": "spire_the_static_scale_03_cache_opened",
+            "items": [
+              "mod_corrosive_rounds",
+              "ration_pack"
+            ],
+            "popup_title": "Abandoned Courier Satchel",
+            "already_open_message": "The courier satchel has already been emptied.",
+            "discovery_message": "You open the satchel and check its sealed pockets before packing the contents away."
+          },
+          {
+            "name": "fire escape",
+            "type": "generic",
+            "action_event": "warp_spire_the_static_scale_03_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "spire_the_static_scale_03",
+        "env": "neon",
+        "title": "Tenant Shrine",
+        "background_image": "images/rooms/world_3/spire_the_static_scale_03.webp",
+        "description": "A tenant shrine of folded notices, dead neon, and cheap candles turns eviction paperwork into a memorial wall. The dead neon still flickers when transit drones pass overhead. A discarded courier satchel lies forgotten in the corner. An optional return fire escape leads directly back to the entrance. The room corridor also remains open for walking back.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_the_static_scale_02"
+        },
+        "pos": [
+          3,
+          3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "tenant shrine",
+            "type": "generic",
+            "condition_unmet_message": "The shrine is small enough to hide, which is the point."
+          },
+          {
+            "name": "folded notices",
+            "type": "generic",
+            "condition_unmet_message": "The notices are all stamped by different departments and the same contempt."
+          },
+          {
+            "name": "courier satchel",
+            "type": "container",
+            "state_key": "spire_the_static_scale_03_cache_opened",
+            "items": [
+              "mod_corrosive_rounds",
+              "ration_pack"
+            ],
+            "popup_title": "Abandoned Courier Satchel",
+            "already_open_message": "The courier satchel has already been emptied.",
+            "discovery_message": "You open the satchel and check its sealed pockets before packing the contents away."
+          },
+          {
+            "name": "fire escape",
+            "type": "generic",
+            "action_event": "warp_spire_the_static_scale_03_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to The Static. You can also retrace the room corridors with NSEW swipes."
+          }
+        ]
+      }
+    },
+    "spire_night_market_scale_01": {
+      "before": {
+        "id": "spire_night_market_scale_01",
+        "env": "neon",
+        "special_exits": {
+          "southwest": "Return to Night Market"
+        },
+        "title": "Lantern Roof",
+        "background_image": "images/rooms/world_3/spire_night_market_scale_01.webp",
+        "description": "String lights cross the lantern roof in careful knots above the Night Market. The anchor knots keep them up when patrol drones skim too low, and the lantern shadows hide handoffs under color. A vendor lockbox is chained beneath the string lights.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "southwest": "spire_night_market",
+          "north": "spire_night_market_scale_02"
+        },
+        "pos": [
+          4,
+          3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "lantern roof",
+            "type": "generic",
+            "condition_unmet_message": "The roof looks festive until the drone scratches are visible."
+          },
+          {
+            "name": "anchor knots",
+            "type": "generic",
+            "condition_unmet_message": "The knots are sailor work, not electrician work."
+          },
+          {
+            "name": "lantern roof kitchen",
+            "type": "rest_stop",
+            "cook_source": "Thermal Cooker",
+            "message": "A street vendor's thermal burner sits beneath string lights, ready for hot noodles and rations."
+          },
+          {
+            "name": "market refuge",
+            "type": "rest_stop",
+            "rest_event": "w3_camp_night_market",
+            "message": "Sheltered from drone patrols beneath the market awnings, your squad catches their breath."
+          },
+          {
+            "name": "vendor lockbox",
+            "type": "generic",
+            "action_event": "find_vhs_tape_05",
+            "condition_unmet_message": "A heavy metal lockbox chained beneath string lights."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_night_market_scale_01",
+        "env": "neon",
+        "title": "Lantern Roof",
+        "background_image": "images/rooms/world_3/spire_night_market_scale_01.webp",
+        "description": "String lights cross the lantern roof in careful knots above the Night Market. The anchor knots keep them up when patrol drones skim too low, and the lantern shadows hide handoffs under color. A vendor lockbox is chained beneath the string lights. The steps south return to Lantern Bridge; Spice Alley continues north.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_lantern_bridge",
+          "north": "spire_night_market_scale_02"
+        },
+        "pos": [
+          3,
+          4
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "lantern roof",
+            "type": "generic",
+            "condition_unmet_message": "The roof looks festive until the drone scratches are visible."
+          },
+          {
+            "name": "anchor knots",
+            "type": "generic",
+            "condition_unmet_message": "The knots are sailor work, not electrician work."
+          },
+          {
+            "name": "lantern roof kitchen",
+            "type": "rest_stop",
+            "cook_source": "Thermal Cooker",
+            "message": "A street vendor's thermal burner sits beneath string lights, ready for hot noodles and rations."
+          },
+          {
+            "name": "market refuge",
+            "type": "rest_stop",
+            "rest_event": "w3_camp_night_market",
+            "message": "Sheltered from drone patrols beneath the market awnings, your squad catches their breath."
+          },
+          {
+            "name": "vendor lockbox",
+            "type": "generic",
+            "action_event": "find_vhs_tape_05",
+            "condition_unmet_message": "A heavy metal lockbox chained beneath string lights."
+          }
+        ]
+      }
+    },
+    "spire_night_market_scale_02": {
+      "before": {
+        "id": "spire_night_market_scale_02",
+        "env": "neon",
+        "title": "Spice Alley",
+        "background_image": "images/rooms/world_3/spire_night_market_scale_02.webp",
+        "description": "Spice alley smells like heat, fried protein, and ozone. Vendor codes are scratched under every awning, telling locals which stalls sell food, data, or silence. A vendor ledger sits weighted down by an iron hex nut.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_night_market_scale_01",
+          "north": "spire_night_market_scale_03"
+        },
+        "pos": [
+          4,
+          4
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "spice alley",
+            "type": "generic",
+            "condition_unmet_message": "The alley hides half the city's trade in plain sight."
+          },
+          {
+            "name": "vendor codes",
+            "type": "generic",
+            "condition_unmet_message": "The codes mark which sellers move food, data, or favors."
+          },
+          {
+            "name": "vendor ledger",
+            "type": "generic",
+            "condition_unmet_message": "A waterlogged notebook listing black-market prices for contraband batteries and synthesized spices."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_night_market_scale_02",
+        "env": "neon",
+        "title": "Spice Alley",
+        "background_image": "images/rooms/world_3/spire_night_market_scale_02.webp",
+        "description": "Spice alley smells like heat, fried protein, and ozone. Vendor codes are scratched under every awning, telling locals which stalls sell food, data, or silence. A vendor ledger sits weighted down by an iron hex nut.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_night_market_scale_01",
+          "north": "spire_night_market_scale_03"
+        },
+        "pos": [
+          3,
+          5
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "spice alley",
+            "type": "generic",
+            "condition_unmet_message": "The alley hides half the city's trade in plain sight."
+          },
+          {
+            "name": "vendor codes",
+            "type": "generic",
+            "condition_unmet_message": "The codes mark which sellers move food, data, or favors."
+          },
+          {
+            "name": "vendor ledger",
+            "type": "generic",
+            "condition_unmet_message": "A waterlogged notebook listing black-market prices for contraband batteries and synthesized spices."
+          }
+        ]
+      }
+    },
+    "spire_night_market_scale_03": {
+      "before": {
+        "id": "spire_night_market_scale_03",
+        "env": "neon",
+        "title": "Rain Cache",
+        "background_image": "images/rooms/world_3/spire_night_market_scale_03.webp",
+        "description": "A rain cache beneath a torn canopy keeps wrapped tools dry beside counterfeit guest pins. The guest pins are cheap, but the route printed on the underside is current. A heavy black market safe rests under a tarp. A one-way slide leads directly back to the entrance.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_night_market_scale_02"
+        },
+        "pos": [
+          4,
+          5
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "rain cache",
+            "type": "generic",
+            "condition_unmet_message": "The cache is exactly the kind of place the rich never think to search."
+          },
+          {
+            "name": "wrapped tools",
+            "type": "generic",
+            "condition_unmet_message": "The tools are cheap, mismatched, and perfect for quiet work."
+          },
+          {
+            "name": "black market safe",
+            "type": "container",
+            "state_key": "spire_night_market_scale_03_cache_opened",
+            "items": [
+              "cyber_visor",
+              "battery_pack"
+            ],
+            "popup_title": "Black Market Safe",
+            "already_open_message": "The black market safe has already been emptied.",
+            "discovery_message": "You swing the safe door aside. The compact equipment inside has been carefully packed for transport."
+          },
+          {
+            "name": "slide",
+            "type": "generic",
+            "action_event": "warp_spire_night_market_scale_03_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "spire_night_market_scale_03",
+        "env": "neon",
+        "title": "Rain Cache",
+        "background_image": "images/rooms/world_3/spire_night_market_scale_03.webp",
+        "description": "A rain cache beneath a torn canopy keeps wrapped tools dry beside counterfeit guest pins. The guest pins are cheap, but the route printed on the underside is current. A heavy black market safe rests under a tarp. An optional return slide leads directly back to the entrance. The room corridor also remains open for walking back.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_night_market_scale_02"
+        },
+        "pos": [
+          3,
+          6
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "rain cache",
+            "type": "generic",
+            "condition_unmet_message": "The cache is exactly the kind of place the rich never think to search."
+          },
+          {
+            "name": "wrapped tools",
+            "type": "generic",
+            "condition_unmet_message": "The tools are cheap, mismatched, and perfect for quiet work."
+          },
+          {
+            "name": "black market safe",
+            "type": "container",
+            "state_key": "spire_night_market_scale_03_cache_opened",
+            "items": [
+              "cyber_visor",
+              "battery_pack"
+            ],
+            "popup_title": "Black Market Safe",
+            "already_open_message": "The black market safe has already been emptied.",
+            "discovery_message": "You swing the safe door aside. The compact equipment inside has been carefully packed for transport."
+          },
+          {
+            "name": "slide",
+            "type": "generic",
+            "action_event": "warp_spire_night_market_scale_03_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to Night Market. You can also retrace the room corridors with NSEW swipes."
+          }
+        ]
+      }
+    },
+    "spire_sewers_scale_03": {
+      "before": {
+        "id": "spire_sewers_scale_03",
+        "env": "neon",
+        "title": "Ratline Nook",
+        "background_image": "images/rooms/world_3/spire_sewers_scale_03.webp",
+        "description": "A dry ratline nook branches away from the main sewer. Chalk arrows mark which exits are watched this week, and the dry ledge smells faintly of smoke and noodle broth. A rusted maintenance locker clings to the wet brickwork. A one-way ladder leads directly back to the entrance.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_sewers_scale_02"
+        },
+        "pos": [
+          0,
+          5
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "ratline nook",
+            "type": "generic",
+            "condition_unmet_message": "The nook is old resistance infrastructure hiding inside utility neglect."
+          },
+          {
+            "name": "chalk arrows",
+            "type": "generic",
+            "condition_unmet_message": "The arrows have been updated recently enough to trust."
+          },
+          {
+            "name": "maintenance locker",
+            "type": "container",
+            "state_key": "spire_sewers_scale_03_cache_opened",
+            "items": [
+              "precision_core",
+              "nano_filament"
+            ],
+            "popup_title": "Flooded Maintenance Locker",
+            "already_open_message": "The maintenance locker has already been emptied.",
+            "discovery_message": "You open the locker and pull the spare components from their retaining clips."
+          },
+          {
+            "name": "ladder",
+            "type": "generic",
+            "action_event": "warp_spire_sewers_scale_03_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "spire_sewers_scale_03",
+        "env": "neon",
+        "title": "Ratline Nook",
+        "background_image": "images/rooms/world_3/spire_sewers_scale_03.webp",
+        "description": "A dry ratline nook branches away from the main sewer. Chalk arrows mark which exits are watched this week, and the dry ledge smells faintly of smoke and noodle broth. A rusted maintenance locker clings to the wet brickwork. An optional return ladder leads directly back to the entrance. The room corridor also remains open for walking back.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_sewers_scale_02"
+        },
+        "pos": [
+          0,
+          5
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "ratline nook",
+            "type": "generic",
+            "condition_unmet_message": "The nook is old resistance infrastructure hiding inside utility neglect."
+          },
+          {
+            "name": "chalk arrows",
+            "type": "generic",
+            "condition_unmet_message": "The arrows have been updated recently enough to trust."
+          },
+          {
+            "name": "maintenance locker",
+            "type": "container",
+            "state_key": "spire_sewers_scale_03_cache_opened",
+            "items": [
+              "precision_core",
+              "nano_filament"
+            ],
+            "popup_title": "Flooded Maintenance Locker",
+            "already_open_message": "The maintenance locker has already been emptied.",
+            "discovery_message": "You open the locker and pull the spare components from their retaining clips."
+          },
+          {
+            "name": "ladder",
+            "type": "generic",
+            "action_event": "warp_spire_sewers_scale_03_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to Sewer Landing Pad. You can also retrace the room corridors with NSEW swipes."
+          }
+        ]
+      }
+    },
+    "spire_transit_plaza_scale_01": {
+      "before": {
+        "id": "spire_transit_plaza_scale_01",
+        "env": "neon",
+        "special_exits": {
+          "southwest": "Return to Transit Plaza"
+        },
+        "title": "Ad Bay",
+        "background_image": "images/rooms/world_3/spire_transit_plaza_scale_01.webp",
+        "description": "The ad bay projects a smiling loop of citizens thanking Dominion for clean air. The smiling loop glitches whenever a real worker walks past, and the dead speaker clicks through missing applause.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "southwest": "spire_transit_plaza",
+          "north": "spire_transit_plaza_scale_02"
+        },
+        "pos": [
+          3,
+          3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "ad bay",
+            "type": "generic",
+            "condition_unmet_message": "The ad copy is too polished to be believed."
+          },
+          {
+            "name": "smiling loop",
+            "type": "generic",
+            "condition_unmet_message": "The loop breaks exactly where the lower-city crowd crosses the frame."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_transit_plaza_scale_01",
+        "env": "neon",
+        "title": "Ad Bay",
+        "background_image": "images/rooms/world_3/spire_transit_plaza_scale_01.webp",
+        "description": "The ad bay projects a smiling loop of citizens thanking Dominion for clean air. The smiling loop glitches whenever a real worker walks past, and the dead speaker clicks through missing applause. The kiosk is north; the passage continues south into Ticket Shadow.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_security_kiosk",
+          "south": "spire_transit_plaza_scale_02"
+        },
+        "pos": [
+          2,
+          0
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "ad bay",
+            "type": "generic",
+            "condition_unmet_message": "The ad copy is too polished to be believed."
+          },
+          {
+            "name": "smiling loop",
+            "type": "generic",
+            "condition_unmet_message": "The loop breaks exactly where the lower-city crowd crosses the frame."
+          }
+        ]
+      }
+    },
+    "spire_transit_plaza_scale_02": {
+      "before": {
+        "id": "spire_transit_plaza_scale_02",
+        "env": "neon",
+        "title": "Ticket Shadow",
+        "background_image": "images/rooms/world_3/spire_transit_plaza_scale_02.webp",
+        "description": "A ticket shadow behind the fare kiosk keeps commuters out of scanner sight for three blessed seconds. The fare kiosk accepts payment faster than guilt, but its blind spot is real.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_transit_plaza_scale_01",
+          "north": "spire_transit_plaza_scale_03"
+        },
+        "pos": [
+          3,
+          4
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "ticket shadow",
+            "type": "generic",
+            "condition_unmet_message": "The blind spot is small, but it is real."
+          },
+          {
+            "name": "fare kiosk",
+            "type": "generic",
+            "condition_unmet_message": "The kiosk is more interested in charging people than protecting Dominion. Useful."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_transit_plaza_scale_02",
+        "env": "neon",
+        "title": "Ticket Shadow",
+        "background_image": "images/rooms/world_3/spire_transit_plaza_scale_02.webp",
+        "description": "A ticket shadow behind the fare kiosk keeps commuters out of scanner sight for three blessed seconds. The fare kiosk accepts payment faster than guilt, but its blind spot is real.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_transit_plaza_scale_01",
+          "south": "spire_transit_plaza_scale_03"
+        },
+        "pos": [
+          2,
+          -1
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "ticket shadow",
+            "type": "generic",
+            "condition_unmet_message": "The blind spot is small, but it is real."
+          },
+          {
+            "name": "fare kiosk",
+            "type": "generic",
+            "condition_unmet_message": "The kiosk is more interested in charging people than protecting Dominion. Useful."
+          }
+        ]
+      }
+    },
+    "spire_transit_plaza_scale_03": {
+      "before": {
+        "id": "spire_transit_plaza_scale_03",
+        "env": "neon",
+        "title": "Underrail Map Room",
+        "background_image": "images/rooms/world_3/spire_transit_plaza_scale_03.webp",
+        "description": "The underrail map room stores obsolete route boards and a service legend that still matches the staff tunnels. A taped transfer notice explains why Dominion forgot to update the old map. An abandoned transit lockbox sits beneath a broken arrivals board. A one-way turnstile leads directly back to the entrance.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_transit_plaza_scale_02"
+        },
+        "pos": [
+          3,
+          5
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "underrail map",
+            "type": "generic",
+            "condition_unmet_message": "The old map is more honest than the live one."
+          },
+          {
+            "name": "service legend",
+            "type": "generic",
+            "condition_unmet_message": "The legend marks doors hidden from guest-facing overlays."
+          },
+          {
+            "name": "transit lockbox",
+            "type": "container",
+            "state_key": "spire_transit_plaza_scale_03_cache_opened",
+            "items": [
+              "focus_matrix",
+              "circuit_board"
+            ],
+            "popup_title": "Abandoned Transit Lockbox",
+            "already_open_message": "The transit lockbox has already been emptied.",
+            "discovery_message": "You lift the lockbox lid and remove the components secured beneath its document tray."
+          },
+          {
+            "name": "turnstile",
+            "type": "generic",
+            "action_event": "warp_spire_transit_plaza_scale_03_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "spire_transit_plaza_scale_03",
+        "env": "neon",
+        "title": "Underrail Map Room",
+        "background_image": "images/rooms/world_3/spire_transit_plaza_scale_03.webp",
+        "description": "The underrail map room stores obsolete route boards and a service legend that still matches the staff tunnels. A taped transfer notice explains why Dominion forgot to update the old map. An abandoned transit lockbox sits beneath a broken arrivals board. An optional return turnstile leads directly back to the entrance. The room corridor also remains open for walking back.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_transit_plaza_scale_02"
+        },
+        "pos": [
+          2,
+          -2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "underrail map",
+            "type": "generic",
+            "condition_unmet_message": "The old map is more honest than the live one."
+          },
+          {
+            "name": "service legend",
+            "type": "generic",
+            "condition_unmet_message": "The legend marks doors hidden from guest-facing overlays."
+          },
+          {
+            "name": "transit lockbox",
+            "type": "container",
+            "state_key": "spire_transit_plaza_scale_03_cache_opened",
+            "items": [
+              "focus_matrix",
+              "circuit_board"
+            ],
+            "popup_title": "Abandoned Transit Lockbox",
+            "already_open_message": "The transit lockbox has already been emptied.",
+            "discovery_message": "You lift the lockbox lid and remove the components secured beneath its document tray."
+          },
+          {
+            "name": "turnstile",
+            "type": "generic",
+            "action_event": "warp_spire_transit_plaza_scale_03_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to Transit Plaza. You can also retrace the room corridors with NSEW swipes."
+          }
+        ]
+      }
+    },
+    "spire_laundry_scale_03": {
+      "before": {
+        "id": "spire_laundry_scale_03",
+        "env": "neon",
+        "title": "Service Bin",
+        "background_image": "images/rooms/world_3/spire_laundry_scale_03.webp",
+        "description": "A service bin overflows with ruined napkins, broken jewelry, and a discarded pass snapped in half. The discarded pass is dead, but its route stamp is still readable. A tailored uniform case has been hidden inside an air intake. A one-way chute leads directly back to the entrance.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_laundry_scale_02"
+        },
+        "pos": [
+          -1,
+          3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "service bin",
+            "type": "generic",
+            "condition_unmet_message": "The bin is where privilege throws away useful things."
+          },
+          {
+            "name": "discarded pass",
+            "type": "generic",
+            "condition_unmet_message": "The pass is dead, but the route printed on it is not."
+          },
+          {
+            "name": "tailored uniform case",
+            "type": "container",
+            "state_key": "spire_laundry_scale_03_cache_opened",
+            "items": [
+              "bulwark_layer",
+              "medkit_plus"
+            ],
+            "popup_title": "Directorate Courier Case",
+            "already_open_message": "The tailored uniform case has already been emptied.",
+            "discovery_message": "You open the fitted case and fold back its protective lining to reach the equipment."
+          },
+          {
+            "name": "chute",
+            "type": "generic",
+            "action_event": "warp_spire_laundry_scale_03_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "spire_laundry_scale_03",
+        "env": "neon",
+        "title": "Service Bin",
+        "background_image": "images/rooms/world_3/spire_laundry_scale_03.webp",
+        "description": "A service bin overflows with ruined napkins, broken jewelry, and a discarded pass snapped in half. The discarded pass is dead, but its route stamp is still readable. A tailored uniform case has been hidden inside an air intake. An optional return chute leads directly back to the entrance. The room corridor also remains open for walking back.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_laundry_scale_02"
+        },
+        "pos": [
+          -1,
+          3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "service bin",
+            "type": "generic",
+            "condition_unmet_message": "The bin is where privilege throws away useful things."
+          },
+          {
+            "name": "discarded pass",
+            "type": "generic",
+            "condition_unmet_message": "The pass is dead, but the route printed on it is not."
+          },
+          {
+            "name": "tailored uniform case",
+            "type": "container",
+            "state_key": "spire_laundry_scale_03_cache_opened",
+            "items": [
+              "bulwark_layer",
+              "medkit_plus"
+            ],
+            "popup_title": "Directorate Courier Case",
+            "already_open_message": "The tailored uniform case has already been emptied.",
+            "discovery_message": "You open the fitted case and fold back its protective lining to reach the equipment."
+          },
+          {
+            "name": "chute",
+            "type": "generic",
+            "action_event": "warp_spire_laundry_scale_03_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to Laundry Service. You can also retrace the room corridors with NSEW swipes."
+          }
+        ]
+      }
+    },
+    "spire_skypark_scale_03": {
+      "before": {
+        "id": "spire_skypark_scale_03",
+        "env": "neon",
+        "title": "Glass Lawn",
+        "background_image": "images/rooms/world_3/spire_skypark_scale_03.webp",
+        "description": "The glass lawn is transparent all the way down to the city it refuses to see. Scanner mist drifts between ornamental trees, checking posture, fabric, and fear. A locked botanical vault is embedded in the synthetic root bed. A one-way spiral leads directly back to the entrance.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_skypark_scale_02"
+        },
+        "pos": [
+          1,
+          3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "glass lawn",
+            "type": "generic",
+            "condition_unmet_message": "Standing here feels like being displayed."
+          },
+          {
+            "name": "scanner mist",
+            "type": "generic",
+            "condition_unmet_message": "The mist checks posture, fabric, and fear."
+          },
+          {
+            "name": "botanical vault",
+            "type": "container",
+            "state_key": "spire_skypark_scale_03_cache_opened",
+            "items": [
+              "stability_gyro_mod",
+              "herbal_poultice"
+            ],
+            "popup_title": "Synthetics Research Cache",
+            "already_open_message": "The botanical vault has already been emptied.",
+            "discovery_message": "You open the vault and recover the supplies protected inside its storage compartment."
+          },
+          {
+            "name": "spiral",
+            "type": "generic",
+            "action_event": "warp_spire_skypark_scale_03_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "spire_skypark_scale_03",
+        "env": "neon",
+        "title": "Glass Lawn",
+        "background_image": "images/rooms/world_3/spire_skypark_scale_03.webp",
+        "description": "The glass lawn is transparent all the way down to the city it refuses to see. Scanner mist drifts between ornamental trees, checking posture, fabric, and fear. A locked botanical vault is embedded in the synthetic root bed. An optional return spiral leads directly back to the entrance. The room corridor also remains open for walking back.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_skypark_scale_02"
+        },
+        "pos": [
+          1,
+          3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "glass lawn",
+            "type": "generic",
+            "condition_unmet_message": "Standing here feels like being displayed."
+          },
+          {
+            "name": "scanner mist",
+            "type": "generic",
+            "condition_unmet_message": "The mist checks posture, fabric, and fear."
+          },
+          {
+            "name": "botanical vault",
+            "type": "container",
+            "state_key": "spire_skypark_scale_03_cache_opened",
+            "items": [
+              "stability_gyro_mod",
+              "herbal_poultice"
+            ],
+            "popup_title": "Synthetics Research Cache",
+            "already_open_message": "The botanical vault has already been emptied.",
+            "discovery_message": "You open the vault and recover the supplies protected inside its storage compartment."
+          },
+          {
+            "name": "spiral",
+            "type": "generic",
+            "action_event": "warp_spire_skypark_scale_03_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to Skypark Dome. You can also retrace the room corridors with NSEW swipes."
+          }
+        ]
+      }
+    },
+    "spire_archive_scale_01": {
+      "before": {
+        "id": "spire_archive_scale_01",
+        "env": "neon",
+        "special_exits": {
+          "southwest": "Return to Archive Vault"
+        },
+        "title": "Catalog Atrium",
+        "background_image": "images/rooms/world_3/spire_archive_scale_01.webp",
+        "description": "The catalog atrium sings file numbers in a soft index choir. Each note points to a life Dominion turned into property, and the index choir never wonders who is listening. An index terminal flashes amber in the dark.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "southwest": "spire_archive_vault",
+          "north": "spire_archive_scale_02"
+        },
+        "pos": [
+          3,
+          2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "catalog atrium",
+            "type": "generic",
+            "condition_unmet_message": "The atrium is beautiful in a way that should be illegal."
+          },
+          {
+            "name": "index choir",
+            "type": "generic",
+            "condition_unmet_message": "The choir treats people like folders because that is what it was built to do."
+          },
+          {
+            "name": "index terminal",
+            "type": "generic",
+            "condition_unmet_message": "An amber screen indexing executive personnel records, redacted down to blank lines."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_archive_scale_01",
+        "env": "neon",
+        "title": "Catalog Atrium",
+        "background_image": "images/rooms/world_3/spire_archive_scale_01.webp",
+        "description": "The catalog atrium sings file numbers in a soft index choir. Each note points to a life Dominion turned into property, and the index choir never wonders who is listening. An index terminal flashes amber in the dark. The vault is north; the maintenance wing continues south to Prism Service Bay.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_archive_vault",
+          "south": "spire_archive_scale_02"
+        },
+        "pos": [
+          2,
+          0
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "catalog atrium",
+            "type": "generic",
+            "condition_unmet_message": "The atrium is beautiful in a way that should be illegal."
+          },
+          {
+            "name": "index choir",
+            "type": "generic",
+            "condition_unmet_message": "The choir treats people like folders because that is what it was built to do."
+          },
+          {
+            "name": "index terminal",
+            "type": "generic",
+            "condition_unmet_message": "An amber screen indexing executive personnel records, redacted down to blank lines."
+          }
+        ]
+      }
+    },
+    "spire_archive_scale_02": {
+      "before": {
+        "id": "spire_archive_scale_02",
+        "env": "neon",
+        "title": "Prism Service Bay",
+        "background_image": "images/rooms/world_3/spire_archive_scale_02.webp",
+        "description": "The prism service bay stores a light wrench and replacement lenses for the gallery array. The light wrench proves the holy-looking Archive still needs maintenance. A lens polishing cloth lies on the technician's tray.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_archive_scale_01",
+          "north": "spire_archive_scale_03"
+        },
+        "pos": [
+          3,
+          3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "prism service bay",
+            "type": "generic",
+            "condition_unmet_message": "The bay proves the holy-looking Archive still needs maintenance."
+          },
+          {
+            "name": "light wrench",
+            "type": "generic",
+            "condition_unmet_message": "The wrench bends light just enough to lie to a sensor."
+          },
+          {
+            "name": "lens polishing cloth",
+            "type": "generic",
+            "condition_unmet_message": "A velvet cloth flecked with fine optical abrasive dust."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_archive_scale_02",
+        "env": "neon",
+        "title": "Prism Service Bay",
+        "background_image": "images/rooms/world_3/spire_archive_scale_02.webp",
+        "description": "The prism service bay stores a light wrench and replacement lenses for the gallery array. The light wrench proves the holy-looking Archive still needs maintenance. A lens polishing cloth lies on the technician's tray.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_archive_scale_01",
+          "south": "spire_archive_scale_03"
+        },
+        "pos": [
+          2,
+          -1
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "prism service bay",
+            "type": "generic",
+            "condition_unmet_message": "The bay proves the holy-looking Archive still needs maintenance."
+          },
+          {
+            "name": "light wrench",
+            "type": "generic",
+            "condition_unmet_message": "The wrench bends light just enough to lie to a sensor."
+          },
+          {
+            "name": "lens polishing cloth",
+            "type": "generic",
+            "condition_unmet_message": "A velvet cloth flecked with fine optical abrasive dust."
+          }
+        ]
+      }
+    },
+    "spire_archive_scale_03": {
+      "before": {
+        "id": "spire_archive_scale_03",
+        "env": "neon",
+        "title": "Alarm Spine",
+        "background_image": "images/rooms/world_3/spire_archive_scale_03.webp",
+        "description": "The alarm spine runs behind the vault in red conduits. Every conduit is labeled with a consequence instead of a destination, and the red conduits pulse faster when Nova gets close. An encrypted datacache hums softly inside a book press. A one-way lift leads directly back to the entrance.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_archive_scale_02"
+        },
+        "pos": [
+          3,
+          4
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "alarm spine",
+            "type": "generic",
+            "condition_unmet_message": "The spine turns theft into a city-wide weather event."
+          },
+          {
+            "name": "red conduits",
+            "type": "generic",
+            "condition_unmet_message": "The conduits pulse faster when Nova gets close."
+          },
+          {
+            "name": "encrypted datacache",
+            "type": "container",
+            "state_key": "spire_archive_scale_03_cache_opened",
+            "items": [
+              "impact_node",
+              "circuit_board"
+            ],
+            "popup_title": "Scholar Research Datacache",
+            "already_open_message": "The encrypted datacache has already been emptied.",
+            "discovery_message": "You open the cache housing and detach the physical components from its insulated mounts."
+          },
+          {
+            "name": "lift",
+            "type": "generic",
+            "action_event": "warp_spire_archive_scale_03_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "spire_archive_scale_03",
+        "env": "neon",
+        "title": "Alarm Spine",
+        "background_image": "images/rooms/world_3/spire_archive_scale_03.webp",
+        "description": "The alarm spine runs behind the vault in red conduits. Every conduit is labeled with a consequence instead of a destination, and the red conduits pulse faster when Nova gets close. An encrypted datacache hums softly inside a book press. An optional return lift leads directly back to the entrance. The room corridor also remains open for walking back.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_archive_scale_02"
+        },
+        "pos": [
+          2,
+          -2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "alarm spine",
+            "type": "generic",
+            "condition_unmet_message": "The spine turns theft into a city-wide weather event."
+          },
+          {
+            "name": "red conduits",
+            "type": "generic",
+            "condition_unmet_message": "The conduits pulse faster when Nova gets close."
+          },
+          {
+            "name": "encrypted datacache",
+            "type": "container",
+            "state_key": "spire_archive_scale_03_cache_opened",
+            "items": [
+              "impact_node",
+              "circuit_board"
+            ],
+            "popup_title": "Scholar Research Datacache",
+            "already_open_message": "The encrypted datacache has already been emptied.",
+            "discovery_message": "You open the cache housing and detach the physical components from its insulated mounts."
+          },
+          {
+            "name": "lift",
+            "type": "generic",
+            "action_event": "warp_spire_archive_scale_03_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to Archive Vault. You can also retrace the room corridors with NSEW swipes."
+          }
+        ]
+      }
+    },
+    "spire_exec_lounge_scale_05": {
+      "before": {
+        "id": "spire_exec_lounge_scale_05",
+        "env": "neon",
+        "title": "Service Dumbwaiter",
+        "background_image": "images/rooms/world_3/spire_exec_lounge_scale_05.webp",
+        "description": "A Service Dumbwaiter drops toward the kitchen levels with a silver tray still balanced inside. The silver tray reflects the patrol outside better than the room's polished cameras. A discreet executive safe gleams behind the mirrored mahogany. A one-way elevator leads directly back to the entrance.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "aero_drone"
+        ],
+        "connections": {
+          "south": "spire_exec_lounge_scale_04"
+        },
+        "pos": [
+          2,
+          4
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "Service Dumbwaiter",
+            "type": "generic",
+            "condition_unmet_message": "The dumbwaiter was designed for plates, not fugitives, but design is negotiable."
+          },
+          {
+            "name": "silver tray",
+            "type": "generic",
+            "condition_unmet_message": "The tray is polished enough to reflect the patrol outside."
+          },
+          {
+            "name": "executive safe",
+            "type": "container",
+            "state_key": "spire_exec_lounge_scale_05_cache_opened",
+            "items": [
+              "phase_rounds",
+              "black_coffee"
+            ],
+            "popup_title": "Director's Private Safe",
+            "already_open_message": "The executive safe has already been emptied.",
+            "discovery_message": "The heavy safe door swings open. You collect the small reserve tucked into its inner shelf."
+          },
+          {
+            "name": "elevator",
+            "type": "generic",
+            "action_event": "warp_spire_exec_lounge_scale_05_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "spire_exec_lounge_scale_05",
+        "env": "neon",
+        "title": "Service Dumbwaiter",
+        "background_image": "images/rooms/world_3/spire_exec_lounge_scale_05.webp",
+        "description": "A Service Dumbwaiter drops toward the kitchen levels with a silver tray still balanced inside. The silver tray reflects the patrol outside better than the room's polished cameras. A discreet executive safe gleams behind the mirrored mahogany. An optional return elevator leads directly back to the entrance. The room corridor also remains open for walking back.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "aero_drone"
+        ],
+        "connections": {
+          "south": "spire_exec_lounge_scale_04"
+        },
+        "pos": [
+          2,
+          4
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "Service Dumbwaiter",
+            "type": "generic",
+            "condition_unmet_message": "The dumbwaiter was designed for plates, not fugitives, but design is negotiable."
+          },
+          {
+            "name": "silver tray",
+            "type": "generic",
+            "condition_unmet_message": "The tray is polished enough to reflect the patrol outside."
+          },
+          {
+            "name": "executive safe",
+            "type": "container",
+            "state_key": "spire_exec_lounge_scale_05_cache_opened",
+            "items": [
+              "phase_rounds",
+              "black_coffee"
+            ],
+            "popup_title": "Director's Private Safe",
+            "already_open_message": "The executive safe has already been emptied.",
+            "discovery_message": "The heavy safe door swings open. You collect the small reserve tucked into its inner shelf."
+          },
+          {
+            "name": "elevator",
+            "type": "generic",
+            "action_event": "warp_spire_exec_lounge_scale_05_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to Exec Lounge. You can also retrace the room corridors with NSEW swipes."
+          }
+        ]
+      }
+    },
+    "spire_landing_pad_scale_04": {
+      "before": {
+        "id": "spire_landing_pad_scale_04",
+        "env": "neon",
+        "weather": "storm",
+        "title": "Boarding Causeway",
+        "background_image": "images/rooms/world_3/spire_landing_pad_scale_04.webp",
+        "description": "The boarding causeway stretches toward the Astra hatch under lockdown strobes. The Astra hatch light blinks like a heartbeat through rain and warning static. A forgotten avionics crate sits strapped against the wind break. A one-way ladder leads directly back to the entrance.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_landing_pad_scale_03"
+        },
+        "pos": [
+          3,
+          5
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "boarding causeway",
+            "type": "generic",
+            "condition_unmet_message": "The causeway is a straight line through a storm of bad odds."
+          },
+          {
+            "name": "Astra hatch",
+            "type": "generic",
+            "condition_unmet_message": "The hatch light blinks like a heartbeat."
+          },
+          {
+            "name": "avionics crate",
+            "type": "container",
+            "state_key": "spire_landing_pad_scale_04_cache_opened",
+            "items": [
+              "composite_plate",
+              "battery_pack"
+            ],
+            "popup_title": "Cargo Shuttle Avionics Crate",
+            "already_open_message": "The avionics crate has already been emptied.",
+            "discovery_message": "You lift the crate lid and release the straps holding the spare equipment in place."
+          },
+          {
+            "name": "ladder",
+            "type": "generic",
+            "action_event": "warp_spire_landing_pad_scale_04_to_entry"
+          }
+        ],
+        "special_exits": {}
+      },
+      "after": {
+        "id": "spire_landing_pad_scale_04",
+        "env": "neon",
+        "weather": "storm",
+        "title": "Boarding Causeway",
+        "background_image": "images/rooms/world_3/spire_landing_pad_scale_04.webp",
+        "description": "The boarding causeway stretches toward the Astra hatch under lockdown strobes. The Astra hatch light blinks like a heartbeat through rain and warning static. A forgotten avionics crate sits strapped against the wind break. An optional return ladder leads directly back to the entrance. The room corridor also remains open for walking back.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_landing_pad_scale_03"
+        },
+        "pos": [
+          3,
+          5
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "boarding causeway",
+            "type": "generic",
+            "condition_unmet_message": "The causeway is a straight line through a storm of bad odds."
+          },
+          {
+            "name": "Astra hatch",
+            "type": "generic",
+            "condition_unmet_message": "The hatch light blinks like a heartbeat."
+          },
+          {
+            "name": "avionics crate",
+            "type": "container",
+            "state_key": "spire_landing_pad_scale_04_cache_opened",
+            "items": [
+              "composite_plate",
+              "battery_pack"
+            ],
+            "popup_title": "Cargo Shuttle Avionics Crate",
+            "already_open_message": "The avionics crate has already been emptied.",
+            "discovery_message": "You lift the crate lid and release the straps holding the spare equipment in place."
+          },
+          {
+            "name": "ladder",
+            "type": "generic",
+            "action_event": "warp_spire_landing_pad_scale_04_to_entry",
+            "condition_unmet_message": "An optional shortcut returns directly to Landing Pad Roof. You can also retrace the room corridors with NSEW swipes."
+          }
+        ]
+      }
+    },
+    "spire_rigging_deck": {
+      "before": {
+        "id": "spire_rigging_deck",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Bridgman Rigging Deck",
+        "background_image": "images/rooms/world_3/spire_landing_pad_roof.webp",
+        "description": "High-tension cables and hydraulic winch drums span the structural gap beneath the entertainment level. Work lights illuminate steel trusses, speaker stacks, and [action:heavy winch rig|heavy tow rigs]. Contractor Cheno studies a [action:rigging schematic|holographic load schematic], his broad shoulders dusted with truss grease. A cider mug and framed family holopic sit beneath the work lights.",
+        "npcs": [
+          "contractor_cheno"
+        ],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_old_subway_car",
+          "east": "spire_hidden_studio"
+        },
+        "pos": [
+          4,
+          1
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "rigging schematic",
+            "type": "generic",
+            "condition_unmet_message": "The blueprints show reinforcement load lines for the entire lower Spire. Cheno has marked two critical stress points in red grease pencil with the note: 'HOLD FAST.'"
+          },
+          {
+            "name": "cider mug",
+            "type": "generic",
+            "condition_unmet_message": "An insulated travel mug beside a heavy wrench. It smells faintly of spiced autumn cider."
+          },
+          {
+            "name": "heavy winch rig",
+            "type": "generic",
+            "condition_unmet_message": "Bridgman Civil heavy-duty hydraulic winch. Capable of hauling an orbital hauler out of a gravitational sinkhole."
+          },
+          {
+            "id": "inspect_cheno_family",
+            "name": "framed family holopic",
+            "type": "inspect",
+            "description": "Inspect the warm family holopic resting on Cheno's tool locker.",
+            "inspect_message": "A warm holopic of Cheno smiling beside his wife Angela, holding an autumn cider. Their headstrong daughter Raegan strikes a hilarious dance pose with a mischievous grin, while dependable older brother Brody stands proudly in his varsity football jacket."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_rigging_deck",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Bridgman Rigging Deck",
+        "background_image": "images/rooms/world_3/spire_landing_pad_roof.webp",
+        "description": "High-tension cables and hydraulic winch drums span the structural gap beneath the entertainment level. Work lights illuminate steel trusses, speaker stacks, and [action:heavy winch rig|heavy tow rigs]. Contractor Cheno studies a [action:rigging schematic|holographic load schematic], his broad shoulders dusted with truss grease. A cider mug and framed family holopic sit beneath the work lights.",
+        "npcs": [
+          "contractor_cheno"
+        ],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_old_subway_car",
+          "east": "spire_hidden_studio"
+        },
+        "pos": [
+          5,
+          1
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "rigging schematic",
+            "type": "generic",
+            "condition_unmet_message": "The blueprints show reinforcement load lines for the entire lower Spire. Cheno has marked two critical stress points in red grease pencil with the note: 'HOLD FAST.'"
+          },
+          {
+            "name": "cider mug",
+            "type": "generic",
+            "condition_unmet_message": "An insulated travel mug beside a heavy wrench. It smells faintly of spiced autumn cider."
+          },
+          {
+            "name": "heavy winch rig",
+            "type": "generic",
+            "condition_unmet_message": "Bridgman Civil heavy-duty hydraulic winch. Capable of hauling an orbital hauler out of a gravitational sinkhole."
+          },
+          {
+            "id": "inspect_cheno_family",
+            "name": "framed family holopic",
+            "type": "inspect",
+            "description": "Inspect the warm family holopic resting on Cheno's tool locker.",
+            "inspect_message": "A warm holopic of Cheno smiling beside his wife Angela, holding an autumn cider. Their headstrong daughter Raegan strikes a hilarious dance pose with a mischievous grin, while dependable older brother Brody stands proudly in his varsity football jacket."
+          }
+        ]
+      }
+    },
+    "spire_hidden_studio": {
+      "before": {
+        "id": "spire_hidden_studio",
+        "env": "city",
+        "title": "Secret Signal Workshop",
+        "background_image": "images/rooms/world_3/spire_the_static.webp",
+        "description": "Tucked behind acoustic baffles, a cluttered studio hums with glowing CRT monitors and [action:amplifier roost|tube amplifiers]. A miniature [action:galaxy terminal|galaxy simulation] rotates silently. Meeko the charcoal cat lounges like an executive boss while Jason solders [action:workbench clutter|circuit boards]. A music workstation is wedged between the monitors.",
+        "npcs": [
+          "creator_jason",
+          "feline_meeko"
+        ],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_rigging_deck"
+        },
+        "pos": [
+          5,
+          1
+        ],
+        "state": {},
+        "actions": [
+          {
+            "id": "inspect_galaxy_terminal",
+            "name": "galaxy terminal",
+            "type": "inspect",
+            "description": "Inspect the glowing green-phosphor CRT display.",
+            "inspect_message": "A green-phosphor CRT display runs an intricate simulation of six interconnected worlds, starships, and tiny travelers moving between nodes. The build notes read: 'Revision 2.0 — Keep the heart, polish the edges.'"
+          },
+          {
+            "id": "inspect_music_workstation",
+            "name": "music workstation",
+            "type": "inspect",
+            "description": "Inspect the tube amplifiers and mixing desk.",
+            "inspect_message": "An array of vintage tube amplifiers, electric guitars, and audio monitors patched into a digital mixing console. A multitrack project is open titled 'The Long Drive Home - Master v34'."
+          },
+          {
+            "id": "inspect_workbench_clutter",
+            "name": "workbench clutter",
+            "type": "inspect",
+            "description": "Inspect the crowded creation benches.",
+            "inspect_message": "Soldering irons, hand-wound pickups, game cartridges, and health food wrappers are piled high around a handwritten whiteboard that reads: 'Ideas for next project: don't start until this one is done (ha).'"
+          },
+          {
+            "id": "inspect_amplifier_roost",
+            "name": "amplifier roost",
+            "type": "inspect",
+            "description": "Inspect the warm tube amplifier where Meeko perches.",
+            "inspect_message": "The warm, humming metal casing of a 100-watt tube amplifier, claimed by Meeko as his executive throne. He rests his heavy chin on the power transformer, observing the studio with sovereign authority."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_hidden_studio",
+        "env": "city",
+        "title": "Secret Signal Workshop",
+        "background_image": "images/rooms/world_3/spire_the_static.webp",
+        "description": "Tucked behind acoustic baffles, a cluttered studio hums with glowing CRT monitors and [action:amplifier roost|tube amplifiers]. A miniature [action:galaxy terminal|galaxy simulation] rotates silently. Meeko the charcoal cat lounges like an executive boss while Jason solders [action:workbench clutter|circuit boards]. A music workstation is wedged between the monitors.",
+        "npcs": [
+          "creator_jason",
+          "feline_meeko"
+        ],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_rigging_deck"
+        },
+        "pos": [
+          6,
+          1
+        ],
+        "state": {},
+        "actions": [
+          {
+            "id": "inspect_galaxy_terminal",
+            "name": "galaxy terminal",
+            "type": "inspect",
+            "description": "Inspect the glowing green-phosphor CRT display.",
+            "inspect_message": "A green-phosphor CRT display runs an intricate simulation of six interconnected worlds, starships, and tiny travelers moving between nodes. The build notes read: 'Revision 2.0 — Keep the heart, polish the edges.'"
+          },
+          {
+            "id": "inspect_music_workstation",
+            "name": "music workstation",
+            "type": "inspect",
+            "description": "Inspect the tube amplifiers and mixing desk.",
+            "inspect_message": "An array of vintage tube amplifiers, electric guitars, and audio monitors patched into a digital mixing console. A multitrack project is open titled 'The Long Drive Home - Master v34'."
+          },
+          {
+            "id": "inspect_workbench_clutter",
+            "name": "workbench clutter",
+            "type": "inspect",
+            "description": "Inspect the crowded creation benches.",
+            "inspect_message": "Soldering irons, hand-wound pickups, game cartridges, and health food wrappers are piled high around a handwritten whiteboard that reads: 'Ideas for next project: don't start until this one is done (ha).'"
+          },
+          {
+            "id": "inspect_amplifier_roost",
+            "name": "amplifier roost",
+            "type": "inspect",
+            "description": "Inspect the warm tube amplifier where Meeko perches.",
+            "inspect_message": "The warm, humming metal casing of a 100-watt tube amplifier, claimed by Meeko as his executive throne. He rests his heavy chin on the power transformer, observing the studio with sovereign authority."
+          }
+        ]
+      }
+    }
+  },
+  "removed_node_transitions": [
+    {
+      "id": "spire_archive__spire_archive_vault__southwest__spire_exec_lounge",
+      "from_node": "spire_archive",
+      "from_room": "spire_archive_vault",
+      "direction": "southwest",
+      "to_node": "spire_exec_lounge",
+      "to_room": "spire_exec_lounge_bar",
+      "transition_text": "Travel to Exec Lounge."
+    },
+    {
+      "id": "spire_exec_lounge__spire_exec_lounge_bar__northwest__spire_laundry",
+      "from_node": "spire_exec_lounge",
+      "from_room": "spire_exec_lounge_bar",
+      "direction": "northwest",
+      "to_node": "spire_laundry",
+      "to_room": "spire_service_lift",
+      "transition_text": "Travel to Laundry Service."
+    },
+    {
+      "id": "spire_exec_lounge__spire_exec_lounge_bar__northeast__spire_archive",
+      "from_node": "spire_exec_lounge",
+      "from_room": "spire_exec_lounge_bar",
+      "direction": "northeast",
+      "to_node": "spire_archive",
+      "to_room": "spire_archive_vault",
+      "transition_text": "Travel to The Archive."
+    },
+    {
+      "id": "spire_skypark__spire_glasswalk__down__spire_archive",
+      "from_node": "spire_skypark",
+      "from_room": "spire_glasswalk",
+      "direction": "down",
+      "to_node": "spire_archive",
+      "to_room": "spire_archive_vault",
+      "transition_text": "Travel to The Archive."
+    },
+    {
+      "id": "spire_laundry__spire_service_lift__down__spire_archive",
+      "from_node": "spire_laundry",
+      "from_room": "spire_service_lift",
+      "direction": "down",
+      "to_node": "spire_archive",
+      "to_room": "spire_archive_vault",
+      "transition_text": "Travel to The Archive."
+    },
+    {
+      "id": "spire_laundry__spire_service_lift__southeast__spire_exec_lounge",
+      "from_node": "spire_laundry",
+      "from_room": "spire_service_lift",
+      "direction": "southeast",
+      "to_node": "spire_exec_lounge",
+      "to_room": "spire_exec_lounge_bar",
+      "transition_text": "Travel to Exec Lounge."
+    },
+    {
+      "id": "spire_vent_output__spire_underrail_platform__down__spire_transit_plaza",
+      "from_node": "spire_vent_output",
+      "from_room": "spire_underrail_platform",
+      "direction": "down",
+      "to_node": "spire_transit_plaza",
+      "to_room": "spire_transit_plaza",
+      "transition_text": "Travel to Transit Plaza."
+    }
+  ]
+}

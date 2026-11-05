@@ -1,5 +1,8 @@
 # Starborn shared room background inventory
 
+Current November 5 status: all **477 rooms now have unique backgrounds** after the [twelve-room art pass](testing/UNIQUE_ROOM_BACKGROUNDS_2026-11-05.md). No shared paths, byte-identical files or identical decoded-pixel images remain. The historical September inventory and earlier completion claims below are retained as history.
+
+
 Audited: 2026-09-17. Source: `app/src/main/assets/rooms.json`, with world membership from `hub_nodes.json`.
 
 ## Requirement and scope
@@ -212,7 +215,7 @@ World 1 campaign rooms do not share images with each other; its shared assignmen
 
 | Room name | Room ID | Classification |
 |---|---|---|
-| Zeke's Apartment | `spire_zekes_apartment` | world_3 |
+| Static Safehouse | `spire_zekes_apartment` | world_3 |
 | Safehouse Roof | `spire_safehouse_roof` | world_3 |
 
 ### World 4: The Foundry

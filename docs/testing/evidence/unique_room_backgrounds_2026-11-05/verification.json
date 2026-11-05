@@ -1,0 +1,49 @@
+{
+  "verified_at_utc": "2026-11-05T16:54:30.082100+00:00",
+  "results": {
+    "android_host_content_navigation": {
+      "tests": 43,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "desktop_content": {
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "all_twelve_packaged_artworks_decode_and_match_sources": {
+    "spire_hidden_studio": true,
+    "spire_black_site_lab": true,
+    "spire_skyline_vip_suite": true,
+    "spire_vip_private_booth": true,
+    "spire_rigging_deck": true,
+    "foundry_subterranean_smelter": true,
+    "foundry_crucible_arena": true,
+    "foundry_pipe_gallery": true,
+    "sector9_coastal_research_station": true,
+    "sector9_sunken_aethel_vault": true,
+    "mine_sealed_munitions_vault": true,
+    "orbital_breached_avionics_lab": true
+  },
+  "packaged_rooms_catalog_matches_source": true,
+  "source_and_duplicate_checks": "source-and-duplicate-check.json",
+  "png_masters_retained": true,
+  "original_reference_images_unchanged": true,
+  "generation_api": "OpenAI Image API, authorized CLI fallback",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "api_requests": 12,
+  "accepted_first_outputs": 12,
+  "webp_total_bytes": 3304090,
+  "apk": {
+    "path": "app/build/outputs/apk/debug/app-debug.apk",
+    "sha256": "432a5761704a1e8a7504312efc0128678bc9c472ab13b9850f24c681e103cfad",
+    "size_bytes": 1299351635
+  },
+  "human_phone_acceptance": false,
+  "installed": false,
+  "published": false
+}

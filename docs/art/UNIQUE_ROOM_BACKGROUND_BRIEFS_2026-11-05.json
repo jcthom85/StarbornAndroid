@@ -1,0 +1,392 @@
+{
+  "status": "briefs_only_no_generation_or_wiring",
+  "rooms": [
+    {
+      "order": 1,
+      "world": "world_3",
+      "room_id": "spire_hidden_studio",
+      "title": "Secret Signal Workshop",
+      "identity": "An intimate electronics-and-music workshop, recognizable by a CRT wall and acoustic baffles rather than a public bar.",
+      "composition": "From the western doorway, a narrow aisle between built-in electronics benches leads toward a bank of chunky CRT housings. Tube-amplifier cabinets and a fixed mixing desk form a second silhouette; the route back is behind the viewer.",
+      "lighting": "Warm amber amplifier light and green phosphor against charcoal acoustic panels, with a restrained cyan glow from the fixed simulation display. Match the Spire's outlined steelwork, but make this room warmer and more personal than its public spaces.",
+      "permanent_features": "Use permanent monitor casings, blank circuit-board fixtures, acoustic baffles, wired amplifier cabinets and mixing-console surfaces. Abstract screen patterns only.",
+      "state_and_content_constraints": "Keep Jason and Meeko out of the painted background. Omit loose game cartridges, food wrappers, readable project titles and whiteboard jokes; these belong to prose and portraits. Do not turn the room into a bar, server farm or nightclub.",
+      "prompt": "A first-person view from a reinforced doorway into a compact workshop tucked behind thick charcoal acoustic baffles. Built-in electronics benches form a narrow aisle toward a wall of rounded CRT housings, their green phosphor patterns reflected in scratched steel. Amber valves glow through the grilles of substantial amplifier cabinets beside a bolted mixing desk, while a small geometric starfield turns on a recessed display. Bundled cables and patched equipment brackets frame the room, leaving a quiet strip of floor through its center.",
+      "current_background": "images/rooms/world_3/spire_the_static.webp",
+      "original_room_keeps_background": {
+        "room_id": "spire_the_static",
+        "title": "The Static"
+      },
+      "proposed_background": "images/rooms/world_3/spire_hidden_studio.webp",
+      "proposed_master": "output/imagegen/unique-room-backgrounds/spire_hidden_studio.png",
+      "neighbors": [
+        {
+          "direction": "west",
+          "room_id": "spire_rigging_deck",
+          "title": "Bridgman Rigging Deck"
+        }
+      ],
+      "source_description": "Tucked behind acoustic baffles, a cluttered studio hums with glowing CRT monitors and [action:amplifier roost|tube amplifiers]. A miniature [action:galaxy terminal|galaxy simulation] rotates silently. Meeko the charcoal cat lounges like an executive boss while Jason solders [action:workbench clutter|circuit boards]. A music workstation is wedged between the monitors.",
+      "source_description_variants": [],
+      "source_sha256": "c1c8b12bfbb1faa7b8503bfef03c852a16511862466f5a010d1834f178938f50"
+    },
+    {
+      "order": 2,
+      "world": "world_3",
+      "room_id": "spire_black_site_lab",
+      "title": "Executive Black-Site Lab",
+      "identity": "A cold, secret research chamber dominated by cylindrical containment architecture, not the donor gallery's portraits.",
+      "composition": "View northward from the southern gallery entrance. Rows of upright cylinders converge toward integrated server banks and an overhead projector assembly; a recessed security enclosure sits beneath it.",
+      "lighting": "Cyan and cold white containment light, dark graphite server cabinets and small amber service indicators. Keep the cylinders readable and the scene bright enough for mobile presentation.",
+      "permanent_features": "Fixed stasis-cylinder shells with opaque or frosted interiors, server banks, ceiling conduits and an abstract blue projection. Treat the safe location as a recessed housing whose contents and door state are not resolved.",
+      "state_and_content_constraints": "No suspended bodies, subjects in tanks, neural-collar victims, readable classified plans or loose loot. Do not bake a permanently closed or open safe into the image.",
+      "prompt": "A first-person view into a restricted laboratory where tall frosted cylinders stand in orderly rows beneath cold cyan service lights. Their heavy graphite bases connect through floor conduits to substantial server banks along the far wall. An overhead projector casts simple blue mechanical shapes above an inset security enclosure, its door face hidden by the angle of the surrounding housing. Scratched metal, reinforced glass and small amber maintenance lights break up the laboratory's severe symmetry, with a clear central approach between the cylinders.",
+      "current_background": "images/rooms/world_3/spire_donor_gallery.webp",
+      "original_room_keeps_background": {
+        "room_id": "spire_donor_gallery",
+        "title": "Donor Gallery"
+      },
+      "proposed_background": "images/rooms/world_3/spire_black_site_lab.webp",
+      "proposed_master": "output/imagegen/unique-room-backgrounds/spire_black_site_lab.png",
+      "neighbors": [
+        {
+          "direction": "south",
+          "room_id": "spire_donor_gallery",
+          "title": "Donor Gallery"
+        }
+      ],
+      "source_description": "Cold neon backlights row upon row of cryogenic stasis cylinders and prototype server banks. An executive black-box safe rests sealed beneath a humming quantum holographic projector.",
+      "source_description_variants": [],
+      "source_sha256": "2d00ed541d79399708fa7d50bd014bd7f4869179c5123895301c0f57a0400e60"
+    },
+    {
+      "order": 3,
+      "world": "world_3",
+      "room_id": "spire_skyline_vip_suite",
+      "title": "Skyline VIP Salon",
+      "identity": "A broad public-facing salon with skyline glass and a permanent dispenser/security station; distinct from both the bar and the private booth.",
+      "composition": "From the western gallery entrance, curved glass reveals rain-covered towers behind plush built-in seating and a central open salon. A discreet northern opening leads toward the private booth.",
+      "lighting": "Amber and champagne interior lighting, burgundy upholstery and cool cyan skyline reflections. Fixed chandelier geometry supplies the recognizable overhead landmark.",
+      "permanent_features": "Velvet stanchion bases, integrated dispenser counter, recessed security console, rain-streaked soundproof glass and abstract holographic chandelier forms.",
+      "state_and_content_constraints": "No patrons, guards, slumped suspect, police silhouettes, readable logs or accusation clues. Do not freeze siren activity or deployable crime-scene tape into the permanent background; the barrier area stays spatially legible through its fixed anchors.",
+      "prompt": "A first-person view into a spacious skyline salon enclosed by tall rain-streaked glass. Curved burgundy seating and velvet stanchions divide the polished floor beneath geometric chandelier light, while gold-edged towers rise through cyan reflections outside. A built-in drinks dispenser and recessed security console share a counter near a discreet private doorway at the side of the room. Fixed barrier anchors mark the transition into that private area, and broad reflections leave the central floor visually calm.",
+      "current_background": "images/rooms/world_3/spire_exec_lounge_bar.webp",
+      "original_room_keeps_background": {
+        "room_id": "spire_exec_lounge_bar",
+        "title": "Exec Lounge"
+      },
+      "proposed_background": "images/rooms/world_3/spire_skyline_vip_suite.webp",
+      "proposed_master": "output/imagegen/unique-room-backgrounds/spire_skyline_vip_suite.png",
+      "neighbors": [
+        {
+          "direction": "west",
+          "room_id": "spire_donor_gallery",
+          "title": "Donor Gallery"
+        },
+        {
+          "direction": "north",
+          "room_id": "spire_vip_private_booth",
+          "title": "Syndicate Booth"
+        }
+      ],
+      "source_description": "Plush velvet stanchions divide the glowing skyline salon from the rain-swept spires outside. Holographic chandeliers illuminate four stranded patrons around an automated crime-scene barrier. Emergency sirens pulse against the soundproof glass. A dispenser log and security terminal wait beside the barrier.",
+      "source_description_variants": [
+        {
+          "description": "The emergency sirens have quieted. Director Vance sits slumped under guard, while the remaining patrons sip their drinks in subdued relief. The golden skyline shines through the rain outside. The crime-scene barrier, dispenser log, and security terminal remain in place.",
+          "requires_milestones": [
+            "ms_w3_sq16_complete"
+          ]
+        }
+      ],
+      "source_sha256": "49f1812a43643b64c87336d0115cacf1935914105e0eac214903c5836cfc4174"
+    },
+    {
+      "order": 4,
+      "world": "world_3",
+      "room_id": "spire_vip_private_booth",
+      "title": "Syndicate Booth",
+      "identity": "A small, enclosed mahogany booth overlooking neon clouds, not an archive hall or a second open salon.",
+      "composition": "View from the southern salon doorway toward a curved banquette and its substantial fixed table. The window wraps tightly around the booth; a recessed service shelf offers an architectural cue to the evidence area.",
+      "lighting": "Warm mahogany and muted wine upholstery against cold rain-blue glass, with a narrow amber table light. Smaller, closer and more private than the salon.",
+      "permanent_features": "Curved mahogany enclosure, fixed table, banquette, soundproof window and installed comms/service fittings. Keep tabletop detail restrained.",
+      "state_and_content_constraints": "Omit Malick's body, blood, crystal glass, datapad, portable comms rig and any readable executive crest. These are narrative evidence, not permanent architecture. The image must not reveal who committed the murder.",
+      "prompt": "A first-person view into a private curved mahogany booth, with a heavy table enclosed by deep wine-colored upholstery and a low amber reading light. Tall soundproof glass wraps around the far side, revealing rain and illuminated clouds between distant spires. A narrow service recess and built-in cable fittings occupy the inner wall, while warm wood grain and worn brass edges make the space feel expensive, close and insulated from the city. The broad tabletop remains quiet beneath the window reflections.",
+      "current_background": "images/rooms/world_3/spire_archive_vault.webp",
+      "original_room_keeps_background": {
+        "room_id": "spire_archive_vault",
+        "title": "Archive Vault"
+      },
+      "proposed_background": "images/rooms/world_3/spire_vip_private_booth.webp",
+      "proposed_master": "output/imagegen/unique-room-backgrounds/spire_vip_private_booth.png",
+      "neighbors": [
+        {
+          "direction": "south",
+          "room_id": "spire_skyline_vip_suite",
+          "title": "Skyline VIP Salon"
+        }
+      ],
+      "source_description": "A private booth of curved mahogany overlooks the neon clouds. Auditor Malick slumps lifeless across the table beside a crystal glass. An executive comms rig lies open near the victim's splayed fingers. The auditor's datapad lies beside the comms rig.",
+      "source_description_variants": [],
+      "source_sha256": "704e995b5a7202a975b9bad9c105fe5880ce1ea76a3294d3975d7204f60ae0f2"
+    },
+    {
+      "order": 5,
+      "world": "world_3",
+      "room_id": "spire_rigging_deck",
+      "title": "Bridgman Rigging Deck",
+      "identity": "An exposed structural work platform beneath the entertainment level, dominated by winch drums and crossing load cables rather than a landing pad.",
+      "composition": "From the western subway-car door, look along the working deck toward the studio access at the eastern end. Heavy trusses and load cables frame a central grated walkway above an unmistakable structural gap.",
+      "lighting": "Warm contractor work lamps on yellow machinery, cool rain-blue city depth, dark graphite trusses and restrained cyan spill from the entertainment structure above.",
+      "permanent_features": "Bolted hydraulic winch drums, anchored cables, steel trusses, mounted speaker stacks, a fixed schematic panel and a work locker.",
+      "state_and_content_constraints": "Omit Cheno, family portraits, cider mug, legible contractor branding and readable load schematics. No aircraft, launch pad, giant open central hole on the walking route, or extra passage suggesting an unwired exit.",
+      "prompt": "A first-person view along a reinforced rigging deck suspended beneath a city entertainment structure. High-tension cables cross between deep steel trusses above a broad grated walkway, and heavy hydraulic winch drums sit bolted into yellow-edged machinery beds. Warm work lamps catch rain on the railings and speaker cabinets while cyan-lit towers descend into the gap beyond. A fixed schematic panel and scarred work locker occupy a sheltered bay, with a reinforced studio door visible at the far end.",
+      "current_background": "images/rooms/world_3/spire_landing_pad_roof.webp",
+      "original_room_keeps_background": {
+        "room_id": "spire_landing_pad_roof",
+        "title": "Landing Pad Roof"
+      },
+      "proposed_background": "images/rooms/world_3/spire_rigging_deck.webp",
+      "proposed_master": "output/imagegen/unique-room-backgrounds/spire_rigging_deck.png",
+      "neighbors": [
+        {
+          "direction": "west",
+          "room_id": "spire_old_subway_car",
+          "title": "Old Subway Car"
+        },
+        {
+          "direction": "east",
+          "room_id": "spire_hidden_studio",
+          "title": "Secret Signal Workshop"
+        }
+      ],
+      "source_description": "High-tension cables and hydraulic winch drums span the structural gap beneath the entertainment level. Work lights illuminate steel trusses, speaker stacks, and [action:heavy winch rig|heavy tow rigs]. Contractor Cheno studies a [action:rigging schematic|holographic load schematic], his broad shoulders dusted with truss grease. A cider mug and framed family holopic sit beneath the work lights.",
+      "source_description_variants": [],
+      "source_sha256": "9905c10851839cacad40253f385666b20d5ba2b38565e46019956791e8b6dd04"
+    },
+    {
+      "order": 6,
+      "world": "world_4",
+      "room_id": "foundry_subterranean_smelter",
+      "title": "Subterranean Smelter Forge",
+      "identity": "An ancient enclosed geothermal forge, with monumental crucibles and a basalt anvil rather than an outdoor lava crossing.",
+      "composition": "View from the southern access toward a central monolithic anvil beneath immense crucible silhouettes. A dry, continuous approach separates the viewer from recessed geothermal channels.",
+      "lighting": "Crimson geothermal depth, orange channel light, black obsidian and small cyan traces in cooling grooves. Keep forms clear rather than burying the chamber in smoke.",
+      "permanent_features": "Colossal obsidian crucibles, geothermal vent mouths, a basalt anvil and carved cooling channels. Leave the container-bearing recess partially occluded so its opening state is not painted in.",
+      "state_and_content_constraints": "No loose iron, mod rewards, active container lid state, figures, or modern Dominion logos. Distinguish the chamber from the ordinary Forge and the neighboring Stepping Stones.",
+      "prompt": "A first-person view into an enclosed forge hollowed beneath black volcanic rock. Colossal obsidian crucibles rise around a monolithic basalt anvil, its broad surface traced by shallow cooling channels catching faint cyan light. Geothermal vents glow crimson behind massive stone ribs, and narrow orange channels run below the dry approach rather than across it. A deep recess in the anvil foundation disappears into shadow, while heavy silhouettes and reflected heat give the chamber the weight of machinery built long before its current owners.",
+      "current_background": "images/rooms/world_4/foundry_slag_stepping_stones.webp",
+      "original_room_keeps_background": {
+        "room_id": "foundry_slag_stepping_stones",
+        "title": "Stepping Stones"
+      },
+      "proposed_background": "images/rooms/world_4/foundry_subterranean_smelter.webp",
+      "proposed_master": "output/imagegen/unique-room-backgrounds/foundry_subterranean_smelter.png",
+      "neighbors": [
+        {
+          "direction": "south",
+          "room_id": "foundry_slag_stepping_stones",
+          "title": "Stepping Stones"
+        }
+      ],
+      "source_description": "Colossal obsidian crucibles loom in the crimson gloom. Ancient geothermal vents feed a pre-Dominion smelting anvil, where an unyielding precursor crucible rests sealed.",
+      "source_description_variants": [],
+      "source_sha256": "c59f85a971994cf65596c3236d89bd64d8da442d9ae9b1f81b7d61a9f70e09f3"
+    },
+    {
+      "order": 7,
+      "world": "world_4",
+      "room_id": "foundry_crucible_arena",
+      "title": "The Scrapper's Crucible",
+      "identity": "A sunken machine-combat amphitheater with a clear ring silhouette, not an overlook of industrial intake machinery.",
+      "composition": "View from the southern access down into the ring. Heavy cage supports outline the combat floor, with recessed slag sluices outside it and a raised telemetry/podium structure above.",
+      "lighting": "Orange slag glow beneath tungsten-gray cages, industrial yellow rail edges, cool cyan telemetry and warm overhead lamps. Energetic and readable rather than a muddy fight pit.",
+      "permanent_features": "Blast-cage frames, scorched titanium floor, raised victor platform, fixed telemetry housings and a large pneumatic announcer horn.",
+      "state_and_content_constraints": "No Brutus, cheering loaders, spectators, combatants, trophies, Forge-Plate prize or readable round counter. Use fixed cage framing without committing to gate-open versus gate-closed battle states.",
+      "prompt": "A first-person view from an iron access landing into a sunken circular combat amphitheater. Thick tungsten cage supports ring a broad scorched titanium floor, while recessed slag sluices cast orange light beneath the surrounding platforms. A raised victor platform and bulky telemetry housings overlook the ring beneath a large pneumatic announcer horn. Yellow-edged rails and cyan instrument glows separate the tiers clearly, and the open center of the arena remains spacious against the heavy industrial enclosure.",
+      "current_background": "images/rooms/world_4/foundry_intake_overlook.webp",
+      "original_room_keeps_background": {
+        "room_id": "foundry_intake_overlook",
+        "title": "Intake Overlook"
+      },
+      "proposed_background": "images/rooms/world_4/foundry_crucible_arena.webp",
+      "proposed_master": "output/imagegen/unique-room-backgrounds/foundry_crucible_arena.png",
+      "neighbors": [
+        {
+          "direction": "south",
+          "room_id": "foundry_intake_overlook",
+          "title": "Intake Overlook"
+        }
+      ],
+      "source_description": "A sunken iron amphitheater enclosed by heavy [action:blast cage|blast cages] and [action:molten sluices|molten slag sluices]. Pitmaster Brutus monitors telemetry above scorched titanium, orchestrating brutal machine combat for rogue loaders and eager betters. A victor podium rises below an announcer horn.",
+      "source_description_variants": [
+        {
+          "description": "Sawdust and molten slag sizzle across the floor. With the Champion felled, rogue loader units raise their hydro-claws in cheer while Brutus grins from the [action:victor podium|victor's podium]. [action:blast cage|Blast cages] enclose molten sluices below an announcer horn.",
+          "requires_milestones": [
+            "ms_w4_crucible_champion"
+          ]
+        }
+      ],
+      "source_sha256": "d5f1a0057ec7fa1892739c7622e10b58dc4d434ae098e3a63785a0cd186a5786"
+    },
+    {
+      "order": 8,
+      "world": "world_4",
+      "room_id": "foundry_pipe_gallery",
+      "title": "High-Pressure Pipe Gallery",
+      "identity": "A long steam-service workspace whose twin-loop manifold and personal workstation distinguish it from a generic airlock.",
+      "composition": "View east from the western Decon approach. Overhead conduits lead toward the Assembly maintenance shutter; the permanent twin-loop bypass assembly occupies the midground beside a bolted workbench.",
+      "lighting": "Cool steel and pale steam balanced by amber work lamps, yellow safety bands and small cyan pressure indicators. Do not obscure the walkable gallery in vapor.",
+      "permanent_features": "Large flanged pipes, twin-loop bypass manifold, built-in tool storage, a pipe-fitting bench, checkered pennants without numbers, and the far shutter frame.",
+      "state_and_content_constraints": "Omit Cameron, loose tools/gloves/baseball/bat, readable number 24, family photograph details and dog-collar text. Frame the shutter with its center beyond the sightline, so the same image supports locked and permanently open states. Do not make the east return corridor look destroyed or inaccessible.",
+      "prompt": "A first-person view along a pressurized maintenance gallery beneath massive flanged steam conduits. A twin-loop bypass manifold fills a service bay beside a bolted pipe-fitting bench and recessed tool storage, with checkered pennants hanging beneath amber work lights. Pale steam escapes in narrow wisps around the upper pipework without covering the dry central walkway. Steel ribs and yellow hazard bands lead toward a deep maintenance-shutter frame at the far end, where the central opening lies beyond the angle of the adjoining wall.",
+      "current_background": "images/rooms/world_4/foundry_service_airlock.webp",
+      "original_room_keeps_background": {
+        "room_id": "foundry_service_airlock",
+        "title": "Service Airlock"
+      },
+      "proposed_background": "images/rooms/world_4/foundry_pipe_gallery.webp",
+      "proposed_master": "output/imagegen/unique-room-backgrounds/foundry_pipe_gallery.png",
+      "neighbors": [
+        {
+          "direction": "west",
+          "room_id": "foundry_decon_chamber",
+          "title": "Decon Chamber"
+        },
+        {
+          "direction": "east",
+          "room_id": "foundry_reject_bay",
+          "title": "Reject Bay"
+        }
+      ],
+      "source_description": "Superheated steam hisses through massive overhead conduits in a pressurized gallery. Checkered racing pennants hang above a pipe bench stacked with flanging tools and leather gloves. A scuffed baseball rests in a tool rack. A family photo and leather dog collar hang beside the bypass manifold. An Assembly maintenance shutter stands at the east end, leading to Reject Bay. Once the crew clears it after Cooling Springs, the corridor stays open in both directions.",
+      "source_description_variants": [],
+      "source_sha256": "1392c174fca31fe5336324b2b8f745b22024e69f3c9880bfd03c59dffb85a1da"
+    },
+    {
+      "order": 9,
+      "world": "world_2",
+      "room_id": "sector9_coastal_research_station",
+      "title": "Tidewatch Station",
+      "identity": "A patched coastal utility station with a desk and filtration system, rather than another open pool landscape.",
+      "composition": "View from the western tidal approach into a sheltered monitoring workspace. A broad window overlooks the wetlands; side openings suggest the coastal route without multiplying exits.",
+      "lighting": "Teal wetland daylight and fog outside, warm amber desk light within, weathered cream panels and copper plumbing. A practical refuge with signs of careful maintenance.",
+      "permanent_features": "Fixed telemetry gauges, patched filtration pipes, a scrubbed built-in desk and a recessed warming plate. Use abstract gauge shapes and blank screen patterns.",
+      "state_and_content_constraints": "No Megan, readable forensic evidence, coffee notes, legible gauges or portable slate. Avoid an abandoned horror clinic: the station is actively maintained even when empty in the background art.",
+      "prompt": "A first-person view from the tidal approach into a sheltered coastal monitoring station. Patched copper pipes run from sturdy filter housings along weathered cream walls, while a bank of analog gauges and simple illuminated displays faces a broad window over misty tidal wetlands. A well-scrubbed built-in desk stands under a warm amber lamp beside a recessed heating plate. Teal daylight reflects from damp railings and carefully repaired panel seams, giving the compact utility workspace a quiet, maintained warmth.",
+      "current_background": "images/rooms/world_2/stream_pools.webp",
+      "original_room_keeps_background": {
+        "room_id": "sector9_stream_pools",
+        "title": "Mist Pools"
+      },
+      "proposed_background": "images/rooms/world_2/sector9_coastal_research_station.webp",
+      "proposed_master": "output/imagegen/unique-room-backgrounds/sector9_coastal_research_station.png",
+      "neighbors": [
+        {
+          "direction": "west",
+          "room_id": "sector9_stream_tidepools",
+          "title": "Beach Transition"
+        },
+        {
+          "direction": "south",
+          "room_id": "sector9_beach_cliffs",
+          "title": "Beach Cliffs"
+        },
+        {
+          "direction": "north",
+          "room_id": "sector9_beach_cove",
+          "title": "Sandy Cove"
+        }
+      ],
+      "source_description": "An old monitoring station overlooks the tidal wetlands. Patched pipes feed the camp's water filters. A wetland telemetry array still tracks the coast; Megan's forensic research slate and a warm solar coffee press share a well-scrubbed desk.",
+      "source_description_variants": [],
+      "source_sha256": "e44c969f9846b1855ec38ddeb52c76f41b8a23f3654b07792b6b1106ea5b5cc5"
+    },
+    {
+      "order": 10,
+      "world": "world_2",
+      "room_id": "sector9_sunken_aethel_vault",
+      "title": "Submerged Aethel Vault",
+      "identity": "A revealed domed Aethel chamber with a dry dais and visible drainage, distinct from the flooded access tunnel.",
+      "composition": "View southward from the northern tunnel entrance toward a raised central dais, framed by basalt pillars and a coral-shaped dome. Drainage channels pull remaining brine away from the dry approach.",
+      "lighting": "Deep cyan and restrained amber along coral-encrusted conductors, dark basalt pillars, warm brass architectural edges and residual teal brine.",
+      "permanent_features": "Basalt pillars, coral-shaped mineral architecture, embedded conductors, floor drainage slits and raised dais. The reliquary recess is shaded without a resolved lid or contents.",
+      "state_and_content_constraints": "No creatures, loose loot, fully flooded central dais, readable Aethel inscriptions, or copied tunnel composition. Keep the chamber as the successfully drained reward space; coral reads as the established architectural material rather than added fauna.",
+      "prompt": "A first-person view from a low stone entrance into a domed chamber supported by dark basalt pillars. Coral-shaped mineral ribs curl across the ceiling around ancient metal conductors, with deep cyan and amber light caught beneath translucent deposits. Floor slits draw the remaining brine into narrow channels around a raised dry dais, its inset recess sheltered beneath a low brass-edged canopy. The shallow water reflects the pillars while the central stone approach stays exposed and clearly walkable.",
+      "current_background": "images/rooms/world_2/stream_sunken_passage.webp",
+      "original_room_keeps_background": {
+        "room_id": "sector9_stream_sunken_passage",
+        "title": "Waterlogged Tunnel"
+      },
+      "proposed_background": "images/rooms/world_2/sector9_sunken_aethel_vault.webp",
+      "proposed_master": "output/imagegen/unique-room-backgrounds/sector9_sunken_aethel_vault.png",
+      "neighbors": [
+        {
+          "direction": "north",
+          "room_id": "sector9_stream_sunken_passage",
+          "title": "Waterlogged Tunnel"
+        }
+      ],
+      "source_description": "Ancient basalt pillars support a domed chamber carved from living coral. Drainage slits in the floor channel the remaining brine away from an ornate Precursor reliquary resting upon a dry central dais.",
+      "source_description_variants": [],
+      "source_sha256": "4b462ae67c5a88a1f06fd1354dc893c4ee8f0f0fcd406cd6041da19d02c5f67a"
+    },
+    {
+      "order": 11,
+      "world": "world_1",
+      "room_id": "mine_sealed_munitions_vault",
+      "title": "Sealed Munitions Stash",
+      "identity": "A small breached armory behind the solved ore-cart obstruction, distinct from the multi-tunnel junction.",
+      "composition": "View westward through the broken eastern bulkhead into a compact locker chamber. Shattered door plates and the permanently wedged ore cart frame the opening; installed lockers supply the dominant interior feature.",
+      "lighting": "Dusty amber industrial lights, muted steel blue in deep storage recesses, rusted iron and gray stone. Match the mine's chunky supports and clear cyan/amber separation.",
+      "permanent_features": "Damaged blast-bulkhead frame, fixed locker banks, scattered rockfall and the wedged ore-cart chassis. Show cache architecture without an explicit lid state.",
+      "state_and_content_constraints": "No weapons on racks, loose scrap or reward items, soldiers, readable Dominion marks, alternate tunnels, or intact bulkhead blocking the entrance. The cart is persistent aftermath of the route-opening puzzle, not a fresh movable puzzle object.",
+      "prompt": "A first-person view through a shattered mine bulkhead into a compact rock-cut armory. Twisted blast-door plates and the crushed chassis of an ore cart frame the entrance, with gray slag dust banked beneath bent iron supports. Stacked steel locker housings occupy the far wall under amber service lamps, their recessed faces partly hidden by a fallen support. Muted blue light separates the storage bays from the warm dust, and a single clear approach leads into the chamber.",
+      "current_background": "images/rooms/world_1/mine_junction.webp",
+      "original_room_keeps_background": {
+        "room_id": "mine_junction",
+        "title": "Cavern Junction"
+      },
+      "proposed_background": "images/rooms/world_1/mine_sealed_munitions_vault.webp",
+      "proposed_master": "output/imagegen/unique-room-backgrounds/mine_sealed_munitions_vault.png",
+      "neighbors": [
+        {
+          "direction": "east",
+          "room_id": "mine_junction",
+          "title": "Cavern Junction"
+        }
+      ],
+      "source_description": "A hidden Dominion armory buried beneath rockfall. Shattered blast door plates flank the shattered ore cart, revealing stacked lockers and an intact dominion munitions cache.",
+      "source_description_variants": [],
+      "source_sha256": "fc7a936f5f809c7b69d5eeb48241414f011649a46ac90aa1a68be8e438aee4ff"
+    },
+    {
+      "order": 12,
+      "world": "world_5",
+      "room_id": "orbital_breached_avionics_lab",
+      "title": "Breached Avionics Lab",
+      "identity": "A breached research chamber recognizable by a broken canopy, planet horizon and quantum-computer housings, rather than the junction's gyroscope.",
+      "composition": "View east from the western magnetic-clamp approach. A fractured canopy fills the far upper field above anchored server benches; a secured service-vault housing sits under fixed equipment.",
+      "lighting": "Cold stellar blue and shield cyan against pale alloy, with restrained amber equipment lamps. Maintain the orbital ring's outlined mechanical language without repeating the junction's warm round hub.",
+      "permanent_features": "Shattered canopy frame, curved planetary horizon, distant shield corona, anchored mainframe banks and fixed service-vault enclosure. A few frozen coolant beads may occupy the depth planes as established atmospheric detail.",
+      "state_and_content_constraints": "No people, creatures, loose rewards, legible computer UI, gyro centerpiece, breathable drifting fog or wide-open new doorway into space. Do not paint the optional magnetic crossing as already repaired inside this room; the crossing belongs to its approach.",
+      "prompt": "A first-person view into a damaged orbital avionics laboratory where a fractured observation canopy opens onto the curved horizon of a planet beneath a distant cyan shield corona. Cold stellar light cuts across anchored quantum-mainframe housings and pale alloy benches, their small amber service lamps still lit. A few frozen coolant beads hang between reinforced canopy ribs and severed overhead conduits. A secured equipment enclosure sits partly concealed beneath the fixed server framework, while the clear central approach contrasts with the dark depth beyond the broken glass.",
+      "current_background": "images/rooms/world_5/orbital_zero_g_junction.webp",
+      "original_room_keeps_background": {
+        "room_id": "orbital_zero_g_junction",
+        "title": "Zero-G Junction"
+      },
+      "proposed_background": "images/rooms/world_5/orbital_breached_avionics_lab.webp",
+      "proposed_master": "output/imagegen/unique-room-backgrounds/orbital_breached_avionics_lab.png",
+      "neighbors": [
+        {
+          "direction": "west",
+          "room_id": "orbital_zero_g_junction",
+          "title": "Zero-G Junction"
+        }
+      ],
+      "source_description": "Cold stellar light floods through a [action:shattered canopy|shattered observation canopy]. Frozen liquid coolant beads drift above abandoned quantum mainframes, where an [action:experimental ai sub-vault|emergency AI sub-vault] remains sealed.",
+      "source_description_variants": [],
+      "source_sha256": "dbeb942693ced4f83fb55a88df9a78842578b3ac2995827e53f2753ff3706b2b"
+    }
+  ]
+}

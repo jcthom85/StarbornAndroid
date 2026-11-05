@@ -57,22 +57,52 @@ events=[e for e in read('events') if e['id'] in action_ids or any('"'+r+'"' in j
 quest_ids={c.get('quest_id') for e in events for c in e.get('conditions',[])+e.get('actions',[]) if c.get('quest_id')}
 result['linked_events']=events
 result['linked_quests']=[q for q in read('quests') if q['id'] in quest_ids]
-named_shortcuts={
-    ('spire_underrail_platform','down','spire_transit_plaza'),
-    ('spire_service_lift','down','spire_archive_vault'),
-    ('spire_glasswalk','down','spire_archive_vault'),
-    ('deep_firewall_gamma','down','deep_anchor_chamber'),
-}
-result['unexpected_nonreciprocal']=[e for e in bad if
+named_shortcuts=set()
+# Retained launch artwork is not reachable by any room connection (also asserted by NavigationIntegrityTest).
+def retained_launch_art(e):
+    return (e['source']=='launch_rail' and rooms['launch_rail']['connections']=={'south':'launch_pod'}
+        and not any('launch_rail' in r['connections'].values() for r in rooms.values()))
+
+result['unexpected_nonreciprocal']=[e for e in bad if not retained_launch_art(e) and (
     (e['source'],e['direction'],e['target']) not in named_shortcuts or
-    'one way' not in rooms[e['source']].get('special_exits',{}).get(e['direction'],'')]
+    'one way' not in rooms[e['source']].get('special_exits',{}).get(e['direction'],''))]
+result['world_three_non_cardinal']=[(a,d,b) for a,r in rooms.items() if world(a)=='world_3' for d,b in r['connections'].items() if d not in ('north','south','east','west')]
+result['world_four_non_cardinal']=[(a,d,b) for a,r in rooms.items() if world(a)=='world_4' for d,b in r['connections'].items() if d not in ('north','south','east','west')]
+result['world_five_non_cardinal']=[(a,d,b) for a,r in rooms.items() if world(a)=='world_5' for d,b in r['connections'].items() if d not in ('north','south','east','west')]
+# NSEW is the walking default. These reviewed alternatives are named, reciprocal taps.
+reviewed_vertical_routes = {
+    ('spire_underrail_platform','down'): 'spire_transit_plaza',
+    ('spire_transit_plaza','up'): 'spire_underrail_platform',
+    ('spire_service_lift','down'): 'spire_archive_vault',
+    ('spire_archive_vault','up'): 'spire_service_lift',
+    ('orbital_service_shaft','down'): 'orbital_server_farm',
+    ('orbital_server_farm','up'): 'orbital_service_shaft',
+    ('deep_firewall_gamma','down'): 'deep_anchor_chamber',
+    ('deep_anchor_chamber','up'): 'deep_firewall_gamma',
+}
+policy_errors=[]
+for source,room in rooms.items():
+    if world(source) not in ('world_1','world_2','world_3','world_4','world_5','world_6'): continue
+    for direction,target in room['connections'].items():
+        if direction not in ('north','south','east','west') and reviewed_vertical_routes.get((source,direction)) != target:
+            policy_errors.append([source,direction,target,'unreviewed or diagonal exit'])
+for (source,direction),target in reviewed_vertical_routes.items():
+    label=rooms[source].get('special_exits',{}).get(direction,'')
+    if rooms[source]['connections'].get(direction)!=target or not label or 'one way' in label.lower():
+        policy_errors.append([source,direction,target,'missing named two-way alternative'])
+for source,direction in [('deep_firewall_gamma','down'),('deep_anchor_chamber','up')]:
+    block=rooms[source].get('blocked_directions',{}).get(direction,{})
+    if not any(x.get('room_id')=='deep_anchor_chamber' and x.get('state_key')=='firewall_access_open' and x.get('value') is True for x in block.get('requires',[])):
+        policy_errors.append([source,direction,'Anchor lift must retain Construct clearance'])
+result['reviewed_direction_policy_errors']=policy_errors
 if __name__=='__main__':
     import sys
     if '--check' in sys.argv:
-        errors={k:result[k] for k in ('unexpected_nonreciprocal','funnels','spatial',
+        errors={k:result[k] for k in ('reviewed_direction_policy_errors','unexpected_nonreciprocal','funnels','spatial',
             'transition_disagreements','transition_metadata_errors','missing_transition_records',
             'duplicate_transition_keys','duplicate_transition_ids','duplicate_rooms','coordinate_collisions') if result[k]}
-        if any(not e['return_path'] for e in bad): errors['traps']=bad
+        traps=[e for e in bad if not e['return_path'] and not retained_launch_art(e)]
+        if traps: errors['traps']=traps
         print(json.dumps(errors,indent=2) if errors else 'PASS: compass geometry, returns, funnels, room positions, and transition metadata.')
         sys.exit(bool(errors))
     else:

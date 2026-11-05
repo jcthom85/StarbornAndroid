@@ -1091,10 +1091,10 @@
   },
   {
     "id": "w3_mq11",
-    "title": "Homecoming",
-    "summary": "Land beneath the Spire and follow Zeke back into the city that erased him.",
-    "description": "Avoid Dominion surveillance by landing in the sewers, clear the landing zone, climb into the Lower City, and let Zeke turn his old apartment into a safehouse before the city notices he came home.",
-    "flavor": "A homecoming is still a homecoming when the locks have forgotten your name.",
+    "title": "Under the Radar",
+    "summary": "Land beneath the Spire and find shelter away from Dominion surveillance.",
+    "description": "Avoid Dominion surveillance by landing in the sewers, clear the landing zone, climb into the Lower City, and secure the abandoned apartment Jax offers above The Static.",
+    "flavor": "A borrowed room can be enough to make a plan.",
     "giver": "Zeke",
     "hub_id": "hub_5_lower_city",
     "stages": [
@@ -1105,7 +1105,7 @@
         "tasks": [
           {
             "id": "clear_landing",
-            "text": "Clear local hostile forces at the landing pad."
+            "text": "Clear a hostile encounter in the sewer tunnels near the landing pad."
           },
           {
             "id": "reach_vent",
@@ -1115,16 +1115,16 @@
       },
       {
         "id": "find_safehouse",
-        "title": "Zeke's Safehouse",
-        "description": "Reach Zeke's old apartment, let him face what Dominion deleted, and set up a shielded base before the city can hear the crew breathing.",
+        "title": "A Borrowed Roof",
+        "description": "Reach the abandoned apartment above The Static and help Zeke and Orion turn Jax's borrowed space into a shielded base.",
         "tasks": [
           {
             "id": "find_apartment",
-            "text": "Locate Zeke's apartment inside The Static block."
+            "text": "Locate the Static Safehouse above The Static."
           },
           {
             "id": "establish_shield",
-            "text": "Let Orion shield Zeke's apartment from Dominion scans."
+            "text": "Help Zeke and Orion shield the Static Safehouse from Dominion scans."
           }
         ]
       }
@@ -1172,18 +1172,18 @@
           },
           {
             "id": "hack_blueprints",
-            "text": "At Zeke's Apartment, build the service-elevator route at his workstation."
+            "text": "At the Static Safehouse, build the service-elevator route at the workstation."
           }
         ]
       },
       {
         "id": "assemble_heist",
         "title": "The Assembly",
-        "description": "Bring every intel thread back to the safehouse planning table and decide who risks being seen.",
+        "description": "Combine the gathered preparation into the crew’s service route.",
         "tasks": [
           {
             "id": "assemble_table",
-            "text": "Use the planning table to assign roles, commit the crew, and launch the heist."
+            "text": "Use the planning table to commit the prepared service route and launch the heist."
           }
         ]
       }
@@ -1199,7 +1199,7 @@
     "id": "w3_sq11",
     "title": "Neon Fix",
     "summary": "Help Jax repair his bar's flickering neon sign to keep Dominion security away.",
-    "description": "Inspect the flickering sign at The Static and install a replacement neon sign core.",
+    "description": "Inspect The Static’s sign. Recover the Sentinel’s core in Upper City’s Exec Lounge private booths, then use the Service Lift panel to return to Jax in Lower City.",
     "flavor": "In the Lower City, darkness is a shield. Neon is just advertisement.",
     "giver": "Jax",
     "hub_id": "hub_5_lower_city",
@@ -1231,7 +1231,7 @@
     "id": "w3_sq12",
     "title": "Cold Case",
     "summary": "Help Gh0st search Spire security databases for records on his sister Elara.",
-    "description": "Examine terminal records in the Transit Plaza to find clues about Elara.",
+    "description": "Recover the erased case number in Upper City’s Uniform Sorting. Use the Service Lift panel to return to Transit Plaza, then search the Security Kiosk for Elara’s transfer.",
     "flavor": "The transfer record still carries Elara's name and routing code.",
     "giver": "Gh0st",
     "hub_id": "hub_5_lower_city",
@@ -1247,7 +1247,7 @@
           },
           {
             "id": "access_terminal",
-            "text": "Use the case number at the Security Kiosk to search Dominion records."
+            "text": "Use the Service Lift panel to return to Transit Plaza, then search the case records at the Security Kiosk."
           },
           {
             "id": "expose_transfer",
@@ -1399,7 +1399,7 @@
     "id": "w3_mq15",
     "title": "Burn Notice",
     "summary": "Escape the Upper City after Nova's signal turns the heist into a sector-wide hunt.",
-    "description": "Fight through the lockdown, cross the drone test alcove, defeat the Administrator on the landing pad, and use the Lens to time the Astra through the Shield toward the Foundry before Vale's compliance net closes.",
+    "description": "Escape the lockdown, defeat the Administrator, and use Scan to find a launch window through the Spire’s internal security curtain toward the Foundry.",
     "flavor": "When paradise burns, the sprinklers dispense policy.",
     "giver": "Nova",
     "hub_id": "hub_6_upper_city",
@@ -1419,18 +1419,18 @@
           },
           {
             "id": "scan_shield_gap",
-            "text": "Use Scan to read the Shield's launch window."
+            "text": "Use Scan to read the Spire security curtain’s launch window."
           }
         ]
       },
       {
         "id": "launch_to_foundry",
-        "title": "Slip the Shield",
-        "description": "Use the Lens to hold the Shield window long enough for the Astra to run.",
+        "title": "Clear the Curtain",
+        "description": "Guide the Astra through the local security curtain; the planetary Shield remains overhead.",
         "tasks": [
           {
             "id": "launch_astra",
-            "text": "Send the Astra through the Shield window."
+            "text": "Send the Astra through the Spire’s security-curtain window."
           }
         ]
       }
@@ -2719,7 +2719,7 @@
         "tasks": [
           {
             "id": "defeat_god_form",
-            "text": "Shatter the Ascended: Silence."
+            "text": "Follow the north path from The Center to the Silence Pulpit and shatter the Ascended: Silence."
           }
         ]
       },
@@ -2827,7 +2827,7 @@
     "id": "w3_sq16",
     "title": "Murder in the Skyline Salon",
     "summary": "Investigate the poisoning of Dominion auditor Malick in the Skyline VIP Salon.",
-    "description": "Examine the poisoned glass, inspect the automated lounge access logs, interrogate the four trapped suspects, and expose the killer to lift the lockdown.",
+    "description": "Examine the poisoned glass and access logs, question the four patrons, and confront the person whose alibi contradicts the evidence.",
     "flavor": "In the Upper City, poisoned wine is just aggressive negotiation.",
     "giver": "Crime-Scene Barrier",
     "hub_id": "hub_6_upper_city",
@@ -2884,7 +2884,7 @@
     "id": "w4_sq_crucible",
     "title": "The Scrapper's Crucible",
     "summary": "Survive Pitmaster Brutus's 3-wave gladiator machine trials in the Waste Intake.",
-    "description": "Step into the sunken arena north of the Intake Overlook, face three escalating waves of rogue automated war machines under brutal environmental hazards, and claim the legendary Crucible Forge-Plate.",
+    "description": "Step into the sunken arena north of the Intake Overlook, face three escalating teams of rogue automated war machines, and claim the Crucible Forge-Plate.",
     "flavor": "Machines do not bleed, but when the slag hits redline, they certainly crack.",
     "giver": "Pitmaster Brutus",
     "hub_id": "hub_7_slag_pits",
@@ -2896,7 +2896,7 @@
         "tasks": [
           {
             "id": "task_round1",
-            "text": "Defeat Round 1: Magma Drone Swarm under Overheat conditions in the Crucible pit."
+            "text": "Defeat Round 1: two Magma Drones supported by a Welder Bot in the Crucible pit."
           },
           {
             "id": "task_round2",

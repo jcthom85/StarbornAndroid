@@ -163,7 +163,7 @@ fun buildInlineActionPlan(
     segments.sortBy { it.start }
     val decorated = segments.map { segment ->
         val action = (segment.target as? InlineActionTarget.Room)?.action
-        segment.copy(inspected = action?.let { inspectionReceiptKey(it, description) }
+        segment.copy(inspected = (action as? GenericAction)?.completedInspection == true || action?.let { inspectionReceiptKey(it, description) }
             ?.let { inspectionState[it] == true } == true)
     }
     return InlineActionPlan(description = parsedDescription, segments = decorated)

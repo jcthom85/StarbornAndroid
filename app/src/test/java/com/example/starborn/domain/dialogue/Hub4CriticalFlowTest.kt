@@ -34,7 +34,7 @@ class Hub4CriticalFlowTest {
         assertFalse(harness.store.state.value.questTasksCompleted["w3_mq13"].orEmpty().contains("disable_sensors"))
 
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("spire_skypark_dome"))
-        val curator = harness.dialogue.startDialogue("Curator")
+        val curator = harness.dialogue.startDialogue("Museum Curator")
         assertNotNull(curator)
         assertEquals("curator_w3_mq13_intro", curator?.current()?.id)
         curator?.advanceUntilFinished()
@@ -116,11 +116,11 @@ class Hub4CriticalFlowTest {
         state = harness.store.state.value
         assertFalse(state.completedQuests.contains("w3_mq15"))
         assertFalse(state.roomId == "foundry_slag_landing")
-        assertTrue(harness.messages.any { it.contains("scan the Shield window", ignoreCase = true) })
+        assertTrue(harness.messages.any { it.contains("shield window display", ignoreCase = true) })
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_scan_shield_gap"))
         assertTrue(harness.store.state.value.questTasksCompleted["w3_mq15"].orEmpty().contains("scan_shield_gap"))
-        assertTrue(harness.messages.any { it.contains("one launch window", ignoreCase = true) })
+        assertTrue(harness.messages.any { it.contains("local security curtain", ignoreCase = true) && it.contains("launch window", ignoreCase = true) })
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq15_launch_astra"))
         state = harness.store.state.value
@@ -154,7 +154,7 @@ class Hub4CriticalFlowTest {
         assertTrue(state.completedMilestones.contains("ms_w3_blackmail_unlocked"))
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_sq15_scan_targeting"))
-        val terminal = harness.dialogue.startDialogue("Lab Terminal")
+        val terminal = harness.dialogue.startDialogue("Hacked Lab Terminal")
         assertNotNull(terminal)
         assertEquals("lab_terminal_w3_sq15_intro", terminal?.current()?.id)
         terminal?.advanceUntilFinished()

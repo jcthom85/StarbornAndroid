@@ -76,7 +76,7 @@ x# Starborn — World Story Checklists
 *   **Goal (External):** Steal the **Lens Relic** and use it to slip the Planetary Shield.
 *   **Antagonist Pressure:** Surveillance, corporate security, and the Administrator as the Spire’s enforcer and gatekeeper.
 *   **Key Reveal:** The Lens exposes the “Shadow” tethers of Dominion power—and Nova’s own signal isn’t as simple as she thought.
-*   **Character Turn:** Nova becomes a real leader (strategy + responsibility); Zeke confronts his erased life; the crew becomes a unit instead of a temporary alliance.
+*   **Character Turn:** Nova becomes a real leader (strategy + responsibility); Zeke turns mining-checkpoint experience into practical heist skills; the crew becomes a unit instead of a temporary alliance.
 *   **Found-Family Beat:** “Base of ops” becomes home—reinforced by breather beats (Night Market resilience, Skypark’s fake paradise) that remind the crew what they’re protecting.
 *   **Relic / Key Item Use:** The **Lens Relic** grants **Scan**, enabling the crew to time the rotating frequency gap in the Shield.
 *   **Failure/Cost Beat (Nova):** Touching the Lens tags her as an anomaly and blows the timeline—alarms rise early and the crew has to improvise under pressure.

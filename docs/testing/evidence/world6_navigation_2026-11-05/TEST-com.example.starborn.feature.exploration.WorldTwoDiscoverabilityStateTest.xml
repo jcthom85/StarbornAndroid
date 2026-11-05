@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.feature.exploration.WorldTwoDiscoverabilityStateTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-11-05T16:18:27.173Z" hostname="V52076.vims.edu" time="0.252">
+  <properties/>
+  <testcase name="side quest journal locations match authored world two actions" classname="com.example.starborn.feature.exploration.WorldTwoDiscoverabilityStateTest" time="0.004"/>
+  <testcase name="main quest journal names world two handoff rooms and authored actions" classname="com.example.starborn.feature.exploration.WorldTwoDiscoverabilityStateTest" time="0.004"/>
+  <testcase name="completed ridge quest repairs absent flags but milestone alone does not" classname="com.example.starborn.feature.exploration.WorldTwoDiscoverabilityStateTest" time="0.034"/>
+  <testcase name="ridge migrated partial states name every visible executable objective" classname="com.example.starborn.feature.exploration.WorldTwoDiscoverabilityStateTest" time="0.054"/>
+  <testcase name="powered or departed Astra retires dark console even without the older inspection receipt" classname="com.example.starborn.feature.exploration.WorldTwoDiscoverabilityStateTest" time="0.005"/>
+  <testcase name="ridge description priority covers every raw flag and milestone combination" classname="com.example.starborn.feature.exploration.WorldTwoDiscoverabilityStateTest" time="0.005"/>
+  <testcase name="ridge progressive states expose exactly the current objective and shield" classname="com.example.starborn.feature.exploration.WorldTwoDiscoverabilityStateTest" time="0.006"/>
+  <testcase name="emitter events select completed prose and retire their actions together" classname="com.example.starborn.feature.exploration.WorldTwoDiscoverabilityStateTest" time="0.017"/>
+  <testcase name="confirmed launch retires console without inventing an inspection receipt" classname="com.example.starborn.feature.exploration.WorldTwoDiscoverabilityStateTest" time="0.043"/>
+  <testcase name="all emitter milestone combinations distinguish visibility from event usability" classname="com.example.starborn.feature.exploration.WorldTwoDiscoverabilityStateTest" time="0.08"/>
+  <testcase name="ridge task migration restores each corresponding flag independently" classname="com.example.starborn.feature.exploration.WorldTwoDiscoverabilityStateTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

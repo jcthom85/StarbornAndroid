@@ -220,6 +220,7 @@ class WorldFiveDiscoverabilityStateTest {
                         val done = stateMask and 2 != 0
                         val completed = stateMask and 4 != 0
                         val seed = GameSessionStore().apply {
+                            setRoom(room.id)
                             milestones.forEach(::setMilestone)
                             if (ready) {
                                 startQuest("w5_mq21")
@@ -235,7 +236,7 @@ class WorldFiveDiscoverabilityStateTest {
                         val expected = when (name) {
                             "w5_mq21_force_dock", "w5_mq21_hack_airlock" -> ready && !done
                             "w5_sq23_map_pressure_loss" -> !completed && keys[3] !in milestones
-                            "w5_sq23_vacuum_seal" -> !completed && keys[3] in milestones
+                            "w5_sq23_route_bulkheads" -> !completed && keys[3] in milestones && keys[4] !in milestones
                             "w5_sq23_reopen_dock" -> !completed && keys[4] in milestones
                             else -> error("Unexpected event $name")
                         }
@@ -249,8 +250,8 @@ class WorldFiveDiscoverabilityStateTest {
                             val required = (action["requires_milestones"] as? List<*>)?.filterIsInstance<String>().orEmpty()
                             assertTrue(milestones.containsAll(required))
                             manager.handleTrigger("player_action", EventPayload.Action(name))
-                            // Event completion history also retires sealing before quest completion.
-                            assertEquals(name, 1, executions)
+                            // Scene/puzzle openers can retry; reward events retain their one-shot guard.
+                            assertEquals(name, if (name == "w5_sq23_route_bulkheads") 2 else 1, executions)
                         }
                     }
                 }
@@ -279,6 +280,7 @@ class WorldFiveDiscoverabilityStateTest {
                             val retired = stateMask and 2 != 0
                             val completed = stateMask and 4 != 0
                             val seed = GameSessionStore().apply {
+                                setRoom(room.id)
                                 milestones.forEach(::setMilestone)
                                 event.conditions.orEmpty().forEach { c ->
                                     when (c.type) {
@@ -301,7 +303,7 @@ class WorldFiveDiscoverabilityStateTest {
                                 usableStates++
                                 assertTrue("${room.id}: ${action["name"]} $milestones", prose.contains(action["name"] as String, true))
                                 manager.handleTrigger("player_action", EventPayload.Action(eventName))
-                                assertEquals("Replay $eventName", 1, executions)
+                                assertEquals("Replay $eventName", if (event.repeatable) 2 else 1, executions)
                             }
                         }
                     }

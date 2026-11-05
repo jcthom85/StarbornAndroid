@@ -12,12 +12,17 @@ import java.io.File
 
 class NavigationIntegrityTest {
     companion object {
-        // Existing shortcuts retain their original destinations and indirect returns.
-        val oneWayExits = mapOf(
-            "spire_underrail_platform" to "spire_transit_plaza",
-            "spire_service_lift" to "spire_archive_vault",
-            "spire_glasswalk" to "spire_archive_vault",
-            "deep_firewall_gamma" to "deep_anchor_chamber"
+        // All playable local links now have direct opposite-direction returns.
+        val oneWayExits = emptyMap<String, String>()
+        val namedVerticalExits = mapOf(
+            ("spire_underrail_platform" to "down") to "spire_transit_plaza",
+            ("spire_transit_plaza" to "up") to "spire_underrail_platform",
+            ("spire_service_lift" to "down") to "spire_archive_vault",
+            ("spire_archive_vault" to "up") to "spire_service_lift",
+            ("orbital_service_shaft" to "down") to "orbital_server_farm",
+            ("orbital_server_farm" to "up") to "orbital_service_shaft",
+            ("deep_firewall_gamma" to "down") to "deep_anchor_chamber",
+            ("deep_anchor_chamber" to "up") to "deep_firewall_gamma"
         )
     }
 
@@ -49,6 +54,113 @@ class NavigationIntegrityTest {
             }
         }
         assertEquals(oneWayExits, exceptions)
+    }
+
+    @Test
+    fun worldThreeUsesCardinalWalkingAndReviewedVerticalAlternatives() {
+        val spire = rooms.values.filter { it.id.startsWith("spire_") }
+        val opposite = mapOf("north" to "south", "south" to "north", "east" to "west", "west" to "east")
+        assertEquals("Keep all existing World 3 content", 70, spire.size)
+        spire.forEach { room ->
+            assertTrue("${room.id} must expose at most four swipe exits", room.connections.keys.count { it in opposite } in 1..4)
+            val alternatives = room.connections.filterKeys { it !in opposite }
+            assertTrue("${room.id} has an unreviewed alternative", alternatives.all { (d, t) -> namedVerticalExits[room.id to d] == t })
+            assertEquals("Only named alternatives hide compass arrows", alternatives.keys, room.specialExits.keys)
+            room.connections.forEach { (direction, destination) ->
+                assertEquals("${room.id}:$direction needs a direct swipe back", room.id,
+                    rooms.getValue(destination).connections[if (direction == "down") "up" else if (direction == "up") "down" else opposite.getValue(direction)])
+            }
+        }
+    }
+
+    @Test
+    fun bothWorldThreeFloorsRemainFullyWalkableWithoutBypassingTheHeistTransfer() {
+        val nodes = JSONArray(File(assets, "hub_nodes.json").readText())
+        for ((hub, entrance) in listOf("hub_5_lower_city" to "spire_sewers_landing", "hub_6_upper_city" to "spire_laundry_service")) {
+            val expected = (0 until nodes.length()).map { nodes.getJSONObject(it) }
+                .filter { it.getString("hub_id") == hub }
+                .flatMap { node -> node.getJSONArray("rooms").let { list -> (0 until list.length()).map { list.getString(it) } } }.toSet()
+            val visited = mutableSetOf<String>()
+            val pending = ArrayDeque<String>().apply { add(entrance) }
+            while (pending.isNotEmpty()) {
+                val id = pending.removeFirst()
+                if (visited.add(id)) pending.addAll(rooms.getValue(id).connections.filterKeys { it in setOf("north", "south", "east", "west") }.values)
+            }
+            assertEquals("$hub must be one complete physical floor, with no premature route to the other floor", expected, visited)
+        }
+    }
+
+    @Test
+    fun worldFourRoutesAreCardinalReciprocalAndKeepEveryRoom() {
+        val foundry = rooms.values.filter { it.id.startsWith("foundry_") }
+        val opposite = mapOf("north" to "south", "south" to "north", "east" to "west", "west" to "east")
+        assertEquals(74, foundry.size)
+        foundry.forEach { room ->
+            assertTrue("${room.id} must fit NSEW", room.connections.size in 1..4)
+            assertTrue("${room.id} must use swipe directions", opposite.keys.containsAll(room.connections.keys))
+            assertTrue("${room.id} must expose its compass exits", room.specialExits.isEmpty())
+            room.connections.forEach { (direction, target) ->
+                assertEquals("${room.id}:$direction must have an immediate return", room.id,
+                    rooms.getValue(target).connections[opposite.getValue(direction)])
+            }
+        }
+        val visited = mutableSetOf<String>()
+        val pending = ArrayDeque<String>().apply { add("foundry_slag_landing") }
+        while (pending.isNotEmpty()) {
+            val id = pending.removeFirst()
+            if (visited.add(id)) pending.addAll(rooms.getValue(id).connections.values)
+        }
+        assertEquals(foundry.map { it.id }.toSet(), visited)
+        for ((source, direction) in listOf("foundry_pipe_gallery" to "east", "foundry_reject_bay" to "west")) {
+            val gate = requireNotNull(rooms.getValue(source).blockedDirections?.get(direction))
+            assertEquals("lock", gate.type)
+            assertTrue(gate.requires.orEmpty().any { it.roomId == "foundry_pipe_gallery" && it.stateKey == "assembly_route_open" && it.value })
+        }
+    }
+
+    @Test
+    fun worldFiveKeepsCardinalWalkingAndReviewedVerticalAlternatives() {
+        val ring = rooms.values.filter { it.id.startsWith("orbital_") || it.id.startsWith("deep_") }
+        val reverse = mapOf("north" to "south", "south" to "north", "east" to "west", "west" to "east")
+        assertEquals(81, ring.size)
+        ring.forEach { room ->
+            assertTrue("${room.id} must fit NSEW", room.connections.keys.count { it in reverse } in 1..4)
+            val alternatives = room.connections.filterKeys { it !in reverse }
+            assertTrue("${room.id} has an unreviewed alternative", alternatives.all { (d, t) -> namedVerticalExits[room.id to d] == t })
+            assertEquals(alternatives.keys, room.specialExits.keys)
+            room.connections.forEach { (d, t) -> assertEquals("${room.id}:$d must return immediately", room.id,
+                rooms.getValue(t).connections[if (d == "down") "up" else if (d == "up") "down" else reverse.getValue(d)]) }
+        }
+        val visited = mutableSetOf<String>(); val pending = ArrayDeque<String>().apply { add("orbital_executive_dock") }
+        while (pending.isNotEmpty()) { val id = pending.removeFirst(); if (visited.add(id)) pending.addAll(rooms.getValue(id).connections.filterKeys { it in reverse }.values) }
+        assertEquals(ring.map { it.id }.toSet(), visited)
+        for ((room, direction) in listOf("orbital_server_farm" to "east", "deep_anchor_chamber" to "west")) {
+            val gate = requireNotNull(rooms.getValue(room).blockedDirections?.get(direction))
+            assertTrue(gate.requires.orEmpty().any { it.roomId == "deep_anchor_chamber" && it.stateKey == "firewall_access_open" && it.value })
+        }
+    }
+
+    @Test
+    fun worldSixUsesReciprocalCardinalPathsAndPreservesAllRooms() {
+        val source = rooms.values.filter { it.id.startsWith("source_") }
+        val reverse = mapOf("north" to "south", "south" to "north", "east" to "west", "west" to "east")
+        assertEquals(65, source.size)
+        source.forEach { room ->
+            assertTrue("${room.id} needs swipeable exits", room.connections.size in 1..4 && reverse.keys.containsAll(room.connections.keys))
+            assertTrue(room.specialExits.isEmpty())
+            room.connections.forEach { (d, to) -> assertEquals("${room.id}:$d needs a return", room.id, rooms.getValue(to).connections[reverse.getValue(d)]) }
+        }
+        val visited = mutableSetOf<String>(); val pending = ArrayDeque<String>().apply { add("source_campfire") }
+        while (pending.isNotEmpty()) { val id = pending.removeFirst(); if (visited.add(id)) pending.addAll(rooms.getValue(id).connections.values) }
+        assertEquals(source.map { it.id }.toSet(), visited)
+        assertEquals("source_zeke_nightmare", rooms.getValue("source_campfire").connections["west"])
+        assertEquals("source_orion_nightmare", rooms.getValue("source_campfire_node_scale_01").connections["east"])
+        for ((id, key) in listOf("source_memory_bridge" to "bridge_built", "source_memory_threshold" to "crossing_open",
+            "source_memory_stair" to "ascent_open", "source_spire_arena" to "center_path_open")) {
+            assertTrue(rooms.getValue(id).blockedDirections?.get("east")?.requires.orEmpty().any { it.roomId == id && it.stateKey == key && it.value })
+            val east = rooms.getValue(id).connections.getValue("east")
+            assertTrue("Retreat cannot be gated by forward progress", rooms.getValue(east).blockedDirections?.get("west") == null)
+        }
     }
 
     @Test

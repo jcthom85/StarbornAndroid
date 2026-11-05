@@ -6,7 +6,7 @@ Status: Source-reconciled reference, October 14, 2026. Current code/assets are t
 |---|---|---|
 | `w3_mq11_clear_landing` | type=encounter_victory | Records an accepted victory while MQ11 is active; do not invent a separate mandatory enemy identity. |
 | `w3_mq11_reach_vent` | type=enter_room, room=spire_vent_output | Requires landing task; advances to safehouse stage and reveals The Static. |
-| `w3_mq11_find_apartment` | type=enter_room, room=spire_zekes_apartment | Records finding Zeke's apartment. Zeke is already in the travelling crew. |
+| `w3_mq11_find_apartment` | type=enter_room, room=spire_zekes_apartment | Records finding the borrowed safehouse. Zeke is already in the travelling crew. |
 | `w3_mq11_establish_shield` | type=player_action, action=w3_mq11_establish_shield | Finishes MQ11, starts MQ12, reveals market/plaza routes. |
 | `w3_mq12_assemble_planning` | type=player_action, action=w3_mq12_assemble_planning | Requires blueprint task, finishes MQ12. |
 | `w3_mq12_to_w3_mq13` | type=quest_stage_complete, quest_id=w3_mq12 | Guarded completion handoff starts/tracks MQ13, reveals Laundry/Skypark, warps to Laundry. |

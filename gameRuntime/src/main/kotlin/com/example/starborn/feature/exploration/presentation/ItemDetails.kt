@@ -7,7 +7,8 @@ import java.util.Locale
 object ItemDetails {
     fun lines(item: Item, resolveName: (String) -> String = { it }): List<String> = buildList {
         fun label(value: String) = value.replace('_', ' ').replaceFirstChar { it.titlecase(Locale.ROOT) }
-        fun percent(value: Double) = "${(value * 100).toInt()}%"
+        // Equipment and combat use percentage points, including fractional points.
+        fun percent(value: Double) = "${java.math.BigDecimal.valueOf(value).stripTrailingZeros().toPlainString()}%"
         item.equipment?.let { gear ->
             add("Slot: ${label(gear.slot)}")
             gear.weaponType?.let { add("Weapon type: ${label(it)}") }

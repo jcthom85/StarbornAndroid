@@ -1,0 +1,4590 @@
+{
+  "events.json": {
+    "w3_mq11_establish_shield": {
+      "before": {
+        "id": "w3_mq11_establish_shield",
+        "description": "Triggered by completing the safehouse setup.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_mq11_establish_shield"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w3_mq11"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w3_mq11",
+            "task_id": "find_apartment"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w3_mq11",
+            "task_id": "establish_shield"
+          }
+        ],
+        "actions": [
+          {
+            "type": "audio_layer",
+            "layer": "stinger",
+            "cue_id": "sfx_w3_shield_anchor",
+            "fade_ms": 0
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_mq11",
+            "task_id": "establish_shield"
+          },
+          {
+            "type": "give_xp",
+            "xp": 400
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_mq11"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_mq11_complete"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w3_mq12"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w3_mq12"
+          },
+          {
+            "type": "reveal_node",
+            "node_id": "spire_night_market"
+          },
+          {
+            "type": "unlock_node",
+            "node_id": "spire_night_market"
+          },
+          {
+            "type": "reveal_node",
+            "node_id": "spire_transit_plaza"
+          },
+          {
+            "type": "unlock_node",
+            "node_id": "spire_transit_plaza"
+          },
+          {
+            "type": "show_message",
+            "message": "Quest Complete: Under the Radar\n\nWith Zeke grounding the terminal and checking the room's wiring, Orion folds a quiet Source shield around the borrowed apartment. Outside, the Spire keeps listening to itself. Inside, the crew has a room the city cannot own. Zeke names the next problem: the Upper City can only be reached through workers, schedules, badges, and people the rich refuse to see."
+          }
+        ]
+      },
+      "after": {
+        "id": "w3_mq11_establish_shield",
+        "description": "Triggered by completing the safehouse setup.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_mq11_establish_shield"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w3_mq11"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w3_mq11",
+            "task_id": "find_apartment"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w3_mq11",
+            "task_id": "establish_shield"
+          }
+        ],
+        "actions": [
+          {
+            "type": "audio_layer",
+            "layer": "stinger",
+            "cue_id": "sfx_w3_shield_anchor",
+            "fade_ms": 0
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_mq11",
+            "task_id": "establish_shield"
+          },
+          {
+            "type": "give_xp",
+            "xp": 400
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_mq11"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_mq11_complete"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w3_mq12"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w3_mq12"
+          },
+          {
+            "type": "reveal_node",
+            "node_id": "spire_night_market"
+          },
+          {
+            "type": "unlock_node",
+            "node_id": "spire_night_market"
+          },
+          {
+            "type": "reveal_node",
+            "node_id": "spire_transit_plaza"
+          },
+          {
+            "type": "unlock_node",
+            "node_id": "spire_transit_plaza"
+          },
+          {
+            "type": "show_message",
+            "message": "With Zeke grounding the terminal and checking the room's wiring, Orion folds a quiet Source shield around the borrowed apartment. Outside, the Spire keeps listening to itself. Inside, the crew has a room the city cannot own. Zeke names the next problem: the Upper City can only be reached through workers, schedules, badges, and people the rich refuse to see."
+          }
+        ]
+      }
+    },
+    "w3_mq12_talk_jax": {
+      "before": {
+        "id": "w3_mq12_talk_jax",
+        "description": "Triggered when talking to Jax.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_mq12_talk_jax"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w3_mq12"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w3_mq12",
+            "task_id": "talk_jax"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_mq12",
+            "task_id": "talk_jax"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_jax_intel"
+          },
+          {
+            "type": "reveal_node",
+            "node_id": "spire_vent_output"
+          },
+          {
+            "type": "unlock_node",
+            "node_id": "spire_vent_output"
+          },
+          {
+            "type": "reveal_node",
+            "node_id": "spire_transit_plaza"
+          },
+          {
+            "type": "unlock_node",
+            "node_id": "spire_transit_plaza"
+          },
+          {
+            "type": "show_message",
+            "message": "Jax slides a data drive across the counter. 'Curfew schedules, elevator shift gossip, and a list of guards who owe me. Don't make me regret remembering Zeke before the city deleted him.'"
+          }
+        ]
+      },
+      "after": {
+        "id": "w3_mq12_talk_jax",
+        "description": "Triggered when talking to Jax.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_mq12_talk_jax"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w3_mq12"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w3_mq12",
+            "task_id": "talk_jax"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_mq12",
+            "task_id": "talk_jax"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_jax_intel"
+          },
+          {
+            "type": "reveal_node",
+            "node_id": "spire_vent_output"
+          },
+          {
+            "type": "unlock_node",
+            "node_id": "spire_vent_output"
+          },
+          {
+            "type": "reveal_node",
+            "node_id": "spire_transit_plaza"
+          },
+          {
+            "type": "unlock_node",
+            "node_id": "spire_transit_plaza"
+          },
+          {
+            "type": "show_message",
+            "message": "Jax slides a data drive across the counter. 'Curfew schedules, elevator shifts, and guards who owe me. You said you came from the mines. Then you know what Dominion does to people it thinks nobody will miss. Get your crew through, and keep my name out of their reports.'"
+          }
+        ]
+      }
+    },
+    "w3_mq12_copy_badges": {
+      "before": {
+        "id": "w3_mq12_copy_badges",
+        "description": "Copy service badge patterns at the elevator service gate.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_mq12_copy_badges"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w3_mq12"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w3_mq12",
+            "task_id": "copy_badges"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_mq12",
+            "task_id": "copy_badges"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_badges_copied"
+          },
+          {
+            "type": "show_message",
+            "message": "Gh0st ghosts the freight badge handshake long enough to copy a service pattern. The climb has a door now, but only if everyone looks like they belong beneath it."
+          }
+        ]
+      },
+      "after": {
+        "id": "w3_mq12_copy_badges",
+        "description": "Copy service badge patterns at the elevator service gate.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_mq12_copy_badges"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w3_mq12"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w3_mq12",
+            "task_id": "copy_badges"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_mq12",
+            "task_id": "copy_badges"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_badges_copied"
+          },
+          {
+            "type": "show_message",
+            "message": "Gh0st intercepts the freight badge reader's authentication signal and copies a valid service pattern. The badges will get you through the gate, provided your uniforms match the clearance."
+          }
+        ]
+      }
+    },
+    "w3_sq11_install_core": {
+      "before": {
+        "id": "w3_sq11_install_core",
+        "description": "Triggered when installing neon core.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_sq11_install_core"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w3_sq11"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w3_sq11",
+            "task_id": "install_core"
+          },
+          {
+            "type": "item",
+            "item_id": "neon_sign_core"
+          }
+        ],
+        "actions": [
+          {
+            "type": "take_item",
+            "item_id": "neon_sign_core",
+            "quantity": 1
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_sq11",
+            "task_id": "install_core"
+          },
+          {
+            "type": "give_xp",
+            "xp": 200
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_sq11"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_streetwise_unlocked"
+          },
+          {
+            "type": "show_message",
+            "message": "Quest Complete: Neon Fix\n\nThe sign flickers and flares back to life, bathing the subway car in neon purple. The bar looks watched, open, and ordinary again, which is the safest kind of lie. Jax grunts in approval and slides the reward across the counter."
+          }
+        ]
+      },
+      "after": {
+        "id": "w3_sq11_install_core",
+        "description": "Triggered when installing neon core.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_sq11_install_core"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w3_sq11"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w3_sq11",
+            "task_id": "install_core"
+          },
+          {
+            "type": "item",
+            "item_id": "neon_sign_core"
+          }
+        ],
+        "actions": [
+          {
+            "type": "take_item",
+            "item_id": "neon_sign_core",
+            "quantity": 1
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_sq11",
+            "task_id": "install_core"
+          },
+          {
+            "type": "give_xp",
+            "xp": 200
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_sq11"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_streetwise_unlocked"
+          },
+          {
+            "type": "show_message",
+            "message": "The sign flickers and flares back to life, bathing the subway car in neon purple. The bar looks watched, open, and ordinary again, which is the safest kind of lie. Jax grunts in approval and slides the reward across the counter."
+          }
+        ]
+      }
+    },
+    "w3_mq12_to_w3_mq13": {
+      "before": {
+        "id": "w3_mq12_to_w3_mq13",
+        "description": "Begin the Upper City heist after the Lower City plan is complete.",
+        "trigger": {
+          "type": "quest_stage_complete",
+          "quest_id": "w3_mq12"
+        },
+        "conditions": [
+          {
+            "type": "quest_completed",
+            "quest_id": "w3_mq12"
+          },
+          {
+            "type": "quest_not_started",
+            "quest_id": "w3_mq13"
+          }
+        ],
+        "actions": [
+          {
+            "type": "start_quest",
+            "quest_id": "w3_mq13"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w3_mq13"
+          },
+          {
+            "type": "reveal_node",
+            "node_id": "spire_laundry"
+          },
+          {
+            "type": "unlock_node",
+            "node_id": "spire_laundry"
+          },
+          {
+            "type": "reveal_node",
+            "node_id": "spire_skypark"
+          },
+          {
+            "type": "unlock_node",
+            "node_id": "spire_skypark"
+          },
+          {
+            "type": "warp",
+            "room_id": "spire_laundry_service"
+          },
+          {
+            "type": "show_message",
+            "message": "Quest Complete: The Plan\n\nZeke combines the schedules, badges, disguises and security records into a service route. He sends the Astra’s autopilot a maintenance clearance to relocate from the sewer dock to the rooftop pad. The crew rides the service lift into Upper City."
+          }
+        ]
+      },
+      "after": {
+        "id": "w3_mq12_to_w3_mq13",
+        "description": "Begin the Upper City heist after the Lower City plan is complete.",
+        "trigger": {
+          "type": "quest_stage_complete",
+          "quest_id": "w3_mq12"
+        },
+        "conditions": [
+          {
+            "type": "quest_completed",
+            "quest_id": "w3_mq12"
+          },
+          {
+            "type": "quest_not_started",
+            "quest_id": "w3_mq13"
+          }
+        ],
+        "actions": [
+          {
+            "type": "start_quest",
+            "quest_id": "w3_mq13"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w3_mq13"
+          },
+          {
+            "type": "reveal_node",
+            "node_id": "spire_laundry"
+          },
+          {
+            "type": "unlock_node",
+            "node_id": "spire_laundry"
+          },
+          {
+            "type": "reveal_node",
+            "node_id": "spire_skypark"
+          },
+          {
+            "type": "unlock_node",
+            "node_id": "spire_skypark"
+          },
+          {
+            "type": "warp",
+            "room_id": "spire_laundry_service"
+          },
+          {
+            "type": "show_message",
+            "message": "Zeke combines the schedules, badges, disguises and security records into a service route. He sends the Astra’s autopilot a maintenance clearance to relocate from the sewer dock to the rooftop pad. The crew rides the service lift into Upper City."
+          }
+        ]
+      }
+    },
+    "w3_mq13_disable_sensors": {
+      "before": {
+        "id": "w3_mq13_disable_sensors",
+        "description": "Zeke and Orion disable sensors from Laundry Service.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_mq13_disable_sensors"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w3_mq13"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w3_mq13",
+            "task_id": "blend_in"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w3_mq13",
+            "task_id": "disable_sensors"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_mq13",
+            "task_id": "disable_sensors"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_scanners_blinded"
+          },
+          {
+            "type": "show_message",
+            "message": "Zeke ghosts the scanner grid from the Laundry Service sensor console while Orion dampens the Source noise. The penthouse sensors blink blind for one narrow window, and the crew moves before fear can vote."
+          }
+        ]
+      },
+      "after": {
+        "id": "w3_mq13_disable_sensors",
+        "description": "Zeke and Orion disable sensors from Laundry Service.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_mq13_disable_sensors"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w3_mq13"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w3_mq13",
+            "task_id": "blend_in"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w3_mq13",
+            "task_id": "disable_sensors"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_mq13",
+            "task_id": "disable_sensors"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_scanners_blinded"
+          },
+          {
+            "type": "show_message",
+            "message": "Zeke disables the scanner grid from the Laundry Service sensor console while Orion dampens the Source noise. The penthouse sensors blink blind for one narrow window, and the crew moves before fear can vote."
+          }
+        ]
+      }
+    },
+    "w3_mq13_enter_lobby": {
+      "before": {
+        "id": "w3_mq13_enter_lobby",
+        "description": "Nova and Gh0st pass the lobby scanners.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_mq13_enter_lobby"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w3_mq13"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w3_mq13",
+            "task_id": "blend_in"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w3_mq13",
+            "task_id": "disable_sensors"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w3_mq13",
+            "task_id": "enter_lobby"
+          }
+        ],
+        "actions": [
+          {
+            "type": "audio_layer",
+            "layer": "stinger",
+            "cue_id": "sfx_w3_elevator_rise",
+            "fade_ms": 0
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_mq13",
+            "task_id": "enter_lobby"
+          },
+          {
+            "type": "give_xp",
+            "xp": 500
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_mq13"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_mq13_complete"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w3_mq14"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w3_mq14"
+          },
+          {
+            "type": "reveal_node",
+            "node_id": "spire_archive"
+          },
+          {
+            "type": "unlock_node",
+            "node_id": "spire_archive"
+          },
+          {
+            "type": "show_message",
+            "message": "Quest Complete: Social Engineering\n\nThe service chute spits Nova and Gh0st past the scanners while Zeke and Orion keep the grid blind. The crew has fooled the Upper City by becoming the people it refuses to see. The Archive opens ahead, and every second now has teeth."
+          }
+        ]
+      },
+      "after": {
+        "id": "w3_mq13_enter_lobby",
+        "description": "Nova and Gh0st pass the lobby scanners.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_mq13_enter_lobby"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w3_mq13"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w3_mq13",
+            "task_id": "blend_in"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w3_mq13",
+            "task_id": "disable_sensors"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w3_mq13",
+            "task_id": "enter_lobby"
+          }
+        ],
+        "actions": [
+          {
+            "type": "audio_layer",
+            "layer": "stinger",
+            "cue_id": "sfx_w3_elevator_rise",
+            "fade_ms": 0
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_mq13",
+            "task_id": "enter_lobby"
+          },
+          {
+            "type": "give_xp",
+            "xp": 500
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_mq13"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_mq13_complete"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w3_mq14"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w3_mq14"
+          },
+          {
+            "type": "reveal_node",
+            "node_id": "spire_archive"
+          },
+          {
+            "type": "unlock_node",
+            "node_id": "spire_archive"
+          },
+          {
+            "type": "show_message",
+            "message": "The service chute spits Nova and Gh0st past the scanners while Zeke and Orion keep the grid blind. The crew has fooled the Upper City by becoming the people it refuses to see. The Archive opens ahead, and every second now has teeth."
+          }
+        ]
+      }
+    },
+    "w3_mq14_take_lens": {
+      "before": {
+        "id": "w3_mq14_take_lens",
+        "description": "Take the Lens and trigger the alarm.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_mq14_take_lens"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w3_mq14"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w3_mq14",
+            "task_id": "solve_light_puzzle"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w3_mq14",
+            "task_id": "take_lens"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_mq14",
+            "task_id": "take_lens"
+          },
+          {
+            "type": "give_item",
+            "item_id": "the_lens",
+            "quantity": 1
+          },
+          {
+            "type": "unlock_skill",
+            "skill_id": "source_art_scan"
+          },
+          {
+            "type": "give_xp",
+            "xp": 550
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_mq14"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_mq14_complete"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w3_mq15"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w3_mq15"
+          },
+          {
+            "type": "reveal_node",
+            "node_id": "spire_landing_pad"
+          },
+          {
+            "type": "unlock_node",
+            "node_id": "spire_landing_pad"
+          },
+          {
+            "type": "show_message",
+            "message": "Quest Complete: The Lens\n\nThe relic burns cold in Nova's hand. The Shield above the Spire becomes visible as rotating chords, and so does the thin old thread running through her own signal. Alarm text blooms across the air: ANOMALY DETECTED. The only route left is through the drone alcove and up to the roof, where the Astra has one impossible launch window."
+          },
+          {
+            "type": "start_dialogue",
+            "npc": "line:thorne_w3_mq14_trap_intro"
+          }
+        ]
+      },
+      "after": {
+        "id": "w3_mq14_take_lens",
+        "description": "Take the Lens and trigger the alarm.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_mq14_take_lens"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w3_mq14"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w3_mq14",
+            "task_id": "solve_light_puzzle"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w3_mq14",
+            "task_id": "take_lens"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_mq14",
+            "task_id": "take_lens"
+          },
+          {
+            "type": "give_item",
+            "item_id": "the_lens",
+            "quantity": 1
+          },
+          {
+            "type": "unlock_skill",
+            "skill_id": "source_art_scan"
+          },
+          {
+            "type": "give_xp",
+            "xp": 550
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_mq14"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_mq14_complete"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w3_mq15"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w3_mq15"
+          },
+          {
+            "type": "reveal_node",
+            "node_id": "spire_landing_pad"
+          },
+          {
+            "type": "unlock_node",
+            "node_id": "spire_landing_pad"
+          },
+          {
+            "type": "show_message",
+            "message": "The relic burns cold in Nova's hand. The Shield above the Spire becomes visible as rotating chords, and so does the thin old thread running through her own signal. Alarm text blooms across the air: ANOMALY DETECTED. The only route left is through the drone alcove and up to the roof, where the Astra has one impossible launch window."
+          },
+          {
+            "type": "start_dialogue",
+            "npc": "line:thorne_w3_mq14_trap_intro"
+          }
+        ]
+      }
+    },
+    "w3_mq15_launch_astra": {
+      "before": {
+        "id": "w3_mq15_launch_astra",
+        "description": "Send the Astra through the Shield window toward World 4.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_mq15_launch_astra"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w3_mq15"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w3_mq15",
+            "task_id": "defeat_administrator"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w3_mq15",
+            "task_id": "scan_shield_gap"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w3_mq15",
+            "task_id": "launch_astra"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_mq15",
+            "task_id": "launch_astra"
+          },
+          {
+            "type": "give_xp",
+            "xp": 700
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_mq15"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_mq15_complete"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w4_access_unlocked"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w4_mq16"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w4_mq16"
+          },
+          {
+            "type": "warp",
+            "room_id": "foundry_slag_landing"
+          },
+          {
+            "type": "show_message",
+            "message": "Quest Complete: Burn Notice\n\nThe Astra clears the Spire’s internal security curtain on Orion’s count. The planetary Shield still hangs above them. Zeke sets a low-altitude course for the Foundry: its Deep-Core Engine can carry them higher, and its Phase-Cutter Arrays can open the way."
+          }
+        ]
+      },
+      "after": {
+        "id": "w3_mq15_launch_astra",
+        "description": "Send the Astra through the Shield window toward World 4.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_mq15_launch_astra"
+        },
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w3_mq15"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w3_mq15",
+            "task_id": "defeat_administrator"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w3_mq15",
+            "task_id": "scan_shield_gap"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w3_mq15",
+            "task_id": "launch_astra"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_mq15",
+            "task_id": "launch_astra"
+          },
+          {
+            "type": "give_xp",
+            "xp": 700
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_mq15"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_mq15_complete"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w4_access_unlocked"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w4_mq16"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w4_mq16"
+          },
+          {
+            "type": "warp",
+            "room_id": "foundry_slag_landing"
+          },
+          {
+            "type": "show_message",
+            "message": "The Astra clears the Spire’s internal security curtain on Orion’s count. The planetary Shield still hangs above them. Zeke sets a low-altitude course for the Foundry: its Deep-Core Engine can carry them higher, and its Phase-Cutter Arrays can open the way."
+          }
+        ]
+      }
+    },
+    "w3_sq12_expose_transfer": {
+      "before": {
+        "id": "w3_sq12_expose_transfer",
+        "description": "Expose the witness transfer.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_sq12_expose_transfer"
+        },
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w3_cold_case_records_found"
+          },
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w3_sq12"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_sq12",
+            "task_id": "expose_transfer"
+          },
+          {
+            "type": "unlock_skill",
+            "skill_id": "gh0st_intercept"
+          },
+          {
+            "type": "give_xp",
+            "xp": 200
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_sq12"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_ghost_skill_unlocked"
+          },
+          {
+            "type": "show_message",
+            "message": "Quest Complete: Cold Case\n\nGh0st broadcasts the deleted transfer to every security kiosk. Elara's trail points toward the orbital ring. Intercept unlocked."
+          }
+        ]
+      },
+      "after": {
+        "id": "w3_sq12_expose_transfer",
+        "description": "Expose the witness transfer.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_sq12_expose_transfer"
+        },
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w3_cold_case_records_found"
+          },
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w3_sq12"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_sq12",
+            "task_id": "expose_transfer"
+          },
+          {
+            "type": "unlock_skill",
+            "skill_id": "gh0st_intercept"
+          },
+          {
+            "type": "give_xp",
+            "xp": 200
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_sq12"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_ghost_skill_unlocked"
+          },
+          {
+            "type": "show_message",
+            "message": "Gh0st broadcasts the deleted transfer to every security kiosk. Elara's trail points toward the orbital ring. Intercept unlocked."
+          }
+        ]
+      }
+    },
+    "w3_sq13_restore_market": {
+      "before": {
+        "id": "w3_sq13_restore_market",
+        "description": "Broadcast the restored Night Market.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_sq13_restore_market"
+        },
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w3_market_grid_ready"
+          },
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w3_sq13"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_sq13",
+            "task_id": "fix_market_lights"
+          },
+          {
+            "type": "give_item",
+            "item_id": "neon_band",
+            "quantity": 1
+          },
+          {
+            "type": "give_xp",
+            "xp": 200
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_sq13"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_market_lit"
+          },
+          {
+            "type": "show_message",
+            "message": "Quest Complete: Night Market Run\n\nWarm light exposes every hidden stall before patrols can declare them abandoned. Neon Band acquired."
+          }
+        ]
+      },
+      "after": {
+        "id": "w3_sq13_restore_market",
+        "description": "Broadcast the restored Night Market.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_sq13_restore_market"
+        },
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w3_market_grid_ready"
+          },
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w3_sq13"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_sq13",
+            "task_id": "fix_market_lights"
+          },
+          {
+            "type": "give_item",
+            "item_id": "neon_band",
+            "quantity": 1
+          },
+          {
+            "type": "give_xp",
+            "xp": 200
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_sq13"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_market_lit"
+          },
+          {
+            "type": "show_message",
+            "message": "Warm light exposes every hidden stall before patrols can declare them abandoned. Neon Band acquired."
+          }
+        ]
+      }
+    },
+    "w3_sq14_leak_ledger": {
+      "before": {
+        "id": "w3_sq14_leak_ledger",
+        "description": "Leak the executive ledger.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_sq14_leak_ledger"
+        },
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w3_ledger_stolen"
+          },
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w3_sq14"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_sq14",
+            "task_id": "leak_ledger"
+          },
+          {
+            "type": "give_item",
+            "item_id": "encrypted_ledger",
+            "quantity": 1
+          },
+          {
+            "type": "give_xp",
+            "xp": 250
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_sq14"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_blackmail_unlocked"
+          },
+          {
+            "type": "show_message",
+            "message": "Quest Complete: Corporate Espionage\n\nEvery worker terminal receives the accounts at once. The Upper City runs on crimes with better stationery."
+          }
+        ]
+      },
+      "after": {
+        "id": "w3_sq14_leak_ledger",
+        "description": "Leak the executive ledger.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_sq14_leak_ledger"
+        },
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w3_ledger_stolen"
+          },
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w3_sq14"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_sq14",
+            "task_id": "leak_ledger"
+          },
+          {
+            "type": "give_item",
+            "item_id": "encrypted_ledger",
+            "quantity": 1
+          },
+          {
+            "type": "give_xp",
+            "xp": 250
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_sq14"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_blackmail_unlocked"
+          },
+          {
+            "type": "show_message",
+            "message": "Every worker terminal receives the accounts at once. The Upper City runs on crimes with better stationery."
+          }
+        ]
+      }
+    },
+    "w3_sq15_scrub_telemetry": {
+      "before": {
+        "id": "w3_sq15_scrub_telemetry",
+        "description": "Scrub the prototype telemetry.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_sq15_scrub_telemetry"
+        },
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w3_prototype_trial_complete"
+          },
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w3_sq15"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_sq15",
+            "task_id": "scrub_telemetry"
+          },
+          {
+            "type": "give_item",
+            "item_id": "phase_rounds",
+            "quantity": 1
+          },
+          {
+            "type": "give_xp",
+            "xp": 300
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_sq15"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_prototype_tested"
+          },
+          {
+            "type": "show_message",
+            "message": "Quest Complete: Prototype Testing\n\nThe roof relay forgets Nova's combat signature and dispenses the Phase Rounds as an approved test result."
+          }
+        ]
+      },
+      "after": {
+        "id": "w3_sq15_scrub_telemetry",
+        "description": "Scrub the prototype telemetry.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_sq15_scrub_telemetry"
+        },
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w3_prototype_trial_complete"
+          },
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w3_sq15"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_sq15",
+            "task_id": "scrub_telemetry"
+          },
+          {
+            "type": "give_item",
+            "item_id": "phase_rounds",
+            "quantity": 1
+          },
+          {
+            "type": "give_xp",
+            "xp": 300
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_sq15"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_prototype_tested"
+          },
+          {
+            "type": "show_message",
+            "message": "The roof relay forgets Nova's combat signature and dispenses the Phase Rounds as an approved test result."
+          }
+        ]
+      }
+    },
+    "w3_sq14_weaponize_ledger": {
+      "before": {
+        "id": "w3_sq14_weaponize_ledger",
+        "description": "Use the ledger privately against an executive security profile.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_sq14_weaponize_ledger"
+        },
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w3_ledger_stolen"
+          },
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w3_sq14"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_sq14",
+            "task_id": "leak_ledger"
+          },
+          {
+            "type": "give_item",
+            "item_id": "phase_rounds",
+            "quantity": 1
+          },
+          {
+            "type": "give_xp",
+            "xp": 250
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_sq14"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_ledger_weaponized"
+          },
+          {
+            "type": "show_message",
+            "message": "Quest Complete: Corporate Espionage\n\nNova keeps the workers out of the blast radius and feeds one executive's private security profile into a dead drop. Phase Rounds acquired."
+          }
+        ]
+      },
+      "after": {
+        "id": "w3_sq14_weaponize_ledger",
+        "description": "Use the ledger privately against an executive security profile.",
+        "trigger": {
+          "type": "player_action",
+          "action": "w3_sq14_weaponize_ledger"
+        },
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w3_ledger_stolen"
+          },
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w3_sq14"
+          }
+        ],
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_sq14",
+            "task_id": "leak_ledger"
+          },
+          {
+            "type": "give_item",
+            "item_id": "phase_rounds",
+            "quantity": 1
+          },
+          {
+            "type": "give_xp",
+            "xp": 250
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_sq14"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_ledger_weaponized"
+          },
+          {
+            "type": "show_message",
+            "message": "Nova keeps the workers out of the blast radius and feeds one executive's private security profile into a dead drop. Phase Rounds acquired."
+          }
+        ]
+      }
+    }
+  },
+  "dialogue.json": {
+    "jax_w3_mq11_shelter": {
+      "before": {
+        "id": "jax_w3_mq11_shelter",
+        "speaker": "Jax",
+        "condition": "quest_active:w3_mq11,quest_task_done:w3_mq11:reach_vent,quest_task_not_done:w3_mq11:find_apartment",
+        "text": "Patrols are sweeping the streets. There's an abandoned apartment upstairs; you can use it while you get your bearings. I'll leave the stairwell open. Keep trouble away from my customers."
+      },
+      "after": {
+        "id": "jax_w3_mq11_shelter",
+        "speaker": "Jax",
+        "condition": "quest_active:w3_mq11,quest_task_done:w3_mq11:reach_vent,quest_task_not_done:w3_mq11:find_apartment",
+        "text": "Easy. You're dripping sewer water on my floor, and you've checked the door three times. I'm Jax. This is The Static; people come here to get out of the patrols' way. What happened?",
+        "next": "jax_w3_mq11_nova_intro"
+      }
+    },
+    "w3_mq12_jax_intro": {
+      "before": {
+        "id": "w3_mq12_jax_intro",
+        "speaker": "Jax",
+        "condition": "quest_active:w3_mq12,quest_task_not_done:w3_mq12:talk_jax",
+        "text": "You want the Upper City? You need timing, credentials, a route, disguises, and the nerve to look bored while they judge your humanity.",
+        "options": [
+          {
+            "id": "jax_w3_mq12_request_codes",
+            "text": "Yes, Zeke said you have the schedules.",
+            "next": "w3_mq12_jax_success"
+          }
+        ]
+      },
+      "after": {
+        "id": "w3_mq12_jax_intro",
+        "speaker": "Jax",
+        "condition": "quest_active:w3_mq12,quest_task_not_done:w3_mq12:talk_jax",
+        "text": "You want the Upper City? You need timing, credentials, a route, disguises, and the nerve to look bored while they judge your humanity.",
+        "options": [
+          {
+            "id": "jax_w3_mq12_request_codes",
+            "text": "We need a way past the patrols. Can you help?",
+            "next": "w3_mq12_jax_success"
+          }
+        ]
+      }
+    },
+    "w3_mq12_workstation_dialogue": {
+      "before": {
+        "id": "w3_mq12_workstation_dialogue",
+        "speaker": "System",
+        "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:map_patrols,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:copy_badges,quest_task_done:w3_mq12:source_disguises,quest_task_not_done:w3_mq12:hack_blueprints",
+        "text": "Zeke's workstation accepts the stolen timing, badges, and disguise notes. His restored employee profile compiles into a service-elevator route.",
+        "trigger": "player_action:w3_mq12_hack_blueprints"
+      },
+      "after": {
+        "id": "w3_mq12_workstation_dialogue",
+        "speaker": "System",
+        "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:map_patrols,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:copy_badges,quest_task_done:w3_mq12:source_disguises,quest_task_not_done:w3_mq12:hack_blueprints",
+        "text": "Zeke's workstation combines the stolen schedules, copied service badges, and disguise notes into a freight-elevator clearance. The Dominion menus work just like the mine checkpoint; the identities on these badges belong to this building's service crew.",
+        "trigger": "player_action:w3_mq12_hack_blueprints"
+      }
+    },
+    "w3_mq12_planning_table_dialogue": {
+      "before": {
+        "id": "w3_mq12_planning_table_dialogue",
+        "speaker": "System",
+        "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:map_patrols,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:copy_badges,quest_task_done:w3_mq12:source_disguises,quest_task_done:w3_mq12:hack_blueprints,quest_task_not_done:w3_mq12:assemble_table",
+        "text": "The planning table maps the infiltration route: patrol timing, badges, and disguises align into a clear path upward.",
+        "options": [
+          {
+            "id": "w3_mq12_assemble_confirm",
+            "text": "Coordinate heist plan.",
+            "trigger": "player_action:w3_mq12_assemble_planning"
+          }
+        ]
+      },
+      "after": {
+        "id": "w3_mq12_planning_table_dialogue",
+        "speaker": "System",
+        "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:map_patrols,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:copy_badges,quest_task_done:w3_mq12:source_disguises,quest_task_done:w3_mq12:hack_blueprints,quest_task_not_done:w3_mq12:assemble_table",
+        "text": "The route is ready: return to Transit Plaza in the copied uniforms, use the freight badges at the service elevator, and ride up to the Upper City laundry intake. Zeke will send the Astra's autopilot clearance to move to the rooftop pad while the crew travels on foot. Once you leave this table, the heist begins.",
+        "options": [
+          {
+            "id": "w3_mq12_assemble_confirm",
+            "text": "Commit the plan and take the service elevator upstairs.",
+            "trigger": "player_action:w3_mq12_assemble_planning"
+          },
+          {
+            "id": "w3_mq12_planning_leave",
+            "text": "Keep preparing. Leave the table for now."
+          }
+        ]
+      }
+    },
+    "zeke_w3_mq13_cover": {
+      "before": {
+        "id": "zeke_w3_mq13_cover",
+        "speaker": "Zeke",
+        "text": "Sir, this commemorative installation is delicate. Touch it again and I will have to file paperwork neither of us wants to read.",
+        "trigger": "player_action:w3_mq13_blend_in"
+      },
+      "after": {
+        "id": "zeke_w3_mq13_cover",
+        "speaker": "Zeke",
+        "text": "Maintenance crew, sir. If you want to report us, the staff checkpoint can verify our clearance. Of course, they'll need to know why you stopped a scheduled service round.",
+        "trigger": "player_action:w3_mq13_blend_in"
+      }
+    },
+    "cheno_default_talk": {
+      "before": {
+        "id": "cheno_default_talk",
+        "speaker": "Cheno",
+        "text": "Hey there, Nova! Watch your step around those cable drums—high-tension steel doesn't forgive careless boots. What can I do for you? If your ship's in a bind or you need something hauled, you came to the right deck.",
+        "options": [
+          {
+            "id": "cheno_opt_who",
+            "text": "What is Bridgman Civil working on up here?",
+            "next": "cheno_who_reply"
+          },
+          {
+            "id": "cheno_opt_music",
+            "text": "Do you help with the sound for The Static?",
+            "next": "cheno_music_reply"
+          },
+          {
+            "id": "cheno_opt_friends",
+            "text": "You seem to know everyone on this deck.",
+            "next": "cheno_friends_reply"
+          },
+          {
+            "id": "cheno_opt_family",
+            "text": "Who's that in the photo on your tool locker?",
+            "next": "cheno_family_reply"
+          },
+          {
+            "id": "cheno_opt_favor_offer",
+            "text": "Need an extra pair of hands on the rigging?",
+            "condition": "milestone_not_set:ms_cheno_rigging_favor_asked",
+            "next": "cheno_favor_offer"
+          },
+          {
+            "id": "cheno_opt_favor_turnin",
+            "text": "I brought the heavy gears and wiring bundles for the center truss.",
+            "condition": "milestone:ms_cheno_rigging_favor_asked,milestone_not_set:ms_cheno_rigging_favor_completed,item:heavy_gear,item:wiring_bundle",
+            "next": "cheno_favor_turnin"
+          }
+        ]
+      },
+      "after": {
+        "id": "cheno_default_talk",
+        "speaker": "Cheno",
+        "text": "Hey there, Nova! Watch your step around those cable drums—high-tension steel doesn't forgive careless boots. What can I do for you? If your ship's in a bind or you need something hauled, you came to the right deck.",
+        "options": [
+          {
+            "id": "cheno_opt_who",
+            "text": "What is Bridgman Civil working on up here?",
+            "next": "cheno_who_reply"
+          },
+          {
+            "id": "cheno_opt_music",
+            "text": "Do you help with the sound for The Static?",
+            "next": "cheno_music_reply"
+          },
+          {
+            "id": "cheno_opt_friends",
+            "text": "You seem to know everyone on this deck.",
+            "next": "cheno_friends_reply"
+          },
+          {
+            "id": "cheno_opt_family",
+            "text": "Who's that in the photo on your tool locker?",
+            "next": "cheno_family_reply"
+          },
+          {
+            "id": "cheno_opt_favor_offer",
+            "text": "Need an extra pair of hands on the rigging?",
+            "condition": "milestone_not_set:ms_cheno_rigging_favor_asked",
+            "next": "cheno_favor_offer"
+          },
+          {
+            "id": "cheno_opt_favor_turnin",
+            "text": "I brought the heavy gears and wiring bundles for the center truss.",
+            "condition": "milestone:ms_cheno_rigging_favor_asked,milestone_not_set:ms_cheno_rigging_favor_completed,item:heavy_gear,item:wiring_bundle",
+            "next": "cheno_favor_turnin"
+          },
+          {
+            "id": "cheno_leave",
+            "text": "I'll see you around. Take care."
+          }
+        ]
+      }
+    },
+    "chris_default_talk": {
+      "before": {
+        "id": "chris_default_talk",
+        "speaker": "Chris",
+        "text": "Watch your step over those patch cables. Dominion pipes four synthetic chords into every elevator to keep productivity up and blood pressure down. We broadcast the other eight. What brings you to our corner of the grid?",
+        "options": [
+          {
+            "id": "chris_opt_poster",
+            "text": "I saw your Wayfarer tour poster taped to the window.",
+            "next": "chris_poster_reply"
+          },
+          {
+            "id": "chris_opt_cheno",
+            "text": "I was just talking with Cheno out on the rigging deck.",
+            "next": "chris_cheno_reply"
+          },
+          {
+            "id": "chris_opt_favor_offer",
+            "text": "Are you two working on a new broadcast?",
+            "condition": "milestone_not_set:ms_wayfarer_broadcast_asked",
+            "next": "chris_favor_offer"
+          },
+          {
+            "id": "chris_opt_favor_turnin",
+            "text": "I brought the rapid capacitor and wiring bundle for your broadcast rig.",
+            "condition": "milestone:ms_wayfarer_broadcast_asked,milestone_not_set:ms_wayfarer_broadcast_completed,item:rapid_capacitor,item:wiring_bundle",
+            "next": "chris_favor_turnin"
+          },
+          {
+            "id": "chris_opt_writing",
+            "text": "What are the lyrics you're working on?",
+            "next": "chris_writing_reply"
+          }
+        ]
+      },
+      "after": {
+        "id": "chris_default_talk",
+        "speaker": "Chris",
+        "text": "Watch your step over those patch cables. Dominion pipes four synthetic chords into every elevator to keep productivity up and blood pressure down. We broadcast the other eight. What brings you to our corner of the grid?",
+        "options": [
+          {
+            "id": "chris_opt_poster",
+            "text": "I saw your Wayfarer tour poster taped to the window.",
+            "next": "chris_poster_reply"
+          },
+          {
+            "id": "chris_opt_cheno",
+            "text": "I was just talking with Cheno out on the rigging deck.",
+            "next": "chris_cheno_reply"
+          },
+          {
+            "id": "chris_opt_favor_offer",
+            "text": "Are you two working on a new broadcast?",
+            "condition": "milestone_not_set:ms_wayfarer_broadcast_asked",
+            "next": "chris_favor_offer"
+          },
+          {
+            "id": "chris_opt_favor_turnin",
+            "text": "I brought the rapid capacitor and wiring bundle for your broadcast rig.",
+            "condition": "milestone:ms_wayfarer_broadcast_asked,milestone_not_set:ms_wayfarer_broadcast_completed,item:rapid_capacitor,item:wiring_bundle",
+            "next": "chris_favor_turnin"
+          },
+          {
+            "id": "chris_opt_writing",
+            "text": "What are the lyrics you're working on?",
+            "next": "chris_writing_reply"
+          },
+          {
+            "id": "chris_leave",
+            "text": "I'll see you around. Take care."
+          }
+        ]
+      }
+    },
+    "andrew_default_talk": {
+      "before": {
+        "id": "andrew_default_talk",
+        "speaker": "Andrew",
+        "text": "Hey. Good to see friendly eyes in here. Take a breath—the world outside this car moves entirely too fast. We're just restringing the acoustic rig and trying to get these coils to sing.",
+        "options": [
+          {
+            "id": "andrew_opt_music",
+            "text": "What kind of music do you play?",
+            "next": "andrew_music_reply"
+          },
+          {
+            "id": "andrew_opt_hug",
+            "text": "It feels surprisingly peaceful in here.",
+            "next": "andrew_hug_reply"
+          },
+          {
+            "id": "andrew_opt_wayfarer",
+            "text": "Do you miss the old days on the road?",
+            "next": "andrew_wayfarer_reply"
+          },
+          {
+            "id": "andrew_opt_listen",
+            "text": "Play something for the room.",
+            "condition": "milestone:ms_wayfarer_broadcast_completed",
+            "next": "andrew_listen_reply"
+          }
+        ]
+      },
+      "after": {
+        "id": "andrew_default_talk",
+        "speaker": "Andrew",
+        "text": "Hey. Good to see friendly eyes in here. Take a breath—the world outside this car moves entirely too fast. We're just restringing the acoustic rig and trying to get these coils to sing.",
+        "options": [
+          {
+            "id": "andrew_opt_music",
+            "text": "What kind of music do you play?",
+            "next": "andrew_music_reply"
+          },
+          {
+            "id": "andrew_opt_hug",
+            "text": "It feels surprisingly peaceful in here.",
+            "next": "andrew_hug_reply"
+          },
+          {
+            "id": "andrew_opt_wayfarer",
+            "text": "Do you miss the old days on the road?",
+            "next": "andrew_wayfarer_reply"
+          },
+          {
+            "id": "andrew_opt_listen",
+            "text": "Play something for the room.",
+            "condition": "milestone:ms_wayfarer_broadcast_completed",
+            "next": "andrew_listen_reply"
+          },
+          {
+            "id": "andrew_leave",
+            "text": "I'll see you around. Take care."
+          }
+        ]
+      }
+    },
+    "creator_jason_default_talk": {
+      "before": {
+        "id": "creator_jason_default_talk",
+        "speaker": "Jason",
+        "text": "Hey! Watch your step around those guitar cables and power supplies. I was just adjusting the clock timing on this signal bus... or was I refactoring the enemy spawn tables? Actually, both. What can I do for you?",
+        "options": [
+          {
+            "id": "jason_opt_what",
+            "text": "What are you making in here? There's gear everywhere.",
+            "next": "jason_what_reply"
+          },
+          {
+            "id": "jason_opt_galaxy",
+            "text": "Is that a simulated galaxy on your terminal?",
+            "next": "jason_galaxy_reply"
+          },
+          {
+            "id": "jason_opt_finish",
+            "text": "Do you ever actually finish a project?",
+            "next": "jason_finish_reply"
+          },
+          {
+            "id": "jason_opt_passion",
+            "text": "You look like you genuinely love what you do.",
+            "next": "jason_passion_reply"
+          },
+          {
+            "id": "jason_opt_resonator",
+            "text": "What's that small copper coil on the corner of your bench?",
+            "condition": "milestone_not_set:ms_jason_resonator_received",
+            "next": "jason_resonator_reply"
+          },
+          {
+            "id": "jason_opt_meeko",
+            "text": "Who's the hefty charcoal cat glaring at me from the tube amp?",
+            "next": "jason_meeko_reply"
+          }
+        ]
+      },
+      "after": {
+        "id": "creator_jason_default_talk",
+        "speaker": "Jason",
+        "text": "Hey! Watch your step around those guitar cables and power supplies. I was just adjusting the clock timing on this signal bus... or was I refactoring the enemy spawn tables? Actually, both. What can I do for you?",
+        "options": [
+          {
+            "id": "jason_opt_what",
+            "text": "What are you making in here? There's gear everywhere.",
+            "next": "jason_what_reply"
+          },
+          {
+            "id": "jason_opt_galaxy",
+            "text": "Is that a simulated galaxy on your terminal?",
+            "next": "jason_galaxy_reply"
+          },
+          {
+            "id": "jason_opt_finish",
+            "text": "Do you ever actually finish a project?",
+            "next": "jason_finish_reply"
+          },
+          {
+            "id": "jason_opt_passion",
+            "text": "You look like you genuinely love what you do.",
+            "next": "jason_passion_reply"
+          },
+          {
+            "id": "jason_opt_resonator",
+            "text": "What's that small copper coil on the corner of your bench?",
+            "condition": "milestone_not_set:ms_jason_resonator_received",
+            "next": "jason_resonator_reply"
+          },
+          {
+            "id": "jason_opt_meeko",
+            "text": "Who's the hefty charcoal cat glaring at me from the tube amp?",
+            "next": "jason_meeko_reply"
+          },
+          {
+            "id": "creator_jason_leave",
+            "text": "I'll see you around. Take care."
+          }
+        ]
+      }
+    },
+    "oliver_default_talk": {
+      "before": {
+        "id": "oliver_default_talk",
+        "speaker": "Oliver",
+        "text": "Oliver is curled with regal poise on a plush thermal cushion at the foot of the bunks. His golden eyes open smoothly as you approach. He lets out a single, precise, schedule-affirming meow, reminding you that all shifts must run on time.",
+        "options": [
+          {
+            "id": "oliver_opt_inspect",
+            "text": "[Report for shift inspection]",
+            "next": "oliver_inspection_reply"
+          },
+          {
+            "id": "oliver_opt_meal",
+            "text": "[Remind Oliver that mealtime is in five minutes]",
+            "next": "oliver_meal_reply"
+          },
+          {
+            "id": "oliver_opt_pat",
+            "text": "[Offer respectful chin scratches]",
+            "condition": "milestone_not_set:ms_oliver_tag_received",
+            "next": "oliver_pat_reply"
+          },
+          {
+            "id": "oliver_opt_pat_again",
+            "text": "[Offer respectful chin scratches]",
+            "condition": "milestone:ms_oliver_tag_received",
+            "next": "oliver_pat_again_reply"
+          }
+        ]
+      },
+      "after": {
+        "id": "oliver_default_talk",
+        "speaker": "Oliver",
+        "text": "Oliver is curled with regal poise on a plush thermal cushion at the foot of the bunks. His golden eyes open smoothly as you approach. He lets out a single, precise, schedule-affirming meow, reminding you that all shifts must run on time.",
+        "options": [
+          {
+            "id": "oliver_opt_inspect",
+            "text": "[Report for shift inspection]",
+            "next": "oliver_inspection_reply"
+          },
+          {
+            "id": "oliver_opt_meal",
+            "text": "[Remind Oliver that mealtime is in five minutes]",
+            "next": "oliver_meal_reply"
+          },
+          {
+            "id": "oliver_opt_pat",
+            "text": "[Offer respectful chin scratches]",
+            "condition": "milestone_not_set:ms_oliver_tag_received",
+            "next": "oliver_pat_reply"
+          },
+          {
+            "id": "oliver_opt_pat_again",
+            "text": "[Offer respectful chin scratches]",
+            "condition": "milestone:ms_oliver_tag_received",
+            "next": "oliver_pat_again_reply"
+          },
+          {
+            "id": "oliver_leave",
+            "text": "I'll see you around. Take care."
+          }
+        ]
+      }
+    },
+    "evelyn_default_talk": {
+      "before": {
+        "id": "evelyn_default_talk",
+        "speaker": "Evelyn",
+        "text": "[Evelyn hums a sparkling vocal jazz run, gently misting a cluster of glowing blue orchids with a brass atomizer.] Well hello, darling! Mind the roots by the pathway. Aren't these blossoms divine? They simply won't bloom without a little Monk or Coltrane in the morning air. What brings you up to our garden in the sky?",
+        "options": [
+          {
+            "id": "evelyn_opt_music",
+            "text": "Do the plants really respond to jazz?",
+            "next": "evelyn_music_reply"
+          },
+          {
+            "id": "evelyn_opt_grandkids",
+            "text": "You mentioned family?",
+            "next": "evelyn_grandkids_reply"
+          },
+          {
+            "id": "evelyn_opt_robert",
+            "text": "Is that gentleman over there trying to climb an invisible ladder?",
+            "next": "evelyn_robert_reply"
+          },
+          {
+            "id": "evelyn_opt_favor_offer",
+            "text": "Your orchids look exceptionally vibrant.",
+            "condition": "milestone_not_set:ms_evelyn_bloom_received",
+            "next": "evelyn_favor_reply"
+          }
+        ]
+      },
+      "after": {
+        "id": "evelyn_default_talk",
+        "speaker": "Evelyn",
+        "text": "[Evelyn hums a sparkling vocal jazz run, gently misting a cluster of glowing blue orchids with a brass atomizer.] Well hello, darling! Mind the roots by the pathway. Aren't these blossoms divine? They simply won't bloom without a little Monk or Coltrane in the morning air. What brings you up to our garden in the sky?",
+        "options": [
+          {
+            "id": "evelyn_opt_music",
+            "text": "Do the plants really respond to jazz?",
+            "next": "evelyn_music_reply"
+          },
+          {
+            "id": "evelyn_opt_grandkids",
+            "text": "You mentioned family?",
+            "next": "evelyn_grandkids_reply"
+          },
+          {
+            "id": "evelyn_opt_robert",
+            "text": "Is that gentleman over there trying to climb an invisible ladder?",
+            "next": "evelyn_robert_reply"
+          },
+          {
+            "id": "evelyn_opt_favor_offer",
+            "text": "Your orchids look exceptionally vibrant.",
+            "condition": "milestone_not_set:ms_evelyn_bloom_received",
+            "next": "evelyn_favor_reply"
+          },
+          {
+            "id": "evelyn_leave",
+            "text": "I'll let you get back to it. Take care."
+          }
+        ]
+      }
+    },
+    "robert_default_talk": {
+      "before": {
+        "id": "robert_default_talk",
+        "speaker": "Robert",
+        "text": "[A dapper older gentleman in immaculate linen overalls raises one hand in theatrical greeting. Without speaking, he points to a tiny scuff mark on the glass floor, clutches his chest in silent melodramatic horror, and then presents his gleaming custom mop with a triumphant, silent flourish!]",
+        "options": [
+          {
+            "id": "robert_opt_mime",
+            "text": "[Smile and mime polishing an invisible pane of glass back at him]",
+            "next": "robert_mime_reply"
+          },
+          {
+            "id": "robert_opt_business",
+            "text": "You built a company out of specialized mops?",
+            "next": "robert_business_reply"
+          },
+          {
+            "id": "robert_opt_keys",
+            "text": "Evelyn said you were looking for something?",
+            "next": "robert_keys_reply"
+          },
+          {
+            "id": "robert_opt_gift",
+            "text": "Your industrial equipment is seriously impressive.",
+            "condition": "milestone_not_set:ms_robert_core_received",
+            "next": "robert_gift_reply"
+          }
+        ]
+      },
+      "after": {
+        "id": "robert_default_talk",
+        "speaker": "Robert",
+        "text": "[A dapper older gentleman in immaculate linen overalls raises one hand in theatrical greeting. Without speaking, he points to a tiny scuff mark on the glass floor, clutches his chest in silent melodramatic horror, and then presents his gleaming custom mop with a triumphant, silent flourish!]",
+        "options": [
+          {
+            "id": "robert_opt_mime",
+            "text": "[Smile and mime polishing an invisible pane of glass back at him]",
+            "next": "robert_mime_reply"
+          },
+          {
+            "id": "robert_opt_business",
+            "text": "You built a company out of specialized mops?",
+            "next": "robert_business_reply"
+          },
+          {
+            "id": "robert_opt_keys",
+            "text": "Evelyn said you were looking for something?",
+            "next": "robert_keys_reply"
+          },
+          {
+            "id": "robert_opt_gift",
+            "text": "Your industrial equipment is seriously impressive.",
+            "condition": "milestone_not_set:ms_robert_core_received",
+            "next": "robert_gift_reply"
+          },
+          {
+            "id": "robert_leave",
+            "text": "I'll let you get back to it. Take care."
+          }
+        ]
+      }
+    },
+    "meeko_default_talk": {
+      "before": {
+        "id": "meeko_default_talk",
+        "speaker": "Meeko",
+        "text": "Meeko narrows his sharp green eyes at you from atop the warm amplifier. He doesn't move a muscle—merely tilts his chin upward with the calm, intimidating presence of an underworld boss granting an audience.",
+        "options": [
+          {
+            "id": "meeko_opt_respect",
+            "text": "[Offer a respectful nod and address Meeko as an equal business partner]",
+            "condition": "milestone_not_set:ms_meeko_audience_granted",
+            "next": "meeko_respect_reply"
+          },
+          {
+            "id": "meeko_opt_familiar",
+            "text": "[Address Meeko with the quiet respect of a made associate]",
+            "condition": "milestone:ms_meeko_audience_granted",
+            "next": "meeko_familiar_reply"
+          },
+          {
+            "id": "meeko_opt_babytalk",
+            "text": "[Attempt to baby-talk Meeko like a cute little kitty]",
+            "next": "meeko_babytalk_reply"
+          },
+          {
+            "id": "meeko_opt_habits",
+            "text": "[Inquire about Jason's working habits]",
+            "next": "meeko_habits_reply"
+          }
+        ]
+      },
+      "after": {
+        "id": "meeko_default_talk",
+        "speaker": "Meeko",
+        "text": "Meeko narrows his sharp green eyes at you from atop the warm amplifier. He doesn't move a muscle—merely tilts his chin upward with the calm, intimidating presence of an underworld boss granting an audience.",
+        "options": [
+          {
+            "id": "meeko_opt_respect",
+            "text": "[Offer a respectful nod and address Meeko as an equal business partner]",
+            "condition": "milestone_not_set:ms_meeko_audience_granted",
+            "next": "meeko_respect_reply"
+          },
+          {
+            "id": "meeko_opt_familiar",
+            "text": "[Address Meeko with the quiet respect of a made associate]",
+            "condition": "milestone:ms_meeko_audience_granted",
+            "next": "meeko_familiar_reply"
+          },
+          {
+            "id": "meeko_opt_babytalk",
+            "text": "[Attempt to baby-talk Meeko like a cute little kitty]",
+            "next": "meeko_babytalk_reply"
+          },
+          {
+            "id": "meeko_opt_habits",
+            "text": "[Inquire about Jason's working habits]",
+            "next": "meeko_habits_reply"
+          },
+          {
+            "id": "meeko_leave",
+            "text": "[Step back and say goodbye.]"
+          }
+        ]
+      }
+    },
+    "jax_w3_mq11_nova_intro": {
+      "before": null,
+      "after": {
+        "id": "jax_w3_mq11_nova_intro",
+        "speaker": "Nova",
+        "text": "Nova. We came from the mining colony. We need somewhere to stop moving before those patrols find us.",
+        "next": "jax_w3_mq11_shelter_offer"
+      }
+    },
+    "jax_w3_mq11_shelter_offer": {
+      "before": null,
+      "after": {
+        "id": "jax_w3_mq11_shelter_offer",
+        "speaker": "Jax",
+        "text": "Then get off the street. There's an empty apartment above the bar. The last tenants left when the sweeps started; I've kept the power on. You can catch your breath there. Keep the stairs clear and trouble away from my customers. That's the deal."
+      }
+    }
+  },
+  "rooms.json": {
+    "spire_maintenance_sluice": {
+      "before": {
+        "id": "spire_maintenance_sluice",
+        "env": "neon",
+        "title": "Maintenance Sluice",
+        "background_image": "images/rooms/world_3/spire_maintenance_sluice.webp",
+        "description": "The maintenance sluice runs above the main tunnel, narrow and hot with valve heat. A maintenance panel blinks beside a pipe map nobody has updated in years.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_runoff_lock"
+        },
+        "pos": [
+          1,
+          3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "maintenance panel",
+            "type": "generic",
+            "condition_unmet_message": "The maintenance panel shows pressure routes under the Lower City and several unmapped service risers."
+          },
+          {
+            "name": "pipe map",
+            "type": "generic",
+            "condition_unmet_message": "The pipe map marks old access routes that Zeke still remembers by smell."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_maintenance_sluice",
+        "env": "neon",
+        "title": "Maintenance Sluice",
+        "background_image": "images/rooms/world_3/spire_maintenance_sluice.webp",
+        "description": "The maintenance sluice runs above the main tunnel, narrow and hot with valve heat. A maintenance panel blinks beside a pipe map nobody has updated in years.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_runoff_lock"
+        },
+        "pos": [
+          1,
+          3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "maintenance panel",
+            "type": "generic",
+            "condition_unmet_message": "The maintenance panel shows pressure routes under the Lower City and several unmapped service risers."
+          },
+          {
+            "name": "pipe map",
+            "type": "generic",
+            "condition_unmet_message": "The pipe map marks maintenance routes beneath the Lower City. Zeke recognizes the Dominion utility symbols from the mine service diagrams."
+          }
+        ]
+      }
+    },
+    "spire_underrail_platform": {
+      "before": {
+        "id": "spire_underrail_platform",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Underrail Platform",
+        "background_image": "images/rooms/world_3/spire_underrail_platform.webp",
+        "description": "An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is scratched with routes, curfews, patrol timing, and warnings written in marker. Platform stairs descend to Transit Plaza and remain open for the climb back.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_vent_output",
+          "east": "spire_the_static",
+          "down": "spire_transit_plaza"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is now scarred with Nova's route marks, patrol timing windows, and a service-gap path toward the Great Elevator. Platform stairs descend to Transit Plaza and remain open for the climb back.",
+            "requires_milestones": [
+              "ms_w3_patrols_mapped"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "underrail map",
+            "type": "generic",
+            "condition_unmet_message": "The underrail map shows which transit lines still run, which ones are watched, and which ones ate people."
+          },
+          {
+            "name": "patrol timing",
+            "type": "generic",
+            "action_event": "w3_mq12_map_patrols",
+            "condition_unmet_message": "The patrol timing is written into the underrail map in marker, shortcuts, and fear."
+          }
+        ],
+        "special_exits": {
+          "down": "Take the platform stairs to Transit Plaza"
+        }
+      },
+      "after": {
+        "id": "spire_underrail_platform",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Underrail Platform",
+        "background_image": "images/rooms/world_3/spire_underrail_platform.webp",
+        "description": "An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is scratched with routes, curfews, patrol timing, and warnings written in marker. Platform stairs descend to Transit Plaza and remain open for the climb back.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_vent_output",
+          "east": "spire_the_static",
+          "down": "spire_transit_plaza"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is now scarred with Nova's route marks, patrol timing windows, and a service-gap path toward the Great Elevator. Platform stairs descend to Transit Plaza and remain open for the climb back.",
+            "requires_milestones": [
+              "ms_w3_patrols_mapped"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "underrail map",
+            "type": "generic",
+            "condition_unmet_message": "The underrail map shows which transit lines still run, which ones are watched, and which ones ate people."
+          },
+          {
+            "name": "patrol timing",
+            "type": "generic",
+            "action_event": "w3_mq12_map_patrols",
+            "condition_unmet_message": "The patrol timing is written into the underrail map in marker, shortcuts, and fear.",
+            "inspect_after_completion": true
+          }
+        ],
+        "special_exits": {
+          "down": "Take the platform stairs to Transit Plaza"
+        }
+      }
+    },
+    "spire_the_static": {
+      "before": {
+        "id": "spire_the_static",
+        "env": "neon",
+        "title": "The Static",
+        "background_image": "images/rooms/world_3/spire_the_static.webp",
+        "description": "The Static is a dark dive bar built around an old subway car. Neon signs pulse erratically, the sign outside keeps failing, and the signal stairwell behind the bar hums with pirate broadcasts. The subway car lies east through the back-bar passage; the signal stairwell remains north.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_underrail_platform",
+          "east": "spire_the_static_scale_01",
+          "north": "spire_signal_stairwell",
+          "south": "spire_transit_plaza"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Static is a dark dive bar built around an old subway car. The repaired sign outside throws enough neon to make patrols look bored, and the signal stairwell behind the bar hums with pirate broadcasts. The subway car lies east through the back-bar passage; the signal stairwell remains north.",
+            "requires_milestones": [
+              "ms_w3_streetwise_unlocked"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "sign",
+            "type": "generic",
+            "action_event": "w3_sq11_inspect_sign",
+            "condition_unmet_message": "The bar's neon sign. It buzzes loudly but is mostly dark."
+          }
+        ],
+        "npc_presence": [
+          {
+            "npc": "jax",
+            "requires_milestones": [
+              "ms_w2_mq05_complete"
+            ],
+            "forbidden_milestones": []
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_the_static",
+        "env": "neon",
+        "title": "The Static",
+        "background_image": "images/rooms/world_3/spire_the_static.webp",
+        "description": "The Static is a dark dive bar built around an old subway car. Neon signs pulse erratically, the sign outside keeps failing, and the signal stairwell behind the bar hums with pirate broadcasts. The subway car lies east through the back-bar passage; the signal stairwell remains north.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_underrail_platform",
+          "east": "spire_the_static_scale_01",
+          "north": "spire_signal_stairwell",
+          "south": "spire_transit_plaza"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Static is a dark dive bar built around an old subway car. The repaired sign outside throws enough neon to make patrols look bored, and the signal stairwell behind the bar hums with pirate broadcasts. The subway car lies east through the back-bar passage; the signal stairwell remains north.",
+            "requires_milestones": [
+              "ms_w3_streetwise_unlocked"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "sign",
+            "type": "generic",
+            "action_event": "w3_sq11_inspect_sign",
+            "condition_unmet_message": "The bar's neon sign. It buzzes loudly but is mostly dark.",
+            "hide_when_event_completed": "w3_sq11_inspect_sign"
+          }
+        ],
+        "npc_presence": [
+          {
+            "npc": "jax",
+            "requires_milestones": [
+              "ms_w2_mq05_complete"
+            ],
+            "forbidden_milestones": []
+          }
+        ]
+      }
+    },
+    "spire_zekes_apartment": {
+      "before": {
+        "id": "spire_zekes_apartment",
+        "env": "neon",
+        "title": "Static Safehouse",
+        "background_image": "images/rooms/world_3/spire_zekes_apartment.webp",
+        "description": "The abandoned apartment above The Static smells of dust and cold pipes. Jax has offered it to the crew as a safehouse. A workstation hums beside a planning table under bad light, and roof access opens toward the impossible skyline.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_signal_stairwell",
+          "north": "spire_safehouse_roof"
+        },
+        "pos": [
+          2,
+          3
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Static Safehouse sits quiet inside Orion's shield. The planning table is empty now except for coffee rings, route burns, and the shape of a plan already in motion. The workstation still hums beneath the route notes.",
+            "requires_milestones": [
+              "ms_w3_mq12_complete"
+            ]
+          },
+          {
+            "description": "The abandoned apartment has become a heist board with walls. The workstation glows with hacked blueprints, the planning table holds every role in the crew, and roof access opens onto the skyline the plan is about to challenge.",
+            "requires_milestones": [
+              "ms_w3_blueprints_hacked"
+            ]
+          },
+          {
+            "description": "The borrowed apartment is still sparse, but the safehouse is starting to look intentional. The workstation holds stolen timing and badge data, the planning table is crowded with route notes, and roof access opens toward disguise materials snapping on the line.",
+            "requires_milestones": [
+              "ms_w3_jax_intel",
+              "ms_w3_patrols_mapped",
+              "ms_w3_badges_copied",
+              "ms_w3_disguises_sourced",
+              "ms_w3_security_records_pulled"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "workstation",
+            "type": "generic",
+            "action_event": "w3_mq12_hack_blueprints",
+            "condition_unmet_message": "The workstation can read Dominion service files, but the blueprints need the crew's stolen intel before they become a route."
+          },
+          {
+            "name": "planning table",
+            "type": "generic",
+            "action_event": "w3_mq12_assemble_planning",
+            "condition_unmet_message": "The planning table waits for every stolen thread before Nova can turn nervous people into assigned roles."
+          }
+        ],
+        "npc_presence": [
+          {
+            "npc": "zeke",
+            "requires_milestones": [
+              "ms_w3_safehouse_found"
+            ],
+            "forbidden_milestones": []
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_zekes_apartment",
+        "env": "neon",
+        "title": "Static Safehouse",
+        "background_image": "images/rooms/world_3/spire_zekes_apartment.webp",
+        "description": "The abandoned apartment above The Static smells of dust and cold pipes. Jax has offered it to the crew as a safehouse. A workstation hums beside a planning table under bad light, and roof access opens toward the impossible skyline.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_signal_stairwell",
+          "north": "spire_safehouse_roof"
+        },
+        "pos": [
+          2,
+          3
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Static Safehouse sits quiet inside Orion's shield. The planning table is empty now except for coffee rings, route burns, and the shape of a plan already in motion. The workstation still hums beneath the route notes.",
+            "requires_milestones": [
+              "ms_w3_mq12_complete"
+            ]
+          },
+          {
+            "description": "The abandoned apartment has become a heist board with walls. The workstation glows with hacked blueprints, the planning table holds every role in the crew, and roof access opens onto the skyline the plan is about to challenge.",
+            "requires_milestones": [
+              "ms_w3_blueprints_hacked"
+            ]
+          },
+          {
+            "description": "The borrowed apartment is still sparse, but the safehouse is starting to look intentional. The workstation holds stolen timing and badge data, the planning table is crowded with route notes, and roof access opens toward disguise materials snapping on the line.",
+            "requires_milestones": [
+              "ms_w3_jax_intel",
+              "ms_w3_patrols_mapped",
+              "ms_w3_badges_copied",
+              "ms_w3_disguises_sourced",
+              "ms_w3_security_records_pulled"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "workstation",
+            "type": "generic",
+            "action_event": "w3_mq12_hack_blueprints",
+            "condition_unmet_message": "The workstation can read Dominion service files, but the blueprints need the crew's stolen intel before they become a route.",
+            "hide_when_event_completed": "w3_mq12_hack_blueprints"
+          },
+          {
+            "name": "planning table",
+            "type": "generic",
+            "action_event": "w3_mq12_assemble_planning",
+            "condition_unmet_message": "The planning table waits for every stolen thread before Nova can turn nervous people into assigned roles.",
+            "hide_when_event_completed": "w3_mq12_assemble_planning"
+          }
+        ],
+        "npc_presence": [
+          {
+            "npc": "zeke",
+            "requires_milestones": [
+              "ms_w3_safehouse_found"
+            ],
+            "forbidden_milestones": []
+          }
+        ]
+      }
+    },
+    "spire_safehouse_roof": {
+      "before": {
+        "id": "spire_safehouse_roof",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Safehouse Roof",
+        "background_image": "images/rooms/world_3/spire_safehouse_roof.webp",
+        "description": "The safehouse roof is barely larger than the apartment below it. A skyline of corporate towers rises beyond laundry lines full of patched coats and disguise materials, and the shield shimmer turns the clouds into a visible cage.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_zekes_apartment"
+        },
+        "pos": [
+          2,
+          4
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The safehouse roof is barely larger than the apartment below it. The skyline rises beyond laundry lines now sorted into disguise materials, and the shield shimmer turns the clouds into a visible cage.",
+            "requires_milestones": [
+              "ms_w3_disguises_sourced"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "skyline",
+            "type": "generic",
+            "condition_unmet_message": "The skyline makes the heist look impossible, which is probably why Zeke keeps staring at it."
+          },
+          {
+            "name": "laundry lines",
+            "type": "generic",
+            "condition_unmet_message": "Nova studies the patched laundry lines for uniforms, coats, and enough fabric to fake a service crew silhouette.",
+            "action_event": "w3_mq12_source_disguises"
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_safehouse_roof",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Safehouse Roof",
+        "background_image": "images/rooms/world_3/spire_safehouse_roof.webp",
+        "description": "The safehouse roof is barely larger than the apartment below it. A skyline of corporate towers rises beyond laundry lines full of patched coats and disguise materials, and the shield shimmer turns the clouds into a visible cage.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_zekes_apartment"
+        },
+        "pos": [
+          2,
+          4
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The safehouse roof is barely larger than the apartment below it. The skyline rises beyond laundry lines now sorted into disguise materials, and the shield shimmer turns the clouds into a visible cage.",
+            "requires_milestones": [
+              "ms_w3_disguises_sourced"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "skyline",
+            "type": "generic",
+            "condition_unmet_message": "The skyline makes the heist look impossible, which is probably why Zeke keeps staring at it."
+          },
+          {
+            "name": "laundry lines",
+            "type": "generic",
+            "condition_unmet_message": "Nova studies the patched laundry lines for uniforms, coats, and enough fabric to fake a service crew silhouette.",
+            "action_event": "w3_mq12_source_disguises",
+            "hide_when_event_completed": "w3_mq12_source_disguises"
+          }
+        ]
+      }
+    },
+    "spire_night_market": {
+      "before": {
+        "id": "spire_night_market",
+        "environmental_effects": [
+          {
+            "id": "market_rain",
+            "preset": "weather.rain",
+            "intensity": 0.5,
+            "space": "viewport"
+          }
+        ],
+        "env": "neon",
+        "weather": "rain",
+        "title": "Night Market",
+        "background_image": "images/rooms/world_3/spire_night_market.webp",
+        "description": "The Night Market insists on being heard. Lanterns swing over food steam, Noodle Row shouts through rain, and a lantern bridge crosses the drain like stubborn stars. A market registry broadcast crackles from a speaker above the stalls.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_checkpoint_queue",
+          "east": "spire_noodle_row",
+          "north": "spire_lantern_bridge",
+          "south": "spire_backstreet_clinic"
+        },
+        "pos": [
+          3,
+          2
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Night Market insists on being heard. Repaired lanterns swing over food steam, Noodle Row shouts through rain, and a lantern bridge crosses the drain like stubborn stars. A market registry broadcast crackles from a speaker above the stalls.",
+            "requires_milestones": [
+              "ms_w3_market_lit"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "lanterns",
+            "type": "generic",
+            "action_event": "w3_sq13_fix_market_lights",
+            "requires_milestones": [
+              "ms_w3_market_siphon_traced"
+            ],
+            "condition_unmet_message": "String lights hung across the alley. Some are flickering out."
+          },
+          {
+            "name": "market registry broadcast",
+            "type": "generic",
+            "action_event": "w3_sq13_restore_market",
+            "requires_milestones": [
+              "ms_w3_market_grid_ready"
+            ],
+            "condition_unmet_message": "The registry still calls the dark stalls abandoned."
+          }
+        ],
+        "npc_presence": [
+          {
+            "npc": "mika",
+            "requires_milestones": [
+              "ms_w2_mq05_complete"
+            ],
+            "forbidden_milestones": []
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_night_market",
+        "environmental_effects": [
+          {
+            "id": "market_rain",
+            "preset": "weather.rain",
+            "intensity": 0.5,
+            "space": "viewport"
+          }
+        ],
+        "env": "neon",
+        "weather": "rain",
+        "title": "Night Market",
+        "background_image": "images/rooms/world_3/spire_night_market.webp",
+        "description": "The Night Market insists on being heard. Lanterns swing over food steam, Noodle Row shouts through rain, and a lantern bridge crosses the drain like stubborn stars. A market registry broadcast crackles from a speaker above the stalls.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_checkpoint_queue",
+          "east": "spire_noodle_row",
+          "north": "spire_lantern_bridge",
+          "south": "spire_backstreet_clinic"
+        },
+        "pos": [
+          3,
+          2
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Night Market insists on being heard. Repaired lanterns swing over food steam, Noodle Row shouts through rain, and a lantern bridge crosses the drain like stubborn stars. A market registry broadcast crackles from a speaker above the stalls.",
+            "requires_milestones": [
+              "ms_w3_market_lit"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "lanterns",
+            "type": "generic",
+            "action_event": "w3_sq13_fix_market_lights",
+            "requires_milestones": [
+              "ms_w3_market_siphon_traced"
+            ],
+            "condition_unmet_message": "String lights hung across the alley. Some are flickering out.",
+            "hide_when_event_completed": "w3_sq13_fix_market_lights"
+          },
+          {
+            "name": "market registry broadcast",
+            "type": "generic",
+            "action_event": "w3_sq13_restore_market",
+            "requires_milestones": [
+              "ms_w3_market_grid_ready"
+            ],
+            "condition_unmet_message": "The registry still calls the dark stalls abandoned.",
+            "hide_when_event_completed": "w3_sq13_restore_market"
+          }
+        ],
+        "npc_presence": [
+          {
+            "npc": "mika",
+            "requires_milestones": [
+              "ms_w2_mq05_complete"
+            ],
+            "forbidden_milestones": []
+          }
+        ]
+      }
+    },
+    "spire_lantern_bridge": {
+      "before": {
+        "id": "spire_lantern_bridge",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Lantern Bridge",
+        "background_image": "images/rooms/world_3/spire_lantern_bridge.webp",
+        "description": "A narrow lantern bridge crosses above the market drain. Paper charms flutter from the rail, each one carrying a name, a debt, or a prayer. An executive power siphon runs along a bright cable toward a billboard. Steps at the north end climb onto Lantern Roof; the market is back to the south.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_night_market",
+          "north": "spire_night_market_scale_01"
+        },
+        "pos": [
+          3,
+          3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "paper charms",
+            "type": "generic",
+            "condition_unmet_message": "The paper charms are cheap, handmade, and treated with more respect than any Dominion permit."
+          },
+          {
+            "name": "market drain",
+            "type": "generic",
+            "condition_unmet_message": "The market drain carries spilled rain and contraband wrappers toward the old sewer channels."
+          },
+          {
+            "name": "executive power siphon",
+            "type": "generic",
+            "action_event": "w3_sq13_trace_power_theft",
+            "condition_unmet_message": "A bright cable steals market current for an executive billboard."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_lantern_bridge",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Lantern Bridge",
+        "background_image": "images/rooms/world_3/spire_lantern_bridge.webp",
+        "description": "A narrow lantern bridge crosses above the market drain. Paper charms flutter from the rail, each one carrying a name, a debt, or a prayer. An executive power siphon runs along a bright cable toward a billboard. Steps at the north end climb onto Lantern Roof; the market is back to the south.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_night_market",
+          "north": "spire_night_market_scale_01"
+        },
+        "pos": [
+          3,
+          3
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "paper charms",
+            "type": "generic",
+            "condition_unmet_message": "The paper charms are cheap, handmade, and treated with more respect than any Dominion permit."
+          },
+          {
+            "name": "market drain",
+            "type": "generic",
+            "condition_unmet_message": "The market drain carries spilled rain and contraband wrappers toward the old sewer channels."
+          },
+          {
+            "name": "executive power siphon",
+            "type": "generic",
+            "action_event": "w3_sq13_trace_power_theft",
+            "condition_unmet_message": "A bright cable steals market current for an executive billboard.",
+            "hide_when_event_completed": "w3_sq13_trace_power_theft"
+          }
+        ]
+      }
+    },
+    "spire_security_kiosk": {
+      "before": {
+        "id": "spire_security_kiosk",
+        "env": "neon",
+        "title": "Security Kiosk",
+        "background_image": "images/rooms/world_3/spire_security_kiosk.webp",
+        "description": "A security kiosk sits under the plaza stairs, unattended because the guards trust the software more than each other. The security terminal and case records glow behind cracked glass. A public kiosk relay waits beside the record display. An under-stairs corridor continues south into Ad Bay; the plaza is back to the north.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_transit_plaza",
+          "south": "spire_transit_plaza_scale_01"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The security kiosk sits under the plaza stairs with its software pride wounded. The security terminal still glows behind cracked glass, and the case records show fresh extraction marks from Gh0st's search. A public kiosk relay waits beside the record display. An under-stairs corridor continues south into Ad Bay; the plaza is back to the north.",
+            "requires_milestones": [
+              "ms_w3_security_records_pulled"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "security terminal",
+            "type": "generic",
+            "action_event": "w3_mq12_interrogate_guard",
+            "condition_unmet_message": "You search the security terminal for shift rotations, extraction codes, and elevator routing."
+          },
+          {
+            "name": "case records",
+            "type": "generic",
+            "action_event": "w3_sq12_access_terminal",
+            "requires_milestones": [
+              "ms_w3_case_number_found"
+            ],
+            "condition_unmet_message": "The case records include sealed entries Gh0st can pull apart for traces of Elara."
+          },
+          {
+            "name": "public kiosk relay",
+            "type": "generic",
+            "action_event": "w3_sq12_expose_transfer",
+            "requires_milestones": [
+              "ms_w3_cold_case_records_found"
+            ],
+            "condition_unmet_message": "The relay can publish a deleted transfer only after Gh0st finds it."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_security_kiosk",
+        "env": "neon",
+        "title": "Security Kiosk",
+        "background_image": "images/rooms/world_3/spire_security_kiosk.webp",
+        "description": "A security kiosk sits under the plaza stairs, unattended because the guards trust the software more than each other. The security terminal and case records glow behind cracked glass. A public kiosk relay waits beside the record display. An under-stairs corridor continues south into Ad Bay; the plaza is back to the north.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_transit_plaza",
+          "south": "spire_transit_plaza_scale_01"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The security kiosk sits under the plaza stairs with its software pride wounded. The security terminal still glows behind cracked glass, and the case records show fresh extraction marks from Gh0st's search. A public kiosk relay waits beside the record display. An under-stairs corridor continues south into Ad Bay; the plaza is back to the north.",
+            "requires_milestones": [
+              "ms_w3_security_records_pulled"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "security terminal",
+            "type": "generic",
+            "action_event": "w3_mq12_interrogate_guard",
+            "condition_unmet_message": "You search the security terminal for shift rotations, extraction codes, and elevator routing.",
+            "hide_when_event_completed": "w3_mq12_interrogate_guard"
+          },
+          {
+            "name": "case records",
+            "type": "generic",
+            "action_event": "w3_sq12_access_terminal",
+            "requires_milestones": [
+              "ms_w3_case_number_found"
+            ],
+            "condition_unmet_message": "The case records include sealed entries Gh0st can pull apart for traces of Elara.",
+            "hide_when_event_completed": "w3_sq12_access_terminal"
+          },
+          {
+            "name": "public kiosk relay",
+            "type": "generic",
+            "action_event": "w3_sq12_expose_transfer",
+            "requires_milestones": [
+              "ms_w3_cold_case_records_found"
+            ],
+            "condition_unmet_message": "The relay can publish a deleted transfer only after Gh0st finds it.",
+            "hide_when_event_completed": "w3_sq12_expose_transfer"
+          }
+        ]
+      }
+    },
+    "spire_elevator_service_gate": {
+      "before": {
+        "id": "spire_elevator_service_gate",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Elevator Service Gate",
+        "background_image": "images/rooms/world_3/spire_elevator_service_gate.webp",
+        "description": "A side service gate hides in the shadow of the Great Elevator. Freight crews pass through with eyes down, freight badges out, and no interest in heroics.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_checkpoint_queue"
+        },
+        "pos": [
+          4,
+          5
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The side service gate hides in the Great Elevator's shadow. Freight crews still pass with eyes down, but the freight badges now carry a copied service pattern Gh0st can fake for one climb.",
+            "requires_milestones": [
+              "ms_w3_badges_copied"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "service gate",
+            "type": "generic",
+            "condition_unmet_message": "The service gate is the kind of access point a good plan can turn into a door."
+          },
+          {
+            "name": "freight badges",
+            "type": "generic",
+            "action_event": "w3_mq12_copy_badges",
+            "condition_unmet_message": "The freight badges hanging at the booth are blank until a shift captain activates them."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_elevator_service_gate",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Elevator Service Gate",
+        "background_image": "images/rooms/world_3/spire_elevator_service_gate.webp",
+        "description": "A side service gate hides in the shadow of the Great Elevator. Freight crews pass through with eyes down, freight badges out, and no interest in heroics.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_checkpoint_queue"
+        },
+        "pos": [
+          4,
+          5
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The side service gate hides in the Great Elevator's shadow. Freight crews still pass with eyes down, but the freight badges now carry a copied service pattern Gh0st can fake for one climb.",
+            "requires_milestones": [
+              "ms_w3_badges_copied"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "service gate",
+            "type": "generic",
+            "condition_unmet_message": "The service gate is the kind of access point a good plan can turn into a door."
+          },
+          {
+            "name": "freight badges",
+            "type": "generic",
+            "action_event": "w3_mq12_copy_badges",
+            "condition_unmet_message": "The freight badges hanging at the booth are blank until a shift captain activates them.",
+            "hide_when_event_completed": "w3_mq12_copy_badges"
+          }
+        ]
+      }
+    },
+    "spire_laundry_service": {
+      "before": {
+        "id": "spire_laundry_service",
+        "environmental_effects": [
+          {
+            "id": "vent_mist",
+            "preset": "machinery.vent_mist",
+            "intensity": 0.3,
+            "emitters": [
+              {
+                "x": 0.24,
+                "y": 0.53,
+                "angle_degrees": -72
+              },
+              {
+                "x": 0.4,
+                "y": 0.54,
+                "angle_degrees": -102
+              }
+            ]
+          }
+        ],
+        "env": "neon",
+        "weather": "steam",
+        "title": "Laundry Service",
+        "background_image": "images/rooms/world_3/spire_laundry_service.webp",
+        "description": "Laundry Service runs beneath the Cloud District, packed with steam pipes, cleaning bots, a sensor console, and a service chute for invisible workers. Uniform sorting and the staff checkpoint turn labor into security theater.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_staff_checkpoint",
+          "east": "spire_prism_gallery",
+          "south": "spire_uniform_sorting",
+          "west": "spire_laundry_scale_01"
+        },
+        "pos": [
+          0,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "Laundry Service runs beneath the Cloud District under red lockdown strobes now. Steam pipes hiss around the sensor console and service chute while cleaning bots repeat evacuation instructions no worker has time to obey.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          },
+          {
+            "description": "Laundry Service runs beneath the Cloud District with its scanner grid blind for one narrow window. Steam pipes, cleaning bots, the sensor console, and the service chute all feel like parts of the same breathless route now.",
+            "requires_milestones": [
+              "ms_w3_scanners_blinded"
+            ]
+          },
+          {
+            "description": "Laundry Service runs beneath the Cloud District, packed with steam pipes, cleaning bots, a sensor console, and a service chute. The guest profile is accepted, but the scanners still need to blink blind before Nova and Gh0st can move.",
+            "requires_milestones": [
+              "ms_w3_guest_profile_accepted"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "sensor console",
+            "type": "generic",
+            "action_event": "w3_mq13_disable_sensors",
+            "condition_unmet_message": "The sensor console is tied into the penthouse scanner grid. Zeke can cut coverage once Nova has guest access."
+          },
+          {
+            "name": "service chute",
+            "type": "generic",
+            "action_event": "w3_mq13_enter_lobby",
+            "condition_unmet_message": "The service chute is the disguised route toward the Archive approach, but the scanners need to be blind first."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_laundry_service",
+        "environmental_effects": [
+          {
+            "id": "vent_mist",
+            "preset": "machinery.vent_mist",
+            "intensity": 0.3,
+            "emitters": [
+              {
+                "x": 0.24,
+                "y": 0.53,
+                "angle_degrees": -72
+              },
+              {
+                "x": 0.4,
+                "y": 0.54,
+                "angle_degrees": -102
+              }
+            ]
+          }
+        ],
+        "env": "neon",
+        "weather": "steam",
+        "title": "Laundry Service",
+        "background_image": "images/rooms/world_3/spire_laundry_service.webp",
+        "description": "Laundry Service runs beneath the Cloud District, packed with steam pipes, cleaning bots, a sensor console, and a service chute for invisible workers. Uniform sorting and the staff checkpoint turn labor into security theater.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_staff_checkpoint",
+          "east": "spire_prism_gallery",
+          "south": "spire_uniform_sorting",
+          "west": "spire_laundry_scale_01"
+        },
+        "pos": [
+          0,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "Laundry Service runs beneath the Cloud District under red lockdown strobes now. Steam pipes hiss around the sensor console and service chute while cleaning bots repeat evacuation instructions no worker has time to obey.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          },
+          {
+            "description": "Laundry Service runs beneath the Cloud District with its scanner grid blind for one narrow window. Steam pipes, cleaning bots, the sensor console, and the service chute all feel like parts of the same breathless route now.",
+            "requires_milestones": [
+              "ms_w3_scanners_blinded"
+            ]
+          },
+          {
+            "description": "Laundry Service runs beneath the Cloud District, packed with steam pipes, cleaning bots, a sensor console, and a service chute. The guest profile is accepted, but the scanners still need to blink blind before Nova and Gh0st can move.",
+            "requires_milestones": [
+              "ms_w3_guest_profile_accepted"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "sensor console",
+            "type": "generic",
+            "action_event": "w3_mq13_disable_sensors",
+            "condition_unmet_message": "The sensor console is tied into the penthouse scanner grid. Zeke can cut coverage once Nova has guest access.",
+            "hide_when_event_completed": "w3_mq13_disable_sensors"
+          },
+          {
+            "name": "service chute",
+            "type": "generic",
+            "action_event": "w3_mq13_enter_lobby",
+            "condition_unmet_message": "The service chute is the disguised route toward the Archive approach, but the scanners need to be blind first.",
+            "hide_when_event_completed": "w3_mq13_enter_lobby"
+          }
+        ]
+      }
+    },
+    "spire_uniform_sorting": {
+      "before": {
+        "id": "spire_uniform_sorting",
+        "env": "neon",
+        "title": "Uniform Sorting",
+        "background_image": "images/rooms/world_3/spire_uniform_sorting.webp",
+        "description": "Uniform sorting smells like detergent and fear. Uniform racks roll in strict rows, and laundry tags mark each sleeve for a life the Upper City will never notice. An erased memorial name leaves a polished scar on a transit plaque.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_laundry_service",
+          "east": "spire_service_lift",
+          "south": "spire_exec_lounge_bar"
+        },
+        "pos": [
+          0,
+          0
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "Uniform sorting smells like detergent, fear, and overheated brakes. Uniform racks stand abandoned in lockdown rows while laundry tags flicker with route closures the Upper City never shows its guests. An erased memorial name leaves a polished scar on a transit plaque.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "uniform racks",
+            "type": "generic",
+            "condition_unmet_message": "The uniform racks confirm the plan: correct silhouette, correct badge timing, no extra conversation."
+          },
+          {
+            "name": "laundry tags",
+            "type": "generic",
+            "condition_unmet_message": "The laundry tags expose which staff routes reach the Archive level."
+          },
+          {
+            "name": "erased memorial name",
+            "type": "generic",
+            "action_event": "w3_sq12_find_case_number",
+            "condition_unmet_message": "A transit memorial has one name polished away more carefully than the others."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_uniform_sorting",
+        "env": "neon",
+        "title": "Uniform Sorting",
+        "background_image": "images/rooms/world_3/spire_uniform_sorting.webp",
+        "description": "Uniform sorting smells like detergent and fear. Uniform racks roll in strict rows, and laundry tags mark each sleeve for a life the Upper City will never notice. An erased memorial name leaves a polished scar on a transit plaque.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_laundry_service",
+          "east": "spire_service_lift",
+          "south": "spire_exec_lounge_bar"
+        },
+        "pos": [
+          0,
+          0
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "Uniform sorting smells like detergent, fear, and overheated brakes. Uniform racks stand abandoned in lockdown rows while laundry tags flicker with route closures the Upper City never shows its guests. An erased memorial name leaves a polished scar on a transit plaque.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "uniform racks",
+            "type": "generic",
+            "condition_unmet_message": "The uniform racks confirm the plan: correct silhouette, correct badge timing, no extra conversation."
+          },
+          {
+            "name": "laundry tags",
+            "type": "generic",
+            "condition_unmet_message": "The laundry tags expose which staff routes reach the Archive level."
+          },
+          {
+            "name": "erased memorial name",
+            "type": "generic",
+            "action_event": "w3_sq12_find_case_number",
+            "condition_unmet_message": "A transit memorial has one name polished away more carefully than the others.",
+            "hide_when_event_completed": "w3_sq12_find_case_number"
+          }
+        ]
+      }
+    },
+    "spire_service_lift": {
+      "before": {
+        "id": "spire_service_lift",
+        "env": "neon",
+        "title": "Service Lift",
+        "background_image": "images/rooms/world_3/spire_service_lift.webp",
+        "description": "A service lift rises through the bones of the Upper City. A worker network uplink can publish the ledger, while a private dead drop can turn it into a precise weapon against one executive. The lift panel offers a return to Lower City’s Transit Plaza beside a rattling inspection hatch. Beyond the inspection hatch, a separate inspection lift travels down to Archive Vault and returns to this landing. The lift panel still controls the cleared route to Lower City.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_uniform_sorting",
+          "north": "spire_skypark_dome",
+          "down": "spire_archive_vault"
+        },
+        "pos": [
+          1,
+          0
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The service lift judders between lockdown floors. The lift panel retains the cleared freight route down to Transit Plaza, and the inspection hatch rattles like the city is trying to shake the crew loose. A worker network uplink and a private dead drop remain accessible beside the panel. Beyond the inspection hatch, a separate inspection lift travels down to Archive Vault and returns to this landing. The lift panel still controls the cleared route to Lower City.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "lift panel",
+            "type": "generic",
+            "condition_unmet_message": "The service-lift panel needs the freight clearance established by the heist plan.",
+            "action_event": "w3_return_to_lower_city",
+            "requires_milestones": [
+              "ms_w3_mq12_complete"
+            ]
+          },
+          {
+            "name": "inspection hatch",
+            "type": "generic",
+            "condition_unmet_message": "An inspection lift cage waits beyond the hatch. It connects to Archive Vault and can be called from either landing; the main lift panel handles Lower City travel."
+          },
+          {
+            "name": "worker network uplink",
+            "type": "generic",
+            "action_event": "w3_sq14_leak_ledger",
+            "requires_milestones": [
+              "ms_w3_ledger_stolen"
+            ],
+            "condition_unmet_message": "The uplink can publish evidence only after Nova has the ledger."
+          },
+          {
+            "name": "private dead drop",
+            "type": "generic",
+            "action_event": "w3_sq14_weaponize_ledger",
+            "requires_milestones": [
+              "ms_w3_ledger_stolen"
+            ],
+            "condition_unmet_message": "The dead drop needs the stolen ledger before it can isolate one executive's security profile."
+          }
+        ],
+        "special_exits": {
+          "down": "Ride the inspection lift to the Archive"
+        }
+      },
+      "after": {
+        "id": "spire_service_lift",
+        "env": "neon",
+        "title": "Service Lift",
+        "background_image": "images/rooms/world_3/spire_service_lift.webp",
+        "description": "A service lift rises through the bones of the Upper City. A worker network uplink can publish the ledger, while a private dead drop can turn it into a precise weapon against one executive. The lift panel offers a return to Lower City’s Transit Plaza beside a rattling inspection hatch. Beyond the inspection hatch, a separate inspection lift travels down to Archive Vault and returns to this landing. The lift panel still controls the cleared route to Lower City.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_uniform_sorting",
+          "north": "spire_skypark_dome",
+          "down": "spire_archive_vault"
+        },
+        "pos": [
+          1,
+          0
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The service lift judders between lockdown floors. The lift panel retains the cleared freight route down to Transit Plaza, and the inspection hatch rattles like the city is trying to shake the crew loose. A worker network uplink and a private dead drop remain accessible beside the panel. Beyond the inspection hatch, a separate inspection lift travels down to Archive Vault and returns to this landing. The lift panel still controls the cleared route to Lower City.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "lift panel",
+            "type": "generic",
+            "condition_unmet_message": "The service-lift panel needs the freight clearance established by the heist plan.",
+            "action_event": "w3_return_to_lower_city",
+            "requires_milestones": [
+              "ms_w3_mq12_complete"
+            ]
+          },
+          {
+            "name": "inspection hatch",
+            "type": "generic",
+            "condition_unmet_message": "An inspection lift cage waits beyond the hatch. It connects to Archive Vault and can be called from either landing; the main lift panel handles Lower City travel."
+          },
+          {
+            "name": "worker network uplink",
+            "type": "generic",
+            "action_event": "w3_sq14_leak_ledger",
+            "requires_milestones": [
+              "ms_w3_ledger_stolen"
+            ],
+            "condition_unmet_message": "The uplink can publish evidence only after Nova has the ledger.",
+            "hide_when_event_completed": "w3_sq14_leak_ledger"
+          },
+          {
+            "name": "private dead drop",
+            "type": "generic",
+            "action_event": "w3_sq14_weaponize_ledger",
+            "requires_milestones": [
+              "ms_w3_ledger_stolen"
+            ],
+            "condition_unmet_message": "The dead drop needs the stolen ledger before it can isolate one executive's security profile.",
+            "hide_when_event_completed": "w3_sq14_weaponize_ledger"
+          }
+        ],
+        "special_exits": {
+          "down": "Ride the inspection lift to the Archive"
+        }
+      }
+    },
+    "spire_exec_lounge_bar": {
+      "before": {
+        "id": "spire_exec_lounge_bar",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Exec Lounge",
+        "background_image": "images/rooms/world_3/spire_exec_lounge_bar.webp",
+        "description": "The Exec Lounge floats on a grav-platform above a silent atrium. A private safe hides behind sculpture, a concierge credential mirror flashes beside the terminal, and every booth looks designed for blackmail. A VIP vector arcade cabinet stands behind the velvet curtain.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_uniform_sorting",
+          "south": "spire_exec_lounge_scale_01"
+        },
+        "pos": [
+          1,
+          2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "private safe",
+            "type": "generic",
+            "action_event": "w3_sq14_steal_ledger",
+            "requires_milestones": [
+              "ms_w3_concierge_key_copied"
+            ],
+            "condition_unmet_message": "A private executive safe hidden behind a decorative gravity-well sculpture."
+          },
+          {
+            "name": "concierge credential mirror",
+            "type": "generic",
+            "action_event": "w3_sq14_copy_concierge_key",
+            "condition_unmet_message": "The mirror flashes the concierge terminal's next rotating credential."
+          },
+          {
+            "name": "concierge terminal",
+            "type": "shop",
+            "shop_id": "upper_city_lounge",
+            "dialogue_id": "upper_city_lounge_shop_intro",
+            "condition_unmet_message": "A silent concierge terminal offering premium equipment with premium contempt."
+          },
+          {
+            "name": "VIP vector arcade cabinet",
+            "type": "arcade_discovery",
+            "hide_when_milestone": "ms_arcade_cabinet_03_repaired",
+            "condition_unmet_message": "A sleek chrome arcade console sits behind the velvet curtain. An overclocked mainframe chip hums with high-speed ICE cycles."
+          }
+        ],
+        "npc_presence": [
+          {
+            "npc": "lab_terminal",
+            "requires_milestones": [
+              "ms_w3_mq13_complete"
+            ],
+            "forbidden_milestones": [
+              "ms_w3_prototype_tested"
+            ]
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_exec_lounge_bar",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Exec Lounge",
+        "background_image": "images/rooms/world_3/spire_exec_lounge_bar.webp",
+        "description": "The Exec Lounge floats on a grav-platform above a silent atrium. A private safe hides behind sculpture, a concierge credential mirror flashes beside the terminal, and every booth looks designed for blackmail. A VIP vector arcade cabinet stands behind the velvet curtain.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "north": "spire_uniform_sorting",
+          "south": "spire_exec_lounge_scale_01"
+        },
+        "pos": [
+          1,
+          2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "private safe",
+            "type": "generic",
+            "action_event": "w3_sq14_steal_ledger",
+            "requires_milestones": [
+              "ms_w3_concierge_key_copied"
+            ],
+            "condition_unmet_message": "A private executive safe hidden behind a decorative gravity-well sculpture.",
+            "hide_when_event_completed": "w3_sq14_steal_ledger"
+          },
+          {
+            "name": "concierge credential mirror",
+            "type": "generic",
+            "action_event": "w3_sq14_copy_concierge_key",
+            "condition_unmet_message": "The mirror flashes the concierge terminal's next rotating credential.",
+            "hide_when_event_completed": "w3_sq14_copy_concierge_key"
+          },
+          {
+            "name": "concierge terminal",
+            "type": "shop",
+            "shop_id": "upper_city_lounge",
+            "dialogue_id": "upper_city_lounge_shop_intro",
+            "condition_unmet_message": "A silent concierge terminal offering premium equipment with premium contempt."
+          },
+          {
+            "name": "VIP vector arcade cabinet",
+            "type": "arcade_discovery",
+            "hide_when_milestone": "ms_arcade_cabinet_03_repaired",
+            "condition_unmet_message": "A sleek chrome arcade console sits behind the velvet curtain. An overclocked mainframe chip hums with high-speed ICE cycles."
+          }
+        ],
+        "npc_presence": [
+          {
+            "npc": "lab_terminal",
+            "requires_milestones": [
+              "ms_w3_mq13_complete"
+            ],
+            "forbidden_milestones": [
+              "ms_w3_prototype_tested"
+            ]
+          }
+        ]
+      }
+    },
+    "spire_archive_vault": {
+      "before": {
+        "id": "spire_archive_vault",
+        "env": "neon",
+        "title": "Archive Vault",
+        "background_image": "images/rooms/world_3/spire_archive_vault.webp",
+        "description": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field that hums toward Nova before she touches it. Command tether-lines vanish into the glass, routing power back toward the Prism Gallery. The catalog wing opens south through Catalog Atrium, with a clear return to the vault. An inspection lift returns up to Service Lift and can be ridden back down to the vault.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "corporate_assassin"
+        ],
+        "connections": {
+          "west": "spire_prism_gallery",
+          "north": "spire_donor_gallery",
+          "east": "spire_drone_test_alcove",
+          "south": "spire_archive_scale_01",
+          "up": "spire_service_lift"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "Crystal stacks strobe red with alarm text. The empty containment field screams around the stolen lens relic. Command tether-lines cross the glass from the Administrator's system; scan tether-lines to follow their deeper geometry. The catalog wing opens south through Catalog Atrium, with a clear return to the vault. An inspection lift returns up to Service Lift and can be ridden back down to the vault.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          },
+          {
+            "description": "Indexed crystal stacks rise above a glass floor two hundred stories high. The Lens hangs unsupported after the resolved prism route drops containment. The lens relic hangs above the idle containment field, with command tether-lines still running back toward the gallery. The catalog wing opens south through Catalog Atrium, with a clear return to the vault. An inspection lift returns up to Service Lift and can be ridden back down to the vault.",
+            "requires_milestones": [
+              "ms_w3_prism_solved"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "containment field",
+            "type": "generic",
+            "action_event": "w3_mq14_read_containment_field",
+            "condition_unmet_message": "The field is not a lock so much as a museum label backed by lethal power."
+          },
+          {
+            "name": "lens relic",
+            "type": "generic",
+            "action_event": "w3_mq14_review_lens",
+            "condition_unmet_message": "The Lens floats inside the containment field. Its Echo rises when Nova's calibrated cutter-suit signal reaches the glass."
+          },
+          {
+            "name": "command tether-lines",
+            "type": "generic",
+            "action_event": "w3_mq14_trace_command_tethers",
+            "condition_unmet_message": "The tether-lines route the containment field through the Prism Gallery instead of the vault door."
+          },
+          {
+            "name": "scan tether-lines",
+            "type": "generic",
+            "action_event": "w3_scan_archive_tethers",
+            "condition_unmet_message": "Without the Lens, the Archive's deeper structure is only glass, light, and ownership."
+          }
+        ],
+        "enemy_flavor": {
+          "corporate_assassin": "A corporate assassin flickers between shard stacks, waiting for the alarm to justify murder."
+        },
+        "special_exits": {
+          "up": "Ride the inspection lift to Service Lift"
+        }
+      },
+      "after": {
+        "id": "spire_archive_vault",
+        "env": "neon",
+        "title": "Archive Vault",
+        "background_image": "images/rooms/world_3/spire_archive_vault.webp",
+        "description": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field that hums toward Nova before she touches it. Command tether-lines vanish into the glass, routing power back toward the Prism Gallery. The catalog wing opens south through Catalog Atrium, with a clear return to the vault. An inspection lift returns up to Service Lift and can be ridden back down to the vault.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "corporate_assassin"
+        ],
+        "connections": {
+          "west": "spire_prism_gallery",
+          "north": "spire_donor_gallery",
+          "east": "spire_drone_test_alcove",
+          "south": "spire_archive_scale_01",
+          "up": "spire_service_lift"
+        },
+        "pos": [
+          2,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "Crystal stacks strobe red with alarm text. The empty containment field screams around the stolen lens relic. Command tether-lines cross the glass from the Administrator's system; scan tether-lines to follow their deeper geometry. The catalog wing opens south through Catalog Atrium, with a clear return to the vault. An inspection lift returns up to Service Lift and can be ridden back down to the vault.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          },
+          {
+            "description": "Indexed crystal stacks rise above a glass floor two hundred stories high. The Lens hangs unsupported after the resolved prism route drops containment. The lens relic hangs above the idle containment field, with command tether-lines still running back toward the gallery. The catalog wing opens south through Catalog Atrium, with a clear return to the vault. An inspection lift returns up to Service Lift and can be ridden back down to the vault.",
+            "requires_milestones": [
+              "ms_w3_prism_solved"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "containment field",
+            "type": "generic",
+            "action_event": "w3_mq14_read_containment_field",
+            "condition_unmet_message": "The field is not a lock so much as a museum label backed by lethal power.",
+            "inspect_after_completion": true
+          },
+          {
+            "name": "lens relic",
+            "type": "generic",
+            "action_event": "w3_mq14_review_lens",
+            "condition_unmet_message": "The Lens floats inside the containment field. Its Echo rises when Nova's calibrated cutter-suit signal reaches the glass."
+          },
+          {
+            "name": "command tether-lines",
+            "type": "generic",
+            "action_event": "w3_mq14_trace_command_tethers",
+            "condition_unmet_message": "The tether-lines route the containment field through the Prism Gallery instead of the vault door.",
+            "inspect_after_completion": true
+          },
+          {
+            "name": "scan tether-lines",
+            "type": "generic",
+            "action_event": "w3_scan_archive_tethers",
+            "condition_unmet_message": "Without the Lens, the Archive's deeper structure is only glass, light, and ownership."
+          }
+        ],
+        "enemy_flavor": {
+          "corporate_assassin": "A corporate assassin flickers between shard stacks, waiting for the alarm to justify murder."
+        },
+        "special_exits": {
+          "up": "Ride the inspection lift to Service Lift"
+        }
+      }
+    },
+    "spire_prism_gallery": {
+      "before": {
+        "id": "spire_prism_gallery",
+        "env": "neon",
+        "title": "Prism Gallery",
+        "background_image": "images/rooms/world_3/spire_prism_gallery.webp",
+        "description": "Prism shutters divide the containment circuit into red feed, blue return and gold authorization. The braided chord is a control loom: its three handles can release the Lens if pressure and audit continuity are preserved.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_laundry_service",
+          "east": "spire_archive_vault"
+        },
+        "pos": [
+          1,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Prism Gallery fractures lockdown lights into alarm chords. The resolved containment route is still warm. Prism shutters frame the braided chord in the glass; scan alarm chords to follow a narrow timing path through the noise toward the roof.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          },
+          {
+            "description": "The prism shutters hold the containment field safely open. The braided chord’s control loom rests in its bypass position, with pressure relieved and the audit held locally.",
+            "requires_milestones": [
+              "ms_w3_prism_solved"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "prism shutters",
+            "type": "generic",
+            "action_event": "w3_mq14_read_prism_shutters",
+            "condition_unmet_message": "The shutters split the vault field into three color bands, each feeding a different part of the cage."
+          },
+          {
+            "name": "braided chord",
+            "type": "generic",
+            "action_event": "w3_mq14_route_prisms",
+            "requires_milestones": [
+              "ms_w3_containment_field_read",
+              "ms_w3_prism_shutters_read",
+              "ms_w3_command_tethers_traced"
+            ],
+            "condition_unmet_message": "The braided chord will not resolve until the containment field, prism shutters, and command tether-lines agree."
+          },
+          {
+            "name": "scan alarm chords",
+            "type": "generic",
+            "action_event": "w3_scan_prism_alarm_chords",
+            "condition_unmet_message": "The alarm chords are visible only after the Lens teaches Nova how to look between colors."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_prism_gallery",
+        "env": "neon",
+        "title": "Prism Gallery",
+        "background_image": "images/rooms/world_3/spire_prism_gallery.webp",
+        "description": "Prism shutters divide the containment circuit into red feed, blue return and gold authorization. The braided chord is a control loom: its three handles can release the Lens if pressure and audit continuity are preserved.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_laundry_service",
+          "east": "spire_archive_vault"
+        },
+        "pos": [
+          1,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The Prism Gallery fractures lockdown lights into alarm chords. The resolved containment route is still warm. Prism shutters frame the braided chord in the glass; scan alarm chords to follow a narrow timing path through the noise toward the roof.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          },
+          {
+            "description": "The prism shutters hold the containment field safely open. The braided chord’s control loom rests in its bypass position, with pressure relieved and the audit held locally.",
+            "requires_milestones": [
+              "ms_w3_prism_solved"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "prism shutters",
+            "type": "generic",
+            "action_event": "w3_mq14_read_prism_shutters",
+            "condition_unmet_message": "The shutters split the vault field into three color bands, each feeding a different part of the cage.",
+            "inspect_after_completion": true
+          },
+          {
+            "name": "braided chord",
+            "type": "generic",
+            "action_event": "w3_mq14_route_prisms",
+            "requires_milestones": [
+              "ms_w3_containment_field_read",
+              "ms_w3_prism_shutters_read",
+              "ms_w3_command_tethers_traced"
+            ],
+            "condition_unmet_message": "The braided chord will not resolve until the containment field, prism shutters, and command tether-lines agree."
+          },
+          {
+            "name": "scan alarm chords",
+            "type": "generic",
+            "action_event": "w3_scan_prism_alarm_chords",
+            "condition_unmet_message": "The alarm chords are visible only after the Lens teaches Nova how to look between colors."
+          }
+        ]
+      }
+    },
+    "spire_drone_test_alcove": {
+      "before": {
+        "id": "spire_drone_test_alcove",
+        "env": "neon",
+        "title": "Drone Test Alcove",
+        "background_image": "images/rooms/world_3/spire_drone_test_alcove.webp",
+        "description": "Scratched glass and warning tape seal the alcove. A prototype rack waits beside sleeping security drones, their dormant sensor paths revealed by the Lens. A flight telemetry log flashes on the rack screen. A prototype targeting audit waits on the calibration screen.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_archive_vault",
+          "east": "spire_landing_pad_roof"
+        },
+        "pos": [
+          3,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "Red warning tape snaps in fanwash as security drones twitch awake. The prototype rack holds a flight telemetry log and a prototype targeting audit. Scan targeting paths to trace lines of fire across Nova's ribs.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "prototype rack",
+            "type": "generic",
+            "action_event": "w3_sq15_test_weapon",
+            "requires_milestones": [
+              "ms_w3_prototype_bias_scanned"
+            ],
+            "condition_unmet_message": "A dangerous experimental weapon rack waits beside a drone testing alcove."
+          },
+          {
+            "name": "prototype targeting audit",
+            "type": "generic",
+            "action_event": "w3_sq15_scan_targeting",
+            "condition_unmet_message": "The prototype's threat table is hidden behind a harmless calibration screen."
+          },
+          {
+            "name": "security drones",
+            "type": "generic",
+            "condition_unmet_message": "The security drones sleep in charging nests, which is not the same thing as harmless."
+          },
+          {
+            "name": "scan targeting paths",
+            "type": "generic",
+            "action_event": "w3_scan_drone_paths",
+            "condition_unmet_message": "The targeting paths are invisible until the Lens turns threat into geometry."
+          },
+          {
+            "name": "flight telemetry log",
+            "type": "generic",
+            "condition_unmet_message": "Recorded drone flight telemetry showing high combat lethality during initial trials."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_drone_test_alcove",
+        "env": "neon",
+        "title": "Drone Test Alcove",
+        "background_image": "images/rooms/world_3/spire_drone_test_alcove.webp",
+        "description": "Scratched glass and warning tape seal the alcove. A prototype rack waits beside sleeping security drones, their dormant sensor paths revealed by the Lens. A flight telemetry log flashes on the rack screen. A prototype targeting audit waits on the calibration screen.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_archive_vault",
+          "east": "spire_landing_pad_roof"
+        },
+        "pos": [
+          3,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "Red warning tape snaps in fanwash as security drones twitch awake. The prototype rack holds a flight telemetry log and a prototype targeting audit. Scan targeting paths to trace lines of fire across Nova's ribs.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "prototype rack",
+            "type": "generic",
+            "action_event": "w3_sq15_test_weapon",
+            "requires_milestones": [
+              "ms_w3_prototype_bias_scanned"
+            ],
+            "condition_unmet_message": "A dangerous experimental weapon rack waits beside a drone testing alcove.",
+            "hide_when_event_completed": "w3_sq15_test_weapon"
+          },
+          {
+            "name": "prototype targeting audit",
+            "type": "generic",
+            "action_event": "w3_sq15_scan_targeting",
+            "condition_unmet_message": "The prototype's threat table is hidden behind a harmless calibration screen.",
+            "hide_when_event_completed": "w3_sq15_scan_targeting"
+          },
+          {
+            "name": "security drones",
+            "type": "generic",
+            "condition_unmet_message": "The security drones sleep in charging nests, which is not the same thing as harmless."
+          },
+          {
+            "name": "scan targeting paths",
+            "type": "generic",
+            "action_event": "w3_scan_drone_paths",
+            "condition_unmet_message": "The targeting paths are invisible until the Lens turns threat into geometry."
+          },
+          {
+            "name": "flight telemetry log",
+            "type": "generic",
+            "condition_unmet_message": "Recorded drone flight telemetry showing high combat lethality during initial trials."
+          }
+        ]
+      }
+    },
+    "spire_landing_pad_roof": {
+      "before": {
+        "id": "spire_landing_pad_roof",
+        "env": "neon",
+        "weather": "storm",
+        "title": "Landing Pad Roof",
+        "background_image": "images/rooms/world_3/spire_landing_pad_roof.webp",
+        "description": "The roof shudders under violent wind and red lockdown light. The Astra waits across the pad while the Planetary Shield rotates overhead in heavy resonance bands, guarding the sky. The flight display marks a shield window and a launch window beside a test telemetry relay.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "aero_drone",
+          "heavy_mech",
+          "administrator_boss"
+        ],
+        "enemy_parties": [
+          [
+            "aero_drone",
+            "heavy_mech"
+          ],
+          [
+            "administrator_boss",
+            "aero_drone"
+          ]
+        ],
+        "connections": {
+          "west": "spire_drone_test_alcove",
+          "north": "spire_landing_pad_scale_01"
+        },
+        "pos": [
+          3,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The roof shudders under wind and lockdown light. The Astra waits across the pad. Scan reveals the Planetary Shield opening for less than a heartbeat. The flight display marks a shield window and a launch window beside a test telemetry relay.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "shield window",
+            "type": "generic",
+            "action_event": "w3_scan_shield_gap",
+            "condition_unmet_message": "The Shield is still an impossible wall until the Lens shows Nova the window in its rotation."
+          },
+          {
+            "name": "launch window",
+            "type": "generic",
+            "action_event": "w3_mq15_launch_astra",
+            "condition_unmet_message": "The Astra can slip the Shield only after the Administrator is down and the Lens has found the window."
+          },
+          {
+            "name": "test telemetry relay",
+            "type": "generic",
+            "action_event": "w3_sq15_scrub_telemetry",
+            "requires_milestones": [
+              "ms_w3_prototype_trial_complete"
+            ],
+            "condition_unmet_message": "The relay has no prototype telemetry to scrub yet."
+          }
+        ],
+        "enemy_flavor": {
+          "aero_drone": "Aero drones knife through the rain of red warning light, their stun emitters searching for a clean angle.",
+          "heavy_mech": "A heavy mech plants itself between the crew and the Astra, vents glowing hot enough to warp the landing paint.",
+          "administrator_boss": "The Administrator descends in a polished security frame, its voice still gentle while the roof guns arm."
+        }
+      },
+      "after": {
+        "id": "spire_landing_pad_roof",
+        "env": "neon",
+        "weather": "storm",
+        "title": "Landing Pad Roof",
+        "background_image": "images/rooms/world_3/spire_landing_pad_roof.webp",
+        "description": "The roof shudders under violent wind and red lockdown light. The Astra waits across the pad while the Planetary Shield rotates overhead in heavy resonance bands, guarding the sky. The flight display marks a shield window and a launch window beside a test telemetry relay.",
+        "npcs": [],
+        "items": [],
+        "enemies": [
+          "aero_drone",
+          "heavy_mech",
+          "administrator_boss"
+        ],
+        "enemy_parties": [
+          [
+            "aero_drone",
+            "heavy_mech"
+          ],
+          [
+            "administrator_boss",
+            "aero_drone"
+          ]
+        ],
+        "connections": {
+          "west": "spire_drone_test_alcove",
+          "north": "spire_landing_pad_scale_01"
+        },
+        "pos": [
+          3,
+          1
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The roof shudders under wind and lockdown light. The Astra waits across the pad. Scan reveals the Planetary Shield opening for less than a heartbeat. The flight display marks a shield window and a launch window beside a test telemetry relay.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "shield window",
+            "type": "generic",
+            "action_event": "w3_scan_shield_gap",
+            "condition_unmet_message": "The Shield is still an impossible wall until the Lens shows Nova the window in its rotation."
+          },
+          {
+            "name": "launch window",
+            "type": "generic",
+            "action_event": "w3_mq15_launch_astra",
+            "condition_unmet_message": "The Astra can slip the Shield only after the Administrator is down and the Lens has found the window.",
+            "hide_when_event_completed": "w3_mq15_launch_astra"
+          },
+          {
+            "name": "test telemetry relay",
+            "type": "generic",
+            "action_event": "w3_sq15_scrub_telemetry",
+            "requires_milestones": [
+              "ms_w3_prototype_trial_complete"
+            ],
+            "condition_unmet_message": "The relay has no prototype telemetry to scrub yet.",
+            "hide_when_event_completed": "w3_sq15_scrub_telemetry"
+          }
+        ],
+        "enemy_flavor": {
+          "aero_drone": "Aero drones knife through the rain of red warning light, their stun emitters searching for a clean angle.",
+          "heavy_mech": "A heavy mech plants itself between the crew and the Astra, vents glowing hot enough to warp the landing paint.",
+          "administrator_boss": "The Administrator descends in a polished security frame, its voice still gentle while the roof guns arm."
+        }
+      }
+    },
+    "spire_night_market_scale_01": {
+      "before": {
+        "id": "spire_night_market_scale_01",
+        "env": "neon",
+        "title": "Lantern Roof",
+        "background_image": "images/rooms/world_3/spire_night_market_scale_01.webp",
+        "description": "String lights cross the lantern roof in careful knots above the Night Market. The anchor knots keep them up when patrol drones skim too low, and the lantern shadows hide handoffs under color. A vendor lockbox is chained beneath the string lights. The steps south return to Lantern Bridge; Spice Alley continues north.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_lantern_bridge",
+          "north": "spire_night_market_scale_02"
+        },
+        "pos": [
+          3,
+          4
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "lantern roof",
+            "type": "generic",
+            "condition_unmet_message": "The roof looks festive until the drone scratches are visible."
+          },
+          {
+            "name": "anchor knots",
+            "type": "generic",
+            "condition_unmet_message": "The knots are sailor work, not electrician work."
+          },
+          {
+            "name": "lantern roof kitchen",
+            "type": "rest_stop",
+            "cook_source": "Thermal Cooker",
+            "message": "A street vendor's thermal burner sits beneath string lights, ready for hot noodles and rations."
+          },
+          {
+            "name": "market refuge",
+            "type": "rest_stop",
+            "rest_event": "w3_camp_night_market",
+            "message": "Sheltered from drone patrols beneath the market awnings, your squad catches their breath."
+          },
+          {
+            "name": "vendor lockbox",
+            "type": "generic",
+            "action_event": "find_vhs_tape_05",
+            "condition_unmet_message": "A heavy metal lockbox chained beneath string lights."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_night_market_scale_01",
+        "env": "neon",
+        "title": "Lantern Roof",
+        "background_image": "images/rooms/world_3/spire_night_market_scale_01.webp",
+        "description": "String lights cross the lantern roof in careful knots above the Night Market. The anchor knots keep them up when patrol drones skim too low, and the lantern shadows hide handoffs under color. A vendor lockbox is chained beneath the string lights. The steps south return to Lantern Bridge; Spice Alley continues north.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_lantern_bridge",
+          "north": "spire_night_market_scale_02"
+        },
+        "pos": [
+          3,
+          4
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "lantern roof",
+            "type": "generic",
+            "condition_unmet_message": "The roof looks festive until the drone scratches are visible."
+          },
+          {
+            "name": "anchor knots",
+            "type": "generic",
+            "condition_unmet_message": "The knots are sailor work, not electrician work."
+          },
+          {
+            "name": "lantern roof kitchen",
+            "type": "rest_stop",
+            "cook_source": "Thermal Cooker",
+            "message": "A street vendor's thermal burner sits beneath string lights, ready for hot noodles and rations."
+          },
+          {
+            "name": "market refuge",
+            "type": "rest_stop",
+            "rest_event": "w3_camp_night_market",
+            "message": "Sheltered from drone patrols beneath the market awnings, your squad catches their breath."
+          },
+          {
+            "name": "vendor lockbox",
+            "type": "generic",
+            "action_event": "find_vhs_tape_05",
+            "condition_unmet_message": "A heavy metal lockbox chained beneath string lights.",
+            "hide_when_event_completed": "find_vhs_tape_05"
+          }
+        ]
+      }
+    },
+    "spire_skypark_scale_02": {
+      "before": {
+        "id": "spire_skypark_scale_02",
+        "env": "neon",
+        "title": "Registry Pavilion",
+        "background_image": "images/rooms/world_3/spire_skypark_scale_02.webp",
+        "description": "A registry pavilion floats over the park with a guest ledger projected in polite gold. The guest ledger shows which false identity can survive the next checkpoint. A pavilion bench cache is tucked beneath the seating.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_skypark_scale_01",
+          "north": "spire_skypark_scale_03"
+        },
+        "pos": [
+          1,
+          2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "registry pavilion",
+            "type": "generic",
+            "condition_unmet_message": "The pavilion watches smiles more carefully than weapons."
+          },
+          {
+            "name": "guest ledger",
+            "type": "generic",
+            "condition_unmet_message": "The ledger shows which false identity can survive the next checkpoint."
+          },
+          {
+            "name": "skypark cookfire",
+            "type": "rest_stop",
+            "cook_source": "Campfire",
+            "message": "A quiet pavilion overlooking the cloudline offers a peaceful spot to boil herbs and prepare trail meals."
+          },
+          {
+            "name": "pavilion shelter",
+            "type": "rest_stop",
+            "rest_event": "w3_camp_skypark",
+            "message": "Resting above the spire rain restores party stamina and focus."
+          },
+          {
+            "name": "pavilion bench cache",
+            "type": "generic",
+            "action_event": "find_vhs_tape_06",
+            "condition_unmet_message": "A forgotten wooden case tucked under a skypark bench."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_skypark_scale_02",
+        "env": "neon",
+        "title": "Registry Pavilion",
+        "background_image": "images/rooms/world_3/spire_skypark_scale_02.webp",
+        "description": "A registry pavilion floats over the park with a guest ledger projected in polite gold. The guest ledger shows which false identity can survive the next checkpoint. A pavilion bench cache is tucked beneath the seating.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_skypark_scale_01",
+          "north": "spire_skypark_scale_03"
+        },
+        "pos": [
+          1,
+          2
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "registry pavilion",
+            "type": "generic",
+            "condition_unmet_message": "The pavilion watches smiles more carefully than weapons."
+          },
+          {
+            "name": "guest ledger",
+            "type": "generic",
+            "condition_unmet_message": "The ledger shows which false identity can survive the next checkpoint."
+          },
+          {
+            "name": "skypark cookfire",
+            "type": "rest_stop",
+            "cook_source": "Campfire",
+            "message": "A quiet pavilion overlooking the cloudline offers a peaceful spot to boil herbs and prepare trail meals."
+          },
+          {
+            "name": "pavilion shelter",
+            "type": "rest_stop",
+            "rest_event": "w3_camp_skypark",
+            "message": "Resting above the spire rain restores party stamina and focus."
+          },
+          {
+            "name": "pavilion bench cache",
+            "type": "generic",
+            "action_event": "find_vhs_tape_06",
+            "condition_unmet_message": "A forgotten wooden case tucked under a skypark bench.",
+            "hide_when_event_completed": "find_vhs_tape_06"
+          }
+        ]
+      }
+    },
+    "spire_skyline_vip_suite": {
+      "before": {
+        "id": "spire_skyline_vip_suite",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Skyline VIP Salon",
+        "background_image": "images/rooms/world_3/spire_skyline_vip_suite.webp",
+        "description": "Plush velvet stanchions divide the glowing skyline salon from the rain-swept spires outside. Holographic chandeliers illuminate four stranded patrons around an automated crime-scene barrier. Emergency sirens pulse against the soundproof glass. A dispenser log and security terminal wait beside the barrier.",
+        "npcs": [
+          "bartender_dax",
+          "director_vance",
+          "dr_lyra",
+          "singer_selene"
+        ],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_donor_gallery",
+          "north": "spire_vip_private_booth"
+        },
+        "pos": [
+          4,
+          0
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The emergency sirens have quieted. Director Vance sits slumped under guard, while the remaining patrons sip their drinks in subdued relief. The golden skyline shines through the rain outside. The crime-scene barrier, dispenser log, and security terminal remain in place.",
+            "requires_milestones": [
+              "ms_w3_sq16_complete"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "crime-scene barrier",
+            "type": "generic",
+            "action_event": "w3_sq16_start",
+            "condition_unmet_message": "Yellow holographic caution tape seals the private Syndicate Booth. A murder investigation is underway."
+          },
+          {
+            "name": "dispenser log",
+            "type": "generic",
+            "action_event": "w3_sq16_inspect_dispenser",
+            "condition_unmet_message": "The automated dispenser log shows pure synth-sparkler was poured at 21:15 without additives."
+          },
+          {
+            "name": "security terminal",
+            "type": "generic",
+            "action_event": "w3_sq16_inspect_terminal",
+            "condition_unmet_message": "Terminal logs show Director Vance's keycard pinged the Syndicate Booth sensor at 21:14, and his comms unit vented coolant at 21:12."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_skyline_vip_suite",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Skyline VIP Salon",
+        "background_image": "images/rooms/world_3/spire_skyline_vip_suite.webp",
+        "description": "Plush velvet stanchions divide the glowing skyline salon from the rain-swept spires outside. Holographic chandeliers illuminate four stranded patrons around an automated crime-scene barrier. Emergency sirens pulse against the soundproof glass. A dispenser log and security terminal wait beside the barrier.",
+        "npcs": [
+          "bartender_dax",
+          "director_vance",
+          "dr_lyra",
+          "singer_selene"
+        ],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "west": "spire_donor_gallery",
+          "north": "spire_vip_private_booth"
+        },
+        "pos": [
+          4,
+          0
+        ],
+        "state": {},
+        "description_variants": [
+          {
+            "description": "The emergency sirens have quieted. Director Vance sits slumped under guard, while the remaining patrons sip their drinks in subdued relief. The golden skyline shines through the rain outside. The crime-scene barrier, dispenser log, and security terminal remain in place.",
+            "requires_milestones": [
+              "ms_w3_sq16_complete"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "name": "crime-scene barrier",
+            "type": "generic",
+            "action_event": "w3_sq16_start",
+            "condition_unmet_message": "Yellow holographic caution tape seals the private Syndicate Booth. A murder investigation is underway.",
+            "hide_when_event_completed": "w3_sq16_start"
+          },
+          {
+            "name": "dispenser log",
+            "type": "generic",
+            "action_event": "w3_sq16_inspect_dispenser",
+            "condition_unmet_message": "The automated dispenser log shows pure synth-sparkler was poured at 21:15 without additives.",
+            "inspect_after_completion": true
+          },
+          {
+            "name": "security terminal",
+            "type": "generic",
+            "action_event": "w3_sq16_inspect_terminal",
+            "condition_unmet_message": "Terminal logs show Director Vance's keycard pinged the Syndicate Booth sensor at 21:14, and his comms unit vented coolant at 21:12.",
+            "inspect_after_completion": true
+          }
+        ]
+      }
+    },
+    "spire_vip_private_booth": {
+      "before": {
+        "id": "spire_vip_private_booth",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Syndicate Booth",
+        "background_image": "images/rooms/world_3/spire_vip_private_booth.webp",
+        "description": "A private booth of curved mahogany overlooks the neon clouds. Auditor Malick slumps lifeless across the table beside a crystal glass. An executive comms rig lies open near the victim's splayed fingers. The auditor's datapad lies beside the comms rig.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_skyline_vip_suite"
+        },
+        "pos": [
+          4,
+          1
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "crystal glass",
+            "type": "generic",
+            "action_event": "w3_sq16_inspect_glass",
+            "condition_unmet_message": "Chemical analysis confirms traces of Cyano-Coolant 9, a rare executive comms refrigerant, mixed into the wine."
+          },
+          {
+            "name": "executive comms rig",
+            "type": "generic",
+            "action_event": "w3_sq16_inspect_rig",
+            "condition_unmet_message": "The portable comms unit stamped with Director Vance's executive crest has its coolant core compartment popped open and empty."
+          },
+          {
+            "name": "auditor's datapad",
+            "type": "generic",
+            "action_event": "w3_sq16_inspect_datapad",
+            "condition_unmet_message": "Auditor Malick's encrypted notes show he scheduled this meeting to confront Director Vance over millions in stolen scrap contracts."
+          }
+        ]
+      },
+      "after": {
+        "id": "spire_vip_private_booth",
+        "env": "neon",
+        "weather": "rain",
+        "title": "Syndicate Booth",
+        "background_image": "images/rooms/world_3/spire_vip_private_booth.webp",
+        "description": "A private booth of curved mahogany overlooks the neon clouds. Auditor Malick slumps lifeless across the table beside a crystal glass. An executive comms rig lies open near the victim's splayed fingers. The auditor's datapad lies beside the comms rig.",
+        "npcs": [],
+        "items": [],
+        "enemies": [],
+        "connections": {
+          "south": "spire_skyline_vip_suite"
+        },
+        "pos": [
+          4,
+          1
+        ],
+        "state": {},
+        "actions": [
+          {
+            "name": "crystal glass",
+            "type": "generic",
+            "action_event": "w3_sq16_inspect_glass",
+            "condition_unmet_message": "Chemical analysis confirms traces of Cyano-Coolant 9, a rare executive comms refrigerant, mixed into the wine.",
+            "inspect_after_completion": true
+          },
+          {
+            "name": "executive comms rig",
+            "type": "generic",
+            "action_event": "w3_sq16_inspect_rig",
+            "condition_unmet_message": "The portable comms unit stamped with Director Vance's executive crest has its coolant core compartment popped open and empty.",
+            "inspect_after_completion": true
+          },
+          {
+            "name": "auditor's datapad",
+            "type": "generic",
+            "action_event": "w3_sq16_inspect_datapad",
+            "condition_unmet_message": "Auditor Malick's encrypted notes show he scheduled this meeting to confront Director Vance over millions in stolen scrap contracts.",
+            "inspect_after_completion": true
+          }
+        ]
+      }
+    }
+  },
+  "hub_nodes.json": {
+    "spire_laundry": {
+      "before": {
+        "id": "spire_laundry",
+        "world_id": "world_3",
+        "hub_id": "hub_6_upper_city",
+        "title": "Laundry Service",
+        "entry_room": "spire_laundry_service",
+        "icon_image": "images/nodes/world_3/spire_laundry.webp",
+        "pos_hint": {
+          "center_x": 0.26,
+          "center_y": 0.56
+        },
+        "size": [
+          210,
+          210
+        ],
+        "rooms": [
+          "spire_laundry_service",
+          "spire_uniform_sorting",
+          "spire_service_lift",
+          "spire_staff_checkpoint",
+          "spire_laundry_scale_01",
+          "spire_laundry_scale_02",
+          "spire_laundry_scale_03"
+        ],
+        "discovered": true,
+        "initial_visibility": "unlocked",
+        "entry_policy": "hub",
+        "return_policy": "entry"
+      },
+      "after": {
+        "id": "spire_laundry",
+        "world_id": "world_3",
+        "hub_id": "hub_6_upper_city",
+        "title": "Service Quarters",
+        "entry_room": "spire_laundry_service",
+        "icon_image": "images/nodes/world_3/spire_laundry.webp",
+        "pos_hint": {
+          "center_x": 0.26,
+          "center_y": 0.56
+        },
+        "size": [
+          210,
+          210
+        ],
+        "rooms": [
+          "spire_laundry_service",
+          "spire_uniform_sorting",
+          "spire_service_lift",
+          "spire_staff_checkpoint",
+          "spire_laundry_scale_01",
+          "spire_laundry_scale_02",
+          "spire_laundry_scale_03"
+        ],
+        "discovered": true,
+        "initial_visibility": "unlocked",
+        "entry_policy": "hub",
+        "return_policy": "entry"
+      }
+    }
+  }
+}

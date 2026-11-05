@@ -1578,7 +1578,7 @@ class ExplorationController(
 
     private fun buildDialogueUi(line: DialogueLine?): DialogueUi? {
         if (line == null) return null
-        val portrait = line.portrait?.takeIf { it.isNotBlank() }?.let { sanitizePortraitPath(it) }
+        val portrait = if (line.speaker == "Prism Controls") null else line.portrait?.takeIf { it.isNotBlank() }?.let { sanitizePortraitPath(it) }
             ?: resolveEmotePortrait(line.speaker, line.emote)
             ?: resolvePortraitKey(line.speaker)
         return DialogueUi(
@@ -2388,7 +2388,10 @@ class ExplorationController(
             enemyTierById = enemyById.mapValues { it.value.tier }
             npcDialogueNameByKey = buildMap {
                 npcs.forEach { npc ->
-                    val dialogueName = npc.name.trim().ifBlank { npc.id.orEmpty().trim() }
+                    val dialogueName = dialogueService.resolveNpcSpeaker(
+                        npc.name.trim().ifBlank { npc.id.orEmpty().trim() },
+                        npc.interactions.firstOrNull { it.type.equals("talk", true) }?.dialogueId
+                    )
                     if (dialogueName.isBlank()) return@forEach
                     val keys = buildList<String?> {
                         add(npc.name)
@@ -6372,6 +6375,14 @@ class ExplorationController(
             if (!isActionVisible(room, action)) return@mapNotNull null
             val type = action["type"].asStringOrNull()?.lowercase()
             val name = action["name"].asStringOrNull() ?: return@mapNotNull null
+            val clueEvent = action["action_event"].asStringOrNull()
+            if (action["inspect_after_completion"] == true && clueEvent != null &&
+                clueEvent in sessionStore.state.value.completedEvents) {
+                val text = eventsById[clueEvent]?.actions?.firstOrNull { it.type == "show_message" }?.message
+                    ?: action["condition_unmet_message"].asStringOrNull()
+                return@mapNotNull GenericAction(name = name, type = "inspect",
+                    conditionUnmetMessage = text, completedInspection = true)
+            }
             when (type) {
                 "toggle" -> ToggleAction(
                     name = name,

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.desktop.World6NavigationPublicTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-05T16:24:18.107Z" hostname="V52076.vims.edu" time="2.186">
+  <properties/>
+  <testcase name="formerDiagonalSavesUseNewSwipeRoutesWithoutLosingNightmareReturns" classname="com.example.starborn.desktop.World6NavigationPublicTest" time="1.189"/>
+  <testcase name="allSourceRoomsHaveWorkingCompassTravelAndImmediateReturns" classname="com.example.starborn.desktop.World6NavigationPublicTest" time="0.258"/>
+  <testcase name="legacyLocationsRetainEscapeAndReturnWithoutReceivingStoryCredit" classname="com.example.starborn.desktop.World6NavigationPublicTest" time="0.137"/>
+  <testcase name="namedMemoryReturnsRemainRepeatableAfterReloadAndOldCompletionReceipts" classname="com.example.starborn.desktop.World6NavigationPublicTest" time="0.504"/>
+  <testcase name="bridgeAscentAndDefendersOpenOnlyThroughTheirStoryActionsAndKeepRestAccess" classname="com.example.starborn.desktop.World6NavigationPublicTest" time="0.096"/>
+  <system-out><![CDATA[DEBUG: give_item action id=astral_thread qty=4
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -93,7 +93,7 @@ class DesktopContentConsistencyTest {
 
     @Test fun itemDetailsIncludeCombatPropertiesAndResolveAuthoredNames() {
         val item = Item("fixture", "Fixture", type = "weapon", equipment = Equipment("weapon", attackStyle = "charged_splash",
-            attackChargeTurns = 2, attackSplashMultiplier = .5, attackElement = "fire", statusOnHit = "burn", statusChance = .25),
+            attackChargeTurns = 2, attackSplashMultiplier = .5, attackElement = "fire", statusOnHit = "burn", statusChance = 25.0),
             effect = ItemEffect(restoreHp = 30, learnSchematic = "recipe", buffs = listOf(BuffEffect("defense", 3, 2)), usesPerBattle = 1))
         val lines = ItemDetails.lines(item) { mapOf("burn" to "Burning", "recipe" to "Cryo-Inductor")[it] ?: it }
         assertTrue(lines.contains("Charge: 2 turns"))
@@ -103,4 +103,18 @@ class DesktopContentConsistencyTest {
         assertTrue(lines.contains("Restore HP: 30"))
         assertTrue(lines.contains("Uses per battle: 1"))
     }
+    @Test fun itemDetailsUseProductionPercentagePointsForWorldThreeRewards() {
+        withServices { services ->
+            val reader = com.example.starborn.data.assets.AssetJsonReader(
+                com.example.starborn.core.platform.DesktopAssetProvider(), com.example.starborn.core.MoshiProvider.instance)
+            val items = reader.readList<Item>("items.json").associateBy { it.id }
+            assertTrue(ItemDetails.lines(items.getValue("neon_band")).contains("Critical chance: 5%"))
+            assertTrue(ItemDetails.lines(items.getValue("cyano_coolant_injector")).contains("On hit: freeze (20%)"))
+            assertFalse(ItemDetails.lines(items.getValue("phase_rounds")).any { it.startsWith("Element:") })
+            val fractional = Item("fixture", "Fixture", type = "accessory", equipment = Equipment("accessory", critRate = 0.15, accuracy = 4.0))
+            assertTrue(ItemDetails.lines(fractional).contains("Critical chance: 0.15%"))
+            assertTrue(ItemDetails.lines(fractional).contains("Accuracy: 4%"))
+        }
+    }
+
 }

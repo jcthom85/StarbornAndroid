@@ -1,0 +1,686 @@
+{
+  "changed_room_fields": {
+    "spire_underrail_platform": [
+      "connections",
+      "description",
+      "description_variants",
+      "special_exits"
+    ],
+    "spire_transit_plaza": [
+      "connections",
+      "description",
+      "description_variants",
+      "special_exits"
+    ],
+    "spire_service_lift": [
+      "actions",
+      "connections",
+      "description",
+      "description_variants",
+      "special_exits"
+    ],
+    "spire_glasswalk": [
+      "description"
+    ],
+    "spire_archive_vault": [
+      "connections",
+      "description",
+      "description_variants",
+      "special_exits"
+    ],
+    "orbital_service_shaft": [
+      "connections",
+      "description",
+      "description_variants",
+      "special_exits"
+    ],
+    "orbital_server_farm": [
+      "connections",
+      "description",
+      "description_variants",
+      "special_exits"
+    ],
+    "deep_firewall_gamma": [
+      "blocked_directions",
+      "connections",
+      "description",
+      "description_variants",
+      "special_exits"
+    ],
+    "deep_anchor_chamber": [
+      "blocked_directions",
+      "connections",
+      "description",
+      "description_variants",
+      "special_exits"
+    ]
+  },
+  "room_changes": {
+    "spire_underrail_platform": {
+      "connections": {
+        "before": {
+          "west": "spire_vent_output",
+          "east": "spire_the_static"
+        },
+        "after": {
+          "west": "spire_vent_output",
+          "east": "spire_the_static",
+          "down": "spire_transit_plaza"
+        }
+      },
+      "description": {
+        "before": "An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is scratched with routes, curfews, patrol timing, and warnings written in marker.",
+        "after": "An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is scratched with routes, curfews, patrol timing, and warnings written in marker. Platform stairs descend to Transit Plaza and remain open for the climb back."
+      },
+      "description_variants": {
+        "before": [
+          {
+            "description": "An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is now scarred with Nova's route marks, patrol timing windows, and a service-gap path toward the Great Elevator.",
+            "requires_milestones": [
+              "ms_w3_patrols_mapped"
+            ]
+          }
+        ],
+        "after": [
+          {
+            "description": "An abandoned underrail platform trembles whenever the city trains pass overhead. The underrail map is now scarred with Nova's route marks, patrol timing windows, and a service-gap path toward the Great Elevator. Platform stairs descend to Transit Plaza and remain open for the climb back.",
+            "requires_milestones": [
+              "ms_w3_patrols_mapped"
+            ]
+          }
+        ]
+      },
+      "special_exits": {
+        "before": null,
+        "after": {
+          "down": "Take the platform stairs to Transit Plaza"
+        }
+      }
+    },
+    "spire_transit_plaza": {
+      "connections": {
+        "before": {
+          "north": "spire_the_static",
+          "west": "spire_sewers_passage",
+          "east": "spire_checkpoint_queue",
+          "south": "spire_security_kiosk"
+        },
+        "after": {
+          "north": "spire_the_static",
+          "west": "spire_sewers_passage",
+          "east": "spire_checkpoint_queue",
+          "south": "spire_security_kiosk",
+          "up": "spire_underrail_platform"
+        }
+      },
+      "description": {
+        "before": "Transit Plaza spreads beneath the Great Elevator, all surveillance glass, guard lanes, and crowded hesitation. The elevator controls tower above a checkpoint queue where fear moves faster than the line, while a security kiosk glows under the stairs.",
+        "after": "Transit Plaza spreads beneath the Great Elevator, all surveillance glass, guard lanes, and crowded hesitation. The elevator controls tower above a checkpoint queue where fear moves faster than the line, while a security kiosk glows under the stairs. The platform stairs climb to Underrail, with a direct return down to the plaza."
+      },
+      "description_variants": {
+        "before": [
+          {
+            "description": "Transit Plaza spreads beneath the Great Elevator with copied badge timing, pulled security records, and mapped patrol gaps hiding inside its clean routines. The elevator controls still look impossible until the planning table makes those pieces into one route.",
+            "requires_milestones": [
+              "ms_w3_badges_copied",
+              "ms_w3_security_records_pulled",
+              "ms_w3_patrols_mapped"
+            ]
+          },
+          {
+            "description": "Transit Plaza spreads beneath the Great Elevator, all surveillance glass, guard lanes, and crowded hesitation. The elevator controls still tower above the checkpoint queue, but the security kiosk now carries Gh0st's pull marks in the system.",
+            "requires_milestones": [
+              "ms_w3_security_records_pulled"
+            ]
+          }
+        ],
+        "after": [
+          {
+            "description": "Transit Plaza spreads beneath the Great Elevator with copied badge timing, pulled security records, and mapped patrol gaps hiding inside its clean routines. The elevator controls still look impossible until the planning table makes those pieces into one route. The platform stairs climb to Underrail, with a direct return down to the plaza.",
+            "requires_milestones": [
+              "ms_w3_badges_copied",
+              "ms_w3_security_records_pulled",
+              "ms_w3_patrols_mapped"
+            ]
+          },
+          {
+            "description": "Transit Plaza spreads beneath the Great Elevator, all surveillance glass, guard lanes, and crowded hesitation. The elevator controls still tower above the checkpoint queue, but the security kiosk now carries Gh0st's pull marks in the system. The platform stairs climb to Underrail, with a direct return down to the plaza.",
+            "requires_milestones": [
+              "ms_w3_security_records_pulled"
+            ]
+          }
+        ]
+      },
+      "special_exits": {
+        "before": null,
+        "after": {
+          "up": "Climb the platform stairs to Underrail"
+        }
+      }
+    },
+    "spire_service_lift": {
+      "actions": {
+        "before": [
+          {
+            "name": "lift panel",
+            "type": "generic",
+            "condition_unmet_message": "The service-lift panel needs the freight clearance established by the heist plan.",
+            "action_event": "w3_return_to_lower_city",
+            "requires_milestones": [
+              "ms_w3_mq12_complete"
+            ]
+          },
+          {
+            "name": "inspection hatch",
+            "type": "generic",
+            "condition_unmet_message": "The inspection hatch is narrow enough for Gh0st and worrying enough for everyone else."
+          },
+          {
+            "name": "worker network uplink",
+            "type": "generic",
+            "action_event": "w3_sq14_leak_ledger",
+            "requires_milestones": [
+              "ms_w3_ledger_stolen"
+            ],
+            "condition_unmet_message": "The uplink can publish evidence only after Nova has the ledger."
+          },
+          {
+            "name": "private dead drop",
+            "type": "generic",
+            "action_event": "w3_sq14_weaponize_ledger",
+            "requires_milestones": [
+              "ms_w3_ledger_stolen"
+            ],
+            "condition_unmet_message": "The dead drop needs the stolen ledger before it can isolate one executive's security profile."
+          }
+        ],
+        "after": [
+          {
+            "name": "lift panel",
+            "type": "generic",
+            "condition_unmet_message": "The service-lift panel needs the freight clearance established by the heist plan.",
+            "action_event": "w3_return_to_lower_city",
+            "requires_milestones": [
+              "ms_w3_mq12_complete"
+            ]
+          },
+          {
+            "name": "inspection hatch",
+            "type": "generic",
+            "condition_unmet_message": "An inspection lift cage waits beyond the hatch. It connects to Archive Vault and can be called from either landing; the main lift panel handles Lower City travel."
+          },
+          {
+            "name": "worker network uplink",
+            "type": "generic",
+            "action_event": "w3_sq14_leak_ledger",
+            "requires_milestones": [
+              "ms_w3_ledger_stolen"
+            ],
+            "condition_unmet_message": "The uplink can publish evidence only after Nova has the ledger."
+          },
+          {
+            "name": "private dead drop",
+            "type": "generic",
+            "action_event": "w3_sq14_weaponize_ledger",
+            "requires_milestones": [
+              "ms_w3_ledger_stolen"
+            ],
+            "condition_unmet_message": "The dead drop needs the stolen ledger before it can isolate one executive's security profile."
+          }
+        ]
+      },
+      "connections": {
+        "before": {
+          "west": "spire_uniform_sorting",
+          "north": "spire_skypark_dome"
+        },
+        "after": {
+          "west": "spire_uniform_sorting",
+          "north": "spire_skypark_dome",
+          "down": "spire_archive_vault"
+        }
+      },
+      "description": {
+        "before": "A service lift rises through the bones of the Upper City. A worker network uplink can publish the ledger, while a private dead drop can turn it into a precise weapon against one executive. The lift panel offers a return to Lower City\u2019s Transit Plaza beside a rattling inspection hatch.",
+        "after": "A service lift rises through the bones of the Upper City. A worker network uplink can publish the ledger, while a private dead drop can turn it into a precise weapon against one executive. The lift panel offers a return to Lower City\u2019s Transit Plaza beside a rattling inspection hatch. Beyond the inspection hatch, a separate inspection lift travels down to Archive Vault and returns to this landing. The lift panel still controls the cleared route to Lower City."
+      },
+      "description_variants": {
+        "before": [
+          {
+            "description": "The service lift judders between lockdown floors. The lift panel retains the cleared freight route down to Transit Plaza, and the inspection hatch rattles like the city is trying to shake the crew loose. A worker network uplink and a private dead drop remain accessible beside the panel.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          }
+        ],
+        "after": [
+          {
+            "description": "The service lift judders between lockdown floors. The lift panel retains the cleared freight route down to Transit Plaza, and the inspection hatch rattles like the city is trying to shake the crew loose. A worker network uplink and a private dead drop remain accessible beside the panel. Beyond the inspection hatch, a separate inspection lift travels down to Archive Vault and returns to this landing. The lift panel still controls the cleared route to Lower City.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          }
+        ]
+      },
+      "special_exits": {
+        "before": null,
+        "after": {
+          "down": "Ride the inspection lift to the Archive"
+        }
+      }
+    },
+    "spire_glasswalk": {
+      "description": {
+        "before": "The glasswalk curves along the dome edge with the whole Lower City visible far below. A camera seam runs under the handrail like a vein.",
+        "after": "The glasswalk curves along the dome edge with the whole Lower City visible far below. A camera seam runs under the handrail like a vein. The Archive approach continues east through Donor Gallery, then south down the stairs."
+      }
+    },
+    "spire_archive_vault": {
+      "connections": {
+        "before": {
+          "west": "spire_prism_gallery",
+          "north": "spire_donor_gallery",
+          "east": "spire_drone_test_alcove",
+          "south": "spire_archive_scale_01"
+        },
+        "after": {
+          "west": "spire_prism_gallery",
+          "north": "spire_donor_gallery",
+          "east": "spire_drone_test_alcove",
+          "south": "spire_archive_scale_01",
+          "up": "spire_service_lift"
+        }
+      },
+      "description": {
+        "before": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field that hums toward Nova before she touches it. Command tether-lines vanish into the glass, routing power back toward the Prism Gallery. The catalog wing opens south through Catalog Atrium, with a clear return to the vault.",
+        "after": "The Archive Vault rises in indexed crystal stacks over a glass floor two hundred stories high. The lens relic hangs in a containment field that hums toward Nova before she touches it. Command tether-lines vanish into the glass, routing power back toward the Prism Gallery. The catalog wing opens south through Catalog Atrium, with a clear return to the vault. An inspection lift returns up to Service Lift and can be ridden back down to the vault."
+      },
+      "description_variants": {
+        "before": [
+          {
+            "description": "Crystal stacks strobe red with alarm text. The empty containment field screams around the stolen lens relic. Command tether-lines cross the glass from the Administrator's system; scan tether-lines to follow their deeper geometry. The catalog wing opens south through Catalog Atrium, with a clear return to the vault.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          },
+          {
+            "description": "Indexed crystal stacks rise above a glass floor two hundred stories high. The Lens hangs unsupported after the resolved prism route drops containment. The lens relic hangs above the idle containment field, with command tether-lines still running back toward the gallery. The catalog wing opens south through Catalog Atrium, with a clear return to the vault.",
+            "requires_milestones": [
+              "ms_w3_prism_solved"
+            ]
+          }
+        ],
+        "after": [
+          {
+            "description": "Crystal stacks strobe red with alarm text. The empty containment field screams around the stolen lens relic. Command tether-lines cross the glass from the Administrator's system; scan tether-lines to follow their deeper geometry. The catalog wing opens south through Catalog Atrium, with a clear return to the vault. An inspection lift returns up to Service Lift and can be ridden back down to the vault.",
+            "requires_milestones": [
+              "ms_w3_mq14_complete"
+            ]
+          },
+          {
+            "description": "Indexed crystal stacks rise above a glass floor two hundred stories high. The Lens hangs unsupported after the resolved prism route drops containment. The lens relic hangs above the idle containment field, with command tether-lines still running back toward the gallery. The catalog wing opens south through Catalog Atrium, with a clear return to the vault. An inspection lift returns up to Service Lift and can be ridden back down to the vault.",
+            "requires_milestones": [
+              "ms_w3_prism_solved"
+            ]
+          }
+        ]
+      },
+      "special_exits": {
+        "before": null,
+        "after": {
+          "up": "Ride the inspection lift to Service Lift"
+        }
+      }
+    },
+    "orbital_service_shaft": {
+      "connections": {
+        "before": {
+          "west": "orbital_security_hub",
+          "east": "orbital_zero_g_junction",
+          "north": "orbital_service_shaft_scale_01"
+        },
+        "after": {
+          "west": "orbital_security_hub",
+          "east": "orbital_zero_g_junction",
+          "north": "orbital_service_shaft_scale_01",
+          "down": "orbital_server_farm"
+        }
+      },
+      "description": {
+        "before": "Gravity ends at the hatch. Zero-g cables descend from a superconductor junction through a vertical dark while Hunter-Killer droids scrape along distant walls, too armored to fight head-on. The marked route runs east to Zero-G Junction; the southern tube there leads to the SysAdmin station and Server Farm.",
+        "after": "Gravity ends at the hatch. Zero-g cables descend from a superconductor junction through a vertical dark while Hunter-Killer droids scrape along distant walls, too armored to fight head-on. The marked route runs east to Zero-G Junction; the southern tube there leads to the SysAdmin station and Server Farm. Anchored service cables also offer a direct descent to Server Farm and a climb back to this hatch."
+      },
+      "description_variants": {
+        "before": [
+          {
+            "description": "The service shaft route follows zero-g cables from a superconductor junction, marked by grip scratches, cable tags, and one clear timing pattern through the Hunter-Killer sweeps. The drop is still awful, but it is no longer unreadable. The marked route runs east to Zero-G Junction; the southern tube there leads to the SysAdmin station and Server Farm.",
+            "requires_milestones": [
+              "ms_w5_shaft_traversed"
+            ]
+          }
+        ],
+        "after": [
+          {
+            "description": "The service shaft route follows zero-g cables from a superconductor junction, marked by grip scratches, cable tags, and one clear timing pattern through the Hunter-Killer sweeps. The drop is still awful, but it is no longer unreadable. The marked route runs east to Zero-G Junction; the southern tube there leads to the SysAdmin station and Server Farm. Anchored service cables also offer a direct descent to Server Farm and a climb back to this hatch.",
+            "requires_milestones": [
+              "ms_w5_shaft_traversed"
+            ]
+          }
+        ]
+      },
+      "special_exits": {
+        "before": null,
+        "after": {
+          "down": "Descend the cables to Server Farm"
+        }
+      }
+    },
+    "orbital_server_farm": {
+      "connections": {
+        "before": {
+          "north": "deep_mainframe_nave",
+          "south": "deep_backup_rack",
+          "west": "deep_sysadmin_nest",
+          "east": "deep_anchor_chamber"
+        },
+        "after": {
+          "north": "deep_mainframe_nave",
+          "south": "deep_backup_rack",
+          "west": "deep_sysadmin_nest",
+          "east": "deep_anchor_chamber",
+          "up": "orbital_service_shaft"
+        }
+      },
+      "description": {
+        "before": "Mist surrounds a purged backup rack. Recover its routine: erase the guardian ownership flag for independence or use the crew covenant socket for shared protection. A mainframe terminal displays a coolant-pulse map; a dead sysadmin drifts behind a coolant pipe. The SysAdmin Nest west leads back to Zero-G Junction and the upper Ring. Mainframe Nave is north, the backup aisle south, and the Anchor entrance east remains guarded until the Firewall Construct falls.",
+        "after": "Mist surrounds a purged backup rack. Recover its routine: erase the guardian ownership flag for independence or use the crew covenant socket for shared protection. A mainframe terminal displays a coolant-pulse map; a dead sysadmin drifts behind a coolant pipe. The SysAdmin Nest west leads back to Zero-G Junction and the upper Ring. Mainframe Nave is north, the backup aisle south, and the Anchor entrance east remains guarded until the Firewall Construct falls. Anchored service cables climb directly to Service Shaft and provide a return descent. The SysAdmin and Zero-G Junction walking route remains available."
+      },
+      "description_variants": {
+        "before": [
+          {
+            "description": "Zeke's coolant-pulse map on the mainframe terminal locates the mainframe nave, three firewall nodes, a purged backup rack and Elara's route. The recovered routine offers a guardian ownership flag or crew covenant socket. A dead sysadmin drifts behind a coolant pipe. The SysAdmin Nest west leads back to Zero-G Junction and the upper Ring. Mainframe Nave is north, the backup aisle south, and the Anchor entrance east remains guarded until the Firewall Construct falls.",
+            "requires_milestones": [
+              "ms_w5_server_maze_mapped"
+            ]
+          },
+          {
+            "description": "Firewall nodes alpha, beta and gamma are dark; the Anchor Chamber answers Gh0st. The mainframe terminal's coolant-pulse map highlights a purged backup rack, guardian ownership flag and crew covenant socket. A dead sysadmin drifts behind a coolant pipe. The SysAdmin Nest west leads back to Zero-G Junction and the upper Ring. Mainframe Nave is north, the backup aisle south, and the Anchor entrance east is cleared once the Firewall Construct falls.",
+            "requires_milestones": [
+              "ms_w5_firewall_gamma_down"
+            ]
+          }
+        ],
+        "after": [
+          {
+            "description": "Zeke's coolant-pulse map on the mainframe terminal locates the mainframe nave, three firewall nodes, a purged backup rack and Elara's route. The recovered routine offers a guardian ownership flag or crew covenant socket. A dead sysadmin drifts behind a coolant pipe. The SysAdmin Nest west leads back to Zero-G Junction and the upper Ring. Mainframe Nave is north, the backup aisle south, and the Anchor entrance east remains guarded until the Firewall Construct falls. Anchored service cables climb directly to Service Shaft and provide a return descent. The SysAdmin and Zero-G Junction walking route remains available.",
+            "requires_milestones": [
+              "ms_w5_server_maze_mapped"
+            ]
+          },
+          {
+            "description": "Firewall nodes alpha, beta and gamma are dark; the Anchor Chamber answers Gh0st. The mainframe terminal's coolant-pulse map highlights a purged backup rack, guardian ownership flag and crew covenant socket. A dead sysadmin drifts behind a coolant pipe. The SysAdmin Nest west leads back to Zero-G Junction and the upper Ring. Mainframe Nave is north, the backup aisle south, and the Anchor entrance east is cleared once the Firewall Construct falls. Anchored service cables climb directly to Service Shaft and provide a return descent. The SysAdmin and Zero-G Junction walking route remains available.",
+            "requires_milestones": [
+              "ms_w5_firewall_gamma_down"
+            ]
+          }
+        ]
+      },
+      "special_exits": {
+        "before": null,
+        "after": {
+          "up": "Climb the cables to Service Shaft"
+        }
+      }
+    },
+    "deep_firewall_gamma": {
+      "blocked_directions": {
+        "before": null,
+        "after": {
+          "down": {
+            "type": "lock",
+            "requires": [
+              {
+                "room_id": "deep_anchor_chamber",
+                "state_key": "firewall_access_open",
+                "value": true
+              }
+            ],
+            "message_locked": "The Firewall Construct still controls the Anchor access lift. Disable its nodes and defeat it before using the lift.",
+            "message_unlock": "The Anchor access lift is cleared in both directions."
+          }
+        }
+      },
+      "connections": {
+        "before": {
+          "west": "deep_firewall_beta"
+        },
+        "after": {
+          "west": "deep_firewall_beta",
+          "down": "deep_anchor_chamber"
+        }
+      },
+      "description": {
+        "before": "Firewall node gamma projects a half-built hard-light body into the aisle. Its face is blank because the system has not decided who it wants to execute yet. The aisle returns west through Beta and Alpha to Mainframe Nave. From there, go south to Server Farm and east to the Anchor entrance.",
+        "after": "Firewall node gamma projects a half-built hard-light body into the aisle. Its face is blank because the system has not decided who it wants to execute yet. The aisle returns west through Beta and Alpha to Mainframe Nave. From there, go south to Server Farm and east to the Anchor entrance. An Anchor access lift waits behind the Construct\u2019s security field. Once cleared, it runs down to the chamber and back up to this aisle."
+      },
+      "description_variants": {
+        "before": [
+          {
+            "description": "Firewall node gamma is gone. The hard-light body has shattered into dead glyphs, and the Anchor Chamber answers from beyond the final aisle. The aisle returns west through Beta and Alpha to Mainframe Nave. From there, go south to Server Farm and east to the Anchor entrance.",
+            "requires_milestones": [
+              "ms_w5_mq23_complete"
+            ]
+          },
+          {
+            "description": "Firewall node gamma has failed into violence. The hard-light body is complete now, blocking the Anchor Chamber with a blank execution face. The aisle returns west through Beta and Alpha to Mainframe Nave. From there, go south to Server Farm and east to the Anchor entrance.",
+            "requires_milestones": [
+              "ms_w5_firewall_gamma_down"
+            ]
+          }
+        ],
+        "after": [
+          {
+            "description": "Firewall node gamma is gone. The hard-light body has shattered into dead glyphs, and the Anchor Chamber answers from beyond the final aisle. The aisle returns west through Beta and Alpha to Mainframe Nave. From there, go south to Server Farm and east to the Anchor entrance. An Anchor access lift waits behind the Construct\u2019s security field. Once cleared, it runs down to the chamber and back up to this aisle.",
+            "requires_milestones": [
+              "ms_w5_mq23_complete"
+            ]
+          },
+          {
+            "description": "Firewall node gamma has failed into violence. The hard-light body is complete now, blocking the Anchor Chamber with a blank execution face. The aisle returns west through Beta and Alpha to Mainframe Nave. From there, go south to Server Farm and east to the Anchor entrance. An Anchor access lift waits behind the Construct\u2019s security field. Once cleared, it runs down to the chamber and back up to this aisle.",
+            "requires_milestones": [
+              "ms_w5_firewall_gamma_down"
+            ]
+          }
+        ]
+      },
+      "special_exits": {
+        "before": null,
+        "after": {
+          "down": "Ride the access lift to the Anchor Chamber"
+        }
+      }
+    },
+    "deep_anchor_chamber": {
+      "blocked_directions": {
+        "before": {
+          "west": {
+            "type": "lock",
+            "requires": [
+              {
+                "room_id": "deep_anchor_chamber",
+                "state_key": "firewall_access_open",
+                "value": true
+              }
+            ],
+            "message_locked": "The Firewall Construct still holds the Anchor Chamber entrance. Follow the mainframe route through Firewall Alpha, Beta and Gamma and break the final defense.",
+            "message_unlock": "The cleared Anchor Chamber entrance remains open for the return through the Server Farm."
+          }
+        },
+        "after": {
+          "west": {
+            "type": "lock",
+            "requires": [
+              {
+                "room_id": "deep_anchor_chamber",
+                "state_key": "firewall_access_open",
+                "value": true
+              }
+            ],
+            "message_locked": "The Firewall Construct still holds the Anchor Chamber entrance. Follow the mainframe route through Firewall Alpha, Beta and Gamma and break the final defense.",
+            "message_unlock": "The cleared Anchor Chamber entrance remains open for the return through the Server Farm."
+          },
+          "up": {
+            "type": "lock",
+            "requires": [
+              {
+                "room_id": "deep_anchor_chamber",
+                "state_key": "firewall_access_open",
+                "value": true
+              }
+            ],
+            "message_locked": "The Firewall Construct still controls the Anchor access lift. Disable its nodes and defeat it before using the lift.",
+            "message_unlock": "The Anchor access lift is cleared in both directions."
+          }
+        }
+      },
+      "connections": {
+        "before": {
+          "west": "orbital_server_farm",
+          "east": "deep_throne_room",
+          "north": "deep_anchor_chamber_scale_01"
+        },
+        "after": {
+          "west": "orbital_server_farm",
+          "east": "deep_throne_room",
+          "north": "deep_anchor_chamber_scale_01",
+          "up": "deep_firewall_gamma"
+        }
+      },
+      "description": {
+        "before": "A tank of conductive fluid hangs inside a cathedral of cables. Elara floats at its center, wired into the Ring as a living processor while the Anchor relic turns beside her. A graviton well bends the light beneath the tank. The cleared entrance west returns through the Server Farm toward the upper Ring; the Throne Room lies east.",
+        "after": "A tank of conductive fluid hangs inside a cathedral of cables. Elara floats at its center, wired into the Ring as a living processor while the Anchor relic turns beside her. A graviton well bends the light beneath the tank. The cleared entrance west returns through the Server Farm toward the upper Ring; the Throne Room lies east. The cleared access lift runs up to Firewall Gamma and back down to the chamber."
+      },
+      "description_variants": {
+        "before": [
+          {
+            "description": "The conductive tank is emptying around Elara's cables. The Anchor relic is gone, and the Hunter-Killer's charge is frozen in a perfect Stasis moment. A graviton well bends the light beneath the tank. The cleared entrance west returns through the Server Farm toward the upper Ring; the Throne Room lies east.",
+            "requires_milestones": [
+              "ms_w5_mq24_complete"
+            ]
+          },
+          {
+            "description": "Elara's firewall is open from the inside. She is present, fighting, and running out of time while the Anchor relic turns beside her like a lock waiting to be stolen. A graviton well bends the light beneath the tank. The cleared entrance west returns through the Server Farm toward the upper Ring; the Throne Room lies east.",
+            "requires_milestones": [
+              "ms_w5_elara_found"
+            ]
+          }
+        ],
+        "after": [
+          {
+            "description": "The conductive tank is emptying around Elara's cables. The Anchor relic is gone, and the Hunter-Killer's charge is frozen in a perfect Stasis moment. A graviton well bends the light beneath the tank. The cleared entrance west returns through the Server Farm toward the upper Ring; the Throne Room lies east. The cleared access lift runs up to Firewall Gamma and back down to the chamber.",
+            "requires_milestones": [
+              "ms_w5_mq24_complete"
+            ]
+          },
+          {
+            "description": "Elara's firewall is open from the inside. She is present, fighting, and running out of time while the Anchor relic turns beside her like a lock waiting to be stolen. A graviton well bends the light beneath the tank. The cleared entrance west returns through the Server Farm toward the upper Ring; the Throne Room lies east. The cleared access lift runs up to Firewall Gamma and back down to the chamber.",
+            "requires_milestones": [
+              "ms_w5_elara_found"
+            ]
+          }
+        ]
+      },
+      "special_exits": {
+        "before": null,
+        "after": {
+          "up": "Ride the access lift to Firewall Gamma"
+        }
+      }
+    }
+  },
+  "events_changed": [
+    "w5_mq23_defeat_construct"
+  ],
+  "transition_records_added": [
+    {
+      "id": "spire_vent_output__spire_underrail_platform__down__spire_transit_plaza",
+      "from_node": "spire_vent_output",
+      "from_room": "spire_underrail_platform",
+      "direction": "down",
+      "to_node": "spire_transit_plaza",
+      "to_room": "spire_transit_plaza",
+      "transition_text": "Take the platform stairs to Transit Plaza."
+    },
+    {
+      "id": "spire_transit_plaza__spire_transit_plaza__up__spire_vent_output",
+      "from_node": "spire_transit_plaza",
+      "from_room": "spire_transit_plaza",
+      "direction": "up",
+      "to_node": "spire_vent_output",
+      "to_room": "spire_underrail_platform",
+      "transition_text": "Climb the platform stairs to Underrail."
+    },
+    {
+      "id": "spire_laundry__spire_service_lift__down__spire_archive",
+      "from_node": "spire_laundry",
+      "from_room": "spire_service_lift",
+      "direction": "down",
+      "to_node": "spire_archive",
+      "to_room": "spire_archive_vault",
+      "transition_text": "Ride the inspection lift to the Archive."
+    },
+    {
+      "id": "spire_archive__spire_archive_vault__up__spire_laundry",
+      "from_node": "spire_archive",
+      "from_room": "spire_archive_vault",
+      "direction": "up",
+      "to_node": "spire_laundry",
+      "to_room": "spire_service_lift",
+      "transition_text": "Ride the inspection lift to Service Lift."
+    },
+    {
+      "id": "orbital_service_shaft__orbital_service_shaft__down__deep_server_farm",
+      "from_node": "orbital_service_shaft",
+      "from_room": "orbital_service_shaft",
+      "direction": "down",
+      "to_node": "deep_server_farm",
+      "to_room": "orbital_server_farm",
+      "transition_text": "Descend the cables to Server Farm."
+    },
+    {
+      "id": "deep_server_farm__orbital_server_farm__up__orbital_service_shaft",
+      "from_node": "deep_server_farm",
+      "from_room": "orbital_server_farm",
+      "direction": "up",
+      "to_node": "orbital_service_shaft",
+      "to_room": "orbital_service_shaft",
+      "transition_text": "Climb the cables to Service Shaft."
+    },
+    {
+      "id": "deep_server_farm__deep_firewall_gamma__down__deep_anchor_chamber",
+      "from_node": "deep_server_farm",
+      "from_room": "deep_firewall_gamma",
+      "direction": "down",
+      "to_node": "deep_anchor_chamber",
+      "to_room": "deep_anchor_chamber",
+      "transition_text": "Ride the access lift to the Anchor Chamber."
+    },
+    {
+      "id": "deep_anchor_chamber__deep_anchor_chamber__up__deep_server_farm",
+      "from_node": "deep_anchor_chamber",
+      "from_room": "deep_anchor_chamber",
+      "direction": "up",
+      "to_node": "deep_server_farm",
+      "to_room": "deep_firewall_gamma",
+      "transition_text": "Ride the access lift to Firewall Gamma."
+    }
+  ],
+  "checks": {
+    "all_existing_cardinal_routes_identical": true,
+    "all_existing_gates_identical": true,
+    "quest_catalog_identical": true,
+    "node_ownership_identical": true,
+    "room_ids_positions_inventory_encounters_identical": true,
+    "event_actions_conditions_rewards_identical_except_victory_message": true
+  }
+}

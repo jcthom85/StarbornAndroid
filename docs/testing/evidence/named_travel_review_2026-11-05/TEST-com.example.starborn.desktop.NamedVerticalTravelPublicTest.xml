@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.desktop.NamedVerticalTravelPublicTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-05T15:56:47.494Z" hostname="V52076.vims.edu" time="1.373">
+  <properties/>
+  <testcase name="anchorLiftRemainsLockedBeforeVictoryIncludingReloadAfterNodeShutdown" classname="com.example.starborn.desktop.NamedVerticalTravelPublicTest" time="1.091"/>
+  <testcase name="reviewedPathsWorkBothWaysAcrossQuestPhasesAndReload" classname="com.example.starborn.desktop.NamedVerticalTravelPublicTest" time="0.28"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

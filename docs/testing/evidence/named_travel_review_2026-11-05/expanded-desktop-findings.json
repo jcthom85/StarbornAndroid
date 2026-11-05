@@ -1,0 +1,7 @@
+[
+  {
+    "class": "com.example.starborn.desktop.DesktopActionReachabilityAuditTest",
+    "test": "usableFunctionalObjectsHaveSharedDescriptionLinksAcrossAuthoredVariants",
+    "message": "java.lang.AssertionError: sector9_hangar_bay: dark console (milestones=[ms_w2_bridge_installed])"
+  }
+]

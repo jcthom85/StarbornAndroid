@@ -1,0 +1,45 @@
+{
+  "android_host": {
+    "tests": 793,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "focused_shared_controller": {
+    "tests": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "apk_build": "assembleDebug passed; not installed",
+  "apk_sha256": "f960fe94eabf5cead267deab3146e4a7077dac6380805d20ac8cf94551c152c9",
+  "assets_sha256": {
+    "events": "ad7cb24a761a3e1f994d80e1ae339c5a7444b46bb59ea3ba3cc3f847939c4e72",
+    "dialogue": "153095d1b52ac044505a8c1b2475749b9f9f4e250049ed305f50b6bb3cd14ebf",
+    "rooms": "3bb1f2785fce7a17d0138f6ee0be85cd2a892b60f13f1bf2af376ed3f9a13a97",
+    "quests": "b83c6ed0c90b9963f33197e609837da5016d468cbdd0daf6dac79e7703ab8d85",
+    "items": "e7eb2687e2f872bceecf2777953e4ccbf4f64fdc5097a971f630a2208fde5091",
+    "skills": "8a9896da20ac0173f0ba34c0efd3da65bd123c3631c272850c4682abc6f48328",
+    "dialogue_voice_profiles": "060b8d4e09aa0c6197af2f7d0598c1aa7a7de46e545c8fbd61f4bcbc4e581258"
+  },
+  "guide_browser": [
+    "World 3 direct link and saved checklist",
+    "World 2 root link",
+    "current Botanist return task",
+    "logo loaded",
+    "desktop layout",
+    "checkmarks persist",
+    "position restored",
+    "search",
+    "cross-world navigation",
+    "theme",
+    "mobile layout",
+    "offline reload",
+    "no browser errors"
+  ],
+  "limits": [
+    "No phone acceptance or device installation.",
+    "Dialogue control sequence resets unfinished handles after leave/load; earned completion remains saved.",
+    "Heist planning and murder deduction were not redesigned."
+  ]
+}

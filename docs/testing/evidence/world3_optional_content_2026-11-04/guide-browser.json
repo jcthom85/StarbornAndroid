@@ -1,0 +1,20 @@
+{
+  "passed": [
+    "World 3 direct link and saved checklist",
+    "World 2 root link",
+    "current Botanist return task",
+    "logo loaded",
+    "desktop layout",
+    "checkmarks persist",
+    "position restored",
+    "search",
+    "cross-world navigation",
+    "theme",
+    "mobile layout",
+    "offline reload",
+    "no browser errors"
+  ],
+  "screenshot": "/var/folders/2g/zfqxfrys7w7f7r25175hsj380000gp/T/starborn-guide-qa-CI03GW/mobile.png",
+  "desktopScreenshot": "/var/folders/2g/zfqxfrys7w7f7r25175hsj380000gp/T/starborn-guide-qa-CI03GW/desktop.png",
+  "world3Screenshot": "/var/folders/2g/zfqxfrys7w7f7r25175hsj380000gp/T/starborn-guide-qa-CI03GW/world3-mobile.png"
+}

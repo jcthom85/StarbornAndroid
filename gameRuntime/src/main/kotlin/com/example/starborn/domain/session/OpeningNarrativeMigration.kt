@@ -136,7 +136,60 @@ fun GameSessionState.migrateOpeningNarrativeState(): GameSessionState {
         if ("w2_sq03_craft_source_resin" in completedEvents) task("w2_sq03", "craft_source_resin")
     }
 
-    if ("ms_game_complete" in migratedMilestones) roomState("source_center", "ending_complete")
+    // Older Foundry saves predate the permanent maintenance return corridor.
+    // Restore access from story evidence, without replaying the Springs reward or transfer.
+    val assemblyRouteCleared = "w4_mq17" in completedQuests ||
+        "ms_w4_mq17_complete" in migratedMilestones || "ms_w4_springs_regrouped" in migratedMilestones ||
+        "regroup_springs" in migratedQuestTasks["w4_mq17"].orEmpty() ||
+        listOf("w4_mq18", "w4_mq19", "w4_mq20").any { it in activeQuests || it in completedQuests }
+    if (assemblyRouteCleared) roomState("foundry_pipe_gallery", "assembly_route_open")
+
+    // Honor completed Firewall progress and old saves that already reached the chamber.
+    // This opens the physical return route; it does not award or complete the boss quest.
+    val beyondAnchorEntrance = listOf("deep_anchor_chamber", "deep_throne_room", "deep_tear").any { prefix ->
+        roomId == prefix || roomId?.startsWith(prefix + "_scale_") == true || prefix in visitedNodes
+    }
+    val anchorEntranceCleared = listOf("w5_mq23", "w5_mq24", "w5_mq25").any { it in completedQuests } ||
+        listOf("ms_w5_mq23_complete", "ms_w5_mq24_complete", "ms_w5_mq25_complete",
+            "ms_w5_anchor_chamber_entered", "ms_w5_anchor_taken").any { it in migratedMilestones } ||
+        "w5_mq23_defeat_construct" in completedEvents ||
+        "defeat_construct" in migratedQuestTasks["w5_mq23"].orEmpty() ||
+        "enter_chamber" in migratedQuestTasks["w5_mq24"].orEmpty() ||
+        listOf("w5_mq24", "w5_mq25").any { it in activeQuests || it in completedQuests } || beyondAnchorEntrance
+    if (anchorEntranceCleared) roomState("deep_anchor_chamber", "firewall_access_open")
+
+    // Restore Source passages from actual quest receipts or legacy locations beyond them.
+    // Only physical access is repaired: no quest tasks, rewards, or victories are granted.
+    fun sourceQuestDone(number: Int) = "w6_mq$number" in completedQuests ||
+        "ms_w6_mq${number}_complete" in migratedMilestones
+    fun sourceTask(quest: Int, vararg tasks: String) = tasks.any { it in migratedQuestTasks["w6_mq$quest"].orEmpty() }
+    fun sourceEvent(vararg ids: String) = ids.any { it in completedEvents }
+    fun sourceLocation(vararg entries: String) = entries.any { entry ->
+        roomId == entry || roomId?.startsWith(entry + "_node_scale_") == true ||
+            (entry + "_node") in visitedNodes
+    }
+    val sourceEndingKnown = sourceQuestDone(30) || "ms_game_complete" in migratedMilestones
+    val sourceAtCenter = sourceLocation("source_center", "source_new_world")
+    val sourceBeyondStair = sourceAtCenter || sourceLocation("source_spire_thought") ||
+        roomId in setOf("source_memory_fragments", "source_spire_archive", "source_spire_arena")
+    val sourceBeyondThreshold = sourceBeyondStair || sourceLocation("source_memory_stair")
+    val sourceLaterStory = sourceQuestDone(29) || "w6_mq30" in activeQuests || sourceEndingKnown
+    val sourceCenterCleared = sourceLaterStory || sourceAtCenter || sourceTask(29, "defeat_memory_guard", "reach_center") ||
+        sourceEvent("w6_mq29_memory_guard", "w6_mq29_reach_center")
+    val sourceAscentCleared = sourceCenterCleared || sourceBeyondStair || sourceTask(29, "climb_stair", "defeat_shadow_wave") ||
+        sourceEvent("w6_mq29_climb_stair", "w6_mq29_shadow_wave")
+    val sourceCrossed = sourceAscentCleared || sourceQuestDone(28) || "w6_mq29" in activeQuests ||
+        sourceTask(28, "reach_singularity") || sourceEvent("w6_mq28_reach_singularity") || sourceBeyondThreshold
+    if (sourceCrossed || sourceTask(28, "build_bridge", "final_banter") ||
+        sourceEvent("w6_mq28_build_bridge", "w6_mq28_final_banter") ||
+        roomId in setOf("source_memory_bridge_span", "source_memory_threshold")) {
+        roomState("source_memory_bridge", "bridge_built")
+    }
+    if (sourceCrossed) roomState("source_memory_threshold", "crossing_open")
+    if (sourceAscentCleared) roomState("source_memory_stair", "ascent_open")
+    if (sourceCenterCleared) roomState("source_spire_arena", "center_path_open")
+
+    if (sourceEndingKnown || sourceLocation("source_new_world")) roomState("source_center", "ending_complete")
 
     val bridgeInstalled = "ms_w2_bridge_installed" in migratedMilestones ||
         "w2_mq05" in completedQuests ||

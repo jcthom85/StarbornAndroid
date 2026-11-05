@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.domain.session.OpeningNarrativeMigrationTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-05T16:18:15.118Z" hostname="V52076.vims.edu" time="0.003">
+  <properties/>
+  <testcase name="derivesWorldTwoRidgeAndBridgeStateIdempotently" classname="com.example.starborn.domain.session.OpeningNarrativeMigrationTest" time="0.0"/>
+  <testcase name="legacyRailSaveResumesAtPodControlsWithoutStartingTheLaunch" classname="com.example.starborn.domain.session.OpeningNarrativeMigrationTest" time="0.0"/>
+  <testcase name="anchorEntranceMigrationPreservesBossProgressAndLegacyOccupantsWithoutPayouts" classname="com.example.starborn.domain.session.OpeningNarrativeMigrationTest" time="0.0"/>
+  <testcase name="sourceNavigationMigrationUsesReceiptsAndLegacyLocationsWithoutInventingProgress" classname="com.example.starborn.domain.session.OpeningNarrativeMigrationTest" time="0.003"/>
+  <testcase name="migratesDiscardedOpeningProgressToGroundedEquivalent" classname="com.example.starborn.domain.session.OpeningNarrativeMigrationTest" time="0.0"/>
+  <testcase name="foundryReturnRouteBackfillsFromStoryEvidenceWithoutMovingOrPayingAgain" classname="com.example.starborn.domain.session.OpeningNarrativeMigrationTest" time="0.0"/>
+  <testcase name="backfillsCompletedForkHandshakeWithoutDuplicatingRewards" classname="com.example.starborn.domain.session.OpeningNarrativeMigrationTest" time="0.0"/>
+  <testcase name="tideglassRepairUsesEventReceiptsWithoutGrantingRewards" classname="com.example.starborn.domain.session.OpeningNarrativeMigrationTest" time="0.0"/>
+  <testcase name="earlyWardenEvidenceRepairsOnlyPhysicalAndQuestProgressWithoutRewards" classname="com.example.starborn.domain.session.OpeningNarrativeMigrationTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

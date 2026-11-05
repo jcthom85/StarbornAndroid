@@ -22,6 +22,12 @@ class DialogueService(
         }
     }
 
+    /** Honor an NPC's declared talk speaker when its display name has no dialogue catalog. */
+    fun resolveNpcSpeaker(displayName: String, declaredLineId: String?): String {
+        if (dialogueBySpeaker.containsKey(displayName.lowercase(Locale.getDefault()))) return displayName
+        return declaredLineId?.let { dialogueById[it]?.speaker } ?: displayName
+    }
+
     /** Scripted radio calls enter a specific line without changing the NPC's normal greeting. */
     fun startDialogueAt(lineId: String): DialogueSession? {
         val line = dialogueById[lineId] ?: return null

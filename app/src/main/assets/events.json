@@ -4720,7 +4720,10 @@
     "id": "w3_mq11_clear_landing",
     "description": "Triggered when clearing the sewers.",
     "trigger": {
-      "type": "encounter_victory"
+      "type": "encounter_victory",
+      "enemies": [
+        "sewer_crawler"
+      ]
     },
     "conditions": [
       {
@@ -4741,7 +4744,7 @@
       },
       {
         "type": "show_message",
-        "message": "The sewer guards are disabled. The landing pad is secure."
+        "message": "The sewer crawler is down. The crew has room to move away from the landing pad toward Vent Output."
       }
     ]
   },
@@ -4789,13 +4792,43 @@
       },
       {
         "type": "show_message",
-        "message": "You climb the access ladder into acidic Lower City rain. Zeke points through the neon smear toward The Static, where his old apartment still hides above a bar the city forgot to erase."
+        "message": "You climb the access ladder into acidic Lower City rain. The Static's sign glows through the neon smear. A bar is a better place to ask about shelter than a Dominion checkpoint."
+      }
+    ]
+  },
+  {
+    "id": "w3_mq11_jax_shelter",
+    "description": "Jax offers the crew the abandoned apartment above his bar. Does not add a prerequisite to existing saves.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "spire_the_static"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq11"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq11",
+        "task_id": "reach_vent"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq11",
+        "task_id": "find_apartment"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "Jax"
       }
     ]
   },
   {
     "id": "w3_mq11_find_apartment",
-    "description": "Triggered when entering Zeke's old apartment.",
+    "description": "Triggered when entering the borrowed apartment above The Static.",
     "trigger": {
       "type": "enter_room",
       "room": "spire_zekes_apartment"
@@ -4823,7 +4856,7 @@
       },
       {
         "type": "show_message",
-        "message": "You slide the door open. Zeke's old apartment is bare, but safe from Dominion scanners."
+        "message": "You slide the door open. The apartment Jax offered is bare, with a working terminal and room for the crew. Orion pauses at the window; Dominion scans still reach this high."
       }
     ]
   },
@@ -4900,7 +4933,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Homecoming\n\nOrion folds a quiet Source shield around Zeke's erased apartment. Outside, the Spire keeps listening to itself. Inside, the crew has a room the city cannot own. Zeke names the next problem: the Upper City can only be reached through workers, schedules, badges, and people the rich refuse to see."
+        "message": "With Zeke grounding the terminal and checking the room's wiring, Orion folds a quiet Source shield around the borrowed apartment. Outside, the Spire keeps listening to itself. Inside, the crew has a room the city cannot own. Zeke names the next problem: the Upper City can only be reached through workers, schedules, badges, and people the rich refuse to see."
       }
     ]
   },
@@ -4950,7 +4983,7 @@
       },
       {
         "type": "show_message",
-        "message": "Jax slides a data drive across the counter. 'Curfew schedules, elevator shift gossip, and a list of guards who owe me. Don't make me regret remembering Zeke before the city deleted him.'"
+        "message": "Jax slides a data drive across the counter. 'Curfew schedules, elevator shifts, and guards who owe me. You said you came from the mines. Then you know what Dominion does to people it thinks nobody will miss. Get your crew through, and keep my name out of their reports.'"
       }
     ]
   },
@@ -5018,7 +5051,7 @@
       },
       {
         "type": "show_message",
-        "message": "Gh0st ghosts the freight badge handshake long enough to copy a service pattern. The climb has a door now, but only if everyone looks like they belong beneath it."
+        "message": "Gh0st intercepts the freight badge reader's authentication signal and copies a valid service pattern. The badges will get you through the gate, provided your uniforms match the clearance."
       }
     ]
   },
@@ -5145,7 +5178,7 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke's workstation folds the stolen timing, badges, and security pull into a usable elevator route. For once, the system that erased him has to open a door with his name still buried in it."
+        "message": "At the safehouse workstation, Zeke folds the stolen timing, badges, and security pull into a usable elevator route. The forms follow the same rules as the mine checkpoint. This time, he uses them to get the whole crew through."
       }
     ]
   },
@@ -5225,11 +5258,32 @@
       "type": "player_action",
       "action": "w3_mq12_use_elevator"
     },
-    "conditions": [],
+    "conditions": [
+      {
+        "type": "in_room",
+        "room_id": "spire_transit_plaza"
+      }
+    ],
     "actions": [
       {
-        "type": "show_message",
-        "message": "The Great Elevator rejects every surface credential you have. Curfews, patrol timing, copied badges, disguises, security records, and Zeke's blueprints all need to meet at the planning table before Nova can risk turning the crew into a headline."
+        "type": "if_milestone_set",
+        "milestone": "ms_w3_mq12_complete",
+        "do": [
+          {
+            "type": "show_message",
+            "message": "The copied freight clearance opens the service elevator. You ride back up to Laundry Service; the heist preparation remains intact."
+          },
+          {
+            "type": "warp",
+            "room_id": "spire_laundry_service"
+          }
+        ],
+        "elseDo": [
+          {
+            "type": "show_message",
+            "message": "The Great Elevator rejects every surface credential you have. Curfews, patrol timing, copied badges, disguises, security records, and Zeke's blueprints all need to meet at the planning table before Nova can risk turning the crew into a headline."
+          }
+        ]
       }
     ]
   },
@@ -5262,7 +5316,7 @@
       },
       {
         "type": "show_message",
-        "message": "You inspect the buzzing neon sign. Its power core is burnt out, leaving The Static looking abandoned enough for patrols to get curious. Jax needs a replacement core."
+        "message": "The sign’s power core is burnt out. Jax points you toward the Sentinel in the Upper City Exec Lounge’s private booths. Bring its core back when you have access upstairs."
       }
     ]
   },
@@ -5313,7 +5367,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Neon Fix\n\nThe sign flickers and flares back to life, bathing the subway car in neon purple. The bar looks watched, open, and ordinary again, which is the safest kind of lie. Jax grunts in approval and slides the reward across the counter."
+        "message": "The sign flickers and flares back to life, bathing the subway car in neon purple. The bar looks watched, open, and ordinary again, which is the safest kind of lie. Jax grunts in approval and slides the reward across the counter."
       }
     ]
   },
@@ -5367,6 +5421,10 @@
         "type": "quest_task_not_done",
         "quest_id": "w3_sq13",
         "task_id": "fix_market_lights"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w3_market_siphon_traced"
       }
     ],
     "actions": [
@@ -5433,7 +5491,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Plan\n\nCurfews, patrol gaps, copied badges, disguises, security records, and Zeke's blueprints lock into one ugly route. Nova assigns the roles. The service lift swallows the crew into the clean machinery of the Upper City, where the only way forward is to look like labor nobody is paid to notice."
+        "message": "Zeke combines the schedules, badges, disguises and security records into a service route. He sends the Astra’s autopilot a maintenance clearance to relocate from the sewer dock to the rooftop pad. The crew rides the service lift into Upper City."
       }
     ]
   },
@@ -5514,7 +5572,7 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke ghosts the scanner grid from the Laundry Service sensor console while Orion dampens the Source noise. The penthouse sensors blink blind for one narrow window, and the crew moves before fear can vote."
+        "message": "Zeke disables the scanner grid from the Laundry Service sensor console while Orion dampens the Source noise. The penthouse sensors blink blind for one narrow window, and the crew moves before fear can vote."
       }
     ]
   },
@@ -5588,7 +5646,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Social Engineering\n\nThe service chute spits Nova and Gh0st past the scanners while Zeke and Orion keep the grid blind. The crew has fooled the Upper City by becoming the people it refuses to see. The Archive opens ahead, and every second now has teeth."
+        "message": "The service chute spits Nova and Gh0st past the scanners while Zeke and Orion keep the grid blind. The crew has fooled the Upper City by becoming the people it refuses to see. The Archive opens ahead, and every second now has teeth."
       }
     ]
   },
@@ -5655,7 +5713,7 @@
       },
       {
         "type": "show_message",
-        "message": "The containment field is not a door. It is a pressure circuit, feeding the Lens through three prism shutters so the relic can be admired without ever being free."
+        "message": "The field feeds pressure through the red shutter. Its plate warns: relieve pressure before opening containment. Blue is the return channel; closing it traps pressure at the Lens."
       }
     ]
   },
@@ -5688,7 +5746,7 @@
       },
       {
         "type": "show_message",
-        "message": "Orion reads the shutters by ear: red carries pressure, blue carries return, and gold carries the permission lie Dominion wrapped around both."
+        "message": "The shutter legend marks red FEED, blue RETURN and gold AUTHORIZATION. A relief socket leads into the blue channel. The red feed can be isolated once that return is carrying pressure."
       }
     ]
   },
@@ -5721,7 +5779,7 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke follows the command tether-lines through the glass. The vault is not asking for a code; it is waiting for the Prism Gallery to stop contradicting itself."
+        "message": "Zeke traces the gold tether to the Administrator’s audit bus. Gold controls authorization, not pressure. Copy its local hold signal before disconnecting the audit; cutting it outright would raise an alarm."
       }
     ]
   },
@@ -5777,7 +5835,7 @@
       },
       {
         "type": "show_message",
-        "message": "The field, prism shutters, and command tethers reach the same phase. Containment drops for six seconds, leaving the Lens unsupported."
+        "message": "Blue carries the relieved pressure, red is isolated, and the gold hold signal stays local. Containment opens. The Lens is ready to lift; Zeke waits by the field before Nova touches it."
       }
     ]
   },
@@ -5849,7 +5907,11 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Lens\n\nThe relic burns cold in Nova's hand. The Shield above the Spire becomes visible as rotating chords, and so does the thin old thread running through her own signal. Alarm text blooms across the air: ANOMALY DETECTED. The only route left is through the drone alcove and up to the roof, where the Astra has one impossible launch window."
+        "message": "The relic burns cold in Nova's hand. The Shield above the Spire becomes visible as rotating chords, and so does the thin old thread running through her own signal. Alarm text blooms across the air: ANOMALY DETECTED. The only route left is through the drone alcove and up to the roof, where the Astra has one impossible launch window."
+      },
+      {
+        "type": "start_dialogue",
+        "npc": "line:thorne_w3_mq14_trap_intro"
       }
     ]
   },
@@ -5965,7 +6027,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "Scan reveals the Shield window opening and closing above the roof, smaller than courage and faster than panic. The Administrator's targeting lattice crosses every launch line."
+        "message": "Scan shows the local security curtain cycling above the roof. The planetary Shield is farther overhead; the Administrator’s targeting lattice still crosses every low-altitude launch line."
       }
     ]
   },
@@ -6000,7 +6062,7 @@
       },
       {
         "type": "show_message",
-        "message": "Scan catches the Shield window on its next rotation. Orion counts under his breath. Zeke has the Astra hot. Nova has one launch window and no room left for fear."
+        "message": "Scan separates the Spire’s local security curtain from the planetary Shield above it. Orion marks a narrow low-altitude launch window toward the Foundry."
       }
     ]
   },
@@ -6100,7 +6162,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Administrator frame collapses, still smiling through sparking teeth. The Shield window opens for less than a second, and Nova can finally see exactly how small freedom is."
+        "message": "The Administrator frame collapses, still smiling through sparking teeth. Its local security curtain flickers. Nova needs one clear launch window toward the Foundry."
       }
     ],
     "recover_recorded_victory": true
@@ -6132,7 +6194,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "The Astra screams ready, but the Shield is still a wall of lethal timing. Nova needs to scan the Shield window before Orion can call the count."
+        "message": "The Astra is ready, but the local security curtain is still cycling. Use the shield window display to scan its launch timing before Orion calls the count."
       }
     ]
   },
@@ -6200,7 +6262,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Burn Notice\n\nThe Astra slips the Shield on Orion's count, using the Lens to ride a gap nobody was supposed to see. The crew survives the cage, but the ship cannot climb to the Orbital Ring on damaged drives. Zeke tags Sector 7's Foundry: a Deep-Core Engine for altitude, Phase-Cutter Arrays for teeth, and no legal way to take either."
+        "message": "The Astra clears the Spire’s internal security curtain on Orion’s count. The planetary Shield still hangs above them. Zeke sets a low-altitude course for the Foundry: its Deep-Core Engine can carry them higher, and its Phase-Cutter Arrays can open the way."
       }
     ]
   },
@@ -6310,6 +6372,10 @@
       {
         "type": "quest_not_completed",
         "quest_id": "w3_sq15"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w3_prototype_bias_scanned"
       }
     ],
     "actions": [
@@ -6645,12 +6711,18 @@
         "quest_id": "w4_mq18"
       },
       {
+        "type": "set_room_state",
+        "room_id": "foundry_pipe_gallery",
+        "state_key": "assembly_route_open",
+        "value": true
+      },
+      {
         "type": "warp",
         "room_id": "foundry_conveyor_belt"
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Ghost in the Machine\n\nGh0st gives Nova his override key. The first time was programming. The second time is choice. The Assembly floor is still making more bodies for the same crime."
+        "message": "Quest Complete: Ghost in the Machine\n\nGh0st gives Nova his override key. The first time was programming. The second time is choice. The Assembly floor is still making more bodies for the same crime. The Pipe Gallery maintenance shutter is now cleared; the crew can return from Reject Bay to the Slag Pits."
       }
     ]
   },
@@ -7633,7 +7705,7 @@
   },
   {
     "id": "w4_sq20_survive_waves",
-    "description": "Survive overclocked test waves.",
+    "description": "Calibrate the test terminal against the mapped heat cycle.",
     "trigger": {
       "type": "player_action",
       "action": "w4_sq20_survive_waves"
@@ -7642,6 +7714,10 @@
       {
         "type": "quest_not_completed",
         "quest_id": "w4_sq20"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w4_hazards_mapped"
       }
     ],
     "actions": [
@@ -8444,6 +8520,12 @@
         "milestone": "ms_w5_mq23_complete"
       },
       {
+        "type": "set_room_state",
+        "room_id": "deep_anchor_chamber",
+        "state_key": "firewall_access_open",
+        "value": true
+      },
+      {
         "type": "start_quest",
         "quest_id": "w5_mq24"
       },
@@ -8453,7 +8535,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Core Approach\n\nThe construct shatters into dead glyphs. The Anchor Chamber opens, and Gh0st hears Elara through the system Vale stole. Thorne's route worked, but every open door now points at the person Dominion turned into infrastructure."
+        "message": "Quest Complete: The Core Approach\n\nThe construct shatters into dead glyphs. The Anchor Chamber opens, and Gh0st hears Elara through the system Vale stole. Thorne's route worked, but every open door now points at the person Dominion turned into infrastructure. The Anchor access lift now runs directly down to the chamber and back up to this aisle. The westward route through the Server Farm remains open for walking back."
       }
     ],
     "recover_recorded_victory": true
@@ -9358,6 +9440,12 @@
     ],
     "actions": [
       {
+        "type": "set_room_state",
+        "room_id": "source_memory_bridge",
+        "state_key": "bridge_built",
+        "value": true
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w6_mq28",
         "task_id": "build_bridge"
@@ -9427,6 +9515,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "source_memory_threshold",
+        "state_key": "crossing_open",
+        "value": true
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w6_mq28",
@@ -9683,12 +9777,8 @@
         "milestone": "ms_w6_unshackled_unlocked"
       },
       {
-        "type": "set_milestone",
-        "milestone": "ms_w6_unshackled_unlocked"
-      },
-      {
         "type": "show_message",
-        "message": "Quest Complete: The HR Record\n\nZeke deletes the active file and its backups, then closes the terminal without checking for approval. Unshackled unlocked."
+        "message": "Quest Complete: The HR Record\n\nZeke leaves the records intact as evidence and closes the review without seeking approval. The file no longer has authority over him. Unshackled unlocked."
       }
     ]
   },
@@ -9923,6 +10013,12 @@
     ],
     "actions": [
       {
+        "type": "set_room_state",
+        "room_id": "source_memory_stair",
+        "state_key": "ascent_open",
+        "value": true
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w6_mq29",
         "task_id": "climb_stair"
@@ -10001,6 +10097,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "source_spire_arena",
+        "state_key": "center_path_open",
+        "value": true
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w6_mq29",
@@ -10136,7 +10238,7 @@
       },
       {
         "type": "show_message",
-        "message": "Vale's human outline cracks like porcelain. Blinding geometry unfolds from inside it. The Silence begins."
+        "message": "Vale's human outline cracks like porcelain. Blinding geometry unfolds from inside it. The Silence begins. Follow the fracture north through the White Shore and Key Orbit to the Silence Pulpit."
       }
     ],
     "recover_recorded_victory": true
@@ -10179,7 +10281,7 @@
       },
       {
         "type": "show_message",
-        "message": "The god-form collapses, but the universe keeps breaking. Vale's code still blocks the signal, and the Key will only answer a circuit, not a ruler."
+        "message": "The god-form collapses, but the universe keeps breaking. Vale's code still blocks the signal, and the Key will only answer a circuit, not a ruler. Return south through the Key Orbit and White Shore to The Center. The shared tuning focus is waiting there."
       }
     ],
     "recover_recorded_victory": true
@@ -10572,7 +10674,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Cold Case\n\nGh0st broadcasts the deleted transfer to every security kiosk. Elara's trail points toward the orbital ring. Intercept unlocked."
+        "message": "Gh0st broadcasts the deleted transfer to every security kiosk. Elara's trail points toward the orbital ring. Intercept unlocked."
       }
     ]
   },
@@ -10655,7 +10757,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Night Market Run\n\nWarm light exposes every hidden stall before patrols can declare them abandoned. Neon Band acquired."
+        "message": "Warm light exposes every hidden stall before patrols can declare them abandoned. Neon Band acquired."
       }
     ]
   },
@@ -10738,7 +10840,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Corporate Espionage\n\nEvery worker terminal receives the accounts at once. The Upper City runs on crimes with better stationery."
+        "message": "Every worker terminal receives the accounts at once. The Upper City runs on crimes with better stationery."
       }
     ]
   },
@@ -10821,7 +10923,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Prototype Testing\n\nThe roof relay forgets Nova's combat signature and dispenses the Phase Rounds as an approved test result."
+        "message": "The roof relay forgets Nova's combat signature and dispenses the Phase Rounds as an approved test result."
       }
     ]
   },
@@ -10982,7 +11084,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Scrap Heap\n\nThe actuators turn a dead vent into a working cooling bypass. Failure becomes infrastructure. Scavenger unlocked."
+        "message": "Quest Complete: The Scrap Heap\n\nThe salvaged actuators turn a dead vent into a working cooling bypass. The springs can carry the overflow again. Failure becomes infrastructure."
       }
     ]
   },
@@ -12889,7 +12991,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Corporate Espionage\n\nNova keeps the workers out of the blast radius and feeds one executive's private security profile into a dead drop. Phase Rounds acquired."
+        "message": "Nova keeps the workers out of the blast radius and feeds one executive's private security profile into a dead drop. Phase Rounds acquired."
       }
     ]
   },
@@ -14405,7 +14507,8 @@
         "type": "warp",
         "room_id": "spire_vent_output"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_spire_the_static_scale_03_to_entry",
@@ -14423,7 +14526,8 @@
         "type": "warp",
         "room_id": "spire_the_static"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_spire_night_market_scale_03_to_entry",
@@ -14441,7 +14545,8 @@
         "type": "warp",
         "room_id": "spire_night_market"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_spire_sewers_scale_03_to_entry",
@@ -14459,7 +14564,8 @@
         "type": "warp",
         "room_id": "spire_sewers_landing"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_spire_transit_plaza_scale_03_to_entry",
@@ -14477,7 +14583,8 @@
         "type": "warp",
         "room_id": "spire_transit_plaza"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_spire_laundry_scale_03_to_entry",
@@ -14495,7 +14602,8 @@
         "type": "warp",
         "room_id": "spire_laundry_service"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_spire_skypark_scale_03_to_entry",
@@ -14513,7 +14621,8 @@
         "type": "warp",
         "room_id": "spire_skypark_dome"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_spire_exec_lounge_scale_05_to_entry",
@@ -14531,7 +14640,8 @@
         "type": "warp",
         "room_id": "spire_exec_lounge_bar"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_spire_archive_scale_03_to_entry",
@@ -14549,7 +14659,8 @@
         "type": "warp",
         "room_id": "spire_archive_vault"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_spire_landing_pad_scale_04_to_entry",
@@ -14567,7 +14678,8 @@
         "type": "warp",
         "room_id": "spire_landing_pad_roof"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_foundry_obsidian_shelf_scale_final_to_entry",
@@ -14585,7 +14697,8 @@
         "type": "warp",
         "room_id": "foundry_slag_landing"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_foundry_slag_river_scale_final_to_entry",
@@ -14603,7 +14716,8 @@
         "type": "warp",
         "room_id": "foundry_slag_river"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_foundry_cooling_springs_scale_final_to_entry",
@@ -14621,7 +14735,8 @@
         "type": "warp",
         "room_id": "foundry_cooling_springs"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_foundry_waste_intake_scale_final_to_entry",
@@ -14639,7 +14754,8 @@
         "type": "warp",
         "room_id": "foundry_waste_intake"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_foundry_service_airlock_scale_final_to_entry",
@@ -14657,7 +14773,8 @@
         "type": "warp",
         "room_id": "foundry_service_airlock"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_foundry_conveyor_belt_scale_final_to_entry",
@@ -14675,7 +14792,8 @@
         "type": "warp",
         "room_id": "foundry_conveyor_belt"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_foundry_conditioning_scale_final_to_entry",
@@ -14693,7 +14811,8 @@
         "type": "warp",
         "room_id": "foundry_conditioning_chamber"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_foundry_forge_scale_final_to_entry",
@@ -14711,7 +14830,8 @@
         "type": "warp",
         "room_id": "foundry_forge_anvil"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_foundry_power_core_scale_final_to_entry",
@@ -14729,7 +14849,8 @@
         "type": "warp",
         "room_id": "foundry_power_core"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_foundry_titan_dock_scale_final_to_entry",
@@ -14747,7 +14868,8 @@
         "type": "warp",
         "room_id": "foundry_titan_dock"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_orbital_executive_dock_scale_final_to_entry",
@@ -14765,7 +14887,8 @@
         "type": "warp",
         "room_id": "orbital_executive_dock"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_orbital_grand_concourse_scale_final_to_entry",
@@ -14783,7 +14906,8 @@
         "type": "warp",
         "room_id": "orbital_grand_concourse"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_orbital_solarium_scale_final_to_entry",
@@ -14801,7 +14925,8 @@
         "type": "warp",
         "room_id": "orbital_solarium"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_orbital_security_hub_scale_final_to_entry",
@@ -14819,7 +14944,8 @@
         "type": "warp",
         "room_id": "orbital_security_hub"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_orbital_service_shaft_scale_final_to_entry",
@@ -14837,7 +14963,8 @@
         "type": "warp",
         "room_id": "orbital_service_shaft"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_deep_server_farm_scale_04_to_entry",
@@ -14855,7 +14982,8 @@
         "type": "warp",
         "room_id": "orbital_server_farm"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_deep_anchor_chamber_scale_08_to_entry",
@@ -14873,7 +15001,8 @@
         "type": "warp",
         "room_id": "deep_anchor_chamber"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_deep_throne_room_scale_07_to_entry",
@@ -14891,7 +15020,8 @@
         "type": "warp",
         "room_id": "deep_throne_room"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_deep_tear_scale_06_to_entry",
@@ -14909,7 +15039,8 @@
         "type": "warp",
         "room_id": "deep_tear"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_source_campfire_node_scale_final_to_entry",
@@ -14927,7 +15058,8 @@
         "type": "warp",
         "room_id": "source_campfire"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_source_zeke_nightmare_node_scale_03_to_entry",
@@ -14945,7 +15077,8 @@
         "type": "warp",
         "room_id": "source_zeke_nightmare"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_source_gh0st_nightmare_node_scale_03_to_entry",
@@ -14963,7 +15096,8 @@
         "type": "warp",
         "room_id": "source_gh0st_nightmare"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_source_orion_nightmare_node_scale_03_to_entry",
@@ -14981,7 +15115,8 @@
         "type": "warp",
         "room_id": "source_orion_nightmare"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_source_echo_mines_node_scale_final_to_entry",
@@ -14999,7 +15134,8 @@
         "type": "warp",
         "room_id": "source_echo_mines"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_source_memory_bridge_node_scale_final_to_entry",
@@ -15017,7 +15153,8 @@
         "type": "warp",
         "room_id": "source_memory_bridge"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_source_memory_stair_node_scale_final_to_entry",
@@ -15035,7 +15172,8 @@
         "type": "warp",
         "room_id": "source_memory_stair"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_source_spire_thought_node_scale_04_to_entry",
@@ -15053,7 +15191,8 @@
         "type": "warp",
         "room_id": "source_spire_thought"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "warp_source_center_node_scale_final_to_entry",
@@ -15071,7 +15210,8 @@
         "type": "warp",
         "room_id": "source_center"
       }
-    ]
+    ],
+    "repeatable": true
   },
   {
     "id": "w3_sq16_start",
@@ -15097,7 +15237,7 @@
       },
       {
         "type": "show_message",
-        "message": "Automated security barriers seal the room. Auditor Malick lies dead in the Syndicate Booth. Four suspects are held under emergency lockdown."
+        "message": "The crime-scene barrier marks Auditor Malick’s booth. Security has ordered four patrons to remain for questioning; the public gallery exit is still open."
       }
     ]
   },
@@ -16717,6 +16857,395 @@
         "type": "give_item",
         "item_id": "charlies_comfort_stone",
         "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "w3_mq13_review_guest_access",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq13_review_guest_access"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq13"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq13",
+        "task_id": "blend_in"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:curator_w3_mq13_intro"
+      }
+    ],
+    "repeatable": true
+  },
+  {
+    "id": "w3_mq14_review_lens",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq14_review_lens"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq14"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq14",
+        "task_id": "solve_light_puzzle"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq14",
+        "task_id": "take_lens"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:zeke_w3_mq14_lens_warning"
+      }
+    ],
+    "repeatable": true
+  },
+  {
+    "id": "w3_mq14_route_prisms",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq14_route_prisms"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq14"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq14",
+        "task_id": "enter_archive"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w3_containment_field_read"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w3_prism_shutters_read"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w3_command_tethers_traced"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq14",
+        "task_id": "solve_light_puzzle"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:w3_prism_route_entry"
+      }
+    ],
+    "repeatable": true
+  },
+  {
+    "id": "w3_return_to_lower_city",
+    "description": "Ride the cleared service lift down to Transit Plaza.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_return_to_lower_city"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w3_mq12_complete"
+      },
+      {
+        "type": "in_room",
+        "room_id": "spire_service_lift"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "The lift panel accepts the copied freight clearance. You descend to Transit Plaza, with The Static and its security kiosk a short walk away. The elevator controls there can bring you back upstairs."
+      },
+      {
+        "type": "warp",
+        "room_id": "spire_transit_plaza"
+      }
+    ]
+  },
+  {
+    "id": "w4_mq17_access_phantom_terminal_scene",
+    "description": "Present gh0st_w4_phantom_intro.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq17_access_phantom_terminal_scene"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq17"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq17",
+        "task_id": "access_phantom_terminal"
+      },
+      {
+        "type": "in_room",
+        "room_id": "foundry_waste_intake"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:gh0st_w4_phantom_intro"
+      }
+    ]
+  },
+  {
+    "id": "w4_mq17_regroup_springs_scene",
+    "description": "Present gh0st_w4_springs_intro.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq17_regroup_springs_scene"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq17"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w4_mq17",
+        "task_id": "access_phantom_terminal"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq17",
+        "task_id": "regroup_springs"
+      },
+      {
+        "type": "in_room",
+        "room_id": "foundry_cooling_springs"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:gh0st_w4_springs_intro"
+      }
+    ]
+  },
+  {
+    "id": "w4_mq20_confront_rylos_scene",
+    "description": "Present rylos_w4_mq20_intro.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq20_confront_rylos_scene"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq20"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq20",
+        "task_id": "confront_rylos"
+      },
+      {
+        "type": "in_room",
+        "room_id": "foundry_titan_dock"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:rylos_w4_mq20_intro"
+      }
+    ]
+  },
+  {
+    "id": "w5_mq22_find_thorne_scene",
+    "description": "Present thorne_w5_mq22_intro.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq22_find_thorne_scene"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq22"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq22",
+        "task_id": "access_mainframe"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq22",
+        "task_id": "find_thorne"
+      },
+      {
+        "type": "in_room",
+        "room_id": "deep_mainframe_nave"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:thorne_w5_mq22_intro"
+      }
+    ]
+  },
+  {
+    "id": "w5_mq24_find_elara_scene",
+    "description": "Present elara_w5_mq24_reunion.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq24_find_elara_scene"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq24"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq24",
+        "task_id": "enter_chamber"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq24",
+        "task_id": "find_elara"
+      },
+      {
+        "type": "in_room",
+        "room_id": "deep_anchor_chamber"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:elara_w5_mq24_reunion"
+      }
+    ]
+  },
+  {
+    "id": "w5_mq25_soloist_scene",
+    "description": "Present vale_w5_mq25_soloist.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq25_soloist_scene"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq25"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq25",
+        "task_id": "reach_throne"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq25",
+        "task_id": "witness_soloist"
+      },
+      {
+        "type": "in_room",
+        "room_id": "deep_throne_room"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:vale_w5_mq25_soloist"
+      }
+    ]
+  },
+  {
+    "id": "w6_mq30_confront_vale_scene",
+    "description": "Present vale_w6_final_confrontation.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_mq30_confront_vale_scene"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq30"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq30",
+        "task_id": "confront_vale"
+      },
+      {
+        "type": "in_room",
+        "room_id": "source_center"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:vale_w6_final_confrontation"
+      }
+    ]
+  },
+  {
+    "id": "w5_sq23_route_bulkheads",
+    "description": "Route the three bulkheads using the pressure map.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_sq23_route_bulkheads"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w5_sq23"
+      },
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w5_pressure_loss_mapped"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w5_breaches_sealed"
+      },
+      {
+        "type": "in_room",
+        "room_id": "orbital_executive_dock"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:w5_bulkheads_first"
       }
     ]
   }

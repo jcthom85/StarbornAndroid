@@ -1264,7 +1264,7 @@
     "name": "Intercept",
     "character": "gh0st",
     "type": "active",
-    "description": "Gh0st intercepts attacks targeting an ally, gaining Guard.",
+    "description": "Gh0st braces himself with Guard: halves incoming damage and prevents stagger for 1 turn.",
     "combat_tags": [
       "defend",
       "support"
@@ -1351,7 +1351,7 @@
     "name": "Corporate Insight",
     "character": "nova",
     "type": "passive",
-    "description": "Dominion command patterns expose predictable weaknesses in corporate security units.",
+    "description": "While Nova is above half HP, grants +10 percentage points of accuracy and critical chance.",
     "combat_tags": [
       "buff"
     ],
@@ -1402,7 +1402,7 @@
     "name": "Data Shield",
     "character": "zeke",
     "type": "passive",
-    "description": "Purged defensive routines harden the party against signal disruption and Silence.",
+    "description": "While Zeke is alive, protects the party from hostile Silence, Jammed, and Short Circuit statuses.",
     "combat_tags": [
       "support",
       "buff"
@@ -1417,7 +1417,7 @@
     "name": "Legacy",
     "character": "nova",
     "type": "passive",
-    "description": "Jed's memory steadies Nova's aim when the cost matters most.",
+    "description": "While Nova is below half HP, grants +15 percentage points of accuracy and critical chance.",
     "combat_tags": [
       "buff"
     ],
@@ -1434,7 +1434,7 @@
     "name": "Unshackled",
     "character": "zeke",
     "type": "passive",
-    "description": "Increases Zeke's Agility and action recovery speed.",
+    "description": "Grants Zeke +3 Agility and +2 Speed.",
     "combat_tags": [
       "buff"
     ],
@@ -1448,7 +1448,7 @@
     "name": "Source Balance",
     "character": "gh0st",
     "type": "passive",
-    "description": "A clean carrier signal grants Defense scaling against physical and Source pressure.",
+    "description": "Grants Gh0st +5 flat damage reduction and 25% Source resistance.",
     "combat_tags": [
       "defend",
       "buff"
@@ -1463,7 +1463,7 @@
     "name": "Ancestral Grace",
     "character": "orion",
     "type": "passive",
-    "description": "The Aethel burial current continuously restores Orion while he remains in the fight.",
+    "description": "Orion begins each battle with Regen for three turns.",
     "combat_tags": [
       "heal",
       "buff"
@@ -1551,7 +1551,9 @@
     "type": "support",
     "description": "The Avatar recalibrates its weapons after the missile barrage, leaving a brief opening to attack or heal.",
     "targeting": "self",
-    "combat_tags": ["support"],
+    "combat_tags": [
+      "support"
+    ],
     "base_power": 0,
     "cooldown": 0
   },
@@ -1562,7 +1564,9 @@
     "type": "support",
     "description": "The Ascended gathers its fractured voices. A brief opening before the next assault.",
     "targeting": "self",
-    "combat_tags": ["support"],
+    "combat_tags": [
+      "support"
+    ],
     "base_power": 0,
     "cooldown": 0
   },
@@ -1833,7 +1837,10 @@
     "character": "enemy",
     "type": "heal",
     "description": "Repairs the welder's squad. Its portable repair spool supports only two uses per battle.",
-    "combat_tags": ["heal", "support"],
+    "combat_tags": [
+      "heal",
+      "support"
+    ],
     "targeting": "all_allies",
     "base_power": 45,
     "scaling": "focus",
@@ -1847,12 +1854,16 @@
     "character": "enemy",
     "type": "enemy",
     "description": "The golem opens its overheated slag shell, sacrificing its action and armor while it cools.",
-    "combat_tags": ["tactical"],
+    "combat_tags": [
+      "tactical"
+    ],
     "targeting": "self",
     "base_power": 0,
     "scaling": "focus",
     "cooldown": 0,
-    "status_applications": ["radiators_exposed"]
+    "status_applications": [
+      "radiators_exposed"
+    ]
   },
   {
     "id": "molten_slam",

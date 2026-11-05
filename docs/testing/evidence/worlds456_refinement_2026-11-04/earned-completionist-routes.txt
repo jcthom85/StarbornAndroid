@@ -1,0 +1,144 @@
+Production crew; real combat; earned W4 arrival; complementary Quality Control/guardian/HR branches; known answers and seed 17.
+W4 alternate=false XP=17820 AP=42 credits=2152
+W5 alternate=false XP=28200 AP=30 credits=1131
+W6 alternate=false XP=46470 AP=41 credits=1131; quests=[w1_mq01, w1_mq02, w1_sq03, w1_mq03, w1_mq04, w1_mq05, w2_mq01, w2_mq02, w2_mq03, w2_sq02, w2_sq03, w2_sq04, w2_sq01, w2_mq04, w2_sq05, w2_mq05, w3_mq11, w3_sq13, w3_mq12, w3_mq13, w3_sq11, w3_sq12, w3_sq14, w3_sq15, w3_sq16, w3_mq14, w3_mq15, w4_mq16, w4_sq16, w4_sq17, w4_sq18, w4_sq_crucible, w4_mq17, w4_mq18, w4_sq19, w4_sq20, w4_mq19, w4_mq20, w5_mq21, w5_mq22, w5_sq21, w5_sq22, w5_sq23, w5_sq24, w5_sq25, w5_mq23, w5_mq24, w5_mq25, w6_mq26, w6_sq27, w6_sq28, w6_sq26, w6_mq27, w6_mq28, w6_sq29, w6_sq30, w6_mq29, w6_mq30]; items={mining_pistol=1, nova_flux_liner=1, scrap_metal=5, ration_pack=2, mine_access_badge=1, armor_plate=1, hydraulic_fluid=1, heavy_gear=1, beast_meat=4, tuning_fork=1, wiring_bundle=4, battery=1, warden_keycard=1, ghost_signal_cell=1, wooden_rod=1, basic_lure=1, mod_corrosive_rounds=1, thermal_cutter=1, source_resin=2, painkillers=4, focus_conduit=1, rapid_capacitor=1, neon_band=1, encrypted_ledger=1, phase_rounds=1, cyano_coolant_injector=1, skyline_master_passkey=1, the_lens=1, pure_iron=5, heat_liner=1, explosive_tip=1, coolant_system=1, crucible_forge_plate=1, gh0st_override_key=1, thermal_clip=1, the_anvil=1, deep_core_engine=1, phase_cutter_arrays=1, medkit_plus=9, mag_boots=1, sysadmin_keycard=1, void_clip=1, anchor_relic=1, key_relic=1, astral_thread=4, starborn_mod=1}; skills=[nova_arc_tether, nova_cryo_vent, nova_hydraulic_kick, nova_blast_wave, orion_stasis_stitch, nova_smoke_bomb, zeke_bulwark_stance, orion_nano_repair, nova_link, gh0st_venom_edge, gh0st_intercept, source_art_scan, nova_plasma_burst, zeke_overload_fists, orion_disruption_pulse, gh0st_system_crash, gh0st_phase_counter, gh0st_harden, source_art_construct, corporate_insight, orion_sunbeam, data_shield, source_art_stasis, nova_rend_round, zeke_quake_slam, orion_stasis_field, gh0st_shadow_flurry, zeke_unshackled, gh0st_source_balance, nova_legacy, orion_ancestral_grace, source_art_tune_world]
+W4 alternate=true XP=17820 AP=42 credits=2152
+W5 alternate=true XP=28200 AP=30 credits=1131
+W6 alternate=true XP=46470 AP=41 credits=1131; quests=[w1_mq01, w1_mq02, w1_sq03, w1_mq03, w1_mq04, w1_mq05, w2_mq01, w2_mq02, w2_mq03, w2_sq02, w2_sq03, w2_sq04, w2_sq01, w2_mq04, w2_sq05, w2_mq05, w3_mq11, w3_sq13, w3_mq12, w3_mq13, w3_sq11, w3_sq12, w3_sq14, w3_sq15, w3_sq16, w3_mq14, w3_mq15, w4_mq16, w4_sq16, w4_sq17, w4_sq18, w4_sq_crucible, w4_mq17, w4_mq18, w4_sq19, w4_sq20, w4_mq19, w4_mq20, w5_mq21, w5_mq22, w5_sq25, w5_sq24, w5_sq23, w5_sq22, w5_sq21, w5_mq23, w5_mq24, w5_mq25, w6_mq26, w6_sq27, w6_sq28, w6_sq26, w6_mq27, w6_mq28, w6_sq29, w6_sq30, w6_mq29, w6_mq30]; items={mining_pistol=1, nova_flux_liner=1, scrap_metal=5, ration_pack=2, mine_access_badge=1, armor_plate=1, hydraulic_fluid=1, heavy_gear=1, beast_meat=4, tuning_fork=1, wiring_bundle=4, battery=1, warden_keycard=1, ghost_signal_cell=1, wooden_rod=1, basic_lure=1, mod_corrosive_rounds=1, thermal_cutter=1, source_resin=2, painkillers=4, focus_conduit=1, rapid_capacitor=2, neon_band=1, encrypted_ledger=1, phase_rounds=1, cyano_coolant_injector=1, skyline_master_passkey=1, the_lens=1, pure_iron=5, heat_liner=1, explosive_tip=1, coolant_system=1, crucible_forge_plate=1, gh0st_override_key=1, thermal_clip=1, the_anvil=1, deep_core_engine=1, phase_cutter_arrays=1, medkit_plus=9, sysadmin_keycard=1, void_clip=1, mag_boots=1, anchor_relic=1, key_relic=1, astral_thread=4, starborn_mod=1}; skills=[nova_arc_tether, nova_cryo_vent, nova_hydraulic_kick, nova_blast_wave, orion_stasis_stitch, nova_smoke_bomb, zeke_bulwark_stance, orion_nano_repair, nova_link, gh0st_venom_edge, gh0st_intercept, source_art_scan, nova_plasma_burst, zeke_overload_fists, orion_disruption_pulse, gh0st_system_crash, gh0st_phase_counter, source_art_construct, zeke_guardian_covenant, orion_sunbeam, corporate_insight, source_art_stasis, nova_rend_round, zeke_quake_slam, orion_stasis_field, gh0st_shadow_flurry, zeke_unshackled, gh0st_source_balance, nova_legacy, orion_ancestral_grace, source_art_tune_world]
+w3_sq13 payout: XP=200; AP=0; inventory delta={neon_band=1}
+w3_sq11 payout: XP=200; AP=0; inventory delta={neon_sign_core=-1}
+w3_sq12 payout: XP=200; AP=2; inventory delta={}
+w3_sq14 payout: XP=250; AP=0; inventory delta={encrypted_ledger=1}
+w3_sq15 payout: XP=300; AP=0; inventory delta={phase_rounds=1}
+w3_sq16 payout: XP=450; AP=0; inventory delta={cyano_coolant_injector=1, skyline_master_passkey=1}
+Equipment combat deltas passed: Neon Band Focus+2/Crit+5; Phase Rounds Agility+2/Focus+2; Coolant Focus+4/Accuracy+3/Freeze element/20% freeze-on-hit; Phase weapon element=null
+Intercept executed in earned rooftop combat; Guard applied to Gh0st.
+w4_sq16 XP=350 AP=0 items={explosive_tip=1}
+w4_sq17 XP=300 AP=0 items={coolant_system=1}
+w4_sq18 XP=300 AP=0 items={}
+w4_sq19 XP=400 AP=2 items={}
+w4_sq20 XP=450 AP=0 items={thermal_clip=1}
+w5_sq21 XP=400 AP=0 items={}
+w5_sq22 XP=400 AP=2 items={}
+w5_sq23 XP=450 AP=0 items={mag_boots=1}
+w5_sq24 XP=500 AP=0 items={}
+w5_sq25 XP=550 AP=0 items={void_clip=1}
+w6_sq27 XP=600 AP=0 items={}
+w6_sq28 XP=600 AP=0 items={}
+w6_sq26 XP=600 AP=2 items={}
+w6_sq29 XP=750 AP=0 items={}
+w6_sq30 XP=800 AP=0 items={starborn_mod=1}
+Starborn earned accessory verified in actual combat setup: Strength+5, Focus+5, Luck+3, crit+15 percentage points; weapon element unchanged.
+w4_sq16 XP=350 AP=0 items={explosive_tip=1}
+w4_sq17 XP=300 AP=0 items={coolant_system=1}
+w4_sq18 XP=300 AP=0 items={}
+w4_sq19 XP=400 AP=2 items={rapid_capacitor=1}
+w4_sq20 XP=450 AP=0 items={thermal_clip=1}
+w5_sq25 XP=550 AP=0 items={void_clip=1}
+w5_sq24 XP=500 AP=0 items={}
+w5_sq23 XP=450 AP=0 items={mag_boots=1}
+w5_sq22 XP=400 AP=2 items={}
+w5_sq21 XP=400 AP=0 items={}
+w6_sq27 XP=600 AP=0 items={}
+w6_sq28 XP=600 AP=0 items={}
+w6_sq26 XP=600 AP=2 items={}
+w6_sq29 XP=750 AP=0 items={}
+w6_sq30 XP=800 AP=0 items={starborn_mod=1}
+Starborn earned accessory verified in actual combat setup: Strength+5, Focus+5, Luck+3, crit+15 percentage points; weapon element unchanged.
+room=workshop_yard enemies=[faulted_loader] seed=17 damageEvents=2 xp=35 ap=0 credits=0 persistedHp={nova=120} knockedOut=[] usedItems={}
+room=admin_security enemies=[acoustic_bulwark] seed=17 damageEvents=1 xp=100 ap=0 credits=40 persistedHp={nova=120} knockedOut=[] usedItems={}
+room=mine_alpha enemies=[echo_borer, echo_borer] seed=17 damageEvents=18 xp=80 ap=0 credits=20 persistedHp={nova=94} knockedOut=[] usedItems={}
+room=launch_lift enemies=[acoustic_bulwark, resonance_buoy] seed=17 damageEvents=10 xp=130 ap=0 credits=55 persistedHp={nova=113} knockedOut=[] usedItems={}
+room=launch_checkpoint enemies=[dominion_dampener, resonance_buoy] seed=17 damageEvents=12 xp=80 ap=0 credits=40 persistedHp={nova=102} knockedOut=[] usedItems={}
+room=launch_bay enemies=[the_iron_warden] seed=17 damageEvents=11 xp=350 ap=0 credits=225 persistedHp={nova=97} knockedOut=[] usedItems={}
+room=sector9_canopy enemy=stalker_vine seed=17 outcome=retreat; enemy remains undefeated
+room=sector9_stream_cave_depths enemies=[echo_borer, echo_borer] seed=17 damageEvents=13 xp=80 ap=0 credits=20 persistedHp={nova=92, zeke=146} knockedOut=[] usedItems={}
+room=sector9_canopy_ridge enemies=[the_beast] seed=17 damageEvents=33 xp=500 ap=0 credits=250 persistedHp={nova=78, zeke=150, orion=95} knockedOut=[] usedItems={ration_pack=1, medkit=1, medkit_i=1}
+room=spire_sewers_scale_01 enemies=[sewer_crawler] seed=17 damageEvents=23 xp=80 ap=0 credits=20 persistedHp={nova=84, zeke=143, orion=76, gh0st=92} knockedOut=[] usedItems={medkit_i=1}
+room=spire_exec_lounge_scale_02 enemies=[sentinel_mki] seed=17 damageEvents=23 xp=180 ap=0 credits=80 persistedHp={nova=105, zeke=149, orion=95, gh0st=55} knockedOut=[] usedItems={medkit_i=1}
+shop=upper_city_lounge bought=medkit quantity=6 cost=408 remainingCredits=342
+room=spire_landing_pad_roof enemies=[aero_drone, heavy_mech] seed=17 damageEvents=30 xp=270 ap=0 credits=160 persistedHp={nova=88, zeke=150, orion=83, gh0st=105} knockedOut=[] usedItems={medkit=1}
+room=spire_landing_pad_roof enemies=[administrator_boss, aero_drone] seed=17 damageEvents=62 xp=490 ap=2 credits=340 persistedHp={nova=120, zeke=128, orion=95, gh0st=44} knockedOut=[] usedItems={medkit=5, medkit_i=3, ration_pack=2}
+room=foundry_crucible_arena enemy=magma_drone seed=17 outcome=retreat; enemy remains undefeated
+room=foundry_crucible_arena enemies=[magma_drone, welder_bot] seed=17 damageEvents=69 xp=250 ap=0 credits=115 persistedHp={nova=100, zeke=108, orion=68, gh0st=72} knockedOut=[] usedItems={ration_pack=1}
+room=foundry_crucible_arena enemies=[slag_golem, welder_bot] seed=17 damageEvents=39 xp=350 ap=0 credits=185 persistedHp={nova=120, zeke=150, orion=95, gh0st=84} knockedOut=[] usedItems={ration_pack=2}
+room=foundry_crucible_arena enemies=[crucible_champion, magma_drone] seed=17 damageEvents=102 xp=470 ap=0 credits=260 persistedHp={nova=80, zeke=111, orion=83, gh0st=74} knockedOut=[] usedItems={ration_pack=3}
+room=foundry_titan_dock enemies=[titan_walker_boss] seed=17 damageEvents=43 xp=600 ap=3 credits=400 persistedHp={nova=120, zeke=150, orion=95, gh0st=105} knockedOut=[] usedItems={}
+skillTree=nova purchased=nova_quiet_steps_v2 apSpent=1 remainingAp=41
+skillTree=zeke purchased=zeke_cover_v2 apSpent=1 remainingAp=40
+skillTree=zeke purchased=zeke_reinforced_harness_v2 apSpent=2 remainingAp=38
+skillTree=zeke purchased=zeke_steady_cover_v2 apSpent=3 remainingAp=35
+skillTree=zeke purchased=zeke_training_session_v2 apSpent=1 remainingAp=34
+skillTree=orion purchased=orion_field_resilience_v2 apSpent=1 remainingAp=33
+skillTree=orion purchased=orion_field_treatment_v2 apSpent=2 remainingAp=31
+skillTree=orion purchased=orion_triage_v2 apSpent=3 remainingAp=28
+skillTree=orion purchased=orion_clear_focus_v2 apSpent=1 remainingAp=27
+skillTree=gh0st purchased=gh0st_scope_v2 apSpent=1 remainingAp=26
+skillTree=gh0st purchased=gh0st_steady_aim_v2 apSpent=2 remainingAp=24
+skillTree=gh0st purchased=gh0st_execute_v2 apSpent=3 remainingAp=21
+skillTree=gh0st purchased=gh0st_quick_position_v2 apSpent=1 remainingAp=20
+shop=orbital_dispensary sold=power_cell quantity=7 credits=210 remainingCredits=2362
+shop=orbital_dispensary sold=composite_plate quantity=4 credits=112 remainingCredits=2474
+shop=orbital_dispensary bought=medkit_plus quantity=6 cost=978 remainingCredits=1496
+shop=orbital_dispensary bought=orbital_glimmer_tonic quantity=1 cost=375 remainingCredits=1121
+room=orbital_executive_dock enemies=[orbital_fighter, orbital_fighter] seed=17 damageEvents=41 xp=480 ap=0 credits=280 persistedHp={nova=1, zeke=113, orion=145, gh0st=105} knockedOut=[nova] usedItems={ration_pack=2, medkit_plus=1}
+room=orbital_grand_concourse enemies=[compliance_officer] seed=17 damageEvents=10 xp=260 ap=0 credits=180 persistedHp={nova=120, zeke=113, orion=145, gh0st=83} knockedOut=[] usedItems={medkit_plus=1}
+room=deep_firewall_gamma enemies=[firewall_construct] seed=17 damageEvents=22 xp=390 ap=0 credits=250 persistedHp={nova=120, zeke=160, orion=145, gh0st=105} knockedOut=[] usedItems={medkit_plus=2}
+room=deep_tear enemies=[compliance_avatar] seed=17 damageEvents=22 xp=750 ap=4 credits=500 persistedHp={nova=120, zeke=160, orion=145, gh0st=105} knockedOut=[] usedItems={medkit_plus=1}
+shop=orbital_dispensary sold=grav_boots quantity=1 credits=1000 remainingCredits=3331
+shop=orbital_dispensary sold=power_cell quantity=6 credits=180 remainingCredits=3511
+shop=orbital_dispensary bought=medkit_plus quantity=10 cost=1630 remainingCredits=1881
+shop=orbital_dispensary bought=orbital_glimmer_tonic quantity=2 cost=750 remainingCredits=1131
+skillTree=nova purchased=nova_grounded_wire_v2 apSpent=1 remainingAp=29
+skillTree=nova purchased=nova_controlled_vent_v2 apSpent=2 remainingAp=27
+skillTree=nova purchased=nova_breaker_bolt_v2 apSpent=3 remainingAp=24
+skillTree=nova purchased=nova_exposed_seam_v2 apSpent=4 remainingAp=20
+room=source_zeke_review_loop enemies=[manager_projection] seed=17 damageEvents=20 xp=420 ap=0 credits=0 persistedHp={nova=120, zeke=136, orion=127, gh0st=105} knockedOut=[] usedItems={}
+room=source_gh0st_nightmare_node_scale_01 enemies=[endless_war_echo] seed=17 damageEvents=15 xp=330 ap=0 credits=0 persistedHp={nova=94, zeke=160, orion=145, gh0st=84} knockedOut=[] usedItems={}
+room=source_orion_tide_well enemies=[silent_shore_wraith] seed=17 damageEvents=26 xp=400 ap=0 credits=0 persistedHp={nova=120, zeke=74, orion=145, gh0st=78} knockedOut=[] usedItems={medkit_plus=1}
+room=source_memory_fragments enemies=[source_shadow, distorted_sentinel, glitch_hound] seed=17 damageEvents=18 xp=810 ap=0 credits=0 persistedHp={nova=120, zeke=119, orion=115, gh0st=105} knockedOut=[] usedItems={medkit_plus=1}
+room=source_spire_arena enemies=[memory_leak, nightmare_guard] seed=17 damageEvents=15 xp=960 ap=0 credits=0 persistedHp={nova=120, zeke=160, orion=145, gh0st=105} knockedOut=[] usedItems={}
+room=source_center enemies=[ascended_vale] seed=17 damageEvents=15 xp=900 ap=5 credits=0 persistedHp={nova=113, zeke=160, orion=145, gh0st=103} knockedOut=[] usedItems={}
+room=source_center_node_scale_03 enemies=[ascended_god] seed=17 damageEvents=25 xp=1500 ap=8 credits=0 persistedHp={nova=104, zeke=156, orion=145, gh0st=105} knockedOut=[] usedItems={}
+room=foundry_crucible_arena enemy=magma_drone seed=17 outcome=retreat; enemy remains undefeated
+room=foundry_crucible_arena enemies=[magma_drone, welder_bot] seed=17 damageEvents=69 xp=250 ap=0 credits=115 persistedHp={nova=100, zeke=108, orion=68, gh0st=72} knockedOut=[] usedItems={ration_pack=1}
+room=foundry_crucible_arena enemies=[slag_golem, welder_bot] seed=17 damageEvents=39 xp=350 ap=0 credits=185 persistedHp={nova=120, zeke=150, orion=95, gh0st=84} knockedOut=[] usedItems={ration_pack=2}
+room=foundry_crucible_arena enemies=[crucible_champion, magma_drone] seed=17 damageEvents=102 xp=470 ap=0 credits=260 persistedHp={nova=80, zeke=111, orion=83, gh0st=74} knockedOut=[] usedItems={ration_pack=3}
+room=foundry_titan_dock enemies=[titan_walker_boss] seed=17 damageEvents=43 xp=600 ap=3 credits=400 persistedHp={nova=120, zeke=150, orion=95, gh0st=105} knockedOut=[] usedItems={}
+skillTree=nova purchased=nova_quiet_steps_v2 apSpent=1 remainingAp=41
+skillTree=zeke purchased=zeke_cover_v2 apSpent=1 remainingAp=40
+skillTree=zeke purchased=zeke_reinforced_harness_v2 apSpent=2 remainingAp=38
+skillTree=zeke purchased=zeke_steady_cover_v2 apSpent=3 remainingAp=35
+skillTree=zeke purchased=zeke_training_session_v2 apSpent=1 remainingAp=34
+skillTree=orion purchased=orion_field_resilience_v2 apSpent=1 remainingAp=33
+skillTree=orion purchased=orion_field_treatment_v2 apSpent=2 remainingAp=31
+skillTree=orion purchased=orion_triage_v2 apSpent=3 remainingAp=28
+skillTree=orion purchased=orion_clear_focus_v2 apSpent=1 remainingAp=27
+skillTree=gh0st purchased=gh0st_scope_v2 apSpent=1 remainingAp=26
+skillTree=gh0st purchased=gh0st_steady_aim_v2 apSpent=2 remainingAp=24
+skillTree=gh0st purchased=gh0st_execute_v2 apSpent=3 remainingAp=21
+skillTree=gh0st purchased=gh0st_quick_position_v2 apSpent=1 remainingAp=20
+shop=orbital_dispensary sold=power_cell quantity=7 credits=210 remainingCredits=2362
+shop=orbital_dispensary sold=composite_plate quantity=4 credits=112 remainingCredits=2474
+shop=orbital_dispensary bought=medkit_plus quantity=6 cost=978 remainingCredits=1496
+shop=orbital_dispensary bought=orbital_glimmer_tonic quantity=1 cost=375 remainingCredits=1121
+room=orbital_executive_dock enemies=[orbital_fighter, orbital_fighter] seed=17 damageEvents=41 xp=480 ap=0 credits=280 persistedHp={nova=1, zeke=113, orion=145, gh0st=105} knockedOut=[nova] usedItems={ration_pack=2, medkit_plus=1}
+room=orbital_grand_concourse enemies=[compliance_officer] seed=17 damageEvents=10 xp=260 ap=0 credits=180 persistedHp={nova=120, zeke=113, orion=145, gh0st=83} knockedOut=[] usedItems={medkit_plus=1}
+room=deep_firewall_gamma enemies=[firewall_construct] seed=17 damageEvents=22 xp=390 ap=0 credits=250 persistedHp={nova=120, zeke=160, orion=145, gh0st=105} knockedOut=[] usedItems={medkit_plus=2}
+room=deep_tear enemies=[compliance_avatar] seed=17 damageEvents=22 xp=750 ap=4 credits=500 persistedHp={nova=120, zeke=160, orion=145, gh0st=105} knockedOut=[] usedItems={medkit_plus=1}
+shop=orbital_dispensary sold=grav_boots quantity=1 credits=1000 remainingCredits=3331
+shop=orbital_dispensary sold=power_cell quantity=6 credits=180 remainingCredits=3511
+shop=orbital_dispensary bought=medkit_plus quantity=10 cost=1630 remainingCredits=1881
+shop=orbital_dispensary bought=orbital_glimmer_tonic quantity=2 cost=750 remainingCredits=1131
+skillTree=nova purchased=nova_grounded_wire_v2 apSpent=1 remainingAp=29
+skillTree=nova purchased=nova_controlled_vent_v2 apSpent=2 remainingAp=27
+skillTree=nova purchased=nova_breaker_bolt_v2 apSpent=3 remainingAp=24
+skillTree=nova purchased=nova_exposed_seam_v2 apSpent=4 remainingAp=20
+room=source_orion_tide_well enemies=[silent_shore_wraith] seed=17 damageEvents=26 xp=400 ap=0 credits=0 persistedHp={nova=120, zeke=74, orion=145, gh0st=78} knockedOut=[] usedItems={medkit_plus=1}
+room=source_gh0st_nightmare_node_scale_01 enemies=[endless_war_echo] seed=17 damageEvents=15 xp=330 ap=0 credits=0 persistedHp={nova=94, zeke=160, orion=145, gh0st=84} knockedOut=[] usedItems={}
+room=source_zeke_review_loop enemies=[manager_projection] seed=17 damageEvents=20 xp=420 ap=0 credits=0 persistedHp={nova=120, zeke=136, orion=127, gh0st=105} knockedOut=[] usedItems={}
+room=source_memory_fragments enemies=[source_shadow, distorted_sentinel, glitch_hound] seed=17 damageEvents=18 xp=810 ap=0 credits=0 persistedHp={nova=120, zeke=119, orion=115, gh0st=105} knockedOut=[] usedItems={medkit_plus=1}
+room=source_spire_arena enemies=[memory_leak, nightmare_guard] seed=17 damageEvents=15 xp=960 ap=0 credits=0 persistedHp={nova=120, zeke=160, orion=145, gh0st=105} knockedOut=[] usedItems={}
+room=source_center enemies=[ascended_vale] seed=17 damageEvents=19 xp=900 ap=5 credits=0 persistedHp={nova=113, zeke=160, orion=145, gh0st=103} knockedOut=[] usedItems={}
+room=source_center_node_scale_03 enemies=[ascended_god] seed=17 damageEvents=25 xp=1500 ap=8 credits=0 persistedHp={nova=104, zeke=156, orion=145, gh0st=105} knockedOut=[] usedItems={}
+Assistance: []
