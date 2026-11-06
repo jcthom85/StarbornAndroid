@@ -5,9 +5,12 @@ import path from 'node:path';
 
 const home = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(home, '../..');
+const integrated = process.argv.includes('--integrated-world3');
+const outputDirectory = path.join(home, 'dist', ...(integrated ? ['world-3-integrated'] : []));
 const guides = [];
-for (const world of [1, 2, 3]) {
-  const source = await readFile(path.join(root, `docs/playtest/walkthroughs/WORLD_${world}_COMPLETIONIST_WALKTHROUGH.md`), 'utf8');
+for (const world of (integrated ? [3] : [1, 2, 3])) {
+  const guideFile = integrated ? 'WORLD_3_INTEGRATED_COMPLETIONIST_WALKTHROUGH.md' : `WORLD_${world}_COMPLETIONIST_WALKTHROUGH.md`;
+  const source = await readFile(path.join(root, 'docs/playtest/walkthroughs', guideFile), 'utf8');
   const sections = [];
   let section = { title: 'Before you start', blocks: [] };
   let paragraph = [];
@@ -39,21 +42,30 @@ for (const world of [1, 2, 3]) {
   guides.push({ world, revision: createHash('sha256').update(source).digest('hex').slice(0, 12), sections });
 }
 const data = JSON.stringify(guides).replaceAll('<', '\\u003c');
-const template = await readFile(path.join(home, 'src/index.html'), 'utf8');
-const app = await readFile(path.join(home, 'src/app.js'), 'utf8');
+let template = await readFile(path.join(home, 'src/index.html'), 'utf8');
+let app = await readFile(path.join(home, 'src/app.js'), 'utf8');
+if (integrated) {
+  app = app.replace("const STORE = 'starborn-companion-v1';", "const STORE = 'starborn-companion-world3-integrated-v1';")
+    .replace("? state.world : 1;", "? state.world : 3;");
+  template = template.replace(/<div class="worlds"[^>]*>.*?<\/div>/,
+    '<div class="worlds" role="group" aria-label="Guide edition"><a href="../#world-3/">Original World 3 guide</a><button data-world="3">World 3 · Integrated route</button></div>')
+    .replace('Search all worlds', 'Search this guide')
+    .replace('Full spoilers · Source review: Oct 21, 2026<br>Game version 1.3.94 (178)', 'Separate edition · Nov 6, 2026<br>Game version 1.3.110 (194)')
+    .replace('Progress is separate from your game save and other devices.', 'This edition has its own checklist. Your original guide progress is preserved.');
+}
 const css = await readFile(path.join(home, 'src/style.css'), 'utf8');
 const logo = await readFile(path.join(root, 'app/src/main/res/drawable-nodpi/title_logo_starborn.webp'));
 const html = template.replace('/* GUIDE_STYLES */', css).replace('/* GUIDE_LOGO */', `data:image/webp;base64,${logo.toString('base64')}`).replace('/* GUIDE_DATA */', `const GUIDES = ${data};`).replace('/* GUIDE_APP */', app);
 const version = createHash('sha256').update(html).digest('hex').slice(0, 12);
-await mkdir(path.join(home, 'dist'), { recursive: true });
-await writeFile(path.join(home, 'dist/index.html'), html);
-await writeFile(path.join(home, 'dist/.nojekyll'), '');
-await writeFile(path.join(home, 'dist/sw.js'), `const CACHE = 'starborn-guide-${version}';
+await mkdir(outputDirectory, { recursive: true });
+await writeFile(path.join(outputDirectory, 'index.html'), html);
+await writeFile(path.join(outputDirectory, '.nojekyll'), '');
+await writeFile(path.join(outputDirectory, 'sw.js'), `const CACHE = '${integrated ? 'starborn-integrated-guide-' : 'starborn-guide-'}${version}';
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(['./', './index.html'])).then(() => self.skipWaiting())));
-self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('starborn-guide-') && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())));
+self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('${integrated ? 'starborn-integrated-guide-' : 'starborn-guide-'}') && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())));
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET' || new URL(event.request.url).origin !== self.location.origin) return;
   if (event.request.mode === 'navigate') event.respondWith(fetch(event.request).then(response => { if (response.ok) { const copy = response.clone(); event.waitUntil(caches.open(CACHE).then(cache => cache.put('./index.html', copy))); } return response; }).catch(() => caches.match('./index.html')));
 });
 `);
-console.log(`Built ${guides.length} worlds, ${guides.reduce((n, g) => n + g.sections.length, 0)} sections, ${guides.reduce((n, g) => n + g.sections.flatMap(s => s.blocks).filter(b => b.step !== null).length, 0)} steps → ${path.join(home, 'dist/index.html')}`);
+console.log(`Built ${guides.length} worlds, ${guides.reduce((n, g) => n + g.sections.length, 0)} sections, ${guides.reduce((n, g) => n + g.sections.flatMap(s => s.blocks).filter(b => b.step !== null).length, 0)} steps → ${path.join(outputDirectory, 'index.html')}`);

@@ -38,3 +38,23 @@ commits the main working tree. Run it only when intending to publish publicly:
 ```powershell
 node sites/starborn-playtest/publish.mjs
 ```
+
+## Separate World 3 integrated edition
+
+`docs/playtest/walkthroughs/WORLD_3_INTEGRATED_COMPLETIONIST_WALKTHROUGH.md`
+interleaves the main story and all six side quests. It is a separate edition;
+`WORLD_3_COMPLETIONIST_WALKTHROUGH.md`, the original root reader and its saved
+checkmarks remain intact. Mid-playthrough readers can use its catch-up section
+without restarting the game.
+
+Build this edition separately:
+
+```sh
+node sites/starborn-playtest/build.mjs --integrated-world3
+```
+
+Output: `dist/world-3-integrated/`, with its own localStorage key and service-worker
+cache namespace. Its link back to the original edition preserves that edition's
+checklist. Publish only this subdirectory to add it without refreshing the root
+reader. The existing root publisher stages only its root files and does not
+publish this edition automatically.
