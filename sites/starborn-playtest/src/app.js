@@ -17,9 +17,10 @@ function inline(text) {
 function guide() { return GUIDES.find(g => g.world === world); }
 function progressState() {
   const g = guide();
-  const current = state.worlds[world];
-  if (!current || typeof current !== 'object' || Array.isArray(current)) state.worlds[world] = {};
-  const p = state.worlds[world];
+  const progressKey = g.progressKey ?? world;
+  const current = state.worlds[progressKey];
+  if (!current || typeof current !== 'object' || Array.isArray(current)) state.worlds[progressKey] = {};
+  const p = state.worlds[progressKey];
   if (!Array.isArray(p.checked)) p.checked = [];
   const valid = new Set(g.sections.flatMap(s => s.blocks).filter(b => b.step !== null).map(b => b.id));
   p.checked = p.checked.filter(id => valid.has(id));

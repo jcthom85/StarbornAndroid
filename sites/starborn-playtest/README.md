@@ -1,60 +1,64 @@
 # Starborn playtest companion
 
-A dependency-free static reader for the Worlds 1, 2 and 3 completionist guides.
-The source guides live in `docs/playtest/walkthroughs/`, the same files bundled by
-the Android app. Never edit the generated guide text in `dist/index.html`.
+A dependency-free static reader for the Worlds 1–4 completionist guides.
+Edit the source guides in `docs/playtest/walkthroughs/`, then rebuild:
 
-From the repository root, rebuild after editing the guides or reader:
-
-```powershell
+```sh
 node sites/starborn-playtest/build.mjs
 ```
 
-Open `dist/index.html` directly in Chrome for a self-contained offline copy, or
-serve `dist/` using any static host. The hosted version caches all three worlds for
-offline use after the first successful visit. Search, checkmarks, theme and saved
-reading position work without a backend. Progress belongs to the browser and
-origin; it does not sync to another device or the game. Clearing site data removes it.
+The output is `dist/`. Open its index directly or serve the directory with a static
+host. The hosted reader caches all four worlds for offline use after a successful
+visit. Search, checkmarks, theme and reading position work locally. Progress belongs
+to the browser and origin; clearing site data removes it.
 
-The walkthrough text retains its authored review date and game version. Publishing
-the companion does not mean its gameplay instructions have been revalidated.
+## Rebuilt Worlds 3 and 4
 
-## Publication
+The November 7 rebuild makes both canonical guides continuous completionist routes:
+World 3 has 181 numbered steps, 70 rooms and 11 quests; World 4 has 236 numbered
+steps, 74 rooms and 11 quests. Journal checks are additional checklist entries.
+The older source editions are archived under
+`docs/playtest/walkthroughs/archive/2026-11-07/`.
 
-Live reader: https://jcthom85.github.io/StarbornAndroid/#world-2/
+Worlds 1 and 2 retain their sources and saved progress. The rebuilt main World 3
+uses a fresh progress namespace for a restart; legacy World 3 data remains stored.
+Guide introductions distinguish source checks from actual device playtesting and
+identify local game fixes that are not yet installed.
 
-Pushing a walkthrough change to `main` does **not** update the live reader. Rebuild and publish `gh-pages` as well. The November 4 refresh adds World 3's current main route, eleven quest checklists and seventy-room reference, and refreshes Worlds 1 and 2 from their maintained sources. Direct `#world-1/`, `#world-2/` and `#world-3/` links select that world even on a fresh browser visit.
+## Verification and publication
 
-The November 5 World 3 refresh follows the NSEW navigation repair: all seventy room references, the heist and rooftop routes, optional-quest returns and Lens puzzle guidance match that build. Older game installations can still have different paths. Direct link: https://jcthom85.github.io/StarbornAndroid/#world-3/
+Live reader: https://jcthom85.github.io/StarbornAndroid/
 
-Before publishing, serve `dist/` locally and run `node sites/starborn-playtest/check.mjs <url>`. It checks direct World 2 entry, current guide data, saved progress, search, mobile layout and offline reading. Chrome is detected for macOS/Windows; set `CHROME_PATH` to override its executable.
+Direct links `#world-1/` through `#world-4/` select a world on a fresh visit.
+Pushing source changes to `main` does not publish the reader: rebuild and update
+`gh-pages` too.
 
+Serve `dist/` locally and run:
 
-`publish.mjs` rebuilds the companion, commits only the generated static files to
-the repository's `gh-pages` branch, pushes that branch and configures GitHub Pages
-if needed. It requires Node, Git and an authenticated `gh` CLI. It never stages or
-commits the main working tree. Run it only when intending to publish publicly:
+```sh
+node sites/starborn-playtest/check.mjs http://127.0.0.1:4175/
+```
 
-```powershell
+Checks cover direct links, complete room references, saved checklists, preservation
+of older progress, search, theme, mobile layout and offline reading. Chrome is
+detected on macOS/Windows; `CHROME_PATH` overrides its executable.
+
+The publisher requires Node, Git and an authenticated `gh` CLI. It rebuilds and
+publishes only root static files to `gh-pages`, without committing the main tree:
+
+```sh
 node sites/starborn-playtest/publish.mjs
 ```
 
-## Separate World 3 integrated edition
+## Separate World 3 edition
 
-`docs/playtest/walkthroughs/WORLD_3_INTEGRATED_COMPLETIONIST_WALKTHROUGH.md`
-interleaves the main story and all six side quests. It is a separate edition;
-`WORLD_3_COMPLETIONIST_WALKTHROUGH.md`, the original root reader and its saved
-checkmarks remain intact. Mid-playthrough readers can use its catch-up section
-without restarting the game.
-
-Build this edition separately:
+The previously published independent edition remains available at
+https://jcthom85.github.io/StarbornAndroid/world-3-integrated/#world-3/.
+Its source is `WORLD_3_INTEGRATED_COMPLETIONIST_WALKTHROUGH.md`; rebuild with:
 
 ```sh
 node sites/starborn-playtest/build.mjs --integrated-world3
 ```
 
-Output: `dist/world-3-integrated/`, with its own localStorage key and service-worker
-cache namespace. Its link back to the original edition preserves that edition's
-checklist. Publish only this subdirectory to add it without refreshing the root
-reader. The existing root publisher stages only its root files and does not
-publish this edition automatically.
+Output goes to `dist/world-3-integrated/`, with independent saved progress and cache.
+The root publisher preserves this subdirectory and does not publish its updates.

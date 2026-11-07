@@ -1,131 +1,569 @@
-# World 4 — The Foundry: completionist route and playtest guide
+# World 4 — The Foundry: complete step-by-step walkthrough
 
-Updated November 5, 2026 for the repaired Foundry navigation build. Older installations may still have diagonal Paths links and no walking route between the Slag Pits and Assembly. This replaces the earlier speculative guide. Coverage means all five main quests and all optional quests on the documented routes; it does not certify every room, build, or incidental interaction.
+Rebuilt November 7, 2026 against the current authored rooms, quests and repaired navigation. Full spoilers. This ordered route includes all five main quests, all six side quests, every one of the Foundry's 74 rooms, optional discoveries, puzzle settings, recovery instructions and a complete Journal checklist.
 
-## Navigation and returning to earlier areas
+## 1. How to use this guide
 
-All ordinary Foundry connections now use NSEW swipes, with immediate opposite-direction returns. The story transfer after Cooling Springs and the final ship departure remain explicit transitions.
+Start at **Obsidian Shelf** after World 3 departure, with **Into the Fire** active. Follow numbered instructions in order. Every movement instruction names its starting room and NSEW swipe directions. Finish dialogue and feedback before expecting rewards or the next objective. Gray passive inspections may be read again; exhausted controls can disappear.
 
-- **Crusher branch:** Waste Intake → south → Crusher Throat → south → Records Shed → south → Magnet Ramp → south → Intake Catwalk → south → Foundry Sorter Spine. Return north. Intake Overlook and the Crucible still lie north of Waste Intake.
-- **Timing Tower branch:** Conveyor Belt → north → Service Walk → north → Timing Tower → north → Reject Chute → north → Roller Underpass → north → Control Perch → north → Foundry Belt Nerve. Return south.
-- **Turbine branch:** Power Core → south → Turbine Balcony → south → Engine Cradle → south → Array Lockers → south → Coolant Choir → south → Foundry Core Shadow. Return north. Engine Service Ring remains directly north of Power Core.
-- **Cooling Springs to Waste Intake:** go north to Obsidian Shelf, east to Slag River, then east to Waste Intake. Reverse west/west/south to return; the diagonal shortcut is gone.
-- **Forge to Power Core:** go north to Conveyor Belt, east to Conditioning Chamber, then east to Power Core. Reverse west/west/south to return; the diagonal shortcut is gone.
+Make a manual arrival save, keep another slot for rolling progress, and retain separate saves before the Anvil and final departure. A normal campaign save gives meaningful progression/economy feedback; stocked debug scenarios may already contain keys, skills or completed tasks.
 
-Before the Project Phantom/Springs sequence, the Assembly maintenance shutter is closed. Finish Gh0st’s conversation at Cooling Springs; it still moves the crew to Conveyor Belt and now clears that shutter permanently. From Conveyor Belt, go west to Reject Bay, then west to High-Pressure Pipe Gallery. Continue west through Decon Chamber and Service Airlock to Waste Intake. The same route reverses east back into Assembly. An older save with completed Springs/story progress recognizes this access when loaded.
+The six side quests are optional for story progression but integrated here for completionist play: **Sabotage, Lost Worker, The Scrap Heap, Quality Control, Overclocked, The Scrapper's Crucible**. Quality Control has two mutually exclusive outcomes; one completes the quest. You do not need both on one save.
 
-This permits missed quests, the Crucible, Cameron’s gallery, and earlier rest stops to remain accessible after entering Assembly. The cryogenic valve still controls entry to the optional Subterranean Smelter Forge; the navigation repair does not bypass that gate. Ten tapped return shortcuts remain optional conveniences, with ordinary swipe routes available for walking back.
+Read available passive room details as you pass. Clear actual blocking encounters before using their controls. A room's descriptive names are not all quest objectives. Optional cooking, fishing and arcade discovery do not replace main tasks. Exact random fish species and loot should be checked in the game's journals/inventory rather than assumed from a fixed cast or fight.
 
-## Main route
+### Builds, recovery and supplies
 
-1. Land at the Obsidian Shelf, cross the Slag River, hack the cooling vents at Waste Intake, then enter the Service Airlock. Return to Waste Intake for Project Phantom.
+Review equipment and shared crew AP regularly. Read each current upgrade's actual effect; spend according to your build instead of assuming a target level or a fixed healing-item budget. **Heat Shadow Alcove** and later **Control Alcove** provide rest; cooking sources are separate controls. Rylan's **welder bench** is a shop. Rest between Crucible rounds and before Titan Dock as needed. Starting a round is not proof of winning it.
 
-2. Inspect the Project Phantom terminal and finish Gh0st and Nova’s conversation. You can complete the early optional quests and Crucible before regrouping at Cooling Springs, or return for them afterward through the cleared maintenance corridor. The springs conversation grants Gh0st’s override key and Phase Counter, completes MQ17, and moves the party into the Assembly Line.
+### Navigation and returning
 
-3. Navigate the conveyors, confront the prototype production at the Conditioning Chamber, then overload the matrix at the Forge. Quality Control and Overclock can be completed during the Assembly detour.
+Ordinary Foundry travel uses NSEW swipes with opposite-direction returns. No diagonal exits exist. Before the Phantom/Springs scene, the maintenance shutter between **High-Pressure Pipe Gallery** and **Reject Bay** is closed. Finish Gh0st's Cooling Springs conversation to move to Conveyor Belt and permanently clear that corridor. Afterward, walk **west** from Conveyor Belt to Reject Bay → **west** to Pipe Gallery → **west** to Decon Chamber → **west** to Service Airlock → **west** to Waste Intake. Reverse those directions to return to Assembly.
 
-4. Read the pulse board in Timing Tower, inspect the grease marks in the Roller Underpass, throw the override paddle in Control Perch, then starve the breath pistons in Bellows Walk. Open the Anvil cradle at the Forge and speak with Nova to claim the relic. Follow the actual room labels in the action table below.
+Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **east** to Slag River → **east** to Waste Intake. The optional smelter requires its own cryogenic valve and is not opened by the Assembly story flag. Ten tapped return shortcuts are conveniences; the route below supplies ordinary walking returns. The story conveys urgency after the Anvil, but no countdown is imposed by this guide.
 
-5. Rest at the Forge Control Alcove before Titan Dock. Inspect Commander Rylos and finish the confrontation before fighting the Titan Walker. The launch also requires both the Deep Core Engine and Phase-Cutter Arrays from the Power Core. Win the fight, collect both components, and use the escape launch to enter World 5.
 
-## Puzzles, choices, and recovery
+## 2. Secure the landing and explore Obsidian Shelf
 
-The Crucible is an optional three-round combat ladder, accepted from Pitmaster Brutus at The Scrapper’s Crucible. Start each round through his dialogue; a round-start receipt does not count as victory. The teams are two Magma Drones with a Welder Bot, a Slag Golem with a Welder Bot, then the Crucible Champion with a Magma Drone escort. Rest at Heat Shadow Alcove (the Obsidian Shelf branch) between rounds as needed. Return to Brutus after round three to claim 500 XP, 350 credits, and one Crucible Forge Plate. Retreat and defeat preserve an uncleared round for retry; reloading and speaking to Brutus again must remain possible. Do not expect a separate Scavenger skill from The Scrap Heap: that quest repairs a bypass and grants its listed XP.
+1. At **Obsidian Shelf**, use **astra**. Finish the arrival check. Confirm the Astra needs Foundry hardware to reach high orbit.
 
-Quality Control has two exclusive endings: release the units, or defend the workers. Both complete the quest; release grants Gh0st’s Harden, while defending grants a Rapid Capacitor. Choose deliberately and check that trying the other ending cannot grant another payout.
+2. At **Obsidian Shelf**, use **compliance bulletin**. Read the local notice if available; it is not a substitute for securing the ship.
 
-Local return shortcuts remain usable after their first trip, including saves with old completion receipts. Save before committing to a branch or leaving the world.
+3. From **Obsidian Shelf**, go **north** to **Obsidian Overlook** (`foundry_obsidian_overlook`).
 
-## Optional quest routes and rewards
+4. At **Obsidian Overlook**, inspect **foundry basin**, **shield window telemetry**.
 
-Rewards below are the completion-event payouts. Battle loot, earlier step rewards, and crew AP awards are separate. Room and prop names come directly from the current assets.
+5. From **Obsidian Overlook**, go **south** to **Obsidian Shelf** (`foundry_slag_landing`) → **west** to **Ash Survey Point** (`foundry_obsidian_shelf_scale_01`).
 
-### Sabotage (`w4_sq16`)
+6. At **Ash Survey Point**, inspect **ash survey**, **landing scorch**, **basalt core sample**.
 
-- **Slag River — ammo crate alpha:** Destroy Slag River ammo crate.
-- **Waste Intake — ammo crate beta:** Destroy Waste Intake ammo crate.
-- **Service Airlock — ammo crate gamma:** Destroy Service Airlock ammo crate and complete Sabotage.
+7. From **Ash Survey Point**, go **north** to **Heat Shadow Alcove** (`foundry_obsidian_shelf_scale_02`).
 
-Completion `w4_sq16_destroy_crate_gamma`: 1 × Explosive Tip, 350 XP.
+8. At **Heat Shadow Alcove**, inspect **heat shadow**, **coolant tags**; use **geothermal induction plate** if you need its rest/cooking service; use **heat shadow refuge** if you need its rest/cooking service.
 
-### Lost Worker (`w4_sq17`)
+9. Clear any active blocking encounter at **Heat Shadow Alcove** before using its room controls. Heal as necessary; passive inspections do not count as victory.
 
-- **Waste Intake — worker maintenance ping:** Trace the missing worker's final maintenance ping.
-- **Cooling Springs — worker tablet:** Find missing worker tablet.
-- **Service Airlock — engineer safe-route valve:** Open the missing engineer's heat-safe route.
+10. From **Heat Shadow Alcove**, go **north** to **Slag Signal Post** (`foundry_obsidian_shelf_scale_03`).
 
-Completion `w4_sq17_vent_safe_route`: 1 × Coolant System, 300 XP.
+11. At **Slag Signal Post**, inspect **slag signal**, **range mast**.
 
-### The Scrap Heap (`w4_sq18`)
+12. From **Slag Signal Post**, go **north** to **Survey Cache** (`foundry_obsidian_shelf_scale_04`).
 
-- **Waste Intake — waste intake brake:** Jam the waste intake before it consumes the wrecks.
-- **Waste Intake — scrap mech pile:** Salvage destroyed mechs.
-- **Cooling Springs — salvaged cooling bypass:** Build a cooling bypass from salvaged actuators.
+13. At **Survey Cache**, inspect **survey cache**, **cracked scope**.
 
-Completion `w4_sq18_build_bypass`: 300 XP.
+14. From **Survey Cache**, go **north** to **Foundry Emergency Marker** (`foundry_obsidian_shelf_scale_final`).
 
-### Quality Control (`w4_sq19`)
+15. At **Foundry Emergency Marker**, inspect **cracked beacon**, **shift tally**; open **heat-sealed container** for one-time contents.
 
-- **Reject Bay — rejected droid:** Read the rejected units' fault codes.
-- **Conveyor Belt — rejected droid:** Resolve defective units.
-- **Conveyor Belt — conveyor release lock:** Release the reprogrammed units.
-- **Conveyor Belt — worker defense relay:** Let the waking units remain as voluntary worker defenders.
+16. From **Foundry Emergency Marker**, go **south** to **Survey Cache** (`foundry_obsidian_shelf_scale_04`) → **south** to **Slag Signal Post** (`foundry_obsidian_shelf_scale_03`) → **south** to **Heat Shadow Alcove** (`foundry_obsidian_shelf_scale_02`) → **south** to **Ash Survey Point** (`foundry_obsidian_shelf_scale_01`) → **east** to **Obsidian Shelf** (`foundry_slag_landing`).
 
-Completion `w4_sq19_release_units`: Harden, 400 XP.
+**Check before leaving:** Into the Fire is active, the landing task is complete, and you are back at Obsidian Shelf. Note the route to Heat Shadow Alcove for later recovery.
 
-Completion `w4_sq19_defend_workers`: 1 × Rapid Capacitor, 400 XP.
 
-### Overclocked (`w4_sq20`)
+## 3. Read the river crossing, begin Sabotage and open the optional smelter
 
-- **Control Alcove — hazard cycle map:** Map the overclocked chamber's heat sequence.
-- **The Forge — test chamber terminal:** Calibrate the test terminal against the mapped heat cycle.
-- **Control Alcove — overclock profile:** Steal the test chamber's overclock profile.
+17. From **Obsidian Shelf**, go **east** to **Slag River** (`foundry_slag_river`).
 
-Completion `w4_sq20_steal_overclock`: 1 × Thermal Clip, 450 XP.
+18. At **Slag River**, use **ammo crate alpha**. Destroy the first marked crate and start/advance **Sabotage**. Keep the quest pending for beta and gamma.
 
-### The Scrapper's Crucible (`w4_sq_crucible`)
+19. From **Slag River**, go **north** to **Stepping Stones** (`foundry_slag_stepping_stones`).
 
-Talk to Brutus for rules, each of three fights, and the final reward. See the Crucible section above.
+20. At **Stepping Stones**, defeat any blocking **Magma Drone** before working the crossing. Read the heat-break/flare rhythm.
 
-## Main-route action reference
+21. At **Stepping Stones**, use **flare rhythm**. Credit the Slag River crossing after securing the Astra. The **slag crossing** control at Slag River is an alternative for this same task; it is not a second required objective.
 
-| Quest | Room | Visible control |
-| --- | --- | --- |
-| `w4_mq16` | Obsidian Shelf | astra |
-| `w4_mq16` | Stepping Stones | flare rhythm |
-| `w4_mq16` | Waste Intake | cooling vent controls |
-| `w4_mq16` | Service Airlock | airlock door |
-| `w4_mq18` | Service Walk | warning lamps |
-| `w4_mq18` | Conditioning Chamber | conditioning records |
-| `w4_mq18` | The Forge | fabrication matrix |
-| `w4_mq19` | Timing Tower | pulse board |
-| `w4_mq19` | Roller Underpass | grease marks |
-| `w4_mq19` | Control Perch | override paddle |
-| `w4_mq19` | Bellows Walk | breath pistons |
-| `w4_mq19` | Control Alcove | hammer cadence |
-| `w4_mq19` | The Forge | anvil relic |
-| `w4_mq20` | Engine Service Ring | thermal clamps |
-| `w4_mq20` | Engine Service Ring | array rack |
-| `w4_mq20` | Escape Catwalk | escape gantry |
-| `w4_mq17` | Waste Intake | project phantom terminal |
-| `w4_mq17` | Cooling Springs | steam pool |
-| `w4_mq20` | Titan Dock | commander rylos |
+22. At **Stepping Stones**, use **cryogenic manifold valve**. Choose **Open Coolant Valve**. Wait for the northern slag crossing to solidify; do not assume the bridge is open merely because you visited the room.
 
-## Acceptance checks
+23. From **Stepping Stones**, go **north** to **Subterranean Smelter Forge** (`foundry_subterranean_smelter`).
 
-- Finish every optional quest and reload after its reward; confirm XP, AP, items, and branch outcomes persist.
-- Attempt the opposite exclusive ending after completing a branch; confirm no second payout.
-- Return through a local shortcut more than once, including after reload.
-- Check scene readability, notifications, touch targets, and combat preparation on a phone.
-- Record whether clues were understandable without this guide, and whether detours were worth taking. Automated known-answer routes cannot measure those experiences.
+24. At **Subterranean Smelter Forge**, use **precursor crucible**. Collect its one-time contents. Read **smelting anvil** for the room context.
 
-See [the Worlds 4–6 refinement report](../../testing/WORLDS456_REFINEMENT_2026-11-04.md) for evidence and test limits.
+25. From **Subterranean Smelter Forge**, go **south** to **Stepping Stones** (`foundry_slag_stepping_stones`).
 
-## Complete room and exit reference
+26. Leave the coolant valve engaged for revisits. Closing it refloods the north crossing; if testing the toggle, reopen it before attempting entry again.
 
-These are physical NSEW connections. The maintenance shutter and cryogenic crossing still apply their story/control requirements.
+27. From **Stepping Stones**, go **south** to **Slag River** (`foundry_slag_river`).
 
-### Obsidian Shelf
+28. From **Slag River**, go **south** to **Basalt Switchback** (`foundry_slag_river_scale_01`).
+
+29. At **Basalt Switchback**, inspect **basalt switchback**, **heat ladder**, **heat tether**.
+
+30. From **Basalt Switchback**, go **east** to **Coolant Spillway** (`foundry_slag_river_scale_02`).
+
+31. At **Coolant Spillway**, inspect **coolant spillway**, **steam curtain**.
+
+32. Clear any active blocking encounter at **Coolant Spillway** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+
+33. From **Coolant Spillway**, go **north** to **Slag Ferry Winch** (`foundry_slag_river_scale_03`).
+
+34. At **Slag Ferry Winch**, inspect **slag ferry**, **winch teeth**.
+
+35. Clear any active blocking encounter at **Slag Ferry Winch** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+
+36. From **Slag Ferry Winch**, go **north** to **River Gauge Station** (`foundry_slag_river_scale_04`).
+
+37. At **River Gauge Station**, inspect **river gauge**, **red needle**.
+
+38. From **River Gauge Station**, go **north** to **Foundry River Control** (`foundry_slag_river_scale_final`).
+
+39. At **Foundry River Control**, inspect **burned console**, **rescue hook**; open **smelter toolbox** for one-time contents.
+
+40. Clear any active blocking encounter at **Foundry River Control** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+
+41. From **Foundry River Control**, go **south** to **River Gauge Station** (`foundry_slag_river_scale_04`) → **south** to **Slag Ferry Winch** (`foundry_slag_river_scale_03`) → **south** to **Coolant Spillway** (`foundry_slag_river_scale_02`) → **west** to **Basalt Switchback** (`foundry_slag_river_scale_01`) → **north** to **Slag River** (`foundry_slag_river`).
+
+**Check before leaving:** The crossing task is credited, Sabotage has its alpha crate, and the optional smelter/cache is checked. You are back at Slag River, ready to go east.
+
+
+## 4. Waste Intake: start the worker and salvage threads
+
+42. From **Slag River**, go **east** to **Waste Intake** (`foundry_waste_intake`).
+
+43. At **Waste Intake**, use **cooling vent controls**. Starve the vents after the river crossing so the Service Airlock can cycle.
+
+44. At **Waste Intake**, use **ammo crate beta**. Destroy the second marked crate.
+
+45. At **Waste Intake**, use **worker maintenance ping**. Start/advance **Lost Worker** by tracing the final maintenance signal.
+
+46. At **Waste Intake**, use **waste intake brake**. Stop the intake before attempting salvage.
+
+47. At **Waste Intake**, use **scrap mech pile**. Recover intact actuators for **The Scrap Heap**.
+
+48. At **Waste Intake**, use **wrecked loader stash**. Collect the regional VHS discovery and check its collectible feedback.
+
+49. From **Waste Intake**, go **north** to **Intake Overlook** (`foundry_intake_overlook`).
+
+50. At **Intake Overlook**, inspect **intake pistons**, **safety railing**.
+
+51. From **Intake Overlook**, go **south** to **Waste Intake** (`foundry_waste_intake`) → **south** to **Crusher Throat** (`foundry_waste_intake_scale_01`).
+
+52. At **Crusher Throat**, inspect **crusher throat**, **jammed tooth**, **crusher tooth**.
+
+53. From **Crusher Throat**, go **south** to **Records Shed** (`foundry_waste_intake_scale_02`).
+
+54. At **Records Shed**, inspect **records shed**, **Phantom labels**.
+
+55. Clear any active blocking encounter at **Records Shed** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+
+56. From **Records Shed**, go **south** to **Magnet Ramp** (`foundry_waste_intake_scale_03`).
+
+57. At **Magnet Ramp**, inspect **magnet ramp**, **loose filings**.
+
+58. Clear any active blocking encounter at **Magnet Ramp** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+
+59. From **Magnet Ramp**, go **south** to **Intake Catwalk** (`foundry_waste_intake_scale_04`).
+
+60. At **Intake Catwalk**, inspect **intake catwalk**, **sway braces**.
+
+61. From **Intake Catwalk**, go **south** to **Foundry Sorter Spine** (`foundry_waste_intake_scale_final`).
+
+62. At **Foundry Sorter Spine**, inspect **sorter spine**, **reject ledger**; open **salvage bin** for one-time contents.
+
+63. Clear any active blocking encounter at **Foundry Sorter Spine** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+
+64. From **Foundry Sorter Spine**, go **north** to **Intake Catwalk** (`foundry_waste_intake_scale_04`) → **north** to **Magnet Ramp** (`foundry_waste_intake_scale_03`) → **north** to **Records Shed** (`foundry_waste_intake_scale_02`) → **north** to **Crusher Throat** (`foundry_waste_intake_scale_01`) → **north** to **Waste Intake** (`foundry_waste_intake`).
+
+**Check before leaving:** The vents, beta crate, worker ping and stopped-intake salvage are recorded. Keep the salvage for the Cooling Springs bypass. The Crucible rounds are scheduled after the early side quests.
+
+
+## 5. Cycle the Service Airlock and complete Sabotage
+
+65. From **Waste Intake**, go **east** to **Service Airlock** (`foundry_service_airlock`).
+
+66. At **Service Airlock**, use **airlock door**. Finish **Into the Fire** and start **Ghost in the Machine**. Check the **Heat Liner** reward and equip it if suitable for your build.
+
+67. At **Service Airlock**, use **ammo crate gamma**. Finish **Sabotage** after alpha and beta: **350 XP + Explosive Tip**. Battle drops and crew AP, if separately awarded, are not part of that item payout.
+
+68. From **Service Airlock**, go **east** to **Decon Chamber** (`foundry_decon_chamber`).
+
+69. At **Decon Chamber**, inspect **decon cycle**.
+
+70. Clear any active blocking encounter at **Decon Chamber** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+
+71. From **Decon Chamber**, go **east** to **High-Pressure Pipe Gallery** (`foundry_pipe_gallery`).
+
+72. At **High-Pressure Pipe Gallery**, inspect **racing pennants**, **pipe bench**, **family photo**, **bypass manifold**, **leather dog collar**; talk to visible residents (Cameron) for local topics and favors.
+
+73. From **High-Pressure Pipe Gallery**, go **west** to **Decon Chamber** (`foundry_decon_chamber`) → **west** to **Service Airlock** (`foundry_service_airlock`) → **north** to **Seal Control Nook** (`foundry_service_airlock_scale_01`).
+
+74. At **Seal Control Nook**, inspect **seal control**, **cycle lever**, **cycle logbook**.
+
+75. From **Seal Control Nook**, go **north** to **Decon Drain** (`foundry_service_airlock_scale_02`).
+
+76. At **Decon Drain**, inspect **decon drain**, **chemical foam**.
+
+77. Clear any active blocking encounter at **Decon Drain** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+
+78. From **Decon Drain**, go **north** to **Pressure Lock Gallery** (`foundry_service_airlock_scale_03`).
+
+79. At **Pressure Lock Gallery**, inspect **pressure lock**, **yellow gauges**.
+
+80. From **Pressure Lock Gallery**, go **north** to **Maintenance Shelf** (`foundry_service_airlock_scale_04`).
+
+81. At **Maintenance Shelf**, inspect **maintenance shelf**, **spare gasket**.
+
+82. From **Maintenance Shelf**, go **north** to **Foundry Seal Backroom** (`foundry_service_airlock_scale_final`).
+
+83. At **Foundry Seal Backroom**, inspect **pressure masks**, **cycling rules**; open **technician locker** for one-time contents.
+
+84. From **Foundry Seal Backroom**, go **south** to **Maintenance Shelf** (`foundry_service_airlock_scale_04`) → **south** to **Pressure Lock Gallery** (`foundry_service_airlock_scale_03`) → **south** to **Decon Drain** (`foundry_service_airlock_scale_02`) → **south** to **Seal Control Nook** (`foundry_service_airlock_scale_01`) → **south** to **Service Airlock** (`foundry_service_airlock`).
+
+85. The **High-Pressure Pipe Gallery** east maintenance shutter encountered on this sweep is still closed at this story stage. Cameron’s gallery is available, but Assembly is not; the Springs sequence opens that corridor later. You are now back at Service Airlock.
+
+**Check before leaving:** Into the Fire and Sabotage are complete, and Ghost in the Machine is active. Return to Waste Intake for Project Phantom; cycling the airlock does not itself finish Gh0st’s story.
+
+
+## 6. Project Phantom, the missing engineer and the cooling bypass
+
+86. From **Service Airlock**, go **west** to **Waste Intake** (`foundry_waste_intake`).
+
+87. At **Waste Intake**, use **project phantom terminal**. Finish Gh0st and Nova’s records conversation. The terminal scene, not a decorative records inspection, credits this task.
+
+88. From **Waste Intake**, go **west** to **Slag River** (`foundry_slag_river`) → **west** to **Obsidian Shelf** (`foundry_slag_landing`) → **south** to **Cooling Springs** (`foundry_cooling_springs`).
+
+89. At **Cooling Springs**, use **worker tablet**. Find the empty shelter and its coolant map for Lost Worker.
+
+90. At **Cooling Springs**, use **salvaged cooling bypass**. Build the bypass from the already-salvaged actuators. Confirm **The Scrap Heap** complete: **300 XP**. It does not unlock a separate Scavenger skill.
+
+91. Do **not** use **steam pool** for the main regroup scene yet; this itinerary finishes the early optional quests and arena first. If you already triggered it, the cleared return corridor lets you come back without restarting.
+
+92. At **Cooling Springs**, use **cooling basin fishing**. Try regional fishing if pursuing the journal. Use your owned rod/lure; a particular catch is not guaranteed on a given cast.
+
+93. At **Cooling Springs**, use **magma regulator**. For optional **Balance Magma Conduit**, set Thermal Bleed **76%**, Slag Viscosity **55 cP**, Pressure Seal **180°**, then confirm the controls and collect the reward feedback. This is separate from the main cooling-bypass task.
+
+94. From **Cooling Springs**, go **south** to **Lava Tube Bypass** (`foundry_lava_tube_bypass`).
+
+95. At **Lava Tube Bypass**, inspect **pipe valves**; check **welder bench** for supplies if needed; talk to visible residents (Rylan) for local topics and favors.
+
+96. From **Lava Tube Bypass**, go **north** to **Cooling Springs** (`foundry_cooling_springs`) → **west** to **Mist Basin** (`foundry_cooling_springs_scale_01`).
+
+97. At **Mist Basin**, inspect **mist basin**, **mineral crust**, **condensation trap**.
+
+98. From **Mist Basin**, go **north** to **Worker Marker** (`foundry_cooling_springs_scale_02`).
+
+99. At **Worker Marker**, inspect **worker marker**, **helmet light**.
+
+100. Clear any active blocking encounter at **Worker Marker** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+
+101. From **Worker Marker**, go **north** to **Spring Valve Nest** (`foundry_cooling_springs_scale_03`).
+
+102. At **Spring Valve Nest**, inspect **spring valve**, **pressure wheel**.
+
+103. From **Spring Valve Nest**, go **north** to **Thermal Shelf** (`foundry_cooling_springs_scale_04`).
+
+104. At **Thermal Shelf**, inspect **thermal shelf**, **cool seam**.
+
+105. From **Thermal Shelf**, go **north** to **Foundry Blue Steam Pocket** (`foundry_cooling_springs_scale_final`).
+
+106. At **Foundry Blue Steam Pocket**, inspect **patched pipes**, **cool residue**; open **coolant reserve** for one-time contents.
+
+107. From **Foundry Blue Steam Pocket**, go **south** to **Thermal Shelf** (`foundry_cooling_springs_scale_04`) → **south** to **Spring Valve Nest** (`foundry_cooling_springs_scale_03`) → **south** to **Worker Marker** (`foundry_cooling_springs_scale_02`) → **south** to **Mist Basin** (`foundry_cooling_springs_scale_01`) → **east** to **Cooling Springs** (`foundry_cooling_springs`).
+
+108. From **Cooling Springs**, go **north** to **Obsidian Shelf** (`foundry_slag_landing`) → **east** to **Slag River** (`foundry_slag_river`) → **east** to **Waste Intake** (`foundry_waste_intake`) → **east** to **Service Airlock** (`foundry_service_airlock`).
+
+109. At **Service Airlock**, use **engineer safe-route valve**. Open the heat-safe exit. Confirm **Lost Worker** complete: **300 XP + Coolant System**.
+
+**Check before leaving:** Sabotage, Lost Worker and The Scrap Heap are complete. The Project Phantom records task is complete; the Springs regroup task is intentionally pending.
+
+
+## 7. The Scrapper’s Crucible: three rounds and a final turn-in
+
+110. From **Service Airlock**, go **west** to **Waste Intake** (`foundry_waste_intake`) → **west** to **Slag River** (`foundry_slag_river`) → **west** to **Obsidian Shelf** (`foundry_slag_landing`) → **west** to **Ash Survey Point** (`foundry_obsidian_shelf_scale_01`) → **north** to **Heat Shadow Alcove** (`foundry_obsidian_shelf_scale_02`).
+
+111. At **Heat Shadow Alcove**, choose the actual **Rest** service (**heat shadow refuge**) and finish recovery before round 1. Cooking at **geothermal induction plate** is a separate optional preparation. Review healing supplies and equipment; this route does not assume a fixed stock.
+
+112. From **Heat Shadow Alcove**, go **south** to **Ash Survey Point** (`foundry_obsidian_shelf_scale_01`) → **east** to **Obsidian Shelf** (`foundry_slag_landing`) → **east** to **Slag River** (`foundry_slag_river`) → **east** to **Waste Intake** (`foundry_waste_intake`) → **north** to **Intake Overlook** (`foundry_intake_overlook`) → **north** to **The Scrapper's Crucible** (`foundry_crucible_arena`).
+
+113. Talk to **Pitmaster Brutus** at **The Scrapper's Crucible**. Read the rules, then choose the Round 1 start response. Finish the start conversation to begin the actual encounter.
+
+114. Defeat two **Magma Drones** and a **Welder Bot**. A start receipt, retreat or defeat does not clear round 1. If you retreat or lose, recover and ask Brutus to restart that uncleared round; do not expect the next round until victory is recorded.
+
+115. Save after the victory. You may return south from the arena and retrace the route to rest before the next round; progress survives the return trip.
+
+116. From **The Scrapper's Crucible**, go **south** to **Intake Overlook** (`foundry_intake_overlook`) → **south** to **Waste Intake** (`foundry_waste_intake`) → **west** to **Slag River** (`foundry_slag_river`) → **west** to **Obsidian Shelf** (`foundry_slag_landing`) → **west** to **Ash Survey Point** (`foundry_obsidian_shelf_scale_01`) → **north** to **Heat Shadow Alcove** (`foundry_obsidian_shelf_scale_02`).
+
+117. At **Heat Shadow Alcove**, choose the actual **Rest** service (**heat shadow refuge**) and finish recovery before round 2. Cooking at **geothermal induction plate** is a separate optional preparation. Review healing supplies and equipment; this route does not assume a fixed stock.
+
+118. From **Heat Shadow Alcove**, go **south** to **Ash Survey Point** (`foundry_obsidian_shelf_scale_01`) → **east** to **Obsidian Shelf** (`foundry_slag_landing`) → **east** to **Slag River** (`foundry_slag_river`) → **east** to **Waste Intake** (`foundry_waste_intake`) → **north** to **Intake Overlook** (`foundry_intake_overlook`) → **north** to **The Scrapper's Crucible** (`foundry_crucible_arena`).
+
+119. Talk to **Pitmaster Brutus** at **The Scrapper's Crucible**. Choose the Round 2 start response after the previous round’s victory. Finish the start conversation to begin the actual encounter.
+
+120. Defeat a **Slag Golem** and **Welder Bot**. A start receipt, retreat or defeat does not clear round 2. If you retreat or lose, recover and ask Brutus to restart that uncleared round; do not expect the next round until victory is recorded.
+
+121. Save after the victory. You may return south from the arena and retrace the route to rest before the next round; progress survives the return trip.
+
+122. From **The Scrapper's Crucible**, go **south** to **Intake Overlook** (`foundry_intake_overlook`) → **south** to **Waste Intake** (`foundry_waste_intake`) → **west** to **Slag River** (`foundry_slag_river`) → **west** to **Obsidian Shelf** (`foundry_slag_landing`) → **west** to **Ash Survey Point** (`foundry_obsidian_shelf_scale_01`) → **north** to **Heat Shadow Alcove** (`foundry_obsidian_shelf_scale_02`).
+
+123. At **Heat Shadow Alcove**, choose the actual **Rest** service (**heat shadow refuge**) and finish recovery before round 3. Cooking at **geothermal induction plate** is a separate optional preparation. Review healing supplies and equipment; this route does not assume a fixed stock.
+
+124. From **Heat Shadow Alcove**, go **south** to **Ash Survey Point** (`foundry_obsidian_shelf_scale_01`) → **east** to **Obsidian Shelf** (`foundry_slag_landing`) → **east** to **Slag River** (`foundry_slag_river`) → **east** to **Waste Intake** (`foundry_waste_intake`) → **north** to **Intake Overlook** (`foundry_intake_overlook`) → **north** to **The Scrapper's Crucible** (`foundry_crucible_arena`).
+
+125. Talk to **Pitmaster Brutus** at **The Scrapper's Crucible**. Choose the Round 3 start response after the previous round’s victory. Finish the start conversation to begin the actual encounter.
+
+126. Defeat the **Crucible Champion** and a **Magma Drone** escort. A start receipt, retreat or defeat does not clear round 3. If you retreat or lose, recover and ask Brutus to restart that uncleared round; do not expect the next round until victory is recorded.
+
+127. Talk to **Pitmaster Brutus** at **The Scrapper's Crucible**. Speak again after round three to claim the final prize. Confirm **The Scrapper’s Crucible** complete: **500 XP + 350 credits + Crucible Forge Plate**. Round-start dialogue alone is not this payout.
+
+128. Read **blast cage**, **molten sluices**, **victor podium** and **announcer horn** if you want the arena’s local details. Save after the turn-in; repeating the completed conversation must not pay again.
+
+**Check before leaving:** All three real round victories and Brutus’s final turn-in are recorded. Keep a completed-side-quest save before the main Springs scene.
+
+
+## 8. Cooling Springs: Gh0st’s decision and the Assembly transfer
+
+129. From **The Scrapper's Crucible**, go **south** to **Intake Overlook** (`foundry_intake_overlook`) → **south** to **Waste Intake** (`foundry_waste_intake`) → **west** to **Slag River** (`foundry_slag_river`) → **west** to **Obsidian Shelf** (`foundry_slag_landing`) → **south** to **Cooling Springs** (`foundry_cooling_springs`).
+
+130. At **Cooling Springs**, use **steam pool**. Finish the complete Gh0st/Nova conversation. Confirm **Ghost in the Machine** complete, Gh0st’s **override key** and **Phase Counter** earned, and **The Assembly** active.
+
+131. The story moves the crew into **Conveyor Belt** and clears the **Pipe Gallery ↔ Reject Bay** maintenance shutter. This is a deliberate scene transfer; it does not permanently lock you out of the Slag Pits.
+
+**Check before leaving:** The crew is at Conveyor Belt, The Assembly is active, and the return corridor is open. If you missed an early side quest or the Crucible, use the westward maintenance route described at the start, finish it, and return east.
+
+
+## 9. Quality Control and the Assembly line
+
+132. From **Conveyor Belt**, go **west** to **Reject Bay** (`foundry_reject_bay`).
+
+133. At **Reject Bay**, use **rejected droid**. Read the fault codes and start/advance **Quality Control**.
+
+134. At **Reject Bay**, use **scorched smelter console**. Discover the optional Foundry arcade cabinet and its parts feedback. Repair/installation aboard Astra is separate.
+
+135. From **Reject Bay**, go **east** to **Conveyor Belt** (`foundry_conveyor_belt`).
+
+136. At **Conveyor Belt**, use **rejected droid**. Resolve the obedience fault after reading the rejection codes.
+
+137. Choose **one** Quality Control outcome at Conveyor Belt: **conveyor release lock** lets the waking units leave and grants **Gh0st’s Harden + 400 XP**; **worker defense relay** lets them stay as voluntary defenders and grants **Rapid Capacitor + 400 XP**. Either completes the quest. The other outcome cannot supply a second payout.
+
+138. From **Conveyor Belt**, go **north** to **Service Walk** (`foundry_belt_service_walk`).
+
+139. At **Service Walk**, use **warning lamps**. Read/time the moving belts. **Belt timing console** at Conveyor Belt is an alternative for this same main task, not an extra required step.
+
+140. From **Service Walk**, go **south** to **Conveyor Belt** (`foundry_conveyor_belt`) → **east** to **Conditioning Chamber** (`foundry_conditioning_chamber`).
+
+141. At **Conditioning Chamber**, use **conditioning records**. Review the Phantom production/conditioning records. The task’s internal name mentions prototypes, but this authored control credits the investigation; decorative unit inspections do not replace it.
+
+142. From **Conditioning Chamber**, go **north** to **Observation Booth** (`foundry_conditioning_observation`).
+
+143. At **Observation Booth**, inspect **operator console**.
+
+144. From **Observation Booth**, go **south** to **Conditioning Chamber** (`foundry_conditioning_chamber`) → **south** to **Heat-Soak Chamber** (`foundry_conditioning_scale_01`).
+
+145. At **Heat-Soak Chamber**, inspect **heat-soak chamber**, **orange coils**, **thermal clamp**.
+
+146. From **Heat-Soak Chamber**, go **east** to **Quench Lane** (`foundry_conditioning_scale_02`).
+
+147. At **Quench Lane**, inspect **quench lane**, **steam alarms**.
+
+148. Clear any active blocking encounter at **Quench Lane** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+
+149. From **Quench Lane**, go **north** to **Defect Window** (`foundry_conditioning_scale_03`).
+
+150. At **Defect Window**, inspect **defect window**, **shaking unit**.
+
+151. From **Defect Window**, go **north** to **Calibration Pit** (`foundry_conditioning_scale_04`).
+
+152. At **Calibration Pit**, inspect **calibration pit**, **load marks**.
+
+153. From **Calibration Pit**, go **north** to **Foundry Defect Choir** (`foundry_conditioning_scale_final`).
+
+154. At **Foundry Defect Choir**, inspect **defect choir**, **glass seam**; open **stress-test locker** for one-time contents.
+
+155. Clear any active blocking encounter at **Foundry Defect Choir** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+
+156. From **Foundry Defect Choir**, go **south** to **Calibration Pit** (`foundry_conditioning_scale_04`) → **south** to **Defect Window** (`foundry_conditioning_scale_03`) → **south** to **Quench Lane** (`foundry_conditioning_scale_02`) → **west** to **Heat-Soak Chamber** (`foundry_conditioning_scale_01`) → **north** to **Conditioning Chamber** (`foundry_conditioning_chamber`).
+
+157. From **Conditioning Chamber**, go **west** to **Conveyor Belt** (`foundry_conveyor_belt`) → **south** to **The Forge** (`foundry_forge_anvil`).
+
+158. At **The Forge**, use **fabrication matrix**. Overload the production matrix. Confirm **The Assembly** complete and **The Anvil** active.
+
+**Check before leaving:** Quality Control has one completed outcome; The Assembly is complete. You have not yet taken the Anvil or earned the engine/arrays.
+
+
+## 10. Overclocked: map, calibrate, recover
+
+159. From **The Forge**, go **west** to **Control Alcove** (`foundry_forge_control_alcove`).
+
+160. At **Control Alcove**, use **hazard cycle map**. Map the heat sequence and start/advance **Overclocked**. Use **control alcove cot** to rest if needed; **smelter break station** is the cooking service.
+
+161. From **Control Alcove**, go **east** to **The Forge** (`foundry_forge_anvil`).
+
+162. At **The Forge**, use **test chamber terminal**. Calibrate against the mapped heat cycle. This is the recorded hazard program; do not wait for an unimplemented live wave battle.
+
+163. From **The Forge**, go **west** to **Control Alcove** (`foundry_forge_control_alcove`).
+
+164. At **Control Alcove**, use **overclock profile**. Finish **Overclocked**: **450 XP + Thermal Clip**. Confirm the quest and item rather than repeating the terminal calibration.
+
+**Check before leaving:** Overclocked is complete. The Anvil is still the current main quest; keep a pre-Anvil save.
+
+
+## 11. The Anvil: read the line, starve the pistons, open the cradle
+
+165. From **Control Alcove**, go **east** to **The Forge** (`foundry_forge_anvil`) → **north** to **Conveyor Belt** (`foundry_conveyor_belt`) → **north** to **Service Walk** (`foundry_belt_service_walk`) → **north** to **Timing Tower** (`foundry_conveyor_belt_scale_01`).
+
+166. At **Timing Tower**, use **pulse board**. Read the machinery timing.
+
+167. From **Timing Tower**, go **north** to **Reject Chute** (`foundry_conveyor_belt_scale_02`) → **north** to **Roller Underpass** (`foundry_conveyor_belt_scale_03`).
+
+168. At **Roller Underpass**, use **grease marks**. Read the safe mechanical route.
+
+169. From **Roller Underpass**, go **north** to **Control Perch** (`foundry_conveyor_belt_scale_04`).
+
+170. At **Control Perch**, use **override paddle**. Commit the override after the two timing/route clues.
+
+171. From **Control Perch**, go **north** to **Foundry Belt Nerve** (`foundry_conveyor_belt_scale_final`).
+
+172. At **Foundry Belt Nerve**, inspect **nerve junction**, **target counter**; open **assembly cache** for one-time contents.
+
+173. Clear any active blocking encounter at **Foundry Belt Nerve** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+
+174. From **Foundry Belt Nerve**, go **south** to **Control Perch** (`foundry_conveyor_belt_scale_04`).
+
+175. From **Control Perch**, go **south** to **Roller Underpass** (`foundry_conveyor_belt_scale_03`) → **south** to **Reject Chute** (`foundry_conveyor_belt_scale_02`) → **south** to **Timing Tower** (`foundry_conveyor_belt_scale_01`) → **south** to **Service Walk** (`foundry_belt_service_walk`) → **south** to **Conveyor Belt** (`foundry_conveyor_belt`) → **south** to **The Forge** (`foundry_forge_anvil`) → **south** to **Bellows Walk** (`foundry_forge_scale_01`).
+
+176. At **Bellows Walk**, use **breath pistons**. Starve the bellows/pistons after the tower override.
+
+177. From **Bellows Walk**, go **east** to **Anvil Shadow** (`foundry_forge_scale_02`).
+
+178. At **Anvil Shadow**, inspect **anvil shadow**, **relic imprint**.
+
+179. Clear any active blocking encounter at **Anvil Shadow** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+
+180. From **Anvil Shadow**, go **north** to **Mold Library** (`foundry_forge_scale_03`).
+
+181. At **Mold Library**, inspect **mold library**, **broken casts**.
+
+182. Clear any active blocking encounter at **Mold Library** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+
+183. From **Mold Library**, go **north** to **Slag Chapel** (`foundry_forge_scale_04`).
+
+184. At **Slag Chapel**, inspect **slag chapel**, **prayer bolts**.
+
+185. From **Slag Chapel**, go **north** to **Foundry Relic Draft** (`foundry_forge_scale_final`).
+
+186. At **Foundry Relic Draft**, inspect **relic draft**, **ash trail**; open **master smith crate** for one-time contents.
+
+187. From **Foundry Relic Draft**, go **south** to **Slag Chapel** (`foundry_forge_scale_04`) → **south** to **Mold Library** (`foundry_forge_scale_03`) → **south** to **Anvil Shadow** (`foundry_forge_scale_02`) → **west** to **Bellows Walk** (`foundry_forge_scale_01`).
+
+188. From **Bellows Walk**, go **north** to **The Forge** (`foundry_forge_anvil`).
+
+189. At **The Forge**, use **anvil cradle**. Open the cradle after pulse board, grease marks, paddle and pistons agree. **Hammer cadence** at Control Alcove addresses the same opening event; it is not another mandatory puzzle.
+
+190. Talk to **Nova** at **The Forge**. Finish the Anvil acquisition conversation and the failed-first-Construct beat. Confirm **The Anvil** owned, **Construct** unlocked, **The Anvil** quest complete and **Meltdown** active. The **anvil relic** control is an alternate acquisition route once the cradle is open; do not expect a second relic/reward.
+
+**Check before leaving:** The Anvil item, Construct and Meltdown are present. All six optional quests should now be complete, with exactly one Quality Control outcome.
+
+
+## 12. Power Core exploration and preparation for Titan Dock
+
+191. From **The Forge**, go **north** to **Conveyor Belt** (`foundry_conveyor_belt`) → **east** to **Conditioning Chamber** (`foundry_conditioning_chamber`) → **east** to **Power Core** (`foundry_power_core`).
+
+192. From **Power Core**, go **north** to **Engine Service Ring** (`foundry_engine_service_ring`).
+
+193. At **Engine Service Ring**, read available local details.
+
+194. Clear any active blocking encounter at **Engine Service Ring** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+
+195. From **Engine Service Ring**, go **south** to **Power Core** (`foundry_power_core`) → **south** to **Turbine Balcony** (`foundry_power_core_scale_01`).
+
+196. At **Turbine Balcony**, inspect **turbine balcony**, **spin blur**, **turbine tachometer**.
+
+197. From **Turbine Balcony**, go **south** to **Engine Cradle** (`foundry_power_core_scale_02`).
+
+198. At **Engine Cradle**, inspect **engine cradle**, **mount clamps**.
+
+199. Clear any active blocking encounter at **Engine Cradle** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+
+200. From **Engine Cradle**, go **south** to **Array Lockers** (`foundry_power_core_scale_03`).
+
+201. At **Array Lockers**, inspect **array lockers**, **phase seals**.
+
+202. From **Array Lockers**, go **south** to **Coolant Choir** (`foundry_power_core_scale_04`).
+
+203. At **Coolant Choir**, inspect **coolant choir**, **blue pipes**, **pressure relief lever**.
+
+204. From **Coolant Choir**, go **south** to **Foundry Core Shadow** (`foundry_power_core_scale_final`).
+
+205. At **Foundry Core Shadow**, inspect **core shadow**, **clamp gauge**; open **shielded core case** for one-time contents.
+
+206. Clear any active blocking encounter at **Foundry Core Shadow** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+
+207. From **Foundry Core Shadow**, go **north** to **Coolant Choir** (`foundry_power_core_scale_04`) → **north** to **Array Lockers** (`foundry_power_core_scale_03`) → **north** to **Engine Cradle** (`foundry_power_core_scale_02`) → **north** to **Turbine Balcony** (`foundry_power_core_scale_01`) → **north** to **Power Core** (`foundry_power_core`).
+
+208. At **Engine Service Ring**, note **thermal clamps** and **array rack**. The main **engine mount** and **phase-cutter arrays** at Power Core are alternatives for the same component tasks. Those thefts require Titan victory; inspecting them early does not grant the parts.
+
+209. From **Power Core**, go **west** to **Conditioning Chamber** (`foundry_conditioning_chamber`) → **west** to **Conveyor Belt** (`foundry_conveyor_belt`) → **south** to **The Forge** (`foundry_forge_anvil`) → **west** to **Control Alcove** (`foundry_forge_control_alcove`).
+
+210. Use **Rest** at **control alcove cot** before the boss. Check party HP, healing/status supplies, compatible equipment and AP spending. Keep a separate pre-Titan save; the earlier arena is optional but its rewards are included in this completionist route.
+
+**Check before leaving:** Every desired Power Core detour is checked and the party is recovered. Do not expect the engine/arrays before defeating Titan Walker.
+
+
+## 13. Rylos and Titan Walker
+
+211. From **Control Alcove**, go **east** to **The Forge** (`foundry_forge_anvil`) → **north** to **Conveyor Belt** (`foundry_conveyor_belt`) → **east** to **Conditioning Chamber** (`foundry_conditioning_chamber`) → **east** to **Power Core** (`foundry_power_core`) → **east** to **Titan Dock** (`foundry_titan_dock`).
+
+212. At **Titan Dock**, use **gantry footlocker**. Collect the second regional VHS discovery if it is available before the confrontation; if combat blocks it, collect it immediately after victory.
+
+213. At **Titan Dock**, use **commander rylos**. Finish the confrontation so the actual showdown is credited. Merely entering Titan Dock is not that conversation.
+
+214. Defeat the **Titan Walker** encounter using the current party’s abilities and supplies. Check **Meltdown → defeat Titan Walker**/the victory milestone afterward. An incomplete confrontation or retreat does not satisfy it. Let victory feedback finish before using other controls.
+
+215. From **Titan Dock**, go **north** to **Escape Catwalk** (`foundry_escape_catwalk`).
+
+216. At **Escape Catwalk**, read available local details.
+
+217. From **Escape Catwalk**, go **south** to **Titan Dock** (`foundry_titan_dock`) → **east** to **Walker Scaffold** (`foundry_titan_dock_scale_01`).
+
+218. At **Walker Scaffold**, inspect **walker scaffold**, **hydraulic scars**, **weld inspection stencil**.
+
+219. From **Walker Scaffold**, go **north** to **Ammo Lift** (`foundry_titan_dock_scale_02`).
+
+220. At **Ammo Lift**, inspect **ammo lift**, **chain brake**.
+
+221. Clear any active blocking encounter at **Ammo Lift** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+
+222. From **Ammo Lift**, go **north** to **Escape Rail** (`foundry_titan_dock_scale_03`).
+
+223. At **Escape Rail**, inspect **escape rail**, **cut coupler**.
+
+224. Clear any active blocking encounter at **Escape Rail** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+
+225. From **Escape Rail**, go **north** to **Meltdown View** (`foundry_titan_dock_scale_04`).
+
+226. At **Meltdown View**, inspect **meltdown view**, **white fire**.
+
+227. From **Meltdown View**, go **north** to **Foundry Last Gantry** (`foundry_titan_dock_scale_final`).
+
+228. At **Foundry Last Gantry**, inspect **last gantry**, **release bolt**; open **titan maintenance pod** for one-time contents.
+
+229. From **Foundry Last Gantry**, go **south** to **Meltdown View** (`foundry_titan_dock_scale_04`) → **south** to **Escape Rail** (`foundry_titan_dock_scale_03`) → **south** to **Ammo Lift** (`foundry_titan_dock_scale_02`) → **south** to **Walker Scaffold** (`foundry_titan_dock_scale_01`) → **west** to **Titan Dock** (`foundry_titan_dock`).
+
+**Check before leaving:** The Rylos conversation and real Titan victory are complete. The final departure still needs both stolen hardware components.
+
+
+## 14. Steal the engine and arrays, then audit before departure
+
+230. From **Titan Dock**, go **west** to **Power Core** (`foundry_power_core`).
+
+231. At **Power Core**, use **engine mount**. Steal the **Deep-Core Engine** after Titan victory.
+
+232. At **Power Core**, use **phase-cutter arrays**. Steal the **Phase-Cutter Arrays** after Titan victory. Verify both task receipts and both items; one is not a substitute for the other.
+
+233. From **Power Core**, go **east** to **Titan Dock** (`foundry_titan_dock`).
+
+234. Stop before **escape launch**. Confirm all five main quests except Meltdown complete, with Meltdown’s confrontation, victory and both theft tasks done. Confirm all six side quests complete, one Quality Control outcome, three Crucible victories and Brutus’s final prize claimed.
+
+235. For a full exploration run, confirm the numbered detours visited all **74 rooms**, both VHS discoveries, the smelter cache, optional magma regulator, wanted regional fishing and arcade discovery. Save to a separate predeparture slot. Ordinary backtracking remains available until you deliberately depart.
+
+236. At **Titan Dock**, use **escape launch**. Launch from Titan Dock only after the audit. **Escape gantry** at Escape Catwalk is an alternate control for this same departure. Confirm **Meltdown** complete and arrival at **Executive Dock** in World 5. The stolen engine/arrays make the Astra high-orbit capable; the Foundry is not a separate second ship.
+
+**Check before leaving:** World 5 arrival is stable, Meltdown is complete, and the predeparture save is retained.
+
+## 15. All-room reference
+
+The numbered route visits every room. Use this reference to locate an object or retrace a branch; the named actions can be stage-dependent. Generic descriptions and optional return shortcuts are not all quest objectives.
+
+### Obsidian Shelf (`foundry_obsidian_shelf`)
 
 #### Obsidian Shelf (`foundry_slag_landing`)
 
@@ -183,8 +621,7 @@ Exits: south → Survey Cache.
 
 Interactions: cracked beacon, shift tally, heat-sealed container, slide.
 
-
-### Slag River
+### Slag River (`foundry_slag_river`)
 
 #### Slag River (`foundry_slag_river`)
 
@@ -201,6 +638,8 @@ Basalt stones rise from the lava channel in a readable flare rhythm. A roaring s
 Exits: south → Slag River, north → Subterranean Smelter Forge.
 
 Interactions: cryogenic manifold valve, flare rhythm.
+
+Access: North requires the cryogenic manifold valve to solidify the slag crossing.
 
 #### Subterranean Smelter Forge (`foundry_subterranean_smelter`)
 
@@ -250,8 +689,7 @@ Exits: south → River Gauge Station.
 
 Interactions: burned console, rescue hook, smelter toolbox, catwalk.
 
-
-### Cooling Springs
+### Cooling Springs (`foundry_cooling_springs`)
 
 #### Cooling Springs (`foundry_cooling_springs`)
 
@@ -309,8 +747,7 @@ Exits: south → Thermal Shelf.
 
 Interactions: patched pipes, cool residue, coolant reserve, drain.
 
-
-### Waste Intake
+### Waste Intake (`foundry_waste_intake`)
 
 #### Waste Intake (`foundry_waste_intake`)
 
@@ -376,8 +813,7 @@ Exits: south → Intake Overlook.
 
 Interactions: blast cage, molten sluices, victor podium, announcer horn.
 
-
-### Service Airlock
+### Service Airlock (`foundry_service_airlock`)
 
 #### Service Airlock (`foundry_service_airlock`)
 
@@ -443,8 +879,9 @@ Exits: west → Decon Chamber, east → Reject Bay.
 
 Interactions: racing pennants, pipe bench, family photo, bypass manifold, leather dog collar.
 
+Access: Check the current story/room gate before attempting the blocked direction.
 
-### Conveyor Belt
+### Conveyor Belt (`foundry_conveyor_belt`)
 
 #### Conveyor Belt (`foundry_conveyor_belt`)
 
@@ -469,6 +906,8 @@ Defective units are dumped into a low bay before the furnace eats them. A reject
 Exits: east → Conveyor Belt, west → High-Pressure Pipe Gallery.
 
 Interactions: rejected droid, scorched smelter console.
+
+Access: Check the current story/room gate before attempting the blocked direction.
 
 #### Timing Tower (`foundry_conveyor_belt_scale_01`)
 
@@ -510,8 +949,7 @@ Exits: south → Control Perch.
 
 Interactions: nerve junction, target counter, assembly cache, slide.
 
-
-### Conditioning
+### Conditioning (`foundry_conditioning`)
 
 #### Conditioning Chamber (`foundry_conditioning_chamber`)
 
@@ -569,8 +1007,7 @@ Exits: south → Calibration Pit.
 
 Interactions: defect choir, glass seam, stress-test locker, valve.
 
-
-### The Forge
+### The Forge (`foundry_forge`)
 
 #### The Forge (`foundry_forge_anvil`)
 
@@ -628,8 +1065,7 @@ Exits: south → Slag Chapel.
 
 Interactions: relic draft, ash trail, master smith crate, flue.
 
-
-### Power Core
+### Power Core (`foundry_power_core`)
 
 #### Power Core (`foundry_power_core`)
 
@@ -687,8 +1123,7 @@ Exits: north → Coolant Choir.
 
 Interactions: core shadow, clamp gauge, shielded core case, lift.
 
-
-### Titan Dock
+### Titan Dock (`foundry_titan_dock`)
 
 #### Titan Dock (`foundry_titan_dock`)
 
@@ -745,3 +1180,133 @@ A last gantry shakes over the Titan dock, pointed directly at the escape route. 
 Exits: south → Meltdown View.
 
 Interactions: last gantry, release bolt, titan maintenance pod, scaffolding.
+
+
+## 16. Journal checklist: all eleven quests
+
+Completed tasks need not be repeated. Choose one Quality Control ending.
+
+### Into the Fire (`w4_mq16`)
+
+**Obsidian Shelf**
+
+- [ ] Secure the Astra on the Obsidian Shelf. (`land_shelf`)
+- [ ] Cross the Slag River by reading the heat breaks. (`cross_slag_river`)
+
+**Cooling the Gate**
+
+- [ ] Starve the cooling vent controls at Waste Intake. (`hack_cooling_vents`)
+- [ ] Cycle the Service Airlock. (`enter_airlock`)
+
+### Ghost in the Machine (`w4_mq17`)
+
+**Project Phantom**
+
+- [ ] Open the Project Phantom terminal. (`access_phantom_terminal`)
+
+**Breather**
+
+- [ ] Regroup with Gh0st at the Cooling Springs. (`regroup_springs`)
+
+### Sabotage (`w4_sq16`)
+
+**Resistance Marks**
+
+- [ ] Destroy the marked ammo crate at the Slag River. (`crate_alpha`)
+- [ ] Destroy the marked ammo crate at Waste Intake. (`crate_beta`)
+- [ ] Destroy the marked ammo crate at the Service Airlock. (`crate_gamma`)
+
+### Lost Worker (`w4_sq17`)
+
+**Last Ping**
+
+- [ ] Trace the worker's final maintenance ping. (`trace_ping`)
+- [ ] Find the engineer's hidden coolant shelter. (`find_worker`)
+- [ ] Open a heat-safe route for trapped workers. (`vent_safe_route`)
+
+### The Scrap Heap (`w4_sq18`)
+
+**Useful Failures**
+
+- [ ] At Waste Intake, use the waste intake brake before the machinery consumes the wrecks. (`stop_intake`)
+- [ ] Extract intact actuators from the mech pile. (`salvage_mechs`)
+- [ ] Build a cooling bypass from the salvaged parts. (`build_bypass`)
+
+### The Assembly (`w4_mq18`)
+
+**Production Floor**
+
+- [ ] Time the Assembly line's moving belts. (`navigate_conveyors`)
+- [ ] Review the Phantom conditioning records in Conditioning Chamber. (`defeat_prototypes`)
+
+**Overload**
+
+- [ ] Overload the fabrication matrix. (`overload_matrix`)
+
+### The Anvil (`w4_mq19`)
+
+**Forge Access**
+
+- [ ] Reach The Forge and inspect the Anvil cradle. (`reach_core_chamber`)
+- [ ] Force the Anvil cradle open. (`solve_conveyor_puzzle`)
+
+**Claim the Relic**
+
+- [ ] Acquire the Anvil relic. (`take_anvil`)
+
+### Meltdown (`w4_mq20`)
+
+**Rylos**
+
+- [ ] Confront Commander Rylos. (`confront_rylos`)
+- [ ] Bring down the Titan Walker. (`defeat_titan_walker`)
+
+**Steal the Heart**
+
+- [ ] Steal the Deep-Core Engine. (`steal_engine`)
+- [ ] Steal the Phase-Cutter Arrays. (`steal_arrays`)
+- [ ] Escape the Foundry aboard the Astra. (`escape_launch`)
+
+### Quality Control (`w4_sq19`)
+
+**Defective Units**
+
+- [ ] At Reject Bay, inspect the rejected droid and read why the Foundry rejected the waking units. (`read_rejection_codes`)
+- [ ] At Conveyor Belt, use the rejected droid to remove the obedience fault. (`resolve_units`)
+- [ ] At Conveyor Belt, choose the conveyor release lock or worker defense relay. (`release_units`)
+
+### Overclocked (`w4_sq20`)
+
+**Hazard Calibration**
+
+- [ ] At Control Alcove, inspect the hazard cycle map. (`map_hazards`)
+- [ ] Calibrate the test chamber terminal in The Forge using the mapped heat cycles. (`survive_waves`)
+- [ ] Return to Control Alcove and steal the overclock profile. (`steal_overclock`)
+
+### The Scrapper's Crucible (`w4_sq_crucible`)
+
+**Gladiator Waves**
+
+- [ ] Defeat Round 1: two Magma Drones supported by a Welder Bot in the Crucible pit. (`task_round1`)
+- [ ] Defeat Round 2: Slag Golem and Welder Bot heavy line. (`task_round2`)
+- [ ] Defeat Round 3: The Crucible Champion and claim the victor's prize. (`task_round3`)
+
+## 17. Recovery: find the missing step
+
+- **Airlock will not cycle:** secure the Astra, credit the river crossing using flare rhythm/slag crossing, and use Waste Intake cooling vent controls before the airlock door.
+- **Smelter doorway is blocked:** open the cryogenic manifold valve at Stepping Stones. Its current room state controls the crossing; turning it off closes the route again.
+- **Lost Worker safe-route valve does nothing:** trace the maintenance ping at Waste Intake, then find the worker tablet at Cooling Springs before using the Service Airlock valve.
+- **The Scrap Heap bypass is unavailable:** stop Waste Intake with the brake before salvaging the mech pile. Build from those parts at Cooling Springs; this is not a generic menu crafting recipe.
+- **Assembly shutter remains closed:** finish both the Phantom records conversation and the Cooling Springs regroup scene. Owning a key or reading the records alone is not the permanent corridor clearance. Reopen and finish an interrupted Springs scene.
+- **A Crucible round does not advance:** finish the Brutus start conversation, win the actual encounter, then speak again. Retreat/defeat leaves the round available. Three completed rounds still require the final prize conversation.
+- **Quality Control cannot resolve:** read the rejected droid at Reject Bay before reprogramming at Conveyor Belt. Choose one release/defense endpoint there; completion closes the other payout.
+- **Overclocked profile is missing:** map the Control Alcove hazard cycle, calibrate the Forge test terminal, then return for the profile. The internal task name “survive waves” does not promise a separate live fight.
+- **Anvil cradle stays closed:** while The Anvil quest is active, visit the Forge so the core-chamber task is credited, then read Timing Tower pulse board and Roller Underpass grease marks, throw Control Perch override paddle, starve Bellows Walk breath pistons, and return to the cradle. Merely visiting the branch rooms does not operate their controls.
+- **Titan victory does not unlock departure:** finish the Rylos confrontation before the fight, then verify the victory receipt and collect both hardware components from Power Core/Engine Service Ring. Finish pending dialogue/feedback before retrying escape launch.
+- **Only a completion notification appears:** check Journal and inventory for actual progress; do not replay a completed reward event to chase a second popup. Record missing narrative feedback separately from missing progression.
+
+## 18. Review scope and phone acceptance
+
+This itinerary is source-checked against current rooms, controls, quest prerequisites and existing earned Foundry campaign traces. Prior production tests cover both Quality Control outcomes on separate routes, early and delayed lower-area side quests, real Crucible/Titan encounters, return travel, save/reload and hardware-gated launch. Known answers, a fixed combat seed, predetermined builds and virtual time are limitations of those tests.
+
+The newly ordered full 74-room itinerary has not been replayed end to end on a phone. Verify touch discoverability, dialogue timing, clue comprehension, resource pressure and whether exploration detours feel rewarding. A route check does not certify every build or random encounter result. The older summary edition is archived separately; this rebuilt document is the main World 4 guide.

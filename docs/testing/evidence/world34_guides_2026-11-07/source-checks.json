@@ -1,0 +1,18 @@
+{
+  "worlds": {
+    "3": {
+      "route_steps": 181,
+      "rooms": 70,
+      "quests": 11,
+      "verified_explicit_edges": 173
+    },
+    "4": {
+      "route_steps": 236,
+      "rooms": 74,
+      "quests": 11,
+      "verified_explicit_edges": 200
+    }
+  },
+  "world1_and_world2_sources_unchanged": true,
+  "world4_named_controls_verified": 40
+}

@@ -10,7 +10,7 @@ const outputDirectory = path.join(home, 'dist', ...(integrated ? ['world-3-integ
 const guides = [];
 const integratedStepIds = integrated
   ? JSON.parse(await readFile(path.join(home, 'src/world3-integrated-step-ids.json'), 'utf8')) : {};
-for (const world of (integrated ? [3] : [1, 2, 3])) {
+for (const world of (integrated ? [3] : [1, 2, 3, 4])) {
   const guideFile = integrated ? 'WORLD_3_INTEGRATED_COMPLETIONIST_WALKTHROUGH.md' : `WORLD_${world}_COMPLETIONIST_WALKTHROUGH.md`;
   const source = await readFile(path.join(root, 'docs/playtest/walkthroughs', guideFile), 'utf8');
   const sections = [];
@@ -22,7 +22,7 @@ for (const world of (integrated ? [3] : [1, 2, 3])) {
     const text = paragraph.join(' ');
     const heading = /^(#{3,4}) /.exec(text);
     const step = /^(\d+)\. /.exec(text);
-    const checklist = world === 3 && /^- \[ \] /.test(text);
+    const checklist = world >= 3 && /^- \[ \] /.test(text);
     if (step) nextStep = Math.max(nextStep, Number(step[1]));
     const stableKey = section.title.replace(/^\d+\. /, '') + '\n' + text.replace(/^\d+\. /, '');
     const id = (integrated && step ? integratedStepIds[stableKey] : null)
@@ -43,7 +43,7 @@ for (const world of (integrated ? [3] : [1, 2, 3])) {
   }
   flush();
   if (section.blocks.length) sections.push(section);
-  guides.push({ world, revision: createHash('sha256').update(source).digest('hex').slice(0, 12), sections });
+  guides.push({ world, ...(world === 3 && !integrated ? { progressKey: '3-rebuilt-2026-11-07' } : {}), revision: createHash('sha256').update(source).digest('hex').slice(0, 12), sections });
 }
 const data = JSON.stringify(guides).replaceAll('<', '\\u003c');
 let template = await readFile(path.join(home, 'src/index.html'), 'utf8');
