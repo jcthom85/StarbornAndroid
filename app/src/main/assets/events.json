@@ -5420,7 +5420,7 @@
       {
         "type": "quest_task_not_done",
         "quest_id": "w3_sq13",
-        "task_id": "fix_market_lights"
+        "task_id": "reroute_power"
       },
       {
         "type": "milestone_set",

@@ -59,89 +59,59 @@ class World3PublicInteractionTest {
         error("World 3 dialogue did not finish")
     }
 
-    @Test fun leavingAnNpcDoesNotDiscardAnAlreadyQueuedScriptedInteraction() = runWith { s ->
-        restore(s, s.sessionStore.state.value.copy(worldId = "world_3", hubId = "hub_6_upper_city",
-            roomId = "spire_prism_gallery", activeQuests = setOf("w3_mq14"), completedQuests = emptySet(),
-            completedEvents = emptySet(), completedMilestones = setOf("ms_w3_containment_field_read",
-                "ms_w3_prism_shutters_read", "ms_w3_command_tethers_traced"),
-            questTasksCompleted = mapOf("w3_mq14" to setOf("enter_archive"))))
-        compose.runOnIdle { s.exploration.onNpcInteraction("Evelyn") }
-        act(s, "w3_mq14_route_prisms")
-        assertTrue(s.exploration.uiState.value.activeDialogue!!.canDismiss)
-        compose.runOnIdle { s.exploration.dismissDialogue() }
-        assertEquals("w3_prism_route_entry", s.exploration.uiState.value.activeDialogue?.line?.id)
-        assertFalse(s.exploration.uiState.value.activeDialogue!!.canDismiss)
-        assertFalse("ms_w3_prism_solved" in s.sessionStore.state.value.completedMilestones)
-        compose.runOnIdle { s.exploration.onDialogueChoiceSelected("leave") }
-        assertNull(s.exploration.uiState.value.activeDialogue)
-    }
-
-    @Test fun worldSixCompanionConversationsCanBeLeftWithoutChangingRescueProgress() = runWith { s ->
-        for ((npc, task, line) in listOf(
-            Triple("Zeke", "rescue_zeke", "zeke_w6_nightmare_release"),
-            Triple("Gh0st", "rescue_gh0st", "gh0st_w6_nightmare_release"),
-            Triple("Orion", "rescue_orion", "orion_w6_nightmare_release"))) {
-            restore(s, s.sessionStore.state.value.copy(worldId = "world_6", hubId = "hub_11_event_horizon",
-                roomId = "source_campfire", activeQuests = setOf("w6_mq26"), completedQuests = emptySet(),
-                completedMilestones = emptySet(), completedEvents = emptySet(),
-                questTasksCompleted = mapOf("w6_mq26" to setOf(task))))
-            compose.runOnIdle { s.exploration.onNpcInteraction(npc) }
-            assertEquals(line, s.exploration.uiState.value.activeDialogue?.line?.id)
-            assertTrue(s.exploration.uiState.value.activeDialogue!!.canDismiss)
-            val before = s.sessionStore.state.value
-            compose.runOnIdle { s.exploration.dismissDialogue() }
-            assertNull(s.exploration.uiState.value.activeDialogue)
-            assertEquals(before.questTasksCompleted, s.sessionStore.state.value.questTasksCompleted)
-            assertEquals(before.inventory, s.sessionStore.state.value.inventory)
-        }
-    }
-
-    @Test fun leavingNpcConversationsDoesNotExecuteUnfinishedGiftTriggers() = runWith { s ->
-        for ((npc, giftChoice, item) in listOf(
-            Triple("Evelyn", "evelyn_opt_favor_offer", "mimis_jazz_bloom"),
-            Triple("Robert", "robert_opt_gift", "roberts_buffer_core"))) {
+    @Test fun responseExitClosesEvelynAndRobertButDoesNotCancelOrdinaryLines() = runWith { s ->
+        for (npc in listOf("Evelyn", "Robert")) {
             restore(s, s.sessionStore.state.value.copy(worldId = "world_3", hubId = "hub_6_upper_city",
-                roomId = "spire_skypark_dome", activeQuests = emptySet(),
-                completedQuests = (11..15).map { "w3_mq$it" }.toSet(), completedMilestones = emptySet()))
+                roomId = "spire_skypark_dome", activeQuests = emptySet(), completedQuests = emptySet(), completedMilestones = emptySet()))
             compose.runOnIdle { s.exploration.onNpcInteraction(npc) }
-            assertTrue(s.exploration.uiState.value.activeDialogue!!.canDismiss)
+            val last = s.exploration.uiState.value.dialogueChoices.last()
+            assertTrue(last.id.contains("leave"))
             val before = s.sessionStore.state.value
-            compose.runOnIdle { s.exploration.onDialogueChoiceSelected(giftChoice) }
-            compose.runOnIdle { s.exploration.dismissDialogue() }
+            compose.runOnIdle { s.exploration.onDialogueChoiceSelected(last.id) }
             assertNull(s.exploration.uiState.value.activeDialogue)
             assertEquals(before.playerXp, s.sessionStore.state.value.playerXp)
             assertEquals(before.inventory, s.sessionStore.state.value.inventory)
-            assertEquals(before.completedMilestones, s.sessionStore.state.value.completedMilestones)
-            assertEquals(0, s.inventoryService.snapshot()[item] ?: 0)
-            compose.runOnIdle { s.exploration.onNpcInteraction(npc) }
-            compose.runOnIdle { s.exploration.onDialogueChoiceSelected(giftChoice) }
-            compose.runOnIdle { s.exploration.advanceDialogue() }
-            assertEquals(1, s.inventoryService.snapshot()[item])
-            compose.runOnIdle { s.exploration.dismissDialogue() }
-            assertNull(s.exploration.uiState.value.activeDialogue)
         }
+        restore(s, s.sessionStore.state.value.copy(roomId = "source_campfire", worldId = "world_6",
+            hubId = "hub_11_event_horizon", activeQuests = setOf("w6_mq26"),
+            questTasksCompleted = mapOf("w6_mq26" to setOf("rescue_zeke"))))
+        compose.runOnIdle { s.exploration.onNpcInteraction("Zeke") }
+        assertNotNull(s.exploration.uiState.value.activeDialogue)
+        assertTrue(s.exploration.uiState.value.dialogueChoices.isEmpty())
+        assertFalse(s.exploration.uiState.value.activeDialogue!!.canDismiss)
+        compose.runOnIdle { s.exploration.dismissDialogue() }
+        assertNotNull(s.exploration.uiState.value.activeDialogue)
+        compose.runOnIdle { s.exploration.advanceDialogue() }
+        assertNull(s.exploration.uiState.value.activeDialogue)
     }
 
-    @Test fun fixedDismissalWorksAcrossLaterWorldResidents() = runWith { s ->
-        for ((npc, room, hub) in listOf(
-            Triple("Cheno", "spire_rigging_deck", "hub_5_lower_city"),
-            Triple("Chris", "spire_old_subway_car", "hub_5_lower_city"),
-            Triple("Andrew", "spire_old_subway_car", "hub_5_lower_city"),
-            Triple("Jason", "spire_hidden_studio", "hub_5_lower_city"),
-            Triple("Meeko", "spire_hidden_studio", "hub_5_lower_city"),
-            Triple("Rylan", "foundry_lava_tube_bypass", "hub_7_slag_pits"),
-            Triple("Cameron", "foundry_pipe_gallery", "hub_7_slag_pits"),
-            Triple("Charles", "orbital_customs_lounge", "hub_9_orbital_ring"),
-            Triple("Oliver", "astra_quarters", "hub_astra"))) {
-            restore(s, s.sessionStore.state.value.copy(roomId = room, hubId = hub,
-                activeQuests = emptySet(), completedQuests = emptySet(), completedMilestones = emptySet(), completedEvents = emptySet()))
-            compose.runOnIdle { s.exploration.onNpcInteraction(npc) }
-            assertNotNull("$npc should open", s.exploration.uiState.value.activeDialogue)
-            assertTrue("$npc should expose a persistent Leave control", s.exploration.uiState.value.activeDialogue!!.canDismiss)
-            compose.runOnIdle { s.exploration.dismissDialogue() }
-            assertNull("$npc should close", s.exploration.uiState.value.activeDialogue)
-            assertTrue(s.exploration.uiState.value.dialogueChoices.isEmpty())
-        }
+    @Test fun rooftopActionsExplainEveryStageAndLaunchAfterRecordedBossVictory() = runWith { s ->
+        val base = s.sessionStore.state.value.copy(worldId = "world_3", hubId = "hub_6_upper_city",
+            roomId = "spire_landing_pad_roof", activeQuests = setOf("w3_mq15"), completedQuests = emptySet(),
+            completedMilestones = setOf("ms_w3_mq14_complete"), completedEvents = emptySet(),
+            questTasksCompleted = mapOf("w3_mq15" to setOf("reach_landing_pad")))
+        restore(s, base)
+        act(s, "w3_mq15_launch_astra")
+        compose.waitUntil(5000) { s.exploration.uiState.value.narrationPrompt != null }
+        assertTrue(s.exploration.uiState.value.narrationPrompt!!.message.contains("Administrator"))
+        dismissNarration(s)
+        restore(s, base.copy(questTasksCompleted = mapOf("w3_mq15" to setOf("reach_landing_pad", "defeat_administrator"))))
+        act(s, "w3_scan_shield_gap")
+        compose.waitUntil(5000) { s.exploration.uiState.value.narrationPrompt?.message?.contains("Scan separates") == true }
+        dismissNarration(s)
+        assertTrue("scan_shield_gap" in s.sessionStore.state.value.questTasksCompleted["w3_mq15"].orEmpty())
+        act(s, "w3_scan_shield_gap")
+        compose.waitUntil(5000) { s.exploration.uiState.value.narrationPrompt != null }
+        assertTrue("Unexpected repeat-scan feedback: ${s.exploration.uiState.value.narrationPrompt!!.message}",
+            s.exploration.uiState.value.narrationPrompt!!.message.contains("already recorded"))
+        dismissNarration(s)
+        assertTrue(s.saveManager.saveGame(9, s.sessionStore.state.value))
+        assertTrue(compose.runOnIdle { s.loadSlot(9) })
+        compose.waitUntil(10000) { !s.exploration.uiState.value.isLoading }
+        dismissNarration(s)
+        act(s, "w3_mq15_launch_astra")
+        compose.waitUntil(5000) { s.sessionStore.state.value.roomId == "foundry_slag_landing" }
+        assertTrue("w3_mq15" in s.sessionStore.state.value.completedQuests)
     }
 
     @Test fun coverStoryRecoversAfterWrongAnswerLeaveAndSaveReload() = runWith { s ->

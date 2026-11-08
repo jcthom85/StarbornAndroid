@@ -30,6 +30,29 @@ import java.io.File
 class DialogueTapInstrumentedTest {
     @get:Rule val rule = createComposeRule()
 
+    @Test fun rooftopShieldAndLaunchWordsAreDistinctTouchableActions() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val type = Types.newParameterizedType(List::class.java, com.example.starborn.domain.model.Room::class.java)
+        val room = context.assets.open("rooms.json").bufferedReader().use {
+            requireNotNull(MoshiProvider.instance.adapter<List<com.example.starborn.domain.model.Room>>(type).fromJson(it.readText()))
+        }.single { it.id == "spire_landing_pad_roof" }
+        val actions = listOf(
+            com.example.starborn.domain.model.GenericAction("shield window", "generic", "w3_scan_shield_gap"),
+            com.example.starborn.domain.model.GenericAction("launch window", "generic", "w3_mq15_launch_astra"))
+        val description = room.descriptionVariants.first().description
+        val plan = com.example.starborn.feature.exploration.presentation.buildInlineActionPlan(description, actions, emptyMap(), room)
+        val selected = mutableListOf<String>()
+        rule.setContent { StarbornTheme { Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            RoomDescriptionPanel(room, description, plan, isDark = false, textColor = Color.White,
+                onAction = { selected += it.name }, onNpcClick = {}, onEnemyClick = {}, borderColor = Color.Cyan,
+                accentColor = Color.Cyan, modifier = Modifier.width(340.dp).heightIn(max = 400.dp))
+        } } }
+        for (name in listOf("shield window", "launch window")) {
+            rule.onAllNodesWithTag("room-action-$name").onFirst().performScrollTo().performTouchInput { click() }
+        }
+        rule.runOnIdle { assertEquals(listOf("shield window", "launch window"), selected) }
+    }
+
     @Test fun tappingReservedChoiceAreaRevealsWithoutAccidentallySelectingAResponse() {
         var choices = 0
         var advances = 0
@@ -47,40 +70,14 @@ class DialogueTapInstrumentedTest {
         rule.runOnIdle { assertEquals(1, choices); assertEquals(0, advances) }
     }
 
-    @Test fun persistentLeaveIsTouchableWhileTextIsRevealingAtLargeFont() {
-        var dismissed = 0
-        var chosen = 0
+    @Test fun noStandaloneLeaveControlExistsDuringOrdinaryDialogue() {
         rule.mainClock.autoAdvance = false
         rule.setContent { StarbornTheme {
-            val density = LocalDensity.current
-            CompositionLocalProvider(LocalDensity provides Density(density.density, 1.4f)) {
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Box(Modifier.width(340.dp).heightIn(max = 540.dp)) {
-                        DialogueOverlay(DialogueUi(DialogueLine("leave-revealing", "Evelyn", "The orchids are flowering. ".repeat(30)),
-                            "images/npcs/elara.webp", null, canDismiss = true),
-                            List(5) { DialogueChoiceUi("topic_$it", "Ask about another part of the garden") },
-                            onAdvance = {}, onChoice = { chosen++ }, onPlayVoice = {}, onDismiss = { dismissed++ })
-                    }
-                }
-            }
+            DialogueOverlay(DialogueUi(DialogueLine("ordinary", "Zeke", "Keep moving toward the service lift."),
+                null, null), emptyList(), onAdvance = {}, onChoice = {}, onPlayVoice = {})
         } }
-        rule.onNodeWithTag("dialogue-leave").assertIsDisplayed().performTouchInput { click() }
-        rule.runOnIdle { assertEquals(1, dismissed); assertEquals(0, chosen) }
-    }
-
-    @Test fun androidBackLeavesWithoutSelectingOrAdvancingDialogue() {
-        var dispatcher: OnBackPressedDispatcher? = null
-        var dismissed = 0
-        var progressed = 0
-        rule.mainClock.autoAdvance = false
-        rule.setContent { StarbornTheme {
-            dispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-            DialogueOverlay(DialogueUi(DialogueLine("back-regression", "Robert", "A long conversation. ".repeat(30)),
-                null, null, canDismiss = true), listOf(DialogueChoiceUi("topic", "Ask a question")),
-                onAdvance = { progressed++ }, onChoice = { progressed++ }, onPlayVoice = {}, onDismiss = { dismissed++ })
-        } }
-        rule.runOnIdle { requireNotNull(dispatcher).onBackPressed() }
-        rule.runOnIdle { assertEquals(1, dismissed); assertEquals(0, progressed) }
+        rule.onNodeWithTag("dialogue-leave").assertDoesNotExist()
+        rule.onNodeWithText("Leave").assertDoesNotExist()
     }
 
     @Test fun actualEvelynAndRobertGoodbyeChoicesReceiveTouchEvents() {
@@ -98,11 +95,15 @@ class DialogueTapInstrumentedTest {
                 onAdvance = {}, onChoice = { chosen += it }, onPlayVoice = {}, onDismiss = {})
         } } }
         for (npc in listOf("evelyn", "robert")) {
+            rule.mainClock.autoAdvance = false
             rule.runOnIdle { who = npc }
             rule.mainClock.advanceTimeByFrame()
             rule.onNodeWithTag("dialogue-advance").performTouchInput { click(center) }
             rule.mainClock.advanceTimeByFrame()
-            rule.onNodeWithText("I'll let you get back to it. Take care.").assertIsDisplayed().performTouchInput { click() }
+            rule.mainClock.autoAdvance = true
+            rule.onNodeWithText("I'll let you get back to it. Take care.").performScrollTo().assertIsDisplayed()
+            capture("goodbye-before-tap.png")
+            rule.onNodeWithText("I'll let you get back to it. Take care.").performTouchInput { click() }
             rule.runOnIdle { assertEquals("${npc}_leave", chosen.last()) }
         }
     }
@@ -133,7 +134,7 @@ class DialogueTapInstrumentedTest {
             }
         }
         rule.onNodeWithTag("dialogue-more-text").assertDoesNotExist()
-        rule.onNodeWithTag("dialogue-leave").assertIsDisplayed()
+        rule.onNodeWithTag("dialogue-leave").assertDoesNotExist()
     }
 
     @Test fun shortDescriptionsHaveNoCueAndLongDescriptionsCanBeScrolledToTheEnd() {

@@ -12,6 +12,23 @@ import org.junit.Test
 
 class DialogueServiceTest {
 
+    @Test fun responseMenusHaveAFinalExitWhileLinearDialogueCannotBeCanceled() {
+        var triggers = 0
+        val root = DialogueLine("question", "Guide", "What do you need?", trigger = "give_xp:99",
+            options = listOf(DialogueOption("answer", "Tell me more.", next = "reply")))
+        val reply = DialogueLine("reply", "Guide", "Here is the answer.")
+        val session = DialogueSession(mapOf(root.id to root, reply.id to reply), root,
+            DialogueConditionEvaluator { true }, DialogueTriggerHandler { triggers++ })
+        assertEquals(DialogueSession.RESPONSE_EXIT_ID, session.choices().last().id)
+        session.choose(DialogueSession.RESPONSE_EXIT_ID)
+        assertTrue(session.isFinished())
+        assertEquals(0, triggers)
+        val linear = DialogueSession(mapOf(reply.id to reply), reply, DialogueConditionEvaluator { true }, DialogueTriggerHandler { triggers++ })
+        assertTrue(linear.choices().isEmpty())
+        assertEquals(reply, linear.choose(DialogueSession.RESPONSE_EXIT_ID))
+        assertEquals(0, triggers)
+    }
+
     @Test
     fun `every authored dialogue graph has a route to an ending`() {
         val assets = listOf(File("src/main/assets"), File("app/src/main/assets")).first { it.exists() }

@@ -58,6 +58,7 @@ class DialogueSession(
     private val conditionEvaluator: DialogueConditionEvaluator,
     private val triggerHandler: DialogueTriggerHandler
 ) {
+    companion object { const val RESPONSE_EXIT_ID = "__response_leave" }
     private var currentId: String? = start.id
 
     fun current(): DialogueLine? = currentId?.let { dialogueById[it] }
@@ -79,8 +80,19 @@ class DialogueSession(
     fun choices(): List<DialogueOption> {
         val line = current() ?: return emptyList()
         val options = line.options ?: return emptyList()
-        return options.filter { option ->
-            conditionEvaluator.isConditionMet(option.condition)
+        val available = options.filter { conditionEvaluator.isConditionMet(it.condition) }
+        if (available.isEmpty()) return emptyList()
+        val exits = available.filter { option ->
+            option.next == null && option.trigger.isNullOrBlank() &&
+                (option.id.contains("leave", true) || option.text.contains("later", true) ||
+                    option.text.contains("step away", true) || option.text.contains("never mind", true) ||
+                    option.text.contains("busy", true))
+        }
+        return if (exits.isNotEmpty()) available.filterNot { it in exits } + exits
+        else {
+            val isControl = listOf("control", "console", "terminal").any { line.speaker.contains(it, true) }
+            available + DialogueOption(RESPONSE_EXIT_ID,
+                if (isControl) "Step away from the controls." else "Let's leave it there for now.")
         }
     }
 
@@ -88,6 +100,10 @@ class DialogueSession(
         val currentLine = current()
         val choice = choices().firstOrNull { it.id.equals(optionId, ignoreCase = true) }
             ?: return currentLine
+        if (choice.id == RESPONSE_EXIT_ID) {
+            currentId = null
+            return null
+        }
         currentLine?.trigger?.let { triggerHandler.handleTrigger(it) }
         choice.trigger?.let { triggerHandler.handleTrigger(it) }
         val nextLine = resolveNext(choice.next)

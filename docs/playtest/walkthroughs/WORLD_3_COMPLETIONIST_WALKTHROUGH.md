@@ -43,7 +43,7 @@ The numbered route includes all eleven quests and every authored World 3 room. O
 
 12. From **Pump Gallery**, go **south** to **Sewer Landing Pad** (`spire_sewers_landing`) → **east** to **Runoff Lock** (`spire_runoff_lock`) → **east** to **Sewer Passage** (`spire_sewers_passage`) → **north** to **Vent Output** (`spire_vent_output`).
 
-13. Before leaving the sewers, take the optional fishing stop: from **Vent Output**, go **south** to **Sewer Passage** (`spire_sewers_passage`). Use **runoff fishing** with your owned rod/lure if pursuing regional catches. Read the fishing journal and strain feedback; a particular species is not guaranteed. Return **north** to **Vent Output** before continuing.
+13. Before leaving the sewers, take the optional fishing stop: from **Vent Output**, go **south** to **Sewer Passage** (`spire_sewers_passage`). Use the **Fish** pill with your owned rod/lure if pursuing regional catches. Read the fishing journal and strain feedback; a particular species is not guaranteed. Return **north** to **Vent Output** before continuing.
 
 
 14. From **Vent Output**, go **east** to **Underrail Platform** (`spire_underrail_platform`) → **east** to **The Static** (`spire_the_static`).
@@ -84,7 +84,7 @@ The numbered route includes all eleven quests and every authored World 3 room. O
 
 30. Talk to **Mika** at **Night Market**. Read her market conversation if available. Inspecting the siphon and using the authored controls can also advance this quest; do not wait for a redundant acceptance dialogue.
 
-31. At **Night Market**, use **lanterns**. Reroute the current after tracing the siphon.
+31. At **Night Market**, use **lanterns** after tracing the siphon. If **Reroute power** is already checked in **Night Market Run**, you can continue. Choosing **Fix lanterns** in Mika’s conversation also reroutes the power.
 
 32. At **Night Market**, use **market registry broadcast**. Finish **Night Market Run**. Check **200 XP + Neon Band**; the band supplies +2 Focus and +5 percentage points of critical chance.
 

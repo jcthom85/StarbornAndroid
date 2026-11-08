@@ -509,15 +509,10 @@ internal fun CampaignNavigationHost(
                 )
             )
             DisposableEffect(Unit) {
-                services.audioCuePlayer.execute(
-                    services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_tinkering_focus", loop = true)
-                )
-                onDispose {
-                    services.audioCuePlayer.execute(
-                        services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, stop = true)
-                    )
+                    val music = services.audioRouter.temporaryMusic("music_tinkering_focus")
+                    services.audioCuePlayer.execute(music.enter)
+                    onDispose { services.audioCuePlayer.execute(music.restore()) }
                 }
-            }
             TinkeringRoute(
                 viewModel = craftingViewModel,
                 onBack = { navController.popBackStack() },
@@ -554,15 +549,10 @@ internal fun CampaignNavigationHost(
         ) { backStackEntry ->
             val source = backStackEntry.arguments?.getString("source")
             DisposableEffect(Unit) {
-                services.audioCuePlayer.execute(
-                    services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_cooking_kitchen", loop = true)
-                )
-                onDispose {
-                    services.audioCuePlayer.execute(
-                        services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, stop = true)
-                    )
+                    val music = services.audioRouter.temporaryMusic("music_cooking_kitchen")
+                    services.audioCuePlayer.execute(music.enter)
+                    onDispose { services.audioCuePlayer.execute(music.restore()) }
                 }
-            }
             CookingScreen(
                 craftingService = services.craftingService,
                 inventoryService = services.inventoryService,
@@ -595,14 +585,9 @@ internal fun CampaignNavigationHost(
             if (zoneId != null) {
                 val fishingViewModel: FishingViewModel = viewModel(factory = FishingViewModelFactory(services.fishingService, zoneId))
                 DisposableEffect(Unit) {
-                    services.audioCuePlayer.execute(
-                        services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_fishing_ambient", loop = true)
-                    )
-                    onDispose {
-                        services.audioCuePlayer.execute(
-                            services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, stop = true)
-                        )
-                    }
+                    val music = services.audioRouter.temporaryMusic("music_fishing_ambient")
+                    services.audioCuePlayer.execute(music.enter)
+                    onDispose { services.audioCuePlayer.execute(music.restore()) }
                 }
                 FishingRoute(
                     viewModel = fishingViewModel,
@@ -637,14 +622,9 @@ internal fun CampaignNavigationHost(
                     ArcadeIds.SPIRE_INFILTRATOR, ArcadeIds.SLAG_CATCHER,
                     ArcadeIds.ORBITAL_DEFENSE, ArcadeIds.HARMONIC_PULSE)) {
                 DisposableEffect(Unit) {
-                    services.audioCuePlayer.execute(
-                        services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_arcade_cabinet", loop = true)
-                    )
-                    onDispose {
-                        services.audioCuePlayer.execute(
-                            services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, stop = true)
-                        )
-                    }
+                    val music = services.audioRouter.temporaryMusic("music_arcade_cabinet")
+                    services.audioCuePlayer.execute(music.enter)
+                    onDispose { services.audioCuePlayer.execute(music.restore()) }
                 }
                 when (cabinetId) {
                     ArcadeIds.CANOPY_HOPPER -> {
@@ -758,14 +738,9 @@ internal fun CampaignNavigationHost(
                     factory = ShopViewModelFactory(services, shopId)
                 )
                 DisposableEffect(Unit) {
-                    services.audioCuePlayer.execute(
-                        services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_shop_cozy", loop = true)
-                    )
-                    onDispose {
-                        services.audioCuePlayer.execute(
-                            services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, stop = true)
-                        )
-                    }
+                    val music = services.audioRouter.temporaryMusic("music_shop_cozy")
+                    services.audioCuePlayer.execute(music.enter)
+                    onDispose { services.audioCuePlayer.execute(music.restore()) }
                 }
                 ShopRoute(
                     viewModel = shopViewModel,

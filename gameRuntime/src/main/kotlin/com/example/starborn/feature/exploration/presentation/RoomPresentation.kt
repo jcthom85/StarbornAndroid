@@ -1,5 +1,7 @@
 package com.example.starborn.feature.exploration.presentation
 
+import com.example.starborn.domain.model.isFishingSpot
+
 import com.example.starborn.domain.model.*
 import com.example.starborn.feature.exploration.viewmodel.ActionHintUi
 import java.util.Locale
@@ -208,7 +210,7 @@ fun resolveRoomBackground(
 
 // Rest/cooking are service controls, including explicit markers; never duplicate them in prose.
 private fun RoomAction.isInlineDescriptionAction(): Boolean =
-    this !is NpcAction && this !is EnemyAction && this !is RestStopAction && !hideInline
+    this !is NpcAction && this !is EnemyAction && this !is RestStopAction && !isFishingSpot() && !hideInline
 
 private fun rangesOverlap(a: IntRange, b: IntRange): Boolean =
     a.first < b.last && b.first < a.last

@@ -37,6 +37,7 @@ import com.example.starborn.domain.model.GenericAction
 import com.example.starborn.domain.model.ShopAction
 import com.example.starborn.domain.model.TinkeringAction
 import com.example.starborn.domain.model.isRoomServiceAction
+import com.example.starborn.domain.model.isFishingSpot
 import com.example.starborn.feature.exploration.presentation.*
 import com.example.starborn.feature.exploration.viewmodel.ExplorationUiState
 import com.example.starborn.feature.exploration.viewmodel.MinimapUiState
@@ -186,7 +187,7 @@ private fun DesktopNarrativeArea(services: DesktopAppServices, ui: ExplorationUi
 private fun DesktopContextualControls(services: DesktopAppServices, ui: ExplorationUiState, plan: InlineActionPlan?, isDark: Boolean, blocked: Boolean) {
     val runtime = services.exploration
     val remaining = contextualRoomTargets(ui, plan, isDark).filterNot { it is InlineActionTarget.Npc || it is InlineActionTarget.Enemy && ui.visualEnemyParties.isNotEmpty() }
-    val serviceActions = if (isDark) emptyList() else ui.actions.filter { it.isRoomServiceAction() }.distinctBy { it.actionKey() }
+    val serviceActions = if (isDark) emptyList() else ui.actions.filter { it.isRoomServiceAction() || it.isFishingSpot() }.distinctBy { it.actionKey() }
     val specialExits = ui.availableConnections.filter { (direction, target) -> target != null && direction.lowercase() !in cardinalDirections &&
         ui.actions.filterIsInstance<TravelAction>().none { it.direction.equals(direction, true) } }
     if (remaining.isEmpty() && serviceActions.isEmpty() && (isDark || ui.groundItems.isEmpty()) && specialExits.isEmpty() && (isDark || ui.npcs.isEmpty()) && !ui.canReturnToHub) return
@@ -213,14 +214,20 @@ private fun DesktopContextualControls(services: DesktopAppServices, ui: Explorat
                         enabled = !blocked && ui.actionHints[action.actionKey()]?.locked != true,
                         modifier = Modifier.heightIn(min = 48.dp).testTag("rest-service-${action.actionKey()}")
                     ) {
-                        Icon(when {
-                            action is ShopAction -> Icons.Rounded.ShoppingCart
-                            action is TinkeringAction -> Icons.Rounded.Build
-                            action is RestStopAction && action.cookSource != null -> Icons.Rounded.Restaurant
-                            else -> Icons.Rounded.Hotel
-                        }, null, Modifier.size(18.dp))
-                        Spacer(Modifier.width(8.dp))
-                        Text(if (action is RestStopAction) restStopServiceLabel(action) else action.name.replaceFirstChar { it.titlecase() })
+                        if (!action.isFishingSpot()) {
+                            Icon(when {
+                                action is ShopAction -> Icons.Rounded.ShoppingCart
+                                action is TinkeringAction -> Icons.Rounded.Build
+                                action is RestStopAction && action.cookSource != null -> Icons.Rounded.Restaurant
+                                else -> Icons.Rounded.Hotel
+                            }, null, Modifier.size(18.dp))
+                            Spacer(Modifier.width(8.dp))
+                        }
+                        Text(when {
+                            action.isFishingSpot() -> "Fish"
+                            action is RestStopAction -> restStopServiceLabel(action)
+                            else -> action.name.replaceFirstChar { it.titlecase() }
+                        })
                     }
                 }
             }

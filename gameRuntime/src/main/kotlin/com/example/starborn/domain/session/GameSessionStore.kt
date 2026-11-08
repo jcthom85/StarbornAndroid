@@ -81,6 +81,10 @@ class GameSessionStore {
         _state.update { it.copy(roomId = roomId) }
     }
 
+    fun setLocation(worldId: String?, hubId: String?, roomId: String?) {
+        _state.update { it.copy(worldId = worldId, hubId = hubId, roomId = roomId) }
+    }
+
     fun setPlayer(playerId: String?) {
         if (playerId?.trim()?.equals("ollie", ignoreCase = true) == true) return
         _state.update {

@@ -190,9 +190,7 @@ class HubController(
             val session = sessionStore.state.value
             if (session.hubId == ASTRA_HUB_ID) return
             sessionStore.setAstraReturnLocation(session.worldId, session.hubId, session.roomId)
-            sessionStore.setWorld(ASTRA_WORLD_ID)
-            sessionStore.setHub(ASTRA_HUB_ID)
-            sessionStore.setRoom(AstraTravel.ENTRY_ROOM_ID)
+            sessionStore.setLocation(ASTRA_WORLD_ID, ASTRA_HUB_ID, AstraTravel.ENTRY_ROOM_ID)
             sessionStore.visitNode(ASTRA_BRIDGE_NODE_ID)
             onEnter(node)
             return
@@ -201,9 +199,7 @@ class HubController(
         if (node.special == SPECIAL_DISEMBARK) {
             val session = sessionStore.state.value
             val dock = AstraTravel.dockingLocation(session, hubsById.values.toList(), nodesByHub.values.flatten())
-            sessionStore.setWorld(dock.worldId)
-            sessionStore.setHub(dock.hubId)
-            sessionStore.setRoom(if (AstraTravel.disembarksToMap(session)) null else dock.roomId)
+            sessionStore.setLocation(dock.worldId, dock.hubId, if (AstraTravel.disembarksToMap(session)) null else dock.roomId)
             if (!AstraTravel.disembarksToMap(session)) sessionStore.visitNode(dock.nodeId)
             sessionStore.clearAstraReturnLocation()
             onEnter(node)

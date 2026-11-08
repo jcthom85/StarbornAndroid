@@ -197,7 +197,7 @@ class AudioCuePlayer(
         cancelFade(type)
         if (type == AudioCueType.MUSIC) {
             val previousCue = currentMusicCue
-            if (previousCue != null && previousCue != cueId && player.isPlaying) {
+            if (previousCue != null && previousCue != cueId) {
                 musicTrackPositions[previousCue] = player.currentPosition
             }
             currentMusicCue = cueId
@@ -205,7 +205,7 @@ class AudioCuePlayer(
         player.stop()
         player.setMediaItem(MediaItem.fromUri(uri))
         player.repeatMode = if (command.loop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
-        setLayerGainImmediate(type, command.gain)
+        setLayerGainImmediate(type, if (command.fadeMs > 0L) 0f else command.gain)
         player.prepare()
         if (type == AudioCueType.MUSIC && command.loop) {
             if (command.restartFromBeginning) musicTrackPositions.remove(cueId)
@@ -214,6 +214,7 @@ class AudioCuePlayer(
         }
         player.playWhenReady = !pausedForBackground
         if (pausedForBackground) resumeMusicAfterBackground = true
+        if (command.fadeMs > 0L) scheduleGain(type, command.gain, command.fadeMs)
     }
 
     override fun resetMusicPlayback() {
@@ -241,9 +242,7 @@ class AudioCuePlayer(
         cancelFade(type)
         if (type == AudioCueType.MUSIC) {
             currentMusicCue?.let { cue ->
-                if (player.isPlaying) {
-                    musicTrackPositions[cue] = player.currentPosition
-                }
+                musicTrackPositions[cue] = player.currentPosition
             }
         }
         if (fadeMs > 0) {

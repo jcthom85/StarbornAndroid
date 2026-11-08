@@ -202,6 +202,25 @@ class AudioRouter(
         return commands
     }
 
+    data class TemporaryMusic(val enter: List<AudioCommand>, val restore: () -> List<AudioCommand>)
+
+    fun temporaryMusic(cueId: String): TemporaryMusic {
+        val previous = currentMusic
+        val previousGain = musicGain
+        val normalized = cueId.normalize()
+        val enter = commandsForLayerOverride(AudioCueType.MUSIC, cueId, loop = true)
+        var restored = false
+        return TemporaryMusic(enter) {
+            if (restored || currentMusic != normalized) emptyList()
+            else {
+                restored = true
+                if (previous == null) commandsForLayerOverride(AudioCueType.MUSIC, stop = true)
+                else commandsForLayerOverride(AudioCueType.MUSIC, previous, gain = previousGain,
+                    loop = true, restartFromBeginning = false)
+            }
+        }
+    }
+
     fun commandsForLayerOverride(
         layer: AudioCueType,
         cueId: String? = null,

@@ -62,6 +62,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.res.painterResource
@@ -101,11 +102,11 @@ fun DialogueOverlay(
     onDismiss: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
-    BackHandler(enabled = dialogue.canDismiss && onDismiss != null) { onDismiss?.invoke() }
     val line = dialogue.line
     val fullText = remember(line.text) { line.text.replace('[', ' ').replace(']', ' ').trim() }
     val textScroll = rememberScrollState()
     val choiceScroll = rememberScrollState()
+    val cueClearancePx = with(LocalDensity.current) { 48.dp.roundToPx() }
     val scrollScope = androidx.compose.runtime.rememberCoroutineScope()
     var textLayout by remember(line.id, fullText) { androidx.compose.runtime.mutableStateOf<TextLayoutResult?>(null) }
     var textViewportHeight by remember { mutableIntStateOf(0) }
@@ -210,23 +211,7 @@ fun DialogueOverlay(
                     if (portraitPath != null) PortraitCard(portraitPainter,
                         dialogue.displaySpeaker ?: line.speaker, accentColor)
                     SpeakerName(dialogue.displaySpeaker ?: line.speaker, accentColor, Modifier.weight(1f))
-                    if (hasVoice && dialogue.canDismiss) {
-                        IconButton(onClick = { onPlayVoice(dialogue.voiceCue.orEmpty()) }) {
-                            Icon(Icons.Default.VolumeUp, "Replay voice", tint = accentColor)
-                        }
-                    }
-                    if (dialogue.canDismiss && onDismiss != null) {
-                        Surface(onClick = onDismiss, shape = RoundedCornerShape(10.dp),
-                            color = accentColor.copy(alpha = .12f),
-                            border = BorderStroke(1.dp, accentColor.copy(alpha = .5f)),
-                            modifier = Modifier.heightIn(min = 48.dp).maestroTag("dialogue-leave")
-                                .semantics { contentDescription = "Leave conversation" }) {
-                            Box(Modifier.padding(horizontal = 12.dp), contentAlignment = Alignment.Center) {
-                                Text("Leave", color = accentColor, style = MaterialTheme.typography.labelLarge)
-                            }
-                        }
-                    }
-                    if (hasVoice && !dialogue.canDismiss) VoicePulseChip(
+                    if (hasVoice) VoicePulseChip(
                         onClick = { onPlayVoice(dialogue.voiceCue.orEmpty()) }, accentColor = accentColor)
                 }
 
@@ -248,6 +233,7 @@ fun DialogueOverlay(
                     Box(Modifier.weight(1f).heightIn(max = 240.dp)) {
                         Box(Modifier.fillMaxWidth().onSizeChanged { textViewportHeight = it.height }
                             .verticalScroll(textScroll)
+                            .padding(bottom = 48.dp)
                             .pointerInput(fullText, revealFinished) {
                                 if (!revealFinished) awaitEachGesture {
                                     val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
@@ -297,6 +283,7 @@ fun DialogueOverlay(
                         modifier = Modifier
                             .heightIn(max = 220.dp)
                             .verticalScroll(choiceScroll)
+                            .padding(bottom = 48.dp)
                             .alpha(if (revealFinished) 1f else 0f)
                             .then(
                                 if (revealFinished) Modifier
@@ -309,7 +296,7 @@ fun DialogueOverlay(
                             style = MaterialTheme.typography.labelSmall,
                             color = accentColor.copy(alpha = 0.8f)
                         )
-                        choices.sortedBy { if (it.id.endsWith("_leave")) 0 else 1 }.forEach { choice ->
+                        choices.forEach { choice ->
                             val parsed = remember(choice.label) { parseChoiceLabel(choice.label) }
                             DialogueChoiceButton(
                                 choice = choice,
@@ -320,7 +307,7 @@ fun DialogueOverlay(
                             )
                         }
                     }
-                    ScrollContinuationCue(revealFinished && choiceScroll.maxValue != Int.MAX_VALUE && choiceScroll.viewportSize > 0 && choiceScroll.canScrollForward, accentColor,
+                    ScrollContinuationCue(revealFinished && choiceScroll.maxValue != Int.MAX_VALUE && choiceScroll.viewportSize > 0 && choiceScroll.value < choiceScroll.maxValue - cueClearancePx - 1, accentColor,
                         "Scroll for more responses", "dialogue-more-responses",
                         onClick = { scrollScope.launch {
                             choiceScroll.animateScrollTo((choiceScroll.value + choiceScroll.viewportSize * .7f).toInt().coerceAtMost(choiceScroll.maxValue))

@@ -12,6 +12,45 @@ import org.junit.Test
 
 /** Uses real bundled tracks and ExoPlayer to check positions, not only command flags. */
 class MusicPlaybackPolicyTest {
+    @Test fun temporaryShopMusicRestoresExplorationPositionWithFade() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        lateinit var driver: AudioCuePlayer
+        lateinit var player: ExoPlayer
+        val router = AudioRouter(AudioBindings(music = mapOf("hub" to "music_w1_homestead_explore")))
+        fun main(action: () -> Unit) = instrumentation.runOnMainSync(action)
+        fun await(message: String, condition: () -> Boolean) {
+            val deadline = SystemClock.uptimeMillis() + 10000
+            while (SystemClock.uptimeMillis() < deadline) {
+                var done = false
+                main { done = condition() }
+                if (done) return
+                SystemClock.sleep(25)
+            }
+            fail(message)
+        }
+        main {
+            driver = AudioCuePlayer(context)
+            player = AudioCuePlayer::class.java.getDeclaredField("musicPlayer").apply { isAccessible = true }.get(driver) as ExoPlayer
+            driver.execute(router.commandsForRoom("hub", "room"))
+        }
+        try {
+            await("Exploration ready") { player.isPlaying }
+            main { player.seekTo(12000) }
+            await("Exploration seek") { player.currentPosition >= 12000 }
+            lateinit var shop: AudioRouter.TemporaryMusic
+            main { shop = router.temporaryMusic("music_shop_cozy"); driver.execute(shop.enter) }
+            await("Shop ready") { player.isPlaying }
+            main {
+                driver.execute(shop.restore())
+                assertTrue("Fade starts quietly", player.volume < .1f)
+            }
+            await("Exploration resumes saved position and fades in") {
+                player.isPlaying && player.currentPosition in 12000..20000 && player.volume > .1f
+            }
+        } finally { main { driver.release() } }
+    }
+
     @Test fun combatStartsFreshWhileExplorationResumesAndNewSessionsClearHistory() {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val context = ApplicationProvider.getApplicationContext<Context>()

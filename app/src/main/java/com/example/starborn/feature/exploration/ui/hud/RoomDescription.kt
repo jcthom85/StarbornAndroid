@@ -318,6 +318,7 @@ fun RoomDescriptionPanel(
     if (currentRoom == null && description.isNullOrBlank()) return
     val scrollState = rememberScrollState()
     val scrollScope = rememberCoroutineScope()
+    val cueClearancePx = with(LocalDensity.current) { 48.dp.roundToPx() }
     LaunchedEffect(currentRoom?.id) {
         scrollState.scrollTo(0)
     }
@@ -385,7 +386,7 @@ fun RoomDescriptionPanel(
                     .fillMaxWidth()
                     .weight(1f, fill = false)
             ) {
-                Box(Modifier.fillMaxWidth().verticalScroll(scrollState).maestroTag("room-description-scroll")) {
+                Box(Modifier.fillMaxWidth().verticalScroll(scrollState).padding(bottom = 48.dp).maestroTag("room-description-scroll")) {
                 RoomDescription(
                     plan = plan,
                     description = description,
@@ -398,7 +399,7 @@ fun RoomDescriptionPanel(
                     modifier = Modifier.fillMaxWidth()
                 )
                 }
-                ScrollContinuationCue(scrollState.maxValue != Int.MAX_VALUE && scrollState.viewportSize > 0 && scrollState.canScrollForward, accentColor,
+                ScrollContinuationCue(scrollState.maxValue != Int.MAX_VALUE && scrollState.viewportSize > 0 && scrollState.value < scrollState.maxValue - cueClearancePx - 1, accentColor,
                     "Scroll for more room description", "room-description-more",
                     onClick = { scrollScope.launch {
                         scrollState.animateScrollTo((scrollState.value + scrollState.viewportSize * .7f).toInt().coerceAtMost(scrollState.maxValue))

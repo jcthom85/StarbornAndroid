@@ -854,7 +854,7 @@ class ExplorationController(
     private fun playRoomAudio(hubId: String?, roomId: String?) {
         // The cinematic owns the music layer until its playback has actually ended.
         if (cinematicMusicActive && _uiState.value.cinematic != null) return
-        val room = roomId?.let { roomsById[it] } ?: _uiState.value.currentRoom
+        val room = roomId?.let { roomsById[it] }
         val weatherId = room?.weather?.takeUnless { it.isBlank() }
         val suppressMusic = shouldSuppressRoomMusic(room)
         val tags = buildSet {
@@ -1585,7 +1585,7 @@ class ExplorationController(
             line = line,
             portrait = portrait,
             voiceCue = line.voiceCue,
-            canDismiss = !activeDialogueNpcName.isNullOrBlank() && !activeDialogueNpcName.orEmpty().startsWith("line:"),
+            canDismiss = activeDialogueSession?.choices()?.isNotEmpty() == true,
             displaySpeaker = if (line.speaker.equals("Orion", true) &&
                 !orionIdentityKnown(sessionStore.state.value)) "???" else null
         )
@@ -1809,9 +1809,7 @@ class ExplorationController(
             val session = sessionStore.state.value
             if (session.hubId == AstraTravel.HUB_ID) return@launch
             sessionStore.setAstraReturnLocation(session.worldId, session.hubId, session.roomId)
-            sessionStore.setWorld("world_astra")
-            sessionStore.setHub("hub_astra")
-            sessionStore.setRoom(AstraTravel.ENTRY_ROOM_ID)
+            sessionStore.setLocation("world_astra", AstraTravel.HUB_ID, AstraTravel.ENTRY_ROOM_ID)
             sessionStore.visitNode(AstraTravel.NODE_ID)
             warpToRoom(AstraTravel.ENTRY_ROOM_ID)
             playUiCue("menu_action")
@@ -1836,13 +1834,12 @@ class ExplorationController(
                 (session.roomId != AstraTravel.ENTRY_ROOM_ID && _uiState.value.astraArrivalTitle == null)) return@launch
             val dock = AstraTravel.dockingLocation(session, worldAssets.loadHubs(), worldAssets.loadHubNodes())
             dismissAstraNavConsole()
-            sessionStore.setWorld(dock.worldId)
-            sessionStore.setHub(dock.hubId)
-            if (AstraTravel.disembarksToMap(session)) {
-                sessionStore.setRoom(null)
+            val returningToMap = AstraTravel.disembarksToMap(session)
+            sessionStore.setLocation(dock.worldId, dock.hubId, if (returningToMap) null else dock.roomId)
+            if (returningToMap) {
+                playRoomAudio(dock.hubId, null)
                 emitEvent(ExplorationEvent.ReturnToHub)
             } else {
-                sessionStore.setRoom(dock.roomId)
                 sessionStore.visitNode(dock.nodeId)
                 warpToRoom(dock.roomId)
             }
@@ -2428,15 +2425,17 @@ class ExplorationController(
             areaNodes = nodes.associateBy { it.id }
             areaEdges = worldAssets.loadNodeTransitions()
             nodeExitResolver = NodeExitResolver(nodes, areaEdges)
-            restoreRoomStates(existingState.roomStates)
-            flushPendingUnlockedExits()
-            flushPendingUnlockedAreas()
-            initializeRoomStates(rooms)
-            sanitizeDarkStates()
-            applyRoomStatesToRooms()
-            roomsByEnvironment = roomsById.values.groupBy { environmentKey(it.env) }
-            roomsByNodeId = nodes.associate { node ->
-                node.id to node.rooms.mapNotNull { roomId -> roomsById[roomId] }
+            withContext(dispatchers.main) {
+                restoreRoomStates(sessionStore.state.value.roomStates)
+                flushPendingUnlockedExits()
+                flushPendingUnlockedAreas()
+                initializeRoomStates(rooms)
+                sanitizeDarkStates()
+                applyRoomStatesToRooms()
+                roomsByEnvironment = roomsById.values.groupBy { environmentKey(it.env) }
+                roomsByNodeId = nodes.associate { node ->
+                    node.id to node.rooms.mapNotNull { roomId -> roomsById[roomId] }
+                }
             }
             initializeUnlockedDirections(rooms)
             initializeGroundItems(rooms)
@@ -2997,9 +2996,7 @@ class ExplorationController(
                 dialogueChoices = session?.choices()?.map { option ->
                     DialogueChoiceUi(option.id, option.text)
                 } ?: emptyList(),
-                statusMessage = if (session != null || merchantShopByDialogueName.containsKey(dialogueName.lowercase(Locale.getDefault()))) {
-                    null
-                } else "No dialogue available for $dialogueName yet."
+                statusMessage = null
             )
         }
         session?.current()?.voiceCue?.let { playVoiceCue(it) }
@@ -3010,7 +3007,21 @@ class ExplorationController(
             handleNpcTrigger("dialogue_closed", npcName, dialogueName)
             activeDialogueNpcName = null
             promptManager.setToastsSuspended(false)
-            offerNpcTrade(npcName)
+            if (_uiState.value.activeDialogue == null && !offerNpcTrade(npcName)) {
+                val state = sessionStore.state.value
+                val message = when {
+                    dialogueName.equals("Jax", ignoreCase = true) &&
+                        _uiState.value.currentRoom?.id == "spire_the_static" &&
+                        "talk_jax" in state.questTasksCompleted["w3_mq12"].orEmpty() ->
+                        "You already have Jax’s curfew schedules. Check The Plan in the Journal for the remaining preparations."
+                    dialogueName.equals("Jax", ignoreCase = true) &&
+                        _uiState.value.currentRoom?.id == "spire_the_static" &&
+                        "w3_mq12" !in state.activeQuests ->
+                        "Jax has nothing more for you right now. If you’re preparing to get past the patrols, speak to Zeke at Static Safehouse first."
+                    else -> "$dialogueName has nothing more to say right now."
+                }
+                showInspection(message)
+            }
         }
     }
 
@@ -3129,20 +3140,21 @@ class ExplorationController(
     }
 
     /** Offer commerce only after authored dialogue has executed its quest triggers. */
-    private fun offerNpcTrade(npcName: String) {
+    private fun offerNpcTrade(npcName: String): Boolean {
         val dialogueName = resolveNpcDialogueName(npcName)
-        val shopId = merchantShopByDialogueName[dialogueName.lowercase(Locale.getDefault())] ?: return
-        val room = _uiState.value.currentRoom ?: return
-        if (visibleNpcsForRoom(room).none { resolveNpcDialogueName(it).equals(dialogueName, true) }) return
+        val shopId = merchantShopByDialogueName[dialogueName.lowercase(Locale.getDefault())] ?: return false
+        val room = _uiState.value.currentRoom ?: return false
+        if (visibleNpcsForRoom(room).none { resolveNpcDialogueName(it).equals(dialogueName, true) }) return false
         // Rooms with a standalone shop action keep their existing access rules until migrated.
-        if (room.actions.any { it["type"] == "shop" && it["shop_id"] == shopId }) return
-        val shop = shopRepository.shopById(shopId) ?: return
+        if (room.actions.any { it["type"] == "shop" && it["shop_id"] == shopId }) return false
+        val shop = shopRepository.shopById(shopId) ?: return false
         showShopGreeting(shop, shop.greeting ?: "Take a look at what I have in stock.")
         _uiState.update { state ->
             state.copy(shopGreeting = state.shopGreeting?.copy(
                 shopName = dialogueName
             ))
         }
+        return true
     }
 
     private fun resolveNpcDialogueName(npcName: String): String {
@@ -5908,13 +5920,28 @@ class ExplorationController(
                     }
                     showInspection(status)
                 } else {
-                    if (eventId == "w2_sq02_trace_cliffs" && !eventManager.canHandleTrigger("player_action", EventPayload.Action(eventId))) {
-                        showInspection(status)
+                    if (eventId in setOf("w3_scan_shield_gap", "w3_mq15_launch_astra") &&
+                        !eventManager.canHandleTrigger("player_action", EventPayload.Action(eventId))) {
+                        val state = sessionStore.state.value
+                        val tasks = state.questTasksCompleted["w3_mq15"].orEmpty()
+                        val message = when {
+                            "w3_mq15" in state.completedQuests -> "The crew has already cleared the Spire. The launch display retains the route to the Foundry."
+                            "w3_mq15" !in state.activeQuests -> "The departure plan is not ready. Finish the Archive containment sequence and take the Lens before plotting the escape."
+                            "defeat_administrator" !in tasks -> "The Administrator's targeting lattice still covers the launch route. Defeat the Administrator and its Aero Drone escort before departing."
+                            eventId == "w3_scan_shield_gap" && "scan_shield_gap" in tasks -> "The low-altitude security-curtain timing is already recorded. Use the launch window display to depart toward the Foundry."
+                            else -> "The escape display is waiting for the current objective to finish. Check Burn Notice in the Journal before retrying."
+                        }
+                        showInspection(message)
                         return
                     }
-                    // Placeholder success text is not evidence that a quest/task event can run.
-                    if (status == "Objective completed." && !eventManager.canHandleTrigger("player_action", EventPayload.Action(eventId))) {
-                        showInspection("There is nothing more to do here right now.")
+                    val needsUnavailableFeedback = _uiState.value.currentRoom?.id?.startsWith("spire_") == true ||
+                        eventId == "w2_sq02_trace_cliffs" || status == "Objective completed."
+                    if (needsUnavailableFeedback &&
+                        !eventManager.canHandleTrigger("player_action", EventPayload.Action(eventId))) {
+                        val message = action.conditionUnmetMessage?.takeIf {
+                            it.isNotBlank() && it != "Objective completed."
+                        } ?: "There is nothing more to do with ${action.name} right now."
+                        showInspection(message)
                         return
                     }
                     val actionNameLower = action.name.lowercase(Locale.getDefault())

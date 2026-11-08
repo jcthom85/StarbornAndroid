@@ -5606,7 +5606,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The roof shudders under wind and lockdown light. The Astra waits across the pad. Scan reveals the Planetary Shield opening for less than a heartbeat. The flight display marks a shield window and a launch window beside a test telemetry relay.",
+        "description": "The roof shudders under wind and lockdown light. The Astra waits across the pad. The Spire's local security curtain cycles beneath the still-intact planetary Shield. The flight display marks a shield window and a launch window beside a test telemetry relay.",
         "requires_milestones": [
           "ms_w3_mq14_complete"
         ]
@@ -5617,13 +5617,13 @@
         "name": "shield window",
         "type": "generic",
         "action_event": "w3_scan_shield_gap",
-        "condition_unmet_message": "The Shield is still an impossible wall until the Lens shows Nova the window in its rotation."
+        "condition_unmet_message": "The Lens can read the Spire's low-altitude security-curtain timing. The planetary Shield remains overhead."
       },
       {
         "name": "launch window",
         "type": "generic",
         "action_event": "w3_mq15_launch_astra",
-        "condition_unmet_message": "The Astra can slip the Shield only after the Administrator is down and the Lens has found the window.",
+        "condition_unmet_message": "Departure requires defeating the Administrator and recording the local security-curtain window with the Lens.",
         "hide_when_event_completed": "w3_mq15_launch_astra"
       },
       {

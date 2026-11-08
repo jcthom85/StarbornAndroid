@@ -6,6 +6,23 @@ import org.junit.Test
 
 class AudioRouterTest {
 
+    @Test fun temporaryActivitiesRestoreExplorationWithoutRestartingAndRespectNewOwners() {
+        val router = AudioRouter(AudioBindings(music = mapOf("hub" to "exploration", "other" to "next_world")))
+        router.commandsForRoom("hub", "room")
+        for (cue in listOf("music_shop_cozy", "music_tinkering_focus", "music_cooking_kitchen", "music_fishing_ambient", "music_arcade_cabinet")) {
+            val temporary = router.temporaryMusic(cue)
+            assertTrue(temporary.enter.filterIsInstance<AudioCommand.Play>().any { it.cueId == cue })
+            val resumed = temporary.restore().filterIsInstance<AudioCommand.Play>().single()
+            assertEquals("exploration", resumed.cueId)
+            assertEquals(false, resumed.restartFromBeginning)
+            assertTrue(resumed.fadeMs > 0)
+            assertTrue(temporary.restore().isEmpty())
+        }
+        val temporary = router.temporaryMusic("music_shop_cozy")
+        router.commandsForRoom("other", "other_room")
+        assertTrue("A disposed activity cannot replace a newer location's music", temporary.restore().isEmpty())
+    }
+
     @Test
     fun newFightsExplicitlyRestartEvenWhenTheSameTrackIsAlreadySelected() {
         val router = AudioRouter(AudioBindings(music = mapOf("hub" to "exploration")))

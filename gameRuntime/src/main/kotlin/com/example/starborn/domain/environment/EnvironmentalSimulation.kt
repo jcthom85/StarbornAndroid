@@ -79,13 +79,15 @@ class EnvironmentalEffectSimulation(private val particleCap: Int = 240) {
             }.coerceAtLeast(0)
             val wantedCount=if(p.burstInterval!=null && f.burst<=0f && p.primitive=="sparks") 0 else minOf(desired,(budget-activeParticles).coerceAtLeast(0))
             if(p.primitive=="jet") activeJets+=minOf(e.emitters.size,(jetLimit-activeJets).coerceAtLeast(0))
+            val horizontalScale = geometry.imageHeight / geometry.spaceWidth(e.space).coerceAtLeast(1f)
+            val verticalScale = geometry.imageHeight / geometry.spaceHeight(e.space).coerceAtLeast(1f)
+            val step = dt * e.speedScale
             for(i in 0 until wantedCount) {
                 val particle=f.particles[i]
                 if(i>=f.count || particle.life<=0f) spawn(f,particle,!f.initialized)
-                particle.life-=dt*e.speedScale
-                val sw=geometry.spaceWidth(e.space).coerceAtLeast(1f);val sh=geometry.spaceHeight(e.space).coerceAtLeast(1f)
-                particle.x+=particle.vx*dt*e.speedScale*geometry.imageHeight/sw
-                particle.y+=particle.vy*dt*e.speedScale*geometry.imageHeight/sh
+                particle.life -= step
+                particle.x += particle.vx * step * horizontalScale
+                particle.y += particle.vy * step * verticalScale
                 if(p.primitive=="motes" || p.primitive=="field" || p.primitive=="haze") {
                     particle.x+=sin(f.time*.45f+particle.phase)*dt*.002f*e.speedScale
                 }

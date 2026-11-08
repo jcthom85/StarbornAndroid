@@ -229,6 +229,7 @@ import com.example.starborn.domain.model.RestStopAction
 import com.example.starborn.domain.model.ShopAction
 import com.example.starborn.domain.model.TinkeringAction
 import com.example.starborn.domain.model.GenericAction
+import com.example.starborn.domain.model.isFishingSpot
 import com.example.starborn.domain.model.ToggleAction
 import com.example.starborn.domain.model.TravelAction
 import com.example.starborn.domain.model.TuningPuzzleAction
@@ -651,7 +652,6 @@ fun ExplorationScreen(
 
     fun handleExplorationBack(allowTitleExit: Boolean = false) {
         when {
-            uiState.cinematic == null && uiState.activeDialogue?.canDismiss == true -> viewModel.dismissDialogue()
             areaEntryActive -> Unit
             restRecoveryNotice != null -> restRecoveryNotice = null
             showExitConfirmDialog -> showExitConfirmDialog = false
@@ -986,10 +986,16 @@ fun ExplorationScreen(
         } else {
             themeColor(activeTheme?.fg, Color.White.copy(alpha = 0.92f))
         }
-        val inlinePlan = remember(baseRoomDescription, uiState.actions, actionHints, currentRoom, uiState.roomState) {
+        val underrailStairs = uiState.actions.filterIsInstance<TravelAction>().firstOrNull {
+            currentRoom?.id == "spire_transit_plaza" && it.direction == "up"
+        }
+        val descriptionActions = remember(uiState.actions, underrailStairs) {
+            uiState.actions.filterNot { it == underrailStairs }
+        }
+        val inlinePlan = remember(baseRoomDescription, descriptionActions, actionHints, currentRoom, uiState.roomState) {
             buildInlineActionPlan(
                 description = baseRoomDescription,
-                actions = uiState.actions.filterNot { it is TravelAction },
+                actions = descriptionActions.filterNot { it is TravelAction },
                 hints = actionHints,
                 room = currentRoom,
                 inspectionState = uiState.roomState
@@ -1002,7 +1008,7 @@ fun ExplorationScreen(
             if (isRoomDark) {
                 emptyList()
             } else {
-                uiState.actions.filter { it.isRoomServiceAction() }.map { action ->
+                uiState.actions.filter { it.isRoomServiceAction() || it.isFishingSpot() }.map { action ->
                     when (action) {
                         is ShopAction -> QuickMenuAction(
                             label = action.name.replaceFirstChar { it.titlecase() },
@@ -1023,7 +1029,7 @@ fun ExplorationScreen(
                             imageVector = Icons.Filled.Build
                         )
                         else -> QuickMenuAction(
-                            label = action.name.replaceFirstChar { it.titlecase() },
+                            label = if (action.isFishingSpot()) "Fish" else action.name.replaceFirstChar { it.titlecase() },
                             roomAction = action
                         )
                     }
@@ -1093,7 +1099,7 @@ fun ExplorationScreen(
                     RoomDescriptionPanel(
                         currentRoom = currentRoom,
                         description = descriptionForPanel,
-                        travelActions = uiState.actions.filterIsInstance<TravelAction>(),
+                        travelActions = descriptionActions.filterIsInstance<TravelAction>(),
                         plan = inlinePlan,
                         isDark = isRoomDark,
                         onAction = { action -> viewModel.inspectRoomAction(action) },
@@ -1106,6 +1112,15 @@ fun ExplorationScreen(
                             .fillMaxWidth()
                             .heightIn(min = 104.dp, max = 280.dp)
                     )
+                    if (!isRoomDark && underrailStairs != null) {
+                        OverworldGatewayCard(
+                            sectorTitle = "Underrail",
+                            labelOverride = "Stairs to Underrail",
+                            isDark = false,
+                            enabled = !blockingOverlayActive && !importantQuestPopupVisible && !roomTransitionInProgress,
+                            onClick = { viewModel.onActionSelected(underrailStairs) }
+                        )
+                    }
                     if (hasRoomEntities) {
                         RoomEntitySection(
                             npcs = visibleNpcs,
@@ -1306,12 +1321,11 @@ fun ExplorationScreen(
                 modifier = Modifier.align(Alignment.Center).zIndex(45f)
             )
         }
-        uiState.activeDialogue?.takeIf { uiState.cinematic == null }?.let { dialogue ->
+        uiState.activeDialogue?.takeIf { uiState.cinematic == null && !roomTransitionInProgress && !areaEntryActive && !uiState.isLoading }?.let { dialogue ->
             DialogueOverlay(
                 dialogue = dialogue,
                 choices = uiState.dialogueChoices,
                 onAdvance = { viewModel.advanceDialogue() },
-                onDismiss = { viewModel.dismissDialogue() },
                 onChoice = { viewModel.onDialogueChoiceSelected(it) },
                 onPlayVoice = { viewModel.onDialogueVoiceRequested(it) },
                 onPlayMurmur = { cueId ->
@@ -4704,12 +4718,6 @@ private fun RestRecoveryOverlay(
                             )
                         }
 
-                        Text(
-                            text = "Tap anywhere to continue",
-                            color = Color.White.copy(alpha = 0.38f),
-                            style = MaterialTheme.typography.labelSmall,
-                            textAlign = TextAlign.Center
-                        )
                     }
                 }
             }
@@ -5300,12 +5308,13 @@ private fun OverworldGatewayCard(
     isDark: Boolean,
     onClick: () -> Unit,
     enabled: Boolean = true,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    labelOverride: String? = null
 ) {
     val shape = RoundedCornerShape(10.dp)
     val mapCyan = Color(0xFF00E5FF)
     val destination = sectorTitle?.takeIf { it.isNotBlank() } ?: "Colony Map"
-    val label = if (isDisembarking) "Disembark" else "To $destination"
+    val label = labelOverride ?: if (isDisembarking) "Disembark" else "To $destination"
     Surface(
         shape = shape,
         color = Color(0xFF060F17).copy(alpha = if (isDark) 0.88f else 0.76f),
@@ -5315,8 +5324,8 @@ private fun OverworldGatewayCard(
             .clip(shape)
             .clickable(enabled = enabled, onClick = onClick)
             .clearAndSetSemantics {
-                contentDescription = if (isDisembarking) "Disembark from the Astra" else "Exit to $destination"
-                if (enabled) onClick(label = if (isDisembarking) "Disembark" else "Exit to $destination") {
+                contentDescription = labelOverride ?: if (isDisembarking) "Disembark from the Astra" else "Exit to $destination"
+                if (enabled) onClick(label = labelOverride ?: if (isDisembarking) "Disembark" else "Exit to $destination") {
                     onClick()
                     true
                 }
