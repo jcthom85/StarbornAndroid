@@ -1,0 +1,166 @@
+id,name,slot,type,equipment,acquisition_sources
+cyber_visor,ICE Breaker Cyber Visor,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""foc"": 3, ""accuracy"": 4}}","Container `black market safe` in `spire_night_market_scale_03`
+Container `unthroned ledger` in `source_spire_thought_node_scale_04`
+Container `luxury display locker` in `orbital_grand_concourse_scale_final`
+ArcadeService `grantSpireReward` ×1"
+foundry_crucible_lining,Crucible Heat Shield,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""vit"": 3, ""str"": 2}}","Container `smelter toolbox` in `foundry_slag_river_scale_final`
+Container `chorus harmony seed` in `source_center_node_scale_final`
+ArcadeService `grantSlagReward` ×1"
+thermal_solder_gun,Master Smelter Solder Gun,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""atk"": 5, ""foc"": 3}}","Container `coolant reserve` in `foundry_cooling_springs_scale_final`
+Container `first shift locker` in `source_echo_mines_node_scale_final`
+ArcadeService `grantSlagReward` ×1"
+plasma_lens_mod,Zenith Plasma Lens,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""accuracy"": 4, ""atk"": 3}}",ArcadeService `grantOrbitalReward` ×1
+orbital_deflector_matrix,Orbital Deflector Matrix,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""foc"": 4, ""vit"": 3}}",ArcadeService `grantOrbitalReward` ×1
+harmonic_resonator_tome,Harmonic Resonator Codex,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""foc"": 4, ""int"": 3}}",ArcadeService `grantHarmonicReward` ×1
+source_cadence_crown,Crown of the Primordial Cadence,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""foc"": 6, ""int"": 6}}",ArcadeService `grantHarmonicReward` ×1
+miner_gyro_mod,Miner's Gyro Mod,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""accuracy"": 4, ""foc"": 1}}","Shop `arcade_prize_shop` — NO CAMPAIGN ENTRANCE FOUND
+ArcadeService `grantDeepMineReward` ×1"
+drill_bit_mod,Champion Drill Bit,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""str"": 2, ""accuracy"": 2}}","Shop `arcade_prize_shop` — NO CAMPAIGN ENTRANCE FOUND
+ArcadeService `grantDeepMineReward` ×1"
+nova_laser_blaster,Laser Blaster,weapon,weapon,"{""slot"": ""weapon"", ""weapon_type"": ""gun"", ""damage_min"": 7, ""damage_max"": 10, ""attack_style"": ""single"", ""attack_power_mult"": 1}",Shop `weapon_shop` — NO CAMPAIGN ENTRANCE FOUND
+nova_plasma_shotgun,Plasma Shotgun,weapon,weapon,"{""slot"": ""weapon"", ""weapon_type"": ""gun"", ""damage_min"": 5, ""damage_max"": 8, ""attack_style"": ""spread"", ""attack_power_mult"": 0.7}","Shop `weapon_shop` — NO CAMPAIGN ENTRANCE FOUND gate {""milestones"": [""ms_w1_mq03_complete""]}"
+nova_rocket_launcher,Rocket Launcher,weapon,weapon,"{""slot"": ""weapon"", ""weapon_type"": ""gun"", ""damage_min"": 9, ""damage_max"": 14, ""attack_style"": ""rocket"", ""attack_charge_turns"": 1, ""attack_power_mult"": 1.6, ""attack_splash_mult"": 0.5}","Shop `weapon_shop` — NO CAMPAIGN ENTRANCE FOUND gate {""milestones"": [""ms_w1_mq05_complete""]}"
+zeke_shock_fists,Shock Fists,weapon,weapon,"{""slot"": ""weapon"", ""weapon_type"": ""glove"", ""damage_min"": 7, ""damage_max"": 11, ""attack_style"": ""single"", ""attack_power_mult"": 1.1, ""attack_element"": ""shock"", ""accuracy"": 4}","Shop `weapon_shop` — NO CAMPAIGN ENTRANCE FOUND
+Normal starting roster equipment: zeke"
+zeke_quake_knuckles,Quake Knuckles,weapon,weapon,"{""slot"": ""weapon"", ""weapon_type"": ""glove"", ""damage_min"": 5, ""damage_max"": 8, ""attack_style"": ""all"", ""attack_power_mult"": 0.7}","Shop `weapon_shop` — NO CAMPAIGN ENTRANCE FOUND gate {""milestones"": [""ms_w1_mq03_complete""]}"
+zeke_maul_gauntlet,Maul Gauntlet,weapon,weapon,"{""slot"": ""weapon"", ""weapon_type"": ""glove"", ""damage_min"": 9, ""damage_max"": 14, ""attack_style"": ""charged_splash"", ""attack_charge_turns"": 1, ""attack_power_mult"": 1.5, ""attack_splash_mult"": 0.5}","Shop `weapon_shop` — NO CAMPAIGN ENTRANCE FOUND gate {""milestones"": [""ms_w1_mq05_complete""]}"
+orion_prism_focus,Prism Focus,weapon,weapon,"{""slot"": ""weapon"", ""weapon_type"": ""jewel"", ""damage_min"": 6, ""damage_max"": 10, ""attack_style"": ""single"", ""attack_power_mult"": 1, ""attack_element"": ""source"", ""accuracy"": 5}","Shop `weapon_shop` — NO CAMPAIGN ENTRANCE FOUND
+Normal starting roster equipment: orion"
+orion_halo_array,Halo Array,weapon,weapon,"{""slot"": ""weapon"", ""weapon_type"": ""jewel"", ""damage_min"": 4, ""damage_max"": 7, ""attack_style"": ""all"", ""attack_power_mult"": 0.65, ""attack_element"": ""source""}","Shop `weapon_shop` — NO CAMPAIGN ENTRANCE FOUND gate {""milestones"": [""ms_w1_mq03_complete""]}"
+orion_stasis_core,Stasis Core,weapon,weapon,"{""slot"": ""weapon"", ""weapon_type"": ""jewel"", ""damage_min"": 8, ""damage_max"": 12, ""attack_style"": ""charged_splash"", ""attack_charge_turns"": 1, ""attack_power_mult"": 1.4, ""attack_splash_mult"": 0.5, ""attack_element"": ""source"", ""stat_mods"": {""foc"": 3}}","Shop `weapon_shop` — NO CAMPAIGN ENTRANCE FOUND gate {""milestones"": [""ms_w1_mq05_complete""]}"
+gh0st_whisperblade,Whisperblade,weapon,weapon,"{""slot"": ""weapon"", ""weapon_type"": ""sword"", ""damage_min"": 7, ""damage_max"": 11, ""attack_style"": ""single"", ""attack_power_mult"": 1.15, ""crit_rate"": 6}","Shop `weapon_shop` — NO CAMPAIGN ENTRANCE FOUND
+Normal starting roster equipment: gh0st"
+gh0st_splitter_edge,Splitter Edge,weapon,weapon,"{""slot"": ""weapon"", ""weapon_type"": ""sword"", ""damage_min"": 5, ""damage_max"": 9, ""attack_style"": ""all_enemies"", ""attack_power_mult"": 0.75}","Shop `weapon_shop` — NO CAMPAIGN ENTRANCE FOUND gate {""milestones"": [""ms_w1_mq03_complete""]}"
+gh0st_void_fang,Void Fang,weapon,weapon,"{""slot"": ""weapon"", ""weapon_type"": ""sword"", ""damage_min"": 9, ""damage_max"": 14, ""attack_style"": ""charged_splash"", ""attack_charge_turns"": 1, ""attack_power_mult"": 1.6, ""attack_splash_mult"": 0.5, ""attack_element"": ""source""}","Shop `weapon_shop` — NO CAMPAIGN ENTRANCE FOUND gate {""milestones"": [""ms_w1_mq05_complete""]}"
+zeke_bulwark_plate,Bulwark Plate,armor,armor_zeke,"{""slot"": ""armor"", ""defense"": 12, ""hp_bonus"": 80}","Shop `armor_shop` — NO CAMPAIGN ENTRANCE FOUND gate {""milestones"": [""ms_w1_mq05_complete""]}"
+zeke_surge_harness,Surge Harness,armor,armor_zeke,"{""slot"": ""armor"", ""defense"": 4, ""stat_mods"": {""spd"": 4, ""evasion"": 6}}","Shop `armor_shop` — NO CAMPAIGN ENTRANCE FOUND
+Normal starting roster equipment: zeke armor"
+zeke_brawler_rig,Brawler Rig,armor,armor_zeke,"{""slot"": ""armor"", ""defense"": 6, ""stat_mods"": {""str"": 6, ""crit_rate"": 4}}","Shop `armor_shop` — NO CAMPAIGN ENTRANCE FOUND gate {""milestones"": [""ms_w1_mq03_complete""]}"
+orion_ward_coat,Ward Coat,armor,armor_orion,"{""slot"": ""armor"", ""defense"": 10, ""hp_bonus"": 60, ""stat_mods"": {""foc"": 2}}","Shop `armor_shop` — NO CAMPAIGN ENTRANCE FOUND gate {""milestones"": [""ms_w1_mq05_complete""]}"
+orion_channeler_mantle,Channeler Mantle,armor,armor_orion,"{""slot"": ""armor"", ""defense"": 4, ""stat_mods"": {""foc"": 5, ""accuracy"": 6}}","Shop `armor_shop` — NO CAMPAIGN ENTRANCE FOUND
+Normal starting roster equipment: orion armor"
+orion_driftweave_cloak,Driftweave Cloak,armor,armor_orion,"{""slot"": ""armor"", ""defense"": 3, ""stat_mods"": {""spd"": 4, ""evasion"": 6}}","Shop `armor_shop` — NO CAMPAIGN ENTRANCE FOUND gate {""milestones"": [""ms_w1_mq03_complete""]}"
+gh0st_nullguard_coat,Nullguard Coat,armor,armor_gh0st,"{""slot"": ""armor"", ""defense"": 9, ""hp_bonus"": 50}","Shop `armor_shop` — NO CAMPAIGN ENTRANCE FOUND gate {""milestones"": [""ms_w1_mq05_complete""]}"
+gh0st_phaseweave_jacket,Phaseweave Jacket,armor,armor_gh0st,"{""slot"": ""armor"", ""defense"": 3, ""stat_mods"": {""spd"": 4, ""evasion"": 8}}","Shop `armor_shop` — NO CAMPAIGN ENTRANCE FOUND
+Normal starting roster equipment: gh0st armor"
+gh0st_killer_harness,Killer Harness,armor,armor_gh0st,"{""slot"": ""armor"", ""defense"": 5, ""stat_mods"": {""str"": 5, ""crit_rate"": 6, ""accuracy"": 4}}","Shop `armor_shop` — NO CAMPAIGN ENTRANCE FOUND gate {""milestones"": [""ms_w1_mq03_complete""]}"
+basic_jacket,Scraprunner Jacket,armor,armor_ollie,"{""slot"": ""armor"", ""defense"": 4, ""accuracy"": 4, ""stat_mods"": {""lck"": 3, ""spd"": 2}}",No normal source found
+nova_helioguard_plate,Helioguard Plate,armor,armor_nova,"{""slot"": ""armor"", ""defense"": 11, ""hp_bonus"": 60, ""stat_mods"": {""foc"": 3}}","Shop `armor_shop` — NO CAMPAIGN ENTRANCE FOUND gate {""milestones"": [""ms_w1_mq05_complete""]}"
+nova_flux_liner,Flux Liner,armor,armor_nova,"{""slot"": ""armor"", ""defense"": 3, ""stat_mods"": {""spd"": 5, ""evasion"": 4, ""accuracy"": 4}}","Event `w1_mq01_receive_starter_kit` reward ×1 (nested)
+Shop `armor_shop` — NO CAMPAIGN ENTRANCE FOUND"
+nova_starline_jacket,Starline Jacket,armor,armor_nova,"{""slot"": ""armor"", ""defense"": 7, ""accuracy"": 5, ""crit_rate"": 3, ""stat_mods"": {""foc"": 2}}","Shop `armor_shop` — NO CAMPAIGN ENTRANCE FOUND gate {""milestones"": [""ms_w1_mq03_complete""]}"
+basic_vest,Trailblazer Vest,armor,armor_ollie,"{""slot"": ""armor"", ""defense"": 7, ""stat_mods"": {""agi"": 3, ""evasion"": 4}}",Shop `mechanic_shop` — NO CAMPAIGN ENTRANCE FOUND
+ollie_canopy_mantle,Canopy Mantle,armor,armor_ollie,"{""slot"": ""armor"", ""defense"": 9, ""hp_bonus"": 50, ""stat_mods"": {""lck"": 4, ""evasion"": 3}}",No normal source found
+basic_slingshot,Basic Slingshot,weapon,weapon,"{""slot"": ""weapon"", ""weapon_type"": ""slingshot"", ""damage_min"": 5, ""damage_max"": 7}",No normal source found
+digital_watch,Digital Watch,accessory,accessory,"{""slot"": ""accessory"", ""accuracy"": 5}",Event `w1_loot_checkpoint_cell` ×1
+gadget_belt,Gadget Belt,accessory,accessory,"{""slot"": ""accessory"", ""crit_rate"": 5}",No normal source found
+mining_pistol,Mining Pistol,weapon,weapon,"{""slot"": ""weapon"", ""weapon_type"": ""gun"", ""damage_min"": 4, ""damage_max"": 7, ""attack_style"": ""single"", ""attack_power_mult"": 1}",Event `w1_mq01_receive_starter_kit` reward ×1 (nested)
+mod_corrosive_rounds,Corrosive Rounds,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""strength"": 3}, ""status_on_hit"": ""corrosion"", ""status_chance"": 25}","Event `w2_sq02_recover_transceiver` ×1
+Dialogue `doc_w1_sq02_turnin_3` ×1
+Container `courier satchel` in `spire_the_static_scale_03`
+Container `assembly cache` in `foundry_conveyor_belt_scale_final`"
+armor_plating_mk_i,Armor Plating Mk. I,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""defense"": 2}}",Tinkering `mod_armor_plating_1`
+insulated_lining,Insulated Lining,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""defense"": 1, ""vitality"": 1}}",Tinkering `mod_insulated_lining_1`
+ergonomic_grip,Ergonomic Grip,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""accuracy"": 2}}",Tinkering `mod_ergonomic_grip_1`
+power_lens_mk_i,Power Lens Mk. I,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""focus"": 2}}",Tinkering `mod_power_lens_1`
+holo_charm,Holo Charm,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""luck"": 3}}",No normal source found
+kinetic_bracelet,Kinetic Bracelet,accessory,accessory,"{""slot"": ""accessory"", ""defense"": 6, ""stat_mods"": {""spd"": 2}}","Shop `accessory_shop` — NO CAMPAIGN ENTRANCE FOUND gate {""milestones"": [""ms_w1_mq03_complete""]}"
+precision_sight,Precision Sight,accessory,accessory,"{""slot"": ""accessory"", ""accuracy"": 8, ""crit_rate"": 4}","Event `w1_loot_workshop_loft` ×1
+Event `w2_kaelen_favor_turnin` ×1
+Shop `accessory_shop` — NO CAMPAIGN ENTRANCE FOUND
+Shop `upper_city_lounge` at spire_exec_lounge_bar"
+stability_gyro,Stability Gyro,accessory,accessory,"{""slot"": ""accessory"", ""defense"": 4, ""stat_mods"": {""spd"": 3}}",Shop `accessory_shop` — NO CAMPAIGN ENTRANCE FOUND
+vital_signet,Vital Signet,accessory,accessory,"{""slot"": ""accessory"", ""hp_bonus"": 120, ""stat_mods"": {""vit"": 2}}","Shop `accessory_shop` — NO CAMPAIGN ENTRANCE FOUND gate {""milestones"": [""ms_w1_mq03_complete""]}"
+focus_conduit,Focus Conduit,accessory,accessory,"{""slot"": ""accessory"", ""accuracy"": 4, ""stat_mods"": {""foc"": 4}}","Event `w1_loot_server_backup_cases` ×1
+Event `w2_sq04_restore_chorus` ×1
+Shop `accessory_shop` — NO CAMPAIGN ENTRANCE FOUND gate {""milestones"": [""ms_w1_mq03_complete""]}
+Shop `upper_city_lounge` at spire_exec_lounge_bar"
+shadow_coil,Shadow Coil,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""evasion"": 8, ""spd"": 2}}",No normal source found
+brutal_charm,Brutal Charm,accessory,accessory,"{""slot"": ""accessory"", ""crit_rate"": 5, ""stat_mods"": {""str"": 4}}",No normal source found
+lucky_talisman,Lucky Talisman,accessory,accessory,"{""slot"": ""accessory"", ""accuracy"": 2, ""stat_mods"": {""luck"": 4}}",Shop `accessory_shop` — NO CAMPAIGN ENTRANCE FOUND
+reactive_plating,Reactive Plating,accessory,accessory,"{""slot"": ""accessory"", ""defense"": 7, ""stat_mods"": {""evasion"": 4}}",No normal source found
+precision_core,Precision Core,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""accuracy"": 6, ""crit_rate"": 4}, ""attack_element"": ""source""}","Container `maintenance locker` in `spire_sewers_scale_03`
+Container `sister memory core` in `source_gh0st_nightmare_node_scale_03`
+Container `master smith crate` in `foundry_forge_scale_final`"
+stability_gyro_mod,Stability Gyro Mod,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""defense"": 4, ""speed"": 2}}","Container `botanical vault` in `spire_skypark_scale_03`
+Container `freedom filing case` in `source_zeke_nightmare_node_scale_03`
+Container `stress-test locker` in `foundry_conditioning_scale_final`"
+impact_node,Impact Node,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""strength"": 4, ""crit_rate"": 2}, ""status_on_hit"": ""bleed"", ""status_chance"": 22}","Container `encrypted datacache` in `spire_archive_scale_03`
+Container `tactical enforcer armory` in `orbital_security_hub_scale_final`"
+bulwark_layer,Bulwark Layer,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""defense"": 6, ""vitality"": 3}}","Container `tailored uniform case` in `spire_laundry_scale_03`
+Container `command dais locker` in `deep_throne_room_scale_07`
+Container `titan maintenance pod` in `foundry_titan_dock_scale_final`
+Container `survivor reliquary` in `source_memory_stair_node_scale_final`"
+focus_matrix,Focus Matrix,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""focus"": 4, ""accuracy"": 3}, ""attack_element"": ""acid""}","Container `transit lockbox` in `spire_transit_plaza_scale_03`
+Container `admin crypt terminal` in `deep_server_farm_scale_04`
+Container `shielded core case` in `foundry_power_core_scale_final`
+Container `covenant beacon` in `source_memory_bridge_node_scale_final`"
+velocity_spool,Velocity Spool,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""speed"": 4, ""evasion"": 4}}",No normal source found
+razor_capacitor,Razor Capacitor,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""strength"": 5, ""crit_rate"": 3}, ""status_on_hit"": ""bleed"", ""status_chance"": 30}",No normal source found
+coil_synchronizer,Coil Synchronizer,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""accuracy"": 5, ""focus"": 2}, ""attack_element"": ""shock""}",No normal source found
+relic_mod_biolum_focus,Bioluminescent Focus,mod,mod,"{""slot"": ""mod"", ""attack_element"": ""electric"", ""status_on_hit"": ""shock"", ""status_chance"": 25.0, ""crit_rate"": 0.1, ""accuracy"": 5.0, ""stat_mods"": {""focus"": 6}}","Event `w2_relic_biolum_solved` ×1
+Container `relic coffer` in `sector9_archive_secret_stash`"
+relic_mod_tachyon_core,Tachyon Overclock Core,mod,mod,"{""slot"": ""mod"", ""attack_element"": ""cryo"", ""status_on_hit"": ""freeze"", ""status_chance"": 20.0, ""accuracy"": 8.0, ""stat_mods"": {""speed"": 8, ""strength"": 5}}",Event `w3_relic_chrono_solved` ×1
+relic_mod_thermal_aegis,Thermal Aegis Plating,mod,mod,"{""slot"": ""mod"", ""hp_bonus"": 45, ""defense"": 6, ""stat_mods"": {""vitality"": 5}}",Event `w4_relic_magma_solved` ×1
+relic_mod_graviton_matrix,Graviton Inertia Matrix,mod,mod,"{""slot"": ""mod"", ""hp_bonus"": 55, ""stat_mods"": {""vitality"": 6, ""stability"": 5}}",Event `w5_relic_graviton_solved` ×1
+recoil_dampener,Recoil Dampener,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""accuracy"": 4, ""speed"": 3}, ""status_on_hit"": ""shock"", ""status_chance"": 18}",Event `w1_sq05_read_datapad` ×1
+execution_servo,Execution Servo,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""strength"": 4, ""speed"": 4}, ""status_on_hit"": ""weak"", ""status_chance"": 16}",No normal source found
+ablative_mesh,Ablative Mesh,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""defense"": 5, ""vitality"": 3}}",No normal source found
+shock_lattice,Shock Lattice,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""defense"": 4, ""evasion"": 4}}",No normal source found
+adaptive_padding,Adaptive Padding,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""vitality"": 5, ""agility"": 2}}",No normal source found
+warding_matrix,Warding Matrix,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""defense"": 3, ""luck"": 3}}",No normal source found
+source_resin,Source Resin,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""focus"": 4, ""vitality"": 4}}","Enemy `the_beast` ×1, 100% chance
+Tinkering `mod_source_resin`"
+rapid_capacitor,Rapid Capacitor,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""speed"": 5, ""agility"": 3}}","Event `w4_sq19_defend_workers` ×1
+Container `technician toolbox` in `sector9_conduit_breaker_room`
+Shop `foundry_welder_shop` at foundry_lava_tube_bypass
+Tinkering `mod_rapid_capacitor`"
+photon_core_mod,Photon Core Mod,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""focus"": 5, ""accuracy"": 4}, ""attack_element"": ""burn""}",Tinkering `mod_photon_core`
+nanite_plating_mod,Nanite Plating Mod,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""defense"": 7, ""vitality"": 4}}","Shop `orbital_dispensary` at orbital_customs_lounge
+Tinkering `mod_nanite_plating`"
+resonance_capacitor_mod,Resonance Capacitor Mod,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""focus"": 5, ""speed"": 4, ""crit_rate"": 3}, ""attack_element"": ""source""}",Tinkering `mod_resonance_capacitor`
+neon_band,Neon Band,accessory,accessory,"{""slot"": ""accessory"", ""crit_rate"": 5, ""stat_mods"": {""focus"": 2}}",Event `w3_sq13_restore_market` ×1
+phase_rounds,Phase Rounds,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""agility"": 2, ""focus"": 2}}","Event `w3_sq15_scrub_telemetry` ×1
+Event `w3_sq14_weaponize_ledger` ×1
+Container `executive safe` in `spire_exec_lounge_scale_05`
+Container `tide glass shell` in `source_orion_nightmare_node_scale_03`
+Container `diplomatic courier case` in `orbital_executive_dock_scale_final`
+Shop `upper_city_lounge` at spire_exec_lounge_bar gate {""milestones"": [""ms_w3_prototype_tested""]}
+ArcadeService `grantSpireReward` ×1"
+heat_liner,Heat Liner,armor,armor,"{""slot"": ""armor"", ""defense"": 6, ""hp_bonus"": 20, ""stat_mods"": {""vitality"": 2}}","Event `w4_mq16_enter_airlock` ×1
+Dialogue `rylan_favor_turnin` ×1
+Shop `foundry_welder_shop` at foundry_lava_tube_bypass"
+explosive_tip,Explosive Tip,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""strength"": 2, ""luck"": 1}}",Event `w4_sq16_destroy_crate_gamma` ×1
+coolant_system,Coolant System,accessory,accessory,"{""slot"": ""accessory"", ""hp_bonus"": 25, ""stat_mods"": {""vitality"": 3}}",Event `w4_sq17_vent_safe_route` ×1
+thermal_clip,Thermal Clip,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""strength"": 2, ""focus"": 1}}","Event `w4_sq20_steal_overclock` ×1
+Shop `foundry_welder_shop` at foundry_lava_tube_bypass"
+grav_boots,Grav-Boots,accessory,accessory,"{""slot"": ""accessory"", ""defense"": 2, ""stat_mods"": {""agility"": 2, ""vitality"": 1}}",Event `w5_mq22_find_thorne` ×1
+mag_boots,Mag-Boots,accessory,accessory,"{""slot"": ""accessory"", ""defense"": 2, ""stat_mods"": {""vitality"": 2}}",Event `w5_sq23_reopen_dock` ×1
+void_clip,Void Clip,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""strength"": 2, ""focus"": 2}}",Event `w5_sq25_open_armory` ×1
+starborn_mod,Starborn,accessory,accessory,"{""slot"": ""accessory"", ""crit_rate"": 15.0, ""stat_mods"": {""strength"": 5, ""focus"": 5, ""luck"": 3}}",Event `w6_sq30_fit_hull` ×1
+thermite_core_mod,Thermite Core Mod,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""strength"": 8, ""luck"": 5}}","Container `dominion munitions cache` in `mine_sealed_munitions_vault`
+Tinkering `mod_thermite_core`"
+orbital_deflector_mod,Orbital Deflector Mod,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""defense"": 9, ""vitality"": 6}}",Tinkering `mod_orbital_deflector`
+astral_weave_mod,Astral Weave Mod,mod,mod,"{""slot"": ""mod"", ""stat_mods"": {""agility"": 8, ""focus"": 8}}",Tinkering `mod_astral_weave`
+relic_retro_overclock,Retro Overclock Core,accessory,accessory,"{""slot"": ""accessory"", ""crit_rate"": 10, ""stat_mods"": {""agility"": 4, ""focus"": 4}}",Shop `arcade_prize_shop` — NO CAMPAIGN ENTRANCE FOUND
+cheno_carabiner,Cheno's Heavy Carabiner,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""vitality"": 3, ""stability"": 4, ""defense"": 5}}",Dialogue `cheno_favor_turnin` ×1
+wayfarer_plectrum,Wayfarer's Resonance Plectrum,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""focus"": 4, ""agility"": 3, ""accuracy"": 3}}",Dialogue `wayfarer_quest_conclude` ×1
+camerons_pipe_wrench,Cameron's Heavy Flange Wrench,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""strength"": 4, ""vitality"": 3, ""defense"": 4, ""stability"": 3}}",Dialogue `cameron_favor_turnin` ×1
+charles_heuristic_slate,Charles's Venture Heuristic Slate,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""focus"": 5, ""accuracy"": 4, ""defense"": 3, ""stability"": 3}}",Dialogue `charles_favor_turnin` ×1
+charlies_comfort_stone,Charlie's Comfort Stone,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""vitality"": 3, ""stability"": 4, ""focus"": 3}}","Event `w2_charlie_puffball_3` ×1
+Dialogue `charlie_step_3_reply` ×1"
+creators_harmonic_resonator,The Builder's Harmonic Resonator,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""focus"": 5, ""stability"": 5, ""vitality"": 4, ""accuracy"": 4}}",Dialogue `jason_resonator_reply` ×1
+olivers_supervisory_seal,Oliver's Supervisory Seal,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""stability"": 4, ""vitality"": 3, ""defense"": 3}}",Dialogue `oliver_pat_reply` ×1
+pennys_herder_bandana,Penny's Pack-Guardian Bandana,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""defense"": 4, ""vitality"": 4, ""stability"": 4}}",Dialogue `penny_wrestle_reply` ×1
+megans_clinical_scanner,Megan's Field Bio-Scanner,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""vitality"": 5, ""stability"": 4, ""defense"": 4, ""focus"": 3}}",Dialogue `megan_favor_turnin` ×1
+mimis_jazz_bloom,Mimi's Jazz Hummingbird Orchid,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""focus"": 4, ""vitality"": 4, ""stability"": 3}}",Dialogue `evelyn_favor_reply` ×1
+roberts_buffer_core,Robert's Gyroscopic Buffer Core,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""stability"": 5, ""defense"": 4, ""agility"": 3}}",Dialogue `robert_gift_reply` ×1
+meekos_mafia_jack,Meeko's Gold-Plated Audio Jack,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""stability"": 5, ""vitality"": 3, ""defense"": 4}}",Dialogue `meeko_respect_reply` ×1
+papaws_marine_slide_rule,Papaw's Precision Slide Rule,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""focus"": 5, ""tech"": 4, ""defense"": 3}}",Room `workshop_loft` pickup
+kodi_and_bellas_sunstone,Kodi and Bella's Sunstone,accessory,accessory,"{""slot"": ""accessory"", ""stat_mods"": {""agility"": 4, ""vitality"": 3, ""focus"": 3}}",Room `sector9_beach_cliffs` pickup
+cyano_coolant_injector,Cyano-Coolant Injector,mod,mod,"{""slot"": ""mod"", ""attack_element"": ""freeze"", ""stat_mods"": {""focus"": 4, ""accuracy"": 3}, ""status_on_hit"": ""freeze"", ""status_chance"": 20}",Dialogue `vance_confession_admission` ×1
+crucible_forge_plate,Crucible Forge-Plate,armor,armor,"{""slot"": ""armor"", ""defense"": 10, ""hp_bonus"": 45, ""stat_mods"": {""vitality"": 4, ""strength"": 2}}",Dialogue `brutus_dialogue_claim` ×1
+tidal_resonator_mod,Tidal Resonator,mod,mod,"{""slot"": ""mod"", ""defense"": 4, ""hp_bonus"": 25, ""stat_mods"": {""vitality"": 3, ""focus"": 3}}",Container `precursor reliquary` in `sector9_sunken_aethel_vault`
+zero_g_gyro_stabilizer_mod,Zero-G Gyro Stabilizer,mod,mod,"{""slot"": ""mod"", ""defense"": 5, ""hp_bonus"": 30, ""stat_mods"": {""agility"": 4, ""focus"": 3}}",Container `experimental ai sub-vault` in `orbital_breached_avionics_lab`
+syndicate_overclock_mod,Syndicate Overclock,mod,mod,"{""slot"": ""mod"", ""hp_bonus"": 35, ""stat_mods"": {""agility"": 6, ""focus"": 6}}",Container `black-box safe` in `spire_black_site_lab`
+magma_induction_core_mod,Magma Induction Core,mod,mod,"{""slot"": ""mod"", ""defense"": 6, ""hp_bonus"": 40, ""stat_mods"": {""strength"": 7, ""vitality"": 5}}",Container `precursor crucible` in `foundry_subterranean_smelter`

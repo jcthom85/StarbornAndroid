@@ -116,7 +116,11 @@ class Worlds456PublicInteractionTest {
         act(s, "w5_sq23_reopen_dock"); dismissNarration(s)
         assertEquals(before.playerXp + 450, s.sessionStore.state.value.playerXp)
         assertEquals(1, s.inventoryService.snapshot()["mag_boots"])
-        act(s, "w5_sq23_reopen_dock"); dismissNarration(s)
+        val completed = s.exploration.uiState.value.actions.filterIsInstance<GenericAction>()
+            .single { it.name == "dock access priority" }
+        assertTrue(completed.completedInspection)
+        assertNull(completed.actionEvent)
+        compose.runOnIdle { s.exploration.onActionSelected(completed) }; dismissNarration(s)
         assertEquals(before.playerXp + 450, s.sessionStore.state.value.playerXp)
     }
 

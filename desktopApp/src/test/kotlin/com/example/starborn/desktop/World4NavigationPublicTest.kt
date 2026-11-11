@@ -63,6 +63,75 @@ class World4NavigationPublicTest {
         assertEquals(expected, s.sessionStore.state.value.roomId)
     }
 
+    @Test fun phantomTerminalDoesNotQueueTheSameConversationTwice() = runWith { s ->
+        restore(s, s.sessionStore.state.value.copy(
+            worldId = "world_4", hubId = "hub_7_slag_pits", roomId = "foundry_waste_intake",
+            activeQuests = setOf("w4_mq17"), completedQuests = emptySet(),
+            completedEvents = emptySet(), completedMilestones = emptySet(), questTasksCompleted = emptyMap()
+        ))
+        val terminal = s.exploration.uiState.value.actions.filterIsInstance<GenericAction>()
+            .single { it.actionEvent == "w4_mq17_access_phantom_terminal_scene" }
+        // Two callbacks can arrive before the dialogue overlay has consumed the room tap.
+        compose.runOnIdle {
+            s.exploration.onActionSelected(terminal)
+            s.exploration.onActionSelected(terminal)
+        }
+        val seen = mutableListOf<String>()
+        compose.runOnIdle {
+            seen += s.exploration.uiState.value.activeDialogue!!.line.id
+            s.exploration.advanceDialogue()
+            // An underlying party/NPC tap must not restart the scripted scene.
+            s.exploration.onNpcInteraction("Gh0st")
+            repeat(6) {
+                s.exploration.uiState.value.activeDialogue?.line?.let {
+                    seen += it.id
+                    s.exploration.advanceDialogue()
+                }
+            }
+        }
+        compose.waitForIdle()
+        assertEquals(listOf("gh0st_w4_phantom_intro", "nova_w4_phantom_prompt"), seen)
+        assertTrue("access_phantom_terminal" in s.sessionStore.state.value.questTasksCompleted["w4_mq17"].orEmpty())
+        dismissNarration(s)
+        compose.waitUntil(5000) {
+            s.exploration.uiState.value.actions.filterIsInstance<GenericAction>()
+                .any { it.name == "project phantom terminal" && it.completedInspection }
+        }
+        val inspection = s.exploration.uiState.value.actions.filterIsInstance<GenericAction>()
+            .single { it.name == "project phantom terminal" }
+        assertTrue(inspection.completedInspection)
+        compose.runOnIdle { s.exploration.onActionSelected(inspection) }
+        assertNull(s.exploration.uiState.value.activeDialogue)
+    }
+
+    @Test fun sabotageCrateBecomesAReadOnlyInspectionAndLegacyMilestoneRestoresIt() = runWith { s ->
+        restore(s, s.sessionStore.state.value.copy(
+            worldId = "world_4", hubId = "hub_7_slag_pits", roomId = "foundry_slag_river",
+            activeQuests = setOf("w4_sq16"), completedQuests = emptySet(),
+            completedEvents = emptySet(), completedMilestones = emptySet(),
+            questTasksCompleted = emptyMap(), roomStates = emptyMap()
+        ))
+        act(s, "w4_sq16_destroy_crate_alpha")
+        compose.waitUntil(5000) {
+            s.exploration.uiState.value.actions.filterIsInstance<GenericAction>()
+                .any { it.name == "ammo crate alpha" && it.completedInspection }
+        }
+        val completed = s.sessionStore.state.value
+        assertTrue("crate_alpha" in completed.questTasksCompleted["w4_sq16"].orEmpty())
+        dismissNarration(s)
+        restore(s, completed.copy(completedEvents = emptySet()))
+        val inspection = s.exploration.uiState.value.actions.filterIsInstance<GenericAction>()
+            .single { it.name == "ammo crate alpha" }
+        assertTrue(inspection.completedInspection)
+        assertNull(inspection.actionEvent)
+        val xp = s.sessionStore.state.value.playerXp
+        val inventory = s.sessionStore.state.value.inventory
+        compose.runOnIdle { s.exploration.onActionSelected(inspection) }
+        compose.waitUntil(5000) { s.exploration.uiState.value.narrationPrompt != null }
+        assertEquals(xp, s.sessionStore.state.value.playerXp)
+        assertEquals(inventory, s.sessionStore.state.value.inventory)
+    }
+
     @Test fun allSeventyFourFoundryRoomsHaveWorkingCardinalReturnTravel() = runWith { s ->
         val ids = s.worldDataSource.loadHubNodes().filter { it.hubId in setOf("hub_7_slag_pits", "hub_8_assembly_line") }.flatMap { it.rooms }.toSet()
         val rooms = s.worldDataSource.loadRooms().filter { it.id in ids }.associateBy { it.id }

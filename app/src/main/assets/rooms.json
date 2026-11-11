@@ -5696,12 +5696,15 @@
     "actions": [
       {
         "name": "astra",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_landing_secured",
         "type": "generic",
         "action_event": "w4_mq16_land_shelf",
         "condition_unmet_message": "The Astra ticks and cools on the landing gantry."
       },
       {
         "name": "compliance bulletin",
+        "inspection_completion_milestone": "ms_w4_compliance_bulletin",
         "type": "generic",
         "action_event": "w4_compliance_bulletin",
         "inspect_after_completion": true,
@@ -5930,6 +5933,7 @@
     "actions": [
       {
         "name": "slag crossing",
+        "inspection_completion_milestone": "ms_w4_slag_crossed",
         "type": "generic",
         "action_event": "w4_mq16_cross_slag_river",
         "inspect_after_completion": true,
@@ -5937,6 +5941,8 @@
       },
       {
         "name": "ammo crate alpha",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_crate_alpha_destroyed",
         "type": "generic",
         "action_event": "w4_sq16_destroy_crate_alpha",
         "condition_unmet_message": "A worker-resistance mark is scratched into the pylon beneath the crate."
@@ -6283,6 +6289,7 @@
       },
       {
         "name": "flare rhythm",
+        "inspection_completion_milestone": "ms_w4_slag_crossed",
         "type": "generic",
         "action_event": "w4_mq16_cross_slag_river",
         "inspect_after_completion": true,
@@ -6433,6 +6440,8 @@
       },
       {
         "name": "worker tablet",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_worker_shelter_found",
         "type": "generic",
         "action_event": "w4_sq17_find_worker",
         "requires_milestones": [
@@ -6442,6 +6451,8 @@
       },
       {
         "name": "salvaged cooling bypass",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_scavenger_unlocked",
         "type": "generic",
         "action_event": "w4_sq18_build_bypass",
         "requires_milestones": [
@@ -6586,12 +6597,15 @@
     "actions": [
       {
         "name": "cooling vent controls",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_cooling_vents_hacked",
         "type": "generic",
         "action_event": "w4_mq16_hack_cooling_vents",
         "condition_unmet_message": "Vent controls cycle scalding air through the service airlock."
       },
       {
         "name": "worker maintenance ping",
+        "inspection_completion_milestone": "ms_w4_worker_ping_traced",
         "type": "generic",
         "action_event": "w4_sq17_trace_ping",
         "inspect_after_completion": true,
@@ -6599,24 +6613,33 @@
       },
       {
         "name": "waste intake brake",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_intake_jammed",
         "type": "generic",
         "action_event": "w4_sq18_stop_intake",
         "condition_unmet_message": "The brake can jam the intake long enough to salvage the wrecks."
       },
       {
         "name": "project phantom terminal",
+        "inspect_after_completion": true,
+        "inspection_completion_event": "w4_mq17_access_phantom_terminal",
+        "inspection_completion_milestone": "ms_w4_phantom_records_found",
         "type": "generic",
         "action_event": "w4_mq17_access_phantom_terminal_scene",
         "condition_unmet_message": "A classified terminal waits behind cracked thermal glass."
       },
       {
         "name": "ammo crate beta",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_crate_beta_destroyed",
         "type": "generic",
         "action_event": "w4_sq16_destroy_crate_beta",
         "condition_unmet_message": "A crate of shaped charges sits too close to the intake pistons, marked with the same resistance scratch."
       },
       {
         "name": "scrap mech pile",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_mechs_salvaged",
         "type": "generic",
         "action_event": "w4_sq18_salvage_mechs",
         "requires_milestones": [
@@ -6626,6 +6649,7 @@
       },
       {
         "name": "wrecked loader stash",
+        "inspect_after_completion": true,
         "type": "generic",
         "action_event": "find_vhs_tape_07",
         "condition_unmet_message": "A heat-scorched salvage compartment inside a ruined loader mech."
@@ -6711,18 +6735,24 @@
     "actions": [
       {
         "name": "airlock door",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_mq16_complete",
         "type": "generic",
         "action_event": "w4_mq16_enter_airlock",
         "condition_unmet_message": "The airlock will not cycle until the cooling vents are under control."
       },
       {
         "name": "ammo crate gamma",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_crate_gamma_destroyed",
         "type": "generic",
         "action_event": "w4_sq16_destroy_crate_gamma",
         "condition_unmet_message": "A final ammo crate is stacked beside the decon pumps, where a worker left the resistance mark in soot."
       },
       {
         "name": "engineer safe-route valve",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_lost_worker_complete",
         "type": "generic",
         "action_event": "w4_sq17_vent_safe_route",
         "requires_milestones": [
@@ -6842,12 +6872,16 @@
     "actions": [
       {
         "name": "belt timing console",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_conveyors_timed",
         "type": "generic",
         "action_event": "w4_mq18_navigate_conveyors",
         "condition_unmet_message": "The belts move in brutal industrial rhythm."
       },
       {
         "name": "rejected droid",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_defective_units_spared",
         "type": "generic",
         "action_event": "w4_sq19_reprogram_units",
         "requires_milestones": [
@@ -6857,6 +6891,8 @@
       },
       {
         "name": "conveyor release lock",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_quality_control_complete",
         "type": "generic",
         "action_event": "w4_sq19_release_units",
         "requires_milestones": [
@@ -6866,6 +6902,8 @@
       },
       {
         "name": "worker defense relay",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_units_defend_workers",
         "type": "generic",
         "action_event": "w4_sq19_defend_workers",
         "requires_milestones": [
@@ -6902,6 +6940,8 @@
     "actions": [
       {
         "name": "warning lamps",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_conveyors_timed",
         "type": "generic",
         "action_event": "w4_mq18_navigate_conveyors",
         "condition_unmet_message": "The warning lamps turn the conveyor into a readable, dangerous rhythm."
@@ -6940,6 +6980,7 @@
     "actions": [
       {
         "name": "rejected droid",
+        "inspection_completion_milestone": "ms_w4_rejection_codes_read",
         "type": "generic",
         "action_event": "w4_sq19_read_rejection_codes",
         "inspect_after_completion": true,
@@ -7008,6 +7049,8 @@
     "actions": [
       {
         "name": "conditioning records",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_prototypes_defeated",
         "type": "generic",
         "action_event": "w4_mq18_defeat_prototypes",
         "condition_unmet_message": "Production records list Phantom units as batches, not people."
@@ -7100,12 +7143,16 @@
     "actions": [
       {
         "name": "fabrication matrix",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_matrix_overloaded",
         "type": "generic",
         "action_event": "w4_mq18_overload_matrix",
         "condition_unmet_message": "The fabrication matrix feeds the conveyor floor with Phantom shells."
       },
       {
         "name": "anvil cradle",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_conveyor_puzzle_solved",
         "type": "generic",
         "action_event": "w4_mq19_open_anvil_cradle",
         "requires_milestones": [
@@ -7118,12 +7165,16 @@
       },
       {
         "name": "anvil relic",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_anvil_claimed",
         "type": "generic",
         "action_event": "w4_mq19_take_anvil",
         "condition_unmet_message": "The Anvil waits in the hammer cradle, hot enough to glow without flame."
       },
       {
         "name": "test chamber terminal",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_hazard_trial_cleared",
         "type": "generic",
         "action_event": "w4_sq20_survive_waves",
         "requires_milestones": [
@@ -7154,6 +7205,8 @@
     "actions": [
       {
         "name": "hammer cadence",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_conveyor_puzzle_solved",
         "type": "generic",
         "action_event": "w4_mq19_open_anvil_cradle",
         "requires_milestones": [
@@ -7166,6 +7219,7 @@
       },
       {
         "name": "hazard cycle map",
+        "inspection_completion_milestone": "ms_w4_hazards_mapped",
         "type": "generic",
         "action_event": "w4_sq20_map_hazards",
         "inspect_after_completion": true,
@@ -7173,6 +7227,8 @@
       },
       {
         "name": "overclock profile",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_overclocked_complete",
         "type": "generic",
         "action_event": "w4_sq20_steal_overclock",
         "requires_milestones": [
@@ -7249,12 +7305,16 @@
     "actions": [
       {
         "name": "engine mount",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_engine_stolen",
         "type": "generic",
         "action_event": "w4_mq20_steal_engine",
         "condition_unmet_message": "The Deep-Core Engine is locked under thermal clamps."
       },
       {
         "name": "phase-cutter arrays",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_arrays_stolen",
         "type": "generic",
         "action_event": "w4_mq20_steal_arrays",
         "condition_unmet_message": "A rack of ship-scale Phase-Cutter Arrays is wired to the engine cradle."
@@ -7297,12 +7357,16 @@
     "actions": [
       {
         "name": "thermal clamps",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_engine_stolen",
         "type": "generic",
         "action_event": "w4_mq20_steal_engine",
         "condition_unmet_message": "The clamps hold the Deep-Core Engine in place until the Titan Walker is no longer guarding the core."
       },
       {
         "name": "array rack",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_arrays_stolen",
         "type": "generic",
         "action_event": "w4_mq20_steal_arrays",
         "condition_unmet_message": "The array rack stores ship-scale Phase-Cutter Arrays meant for something far larger than the Astra."
@@ -7366,6 +7430,9 @@
     "actions": [
       {
         "name": "commander rylos",
+        "inspect_after_completion": true,
+        "inspection_completion_event": "w4_mq20_confront_rylos",
+        "inspection_completion_milestone": "ms_w4_rylos_confronted",
         "type": "generic",
         "action_event": "w4_mq20_confront_rylos_scene",
         "condition_unmet_message": "Rylos waits on the Titan Walker, chrome face lit by the volcano."
@@ -7378,6 +7445,7 @@
       },
       {
         "name": "gantry footlocker",
+        "inspect_after_completion": true,
         "type": "generic",
         "action_event": "find_vhs_tape_08",
         "condition_unmet_message": "A locked footlocker bolted to the escape gantry rail."
@@ -7470,18 +7538,23 @@
     "actions": [
       {
         "name": "docking controls",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_forced_dock",
         "type": "generic",
         "action_event": "w5_mq21_force_dock",
         "condition_unmet_message": "Compliance has the Astra in a tractor lock."
       },
       {
         "name": "sealed airlock",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_airlock_hacked",
         "type": "generic",
         "action_event": "w5_mq21_hack_airlock",
         "condition_unmet_message": "The station airlock refuses the crew until Gh0st breaks Thorne's old cipher."
       },
       {
         "name": "pressure map",
+        "inspection_completion_milestone": "ms_w5_pressure_loss_mapped",
         "type": "generic",
         "action_event": "w5_sq23_map_pressure_loss",
         "inspect_after_completion": true,
@@ -7489,6 +7562,9 @@
       },
       {
         "name": "airlock console",
+        "inspect_after_completion": true,
+        "inspection_completion_event": "w5_sq23_vacuum_seal",
+        "inspection_completion_milestone": "ms_w5_breaches_sealed",
         "type": "generic",
         "action_event": "w5_sq23_route_bulkheads",
         "requires_milestones": [
@@ -7498,6 +7574,8 @@
       },
       {
         "name": "dock access priority",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_vacuum_seal_complete",
         "type": "generic",
         "action_event": "w5_sq23_reopen_dock",
         "requires_milestones": [
@@ -7538,6 +7616,8 @@
     "actions": [
       {
         "name": "docking collar",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_forced_dock",
         "type": "generic",
         "action_event": "w5_mq21_force_dock",
         "condition_unmet_message": "The docking collar is close enough for the Astra to ram if the fighters stop shooting."
@@ -7589,6 +7669,7 @@
     "actions": [
       {
         "name": "director logs",
+        "inspection_completion_milestone": "ms_w5_director_logs_decrypted",
         "type": "generic",
         "action_event": "w5_sq21_director_logs",
         "inspect_after_completion": true,
@@ -7599,6 +7680,8 @@
       },
       {
         "name": "concourse public broadcast",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_corporate_insight_unlocked",
         "type": "generic",
         "action_event": "w5_sq21_publish_logs",
         "requires_milestones": [
@@ -7718,12 +7801,16 @@
     "actions": [
       {
         "name": "fake beach",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_solarium_crossed",
         "type": "generic",
         "action_event": "w5_mq22_cross_solarium",
         "condition_unmet_message": "The artificial sun warms sand inside a station-sized cage."
       },
       {
         "name": "mirror array",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_mirrors_realigned",
         "type": "generic",
         "action_event": "w5_sq22_realign_mirrors",
         "requires_milestones": [
@@ -7733,6 +7820,8 @@
       },
       {
         "name": "garden light priority",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_solar_maintenance_complete",
         "type": "generic",
         "action_event": "w5_sq22_restore_gardens",
         "requires_milestones": [
@@ -7748,6 +7837,7 @@
       },
       {
         "name": "solarium tide cache",
+        "inspect_after_completion": true,
         "type": "generic",
         "action_event": "find_vhs_tape_09",
         "condition_unmet_message": "A sealed container wedged beneath the artificial coral ledges."
@@ -7784,6 +7874,7 @@
     "actions": [
       {
         "name": "false sun path",
+        "inspection_completion_milestone": "ms_w5_false_sun_traced",
         "type": "generic",
         "action_event": "w5_sq22_trace_false_sun",
         "inspect_after_completion": true,
@@ -7791,6 +7882,8 @@
       },
       {
         "name": "mirror panels",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_mirrors_realigned",
         "type": "generic",
         "action_event": "w5_sq22_realign_mirrors",
         "requires_milestones": [
@@ -7847,6 +7940,7 @@
     "actions": [
       {
         "name": "Director redaction checksum",
+        "inspection_completion_milestone": "ms_w5_redactions_found",
         "type": "generic",
         "action_event": "w5_sq21_find_redactions",
         "inspect_after_completion": true,
@@ -7927,6 +8021,8 @@
     "actions": [
       {
         "name": "zero-g cables",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_shaft_traversed",
         "type": "generic",
         "action_event": "w5_mq22_traverse_shaft",
         "condition_unmet_message": "The drop requires careful movement between patrol sweeps."
@@ -7998,6 +8094,8 @@
       },
       {
         "name": "patrol timing",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_shaft_traversed",
         "type": "generic",
         "action_event": "w5_mq22_traverse_shaft",
         "condition_unmet_message": "The Hunter-Killer sweeps leave exactly enough dead space for a careful crew."
@@ -8091,18 +8189,23 @@
     "actions": [
       {
         "name": "mainframe terminal",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_mainframe_accessed",
         "type": "generic",
         "action_event": "w5_mq22_access_mainframe",
         "condition_unmet_message": "The server farm terminal routes through Harmony and Architect directory trees."
       },
       {
         "name": "coolant-pulse map",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_server_maze_mapped",
         "type": "generic",
         "action_event": "w5_mq23_navigate_maze",
         "condition_unmet_message": "Cold aisles repeat around the same impossible rack numbers."
       },
       {
         "name": "purged backup rack",
+        "inspection_completion_milestone": "ms_w5_backup_purge_traced",
         "type": "generic",
         "action_event": "w5_sq24_trace_purge",
         "inspect_after_completion": true,
@@ -8110,6 +8213,8 @@
       },
       {
         "name": "guardian ownership flag",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_data_shield_unlocked",
         "type": "generic",
         "action_event": "w5_sq24_restore_guardian",
         "requires_milestones": [
@@ -8119,6 +8224,8 @@
       },
       {
         "name": "crew covenant socket",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_guardian_covenant",
         "type": "generic",
         "action_event": "w5_sq24_bind_guardian",
         "requires_milestones": [
@@ -8128,6 +8235,8 @@
       },
       {
         "name": "dead sysadmin",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_sysadmin_keycard_found",
         "type": "generic",
         "action_event": "w5_sq25_find_keycard",
         "condition_unmet_message": "A station administrator floats behind a coolant pipe, keycard still clipped to the uniform."
@@ -8194,12 +8303,17 @@
     "actions": [
       {
         "name": "mainframe terminal",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_mainframe_accessed",
         "type": "generic",
         "action_event": "w5_mq22_access_mainframe",
         "condition_unmet_message": "The terminal carries both Harmony and Architect root directories."
       },
       {
         "name": "thorne trace",
+        "inspect_after_completion": true,
+        "inspection_completion_event": "w5_mq22_find_thorne",
+        "inspection_completion_milestone": "ms_w5_thorne_found",
         "type": "generic",
         "action_event": "w5_mq22_find_thorne_scene",
         "condition_unmet_message": "Thorne's emergency trace is buried behind the Great Silence log."
@@ -8245,6 +8359,8 @@
     "actions": [
       {
         "name": "firewall node alpha",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_firewall_alpha_down",
         "type": "generic",
         "action_event": "w5_mq23_firewall_alpha",
         "condition_unmet_message": "The first firewall node shifts its cipher every few seconds."
@@ -8283,6 +8399,8 @@
     "actions": [
       {
         "name": "firewall node beta",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_firewall_beta_down",
         "type": "generic",
         "action_event": "w5_mq23_firewall_beta",
         "condition_unmet_message": "The second node is protected by a recursive Dominion lock."
@@ -8332,6 +8450,8 @@
     "actions": [
       {
         "name": "firewall node gamma",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_firewall_gamma_down",
         "type": "generic",
         "action_event": "w5_mq23_firewall_gamma",
         "condition_unmet_message": "The final node projects a hard-light guardian into the aisle."
@@ -8388,6 +8508,8 @@
     "actions": [
       {
         "name": "purged backup rack",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_backup_recovered",
         "type": "generic",
         "action_event": "w5_sq24_recover_backup",
         "requires_milestones": [
@@ -8427,6 +8549,8 @@
     "actions": [
       {
         "name": "dead sysadmin",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_sysadmin_keycard_found",
         "type": "generic",
         "action_event": "w5_sq25_find_keycard",
         "condition_unmet_message": "An administrator's body drifts in the nest, holding a high-clearance keycard."
@@ -8482,12 +8606,17 @@
     "actions": [
       {
         "name": "elara",
+        "inspect_after_completion": true,
+        "inspection_completion_event": "w5_mq24_find_elara",
+        "inspection_completion_milestone": "ms_w5_elara_found",
         "type": "generic",
         "action_event": "w5_mq24_find_elara_scene",
         "condition_unmet_message": "Elara is inside the system, fighting through command layers to open the chamber from within."
       },
       {
         "name": "anchor relic",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_anchor_taken",
         "type": "generic",
         "action_event": "w5_mq24_take_anchor",
         "condition_unmet_message": "The Anchor remains locked to Elara's failing firewall."
@@ -8587,12 +8716,17 @@
     "actions": [
       {
         "name": "containment field",
+        "inspect_after_completion": true,
+        "inspection_completion_event": "w5_mq25_soloist",
+        "inspection_completion_milestone": "ms_w5_soloist_witnessed",
         "type": "generic",
         "action_event": "w5_mq25_soloist_scene",
         "condition_unmet_message": "Thorne is trapped behind the field while Vale watches the Anchor."
       },
       {
         "name": "executive armory",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w5_admin_privileges_complete",
         "type": "generic",
         "action_event": "w5_sq25_open_armory",
         "condition_unmet_message": "The executive armory requires a station administrator's keycard."
@@ -8854,6 +8988,7 @@
     "actions": [
       {
         "name": "backup lattice",
+        "inspection_completion_milestone": "ms_w6_hr_backups_found",
         "type": "generic",
         "action_event": "w6_sq27_delete_record",
         "inspect_after_completion": true,
@@ -8892,6 +9027,7 @@
     "actions": [
       {
         "name": "authorization chain",
+        "inspection_completion_milestone": "ms_w6_hr_revoked",
         "type": "generic",
         "action_event": "w6_sq27_revoke_record",
         "inspect_after_completion": true,
@@ -8930,6 +9066,8 @@
     "actions": [
       {
         "name": "unauthorized exit",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w6_unshackled_unlocked",
         "type": "generic",
         "action_event": "w6_sq27_leave_review",
         "requires_milestones": [
@@ -8939,6 +9077,8 @@
       },
       {
         "name": "worker broadcast",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w6_workers_unshackled",
         "type": "generic",
         "action_event": "w6_sq27_free_workers",
         "requires_milestones": [
@@ -8978,6 +9118,7 @@
     "actions": [
       {
         "name": "buried voice",
+        "inspection_completion_milestone": "ms_w6_elara_voice_isolated",
         "type": "generic",
         "action_event": "w6_sq28_elara_song",
         "inspect_after_completion": true,
@@ -9016,6 +9157,7 @@
     "actions": [
       {
         "name": "command carrier",
+        "inspection_completion_milestone": "ms_w6_elara_commands_broken",
         "type": "generic",
         "action_event": "w6_sq28_break_command",
         "inspect_after_completion": true,
@@ -9055,6 +9197,8 @@
     "actions": [
       {
         "name": "pure audio log",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w6_source_balance_unlocked",
         "type": "generic",
         "action_event": "w6_sq28_preserve_song",
         "requires_milestones": [
@@ -9162,6 +9306,7 @@
     "actions": [
       {
         "name": "crooked tool marks",
+        "inspection_completion_milestone": "ms_w6_jed_marks_found",
         "type": "generic",
         "action_event": "w6_sq26_jed_echo",
         "inspect_after_completion": true,
@@ -9213,6 +9358,7 @@
     "actions": [
       {
         "name": "jed echo",
+        "inspection_completion_milestone": "ms_w6_jed_lesson_heard",
         "type": "generic",
         "action_event": "w6_sq26_hear_lesson",
         "inspect_after_completion": true,
@@ -9255,12 +9401,15 @@
     "actions": [
       {
         "name": "manager patrol",
+        "inspect_after_completion": true,
         "type": "generic",
         "action_event": "w6_mq27_evade_manager",
         "condition_unmet_message": "The projections reset the memory whenever they see Nova."
       },
       {
         "name": "open shift gate",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w6_legacy_unlocked",
         "type": "generic",
         "action_event": "w6_sq26_carry_legacy",
         "requires_milestones": [
@@ -9328,30 +9477,39 @@
     "actions": [
       {
         "name": "Zeke's anchor",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w6_bridge_zeke_anchor",
         "type": "generic",
         "action_event": "w6_mq28_anchor_zeke",
         "condition_unmet_message": "The bridge needs the memory of someone who chose family after utility failed."
       },
       {
         "name": "Gh0st's anchor",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w6_bridge_ghost_anchor",
         "type": "generic",
         "action_event": "w6_mq28_anchor_ghost",
         "condition_unmet_message": "The bridge needs the memory of someone who stopped mistaking orders for identity."
       },
       {
         "name": "Orion's anchor",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w6_bridge_orion_anchor",
         "type": "generic",
         "action_event": "w6_mq28_anchor_orion",
         "condition_unmet_message": "The bridge needs the memory of someone who woke from preservation into grief."
       },
       {
         "name": "Nova's anchor",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w6_bridge_nova_anchor",
         "type": "generic",
         "action_event": "w6_mq28_anchor_nova",
         "condition_unmet_message": "The bridge needs the memory of someone who refuses a painless lie."
       },
       {
         "name": "unfinished bridge",
+        "inspect_after_completion": true,
         "type": "generic",
         "action_event": "w6_mq28_build_bridge",
         "requires_milestones": [
@@ -9406,6 +9564,7 @@
     "actions": [
       {
         "name": "campfire promise",
+        "inspect_after_completion": true,
         "type": "generic",
         "action_event": "w6_mq28_final_banter",
         "condition_unmet_message": "The crew has one quiet moment before the final ascent."
@@ -9419,6 +9578,7 @@
       },
       {
         "name": "memory altar box",
+        "inspect_after_completion": true,
         "type": "generic",
         "action_event": "find_vhs_tape_10",
         "condition_unmet_message": "A crystal repository glowing with warm pre-collapse harmonics."
@@ -9460,6 +9620,7 @@
       },
       {
         "name": "names beneath the light",
+        "inspection_completion_milestone": "ms_w6_aethel_names_traced",
         "type": "generic",
         "action_event": "w6_sq29_aethel_grave",
         "inspect_after_completion": true,
@@ -9510,24 +9671,31 @@
     "actions": [
       {
         "name": "Jed's door",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w6_refused_jed_revision",
         "type": "generic",
         "action_event": "w6_mq29_refuse_jed_revision",
         "condition_unmet_message": "Vale's stair offers a version of the mine where Jed never died."
       },
       {
         "name": "Astra wreckage",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w6_refused_astra_revision",
         "type": "generic",
         "action_event": "w6_mq29_refuse_astra_revision",
         "condition_unmet_message": "A polished Astra waits without crash scars, without Sector 9, and without Orion."
       },
       {
         "name": "Foundry catwalk",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w6_refused_foundry_revision",
         "type": "generic",
         "action_event": "w6_mq29_refuse_foundry_revision",
         "condition_unmet_message": "The Foundry offers Gh0st a clean origin with no bodies behind it."
       },
       {
         "name": "memory stair",
+        "inspect_after_completion": true,
         "type": "generic",
         "action_event": "w6_mq29_climb_stair",
         "requires_milestones": [
@@ -9539,6 +9707,8 @@
       },
       {
         "name": "aethel grave",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w6_aethel_grave_tuned",
         "type": "generic",
         "action_event": "w6_sq29_tune_grave",
         "requires_milestones": [
@@ -9594,6 +9764,8 @@
     "actions": [
       {
         "name": "answering chorus",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w6_ancestral_grace_unlocked",
         "type": "generic",
         "action_event": "w6_sq29_carry_chorus",
         "requires_milestones": [
@@ -9648,6 +9820,7 @@
     "actions": [
       {
         "name": "wreck timeline",
+        "inspection_completion_milestone": "ms_w6_astra_timeline_identified",
         "type": "generic",
         "action_event": "w6_sq30_final_scavenge",
         "inspect_after_completion": true,
@@ -9684,6 +9857,7 @@
     "actions": [
       {
         "name": "future astra hull",
+        "inspection_completion_milestone": "ms_w6_astra_hull_detached",
         "type": "generic",
         "action_event": "w6_sq30_detach_hull",
         "inspect_after_completion": true,
@@ -9726,6 +9900,8 @@
     "actions": [
       {
         "name": "empty armor socket",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w6_final_scavenge_complete",
         "type": "generic",
         "action_event": "w6_sq30_fit_hull",
         "requires_milestones": [
@@ -9803,6 +9979,8 @@
     "actions": [
       {
         "name": "Vale",
+        "inspect_after_completion": true,
+        "inspection_completion_event": "w6_mq30_confront_vale",
         "type": "generic",
         "action_event": "w6_mq30_confront_vale_scene",
         "condition_unmet_message": "Vale waits at the center of the white ocean, calm enough to make annihilation sound reasonable."
@@ -16695,6 +16873,8 @@
       },
       {
         "name": "pulse board",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_pulse_board_read",
         "type": "generic",
         "action_event": "w4_mq19_read_pulse_board",
         "condition_unmet_message": "The board predicts crush points before they happen."
@@ -16777,6 +16957,8 @@
       },
       {
         "name": "grease marks",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_grease_route_read",
         "type": "generic",
         "action_event": "w4_mq19_read_grease_marks",
         "condition_unmet_message": "The marks show where previous crews crawled."
@@ -16818,6 +17000,8 @@
       },
       {
         "name": "override paddle",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_paddle_thrown",
         "type": "generic",
         "action_event": "w4_mq19_throw_override_paddle",
         "condition_unmet_message": "The paddle can pause one section if the mesh comes loose."
@@ -16990,6 +17174,8 @@
       },
       {
         "name": "breath pistons",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_w4_pistons_starved",
         "type": "generic",
         "action_event": "w4_mq19_starve_breath_pistons",
         "condition_unmet_message": "The pistons can starve the fire if timed correctly."

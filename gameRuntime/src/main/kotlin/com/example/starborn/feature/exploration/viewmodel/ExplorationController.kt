@@ -2926,6 +2926,8 @@ class ExplorationController(
 
     private fun startImmediateDialogue(npcName: String): Boolean {
         if (activeDialogueSession != null) {
+            // A scene already on screen must not queue another copy of itself.
+            if (activeDialogueNpcName.equals(npcName, ignoreCase = true)) return true
             if (pendingDialogueNpcs.none { it.equals(npcName, true) }) pendingDialogueNpcs.addLast(npcName)
             return true
         }
@@ -2983,6 +2985,8 @@ class ExplorationController(
     }
 
     fun onNpcInteraction(npcName: String) {
+        // Room/party taps arriving behind the overlay must not replace its session.
+        if (activeDialogueSession != null) return
         if (npcName.lowercase(Locale.ROOT) in setOf("charlie", "creature_charlie", "glade creature")) {
             inspectGladeBall()
             return
@@ -3214,6 +3218,8 @@ class ExplorationController(
     )
 
     fun onActionSelected(action: RoomAction) {
+        // Ignore underlying room callbacks while a conversation owns interaction.
+        if (activeDialogueSession != null) return
         guardedActionMessage(_uiState.value.currentRoom, action)?.let { message ->
             showInspection(message)
             updateActionHints(_uiState.value.currentRoom)
@@ -6457,13 +6463,17 @@ class ExplorationController(
             if (!isActionVisible(room, action)) return@mapNotNull null
             val type = action["type"].asStringOrNull()?.lowercase()
             val name = action["name"].asStringOrNull() ?: return@mapNotNull null
-            val clueEvent = action["action_event"].asStringOrNull()
-            if (action["inspect_after_completion"] == true && clueEvent != null &&
-                clueEvent in sessionStore.state.value.completedEvents) {
+            val clueEvent = action["inspection_completion_event"].asStringOrNull()
+                ?: action["action_event"].asStringOrNull()
+            val completionMilestone = action["inspection_completion_milestone"].asStringOrNull()
+            val session = sessionStore.state.value
+            val inspectionComplete = clueEvent in session.completedEvents ||
+                (completionMilestone != null && completionMilestone in session.completedMilestones)
+            if (action["inspect_after_completion"] == true && clueEvent != null && inspectionComplete) {
                 val text = eventsById[clueEvent]?.actions?.firstOrNull { it.type == "show_message" }?.message
                     ?: action["condition_unmet_message"].asStringOrNull()
                 return@mapNotNull GenericAction(name = name, type = "inspect",
-                    conditionUnmetMessage = text, completedInspection = true)
+                    conditionUnmetMessage = text?.substringAfter("\n\n", text), completedInspection = true)
             }
             val discoveryCabinet = action["discovery_cabinet_id"].asStringOrNull()
             if (discoveryCabinet != null && arcadeService.progress(discoveryCabinet).discovered) {
