@@ -136,6 +136,16 @@ fun GameSessionState.migrateOpeningNarrativeState(): GameSessionState {
         if ("w2_sq03_craft_source_resin" in completedEvents) task("w2_sq03", "craft_source_resin")
     }
 
+    // The terminal scene can record its completion before the quest task write finishes.
+    if ("w4_mq17" in activeQuests && "w4_mq17" !in completedQuests &&
+        ("w4_mq17_access_phantom_terminal" in completedEvents ||
+            "ms_w4_phantom_records_found" in migratedMilestones ||
+            "access_phantom_terminal" in migratedQuestTasks["w4_mq17"].orEmpty())) {
+        task("w4_mq17", "access_phantom_terminal")
+        backfillMilestone("ms_w4_phantom_records_found")
+        migratedQuestStages["w4_mq17"] = "cooling_springs"
+    }
+
     // Older Foundry saves predate the permanent maintenance return corridor.
     // Restore access from story evidence, without replaying the Springs reward or transfer.
     val assemblyRouteCleared = "w4_mq17" in completedQuests ||

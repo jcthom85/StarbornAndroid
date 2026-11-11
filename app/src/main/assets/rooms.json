@@ -6434,9 +6434,12 @@
     "actions": [
       {
         "name": "steam pool",
+        "inspect_after_completion": true,
+        "inspection_completion_event": "w4_mq17_regroup_springs",
+        "inspection_completion_milestone": "ms_w4_springs_regrouped",
         "type": "generic",
         "action_event": "w4_mq17_regroup_springs_scene",
-        "condition_unmet_message": "A rare quiet pocket in the Foundry heat."
+        "condition_unmet_message": "Steam drifts across the pool. The air is quiet here."
       },
       {
         "name": "worker tablet",

@@ -467,6 +467,9 @@ class EventManager(
                 "rebuild_ui", "wait_for_draw" -> true
                 "board_astra" -> {
                     if (state.hubId != com.example.starborn.domain.session.AstraTravel.HUB_ID) {
+                        action.travelTransition?.let { style ->
+                            eventHooks.onTravelTransition(com.example.starborn.domain.session.AstraTravel.ENTRY_ROOM_ID, style)
+                        }
                         sessionStore.setAstraReturnLocation(state.worldId, state.hubId, state.roomId)
                         sessionStore.setWorld(com.example.starborn.domain.session.AstraTravel.WORLD_ID)
                         sessionStore.setHub(com.example.starborn.domain.session.AstraTravel.HUB_ID)
@@ -477,6 +480,9 @@ class EventManager(
                 }
                 "set_room", "warp" -> {
                     action.roomId?.let {
+                        if (it != state.roomId) action.travelTransition?.let { style ->
+                            eventHooks.onTravelTransition(it, style)
+                        }
                         sessionStore.setRoom(it)
                     }
                     true
@@ -704,5 +710,6 @@ data class EventHooks(
     val onRevealNode: (nodeId: String) -> Unit = {},
     val onUnlockNode: (nodeId: String) -> Unit = {},
     val onCompleteNode: (nodeId: String) -> Unit = {},
-    val onAudioLayerCommand: (AudioLayerCommandSpec) -> Unit = {}
+    val onAudioLayerCommand: (AudioLayerCommandSpec) -> Unit = {},
+    val onTravelTransition: (roomId: String, style: String) -> Unit = { _, _ -> }
 )

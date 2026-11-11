@@ -1,6 +1,7 @@
 package com.example.starborn.feature.exploration.viewmodel
 
 import com.example.starborn.feature.exploration.presentation.resolveRoomDescription
+import com.example.starborn.feature.exploration.presentation.resolveRoomBackground
 import com.example.starborn.feature.exploration.presentation.inspectionReceiptKey
 
 import com.example.starborn.feature.exploration.presentation.hasModalScene
@@ -561,7 +562,10 @@ class ExplorationController(
             onRestParty = { message ->
                 handleRestParty(message)
             },
-            onAudioLayerCommand = { handleAudioLayerCommand(it) }
+            onAudioLayerCommand = { handleAudioLayerCommand(it) },
+            onTravelTransition = { roomId, style ->
+                pendingScriptedTravel = ScriptedTravelStyle.fromAsset(style)?.let { roomId to it }
+            }
         )
     )
 
@@ -661,6 +665,9 @@ class ExplorationController(
     private val roomStates: MutableMap<String, MutableMap<String, Boolean>> = mutableMapOf()
     private var authoredRoomsById: Map<String, Room> = emptyMap()
     private var observedRestorationVersion = sessionStore.restorationVersion
+    private var pendingScriptedTravel: Pair<String, ScriptedTravelStyle>? = null
+    private var revealedScriptedTravelId: Long? = null
+    private val arrivalDialogueNpcs = ArrayDeque<String>()
     private val roomGroundItems: MutableMap<String, MutableMap<String, Int>> = mutableMapOf()
     private val visitedRooms: MutableSet<String> = mutableSetOf()
     private val discoveredRooms: MutableSet<String> = mutableSetOf()
@@ -810,6 +817,7 @@ class ExplorationController(
 
     private fun playDialogueMusic(cue: String, persistent: Boolean = false) {
         if (cue.isBlank()) return
+        if (_uiState.value.roomTransition?.scriptedStyle != null) return
         dialogueMusicActive = true
         dialogueMusicPersistent = persistent
         emitAudioCommands(
@@ -855,6 +863,9 @@ class ExplorationController(
     private fun playRoomAudio(hubId: String?, roomId: String?) {
         // The cinematic owns the music layer until its playback has actually ended.
         if (cinematicMusicActive && _uiState.value.cinematic != null) return
+        val transition = _uiState.value.roomTransition
+        if (transition?.scriptedStyle != null && transition.toRoomId == roomId &&
+            transition.id != revealedScriptedTravelId) return
         val room = roomId?.let { roomsById[it] }
         val weatherId = room?.weather?.takeUnless { it.isBlank() }
         val suppressMusic = shouldSuppressRoomMusic(room)
@@ -1814,8 +1825,7 @@ class ExplorationController(
             sessionStore.setAstraReturnLocation(session.worldId, session.hubId, session.roomId)
             sessionStore.setLocation("world_astra", AstraTravel.HUB_ID, AstraTravel.ENTRY_ROOM_ID)
             sessionStore.visitNode(AstraTravel.NODE_ID)
-            warpToRoom(AstraTravel.ENTRY_ROOM_ID)
-            playUiCue("menu_action")
+            warpToRoom(AstraTravel.ENTRY_ROOM_ID, ScriptedTravelStyle.AIRLOCK)
             postStatus("Astra boarding sequence complete.")
         }
     }
@@ -1844,10 +1854,10 @@ class ExplorationController(
                 emitEvent(ExplorationEvent.ReturnToHub)
             } else {
                 sessionStore.visitNode(dock.nodeId)
-                warpToRoom(dock.roomId)
+                warpToRoom(dock.roomId, ScriptedTravelStyle.AIRLOCK)
             }
             sessionStore.clearAstraReturnLocation()
-            playUiCue("menu_action")
+            if (returningToMap) playUiCue("menu_action")
             postStatus("Disembarked from the Astra.")
         }
     }
@@ -2001,7 +2011,7 @@ class ExplorationController(
                 }
                 val currentRoomId = _uiState.value.currentRoom?.id
                 if (!hubMenu && !_uiState.value.isLoading && newState.roomId != null && newState.roomId != currentRoomId) {
-                    newState.roomId?.let(::warpToRoom)
+                    newState.roomId?.let { warpToRoom(it) }
                 }
             }
         }
@@ -2856,7 +2866,9 @@ class ExplorationController(
         return Pair(nextHub, nextWorld)
     }
 
-    private fun warpToRoom(roomId: String) {
+    private fun warpToRoom(roomId: String, directStyle: ScriptedTravelStyle? = null) {
+        val pending = pendingScriptedTravel
+        pendingScriptedTravel = null
         dialogueMusicPersistent = false
         dialogueMusicActive = false
         val nextRoom = roomsById[roomId] ?: return
@@ -2882,15 +2894,22 @@ class ExplorationController(
         }
 
         val previousRoom = _uiState.value.currentRoom
-        val servicePassage = setOf(previousRoom?.id, nextRoom.id) == setOf("sector9_hangar_bay", "sector9_landing_drop")
+        val style = directStyle ?: pending?.takeIf { it.first == roomId }?.second
+        val transition = if (previousRoom != null && previousRoom.id != nextRoom.id && style != null &&
+            _uiState.value.cinematic == null) {
+            RoomTransitionUi(System.nanoTime(), previousRoom.id, nextRoom.id, "passage",
+                resolveRoomBackground(previousRoom, getRoomStateSnapshot(previousRoom.id),
+                    sessionStore.state.value.completedMilestones),
+                scriptedStyle = style,
+                destinationTitle = if (style == ScriptedTravelStyle.LAUNCH && nextWorld != null)
+                    "${nextWorld.title} · ${nextRoom.title}" else nextRoom.title)
+        } else null
         val nextActions = parseActions(nextRoom)
         val sessionState = sessionStore.state.value
         _uiState.update { current ->
             current.copy(
-                areaEntry = if (servicePassage) AreaEntryUi(System.nanoTime(), nextRoom.title, nextHub?.title,
-                    "Maintenance passage from ${previousRoom?.title}", false) else current.areaEntry,
-                roomTransition = if (servicePassage) RoomTransitionUi(System.nanoTime(), previousRoom!!.id,
-                    nextRoom.id, "passage", previousRoom.backgroundImage) else current.roomTransition,
+                areaEntry = null,
+                roomTransition = transition,
                 currentRoom = nextRoom,
                 currentHub = nextHub ?: current.currentHub,
                 currentWorld = nextWorld ?: current.currentWorld,
@@ -2922,9 +2941,37 @@ class ExplorationController(
         handleRoomEntryTutorials(nextRoom)
         eventManager.handleTrigger("enter_room", EventPayload.EnterRoom(nextRoom.id))
         reconcileMovementAfterRoomChange(nextRoom.id)
+        if (transition == null) presentArrivalDialogue()
+    }
+
+    fun onScriptedRoomRevealed(transitionId: Long) {
+        val state = _uiState.value
+        val transition = state.roomTransition ?: return
+        if (transition.id != transitionId || transition.scriptedStyle == null ||
+            state.currentRoom?.id != transition.toRoomId || revealedScriptedTravelId == transitionId) return
+        revealedScriptedTravelId = transitionId
+        playRoomAudio(sessionStore.state.value.hubId, transition.toRoomId)
+    }
+
+    fun onScriptedTravelFinished(transitionId: Long) {
+        val transition = _uiState.value.roomTransition ?: return
+        if (transition.id != transitionId || transition.scriptedStyle == null) return
+        onScriptedRoomRevealed(transitionId)
+        _uiState.update { it.copy(roomTransition = null) }
+        presentArrivalDialogue()
+    }
+
+    private fun presentArrivalDialogue() {
+        val queued = arrivalDialogueNpcs.toList()
+        arrivalDialogueNpcs.clear()
+        queued.forEach(::startImmediateDialogue)
     }
 
     private fun startImmediateDialogue(npcName: String): Boolean {
+        if (pendingScriptedTravel != null || _uiState.value.roomTransition?.scriptedStyle != null) {
+            if (arrivalDialogueNpcs.none { it.equals(npcName, true) }) arrivalDialogueNpcs.addLast(npcName)
+            return true
+        }
         if (activeDialogueSession != null) {
             // A scene already on screen must not queue another copy of itself.
             if (activeDialogueNpcName.equals(npcName, ignoreCase = true)) return true
@@ -5037,6 +5084,9 @@ class ExplorationController(
     /** A load replaces caches; it must not union future progress into an earlier save. */
     private fun synchronizeRestoredWorld(state: GameSessionState) {
         observedRestorationVersion = sessionStore.restorationVersion
+        pendingScriptedTravel = null
+        revealedScriptedTravelId = null
+        arrivalDialogueNpcs.clear()
         roomsById = authoredRoomsById
         restoreRoomStates(state.roomStates)
         initializeRoomStates(authoredRoomsById.values.toList())
@@ -5066,6 +5116,7 @@ class ExplorationController(
         val room = _uiState.value.currentRoom?.id?.let { roomsById[it] }
         _uiState.update { current -> current.copy(
             currentRoom = room, roomState = room?.id?.let { roomStates[it]?.toMap() }.orEmpty(),
+            roomTransition = null, areaEntry = null,
             groundItems = getGroundItemsSnapshot(room?.id), activeDialogue = null, dialogueChoices = emptyList(),
             roomObjectOffer = null, narrationPrompt = null, eventAnnouncement = null,
             tuningPuzzle = null, togglePrompt = null, blockedPrompt = null, shopGreeting = null,
@@ -5547,6 +5598,7 @@ class ExplorationController(
         trim().lowercase(Locale.getDefault()).replace('-', '_').replace(Regex("[^a-z0-9_]"), "")
 
     private fun playVoiceCue(cueId: String?, force: Boolean = false) {
+        if (_uiState.value.roomTransition?.scriptedStyle != null) return
         val normalized = cueId?.trim()?.takeIf { it.isNotEmpty() } ?: return
         val dedupeKey = normalized.lowercase(Locale.getDefault()).replace('-', '_')
         if (!force && dedupeKey == lastDialogueVoiceCue) return

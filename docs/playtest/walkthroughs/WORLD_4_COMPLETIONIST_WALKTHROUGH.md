@@ -221,7 +221,7 @@ The **Slag River** Magma Drone holds the east crossing to **Waste Intake**. Defe
 
 86. From **Service Airlock**, go **west** to **Waste Intake** (`foundry_waste_intake`).
 
-87. At **Waste Intake**, use **project phantom terminal**. Finish Gh0st and Nova’s records conversation. The terminal scene, not a decorative records inspection, credits this task.
+87. At **Waste Intake**, use **project phantom terminal**. Advance through Nova’s final line, “Open it. We face what it says together,” until the **PROJECT PHANTOM opens** message appears. Check that **Ghost in the Machine** has advanced to **Stage 2: Breather** before leaving.
 
 88. From **Waste Intake**, go **west** to **Slag River** (`foundry_slag_river`) → **west** to **Obsidian Shelf** (`foundry_slag_landing`) → **south** to **Cooling Springs** (`foundry_cooling_springs`).
 
@@ -317,7 +317,7 @@ The **Slag River** Magma Drone holds the east crossing to **Waste Intake**. Defe
 
 129. From **The Scrapper's Crucible**, go **south** to **Intake Overlook** (`foundry_intake_overlook`) → **south** to **Waste Intake** (`foundry_waste_intake`) → **west** to **Slag River** (`foundry_slag_river`) → **west** to **Obsidian Shelf** (`foundry_slag_landing`) → **south** to **Cooling Springs** (`foundry_cooling_springs`).
 
-130. At **Cooling Springs**, use **steam pool**. Finish the complete Gh0st/Nova conversation. Confirm **Ghost in the Machine** complete, Gh0st’s **override key** and **Phase Counter** earned, and **The Assembly** active.
+130. At **Cooling Springs**, check that **Ghost in the Machine** is on **Stage 2: Breather**. If it still says **Open the Project Phantom terminal**, go **north** to **Obsidian Shelf** → **east** to **Slag River** → **east** to **Waste Intake** and finish step 87. Once **Breather** is active, use **steam pool** at **Cooling Springs** and finish Gh0st’s conversation. Confirm **Ghost in the Machine** complete, Gh0st’s **override key** and **Phase Counter** earned, and **The Assembly** active.
 
 131. The story moves the crew into **Conveyor Belt** and clears the **Pipe Gallery ↔ Reject Bay** maintenance shutter. This is a deliberate scene transfer; it does not permanently lock you out of the Slag Pits.
 

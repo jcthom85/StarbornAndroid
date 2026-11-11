@@ -124,8 +124,23 @@ data class RoomTransitionUi(
     val fromRoomId: String,
     val toRoomId: String,
     val direction: String,
-    val fromBackgroundImage: String?
+    val fromBackgroundImage: String?,
+    val scriptedStyle: ScriptedTravelStyle? = null,
+    val destinationTitle: String? = null
 )
+
+enum class ScriptedTravelStyle(val durationMs: Int, val departureCue: String, val arrivalCue: String? = null) {
+    PASSAGE(580, "ui_room_move"),
+    LIFT(1150, "sfx_w3_elevator_rise", "sfx_door_airlock_open"),
+    AIRLOCK(950, "sfx_door_airlock_close", "sfx_door_airlock_open"),
+    FOUNDRY(1300, "sfx_door_airlock_open"),
+    LAUNCH(2200, "sfx_w2_astra_launch"),
+    SOURCE(1050, "sfx_w2_chime_gate");
+
+    companion object {
+        fun fromAsset(value: String): ScriptedTravelStyle? = entries.firstOrNull { it.name.equals(value, true) }
+    }
+}
 
 data class EnemyIconUi(
     val spritePath: String,

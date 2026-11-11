@@ -3,6 +3,7 @@ package com.example.starborn.desktop
 import androidx.compose.ui.test.junit4.createComposeRule
 import com.example.starborn.domain.model.GenericAction
 import com.example.starborn.domain.session.GameSessionState
+import com.example.starborn.feature.exploration.viewmodel.ScriptedTravelStyle
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Rule
@@ -197,6 +198,9 @@ class World4NavigationPublicTest {
         val xp = s.sessionStore.state.value.playerXp
         act(s, "w4_mq17_regroup_springs_scene"); finish(s)
         compose.waitUntil(5000) { s.exploration.uiState.value.currentRoom?.id == "foundry_conveyor_belt" }; dismissNarration(s)
+        val transfer = s.exploration.uiState.value.roomTransition
+        assertEquals(ScriptedTravelStyle.FOUNDRY, transfer?.scriptedStyle)
+        assertEquals("foundry_cooling_springs", transfer?.fromRoomId)
         assertEquals(xp + 800, s.sessionStore.state.value.playerXp)
         assertEquals(true, s.sessionStore.state.value.roomStates["foundry_pipe_gallery"]?.get("assembly_route_open"))
         assertTrue("w4_mq18" in s.sessionStore.state.value.activeQuests)

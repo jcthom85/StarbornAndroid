@@ -1,6 +1,9 @@
 package com.example.starborn.desktop
 
 import androidx.compose.ui.test.junit4.createComposeRule
+import com.example.starborn.desktop.ui.DesktopExplorationScreen
+import com.example.starborn.desktop.ui.DesktopStarbornTheme
+import com.example.starborn.domain.audio.AudioCommand
 import com.example.starborn.domain.model.GenericAction
 import com.example.starborn.domain.session.GameSessionState
 import kotlinx.coroutines.runBlocking
@@ -73,15 +76,22 @@ class Worlds456PublicInteractionTest {
     }
 
     @Test fun phantomSceneAndSpringsConversationAwardTheKeyOnlyAfterDialogue() = runWith { s ->
-        restore(s, s.sessionStore.state.value.copy(worldId = "world_4", hubId = "hub_7_slag_pits", roomId = "foundry_waste_intake",
+        restore(s, s.sessionStore.state.value.copy(worldId = "world_4", hubId = "hub_7_slag_pits", roomId = "foundry_cooling_springs",
             activeQuests = setOf("w4_mq17"), completedQuests = emptySet(), completedEvents = emptySet(),
             completedMilestones = emptySet(), questTasksCompleted = emptyMap()))
+        act(s, "w4_mq17_regroup_springs_scene")
+        assertNull(s.exploration.uiState.value.activeDialogue)
+        compose.waitUntil(5000) { s.exploration.uiState.value.narrationPrompt != null }
+        assertTrue(s.exploration.uiState.value.narrationPrompt!!.message.contains("Waste Intake"))
+        dismissNarration(s)
+        restore(s, s.sessionStore.state.value.copy(roomId = "foundry_waste_intake"))
         act(s, "w4_mq17_access_phantom_terminal_scene")
         assertEquals("gh0st_w4_phantom_intro", s.exploration.uiState.value.activeDialogue?.line?.id)
         assertFalse("access_phantom_terminal" in s.sessionStore.state.value.questTasksCompleted["w4_mq17"].orEmpty())
         val seen = mutableListOf<String>(); finish(s, seen)
         assertTrue("nova_w4_phantom_prompt" in seen)
         assertTrue("access_phantom_terminal" in s.sessionStore.state.value.questTasksCompleted["w4_mq17"].orEmpty())
+        assertEquals("cooling_springs", s.sessionStore.state.value.questStageById["w4_mq17"])
         restore(s, s.sessionStore.state.value.copy(roomId = "foundry_cooling_springs"))
         val xp = s.sessionStore.state.value.playerXp
         act(s, "w4_mq17_regroup_springs_scene")
@@ -91,6 +101,33 @@ class Worlds456PublicInteractionTest {
         assertEquals(xp + 800, s.sessionStore.state.value.playerXp)
         assertEquals(1, s.inventoryService.snapshot()["gh0st_override_key"])
         assertTrue("w4_mq17" in s.sessionStore.state.value.completedQuests)
+        assertTrue("gh0st_phase_counter" in s.sessionStore.state.value.unlockedSkills)
+        assertTrue("w4_mq18" in s.sessionStore.state.value.activeQuests)
+    }
+
+    @Test fun foundryDeparturePlaysLaunchThenRevealsTheDockBeforeValesBroadcast() = runWith { s ->
+        restore(s, s.sessionStore.state.value.copy(worldId = "world_4", hubId = "hub_8_assembly_line",
+            roomId = "foundry_escape_catwalk", activeQuests = setOf("w4_mq20"),
+            questTasksCompleted = mapOf("w4_mq20" to setOf("steal_engine", "steal_arrays"))))
+        val audio = s.audioDriver as RecordingAudioDriver
+        audio.commands.clear()
+        act(s, "w4_mq20_escape_launch")
+        compose.waitUntil(5000) { s.exploration.uiState.value.currentRoom?.id == "orbital_executive_dock" }
+        assertNull(s.exploration.uiState.value.activeDialogue)
+        assertFalse(audio.commands.filterIsInstance<AudioCommand.Play>().any { it.cueId == "music_w5_void_explore" })
+
+        compose.setContent {
+            DesktopStarbornTheme(s) {
+                DesktopExplorationScreen(s, {}, {}, {}, {}, {}, {})
+            }
+        }
+        compose.waitUntil(10000) {
+            s.exploration.uiState.value.activeDialogue?.line?.id == "vale_w4_mq20_coup"
+        }
+        assertNull(s.exploration.uiState.value.roomTransition)
+        val played = audio.commands.filterIsInstance<AudioCommand.Play>().map { it.cueId }
+        assertTrue(played.contains("sfx_w2_astra_launch"))
+        assertTrue(played.indexOf("music_w5_void_explore") > played.indexOf("sfx_w2_astra_launch"))
     }
 
     @Test fun bulkheadMistakeLeaveAndReloadPreserveRetryWithoutAwardingProgress() = runWith { s ->

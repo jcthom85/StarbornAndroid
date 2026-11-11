@@ -4405,7 +4405,8 @@
     ],
     "actions": [
       {
-        "type": "board_astra"
+        "type": "board_astra",
+        "travel_transition": "airlock"
       },
       {
         "type": "show_message",
@@ -5331,7 +5332,8 @@
           },
           {
             "type": "warp",
-            "room_id": "spire_laundry_service"
+            "room_id": "spire_laundry_service",
+            "travel_transition": "lift"
           }
         ],
         "elseDo": [
@@ -5543,7 +5545,8 @@
       },
       {
         "type": "warp",
-        "room_id": "spire_laundry_service"
+        "room_id": "spire_laundry_service",
+        "travel_transition": "lift"
       },
       {
         "type": "show_message",
@@ -6314,7 +6317,8 @@
       },
       {
         "type": "warp",
-        "room_id": "foundry_slag_landing"
+        "room_id": "foundry_slag_landing",
+        "travel_transition": "launch"
       },
       {
         "type": "show_message",
@@ -6774,7 +6778,8 @@
       },
       {
         "type": "warp",
-        "room_id": "foundry_conveyor_belt"
+        "room_id": "foundry_conveyor_belt",
+        "travel_transition": "foundry"
       },
       {
         "type": "show_message",
@@ -7712,7 +7717,8 @@
       },
       {
         "type": "warp",
-        "room_id": "orbital_executive_dock"
+        "room_id": "orbital_executive_dock",
+        "travel_transition": "launch"
       },
       {
         "type": "show_message",
@@ -8905,7 +8911,8 @@
       },
       {
         "type": "warp",
-        "room_id": "source_campfire"
+        "room_id": "source_campfire",
+        "travel_transition": "source"
       },
       {
         "type": "start_quest",
@@ -9224,7 +9231,8 @@
       },
       {
         "type": "warp",
-        "room_id": "source_echo_mines"
+        "room_id": "source_echo_mines",
+        "travel_transition": "source"
       },
       {
         "type": "show_message",
@@ -9344,7 +9352,8 @@
       },
       {
         "type": "warp",
-        "room_id": "source_memory_bridge"
+        "room_id": "source_memory_bridge",
+        "travel_transition": "lift"
       },
       {
         "type": "show_message",
@@ -9600,7 +9609,8 @@
       },
       {
         "type": "warp",
-        "room_id": "source_memory_stair"
+        "room_id": "source_memory_stair",
+        "travel_transition": "source"
       },
       {
         "type": "start_quest",
@@ -14565,7 +14575,8 @@
       },
       {
         "type": "warp",
-        "room_id": "spire_vent_output"
+        "room_id": "spire_vent_output",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -14584,7 +14595,8 @@
       },
       {
         "type": "warp",
-        "room_id": "spire_the_static"
+        "room_id": "spire_the_static",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -14603,7 +14615,8 @@
       },
       {
         "type": "warp",
-        "room_id": "spire_night_market"
+        "room_id": "spire_night_market",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -14622,7 +14635,8 @@
       },
       {
         "type": "warp",
-        "room_id": "spire_sewers_landing"
+        "room_id": "spire_sewers_landing",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -14641,7 +14655,8 @@
       },
       {
         "type": "warp",
-        "room_id": "spire_transit_plaza"
+        "room_id": "spire_transit_plaza",
+        "travel_transition": "airlock"
       }
     ],
     "repeatable": true
@@ -14660,7 +14675,8 @@
       },
       {
         "type": "warp",
-        "room_id": "spire_laundry_service"
+        "room_id": "spire_laundry_service",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -14679,7 +14695,8 @@
       },
       {
         "type": "warp",
-        "room_id": "spire_skypark_dome"
+        "room_id": "spire_skypark_dome",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -14698,7 +14715,8 @@
       },
       {
         "type": "warp",
-        "room_id": "spire_exec_lounge_bar"
+        "room_id": "spire_exec_lounge_bar",
+        "travel_transition": "lift"
       }
     ],
     "repeatable": true
@@ -14717,7 +14735,8 @@
       },
       {
         "type": "warp",
-        "room_id": "spire_archive_vault"
+        "room_id": "spire_archive_vault",
+        "travel_transition": "lift"
       }
     ],
     "repeatable": true
@@ -14736,7 +14755,8 @@
       },
       {
         "type": "warp",
-        "room_id": "spire_landing_pad_roof"
+        "room_id": "spire_landing_pad_roof",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -14755,7 +14775,8 @@
       },
       {
         "type": "warp",
-        "room_id": "foundry_slag_landing"
+        "room_id": "foundry_slag_landing",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -14774,7 +14795,8 @@
       },
       {
         "type": "warp",
-        "room_id": "foundry_slag_river"
+        "room_id": "foundry_slag_river",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -14793,7 +14815,8 @@
       },
       {
         "type": "warp",
-        "room_id": "foundry_cooling_springs"
+        "room_id": "foundry_cooling_springs",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -14812,7 +14835,8 @@
       },
       {
         "type": "warp",
-        "room_id": "foundry_waste_intake"
+        "room_id": "foundry_waste_intake",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -14831,7 +14855,8 @@
       },
       {
         "type": "warp",
-        "room_id": "foundry_service_airlock"
+        "room_id": "foundry_service_airlock",
+        "travel_transition": "airlock"
       }
     ],
     "repeatable": true
@@ -14850,7 +14875,8 @@
       },
       {
         "type": "warp",
-        "room_id": "foundry_conveyor_belt"
+        "room_id": "foundry_conveyor_belt",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -14869,7 +14895,8 @@
       },
       {
         "type": "warp",
-        "room_id": "foundry_conditioning_chamber"
+        "room_id": "foundry_conditioning_chamber",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -14888,7 +14915,8 @@
       },
       {
         "type": "warp",
-        "room_id": "foundry_forge_anvil"
+        "room_id": "foundry_forge_anvil",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -14907,7 +14935,8 @@
       },
       {
         "type": "warp",
-        "room_id": "foundry_power_core"
+        "room_id": "foundry_power_core",
+        "travel_transition": "lift"
       }
     ],
     "repeatable": true
@@ -14926,7 +14955,8 @@
       },
       {
         "type": "warp",
-        "room_id": "foundry_titan_dock"
+        "room_id": "foundry_titan_dock",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -14945,7 +14975,8 @@
       },
       {
         "type": "warp",
-        "room_id": "orbital_executive_dock"
+        "room_id": "orbital_executive_dock",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -14964,7 +14995,8 @@
       },
       {
         "type": "warp",
-        "room_id": "orbital_grand_concourse"
+        "room_id": "orbital_grand_concourse",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -14983,7 +15015,8 @@
       },
       {
         "type": "warp",
-        "room_id": "orbital_solarium"
+        "room_id": "orbital_solarium",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -15002,7 +15035,8 @@
       },
       {
         "type": "warp",
-        "room_id": "orbital_security_hub"
+        "room_id": "orbital_security_hub",
+        "travel_transition": "airlock"
       }
     ],
     "repeatable": true
@@ -15021,7 +15055,8 @@
       },
       {
         "type": "warp",
-        "room_id": "orbital_service_shaft"
+        "room_id": "orbital_service_shaft",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -15040,7 +15075,8 @@
       },
       {
         "type": "warp",
-        "room_id": "orbital_server_farm"
+        "room_id": "orbital_server_farm",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -15059,7 +15095,8 @@
       },
       {
         "type": "warp",
-        "room_id": "deep_anchor_chamber"
+        "room_id": "deep_anchor_chamber",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -15078,7 +15115,8 @@
       },
       {
         "type": "warp",
-        "room_id": "deep_throne_room"
+        "room_id": "deep_throne_room",
+        "travel_transition": "lift"
       }
     ],
     "repeatable": true
@@ -15097,7 +15135,8 @@
       },
       {
         "type": "warp",
-        "room_id": "deep_tear"
+        "room_id": "deep_tear",
+        "travel_transition": "source"
       }
     ],
     "repeatable": true
@@ -15116,7 +15155,8 @@
       },
       {
         "type": "warp",
-        "room_id": "source_campfire"
+        "room_id": "source_campfire",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -15135,7 +15175,8 @@
       },
       {
         "type": "warp",
-        "room_id": "source_zeke_nightmare"
+        "room_id": "source_zeke_nightmare",
+        "travel_transition": "airlock"
       }
     ],
     "repeatable": true
@@ -15154,7 +15195,8 @@
       },
       {
         "type": "warp",
-        "room_id": "source_gh0st_nightmare"
+        "room_id": "source_gh0st_nightmare",
+        "travel_transition": "source"
       }
     ],
     "repeatable": true
@@ -15173,7 +15215,8 @@
       },
       {
         "type": "warp",
-        "room_id": "source_orion_nightmare"
+        "room_id": "source_orion_nightmare",
+        "travel_transition": "source"
       }
     ],
     "repeatable": true
@@ -15192,7 +15235,8 @@
       },
       {
         "type": "warp",
-        "room_id": "source_echo_mines"
+        "room_id": "source_echo_mines",
+        "travel_transition": "source"
       }
     ],
     "repeatable": true
@@ -15211,7 +15255,8 @@
       },
       {
         "type": "warp",
-        "room_id": "source_memory_bridge"
+        "room_id": "source_memory_bridge",
+        "travel_transition": "source"
       }
     ],
     "repeatable": true
@@ -15230,7 +15275,8 @@
       },
       {
         "type": "warp",
-        "room_id": "source_memory_stair"
+        "room_id": "source_memory_stair",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -15249,7 +15295,8 @@
       },
       {
         "type": "warp",
-        "room_id": "source_spire_thought"
+        "room_id": "source_spire_thought",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -15268,7 +15315,8 @@
       },
       {
         "type": "warp",
-        "room_id": "source_center"
+        "room_id": "source_center",
+        "travel_transition": "source"
       }
     ],
     "repeatable": true
@@ -16460,7 +16508,8 @@
       },
       {
         "type": "warp",
-        "room_id": "sector9_hangar_bay"
+        "room_id": "sector9_hangar_bay",
+        "travel_transition": "airlock"
       },
       {
         "type": "show_message",
@@ -16671,7 +16720,8 @@
     "actions": [
       {
         "type": "warp",
-        "room_id": "sector9_landing_drop"
+        "room_id": "sector9_landing_drop",
+        "travel_transition": "passage"
       },
       {
         "type": "show_message",
@@ -16700,7 +16750,8 @@
     "actions": [
       {
         "type": "warp",
-        "room_id": "sector9_hangar_bay"
+        "room_id": "sector9_hangar_bay",
+        "travel_transition": "passage"
       }
     ],
     "repeatable": true
@@ -17042,7 +17093,8 @@
       },
       {
         "type": "warp",
-        "room_id": "spire_transit_plaza"
+        "room_id": "spire_transit_plaza",
+        "travel_transition": "lift"
       }
     ]
   },
@@ -17108,6 +17160,36 @@
       {
         "type": "start_dialogue",
         "npc": "line:gh0st_w4_springs_intro"
+      }
+    ]
+  },
+  {
+    "id": "w4_mq17_steam_pool_before_records",
+    "description": "Gh0st points the crew to the Phantom terminal before regrouping.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq17_regroup_springs_scene"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq17"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq17",
+        "task_id": "access_phantom_terminal"
+      },
+      {
+        "type": "in_room",
+        "room_id": "foundry_cooling_springs"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "Steam drifts across the pool. Gh0st stays on his feet. “Before we sit down, I need to see what’s on that Phantom terminal in Waste Intake.”"
       }
     ]
   },

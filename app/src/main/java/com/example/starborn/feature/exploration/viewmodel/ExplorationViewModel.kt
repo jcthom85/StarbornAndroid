@@ -208,6 +208,8 @@ class ExplorationViewModel(
     fun showStatusMessage(message: String) = runtime.showStatusMessage(message)
     fun dismissLevelUpPrompt() = runtime.dismissLevelUpPrompt()
     fun onFadeOverlayFinished(commandId: Long) = runtime.onFadeOverlayFinished(commandId)
+    fun onScriptedRoomRevealed(transitionId: Long) = runtime.onScriptedRoomRevealed(transitionId)
+    fun onScriptedTravelFinished(transitionId: Long) = runtime.onScriptedTravelFinished(transitionId)
     fun advanceCinematic() = runtime.advanceCinematic()
     fun skipCinematic() = runtime.skipCinematic()
     fun dismissAstraNavConsole() = runtime.dismissAstraNavConsole()

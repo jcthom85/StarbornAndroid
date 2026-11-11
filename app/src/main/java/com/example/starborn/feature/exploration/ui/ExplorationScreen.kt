@@ -401,8 +401,9 @@ fun ExplorationScreen(
     val gateReveal = com.example.starborn.ui.exploration.rememberTempleGateReveal(
         uiState.currentRoom?.id, uiState.roomState["temple_open"] == true, uiState.settings.disableScreenshake)
     val gateRevealActive = gateReveal.active
+    val scriptedTravelActive = uiState.roomTransition?.scriptedStyle != null
     val coroutineScope = rememberCoroutineScope()
-    val blockingOverlayActive = uiState.gladeBallAnimating || gateRevealActive || areaEntryActive || environmentalPreview || restRecoveryNotice != null ||
+    val blockingOverlayActive = scriptedTravelActive || uiState.gladeBallAnimating || gateRevealActive || areaEntryActive || environmentalPreview || restRecoveryNotice != null ||
         walkthroughVisible || uiState.isMenuOverlayVisible ||
             uiState.blockedPrompt != null || uiState.roomActionsVisible || uiState.roomObjectOffer != null || uiState.togglePrompt != null ||
             uiState.tuningPuzzle != null ||
@@ -420,7 +421,7 @@ fun ExplorationScreen(
             uiState.isMapLegendVisible ||
             uiState.tutorialState.current != null
     val questDetailBlockingOverlayActive =
-        gateRevealActive || uiState.gladeBallAnimating || restRecoveryNotice != null || walkthroughVisible || uiState.isMenuOverlayVisible ||
+        scriptedTravelActive || gateRevealActive || uiState.gladeBallAnimating || restRecoveryNotice != null || walkthroughVisible || uiState.isMenuOverlayVisible ||
             uiState.blockedPrompt != null || uiState.roomActionsVisible || uiState.roomObjectOffer != null || uiState.togglePrompt != null ||
             uiState.tuningPuzzle != null ||
             uiState.activeDialogue != null ||
@@ -438,13 +439,13 @@ fun ExplorationScreen(
             uiState.tutorialState.current != null
 
     val queuedNotice = explorationNotice(uiState,
-        externalModal = gateRevealActive || areaEntryActive || environmentalPreview || restRecoveryNotice != null || walkthroughVisible ||
+        externalModal = scriptedTravelActive || gateRevealActive || areaEntryActive || environmentalPreview || restRecoveryNotice != null || walkthroughVisible ||
             saveLoadMode != null || showInventoryTargetDialog)
 
-    LaunchedEffect(importantQuestPopupVisible, areaEntryActive, environmentalPreview, restRecoveryNotice, walkthroughVisible,
+    LaunchedEffect(scriptedTravelActive, importantQuestPopupVisible, areaEntryActive, environmentalPreview, restRecoveryNotice, walkthroughVisible,
         saveLoadMode, showInventoryTargetDialog) {
         viewModel.setNoticePresentationBlocked("android-presentation",
-            importantQuestPopupVisible || areaEntryActive || environmentalPreview || restRecoveryNotice != null ||
+            scriptedTravelActive || importantQuestPopupVisible || areaEntryActive || environmentalPreview || restRecoveryNotice != null ||
                 walkthroughVisible || saveLoadMode != null || showInventoryTargetDialog)
     }
     DisposableEffect(viewModel) {
@@ -608,16 +609,28 @@ fun ExplorationScreen(
     }
     val roomTransitionInProgress = roomTransitionActive || roomTransitionProgress.value < 1f
     val outgoingBackgroundPainter = rememberRoomBackgroundPainter(outgoingBackgroundPath)
+    val backdropProgress = if (scriptedTravelActive) {
+        if (roomTransitionProgress.value < .5f) 0f else 1f
+    } else roomTransitionProgress.value
 
     LaunchedEffect(roomTransition?.id) {
         roomTransition ?: return@LaunchedEffect
         roomTransitionActive = true
-        audioCuePlayer.play("ui_room_move")
-        roomTransitionProgress.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(durationMillis = 240, easing = FastOutSlowInEasing)
-        )
-        roomTransitionActive = false
+        try {
+            val style = roomTransition.scriptedStyle
+            if (style == null) {
+                audioCuePlayer.play("ui_room_move")
+                roomTransitionProgress.animateTo(1f, tween(240, easing = FastOutSlowInEasing))
+            } else {
+                com.example.starborn.ui.exploration.animateScriptedTravel(roomTransitionProgress, style,
+                    uiState.settings.disableScreenshake, audioCuePlayer::play) {
+                    viewModel.onScriptedRoomRevealed(roomTransition.id)
+                }
+                viewModel.onScriptedTravelFinished(roomTransition.id)
+            }
+        } finally {
+            roomTransitionActive = false
+        }
     }
     val actionAccentColor = themeColor(uiState.theme?.accent, Color(0xFF80E0FF))
     val fadeCommand = uiState.fadeOverlay
@@ -655,7 +668,7 @@ fun ExplorationScreen(
 
     fun handleExplorationBack(allowTitleExit: Boolean = false) {
         when {
-            areaEntryActive -> Unit
+            scriptedTravelActive || areaEntryActive -> Unit
             restRecoveryNotice != null -> restRecoveryNotice = null
             showExitConfirmDialog -> showExitConfirmDialog = false
             environmentalPreview -> environmentalPreview = false
@@ -751,7 +764,7 @@ fun ExplorationScreen(
             .focusRequester(keyboardFocusRequester)
             .focusable()
             .onKeyEvent { keyEvent ->
-                if (areaEntryActive) return@onKeyEvent true
+                if (scriptedTravelActive || areaEntryActive) return@onKeyEvent true
                 if (uiState.activeDialogue != null || uiState.cinematic != null || importantQuestPopupVisible) return@onKeyEvent false
                 if (keyEvent.type == KeyEventType.KeyDown) {
                     when (keyEvent.key) {
@@ -842,10 +855,10 @@ fun ExplorationScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .graphicsLayer {
-                        val remaining = 1f - roomTransitionProgress.value
+                        val remaining = 1f - backdropProgress
                         translationX = enterX * size.width * 0.12f * remaining
                         translationY = enterY * size.height * 0.12f * remaining
-                        scaleX = 0.99f + (0.01f * roomTransitionProgress.value)
+                        scaleX = 0.99f + (0.01f * backdropProgress)
                         scaleY = scaleX
                     },
                 contentScale = ContentScale.Crop
@@ -867,10 +880,10 @@ fun ExplorationScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .blur(
-                            (6f * (roomTransitionProgress.value / 0.55f).coerceIn(0f, 1f)).dp
+                            (6f * (backdropProgress / 0.55f).coerceIn(0f, 1f)).dp
                         )
                         .graphicsLayer {
-                            val exitProgress = roomTransitionProgress.value
+                            val exitProgress = backdropProgress
                             translationX = exitX * size.width * 0.78f * exitProgress
                             translationY = exitY * size.height * 0.78f * exitProgress
                             alpha = (1f - (exitProgress / 0.82f)).coerceIn(0f, 1f)
@@ -951,7 +964,7 @@ fun ExplorationScreen(
                 modifier = Modifier.fillMaxSize()
             )
         }
-        val effectProgress=roomTransitionProgress.value.coerceIn(0f,1f)
+        val effectProgress=backdropProgress.coerceIn(0f,1f)
         val effectsMoving=outgoingBackgroundPath!=null && effectProgress<1f
         val effectEnterX=when(roomTransition?.direction) { "east"->-1f;"west"->1f;else->0f }
         val effectEnterY=when(roomTransition?.direction) { "north"->1f;"south"->-1f;else->0f }
@@ -1663,6 +1676,10 @@ fun ExplorationScreen(
             )
         }
 
+        roomTransition?.scriptedStyle?.let { style ->
+            com.example.starborn.ui.exploration.ScriptedTravelOverlay(style, roomTransition.destinationTitle,
+                roomTransitionProgress.value, uiState.settings.disableScreenshake, Modifier.zIndex(125f))
+        }
         if (areaEntryActive) {
             AreaEntryOverlay(areaEntry.copy(region = areaEntry.region ?: uiState.currentHub?.title)) {
                 finishedAreaEntryId = areaEntry.id

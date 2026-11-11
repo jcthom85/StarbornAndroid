@@ -93,6 +93,25 @@ class OpeningNarrativeMigrationTest {
         }
     }
 
+    @Test fun phantomRecordsRepairRequiresEvidenceThatTheTerminalWasOpened() {
+        val stuck = GameSessionState(roomId = "foundry_cooling_springs",
+            activeQuests = setOf("w4_mq17"), questStageById = mapOf("w4_mq17" to "phantom_records"))
+        val sceneOnly = stuck.copy(completedEvents = setOf("w4_mq17_access_phantom_terminal_scene"))
+        assertTrue(sceneOnly == sceneOnly.migrateOpeningNarrativeState())
+        for (old in listOf(
+            stuck.copy(completedEvents = setOf("w4_mq17_access_phantom_terminal")),
+            stuck.copy(completedMilestones = setOf("ms_w4_phantom_records_found"))
+        )) {
+            val repaired = old.migrateOpeningNarrativeState()
+            assertTrue(repaired.questTasksCompleted["w4_mq17"] == setOf("access_phantom_terminal"))
+            assertTrue(repaired.questStageById["w4_mq17"] == "cooling_springs")
+            assertTrue("ms_w4_phantom_records_found" in repaired.completedMilestones)
+            assertTrue(repaired.activeQuests == old.activeQuests && repaired.completedQuests == old.completedQuests)
+            assertTrue(repaired.roomId == old.roomId && repaired.inventory == old.inventory && repaired.playerXp == old.playerXp)
+            assertTrue(repaired == repaired.migrateOpeningNarrativeState())
+        }
+    }
+
     @Test fun tideglassRepairUsesEventReceiptsWithoutGrantingRewards() {
         val old = GameSessionState(activeQuests = setOf("w2_sq03"),
             completedEvents = setOf("w2_sq03_visit"), inventory = mapOf("source_resin" to 1), playerXp = 17)

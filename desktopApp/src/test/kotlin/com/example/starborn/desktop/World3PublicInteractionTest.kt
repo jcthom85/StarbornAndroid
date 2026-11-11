@@ -3,6 +3,7 @@ package com.example.starborn.desktop
 import androidx.compose.ui.test.junit4.createComposeRule
 import com.example.starborn.domain.model.GenericAction
 import com.example.starborn.domain.session.GameSessionState
+import com.example.starborn.feature.exploration.viewmodel.ScriptedTravelStyle
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Rule
@@ -110,7 +111,8 @@ class World3PublicInteractionTest {
         compose.waitUntil(10000) { !s.exploration.uiState.value.isLoading }
         dismissNarration(s)
         act(s, "w3_mq15_launch_astra")
-        compose.waitUntil(5000) { s.sessionStore.state.value.roomId == "foundry_slag_landing" }
+        compose.waitUntil(5000) { s.exploration.uiState.value.currentRoom?.id == "foundry_slag_landing" }
+        assertEquals(ScriptedTravelStyle.LAUNCH, s.exploration.uiState.value.roomTransition?.scriptedStyle)
         assertTrue("w3_mq15" in s.sessionStore.state.value.completedQuests)
     }
 
@@ -256,6 +258,7 @@ class World3PublicInteractionTest {
         repeat(2) {
             act(s, "w3_return_to_lower_city")
             compose.waitUntil(5000) { s.exploration.uiState.value.currentRoom?.id == "spire_transit_plaza" }
+            assertEquals(ScriptedTravelStyle.LIFT, s.exploration.uiState.value.roomTransition?.scriptedStyle)
             dismissNarration(s)
             assertEquals("hub_5_lower_city", s.sessionStore.state.value.hubId)
             compose.runOnIdle { s.exploration.travel("north") }

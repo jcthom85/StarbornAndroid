@@ -147,11 +147,26 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
             runtime.onFadeOverlayFinished(fade.id)
         }
     }
-    val moveProgress = remember(ui.roomTransition?.id) { Animatable(if (ui.roomTransition == null) 1f else 0f) }
-    LaunchedEffect(ui.roomTransition?.id) {
-        if (ui.roomTransition != null) {
-            services.audioDriver.executeAll(listOf(com.example.starborn.domain.audio.AudioCommand.Play(com.example.starborn.domain.audio.AudioCueType.UI, "ui_room_move", fadeMs = 0)))
+    val roomTransition = ui.roomTransition
+    val scriptedTravelActive = roomTransition?.scriptedStyle != null
+    val moveProgress = remember(roomTransition?.id) { Animatable(if (roomTransition == null) 1f else 0f) }
+    val backdropProgress = if (scriptedTravelActive) {
+        if (moveProgress.value < .5f) 0f else 1f
+    } else moveProgress.value
+    LaunchedEffect(roomTransition?.id) {
+        roomTransition ?: return@LaunchedEffect
+        val playCue = { cue: String ->
+            services.audioDriver.executeAll(listOf(com.example.starborn.domain.audio.AudioCommand.Play(
+                com.example.starborn.domain.audio.AudioCueType.UI, cue, fadeMs = 0)))
+        }
+        val style = roomTransition.scriptedStyle
+        if (style == null) {
+            playCue("ui_room_move")
             moveProgress.animateTo(1f, tween(300, easing = FastOutSlowInEasing))
+        } else {
+            com.example.starborn.ui.exploration.animateScriptedTravel(moveProgress, style,
+                settings.disableScreenshake, playCue) { runtime.onScriptedRoomRevealed(roomTransition.id) }
+            runtime.onScriptedTravelFinished(roomTransition.id)
         }
     }
     val gateReveal = com.example.starborn.ui.exploration.rememberTempleGateReveal(
@@ -159,10 +174,10 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
     val revealingRoom = ui.fadeOverlay?.let { it.toAlpha < it.fromAlpha } == true
     val sceneBlocked = gateReveal.active || ui.roomObjectOffer != null || restNotice != null || actionsOpen || quickLoadOpen || environmentPreview || menuOpen || shopId != null || controlsOpen || cookingSource != null || ui.activeDialogue != null || ui.cinematic != null || ui.prompt != null || ui.narrationPrompt != null || ui.togglePrompt != null || ui.tuningPuzzle != null || ui.blockedPrompt != null || ui.shopGreeting != null || ui.eventAnnouncement != null || (ui.forceBlackScreen && !revealingRoom) || ui.isAstraNavConsoleVisible || ui.isSimulationDeckVisible || ui.isTapeDeckVisible || ui.showBurgQuestAstraExitDialog || ui.isMilestoneGalleryVisible || ui.isCatchLogVisible || ui.astraFacility != null || ui.isAstraRecreationVisible || ui.levelUpPrompt != null || ui.skillTreeOverlay != null || ui.questDetail != null || ui.partyMemberDetails != null || ui.tutorialState.current != null
     val queuedNotice = explorationNotice(ui, gateReveal.active || restNotice != null || actionsOpen || quickLoadOpen || environmentPreview ||
-        menuOpen || shopId != null || controlsOpen || cookingSource != null || moveProgress.value < 1f)
-    val questPopupVisible = !sceneBlocked && questPresentations.important.isNotEmpty()
-    val blocked = sceneBlocked || questPopupVisible || moveProgress.value < 1f
-    val externalNoticeBlocker = gateReveal.active || questPopupVisible || restNotice != null || actionsOpen || quickLoadOpen || environmentPreview ||
+        menuOpen || shopId != null || controlsOpen || cookingSource != null || scriptedTravelActive || moveProgress.value < 1f)
+    val questPopupVisible = !sceneBlocked && !scriptedTravelActive && questPresentations.important.isNotEmpty()
+    val blocked = sceneBlocked || questPopupVisible || scriptedTravelActive || moveProgress.value < 1f
+    val externalNoticeBlocker = scriptedTravelActive || gateReveal.active || questPopupVisible || restNotice != null || actionsOpen || quickLoadOpen || environmentPreview ||
         menuOpen || shopId != null || controlsOpen || cookingSource != null
     LaunchedEffect(externalNoticeBlocker) { runtime.setNoticePresentationBlocked("desktop-presentation", externalNoticeBlocker) }
     DisposableEffect(runtime) {
@@ -205,7 +220,8 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
             }
         }
     }.onPreviewKeyEvent { event ->
-        if (acknowledgeForeground != null && event.key in listOf(Key.Enter, Key.Spacebar, Key.Escape)) {
+        if (scriptedTravelActive) true
+        else if (acknowledgeForeground != null && event.key in listOf(Key.Enter, Key.Spacebar, Key.Escape)) {
             if (event.type == KeyEventType.KeyUp) acknowledgeForeground()
             true
         } else if (event.type != KeyEventType.KeyDown) false
@@ -256,13 +272,13 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
             com.example.starborn.feature.exploration.presentation.BurgQuestPresentation.commonRoomDescription
             else resolveRoomDescription(room, ui.roomState, ui.completedMilestones, isDark)
         val inlinePlan = remember(description, ui.actions, ui.actionHints, room, ui.roomState) { buildInlineActionPlan(description, ui.actions, ui.actionHints, room, ui.roomState) }
-        DesktopRoomTransitionBackdrop(services, ui, moveProgress.value,
+        DesktopRoomTransitionBackdrop(services, ui, backdropProgress,
             resolveRoomBackground(room, ui.roomState, ui.completedMilestones)) { layout ->
             if (isDark) Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = .85f)))
             val density = androidx.compose.ui.platform.LocalDensity.current
             val geometry = EnvironmentalGeometry(with(density) { maxWidth.toPx() }, with(density) { maxHeight.toPx() },
                 layout.center.left,layout.center.top,layout.center.width,layout.center.height)
-            val progress=moveProgress.value.coerceIn(0f,1f)
+            val progress=backdropProgress.coerceIn(0f,1f)
             val moving=ui.roomTransition?.fromBackgroundImage!=null && progress<1f
             val moveSignX = when (ui.roomTransition?.direction?.lowercase()) { "east" -> 1f; "west" -> -1f; else -> 0f }
             val moveSignY = when (ui.roomTransition?.direction?.lowercase()) { "south" -> 1f; "north" -> -1f; else -> 0f }
@@ -388,7 +404,11 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                 if (greeting.choices.isEmpty()) Button(onClick = runtime::enterPendingShop, modifier = Modifier.align(Alignment.End)) { Text("Enter shop") }
             }
         }
-        ui.activeDialogue?.takeIf { ui.cinematic == null }?.let { dialogue ->
+        roomTransition?.scriptedStyle?.let { style ->
+            com.example.starborn.ui.exploration.ScriptedTravelOverlay(style, roomTransition.destinationTitle,
+                moveProgress.value, settings.disableScreenshake, Modifier.zIndex(125f))
+        }
+        ui.activeDialogue?.takeIf { ui.cinematic == null && !scriptedTravelActive }?.let { dialogue ->
             Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = .62f))
                 .clickable(interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }, indication = null) {}, contentAlignment = Alignment.BottomCenter) {
                 DesktopAuthoredDialogueOverlay(services = services, dialogue = dialogue, choices = ui.dialogueChoices,
