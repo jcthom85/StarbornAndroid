@@ -188,10 +188,18 @@ private fun DesktopContextualControls(services: DesktopAppServices, ui: Explorat
     val runtime = services.exploration
     val remaining = contextualRoomTargets(ui, plan, isDark).filterNot { it is InlineActionTarget.Npc || it is InlineActionTarget.Enemy && ui.visualEnemyParties.isNotEmpty() }
     val serviceActions = if (isDark) emptyList() else ui.actions.filter { it.isRoomServiceAction() || it.isFishingSpot() }.distinctBy { it.actionKey() }
+    val roomRoutes = if (isDark) emptyList() else ui.actions.filterIsInstance<GenericAction>()
+        .filter { it.travelLabel != null }
     val specialExits = ui.availableConnections.filter { (direction, target) -> target != null && direction.lowercase() !in cardinalDirections &&
         ui.actions.filterIsInstance<TravelAction>().none { it.direction.equals(direction, true) } }
-    if (remaining.isEmpty() && serviceActions.isEmpty() && (isDark || ui.groundItems.isEmpty()) && specialExits.isEmpty() && (isDark || ui.npcs.isEmpty()) && !ui.canReturnToHub) return
+    if (remaining.isEmpty() && roomRoutes.isEmpty() && serviceActions.isEmpty() && (isDark || ui.groundItems.isEmpty()) && specialExits.isEmpty() && (isDark || ui.npcs.isEmpty()) && !ui.canReturnToHub) return
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        val routeAccent = ui.theme?.accent?.takeIf { it.size >= 3 }
+            ?.let { Color(it[0], it[1], it[2]) } ?: PanelCyan
+        roomRoutes.forEach { action ->
+            DesktopOverworldGateway(ui, blocked, { runtime.inspectRoomAction(action) },
+                routeLabel = action.travelLabel, accent = routeAccent)
+        }
         if (ui.canReturnToHub) DesktopOverworldGateway(ui, blocked, runtime::requestReturnToHub)
         if (!isDark && ui.npcs.isNotEmpty()) {
             val npcScroll = rememberScrollState()
@@ -381,19 +389,21 @@ private fun DesktopNpcPresenceChip(services: DesktopAppServices, ui: Exploration
 }
 
 @Composable
-private fun DesktopOverworldGateway(ui: ExplorationUiState, blocked: Boolean, onOpen: () -> Unit) {
+private fun DesktopOverworldGateway(ui: ExplorationUiState, blocked: Boolean, onOpen: () -> Unit,
+    routeLabel: String? = null, accent: Color = PanelCyan
+) {
     val disembarking = ui.currentRoom?.id == com.example.starborn.domain.session.AstraTravel.ENTRY_ROOM_ID
-    val tooltipText = if (disembarking) "Disembark from ship and return to surface" else "Travel to the regional hubs"
+    val tooltipText = routeLabel ?: if (disembarking) "Disembark from ship and return to surface" else "Travel to the regional hubs"
     DesktopTooltip(tooltipText) {
         Surface(onClick = onOpen, enabled = !blocked, modifier = Modifier.fillMaxWidth().explorationFeedback(!blocked).testTag("overworld-gateway")
-            .semantics { contentDescription = if (disembarking) "Disembark from the Astra" else "Exit to Overworld" },
-            color = if (LocalExplorationSettings.current.highContrastMode) Color.Black else Color(0xE6060F17), shape = RoundedCornerShape(10.dp), border = BorderStroke(1.dp, if (LocalExplorationSettings.current.highContrastMode) Color.White else PanelCyan.copy(alpha = .35f))) {
-            Row(Modifier.background(Brush.horizontalGradient(listOf(PanelCyan.copy(alpha = .10f), Color.Transparent)))
+            .semantics { contentDescription = routeLabel ?: if (disembarking) "Disembark from the Astra" else "Exit to Overworld" },
+            color = if (LocalExplorationSettings.current.highContrastMode) Color.Black else Color(0xE6060F17), shape = RoundedCornerShape(10.dp), border = BorderStroke(1.dp, if (LocalExplorationSettings.current.highContrastMode) Color.White else accent.copy(alpha = .35f))) {
+            Row(Modifier.background(Brush.horizontalGradient(listOf(accent.copy(alpha = .10f), Color.Transparent)))
                 .padding(14.dp), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.Map, null, Modifier.size(26.dp), tint = PanelCyan)
-                Text(if (disembarking) "DISEMBARK" else "OVERWORLD MAP", Modifier.weight(1f), color = Color.White,
+                Icon(Icons.Default.Map, null, Modifier.size(26.dp), tint = accent)
+                Text(routeLabel ?: if (disembarking) "DISEMBARK" else "OVERWORLD MAP", Modifier.weight(1f), color = Color.White,
                     style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
-                Text("TRAVEL", color = PanelCyan, style = MaterialTheme.typography.labelSmall)
+                Text("TRAVEL", color = accent, style = MaterialTheme.typography.labelSmall)
             }
         }
     }

@@ -117,7 +117,14 @@ class Hub3CriticalFlowTest {
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq12_hack_blueprints"))
         assertTrue(harness.store.state.value.questTasksCompleted["w3_mq12"].orEmpty().contains("hack_blueprints"))
 
-        // 7. Assemble at planning table
+        // Opening or reopening the table only reviews the route.
+        repeat(2) {
+            harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq12_review_plan"))
+            assertTrue("Review must leave The Plan active", "w3_mq12" in harness.store.state.value.activeQuests)
+            assertTrue("Review must not start the heist", "w3_mq13" !in harness.store.state.value.activeQuests)
+        }
+
+        // Explicit confirmation commits the heist.
         harness.events.handleTrigger("player_action", EventPayload.Action("w3_mq12_assemble_planning"))
         assertTrue("Heist departure must explain actual travel", harness.messages.any { it.contains("crew rides the service lift") })
         state = harness.store.state.value

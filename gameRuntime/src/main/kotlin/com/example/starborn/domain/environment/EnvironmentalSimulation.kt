@@ -29,6 +29,7 @@ class EnvironmentalSceneMemory {
     val sceneCount get()=scenes.size
 }
 class EnvironmentalEffectSimulation(private val particleCap: Int = 240) {
+    private val continuousRainStyles = setOf("rain", "storm")
     var budget=particleCap
         set(value) { field=value.coerceIn(0,particleCap) }
     val layers=mutableListOf<EnvironmentalLayerFrame>()
@@ -82,12 +83,22 @@ class EnvironmentalEffectSimulation(private val particleCap: Int = 240) {
             val horizontalScale = geometry.imageHeight / geometry.spaceWidth(e.space).coerceAtLeast(1f)
             val verticalScale = geometry.imageHeight / geometry.spaceHeight(e.space).coerceAtLeast(1f)
             val step = dt * e.speedScale
+            val continuousRain = p.primitive == "precipitation" && p.style in continuousRainStyles
             for(i in 0 until wantedCount) {
                 val particle=f.particles[i]
-                if(i>=f.count || particle.life<=0f) spawn(f,particle,!f.initialized)
-                particle.life -= step
+                if (i >= f.count || (!continuousRain && particle.life <= 0f)) {
+                    spawn(f, particle, continuousRain || !f.initialized)
+                }
+                if (!continuousRain) particle.life -= step
                 particle.x += particle.vx * step * horizontalScale
                 particle.y += particle.vy * step * verticalScale
+                if (continuousRain) {
+                    // Recycle beyond the visible region so each streak keeps its speed and brightness.
+                    particle.x = wrapRainCoordinate(particle.x, e.region.x, e.region.width)
+                    particle.y = wrapRainCoordinate(particle.y, e.region.y, e.region.height)
+                    particle.alpha = 1f
+                    continue
+                }
                 if(p.primitive=="motes" || p.primitive=="field" || p.primitive=="haze") {
                     particle.x+=sin(f.time*.45f+particle.phase)*dt*.002f*e.speedScale
                 }
@@ -98,6 +109,12 @@ class EnvironmentalEffectSimulation(private val particleCap: Int = 240) {
             f.count=wantedCount;activeParticles+=wantedCount;f.initialized=true
         }
     }
+    private fun wrapRainCoordinate(value: Float, start: Float, extent: Float): Float {
+        val lower = start - .12f
+        val span = extent + .24f
+        return if (value < lower || value >= lower + span) lower + (value - lower).mod(span) else value
+    }
+
     private fun spawn(f:EnvironmentalLayerFrame,particle:EnvironmentalParticle,warm:Boolean) {
         val e=f.effect;val p=e.preset;val random=f.random
         particle.lifetime=f.between(p.lifetime);particle.life=particle.lifetime*(if(warm) .1f+random.nextFloat()*.85f else 1f)

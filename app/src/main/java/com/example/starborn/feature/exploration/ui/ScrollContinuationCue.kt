@@ -36,19 +36,19 @@ fun ScrollContinuationCue(
     val transition = rememberInfiniteTransition(label = "scrollContinuation")
     val pulse by transition.animateFloat(.65f, 1f,
         infiniteRepeatable(tween(850, easing = FastOutSlowInEasing), RepeatMode.Reverse), label = "scrollCueGlow")
-    Box(modifier.fillMaxWidth().height(48.dp)
+    Box(modifier.fillMaxWidth().height(28.dp)
         .background(Brush.verticalGradient(listOf(Color.Transparent, Color(0xF0061018)))),
         contentAlignment = Alignment.BottomCenter) {
         Surface(onClick = onClick, shape = RoundedCornerShape(999.dp),
             color = Color(0xFF091725), border = BorderStroke(1.dp, accentColor.copy(alpha = pulse)),
             shadowElevation = 8.dp,
-            modifier = Modifier.heightIn(min = 48.dp).maestroTag(tag)
+            modifier = Modifier.heightIn(min = 28.dp).maestroTag(tag)
                 .semantics { contentDescription = description }) {
-            Row(Modifier.padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("MORE", style = MaterialTheme.typography.labelMedium, color = accentColor)
+            Row(Modifier.padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+                Text("MORE", style = MaterialTheme.typography.labelSmall, color = accentColor)
                 Icon(Icons.Default.KeyboardDoubleArrowDown, null, tint = accentColor,
-                    modifier = Modifier.size(22.dp).graphicsLayer { translationY = (pulse - .65f) * 8.dp.toPx() })
+                    modifier = Modifier.size(16.dp).graphicsLayer { translationY = (pulse - .65f) * 8.dp.toPx() })
             }
         }
     }

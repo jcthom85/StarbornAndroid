@@ -70,7 +70,9 @@ class World4NavigationPublicTest {
             activeQuests = emptySet(), completedQuests = (16..20).map { "w4_mq$it" }.toSet() + (16..20).map { "w4_sq$it" } + "w4_sq_crucible",
             completedEvents = emptySet(), completedMilestones = setOf("ms_w4_mq17_complete"), questTasksCompleted = emptyMap(),
             roomStates = mapOf("foundry_pipe_gallery" to mapOf("assembly_route_open" to true),
-                "foundry_slag_stepping_stones" to mapOf("slag_bridge_solidified" to true))))
+                "foundry_slag_stepping_stones" to mapOf("slag_bridge_solidified" to true),
+                "foundry_slag_river" to mapOf("encounter_cleared:magma_drone" to true),
+                "foundry_titan_dock" to mapOf("encounter_cleared:titan_walker_boss" to true))))
         val visited = mutableSetOf<String>(); val traversed = mutableSetOf<Pair<String, String>>()
         val reverse = mapOf("north" to "south", "south" to "north", "east" to "west", "west" to "east")
         fun walk(id: String) {
@@ -87,6 +89,29 @@ class World4NavigationPublicTest {
         assertEquals(74, visited.size); assertEquals(ids, visited)
         assertEquals(rooms.values.sumOf { it.connections.size }, traversed.size)
         assertEquals("foundry_slag_landing", s.sessionStore.state.value.roomId)
+    }
+
+    @Test fun slagDroneBlocksTheCrossingUntilVictoryAndKeepsItOpenAfterReload() = runWith { s ->
+        restore(s, s.sessionStore.state.value.copy(
+            worldId = "world_4", hubId = "hub_7_slag_pits", roomId = "foundry_slag_river",
+            activeQuests = setOf("w4_mq16"), unlockedExits = emptySet(), roomStates = emptyMap()
+        ))
+        compose.runOnIdle { s.exploration.travel("east") }
+        compose.waitUntil(5000) { s.exploration.uiState.value.blockedPrompt != null }
+        assertEquals("foundry_slag_river", s.sessionStore.state.value.roomId)
+        go(s, "west", "foundry_slag_landing")
+        go(s, "east", "foundry_slag_river")
+        compose.runOnIdle {
+            s.exploration.onCombatVictory(com.example.starborn.navigation.CombatResultPayload(
+                outcome = com.example.starborn.navigation.CombatResultPayload.Outcome.VICTORY,
+                enemyIds = listOf("magma_drone"), roomId = "foundry_slag_river"
+            ))
+        }
+        val cleared = s.sessionStore.state.value
+        assertEquals(true, cleared.roomStates["foundry_slag_river"]?.get("encounter_cleared:magma_drone"))
+        restore(s, cleared)
+        go(s, "east", "foundry_waste_intake")
+        go(s, "west", "foundry_slag_river")
     }
 
     @Test fun springsStoryOpensPermanentWalkbackAndLegacyReloadKeepsItWithoutAnotherReward() = runWith { s ->

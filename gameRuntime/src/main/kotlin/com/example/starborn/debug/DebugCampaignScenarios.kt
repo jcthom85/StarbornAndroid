@@ -340,7 +340,7 @@ object DebugCampaignScenarios {
             listOf("Inspect the crime-scene barrier to start the investigation.",
                 "Inspect the drink dispenser log and security terminal in the salon.",
                 "Move north to the Syndicate Booth and inspect the crystal glass, comms rig, and datapad.",
-                "Confront Director Vance with the contradictory timestamp log to extract his confession."),
+                "Confront Director Sorrell with the contradictory timestamp log to extract his confession."),
             listOf("Clues register in the journal and update quest tasks.",
                 "Dialogue confrontation cleanly solves the mystery and lifts the lockdown.",
                 "Awards Cyano-Coolant Injector and Skyline Master Passkey."),

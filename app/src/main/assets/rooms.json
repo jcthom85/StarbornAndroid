@@ -72,6 +72,8 @@
       {
         "name": "broken Hyperion cabinet",
         "type": "arcade_discovery",
+        "discovery_cabinet_id": "deep_mine_asteroid_drill",
+        "discovered_message": "You have salvaged this cabinet’s unique component and copied its repair schematic. Check your field kit for repair requirements. Install the repaired cabinet aboard the Astra to play.",
         "hide_when_milestone": "ms_arcade_deep_mine_discovered",
         "condition_unmet_message": "A dead pre-Dominion arcade cabinet leans beneath a miner's coat. One amber diagnostic blinks behind the cracked glass."
       },
@@ -116,6 +118,7 @@
     "actions": [
       {
         "name": "thermal cooker",
+        "activity_title": "Ration Sink Galley",
         "type": "rest_stop",
         "cook_source": "Thermal Cooker",
         "message": "The industrial cooker hums with steady heat. Cook Rourke keeps the regulator low, but there's enough burner space to prepare a meal."
@@ -511,6 +514,7 @@
       },
       {
         "name": "sleeping shelf",
+        "activity_title": "Nova’s Sleeping Shelf",
         "type": "rest_stop",
         "show_when_state": "light_on",
         "rest_event": "w1_rest_nova_bunk",
@@ -1252,6 +1256,8 @@
       },
       {
         "name": "toxic blockage",
+        "guarded_by": ["siren_skimmer"],
+        "guarded_message": "The two Skimmers circle the intake grille. Defeat them before reaching in to clear the toxic blockage.",
         "type": "generic",
         "action_event": "w1_sq02_clear_toxic_blockage",
         "condition_unmet_message": "The toxic blockage pulses in the redirected updraft, close enough to clear if the airflow is stable."
@@ -2189,6 +2195,7 @@
         "acoustic_bulwark"
       ]
     ],
+    "enemy_flavor": {"acoustic_bulwark": "The damaged Bulwark guards the post with exposed cabling. Defeating this unit guarantees one Wiring Bundle for Field Kit repairs and fishing gear."},
     "connections": {
       "west": "admin_window"
     },
@@ -2219,7 +2226,8 @@
         "enemy_id": "acoustic_bulwark",
         "hp": 30,
         "vitality": 0,
-        "stability": 12
+        "stability": 12,
+        "extra_drops": [{"id": "wiring_bundle", "chance": 1.0, "quantity": 1}]
       }
     ]
   },
@@ -3510,6 +3518,7 @@
       },
       {
         "name": "service recess",
+        "activity_title": "Cargo Lift Recess",
         "type": "rest_stop",
         "message": "While the lift pressure rebuilds, Nova ducks into the shielded service recess and uses its emergency dressings to patch up the crew. The pause lasts only until the pressure gauge turns green."
       }
@@ -3993,6 +4002,7 @@
         "name": "astra",
         "type": "generic",
         "condition_unmet_message": "The Astra boarding ramp hums softly, welcoming the crew aboard.",
+        "travel_label": "Board the Astra",
         "action_event": "source_board_astra"
       }
     ]
@@ -4197,7 +4207,7 @@
       }
     ],
     "special_exits": {
-      "down": "Take the platform stairs to Transit Plaza"
+      "down": "Stairs to Transit Plaza"
     }
   },
   {
@@ -4382,7 +4392,7 @@
       {
         "name": "planning table",
         "type": "generic",
-        "action_event": "w3_mq12_assemble_planning",
+        "action_event": "w3_mq12_review_plan",
         "condition_unmet_message": "The planning table waits for every stolen thread before Nova can turn nervous people into assigned roles.",
         "hide_when_event_completed": "w3_mq12_assemble_planning"
       }
@@ -4660,12 +4670,13 @@
       {
         "name": "elevator controls",
         "type": "generic",
+        "travel_label": "Freight elevator to Laundry Service",
         "action_event": "w3_mq12_use_elevator",
         "condition_unmet_message": "The elevator controls require high-level Spire authorization, which is just another way to say the city decides who gets to rise."
       }
     ],
     "special_exits": {
-      "up": "Climb the platform stairs to Underrail"
+      "up": "Stairs to Underrail"
     }
   },
   {
@@ -4988,6 +4999,7 @@
         "name": "lift panel",
         "type": "generic",
         "condition_unmet_message": "The service-lift panel needs the freight clearance established by the heist plan.",
+        "travel_label": "City lift to Transit Plaza",
         "action_event": "w3_return_to_lower_city",
         "requires_milestones": [
           "ms_w3_mq12_complete"
@@ -5037,7 +5049,7 @@
       }
     ],
     "special_exits": {
-      "down": "Ride the inspection lift to the Archive"
+      "down": "Inspection lift to Archive"
     }
   },
   {
@@ -5296,7 +5308,7 @@
   {
     "id": "spire_exec_lounge_bar",
     "env": "neon",
-    "weather": "rain",
+    "weather": null,
     "title": "Exec Lounge",
     "background_image": "images/rooms/world_3/spire_exec_lounge_bar.webp",
     "description": "The Exec Lounge floats on a grav-platform above a silent atrium. A private safe hides behind sculpture, a concierge credential mirror flashes beside the terminal, and every booth looks designed for blackmail. A VIP vector arcade cabinet stands behind the velvet curtain.",
@@ -5340,6 +5352,8 @@
       {
         "name": "VIP vector arcade cabinet",
         "type": "arcade_discovery",
+        "discovery_cabinet_id": "spire_infiltrator",
+        "discovered_message": "You have salvaged this cabinet’s unique component and copied its repair schematic. Check your field kit for repair requirements. Install the repaired cabinet aboard the Astra to play.",
         "hide_when_milestone": "ms_arcade_cabinet_03_repaired",
         "condition_unmet_message": "A sleek chrome arcade console sits behind the velvet curtain. An overclocked mainframe chip hums with high-speed ICE cycles."
       }
@@ -5425,7 +5439,7 @@
       "corporate_assassin": "A corporate assassin flickers between shard stacks, waiting for the alarm to justify murder."
     },
     "special_exits": {
-      "up": "Ride the inspection lift to Service Lift"
+      "up": "Inspection lift to Service Lift"
     }
   },
   {
@@ -5622,6 +5636,7 @@
       {
         "name": "launch window",
         "type": "generic",
+        "travel_label": "Depart for the Foundry",
         "action_event": "w3_mq15_launch_astra",
         "condition_unmet_message": "Departure requires defeating the Administrator and recording the local security-curtain window with the Lens.",
         "hide_when_event_completed": "w3_mq15_launch_astra"
@@ -5640,7 +5655,7 @@
     "enemy_flavor": {
       "aero_drone": "Aero drones knife through the rain of red warning light, their stun emitters searching for a clean angle.",
       "heavy_mech": "A heavy mech plants itself between the crew and the Astra, vents glowing hot enough to warp the landing paint.",
-      "administrator_boss": "The Administrator descends in a polished security frame, its voice still gentle while the roof guns arm."
+      "administrator_boss": "The Administrator descends in its command frame with an Aero Drone escort. The roof guns train on the Astra. Defeat the Administrator to break the Spire’s lockdown and clear your escape."
     }
   },
   {
@@ -5689,6 +5704,7 @@
         "name": "compliance bulletin",
         "type": "generic",
         "action_event": "w4_compliance_bulletin",
+        "inspect_after_completion": true,
         "condition_unmet_message": "The factory PA hisses through layers of heat distortion."
       }
     ]
@@ -5699,7 +5715,7 @@
     "weather": "dust",
     "title": "Obsidian Overlook",
     "background_image": "images/rooms/world_4/foundry_obsidian_overlook.webp",
-    "description": "A cracked overlook juts above the Foundry basin. The whole sector glows below: slag rivers, intake pistons, and the factory spine Vale built to feed something larger than war. Shield window telemetry flickers on the crew's flight display.",
+    "description": "A cracked overlook juts above the Foundry basin. The whole sector glows below: slag rivers, intake pistons, and the factory spine Vale designed to supply Thorne’s Harmony project. Shield window telemetry flickers on the crew's flight display.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -5734,6 +5750,142 @@
   },
   {
     "id": "foundry_slag_river",
+    "environmental_effects": [
+      {
+        "id": "falling_ash",
+        "preset": "legacy.dust",
+        "intensity": 0.2
+      },
+      {
+        "id": "magma_channel_glow",
+        "preset": "lighting.magma_glow",
+        "emitters": [
+          {
+            "x": 0.2,
+            "y": 0.6,
+            "radius": 0
+          },
+          {
+            "x": 0.8,
+            "y": 0.6,
+            "radius": 0
+          },
+          {
+            "x": 0.5,
+            "y": 0.35,
+            "radius": 0
+          }
+        ],
+        "light_surfaces": [
+          {
+            "points": [
+              {
+                "x": 0,
+                "y": 0.74
+              },
+              {
+                "x": 0.15,
+                "y": 0.67
+              },
+              {
+                "x": 0.31,
+                "y": 0.58
+              },
+              {
+                "x": 0.39,
+                "y": 0.55
+              },
+              {
+                "x": 0.35,
+                "y": 0.5
+              },
+              {
+                "x": 0.26,
+                "y": 0.52
+              },
+              {
+                "x": 0.17,
+                "y": 0.58
+              },
+              {
+                "x": 0,
+                "y": 0.66
+              }
+            ],
+            "source": 0,
+            "strength": 0.85
+          },
+          {
+            "points": [
+              {
+                "x": 1,
+                "y": 0.78
+              },
+              {
+                "x": 0.84,
+                "y": 0.7
+              },
+              {
+                "x": 0.71,
+                "y": 0.59
+              },
+              {
+                "x": 0.63,
+                "y": 0.56
+              },
+              {
+                "x": 0.65,
+                "y": 0.51
+              },
+              {
+                "x": 0.75,
+                "y": 0.54
+              },
+              {
+                "x": 0.86,
+                "y": 0.61
+              },
+              {
+                "x": 1,
+                "y": 0.67
+              }
+            ],
+            "source": 1,
+            "strength": 0.85
+          },
+          {
+            "points": [
+              {
+                "x": 0.37,
+                "y": 0.44
+              },
+              {
+                "x": 0.46,
+                "y": 0.36
+              },
+              {
+                "x": 0.53,
+                "y": 0.31
+              },
+              {
+                "x": 0.58,
+                "y": 0.32
+              },
+              {
+                "x": 0.53,
+                "y": 0.4
+              },
+              {
+                "x": 0.48,
+                "y": 0.47
+              }
+            ],
+            "source": 2,
+            "strength": 0.85
+          }
+        ]
+      }
+    ],
     "env": "foundry",
     "weather": "dust",
     "title": "Slag River",
@@ -5744,6 +5896,12 @@
     "enemies": [
       "magma_drone"
     ],
+    "blocked_directions": {
+      "east": {
+        "type": "enemy",
+        "message_locked": "A Magma Drone holds the east crossing into Waste Intake. Defeat it to open the crossing. The route west to the landing shelf is clear."
+      }
+    },
     "connections": {
       "west": "foundry_slag_landing",
       "north": "foundry_slag_stepping_stones",
@@ -5774,7 +5932,8 @@
         "name": "slag crossing",
         "type": "generic",
         "action_event": "w4_mq16_cross_slag_river",
-        "condition_unmet_message": "The crossing teaches respect fast: watch the flare rhythm or burn."
+        "inspect_after_completion": true,
+        "condition_unmet_message": "Watch the breaks between flares. Secure the Astra at Obsidian Shelf before the crew attempts the crossing."
       },
       {
         "name": "ammo crate alpha",
@@ -5789,6 +5948,286 @@
   },
   {
     "id": "foundry_slag_stepping_stones",
+    "environmental_effects": [
+      {
+        "id": "falling_ash",
+        "preset": "legacy.dust",
+        "intensity": 0.2
+      },
+      {
+        "id": "magma_channel_glow",
+        "preset": "lighting.magma_glow",
+        "emitters": [
+          {
+            "x": 0.2,
+            "y": 0.6,
+            "radius": 0
+          },
+          {
+            "x": 0.8,
+            "y": 0.6,
+            "radius": 0
+          },
+          {
+            "x": 0.5,
+            "y": 0.35,
+            "radius": 0
+          }
+        ],
+        "light_surfaces": [
+          {
+            "points": [
+              {
+                "x": 0,
+                "y": 0.69
+              },
+              {
+                "x": 0.13,
+                "y": 0.58
+              },
+              {
+                "x": 0.28,
+                "y": 0.48
+              },
+              {
+                "x": 0.37,
+                "y": 0.39
+              },
+              {
+                "x": 0.44,
+                "y": 0.29
+              },
+              {
+                "x": 0.34,
+                "y": 0.32
+              },
+              {
+                "x": 0.24,
+                "y": 0.4
+              },
+              {
+                "x": 0.1,
+                "y": 0.47
+              },
+              {
+                "x": 0,
+                "y": 0.53
+              }
+            ],
+            "source": 0,
+            "strength": 0.85
+          },
+          {
+            "points": [
+              {
+                "x": 1,
+                "y": 0.74
+              },
+              {
+                "x": 0.86,
+                "y": 0.61
+              },
+              {
+                "x": 0.76,
+                "y": 0.48
+              },
+              {
+                "x": 0.63,
+                "y": 0.35
+              },
+              {
+                "x": 0.57,
+                "y": 0.29
+              },
+              {
+                "x": 0.68,
+                "y": 0.32
+              },
+              {
+                "x": 0.85,
+                "y": 0.42
+              },
+              {
+                "x": 1,
+                "y": 0.52
+              }
+            ],
+            "source": 1,
+            "strength": 0.85
+          },
+          {
+            "points": [
+              {
+                "x": 0.38,
+                "y": 0.3
+              },
+              {
+                "x": 0.46,
+                "y": 0.23
+              },
+              {
+                "x": 0.52,
+                "y": 0.19
+              },
+              {
+                "x": 0.59,
+                "y": 0.22
+              },
+              {
+                "x": 0.57,
+                "y": 0.27
+              },
+              {
+                "x": 0.47,
+                "y": 0.32
+              }
+            ],
+            "source": 2,
+            "strength": 0.85
+          }
+        ],
+        "forbidden_state": {
+          "slag_bridge_solidified": true
+        }
+      },
+      {
+        "id": "magma_channel_cooled",
+        "preset": "lighting.magma_glow",
+        "emitters": [
+          {
+            "x": 0.2,
+            "y": 0.6,
+            "radius": 0
+          },
+          {
+            "x": 0.8,
+            "y": 0.6,
+            "radius": 0
+          },
+          {
+            "x": 0.5,
+            "y": 0.35,
+            "radius": 0
+          }
+        ],
+        "light_surfaces": [
+          {
+            "points": [
+              {
+                "x": 0,
+                "y": 0.69
+              },
+              {
+                "x": 0.13,
+                "y": 0.58
+              },
+              {
+                "x": 0.28,
+                "y": 0.48
+              },
+              {
+                "x": 0.37,
+                "y": 0.39
+              },
+              {
+                "x": 0.44,
+                "y": 0.29
+              },
+              {
+                "x": 0.34,
+                "y": 0.32
+              },
+              {
+                "x": 0.24,
+                "y": 0.4
+              },
+              {
+                "x": 0.1,
+                "y": 0.47
+              },
+              {
+                "x": 0,
+                "y": 0.53
+              }
+            ],
+            "source": 0,
+            "strength": 0.85
+          },
+          {
+            "points": [
+              {
+                "x": 1,
+                "y": 0.74
+              },
+              {
+                "x": 0.86,
+                "y": 0.61
+              },
+              {
+                "x": 0.76,
+                "y": 0.48
+              },
+              {
+                "x": 0.63,
+                "y": 0.35
+              },
+              {
+                "x": 0.57,
+                "y": 0.29
+              },
+              {
+                "x": 0.68,
+                "y": 0.32
+              },
+              {
+                "x": 0.85,
+                "y": 0.42
+              },
+              {
+                "x": 1,
+                "y": 0.52
+              }
+            ],
+            "source": 1,
+            "strength": 0.85
+          },
+          {
+            "points": [
+              {
+                "x": 0.38,
+                "y": 0.3
+              },
+              {
+                "x": 0.46,
+                "y": 0.23
+              },
+              {
+                "x": 0.52,
+                "y": 0.19
+              },
+              {
+                "x": 0.59,
+                "y": 0.22
+              },
+              {
+                "x": 0.57,
+                "y": 0.27
+              },
+              {
+                "x": 0.47,
+                "y": 0.32
+              }
+            ],
+            "source": 2,
+            "strength": 0.85
+          }
+        ],
+        "intensity": 0.12,
+        "requires_state": {
+          "slag_bridge_solidified": true
+        }
+      }
+    ],
     "env": "foundry",
     "weather": "dust",
     "title": "Stepping Stones",
@@ -5846,7 +6285,8 @@
         "name": "flare rhythm",
         "type": "generic",
         "action_event": "w4_mq16_cross_slag_river",
-        "condition_unmet_message": "The flare rhythm leaves a narrow crossing window if Nova waits instead of rushing."
+        "inspect_after_completion": true,
+        "condition_unmet_message": "The flares leave a narrow crossing window. Secure the Astra at Obsidian Shelf before the crew attempts the crossing."
       }
     ],
     "enemy_flavor": {
@@ -6154,6 +6594,7 @@
         "name": "worker maintenance ping",
         "type": "generic",
         "action_event": "w4_sq17_trace_ping",
+        "inspect_after_completion": true,
         "condition_unmet_message": "A weak maintenance ping repeats beneath the intake alarms."
       },
       {
@@ -6501,11 +6942,14 @@
         "name": "rejected droid",
         "type": "generic",
         "action_event": "w4_sq19_read_rejection_codes",
+        "inspect_after_completion": true,
         "condition_unmet_message": "A rejected droid twitches beside a bin of defective units."
       },
       {
         "name": "scorched smelter console",
         "type": "arcade_discovery",
+        "discovery_cabinet_id": "slag_catcher",
+        "discovered_message": "You have salvaged this cabinet’s unique component and copied its repair schematic. Check your field kit for repair requirements. Install the repaired cabinet aboard the Astra to play.",
         "hide_when_milestone": "ms_arcade_cabinet_04_repaired",
         "condition_unmet_message": "A heavy ceramic arcade console sits amidst discarded machine scrap. A thermite logic gate still holds shift records."
       }
@@ -6724,6 +7168,7 @@
         "name": "hazard cycle map",
         "type": "generic",
         "action_event": "w4_sq20_map_hazards",
+        "inspect_after_completion": true,
         "condition_unmet_message": "The heat-cycle sequence repeats behind the Forge controls."
       },
       {
@@ -6737,12 +7182,14 @@
       },
       {
         "name": "smelter break station",
+        "activity_title": "Smelter Break Kitchen",
         "type": "rest_stop",
         "cook_source": "Thermal Cooker",
         "message": "A maintenance thermal lunch station still holds steady heat to simmer restorative broths."
       },
       {
         "name": "control alcove cot",
+        "activity_title": "The Control Alcove Cot",
         "type": "rest_stop",
         "rest_event": "w4_camp_forge_alcove",
         "message": "A reinforced alcove offers respite from the crushing cadence of the forge."
@@ -6826,6 +7273,19 @@
     "enemies": [
       "flame_trooper"
     ],
+    "enemy_instances": [
+      {
+        "enemy_id": "flame_trooper",
+        "extra_drops": [
+          {
+            "id": "ration_pack",
+            "chance": 1.0,
+            "quantity": 2
+          }
+        ]
+      }
+    ],
+    "enemy_flavor": {"flame_trooper": "The trooper carries two sealed Ration Packs for recovery or Ration Soup preparation."},
     "connections": {
       "south": "foundry_power_core"
     },
@@ -6866,6 +7326,12 @@
         "titan_walker_boss"
       ]
     ],
+    "blocked_directions": {
+      "north": {
+        "type": "enemy",
+        "message_locked": "The Titan Walker covers the north escape catwalk. Defeat it to clear the way. You can withdraw west to Power Core."
+      }
+    },
     "connections": {
       "north": "foundry_escape_catwalk",
       "west": "foundry_power_core",
@@ -7018,6 +7484,7 @@
         "name": "pressure map",
         "type": "generic",
         "action_event": "w5_sq23_map_pressure_loss",
+        "inspect_after_completion": true,
         "condition_unmet_message": "The pressure map marks three breach warnings, but the order matters more than the count."
       },
       {
@@ -7124,6 +7591,7 @@
         "name": "director logs",
         "type": "generic",
         "action_event": "w5_sq21_director_logs",
+        "inspect_after_completion": true,
         "requires_milestones": [
           "ms_w5_redactions_found"
         ],
@@ -7176,12 +7644,14 @@
       },
       {
         "name": "executive galley recycler",
+        "activity_title": "Customs Galley",
         "type": "rest_stop",
         "cook_source": "Thermal Cooker",
         "message": "A passenger galley dispenser ready to reconstitute nutrient blocks and hot spiced broths."
       },
       {
         "name": "lounge seating",
+        "activity_title": "Quiet Corner of Customs",
         "type": "rest_stop",
         "rest_event": "w5_camp_customs_lounge",
         "message": "Plush seating in the silent customs lounge provides vital rest before the deep void ring."
@@ -7189,6 +7659,8 @@
       {
         "name": "customs observation console",
         "type": "arcade_discovery",
+        "discovery_cabinet_id": "orbital_defense",
+        "discovered_message": "You have salvaged this cabinet’s unique component and copied its repair schematic. Check your field kit for repair requirements. Install the repaired cabinet aboard the Astra to play.",
         "hide_when_milestone": "ms_arcade_cabinet_05_repaired",
         "condition_unmet_message": "A decommissioned customs arcade terminal is mounted in the passenger waiting niche. A Zenith telemetry array still hums in its memory slot."
       },
@@ -7314,6 +7786,7 @@
         "name": "false sun path",
         "type": "generic",
         "action_event": "w5_sq22_trace_false_sun",
+        "inspect_after_completion": true,
         "condition_unmet_message": "The reflected light path shows where the false sun is being wasted."
       },
       {
@@ -7376,6 +7849,7 @@
         "name": "Director redaction checksum",
         "type": "generic",
         "action_event": "w5_sq21_find_redactions",
+        "inspect_after_completion": true,
         "condition_unmet_message": "Security retained a checksum for every sentence the Director removed."
       },
       {
@@ -7466,7 +7940,7 @@
       }
     ],
     "special_exits": {
-      "down": "Descend the cables to Server Farm"
+      "down": "Cables to Server Farm"
     }
   },
   {
@@ -7631,6 +8105,7 @@
         "name": "purged backup rack",
         "type": "generic",
         "action_event": "w5_sq24_trace_purge",
+        "inspect_after_completion": true,
         "condition_unmet_message": "A server marked PURGED still carries a faint diagnostic pulse."
       },
       {
@@ -7682,7 +8157,7 @@
       }
     },
     "special_exits": {
-      "up": "Climb the cables to Service Shaft"
+      "up": "Cables to Service Shaft"
     }
   },
   {
@@ -7866,7 +8341,7 @@
       "firewall_construct": "A hard-light construct assembles from defensive code, all angles and corporate certainty."
     },
     "special_exits": {
-      "down": "Ride the access lift to the Anchor Chamber"
+      "down": "Lift to Anchor Chamber"
     },
     "blocked_directions": {
       "down": {
@@ -8055,7 +8530,7 @@
       }
     },
     "special_exits": {
-      "up": "Ride the access lift to Firewall Gamma"
+      "up": "Lift to Firewall Gamma"
     }
   },
   {
@@ -8334,12 +8809,14 @@
       },
       {
         "name": "memory oasis",
+        "activity_title": "The Memory Oasis",
         "type": "rest_stop",
         "rest_event": "w6_rest_memory_oasis",
         "message": "The blue fire is quiet enough to cook beside. Source pressure lifts Nova's tinnitus while the crew argues over seasoning."
       },
       {
         "name": "campfire cookware",
+        "activity_title": "The Memory Cookfire",
         "type": "rest_stop",
         "cook_source": "Source Campfire",
         "message": "The crew sets pots beside the blue flame."
@@ -8379,6 +8856,7 @@
         "name": "backup lattice",
         "type": "generic",
         "action_event": "w6_sq27_delete_record",
+        "inspect_after_completion": true,
         "condition_unmet_message": "Copies of Zeke's file glow inside every cubicle wall."
       }
     ],
@@ -8416,6 +8894,7 @@
         "name": "authorization chain",
         "type": "generic",
         "action_event": "w6_sq27_revoke_record",
+        "inspect_after_completion": true,
         "requires_milestones": [
           "ms_w6_hr_backups_found"
         ],
@@ -8501,6 +8980,7 @@
         "name": "buried voice",
         "type": "generic",
         "action_event": "w6_sq28_elara_song",
+        "inspect_after_completion": true,
         "condition_unmet_message": "One human breath repeats beneath the order channels."
       }
     ],
@@ -8538,6 +9018,7 @@
         "name": "command carrier",
         "type": "generic",
         "action_event": "w6_sq28_break_command",
+        "inspect_after_completion": true,
         "requires_milestones": [
           "ms_w6_elara_voice_isolated"
         ],
@@ -8683,6 +9164,7 @@
         "name": "crooked tool marks",
         "type": "generic",
         "action_event": "w6_sq26_jed_echo",
+        "inspect_after_completion": true,
         "condition_unmet_message": "Three hand-cut marks survive beneath Vale's perfect reconstruction."
       }
     ]
@@ -8733,6 +9215,7 @@
         "name": "jed echo",
         "type": "generic",
         "action_event": "w6_sq26_hear_lesson",
+        "inspect_after_completion": true,
         "requires_milestones": [
           "ms_w6_jed_marks_found"
         ],
@@ -8741,6 +9224,8 @@
       {
         "name": "crystalline arcade console",
         "type": "arcade_discovery",
+        "discovery_cabinet_id": "harmonic_pulse",
+        "discovered_message": "You have salvaged this cabinet’s unique component and copied its repair schematic. Check your field kit for repair requirements. Install the repaired cabinet aboard the Astra to play.",
         "hide_when_milestone": "ms_arcade_cabinet_06_repaired",
         "condition_unmet_message": "An ancient crystalline arcade console stands in the harmonic resonance field. A prismatic tuning fork hums within its core housing."
       }
@@ -8927,6 +9412,7 @@
       },
       {
         "name": "final meal",
+        "activity_title": "The Shared Table",
         "type": "rest_stop",
         "rest_event": "w6_rest_final_meal",
         "message": "The last safe span holds long enough for a final shared meal before the Source takes the words apart."
@@ -8976,6 +9462,7 @@
         "name": "names beneath the light",
         "type": "generic",
         "action_event": "w6_sq29_aethel_grave",
+        "inspect_after_completion": true,
         "condition_unmet_message": "Aethel names answer one another beneath the threshold."
       }
     ],
@@ -9163,6 +9650,7 @@
         "name": "wreck timeline",
         "type": "generic",
         "action_event": "w6_sq30_final_scavenge",
+        "inspect_after_completion": true,
         "condition_unmet_message": "A fracture signature links the distant hull to one preventable future."
       }
     ]
@@ -9198,6 +9686,7 @@
         "name": "future astra hull",
         "type": "generic",
         "action_event": "w6_sq30_detach_hull",
+        "inspect_after_completion": true,
         "requires_milestones": [
           "ms_w6_astra_timeline_identified"
         ],
@@ -9500,6 +9989,8 @@
       {
         "name": "waterlogged survival console",
         "type": "arcade_discovery",
+        "discovery_cabinet_id": "canopy_hopper",
+        "discovered_message": "You have salvaged this cabinet’s unique component and copied its repair schematic. Check your field kit for repair requirements. Install the repaired cabinet aboard the Astra to play.",
         "hide_when_milestone": "ms_arcade_cabinet_02_repaired",
         "condition_unmet_message": "An emerald optic board glimmers in the waterproof survival pod console."
       }
@@ -10058,12 +10549,14 @@
     "actions": [
       {
         "name": "sheltered cookfire",
+        "activity_title": "Falls Ember Hearth",
         "type": "rest_stop",
         "cook_source": "Campfire",
         "message": "A dry recess behind the falls stays warm and sheltered. Preparing hot broth over the flame restores focus."
       },
       {
         "name": "recess shelter",
+        "activity_title": "Shelter Behind the Falls",
         "type": "rest_stop",
         "rest_event": "w2_camp_stream_falls",
         "message": "The steady water-chord quiets the mental strain, letting your squad rest and recharge."
@@ -10170,6 +10663,12 @@
       "echo_borer",
       "echo_borer"
     ],
+    "blocked_directions": {
+      "east": {
+        "type": "enemy",
+        "message_locked": "The Echo Borers hold the east passage into the Waterlogged Tunnel. Defeat them to pass. The cave entrance remains open to the south."
+      }
+    },
     "connections": {
       "south": "sector9_stream_cave_entrance",
       "east": "sector9_stream_sunken_passage"
@@ -10392,6 +10891,7 @@
     "actions": [
       {
         "name": "campfire",
+        "activity_title": "Sandy Cove Cookfire",
         "type": "rest_stop",
         "condition_unmet_message": "The fire burns with a warm, steady glow, throwing long shadows on the stone walls.",
         "cook_source": "Campfire",
@@ -10789,6 +11289,13 @@
     "enemies": [
       "razor_vine"
     ],
+    "enemy_instances": [
+      {
+        "enemy_id": "razor_vine",
+        "extra_drops": [{"id": "herb", "chance": 1.0, "quantity": 1}]
+      }
+    ],
+    "enemy_flavor": {"razor_vine": "Medicinal herbs grow beneath the Razor Vine. Defeating it yields one Herb for cooking or an Antidote Flask."},
     "connections": {
       "north": "sector9_canopy",
       "east": "sector9_wilds_nest",
@@ -10860,6 +11367,8 @@
       },
       {
         "name": "trampled supply pack",
+        "guarded_by": ["shard_hound"],
+        "guarded_message": "The Shard-Hounds are guarding the pack in their den. Defeat them before retrieving the supplies.",
         "type": "container",
         "state_key": "w2_hound_nest_pack_opened",
         "items": [
@@ -11245,12 +11754,14 @@
     "actions": [
       {
         "name": "heat ring cookfire",
+        "activity_title": "The Blind’s Heat Ring",
         "type": "rest_stop",
         "cook_source": "Campfire",
         "message": "The Dominion heat ring provides steady cooking heat to roast skewers and prepare provisions."
       },
       {
         "name": "ridge campsite",
+        "activity_title": "Ridge Camp",
         "type": "rest_stop",
         "rest_event": "w2_camp_wilds_lookout",
         "message": "Resting beside the heat ring lets your party recover from the trail."
@@ -11654,12 +12165,14 @@
     "actions": [
       {
         "name": "stone cookfire",
+        "activity_title": "Outlook Stone Hearth",
         "type": "rest_stop",
         "cook_source": "Campfire",
         "message": "The warm stone plateau makes an ideal spot to boil water and cook restorative fish stew."
       },
       {
         "name": "plateau camp",
+        "activity_title": "Sanctuary Plateau Camp",
         "type": "rest_stop",
         "rest_event": "w2_camp_ridge_plateau",
         "message": "Shared rest and quiet contemplation on the warm stone restore focus before the temple."
@@ -11944,6 +12457,12 @@
     "enemies": [
       "ruin_guardian"
     ],
+    "blocked_directions": {
+      "west": {
+        "type": "enemy",
+        "message_locked": "The Ruin Guardian seals the west approach to the security terminal. Defeat it to enter the Security Hub. The Grand Hall remains open to the south."
+      }
+    },
     "connections": {
       "south": "sector9_foyer_grand_hall",
       "west": "sector9_foyer_security_hub"
@@ -12992,12 +13511,14 @@
     "actions": [
       {
         "name": "manifold cooker",
+        "activity_title": "Manifold Galley",
         "type": "rest_stop",
         "cook_source": "Thermal Cooker",
         "message": "A maintenance thermal plate offers sterile heat to press rations and simmer preserves."
       },
       {
         "name": "facility camp station",
+        "activity_title": "Manifold Refuge",
         "type": "rest_stop",
         "rest_event": "w2_camp_power_manifold",
         "message": "Food and quiet rest bring party stamina back under control."
@@ -13797,6 +14318,7 @@
       },
       {
         "name": "galley kitchenette",
+        "activity_title": "The Astra Galley",
         "type": "rest_stop",
         "cook_source": "Kitchen Provisions",
         "message": "A patched electric hotplate and kettle station ready to brew tea and cook nutritious rations for the voyage."
@@ -14093,6 +14615,7 @@
       {
         "name": "chute",
         "type": "generic",
+        "travel_label": "Chute to Vent Output",
         "action_event": "warp_spire_vent_output_scale_03_to_entry",
         "condition_unmet_message": "An optional shortcut returns directly to Vent Output. You can also retrace the room corridors with NSEW swipes."
       }
@@ -14204,6 +14727,7 @@
       {
         "name": "fire escape",
         "type": "generic",
+        "travel_label": "Fire escape to The Static",
         "action_event": "warp_spire_the_static_scale_03_to_entry",
         "condition_unmet_message": "An optional shortcut returns directly to The Static. You can also retrace the room corridors with NSEW swipes."
       }
@@ -14240,12 +14764,14 @@
       },
       {
         "name": "lantern roof kitchen",
+        "activity_title": "Lantern Roof Kitchen",
         "type": "rest_stop",
         "cook_source": "Thermal Cooker",
         "message": "A street vendor's thermal burner sits beneath string lights, ready for hot noodles and rations."
       },
       {
         "name": "market refuge",
+        "activity_title": "Lantern Roof Refuge",
         "type": "rest_stop",
         "rest_event": "w3_camp_night_market",
         "message": "Sheltered from drone patrols beneath the market awnings, your squad catches their breath."
@@ -14338,6 +14864,7 @@
       {
         "name": "slide",
         "type": "generic",
+        "travel_label": "Slide to Night Market",
         "action_event": "warp_spire_night_market_scale_03_to_entry",
         "condition_unmet_message": "An optional shortcut returns directly to Night Market. You can also retrace the room corridors with NSEW swipes."
       }
@@ -14471,6 +14998,7 @@
       {
         "name": "ladder",
         "type": "generic",
+        "travel_label": "Ladder to Sewer Landing Pad",
         "action_event": "warp_spire_sewers_scale_03_to_entry",
         "condition_unmet_message": "An optional shortcut returns directly to Sewer Landing Pad. You can also retrace the room corridors with NSEW swipes."
       }
@@ -14581,6 +15109,7 @@
       {
         "name": "turnstile",
         "type": "generic",
+        "travel_label": "Turnstile to Transit Plaza",
         "action_event": "warp_spire_transit_plaza_scale_03_to_entry",
         "condition_unmet_message": "An optional shortcut returns directly to Transit Plaza. You can also retrace the room corridors with NSEW swipes."
       }
@@ -14711,6 +15240,7 @@
       {
         "name": "chute",
         "type": "generic",
+        "travel_label": "Chute to Laundry Service",
         "action_event": "warp_spire_laundry_scale_03_to_entry",
         "condition_unmet_message": "An optional shortcut returns directly to Laundry Service. You can also retrace the room corridors with NSEW swipes."
       }
@@ -14783,12 +15313,14 @@
       },
       {
         "name": "skypark cookfire",
+        "activity_title": "Skypark Ember Hearth",
         "type": "rest_stop",
         "cook_source": "Campfire",
         "message": "A quiet pavilion overlooking the cloudline offers a peaceful spot to boil herbs and prepare trail meals."
       },
       {
         "name": "pavilion shelter",
+        "activity_title": "Pavilion Refuge",
         "type": "rest_stop",
         "rest_event": "w3_camp_skypark",
         "message": "Resting above the spire rain restores party stamina and focus."
@@ -14845,6 +15377,7 @@
       {
         "name": "spiral",
         "type": "generic",
+        "travel_label": "Spiral stairs to Skypark Dome",
         "action_event": "warp_spire_skypark_scale_03_to_entry",
         "condition_unmet_message": "An optional shortcut returns directly to Skypark Dome. You can also retrace the room corridors with NSEW swipes."
       }
@@ -14965,6 +15498,7 @@
       {
         "name": "lift",
         "type": "generic",
+        "travel_label": "Lift to Archive Vault",
         "action_event": "warp_spire_archive_scale_03_to_entry",
         "condition_unmet_message": "An optional shortcut returns directly to Archive Vault. You can also retrace the room corridors with NSEW swipes."
       }
@@ -15122,6 +15656,19 @@
     "enemies": [
       "aero_drone"
     ],
+    "enemy_instances": [
+      {
+        "enemy_id": "aero_drone",
+        "extra_drops": [
+          {
+            "id": "circuit_board",
+            "chance": 1.0,
+            "quantity": 1
+          }
+        ]
+      }
+    ],
+    "enemy_flavor": {"aero_drone": "This service drone carries a recoverable Circuit Board for Field Kit repairs and reinforced fishing gear."},
     "connections": {
       "south": "spire_exec_lounge_scale_04"
     },
@@ -15143,6 +15690,8 @@
       },
       {
         "name": "executive safe",
+        "guarded_by": ["aero_drone"],
+        "guarded_message": "The security drone covers the safe. Defeat it before opening the door and collecting the contents.",
         "type": "container",
         "state_key": "spire_exec_lounge_scale_05_cache_opened",
         "items": [
@@ -15156,6 +15705,7 @@
       {
         "name": "elevator",
         "type": "generic",
+        "travel_label": "Elevator to Exec Lounge",
         "action_event": "warp_spire_exec_lounge_scale_05_to_entry",
         "condition_unmet_message": "An optional shortcut returns directly to Exec Lounge. You can also retrace the room corridors with NSEW swipes."
       }
@@ -15173,6 +15723,19 @@
     "enemies": [
       "aero_drone"
     ],
+    "enemy_instances": [
+      {
+        "enemy_id": "aero_drone",
+        "extra_drops": [
+          {
+            "id": "wiring_bundle",
+            "chance": 1.0,
+            "quantity": 1
+          }
+        ]
+      }
+    ],
+    "enemy_flavor": {"aero_drone": "Its exposed harness yields one Wiring Bundle when defeated, useful for repairs and salvage lures."},
     "connections": {
       "south": "spire_landing_pad_roof",
       "north": "spire_landing_pad_scale_02"
@@ -15239,6 +15802,19 @@
     "enemies": [
       "corporate_assassin"
     ],
+    "enemy_instances": [
+      {
+        "enemy_id": "corporate_assassin",
+        "extra_drops": [
+          {
+            "id": "ration_pack",
+            "chance": 1.0,
+            "quantity": 2
+          }
+        ]
+      }
+    ],
+    "enemy_flavor": {"corporate_assassin": "The assassin carries two sealed Ration Packs. Defeat them to recover the supplies."},
     "connections": {
       "south": "spire_landing_pad_scale_02",
       "north": "spire_landing_pad_scale_04"
@@ -15305,6 +15881,7 @@
       {
         "name": "ladder",
         "type": "generic",
+        "travel_label": "Ladder to Landing Pad Roof",
         "action_event": "warp_spire_landing_pad_scale_04_to_entry",
         "condition_unmet_message": "An optional shortcut returns directly to Landing Pad Roof. You can also retrace the room corridors with NSEW swipes."
       }
@@ -15381,12 +15958,14 @@
       },
       {
         "name": "geothermal induction plate",
+        "activity_title": "Heat Shadow Hearth",
         "type": "rest_stop",
         "cook_source": "Thermal Cooker",
         "message": "A shielded induction plate taps volcanic heat, perfect for searing meat and pressing rations."
       },
       {
         "name": "heat shadow refuge",
+        "activity_title": "Heat Shadow Refuge",
         "type": "rest_stop",
         "rest_event": "w4_camp_heat_shadow",
         "message": "Shielded from furnace slag, your squad cools down and recovers from combat fatigue."
@@ -15506,6 +16085,19 @@
     "enemies": [
       "welder_bot"
     ],
+    "enemy_instances": [
+      {
+        "enemy_id": "welder_bot",
+        "extra_drops": [
+          {
+            "id": "pure_iron",
+            "chance": 1.0,
+            "quantity": 2
+          }
+        ]
+      }
+    ],
+    "enemy_flavor": {"welder_bot": "The welder carries two Pure Iron billets, enough iron for the Slag Catcher cabinet repair."},
     "connections": {
       "west": "foundry_slag_river_scale_01",
       "north": "foundry_slag_river_scale_03"
@@ -18051,12 +18643,14 @@
       },
       {
         "name": "thermal conduit heater",
+        "activity_title": "Thaw Gallery Hearth",
         "type": "rest_stop",
         "cook_source": "Thermal Cooker",
         "message": "Warm radiant coils provide heat to prepare hot rations in the frozen orbital depths."
       },
       {
         "name": "thaw gallery shelter",
+        "activity_title": "Thaw Gallery Refuge",
         "type": "rest_stop",
         "rest_event": "w5_camp_thaw_gallery",
         "message": "Resting near the radiant pipes allows the party to thaw and recover from the void chill."
@@ -20504,6 +21098,19 @@
     "enemies": [
       "phantom_prototype"
     ],
+    "enemy_instances": [
+      {
+        "enemy_id": "phantom_prototype",
+        "extra_drops": [
+          {
+            "id": "circuit_board",
+            "chance": 1.0,
+            "quantity": 1
+          }
+        ]
+      }
+    ],
+    "enemy_flavor": {"phantom_prototype": "One intact Circuit Board can be recovered from this prototype for Field Kit repairs or reinforced fishing gear."},
     "connections": {
       "south": "foundry_conditioning_scale_04"
     },
@@ -21485,7 +22092,7 @@
   {
     "id": "spire_skyline_vip_suite",
     "env": "neon",
-    "weather": "rain",
+    "weather": null,
     "title": "Skyline VIP Salon",
     "background_image": "images/rooms/world_3/spire_skyline_vip_suite.webp",
     "description": "Plush velvet stanchions divide the glowing skyline salon from the rain-swept spires outside. Holographic chandeliers illuminate four stranded patrons around an automated crime-scene barrier. Emergency sirens pulse against the soundproof glass. A dispenser log and security terminal wait beside the barrier.",
@@ -21508,7 +22115,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The emergency sirens have quieted. Director Vance sits slumped under guard, while the remaining patrons sip their drinks in subdued relief. The golden skyline shines through the rain outside. The crime-scene barrier, dispenser log, and security terminal remain in place.",
+        "description": "The emergency sirens have quieted. Director Sorrell sits slumped under guard, while the remaining patrons sip their drinks in subdued relief. The golden skyline shines through the rain outside. The crime-scene barrier, dispenser log, and security terminal remain in place.",
         "requires_milestones": [
           "ms_w3_sq16_complete"
         ]
@@ -21541,7 +22148,7 @@
   {
     "id": "spire_vip_private_booth",
     "env": "neon",
-    "weather": "rain",
+    "weather": null,
     "title": "Syndicate Booth",
     "background_image": "images/rooms/world_3/spire_vip_private_booth.webp",
     "description": "A private booth of curved mahogany overlooks the neon clouds. Auditor Malick slumps lifeless across the table beside a crystal glass. An executive comms rig lies open near the victim's splayed fingers. The auditor's datapad lies beside the comms rig.",
@@ -21568,14 +22175,14 @@
         "name": "executive comms rig",
         "type": "generic",
         "action_event": "w3_sq16_inspect_rig",
-        "condition_unmet_message": "The portable comms unit stamped with Director Vance's executive crest has its coolant core compartment popped open and empty.",
+        "condition_unmet_message": "The portable comms unit stamped with Director Sorrell's executive crest has its coolant core compartment popped open and empty.",
         "inspect_after_completion": true
       },
       {
         "name": "auditor's datapad",
         "type": "generic",
         "action_event": "w3_sq16_inspect_datapad",
-        "condition_unmet_message": "Auditor Malick's encrypted notes show he scheduled this meeting to confront Director Vance over millions in stolen scrap contracts.",
+        "condition_unmet_message": "Auditor Malick's encrypted notes show he scheduled this meeting to confront Director Sorrell over millions in stolen scrap contracts.",
         "inspect_after_completion": true
       }
     ]

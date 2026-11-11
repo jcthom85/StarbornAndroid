@@ -10,7 +10,7 @@ Make a manual arrival save, keep another slot for rolling progress, and retain s
 
 The six side quests are optional for story progression but integrated here for completionist play: **Sabotage, Lost Worker, The Scrap Heap, Quality Control, Overclocked, The Scrapper's Crucible**. Quality Control has two mutually exclusive outcomes; one completes the quest. You do not need both on one save.
 
-Read available passive room details as you pass. Clear actual blocking encounters before using their controls. A room's descriptive names are not all quest objectives. Optional cooking, fishing and arcade discovery do not replace main tasks. Exact random fish species and loot should be checked in the game's journals/inventory rather than assumed from a fixed cast or fight.
+Read available passive room details as you pass. Defeat the Magma Drone at Slag River to open the east crossing, and the Titan Walker to open the north escape catwalk. Other patrols along the room sweep are optional unless an objective explicitly requires victory. A room's descriptive names are not all quest objectives. Optional cooking, fishing and arcade discovery do not replace main tasks. Exact random fish species and loot should be checked in the game's journals/inventory rather than assumed from a fixed cast or fight.
 
 ### Builds, recovery and supplies
 
@@ -22,6 +22,8 @@ Ordinary Foundry travel uses NSEW swipes with opposite-direction returns. No dia
 
 Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **east** to Slag River → **east** to Waste Intake. The optional smelter requires its own cryogenic valve and is not opened by the Assembly story flag. Ten tapped return shortcuts are conveniences; the route below supplies ordinary walking returns. The story conveys urgency after the Anvil, but no countdown is imposed by this guide.
 
+
+Optional supply fights include **Coolant Spillway** (two guaranteed **Pure Iron** for the Slag Catcher repair), **Foundry Defect Choir** (one **Circuit Board** for Field Kit projects), and **Engine Service Ring** (two **Ration Packs** for recovery or Ration Soup). Existing random enemy drops are additional.
 
 ## 2. Secure the landing and explore Obsidian Shelf
 
@@ -41,7 +43,7 @@ Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **eas
 
 8. At **Heat Shadow Alcove**, inspect **heat shadow**, **coolant tags**; use **geothermal induction plate** if you need its rest/cooking service; use **heat shadow refuge** if you need its rest/cooking service.
 
-9. Clear any active blocking encounter at **Heat Shadow Alcove** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+9. At **Heat Shadow Alcove**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 10. From **Heat Shadow Alcove**, go **north** to **Slag Signal Post** (`foundry_obsidian_shelf_scale_03`).
 
@@ -60,6 +62,8 @@ Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **eas
 **Check before leaving:** Into the Fire is active, the landing task is complete, and you are back at Obsidian Shelf. Note the route to Heat Shadow Alcove for later recovery.
 
 
+The **Slag River** Magma Drone holds the east crossing to **Waste Intake**. Defeat it before you first head east. You can still retreat west to Obsidian Shelf.
+
 ## 3. Read the river crossing, begin Sabotage and open the optional smelter
 
 17. From **Obsidian Shelf**, go **east** to **Slag River** (`foundry_slag_river`).
@@ -70,7 +74,7 @@ Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **eas
 
 20. At **Stepping Stones**, defeat any blocking **Magma Drone** before working the crossing. Read the heat-break/flare rhythm.
 
-21. At **Stepping Stones**, use **flare rhythm**. Credit the Slag River crossing after securing the Astra. The **slag crossing** control at Slag River is an alternative for this same task; it is not a second required objective.
+21. At **Stepping Stones**, use **flare rhythm**. This checks off **Cross the Slag River by reading the heat breaks** in **Secure Landing** after you secure the Astra. **Slag crossing** at Slag River gives the same credit. If the Journal already shows the task checked, continue. This reading leaves you in the same room.
 
 22. At **Stepping Stones**, use **cryogenic manifold valve**. Choose **Open Coolant Valve**. Wait for the northern slag crossing to solidify; do not assume the bridge is open merely because you visited the room.
 
@@ -92,13 +96,13 @@ Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **eas
 
 31. At **Coolant Spillway**, inspect **coolant spillway**, **steam curtain**.
 
-32. Clear any active blocking encounter at **Coolant Spillway** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+32. At **Coolant Spillway**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 33. From **Coolant Spillway**, go **north** to **Slag Ferry Winch** (`foundry_slag_river_scale_03`).
 
 34. At **Slag Ferry Winch**, inspect **slag ferry**, **winch teeth**.
 
-35. Clear any active blocking encounter at **Slag Ferry Winch** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+35. At **Slag Ferry Winch**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 36. From **Slag Ferry Winch**, go **north** to **River Gauge Station** (`foundry_slag_river_scale_04`).
 
@@ -108,7 +112,7 @@ Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **eas
 
 39. At **Foundry River Control**, inspect **burned console**, **rescue hook**; open **smelter toolbox** for one-time contents.
 
-40. Clear any active blocking encounter at **Foundry River Control** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+40. At **Foundry River Control**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 41. From **Foundry River Control**, go **south** to **River Gauge Station** (`foundry_slag_river_scale_04`) → **south** to **Slag Ferry Winch** (`foundry_slag_river_scale_03`) → **south** to **Coolant Spillway** (`foundry_slag_river_scale_02`) → **west** to **Basalt Switchback** (`foundry_slag_river_scale_01`) → **north** to **Slag River** (`foundry_slag_river`).
 
@@ -143,13 +147,13 @@ Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **eas
 
 54. At **Records Shed**, inspect **records shed**, **Phantom labels**.
 
-55. Clear any active blocking encounter at **Records Shed** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+55. At **Records Shed**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 56. From **Records Shed**, go **south** to **Magnet Ramp** (`foundry_waste_intake_scale_03`).
 
 57. At **Magnet Ramp**, inspect **magnet ramp**, **loose filings**.
 
-58. Clear any active blocking encounter at **Magnet Ramp** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+58. At **Magnet Ramp**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 59. From **Magnet Ramp**, go **south** to **Intake Catwalk** (`foundry_waste_intake_scale_04`).
 
@@ -159,7 +163,7 @@ Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **eas
 
 62. At **Foundry Sorter Spine**, inspect **sorter spine**, **reject ledger**; open **salvage bin** for one-time contents.
 
-63. Clear any active blocking encounter at **Foundry Sorter Spine** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+63. At **Foundry Sorter Spine**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 64. From **Foundry Sorter Spine**, go **north** to **Intake Catwalk** (`foundry_waste_intake_scale_04`) → **north** to **Magnet Ramp** (`foundry_waste_intake_scale_03`) → **north** to **Records Shed** (`foundry_waste_intake_scale_02`) → **north** to **Crusher Throat** (`foundry_waste_intake_scale_01`) → **north** to **Waste Intake** (`foundry_waste_intake`).
 
@@ -178,7 +182,7 @@ Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **eas
 
 69. At **Decon Chamber**, inspect **decon cycle**.
 
-70. Clear any active blocking encounter at **Decon Chamber** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+70. At **Decon Chamber**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 71. From **Decon Chamber**, go **east** to **High-Pressure Pipe Gallery** (`foundry_pipe_gallery`).
 
@@ -192,7 +196,7 @@ Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **eas
 
 76. At **Decon Drain**, inspect **decon drain**, **chemical foam**.
 
-77. Clear any active blocking encounter at **Decon Drain** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+77. At **Decon Drain**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 78. From **Decon Drain**, go **north** to **Pressure Lock Gallery** (`foundry_service_airlock_scale_03`).
 
@@ -243,7 +247,7 @@ Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **eas
 
 99. At **Worker Marker**, inspect **worker marker**, **helmet light**.
 
-100. Clear any active blocking encounter at **Worker Marker** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+100. At **Worker Marker**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 101. From **Worker Marker**, go **north** to **Spring Valve Nest** (`foundry_cooling_springs_scale_03`).
 
@@ -354,7 +358,7 @@ Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **eas
 
 147. At **Quench Lane**, inspect **quench lane**, **steam alarms**.
 
-148. Clear any active blocking encounter at **Quench Lane** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+148. At **Quench Lane**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 149. From **Quench Lane**, go **north** to **Defect Window** (`foundry_conditioning_scale_03`).
 
@@ -368,7 +372,7 @@ Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **eas
 
 154. At **Foundry Defect Choir**, inspect **defect choir**, **glass seam**; open **stress-test locker** for one-time contents.
 
-155. Clear any active blocking encounter at **Foundry Defect Choir** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+155. At **Foundry Defect Choir**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 156. From **Foundry Defect Choir**, go **south** to **Calibration Pit** (`foundry_conditioning_scale_04`) → **south** to **Defect Window** (`foundry_conditioning_scale_03`) → **south** to **Quench Lane** (`foundry_conditioning_scale_02`) → **west** to **Heat-Soak Chamber** (`foundry_conditioning_scale_01`) → **north** to **Conditioning Chamber** (`foundry_conditioning_chamber`).
 
@@ -414,7 +418,7 @@ Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **eas
 
 172. At **Foundry Belt Nerve**, inspect **nerve junction**, **target counter**; open **assembly cache** for one-time contents.
 
-173. Clear any active blocking encounter at **Foundry Belt Nerve** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+173. At **Foundry Belt Nerve**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 174. From **Foundry Belt Nerve**, go **south** to **Control Perch** (`foundry_conveyor_belt_scale_04`).
 
@@ -426,13 +430,13 @@ Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **eas
 
 178. At **Anvil Shadow**, inspect **anvil shadow**, **relic imprint**.
 
-179. Clear any active blocking encounter at **Anvil Shadow** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+179. At **Anvil Shadow**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 180. From **Anvil Shadow**, go **north** to **Mold Library** (`foundry_forge_scale_03`).
 
 181. At **Mold Library**, inspect **mold library**, **broken casts**.
 
-182. Clear any active blocking encounter at **Mold Library** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+182. At **Mold Library**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 183. From **Mold Library**, go **north** to **Slag Chapel** (`foundry_forge_scale_04`).
 
@@ -461,7 +465,7 @@ Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **eas
 
 193. At **Engine Service Ring**, read available local details.
 
-194. Clear any active blocking encounter at **Engine Service Ring** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+194. At **Engine Service Ring**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 195. From **Engine Service Ring**, go **south** to **Power Core** (`foundry_power_core`) → **south** to **Turbine Balcony** (`foundry_power_core_scale_01`).
 
@@ -471,7 +475,7 @@ Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **eas
 
 198. At **Engine Cradle**, inspect **engine cradle**, **mount clamps**.
 
-199. Clear any active blocking encounter at **Engine Cradle** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+199. At **Engine Cradle**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 200. From **Engine Cradle**, go **south** to **Array Lockers** (`foundry_power_core_scale_03`).
 
@@ -485,7 +489,7 @@ Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **eas
 
 205. At **Foundry Core Shadow**, inspect **core shadow**, **clamp gauge**; open **shielded core case** for one-time contents.
 
-206. Clear any active blocking encounter at **Foundry Core Shadow** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+206. At **Foundry Core Shadow**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 207. From **Foundry Core Shadow**, go **north** to **Coolant Choir** (`foundry_power_core_scale_04`) → **north** to **Array Lockers** (`foundry_power_core_scale_03`) → **north** to **Engine Cradle** (`foundry_power_core_scale_02`) → **north** to **Turbine Balcony** (`foundry_power_core_scale_01`) → **north** to **Power Core** (`foundry_power_core`).
 
@@ -520,13 +524,13 @@ Cooling Springs returns to Waste Intake by **north** to Obsidian Shelf → **eas
 
 220. At **Ammo Lift**, inspect **ammo lift**, **chain brake**.
 
-221. Clear any active blocking encounter at **Ammo Lift** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+221. At **Ammo Lift**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 222. From **Ammo Lift**, go **north** to **Escape Rail** (`foundry_titan_dock_scale_03`).
 
 223. At **Escape Rail**, inspect **escape rail**, **cut coupler**.
 
-224. Clear any active blocking encounter at **Escape Rail** before using its room controls. Heal as necessary; passive inspections do not count as victory.
+224. At **Escape Rail**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
 
 225. From **Escape Rail**, go **north** to **Meltdown View** (`foundry_titan_dock_scale_04`).
 

@@ -507,7 +507,11 @@ fun CombatScreen(
                         knockoutFx.remove(fx)
                     }
                 }
-                is CombatFxEvent.CombatOutcomeFx -> outcomeFx = event.outcome
+                is CombatFxEvent.CombatOutcomeFx -> {
+                    if (event.outcome != CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY) {
+                        outcomeFx = event.outcome
+                    }
+                }
                 is CombatFxEvent.SupportCue -> {
                     val fx = SupportFxUi(
                         id = UUID.randomUUID().toString(),
@@ -558,15 +562,22 @@ fun CombatScreen(
     LaunchedEffect(pendingOutcome) {
         val resolved = pendingOutcome ?: return@LaunchedEffect
         val handle = navController.previousBackStackEntry?.savedStateHandle
-        if (resolved is CombatOutcome.Victory) {
-            viewModel.playVictoryMusic()
-        }
         val waitMillis = when (resolved) {
             is CombatOutcome.Victory -> 2000L
             is CombatOutcome.Defeat -> 750L
             CombatOutcome.Retreat -> 600L
         }
         delay(waitMillis)
+        if (resolved is CombatOutcome.Victory) {
+            while (attackHitFx.isNotEmpty() || damageFx.isNotEmpty() ||
+                knockoutFx.isNotEmpty() || delayedDeathTargets.isNotEmpty()) {
+                delay(16L)
+            }
+            // Enemy exit fades begin after the last hit releases its death hold.
+            delay(400L)
+            viewModel.playVictoryMusic()
+            outcomeFx = CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY
+        }
         when (resolved) {
             is CombatOutcome.Victory -> {
                 val rewards = resolved.rewards
@@ -612,7 +623,7 @@ fun CombatScreen(
 
     if (pendingOutcome != null && outcomeFx == null && outcome != null) {
         outcomeFx = when (outcome) {
-            is CombatOutcome.Victory -> CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY
+            is CombatOutcome.Victory -> null
             is CombatOutcome.Defeat -> CombatFxEvent.CombatOutcomeFx.OutcomeType.DEFEAT
             CombatOutcome.Retreat -> CombatFxEvent.CombatOutcomeFx.OutcomeType.RETREAT
         }
@@ -666,7 +677,7 @@ fun CombatScreen(
             showItemsDialog.value = false
         }
         val menuActorSkills = menuActor?.let { viewModel.skillsForPlayer(it.id) }.orEmpty()
-        val victoryEmotes = pendingOutcome is CombatOutcome.Victory
+        val victoryEmotes = pendingVictoryPayload != null
 
         BackHandler(enabled = inspectedEnemyId != null || showSkillsDialog.value || showItemsDialog.value || pendingTargetRequest != null) {
             when {

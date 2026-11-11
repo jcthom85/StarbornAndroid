@@ -165,8 +165,9 @@ fun buildInlineActionPlan(
     segments.sortBy { it.start }
     val decorated = segments.map { segment ->
         val action = (segment.target as? InlineActionTarget.Room)?.action
-        segment.copy(inspected = (action as? GenericAction)?.completedInspection == true || action?.let { inspectionReceiptKey(it, description) }
-            ?.let { inspectionState[it] == true } == true)
+        val isSearched = (action as? ContainerAction)?.stateKey?.let { inspectionState[it] == true } == true
+        val isRead = action?.let { inspectionReceiptKey(it, description) }?.let { inspectionState[it] == true } == true
+        segment.copy(inspected = isSearched || isRead || (action as? GenericAction)?.completedInspection == true)
     }
     return InlineActionPlan(description = parsedDescription, segments = decorated)
 }
@@ -210,7 +211,7 @@ fun resolveRoomBackground(
 
 // Rest/cooking are service controls, including explicit markers; never duplicate them in prose.
 private fun RoomAction.isInlineDescriptionAction(): Boolean =
-    this !is NpcAction && this !is EnemyAction && this !is RestStopAction && !isFishingSpot() && !hideInline
+    this !is NpcAction && this !is EnemyAction && this !is ShopAction && this !is TinkeringAction && this !is RestStopAction && !isFishingSpot() && (this as? GenericAction)?.travelLabel == null && !hideInline
 
 private fun rangesOverlap(a: IntRange, b: IntRange): Boolean =
     a.first < b.last && b.first < a.last

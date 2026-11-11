@@ -838,7 +838,7 @@
     "id": "spire_exec_lounge",
     "world_id": "world_3",
     "hub_id": "hub_6_upper_city",
-    "title": "Exec Lounge",
+    "title": "Executive Hospitality",
     "entry_room": "spire_exec_lounge_bar",
     "icon_image": "images/nodes/world_3/spire_exec_lounge.webp",
     "pos_hint": {
@@ -921,7 +921,7 @@
     "id": "foundry_obsidian_shelf",
     "world_id": "world_4",
     "hub_id": "hub_7_slag_pits",
-    "title": "Obsidian Shelf",
+    "title": "Foundry Landing Zone",
     "entry_room": "foundry_slag_landing",
     "icon_image": "images/nodes/world_4/foundry_obsidian_shelf.webp",
     "pos_hint": {
@@ -950,7 +950,7 @@
     "id": "foundry_slag_river",
     "world_id": "world_4",
     "hub_id": "hub_7_slag_pits",
-    "title": "Slag River",
+    "title": "Slag Channels",
     "entry_room": "foundry_slag_river",
     "icon_image": "images/nodes/world_4/foundry_slag_river.webp",
     "pos_hint": {
@@ -980,7 +980,7 @@
     "id": "foundry_cooling_springs",
     "world_id": "world_4",
     "hub_id": "hub_7_slag_pits",
-    "title": "Cooling Springs",
+    "title": "Cooling District",
     "entry_room": "foundry_cooling_springs",
     "icon_image": "images/nodes/world_4/foundry_cooling_springs.webp",
     "pos_hint": {
@@ -1009,7 +1009,7 @@
     "id": "foundry_waste_intake",
     "world_id": "world_4",
     "hub_id": "hub_7_slag_pits",
-    "title": "Waste Intake",
+    "title": "Waste Processing",
     "entry_room": "foundry_waste_intake",
     "icon_image": "images/nodes/world_4/foundry_waste_intake.webp",
     "pos_hint": {
@@ -1039,7 +1039,7 @@
     "id": "foundry_service_airlock",
     "world_id": "world_4",
     "hub_id": "hub_7_slag_pits",
-    "title": "Service Airlock",
+    "title": "Service Annex",
     "entry_room": "foundry_service_airlock",
     "icon_image": "images/nodes/world_4/foundry_service_airlock.webp",
     "pos_hint": {
@@ -1069,7 +1069,7 @@
     "id": "foundry_conveyor_belt",
     "world_id": "world_4",
     "hub_id": "hub_8_assembly_line",
-    "title": "Conveyor Belt",
+    "title": "Conveyor Assembly",
     "entry_room": "foundry_conveyor_belt",
     "icon_image": "images/nodes/world_4/foundry_conveyor_belt.webp",
     "pos_hint": {
@@ -1128,7 +1128,7 @@
     "id": "foundry_forge",
     "world_id": "world_4",
     "hub_id": "hub_8_assembly_line",
-    "title": "The Forge",
+    "title": "Forge Complex",
     "entry_room": "foundry_forge_anvil",
     "icon_image": "images/nodes/world_4/foundry_forge.webp",
     "pos_hint": {
@@ -1157,7 +1157,7 @@
     "id": "foundry_power_core",
     "world_id": "world_4",
     "hub_id": "hub_8_assembly_line",
-    "title": "Power Core",
+    "title": "Core Complex",
     "entry_room": "foundry_power_core",
     "icon_image": "images/nodes/world_4/foundry_power_core.webp",
     "pos_hint": {
@@ -1186,7 +1186,7 @@
     "id": "foundry_titan_dock",
     "world_id": "world_4",
     "hub_id": "hub_8_assembly_line",
-    "title": "Titan Dock",
+    "title": "Titan Gantries",
     "entry_room": "foundry_titan_dock",
     "icon_image": "images/nodes/world_4/foundry_titan_dock.webp",
     "pos_hint": {
@@ -1215,7 +1215,7 @@
     "id": "orbital_executive_dock",
     "world_id": "world_5",
     "hub_id": "hub_9_orbital_ring",
-    "title": "Executive Dock",
+    "title": "Executive Arrival Zone",
     "entry_room": "orbital_executive_dock",
     "icon_image": "images/nodes/world_5/orbital_executive_dock.webp",
     "pos_hint": {
@@ -1246,7 +1246,7 @@
     "id": "orbital_grand_concourse",
     "world_id": "world_5",
     "hub_id": "hub_9_orbital_ring",
-    "title": "Grand Concourse",
+    "title": "Concourse District",
     "entry_room": "orbital_grand_concourse",
     "icon_image": "images/nodes/world_5/orbital_grand_concourse.webp",
     "pos_hint": {
@@ -1277,7 +1277,7 @@
     "id": "orbital_solarium",
     "world_id": "world_5",
     "hub_id": "hub_9_orbital_ring",
-    "title": "Solarium",
+    "title": "Orbital Gardens",
     "entry_room": "orbital_solarium",
     "icon_image": "images/nodes/world_5/orbital_solarium.webp",
     "pos_hint": {
@@ -1308,7 +1308,7 @@
     "id": "orbital_security_hub",
     "world_id": "world_5",
     "hub_id": "hub_9_orbital_ring",
-    "title": "Security Hub",
+    "title": "Compliance Precinct",
     "entry_room": "orbital_security_hub",
     "icon_image": "images/nodes/world_5/orbital_security_hub.webp",
     "pos_hint": {
@@ -1339,7 +1339,7 @@
     "id": "orbital_service_shaft",
     "world_id": "world_5",
     "hub_id": "hub_9_orbital_ring",
-    "title": "Service Shaft",
+    "title": "Service Access",
     "entry_room": "orbital_service_shaft",
     "icon_image": "images/nodes/world_5/orbital_service_shaft.webp",
     "pos_hint": {
@@ -1371,7 +1371,7 @@
     "id": "deep_server_farm",
     "world_id": "world_5",
     "hub_id": "hub_10_deep_ring",
-    "title": "Server Farm",
+    "title": "Mainframe Sector",
     "entry_room": "orbital_server_farm",
     "icon_image": "images/nodes/world_5/deep_server_farm.webp",
     "pos_hint": {
@@ -1404,7 +1404,7 @@
     "id": "deep_anchor_chamber",
     "world_id": "world_5",
     "hub_id": "hub_10_deep_ring",
-    "title": "Anchor Chamber",
+    "title": "Anchor Containment",
     "entry_room": "deep_anchor_chamber",
     "icon_image": "images/nodes/world_5/deep_anchor_chamber.webp",
     "pos_hint": {
@@ -1435,7 +1435,7 @@
     "id": "deep_throne_room",
     "world_id": "world_5",
     "hub_id": "hub_10_deep_ring",
-    "title": "Throne Room",
+    "title": "Command Deck",
     "entry_room": "deep_throne_room",
     "icon_image": "images/nodes/world_5/deep_throne_room.webp",
     "pos_hint": {
@@ -1465,7 +1465,7 @@
     "id": "deep_tear",
     "world_id": "world_5",
     "hub_id": "hub_10_deep_ring",
-    "title": "The Tear",
+    "title": "Tear Approach",
     "entry_room": "deep_tear",
     "icon_image": "images/nodes/world_5/deep_tear.webp",
     "pos_hint": {
@@ -1494,7 +1494,7 @@
     "id": "source_campfire_node",
     "world_id": "world_6",
     "hub_id": "hub_11_event_horizon",
-    "title": "The Campfire",
+    "title": "The Gathering",
     "entry_room": "source_campfire",
     "icon_image": "images/nodes/world_6/source_campfire_node.webp",
     "pos_hint": {
@@ -1522,7 +1522,7 @@
     "id": "source_zeke_nightmare_node",
     "world_id": "world_6",
     "hub_id": "hub_11_event_horizon",
-    "title": "Infinite Cubicle",
+    "title": "Zeke’s Nightmare",
     "entry_room": "source_zeke_nightmare",
     "icon_image": "images/nodes/world_6/source_zeke_nightmare_node.webp",
     "pos_hint": {
@@ -1550,7 +1550,7 @@
     "id": "source_gh0st_nightmare_node",
     "world_id": "world_6",
     "hub_id": "hub_11_event_horizon",
-    "title": "Endless War",
+    "title": "Gh0st’s Nightmare",
     "entry_room": "source_gh0st_nightmare",
     "icon_image": "images/nodes/world_6/source_gh0st_nightmare_node.webp",
     "pos_hint": {
@@ -1578,7 +1578,7 @@
     "id": "source_orion_nightmare_node",
     "world_id": "world_6",
     "hub_id": "hub_11_event_horizon",
-    "title": "Silent Shore",
+    "title": "Orion’s Nightmare",
     "entry_room": "source_orion_nightmare",
     "icon_image": "images/nodes/world_6/source_orion_nightmare_node.webp",
     "pos_hint": {
@@ -1606,7 +1606,7 @@
     "id": "source_echo_mines_node",
     "world_id": "world_6",
     "hub_id": "hub_11_event_horizon",
-    "title": "Echo of the Mines",
+    "title": "Mine Memories",
     "entry_room": "source_echo_mines",
     "icon_image": "images/nodes/world_6/source_echo_mines_node.webp",
     "pos_hint": {
@@ -1637,7 +1637,7 @@
     "id": "source_memory_bridge_node",
     "world_id": "world_6",
     "hub_id": "hub_11_event_horizon",
-    "title": "Memory Bridge",
+    "title": "The Crew’s Crossing",
     "entry_room": "source_memory_bridge",
     "icon_image": "images/nodes/world_6/source_memory_bridge_node.webp",
     "pos_hint": {
@@ -1667,7 +1667,7 @@
     "id": "source_memory_stair_node",
     "world_id": "world_6",
     "hub_id": "hub_12_singularity",
-    "title": "Memory Stair",
+    "title": "The Ascent",
     "entry_room": "source_memory_stair",
     "icon_image": "images/nodes/world_6/source_memory_stair_node.webp",
     "pos_hint": {
@@ -1696,7 +1696,7 @@
     "id": "source_spire_thought_node",
     "world_id": "world_6",
     "hub_id": "hub_12_singularity",
-    "title": "Spire of Thought",
+    "title": "Spire Memories",
     "entry_room": "source_spire_thought",
     "icon_image": "images/nodes/world_6/source_spire_thought_node.webp",
     "pos_hint": {
@@ -1725,7 +1725,7 @@
     "id": "source_center_node",
     "world_id": "world_6",
     "hub_id": "hub_12_singularity",
-    "title": "The Center",
+    "title": "Heart of the Source",
     "entry_room": "source_center",
     "icon_image": "images/nodes/world_6/source_center_node.webp",
     "pos_hint": {
@@ -1752,7 +1752,7 @@
     "id": "source_new_world_node",
     "world_id": "world_6",
     "hub_id": "hub_12_singularity",
-    "title": "New World",
+    "title": "Beyond the Silence",
     "entry_room": "source_new_world",
     "icon_image": "images/nodes/world_6/source_new_world_node.webp",
     "pos_hint": {

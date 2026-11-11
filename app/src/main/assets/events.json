@@ -5183,6 +5183,62 @@
     ]
   },
   {
+    "id": "w3_mq12_review_plan",
+    "description": "Review the prepared route without committing the heist.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w3_mq12_review_plan"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w3_mq12"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "talk_jax"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "map_patrols"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "interrogate_guard"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "copy_badges"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "source_disguises"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w3_mq12",
+        "task_id": "hack_blueprints"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w3_mq12",
+        "task_id": "assemble_table"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:w3_mq12_planning_table_dialogue"
+      }
+    ],
+    "repeatable": true
+  },
+  {
     "id": "w3_mq12_assemble_planning",
     "description": "Triggered when coordinating the heist plan.",
     "trigger": {
@@ -6125,7 +6181,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "The rooftop security line buckles. The Astra is close enough to smell hot metal through the wind, and the Administrator stops pretending this is only an arrest."
+        "message": "The rooftop security line buckles. The Administrator drops into its command frame and brings its last Aero Drone to bear. It controls the rooftop guns and the local security curtain. This is the crew’s final fight for the Spire."
       }
     ]
   },
@@ -6162,7 +6218,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Administrator frame collapses, still smiling through sparking teeth. Its local security curtain flickers. Nova needs one clear launch window toward the Foundry."
+        "message": "The Administrator’s command frame collapses. The rooftop guns go dark, and for the first time since the heist began, the Spire falls quiet. Use the shield window to read the opening in the local security curtain, then depart for the Foundry."
       }
     ],
     "recover_recorded_victory": true
@@ -6501,7 +6557,7 @@
       },
       {
         "type": "show_message",
-        "message": "You learn the rhythm of the Source flares and cross the slag channel with boots smoking."
+        "message": "Nova spots the lull between the Source flares and marks the crossing window. The crew can time its passage without rushing into the heat."
       }
     ]
   },
@@ -7660,7 +7716,11 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Meltdown\n\nThe stolen engine kicks the Astra into high orbit while the Phase-Cutter Arrays carve open the pursuit net. Below, Gh0st leaves Rylos alive because choice matters more than revenge. Vale loses the Ascension Cradle hardware and stops pretending this is a local audit: he relieves Thorne, locks the Ring, and activates the Soloist variant."
+        "message": "The stolen engine kicks the Astra into high orbit while the Phase-Cutter Arrays carve open the pursuit net. Below, Gh0st leaves Rylos alive. A command broadcast cuts across the flight channel."
+      },
+      {
+        "type": "start_dialogue",
+        "npc": "line:vale_w4_mq20_coup"
       }
     ]
   },
@@ -15297,7 +15357,7 @@
       },
       {
         "type": "show_message",
-        "message": "Access log, corner-table reader: Vance's badge registered at 21:00. Syndicate Booth reader: the same badge registered at 21:14. Equipment log: his comms unit vented coolant at 21:12. The entries are separate records; the terminal offers no reconstruction of the crime."
+        "message": "Access log, corner-table reader: Sorrell's badge registered at 21:00. Syndicate Booth reader: the same badge registered at 21:14. Equipment log: his comms unit vented coolant at 21:12. The entries are separate records; the terminal offers no reconstruction of the crime."
       }
     ]
   },
@@ -15320,7 +15380,7 @@
       },
       {
         "type": "show_message",
-        "message": "The comms rig bears Vance's procurement crest. Its Cyano-Coolant 9 core bracket is empty, with fresh frost around the release catch. This is a physical inspection, separate from the terminal's timestamps."
+        "message": "The comms rig bears Sorrell's procurement crest. Its Cyano-Coolant 9 core bracket is empty, with fresh frost around the release catch. This is a physical inspection, separate from the terminal's timestamps."
       }
     ]
   },
@@ -15334,7 +15394,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "Malick's encrypted files reveal Director Vance embezzled millions in military scrap. Malick scheduled this meeting to give Vance one chance to surrender before filing the report."
+        "message": "Malick's encrypted files reveal Director Sorrell embezzled millions in military scrap. Malick scheduled this meeting to give Sorrell one chance to surrender before filing the report."
       }
     ]
   },

@@ -110,7 +110,7 @@ Start: Triage Hall (`medbay_hall`).
 1. Go **north** to Doc's Exam Room (`medbay_exam1`). Talk to **Doc** until **System Flush (`w1_sq02`)** starts.
 2. Go **east** to Med Supply Closet (`medbay_storage`). Turn on **emergency terminal**, then loot **cryogenic locker**. Return **west**, then **south** to Triage Hall.
 3. Heal if needed, then go **east** to Ventilation Hub (`medbay_vents`). Defeat the **two Siren Skimmers**. Let victory processing finish.
-4. Inspect **vent first** to identify the cracked housing. Then use **fans** to reroute airflow. Then clear **toxic blockage**. The order matters; repeatedly tapping the blockage before inspection and airflow does not advance the intended chain.
+4. Inspect **vent first** to identify the cracked housing. Then use **fans** to reroute airflow. Defeat the two Siren Skimmers before reaching into the intake to clear **toxic blockage**. The order matters; repeatedly tapping the blockage before inspection and airflow does not advance the intended chain.
 5. Go **east** to Exhaust Mouth (`medbay_exhaust`), inspect **vent pipe** and **grate**, then return **west**.
 6. Go **west** to Triage Hall, then **north** to Doc. Finish the turn-in: **90 XP + Corrosive Rounds mod**. Inspect the mod in Party/Items and equip it in a compatible unlocked slot if desired.
 7. Return **south** to Triage Hall, go **west** to Decon Lock (`medbay_decon`), then **north** to The Morgue (`medbay_morgue`). Loot **bio-containment canister** and read **recycling terminal**; inspect **drawers**.

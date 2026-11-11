@@ -318,7 +318,7 @@ fun RoomDescriptionPanel(
     if (currentRoom == null && description.isNullOrBlank()) return
     val scrollState = rememberScrollState()
     val scrollScope = rememberCoroutineScope()
-    val cueClearancePx = with(LocalDensity.current) { 48.dp.roundToPx() }
+    val cueClearancePx = with(LocalDensity.current) { 28.dp.roundToPx() }
     LaunchedEffect(currentRoom?.id) {
         scrollState.scrollTo(0)
     }
@@ -386,7 +386,7 @@ fun RoomDescriptionPanel(
                     .fillMaxWidth()
                     .weight(1f, fill = false)
             ) {
-                Box(Modifier.fillMaxWidth().verticalScroll(scrollState).padding(bottom = 48.dp).maestroTag("room-description-scroll")) {
+                Box(Modifier.fillMaxWidth().verticalScroll(scrollState).padding(bottom = 28.dp).maestroTag("room-description-scroll")) {
                 RoomDescription(
                     plan = plan,
                     description = description,

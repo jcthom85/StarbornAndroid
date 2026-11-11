@@ -114,7 +114,8 @@ data class GenericAction(
     val cabinetId: String? = null,
     @Json(name = "hide_inline")
     override val hideInline: Boolean = false,
-    val completedInspection: Boolean = false
+    val completedInspection: Boolean = false,
+    val travelLabel: String? = null
 ) : RoomAction
 
 fun RoomAction.actionKey(): String = when (this) {

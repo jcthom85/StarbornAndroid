@@ -1,0 +1,18 @@
+{
+  "full_host_tests": 815,
+  "full_host_failures": 0,
+  "final_focused_host_tests": 17,
+  "final_desktop_tests": 10,
+  "final_focused_failures": 0,
+  "android_tests": 8,
+  "android_result": "OK (8 tests)",
+  "apk_build": "success",
+  "apk_sha256": "64cae5e7c718c46a68bd6516bbd9904263575069199de6dc793bb539f5f7f52a",
+  "room_json_apk_parity": true,
+  "balance_changed": false,
+  "exact_reported_rooftop_save": "unavailable; all tested gate states return feedback and valid post-boss route launches",
+  "pixel_installed": false,
+  "version_bumped": false,
+  "committed_or_pushed": false,
+  "old_walkthrough_unchanged": true
+}

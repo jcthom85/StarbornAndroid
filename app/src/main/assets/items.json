@@ -2273,7 +2273,7 @@
   {
     "id": "vial_of_venom",
     "name": "Vial of Venom",
-    "description": "A sealed vial of corrosive venom harvested from wasteland fauna.",
+    "description": "A sealed vial of corrosive venom harvested from wasteland fauna. Combine one vial with one Herb in the Field Kit to make an Antidote Flask.",
     "type": "component",
     "value": 22,
     "buy_price": 44,
@@ -3814,7 +3814,7 @@
   {
     "id": "skyline_master_passkey",
     "name": "Skyline Master Passkey",
-    "description": "The executive passkey Vance surrendered with his confession. Kept as evidence of the Skyline Salon case.",
+    "description": "The executive passkey Sorrell surrendered with his confession. Kept as evidence of the Skyline Salon case.",
     "type": "quest",
     "value": 0,
     "rarity": "epic",
@@ -3823,7 +3823,7 @@
   {
     "id": "cyano_coolant_injector",
     "name": "Cyano-Coolant Injector",
-    "description": "A weapon mod recovered from Vance’s comms core. Adds Freeze to otherwise untyped basic weapon attacks, a 20% freeze-on-hit chance, +4 Focus and +3 Accuracy.",
+    "description": "A weapon mod recovered from Sorrell’s comms core. Adds Freeze to otherwise untyped basic weapon attacks, a 20% freeze-on-hit chance, +4 Focus and +3 Accuracy.",
     "type": "mod",
     "value": 350,
     "rarity": "rare",

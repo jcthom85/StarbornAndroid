@@ -106,7 +106,7 @@ fun DialogueOverlay(
     val fullText = remember(line.text) { line.text.replace('[', ' ').replace(']', ' ').trim() }
     val textScroll = rememberScrollState()
     val choiceScroll = rememberScrollState()
-    val cueClearancePx = with(LocalDensity.current) { 48.dp.roundToPx() }
+    val cueClearancePx = with(LocalDensity.current) { 28.dp.roundToPx() }
     val scrollScope = androidx.compose.runtime.rememberCoroutineScope()
     var textLayout by remember(line.id, fullText) { androidx.compose.runtime.mutableStateOf<TextLayoutResult?>(null) }
     var textViewportHeight by remember { mutableIntStateOf(0) }
@@ -233,7 +233,7 @@ fun DialogueOverlay(
                     Box(Modifier.weight(1f).heightIn(max = 240.dp)) {
                         Box(Modifier.fillMaxWidth().onSizeChanged { textViewportHeight = it.height }
                             .verticalScroll(textScroll)
-                            .padding(bottom = 48.dp)
+                            .padding(bottom = if (textLayout?.size?.height?.let { it > textViewportHeight } == true) 28.dp else 0.dp)
                             .pointerInput(fullText, revealFinished) {
                                 if (!revealFinished) awaitEachGesture {
                                     val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
@@ -283,7 +283,7 @@ fun DialogueOverlay(
                         modifier = Modifier
                             .heightIn(max = 220.dp)
                             .verticalScroll(choiceScroll)
-                            .padding(bottom = 48.dp)
+                            .padding(bottom = if (choiceScroll.maxValue > 0 && choiceScroll.maxValue != Int.MAX_VALUE) 28.dp else 0.dp)
                             .alpha(if (revealFinished) 1f else 0f)
                             .then(
                                 if (revealFinished) Modifier

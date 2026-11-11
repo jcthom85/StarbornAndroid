@@ -277,8 +277,8 @@ class FishingService(
 
     private fun formatZoneName(zoneId: String): String = when (zoneId) {
         "colony_pit_drain" -> "Colony Drain Pool"
-        "sector9_stream" -> "Sector 9 Tide Pools"
-        "spire_runoff" -> "Spire Rainwater Runoff"
+        "sector9_stream" -> "Canopy Tide Pools"
+        "spire_runoff" -> "Neon Runoff Pool"
         "foundry_cooling_runoff" -> "Foundry Cooling Springs"
         "orbital_false_tide" -> "Orbital False Tide"
         "singularity_ether_well" -> "Source Ether Well"

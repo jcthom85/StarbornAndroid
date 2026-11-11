@@ -134,6 +134,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -463,11 +464,13 @@ fun ExplorationScreen(
         viewModel.setExplorationInteractionBlocked(blockingOverlayActive || importantQuestPopupVisible || approachingCombat)
     }
 
-    LaunchedEffect(viewModel, uiState.currentWorld?.id) {
+    val eventWorldId by rememberUpdatedState(uiState.currentWorld?.id)
+    // Keep collecting across warps so the destination's audio commands reach the player.
+    LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
             when (event) {
                 is ExplorationEvent.EnterCombat -> {
-                    if (uiState.currentWorld?.id == "world_2") {
+                    if (eventWorldId == "world_2") {
                         approachingCombat = true
                         viewModel.setExplorationInteractionBlocked(true)
                         delay(350L)
@@ -496,7 +499,7 @@ fun ExplorationScreen(
                 is ExplorationEvent.RoomSearchUnlocked -> viewModel.showStatusMessage(event.note ?: "A hidden stash is now accessible")
                 is ExplorationEvent.ItemUsed -> viewModel.showStatusMessage(event.message ?: formatItemUseResult(event.result))
                 is ExplorationEvent.RestRecovered -> {
-                    val message = "A Quiet Rest"
+                    val message = event.title
                     restRecoveryNotice = RestRecoveryNotice(
                         id = System.nanoTime(),
                         title = message,
@@ -986,16 +989,18 @@ fun ExplorationScreen(
         } else {
             themeColor(activeTheme?.fg, Color.White.copy(alpha = 0.92f))
         }
-        val underrailStairs = uiState.actions.filterIsInstance<TravelAction>().firstOrNull {
-            currentRoom?.id == "spire_transit_plaza" && it.direction == "up"
+        val travelActions = uiState.actions.mapNotNull { action ->
+            val label = when (action) {
+                is TravelAction -> action.name
+                is GenericAction -> action.travelLabel
+                else -> null
+            }
+            label?.let { action to it }
         }
-        val descriptionActions = remember(uiState.actions, underrailStairs) {
-            uiState.actions.filterNot { it == underrailStairs }
-        }
-        val inlinePlan = remember(baseRoomDescription, descriptionActions, actionHints, currentRoom, uiState.roomState) {
+        val inlinePlan = remember(baseRoomDescription, uiState.actions, actionHints, currentRoom, uiState.roomState) {
             buildInlineActionPlan(
                 description = baseRoomDescription,
-                actions = descriptionActions.filterNot { it is TravelAction },
+                actions = uiState.actions.filterNot { it is TravelAction },
                 hints = actionHints,
                 room = currentRoom,
                 inspectionState = uiState.roomState
@@ -1039,7 +1044,7 @@ fun ExplorationScreen(
         val hasRoomEntities = visibleNpcs.isNotEmpty() ||
             visibleGroundItems.isNotEmpty() ||
             serviceQuickActions.isNotEmpty() ||
-            uiState.canReturnToHub
+            uiState.canReturnToHub || (!isRoomDark && travelActions.isNotEmpty())
 
         Box(
             modifier = Modifier
@@ -1099,7 +1104,6 @@ fun ExplorationScreen(
                     RoomDescriptionPanel(
                         currentRoom = currentRoom,
                         description = descriptionForPanel,
-                        travelActions = descriptionActions.filterIsInstance<TravelAction>(),
                         plan = inlinePlan,
                         isDark = isRoomDark,
                         onAction = { action -> viewModel.inspectRoomAction(action) },
@@ -1112,15 +1116,6 @@ fun ExplorationScreen(
                             .fillMaxWidth()
                             .heightIn(min = 104.dp, max = 280.dp)
                     )
-                    if (!isRoomDark && underrailStairs != null) {
-                        OverworldGatewayCard(
-                            sectorTitle = "Underrail",
-                            labelOverride = "Stairs to Underrail",
-                            isDark = false,
-                            enabled = !blockingOverlayActive && !importantQuestPopupVisible && !roomTransitionInProgress,
-                            onClick = { viewModel.onActionSelected(underrailStairs) }
-                        )
-                    }
                     if (hasRoomEntities) {
                         RoomEntitySection(
                             npcs = visibleNpcs,
@@ -1129,8 +1124,9 @@ fun ExplorationScreen(
                             npcTradeKeys = uiState.npcTradeKeys,
                             groundItems = visibleGroundItems,
                             serviceActions = serviceQuickActions,
+                            travelActions = if (isRoomDark) emptyList() else travelActions,
                             canReturnToHub = uiState.canReturnToHub,
-                            gatewayEnabled = !blockingOverlayActive && !importantQuestPopupVisible,
+                            gatewayEnabled = !blockingOverlayActive && !importantQuestPopupVisible && !roomTransitionInProgress,
                             sectorTitle = if (uiState.currentHub?.id == "hub_astra") "Cargo ramp" else uiState.currentHub?.title,
                             isDisembarking = uiState.currentHub?.id == "hub_astra",
                             onReturnToHub = { viewModel.requestReturnToHub() },
@@ -1143,7 +1139,8 @@ fun ExplorationScreen(
                             onNpcClick = { name -> viewModel.onNpcInteraction(name) },
                             onCollectItem = { itemId -> viewModel.collectGroundItem(itemId) },
                             onCollectAll = { viewModel.collectAllGroundItems() },
-                            onAction = { action -> viewModel.onActionSelected(action) }
+                            onAction = { action -> viewModel.onActionSelected(action) },
+                            onTravel = viewModel::inspectRoomAction
                         )
                     }
                 }
@@ -5096,6 +5093,7 @@ internal fun RoomEntitySection(
     npcTradeKeys: Set<String> = emptySet(),
     groundItems: Map<String, Int>,
     serviceActions: List<QuickMenuAction> = emptyList(),
+    travelActions: List<Pair<RoomAction, String>> = emptyList(),
     canReturnToHub: Boolean = false,
     gatewayEnabled: Boolean = true,
     sectorTitle: String? = null,
@@ -5110,7 +5108,8 @@ internal fun RoomEntitySection(
     onNpcClick: (String) -> Unit,
     onCollectItem: (String) -> Unit,
     onCollectAll: () -> Unit,
-    onAction: (RoomAction) -> Unit
+    onAction: (RoomAction) -> Unit,
+    onTravel: (RoomAction) -> Unit = onAction
 ) {
     val itemEntries = remember(groundItems, itemDisplayName, itemIsEquipment) {
         groundItems.entries.sortedWith(
@@ -5129,6 +5128,13 @@ internal fun RoomEntitySection(
                 .padding(horizontal = 8.dp, vertical = 6.dp),
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
+            travelActions.forEach { (action, label) ->
+                OverworldGatewayCard(
+                    sectorTitle = null, isDark = isDark, enabled = gatewayEnabled,
+                    onClick = { onTravel(action) }, routeLabel = label,
+                    routeAccent = accentColor
+                )
+            }
             if (canReturnToHub) {
                 OverworldGatewayCard(
                     sectorTitle = sectorTitle,
@@ -5309,12 +5315,18 @@ private fun OverworldGatewayCard(
     onClick: () -> Unit,
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
-    labelOverride: String? = null
+    routeLabel: String? = null,
+    routeAccent: Color? = null
 ) {
     val shape = RoundedCornerShape(10.dp)
-    val mapCyan = Color(0xFF00E5FF)
+    val mapCyan = routeAccent ?: Color(0xFF00E5FF)
     val destination = sectorTitle?.takeIf { it.isNotBlank() } ?: "Colony Map"
-    val label = labelOverride ?: if (isDisembarking) "Disembark" else "To $destination"
+    val label = routeLabel ?: when {
+        isDisembarking -> "Disembark"
+        sectorTitle.isNullOrBlank() -> "Colony Map"
+        else -> "$destination map"
+    }
+    val accessibilityLabel = if (isDisembarking) "Disembark from the Astra" else label
     Surface(
         shape = shape,
         color = Color(0xFF060F17).copy(alpha = if (isDark) 0.88f else 0.76f),
@@ -5324,8 +5336,8 @@ private fun OverworldGatewayCard(
             .clip(shape)
             .clickable(enabled = enabled, onClick = onClick)
             .clearAndSetSemantics {
-                contentDescription = labelOverride ?: if (isDisembarking) "Disembark from the Astra" else "Exit to $destination"
-                if (enabled) onClick(label = labelOverride ?: if (isDisembarking) "Disembark" else "Exit to $destination") {
+                contentDescription = accessibilityLabel
+                if (enabled) onClick(label = label) {
                     onClick()
                     true
                 }
@@ -5358,13 +5370,13 @@ private fun OverworldGatewayCard(
                     modifier = Modifier.size(26.dp)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        Icon(Icons.Outlined.Map, contentDescription = null,
+                        Icon(if (routeLabel == null) Icons.Outlined.Map else Icons.Filled.ChevronRight, contentDescription = null,
                             tint = mapCyan.copy(alpha = 0.85f), modifier = Modifier.size(18.dp))
                     }
                 }
                 Text(
                     text = label,
-                    color = Color.White.copy(alpha = 0.94f),
+                    color = routeAccent ?: Color.White.copy(alpha = 0.94f),
                     style = MaterialTheme.typography.labelMedium.copy(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 0.5.sp

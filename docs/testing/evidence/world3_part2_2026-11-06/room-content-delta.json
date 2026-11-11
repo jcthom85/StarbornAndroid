@@ -1,0 +1,148 @@
+{
+  "spire_landing_pad_roof": {
+    "before": {
+      "id": "spire_landing_pad_roof",
+      "env": "neon",
+      "weather": "storm",
+      "title": "Landing Pad Roof",
+      "background_image": "images/rooms/world_3/spire_landing_pad_roof.webp",
+      "description": "The roof shudders under violent wind and red lockdown light. The Astra waits across the pad while the Planetary Shield rotates overhead in heavy resonance bands, guarding the sky. The flight display marks a shield window and a launch window beside a test telemetry relay.",
+      "npcs": [],
+      "items": [],
+      "enemies": [
+        "aero_drone",
+        "heavy_mech",
+        "administrator_boss"
+      ],
+      "enemy_parties": [
+        [
+          "aero_drone",
+          "heavy_mech"
+        ],
+        [
+          "administrator_boss",
+          "aero_drone"
+        ]
+      ],
+      "connections": {
+        "west": "spire_drone_test_alcove",
+        "north": "spire_landing_pad_scale_01"
+      },
+      "pos": [
+        3,
+        1
+      ],
+      "state": {},
+      "description_variants": [
+        {
+          "description": "The roof shudders under wind and lockdown light. The Astra waits across the pad. Scan reveals the Planetary Shield opening for less than a heartbeat. The flight display marks a shield window and a launch window beside a test telemetry relay.",
+          "requires_milestones": [
+            "ms_w3_mq14_complete"
+          ]
+        }
+      ],
+      "actions": [
+        {
+          "name": "shield window",
+          "type": "generic",
+          "action_event": "w3_scan_shield_gap",
+          "condition_unmet_message": "The Shield is still an impossible wall until the Lens shows Nova the window in its rotation."
+        },
+        {
+          "name": "launch window",
+          "type": "generic",
+          "action_event": "w3_mq15_launch_astra",
+          "condition_unmet_message": "The Astra can slip the Shield only after the Administrator is down and the Lens has found the window.",
+          "hide_when_event_completed": "w3_mq15_launch_astra"
+        },
+        {
+          "name": "test telemetry relay",
+          "type": "generic",
+          "action_event": "w3_sq15_scrub_telemetry",
+          "requires_milestones": [
+            "ms_w3_prototype_trial_complete"
+          ],
+          "condition_unmet_message": "The relay has no prototype telemetry to scrub yet.",
+          "hide_when_event_completed": "w3_sq15_scrub_telemetry"
+        }
+      ],
+      "enemy_flavor": {
+        "aero_drone": "Aero drones knife through the rain of red warning light, their stun emitters searching for a clean angle.",
+        "heavy_mech": "A heavy mech plants itself between the crew and the Astra, vents glowing hot enough to warp the landing paint.",
+        "administrator_boss": "The Administrator descends in a polished security frame, its voice still gentle while the roof guns arm."
+      }
+    },
+    "after": {
+      "id": "spire_landing_pad_roof",
+      "env": "neon",
+      "weather": "storm",
+      "title": "Landing Pad Roof",
+      "background_image": "images/rooms/world_3/spire_landing_pad_roof.webp",
+      "description": "The roof shudders under violent wind and red lockdown light. The Astra waits across the pad while the Planetary Shield rotates overhead in heavy resonance bands, guarding the sky. The flight display marks a shield window and a launch window beside a test telemetry relay.",
+      "npcs": [],
+      "items": [],
+      "enemies": [
+        "aero_drone",
+        "heavy_mech",
+        "administrator_boss"
+      ],
+      "enemy_parties": [
+        [
+          "aero_drone",
+          "heavy_mech"
+        ],
+        [
+          "administrator_boss",
+          "aero_drone"
+        ]
+      ],
+      "connections": {
+        "west": "spire_drone_test_alcove",
+        "north": "spire_landing_pad_scale_01"
+      },
+      "pos": [
+        3,
+        1
+      ],
+      "state": {},
+      "description_variants": [
+        {
+          "description": "The roof shudders under wind and lockdown light. The Astra waits across the pad. The Spire's local security curtain cycles beneath the still-intact planetary Shield. The flight display marks a shield window and a launch window beside a test telemetry relay.",
+          "requires_milestones": [
+            "ms_w3_mq14_complete"
+          ]
+        }
+      ],
+      "actions": [
+        {
+          "name": "shield window",
+          "type": "generic",
+          "action_event": "w3_scan_shield_gap",
+          "condition_unmet_message": "The Lens can read the Spire's low-altitude security-curtain timing. The planetary Shield remains overhead."
+        },
+        {
+          "name": "launch window",
+          "type": "generic",
+          "action_event": "w3_mq15_launch_astra",
+          "condition_unmet_message": "Departure requires defeating the Administrator and recording the local security-curtain window with the Lens.",
+          "hide_when_event_completed": "w3_mq15_launch_astra"
+        },
+        {
+          "name": "test telemetry relay",
+          "type": "generic",
+          "action_event": "w3_sq15_scrub_telemetry",
+          "requires_milestones": [
+            "ms_w3_prototype_trial_complete"
+          ],
+          "condition_unmet_message": "The relay has no prototype telemetry to scrub yet.",
+          "hide_when_event_completed": "w3_sq15_scrub_telemetry"
+        }
+      ],
+      "enemy_flavor": {
+        "aero_drone": "Aero drones knife through the rain of red warning light, their stun emitters searching for a clean angle.",
+        "heavy_mech": "A heavy mech plants itself between the crew and the Astra, vents glowing hot enough to warp the landing paint.",
+        "administrator_boss": "The Administrator descends in a polished security frame, its voice still gentle while the roof guns arm."
+      }
+    }
+  }
+}

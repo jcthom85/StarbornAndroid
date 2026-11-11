@@ -54,7 +54,7 @@ class DesktopLocalizedLightingTest {
                 EnvironmentalEffectsOverlay(room.id, if (enabled) effects else emptyList(), geometry, previewTimeSeconds = time)
             }
         }
-        for (room in listOf("pit_nova_bunk", "sector9_landing_glade", "source_campfire")) {
+        for (room in listOf("pit_nova_bunk", "sector9_landing_glade", "source_campfire", "foundry_slag_river", "foundry_slag_stepping_stones")) {
             compose.runOnIdle { id = room }
             compose.waitUntil(10000) { loaded == room }
             for (phone in listOf(false, true)) {
@@ -85,8 +85,10 @@ class DesktopLocalizedLightingTest {
                         if (!phone) assertEquals("light must not wash the desktop side margin", before.getRGB(10, before.height/2), after.getRGB(10, after.height/2))
                     }
                 }
-                assertTrue("$room needs perceptible temporal lighting, not just a few changed pixels: $mostMovingPixels",
-                    mostMovingPixels > before.width * before.height * .01)
+                // The lava channels occupy much less of the image than the room-wide lighting fixtures.
+                val minimumMovingFraction = if (room.startsWith("foundry_slag_")) .002 else .01
+                assertTrue("$room needs perceptible temporal lighting: $mostMovingPixels",
+                    mostMovingPixels > before.width * before.height * minimumMovingFraction)
                 assertTrue("$room must not tint the entire viewport", changed < before.width * before.height * .75)
                 if (phone) {
                     val frames = File(out, "frames-$room").apply { mkdirs() }

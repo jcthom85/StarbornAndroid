@@ -82,7 +82,7 @@
         "chance": 0.75
       }
     ],
-    "description": "Burrows, then attacks from below. Insulated against Shock. Burn opens it up; Freeze locks its claws and keeps it above ground.",
+    "description": "Burrows, then attacks from below. Insulated against Shock. Burn opens it up; Freeze locks its claws and keeps it above ground. Often yields Beast Meat for cooking or Source Resin crafting.",
     "portrait": "images/enemies/echo_borer_combat.png"
   },
   {
@@ -126,7 +126,7 @@
         "chance": 0.35
       }
     ],
-    "description": "Fast airborne controller. Its shriek briefly disrupts suit optics. Too quick to reliably shoot, but Freeze collapses the steam sac and drops it.",
+    "description": "Fast airborne controller. Its shriek briefly disrupts suit optics. Too quick to reliably shoot, but Freeze collapses the steam sac and drops it. May yield venom for crafting Antidote Flasks and rations for recovery.",
     "portrait": "images/enemies/siren_skimmer_combat.png"
   },
   {
@@ -222,7 +222,7 @@
         "chance": 0.4
       }
     ],
-    "description": "Armored Dominion opponent with an active barrier. Hydraulic Kick breaks its Guard; Stagger disrupts the shield.",
+    "description": "Armored Dominion opponent with an active barrier. Hydraulic Kick breaks its Guard; Stagger disrupts the shield. May yield Armor Plate; salvage it in the Field Kit for Scrap Metal and Ballistic Weave.",
     "portrait": "images/enemies/acoustic_bulwark_combat.png"
   },
   {
@@ -271,7 +271,7 @@
         "chance": 0.35
       }
     ],
-    "description": "Fast support drone with EMP and Static bursts. It calls in whatever else is nearby, so it dies first. Shock drops it in one; its casing shrugs off Acid.",
+    "description": "Fast support drone with EMP and Static bursts. It calls in whatever else is nearby, so it dies first. Shock drops it in one; its casing shrugs off Acid. May yield wiring and batteries for Field Kit repairs, lures, and Pulse Grenades.",
     "portrait": "images/enemies/resonance_buoy_combat.png"
   },
   {
@@ -448,7 +448,7 @@
         "chance": 0.4
       }
     ],
-    "description": "Ranged acid plant. Highly vulnerable to fire.",
+    "description": "Ranged acid plant. Highly vulnerable to fire. May yield venom for crafting Antidote Flasks.",
     "portrait": "images/enemies/spore_spitter_combat.png"
   },
   {
@@ -527,7 +527,7 @@
     "xp_reward": 40,
     "credit_reward": 0,
     "drops": [],
-    "description": "Overgrown thorn hazard. Extremely weak to fire.",
+    "description": "Overgrown thorn hazard. Extremely weak to fire. Its thicket growth shelters herbs used in cooking and antidotes.",
     "portrait": "images/enemies/razor_vine_combat.png"
   },
   {
@@ -688,7 +688,7 @@
         "chance": 0.3
       }
     ],
-    "description": "Corrosive sewage biological. Applies acid/erosion.",
+    "description": "Corrosive sewage biological. Applies acid/erosion. May yield Wiring Bundles for Field Kit repairs and fishing lures.",
     "portrait": "images/enemies/mutated_crawler_combat.png"
   },
   {
@@ -772,7 +772,7 @@
         "chance": 0.5
       }
     ],
-    "description": "Flying Dominion robot shield droid. Drops Neon Sign Core.",
+    "description": "Flying Dominion robot shield droid. Drops Neon Sign Core. Carries the Neon Sign Core for Jax’s repair and may yield a Battery for Pulse Grenades.",
     "portrait": "images/enemies/resonance_buoy_combat.png"
   },
   {
@@ -817,7 +817,7 @@
         "chance": 0.4
       }
     ],
-    "description": "Fast stun drone that dodges clean hits until its pattern is read. Scan marks the opening; physical strikes finish it once staggered.",
+    "description": "Fast stun drone that dodges clean hits until its pattern is read. Scan marks the opening; physical strikes finish it once staggered. May yield Wiring Bundles and Power Cells. Salvage a Power Cell in the Field Kit for wiring and scrap.",
     "portrait": "images/enemies/security_drone_combat.png"
   },
   {
@@ -909,7 +909,7 @@
         "chance": 0.35
       }
     ],
-    "description": "Armored flamethrower tank with heavy stability. Scan calls out its exposed stabilizers; shock damage breaks them fastest.",
+    "description": "Armored flamethrower tank with heavy stability. Scan calls out its exposed stabilizers; shock damage breaks them fastest. May yield Scrap Metal and Power Cells for Field Kit projects.",
     "portrait": "images/enemies/heavy_loader_combat.png"
   },
   {
@@ -1001,7 +1001,7 @@
         "chance": 0.45
       }
     ],
-    "description": "Fast burn-element drone. Cooling and shock attacks destabilize it.",
+    "description": "Fast burn-element drone. Cooling and shock attacks destabilize it. May yield Wiring Bundles and Power Cells for Field Kit repairs.",
     "portrait": "images/enemies/security_drone_combat.png"
   },
   {
@@ -1051,7 +1051,7 @@
         "chance": 0.35
       }
     ],
-    "description": "Slow armored hitter. After Molten Slam it spends a turn cooling with its shell exposed. Exploit that opening or use Freeze and Shock against its armor.",
+    "description": "Slow armored hitter. After Molten Slam it spends a turn cooling with its shell exposed. Exploit that opening or use Freeze and Shock against its armor. May yield Scrap Metal and Power Cells for crafting and salvage.",
     "portrait": "images/enemies/heavy_loader_combat.png"
   },
   {
@@ -1096,7 +1096,7 @@
         "chance": 0.25
       }
     ],
-    "description": "Repair support. Field Weld restores itself and its squad, but only twice per battle. Disable it or focus it down before attacking armored allies; between repairs it uses Torch Cut.",
+    "description": "Repair support. Field Weld restores itself and its squad, but only twice per battle. Disable it or focus it down before attacking armored allies; between repairs it uses Torch Cut. May yield Scrap Metal and Power Cells. Check individual patrols for recoverable stock.",
     "portrait": "images/enemies/heavy_loader_combat.png"
   },
   {
@@ -1142,7 +1142,7 @@
         "chance": 0.35
       }
     ],
-    "description": "Armored cone-AoE trooper. Source disruption weakens its suit locks.",
+    "description": "Armored cone-AoE trooper. Source disruption weakens its suit locks. May yield healing supplies and Battery Packs. Salvage a Battery Pack for wiring.",
     "portrait": "images/enemies/dominion_dampener_combat.png"
   },
   {
@@ -1189,7 +1189,7 @@
         "chance": 0.35
       }
     ],
-    "description": "Stealth Source assassin. Scan and shock expose its timing.",
+    "description": "Stealth Source assassin. Scan and shock expose its timing. May yield Wiring Bundles and Power Cells for crafting.",
     "portrait": "images/enemies/riot_guard_combat.png"
   },
   {

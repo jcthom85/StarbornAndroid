@@ -207,7 +207,7 @@ Both fern and spore scans are in Resonant Canopy. Reach gamma before recovering 
 
 78. From **Spore Thickets**, go **east** to **Hound Nest** (`sector9_wilds_nest`).
 
-79. At **Hound Nest**, clear the two-Shard-Hound pack if encountered, harvest **shard-hound remains**, and open **trampled supply pack** for Beast Meat, Wiring Bundle and Energy Core.
+79. At **Hound Nest**, defeat the two Shard-Hounds to retrieve the guarded supply pack, harvest **shard-hound remains**, and open **trampled supply pack** for Beast Meat, Wiring Bundle and Energy Core.
 
 80. From **Hound Nest**, go **west** to **Spore Thickets** (`sector9_wilds_thickets`) -> **south** to **Poison Hollow** (`sector9_wilds_hollow`).
 
@@ -384,7 +384,7 @@ West/east crystals are outside Sanctuary in the Temple tuner wings; north is Aco
 
 156. From **Sanctuary Grand Hall**, go **north** to **Left Reliquary** (`sector9_foyer_left_gallery`).
 
-157. At **Left Reliquary**, clear Ruin-Guardian if encountered (guaranteed Scrap Metal), and read **botanical research log**.
+157. At **Left Reliquary**, defeat the Ruin Guardian to open the west route to the Security Hub (guaranteed Scrap Metal), and read **botanical research log**.
 
 158. From **Left Reliquary**, go **west** to **Dominion Outpost** (`sector9_foyer_security_hub`).
 

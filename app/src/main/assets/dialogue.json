@@ -1293,7 +1293,7 @@
   {
     "id": "zeke_w3_mq13_cover",
     "speaker": "Zeke",
-    "text": "Zeke keeps his voice low as the registry clears. 'Right order, right badges. Same trick as the mine checkpoint: give the system a story its own forms already believe.'",
+    "text": "[Zeke keeps his voice low as the registry clears.] Right order, right badges. Same trick as the mine checkpoint: give the system a story its own forms already believe.",
     "trigger": "player_action:w3_mq13_blend_in"
   },
   {
@@ -1326,6 +1326,12 @@
     "speaker": "Zeke",
     "condition": "quest_active:w3_mq14,quest_task_done:w3_mq14:solve_light_puzzle,quest_task_not_done:w3_mq14:take_lens",
     "text": "Wait. Energy density is spiking before you touch it. It's reading you back, Nova. Grab it, and the feedback lights us up.",
+    "next": "thorne_w3_lens_recovery_order"
+  },
+  {
+    "id": "thorne_w3_lens_recovery_order",
+    "speaker": "Thorne",
+    "text": "[The freight route on the vault display turns red.] Administrator, suspend freight access. Recover the Lens intact. I’ve sold access to Harmony for the next ten years. I intend to deliver.",
     "next": "nova_w3_mq14_lens_take"
   },
   {
@@ -1338,20 +1344,20 @@
     "id": "thorne_w3_mq14_trap_intro",
     "speaker": "Thorne",
     "condition": "quest_completed:w3_mq14,quest_active:w3_mq15",
-    "text": "You just tripped a station-wide audit. Do you have any idea what you have done, or are you still calling this courage?",
-    "next": "thorne_w3_mq14_trap_vale"
+    "text": "You’ve taken the Lens. I’ve opened an audit and given Vale recovery access. Administrator, contain the crew. I want the Lens back intact.",
+    "next": "vale_w3_mq15_override"
   },
   {
     "id": "thorne_w3_mq14_trap_vale",
     "speaker": "Thorne",
-    "text": "He is coming, and leaves no survivors. You cannot let him find you. He isn't city security—he's what city security fears.",
-    "next": "vale_w3_mq15_override"
+    "text": "[Thorne’s countermand flashes DENIED.] I gave him recovery access. He’s taken the district’s guns. Get to your ship before he seals the launch route."
   },
   {
     "id": "vale_w3_mq15_override",
     "speaker": "Vale",
     "condition": "quest_active:w3_mq15,quest_task_not_done:w3_mq15:defeat_administrator",
-    "text": "Archive anomaly detected. Administrator, lock the district. Seal the roof. I want no ungoverned noise leaving Sector 0, especially if it sings."
+    "text": "Recovery access accepted. Administrator, seal the roof and authorize lethal force. No ungoverned signal leaves the Spire.",
+    "next": "thorne_w3_mq14_trap_vale"
   },
   {
     "id": "upper_city_lounge_shop_intro",
@@ -1520,14 +1526,14 @@
     "id": "rylos_w4_mq20_intro",
     "speaker": "Rylos",
     "condition": "quest_active:w4_mq20,quest_task_not_done:w4_mq20:confront_rylos",
-    "text": "You are malfunctioning, Unit 734. Submit for correction. Pain is just data leaving the body.",
+    "text": "Director Thorne owns every circuit in this Foundry, Unit 734. She paid for yours as well. Submit for correction. Pain is just data leaving the body.",
     "trigger": "player_action:w4_mq20_confront_rylos"
   },
   {
     "id": "vale_w4_mq20_coup",
     "speaker": "Vale",
     "condition": "quest_completed:w4_mq20,milestone_set:ms_w5_access_unlocked",
-    "text": "Commander Rylos. Audit complete. Denied. Director Thorne is relieved. All sectors: lockdown."
+    "text": "Commander Rylos, the audit is complete. Thorne’s credentials are revoked. Orbital Compliance now answers to me. All sectors, lock down."
   },
   {
     "id": "zeke_w4_post_airlock_idle",
@@ -1623,7 +1629,7 @@
     "id": "thorne_w5_mq22_intro",
     "speaker": "Thorne",
     "condition": "quest_active:w5_mq22,quest_task_done:w5_mq22:access_mainframe,quest_task_not_done:w5_mq22:find_thorne",
-    "text": "I built the cage, thinking Harmony was sellable. Vale isn't trying to own the world—he's trying to erase every voice but his.",
+    "text": "I built the cage. The Foundry supplied the hardware, and I sold the first Harmony contracts before we knew what it would do to the people inside. Vale used my recovery access to copy the command cipher. Now the Ring answers to him.",
     "trigger": "player_action:w5_mq22_find_thorne"
   },
   {
@@ -1747,7 +1753,7 @@
     "id": "vale_w6_final_confrontation",
     "speaker": "Vale",
     "condition": "quest_active:w6_mq30,quest_task_not_done:w6_mq30:confront_vale",
-    "text": "Thorne wanted to bottle the ocean. I will break the glass. No bodies to starve, no minds to break. Why fight for friction?",
+    "text": "Thorne sold Harmony by subscription. I can give it to everyone. I can rebuild the mine so no child remembers hunger, no worker remembers the dead, and no one has a voice apart from mine. Tell me what they lose that was worth the pain.",
     "trigger": "music_silence_persist,player_action:w6_mq30_confront_vale",
     "next": "nova_w6_final_answer"
   },
@@ -1755,7 +1761,7 @@
     "id": "nova_w6_final_answer",
     "speaker": "Nova",
     "condition": "quest_active:w6_mq30",
-    "text": "You are not saving them. You are building a mass grave and calling the silence peace."
+    "text": "Jed left his handprint where you tried to polish the mine clean. You can take away the grief by taking away everyone we loved. I won’t let you call that saving us."
   },
   {
     "id": "zeke_w6_post_nightmare_idle",
@@ -2114,7 +2120,7 @@
     "options": [
       {
         "id": "cheno_opt_who",
-        "text": "What is Bridgman Civil working on up here?",
+        "text": "What is the rigging crew working on up here?",
         "next": "cheno_who_reply"
       },
       {
@@ -2178,7 +2184,7 @@
   {
     "id": "cheno_favor_turnin",
     "speaker": "Cheno",
-    "text": "Look at that—solid Dominion-grade alloy! [Cheno takes the parts with massive hands, effortlessly locking them into the pneumatic press with a single smooth clamp.] There. That center truss will hold through a category-five solar gale. A deal's a deal, Nova. Take this—it's forged from Bridgman structural titanium. When things get heavy out there, remember you've got friends who've got your back.",
+    "text": "Look at that—solid Dominion-grade alloy! [Cheno takes the parts with massive hands, effortlessly locking them into the pneumatic press with a single smooth clamp.] There. That center truss will hold through a category-five solar gale. A deal's a deal, Nova. Take this—it's forged from salvaged structural titanium. When things get heavy out there, remember you've got friends who've got your back.",
     "trigger": "take_item:heavy_gear*2,take_item:wiring_bundle*2,give_item:cheno_carabiner,give_xp:250,give_credits:300,set_milestone:ms_cheno_rigging_favor_completed",
     "next": "cheno_default_talk"
   },
@@ -3176,12 +3182,19 @@
   {
     "id": "dax_default_talk_3",
     "speaker": "Dax",
-    "text": "I had my back turned prepping garnishes for Director Vance. But the terminal records every badge ping in this room!"
+    "text": "I had my back turned prepping garnishes for Director Sorrell. But the terminal records every badge ping in this room!"
   },
   {
     "id": "dr_lyra_default_talk",
     "speaker": "Dr. Lyra",
-    "text": "Before you ask: yes, I handle binary coolants. And no, I didn't kill Malick. He was the one auditing Procurement to clear my record. Why would I poison my only ally?"
+    "text": "Before you ask: yes, I handle binary coolants. And no, I didn't kill Malick. He was the one auditing Procurement to clear my record. Why would I poison my only ally?",
+    "condition": "milestone_not_set:ms_w3_sq16_complete"
+  },
+  {
+    "id": "dr_lyra_case_closed",
+    "speaker": "Dr. Lyra",
+    "condition": "milestone_set:ms_w3_sq16_complete",
+    "text": "Malick was going to put his name on the audit so Procurement would have to answer him. I’m filing it under mine. They already demoted me once. I know what it could cost. Dax is keeping a copy in case mine disappears."
   },
   {
     "id": "singer_selene_default_talk",
@@ -3190,7 +3203,7 @@
   },
   {
     "id": "director_vance_default_talk",
-    "speaker": "Director Vance",
+    "speaker": "Director Sorrell",
     "text": "Do not waste my time, scrapper. I am a tier-four director! I've been seated at this corner table on an encrypted conference call since 21:00 sharp. My comms rig logs prove I never left my seat!",
     "condition": "milestone_set:ms_w3_sq16_glass_inspected,milestone_set:ms_w3_sq16_terminal_inspected,milestone_set:ms_w3_sq16_rig_inspected,milestone_not_set:ms_w3_sq16_complete",
     "options": [
@@ -3207,7 +3220,7 @@
   },
   {
     "id": "vance_confession_1",
-    "speaker": "Director Vance",
+    "speaker": "Director Sorrell",
     "text": "What?! That's... that is an outrageous fabrication! A timestamp glitch in the logging firmware!",
     "next": "w3_case_physical_question"
   },
@@ -3219,9 +3232,16 @@
   },
   {
     "id": "vance_confession_3",
-    "speaker": "Director Vance",
-    "text": "...Fine! Malick was going to file the scrap-contract audit in the morning. Forty years climbing the Spire, destroyed over manifests! I took the coolant from my rig. Take the passkey—security can hear the rest from your recorder.",
-    "trigger": "give_xp:450,give_item:cyano_coolant_injector,give_item:skyline_master_passkey,complete_quest:w3_sq16,set_milestone:ms_w3_sq16_complete"
+    "speaker": "Director Sorrell",
+    "text": "Malick was filing the scrap-contract audit in the morning. My signature was on the transfers. Forty years climbing the Spire, and one report could end it all.",
+    "next": "vance_confession_admission"
+  },
+  {
+    "id": "vance_confession_admission",
+    "speaker": "Director Sorrell",
+    "text": "[Sorrell sets his passkey on the table.] I took the coolant from my rig. I put it in his glass. Leave the recorder running. I’ll tell security where to find the contracts.",
+    "trigger": "give_xp:450,give_item:cyano_coolant_injector,give_item:skyline_master_passkey,complete_quest:w3_sq16,set_milestone:ms_w3_sq16_complete",
+    "next": "vance_security_aftermath"
   },
   {
     "id": "brutus_dialogue_champion",
@@ -3769,15 +3789,15 @@
   },
   {
     "id": "vance_initial_alibi",
-    "speaker": "Director Vance",
+    "speaker": "Director Sorrell",
     "condition": "milestone_not_set:ms_w3_sq16_complete",
     "text": "I've been at my corner table on an encrypted call since 21:00. My comms logs will confirm it. Ask someone whose time you can afford."
   },
   {
     "id": "vance_case_closed",
-    "speaker": "Director Vance",
+    "speaker": "Director Sorrell",
     "condition": "milestone_set:ms_w3_sq16_complete",
-    "text": "Vance watches the security recorder in silence. His surrendered passkey lies in your kit; his confession is already on file."
+    "text": "[Under guard, Sorrell keeps his eyes on the floor. His credentials have been seized and the confession is on file.] I have nothing further to say."
   },
   {
     "id": "w3_prism_route_entry",
@@ -3998,7 +4018,7 @@
   {
     "id": "w3_cover_order",
     "speaker": "Museum Curator",
-    "text": "The Curator blocks the registry with one immaculate sleeve. 'Maintenance, then? State your work order. I will not have contractors wandering through the orchids.'",
+    "text": "[The Curator blocks the registry with one immaculate sleeve.] Maintenance, then? State your work order. I will not have contractors wandering through the orchids.",
     "options": [
       {
         "id": "correct",
@@ -4024,13 +4044,13 @@
   {
     "id": "w3_cover_emergency_rebuttal",
     "speaker": "Museum Curator",
-    "text": "'An emergency? There is no damage report. Incident number?' Zeke taps the folded service order in Nova's hand. The copied clearance authorizes scheduled work. You can correct the request or step away.",
+    "text": "[Zeke taps the folded service order in Nova's hand. The copied clearance authorizes scheduled work.] An emergency? There is no damage report. Incident number?",
     "next": "w3_cover_recover"
   },
   {
     "id": "w3_cover_delivery_rebuttal",
     "speaker": "Museum Curator",
-    "text": "'Guest deliveries use the concierge. You are wearing maintenance uniforms.' The Curator waits, enjoying this. The folded service order is still in Nova's hand; the cover can be recovered.",
+    "text": "[The Curator waits, enjoying this. The folded service order is still in Nova's hand.] Guest deliveries use the concierge. You are wearing maintenance uniforms.",
     "next": "w3_cover_recover"
   },
   {
@@ -4052,13 +4072,13 @@
   {
     "id": "w3_cover_service_verified",
     "speaker": "Museum Curator",
-    "text": "The registry matches the work order to your copied badges. 'Air filters. Of course. Try not to touch anything a guest might see.' The Curator moves his sleeve. For once, all that preparation looks like ordinary work.",
+    "text": "[The registry matches the work order to your copied badges. The Curator moves his sleeve.] Air filters. Of course. Try not to touch anything a guest might see.",
     "next": "zeke_w3_mq13_cover"
   },
   {
     "id": "w3_case_alibi_question",
     "speaker": "Nova",
-    "text": "Vance claims he remained at his corner table from 21:00 onward. Which record contradicts that claim?",
+    "text": "Sorrell claims he remained at his corner table from 21:00 onward. Which record contradicts that claim?",
     "options": [
       {
         "id": "correct",
@@ -4083,20 +4103,20 @@
   },
   {
     "id": "w3_case_remote_rebuttal",
-    "speaker": "Director Vance",
+    "speaker": "Director Sorrell",
     "text": "'A unit can vent while I sit beside it. That says nothing about where I went.' The equipment timestamp alone does not contradict his location. The access log records movement.",
     "next": "w3_case_alibi_question"
   },
   {
     "id": "w3_case_dispenser_rebuttal",
-    "speaker": "Director Vance",
-    "text": "'The bar pours drinks all evening. Was I supposed to stop it?' The dispenser record describes the drink, not Vance's movements.",
+    "speaker": "Director Sorrell",
+    "text": "'The bar pours drinks all evening. Was I supposed to stop it?' The dispenser record describes the drink, not Sorrell's movements.",
     "next": "w3_case_alibi_question"
   },
   {
     "id": "w3_case_physical_question",
     "speaker": "Nova",
-    "text": "Vance blames the badge ping on a logging fault. Which evidence independently connects his equipment to the poison?",
+    "text": "Sorrell blames the badge ping on a logging fault. Which evidence independently connects his equipment to the poison?",
     "options": [
       {
         "id": "correct",
@@ -4121,13 +4141,13 @@
   },
   {
     "id": "w3_case_same_record_rebuttal",
-    "speaker": "Director Vance",
+    "speaker": "Director Sorrell",
     "text": "'You are reading the same log twice.' Repeating the disputed record does not answer his objection. The glass and the rig provide a separate physical connection.",
     "next": "w3_case_physical_question"
   },
   {
     "id": "w3_case_clean_rebuttal",
-    "speaker": "Director Vance",
+    "speaker": "Director Sorrell",
     "text": "'Then accuse whoever touched it afterward.' A clean dispenser narrows when the poison was added, but it does not identify its source. Compare the residue in the glass with the missing component.",
     "next": "w3_case_physical_question"
   },
@@ -4142,5 +4162,10 @@
     "speaker": "Hacked Lab Terminal",
     "text": "Corrected trial retained: the worker-shaped maintenance target crosses unharmed; the armed drone target takes the burst. Operator telemetry has been scrubbed from the roof relay. Calibration reward already issued.",
     "condition": "quest_completed:w3_sq15,milestone_set:ms_w3_prototype_tested"
+  },
+  {
+    "id": "vance_security_aftermath",
+    "speaker": "System",
+    "text": "[The recorder sends the confession and evidence to salon security. Two guards take Sorrell’s credentials and seat him under guard to await transport. Lyra asks Dax to keep a copy of Malick’s audit.]"
   }
 ]

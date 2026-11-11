@@ -29,6 +29,8 @@ fun roomObjectOffer(action: RoomAction): RoomObjectOffer? {
         is TinkeringAction -> "Inspect your recipes, tools and available materials." to "Open workbench"
         is TuningPuzzleAction -> "Examine the mechanism and its controls." to "Examine"
         is GenericAction -> when {
+            action.actionEvent == "w3_mq15_launch_astra" ->
+                "Take the Astra out of the Spire and continue to World 4, the Foundry." to "Depart for the Foundry"
             action.type == "fishing" -> "Choose your gear and fish here." to "Fish"
             action.type == "arcade_discovery" -> (action.conditionUnmetMessage ?: "Examine the damaged equipment and any parts worth salvaging.") to "Examine"
             action.type.startsWith("arcade") -> "Examine this cabinet and its available game." to "Open cabinet"
@@ -36,5 +38,5 @@ fun roomObjectOffer(action: RoomAction): RoomObjectOffer? {
         }
         else -> return null
     }
-    return RoomObjectOffer(action, action.name.replaceFirstChar { it.titlecase() }, detail, verb)
+    return RoomObjectOffer(action, (action as? GenericAction)?.travelLabel ?: action.name.replaceFirstChar { it.titlecase() }, detail, verb)
 }

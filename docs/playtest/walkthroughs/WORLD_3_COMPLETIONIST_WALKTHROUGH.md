@@ -4,6 +4,8 @@ Updated November 7, 2026. Full spoilers. The route covers release **1.3.110 (194
 
 This rebuilt main edition follows the same structure as Worlds 1 and 2: one ordered route through the main story, all six side quests and all 70 rooms, with chapter checkpoints, a room reference, Journal checklist and recovery advice. Start at Sewer Landing Pad on World 3 arrival. The older main-story-first edition is archived separately.
 
+Optional combat supplies include one guaranteed **Circuit Board** at **Service Dumbwaiter**, one **Wiring Bundle** at **Fuel Bridge**, and two **Ration Packs** at **Drone Wreck Roof**. These are combat drops from those specific encounters. The circuit and wiring support Field Kit projects, including repaired arcade equipment and fishing gear.
+
 ## 1. How to follow this route
 
 Start the ordered steps below at Sewer Landing Pad on a new World 3 arrival, or join the chapter matching your Journal. Complete dialogue before expecting quest credit. Response menus end with a goodbye or leave response. Ordinary dialogue without choices continues normally; finish its final line to receive any reward. Inspect gray clues again when you need their information.
@@ -173,9 +175,9 @@ The numbered route includes all eleven quests and every authored World 3 room. O
 74. From **Rain Cache**, go **south** to **Spice Alley** (`spire_night_market_scale_02`) → **south** to **Lantern Roof** (`spire_night_market_scale_01`) → **south** to **Lantern Bridge** (`spire_lantern_bridge`) → **south** to **Night Market** (`spire_night_market`) → **west** to **Checkpoint Queue** (`spire_checkpoint_queue`) → **west** to **Transit Plaza** (`spire_transit_plaza`) → **north** to **The Static** (`spire_the_static`) → **north** to **Signal Stairwell** (`spire_signal_stairwell`) → **north** to **Static Safehouse** (`spire_zekes_apartment`). You are back at the route’s departure point.
 
 
-75. Before committing the heist, go **south** from **Static Safehouse** to **Signal Stairwell** (`spire_signal_stairwell`). Use **chrono coil console** for optional **Synchronize Chrono Coils**. Set Flux Damping to **45%**, Tachyon Pitch to **108 kHz**, and Harmonic Dilation to **240°**, then confirm the alignment. This is separate from the later Lens containment puzzle. Collect its reward feedback and return **north** to **Static Safehouse**.
+75. If you have not already recovered the **Tachyon Overclock Core** and want to solve this optional puzzle, go **south** from **Static Safehouse** to **Signal Stairwell** (`spire_signal_stairwell`). Use **chrono coil console** for optional **Synchronize Chrono Coils**. Set Flux Damping to **45%**, Tachyon Pitch to **108 kHz**, and Harmonic Dilation to **240°**, then confirm the alignment. This is separate from the later Lens containment puzzle. Collect its reward feedback and return **north** to **Static Safehouse**.
 
-76. At **Static Safehouse**, use **planning table**. Review the physical route. Choose **Commit the plan and take the service elevator upstairs** when ready; “Keep preparing” leaves you here without launching the heist.
+76. At **Static Safehouse**, use **planning table** after all six preparation tasks are checked in **The Plan**. Opening the table reviews the route. If **The Plan** is already complete, skip the confirmation and continue with **Social Engineering** upstairs. Choose **Commit the plan and take the service elevator upstairs** when ready; “Keep preparing” leaves you here without launching the heist.
 
 77. The crew walks back to Transit Plaza in uniform and rides the cleared freight elevator to **Laundry Service**. The Astra relocates separately on autopilot. Confirm **The Plan** complete and **Social Engineering** active.
 
@@ -213,7 +215,7 @@ The numbered route includes all eleven quests and every authored World 3 room. O
 
 90. From **Private Booth**, go **west** to **Velvet Hall** (`spire_exec_lounge_scale_01`) → **north** to **Exec Lounge** (`spire_exec_lounge_bar`) → **north** to **Uniform Sorting** (`spire_uniform_sorting`) → **east** to **Service Lift** (`spire_service_lift`).
 
-91. At **Service Lift**, use **lift panel**. Ride the cleared city lift to Transit Plaza. You will finish both outstanding return quests on this trip.
+91. At **Service Lift**, tap **City lift to Transit Plaza**. Ride the cleared city lift to Transit Plaza. You will finish both outstanding return quests on this trip.
 
 **Check before leaving:** The Neon Sign Core and memorial case number are recovered, and the city lift has brought you to Transit Plaza. They are different quest proofs; neither requires replaying a completed fight.
 
@@ -233,7 +235,7 @@ The numbered route includes all eleven quests and every authored World 3 room. O
 
 98. From **Security Kiosk**, go **north** to **Transit Plaza** (`spire_transit_plaza`).
 
-99. At **Transit Plaza**, use **elevator controls**. Ride back upstairs to Laundry Service.
+99. At **Transit Plaza**, tap **Freight elevator to Laundry Service**. Ride back upstairs to Laundry Service.
 
 **Check before leaving:** Neon Fix and Cold Case show Completed; Gh0st has Intercept. You have returned upstairs to Laundry Service with the other heist progress intact.
 
@@ -263,7 +265,7 @@ The numbered route includes all eleven quests and every authored World 3 room. O
 
 109. At **Skyline VIP Salon**, use **crime-scene barrier**. Begin the case. The public exit remains open.
 
-110. Question **Dax, Vance, Lyra and Selene**. Note Vance’s claim that he stayed at his corner table from **21:00** onward. You may leave conversations and revisit evidence.
+110. Question **Dax, Sorrell, Lyra and Selene**. Note Sorrell’s claim that he stayed at his corner table from **21:00** onward. You may leave conversations and revisit evidence.
 
 111. At **Skyline VIP Salon**, use **dispenser log**. Read when the clean drink was prepared.
 
@@ -279,7 +281,7 @@ The numbered route includes all eleven quests and every authored World 3 room. O
 
 117. From **Syndicate Booth**, go **south** to **Skyline VIP Salon** (`spire_skyline_vip_suite`).
 
-118. Talk to **Director Vance** at **Skyline VIP Salon**. Choose **Let’s check your alibi against the records**. Identify **his badge entering the Syndicate Booth at 21:14**, then connect **coolant in the glass with the missing core in his comms rig**. Wrong arguments receive rebuttals and permit retry or leaving. Finish his confession.
+118. Talk to **Director Sorrell** at **Skyline VIP Salon**. Choose **Let’s check your alibi against the records**. Identify **his badge entering the Syndicate Booth at 21:14**, then connect **coolant in the glass with the missing core in his comms rig**. Wrong arguments receive rebuttals and permit retry or leaving. Finish his confession and the security response. Talk to **Dr. Lyra** afterward to hear what she plans to do with Malick’s audit.
 
 119. Confirm **Murder in the Skyline Salon** complete: **450 XP + Cyano-Coolant Injector + Skyline Master Passkey**. The passkey is evidence. Review the injector’s actual equipment effects before equipping it; do not assume it overrides every weapon’s element. Save.
 
@@ -329,7 +331,7 @@ The numbered route includes all eleven quests and every authored World 3 room. O
 
 140. From **Ledger Office**, go **north** to **Service Dumbwaiter** (`spire_exec_lounge_scale_05`).
 
-141. At **Service Dumbwaiter** (`spire_exec_lounge_scale_05`), inspect **Service Dumbwaiter**, **silver tray**; open **executive safe** for its one-time contents.
+141. At **Service Dumbwaiter** (`spire_exec_lounge_scale_05`), inspect **Service Dumbwaiter**, **silver tray**; defeat the Aero Drone guarding **executive safe**, then open it for its one-time contents.
 
 142. If **Service Dumbwaiter** has an active blocking encounter, clear it before its room actions. Heal and review equipment first; a flavor inspection does not substitute for victory.
 
@@ -367,7 +369,7 @@ The numbered route includes all eleven quests and every authored World 3 room. O
 
 157. From **Prism Gallery**, go **east** to **Archive Vault** (`spire_archive_vault`).
 
-158. At **Archive Vault**, use **lens relic**. Finish Zeke’s warning and Nova’s response. Listen to Thorne and Vale’s escalation. Confirm **The Lens** in inventory and **Burn Notice** active. Keep the pre-Lens save separately.
+158. At **Archive Vault**, use **lens relic**. Finish Zeke’s warning, Thorne’s recovery order, and Nova’s response. Listen as Vale uses Thorne’s recovery access to take control of the rooftop guns. Confirm **The Lens** in inventory and **Burn Notice** active. Keep the pre-Lens save separately.
 
 **Check before leaving:** The containment sequence is solved; The Lens is owned; the warnings have finished and Burn Notice is active. Keep your pre-Lens save.
 
@@ -423,7 +425,7 @@ The numbered route includes all eleven quests and every authored World 3 room. O
 
 180. Confirm the numbered exploration detours are complete: all 70 rooms have been visited, the two VHS caches and optional chrono puzzle were checked, and wanted fishing/arcade discoveries appear in their actual journals or inventory. You do not need both ledger branches. Keep the predeparture save in a separate slot.
 
-181. At **Landing Pad Roof**, use **launch window**. Depart only after the completion checkpoint. Finish the escape sequence and confirm **Burn Notice** completes on arrival in World 4. The Foundry is below the outer Shield; high-orbit hardware is still missing.
+181. At **Landing Pad Roof**, tap **Depart for the Foundry** and confirm. Depart only after the completion checkpoint. Finish the escape sequence and confirm **Burn Notice** completes on arrival in World 4. The Foundry is below the outer Shield; high-orbit hardware is still missing.
 
 **Check before leaving:** All six side quests are complete, one ledger outcome is retained, and your predeparture save is protected. Departure completes Burn Notice and starts World 4.
 
@@ -697,7 +699,7 @@ Exits: north → The Static, west → Sewer Passage, east → Checkpoint Queue, 
 
 Named travel control: **Climb the platform stairs to Underrail** (up → Underrail Platform). Works in both directions.
 
-Interactions: elevator controls.
+Travel button: **Freight elevator to Laundry Service**.
 
 #### Checkpoint Queue (`spire_checkpoint_queue`)
 
@@ -773,7 +775,9 @@ Exits: west → Uniform Sorting, north → Skypark Dome.
 
 Named travel control: **Ride the inspection lift to the Archive** (down → Archive Vault). Works in both directions.
 
-Interactions: lift panel, inspection hatch, worker network uplink, private dead drop, ledger receipts.
+Travel button: **City lift to Transit Plaza**.
+
+Interactions: inspection hatch, worker network uplink, private dead drop, ledger receipts.
 
 #### Staff Checkpoint (`spire_staff_checkpoint`)
 
@@ -991,7 +995,9 @@ The roof shudders under violent wind and red lockdown light. The Astra waits acr
 
 Exits: west → Drone Test Alcove, north → Fuel Bridge.
 
-Interactions: shield window, launch window, test telemetry relay.
+Travel button: **Depart for the Foundry**.
+
+Interactions: shield window, test telemetry relay.
 
 #### Fuel Bridge (`spire_landing_pad_scale_01`)
 
@@ -1139,7 +1145,7 @@ Use these task names to join midway or locate an unfinished objective. Completed
 
 **Expose the Killer**
 
-- [ ] Challenge Vance's alibi using the access log, then connect his equipment to the poison. (`expose_vance`)
+- [ ] Challenge Sorrell's alibi using the access log, then connect his equipment to the poison. (`expose_vance`)
 
 ## 15. Recovery: find the missing step
 
@@ -1148,9 +1154,9 @@ Use these task names to join midway or locate an unfinished objective. Completed
 - **The Curator rejects the cover:** the work order is scheduled Skypark air-filter inspection. Correct the claim or leave and consult the Staff Checkpoint badge scanner. Finish the successful scene to credit guest access.
 - **Cold Case’s relay cannot publish:** recover the erased memorial case number at Uniform Sorting, then inspect case records at Security Kiosk before using the relay.
 - **The ledger alternative has disappeared:** completion intentionally closes the other outcome. Inspect ledger receipts to confirm the one you chose; a second branch is not needed.
-- **Vance only gives an alibi:** inspect glass, security terminal and comms rig. The datapad adds motive context but is not one of the three required confrontation inspections. His initial denial is not a completed accusation.
+- **Sorrell only gives an alibi:** inspect glass, security terminal and comms rig. The datapad adds motive context but is not one of the three required confrontation inspections. His initial denial is not a completed accusation.
 - **Prism controls are unavailable:** inspect containment field, prism shutters and command tether-lines. Use blue RETURN, isolate red FEED, then copy the local gold hold before disconnecting audit. Gray clues can be read again.
-- **The roof controls appear inert in the installed build:** check Burn Notice. Defeat the Administrator/Aero Drone party, then use shield window once, then launch window. A second scan is not another objective. The local part-two repair adds feedback for repeated/ineligible use; it has not yet been installed as a new release. Preserve a save if those prerequisites are complete but departure still fails.
+- **The roof controls appear inert in the installed build:** check Burn Notice. Defeat the Administrator/Aero Drone party, then use shield window once, then confirm **Depart for the Foundry**. A second scan is not another objective. The local part-two repair adds feedback for repeated/ineligible use; it has not yet been installed as a new release. Preserve a save if those prerequisites are complete but departure still fails.
 - **The Administrator fight drains supplies:** rest at Registry Pavilion and check equipment/AP allocation. The preceding security party is a separate fight. Difficulty is under review; this guide does not assume optional grinding or certify a multi-seed balance result.
 
 ## 16. Review scope and playtest checks

@@ -1,5 +1,23 @@
 [
   {
+    "id": "gadget_antidote_flask",
+    "name": "Neutralize Venom",
+    "category": "consumable",
+    "method": "assemble",
+    "base": "vial_of_venom",
+    "components": [
+      "herb"
+    ],
+    "ingredients": {
+      "vial_of_venom": 1,
+      "herb": 1
+    },
+    "result": "antidote_flask",
+    "description": "Buffer harvested venom with swamp herbs to prepare a neutralizing serum. Cleanses Acid, Poison, and Erosion.",
+    "success_message": "You seal the neutralized serum in an Antidote Flask.",
+    "discovery_hint": "Start with vial of venom. Try herb."
+  },
+  {
     "id": "gear_salvage_lure",
     "name": "Magnetic Salvage Lure",
     "category": "gear",

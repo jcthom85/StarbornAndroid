@@ -65,7 +65,7 @@ fun CookingScreen(
                 prompt = NarrationPrompt(message, tapToDismiss = false),
                 theme = null,
                 onDismiss = { feedback = null },
-                title = "At the cookfire",
+                title = source ?: "Cooking",
                 actions = {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                         TextButton(onClick = { feedback = null }, modifier = Modifier.heightIn(min = 48.dp)) { Text("Done") }

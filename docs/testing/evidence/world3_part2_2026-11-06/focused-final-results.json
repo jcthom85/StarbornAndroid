@@ -1,0 +1,42 @@
+[
+  {
+    "module": "app",
+    "name": "com.example.starborn.domain.dialogue.DialogueServiceTest",
+    "tests": "7",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "module": "app",
+    "name": "com.example.starborn.domain.audio.AudioRouterTest",
+    "tests": "8",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "module": "app",
+    "name": "com.example.starborn.domain.dialogue.Hub4CriticalFlowTest",
+    "tests": "2",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "module": "desktopApp",
+    "name": "com.example.starborn.desktop.World3PublicInteractionTest",
+    "tests": "9",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  {
+    "module": "desktopApp",
+    "name": "com.example.starborn.desktop.DesktopAudioOwnershipTest",
+    "tests": "1",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  }
+]

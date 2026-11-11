@@ -125,6 +125,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.CoroutineScope
@@ -1034,7 +1035,8 @@ class ExplorationController(
                 restoredHp = restoredAmount,
                 partySize = restoredHp.size,
                 alreadyFull = restoredAmount == 0,
-                message = resolvedMessage
+                message = resolvedMessage,
+                title = roomActivityTitle(cooking = false) ?: _uiState.value.currentRoom?.title ?: "A Moment of Shelter"
             )
         )
     }
@@ -1539,7 +1541,8 @@ class ExplorationController(
         if (destId != null && opposite != null) {
             val destRoom = roomsById[destId]
             val destBlock = destRoom?.blockedDirections?.get(opposite)
-            if (destRoom != null && destBlock != null && isBlockActive(destRoom, opposite, destBlock)) {
+            if (destRoom != null && destBlock != null &&
+                !destBlock.type.equals("enemy", ignoreCase = true) && isBlockActive(destRoom, opposite, destBlock)) {
                 return destBlock.toIndicatorStatus()
             }
         }
@@ -1878,7 +1881,9 @@ class ExplorationController(
 
     init {
         viewModelScope.launch(dispatchers.main) {
-            sessionStore.state.collect { newState ->
+            sessionStore.state.distinctUntilChanged { previous, next ->
+                previous.copy(enemyPartyStates = next.enemyPartyStates) == next
+            }.collect { newState ->
                 if (observedRestorationVersion != sessionStore.restorationVersion && authoredRoomsById.isNotEmpty()) {
                     synchronizeRestoredWorld(newState)
                 }
@@ -3176,7 +3181,10 @@ class ExplorationController(
         dismissRoomActions()
         if (_uiState.value.actions.none { it.actionKey() == action.actionKey() }) return
         val offer = com.example.starborn.feature.exploration.presentation.roomObjectOffer(action)
-        if (offer != null && _uiState.value.actionHints[action.actionKey()]?.locked != true) {
+        val canOffer = (action as? GenericAction)?.actionEvent != "w3_mq15_launch_astra" ||
+            ("scan_shield_gap" in sessionStore.state.value.questTasksCompleted["w3_mq15"].orEmpty() &&
+                eventManager.canHandleTrigger("player_action", EventPayload.Action("w3_mq15_launch_astra")))
+        if (offer != null && canOffer && _uiState.value.actionHints[action.actionKey()]?.locked != true) {
             _uiState.update { it.copy(roomObjectOffer = offer) }
         } else onActionSelected(action)
     }
@@ -3206,6 +3214,11 @@ class ExplorationController(
     )
 
     fun onActionSelected(action: RoomAction) {
+        guardedActionMessage(_uiState.value.currentRoom, action)?.let { message ->
+            showInspection(message)
+            updateActionHints(_uiState.value.currentRoom)
+            return
+        }
         val routeId = (action as? GenericAction)?.actionEvent
         val route = serviceRoutes[routeId]
         if (route != null && _uiState.value.actions.any { it.actionKey() == action.actionKey() } &&
@@ -5640,10 +5653,15 @@ class ExplorationController(
         _uiState.update { it.copy(shopGreeting = null, pendingShopId = null) }
     }
 
+    private fun roomActivityTitle(cooking: Boolean): String? =
+        _uiState.value.currentRoom?.actions?.firstNotNullOfOrNull { action ->
+            if ((action["cook_source"] != null) == cooking) action["activity_title"].asStringOrNull() else null
+        }
+
     private fun handleRestStopAction(action: RestStopAction) {
         if (action.cookSource != null || action.name.contains("cook", ignoreCase = true) || action.name.contains("kitchen", ignoreCase = true)) {
             _uiState.value.currentRoom?.id?.let { sessionStore.setRoomState(it, "cooking_discovered", true) }
-            emitEvent(ExplorationEvent.OpenCooking(action.cookSource ?: action.name))
+            emitEvent(ExplorationEvent.OpenCooking(roomActivityTitle(cooking = true) ?: action.name))
         } else {
             val eventId = action.restEvent?.takeIf { it.isNotBlank() }
             if (eventId != null && eventManager.canHandleTrigger("player_action", EventPayload.Action(eventId))) {
@@ -5934,7 +5952,10 @@ class ExplorationController(
                         showInspection(message)
                         return
                     }
-                    val needsUnavailableFeedback = _uiState.value.currentRoom?.id?.startsWith("spire_") == true ||
+                    val roomId = _uiState.value.currentRoom?.id.orEmpty()
+                    val needsUnavailableFeedback = roomId.startsWith("spire_") ||
+                        roomId.startsWith("foundry_") || roomId.startsWith("orbital_") ||
+                        roomId.startsWith("deep_") || roomId.startsWith("source_") ||
                         eventId == "w2_sq02_trace_cliffs" || status == "Objective completed."
                     if (needsUnavailableFeedback &&
                         !eventManager.canHandleTrigger("player_action", EventPayload.Action(eventId))) {
@@ -6059,11 +6080,24 @@ class ExplorationController(
         }
     }
 
+    private fun guardedActionMessage(room: Room?, action: RoomAction): String? {
+        if (room == null) return null
+        if (action is ContainerAction && action.stateKey?.let { roomStates[room.id]?.get(it) } == true) return null
+        val authored = room.actions.firstOrNull { it["name"] == action.name } ?: return null
+        val guards = authored["guarded_by"].asListOrNull().orEmpty()
+        if (guards.isEmpty() || roomEnemyParties(room).flatten().none { it in guards }) return null
+        return authored["guarded_message"].asStringOrNull()
+            ?: "Defeat the enemies guarding ${action.name} before using it."
+    }
+
     private fun buildActionHints(room: Room?, actions: List<RoomAction>): Map<String, ActionHintUi> {
         if (room == null || actions.isEmpty()) return emptyMap()
         val hints = mutableMapOf<String, ActionHintUi>()
         actions.forEach { action ->
-            val hint = when (action) {
+            val guardedMessage = guardedActionMessage(room, action)
+            val hint = if (guardedMessage != null) {
+                ActionHintUi(locked = true, message = guardedMessage)
+            } else when (action) {
                 is ToggleAction -> deriveToggleHint(action)
                 else -> null
             }
@@ -6133,7 +6167,7 @@ class ExplorationController(
         val alreadyOpen = stateKey?.let { _uiState.value.roomState[it] == true } ?: false
         if (alreadyOpen) {
             val message = action.alreadyOpenMessage ?: "You've already searched ${action.name}."
-            postStatus(message)
+            showInspection(message)
             return
         }
 
@@ -6173,7 +6207,9 @@ class ExplorationController(
                 "Found $prefix and $suffix in the $containerTitle."
             }
         }
-        if (action.discoveryMessage.isNullOrBlank()) postStatus(message)
+        if (action.discoveryMessage.isNullOrBlank()) {
+            if (grantedDisplayNames.isEmpty()) showInspection(message) else postStatus(message)
+        }
 
         triggerPlayerAction(action.actionEvent?.takeIf { it.isNotBlank() })
         updateActionHints(_uiState.value.currentRoom)
@@ -6429,6 +6465,14 @@ class ExplorationController(
                 return@mapNotNull GenericAction(name = name, type = "inspect",
                     conditionUnmetMessage = text, completedInspection = true)
             }
+            val discoveryCabinet = action["discovery_cabinet_id"].asStringOrNull()
+            if (discoveryCabinet != null && arcadeService.progress(discoveryCabinet).discovered) {
+                return@mapNotNull GenericAction(
+                    name = name, type = "inspect", completedInspection = true,
+                    conditionUnmetMessage = action["discovered_message"].asStringOrNull()
+                        ?: "The cabinet's component and repair schematic are recorded in your field kit."
+                )
+            }
             when (type) {
                 "toggle" -> ToggleAction(
                     name = name,
@@ -6488,7 +6532,8 @@ class ExplorationController(
                         ?: action["inspect_message"].asStringOrNull()
                         ?: action["message"].asStringOrNull()
                         ?: action["description"].asStringOrNull(),
-                    hideInline = action["hide_inline"] as? Boolean ?: false
+                    hideInline = action["hide_inline"] as? Boolean ?: false,
+                    travelLabel = action["travel_label"].asStringOrNull()
                 )
             }
         }
@@ -6799,7 +6844,8 @@ sealed interface ExplorationEvent {
         val restoredHp: Int,
         val partySize: Int,
         val alreadyFull: Boolean,
-        val message: String? = null
+        val message: String? = null,
+        val title: String = "A Moment of Shelter"
     ) : ExplorationEvent
     data class OpenTinkering(val sourceId: String?) : ExplorationEvent
     data class OpenCooking(val sourceId: String?) : ExplorationEvent

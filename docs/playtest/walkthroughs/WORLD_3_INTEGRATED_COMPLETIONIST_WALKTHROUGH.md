@@ -279,7 +279,7 @@ The numbered route includes all eleven quests and every authored World 3 room. O
 
 109. At **Skyline VIP Salon**, use **crime-scene barrier**. Begin the case. The public exit remains open.
 
-110. Question **Dax, Vance, Lyra and Selene**. Note Vance’s claim that he stayed at his corner table from **21:00** onward. You may leave conversations and revisit evidence.
+110. Question **Dax, Sorrell, Lyra and Selene**. Note Sorrell’s claim that he stayed at his corner table from **21:00** onward. You may leave conversations and revisit evidence.
 
 111. At **Skyline VIP Salon**, use **dispenser log**. Read when the clean drink was prepared.
 
@@ -295,7 +295,7 @@ The numbered route includes all eleven quests and every authored World 3 room. O
 
 117. From **Syndicate Booth**, go **south** to **Skyline VIP Salon** (`spire_skyline_vip_suite`).
 
-118. Talk to **Director Vance** at **Skyline VIP Salon**. Choose **Let’s check your alibi against the records**. Identify **his badge entering the Syndicate Booth at 21:14**, then connect **coolant in the glass with the missing core in his comms rig**. Wrong arguments receive rebuttals and permit retry or leaving. Finish his confession.
+118. Talk to **Director Sorrell** at **Skyline VIP Salon**. Choose **Let’s check your alibi against the records**. Identify **his badge entering the Syndicate Booth at 21:14**, then connect **coolant in the glass with the missing core in his comms rig**. Wrong arguments receive rebuttals and permit retry or leaving. Finish his confession.
 
 119. Confirm **Murder in the Skyline Salon** complete: **450 XP + Cyano-Coolant Injector + Skyline Master Passkey**. The passkey is evidence. Review the injector’s actual equipment effects before equipping it; do not assume it overrides every weapon’s element. Save.
 
@@ -1155,7 +1155,7 @@ Use these task names to join midway or locate an unfinished objective. Completed
 
 **Expose the Killer**
 
-- [ ] Challenge Vance's alibi using the access log, then connect his equipment to the poison. (`expose_vance`)
+- [ ] Challenge Sorrell's alibi using the access log, then connect his equipment to the poison. (`expose_vance`)
 
 ## 15. Recovery: find the missing step
 
@@ -1164,7 +1164,7 @@ Use these task names to join midway or locate an unfinished objective. Completed
 - **The Curator rejects the cover:** the work order is scheduled Skypark air-filter inspection. Correct the claim or leave and consult the Staff Checkpoint badge scanner. Finish the successful scene to credit guest access.
 - **Cold Case’s relay cannot publish:** recover the erased memorial case number at Uniform Sorting, then inspect case records at Security Kiosk before using the relay.
 - **The ledger alternative has disappeared:** completion intentionally closes the other outcome. Inspect ledger receipts to confirm the one you chose; a second branch is not needed.
-- **Vance only gives an alibi:** inspect glass, security terminal and comms rig. The datapad adds motive context but is not one of the three required confrontation inspections. His initial denial is not a completed accusation.
+- **Sorrell only gives an alibi:** inspect glass, security terminal and comms rig. The datapad adds motive context but is not one of the three required confrontation inspections. His initial denial is not a completed accusation.
 - **Prism controls are unavailable:** inspect containment field, prism shutters and command tether-lines. Use blue RETURN, isolate red FEED, then copy the local gold hold before disconnecting audit. Gray clues can be read again.
 - **The roof controls appear inert in the installed build:** check Burn Notice. Defeat the Administrator/Aero Drone party, then use shield window once, then launch window. A second scan is not another objective. The local part-two repair adds feedback for repeated/ineligible use; it has not yet been installed as a new release. Preserve a save if those prerequisites are complete but departure still fails.
 - **The Administrator fight drains supplies:** rest at Registry Pavilion and check equipment/AP allocation. The preceding security party is a separate fight. Difficulty is under review; this guide does not assume optional grinding or certify a multi-seed balance result.

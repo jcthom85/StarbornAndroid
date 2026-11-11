@@ -65,7 +65,7 @@ class World3ReadinessRegressionTest {
     @Test fun murderRequiresPlayerDeductionAndWrongClaimsGiveNoCompletionOrRewards() {
         val h = Harness()
         listOf("w3_sq16_inspect_glass", "w3_sq16_inspect_terminal", "w3_sq16_inspect_rig").forEach(h::act)
-        var session = requireNotNull(h.dialogue.startDialogue("Director Vance"))
+        var session = requireNotNull(h.dialogue.startDialogue("Director Sorrell"))
         session.choose("vance_confront_evidence")
         for (wrong in listOf("case_coolant_time", "case_drink_time")) {
             session.choose(wrong); session.advance()
@@ -76,7 +76,7 @@ class World3ReadinessRegressionTest {
         session.choose("w3_case_alibi_leave")
         assertTrue(session.isFinished())
         h.store.restore(h.store.state.value)
-        session = requireNotNull(h.dialogue.startDialogue("Director Vance"))
+        session = requireNotNull(h.dialogue.startDialogue("Director Sorrell"))
         session.choose("vance_confront_evidence"); session.choose("correct"); session.advance()
         assertEquals("w3_case_physical_question", session.current()?.id)
         for (wrong in listOf("case_badge_again", "case_dispenser_clean")) {
@@ -84,13 +84,19 @@ class World3ReadinessRegressionTest {
             assertEquals("w3_case_physical_question", session.current()?.id)
             assertFalse("w3_sq16" in h.store.state.value.completedQuests)
         }
-        session.choose("correct"); session.advance(); session.advance()
+        session.choose("correct")
+        session.advance()
+        session.advance()
+        assertEquals("vance_confession_admission", session.current()?.id)
+        session.advance()
+        assertEquals("vance_security_aftermath", session.current()?.id)
+        session.advance()
         assertTrue(session.isFinished())
         assertTrue("w3_sq16" in h.store.state.value.completedQuests)
         assertEquals(450, h.store.state.value.playerXp)
         assertEquals(1, h.inventory.snapshot()["cyano_coolant_injector"])
         assertFalse("ms_w3_sq16_datapad_inspected" in h.store.state.value.completedMilestones)
-        requireNotNull(h.dialogue.startDialogue("Director Vance")).advance()
+        requireNotNull(h.dialogue.startDialogue("Director Sorrell")).advance()
         assertEquals(450, h.store.state.value.playerXp)
     }
 
@@ -185,9 +191,9 @@ class World3ReadinessRegressionTest {
 
     @Test fun suspectGivesAlibiBeforeEvidenceAndConfessionCannotRepeat() {
         val h = Harness()
-        assertEquals("vance_initial_alibi", h.dialogue.startDialogue("Director Vance")?.current()?.id)
+        assertEquals("vance_initial_alibi", h.dialogue.startDialogue("Director Sorrell")?.current()?.id)
         listOf("ms_w3_sq16_glass_inspected", "ms_w3_sq16_terminal_inspected", "ms_w3_sq16_rig_inspected").forEach(h.store::setMilestone)
-        val vance = requireNotNull(h.dialogue.startDialogue("Director Vance"))
+        val vance = requireNotNull(h.dialogue.startDialogue("Director Sorrell"))
         assertEquals("director_vance_default_talk", vance.current()?.id)
         vance.choose("vance_confront_evidence")
         repeat(12) {
@@ -197,10 +203,10 @@ class World3ReadinessRegressionTest {
         }
         assertTrue(vance.isFinished())
         val xp = h.store.state.value.playerXp
-        requireNotNull(h.dialogue.startDialogue("Director Vance")).advance()
+        requireNotNull(h.dialogue.startDialogue("Director Sorrell")).advance()
         assertEquals(xp, h.store.state.value.playerXp)
         assertEquals(1, h.inventory.snapshot()["cyano_coolant_injector"])
-        assertEquals("vance_case_closed", h.dialogue.startDialogue("Director Vance")?.current()?.id)
+        assertEquals("vance_case_closed", h.dialogue.startDialogue("Director Sorrell")?.current()?.id)
     }
 
     @Test fun prismRequiresCluesWrongRoutesResetAndLeavingAllowsRetryAcrossRestore() {

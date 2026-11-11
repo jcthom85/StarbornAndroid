@@ -1,0 +1,5 @@
+room=sector9_canopy_ridge enemies=[the_beast] seed=17 damageEvents=33 xp=500 ap=0 credits=250 persistedHp={nova=78, zeke=150, orion=95} knockedOut=[] usedItems={ration_pack=1, medkit=1, medkit_i=1}
+room=spire_landing_pad_roof enemies=[aero_drone, heavy_mech] seed=17 damageEvents=30 xp=270 ap=0 credits=160 persistedHp={nova=88, zeke=150, orion=83, gh0st=105} knockedOut=[] usedItems={medkit=1}
+room=spire_landing_pad_roof enemies=[administrator_boss, aero_drone] seed=17 damageEvents=62 xp=490 ap=2 credits=340 persistedHp={nova=120, zeke=128, orion=95, gh0st=44} knockedOut=[] usedItems={medkit=5, medkit_i=3, ration_pack=2}
+room=spire_landing_pad_roof enemies=[aero_drone, heavy_mech] seed=17 damageEvents=30 xp=270 ap=0 credits=160 persistedHp={nova=88, zeke=150, orion=83, gh0st=105} knockedOut=[] usedItems={medkit=1}
+room=spire_landing_pad_roof enemies=[administrator_boss, aero_drone] seed=17 damageEvents=62 xp=490 ap=2 credits=340 persistedHp={nova=120, zeke=128, orion=95, gh0st=44} knockedOut=[] usedItems={medkit=5, medkit_i=3, ration_pack=2}
