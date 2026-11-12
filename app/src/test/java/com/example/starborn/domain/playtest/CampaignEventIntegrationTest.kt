@@ -530,7 +530,7 @@ class CampaignEventIntegrationTest {
         agent.executeAction("w4_mq19_throw_override_paddle")
         agent.executeAction("w4_mq19_starve_breath_pistons")
         agent.executeAction("w4_mq19_open_anvil_cradle")
-        agent.talkTo("Nova")
+        agent.executeAction("w4_mq19_take_anvil")
 
         var state = harness.store.state.value
         assertTrue("w4_mq19 should be completed", state.completedQuests.contains("w4_mq19"))

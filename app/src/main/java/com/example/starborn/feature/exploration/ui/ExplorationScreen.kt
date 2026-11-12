@@ -56,6 +56,7 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -104,6 +105,7 @@ import androidx.compose.material.icons.outlined.School
 import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.Restaurant
 import androidx.compose.material.icons.rounded.Hotel
+import androidx.compose.material.icons.rounded.Phishing
 import androidx.compose.material.icons.rounded.SportsEsports
 import androidx.compose.material.icons.outlined.RadioButtonUnchecked
 import androidx.compose.material3.AlertDialog
@@ -136,6 +138,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -584,9 +587,6 @@ fun ExplorationScreen(
     var dragDelta by remember { mutableStateOf(Offset.Zero) }
 
     val keyboardFocusRequester = remember { FocusRequester() }
-    LaunchedEffect(Unit) {
-        keyboardFocusRequester.requestFocus()
-    }
 
     val resolvedBackgroundPath = resolveRoomBackground(
         room = uiState.currentRoom,
@@ -665,6 +665,15 @@ fun ExplorationScreen(
         saveLoadMode != null ||
         showExitConfirmDialog ||
         showInventoryTargetDialog
+    val keyboardNavigationReady = !blockingOverlayActive && !isAnyOverlayOpen &&
+        !roomTransitionInProgress && !importantQuestPopupVisible && !uiState.isLoading && !approachingCombat
+    LaunchedEffect(viewModel, keyboardNavigationReady) {
+        if (keyboardNavigationReady) {
+            // A dialog can dispose its focused node a frame after it closes.
+            withFrameNanos { }
+            keyboardFocusRequester.requestFocus()
+        }
+    }
 
     fun handleExplorationBack(allowTitleExit: Boolean = false) {
         when {
@@ -762,9 +771,22 @@ fun ExplorationScreen(
             .fillMaxSize()
             .background(Color.Black)
             .focusRequester(keyboardFocusRequester)
-            .focusable()
+            .onPreviewKeyEvent { keyEvent ->
+                if (scriptedTravelActive || areaEntryActive) return@onPreviewKeyEvent true
+                if (!keyboardNavigationReady || keyEvent.type != KeyEventType.KeyDown) return@onPreviewKeyEvent false
+                val direction = when (keyEvent.key) {
+                    Key.W, Key.DirectionUp -> "north"
+                    Key.S, Key.DirectionDown -> "south"
+                    Key.A, Key.DirectionLeft -> "west"
+                    Key.D, Key.DirectionRight -> "east"
+                    else -> return@onPreviewKeyEvent false
+                }
+                val target = uiState.availableConnections.keys.firstOrNull { it.equals(direction, ignoreCase = true) }
+                    ?: return@onPreviewKeyEvent false
+                viewModel.travel(target)
+                true
+            }
             .onKeyEvent { keyEvent ->
-                if (scriptedTravelActive || areaEntryActive) return@onKeyEvent true
                 if (uiState.activeDialogue != null || uiState.cinematic != null || importantQuestPopupVisible) return@onKeyEvent false
                 if (keyEvent.type == KeyEventType.KeyDown) {
                     when (keyEvent.key) {
@@ -812,30 +834,10 @@ fun ExplorationScreen(
                         else -> {}
                     }
 
-                    if (!blockingOverlayActive &&
-                        !roomTransitionInProgress &&
-                        !uiState.isMenuOverlayVisible
-                    ) {
-                        val direction = when (keyEvent.key) {
-                            Key.W, Key.DirectionUp -> "north"
-                            Key.S, Key.DirectionDown -> "south"
-                            Key.A, Key.DirectionLeft -> "west"
-                            Key.D, Key.DirectionRight -> "east"
-                            else -> null
-                        }
-                        if (direction != null) {
-                            val targetDir = uiState.availableConnections.keys.firstOrNull { key ->
-                                key.equals(direction, ignoreCase = true)
-                            }
-                            if (targetDir != null) {
-                                viewModel.travel(targetDir)
-                                return@onKeyEvent true
-                            }
-                        }
-                    }
                 }
                 false
             }
+            .focusable()
     ) {
         Box(modifier = baseModifier) {
             val transitionDirection = roomTransition?.direction
@@ -939,7 +941,7 @@ fun ExplorationScreen(
             }
             resolved
         }
-        val baseRoomDescription = remember(currentRoom, uiState.roomState, uiState.completedMilestones, isRoomDark, uiState.isBurgQuestSession) {
+        val baseRoomDescription = remember(currentRoom, uiState.roomState, uiState.completedMilestones, uiState.completedEvents, isRoomDark, uiState.isBurgQuestSession) {
             if (uiState.isBurgQuestSession && currentRoom?.id == "astra_common_room") {
                 com.example.starborn.feature.exploration.presentation.BurgQuestPresentation.commonRoomDescription
             } else {
@@ -947,7 +949,8 @@ fun ExplorationScreen(
                     room = currentRoom,
                     roomState = uiState.roomState,
                     completedMilestones = uiState.completedMilestones,
-                    isRoomDark = isRoomDark
+                    isRoomDark = isRoomDark,
+                    completedEvents = uiState.completedEvents
                 )
             }
         }
@@ -1048,7 +1051,8 @@ fun ExplorationScreen(
                         )
                         else -> QuickMenuAction(
                             label = if (action.isFishingSpot()) "Fish" else action.name.replaceFirstChar { it.titlecase() },
-                            roomAction = action
+                            roomAction = action,
+                            imageVector = Icons.Rounded.Phishing.takeIf { action.isFishingSpot() }
                         )
                     }
                 }
@@ -1116,6 +1120,7 @@ fun ExplorationScreen(
                 ) {
                     RoomDescriptionPanel(
                         currentRoom = currentRoom,
+                        animateHighlights = !uiState.settings.disableFlashes && !uiState.settings.disableScreenshake,
                         description = descriptionForPanel,
                         plan = inlinePlan,
                         isDark = isRoomDark,
@@ -1867,6 +1872,9 @@ fun ExplorationScreen(
             state = questPresentations,
             deferShowing = blockingOverlayActive || importantQuestPopupVisible,
             accentColor = questAccentColor,
+            reducedMotion = uiState.settings.disableScreenshake,
+            showPulse = !uiState.settings.disableFlashes,
+            onObjectiveChecked = { viewModel.playQuestPresentationCue("quest_update") },
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .fillMaxWidth()

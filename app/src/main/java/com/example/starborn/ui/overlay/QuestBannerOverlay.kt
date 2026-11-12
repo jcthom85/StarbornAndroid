@@ -51,6 +51,8 @@ import androidx.compose.ui.unit.dp
 import com.example.starborn.ui.events.QuestBannerType
 import com.example.starborn.ui.events.QuestObjectiveStatus
 import com.example.starborn.ui.events.QuestObjectiveRole
+import com.example.starborn.ui.events.QuestObjectiveCheckmark
+import com.example.starborn.ui.events.questObjectiveFeedbackProgress
 import com.example.starborn.ui.haptics.HapticType
 import com.example.starborn.ui.haptics.Haptics
 import kotlinx.coroutines.delay
@@ -70,25 +72,31 @@ fun QuestBannerOverlay(
     state: com.example.starborn.ui.events.QuestPresentationState,
     accentColor: Color,
     modifier: Modifier = Modifier,
-    deferShowing: Boolean = false
+    deferShowing: Boolean = false,
+    reducedMotion: Boolean = false,
+    showPulse: Boolean = true,
+    onObjectiveChecked: () -> Unit = {}
 ) {
     val current = state.updates.firstOrNull()
     val visible = current != null && !deferShowing && state.important.isEmpty()
+    val checkProgress = questObjectiveFeedbackProgress(state, current, visible, reducedMotion, onObjectiveChecked)
     val context = LocalContext.current
     fun dismiss() { if (state.updates.firstOrNull() == current) state.updates.removeAt(0) }
     LaunchedEffect(current, visible) {
         if (visible) {
-            Haptics.pulse(context, HapticType.TICK)
+            if (current.objectives.none { it.completed && it.role == QuestObjectiveRole.JUST_COMPLETED }) {
+                Haptics.pulse(context, HapticType.TICK)
+            }
             delay(QUEST_BANNER_AUTO_DISMISS_MS)
             dismiss()
         }
     }
-    if (visible && current != null) Box(
+    if (visible) Box(
         modifier = modifier.statusBarsPadding().padding(top = 12.dp, start = 16.dp, end = 16.dp),
         contentAlignment = Alignment.TopCenter
     ) {
         QuestBannerCard(Banner(current.type, current.questId, current.questTitle,
-            current.objectives, current.remainingObjectiveCount), accentColor, ::dismiss)
+            current.objectives, current.remainingObjectiveCount), accentColor, checkProgress, showPulse, ::dismiss)
     }
 }
 
@@ -96,6 +104,8 @@ fun QuestBannerOverlay(
 private fun QuestBannerCard(
     banner: Banner,
     accentColor: Color,
+    checkProgress: Float,
+    showPulse: Boolean,
     onDismiss: () -> Unit
 ) {
     val accent = when (banner.type) {
@@ -179,7 +189,7 @@ private fun QuestBannerCard(
                 )
                 if ((banner.type == QuestBannerType.PROGRESS || banner.type == QuestBannerType.NEW) && banner.objectives.isNotEmpty()) {
                     banner.objectives.forEach { objective ->
-                        BannerObjectiveRow(objective = objective, accentColor = accent)
+                        BannerObjectiveRow(objective, accent, checkProgress, showPulse)
                     }
                     if (banner.remainingObjectiveCount > 0) {
                         Text(
@@ -210,20 +220,24 @@ private fun QuestBannerCard(
 @Composable
 private fun BannerObjectiveRow(
     objective: QuestObjectiveStatus,
-    accentColor: Color
+    accentColor: Color,
+    checkProgress: Float,
+    showPulse: Boolean
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        val icon = if (objective.completed) Icons.Filled.CheckCircle else Icons.Outlined.RadioButtonUnchecked
-        val tint = if (objective.completed) accentColor else Color.White.copy(alpha = 0.7f)
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = tint,
-            modifier = Modifier.size(16.dp)
-        )
+        if (objective.role == QuestObjectiveRole.JUST_COMPLETED) {
+            QuestObjectiveCheckmark(accentColor, checkProgress, showPulse = showPulse)
+        } else {
+            Icon(
+                imageVector = if (objective.completed) Icons.Filled.CheckCircle else Icons.Outlined.RadioButtonUnchecked,
+                contentDescription = null,
+                tint = if (objective.completed) accentColor else Color.White.copy(alpha = 0.7f),
+                modifier = Modifier.size(18.dp).padding(1.dp)
+            )
+        }
         Text(
             text = when (objective.role) {
                 QuestObjectiveRole.JUST_COMPLETED -> "Completed: ${objective.text}"

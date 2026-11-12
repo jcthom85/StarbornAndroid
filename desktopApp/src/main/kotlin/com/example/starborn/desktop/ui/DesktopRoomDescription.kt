@@ -54,6 +54,8 @@ import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.model.RoomAction
 import kotlin.math.roundToInt
 import com.example.starborn.feature.exploration.presentation.*
+import com.example.starborn.ui.exploration.actionHighlightAlpha
+import com.example.starborn.ui.exploration.needsAttention
 
 private const val ACTION_TAG = "action"
 
@@ -194,7 +196,8 @@ private fun SinglePlanDescription(
     val disabledColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f)
     val enemyAccent = Color(0xFFFF8A80)
 
-    val annotatedText = remember(plan, highlightColor, disabledColor, accentColor, isDark) {
+    val cueAlpha = actionHighlightAlpha(plan, !settings.disableFlashes && !settings.disableScreenshake)
+    val annotatedText = remember(plan, highlightColor, disabledColor, accentColor, isDark, cueAlpha) {
         buildAnnotatedString {
             append(plan.description)
             plan.segments.forEach { segment ->
@@ -217,7 +220,7 @@ private fun SinglePlanDescription(
                         color = color,
                         fontWeight = weight,
                         textDecoration = decoration,
-                        background = backgroundColor
+                        background = if (segment.needsAttention()) accentColor.copy(alpha = cueAlpha) else backgroundColor
                     ),
                     start = segment.start,
                     end = segment.end

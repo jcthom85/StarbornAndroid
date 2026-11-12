@@ -55,6 +55,7 @@ data class ExplorationUiState(
     val questLogCompleted: List<QuestSummaryUi> = emptyList(),
     val questDetail: QuestDetailUi? = null,
     val completedMilestones: Set<String> = emptySet(),
+    val completedEvents: Set<String> = emptySet(),
     val milestoneBands: List<MilestoneBandUi> = emptyList(),
     val narrationPrompt: NarrationPrompt? = null,
     val partyStatus: PartyStatusUi = PartyStatusUi(),

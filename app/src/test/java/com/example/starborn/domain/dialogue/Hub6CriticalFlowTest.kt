@@ -64,7 +64,9 @@ class Hub6CriticalFlowTest {
         harness.events.handleTrigger("player_action", EventPayload.Action("w4_mq19_open_anvil_cradle"))
         assertEquals("claim_anvil", harness.store.state.value.questStageById["w4_mq19"])
 
-        val anvil = harness.dialogue.startDialogue("Nova")
+        harness.store.setRoom("foundry_forge_anvil")
+        harness.events.handleTrigger("player_action", EventPayload.Action("w4_mq19_take_anvil_scene"))
+        val anvil = harness.requestedDialogue?.let(harness.dialogue::startDialogueAt)
         assertNotNull(anvil)
         assertEquals("nova_w4_mq19_anvil_intro", anvil?.current()?.id)
         anvil?.advanceUntilFinished()
@@ -142,6 +144,8 @@ class Hub6CriticalFlowTest {
         val store = GameSessionStore()
         val events: EventManager
         val dialogue: DialogueService
+        var requestedDialogue: String? = null
+            private set
 
         init {
             initialState?.let(store::restore)
@@ -149,6 +153,7 @@ class Hub6CriticalFlowTest {
                 events = loadEvents(),
                 sessionStore = store,
                 eventHooks = EventHooks(
+                    onStartDialogue = { requestedDialogue = it.removePrefix("line:") },
                     onQuestTaskUpdated = { questId, taskId ->
                         if (!questId.isNullOrBlank() && !taskId.isNullOrBlank()) {
                             store.setQuestTaskCompleted(questId, taskId, true)

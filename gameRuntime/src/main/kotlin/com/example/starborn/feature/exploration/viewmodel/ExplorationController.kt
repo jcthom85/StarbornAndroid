@@ -1943,6 +1943,7 @@ class ExplorationController(
                     )
                     current.copy(
                         completedMilestones = newState.completedMilestones,
+                        completedEvents = newState.completedEvents,
                         activeMeal = newState.activeMealBuff,
                         activeQuests = newState.activeQuests,
                         completedQuests = newState.completedQuests,
@@ -2602,6 +2603,7 @@ class ExplorationController(
                     questLogActive = activeJournal,
                     questLogCompleted = completedJournal,
                     completedMilestones = sessionState.completedMilestones,
+                    completedEvents = sessionState.completedEvents,
                     theme = initialTheme,
                     themeStyle = initialThemeStyle,
                     darkCapableRooms = darkCapableRoomIds,
@@ -5121,6 +5123,7 @@ class ExplorationController(
             roomObjectOffer = null, narrationPrompt = null, eventAnnouncement = null,
             tuningPuzzle = null, togglePrompt = null, blockedPrompt = null, shopGreeting = null,
             completedMilestones = state.completedMilestones,
+            completedEvents = state.completedEvents,
             actions = room?.let(::parseActions).orEmpty(),
             availableConnections = room?.let(::visibleConnections).orEmpty(),
             blockedDirections = room?.let(::computeBlockedDirections).orEmpty(),
@@ -5990,7 +5993,8 @@ class ExplorationController(
                 if (eventId == null) {
                     val room = _uiState.value.currentRoom
                     val description = resolveRoomDescription(room, _uiState.value.roomState,
-                        sessionStore.state.value.completedMilestones, room?.let(::isRoomDark) == true)
+                        sessionStore.state.value.completedMilestones, room?.let(::isRoomDark) == true,
+                        sessionStore.state.value.completedEvents)
                     inspectionReceiptKey(action, description)?.let { key ->
                         room?.id?.let { setRoomStateValue(it, key, true) }
                     }
@@ -6522,7 +6526,8 @@ class ExplorationController(
             val inspectionComplete = clueEvent in session.completedEvents ||
                 (completionMilestone != null && completionMilestone in session.completedMilestones)
             if (action["inspect_after_completion"] == true && clueEvent != null && inspectionComplete) {
-                val text = eventsById[clueEvent]?.actions?.firstOrNull { it.type == "show_message" }?.message
+                val text = action["completed_inspection_message"].asStringOrNull()
+                    ?: eventsById[clueEvent]?.actions?.firstOrNull { it.type == "show_message" }?.message
                     ?: action["condition_unmet_message"].asStringOrNull()
                 return@mapNotNull GenericAction(name = name, type = "inspect",
                     conditionUnmetMessage = text?.substringAfter("\n\n", text), completedInspection = true)
@@ -6595,7 +6600,9 @@ class ExplorationController(
                         ?: action["message"].asStringOrNull()
                         ?: action["description"].asStringOrNull(),
                     hideInline = action["hide_inline"] as? Boolean ?: false,
-                    travelLabel = action["travel_label"].asStringOrNull()
+                    travelLabel = action["travel_label"].asStringOrNull(),
+                    drawAttention = action["highlight_when_milestone"].asStringOrNull()?.let { it in session.completedMilestones } == true &&
+                        action["highlight_until_milestone"].asStringOrNull()?.let { it !in session.completedMilestones } == true
                 )
             }
         }

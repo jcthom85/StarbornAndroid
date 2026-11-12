@@ -1256,7 +1256,9 @@
       },
       {
         "name": "toxic blockage",
-        "guarded_by": ["siren_skimmer"],
+        "guarded_by": [
+          "siren_skimmer"
+        ],
         "guarded_message": "The two Skimmers circle the intake grille. Defeat them before reaching in to clear the toxic blockage.",
         "type": "generic",
         "action_event": "w1_sq02_clear_toxic_blockage",
@@ -2195,7 +2197,9 @@
         "acoustic_bulwark"
       ]
     ],
-    "enemy_flavor": {"acoustic_bulwark": "The damaged Bulwark guards the post with exposed cabling. Defeating this unit guarantees one Wiring Bundle for Field Kit repairs and fishing gear."},
+    "enemy_flavor": {
+      "acoustic_bulwark": "The damaged Bulwark guards the post with exposed cabling. Defeating this unit guarantees one Wiring Bundle for Field Kit repairs and fishing gear."
+    },
     "connections": {
       "west": "admin_window"
     },
@@ -2227,7 +2231,13 @@
         "hp": 30,
         "vitality": 0,
         "stability": 12,
-        "extra_drops": [{"id": "wiring_bundle", "chance": 1.0, "quantity": 1}]
+        "extra_drops": [
+          {
+            "id": "wiring_bundle",
+            "chance": 1.0,
+            "quantity": 1
+          }
+        ]
       }
     ]
   },
@@ -7122,7 +7132,7 @@
         ]
       },
       {
-        "description": "Belt plates lock safely; breath pistons starve. The Anvil cradle opens like an unclenching hand, the anvil relic casting Nova's shadow up the hammer wall. A fabrication matrix panel overlooks the hammer lane beside a test chamber terminal.",
+        "description": "The locking plates have withdrawn. The [action:anvil relic|Anvil relic] hangs within reach above the open cradle, casting Nova's shadow up the hammer wall. A fabrication matrix panel overlooks the hammer lane beside a test chamber terminal.",
         "requires_milestones": [
           "ms_w4_conveyor_puzzle_solved"
         ]
@@ -7150,7 +7160,7 @@
         "inspection_completion_milestone": "ms_w4_matrix_overloaded",
         "type": "generic",
         "action_event": "w4_mq18_overload_matrix",
-        "condition_unmet_message": "The fabrication matrix feeds the conveyor floor with Phantom shells."
+        "condition_unmet_message": "The fabrication matrix keeps feeding Phantom shells onto the line. Review the records in the Conditioning Chamber to find how to overload it."
       },
       {
         "name": "anvil cradle",
@@ -7168,11 +7178,14 @@
       },
       {
         "name": "anvil relic",
+        "highlight_when_milestone": "ms_w4_conveyor_puzzle_solved",
+        "highlight_until_milestone": "ms_w4_anvil_claimed",
         "inspect_after_completion": true,
+        "inspection_completion_event": "w4_mq19_take_anvil",
         "inspection_completion_milestone": "ms_w4_anvil_claimed",
         "type": "generic",
-        "action_event": "w4_mq19_take_anvil",
-        "condition_unmet_message": "The Anvil waits in the hammer cradle, hot enough to glow without flame."
+        "action_event": "w4_mq19_take_anvil_scene",
+        "condition_unmet_message": "The Anvil glows behind the cradle's locking plates. Open the anvil cradle before reaching for it."
       },
       {
         "name": "test chamber terminal",
@@ -7281,16 +7294,23 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Power Core is stripped: engine gone, Phase-Cutter Arrays gone, alarms climbing into panic. The Astra can reach high orbit now if the crew can launch before the factory seals. The engine mount connects to the core's thermal clamps. The southern stair leads to Turbine Balcony; Engine Service Ring remains north.",
         "requires_milestones": [
+          "ms_w4_engine_stolen",
           "ms_w4_arrays_stolen"
-        ]
+        ],
+        "description": "The engine mount stands empty beneath open thermal clamps. The array rack that held the Phase-Cutter Arrays is stripped bare. Alarms echo through the hollow machinery. The southern stair leads to Turbine Balcony; Engine Service Ring remains north."
       },
       {
-        "description": "The engine cradle is torn open. Without the Deep-Core Engine, the Foundry pulses unevenly, and Vale's Ascension Cradle timeline just lost its heart. The engine mount connects to the core's thermal clamps. Phase-Cutter Arrays occupy the adjoining rack. The southern stair leads to Turbine Balcony; Engine Service Ring remains north.",
         "requires_milestones": [
           "ms_w4_engine_stolen"
-        ]
+        ],
+        "description": "Open thermal clamps surround the empty engine mount. The Foundry pulses unevenly without the Deep-Core Engine. The Phase-Cutter Arrays remain secured in the array rack. The southern stair leads to Turbine Balcony; Engine Service Ring remains north."
+      },
+      {
+        "requires_milestones": [
+          "ms_w4_arrays_stolen"
+        ],
+        "description": "The Deep-Core Engine still hammers in the engine mount, held by thermal clamps. Beside it, the array rack that held the Phase-Cutter Arrays stands empty. The southern stair leads to Turbine Balcony; Engine Service Ring remains north."
       },
       {
         "description": "The Titan Walker is down, and the Power Core no longer has a champion. Thermal clamps still grip the Deep-Core Engine while Phase-Cutter Arrays wait in a rack beside the cradle. The engine mount connects to the core's thermal clamps. The southern stair leads to Turbine Balcony; Engine Service Ring remains north.",
@@ -7312,7 +7332,8 @@
         "inspection_completion_milestone": "ms_w4_engine_stolen",
         "type": "generic",
         "action_event": "w4_mq20_steal_engine",
-        "condition_unmet_message": "The Deep-Core Engine is locked under thermal clamps."
+        "condition_unmet_message": "The Deep-Core Engine is still secured. Take the Anvil and defeat the Titan Walker before releasing the thermal clamps.",
+        "completed_inspection_message": "The thermal clamps hang open around the empty engine mount. The Deep-Core Engine has been secured for the Astra."
       },
       {
         "name": "phase-cutter arrays",
@@ -7320,7 +7341,8 @@
         "inspection_completion_milestone": "ms_w4_arrays_stolen",
         "type": "generic",
         "action_event": "w4_mq20_steal_arrays",
-        "condition_unmet_message": "A rack of ship-scale Phase-Cutter Arrays is wired to the engine cradle."
+        "condition_unmet_message": "The Phase-Cutter Arrays are still secured. Take the Anvil and defeat the Titan Walker before removing them.",
+        "completed_inspection_message": "The array rack is empty. The Phase-Cutter Arrays have been secured for the Astra."
       }
     ]
   },
@@ -7348,7 +7370,9 @@
         ]
       }
     ],
-    "enemy_flavor": {"flame_trooper": "The trooper carries two sealed Ration Packs for recovery or Ration Soup preparation."},
+    "enemy_flavor": {
+      "flame_trooper": "The trooper carries two sealed Ration Packs for recovery or Ration Soup preparation."
+    },
     "connections": {
       "south": "foundry_power_core"
     },
@@ -7364,7 +7388,8 @@
         "inspection_completion_milestone": "ms_w4_engine_stolen",
         "type": "generic",
         "action_event": "w4_mq20_steal_engine",
-        "condition_unmet_message": "The clamps hold the Deep-Core Engine in place until the Titan Walker is no longer guarding the core."
+        "condition_unmet_message": "The Deep-Core Engine is still secured. Take the Anvil and defeat the Titan Walker before releasing the thermal clamps.",
+        "completed_inspection_message": "The thermal clamps hang open around the empty engine mount. The Deep-Core Engine has been secured for the Astra."
       },
       {
         "name": "array rack",
@@ -7372,7 +7397,29 @@
         "inspection_completion_milestone": "ms_w4_arrays_stolen",
         "type": "generic",
         "action_event": "w4_mq20_steal_arrays",
-        "condition_unmet_message": "The array rack stores ship-scale Phase-Cutter Arrays meant for something far larger than the Astra."
+        "condition_unmet_message": "The Phase-Cutter Arrays are still secured. Take the Anvil and defeat the Titan Walker before removing them.",
+        "completed_inspection_message": "The array rack is empty. The Phase-Cutter Arrays have been secured for the Astra."
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w4_engine_stolen",
+          "ms_w4_arrays_stolen"
+        ],
+        "description": "The engine mount stands empty beneath open thermal clamps. The array rack that held the Phase-Cutter Arrays is stripped bare. Alarms echo through the hollow machinery."
+      },
+      {
+        "requires_milestones": [
+          "ms_w4_engine_stolen"
+        ],
+        "description": "Open thermal clamps surround the empty engine mount. The Foundry pulses unevenly without the Deep-Core Engine. The Phase-Cutter Arrays remain secured in the array rack."
+      },
+      {
+        "requires_milestones": [
+          "ms_w4_arrays_stolen"
+        ],
+        "description": "The Deep-Core Engine still hammers in the engine mount, held by thermal clamps. Beside it, the array rack that held the Phase-Cutter Arrays stands empty."
       }
     ]
   },
@@ -7411,6 +7458,40 @@
     "state": {},
     "description_variants": [
       {
+        "description": "Factory alarms turn the Titan Dock red. The Astra waits beyond the escape catwalk with a stolen engine, stolen arrays, and not much time. Commander Rylos's insignia marks the launch cradle. The escape launch route runs past an open, empty gantry footlocker bolted to the rail.",
+        "requires_milestones": [
+          "ms_w4_engine_stolen",
+          "ms_w4_arrays_stolen"
+        ],
+        "requires_events": [
+          "find_vhs_tape_08"
+        ]
+      },
+      {
+        "description": "The Titan Walker lies broken in its launch cradle. The dock trembles over the primary vent, but the path back to the Power Core is open. Commander Rylos's insignia marks the cradle. The escape launch route passes an open, empty gantry footlocker.",
+        "requires_milestones": [
+          "ms_w4_titan_defeated"
+        ],
+        "requires_events": [
+          "find_vhs_tape_08"
+        ]
+      },
+      {
+        "description": "Commander Rylos watches from the Titan Walker, chrome face bright in volcano glare. He calls Gh0st a unit; calling him a person would admit the crime. The escape launch route passes an open, empty gantry footlocker bolted to the rail.",
+        "requires_milestones": [
+          "ms_w4_rylos_confronted"
+        ],
+        "requires_events": [
+          "find_vhs_tape_08"
+        ]
+      },
+      {
+        "description": "A circular platform hangs over the volcano primary vent. Catwalks tremble above orange depth while a Titan Walker waits in its launch cradle. Commander Rylos watches from the Titan Walker. The escape launch route runs past an open, empty gantry footlocker bolted to the rail.",
+        "requires_events": [
+          "find_vhs_tape_08"
+        ]
+      },
+      {
         "description": "Factory alarms turn the Titan Dock red. The Astra waits beyond the escape catwalk with a stolen engine, stolen arrays, and not much time. Commander Rylos's insignia marks the launch cradle. The escape launch route runs past a gantry footlocker bolted to the rail.",
         "requires_milestones": [
           "ms_w4_engine_stolen",
@@ -7448,10 +7529,10 @@
       },
       {
         "name": "gantry footlocker",
-        "inspect_after_completion": true,
         "type": "generic",
         "action_event": "find_vhs_tape_08",
-        "condition_unmet_message": "A locked footlocker bolted to the escape gantry rail."
+        "condition_unmet_message": "A locked footlocker bolted to the escape gantry rail.",
+        "hide_when_event_completed": "find_vhs_tape_08"
       }
     ],
     "enemy_flavor": {
@@ -7789,6 +7870,30 @@
     "state": {},
     "description_variants": [
       {
+        "description": "The Solarium mirror array burns clean again. The false sun is still false, but its light no longer feeds void-moss across the executive trees. A panel sets garden light priority above the fake beach, where the solarium tide cache lies open and empty beneath artificial coral ledges. Water laps the [action:false tide fishing|artificial shoreline].",
+        "requires_milestones": [
+          "ms_w5_solar_maintenance_complete"
+        ],
+        "requires_events": [
+          "find_vhs_tape_09"
+        ]
+      },
+      {
+        "description": "The fake beach has been crossed. Its sand keeps the shape of Nova's hand like paradise is trying to remember being real. The mirror array hangs above a panel for garden light priority, and the solarium tide cache lies open and empty beneath artificial coral ledges. Water laps the [action:false tide fishing|artificial shoreline].",
+        "requires_milestones": [
+          "ms_w5_solarium_crossed"
+        ],
+        "requires_events": [
+          "find_vhs_tape_09"
+        ]
+      },
+      {
+        "description": "Real soil, tropical trees, and a fake beach sit beneath a fusion lamp and mirror array. The fruit is rotting in a paradise built for executives. A panel sets garden light priority, while the solarium tide cache lies open and empty beneath artificial coral ledges. Water laps the [action:false tide fishing|artificial shoreline].",
+        "requires_events": [
+          "find_vhs_tape_09"
+        ]
+      },
+      {
         "description": "The Solarium mirror array burns clean again. The false sun is still false, but its light no longer feeds void-moss across the executive trees. A panel sets garden light priority above the fake beach, where a solarium tide cache rests beneath artificial coral ledges. Water laps the [action:false tide fishing|artificial shoreline].",
         "requires_milestones": [
           "ms_w5_solar_maintenance_complete"
@@ -7840,10 +7945,10 @@
       },
       {
         "name": "solarium tide cache",
-        "inspect_after_completion": true,
         "type": "generic",
         "action_event": "find_vhs_tape_09",
-        "condition_unmet_message": "A sealed container wedged beneath the artificial coral ledges."
+        "condition_unmet_message": "A sealed container wedged beneath the artificial coral ledges.",
+        "hide_when_event_completed": "find_vhs_tape_09"
       }
     ]
   },
@@ -9536,7 +9641,24 @@
         ],
         "message_locked": "Set all four crew anchors and use the unfinished bridge before crossing east."
       }
-    }
+    },
+    "description_variants": [
+      {
+        "requires_state": {
+          "bridge_built": true
+        },
+        "description": "The unfinished bridge has become a solid crossing. Zeke's anchor, Gh0st's anchor, Orion's anchor, and Nova's anchor hold its separate memories in balance. East leads onto Shared Memory Span, where the crew can rest and share its campfire promise. The mine elevator remains west; the memory path north can be retraced."
+      },
+      {
+        "requires_milestones": [
+          "ms_w6_bridge_zeke_anchor",
+          "ms_w6_bridge_ghost_anchor",
+          "ms_w6_bridge_orion_anchor",
+          "ms_w6_bridge_nova_anchor"
+        ],
+        "description": "Zeke's anchor, Gh0st's anchor, Orion's anchor, and Nova's anchor answer one another across the static. All four hold; the unfinished bridge waits for the crew to join them into a crossing. The mine elevator remains west; the memory path north can be retraced."
+      }
+    ]
   },
   {
     "id": "source_memory_bridge_span",
@@ -9581,10 +9703,18 @@
       },
       {
         "name": "memory altar box",
-        "inspect_after_completion": true,
         "type": "generic",
         "action_event": "find_vhs_tape_10",
-        "condition_unmet_message": "A crystal repository glowing with warm pre-collapse harmonics."
+        "condition_unmet_message": "A crystal repository glowing with warm pre-collapse harmonics.",
+        "hide_when_event_completed": "find_vhs_tape_10"
+      }
+    ],
+    "description_variants": [
+      {
+        "description": "The bridge forms from Tideglass sand, Foundry heat, Spire rain, and the Astra's engine note. Each step belongs to more than one survivor. A campfire promise hangs in the quiet beside an open, empty memory altar box, its crystal lining still glowing.",
+        "requires_events": [
+          "find_vhs_tape_10"
+        ]
       }
     ]
   },
@@ -9732,7 +9862,23 @@
         ],
         "message_locked": "Refuse Jed’s door, the Astra wreckage and the Foundry catwalk, then climb the memory stair before heading east."
       }
-    }
+    },
+    "description_variants": [
+      {
+        "requires_state": {
+          "ascent_open": true
+        },
+        "description": "Jed's door, the Astra wreckage and the Foundry catwalk remain scarred and real. The memory stair holds beneath the crew, its eastern ascent open toward World-Fracture Landing. An Aethel grave waits among the fragments. West leads back through the threshold to the shared span."
+      },
+      {
+        "requires_milestones": [
+          "ms_w6_refused_jed_revision",
+          "ms_w6_refused_astra_revision",
+          "ms_w6_refused_foundry_revision"
+        ],
+        "description": "Nova has refused the promises behind Jed's door, the Astra wreckage and the Foundry catwalk. Their scars remain. The memory stair has steadied enough to climb. An Aethel grave waits among the fragments. West leads back through the threshold to the shared span."
+      }
+    ]
   },
   {
     "id": "source_memory_fragments",
@@ -10005,6 +10151,18 @@
           "ms_w6_mq30_complete"
         ],
         "description": "The white ocean is no longer silent. Countless voices move through it like tidewater, separate and connected by choice. The shared tuning focus remains where Vale tried to silence them."
+      },
+      {
+        "requires_events": [
+          "w6_mq30_defeat_god"
+        ],
+        "description": "Vale's blinding geometry has broken apart. Separate voices stir across the white ocean, but his code still binds them. The Key answers at the shared tuning focus, waiting for the crew to bring their voices together. West leads back toward the shared span for rest; the remembered Silence Pulpit lies north through White Shore and Key Orbit."
+      },
+      {
+        "requires_events": [
+          "w6_mq30_defeat_vale"
+        ],
+        "description": "Vale's human outline has shattered. A white fracture runs north through White Shore and Key Orbit toward the Silence Pulpit, where his remaining form waits. The shared tuning focus trembles under code that has not yet been broken. West leads back toward the shared span for rest."
       }
     ],
     "blocked_directions": {
@@ -11473,10 +11631,18 @@
     "enemy_instances": [
       {
         "enemy_id": "razor_vine",
-        "extra_drops": [{"id": "herb", "chance": 1.0, "quantity": 1}]
+        "extra_drops": [
+          {
+            "id": "herb",
+            "chance": 1.0,
+            "quantity": 1
+          }
+        ]
       }
     ],
-    "enemy_flavor": {"razor_vine": "Medicinal herbs grow beneath the Razor Vine. Defeating it yields one Herb for cooking or an Antidote Flask."},
+    "enemy_flavor": {
+      "razor_vine": "Medicinal herbs grow beneath the Razor Vine. Defeating it yields one Herb for cooking or an Antidote Flask."
+    },
     "connections": {
       "north": "sector9_canopy",
       "east": "sector9_wilds_nest",
@@ -11548,7 +11714,9 @@
       },
       {
         "name": "trampled supply pack",
-        "guarded_by": ["shard_hound"],
+        "guarded_by": [
+          "shard_hound"
+        ],
         "guarded_message": "The Shard-Hounds are guarding the pack in their den. Defeat them before retrieving the supplies.",
         "type": "container",
         "state_key": "w2_hound_nest_pack_opened",
@@ -15849,7 +16017,9 @@
         ]
       }
     ],
-    "enemy_flavor": {"aero_drone": "This service drone carries a recoverable Circuit Board for Field Kit repairs and reinforced fishing gear."},
+    "enemy_flavor": {
+      "aero_drone": "This service drone carries a recoverable Circuit Board for Field Kit repairs and reinforced fishing gear."
+    },
     "connections": {
       "south": "spire_exec_lounge_scale_04"
     },
@@ -15871,7 +16041,9 @@
       },
       {
         "name": "executive safe",
-        "guarded_by": ["aero_drone"],
+        "guarded_by": [
+          "aero_drone"
+        ],
         "guarded_message": "The security drone covers the safe. Defeat it before opening the door and collecting the contents.",
         "type": "container",
         "state_key": "spire_exec_lounge_scale_05_cache_opened",
@@ -15916,7 +16088,9 @@
         ]
       }
     ],
-    "enemy_flavor": {"aero_drone": "Its exposed harness yields one Wiring Bundle when defeated, useful for repairs and salvage lures."},
+    "enemy_flavor": {
+      "aero_drone": "Its exposed harness yields one Wiring Bundle when defeated, useful for repairs and salvage lures."
+    },
     "connections": {
       "south": "spire_landing_pad_roof",
       "north": "spire_landing_pad_scale_02"
@@ -15995,7 +16169,9 @@
         ]
       }
     ],
-    "enemy_flavor": {"corporate_assassin": "The assassin carries two sealed Ration Packs. Defeat them to recover the supplies."},
+    "enemy_flavor": {
+      "corporate_assassin": "The assassin carries two sealed Ration Packs. Defeat them to recover the supplies."
+    },
     "connections": {
       "south": "spire_landing_pad_scale_02",
       "north": "spire_landing_pad_scale_04"
@@ -16278,7 +16454,9 @@
         ]
       }
     ],
-    "enemy_flavor": {"welder_bot": "The welder carries two Pure Iron billets, enough iron for the Slag Catcher cabinet repair."},
+    "enemy_flavor": {
+      "welder_bot": "The welder carries two Pure Iron billets, enough iron for the Slag Catcher cabinet repair."
+    },
     "connections": {
       "west": "foundry_slag_river_scale_01",
       "north": "foundry_slag_river_scale_03"
@@ -17570,7 +17748,7 @@
   {
     "id": "orbital_executive_dock_scale_01",
     "env": "void",
-    "title": "Ring Service Alcove",
+    "title": "Customs Crawlway",
     "background_image": "images/rooms/world_5/orbital_executive_dock_scale_01.webp",
     "description": "A luggage recess hides the service crawlway beneath an executive arrival mural. Scuffed knee plates have polished the lower edge of its brass trim.",
     "npcs": [],
@@ -17601,7 +17779,7 @@
   {
     "id": "orbital_executive_dock_scale_02",
     "env": "void",
-    "title": "Ring Pressure Gallery",
+    "title": "Collar Pressure Gallery",
     "background_image": "images/rooms/world_5/orbital_executive_dock_scale_02.webp",
     "description": "A pressure gallery runs behind the polished walls. Its warning strip flashes whenever exterior vacuum loads the hospitality seals.",
     "npcs": [],
@@ -17634,7 +17812,7 @@
   {
     "id": "orbital_executive_dock_scale_03",
     "env": "void",
-    "title": "Ring Overlook Niche",
+    "title": "Gantry Inspection Slit",
     "background_image": "images/rooms/world_5/orbital_executive_dock_scale_03.webp",
     "description": "Through a narrow inspection slit, the docking collar flexes against the Astra. The guest windows hide the cables carrying that load.",
     "npcs": [],
@@ -17665,7 +17843,7 @@
   {
     "id": "orbital_executive_dock_scale_04",
     "env": "void",
-    "title": "Ring Control Pocket",
+    "title": "Arrival Light Relay",
     "background_image": "images/rooms/world_5/orbital_executive_dock_scale_04.webp",
     "description": "An arrival-light relay sits behind a decorative panel. Its switch is tagged DISPLAY ONLY; the nearby pressure controls have their own sealed circuit.",
     "npcs": [],
@@ -17698,7 +17876,7 @@
   {
     "id": "orbital_executive_dock_scale_05",
     "env": "void",
-    "title": "Ring Quiet Cache",
+    "title": "Sealant Store",
     "background_image": "images/rooms/world_5/orbital_executive_dock_scale_05.webp",
     "description": "A shelf holds dried sealant cartridges, each split open to prove it empty. Someone has crossed out the next delivery date three times.",
     "npcs": [],
@@ -17729,7 +17907,7 @@
   {
     "id": "orbital_executive_dock_scale_06",
     "env": "void",
-    "title": "Ring Echo Walk",
+    "title": "Freight Intercom Walk",
     "background_image": "images/rooms/world_5/orbital_executive_dock_scale_06.webp",
     "description": "The collar intercom repeats an abandoned freight request. Between the formal announcements, a loader keeps asking whether anyone has cleared the workers to board.",
     "npcs": [],
@@ -17762,7 +17940,7 @@
   {
     "id": "orbital_grand_concourse_scale_01",
     "env": "void",
-    "title": "Ring Service Alcove",
+    "title": "Cleaners’ Passage",
     "background_image": "images/rooms/world_5/orbital_grand_concourse_scale_01.webp",
     "description": "Behind a directory of luxury suites, a cleaner has scratched a second map at shoulder height. It follows waste pipes instead of promenades.",
     "npcs": [],
@@ -17793,7 +17971,7 @@
   {
     "id": "orbital_grand_concourse_scale_02",
     "env": "void",
-    "title": "Ring Pressure Gallery",
+    "title": "Inward Gauge Gallery",
     "background_image": "images/rooms/world_5/orbital_grand_concourse_scale_02.webp",
     "description": "A pressure inspection rail follows the back of a gold wall. Its indicators have been turned inward so staff must read them from the service passage.",
     "npcs": [],
@@ -17826,7 +18004,7 @@
   {
     "id": "orbital_grand_concourse_scale_03",
     "env": "void",
-    "title": "Ring Overlook Niche",
+    "title": "Chandelier Frame",
     "background_image": "images/rooms/world_5/orbital_grand_concourse_scale_03.webp",
     "description": "A gap above a ceiling panel reveals the concourse chandelier from behind. Its glitter rests on a welded frame with fresh repair marks.",
     "npcs": [],
@@ -17857,7 +18035,7 @@
   {
     "id": "orbital_grand_concourse_scale_04",
     "env": "void",
-    "title": "Ring Control Pocket",
+    "title": "Directory Relay",
     "background_image": "images/rooms/world_5/orbital_grand_concourse_scale_04.webp",
     "description": "The directory lighting has a manual relay beside a list of names. Room numbers are printed; the erased guest names are not.",
     "npcs": [],
@@ -17890,7 +18068,7 @@
   {
     "id": "orbital_grand_concourse_scale_05",
     "env": "void",
-    "title": "Ring Quiet Cache",
+    "title": "Shift Rota Cupboard",
     "background_image": "images/rooms/world_5/orbital_grand_concourse_scale_05.webp",
     "description": "An old cleaning cart is parked in a cupboard too shallow for its handle. A folded shift rota uses job titles where names should be.",
     "npcs": [],
@@ -17921,7 +18099,7 @@
   {
     "id": "orbital_grand_concourse_scale_06",
     "env": "void",
-    "title": "Ring Echo Walk",
+    "title": "Hospitality Speaker Walk",
     "background_image": "images/rooms/world_5/orbital_grand_concourse_scale_06.webp",
     "description": "A hospitality announcement echoes through an uncarpeted passage. Here, without the public speakers smoothing it, the pause before \"valued guest\" sounds painfully long.",
     "npcs": [],
@@ -17954,7 +18132,7 @@
   {
     "id": "orbital_solarium_scale_01",
     "env": "void",
-    "title": "Ring Service Alcove",
+    "title": "Root Irrigation Recess",
     "background_image": "images/rooms/world_5/orbital_solarium_scale_01.webp",
     "description": "Water stains lead from the garden border into a narrow irrigation recess. Roots have found the joints that the decorative stonework conceals.",
     "npcs": [],
@@ -17985,7 +18163,7 @@
   {
     "id": "orbital_solarium_scale_02",
     "env": "void",
-    "title": "Ring Pressure Gallery",
+    "title": "Condensation Channel",
     "background_image": "images/rooms/world_5/orbital_solarium_scale_02.webp",
     "description": "A condensation channel runs along the outer glass. Beyond it is black space. Mirror mounts on the inner frame show how carefully the garden daylight must be aimed.",
     "npcs": [],
@@ -18018,7 +18196,7 @@
   {
     "id": "orbital_solarium_scale_03",
     "env": "void",
-    "title": "Ring Overlook Niche",
+    "title": "Mirror Edge Walk",
     "background_image": "images/rooms/world_5/orbital_solarium_scale_03.webp",
     "description": "From this slit behind the beds, the mirror array is visible edge-on. The brilliant garden sun resolves into hinges, reflectors, and a tracked lamp.",
     "npcs": [],
@@ -18049,7 +18227,7 @@
   {
     "id": "orbital_solarium_scale_04",
     "env": "void",
-    "title": "Ring Control Pocket",
+    "title": "Fountain Cabinet",
     "background_image": "images/rooms/world_5/orbital_solarium_scale_04.webp",
     "description": "A dead decorative fountain shares a cabinet with the garden lighting schedule. Both were programmed for visitors who would never ask where the water went.",
     "npcs": [],
@@ -18082,7 +18260,7 @@
   {
     "id": "orbital_solarium_scale_05",
     "env": "void",
-    "title": "Ring Quiet Cache",
+    "title": "Seed Ledger Store",
     "background_image": "images/rooms/world_5/orbital_solarium_scale_05.webp",
     "description": "Seed packets lie flattened between pages of an old planting ledger. Each failed crop has a date beside it; later entries stop using the word ornamental.",
     "npcs": [],
@@ -18113,7 +18291,7 @@
   {
     "id": "orbital_solarium_scale_06",
     "env": "void",
-    "title": "Ring Echo Walk",
+    "title": "Cooling Irrigation Walk",
     "background_image": "images/rooms/world_5/orbital_solarium_scale_06.webp",
     "description": "An irrigation pipe ticks as it cools. The sound moves along the beds, a small physical rhythm beneath the station's recorded birdsong.",
     "npcs": [],
@@ -18146,7 +18324,7 @@
   {
     "id": "orbital_security_hub_scale_01",
     "env": "void",
-    "title": "Ring Service Alcove",
+    "title": "Camera Calibration Bay",
     "background_image": "images/rooms/world_5/orbital_security_hub_scale_01.webp",
     "description": "A service hatch sits below a camera calibration chart. The chart leaves a blank wedge where technicians must stand to adjust the lenses. The Security Hub is north; the maintenance passage continues south.",
     "npcs": [],
@@ -18177,7 +18355,7 @@
   {
     "id": "orbital_security_hub_scale_02",
     "env": "void",
-    "title": "Ring Pressure Gallery",
+    "title": "Hull Inspection Gallery",
     "background_image": "images/rooms/world_5/orbital_security_hub_scale_02.webp",
     "description": "A reinforced gallery separates the security office from the outer hull. Its pressure strip has a manual inspection date newer than the staff roster.",
     "npcs": [],
@@ -18210,7 +18388,7 @@
   {
     "id": "orbital_security_hub_scale_03",
     "env": "void",
-    "title": "Ring Overlook Niche",
+    "title": "Camera Backwalk",
     "background_image": "images/rooms/world_5/orbital_security_hub_scale_03.webp",
     "description": "A maintenance window looks onto the backs of the camera housings. From here their overlapping cones are mechanical coverage, not an all-seeing eye.",
     "npcs": [],
@@ -18241,7 +18419,7 @@
   {
     "id": "orbital_security_hub_scale_04",
     "env": "void",
-    "title": "Ring Control Pocket",
+    "title": "Evidence Test Relay",
     "background_image": "images/rooms/world_5/orbital_security_hub_scale_04.webp",
     "description": "A test relay has been sealed under a clear cover. Beside it, handwritten instructions insist on preserving the original logs before diagnostics.",
     "npcs": [],
@@ -18274,7 +18452,7 @@
   {
     "id": "orbital_security_hub_scale_05",
     "env": "void",
-    "title": "Ring Quiet Cache",
+    "title": "Badge Evidence Store",
     "background_image": "images/rooms/world_5/orbital_security_hub_scale_05.webp",
     "description": "An evidence carton contains discarded blank badges and a ruined label roll. Even the staff who moved evidence needed permission to touch an empty box.",
     "npcs": [],
@@ -18305,7 +18483,7 @@
   {
     "id": "orbital_security_hub_scale_06",
     "env": "void",
-    "title": "Ring Echo Walk",
+    "title": "Incident Speaker Walk",
     "background_image": "images/rooms/world_5/orbital_security_hub_scale_06.webp",
     "description": "A diagnostic speaker repeats an incomplete incident number. The next field is always a silence where an operator should have answered.",
     "npcs": [],
@@ -18338,7 +18516,7 @@
   {
     "id": "orbital_service_shaft_scale_01",
     "env": "void",
-    "title": "Ring Service Alcove",
+    "title": "Cable Spool Recess",
     "background_image": "images/rooms/world_5/orbital_service_shaft_scale_01.webp",
     "description": "Cable spools narrow the entrance to a worker passage. The only route marker is an arrow on the side of a spool that was too heavy to move.",
     "npcs": [],
@@ -18369,7 +18547,7 @@
   {
     "id": "orbital_service_shaft_scale_02",
     "env": "void",
-    "title": "Ring Pressure Gallery",
+    "title": "Tether Conduit",
     "background_image": "images/rooms/world_5/orbital_service_shaft_scale_02.webp",
     "description": "A pressure conduit follows the shaft wall beside a row of handholds. Every third handhold has a tether scar worn into its base.",
     "npcs": [],
@@ -18402,7 +18580,7 @@
   {
     "id": "orbital_service_shaft_scale_03",
     "env": "void",
-    "title": "Ring Overlook Niche",
+    "title": "Partition Overlook",
     "background_image": "images/rooms/world_5/orbital_service_shaft_scale_03.webp",
     "description": "A gap between cable trays exposes several floors of the station at once. Luxury rooms and machinery occupy opposite sides of the same thin partitions.",
     "npcs": [],
@@ -18433,7 +18611,7 @@
   {
     "id": "orbital_service_shaft_scale_04",
     "env": "void",
-    "title": "Ring Control Pocket",
+    "title": "Worklight Lockout",
     "background_image": "images/rooms/world_5/orbital_service_shaft_scale_04.webp",
     "description": "A local work-light switch sits beside a signed lockout tag. The circuit powers this recess; the main station feed runs in a sealed conduit beyond it.",
     "npcs": [],
@@ -18466,7 +18644,7 @@
   {
     "id": "orbital_service_shaft_scale_05",
     "env": "void",
-    "title": "Ring Quiet Cache",
+    "title": "Cut Tether Store",
     "background_image": "images/rooms/world_5/orbital_service_shaft_scale_05.webp",
     "description": "A tether bag hangs from a hook, its buckle cut cleanly through. Beside it are empty ration wrappers folded into a neat stack.",
     "npcs": [],
@@ -18497,7 +18675,7 @@
   {
     "id": "orbital_service_shaft_scale_06",
     "env": "void",
-    "title": "Ring Echo Walk",
+    "title": "Freight Motor Walk",
     "background_image": "images/rooms/world_5/orbital_service_shaft_scale_06.webp",
     "description": "Cable vibration carries a freight motor's pulse through the passage. Voices from the guest decks vanish into insulation, but the machinery never quite does.",
     "npcs": [],
@@ -18531,7 +18709,7 @@
     "id": "deep_server_farm_scale_01",
     "env": "void",
     "weather": "snow",
-    "title": "Ring Service Alcove",
+    "title": "Cooling Grille",
     "background_image": "images/rooms/world_5/deep_server_farm_scale_01.webp",
     "description": "Cool air escapes around a service grille between server towers. The maintenance marks are written in grease pencil so a technician can change them without a login. The backup aisle is north; the cooling service route continues south.",
     "npcs": [],
@@ -18563,7 +18741,7 @@
     "id": "deep_server_farm_scale_02",
     "env": "void",
     "weather": "snow",
-    "title": "Ring Pressure Gallery",
+    "title": "Cooling Plenum",
     "background_image": "images/rooms/world_5/deep_server_farm_scale_02.webp",
     "description": "A pressure inspection strip crosses the cooling plenum. Water beads on the cold side while the server side remains hot enough to dry a palm print.",
     "npcs": [],
@@ -18597,7 +18775,7 @@
     "id": "deep_server_farm_scale_03",
     "env": "void",
     "weather": "snow",
-    "title": "Ring Overlook Niche",
+    "title": "Rack Sightline",
     "background_image": "images/rooms/world_5/deep_server_farm_scale_03.webp",
     "description": "A narrow sightline runs behind the server racks. Their status lights continue blinking even where the polished front panels show only a smooth black surface.",
     "npcs": [],
@@ -18629,7 +18807,7 @@
     "id": "deep_server_farm_scale_04",
     "env": "void",
     "weather": "snow",
-    "title": "Ring Control Pocket",
+    "title": "Root Access Pocket",
     "background_image": "images/rooms/world_5/deep_server_farm_scale_04.webp",
     "description": "A control pocket hides a manual toggle behind a panel dressed as decor. Someone left one practical way to make the automated system hesitate. An active admin crypt terminal blinks behind a sub-floor hatch. An optional return slide leads directly back to the entrance. The room corridors also remain open for walking back.",
     "npcs": [],
@@ -20848,6 +21026,14 @@
       [
         "ascended_god"
       ]
+    ],
+    "description_variants": [
+      {
+        "requires_events": [
+          "w6_mq30_defeat_god"
+        ],
+        "description": "The Silence pulpit stands empty beneath falling shards of blinding geometry. Individual voices break through where the god-form tried to erase them. South leads through Key Orbit and White Shore to The Center, where the shared tuning focus waits. The memory path continues north."
+      }
     ]
   },
   {
@@ -21299,7 +21485,9 @@
         ]
       }
     ],
-    "enemy_flavor": {"phantom_prototype": "One intact Circuit Board can be recovered from this prototype for Field Kit repairs or reinforced fishing gear."},
+    "enemy_flavor": {
+      "phantom_prototype": "One intact Circuit Board can be recovered from this prototype for Field Kit repairs or reinforced fishing gear."
+    },
     "connections": {
       "south": "foundry_conditioning_scale_04"
     },

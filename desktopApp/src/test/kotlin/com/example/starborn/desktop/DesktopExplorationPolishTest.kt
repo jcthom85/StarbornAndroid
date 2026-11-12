@@ -68,7 +68,7 @@ class DesktopExplorationPolishTest {
         } finally { services.close(); directory.deleteRecursively() }
     }
 
-    @Test fun escapeClosesDrawerAndTabDoesNotOpenMenu() {
+    @Test fun escapeClosesDrawerAndKeyboardTravelStillWorks() {
         val directory = Files.createTempDirectory("starborn-polish-keyboard").toFile()
         val services = DesktopAppServices(directory)
         try {
@@ -88,6 +88,11 @@ class DesktopExplorationPolishTest {
             assertFalse(services.exploration.uiState.value.isMenuOverlayVisible)
             compose.onRoot().performKeyInput { pressKey(Key.Tab) }
             assertFalse(services.exploration.uiState.value.isMenuOverlayVisible)
+            compose.onRoot().performKeyInput { pressKey(Key.D) }
+            compose.waitUntil(5000) { services.exploration.uiState.value.currentRoom?.id == "pit_shaft" }
+            compose.waitForIdle()
+            compose.onRoot().performKeyInput { pressKey(Key.DirectionLeft) }
+            compose.waitUntil(5000) { services.exploration.uiState.value.currentRoom?.id == "pit_jed_bunk" }
         } finally { services.close(); directory.deleteRecursively() }
     }
 

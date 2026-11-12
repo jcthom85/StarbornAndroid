@@ -856,8 +856,11 @@ fun CombatScreen(
         }
 
         val combatFocusRequester = remember { FocusRequester() }
-        LaunchedEffect(Unit) {
-            combatFocusRequester.requestFocus()
+        LaunchedEffect(showSkillsDialog.value, showItemsDialog.value) {
+            if (!showSkillsDialog.value && !showItemsDialog.value) {
+                androidx.compose.runtime.withFrameNanos { }
+                combatFocusRequester.requestFocus()
+            }
         }
 
         val backgroundPainter = rememberRoomBackgroundPainter(viewModel.roomBackground)
@@ -867,7 +870,6 @@ fun CombatScreen(
                 .background(Color(0xFF05070B))
                 .clipToBounds()
                 .focusRequester(combatFocusRequester)
-                .focusable()
                 .onKeyEvent { keyEvent ->
                     if (inspectedEnemyId != null && keyEvent.key !in listOf(Key.ButtonB, Key.Escape, Key.ButtonL1, Key.ButtonR1, Key.Tab)) return@onKeyEvent true
                     if (keyEvent.type == KeyEventType.KeyDown) {
@@ -966,6 +968,7 @@ fun CombatScreen(
                     }
                     false
                 }
+                .focusable()
         ) {
             Box(
                 modifier = Modifier

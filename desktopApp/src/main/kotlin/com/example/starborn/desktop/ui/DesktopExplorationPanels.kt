@@ -222,15 +222,14 @@ private fun DesktopContextualControls(services: DesktopAppServices, ui: Explorat
                         enabled = !blocked && ui.actionHints[action.actionKey()]?.locked != true,
                         modifier = Modifier.heightIn(min = 48.dp).testTag("rest-service-${action.actionKey()}")
                     ) {
-                        if (!action.isFishingSpot()) {
-                            Icon(when {
-                                action is ShopAction -> Icons.Rounded.ShoppingCart
-                                action is TinkeringAction -> Icons.Rounded.Build
-                                action is RestStopAction && action.cookSource != null -> Icons.Rounded.Restaurant
-                                else -> Icons.Rounded.Hotel
-                            }, null, Modifier.size(18.dp))
-                            Spacer(Modifier.width(8.dp))
-                        }
+                        Icon(when {
+                            action.isFishingSpot() -> Icons.Rounded.Phishing
+                            action is ShopAction -> Icons.Rounded.ShoppingCart
+                            action is TinkeringAction -> Icons.Rounded.Build
+                            action is RestStopAction && action.cookSource != null -> Icons.Rounded.Restaurant
+                            else -> Icons.Rounded.Hotel
+                        }, null, Modifier.size(18.dp))
+                        Spacer(Modifier.width(8.dp))
                         Text(when {
                             action.isFishingSpot() -> "Fish"
                             action is RestStopAction -> restStopServiceLabel(action)

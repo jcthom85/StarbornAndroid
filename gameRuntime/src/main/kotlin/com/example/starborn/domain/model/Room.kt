@@ -56,7 +56,9 @@ data class RoomDescriptionVariant(
     @Json(name = "requires_milestones")
     val requiresMilestones: List<String> = emptyList(),
     @Json(name = "forbidden_milestones")
-    val forbiddenMilestones: List<String> = emptyList()
+    val forbiddenMilestones: List<String> = emptyList(),
+    @Json(name = "requires_events")
+    val requiresEvents: List<String> = emptyList()
 )
 
 

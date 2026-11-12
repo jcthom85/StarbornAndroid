@@ -55,6 +55,22 @@ class DesktopQuestQueueTest {
         state.clear(); assertTrue(state.important.isEmpty()); assertTrue(state.toasts.isEmpty())
     }
 
+    @Test fun stageUpdateKeepsUncheckedFeedbackAndDistinctObjectivesCanPlayBackToBack() {
+        val state = QuestPresentationState()
+        val first = QuestObjectiveStatus("first", "First objective", true, QuestObjectiveRole.JUST_COMPLETED)
+        val next = QuestObjectiveStatus("next", "Next objective", false, QuestObjectiveRole.NEXT)
+        val credit = UiEvent.ShowQuestBanner(QuestBannerType.PROGRESS, "quest", "Quest", listOf(first))
+        state.accept(credit, 0)
+        state.accept(credit.copy(objectives = listOf(next)), 5)
+        val merged = state.updates.single()
+        assertEquals(listOf(first, next), merged.objectives)
+        assertTrue(state.markObjectivesShown(merged))
+        assertFalse(state.markObjectivesShown(merged))
+        state.updates.clear()
+        state.accept(credit.copy(objectives = listOf(next.copy(completed = true, role = QuestObjectiveRole.JUST_COMPLETED))), 10)
+        assertTrue(state.markObjectivesShown(state.updates.single()))
+    }
+
     @Test fun completingQuestDropsObsoleteUpdatesAndRejectsLateProgress() {
         val state = QuestPresentationState()
         state.accept(UiEvent.ShowQuestBanner(QuestBannerType.PROGRESS, "first", "Old objective"), 0)
@@ -135,7 +151,8 @@ class DesktopQuestPresentationTest {
 
     @Test fun updatesRenderTypedObjectiveRolesAndDismissWithoutImportantCard() {
         val directory = Files.createTempDirectory("starborn-quest-update-").toFile()
-        val services = DesktopAppServices(directory, RecordingAudio())
+        val audio = RecordingAudio()
+        val services = DesktopAppServices(directory, audio)
         val presentations = QuestPresentationState()
         try {
             compose.mainClock.autoAdvance = false
@@ -150,6 +167,9 @@ class DesktopQuestPresentationTest {
             compose.onNodeWithText("Completed: Authored completed objective", substring = true).assertExists()
             compose.onNodeWithText("Next: Authored next objective", substring = true).assertExists()
             compose.onNodeWithText("+2 more objectives").assertExists()
+            compose.waitUntil(5000) {
+                audio.commands.filterIsInstance<AudioCommand.Play>().count { it.cueId == "quest_update_tick" } == 1
+            }
             capture("quest-updated")
             compose.mainClock.advanceTimeBy(3500)
             compose.runOnIdle { assertTrue(presentations.updates.isEmpty()) }
@@ -169,6 +189,7 @@ class DesktopQuestPresentationTest {
                 compose.mainClock.advanceTimeBy(400)
                 compose.runOnIdle { assertTrue("Swipe dismisses the update", presentations.updates.isEmpty()) }
             }
+            assertEquals(1, audio.commands.filterIsInstance<AudioCommand.Play>().count { it.cueId == "quest_update_tick" })
         } finally { services.close(); directory.deleteRecursively() }
     }
 
@@ -214,10 +235,12 @@ class DesktopQuestPresentationTest {
         val directory = Files.createTempDirectory("starborn-journal-parity-").toFile()
         val services = DesktopAppServices(directory, RecordingAudio())
         try {
-            services.startNewGame()
+            assertTrue(compose.runOnIdle { services.startNewGame() })
+            val runtime = compose.runOnIdle { services.exploration }
+            compose.waitUntil(10_000) { !runtime.uiState.value.isLoading && runtime.uiState.value.currentRoom != null }
             val quest = services.questRepository.questById("w1_mq01")!!
             val task = quest.stages.first().tasks.first()
-            services.sessionStore.setQuestTaskCompleted(quest.id, task.id, true)
+            compose.runOnIdle { services.sessionStore.setQuestTaskCompleted(quest.id, task.id, true) }
             compose.setContent { DesktopStarbornTheme { Box(Modifier.size(1280.dp, 800.dp)) {
                 DesktopFieldMenuContent(services, initialTab = DesktopMenuTab.JOURNAL, onOpenFieldKit = {}, onReturnToTitle = {}, onDismiss = {})
             } } }

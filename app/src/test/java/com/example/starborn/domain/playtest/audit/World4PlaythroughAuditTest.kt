@@ -117,11 +117,13 @@ class World4PlaythroughAuditTest {
         )
 
         lateinit var eventManager: EventManager
+        var requestedDialogue: String? = null
 
         eventManager = EventManager(
             events = events.values.toList(),
             sessionStore = store,
             eventHooks = EventHooks(
+                onStartDialogue = { requestedDialogue = it },
                 onPlayCinematic = { _, done -> done() },
                 onQuestStarted = { qId -> if (!qId.isNullOrBlank()) questRuntime.recordQuestStarted(qId) },
                 onQuestCompleted = { qId ->
@@ -223,7 +225,10 @@ class World4PlaythroughAuditTest {
         }
 
         fun talk(speakerName: String, choiceId: String? = null) {
-            val session = checkNotNull(dialogueService.startDialogue(speakerName)) { "No dialogue for $speakerName" }
+            val session = checkNotNull(
+                if (speakerName.startsWith("line:")) dialogueService.startDialogueAt(speakerName.removePrefix("line:"))
+                else dialogueService.startDialogue(speakerName)
+            ) { "No dialogue for $speakerName" }
             var steps = 0
             while (!session.isFinished()) {
                 check(++steps <= 50) { "Stuck in dialogue with $speakerName" }
@@ -306,8 +311,9 @@ class World4PlaythroughAuditTest {
         doAction("w4_mq19_read_grease_marks")
         doAction("w4_mq19_throw_override_paddle")
         doAction("w4_mq19_starve_breath_pistons")
-        talk("Orion") // Triggers w4_mq19_open_anvil_cradle
-        talk("Nova") // Triggers w4_mq19_take_anvil
+        doAction("w4_mq19_open_anvil_cradle")
+        doAction("w4_mq19_take_anvil_scene")
+        talk(checkNotNull(requestedDialogue))
 
         assertTrue("w4_mq19 completed", store.state.value.completedQuests.contains("w4_mq19"))
         assertTrue("The Anvil acquired", (store.state.value.inventory["the_anvil"] ?: 0) >= 1)

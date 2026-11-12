@@ -378,7 +378,7 @@ The **Slag River** Magma Drone holds the east crossing to **Waste Intake**. Defe
 
 157. From **Conditioning Chamber**, go **west** to **Conveyor Belt** (`foundry_conveyor_belt`) → **south** to **The Forge** (`foundry_forge_anvil`).
 
-158. At **The Forge**, use **fabrication matrix**. Overload the production matrix. Confirm **The Assembly** complete and **The Anvil** active.
+158. At **The Forge**, use **fabrication matrix**. The overload message describes the Phantom production line shutting down. Confirm **The Assembly** complete and **The Anvil** active. If the panel directs you to the **Conditioning Chamber**, use **conditioning records** as in step 141 before retrying.
 
 **Check before leaving:** Quality Control has one completed outcome; The Assembly is complete. You have not yet taken the Anvil or earned the engine/arrays.
 
@@ -452,7 +452,7 @@ The **Slag River** Magma Drone holds the east crossing to **Waste Intake**. Defe
 
 189. At **The Forge**, use **anvil cradle**. Open the cradle after pulse board, grease marks, paddle and pistons agree. **Hammer cadence** at Control Alcove addresses the same opening event; it is not another mandatory puzzle.
 
-190. Talk to **Nova** at **The Forge**. Finish the Anvil acquisition conversation and the failed-first-Construct beat. Confirm **The Anvil** owned, **Construct** unlocked, **The Anvil** quest complete and **Meltdown** active. The **anvil relic** control is an alternate acquisition route once the cradle is open; do not expect a second relic/reward.
+190. At **The Forge**, use **anvil relic** after opening the cradle. Advance through Nova’s first attempt at a Construct and Gh0st catching her. Confirm **The Anvil** in inventory, **Construct** unlocked, **The Anvil** complete, and **Meltdown** active.
 
 **Check before leaving:** The Anvil item, Construct and Meltdown are present. All six optional quests should now be complete, with exactly one Quality Control outcome.
 

@@ -1518,9 +1518,29 @@
   {
     "id": "nova_w4_mq19_anvil_intro",
     "speaker": "Nova",
-    "condition": "quest_active:w4_mq19,quest_task_done:w4_mq19:solve_conveyor_puzzle,quest_task_not_done:w4_mq19:take_anvil",
-    "text": "The cradle is amplifying my Fork scar. Input is noisy. Keep clear until I stabilize it.",
+    "scripted_only": true,
+    "text": "My scar's burning. Stand back. I think I can hold it.",
+    "next": "gh0st_w4_mq19_catch_nova"
+  },
+  {
+    "id": "gh0st_w4_mq19_catch_nova",
+    "speaker": "Gh0st",
+    "scripted_only": true,
+    "text": "[A lattice of light snaps into shape above the Anvil, then buckles. Nova slips toward the slag. Gh0st catches her arm.] Let it fall. I've got you.",
     "trigger": "player_action:w4_mq19_take_anvil"
+  },
+  {
+    "id": "rylos_w4_before_anvil",
+    "speaker": "Rylos",
+    "scripted_only": true,
+    "text": "You crossed my factory and left the Anvil in its cradle. All that effort, and Dominion still keeps its prize.",
+    "next": "gh0st_w4_return_for_anvil"
+  },
+  {
+    "id": "gh0st_w4_return_for_anvil",
+    "speaker": "Gh0st",
+    "scripted_only": true,
+    "text": "The relic is still in the Forge. We need to take it before we make our move here."
   },
   {
     "id": "rylos_w4_mq20_intro",

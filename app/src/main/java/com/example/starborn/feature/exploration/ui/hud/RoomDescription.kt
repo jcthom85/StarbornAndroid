@@ -55,6 +55,8 @@ import com.example.starborn.domain.model.TravelAction
 import com.example.starborn.domain.model.RoomAction
 import kotlin.math.roundToInt
 import com.example.starborn.feature.exploration.presentation.*
+import com.example.starborn.ui.exploration.actionHighlightAlpha
+import com.example.starborn.ui.exploration.needsAttention
 
 private const val ACTION_TAG = "action"
 
@@ -127,7 +129,8 @@ fun RoomDescription(
     onNpcClick: (String) -> Unit,
     onEnemyClick: (String) -> Unit,
     accentColor: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    animateHighlights: Boolean = true
 ) {
     val currentDescription = plan?.description ?: description ?: ""
     if (currentDescription.isBlank()) {
@@ -162,6 +165,7 @@ fun RoomDescription(
         } else {
             SinglePlanDescription(
                 plan = targetPlan,
+                animateHighlights = animateHighlights,
                 isDark = isDark,
                 textColor = textColor,
                 accentColor = accentColor,
@@ -183,14 +187,16 @@ private fun SinglePlanDescription(
     onAction: (RoomAction) -> Unit,
     onNpcClick: (String) -> Unit,
     onEnemyClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    animateHighlights: Boolean = true
 ) {
     val defaultColor = textColor
     val highlightColor = accentColor.copy(alpha = if (isDark) 0.78f else 0.92f)
     val disabledColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f)
     val enemyAccent = Color(0xFFFF8A80)
 
-    val annotatedText = remember(plan, highlightColor, disabledColor, accentColor, isDark) {
+    val cueAlpha = actionHighlightAlpha(plan, animateHighlights)
+    val annotatedText = remember(plan, highlightColor, disabledColor, accentColor, isDark, cueAlpha) {
         buildAnnotatedString {
             append(plan.description)
             plan.segments.forEach { segment ->
@@ -213,7 +219,7 @@ private fun SinglePlanDescription(
                         color = color,
                         fontWeight = weight,
                         textDecoration = decoration,
-                        background = backgroundColor
+                        background = if (segment.needsAttention()) accentColor.copy(alpha = cueAlpha) else backgroundColor
                     ),
                     start = segment.start,
                     end = segment.end
@@ -313,7 +319,8 @@ fun RoomDescriptionPanel(
     onEnemyClick: (String) -> Unit,
     borderColor: Color,
     accentColor: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    animateHighlights: Boolean = true
 ) {
     if (currentRoom == null && description.isNullOrBlank()) return
     val scrollState = rememberScrollState()
@@ -389,6 +396,7 @@ fun RoomDescriptionPanel(
                 Box(Modifier.fillMaxWidth().verticalScroll(scrollState).padding(bottom = 28.dp).maestroTag("room-description-scroll")) {
                 RoomDescription(
                     plan = plan,
+                    animateHighlights = animateHighlights,
                     description = description,
                     isDark = isDark,
                     textColor = textColor,

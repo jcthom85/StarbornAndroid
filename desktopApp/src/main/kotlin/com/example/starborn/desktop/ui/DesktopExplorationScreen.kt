@@ -270,7 +270,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
         val isDark = resolveRoomDarkness(ui)
         val description = if (ui.isBurgQuestSession && room?.id == "astra_common_room")
             com.example.starborn.feature.exploration.presentation.BurgQuestPresentation.commonRoomDescription
-            else resolveRoomDescription(room, ui.roomState, ui.completedMilestones, isDark)
+            else resolveRoomDescription(room, ui.roomState, ui.completedMilestones, isDark, ui.completedEvents)
         val inlinePlan = remember(description, ui.actions, ui.actionHints, room, ui.roomState) { buildInlineActionPlan(description, ui.actions, ui.actionHints, room, ui.roomState) }
         DesktopRoomTransitionBackdrop(services, ui, backdropProgress,
             resolveRoomBackground(room, ui.roomState, ui.completedMilestones)) { layout ->

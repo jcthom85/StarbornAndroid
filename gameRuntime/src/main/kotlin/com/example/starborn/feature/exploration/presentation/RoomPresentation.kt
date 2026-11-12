@@ -176,7 +176,8 @@ fun resolveRoomDescription(
     room: Room?,
     roomState: Map<String, Boolean>,
     completedMilestones: Set<String>,
-    isRoomDark: Boolean
+    isRoomDark: Boolean,
+    completedEvents: Set<String> = emptySet()
 ): String? {
     if (room == null) return null
     if (isRoomDark) {
@@ -188,7 +189,8 @@ fun resolveRoomDescription(
             variant.requiresState.all { (key, expected) -> roomState[key] == expected } &&
             variant.forbiddenState.none { (key, forbidden) -> roomState[key] == forbidden } &&
             variant.requiresMilestones.all { it in completedMilestones } &&
-            variant.forbiddenMilestones.none { it in completedMilestones }
+            variant.forbiddenMilestones.none { it in completedMilestones } &&
+            variant.requiresEvents.all { it in completedEvents }
     }
     return variant?.description ?: room.description
 }

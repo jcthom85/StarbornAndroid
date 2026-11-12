@@ -2157,7 +2157,8 @@ class LegalRouteCampaignRunnerTest {
             performAction("w4_mq19_starve_breath_pistons")
             navigateLegalPath("foundry_forge_anvil")
             performAction("w4_mq19_open_anvil_cradle")
-            talkToNpc("Nova")
+            performAction("w4_mq19_take_anvil_scene")
+            finishDialogue("correct")
             assertTrue("w4_mq19 completed", harness.sessionStore.state.value.completedQuests.contains("w4_mq19"))
             assertTrue("The Anvil acquired", (harness.sessionStore.state.value.inventory["the_anvil"] ?: 0) >= 1)
             assertTrue("w4_mq20 active", harness.sessionStore.state.value.activeQuests.contains("w4_mq20"))
@@ -2181,6 +2182,7 @@ class LegalRouteCampaignRunnerTest {
             assertTrue(harness.inventoryService.hasItem("phase_cutter_arrays"))
             navigateLegalPath("foundry_titan_dock")
             performAction("w4_mq20_escape_launch")
+            finishDialogue("correct")
             assertTrue("w4_mq20 completed", harness.sessionStore.state.value.completedQuests.contains("w4_mq20"))
             assertTrue("ms_w5_access_unlocked set", harness.sessionStore.state.value.completedMilestones.contains("ms_w5_access_unlocked"))
             assertEquals("orbital_executive_dock", harness.sessionStore.state.value.roomId)
@@ -2546,6 +2548,11 @@ class LegalRouteCampaignRunnerTest {
         private var lastPrototypeProbe: Triple<Int, Int, Set<String>>? = null
         fun settle() {
             dispatcher.scheduler.runCurrent()
+            // Headless campaign runs acknowledge scripted room transitions in place of the UI.
+            explorationVm.uiState.value.roomTransition?.takeIf { it.scriptedStyle != null }?.let {
+                explorationVm.onScriptedTravelFinished(it.id)
+                dispatcher.scheduler.runCurrent()
+            }
             val branch = prototypeBranch
             val snapshot = sessionStore.state.value
             val probe = Triple(snapshot.playerAp, snapshot.purchasedSkillNodes.size, snapshot.completedMilestones)

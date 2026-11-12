@@ -6665,7 +6665,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Into the Fire\n\nThe service airlock cycles open. You have a route inside, a heat liner that might keep your skin attached, and Zeke's engine ping buried deeper in the factory."
+        "message": "The service airlock cycles open. You have a route inside, a heat liner that might keep your skin attached, and Zeke's engine ping buried deeper in the factory."
       }
     ]
   },
@@ -6783,7 +6783,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Ghost in the Machine\n\nGh0st gives Nova his override key. The first time was programming. The second time is choice. The Assembly floor is still making more bodies for the same crime. The Pipe Gallery maintenance shutter is now cleared; the crew can return from Reject Bay to the Slag Pits."
+        "message": "Gh0st gives Nova his override key. The first time was programming. The second time is choice. The Assembly floor is still making more bodies for the same crime. The Pipe Gallery maintenance shutter is now cleared; the crew can return from Reject Bay to the Slag Pits."
       }
     ]
   },
@@ -6966,7 +6966,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Sabotage\n\nThe final crate erupts against the decon pumps. The resistance mark burns clean through the soot: not every person in the Foundry is waiting to be saved. Explosive Tip acquired."
+        "message": "The final crate erupts against the decon pumps. The resistance mark burns clean through the soot: not every person in the Foundry is waiting to be saved. Explosive Tip acquired."
       }
     ]
   },
@@ -7181,7 +7181,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Assembly\n\nThe fabrication matrix screams itself silent. No more Phantom shells leave this floor, and the Forge below loses the rhythm protecting the Anvil."
+        "message": "The fabrication matrix screams itself silent. Half-built Phantom shells sag in their cradles. The hammer keeps falling, and moving plates still guard the Anvil, but the Assembly line will make no more Phantoms."
       }
     ]
   },
@@ -7421,7 +7421,7 @@
       },
       {
         "type": "show_message",
-        "message": "The pulse board, grease route, override paddle, and breath pistons finally agree. The Anvil cradle opens with a sound like the Forge losing an argument."
+        "message": "The pulse board, grease route, override paddle, and breath pistons finally agree. The locking plates withdraw. The Anvil hangs within reach."
       }
     ]
   },
@@ -7489,7 +7489,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Anvil\n\nThe relic answers Nova too fast. Her first Construct twists, collapses, and nearly drops her into slag before Gh0st catches her. Rylos moves the Titan Walker to the Power Core; the engine theft just became a fight."
+        "message": "The broken Construct cools beside the empty cradle. The Anvil is yours. Rylos is moving the Titan Walker into position. If the crew wants the engine, they'll have to go through him."
       }
     ]
   },
@@ -7982,7 +7982,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Docking Procedure\n\nGh0st breaks Thorne's old cipher by following the scar tissue Vale left behind. The airlock opens onto disinfectant, money, and a Compliance greeting so polite it sounds pre-recorded for survivors. The Ring is not welcoming the crew; it is deciding how to process them."
+        "message": "Gh0st breaks Thorne's old cipher by following the scar tissue Vale left behind. The airlock opens onto disinfectant, money, and a Compliance greeting so polite it sounds pre-recorded for survivors. The Ring is not welcoming the crew; it is deciding how to process them."
       }
     ]
   },
@@ -8201,7 +8201,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Zero G\n\nThorne gives up the core access route because Vale has locked her inside her own product. Harmony was her cage with branding. Vale has turned it into a faith with one surviving voice, and Elara is wired into the altar."
+        "message": "Thorne gives up the core access route because Vale has locked her inside her own product. Harmony was her cage with branding. Vale has turned it into a faith with one surviving voice, and Elara is wired into the altar."
       }
     ]
   },
@@ -8601,7 +8601,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Core Approach\n\nThe construct shatters into dead glyphs. The Anchor Chamber opens, and Gh0st hears Elara through the system Vale stole. Thorne's route worked, but every open door now points at the person Dominion turned into infrastructure. The Anchor access lift now runs directly down to the chamber and back up to this aisle. The westward route through the Server Farm remains open for walking back."
+        "message": "The construct shatters into dead glyphs. The Anchor Chamber opens, and Gh0st hears Elara through the system Vale stole. Thorne's route worked, but every open door now points at the person Dominion turned into infrastructure. The Anchor access lift now runs directly down to the chamber and back up to this aisle. The westward route through the Server Farm remains open for walking back."
       }
     ],
     "recover_recorded_victory": true
@@ -8676,7 +8676,7 @@
       },
       {
         "type": "show_message",
-        "message": "Elara forces the blast doors open from inside the system. She is present, fighting, and running out of time. Gh0st reaches for the tank and stops when he sees the cables move with her breathing."
+        "message": "Elara forces the blast doors open from inside the system. She is present, fighting, and running out of time. Gh0st reaches for the tank and stops when he sees the cables move with her breathing. Beside the tank, the Anchor relic turns within reach."
       }
     ]
   },
@@ -8744,7 +8744,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Anchor\n\nNova takes the relic from the machine using Elara as a living processor and freezes the charging Hunter-Killer in a single clean instant. Stasis unlocked. Elara is free enough to scream, but not free enough to leave before Vale drags the Ring into the Tear."
+        "message": "Nova takes the relic from the machine using Elara as a living processor and freezes the charging Hunter-Killer in a single clean instant. Stasis unlocked. Elara is free enough to scream, but not free enough to leave before Vale drags the Ring into the Tear."
       }
     ]
   },
@@ -8924,7 +8924,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Critical Mass\n\nNova refuses to leave Elara behind or let Vale turn the Source into one obedient voice. The Ring collapses around the breach, the crew leaps together, and every separate voice becomes a thread in the dark before they wake beside a blue waveform fire."
+        "message": "Nova refuses to leave Elara behind or let Vale turn the Source into one obedient voice. The Ring collapses around the breach, the crew leaps together, and every separate voice becomes a thread in the dark before they wake beside a blue waveform fire."
       }
     ]
   },
@@ -9057,7 +9057,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Admin Privileges\n\nThe armory opens on a rack of phase-tuned ammunition. Dead privilege becomes live leverage. Void Clip acquired."
+        "message": "The armory opens on a rack of phase-tuned ammunition. Dead privilege becomes live leverage. Void Clip acquired."
       }
     ]
   },
@@ -9236,7 +9236,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Fractured Minds\n\nZeke, Gh0st, and Orion return with the parts of themselves Vale would have edited out. The song-fire gathers those separate voices into the Key, not as ownership, but as permission to carry each other forward."
+        "message": "Zeke, Gh0st, and Orion return with the parts of themselves Vale would have edited out. The song-fire gathers those separate voices into the Key, not as ownership, but as permission to carry each other forward."
       }
     ]
   },
@@ -9357,7 +9357,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Echo of the Mines\n\nThe elevator rises through white noise. Vale offers a cleaner beginning with no fear, no Jed, no grief, and no reason for Nova to become herself. She leaves the beginning intact instead of letting him improve it into a lie."
+        "message": "The elevator rises through white noise. Vale offers a cleaner beginning with no fear, no Jed, no grief, and no reason for Nova to become herself. She leaves the beginning intact instead of letting him improve it into a lie."
       }
     ]
   },
@@ -9521,7 +9521,7 @@
       },
       {
         "type": "show_message",
-        "message": "Tideglass sand, Foundry heat, Spire rain, the Astra's engine note, and the Colony's first real morning become solid sections of bridge. Every piece holds because someone else remembers it too."
+        "message": "Tideglass sand, Foundry heat, Spire rain, the Astra's engine note, and the Colony's first real morning become solid sections of bridge. Every piece holds because someone else remembers it too. The crossing east to Shared Memory Span holds. The crew pauses there around one last campfire promise."
       }
     ]
   },
@@ -9622,7 +9622,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Crossing\n\nThe bridge reaches the Memory Stair. Vale offers Nova a perfect world without grief, without Jed's death, without every scar that taught the crew to choose each other. She lets the image fade. Love that cannot survive truth is not love."
+        "message": "The bridge reaches the Memory Stair. Vale offers Nova a perfect world without grief, without Jed's death, without every scar that taught the crew to choose each other. She lets the image fade. Love that cannot survive truth is not love."
       }
     ]
   },
@@ -9737,7 +9737,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Jed's Echo\n\nThe memory cannot answer, but Nova remembers what survival was supposed to protect. Legacy unlocked."
+        "message": "The memory cannot answer, but Nova remembers what survival was supposed to protect. Legacy unlocked."
       }
     ]
   },
@@ -9848,7 +9848,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The HR Record\n\nZeke leaves the records intact as evidence and closes the review without seeking approval. The file no longer has authority over him. Unshackled unlocked."
+        "message": "Zeke leaves the records intact as evidence and closes the review without seeking approval. The file no longer has authority over him. Unshackled unlocked."
       }
     ]
   },
@@ -9963,7 +9963,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Elara's Song\n\nGh0st hears her voice without a command hidden inside it. Source Balance unlocked."
+        "message": "Gh0st hears her voice without a command hidden inside it. Source Balance unlocked."
       }
     ]
   },
@@ -10095,7 +10095,7 @@
       },
       {
         "type": "show_message",
-        "message": "The stair climbs through every world the crew survived. Vale offers polished revisions: a kinder mine, a safer jungle, a cleaner Spire, a Foundry without screaming, a Ring without bodies. Nova keeps the scars because they belong to real people."
+        "message": "The stair climbs through every world the crew survived. Vale offers polished revisions: a kinder mine, a safer jungle, a cleaner Spire, a Foundry without screaming, a Ring without bodies. Nova keeps the scars because they belong to real people. The eastern ascent now holds beneath their feet, leading to World-Fracture Landing."
       }
     ]
   },
@@ -10236,7 +10236,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Spire of Thought\n\nThe Starborn step onto the white ocean carrying every unrevised voice. Vale waits at the center, serene and certain, ready to call deletion mercy."
+        "message": "The Starborn step onto the white ocean carrying every unrevised voice. Vale waits at the center, serene and certain, ready to call deletion mercy."
       }
     ]
   },
@@ -10546,7 +10546,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Aethel Grave\n\nOrion reads the names of Aethel victims and survivors held by Architect systems. Their continuity remains their own. Ancestral Grace unlocked."
+        "message": "Orion reads the names of Aethel victims and survivors held by Architect systems. Their continuity remains their own. Ancestral Grace unlocked."
       }
     ]
   },
@@ -10662,7 +10662,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Final Scavenge\n\nZeke extracts the future Astra fragment and refuses the timeline it came from. The Starborn mod is not proof the ship dies; it is proof the crew can still change the ending."
+        "message": "Zeke extracts the future Astra fragment and refuses the timeline it came from. The Starborn mod is not proof the ship dies; it is proof the crew can still change the ending."
       }
     ]
   },
@@ -11076,7 +11076,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Lost Worker\n\nThe engineer is gone, but her route opens and worker signals begin moving through it. Coolant System acquired."
+        "message": "The engineer is gone, but her route opens and worker signals begin moving through it. Coolant System acquired."
       }
     ]
   },
@@ -11154,7 +11154,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The Scrap Heap\n\nThe salvaged actuators turn a dead vent into a working cooling bypass. The springs can carry the overflow again. Failure becomes infrastructure."
+        "message": "The salvaged actuators turn a dead vent into a working cooling bypass. The springs can carry the overflow again. Failure becomes infrastructure."
       }
     ]
   },
@@ -11236,7 +11236,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Quality Control\n\nThe conveyor releases. The units choose the worker tunnels, and Gh0st compiles their defensive logic into Harden."
+        "message": "The conveyor releases. The units choose the worker tunnels, and Gh0st compiles their defensive logic into Harden."
       }
     ]
   },
@@ -11319,7 +11319,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Overclocked\n\nNova turns the chamber's kill profile into a Thermal Clip. The Foundry's lesson now belongs to her."
+        "message": "Nova turns the chamber's kill profile into a Thermal Clip. The Foundry's lesson now belongs to her."
       }
     ]
   },
@@ -11401,7 +11401,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Employee of the Month\n\nEvery Ring display shows the unredacted record. Corporate Insight unlocked."
+        "message": "Every Ring display shows the unredacted record. Corporate Insight unlocked."
       }
     ]
   },
@@ -11446,7 +11446,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Solar Maintenance\n\nLight leaves the executive promenade and reaches the gardens. Orion learns to carry a fragment of the false sun."
+        "message": "Light leaves the executive promenade and reaches the gardens. Orion learns to carry a fragment of the false sun."
       }
     ]
   },
@@ -11492,7 +11492,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Vacuum Seal\n\nThe safe dock reopens to workers and freight crews. Mag-Boots acquired."
+        "message": "The safe dock reopens to workers and freight crews. Mag-Boots acquired."
       }
     ]
   },
@@ -11574,7 +11574,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Ghost in the Shell\n\nThe routine chooses what to defend instead of who to obey. Data Shield unlocked."
+        "message": "The routine chooses what to defend instead of who to obey. Data Shield unlocked."
       }
     ]
   },
@@ -13107,7 +13107,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Quality Control\n\nThe units choose to stay. Their first independent act is protecting the workers the Foundry ordered them to harm. Rapid Capacitor acquired."
+        "message": "The units choose to stay. Their first independent act is protecting the workers the Foundry ordered them to harm. Rapid Capacitor acquired."
       }
     ]
   },
@@ -13152,7 +13152,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: Ghost in the Shell\n\nThe guardian refuses an owner but accepts a covenant: protection flows both ways. Guardian Covenant unlocked."
+        "message": "The guardian refuses an owner but accepts a covenant: protection flows both ways. Guardian Covenant unlocked."
       }
     ]
   },
@@ -13197,7 +13197,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: The HR Record\n\nZeke broadcasts the revocation. Every worker file remains as evidence, and none of them can issue another order. Unshackled unlocked."
+        "message": "Zeke broadcasts the revocation. Every worker file remains as evidence, and none of them can issue another order. Unshackled unlocked."
       }
     ]
   },
@@ -17190,6 +17190,71 @@
       {
         "type": "show_message",
         "message": "Steam drifts across the pool. Gh0st stays on his feet. “Before we sit down, I need to see what’s on that Phantom terminal in Waste Intake.”"
+      }
+    ]
+  },
+  {
+    "id": "w4_mq19_rylos_before_anvil",
+    "description": "Rylos calls out the unopened relic handoff when the crew reaches him early.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq20_confront_rylos_scene"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq19"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq19",
+        "task_id": "take_anvil"
+      },
+      {
+        "type": "in_room",
+        "room_id": "foundry_titan_dock"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:rylos_w4_before_anvil"
+      }
+    ]
+  },
+  {
+    "id": "w4_mq19_take_anvil_scene",
+    "description": "Play Nova's first Construct when the player takes the Anvil.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_mq19_take_anvil_scene"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w4_mq19"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w4_mq19",
+        "task_id": "solve_conveyor_puzzle"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w4_mq19",
+        "task_id": "take_anvil"
+      },
+      {
+        "type": "in_room",
+        "room_id": "foundry_forge_anvil"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:nova_w4_mq19_anvil_intro"
       }
     ]
   },

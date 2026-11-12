@@ -105,6 +105,40 @@ class World4NavigationPublicTest {
         assertNull(s.exploration.uiState.value.activeDialogue)
     }
 
+    @Test fun exhaustedFootlockerAndShipPartsReflectSavedCompletion() = runWith { s ->
+        val base = s.sessionStore.state.value.copy(
+            worldId = "world_4", hubId = "hub_7_slag_pits", roomId = "foundry_titan_dock",
+            completedEvents = setOf("find_vhs_tape_08"), completedMilestones = emptySet(),
+            roomStates = emptyMap()
+        )
+        restore(s, base)
+        assertFalse(s.exploration.uiState.value.actions.any { it.name == "gantry footlocker" })
+        fun prose(): String {
+            val ui = s.exploration.uiState.value
+            return com.example.starborn.feature.exploration.presentation.resolveRoomDescription(
+                ui.currentRoom, ui.roomState, ui.completedMilestones, false, ui.completedEvents)!!
+        }
+        assertTrue(prose().contains("open, empty gantry footlocker"))
+        for (room in listOf("foundry_power_core", "foundry_engine_service_ring")) {
+            for (milestones in listOf(setOf("ms_w4_engine_stolen"), setOf("ms_w4_arrays_stolen"),
+                setOf("ms_w4_engine_stolen", "ms_w4_arrays_stolen"))) {
+                restore(s, base.copy(roomId = room, completedMilestones = milestones))
+                compose.waitUntil(5000) { s.exploration.uiState.value.completedMilestones == milestones }
+                compose.waitForIdle()
+                val actions = s.exploration.uiState.value.actions.filterIsInstance<GenericAction>()
+                val engineName = if (room == "foundry_power_core") "engine mount" else "thermal clamps"
+                val arraysName = if (room == "foundry_power_core") "phase-cutter arrays" else "array rack"
+                assertEquals("ms_w4_engine_stolen" in milestones, actions.single { it.name == engineName }.completedInspection)
+                assertEquals("ms_w4_arrays_stolen" in milestones, actions.single { it.name == arraysName }.completedInspection)
+                if (milestones == setOf("ms_w4_arrays_stolen")) assertTrue(prose().contains("Deep-Core Engine still hammers"))
+                actions.filter { it.completedInspection }.forEach {
+                    assertNull(it.actionEvent)
+                    assertTrue(it.conditionUnmetMessage!!.contains("secured for the Astra"))
+                }
+            }
+        }
+    }
+
     @Test fun sabotageCrateBecomesAReadOnlyInspectionAndLegacyMilestoneRestoresIt() = runWith { s ->
         restore(s, s.sessionStore.state.value.copy(
             worldId = "world_4", hubId = "hub_7_slag_pits", roomId = "foundry_slag_river",
@@ -131,6 +165,91 @@ class World4NavigationPublicTest {
         compose.waitUntil(5000) { s.exploration.uiState.value.narrationPrompt != null }
         assertEquals(xp, s.sessionStore.state.value.playerXp)
         assertEquals(inventory, s.sessionStore.state.value.inventory)
+    }
+
+    @Test fun fabricationMatrixExplainsTheOverloadAndHandsOffToTheAnvil() = runWith { s ->
+        val assembly = s.sessionStore.state.value.copy(
+            worldId = "world_4", hubId = "hub_8_assembly_line", roomId = "foundry_forge_anvil",
+            activeQuests = setOf("w4_mq18"), completedQuests = setOf("w4_mq17"),
+            completedEvents = emptySet(), completedMilestones = emptySet(),
+            questStageById = mapOf("w4_mq18" to "matrix_overload"),
+            questTasksCompleted = mapOf("w4_mq18" to setOf("navigate_conveyors", "defeat_prototypes"))
+        )
+        restore(s, assembly)
+        act(s, "w4_mq18_overload_matrix")
+        compose.waitUntil(5000) {
+            s.exploration.uiState.value.narrationPrompt?.message?.contains("Half-built Phantom shells") == true
+        }
+        val finished = s.sessionStore.state.value
+        assertTrue("w4_mq18" in finished.completedQuests)
+        assertTrue("w4_mq19" in finished.activeQuests)
+        assertEquals("w4_mq19", finished.trackedQuestId)
+        assertEquals(assembly.playerXp + 900, finished.playerXp)
+
+        dismissNarration(s)
+        compose.waitUntil(5000) {
+            s.exploration.uiState.value.actions.filterIsInstance<GenericAction>()
+                .any { it.name == "fabrication matrix" && it.completedInspection }
+        }
+        val inspection = s.exploration.uiState.value.actions.filterIsInstance<GenericAction>()
+            .single { it.name == "fabrication matrix" }
+        compose.runOnIdle { s.exploration.onActionSelected(inspection) }
+        compose.waitUntil(5000) { s.exploration.uiState.value.narrationPrompt != null }
+        assertTrue(s.exploration.uiState.value.narrationPrompt!!.message.contains("Half-built Phantom shells"))
+        assertEquals(finished.playerXp, s.sessionStore.state.value.playerXp)
+    }
+
+    @Test fun anvilRelicPlaysTheConstructSceneAndGrantsOneReward() = runWith { s ->
+        restore(s, s.sessionStore.state.value.copy(
+            worldId = "world_4", hubId = "hub_8_assembly_line", roomId = "foundry_forge_anvil",
+            activeQuests = setOf("w4_mq19"), completedQuests = setOf("w4_mq18"),
+            completedEvents = emptySet(), completedMilestones = setOf("ms_w4_conveyor_puzzle_solved"),
+            questStageById = mapOf("w4_mq19" to "claim_anvil"),
+            questTasksCompleted = mapOf("w4_mq19" to setOf("reach_core_chamber", "solve_conveyor_puzzle"))
+        ))
+        assertFalse(s.exploration.uiState.value.npcs.any { it.equals("Nova", ignoreCase = true) })
+        assertTrue(s.exploration.uiState.value.actions.filterIsInstance<GenericAction>()
+            .single { it.name == "anvil relic" }.drawAttention)
+        val beforeClaim = s.sessionStore.state.value
+        restore(s, beforeClaim.copy(roomId = "foundry_titan_dock"))
+        act(s, "w4_mq20_confront_rylos_scene")
+        assertEquals("rylos_w4_before_anvil", s.exploration.uiState.value.activeDialogue?.line?.id)
+        finish(s)
+        assertTrue("w4_mq19" in s.sessionStore.state.value.activeQuests)
+        assertFalse("w4_mq20" in s.sessionStore.state.value.activeQuests)
+        assertFalse(s.inventoryService.hasItem("the_anvil"))
+        restore(s, s.sessionStore.state.value.copy(roomId = "foundry_forge_anvil"))
+        val xp = s.sessionStore.state.value.playerXp
+        act(s, "w4_mq19_take_anvil_scene")
+        assertEquals("nova_w4_mq19_anvil_intro", s.exploration.uiState.value.activeDialogue?.line?.id)
+        assertFalse(s.inventoryService.hasItem("the_anvil"))
+
+        val seen = mutableListOf<String>()
+        finish(s, seen)
+        assertEquals(listOf("nova_w4_mq19_anvil_intro", "gh0st_w4_mq19_catch_nova"), seen)
+        compose.waitUntil(5000) {
+            s.exploration.uiState.value.narrationPrompt?.message?.contains("The Anvil is yours") == true
+        }
+        val claimed = s.sessionStore.state.value
+        assertEquals(1, claimed.inventory["the_anvil"])
+        assertTrue("source_art_construct" in claimed.unlockedSkills)
+        assertTrue("w4_mq19" in claimed.completedQuests)
+        assertTrue("w4_mq20" in claimed.activeQuests)
+        assertEquals(xp + 950, claimed.playerXp)
+
+        restore(s, claimed.copy(completedEvents = emptySet()))
+        compose.waitUntil(5000) {
+            s.exploration.uiState.value.actions.filterIsInstance<GenericAction>()
+                .any { it.name == "anvil relic" && it.completedInspection }
+        }
+        val inspection = s.exploration.uiState.value.actions.filterIsInstance<GenericAction>()
+            .single { it.name == "anvil relic" }
+        assertFalse(inspection.drawAttention)
+        compose.runOnIdle { s.exploration.onActionSelected(inspection) }
+        compose.waitUntil(5000) { s.exploration.uiState.value.narrationPrompt != null }
+        assertNull(s.exploration.uiState.value.activeDialogue)
+        assertEquals(claimed.inventory, s.sessionStore.state.value.inventory)
+        assertEquals(claimed.playerXp, s.sessionStore.state.value.playerXp)
     }
 
     @Test fun allSeventyFourFoundryRoomsHaveWorkingCardinalReturnTravel() = runWith { s ->

@@ -132,6 +132,9 @@ internal fun DesktopQuestPresentation(services: DesktopAppServices, state: Quest
         val showUpdate = update != null && !sceneBlocked && current == null
         var updateShowing by remember(update) { mutableStateOf(true) }
         var updateSwipe by remember(update) { mutableFloatStateOf(0f) }
+        val checkProgress = questObjectiveFeedbackProgress(state, update, showUpdate && updateShowing, settings.disableScreenshake) {
+            services.exploration.playQuestPresentationCue("quest_update")
+        }
         LaunchedEffect(update, showUpdate) {
             if (showUpdate) { delay(3200); updateShowing = false }
         }
@@ -149,11 +152,19 @@ internal fun DesktopQuestPresentation(services: DesktopAppServices, state: Quest
                         Text("Quest Updated", color = accent, style = MaterialTheme.typography.labelLarge)
                         Text(update?.questTitle.orEmpty(), style = MaterialTheme.typography.titleMedium)
                         update?.objectives?.forEach { objective ->
-                            Text((if (objective.completed) "✓ " else "○ ") + when (objective.role) {
-                                QuestObjectiveRole.JUST_COMPLETED -> "Completed: ${objective.text}"
-                                QuestObjectiveRole.NEXT -> "Next: ${objective.text}"
-                                QuestObjectiveRole.STANDARD -> objective.text
-                            }, color = if (objective.completed) FieldMenuDesign.textMuted else FieldMenuDesign.text)
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                if (objective.role == QuestObjectiveRole.JUST_COMPLETED) {
+                                    QuestObjectiveCheckmark(accent, checkProgress, showPulse = !settings.disableFlashes)
+                                } else {
+                                    Icon(if (objective.completed) Icons.Default.CheckCircle else Icons.Default.RadioButtonUnchecked,
+                                        null, Modifier.size(18.dp).padding(1.dp), tint = FieldMenuDesign.textMuted)
+                                }
+                                Text(when (objective.role) {
+                                    QuestObjectiveRole.JUST_COMPLETED -> "Completed: ${objective.text}"
+                                    QuestObjectiveRole.NEXT -> "Next: ${objective.text}"
+                                    QuestObjectiveRole.STANDARD -> objective.text
+                                }, color = if (objective.completed) FieldMenuDesign.textMuted else FieldMenuDesign.text)
+                            }
                         }
                         update?.remainingObjectiveCount?.takeIf { it > 0 }?.let { Text("+$it more objectives", color = FieldMenuDesign.textMuted) }
                     }
