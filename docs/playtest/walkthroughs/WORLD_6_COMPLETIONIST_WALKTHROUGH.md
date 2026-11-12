@@ -559,7 +559,7 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 ## 17. Complete room and exit reference
 
-Exits below are NSEW swipes. Forward story locks are explained in the route; their return walks stay available. Interactions list authored controls, including optional shortcuts and services.
+Exits below are NSEW swipes. Completed bridge, stair and finale interactions update their room aftermath text; the descriptions below are the initial room view.
 
 ### The Campfire (`source_campfire`)
 

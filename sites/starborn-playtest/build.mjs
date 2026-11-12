@@ -50,6 +50,24 @@ const preserveIndex = process.argv.indexOf('--preserve-existing');
 if (!integrated && preserveIndex >= 0) {
   const existingHtml = await readFile(process.argv[preserveIndex + 1], 'utf8');
   const existing = JSON.parse(existingHtml.match(/const GUIDES = (.*?);\n/)[1]);
+  // A room rename changes text, not the action the player checked off.
+  // Preserve checklist IDs for matching ordered steps and unchanged chapters.
+  for (const current of guides.filter(g => g.world >= 5)) {
+    const prior = existing.find(g => g.world === current.world);
+    if (!prior) continue;
+    const labels = [...new Set([...prior.sections, ...current.sections].flatMap(s => s.blocks)
+      .map(b => b.heading ? b.text.match(/^(.+) \(`(?:orbital_|deep_|source_)[^`]+`\)$/)?.[1] : null)
+      .filter(Boolean))].sort((a, b) => b.length - a.length);
+    const normalizeRoomNames = text => labels.reduce((value, label) => value.replaceAll(label, '<room>'), text);
+    for (const section of current.sections) {
+      const oldSection = prior.sections.find(s => s.title === section.title);
+      if (!oldSection) continue;
+      for (const block of section.blocks.filter(b => b.step !== null)) {
+        const oldBlock = oldSection.blocks.find(b => b.step === block.step);
+        if (oldBlock && normalizeRoomNames(oldBlock.text) === normalizeRoomNames(block.text)) block.id = oldBlock.id;
+      }
+    }
+  }
   for (const prior of existing.filter(g => g.world <= 4)) {
     const index = guides.findIndex(g => g.world === prior.world);
     if (index >= 0) guides[index] = prior;
