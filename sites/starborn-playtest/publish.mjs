@@ -28,7 +28,7 @@ if (branch) {
 await cp(path.join(home, 'dist'), staging, { recursive: true });
 run('git', ['add', '--', 'index.html', 'sw.js', '.nojekyll'], staging);
 if (run('git', ['status', '--porcelain'], staging)) {
-  run('git', ['-c', 'user.name=Starborn Guide Publisher', '-c', 'user.email=guide-publisher@users.noreply.github.com', 'commit', '-m', 'Publish Starborn Worlds 1–4 playtest companion'], staging);
+  run('git', ['-c', 'user.name=Starborn Guide Publisher', '-c', 'user.email=guide-publisher@users.noreply.github.com', 'commit', '-m', 'Publish Starborn Worlds 1–5 playtest companion'], staging);
   run('git', ['push', 'origin', 'HEAD:refs/heads/gh-pages'], staging);
 }
 if (!pages) run('gh', ['api', '--method', 'POST', endpoint, '-f', 'build_type=legacy', '-f', 'source[branch]=gh-pages', '-f', 'source[path]=/']);

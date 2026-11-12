@@ -10,7 +10,7 @@ const outputDirectory = path.join(home, 'dist', ...(integrated ? ['world-3-integ
 const guides = [];
 const integratedStepIds = integrated
   ? JSON.parse(await readFile(path.join(home, 'src/world3-integrated-step-ids.json'), 'utf8')) : {};
-for (const world of (integrated ? [3] : [1, 2, 3, 4])) {
+for (const world of (integrated ? [3] : [1, 2, 3, 4, 5])) {
   const guideFile = integrated ? 'WORLD_3_INTEGRATED_COMPLETIONIST_WALKTHROUGH.md' : `WORLD_${world}_COMPLETIONIST_WALKTHROUGH.md`;
   const source = await readFile(path.join(root, 'docs/playtest/walkthroughs', guideFile), 'utf8');
   const sections = [];
@@ -44,6 +44,16 @@ for (const world of (integrated ? [3] : [1, 2, 3, 4])) {
   flush();
   if (section.blocks.length) sections.push(section);
   guides.push({ world, ...(world === 3 && !integrated ? { progressKey: '3-rebuilt-2026-11-07' } : {}), revision: createHash('sha256').update(source).digest('hex').slice(0, 12), sections });
+}
+// Preserve published chapters and checklist IDs when adding later worlds.
+const preserveIndex = process.argv.indexOf('--preserve-existing');
+if (!integrated && preserveIndex >= 0) {
+  const existingHtml = await readFile(process.argv[preserveIndex + 1], 'utf8');
+  const existing = JSON.parse(existingHtml.match(/const GUIDES = (.*?);\n/)[1]);
+  for (const prior of existing.filter(g => g.world <= 4)) {
+    const index = guides.findIndex(g => g.world === prior.world);
+    if (index >= 0) guides[index] = prior;
+  }
 }
 const data = JSON.stringify(guides).replaceAll('<', '\\u003c');
 let template = await readFile(path.join(home, 'src/index.html'), 'utf8');

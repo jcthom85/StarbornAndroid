@@ -1,6 +1,6 @@
 # Starborn playtest companion
 
-A dependency-free static reader for the Worlds 1–4 completionist guides.
+A dependency-free static reader for the Worlds 1–5 completionist guides.
 Edit the source guides in `docs/playtest/walkthroughs/`, then rebuild:
 
 ```sh
@@ -8,7 +8,7 @@ node sites/starborn-playtest/build.mjs
 ```
 
 The output is `dist/`. Open its index directly or serve the directory with a static
-host. The hosted reader caches all four worlds for offline use after a successful
+host. The hosted reader caches all five worlds for offline use after a successful
 visit. Search, checkmarks, theme and reading position work locally. Progress belongs
 to the browser and origin; clearing site data removes it.
 
@@ -29,7 +29,7 @@ identify local game fixes that are not yet installed.
 
 Live reader: https://jcthom85.github.io/StarbornAndroid/
 
-Direct links `#world-1/` through `#world-4/` select a world on a fresh visit.
+Direct links `#world-1/` through `#world-5/` select a world on a fresh visit.
 Pushing source changes to `main` does not publish the reader: rebuild and update
 `gh-pages` too.
 
@@ -62,3 +62,11 @@ node sites/starborn-playtest/build.mjs --integrated-world3
 
 Output goes to `dist/world-3-integrated/`, with independent saved progress and cache.
 The root publisher preserves this subdirectory and does not publish its updates.
+
+## World 5
+
+Added November 12, 2026: 235 ordered route steps through all 81 rooms, all ten
+Journal quests, optional discoveries and a separate saved checklist. Available at
+https://jcthom85.github.io/StarbornAndroid/#world-5/. Earlier worlds retain their
+progress keys and chapter links. Publish to gh-pages after rebuilding; updating
+the Markdown source on main alone does not update the hosted reader.

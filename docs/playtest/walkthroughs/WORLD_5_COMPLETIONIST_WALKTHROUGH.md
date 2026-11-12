@@ -526,18 +526,16 @@ For nearer recovery, from Anchor Chamber go **north** through **Cable Narthex �
 
 All branch visits and ordinary walking returns are integrated above. Check these receipts; container contents are authored, while incidental battle drops and fish catches may vary.
 
-| Room ID | Container / discovery | Authored reward |
-| --- | --- | --- |
-| `orbital_breached_avionics_lab` | experimental ai sub-vault | Zero-G Gyro Stabilizer, Composite Plate, Circuit Board |
-| `deep_server_farm_scale_04` | admin crypt terminal | Composite Plate, Focus Matrix |
-| `deep_anchor_chamber_scale_08` | resonance anchor safe | Composite Plate, Astral Thread |
-| `deep_throne_room_scale_07` | command dais locker | Composite Plate, Bulwark Layer |
-| `deep_tear_scale_06` | anomaly fracture | Composite Plate, Astral Thread |
-| `orbital_executive_dock_scale_final` | diplomatic courier case | Composite Plate, Phase Rounds |
-| `orbital_grand_concourse_scale_final` | luxury display locker | Composite Plate, ICE Breaker Cyber Visor |
-| `orbital_solarium_scale_final` | hydroponic canister | Composite Plate, Tideglass Delight |
-| `orbital_security_hub_scale_final` | tactical enforcer armory | Composite Plate, Impact Node |
-| `orbital_service_shaft_scale_final` | eva engineer pack | Composite Plate, Battery Pack |
+- `orbital_breached_avionics_lab` — experimental ai sub-vault — Zero-G Gyro Stabilizer, Composite Plate, Circuit Board
+- `deep_server_farm_scale_04` — admin crypt terminal — Composite Plate, Focus Matrix
+- `deep_anchor_chamber_scale_08` — resonance anchor safe — Composite Plate, Astral Thread
+- `deep_throne_room_scale_07` — command dais locker — Composite Plate, Bulwark Layer
+- `deep_tear_scale_06` — anomaly fracture — Composite Plate, Astral Thread
+- `orbital_executive_dock_scale_final` — diplomatic courier case — Composite Plate, Phase Rounds
+- `orbital_grand_concourse_scale_final` — luxury display locker — Composite Plate, ICE Breaker Cyber Visor
+- `orbital_solarium_scale_final` — hydroponic canister — Composite Plate, Tideglass Delight
+- `orbital_security_hub_scale_final` — tactical enforcer armory — Composite Plate, Impact Node
+- `orbital_service_shaft_scale_final` — eva engineer pack — Composite Plate, Battery Pack
 
 - [ ] Solarium tide cache: Great Frontier Film 09.
 - [ ] Customs observation console: Orbital Defense component and schematic; repair/install separately.
@@ -672,3 +670,676 @@ All branch visits and ordinary walking returns are integrated above. Check these
 This route was rebuilt from the repository’s room connections, visible controls, event prerequisites, Journal objectives, tuning targets and rewards. All 81 room visits and each written NSEW movement were checked against the authored graph. Existing public interaction tests exercise Ring return travel, the optional magnetic crossing, the Construct’s Anchor gate, arrival preparation and completed-control behavior. Those checks are not a complete fresh campaign playthrough of this itinerary or a balance certification.
 
 On your phone, check whether the clues make sense without consulting the answer, whether active controls and service pills are discoverable, whether conversations finish cleanly, and whether detours reward their travel time. Record your equipment and consumable use for the Fighter, Construct and Avatar. After significant rewards, save/reload and confirm completion and ownership persist. Keep your prechoice and predeparture saves. The older summary is retained in [the archived edition](archive/2026-11-12/WORLD_5_PRE_REBUILD_WALKTHROUGH.md).
+
+## 17. Complete room and exit reference
+
+Use the room IDs to distinguish repeated branch titles. Exits are NSEW swipes; named travel controls are tapped alternatives. Enemy lists describe authored encounters, not an instruction that every enemy must be defeated.
+
+### Executive Dock (`orbital_executive_dock`)
+
+Compliance fighters rake the Astra beneath the Ring. Docking controls face the sealed airlock; its airlock console displays a pressure map and dock access priority. Beyond the glass, red carpet floats over white flooring beside Thorne loyalists' bodies, adrift in dead gravity.
+
+Exits: north → Airlock Gallery (`orbital_airlock_gallery`), east → Grand Concourse (`orbital_grand_concourse`), south → Solarium (`orbital_solarium`), west → Ring Service Alcove (`orbital_executive_dock_scale_01`).
+
+Interactions: docking controls, sealed airlock, pressure map, airlock console, dock access priority.
+
+NPCs: gh0st.
+
+### Airlock Gallery (`orbital_airlock_gallery`)
+
+A glass gallery curves above the docking collar. The planet turns below in perfect silence while the stolen Deep-Core Engine shakes heat through the Astra's spine. An airlock manifest hangs beside a speaker playing the Compliance greeting.
+
+Exits: south → Executive Dock (`orbital_executive_dock`).
+
+Interactions: docking collar, compliance greeting, airlock manifest.
+
+### Grand Concourse (`orbital_grand_concourse`)
+
+Golden Architect statues tower over an immaculate promenade. Every wall repeats Vale's compliance notices between advertisements for Harmony. A holographic directory lists the director logs beside controls for the concourse public broadcast.
+
+Exits: north → Customs Lounge (`orbital_customs_lounge`), west → Executive Dock (`orbital_executive_dock`), east → Security Hub (`orbital_security_hub`), south → Ring Service Alcove (`orbital_grand_concourse_scale_01`).
+
+Interactions: director logs, concourse public broadcast, holographic directory.
+
+### Customs Lounge (`orbital_customs_lounge`)
+
+A silent lounge waits behind velvet queue ropes and biometric gates. An automated commissary terminal hums on the wall beside an executive galley recycler and lounge seating. A customs observation console rests in the waiting niche beside an [action:encrypted slate|analyst's glowing slate].
+
+Exits: south → Grand Concourse (`orbital_grand_concourse`).
+
+Interactions: biometric gates, executive galley recycler (service pill), lounge seating (service pill), customs observation console, commissary terminal (service pill), encrypted slate.
+
+NPCs: analyst_charles.
+
+### Solarium (`orbital_solarium`)
+
+Real soil, tropical trees, and a fake beach sit beneath a fusion lamp and mirror array. The fruit is rotting in a paradise built for executives. A panel sets garden light priority, while a solarium tide cache rests beneath artificial coral ledges. Water laps the [action:false tide fishing|artificial shoreline].
+
+Exits: north → Executive Dock (`orbital_executive_dock`), south → Mirror Walk (`orbital_mirror_walk`), west → Ring Service Alcove (`orbital_solarium_scale_01`).
+
+Interactions: fake beach, mirror array, garden light priority, false tide fishing (service pill), solarium tide cache.
+
+NPCs: maintenance_bot.
+
+### Mirror Walk (`orbital_mirror_walk`)
+
+Polished mirror panels line a humid maintenance walk behind the Solarium. Each panel reflects a different angle of the same fake sun. The false sun path converges on a solar reflector hub.
+
+Exits: north → Solarium (`orbital_solarium`).
+
+Interactions: false sun path, mirror panels, solar reflector hub.
+
+### Security Hub (`orbital_security_hub`)
+
+A fortified checkpoint seals the lift to the core. Compliance officers move without conversation while Null-G drones cling to the ceiling. A security display pairs armory diagnostics with the Director redaction checksum. The service corridor extends south behind the checkpoint; the surveillance platform remains north.
+
+Exits: north → Surveillance Pit (`orbital_surveillance_pit`), west → Grand Concourse (`orbital_grand_concourse`), east → Service Shaft (`orbital_service_shaft`), south → Ring Service Alcove (`orbital_security_hub_scale_01`).
+
+Interactions: Director redaction checksum, armory diagnostics.
+
+### Surveillance Pit (`orbital_surveillance_pit`)
+
+A sunken room of red lenses tracks every corridor on the executive deck. The panopticon archive preserves screens that flag posture, pulse, hesitation, and anything else a frightened system calls intent.
+
+Exits: south → Security Hub (`orbital_security_hub`).
+
+Interactions: red lenses, panopticon archive.
+
+### Service Shaft (`orbital_service_shaft`)
+
+Gravity ends at the hatch. Zero-g cables descend from a superconductor junction through a vertical dark while Hunter-Killer droids scrape along distant walls, too armored to fight head-on. The marked route runs east to Zero-G Junction; the southern tube there leads to the SysAdmin station and Server Farm. Anchored service cables also offer a direct descent to Server Farm and a climb back to this hatch.
+
+Exits: west → Security Hub (`orbital_security_hub`), east → Zero-G Junction (`orbital_zero_g_junction`), north → Ring Service Alcove (`orbital_service_shaft_scale_01`).
+
+Named travel control: **Cables to Server Farm** → Server Farm.
+
+Interactions: zero-g cables, superconductor junction.
+
+### Zero-G Junction (`orbital_zero_g_junction`)
+
+Three maintenance tubes meet in a dead-gravity junction beside a gyroscope stabilizer. A display tracks patrol timing. An emergency magnetic clamp console overlooks the eastern breach, where unanchored scrap drifts dangerously. The southern maintenance tube reaches the SysAdmin Nest and the Server Farm approach. The western tube returns to Service Shaft; the magnetic clamp controls only the eastern breach.
+
+Exits: west → Service Shaft (`orbital_service_shaft`), east → Breached Avionics Lab (`orbital_breached_avionics_lab`), south → SysAdmin Nest (`deep_sysadmin_nest`).
+
+Interactions: magnetic clamp console, patrol timing, gyroscope stabilizer.
+
+### Breached Avionics Lab (`orbital_breached_avionics_lab`)
+
+Cold stellar light floods through a [action:shattered canopy|shattered observation canopy]. Frozen liquid coolant beads drift above abandoned quantum mainframes, where an [action:experimental ai sub-vault|emergency AI sub-vault] remains sealed.
+
+Exits: west → Zero-G Junction (`orbital_zero_g_junction`).
+
+Interactions: experimental ai sub-vault, shattered canopy.
+
+### Server Farm (`orbital_server_farm`)
+
+Mist surrounds a purged backup rack. Recover its routine: erase the guardian ownership flag for independence or use the crew covenant socket for shared protection. A mainframe terminal displays a coolant-pulse map; a dead sysadmin drifts behind a coolant pipe. The SysAdmin Nest west leads back to Zero-G Junction and the upper Ring. Mainframe Nave is north, the backup aisle south, and the Anchor entrance east remains guarded until the Firewall Construct falls. Anchored service cables climb directly to Service Shaft and provide a return descent. The SysAdmin and Zero-G Junction walking route remains available.
+
+Exits: north → Mainframe Nave (`deep_mainframe_nave`), south → Purged Backup Rack (`deep_backup_rack`), west → SysAdmin Nest (`deep_sysadmin_nest`), east → Anchor Chamber (`deep_anchor_chamber`).
+
+Named travel control: **Cables to Service Shaft** → Service Shaft.
+
+Interactions: mainframe terminal, coolant-pulse map, purged backup rack, guardian ownership flag, crew covenant socket, dead sysadmin.
+
+### Mainframe Nave (`deep_mainframe_nave`)
+
+Server columns form a cold cathedral around the mainframe terminal and its quantum core lattice. Harmony's directory tree overlays older Architect notation like a luxury label pasted on a weapon. A buried signal is labeled Thorne trace.
+
+Exits: south → Server Farm (`orbital_server_farm`), east → Firewall Alpha (`deep_firewall_alpha`).
+
+Interactions: mainframe terminal, thorne trace, quantum core lattice.
+
+NPCs: thorne.
+
+### Firewall Alpha (`deep_firewall_alpha`)
+
+Firewall node alpha hangs in a cage of blue hard-light. Its cipher keeps rewriting itself in Thorne's old notation with Vale's edits layered over the top.
+
+Exits: west → Mainframe Nave (`deep_mainframe_nave`), east → Firewall Beta (`deep_firewall_beta`).
+
+Interactions: firewall node alpha.
+
+### Firewall Beta (`deep_firewall_beta`)
+
+Firewall node beta loops through recursion windows. Each window shows a slightly different version of the same locked door.
+
+Exits: west → Firewall Alpha (`deep_firewall_alpha`), east → Firewall Gamma (`deep_firewall_gamma`).
+
+Interactions: firewall node beta.
+
+### Firewall Gamma (`deep_firewall_gamma`)
+
+Firewall node gamma projects a half-built hard-light body into the aisle. Its face is blank because the system has not decided who it wants to execute yet. The aisle returns west through Beta and Alpha to Mainframe Nave. From there, go south to Server Farm and east to the Anchor entrance. An Anchor access lift waits behind the Construct’s security field. Once cleared, it runs down to the chamber and back up to this aisle.
+
+Exits: west → Firewall Beta (`deep_firewall_beta`).
+
+Named travel control: **Lift to Anchor Chamber** → Anchor Chamber.
+
+Interactions: firewall node gamma.
+
+### Purged Backup Rack (`deep_backup_rack`)
+
+A purged backup rack still blinks through a layer of frost. Vale's deletion order missed one defensive routine hiding under old checksum names. A service grille opens south into the maintenance alcove; the Server Farm is back to the north.
+
+Exits: north → Server Farm (`orbital_server_farm`), south → Ring Service Alcove (`deep_server_farm_scale_01`).
+
+Interactions: purged backup rack.
+
+### SysAdmin Nest (`deep_sysadmin_nest`)
+
+A cramped admin station floats behind coolant pipes, abandoned halfway through an evacuation. A dead sysadmin still clutches a warning printout nobody above listened to. The northern maintenance tube returns to Zero-G Junction; the Server Farm is east.
+
+Exits: east → Server Farm (`orbital_server_farm`), north → Zero-G Junction (`orbital_zero_g_junction`).
+
+Interactions: dead sysadmin.
+
+### Anchor Chamber (`deep_anchor_chamber`)
+
+A tank of conductive fluid hangs inside a cathedral of cables. Elara floats at its center, wired into the Ring as a living processor while the Anchor relic turns beside her. A graviton well bends the light beneath the tank. The cleared entrance west returns through the Server Farm toward the upper Ring; the Throne Room lies east. The cleared access lift runs up to Firewall Gamma and back down to the chamber.
+
+Exits: west → Server Farm (`orbital_server_farm`), east → Throne Room (`deep_throne_room`), north → Cable Narthex (`deep_anchor_chamber_scale_01`).
+
+Named travel control: **Lift to Firewall Gamma** → Firewall Gamma.
+
+Interactions: elara, anchor relic, graviton well.
+
+NPCs: elara.
+
+### Throne Room (`deep_throne_room`)
+
+A glass observation deck looks down on the planet and its failing Shield. Thorne's containment field faces a command dais where Vale waits without blinking. The director's desk stands beside the executive armory.
+
+Exits: west → Anchor Chamber (`deep_anchor_chamber`), east → The Tear (`deep_tear`), north → Observation Apse (`deep_throne_room_scale_01`).
+
+Interactions: containment field, executive armory, director's desk.
+
+NPCs: vale.
+
+### The Tear (`deep_tear`)
+
+The Ring breaks into slow impossible angles around a reality breach. Spatial shear folds its edges inward. Music exists here without air, speakers, or permission.
+
+Exits: west → Throne Room (`deep_throne_room`), north → Gravity Suture (`deep_tear_scale_01`).
+
+Interactions: reality breach, spatial shear.
+
+### Ring Service Alcove (`orbital_executive_dock_scale_01`)
+
+A luggage recess hides the service crawlway beneath an executive arrival mural. Scuffed knee plates have polished the lower edge of its brass trim.
+
+Exits: east → Executive Dock (`orbital_executive_dock`), north → Ring Pressure Gallery (`orbital_executive_dock_scale_02`).
+
+Interactions: service alcove, maintenance mark.
+
+### Ring Pressure Gallery (`orbital_executive_dock_scale_02`)
+
+A pressure gallery runs behind the polished walls. Its warning strip flashes whenever exterior vacuum loads the hospitality seals.
+
+Exits: south → Ring Service Alcove (`orbital_executive_dock_scale_01`), north → Ring Overlook Niche (`orbital_executive_dock_scale_03`).
+
+Interactions: pressure gallery, warning strip.
+
+### Ring Overlook Niche (`orbital_executive_dock_scale_03`)
+
+Through a narrow inspection slit, the docking collar flexes against the Astra. The guest windows hide the cables carrying that load.
+
+Exits: south → Ring Pressure Gallery (`orbital_executive_dock_scale_02`), north → Ring Control Pocket (`orbital_executive_dock_scale_04`).
+
+Interactions: overlook niche, sightline.
+
+### Ring Control Pocket (`orbital_executive_dock_scale_04`)
+
+An arrival-light relay sits behind a decorative panel. Its switch is tagged DISPLAY ONLY; the nearby pressure controls have their own sealed circuit.
+
+Exits: south → Ring Overlook Niche (`orbital_executive_dock_scale_03`), north → Ring Quiet Cache (`orbital_executive_dock_scale_05`).
+
+Interactions: control pocket, manual toggle.
+
+### Ring Quiet Cache (`orbital_executive_dock_scale_05`)
+
+A shelf holds dried sealant cartridges, each split open to prove it empty. Someone has crossed out the next delivery date three times.
+
+Exits: south → Ring Control Pocket (`orbital_executive_dock_scale_04`), north → Ring Echo Walk (`orbital_executive_dock_scale_06`).
+
+Interactions: quiet cache, wrapped tool.
+
+### Ring Echo Walk (`orbital_executive_dock_scale_06`)
+
+The collar intercom repeats an abandoned freight request. Between the formal announcements, a loader keeps asking whether anyone has cleared the workers to board.
+
+Exits: south → Ring Quiet Cache (`orbital_executive_dock_scale_05`), north → Ring Dock Memorial (`orbital_executive_dock_scale_final`).
+
+Interactions: echo walk, old signal.
+
+### Ring Service Alcove (`orbital_grand_concourse_scale_01`)
+
+Behind a directory of luxury suites, a cleaner has scratched a second map at shoulder height. It follows waste pipes instead of promenades.
+
+Exits: north → Grand Concourse (`orbital_grand_concourse`), east → Ring Pressure Gallery (`orbital_grand_concourse_scale_02`).
+
+Interactions: service alcove, maintenance mark.
+
+### Ring Pressure Gallery (`orbital_grand_concourse_scale_02`)
+
+A pressure inspection rail follows the back of a gold wall. Its indicators have been turned inward so staff must read them from the service passage.
+
+Exits: west → Ring Service Alcove (`orbital_grand_concourse_scale_01`), north → Ring Overlook Niche (`orbital_grand_concourse_scale_03`).
+
+Interactions: pressure gallery, warning strip.
+
+### Ring Overlook Niche (`orbital_grand_concourse_scale_03`)
+
+A gap above a ceiling panel reveals the concourse chandelier from behind. Its glitter rests on a welded frame with fresh repair marks.
+
+Exits: south → Ring Pressure Gallery (`orbital_grand_concourse_scale_02`), north → Ring Control Pocket (`orbital_grand_concourse_scale_04`).
+
+Interactions: overlook niche, sightline.
+
+### Ring Control Pocket (`orbital_grand_concourse_scale_04`)
+
+The directory lighting has a manual relay beside a list of names. Room numbers are printed; the erased guest names are not.
+
+Exits: south → Ring Overlook Niche (`orbital_grand_concourse_scale_03`), north → Ring Quiet Cache (`orbital_grand_concourse_scale_05`).
+
+Interactions: control pocket, manual toggle.
+
+### Ring Quiet Cache (`orbital_grand_concourse_scale_05`)
+
+An old cleaning cart is parked in a cupboard too shallow for its handle. A folded shift rota uses job titles where names should be.
+
+Exits: south → Ring Control Pocket (`orbital_grand_concourse_scale_04`), north → Ring Echo Walk (`orbital_grand_concourse_scale_06`).
+
+Interactions: quiet cache, wrapped tool.
+
+### Ring Echo Walk (`orbital_grand_concourse_scale_06`)
+
+A hospitality announcement echoes through an uncarpeted passage. Here, without the public speakers smoothing it, the pause before "valued guest" sounds painfully long.
+
+Exits: south → Ring Quiet Cache (`orbital_grand_concourse_scale_05`), north → Ring Courtesy Theater (`orbital_grand_concourse_scale_final`).
+
+Interactions: echo walk, old signal.
+
+### Ring Service Alcove (`orbital_solarium_scale_01`)
+
+Water stains lead from the garden border into a narrow irrigation recess. Roots have found the joints that the decorative stonework conceals.
+
+Exits: east → Solarium (`orbital_solarium`), north → Ring Pressure Gallery (`orbital_solarium_scale_02`).
+
+Interactions: service alcove, maintenance mark.
+
+### Ring Pressure Gallery (`orbital_solarium_scale_02`)
+
+A condensation channel runs along the outer glass. Beyond it is black space. Mirror mounts on the inner frame show how carefully the garden daylight must be aimed.
+
+Exits: south → Ring Service Alcove (`orbital_solarium_scale_01`), north → Ring Overlook Niche (`orbital_solarium_scale_03`).
+
+Interactions: pressure gallery, warning strip.
+
+### Ring Overlook Niche (`orbital_solarium_scale_03`)
+
+From this slit behind the beds, the mirror array is visible edge-on. The brilliant garden sun resolves into hinges, reflectors, and a tracked lamp.
+
+Exits: south → Ring Pressure Gallery (`orbital_solarium_scale_02`), north → Ring Control Pocket (`orbital_solarium_scale_04`).
+
+Interactions: overlook niche, sightline.
+
+### Ring Control Pocket (`orbital_solarium_scale_04`)
+
+A dead decorative fountain shares a cabinet with the garden lighting schedule. Both were programmed for visitors who would never ask where the water went.
+
+Exits: south → Ring Overlook Niche (`orbital_solarium_scale_03`), north → Ring Quiet Cache (`orbital_solarium_scale_05`).
+
+Interactions: control pocket, manual toggle.
+
+### Ring Quiet Cache (`orbital_solarium_scale_05`)
+
+Seed packets lie flattened between pages of an old planting ledger. Each failed crop has a date beside it; later entries stop using the word ornamental.
+
+Exits: south → Ring Control Pocket (`orbital_solarium_scale_04`), north → Ring Echo Walk (`orbital_solarium_scale_06`).
+
+Interactions: quiet cache, wrapped tool.
+
+### Ring Echo Walk (`orbital_solarium_scale_06`)
+
+An irrigation pipe ticks as it cools. The sound moves along the beds, a small physical rhythm beneath the station's recorded birdsong.
+
+Exits: south → Ring Quiet Cache (`orbital_solarium_scale_05`), north → Ring False Tide (`orbital_solarium_scale_final`).
+
+Interactions: echo walk, old signal.
+
+### Ring Service Alcove (`orbital_security_hub_scale_01`)
+
+A service hatch sits below a camera calibration chart. The chart leaves a blank wedge where technicians must stand to adjust the lenses. The Security Hub is north; the maintenance passage continues south.
+
+Exits: north → Security Hub (`orbital_security_hub`), south → Ring Pressure Gallery (`orbital_security_hub_scale_02`).
+
+Interactions: service alcove, maintenance mark.
+
+### Ring Pressure Gallery (`orbital_security_hub_scale_02`)
+
+A reinforced gallery separates the security office from the outer hull. Its pressure strip has a manual inspection date newer than the staff roster.
+
+Exits: north → Ring Service Alcove (`orbital_security_hub_scale_01`), south → Ring Overlook Niche (`orbital_security_hub_scale_03`).
+
+Interactions: pressure gallery, warning strip.
+
+### Ring Overlook Niche (`orbital_security_hub_scale_03`)
+
+A maintenance window looks onto the backs of the camera housings. From here their overlapping cones are mechanical coverage, not an all-seeing eye.
+
+Exits: north → Ring Pressure Gallery (`orbital_security_hub_scale_02`), south → Ring Control Pocket (`orbital_security_hub_scale_04`).
+
+Interactions: overlook niche, sightline.
+
+### Ring Control Pocket (`orbital_security_hub_scale_04`)
+
+A test relay has been sealed under a clear cover. Beside it, handwritten instructions insist on preserving the original logs before diagnostics.
+
+Exits: north → Ring Overlook Niche (`orbital_security_hub_scale_03`), south → Ring Quiet Cache (`orbital_security_hub_scale_05`).
+
+Interactions: control pocket, manual toggle.
+
+### Ring Quiet Cache (`orbital_security_hub_scale_05`)
+
+An evidence carton contains discarded blank badges and a ruined label roll. Even the staff who moved evidence needed permission to touch an empty box.
+
+Exits: north → Ring Control Pocket (`orbital_security_hub_scale_04`), south → Ring Echo Walk (`orbital_security_hub_scale_06`).
+
+Interactions: quiet cache, wrapped tool.
+
+### Ring Echo Walk (`orbital_security_hub_scale_06`)
+
+A diagnostic speaker repeats an incomplete incident number. The next field is always a silence where an operator should have answered.
+
+Exits: north → Ring Quiet Cache (`orbital_security_hub_scale_05`), south → Ring Threat Cathedral (`orbital_security_hub_scale_final`).
+
+Interactions: echo walk, old signal.
+
+### Ring Service Alcove (`orbital_service_shaft_scale_01`)
+
+Cable spools narrow the entrance to a worker passage. The only route marker is an arrow on the side of a spool that was too heavy to move.
+
+Exits: south → Service Shaft (`orbital_service_shaft`), north → Ring Pressure Gallery (`orbital_service_shaft_scale_02`).
+
+Interactions: service alcove, maintenance mark.
+
+### Ring Pressure Gallery (`orbital_service_shaft_scale_02`)
+
+A pressure conduit follows the shaft wall beside a row of handholds. Every third handhold has a tether scar worn into its base.
+
+Exits: south → Ring Service Alcove (`orbital_service_shaft_scale_01`), north → Ring Overlook Niche (`orbital_service_shaft_scale_03`).
+
+Interactions: pressure gallery, warning strip.
+
+### Ring Overlook Niche (`orbital_service_shaft_scale_03`)
+
+A gap between cable trays exposes several floors of the station at once. Luxury rooms and machinery occupy opposite sides of the same thin partitions.
+
+Exits: south → Ring Pressure Gallery (`orbital_service_shaft_scale_02`), north → Ring Control Pocket (`orbital_service_shaft_scale_04`).
+
+Interactions: overlook niche, sightline.
+
+### Ring Control Pocket (`orbital_service_shaft_scale_04`)
+
+A local work-light switch sits beside a signed lockout tag. The circuit powers this recess; the main station feed runs in a sealed conduit beyond it.
+
+Exits: south → Ring Overlook Niche (`orbital_service_shaft_scale_03`), north → Ring Quiet Cache (`orbital_service_shaft_scale_05`).
+
+Interactions: control pocket, manual toggle.
+
+### Ring Quiet Cache (`orbital_service_shaft_scale_05`)
+
+A tether bag hangs from a hook, its buckle cut cleanly through. Beside it are empty ration wrappers folded into a neat stack.
+
+Exits: south → Ring Control Pocket (`orbital_service_shaft_scale_04`), north → Ring Echo Walk (`orbital_service_shaft_scale_06`).
+
+Interactions: quiet cache, wrapped tool.
+
+### Ring Echo Walk (`orbital_service_shaft_scale_06`)
+
+Cable vibration carries a freight motor's pulse through the passage. Voices from the guest decks vanish into insulation, but the machinery never quite does.
+
+Exits: south → Ring Quiet Cache (`orbital_service_shaft_scale_05`), north → Ring Drift Chapel (`orbital_service_shaft_scale_final`).
+
+Interactions: echo walk, old signal.
+
+### Ring Service Alcove (`deep_server_farm_scale_01`)
+
+Cool air escapes around a service grille between server towers. The maintenance marks are written in grease pencil so a technician can change them without a login. The backup aisle is north; the cooling service route continues south.
+
+Exits: north → Purged Backup Rack (`deep_backup_rack`), south → Ring Pressure Gallery (`deep_server_farm_scale_02`).
+
+Interactions: service alcove, maintenance mark.
+
+### Ring Pressure Gallery (`deep_server_farm_scale_02`)
+
+A pressure inspection strip crosses the cooling plenum. Water beads on the cold side while the server side remains hot enough to dry a palm print.
+
+Exits: north → Ring Service Alcove (`deep_server_farm_scale_01`), south → Ring Overlook Niche (`deep_server_farm_scale_03`).
+
+Interactions: pressure gallery, warning strip.
+
+### Ring Overlook Niche (`deep_server_farm_scale_03`)
+
+A narrow sightline runs behind the server racks. Their status lights continue blinking even where the polished front panels show only a smooth black surface.
+
+Exits: north → Ring Pressure Gallery (`deep_server_farm_scale_02`), south → Ring Control Pocket (`deep_server_farm_scale_04`).
+
+Interactions: overlook niche, sightline.
+
+### Ring Control Pocket (`deep_server_farm_scale_04`)
+
+A control pocket hides a manual toggle behind a panel dressed as decor. Someone left one practical way to make the automated system hesitate. An active admin crypt terminal blinks behind a sub-floor hatch. An optional return slide leads directly back to the entrance. The room corridors also remain open for walking back.
+
+Exits: north → Ring Overlook Niche (`deep_server_farm_scale_03`).
+
+Interactions: control pocket, manual toggle, admin crypt terminal, slide.
+
+### Cable Narthex (`deep_anchor_chamber_scale_01`)
+
+A cable narthex braids power lines into a pulse rosary leading toward Elara's tank. The pulse rosary counts her heartbeats as throughput, while a maintenance hymn loops softly enough to make captivity sound like care.
+
+Exits: south → Anchor Chamber (`deep_anchor_chamber`), north → Chorus Tank (`deep_anchor_chamber_scale_02`).
+
+Interactions: pulse rosary, maintenance hymn.
+
+### Chorus Tank (`deep_anchor_chamber_scale_02`)
+
+A chorus tank echoes with synthetic voices trying to smooth Elara into infrastructure. Breath meters rise beside the glass whenever the system calls her an asset instead of a person.
+
+Exits: south → Cable Narthex (`deep_anchor_chamber_scale_01`), north → Anchor Loom (`deep_anchor_chamber_scale_03`).
+
+Interactions: chorus tank, breath meters.
+
+### Anchor Loom (`deep_anchor_chamber_scale_03`)
+
+An Anchor loom spins gold command-thread around the relic, weaving every Ring permission through Elara's body. The gold spindle jitters each time the crew's signal interrupts Vale's ownership claim.
+
+Exits: south → Chorus Tank (`deep_anchor_chamber_scale_02`), north → Thaw Gallery (`deep_anchor_chamber_scale_04`).
+
+Interactions: Anchor loom, gold spindle.
+
+### Thaw Gallery (`deep_anchor_chamber_scale_04`)
+
+A thaw gallery warms just enough for hands to work a release rail without freezing to the metal. Someone installed the release rail behind official paneling; a scratched route leads back along the wall.
+
+Exits: south → Anchor Loom (`deep_anchor_chamber_scale_03`), north → Living Cable Threshold (`deep_anchor_chamber_scale_05`).
+
+Interactions: release rail, scratched route, thermal conduit heater (service pill), thaw gallery shelter (service pill).
+
+### Living Cable Threshold (`deep_anchor_chamber_scale_05`)
+
+The Living Cable threshold crosses the floor like a vein between Elara and the Ring. Command noise crawls along it, but beneath the static a human signal keeps refusing to flatten.
+
+Exits: south → Thaw Gallery (`deep_anchor_chamber_scale_04`), north → Empty Cradle Afterimage (`deep_anchor_chamber_scale_06`).
+
+Interactions: Living Cable, human signal.
+
+### Empty Cradle Afterimage (`deep_anchor_chamber_scale_06`)
+
+An empty cradle afterimage burns where the Anchor should be, as if the relic refuses to admit it has been stolen. The afterimage throws Elara's shadow in the wrong direction.
+
+Exits: south → Living Cable Threshold (`deep_anchor_chamber_scale_05`), north → Mercy Lie Wall (`deep_anchor_chamber_scale_07`).
+
+Interactions: empty cradle, Elara's shadow.
+
+### Mercy Lie Wall (`deep_anchor_chamber_scale_07`)
+
+A Mercy Lie wall scrolls Vale's promise in calm white text: no pain, no separation, no self. The line edits itself whenever Nova looks away, trying to make extinction sound like relief.
+
+Exits: south → Empty Cradle Afterimage (`deep_anchor_chamber_scale_06`), north → Manual Release Plinth (`deep_anchor_chamber_scale_08`).
+
+Interactions: Mercy Lie, calm white text.
+
+### Manual Release Plinth (`deep_anchor_chamber_scale_08`)
+
+A manual release plinth hides under ceremonial glass near the last tank cable. The manual key is labeled EMERGENCY, because even monsters leave themselves a maintenance route. A harmonic resonance anchor safe hums in tune with the containment field. An optional return anchor cable leads directly back to the entrance. The room corridors also remain open for walking back.
+
+Exits: south → Mercy Lie Wall (`deep_anchor_chamber_scale_07`).
+
+Interactions: manual release, manual key, resonance anchor safe, anchor cable.
+
+### Observation Apse (`deep_throne_room_scale_01`)
+
+An observation apse frames the planet beneath the failing Shield, with executive seats arranged like a congregation around ownership. The planet view flickers wherever the prison sky is weakest.
+
+Exits: south → Throne Room (`deep_throne_room`), north → Thorne Cell (`deep_throne_room_scale_02`).
+
+Interactions: observation apse, planet view.
+
+### Thorne Cell (`deep_throne_room_scale_02`)
+
+Thorne's cell hangs beside the dais, close enough for her to watch Vale turn her product into a religion. The containment seam glows brighter whenever she tries to speak.
+
+Exits: south → Observation Apse (`deep_throne_room_scale_01`), north → Soloist Dais (`deep_throne_room_scale_03`).
+
+Interactions: Thorne's cell, containment seam.
+
+### Soloist Dais (`deep_throne_room_scale_03`)
+
+The Soloist dais waits under a white baton of hard light. Vale's command score hangs in the air around it, every note assigned to a system that used to answer someone else.
+
+Exits: south → Thorne Cell (`deep_throne_room_scale_02`), north → Boardroom Grave (`deep_throne_room_scale_04`).
+
+Interactions: Soloist dais, command score.
+
+### Boardroom Grave (`deep_throne_room_scale_04`)
+
+A boardroom grave of empty chairs surrounds a table still voting on dead agenda items. The casualty projection is filed between launch timing and consumer adoption.
+
+Exits: south → Soloist Dais (`deep_throne_room_scale_03`), north → Coup Balcony (`deep_throne_room_scale_05`).
+
+Interactions: empty chairs, casualty projection.
+
+### Coup Balcony (`deep_throne_room_scale_05`)
+
+A coup balcony overlooks the Ring security crown as Vale rewrites command ownership in real time. The security crown changes color with each permission Thorne loses.
+
+Exits: south → Boardroom Grave (`deep_throne_room_scale_04`), north → Avatar Gate (`deep_throne_room_scale_06`).
+
+Interactions: coup balcony, security crown.
+
+### Avatar Gate (`deep_throne_room_scale_06`)
+
+An Avatar gate blooms with a compliance halo large enough to frame a boss fight. The halo rotates toward Nova like an accusation, already deciding what shape punishment should take.
+
+Exits: south → Coup Balcony (`deep_throne_room_scale_05`), north → Tear Runway (`deep_throne_room_scale_07`).
+
+Interactions: Avatar gate, compliance halo.
+
+### Tear Runway (`deep_throne_room_scale_07`)
+
+A Tear runway extends from the throne deck into shaking glass and impossible music. Reflections arrive before the crew does, each one a future Vale claims he can make painless. An obsidian command dais locker sits under the shattered viewport. An optional return lift leads directly back to the entrance. The room corridors also remain open for walking back.
+
+Exits: south → Avatar Gate (`deep_throne_room_scale_06`).
+
+Interactions: Tear runway, impossible music, command dais locker, lift.
+
+### Gravity Suture (`deep_tear_scale_01`)
+
+A gravity suture stitches the Ring to the wound with black light that bends every rail inward. The black stitch pulls thoughts slightly out of order.
+
+Exits: south → The Tear (`deep_tear`), north → Choir Gap (`deep_tear_scale_02`).
+
+Interactions: gravity suture, black stitch.
+
+### Choir Gap (`deep_tear_scale_02`)
+
+A choir gap opens where music moves without air. A soundless note presses against Nova's teeth, not silent but too full of signal to become sound.
+
+Exits: south → Gravity Suture (`deep_tear_scale_01`), north → Ring Shear (`deep_tear_scale_03`).
+
+Interactions: choir gap, soundless note.
+
+### Ring Shear (`deep_tear_scale_03`)
+
+A Ring shear folds the deck into angles the station was never engineered to survive. The folded deck points toward the Source like wreckage learning a new direction.
+
+Exits: south → Choir Gap (`deep_tear_scale_02`), north → Event Lip (`deep_tear_scale_04`).
+
+Interactions: Ring shear, folded deck.
+
+### Event Lip (`deep_tear_scale_04`)
+
+The event lip burns blue at the edge of the Tear while Vale's coup collapses behind the crew. The blue horizon shows the Campfire before anyone jumps.
+
+Exits: south → Ring Shear (`deep_tear_scale_03`), north → Last Bulkhead (`deep_tear_scale_05`).
+
+Interactions: event lip, blue horizon.
+
+### Last Bulkhead (`deep_tear_scale_05`)
+
+The last bulkhead holds one manual wheel between the Ring and the impossible. The manual wheel is hot from people trying to close what cannot close.
+
+Exits: south → Event Lip (`deep_tear_scale_04`), north → Source Drop (`deep_tear_scale_06`).
+
+Interactions: last bulkhead, manual wheel.
+
+### Source Drop (`deep_tear_scale_06`)
+
+The Source drop waits beyond the hull, filled with falling voices that do not get farther away. The falling voices include names Nova has not learned yet. A pulsing anomaly fracture has crystallized into physical salvage. An optional return reality slipstream leads directly back to the entrance. The room corridors also remain open for walking back.
+
+Exits: south → Last Bulkhead (`deep_tear_scale_05`).
+
+Interactions: Source drop, falling voices, anomaly fracture, reality slipstream.
+
+### Ring Dock Memorial (`orbital_executive_dock_scale_final`)
+
+A dock memorial projects names over the forced-docking scar, then redacts the staff names first. The dock memorial and redaction pulse show the Ring preserving class even during collapse. An airtight diplomatic courier case floats secured by velcro. An optional return chute leads directly back to the entrance. The room corridors also remain open for walking back.
+
+Exits: south → Ring Echo Walk (`orbital_executive_dock_scale_06`).
+
+Interactions: dock memorial, redaction pulse, diplomatic courier case, chute.
+
+### Ring Courtesy Theater (`orbital_grand_concourse_scale_final`)
+
+A courtesy theater keeps playing welcome footage to empty chairs while blast shutters grind nearby. The welcome footage and empty chairs make Harmony's politeness feel obscene. A shattered luxury display locker holds untouched luxury goods. An optional return express escalator leads directly back to the entrance. The room corridors also remain open for walking back.
+
+Exits: south → Ring Echo Walk (`orbital_grand_concourse_scale_06`).
+
+Interactions: welcome footage, empty chairs, luxury display locker, express escalator.
+
+### Ring False Tide (`orbital_solarium_scale_final`)
+
+A false tide laps against the Solarium beach with water pumped through hidden climate veins. The false tide and climate veins make paradise visibly mechanical. A pressurized hydroponic canister sits among dead decorative moss. An optional return stairwell leads directly back to the entrance. The room corridors also remain open for walking back.
+
+Exits: south → Ring Echo Walk (`orbital_solarium_scale_06`).
+
+Interactions: false tide, climate veins, hydroponic canister, stairwell.
+
+### Ring Threat Cathedral (`orbital_security_hub_scale_final`)
+
+A threat cathedral stacks surveillance feeds into stained-glass panes of suspicion. The surveillance panes and priority docket turn security into worship. A heavy tactical enforcer armory is recessed into the bulkhead. An optional return hatch leads directly back to the entrance. The room corridors also remain open for walking back.
+
+Exits: north → Ring Echo Walk (`orbital_security_hub_scale_06`).
+
+Interactions: surveillance panes, priority docket, tactical enforcer armory, hatch.
+
+### Ring Drift Chapel (`orbital_service_shaft_scale_final`)
+
+A drift chapel of tether hooks and emergency blankets floats beside the service shaft. The tether hooks and prayer patch show the workers who made zero-g survivable. An orange EVA engineer pack is clamped to the structural truss. An optional return guide leads directly back to the entrance. The room corridors also remain open for walking back.
+
+Exits: south → Ring Echo Walk (`orbital_service_shaft_scale_06`).
+
+Interactions: tether hooks, prayer patch, eva engineer pack, guide.
+
