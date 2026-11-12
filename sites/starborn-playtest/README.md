@@ -82,3 +82,14 @@ adding Worlds 5–6, because those older hosted editions differ from current sou
 For matching local QA, pass `--preserve-existing /absolute/path/to/published-index.html`
 to build.mjs. Explicitly updating the older editions requires a separate reviewed
 publication; do not silently replace their content and invalidate saved progress.
+
+## Visible-interaction audit
+
+Before publishing Worlds 5 or 6, run
+`./gradlew :desktopApp:test --tests '*World56WalkthroughReachabilityTest'`.
+This checks the numbered inspection/use/open instructions with the game’s real
+inline-link renderer, including explicit aliases and description variants. A raw
+action definition is not proof of a tappable link. Room-only visits remain numbered
+steps; dormant, unlinked passive actions are excluded from the room reference.
+The inspection correction map retains the existing checklist IDs for these same
+visits without preserving IDs for unrelated future instruction changes.

@@ -10,6 +10,8 @@ Keep a manual arrival save, a rolling progress save, a separate save before choo
 
 The five optional quests are integrated into the route: **Employee of the Month, Solar Maintenance, Vacuum Seal, Ghost in the Shell, Admin Privileges**. Ghost in the Shell has two exclusive endings: complete one on your main save and use a separate save to compare the other. Do not expect both rewards on one completed quest.
 
+Inspection steps name links exposed by the room description, rather than every dormant action definition in the assets. Some atmospheric service rooms have no tappable details; reading their prose completes that visit.
+
 ### Recovery, combat and services
 
 **Customs Lounge** provides Rest, Cook and the **Orbital Dispensary** shop. Later, **Thaw Gallery** provides Rest and Cook. Use the dedicated service pills; the equipment names in this guide identify the location. Review gear, AP, consumables and recovery before bosses. No fixed level or shopping quantity is assumed. Ordinary patrol fights can provide resources, but a passive object description is not a loot promise.
@@ -60,7 +62,7 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 17. From **Executive Dock**, go **west** to **Customs Crawlway** (`orbital_executive_dock_scale_01`).
 
-18. At **Customs Crawlway**, inspect **service alcove**, **maintenance mark**. These are local details; do not expect a quest reward from every inspection.
+18. At **Customs Crawlway**, read the room description. There are no tappable inspection details in this room.
 
 19. From **Customs Crawlway**, go **north** to **Collar Pressure Gallery** (`orbital_executive_dock_scale_02`).
 
@@ -68,19 +70,19 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 21. From **Collar Pressure Gallery**, go **north** to **Gantry Inspection Slit** (`orbital_executive_dock_scale_03`).
 
-22. At **Gantry Inspection Slit**, inspect **overlook niche**, **sightline**. These are local details; do not expect a quest reward from every inspection.
+22. At **Gantry Inspection Slit**, read the room description. There are no tappable inspection details in this room.
 
 23. From **Gantry Inspection Slit**, go **north** to **Arrival Light Relay** (`orbital_executive_dock_scale_04`).
 
-24. At **Arrival Light Relay**, inspect **control pocket**, **manual toggle**. These are local details; do not expect a quest reward from every inspection.
+24. At **Arrival Light Relay**, read the room description. There are no tappable inspection details in this room.
 
 25. From **Arrival Light Relay**, go **north** to **Sealant Store** (`orbital_executive_dock_scale_05`).
 
-26. At **Sealant Store**, inspect **quiet cache**, **wrapped tool**. These are local details; do not expect a quest reward from every inspection.
+26. At **Sealant Store**, read the room description. There are no tappable inspection details in this room.
 
 27. From **Sealant Store**, go **north** to **Freight Intercom Walk** (`orbital_executive_dock_scale_06`).
 
-28. At **Freight Intercom Walk**, inspect **echo walk**, **old signal**. These are local details; do not expect a quest reward from every inspection.
+28. At **Freight Intercom Walk**, read the room description. There are no tappable inspection details in this room.
 
 29. From **Freight Intercom Walk**, go **north** to **Ring Dock Memorial** (`orbital_executive_dock_scale_final`).
 
@@ -118,27 +120,27 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 44. From **Solarium**, go **west** to **Root Irrigation Recess** (`orbital_solarium_scale_01`).
 
-45. At **Root Irrigation Recess**, inspect **service alcove**, **maintenance mark**. These are local details; do not expect a quest reward from every inspection.
+45. At **Root Irrigation Recess**, read the room description. There are no tappable inspection details in this room.
 
 46. From **Root Irrigation Recess**, go **north** to **Condensation Channel** (`orbital_solarium_scale_02`).
 
-47. At **Condensation Channel**, inspect **pressure gallery**, **warning strip**. These are local details; do not expect a quest reward from every inspection.
+47. At **Condensation Channel**, read the room description. There are no tappable inspection details in this room.
 
 48. From **Condensation Channel**, go **north** to **Mirror Edge Walk** (`orbital_solarium_scale_03`).
 
-49. At **Mirror Edge Walk**, inspect **overlook niche**, **sightline**. These are local details; do not expect a quest reward from every inspection.
+49. At **Mirror Edge Walk**, read the room description. There are no tappable inspection details in this room.
 
 50. From **Mirror Edge Walk**, go **north** to **Fountain Cabinet** (`orbital_solarium_scale_04`).
 
-51. At **Fountain Cabinet**, inspect **control pocket**, **manual toggle**. These are local details; do not expect a quest reward from every inspection.
+51. At **Fountain Cabinet**, read the room description. There are no tappable inspection details in this room.
 
 52. From **Fountain Cabinet**, go **north** to **Seed Ledger Store** (`orbital_solarium_scale_05`).
 
-53. At **Seed Ledger Store**, inspect **quiet cache**, **wrapped tool**. These are local details; do not expect a quest reward from every inspection.
+53. At **Seed Ledger Store**, read the room description. There are no tappable inspection details in this room.
 
 54. From **Seed Ledger Store**, go **north** to **Cooling Irrigation Walk** (`orbital_solarium_scale_06`).
 
-55. At **Cooling Irrigation Walk**, inspect **echo walk**, **old signal**. These are local details; do not expect a quest reward from every inspection.
+55. At **Cooling Irrigation Walk**, read the room description. There are no tappable inspection details in this room.
 
 56. From **Cooling Irrigation Walk**, go **north** to **Ring False Tide** (`orbital_solarium_scale_final`).
 
@@ -156,27 +158,27 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 62. From **Grand Concourse**, go **south** to **Cleaners’ Passage** (`orbital_grand_concourse_scale_01`).
 
-63. At **Cleaners’ Passage**, inspect **service alcove**, **maintenance mark**. These are local details; do not expect a quest reward from every inspection.
+63. At **Cleaners’ Passage**, read the room description. There are no tappable inspection details in this room.
 
 64. From **Cleaners’ Passage**, go **east** to **Inward Gauge Gallery** (`orbital_grand_concourse_scale_02`).
 
-65. At **Inward Gauge Gallery**, inspect **pressure gallery**, **warning strip**. These are local details; do not expect a quest reward from every inspection.
+65. At **Inward Gauge Gallery**, read the room description. There are no tappable inspection details in this room.
 
 66. From **Inward Gauge Gallery**, go **north** to **Chandelier Frame** (`orbital_grand_concourse_scale_03`).
 
-67. At **Chandelier Frame**, inspect **overlook niche**, **sightline**. These are local details; do not expect a quest reward from every inspection.
+67. At **Chandelier Frame**, read the room description. There are no tappable inspection details in this room.
 
 68. From **Chandelier Frame**, go **north** to **Directory Relay** (`orbital_grand_concourse_scale_04`).
 
-69. At **Directory Relay**, inspect **control pocket**, **manual toggle**. These are local details; do not expect a quest reward from every inspection.
+69. At **Directory Relay**, read the room description. There are no tappable inspection details in this room.
 
 70. From **Directory Relay**, go **north** to **Shift Rota Cupboard** (`orbital_grand_concourse_scale_05`).
 
-71. At **Shift Rota Cupboard**, inspect **quiet cache**, **wrapped tool**. These are local details; do not expect a quest reward from every inspection.
+71. At **Shift Rota Cupboard**, read the room description. There are no tappable inspection details in this room.
 
 72. From **Shift Rota Cupboard**, go **north** to **Hospitality Speaker Walk** (`orbital_grand_concourse_scale_06`).
 
-73. At **Hospitality Speaker Walk**, inspect **echo walk**, **old signal**. These are local details; do not expect a quest reward from every inspection.
+73. At **Hospitality Speaker Walk**, read the room description. There are no tappable inspection details in this room.
 
 74. From **Hospitality Speaker Walk**, go **north** to **Ring Courtesy Theater** (`orbital_grand_concourse_scale_final`).
 
@@ -202,27 +204,27 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 85. From **Security Hub**, go **south** to **Camera Calibration Bay** (`orbital_security_hub_scale_01`).
 
-86. At **Camera Calibration Bay**, inspect **service alcove**, **maintenance mark**. These are local details; do not expect a quest reward from every inspection.
+86. At **Camera Calibration Bay**, read the room description. There are no tappable inspection details in this room.
 
 87. From **Camera Calibration Bay**, go **south** to **Hull Inspection Gallery** (`orbital_security_hub_scale_02`).
 
-88. At **Hull Inspection Gallery**, inspect **pressure gallery**, **warning strip**. These are local details; do not expect a quest reward from every inspection.
+88. At **Hull Inspection Gallery**, read the room description. There are no tappable inspection details in this room.
 
 89. From **Hull Inspection Gallery**, go **south** to **Camera Backwalk** (`orbital_security_hub_scale_03`).
 
-90. At **Camera Backwalk**, inspect **overlook niche**, **sightline**. These are local details; do not expect a quest reward from every inspection.
+90. At **Camera Backwalk**, read the room description. There are no tappable inspection details in this room.
 
 91. From **Camera Backwalk**, go **south** to **Evidence Test Relay** (`orbital_security_hub_scale_04`).
 
-92. At **Evidence Test Relay**, inspect **control pocket**, **manual toggle**. These are local details; do not expect a quest reward from every inspection.
+92. At **Evidence Test Relay**, read the room description. There are no tappable inspection details in this room.
 
 93. From **Evidence Test Relay**, go **south** to **Badge Evidence Store** (`orbital_security_hub_scale_05`).
 
-94. At **Badge Evidence Store**, inspect **quiet cache**, **wrapped tool**. These are local details; do not expect a quest reward from every inspection.
+94. At **Badge Evidence Store**, read the room description. There are no tappable inspection details in this room.
 
 95. From **Badge Evidence Store**, go **south** to **Incident Speaker Walk** (`orbital_security_hub_scale_06`).
 
-96. At **Incident Speaker Walk**, inspect **echo walk**, **old signal**. These are local details; do not expect a quest reward from every inspection.
+96. At **Incident Speaker Walk**, read the room description. There are no tappable inspection details in this room.
 
 97. From **Incident Speaker Walk**, go **south** to **Ring Threat Cathedral** (`orbital_security_hub_scale_final`).
 
@@ -254,27 +256,27 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 110. From **Service Shaft**, go **north** to **Cable Spool Recess** (`orbital_service_shaft_scale_01`).
 
-111. At **Cable Spool Recess**, inspect **service alcove**, **maintenance mark**. These are local details; do not expect a quest reward from every inspection.
+111. At **Cable Spool Recess**, read the room description. There are no tappable inspection details in this room.
 
 112. From **Cable Spool Recess**, go **north** to **Tether Conduit** (`orbital_service_shaft_scale_02`).
 
-113. At **Tether Conduit**, inspect **pressure gallery**, **warning strip**. These are local details; do not expect a quest reward from every inspection.
+113. At **Tether Conduit**, read the room description. There are no tappable inspection details in this room.
 
 114. From **Tether Conduit**, go **north** to **Partition Overlook** (`orbital_service_shaft_scale_03`).
 
-115. At **Partition Overlook**, inspect **overlook niche**, **sightline**. These are local details; do not expect a quest reward from every inspection.
+115. At **Partition Overlook**, read the room description. There are no tappable inspection details in this room.
 
 116. From **Partition Overlook**, go **north** to **Worklight Lockout** (`orbital_service_shaft_scale_04`).
 
-117. At **Worklight Lockout**, inspect **control pocket**, **manual toggle**. These are local details; do not expect a quest reward from every inspection.
+117. At **Worklight Lockout**, read the room description. There are no tappable inspection details in this room.
 
 118. From **Worklight Lockout**, go **north** to **Cut Tether Store** (`orbital_service_shaft_scale_05`).
 
-119. At **Cut Tether Store**, inspect **quiet cache**, **wrapped tool**. These are local details; do not expect a quest reward from every inspection.
+119. At **Cut Tether Store**, read the room description. There are no tappable inspection details in this room.
 
 120. From **Cut Tether Store**, go **north** to **Freight Motor Walk** (`orbital_service_shaft_scale_06`).
 
-121. At **Freight Motor Walk**, inspect **echo walk**, **old signal**. These are local details; do not expect a quest reward from every inspection.
+121. At **Freight Motor Walk**, read the room description. There are no tappable inspection details in this room.
 
 122. From **Freight Motor Walk**, go **north** to **Ring Drift Chapel** (`orbital_service_shaft_scale_final`).
 
@@ -324,15 +326,15 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 144. From **Purged Backup Rack**, go **south** to **Cooling Grille** (`deep_server_farm_scale_01`).
 
-145. At **Cooling Grille**, inspect **service alcove**, **maintenance mark**. These are local details; do not expect a quest reward from every inspection.
+145. At **Cooling Grille**, read the room description. There are no tappable inspection details in this room.
 
 146. From **Cooling Grille**, go **south** to **Cooling Plenum** (`deep_server_farm_scale_02`).
 
-147. At **Cooling Plenum**, inspect **pressure gallery**, **warning strip**. These are local details; do not expect a quest reward from every inspection.
+147. At **Cooling Plenum**, read the room description. There are no tappable inspection details in this room.
 
 148. From **Cooling Plenum**, go **south** to **Rack Sightline** (`deep_server_farm_scale_03`).
 
-149. At **Rack Sightline**, inspect **overlook niche**, **sightline**. These are local details; do not expect a quest reward from every inspection.
+149. At **Rack Sightline**, inspect **sightline**.
 
 150. From **Rack Sightline**, go **south** to **Root Access Pocket** (`deep_server_farm_scale_04`).
 
@@ -869,7 +871,7 @@ A luggage recess hides the service crawlway beneath an executive arrival mural. 
 
 Exits: east → Executive Dock (`orbital_executive_dock`), north → Collar Pressure Gallery (`orbital_executive_dock_scale_02`).
 
-Interactions: service alcove, maintenance mark.
+Interactions: none in the room description.
 
 ### Collar Pressure Gallery (`orbital_executive_dock_scale_02`)
 
@@ -885,7 +887,7 @@ Through a narrow inspection slit, the docking collar flexes against the Astra. T
 
 Exits: south → Collar Pressure Gallery (`orbital_executive_dock_scale_02`), north → Arrival Light Relay (`orbital_executive_dock_scale_04`).
 
-Interactions: overlook niche, sightline.
+Interactions: none in the room description.
 
 ### Arrival Light Relay (`orbital_executive_dock_scale_04`)
 
@@ -893,7 +895,7 @@ An arrival-light relay sits behind a decorative panel. Its switch is tagged DISP
 
 Exits: south → Gantry Inspection Slit (`orbital_executive_dock_scale_03`), north → Sealant Store (`orbital_executive_dock_scale_05`).
 
-Interactions: control pocket, manual toggle.
+Interactions: none in the room description.
 
 ### Sealant Store (`orbital_executive_dock_scale_05`)
 
@@ -901,7 +903,7 @@ A shelf holds dried sealant cartridges, each split open to prove it empty. Someo
 
 Exits: south → Arrival Light Relay (`orbital_executive_dock_scale_04`), north → Freight Intercom Walk (`orbital_executive_dock_scale_06`).
 
-Interactions: quiet cache, wrapped tool.
+Interactions: none in the room description.
 
 ### Freight Intercom Walk (`orbital_executive_dock_scale_06`)
 
@@ -909,7 +911,7 @@ The collar intercom repeats an abandoned freight request. Between the formal ann
 
 Exits: south → Sealant Store (`orbital_executive_dock_scale_05`), north → Ring Dock Memorial (`orbital_executive_dock_scale_final`).
 
-Interactions: echo walk, old signal.
+Interactions: none in the room description.
 
 ### Cleaners’ Passage (`orbital_grand_concourse_scale_01`)
 
@@ -917,7 +919,7 @@ Behind a directory of luxury suites, a cleaner has scratched a second map at sho
 
 Exits: north → Grand Concourse (`orbital_grand_concourse`), east → Inward Gauge Gallery (`orbital_grand_concourse_scale_02`).
 
-Interactions: service alcove, maintenance mark.
+Interactions: none in the room description.
 
 ### Inward Gauge Gallery (`orbital_grand_concourse_scale_02`)
 
@@ -925,7 +927,7 @@ A pressure inspection rail follows the back of a gold wall. Its indicators have 
 
 Exits: west → Cleaners’ Passage (`orbital_grand_concourse_scale_01`), north → Chandelier Frame (`orbital_grand_concourse_scale_03`).
 
-Interactions: pressure gallery, warning strip.
+Interactions: none in the room description.
 
 ### Chandelier Frame (`orbital_grand_concourse_scale_03`)
 
@@ -933,7 +935,7 @@ A gap above a ceiling panel reveals the concourse chandelier from behind. Its gl
 
 Exits: south → Inward Gauge Gallery (`orbital_grand_concourse_scale_02`), north → Directory Relay (`orbital_grand_concourse_scale_04`).
 
-Interactions: overlook niche, sightline.
+Interactions: none in the room description.
 
 ### Directory Relay (`orbital_grand_concourse_scale_04`)
 
@@ -941,7 +943,7 @@ The directory lighting has a manual relay beside a list of names. Room numbers a
 
 Exits: south → Chandelier Frame (`orbital_grand_concourse_scale_03`), north → Shift Rota Cupboard (`orbital_grand_concourse_scale_05`).
 
-Interactions: control pocket, manual toggle.
+Interactions: none in the room description.
 
 ### Shift Rota Cupboard (`orbital_grand_concourse_scale_05`)
 
@@ -949,7 +951,7 @@ An old cleaning cart is parked in a cupboard too shallow for its handle. A folde
 
 Exits: south → Directory Relay (`orbital_grand_concourse_scale_04`), north → Hospitality Speaker Walk (`orbital_grand_concourse_scale_06`).
 
-Interactions: quiet cache, wrapped tool.
+Interactions: none in the room description.
 
 ### Hospitality Speaker Walk (`orbital_grand_concourse_scale_06`)
 
@@ -957,7 +959,7 @@ A hospitality announcement echoes through an uncarpeted passage. Here, without t
 
 Exits: south → Shift Rota Cupboard (`orbital_grand_concourse_scale_05`), north → Ring Courtesy Theater (`orbital_grand_concourse_scale_final`).
 
-Interactions: echo walk, old signal.
+Interactions: none in the room description.
 
 ### Root Irrigation Recess (`orbital_solarium_scale_01`)
 
@@ -965,7 +967,7 @@ Water stains lead from the garden border into a narrow irrigation recess. Roots 
 
 Exits: east → Solarium (`orbital_solarium`), north → Condensation Channel (`orbital_solarium_scale_02`).
 
-Interactions: service alcove, maintenance mark.
+Interactions: none in the room description.
 
 ### Condensation Channel (`orbital_solarium_scale_02`)
 
@@ -973,7 +975,7 @@ A condensation channel runs along the outer glass. Beyond it is black space. Mir
 
 Exits: south → Root Irrigation Recess (`orbital_solarium_scale_01`), north → Mirror Edge Walk (`orbital_solarium_scale_03`).
 
-Interactions: pressure gallery, warning strip.
+Interactions: none in the room description.
 
 ### Mirror Edge Walk (`orbital_solarium_scale_03`)
 
@@ -981,7 +983,7 @@ From this slit behind the beds, the mirror array is visible edge-on. The brillia
 
 Exits: south → Condensation Channel (`orbital_solarium_scale_02`), north → Fountain Cabinet (`orbital_solarium_scale_04`).
 
-Interactions: overlook niche, sightline.
+Interactions: none in the room description.
 
 ### Fountain Cabinet (`orbital_solarium_scale_04`)
 
@@ -989,7 +991,7 @@ A dead decorative fountain shares a cabinet with the garden lighting schedule. B
 
 Exits: south → Mirror Edge Walk (`orbital_solarium_scale_03`), north → Seed Ledger Store (`orbital_solarium_scale_05`).
 
-Interactions: control pocket, manual toggle.
+Interactions: none in the room description.
 
 ### Seed Ledger Store (`orbital_solarium_scale_05`)
 
@@ -997,7 +999,7 @@ Seed packets lie flattened between pages of an old planting ledger. Each failed 
 
 Exits: south → Fountain Cabinet (`orbital_solarium_scale_04`), north → Cooling Irrigation Walk (`orbital_solarium_scale_06`).
 
-Interactions: quiet cache, wrapped tool.
+Interactions: none in the room description.
 
 ### Cooling Irrigation Walk (`orbital_solarium_scale_06`)
 
@@ -1005,7 +1007,7 @@ An irrigation pipe ticks as it cools. The sound moves along the beds, a small ph
 
 Exits: south → Seed Ledger Store (`orbital_solarium_scale_05`), north → Ring False Tide (`orbital_solarium_scale_final`).
 
-Interactions: echo walk, old signal.
+Interactions: none in the room description.
 
 ### Camera Calibration Bay (`orbital_security_hub_scale_01`)
 
@@ -1013,7 +1015,7 @@ A service hatch sits below a camera calibration chart. The chart leaves a blank 
 
 Exits: north → Security Hub (`orbital_security_hub`), south → Hull Inspection Gallery (`orbital_security_hub_scale_02`).
 
-Interactions: service alcove, maintenance mark.
+Interactions: none in the room description.
 
 ### Hull Inspection Gallery (`orbital_security_hub_scale_02`)
 
@@ -1021,7 +1023,7 @@ A reinforced gallery separates the security office from the outer hull. Its pres
 
 Exits: north → Camera Calibration Bay (`orbital_security_hub_scale_01`), south → Camera Backwalk (`orbital_security_hub_scale_03`).
 
-Interactions: pressure gallery, warning strip.
+Interactions: none in the room description.
 
 ### Camera Backwalk (`orbital_security_hub_scale_03`)
 
@@ -1029,7 +1031,7 @@ A maintenance window looks onto the backs of the camera housings. From here thei
 
 Exits: north → Hull Inspection Gallery (`orbital_security_hub_scale_02`), south → Evidence Test Relay (`orbital_security_hub_scale_04`).
 
-Interactions: overlook niche, sightline.
+Interactions: none in the room description.
 
 ### Evidence Test Relay (`orbital_security_hub_scale_04`)
 
@@ -1037,7 +1039,7 @@ A test relay has been sealed under a clear cover. Beside it, handwritten instruc
 
 Exits: north → Camera Backwalk (`orbital_security_hub_scale_03`), south → Badge Evidence Store (`orbital_security_hub_scale_05`).
 
-Interactions: control pocket, manual toggle.
+Interactions: none in the room description.
 
 ### Badge Evidence Store (`orbital_security_hub_scale_05`)
 
@@ -1045,7 +1047,7 @@ An evidence carton contains discarded blank badges and a ruined label roll. Even
 
 Exits: north → Evidence Test Relay (`orbital_security_hub_scale_04`), south → Incident Speaker Walk (`orbital_security_hub_scale_06`).
 
-Interactions: quiet cache, wrapped tool.
+Interactions: none in the room description.
 
 ### Incident Speaker Walk (`orbital_security_hub_scale_06`)
 
@@ -1053,7 +1055,7 @@ A diagnostic speaker repeats an incomplete incident number. The next field is al
 
 Exits: north → Badge Evidence Store (`orbital_security_hub_scale_05`), south → Ring Threat Cathedral (`orbital_security_hub_scale_final`).
 
-Interactions: echo walk, old signal.
+Interactions: none in the room description.
 
 ### Cable Spool Recess (`orbital_service_shaft_scale_01`)
 
@@ -1061,7 +1063,7 @@ Cable spools narrow the entrance to a worker passage. The only route marker is a
 
 Exits: south → Service Shaft (`orbital_service_shaft`), north → Tether Conduit (`orbital_service_shaft_scale_02`).
 
-Interactions: service alcove, maintenance mark.
+Interactions: none in the room description.
 
 ### Tether Conduit (`orbital_service_shaft_scale_02`)
 
@@ -1069,7 +1071,7 @@ A pressure conduit follows the shaft wall beside a row of handholds. Every third
 
 Exits: south → Cable Spool Recess (`orbital_service_shaft_scale_01`), north → Partition Overlook (`orbital_service_shaft_scale_03`).
 
-Interactions: pressure gallery, warning strip.
+Interactions: none in the room description.
 
 ### Partition Overlook (`orbital_service_shaft_scale_03`)
 
@@ -1077,7 +1079,7 @@ A gap between cable trays exposes several floors of the station at once. Luxury 
 
 Exits: south → Tether Conduit (`orbital_service_shaft_scale_02`), north → Worklight Lockout (`orbital_service_shaft_scale_04`).
 
-Interactions: overlook niche, sightline.
+Interactions: none in the room description.
 
 ### Worklight Lockout (`orbital_service_shaft_scale_04`)
 
@@ -1085,7 +1087,7 @@ A local work-light switch sits beside a signed lockout tag. The circuit powers t
 
 Exits: south → Partition Overlook (`orbital_service_shaft_scale_03`), north → Cut Tether Store (`orbital_service_shaft_scale_05`).
 
-Interactions: control pocket, manual toggle.
+Interactions: none in the room description.
 
 ### Cut Tether Store (`orbital_service_shaft_scale_05`)
 
@@ -1093,7 +1095,7 @@ A tether bag hangs from a hook, its buckle cut cleanly through. Beside it are em
 
 Exits: south → Worklight Lockout (`orbital_service_shaft_scale_04`), north → Freight Motor Walk (`orbital_service_shaft_scale_06`).
 
-Interactions: quiet cache, wrapped tool.
+Interactions: none in the room description.
 
 ### Freight Motor Walk (`orbital_service_shaft_scale_06`)
 
@@ -1101,7 +1103,7 @@ Cable vibration carries a freight motor's pulse through the passage. Voices from
 
 Exits: south → Cut Tether Store (`orbital_service_shaft_scale_05`), north → Ring Drift Chapel (`orbital_service_shaft_scale_final`).
 
-Interactions: echo walk, old signal.
+Interactions: none in the room description.
 
 ### Cooling Grille (`deep_server_farm_scale_01`)
 
@@ -1109,7 +1111,7 @@ Cool air escapes around a service grille between server towers. The maintenance 
 
 Exits: north → Purged Backup Rack (`deep_backup_rack`), south → Cooling Plenum (`deep_server_farm_scale_02`).
 
-Interactions: service alcove, maintenance mark.
+Interactions: none in the room description.
 
 ### Cooling Plenum (`deep_server_farm_scale_02`)
 
@@ -1117,7 +1119,7 @@ A pressure inspection strip crosses the cooling plenum. Water beads on the cold 
 
 Exits: north → Cooling Grille (`deep_server_farm_scale_01`), south → Rack Sightline (`deep_server_farm_scale_03`).
 
-Interactions: pressure gallery, warning strip.
+Interactions: none in the room description.
 
 ### Rack Sightline (`deep_server_farm_scale_03`)
 
@@ -1125,7 +1127,7 @@ A narrow sightline runs behind the server racks. Their status lights continue bl
 
 Exits: north → Cooling Plenum (`deep_server_farm_scale_02`), south → Root Access Pocket (`deep_server_farm_scale_04`).
 
-Interactions: overlook niche, sightline.
+Interactions: sightline.
 
 ### Root Access Pocket (`deep_server_farm_scale_04`)
 

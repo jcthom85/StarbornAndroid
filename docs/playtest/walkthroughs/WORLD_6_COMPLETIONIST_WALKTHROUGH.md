@@ -623,7 +623,7 @@ A black ocean lies perfectly still beneath an empty sky. Every Aethel note dies 
 
 Exits: west → Blue Ash Circle (`source_campfire_node_scale_01`), east → Tide-Well (`source_orion_tide_well`), north → Black Tide Shelf (`source_orion_nightmare_node_scale_01`).
 
-Interactions: .
+Interactions: none in the room description.
 
 ### Tide-Well (`source_orion_tide_well`)
 
@@ -631,7 +631,7 @@ The shore drops into a circular well of black water. Every ripple carries an Aet
 
 Exits: west → Silent Shore (`source_orion_nightmare`), east → Answering Chorus (`source_orion_chorus`).
 
-Interactions: .
+Interactions: none in the room description.
 
 ### Answering Chorus (`source_orion_chorus`)
 
@@ -647,7 +647,7 @@ Jed's workshop, the mine checkpoint, and the first shelter occupy the same impos
 
 Exits: north → The Campfire (`source_campfire`), east → Jed's Echo Bench (`source_echo_workbench`), south → Locker Row Loop (`source_echo_mines_node_scale_01`).
 
-Interactions: .
+Interactions: none in the room description.
 
 ### Jed's Echo Bench (`source_echo_workbench`)
 
@@ -671,7 +671,7 @@ The mine elevator doors open onto white noise instead of a shaft. Its floor reme
 
 Exits: west → Manager Patrol Route (`source_echo_patrol`), east → Memory Bridge (`source_memory_bridge`).
 
-Interactions: .
+Interactions: none in the room description.
 
 ### Memory Bridge (`source_memory_bridge`)
 

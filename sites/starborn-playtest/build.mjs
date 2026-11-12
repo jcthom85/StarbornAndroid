@@ -8,6 +8,7 @@ const root = path.resolve(home, '../..');
 const integrated = process.argv.includes('--integrated-world3');
 const outputDirectory = path.join(home, 'dist', ...(integrated ? ['world-3-integrated'] : []));
 const guides = [];
+const inspectionStepIds = JSON.parse(await readFile(path.join(home, 'src/world56-inspection-step-ids.json'), 'utf8'));
 const integratedStepIds = integrated
   ? JSON.parse(await readFile(path.join(home, 'src/world3-integrated-step-ids.json'), 'utf8')) : {};
 for (const world of (integrated ? [3] : [1, 2, 3, 4, 5, 6])) {
@@ -26,6 +27,7 @@ for (const world of (integrated ? [3] : [1, 2, 3, 4, 5, 6])) {
     if (step) nextStep = Math.max(nextStep, Number(step[1]));
     const stableKey = section.title.replace(/^\d+\. /, '') + '\n' + text.replace(/^\d+\. /, '');
     const id = (integrated && step ? integratedStepIds[stableKey] : null)
+      || inspectionStepIds[String(world)]?.[stableKey]
       || createHash('sha256').update(`${section.title}\n${text}`).digest('hex').slice(0, 16);
     section.blocks.push({ id, text: heading ? text.slice(heading[0].length) : text, heading: heading?.[1].length || 0, step: step ? Number(step[1]) : checklist ? ++nextStep : null });
     paragraph = [];
