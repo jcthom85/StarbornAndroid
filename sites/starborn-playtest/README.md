@@ -1,6 +1,6 @@
 # Starborn playtest companion
 
-A dependency-free static reader for the Worlds 1–5 completionist guides.
+A dependency-free static reader for the Worlds 1–6 completionist guides.
 Edit the source guides in `docs/playtest/walkthroughs/`, then rebuild:
 
 ```sh
@@ -8,7 +8,7 @@ node sites/starborn-playtest/build.mjs
 ```
 
 The output is `dist/`. Open its index directly or serve the directory with a static
-host. The hosted reader caches all five worlds for offline use after a successful
+host. The hosted reader caches all six worlds for offline use after a successful
 visit. Search, checkmarks, theme and reading position work locally. Progress belongs
 to the browser and origin; clearing site data removes it.
 
@@ -29,7 +29,7 @@ identify local game fixes that are not yet installed.
 
 Live reader: https://jcthom85.github.io/StarbornAndroid/
 
-Direct links `#world-1/` through `#world-5/` select a world on a fresh visit.
+Direct links `#world-1/` through `#world-6/` select a world on a fresh visit.
 Pushing source changes to `main` does not publish the reader: rebuild and update
 `gh-pages` too.
 
@@ -70,3 +70,15 @@ Journal quests, optional discoveries and a separate saved checklist. Available a
 https://jcthom85.github.io/StarbornAndroid/#world-5/. Earlier worlds retain their
 progress keys and chapter links. Publish to gh-pages after rebuilding; updating
 the Markdown source on main alone does not update the hosted reader.
+
+## World 6
+
+Added November 12, 2026: 187 numbered route steps through all 65 rooms, all ten
+Journal quests, the two-form finale, ending callbacks and the postgame shore.
+Link: https://jcthom85.github.io/StarbornAndroid/#world-6/.
+
+Publication preserves the currently hosted Worlds 1–4 blocks and IDs exactly while
+adding Worlds 5–6, because those older hosted editions differ from current source.
+For matching local QA, pass `--preserve-existing /absolute/path/to/published-index.html`
+to build.mjs. Explicitly updating the older editions requires a separate reviewed
+publication; do not silently replace their content and invalidate saved progress.

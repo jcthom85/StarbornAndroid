@@ -10,7 +10,7 @@ const outputDirectory = path.join(home, 'dist', ...(integrated ? ['world-3-integ
 const guides = [];
 const integratedStepIds = integrated
   ? JSON.parse(await readFile(path.join(home, 'src/world3-integrated-step-ids.json'), 'utf8')) : {};
-for (const world of (integrated ? [3] : [1, 2, 3, 4, 5])) {
+for (const world of (integrated ? [3] : [1, 2, 3, 4, 5, 6])) {
   const guideFile = integrated ? 'WORLD_3_INTEGRATED_COMPLETIONIST_WALKTHROUGH.md' : `WORLD_${world}_COMPLETIONIST_WALKTHROUGH.md`;
   const source = await readFile(path.join(root, 'docs/playtest/walkthroughs', guideFile), 'utf8');
   const sections = [];

@@ -35,7 +35,7 @@ try {
   async function waitFor(expression) { for (let i = 0; i < 100; i++) { if (await evaluate(expression)) return; await new Promise(resolve => setTimeout(resolve, 100)); } throw new Error(`Timed out: ${expression}`); }
   await waitFor('document.querySelector("#article h2") !== null');
   await waitFor('document.querySelector(".brand-logo")?.naturalWidth > 0');
-  assert.equal(await evaluate('GUIDES.length'), 5);
+  assert.equal(await evaluate('GUIDES.length'), 6);
   assert.equal(await evaluate('world'), 2, 'world-2 root link selects World 2 on a fresh visit');
   assert.equal(await evaluate('GUIDES[1].sections.some(s => s.blocks.some(b => b.text.includes("report_to_zeke")))'), true, 'World 2 includes the current Botanist return task');
   await evaluate(`state.worlds[1] = {checked:[GUIDES[0].sections.flatMap(s=>s.blocks).filter(b=>b.step!==null).at(-1).id],section:0,scroll:0}; state.worlds[2].checked=[GUIDES[1].sections.flatMap(s=>s.blocks).find(b=>b.step!==null).id]; state.worlds[3]={checked:['old-world3-step'],section:0,scroll:0}; save();`);
@@ -78,6 +78,18 @@ try {
   await waitFor('typeof world !== "undefined" && world === 5 && document.querySelector("input[data-step]")?.checked === true');
   assert.equal(await evaluate(`JSON.parse(localStorage.getItem(STORE)).worlds[5].checked.includes('${world5Step}')`), true);
   assert.equal(await evaluate(`JSON.parse(localStorage.getItem(STORE)).worlds[4].checked.includes('${world4Step}')`), true, 'World 5 preserves World 4 progress');
+  await send('Page.navigate', { url: url.replace(/#.*$/, '') + '#world-6/' });
+  await waitFor('typeof world !== "undefined" && world === 6 && document.querySelector("#article h2") !== null');
+  assert.equal(await evaluate('GUIDES[5].sections.flatMap(s => s.blocks).filter(b => /^\\d+\\. /.test(b.text)).length'), 187, 'World 6 complete route');
+  assert.equal(await evaluate('GUIDES[5].sections.flatMap(s => s.blocks).filter(b => b.text.startsWith("Exits:")).length'), 65, 'World 6 every room reference');
+  assert.equal(await evaluate('GUIDES[4].sections.flatMap(s => s.blocks).filter(b => b.text.startsWith("Exits:")).length'), 81, 'World 5 every room reference');
+  await evaluate('showSection(GUIDES[5].sections.findIndex(s => s.title.includes("Campfire and Zeke")))');
+  await waitFor('restoring === false && document.querySelector("input[data-step]") !== null');
+  const world6Step = await evaluate('document.querySelector("input[data-step]").dataset.step');
+  await evaluate('document.querySelector("input[data-step]").click()');
+  await send('Page.reload');
+  await waitFor('typeof world !== "undefined" && world === 6 && document.querySelector("input[data-step]")?.checked === true');
+  assert.equal(await evaluate(`JSON.parse(localStorage.getItem(STORE)).worlds[5].checked.includes('${world5Step}')`), true, 'World 6 preserves World 5 checklist');
   await evaluate('switchWorld(1)');
   assert.equal(await evaluate('document.documentElement.scrollWidth <= innerWidth'), true, 'desktop has no horizontal overflow');
   const desktopShot = await send('Page.captureScreenshot', { format: 'png' });
@@ -125,12 +137,18 @@ try {
   await evaluate('switchWorld(5); showSection(2); window.scrollTo(0,0)');
   await waitFor('restoring === false');
   assert.equal(await evaluate('document.documentElement.scrollWidth <= innerWidth'), true, 'World 5 narrow phone layout');
+  await evaluate('switchWorld(6); showSection(2); window.scrollTo(0,0)');
+  await waitFor('restoring === false');
+  assert.equal(await evaluate('document.documentElement.scrollWidth <= innerWidth'), true, 'World 6 narrow phone layout');
+  assert.equal(await evaluate('Array.from(document.querySelectorAll("button[data-world]")).every(b => { const r = b.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; })'), true, 'all six world buttons fit narrow phone');
+  const world6Shot = await send('Page.captureScreenshot', { format: 'png' });
+  await writeFile(path.join(profile, 'world6-mobile.png'), Buffer.from(world6Shot.data, 'base64'));
   await send('Network.enable');
   await send('Network.emulateNetworkConditions', { offline: true, latency: 0, downloadThroughput: 0, uploadThroughput: 0 });
   await send('Page.reload');
   await waitFor('document.querySelector("#article h2") !== null');
-  assert.equal(await evaluate('GUIDES.length'), 5, 'all five worlds available after offline reload');
+  assert.equal(await evaluate('GUIDES.length'), 6, 'all six worlds available after offline reload');
   assert.deepEqual(errors, [], 'no uncaught browser errors');
-  console.log(JSON.stringify({ passed: ['World 4 direct link, all rooms and saved checklist', 'rebuilt World 3 direct link and saved checklist', 'World 2 root link', 'current Botanist return task', 'logo loaded', 'desktop layout', 'checkmarks persist', 'position restored', 'search', 'cross-world navigation', 'theme', 'mobile layout', 'offline reload', 'no browser errors'], screenshot, desktopScreenshot, world3Screenshot, world4Screenshot }, null, 2));
+  console.log(JSON.stringify({ passed: ['World 5 and 6 direct links, all rooms, saved checklists and narrow layouts', 'World 4 direct link, all rooms and saved checklist', 'rebuilt World 3 direct link and saved checklist', 'World 2 root link', 'current Botanist return task', 'logo loaded', 'desktop layout', 'checkmarks persist', 'position restored', 'search', 'cross-world navigation', 'theme', 'mobile layout', 'offline reload', 'no browser errors'], screenshot, desktopScreenshot, world3Screenshot, world4Screenshot }, null, 2));
   await send('Browser.close');
 } finally { socket?.close(); chrome.kill(); }

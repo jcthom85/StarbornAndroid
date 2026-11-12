@@ -8,3 +8,6 @@
 @media(max-width:760px){.topbar{height:100px}.brand-logo{width:clamp(84px,29vw,116px)}.brand>small{font-size:7px;letter-spacing:1px;margin-bottom:5px}aside{height:auto}html{scroll-padding-top:115px}}
 
 @media(max-width:760px){.topbar{height:auto;min-height:77px;padding-top:8px;padding-bottom:8px}.brand{flex:1}.worlds{order:3;width:100%;justify-content:center}.worlds button{flex:1}.quiet{order:2}html{scroll-padding-top:120px}}
+
+@media(max-width:760px){.worlds{min-width:0}.worlds button{min-width:0;padding:6px 3px;font-size:11px;white-space:nowrap}}
+@media(min-width:761px) and (max-width:1100px){.topbar{gap:12px;padding:0 20px}.worlds button{min-width:0;padding:6px 9px;font-size:13px}}
