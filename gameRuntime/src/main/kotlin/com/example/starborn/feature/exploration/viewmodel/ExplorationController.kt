@@ -933,7 +933,9 @@ class ExplorationController(
     private fun removeEnemiesFromRoom(roomId: String?, enemyIds: List<String>) {
         if (enemyIds.isEmpty()) return
         val currentRoom = roomsById[roomId] ?: return
-        if (roomEnemyParties(currentRoom).isEmpty()) return
+        val replacesStaticEncounter = currentRoom.id == "spire_landing_pad_scale_03" &&
+            enemyIds == listOf("corporate_assassin")
+        if (roomEnemyParties(currentRoom).isEmpty() && !replacesStaticEncounter) return
         setRoomStateValue(
             roomIdOrNull = currentRoom.id,
             stateKey = encounterClearedStateKey(enemyIds),
@@ -964,6 +966,14 @@ class ExplorationController(
 
     fun onCombatDefeat(enemyIds: List<String>) {
         val pendingBattle = sessionStore.state.value.pendingBattleJson
+        val patrolId = pendingBattle.takeIf { it.isNotBlank() }?.let {
+            runCatching { battleDescriptorAdapter.fromJson(it)?.sourcePartyId }.getOrNull()
+        }
+        if (patrolId != null) {
+            enemyMovementManager?.applyRetreatGrace(patrolId)
+            persistEnemyMovementState()
+            refreshMovementPresence()
+        }
         combatHandler.processDefeat(
             enemyIds = enemyIds,
             onDefeatProcessed = {
@@ -2652,6 +2662,7 @@ class ExplorationController(
             }
             playRoomAudio(initialHub?.id, initialRoom?.id)
             updateMinimap(initialRoom)
+            refreshMovementPresence()
             val recoveringBattle = sessionStore.state.value.pendingBattleJson.takeIf { it.isNotBlank() }
             if (!hubMenu && recoveringBattle != null) {
                 val descriptor = runCatching { battleDescriptorAdapter.fromJson(recoveringBattle) }.getOrNull()
@@ -4348,9 +4359,11 @@ class ExplorationController(
                 val now = monotonicTimeMs()
                 val delta = (now - last).coerceIn(0L, 1_000L)
                 last = now
-                if (!explorationVisible || explorationInteractionBlocked || _uiState.value.isLoading) continue
+                val session = sessionStore.state.value
+                if (!explorationVisible || explorationInteractionBlocked || _uiState.value.isLoading ||
+                    session.pendingBattleJson.isNotBlank()) continue
                 val manager = enemyMovementManager ?: continue
-                val tick = manager.tick(delta, _uiState.value.currentRoom?.id, sessionStore.state.value)
+                val tick = manager.tick(delta, _uiState.value.currentRoom?.id, session)
                 sessionStore.setEnemyPartyStates(tick.states)
                 val event = tick.events.lastOrNull()
                 if (event != null) movementNoticeExpiresAtMs = now + 3_500L
@@ -4410,9 +4423,14 @@ class ExplorationController(
             ?.partiesInRoom(room.id, sessionStore.state.value)
             .orEmpty()
             .map { it.enemies }
-        if (moving.isEmpty()) return room
-        val combined = roomEnemyParties(room) + moving
+        val combined = visibleStaticEnemyParties(room) + moving
         return room.copy(enemyParties = combined, enemies = combined.flatten())
+    }
+
+    private fun visibleStaticEnemyParties(room: Room): List<List<String>> {
+        val parties = roomEnemyParties(room)
+        if (room.id != "spire_landing_pad_roof" || parties.none { "heavy_mech" in it }) return parties
+        return parties.filterNot { "administrator_boss" in it }
     }
 
     private fun refreshMovementPresence(events: List<EnemyMovementEvent> = emptyList()) {
@@ -4423,7 +4441,7 @@ class ExplorationController(
         val manager = enemyMovementManager
 
         _uiState.update { current ->
-            val staticVisuals = roomEnemyParties(baseRoom).mapIndexed { index, members ->
+            val staticVisuals = visibleStaticEnemyParties(baseRoom).mapIndexed { index, members ->
                 VisualEnemyParty(id = "static_$index", enemies = members)
             }
             val activeMovingParties = manager?.partiesInRoom(currentId, session).orEmpty()
@@ -4533,14 +4551,19 @@ class ExplorationController(
         val manager = enemyMovementManager ?: return
         val party = manager.party(partyId) ?: return
         val room = _uiState.value.currentRoom ?: return
+        if (manager.partiesInRoom(room.id, sessionStore.state.value).none { it.id == partyId }) return
         preparePendingEncounter(room, party.enemies, party.id)
         emitEvent(ExplorationEvent.EnterCombat(party.enemies))
     }
 
     fun engageEnemy(enemyId: String) {
+        if (sessionStore.state.value.pendingBattleJson.isNotBlank()) return
         val room = _uiState.value.currentRoom
         val parties = room?.let { roomEnemyParties(it) }.orEmpty()
         val normalizedEnemyId = enemyId.trim()
+        if (room?.id == "spire_landing_pad_roof" &&
+            normalizedEnemyId.equals("administrator_boss", ignoreCase = true) &&
+            parties.none { "administrator_boss" in it }) return
         val encounterIds = when {
             parties.isEmpty() -> listOfNotNull(enemyId.takeIf { it.isNotBlank() })
             normalizedEnemyId.isBlank() -> parties.firstOrNull().orEmpty()
@@ -4555,7 +4578,7 @@ class ExplorationController(
                 enemyMovementManager
                     ?.partiesInRoom(roomId, sessionStore.state.value)
                     ?.firstOrNull { party ->
-                        party.enemies.any { it.equals(normalizedEnemyId, ignoreCase = true) }
+                        partiesMatch(party.enemies, encounterIds)
                     }
                     ?.id
             }
@@ -4585,6 +4608,12 @@ class ExplorationController(
         encounterIds: List<String>,
         sourcePartyId: String? = null
     ): EncounterDescriptor {
+        val patrol = sourcePartyId?.let { enemyMovementManager?.party(it) }
+        if (patrol != null) {
+            return EncounterDescriptor(encounterIds.mapIndexed { index, enemyId ->
+                EncounterEnemyInstance(enemyId = enemyId, extraDrops = if (index == 0) patrol.extraDrops else emptyList())
+            }, sourcePartyId = sourcePartyId)
+        }
         val overridesByEnemy = room.enemyInstances.orEmpty().groupBy { it.enemyId }
         if (overridesByEnemy.isEmpty()) {
             return EncounterDescriptor(encounterIds.map { enemyId ->
@@ -5109,6 +5138,8 @@ class ExplorationController(
         roomsByEnvironment = roomsById.values.groupBy { environmentKey(it.env) }
         roomsByNodeId = areaNodes.mapValues { (_, node) -> node.rooms.mapNotNull { roomsById[it] } }
         enemyMovementManager?.restore(state.enemyPartyStates, state)
+        movementCombatRequested = false
+        val aggression = enemyMovementManager?.onPlayerRoomChanged(state.roomId, state)?.aggression
         activeDialogueSession = null; activeDialogueNpcName = null
         pendingDialogueNpcs.clear(); eventAnnouncementQueue.clear(); narrationQueue.clear()
         promptManager.discardMatching { true }
@@ -5119,6 +5150,8 @@ class ExplorationController(
         _uiState.update { current -> current.copy(
             currentRoom = room, roomState = room?.id?.let { roomStates[it]?.toMap() }.orEmpty(),
             roomTransition = null, areaEntry = null,
+            enemyAggression = aggression, enemyMovementNotice = null,
+            nearbyThreatDirection = state.roomId?.let(::nearbyThreatDirection),
             groundItems = getGroundItemsSnapshot(room?.id), activeDialogue = null, dialogueChoices = emptyList(),
             roomObjectOffer = null, narrationPrompt = null, eventAnnouncement = null,
             tuningPuzzle = null, togglePrompt = null, blockedPrompt = null, shopGreeting = null,
@@ -5130,6 +5163,9 @@ class ExplorationController(
             directionIndicators = room?.let(::buildDirectionIndicators).orEmpty()
         ) }
         updateMinimap(room)
+        // Loading another save in the same room does not trigger a location warp.
+        // Rebuild the enemy rail as well as the room model from that save's receipts.
+        refreshMovementPresence()
     }
 
     private fun initializeUnlockedDirections(rooms: List<Room>) {
@@ -5841,6 +5877,14 @@ class ExplorationController(
 
     private fun handleGenericAction(action: GenericAction) {
         when (action.type.lowercase(Locale.getDefault())) {
+            "combat_prototype_titan", "combat_prototype_reserves" -> {
+                if ("ms_debug_combat_prototypes" !in sessionStore.state.value.completedMilestones ||
+                    _uiState.value.currentRoom?.id != "astra_simulation_deck") return
+                val ids = if (action.type == "combat_prototype_titan") listOf("prototype_titan", "prototype_missile",
+                    "prototype_cutter", "prototype_anchor", "prototype_projector") else listOf("prototype_administrator")
+                setRecoverableEncounter(EncounterDescriptor(ids.map { EncounterEnemyInstance(enemyId=it) }))
+                emitEvent(ExplorationEvent.EnterCombat(ids))
+            }
             "fishing" -> handleFishingAction(action)
             "arcade_discovery" -> {
                 val room = _uiState.value.currentRoom?.id.orEmpty().lowercase(Locale.getDefault())
@@ -5853,6 +5897,7 @@ class ExplorationController(
                                     "You salvage the fork and copy the Harmonic Pulse repair schematic to your field kit."
                             )
                             emitEvent(ExplorationEvent.ItemGranted("Prismatic Tuning Fork", 1))
+                            announceArcadeSchematic("Harmonic Pulse", "Prismatic Tuning Fork")
                         } else {
                             showInspection("The primordial workbench is quiet; the tuning fork is already safely in your field kit.")
                         }
@@ -5864,6 +5909,7 @@ class ExplorationController(
                                     "You salvage the array and copy the Orbital Defense 2000 repair schematic to your field kit."
                             )
                             emitEvent(ExplorationEvent.ItemGranted("Zenith Telemetry Array", 1))
+                            announceArcadeSchematic("Orbital Defense 2000", "Zenith Telemetry Array")
                         } else {
                             showInspection("The observation console is stripped; the telemetry array is already safely in your field kit.")
                         }
@@ -5875,6 +5921,7 @@ class ExplorationController(
                                     "You salvage the gate and copy the Slag Catcher repair schematic to your field kit."
                             )
                             emitEvent(ExplorationEvent.ItemGranted("Thermite Logic Gate", 1))
+                            announceArcadeSchematic("Slag Catcher", "Thermite Logic Gate")
                         } else {
                             showInspection("The reject bay console is stripped; the thermite gate is already safely in your field kit.")
                         }
@@ -5886,6 +5933,7 @@ class ExplorationController(
                                     "You salvage the chip and copy the Spire Infiltrator repair schematic to your field kit."
                             )
                             emitEvent(ExplorationEvent.ItemGranted("Hyperion Mainframe Chip", 1))
+                            announceArcadeSchematic("Spire Infiltrator", "Hyperion Mainframe Chip")
                         } else {
                             showInspection("The VIP cabinet is stripped; the mainframe chip is already safely in your field kit.")
                         }
@@ -5897,6 +5945,7 @@ class ExplorationController(
                                     "You salvage the board and copy the Canopy Hopper repair schematic to your field kit."
                             )
                             emitEvent(ExplorationEvent.ItemGranted("Sector 9 Optic Board", 1))
+                            announceArcadeSchematic("Canopy Hopper", "Sector 9 Optic Board")
                         } else {
                             showInspection("The survival pod console is stripped; the optic board is already safely in your field kit.")
                         }
@@ -6056,6 +6105,14 @@ class ExplorationController(
         }
     }
 
+    private fun announceArcadeSchematic(title: String, component: String) {
+        playUiCue("confirm")
+        promptManager.enqueue(ItemGrantedPrompt(
+            itemName = "$title repair schematic", quantity = 1, category = "arcade_schematic",
+            description = "$component recovered. Repair from Menu → Tinker. Playable in Astra Recreation after repair."
+        ))
+    }
+
     private fun handleArcadeDiscovery() {
         if (arcadeService.discoverDeepMine()) {
             showInspection(
@@ -6063,6 +6120,7 @@ class ExplorationController(
                     "You ease out an intact logic board and copy the cabinet repair schematic to your field kit."
             )
             emitEvent(ExplorationEvent.ItemGranted("Hyperion Logic Board", 1))
+            announceArcadeSchematic("Deep Mine Asteroid Drill", "Hyperion Logic Board")
         } else {
             showInspection("The stripped Hyperion cabinet waits for the logic board in your field kit to give it a second life.")
         }
@@ -6617,7 +6675,13 @@ class ExplorationController(
                     TravelAction(name = travelLabel, direction = normalized)
                 }
         }
-        return authoredActions + travelActions
+        val prototypes = if (room.id == "astra_simulation_deck" &&
+            "ms_debug_combat_prototypes" in sessionStore.state.value.completedMilestones) listOf(
+            GenericAction("Titan systems prototype", "combat_prototype_titan", hideInline=true,
+                travelLabel="Start Titan systems prototype"),
+            GenericAction("Finite reserve prototype", "combat_prototype_reserves", hideInline=true,
+                travelLabel="Start finite reserve prototype")) else emptyList()
+        return authoredActions + travelActions + prototypes
     }
 
     private fun isActionVisible(room: Room, action: Map<String, Any?>): Boolean {
@@ -6795,7 +6859,16 @@ private fun roomEnemyParties(room: Room): List<List<String>> {
     return singles.map { listOf(it) }
 }
 
-private fun removeDefeatedEnemies(room: Room, defeatedIds: List<String>): Room {
+private fun removeDefeatedEnemies(room: Room, historicalIds: List<String>): Room {
+    val defeatedIds = when {
+        room.id == "spire_archive_vault" && historicalIds == listOf("corporate_assassin") ->
+            listOf("corporate_assassin", "concierge_relay")
+        room.id == "spire_exec_lounge_scale_05" && historicalIds == listOf("aero_drone") ->
+            listOf("riot_guard", "aero_drone")
+        room.id == "spire_landing_pad_scale_01" && historicalIds == listOf("aero_drone") ->
+            listOf("aero_drone", "concierge_relay")
+        else -> com.example.starborn.domain.combat.World2EncounterCompatibility.creditedIds(room.id, historicalIds)
+    }
     val parties = roomEnemyParties(room)
     val targetIndex = parties.indexOfFirst { partiesMatch(it, defeatedIds) }
     val updatedParties = if (targetIndex >= 0) {

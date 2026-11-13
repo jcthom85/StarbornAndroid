@@ -1,0 +1,4 @@
+Slot 11: warden; launch_bay; level 4; party=[nova]; file=game_session_slot11.pb
+Slot 12: beast; sector9_canopy_ridge; level 5; party=[nova, zeke, orion]; file=game_session_slot12.pb
+Slot 13: hound-pack; sector9_wilds_nest; level 5; party=[nova, zeke]; file=game_session_slot13.pb
+Slot 14: plant-pair; sector9_canopy; level 5; party=[nova, zeke]; file=game_session_slot14.pb

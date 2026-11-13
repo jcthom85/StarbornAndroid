@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.desktop.World2CombatGatePublicTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-13T12:15:30.748Z" hostname="V52076.vims.edu" time="0.925">
+  <properties/>
+  <testcase name="worldTwoGuardsAllowRetreatAndUnlockAfterVictoryAndRestore" classname="com.example.starborn.desktop.World2CombatGatePublicTest" time="0.849"/>
+  <testcase name="historicalClearedFormationsStayClearedAfterRestoreAndLegacyVictory" classname="com.example.starborn.desktop.World2CombatGatePublicTest" time="0.074"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

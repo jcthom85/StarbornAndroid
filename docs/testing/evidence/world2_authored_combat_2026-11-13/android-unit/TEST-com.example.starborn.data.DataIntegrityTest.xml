@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.data.DataIntegrityTest" tests="30" skipped="0" failures="0" errors="0" timestamp="2026-11-13T12:15:08.773Z" hostname="V52076.vims.edu" time="0.363">
+  <properties/>
+  <testcase name="dialogueVoiceProfilesCoverAuthoredSpeakers" classname="com.example.starborn.data.DataIntegrityTest" time="0.014"/>
+  <testcase name="allQuestsProvideInWorldSpatialDirectionAndLandmarks" classname="com.example.starborn.data.DataIntegrityTest" time="0.069"/>
+  <testcase name="runtimeRoomsDeserializeWithRequiredFields" classname="com.example.starborn.data.DataIntegrityTest" time="0.026"/>
+  <testcase name="worldThreeHubStartsMatchStoryEntryPoints" classname="com.example.starborn.data.DataIntegrityTest" time="0.004"/>
+  <testcase name="worldThreePrismGalleryUsesEnvironmentalActions" classname="com.example.starborn.data.DataIntegrityTest" time="0.022"/>
+  <testcase name="worldOneBunkTeachesLightBeforeMovementWithoutExtraObjectGate" classname="com.example.starborn.data.DataIntegrityTest" time="0.019"/>
+  <testcase name="playCinematicActionsReferenceExistingScenes" classname="com.example.starborn.data.DataIntegrityTest" time="0.016"/>
+  <testcase name="questReferencesAreValid" classname="com.example.starborn.data.DataIntegrityTest" time="0.013"/>
+  <testcase name="runtimeThemesUseRgbaArrays" classname="com.example.starborn.data.DataIntegrityTest" time="0.001"/>
+  <testcase name="milestoneExitUnlocksReferenceValidRooms" classname="com.example.starborn.data.DataIntegrityTest" time="0.007"/>
+  <testcase name="restStopRoomActionsReferenceValidEvents" classname="com.example.starborn.data.DataIntegrityTest" time="0.014"/>
+  <testcase name="questDialogueAvoidsMonotonousRoboticTemplates" classname="com.example.starborn.data.DataIntegrityTest" time="0.004"/>
+  <testcase name="shopItemsAndMilestonesAreValid" classname="com.example.starborn.data.DataIntegrityTest" time="0.003"/>
+  <testcase name="systemTutorialActionsReferenceScripts" classname="com.example.starborn.data.DataIntegrityTest" time="0.013"/>
+  <testcase name="worldTwoRoomsFormReciprocalNavigationGraphs" classname="com.example.starborn.data.DataIntegrityTest" time="0.008"/>
+  <testcase name="roomActionLabelsUseWorldNounsInsteadOfMetaPuzzleTerms" classname="com.example.starborn.data.DataIntegrityTest" time="0.004"/>
+  <testcase name="questTutorialIdsAndSystemTutorialActionsReferenceScripts" classname="com.example.starborn.data.DataIntegrityTest" time="0.009"/>
+  <testcase name="lateWorldPuzzleBeatsUseWorldSystems" classname="com.example.starborn.data.DataIntegrityTest" time="0.027"/>
+  <testcase name="tuningPuzzleRoomActionsReferenceValidDefinitionsAndEvents" classname="com.example.starborn.data.DataIntegrityTest" time="0.02"/>
+  <testcase name="worldThreeHasBuiltoutRoomGraph" classname="com.example.starborn.data.DataIntegrityTest" time="0.013"/>
+  <testcase name="cardDenDiceTableDisappearsAfterGamblingReward" classname="com.example.starborn.data.DataIntegrityTest" time="0.003"/>
+  <testcase name="roomsHaveOneNodeOwnerAndCrossNodeExitsHaveTransitions" classname="com.example.starborn.data.DataIntegrityTest" time="0.009"/>
+  <testcase name="messHallHyperionCabinetRemainsInspectableUntilRepair" classname="com.example.starborn.data.DataIntegrityTest" time="0.005"/>
+  <testcase name="allHubNodeEntriesExistAndBelongToTheirNodes" classname="com.example.starborn.data.DataIntegrityTest" time="0.002"/>
+  <testcase name="worldTwoPuzzleBeatsUseEnvironmentalChains" classname="com.example.starborn.data.DataIntegrityTest" time="0.014"/>
+  <testcase name="securityPostIsTheOnlyShieldTrainerTutorialEncounter" classname="com.example.starborn.data.DataIntegrityTest" time="0.003"/>
+  <testcase name="worldOneRoomActionNamesAppearInDescriptions" classname="com.example.starborn.data.DataIntegrityTest" time="0.004"/>
+  <testcase name="dialogueTriggersAndConditionsDoNotContainDanglingReferences" classname="com.example.starborn.data.DataIntegrityTest" time="0.002"/>
+  <testcase name="forgePuzzleSliceUsesEnvironmentalActions" classname="com.example.starborn.data.DataIntegrityTest" time="0.01"/>
+  <testcase name="hubOneNodesUsePublicThresholdRoomsAsEntries" classname="com.example.starborn.data.DataIntegrityTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

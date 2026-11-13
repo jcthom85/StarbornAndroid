@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.domain.combat.AuthoredEncounterRulesTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-13T02:27:38.431Z" hostname="V52076.vims.edu" time="0.152">
+  <properties/>
+  <testcase name="everyDestructionOrderCancelsTheRightWeaponWithoutDestroyingTheBody" classname="com.example.starborn.domain.combat.AuthoredEncounterRulesTest" time="0.013"/>
+  <testcase name="disablingOrBreakingAWeaponCancelsItsQueuedAction" classname="com.example.starborn.domain.combat.AuthoredEncounterRulesTest" time="0.003"/>
+  <testcase name="reservesCountStartingEscortsAndDoNotRecycleDeadReserveSlots" classname="com.example.starborn.domain.combat.AuthoredEncounterRulesTest" time="0.0"/>
+  <testcase name="phaseIsCommittedOnceAndDropsTheDeclaredDefenses" classname="com.example.starborn.domain.combat.AuthoredEncounterRulesTest" time="0.0"/>
+  <testcase name="losingTheDeclaredTargetCancelsRatherThanRetargetingSomeoneElse" classname="com.example.starborn.domain.combat.AuthoredEncounterRulesTest" time="0.0"/>
+  <testcase name="preparationCountersAndPhaseStateRoundTripWithoutAClockOrCoroutine" classname="com.example.starborn.domain.combat.AuthoredEncounterRulesTest" time="0.133"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

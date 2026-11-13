@@ -180,6 +180,7 @@ class CombatViewModel(
     fun onCombatTutorialTargetCancelled() = runtime.onCombatTutorialTargetCancelled()
     fun isCombatTutorialCommandEnabled(command: String) = runtime.isCombatTutorialCommandEnabled(command)
     fun isCombatTutorialTargetEnabled(targetId: String) = runtime.isCombatTutorialTargetEnabled(targetId)
+    fun guard() = runtime.guard()
     fun toggleEnemyTarget(enemyId: String) = runtime.toggleEnemyTarget(enemyId)
     fun checkCombatEnd() = runtime.checkCombatEnd()
     fun skillsForPlayer(playerId: String) = runtime.skillsForPlayer(playerId)

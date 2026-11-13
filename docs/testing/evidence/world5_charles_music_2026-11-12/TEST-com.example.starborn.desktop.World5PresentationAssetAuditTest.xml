@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.desktop.World5PresentationAssetAuditTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-13T00:54:40.671Z" hostname="V52076.vims.edu" time="0.498">
+  <properties/>
+  <testcase name="everyWorldFiveAndSixPassiveInspectionHasAVisibleTargetInEveryAuthoredDescription" classname="com.example.starborn.desktop.World5PresentationAssetAuditTest" time="0.285"/>
+  <testcase name="allCrewHaveDistinctTransparentKoArtAndTheDroneHasTransparency" classname="com.example.starborn.desktop.World5PresentationAssetAuditTest" time="0.182"/>
+  <testcase name="allEnemyPrimaryArtResolvesAndCorrectedEnemiesUseTheirOwnSprites" classname="com.example.starborn.desktop.World5PresentationAssetAuditTest" time="0.028"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

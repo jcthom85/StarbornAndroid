@@ -1,0 +1,3679 @@
+{
+  "status": "design candidate, not implemented; owner-approved direction, detailed specifications proposed",
+  "roster": [
+    {
+      "id": "faulted_loader",
+      "name": "Faulted Loader",
+      "world": "world_1",
+      "status": "existing definition; proposed behavior",
+      "role": "tutorial striker",
+      "signature": "Two safe reads then an exposed relay; preserve the reduced opening instance.",
+      "counterplay": "Use the taught electrical opening; basic attacks remain viable.",
+      "visual_brief": "Asymmetric cargo fork, split relay, compact yellow loader.",
+      "current_tier": "common",
+      "current_primary_art": "images/enemies/heavy_loader_combat.png",
+      "art_decision": "Review existing dedicated art at phone scale; retain if it meets unique identity.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "echo_borer",
+      "name": "Echo-Borer",
+      "world": "world_1",
+      "status": "existing definition; proposed behavior",
+      "role": "burrowing pack",
+      "signature": "One borer braces while its partner emerges; bounded stagger rather than chained lost turns.",
+      "counterplay": "Choose exposed target or spend area damage when both emerge.",
+      "visual_brief": "Segmented slate burrower with broad drill snout.",
+      "current_tier": "standard",
+      "current_primary_art": "images/enemies/echo_borer_combat.png",
+      "art_decision": "Review existing dedicated art at phone scale; retain if it meets unique identity.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "siren_skimmer",
+      "name": "Siren Skimmer",
+      "world": "world_1",
+      "status": "existing definition; proposed behavior",
+      "role": "volatile harrier",
+      "signature": "Visible throat inflation precedes a sonic burst.",
+      "counterplay": "Interrupt the inflation or guard the burst; cold is an earned shortcut.",
+      "visual_brief": "Wide manta wings and an oversized luminous throat sac.",
+      "current_tier": "standard",
+      "current_primary_art": "images/enemies/siren_skimmer_combat.png",
+      "art_decision": "Review existing dedicated art at phone scale; retain if it meets unique identity.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "dominion_dampener",
+      "name": "Dominion Dampener",
+      "world": "world_1",
+      "status": "existing definition; proposed behavior",
+      "role": "suppression rifleman",
+      "signature": "Marks a target before a limited suppression volley.",
+      "counterplay": "Disrupt the mark, break the shooter, or defend the marked ally.",
+      "visual_brief": "Low industrial armor, long baffled suppression rifle.",
+      "current_tier": "standard",
+      "current_primary_art": "images/enemies/dominion_dampener_combat.png",
+      "art_decision": "Review existing dedicated art at phone scale; retain if it meets unique identity.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "acoustic_bulwark",
+      "name": "Acoustic Bulwark",
+      "world": "world_1",
+      "status": "existing definition; proposed behavior",
+      "role": "shield defender / drill elite",
+      "signature": "Declared bracing protects an ally for one cycle; isolated drill remains readable.",
+      "counterplay": "Guard Break or physical pressure during the recovery; no optional reward required.",
+      "visual_brief": "Broad acoustic shield disk, squat planted legs.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/acoustic_bulwark_combat.png",
+      "art_decision": "Review existing dedicated art at phone scale; retain if it meets unique identity.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "resonance_buoy",
+      "name": "Resonance Buoy",
+      "world": "world_1",
+      "status": "existing definition; proposed behavior",
+      "role": "capacitor support",
+      "signature": "Stores one visible charge and boosts a partner; no hidden summoning claim.",
+      "counterplay": "Break the charge or remove the supported attacker.",
+      "visual_brief": "Small tethered bell-shaped capacitor with two exposed coils.",
+      "current_tier": "standard",
+      "current_primary_art": "images/enemies/resonance_buoy_combat.png",
+      "art_decision": "Review existing dedicated art at phone scale; retain if it meets unique identity.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "pressure_hauler",
+      "name": "Pressure Hauler",
+      "world": "world_1",
+      "status": "existing definition; proposed behavior",
+      "role": "optional pursuit elite",
+      "signature": "A slow pressure build precedes a heavy shove and venting recovery.",
+      "counterplay": "Hear/read the patrol notice, choose engagement, punish venting.",
+      "visual_brief": "Tracked pressure tank with huge valve wheel; distinguish from Loader.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/pressure_hauler_combat.png",
+      "art_decision": "Review existing dedicated art at phone scale; retain if it meets unique identity.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "the_iron_warden",
+      "name": "The Iron Warden",
+      "world": "world_1",
+      "status": "existing definition; proposed behavior",
+      "role": "solo boss",
+      "signature": "Shield discipline becomes a finite emergency overclock.",
+      "counterplay": "Read commitment and exploit recovery; see BOSS_DESIGNS.",
+      "visual_brief": "Human authority inside tall riot power armor, shield and restrained silhouette.",
+      "current_tier": "boss",
+      "current_primary_art": "images/enemies/the_iron_warden_combat.png",
+      "art_decision": "Review existing dedicated art at phone scale; retain if it meets unique identity.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "shard_hound",
+      "name": "Shard-Hound",
+      "world": "world_2",
+      "status": "existing definition; proposed behavior",
+      "role": "pack striker",
+      "signature": "One hound marks prey and the other telegraphs a pounce.",
+      "counterplay": "Interrupt the caller or guard the marked target; no permanent focus-fire loop.",
+      "visual_brief": "Faceted mineral antlers over a lean quadruped body.",
+      "current_tier": "standard",
+      "current_primary_art": "images/enemies/shard_hound_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "spore_spitter",
+      "name": "Spore-Spitter",
+      "world": "world_2",
+      "status": "existing definition; proposed behavior",
+      "role": "biological controller",
+      "signature": "Swells a conspicuous spore bulb before a bounded poison burst.",
+      "counterplay": "Interrupt or use defense and accessible antidote/recovery.",
+      "visual_brief": "Rooted pitcher-shaped organism, clustered amber spore sacs.",
+      "current_tier": "standard",
+      "current_primary_art": "images/enemies/spore_spitter_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "ruin_guardian",
+      "name": "Ruin-Guardian",
+      "world": "world_2",
+      "status": "existing definition; proposed behavior",
+      "role": "reliquary elite",
+      "signature": "A stone ward absorbs one attack cycle before its joints brighten.",
+      "counterplay": "Strike the visible unwarded joints or break its stance.",
+      "visual_brief": "Heavy carved quadruped masonry with floating keystone ribs.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/ruin_guardian_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "razor_vine",
+      "name": "Razor-Vine",
+      "world": "world_2",
+      "status": "existing definition; proposed behavior",
+      "role": "short hazard fight",
+      "signature": "A visible tendril coils before it binds one target; binding has a finite duration.",
+      "counterplay": "Cut the coil or interrupt it with a basic attack; burning is optional.",
+      "visual_brief": "Low thorn fan with a single large coiling tendril.",
+      "current_tier": "standard",
+      "current_primary_art": "images/enemies/razor_vine_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "stalker_vine",
+      "name": "Stalker-Vine",
+      "world": "world_2",
+      "status": "existing definition; proposed behavior",
+      "role": "symbiotic elite",
+      "signature": "Anchors itself to shelter a spitter, then spends a finite root reserve on recovery.",
+      "counterplay": "Attack the partner or interrupt rooting; finite healing prevents stalemate.",
+      "visual_brief": "Tall walking mangrove roots around a translucent seed heart.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/stalker_vine_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "sentinel_orb",
+      "name": "Sentinel Orb",
+      "world": "world_2",
+      "status": "existing definition; proposed behavior",
+      "role": "Architect sentry",
+      "signature": "Its iris color and shape announce charge/discharge, not a guessed resistance table.",
+      "counterplay": "Read charge and break its exposed iris; preserve wiring/battery supply.",
+      "visual_brief": "Ancient three-ring iris orb with weathered stone inlays.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/sentinel_orb_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "the_beast",
+      "name": "The Source Beast",
+      "world": "world_2",
+      "status": "existing definition; proposed behavior",
+      "role": "solo creature boss",
+      "signature": "Measured hunting becomes an exhausted, dangerous frenzy.",
+      "counterplay": "Read lunges and recovery; see BOSS_DESIGNS.",
+      "visual_brief": "One enormous living apex creature; scarred organic mass, no borrowed armor.",
+      "current_tier": "boss",
+      "current_primary_art": "images/enemies/the_beast_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "sewer_crawler",
+      "name": "Sewer Crawler",
+      "world": "world_3",
+      "status": "existing definition; proposed behavior",
+      "role": "urban scavenger",
+      "signature": "Acid feeding leaves the next lunge briefly exposed.",
+      "counterplay": "Exploit the feeding pause or use an area attack against a pair.",
+      "visual_brief": "Low many-legged pipe scavenger with a translucent waste reservoir.",
+      "current_tier": "normal",
+      "current_primary_art": "images/enemies/mutated_crawler_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "riot_guard",
+      "name": "Riot Guard",
+      "world": "world_3",
+      "status": "existing definition; proposed behavior",
+      "role": "formation defender",
+      "signature": "Braces to shelter a drone, then commits to a baton rush.",
+      "counterplay": "Break the brace or exploit the drone while the guard commits.",
+      "visual_brief": "Human in narrow city armor with a rectangular transparent shield.",
+      "current_tier": "normal",
+      "current_primary_art": "images/enemies/riot_guard_combat.png",
+      "art_decision": "Review existing dedicated art at phone scale; retain if it meets unique identity.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "sentinel_mki",
+      "name": "Sentinel Mk. I",
+      "world": "world_3",
+      "status": "existing definition; proposed behavior",
+      "role": "optional quarantine elite",
+      "signature": "A quarantine field rotates between disruption and recovery.",
+      "counterplay": "Read its field cycle and interrupt; always preserve Neon Sign Core.",
+      "visual_brief": "Suspended medical/quarantine pod with radial restraint fins.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/resonance_buoy_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "aero_drone",
+      "name": "Aero Drone",
+      "world": "world_3",
+      "status": "existing definition; proposed behavior",
+      "role": "mobile disruption",
+      "signature": "Targeting light precedes stun pulse; evasive maneuver has a visible end.",
+      "counterplay": "Interrupt targeting or hit after the dodge; no unbounded stun chain.",
+      "visual_brief": "Swept compact wings, white chassis, cyan sensors; existing dedicated art candidate.",
+      "current_tier": "standard",
+      "current_primary_art": "images/enemies/aero_drone_combat.png",
+      "art_decision": "Review existing dedicated art at phone scale; retain if it meets unique identity.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "corporate_assassin",
+      "name": "Corporate Assassin",
+      "world": "world_3",
+      "status": "existing definition; proposed behavior",
+      "role": "priority striker elite",
+      "signature": "Marks a victim then commits to a lunge; smoke cannot make it untargetable forever.",
+      "counterplay": "Defend the marked ally or interrupt the setup; Scan offers clarity, not sole access.",
+      "visual_brief": "Tailored human silhouette, folded blade, distinct smoke emitter.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/riot_guard_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "heavy_mech",
+      "name": "Heavy Mech",
+      "world": "world_3",
+      "status": "existing definition; proposed behavior",
+      "role": "armored platform elite",
+      "signature": "A lateral heat sweep is followed by exposed stabilizers.",
+      "counterplay": "Break the brace or punish stabilization; no overlap with an instant drone stun.",
+      "visual_brief": "Low armored riot chassis, broad heat nozzle and stabilizer feet.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/heavy_loader_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "administrator_boss",
+      "name": "Administrator",
+      "world": "world_3",
+      "status": "existing definition; proposed behavior",
+      "role": "reinforcement boss",
+      "signature": "Finite drone reserves and command windows.",
+      "counterplay": "Choose command pressure versus drone control; see BOSS_DESIGNS.",
+      "visual_brief": "Large suspended concierge intelligence with a smiling porcelain display.",
+      "current_tier": "boss",
+      "current_primary_art": "images/enemies/the_warden_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "magma_drone",
+      "name": "Magma Drone",
+      "world": "world_4",
+      "status": "existing definition; proposed behavior",
+      "role": "heat harrier",
+      "signature": "One heat charge announces a burst and opens its coolant vanes.",
+      "counterplay": "Exploit cooling or interrupt the charge; retain first crossing gate.",
+      "visual_brief": "Triangular heat-shielded skimmer with red-hot underside and blue coolant fins.",
+      "current_tier": "standard",
+      "current_primary_art": "images/enemies/security_drone_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "slag_golem",
+      "name": "Slag Golem",
+      "world": "world_4",
+      "status": "existing definition; proposed behavior",
+      "role": "cooling-window elite",
+      "signature": "Keep Molten Slam followed by exposed cooling; add a reliable tell before impact.",
+      "counterplay": "Guard or break the slam and punish cooling.",
+      "visual_brief": "Bipedal slag crust around a glowing furnace belly, distinct from every loader.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/heavy_loader_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "welder_bot",
+      "name": "Welder Bot",
+      "world": "world_4",
+      "status": "existing definition; proposed behavior",
+      "role": "finite repair support",
+      "signature": "Field Weld has visible finite charges and a cooldown.",
+      "counterplay": "Interrupt the weld or kill its beneficiary; preserve limited repair supplies.",
+      "visual_brief": "Narrow tripod, welding torch arm, dangling finite weld cartridges.",
+      "current_tier": "standard",
+      "current_primary_art": "images/enemies/heavy_loader_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "flame_trooper",
+      "name": "Flame Trooper",
+      "world": "world_4",
+      "status": "existing definition; proposed behavior",
+      "role": "armored furnace infantry",
+      "signature": "Pressure gauge and stance announce the cone; armor locks restrict its next action.",
+      "counterplay": "Break the setup or guard the cone, then punish the locked stance.",
+      "visual_brief": "Insulated industrial human suit with a horizontal furnace shield.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/dominion_dampener_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "phantom_prototype",
+      "name": "Phantom",
+      "world": "world_4",
+      "status": "existing definition; proposed behavior",
+      "role": "incomplete assassin elite",
+      "signature": "A half-cloak flickers before a committed Source slash.",
+      "counterplay": "Interrupt exposed hardware or strike after the slash; no permanent evasion.",
+      "visual_brief": "Open skeletal stealth machine, incomplete face, asymmetric cable limbs.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/riot_guard_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "conveyor_crusher",
+      "name": "Conveyor Crusher",
+      "world": "world_4",
+      "status": "existing definition; proposed behavior",
+      "role": "rhythm hazard",
+      "signature": "Three clearly shown press positions precede one committed slam.",
+      "counterplay": "Prepare on the warning beat and punish the raised press; no mandatory reflex input.",
+      "visual_brief": "Overhead stamping press on a compact conveyor frame.",
+      "current_tier": "hazard",
+      "current_primary_art": "images/enemies/heavy_loader_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "titan_walker_boss",
+      "name": "Titan Walker",
+      "world": "world_4",
+      "status": "existing definition; proposed behavior",
+      "role": "multipart core boss",
+      "signature": "Four distinct detachable weapon systems share a machine action budget.",
+      "counterplay": "Choose which threat to remove; see BOSS_DESIGNS.",
+      "visual_brief": "Huge suspended siege chassis with clear sockets for four separate systems.",
+      "current_tier": "boss",
+      "current_primary_art": "images/enemies/the_warden_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "No independent rewards; encounter budget only."
+    },
+    {
+      "id": "crucible_champion",
+      "name": "Crucible Champion",
+      "world": "world_4",
+      "status": "existing definition; proposed behavior",
+      "role": "optional arena duelist boss",
+      "signature": "Alternating heavy commitments and short feints; predictable recovery.",
+      "counterplay": "Read the commitment rather than repeat the Titan component solution.",
+      "visual_brief": "Low crucible-alloy prizefighter frame with hammer fists and victory dents.",
+      "current_tier": "boss",
+      "current_primary_art": "images/enemies/heavy_loader_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "orbital_fighter",
+      "name": "Compliance Fighter",
+      "world": "world_5",
+      "status": "existing definition; proposed behavior",
+      "role": "paired interception striker",
+      "signature": "One craft designates while the other commits a missile pass.",
+      "counterplay": "Break designation, defend or interrupt; first paired screen must remain fair on arrival.",
+      "visual_brief": "Thin orbital interceptor, separated thruster pods, no Aero Drone wing reuse.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/aero_drone_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "compliance_officer",
+      "name": "Compliance Officer",
+      "world": "world_5",
+      "status": "existing definition; proposed behavior",
+      "role": "control squad specialist",
+      "signature": "Issues one explicit detention mark; a partner can exploit it next cycle.",
+      "counterplay": "Interrupt command or defend/cleanse the marked target.",
+      "visual_brief": "Long ivory uniform coat and compact scanner baton, no Riot Guard body.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/riot_guard_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "null_g_drone",
+      "name": "Null-G Drone",
+      "world": "world_5",
+      "status": "existing definition; proposed behavior",
+      "role": "gravity support",
+      "signature": "Projects one readable gravity tether that strengthens a partner attack.",
+      "counterplay": "Break the tether unit or guard the announced follow-up.",
+      "visual_brief": "Compact gyro rings, clamp arms, maneuvering thrusters; new dedicated art candidate.",
+      "current_tier": "common",
+      "current_primary_art": "images/enemies/null_g_drone_combat.png",
+      "art_decision": "Review existing dedicated art at phone scale; retain if it meets unique identity.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "void_turret",
+      "name": "Void Turret",
+      "world": "world_5",
+      "status": "existing definition; proposed behavior",
+      "role": "fixed pressure gun",
+      "signature": "A charging aperture announces a narrow beam and venting downtime.",
+      "counterplay": "Interrupt/guard and hit its open housing.",
+      "visual_brief": "Wall-mounted iris cannon with a broad horizontal anchoring bracket.",
+      "current_tier": "common",
+      "current_primary_art": "images/enemies/sentinel_orb_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "hk_droid",
+      "name": "Hunter-Killer Droid",
+      "world": "world_5",
+      "status": "existing definition; proposed behavior",
+      "role": "scripted pursuit elite",
+      "signature": "One recurring hunter; Stasis is a taught route to disabling pursuit.",
+      "counterplay": "Use the earned Anchor ability or withdraw safely; not a normal damage sponge.",
+      "visual_brief": "Tall reverse-jointed hunting frame with a rotating capture cage.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/heavy_loader_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "elite_guard",
+      "name": "Elite Guard",
+      "world": "world_5",
+      "status": "existing definition; proposed behavior",
+      "role": "reflector elite",
+      "signature": "A shield explicitly reflects a limited ranged category, then drops for a strike.",
+      "counterplay": "Use physical/melee/area options available to the crew; announce reflection before punishment.",
+      "visual_brief": "Towering ceremonial shield bearer, narrow gold crest and segmented mirror shield.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/riot_guard_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "firewall_construct",
+      "name": "Firewall Construct",
+      "world": "world_5",
+      "status": "existing definition; proposed behavior",
+      "role": "frequency-switch elite",
+      "signature": "A shown frequency changes only on a declared cycle, never immediately after input.",
+      "counterplay": "Scan or observe its tell; neutral damage always remains useful.",
+      "visual_brief": "Angular lattice crab of hard-light panels and a central triangular aperture.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/ruin_guardian_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "compliance_avatar",
+      "name": "Compliance Avatar",
+      "world": "world_5",
+      "status": "existing definition; proposed behavior",
+      "role": "coordinated boss body",
+      "signature": "Command link and broken-link modes form a duet with the Conductor.",
+      "counterplay": "Disrupt coordination or pressure the body; see BOSS_DESIGNS.",
+      "visual_brief": "Large ceremonial hard-light body, cathedral ribs, no Warden silhouette.",
+      "current_tier": "boss",
+      "current_primary_art": "images/enemies/the_warden_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "manager_projection",
+      "name": "The Manager",
+      "world": "world_6",
+      "status": "existing definition; proposed behavior",
+      "role": "Zeke rescue elite",
+      "signature": "One performance demand followed by an interruptible judgment.",
+      "counterplay": "Nova basic pressure/Guard/Break can answer before Zeke is rescued.",
+      "visual_brief": "Floating office torso made of stacked forms, long pointing arms, hollow face.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/the_warden_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "endless_war_echo",
+      "name": "War Echo",
+      "world": "world_6",
+      "status": "existing definition; proposed behavior",
+      "role": "Gh0st rescue pair",
+      "signature": "The two echo soldiers alternate designation and execution instead of attacking at once.",
+      "counterplay": "Interrupt designation or defend; never require Gh0st to rescue Gh0st.",
+      "visual_brief": "Split silhouette of ceremonial gunner and torn orders; one enemy kind, two instances.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/phantom_assassin_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "silent_shore_wraith",
+      "name": "Silent Shore",
+      "world": "world_6",
+      "status": "existing definition; proposed behavior",
+      "role": "Orion rescue elite",
+      "signature": "A tide visibly gathers before a silence wave, followed by a listening opening.",
+      "counterplay": "Interrupt/Guard/basic pressure; Orion-only abilities cannot be required to rescue him.",
+      "visual_brief": "Tall empty cloak with a crescent wave cavity instead of a face.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/ruin_guardian_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "source_shadow",
+      "name": "Source Shadow",
+      "world": "world_6",
+      "status": "existing definition; proposed behavior",
+      "role": "fracture striker",
+      "signature": "Its silhouette compresses before a short committed slash.",
+      "counterplay": "Interrupt or exploit its recovery; useful basic-action target in mixed parties.",
+      "visual_brief": "Offset black paper-like limbs surrounding a bright missing center.",
+      "current_tier": "common",
+      "current_primary_art": "images/enemies/phantom_assassin_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "distorted_sentinel",
+      "name": "Warped Sentinel",
+      "world": "world_6",
+      "status": "existing definition; proposed behavior",
+      "role": "fracture disruptor",
+      "signature": "A fractured reticle shows who will receive the next glitch bolt.",
+      "counterplay": "Break the reticle or guard its target.",
+      "visual_brief": "Asymmetric levitating prism with broken orbit segments; no existing drone repaint.",
+      "current_tier": "common",
+      "current_primary_art": "images/enemies/security_drone_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "glitch_hound",
+      "name": "Glitch Hound",
+      "world": "world_6",
+      "status": "existing definition; proposed behavior",
+      "role": "fast pack threat",
+      "signature": "Flickering footprint sequence precedes a pounce; brief recovery follows.",
+      "counterplay": "Guard marked prey or interrupt the approach.",
+      "visual_brief": "Ribbon-legged quadruped with missing geometric body slices; no Borer shape.",
+      "current_tier": "common",
+      "current_primary_art": "images/enemies/echo_borer_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "memory_leak",
+      "name": "Memory Leak",
+      "world": "world_6",
+      "status": "existing definition; proposed behavior",
+      "role": "fragile memory controller",
+      "signature": "Copies one announced pressure effect with a finite echo buffer.",
+      "counterplay": "Remove quickly or interrupt the copy; not another long elite HP wall.",
+      "visual_brief": "Floating spooling film and translucent memory panels around a small vulnerable knot.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/resonance_buoy_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "nightmare_guard",
+      "name": "Nightmare Guard",
+      "world": "world_6",
+      "status": "existing definition; proposed behavior",
+      "role": "memory defender elite",
+      "signature": "Shelters the Leak until it commits to an accusatory strike.",
+      "counterplay": "Break shelter or use an available area response.",
+      "visual_brief": "Human-shaped folded shields with shifting empty portrait frames.",
+      "current_tier": "elite",
+      "current_primary_art": "images/enemies/riot_guard_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "ascended_vale",
+      "name": "The Ascended: Soloist",
+      "world": "world_6",
+      "status": "existing definition; proposed behavior",
+      "role": "final boss human form",
+      "signature": "Precise limited commands with explicit counterwindows.",
+      "counterplay": "Read commands rather than rely on one debuff; see BOSS_DESIGNS.",
+      "visual_brief": "Calm human Vale, immaculate asymmetric coat, one controlled gesture.",
+      "current_tier": "boss",
+      "current_primary_art": "images/enemies/the_warden_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "ascended_god",
+      "name": "The Ascended: Silence",
+      "world": "world_6",
+      "status": "existing definition; proposed behavior",
+      "role": "final boss transformed form",
+      "signature": "Two distinct manifestations and a final committed silence cycle.",
+      "counterplay": "Remove a pressure source or attack the exposed form; see BOSS_DESIGNS.",
+      "visual_brief": "Huge fractured porcelain figure unfolding into impossible rings, not Iron Warden art.",
+      "current_tier": "boss",
+      "current_primary_art": "images/enemies/the_iron_warden_combat.png",
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "moss_borer",
+      "name": "Moss Borer",
+      "world": "world_2",
+      "status": "proposed new definition",
+      "role": "cavern pair",
+      "signature": "A moss shield opens when the creature exhales a visible mineral cloud.",
+      "counterplay": "Choose exposed partner; cold/physical timing remain useful.",
+      "visual_brief": "Broad rooted beetle with moss sail plates; visual family connection to Pit burrowers, new art.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "mist_glider",
+      "name": "Mist Glider",
+      "world": "world_2",
+      "status": "proposed new definition",
+      "role": "wetland harrier",
+      "signature": "Draws a visible mist membrane before a resonant dive.",
+      "counterplay": "Interrupt or guard the dive; mist drops after commitment.",
+      "visual_brief": "Long reed-like flying fish with translucent fan fins; related ecology, unique silhouette.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "concierge_relay",
+      "name": "Concierge Relay",
+      "world": "world_3",
+      "status": "proposed new definition",
+      "role": "city support terminal",
+      "signature": "Broadcasts a single visible shield or targeting order, then must recharge.",
+      "counterplay": "Interrupt the order or pressure its recipient; no infinite healing.",
+      "visual_brief": "Floating brass desk bell with an unfolded holo-fan and three cable tassels.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "administrator_interdictor",
+      "name": "Interdictor Drone",
+      "world": "world_3",
+      "status": "proposed new definition",
+      "role": "boss reserve drone",
+      "signature": "One issued interception command before its fragile emitter cools.",
+      "counterplay": "Remove the emitter or interrupt deployment; zero independent loot/XP.",
+      "visual_brief": "Vertical clamp-shaped drone with bright central stop-light lens.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "No independent rewards; encounter budget only."
+    },
+    {
+      "id": "magnet_sifter",
+      "name": "Magnet Sifter",
+      "world": "world_4",
+      "status": "proposed new definition",
+      "role": "industrial controller",
+      "signature": "Magnetizes a named target before an allied physical strike.",
+      "counterplay": "Interrupt the field or defend; bounded mark cannot stack into lockout.",
+      "visual_brief": "Horseshoe magnetic head over a short wheeled sorting bin.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "quench_mite",
+      "name": "Quench Mite",
+      "world": "world_4",
+      "status": "proposed new definition",
+      "role": "coolant scavenger",
+      "signature": "Steals ambient heat to swell a coolant sac, then vents it.",
+      "counterplay": "Interrupt the swelling or exploit the empty sac; avoids another Burn-only enemy.",
+      "visual_brief": "Pale six-legged boiler parasite with oversized blue fluid abdomen.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "customs_screener",
+      "name": "Customs Screener",
+      "world": "world_5",
+      "status": "proposed new definition",
+      "role": "standard scanning sentry",
+      "signature": "Marks one crew member but has little direct damage.",
+      "counterplay": "Interrupt its scan or remove the paired attacker.",
+      "visual_brief": "Narrow walking checkpoint arch with two articulated scanner paddles.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "tether_rigger",
+      "name": "Tether Rigger",
+      "world": "world_5",
+      "status": "proposed new definition",
+      "role": "standard capture technician",
+      "signature": "Readies a visible tether before restricting a target for a bounded period.",
+      "counterplay": "Break its preparation or defend; no hardlock or mandatory rare cleanse.",
+      "visual_brief": "Low three-legged maintenance chassis with a large cable spool and hooked boom.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "prism_surveyor",
+      "name": "Prism Surveyor",
+      "world": "world_5",
+      "status": "proposed new definition",
+      "role": "standard targeting support",
+      "signature": "Aligns one beam guide that amplifies a partner volley for one cycle.",
+      "counterplay": "Break alignment or interrupt the volley; not the elite Firewall frequency puzzle.",
+      "visual_brief": "Small floating diamond lantern inside a wide three-arm measuring caliper.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "boardroom_bailiff",
+      "name": "Boardroom Bailiff",
+      "world": "world_5",
+      "status": "proposed new definition",
+      "role": "optional named elite",
+      "signature": "Displays a charge, then executes a visible sentence; a broken seal creates recovery.",
+      "counterplay": "Interrupt a seal or guard the sentence, then exploit recovery.",
+      "visual_brief": "Empty ceremonial judicial armor with a huge square seal stamp, no Avatar body.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "threshold_remnant",
+      "name": "Threshold Remnant",
+      "world": "world_5",
+      "status": "proposed new definition",
+      "role": "breach foreshadow striker",
+      "signature": "A half-formed fracture attack fails into a long exposed recovery.",
+      "counterplay": "Read the incomplete attack; introductory precursor to Source creatures.",
+      "visual_brief": "Incomplete glass ribbon organism caught inside an orbital airlock-shaped outline.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "directive_conductor",
+      "name": "Directive Conductor",
+      "world": "world_5",
+      "status": "proposed new definition",
+      "role": "boss command partner",
+      "signature": "Relays the Avatar link, with its own charge and shutdown response.",
+      "counterplay": "Cut coordination or exploit body windows; no infinite resummoning.",
+      "visual_brief": "Floating angular halo of ordered command tiles, clearly separate from the Avatar body.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "No independent rewards; encounter budget only."
+    },
+    {
+      "id": "review_clerk",
+      "name": "Review Clerk",
+      "world": "world_6",
+      "status": "proposed new definition",
+      "role": "nightmare standard",
+      "signature": "Stamps a visible performance mark that another enemy can exploit.",
+      "counterplay": "Interrupt or defend; no rescue credit.",
+      "visual_brief": "Small ambulatory filing cabinet with paper legs and a heavy stamp arm.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "war_order_fragment",
+      "name": "War Order Fragment",
+      "world": "world_6",
+      "status": "proposed new definition",
+      "role": "nightmare standard",
+      "signature": "Repeats one military order before dissolving into a missed shot.",
+      "counterplay": "Interrupt the order or strike during the miss; no Gh0st rescue credit.",
+      "visual_brief": "Floating broken rifle wrapped in strips of command paper, no soldier body.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "tide_murmur",
+      "name": "Tide Murmur",
+      "world": "world_6",
+      "status": "proposed new definition",
+      "role": "nightmare standard",
+      "signature": "A low wave outline announces a bounded disruption pulse.",
+      "counterplay": "Interrupt the forming wave or guard; no Orion rescue credit.",
+      "visual_brief": "Small shell-shaped absence filled with a moving water ribbon.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "Encounter budget and existing guaranteed-material contracts; no automatic extra XP for adding a member."
+    },
+    {
+      "id": "silence_voice_anchor",
+      "name": "Voice Anchor",
+      "world": "world_6",
+      "status": "proposed new definition",
+      "role": "final manifestation",
+      "signature": "Charges the silence command; removal reduces command pressure.",
+      "counterplay": "Can be destroyed or outlasted through a guarded opening; no independent reward.",
+      "visual_brief": "Tall split tuning-arch with a clearly visible throat aperture.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "No independent rewards; encounter budget only."
+    },
+    {
+      "id": "silence_memory_anchor",
+      "name": "Memory Anchor",
+      "world": "world_6",
+      "status": "proposed new definition",
+      "role": "final manifestation",
+      "signature": "Charges the memory-erasure pulse on the shared boss schedule.",
+      "counterplay": "Destroy it to reduce memory pressure or attack the body; no independent reward.",
+      "visual_brief": "Wide suspended broken memory lens, horizontal silhouette distinct from Voice Anchor.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "No independent rewards; encounter budget only."
+    },
+    {
+      "id": "titan_missile_battery",
+      "name": "Missile Battery",
+      "world": "world_4",
+      "status": "proposed new definition",
+      "role": "Titan component",
+      "signature": "Queued area salvo; its tell persists until resolved.",
+      "counterplay": "Remove sustained group pressure.",
+      "visual_brief": "Wide twin missile pod, top-left socket.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "No independent rewards; encounter budget only."
+    },
+    {
+      "id": "titan_cutting_arm",
+      "name": "Cutting Arm",
+      "world": "world_4",
+      "status": "proposed new definition",
+      "role": "Titan component",
+      "signature": "Declared heavy single-target cut and recovery.",
+      "counterplay": "Remove the most dangerous committed strike.",
+      "visual_brief": "Long articulated saw arm, lower-left socket.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "No independent rewards; encounter budget only."
+    },
+    {
+      "id": "titan_anchor_cannon",
+      "name": "Anchor Cannon",
+      "world": "world_4",
+      "status": "proposed new definition",
+      "role": "Titan component",
+      "signature": "Marks a target for bounded disruption before a shot.",
+      "counterplay": "Remove the control threat.",
+      "visual_brief": "Short heavy grapnel barrel with cable spool, lower-right socket.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "No independent rewards; encounter budget only."
+    },
+    {
+      "id": "titan_shield_projector",
+      "name": "Shield Projector",
+      "world": "world_4",
+      "status": "proposed new definition",
+      "role": "Titan component",
+      "signature": "Gives the chassis finite protection with a visible recharge.",
+      "counterplay": "Shorten the core fight; core never becomes absolutely immune.",
+      "visual_brief": "Tall forked emitter with a flat shield lens, top-right socket.",
+      "current_tier": null,
+      "current_primary_art": null,
+      "art_decision": "Require a distinct approved silhouette; audit any existing dedicated candidate before generating.",
+      "reward_policy": "No independent rewards; encounter budget only."
+    }
+  ],
+  "encounter_decisions": [
+    {
+      "source_id": "static:workshop_yard:1",
+      "world": "world_1",
+      "room_id": "workshop_yard",
+      "room_title": "Scrap Yard",
+      "party": [
+        "faulted_loader"
+      ],
+      "purpose": "Opening relay lesson; retain reduced instance and north gate.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {
+        "north": {
+          "type": "enemy",
+          "enemy_id": "faulted_loader",
+          "message_locked": "The loader's wild arm blocks the workshop shutter. Engage the Faulted Loader to enter combat!",
+          "message_unlock": "The loader folds into the scrap, leaving the workshop route open."
+        }
+      },
+      "guaranteed_instance_rewards": [
+        {
+          "enemy_id": "faulted_loader",
+          "hp": 45,
+          "vitality": 1,
+          "stability": 18
+        }
+      ],
+      "baseline_base_guarantees": [
+        {
+          "from_enemy": "faulted_loader",
+          "item": "scrap_metal",
+          "quantity": 1
+        }
+      ],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:medbay_vents:1",
+      "world": "world_1",
+      "room_id": "medbay_vents",
+      "room_title": "Ventilation Hub",
+      "party": [
+        "siren_skimmer",
+        "siren_skimmer"
+      ],
+      "purpose": "Read inflation and choose single-target interruption versus area damage.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:admin_security:1",
+      "world": "world_1",
+      "room_id": "admin_security",
+      "room_title": "Security Post",
+      "party": [
+        "acoustic_bulwark"
+      ],
+      "purpose": "Keep a single-variable Guard Break drill and guaranteed Wiring Bundle.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [
+        {
+          "enemy_id": "acoustic_bulwark",
+          "hp": 30,
+          "vitality": 0,
+          "stability": 12,
+          "extra_drops": [
+            {
+              "id": "wiring_bundle",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards.",
+      "guaranteed_materials_to_keep": [
+        {
+          "item": "wiring_bundle",
+          "quantity": 1,
+          "old_enemy": "acoustic_bulwark",
+          "new_recipient": "acoustic_bulwark"
+        }
+      ]
+    },
+    {
+      "source_id": "static:server_aisle1:1",
+      "world": "world_1",
+      "room_id": "server_aisle1",
+      "room_title": "Aisle 01",
+      "party": [
+        "resonance_buoy",
+        "resonance_buoy"
+      ],
+      "purpose": "Two staggered capacitor charges; teach interruption without simultaneous burst.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:mine_alpha:1",
+      "world": "world_1",
+      "room_id": "mine_alpha",
+      "room_title": "Main Tunnel Alpha",
+      "party": [
+        "echo_borer",
+        "echo_borer"
+      ],
+      "purpose": "Pack exposure timing; preserve first-mine victory task.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:mine_checkpoint:1",
+      "world": "world_1",
+      "room_id": "mine_checkpoint",
+      "room_title": "Riot Control Post",
+      "party": [
+        "acoustic_bulwark",
+        "dominion_dampener"
+      ],
+      "purpose": "Break protection or stop suppression; preserve main quest listener.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:launch_access:1",
+      "world": "world_1",
+      "room_id": "launch_access",
+      "room_title": "Maintenance Access",
+      "party": [
+        "siren_skimmer",
+        "echo_borer"
+      ],
+      "purpose": "A final mixed organic target-priority test before security.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:launch_lift:1",
+      "world": "world_1",
+      "room_id": "launch_lift",
+      "room_title": "Cargo Lift",
+      "party": [
+        "acoustic_bulwark",
+        "resonance_buoy"
+      ],
+      "purpose": "Interrupt charge or break the shield; preserve north gate and gauntlet task.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {
+        "north": {
+          "type": "enemy",
+          "message_locked": "A hostile Acoustic Bulwark blocks access to the security checkpoint."
+        }
+      },
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:launch_checkpoint:1",
+      "world": "world_1",
+      "room_id": "launch_checkpoint",
+      "room_title": "Security Checkpoint B",
+      "party": [
+        "dominion_dampener",
+        "resonance_buoy"
+      ],
+      "purpose": "Deal with the mark or its amplifier; preserve north gate and Buoy victory contract.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {
+        "north": {
+          "type": "enemy",
+          "message_locked": "A Dominion Dampener and security drone lock down the route to the pods."
+        }
+      },
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:launch_bay:1",
+      "world": "world_1",
+      "room_id": "launch_bay",
+      "room_title": "Pod Bay",
+      "party": [
+        "the_iron_warden"
+      ],
+      "purpose": "Warden solo shield/overclock boss; BOSS_DESIGNS W1.",
+      "disposition": "boss",
+      "merged_into": null,
+      "baseline_gate_contract": {
+        "north": {
+          "type": "lock",
+          "consume": false,
+          "message_locked": "The Warden stands in front of the escape pod, blocking the access hatch.",
+          "message_unlock": "The Warden is defeated. Zeke has opened the pod hatch.",
+          "requires": [
+            {
+              "room_id": "launch_bay",
+              "state_key": "warden_defeated",
+              "value": true
+            }
+          ]
+        }
+      },
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [
+        {
+          "from_enemy": "the_iron_warden",
+          "item": "warden_keycard",
+          "quantity": 1
+        }
+      ],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:spire_archive_vault:1",
+      "world": "world_3",
+      "room_id": "spire_archive_vault",
+      "room_title": "Archive Vault",
+      "party": [
+        "corporate_assassin",
+        "concierge_relay"
+      ],
+      "purpose": "Assassin protected by a finite command relay; retain the Lens story contract.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:spire_landing_pad_roof:1",
+      "world": "world_3",
+      "room_id": "spire_landing_pad_roof",
+      "room_title": "Landing Pad Roof",
+      "party": [
+        "aero_drone",
+        "heavy_mech"
+      ],
+      "purpose": "Short security prelude with nonoverlapping tells; recovery opportunity before boss.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:spire_landing_pad_roof:2",
+      "world": "world_3",
+      "room_id": "spire_landing_pad_roof",
+      "room_title": "Landing Pad Roof",
+      "party": [
+        "administrator_boss",
+        "aero_drone"
+      ],
+      "purpose": "Finite-reserve Administrator encounter; starting drone counts toward reserves.",
+      "disposition": "boss",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [
+        {
+          "from_enemy": "administrator_boss",
+          "item": "power_cell",
+          "quantity": 2
+        }
+      ],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_slag_river:1",
+      "world": "world_4",
+      "room_id": "foundry_slag_river",
+      "room_title": "Slag River",
+      "party": [
+        "magma_drone"
+      ],
+      "purpose": "First heat/cooling lesson; preserve east crossing combat gate.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {
+        "east": {
+          "type": "enemy",
+          "message_locked": "A Magma Drone holds the east crossing into Waste Intake. Defeat it to open the crossing. The route west to the landing shelf is clear."
+        }
+      },
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_slag_stepping_stones:1",
+      "world": "world_4",
+      "room_id": "foundry_slag_stepping_stones",
+      "room_title": "Stepping Stones",
+      "party": [],
+      "purpose": "Let the crossing puzzle breathe after the River drone.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {
+        "north": {
+          "type": "lock",
+          "requires": [
+            {
+              "room_id": "foundry_slag_stepping_stones",
+              "state_key": "slag_bridge_solidified",
+              "value": true
+            }
+          ],
+          "message_locked": "A roaring cataract of molten white slag surges across the northern channel. The searing thermal updraft would vaporize anyone attempting to jump across.",
+          "message_unlock": "Cryogenic coolant floods the channel, hissing into steam as the molten slag crusts into a solid obsidian bridge!"
+        }
+      },
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:foundry_waste_intake:1",
+      "world": "world_4",
+      "room_id": "foundry_waste_intake",
+      "room_title": "Waste Intake",
+      "party": [
+        "slag_golem"
+      ],
+      "purpose": "First readable Slam/cooling elite; no second immediately stacked fight.",
+      "disposition": "elite",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_waste_intake:2",
+      "world": "world_4",
+      "room_id": "foundry_waste_intake",
+      "room_title": "Waste Intake",
+      "party": [],
+      "purpose": "Move this mixed pressure test to the optional Magnet Ramp.",
+      "disposition": "merge",
+      "merged_into": "static:foundry_waste_intake_scale_03:1",
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Merge entitlements into static:foundry_waste_intake_scale_03:1 with one receipt; no duplicate payout."
+    },
+    {
+      "source_id": "static:foundry_service_airlock:1",
+      "world": "world_4",
+      "room_id": "foundry_service_airlock",
+      "room_title": "Service Airlock",
+      "party": [
+        "quench_mite"
+      ],
+      "purpose": "Short coolant-scavenger introduction before the machinery combinations.",
+      "disposition": "replace",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_decon_chamber:1",
+      "world": "world_4",
+      "room_id": "foundry_decon_chamber",
+      "room_title": "Decon Chamber",
+      "party": [],
+      "purpose": "Quiet decontamination and story/control inspection after the introduction.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:foundry_conveyor_belt:1",
+      "world": "world_4",
+      "room_id": "foundry_conveyor_belt",
+      "room_title": "Conveyor Belt",
+      "party": [
+        "welder_bot",
+        "magma_drone"
+      ],
+      "purpose": "Finite repair plus heat pressure; retain existing support lesson.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_conveyor_belt:2",
+      "world": "world_4",
+      "room_id": "foundry_conveyor_belt",
+      "room_title": "Conveyor Belt",
+      "party": [],
+      "purpose": "Concentrate the Phantom introduction at Reject Bay.",
+      "disposition": "merge",
+      "merged_into": "static:foundry_reject_bay:1",
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Merge entitlements into static:foundry_reject_bay:1 with one receipt; no duplicate payout."
+    },
+    {
+      "source_id": "static:foundry_belt_service_walk:1",
+      "world": "world_4",
+      "room_id": "foundry_belt_service_walk",
+      "room_title": "Service Walk",
+      "party": [],
+      "purpose": "Keep maintenance travel and recovery from becoming another Welder duel.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:foundry_reject_bay:1",
+      "world": "world_4",
+      "room_id": "foundry_reject_bay",
+      "room_title": "Reject Bay",
+      "party": [
+        "phantom_prototype"
+      ],
+      "purpose": "First complete cloak/commitment lesson; one clear elite encounter.",
+      "disposition": "elite",
+      "merged_into": null,
+      "baseline_gate_contract": {
+        "west": {
+          "type": "lock",
+          "requires": [
+            {
+              "room_id": "foundry_pipe_gallery",
+              "state_key": "assembly_route_open",
+              "value": true
+            }
+          ],
+          "message_locked": "The Assembly maintenance shutter is sealed. Recover Project Phantom and regroup with Gh0st at Cooling Springs before opening this route.",
+          "message_unlock": "The cleared maintenance corridor connects the Pipe Gallery and Reject Bay. The route stays open for the return trip."
+        }
+      },
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_conditioning_chamber:1",
+      "world": "world_4",
+      "room_id": "foundry_conditioning_chamber",
+      "room_title": "Conditioning Chamber",
+      "party": [
+        "flame_trooper",
+        "magnet_sifter"
+      ],
+      "purpose": "Teach the magnetic mark before its partner cone; never chain both controls.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_forge_anvil:1",
+      "world": "world_4",
+      "room_id": "foundry_forge_anvil",
+      "room_title": "The Forge",
+      "party": [
+        "conveyor_crusher"
+      ],
+      "purpose": "Short rhythm hazard, not an extra squad during relic acquisition.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_power_core:1",
+      "world": "world_4",
+      "room_id": "foundry_power_core",
+      "room_title": "Power Core",
+      "party": [
+        "flame_trooper",
+        "phantom_prototype"
+      ],
+      "purpose": "One authored lock-and-lunge squad instead of two solo fights; fixed combined pressure budget.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_power_core:2",
+      "world": "world_4",
+      "room_id": "foundry_power_core",
+      "room_title": "Power Core",
+      "party": [],
+      "purpose": "Second existing solo becomes part of the first squad, not another reward roll.",
+      "disposition": "merge",
+      "merged_into": "static:foundry_power_core:1",
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Merge entitlements into static:foundry_power_core:1 with one receipt; no duplicate payout."
+    },
+    {
+      "source_id": "static:foundry_engine_service_ring:1",
+      "world": "world_4",
+      "room_id": "foundry_engine_service_ring",
+      "room_title": "Engine Service Ring",
+      "party": [
+        "flame_trooper"
+      ],
+      "purpose": "Keep the optional supply duel and two guaranteed Ration Packs.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [
+        {
+          "enemy_id": "flame_trooper",
+          "extra_drops": [
+            {
+              "id": "ration_pack",
+              "chance": 1.0,
+              "quantity": 2
+            }
+          ]
+        }
+      ],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards.",
+      "guaranteed_materials_to_keep": [
+        {
+          "item": "ration_pack",
+          "quantity": 2,
+          "old_enemy": "flame_trooper",
+          "new_recipient": "flame_trooper"
+        }
+      ]
+    },
+    {
+      "source_id": "static:foundry_titan_dock:1",
+      "world": "world_4",
+      "room_id": "foundry_titan_dock",
+      "room_title": "Titan Dock",
+      "party": [
+        "titan_walker_boss",
+        "titan_missile_battery",
+        "titan_cutting_arm",
+        "titan_anchor_cannon",
+        "titan_shield_projector"
+      ],
+      "purpose": "Four destructible systems and one chassis, shared action budget; preserve north escape gate.",
+      "disposition": "boss",
+      "merged_into": null,
+      "baseline_gate_contract": {
+        "north": {
+          "type": "enemy",
+          "message_locked": "The Titan Walker covers the north escape catwalk. Defeat it to clear the way. You can withdraw west to Power Core."
+        }
+      },
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [
+        {
+          "from_enemy": "titan_walker_boss",
+          "item": "power_cell",
+          "quantity": 3
+        }
+      ],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:orbital_executive_dock:1",
+      "world": "world_5",
+      "room_id": "orbital_executive_dock",
+      "room_title": "Executive Dock",
+      "party": [
+        "orbital_fighter",
+        "orbital_fighter"
+      ],
+      "purpose": "Paired designation/pass interception; preserve arrival tempo overrides and story trigger.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:orbital_grand_concourse:1",
+      "world": "world_5",
+      "room_id": "orbital_grand_concourse",
+      "room_title": "Grand Concourse",
+      "party": [
+        "customs_screener"
+      ],
+      "purpose": "Introduce public detention scanning with low solo damage.",
+      "disposition": "replace",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:orbital_customs_lounge:1",
+      "world": "world_5",
+      "room_id": "orbital_customs_lounge",
+      "room_title": "Customs Lounge",
+      "party": [],
+      "purpose": "Give Charles, the shop and the rest stop a coherent quiet room.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:orbital_solarium:1",
+      "world": "world_5",
+      "room_id": "orbital_solarium",
+      "room_title": "Solarium",
+      "party": [
+        "null_g_drone"
+      ],
+      "purpose": "First gravity-tether tell; basic attacks can break preparation.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:orbital_mirror_walk:1",
+      "world": "world_5",
+      "room_id": "orbital_mirror_walk",
+      "room_title": "Mirror Walk",
+      "party": [
+        "prism_surveyor"
+      ],
+      "purpose": "Teach beam alignment before the support unit appears in squads.",
+      "disposition": "replace",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:orbital_security_hub:1",
+      "world": "world_5",
+      "room_id": "orbital_security_hub",
+      "room_title": "Security Hub",
+      "party": [
+        "compliance_officer",
+        "null_g_drone"
+      ],
+      "purpose": "Detention plus gravity support; preserve the main security victory contract.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:orbital_surveillance_pit:1",
+      "world": "world_5",
+      "room_id": "orbital_surveillance_pit",
+      "room_title": "Surveillance Pit",
+      "party": [
+        "customs_screener",
+        "void_turret"
+      ],
+      "purpose": "One scan/beam squad; replace two unconnected solos.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:orbital_surveillance_pit:2",
+      "world": "world_5",
+      "room_id": "orbital_surveillance_pit",
+      "room_title": "Surveillance Pit",
+      "party": [],
+      "purpose": "Consolidate this presence into the first surveillance encounter.",
+      "disposition": "merge",
+      "merged_into": "static:orbital_surveillance_pit:1",
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Merge entitlements into static:orbital_surveillance_pit:1 with one receipt; no duplicate payout."
+    },
+    {
+      "source_id": "static:orbital_server_farm:1",
+      "world": "world_5",
+      "room_id": "orbital_server_farm",
+      "room_title": "Server Farm",
+      "party": [
+        "void_turret",
+        "void_turret"
+      ],
+      "purpose": "Offset beam charge test; one compact machinery fight.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {
+        "east": {
+          "type": "lock",
+          "requires": [
+            {
+              "room_id": "deep_anchor_chamber",
+              "state_key": "firewall_access_open",
+              "value": true
+            }
+          ],
+          "message_locked": "The Firewall Construct still holds the Anchor Chamber entrance. Follow the mainframe route through Firewall Alpha, Beta and Gamma and break the final defense.",
+          "message_unlock": "The cleared Anchor Chamber entrance remains open for the return through the Server Farm."
+        }
+      },
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:orbital_server_farm:2",
+      "world": "world_5",
+      "room_id": "orbital_server_farm",
+      "room_title": "Server Farm",
+      "party": [],
+      "purpose": "Reserve the full Firewall elite for Gamma; remove the early duplicate.",
+      "disposition": "merge",
+      "merged_into": "static:deep_firewall_gamma:1",
+      "baseline_gate_contract": {
+        "east": {
+          "type": "lock",
+          "requires": [
+            {
+              "room_id": "deep_anchor_chamber",
+              "state_key": "firewall_access_open",
+              "value": true
+            }
+          ],
+          "message_locked": "The Firewall Construct still holds the Anchor Chamber entrance. Follow the mainframe route through Firewall Alpha, Beta and Gamma and break the final defense.",
+          "message_unlock": "The cleared Anchor Chamber entrance remains open for the return through the Server Farm."
+        }
+      },
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Merge entitlements into static:deep_firewall_gamma:1 with one receipt; no duplicate payout."
+    },
+    {
+      "source_id": "static:deep_mainframe_nave:1",
+      "world": "world_5",
+      "room_id": "deep_mainframe_nave",
+      "room_title": "Mainframe Nave",
+      "party": [],
+      "purpose": "Thorne/Elara story space and preparation, not another turret.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:deep_firewall_alpha:1",
+      "world": "world_5",
+      "room_id": "deep_firewall_alpha",
+      "room_title": "Firewall Alpha",
+      "party": [
+        "void_turret",
+        "customs_screener"
+      ],
+      "purpose": "Scan-and-beam test after both units have individual introductions.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:deep_firewall_beta:1",
+      "world": "world_5",
+      "room_id": "deep_firewall_beta",
+      "room_title": "Firewall Beta",
+      "party": [
+        "void_turret",
+        "null_g_drone"
+      ],
+      "purpose": "Change target priorities from Alpha: tether versus the charging turret.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:deep_firewall_gamma:1",
+      "world": "world_5",
+      "room_id": "deep_firewall_gamma",
+      "room_title": "Firewall Gamma",
+      "party": [
+        "firewall_construct",
+        "prism_surveyor"
+      ],
+      "purpose": "One definitive Firewall elite with readable frequency and fragile alignment support.",
+      "disposition": "elite",
+      "merged_into": null,
+      "baseline_gate_contract": {
+        "down": {
+          "type": "lock",
+          "requires": [
+            {
+              "room_id": "deep_anchor_chamber",
+              "state_key": "firewall_access_open",
+              "value": true
+            }
+          ],
+          "message_locked": "The Firewall Construct still controls the Anchor access lift. Disable its nodes and defeat it before using the lift.",
+          "message_unlock": "The Anchor access lift is cleared in both directions."
+        }
+      },
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:deep_anchor_chamber:1",
+      "world": "world_5",
+      "room_id": "deep_anchor_chamber",
+      "room_title": "Anchor Chamber",
+      "party": [
+        "hk_droid"
+      ],
+      "purpose": "One scripted hunter challenge; Anchor/Stasis disables pursuit, damage is not the required answer.",
+      "disposition": "pursuit",
+      "merged_into": null,
+      "baseline_gate_contract": {
+        "west": {
+          "type": "lock",
+          "requires": [
+            {
+              "room_id": "deep_anchor_chamber",
+              "state_key": "firewall_access_open",
+              "value": true
+            }
+          ],
+          "message_locked": "The Firewall Construct still holds the Anchor Chamber entrance. Follow the mainframe route through Firewall Alpha, Beta and Gamma and break the final defense.",
+          "message_unlock": "The cleared Anchor Chamber entrance remains open for the return through the Server Farm."
+        },
+        "up": {
+          "type": "lock",
+          "requires": [
+            {
+              "room_id": "deep_anchor_chamber",
+              "state_key": "firewall_access_open",
+              "value": true
+            }
+          ],
+          "message_locked": "The Firewall Construct still controls the Anchor access lift. Disable its nodes and defeat it before using the lift.",
+          "message_unlock": "The Anchor access lift is cleared in both directions."
+        }
+      },
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:deep_throne_room:1",
+      "world": "world_5",
+      "room_id": "deep_throne_room",
+      "room_title": "Throne Room",
+      "party": [
+        "elite_guard"
+      ],
+      "purpose": "Reflector duel introduction; explicit safe physical/area alternatives.",
+      "disposition": "elite",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:deep_tear:1",
+      "world": "world_5",
+      "room_id": "deep_tear",
+      "room_title": "The Tear",
+      "party": [
+        "compliance_avatar",
+        "directive_conductor"
+      ],
+      "purpose": "One unique boss duet with persistent broken-link consequences.",
+      "disposition": "boss",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [
+        {
+          "from_enemy": "compliance_avatar",
+          "item": "power_cell",
+          "quantity": 3
+        }
+      ],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:source_zeke_review_loop:1",
+      "world": "world_6",
+      "room_id": "source_zeke_review_loop",
+      "room_title": "Performance Review Loop",
+      "party": [
+        "manager_projection"
+      ],
+      "purpose": "Unique Zeke rescue elite; Nova-alone-safe counters and room-scoped rescue credit.",
+      "disposition": "elite",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:source_gh0st_kill_suite:1",
+      "world": "world_6",
+      "room_id": "source_gh0st_kill_suite",
+      "room_title": "Kill-Suite Loop",
+      "party": [
+        "endless_war_echo",
+        "endless_war_echo"
+      ],
+      "purpose": "Unique Gh0st rescue pair; designation/execution cycle rather than simultaneous burst.",
+      "disposition": "elite",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:source_orion_tide_well:1",
+      "world": "world_6",
+      "room_id": "source_orion_tide_well",
+      "room_title": "Tide-Well",
+      "party": [
+        "silent_shore_wraith"
+      ],
+      "purpose": "Unique Orion rescue elite; basic/Guard/Break counter before Orion rejoins.",
+      "disposition": "elite",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:source_echo_patrol:1",
+      "world": "world_6",
+      "room_id": "source_echo_patrol",
+      "room_title": "Manager Patrol Route",
+      "party": [
+        "source_shadow"
+      ],
+      "purpose": "Short first proper Source striker encounter.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:source_memory_fragments:1",
+      "world": "world_6",
+      "room_id": "source_memory_fragments",
+      "room_title": "World-Fracture Landing",
+      "party": [
+        "source_shadow",
+        "distorted_sentinel",
+        "glitch_hound"
+      ],
+      "purpose": "Authored three-role fracture wave; preserve current arrival tempo and quest contract.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:source_spire_arena:1",
+      "world": "world_6",
+      "room_id": "source_spire_arena",
+      "room_title": "Memory Defense Arena",
+      "party": [
+        "memory_leak",
+        "nightmare_guard"
+      ],
+      "purpose": "Fragile copy pressure behind a defender; preserve Center-path unlock.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {
+        "east": {
+          "type": "lock",
+          "requires": [
+            {
+              "room_id": "source_spire_arena",
+              "state_key": "center_path_open",
+              "value": true
+            }
+          ],
+          "message_locked": "The Memory Leak and Nightmare Guard still defend the path to the Center. Break the memory defenses before crossing east."
+        }
+      },
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:source_center:1",
+      "world": "world_6",
+      "room_id": "source_center",
+      "room_title": "The Center",
+      "party": [
+        "ascended_vale"
+      ],
+      "purpose": "Final encounter stage 1: controlled Soloist; stage 2 is a linked descriptor at the same arena.",
+      "disposition": "boss",
+      "merged_into": null,
+      "baseline_gate_contract": {
+        "east": {
+          "type": "lock",
+          "requires": [
+            {
+              "room_id": "source_center",
+              "state_key": "ending_complete",
+              "value": true
+            }
+          ],
+          "message_locked": "The white horizon has no path yet. Finish the confrontation and restore the separate voices first."
+        }
+      },
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:sector9_stream_pools:1",
+      "world": "world_2",
+      "room_id": "sector9_stream_pools",
+      "room_title": "Mist Pools",
+      "party": [
+        "mist_glider"
+      ],
+      "purpose": "First wetland creature: read the dive; new world identity.",
+      "disposition": "replace",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:sector9_stream_wetlands:1",
+      "world": "world_2",
+      "room_id": "sector9_stream_wetlands",
+      "room_title": "Resonant Sedge",
+      "party": [
+        "spore_spitter"
+      ],
+      "purpose": "First poison tell; preserve guaranteed Herb.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [
+        {
+          "enemy_id": "spore_spitter",
+          "extra_drops": [
+            {
+              "id": "herb",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards.",
+      "guaranteed_materials_to_keep": [
+        {
+          "item": "herb",
+          "quantity": 1,
+          "old_enemy": "spore_spitter",
+          "new_recipient": "spore_spitter"
+        }
+      ]
+    },
+    {
+      "source_id": "static:sector9_stream_cave_depths:1",
+      "world": "world_2",
+      "room_id": "sector9_stream_cave_depths",
+      "room_title": "Glow-Moss Cavern",
+      "party": [
+        "moss_borer",
+        "moss_borer"
+      ],
+      "purpose": "Cold cavern cousins, new silhouettes; preserve east combat gate and canopy task aliases.",
+      "disposition": "replace",
+      "merged_into": null,
+      "baseline_gate_contract": {
+        "east": {
+          "type": "enemy",
+          "message_locked": "The Echo Borers hold the east passage into the Waterlogged Tunnel. Defeat them to pass. The cave entrance remains open to the south."
+        }
+      },
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:sector9_canopy:1",
+      "world": "world_2",
+      "room_id": "sector9_canopy",
+      "room_title": "Resonant Canopy",
+      "party": [
+        "stalker_vine",
+        "spore_spitter"
+      ],
+      "purpose": "Root support and poison pressure; retain reduced teaching instances.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [
+        {
+          "enemy_id": "stalker_vine",
+          "hp": 60,
+          "vitality": 4,
+          "stability": 60
+        },
+        {
+          "enemy_id": "spore_spitter",
+          "hp": 30,
+          "vitality": 3,
+          "stability": 30
+        }
+      ],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:sector9_wilds_thickets:1",
+      "world": "world_2",
+      "room_id": "sector9_wilds_thickets",
+      "room_title": "Spore Thickets",
+      "party": [
+        "razor_vine"
+      ],
+      "purpose": "One short binding hazard protecting a guaranteed Herb.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [
+        {
+          "enemy_id": "razor_vine",
+          "extra_drops": [
+            {
+              "id": "herb",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards.",
+      "guaranteed_materials_to_keep": [
+        {
+          "item": "herb",
+          "quantity": 1,
+          "old_enemy": "razor_vine",
+          "new_recipient": "razor_vine"
+        }
+      ]
+    },
+    {
+      "source_id": "static:sector9_wilds_nest:1",
+      "world": "world_2",
+      "room_id": "sector9_wilds_nest",
+      "room_title": "Hound Nest",
+      "party": [
+        "shard_hound",
+        "shard_hound"
+      ],
+      "purpose": "Alternating pack designation; preserve guaranteed Beast Meat and early HP overrides.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [
+        {
+          "enemy_id": "shard_hound",
+          "occurrence": 1,
+          "hp": 40,
+          "stability": 28,
+          "vitality": 3,
+          "extra_drops": [
+            {
+              "id": "beast_meat",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        },
+        {
+          "enemy_id": "shard_hound",
+          "occurrence": 2,
+          "hp": 40,
+          "stability": 28,
+          "vitality": 3
+        }
+      ],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards.",
+      "guaranteed_materials_to_keep": [
+        {
+          "item": "beast_meat",
+          "quantity": 1,
+          "old_enemy": "shard_hound",
+          "new_recipient": "shard_hound"
+        }
+      ]
+    },
+    {
+      "source_id": "static:sector9_foyer_left_gallery:1",
+      "world": "world_2",
+      "room_id": "sector9_foyer_left_gallery",
+      "room_title": "Left Reliquary",
+      "party": [
+        "ruin_guardian"
+      ],
+      "purpose": "Read stone wards; preserve west gate and guaranteed Scrap Metal.",
+      "disposition": "elite",
+      "merged_into": null,
+      "baseline_gate_contract": {
+        "west": {
+          "type": "enemy",
+          "message_locked": "The Ruin Guardian seals the west approach to the security terminal. Defeat it to enter the Security Hub. The Grand Hall remains open to the south."
+        }
+      },
+      "guaranteed_instance_rewards": [
+        {
+          "enemy_id": "ruin_guardian",
+          "extra_drops": [
+            {
+              "id": "scrap_metal",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards.",
+      "guaranteed_materials_to_keep": [
+        {
+          "item": "scrap_metal",
+          "quantity": 1,
+          "old_enemy": "ruin_guardian",
+          "new_recipient": "ruin_guardian"
+        }
+      ]
+    },
+    {
+      "source_id": "static:sector9_conduit_junction:1",
+      "world": "world_2",
+      "room_id": "sector9_conduit_junction",
+      "room_title": "T-Junction Wiring",
+      "party": [
+        "sentinel_orb"
+      ],
+      "purpose": "First iris-charge lesson and guaranteed Wiring Bundle.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [
+        {
+          "enemy_id": "sentinel_orb",
+          "extra_drops": [
+            {
+              "id": "wiring_bundle",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards.",
+      "guaranteed_materials_to_keep": [
+        {
+          "item": "wiring_bundle",
+          "quantity": 1,
+          "old_enemy": "sentinel_orb",
+          "new_recipient": "sentinel_orb"
+        }
+      ]
+    },
+    {
+      "source_id": "static:sector9_hall_acoustics_lab:1",
+      "world": "world_2",
+      "room_id": "sector9_hall_acoustics_lab",
+      "room_title": "Acoustics Lab",
+      "party": [
+        "sentinel_orb",
+        "spore_spitter"
+      ],
+      "purpose": "Ancient sentry and encroaching ecology: choose the next charged attack.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:sector9_vents_gantry:1",
+      "world": "world_2",
+      "room_id": "sector9_vents_gantry",
+      "room_title": "High Gantry",
+      "party": [
+        "sentinel_orb"
+      ],
+      "purpose": "Elevated sentry mastery; guarantee Battery and preserve the separate cutter gate.",
+      "disposition": "elite",
+      "merged_into": null,
+      "baseline_gate_contract": {
+        "south": {
+          "type": "key",
+          "key_id": "thermal_cutter",
+          "consume": false,
+          "message_locked": "Razor-vines choke the shaft. The barbed stems will burst into toxic spores if cut cold.",
+          "message_unlock": "The Thermal Cutter cauterizes the razor-vines. The shaft route is open."
+        }
+      },
+      "guaranteed_instance_rewards": [
+        {
+          "enemy_id": "sentinel_orb",
+          "extra_drops": [
+            {
+              "id": "battery",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards.",
+      "guaranteed_materials_to_keep": [
+        {
+          "item": "battery",
+          "quantity": 1,
+          "old_enemy": "sentinel_orb",
+          "new_recipient": "sentinel_orb"
+        }
+      ]
+    },
+    {
+      "source_id": "static:spire_sewers_scale_01:1",
+      "world": "world_3",
+      "room_id": "spire_sewers_scale_01",
+      "room_title": "Pump Gallery",
+      "party": [
+        "sewer_crawler"
+      ],
+      "purpose": "Teach the feeding pause and preserve landing-clear quest credit.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:spire_sewers_scale_02:1",
+      "world": "world_3",
+      "room_id": "spire_sewers_scale_02",
+      "room_title": "Filter Sluice",
+      "party": [
+        "sewer_crawler",
+        "sewer_crawler"
+      ],
+      "purpose": "Pair develops the feeding lesson into target priority.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:spire_exec_lounge_scale_02:1",
+      "world": "world_3",
+      "room_id": "spire_exec_lounge_scale_02",
+      "room_title": "Private Booth",
+      "party": [
+        "sentinel_mki"
+      ],
+      "purpose": "Optional quarantine elite; guaranteed Neon Sign Core remains here.",
+      "disposition": "elite",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [
+        {
+          "from_enemy": "sentinel_mki",
+          "item": "neon_sign_core",
+          "quantity": 1
+        }
+      ],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:spire_exec_lounge_scale_05:1",
+      "world": "world_3",
+      "room_id": "spire_exec_lounge_scale_05",
+      "room_title": "Service Dumbwaiter",
+      "party": [
+        "riot_guard",
+        "aero_drone"
+      ],
+      "purpose": "City shield/air squad; Circuit Board remains a one-time formation reward.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [
+        {
+          "enemy_id": "aero_drone",
+          "extra_drops": [
+            {
+              "id": "circuit_board",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards.",
+      "guaranteed_materials_to_keep": [
+        {
+          "item": "circuit_board",
+          "quantity": 1,
+          "old_enemy": "aero_drone",
+          "new_recipient": "aero_drone"
+        }
+      ]
+    },
+    {
+      "source_id": "static:spire_landing_pad_scale_01:1",
+      "world": "world_3",
+      "room_id": "spire_landing_pad_scale_01",
+      "room_title": "Fuel Bridge",
+      "party": [
+        "aero_drone",
+        "concierge_relay"
+      ],
+      "purpose": "Interrupt the flight command; preserve guaranteed Wiring Bundle.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [
+        {
+          "enemy_id": "aero_drone",
+          "extra_drops": [
+            {
+              "id": "wiring_bundle",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards.",
+      "guaranteed_materials_to_keep": [
+        {
+          "item": "wiring_bundle",
+          "quantity": 1,
+          "old_enemy": "aero_drone",
+          "new_recipient": "aero_drone"
+        }
+      ]
+    },
+    {
+      "source_id": "static:spire_landing_pad_scale_03:1",
+      "world": "world_3",
+      "room_id": "spire_landing_pad_scale_03",
+      "room_title": "Drone Wreck Roof",
+      "party": [
+        "corporate_assassin"
+      ],
+      "purpose": "Optional marked-lunge duel; preserve two Ration Packs.",
+      "disposition": "elite",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [
+        {
+          "enemy_id": "corporate_assassin",
+          "extra_drops": [
+            {
+              "id": "ration_pack",
+              "chance": 1.0,
+              "quantity": 2
+            }
+          ]
+        }
+      ],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards.",
+      "guaranteed_materials_to_keep": [
+        {
+          "item": "ration_pack",
+          "quantity": 2,
+          "old_enemy": "corporate_assassin",
+          "new_recipient": "corporate_assassin"
+        }
+      ]
+    },
+    {
+      "source_id": "static:foundry_obsidian_shelf_scale_02:1",
+      "world": "world_4",
+      "room_id": "foundry_obsidian_shelf_scale_02",
+      "room_title": "Heat Shadow Alcove",
+      "party": [],
+      "purpose": "Make Heat Shadow Alcove a dependable refuge.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:foundry_slag_river_scale_02:1",
+      "world": "world_4",
+      "room_id": "foundry_slag_river_scale_02",
+      "room_title": "Coolant Spillway",
+      "party": [
+        "welder_bot"
+      ],
+      "purpose": "Keep the supplies fight: two guaranteed Pure Iron for the arcade repair.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [
+        {
+          "enemy_id": "welder_bot",
+          "extra_drops": [
+            {
+              "id": "pure_iron",
+              "chance": 1.0,
+              "quantity": 2
+            }
+          ]
+        }
+      ],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards.",
+      "guaranteed_materials_to_keep": [
+        {
+          "item": "pure_iron",
+          "quantity": 2,
+          "old_enemy": "welder_bot",
+          "new_recipient": "welder_bot"
+        }
+      ]
+    },
+    {
+      "source_id": "static:foundry_slag_river_scale_03:1",
+      "world": "world_4",
+      "room_id": "foundry_slag_river_scale_03",
+      "room_title": "Slag Ferry Winch",
+      "party": [
+        "slag_golem",
+        "quench_mite"
+      ],
+      "purpose": "Cooling windows and a coolant scavenger; distinguish from the main Golem lesson.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_cooling_springs_scale_02:1",
+      "world": "world_4",
+      "room_id": "foundry_cooling_springs_scale_02",
+      "room_title": "Worker Marker",
+      "party": [],
+      "purpose": "Worker memorial and recovery branch: use atmosphere, not another drone.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:foundry_waste_intake_scale_02:1",
+      "world": "world_4",
+      "room_id": "foundry_waste_intake_scale_02",
+      "room_title": "Records Shed",
+      "party": [],
+      "purpose": "Records and clues become a deliberate quiet connector.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:foundry_waste_intake_scale_03:1",
+      "world": "world_4",
+      "room_id": "foundry_waste_intake_scale_03",
+      "room_title": "Magnet Ramp",
+      "party": [
+        "slag_golem",
+        "magnet_sifter"
+      ],
+      "purpose": "Optional mark-and-slam coordination test, taught before lethal combination.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_service_airlock_scale_02:1",
+      "world": "world_4",
+      "room_id": "foundry_service_airlock_scale_02",
+      "room_title": "Decon Drain",
+      "party": [
+        "quench_mite",
+        "quench_mite"
+      ],
+      "purpose": "Optional paired scavengers with alternating swell timing.",
+      "disposition": "replace",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_conveyor_belt_scale_02:1",
+      "world": "world_4",
+      "room_id": "foundry_conveyor_belt_scale_02",
+      "room_title": "Reject Chute",
+      "party": [
+        "welder_bot",
+        "quench_mite"
+      ],
+      "purpose": "Finite repair plus a swelling coolant scavenger; choose the repair interrupt or stop the cold vent.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_conveyor_belt_scale_03:1",
+      "world": "world_4",
+      "room_id": "foundry_conveyor_belt_scale_03",
+      "room_title": "Roller Underpass",
+      "party": [
+        "conveyor_crusher",
+        "magma_drone"
+      ],
+      "purpose": "A declared press cycle and heat charger; pressure must fit one shared window.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_conditioning_scale_02:1",
+      "world": "world_4",
+      "room_id": "foundry_conditioning_scale_02",
+      "room_title": "Quench Lane",
+      "party": [
+        "magma_drone",
+        "quench_mite"
+      ],
+      "purpose": "Opposed heat/coolant timing and different target priorities.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_forge_scale_02:1",
+      "world": "world_4",
+      "room_id": "foundry_forge_scale_02",
+      "room_title": "Anvil Shadow",
+      "party": [],
+      "purpose": "Relic aftermath and anvil atmosphere remain quiet.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:foundry_forge_scale_03:1",
+      "world": "world_4",
+      "room_id": "foundry_forge_scale_03",
+      "room_title": "Mold Library",
+      "party": [
+        "slag_golem"
+      ],
+      "purpose": "Optional cooling-window mastery in a mold enclosure; no repair support repeat.",
+      "disposition": "elite",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_power_core_scale_02:1",
+      "world": "world_4",
+      "room_id": "foundry_power_core_scale_02",
+      "room_title": "Engine Cradle",
+      "party": [],
+      "purpose": "Give the engine hardware discovery space after Power Core combat.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:foundry_titan_dock_scale_02:1",
+      "world": "world_4",
+      "room_id": "foundry_titan_dock_scale_02",
+      "room_title": "Ammo Lift",
+      "party": [
+        "flame_trooper",
+        "welder_bot"
+      ],
+      "purpose": "Optional supply-guard squad: interrupt finite welds or the cone.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_titan_dock_scale_03:1",
+      "world": "world_4",
+      "room_id": "foundry_titan_dock_scale_03",
+      "room_title": "Escape Rail",
+      "party": [],
+      "purpose": "Reserve tension for Titan and the escape; no extra Golem on the rail.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:orbital_executive_dock_scale_02:1",
+      "world": "world_5",
+      "room_id": "orbital_executive_dock_scale_02",
+      "room_title": "Collar Pressure Gallery",
+      "party": [],
+      "purpose": "Pressure gallery breathes between the arrival and branch test.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:orbital_executive_dock_scale_04:1",
+      "world": "world_5",
+      "room_id": "orbital_executive_dock_scale_04",
+      "room_title": "Arrival Light Relay",
+      "party": [
+        "tether_rigger",
+        "null_g_drone"
+      ],
+      "purpose": "Optional capture-unit combination; offset tether preparation.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:orbital_executive_dock_scale_06:1",
+      "world": "world_5",
+      "room_id": "orbital_executive_dock_scale_06",
+      "room_title": "Freight Intercom Walk",
+      "party": [],
+      "purpose": "Let the stranded-worker intercom land without an interchangeable officer.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:orbital_grand_concourse_scale_02:1",
+      "world": "world_5",
+      "room_id": "orbital_grand_concourse_scale_02",
+      "room_title": "Inward Gauge Gallery",
+      "party": [
+        "customs_screener",
+        "null_g_drone"
+      ],
+      "purpose": "A scanner and gravity partner; one main test on this long branch.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:orbital_grand_concourse_scale_04:1",
+      "world": "world_5",
+      "room_id": "orbital_grand_concourse_scale_04",
+      "room_title": "Directory Relay",
+      "party": [],
+      "purpose": "Directory relay is an inspection beat, not a second patrol.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:orbital_grand_concourse_scale_06:1",
+      "world": "world_5",
+      "room_id": "orbital_grand_concourse_scale_06",
+      "room_title": "Hospitality Speaker Walk",
+      "party": [],
+      "purpose": "Hospitality announcements provide atmosphere between fights.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:orbital_solarium_scale_02:1",
+      "world": "world_5",
+      "room_id": "orbital_solarium_scale_02",
+      "room_title": "Condensation Channel",
+      "party": [],
+      "purpose": "Condensation and artificial ecology provide a quiet connector.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:orbital_solarium_scale_04:1",
+      "world": "world_5",
+      "room_id": "orbital_solarium_scale_04",
+      "room_title": "Fountain Cabinet",
+      "party": [
+        "prism_surveyor",
+        "null_g_drone"
+      ],
+      "purpose": "Alignment plus gravity, with clearly separate linked targets.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:orbital_solarium_scale_06:1",
+      "world": "world_5",
+      "room_id": "orbital_solarium_scale_06",
+      "room_title": "Cooling Irrigation Walk",
+      "party": [],
+      "purpose": "Keep irrigation maintenance observational.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:orbital_security_hub_scale_02:1",
+      "world": "world_5",
+      "room_id": "orbital_security_hub_scale_02",
+      "room_title": "Hull Inspection Gallery",
+      "party": [],
+      "purpose": "Hull inspection is a readable approach to the evidence squad.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:orbital_security_hub_scale_04:1",
+      "world": "world_5",
+      "room_id": "orbital_security_hub_scale_04",
+      "room_title": "Evidence Test Relay",
+      "party": [
+        "compliance_officer",
+        "prism_surveyor"
+      ],
+      "purpose": "Officer command plus aim support; interrupt either coordination link.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:orbital_security_hub_scale_06:1",
+      "world": "world_5",
+      "room_id": "orbital_security_hub_scale_06",
+      "room_title": "Incident Speaker Walk",
+      "party": [],
+      "purpose": "Incident recordings get a quiet aftermath.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:orbital_service_shaft_scale_02:1",
+      "world": "world_5",
+      "room_id": "orbital_service_shaft_scale_02",
+      "room_title": "Tether Conduit",
+      "party": [
+        "tether_rigger"
+      ],
+      "purpose": "Introduce the shaft technician before its combined optional test.",
+      "disposition": "replace",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:orbital_service_shaft_scale_04:1",
+      "world": "world_5",
+      "room_id": "orbital_service_shaft_scale_04",
+      "room_title": "Worklight Lockout",
+      "party": [],
+      "purpose": "Worklight lockout is an inspection/recovery interval.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:orbital_service_shaft_scale_06:1",
+      "world": "world_5",
+      "room_id": "orbital_service_shaft_scale_06",
+      "room_title": "Freight Motor Walk",
+      "party": [
+        "customs_screener",
+        "tether_rigger"
+      ],
+      "purpose": "Scan plus capture: strict control budget and mandatory recovery gap.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:deep_server_farm_scale_02:1",
+      "world": "world_5",
+      "room_id": "deep_server_farm_scale_02",
+      "room_title": "Cooling Plenum",
+      "party": [
+        "prism_surveyor",
+        "void_turret"
+      ],
+      "purpose": "Optional alignment/beam party instead of a second major Firewall elite.",
+      "disposition": "replace",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:deep_anchor_chamber_scale_02:1",
+      "world": "world_5",
+      "room_id": "deep_anchor_chamber_scale_02",
+      "room_title": "Chorus Tank",
+      "party": [],
+      "purpose": "Chorus Tank must not duplicate the supposedly singular hunter.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:deep_anchor_chamber_scale_06:1",
+      "world": "world_5",
+      "room_id": "deep_anchor_chamber_scale_06",
+      "room_title": "Empty Cradle Afterimage",
+      "party": [],
+      "purpose": "Empty Cradle foreshadows absence; remove the third hunter.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:deep_throne_room_scale_02:1",
+      "world": "world_5",
+      "room_id": "deep_throne_room_scale_02",
+      "room_title": "Thorne Cell",
+      "party": [],
+      "purpose": "Thorne Cell is a story beat, not another shield guard.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:deep_throne_room_scale_04:1",
+      "world": "world_5",
+      "room_id": "deep_throne_room_scale_04",
+      "room_title": "Boardroom Grave",
+      "party": [
+        "boardroom_bailiff"
+      ],
+      "purpose": "Unique optional judgment elite; never a second Compliance Avatar.",
+      "disposition": "replace",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [
+        {
+          "from_enemy": "compliance_avatar",
+          "item": "power_cell",
+          "quantity": 3
+        }
+      ],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:deep_throne_room_scale_06:1",
+      "world": "world_5",
+      "room_id": "deep_throne_room_scale_06",
+      "room_title": "Avatar Gate",
+      "party": [
+        "elite_guard",
+        "prism_surveyor"
+      ],
+      "purpose": "Optional reflector/aim-support mastery; safe alternate attack types stay useful.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:deep_tear_scale_02:1",
+      "world": "world_5",
+      "room_id": "deep_tear_scale_02",
+      "room_title": "Choir Gap",
+      "party": [
+        "threshold_remnant"
+      ],
+      "purpose": "Optional incomplete fracture creature foreshadows Source without reusing its enemy ID/art.",
+      "disposition": "replace",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:deep_tear_scale_05:1",
+      "world": "world_5",
+      "room_id": "deep_tear_scale_05",
+      "room_title": "Last Bulkhead",
+      "party": [],
+      "purpose": "Last Bulkhead preserves space around the climax.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:source_zeke_nightmare_node_scale_01:1",
+      "world": "world_6",
+      "room_id": "source_zeke_nightmare_node_scale_01",
+      "room_title": "Badge Labyrinth",
+      "party": [
+        "review_clerk"
+      ],
+      "purpose": "Optional paperwork threat; cannot grant Zeke rescue credit.",
+      "disposition": "replace",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:source_gh0st_nightmare_node_scale_01:1",
+      "world": "world_6",
+      "room_id": "source_gh0st_nightmare_node_scale_01",
+      "room_title": "Order Well",
+      "party": [
+        "war_order_fragment"
+      ],
+      "purpose": "Optional command fragment, distinct from the rescue pair.",
+      "disposition": "replace",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:source_orion_nightmare_node_scale_01:1",
+      "world": "world_6",
+      "room_id": "source_orion_nightmare_node_scale_01",
+      "room_title": "Black Tide Shelf",
+      "party": [
+        "tide_murmur"
+      ],
+      "purpose": "Optional small tide threat; cannot grant Orion rescue credit.",
+      "disposition": "replace",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:source_echo_mines_node_scale_02:1",
+      "world": "world_6",
+      "room_id": "source_echo_mines_node_scale_02",
+      "room_title": "Pay Stub Drift",
+      "party": [
+        "source_shadow",
+        "review_clerk"
+      ],
+      "purpose": "Optional shadow exploiting a stamped target; one clear cooperation link.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:source_memory_stair_node_scale_02:1",
+      "world": "world_6",
+      "room_id": "source_memory_stair_node_scale_02",
+      "room_title": "Canopy Root Step",
+      "party": [
+        "distorted_sentinel"
+      ],
+      "purpose": "Short reticle lesson before the full fracture wave.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:source_spire_thought_node_scale_01:1",
+      "world": "world_6",
+      "room_id": "source_spire_thought_node_scale_01",
+      "room_title": "Revision Gallery",
+      "party": [
+        "memory_leak"
+      ],
+      "purpose": "First fragile copy controller; keep brief, not a repeated HP elite.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:source_spire_thought_node_scale_03:1",
+      "world": "world_6",
+      "room_id": "source_spire_thought_node_scale_03",
+      "room_title": "Memory Defense Line",
+      "party": [
+        "nightmare_guard"
+      ],
+      "purpose": "Optional shelter/commitment elite before its mixed defense encounter.",
+      "disposition": "elite",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:source_spire_thought_node_scale_04:1",
+      "world": "world_6",
+      "room_id": "source_spire_thought_node_scale_04",
+      "room_title": "No Throne",
+      "party": [],
+      "purpose": "Let No Throne express the rejection of control without another Leak.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "static:source_center_node_scale_03:1",
+      "world": "world_6",
+      "room_id": "source_center_node_scale_03",
+      "room_title": "Silence Pulpit",
+      "party": [],
+      "purpose": "Relocate the transformed fight into the linked final arena; legacy partial saves have explicit recovery.",
+      "disposition": "relocate",
+      "merged_into": "new:source_final_silence",
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Merge entitlements into new:source_final_silence with one receipt; no duplicate payout."
+    },
+    {
+      "source_id": "static:foundry_slag_river_scale_final:1",
+      "world": "world_4",
+      "room_id": "foundry_slag_river_scale_final",
+      "room_title": "Foundry River Control",
+      "party": [
+        "magma_drone",
+        "magma_drone"
+      ],
+      "purpose": "Optional two-burst timing mastery; offset charges, no burst stack.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_waste_intake_scale_final:1",
+      "world": "world_4",
+      "room_id": "foundry_waste_intake_scale_final",
+      "room_title": "Foundry Sorter Spine",
+      "party": [
+        "welder_bot",
+        "magnet_sifter"
+      ],
+      "purpose": "One meaningful sorting squad; consolidate the two independent solos.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_waste_intake_scale_final:2",
+      "world": "world_4",
+      "room_id": "foundry_waste_intake_scale_final",
+      "room_title": "Foundry Sorter Spine",
+      "party": [],
+      "purpose": "Remove the separate Drone duel; consolidated encounter owns the reward budget.",
+      "disposition": "merge",
+      "merged_into": "static:foundry_waste_intake_scale_final:1",
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Merge entitlements into static:foundry_waste_intake_scale_final:1 with one receipt; no duplicate payout."
+    },
+    {
+      "source_id": "static:foundry_conveyor_belt_scale_final:1",
+      "world": "world_4",
+      "room_id": "foundry_conveyor_belt_scale_final",
+      "room_title": "Foundry Belt Nerve",
+      "party": [
+        "conveyor_crusher"
+      ],
+      "purpose": "Optional press mastery: richer declared pattern, same basic-response access.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_conditioning_scale_final:1",
+      "world": "world_4",
+      "room_id": "foundry_conditioning_scale_final",
+      "room_title": "Foundry Defect Choir",
+      "party": [
+        "phantom_prototype",
+        "welder_bot"
+      ],
+      "purpose": "Optional prototype repair team; preserve guaranteed Circuit Board on one formation receipt.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [
+        {
+          "enemy_id": "phantom_prototype",
+          "extra_drops": [
+            {
+              "id": "circuit_board",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards.",
+      "guaranteed_materials_to_keep": [
+        {
+          "item": "circuit_board",
+          "quantity": 1,
+          "old_enemy": "phantom_prototype",
+          "new_recipient": "phantom_prototype"
+        }
+      ]
+    },
+    {
+      "source_id": "static:foundry_power_core_scale_final:1",
+      "world": "world_4",
+      "room_id": "foundry_power_core_scale_final",
+      "room_title": "Foundry Core Shadow",
+      "party": [
+        "slag_golem",
+        "welder_bot"
+      ],
+      "purpose": "One cooling/repair composition; no duplicate solo reward sequence.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:foundry_power_core_scale_final:2",
+      "world": "world_4",
+      "room_id": "foundry_power_core_scale_final",
+      "room_title": "Foundry Core Shadow",
+      "party": [],
+      "purpose": "Merge the existing Welder into the first party.",
+      "disposition": "merge",
+      "merged_into": "static:foundry_power_core_scale_final:1",
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Merge entitlements into static:foundry_power_core_scale_final:1 with one receipt; no duplicate payout."
+    },
+    {
+      "source_id": "static:orbital_grand_concourse_scale_final:1",
+      "world": "world_5",
+      "room_id": "orbital_grand_concourse_scale_final",
+      "room_title": "Ring Courtesy Theater",
+      "party": [
+        "customs_screener",
+        "prism_surveyor"
+      ],
+      "purpose": "Optional courtesy trap: remove scanning or aim support; low direct-damage control puzzle.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:orbital_security_hub_scale_final:1",
+      "world": "world_5",
+      "room_id": "orbital_security_hub_scale_final",
+      "room_title": "Ring Threat Cathedral",
+      "party": [
+        "compliance_officer",
+        "void_turret",
+        "null_g_drone"
+      ],
+      "purpose": "Optional three-role mastery formation; only one coordinated heavy attack per cycle.",
+      "disposition": "remix",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "static:source_memory_stair_node_scale_final:1",
+      "world": "world_6",
+      "room_id": "source_memory_stair_node_scale_final",
+      "room_title": "Source Scar Step",
+      "party": [],
+      "purpose": "Source Scar Step becomes a quiet memory/reward destination.",
+      "disposition": "retire",
+      "merged_into": null,
+      "baseline_gate_contract": {},
+      "guaranteed_instance_rewards": [],
+      "baseline_base_guarantees": [],
+      "reward_contract": "No guaranteed instance supply is removed; reconcile optional XP/credit loss in the world budget."
+    },
+    {
+      "source_id": "event:w2_mq04_beast_ambush",
+      "world": "world_2",
+      "room_id": "sector9_canopy_ridge",
+      "room_title": "Canopy Ridge",
+      "party": [
+        "the_beast"
+      ],
+      "purpose": "Two-pattern solo Beast; preserve player-selected Face the Beast trigger and trial outcome.",
+      "disposition": "boss",
+      "merged_into": null,
+      "baseline_base_guarantees": [
+        {
+          "from_enemy": "the_beast",
+          "item": "source_resin",
+          "quantity": 1
+        }
+      ],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "event:w4_crucible_spawn_round_1",
+      "world": "world_4",
+      "room_id": "foundry_crucible_arena",
+      "room_title": "The Scrapper's Crucible",
+      "party": [
+        "magma_drone",
+        "magma_drone",
+        "welder_bot"
+      ],
+      "purpose": "Optional arena support/charge test; stagger both drone windups.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "event:w4_crucible_spawn_round_2",
+      "world": "world_4",
+      "room_id": "foundry_crucible_arena",
+      "room_title": "The Scrapper's Crucible",
+      "party": [
+        "slag_golem",
+        "welder_bot"
+      ],
+      "purpose": "Optional cooling/finite-repair test; rest allowed between rounds.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "event:w4_crucible_spawn_round_3",
+      "world": "world_4",
+      "room_id": "foundry_crucible_arena",
+      "room_title": "The Scrapper's Crucible",
+      "party": [
+        "crucible_champion"
+      ],
+      "purpose": "Final arena solo duel; remove the accompaniment to distinguish the Champion from squad bosses.",
+      "disposition": "boss",
+      "merged_into": null,
+      "baseline_base_guarantees": [
+        {
+          "from_enemy": "crucible_champion",
+          "item": "pure_iron",
+          "quantity": 1
+        }
+      ],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    },
+    {
+      "source_id": "patrol:w1_deep_mine_pressure_patrol",
+      "world": "world_1",
+      "room_id": "mine_conveyor",
+      "room_title": "Conveyor Belt",
+      "party": [
+        "pressure_hauler"
+      ],
+      "purpose": "Retain one optional signaled patrol, its activation and safe-room exclusions.",
+      "disposition": "retain",
+      "merged_into": null,
+      "baseline_base_guarantees": [],
+      "reward_contract": "Preserve each guaranteed item once in this retained encounter; rebudget non-guaranteed rewards."
+    }
+  ],
+  "new_encounters": [
+    {
+      "id": "new:source_final_silence",
+      "world": "world_6",
+      "room_id": "source_center",
+      "party": [
+        "ascended_god",
+        "silence_voice_anchor",
+        "silence_memory_anchor"
+      ],
+      "purpose": "Linked final stage 2 and short closing cycle; no walking required between forms.",
+      "absorbs": [
+        "static:source_center_node_scale_03:1"
+      ]
+    }
+  ],
+  "baseline_ref": "BASELINE.json",
+  "boss_designs": [
+    {
+      "id": "warden",
+      "world": "world_1",
+      "actors": [
+        "the_iron_warden"
+      ],
+      "reserves": [],
+      "victory_core": "the_iron_warden",
+      "style": "solo shield/overclock",
+      "reference": "BOSS_DESIGNS.md#w1--iron-warden-discipline-under-strain"
+    },
+    {
+      "id": "beast",
+      "world": "world_2",
+      "actors": [
+        "the_beast"
+      ],
+      "reserves": [],
+      "victory_core": "the_beast",
+      "style": "solo behavioral phases",
+      "reference": "BOSS_DESIGNS.md#w2--source-beast-hunt-becomes-frenzy"
+    },
+    {
+      "id": "administrator",
+      "world": "world_3",
+      "actors": [
+        "administrator_boss",
+        "aero_drone"
+      ],
+      "reserves": [
+        "administrator_interdictor"
+      ],
+      "reserve_count": 3,
+      "max_live_escorts": 2,
+      "victory_core": "administrator_boss",
+      "style": "finite reinforcement command",
+      "reference": "BOSS_DESIGNS.md#w3--administrator-command-and-limited-reserves"
+    },
+    {
+      "id": "titan",
+      "world": "world_4",
+      "actors": [
+        "titan_walker_boss",
+        "titan_missile_battery",
+        "titan_cutting_arm",
+        "titan_anchor_cannon",
+        "titan_shield_projector"
+      ],
+      "reserves": [],
+      "victory_core": "titan_walker_boss",
+      "style": "four destructible systems / shared chassis clock",
+      "reference": "BOSS_DESIGNS.md#w4--titan-walker-four-systems-one-machine"
+    },
+    {
+      "id": "champion",
+      "world": "world_4",
+      "actors": [
+        "crucible_champion"
+      ],
+      "reserves": [],
+      "victory_core": "crucible_champion",
+      "style": "optional solo commitment duel",
+      "reference": "BOSS_DESIGNS.md#w4-optional--crucible-champion-deliberate-solo-duel"
+    },
+    {
+      "id": "avatar",
+      "world": "world_5",
+      "actors": [
+        "compliance_avatar",
+        "directive_conductor"
+      ],
+      "reserves": [],
+      "victory_core": "compliance_avatar",
+      "style": "coordinated duet / persistent broken link",
+      "reference": "BOSS_DESIGNS.md#w5--compliance-avatar-and-directive-conductor-break-the-agreement"
+    },
+    {
+      "id": "finale",
+      "world": "world_6",
+      "actors": [
+        "ascended_vale",
+        "ascended_god",
+        "silence_voice_anchor",
+        "silence_memory_anchor"
+      ],
+      "stages": [
+        [
+          "ascended_vale"
+        ],
+        [
+          "ascended_god",
+          "silence_voice_anchor",
+          "silence_memory_anchor"
+        ]
+      ],
+      "reserves": [],
+      "victory_core": "ascended_god",
+      "style": "human command / transformed manifestations / closing commitment",
+      "reference": "BOSS_DESIGNS.md#w6--vale-control-fracture-separate-voices"
+    }
+  ]
+}

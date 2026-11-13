@@ -1,0 +1,914 @@
+{
+  "status": "planning only",
+  "unique_subjects": 69,
+  "no_new_images_generated": true,
+  "subjects": [
+    {
+      "enemy_id": "faulted_loader",
+      "world": "world_1",
+      "name": "Faulted Loader",
+      "visual_brief": "Asymmetric cargo fork, split relay, compact yellow loader.",
+      "current_review_candidate": "images/enemies/heavy_loader_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/faulted_loader_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "echo_borer",
+      "world": "world_1",
+      "name": "Echo-Borer",
+      "visual_brief": "Segmented slate burrower with broad drill snout.",
+      "current_review_candidate": "images/enemies/echo_borer_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/echo_borer_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "siren_skimmer",
+      "world": "world_1",
+      "name": "Siren Skimmer",
+      "visual_brief": "Wide manta wings and an oversized luminous throat sac.",
+      "current_review_candidate": "images/enemies/siren_skimmer_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/siren_skimmer_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "dominion_dampener",
+      "world": "world_1",
+      "name": "Dominion Dampener",
+      "visual_brief": "Low industrial armor, long baffled suppression rifle.",
+      "current_review_candidate": "images/enemies/dominion_dampener_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/dominion_dampener_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "acoustic_bulwark",
+      "world": "world_1",
+      "name": "Acoustic Bulwark",
+      "visual_brief": "Broad acoustic shield disk, squat planted legs.",
+      "current_review_candidate": "images/enemies/acoustic_bulwark_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/acoustic_bulwark_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "resonance_buoy",
+      "world": "world_1",
+      "name": "Resonance Buoy",
+      "visual_brief": "Small tethered bell-shaped capacitor with two exposed coils.",
+      "current_review_candidate": "images/enemies/resonance_buoy_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/resonance_buoy_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "pressure_hauler",
+      "world": "world_1",
+      "name": "Pressure Hauler",
+      "visual_brief": "Tracked pressure tank with huge valve wheel; distinguish from Loader.",
+      "current_review_candidate": "images/enemies/pressure_hauler_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/pressure_hauler_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "the_iron_warden",
+      "world": "world_1",
+      "name": "The Iron Warden",
+      "visual_brief": "Human authority inside tall riot power armor, shield and restrained silhouette.",
+      "current_review_candidate": "images/enemies/the_iron_warden_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/the_iron_warden_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "shield-damaged treatment",
+        "emergency-overclock tell"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "shard_hound",
+      "world": "world_2",
+      "name": "Shard-Hound",
+      "visual_brief": "Faceted mineral antlers over a lean quadruped body.",
+      "current_review_candidate": "images/enemies/shard_hound_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/shard_hound_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "spore_spitter",
+      "world": "world_2",
+      "name": "Spore-Spitter",
+      "visual_brief": "Rooted pitcher-shaped organism, clustered amber spore sacs.",
+      "current_review_candidate": "images/enemies/spore_spitter_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/spore_spitter_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "ruin_guardian",
+      "world": "world_2",
+      "name": "Ruin-Guardian",
+      "visual_brief": "Heavy carved quadruped masonry with floating keystone ribs.",
+      "current_review_candidate": "images/enemies/ruin_guardian_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/ruin_guardian_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "razor_vine",
+      "world": "world_2",
+      "name": "Razor-Vine",
+      "visual_brief": "Low thorn fan with a single large coiling tendril.",
+      "current_review_candidate": "images/enemies/razor_vine_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/razor_vine_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "stalker_vine",
+      "world": "world_2",
+      "name": "Stalker-Vine",
+      "visual_brief": "Tall walking mangrove roots around a translucent seed heart.",
+      "current_review_candidate": "images/enemies/stalker_vine_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/stalker_vine_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "sentinel_orb",
+      "world": "world_2",
+      "name": "Sentinel Orb",
+      "visual_brief": "Ancient three-ring iris orb with weathered stone inlays.",
+      "current_review_candidate": "images/enemies/sentinel_orb_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/sentinel_orb_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "the_beast",
+      "world": "world_2",
+      "name": "The Source Beast",
+      "visual_brief": "One enormous living apex creature; scarred organic mass, no borrowed armor.",
+      "current_review_candidate": "images/enemies/the_beast_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/the_beast_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "hunt pose",
+        "frenzy pose"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "sewer_crawler",
+      "world": "world_3",
+      "name": "Sewer Crawler",
+      "visual_brief": "Low many-legged pipe scavenger with a translucent waste reservoir.",
+      "current_review_candidate": "images/enemies/mutated_crawler_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/sewer_crawler_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "riot_guard",
+      "world": "world_3",
+      "name": "Riot Guard",
+      "visual_brief": "Human in narrow city armor with a rectangular transparent shield.",
+      "current_review_candidate": "images/enemies/riot_guard_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/riot_guard_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "sentinel_mki",
+      "world": "world_3",
+      "name": "Sentinel Mk. I",
+      "visual_brief": "Suspended medical/quarantine pod with radial restraint fins.",
+      "current_review_candidate": "images/enemies/resonance_buoy_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/sentinel_mki_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "aero_drone",
+      "world": "world_3",
+      "name": "Aero Drone",
+      "visual_brief": "Swept compact wings, white chassis, cyan sensors; existing dedicated art candidate.",
+      "current_review_candidate": "images/enemies/aero_drone_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/aero_drone_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "corporate_assassin",
+      "world": "world_3",
+      "name": "Corporate Assassin",
+      "visual_brief": "Tailored human silhouette, folded blade, distinct smoke emitter.",
+      "current_review_candidate": "images/enemies/riot_guard_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/corporate_assassin_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "heavy_mech",
+      "world": "world_3",
+      "name": "Heavy Mech",
+      "visual_brief": "Low armored riot chassis, broad heat nozzle and stabilizer feet.",
+      "current_review_candidate": "images/enemies/heavy_loader_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/heavy_mech_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "administrator_boss",
+      "world": "world_3",
+      "name": "Administrator",
+      "visual_brief": "Large suspended concierge intelligence with a smiling porcelain display.",
+      "current_review_candidate": "images/enemies/the_warden_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/administrator_boss_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "command preparation",
+        "reserve depleted/shutdown"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "magma_drone",
+      "world": "world_4",
+      "name": "Magma Drone",
+      "visual_brief": "Triangular heat-shielded skimmer with red-hot underside and blue coolant fins.",
+      "current_review_candidate": "images/enemies/security_drone_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/magma_drone_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "slag_golem",
+      "world": "world_4",
+      "name": "Slag Golem",
+      "visual_brief": "Bipedal slag crust around a glowing furnace belly, distinct from every loader.",
+      "current_review_candidate": "images/enemies/heavy_loader_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/slag_golem_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "welder_bot",
+      "world": "world_4",
+      "name": "Welder Bot",
+      "visual_brief": "Narrow tripod, welding torch arm, dangling finite weld cartridges.",
+      "current_review_candidate": "images/enemies/heavy_loader_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/welder_bot_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "flame_trooper",
+      "world": "world_4",
+      "name": "Flame Trooper",
+      "visual_brief": "Insulated industrial human suit with a horizontal furnace shield.",
+      "current_review_candidate": "images/enemies/dominion_dampener_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/flame_trooper_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "phantom_prototype",
+      "world": "world_4",
+      "name": "Phantom",
+      "visual_brief": "Open skeletal stealth machine, incomplete face, asymmetric cable limbs.",
+      "current_review_candidate": "images/enemies/riot_guard_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/phantom_prototype_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "conveyor_crusher",
+      "world": "world_4",
+      "name": "Conveyor Crusher",
+      "visual_brief": "Overhead stamping press on a compact conveyor frame.",
+      "current_review_candidate": "images/enemies/heavy_loader_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/conveyor_crusher_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "titan_walker_boss",
+      "world": "world_4",
+      "name": "Titan Walker",
+      "visual_brief": "Huge suspended siege chassis with clear sockets for four separate systems.",
+      "current_review_candidate": "images/enemies/the_warden_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/titan_walker_boss_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "four empty/destroyed socket treatments",
+        "exposed vent state",
+        "emergency power tell"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "crucible_champion",
+      "world": "world_4",
+      "name": "Crucible Champion",
+      "visual_brief": "Low crucible-alloy prizefighter frame with hammer fists and victory dents.",
+      "current_review_candidate": "images/enemies/heavy_loader_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/crucible_champion_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "orbital_fighter",
+      "world": "world_5",
+      "name": "Compliance Fighter",
+      "visual_brief": "Thin orbital interceptor, separated thruster pods, no Aero Drone wing reuse.",
+      "current_review_candidate": "images/enemies/aero_drone_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/orbital_fighter_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "compliance_officer",
+      "world": "world_5",
+      "name": "Compliance Officer",
+      "visual_brief": "Long ivory uniform coat and compact scanner baton, no Riot Guard body.",
+      "current_review_candidate": "images/enemies/riot_guard_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/compliance_officer_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "null_g_drone",
+      "world": "world_5",
+      "name": "Null-G Drone",
+      "visual_brief": "Compact gyro rings, clamp arms, maneuvering thrusters; new dedicated art candidate.",
+      "current_review_candidate": "images/enemies/null_g_drone_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/null_g_drone_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "void_turret",
+      "world": "world_5",
+      "name": "Void Turret",
+      "visual_brief": "Wall-mounted iris cannon with a broad horizontal anchoring bracket.",
+      "current_review_candidate": "images/enemies/sentinel_orb_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/void_turret_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "hk_droid",
+      "world": "world_5",
+      "name": "Hunter-Killer Droid",
+      "visual_brief": "Tall reverse-jointed hunting frame with a rotating capture cage.",
+      "current_review_candidate": "images/enemies/heavy_loader_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/hk_droid_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "elite_guard",
+      "world": "world_5",
+      "name": "Elite Guard",
+      "visual_brief": "Towering ceremonial shield bearer, narrow gold crest and segmented mirror shield.",
+      "current_review_candidate": "images/enemies/riot_guard_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/elite_guard_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "firewall_construct",
+      "world": "world_5",
+      "name": "Firewall Construct",
+      "visual_brief": "Angular lattice crab of hard-light panels and a central triangular aperture.",
+      "current_review_candidate": "images/enemies/ruin_guardian_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/firewall_construct_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "compliance_avatar",
+      "world": "world_5",
+      "name": "Compliance Avatar",
+      "visual_brief": "Large ceremonial hard-light body, cathedral ribs, no Warden silhouette.",
+      "current_review_candidate": "images/enemies/the_warden_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/compliance_avatar_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "linked pose",
+        "broken-link recalibration"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "manager_projection",
+      "world": "world_6",
+      "name": "The Manager",
+      "visual_brief": "Floating office torso made of stacked forms, long pointing arms, hollow face.",
+      "current_review_candidate": "images/enemies/the_warden_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/manager_projection_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "endless_war_echo",
+      "world": "world_6",
+      "name": "War Echo",
+      "visual_brief": "Split silhouette of ceremonial gunner and torn orders; one enemy kind, two instances.",
+      "current_review_candidate": "images/enemies/phantom_assassin_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/endless_war_echo_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "silent_shore_wraith",
+      "world": "world_6",
+      "name": "Silent Shore",
+      "visual_brief": "Tall empty cloak with a crescent wave cavity instead of a face.",
+      "current_review_candidate": "images/enemies/ruin_guardian_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/silent_shore_wraith_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "source_shadow",
+      "world": "world_6",
+      "name": "Source Shadow",
+      "visual_brief": "Offset black paper-like limbs surrounding a bright missing center.",
+      "current_review_candidate": "images/enemies/phantom_assassin_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/source_shadow_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "distorted_sentinel",
+      "world": "world_6",
+      "name": "Warped Sentinel",
+      "visual_brief": "Asymmetric levitating prism with broken orbit segments; no existing drone repaint.",
+      "current_review_candidate": "images/enemies/security_drone_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/distorted_sentinel_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "glitch_hound",
+      "world": "world_6",
+      "name": "Glitch Hound",
+      "visual_brief": "Ribbon-legged quadruped with missing geometric body slices; no Borer shape.",
+      "current_review_candidate": "images/enemies/echo_borer_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/glitch_hound_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "memory_leak",
+      "world": "world_6",
+      "name": "Memory Leak",
+      "visual_brief": "Floating spooling film and translucent memory panels around a small vulnerable knot.",
+      "current_review_candidate": "images/enemies/resonance_buoy_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/memory_leak_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "nightmare_guard",
+      "world": "world_6",
+      "name": "Nightmare Guard",
+      "visual_brief": "Human-shaped folded shields with shifting empty portrait frames.",
+      "current_review_candidate": "images/enemies/riot_guard_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/nightmare_guard_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "ascended_vale",
+      "world": "world_6",
+      "name": "The Ascended: Soloist",
+      "visual_brief": "Calm human Vale, immaculate asymmetric coat, one controlled gesture.",
+      "current_review_candidate": "images/enemies/the_warden_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/ascended_vale_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "command tell",
+        "human-form fracture"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "ascended_god",
+      "world": "world_6",
+      "name": "The Ascended: Silence",
+      "visual_brief": "Huge fractured porcelain figure unfolding into impossible rings, not Iron Warden art.",
+      "current_review_candidate": "images/enemies/the_iron_warden_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/ascended_god_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "manifestation sockets",
+        "Great Silence commitment",
+        "final collapse"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "moss_borer",
+      "world": "world_2",
+      "name": "Moss Borer",
+      "visual_brief": "Broad rooted beetle with moss sail plates; visual family connection to Pit burrowers, new art.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/moss_borer_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "mist_glider",
+      "world": "world_2",
+      "name": "Mist Glider",
+      "visual_brief": "Long reed-like flying fish with translucent fan fins; related ecology, unique silhouette.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/mist_glider_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "concierge_relay",
+      "world": "world_3",
+      "name": "Concierge Relay",
+      "visual_brief": "Floating brass desk bell with an unfolded holo-fan and three cable tassels.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/concierge_relay_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "administrator_interdictor",
+      "world": "world_3",
+      "name": "Interdictor Drone",
+      "visual_brief": "Vertical clamp-shaped drone with bright central stop-light lens.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/administrator_interdictor_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "magnet_sifter",
+      "world": "world_4",
+      "name": "Magnet Sifter",
+      "visual_brief": "Horseshoe magnetic head over a short wheeled sorting bin.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/magnet_sifter_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "quench_mite",
+      "world": "world_4",
+      "name": "Quench Mite",
+      "visual_brief": "Pale six-legged boiler parasite with oversized blue fluid abdomen.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/quench_mite_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "customs_screener",
+      "world": "world_5",
+      "name": "Customs Screener",
+      "visual_brief": "Narrow walking checkpoint arch with two articulated scanner paddles.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/customs_screener_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "tether_rigger",
+      "world": "world_5",
+      "name": "Tether Rigger",
+      "visual_brief": "Low three-legged maintenance chassis with a large cable spool and hooked boom.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/tether_rigger_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "prism_surveyor",
+      "world": "world_5",
+      "name": "Prism Surveyor",
+      "visual_brief": "Small floating diamond lantern inside a wide three-arm measuring caliper.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/prism_surveyor_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "boardroom_bailiff",
+      "world": "world_5",
+      "name": "Boardroom Bailiff",
+      "visual_brief": "Empty ceremonial judicial armor with a huge square seal stamp, no Avatar body.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/boardroom_bailiff_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "threshold_remnant",
+      "world": "world_5",
+      "name": "Threshold Remnant",
+      "visual_brief": "Incomplete glass ribbon organism caught inside an orbital airlock-shaped outline.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/threshold_remnant_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "directive_conductor",
+      "world": "world_5",
+      "name": "Directive Conductor",
+      "visual_brief": "Floating angular halo of ordered command tiles, clearly separate from the Avatar body.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/directive_conductor_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "command charge",
+        "collapsed state"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "review_clerk",
+      "world": "world_6",
+      "name": "Review Clerk",
+      "visual_brief": "Small ambulatory filing cabinet with paper legs and a heavy stamp arm.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/review_clerk_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "war_order_fragment",
+      "world": "world_6",
+      "name": "War Order Fragment",
+      "visual_brief": "Floating broken rifle wrapped in strips of command paper, no soldier body.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/war_order_fragment_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "tide_murmur",
+      "world": "world_6",
+      "name": "Tide Murmur",
+      "visual_brief": "Small shell-shaped absence filled with a moving water ribbon.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/tide_murmur_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "readable signature tell using pose, motion or overlay"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "silence_voice_anchor",
+      "world": "world_6",
+      "name": "Voice Anchor",
+      "visual_brief": "Tall split tuning-arch with a clearly visible throat aperture.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/silence_voice_anchor_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "active/inactive treatment and clear attachment anchor"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "silence_memory_anchor",
+      "world": "world_6",
+      "name": "Memory Anchor",
+      "visual_brief": "Wide suspended broken memory lens, horizontal silhouette distinct from Voice Anchor.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/silence_memory_anchor_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "active/inactive treatment and clear attachment anchor"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "titan_missile_battery",
+      "world": "world_4",
+      "name": "Missile Battery",
+      "visual_brief": "Wide twin missile pod, top-left socket.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/titan_missile_battery_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "active/inactive treatment and clear attachment anchor"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "titan_cutting_arm",
+      "world": "world_4",
+      "name": "Cutting Arm",
+      "visual_brief": "Long articulated saw arm, lower-left socket.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/titan_cutting_arm_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "active/inactive treatment and clear attachment anchor"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "titan_anchor_cannon",
+      "world": "world_4",
+      "name": "Anchor Cannon",
+      "visual_brief": "Short heavy grapnel barrel with cable spool, lower-right socket.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/titan_anchor_cannon_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "active/inactive treatment and clear attachment anchor"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    },
+    {
+      "enemy_id": "titan_shield_projector",
+      "world": "world_4",
+      "name": "Shield Projector",
+      "visual_brief": "Tall forked emitter with a flat shield lens, top-right socket.",
+      "current_review_candidate": null,
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/titan_shield_projector_combat.png",
+      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "additional_state_requirements": [
+        "active/inactive treatment and clear attachment anchor"
+      ],
+      "portrait_and_exploration": "Derive from this approved subject; do not bind an unrelated icon."
+    }
+  ]
+}

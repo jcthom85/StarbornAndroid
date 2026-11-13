@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.desktop.Worlds456PublicInteractionTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-13T00:54:41.723Z" hostname="V52076.vims.edu" time="3.303">
+  <properties/>
+  <testcase name="crucibleDefeatCallbackAndReloadAllowTheSameRoundToRestart" classname="com.example.starborn.desktop.Worlds456PublicInteractionTest" time="0.811"/>
+  <testcase name="pendingEndingResumesAfterFreshRuntimeAndCreditsCannotPayTwice" classname="com.example.starborn.desktop.Worlds456PublicInteractionTest" time="0.113"/>
+  <testcase name="foundryDeparturePlaysLaunchThenRevealsTheDockBeforeValesBroadcast" classname="com.example.starborn.desktop.Worlds456PublicInteractionTest" time="2.206"/>
+  <testcase name="fullNpcNamesResolveThorneAndValeAtTheirCurrentQuestScenes" classname="com.example.starborn.desktop.Worlds456PublicInteractionTest" time="0.054"/>
+  <testcase name="bulkheadMistakeLeaveAndReloadPreserveRetryWithoutAwardingProgress" classname="com.example.starborn.desktop.Worlds456PublicInteractionTest" time="0.067"/>
+  <testcase name="phantomSceneAndSpringsConversationAwardTheKeyOnlyAfterDialogue" classname="com.example.starborn.desktop.Worlds456PublicInteractionTest" time="0.05"/>
+  <system-out><![CDATA[DEBUG: give_item action id=composite_plate qty=4
+DEBUG: give_item action id=grav_boots qty=1
+DEBUG: give_item action id=composite_plate qty=4
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=gh0st_override_key qty=1
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.desktop.DesktopCombatFlowTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-13T02:21:15.094Z" hostname="V52076.vims.edu" time="5.162">
+  <properties/>
+  <testcase name="testFirstCombatEncounterSetupAndAction" classname="com.example.starborn.desktop.DesktopCombatFlowTest" time="0.786"/>
+  <testcase name="testDesktopCombatScreenRendersControlsAndAffinityRadar" classname="com.example.starborn.desktop.DesktopCombatFlowTest" time="4.373"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

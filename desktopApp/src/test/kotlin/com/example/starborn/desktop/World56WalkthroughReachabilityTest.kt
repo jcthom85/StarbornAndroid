@@ -38,8 +38,8 @@ class World56WalkthroughReachabilityTest {
     }
 
     @Test fun everyDocumentedInspectionAndPrimaryTextControlHasAnActualLink() {
-        val inspection = Regex("""^\d+\. At \*\*(.+?)\*\*, inspect (.+?)\.""")
-        val control = Regex("""^\d+\. At \*\*(.+?)\*\*, (?:use|open) \*\*(.+?)\*\*""")
+        val inspection = Regex("""(?:^\d+\. |(?<=\. ))At \*\*(.+?)\*\*, inspect (.+?)\.""")
+        val control = Regex("""(?:^\d+\. |(?<=\. ))At \*\*(.+?)\*\*, (?:use|open) \*\*(.+?)\*\*""")
         val bold = Regex("""\*\*(.+?)\*\*""")
         var checked = 0
         for (world in listOf(5, 6)) {

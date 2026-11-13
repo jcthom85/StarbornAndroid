@@ -28,6 +28,10 @@ AP is shared across crew purchases. Review each character's Party skill-tree con
 
 Orion brings Field Patch when recruited: heal one living ally and add Shield for one turn, with a cooldown of three personal turns. No AP purchase or level-6 unlock is needed for Field Patch. Field Treatment is a separate purchased heal; inspect its actual requirements and description if choosing that path. After Anchor Drill, Nova's Link restores party HP and applies Regen. Keep supplies for emergencies, use rest stops between stretches, and record AP allocation and ability use when evaluating the Beast or later resource pressure.
 
+### Combat rhythms
+
+The Beast remains a single opponent. Its marked hunting lunge gives a response turn; Guard the named target, interrupt it, or use the recovery opening. Below half HP, its roar announces two separately warned frenzy strikes followed by overextension. The roar does not disable the party. Stalker-Vine has one shelter and two visible root-healing reserves. The hound and cavern-borer pairs begin on different beats; Razor-Vine's coiling preparation can be cut by a damaging hit.
+
 ### Optional local NPC rewards and known checks
 
 David, Penny and Megan have explicit ways to end their looping conversations. Use leave and confirm movement returns. Charlie is unseen: interact with the glade's puffball instead of an NPC. Three patient play beats give 25 + 35 + 60 XP and one Comfort Stone total; later play must not repeat either reward. Back must not advance trust. Penny's first wrestle gives one Pack-Guardian Bandana and 50 XP; later play gives no extra reward.
@@ -93,7 +97,7 @@ Explore the coast before the temple. Tideglass Day is a later Orion quest; visit
 
 28. From **Stream Bank**, go **east** to **Mist Pools** (`sector9_stream_pools`).
 
-29. At **Mist Pools**, clear the Siren Skimmer encounter, harvest **reed bulbs**, and read **still basins**. Reeds are at Mist Pools, not Resonant Sedge.
+29. At **Mist Pools**, clear the Mist Glider encounter, harvest **reed bulbs**, and read **still basins**. Reeds are at Mist Pools, not Resonant Sedge.
 
 30. From **Mist Pools**, go **south** to **Resonant Sedge** (`sector9_stream_wetlands`).
 
@@ -109,7 +113,7 @@ Explore the coast before the temple. Tideglass Day is a later Orion quest; visit
 
 36. From **Cavern Entrance**, go **north** to **Glow-Moss Cavern** (`sector9_stream_cave_depths`).
 
-37. At **Glow-Moss Cavern**, clear the two-Echo-Borer encounter, harvest **echo nest** for Beast Meat, read **glowing moss**, and interact with **waterproof cargo case** for VHS discovery. Check its collectible feedback rather than expecting food.
+37. At **Glow-Moss Cavern**, clear the two-Moss-Borer encounter, harvest **echo nest** for Beast Meat, read **glowing moss**, and interact with **waterproof cargo case** for VHS discovery. Check its collectible feedback rather than expecting food.
 
 38. From **Glow-Moss Cavern**, go **east** to **Waterlogged Tunnel** (`sector9_stream_sunken_passage`).
 
@@ -199,7 +203,7 @@ Both fern and spore scans are in Resonant Canopy. Reach gamma before recovering 
 
 74. From **Crash Site**, go **south** to **Resonant Canopy** (`sector9_canopy`).
 
-75. At **Resonant Canopy**, clear the Stalker-Vine / Spore-Spitter pair (focus the healer first). This can credit The Signal canopy-clear task and reveal ridge/temple nodes. Read **low-frequency hum**, note **crystalline ferns** and **drifting spores** for after Botanist acceptance, and use **Scavenge remains** to start/advance Lost Patrol alpha. An Echo-Borer victory elsewhere is also accepted for The Signal; record whether that alternative is clear.
+75. At **Resonant Canopy**, clear the Stalker-Vine / Spore-Spitter pair (focus the healer first). This can credit The Signal canopy-clear task and reveal ridge/temple nodes. Read **low-frequency hum**, note **crystalline ferns** and **drifting spores** for after Botanist acceptance, and use **Scavenge remains** to start/advance Lost Patrol alpha. The Moss Borer pair at Glow-Moss Cavern is also accepted for The Signal; older interrupted Echo-Borer battles retain that credit.
 
 76. From **Resonant Canopy**, go **south** to **Spore Thickets** (`sector9_wilds_thickets`).
 
@@ -372,7 +376,7 @@ West/east crystals are outside Sanctuary in the Temple tuner wings; north is Aco
 
 150. From **Echo Alcoves**, go **north** to **Acoustics Lab** (`sector9_hall_acoustics_lab`).
 
-151. At **Acoustics Lab**, use **northern resonance crystal** with Ancient Echoes active.
+151. At **Acoustics Lab**, defeat the Sentinel Orb / Spore-Spitter formation, then use **northern resonance crystal** with Ancient Echoes active.
 
 152. From **Acoustics Lab**, go **south** to **Echo Alcoves** (`sector9_hall_echo_alcoves`) -> **east** to **Cymatic Basin** (`sector9_hall_reflection_pool`).
 
@@ -858,10 +862,10 @@ Entry: **Mist Pools** (`sector9_stream_pools`). Entry policy: transition; return
 
 #### Mist Pools (`sector9_stream_pools`)
 
-Deep wetlands where the glowing water pools into wide, still basins. Reed bulbs push through the mineral fog, and a Siren Skimmer darts through the mist with a shrill, disorienting cry.
+Deep wetlands where the glowing water pools into wide, still basins. Reed bulbs push through the mineral fog, and a Mist Glider draws silver membranes through the mineral fog.
 
 - **Exits:** **west** -> Stream Bank (`sector9_landing_stream`); **east** -> Crystalline Flats (`sector9_stream_flats`); **south** -> Resonant Sedge (`sector9_stream_wetlands`).
-- **Direct encounters:** siren_skimmer.
+- **Direct encounters:** mist_glider.
 - **reed bulbs** (generic; object: reed bulbs): Already harvested.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_herb_reeds_foraged"}`.
 - Event `w2_forage_herb_reeds` prerequisites: `[{"type": "milestone_not_set", "milestone": "ms_w2_herb_reeds_foraged"}]`. See the numbered route for its quest/reward sequence.
@@ -921,10 +925,10 @@ A dark cavern opens behind a waterfall curtain beneath the main shelf. Wet mist 
 
 #### Glow-Moss Cavern (`sector9_stream_cave_depths`)
 
-A quiet cavern chamber lit blue by thick sheets of glowing moss. A waterproof cargo case rests against the rocks. Two Echo-Borers scrape around an echo nest, their crystalline claws clicking against the cold stone.
+A quiet cavern chamber lit blue by thick sheets of glowing moss. A waterproof cargo case rests against the rocks. Two Moss Borers scrape around an echo nest, their moss-plated shells opening and closing above the cold stone.
 
 - **Exits:** **south** -> Cavern Entrance (`sector9_stream_cave_entrance`); **east** -> Waterlogged Tunnel (`sector9_stream_sunken_passage`).
-- **Direct encounters:** echo_borer, echo_borer.
+- **Direct encounters:** moss_borer, moss_borer.
 - **echo nest** (generic; object: echo nest): Already harvested.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_meat_cave_foraged"}`.
 - Event `w2_forage_meat_cave` prerequisites: `[{"type": "milestone_not_set", "milestone": "ms_w2_meat_cave_foraged"}]`. See the numbered route for its quest/reward sequence.
@@ -1299,10 +1303,10 @@ Small side alcoves designed for private study. A choir alcove log projects shift
 
 #### Acoustics Lab (`sector9_hall_acoustics_lab`)
 
-A laboratory bay containing Dominion logging sensors focused on cymatic pool fluctuations. The northern resonance crystal hums inside a sealed acoustic rack.
+A laboratory bay containing Dominion logging sensors focused on cymatic pool fluctuations. The northern resonance crystal hums inside a sealed acoustic rack. An ancient iris sentry tracks a spore bulb rooted beneath its housing; each moves to a different rhythm.
 
 - **Exits:** **south** -> Echo Alcoves (`sector9_hall_echo_alcoves`).
-- **Direct encounters:** spore_spitter.
+- **Direct encounters:** sentinel_orb, spore_spitter.
 - **northern resonance crystal** (generic; object: northern resonance crystal): A gold crystal vibrates at the mural alignment frequency.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_crystal_north_seated"}`.
 - Event `w2_sq04_crystal_north` prerequisites: `[{"type": "quest_active", "quest_id": "w2_sq04"}, {"type": "quest_task_not_done", "quest_id": "w2_sq04", "task_id": "crystal_north"}]`. See the numbered route for its quest/reward sequence.

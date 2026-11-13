@@ -47,8 +47,36 @@ data class Enemy(
     val behavior: String? = null,
     @Json(name = "alert_delay")
     val alertDelay: Int? = null,
-    val composite: CompositePart? = null
+    val composite: CompositePart? = null,
+    val authored: AuthoredEnemyPattern? = null
 ) : Entity(id, name, description)
+
+/** Opt-in encounter direction. Unconfigured enemies retain their existing AI. */
+data class AuthoredEnemyPattern(
+    val cycle: List<String> = emptyList(),
+    val windups: Map<String, String> = emptyMap(),
+    @Json(name = "duplicate_cycle_offset") val duplicateCycleOffset: Int = 0,
+    @Json(name = "interrupt_on_damage") val interruptOnDamage: Set<String> = emptySet(),
+    @Json(name = "resource_labels") val resourceLabels: Map<String, String> = emptyMap(),
+    @Json(name = "linked_to") val linkedTo: String? = null,
+    @Json(name = "linked_actions") val linkedActions: Map<String, String> = emptyMap(),
+    val phase: AuthoredEnemyPhase? = null,
+    val reinforcements: AuthoredReinforcements? = null
+)
+
+data class AuthoredEnemyPhase(
+    @Json(name = "hp_below") val hpBelow: Double,
+    val name: String,
+    @Json(name = "opening_skill") val openingSkill: String,
+    val cycle: List<String>,
+    @Json(name = "remove_statuses") val removeStatuses: List<String> = emptyList()
+)
+
+data class AuthoredReinforcements(
+    @Json(name = "skill_id") val skillId: String,
+    val pool: List<String>,
+    @Json(name = "max_alive") val maxAlive: Int = 2
+)
 
 @JsonClass(generateAdapter = true)
 data class CompositePart(

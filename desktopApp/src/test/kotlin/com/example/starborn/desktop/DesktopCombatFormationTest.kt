@@ -46,10 +46,16 @@ class DesktopCombatFormationTest {
                 }
                 compose.mainClock.advanceTimeBy(100)
                 compose.waitForIdle()
+                val figureMatcher = SemanticsMatcher("figures") {
+                    it.config.getOrElse(androidx.compose.ui.semantics.SemanticsProperties.TestTag) { "" }
+                        .startsWith("combat-figure-")
+                }
+                // Each keyed screen waits for settings from DataStore before composing combat.
+                compose.waitUntil(5_000) {
+                    compose.onAllNodes(figureMatcher).fetchSemanticsNodes().size == count + cases[index].second.size
+                }
                 val file = File("build/reports/combat-clarity/matrix-$index-party-$count.png").apply { parentFile.mkdirs() }
                 ImageIO.write(compose.onRoot().captureToImage().asAwtImage(), "png", file)
-                val figures = compose.onAllNodes(SemanticsMatcher("figures") { it.config.getOrElse(androidx.compose.ui.semantics.SemanticsProperties.TestTag) { "" }.startsWith("combat-figure-") }).fetchSemanticsNodes()
-                assertTrue(figures.size == count + cases[index].second.size)
                 compose.onNodeWithTag("combat-recent-actions").assertIsDisplayed()
                 if (index == 5) {
                     val boss = compose.onNodeWithContentDescription("The Iron Warden", useUnmergedTree = true).fetchSemanticsNode().boundsInRoot

@@ -24,6 +24,8 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -893,6 +895,12 @@ fun CombatScreen(
                                     pendingVictoryPayload != null -> return@onKeyEvent true
                                 }
                             }
+                            Key.G -> {
+                                if (!combatLocked && pendingTargetRequest == null && awaitingActionId != null && combatTutorial == null) {
+                                    viewModel.guard()
+                                    return@onKeyEvent true
+                                }
+                            }
                             Key.ButtonA, Key.Enter, Key.Spacebar -> {
                                 when {
                                     pendingVictoryPayload != null -> {
@@ -1042,9 +1050,11 @@ fun CombatScreen(
                 ?: 1
             val commandCurrentHp = commandActorState?.hp ?: commandMaxHp
             val compactCrew = playerParty.size > 2 &&
-                (maxHeight < 640.dp || (enemies.size > 3 && maxHeight < 800.dp))
+                (maxHeight < 640.dp || (maxHeight < 800.dp && (enemies.size > 3 || density.fontScale >= 1.2f)))
             val crewPortraitSize = if (compactCrew) 48.dp else if (maxHeight < 640.dp) 64.dp else 80.dp
             val crewSingleRow = maxWidth >= 600.dp
+            val scrollBattle = maxHeight < 640.dp && enemies.firstOrNull()?.composite?.group?.let { it != "driller" } == true
+            val battleScrollState = rememberScrollState()
             val contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
             Column(
                 modifier = Modifier
@@ -1052,14 +1062,15 @@ fun CombatScreen(
                     .padding(contentPadding)
                     .statusBarsPadding()
                     .navigationBarsPadding()
+                    .then(if (scrollBattle) Modifier.verticalScroll(battleScrollState) else Modifier)
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f)
+                        .then(if (scrollBattle) Modifier else Modifier.weight(1f))
                 ) {
                     Column(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = if (scrollBattle) Modifier.fillMaxWidth() else Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -1086,8 +1097,13 @@ fun CombatScreen(
                                 viewModel::onCombatTutorialContinue, viewModel::skipCombatTutorial,
                                 Modifier.testTag("combat-tutorial-guidance"))
                         }
+                        if (state != null && enemies.firstOrNull()?.composite?.group != null &&
+                            enemies.firstOrNull()?.composite?.group != "driller") {
+                            com.example.starborn.ui.combat.LinkedEnemyTargets(state, enemyCombatantIds,
+                                selectedEnemyIds, { handleEnemyTap(it) })
+                        }
                         com.example.starborn.feature.combat.ui.components.EnemyFormationViewport(
-                            Modifier.fillMaxWidth().weight(1f).testTag("combat-enemies")
+                            Modifier.fillMaxWidth().then(if (scrollBattle) Modifier.height(140.dp) else Modifier.weight(1f)).testTag("combat-enemies")
                         ) {
                           EnemyRoster(
                             enemies = enemies,
@@ -1130,7 +1146,14 @@ fun CombatScreen(
                         .fillMaxWidth()
                         .height(56.dp)
                 ) {
-                    if (!commandPaletteVisible && !targetMode) {
+                    if (com.example.starborn.ui.combat.hasAuthoredPreparation(state)) {
+                        com.example.starborn.ui.combat.AuthoredEncounterPanel(state, enemies,
+                            viewModel::focusEnemyTarget, Modifier.align(Alignment.Center),
+                            skillName = viewModel.runtime::skillDisplayName)
+                    } else Row(Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                      Box(Modifier.weight(1f)) {
+                       if (!commandPaletteVisible && !targetMode) {
                         CombatImpactBanner(
                             message = if (showCombatActionText) combatBanner else null,
                             hasInstruction = false,
@@ -1138,6 +1161,9 @@ fun CombatScreen(
                             theme = viewModel.theme,
                             modifier = Modifier.align(Alignment.Center)
                         )
+                       }
+                      }
+                      com.example.starborn.ui.combat.AuthoredEncounterStatus(state, enemies)
                     }
                 }
                 Spacer(Modifier.height(8.dp))
@@ -1179,6 +1205,8 @@ fun CombatScreen(
                 canAttack = hasTargets && viewModel.isCombatTutorialCommandEnabled("Attack"),
                 hasSkills = menuActorSkills.isNotEmpty() && viewModel.isCombatTutorialCommandEnabled("Abilities"),
                 hasItems = battleUsableItems.isNotEmpty() && viewModel.isCombatTutorialCommandEnabled("Items"),
+                onGuard = viewModel::guard,
+                canGuard = combatTutorial == null,
                 onAttack = {
                     if (viewModel.onCombatTutorialCommand("Attack")) {
                         requestTarget(PendingTargetRequest.Attack)

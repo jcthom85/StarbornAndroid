@@ -169,6 +169,23 @@ TRACK_REGISTRY = [
         "prompt": "Dark Industrial Rock & Heavy Synth-Metal. BPM: 118. Key: B Minor. Chugging 7-string distorted guitar riffs, screaming analog synth leads, massive acoustic rock drums, rumbling seismic sub-bass. Raw energy, sizzling overdrive, explosive dynamic hits. High-stakes danger, superheated reactor core, overwhelming industrial power."
     },
     {
+        "id": "music_w5_orbital_intrigue",
+        "loop": True,
+        "fade_in_ms": 1400,
+        "fade_out_ms": 1200,
+        "gain": 0.8,
+        "tags": [
+            "world_5",
+            "explore",
+            "stealth",
+            "electronica",
+            "orbital"
+        ],
+        "title": "Grand Concourse (Borrowed Time)",
+        "category": "w5",
+        "prompt": "Instrumental science-fiction RPG exploration music: restrained orbital espionage and uneasy human resolve. 80 BPM, C minor, steady 4/4, a 96-second repeating 32-bar underscore. Begin already inside the quiet pulse, with no cinematic intro. Warm analog sequencer eighth-notes, rounded low synth bass, light dry electronic ticks and soft brushed metallic percussion. Narrow cold radar tones answer occasional muted electric-piano chords; a subtle descending chromatic C-B-B-flat-A figure suggests surveillance without dominating. One brief warmer midrange string or Rhodes phrase hints at the people still trapped aboard this luxurious corporate station, then settles back into unresolved watchfulness. Vintage tape warmth, controlled bass, uncluttered mids so dialogue and interface sounds remain clear. Dangerous and suspicious, never cozy, triumphant or serene. Maintain moderate intensity and small arrangement changes for repeated long exploration sessions; no drops, alarm effects, loud risers, battle drums, huge crescendos, solos, vocals or choir. Finish on the same harmonic texture and rhythmic groove as the opening, with no final cadence and no fade to silence, suitable for a game loop."
+    },
+    {
         "id": "music_w5_void_explore",
         "title": "Grand Concourse (Zero-G Window)",
         "category": "w5",

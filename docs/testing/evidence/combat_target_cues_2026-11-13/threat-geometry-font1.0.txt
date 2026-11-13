@@ -1,0 +1,3 @@
+combat-enemies=Rect.fromLTRB(32.0, 293.0, 1048.0, 806.0)
+combat-enemy-the_beast=Rect.fromLTRB(436.9, 339.0, 643.2, 757.9)
+combat-party=Rect.fromLTRB(32.0, 974.0, 1048.0, 1806.0)

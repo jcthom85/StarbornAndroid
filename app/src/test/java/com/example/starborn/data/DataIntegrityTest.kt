@@ -61,13 +61,13 @@ class DataIntegrityTest {
     }
 
     @Test
-    fun messHallHyperionCabinetDisappearsAfterDiscovery() {
+    fun messHallHyperionCabinetRemainsInspectableUntilRepair() {
         val rooms = readList("src/main/assets/rooms.json", Room::class.java)
         val messHall = rooms.single { it.id == "pit_mess" }
         val cabinet = messHall.actions.single { it["name"] == "broken Hyperion cabinet" }
 
         assertEquals("arcade_discovery", cabinet["type"])
-        assertEquals("ms_arcade_deep_mine_discovered", cabinet["hide_when_milestone"])
+        assertEquals("ms_arcade_cabinet_01_repaired", cabinet["hide_when_milestone"])
     }
 
     @Test

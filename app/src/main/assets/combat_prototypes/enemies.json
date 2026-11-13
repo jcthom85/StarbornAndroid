@@ -1,0 +1,379 @@
+[
+  {
+    "id": "prototype_titan",
+    "combat_size": "massive",
+    "recovery_after": {},
+    "name": "Titan Systems Prototype",
+    "tier": "boss",
+    "combat_behavior": "boss",
+    "combat_role": "boss",
+    "hp": 900,
+    "strength": 12,
+    "vitality": 8,
+    "agility": 8,
+    "focus": 12,
+    "luck": 6,
+    "speed": 5,
+    "stability": 260,
+    "broken_turns": 2,
+    "element": "physical",
+    "resistances": {
+      "physical": 25,
+      "burn": 40,
+      "shock": -50,
+      "source": -10
+    },
+    "tags": [
+      "machine",
+      "boss",
+      "foundry"
+    ],
+    "abilities": [
+      "prototype_salvo",
+      "prototype_cut",
+      "prototype_anchor",
+      "prototype_shield",
+      "prototype_recover"
+    ],
+    "flavor": "Commander Rylos pilots this siege frame from a cockpit suspended over the volcano vent.",
+    "xp_reward": 100,
+    "credit_reward": 25,
+    "ap_reward": 0,
+    "drops": [],
+    "description": "Rylos boss vehicle. Strike exposed cooling vents after attacks.",
+    "portrait": "images/enemies/the_warden_combat.png",
+    "composite": {
+      "group": "prototype_titan",
+      "role": "core",
+      "width_scale": 0.8,
+      "height_scale": 0.7
+    },
+    "authored": {
+      "cycle": [
+        "prototype_salvo",
+        "prototype_recover",
+        "prototype_cut",
+        "prototype_recover",
+        "prototype_anchor",
+        "prototype_shield",
+        "prototype_recover"
+      ],
+      "windups": {
+        "prototype_salvo": "Missile doors opening",
+        "prototype_cut": "Cutting arm extending",
+        "prototype_anchor": "Anchor cannon locking on"
+      },
+      "linked_actions": {
+        "prototype_salvo": "prototype_missile",
+        "prototype_cut": "prototype_cutter",
+        "prototype_anchor": "prototype_anchor",
+        "prototype_shield": "prototype_projector"
+      }
+    }
+  },
+  {
+    "id": "prototype_missile",
+    "combat_size": "small",
+    "name": "Missile Battery",
+    "tier": "elite",
+    "combat_behavior": "aggressive",
+    "combat_role": "striker",
+    "hp": 120,
+    "strength": 19,
+    "vitality": 2,
+    "agility": 22,
+    "focus": 12,
+    "luck": 8,
+    "speed": 20,
+    "stability": 45,
+    "element": "physical",
+    "resistances": {
+      "physical": 10,
+      "burn": 0,
+      "shock": -20,
+      "source": 0
+    },
+    "tags": [
+      "machine",
+      "dominion",
+      "orbital"
+    ],
+    "abilities": [],
+    "flavor": "A remote interceptor slaved to Orbital Compliance.",
+    "xp_reward": 999,
+    "credit_reward": 0,
+    "drops": [
+      {
+        "id": "power_cell",
+        "chance": 1
+      }
+    ],
+    "description": "Fast orbital striker. Shock disrupts its guidance.",
+    "portrait": "images/enemies/aero_drone_combat.png",
+    "ap_reward": 0,
+    "authored": {
+      "linked_to": "prototype_titan"
+    },
+    "composite": {
+      "group": "prototype_titan",
+      "role": "weapon",
+      "offset_x": -0.53,
+      "offset_y": -0.4,
+      "width_scale": 0.45,
+      "height_scale": 0.45
+    }
+  },
+  {
+    "id": "prototype_cutter",
+    "combat_size": "small",
+    "name": "Cutting Arm",
+    "tier": "hazard",
+    "combat_behavior": "stationary",
+    "combat_role": "hazard",
+    "hp": 120,
+    "strength": 25,
+    "vitality": 2,
+    "agility": 0,
+    "focus": 0,
+    "luck": 0,
+    "speed": 1,
+    "stability": 45,
+    "element": "physical",
+    "resistances": {
+      "physical": 80,
+      "burn": 80,
+      "shock": 50,
+      "source": 50
+    },
+    "tags": [
+      "machine",
+      "hazard",
+      "foundry"
+    ],
+    "abilities": [],
+    "flavor": "An industrial press that does not know you are alive and would not care if it did.",
+    "xp_reward": 999,
+    "credit_reward": 0,
+    "drops": [
+      {
+        "id": "power_cell",
+        "chance": 1
+      }
+    ],
+    "description": "Stationary timing hazard. Hacking beats brute force.",
+    "portrait": "images/enemies/heavy_loader_combat.png",
+    "ap_reward": 0,
+    "authored": {
+      "linked_to": "prototype_titan"
+    },
+    "composite": {
+      "group": "prototype_titan",
+      "role": "weapon",
+      "offset_x": -0.53,
+      "offset_y": 0.3,
+      "width_scale": 0.45,
+      "height_scale": 0.45
+    }
+  },
+  {
+    "id": "prototype_anchor",
+    "combat_size": "small",
+    "name": "Anchor Cannon",
+    "tier": "common",
+    "combat_behavior": "stationary",
+    "combat_role": "striker",
+    "hp": 120,
+    "strength": 21,
+    "vitality": 2,
+    "agility": 4,
+    "focus": 20,
+    "luck": 5,
+    "speed": 6,
+    "stability": 45,
+    "element": "source",
+    "resistances": {
+      "physical": -20,
+      "shock": 20,
+      "source": 35
+    },
+    "tags": [
+      "machine",
+      "turret",
+      "orbital"
+    ],
+    "abilities": [],
+    "flavor": "A tracking cannon bolted between frozen server racks.",
+    "xp_reward": 999,
+    "credit_reward": 0,
+    "drops": [
+      {
+        "id": "power_cell",
+        "chance": 1
+      }
+    ],
+    "description": "High-damage stationary turret vulnerable to melee pressure.",
+    "portrait": "images/enemies/sentinel_orb_combat.png",
+    "ap_reward": 0,
+    "authored": {
+      "linked_to": "prototype_titan"
+    },
+    "composite": {
+      "group": "prototype_titan",
+      "role": "weapon",
+      "offset_x": 0.53,
+      "offset_y": 0.3,
+      "width_scale": 0.45,
+      "height_scale": 0.45
+    }
+  },
+  {
+    "id": "prototype_projector",
+    "combat_size": "small",
+    "name": "Shield Projector",
+    "tier": "elite",
+    "combat_behavior": "trickster",
+    "combat_role": "controller",
+    "hp": 120,
+    "stability": 45,
+    "strength": 5,
+    "vitality": 2,
+    "agility": 6,
+    "focus": 8,
+    "luck": 2,
+    "speed": 13,
+    "element": "shock",
+    "resistances": {
+      "shock": 100,
+      "physical": -20
+    },
+    "tags": [
+      "robotic",
+      "flying"
+    ],
+    "abilities": [],
+    "flavor": "A hovering security globe patrolling the upper stasis corridors, firing concentrated resonance shocks at intruders.",
+    "xp_reward": 999,
+    "credit_reward": 0,
+    "drops": [
+      {
+        "id": "power_cell",
+        "chance": 1
+      }
+    ],
+    "description": "Hovering defense drone. Blinds targets.",
+    "portrait": "images/enemies/sentinel_orb_combat.png",
+    "ap_reward": 0,
+    "authored": {
+      "linked_to": "prototype_titan"
+    },
+    "composite": {
+      "group": "prototype_titan",
+      "role": "weapon",
+      "offset_x": 0.53,
+      "offset_y": -0.4,
+      "width_scale": 0.45,
+      "height_scale": 0.45
+    }
+  },
+  {
+    "id": "prototype_administrator",
+    "combat_size": "massive",
+    "name": "Reserve Deployment Prototype",
+    "tier": "boss",
+    "combat_behavior": "summoner",
+    "combat_role": "boss",
+    "hp": 850,
+    "strength": 8,
+    "vitality": 8,
+    "agility": 12,
+    "focus": 22,
+    "luck": 8,
+    "speed": 5,
+    "stability": 220,
+    "broken_turns": 2,
+    "element": "source",
+    "resistances": {
+      "source": 30,
+      "shock": -50,
+      "physical": 10
+    },
+    "tags": [
+      "machine",
+      "dominion",
+      "boss"
+    ],
+    "abilities": [
+      "prototype_deploy",
+      "prototype_recover"
+    ],
+    "flavor": "The smiling intelligence that keeps the Upper City clean, calm, and terrified.",
+    "xp_reward": 100,
+    "credit_reward": 25,
+    "ap_reward": 0,
+    "drops": [],
+    "description": "Upper City boss that weaponizes drones, lasers, and polite control. Scan exposes timing gaps in its shield lattice; shock breaks its frame fastest.",
+    "portrait": "images/enemies/the_warden_combat.png",
+    "authored": {
+      "cycle": [
+        "prototype_deploy",
+        "prototype_recover"
+      ],
+      "windups": {
+        "prototype_deploy": "Hangar deployment charging"
+      },
+      "reinforcements": {
+        "skill_id": "prototype_deploy",
+        "pool": [
+          "prototype_interdictor",
+          "prototype_interdictor",
+          "prototype_interdictor"
+        ],
+        "max_alive": 2
+      }
+    }
+  },
+  {
+    "id": "prototype_interdictor",
+    "combat_size": "small",
+    "name": "Reserve Interdictor",
+    "tier": "standard",
+    "combat_behavior": "harrier",
+    "combat_role": "support",
+    "hp": 70,
+    "strength": 6,
+    "vitality": 2,
+    "agility": 14,
+    "focus": 6,
+    "luck": 5,
+    "speed": 16,
+    "stability": 30,
+    "element": "shock",
+    "resistances": {
+      "shock": 30,
+      "physical": -10
+    },
+    "tags": [
+      "machine",
+      "flying",
+      "dominion"
+    ],
+    "abilities": [
+      "stun_pulse"
+    ],
+    "flavor": "A polished aerial stun drone built to keep the Upper City peaceful by making dissent briefly unconscious.",
+    "xp_reward": 999,
+    "credit_reward": 0,
+    "drops": [
+      {
+        "id": "power_cell",
+        "chance": 1
+      }
+    ],
+    "description": "Fast stun drone that dodges clean hits until its pattern is read. Scan marks the opening; physical strikes finish it once staggered. May yield Wiring Bundles and Power Cells. Salvage a Power Cell in the Field Kit for wiring and scrap.",
+    "portrait": "images/enemies/aero_drone_combat.png",
+    "sprite": [
+      "images/enemies/aero_drone_combat.png"
+    ],
+    "ap_reward": 0
+  }
+]

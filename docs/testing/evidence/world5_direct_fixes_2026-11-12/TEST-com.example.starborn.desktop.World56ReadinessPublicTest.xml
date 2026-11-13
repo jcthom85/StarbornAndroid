@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.desktop.World56ReadinessPublicTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-13T00:36:38.019Z" hostname="V52076.vims.edu" time="0.981">
+  <properties/>
+  <testcase name="anchorAndRefusalOrdersChangeProseOnlyWhenTheActualCrossingIsOpened" classname="com.example.starborn.desktop.World56ReadinessPublicTest" time="0.757"/>
+  <testcase name="finalFocusStillRequiresBothBossesAndAftermathSurvivesRestore" classname="com.example.starborn.desktop.World56ReadinessPublicTest" time="0.061"/>
+  <testcase name="bothFilmCachesBecomeOrdinaryEmptyProseAndStayEmptyAfterReload" classname="com.example.starborn.desktop.World56ReadinessPublicTest" time="0.113"/>
+  <testcase name="restoredDockingNarrativeAppearsAndDoesNotReplayItsReward" classname="com.example.starborn.desktop.World56ReadinessPublicTest" time="0.049"/>
+  <system-out><![CDATA[DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=composite_plate qty=4
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

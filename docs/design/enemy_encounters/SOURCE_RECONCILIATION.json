@@ -1,0 +1,42 @@
+{
+  "date": "2026-11-13",
+  "report": "../../testing/AUTHORED_COMBAT_PROTOTYPE_AND_WORLD1_2026-11-12.md",
+  "sources": {
+    "enemies": {
+      "baseline_sha256": "0ec9871c9de2262e7368bfef317ce0f79888776250c06afc80cae9b11b4829ea",
+      "implemented_sha256": "9e0fbb0e9aa0e5be99b2d63784cf4a854177a8568a313c987a2c439b2aa7f464",
+      "reason": "Adds authored Spire combat patterns, Concierge Relay and Administrator Interdictor to the implemented Worlds 1\u20132 definitions."
+    },
+    "skills": {
+      "baseline_sha256": "3fe9d0f064f687cc7e780e65d0f547e31ffe52047bb0ac0df9cdc0ac1b5e438f",
+      "implemented_sha256": "7c21726c888bd766bb0e5ba3c9e5ce71246b370811ce361b267e5f0312fe3682",
+      "reason": "Adds authored Spire skills and recovery actions to the Warden and Sector 9 additions."
+    },
+    "rooms": {
+      "baseline_sha256": "eb540ae416d920e3b3ffe29538ad3caa3b21fe32ee8a65f49804fafbcc8c80ff",
+      "implemented_sha256": "84c6a726b1853532f89a5f93e918689fa280610ec28cd64b26b0341d3f706c39",
+      "reason": "Updates Spire squads and transfers the Drone Wreck Roof assassin from a static encounter to the rooftop patrol. Retains previous room changes and encounter supply sources."
+    },
+    "events": {
+      "baseline_sha256": "d53bf2db7ccc9659402ffbe8a9e2ccc2cbaf430d88172d983b7d0f8ccc59eab9",
+      "implemented_sha256": "ecea4acf30536ae6aa303aceb974dd3f7a65243bee2a37025ce2b273dbc01473",
+      "reason": "Scopes the rooftop security receipt to its Heavy Mech and revises recovery guidance. Retains the Sector 9 Signal compatibility fix."
+    },
+    "enemy_movement": {
+      "baseline_sha256": "a7219c4b818d71a4de5d5189cab589fc8194e38992d9473e33358e474ebcabd3",
+      "implemented_sha256": "b518df8eeec12dd335089898d969faefd2530d08ec9aad72e4abc3b3a28cb0c4",
+      "reason": "Adds the bounded two-room Spire assassin patrol with its original guaranteed ration reward."
+    }
+  },
+  "supplemental_sources": {
+    "statuses": {
+      "baseline_sha256": "a42ecf6bc1c0daf55a4510e15a80820d08380b7a6f5dc59ef6cb2cd28d51b07c",
+      "implemented_sha256": "9a1162e1036d08f23e47ab60e97d04b77686dc5690042c50bb291f1c6a2758e3",
+      "reason": "Adds Sector 9 shelter/exposure and Spire shield order/exposed vents statuses."
+    }
+  },
+  "reports": [
+    "../../testing/AUTHORED_COMBAT_PROTOTYPE_AND_WORLD1_2026-11-12.md",
+    "../../testing/WORLD2_AUTHORED_COMBAT_2026-11-13.md"
+  ]
+}

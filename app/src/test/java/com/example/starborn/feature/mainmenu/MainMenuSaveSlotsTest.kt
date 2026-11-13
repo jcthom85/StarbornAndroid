@@ -20,7 +20,7 @@ class MainMenuSaveSlotsTest {
     @Before fun setUp() = Dispatchers.setMain(dispatcher)
     @After fun tearDown() = Dispatchers.resetMain()
 
-    @Test fun titleLoadGameListsAndLoadsTheTenthNumberedSave() = runTest(dispatcher) {
+    @Test fun titleLoadGameListsAndLoadsTheTwentiethNumberedSave() = runTest(dispatcher) {
         val assets = mock<WorldAssetDataSource> {
             on { loadWorlds() } doReturn emptyList()
             on { loadRooms() } doReturn emptyList()
@@ -33,14 +33,14 @@ class MainMenuSaveSlotsTest {
             on { themeRepository } doReturn themes
         }
         val saved = GameSessionState(worldId = "world_2", roomId = "sector9_stream_falls", playerId = "nova")
-        whenever(services.slotInfo(10)).thenReturn(GameSessionSlotInfo(saved, 1234L))
-        whenever(services.loadSlot(10)).thenReturn(true)
+        whenever(services.slotInfo(20)).thenReturn(GameSessionSlotInfo(saved, 1234L))
+        whenever(services.loadSlot(20)).thenReturn(true)
         val vm = MainMenuViewModel(services)
         runCurrent()
-        assertEquals((1..10).toList(), vm.slots.value.filter { it.slot > 0 }.map { it.slot })
-        assertEquals(12, vm.slots.value.size)
-        assertEquals(saved, vm.slots.value.single { it.slot == 10 }.state)
-        assertTrue(vm.loadSlot(10))
-        verify(services).loadSlot(10)
+        assertEquals((1..20).toList(), vm.slots.value.filter { it.slot > 0 }.map { it.slot })
+        assertEquals(22, vm.slots.value.size)
+        assertEquals(saved, vm.slots.value.single { it.slot == 20 }.state)
+        assertTrue(vm.loadSlot(20))
+        verify(services).loadSlot(20)
     }
 }

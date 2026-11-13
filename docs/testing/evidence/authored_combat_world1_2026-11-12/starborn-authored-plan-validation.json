@@ -1,0 +1,38 @@
+{
+  "baseline_sources": 131,
+  "covered_sources": 131,
+  "proposed_opportunities_or_stages": 98,
+  "roster": 69,
+  "worlds": {
+    "world_1": {
+      "baseline": 11,
+      "proposed": 11,
+      "roster": 8
+    },
+    "world_2": {
+      "baseline": 11,
+      "proposed": 11,
+      "roster": 9
+    },
+    "world_3": {
+      "baseline": 9,
+      "proposed": 9,
+      "roster": 9
+    },
+    "world_4": {
+      "baseline": 41,
+      "proposed": 27,
+      "roster": 14
+    },
+    "world_5": {
+      "baseline": 42,
+      "proposed": 25,
+      "roster": 14
+    },
+    "world_6": {
+      "baseline": 17,
+      "proposed": 15,
+      "roster": 15
+    }
+  }
+}

@@ -117,6 +117,8 @@ fun CommandPalette(
     targetInstruction: String? = null,
     onCancelTarget: (() -> Unit)? = null,
     momentum: Int = 0,
+    canGuard: Boolean = false,
+    onGuard: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     if (actor == null) return
@@ -257,11 +259,12 @@ fun CommandPalette(
                                 isOvercharged = momentum > 0,
                                 isMaxOvercharge = momentum >= 3
                             ),
+                            CommandEntry("Guard", Icons.Rounded.Shield, canGuard, onGuard),
                             CommandEntry("Items", Icons.Rounded.Inventory2, hasItems, onItems),
                             CommandEntry(snackLabel, Icons.Rounded.Restaurant, canSnack, onSnack, cooldown = snackCooldown),
                             CommandEntry("Retreat", Icons.AutoMirrored.Rounded.ExitToApp, canRetreat, onRetreat)
                         )
-                        val rows = listOf(commands.take(2), commands.drop(2))
+                        val rows = listOf(commands.take(3), commands.drop(3))
                         rows.forEach { chunk ->
                             if (chunk.isNotEmpty()) {
                                 Row(

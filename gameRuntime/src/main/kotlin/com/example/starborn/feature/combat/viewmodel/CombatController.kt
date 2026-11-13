@@ -9,6 +9,9 @@ import com.example.starborn.domain.audio.AudioCommand
 import com.example.starborn.domain.audio.AudioCueType
 import com.example.starborn.domain.audio.AudioRouter
 import com.example.starborn.domain.combat.CombatAction
+import com.example.starborn.domain.combat.AuthoredEncounterRules
+import com.example.starborn.domain.combat.EnemyPreparation
+import com.example.starborn.domain.combat.TurnSlot
 import com.example.starborn.domain.combat.CombatActionProcessor
 import com.example.starborn.domain.combat.CombatAiWeights
 import com.example.starborn.domain.combat.CombatEngine
@@ -111,15 +114,17 @@ class CombatController(
 
     val player: Player?
     val playerParty: List<Player>
-    val enemies: List<Enemy>
+    private val activeEnemyDefinitions = mutableListOf<Enemy>()
+    val enemies: List<Enemy> get() = activeEnemyDefinitions
     private val encounterEnemySlots: List<EncounterEnemySlot>
+    private val enemyCatalog: Map<String, Enemy>
 
     private val playerSkillsById: Map<String, List<Skill>>
     private val playerDefaultSkillIds: Map<String, Set<String>>
     private val playerCombatants: List<Combatant>
-    private val enemyCombatants: List<Combatant>
+    private val enemyCombatants: MutableList<Combatant>
     private val playerIdList: List<String>
-    private val enemyIdList: List<String>
+    private val enemyIdList: MutableList<String>
     private val encounterEnemyIdList: List<String>
     private val bossCoreCombatantIds: Set<String>
     private val readyQueue = mutableListOf<String>()
@@ -196,7 +201,7 @@ class CombatController(
     private var enemyTurnResumeJob: Job? = null
     private var enemyTurnsBlockedUntilMs: Long = 0L
     val encounterEnemyIds: List<String> get() = encounterEnemyIdList
-    val enemyCombatantIds: List<String> get() = enemyIdList
+    val enemyCombatantIds: List<String> get() = enemyIdList.toList()
     private val _selectedEnemies = MutableStateFlow<Set<String>>(emptySet())
     val selectedEnemies: StateFlow<Set<String>> = _selectedEnemies.asStateFlow()
     val weaknessKnowledge = sessionStore.state
@@ -330,9 +335,12 @@ class CombatController(
     init {
         itemCatalog.load()
         val players = worldAssets.loadCharacters()
-        val allEnemies = worldAssets.loadEnemies()
+        val prototypeEncounter = enemyIds.any { it.startsWith("prototype_") }
+        val allEnemies = worldAssets.loadEnemies() + if (prototypeEncounter) worldAssets.loadCombatPrototypeEnemies() else emptyList()
+        enemyCatalog = allEnemies.associateBy { it.id }
         val progression = sessionStore.state.value
-        val allSkills = worldAssets.loadSkills(progression.progressionPrototypeVersion).map {
+        val allSkills = (worldAssets.loadSkills(progression.progressionPrototypeVersion) +
+            if (prototypeEncounter) worldAssets.loadCombatPrototypeSkills() else emptyList()).map {
             com.example.starborn.domain.leveling.CrewBuildPrototype.tune(it, progression)
         }
         val rooms = worldAssets.loadRooms()
@@ -371,7 +379,7 @@ class CombatController(
                 )
             }
         encounterEnemySlots = slots
-        enemies = slots.map { it.enemy }
+        activeEnemyDefinitions.addAll(slots.map { it.enemy })
         encounterEnemyIdList = slots.map { it.canonicalId }
 
         val currentRoomId = sessionSnapshot.roomId
@@ -421,14 +429,14 @@ class CombatController(
                 vitalityOverride = finalVit,
                 stabilityOverride = slot.stability
             )
-        }
+        }.toMutableList()
         val rawTitle = buildEncounterTitle(encounterEnemySlots.map { it.enemy })
         encounterTitle = if (isMasterProtocol) "⚡ MASTER: $rawTitle" else rawTitle
         playerIdList = playerCombatants.map { it.id }
-        enemyIdList = enemyCombatants.map { it.id }
+        enemyIdList = enemyCombatants.map { it.id }.toMutableList()
         bossCoreCombatantIds = encounterEnemySlots.mapIndexedNotNull { index, slot ->
             val role = slot.enemy.composite?.role
-            if (role.equals("core", ignoreCase = true)) {
+            if (role.equals("core", ignoreCase = true) || slot.enemy.authored?.reinforcements != null) {
                 enemyCombatants.getOrNull(index)?.id
             } else {
                 null
@@ -507,7 +515,19 @@ class CombatController(
                 }
             }
             val seeded = if (baseSeeded != null && updatedCombatants != null) {
-                baseSeeded.copy(combatants = updatedCombatants)
+                baseSeeded.copy(combatants = updatedCombatants, authored = baseSeeded.authored.copy(
+                    cyclePositions = enemyIdList.associateWith { id ->
+                        val definition = enemyDefinitions.getValue(id)
+                        val ordinal = enemyIdList.filter { enemyDefinitions[it]?.id == definition.id }.indexOf(id)
+                        ordinal * (definition.authored?.duplicateCycleOffset ?: 0).coerceAtLeast(0)
+                    },
+                    remainingUses = enemyIdList.mapNotNull { id ->
+                        val pattern = enemyDefinitions[id]?.authored ?: return@mapNotNull null
+                        val limits = pattern.resourceLabels.keys.mapNotNull { skillId ->
+                            skillById[skillId]?.usesPerBattle?.let { skillId to it }
+                        }.toMap()
+                        (id to limits).takeIf { limits.isNotEmpty() }
+                    }.toMap()))
             } else {
                 baseSeeded
             }
@@ -550,6 +570,20 @@ class CombatController(
         val targetId = targetIdOverride ?: resolveEnemyTargets(snapshot).firstOrNull() ?: return
         playUiCue("confirm")
         executePlayerAttack(attackerId, targetId)
+    }
+
+    fun skillDisplayName(id: String): String? = skillById[id]?.name
+
+    fun guard() {
+        val id = _awaitingAction.value ?: return
+        if (_combatTutorial.value != null || _state.value?.outcome != null) return
+        updateState { current ->
+            if (current.combatants[id]?.isAlive != true) return@updateState current
+            actionProcessor.execute(current, CombatAction.Defend(id), ::victoryReward).applyOutcomeResults(current)
+        }
+        playUiCue("confirm")
+        clearAwaitingAction(id)
+        concludeActorTurn(id)
     }
 
     fun useSkill(skill: Skill, explicitTargets: List<String>? = null) {
@@ -1296,6 +1330,13 @@ class CombatController(
             is CombatAction.SkillUse -> {
                 val key = "${action.actorId}:${action.skillId}"
                 enemySkillUsageCounts[key] = enemySkillUsageCounts.getOrDefault(key, 0) + 1
+                updateState { current ->
+                    val limits = current.authored.remainingUses[action.actorId]
+                    val remaining = limits?.get(action.skillId)
+                    if (remaining == null) current else current.copy(authored = current.authored.copy(
+                        remainingUses = current.authored.remainingUses +
+                            (action.actorId to (limits + (action.skillId to (remaining - 1).coerceAtLeast(0))))))
+                }
                 recordEnemyAction(action.actorId, action.skillId)
             }
             is CombatAction.BasicAttack -> recordEnemyAction(action.actorId, ENEMY_BASIC_ACTION_MARKER)
@@ -1716,7 +1757,7 @@ class CombatController(
 
     private fun updateState(block: (CombatState) -> CombatState) {
         val current = _state.value ?: return
-        val updated = block(current)
+        val updated = AuthoredEncounterRules.reconcile(block(current), enemyDefinitions, statusRegistry, current)
         if (updated === current) return
         _state.value = updated
         processNewLogEntries(current, updated)
@@ -2134,7 +2175,7 @@ class CombatController(
         currentState.turnOrder.forEach { slot ->
             val id = slot.combatantId
             val combatantState = currentState.combatants[id] ?: return@forEach
-            if (!combatantState.isAlive) {
+            if (!combatantState.isAlive || AuthoredEncounterRules.linkedOwner(id, enemyDefinitions) != null) {
                 meters[id] = 0f
                 removeFromReadyQueue(id)
                 return@forEach
@@ -2608,10 +2649,12 @@ class CombatController(
                 tryProcessEnemyTurns()
                 return
             }
-            val action = selectEnemyAction(snapshot, enemyStateSnapshot)
+            if (executeAuthoredWaitOrPreparation(enemyId)) return
+            val action = authoredEnemyAction(enemyId) ?: return
             val skillUse = action as? CombatAction.SkillUse
             val telegraphSkill = skillUse?.let { skillById[it.skillId] }
-            if (telegraphSkill != null && shouldTelegraph(telegraphSkill)) {
+            if (telegraphSkill != null && shouldTelegraph(telegraphSkill) &&
+                telegraphSkill.id !in enemyDefinitions[enemyId]?.authored?.windups.orEmpty()) {
                 combatFxEvents.tryEmit(
                     CombatFxEvent.Telegraph(
                         actorId = enemyId,
@@ -2627,15 +2670,26 @@ class CombatController(
             // Guard minigame disabled: enemy attacks always resolve immediately.
             suppressMissLungeTargets = emptySet()
             var acted = false
+            var executed = false
             updateState { current ->
                 val enemyState = current.combatants[enemyId] ?: return@updateState current
                 if (!enemyState.isAlive) return@updateState current
-                val resolved = actionProcessor.execute(current, action, ::victoryReward)
+                if (skillUse != null && enemyDefinitions[enemyId]?.authored?.linkedActions?.containsKey(skillUse.skillId) == true) {
+                    val source = AuthoredEncounterRules.sourceFor(enemyId, skillUse.skillId, enemyDefinitions)
+                    if (source == null || !AuthoredEncounterRules.canPrepare(source, current, statusRegistry)) return@updateState current
+                }
+                var resolved = actionProcessor.execute(current, action, ::victoryReward)
+                executed = resolved.log.drop(current.log.size).any { it is CombatLogEntry.ActionQueued && it.actorId == enemyId }
+                if (executed) {
+                    val reinforcement = enemyDefinitions[enemyId]?.authored?.reinforcements
+                    if (skillUse?.skillId == reinforcement?.skillId) resolved = deployReserve(resolved, enemyId)
+                }
+                resolved = tickLinkedParts(resolved, enemyId)
                 acted = true
                 resolved.applyOutcomeResults(current)
             }
             if (acted) {
-                recordEnemyActionUse(action)
+                if (executed) recordEnemyActionUse(action)
                 concludeActorTurn(enemyId)
             } else {
                 removeFromReadyQueue(enemyId)
@@ -2647,6 +2701,125 @@ class CombatController(
         } finally {
             resumeAtbForAnimation()
         }
+    }
+
+    /** A charged action consumes a real ATB opportunity, leaving the party free to respond. */
+    private fun waitAuthoredTurn(id: String, reason: String) {
+        updateState { before ->
+            val ticked = tickLinkedParts(combatEngine.tickEndOfTurn(before, id), id)
+            combatEngine.resolveOutcome(ticked.copy(
+                log = ticked.log + CombatLogEntry.TurnSkipped(before.round, id, reason)), ::victoryReward)
+                .applyOutcomeResults(before)
+        }
+        concludeActorTurn(id)
+    }
+
+    private fun executeAuthoredWaitOrPreparation(id: String): Boolean {
+        val state = _state.value ?: return true
+        if (id in state.authored.recovery) {
+            updateState { it.copy(authored = it.authored.copy(recovery = it.authored.recovery - id)) }
+            waitAuthoredTurn(id, "Recovering after interruption")
+            enemyTurnJob = null
+            return true
+        }
+        return false
+    }
+
+    private fun authoredEnemyAction(id: String): CombatAction? {
+        var current = _state.value ?: return null
+        val pattern = enemyDefinitions[id]?.authored ?: return selectEnemyAction(current, current.combatants.getValue(id))
+        val pending = current.authored.preparations[id]
+        if (pending != null) {
+            updateState { it.copy(authored = it.authored.copy(preparations = it.authored.preparations - id)) }
+            val skill = skillById[pending.skillId]
+            val deploymentUnavailable = pending.skillId == pattern.reinforcements?.skillId &&
+                AuthoredEncounterRules.nextReserve(id, current, enemyDefinitions) == null
+            if (skill == null || deploymentUnavailable || !enemyAI.canEnemyUseSkill(id, skill, current) ||
+                !AuthoredEncounterRules.canPrepare(pending.sourceId, current, statusRegistry)) {
+                waitAuthoredTurn(id, "${pending.label} interrupted")
+                enemyTurnJob = null
+                return null
+            }
+            return CombatAction.SkillUse(id, pending.skillId,
+                pending.targetIds.filter { current.combatants[it]?.isAlive == true })
+        }
+        val phaseOpening = id in current.authored.phaseOpenings
+        val cycle = if (id in current.authored.phases) pattern.phase?.cycle.orEmpty() else pattern.cycle
+        val position = current.authored.cyclePositions[id] ?: 0
+        val desired = if (phaseOpening) pattern.phase?.openingSkill else cycle.getOrNull(position % cycle.size.coerceAtLeast(1))
+        val skill = desired?.let(skillById::get)
+        val source = desired?.let { AuthoredEncounterRules.sourceFor(id, it, enemyDefinitions) }
+        val reserveAvailable = desired != pattern.reinforcements?.skillId ||
+            AuthoredEncounterRules.nextReserve(id, current, enemyDefinitions) != null
+        val action = if (skill != null && source != null && reserveAvailable &&
+            AuthoredEncounterRules.canPrepare(source, current, statusRegistry) && enemyAI.canEnemyUseSkill(id, skill, current)) {
+            CombatAction.SkillUse(id, skill.id, resolveSkillTargets(skill, current, id))
+        } else if (!reserveAvailable && desired != null) {
+            updateState { it.copy(authored = it.authored.copy(cyclePositions = it.authored.cyclePositions + (id to position + 1))) }
+            waitAuthoredTurn(id, "Deployment bay unavailable")
+            enemyTurnJob = null
+            return null
+        } else if (desired != null) {
+            CombatAction.BasicAttack(id, resolvePlayerTargets(current).firstOrNull() ?: return null)
+        } else selectEnemyAction(current, current.combatants.getValue(id))
+        updateState { it.copy(authored = it.authored.copy(
+            cyclePositions = if (phaseOpening) it.authored.cyclePositions else it.authored.cyclePositions + (id to position + 1),
+            phaseOpenings = if (phaseOpening && (action as? CombatAction.SkillUse)?.skillId != pattern.phase?.openingSkill)
+                it.authored.phaseOpenings else it.authored.phaseOpenings - id)) }
+        val use = action as? CombatAction.SkillUse ?: return action
+        val label = pattern.windups[use.skillId] ?: return action
+        current = _state.value ?: return null
+        val actualSource = AuthoredEncounterRules.sourceFor(id, use.skillId, enemyDefinitions)
+        if (actualSource == null || !AuthoredEncounterRules.canPrepare(actualSource, current, statusRegistry)) {
+            waitAuthoredTurn(id, "$label unavailable")
+            enemyTurnJob = null
+            return null
+        }
+        val preparation = EnemyPreparation(id, actualSource, use.skillId, use.targetIds, label)
+        updateState { it.copy(authored = it.authored.copy(preparations = it.authored.preparations + (id to preparation))) }
+        combatFxEvents.tryEmit(CombatFxEvent.Telegraph(id, label, use.targetIds))
+        waitAuthoredTurn(id, "Preparing $label")
+        enemyTurnJob = null
+        return null
+    }
+
+    private fun tickLinkedParts(state: CombatState, owner: String): CombatState {
+        var result = state
+        enemyIdList.filter { AuthoredEncounterRules.linkedOwner(it, enemyDefinitions) == owner }.forEach { id ->
+            val part = result.combatants[id] ?: return@forEach
+            if (part.isAlive) {
+                result = combatEngine.tickEndOfTurn(result, id)
+                val ticked = result.combatants.getValue(id)
+                if (ticked.breakTurns > 0) result = result.copy(combatants = result.combatants +
+                    (id to ticked.copy(breakTurns = ticked.breakTurns - 1)))
+            }
+        }
+        return result
+    }
+
+    private fun deployReserve(state: CombatState, owner: String): CombatState {
+        if (state.outcome != null || state.combatants.values.count { it.isAlive && it.combatant.side == CombatSide.ENEMY } >= 5) return state
+        val canonical = AuthoredEncounterRules.nextReserve(owner, state, enemyDefinitions) ?: return state
+        val definition = enemyCatalog[canonical] ?: return state
+        val used = state.authored.reservesUsed[owner] ?: 0
+        val id = "$canonical#reserve${used + 1}@$owner"
+        if (id in state.combatants) return state
+        val combatant = definition.toCombatant(id)
+        enemyDefinitions[id] = definition
+        activeEnemyDefinitions.add(definition)
+        enemyCombatants.add(combatant)
+        enemyIdList.add(id)
+        val skills = combatant.skills.mapNotNull(skillById::get)
+        enemyBrains[id] = EnemyBrain(enemyAI.parseBehavior(definition.combatBehavior) ?: enemyAI.inferBehavior(skills),
+            enemyAI.parseRole(definition.combatRole) ?: enemyAI.inferRole(skills))
+        enemyActionHistory[id] = ArrayDeque()
+        _atbMeters.update { it + (id to 0f) }
+        playBattleCue("enemy_attack_drone")
+        return state.copy(turnOrder = state.turnOrder + TurnSlot(id, 0),
+            combatants = state.combatants + (id to CombatantState(combatant, combatant.stats.maxHp, combatant.stats.stability)),
+            authored = state.authored.copy(reservesUsed = state.authored.reservesUsed + (owner to used + 1),
+                reserveOwners = state.authored.reserveOwners + (id to owner)),
+            log = state.log + CombatLogEntry.TurnSkipped(state.round, owner, "${definition.name} deployed"))
     }
 
     private data class EquipmentBonuses(
@@ -3009,6 +3182,7 @@ class CombatController(
         val dropAccumulator = mutableMapOf<String, Int>()
         encounterEnemySlots.forEach { slot ->
             val enemy = slot.enemy
+            if (enemy.authored?.linkedTo != null && enemies.any { it.id == enemy.authored.linkedTo }) return@forEach
             xpTotal += enemy.xpReward
             apTotal += enemy.apReward ?: 0
             creditsTotal += enemy.creditReward
@@ -3163,6 +3337,9 @@ class CombatController(
         val reward = victoryReward()
         val victory = CombatOutcome.Victory(reward)
         return copy(
+            combatants = combatants.mapValues { (_, actor) ->
+                if (actor.combatant.side == CombatSide.ENEMY && actor.isAlive) actor.copy(hp = 0) else actor
+            },
             outcome = victory,
             log = log + CombatLogEntry.Outcome(turn = round, result = victory)
         )

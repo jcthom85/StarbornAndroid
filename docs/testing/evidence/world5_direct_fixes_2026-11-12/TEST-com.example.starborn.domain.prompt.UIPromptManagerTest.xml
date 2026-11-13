@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.domain.prompt.UIPromptManagerTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-11-13T00:38:06.999Z" hostname="V52076.vims.edu" time="0.005">
+  <properties/>
+  <testcase name="dismiss callback can enqueue the next prompt without losing it" classname="com.example.starborn.domain.prompt.UIPromptManagerTest" time="0.003"/>
+  <testcase name="modal blockers wait for every owner and preserve queued tutorials and rewards" classname="com.example.starborn.domain.prompt.UIPromptManagerTest" time="0.001"/>
+  <testcase name="suspending toasts pauses item toasts while allowing tutorials" classname="com.example.starborn.domain.prompt.UIPromptManagerTest" time="0.0"/>
+  <testcase name="stale dismiss and unrelated collect all cannot skip a visible prompt" classname="com.example.starborn.domain.prompt.UIPromptManagerTest" time="0.0"/>
+  <testcase name="fieldMenuAllowsItsInstructionsButDefersRewardsAndUnrelatedTutorials" classname="com.example.starborn.domain.prompt.UIPromptManagerTest" time="0.0"/>
+  <testcase name="reward group finishes before a tutorial arriving after its first card" classname="com.example.starborn.domain.prompt.UIPromptManagerTest" time="0.0"/>
+  <testcase name="consumption feedback follows the scene before unlock tutorials and rewards" classname="com.example.starborn.domain.prompt.UIPromptManagerTest" time="0.001"/>
+  <testcase name="dismissing one acquisition advances within its sequence" classname="com.example.starborn.domain.prompt.UIPromptManagerTest" time="0.0"/>
+  <testcase name="collect all removes only the matching item sequence" classname="com.example.starborn.domain.prompt.UIPromptManagerTest" time="0.0"/>
+  <testcase name="individual item grants from the same busy period also stay together" classname="com.example.starborn.domain.prompt.UIPromptManagerTest" time="0.0"/>
+  <testcase name="Jed equipment offer follows every starter kit card" classname="com.example.starborn.domain.prompt.UIPromptManagerTest" time="0.0"/>
+  <testcase name="dialogue before receipt holds the entire group and mid-group pause preserves its remainder" classname="com.example.starborn.domain.prompt.UIPromptManagerTest" time="0.0"/>
+  <testcase name="tutorials take priority over queued item toasts" classname="com.example.starborn.domain.prompt.UIPromptManagerTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

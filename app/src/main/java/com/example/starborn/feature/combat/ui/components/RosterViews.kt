@@ -134,7 +134,9 @@ fun PartyRoster(
                                 victoryEmotes -> "images/characters/emotes/${member.id}_cool.png"
                                 else -> member.combatIconPath.takeIf { it.isNotBlank() } ?: member.miniIconPath
                             }
-                            val portraitPainter = rememberAssetPainter(portraitPath, painterResource(R.drawable.main_menu_background))
+                            val basePortrait = rememberAssetPainter(member.combatIconPath.takeIf { it.isNotBlank() } ?: member.miniIconPath,
+                                painterResource(R.drawable.main_menu_background))
+                            val portraitPainter = rememberAssetPainter(portraitPath, basePortrait)
                             val portraitFrameSize = portraitSize + 8.dp
                             val barWidth = if (compact) 64.dp else if (singleRow && party.size > 2) 112.dp else 128.dp
                             val atbProgress = atbMeters[member.id] ?: 0f
@@ -268,7 +270,7 @@ fun PartyRoster(
                                             ) {
                                                 Image(
                                                     painter = portraitPainter,
-                                                    contentDescription = member.name,
+                                                    contentDescription = member.name + if (!isAlive) ", knocked out" else "",
                                                     modifier = Modifier.matchParentSize(),
                                                     contentScale = ContentScale.Crop
                                                 )
@@ -292,9 +294,11 @@ fun PartyRoster(
                                                 }
                                             }
                                         }
+                                        com.example.starborn.ui.combat.AuthoredTargetMarker(combatState, member.id,
+                                            Modifier.matchParentSize())
                                     }
                                     Text(
-                                        text = titleCaseName(member.name),
+                                        text = titleCaseName(member.name) + if (!isAlive) " · KO" else "",
                                         style = MaterialTheme.typography.labelSmall.copy(
                                             fontFamily = CombatNameFont,
                                             fontWeight = FontWeight.Medium
@@ -861,13 +865,13 @@ fun CompositeEnemyRoster(
     val topRowEntries = if (compositeGroup == "driller") {
         topRowEntriesBase.sortedBy { it.layout.offsetX }
     } else {
-        topRowEntriesBase
+        emptyList()
     }
     val density = LocalDensity.current
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 360.dp),
+            .heightIn(min = if (compositeGroup == "driller") 360.dp else 0.dp),
         contentAlignment = Alignment.BottomCenter
     ) {
         val boxWidth = maxWidth

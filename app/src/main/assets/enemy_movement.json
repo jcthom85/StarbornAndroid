@@ -26,6 +26,19 @@
         "debug_enemy_party_sizes_south"
       ],
       "protected_rooms": []
+    },
+    {
+      "id": "spire_roof_patrol",
+      "rooms": [
+        "spire_landing_pad_scale_02",
+        "spire_landing_pad_scale_03"
+      ],
+      "protected_rooms": [
+        "spire_landing_pad_roof",
+        "spire_landing_pad_scale_01",
+        "spire_landing_pad_scale_04",
+        "spire_drone_test_alcove"
+      ]
     }
   ],
   "parties": [
@@ -181,6 +194,35 @@
         "enter_room": "A Dominion escort advances from the south.",
         "leave_room": "The Dominion escort falls back south.",
         "adjacent": "Bootsteps and chittering echo south of here."
+      }
+    },
+    {
+      "id": "spire_rooftop_assassin",
+      "zone_id": "spire_roof_patrol",
+      "enemies": [
+        "corporate_assassin"
+      ],
+      "start_room": "spire_landing_pad_scale_03",
+      "route": [
+        "spire_landing_pad_scale_02",
+        "spire_landing_pad_scale_03"
+      ],
+      "behavior": "patrol",
+      "aggression": "aggressive",
+      "move_interval_seconds": 22,
+      "engage_delay_seconds": 10,
+      "replaces_static_encounter": true,
+      "extra_drops": [
+        {
+          "id": "ration_pack",
+          "chance": 1,
+          "quantity": 2
+        }
+      ],
+      "signals": {
+        "enter_room": "An assassin steps onto the roof and sights the crew.",
+        "leave_room": "The assassin slips along the roofline.",
+        "adjacent": "Quiet boots scrape the rooftop nearby."
       }
     }
   ]

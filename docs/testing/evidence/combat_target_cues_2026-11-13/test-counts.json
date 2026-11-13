@@ -1,0 +1,17 @@
+{
+  "combat": {
+    "tests": 6,
+    "failures": 0,
+    "errors": 0
+  },
+  "desktop": {
+    "tests": 6,
+    "failures": 0,
+    "errors": 0
+  },
+  "android-instrumentation": {
+    "tests": 4,
+    "failures": 0,
+    "errors": 0
+  }
+}

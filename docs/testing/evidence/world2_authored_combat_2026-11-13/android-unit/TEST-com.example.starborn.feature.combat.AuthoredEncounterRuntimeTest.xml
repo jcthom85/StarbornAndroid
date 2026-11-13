@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.feature.combat.AuthoredEncounterRuntimeTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-13T12:15:09.303Z" hostname="V52076.vims.edu" time="1.029">
+  <properties/>
+  <testcase name="deploymentAddsRealTargetsRespectsLiveCapAndCoreVictoryPaysOnlyTheParent" classname="com.example.starborn.feature.combat.AuthoredEncounterRuntimeTest" time="0.325"/>
+  <testcase name="guardIsARealTurnAndRemainsAvailableWithoutAnOptionalSkill" classname="com.example.starborn.feature.combat.AuthoredEncounterRuntimeTest" time="0.023"/>
+  <testcase name="earnedBeastArrivalsWinWithBasicAttacksOrGuardAndKeepRewards" classname="com.example.starborn.feature.combat.AuthoredEncounterRuntimeTest" time="0.501"/>
+  <testcase name="fiveTargetsShareOneClockAndDestroyingAChargingWeaponCancelsIt" classname="com.example.starborn.feature.combat.AuthoredEncounterRuntimeTest" time="0.015"/>
+  <testcase name="plantHealingExhaustsItsVisibleReservesAndPackMembersBeginOnDifferentBeats" classname="com.example.starborn.feature.combat.AuthoredEncounterRuntimeTest" time="0.056"/>
+  <testcase name="earnedSoloWardenArrivalWinsWithDirectAndReactivePoliciesAndKeepsRewards" classname="com.example.starborn.feature.combat.AuthoredEncounterRuntimeTest" time="0.109"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

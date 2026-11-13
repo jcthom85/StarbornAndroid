@@ -1,0 +1,22 @@
+{
+  "runtime": {
+    "tests": 40,
+    "failures": 0,
+    "errors": 0
+  },
+  "android-unit": {
+    "tests": 94,
+    "failures": 0,
+    "errors": 0
+  },
+  "desktop": {
+    "tests": 7,
+    "failures": 0,
+    "errors": 0
+  },
+  "android-instrumentation": {
+    "tests": 3,
+    "failures": 0,
+    "errors": 0
+  }
+}

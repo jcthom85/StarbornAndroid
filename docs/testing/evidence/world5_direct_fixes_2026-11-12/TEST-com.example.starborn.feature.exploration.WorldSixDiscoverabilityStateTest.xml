@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.feature.exploration.WorldSixDiscoverabilityStateTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-13T00:38:07.228Z" hostname="V52076.vims.edu" time="0.109">
+  <properties/>
+  <testcase name="memory references survive quest retirement and independent Aethel milestones" classname="com.example.starborn.feature.exploration.WorldSixDiscoverabilityStateTest" time="0.025"/>
+  <testcase name="Jed legacy references survive independent milestones and retired tasks" classname="com.example.starborn.feature.exploration.WorldSixDiscoverabilityStateTest" time="0.02"/>
+  <testcase name="world six completion events exclusively own successor handoffs" classname="com.example.starborn.feature.exploration.WorldSixDiscoverabilityStateTest" time="0.008"/>
+  <testcase name="quest terminology names authored world six rooms and actions" classname="com.example.starborn.feature.exploration.WorldSixDiscoverabilityStateTest" time="0.004"/>
+  <testcase name="finale and Gh0st references remain reachable in independent milestone and task states" classname="com.example.starborn.feature.exploration.WorldSixDiscoverabilityStateTest" time="0.039"/>
+  <testcase name="remaining Source references preserve partial progress and intentional epilogue replay" classname="com.example.starborn.feature.exploration.WorldSixDiscoverabilityStateTest" time="0.013"/>
+  <system-out><![CDATA[DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=vhs_tape_10 qty=1
+DEBUG: give_item action id=starborn_mod qty=1
+DEBUG: give_item action id=starborn_mod qty=1
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,73 @@
+{
+  "baseline_sources": 131,
+  "covered_sources": 131,
+  "proposed_opportunities_or_stages": 98,
+  "roster": 69,
+  "worlds": {
+    "world_1": {
+      "baseline": 11,
+      "proposed": 11,
+      "roster": 8
+    },
+    "world_2": {
+      "baseline": 11,
+      "proposed": 11,
+      "roster": 9
+    },
+    "world_3": {
+      "baseline": 9,
+      "proposed": 9,
+      "roster": 9
+    },
+    "world_4": {
+      "baseline": 41,
+      "proposed": 27,
+      "roster": 14
+    },
+    "world_5": {
+      "baseline": 42,
+      "proposed": 25,
+      "roster": 14
+    },
+    "world_6": {
+      "baseline": 17,
+      "proposed": 15,
+      "roster": 15
+    }
+  },
+  "negative_checks": [
+    {
+      "case": "missing source decision",
+      "correctly_rejected": true
+    },
+    {
+      "case": "undefined enemy",
+      "correctly_rejected": true
+    },
+    {
+      "case": "cross-world ID reuse",
+      "correctly_rejected": true
+    },
+    {
+      "case": "lost guaranteed material",
+      "correctly_rejected": true
+    },
+    {
+      "case": "orphan merge destination",
+      "correctly_rejected": true
+    }
+  ],
+  "scope": "Design coverage, contracts and source freshness only; no gameplay or balance test.",
+  "source_freshness": "All six snapshotted production asset files still match; this pass did not change them.",
+  "packet_sha256": {
+    "README.md": "b96cbe75babe3c5436aae1550b883e65a8fc3e08258228b75451ff234517df14",
+    "BOSS_DESIGNS.md": "7dee35a68dd07720f8de29ef885fd5e45aa944d1412f148fd701054243f784aa",
+    "ROSTER.md": "011f4cc064b684dc67a0320e792dbd04c81a60b7658013ab96b9340dd109d484",
+    "ENCOUNTER_ROUTE.md": "710417a09cb27a0e976db70d328a7fa9f83df09d414cebc5ca30728863074d41",
+    "IMPLEMENTATION.md": "36a45c2bb62c6e2fc035f5c550af4e1af6811c70430df45914f455c7ff268311",
+    "BASELINE.json": "dd01484e526276d023a941d05982387a02e8972fa342c8d81d20c48327546527",
+    "PLAN.json": "bebc7b55d3073e07f055788a722fd716276bc79beb4d96114450465fc8b925e1",
+    "ART_MANIFEST.json": "9eff155f6ea441940cc2bdb6bcbdc0f93cb7d86adab49eb63b69091dddbddda5",
+    "validate_plan.py": "81985f87b45e1f24e3d8d0788d5893de965d299c66b15a69d426f432bf16c0e1"
+  }
+}

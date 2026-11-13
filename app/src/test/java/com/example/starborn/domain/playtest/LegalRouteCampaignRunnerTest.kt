@@ -473,7 +473,7 @@ class LegalRouteCampaignRunnerTest {
             h.explorationVm.onActionSelected(com.example.starborn.domain.model.GenericAction(
                 "stalker", "generic", actionEvent = "w2_mq04_confront", conditionUnmetMessage = "Objective completed."))
             h.settle()
-            assertEquals("There is nothing more to do here right now.", h.explorationVm.uiState.value.narrationPrompt?.message)
+            assertEquals("There is nothing more to do with stalker right now.", h.explorationVm.uiState.value.narrationPrompt?.message)
             assertNull(h.explorationVm.uiState.value.activeDialogue)
             assertFalse("ms_w2_stalker_confronted" in h.sessionStore.state.value.completedMilestones)
         } finally { h.close() }
@@ -813,17 +813,21 @@ class LegalRouteCampaignRunnerTest {
     @Test
     fun productionWorld3CompletionistRoutesVerifyBothLedgerOutcomesAndReloads() {
         useProductionCrewRules = true
-        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
+        val source = WorldAssetDataSource(AssetJsonReader(DesktopAssetProvider(
+            listOf(assets, File(root, "app/src/debug/assets"))), moshi))
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope,
+            initialState = requireNotNull(source.loadWorld1Checkpoint("w1_mq05")))
         try {
+            h.settle()
             val agent = LegalCampaignAgent(h)
-            agent.playWorld1()
+            agent.finishWorld1Launch()
             agent.playWorld2(completionist = true)
             val arrival = h.saveSlot(6)
             val branches = mutableListOf<String>()
             for (weaponize in listOf(false, true)) {
                 h.loadSlot(6)
                 assertEquals(arrival.inventory, h.sessionStore.state.value.inventory)
-                agent.playWorld3(completionist = true, weaponizeLedger = weaponize)
+                agent.playWorld3(completionist = true, weaponizeLedger = weaponize, exportReviewSaves = !weaponize)
                 val state = h.saveSlot(7)
                 assertEquals("foundry_slag_landing", state.roomId)
                 assertTrue(state.completedQuests.containsAll((11..16).map { "w3_sq$it" }))
@@ -846,6 +850,13 @@ class LegalRouteCampaignRunnerTest {
                     "level=${state.playerLevel}; XP=${state.playerXp}; AP=${state.playerAp}; credits=${state.playerCredits}; " +
                     "inventory=${state.inventory}; skills=${state.unlockedSkills}; tasks=${state.questTasksCompleted.filterKeys { it.startsWith("w3_") }}"
             }
+            h.loadSlot(6)
+            agent.playWorld3(rooftopSeed = 41, exportReviewSaves = true)
+            val main = h.saveSlot(7)
+            assertEquals("foundry_slag_landing", main.roomId)
+            assertTrue(main.completedQuests.containsAll((11..15).map { "w3_mq$it" }))
+            assertEquals(main, h.loadSlot(7))
+            branches += "main route; rooftop seed 41; five main quests; Foundry arrival and reload"
             assertTrue("Completionist routes must use earned resources and public actions", assistance.isEmpty())
             File("build/reports/world3-readiness/earned-completionist-routes.txt").apply {
                 requireNotNull(parentFile).mkdirs()
@@ -1214,6 +1225,85 @@ class LegalRouteCampaignRunnerTest {
             assertTrue(h.inventoryService.hasItem("wooden_rod"))
             assertTrue(h.inventoryService.hasItem("basic_lure"))
             File("build/reports/campaign-systems/public-procurement-route.txt").apply { requireNotNull(parentFile).mkdirs(); writeText(log.joinToString("\n") + "\n") }
+        } finally { h.close() }
+    }
+
+    @Test
+    fun authoredWardenContinuesTheEarnedLaunchCheckpointThroughWorldTwoAndReload() {
+        useProductionCrewRules = true
+        val checkpoint = requireNotNull(moshi.adapter(GameSessionState::class.java).fromJson(
+            File(root, "app/src/debug/assets/playtest/world1/world1_w1_mq05.json").readText()))
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = checkpoint)
+        try {
+            h.settle()
+            val arrival = h.saveSlot(8)
+            assertEquals(arrival, h.loadSlot(8))
+            LegalCampaignAgent(h).finishWorld1Launch()
+            assertEquals("sector9_crash_site", h.sessionStore.state.value.roomId)
+            assertTrue("w1_mq05" in h.sessionStore.state.value.completedQuests)
+            assertTrue("w2_mq01" in h.sessionStore.state.value.activeQuests)
+            assertTrue("ms_w1_warden_defeated" in h.sessionStore.state.value.completedMilestones)
+            assertEquals(1, h.inventoryService.snapshot()["warden_keycard"])
+            assertTrue("The launch slice must use real public encounters", assistance.isEmpty())
+            assertEquals(1, publicCombats.count { it.contains("enemies=[the_iron_warden]") })
+            val saved = h.saveSlot(9)
+            assertEquals(saved, h.loadSlot(9))
+            File("build/reports/authored-encounters/earned-launch-route.txt").apply {
+                requireNotNull(parentFile).mkdirs()
+                writeText(publicCombats.joinToString("\n") + "\nWorld 2 arrival and slot 9 reload verified.\n")
+            }
+        } finally { h.close() }
+    }
+
+    @Test
+    fun authoredWorld2CompletionistRouteFromEarnedLaunchReachesWorld3AndReloads() {
+        useProductionCrewRules = true
+        val checkpoint = requireNotNull(moshi.adapter(GameSessionState::class.java).fromJson(
+            File(root, "app/src/debug/assets/playtest/world1/world1_w1_mq05.json").readText()))
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = checkpoint)
+        try {
+            h.settle()
+            val agent = LegalCampaignAgent(h)
+            agent.finishWorld1Launch()
+            agent.playWorld2(completionist = true, defeatOptionalPairs = true, defeatAllEncounters = true)
+            val saved = h.saveSlot(9)
+            assertEquals("spire_sewers_landing", saved.roomId)
+            assertTrue(saved.completedQuests.containsAll((1..5).map { "w2_mq%02d".format(it) } +
+                (1..5).map { "w2_sq%02d".format(it) }))
+            assertTrue(saved.partyMembers.containsAll(listOf("nova", "zeke", "orion", "gh0st")))
+            assertTrue("nova_link" in saved.unlockedSkills)
+            assertTrue("w3_mq11" in saved.activeQuests)
+            assertTrue(saved.pendingBattleJson.isBlank())
+            assertTrue("Earned route requires no assistance: $assistance", assistance.isEmpty())
+            assertEquals(saved, h.loadSlot(9))
+            File("build/reports/world2-authored/earned-completionist-route.txt").apply {
+                parentFile!!.mkdirs(); writeText(publicCombats.joinToString("\n") +
+                    "\nAll ten World 2 quests complete; World 3 arrival and slot 9 reload verified.\nAssistance: $assistance\n")
+            }
+        } finally { h.close() }
+    }
+
+    @Test
+    fun authoredWorld2MainRouteFromEarnedLaunchReachesWorld3WithoutOptionalFights() {
+        useProductionCrewRules = true
+        val checkpoint = requireNotNull(moshi.adapter(GameSessionState::class.java).fromJson(
+            File(root, "app/src/debug/assets/playtest/world1/world1_w1_mq05.json").readText()))
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = checkpoint)
+        try {
+            h.settle()
+            val agent = LegalCampaignAgent(h)
+            agent.finishWorld1Launch()
+            agent.playWorld2()
+            val saved = h.saveSlot(8)
+            assertEquals("spire_sewers_landing", saved.roomId)
+            assertTrue(saved.completedQuests.containsAll((1..5).map { "w2_mq%02d".format(it) }))
+            assertTrue("w3_mq11" in saved.activeQuests)
+            assertTrue(assistance.isEmpty())
+            assertEquals(saved, h.loadSlot(8))
+            File("build/reports/world2-authored/earned-main-route.txt").apply {
+                parentFile!!.mkdirs();writeText(publicCombats.joinToString("\n") +
+                    "\nAll five main quests complete; World 3 arrival and slot 8 reload verified.\nAssistance: $assistance\n")
+            }
         } finally { h.close() }
     }
 
@@ -1587,7 +1677,7 @@ class LegalRouteCampaignRunnerTest {
             assertTrue("w2_mq01 active", harness.sessionStore.state.value.activeQuests.contains("w2_mq01"))
         }
 
-        fun playWorld2(completionist: Boolean = false, defeatOptionalPairs: Boolean = false, pairSeed: Int = 17) {
+        fun playWorld2(completionist: Boolean = false, defeatOptionalPairs: Boolean = false, pairSeed: Int = 17, defeatAllEncounters: Boolean = false) {
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w2_mq01"))
             talkToNpc("Zeke")
             performAction("w2_mq01_examine_pod")
@@ -1606,7 +1696,7 @@ class LegalRouteCampaignRunnerTest {
                 harness.playPublicEncounter("shard_hound", seed = pairSeed)
             }
             navigateLegalPath("sector9_stream_cave_depths")
-            harness.playPublicEncounter("echo_borer", seed = pairSeed)
+            harness.playPublicEncounter("moss_borer", seed = pairSeed)
             navigateLegalPath("sector9_temple_gate")
             harness.explorationVm.travel("east")
             harness.settle()
@@ -1638,6 +1728,19 @@ class LegalRouteCampaignRunnerTest {
             assertTrue("Orion joins party", harness.sessionStore.state.value.partyMembers.contains("orion"))
             assertTrue("w2_mq04 active", harness.sessionStore.state.value.activeQuests.contains("w2_mq04"))
 
+            if (defeatAllEncounters) {
+                for ((room, enemy) in listOf(
+                    "sector9_stream_pools" to "mist_glider",
+                    "sector9_stream_wetlands" to "spore_spitter",
+                    "sector9_wilds_thickets" to "razor_vine",
+                    "sector9_foyer_left_gallery" to "ruin_guardian",
+                    "sector9_conduit_junction" to "sentinel_orb",
+                    "sector9_hall_acoustics_lab" to "sentinel_orb",
+                    "sector9_vents_gantry" to "sentinel_orb")) {
+                    navigateLegalPath(room)
+                    harness.playPublicEncounter(enemy, seed = pairSeed)
+                }
+            }
             if (completionist) completeWorld2EarlySideQuests()
 
             // MQ04: The Hunter (Source Beast & Gh0st joins)
@@ -1648,6 +1751,9 @@ class LegalRouteCampaignRunnerTest {
             assertFalse("Starting dialogue must not credit the confrontation", "ms_w2_stalker_confronted" in harness.sessionStore.state.value.completedMilestones)
             finishDialogue("")
             assertTrue("Finishing dialogue credits the confrontation", "ms_w2_stalker_confronted" in harness.sessionStore.state.value.completedMilestones)
+            File("build/reports/world2-authored/beast-earned-arrival-${if (completionist) "completionist" else "main"}.json").apply {
+                parentFile!!.mkdirs(); writeText(moshi.adapter(GameSessionState::class.java).toJson(harness.sessionStore.state.value))
+            }
             performAction("w2_mq04_beast_ambush")
             harness.playPublicEncounter("the_beast", pending = true)
             assertTrue("Recruited Gh0st visible for later Stolen Tech offer",
@@ -1754,10 +1860,19 @@ class LegalRouteCampaignRunnerTest {
             assertTrue(harness.sessionStore.state.value.completedQuests.containsAll((1..4).map { "w2_sq%02d".format(it) }))
         }
 
-        fun playWorld3(completionist: Boolean = false, weaponizeLedger: Boolean = false) {
+        fun playWorld3(
+            completionist: Boolean = false,
+            weaponizeLedger: Boolean = false,
+            rooftopSeed: Int = 17,
+            exportReviewSaves: Boolean = false
+        ) {
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w3_mq11"))
             navigateLegalPath("spire_sewers_scale_01")
             harness.playPublicEncounter("sewer_crawler")
+            if (completionist) {
+                navigateLegalPath("spire_sewers_scale_02")
+                harness.playPublicEncounter("sewer_crawler")
+            }
             navigateLegalPath("spire_vent_output")
             navigateLegalPath("spire_zekes_apartment")
             talkToNpc("Zeke")
@@ -1795,7 +1910,8 @@ class LegalRouteCampaignRunnerTest {
             performAction("w3_mq12_source_disguises")
             navigateLegalPath("spire_zekes_apartment")
             performAction("w3_mq12_hack_blueprints")
-            performAction("w3_mq12_assemble_planning")
+            performAction("w3_mq12_review_plan")
+            finishDialogue("w3_mq12_assemble_confirm")
             assertTrue("w3_mq12 completed", harness.sessionStore.state.value.completedQuests.contains("w3_mq12"))
 
             // Upper City Infiltration
@@ -1817,6 +1933,7 @@ class LegalRouteCampaignRunnerTest {
             }
 
             navigateLegalPath("spire_archive_vault")
+            if (completionist) harness.playPublicEncounter("corporate_assassin")
             performAction("w3_mq14_read_containment_field")
             navigateLegalPath("spire_prism_gallery")
             performAction("w3_mq14_read_prism_shutters")
@@ -1834,14 +1951,38 @@ class LegalRouteCampaignRunnerTest {
             navigateLegalPath("spire_skypark_scale_02")
             harness.restAtVisibleStop()
             navigateLegalPath("spire_exec_lounge_bar")
-            harness.buyAtVisibleShop("upper_city_lounge", "medkit", 6)
+            if (completionist) harness.buyAtVisibleShop("upper_city_lounge", "medkit", 2)
             navigateLegalPath("spire_landing_pad_roof")
             if (completionist) harness.verifyWorld3RewardEquipment()
-            harness.playPublicEncounter("heavy_mech", verifyIntercept = completionist)
+            assertFalse("Administrator waits until the security line is cleared",
+                "administrator_boss" in harness.explorationVm.uiState.value.enemies)
+            if (exportReviewSaves && !completionist) harness.exportSpireReviewSave(15, "heavy_mech")
+            harness.playPublicEncounter("heavy_mech", seed = rooftopSeed, verifyIntercept = completionist)
             navigateLegalPath("spire_skypark_scale_02")
             harness.restAtVisibleStop()
             navigateLegalPath("spire_landing_pad_roof")
-            harness.playPublicEncounter("administrator_boss")
+            if (exportReviewSaves && !completionist) harness.exportSpireReviewSave(16, "administrator_boss")
+            harness.playPublicEncounter("administrator_boss", seed = rooftopSeed)
+            if (completionist) {
+                navigateLegalPath("spire_exec_lounge_scale_05")
+                harness.playPublicEncounter("riot_guard")
+                navigateLegalPath("spire_landing_pad_scale_01")
+                harness.playPublicEncounter("aero_drone")
+                navigateLegalPath("spire_landing_pad_scale_03")
+                val beforePatrol = harness.saveSlot(8)
+                harness.loadSlot(8)
+                if (exportReviewSaves) harness.exportSpireReviewSave(17, "corporate_assassin")
+                harness.playPublicEncounter("corporate_assassin")
+                assertTrue(harness.sessionStore.state.value.enemyPartyStates.getValue("spire_rooftop_assassin").defeated)
+                val defeated = harness.saveSlot(8)
+                harness.loadSlot(8)
+                assertEquals(defeated.enemyPartyStates["spire_rooftop_assassin"],
+                    harness.sessionStore.state.value.enemyPartyStates["spire_rooftop_assassin"])
+                assertFalse("Patrol must stay cleared after reload",
+                    "corporate_assassin" in harness.explorationVm.uiState.value.enemies)
+                assertTrue(beforePatrol.enemyPartyStates["spire_rooftop_assassin"]?.defeated == false)
+                navigateLegalPath("spire_landing_pad_roof")
+            }
             performAction("w3_scan_shield_gap")
             performAction("w3_mq15_launch_astra")
             assertTrue("w3_mq15 completed", harness.sessionStore.state.value.completedQuests.contains("w3_mq15"))
@@ -2768,8 +2909,27 @@ class LegalRouteCampaignRunnerTest {
             )
         }
 
+        fun exportSpireReviewSave(slot: Int, enemyId: String) = runBlocking {
+            val state = sessionStore.state.value
+            assertEquals("world_3", state.worldId)
+            assertTrue(enemyId in explorationVm.uiState.value.enemies)
+            assertTrue(state.pendingBattleJson.isBlank())
+            assertNull(state.battleCheckpoint)
+            val output = File("build/reports/world3-readiness/slots").apply { mkdirs() }
+            val persistence = GameSessionPersistence(output)
+            persistence.writeSlot(slot, state)
+            assertEquals(state, persistence.readSlot(slot))
+        }
+
         fun playPublicEncounter(enemyId: String, retreat: Boolean = false, pending: Boolean = false, seed: Int = 17, verifyIntercept: Boolean = false) {
             val room = requireNotNull(sessionStore.state.value.roomId)
+            if (!pending && enemyId in setOf("the_iron_warden", "stalker_vine", "shard_hound")) {
+                val snapshot=sessionStore.state.value
+                assertTrue("Review checkpoint must precede battle entry",snapshot.pendingBattleJson.isBlank())
+                File("build/reports/focused-combat-checkpoints/source-$enemyId.json").apply {
+                    parentFile!!.mkdirs();writeText(moshi.adapter(GameSessionState::class.java).toJson(snapshot))
+                }
+            }
             if (!pending) {
                 assertTrue("Enemy must be present before engagement in $room", enemyId in explorationVm.uiState.value.enemies)
                 explorationVm.engageEnemy(enemyId)
@@ -2954,10 +3114,35 @@ class LegalRouteCampaignRunnerTest {
                 val knockedOut = state.combatants.values.filter { it.combatant.side == com.example.starborn.domain.combat.CombatSide.PLAYER && !it.isAlive }
                     .map { it.combatant.id }
                 publicCombats += "room=$room enemies=$encounterIds seed=$seed damageEvents=${state.log.count { it is com.example.starborn.domain.combat.CombatLogEntry.Damage }} xp=${reward.xp} ap=${reward.ap} credits=${reward.credits} persistedHp=${sessionStore.state.value.partyMemberHp} knockedOut=$knockedOut usedItems=$usedItems"
+                val guaranteedDrop = when (room) {
+                    "spire_exec_lounge_scale_05" -> "circuit_board" to 1
+                    "spire_landing_pad_scale_01" -> "wiring_bundle" to 1
+                    "spire_landing_pad_scale_03" -> "ration_pack" to 2
+                    else -> null
+                }
+                guaranteedDrop?.let { (item, count) ->
+                    assertTrue("Preserve $item at $room", reward.drops.any { it.itemId == item && it.quantity >= count })
+                }
+                if (enemyId == "administrator_boss") {
+                    assertEquals(490, reward.xp)
+                    assertEquals(340, reward.credits)
+                    assertEquals(2, reward.ap)
+                    assertTrue(reward.drops.any { it.itemId == "power_cell" && it.quantity >= 2 })
+                    assertTrue((state.authored.reservesUsed["administrator_boss"] ?: 0) <= 3)
+                    assertTrue(state.combatants.values.none { it.isAlive && it.combatant.side == com.example.starborn.domain.combat.CombatSide.ENEMY })
+                }
+                if (room.startsWith("spire_")) File("build/reports/world3-readiness/$room-$enemyId-$seed-combat.txt").apply {
+                    parentFile!!.mkdirs()
+                    writeText(state.log.joinToString("\n") + "\nOutcome: ${state.outcome}\n")
+                }
+                if (room.startsWith("sector9_")) File("build/reports/world2-authored/$enemyId-$seed-combat.txt").apply {
+                    parentFile!!.mkdirs();writeText(state.log.joinToString("\n")+"\nOutcome: ${state.outcome}\n")
+                }
                 explorationVm.onCombatVictory(CombatResultPayload(
                     outcome = CombatResultPayload.Outcome.VICTORY,
                     enemyIds = combat.encounterEnemyIds,
                     roomId = combat.encounterRoomId,
+                    sourcePartyId = descriptor.sourcePartyId,
                     rewardXp = reward.xp, rewardAp = reward.ap, rewardCredits = reward.credits,
                     rewardItems = reward.drops.associate { it.itemId to it.quantity }
                 ))

@@ -3,6 +3,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.VideogameAsset
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.runtime.*
@@ -23,6 +24,7 @@ import java.util.Locale
 private fun itemCategoryAccentColor(category: String?): Color {
     val norm = category?.lowercase(Locale.getDefault())?.trim().orEmpty()
     return when {
+        norm.contains("schematic") -> Color(0xFF7BE8FF)
         norm.contains("key") || norm.contains("relic") || norm.contains("core") || norm.contains("quest") || norm.contains("currency") || norm.contains("credit") -> Color(0xFFFFD54F) // Golden Amber
         norm.contains("weapon") || norm.contains("gun") || norm.contains("sword") || norm.contains("armor") || norm.contains("gear") || norm.contains("accessory") -> Color(0xFF7BE8FF) // Cyber Cyan
         norm.contains("consumable") || norm.contains("food") || norm.contains("ration") || norm.contains("heal") || norm.contains("stim") || norm.contains("firstaid") -> Color(0xFF81C784) // Medical Jade
@@ -58,7 +60,7 @@ internal fun DesktopItemGrantedBanner(
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .widthIn(max = 560.dp).fillMaxWidth()
             .semantics {
-                contentDescription = if (prompt.category == "consumed") "Item used: $itemLabel. Removed from inventory." else "Item acquired: $itemLabel."
+                contentDescription = prompt.acquisitionDescription
             },
         color = Color(0xFF060B13).copy(alpha = 0.98f),
         contentColor = Color.White,
@@ -95,7 +97,7 @@ internal fun DesktopItemGrantedBanner(
                             .padding(horizontal = 8.dp, vertical = 3.dp)
                     ) {
                         Text(
-                            text = if (prompt.category == "consumed") "ITEM USED" else "ITEM ACQUIRED",
+                            text = prompt.announcementHeading,
                             style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.1.sp, fontWeight = FontWeight.Bold),
                             color = accentColor
                         )
@@ -113,12 +115,16 @@ internal fun DesktopItemGrantedBanner(
                     shape = RoundedCornerShape(14.dp),
                     border = BorderStroke(1.dp, accentColor.copy(alpha = 0.40f))
                 ) {
+                    if (prompt.category == "arcade_schematic") {
+                        Icon(Icons.Default.VideogameAsset, null, Modifier.padding(10.dp), tint = accentColor)
+                    } else {
                     Image(
                         painter = rememberDesktopAssetPainter(iconRes, services.assetProvider),
                         contentDescription = null,
                         modifier = Modifier.padding(10.dp),
                         contentScale = ContentScale.Fit
                     )
+                    }
                 }
                 Column(
                     modifier = Modifier.weight(1f),
@@ -141,7 +147,7 @@ internal fun DesktopItemGrantedBanner(
                             text = description,
                             style = MaterialTheme.typography.bodySmall.copy(fontSize = 16.sp, lineHeight = 22.sp),
                             color = Color.White.copy(alpha = 0.74f),
-                            maxLines = 2,
+                            maxLines = if (prompt.category == "arcade_schematic") Int.MAX_VALUE else 2,
                             overflow = TextOverflow.Ellipsis
                         )
                     }

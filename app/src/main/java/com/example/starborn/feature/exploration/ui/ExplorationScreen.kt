@@ -92,6 +92,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.filled.VideogameAsset
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ChevronRight
@@ -455,17 +456,16 @@ fun ExplorationScreen(
         onDispose { viewModel.setNoticePresentationBlocked("android-presentation", false) }
     }
 
-    DisposableEffect(Unit) {
-        viewModel.setExplorationVisible(true)
-        viewModel.setExplorationInteractionBlocked(false)
-        onDispose {
-            viewModel.setExplorationVisible(false)
-            viewModel.setExplorationInteractionBlocked(true)
+    val explorationLifecycle = LocalLifecycleOwner.current.lifecycle
+    LaunchedEffect(viewModel, explorationLifecycle) {
+        explorationLifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            viewModel.setExplorationVisible(true)
+            try {
+                kotlinx.coroutines.awaitCancellation()
+            } finally {
+                viewModel.setExplorationVisible(false)
+            }
         }
-    }
-
-    LaunchedEffect(blockingOverlayActive, importantQuestPopupVisible, approachingCombat) {
-        viewModel.setExplorationInteractionBlocked(blockingOverlayActive || importantQuestPopupVisible || approachingCombat)
     }
 
     val eventWorldId by rememberUpdatedState(uiState.currentWorld?.id)
@@ -608,6 +608,11 @@ fun ExplorationScreen(
         CoreAnimatable(if (roomTransition == null) 1f else 0f)
     }
     val roomTransitionInProgress = roomTransitionActive || roomTransitionProgress.value < 1f
+    val patrolInteractionBlocked = blockingOverlayActive || importantQuestPopupVisible || approachingCombat || roomTransitionInProgress
+    LaunchedEffect(viewModel, patrolInteractionBlocked) {
+        viewModel.setExplorationInteractionBlocked(patrolInteractionBlocked)
+    }
+
     val outgoingBackgroundPainter = rememberRoomBackgroundPainter(outgoingBackgroundPath)
     val backdropProgress = if (scriptedTravelActive) {
         if (roomTransitionProgress.value < .5f) 0f else 1f
@@ -1183,6 +1188,25 @@ fun ExplorationScreen(
                 )
             }
 
+
+            if (!patrolInteractionBlocked) {
+                val aggression = uiState.enemyAggression
+                if (aggression != null) {
+                    com.example.starborn.ui.exploration.PatrolWarning(
+                        aggression, Modifier.align(Alignment.Center).padding(horizontal = 16.dp)
+                    )
+                } else {
+                    uiState.enemyMovementNotice?.let { notice ->
+                        Surface(
+                            Modifier.align(Alignment.Center).padding(horizontal = 16.dp),
+                            shape = RoundedCornerShape(8.dp), color = Color(0xDB101A23)
+                        ) {
+                            Text(notice, Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                                color = Color(0xFFFFD8B0), style = MaterialTheme.typography.labelMedium)
+                        }
+                    }
+                }
+            }
 
             if (approachingCombat) {
                 Surface(
@@ -7049,6 +7073,7 @@ fun MilestoneBanner(
 private fun itemCategoryAccentColor(category: String?): Color {
     val norm = category?.lowercase(Locale.getDefault())?.trim().orEmpty()
     return when {
+        norm.contains("schematic") -> Color(0xFF7BE8FF)
         norm.contains("key") || norm.contains("relic") || norm.contains("core") || norm.contains("quest") || norm.contains("currency") || norm.contains("credit") -> Color(0xFFFFD54F) // Golden Amber
         norm.contains("weapon") || norm.contains("gun") || norm.contains("sword") || norm.contains("armor") || norm.contains("gear") || norm.contains("accessory") -> Color(0xFF7BE8FF) // Cyber Cyan
         norm.contains("consumable") || norm.contains("food") || norm.contains("ration") || norm.contains("heal") || norm.contains("stim") || norm.contains("firstaid") -> Color(0xFF81C784) // Medical Jade
@@ -7085,7 +7110,7 @@ fun ItemGrantedBanner(
             .widthIn(min = 300.dp, max = 560.dp)
             .maestroTag("item-granted-continue")
             .semantics {
-                contentDescription = if (prompt.category == "consumed") "Item used: $itemLabel. Removed from inventory." else "Item acquired: $itemLabel."
+                contentDescription = prompt.acquisitionDescription
             },
         color = Color(0xFF060B13).copy(alpha = 0.98f),
         contentColor = Color.White,
@@ -7122,7 +7147,7 @@ fun ItemGrantedBanner(
                             .padding(horizontal = 8.dp, vertical = 3.dp)
                     ) {
                         Text(
-                            text = if (prompt.category == "consumed") "ITEM USED" else "ITEM ACQUIRED",
+                            text = prompt.announcementHeading,
                             style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 1.1.sp, fontWeight = FontWeight.Bold),
                             color = accentColor
                         )
@@ -7140,12 +7165,16 @@ fun ItemGrantedBanner(
                     shape = RoundedCornerShape(14.dp),
                     border = BorderStroke(1.dp, accentColor.copy(alpha = 0.40f))
                 ) {
+                    if (prompt.category == "arcade_schematic") {
+                        Icon(Icons.Default.VideogameAsset, null, Modifier.padding(10.dp), tint = accentColor)
+                    } else {
                     Image(
                         painter = painterResource(iconRes),
                         contentDescription = null,
                         modifier = Modifier.padding(10.dp),
                         contentScale = ContentScale.Fit
                     )
+                    }
                 }
                 Column(
                     modifier = Modifier.weight(1f),
@@ -7168,7 +7197,7 @@ fun ItemGrantedBanner(
                             text = description,
                             style = MaterialTheme.typography.bodySmall,
                             color = Color.White.copy(alpha = 0.74f),
-                            maxLines = 2,
+                            maxLines = if (prompt.category == "arcade_schematic") Int.MAX_VALUE else 2,
                             overflow = TextOverflow.Ellipsis
                         )
                     }

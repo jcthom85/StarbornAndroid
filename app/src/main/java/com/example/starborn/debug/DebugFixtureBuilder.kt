@@ -23,6 +23,26 @@ object DebugFixtureBuilder {
         if (fixture in setOf(DebugFixture.FISHING, DebugFixture.COOKING, DebugFixture.TINKERING, DebugFixture.SHOP)) {
             return DebugSystemFixtureBuilder.prepare(services, procedure)
         }
+        if (fixture == DebugFixture.COMBAT_PROTOTYPE) {
+            val party = listOf("nova", "zeke", "orion", "gh0st")
+            val stock = mutableMapOf("medkit_i" to 20, "ration_pack" to 10)
+            val weapons = party.associateWith { requireNotNull(com.example.starborn.domain.session.GameBootstrap.defaultWeapons[it]) }
+            val armors = party.associateWith { requireNotNull(com.example.starborn.domain.session.GameBootstrap.defaultArmors[it]) }
+            (weapons.values + armors.values).forEach { stock[it] = 1 }
+            services.sessionStore.restore(services.sessionStore.state.value.copy(
+                worldId="world_astra", hubId="hub_astra", roomId="astra_simulation_deck",
+                playerId="nova", partyMembers=party, playerLevel=12,
+                partyMemberLevels=party.associateWith { 12 }, partyMemberXp=party.associateWith { 0 },
+                partyMemberHp=emptyMap(), activeQuests=emptySet(), completedQuests=emptySet(),
+                questStageById=emptyMap(), questTasksCompleted=emptyMap(), trackedQuestId=null,
+                completedMilestones=setOf("ms_debug_combat_prototypes"),
+                equippedWeapons=weapons, equippedArmors=armors, inventory=stock,
+                unlockedWeapons=weapons.values.toSet(), unlockedArmors=armors.values.toSet(),
+                unlockedSkills=services.worldDataSource.loadSkills(services.sessionStore.state.value.progressionPrototypeVersion)
+                    .filter { it.character in party }.map { it.id }.toSet()))
+            services.inventoryService.restore(stock)
+            return true
+        }
         if (fixture == DebugFixture.CAMPAIGN_CHECKPOINT) {
             return DebugCampaignFixtureBuilder.prepare(services, procedure)
         }

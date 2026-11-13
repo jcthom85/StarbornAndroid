@@ -296,7 +296,7 @@ class OpeningCombatRuntimeTest {
                 val healed = requireNotNull(vm.combatState).combatants.getValue("stalker_vine")
                 if (healed.hp > 10) {
                     assertTrue("Healing must respect maximum HP", healed.hp <= healed.combatant.stats.maxHp)
-                    assertTrue("Heal must enter cooldown", healed.activeCooldowns.getOrDefault("nature_heal", 0) > 0)
+                    assertTrue("Heal must enter cooldown", healed.activeCooldowns.getOrDefault("sector9_mend", 0) > 0)
                     return
                 }
             }

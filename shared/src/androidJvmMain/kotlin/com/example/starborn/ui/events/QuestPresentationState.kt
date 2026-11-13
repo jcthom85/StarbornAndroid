@@ -13,6 +13,7 @@ class QuestPresentationState {
     val toasts = mutableStateListOf<UiEvent.ShowToast>()
     private val recentUpdates = mutableMapOf<String, Long>()
     private val started = mutableSetOf<Important>()
+    private val acceptedDetails = mutableSetOf<Pair<String, QuestBannerType>>()
     private val finishedQuests = mutableSetOf<String>()
     private val acknowledgedObjectives = mutableSetOf<Pair<String, String>>()
     var journalBadge by mutableIntStateOf(0)
@@ -23,7 +24,9 @@ class QuestPresentationState {
             is UiEvent.ShowQuestDetail -> {
                 if (event.type == QuestBannerType.NEW && finishedQuests.remove(event.questId)) {
                     acknowledgedObjectives.removeAll { it.first == event.questId }
+                    acceptedDetails.removeAll { it.first == event.questId }
                 }
+                if (!acceptedDetails.add(event.questId to event.type)) return
                 if (event.type == QuestBannerType.COMPLETED || event.type == QuestBannerType.FAILED) {
                     finishedQuests.add(event.questId)
                     updates.removeAll { it.questId == event.questId }
@@ -78,7 +81,7 @@ class QuestPresentationState {
     fun readJournal() { journalBadge = 0 }
     fun clear() {
         important.clear(); updates.clear(); toasts.clear(); recentUpdates.clear()
-        started.clear(); finishedQuests.clear(); acknowledgedObjectives.clear(); journalBadge = 0
+        started.clear(); acceptedDetails.clear(); finishedQuests.clear(); acknowledgedObjectives.clear(); journalBadge = 0
     }
 }
 

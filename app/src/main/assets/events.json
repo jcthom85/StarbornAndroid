@@ -3657,12 +3657,13 @@
   },
   {
     "id": "w2_mq02_clear_canopy",
-    "description": "Triggered when defeating the echo-borer on Canopy Ridge.",
+    "description": "Credits the canopy path after its plant pair or the cavern Moss Borers. Legacy Echo-Borer victories remain accepted for interrupted older battles.",
     "trigger": {
       "type": "encounter_victory",
       "enemies": [
         "echo_borer",
-        "stalker_vine"
+        "stalker_vine",
+        "moss_borer"
       ]
     },
     "conditions": [
@@ -6161,9 +6162,9 @@
     "trigger": {
       "type": "encounter_victory",
       "enemies": [
-        "aero_drone",
         "heavy_mech"
-      ]
+      ],
+      "room": "spire_landing_pad_roof"
     },
     "conditions": [
       {
@@ -6184,7 +6185,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "The rooftop security line buckles. The Administrator drops into its command frame and brings its last Aero Drone to bear. It controls the rooftop guns and the local security curtain. This is the crew’s final fight for the Spire."
+        "message": "The rooftop security line buckles. The Administrator is bringing its command frame online. The western exit is still clear. Recover if you need to, then return to shut down the rooftop guns."
       }
     ]
   },
@@ -17509,6 +17510,42 @@
             ]
           }
         ]
+      }
+    ]
+  },
+  {
+    "id": "w5_charles_verify_public_queue",
+    "description": "Verify Charles's public customs feed without copying passenger records.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_charles_verify_public_queue"
+    },
+    "conditions": [
+      {
+        "type": "milestone_set",
+        "milestone": "ms_charles_analytics_favor_asked"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_charles_public_queue_verified"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_charles_analytics_favor_completed"
+      },
+      {
+        "type": "in_room",
+        "room_id": "orbital_customs_lounge"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_charles_public_queue_verified"
+      },
+      {
+        "type": "show_message",
+        "message": "Nova compares the gate's public departures with the advertised waits on Charles's slate. The service checks are clear, but empty executive berths are reserved ahead of waiting staff transports. She records the mismatched times and berth numbers, leaving passenger records sealed.\n\nCharles studies the comparison. 'Priority holds. My model treated them as mechanical delays. Good catch. Bring me the two Circuit Boards and Focusing Lens, and I'll finish the isolated tap. Anything you've already salvaged will do.'"
       }
     ]
   }

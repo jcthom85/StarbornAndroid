@@ -1,0 +1,11 @@
+{
+  "original_numbered_slots_1_to_10_unchanged": true,
+  "live_auto_and_quick_unchanged": true,
+  "new_slots_sha256": {
+    "11": "3fbe28e22aa27accebaef99ab8df391eecf946241929c2de14a5be73575000aa",
+    "12": "88bfd114d836ad2edbb29066e7ef8ae8e5507e0eff47fc500497db9960b67cd0",
+    "13": "b755d1b5b5c1ed5f9f498ad7057d053c9c3720c877c81ee7394023d62378099f",
+    "14": "6b08863280ccece96da53a29624c65796181b3fec731279218d49b06c9e8f54f"
+  },
+  "original_slots_1_to_10_unchanged_after_opening_load_menu": true
+}

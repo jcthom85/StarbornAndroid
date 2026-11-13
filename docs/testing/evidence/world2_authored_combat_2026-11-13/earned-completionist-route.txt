@@ -1,0 +1,15 @@
+room=launch_checkpoint enemies=[dominion_dampener, resonance_buoy] seed=17 damageEvents=12 xp=80 ap=0 credits=40 persistedHp={nova=102} knockedOut=[] usedItems={}
+room=launch_bay enemies=[the_iron_warden] seed=17 damageEvents=10 xp=350 ap=0 credits=225 persistedHp={nova=102} knockedOut=[] usedItems={}
+room=sector9_canopy enemies=[stalker_vine, spore_spitter] seed=17 damageEvents=7 xp=155 ap=0 credits=15 persistedHp={nova=102, zeke=150} knockedOut=[] usedItems={}
+room=sector9_wilds_nest enemies=[shard_hound, shard_hound] seed=17 damageEvents=9 xp=100 ap=0 credits=30 persistedHp={nova=102, zeke=150} knockedOut=[] usedItems={}
+room=sector9_stream_cave_depths enemies=[moss_borer, moss_borer] seed=17 damageEvents=15 xp=80 ap=0 credits=20 persistedHp={nova=97, zeke=150} knockedOut=[] usedItems={}
+room=sector9_stream_pools enemies=[mist_glider] seed=17 damageEvents=4 xp=45 ap=0 credits=12 persistedHp={nova=97, zeke=150, orion=95} knockedOut=[] usedItems={}
+room=sector9_stream_wetlands enemies=[spore_spitter] seed=17 damageEvents=4 xp=55 ap=0 credits=15 persistedHp={nova=97, zeke=150, orion=95} knockedOut=[] usedItems={}
+room=sector9_wilds_thickets enemies=[razor_vine] seed=17 damageEvents=6 xp=40 ap=0 credits=0 persistedHp={nova=97, zeke=150, orion=95} knockedOut=[] usedItems={}
+room=sector9_foyer_left_gallery enemies=[ruin_guardian] seed=17 damageEvents=12 xp=120 ap=0 credits=50 persistedHp={nova=97, zeke=150, orion=95} knockedOut=[] usedItems={}
+room=sector9_conduit_junction enemies=[sentinel_orb] seed=17 damageEvents=10 xp=110 ap=0 credits=45 persistedHp={nova=97, zeke=150, orion=95} knockedOut=[] usedItems={}
+room=sector9_hall_acoustics_lab enemies=[sentinel_orb, spore_spitter] seed=17 damageEvents=12 xp=55 ap=0 credits=15 persistedHp={nova=89, zeke=150, orion=95} knockedOut=[] usedItems={}
+room=sector9_vents_gantry enemies=[sentinel_orb] seed=17 damageEvents=10 xp=110 ap=0 credits=45 persistedHp={nova=89, zeke=150, orion=95} knockedOut=[] usedItems={}
+room=sector9_canopy_ridge enemies=[the_beast] seed=17 damageEvents=29 xp=500 ap=0 credits=250 persistedHp={nova=89, zeke=150, orion=95} knockedOut=[] usedItems={}
+All ten World 2 quests complete; World 3 arrival and slot 9 reload verified.
+Assistance: []

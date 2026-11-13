@@ -96,6 +96,41 @@ class EnemyMovementManagerTest {
         assertEquals("conveyor", manager.stateSnapshot().getValue("patrol").roomId)
     }
 
+    @Test
+    fun spirePatrolStaysOnItsRoofRouteAndHonorsOlderVictories() {
+        val reader = com.example.starborn.data.assets.AssetJsonReader(
+            com.example.starborn.core.platform.DesktopAssetProvider(),
+            com.example.starborn.core.MoshiProvider.instance
+        )
+        val assets = com.example.starborn.data.assets.WorldAssetDataSource(reader)
+        val catalog = requireNotNull(assets.loadEnemyMovement())
+        val patrol = catalog.parties.single { it.id == "spire_rooftop_assassin" }
+        val rooms = assets.loadRooms()
+        val manager = EnemyMovementManager(catalog, rooms)
+        val session = GameSessionState(worldId = "world_3")
+        val sightline = "spire_landing_pad_scale_02"
+        val wreck = "spire_landing_pad_scale_03"
+        manager.restore(emptyMap(), session)
+        assertEquals(wreck, manager.stateSnapshot().getValue(patrol.id).roomId)
+        val arrival = manager.tick(22_000, sightline, session)
+        assertEquals(sightline, arrival.states.getValue(patrol.id).roomId)
+        assertEquals(10_000L, arrival.aggression?.remainingMs)
+        assertNull(arrival.autoEngagePartyId)
+        assertEquals(patrol.id, manager.tick(10_000, sightline, session).autoEngagePartyId)
+        manager.applyRetreatGrace(patrol.id)
+        assertNull(manager.tick(1_000, sightline, session).aggression)
+        val unsafeSave = manager.stateSnapshot().getValue(patrol.id).copy(roomId = "spire_landing_pad_roof")
+        manager.restore(mapOf(patrol.id to unsafeSave), session)
+        assertEquals(wreck, manager.stateSnapshot().getValue(patrol.id).roomId)
+        val oldVictory = session.copy(roomStates = mapOf(wreck to mapOf("encounter_cleared:corporate_assassin" to true)))
+        manager.restore(emptyMap(), oldVictory)
+        assertTrue(manager.partiesInRoom(wreck, oldVictory).isEmpty())
+        val protectedZone = catalog.zones.single { it.id == patrol.zoneId }.copy(protectedRooms = listOf(sightline))
+        val unsafeRoute = EnemyMovementManager(EnemyMovementCatalog(listOf(protectedZone), listOf(patrol)), rooms)
+        unsafeRoute.restore(emptyMap(), session)
+        assertNull(unsafeRoute.party(patrol.id))
+    }
+
     private fun manager(startRoom: String = "conveyor"): EnemyMovementManager {
         val route = listOf("conveyor", "sifter", "shoring")
         val rooms = listOf(
@@ -106,7 +141,7 @@ class EnemyMovementManagerTest {
         )
         return EnemyMovementManager(
             EnemyMovementCatalog(
-                zones = listOf(EnemyMovementZone("zone", route)),
+                zones = listOf(EnemyMovementZone("zone", route + "junction")),
                 parties = listOf(
                     EnemyMovementParty(
                         id = "patrol",
@@ -143,7 +178,7 @@ class EnemyMovementManagerTest {
         )
         return EnemyMovementManager(
             EnemyMovementCatalog(
-                zones = listOf(EnemyMovementZone("zone", route)),
+                zones = listOf(EnemyMovementZone("zone", route + "junction")),
                 parties = listOf(
                     EnemyMovementParty(
                         id = "patrol",

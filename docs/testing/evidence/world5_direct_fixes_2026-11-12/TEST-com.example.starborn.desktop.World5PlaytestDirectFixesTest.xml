@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.desktop.World5PlaytestDirectFixesTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-13T00:38:50.953Z" hostname="V52076.vims.edu" time="1.718">
+  <properties/>
+  <testcase name="repairedInspectionsHaveRealDetailsAndBecomeGrayWithoutGrantingProgress" classname="com.example.starborn.desktop.World5PlaytestDirectFixesTest" time="0.714"/>
+  <testcase name="sixDiscoveriesAnnounceTheLearnedGameOnceAndStayReadOnlyAfterReload" classname="com.example.starborn.desktop.World5PlaytestDirectFixesTest" time="0.228"/>
+  <testcase name="schematicCardAndKnockedOutPortraitsStayReadable" classname="com.example.starborn.desktop.World5PlaytestDirectFixesTest" time="0.697"/>
+  <testcase name="removingTheShipWorkbenchLeavesMenuTinkeringAvailable" classname="com.example.starborn.desktop.World5PlaytestDirectFixesTest" time="0.078"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -56,6 +56,9 @@ class WorldAssetDataSource(
 
     fun loadEnemies(): List<Enemy> = assetReader.readList("enemies.json")
 
+    fun loadCombatPrototypeEnemies(): List<Enemy> = assetReader.readList("combat_prototypes/enemies.json")
+    fun loadCombatPrototypeSkills(): List<Skill> = assetReader.readList("combat_prototypes/skills.json")
+
     fun loadEnemyMovement(): EnemyMovementCatalog =
         assetReader.readObject<EnemyMovementCatalog>("enemy_movement.json") ?: EnemyMovementCatalog()
 

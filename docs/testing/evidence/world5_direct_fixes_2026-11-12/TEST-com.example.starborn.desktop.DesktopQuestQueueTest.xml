@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.desktop.DesktopQuestQueueTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-13T00:38:43.332Z" hostname="V52076.vims.edu" time="0.02">
+  <properties/>
+  <testcase name="summaryToastBadgeAndResetRemainSeparate" classname="com.example.starborn.desktop.DesktopQuestQueueTest" time="0.011"/>
+  <testcase name="stageUpdateKeepsUncheckedFeedbackAndDistinctObjectivesCanPlayBackToBack" classname="com.example.starborn.desktop.DesktopQuestQueueTest" time="0.007"/>
+  <testcase name="staleQuestDismissDoesNotSkipNextCard" classname="com.example.starborn.desktop.DesktopQuestQueueTest" time="0.0"/>
+  <testcase name="importantEventsKeepOrderAndDeduplicatePendingQuestTypes" classname="com.example.starborn.desktop.DesktopQuestQueueTest" time="0.0"/>
+  <testcase name="completingQuestDropsObsoleteUpdatesAndRejectsLateProgress" classname="com.example.starborn.desktop.DesktopQuestQueueTest" time="0.001"/>
+  <testcase name="eachVisibleCardStartsOnlyOnceUntilDismissed" classname="com.example.starborn.desktop.DesktopQuestQueueTest" time="0.0"/>
+  <testcase name="progressPreservesObjectivesRolesAndCountAndUsesTwoSecondDedupe" classname="com.example.starborn.desktop.DesktopQuestQueueTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

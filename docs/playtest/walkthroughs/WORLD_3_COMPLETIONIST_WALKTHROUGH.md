@@ -4,7 +4,7 @@ Updated November 7, 2026. Full spoilers. The route covers release **1.3.110 (194
 
 This rebuilt main edition follows the same structure as Worlds 1 and 2: one ordered route through the main story, all six side quests and all 70 rooms, with chapter checkpoints, a room reference, Journal checklist and recovery advice. Start at Sewer Landing Pad on World 3 arrival. The older main-story-first edition is archived separately.
 
-Optional combat supplies include one guaranteed **Circuit Board** at **Service Dumbwaiter**, one **Wiring Bundle** at **Fuel Bridge**, and two **Ration Packs** at **Drone Wreck Roof**. These are combat drops from those specific encounters. The circuit and wiring support Field Kit projects, including repaired arcade equipment and fishing gear.
+Optional combat supplies include one guaranteed **Circuit Board** at **Service Dumbwaiter**, one **Wiring Bundle** at **Fuel Bridge**, and two **Ration Packs** from the assassin patrolling **Shield Sightline** and **Drone Wreck Roof**. These are combat drops from those specific encounters. The circuit and wiring support Field Kit projects, including repaired arcade equipment and fishing gear.
 
 ## 1. How to follow this route
 
@@ -331,9 +331,9 @@ The numbered route includes all eleven quests and every authored World 3 room. O
 
 140. From **Ledger Office**, go **north** to **Service Dumbwaiter** (`spire_exec_lounge_scale_05`).
 
-141. At **Service Dumbwaiter** (`spire_exec_lounge_scale_05`), inspect **Service Dumbwaiter**, **silver tray**; defeat the Aero Drone guarding **executive safe**, then open it for its one-time contents.
+141. At **Service Dumbwaiter** (`spire_exec_lounge_scale_05`), inspect **Service Dumbwaiter**, **silver tray**; defeat the Riot Guard / Aero Drone squad near **executive safe**, then open it for its one-time contents.
 
-142. If **Service Dumbwaiter** has an active blocking encounter, clear it before its room actions. Heal and review equipment first; a flavor inspection does not substitute for victory.
+142. Check that the Service Dumbwaiter squad dropped its guaranteed **Circuit Board**. Its guard braces the squad once before switching to baton rushes.
 
 143. From **Service Dumbwaiter**, go **south** to **Ledger Office** (`spire_exec_lounge_scale_04`) → **south** to **Blackmail Balcony** (`spire_exec_lounge_scale_03`) → **south** to **Private Booth** (`spire_exec_lounge_scale_02`) → **west** to **Velvet Hall** (`spire_exec_lounge_scale_01`) → **north** to **Exec Lounge** (`spire_exec_lounge_bar`) → **north** to **Uniform Sorting** (`spire_uniform_sorting`) → **north** to **Laundry Service** (`spire_laundry_service`) → **east** to **Prism Gallery** (`spire_prism_gallery`) → **east** to **Archive Vault** (`spire_archive_vault`) → **north** to **Donor Gallery** (`spire_donor_gallery`) → **east** to **Skyline VIP Salon** (`spire_skyline_vip_suite`). You are back at the route’s departure point.
 
@@ -343,7 +343,7 @@ The numbered route includes all eleven quests and every authored World 3 room. O
 
 144. From **Skyline VIP Salon**, go **west** to **Donor Gallery** (`spire_donor_gallery`) → **south** to **Archive Vault** (`spire_archive_vault`).
 
-145. From **Archive Vault**, go **south** to **Catalog Atrium** (`spire_archive_scale_01`).
+145. At **Archive Vault**, you can fight the Corporate Assassin / Concierge Relay pair. Interrupt the Relay’s shield order or focus the Assassin during recovery. Then go **south** to **Catalog Atrium** (`spire_archive_scale_01`).
 
 146. At **Catalog Atrium** (`spire_archive_scale_01`), inspect **catalog atrium**, **index choir**, **index terminal**.
 
@@ -389,7 +389,7 @@ The numbered route includes all eleven quests and every authored World 3 room. O
 
 165. Before rooftop combat, rest or buy supplies if needed. From Landing Pad Roof, retrace **west** to Drone Test Alcove → **west** to Archive Vault → **north** to Donor Gallery → **west** to Glasswalk → **west** to Skypark Dome → **north** to Orchid Walk → **north** to Registry Pavilion for **Rest**. Return by reversing those directions. Exec Lounge also has the Upper City Lounge shop. Do not use up your only predeparture save.
 
-166. At **Landing Pad Roof**, defeat the **Aero Drone / Heavy Mech** party and then the **Administrator / Aero Drone** party as they become available. They are separate encounters. Recover between them if needed; defeating one party does not mean all rooftop security is cleared.
+166. At **Landing Pad Roof**, defeat the **Aero Drone / Heavy Mech** party and then the **Administrator / Aero Drone** party as they become available. The Administrator becomes available after security falls. The west exit stays open for recovery. Interrupt the deployment to prevent another drone from joining, or focus the Administrator to shut down its surviving escorts. It can deploy three Interdictors total, with at most two escorts active. Below 35% HP it switches to exposed emergency fire.
 
 167. At **Landing Pad Roof**, use **shield window**. Use the Lens/Scan timing to identify the local security-curtain opening. This is not the removal of the planetary Shield.
 
@@ -401,7 +401,7 @@ The numbered route includes all eleven quests and every authored World 3 room. O
 
 169. At **Fuel Bridge** (`spire_landing_pad_scale_01`), inspect **fuel bridge**, **wind shear**.
 
-170. If **Fuel Bridge** has an active blocking encounter, clear it before its room actions. Heal and review equipment first; a flavor inspection does not substitute for victory.
+170. Defeat the optional Aero Drone / Concierge Relay squad for its guaranteed **Wiring Bundle**. A damaging hit during the Relay’s shield warning interrupts the order.
 
 171. From **Fuel Bridge**, go **north** to **Shield Sightline** (`spire_landing_pad_scale_02`).
 
@@ -409,7 +409,7 @@ The numbered route includes all eleven quests and every authored World 3 room. O
 
 173. From **Shield Sightline**, go **north** to **Drone Wreck Roof** (`spire_landing_pad_scale_03`).
 
-174. At **Drone Wreck Roof** (`spire_landing_pad_scale_03`), inspect **drone wreck**, **broken rotor**.
+174. At **Drone Wreck Roof** (`spire_landing_pad_scale_03`), inspect **drone wreck**, **broken rotor**. The optional Corporate Assassin patrol moves between here and Shield Sightline. If it spots you, the countdown gives you time to leave or engage. Victory awards two **Ration Packs** once, whichever room you fight in.
 
 175. If **Drone Wreck Roof** has an active blocking encounter, clear it before its room actions. Heal and review equipment first; a flavor inspection does not substitute for victory.
 

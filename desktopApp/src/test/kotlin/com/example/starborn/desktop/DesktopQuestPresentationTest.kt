@@ -96,7 +96,13 @@ class DesktopQuestQueueTest {
         val current = state.important.first()
         assertTrue(state.markStarted(current)); assertFalse(state.markStarted(current))
         state.dismissImportant(); state.accept(detail("a", QuestBannerType.FAILED))
+        assertTrue("Replayed failures must not reopen the popup or stinger", state.important.isEmpty())
+        state.accept(detail("a", QuestBannerType.NEW))
+        assertTrue("A genuinely restarted quest can be announced", state.markStarted(state.important.first()))
+        state.dismissImportant(); state.accept(detail("a", QuestBannerType.FAILED))
         assertTrue(state.markStarted(state.important.first()))
+        state.clear(); state.accept(detail("a", QuestBannerType.FAILED))
+        assertTrue("A different loaded session has its own presentation receipts", state.markStarted(state.important.first()))
     }
 }
 

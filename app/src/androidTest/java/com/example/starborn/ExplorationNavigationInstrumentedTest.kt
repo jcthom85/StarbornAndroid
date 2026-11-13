@@ -31,6 +31,69 @@ import org.junit.Test
 class ExplorationNavigationInstrumentedTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
 
+    @Test fun spirePatrolShowsCountdownBeforeStartingCombat() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val services = compose.runOnUiThread {
+            AppServices(IsolatedProgressionContext(context), isTestSession = true)
+        }
+        lateinit var vm: ExplorationViewModel
+        var opponents by mutableStateOf<List<String>>(emptyList())
+        try {
+            runBlocking {
+                services.userSettingsStore.setTutorialsEnabled(false)
+                services.userSettingsStore.setEnvironmentalEffectsQuality(
+                    com.example.starborn.data.local.EnvironmentalEffectsQuality.OFF
+                )
+            }
+            compose.runOnUiThread {
+                assertTrue(services.startDebugScenario("tut_npc_dialogue"))
+                services.clearDebugBootstrap()
+                services.sessionStore.restore(services.sessionStore.state.value.copy(
+                    worldId = "world_3",
+                    hubId = "hub_6_upper_city",
+                    roomId = "spire_landing_pad_scale_03",
+                    activeQuests = emptySet(),
+                    completedQuests = emptySet(),
+                    completedMilestones = emptySet(),
+                    pendingBattleJson = ""
+                ))
+                vm = ExplorationViewModelFactory(services).create(ExplorationViewModel::class.java)
+            }
+            compose.waitUntil(15_000) {
+                vm.uiState.value.currentRoom?.id == "spire_landing_pad_scale_03" &&
+                    !vm.uiState.value.isLoading
+            }
+            compose.runOnUiThread {
+                services.tutorialManager.cancelAllScheduled()
+                services.promptManager.discardMatching { true }
+            }
+            compose.setContent {
+                StarbornTheme {
+                    ExplorationScreen(
+                        vm, services.audioCuePlayer, services.uiEventBus, services.questPresentations,
+                        onEnemySelected = { opponents = it },
+                        isTestSession = true
+                    )
+                }
+            }
+            compose.waitUntil(5_000) {
+                compose.onAllNodesWithTag("patrol-warning").fetchSemanticsNodes().isNotEmpty()
+            }
+            compose.onNodeWithTag("patrol-warning").assertIsDisplayed()
+            compose.runOnIdle {
+                assertTrue(opponents.isEmpty())
+                assertTrue(services.sessionStore.state.value.pendingBattleJson.isBlank())
+            }
+            compose.waitUntil(20_000) { opponents.isNotEmpty() }
+            compose.runOnIdle {
+                assertEquals(listOf("corporate_assassin"), opponents)
+                assertTrue(services.sessionStore.state.value.pendingBattleJson.isNotBlank())
+            }
+        } finally {
+            compose.runOnUiThread { runCatching { vm.runtime.close() }; services.release() }
+        }
+    }
+
     @Test fun hardwareMovementWorksWithWasdAndArrowsAfterClosingAnInspection() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val services = compose.runOnUiThread { AppServices(IsolatedProgressionContext(context), isTestSession = true) }

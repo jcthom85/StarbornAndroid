@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.feature.combat.CombatViewModelTest" tests="21" skipped="0" failures="0" errors="0" timestamp="2026-11-13T02:27:44.105Z" hostname="V52076.vims.edu" time="0.112">
+  <properties/>
+  <testcase name="readyEnemyCannotActWhilePlayerCommandMenuIsOpen" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.052"/>
+  <testcase name="duplicateEnemyIdsCreateUniqueCombatantIdsAndCanonicalResults" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.002"/>
+  <testcase name="weaknessHitShowsCooldownRewardBanner" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.009"/>
+  <testcase name="consumeLevelUpSummariesClearsQueue" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.001"/>
+  <testcase name="testPassiveSkillTreeStatBonusesAreAppliedToCombatant" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.002"/>
+  <testcase name="dismissingPlayerCommandMenuDefersReadyEnemyAction" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.001"/>
+  <testcase name="lootDropsAreAddedToInventoryOnVictory" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.021"/>
+  <testcase name="scanDiscoversEnemyWeaknessWithoutDamage" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.002"/>
+  <testcase name="enemyBasicActionClearsConsecutiveSkillPenalty" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.001"/>
+  <testcase name="victoryRewardSkipsDropsWhenChanceFails" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.001"/>
+  <testcase name="encounterExtraDropsAreGrantedToSpecificInstance" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.001"/>
+  <testcase name="faultedLoaderTutorialGuidesArcTetherWeaknessAndPreventsSkipping" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.004"/>
+  <testcase name="encounterOverrideDropsReplaceBaseTable" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.001"/>
+  <testcase name="victoryRewardCanonicalizesLootIds" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.001"/>
+  <testcase name="authoredFoundryRepairTargetsSquadAndCoolingTargetsCaster" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.001"/>
+  <testcase name="inspectionTransfersToReadyCharacterWithoutLosingEnemyFocus" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.002"/>
+  <testcase name="enemyInspectionPausesIndependentlyAndAutomaticFocusDoesNotInspect" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.001"/>
+  <testcase name="heavyLiftingTutorialGuidesBlockedHitThenGuardBreak" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.004"/>
+  <testcase name="readyEnemyCanActBehindReadyPlayerWhenMenuIsNotOpen" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.001"/>
+  <testcase name="heavyLiftingTutorialPausePreventsReadyEnemyTurn" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.0"/>
+  <testcase name="endingBattleDuringTutorialClearsPendingExplanationAndRecordsCompletion" classname="com.example.starborn.feature.combat.CombatViewModelTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.desktop.World5NavigationPublicTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-13T00:54:38.388Z" hostname="V52076.vims.edu" time="1.488">
+  <properties/>
+  <testcase name="everyRingRoomHasWorkingCardinalTravelAndReturn" classname="com.example.starborn.desktop.World5NavigationPublicTest" time="1.043"/>
+  <testcase name="oldSavesAlreadyBeyondAnchorDoorRetainAnExitWithoutBossCredit" classname="com.example.starborn.desktop.World5NavigationPublicTest" time="0.14"/>
+  <testcase name="realVictoryCallbackOpensAnchorDoorAndReloadedWalkbackDoesNotPayAgain" classname="com.example.starborn.desktop.World5NavigationPublicTest" time="0.089"/>
+  <testcase name="arrivalStillAllowsSupplyPreparationBeforeTheFighter" classname="com.example.starborn.desktop.World5NavigationPublicTest" time="0.071"/>
+  <testcase name="magneticClampStillGatesOnlyTheOptionalLabAndPreservesSavedReturn" classname="com.example.starborn.desktop.World5NavigationPublicTest" time="0.068"/>
+  <testcase name="formerDiagonalBranchesReloadWithCardinalReturns" classname="com.example.starborn.desktop.World5NavigationPublicTest" time="0.076"/>
+  <system-out><![CDATA[DEBUG: give_item action id=composite_plate qty=4
+DEBUG: give_item action id=composite_plate qty=4
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

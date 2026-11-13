@@ -30,7 +30,11 @@ data class EnemyMovementParty(
     val engageDelaySeconds: Int = 10,
     @Json(name = "requires_active_quest")
     val requiresActiveQuest: String? = null,
-    val signals: EnemyMovementSignals = EnemyMovementSignals()
+    val signals: EnemyMovementSignals = EnemyMovementSignals(),
+    @Json(name = "replaces_static_encounter")
+    val replacesStaticEncounter: Boolean = false,
+    @Json(name = "extra_drops")
+    val extraDrops: List<com.example.starborn.domain.model.Drop> = emptyList()
 )
 
 data class EnemyMovementSignals(

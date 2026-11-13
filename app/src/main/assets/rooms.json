@@ -73,8 +73,8 @@
         "name": "broken Hyperion cabinet",
         "type": "arcade_discovery",
         "discovery_cabinet_id": "deep_mine_asteroid_drill",
-        "discovered_message": "You have salvaged this cabinet’s unique component and copied its repair schematic. Check your field kit for repair requirements. Install the repaired cabinet aboard the Astra to play.",
-        "hide_when_milestone": "ms_arcade_deep_mine_discovered",
+        "discovered_message": "You have recovered the unique component and learned the Deep Mine Asteroid Drill repair schematic. Repair the cabinet through Menu → Tinker to make it playable from Astra Recreation.",
+        "hide_when_milestone": "ms_arcade_cabinet_01_repaired",
         "condition_unmet_message": "A dead pre-Dominion arcade cabinet leans beneath a miner's coat. One amber diagnostic blinks behind the cracked glass."
       },
       {
@@ -5363,7 +5363,7 @@
         "name": "VIP vector arcade cabinet",
         "type": "arcade_discovery",
         "discovery_cabinet_id": "spire_infiltrator",
-        "discovered_message": "You have salvaged this cabinet’s unique component and copied its repair schematic. Check your field kit for repair requirements. Install the repaired cabinet aboard the Astra to play.",
+        "discovered_message": "You have recovered the unique component and learned the Spire Infiltrator repair schematic. Repair the cabinet through Menu → Tinker to make it playable from Astra Recreation.",
         "hide_when_milestone": "ms_arcade_cabinet_03_repaired",
         "condition_unmet_message": "A sleek chrome arcade console sits behind the velvet curtain. An overclocked mainframe chip hums with high-speed ICE cycles."
       }
@@ -5389,7 +5389,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "corporate_assassin"
+      "corporate_assassin",
+      "concierge_relay"
     ],
     "connections": {
       "west": "spire_prism_gallery",
@@ -5450,7 +5451,13 @@
     },
     "special_exits": {
       "up": "Inspection lift to Service Lift"
-    }
+    },
+    "enemy_parties": [
+      [
+        "corporate_assassin",
+        "concierge_relay"
+      ]
+    ]
   },
   {
     "id": "spire_prism_gallery",
@@ -7003,7 +7010,7 @@
         "name": "scorched smelter console",
         "type": "arcade_discovery",
         "discovery_cabinet_id": "slag_catcher",
-        "discovered_message": "You have salvaged this cabinet’s unique component and copied its repair schematic. Check your field kit for repair requirements. Install the repaired cabinet aboard the Astra to play.",
+        "discovered_message": "You have recovered the unique component and learned the Slag Catcher repair schematic. Repair the cabinet through Menu → Tinker to make it playable from Astra Recreation.",
         "hide_when_milestone": "ms_arcade_cabinet_04_repaired",
         "condition_unmet_message": "A heavy ceramic arcade console sits amidst discarded machine scrap. A thermite logic gate still holds shift records."
       }
@@ -7807,7 +7814,11 @@
       {
         "name": "biometric gates",
         "type": "generic",
-        "condition_unmet_message": "The gates do not check identity so much as ownership, priority, and whether a body is approved to keep moving."
+        "condition_unmet_message": "The gates' public display lists advertised waits, actual departure times and berth priorities. The passenger records are sealed. Charles's slate carries a second set of public timings.",
+        "action_event": "w5_charles_verify_public_queue",
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_charles_analytics_favor_completed",
+        "completed_inspection_message": "Charles's isolated feed compares public departure times with the gate's berth priorities. Executive holds still delay the staff transports. The passenger records remain sealed."
       },
       {
         "name": "executive galley recycler",
@@ -7827,7 +7838,7 @@
         "name": "customs observation console",
         "type": "arcade_discovery",
         "discovery_cabinet_id": "orbital_defense",
-        "discovered_message": "You have salvaged this cabinet’s unique component and copied its repair schematic. Check your field kit for repair requirements. Install the repaired cabinet aboard the Astra to play.",
+        "discovered_message": "You have recovered the unique component and learned the Orbital Defense 2000 repair schematic. Repair the cabinet through Menu → Tinker to make it playable from Astra Recreation.",
         "hide_when_milestone": "ms_arcade_cabinet_05_repaired",
         "condition_unmet_message": "A decommissioned customs arcade terminal is mounted in the passenger waiting niche. A Zenith telemetry array still hums in its memory slot."
       },
@@ -9352,13 +9363,24 @@
       -1
     ],
     "state": {},
-    "actions": [],
+    "actions": [
+      {
+        "name": "black ocean",
+        "type": "inspect",
+        "inspect_message": "The water reflects no stars. Orion listens to the silence for a moment, then turns toward the Tide-Well."
+      },
+      {
+        "name": "Aethel note",
+        "type": "inspect",
+        "inspect_message": "Orion listens before sounding another note. The spaces between the notes matter as much as the sound: room for an answer, rather than another command."
+      }
+    ],
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w6_mq26_complete"
         ],
-        "description": "The black ocean answers in low harmonics now. Orion stands at the shore as a survivor, not a monument. West, Blue Ash Circle leads back to the Campfire. The Tide-Well lies east, while the northern path follows the shore's echoes."
+        "description": "The black ocean answers in low harmonics now. An Aethel note carries beyond the waterline. Orion stands at the shore as a survivor, not a monument. West, Blue Ash Circle leads back to the Campfire. The Tide-Well lies east, while the northern path follows the shore's echoes."
       }
     ]
   },
@@ -9442,7 +9464,18 @@
       1
     ],
     "state": {},
-    "actions": []
+    "actions": [
+      {
+        "name": "first shelter",
+        "type": "inspect",
+        "inspect_message": "The shelter occupies the same impossible space as Jed’s workshop. Its cheap walls are familiar in a way Vale’s perfect revisions never are."
+      },
+      {
+        "name": "mine checkpoint",
+        "type": "inspect",
+        "inspect_message": "The checkpoint has been rebuilt from memory. The way east leads past Jed’s Echo Bench toward the Manager’s patrol."
+      }
+    ]
   },
   {
     "id": "source_echo_workbench",
@@ -9479,7 +9512,7 @@
         "name": "crystalline arcade console",
         "type": "arcade_discovery",
         "discovery_cabinet_id": "harmonic_pulse",
-        "discovered_message": "You have salvaged this cabinet’s unique component and copied its repair schematic. Check your field kit for repair requirements. Install the repaired cabinet aboard the Astra to play.",
+        "discovered_message": "You have recovered the unique component and learned the Harmonic Pulse repair schematic. Repair the cabinet through Menu → Tinker to make it playable from Astra Recreation.",
         "hide_when_milestone": "ms_arcade_cabinet_06_repaired",
         "condition_unmet_message": "An ancient crystalline arcade console stands in the harmonic resonance field. A prismatic tuning fork hums within its core housing."
       }
@@ -10329,7 +10362,7 @@
         "name": "waterlogged survival console",
         "type": "arcade_discovery",
         "discovery_cabinet_id": "canopy_hopper",
-        "discovered_message": "You have salvaged this cabinet’s unique component and copied its repair schematic. Check your field kit for repair requirements. Install the repaired cabinet aboard the Astra to play.",
+        "discovered_message": "You have recovered the unique component and learned the Canopy Hopper repair schematic. Repair the cabinet through Menu → Tinker to make it playable from Astra Recreation.",
         "hide_when_milestone": "ms_arcade_cabinet_02_repaired",
         "condition_unmet_message": "An emerald optic board glimmers in the waterproof survival pod console."
       }
@@ -10732,11 +10765,11 @@
     "weather": "fog",
     "title": "Mist Pools",
     "background_image": "images/rooms/world_2/stream_pools.webp",
-    "description": "Deep wetlands where the glowing water pools into wide, still basins. Reed bulbs push through the mineral fog, and a Siren Skimmer darts through the mist with a shrill, disorienting cry.",
+    "description": "Deep wetlands where the glowing water pools into wide, still basins. Reed bulbs push through the mineral fog, and a Mist Glider draws silver membranes through the mineral fog.",
     "npcs": [],
     "items": [],
     "enemies": [
-      "siren_skimmer"
+      "mist_glider"
     ],
     "connections": {
       "west": "sector9_landing_stream",
@@ -10995,17 +11028,17 @@
     "weather": "cave_drip",
     "title": "Glow-Moss Cavern",
     "background_image": "images/rooms/world_2/stream_cave_depths.webp",
-    "description": "A quiet cavern chamber lit blue by thick sheets of glowing moss. A waterproof cargo case rests against the rocks. Two Echo-Borers scrape around an echo nest, their crystalline claws clicking against the cold stone.",
+    "description": "A quiet cavern chamber lit blue by thick sheets of glowing moss. A waterproof cargo case rests against the rocks. Two Moss Borers scrape around an echo nest, their moss-plated shells opening and closing above the cold stone.",
     "npcs": [],
     "items": [],
     "enemies": [
-      "echo_borer",
-      "echo_borer"
+      "moss_borer",
+      "moss_borer"
     ],
     "blocked_directions": {
       "east": {
         "type": "enemy",
-        "message_locked": "The Echo Borers hold the east passage into the Waterlogged Tunnel. Defeat them to pass. The cave entrance remains open to the south."
+        "message_locked": "The Moss Borers hold the east passage into the Waterlogged Tunnel. Defeat them to pass. The cave entrance remains open to the south."
       }
     },
     "connections": {
@@ -11047,8 +11080,8 @@
     ],
     "enemy_parties": [
       [
-        "echo_borer",
-        "echo_borer"
+        "moss_borer",
+        "moss_borer"
       ]
     ]
   },
@@ -13174,7 +13207,7 @@
     "weather": "resonance",
     "title": "Acoustics Lab",
     "background_image": "images/rooms/world_2/hall_acoustics_lab.webp",
-    "description": "A laboratory bay containing Dominion logging sensors focused on cymatic pool fluctuations. The northern resonance crystal hums inside a sealed acoustic rack.",
+    "description": "A laboratory bay containing Dominion logging sensors focused on cymatic pool fluctuations. The northern resonance crystal hums inside a sealed acoustic rack. An ancient iris sentry tracks a spore bulb rooted beneath its housing; each moves to a different rhythm.",
     "description_variants": [
       {
         "requires_milestones": [
@@ -13186,6 +13219,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
+      "sentinel_orb",
       "spore_spitter"
     ],
     "connections": {
@@ -13203,6 +13237,26 @@
         "action_event": "w2_sq04_crystal_north",
         "requires_milestone_not_set": "ms_w2_crystal_north_seated",
         "condition_unmet_message": "A gold crystal vibrates at the mural alignment frequency."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "sentinel_orb",
+        "spore_spitter"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "sentinel_orb",
+        "hp": 45,
+        "vitality": 4,
+        "stability": 50
+      },
+      {
+        "enemy_id": "spore_spitter",
+        "hp": 30,
+        "vitality": 3,
+        "stability": 30
       }
     ]
   },
@@ -14752,7 +14806,7 @@
     "weather": "industrial",
     "title": "Astra Cargo Bay",
     "background_image": "images/rooms/astra/cargo_bay.webp",
-    "description": "Cargo nets, sealed crates, and replacement conduits crowd the lower deck. The [action:Astra workbench|repair bench] stands beside a [action:cargo records|records terminal] for shared supplies, the Catch Log, and the shielded relic archive. The [action:disembark|cargo ramp] leads back outside; the common room is through the east hatch.",
+    "description": "Cargo nets, sealed crates, and replacement conduits crowd the lower deck. The repair bench stands beside a [action:cargo records|records terminal] for shared supplies, the Catch Log, and the shielded relic archive. The [action:disembark|cargo ramp] leads back outside; the common room is through the east hatch.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14774,11 +14828,6 @@
         "name": "disembark",
         "type": "generic",
         "action_event": "astra_disembark"
-      },
-      {
-        "name": "Astra workbench",
-        "type": "tinkering",
-        "condition_unmet_message": "A sturdy titanium bench equipped with laser soldering tools and schematic vices."
       }
     ],
     "description_variants": [
@@ -14786,7 +14835,7 @@
         "requires_milestones": [
           "ms_w4_engine_stolen"
         ],
-        "description": "Cargo nets, sealed crates, and replacement conduits crowd the lower deck. The [action:Astra workbench|repair bench] stands beside a [action:cargo records|records terminal] for shared supplies, the Catch Log, and the shielded relic archive. The [action:disembark|cargo ramp] leads back outside; the common room is through the east hatch. Fresh conduits carry the Deep-Core engine's steady power through the lower deck."
+        "description": "Cargo nets, sealed crates, and replacement conduits crowd the lower deck. The repair bench stands beside a [action:cargo records|records terminal] for shared supplies, the Catch Log, and the shielded relic archive. The [action:disembark|cargo ramp] leads back outside; the common room is through the east hatch. Fresh conduits carry the Deep-Core engine's steady power through the lower deck."
       }
     ]
   },
@@ -16003,6 +16052,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
+      "riot_guard",
       "aero_drone"
     ],
     "enemy_instances": [
@@ -16015,6 +16065,13 @@
             "quantity": 1
           }
         ]
+      },
+      {
+        "enemy_id": "riot_guard",
+        "hp": 135,
+        "override_drops": [],
+        "stability": 80,
+        "vitality": 7
       }
     ],
     "enemy_flavor": {
@@ -16062,6 +16119,12 @@
         "action_event": "warp_spire_exec_lounge_scale_05_to_entry",
         "condition_unmet_message": "An optional shortcut returns directly to Exec Lounge. You can also retrace the room corridors with NSEW swipes."
       }
+    ],
+    "enemy_parties": [
+      [
+        "riot_guard",
+        "aero_drone"
+      ]
     ]
   },
   {
@@ -16074,7 +16137,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "aero_drone"
+      "aero_drone",
+      "concierge_relay"
     ],
     "enemy_instances": [
       {
@@ -16111,6 +16175,12 @@
         "type": "generic",
         "condition_unmet_message": "The shear reveals the Shield rhythm in the clouds."
       }
+    ],
+    "enemy_parties": [
+      [
+        "aero_drone",
+        "concierge_relay"
+      ]
     ]
   },
   {
@@ -16154,21 +16224,6 @@
     "description": "A drone wreck skids across the roof, its broken rotor still trying to obey a command that no longer matters. The broken rotor twitches whenever the alarm network speaks.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "corporate_assassin"
-    ],
-    "enemy_instances": [
-      {
-        "enemy_id": "corporate_assassin",
-        "extra_drops": [
-          {
-            "id": "ration_pack",
-            "chance": 1.0,
-            "quantity": 2
-          }
-        ]
-      }
-    ],
     "enemy_flavor": {
       "corporate_assassin": "The assassin carries two sealed Ration Packs. Defeat them to recover the supplies."
     },
@@ -16192,7 +16247,8 @@
         "type": "generic",
         "condition_unmet_message": "The rotor twitches whenever the alarm network speaks."
       }
-    ]
+    ],
+    "enemies": []
   },
   {
     "id": "spire_landing_pad_scale_04",
@@ -17765,14 +17821,14 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "luggage recess",
         "type": "generic",
-        "condition_unmet_message": "The crawlway clearance was measured for a person carrying tools, not luggage."
+        "condition_unmet_message": "The recess is deep enough for a tool case and a crouching technician. The arrival mural above it leaves the service entrance out of the picture."
       },
       {
-        "name": "maintenance mark",
+        "name": "knee plates",
         "type": "generic",
-        "condition_unmet_message": "The maintenance arrow is stamped beneath the executive crest."
+        "condition_unmet_message": "The brass is polished at knee height. Workers have passed this way often enough to wear their own route into the executive trim."
       }
     ]
   },
@@ -17829,14 +17885,14 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "inspection slit",
         "type": "generic",
-        "condition_unmet_message": "Each collar movement travels through the frame under your feet."
+        "condition_unmet_message": "From behind the hospitality wall, the docking collar is a load-bearing joint with cables and fresh strain marks."
       },
       {
-        "name": "sightline",
+        "name": "docking collar",
         "type": "generic",
-        "condition_unmet_message": "The Astra is visible beyond the inner ring of docking clamps."
+        "condition_unmet_message": "The collar flexes against the Astra. The public-facing glass hides how much work is holding the two hulls together."
       }
     ]
   },
@@ -17862,14 +17918,14 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "arrival-light relay",
         "type": "generic",
-        "condition_unmet_message": "The relay feeds the red carpet lamps. It cannot move a bulkhead."
+        "condition_unmet_message": "The relay controls the welcoming lights. Its DISPLAY ONLY tag separates hospitality lighting from actual dock safety."
       },
       {
-        "name": "manual toggle",
+        "name": "pressure controls",
         "type": "generic",
-        "condition_unmet_message": "A handwritten tag separates arrival lighting from life support."
+        "condition_unmet_message": "The pressure circuit is sealed separately. This local lighting relay cannot seal the dock or replace the Executive Dock airlock console."
       }
     ]
   },
@@ -17893,14 +17949,14 @@
     "state": {},
     "actions": [
       {
-        "name": "quiet cache",
+        "name": "sealant cartridges",
         "type": "generic",
-        "condition_unmet_message": "All the cartridges are empty; the usable supplies have already gone elsewhere."
+        "condition_unmet_message": "Every cartridge has been split open and used dry. This is an exhausted supply shelf, not an unopened cache."
       },
       {
-        "name": "wrapped tool",
+        "name": "delivery date",
         "type": "generic",
-        "condition_unmet_message": "A glove print obscures the final delivery date."
+        "condition_unmet_message": "Three crossed-out dates crowd the ledger. The next delivery has no date at all."
       }
     ]
   },
@@ -17926,14 +17982,14 @@
     "state": {},
     "actions": [
       {
-        "name": "echo walk",
+        "name": "collar intercom",
         "type": "generic",
-        "condition_unmet_message": "The transmission is a recording from before the lockdown."
+        "condition_unmet_message": "A freight request loops between polished arrival announcements. Nobody has acknowledged the loader asking for clearance."
       },
       {
-        "name": "old signal",
+        "name": "freight request",
         "type": "generic",
-        "condition_unmet_message": "The unanswered request loops beneath the arrival chime."
+        "condition_unmet_message": "The request is for workers to board, not for a luxury passenger transfer. The dock kept broadcasting its welcome while leaving them waiting."
       }
     ]
   },
@@ -17957,14 +18013,14 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "directory of luxury suites",
         "type": "generic",
-        "condition_unmet_message": "The pipe route runs behind the rooms shown on the guest directory."
+        "condition_unmet_message": "The guest directory traces an immaculate promenade. The cleaner’s scratched map takes an entirely different route behind it."
       },
       {
-        "name": "maintenance mark",
+        "name": "waste pipes",
         "type": "generic",
-        "condition_unmet_message": "A small broom symbol identifies the mapmaker."
+        "condition_unmet_message": "The service map follows pipes that cannot be moved for a renovation. It was drawn for somebody who needed to get through, not somebody admiring the station."
       }
     ]
   },
@@ -17990,14 +18046,14 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "pressure inspection rail",
         "type": "generic",
-        "condition_unmet_message": "The indicators face the service passage, where staff must inspect them by hand."
+        "condition_unmet_message": "The rail keeps a technician close enough to read gauges hidden behind the gold wall."
       },
       {
-        "name": "warning strip",
+        "name": "indicators",
         "type": "generic",
-        "condition_unmet_message": "The warning strip is visible only from this side of the wall."
+        "condition_unmet_message": "The indicators face the service passage. Guests see the finish; workers have to check what is pressing against it."
       }
     ]
   },
@@ -18021,14 +18077,14 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "ceiling panel",
         "type": "generic",
-        "condition_unmet_message": "The repair weld is rough but holds the chandelier level."
+        "condition_unmet_message": "The panel opens onto the chandelier’s working frame. Its mounting bolts are easier to see than the crystals from this side."
       },
       {
-        "name": "sightline",
+        "name": "welded frame",
         "type": "generic",
-        "condition_unmet_message": "Guests below can see every crystal and none of the frame."
+        "condition_unmet_message": "Fresh repairs brace the chandelier. The station’s weightless elegance still rests on somebody’s welds."
       }
     ]
   },
@@ -18054,14 +18110,14 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "directory lighting",
         "type": "generic",
-        "condition_unmet_message": "The relay is for the directory backlight."
+        "condition_unmet_message": "The lighting relay belongs to the directory display, not the Ring’s security network."
       },
       {
-        "name": "manual toggle",
+        "name": "erased guest names",
         "type": "generic",
-        "condition_unmet_message": "Pencil impressions survive where the guest names were rubbed away."
+        "condition_unmet_message": "Room numbers remain legible after names have been scrubbed away. The station has preserved the space more carefully than its occupants."
       }
     ]
   },
@@ -18085,14 +18141,14 @@
     "state": {},
     "actions": [
       {
-        "name": "quiet cache",
+        "name": "cleaning cart",
         "type": "generic",
-        "condition_unmet_message": "The cart compartments contain dried cloths and empty bottles."
+        "condition_unmet_message": "The cart is wedged into a cupboard that was never built for its handle. There is no hidden supply compartment."
       },
       {
-        "name": "wrapped tool",
+        "name": "shift rota",
         "type": "generic",
-        "condition_unmet_message": "Someone has written their own name over one of the job titles."
+        "condition_unmet_message": "The rota records jobs without names. A person could disappear from this sheet without leaving a blank line."
       }
     ]
   },
@@ -18118,14 +18174,14 @@
     "state": {},
     "actions": [
       {
-        "name": "echo walk",
+        "name": "hospitality announcement",
         "type": "generic",
-        "condition_unmet_message": "The same pause repeats on every cycle."
+        "condition_unmet_message": "Without the public speakers smoothing its pauses, the recorded welcome sounds assembled one phrase at a time."
       },
       {
-        "name": "old signal",
+        "name": "public speakers",
         "type": "generic",
-        "condition_unmet_message": "The service speaker has no music channel, only announcements."
+        "condition_unmet_message": "The guest decks hear a reassuring voice. This uncarpeted passage carries the rough gaps between its words."
       }
     ]
   },
@@ -18149,14 +18205,14 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "water stains",
         "type": "generic",
-        "condition_unmet_message": "The roots follow the water supply beneath the planting beds."
+        "condition_unmet_message": "A thin trail leads from the ornamental border into the irrigation recess. The plants have outlasted the neat division between display and maintenance."
       },
       {
-        "name": "maintenance mark",
+        "name": "roots",
         "type": "generic",
-        "condition_unmet_message": "A gardener marked the access seam with green paint."
+        "condition_unmet_message": "Fine roots press into the stone joints. They are finding room wherever the station’s decorative finish gives way."
       }
     ]
   },
@@ -18182,14 +18238,14 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "outer glass",
         "type": "generic",
-        "condition_unmet_message": "Condensation gathers where the frame meets the glass."
+        "condition_unmet_message": "Condensation beads against glass with open space beyond it. A narrow layer of material keeps the garden’s weather inside."
       },
       {
-        "name": "warning strip",
+        "name": "mirror mounts",
         "type": "generic",
-        "condition_unmet_message": "The pressure strip is separate from the garden-light controls."
+        "condition_unmet_message": "The mounts expose the hinges behind the false daylight. The garden’s light can be aimed; it is not a natural sun."
       }
     ]
   },
@@ -18213,14 +18269,14 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "mirror array",
         "type": "generic",
-        "condition_unmet_message": "Each reflector has a different angle to the same light source."
+        "condition_unmet_message": "Seen edge-on, the artificial sun is a machine of hinges and reflectors. Actual alignment controls are back at Mirror Walk."
       },
       {
-        "name": "sightline",
+        "name": "tracked lamp",
         "type": "generic",
-        "condition_unmet_message": "The public view hides the lamp track behind a hedge."
+        "condition_unmet_message": "A powered track carries the lamp above the beds. Nothing here changes its priority; the Solarium’s garden light control does that."
       }
     ]
   },
@@ -18246,14 +18302,14 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "decorative fountain",
         "type": "generic",
-        "condition_unmet_message": "The fountain relay is disconnected."
+        "condition_unmet_message": "The fountain is dry. Its cabinet is still warm from the garden-light electronics sharing the space."
       },
       {
-        "name": "manual toggle",
+        "name": "garden lighting schedule",
         "type": "generic",
-        "condition_unmet_message": "The schedule still calls an artificial lighting cycle \"dawn\"."
+        "condition_unmet_message": "The schedule was written around visiting hours. The plants’ needs appear beneath presentation settings."
       }
     ]
   },
@@ -18277,14 +18333,14 @@
     "state": {},
     "actions": [
       {
-        "name": "quiet cache",
+        "name": "seed packets",
         "type": "generic",
-        "condition_unmet_message": "The packets are empty, saved as labels for the ledger."
+        "condition_unmet_message": "Flattened packets mark varieties that were tried here. Their contents have long since been planted; there are no loose seeds to collect."
       },
       {
-        "name": "wrapped tool",
+        "name": "planting ledger",
         "type": "generic",
-        "condition_unmet_message": "The last gardener was planning food crops."
+        "condition_unmet_message": "Later entries stop calling the crops ornamental. Somebody had begun writing about the beds as food."
       }
     ]
   },
@@ -18310,14 +18366,14 @@
     "state": {},
     "actions": [
       {
-        "name": "echo walk",
+        "name": "irrigation pipe",
         "type": "generic",
-        "condition_unmet_message": "The ticking comes from the pipe brackets."
+        "condition_unmet_message": "The pipe ticks as it cools, carrying a small physical rhythm through the garden."
       },
       {
-        "name": "old signal",
+        "name": "recorded birdsong",
         "type": "generic",
-        "condition_unmet_message": "The birdsong repeats exactly; the pipe never does."
+        "condition_unmet_message": "The birds repeat without answering the pipe or one another. The irrigation is the living garden’s more reliable sound."
       }
     ]
   },
@@ -18341,14 +18397,14 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "service hatch",
         "type": "generic",
-        "condition_unmet_message": "The wedge is labelled maintenance clearance."
+        "condition_unmet_message": "The hatch sits below the cameras’ calibration chart. Technicians needed a way to reach the system without becoming its target."
       },
       {
-        "name": "maintenance mark",
+        "name": "camera calibration chart",
         "type": "generic",
-        "condition_unmet_message": "The diagram describes lens geometry, not a disabled security system."
+        "condition_unmet_message": "A blank wedge marks where the technician must stand. It is a maintenance allowance, not another security objective."
       }
     ]
   },
@@ -18374,14 +18430,14 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "pressure strip",
         "type": "generic",
-        "condition_unmet_message": "Someone kept inspecting the hull after the roster stopped updating."
+        "condition_unmet_message": "The inspection strip has a recent manual check. Someone was still maintaining the hull after the staff roster stopped being reliable."
       },
       {
-        "name": "warning strip",
+        "name": "staff roster",
         "type": "generic",
-        "condition_unmet_message": "The inspector signed with initials instead of a personnel number."
+        "condition_unmet_message": "The roster is older than the safety inspection beside it. Its list of workers no longer explains who kept the passage running."
       }
     ]
   },
@@ -18405,14 +18461,14 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "camera housings",
         "type": "generic",
-        "condition_unmet_message": "The camera mounts need physical adjustment."
+        "condition_unmet_message": "From behind the lenses, the surveillance system is brackets, cable and moving joints."
       },
       {
-        "name": "sightline",
+        "name": "overlapping cones",
         "type": "generic",
-        "condition_unmet_message": "Cable bundles follow each camera arm back to the hub."
+        "condition_unmet_message": "The coverage cones overlap because each camera has limits. This window offers a view of those limits, not a second patrol-disable control."
       }
     ]
   },
@@ -18438,14 +18494,14 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "test relay",
         "type": "generic",
-        "condition_unmet_message": "The relay is labelled BENCH TEST and is disconnected from live cameras."
+        "condition_unmet_message": "The relay is sealed under a clear diagnostic cover. It is not the main Security Hub control."
       },
       {
-        "name": "manual toggle",
+        "name": "original logs",
         "type": "generic",
-        "condition_unmet_message": "The handwritten instruction was added after the printed procedure."
+        "condition_unmet_message": "The handwritten note insists that technicians preserve the original record before testing. The Director redaction checksum is at Security Hub."
       }
     ]
   },
@@ -18469,14 +18525,14 @@
     "state": {},
     "actions": [
       {
-        "name": "quiet cache",
+        "name": "evidence carton",
         "type": "generic",
-        "condition_unmet_message": "The badges carry no usable credentials."
+        "condition_unmet_message": "The carton holds discarded blanks and a ruined label roll. The useful records have been stored elsewhere."
       },
       {
-        "name": "wrapped tool",
+        "name": "blank badges",
         "type": "generic",
-        "condition_unmet_message": "The carton has three authorization stamps for one disposal request."
+        "condition_unmet_message": "The badges were never assigned. Even moving an empty evidence box apparently required an identity someone could revoke."
       }
     ]
   },
@@ -18502,14 +18558,14 @@
     "state": {},
     "actions": [
       {
-        "name": "echo walk",
+        "name": "diagnostic speaker",
         "type": "generic",
-        "condition_unmet_message": "The recording ends before naming an officer."
+        "condition_unmet_message": "The speaker repeats an unfinished incident number, then waits for a response that never comes."
       },
       {
-        "name": "old signal",
+        "name": "incident number",
         "type": "generic",
-        "condition_unmet_message": "The incident number matches the rhythm of the redaction printer."
+        "condition_unmet_message": "The final field is silent. The diagnostic record has kept the shape of an absent operator."
       }
     ]
   },
@@ -18533,14 +18589,14 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "cable spools",
         "type": "generic",
-        "condition_unmet_message": "The arrow points along the permanent service corridor."
+        "condition_unmet_message": "The spools leave only enough clearance for a worker and tools. Their weight has made them part of the passage."
       },
       {
-        "name": "maintenance mark",
+        "name": "route marker",
         "type": "generic",
-        "condition_unmet_message": "The spool has worn grooves where workers squeezed past."
+        "condition_unmet_message": "The arrow was marked on a spool too heavy to shift. It points along the worker route rather than toward a guest destination."
       }
     ]
   },
@@ -18566,14 +18622,14 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "handholds",
         "type": "generic",
-        "condition_unmet_message": "The scars show where maintenance crews secured themselves."
+        "condition_unmet_message": "The handholds follow the pressure conduit. They were built for steady movement through dead gravity."
       },
       {
-        "name": "warning strip",
+        "name": "tether scar",
         "type": "generic",
-        "condition_unmet_message": "The pressure strip has been positioned within reach of a tethered worker."
+        "condition_unmet_message": "A worn groove marks where a tether repeatedly took someone’s weight. The metal remembers the safe route."
       }
     ]
   },
@@ -18597,14 +18653,14 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
+        "name": "cable trays",
         "type": "generic",
-        "condition_unmet_message": "Warm light leaks through the guest-side joints."
+        "condition_unmet_message": "Between the trays, several station floors are visible at once. The divide between luxury and machinery is remarkably thin."
       },
       {
-        "name": "sightline",
+        "name": "thin partitions",
         "type": "generic",
-        "condition_unmet_message": "The cable trays connect floors that the public lifts keep separate."
+        "condition_unmet_message": "A guest room and its service machinery occupy opposite sides of the same wall. Only one side was meant to be looked at."
       }
     ]
   },
@@ -18630,14 +18686,14 @@
     "state": {},
     "actions": [
       {
-        "name": "control pocket",
+        "name": "work-light switch",
         "type": "generic",
-        "condition_unmet_message": "The switch label specifies work lights only."
+        "condition_unmet_message": "The switch serves only this maintenance recess. It does not open the shaft, disable patrols or reroute station power."
       },
       {
-        "name": "manual toggle",
+        "name": "lockout tag",
         "type": "generic",
-        "condition_unmet_message": "The lockout tag names the worker responsible for this circuit."
+        "condition_unmet_message": "A technician signed the tag before isolating the local lights. The main station feed remains sealed away."
       }
     ]
   },
@@ -18661,14 +18717,14 @@
     "state": {},
     "actions": [
       {
-        "name": "quiet cache",
+        "name": "tether bag",
         "type": "generic",
-        "condition_unmet_message": "The damaged tether was taken out of service."
+        "condition_unmet_message": "The buckle has been cut cleanly through. The empty bag is still hanging exactly where somebody left it."
       },
       {
-        "name": "wrapped tool",
+        "name": "ration wrappers",
         "type": "generic",
-        "condition_unmet_message": "The wrappers have been stacked where they cannot fall into the shaft."
+        "condition_unmet_message": "The wrappers have been folded into a neat stack. This was a stopping place, not a stocked supply cache."
       }
     ]
   },
@@ -18694,14 +18750,14 @@
     "state": {},
     "actions": [
       {
-        "name": "echo walk",
+        "name": "cable vibration",
         "type": "generic",
-        "condition_unmet_message": "The vibration rises through the cable supports."
+        "condition_unmet_message": "A freight motor’s pulse travels through the cable. It is easier to feel the station working here than to hear the guest decks."
       },
       {
-        "name": "old signal",
+        "name": "freight motor",
         "type": "generic",
-        "condition_unmet_message": "A worker marked the loudest support with a chalk circle."
+        "condition_unmet_message": "Insulation swallows voices from above, but the motor keeps announcing every turn through the structure."
       }
     ]
   },
@@ -18726,14 +18782,14 @@
     "state": {},
     "actions": [
       {
-        "name": "service alcove",
+        "name": "service grille",
         "type": "generic",
-        "condition_unmet_message": "The pencil marks track filter changes, not account privileges."
+        "condition_unmet_message": "Cold air slips through a grille between the towers. This passage belongs to the cooling system behind the polished server fronts."
       },
       {
-        "name": "maintenance mark",
+        "name": "maintenance marks",
         "type": "generic",
-        "condition_unmet_message": "A recent date sits beneath several older erased ones."
+        "condition_unmet_message": "Grease-pencil annotations can be changed without a login. The technicians kept a working record outside the permission system."
       }
     ]
   },
@@ -18760,14 +18816,14 @@
     "state": {},
     "actions": [
       {
-        "name": "pressure gallery",
+        "name": "cooling plenum",
         "type": "generic",
-        "condition_unmet_message": "The cooling system is still physically separating hot and cold air."
+        "condition_unmet_message": "The plenum carries cold air past the pressure strip. Its two sides have sharply different temperatures."
       },
       {
-        "name": "warning strip",
+        "name": "palm print",
         "type": "generic",
-        "condition_unmet_message": "The pressure warning belongs to the plenum seal, not the data network."
+        "condition_unmet_message": "The server side is warm enough to dry a handprint. Beaded water on the other side shows how hard the cooling circuit is working."
       }
     ]
   },
@@ -18792,14 +18848,14 @@
     "state": {},
     "actions": [
       {
-        "name": "overlook niche",
-        "type": "generic",
-        "condition_unmet_message": "Individual nodes remain visible from the maintenance side."
-      },
-      {
         "name": "sightline",
         "type": "generic",
-        "condition_unmet_message": "The front panels hide the wiring that joins them."
+        "condition_unmet_message": "Behind the racks, the blinking status lights are visible without the smooth front panels concealing them."
+      },
+      {
+        "name": "status lights",
+        "type": "generic",
+        "condition_unmet_message": "The lights keep their own rhythm behind the decorative faces. The coolant-pulse map is back at Server Farm; these are local status indicators."
       }
     ]
   },

@@ -76,7 +76,7 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 ## 4. Orion’s nightmare, the Chorus and campfire memories
 
-28. From **The Campfire**, go **east** to **Blue Ash Circle** (`source_campfire_node_scale_01`) → **east** to **Silent Shore** (`source_orion_nightmare`).
+28. From **The Campfire**, go **east** to **Blue Ash Circle** (`source_campfire_node_scale_01`) → **east** to **Silent Shore** (`source_orion_nightmare`). At **Silent Shore**, inspect **black ocean**, **Aethel note**.
 
 29. From **Silent Shore**, go **east** to **Tide-Well** (`source_orion_tide_well`).
 
@@ -160,7 +160,7 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 67. At **Source First Fear**, open **first shift locker** for Astral Thread, Master Smelter Solder Gun. Confirm the one-time contents in inventory.
 
-68. From **Source First Fear**, go **south** to **Manager Blind Spot** (`source_echo_mines_node_scale_04`) → **south** to **Shelter Plastic** (`source_echo_mines_node_scale_03`) → **south** to **Pay Stub Drift** (`source_echo_mines_node_scale_02`) → **west** to **Locker Row Loop** (`source_echo_mines_node_scale_01`) → **north** to **Echo of the Mines** (`source_echo_mines`).
+68. From **Source First Fear**, go **south** to **Manager Blind Spot** (`source_echo_mines_node_scale_04`) → **south** to **Shelter Plastic** (`source_echo_mines_node_scale_03`) → **south** to **Pay Stub Drift** (`source_echo_mines_node_scale_02`) → **west** to **Locker Row Loop** (`source_echo_mines_node_scale_01`) → **north** to **Echo of the Mines** (`source_echo_mines`). At **Echo of the Mines**, inspect **first shelter**, **mine checkpoint**.
 
 69. From **Echo of the Mines**, go **east** to **Jed's Echo Bench** (`source_echo_workbench`).
 
@@ -623,7 +623,7 @@ A black ocean lies perfectly still beneath an empty sky. Every Aethel note dies 
 
 Exits: west → Blue Ash Circle (`source_campfire_node_scale_01`), east → Tide-Well (`source_orion_tide_well`), north → Black Tide Shelf (`source_orion_nightmare_node_scale_01`).
 
-Interactions: none in the room description.
+Interactions: black ocean, Aethel note.
 
 ### Tide-Well (`source_orion_tide_well`)
 
@@ -647,7 +647,7 @@ Jed's workshop, the mine checkpoint, and the first shelter occupy the same impos
 
 Exits: north → The Campfire (`source_campfire`), east → Jed's Echo Bench (`source_echo_workbench`), south → Locker Row Loop (`source_echo_mines_node_scale_01`).
 
-Interactions: none in the room description.
+Interactions: first shelter, mine checkpoint.
 
 ### Jed's Echo Bench (`source_echo_workbench`)
 

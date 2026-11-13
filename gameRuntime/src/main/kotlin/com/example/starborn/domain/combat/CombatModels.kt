@@ -86,7 +86,8 @@ data class CombatState(
     val combatants: Map<String, CombatantState>,
     val round: Int = 1,
     val log: List<CombatLogEntry> = emptyList(),
-    val outcome: CombatOutcome? = null
+    val outcome: CombatOutcome? = null,
+    val authored: AuthoredEncounterState = AuthoredEncounterState()
 ) {
     val activeCombatant: CombatantState?
         get() = turnOrder.getOrNull(activeTurnIndex)?.combatantId?.let(combatants::get)

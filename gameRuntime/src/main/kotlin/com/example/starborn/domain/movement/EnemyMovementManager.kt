@@ -2,7 +2,6 @@ package com.example.starborn.domain.movement
 
 import com.example.starborn.domain.model.Room
 import com.example.starborn.domain.session.GameSessionState
-import java.util.Locale
 
 const val MAX_ACTIVE_ENEMY_PARTIES_PER_ROOM: Int = 5
 
@@ -11,12 +10,27 @@ class EnemyMovementManager(
     rooms: List<Room>
 ) {
     private val roomsById = rooms.associateBy { it.id }
-    private val definitionsById = catalog.parties.associateBy { it.id }
+    private val cardinalDirections = setOf("north", "east", "south", "west")
+    private val zonesById = catalog.zones.associateBy { it.id }
+    private val definitionsById = catalog.parties.filter { party ->
+        permitsRoom(party, party.startRoom) &&
+            party.route.all { permitsRoom(party, it) } &&
+            party.route.zipWithNext().all { (a, b) ->
+                directionBetween(a, b) in cardinalDirections && directionBetween(b, a) in cardinalDirections
+            }
+    }.associateBy { it.id }
     private var states: Map<String, EnemyPartyRuntimeState> = emptyMap()
 
     fun restore(persisted: Map<String, EnemyPartyRuntimeState>, session: GameSessionState) {
         states = definitionsById.values.associate { definition ->
-            definition.id to (persisted[definition.id] ?: initialState(definition))
+            val saved = persisted[definition.id]
+            val validPosition = saved?.let {
+                permitsRoom(definition, it.roomId) &&
+                    (definition.route.getOrNull(it.routeIndex) == it.roomId ||
+                        it.roomId == definition.startRoom && it.routeIndex == 0)
+            } == true
+            definition.id to (if (validPosition) requireNotNull(saved)
+                else initialState(definition).copy(defeated = saved?.defeated == true))
         }
         deactivateUnavailable(session)
     }
@@ -62,7 +76,8 @@ class EnemyMovementManager(
         }
 
         states = mutable
-        val aggression = updateAggression(deltaMs, currentRoomId, session, graceProtectedAtTickStart)
+        val newlyArrived = events.filter { it.roomId == currentRoomId }.map { it.partyId }
+        val aggression = updateAggression(deltaMs, currentRoomId, session, graceProtectedAtTickStart + newlyArrived)
         val movementEvents = events.flatMap { event ->
             eventForPlayer(event, currentRoomId, definition = definitionsById[event.partyId])
         }
@@ -246,9 +261,19 @@ class EnemyMovementManager(
         }
     }
 
-    private fun isActive(definition: EnemyMovementParty, session: GameSessionState): Boolean =
-        definition.requiresActiveQuest.isNullOrBlank() ||
+    private fun permitsRoom(definition: EnemyMovementParty, roomId: String): Boolean {
+        val zone = zonesById[definition.zoneId] ?: return false
+        return roomId in roomsById && roomId in zone.rooms && roomId !in zone.protectedRooms
+    }
+
+    private fun isActive(definition: EnemyMovementParty, session: GameSessionState): Boolean {
+        if (definition.replacesStaticEncounter) {
+            val key = "encounter_cleared:" + definition.enemies.sorted().joinToString("|")
+            if (session.roomStates[definition.startRoom]?.get(key) == true) return false
+        }
+        return definition.requiresActiveQuest.isNullOrBlank() ||
             session.activeQuests.any { it.equals(definition.requiresActiveQuest, ignoreCase = true) }
+    }
 
     private fun initialState(definition: EnemyMovementParty): EnemyPartyRuntimeState =
         EnemyPartyRuntimeState(

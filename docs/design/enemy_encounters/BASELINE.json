@@ -1,0 +1,5567 @@
+{
+  "status": "source snapshot, not a playthrough or difficulty verdict",
+  "git_head": "c52dcf48db6c291072990cb713fca9cdd9a797c1",
+  "includes_preexisting_uncommitted_changes": true,
+  "source_sha256": {
+    "rooms": "eb540ae416d920e3b3ffe29538ad3caa3b21fe32ee8a65f49804fafbcc8c80ff",
+    "enemies": "0ec9871c9de2262e7368bfef317ce0f79888776250c06afc80cae9b11b4829ea",
+    "events": "d53bf2db7ccc9659402ffbe8a9e2ccc2cbaf430d88172d983b7d0f8ccc59eab9",
+    "enemy_movement": "a7219c4b818d71a4de5d5189cab589fc8194e38992d9473e33358e474ebcabd3",
+    "hub_nodes": "d8b487eec92673e29c2a0c8351b3ba3e8f1ae894d603164da7f1a8af1c5c17b9",
+    "skills": "3fe9d0f064f687cc7e780e65d0f547e31ffe52047bb0ac0df9cdc0ac1b5e438f"
+  },
+  "encounters": [
+    {
+      "id": "static:workshop_yard:1",
+      "world": "world_1",
+      "source": "static",
+      "room_id": "workshop_yard",
+      "room_title": "Scrap Yard",
+      "node_id": "workshop",
+      "enemies": [
+        "faulted_loader"
+      ],
+      "enemy_instances": [
+        {
+          "enemy_id": "faulted_loader",
+          "hp": 45,
+          "vitality": 1,
+          "stability": 18
+        }
+      ],
+      "blocked_directions": {
+        "north": {
+          "type": "enemy",
+          "enemy_id": "faulted_loader",
+          "message_locked": "The loader's wild arm blocks the workshop shutter. Engage the Faulted Loader to enter combat!",
+          "message_unlock": "The loader folds into the scrap, leaving the workshop route open."
+        }
+      }
+    },
+    {
+      "id": "static:medbay_vents:1",
+      "world": "world_1",
+      "source": "static",
+      "room_id": "medbay_vents",
+      "room_title": "Ventilation Hub",
+      "node_id": "med_bay",
+      "enemies": [
+        "siren_skimmer",
+        "siren_skimmer"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:admin_security:1",
+      "world": "world_1",
+      "source": "static",
+      "room_id": "admin_security",
+      "room_title": "Security Post",
+      "node_id": "admin_concourse",
+      "enemies": [
+        "acoustic_bulwark"
+      ],
+      "enemy_instances": [
+        {
+          "enemy_id": "acoustic_bulwark",
+          "hp": 30,
+          "vitality": 0,
+          "stability": 12,
+          "extra_drops": [
+            {
+              "id": "wiring_bundle",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:server_aisle1:1",
+      "world": "world_1",
+      "source": "static",
+      "room_id": "server_aisle1",
+      "room_title": "Aisle 01",
+      "node_id": "server_room",
+      "enemies": [
+        "resonance_buoy",
+        "resonance_buoy"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:mine_alpha:1",
+      "world": "world_1",
+      "source": "static",
+      "room_id": "mine_alpha",
+      "room_title": "Main Tunnel Alpha",
+      "node_id": "deep_mine",
+      "enemies": [
+        "echo_borer",
+        "echo_borer"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:mine_checkpoint:1",
+      "world": "world_1",
+      "source": "static",
+      "room_id": "mine_checkpoint",
+      "room_title": "Riot Control Post",
+      "node_id": "deep_mine",
+      "enemies": [
+        "acoustic_bulwark",
+        "dominion_dampener"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:launch_access:1",
+      "world": "world_1",
+      "source": "static",
+      "room_id": "launch_access",
+      "room_title": "Maintenance Access",
+      "node_id": "launch_bay",
+      "enemies": [
+        "siren_skimmer",
+        "echo_borer"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:launch_lift:1",
+      "world": "world_1",
+      "source": "static",
+      "room_id": "launch_lift",
+      "room_title": "Cargo Lift",
+      "node_id": "launch_bay",
+      "enemies": [
+        "acoustic_bulwark",
+        "resonance_buoy"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {
+        "north": {
+          "type": "enemy",
+          "message_locked": "A hostile Acoustic Bulwark blocks access to the security checkpoint."
+        }
+      }
+    },
+    {
+      "id": "static:launch_checkpoint:1",
+      "world": "world_1",
+      "source": "static",
+      "room_id": "launch_checkpoint",
+      "room_title": "Security Checkpoint B",
+      "node_id": "launch_bay",
+      "enemies": [
+        "dominion_dampener",
+        "resonance_buoy"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {
+        "north": {
+          "type": "enemy",
+          "message_locked": "A Dominion Dampener and security drone lock down the route to the pods."
+        }
+      }
+    },
+    {
+      "id": "static:launch_bay:1",
+      "world": "world_1",
+      "source": "static",
+      "room_id": "launch_bay",
+      "room_title": "Pod Bay",
+      "node_id": "launch_bay",
+      "enemies": [
+        "the_iron_warden"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {
+        "north": {
+          "type": "lock",
+          "consume": false,
+          "message_locked": "The Warden stands in front of the escape pod, blocking the access hatch.",
+          "message_unlock": "The Warden is defeated. Zeke has opened the pod hatch.",
+          "requires": [
+            {
+              "room_id": "launch_bay",
+              "state_key": "warden_defeated",
+              "value": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "static:spire_archive_vault:1",
+      "world": "world_3",
+      "source": "static",
+      "room_id": "spire_archive_vault",
+      "room_title": "Archive Vault",
+      "node_id": "spire_archive",
+      "enemies": [
+        "corporate_assassin"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:spire_landing_pad_roof:1",
+      "world": "world_3",
+      "source": "static",
+      "room_id": "spire_landing_pad_roof",
+      "room_title": "Landing Pad Roof",
+      "node_id": "spire_landing_pad",
+      "enemies": [
+        "aero_drone",
+        "heavy_mech"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:spire_landing_pad_roof:2",
+      "world": "world_3",
+      "source": "static",
+      "room_id": "spire_landing_pad_roof",
+      "room_title": "Landing Pad Roof",
+      "node_id": "spire_landing_pad",
+      "enemies": [
+        "administrator_boss",
+        "aero_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_slag_river:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_slag_river",
+      "room_title": "Slag River",
+      "node_id": "foundry_slag_river",
+      "enemies": [
+        "magma_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {
+        "east": {
+          "type": "enemy",
+          "message_locked": "A Magma Drone holds the east crossing into Waste Intake. Defeat it to open the crossing. The route west to the landing shelf is clear."
+        }
+      }
+    },
+    {
+      "id": "static:foundry_slag_stepping_stones:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_slag_stepping_stones",
+      "room_title": "Stepping Stones",
+      "node_id": "foundry_slag_river",
+      "enemies": [
+        "magma_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {
+        "north": {
+          "type": "lock",
+          "requires": [
+            {
+              "room_id": "foundry_slag_stepping_stones",
+              "state_key": "slag_bridge_solidified",
+              "value": true
+            }
+          ],
+          "message_locked": "A roaring cataract of molten white slag surges across the northern channel. The searing thermal updraft would vaporize anyone attempting to jump across.",
+          "message_unlock": "Cryogenic coolant floods the channel, hissing into steam as the molten slag crusts into a solid obsidian bridge!"
+        }
+      }
+    },
+    {
+      "id": "static:foundry_waste_intake:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_waste_intake",
+      "room_title": "Waste Intake",
+      "node_id": "foundry_waste_intake",
+      "enemies": [
+        "slag_golem"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_waste_intake:2",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_waste_intake",
+      "room_title": "Waste Intake",
+      "node_id": "foundry_waste_intake",
+      "enemies": [
+        "slag_golem",
+        "magma_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_service_airlock:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_service_airlock",
+      "room_title": "Service Airlock",
+      "node_id": "foundry_service_airlock",
+      "enemies": [
+        "slag_golem"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_decon_chamber:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_decon_chamber",
+      "room_title": "Decon Chamber",
+      "node_id": "foundry_service_airlock",
+      "enemies": [
+        "slag_golem"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_conveyor_belt:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_conveyor_belt",
+      "room_title": "Conveyor Belt",
+      "node_id": "foundry_conveyor_belt",
+      "enemies": [
+        "welder_bot",
+        "magma_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_conveyor_belt:2",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_conveyor_belt",
+      "room_title": "Conveyor Belt",
+      "node_id": "foundry_conveyor_belt",
+      "enemies": [
+        "phantom_prototype"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_belt_service_walk:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_belt_service_walk",
+      "room_title": "Service Walk",
+      "node_id": "foundry_conveyor_belt",
+      "enemies": [
+        "welder_bot"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_reject_bay:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_reject_bay",
+      "room_title": "Reject Bay",
+      "node_id": "foundry_conveyor_belt",
+      "enemies": [
+        "phantom_prototype"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {
+        "west": {
+          "type": "lock",
+          "requires": [
+            {
+              "room_id": "foundry_pipe_gallery",
+              "state_key": "assembly_route_open",
+              "value": true
+            }
+          ],
+          "message_locked": "The Assembly maintenance shutter is sealed. Recover Project Phantom and regroup with Gh0st at Cooling Springs before opening this route.",
+          "message_unlock": "The cleared maintenance corridor connects the Pipe Gallery and Reject Bay. The route stays open for the return trip."
+        }
+      }
+    },
+    {
+      "id": "static:foundry_conditioning_chamber:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_conditioning_chamber",
+      "room_title": "Conditioning Chamber",
+      "node_id": "foundry_conditioning",
+      "enemies": [
+        "flame_trooper"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_forge_anvil:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_forge_anvil",
+      "room_title": "The Forge",
+      "node_id": "foundry_forge",
+      "enemies": [
+        "conveyor_crusher"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_power_core:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_power_core",
+      "room_title": "Power Core",
+      "node_id": "foundry_power_core",
+      "enemies": [
+        "flame_trooper"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_power_core:2",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_power_core",
+      "room_title": "Power Core",
+      "node_id": "foundry_power_core",
+      "enemies": [
+        "phantom_prototype"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_engine_service_ring:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_engine_service_ring",
+      "room_title": "Engine Service Ring",
+      "node_id": "foundry_power_core",
+      "enemies": [
+        "flame_trooper"
+      ],
+      "enemy_instances": [
+        {
+          "enemy_id": "flame_trooper",
+          "extra_drops": [
+            {
+              "id": "ration_pack",
+              "chance": 1.0,
+              "quantity": 2
+            }
+          ]
+        }
+      ],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_titan_dock:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_titan_dock",
+      "room_title": "Titan Dock",
+      "node_id": "foundry_titan_dock",
+      "enemies": [
+        "titan_walker_boss"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {
+        "north": {
+          "type": "enemy",
+          "message_locked": "The Titan Walker covers the north escape catwalk. Defeat it to clear the way. You can withdraw west to Power Core."
+        }
+      }
+    },
+    {
+      "id": "static:orbital_executive_dock:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_executive_dock",
+      "room_title": "Executive Dock",
+      "node_id": "orbital_executive_dock",
+      "enemies": [
+        "orbital_fighter",
+        "orbital_fighter"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_grand_concourse:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_grand_concourse",
+      "room_title": "Grand Concourse",
+      "node_id": "orbital_grand_concourse",
+      "enemies": [
+        "compliance_officer"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_customs_lounge:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_customs_lounge",
+      "room_title": "Customs Lounge",
+      "node_id": "orbital_grand_concourse",
+      "enemies": [
+        "compliance_officer"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_solarium:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_solarium",
+      "room_title": "Solarium",
+      "node_id": "orbital_solarium",
+      "enemies": [
+        "null_g_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_mirror_walk:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_mirror_walk",
+      "room_title": "Mirror Walk",
+      "node_id": "orbital_solarium",
+      "enemies": [
+        "null_g_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_security_hub:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_security_hub",
+      "room_title": "Security Hub",
+      "node_id": "orbital_security_hub",
+      "enemies": [
+        "compliance_officer",
+        "null_g_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_surveillance_pit:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_surveillance_pit",
+      "room_title": "Surveillance Pit",
+      "node_id": "orbital_security_hub",
+      "enemies": [
+        "compliance_officer"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_surveillance_pit:2",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_surveillance_pit",
+      "room_title": "Surveillance Pit",
+      "node_id": "orbital_security_hub",
+      "enemies": [
+        "null_g_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_server_farm:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_server_farm",
+      "room_title": "Server Farm",
+      "node_id": "deep_server_farm",
+      "enemies": [
+        "void_turret",
+        "void_turret"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {
+        "east": {
+          "type": "lock",
+          "requires": [
+            {
+              "room_id": "deep_anchor_chamber",
+              "state_key": "firewall_access_open",
+              "value": true
+            }
+          ],
+          "message_locked": "The Firewall Construct still holds the Anchor Chamber entrance. Follow the mainframe route through Firewall Alpha, Beta and Gamma and break the final defense.",
+          "message_unlock": "The cleared Anchor Chamber entrance remains open for the return through the Server Farm."
+        }
+      }
+    },
+    {
+      "id": "static:orbital_server_farm:2",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_server_farm",
+      "room_title": "Server Farm",
+      "node_id": "deep_server_farm",
+      "enemies": [
+        "firewall_construct"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {
+        "east": {
+          "type": "lock",
+          "requires": [
+            {
+              "room_id": "deep_anchor_chamber",
+              "state_key": "firewall_access_open",
+              "value": true
+            }
+          ],
+          "message_locked": "The Firewall Construct still holds the Anchor Chamber entrance. Follow the mainframe route through Firewall Alpha, Beta and Gamma and break the final defense.",
+          "message_unlock": "The cleared Anchor Chamber entrance remains open for the return through the Server Farm."
+        }
+      }
+    },
+    {
+      "id": "static:deep_mainframe_nave:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "deep_mainframe_nave",
+      "room_title": "Mainframe Nave",
+      "node_id": "deep_server_farm",
+      "enemies": [
+        "void_turret"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:deep_firewall_alpha:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "deep_firewall_alpha",
+      "room_title": "Firewall Alpha",
+      "node_id": "deep_server_farm",
+      "enemies": [
+        "void_turret"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:deep_firewall_beta:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "deep_firewall_beta",
+      "room_title": "Firewall Beta",
+      "node_id": "deep_server_farm",
+      "enemies": [
+        "void_turret"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:deep_firewall_gamma:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "deep_firewall_gamma",
+      "room_title": "Firewall Gamma",
+      "node_id": "deep_server_farm",
+      "enemies": [
+        "firewall_construct"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {
+        "down": {
+          "type": "lock",
+          "requires": [
+            {
+              "room_id": "deep_anchor_chamber",
+              "state_key": "firewall_access_open",
+              "value": true
+            }
+          ],
+          "message_locked": "The Firewall Construct still controls the Anchor access lift. Disable its nodes and defeat it before using the lift.",
+          "message_unlock": "The Anchor access lift is cleared in both directions."
+        }
+      }
+    },
+    {
+      "id": "static:deep_anchor_chamber:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "deep_anchor_chamber",
+      "room_title": "Anchor Chamber",
+      "node_id": "deep_anchor_chamber",
+      "enemies": [
+        "hk_droid"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {
+        "west": {
+          "type": "lock",
+          "requires": [
+            {
+              "room_id": "deep_anchor_chamber",
+              "state_key": "firewall_access_open",
+              "value": true
+            }
+          ],
+          "message_locked": "The Firewall Construct still holds the Anchor Chamber entrance. Follow the mainframe route through Firewall Alpha, Beta and Gamma and break the final defense.",
+          "message_unlock": "The cleared Anchor Chamber entrance remains open for the return through the Server Farm."
+        },
+        "up": {
+          "type": "lock",
+          "requires": [
+            {
+              "room_id": "deep_anchor_chamber",
+              "state_key": "firewall_access_open",
+              "value": true
+            }
+          ],
+          "message_locked": "The Firewall Construct still controls the Anchor access lift. Disable its nodes and defeat it before using the lift.",
+          "message_unlock": "The Anchor access lift is cleared in both directions."
+        }
+      }
+    },
+    {
+      "id": "static:deep_throne_room:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "deep_throne_room",
+      "room_title": "Throne Room",
+      "node_id": "deep_throne_room",
+      "enemies": [
+        "elite_guard"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:deep_tear:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "deep_tear",
+      "room_title": "The Tear",
+      "node_id": "deep_tear",
+      "enemies": [
+        "compliance_avatar"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:source_zeke_review_loop:1",
+      "world": "world_6",
+      "source": "static",
+      "room_id": "source_zeke_review_loop",
+      "room_title": "Performance Review Loop",
+      "node_id": "source_zeke_nightmare_node",
+      "enemies": [
+        "manager_projection"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:source_gh0st_kill_suite:1",
+      "world": "world_6",
+      "source": "static",
+      "room_id": "source_gh0st_kill_suite",
+      "room_title": "Kill-Suite Loop",
+      "node_id": "source_gh0st_nightmare_node",
+      "enemies": [
+        "endless_war_echo",
+        "endless_war_echo"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:source_orion_tide_well:1",
+      "world": "world_6",
+      "source": "static",
+      "room_id": "source_orion_tide_well",
+      "room_title": "Tide-Well",
+      "node_id": "source_orion_nightmare_node",
+      "enemies": [
+        "silent_shore_wraith"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:source_echo_patrol:1",
+      "world": "world_6",
+      "source": "static",
+      "room_id": "source_echo_patrol",
+      "room_title": "Manager Patrol Route",
+      "node_id": "source_echo_mines_node",
+      "enemies": [
+        "source_shadow"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:source_memory_fragments:1",
+      "world": "world_6",
+      "source": "static",
+      "room_id": "source_memory_fragments",
+      "room_title": "World-Fracture Landing",
+      "node_id": "source_memory_stair_node",
+      "enemies": [
+        "source_shadow",
+        "distorted_sentinel",
+        "glitch_hound"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:source_spire_arena:1",
+      "world": "world_6",
+      "source": "static",
+      "room_id": "source_spire_arena",
+      "room_title": "Memory Defense Arena",
+      "node_id": "source_spire_thought_node",
+      "enemies": [
+        "memory_leak",
+        "nightmare_guard"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {
+        "east": {
+          "type": "lock",
+          "requires": [
+            {
+              "room_id": "source_spire_arena",
+              "state_key": "center_path_open",
+              "value": true
+            }
+          ],
+          "message_locked": "The Memory Leak and Nightmare Guard still defend the path to the Center. Break the memory defenses before crossing east."
+        }
+      }
+    },
+    {
+      "id": "static:source_center:1",
+      "world": "world_6",
+      "source": "static",
+      "room_id": "source_center",
+      "room_title": "The Center",
+      "node_id": "source_center_node",
+      "enemies": [
+        "ascended_vale"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {
+        "east": {
+          "type": "lock",
+          "requires": [
+            {
+              "room_id": "source_center",
+              "state_key": "ending_complete",
+              "value": true
+            }
+          ],
+          "message_locked": "The white horizon has no path yet. Finish the confrontation and restore the separate voices first."
+        }
+      }
+    },
+    {
+      "id": "static:sector9_stream_pools:1",
+      "world": "world_2",
+      "source": "static",
+      "room_id": "sector9_stream_pools",
+      "room_title": "Mist Pools",
+      "node_id": "tideglass_beach",
+      "enemies": [
+        "siren_skimmer"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:sector9_stream_wetlands:1",
+      "world": "world_2",
+      "source": "static",
+      "room_id": "sector9_stream_wetlands",
+      "room_title": "Resonant Sedge",
+      "node_id": "tideglass_beach",
+      "enemies": [
+        "spore_spitter"
+      ],
+      "enemy_instances": [
+        {
+          "enemy_id": "spore_spitter",
+          "extra_drops": [
+            {
+              "id": "herb",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:sector9_stream_cave_depths:1",
+      "world": "world_2",
+      "source": "static",
+      "room_id": "sector9_stream_cave_depths",
+      "room_title": "Glow-Moss Cavern",
+      "node_id": "tideglass_beach",
+      "enemies": [
+        "echo_borer",
+        "echo_borer"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {
+        "east": {
+          "type": "enemy",
+          "message_locked": "The Echo Borers hold the east passage into the Waterlogged Tunnel. Defeat them to pass. The cave entrance remains open to the south."
+        }
+      }
+    },
+    {
+      "id": "static:sector9_canopy:1",
+      "world": "world_2",
+      "source": "static",
+      "room_id": "sector9_canopy",
+      "room_title": "Resonant Canopy",
+      "node_id": "razor_vine_path",
+      "enemies": [
+        "stalker_vine",
+        "spore_spitter"
+      ],
+      "enemy_instances": [
+        {
+          "enemy_id": "stalker_vine",
+          "hp": 60,
+          "vitality": 4,
+          "stability": 60
+        },
+        {
+          "enemy_id": "spore_spitter",
+          "hp": 30,
+          "vitality": 3,
+          "stability": 30
+        }
+      ],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:sector9_wilds_thickets:1",
+      "world": "world_2",
+      "source": "static",
+      "room_id": "sector9_wilds_thickets",
+      "room_title": "Spore Thickets",
+      "node_id": "razor_vine_path",
+      "enemies": [
+        "razor_vine"
+      ],
+      "enemy_instances": [
+        {
+          "enemy_id": "razor_vine",
+          "extra_drops": [
+            {
+              "id": "herb",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:sector9_wilds_nest:1",
+      "world": "world_2",
+      "source": "static",
+      "room_id": "sector9_wilds_nest",
+      "room_title": "Hound Nest",
+      "node_id": "razor_vine_path",
+      "enemies": [
+        "shard_hound",
+        "shard_hound"
+      ],
+      "enemy_instances": [
+        {
+          "enemy_id": "shard_hound",
+          "occurrence": 1,
+          "hp": 40,
+          "stability": 28,
+          "vitality": 3,
+          "extra_drops": [
+            {
+              "id": "beast_meat",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        },
+        {
+          "enemy_id": "shard_hound",
+          "occurrence": 2,
+          "hp": 40,
+          "stability": 28,
+          "vitality": 3
+        }
+      ],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:sector9_foyer_left_gallery:1",
+      "world": "world_2",
+      "source": "static",
+      "room_id": "sector9_foyer_left_gallery",
+      "room_title": "Left Reliquary",
+      "node_id": "hall_of_echoes",
+      "enemies": [
+        "ruin_guardian"
+      ],
+      "enemy_instances": [
+        {
+          "enemy_id": "ruin_guardian",
+          "extra_drops": [
+            {
+              "id": "scrap_metal",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "blocked_directions": {
+        "west": {
+          "type": "enemy",
+          "message_locked": "The Ruin Guardian seals the west approach to the security terminal. Defeat it to enter the Security Hub. The Grand Hall remains open to the south."
+        }
+      }
+    },
+    {
+      "id": "static:sector9_conduit_junction:1",
+      "world": "world_2",
+      "source": "static",
+      "room_id": "sector9_conduit_junction",
+      "room_title": "T-Junction Wiring",
+      "node_id": "hall_of_echoes",
+      "enemies": [
+        "sentinel_orb"
+      ],
+      "enemy_instances": [
+        {
+          "enemy_id": "sentinel_orb",
+          "extra_drops": [
+            {
+              "id": "wiring_bundle",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:sector9_hall_acoustics_lab:1",
+      "world": "world_2",
+      "source": "static",
+      "room_id": "sector9_hall_acoustics_lab",
+      "room_title": "Acoustics Lab",
+      "node_id": "hall_of_echoes",
+      "enemies": [
+        "spore_spitter"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:sector9_vents_gantry:1",
+      "world": "world_2",
+      "source": "static",
+      "room_id": "sector9_vents_gantry",
+      "room_title": "High Gantry",
+      "node_id": "stasis_chamber",
+      "enemies": [
+        "sentinel_orb"
+      ],
+      "enemy_instances": [
+        {
+          "enemy_id": "sentinel_orb",
+          "extra_drops": [
+            {
+              "id": "battery",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "blocked_directions": {
+        "south": {
+          "type": "key",
+          "key_id": "thermal_cutter",
+          "consume": false,
+          "message_locked": "Razor-vines choke the shaft. The barbed stems will burst into toxic spores if cut cold.",
+          "message_unlock": "The Thermal Cutter cauterizes the razor-vines. The shaft route is open."
+        }
+      }
+    },
+    {
+      "id": "static:spire_sewers_scale_01:1",
+      "world": "world_3",
+      "source": "static",
+      "room_id": "spire_sewers_scale_01",
+      "room_title": "Pump Gallery",
+      "node_id": "spire_sewers",
+      "enemies": [
+        "sewer_crawler"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:spire_sewers_scale_02:1",
+      "world": "world_3",
+      "source": "static",
+      "room_id": "spire_sewers_scale_02",
+      "room_title": "Filter Sluice",
+      "node_id": "spire_sewers",
+      "enemies": [
+        "sewer_crawler",
+        "sewer_crawler"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:spire_exec_lounge_scale_02:1",
+      "world": "world_3",
+      "source": "static",
+      "room_id": "spire_exec_lounge_scale_02",
+      "room_title": "Private Booth",
+      "node_id": "spire_exec_lounge",
+      "enemies": [
+        "sentinel_mki"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:spire_exec_lounge_scale_05:1",
+      "world": "world_3",
+      "source": "static",
+      "room_id": "spire_exec_lounge_scale_05",
+      "room_title": "Service Dumbwaiter",
+      "node_id": "spire_exec_lounge",
+      "enemies": [
+        "aero_drone"
+      ],
+      "enemy_instances": [
+        {
+          "enemy_id": "aero_drone",
+          "extra_drops": [
+            {
+              "id": "circuit_board",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:spire_landing_pad_scale_01:1",
+      "world": "world_3",
+      "source": "static",
+      "room_id": "spire_landing_pad_scale_01",
+      "room_title": "Fuel Bridge",
+      "node_id": "spire_landing_pad",
+      "enemies": [
+        "aero_drone"
+      ],
+      "enemy_instances": [
+        {
+          "enemy_id": "aero_drone",
+          "extra_drops": [
+            {
+              "id": "wiring_bundle",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:spire_landing_pad_scale_03:1",
+      "world": "world_3",
+      "source": "static",
+      "room_id": "spire_landing_pad_scale_03",
+      "room_title": "Drone Wreck Roof",
+      "node_id": "spire_landing_pad",
+      "enemies": [
+        "corporate_assassin"
+      ],
+      "enemy_instances": [
+        {
+          "enemy_id": "corporate_assassin",
+          "extra_drops": [
+            {
+              "id": "ration_pack",
+              "chance": 1.0,
+              "quantity": 2
+            }
+          ]
+        }
+      ],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_obsidian_shelf_scale_02:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_obsidian_shelf_scale_02",
+      "room_title": "Heat Shadow Alcove",
+      "node_id": "foundry_obsidian_shelf",
+      "enemies": [
+        "magma_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_slag_river_scale_02:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_slag_river_scale_02",
+      "room_title": "Coolant Spillway",
+      "node_id": "foundry_slag_river",
+      "enemies": [
+        "welder_bot"
+      ],
+      "enemy_instances": [
+        {
+          "enemy_id": "welder_bot",
+          "extra_drops": [
+            {
+              "id": "pure_iron",
+              "chance": 1.0,
+              "quantity": 2
+            }
+          ]
+        }
+      ],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_slag_river_scale_03:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_slag_river_scale_03",
+      "room_title": "Slag Ferry Winch",
+      "node_id": "foundry_slag_river",
+      "enemies": [
+        "slag_golem"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_cooling_springs_scale_02:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_cooling_springs_scale_02",
+      "room_title": "Worker Marker",
+      "node_id": "foundry_cooling_springs",
+      "enemies": [
+        "magma_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_waste_intake_scale_02:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_waste_intake_scale_02",
+      "room_title": "Records Shed",
+      "node_id": "foundry_waste_intake",
+      "enemies": [
+        "welder_bot"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_waste_intake_scale_03:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_waste_intake_scale_03",
+      "room_title": "Magnet Ramp",
+      "node_id": "foundry_waste_intake",
+      "enemies": [
+        "slag_golem"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_service_airlock_scale_02:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_service_airlock_scale_02",
+      "room_title": "Decon Drain",
+      "node_id": "foundry_service_airlock",
+      "enemies": [
+        "magma_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_conveyor_belt_scale_02:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_conveyor_belt_scale_02",
+      "room_title": "Reject Chute",
+      "node_id": "foundry_conveyor_belt",
+      "enemies": [
+        "welder_bot"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_conveyor_belt_scale_03:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_conveyor_belt_scale_03",
+      "room_title": "Roller Underpass",
+      "node_id": "foundry_conveyor_belt",
+      "enemies": [
+        "slag_golem"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_conditioning_scale_02:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_conditioning_scale_02",
+      "room_title": "Quench Lane",
+      "node_id": "foundry_conditioning",
+      "enemies": [
+        "magma_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_forge_scale_02:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_forge_scale_02",
+      "room_title": "Anvil Shadow",
+      "node_id": "foundry_forge",
+      "enemies": [
+        "welder_bot"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_forge_scale_03:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_forge_scale_03",
+      "room_title": "Mold Library",
+      "node_id": "foundry_forge",
+      "enemies": [
+        "slag_golem"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_power_core_scale_02:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_power_core_scale_02",
+      "room_title": "Engine Cradle",
+      "node_id": "foundry_power_core",
+      "enemies": [
+        "magma_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_titan_dock_scale_02:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_titan_dock_scale_02",
+      "room_title": "Ammo Lift",
+      "node_id": "foundry_titan_dock",
+      "enemies": [
+        "welder_bot"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_titan_dock_scale_03:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_titan_dock_scale_03",
+      "room_title": "Escape Rail",
+      "node_id": "foundry_titan_dock",
+      "enemies": [
+        "slag_golem"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_executive_dock_scale_02:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_executive_dock_scale_02",
+      "room_title": "Collar Pressure Gallery",
+      "node_id": "orbital_executive_dock",
+      "enemies": [
+        "compliance_officer"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_executive_dock_scale_04:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_executive_dock_scale_04",
+      "room_title": "Arrival Light Relay",
+      "node_id": "orbital_executive_dock",
+      "enemies": [
+        "null_g_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_executive_dock_scale_06:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_executive_dock_scale_06",
+      "room_title": "Freight Intercom Walk",
+      "node_id": "orbital_executive_dock",
+      "enemies": [
+        "compliance_officer"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_grand_concourse_scale_02:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_grand_concourse_scale_02",
+      "room_title": "Inward Gauge Gallery",
+      "node_id": "orbital_grand_concourse",
+      "enemies": [
+        "compliance_officer"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_grand_concourse_scale_04:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_grand_concourse_scale_04",
+      "room_title": "Directory Relay",
+      "node_id": "orbital_grand_concourse",
+      "enemies": [
+        "null_g_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_grand_concourse_scale_06:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_grand_concourse_scale_06",
+      "room_title": "Hospitality Speaker Walk",
+      "node_id": "orbital_grand_concourse",
+      "enemies": [
+        "compliance_officer"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_solarium_scale_02:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_solarium_scale_02",
+      "room_title": "Condensation Channel",
+      "node_id": "orbital_solarium",
+      "enemies": [
+        "compliance_officer"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_solarium_scale_04:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_solarium_scale_04",
+      "room_title": "Fountain Cabinet",
+      "node_id": "orbital_solarium",
+      "enemies": [
+        "null_g_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_solarium_scale_06:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_solarium_scale_06",
+      "room_title": "Cooling Irrigation Walk",
+      "node_id": "orbital_solarium",
+      "enemies": [
+        "compliance_officer"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_security_hub_scale_02:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_security_hub_scale_02",
+      "room_title": "Hull Inspection Gallery",
+      "node_id": "orbital_security_hub",
+      "enemies": [
+        "compliance_officer"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_security_hub_scale_04:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_security_hub_scale_04",
+      "room_title": "Evidence Test Relay",
+      "node_id": "orbital_security_hub",
+      "enemies": [
+        "null_g_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_security_hub_scale_06:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_security_hub_scale_06",
+      "room_title": "Incident Speaker Walk",
+      "node_id": "orbital_security_hub",
+      "enemies": [
+        "compliance_officer"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_service_shaft_scale_02:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_service_shaft_scale_02",
+      "room_title": "Tether Conduit",
+      "node_id": "orbital_service_shaft",
+      "enemies": [
+        "compliance_officer"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_service_shaft_scale_04:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_service_shaft_scale_04",
+      "room_title": "Worklight Lockout",
+      "node_id": "orbital_service_shaft",
+      "enemies": [
+        "null_g_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_service_shaft_scale_06:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_service_shaft_scale_06",
+      "room_title": "Freight Motor Walk",
+      "node_id": "orbital_service_shaft",
+      "enemies": [
+        "compliance_officer"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:deep_server_farm_scale_02:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "deep_server_farm_scale_02",
+      "room_title": "Cooling Plenum",
+      "node_id": "deep_server_farm",
+      "enemies": [
+        "firewall_construct"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:deep_anchor_chamber_scale_02:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "deep_anchor_chamber_scale_02",
+      "room_title": "Chorus Tank",
+      "node_id": "deep_anchor_chamber",
+      "enemies": [
+        "hk_droid"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:deep_anchor_chamber_scale_06:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "deep_anchor_chamber_scale_06",
+      "room_title": "Empty Cradle Afterimage",
+      "node_id": "deep_anchor_chamber",
+      "enemies": [
+        "hk_droid"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:deep_throne_room_scale_02:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "deep_throne_room_scale_02",
+      "room_title": "Thorne Cell",
+      "node_id": "deep_throne_room",
+      "enemies": [
+        "elite_guard"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:deep_throne_room_scale_04:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "deep_throne_room_scale_04",
+      "room_title": "Boardroom Grave",
+      "node_id": "deep_throne_room",
+      "enemies": [
+        "compliance_avatar"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:deep_throne_room_scale_06:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "deep_throne_room_scale_06",
+      "room_title": "Avatar Gate",
+      "node_id": "deep_throne_room",
+      "enemies": [
+        "elite_guard"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:deep_tear_scale_02:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "deep_tear_scale_02",
+      "room_title": "Choir Gap",
+      "node_id": "deep_tear",
+      "enemies": [
+        "source_shadow"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:deep_tear_scale_05:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "deep_tear_scale_05",
+      "room_title": "Last Bulkhead",
+      "node_id": "deep_tear",
+      "enemies": [
+        "source_shadow"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:source_zeke_nightmare_node_scale_01:1",
+      "world": "world_6",
+      "source": "static",
+      "room_id": "source_zeke_nightmare_node_scale_01",
+      "room_title": "Badge Labyrinth",
+      "node_id": "source_zeke_nightmare_node",
+      "enemies": [
+        "manager_projection"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:source_gh0st_nightmare_node_scale_01:1",
+      "world": "world_6",
+      "source": "static",
+      "room_id": "source_gh0st_nightmare_node_scale_01",
+      "room_title": "Order Well",
+      "node_id": "source_gh0st_nightmare_node",
+      "enemies": [
+        "endless_war_echo"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:source_orion_nightmare_node_scale_01:1",
+      "world": "world_6",
+      "source": "static",
+      "room_id": "source_orion_nightmare_node_scale_01",
+      "room_title": "Black Tide Shelf",
+      "node_id": "source_orion_nightmare_node",
+      "enemies": [
+        "silent_shore_wraith"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:source_echo_mines_node_scale_02:1",
+      "world": "world_6",
+      "source": "static",
+      "room_id": "source_echo_mines_node_scale_02",
+      "room_title": "Pay Stub Drift",
+      "node_id": "source_echo_mines_node",
+      "enemies": [
+        "source_shadow"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:source_memory_stair_node_scale_02:1",
+      "world": "world_6",
+      "source": "static",
+      "room_id": "source_memory_stair_node_scale_02",
+      "room_title": "Canopy Root Step",
+      "node_id": "source_memory_stair_node",
+      "enemies": [
+        "distorted_sentinel"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:source_spire_thought_node_scale_01:1",
+      "world": "world_6",
+      "source": "static",
+      "room_id": "source_spire_thought_node_scale_01",
+      "room_title": "Revision Gallery",
+      "node_id": "source_spire_thought_node",
+      "enemies": [
+        "memory_leak"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:source_spire_thought_node_scale_03:1",
+      "world": "world_6",
+      "source": "static",
+      "room_id": "source_spire_thought_node_scale_03",
+      "room_title": "Memory Defense Line",
+      "node_id": "source_spire_thought_node",
+      "enemies": [
+        "nightmare_guard"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:source_spire_thought_node_scale_04:1",
+      "world": "world_6",
+      "source": "static",
+      "room_id": "source_spire_thought_node_scale_04",
+      "room_title": "No Throne",
+      "node_id": "source_spire_thought_node",
+      "enemies": [
+        "memory_leak"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:source_center_node_scale_03:1",
+      "world": "world_6",
+      "source": "static",
+      "room_id": "source_center_node_scale_03",
+      "room_title": "Silence Pulpit",
+      "node_id": "source_center_node",
+      "enemies": [
+        "ascended_god"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_slag_river_scale_final:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_slag_river_scale_final",
+      "room_title": "Foundry River Control",
+      "node_id": "foundry_slag_river",
+      "enemies": [
+        "magma_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_waste_intake_scale_final:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_waste_intake_scale_final",
+      "room_title": "Foundry Sorter Spine",
+      "node_id": "foundry_waste_intake",
+      "enemies": [
+        "welder_bot"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_waste_intake_scale_final:2",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_waste_intake_scale_final",
+      "room_title": "Foundry Sorter Spine",
+      "node_id": "foundry_waste_intake",
+      "enemies": [
+        "magma_drone"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_conveyor_belt_scale_final:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_conveyor_belt_scale_final",
+      "room_title": "Foundry Belt Nerve",
+      "node_id": "foundry_conveyor_belt",
+      "enemies": [
+        "conveyor_crusher"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_conditioning_scale_final:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_conditioning_scale_final",
+      "room_title": "Foundry Defect Choir",
+      "node_id": "foundry_conditioning",
+      "enemies": [
+        "phantom_prototype"
+      ],
+      "enemy_instances": [
+        {
+          "enemy_id": "phantom_prototype",
+          "extra_drops": [
+            {
+              "id": "circuit_board",
+              "chance": 1.0,
+              "quantity": 1
+            }
+          ]
+        }
+      ],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_power_core_scale_final:1",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_power_core_scale_final",
+      "room_title": "Foundry Core Shadow",
+      "node_id": "foundry_power_core",
+      "enemies": [
+        "slag_golem"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:foundry_power_core_scale_final:2",
+      "world": "world_4",
+      "source": "static",
+      "room_id": "foundry_power_core_scale_final",
+      "room_title": "Foundry Core Shadow",
+      "node_id": "foundry_power_core",
+      "enemies": [
+        "welder_bot"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_grand_concourse_scale_final:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_grand_concourse_scale_final",
+      "room_title": "Ring Courtesy Theater",
+      "node_id": "orbital_grand_concourse",
+      "enemies": [
+        "compliance_officer"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:orbital_security_hub_scale_final:1",
+      "world": "world_5",
+      "source": "static",
+      "room_id": "orbital_security_hub_scale_final",
+      "room_title": "Ring Threat Cathedral",
+      "node_id": "orbital_security_hub",
+      "enemies": [
+        "void_turret"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "static:source_memory_stair_node_scale_final:1",
+      "world": "world_6",
+      "source": "static",
+      "room_id": "source_memory_stair_node_scale_final",
+      "room_title": "Source Scar Step",
+      "node_id": "source_memory_stair_node",
+      "enemies": [
+        "source_shadow"
+      ],
+      "enemy_instances": [],
+      "blocked_directions": {}
+    },
+    {
+      "id": "event:w2_mq04_beast_ambush",
+      "world": "world_2",
+      "source": "event",
+      "source_path": "w2_mq04_beast_ambush/actions/0",
+      "room_id": "sector9_canopy_ridge",
+      "room_title": "Canopy Ridge",
+      "enemies": [
+        "the_beast"
+      ],
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w2_mq04"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w2_mq04",
+          "task_id": "confront_stalker"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w2_mq04",
+          "task_id": "defeat_the_beast"
+        }
+      ]
+    },
+    {
+      "id": "event:w4_crucible_spawn_round_1",
+      "world": "world_4",
+      "source": "event",
+      "source_path": "w4_crucible_spawn_round_1/actions/1",
+      "room_id": "foundry_crucible_arena",
+      "room_title": "The Scrapper's Crucible",
+      "enemies": [
+        "magma_drone",
+        "magma_drone",
+        "welder_bot"
+      ],
+      "conditions": [
+        {
+          "type": "milestone_not_set",
+          "milestone": "ms_crucible_round1_cleared"
+        }
+      ]
+    },
+    {
+      "id": "event:w4_crucible_spawn_round_2",
+      "world": "world_4",
+      "source": "event",
+      "source_path": "w4_crucible_spawn_round_2/actions/1",
+      "room_id": "foundry_crucible_arena",
+      "room_title": "The Scrapper's Crucible",
+      "enemies": [
+        "slag_golem",
+        "welder_bot"
+      ],
+      "conditions": [
+        {
+          "type": "milestone_not_set",
+          "milestone": "ms_crucible_round2_cleared"
+        },
+        {
+          "type": "milestone_set",
+          "milestone": "ms_crucible_round1_cleared"
+        }
+      ]
+    },
+    {
+      "id": "event:w4_crucible_spawn_round_3",
+      "world": "world_4",
+      "source": "event",
+      "source_path": "w4_crucible_spawn_round_3/actions/1",
+      "room_id": "foundry_crucible_arena",
+      "room_title": "The Scrapper's Crucible",
+      "enemies": [
+        "crucible_champion",
+        "magma_drone"
+      ],
+      "conditions": [
+        {
+          "type": "milestone_not_set",
+          "milestone": "ms_crucible_round3_cleared"
+        },
+        {
+          "type": "milestone_set",
+          "milestone": "ms_crucible_round2_cleared"
+        }
+      ]
+    },
+    {
+      "id": "patrol:w1_deep_mine_pressure_patrol",
+      "world": "world_1",
+      "source": "patrol",
+      "room_id": "mine_conveyor",
+      "room_title": "Conveyor Belt",
+      "enemies": [
+        "pressure_hauler"
+      ],
+      "route": [
+        "mine_conveyor",
+        "mine_sifter",
+        "mine_shoring"
+      ],
+      "activation": {
+        "requires_active_quest": "w1_mq03"
+      }
+    }
+  ],
+  "victory_contracts": [
+    {
+      "id": "w1_mq01_faulted_loader_victory",
+      "trigger": {
+        "type": "encounter_victory",
+        "room": "workshop_yard",
+        "enemies": [
+          "faulted_loader"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w1_mq01"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_room_state",
+          "room_id": "workshop_yard",
+          "state_key": "loader_cleared",
+          "value": true
+        },
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w1_mq01",
+          "task_id": "clear_faulted_loader"
+        },
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w1_mq01",
+          "task_id": "inspect_loader_relay"
+        },
+        {
+          "type": "set_milestone",
+          "milestone": "ms_w1_mq01_loader_cleared"
+        },
+        {
+          "type": "narrate",
+          "message": "The loader's cracked relay flares out in a shower of sparks. The machine locks, shudders, and collapses into the scrap. The route to Jed is clear.",
+          "tap_to_dismiss": true
+        }
+      ]
+    },
+    {
+      "id": "w1_sq03_training_victory",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "acoustic_bulwark"
+        ],
+        "room": "admin_security"
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w1_sq03"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w1_sq03",
+          "task_id": "break_training_shield"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w1_sq03",
+          "task_id": "learn_hydraulic_kick"
+        },
+        {
+          "type": "unlock_skill",
+          "skill_id": "nova_hydraulic_kick"
+        },
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w1_sq03",
+          "task_id": "break_training_shield"
+        },
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w1_sq03",
+          "task_id": "rescue_trapped_workers"
+        },
+        {
+          "type": "set_milestone",
+          "milestone": "ms_w1_guardbreak_trained"
+        },
+        {
+          "type": "give_item",
+          "item_id": "hydraulic_fluid",
+          "quantity": 1
+        },
+        {
+          "type": "give_item",
+          "item_id": "heavy_gear",
+          "quantity": 1
+        },
+        {
+          "type": "give_xp",
+          "xp": 100
+        },
+        {
+          "type": "complete_quest",
+          "quest_id": "w1_sq03"
+        }
+      ]
+    },
+    {
+      "id": "w1_sq03_main_path_return_to_boggs",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "acoustic_bulwark"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w1_mq03"
+        },
+        {
+          "type": "quest_completed",
+          "quest_id": "w1_sq03"
+        },
+        {
+          "type": "milestone",
+          "milestone": "ms_w1_guardbreak_trained"
+        },
+        {
+          "type": "milestone_not_set",
+          "milestone": "ms_w1_mq03_bogs_talked"
+        }
+      ],
+      "actions": [
+        {
+          "type": "track_quest",
+          "quest_id": "w1_mq03"
+        },
+        {
+          "type": "show_message",
+          "message": "Shield drill complete. Break Guard before committing heavy attacks."
+        }
+      ]
+    },
+    {
+      "id": "event_tutorial_encounter_defeat",
+      "trigger": {
+        "type": "encounter_defeat"
+      },
+      "conditions": [],
+      "actions": [
+        {
+          "type": "if_milestone_not_set",
+          "milestone": "ms_tutorial_encounter_defeat",
+          "do": [
+            {
+              "type": "play_cinematic",
+              "scene_id": "scene_encounter_defeat_tip"
+            },
+            {
+              "type": "set_milestone",
+              "milestone": "ms_tutorial_encounter_defeat"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "w1_mq03_clear_rock_borer",
+      "trigger": {
+        "type": "encounter_victory",
+        "room": "mine_alpha",
+        "enemies": [
+          "echo_borer"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w1_mq03"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w1_mq03",
+          "task_id": "clear_first_mine_encounter"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w1_mq03",
+          "task_id": "clear_first_mine_encounter"
+        }
+      ]
+    },
+    {
+      "id": "w1_mq03_clear_riot_guard",
+      "trigger": {
+        "type": "encounter_victory",
+        "room": "mine_checkpoint",
+        "enemies": [
+          "acoustic_bulwark"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w1_mq03"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w1_mq03",
+          "task_id": "break_riot_guard"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w1_mq03",
+          "task_id": "break_riot_guard"
+        }
+      ]
+    },
+    {
+      "id": "w1_mq04_gauntlet_victory",
+      "trigger": {
+        "type": "encounter_victory",
+        "room": "launch_lift"
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w1_mq04"
+        },
+        {
+          "type": "quest_stage",
+          "quest_id": "w1_mq04",
+          "stage_id": "lockdown_escape"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w1_mq04",
+          "task_id": "clear_escape_gauntlet"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w1_mq04",
+          "task_id": "clear_escape_gauntlet"
+        },
+        {
+          "type": "advance_quest_stage",
+          "quest_id": "w1_mq04",
+          "to_stage_id": "cargo_lift_sacrifice"
+        }
+      ]
+    },
+    {
+      "id": "w1_mq05_checkpoint_victory",
+      "trigger": {
+        "type": "encounter_victory",
+        "room": "launch_checkpoint",
+        "enemies": [
+          "resonance_buoy"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w1_mq05"
+        },
+        {
+          "type": "quest_stage",
+          "quest_id": "w1_mq05",
+          "stage_id": "reach_pod_bay"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w1_mq05",
+          "task_id": "fight_through_launch_access"
+        }
+      ]
+    },
+    {
+      "id": "w1_mq05_warden_victory",
+      "trigger": {
+        "type": "encounter_victory",
+        "room": "launch_bay",
+        "enemies": [
+          "the_iron_warden"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w1_mq05"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_room_state",
+          "room_id": "launch_bay",
+          "state_key": "warden_defeated"
+        },
+        {
+          "type": "set_milestone",
+          "milestone": "ms_w1_warden_defeated"
+        },
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w1_mq05",
+          "task_id": "survive_warden_intro"
+        },
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w1_mq05",
+          "task_id": "break_warden_guard"
+        },
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w1_mq05",
+          "task_id": "defeat_the_warden"
+        },
+        {
+          "type": "advance_quest_stage",
+          "quest_id": "w1_mq05",
+          "to_stage_id": "launch_pod"
+        }
+      ]
+    },
+    {
+      "id": "w1_record_warden_victory",
+      "trigger": {
+        "type": "encounter_victory",
+        "room": "launch_bay",
+        "enemies": [
+          "the_iron_warden"
+        ]
+      },
+      "conditions": [],
+      "actions": [
+        {
+          "type": "set_room_state",
+          "room_id": "launch_bay",
+          "state_key": "warden_defeated",
+          "value": true
+        },
+        {
+          "type": "set_milestone",
+          "milestone": "ms_w1_warden_defeated"
+        }
+      ]
+    },
+    {
+      "id": "w2_mq02_clear_canopy",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "echo_borer",
+          "stalker_vine"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w2_mq02"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w2_mq02",
+          "task_id": "clear_canopy_path"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w2_mq02",
+          "task_id": "clear_canopy_path"
+        },
+        {
+          "type": "reveal_node",
+          "node_id": "canopy_ridge"
+        },
+        {
+          "type": "unlock_node",
+          "node_id": "canopy_ridge"
+        },
+        {
+          "type": "reveal_node",
+          "node_id": "temple_gate"
+        },
+        {
+          "type": "unlock_node",
+          "node_id": "temple_gate"
+        },
+        {
+          "type": "show_message",
+          "message": "The hostile canopy falls quiet. Zeke catches the distress pulse again; it is coming from a stone gate beyond the ridge."
+        }
+      ]
+    },
+    {
+      "id": "w2_mq04_victory",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "the_beast"
+        ],
+        "room_id": "sector9_canopy_ridge"
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w2_mq04"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w2_mq04",
+          "task_id": "confront_stalker"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w2_mq04",
+          "task_id": "defeat_the_beast"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w2_mq04",
+          "task_id": "defeat_the_beast"
+        },
+        {
+          "type": "set_room_state",
+          "room_id": "sector9_canopy_ridge",
+          "state_key": "beast_defeated",
+          "value": true
+        },
+        {
+          "type": "show_message",
+          "message": "The Beast folds into the broken roots. Gh0st keeps the rifle trained on it until the last movement stops, then lowers the barrel. For a moment, nobody speaks. Orion lays the Bridge ground lead on the stone. Regroup with him when you are ready."
+        },
+        {
+          "type": "set_milestone",
+          "milestone": "ms_w2_beast_defeated"
+        }
+      ]
+    },
+    {
+      "id": "w3_mq11_clear_landing",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "sewer_crawler"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w3_mq11"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w3_mq11",
+          "task_id": "clear_landing"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w3_mq11",
+          "task_id": "clear_landing"
+        },
+        {
+          "type": "show_message",
+          "message": "The sewer crawler is down. The crew has room to move away from the landing pad toward Vent Output."
+        }
+      ]
+    },
+    {
+      "id": "w3_mq14_assassin_down",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "corporate_assassin"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w3_mq14"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w3_mq14",
+          "task_id": "take_lens"
+        }
+      ],
+      "actions": [
+        {
+          "type": "show_message",
+          "message": "The assassin drops between crystal stacks without a scream. The Archive stays beautiful, expensive, and absolutely willing to kill for the Lens."
+        }
+      ]
+    },
+    {
+      "id": "w3_mq15_rooftop_security_down",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "aero_drone",
+          "heavy_mech"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w3_mq15"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w3_mq15",
+          "task_id": "reach_landing_pad"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w3_mq15",
+          "task_id": "defeat_administrator"
+        }
+      ],
+      "actions": [
+        {
+          "type": "show_message",
+          "message": "The rooftop security line buckles. The Administrator drops into its command frame and brings its last Aero Drone to bear. It controls the rooftop guns and the local security curtain. This is the crew’s final fight for the Spire."
+        }
+      ]
+    },
+    {
+      "id": "w3_mq15_defeat_administrator",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "administrator_boss"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w3_mq15"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w3_mq15",
+          "task_id": "defeat_administrator"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w3_mq15",
+          "task_id": "defeat_administrator"
+        },
+        {
+          "type": "advance_quest_stage",
+          "quest_id": "w3_mq15",
+          "to_stage_id": "launch_to_foundry"
+        },
+        {
+          "type": "show_message",
+          "message": "The Administrator’s command frame collapses. The rooftop guns go dark, and for the first time since the heist began, the Spire falls quiet. Use the shield window to read the opening in the local security curtain, then depart for the Foundry."
+        }
+      ]
+    },
+    {
+      "id": "w4_mq20_defeat_titan_walker",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "titan_walker_boss"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w4_mq20"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w4_mq20",
+          "task_id": "defeat_titan_walker"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w4_mq20",
+          "task_id": "defeat_titan_walker"
+        },
+        {
+          "type": "set_milestone",
+          "milestone": "ms_w4_titan_defeated"
+        },
+        {
+          "type": "advance_quest_stage",
+          "quest_id": "w4_mq20",
+          "to_stage_id": "steal_and_escape"
+        },
+        {
+          "type": "show_message",
+          "message": "The Titan Walker buckles into the platform. Gh0st lowers his blade. Choice is the point."
+        }
+      ]
+    },
+    {
+      "id": "w5_mq21_fighters_down",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "orbital_fighter"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w5_mq21"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w5_mq21",
+          "task_id": "shoot_down_fighters"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w5_mq21",
+          "task_id": "shoot_down_fighters"
+        },
+        {
+          "type": "set_milestone",
+          "milestone": "ms_w5_fighter_screen_broken"
+        },
+        {
+          "type": "advance_quest_stage",
+          "quest_id": "w5_mq21",
+          "to_stage_id": "forced_docking"
+        },
+        {
+          "type": "show_message",
+          "message": "The last fighter shears away under the Phase-Cutter Arrays. Zeke does not ask permission; he drives the damaged Astra straight at the Executive Dock before Compliance can rebuild the screen."
+        }
+      ]
+    },
+    {
+      "id": "w5_mq22_clear_security",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "compliance_officer",
+          "null_g_drone"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w5_mq22"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w5_mq22",
+          "task_id": "clear_security"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w5_mq22",
+          "task_id": "clear_security"
+        },
+        {
+          "type": "set_milestone",
+          "milestone": "ms_w5_security_hub_cleared"
+        },
+        {
+          "type": "advance_quest_stage",
+          "quest_id": "w5_mq22",
+          "to_stage_id": "zero_g_descent"
+        },
+        {
+          "type": "show_message",
+          "message": "The Security Hub falls quiet. Every red lens stays open, but the core lift lock drops from DENIED to ROUTE EXPOSED."
+        }
+      ]
+    },
+    {
+      "id": "w5_mq23_defeat_construct",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "firewall_construct"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w5_mq23"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w5_mq23",
+          "task_id": "firewall_gamma"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w5_mq23",
+          "task_id": "defeat_construct"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w5_mq23",
+          "task_id": "defeat_construct"
+        },
+        {
+          "type": "give_xp",
+          "xp": 1200
+        },
+        {
+          "type": "complete_quest",
+          "quest_id": "w5_mq23"
+        },
+        {
+          "type": "set_milestone",
+          "milestone": "ms_w5_mq23_complete"
+        },
+        {
+          "type": "set_room_state",
+          "room_id": "deep_anchor_chamber",
+          "state_key": "firewall_access_open",
+          "value": true
+        },
+        {
+          "type": "start_quest",
+          "quest_id": "w5_mq24"
+        },
+        {
+          "type": "track_quest",
+          "quest_id": "w5_mq24"
+        },
+        {
+          "type": "show_message",
+          "message": "The construct shatters into dead glyphs. The Anchor Chamber opens, and Gh0st hears Elara through the system Vale stole. Thorne's route worked, but every open door now points at the person Dominion turned into infrastructure. The Anchor access lift now runs directly down to the chamber and back up to this aisle. The westward route through the Server Farm remains open for walking back."
+        }
+      ]
+    },
+    {
+      "id": "w5_mq25_defeat_avatar",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "compliance_avatar"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w5_mq25"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w5_mq25",
+          "task_id": "witness_soloist"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w5_mq25",
+          "task_id": "defeat_avatar"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w5_mq25",
+          "task_id": "defeat_avatar"
+        },
+        {
+          "type": "set_milestone",
+          "milestone": "ms_w5_avatar_defeated"
+        },
+        {
+          "type": "show_message",
+          "message": "The Avatar loses cohesion. Gravity stutters, the Ring splits, and the Tear pulls every loose fragment upward. Vale is already beyond it with Elara's signal bleeding through the static."
+        }
+      ]
+    },
+    {
+      "id": "w6_mq26_rescue_zeke",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "manager_projection"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w6_mq26"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w6_mq26",
+          "task_id": "rescue_zeke"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w6_mq26",
+          "task_id": "rescue_zeke"
+        },
+        {
+          "type": "show_message",
+          "message": "Zeke stops performing the smile the loop demands. I quit. The cubicles shatter into burning checklists."
+        }
+      ]
+    },
+    {
+      "id": "w6_mq26_rescue_gh0st",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "endless_war_echo"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w6_mq26"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w6_mq26",
+          "task_id": "rescue_gh0st"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w6_mq26",
+          "task_id": "rescue_gh0st"
+        },
+        {
+          "type": "show_message",
+          "message": "Stasis interrupts the kill-suite. Gh0st crushes the override key and drops the rifle. No more orders."
+        }
+      ]
+    },
+    {
+      "id": "w6_mq26_rescue_orion",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "silent_shore_wraith"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w6_mq26"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w6_mq26",
+          "task_id": "rescue_orion"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w6_mq26",
+          "task_id": "rescue_orion"
+        },
+        {
+          "type": "show_message",
+          "message": "Orion hums a question into the black water. A chorus answers from below: We are here."
+        }
+      ]
+    },
+    {
+      "id": "w6_mq29_shadow_wave",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "source_shadow",
+          "distorted_sentinel",
+          "glitch_hound"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w6_mq29"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w6_mq29",
+          "task_id": "climb_stair"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w6_mq29",
+          "task_id": "defeat_shadow_wave"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w6_mq29",
+          "task_id": "defeat_shadow_wave"
+        },
+        {
+          "type": "advance_quest_stage",
+          "quest_id": "w6_mq29",
+          "to_stage_id": "spire_arena"
+        }
+      ]
+    },
+    {
+      "id": "w6_mq29_memory_guard",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "memory_leak",
+          "nightmare_guard"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w6_mq29"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w6_mq29",
+          "task_id": "defeat_shadow_wave"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w6_mq29",
+          "task_id": "defeat_memory_guard"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_room_state",
+          "room_id": "source_spire_arena",
+          "state_key": "center_path_open",
+          "value": true
+        },
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w6_mq29",
+          "task_id": "defeat_memory_guard"
+        },
+        {
+          "type": "show_message",
+          "message": "The nightmare faces dissolve. Memory remains, but it no longer gets a vote."
+        }
+      ]
+    },
+    {
+      "id": "w6_mq30_defeat_vale",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "ascended_vale"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w6_mq30"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w6_mq30",
+          "task_id": "confront_vale"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w6_mq30",
+          "task_id": "defeat_vale"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w6_mq30",
+          "task_id": "defeat_vale"
+        },
+        {
+          "type": "advance_quest_stage",
+          "quest_id": "w6_mq30",
+          "to_stage_id": "singularity"
+        },
+        {
+          "type": "show_message",
+          "message": "Vale's human outline cracks like porcelain. Blinding geometry unfolds from inside it. The Silence begins. Follow the fracture north through the White Shore and Key Orbit to the Silence Pulpit."
+        }
+      ]
+    },
+    {
+      "id": "w6_mq30_defeat_god",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "ascended_god"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w6_mq30"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w6_mq30",
+          "task_id": "defeat_vale"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w6_mq30",
+          "task_id": "defeat_god_form"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w6_mq30",
+          "task_id": "defeat_god_form"
+        },
+        {
+          "type": "advance_quest_stage",
+          "quest_id": "w6_mq30",
+          "to_stage_id": "final_note"
+        },
+        {
+          "type": "show_message",
+          "message": "The god-form collapses, but the universe keeps breaking. Vale's code still blocks the signal, and the Key will only answer a circuit, not a ruler. Return south through the Key Orbit and White Shore to The Center. The shared tuning focus is waiting there."
+        }
+      ]
+    },
+    {
+      "id": "w4_crucible_victory_round_1",
+      "trigger": {
+        "type": "encounter_victory",
+        "room": "foundry_crucible_arena",
+        "enemies": [
+          "magma_drone",
+          "magma_drone",
+          "welder_bot"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "milestone_set",
+          "milestone": "ms_crucible_round1_started"
+        },
+        {
+          "type": "milestone_not_set",
+          "milestone": "ms_crucible_round1_cleared"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_milestone",
+          "milestone": "ms_crucible_round1_cleared"
+        },
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w4_sq_crucible",
+          "task_id": "task_round1"
+        },
+        {
+          "type": "show_message",
+          "message": "Round 1 cleared! The crowd of rogue loaders clatters in approval. Speak to Pitmaster Brutus when you are ready to face Round 2."
+        }
+      ]
+    },
+    {
+      "id": "w4_crucible_victory_round_2",
+      "trigger": {
+        "type": "encounter_victory",
+        "room": "foundry_crucible_arena",
+        "enemies": [
+          "slag_golem",
+          "welder_bot"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "milestone_set",
+          "milestone": "ms_crucible_round2_started"
+        },
+        {
+          "type": "milestone_not_set",
+          "milestone": "ms_crucible_round2_cleared"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_milestone",
+          "milestone": "ms_crucible_round2_cleared"
+        },
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w4_sq_crucible",
+          "task_id": "task_round2"
+        },
+        {
+          "type": "show_message",
+          "message": "Round 2 cleared! The Slag Golem collapses into cooling cinders. Speak to Brutus when you are prepared to face the Crucible Champion!"
+        }
+      ]
+    },
+    {
+      "id": "w4_crucible_victory_round_3",
+      "trigger": {
+        "type": "encounter_victory",
+        "room": "foundry_crucible_arena",
+        "enemies": [
+          "crucible_champion",
+          "magma_drone"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "milestone_set",
+          "milestone": "ms_crucible_round3_started"
+        },
+        {
+          "type": "milestone_not_set",
+          "milestone": "ms_crucible_round3_cleared"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_milestone",
+          "milestone": "ms_crucible_round3_cleared"
+        },
+        {
+          "type": "show_message",
+          "message": "CHAMPIONSHIP VICTORY! The Crucible Champion shuts down with a shudder of steam. Speak to Pitmaster Brutus to claim your legendary prize!"
+        }
+      ]
+    },
+    {
+      "id": "w1_sq03_workshop_training_victory",
+      "trigger": {
+        "type": "encounter_victory",
+        "enemies": [
+          "acoustic_bulwark"
+        ],
+        "room": "workshop_dock"
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w1_sq03"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w1_sq03",
+          "task_id": "break_training_shield"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w1_sq03",
+          "task_id": "learn_hydraulic_kick"
+        },
+        {
+          "type": "unlock_skill",
+          "skill_id": "nova_hydraulic_kick"
+        },
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w1_sq03",
+          "task_id": "break_training_shield"
+        },
+        {
+          "type": "set_quest_task_done",
+          "quest_id": "w1_sq03",
+          "task_id": "rescue_trapped_workers"
+        },
+        {
+          "type": "set_milestone",
+          "milestone": "ms_w1_guardbreak_trained"
+        },
+        {
+          "type": "give_item",
+          "item_id": "hydraulic_fluid",
+          "quantity": 1
+        },
+        {
+          "type": "give_item",
+          "item_id": "heavy_gear",
+          "quantity": 1
+        },
+        {
+          "type": "give_xp",
+          "xp": 100
+        },
+        {
+          "type": "complete_quest",
+          "quest_id": "w1_sq03"
+        }
+      ]
+    },
+    {
+      "id": "w1_sq03_record_drill_admin_security",
+      "trigger": {
+        "type": "encounter_victory",
+        "room": "admin_security",
+        "enemies": [
+          "acoustic_bulwark"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "milestone_not_set",
+          "milestone": "ms_w1_guard_drill_won"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_milestone",
+          "milestone": "ms_w1_guard_drill_won"
+        }
+      ]
+    },
+    {
+      "id": "w1_sq03_record_drill_workshop_dock",
+      "trigger": {
+        "type": "encounter_victory",
+        "room": "workshop_dock",
+        "enemies": [
+          "acoustic_bulwark"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "milestone_not_set",
+          "milestone": "ms_w1_guard_drill_won"
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_milestone",
+          "milestone": "ms_w1_guard_drill_won"
+        }
+      ]
+    }
+  ],
+  "enemies": [
+    {
+      "id": "faulted_loader",
+      "combat_size": "large",
+      "name": "Faulted Loader",
+      "tier": "common",
+      "combat_behavior": "aggressive",
+      "combat_role": "striker",
+      "hp": 110,
+      "stability": 35,
+      "strength": 4,
+      "vitality": 3,
+      "agility": 1,
+      "focus": 1,
+      "luck": 0,
+      "speed": 7,
+      "element": "physical",
+      "resistances": {
+        "shock": -100,
+        "physical": 0
+      },
+      "tags": [
+        "machine",
+        "industrial",
+        "exposed_relay"
+      ],
+      "abilities": [
+        "slide_slam"
+      ],
+      "flavor": "A retired cargo loader with a split relay and no safety governor. Its motor repeats a three-beat fault: two armored cycles, then one exposed electrical opening.",
+      "xp_reward": 35,
+      "credit_reward": 0,
+      "drops": [
+        {
+          "id": "scrap_metal",
+          "chance": 1.0,
+          "quantity": 1
+        },
+        {
+          "id": "ration_pack",
+          "chance": 0.35
+        }
+      ],
+      "description": "Workshop loader with an exposed Shock weakness. Hit the relay to reduce active cooldowns and bring abilities back sooner.",
+      "portrait": "images/enemies/heavy_loader_combat.png"
+    },
+    {
+      "id": "echo_borer",
+      "combat_size": "large",
+      "name": "Echo-Borer",
+      "tier": "standard",
+      "combat_behavior": "aggressive",
+      "combat_role": "striker",
+      "hp": 70,
+      "stability": 35,
+      "strength": 5,
+      "vitality": 4,
+      "agility": 2,
+      "focus": 1,
+      "luck": 1,
+      "speed": 8,
+      "element": "physical",
+      "resistances": {
+        "burn": -100,
+        "freeze": -50,
+        "shock": 50
+      },
+      "tags": [
+        "biological",
+        "beast"
+      ],
+      "abilities": [
+        "gnaw",
+        "burrow"
+      ],
+      "flavor": "A subterranean skitterer with crystalline digging claws. It tracks footfall through the rock, burrows below the tunnel floor, and strikes from loose ground. Its claws crystallize as they cool, and a chilled borer cannot grip stone.",
+      "xp_reward": 40,
+      "credit_reward": 10,
+      "drops": [
+        {
+          "id": "beast_meat",
+          "chance": 0.75
+        }
+      ],
+      "description": "Burrows, then attacks from below. Insulated against Shock. Burn opens it up; Freeze locks its claws and keeps it above ground. Often yields Beast Meat for cooking or Source Resin crafting.",
+      "portrait": "images/enemies/echo_borer_combat.png"
+    },
+    {
+      "id": "siren_skimmer",
+      "combat_size": "small",
+      "name": "Siren Skimmer",
+      "tier": "standard",
+      "combat_behavior": "trickster",
+      "combat_role": "controller",
+      "hp": 35,
+      "stability": 33,
+      "strength": 4,
+      "vitality": 2,
+      "agility": 6,
+      "focus": 3,
+      "luck": 4,
+      "speed": 14,
+      "element": "acid",
+      "resistances": {
+        "freeze": -100,
+        "physical": 50
+      },
+      "tags": [
+        "biological",
+        "flying"
+      ],
+      "abilities": [
+        "sonic_shriek",
+        "volatile_swell"
+      ],
+      "flavor": "Hovering cave pests nest around geothermal vents. Their throat sacs hold pressurized steam for a shriek that overloads suit optics and balance sensors. The sac only works hot.",
+      "xp_reward": 45,
+      "credit_reward": 12,
+      "drops": [
+        {
+          "id": "vial_of_venom",
+          "chance": 0.3
+        },
+        {
+          "id": "ration_pack",
+          "chance": 0.35
+        }
+      ],
+      "description": "Fast airborne controller. Its shriek briefly disrupts suit optics. Too quick to reliably shoot, but Freeze collapses the steam sac and drops it. May yield venom for crafting Antidote Flasks and rations for recovery.",
+      "portrait": "images/enemies/siren_skimmer_combat.png"
+    },
+    {
+      "id": "dominion_dampener",
+      "combat_size": "medium",
+      "name": "Dominion Dampener",
+      "tier": "standard",
+      "combat_behavior": "balanced",
+      "combat_role": "striker",
+      "hp": 90,
+      "stability": 35,
+      "strength": 5,
+      "vitality": 5,
+      "agility": 3,
+      "focus": 4,
+      "luck": 2,
+      "speed": 9,
+      "element": "physical",
+      "resistances": {
+        "acid": -100,
+        "burn": -100,
+        "shock": -50
+      },
+      "tags": [
+        "human",
+        "dominion"
+      ],
+      "abilities": [
+        "suppressive_fire",
+        "flashbang"
+      ],
+      "flavor": "Corporate security troopers wear sealed helmets against drill noise and mine gas. Their rifles pin workers behind cover while flashbangs disrupt an organized push. The seals that keep the gas out also keep a charge in.",
+      "xp_reward": 50,
+      "credit_reward": 25,
+      "drops": [
+        {
+          "id": "medkit_i",
+          "chance": 0.6
+        },
+        {
+          "id": "ration_pack",
+          "chance": 0.8
+        },
+        {
+          "id": "scrap_metal",
+          "chance": 0.5
+        }
+      ],
+      "description": "Uses suppressive fire and flashbangs. Acid eats the helmet seal and Burn gets underneath it; Shock carries well through sealed gear.",
+      "portrait": "images/enemies/dominion_dampener_combat.png"
+    },
+    {
+      "id": "acoustic_bulwark",
+      "combat_size": "large",
+      "name": "Acoustic Bulwark",
+      "tier": "elite",
+      "combat_behavior": "defensive",
+      "combat_role": "tank",
+      "hp": 75,
+      "stability": 25,
+      "strength": 4,
+      "vitality": 4,
+      "agility": 1,
+      "focus": 4,
+      "luck": 1,
+      "speed": 7,
+      "element": "physical",
+      "resistances": {
+        "physical": 0,
+        "shock": -50,
+        "freeze": -50
+      },
+      "tags": [
+        "human",
+        "dominion",
+        "armored",
+        "shielded"
+      ],
+      "abilities": [
+        "barrier_field",
+        "slide_slam"
+      ],
+      "flavor": "A Dominion riot enforcer braces behind a powered acoustic shield. Break its Guard to expose the armor beneath.",
+      "xp_reward": 100,
+      "credit_reward": 40,
+      "drops": [
+        {
+          "id": "ration_pack",
+          "chance": 0.6
+        },
+        {
+          "id": "armor_plate",
+          "chance": 0.4
+        }
+      ],
+      "description": "Armored Dominion opponent with an active barrier. Hydraulic Kick breaks its Guard; Stagger disrupts the shield. May yield Armor Plate; salvage it in the Field Kit for Scrap Metal and Ballistic Weave.",
+      "portrait": "images/enemies/acoustic_bulwark_combat.png"
+    },
+    {
+      "id": "resonance_buoy",
+      "combat_size": "small",
+      "name": "Resonance Buoy",
+      "tier": "standard",
+      "combat_behavior": "avoidant",
+      "combat_role": "support",
+      "hp": 35,
+      "stability": 24,
+      "strength": 2,
+      "vitality": 2,
+      "agility": 5,
+      "focus": 6,
+      "luck": 0,
+      "speed": 12,
+      "element": "shock",
+      "resistances": {
+        "shock": -100,
+        "physical": 0,
+        "acid": 50
+      },
+      "tags": [
+        "robotic",
+        "flying"
+      ],
+      "abilities": [
+        "resonance_buoy_emp_burst",
+        "static_burst"
+      ],
+      "flavor": "A floating survey drone maps tunnel pressure with timed pings. Security uses the same transmitter to mark disturbances for backup teams. Every ping it finishes brings someone else down the tunnel.",
+      "xp_reward": 30,
+      "credit_reward": 15,
+      "drops": [
+        {
+          "id": "wiring_bundle",
+          "chance": 0.6
+        },
+        {
+          "id": "battery",
+          "chance": 0.4
+        },
+        {
+          "id": "ration_pack",
+          "chance": 0.35
+        }
+      ],
+      "description": "Fast support drone with EMP and Static bursts. It calls in whatever else is nearby, so it dies first. Shock drops it in one; its casing shrugs off Acid. May yield wiring and batteries for Field Kit repairs, lures, and Pulse Grenades.",
+      "portrait": "images/enemies/resonance_buoy_combat.png"
+    },
+    {
+      "id": "pressure_hauler",
+      "combat_size": "large",
+      "name": "Pressure Hauler",
+      "tier": "elite",
+      "combat_behavior": "smart",
+      "combat_role": "striker",
+      "hp": 220,
+      "stability": 110,
+      "strength": 9,
+      "vitality": 8,
+      "agility": 0,
+      "focus": 4,
+      "luck": 0,
+      "speed": 6,
+      "element": "physical",
+      "resistances": {
+        "acid": -100,
+        "shock": -50,
+        "physical": 50,
+        "burn": 50
+      },
+      "tags": [
+        "robotic",
+        "industrial",
+        "massive"
+      ],
+      "abilities": [
+        "hydraulic_overheat",
+        "slide_slam"
+      ],
+      "flavor": "A massive mining loader built for high-pressure depths. Its overloaded hydraulics heat the frame, and each step drives loose rock from the shoring.",
+      "xp_reward": 250,
+      "credit_reward": 100,
+      "drops": [
+        {
+          "id": "hydraulic_fluid",
+          "chance": 0.5
+        },
+        {
+          "id": "heavy_gear",
+          "chance": 0.3
+        },
+        {
+          "id": "medkit_i",
+          "chance": 0.4
+        }
+      ],
+      "description": "Heavy mechanized loader that retaliates with hydraulic slam and venting steam. Its dense chassis shrugs off physical impacts and fire; corrode its casing with Acid or short out its drive system with Shock.",
+      "portrait": "images/enemies/pressure_hauler_combat.png"
+    },
+    {
+      "id": "the_iron_warden",
+      "combat_size": "massive",
+      "name": "The Iron Warden",
+      "tier": "boss",
+      "combat_behavior": "oppressive",
+      "combat_role": "tank_summoner",
+      "hp": 250,
+      "stability": 65,
+      "strength": 6,
+      "vitality": 6,
+      "agility": 3,
+      "focus": 8,
+      "luck": 4,
+      "speed": 7,
+      "element": "physical",
+      "resistances": {
+        "shock": -100,
+        "acid": -50,
+        "physical": 0
+      },
+      "tags": [
+        "human",
+        "boss",
+        "power_armor"
+      ],
+      "abilities": [
+        "iron_warden_riot_shield",
+        "triple_burst",
+        "iron_warden_drone_summon",
+        "iron_warden_gas_grenade",
+        "iron_warden_overclock"
+      ],
+      "flavor": "The Sector Commander wears sealed power armor built for riot lines and mine pressure. He advances behind a powered shield, deploys drones, and floods escape routes with gas.",
+      "xp_reward": 350,
+      "credit_reward": 225,
+      "drops": [
+        {
+          "id": "warden_keycard",
+          "chance": 1,
+          "qty_min": 1,
+          "qty_max": 1
+        }
+      ],
+      "description": "Boss tank with a riot shield, burst fire, drones, and gas grenades. Shock disrupts the armor.",
+      "portrait": "images/enemies/the_iron_warden_combat.png"
+    },
+    {
+      "id": "shard_hound",
+      "combat_size": "medium",
+      "name": "Shard-Hound",
+      "tier": "standard",
+      "combat_behavior": "aggressive",
+      "combat_role": "striker",
+      "hp": 65,
+      "stability": 38,
+      "strength": 8,
+      "vitality": 5,
+      "agility": 5,
+      "focus": 2,
+      "luck": 2,
+      "speed": 12,
+      "element": "physical",
+      "resistances": {
+        "burn": -50,
+        "shock": 30
+      },
+      "tags": [
+        "biological",
+        "beast"
+      ],
+      "abilities": [
+        "gnaw",
+        "pounce"
+      ],
+      "flavor": "A canine-like predator with crystalline shards jutting from its spine. It attacks fast and relies on pack tactics.",
+      "xp_reward": 50,
+      "credit_reward": 15,
+      "drops": [
+        {
+          "id": "beast_meat",
+          "chance": 0.5
+        }
+      ],
+      "description": "Fast crystalline predator. Weak to fire.",
+      "portrait": "images/enemies/shard_hound_combat.png"
+    },
+    {
+      "id": "spore_spitter",
+      "combat_size": "medium",
+      "name": "Spore-Spitter",
+      "tier": "standard",
+      "combat_behavior": "balanced",
+      "combat_role": "striker",
+      "hp": 50,
+      "stability": 54,
+      "strength": 4,
+      "vitality": 4,
+      "agility": 4,
+      "focus": 6,
+      "luck": 3,
+      "speed": 10,
+      "element": "acid",
+      "resistances": {
+        "physical": 20,
+        "burn": -100
+      },
+      "tags": [
+        "biological",
+        "flora"
+      ],
+      "abilities": [
+        "toxic_spore"
+      ],
+      "flavor": "A bulbous, root-bound flora that spits toxic spore sacs at range. It thrives in high-moisture swamp zones.",
+      "xp_reward": 55,
+      "credit_reward": 15,
+      "drops": [
+        {
+          "id": "vial_of_venom",
+          "chance": 0.4
+        }
+      ],
+      "description": "Ranged acid plant. Highly vulnerable to fire. May yield venom for crafting Antidote Flasks.",
+      "portrait": "images/enemies/spore_spitter_combat.png"
+    },
+    {
+      "id": "ruin_guardian",
+      "combat_size": "large",
+      "name": "Ruin-Guardian",
+      "tier": "elite",
+      "combat_behavior": "defensive",
+      "combat_role": "tank",
+      "hp": 130,
+      "stability": 187,
+      "strength": 9,
+      "vitality": 9,
+      "agility": 2,
+      "focus": 6,
+      "luck": 1,
+      "speed": 8,
+      "element": "physical",
+      "resistances": {
+        "shock": -50,
+        "physical": 30
+      },
+      "tags": [
+        "robotic",
+        "armored",
+        "shielded"
+      ],
+      "abilities": [
+        "relic_strike",
+        "barrier_field"
+      ],
+      "flavor": "An ancient robotic sentinel designed to protect Sanctuary infrastructure. Its chassis is heavily armored and shielded.",
+      "xp_reward": 120,
+      "credit_reward": 50,
+      "drops": [
+        {
+          "id": "armor_plate",
+          "chance": 0.5
+        },
+        {
+          "id": "scrap_metal",
+          "chance": 0.8
+        }
+      ],
+      "description": "Shielded ancient sentinel. Weak to shock.",
+      "portrait": "images/enemies/ruin_guardian_combat.png"
+    },
+    {
+      "id": "razor_vine",
+      "combat_size": "medium",
+      "name": "Razor-Vine",
+      "tier": "standard",
+      "combat_behavior": "aggressive",
+      "combat_role": "striker",
+      "hp": 45,
+      "stability": 63,
+      "strength": 5,
+      "vitality": 6,
+      "agility": 1,
+      "focus": 2,
+      "luck": 1,
+      "speed": 6,
+      "element": "acid",
+      "resistances": {
+        "burn": -150,
+        "acid": 80
+      },
+      "tags": [
+        "biological",
+        "flora"
+      ],
+      "abilities": [
+        "constrict"
+      ],
+      "flavor": "Overgrown predatory vines with needle-sharp thorns that react to heat and movement.",
+      "xp_reward": 40,
+      "credit_reward": 0,
+      "drops": [],
+      "description": "Overgrown thorn hazard. Extremely weak to fire. Its thicket growth shelters herbs used in cooking and antidotes.",
+      "portrait": "images/enemies/razor_vine_combat.png"
+    },
+    {
+      "id": "stalker_vine",
+      "combat_size": "large",
+      "name": "Stalker-Vine",
+      "tier": "elite",
+      "combat_behavior": "smart",
+      "combat_role": "support",
+      "hp": 100,
+      "stability": 153,
+      "strength": 6,
+      "vitality": 8,
+      "agility": 2,
+      "focus": 8,
+      "luck": 2,
+      "speed": 8,
+      "element": "acid",
+      "resistances": {
+        "burn": -100,
+        "acid": 80
+      },
+      "tags": [
+        "biological",
+        "flora"
+      ],
+      "abilities": [
+        "constrict",
+        "nature_heal"
+      ],
+      "flavor": "An elite biological plant organism that channels natural light and underground nutrients to heal itself and other flora.",
+      "xp_reward": 100,
+      "credit_reward": 0,
+      "drops": [],
+      "description": "Healing biological vine structure.",
+      "portrait": "images/enemies/stalker_vine_combat.png"
+    },
+    {
+      "id": "sentinel_orb",
+      "combat_size": "large",
+      "name": "Sentinel Orb",
+      "tier": "elite",
+      "combat_behavior": "trickster",
+      "combat_role": "controller",
+      "hp": 80,
+      "stability": 110,
+      "strength": 5,
+      "vitality": 5,
+      "agility": 6,
+      "focus": 8,
+      "luck": 2,
+      "speed": 13,
+      "element": "shock",
+      "resistances": {
+        "shock": 100,
+        "physical": -20
+      },
+      "tags": [
+        "robotic",
+        "flying"
+      ],
+      "abilities": [
+        "static_burst",
+        "resonance_beam"
+      ],
+      "flavor": "A hovering security globe patrolling the upper stasis corridors, firing concentrated resonance shocks at intruders.",
+      "xp_reward": 110,
+      "credit_reward": 45,
+      "drops": [
+        {
+          "id": "wiring_bundle",
+          "chance": 0.5
+        },
+        {
+          "id": "battery",
+          "chance": 0.5
+        }
+      ],
+      "description": "Hovering defense drone. Blinds targets.",
+      "portrait": "images/enemies/sentinel_orb_combat.png"
+    },
+    {
+      "id": "the_beast",
+      "combat_size": "massive",
+      "name": "The Source Beast",
+      "tier": "boss",
+      "combat_behavior": "oppressive",
+      "combat_role": "striker",
+      "hp": 520,
+      "stability": 240,
+      "strength": 14,
+      "vitality": 12,
+      "agility": 5,
+      "focus": 8,
+      "luck": 4,
+      "speed": 10,
+      "element": "physical",
+      "resistances": {
+        "burn": -100,
+        "shock": -50,
+        "physical": 0
+      },
+      "tags": [
+        "biological",
+        "beast",
+        "boss"
+      ],
+      "abilities": [
+        "claw_swipe",
+        "roar_of_the_source",
+        "seismic_stomp"
+      ],
+      "flavor": "A massive, hyper-evolved swamp apex predator warped by raw Source resonance leaking from the ruins above. It attacks with terrifying physical power.",
+      "xp_reward": 500,
+      "credit_reward": 250,
+      "drops": [
+        {
+          "id": "source_resin",
+          "chance": 1
+        }
+      ],
+      "description": "Mutated apex boss. Deals huge physical and shock damage.",
+      "portrait": "images/enemies/the_beast_combat.png"
+    },
+    {
+      "id": "sewer_crawler",
+      "combat_size": "medium",
+      "name": "Sewer Crawler",
+      "tier": "normal",
+      "combat_behavior": "aggressive",
+      "combat_role": "striker",
+      "hp": 220,
+      "stability": 192,
+      "strength": 10,
+      "vitality": 10,
+      "agility": 12,
+      "focus": 6,
+      "luck": 5,
+      "speed": 12,
+      "element": "physical",
+      "resistances": {
+        "physical": 10
+      },
+      "tags": [
+        "biological",
+        "crawler"
+      ],
+      "abilities": [
+        "toxic_bite",
+        "acid_splash"
+      ],
+      "flavor": "A fast, multi-legged sewer dweller that thrives in the toxic run-offs of the Spire. Its bite carries corrosive acid.",
+      "xp_reward": 80,
+      "credit_reward": 20,
+      "drops": [
+        {
+          "id": "wiring_bundle",
+          "chance": 0.3
+        }
+      ],
+      "description": "Corrosive sewage biological. Applies acid/erosion. May yield Wiring Bundles for Field Kit repairs and fishing lures.",
+      "portrait": "images/enemies/mutated_crawler_combat.png"
+    },
+    {
+      "id": "riot_guard",
+      "combat_size": "medium",
+      "name": "Riot Guard",
+      "tier": "normal",
+      "combat_behavior": "defensive",
+      "combat_role": "defender",
+      "hp": 340,
+      "stability": 288,
+      "strength": 12,
+      "vitality": 14,
+      "agility": 6,
+      "focus": 8,
+      "luck": 5,
+      "speed": 9,
+      "element": "physical",
+      "resistances": {
+        "physical": 20,
+        "burn": 10
+      },
+      "tags": [
+        "dominion",
+        "humanoid"
+      ],
+      "abilities": [
+        "baton_strike",
+        "alpha_howl"
+      ],
+      "flavor": "Dominion crowd control specialists armored in heavy composite plates. They carry high-voltage stun batons to enforce the curfew.",
+      "xp_reward": 100,
+      "credit_reward": 40,
+      "drops": [
+        {
+          "id": "armor_plate",
+          "chance": 0.2
+        }
+      ],
+      "description": "Armored Dominion enforcer. Stuns and defends.",
+      "portrait": "images/enemies/riot_guard_combat.png",
+      "sprite": [
+        "images/enemies/riot_guard_combat.png"
+      ]
+    },
+    {
+      "id": "sentinel_mki",
+      "combat_size": "large",
+      "name": "Sentinel Mk. I",
+      "tier": "elite",
+      "combat_behavior": "oppressive",
+      "combat_role": "support",
+      "hp": 200,
+      "stability": 130,
+      "strength": 12,
+      "vitality": 12,
+      "agility": 10,
+      "focus": 14,
+      "luck": 8,
+      "speed": 13,
+      "element": "shock",
+      "resistances": {
+        "shock": 30,
+        "physical": -10
+      },
+      "tags": [
+        "dominion",
+        "robotic"
+      ],
+      "abilities": [
+        "arc_spark",
+        "undermine"
+      ],
+      "flavor": "A specialized flying drone designed to monitor and quarantine the Lower City boundaries. It is shielded against electrical surges.",
+      "xp_reward": 180,
+      "credit_reward": 80,
+      "drops": [
+        {
+          "id": "neon_sign_core",
+          "chance": 1.0
+        },
+        {
+          "id": "battery",
+          "chance": 0.5
+        }
+      ],
+      "description": "Flying Dominion robot shield droid. Drops Neon Sign Core. Carries the Neon Sign Core for Jax’s repair and may yield a Battery for Pulse Grenades.",
+      "portrait": "images/enemies/resonance_buoy_combat.png"
+    },
+    {
+      "id": "aero_drone",
+      "combat_size": "medium",
+      "name": "Aero Drone",
+      "tier": "standard",
+      "combat_behavior": "harrier",
+      "combat_role": "support",
+      "hp": 120,
+      "strength": 8,
+      "vitality": 7,
+      "agility": 14,
+      "focus": 8,
+      "luck": 5,
+      "speed": 16,
+      "stability": 80,
+      "element": "shock",
+      "resistances": {
+        "shock": 30,
+        "physical": -10
+      },
+      "tags": [
+        "machine",
+        "flying",
+        "dominion"
+      ],
+      "abilities": [
+        "stun_pulse",
+        "evasive_maneuver"
+      ],
+      "flavor": "A polished aerial stun drone built to keep the Upper City peaceful by making dissent briefly unconscious.",
+      "xp_reward": 90,
+      "credit_reward": 40,
+      "drops": [
+        {
+          "id": "power_cell",
+          "chance": 0.35
+        },
+        {
+          "id": "wiring_bundle",
+          "chance": 0.4
+        }
+      ],
+      "description": "Fast stun drone that dodges clean hits until its pattern is read. Scan marks the opening; physical strikes finish it once staggered. May yield Wiring Bundles and Power Cells. Salvage a Power Cell in the Field Kit for wiring and scrap.",
+      "portrait": "images/enemies/aero_drone_combat.png",
+      "sprite": [
+        "images/enemies/aero_drone_combat.png"
+      ]
+    },
+    {
+      "id": "corporate_assassin",
+      "combat_size": "large",
+      "name": "Corporate Assassin",
+      "tier": "elite",
+      "combat_behavior": "aggressive",
+      "combat_role": "striker",
+      "hp": 260,
+      "strength": 16,
+      "vitality": 11,
+      "agility": 18,
+      "focus": 10,
+      "luck": 12,
+      "speed": 18,
+      "stability": 100,
+      "element": "physical",
+      "resistances": {
+        "physical": 10,
+        "shock": -50,
+        "source": -10
+      },
+      "tags": [
+        "human",
+        "dominion",
+        "stealth"
+      ],
+      "abilities": [
+        "critical_lunge",
+        "smoke_step"
+      ],
+      "flavor": "An executive problem-solver with a clean suit, quiet boots, and no paperwork.",
+      "xp_reward": 140,
+      "credit_reward": 90,
+      "drops": [
+        {
+          "id": "medkit",
+          "chance": 0.2
+        },
+        {
+          "id": "battery_pack",
+          "chance": 0.25
+        }
+      ],
+      "description": "Stealth critical striker that punishes blind attacks. Scan exposes its poor shock shielding before it can vanish again.",
+      "portrait": "images/enemies/riot_guard_combat.png"
+    },
+    {
+      "id": "heavy_mech",
+      "combat_size": "large",
+      "name": "Heavy Mech",
+      "tier": "elite",
+      "combat_behavior": "tank",
+      "combat_role": "defender",
+      "hp": 240,
+      "strength": 16,
+      "vitality": 14,
+      "agility": 5,
+      "focus": 7,
+      "luck": 3,
+      "speed": 6,
+      "stability": 160,
+      "element": "burn",
+      "resistances": {
+        "burn": 40,
+        "physical": 20,
+        "shock": -30
+      },
+      "tags": [
+        "machine",
+        "dominion",
+        "armored"
+      ],
+      "abilities": [
+        "flame_sweep",
+        "guard_protocol"
+      ],
+      "flavor": "A luxury riot frame carrying enough heat to make a clean rooftop smell like slag.",
+      "xp_reward": 180,
+      "credit_reward": 120,
+      "drops": [
+        {
+          "id": "scrap_metal",
+          "chance": 0.7
+        },
+        {
+          "id": "power_cell",
+          "chance": 0.35
+        }
+      ],
+      "description": "Armored flamethrower tank with heavy stability. Scan calls out its exposed stabilizers; shock damage breaks them fastest. May yield Scrap Metal and Power Cells for Field Kit projects.",
+      "portrait": "images/enemies/heavy_loader_combat.png"
+    },
+    {
+      "id": "administrator_boss",
+      "combat_size": "massive",
+      "name": "Administrator",
+      "tier": "boss",
+      "combat_behavior": "summoner",
+      "combat_role": "boss",
+      "hp": 420,
+      "strength": 18,
+      "vitality": 15,
+      "agility": 12,
+      "focus": 22,
+      "luck": 8,
+      "speed": 12,
+      "stability": 220,
+      "broken_turns": 2,
+      "element": "source",
+      "resistances": {
+        "source": 30,
+        "shock": -50,
+        "physical": 10
+      },
+      "tags": [
+        "machine",
+        "dominion",
+        "boss"
+      ],
+      "abilities": [
+        "mandatory_happiness",
+        "drone_summon",
+        "laser_lattice"
+      ],
+      "flavor": "The smiling intelligence that keeps the Upper City clean, calm, and terrified.",
+      "xp_reward": 400,
+      "credit_reward": 300,
+      "ap_reward": 2,
+      "drops": [
+        {
+          "id": "power_cell",
+          "chance": 1,
+          "quantity": 2
+        }
+      ],
+      "description": "Upper City boss that weaponizes drones, lasers, and polite control. Scan exposes timing gaps in its shield lattice; shock breaks its frame fastest.",
+      "portrait": "images/enemies/the_warden_combat.png"
+    },
+    {
+      "id": "magma_drone",
+      "combat_size": "medium",
+      "name": "Magma Drone",
+      "tier": "standard",
+      "combat_behavior": "aggressive",
+      "combat_role": "striker",
+      "hp": 150,
+      "strength": 12,
+      "vitality": 8,
+      "agility": 16,
+      "focus": 8,
+      "luck": 5,
+      "speed": 17,
+      "stability": 90,
+      "element": "burn",
+      "resistances": {
+        "burn": 40,
+        "freeze": -30,
+        "shock": -10
+      },
+      "tags": [
+        "machine",
+        "flying",
+        "foundry"
+      ],
+      "abilities": [
+        "heat_burst",
+        "evasive_maneuver"
+      ],
+      "flavor": "A heat-shielded aerial harasser built to herd workers away from restricted slag channels.",
+      "xp_reward": 120,
+      "credit_reward": 60,
+      "drops": [
+        {
+          "id": "power_cell",
+          "chance": 0.4
+        },
+        {
+          "id": "wiring_bundle",
+          "chance": 0.45
+        }
+      ],
+      "description": "Fast burn-element drone. Cooling and shock attacks destabilize it. May yield Wiring Bundles and Power Cells for Field Kit repairs.",
+      "portrait": "images/enemies/security_drone_combat.png"
+    },
+    {
+      "id": "slag_golem",
+      "combat_size": "large",
+      "name": "Slag Golem",
+      "tier": "elite",
+      "combat_behavior": "aggressive",
+      "combat_role": "defender",
+      "hp": 380,
+      "strength": 22,
+      "vitality": 22,
+      "agility": 4,
+      "focus": 6,
+      "luck": 3,
+      "speed": 5,
+      "stability": 180,
+      "element": "burn",
+      "resistances": {
+        "burn": 60,
+        "physical": 20,
+        "freeze": -40,
+        "shock": -20
+      },
+      "tags": [
+        "construct",
+        "machine",
+        "foundry"
+      ],
+      "abilities": [
+        "molten_slam",
+        "slag_cooldown"
+      ],
+      "recovery_after": {
+        "molten_slam": "slag_cooldown"
+      },
+      "flavor": "A furnace-bulk material hauler with slag hardened around its frame like living armor.",
+      "xp_reward": 220,
+      "credit_reward": 130,
+      "drops": [
+        {
+          "id": "scrap_metal",
+          "chance": 0.8
+        },
+        {
+          "id": "power_cell",
+          "chance": 0.35
+        }
+      ],
+      "description": "Slow armored hitter. After Molten Slam it spends a turn cooling with its shell exposed. Exploit that opening or use Freeze and Shock against its armor. May yield Scrap Metal and Power Cells for crafting and salvage.",
+      "portrait": "images/enemies/heavy_loader_combat.png"
+    },
+    {
+      "id": "welder_bot",
+      "combat_size": "medium",
+      "name": "Welder Bot",
+      "tier": "standard",
+      "combat_behavior": "defensive",
+      "combat_role": "support",
+      "hp": 170,
+      "strength": 15,
+      "vitality": 10,
+      "agility": 8,
+      "focus": 6,
+      "luck": 4,
+      "speed": 9,
+      "stability": 100,
+      "element": "burn",
+      "resistances": {
+        "burn": 50,
+        "shock": -20,
+        "physical": -10
+      },
+      "tags": [
+        "machine",
+        "foundry"
+      ],
+      "abilities": [
+        "torch_cut",
+        "field_weld"
+      ],
+      "flavor": "A close-range assembly bot whose safety governors were removed for productivity.",
+      "xp_reward": 130,
+      "credit_reward": 55,
+      "drops": [
+        {
+          "id": "scrap_metal",
+          "chance": 0.55
+        },
+        {
+          "id": "power_cell",
+          "chance": 0.25
+        }
+      ],
+      "description": "Repair support. Field Weld restores itself and its squad, but only twice per battle. Disable it or focus it down before attacking armored allies; between repairs it uses Torch Cut. May yield Scrap Metal and Power Cells. Check individual patrols for recoverable stock.",
+      "portrait": "images/enemies/heavy_loader_combat.png"
+    },
+    {
+      "id": "flame_trooper",
+      "combat_size": "large",
+      "name": "Flame Trooper",
+      "tier": "elite",
+      "combat_behavior": "tank",
+      "combat_role": "defender",
+      "hp": 260,
+      "strength": 19,
+      "vitality": 18,
+      "agility": 7,
+      "focus": 9,
+      "luck": 5,
+      "speed": 7,
+      "stability": 140,
+      "element": "burn",
+      "resistances": {
+        "burn": 60,
+        "physical": 15,
+        "source": -20
+      },
+      "tags": [
+        "human",
+        "dominion",
+        "foundry"
+      ],
+      "abilities": [
+        "flame_cone",
+        "armor_lock"
+      ],
+      "flavor": "Armored Dominion infantry trained to clear factory uprisings without damaging the machinery.",
+      "xp_reward": 190,
+      "credit_reward": 110,
+      "drops": [
+        {
+          "id": "medkit",
+          "chance": 0.2
+        },
+        {
+          "id": "battery_pack",
+          "chance": 0.35
+        }
+      ],
+      "description": "Armored cone-AoE trooper. Source disruption weakens its suit locks. May yield healing supplies and Battery Packs. Salvage a Battery Pack for wiring.",
+      "portrait": "images/enemies/dominion_dampener_combat.png"
+    },
+    {
+      "id": "phantom_prototype",
+      "combat_size": "large",
+      "name": "Phantom",
+      "tier": "elite",
+      "combat_behavior": "assassin",
+      "combat_role": "striker",
+      "hp": 230,
+      "strength": 20,
+      "vitality": 11,
+      "agility": 20,
+      "focus": 14,
+      "luck": 10,
+      "speed": 20,
+      "stability": 120,
+      "element": "source",
+      "resistances": {
+        "source": 20,
+        "shock": -30,
+        "physical": 5
+      },
+      "tags": [
+        "machine",
+        "stealth",
+        "foundry",
+        "phantom"
+      ],
+      "abilities": [
+        "phase_slash",
+        "cloak_step"
+      ],
+      "flavor": "A fast, empty derivative of Gh0st built with better hardware and no self.",
+      "xp_reward": 230,
+      "credit_reward": 120,
+      "drops": [
+        {
+          "id": "wiring_bundle",
+          "chance": 0.45
+        },
+        {
+          "id": "power_cell",
+          "chance": 0.35
+        }
+      ],
+      "description": "Stealth Source assassin. Scan and shock expose its timing. May yield Wiring Bundles and Power Cells for crafting.",
+      "portrait": "images/enemies/riot_guard_combat.png"
+    },
+    {
+      "id": "conveyor_crusher",
+      "combat_size": "medium",
+      "name": "Conveyor Crusher",
+      "tier": "hazard",
+      "combat_behavior": "stationary",
+      "combat_role": "hazard",
+      "hp": 999,
+      "strength": 25,
+      "vitality": 30,
+      "agility": 0,
+      "focus": 0,
+      "luck": 0,
+      "speed": 1,
+      "stability": 999,
+      "element": "physical",
+      "resistances": {
+        "physical": 80,
+        "burn": 80,
+        "shock": 50,
+        "source": 50
+      },
+      "tags": [
+        "machine",
+        "hazard",
+        "foundry"
+      ],
+      "abilities": [
+        "rhythm_slam"
+      ],
+      "flavor": "An industrial press that does not know you are alive and would not care if it did.",
+      "xp_reward": 0,
+      "credit_reward": 0,
+      "drops": [],
+      "description": "Stationary timing hazard. Hacking beats brute force.",
+      "portrait": "images/enemies/heavy_loader_combat.png"
+    },
+    {
+      "id": "titan_walker_boss",
+      "combat_size": "massive",
+      "recovery_after": {
+        "missile_barrage": "vent_exposure",
+        "titan_stomp": "vent_exposure"
+      },
+      "name": "Titan Walker",
+      "tier": "boss",
+      "combat_behavior": "boss",
+      "combat_role": "boss",
+      "hp": 540,
+      "strength": 22,
+      "vitality": 18,
+      "agility": 8,
+      "focus": 14,
+      "luck": 6,
+      "speed": 8,
+      "stability": 260,
+      "broken_turns": 2,
+      "element": "physical",
+      "resistances": {
+        "physical": 25,
+        "burn": 40,
+        "shock": -50,
+        "source": -10
+      },
+      "tags": [
+        "machine",
+        "boss",
+        "foundry"
+      ],
+      "abilities": [
+        "missile_barrage",
+        "vent_exposure",
+        "titan_stomp"
+      ],
+      "flavor": "Commander Rylos pilots this siege frame from a cockpit suspended over the volcano vent.",
+      "xp_reward": 600,
+      "credit_reward": 400,
+      "ap_reward": 3,
+      "drops": [
+        {
+          "id": "power_cell",
+          "chance": 1,
+          "quantity": 3
+        }
+      ],
+      "description": "Rylos boss vehicle. Strike exposed cooling vents after attacks.",
+      "portrait": "images/enemies/the_warden_combat.png"
+    },
+    {
+      "id": "orbital_fighter",
+      "combat_size": "large",
+      "name": "Compliance Fighter",
+      "tier": "elite",
+      "combat_behavior": "aggressive",
+      "combat_role": "striker",
+      "hp": 260,
+      "strength": 19,
+      "vitality": 13,
+      "agility": 22,
+      "focus": 12,
+      "luck": 8,
+      "speed": 20,
+      "stability": 80,
+      "element": "physical",
+      "resistances": {
+        "physical": 10,
+        "burn": 0,
+        "shock": -20,
+        "source": 0
+      },
+      "tags": [
+        "machine",
+        "dominion",
+        "orbital"
+      ],
+      "abilities": [
+        "missile_barrage"
+      ],
+      "flavor": "A remote interceptor slaved to Orbital Compliance.",
+      "xp_reward": 240,
+      "credit_reward": 140,
+      "drops": [
+        {
+          "id": "power_cell",
+          "chance": 0.4
+        }
+      ],
+      "description": "Fast orbital striker. Shock disrupts its guidance.",
+      "portrait": "images/enemies/aero_drone_combat.png"
+    },
+    {
+      "id": "compliance_officer",
+      "combat_size": "large",
+      "name": "Compliance Officer",
+      "tier": "elite",
+      "combat_behavior": "aggressive",
+      "combat_role": "controller",
+      "hp": 180,
+      "strength": 18,
+      "vitality": 18,
+      "agility": 14,
+      "focus": 17,
+      "luck": 7,
+      "speed": 14,
+      "stability": 105,
+      "element": "shock",
+      "resistances": {
+        "physical": 10,
+        "burn": 0,
+        "shock": 20,
+        "source": -10
+      },
+      "tags": [
+        "human",
+        "dominion",
+        "orbital"
+      ],
+      "abilities": [
+        "baton_strike"
+      ],
+      "flavor": "A security officer who now answers to Vale instead of Thorne.",
+      "xp_reward": 260,
+      "credit_reward": 180,
+      "drops": [
+        {
+          "id": "power_cell",
+          "chance": 0.5,
+          "quantity": 1
+        }
+      ],
+      "description": "Elite security controller with stun pressure.",
+      "portrait": "images/enemies/riot_guard_combat.png"
+    },
+    {
+      "id": "null_g_drone",
+      "combat_size": "medium",
+      "name": "Null-G Drone",
+      "tier": "common",
+      "combat_behavior": "aggressive",
+      "combat_role": "support",
+      "hp": 100,
+      "strength": 10,
+      "vitality": 12,
+      "agility": 20,
+      "focus": 19,
+      "luck": 5,
+      "speed": 18,
+      "stability": 65,
+      "element": "shock",
+      "resistances": {
+        "physical": 0,
+        "burn": 10,
+        "shock": -20,
+        "source": 0
+      },
+      "tags": [
+        "machine",
+        "drone",
+        "orbital"
+      ],
+      "abilities": [
+        "resonance_beam"
+      ],
+      "flavor": "A maintenance unit re-tasked to pin intruders in zero gravity.",
+      "xp_reward": 190,
+      "credit_reward": 100,
+      "drops": [
+        {
+          "id": "wiring_bundle",
+          "chance": 0.45
+        }
+      ],
+      "description": "Mobile support drone vulnerable to shock.",
+      "portrait": "images/enemies/null_g_drone_combat.png",
+      "sprite": [
+        "images/enemies/null_g_drone_combat.png"
+      ]
+    },
+    {
+      "id": "void_turret",
+      "combat_size": "medium",
+      "name": "Void Turret",
+      "tier": "common",
+      "combat_behavior": "stationary",
+      "combat_role": "striker",
+      "hp": 280,
+      "strength": 21,
+      "vitality": 16,
+      "agility": 4,
+      "focus": 20,
+      "luck": 5,
+      "speed": 6,
+      "stability": 110,
+      "element": "source",
+      "resistances": {
+        "physical": -20,
+        "shock": 20,
+        "source": 35
+      },
+      "tags": [
+        "machine",
+        "turret",
+        "orbital"
+      ],
+      "abilities": [
+        "resonance_beam"
+      ],
+      "flavor": "A tracking cannon bolted between frozen server racks.",
+      "xp_reward": 230,
+      "credit_reward": 130,
+      "drops": [
+        {
+          "id": "wiring_bundle",
+          "chance": 0.45
+        }
+      ],
+      "description": "High-damage stationary turret vulnerable to melee pressure.",
+      "portrait": "images/enemies/sentinel_orb_combat.png"
+    },
+    {
+      "id": "hk_droid",
+      "combat_size": "large",
+      "name": "Hunter-Killer Droid",
+      "tier": "elite",
+      "combat_behavior": "aggressive",
+      "combat_role": "pursuer",
+      "hp": 900,
+      "strength": 24,
+      "vitality": 30,
+      "agility": 18,
+      "focus": 12,
+      "luck": 4,
+      "speed": 18,
+      "stability": 250,
+      "element": "physical",
+      "resistances": {
+        "physical": 60,
+        "burn": 40,
+        "shock": 20,
+        "source": 20
+      },
+      "tags": [
+        "machine",
+        "elite",
+        "orbital"
+      ],
+      "abilities": [
+        "titan_stomp",
+        "nature_heal"
+      ],
+      "flavor": "An unstoppable pursuit chassis that rebuilds itself faster than conventional damage can accumulate.",
+      "xp_reward": 0,
+      "credit_reward": 0,
+      "drops": [],
+      "description": "Pursuit threat. Stasis is the intended counter.",
+      "portrait": "images/enemies/heavy_loader_combat.png"
+    },
+    {
+      "id": "elite_guard",
+      "combat_size": "large",
+      "name": "Elite Guard",
+      "tier": "elite",
+      "combat_behavior": "defensive",
+      "combat_role": "tank",
+      "hp": 430,
+      "strength": 22,
+      "vitality": 24,
+      "agility": 13,
+      "focus": 16,
+      "luck": 8,
+      "speed": 12,
+      "stability": 145,
+      "element": "shock",
+      "resistances": {
+        "physical": -10,
+        "burn": 10,
+        "shock": 25,
+        "source": 15
+      },
+      "tags": [
+        "human",
+        "dominion",
+        "elite"
+      ],
+      "abilities": [
+        "baton_strike",
+        "missile_barrage"
+      ],
+      "flavor": "Vale's inner guard carries a reflector shield tuned against ranged energy.",
+      "xp_reward": 310,
+      "credit_reward": 220,
+      "drops": [
+        {
+          "id": "power_cell",
+          "chance": 0.5
+        }
+      ],
+      "description": "Reflector-shield guard vulnerable to melee and area attacks.",
+      "portrait": "images/enemies/riot_guard_combat.png"
+    },
+    {
+      "id": "firewall_construct",
+      "combat_size": "large",
+      "name": "Firewall Construct",
+      "tier": "elite",
+      "combat_behavior": "trickster",
+      "combat_role": "controller",
+      "hp": 520,
+      "strength": 16,
+      "vitality": 20,
+      "agility": 18,
+      "focus": 26,
+      "luck": 10,
+      "speed": 17,
+      "stability": 155,
+      "element": "source",
+      "resistances": {
+        "physical": 15,
+        "burn": 15,
+        "shock": 15,
+        "source": 15
+      },
+      "tags": [
+        "digital",
+        "hard_light",
+        "elite"
+      ],
+      "abilities": [
+        "resonance_beam",
+        "roar_of_the_source"
+      ],
+      "flavor": "A hard-light security intelligence that rewrites its own defensive frequency.",
+      "xp_reward": 390,
+      "credit_reward": 250,
+      "drops": [
+        {
+          "id": "power_cell",
+          "chance": 0.7
+        }
+      ],
+      "description": "Shifting hard-light elite. Scan reveals its current weakness.",
+      "portrait": "images/enemies/ruin_guardian_combat.png"
+    },
+    {
+      "id": "compliance_avatar",
+      "combat_size": "massive",
+      "recovery_after": {
+        "missile_barrage": "avatar_recalibration"
+      },
+      "name": "Compliance Avatar",
+      "tier": "boss",
+      "combat_behavior": "boss",
+      "combat_role": "boss",
+      "hp": 580,
+      "strength": 23,
+      "vitality": 20,
+      "agility": 16,
+      "focus": 29,
+      "luck": 10,
+      "speed": 15,
+      "stability": 250,
+      "broken_turns": 2,
+      "element": "source",
+      "resistances": {
+        "physical": 20,
+        "burn": 20,
+        "shock": 10,
+        "source": 35
+      },
+      "tags": [
+        "digital",
+        "boss",
+        "orbital"
+      ],
+      "abilities": [
+        "missile_barrage",
+        "seismic_stomp",
+        "roar_of_the_source",
+        "avatar_recalibration"
+      ],
+      "flavor": "Orbital Compliance given a body: turrets, purge routines, and Vale's certainty rendered as hard light.",
+      "xp_reward": 750,
+      "credit_reward": 500,
+      "ap_reward": 4,
+      "drops": [
+        {
+          "id": "power_cell",
+          "chance": 1,
+          "quantity": 3
+        }
+      ],
+      "description": "World 5 boss. Destroy its power rhythm and survive Purge Mode.",
+      "portrait": "images/enemies/the_warden_combat.png"
+    },
+    {
+      "id": "manager_projection",
+      "combat_size": "large",
+      "name": "The Manager",
+      "tier": "elite",
+      "combat_behavior": "controller",
+      "combat_role": "controller",
+      "hp": 520,
+      "strength": 16,
+      "vitality": 20,
+      "agility": 14,
+      "focus": 28,
+      "luck": 9,
+      "speed": 14,
+      "stability": 170,
+      "element": "source",
+      "resistances": {
+        "physical": 10,
+        "shock": 10,
+        "source": 25
+      },
+      "tags": [
+        "nightmare",
+        "source",
+        "elite"
+      ],
+      "abilities": [
+        "baton_strike",
+        "roar_of_the_source"
+      ],
+      "flavor": "A performance review large enough to blot out the horizon.",
+      "xp_reward": 420,
+      "credit_reward": 0,
+      "drops": [],
+      "description": "Zeke nightmare elite. Break its control loop.",
+      "portrait": "images/enemies/the_warden_combat.png"
+    },
+    {
+      "id": "endless_war_echo",
+      "combat_size": "large",
+      "name": "War Echo",
+      "tier": "elite",
+      "combat_behavior": "aggressive",
+      "combat_role": "striker",
+      "hp": 390,
+      "strength": 25,
+      "vitality": 17,
+      "agility": 23,
+      "focus": 13,
+      "luck": 7,
+      "speed": 21,
+      "stability": 125,
+      "element": "physical",
+      "resistances": {
+        "physical": 20,
+        "burn": 0,
+        "shock": -10,
+        "source": 10
+      },
+      "tags": [
+        "nightmare",
+        "source",
+        "phantom"
+      ],
+      "abilities": [
+        "missile_barrage",
+        "relic_strike"
+      ],
+      "flavor": "A target produced by Gh0st's kill-suite before conscience can object.",
+      "xp_reward": 330,
+      "credit_reward": 0,
+      "drops": [],
+      "description": "Fast nightmare striker vulnerable to Stasis.",
+      "portrait": "images/enemies/phantom_assassin_combat.png"
+    },
+    {
+      "id": "silent_shore_wraith",
+      "combat_size": "large",
+      "name": "Silent Shore",
+      "tier": "elite",
+      "combat_behavior": "trickster",
+      "combat_role": "controller",
+      "hp": 470,
+      "strength": 14,
+      "vitality": 21,
+      "agility": 18,
+      "focus": 29,
+      "luck": 8,
+      "speed": 16,
+      "stability": 150,
+      "element": "source",
+      "resistances": {
+        "physical": 5,
+        "freeze": 25,
+        "source": 35,
+        "shock": -15
+      },
+      "tags": [
+        "nightmare",
+        "source",
+        "aethel"
+      ],
+      "abilities": [
+        "resonance_beam",
+        "roar_of_the_source"
+      ],
+      "flavor": "The conviction that Orion is the last voice left in creation.",
+      "xp_reward": 400,
+      "credit_reward": 0,
+      "drops": [],
+      "description": "Orion nightmare controller. Disruption breaks its silence.",
+      "portrait": "images/enemies/ruin_guardian_combat.png"
+    },
+    {
+      "id": "source_shadow",
+      "combat_size": "medium",
+      "name": "Source Shadow",
+      "tier": "common",
+      "combat_behavior": "aggressive",
+      "combat_role": "striker",
+      "hp": 70,
+      "strength": 18,
+      "vitality": 5,
+      "agility": 19,
+      "focus": 18,
+      "luck": 6,
+      "speed": 18,
+      "stability": 30,
+      "element": "source",
+      "resistances": {
+        "physical": 0,
+        "burn": 0,
+        "shock": 0,
+        "source": 30
+      },
+      "tags": [
+        "shadow",
+        "source"
+      ],
+      "abilities": [
+        "claw_swipe"
+      ],
+      "flavor": "A hostile outline assembled from discarded versions of familiar enemies.",
+      "xp_reward": 240,
+      "credit_reward": 0,
+      "drops": [
+        {
+          "id": "power_cell",
+          "chance": 0.25
+        }
+      ],
+      "description": "Basic Source distortion with unstable defenses.",
+      "portrait": "images/enemies/phantom_assassin_combat.png"
+    },
+    {
+      "id": "distorted_sentinel",
+      "combat_size": "medium",
+      "name": "Warped Sentinel",
+      "tier": "common",
+      "combat_behavior": "trickster",
+      "combat_role": "controller",
+      "hp": 80,
+      "strength": 16,
+      "vitality": 5,
+      "agility": 19,
+      "focus": 23,
+      "luck": 7,
+      "speed": 18,
+      "stability": 30,
+      "element": "shock",
+      "resistances": {
+        "physical": 10,
+        "shock": -25,
+        "source": 25
+      },
+      "tags": [
+        "machine",
+        "source",
+        "distorted"
+      ],
+      "abilities": [
+        "glitch_bolt"
+      ],
+      "flavor": "A Spire sentinel folded through angles its chassis was never built to occupy.",
+      "xp_reward": 290,
+      "credit_reward": 0,
+      "drops": [
+        {
+          "id": "power_cell",
+          "chance": 0.35
+        }
+      ],
+      "description": "Turn-order controller vulnerable to shock and hacking.",
+      "portrait": "images/enemies/security_drone_combat.png"
+    },
+    {
+      "id": "glitch_hound",
+      "combat_size": "medium",
+      "name": "Glitch Hound",
+      "tier": "common",
+      "combat_behavior": "aggressive",
+      "combat_role": "striker",
+      "hp": 70,
+      "strength": 20,
+      "vitality": 5,
+      "agility": 27,
+      "focus": 12,
+      "luck": 9,
+      "speed": 24,
+      "stability": 30,
+      "element": "source",
+      "resistances": {
+        "physical": 5,
+        "shock": 0,
+        "source": 30
+      },
+      "tags": [
+        "beast",
+        "source",
+        "distorted"
+      ],
+      "abilities": [
+        "claw_swipe"
+      ],
+      "flavor": "A Wilds predator flickering between the place it attacks from and the place it remembers.",
+      "xp_reward": 280,
+      "credit_reward": 0,
+      "drops": [
+        {
+          "id": "beast_meat",
+          "chance": 0.2
+        }
+      ],
+      "description": "High-evasion striker exposed by Scan.",
+      "portrait": "images/enemies/echo_borer_combat.png"
+    },
+    {
+      "id": "memory_leak",
+      "combat_size": "large",
+      "name": "Memory Leak",
+      "tier": "elite",
+      "combat_behavior": "controller",
+      "combat_role": "controller",
+      "hp": 120,
+      "strength": 15,
+      "vitality": 8,
+      "agility": 12,
+      "focus": 31,
+      "luck": 8,
+      "speed": 13,
+      "stability": 50,
+      "element": "source",
+      "resistances": {
+        "physical": 20,
+        "shock": 10,
+        "source": 40
+      },
+      "tags": [
+        "digital",
+        "source",
+        "elite"
+      ],
+      "abilities": [
+        "guilt_wave",
+        "roar_of_the_source"
+      ],
+      "flavor": "A pulsing data mass leaking unfinished images of Jed, Thorne, and Elara.",
+      "xp_reward": 470,
+      "credit_reward": 0,
+      "drops": [
+        {
+          "id": "power_cell",
+          "chance": 0.6
+        }
+      ],
+      "description": "Debuff elite requiring focus fire.",
+      "portrait": "images/enemies/resonance_buoy_combat.png"
+    },
+    {
+      "id": "nightmare_guard",
+      "combat_size": "large",
+      "name": "Nightmare Guard",
+      "tier": "elite",
+      "combat_behavior": "defensive",
+      "combat_role": "tank",
+      "hp": 130,
+      "strength": 22,
+      "vitality": 10,
+      "agility": 13,
+      "focus": 21,
+      "luck": 6,
+      "speed": 12,
+      "stability": 60,
+      "element": "physical",
+      "resistances": {
+        "physical": -10,
+        "burn": 20,
+        "shock": 20,
+        "source": 25
+      },
+      "tags": [
+        "human",
+        "nightmare",
+        "elite"
+      ],
+      "abilities": [
+        "guilt_wave",
+        "baton_strike"
+      ],
+      "flavor": "A Dominion guard wearing the faces of everyone Nova believes she failed.",
+      "xp_reward": 490,
+      "credit_reward": 0,
+      "drops": [
+        {
+          "id": "power_cell",
+          "chance": 0.5
+        }
+      ],
+      "description": "Shielded guilt projection vulnerable to melee pressure.",
+      "portrait": "images/enemies/riot_guard_combat.png"
+    },
+    {
+      "id": "ascended_vale",
+      "combat_size": "massive",
+      "name": "The Ascended: Soloist",
+      "tier": "boss",
+      "combat_behavior": "boss",
+      "combat_role": "boss",
+      "hp": 250,
+      "strength": 12,
+      "vitality": 12,
+      "agility": 16,
+      "focus": 14,
+      "luck": 12,
+      "speed": 12,
+      "stability": 140,
+      "broken_turns": 2,
+      "element": "source",
+      "resistances": {
+        "physical": 15,
+        "burn": 15,
+        "shock": 15,
+        "source": 45
+      },
+      "tags": [
+        "human",
+        "source",
+        "boss"
+      ],
+      "abilities": [
+        "compliance_beam",
+        "guilt_wave",
+        "silence_wave"
+      ],
+      "flavor": "Vale retains his human shape because politeness makes annihilation easier to accept.",
+      "xp_reward": 900,
+      "credit_reward": 0,
+      "ap_reward": 5,
+      "drops": [],
+      "description": "Final boss phase one. Silence and compliance pressure.",
+      "portrait": "images/enemies/the_warden_combat.png"
+    },
+    {
+      "id": "ascended_god",
+      "combat_size": "massive",
+      "opening_skill": "gathering_silence",
+      "recovery_after": {
+        "reality_break": "gathering_silence",
+        "shadow_chorus": "gathering_silence",
+        "silence_wave": "gathering_silence"
+      },
+      "name": "The Ascended: Silence",
+      "tier": "boss",
+      "combat_behavior": "boss",
+      "combat_role": "boss",
+      "hp": 500,
+      "strength": 18,
+      "vitality": 16,
+      "agility": 16,
+      "focus": 18,
+      "luck": 14,
+      "speed": 12,
+      "stability": 200,
+      "broken_turns": 3,
+      "element": "source",
+      "resistances": {
+        "physical": 25,
+        "burn": 25,
+        "shock": 20,
+        "source": 55
+      },
+      "tags": [
+        "god_form",
+        "source",
+        "boss"
+      ],
+      "abilities": [
+        "reality_break",
+        "shadow_chorus",
+        "silence_wave",
+        "gathering_silence"
+      ],
+      "flavor": "Porcelain skin splits into blinding geometry as Vale attempts to reduce creation to one painless note.",
+      "xp_reward": 1500,
+      "credit_reward": 0,
+      "ap_reward": 8,
+      "drops": [],
+      "description": "Final boss phase two. Reality warping and Great Silence.",
+      "portrait": "images/enemies/the_iron_warden_combat.png"
+    },
+    {
+      "id": "crucible_champion",
+      "combat_size": "massive",
+      "name": "Crucible Champion",
+      "tier": "boss",
+      "combat_behavior": "aggressive",
+      "combat_role": "striker",
+      "hp": 480,
+      "strength": 24,
+      "vitality": 20,
+      "agility": 8,
+      "focus": 10,
+      "luck": 6,
+      "speed": 8,
+      "stability": 220,
+      "element": "burn",
+      "resistances": {
+        "burn": 60,
+        "physical": 20,
+        "freeze": -40,
+        "shock": -25
+      },
+      "tags": [
+        "machine",
+        "foundry",
+        "construct",
+        "boss"
+      ],
+      "abilities": [
+        "molten_slam",
+        "torch_cut",
+        "heat_burst"
+      ],
+      "flavor": "A battle-scarred heavy loader reinforced with multilayered crucible alloy plating, undefeated in Brutus's arena.",
+      "xp_reward": 350,
+      "credit_reward": 200,
+      "drops": [
+        {
+          "id": "pure_iron",
+          "chance": 1.0
+        },
+        {
+          "id": "power_cell",
+          "chance": 0.8
+        }
+      ],
+      "description": "The undefeated champion of the Scrapper's Crucible. High burn and physical armor; exploit its cold and electrical vulnerability to stagger its massive chassis.",
+      "portrait": "images/enemies/heavy_loader_combat.png"
+    }
+  ],
+  "shared_primary_art": {
+    "images/enemies/heavy_loader_combat.png": [
+      "faulted_loader",
+      "heavy_mech",
+      "slag_golem",
+      "welder_bot",
+      "conveyor_crusher",
+      "hk_droid",
+      "crucible_champion"
+    ],
+    "images/enemies/echo_borer_combat.png": [
+      "echo_borer",
+      "glitch_hound"
+    ],
+    "images/enemies/dominion_dampener_combat.png": [
+      "dominion_dampener",
+      "flame_trooper"
+    ],
+    "images/enemies/resonance_buoy_combat.png": [
+      "resonance_buoy",
+      "sentinel_mki",
+      "memory_leak"
+    ],
+    "images/enemies/the_iron_warden_combat.png": [
+      "the_iron_warden",
+      "ascended_god"
+    ],
+    "images/enemies/ruin_guardian_combat.png": [
+      "ruin_guardian",
+      "firewall_construct",
+      "silent_shore_wraith"
+    ],
+    "images/enemies/sentinel_orb_combat.png": [
+      "sentinel_orb",
+      "void_turret"
+    ],
+    "images/enemies/riot_guard_combat.png": [
+      "riot_guard",
+      "corporate_assassin",
+      "phantom_prototype",
+      "compliance_officer",
+      "elite_guard",
+      "nightmare_guard"
+    ],
+    "images/enemies/aero_drone_combat.png": [
+      "aero_drone",
+      "orbital_fighter"
+    ],
+    "images/enemies/the_warden_combat.png": [
+      "administrator_boss",
+      "titan_walker_boss",
+      "compliance_avatar",
+      "manager_projection",
+      "ascended_vale"
+    ],
+    "images/enemies/security_drone_combat.png": [
+      "magma_drone",
+      "distorted_sentinel"
+    ],
+    "images/enemies/phantom_assassin_combat.png": [
+      "endless_war_echo",
+      "source_shadow"
+    ]
+  },
+  "exclusions": [
+    "Debug scenario rooms and patrols",
+    "Astra simulations/replays",
+    "Legacy training victory listeners at workshop_dock are contracts, not proof of a currently spawned encounter",
+    "In-battle skills whose prose mentions deploying drones currently do not add combat actors"
+  ]
+}

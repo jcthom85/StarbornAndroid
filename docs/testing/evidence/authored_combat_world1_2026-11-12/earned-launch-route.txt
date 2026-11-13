@@ -1,0 +1,3 @@
+room=launch_checkpoint enemies=[dominion_dampener, resonance_buoy] seed=17 damageEvents=12 xp=80 ap=0 credits=40 persistedHp={nova=102} knockedOut=[] usedItems={}
+room=launch_bay enemies=[the_iron_warden] seed=17 damageEvents=10 xp=350 ap=0 credits=225 persistedHp={nova=102} knockedOut=[] usedItems={}
+World 2 arrival and slot 9 reload verified.

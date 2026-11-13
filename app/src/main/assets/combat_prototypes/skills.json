@@ -1,0 +1,85 @@
+[
+  {
+    "id": "prototype_salvo",
+    "name": "Missile Salvo",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Isolated encounter prototype; temporary effects and artwork.",
+    "base_power": 35,
+    "cooldown": 0,
+    "combat_tags": [
+      "aoe",
+      "dmg"
+    ],
+    "targeting": "all_enemies"
+  },
+  {
+    "id": "prototype_cut",
+    "name": "Cutting Strike",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Isolated encounter prototype; temporary effects and artwork.",
+    "base_power": 40,
+    "cooldown": 0,
+    "combat_tags": [
+      "dmg"
+    ]
+  },
+  {
+    "id": "prototype_anchor",
+    "name": "Anchor Shot",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Isolated encounter prototype; temporary effects and artwork.",
+    "base_power": 15,
+    "cooldown": 0,
+    "combat_tags": [
+      "dmg"
+    ],
+    "status_applications": [
+      "short"
+    ]
+  },
+  {
+    "id": "prototype_shield",
+    "name": "Project Shield",
+    "character": "enemy",
+    "type": "support",
+    "description": "Isolated encounter prototype; temporary effects and artwork.",
+    "base_power": 0,
+    "cooldown": 0,
+    "combat_tags": [
+      "support"
+    ],
+    "targeting": "self",
+    "status_applications": [
+      "guard"
+    ]
+  },
+  {
+    "id": "prototype_recover",
+    "name": "Cooling Recovery",
+    "character": "enemy",
+    "type": "support",
+    "description": "Isolated encounter prototype; temporary effects and artwork.",
+    "base_power": 0,
+    "cooldown": 0,
+    "combat_tags": [
+      "support"
+    ],
+    "targeting": "self"
+  },
+  {
+    "id": "prototype_deploy",
+    "name": "Deploy Interdictor",
+    "character": "enemy",
+    "type": "support",
+    "description": "Isolated encounter prototype; temporary effects and artwork.",
+    "base_power": 0,
+    "cooldown": 0,
+    "combat_tags": [
+      "support"
+    ],
+    "targeting": "self"
+  }
+]

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.domain.environment.EnvironmentalEffectsTest" tests="25" skipped="0" failures="0" errors="0" timestamp="2026-11-13T12:15:03.329Z" hostname="V52076.vims.edu" time="0.388">
+  <properties/>
+  <testcase name="allCampaignDefinitionsAndOriginalSteamAssetsValidate" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.121"/>
+  <testcase name="preferenceValueDefaultsAndRoundTrips" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.001"/>
+  <testcase name="missingCatalogStillSupportsLegacyWeather" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.017"/>
+  <testcase name="stateAndMilestonePredicatesMatchRoomVariants" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.014"/>
+  <testcase name="deltaClampFadeAndRetirementWork" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.015"/>
+  <testcase name="requiredStateFalseDoesNotMatchMissingKey" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.009"/>
+  <testcase name="localizedLightingProfilesRespectRoomStateQualityAndBounds" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.017"/>
+  <testcase name="novaLightConditionAndSaveStateRemainAuthoritative" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.014"/>
+  <testcase name="compatibilityDefaultsMatchTheAuthoredLegacyCatalog" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.003"/>
+  <testcase name="pooledBudgetAndBurstsNeverExceedCaps" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.024"/>
+  <testcase name="emitterRegionAndDuplicateValidationRejectBadData" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.009"/>
+  <testcase name="allLegacyFamiliesResolveInExplorationAndCombat" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.056"/>
+  <testcase name="resizeAndStateChangesKeepPhasesAndParticleSlots" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.006"/>
+  <testcase name="sourceGeometryHandlesFitCropAndViewportIndependently" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.0"/>
+  <testcase name="overlappingScenesShareParticleJetAndBurstBudgets" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.012"/>
+  <testcase name="darkVisibilityAndCombatContributionAreBounded" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.006"/>
+  <testcase name="fixedSeedAndTimeAreDeterministic" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.006"/>
+  <testcase name="rapidProfileChangesAndNavigationStayBounded" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.018"/>
+  <testcase name="lightWavesAreGentleIndependentAndSteadyWhenAccessibilityDisablesAnimation" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.002"/>
+  <testcase name="qualityAndAccessibilityApplyTogether" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.006"/>
+  <testcase name="invalidBindingSkipsWithoutFallingBackToRain" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.006"/>
+  <testcase name="combatOptOutAndZeroIntensityDoNoWork" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.009"/>
+  <testcase name="malformedSurfaceMasksAreRejectedRatherThanDrawingAcrossTheScene" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.008"/>
+  <testcase name="explicitEmptyOverridesWeatherAndNullUsesLegacy" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.009"/>
+  <testcase name="lightMotionHasPhysicalRolesAndStopsWithAccessibilitySettings" classname="com.example.starborn.domain.environment.EnvironmentalEffectsTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[WARN [EnvironmentalEffects] Missing or unsupported catalog; using legacy compatibility effects
+WARN [EnvironmentalEffects] pit_nova_bunk/bad: unknown preset missing
+WARN [EnvironmentalEffects] pit_nova_bunk/bad-mask: invalid light surface
+]]></system-err>
+</testsuite>

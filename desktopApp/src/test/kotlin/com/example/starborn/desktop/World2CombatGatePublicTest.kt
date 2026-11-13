@@ -94,4 +94,32 @@ class World2CombatGatePublicTest {
             go(s, if (direction == "east") "west" else "east", id)
         }
     }
+    @Test fun historicalClearedFormationsStayClearedAfterRestoreAndLegacyVictory() = runWith { s ->
+        val base=s.sessionStore.state.value.copy(worldId="world_2",hubId="hub_3_sector9",
+            activeQuests=emptySet(),completedQuests=emptySet(),completedEvents=emptySet(),
+            completedMilestones=emptySet(),unlockedExits=emptySet(),questTasksCompleted=emptyMap())
+        val cases=listOf(
+            "sector9_stream_pools" to listOf("siren_skimmer"),
+            "sector9_stream_cave_depths" to listOf("echo_borer","echo_borer"),
+            "sector9_hall_acoustics_lab" to listOf("spore_spitter"))
+        for((room,ids) in cases) {
+            val key="encounter_cleared:"+ids.sorted().joinToString("|")
+            restore(s,base.copy(roomId=room,roomStates=mapOf(room to mapOf(key to true))))
+            assertTrue("Old receipt must clear $room",s.exploration.uiState.value.enemies.isEmpty())
+            val saved=s.sessionStore.state.value
+            restore(s,saved)
+            assertTrue(s.exploration.uiState.value.enemies.isEmpty())
+            restore(s,base.copy(roomId=room,roomStates=emptyMap()))
+            compose.waitUntil(5000) { s.exploration.uiState.value.enemies.isNotEmpty() }
+            assertFalse("Fresh room must still offer its new formation in $room",s.exploration.uiState.value.enemies.isEmpty())
+            // An already-running older battle may return the original IDs.
+            compose.runOnIdle { s.exploration.onCombatVictory(com.example.starborn.navigation.CombatResultPayload(
+                outcome=com.example.starborn.navigation.CombatResultPayload.Outcome.VICTORY,enemyIds=ids,roomId=room)) }
+            compose.waitForIdle()
+            assertTrue("Legacy victory must retire the corresponding new formation",s.exploration.uiState.value.enemies.isEmpty())
+            restore(s,s.sessionStore.state.value)
+            assertTrue(s.exploration.uiState.value.enemies.isEmpty())
+        }
+    }
+
 }

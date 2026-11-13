@@ -155,7 +155,8 @@ private fun DesktopCombatContent(
                     val targets = effect.targetIds.joinToString { name(it) }
                     val label = effect.skillName + if (targets.isNotBlank()) " -> $targets" else ""
                     effect.targetIds.forEach { showCue(it, effect.skillName, Color(0xFFFFBB55), kind = DesktopCueKind.TELEGRAPH) }
-                    intents[effect.actorId] = label
+                    if (runtime.enemies.firstOrNull { it.id == runtime.enemyTypeId(effect.actorId) }?.authored == null)
+                        intents[effect.actorId] = label
                     record("${name(effect.actorId)} prepares $label")
                 }
                 is CombatFxEvent.Impact -> {
@@ -373,6 +374,10 @@ private fun DesktopCombatContent(
                     } else false
                 }
                 Key.Escape -> cancelActiveSelectionOrMenu()
+                Key.G -> {
+                    if (actorId != null && targetAction == null && timedPrompt == null && tutorial == null) runtime.guard()
+                    true
+                }
                 Key.Four -> {
                     if (actorId != null && timedPrompt == null && targetAction == null && runtime.canUseSnack(requireNotNull(actorId)) && runtime.isCombatTutorialCommandEnabled("snack")) {
                         chooseTarget(runtime.snackTargetRequirement(requireNotNull(actorId)), "Choose a snack target") { runtime.useSnack(it) }
@@ -692,6 +697,11 @@ private fun DesktopCombatContent(
                             )
                         }
                     ) {
+                        DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().testTag("combat-action-guard").heightIn(min = 44.dp),
+                            onClick = { runtime.guard() }, icon = Icons.Rounded.Shield,
+                            enabled = actor != null && targetAction == null && timedPrompt == null && tutorial == null) {
+                            Text("Guard", fontWeight = FontWeight.SemiBold)
+                        }
                         DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().testTag("combat-action-skills").heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::openSkills, icon = Icons.Rounded.AutoAwesome,
                             enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("skills")) {
                             Row(
@@ -860,6 +870,7 @@ DesktopBattleFormation(enemies, services, Modifier.fillMaxWidth().weight(if (wid
                     sprite = { id -> runtime.enemies.firstOrNull { it.id == runtime.enemyTypeId(id) }?.portrait },
                     enemySize = { id -> runtime.enemies.firstOrNull { it.id == runtime.enemyTypeId(id) }?.combatSize ?: "medium" },
                     enemyWidth = { id -> runtime.enemies.firstOrNull { it.id == runtime.enemyTypeId(id) }?.combatWidth ?: 1f },
+                    composite = { id -> runtime.enemies.firstOrNull { it.id == runtime.enemyTypeId(id) }?.composite },
                     selectedId = if (targetAction != null) selectedTarget else focusedEnemies.firstOrNull(), validTargets = validIds, targeting = targetAction != null,
                     meters = meters, intents = intents, feedback = feedback, cues = cues, lungeStyle = lungeStyle,
                     lungeActor = lungeActor, lungeToken = lungeToken, missActor = missActor, missToken = missToken, battleHeight = battlefieldHeight, opposingCount = enemies.size,
@@ -870,10 +881,15 @@ DesktopBattleFormation(enemies, services, Modifier.fillMaxWidth().weight(if (wid
                             if (targetAction != null && id in validIds) targetAction?.invoke(id)
                         }
                     })
-                Spacer(Modifier.height(24.dp))
+                Box(Modifier.fillMaxWidth().height(24.dp), contentAlignment = Alignment.Center) {
+                    if (com.example.starborn.ui.combat.hasAuthoredPreparation(battle))
+                        com.example.starborn.ui.combat.AuthoredEncounterPanel(battle, runtime.enemies,
+                            runtime::focusEnemyTarget, compact = true, skillName = runtime::skillDisplayName)
+                    else com.example.starborn.ui.combat.AuthoredEncounterStatus(battle, runtime.enemies)
+                }
                 if (!wide && targetAction != null) Text(instruction ?: "Choose a target", color = Color(0xFF63E6FF), style = MaterialTheme.typography.labelMedium)
 DesktopBattleFormation(party, services, Modifier.fillMaxWidth().weight(if (wide) .42f else .36f), false,
-                    choosingId = actorId, executingId = lungeActor.takeIf { lungeToken > 0 },
+                    choosingId = actorId, executingId = lungeActor.takeIf { lungeToken > 0 }, authoredState = battle,
                     sprite = { id ->
                         val normal = runtime.playerParty.firstOrNull { it.id == id }?.combatIconPath
                         when {

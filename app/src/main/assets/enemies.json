@@ -331,7 +331,7 @@
     "name": "The Iron Warden",
     "tier": "boss",
     "combat_behavior": "oppressive",
-    "combat_role": "tank_summoner",
+    "combat_role": "defender",
     "hp": 250,
     "stability": 65,
     "strength": 6,
@@ -354,11 +354,11 @@
     "abilities": [
       "iron_warden_riot_shield",
       "triple_burst",
-      "iron_warden_drone_summon",
       "iron_warden_gas_grenade",
-      "iron_warden_overclock"
+      "iron_warden_overclock",
+      "warden_recovery"
     ],
-    "flavor": "The Sector Commander wears sealed power armor built for riot lines and mine pressure. He advances behind a powered shield, deploys drones, and floods escape routes with gas.",
+    "flavor": "The Sector Commander advances behind a powered riot shield. His gun locks onto its target before each burst. Below the failing shield, sealed armor vents betray an emergency overclock.",
     "xp_reward": 350,
     "credit_reward": 225,
     "drops": [
@@ -369,8 +369,36 @@
         "qty_max": 1
       }
     ],
-    "description": "Boss tank with a riot shield, burst fire, drones, and gas grenades. Shock disrupts the armor.",
-    "portrait": "images/enemies/the_iron_warden_combat.png"
+    "description": "Solo armored boss. Read the burst lock-on and gas preparation, defend or disrupt the attack, and strike during recovery. Emergency Overclock drops his shield.",
+    "portrait": "images/enemies/the_iron_warden_combat.png",
+    "authored": {
+      "cycle": [
+        "iron_warden_riot_shield",
+        "triple_burst",
+        "warden_recovery",
+        "iron_warden_gas_grenade",
+        "warden_recovery"
+      ],
+      "windups": {
+        "triple_burst": "Burst lock-on",
+        "iron_warden_gas_grenade": "Gas canister primed"
+      },
+      "phase": {
+        "hp_below": 0.4,
+        "name": "Emergency Overclock — shield down",
+        "opening_skill": "iron_warden_overclock",
+        "cycle": [
+          "triple_burst",
+          "warden_recovery",
+          "iron_warden_gas_grenade",
+          "warden_recovery"
+        ],
+        "remove_statuses": [
+          "shield",
+          "guard"
+        ]
+      }
+    }
   },
   {
     "id": "shard_hound",
@@ -397,8 +425,9 @@
       "beast"
     ],
     "abilities": [
-      "gnaw",
-      "pounce"
+      "pounce",
+      "sector9_recover",
+      "gnaw"
     ],
     "flavor": "A canine-like predator with crystalline shards jutting from its spine. It attacks fast and relies on pack tactics.",
     "xp_reward": 50,
@@ -409,8 +438,20 @@
         "chance": 0.5
       }
     ],
-    "description": "Fast crystalline predator. Weak to fire.",
-    "portrait": "images/enemies/shard_hound_combat.png"
+    "description": "Marks its intended prey before pouncing, then repositions. Pack partners begin on different beats. Weak to fire.",
+    "portrait": "images/enemies/shard_hound_combat.png",
+    "authored": {
+      "cycle": [
+        "pounce",
+        "sector9_recover",
+        "gnaw",
+        "sector9_recover"
+      ],
+      "windups": {
+        "pounce": "Prey marked — pounce"
+      },
+      "duplicate_cycle_offset": 2
+    }
   },
   {
     "id": "spore_spitter",
@@ -437,7 +478,8 @@
       "flora"
     ],
     "abilities": [
-      "toxic_spore"
+      "sector9_spore",
+      "sector9_recover"
     ],
     "flavor": "A bulbous, root-bound flora that spits toxic spore sacs at range. It thrives in high-moisture swamp zones.",
     "xp_reward": 55,
@@ -448,8 +490,17 @@
         "chance": 0.4
       }
     ],
-    "description": "Ranged acid plant. Highly vulnerable to fire. May yield venom for crafting Antidote Flasks.",
-    "portrait": "images/enemies/spore_spitter_combat.png"
+    "description": "Its swelling bulb announces a single-target spore release. Interrupt or Guard; fire remains effective. May yield venom for Antidote Flasks.",
+    "portrait": "images/enemies/spore_spitter_combat.png",
+    "authored": {
+      "cycle": [
+        "sector9_spore",
+        "sector9_recover"
+      ],
+      "windups": {
+        "sector9_spore": "Spore bulb swelling"
+      }
+    }
   },
   {
     "id": "ruin_guardian",
@@ -477,8 +528,10 @@
       "shielded"
     ],
     "abilities": [
+      "sector9_ward",
       "relic_strike",
-      "barrier_field"
+      "sector9_exposed_recovery",
+      "sector9_recover"
     ],
     "flavor": "An ancient robotic sentinel designed to protect Sanctuary infrastructure. Its chassis is heavily armored and shielded.",
     "xp_reward": 120,
@@ -493,8 +546,19 @@
         "chance": 0.8
       }
     ],
-    "description": "Shielded ancient sentinel. Weak to shock.",
-    "portrait": "images/enemies/ruin_guardian_combat.png"
+    "description": "Braces a stone ward once, announces its relic strike, then exposes its joints. Weak to Shock; basic attacks remain viable.",
+    "portrait": "images/enemies/ruin_guardian_combat.png",
+    "authored": {
+      "cycle": [
+        "sector9_ward",
+        "relic_strike",
+        "sector9_exposed_recovery",
+        "sector9_recover"
+      ],
+      "windups": {
+        "relic_strike": "Stone joints align — relic strike"
+      }
+    }
   },
   {
     "id": "razor_vine",
@@ -521,14 +585,27 @@
       "flora"
     ],
     "abilities": [
-      "constrict"
+      "sector9_coil",
+      "sector9_recover"
     ],
     "flavor": "Overgrown predatory vines with needle-sharp thorns that react to heat and movement.",
     "xp_reward": 40,
     "credit_reward": 0,
     "drops": [],
-    "description": "Overgrown thorn hazard. Extremely weak to fire. Its thicket growth shelters herbs used in cooking and antidotes.",
-    "portrait": "images/enemies/razor_vine_combat.png"
+    "description": "Coils a thorned tendril before weakening one target. A damaging hit interrupts the coil. Extremely weak to fire; guards useful herbs.",
+    "portrait": "images/enemies/razor_vine_combat.png",
+    "authored": {
+      "cycle": [
+        "sector9_coil",
+        "sector9_recover"
+      ],
+      "windups": {
+        "sector9_coil": "Tendril coiling — strike it to interrupt"
+      },
+      "interrupt_on_damage": [
+        "sector9_coil"
+      ]
+    }
   },
   {
     "id": "stalker_vine",
@@ -555,15 +632,31 @@
       "flora"
     ],
     "abilities": [
+      "sector9_shelter",
+      "sector9_mend",
       "constrict",
-      "nature_heal"
+      "sector9_recover"
     ],
     "flavor": "An elite biological plant organism that channels natural light and underground nutrients to heal itself and other flora.",
     "xp_reward": 100,
     "credit_reward": 0,
     "drops": [],
-    "description": "Healing biological vine structure.",
-    "portrait": "images/enemies/stalker_vine_combat.png"
+    "description": "Shelters the plant formation once and spends at most two healing reserves. Interrupt the rooting or pressure its partner; recovery cannot continue indefinitely.",
+    "portrait": "images/enemies/stalker_vine_combat.png",
+    "authored": {
+      "cycle": [
+        "sector9_shelter",
+        "sector9_mend",
+        "constrict",
+        "sector9_recover"
+      ],
+      "windups": {
+        "sector9_mend": "Roots drawing from a finite reserve"
+      },
+      "resource_labels": {
+        "sector9_mend": "Root reserves"
+      }
+    }
   },
   {
     "id": "sentinel_orb",
@@ -590,8 +683,10 @@
       "flying"
     ],
     "abilities": [
+      "sector9_orb_beam",
+      "sector9_exposed_recovery",
       "static_burst",
-      "resonance_beam"
+      "sector9_recover"
     ],
     "flavor": "A hovering security globe patrolling the upper stasis corridors, firing concentrated resonance shocks at intruders.",
     "xp_reward": 110,
@@ -606,8 +701,19 @@
         "chance": 0.5
       }
     ],
-    "description": "Hovering defense drone. Blinds targets.",
-    "portrait": "images/enemies/sentinel_orb_combat.png"
+    "description": "Its iris opens before a targeted discharge. Strike during exposed recovery or interrupt the charge; insulated against Shock.",
+    "portrait": "images/enemies/sentinel_orb_combat.png",
+    "authored": {
+      "cycle": [
+        "sector9_orb_beam",
+        "sector9_exposed_recovery",
+        "static_burst",
+        "sector9_recover"
+      ],
+      "windups": {
+        "sector9_orb_beam": "Iris opening — discharge"
+      }
+    }
   },
   {
     "id": "the_beast",
@@ -636,11 +742,14 @@
       "boss"
     ],
     "abilities": [
-      "claw_swipe",
-      "roar_of_the_source",
-      "seismic_stomp"
+      "beast_hunt_claw",
+      "sector9_exposed_recovery",
+      "sector9_recover",
+      "beast_frenzy_claw",
+      "beast_frenzy_pounce",
+      "beast_frenzy_roar"
     ],
-    "flavor": "A massive, hyper-evolved swamp apex predator warped by raw Source resonance leaking from the ruins above. It attacks with terrifying physical power.",
+    "flavor": "A massive swamp predator warped by Source resonance. It studies a victim before committing its weight. Wounded, it abandons the patient hunt for a frantic two-strike rush that leaves its flanks exposed.",
     "xp_reward": 500,
     "credit_reward": 250,
     "drops": [
@@ -649,8 +758,34 @@
         "chance": 1
       }
     ],
-    "description": "Mutated apex boss. Deals huge physical and shock damage.",
-    "portrait": "images/enemies/the_beast_combat.png"
+    "description": "Solo apex predator. Marks prey before a heavy lunge. Below half health it announces two separately warned frenzy strikes, then overextends. Guard, interrupt, heal or attack during recovery.",
+    "portrait": "images/enemies/the_beast_combat.png",
+    "authored": {
+      "cycle": [
+        "beast_hunt_claw",
+        "sector9_exposed_recovery",
+        "sector9_recover"
+      ],
+      "windups": {
+        "beast_hunt_claw": "Prey marked — hunting lunge",
+        "beast_frenzy_claw": "Frenzy 1/2 — raking claw",
+        "beast_frenzy_pounce": "Frenzy 2/2 — bounding pounce"
+      },
+      "phase": {
+        "hp_below": 0.5,
+        "name": "Frenzy — two strikes, then overextension",
+        "opening_skill": "beast_frenzy_roar",
+        "cycle": [
+          "beast_frenzy_claw",
+          "beast_frenzy_pounce",
+          "sector9_exposed_recovery",
+          "sector9_recover"
+        ],
+        "remove_statuses": [
+          "sector9_carapace"
+        ]
+      }
+    }
   },
   {
     "id": "sewer_crawler",
@@ -677,6 +812,7 @@
     ],
     "abilities": [
       "toxic_bite",
+      "spire_recover",
       "acid_splash"
     ],
     "flavor": "A fast, multi-legged sewer dweller that thrives in the toxic run-offs of the Spire. Its bite carries corrosive acid.",
@@ -689,7 +825,20 @@
       }
     ],
     "description": "Corrosive sewage biological. Applies acid/erosion. May yield Wiring Bundles for Field Kit repairs and fishing lures.",
-    "portrait": "images/enemies/mutated_crawler_combat.png"
+    "portrait": "images/enemies/mutated_crawler_combat.png",
+    "authored": {
+      "cycle": [
+        "toxic_bite",
+        "spire_recover",
+        "acid_splash",
+        "spire_recover"
+      ],
+      "windups": {
+        "toxic_bite": "Feeding lunge",
+        "acid_splash": "Acid gathering"
+      },
+      "duplicate_cycle_offset": 2
+    }
   },
   {
     "id": "riot_guard",
@@ -716,8 +865,9 @@
       "humanoid"
     ],
     "abilities": [
-      "baton_strike",
-      "alpha_howl"
+      "spire_guard_cover",
+      "spire_baton_rush",
+      "spire_recover"
     ],
     "flavor": "Dominion crowd control specialists armored in heavy composite plates. They carry high-voltage stun batons to enforce the curfew.",
     "xp_reward": 100,
@@ -728,8 +878,21 @@
         "chance": 0.2
       }
     ],
-    "description": "Armored Dominion enforcer. Stuns and defends.",
-    "portrait": "images/enemies/sentinel_droid_combat.png"
+    "description": "Braces the squad once, then warns before rushing a target with its baton.",
+    "portrait": "images/enemies/riot_guard_combat.png",
+    "sprite": [
+      "images/enemies/riot_guard_combat.png"
+    ],
+    "authored": {
+      "cycle": [
+        "spire_guard_cover",
+        "spire_baton_rush",
+        "spire_recover"
+      ],
+      "windups": {
+        "spire_baton_rush": "Baton rush lining up"
+      }
+    }
   },
   {
     "id": "sentinel_mki",
@@ -756,8 +919,10 @@
       "robotic"
     ],
     "abilities": [
-      "arc_spark",
-      "undermine"
+      "guard_protocol",
+      "spire_quarantine_pulse",
+      "spire_open_vents",
+      "spire_recover"
     ],
     "flavor": "A specialized flying drone designed to monitor and quarantine the Lower City boundaries. It is shielded against electrical surges.",
     "xp_reward": 180,
@@ -773,7 +938,18 @@
       }
     ],
     "description": "Flying Dominion robot shield droid. Drops Neon Sign Core. Carries the Neon Sign Core for Jax’s repair and may yield a Battery for Pulse Grenades.",
-    "portrait": "images/enemies/resonance_buoy_combat.png"
+    "portrait": "images/enemies/resonance_buoy_combat.png",
+    "authored": {
+      "cycle": [
+        "guard_protocol",
+        "spire_quarantine_pulse",
+        "spire_open_vents",
+        "spire_recover"
+      ],
+      "windups": {
+        "spire_quarantine_pulse": "Quarantine pulse charging"
+      }
+    }
   },
   {
     "id": "aero_drone",
@@ -801,8 +977,9 @@
       "dominion"
     ],
     "abilities": [
-      "stun_pulse",
-      "evasive_maneuver"
+      "spire_ion_burst",
+      "evasive_maneuver",
+      "spire_recover"
     ],
     "flavor": "A polished aerial stun drone built to keep the Upper City peaceful by making dissent briefly unconscious.",
     "xp_reward": 90,
@@ -817,8 +994,22 @@
         "chance": 0.4
       }
     ],
-    "description": "Fast stun drone that dodges clean hits until its pattern is read. Scan marks the opening; physical strikes finish it once staggered. May yield Wiring Bundles and Power Cells. Salvage a Power Cell in the Field Kit for wiring and scrap.",
-    "portrait": "images/enemies/security_drone_combat.png"
+    "description": "Charges a targeted ion burst that weakens its target, then evades and repositions. Physical strikes work well.",
+    "portrait": "images/enemies/aero_drone_combat.png",
+    "sprite": [
+      "images/enemies/aero_drone_combat.png"
+    ],
+    "authored": {
+      "cycle": [
+        "spire_ion_burst",
+        "evasive_maneuver",
+        "spire_recover",
+        "spire_recover"
+      ],
+      "windups": {
+        "spire_ion_burst": "Ion burst charging"
+      }
+    }
   },
   {
     "id": "corporate_assassin",
@@ -847,8 +1038,10 @@
       "stealth"
     ],
     "abilities": [
+      "smoke_step",
       "critical_lunge",
-      "smoke_step"
+      "spire_open_vents",
+      "spire_recover"
     ],
     "flavor": "An executive problem-solver with a clean suit, quiet boots, and no paperwork.",
     "xp_reward": 140,
@@ -864,7 +1057,18 @@
       }
     ],
     "description": "Stealth critical striker that punishes blind attacks. Scan exposes its poor shock shielding before it can vanish again.",
-    "portrait": "images/enemies/riot_guard_combat.png"
+    "portrait": "images/enemies/riot_guard_combat.png",
+    "authored": {
+      "cycle": [
+        "smoke_step",
+        "critical_lunge",
+        "spire_open_vents",
+        "spire_recover"
+      ],
+      "windups": {
+        "critical_lunge": "Assassin marks a target"
+      }
+    }
   },
   {
     "id": "heavy_mech",
@@ -893,8 +1097,10 @@
       "armored"
     ],
     "abilities": [
-      "flame_sweep",
-      "guard_protocol"
+      "spire_recover",
+      "guard_protocol",
+      "spire_heat_sweep",
+      "spire_open_vents"
     ],
     "flavor": "A luxury riot frame carrying enough heat to make a clean rooftop smell like slag.",
     "xp_reward": 180,
@@ -909,8 +1115,20 @@
         "chance": 0.35
       }
     ],
-    "description": "Armored flamethrower tank with heavy stability. Scan calls out its exposed stabilizers; shock damage breaks them fastest. May yield Scrap Metal and Power Cells for Field Kit projects.",
-    "portrait": "images/enemies/heavy_loader_combat.png"
+    "description": "Braces, warms up a wide heat sweep, then exposes its vents. Shock breaks its stabilizers fastest.",
+    "portrait": "images/enemies/heavy_loader_combat.png",
+    "authored": {
+      "cycle": [
+        "spire_recover",
+        "guard_protocol",
+        "spire_heat_sweep",
+        "spire_open_vents",
+        "spire_recover"
+      ],
+      "windups": {
+        "spire_heat_sweep": "Flame cone heating"
+      }
+    }
   },
   {
     "id": "administrator_boss",
@@ -940,9 +1158,11 @@
       "boss"
     ],
     "abilities": [
-      "mandatory_happiness",
-      "drone_summon",
-      "laser_lattice"
+      "spire_deploy",
+      "spire_recover",
+      "spire_lattice",
+      "spire_open_vents",
+      "spire_emergency_lattice"
     ],
     "flavor": "The smiling intelligence that keeps the Upper City clean, calm, and terrified.",
     "xp_reward": 400,
@@ -955,8 +1175,41 @@
         "quantity": 2
       }
     ],
-    "description": "Upper City boss that weaponizes drones, lasers, and polite control. Scan exposes timing gaps in its shield lattice; shock breaks its frame fastest.",
-    "portrait": "images/enemies/the_warden_combat.png"
+    "description": "Warns before deploying an Interdictor or firing the Laser Lattice. Carries three reserve drones, with at most two escorts active. Below 35% HP it switches to exposed emergency fire. Shock is effective.",
+    "portrait": "images/enemies/the_warden_combat.png",
+    "authored": {
+      "cycle": [
+        "spire_deploy",
+        "spire_recover",
+        "spire_lattice",
+        "spire_open_vents",
+        "spire_recover"
+      ],
+      "windups": {
+        "spire_deploy": "Reinforcements incoming",
+        "spire_lattice": "Rooftop lattice charging",
+        "spire_emergency_lattice": "Emergency beam locking on"
+      },
+      "phase": {
+        "hp_below": 0.35,
+        "name": "Emergency Mode — exposed command frame",
+        "opening_skill": "spire_open_vents",
+        "cycle": [
+          "spire_emergency_lattice",
+          "spire_open_vents",
+          "spire_recover"
+        ]
+      },
+      "reinforcements": {
+        "skill_id": "spire_deploy",
+        "pool": [
+          "administrator_interdictor",
+          "administrator_interdictor",
+          "administrator_interdictor"
+        ],
+        "max_alive": 2
+      }
+    }
   },
   {
     "id": "magma_drone",
@@ -1405,7 +1658,10 @@
       }
     ],
     "description": "Mobile support drone vulnerable to shock.",
-    "portrait": "images/enemies/sentinel_orb_combat.png"
+    "portrait": "images/enemies/null_g_drone_combat.png",
+    "sprite": [
+      "images/enemies/null_g_drone_combat.png"
+    ]
   },
   {
     "id": "void_turret",
@@ -2081,5 +2337,210 @@
     ],
     "description": "The undefeated champion of the Scrapper's Crucible. High burn and physical armor; exploit its cold and electrical vulnerability to stagger its massive chassis.",
     "portrait": "images/enemies/heavy_loader_combat.png"
+  },
+  {
+    "id": "moss_borer",
+    "combat_size": "large",
+    "name": "Moss Borer",
+    "tier": "standard",
+    "combat_behavior": "aggressive",
+    "combat_role": "striker",
+    "hp": 70,
+    "stability": 35,
+    "strength": 5,
+    "vitality": 4,
+    "agility": 2,
+    "focus": 1,
+    "luck": 1,
+    "speed": 8,
+    "element": "physical",
+    "resistances": {
+      "burn": -100,
+      "freeze": -50,
+      "shock": 50
+    },
+    "tags": [
+      "biological",
+      "beast"
+    ],
+    "abilities": [
+      "sector9_carapace",
+      "sector9_exhale",
+      "sector9_exposed_recovery",
+      "gnaw"
+    ],
+    "flavor": "A broad cavern grazer carries moss along its mineral plates. The plates close before a cloudy exhalation, then open while it draws breath.",
+    "xp_reward": 40,
+    "credit_reward": 10,
+    "drops": [
+      {
+        "id": "beast_meat",
+        "chance": 0.75
+      }
+    ],
+    "description": "Closes its moss carapace, warns of a mineral exhale, then opens to recover. Cavern pairs start at different points in this rhythm.",
+    "portrait": "images/enemies/echo_borer_combat.png",
+    "authored": {
+      "cycle": [
+        "sector9_carapace",
+        "sector9_exhale",
+        "sector9_exposed_recovery",
+        "gnaw"
+      ],
+      "windups": {
+        "sector9_exhale": "Moss plates part — mineral exhale"
+      },
+      "duplicate_cycle_offset": 2
+    }
+  },
+  {
+    "id": "mist_glider",
+    "combat_size": "small",
+    "name": "Mist Glider",
+    "tier": "standard",
+    "combat_behavior": "trickster",
+    "combat_role": "controller",
+    "hp": 35,
+    "stability": 33,
+    "strength": 4,
+    "vitality": 2,
+    "agility": 6,
+    "focus": 3,
+    "luck": 4,
+    "speed": 14,
+    "element": "acid",
+    "resistances": {
+      "freeze": -100,
+      "physical": 50
+    },
+    "tags": [
+      "biological",
+      "flying"
+    ],
+    "abilities": [
+      "sector9_mist",
+      "sector9_dive",
+      "sector9_exposed_recovery"
+    ],
+    "flavor": "A reed-finned glider hangs over the still pools. A silver membrane gathers around its fins before it folds into a resonant dive.",
+    "xp_reward": 45,
+    "credit_reward": 12,
+    "drops": [
+      {
+        "id": "vial_of_venom",
+        "chance": 0.3
+      },
+      {
+        "id": "ration_pack",
+        "chance": 0.35
+      }
+    ],
+    "description": "Gathers a short-lived mist membrane before a marked dive. Guard or interrupt the dive; attack while it recovers.",
+    "portrait": "images/enemies/siren_skimmer_combat.png",
+    "authored": {
+      "cycle": [
+        "sector9_mist",
+        "sector9_dive",
+        "sector9_exposed_recovery"
+      ],
+      "windups": {
+        "sector9_dive": "Mist membrane tightening — dive"
+      }
+    }
+  },
+  {
+    "id": "concierge_relay",
+    "combat_size": "small",
+    "name": "Concierge Relay",
+    "tier": "standard",
+    "combat_behavior": "harrier",
+    "combat_role": "support",
+    "hp": 72,
+    "strength": 8,
+    "vitality": 7,
+    "agility": 6,
+    "focus": 9,
+    "luck": 5,
+    "speed": 7,
+    "stability": 55,
+    "element": "shock",
+    "resistances": {
+      "shock": 30,
+      "physical": -10
+    },
+    "tags": [
+      "machine",
+      "flying",
+      "dominion"
+    ],
+    "abilities": [
+      "spire_relay_shield",
+      "spire_recover"
+    ],
+    "flavor": "Broadcasts one interruptible shield order, then repositions.",
+    "xp_reward": 0,
+    "credit_reward": 0,
+    "drops": [],
+    "description": "Broadcasts one interruptible shield order, then repositions.",
+    "portrait": "images/enemies/resonance_buoy_combat.png",
+    "authored": {
+      "cycle": [
+        "spire_relay_shield",
+        "spire_recover",
+        "spire_recover"
+      ],
+      "windups": {
+        "spire_relay_shield": "Shield broadcast charging"
+      },
+      "interrupt_on_damage": [
+        "spire_relay_shield"
+      ]
+    }
+  },
+  {
+    "id": "administrator_interdictor",
+    "combat_size": "small",
+    "name": "Interdictor Drone",
+    "tier": "standard",
+    "combat_behavior": "harrier",
+    "combat_role": "support",
+    "hp": 78,
+    "strength": 8,
+    "vitality": 7,
+    "agility": 6,
+    "focus": 9,
+    "luck": 5,
+    "speed": 8,
+    "stability": 55,
+    "element": "shock",
+    "resistances": {
+      "shock": 30,
+      "physical": -10
+    },
+    "tags": [
+      "machine",
+      "flying",
+      "dominion"
+    ],
+    "abilities": [
+      "spire_interception",
+      "spire_recover"
+    ],
+    "flavor": "Deploys from the Administrator and prepares one interception pulse.",
+    "xp_reward": 0,
+    "credit_reward": 0,
+    "drops": [],
+    "description": "Deploys from the Administrator and prepares one interception pulse.",
+    "portrait": "images/enemies/aero_drone_combat.png",
+    "authored": {
+      "cycle": [
+        "spire_interception",
+        "spire_recover",
+        "spire_recover"
+      ],
+      "windups": {
+        "spire_interception": "Interception emitter charging"
+      }
+    }
   }
 ]

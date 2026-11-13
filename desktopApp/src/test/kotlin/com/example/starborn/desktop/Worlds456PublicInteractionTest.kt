@@ -114,7 +114,7 @@ class Worlds456PublicInteractionTest {
         act(s, "w4_mq20_escape_launch")
         compose.waitUntil(5000) { s.exploration.uiState.value.currentRoom?.id == "orbital_executive_dock" }
         assertNull(s.exploration.uiState.value.activeDialogue)
-        assertFalse(audio.commands.filterIsInstance<AudioCommand.Play>().any { it.cueId == "music_w5_void_explore" })
+        assertFalse(audio.commands.filterIsInstance<AudioCommand.Play>().any { it.cueId == "music_w5_orbital_intrigue" })
 
         compose.setContent {
             DesktopStarbornTheme(s) {
@@ -127,7 +127,7 @@ class Worlds456PublicInteractionTest {
         assertNull(s.exploration.uiState.value.roomTransition)
         val played = audio.commands.filterIsInstance<AudioCommand.Play>().map { it.cueId }
         assertTrue(played.contains("sfx_w2_astra_launch"))
-        assertTrue(played.indexOf("music_w5_void_explore") > played.indexOf("sfx_w2_astra_launch"))
+        assertTrue(played.indexOf("music_w5_orbital_intrigue") > played.indexOf("sfx_w2_astra_launch"))
     }
 
     @Test fun bulkheadMistakeLeaveAndReloadPreserveRetryWithoutAwardingProgress() = runWith { s ->

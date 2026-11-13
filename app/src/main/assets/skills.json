@@ -2055,5 +2055,475 @@
       "stagger",
       "stun"
     ]
+  },
+  {
+    "id": "warden_recovery",
+    "name": "Armor Recovery",
+    "character": "the_iron_warden",
+    "type": "support",
+    "description": "The Warden resets his weapon and vents his armor, leaving a safe response window.",
+    "targeting": "self",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "cooldown": 0
+  },
+  {
+    "id": "sector9_recover",
+    "name": "Reposition",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Repositions without attacking, leaving time to respond.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [],
+    "targeting": "self"
+  },
+  {
+    "id": "sector9_exhale",
+    "name": "Mineral Exhale",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Exhales a mineral cloud at the announced target, then opens its carapace.",
+    "combat_tags": [
+      "dmg",
+      "acid"
+    ],
+    "base_power": 65,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [],
+    "targeting": "single_enemy"
+  },
+  {
+    "id": "sector9_carapace",
+    "name": "Moss Carapace",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Closes its moss plates for one personal turn.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [
+      "sector9_carapace"
+    ],
+    "targeting": "self"
+  },
+  {
+    "id": "sector9_dive",
+    "name": "Resonant Dive",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Commits to the previously announced dive; its mist membrane falls afterward.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 90,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [],
+    "targeting": "single_enemy"
+  },
+  {
+    "id": "sector9_mist",
+    "name": "Mist Membrane",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Forms a short-lived mist membrane before committing to a dive.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [
+      "sector9_carapace"
+    ],
+    "targeting": "self"
+  },
+  {
+    "id": "sector9_spore",
+    "name": "Spore Release",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Releases a swelling spore sac at its announced target. Weakness has a finite duration.",
+    "combat_tags": [
+      "dmg",
+      "acid"
+    ],
+    "base_power": 80,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [
+      "weak"
+    ],
+    "targeting": "single_enemy"
+  },
+  {
+    "id": "sector9_coil",
+    "name": "Thorn Coil",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "A coiled tendril weakens one victim. Damaging the vine while it coils interrupts the attempt.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 60,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [
+      "weak"
+    ],
+    "targeting": "single_enemy"
+  },
+  {
+    "id": "sector9_shelter",
+    "name": "Root Shelter",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Anchors once to shelter the plant formation for one personal turn.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [
+      "sector9_root_shelter"
+    ],
+    "targeting": "all_allies",
+    "uses_per_battle": 1
+  },
+  {
+    "id": "sector9_mend",
+    "name": "Root Reserve",
+    "character": "enemy",
+    "type": "heal",
+    "description": "Spends one of two root reserves to restore the plant formation. Exhausted reserves do not return.",
+    "combat_tags": [
+      "heal"
+    ],
+    "base_power": 60,
+    "scaling": "atk",
+    "cooldown": 3,
+    "status_applications": [],
+    "targeting": "all_allies",
+    "uses_per_battle": 2
+  },
+  {
+    "id": "sector9_ward",
+    "name": "Stone Ward",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Braces its stone ward once. Its joints become exposed after the committed strike.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [
+      "sector9_carapace"
+    ],
+    "targeting": "self",
+    "uses_per_battle": 1
+  },
+  {
+    "id": "sector9_exposed_recovery",
+    "name": "Exposed Recovery",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Recovers with exposed joints, reducing defense until its next personal turn.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [
+      "sector9_exposed"
+    ],
+    "targeting": "self"
+  },
+  {
+    "id": "sector9_orb_beam",
+    "name": "Iris Discharge",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Discharges at the declared target after its iris charge. Does not blind or disable the whole crew.",
+    "combat_tags": [
+      "dmg",
+      "shock"
+    ],
+    "base_power": 100,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [],
+    "targeting": "single_enemy"
+  },
+  {
+    "id": "beast_hunt_claw",
+    "name": "Hunting Lunge",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "A heavy committed lunge at the prey identified by its warning.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 150,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [],
+    "targeting": "single_enemy"
+  },
+  {
+    "id": "beast_frenzy_roar",
+    "name": "Frenzy Roar",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Lowers its stance and announces a two-part frenzy. The roar deals no damage and does not disable the crew.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [],
+    "targeting": "self"
+  },
+  {
+    "id": "beast_frenzy_claw",
+    "name": "Frenzy: Raking Claw",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "The first separately warned strike of the frenzy sequence.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 105,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [],
+    "targeting": "single_enemy"
+  },
+  {
+    "id": "beast_frenzy_pounce",
+    "name": "Frenzy: Bounding Pounce",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "The second separately warned strike; the Beast then overextends for a longer recovery.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 115,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [],
+    "targeting": "single_enemy"
+  },
+  {
+    "id": "spire_recover",
+    "name": "Reposition",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Reposition.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [],
+    "targeting": "self"
+  },
+  {
+    "id": "spire_relay_shield",
+    "name": "Shield Order",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Shield Order.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [
+      "spire_shelter"
+    ],
+    "targeting": "all_allies",
+    "uses_per_battle": 1
+  },
+  {
+    "id": "spire_guard_cover",
+    "name": "Shield Brace",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Shield Brace.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [
+      "spire_shelter"
+    ],
+    "targeting": "all_allies",
+    "uses_per_battle": 1
+  },
+  {
+    "id": "spire_baton_rush",
+    "name": "Baton Rush",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Baton Rush.",
+    "combat_tags": [
+      "physical"
+    ],
+    "base_power": 75,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [
+      "weak"
+    ],
+    "targeting": "single_enemy"
+  },
+  {
+    "id": "spire_ion_burst",
+    "name": "Ion Burst",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Ion Burst.",
+    "combat_tags": [
+      "shock"
+    ],
+    "base_power": 55,
+    "scaling": "focus",
+    "cooldown": 0,
+    "status_applications": [
+      "weak"
+    ],
+    "targeting": "single_enemy"
+  },
+  {
+    "id": "spire_interception",
+    "name": "Intercept Pulse",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Intercept Pulse.",
+    "combat_tags": [
+      "shock"
+    ],
+    "base_power": 60,
+    "scaling": "focus",
+    "cooldown": 0,
+    "status_applications": [
+      "weak"
+    ],
+    "targeting": "single_enemy",
+    "uses_per_battle": 1
+  },
+  {
+    "id": "spire_heat_sweep",
+    "name": "Heat Sweep",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Heat Sweep.",
+    "combat_tags": [
+      "burn"
+    ],
+    "base_power": 55,
+    "scaling": "focus",
+    "cooldown": 0,
+    "status_applications": [],
+    "targeting": "all_enemies"
+  },
+  {
+    "id": "spire_deploy",
+    "name": "Deploy Interdictor",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Deploy Interdictor.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [],
+    "targeting": "self"
+  },
+  {
+    "id": "spire_lattice",
+    "name": "Laser Lattice",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Laser Lattice.",
+    "combat_tags": [
+      "source"
+    ],
+    "base_power": 75,
+    "scaling": "focus",
+    "cooldown": 0,
+    "status_applications": [],
+    "targeting": "all_enemies"
+  },
+  {
+    "id": "spire_open_vents",
+    "name": "Exposed Vents",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Exposed Vents.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "atk",
+    "cooldown": 0,
+    "status_applications": [
+      "spire_exposed"
+    ],
+    "targeting": "self"
+  },
+  {
+    "id": "spire_emergency_lattice",
+    "name": "Emergency Lattice",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Emergency Lattice.",
+    "combat_tags": [
+      "source"
+    ],
+    "base_power": 95,
+    "scaling": "focus",
+    "cooldown": 0,
+    "status_applications": [],
+    "targeting": "single_enemy"
+  },
+  {
+    "id": "spire_quarantine_pulse",
+    "name": "Quarantine Pulse",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Quarantine Pulse.",
+    "combat_tags": [
+      "shock"
+    ],
+    "base_power": 85,
+    "scaling": "focus",
+    "cooldown": 0,
+    "status_applications": [
+      "weak"
+    ],
+    "targeting": "single_enemy"
   }
 ]

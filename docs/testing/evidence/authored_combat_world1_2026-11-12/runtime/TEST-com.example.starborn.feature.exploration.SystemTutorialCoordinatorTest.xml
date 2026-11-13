@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.feature.exploration.SystemTutorialCoordinatorTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-13T02:27:38.969Z" hostname="V52076.vims.edu" time="0.034">
+  <properties/>
+  <testcase name="enabledDelayedHintWaitsForDismissalBeforeContinuing" classname="com.example.starborn.feature.exploration.SystemTutorialCoordinatorTest" time="0.033"/>
+  <testcase name="disablingDuringDelaySkipsHintAndReleasesEventOnce" classname="com.example.starborn.feature.exploration.SystemTutorialCoordinatorTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

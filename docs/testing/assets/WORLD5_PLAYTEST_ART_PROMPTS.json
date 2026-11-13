@@ -1,0 +1,31 @@
+{
+  "method": "built-in image generation tool",
+  "transparent_background": true,
+  "assets": {
+    "nova": {
+      "reference": "world_assets/src/main/assets/images/characters/emotes/nova_idle.png",
+      "output": "world_assets/src/main/assets/images/characters/emotes/nova_down.png",
+      "prompt": "Edit target: the provided Starborn portrait of nova. Create ONE game-ready KO/unconscious portrait matching this exact character identity, clothing, proportions, polished cel-shaded chibi illustration style, outline weight, chest-up crop, and image framing. Change the upbeat/alert pose into slumped shoulders and a gently lowered/tilted head, both eyes fully closed, exhausted unconscious expression, hands relaxed (no raised fighting fist or chin-rest pose). Clearly knocked out but alive and recoverable: no blood, gore, death symbols, X eyes, tears or new accessories. Preserve recognizable hairstyle, hair colors, outfit and existing equipment exactly. Keep the character as a clean isolated bust with a genuinely transparent background. No text, borders, scenery, effects or other characters."
+    },
+    "zeke": {
+      "reference": "world_assets/src/main/assets/images/characters/emotes/zeke_idle.png",
+      "output": "world_assets/src/main/assets/images/characters/emotes/zeke_down.png",
+      "prompt": "Edit target: the provided Starborn portrait of zeke. Create ONE game-ready KO/unconscious portrait matching this exact character identity, clothing, proportions, polished cel-shaded chibi illustration style, outline weight, chest-up crop, and image framing. Change the upbeat/alert pose into slumped shoulders and a gently lowered/tilted head, both eyes fully closed, exhausted unconscious expression, hands relaxed (no raised fighting fist or chin-rest pose). Clearly knocked out but alive and recoverable: no blood, gore, death symbols, X eyes, tears or new accessories. Preserve recognizable hairstyle, hair colors, outfit and existing equipment exactly. Keep the character as a clean isolated bust with a genuinely transparent background. No text, borders, scenery, effects or other characters."
+    },
+    "orion": {
+      "reference": "world_assets/src/main/assets/images/characters/emotes/orion_idle.png",
+      "output": "world_assets/src/main/assets/images/characters/emotes/orion_down.png",
+      "prompt": "Edit target: the provided Starborn portrait of orion. Create ONE game-ready KO/unconscious portrait matching this exact character identity, clothing, proportions, polished cel-shaded chibi illustration style, outline weight, chest-up crop, and image framing. Change the upbeat/alert pose into slumped shoulders and a gently lowered/tilted head, both eyes fully closed, exhausted unconscious expression, hands relaxed (no raised fighting fist or chin-rest pose). Clearly knocked out but alive and recoverable: no blood, gore, death symbols, X eyes, tears or new accessories. Preserve recognizable hairstyle, hair colors, outfit and existing equipment exactly. Keep the character as a clean isolated bust with a genuinely transparent background. No text, borders, scenery, effects or other characters."
+    },
+    "gh0st": {
+      "reference": "world_assets/src/main/assets/images/characters/emotes/gh0st_idle.png",
+      "output": "world_assets/src/main/assets/images/characters/emotes/gh0st_down.png",
+      "prompt": "Edit target: the provided Starborn portrait of gh0st. Create ONE game-ready KO/unconscious portrait matching this exact character identity, clothing, proportions, polished cel-shaded chibi illustration style, outline weight, chest-up crop, and image framing. Change the upbeat/alert pose into slumped shoulders and a gently lowered/tilted head, both eyes fully closed, exhausted unconscious expression, hands relaxed (no raised fighting fist or chin-rest pose). Clearly knocked out but alive and recoverable: no blood, gore, death symbols, X eyes, tears or new accessories. Preserve recognizable hairstyle, hair colors, outfit and existing equipment exactly. Keep the character as a clean isolated bust with a genuinely transparent background. No text, borders, scenery, effects or other characters."
+    },
+    "null_g_drone": {
+      "reference": "world_assets/src/main/assets/images/enemies/aero_drone_combat.png",
+      "output": "world_assets/src/main/assets/images/enemies/null_g_drone_combat.png",
+      "prompt": "Reference image is STYLE ONLY: match Starborn's polished cel-shaded sci-fi enemy sprite, crisp dark outlines, white-gray industrial metal and cyan energy accents. Create a distinct Null-G Drone, a compact dangerous orbital maintenance/support machine repurposed to pin intruders in zero gravity. Centered full-body isolated machine, front three-quarter view, lower-center framing like reference. Design a squat hexagonal central chassis with a narrow cyan optical sensor and circular gyroscopic stabilization rings at its sides, four compact multidirectional maneuvering thrusters, two small articulated magnetic clamp arms. It must be clearly different in silhouette from the reference's winged Aero Drone and from a plain spherical sentinel. No background, ground plane, shadow floor, text, border, UI icon or scenery. Genuinely transparent alpha background. One single clean enemy sprite with complete unclipped silhouette and readable shape at small exploration size."
+    }
+  }
+}

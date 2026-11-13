@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.feature.combat.EnemySupportDecisionTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-11-13T02:27:44.220Z" hostname="V52076.vims.edu" time="0.025">
+  <properties/>
+  <testcase name="healing rejects explicit enemy targets" classname="com.example.starborn.feature.combat.EnemySupportDecisionTest" time="0.002"/>
+  <testcase name="repair on cooldown is excluded from enemy decisions" classname="com.example.starborn.feature.combat.EnemySupportDecisionTest" time="0.001"/>
+  <testcase name="Avatar recalibrates only after barrage without damage or permanent recovery loop" classname="com.example.starborn.feature.combat.EnemySupportDecisionTest" time="0.002"/>
+  <testcase name="duplicate golems recover independently and jammed recovery cannot bypass skill gates" classname="com.example.starborn.feature.combat.EnemySupportDecisionTest" time="0.002"/>
+  <testcase name="wounded support AI repairs itself and processor heals the enemy" classname="com.example.starborn.feature.combat.EnemySupportDecisionTest" time="0.001"/>
+  <testcase name="Titan vents after either heavy attack and exposes only itself" classname="com.example.starborn.feature.combat.EnemySupportDecisionTest" time="0.002"/>
+  <testcase name="welder repairs living squad members not opponents and respects finite supplies" classname="com.example.starborn.feature.combat.EnemySupportDecisionTest" time="0.002"/>
+  <testcase name="authored jammed status blocks enemy support skills" classname="com.example.starborn.feature.combat.EnemySupportDecisionTest" time="0.001"/>
+  <testcase name="protected wounded enemy attacks instead of refreshing basic defense" classname="com.example.starborn.feature.combat.EnemySupportDecisionTest" time="0.003"/>
+  <testcase name="support AI does not waste repair at full health" classname="com.example.starborn.feature.combat.EnemySupportDecisionTest" time="0.001"/>
+  <testcase name="final boss opens and recovers with a non damaging setup action" classname="com.example.starborn.feature.combat.EnemySupportDecisionTest" time="0.002"/>
+  <testcase name="radiator exposure reduces physical defense with identical damage rolls" classname="com.example.starborn.feature.combat.EnemySupportDecisionTest" time="0.001"/>
+  <testcase name="party ration ignores single selection heals living allies and consumes once" classname="com.example.starborn.feature.combat.EnemySupportDecisionTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

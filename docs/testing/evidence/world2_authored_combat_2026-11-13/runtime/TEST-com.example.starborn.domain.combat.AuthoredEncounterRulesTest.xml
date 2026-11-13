@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.domain.combat.AuthoredEncounterRulesTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-13T12:15:03.157Z" hostname="V52076.vims.edu" time="0.167">
+  <properties/>
+  <testcase name="everyDestructionOrderCancelsTheRightWeaponWithoutDestroyingTheBody" classname="com.example.starborn.domain.combat.AuthoredEncounterRulesTest" time="0.016"/>
+  <testcase name="disablingOrBreakingAWeaponCancelsItsQueuedAction" classname="com.example.starborn.domain.combat.AuthoredEncounterRulesTest" time="0.005"/>
+  <testcase name="onlyOptedInPreparationsAreCutByAnOrdinaryDamagingHit" classname="com.example.starborn.domain.combat.AuthoredEncounterRulesTest" time="0.0"/>
+  <testcase name="oldVictoriesMapOnlyWithinTheirOriginalWorldTwoRoom" classname="com.example.starborn.domain.combat.AuthoredEncounterRulesTest" time="0.001"/>
+  <testcase name="reservesCountStartingEscortsAndDoNotRecycleDeadReserveSlots" classname="com.example.starborn.domain.combat.AuthoredEncounterRulesTest" time="0.0"/>
+  <testcase name="phaseIsCommittedOnceAndDropsTheDeclaredDefenses" classname="com.example.starborn.domain.combat.AuthoredEncounterRulesTest" time="0.0"/>
+  <testcase name="losingTheDeclaredTargetCancelsRatherThanRetargetingSomeoneElse" classname="com.example.starborn.domain.combat.AuthoredEncounterRulesTest" time="0.0"/>
+  <testcase name="preparationCountersAndPhaseStateRoundTripWithoutAClockOrCoroutine" classname="com.example.starborn.domain.combat.AuthoredEncounterRulesTest" time="0.142"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

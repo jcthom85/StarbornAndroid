@@ -1,0 +1,5 @@
+prototype_titan: Rect.fromLTRB(252.0, 12.0, 422.0, 56.0)
+prototype_missile: Rect.fromLTRB(426.0, 12.0, 597.0, 56.0)
+prototype_cutter: Rect.fromLTRB(601.0, 12.0, 772.0, 56.0)
+prototype_anchor: Rect.fromLTRB(252.0, 60.0, 510.0, 104.0)
+prototype_projector: Rect.fromLTRB(514.0, 60.0, 772.0, 104.0)

@@ -1,0 +1,7 @@
+room=launch_checkpoint enemies=[dominion_dampener, resonance_buoy] seed=17 damageEvents=12 xp=80 ap=0 credits=40 persistedHp={nova=102} knockedOut=[] usedItems={}
+room=launch_bay enemies=[the_iron_warden] seed=17 damageEvents=10 xp=350 ap=0 credits=225 persistedHp={nova=102} knockedOut=[] usedItems={}
+room=sector9_canopy enemy=stalker_vine seed=17 outcome=retreat; enemy remains undefeated
+room=sector9_stream_cave_depths enemies=[moss_borer, moss_borer] seed=17 damageEvents=15 xp=80 ap=0 credits=20 persistedHp={nova=97, zeke=150} knockedOut=[] usedItems={}
+room=sector9_canopy_ridge enemies=[the_beast] seed=17 damageEvents=22 xp=500 ap=0 credits=250 persistedHp={nova=120, zeke=150, orion=95} knockedOut=[] usedItems={}
+All five main quests complete; World 3 arrival and slot 8 reload verified.
+Assistance: []

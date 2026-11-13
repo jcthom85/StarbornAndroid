@@ -1,0 +1,62 @@
+{
+  "tests": 60,
+  "failures": 0,
+  "suites": [
+    {
+      "name": "com.example.starborn.desktop.CharlesFavorPublicTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-13T00:54:18.911Z"
+    },
+    {
+      "name": "com.example.starborn.desktop.World56WalkthroughReachabilityTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-13T00:54:37.910Z"
+    },
+    {
+      "name": "com.example.starborn.desktop.World5NavigationPublicTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-13T00:54:38.388Z"
+    },
+    {
+      "name": "com.example.starborn.desktop.World5PresentationAssetAuditTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-13T00:54:40.671Z"
+    },
+    {
+      "name": "com.example.starborn.desktop.Worlds456PublicInteractionTest",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-13T00:54:41.723Z"
+    },
+    {
+      "name": "com.example.starborn.data.DataIntegrityTest",
+      "tests": "30",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-13T00:53:51.016Z"
+    },
+    {
+      "name": "com.example.starborn.data.assets.CinematicMusicIntegrityTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-13T00:53:51.636Z"
+    },
+    {
+      "name": "com.example.starborn.feature.exploration.WorldFiveDiscoverabilityStateTest",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-13T00:53:51.870Z"
+    }
+  ]
+}

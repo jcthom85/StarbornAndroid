@@ -48,14 +48,37 @@ internal fun DesktopBattleFormation(
     lungeActor: String?, lungeToken: Long, missActor: String?, missToken: Long,
     battleHeight: androidx.compose.ui.unit.Dp = 800.dp, opposingCount: Int = 0,
     choosingId: String? = null, executingId: String? = null,
+    authoredState: com.example.starborn.domain.combat.CombatState? = null,
     enemySize: (String) -> String = { "medium" },
     enemyWidth: (String) -> Float = { 1f },
+    composite: (String) -> com.example.starborn.domain.model.CompositePart? = { null },
     onHover: (String?) -> Unit = {},
     onSelect: (String) -> Unit
 ) {
     val settings by services.userSettingsStore.settings.collectAsState(initial = UserSettings())
     BoxWithConstraints(modifier) {
-        val placements = planBattleFormation(
+        val parts = members.associate { it.combatant.id to composite(it.combatant.id) }
+        val isComposite = enemySide && parts.isNotEmpty() && parts.values.all { it != null } &&
+            parts.values.map { it?.group }.distinct().size == 1
+        val hud = if (isComposite) 112f else 0f
+        if (isComposite) Box(Modifier.fillMaxWidth().align(Alignment.TopCenter)) {
+            com.example.starborn.ui.combat.LinkedEnemyTargets(
+                com.example.starborn.domain.combat.CombatState(emptyList(), 0, members.associateBy { it.combatant.id }),
+                members.map { it.combatant.id }, setOfNotNull(selectedId), onSelect)
+        }
+        val placements = if (isComposite) {
+            val layouts = parts.values.filterNotNull()
+            val extentX = layouts.maxOf { kotlin.math.abs(it.offsetX) + it.widthScale / 2f }.coerceAtLeast(.5f) * 2
+            val extentY = layouts.maxOf { kotlin.math.abs(it.offsetY) + it.heightScale / 2f }.coerceAtLeast(.5f) * 2
+            val unit = minOf(maxWidth.value / extentX, (maxHeight.value - hud).coerceAtLeast(1f) / extentY) * .90f
+            members.map { member ->
+                val part = requireNotNull(parts[member.combatant.id])
+                FormationPlacement(member.combatant.id,
+                    maxWidth.value / 2 + unit * (part.offsetX - part.widthScale / 2),
+                    hud + (maxHeight.value - hud) / 2 + unit * (part.offsetY - part.heightScale / 2),
+                    unit * part.widthScale, unit * part.heightScale, 0f)
+            }
+        } else planBattleFormation(
             members.map { FormationMember(it.combatant.id, enemySize(it.combatant.id), enemyWidth(it.combatant.id)) },
             maxWidth.value, maxHeight.value, enemySide)
         placements.forEach { placement ->
@@ -69,6 +92,7 @@ internal fun DesktopBattleFormation(
                         if (lungeActor == id) lungeToken else 0L, if (missActor == id) missToken else 0L,
                         cues = cues.filter { it.targetId == id }, lungeStyle = lungeStyle, settings = settings,
                         onHover = onHover, onClick = { onSelect(id) },
+                        showStatus = !isComposite, authoredState = authoredState,
                         actionState = if (enemySide) null else combatActionState(member.isAlive, id == executingId, id == choosingId, (meters[id] ?: 0f) >= .999f))
                 }
             }
@@ -83,7 +107,8 @@ private fun DesktopBattleFigure(
     selected: Boolean, validTarget: Boolean, targeting: Boolean, meter: Float?, intent: String?,
     feedback: String?, figureHeight: androidx.compose.ui.unit.Dp, cardWidth: androidx.compose.ui.unit.Dp, lungeToken: Long, missToken: Long,
     cues: List<DesktopCombatCue>, lungeStyle: AttackLungeStyle, settings: UserSettings,
-    onHover: (String?) -> Unit, onClick: () -> Unit, actionState: String?
+    onHover: (String?) -> Unit, onClick: () -> Unit, actionState: String?, showStatus: Boolean = true,
+    authoredState: com.example.starborn.domain.combat.CombatState? = null
 ) {
     val motion = remember { Animatable(0f) }
     val recoil = remember { Animatable(0f) }
@@ -129,7 +154,7 @@ private fun DesktopBattleFigure(
     }
     val status: @Composable () -> Unit = {
 Column(Modifier.heightIn(min = if (enemySide) 56.dp else 68.dp).fillMaxWidth().padding(horizontal = 4.dp), verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.Top), horizontalAlignment = Alignment.CenterHorizontally) {
-            com.example.starborn.ui.menu.ReadableEnemyName(state.combatant.name, baseSize = 11)
+            com.example.starborn.ui.menu.ReadableEnemyName(state.combatant.name + if (!enemySide && !state.isAlive) " · KO" else "", baseSize = 11)
             LinearProgressIndicator(progress = { readiness }, modifier = Modifier.fillMaxWidth().height(4.dp), color = Color(0xFF2F9BE8), trackColor = Color(0xCC070B12))
             LinearProgressIndicator(progress = { hp.coerceIn(0f, 1f) }, modifier = Modifier.fillMaxWidth().height(4.dp), color = Color(0xFFFF4D59), trackColor = Color(0xCC070B12))
             if (enemySide) Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -223,7 +248,7 @@ Column(Modifier.heightIn(min = if (enemySide) 56.dp else 68.dp).fillMaxWidth().p
                     scaleY = if (isBroken) .96f - (if (animate) .01f * daze else 0f) else scaleX
                     alpha = lifeAlpha * if (targeting && !validTarget) .45f else 1f
                 }) {
-                Image(spritePainter, state.combatant.name, Modifier.matchParentSize(),
+                Image(spritePainter, state.combatant.name + if (!enemySide && !state.isAlive) ", knocked out" else "", Modifier.matchParentSize(),
                     alignment = Alignment.BottomCenter, contentScale = ContentScale.Fit)
                 if (isBroken) com.example.starborn.shared.combat.StabilityBrokenField(
                     Modifier.matchParentSize().testTag("combat-broken-field-${state.combatant.id}"), flashesDisabled = settings.disableFlashes)
@@ -264,7 +289,9 @@ Column(Modifier.heightIn(min = if (enemySide) 56.dp else 68.dp).fillMaxWidth().p
                         style = MaterialTheme.typography.titleMedium)
                 }
             }
+            com.example.starborn.ui.combat.AuthoredTargetMarker(authoredState, state.combatant.id,
+                Modifier.align(Alignment.Center).size(figureHeight))
         }
-        status()
+        if (showStatus) status()
     }
 }

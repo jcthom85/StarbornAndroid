@@ -2517,7 +2517,7 @@
   {
     "id": "analyst_charles_default_talk",
     "speaker": "Charles",
-    "text": "Don't tell me—let me guess: you're trying to breach the Executive Core on a standard hyper-drive budget without optimizing your salvage loop margins? [Charles tilts his illuminated slate, gesturing to an empty plush chair.] Sit down, Nova. If you're going to dismantle the Dominion, at least do it with sound operational architecture.",
+    "text": "Keep your voice down near that gate. [Charles angles his slate away from the customs scanner, leaving the public departure board visible.] I can help you read the station's schedules. Passenger records and access codes stay sealed. What do you need?",
     "options": [
       {
         "id": "charles_opt_mmo",
@@ -2542,14 +2542,20 @@
       {
         "id": "charles_opt_favor_offer",
         "text": "Could your analytics help tune my tactical heuristics?",
-        "condition": "milestone_not_set:ms_charles_analytics_favor_asked",
+        "condition": "milestone_not_set:ms_charles_analytics_favor_asked,milestone_not_set:ms_charles_analytics_favor_completed",
         "next": "charles_favor_offer"
       },
       {
         "id": "charles_opt_favor_turnin",
         "text": "I've brought the circuit boards and focusing lens for your network tap.",
-        "condition": "milestone:ms_charles_analytics_favor_asked,milestone_not_set:ms_charles_analytics_favor_completed,item:circuit_board*2,item:focusing_lens",
+        "condition": "milestone:ms_charles_analytics_favor_asked,milestone:ms_charles_public_queue_verified,milestone_not_set:ms_charles_analytics_favor_completed,item:circuit_board*2,item:focusing_lens",
         "next": "charles_favor_turnin"
+      },
+      {
+        "id": "charles_opt_favor_status",
+        "text": "What do you need me to check at the gate?",
+        "condition": "milestone:ms_charles_analytics_favor_asked,milestone_not_set:ms_charles_public_queue_verified,milestone_not_set:ms_charles_analytics_favor_completed",
+        "next": "charles_favor_status"
       },
       {
         "id": "analyst_charles_default_talk_leave",
@@ -2578,22 +2584,30 @@
   {
     "id": "charles_ethics_reply",
     "speaker": "Charles",
-    "text": "Because at the end of the day, having an MBA or a computer science degree doesn't mean a thing if you don't use it to be a good person. The Dominion turns people into line items. If my algorithms can help a crew like the Astra break their grip and give people their freedom back, that's the only return on investment I care about.",
+    "text": "I used to supply throughput forecasts to Thorne's shipping contractors. They called every staff delay unavoidable. I watched executive shuttles leave half-empty while staff transports sat in the queue. [Charles taps the public departure board.] Now Vale's compliance notices say those same workers can't leave. I want them off this ring. That doesn't mean I hand a stranger their names or a key to every door. Check my figures before you ask me to trust yours.",
     "next": "analyst_charles_default_talk"
   },
   {
     "id": "charles_favor_offer",
     "speaker": "Charles",
-    "text": "I can compile a custom tactical optimization heuristic for your suit computer, but my local node is throttled by station firewalls. Bring me 2 Circuit Boards to bypass the local packet switch and 1 Focusing Lens to align the quantum transmitter. Once I hook into the central concourse pipeline, I'll compile a heuristic slate that will redline your focus and critical timing.",
+    "text": "I can build a tactical heuristic for your suit, but I won't connect it to a feed I haven't checked. Compare the advertised waits on my slate with the public queue at the biometric gates. Departure times and berth numbers only; leave passenger records alone. Then bring me two Circuit Boards and one Focusing Lens for an isolated tap. Standard salvage is fine, including anything you've already carried here. If the numbers hold, we both get something useful.",
     "trigger": "set_milestone:ms_charles_analytics_favor_asked",
+    "next": "analyst_charles_default_talk",
+    "condition": "milestone_not_set:ms_charles_analytics_favor_asked,milestone_not_set:ms_charles_analytics_favor_completed"
+  },
+  {
+    "id": "charles_favor_status",
+    "speaker": "Charles",
+    "text": "The biometric gates have a public queue display. Compare its actual departures with the advertised waits on my slate. I need to know whether the delays come from a fault or from somebody holding the berths. After that, two Circuit Boards and one Focusing Lens finish the tap. There's no need to hunt down fresh parts if you already have them.",
     "next": "analyst_charles_default_talk"
   },
   {
     "id": "charles_favor_turnin",
     "speaker": "Charles",
-    "text": "[Charles snaps the focusing lens into his custom bus and solders the circuit boards in place with surgical accuracy. A cascade of green diagnostic metrics flows across his displays.] Feed linked. Latency reduced to zero point two milliseconds. [He hands you an encrypted, glowing tactical slate.] Take this, Nova—the Venture Heuristic Slate. It'll tighten your focus, expand your situational bandwidth, and make sure your strikes hit where they hurt most. Now go tear their system apart.",
+    "text": "[Charles fits the lens into an isolated transmitter and seats both circuit boards. The public departure timings on his slate settle into a steady rhythm.] Your comparison caught the priority holds my model missed. This feed is useful now—and nobody's passenger file had to leave the gate. [He disconnects a small tactical slate and offers it to Nova.] The Venture Heuristic Slate. It'll help you read openings and place your shots. That's the extent of my network access. The rest is up to you.",
     "trigger": "take_item:circuit_board*2,take_item:focusing_lens*1,give_item:charles_heuristic_slate,give_xp:400,give_credits:500,set_milestone:ms_charles_analytics_favor_completed",
-    "next": "analyst_charles_default_talk"
+    "next": "analyst_charles_default_talk",
+    "condition": "milestone:ms_charles_analytics_favor_asked,milestone:ms_charles_public_queue_verified,milestone_not_set:ms_charles_analytics_favor_completed,item:circuit_board*2,item:focusing_lens"
   },
   {
     "id": "charlie_default_talk",

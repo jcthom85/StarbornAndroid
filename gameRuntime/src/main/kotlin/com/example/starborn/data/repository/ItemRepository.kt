@@ -13,6 +13,8 @@ class ItemRepository(
     private val whitespaceRegex = Regex("\\s+")
     private val punctuationRegex = Regex("[^a-z0-9_]")
 
+    // Startup can reload on a worker while a session reads the catalog.
+    @Synchronized
     override fun load() {
         val items = dataSource.loadItems()
         itemsById.clear()
@@ -26,8 +28,10 @@ class ItemRepository(
         }
     }
 
+    @Synchronized
     fun allItems(): List<Item> = itemsById.values.toList()
 
+    @Synchronized
     override fun findItem(idOrAlias: String): Item? {
         val normalized = idOrAlias.trim().lowercase(Locale.getDefault())
         if (normalized.isEmpty()) return null

@@ -1,0 +1,27 @@
+{
+  "provider": "ElevenLabs Music API",
+  "endpoint": "https://api.elevenlabs.io/v1/music",
+  "documentation": "https://elevenlabs.io/docs/api-reference/music/compose",
+  "request": {
+    "prompt": "Instrumental science-fiction RPG exploration music: restrained orbital espionage and uneasy human resolve. 80 BPM, C minor, steady 4/4, a 96-second repeating 32-bar underscore. Begin already inside the quiet pulse, with no cinematic intro. Warm analog sequencer eighth-notes, rounded low synth bass, light dry electronic ticks and soft brushed metallic percussion. Narrow cold radar tones answer occasional muted electric-piano chords; a subtle descending chromatic C-B-B-flat-A figure suggests surveillance without dominating. One brief warmer midrange string or Rhodes phrase hints at the people still trapped aboard this luxurious corporate station, then settles back into unresolved watchfulness. Vintage tape warmth, controlled bass, uncluttered mids so dialogue and interface sounds remain clear. Dangerous and suspicious, never cozy, triumphant or serene. Maintain moderate intensity and small arrangement changes for repeated long exploration sessions; no drops, alarm effects, loud risers, battle drums, huge crescendos, solos, vocals or choir. Finish on the same harmonic texture and rhythmic groove as the opening, with no final cadence and no fade to silence, suitable for a game loop.",
+    "music_length_ms": 96000,
+    "model_id": "music_v2",
+    "force_instrumental": true
+  },
+  "output_format": "mp3_44100_128",
+  "output": "app/src/main/res/raw/music_w5_orbital_intrigue.mp3",
+  "sha256": "81f914117cbd515cc375c913dbb8dd531c3199bc45362cc4c75c210dc1ac2357",
+  "bytes": 1536461,
+  "review": "Generated with the approved tense espionage direction; decoded and measured successfully. Subjective listening and loop audition remain for playtesting.",
+  "decoded_validation": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 4234752,
+    "duration_seconds": 96.02612244897959,
+    "rms_dbfs": -17.13529103294035,
+    "peak_dbfs": -1.2414086196602072,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -26.325048139842444,
+    "last_second_rms_dbfs": -18.20498366246681
+  }
+}

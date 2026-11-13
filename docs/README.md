@@ -25,6 +25,8 @@ Use document roles rather than one hierarchy for every question:
 
 ## Current work
 
+November 12: [Enemy and encounter redesign candidate](design/enemy_encounters/README.md) proposes world-specific rosters, authored formations, distinct elite identities and varied complete boss encounters. It accounts for all 131 current campaign encounter sources and includes progression/save contracts and an art manifest. The high-level direction is owner-approved; the detailed packet is proposed design, not implemented combat or accepted balance.
+
 World 2 playtesting: use the [current completionist walkthrough](playtest/walkthroughs/WORLD_2_COMPLETIONIST_WALKTHROUGH.md) or its [downloadable PDF](playtest_guides/STARBORN_PLAYTEST_GUIDE_WORLD_2.pdf), refreshed October 29 for version 1.3.100 (184). The guide documents known limitations separately from verified routes.
 
 October 29: [World 2 readiness assessment](testing/WORLD2_READINESS_2026-10-29.md) compares the current chapter with World 1's functional standards, records bounded fixes and earned-route evidence, and provides a [focused phone checklist](playtest/WORLD_2_FOCUSED_CHECKLIST.md). Phone acceptance and the shared Rapid Capacitor wording decision remain open.

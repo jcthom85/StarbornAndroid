@@ -5,7 +5,7 @@ import com.example.starborn.feature.mainmenu.DebugScenarioCatalog
 import com.example.starborn.feature.mainmenu.DebugScenarioCategory
 import com.example.starborn.feature.mainmenu.DebugScenarioDestination
 
-enum class DebugFixture { OPENING, CRYO_EXACT, CRYO_MISSING, ARCADE_READY, FISHING, COOKING, TINKERING, SHOP, CAMPAIGN_CHECKPOINT }
+enum class DebugFixture { OPENING, CRYO_EXACT, CRYO_MISSING, ARCADE_READY, FISHING, COOKING, TINKERING, SHOP, CAMPAIGN_CHECKPOINT, COMBAT_PROTOTYPE }
 
 data class DebugTestProcedure(
     val fixture: DebugFixture,
@@ -36,7 +36,19 @@ object DebugArcadeCabinets {
 
 /** Only rebuilt fixtures belong here. Legacy shortcuts remain visible in a separate migration list. */
 object DebugTestRegistry {
-    val scenarios = listOf(
+    private val encounterPrototypes = listOf("titan" to "Titan / Four Destructible Systems", "reserves" to "Administrator / Finite Reserves").map { (id, title) ->
+        test("combat_prototype_$id", title, DebugScenarioCategory.SYSTEM,
+            DebugTestProcedure(DebugFixture.COMBAT_PROTOTYPE,
+                "Isolated Test Session aboard the Astra; four crew, level 12, basic weapons, recovery stock and temporary enemy art.",
+                listOf("Use Start $title in the room's lower controls.",
+                    "Read the preparation warning. Guard, interrupt, or select a weapon while its attack is charging.",
+                    "Inspect every target; finish or retreat and repeat to compare target orders."),
+                listOf("Weapon destruction cancels its pending attack; parts have no independent turns.",
+                    "Reserve deployment creates real targets, respects its finite pool and never pays their individual drops."),
+                setOf("system_behavior:authored_encounters"),
+                "Synthetic mechanics workbench with temporary art. Not campaign balance or final asset acceptance.", targetId=id), world="The Astra")
+    }
+    val scenarios = encounterPrototypes + listOf(
         test("campaign_w1_mq01", "Opening / Wake Up Call", DebugScenarioCategory.STORY,
             DebugTestProcedure(DebugFixture.OPENING,
                 "Normal New Game in Nova's bunk; Nova alone, normal starter progression, tutorials enabled by game settings.",

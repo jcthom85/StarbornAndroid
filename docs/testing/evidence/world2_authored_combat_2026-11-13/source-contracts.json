@@ -1,0 +1,120 @@
+{
+  "enemies": {
+    "before_sha256": "7e23e8a1b80d49669b842bcc32795b70e95645342b40c08612f6f16cad14791d",
+    "after_sha256": "99b1ff094ef9d5a0d58e408f5d85b5b836fcf80ed93edd7e485ccb8fe3bb7177",
+    "added": [
+      "mist_glider",
+      "moss_borer"
+    ],
+    "removed": [],
+    "changed_fields": {
+      "shard_hound": [
+        "abilities",
+        "authored",
+        "description"
+      ],
+      "spore_spitter": [
+        "abilities",
+        "authored",
+        "description"
+      ],
+      "ruin_guardian": [
+        "abilities",
+        "authored",
+        "description"
+      ],
+      "razor_vine": [
+        "abilities",
+        "authored",
+        "description"
+      ],
+      "stalker_vine": [
+        "abilities",
+        "authored",
+        "description"
+      ],
+      "sentinel_orb": [
+        "abilities",
+        "authored",
+        "description"
+      ],
+      "the_beast": [
+        "abilities",
+        "authored",
+        "description",
+        "flavor"
+      ]
+    }
+  },
+  "skills": {
+    "before_sha256": "a2c25071caf4355267064c079becb4f3ae44a67508fadd1a4c9e4fa72e2f11fe",
+    "after_sha256": "02e127292504b401c19f89bd42492784ece70cf26aa2401e4b9a9a0b26fd2f78",
+    "added": [
+      "beast_frenzy_claw",
+      "beast_frenzy_pounce",
+      "beast_frenzy_roar",
+      "beast_hunt_claw",
+      "sector9_carapace",
+      "sector9_coil",
+      "sector9_dive",
+      "sector9_exhale",
+      "sector9_exposed_recovery",
+      "sector9_mend",
+      "sector9_mist",
+      "sector9_orb_beam",
+      "sector9_recover",
+      "sector9_shelter",
+      "sector9_spore",
+      "sector9_ward"
+    ],
+    "removed": [],
+    "changed_fields": {}
+  },
+  "statuses": {
+    "before_sha256": "a42ecf6bc1c0daf55a4510e15a80820d08380b7a6f5dc59ef6cb2cd28d51b07c",
+    "after_sha256": "fdf5981d268881a3187f0b67f93d59ea753ef4c14b9cad34f4101ddad3e5b1c3",
+    "added": [
+      "sector9_carapace",
+      "sector9_exposed",
+      "sector9_root_shelter"
+    ],
+    "removed": [],
+    "changed_fields": {}
+  },
+  "rooms": {
+    "before_sha256": "eb540ae416d920e3b3ffe29538ad3caa3b21fe32ee8a65f49804fafbcc8c80ff",
+    "after_sha256": "aac38c5ec51a62ec417e548cfbd8a703f2c1c3b910d0352576e32844a1abc414",
+    "added": [],
+    "removed": [],
+    "changed_fields": {
+      "sector9_stream_pools": [
+        "description",
+        "enemies"
+      ],
+      "sector9_stream_cave_depths": [
+        "blocked_directions",
+        "description",
+        "enemies",
+        "enemy_parties"
+      ],
+      "sector9_hall_acoustics_lab": [
+        "description",
+        "enemies",
+        "enemy_instances",
+        "enemy_parties"
+      ]
+    }
+  },
+  "events": {
+    "before_sha256": "d53bf2db7ccc9659402ffbe8a9e2ccc2cbaf430d88172d983b7d0f8ccc59eab9",
+    "after_sha256": "14699679e0315a590e9b941c19b3fbbdb7e667f464a28507da11dc45118b70ed",
+    "added": [],
+    "removed": [],
+    "changed_fields": {
+      "w2_mq02_clear_canopy": [
+        "description",
+        "trigger"
+      ]
+    }
+  }
+}

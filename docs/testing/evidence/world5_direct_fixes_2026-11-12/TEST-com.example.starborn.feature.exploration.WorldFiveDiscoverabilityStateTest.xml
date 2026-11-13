@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.starborn.feature.exploration.WorldFiveDiscoverabilityStateTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-13T00:38:07.043Z" hostname="V52076.vims.edu" time="0.182">
+  <properties/>
+  <testcase name="quest terminology names authored world five rooms and actions" classname="com.example.starborn.feature.exploration.WorldFiveDiscoverabilityStateTest" time="0.006"/>
+  <testcase name="deep station references survive independent milestones and event task retirement" classname="com.example.starborn.feature.exploration.WorldFiveDiscoverabilityStateTest" time="0.034"/>
+  <testcase name="firewall partial saves retain usable references and completed tasks prevent replay" classname="com.example.starborn.feature.exploration.WorldFiveDiscoverabilityStateTest" time="0.017"/>
+  <testcase name="graviton puzzle stays discoverable across independent anchor progress and retires when solved" classname="com.example.starborn.feature.exploration.WorldFiveDiscoverabilityStateTest" time="0.004"/>
+  <testcase name="world five completion events exclusively own successor handoffs" classname="com.example.starborn.feature.exploration.WorldFiveDiscoverabilityStateTest" time="0.009"/>
+  <testcase name="concourse mirror and security references respect independent action gates and event history" classname="com.example.starborn.feature.exploration.WorldFiveDiscoverabilityStateTest" time="0.044"/>
+  <testcase name="remaining orbital rooms preserve actionable prose and retire completed events after restore" classname="com.example.starborn.feature.exploration.WorldFiveDiscoverabilityStateTest" time="0.025"/>
+  <testcase name="dock and gallery retain usable references across independent pressure and quest progress" classname="com.example.starborn.feature.exploration.WorldFiveDiscoverabilityStateTest" time="0.043"/>
+  <system-out><![CDATA[DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=void_clip qty=1
+DEBUG: give_item action id=void_clip qty=1
+DEBUG: give_item action id=void_clip qty=1
+DEBUG: give_item action id=void_clip qty=1
+DEBUG: give_item action id=void_clip qty=1
+DEBUG: give_item action id=void_clip qty=1
+DEBUG: give_item action id=void_clip qty=1
+DEBUG: give_item action id=void_clip qty=1
+DEBUG: give_item action id=void_clip qty=1
+DEBUG: give_item action id=void_clip qty=1
+DEBUG: give_item action id=void_clip qty=1
+DEBUG: give_item action id=void_clip qty=1
+DEBUG: give_item action id=void_clip qty=1
+DEBUG: give_item action id=void_clip qty=1
+DEBUG: give_item action id=void_clip qty=1
+DEBUG: give_item action id=void_clip qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=vhs_tape_09 qty=1
+DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=sysadmin_keycard qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+DEBUG: give_item action id=mag_boots qty=1
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

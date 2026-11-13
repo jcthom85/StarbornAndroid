@@ -206,6 +206,21 @@
       ]
     },
     {
+      "id": "music_w5_orbital_intrigue",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1400,
+      "fade_out_ms": 1200,
+      "gain": 0.8,
+      "tags": [
+        "world_5",
+        "explore",
+        "stealth",
+        "electronica",
+        "orbital"
+      ]
+    },
+    {
       "id": "music_w5_void_explore",
       "type": "music",
       "loop": true,
