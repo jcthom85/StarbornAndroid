@@ -5,6 +5,13 @@ import com.example.starborn.domain.model.Item
 
 /** Player-facing wording shared by touch and desktop combat. */
 object CombatClarity {
+    fun ringStatusLabel(id: String): String? = when (id) {
+        "ring_guard" -> "Mirror Guard"
+        "ring_frequency_shock" -> "Weak to Burn"
+        "ring_frequency_burn" -> "Weak to Shock"
+        else -> null
+    }
+
     fun statusName(id: String): String = if (id.startsWith("buff_")) {
         bonus(id.removePrefix("buff_"), 0).substringBefore(" +0")
     } else id.replace('_', ' ').trim().replaceFirstChar { it.uppercaseChar() }

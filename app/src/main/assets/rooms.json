@@ -6258,9 +6258,7 @@
     "description": "Basalt stones rise from the lava channel in a readable flare rhythm. A roaring slag cataract blocks the northern crossing beside a cryogenic manifold valve.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "magma_drone"
-    ],
+    "enemies": [],
     "connections": {
       "south": "foundry_slag_river",
       "north": "foundry_subterranean_smelter"
@@ -6313,9 +6311,7 @@
         "condition_unmet_message": "The flares leave a narrow crossing window. Secure the Astra at Obsidian Shelf before the crew attempts the crossing."
       }
     ],
-    "enemy_flavor": {
-      "magma_drone": "A magma drone darts between flare bursts, using the crossing itself as a weapon."
-    }
+    "enemy_parties": []
   },
   {
     "id": "foundry_subterranean_smelter",
@@ -6557,16 +6553,11 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "slag_golem",
-      "magma_drone"
+      "slag_golem"
     ],
     "enemy_parties": [
       [
         "slag_golem"
-      ],
-      [
-        "slag_golem",
-        "magma_drone"
       ]
     ],
     "connections": {
@@ -6675,9 +6666,41 @@
         "condition_unmet_message": "A heat-scorched salvage compartment inside a ruined loader mech."
       }
     ],
-    "enemy_flavor": {
-      "slag_golem": "A slag golem drags itself out of the intake channel, armor still molten at the seams."
-    }
+    "enemy_instances": [
+      {
+        "enemy_id": "slag_golem",
+        "occurrence": 1,
+        "override_drops": [
+          {
+            "id": "scrap_metal",
+            "chance": 0.8
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.35
+          },
+          {
+            "id": "scrap_metal",
+            "chance": 0.8
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.35
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.4
+          },
+          {
+            "id": "wiring_bundle",
+            "chance": 0.45
+          }
+        ],
+        "xp_reward": 560,
+        "credit_reward": 320,
+        "ap_reward": 0
+      }
+    ]
   },
   {
     "id": "foundry_intake_overlook",
@@ -6720,7 +6743,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "slag_golem"
+      "quench_mite"
     ],
     "connections": {
       "east": "foundry_decon_chamber",
@@ -6780,6 +6803,30 @@
         ],
         "condition_unmet_message": "The valve needs the missing engineer's coolant map."
       }
+    ],
+    "enemy_parties": [
+      [
+        "quench_mite"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "quench_mite",
+        "occurrence": 1,
+        "override_drops": [
+          {
+            "id": "scrap_metal",
+            "chance": 0.8
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.35
+          }
+        ],
+        "xp_reward": 220,
+        "credit_reward": 130,
+        "ap_reward": 0
+      }
     ]
   },
   {
@@ -6815,9 +6862,7 @@
     "description": "Chemical mist hangs in a narrow decon chamber. The decon cycle waits behind a sealed panel; the walls are too clean, the drains too large, and the emergency shower is bolted shut from the wrong side.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "slag_golem"
-    ],
+    "enemies": [],
     "connections": {
       "west": "foundry_service_airlock",
       "east": "foundry_pipe_gallery"
@@ -6833,7 +6878,8 @@
         "type": "generic",
         "condition_unmet_message": "The decon cycle is calibrated for equipment, not people. That says enough about who was expected to survive it."
       }
-    ]
+    ],
+    "enemy_parties": []
   },
   {
     "id": "foundry_conveyor_belt",
@@ -6846,16 +6892,12 @@
     "items": [],
     "enemies": [
       "welder_bot",
-      "magma_drone",
-      "phantom_prototype"
+      "magma_drone"
     ],
     "enemy_parties": [
       [
         "welder_bot",
         "magma_drone"
-      ],
-      [
-        "phantom_prototype"
       ]
     ],
     "connections": {
@@ -6932,9 +6974,49 @@
         "condition_unmet_message": "The relay needs conscious units before it can accept volunteers."
       }
     ],
-    "enemy_flavor": {
-      "phantom_prototype": "A proto-Gh0st unit blinks into view with an energy blade already raised."
-    }
+    "enemy_instances": [
+      {
+        "enemy_id": "welder_bot",
+        "occurrence": 1,
+        "override_drops": [
+          {
+            "id": "scrap_metal",
+            "chance": 0.55
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.25
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.4
+          },
+          {
+            "id": "wiring_bundle",
+            "chance": 0.45
+          },
+          {
+            "id": "wiring_bundle",
+            "chance": 0.45
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.35
+          }
+        ],
+        "xp_reward": 240,
+        "credit_reward": 118,
+        "ap_reward": 0
+      },
+      {
+        "enemy_id": "magma_drone",
+        "occurrence": 1,
+        "override_drops": [],
+        "xp_reward": 240,
+        "credit_reward": 117,
+        "ap_reward": 0
+      }
+    ]
   },
   {
     "id": "foundry_belt_service_walk",
@@ -6945,9 +7027,7 @@
     "description": "A narrow service walk runs above the conveyor feed. Warning lamps blink in strict sequence, spelling out when the crushers fall and when a person can move. The tower steps continue north to Timing Tower; the conveyor floor is back to the south.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "welder_bot"
-    ],
+    "enemies": [],
     "connections": {
       "south": "foundry_conveyor_belt",
       "north": "foundry_conveyor_belt_scale_01"
@@ -6966,7 +7046,8 @@
         "action_event": "w4_mq18_navigate_conveyors",
         "condition_unmet_message": "The warning lamps turn the conveyor into a readable, dangerous rhythm."
       }
-    ]
+    ],
+    "enemy_parties": []
   },
   {
     "id": "foundry_reject_bay",
@@ -7039,7 +7120,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "flame_trooper"
+      "flame_trooper",
+      "magnet_sifter"
     ],
     "connections": {
       "north": "foundry_conditioning_observation",
@@ -7074,6 +7156,39 @@
         "type": "generic",
         "action_event": "w4_mq18_defeat_prototypes",
         "condition_unmet_message": "Production records list Phantom units as batches, not people."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "flame_trooper",
+        "magnet_sifter"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "flame_trooper",
+        "occurrence": 1,
+        "override_drops": [
+          {
+            "id": "medkit",
+            "chance": 0.2
+          },
+          {
+            "id": "battery_pack",
+            "chance": 0.35
+          }
+        ],
+        "xp_reward": 95,
+        "credit_reward": 55,
+        "ap_reward": 0
+      },
+      {
+        "enemy_id": "magnet_sifter",
+        "occurrence": 1,
+        "override_drops": [],
+        "xp_reward": 95,
+        "credit_reward": 55,
+        "ap_reward": 0
       }
     ]
   },
@@ -7351,6 +7466,47 @@
         "condition_unmet_message": "The Phase-Cutter Arrays are still secured. Take the Anvil and defeat the Titan Walker before removing them.",
         "completed_inspection_message": "The array rack is empty. The Phase-Cutter Arrays have been secured for the Astra."
       }
+    ],
+    "enemy_parties": [
+      [
+        "flame_trooper",
+        "phantom_prototype"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "flame_trooper",
+        "occurrence": 1,
+        "override_drops": [
+          {
+            "id": "medkit",
+            "chance": 0.2
+          },
+          {
+            "id": "battery_pack",
+            "chance": 0.35
+          },
+          {
+            "id": "wiring_bundle",
+            "chance": 0.45
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.35
+          }
+        ],
+        "xp_reward": 210,
+        "credit_reward": 115,
+        "ap_reward": 0
+      },
+      {
+        "enemy_id": "phantom_prototype",
+        "occurrence": 1,
+        "override_drops": [],
+        "xp_reward": 210,
+        "credit_reward": 115,
+        "ap_reward": 0
+      }
     ]
   },
   {
@@ -7593,6 +7749,7 @@
     ],
     "items": [],
     "enemies": [
+      "orbital_fighter",
       "orbital_fighter"
     ],
     "enemy_parties": [
@@ -7676,8 +7833,22 @@
       }
     ],
     "enemy_flavor": {
-      "orbital_fighter": "Compliance interceptors pivot around the Ring with machine-perfect formation."
-    }
+      "orbital_fighter": "Marks its missile pass before committing, then reorients. Shock disrupts its guidance."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "orbital_fighter",
+        "occurrence": 1,
+        "xp_reward": 240,
+        "credit_reward": 140
+      },
+      {
+        "enemy_id": "orbital_fighter",
+        "occurrence": 2,
+        "xp_reward": 240,
+        "credit_reward": 140
+      }
+    ]
   },
   {
     "id": "orbital_airlock_gallery",
@@ -7736,7 +7907,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "compliance_officer"
+      "customs_screener"
     ],
     "connections": {
       "north": "orbital_customs_lounge",
@@ -7787,6 +7958,22 @@
         "description": "Inspect the flickering Ring Concourse holo-map.",
         "inspect_message": "A translucent ring of light hovers over the pedestal. Three entire residential quadrants are labeled 'DECOMMISSIONED - DO NOT VENTILATE'. A blinking yellow line traces the route to the Executive Core, bypasses security checkpoints, and terminates at the Anchor Chamber."
       }
+    ],
+    "enemy_parties": [
+      [
+        "customs_screener"
+      ]
+    ],
+    "enemy_flavor": {
+      "customs_screener": "Marks one crew member for squad pressure, then resets. Interrupt its scanner preparation."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "customs_screener",
+        "occurrence": 1,
+        "xp_reward": 260,
+        "credit_reward": 180
+      }
     ]
   },
   {
@@ -7799,9 +7986,7 @@
       "analyst_charles"
     ],
     "items": [],
-    "enemies": [
-      "compliance_officer"
-    ],
+    "enemies": [],
     "connections": {
       "south": "orbital_grand_concourse"
     },
@@ -7854,7 +8039,9 @@
         "description": "Inspect the glowing analytics slate resting on the table.",
         "inspect_message": "A dual-display analytics tablet running live simulations of Dominion trade flows, MMO auction house margins, and an open project folder titled 'Great Frontier Feedback & World Architecture'."
       }
-    ]
+    ],
+    "enemy_parties": [],
+    "enemy_flavor": {}
   },
   {
     "id": "orbital_solarium",
@@ -7961,6 +8148,22 @@
         "condition_unmet_message": "A sealed container wedged beneath the artificial coral ledges.",
         "hide_when_event_completed": "find_vhs_tape_09"
       }
+    ],
+    "enemy_parties": [
+      [
+        "null_g_drone"
+      ]
+    ],
+    "enemy_flavor": {
+      "null_g_drone": "Prepares a short gravity tether, then releases its clamps. Shock is effective."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "null_g_drone",
+        "occurrence": 1,
+        "xp_reward": 190,
+        "credit_reward": 100
+      }
     ]
   },
   {
@@ -7972,7 +8175,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "null_g_drone"
+      "prism_surveyor"
     ],
     "connections": {
       "north": "orbital_solarium"
@@ -8016,6 +8219,22 @@
         "type": "inspect",
         "description": "Calibrate the solar reflector alignment controls.",
         "inspect_message": "The polished gold mirrors outside the hull angle smoothly against the starfield, concentrating synthetic sunlight onto the Executive Gardens below. A manual control lever feels warm to the touch, humming with channeled orbital solar flux."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "prism_surveyor"
+      ]
+    ],
+    "enemy_flavor": {
+      "prism_surveyor": "Prepares three brief squad damage boosts. Interrupt the alignment or remove the supported attacker."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "prism_surveyor",
+        "occurrence": 1,
+        "xp_reward": 190,
+        "credit_reward": 100
       }
     ]
   },
@@ -8072,6 +8291,24 @@
         "description": "Audit the automated defense rack diagnostics.",
         "inspect_message": "Rack telemetry indicates sixty percent of perimeter turrets jammed during the initial breach because their target profiles could not classify Chorus-altered bioforms as non-employees. The system defaulted to holding fire until overridden by physical force."
       }
+    ],
+    "enemy_flavor": {
+      "compliance_officer": "Commits to a warned detention sweep, then resets its stance.",
+      "null_g_drone": "Prepares a short gravity tether, then releases its clamps. Shock is effective."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "compliance_officer",
+        "occurrence": 1,
+        "xp_reward": 457,
+        "credit_reward": 284
+      },
+      {
+        "enemy_id": "null_g_drone",
+        "occurrence": 1,
+        "xp_reward": 255,
+        "credit_reward": 159
+      }
     ]
   },
   {
@@ -8083,8 +8320,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "compliance_officer",
-      "null_g_drone"
+      "customs_screener",
+      "void_turret"
     ],
     "connections": {
       "south": "orbital_security_hub"
@@ -8107,6 +8344,30 @@
         "description": "Examine the surveillance pit's recorded camera feeds.",
         "inspect_message": "Thousands of split screens flicker across the curved wall. In one feed, Nova and the crew are visible walking down the corridor three minutes ago. In another, empty offices in the Spire sit silent beneath emergency beacon strobe light."
       }
+    ],
+    "enemy_parties": [
+      [
+        "customs_screener",
+        "void_turret"
+      ]
+    ],
+    "enemy_flavor": {
+      "customs_screener": "Marks one crew member for squad pressure, then resets. Interrupt its scanner preparation.",
+      "void_turret": "Charges a beam before firing, then vents. Interrupt the charge or guard and punish the opening."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "customs_screener",
+        "occurrence": 1,
+        "xp_reward": 138,
+        "credit_reward": 86
+      },
+      {
+        "enemy_id": "void_turret",
+        "occurrence": 1,
+        "xp_reward": 312,
+        "credit_reward": 194
+      }
     ]
   },
   {
@@ -8114,7 +8375,7 @@
     "env": "void",
     "title": "Service Shaft",
     "background_image": "images/rooms/world_5/orbital_service_shaft.webp",
-    "description": "Gravity ends at the hatch. Zero-g cables descend from a superconductor junction through a vertical dark while Hunter-Killer droids scrape along distant walls, too armored to fight head-on. The marked route runs east to Zero-G Junction; the southern tube there leads to the SysAdmin station and Server Farm. Anchored service cables also offer a direct descent to Server Farm and a climb back to this hatch.",
+    "description": "Gravity ends at the hatch. Zero-g cables descend from a superconductor junction through a vertical dark while the Hunter-Killer scrapes along a distant wall, too armored to fight head-on. The marked route runs east to Zero-G Junction; the southern tube there leads to the SysAdmin station and Server Farm. Anchored service cables also offer a direct descent to Server Farm and a climb back to this hatch.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -8277,6 +8538,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
+      "void_turret",
       "void_turret"
     ],
     "connections": {
@@ -8365,9 +8627,6 @@
       [
         "void_turret",
         "void_turret"
-      ],
-      [
-        "firewall_construct"
       ]
     ],
     "blocked_directions": {
@@ -8386,7 +8645,24 @@
     },
     "special_exits": {
       "up": "Cables to Service Shaft"
-    }
+    },
+    "enemy_flavor": {
+      "void_turret": "Charges a beam before firing, then vents. Interrupt the charge or guard and punish the opening."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "void_turret",
+        "occurrence": 1,
+        "xp_reward": 425,
+        "credit_reward": 255
+      },
+      {
+        "enemy_id": "void_turret",
+        "occurrence": 2,
+        "xp_reward": 425,
+        "credit_reward": 255
+      }
+    ]
   },
   {
     "id": "deep_mainframe_nave",
@@ -8399,9 +8675,7 @@
       "thorne"
     ],
     "items": [],
-    "enemies": [
-      "void_turret"
-    ],
+    "enemies": [],
     "connections": {
       "south": "orbital_server_farm",
       "east": "deep_firewall_alpha"
@@ -8444,7 +8718,9 @@
         "description": "Inspect the pulsing quantum core lattice.",
         "inspect_message": "A cage of optical glass encases hundreds of suspended crystalline processors. Light pulses through the lattice like neural synapses firing in rapid sequence, processing millions of compliance simulations per second."
       }
-    ]
+    ],
+    "enemy_parties": [],
+    "enemy_flavor": {}
   },
   {
     "id": "deep_firewall_alpha",
@@ -8456,7 +8732,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "void_turret"
+      "void_turret",
+      "customs_screener"
     ],
     "connections": {
       "west": "deep_mainframe_nave",
@@ -8484,6 +8761,30 @@
         "action_event": "w5_mq23_firewall_alpha",
         "condition_unmet_message": "The first firewall node shifts its cipher every few seconds."
       }
+    ],
+    "enemy_parties": [
+      [
+        "void_turret",
+        "customs_screener"
+      ]
+    ],
+    "enemy_flavor": {
+      "void_turret": "Charges a beam before firing, then vents. Interrupt the charge or guard and punish the opening.",
+      "customs_screener": "Marks one crew member for squad pressure, then resets. Interrupt its scanner preparation."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "void_turret",
+        "occurrence": 1,
+        "xp_reward": 159,
+        "credit_reward": 89
+      },
+      {
+        "enemy_id": "customs_screener",
+        "occurrence": 1,
+        "xp_reward": 71,
+        "credit_reward": 41
+      }
     ]
   },
   {
@@ -8496,7 +8797,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "void_turret"
+      "void_turret",
+      "null_g_drone"
     ],
     "connections": {
       "west": "deep_firewall_alpha",
@@ -8524,6 +8826,30 @@
         "action_event": "w5_mq23_firewall_beta",
         "condition_unmet_message": "The second node is protected by a recursive Dominion lock."
       }
+    ],
+    "enemy_parties": [
+      [
+        "void_turret",
+        "null_g_drone"
+      ]
+    ],
+    "enemy_flavor": {
+      "void_turret": "Charges a beam before firing, then vents. Interrupt the charge or guard and punish the opening.",
+      "null_g_drone": "Prepares a short gravity tether, then releases its clamps. Shock is effective."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "void_turret",
+        "occurrence": 1,
+        "xp_reward": 169,
+        "credit_reward": 95
+      },
+      {
+        "enemy_id": "null_g_drone",
+        "occurrence": 1,
+        "xp_reward": 61,
+        "credit_reward": 35
+      }
     ]
   },
   {
@@ -8536,11 +8862,13 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "firewall_construct"
+      "firewall_construct",
+      "prism_surveyor"
     ],
     "enemy_parties": [
       [
-        "firewall_construct"
+        "firewall_construct",
+        "prism_surveyor"
       ]
     ],
     "connections": {
@@ -8577,7 +8905,8 @@
       }
     ],
     "enemy_flavor": {
-      "firewall_construct": "A hard-light construct assembles from defensive code, all angles and corporate certainty."
+      "firewall_construct": "Announces Amber (Burn weakness, Shock resistance) and Blue (Shock weakness, Burn resistance) before changing frequency. Scan identifies the current opening. Physical and Source damage remain neutral; strike after its warned sweep.",
+      "prism_surveyor": "Prepares three brief squad damage boosts. Interrupt the alignment or remove the supported attacker."
     },
     "special_exits": {
       "down": "Lift to Anchor Chamber"
@@ -8595,7 +8924,21 @@
         "message_locked": "The Firewall Construct still controls the Anchor access lift. Disable its nodes and defeat it before using the lift.",
         "message_unlock": "The Anchor access lift is cleared in both directions."
       }
-    }
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "firewall_construct",
+        "occurrence": 1,
+        "xp_reward": 510,
+        "credit_reward": 327
+      },
+      {
+        "enemy_id": "prism_surveyor",
+        "occurrence": 1,
+        "xp_reward": 108,
+        "credit_reward": 70
+      }
+    ]
   },
   {
     "id": "deep_backup_rack",
@@ -8749,7 +9092,7 @@
       }
     ],
     "enemy_flavor": {
-      "hk_droid": "The Hunter-Killer repairs every wound before it finishes opening. Only Stasis can stop its pursuit."
+      "hk_droid": "Pursuit threat. Stasis is the intended counter."
     },
     "blocked_directions": {
       "west": {
@@ -8779,7 +9122,12 @@
     },
     "special_exits": {
       "up": "Lift to Firewall Gamma"
-    }
+    },
+    "enemy_parties": [
+      [
+        "hk_droid"
+      ]
+    ]
   },
   {
     "id": "deep_throne_room",
@@ -8857,6 +9205,22 @@
         "description": "Inspect Director Thorne's gold-inlaid executive desk.",
         "inspect_message": "A fountain pen rests beside an unfinished executive order commanding the unconditional disarmament of all colony defense units. A leather-bound notebook contains hand-drawn sketches of the Precursor Anchor with notes questioning whether the Chorus can truly be commanded."
       }
+    ],
+    "enemy_parties": [
+      [
+        "elite_guard"
+      ]
+    ],
+    "enemy_flavor": {
+      "elite_guard": "Mirror Guard returns half the damage of single-target focus-scaled energy skills and energy firearm shots, capped at a quarter of the attacker’s maximum HP. Physical, melee and area attacks do not reflect. Its shield drops for a warned strike and recovery."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "elite_guard",
+        "occurrence": 1,
+        "xp_reward": 310,
+        "credit_reward": 220
+      }
     ]
   },
   {
@@ -8916,7 +9280,7 @@
       }
     ],
     "enemy_flavor": {
-      "compliance_avatar": "An independent Conductor directs the Avatar through a fragile command link. Break the preparation or destroy the Conductor to end their coordination."
+      "compliance_avatar": "The Conductor directs joint attacks. Interrupt its preparation or destroy it to break coordination permanently. The Avatar recalibrates after the link breaks; defeating the body ends the encounter."
     }
   },
   {
@@ -10141,11 +10505,15 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "ascended_vale"
+      "ascended_vale",
+      "ascended_god"
     ],
     "enemy_parties": [
       [
         "ascended_vale"
+      ],
+      [
+        "ascended_god"
       ]
     ],
     "connections": {
@@ -10195,7 +10563,7 @@
         "requires_events": [
           "w6_mq30_defeat_vale"
         ],
-        "description": "Vale's human outline has shattered. A white fracture runs north through White Shore and Key Orbit toward the Silence Pulpit, where his remaining form waits. The shared tuning focus trembles under code that has not yet been broken. West leads back toward the shared span for rest."
+        "description": "Vale’s human outline has shattered. His remaining form rises from the white ocean here at The Center, held together by two anchors. The crew can save here before challenging the Silence."
       }
     ],
     "blocked_directions": {
@@ -16346,9 +16714,7 @@
     "description": "A heat shadow alcove hides behind stacked coolant tags fluttering in furnace wind. The coolant tags mark batches diverted from worker safety.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "magma_drone"
-    ],
+    "enemies": [],
     "connections": {
       "south": "foundry_obsidian_shelf_scale_01",
       "north": "foundry_obsidian_shelf_scale_03"
@@ -16383,7 +16749,8 @@
         "rest_event": "w4_camp_heat_shadow",
         "message": "Shielded from furnace slag, your squad cools down and recovers from combat fatigue."
       }
-    ]
+    ],
+    "enemy_parties": []
   },
   {
     "id": "foundry_obsidian_shelf_scale_03",
@@ -16545,7 +16912,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "slag_golem"
+      "slag_golem",
+      "quench_mite"
     ],
     "connections": {
       "south": "foundry_slag_river_scale_02",
@@ -16566,6 +16934,39 @@
         "name": "winch teeth",
         "type": "generic",
         "condition_unmet_message": "The teeth catch every third crank."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "slag_golem",
+        "quench_mite"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "slag_golem",
+        "occurrence": 1,
+        "override_drops": [
+          {
+            "id": "scrap_metal",
+            "chance": 0.8
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.35
+          }
+        ],
+        "xp_reward": 170,
+        "credit_reward": 96,
+        "ap_reward": 0
+      },
+      {
+        "enemy_id": "quench_mite",
+        "occurrence": 1,
+        "override_drops": [],
+        "xp_reward": 170,
+        "credit_reward": 95,
+        "ap_reward": 0
       }
     ]
   },
@@ -16680,9 +17081,7 @@
     "description": "A worker marker stands beside a dead helmet light and a name scratched into pipe insulation. The helmet light died facing the exit.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "magma_drone"
-    ],
+    "enemies": [],
     "connections": {
       "south": "foundry_cooling_springs_scale_01",
       "north": "foundry_cooling_springs_scale_03"
@@ -16703,7 +17102,8 @@
         "type": "generic",
         "condition_unmet_message": "The light died facing the exit."
       }
-    ]
+    ],
+    "enemy_parties": []
   },
   {
     "id": "foundry_cooling_springs_scale_03",
@@ -16853,9 +17253,7 @@
     "description": "A records shed lists Phantom labels on crates that officially never existed. The Phantom labels use budget codes instead of names.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "welder_bot"
-    ],
+    "enemies": [],
     "connections": {
       "north": "foundry_waste_intake_scale_01",
       "south": "foundry_waste_intake_scale_03"
@@ -16876,7 +17274,8 @@
         "type": "generic",
         "condition_unmet_message": "The labels use budget codes instead of names."
       }
-    ]
+    ],
+    "enemy_parties": []
   },
   {
     "id": "foundry_waste_intake_scale_03",
@@ -16888,7 +17287,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "slag_golem"
+      "slag_golem",
+      "magnet_sifter"
     ],
     "connections": {
       "north": "foundry_waste_intake_scale_02",
@@ -16909,6 +17309,39 @@
         "name": "loose filings",
         "type": "generic",
         "condition_unmet_message": "The filings point toward live current under the floor."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "slag_golem",
+        "magnet_sifter"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "slag_golem",
+        "occurrence": 1,
+        "override_drops": [
+          {
+            "id": "scrap_metal",
+            "chance": 0.8
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.35
+          }
+        ],
+        "xp_reward": 170,
+        "credit_reward": 96,
+        "ap_reward": 0
+      },
+      {
+        "enemy_id": "magnet_sifter",
+        "occurrence": 1,
+        "override_drops": [],
+        "xp_reward": 169,
+        "credit_reward": 95,
+        "ap_reward": 0
       }
     ]
   },
@@ -16989,7 +17422,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "magma_drone"
+      "quench_mite"
     ],
     "connections": {
       "south": "foundry_service_airlock_scale_01",
@@ -17010,6 +17443,39 @@
         "name": "chemical foam",
         "type": "generic",
         "condition_unmet_message": "The foam carries metal flakes like stars."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "quench_mite",
+        "quench_mite"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "quench_mite",
+        "occurrence": 1,
+        "override_drops": [
+          {
+            "id": "power_cell",
+            "chance": 0.4
+          },
+          {
+            "id": "wiring_bundle",
+            "chance": 0.45
+          }
+        ],
+        "xp_reward": 120,
+        "credit_reward": 61,
+        "ap_reward": 0
+      },
+      {
+        "enemy_id": "quench_mite",
+        "occurrence": 2,
+        "override_drops": [],
+        "xp_reward": 119,
+        "credit_reward": 60,
+        "ap_reward": 0
       }
     ]
   },
@@ -17133,7 +17599,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "welder_bot"
+      "welder_bot",
+      "quench_mite"
     ],
     "connections": {
       "south": "foundry_conveyor_belt_scale_01",
@@ -17155,6 +17622,39 @@
         "type": "generic",
         "condition_unmet_message": "The rain hides small parts worth stealing."
       }
+    ],
+    "enemy_parties": [
+      [
+        "welder_bot",
+        "quench_mite"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "welder_bot",
+        "occurrence": 1,
+        "override_drops": [
+          {
+            "id": "scrap_metal",
+            "chance": 0.55
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.25
+          }
+        ],
+        "xp_reward": 125,
+        "credit_reward": 58,
+        "ap_reward": 0
+      },
+      {
+        "enemy_id": "quench_mite",
+        "occurrence": 1,
+        "override_drops": [],
+        "xp_reward": 124,
+        "credit_reward": 58,
+        "ap_reward": 0
+      }
     ]
   },
   {
@@ -17167,7 +17667,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "slag_golem"
+      "conveyor_crusher",
+      "magma_drone"
     ],
     "connections": {
       "south": "foundry_conveyor_belt_scale_02",
@@ -17199,6 +17700,39 @@
         "type": "generic",
         "action_event": "w4_mq19_read_grease_marks",
         "condition_unmet_message": "The marks show where previous crews crawled."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "conveyor_crusher",
+        "magma_drone"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "conveyor_crusher",
+        "occurrence": 1,
+        "override_drops": [
+          {
+            "id": "scrap_metal",
+            "chance": 0.8
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.35
+          }
+        ],
+        "xp_reward": 170,
+        "credit_reward": 96,
+        "ap_reward": 0
+      },
+      {
+        "enemy_id": "magma_drone",
+        "occurrence": 1,
+        "override_drops": [],
+        "xp_reward": 169,
+        "credit_reward": 95,
+        "ap_reward": 0
       }
     ]
   },
@@ -17290,7 +17824,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "magma_drone"
+      "magma_drone",
+      "quench_mite"
     ],
     "connections": {
       "west": "foundry_conditioning_scale_01",
@@ -17311,6 +17846,39 @@
         "name": "steam alarms",
         "type": "generic",
         "condition_unmet_message": "The alarms are calibrated to production loss, not injury."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "magma_drone",
+        "quench_mite"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "magma_drone",
+        "occurrence": 1,
+        "override_drops": [
+          {
+            "id": "power_cell",
+            "chance": 0.4
+          },
+          {
+            "id": "wiring_bundle",
+            "chance": 0.45
+          }
+        ],
+        "xp_reward": 120,
+        "credit_reward": 60,
+        "ap_reward": 0
+      },
+      {
+        "enemy_id": "quench_mite",
+        "occurrence": 1,
+        "override_drops": [],
+        "xp_reward": 119,
+        "credit_reward": 60,
+        "ap_reward": 0
       }
     ]
   },
@@ -17433,9 +18001,7 @@
     "description": "The anvil shadow remains on the floor even when the light changes. A relic imprint glows beneath the ash.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "welder_bot"
-    ],
+    "enemies": [],
     "connections": {
       "west": "foundry_forge_scale_01",
       "north": "foundry_forge_scale_03"
@@ -17456,7 +18022,8 @@
         "type": "generic",
         "condition_unmet_message": "The imprint pulls at Nova's bones."
       }
-    ]
+    ],
+    "enemy_parties": []
   },
   {
     "id": "foundry_forge_scale_03",
@@ -17570,9 +18137,7 @@
     "description": "The engine cradle grips the Deep-Core Engine with mount clamps bigger than mining rigs. The mount clamps loosen when the core output spikes.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "magma_drone"
-    ],
+    "enemies": [],
     "connections": {
       "north": "foundry_power_core_scale_01",
       "south": "foundry_power_core_scale_03"
@@ -17593,7 +18158,8 @@
         "type": "generic",
         "condition_unmet_message": "The clamps loosen when the core output spikes."
       }
-    ]
+    ],
+    "enemy_parties": []
   },
   {
     "id": "foundry_power_core_scale_03",
@@ -17711,6 +18277,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
+      "flame_trooper",
       "welder_bot"
     ],
     "connections": {
@@ -17733,6 +18300,39 @@
         "type": "generic",
         "condition_unmet_message": "The brake will fail before the schedule does."
       }
+    ],
+    "enemy_parties": [
+      [
+        "flame_trooper",
+        "welder_bot"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "flame_trooper",
+        "occurrence": 1,
+        "override_drops": [
+          {
+            "id": "scrap_metal",
+            "chance": 0.55
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.25
+          }
+        ],
+        "xp_reward": 125,
+        "credit_reward": 58,
+        "ap_reward": 0
+      },
+      {
+        "enemy_id": "welder_bot",
+        "occurrence": 1,
+        "override_drops": [],
+        "xp_reward": 124,
+        "credit_reward": 57,
+        "ap_reward": 0
+      }
     ]
   },
   {
@@ -17744,9 +18344,7 @@
     "description": "An escape rail points toward the Astra route, but a cut coupler hangs loose under the track. The cut coupler can be forced if the core surge covers the noise.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "slag_golem"
-    ],
+    "enemies": [],
     "connections": {
       "south": "foundry_titan_dock_scale_02",
       "north": "foundry_titan_dock_scale_04"
@@ -17767,7 +18365,8 @@
         "type": "generic",
         "condition_unmet_message": "The coupler can be forced if the core surge covers the noise."
       }
-    ]
+    ],
+    "enemy_parties": []
   },
   {
     "id": "foundry_titan_dock_scale_04",
@@ -17840,9 +18439,7 @@
     "description": "A pressure gallery runs behind the polished walls. Its warning strip flashes whenever exterior vacuum loads the hospitality seals.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "compliance_officer"
-    ],
+    "enemies": [],
     "connections": {
       "south": "orbital_executive_dock_scale_01",
       "north": "orbital_executive_dock_scale_03"
@@ -17863,7 +18460,9 @@
         "type": "generic",
         "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
       }
-    ]
+    ],
+    "enemy_parties": [],
+    "enemy_flavor": {}
   },
   {
     "id": "orbital_executive_dock_scale_03",
@@ -17905,6 +18504,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
+      "tether_rigger",
       "null_g_drone"
     ],
     "connections": {
@@ -17926,6 +18526,30 @@
         "name": "pressure controls",
         "type": "generic",
         "condition_unmet_message": "The pressure circuit is sealed separately. This local lighting relay cannot seal the dock or replace the Executive Dock airlock console."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "tether_rigger",
+        "null_g_drone"
+      ]
+    ],
+    "enemy_flavor": {
+      "tether_rigger": "An interruptible cable reduces a target’s damage briefly, followed by two recovery turns.",
+      "null_g_drone": "Prepares a short gravity tether, then releases its clamps. Shock is effective."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "tether_rigger",
+        "occurrence": 1,
+        "xp_reward": 234,
+        "credit_reward": 126
+      },
+      {
+        "enemy_id": "null_g_drone",
+        "occurrence": 1,
+        "xp_reward": 143,
+        "credit_reward": 77
       }
     ]
   },
@@ -17968,9 +18592,7 @@
     "description": "The collar intercom repeats an abandoned freight request. Between the formal announcements, a loader keeps asking whether anyone has cleared the workers to board.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "compliance_officer"
-    ],
+    "enemies": [],
     "connections": {
       "south": "orbital_executive_dock_scale_05",
       "north": "orbital_executive_dock_scale_final"
@@ -17991,7 +18613,9 @@
         "type": "generic",
         "condition_unmet_message": "The request is for workers to board, not for a luxury passenger transfer. The dock kept broadcasting its welcome while leaving them waiting."
       }
-    ]
+    ],
+    "enemy_parties": [],
+    "enemy_flavor": {}
   },
   {
     "id": "orbital_grand_concourse_scale_01",
@@ -18033,7 +18657,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "compliance_officer"
+      "customs_screener",
+      "null_g_drone"
     ],
     "connections": {
       "west": "orbital_grand_concourse_scale_01",
@@ -18054,6 +18679,30 @@
         "name": "indicators",
         "type": "generic",
         "condition_unmet_message": "The indicators face the service passage. Guests see the finish; workers have to check what is pressing against it."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "customs_screener",
+        "null_g_drone"
+      ]
+    ],
+    "enemy_flavor": {
+      "customs_screener": "Marks one crew member for squad pressure, then resets. Interrupt its scanner preparation.",
+      "null_g_drone": "Prepares a short gravity tether, then releases its clamps. Shock is effective."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "customs_screener",
+        "occurrence": 1,
+        "xp_reward": 287,
+        "credit_reward": 203
+      },
+      {
+        "enemy_id": "null_g_drone",
+        "occurrence": 1,
+        "xp_reward": 230,
+        "credit_reward": 163
       }
     ]
   },
@@ -18096,9 +18745,7 @@
     "description": "The directory lighting has a manual relay beside a list of names. Room numbers are printed; the erased guest names are not.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "null_g_drone"
-    ],
+    "enemies": [],
     "connections": {
       "south": "orbital_grand_concourse_scale_03",
       "north": "orbital_grand_concourse_scale_05"
@@ -18119,7 +18766,9 @@
         "type": "generic",
         "condition_unmet_message": "Room numbers remain legible after names have been scrubbed away. The station has preserved the space more carefully than its occupants."
       }
-    ]
+    ],
+    "enemy_parties": [],
+    "enemy_flavor": {}
   },
   {
     "id": "orbital_grand_concourse_scale_05",
@@ -18160,9 +18809,7 @@
     "description": "A hospitality announcement echoes through an uncarpeted passage. Here, without the public speakers smoothing it, the pause before \"valued guest\" sounds painfully long.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "compliance_officer"
-    ],
+    "enemies": [],
     "connections": {
       "south": "orbital_grand_concourse_scale_05",
       "north": "orbital_grand_concourse_scale_final"
@@ -18183,7 +18830,9 @@
         "type": "generic",
         "condition_unmet_message": "The guest decks hear a reassuring voice. This uncarpeted passage carries the rough gaps between its words."
       }
-    ]
+    ],
+    "enemy_parties": [],
+    "enemy_flavor": {}
   },
   {
     "id": "orbital_solarium_scale_01",
@@ -18224,9 +18873,7 @@
     "description": "A condensation channel runs along the outer glass. Beyond it is black space. Mirror mounts on the inner frame show how carefully the garden daylight must be aimed.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "compliance_officer"
-    ],
+    "enemies": [],
     "connections": {
       "south": "orbital_solarium_scale_01",
       "north": "orbital_solarium_scale_03"
@@ -18247,7 +18894,9 @@
         "type": "generic",
         "condition_unmet_message": "The mounts expose the hinges behind the false daylight. The garden’s light can be aimed; it is not a natural sun."
       }
-    ]
+    ],
+    "enemy_parties": [],
+    "enemy_flavor": {}
   },
   {
     "id": "orbital_solarium_scale_03",
@@ -18289,6 +18938,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
+      "prism_surveyor",
       "null_g_drone"
     ],
     "connections": {
@@ -18310,6 +18960,30 @@
         "name": "garden lighting schedule",
         "type": "generic",
         "condition_unmet_message": "The schedule was written around visiting hours. The plants’ needs appear beneath presentation settings."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "prism_surveyor",
+        "null_g_drone"
+      ]
+    ],
+    "enemy_flavor": {
+      "prism_surveyor": "Prepares three brief squad damage boosts. Interrupt the alignment or remove the supported attacker.",
+      "null_g_drone": "Prepares a short gravity tether, then releases its clamps. Shock is effective."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "prism_surveyor",
+        "occurrence": 1,
+        "xp_reward": 197,
+        "credit_reward": 106
+      },
+      {
+        "enemy_id": "null_g_drone",
+        "occurrence": 1,
+        "xp_reward": 180,
+        "credit_reward": 97
       }
     ]
   },
@@ -18352,9 +19026,7 @@
     "description": "An irrigation pipe ticks as it cools. The sound moves along the beds, a small physical rhythm beneath the station's recorded birdsong.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "compliance_officer"
-    ],
+    "enemies": [],
     "connections": {
       "south": "orbital_solarium_scale_05",
       "north": "orbital_solarium_scale_final"
@@ -18375,7 +19047,9 @@
         "type": "generic",
         "condition_unmet_message": "The birds repeat without answering the pipe or one another. The irrigation is the living garden’s more reliable sound."
       }
-    ]
+    ],
+    "enemy_parties": [],
+    "enemy_flavor": {}
   },
   {
     "id": "orbital_security_hub_scale_01",
@@ -18416,9 +19090,7 @@
     "description": "A reinforced gallery separates the security office from the outer hull. Its pressure strip has a manual inspection date newer than the staff roster.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "compliance_officer"
-    ],
+    "enemies": [],
     "connections": {
       "north": "orbital_security_hub_scale_01",
       "south": "orbital_security_hub_scale_03"
@@ -18439,7 +19111,9 @@
         "type": "generic",
         "condition_unmet_message": "The roster is older than the safety inspection beside it. Its list of workers no longer explains who kept the passage running."
       }
-    ]
+    ],
+    "enemy_parties": [],
+    "enemy_flavor": {}
   },
   {
     "id": "orbital_security_hub_scale_03",
@@ -18481,7 +19155,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "null_g_drone"
+      "compliance_officer",
+      "prism_surveyor"
     ],
     "connections": {
       "north": "orbital_security_hub_scale_03",
@@ -18502,6 +19177,30 @@
         "name": "original logs",
         "type": "generic",
         "condition_unmet_message": "The handwritten note insists that technicians preserve the original record before testing. The Director redaction checksum is at Security Hub."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "compliance_officer",
+        "prism_surveyor"
+      ]
+    ],
+    "enemy_flavor": {
+      "compliance_officer": "Commits to a warned detention sweep, then resets its stance.",
+      "prism_surveyor": "Prepares three brief squad damage boosts. Interrupt the alignment or remove the supported attacker."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "compliance_officer",
+        "occurrence": 1,
+        "xp_reward": 234,
+        "credit_reward": 126
+      },
+      {
+        "enemy_id": "prism_surveyor",
+        "occurrence": 1,
+        "xp_reward": 143,
+        "credit_reward": 77
       }
     ]
   },
@@ -18544,9 +19243,7 @@
     "description": "A diagnostic speaker repeats an incomplete incident number. The next field is always a silence where an operator should have answered.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "compliance_officer"
-    ],
+    "enemies": [],
     "connections": {
       "north": "orbital_security_hub_scale_05",
       "south": "orbital_security_hub_scale_final"
@@ -18567,7 +19264,9 @@
         "type": "generic",
         "condition_unmet_message": "The final field is silent. The diagnostic record has kept the shape of an absent operator."
       }
-    ]
+    ],
+    "enemy_parties": [],
+    "enemy_flavor": {}
   },
   {
     "id": "orbital_service_shaft_scale_01",
@@ -18609,7 +19308,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "compliance_officer"
+      "tether_rigger"
     ],
     "connections": {
       "south": "orbital_service_shaft_scale_01",
@@ -18630,6 +19329,22 @@
         "name": "tether scar",
         "type": "generic",
         "condition_unmet_message": "A worn groove marks where a tether repeatedly took someone’s weight. The metal remembers the safe route."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "tether_rigger"
+      ]
+    ],
+    "enemy_flavor": {
+      "tether_rigger": "An interruptible cable reduces a target’s damage briefly, followed by two recovery turns."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "tether_rigger",
+        "occurrence": 1,
+        "xp_reward": 517,
+        "credit_reward": 366
       }
     ]
   },
@@ -18672,9 +19387,7 @@
     "description": "A local work-light switch sits beside a signed lockout tag. The circuit powers this recess; the main station feed runs in a sealed conduit beyond it.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "null_g_drone"
-    ],
+    "enemies": [],
     "connections": {
       "south": "orbital_service_shaft_scale_03",
       "north": "orbital_service_shaft_scale_05"
@@ -18695,7 +19408,9 @@
         "type": "generic",
         "condition_unmet_message": "A technician signed the tag before isolating the local lights. The main station feed remains sealed away."
       }
-    ]
+    ],
+    "enemy_parties": [],
+    "enemy_flavor": {}
   },
   {
     "id": "orbital_service_shaft_scale_05",
@@ -18737,7 +19452,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "compliance_officer"
+      "customs_screener",
+      "tether_rigger"
     ],
     "connections": {
       "south": "orbital_service_shaft_scale_05",
@@ -18758,6 +19474,30 @@
         "name": "freight motor",
         "type": "generic",
         "condition_unmet_message": "Insulation swallows voices from above, but the motor keeps announcing every turn through the structure."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "customs_screener",
+        "tether_rigger"
+      ]
+    ],
+    "enemy_flavor": {
+      "customs_screener": "Marks one crew member for squad pressure, then resets. Interrupt its scanner preparation.",
+      "tether_rigger": "An interruptible cable reduces a target’s damage briefly, followed by two recovery turns."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "customs_screener",
+        "occurrence": 1,
+        "xp_reward": 222,
+        "credit_reward": 157
+      },
+      {
+        "enemy_id": "tether_rigger",
+        "occurrence": 1,
+        "xp_reward": 295,
+        "credit_reward": 209
       }
     ]
   },
@@ -18803,7 +19543,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "firewall_construct"
+      "prism_surveyor",
+      "void_turret"
     ],
     "connections": {
       "north": "deep_server_farm_scale_01",
@@ -18824,6 +19565,30 @@
         "name": "palm print",
         "type": "generic",
         "condition_unmet_message": "The server side is warm enough to dry a handprint. Beaded water on the other side shows how hard the cooling circuit is working."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "prism_surveyor",
+        "void_turret"
+      ]
+    ],
+    "enemy_flavor": {
+      "prism_surveyor": "Prepares three brief squad damage boosts. Interrupt the alignment or remove the supported attacker.",
+      "void_turret": "Charges a beam before firing, then vents. Interrupt the charge or guard and punish the opening."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "prism_surveyor",
+        "occurrence": 1,
+        "xp_reward": 218,
+        "credit_reward": 143
+      },
+      {
+        "enemy_id": "void_turret",
+        "occurrence": 1,
+        "xp_reward": 557,
+        "credit_reward": 366
       }
     ]
   },
@@ -18984,7 +19749,9 @@
         "type": "generic",
         "condition_unmet_message": "The meters spike when Nova gets close, like Elara is fighting the Ring with the only rhythm still hers."
       }
-    ]
+    ],
+    "enemy_parties": [],
+    "enemy_flavor": {}
   },
   {
     "id": "deep_anchor_chamber_scale_03",
@@ -19154,7 +19921,9 @@
         "type": "generic",
         "condition_unmet_message": "Her shadow points toward the exit before the rest of the chamber does."
       }
-    ]
+    ],
+    "enemy_parties": [],
+    "enemy_flavor": {}
   },
   {
     "id": "deep_anchor_chamber_scale_07",
@@ -19306,9 +20075,7 @@
     "description": "Thorne's cell hangs beside the dais, close enough for her to watch Vale turn her product into a religion. The containment seam glows brighter whenever she tries to speak.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "elite_guard"
-    ],
+    "enemies": [],
     "connections": {
       "south": "deep_throne_room_scale_01",
       "north": "deep_throne_room_scale_03"
@@ -19329,7 +20096,9 @@
         "type": "generic",
         "condition_unmet_message": "The seam is keyed to Vale now. That is the coup in one strip of light."
       }
-    ]
+    ],
+    "enemy_parties": [],
+    "enemy_flavor": {}
   },
   {
     "id": "deep_throne_room_scale_03",
@@ -19409,7 +20178,15 @@
         "type": "generic",
         "condition_unmet_message": "The projection does not hide the dead. It prices them."
       }
-    ]
+    ],
+    "enemy_parties": [
+      [
+        "boardroom_bailiff"
+      ]
+    ],
+    "enemy_flavor": {
+      "boardroom_bailiff": "Optional judgment elite. Raises a limited guard before committing to a warned verdict. Its defeat grants no Avatar story credit."
+    }
   },
   {
     "id": "deep_throne_room_scale_05",
@@ -19467,7 +20244,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "elite_guard"
+      "elite_guard",
+      "prism_surveyor"
     ],
     "connections": {
       "south": "deep_throne_room_scale_05",
@@ -19488,6 +20266,30 @@
         "name": "compliance halo",
         "type": "generic",
         "condition_unmet_message": "The halo borrows religious geometry for corporate enforcement."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "elite_guard",
+        "prism_surveyor"
+      ]
+    ],
+    "enemy_flavor": {
+      "elite_guard": "Mirror Guard returns half the damage of single-target focus-scaled energy skills and energy firearm shots, capped at a quarter of the attacker’s maximum HP. Physical, melee and area attacks do not reflect. Its shield drops for a warned strike and recovery.",
+      "prism_surveyor": "Prepares three brief squad damage boosts. Interrupt the alignment or remove the supported attacker."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "elite_guard",
+        "occurrence": 1,
+        "xp_reward": 490,
+        "credit_reward": 356
+      },
+      {
+        "enemy_id": "prism_surveyor",
+        "occurrence": 1,
+        "xp_reward": 126,
+        "credit_reward": 92
       }
     ]
   },
@@ -19603,7 +20405,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "source_shadow"
+      "threshold_remnant"
     ],
     "connections": {
       "south": "deep_tear_scale_01",
@@ -19624,6 +20426,22 @@
         "name": "soundless note",
         "type": "generic",
         "condition_unmet_message": "The note tastes like metal and grief."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "threshold_remnant"
+      ]
+    ],
+    "enemy_flavor": {
+      "threshold_remnant": "Warns before an incomplete fracture, then unravels into exposed recovery."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "threshold_remnant",
+        "occurrence": 1,
+        "xp_reward": 477,
+        "credit_reward": 1
       }
     ]
   },
@@ -19721,9 +20539,7 @@
     "description": "The last bulkhead holds one manual wheel between the Ring and the impossible. The manual wheel is hot from people trying to close what cannot close.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "source_shadow"
-    ],
+    "enemies": [],
     "connections": {
       "south": "deep_tear_scale_04",
       "north": "deep_tear_scale_06"
@@ -19744,7 +20560,9 @@
         "type": "generic",
         "condition_unmet_message": "Someone tried the old kind of control here and learned the universe had moved on."
       }
-    ]
+    ],
+    "enemy_parties": [],
+    "enemy_flavor": {}
   },
   {
     "id": "deep_tear_scale_06",
@@ -19968,7 +20786,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "manager_projection"
+      "review_clerk"
     ],
     "connections": {
       "south": "source_zeke_nightmare",
@@ -19996,6 +20814,21 @@
         "type": "inspect",
         "description": "Examine the stamped termination notice floating between cubicle dividers.",
         "inspect_message": "The document lists impossible metrics: 'Failed to demonstrate total emotional indifference under terminal quota conditions.' Zeke's signature at the bottom has been violently crossed out with a heavy black grease pencil."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "review_clerk"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "review_clerk",
+        "occurrence": 1,
+        "xp_reward": 420,
+        "credit_reward": 0,
+        "ap_reward": 0,
+        "override_drops": []
       }
     ]
   },
@@ -20087,7 +20920,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "endless_war_echo"
+      "war_order_fragment"
     ],
     "connections": {
       "south": "source_gh0st_nightmare",
@@ -20115,6 +20948,21 @@
         "type": "inspect",
         "description": "Examine the pile of blackened Warden dogtags hanging from the command terminal.",
         "inspect_message": "Each metal tag is stamped with a callsign that never returned from the breach. As Gh0st steps close, the radio static in his helmet softens, resolving into a brief, clear squad salute before fading into the hum of the Source."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "war_order_fragment"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "war_order_fragment",
+        "occurrence": 1,
+        "xp_reward": 330,
+        "credit_reward": 0,
+        "ap_reward": 0,
+        "override_drops": []
       }
     ]
   },
@@ -20207,7 +21055,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "silent_shore_wraith"
+      "tide_murmur"
     ],
     "connections": {
       "south": "source_orion_nightmare",
@@ -20235,6 +21083,21 @@
         "type": "inspect",
         "description": "Inspect the brass chronometer resting on the black tide shelf.",
         "inspect_message": "The hands are permanently fused at 04:17—the exact minute the First Tide flooded the lower observatory. The glass lens is frosted with brine, yet the ticking spring inside still beats like a slow, stubborn heart."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "tide_murmur"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "tide_murmur",
+        "occurrence": 1,
+        "xp_reward": 400,
+        "credit_reward": 0,
+        "ap_reward": 0,
+        "override_drops": []
       }
     ]
   },
@@ -20368,7 +21231,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "source_shadow"
+      "source_shadow",
+      "review_clerk"
     ],
     "connections": {
       "west": "source_echo_mines_node_scale_01",
@@ -20389,6 +21253,35 @@
         "name": "missing hours",
         "type": "generic",
         "condition_unmet_message": "Nova remembers being tired before she remembers being angry."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "source_shadow",
+        "review_clerk"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "source_shadow",
+        "occurrence": 1,
+        "xp_reward": 240,
+        "credit_reward": 0,
+        "ap_reward": 0,
+        "override_drops": [
+          {
+            "id": "power_cell",
+            "chance": 0.25
+          }
+        ]
+      },
+      {
+        "enemy_id": "review_clerk",
+        "occurrence": 1,
+        "xp_reward": 0,
+        "credit_reward": 0,
+        "ap_reward": 0,
+        "override_drops": []
       }
     ]
   },
@@ -20907,9 +21800,7 @@
     "description": "A throne-shaped absence waits at the top of the thought spiral. The absence brightens when Nova refuses to sit, leaving room for a circuit instead of a ruler. An unthroned ledger rests where a ruler was meant to sit. An open return circuit leads back to the Spire of Thought.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "memory_leak"
-    ],
+    "enemies": [],
     "connections": {
       "south": "source_spire_thought_node_scale_03"
     },
@@ -20947,7 +21838,8 @@
         "action_event": "warp_source_spire_thought_node_scale_04_to_entry"
       }
     ],
-    "special_exits": {}
+    "special_exits": {},
+    "enemy_parties": []
   },
   {
     "id": "source_center_node_scale_01",
@@ -21047,12 +21939,10 @@
     "weather": "resonance",
     "title": "Silence Pulpit",
     "background_image": "images/rooms/world_6/source_center_node_scale_03.webp",
-    "description": "A Silence pulpit rises from the ocean where Vale's broken human outline becomes blinding geometry. The geometry preaches one painless note while every separate voice in the crew pushes back.",
+    "description": "A Silence pulpit rises from the ocean. The steps remember a sermon that once tried to drown out every separate voice. The fracture echoes back toward The Center.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "ascended_god"
-    ],
+    "enemies": [],
     "connections": {
       "south": "source_center_node_scale_02",
       "north": "source_center_node_scale_final"
@@ -21072,13 +21962,14 @@
         "name": "blinding geometry",
         "type": "generic",
         "condition_unmet_message": "This is not a god revealing itself. It is a man becoming large enough to hide the damage."
+      },
+      {
+        "name": "return to the fracture",
+        "type": "generic",
+        "action_event": "w6_resume_silence_at_center"
       }
     ],
-    "enemy_parties": [
-      [
-        "ascended_god"
-      ]
-    ],
+    "enemy_parties": [],
     "description_variants": [
       {
         "requires_events": [
@@ -21293,6 +22184,39 @@
         "action_event": "warp_foundry_slag_river_scale_final_to_entry",
         "condition_unmet_message": "An optional shortcut returns directly to the area entrance. You can also retrace the room corridors using NSEW swipes."
       }
+    ],
+    "enemy_parties": [
+      [
+        "magma_drone",
+        "magma_drone"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "magma_drone",
+        "occurrence": 1,
+        "override_drops": [
+          {
+            "id": "power_cell",
+            "chance": 0.4
+          },
+          {
+            "id": "wiring_bundle",
+            "chance": 0.45
+          }
+        ],
+        "xp_reward": 120,
+        "credit_reward": 60,
+        "ap_reward": 0
+      },
+      {
+        "enemy_id": "magma_drone",
+        "occurrence": 2,
+        "override_drops": [],
+        "xp_reward": 119,
+        "credit_reward": 60,
+        "ap_reward": 0
+      }
     ]
   },
   {
@@ -21374,7 +22298,7 @@
     "items": [],
     "enemies": [
       "welder_bot",
-      "magma_drone"
+      "magnet_sifter"
     ],
     "connections": {
       "north": "foundry_waste_intake_scale_04"
@@ -21412,6 +22336,47 @@
         "type": "generic",
         "action_event": "warp_foundry_waste_intake_scale_final_to_entry",
         "condition_unmet_message": "An optional shortcut returns directly to the area entrance. You can also retrace the room corridors using NSEW swipes."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "welder_bot",
+        "magnet_sifter"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "welder_bot",
+        "occurrence": 1,
+        "override_drops": [
+          {
+            "id": "scrap_metal",
+            "chance": 0.55
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.25
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.4
+          },
+          {
+            "id": "wiring_bundle",
+            "chance": 0.45
+          }
+        ],
+        "xp_reward": 185,
+        "credit_reward": 88,
+        "ap_reward": 0
+      },
+      {
+        "enemy_id": "magnet_sifter",
+        "occurrence": 1,
+        "override_drops": [],
+        "xp_reward": 184,
+        "credit_reward": 87,
+        "ap_reward": 0
       }
     ]
   },
@@ -21523,23 +22488,9 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "phantom_prototype"
+      "phantom_prototype",
+      "welder_bot"
     ],
-    "enemy_instances": [
-      {
-        "enemy_id": "phantom_prototype",
-        "extra_drops": [
-          {
-            "id": "circuit_board",
-            "chance": 1.0,
-            "quantity": 1
-          }
-        ]
-      }
-    ],
-    "enemy_flavor": {
-      "phantom_prototype": "One intact Circuit Board can be recovered from this prototype for Field Kit repairs or reinforced fishing gear."
-    },
     "connections": {
       "south": "foundry_conditioning_scale_04"
     },
@@ -21576,6 +22527,44 @@
         "type": "generic",
         "action_event": "warp_foundry_conditioning_scale_final_to_entry",
         "condition_unmet_message": "An optional shortcut returns directly to the area entrance. You can also retrace the room corridors using NSEW swipes."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "phantom_prototype",
+        "welder_bot"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "phantom_prototype",
+        "occurrence": 1,
+        "override_drops": [
+          {
+            "id": "wiring_bundle",
+            "chance": 0.45
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.35
+          },
+          {
+            "id": "circuit_board",
+            "chance": 1.0,
+            "quantity": 1
+          }
+        ],
+        "xp_reward": 175,
+        "credit_reward": 90,
+        "ap_reward": 0
+      },
+      {
+        "enemy_id": "welder_bot",
+        "occurrence": 1,
+        "override_drops": [],
+        "xp_reward": 174,
+        "credit_reward": 90,
+        "ap_reward": 0
       }
     ]
   },
@@ -21677,6 +22666,47 @@
         "type": "generic",
         "action_event": "warp_foundry_power_core_scale_final_to_entry",
         "condition_unmet_message": "An optional shortcut returns directly to the area entrance. You can also retrace the room corridors using NSEW swipes."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "slag_golem",
+        "welder_bot"
+      ]
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "slag_golem",
+        "occurrence": 1,
+        "override_drops": [
+          {
+            "id": "scrap_metal",
+            "chance": 0.8
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.35
+          },
+          {
+            "id": "scrap_metal",
+            "chance": 0.55
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.25
+          }
+        ],
+        "xp_reward": 235,
+        "credit_reward": 123,
+        "ap_reward": 0
+      },
+      {
+        "enemy_id": "welder_bot",
+        "occurrence": 1,
+        "override_drops": [],
+        "xp_reward": 234,
+        "credit_reward": 122,
+        "ap_reward": 0
       }
     ]
   },
@@ -21786,7 +22816,8 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "compliance_officer"
+      "customs_screener",
+      "prism_surveyor"
     ],
     "connections": {
       "south": "orbital_grand_concourse_scale_06"
@@ -21824,6 +22855,30 @@
         "type": "generic",
         "action_event": "warp_orbital_grand_concourse_scale_final_to_entry",
         "condition_unmet_message": "An optional shortcut returns directly to the area entrance. You can also retrace the room corridors using NSEW swipes."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "customs_screener",
+        "prism_surveyor"
+      ]
+    ],
+    "enemy_flavor": {
+      "customs_screener": "Marks one crew member for squad pressure, then resets. Interrupt its scanner preparation.",
+      "prism_surveyor": "Prepares three brief squad damage boosts. Interrupt the alignment or remove the supported attacker."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "customs_screener",
+        "occurrence": 1,
+        "xp_reward": 275,
+        "credit_reward": 194
+      },
+      {
+        "enemy_id": "prism_surveyor",
+        "occurrence": 1,
+        "xp_reward": 242,
+        "credit_reward": 172
       }
     ]
   },
@@ -21884,7 +22939,9 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "void_turret"
+      "compliance_officer",
+      "void_turret",
+      "null_g_drone"
     ],
     "connections": {
       "north": "orbital_security_hub_scale_06"
@@ -21922,6 +22979,38 @@
         "type": "generic",
         "action_event": "warp_orbital_security_hub_scale_final_to_entry",
         "condition_unmet_message": "An optional shortcut returns directly to the area entrance. You can also retrace the room corridors using NSEW swipes."
+      }
+    ],
+    "enemy_parties": [
+      [
+        "compliance_officer",
+        "void_turret",
+        "null_g_drone"
+      ]
+    ],
+    "enemy_flavor": {
+      "compliance_officer": "Commits to a warned detention sweep, then resets its stance.",
+      "void_turret": "Charges a beam before firing, then vents. Interrupt the charge or guard and punish the opening.",
+      "null_g_drone": "Prepares a short gravity tether, then releases its clamps. Shock is effective."
+    },
+    "enemy_instances": [
+      {
+        "enemy_id": "compliance_officer",
+        "occurrence": 1,
+        "xp_reward": 148,
+        "credit_reward": 86
+      },
+      {
+        "enemy_id": "void_turret",
+        "occurrence": 1,
+        "xp_reward": 231,
+        "credit_reward": 134
+      },
+      {
+        "enemy_id": "null_g_drone",
+        "occurrence": 1,
+        "xp_reward": 84,
+        "credit_reward": 49
       }
     ]
   },
@@ -22150,9 +23239,7 @@
     "description": "A scar step holds dents from every world, refusing Vale's offer to polish them away. The scar step and unpolished edge turn damage into proof of life. A scarred survivor reliquary holds fragments of every battle survived. A one-way slide leads directly back to the entrance.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "source_shadow"
-    ],
+    "enemies": [],
     "connections": {
       "south": "source_memory_stair_node_scale_04"
     },
@@ -22190,7 +23277,8 @@
         "action_event": "warp_source_memory_stair_node_scale_final_to_entry"
       }
     ],
-    "special_exits": {}
+    "special_exits": {},
+    "enemy_parties": []
   },
   {
     "id": "source_center_node_scale_final",
@@ -22666,6 +23754,33 @@
         "name": "announcer horn",
         "type": "generic",
         "condition_unmet_message": "A blaring pneumatic klaxon that signals wave starts and emergency coolant flushes."
+      }
+    ],
+    "enemy_instances": [
+      {
+        "enemy_id": "crucible_champion",
+        "occurrence": 1,
+        "xp_reward": 470,
+        "credit_reward": 260,
+        "ap_reward": 0,
+        "override_drops": [
+          {
+            "id": "pure_iron",
+            "chance": 1.0
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.8
+          },
+          {
+            "id": "power_cell",
+            "chance": 0.4
+          },
+          {
+            "id": "wiring_bundle",
+            "chance": 0.45
+          }
+        ]
       }
     ]
   }

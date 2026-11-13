@@ -369,7 +369,10 @@ class CombatController(
                 val overrides = pendingSlots.getOrNull(index)?.takeIf { it.enemyId == canonicalId }
                 EncounterEnemySlot(
                     canonicalId = canonicalId,
-                    enemy = crewEncounterTempo.apply(enemy.forEncounterRoom(sessionSnapshot.roomId),
+                    enemy = crewEncounterTempo.apply(enemy.copy(
+                        xpReward = overrides?.xpReward ?: enemy.xpReward,
+                        creditReward = overrides?.creditReward ?: enemy.creditReward,
+                        apReward = overrides?.apReward ?: enemy.apReward).forEncounterRoom(sessionSnapshot.roomId),
                         sessionSnapshot.roomId, sessionSnapshot.progressionPrototypeVersion),
                     hp = overrides?.hp,
                     vitality = overrides?.vitality,
@@ -509,7 +512,7 @@ class CombatController(
                 if (combatantState.combatant.side == CombatSide.PLAYER) {
                     val maxHp = combatantState.combatant.stats.maxHp
                     val persistedHp = sessionSnapshot.partyMemberHp[id] ?: maxHp
-                    val initialHp = persistedHp.coerceIn(1, maxHp)
+                    val initialHp = persistedHp.coerceIn(if ("ascended_god" in encounterEnemyIdList) 0 else 1, maxHp)
                     val initialStatuses = if (com.example.starborn.domain.leveling.CrewBuildPrototype.ORION_ANCESTRAL_GRACE in combatantState.combatant.talents &&
                         combatantState.statusEffects.none { it.id == "regen" }) {
                         combatantState.statusEffects + StatusEffect(id = "regen", remainingTurns = 3, stacks = 1, sourceId = id)
@@ -2160,7 +2163,8 @@ class CombatController(
             } else {
                 random.nextDouble(0.2, 0.6)
             }
-            combatant.id to seed.toFloat()
+            val hasOwnTurn = AuthoredEncounterRules.linkedOwner(combatant.id, enemyDefinitions) == null
+            combatant.id to if (hasOwnTurn) seed.toFloat() else 0f
         }
         _atbMeters.value = initial
     }
@@ -2800,6 +2804,12 @@ class CombatController(
         val use = action as? CombatAction.SkillUse ?: return action
         val label = pattern.windups[use.skillId] ?: return action
         current = _state.value ?: return null
+        if (pattern.windupGroup != null && current.authored.preparations.keys.any {
+                it != id && enemyDefinitions[it]?.authored?.windupGroup == pattern.windupGroup }) {
+            waitAuthoredTurn(id, "Covering the formation")
+            enemyTurnJob = null
+            return null
+        }
         val actualSource = AuthoredEncounterRules.sourceFor(id, use.skillId, enemyDefinitions)
         if (actualSource == null || !AuthoredEncounterRules.canPrepare(actualSource, current, statusRegistry)) {
             waitAuthoredTurn(id, "$label unavailable")
@@ -3386,7 +3396,7 @@ class CombatController(
         val snapshot = buildMap {
             playerParty.forEach { member ->
                 state.combatants[member.id]?.let { combatantState ->
-                    put(member.id, combatantState.hp.coerceAtLeast(1))
+                    put(member.id, combatantState.hp.coerceAtLeast(if ("ascended_vale" in encounterEnemyIdList) 0 else 1))
                 }
             }
         }
@@ -3524,7 +3534,11 @@ class CombatController(
             }
             SkillTargeting.SINGLE_ENEMY -> {
                 if (attackerSide == CombatSide.ENEMY) {
-                    resolvePlayerTargets(state)
+                    val mark = enemyDefinitions[attackerId]?.authored?.preferredTargetStatus
+                    val marked = playerIdList.filter { id -> state.combatants[id]?.let { actor ->
+                        actor.isAlive && mark != null && actor.statusEffects.any { it.id == mark }
+                    } == true }
+                    marked.take(1).ifEmpty { resolvePlayerTargets(state) }
                 } else {
                     resolveEnemyTargets(state)
                 }
@@ -3755,6 +3769,7 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
     }
 
     fun playVictoryMusic() {
+        if (encounterEnemyIdList == listOf("ascended_vale")) return
         val commands = mutableListOf<com.example.starborn.domain.audio.AudioCommand>()
         commands += audioRouter.commandsForLayerOverride(
             layer = AudioCueType.MUSIC,

@@ -1,6 +1,6 @@
 # Implementation progress — November 13, 2026
 
-The campaign now has authored combat through the Foundry and a first Ring mechanics pass. The Titan Walker and Administrator have original artwork. The wider World 5 roster, World 6 redesign and remaining art batches are planned. Moss Borer, Mist Glider, Directive Conductor and Boardroom Bailiff use temporary sprites.
+The campaign now has authored combat through the Source. The Titan Walker, Administrator, Ring and Source roster have dedicated artwork.
 
 ## Implemented
 
@@ -43,17 +43,29 @@ The expanding warning card is replaced by compact cues in existing message space
 - The Titan uses an assembled portrait in exploration and five original sprites in battle. When a system is destroyed, the combat sprite disappears to expose its chassis mount.
 - After heavy attacks the Titan exposes its vents. Emergency Power begins below 40% chassis HP and introduces the warned Hydraulic Stomp. The stomp and vent cycle also keeps a fully disarmed chassis active.
 - Slag River's drone shows a marked Heat Burst followed by venting. Slag Golem and Flame Trooper warn before their heavy attacks. On Conveyor Belt, the Welder Bot's limited repairs can be interrupted by damaging it during the charge.
+- Consolidated the Foundry to 24 room formations and three Crucible rounds. The static total remains 6,780 XP, 3,665 credits and 3 AP. The crossing and escape gates and guaranteed materials remain. The solo Champion now uses a warned hammer strike, exposed recovery and a faster White Heat phase.
+- Sixteen dedicated sprites cover Foundry fighters and formerly shared Sector 9 and Spire identities. The Administrator is larger in Android combat.
 - An earned route verified the north gate, one victory receipt, save and reload, and the hardware checks before departure to World 5. Review saves 18–20 are exported by that route.
 
-## World 5 — first mechanics pass
+## World 5 — The Ring
 
 - The Avatar automatically brings a separately targetable Directive Conductor into combat while retaining the original single-boss encounter receipt. The Conductor has three brief wards and no damaging action cycle. Joint preparations use the Conductor as their interruptible source.
 - Destroying the Conductor cancels the joint preparation, removes its ward and permanently replaces coordination with an exposed recalibration and simpler single-target discharges. An intact link introduces a warned party Purge below half HP. Avatar death collapses the partner and pays the original reward once.
 - Boardroom Grave now has a distinct Boardroom Bailiff, retaining its previous reward budget and three guaranteed cells. Historical side-room Avatar receipts retire the replacement; they cannot recover main-boss quest credit. The main Avatar victory handler is scoped to The Tear.
 - Chorus Tank and Empty Cradle Afterimage no longer duplicate the scripted Hunter-Killer. The Anchor acquisition/Stasis sequence remains.
 - Fighter pairs start on alternating beats. Officers, gravity drones, turrets, shield guards and the main Firewall Construct now have explicit preparation/recovery cycles. Drone tethers and turret charges can be interrupted by damage.
-- The first pass uses temporary art for the Conductor and Bailiff. The wider density/roster plan, actual reflector and frequency-switch mechanics, and final World 5 artwork remain open. The current guard reduces damage rather than reflecting it; descriptions state its implemented behavior.
-- Main-story and completionist routes both reached the Source from an earned World 1–4 arrival, using real combat and seed 17. Runtime checks cover body-first/partner-first victory, interruption, permanent link loss, the original payout, staggered fighter openings and rejection of an old side-room boss receipt. This is progression evidence, not blind-play or multi-seed balance acceptance.
+- The Ring now has 25 encounter placements, down from 40. Repeated fights were consolidated into squads and story spaces cleared. The static reward budget remains 11,550 XP and 7,070 credits. Existing cleared receipts retire their room’s replacement encounter.
+- Mirror Guard returns half of eligible single-target ranged energy damage, up to a quarter of the attacker’s maximum HP. Firewall Gamma declares alternating Burn and Shock openings while Physical and Source remain neutral.
+- Thirteen new sprites were generated through the OpenAI Image API and integrated into combat and exploration. Null-G Drone retains its dedicated art.
+- Main-story and completionist routes reached the Source from an earned World 1–4 arrival. The completionist sweep clears the optional squads and leaves the Hunter-Killer to the Stasis scene. The routes exercised Conductor-first and Avatar-first wins with seeds 17 and 41. Emulator checks verified both boss targets and fixed positioning after link loss.
+
+## World 6 — The Source
+
+- The three rescue fights have distinct warnings and recovery. The Kill-Suite Echoes alternate attack preparation. Optional nightmare branches have their own opponents and existing rewards.
+- Source fragments coordinate their dangerous attacks. Memory Leak has two Borrowed Pressure casts, and Nightmare Guard has two shelter casts. Quest victories are scoped to their intended arenas.
+- Soloist and Silence now fight at The Center. The transformation provides a save point with separate battle rewards. HP, knockouts and inventory carry forward, and the second-form retry restores battle-entry HP and inventory.
+- Silence has two independently destructible command anchors on the body’s turn schedule. Below 15% HP, it prepares one Great Silence and exposes itself afterward. Shared tuning still closes the story.
+- Fifteen dedicated sprites were generated through the OpenAI Image API. The completionist walkthrough preserves the northern exploration branch and describes the return from the former Silence arena.
 
 ## Verified / limits
 
@@ -65,4 +77,4 @@ Combat restarts from battle entry when reopened. The source reconciliation recor
 
 ## Next
 
-Review Administrator battlefield scale and the Ring duet's presentation, then stabilize the remaining Ring roles before producing their artwork. The wider Foundry roster and route redesign remains proposed. The save menu supports 30 manual slots; the requested World 6 slot 21 starts at Echo of the Mines after the opening rescues, using temporary battle assistance and normal rewards while preserving the player's slot 10 build.
+Blind playtest the Ring’s opening fighters, Security Hub, Firewall Gamma and the Avatar duet to evaluate pacing and whether the tells are easy to read. Playtest the revised Foundry squads and Crucible duel with an earned arrival. The save menu supports 30 manual slots; the requested World 6 slot 21 starts at Echo of the Mines after the opening rescues, using temporary battle assistance and normal rewards while preserving the player's slot 10 build.

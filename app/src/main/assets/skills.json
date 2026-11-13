@@ -2850,5 +2850,605 @@
       "ring_command_ward"
     ],
     "uses_per_battle": 3
+  },
+  {
+    "id": "ring_designate",
+    "name": "Detention Mark",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Detention Mark.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 20,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "enemy",
+    "status_applications": [
+      "ring_detention_mark"
+    ]
+  },
+  {
+    "id": "ring_capture",
+    "name": "Capture Cable",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Capture Cable.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 45,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "enemy",
+    "status_applications": [
+      "ring_capture_drag"
+    ]
+  },
+  {
+    "id": "ring_alignment",
+    "name": "Volley Alignment",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Volley Alignment.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "all_allies",
+    "status_applications": [
+      "ring_alignment"
+    ],
+    "uses_per_battle": 3
+  },
+  {
+    "id": "ring_prism_shot",
+    "name": "Survey Pulse",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Survey Pulse.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 40,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "enemy"
+  },
+  {
+    "id": "ring_shock_frequency",
+    "name": "Amber Frequency — Burn Opening",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Amber Frequency — Burn Opening.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "self",
+    "status_applications": [
+      "ring_frequency_shock"
+    ]
+  },
+  {
+    "id": "ring_burn_frequency",
+    "name": "Blue Frequency — Shock Opening",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Blue Frequency — Shock Opening.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "self",
+    "status_applications": [
+      "ring_frequency_burn"
+    ]
+  },
+  {
+    "id": "ring_fracture",
+    "name": "Incomplete Fracture",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Incomplete Fracture.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 70,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "enemy"
+  },
+  {
+    "id": "ring_remnant_expose",
+    "name": "Fracture Unraveling",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Fracture Unraveling.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "self",
+    "status_applications": [
+      "ring_link_exposed"
+    ]
+  },
+  {
+    "id": "source_recover",
+    "name": "Regathering",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Regathering.",
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "self",
+    "combat_tags": [
+      "support"
+    ]
+  },
+  {
+    "id": "source_expose",
+    "name": "Exposed Memory",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Exposed Memory.",
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "self",
+    "combat_tags": [
+      "support"
+    ],
+    "status_applications": [
+      "source_exposed"
+    ]
+  },
+  {
+    "id": "source_review_order",
+    "name": "Performance Demand",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Performance Demand.",
+    "base_power": 24,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg"
+    ],
+    "status_applications": [
+      "source_review_mark"
+    ]
+  },
+  {
+    "id": "source_review_judgment",
+    "name": "Final Judgment",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Final Judgment.",
+    "base_power": 77,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg"
+    ]
+  },
+  {
+    "id": "source_war_order",
+    "name": "Designation",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Designation.",
+    "base_power": 24,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg"
+    ],
+    "status_applications": [
+      "source_review_mark"
+    ]
+  },
+  {
+    "id": "source_war_volley",
+    "name": "Execution Volley",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Execution Volley.",
+    "base_power": 73,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg"
+    ]
+  },
+  {
+    "id": "source_tide",
+    "name": "Silence Tide",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Silence Tide.",
+    "base_power": 62,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "all_enemies",
+    "combat_tags": [
+      "dmg",
+      "source"
+    ],
+    "status_applications": [
+      "silence"
+    ]
+  },
+  {
+    "id": "source_slash",
+    "name": "Shadow Slash",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Shadow Slash.",
+    "base_power": 65,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg"
+    ]
+  },
+  {
+    "id": "source_bolt",
+    "name": "Fractured Bolt",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Fractured Bolt.",
+    "base_power": 62,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg"
+    ]
+  },
+  {
+    "id": "source_pounce",
+    "name": "Glitch Pounce",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Glitch Pounce.",
+    "base_power": 66,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg"
+    ]
+  },
+  {
+    "id": "source_memory_copy",
+    "name": "Borrowed Pressure",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Borrowed Pressure.",
+    "base_power": 57,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "all_enemies",
+    "combat_tags": [
+      "dmg",
+      "source"
+    ],
+    "uses_per_battle": 2
+  },
+  {
+    "id": "source_memory_shelter",
+    "name": "Shelter the Leak",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Shelter the Leak.",
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "all_allies",
+    "combat_tags": [
+      "support"
+    ],
+    "status_applications": [
+      "source_echo_shelter"
+    ],
+    "uses_per_battle": 2
+  },
+  {
+    "id": "source_accuse",
+    "name": "Accusation",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Accusation.",
+    "base_power": 69,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg"
+    ]
+  },
+  {
+    "id": "source_vale_command",
+    "name": "Command of Silence",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Command of Silence.",
+    "base_power": 67,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg",
+      "source"
+    ],
+    "status_applications": [
+      "silence"
+    ]
+  },
+  {
+    "id": "source_vale_verdict",
+    "name": "Soloist’s Verdict",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Soloist’s Verdict.",
+    "base_power": 78,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg",
+      "source"
+    ]
+  },
+  {
+    "id": "source_voice_command",
+    "name": "Erase the Voice",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Erase the Voice.",
+    "base_power": 69,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg",
+      "source"
+    ],
+    "status_applications": [
+      "silence"
+    ]
+  },
+  {
+    "id": "source_memory_command",
+    "name": "Erase the Memory",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Erase the Memory.",
+    "base_power": 53,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "all_enemies",
+    "combat_tags": [
+      "dmg",
+      "source"
+    ]
+  },
+  {
+    "id": "source_silence_fallback",
+    "name": "Fractured Command",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Fractured Command.",
+    "base_power": 60,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg",
+      "source"
+    ]
+  },
+  {
+    "id": "source_great_silence",
+    "name": "Great Silence",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Great Silence.",
+    "base_power": 68,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "all_enemies",
+    "combat_tags": [
+      "dmg",
+      "source"
+    ],
+    "uses_per_battle": 1
+  },
+  {
+    "id": "source_clerk_stamp",
+    "name": "File the Review",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "File the Review.",
+    "base_power": 35,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg"
+    ],
+    "status_applications": [
+      "source_review_mark"
+    ]
+  },
+  {
+    "id": "source_order_fragment_shot",
+    "name": "Broken Order",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Broken Order.",
+    "base_power": 50,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg"
+    ]
+  },
+  {
+    "id": "source_tide_murmur",
+    "name": "Low Tide",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Low Tide.",
+    "base_power": 45,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg"
+    ],
+    "status_applications": [
+      "weak"
+    ]
+  },
+  {
+    "id": "foundry_quench_vent",
+    "name": "Coolant Vent",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Coolant Vent.",
+    "base_power": 57,
+    "scaling": "atk",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg",
+      "freeze"
+    ]
+  },
+  {
+    "id": "foundry_magnet_mark",
+    "name": "Magnetic Mark",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Magnetic Mark.",
+    "base_power": 22,
+    "scaling": "atk",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg"
+    ],
+    "status_applications": [
+      "foundry_magnetic_mark"
+    ]
+  },
+  {
+    "id": "foundry_press_reset",
+    "name": "Press Rising",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Press Rising.",
+    "base_power": 0,
+    "scaling": "atk",
+    "cooldown": 0,
+    "targeting": "self",
+    "combat_tags": [
+      "support"
+    ],
+    "status_applications": [
+      "foundry_opening"
+    ]
+  },
+  {
+    "id": "foundry_press_slam",
+    "name": "Stamping Press",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Stamping Press.",
+    "base_power": 76,
+    "scaling": "atk",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg"
+    ]
+  },
+  {
+    "id": "foundry_champion_feint",
+    "name": "Checking Jab",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Checking Jab.",
+    "base_power": 29,
+    "scaling": "atk",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg"
+    ]
+  },
+  {
+    "id": "foundry_champion_hammer",
+    "name": "Hammer Commitment",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Hammer Commitment.",
+    "base_power": 112,
+    "scaling": "atk",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg"
+    ]
+  },
+  {
+    "id": "foundry_champion_heated",
+    "name": "White-Hot Hammer",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "White-Hot Hammer.",
+    "base_power": 121,
+    "scaling": "atk",
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "combat_tags": [
+      "dmg",
+      "burn"
+    ]
+  },
+  {
+    "id": "foundry_exposed",
+    "name": "Exposed Recovery",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Exposed Recovery.",
+    "base_power": 0,
+    "scaling": "atk",
+    "cooldown": 0,
+    "targeting": "self",
+    "combat_tags": [
+      "support"
+    ],
+    "status_applications": [
+      "foundry_opening"
+    ]
   }
 ]

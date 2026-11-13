@@ -43,7 +43,7 @@ Optional supply fights include **Coolant Spillway** (two guaranteed **Pure Iron*
 
 8. At **Heat Shadow Alcove**, inspect **heat shadow**, **coolant tags**; use **geothermal induction plate** if you need its rest/cooking service; use **heat shadow refuge** if you need its rest/cooking service.
 
-9. At **Heat Shadow Alcove**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+9. At **Heat Shadow Alcove**, use **Rest** if the crew needs it. The alcove is a safe place to recover between fights.
 
 10. From **Heat Shadow Alcove**, go **north** to **Slag Signal Post** (`foundry_obsidian_shelf_scale_03`).
 
@@ -74,7 +74,7 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 
 19. From **Slag River**, go **north** to **Stepping Stones** (`foundry_slag_stepping_stones`).
 
-20. At **Stepping Stones**, defeat any blocking **Magma Drone** before working the crossing. Read the heat-break/flare rhythm.
+20. At **Stepping Stones**, look for the rhythm of the heat breaks before touching the valve.
 
 21. At **Stepping Stones**, use **flare rhythm**. This checks off **Cross the Slag River by reading the heat breaks** in **Secure Landing** after you secure the Astra. **Slag crossing** at Slag River gives the same credit. If the Journal already shows the task checked, continue. This reading leaves you in the same room.
 
@@ -98,13 +98,13 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 
 31. At **Coolant Spillway**, inspect **coolant spillway**, **steam curtain**.
 
-32. At **Coolant Spillway**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+32. At **Coolant Spillway**, defeat the optional **Welder Bot** for two guaranteed **Pure Iron** for the arcade repair. Damage it during repair preparation to interrupt it.
 
 33. From **Coolant Spillway**, go **north** to **Slag Ferry Winch** (`foundry_slag_river_scale_03`).
 
 34. At **Slag Ferry Winch**, inspect **slag ferry**, **winch teeth**.
 
-35. At **Slag Ferry Winch**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+35. At **Slag Ferry Winch**, the optional **Slag Golem** and **Quench Mite** alternate heavy attacks. Damage the mite when its coolant sac swells.
 
 36. From **Slag Ferry Winch**, go **north** to **River Gauge Station** (`foundry_slag_river_scale_04`).
 
@@ -114,7 +114,7 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 
 39. At **Foundry River Control**, inspect **burned console**, **rescue hook**; open **smelter toolbox** for one-time contents.
 
-40. At **Foundry River Control**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+40. At **Foundry River Control**, the optional pair of **Magma Drones** staggers its Heat Bursts. Attack during each drone’s venting pause.
 
 41. From **Foundry River Control**, go **south** to **River Gauge Station** (`foundry_slag_river_scale_04`) → **south** to **Slag Ferry Winch** (`foundry_slag_river_scale_03`) → **south** to **Coolant Spillway** (`foundry_slag_river_scale_02`) → **west** to **Basalt Switchback** (`foundry_slag_river_scale_01`) → **north** to **Slag River** (`foundry_slag_river`).
 
@@ -149,13 +149,13 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 
 54. At **Records Shed**, inspect **records shed**, **Phantom labels**.
 
-55. At **Records Shed**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+55. At **Records Shed**, finish reading the records before heading south to the optional squad at Magnet Ramp.
 
 56. From **Records Shed**, go **south** to **Magnet Ramp** (`foundry_waste_intake_scale_03`).
 
 57. At **Magnet Ramp**, inspect **magnet ramp**, **loose filings**.
 
-58. At **Magnet Ramp**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+58. At **Magnet Ramp**, the optional **Magnet Sifter** marks a crew member for the **Slag Golem**. Interrupt the lock or guard the marked character.
 
 59. From **Magnet Ramp**, go **south** to **Intake Catwalk** (`foundry_waste_intake_scale_04`).
 
@@ -165,7 +165,7 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 
 62. At **Foundry Sorter Spine**, inspect **sorter spine**, **reject ledger**; open **salvage bin** for one-time contents.
 
-63. At **Foundry Sorter Spine**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+63. At **Foundry Sorter Spine**, the optional **Welder Bot** supports a **Magnet Sifter**. Choose which preparation to interrupt first.
 
 64. From **Foundry Sorter Spine**, go **north** to **Intake Catwalk** (`foundry_waste_intake_scale_04`) → **north** to **Magnet Ramp** (`foundry_waste_intake_scale_03`) → **north** to **Records Shed** (`foundry_waste_intake_scale_02`) → **north** to **Crusher Throat** (`foundry_waste_intake_scale_01`) → **north** to **Waste Intake** (`foundry_waste_intake`).
 
@@ -184,7 +184,7 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 
 69. At **Decon Chamber**, inspect **decon cycle**.
 
-70. At **Decon Chamber**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+70. At **Decon Chamber**, use the quiet stretch to check the Journal before continuing east.
 
 71. From **Decon Chamber**, go **east** to **High-Pressure Pipe Gallery** (`foundry_pipe_gallery`).
 
@@ -198,7 +198,7 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 
 76. At **Decon Drain**, inspect **decon drain**, **chemical foam**.
 
-77. At **Decon Drain**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+77. At **Decon Drain**, the optional **Quench Mites** stagger their coolant vents. Hit the swelling mite to interrupt it.
 
 78. From **Decon Drain**, go **north** to **Pressure Lock Gallery** (`foundry_service_airlock_scale_03`).
 
@@ -249,7 +249,7 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 
 99. At **Worker Marker**, inspect **worker marker**, **helmet light**.
 
-100. At **Worker Marker**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+100. At **Worker Marker**, read the memorial details before continuing north.
 
 101. From **Worker Marker**, go **north** to **Spring Valve Nest** (`foundry_cooling_springs_scale_03`).
 
@@ -306,7 +306,7 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 
 125. Talk to **Pitmaster Brutus** at **The Scrapper's Crucible**. Choose the Round 3 start response after the previous round’s victory. Finish the start conversation to begin the actual encounter.
 
-126. Defeat the **Crucible Champion** and a **Magma Drone** escort. A start receipt, retreat or defeat does not clear round 3. If you retreat or lose, recover and ask Brutus to restart that uncleared round; do not expect the next round until victory is recorded.
+126. Defeat the **Crucible Champion** in a solo bout. Guard the marked crew member when its fists lock, then attack during its exposed recovery. Below 35% HP, **White Heat** shortens its recovery. Winning pays one guaranteed **Pure Iron**. A retreat or defeat leaves round 3 available.
 
 127. Talk to **Pitmaster Brutus** at **The Scrapper's Crucible**. Speak again after round three to claim the final prize. Confirm **The Scrapper’s Crucible** complete: **500 XP + 350 credits + Crucible Forge Plate**. Round-start dialogue alone is not this payout.
 
@@ -360,7 +360,7 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 
 147. At **Quench Lane**, inspect **quench lane**, **steam alarms**.
 
-148. At **Quench Lane**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+148. At **Quench Lane**, the optional **Magma Drone** and **Quench Mite** alternate heat and coolant attacks.
 
 149. From **Quench Lane**, go **north** to **Defect Window** (`foundry_conditioning_scale_03`).
 
@@ -374,7 +374,7 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 
 154. At **Foundry Defect Choir**, inspect **defect choir**, **glass seam**; open **stress-test locker** for one-time contents.
 
-155. At **Foundry Defect Choir**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+155. At **Foundry Defect Choir**, defeat the optional **Phantom Prototype** and **Welder Bot** for one guaranteed **Circuit Board**.
 
 156. From **Foundry Defect Choir**, go **south** to **Calibration Pit** (`foundry_conditioning_scale_04`) → **south** to **Defect Window** (`foundry_conditioning_scale_03`) → **south** to **Quench Lane** (`foundry_conditioning_scale_02`) → **west** to **Heat-Soak Chamber** (`foundry_conditioning_scale_01`) → **north** to **Conditioning Chamber** (`foundry_conditioning_chamber`).
 
@@ -420,7 +420,7 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 
 172. At **Foundry Belt Nerve**, inspect **nerve junction**, **target counter**; open **assembly cache** for one-time contents.
 
-173. At **Foundry Belt Nerve**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+173. At **Foundry Belt Nerve**, the optional **Conveyor Crusher** exposes its mechanism after its warned press slam.
 
 174. From **Foundry Belt Nerve**, go **south** to **Control Perch** (`foundry_conveyor_belt_scale_04`).
 
@@ -432,13 +432,13 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 
 178. At **Anvil Shadow**, inspect **anvil shadow**, **relic imprint**.
 
-179. At **Anvil Shadow**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+179. At **Anvil Shadow**, finish inspecting the relic imprint before continuing north to the optional duel in Mold Library.
 
 180. From **Anvil Shadow**, go **north** to **Mold Library** (`foundry_forge_scale_03`).
 
 181. At **Mold Library**, inspect **mold library**, **broken casts**.
 
-182. At **Mold Library**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+182. At **Mold Library**, the optional **Slag Golem** exposes a window after its heavy attack.
 
 183. From **Mold Library**, go **north** to **Slag Chapel** (`foundry_forge_scale_04`).
 
@@ -467,7 +467,7 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 
 193. At **Engine Service Ring**, read available local details.
 
-194. At **Engine Service Ring**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+194. At **Engine Service Ring**, defeat the optional **Flame Trooper** for two guaranteed **Ration Packs**.
 
 195. From **Engine Service Ring**, go **south** to **Power Core** (`foundry_power_core`) → **south** to **Turbine Balcony** (`foundry_power_core_scale_01`).
 
@@ -477,7 +477,7 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 
 198. At **Engine Cradle**, inspect **engine cradle**, **mount clamps**.
 
-199. At **Engine Cradle**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+199. At **Engine Cradle**, inspect the hardware at your own pace before continuing south.
 
 200. From **Engine Cradle**, go **south** to **Array Lockers** (`foundry_power_core_scale_03`).
 
@@ -491,7 +491,7 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 
 205. At **Foundry Core Shadow**, inspect **core shadow**, **clamp gauge**; open **shielded core case** for one-time contents.
 
-206. At **Foundry Core Shadow**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+206. At **Foundry Core Shadow**, the optional **Welder Bot** supports a **Slag Golem**. Interrupt the repair or use the golem’s recovery window.
 
 207. From **Foundry Core Shadow**, go **north** to **Coolant Choir** (`foundry_power_core_scale_04`) → **north** to **Array Lockers** (`foundry_power_core_scale_03`) → **north** to **Engine Cradle** (`foundry_power_core_scale_02`) → **north** to **Turbine Balcony** (`foundry_power_core_scale_01`) → **north** to **Power Core** (`foundry_power_core`).
 
@@ -526,13 +526,13 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 
 220. At **Ammo Lift**, inspect **ammo lift**, **chain brake**.
 
-221. At **Ammo Lift**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+221. At **Ammo Lift**, the optional **Welder Bot** supports a **Flame Trooper**. Interrupt the repair or prepare for the trooper’s sweep.
 
 222. From **Ammo Lift**, go **north** to **Escape Rail** (`foundry_titan_dock_scale_03`).
 
 223. At **Escape Rail**, inspect **escape rail**, **cut coupler**.
 
-224. At **Escape Rail**, fight the local patrol if you want the combat rewards, or continue with the room sweep.
+224. At **Escape Rail**, finish inspecting the route before returning to Titan Dock.
 
 225. From **Escape Rail**, go **north** to **Meltdown View** (`foundry_titan_dock_scale_04`).
 

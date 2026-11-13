@@ -55,17 +55,18 @@ fun VictoryDialog(
     theme: Theme?,
     onContinue: () -> Unit
 ) {
+    val transformation = payload.enemyIds == listOf("ascended_vale")
     val buttonLabel = if (stage == VictoryDialogStage.SPOILS && payload.levelUps.isNotEmpty()) {
         "Next"
     } else {
-        "Continue"
+        if (transformation) "Return to The Center" else "Continue"
     }
     val title = when (stage) {
-        VictoryDialogStage.SPOILS -> "Spoils Recovered"
+        VictoryDialogStage.SPOILS -> if (transformation) "The Silence Rises" else "Spoils Recovered"
         VictoryDialogStage.LEVEL_UPS -> "Level Up!"
     }
     val eyebrow = when (stage) {
-        VictoryDialogStage.SPOILS -> "Battle Rewards"
+        VictoryDialogStage.SPOILS -> if (transformation) "Vale’s Transformation" else "Battle Rewards"
         VictoryDialogStage.LEVEL_UPS -> "Progression"
     }
     val panelColor = Color(0xFF21130D).copy(alpha = if (highContrastMode) 0.98f else 0.94f)

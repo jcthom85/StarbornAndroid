@@ -52,7 +52,7 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 16. From **Endless War**, go **east** to **Kill-Suite Loop** (`source_gh0st_kill_suite`).
 
-17. At **Kill-Suite Loop**, defeat **Endless War Echo**. Confirm **Rescue Gh0st** credited. The Order Well branch contains another encounter of this type; clearing both is not a second rescue task.
+17. At **Kill-Suite Loop**, defeat **Endless War Echo**. Confirm **Rescue Gh0st** credited. The Order Well branch has an optional War Order Fragment. The rescue comes from the two Echoes in Kill-Suite Loop.
 
 18. From **Kill-Suite Loop**, go **west** to **Endless War** (`source_gh0st_nightmare`).
 
@@ -80,7 +80,7 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 29. From **Silent Shore**, go **east** to **Tide-Well** (`source_orion_tide_well`).
 
-30. At **Tide-Well**, defeat **Silent Shore Wraith**. Confirm **Rescue Orion** credited. The optional Black Tide Shelf has another wraith; it is not a fourth missing crew member.
+30. At **Tide-Well**, defeat **Silent Shore Wraith**. Confirm **Rescue Orion** credited. Black Tide Shelf has an optional Tide Murmur.
 
 31. From **Tide-Well**, go **east** to **Answering Chorus** (`source_orion_chorus`).
 
@@ -352,7 +352,7 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 157. At **The Center**, use **Vale**. Finish Vale’s full confrontation and Nova’s answer. Confirm **Confront Vale** credited before fighting; arrival alone is insufficient.
 
-158. At **The Center**, defeat **Ascended: Soloist** (`ascended_vale`). Confirm **Defeat Vale** credited before attempting the second form. The shared tuning focus remains locked until both forms fall.
+158. At **The Center**, defeat **Ascended: Soloist** (`ascended_vale`). Confirm **Defeat Vale** credited before attempting the second form. Save at The Center after the transformation. HP, knockouts and supplies carry forward. Defeat **Ascended: Silence** here, then confirm the second-form objective. Its Voice Anchor prepares targeted Silence, and its Memory Anchor prepares a party pulse. Breaking an anchor cancels its attack. You can also target the body directly. Guard when **Great Silence** is announced and use the opening that follows.
 
 159. From **The Center**, go **north** to **White Shore** (`source_center_node_scale_01`).
 
@@ -366,7 +366,7 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 164. At **Silence Pulpit**, inspect **Silence pulpit**, **blinding geometry**. These are local details; do not expect a quest reward from every inspection.
 
-165. At **Silence Pulpit**, defeat **Ascended: Silence** (`ascended_god`) after Soloist. Confirm the second-form objective credited in The Final Note. You may return south through Key Orbit and White Shore, then west to the bridge recovery route between fights.
+165. At **Silence Pulpit**, continue exploring. If you loaded an older save here with the second form still pending, use **return to the fracture** to resume at The Center.
 
 166. From **Silence Pulpit**, go **north** to **Source Voice Orbit** (`source_center_node_scale_final`).
 
@@ -491,7 +491,7 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 **The Singularity**
 
-- [ ] Follow the north path from The Center to the Silence Pulpit and shatter the Ascended: Silence. (`defeat_god_form`)
+- [ ] Shatter the Ascended: Silence at The Center. (`defeat_god_form`)
 
 **Tune the World**
 
@@ -554,7 +554,7 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 - **Stair east exit blocked:** refuse all three revisions and use memory stair.
 - **Center eastward progress blocked:** defeat the full shadow wave and then the memory defenders; entering the Center starts The Final Note. The Center’s New World exit requires the ending, not another bridge control.
 - **Grave or hull quest incomplete:** names beneath the light → aethel grave → answering chorus; wreck timeline → future astra hull → empty armor socket.
-- **Final tuning is unavailable:** finish the Vale conversation, defeat Soloist, then defeat Silence at Silence Pulpit.
+- **Final tuning is unavailable:** finish the Vale conversation, defeat Soloist, then defeat Silence at The Center.
 - **Ending not complete after tuning:** finish/skip the pending cinematics normally. Completion, XP, warp and credits depend on their callbacks. Do not expect repeated boss or tuning rewards from an already completed save.
 
 ## 17. Complete room and exit reference

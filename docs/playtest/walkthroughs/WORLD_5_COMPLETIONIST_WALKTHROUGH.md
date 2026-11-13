@@ -40,7 +40,7 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 7. From **Customs Lounge**, go **south** to **Grand Concourse** (`orbital_grand_concourse`) → **west** to **Executive Dock** (`orbital_executive_dock`).
 
-8. At **Executive Dock**, engage and defeat the **Orbital Fighter**. Confirm the fighters objective in Journal. Retreat to Customs Lounge for supplies if needed; the guide does not assume instant victory.
+8. At **Executive Dock**, defeat the two **Compliance Fighters**. Watch for the detention mark and staggered missile passes. Confirm the fighters objective in Journal. Retreat to Customs Lounge for supplies if needed; the guide does not assume instant victory.
 
 9. At **Executive Dock**, use **docking controls**. Force the Astra into the docking collar. The docking collar at Airlock Gallery is an alternate for the same task, not a second docking objective.
 
@@ -374,7 +374,7 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 167. At **Firewall Gamma**, use **firewall node gamma**. Drop Gamma after Beta. This exposes the final defense; it is not the boss victory.
 
-168. At **Firewall Gamma**, defeat the **Firewall Construct** in real combat. Confirm **The Core Approach** complete and **The Anchor** active. Both the Anchor lift and Server Farm entrance should now be open. If you need recovery, walk west through Beta, Alpha and Mainframe Nave, then south to Server Farm and back to Customs Lounge using the return route below.
+168. At **Firewall Gamma**, defeat the **Firewall Construct / Prism Surveyor** squad. Interrupt the Surveyor’s volley boost. Amber favors Burn, Blue favors Shock, and Physical and Source stay neutral. Confirm **The Core Approach** complete and **The Anchor** active. Both the Anchor lift and Server Farm entrance should now be open. If you need recovery, walk west through Beta, Alpha and Mainframe Nave, then south to Server Farm and back to Customs Lounge using the return route below.
 
 169. From **Firewall Gamma**, go **west** to **Firewall Beta** (`deep_firewall_beta`) → **west** to **Firewall Alpha** (`deep_firewall_alpha`) → **west** to **Mainframe Nave** (`deep_mainframe_nave`) → **south** to **Server Farm** (`orbital_server_farm`) → **east** to **Anchor Chamber** (`deep_anchor_chamber`).
 
@@ -517,6 +517,36 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 234. At **The Tear**, make and retain a predeparture save. Check the Journal checklist below, all ten containers, Film 09, arcade discovery and optional matrix. Finish remaining shopping or upgrades before using the breach. Visiting the Source Drop side room or its return shortcut does not substitute for the story departure control.
 
 235. At **The Tear**, use **reality breach**. Commit to World 6. Confirm **Critical Mass** complete, arrival at **Source Campfire** (`source_campfire`), and **Fractured Minds**, the opening World 6 quest (`w6_mq26`) active. Keep the Ring save if you want to revisit its content.
+
+
+### Optional combat on the Ring
+
+These squads appear along the existing route. Clear them when you want extra supplies or a different fight. The four required victories are at Executive Dock, Security Hub, Firewall Gamma and The Tear. The Anchor Chamber Hunter-Killer is handled during the relic scene.
+
+| Room | Squad |
+| --- | --- |
+| Grand Concourse | Customs Screener |
+| Solarium | Null-G Drone |
+| Mirror Walk | Prism Surveyor |
+| Surveillance Pit | Customs Screener, Void Turret |
+| Server Farm | Void Turret, Void Turret |
+| Firewall Alpha | Void Turret, Customs Screener |
+| Firewall Beta | Void Turret, Null-G Drone |
+| Throne Room | Elite Guard |
+| Arrival Light Relay | Tether Rigger, Null-G Drone |
+| Inward Gauge Gallery | Customs Screener, Null-G Drone |
+| Fountain Cabinet | Prism Surveyor, Null-G Drone |
+| Evidence Test Relay | Compliance Officer, Prism Surveyor |
+| Tether Conduit | Tether Rigger |
+| Freight Motor Walk | Customs Screener, Tether Rigger |
+| Cooling Plenum | Prism Surveyor, Void Turret |
+| Boardroom Grave | Boardroom Bailiff |
+| Avatar Gate | Elite Guard, Prism Surveyor |
+| Choir Gap | Threshold Remnant |
+| Ring Courtesy Theater | Customs Screener, Prism Surveyor |
+| Ring Threat Cathedral | Compliance Officer, Void Turret, Null-G Drone |
+
+Mirror Guard reflects a portion of single-target energy firearm shots and focus-scaled energy skills. Use physical attacks, melee skills or area attacks while the shield is up, or wait for the guard to lower it.
 
 ## 12. Returning for supplies and recovery
 
@@ -749,7 +779,7 @@ Interactions: red lenses, panopticon archive.
 
 ### Service Shaft (`orbital_service_shaft`)
 
-Gravity ends at the hatch. Zero-g cables descend from a superconductor junction through a vertical dark while Hunter-Killer droids scrape along distant walls, too armored to fight head-on. The marked route runs east to Zero-G Junction; the southern tube there leads to the SysAdmin station and Server Farm. Anchored service cables also offer a direct descent to Server Farm and a climb back to this hatch.
+Gravity ends at the hatch. Zero-g cables descend from a superconductor junction through a vertical dark while the Hunter-Killer scrapes along a distant wall, too armored to fight head-on. The marked route runs east to Zero-G Junction; the southern tube there leads to the SysAdmin station and Server Farm. Anchored service cables also offer a direct descent to Server Farm and a climb back to this hatch.
 
 Exits: west → Security Hub (`orbital_security_hub`), east → Zero-G Junction (`orbital_zero_g_junction`), north → Cable Spool Recess (`orbital_service_shaft_scale_01`).
 

@@ -232,7 +232,8 @@ class CombatEngine(
         val resistance = targetState.combatant.stats.statusResistance.coerceIn(0, 100)
         if (hostile && resistance > 0 && random.nextInt(100) < resistance) return state
         val updatedStatuses = targetState.statusEffects.filterNot {
-            canonicalId == "regen" && it.id == com.example.starborn.domain.leveling.CrewBuildPrototype.AFTERCARE_STATUS
+            (definition?.affinityOverrides?.isNotEmpty() == true && statusRegistry.definition(it.id)?.affinityOverrides?.isNotEmpty() == true) ||
+                (canonicalId == "regen" && it.id == com.example.starborn.domain.leveling.CrewBuildPrototype.AFTERCARE_STATUS)
         }.toMutableList()
         val index = updatedStatuses.indexOfFirst { it.id.equals(canonicalId, ignoreCase = true) }
         val newStatus = if (index >= 0) {
@@ -418,7 +419,10 @@ class CombatEngine(
     ): AffinityTier {
         val profile = targetState.combatant.resistances
         val key = element?.lowercase()
-        val base = when (key) {
+        val override = targetState.statusEffects.asReversed().firstNotNullOfOrNull {
+            statusRegistry.definition(it.id)?.affinityOverrides?.get(key)
+        }
+        val base = override ?: when (key) {
             "burn", "fire" -> profile.burn
             "freeze", "ice" -> profile.freeze
             "shock", "lightning" -> profile.shock

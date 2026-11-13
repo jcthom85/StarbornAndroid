@@ -578,7 +578,9 @@ fun CombatScreen(
             // Enemy exit fades begin after the last hit releases its death hold.
             delay(400L)
             viewModel.playVictoryMusic()
-            outcomeFx = CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY
+            if (viewModel.encounterEnemyIds != listOf("ascended_vale")) {
+                outcomeFx = CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY
+            }
         }
         when (resolved) {
             is CombatOutcome.Victory -> {
@@ -605,7 +607,9 @@ fun CombatScreen(
                 )
                 handle?.set("combat_result", payload)
                 pendingOutcome = null
-                exitMainText = "The party collapses in defeat... Regrouping to recover."
+                exitMainText = if ("ascended_god" in viewModel.encounterEnemyIds) {
+                    "Returning to the Silence checkpoint."
+                } else "The party collapses in defeat... Regrouping to recover."
                 isExiting = true
             }
             CombatOutcome.Retreat -> {
@@ -679,7 +683,7 @@ fun CombatScreen(
             showItemsDialog.value = false
         }
         val menuActorSkills = menuActor?.let { viewModel.skillsForPlayer(it.id) }.orEmpty()
-        val victoryEmotes = pendingVictoryPayload != null
+        val victoryEmotes = pendingVictoryPayload?.let { it.enemyIds != listOf("ascended_vale") } == true
 
         BackHandler(enabled = inspectedEnemyId != null || showSkillsDialog.value || showItemsDialog.value || pendingTargetRequest != null) {
             when {

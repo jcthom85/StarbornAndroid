@@ -32,6 +32,9 @@ data class EncounterDescriptor(
 
 data class EncounterEnemyInstance(
     val enemyId: String,
+    val xpReward: Int? = null,
+    val creditReward: Int? = null,
+    val apReward: Int? = null,
     val hp: Int? = null,
     val vitality: Int? = null,
     val stability: Int? = null,

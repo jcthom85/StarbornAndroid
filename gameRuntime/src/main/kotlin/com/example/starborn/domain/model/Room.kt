@@ -96,6 +96,9 @@ data class RoomEnemyInstance(
     @Json(name = "enemy_id")
     val enemyId: String,
     val occurrence: Int? = null,
+    @Json(name = "xp_reward") val xpReward: Int? = null,
+    @Json(name = "credit_reward") val creditReward: Int? = null,
+    @Json(name = "ap_reward") val apReward: Int? = null,
     val hp: Int? = null,
     val vitality: Int? = null,
     val stability: Int? = null,

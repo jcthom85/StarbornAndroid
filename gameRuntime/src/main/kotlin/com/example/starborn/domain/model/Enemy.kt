@@ -53,6 +53,8 @@ data class Enemy(
 
 /** Opt-in encounter direction. Unconfigured enemies retain their existing AI. */
 data class AuthoredEnemyPattern(
+    @Json(name = "windup_group") val windupGroup: String? = null,
+    @Json(name = "preferred_target_status") val preferredTargetStatus: String? = null,
     val cycle: List<String> = emptyList(),
     val windups: Map<String, String> = emptyMap(),
     @Json(name = "duplicate_cycle_offset") val duplicateCycleOffset: Int = 0,

@@ -20,6 +20,10 @@ data class StatusDefinition(
     val accuracyMultiplier: Double? = null,
     @Json(name = "incoming_multiplier")
     val incomingMultiplier: Double? = null,
+    @Json(name = "reflect_single_energy")
+    val reflectSingleEnergy: Double? = null,
+    @Json(name = "affinity_overrides")
+    val affinityOverrides: Map<String, Int> = emptyMap(),
     @Json(name = "incoming_multiplier_physical")
     val incomingMultiplierPhysical: Double? = null,
     @Json(name = "flat_defense_bonus")

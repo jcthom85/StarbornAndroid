@@ -938,7 +938,7 @@
       }
     ],
     "description": "Flying Dominion robot shield droid. Drops Neon Sign Core. Carries the Neon Sign Core for Jax’s repair and may yield a Battery for Pulse Grenades.",
-    "portrait": "images/enemies/resonance_buoy_combat.png",
+    "portrait": "images/enemies/sentinel_mki_foundry_pass.png",
     "authored": {
       "cycle": [
         "guard_protocol",
@@ -949,7 +949,10 @@
       "windups": {
         "spire_quarantine_pulse": "Quarantine pulse charging"
       }
-    }
+    },
+    "sprite": [
+      "images/enemies/sentinel_mki_foundry_pass.png"
+    ]
   },
   {
     "id": "aero_drone",
@@ -1057,7 +1060,7 @@
       }
     ],
     "description": "Stealth critical striker that punishes blind attacks. Scan exposes its poor shock shielding before it can vanish again.",
-    "portrait": "images/enemies/riot_guard_combat.png",
+    "portrait": "images/enemies/corporate_assassin_foundry_pass.png",
     "authored": {
       "cycle": [
         "smoke_step",
@@ -1068,7 +1071,10 @@
       "windups": {
         "critical_lunge": "Assassin marks a target"
       }
-    }
+    },
+    "sprite": [
+      "images/enemies/corporate_assassin_foundry_pass.png"
+    ]
   },
   {
     "id": "heavy_mech",
@@ -1116,7 +1122,7 @@
       }
     ],
     "description": "Braces, warms up a wide heat sweep, then exposes its vents. Shock breaks its stabilizers fastest.",
-    "portrait": "images/enemies/heavy_loader_combat.png",
+    "portrait": "images/enemies/heavy_mech_foundry_pass.png",
     "authored": {
       "cycle": [
         "spire_recover",
@@ -1128,7 +1134,10 @@
       "windups": {
         "spire_heat_sweep": "Flame cone heating"
       }
-    }
+    },
+    "sprite": [
+      "images/enemies/heavy_mech_foundry_pass.png"
+    ]
   },
   {
     "id": "administrator_boss",
@@ -1255,7 +1264,7 @@
       }
     ],
     "description": "Fast burn-element drone. Cooling and shock attacks destabilize it. May yield Wiring Bundles and Power Cells for Field Kit repairs.",
-    "portrait": "images/enemies/security_drone_combat.png",
+    "portrait": "images/enemies/magma_drone_foundry_pass.png",
     "authored": {
       "cycle": [
         "foundry_heat_burst",
@@ -1264,8 +1273,12 @@
       "windups": {
         "foundry_heat_burst": "Heat chamber charging"
       },
-      "duplicate_cycle_offset": 1
-    }
+      "duplicate_cycle_offset": 1,
+      "windup_group": "foundry_pressure"
+    },
+    "sprite": [
+      "images/enemies/magma_drone_foundry_pass.png"
+    ]
   },
   {
     "id": "slag_golem",
@@ -1315,7 +1328,7 @@
       }
     ],
     "description": "Slow armored hitter. After Molten Slam it spends a turn cooling with its shell exposed. Exploit that opening or use Freeze and Shock against its armor. May yield Scrap Metal and Power Cells for crafting and salvage.",
-    "portrait": "images/enemies/heavy_loader_combat.png",
+    "portrait": "images/enemies/slag_golem_foundry_pass.png",
     "authored": {
       "cycle": [
         "molten_slam",
@@ -1323,8 +1336,13 @@
       ],
       "windups": {
         "molten_slam": "Molten fist rising"
-      }
-    }
+      },
+      "windup_group": "foundry_pressure",
+      "preferred_target_status": "foundry_magnetic_mark"
+    },
+    "sprite": [
+      "images/enemies/slag_golem_foundry_pass.png"
+    ]
   },
   {
     "id": "welder_bot",
@@ -1369,7 +1387,7 @@
       }
     ],
     "description": "Repair support. Field Weld restores itself and its squad, but only twice per battle. Disable it or focus it down before attacking armored allies; between repairs it uses Torch Cut. May yield Scrap Metal and Power Cells. Check individual patrols for recoverable stock.",
-    "portrait": "images/enemies/heavy_loader_combat.png",
+    "portrait": "images/enemies/welder_bot_foundry_pass.png",
     "authored": {
       "cycle": [
         "torch_cut",
@@ -1383,7 +1401,10 @@
       "interrupt_on_damage": [
         "field_weld"
       ]
-    }
+    },
+    "sprite": [
+      "images/enemies/welder_bot_foundry_pass.png"
+    ]
   },
   {
     "id": "flame_trooper",
@@ -1429,7 +1450,7 @@
       }
     ],
     "description": "Armored cone-AoE trooper. Source disruption weakens its suit locks. May yield healing supplies and Battery Packs. Salvage a Battery Pack for wiring.",
-    "portrait": "images/enemies/dominion_dampener_combat.png",
+    "portrait": "images/enemies/flame_trooper_foundry_pass.png",
     "authored": {
       "cycle": [
         "armor_lock",
@@ -1437,8 +1458,13 @@
       ],
       "windups": {
         "flame_cone": "Flame nozzle pressurizing"
-      }
-    }
+      },
+      "windup_group": "foundry_pressure",
+      "preferred_target_status": "foundry_magnetic_mark"
+    },
+    "sprite": [
+      "images/enemies/flame_trooper_foundry_pass.png"
+    ]
   },
   {
     "id": "phantom_prototype",
@@ -1468,8 +1494,9 @@
       "phantom"
     ],
     "abilities": [
+      "cloak_step",
       "phase_slash",
-      "cloak_step"
+      "foundry_exposed"
     ],
     "flavor": "A fast, empty derivative of Gh0st built with better hardware and no self.",
     "xp_reward": 230,
@@ -1485,7 +1512,22 @@
       }
     ],
     "description": "Stealth Source assassin. Scan and shock expose its timing. May yield Wiring Bundles and Power Cells for crafting.",
-    "portrait": "images/enemies/riot_guard_combat.png"
+    "portrait": "images/enemies/phantom_prototype_foundry_pass.png",
+    "authored": {
+      "cycle": [
+        "cloak_step",
+        "phase_slash",
+        "foundry_exposed"
+      ],
+      "windups": {
+        "phase_slash": "Phantom committing to a slash"
+      },
+      "windup_group": "foundry_pressure",
+      "preferred_target_status": "foundry_magnetic_mark"
+    },
+    "sprite": [
+      "images/enemies/phantom_prototype_foundry_pass.png"
+    ]
   },
   {
     "id": "conveyor_crusher",
@@ -1494,7 +1536,7 @@
     "tier": "hazard",
     "combat_behavior": "stationary",
     "combat_role": "hazard",
-    "hp": 999,
+    "hp": 210,
     "strength": 25,
     "vitality": 30,
     "agility": 0,
@@ -1515,14 +1557,30 @@
       "foundry"
     ],
     "abilities": [
-      "rhythm_slam"
+      "foundry_press_reset",
+      "foundry_press_slam",
+      "foundry_exposed"
     ],
     "flavor": "An industrial press that does not know you are alive and would not care if it did.",
     "xp_reward": 0,
     "credit_reward": 0,
     "drops": [],
-    "description": "Stationary timing hazard. Hacking beats brute force.",
-    "portrait": "images/enemies/heavy_loader_combat.png"
+    "description": "The press rises, commits to a warned slam, then exposes its mechanism. Guard or break it before the press lands.",
+    "portrait": "images/enemies/conveyor_crusher_foundry_pass.png",
+    "authored": {
+      "cycle": [
+        "foundry_press_reset",
+        "foundry_press_slam",
+        "foundry_exposed"
+      ],
+      "windups": {
+        "foundry_press_slam": "Press descending"
+      },
+      "windup_group": "foundry_pressure"
+    },
+    "sprite": [
+      "images/enemies/conveyor_crusher_foundry_pass.png"
+    ]
   },
   {
     "id": "titan_walker_boss",
@@ -1660,6 +1718,7 @@
       "orbital"
     ],
     "abilities": [
+      "ring_designate",
       "ring_guided_pass",
       "ring_recover"
     ],
@@ -1673,17 +1732,24 @@
       }
     ],
     "description": "Marks its missile pass before committing, then reorients. Shock disrupts its guidance.",
-    "portrait": "images/enemies/aero_drone_combat.png",
+    "portrait": "images/enemies/orbital_fighter_combat.png",
     "authored": {
       "cycle": [
+        "ring_designate",
         "ring_guided_pass",
         "ring_recover"
       ],
       "windups": {
         "ring_guided_pass": "Guidance light fixing a missile pass"
       },
+      "interrupt_on_damage": [],
+      "preferred_target_status": "ring_detention_mark",
+      "windup_group": "ring_squad",
       "duplicate_cycle_offset": 1
-    }
+    },
+    "sprite": [
+      "images/enemies/orbital_fighter_combat.png"
+    ]
   },
   {
     "id": "compliance_officer",
@@ -1713,6 +1779,7 @@
       "orbital"
     ],
     "abilities": [
+      "ring_designate",
       "ring_detain",
       "ring_recover"
     ],
@@ -1727,16 +1794,23 @@
       }
     ],
     "description": "Commits to a warned detention sweep, then resets its stance.",
-    "portrait": "images/enemies/riot_guard_combat.png",
+    "portrait": "images/enemies/compliance_officer_combat.png",
     "authored": {
       "cycle": [
+        "ring_designate",
         "ring_detain",
         "ring_recover"
       ],
       "windups": {
         "ring_detain": "Officer winding up a detention sweep"
-      }
-    }
+      },
+      "interrupt_on_damage": [],
+      "preferred_target_status": "ring_detention_mark",
+      "windup_group": "ring_squad"
+    },
+    "sprite": [
+      "images/enemies/compliance_officer_combat.png"
+    ]
   },
   {
     "id": "null_g_drone",
@@ -1793,7 +1867,8 @@
       },
       "interrupt_on_damage": [
         "ring_tether"
-      ]
+      ],
+      "windup_group": "ring_squad"
     }
   },
   {
@@ -1836,7 +1911,7 @@
       }
     ],
     "description": "Charges a beam before firing, then vents. Interrupt the charge or guard and punish the opening.",
-    "portrait": "images/enemies/sentinel_orb_combat.png",
+    "portrait": "images/enemies/void_turret_combat.png",
     "authored": {
       "cycle": [
         "ring_beam",
@@ -1847,8 +1922,14 @@
       },
       "interrupt_on_damage": [
         "ring_beam"
-      ]
-    }
+      ],
+      "preferred_target_status": "ring_detention_mark",
+      "windup_group": "ring_squad",
+      "duplicate_cycle_offset": 1
+    },
+    "sprite": [
+      "images/enemies/void_turret_combat.png"
+    ]
   },
   {
     "id": "hk_droid",
@@ -1886,7 +1967,10 @@
     "credit_reward": 0,
     "drops": [],
     "description": "Pursuit threat. Stasis is the intended counter.",
-    "portrait": "images/enemies/heavy_loader_combat.png"
+    "portrait": "images/enemies/hk_droid_combat.png",
+    "sprite": [
+      "images/enemies/hk_droid_combat.png"
+    ]
   },
   {
     "id": "elite_guard",
@@ -1929,8 +2013,8 @@
         "chance": 0.5
       }
     ],
-    "description": "Braces behind its shield, then lowers it for a committed strike. Guarding reduces damage; it does not reflect attacks.",
-    "portrait": "images/enemies/riot_guard_combat.png",
+    "description": "Mirror Guard returns half the damage of single-target focus-scaled energy skills and energy firearm shots, capped at a quarter of the attacker’s maximum HP. Physical, melee and area attacks do not reflect. Its shield drops for a warned strike and recovery.",
+    "portrait": "images/enemies/elite_guard_combat.png",
     "authored": {
       "cycle": [
         "ring_guard",
@@ -1940,7 +2024,10 @@
       "windups": {
         "ring_guard_strike": "Mirror shield lowering for a strike"
       }
-    }
+    },
+    "sprite": [
+      "images/enemies/elite_guard_combat.png"
+    ]
   },
   {
     "id": "firewall_construct",
@@ -1959,10 +2046,10 @@
     "stability": 155,
     "element": "source",
     "resistances": {
-      "physical": 15,
-      "burn": 15,
-      "shock": 15,
-      "source": 15
+      "physical": 0,
+      "burn": 0,
+      "shock": 0,
+      "source": 0
     },
     "tags": [
       "digital",
@@ -1970,10 +2057,14 @@
       "elite"
     ],
     "abilities": [
+      "ring_shock_frequency",
+      "ring_frequency",
+      "ring_recover",
+      "ring_burn_frequency",
       "ring_frequency",
       "ring_recover"
     ],
-    "flavor": "A hard-light security intelligence that rewrites its own defensive frequency.",
+    "flavor": "An angular hard-light lattice that declares each defensive frequency before committing to it.",
     "xp_reward": 390,
     "credit_reward": 250,
     "drops": [
@@ -1982,17 +2073,27 @@
         "chance": 0.7
       }
     ],
-    "description": "Aligns its hard-light lattice before a Source sweep. Neutral attacks remain useful; recovery opens a response window.",
-    "portrait": "images/enemies/ruin_guardian_combat.png",
+    "description": "Announces Amber (Burn weakness, Shock resistance) and Blue (Shock weakness, Burn resistance) before changing frequency. Scan identifies the current opening. Physical and Source damage remain neutral; strike after its warned sweep.",
+    "portrait": "images/enemies/firewall_construct_combat.png",
     "authored": {
       "cycle": [
+        "ring_shock_frequency",
+        "ring_frequency",
+        "ring_recover",
+        "ring_burn_frequency",
         "ring_frequency",
         "ring_recover"
       ],
       "windups": {
-        "ring_frequency": "Hard-light lattice aligning"
-      }
-    }
+        "ring_shock_frequency": "Amber lattice opening to Burn",
+        "ring_burn_frequency": "Blue lattice opening to Shock",
+        "ring_frequency": "Frequency sweep charging"
+      },
+      "interrupt_on_damage": []
+    },
+    "sprite": [
+      "images/enemies/firewall_construct_combat.png"
+    ]
   },
   {
     "id": "compliance_avatar",
@@ -2041,7 +2142,7 @@
       }
     ],
     "description": "The Conductor directs joint attacks. Interrupt its preparation or destroy it to break coordination permanently. The Avatar recalibrates after the link breaks; defeating the body ends the encounter.",
-    "portrait": "images/enemies/the_warden_combat.png",
+    "portrait": "images/enemies/compliance_avatar_combat.png",
     "authored": {
       "cycle": [
         "ring_joint_execution",
@@ -2087,7 +2188,10 @@
           "ring_command_ward"
         ]
       }
-    }
+    },
+    "sprite": [
+      "images/enemies/compliance_avatar_combat.png"
+    ]
   },
   {
     "id": "manager_projection",
@@ -2116,15 +2220,33 @@
       "elite"
     ],
     "abilities": [
-      "baton_strike",
-      "roar_of_the_source"
+      "source_review_order",
+      "source_review_judgment",
+      "source_expose"
     ],
     "flavor": "A performance review large enough to blot out the horizon.",
     "xp_reward": 420,
     "credit_reward": 0,
     "drops": [],
     "description": "Zeke nightmare elite. Break its control loop.",
-    "portrait": "images/enemies/the_warden_combat.png"
+    "portrait": "images/enemies/manager_projection_source_combat.png",
+    "authored": {
+      "cycle": [
+        "source_review_order",
+        "source_review_judgment",
+        "source_expose"
+      ],
+      "windups": {
+        "source_review_judgment": "Final judgment pending"
+      },
+      "interrupt_on_damage": [
+        "source_review_judgment"
+      ],
+      "preferred_target_status": "source_review_mark"
+    },
+    "sprite": [
+      "images/enemies/manager_projection_source_combat.png"
+    ]
   },
   {
     "id": "endless_war_echo",
@@ -2136,10 +2258,10 @@
     "hp": 390,
     "strength": 25,
     "vitality": 17,
-    "agility": 23,
+    "agility": 13,
     "focus": 13,
     "luck": 7,
-    "speed": 21,
+    "speed": 9,
     "stability": 125,
     "element": "physical",
     "resistances": {
@@ -2154,15 +2276,32 @@
       "phantom"
     ],
     "abilities": [
-      "missile_barrage",
-      "relic_strike"
+      "source_war_order",
+      "source_war_volley",
+      "source_expose"
     ],
     "flavor": "A target produced by Gh0st's kill-suite before conscience can object.",
     "xp_reward": 330,
     "credit_reward": 0,
     "drops": [],
     "description": "Fast nightmare striker vulnerable to Stasis.",
-    "portrait": "images/enemies/phantom_assassin_combat.png"
+    "portrait": "images/enemies/endless_war_echo_source_combat.png",
+    "authored": {
+      "cycle": [
+        "source_war_order",
+        "source_war_volley",
+        "source_expose"
+      ],
+      "windups": {
+        "source_war_volley": "Execution volley loading"
+      },
+      "duplicate_cycle_offset": 1,
+      "windup_group": "source_war_pair",
+      "preferred_target_status": "source_review_mark"
+    },
+    "sprite": [
+      "images/enemies/endless_war_echo_source_combat.png"
+    ]
   },
   {
     "id": "silent_shore_wraith",
@@ -2192,15 +2331,29 @@
       "aethel"
     ],
     "abilities": [
-      "resonance_beam",
-      "roar_of_the_source"
+      "source_tide",
+      "source_expose",
+      "source_recover"
     ],
     "flavor": "The conviction that Orion is the last voice left in creation.",
     "xp_reward": 400,
     "credit_reward": 0,
     "drops": [],
     "description": "Orion nightmare controller. Disruption breaks its silence.",
-    "portrait": "images/enemies/ruin_guardian_combat.png"
+    "portrait": "images/enemies/silent_shore_wraith_source_combat.png",
+    "authored": {
+      "cycle": [
+        "source_tide",
+        "source_expose",
+        "source_recover"
+      ],
+      "windups": {
+        "source_tide": "Silence tide gathering"
+      }
+    },
+    "sprite": [
+      "images/enemies/silent_shore_wraith_source_combat.png"
+    ]
   },
   {
     "id": "source_shadow",
@@ -2229,7 +2382,8 @@
       "source"
     ],
     "abilities": [
-      "claw_swipe"
+      "source_slash",
+      "source_recover"
     ],
     "flavor": "A hostile outline assembled from discarded versions of familiar enemies.",
     "xp_reward": 240,
@@ -2241,7 +2395,20 @@
       }
     ],
     "description": "Basic Source distortion with unstable defenses.",
-    "portrait": "images/enemies/phantom_assassin_combat.png"
+    "portrait": "images/enemies/source_shadow_source_combat.png",
+    "authored": {
+      "cycle": [
+        "source_slash",
+        "source_recover"
+      ],
+      "windups": {
+        "source_slash": "Shadow drawing tight"
+      },
+      "windup_group": "source_fragments"
+    },
+    "sprite": [
+      "images/enemies/source_shadow_source_combat.png"
+    ]
   },
   {
     "id": "distorted_sentinel",
@@ -2270,7 +2437,8 @@
       "distorted"
     ],
     "abilities": [
-      "glitch_bolt"
+      "source_bolt",
+      "source_recover"
     ],
     "flavor": "A Spire sentinel folded through angles its chassis was never built to occupy.",
     "xp_reward": 290,
@@ -2282,7 +2450,20 @@
       }
     ],
     "description": "Turn-order controller vulnerable to shock and hacking.",
-    "portrait": "images/enemies/security_drone_combat.png"
+    "portrait": "images/enemies/distorted_sentinel_source_combat.png",
+    "authored": {
+      "cycle": [
+        "source_bolt",
+        "source_recover"
+      ],
+      "windups": {
+        "source_bolt": "Fractured reticle locking"
+      },
+      "windup_group": "source_fragments"
+    },
+    "sprite": [
+      "images/enemies/distorted_sentinel_source_combat.png"
+    ]
   },
   {
     "id": "glitch_hound",
@@ -2311,7 +2492,8 @@
       "distorted"
     ],
     "abilities": [
-      "claw_swipe"
+      "source_pounce",
+      "source_recover"
     ],
     "flavor": "A Wilds predator flickering between the place it attacks from and the place it remembers.",
     "xp_reward": 280,
@@ -2323,7 +2505,20 @@
       }
     ],
     "description": "High-evasion striker exposed by Scan.",
-    "portrait": "images/enemies/echo_borer_combat.png"
+    "portrait": "images/enemies/glitch_hound_source_combat.png",
+    "authored": {
+      "cycle": [
+        "source_pounce",
+        "source_recover"
+      ],
+      "windups": {
+        "source_pounce": "Footprints converging"
+      },
+      "windup_group": "source_fragments"
+    },
+    "sprite": [
+      "images/enemies/glitch_hound_source_combat.png"
+    ]
   },
   {
     "id": "memory_leak",
@@ -2352,8 +2547,10 @@
       "elite"
     ],
     "abilities": [
-      "guilt_wave",
-      "roar_of_the_source"
+      "source_memory_copy",
+      "source_expose",
+      "source_bolt",
+      "source_recover"
     ],
     "flavor": "A pulsing data mass leaking unfinished images of Jed, Thorne, and Elara.",
     "xp_reward": 470,
@@ -2365,7 +2562,24 @@
       }
     ],
     "description": "Debuff elite requiring focus fire.",
-    "portrait": "images/enemies/resonance_buoy_combat.png"
+    "portrait": "images/enemies/memory_leak_source_combat.png",
+    "authored": {
+      "cycle": [
+        "source_memory_copy",
+        "source_expose",
+        "source_bolt",
+        "source_recover"
+      ],
+      "windups": {
+        "source_memory_copy": "Borrowed memory charging",
+        "source_bolt": "Memory fragment aligning"
+      },
+      "wait_when_unavailable": true,
+      "windup_group": "source_defense"
+    },
+    "sprite": [
+      "images/enemies/memory_leak_source_combat.png"
+    ]
   },
   {
     "id": "nightmare_guard",
@@ -2395,8 +2609,9 @@
       "elite"
     ],
     "abilities": [
-      "guilt_wave",
-      "baton_strike"
+      "source_memory_shelter",
+      "source_accuse",
+      "source_expose"
     ],
     "flavor": "A Dominion guard wearing the faces of everyone Nova believes she failed.",
     "xp_reward": 490,
@@ -2408,7 +2623,22 @@
       }
     ],
     "description": "Shielded guilt projection vulnerable to melee pressure.",
-    "portrait": "images/enemies/riot_guard_combat.png"
+    "portrait": "images/enemies/nightmare_guard_source_combat.png",
+    "authored": {
+      "cycle": [
+        "source_memory_shelter",
+        "source_accuse",
+        "source_expose"
+      ],
+      "windups": {
+        "source_accuse": "Guard readying an accusation"
+      },
+      "wait_when_unavailable": true,
+      "windup_group": "source_defense"
+    },
+    "sprite": [
+      "images/enemies/nightmare_guard_source_combat.png"
+    ]
   },
   {
     "id": "ascended_vale",
@@ -2417,7 +2647,7 @@
     "tier": "boss",
     "combat_behavior": "boss",
     "combat_role": "boss",
-    "hp": 250,
+    "hp": 350,
     "strength": 12,
     "vitality": 12,
     "agility": 16,
@@ -2439,27 +2669,48 @@
       "boss"
     ],
     "abilities": [
-      "compliance_beam",
-      "guilt_wave",
-      "silence_wave"
+      "source_vale_command",
+      "source_expose",
+      "source_vale_verdict",
+      "source_recover"
     ],
     "flavor": "Vale retains his human shape because politeness makes annihilation easier to accept.",
     "xp_reward": 900,
     "credit_reward": 0,
     "ap_reward": 5,
     "drops": [],
-    "description": "Final boss phase one. Silence and compliance pressure.",
-    "portrait": "images/enemies/the_warden_combat.png"
+    "description": "Vale announces a targeted Silence command or verdict. Guard the marked ally and strike during recovery.",
+    "portrait": "images/enemies/ascended_vale_source_combat.png",
+    "authored": {
+      "cycle": [
+        "source_vale_command",
+        "source_expose",
+        "source_vale_verdict",
+        "source_recover"
+      ],
+      "windups": {
+        "source_vale_command": "Vale preparing a silence command",
+        "source_vale_verdict": "Vale preparing his verdict"
+      },
+      "phase": {
+        "hp_below": 0.5,
+        "name": "Soloist’s Verdict",
+        "opening_skill": "source_expose",
+        "cycle": [
+          "source_vale_verdict",
+          "source_expose",
+          "source_vale_command",
+          "source_recover"
+        ]
+      }
+    },
+    "sprite": [
+      "images/enemies/ascended_vale_source_combat.png"
+    ]
   },
   {
     "id": "ascended_god",
     "combat_size": "massive",
-    "opening_skill": "gathering_silence",
-    "recovery_after": {
-      "reality_break": "gathering_silence",
-      "shadow_chorus": "gathering_silence",
-      "silence_wave": "gathering_silence"
-    },
     "name": "The Ascended: Silence",
     "tier": "boss",
     "combat_behavior": "boss",
@@ -2486,18 +2737,62 @@
       "boss"
     ],
     "abilities": [
-      "reality_break",
-      "shadow_chorus",
-      "silence_wave",
-      "gathering_silence"
+      "source_voice_command",
+      "source_expose",
+      "source_memory_command",
+      "source_silence_fallback",
+      "source_recover",
+      "source_great_silence"
     ],
     "flavor": "Porcelain skin splits into blinding geometry as Vale attempts to reduce creation to one painless note.",
     "xp_reward": 1500,
     "credit_reward": 0,
     "ap_reward": 8,
     "drops": [],
-    "description": "Final boss phase two. Reality warping and Great Silence.",
-    "portrait": "images/enemies/the_iron_warden_combat.png"
+    "description": "The Voice and Memory Anchors supply separate commands on one schedule. Destroy either to stop its attack. Guard the Great Silence and strike during the exposed opening.",
+    "portrait": "images/enemies/ascended_god_source_combat.png",
+    "authored": {
+      "cycle": [
+        "source_voice_command",
+        "source_expose",
+        "source_memory_command",
+        "source_expose",
+        "source_silence_fallback",
+        "source_recover"
+      ],
+      "windups": {
+        "source_voice_command": "Voice Anchor closing",
+        "source_memory_command": "Memory Anchor charging",
+        "source_great_silence": "Great Silence gathering",
+        "source_silence_fallback": "Fractured command gathering"
+      },
+      "linked_actions": {
+        "source_voice_command": "silence_voice_anchor",
+        "source_memory_command": "silence_memory_anchor"
+      },
+      "phase": {
+        "hp_below": 0.15,
+        "name": "Great Silence",
+        "opening_skill": "source_great_silence",
+        "cycle": [
+          "source_expose",
+          "source_silence_fallback",
+          "source_expose"
+        ]
+      }
+    },
+    "composite": {
+      "group": "vale_silence",
+      "role": "core",
+      "offset_x": 0,
+      "offset_y": 0.02,
+      "width_scale": 1.32,
+      "height_scale": 1.32,
+      "z": 0
+    },
+    "sprite": [
+      "images/enemies/ascended_god_source_combat.png"
+    ]
   },
   {
     "id": "crucible_champion",
@@ -2528,9 +2823,10 @@
       "boss"
     ],
     "abilities": [
-      "molten_slam",
-      "torch_cut",
-      "heat_burst"
+      "foundry_champion_feint",
+      "foundry_champion_hammer",
+      "foundry_exposed",
+      "foundry_champion_heated"
     ],
     "flavor": "A battle-scarred heavy loader reinforced with multilayered crucible alloy plating, undefeated in Brutus's arena.",
     "xp_reward": 350,
@@ -2545,8 +2841,33 @@
         "chance": 0.8
       }
     ],
-    "description": "The undefeated champion of the Scrapper's Crucible. High burn and physical armor; exploit its cold and electrical vulnerability to stagger its massive chassis.",
-    "portrait": "images/enemies/heavy_loader_combat.png"
+    "description": "A light checking jab precedes a warned hammer strike. Use the exposed recovery. White Heat shortens its recovery below 35% HP. Its prize includes one Pure Iron.",
+    "portrait": "images/enemies/crucible_champion_foundry_pass.png",
+    "authored": {
+      "cycle": [
+        "foundry_champion_feint",
+        "foundry_champion_hammer",
+        "foundry_exposed",
+        "foundry_exposed"
+      ],
+      "windups": {
+        "foundry_champion_hammer": "Hammer fists locking",
+        "foundry_champion_heated": "White-hot fists locking"
+      },
+      "phase": {
+        "hp_below": 0.35,
+        "name": "White Heat",
+        "opening_skill": "foundry_exposed",
+        "cycle": [
+          "foundry_champion_feint",
+          "foundry_champion_heated",
+          "foundry_exposed"
+        ]
+      }
+    },
+    "sprite": [
+      "images/enemies/crucible_champion_foundry_pass.png"
+    ]
   },
   {
     "id": "moss_borer",
@@ -2589,7 +2910,7 @@
       }
     ],
     "description": "Closes its moss carapace, warns of a mineral exhale, then opens to recover. Cavern pairs start at different points in this rhythm.",
-    "portrait": "images/enemies/echo_borer_combat.png",
+    "portrait": "images/enemies/moss_borer_foundry_pass.png",
     "authored": {
       "cycle": [
         "sector9_carapace",
@@ -2601,7 +2922,10 @@
         "sector9_exhale": "Moss plates part — mineral exhale"
       },
       "duplicate_cycle_offset": 2
-    }
+    },
+    "sprite": [
+      "images/enemies/moss_borer_foundry_pass.png"
+    ]
   },
   {
     "id": "mist_glider",
@@ -2646,7 +2970,7 @@
       }
     ],
     "description": "Gathers a short-lived mist membrane before a marked dive. Guard or interrupt the dive; attack while it recovers.",
-    "portrait": "images/enemies/siren_skimmer_combat.png",
+    "portrait": "images/enemies/mist_glider_foundry_pass.png",
     "authored": {
       "cycle": [
         "sector9_mist",
@@ -2656,7 +2980,10 @@
       "windups": {
         "sector9_dive": "Mist membrane tightening — dive"
       }
-    }
+    },
+    "sprite": [
+      "images/enemies/mist_glider_foundry_pass.png"
+    ]
   },
   {
     "id": "concierge_relay",
@@ -2692,7 +3019,7 @@
     "credit_reward": 0,
     "drops": [],
     "description": "Broadcasts one interruptible shield order, then repositions.",
-    "portrait": "images/enemies/resonance_buoy_combat.png",
+    "portrait": "images/enemies/concierge_relay_foundry_pass.png",
     "authored": {
       "cycle": [
         "spire_relay_shield",
@@ -2705,7 +3032,10 @@
       "interrupt_on_damage": [
         "spire_relay_shield"
       ]
-    }
+    },
+    "sprite": [
+      "images/enemies/concierge_relay_foundry_pass.png"
+    ]
   },
   {
     "id": "administrator_interdictor",
@@ -2741,7 +3071,7 @@
     "credit_reward": 0,
     "drops": [],
     "description": "Deploys from the Administrator and prepares one interception pulse.",
-    "portrait": "images/enemies/aero_drone_combat.png",
+    "portrait": "images/enemies/administrator_interdictor_foundry_pass.png",
     "authored": {
       "cycle": [
         "spire_interception",
@@ -2751,7 +3081,10 @@
       "windups": {
         "spire_interception": "Interception emitter charging"
       }
-    }
+    },
+    "sprite": [
+      "images/enemies/administrator_interdictor_foundry_pass.png"
+    ]
   },
   {
     "id": "titan_missile_battery",
@@ -2949,9 +3282,9 @@
     "credit_reward": 0,
     "drops": [],
     "description": "Independent command partner. Supplies three brief wards, never direct attacks. Its destruction permanently breaks the Avatar link.",
-    "portrait": "images/enemies/null_g_drone_combat.png",
+    "portrait": "images/enemies/directive_conductor_combat.png",
     "sprite": [
-      "images/enemies/null_g_drone_combat.png"
+      "images/enemies/directive_conductor_combat.png"
     ],
     "authored": {
       "cycle": [
@@ -3008,7 +3341,7 @@
       }
     ],
     "description": "Optional judgment elite. Raises a limited guard before committing to a warned verdict. Its defeat grants no Avatar story credit.",
-    "portrait": "images/enemies/ruin_guardian_combat.png",
+    "portrait": "images/enemies/boardroom_bailiff_combat.png",
     "authored": {
       "cycle": [
         "ring_guard",
@@ -3019,6 +3352,597 @@
         "ring_beam": "Bailiff pronouncing its verdict"
       }
     },
-    "ap_reward": 4
+    "ap_reward": 4,
+    "sprite": [
+      "images/enemies/boardroom_bailiff_combat.png"
+    ]
+  },
+  {
+    "id": "customs_screener",
+    "combat_size": "medium",
+    "name": "Customs Screener",
+    "tier": "standard",
+    "combat_behavior": "aggressive",
+    "combat_role": "controller",
+    "hp": 125,
+    "strength": 10,
+    "vitality": 12,
+    "agility": 20,
+    "focus": 19,
+    "luck": 5,
+    "speed": 13,
+    "stability": 75,
+    "element": "shock",
+    "resistances": {
+      "physical": 0,
+      "burn": 10,
+      "shock": -20,
+      "source": 0
+    },
+    "tags": [
+      "machine",
+      "drone",
+      "orbital"
+    ],
+    "abilities": [
+      "ring_designate",
+      "ring_recover"
+    ],
+    "flavor": "Marks one crew member for squad pressure, then resets. Interrupt its scanner preparation.",
+    "xp_reward": 200,
+    "credit_reward": 110,
+    "drops": [],
+    "description": "Marks one crew member for squad pressure, then resets. Interrupt its scanner preparation.",
+    "portrait": "images/enemies/customs_screener_combat.png",
+    "sprite": [
+      "images/enemies/customs_screener_combat.png"
+    ],
+    "authored": {
+      "cycle": [
+        "ring_designate",
+        "ring_recover"
+      ],
+      "windups": {
+        "ring_designate": "Scanner paddles narrowing to one crew member"
+      },
+      "interrupt_on_damage": [
+        "ring_designate"
+      ]
+    }
+  },
+  {
+    "id": "tether_rigger",
+    "combat_size": "medium",
+    "name": "Tether Rigger",
+    "tier": "standard",
+    "combat_behavior": "aggressive",
+    "combat_role": "controller",
+    "hp": 165,
+    "strength": 10,
+    "vitality": 12,
+    "agility": 20,
+    "focus": 19,
+    "luck": 5,
+    "speed": 11,
+    "stability": 75,
+    "element": "shock",
+    "resistances": {
+      "physical": 0,
+      "burn": 10,
+      "shock": -20,
+      "source": 0
+    },
+    "tags": [
+      "machine",
+      "drone",
+      "orbital"
+    ],
+    "abilities": [
+      "ring_capture",
+      "ring_recover",
+      "ring_recover"
+    ],
+    "flavor": "An interruptible cable reduces a target’s damage briefly, followed by two recovery turns.",
+    "xp_reward": 200,
+    "credit_reward": 110,
+    "drops": [],
+    "description": "An interruptible cable reduces a target’s damage briefly, followed by two recovery turns.",
+    "portrait": "images/enemies/tether_rigger_combat.png",
+    "sprite": [
+      "images/enemies/tether_rigger_combat.png"
+    ],
+    "authored": {
+      "cycle": [
+        "ring_capture",
+        "ring_recover",
+        "ring_recover"
+      ],
+      "windups": {
+        "ring_capture": "Cable spool taking up slack"
+      },
+      "interrupt_on_damage": [
+        "ring_capture"
+      ]
+    }
+  },
+  {
+    "id": "prism_surveyor",
+    "combat_size": "medium",
+    "name": "Prism Surveyor",
+    "tier": "standard",
+    "combat_behavior": "aggressive",
+    "combat_role": "support",
+    "hp": 110,
+    "strength": 10,
+    "vitality": 12,
+    "agility": 20,
+    "focus": 19,
+    "luck": 5,
+    "speed": 12,
+    "stability": 75,
+    "element": "shock",
+    "resistances": {
+      "physical": 0,
+      "burn": 10,
+      "shock": -20,
+      "source": 0
+    },
+    "tags": [
+      "machine",
+      "drone",
+      "orbital"
+    ],
+    "abilities": [
+      "ring_alignment",
+      "ring_recover",
+      "ring_prism_shot",
+      "ring_recover"
+    ],
+    "flavor": "Prepares three brief squad damage boosts. Interrupt the alignment or remove the supported attacker.",
+    "xp_reward": 200,
+    "credit_reward": 110,
+    "drops": [],
+    "description": "Prepares three brief squad damage boosts. Interrupt the alignment or remove the supported attacker.",
+    "portrait": "images/enemies/prism_surveyor_combat.png",
+    "sprite": [
+      "images/enemies/prism_surveyor_combat.png"
+    ],
+    "authored": {
+      "cycle": [
+        "ring_alignment",
+        "ring_recover",
+        "ring_prism_shot",
+        "ring_recover"
+      ],
+      "windups": {
+        "ring_alignment": "Prism aligning the squad volley"
+      },
+      "interrupt_on_damage": [
+        "ring_alignment"
+      ],
+      "resource_labels": {
+        "ring_alignment": "Alignment charges"
+      },
+      "wait_when_unavailable": true
+    }
+  },
+  {
+    "id": "threshold_remnant",
+    "combat_size": "medium",
+    "name": "Threshold Remnant",
+    "tier": "standard",
+    "combat_behavior": "aggressive",
+    "combat_role": "striker",
+    "hp": 240,
+    "strength": 10,
+    "vitality": 12,
+    "agility": 20,
+    "focus": 19,
+    "luck": 5,
+    "speed": 13,
+    "stability": 75,
+    "element": "shock",
+    "resistances": {
+      "physical": 0,
+      "burn": 10,
+      "shock": -20,
+      "source": 0
+    },
+    "tags": [
+      "machine",
+      "drone",
+      "orbital"
+    ],
+    "abilities": [
+      "ring_fracture",
+      "ring_remnant_expose",
+      "ring_recover"
+    ],
+    "flavor": "Warns before an incomplete fracture, then unravels into exposed recovery.",
+    "xp_reward": 200,
+    "credit_reward": 110,
+    "drops": [],
+    "description": "Warns before an incomplete fracture, then unravels into exposed recovery.",
+    "portrait": "images/enemies/threshold_remnant_combat.png",
+    "sprite": [
+      "images/enemies/threshold_remnant_combat.png"
+    ],
+    "authored": {
+      "cycle": [
+        "ring_fracture",
+        "ring_remnant_expose",
+        "ring_recover"
+      ],
+      "windups": {
+        "ring_fracture": "Incomplete fracture taking shape"
+      },
+      "interrupt_on_damage": []
+    }
+  },
+  {
+    "id": "review_clerk",
+    "combat_size": "medium",
+    "name": "Review Clerk",
+    "tier": "standard",
+    "combat_behavior": "controller",
+    "combat_role": "controller",
+    "hp": 145,
+    "strength": 16,
+    "vitality": 20,
+    "agility": 9,
+    "focus": 28,
+    "luck": 9,
+    "speed": 11,
+    "stability": 170,
+    "element": "source",
+    "resistances": {
+      "physical": 10,
+      "shock": 10,
+      "source": 25
+    },
+    "tags": [
+      "nightmare",
+      "source",
+      "elite"
+    ],
+    "abilities": [
+      "source_clerk_stamp",
+      "source_recover"
+    ],
+    "flavor": "A performance review large enough to blot out the horizon.",
+    "xp_reward": 420,
+    "credit_reward": 0,
+    "drops": [],
+    "description": "Its stamp marks one target for a follow-up. Interrupt the stamp or defend the marked ally.",
+    "portrait": "images/enemies/review_clerk_source_combat.png",
+    "authored": {
+      "cycle": [
+        "source_clerk_stamp",
+        "source_recover"
+      ],
+      "windups": {
+        "source_clerk_stamp": "Stamp descending"
+      },
+      "interrupt_on_damage": [
+        "source_clerk_stamp"
+      ]
+    },
+    "sprite": [
+      "images/enemies/review_clerk_source_combat.png"
+    ]
+  },
+  {
+    "id": "war_order_fragment",
+    "combat_size": "medium",
+    "name": "War Order Fragment",
+    "tier": "standard",
+    "combat_behavior": "aggressive",
+    "combat_role": "striker",
+    "hp": 150,
+    "strength": 25,
+    "vitality": 17,
+    "agility": 9,
+    "focus": 13,
+    "luck": 7,
+    "speed": 11,
+    "stability": 125,
+    "element": "physical",
+    "resistances": {
+      "physical": 20,
+      "burn": 0,
+      "shock": -10,
+      "source": 10
+    },
+    "tags": [
+      "nightmare",
+      "source",
+      "phantom"
+    ],
+    "abilities": [
+      "source_order_fragment_shot",
+      "source_expose",
+      "source_recover"
+    ],
+    "flavor": "A target produced by Gh0st's kill-suite before conscience can object.",
+    "xp_reward": 330,
+    "credit_reward": 0,
+    "drops": [],
+    "description": "Charges a single shot, then drifts apart into exposed recovery.",
+    "portrait": "images/enemies/war_order_fragment_source_combat.png",
+    "authored": {
+      "cycle": [
+        "source_order_fragment_shot",
+        "source_expose",
+        "source_recover"
+      ],
+      "windups": {
+        "source_order_fragment_shot": "Broken order taking aim"
+      }
+    },
+    "sprite": [
+      "images/enemies/war_order_fragment_source_combat.png"
+    ]
+  },
+  {
+    "id": "tide_murmur",
+    "combat_size": "medium",
+    "name": "Tide Murmur",
+    "tier": "standard",
+    "combat_behavior": "trickster",
+    "combat_role": "controller",
+    "hp": 145,
+    "strength": 14,
+    "vitality": 21,
+    "agility": 9,
+    "focus": 29,
+    "luck": 8,
+    "speed": 10,
+    "stability": 150,
+    "element": "source",
+    "resistances": {
+      "physical": 5,
+      "freeze": 25,
+      "source": 35,
+      "shock": -15
+    },
+    "tags": [
+      "nightmare",
+      "source",
+      "aethel"
+    ],
+    "abilities": [
+      "source_tide_murmur",
+      "source_recover"
+    ],
+    "flavor": "The conviction that Orion is the last voice left in creation.",
+    "xp_reward": 400,
+    "credit_reward": 0,
+    "drops": [],
+    "description": "A low tide briefly weakens one ally. Interrupt the gathering wave.",
+    "portrait": "images/enemies/tide_murmur_source_combat.png",
+    "authored": {
+      "cycle": [
+        "source_tide_murmur",
+        "source_recover"
+      ],
+      "windups": {
+        "source_tide_murmur": "Low tide gathering"
+      },
+      "interrupt_on_damage": [
+        "source_tide_murmur"
+      ]
+    },
+    "sprite": [
+      "images/enemies/tide_murmur_source_combat.png"
+    ]
+  },
+  {
+    "id": "silence_voice_anchor",
+    "combat_size": "medium",
+    "name": "Voice Anchor",
+    "tier": "elite",
+    "combat_behavior": "boss",
+    "combat_role": "boss",
+    "hp": 120,
+    "strength": 18,
+    "vitality": 16,
+    "agility": 4,
+    "focus": 18,
+    "luck": 14,
+    "speed": 1,
+    "stability": 70,
+    "broken_turns": 3,
+    "element": "source",
+    "resistances": {
+      "physical": 25,
+      "burn": 25,
+      "shock": 20,
+      "source": 55
+    },
+    "tags": [
+      "god_form",
+      "source",
+      "boss"
+    ],
+    "abilities": [],
+    "flavor": "Supplies the targeted Silence command. Destroy it to cancel its preparation.",
+    "xp_reward": 0,
+    "credit_reward": 0,
+    "ap_reward": 0,
+    "drops": [],
+    "description": "Supplies the targeted Silence command. Destroy it to cancel its preparation.",
+    "portrait": "images/enemies/silence_voice_anchor_source_combat.png",
+    "authored": {
+      "linked_to": "ascended_god"
+    },
+    "composite": {
+      "group": "vale_silence",
+      "role": "part",
+      "offset_x": -0.57,
+      "offset_y": 0.04,
+      "width_scale": 0.46,
+      "height_scale": 0.68,
+      "z": 1
+    },
+    "sprite": [
+      "images/enemies/silence_voice_anchor_source_combat.png"
+    ]
+  },
+  {
+    "id": "silence_memory_anchor",
+    "combat_size": "medium",
+    "name": "Memory Anchor",
+    "tier": "elite",
+    "combat_behavior": "boss",
+    "combat_role": "boss",
+    "hp": 120,
+    "strength": 18,
+    "vitality": 16,
+    "agility": 4,
+    "focus": 18,
+    "luck": 14,
+    "speed": 1,
+    "stability": 70,
+    "broken_turns": 3,
+    "element": "source",
+    "resistances": {
+      "physical": 25,
+      "burn": 25,
+      "shock": 20,
+      "source": 55
+    },
+    "tags": [
+      "god_form",
+      "source",
+      "boss"
+    ],
+    "abilities": [],
+    "flavor": "Supplies the party-wide memory pulse. Destroy it to cancel its preparation.",
+    "xp_reward": 0,
+    "credit_reward": 0,
+    "ap_reward": 0,
+    "drops": [],
+    "description": "Supplies the party-wide memory pulse. Destroy it to cancel its preparation.",
+    "portrait": "images/enemies/silence_memory_anchor_source_combat.png",
+    "authored": {
+      "linked_to": "ascended_god"
+    },
+    "composite": {
+      "group": "vale_silence",
+      "role": "part",
+      "offset_x": 0.57,
+      "offset_y": 0.07,
+      "width_scale": 0.48,
+      "height_scale": 0.43,
+      "z": 1
+    },
+    "sprite": [
+      "images/enemies/silence_memory_anchor_source_combat.png"
+    ]
+  },
+  {
+    "id": "quench_mite",
+    "combat_size": "medium",
+    "name": "Quench Mite",
+    "tier": "standard",
+    "combat_behavior": "aggressive",
+    "combat_role": "striker",
+    "hp": 100,
+    "strength": 12,
+    "vitality": 8,
+    "agility": 16,
+    "focus": 8,
+    "luck": 5,
+    "speed": 17,
+    "stability": 90,
+    "element": "burn",
+    "resistances": {
+      "burn": 40,
+      "freeze": -30,
+      "shock": -10
+    },
+    "tags": [
+      "machine",
+      "flying",
+      "foundry"
+    ],
+    "abilities": [
+      "foundry_quench_vent",
+      "foundry_exposed"
+    ],
+    "flavor": "Its coolant sac swells before a cold vent. Damage interrupts the swelling.",
+    "xp_reward": 120,
+    "credit_reward": 60,
+    "drops": [],
+    "description": "Its coolant sac swells before a cold vent. Damage interrupts the swelling.",
+    "portrait": "images/enemies/quench_mite_foundry_pass.png",
+    "authored": {
+      "cycle": [
+        "foundry_quench_vent",
+        "foundry_exposed"
+      ],
+      "windups": {
+        "foundry_quench_vent": "Coolant sac swelling"
+      },
+      "interrupt_on_damage": [
+        "foundry_quench_vent"
+      ],
+      "duplicate_cycle_offset": 1,
+      "windup_group": "foundry_pressure"
+    },
+    "sprite": [
+      "images/enemies/quench_mite_foundry_pass.png"
+    ]
+  },
+  {
+    "id": "magnet_sifter",
+    "combat_size": "medium",
+    "name": "Magnet Sifter",
+    "tier": "standard",
+    "combat_behavior": "defensive",
+    "combat_role": "support",
+    "hp": 130,
+    "strength": 15,
+    "vitality": 10,
+    "agility": 8,
+    "focus": 6,
+    "luck": 4,
+    "speed": 9,
+    "stability": 100,
+    "element": "burn",
+    "resistances": {
+      "burn": 50,
+      "shock": -20,
+      "physical": -10
+    },
+    "tags": [
+      "machine",
+      "foundry"
+    ],
+    "abilities": [
+      "foundry_magnet_mark",
+      "foundry_exposed"
+    ],
+    "flavor": "Marks one crew member so its partner can aim a committed attack at them.",
+    "xp_reward": 130,
+    "credit_reward": 55,
+    "drops": [],
+    "description": "Marks one crew member so its partner can aim a committed attack at them.",
+    "portrait": "images/enemies/magnet_sifter_foundry_pass.png",
+    "authored": {
+      "cycle": [
+        "foundry_magnet_mark",
+        "foundry_exposed"
+      ],
+      "windups": {
+        "foundry_magnet_mark": "Magnetic lock aligning"
+      },
+      "interrupt_on_damage": [
+        "foundry_magnet_mark"
+      ]
+    },
+    "sprite": [
+      "images/enemies/magnet_sifter_foundry_pass.png"
+    ]
   }
 ]

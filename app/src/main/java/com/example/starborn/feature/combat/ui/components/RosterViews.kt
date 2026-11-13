@@ -613,7 +613,13 @@ fun EnemyRoster(
                         )
                         val shape = RoundedCornerShape(28.dp)
                         val atbProgress = atbMeters[combatantId] ?: 0f
-                        val spriteScale = combatEnemySpriteScale(enemy.tier)
+                        val administrator = enemy.id == "administrator_boss"
+                        val commandBody = administrator || enemy.authored?.coordination != null
+                        val spriteScale = combatEnemySpriteScale(enemy.tier) * when {
+                            administrator -> 1.6f
+                            commandBody -> 1.35f
+                            else -> 1f
+                        }
                         val rippleScale = 1f + (spriteScale - 1f) * 0.5f
                         val rippleSize = portraitSize * rippleScale
                         val labelSpacer = if (isElite) 8.dp else 4.dp
@@ -724,7 +730,7 @@ fun EnemyRoster(
                                             .size(portraitSize)
                                             .graphicsLayer {
                                                 compositingStrategy = CompositingStrategy.Offscreen
-                                                transformOrigin = TransformOrigin(0.5f, 1f)
+                                                transformOrigin = TransformOrigin(0.5f, if (commandBody) 0f else 1f)
                                                 if (enemyBroken) {
                                                     val brokenDazeWave = sin(idleWave * 2f + idlePhase)
                                                     val brokenSway = sin(idleWave + idlePhase)

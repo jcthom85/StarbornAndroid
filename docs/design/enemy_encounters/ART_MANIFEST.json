@@ -1,5 +1,5 @@
 {
-  "status": "Titan and Administrator sprites integrated; remaining subjects are planned",
+  "status": "Dedicated campaign sprites integrated across all six worlds",
   "unique_subjects": 69,
   "no_new_images_generated": false,
   "subjects": [
@@ -231,9 +231,9 @@
       "world": "world_3",
       "name": "Sentinel Mk. I",
       "visual_brief": "Suspended medical/quarantine pod with radial restraint fins.",
-      "current_review_candidate": "images/enemies/resonance_buoy_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/sentinel_mki_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/sentinel_mki_foundry_pass.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/sentinel_mki_foundry_pass.png",
+      "decision": "Integrated original OpenAI Image API art for exploration and combat.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -257,9 +257,9 @@
       "world": "world_3",
       "name": "Corporate Assassin",
       "visual_brief": "Tailored human silhouette, folded blade, distinct smoke emitter.",
-      "current_review_candidate": "images/enemies/riot_guard_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/corporate_assassin_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/corporate_assassin_foundry_pass.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/corporate_assassin_foundry_pass.png",
+      "decision": "Integrated original OpenAI Image API art for exploration and combat.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -270,9 +270,9 @@
       "world": "world_3",
       "name": "Heavy Mech",
       "visual_brief": "Low armored riot chassis, broad heat nozzle and stabilizer feet.",
-      "current_review_candidate": "images/enemies/heavy_loader_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/heavy_mech_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/heavy_mech_foundry_pass.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/heavy_mech_foundry_pass.png",
+      "decision": "Integrated original OpenAI Image API art for exploration and combat.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -297,9 +297,9 @@
       "world": "world_4",
       "name": "Magma Drone",
       "visual_brief": "Triangular heat-shielded skimmer with red-hot underside and blue coolant fins.",
-      "current_review_candidate": "images/enemies/security_drone_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/magma_drone_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/magma_drone_foundry_pass.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/magma_drone_foundry_pass.png",
+      "decision": "Integrated original OpenAI Image API art for exploration and combat.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -310,9 +310,9 @@
       "world": "world_4",
       "name": "Slag Golem",
       "visual_brief": "Bipedal slag crust around a glowing furnace belly, distinct from every loader.",
-      "current_review_candidate": "images/enemies/heavy_loader_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/slag_golem_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/slag_golem_foundry_pass.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/slag_golem_foundry_pass.png",
+      "decision": "Integrated original OpenAI Image API art for exploration and combat.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -323,9 +323,9 @@
       "world": "world_4",
       "name": "Welder Bot",
       "visual_brief": "Narrow tripod, welding torch arm, dangling finite weld cartridges.",
-      "current_review_candidate": "images/enemies/heavy_loader_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/welder_bot_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/welder_bot_foundry_pass.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/welder_bot_foundry_pass.png",
+      "decision": "Integrated original OpenAI Image API art for exploration and combat.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -336,9 +336,9 @@
       "world": "world_4",
       "name": "Flame Trooper",
       "visual_brief": "Insulated industrial human suit with a horizontal furnace shield.",
-      "current_review_candidate": "images/enemies/dominion_dampener_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/flame_trooper_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/flame_trooper_foundry_pass.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/flame_trooper_foundry_pass.png",
+      "decision": "Integrated original OpenAI Image API art for exploration and combat.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -349,9 +349,9 @@
       "world": "world_4",
       "name": "Phantom",
       "visual_brief": "Open skeletal stealth machine, incomplete face, asymmetric cable limbs.",
-      "current_review_candidate": "images/enemies/riot_guard_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/phantom_prototype_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/phantom_prototype_foundry_pass.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/phantom_prototype_foundry_pass.png",
+      "decision": "Integrated original OpenAI Image API art for exploration and combat.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -362,9 +362,9 @@
       "world": "world_4",
       "name": "Conveyor Crusher",
       "visual_brief": "Overhead stamping press on a compact conveyor frame.",
-      "current_review_candidate": "images/enemies/heavy_loader_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/conveyor_crusher_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/conveyor_crusher_foundry_pass.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/conveyor_crusher_foundry_pass.png",
+      "decision": "Integrated original OpenAI Image API art for exploration and combat.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -390,9 +390,9 @@
       "world": "world_4",
       "name": "Crucible Champion",
       "visual_brief": "Low crucible-alloy prizefighter frame with hammer fists and victory dents.",
-      "current_review_candidate": "images/enemies/heavy_loader_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/crucible_champion_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/crucible_champion_foundry_pass.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/crucible_champion_foundry_pass.png",
+      "decision": "Integrated original OpenAI Image API art for exploration and combat.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -403,9 +403,9 @@
       "world": "world_5",
       "name": "Compliance Fighter",
       "visual_brief": "Thin orbital interceptor, separated thruster pods, no Aero Drone wing reuse.",
-      "current_review_candidate": "images/enemies/aero_drone_combat.png",
+      "current_review_candidate": "images/enemies/orbital_fighter_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/orbital_fighter_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Original OpenAI Image API sprite integrated for combat and exploration.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -416,9 +416,9 @@
       "world": "world_5",
       "name": "Compliance Officer",
       "visual_brief": "Long ivory uniform coat and compact scanner baton, no Riot Guard body.",
-      "current_review_candidate": "images/enemies/riot_guard_combat.png",
+      "current_review_candidate": "images/enemies/compliance_officer_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/compliance_officer_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Original OpenAI Image API sprite integrated for combat and exploration.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -431,7 +431,7 @@
       "visual_brief": "Compact gyro rings, clamp arms, maneuvering thrusters; new dedicated art candidate.",
       "current_review_candidate": "images/enemies/null_g_drone_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/null_g_drone_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Existing dedicated sprite retained.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -442,9 +442,9 @@
       "world": "world_5",
       "name": "Void Turret",
       "visual_brief": "Wall-mounted iris cannon with a broad horizontal anchoring bracket.",
-      "current_review_candidate": "images/enemies/sentinel_orb_combat.png",
+      "current_review_candidate": "images/enemies/void_turret_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/void_turret_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Original OpenAI Image API sprite integrated for combat and exploration.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -455,9 +455,9 @@
       "world": "world_5",
       "name": "Hunter-Killer Droid",
       "visual_brief": "Tall reverse-jointed hunting frame with a rotating capture cage.",
-      "current_review_candidate": "images/enemies/heavy_loader_combat.png",
+      "current_review_candidate": "images/enemies/hk_droid_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/hk_droid_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Original OpenAI Image API sprite integrated for combat and exploration.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -468,9 +468,9 @@
       "world": "world_5",
       "name": "Elite Guard",
       "visual_brief": "Towering ceremonial shield bearer, narrow gold crest and segmented mirror shield.",
-      "current_review_candidate": "images/enemies/riot_guard_combat.png",
+      "current_review_candidate": "images/enemies/elite_guard_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/elite_guard_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Original OpenAI Image API sprite integrated for combat and exploration.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -481,9 +481,9 @@
       "world": "world_5",
       "name": "Firewall Construct",
       "visual_brief": "Angular lattice crab of hard-light panels and a central triangular aperture.",
-      "current_review_candidate": "images/enemies/ruin_guardian_combat.png",
+      "current_review_candidate": "images/enemies/firewall_construct_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/firewall_construct_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Original OpenAI Image API sprite integrated for combat and exploration.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -494,9 +494,9 @@
       "world": "world_5",
       "name": "Compliance Avatar",
       "visual_brief": "Large ceremonial hard-light body, cathedral ribs, no Warden silhouette.",
-      "current_review_candidate": "images/enemies/the_warden_combat.png",
+      "current_review_candidate": "images/enemies/compliance_avatar_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/compliance_avatar_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Original OpenAI Image API sprite integrated for combat and exploration.",
       "additional_state_requirements": [
         "linked pose",
         "broken-link recalibration"
@@ -508,9 +508,9 @@
       "world": "world_6",
       "name": "The Manager",
       "visual_brief": "Floating office torso made of stacked forms, long pointing arms, hollow face.",
-      "current_review_candidate": "images/enemies/the_warden_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/manager_projection_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/manager_projection_source_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/manager_projection_source_combat.png",
+      "decision": "Original OpenAI Image API sprite integrated.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -521,9 +521,9 @@
       "world": "world_6",
       "name": "War Echo",
       "visual_brief": "Split silhouette of ceremonial gunner and torn orders; one enemy kind, two instances.",
-      "current_review_candidate": "images/enemies/phantom_assassin_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/endless_war_echo_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/endless_war_echo_source_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/endless_war_echo_source_combat.png",
+      "decision": "Original OpenAI Image API sprite integrated.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -534,9 +534,9 @@
       "world": "world_6",
       "name": "Silent Shore",
       "visual_brief": "Tall empty cloak with a crescent wave cavity instead of a face.",
-      "current_review_candidate": "images/enemies/ruin_guardian_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/silent_shore_wraith_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/silent_shore_wraith_source_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/silent_shore_wraith_source_combat.png",
+      "decision": "Original OpenAI Image API sprite integrated.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -547,9 +547,9 @@
       "world": "world_6",
       "name": "Source Shadow",
       "visual_brief": "Offset black paper-like limbs surrounding a bright missing center.",
-      "current_review_candidate": "images/enemies/phantom_assassin_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/source_shadow_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/source_shadow_source_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/source_shadow_source_combat.png",
+      "decision": "Original OpenAI Image API sprite integrated.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -560,9 +560,9 @@
       "world": "world_6",
       "name": "Warped Sentinel",
       "visual_brief": "Asymmetric levitating prism with broken orbit segments; no existing drone repaint.",
-      "current_review_candidate": "images/enemies/security_drone_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/distorted_sentinel_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/distorted_sentinel_source_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/distorted_sentinel_source_combat.png",
+      "decision": "Original OpenAI Image API sprite integrated.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -573,9 +573,9 @@
       "world": "world_6",
       "name": "Glitch Hound",
       "visual_brief": "Ribbon-legged quadruped with missing geometric body slices; no Borer shape.",
-      "current_review_candidate": "images/enemies/echo_borer_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/glitch_hound_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/glitch_hound_source_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/glitch_hound_source_combat.png",
+      "decision": "Original OpenAI Image API sprite integrated.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -586,9 +586,9 @@
       "world": "world_6",
       "name": "Memory Leak",
       "visual_brief": "Floating spooling film and translucent memory panels around a small vulnerable knot.",
-      "current_review_candidate": "images/enemies/resonance_buoy_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/memory_leak_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/memory_leak_source_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/memory_leak_source_combat.png",
+      "decision": "Original OpenAI Image API sprite integrated.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -599,9 +599,9 @@
       "world": "world_6",
       "name": "Nightmare Guard",
       "visual_brief": "Human-shaped folded shields with shifting empty portrait frames.",
-      "current_review_candidate": "images/enemies/riot_guard_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/nightmare_guard_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/nightmare_guard_source_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/nightmare_guard_source_combat.png",
+      "decision": "Original OpenAI Image API sprite integrated.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -612,9 +612,9 @@
       "world": "world_6",
       "name": "The Ascended: Soloist",
       "visual_brief": "Calm human Vale, immaculate asymmetric coat, one controlled gesture.",
-      "current_review_candidate": "images/enemies/the_warden_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/ascended_vale_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/ascended_vale_source_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/ascended_vale_source_combat.png",
+      "decision": "Original OpenAI Image API sprite integrated.",
       "additional_state_requirements": [
         "command tell",
         "human-form fracture"
@@ -626,9 +626,9 @@
       "world": "world_6",
       "name": "The Ascended: Silence",
       "visual_brief": "Huge fractured porcelain figure unfolding into impossible rings, not Iron Warden art.",
-      "current_review_candidate": "images/enemies/the_iron_warden_combat.png",
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/ascended_god_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/ascended_god_source_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/ascended_god_source_combat.png",
+      "decision": "Original OpenAI Image API sprite integrated.",
       "additional_state_requirements": [
         "manifestation sockets",
         "Great Silence commitment",
@@ -641,9 +641,9 @@
       "world": "world_2",
       "name": "Moss Borer",
       "visual_brief": "Broad rooted beetle with moss sail plates; visual family connection to Pit burrowers, new art.",
-      "current_review_candidate": null,
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/moss_borer_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/moss_borer_foundry_pass.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/moss_borer_foundry_pass.png",
+      "decision": "Integrated original OpenAI Image API art for exploration and combat.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -654,9 +654,9 @@
       "world": "world_2",
       "name": "Mist Glider",
       "visual_brief": "Long reed-like flying fish with translucent fan fins; related ecology, unique silhouette.",
-      "current_review_candidate": null,
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/mist_glider_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/mist_glider_foundry_pass.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/mist_glider_foundry_pass.png",
+      "decision": "Integrated original OpenAI Image API art for exploration and combat.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -667,9 +667,9 @@
       "world": "world_3",
       "name": "Concierge Relay",
       "visual_brief": "Floating brass desk bell with an unfolded holo-fan and three cable tassels.",
-      "current_review_candidate": null,
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/concierge_relay_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/concierge_relay_foundry_pass.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/concierge_relay_foundry_pass.png",
+      "decision": "Integrated original OpenAI Image API art for exploration and combat.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -680,9 +680,9 @@
       "world": "world_3",
       "name": "Interdictor Drone",
       "visual_brief": "Vertical clamp-shaped drone with bright central stop-light lens.",
-      "current_review_candidate": null,
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/administrator_interdictor_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/administrator_interdictor_foundry_pass.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/administrator_interdictor_foundry_pass.png",
+      "decision": "Integrated original OpenAI Image API art for exploration and combat.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -693,9 +693,9 @@
       "world": "world_4",
       "name": "Magnet Sifter",
       "visual_brief": "Horseshoe magnetic head over a short wheeled sorting bin.",
-      "current_review_candidate": null,
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/magnet_sifter_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/magnet_sifter_foundry_pass.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/magnet_sifter_foundry_pass.png",
+      "decision": "Integrated original OpenAI Image API art for exploration and combat.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -706,9 +706,9 @@
       "world": "world_4",
       "name": "Quench Mite",
       "visual_brief": "Pale six-legged boiler parasite with oversized blue fluid abdomen.",
-      "current_review_candidate": null,
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/quench_mite_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/quench_mite_foundry_pass.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/quench_mite_foundry_pass.png",
+      "decision": "Integrated original OpenAI Image API art for exploration and combat.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -719,9 +719,9 @@
       "world": "world_5",
       "name": "Customs Screener",
       "visual_brief": "Narrow walking checkpoint arch with two articulated scanner paddles.",
-      "current_review_candidate": null,
+      "current_review_candidate": "images/enemies/customs_screener_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/customs_screener_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Original OpenAI Image API sprite integrated for combat and exploration.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -732,9 +732,9 @@
       "world": "world_5",
       "name": "Tether Rigger",
       "visual_brief": "Low three-legged maintenance chassis with a large cable spool and hooked boom.",
-      "current_review_candidate": null,
+      "current_review_candidate": "images/enemies/tether_rigger_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/tether_rigger_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Original OpenAI Image API sprite integrated for combat and exploration.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -745,9 +745,9 @@
       "world": "world_5",
       "name": "Prism Surveyor",
       "visual_brief": "Small floating diamond lantern inside a wide three-arm measuring caliper.",
-      "current_review_candidate": null,
+      "current_review_candidate": "images/enemies/prism_surveyor_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/prism_surveyor_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Original OpenAI Image API sprite integrated for combat and exploration.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -758,9 +758,9 @@
       "world": "world_5",
       "name": "Boardroom Bailiff",
       "visual_brief": "Empty ceremonial judicial armor with a huge square seal stamp, no Avatar body.",
-      "current_review_candidate": null,
+      "current_review_candidate": "images/enemies/boardroom_bailiff_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/boardroom_bailiff_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Original OpenAI Image API sprite integrated for combat and exploration.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -771,9 +771,9 @@
       "world": "world_5",
       "name": "Threshold Remnant",
       "visual_brief": "Incomplete glass ribbon organism caught inside an orbital airlock-shaped outline.",
-      "current_review_candidate": null,
+      "current_review_candidate": "images/enemies/threshold_remnant_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/threshold_remnant_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Original OpenAI Image API sprite integrated for combat and exploration.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -784,9 +784,9 @@
       "world": "world_5",
       "name": "Directive Conductor",
       "visual_brief": "Floating angular halo of ordered command tiles, clearly separate from the Avatar body.",
-      "current_review_candidate": null,
+      "current_review_candidate": "images/enemies/directive_conductor_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/directive_conductor_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Original OpenAI Image API sprite integrated for combat and exploration.",
       "additional_state_requirements": [
         "command charge",
         "collapsed state"
@@ -798,9 +798,9 @@
       "world": "world_6",
       "name": "Review Clerk",
       "visual_brief": "Small ambulatory filing cabinet with paper legs and a heavy stamp arm.",
-      "current_review_candidate": null,
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/review_clerk_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/review_clerk_source_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/review_clerk_source_combat.png",
+      "decision": "Original OpenAI Image API sprite integrated.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -811,9 +811,9 @@
       "world": "world_6",
       "name": "War Order Fragment",
       "visual_brief": "Floating broken rifle wrapped in strips of command paper, no soldier body.",
-      "current_review_candidate": null,
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/war_order_fragment_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/war_order_fragment_source_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/war_order_fragment_source_combat.png",
+      "decision": "Original OpenAI Image API sprite integrated.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -824,9 +824,9 @@
       "world": "world_6",
       "name": "Tide Murmur",
       "visual_brief": "Small shell-shaped absence filled with a moving water ribbon.",
-      "current_review_candidate": null,
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/tide_murmur_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/tide_murmur_source_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/tide_murmur_source_combat.png",
+      "decision": "Original OpenAI Image API sprite integrated.",
       "additional_state_requirements": [
         "readable signature tell using pose, motion or overlay"
       ],
@@ -837,9 +837,9 @@
       "world": "world_6",
       "name": "Voice Anchor",
       "visual_brief": "Tall split tuning-arch with a clearly visible throat aperture.",
-      "current_review_candidate": null,
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/silence_voice_anchor_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/silence_voice_anchor_source_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/silence_voice_anchor_source_combat.png",
+      "decision": "Original OpenAI Image API sprite integrated.",
       "additional_state_requirements": [
         "active/inactive treatment and clear attachment anchor"
       ],
@@ -850,9 +850,9 @@
       "world": "world_6",
       "name": "Memory Anchor",
       "visual_brief": "Wide suspended broken memory lens, horizontal silhouette distinct from Voice Anchor.",
-      "current_review_candidate": null,
-      "proposed_base_path": "world_assets/src/main/assets/images/enemies/silence_memory_anchor_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "current_review_candidate": "images/enemies/silence_memory_anchor_source_combat.png",
+      "proposed_base_path": "world_assets/src/main/assets/images/enemies/silence_memory_anchor_source_combat.png",
+      "decision": "Original OpenAI Image API sprite integrated.",
       "additional_state_requirements": [
         "active/inactive treatment and clear attachment anchor"
       ],

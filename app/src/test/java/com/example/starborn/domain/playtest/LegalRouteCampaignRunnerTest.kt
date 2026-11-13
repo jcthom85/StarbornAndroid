@@ -881,10 +881,11 @@ class LegalRouteCampaignRunnerTest {
             agent.finishWorld1Launch()
             agent.playWorld2()
             agent.playWorld3()
-            agent.playWorld4(exportReviewSaves = true)
+            agent.playWorld4(completionist = true, exportReviewSaves = true)
             val arrival = h.saveSlot(7)
             assertEquals("orbital_executive_dock", arrival.roomId)
             assertTrue(arrival.completedQuests.containsAll((16..20).map { "w4_mq$it" }))
+            assertTrue(arrival.completedQuests.containsAll((16..20).map { "w4_sq$it" } + "w4_sq_crucible"))
             assertEquals(arrival, h.loadSlot(7))
             assertTrue(assistance.isEmpty())
         } finally { h.close() }
@@ -910,7 +911,7 @@ class LegalRouteCampaignRunnerTest {
                 assertEquals(arrival.roomId, h.sessionStore.state.value.roomId)
                 assertEquals(arrival.inventory, h.sessionStore.state.value.inventory)
                 assertEquals(arrival.playerXp, h.sessionStore.state.value.playerXp)
-                agent.playWorld5(completionist = completionist)
+                agent.playWorld5(completionist = completionist, avatarBodyFirst = completionist, avatarSeed = if (completionist) 41 else 17, sweepOptionalCombat = completionist)
                 val end = h.saveSlot(8)
                 assertEquals("source_campfire", end.roomId)
                 assertTrue(end.completedQuests.containsAll((21..25).map { "w5_mq$it" }))
@@ -920,10 +921,40 @@ class LegalRouteCampaignRunnerTest {
             assertTrue(assistance.isEmpty())
             File("build/reports/world5-authored/earned-routes.txt").apply {
                 parentFile.mkdirs()
-                writeText("Earned W1 launch through W4 arrival; W5 main and completionist routes; real combat, seed 17.\n" +
+                writeText("Earned W1 launch through W4 arrival; W5 main and completionist routes; support-first seed 17, body-first and all remaining static encounters seed 41.\n" +
                     publicCombats.joinToString("\n") + "\nAssistance: $assistance\n")
             }
         } finally { h.close() }
+    }
+
+    @Test
+    fun earnedSourceRoutesReachCreditsAcrossRescueAndFinaleOrders() {
+        useProductionCrewRules = true
+        val reader = AssetJsonReader(DesktopAssetProvider(listOf(assets, File(root, "app/src/debug/assets"))), moshi)
+        val checkpoint = requireNotNull(WorldAssetDataSource(reader).loadWorld1Checkpoint("w1_mq05"))
+        val harness = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = checkpoint)
+        try {
+            val agent = LegalCampaignAgent(harness)
+            agent.finishWorld1Launch()
+            agent.playWorld2()
+            agent.playWorld3()
+            agent.playWorld4()
+            agent.playWorld5()
+            harness.saveSlot(7)
+            for (alternate in listOf(false, true)) {
+                harness.loadSlot(7)
+                agent.playWorld6(completionist = true, alternate = alternate)
+                val end = harness.sessionStore.state.value
+                assertTrue(end.completedQuests.containsAll((26..30).map { "w6_sq$it" }))
+                assertTrue("ms_game_complete" in end.completedMilestones)
+                assertTrue("ms_credits_seen" in end.completedMilestones)
+            }
+            assertTrue(assistance.isEmpty())
+            File("build/reports/world6-authored/earned-routes.txt").apply {
+                parentFile!!.mkdirs()
+                writeText(publicCombats.joinToString("\n"))
+            }
+        } finally { harness.close() }
     }
 
     @Test
@@ -2283,7 +2314,14 @@ class LegalRouteCampaignRunnerTest {
             completeLateSide("w4_sq17", "foundry_service_airlock", "w4_sq17_vent_safe_route", 300)
             navigateLegalPath("foundry_waste_intake"); performAction("w4_sq18_stop_intake"); performAction("w4_sq18_salvage_mechs")
             completeLateSide("w4_sq18", "foundry_cooling_springs", "w4_sq18_build_bypass", 300)
-            for ((round, enemy) in listOf(1 to "magma_drone", 2 to "slag_golem", 3 to "crucible_champion")) {
+            val rosters = listOf(
+                listOf("magma_drone", "magma_drone", "welder_bot"),
+                listOf("slag_golem", "welder_bot"),
+                listOf("crucible_champion")
+            )
+            for ((index, roster) in rosters.withIndex()) {
+                val round = index + 1
+                val enemy = roster.first()
                 navigateLegalPath("foundry_obsidian_shelf_scale_02"); harness.restAtVisibleStop()
                 navigateLegalPath("foundry_crucible_arena")
                 assertTrue("Brutus must be visible", "pitmaster_brutus" in harness.explorationVm.uiState.value.npcs)
@@ -2296,7 +2334,14 @@ class LegalRouteCampaignRunnerTest {
                     talkToNpc("pitmaster_brutus", "opt_brutus_start_round1")
                     assertTrue("Brutus must restart a retreated round", harness.sessionStore.state.value.pendingBattleJson.isNotBlank())
                 }
+                val descriptor = requireNotNull(
+                    moshi.adapter(com.example.starborn.domain.combat.EncounterDescriptor::class.java)
+                        .fromJson(harness.sessionStore.state.value.pendingBattleJson)
+                )
+                assertEquals(roster, descriptor.enemies.map { it.enemyId })
+                val ironBefore = harness.sessionStore.state.value.inventory["pure_iron"] ?: 0
                 harness.playPublicEncounter(enemy, pending = true)
+                if (round == 3) assertEquals(ironBefore + 1, harness.sessionStore.state.value.inventory["pure_iron"])
                 assertTrue("ms_crucible_round${round}_cleared" in harness.sessionStore.state.value.completedMilestones)
                 if (round < 3) assertFalse("ms_crucible_round${round + 1}_cleared" in harness.sessionStore.state.value.completedMilestones)
                 harness.saveSlot(8); harness.loadSlot(8)
@@ -2512,7 +2557,7 @@ class LegalRouteCampaignRunnerTest {
             navigateLegalPath("orbital_executive_dock")
         }
 
-        fun playWorld5(completionist: Boolean = false, alternate: Boolean = false) {
+        fun playWorld5(completionist: Boolean = false, alternate: Boolean = false, avatarBodyFirst: Boolean = false, avatarSeed: Int = 17, sweepOptionalCombat: Boolean = false) {
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w5_mq21"))
             if (harness.sessionStore.state.value.progressionPrototypeVersion == 1) {
                 val crew = com.example.starborn.domain.leveling.CrewBuildPrototype
@@ -2535,6 +2580,8 @@ class LegalRouteCampaignRunnerTest {
             navigateLegalPath("orbital_solarium")
             performAction("w5_mq22_cross_solarium")
             navigateLegalPath("orbital_grand_concourse")
+            harness.playPublicEncounter("customs_screener")
+            navigateLegalPath("orbital_security_hub")
             harness.playPublicEncounter("compliance_officer")
             navigateLegalPath("orbital_service_shaft")
             performAction("w5_mq22_traverse_shaft")
@@ -2601,7 +2648,20 @@ class LegalRouteCampaignRunnerTest {
             performAction("w5_mq25_enter_tear")
             assertEquals("The breach must wait for the Avatar victory", "deep_tear", harness.sessionStore.state.value.roomId)
             assertFalse("Uncleared breach must not unlock World 6", "ms_w6_access_unlocked" in harness.sessionStore.state.value.completedMilestones)
-            harness.playPublicEncounter("compliance_avatar")
+            harness.playPublicEncounter("compliance_avatar", seed = avatarSeed, preferChassis = avatarBodyFirst)
+            if (sweepOptionalCombat) {
+                val ringRooms = harness.rooms.filter { it.backgroundImage.contains("/world_5/") && it.enemies.isNotEmpty() }
+                for (room in ringRooms) {
+                    navigateLegalPath(room.id)
+                    while (true) {
+                        val remaining = harness.explorationVm.uiState.value.enemies.firstOrNull { it != "hk_droid" } ?: break
+                        harness.playPublicEncounter(remaining, seed = 41)
+                        navigateLegalPath("orbital_customs_lounge")
+                        harness.restAtVisibleStop()
+                        navigateLegalPath(room.id)
+                    }
+                }
+            }
             navigateLegalPath("orbital_customs_lounge")
             harness.sellAtVisibleShop("orbital_dispensary", "grav_boots", 1)
             val remainingCells = harness.sessionStore.state.value.inventory["power_cell"] ?: 0
@@ -2631,7 +2691,7 @@ class LegalRouteCampaignRunnerTest {
             harness.settle()
             harness.restAtVisibleStop()
             val nightmares = listOf("source_zeke_review_loop" to "manager_projection",
-                "source_gh0st_nightmare_node_scale_01" to "endless_war_echo", "source_orion_tide_well" to "silent_shore_wraith")
+                "source_gh0st_kill_suite" to "endless_war_echo", "source_orion_tide_well" to "silent_shore_wraith")
             for ((room, enemy) in if (alternate) nightmares.reversed() else nightmares) {
                 navigateLegalPath(room); harness.playPublicEncounter(enemy)
                 navigateLegalPath("source_campfire"); harness.restAtVisibleStop()
@@ -2687,11 +2747,21 @@ class LegalRouteCampaignRunnerTest {
             harness.explorationVm.onActionSelected(lockedTuning)
             harness.settle()
             assertTrue("Vale victory alone must not unlock final tuning", harness.explorationVm.uiState.value.tuningPuzzle == null)
-            navigateLegalPath("source_memory_bridge_span")
-            harness.restAtVisibleStop()
-            navigateLegalPath("source_center_node_scale_03")
-            harness.playPublicEncounter("ascended_god")
-            navigateLegalPath("source_center")
+            val interlude = harness.saveSlot(9)
+            if (alternate) {
+                // Simulate a save made at the former second-form arena.
+                runBlocking {
+                    harness.persistence.writeSlot(9, interlude.copy(roomId = "source_center_node_scale_03"))
+                }
+            }
+            harness.loadSlot(9)
+            if (alternate) performAction("w6_resume_silence_at_center")
+            assertEquals(interlude.partyMemberHp, harness.sessionStore.state.value.partyMemberHp)
+            assertEquals(interlude.inventory, harness.sessionStore.state.value.inventory)
+            assertEquals(interlude.playerXp, harness.sessionStore.state.value.playerXp)
+            assertEquals(interlude.playerAp, harness.sessionStore.state.value.playerAp)
+            assertEquals(listOf("ascended_god"), harness.explorationVm.uiState.value.enemies)
+            harness.playPublicEncounter("ascended_god", seed = if (alternate) 41 else 17, preferChassis = alternate)
             val finalTuning = harness.explorationVm.uiState.value.actions.single {
                 it is com.example.starborn.domain.model.TuningPuzzleAction && it.puzzleId == "source_harmonic_focus"
             }

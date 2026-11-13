@@ -270,7 +270,8 @@
     "name": "Mirror Guard",
     "default_duration": 1,
     "incoming_multiplier": 0.65,
-    "target": "self"
+    "target": "self",
+    "reflect_single_energy": 0.5
   },
   {
     "id": "ring_command_ward",
@@ -292,5 +293,85 @@
     "default_duration": 1,
     "incoming_multiplier": 1.1,
     "target": "enemy"
+  },
+  {
+    "id": "ring_detention_mark",
+    "name": "Detention Mark",
+    "default_duration": 1,
+    "incoming_multiplier": 1.1,
+    "target": "enemy"
+  },
+  {
+    "id": "ring_capture_drag",
+    "name": "Capture Cable Drag",
+    "default_duration": 1,
+    "outgoing_multiplier": 0.8,
+    "target": "enemy"
+  },
+  {
+    "id": "ring_alignment",
+    "name": "Volley Alignment",
+    "default_duration": 1,
+    "outgoing_multiplier": 1.15,
+    "target": "ally"
+  },
+  {
+    "id": "ring_frequency_shock",
+    "name": "Amber Frequency: Burn Weak / Shock Resist",
+    "default_duration": 4,
+    "affinity_overrides": {
+      "burn": -50,
+      "shock": 50,
+      "source": 0,
+      "physical": 0
+    },
+    "target": "self"
+  },
+  {
+    "id": "ring_frequency_burn",
+    "name": "Blue Frequency: Shock Weak / Burn Resist",
+    "default_duration": 4,
+    "affinity_overrides": {
+      "burn": 50,
+      "shock": -50,
+      "source": 0,
+      "physical": 0
+    },
+    "target": "self"
+  },
+  {
+    "id": "source_review_mark",
+    "name": "Performance Mark",
+    "target": "enemy",
+    "default_duration": 1,
+    "incoming_multiplier": 1.15
+  },
+  {
+    "id": "source_echo_shelter",
+    "name": "Memory Shelter",
+    "target": "ally",
+    "default_duration": 1,
+    "incoming_multiplier": 0.8
+  },
+  {
+    "id": "source_exposed",
+    "name": "Exposed Memory",
+    "target": "self",
+    "default_duration": 1,
+    "incoming_multiplier": 1.25
+  },
+  {
+    "id": "foundry_magnetic_mark",
+    "name": "Magnetic Mark",
+    "default_duration": 2,
+    "incoming_multiplier": 1.1,
+    "target": "enemy"
+  },
+  {
+    "id": "foundry_opening",
+    "name": "Exposed Recovery",
+    "default_duration": 1,
+    "incoming_multiplier": 1.25,
+    "target": "self"
   }
 ]

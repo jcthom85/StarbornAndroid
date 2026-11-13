@@ -838,8 +838,26 @@ class CombatActionProcessor(
         }
         val hpDamage = resolved((outgoing * TalentEffects.hpMultiplier(attacker, target, skillId, skillId != null && skillLookup(skillId)?.targeting?.contains("all") != true)).roundToInt())
         val stabilityBase = resolved(outgoing)
-        return engine.applyDamage(state, attackerId, targetId, hpDamage, element, critical, brokenBonus,
+        var result = engine.applyDamage(state, attackerId, targetId, hpDamage, element, critical, brokenBonus,
             momentumSpent, stabilityBase, TalentEffects.stabilityMultiplier(attacker, skillId, target, element == PHYSICAL_ELEMENT))
+        val skill = skillId?.let(skillLookup)
+        val area = if (skill == null) {
+            val attack = attacker.combatant.weapon?.attack
+            attack != null && attack !is WeaponAttack.SingleTarget
+        } else {
+            skill.targeting?.startsWith("all_", ignoreCase = true) == true ||
+                skill.combatTags.orEmpty().any { it.lowercase() in setOf("aoe", "burst", "multi") }
+        }
+        val energy = element != null && element != PHYSICAL_ELEMENT
+        val ranged = if (skill != null) skill.scaling.equals("focus", true)
+            else attacker.combatant.weapon?.weaponType?.lowercase() in setOf("pistol", "rifle", "gun", "ranged")
+        val reflect = target.statusEffects.maxOfOrNull { statusRegistry.definition(it.id)?.reflectSingleEnergy ?: 0.0 } ?: 0.0
+        if (hpDamage > 0 && energy && ranged && !area && reflect > 0 && attacker.combatant.side != target.combatant.side) {
+            val rebound = (hpDamage * reflect.coerceIn(0.0, 1.0)).roundToInt()
+                .coerceIn(1, (attacker.combatant.stats.maxHp / 4).coerceAtLeast(1))
+            result = engine.applyDamage(result, targetId, attackerId, rebound, element)
+        }
+        return result
     }
 
     private fun applyDamage(

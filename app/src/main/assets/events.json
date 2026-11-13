@@ -8029,7 +8029,8 @@
       "enemies": [
         "compliance_officer",
         "null_g_drone"
-      ]
+      ],
+      "room_id": "orbital_security_hub"
     },
     "conditions": [
       {
@@ -8099,7 +8100,7 @@
       },
       {
         "type": "show_message",
-        "message": "The crew pulls through dead gravity while Hunter-Killers scrape past on the far wall. Fighting one would be suicide. Timing is enough."
+        "message": "The crew pulls through dead gravity while the Hunter-Killer scrapes past on the far wall. Fighting it would be suicide. Timing is enough."
       }
     ]
   },
@@ -8550,7 +8551,8 @@
       "type": "encounter_victory",
       "enemies": [
         "firewall_construct"
-      ]
+      ],
+      "room_id": "deep_firewall_gamma"
     },
     "conditions": [
       {
@@ -9070,7 +9072,8 @@
       "type": "encounter_victory",
       "enemies": [
         "manager_projection"
-      ]
+      ],
+      "room_id": "source_zeke_review_loop"
     },
     "conditions": [
       {
@@ -9103,7 +9106,8 @@
       "type": "encounter_victory",
       "enemies": [
         "endless_war_echo"
-      ]
+      ],
+      "room_id": "source_gh0st_kill_suite"
     },
     "conditions": [
       {
@@ -9136,7 +9140,8 @@
       "type": "encounter_victory",
       "enemies": [
         "silent_shore_wraith"
-      ]
+      ],
+      "room_id": "source_orion_tide_well"
     },
     "conditions": [
       {
@@ -10110,7 +10115,8 @@
         "source_shadow",
         "distorted_sentinel",
         "glitch_hound"
-      ]
+      ],
+      "room_id": "source_memory_fragments"
     },
     "conditions": [
       {
@@ -10150,7 +10156,8 @@
       "enemies": [
         "memory_leak",
         "nightmare_guard"
-      ]
+      ],
+      "room_id": "source_spire_arena"
     },
     "conditions": [
       {
@@ -10279,7 +10286,8 @@
       "type": "encounter_victory",
       "enemies": [
         "ascended_vale"
-      ]
+      ],
+      "room_id": "source_center"
     },
     "conditions": [
       {
@@ -10309,8 +10317,15 @@
         "to_stage_id": "singularity"
       },
       {
+        "type": "audio_layer",
+        "layer": "battle",
+        "cue_id": "battle_stability_shatter",
+        "fade_ms": 0,
+        "loop": false
+      },
+      {
         "type": "show_message",
-        "message": "Vale's human outline cracks like porcelain. Blinding geometry unfolds from inside it. The Silence begins. Follow the fracture north through the White Shore and Key Orbit to the Silence Pulpit."
+        "message": "Vale’s human outline cracks like porcelain. Two anchors catch the geometry spilling out of him. The Silence rises here. Save at The Center when you are ready to face it."
       }
     ],
     "recover_recorded_victory": true
@@ -10322,7 +10337,8 @@
       "type": "encounter_victory",
       "enemies": [
         "ascended_god"
-      ]
+      ],
+      "room_id": "source_center"
     },
     "conditions": [
       {
@@ -10353,7 +10369,7 @@
       },
       {
         "type": "show_message",
-        "message": "The god-form collapses, but the universe keeps breaking. Vale's code still blocks the signal, and the Key will only answer a circuit, not a ruler. Return south through the Key Orbit and White Shore to The Center. The shared tuning focus is waiting there."
+        "message": "Vale’s geometry collapses. The Key answers at the shared tuning focus. Bring the crew’s voices together."
       }
     ],
     "recover_recorded_victory": true
@@ -15593,7 +15609,7 @@
       },
       {
         "type": "spawn_encounter",
-        "encounter_id": "crucible_champion,magma_drone",
+        "encounter_id": "crucible_champion",
         "room_id": "foundry_crucible_arena"
       }
     ],
@@ -15616,8 +15632,7 @@
       "type": "encounter_victory",
       "room": "foundry_crucible_arena",
       "enemies": [
-        "crucible_champion",
-        "magma_drone"
+        "crucible_champion"
       ]
     },
     "actions": [
@@ -17549,5 +17564,65 @@
         "message": "Nova compares the gate's public departures with the advertised waits on Charles's slate. The service checks are clear, but empty executive berths are reserved ahead of waiting staff transports. She records the mismatched times and berth numbers, leaving passenger records sealed.\n\nCharles studies the comparison. 'Priority holds. My model treated them as mechanical delays. Good catch. Bring me the two Circuit Boards and Focusing Lens, and I'll finish the isolated tap. Anything you've already salvaged will do.'"
       }
     ]
+  },
+  {
+    "id": "w6_resume_silence_at_center",
+    "description": "Return from Silence Pulpit to The Center.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_resume_silence_at_center"
+    },
+    "repeatable": true,
+    "actions": [
+      {
+        "type": "warp",
+        "room_id": "source_center",
+        "travel_transition": "source"
+      }
+    ]
+  },
+  {
+    "id": "w6_mq30_defeat_god_legacy",
+    "description": "Shatter the Ascended: Silence.",
+    "trigger": {
+      "type": "encounter_victory",
+      "enemies": [
+        "ascended_god"
+      ],
+      "room_id": "source_center_node_scale_03"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq30"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w6_mq30",
+        "task_id": "defeat_vale"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq30",
+        "task_id": "defeat_god_form"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_quest_task_done",
+        "quest_id": "w6_mq30",
+        "task_id": "defeat_god_form"
+      },
+      {
+        "type": "advance_quest_stage",
+        "quest_id": "w6_mq30",
+        "to_stage_id": "final_note"
+      },
+      {
+        "type": "show_message",
+        "message": "Vale’s geometry collapses. Return to The Center to use the shared tuning focus."
+      }
+    ],
+    "recover_recorded_victory": true
   }
 ]

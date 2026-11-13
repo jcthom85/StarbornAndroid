@@ -36,6 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.starborn.domain.combat.ActiveBuff
+import com.example.starborn.domain.combat.CombatClarity.ringStatusLabel
 import com.example.starborn.domain.combat.StatusEffect
 import java.util.Locale
 import kotlin.math.abs
@@ -58,8 +59,9 @@ fun EnemyStatusRail(
     modifier: Modifier = Modifier,
     maxVisible: Int = 3
 ) {
-    val entries = statusChipsFor(statuses, buffs)
-    if (entries.isEmpty()) return
+    val ringStatus = statuses.firstNotNullOfOrNull { ringStatusLabel(it.id) }
+    val entries = statusChipsFor(statuses.filter { ringStatusLabel(it.id) == null }, buffs)
+    if (entries.isEmpty() && ringStatus == null) return
     val visible = entries.take(maxVisible.coerceAtLeast(1))
     val overflow = entries.size - visible.size
     Surface(
@@ -68,13 +70,17 @@ fun EnemyStatusRail(
         shape = RoundedCornerShape(999.dp),
         border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f)),
         modifier = modifier
-            .semantics { contentDescription = entries.joinToString("; ") { it.description } }
+            .semantics { contentDescription = (listOfNotNull(ringStatus) + entries.map { it.description }).joinToString("; ") }
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 4.dp, vertical = 3.dp),
             horizontalArrangement = Arrangement.spacedBy(3.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            ringStatus?.let {
+                Text(it, Modifier.padding(horizontal = 4.dp), color = Color(0xFFFFC46B),
+                    style = MaterialTheme.typography.labelSmall, maxLines = 1)
+            }
             visible.forEach { chip ->
                 EnemyStatusPip(chip)
             }

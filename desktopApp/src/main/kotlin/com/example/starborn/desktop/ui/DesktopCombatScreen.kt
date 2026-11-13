@@ -897,7 +897,8 @@ DesktopBattleFormation(party, services, Modifier.fillMaxWidth().weight(if (wide)
                         val normal = runtime.playerParty.firstOrNull { it.id == id }?.combatIconPath
                         when {
                             battle.combatants[id]?.isAlive == false -> "images/characters/emotes/${id}_down.png"
-                            battle.outcome is CombatOutcome.Victory -> "images/characters/emotes/${id}_cool.png"
+                            battle.outcome is CombatOutcome.Victory && runtime.encounterEnemyIds != listOf("ascended_vale") ->
+                                "images/characters/emotes/${id}_cool.png"
                             missActor == id && missToken > 0 && id == lungeActor -> "images/characters/emotes/${id}_confident.png"
                             id == lungeActor -> "images/characters/emotes/${id}_angry.png"
                             else -> normal

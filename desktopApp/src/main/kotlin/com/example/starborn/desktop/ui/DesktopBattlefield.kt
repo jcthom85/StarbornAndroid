@@ -182,6 +182,8 @@ Column(Modifier.heightIn(min = if (enemySide) 56.dp else 68.dp).fillMaxWidth().p
             val notice = when {
                 state.isAlive && enemySide && state.breakTurns > 0 -> "STABILITY BROKEN"
                 intent != null -> intent
+                enemySide && state.statusEffects.any { com.example.starborn.domain.combat.CombatClarity.ringStatusLabel(it.id) != null } ->
+                    state.statusEffects.firstNotNullOf { com.example.starborn.domain.combat.CombatClarity.ringStatusLabel(it.id) }
                 state.weaponCharge != null -> "Charging ${state.weaponCharge?.remainingTurns}"
                 state.statusEffects.isNotEmpty() || state.buffs.isNotEmpty() ->
                     "${state.statusEffects.size + state.buffs.size} effects"

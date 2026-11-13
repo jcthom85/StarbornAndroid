@@ -933,8 +933,9 @@ class ExplorationController(
     private fun removeEnemiesFromRoom(roomId: String?, enemyIds: List<String>) {
         if (enemyIds.isEmpty()) return
         val currentRoom = roomsById[roomId] ?: return
-        val replacesStaticEncounter = currentRoom.id == "spire_landing_pad_scale_03" &&
-            enemyIds == listOf("corporate_assassin")
+        val replacesStaticEncounter =
+            (currentRoom.id == "spire_landing_pad_scale_03" && enemyIds == listOf("corporate_assassin")) ||
+                (currentRoom.id == "source_center_node_scale_03" && enemyIds == listOf("ascended_god"))
         if (roomEnemyParties(currentRoom).isEmpty() && !replacesStaticEncounter) return
         setRoomStateValue(
             roomIdOrNull = currentRoom.id,
@@ -961,11 +962,15 @@ class ExplorationController(
             }
         )
         sessionStore.finishBattle(pendingBattle)
+        if (result.enemyIds.any { it == "ascended_vale" || it == "ascended_god" }) {
+            refreshMovementPresence()
+        }
         playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
     }
 
     fun onCombatDefeat(enemyIds: List<String>) {
         val pendingBattle = sessionStore.state.value.pendingBattleJson
+        val silenceRetry = sessionStore.state.value.battleCheckpoint?.takeIf { "ascended_god" in enemyIds }
         val patrolId = pendingBattle.takeIf { it.isNotBlank() }?.let {
             runCatching { battleDescriptorAdapter.fromJson(it)?.sourcePartyId }.getOrNull()
         }
@@ -977,7 +982,17 @@ class ExplorationController(
         combatHandler.processDefeat(
             enemyIds = enemyIds,
             onDefeatProcessed = {
-                stabilizePartyAfterDefeat()
+                if (silenceRetry == null) {
+                    stabilizePartyAfterDefeat()
+                } else {
+                    inventoryService.restore(silenceRetry.inventory)
+                    sessionStore.setInventory(silenceRetry.inventory)
+                    val entryVitals = silenceRetry.partyMembers.associateWith { id ->
+                        silenceRetry.partyMemberHp[id] ?: charactersById[id]?.let { maximumHp(it, silenceRetry) } ?: 1
+                    }
+                    sessionStore.updatePartyVitals(entryVitals)
+                    postStatus("The crew returns to the moment before challenging the Silence. Tap it to retry.")
+                }
                 refreshCurrentRoomBlockedDirections()
             }
         )
@@ -4429,6 +4444,17 @@ class ExplorationController(
 
     private fun visibleStaticEnemyParties(room: Room): List<List<String>> {
         val parties = roomEnemyParties(room)
+        if (room.id == "source_center") {
+            val state = sessionStore.state.value
+            val tasks = state.questTasksCompleted["w6_mq30"].orEmpty()
+            val events = state.completedEvents
+            if ("w6_mq30" in state.completedQuests || "defeat_god_form" in tasks ||
+                "w6_mq30_defeat_god" in events || "w6_mq30_defeat_god_legacy" in events ||
+                state.roomStates["source_center_node_scale_03"]?.get("encounter_cleared:ascended_god") == true) return emptyList()
+            val soloistDefeated = "defeat_vale" in tasks || "w6_mq30_defeat_vale" in events ||
+                state.roomStates[room.id]?.get("encounter_cleared:ascended_vale") == true
+            return parties.filter { (if (soloistDefeated) "ascended_god" else "ascended_vale") in it }
+        }
         if (room.id != "spire_landing_pad_roof" || parties.none { "heavy_mech" in it }) return parties
         return parties.filterNot { "administrator_boss" in it }
     }
@@ -4561,6 +4587,16 @@ class ExplorationController(
         val room = _uiState.value.currentRoom
         val parties = room?.let { roomEnemyParties(it) }.orEmpty()
         val normalizedEnemyId = enemyId.trim()
+        if (room?.id == "source_center" && normalizedEnemyId in setOf("ascended_vale", "ascended_god")) {
+            if (parties.none { normalizedEnemyId in it }) return
+            val state = sessionStore.state.value
+            if (normalizedEnemyId == "ascended_vale" &&
+                "confront_vale" !in state.questTasksCompleted["w6_mq30"].orEmpty() &&
+                "w6_mq30_confront_vale" !in state.completedEvents) {
+                postStatus("Speak to Vale before challenging the Soloist.")
+                return
+            }
+        }
         if (room?.id == "spire_landing_pad_roof" &&
             normalizedEnemyId.equals("administrator_boss", ignoreCase = true) &&
             parties.none { "administrator_boss" in it }) return
@@ -4633,6 +4669,9 @@ class ExplorationController(
             }
             EncounterEnemyInstance(
                 enemyId = enemyId,
+                xpReward = match?.xpReward,
+                creditReward = match?.creditReward,
+                apReward = match?.apReward,
                 hp = match?.hp,
                 vitality = match?.vitality,
                 stability = match?.stability,
@@ -4989,12 +5028,12 @@ class ExplorationController(
         val currentRoom = _uiState.value.currentRoom ?: return
         val targetRoomId = roomId?.trim().takeUnless { it.isNullOrEmpty() } ?: currentRoom.id
         if (!targetRoomId.equals(currentRoom.id, ignoreCase = true)) return
-        val enemyIds = encounterId
+        val authoredIds = encounterId
             ?.split(',')
             .orEmpty()
             .map { it.trim() }
             .filter { it.isNotEmpty() && enemyById.containsKey(it.lowercase(Locale.getDefault())) }
-            .distinct()
+        val enemyIds = if (currentRoom.id == "foundry_crucible_arena") authoredIds else authoredIds.distinct()
         if (enemyIds.isEmpty()) return
         if (
             enemyIds == listOf("the_beast") &&
@@ -6866,6 +6905,10 @@ private fun roomEnemyParties(room: Room): List<List<String>> {
 
 private fun removeDefeatedEnemies(room: Room, historicalIds: List<String>): Room {
     val defeatedIds = when {
+        room.id == "source_zeke_nightmare_node_scale_01" && historicalIds == listOf("manager_projection") -> listOf("review_clerk")
+        room.id == "source_gh0st_nightmare_node_scale_01" && historicalIds == listOf("endless_war_echo") -> listOf("war_order_fragment")
+        room.id == "source_orion_nightmare_node_scale_01" && historicalIds == listOf("silent_shore_wraith") -> listOf("tide_murmur")
+        room.id == "source_echo_mines_node_scale_02" && historicalIds == listOf("source_shadow") -> listOf("source_shadow", "review_clerk")
         room.id == "deep_throne_room_scale_04" && historicalIds == listOf("compliance_avatar") ->
             listOf("boardroom_bailiff")
         room.id == "spire_archive_vault" && historicalIds == listOf("corporate_assassin") ->
@@ -6874,7 +6917,9 @@ private fun removeDefeatedEnemies(room: Room, historicalIds: List<String>): Room
             listOf("riot_guard", "aero_drone")
         room.id == "spire_landing_pad_scale_01" && historicalIds == listOf("aero_drone") ->
             listOf("aero_drone", "concierge_relay")
-        else -> com.example.starborn.domain.combat.World2EncounterCompatibility.creditedIds(room.id, historicalIds)
+        else -> com.example.starborn.domain.combat.FoundryEncounterCompatibility.creditedIds(room.id,
+            com.example.starborn.domain.combat.World5EncounterCompatibility.creditedIds(room.id,
+                com.example.starborn.domain.combat.World2EncounterCompatibility.creditedIds(room.id, historicalIds)))
     }
     val parties = roomEnemyParties(room)
     val targetIndex = parties.indexOfFirst { partiesMatch(it, defeatedIds) }

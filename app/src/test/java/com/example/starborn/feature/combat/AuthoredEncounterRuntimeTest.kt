@@ -59,6 +59,29 @@ class AuthoredEncounterRuntimeTest {
         vm.playerAttack(target);step(vm)
     }
 
+    @Test fun silenceKeepsAStageOneKnockoutAndLosesItsVoiceCommandWhenTheAnchorFalls() {
+        val arrival = prototypeFixture().let { it.copy(roomId = "source_center",
+            partyMemberHp = it.partyMemberHp + ("orion" to 0)) }
+        val (vm, _) = create(listOf("ascended_god"), arrival)
+        try {
+            val initial = requireNotNull(vm.combatState)
+            assertEquals(0, initial.combatants.getValue("orion").hp)
+            assertEquals(listOf("ascended_god"), vm.encounterEnemyIds)
+            assertEquals(0f, vm.atbMeters.value["silence_voice_anchor"])
+            until(vm) { vm.combatState!!.authored.preparations["ascended_god"]?.sourceId == "silence_voice_anchor" }
+            CombatPlaytestBridge.isOpMode = true
+            novaAttack(vm, "silence_voice_anchor")
+            assertNull(vm.combatState!!.outcome)
+            assertFalse(vm.combatState!!.authored.preparations.containsKey("ascended_god"))
+            assertTrue(vm.combatState!!.combatants.getValue("silence_memory_anchor").isAlive)
+            novaAttack(vm, "ascended_god")
+            val victory = vm.combatState!!.outcome as CombatOutcome.Victory
+            assertEquals(1500, victory.rewards.xp)
+            assertEquals(8, victory.rewards.ap)
+            assertFalse(vm.combatState!!.combatants.getValue("silence_memory_anchor").isAlive)
+        } finally { vm.close(); CombatPlaytestBridge.reset() }
+    }
+
     @Test fun fiveTargetsShareOneClockAndDestroyingAChargingWeaponCancelsIt() {
         val ids=listOf("prototype_titan","prototype_missile","prototype_cutter","prototype_anchor","prototype_projector")
         val (vm,store)=create(ids)

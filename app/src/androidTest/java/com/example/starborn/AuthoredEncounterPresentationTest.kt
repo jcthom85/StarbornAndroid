@@ -29,6 +29,100 @@ import java.io.File
 /** Separate cache-backed Test Session; never loads or moves the player's campaign. */
 class AuthoredEncounterPresentationTest {
     @get:Rule val compose=createComposeRule()
+    @Test fun silenceFormationKeepsTargetsReadableWhenAnAnchorFalls() {
+        val base = ApplicationProvider.getApplicationContext<Context>()
+        lateinit var services: AppServices
+        lateinit var vm: CombatViewModel
+        compose.runOnUiThread {
+            services = AppServices(IsolatedProgressionContext(base), true)
+            assertTrue(services.startDebugScenario("w3_lockdown_escape"))
+            services.sessionStore.restore(services.sessionStore.state.value.copy(
+                worldId = "world_6", hubId = "hub_12_singularity", roomId = "source_center"))
+            vm = CombatViewModelFactory(services, listOf("ascended_god"), false).create(CombatViewModel::class.java)
+            vm.setBackgroundPaused(true)
+        }
+        compose.setContent { StarbornTheme { Box(Modifier.height(720.dp)) {
+            CombatScreen(rememberNavController(), vm, services.audioCuePlayer,
+                suppressFlashes = true, suppressScreenshake = true, highContrastMode = false,
+                largeTouchTargets = false, showCombatActionText = true, overlayPaused = true)
+        } } }
+        try {
+            val ids = listOf("ascended_god", "silence_voice_anchor", "silence_memory_anchor")
+            for (id in ids) {
+                compose.onNodeWithTag("combat-linked-target-$id").assertIsDisplayed().performTouchInput { click() }
+                compose.runOnIdle { assertEquals(id, vm.inspectedEnemyId.value); vm.dismissEnemyInspection() }
+            }
+            val field = com.example.starborn.feature.combat.viewmodel.CombatController::class.java
+                .getDeclaredField("_state").apply { isAccessible = true }
+            @Suppress("UNCHECKED_CAST")
+            val state = field.get(vm.runtime) as kotlinx.coroutines.flow.MutableStateFlow<com.example.starborn.domain.combat.CombatState?>
+            val folder = File(base.getExternalFilesDir(null), "world6-authored").apply { mkdirs() }
+            fun shot(name: String) {
+                val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+                File(folder, name).outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+                bitmap.recycle()
+            }
+            compose.waitForIdle()
+            shot("silence-formation.png")
+            val before = compose.onNodeWithTag("combat-enemies").fetchSemanticsNode().boundsInRoot
+            compose.runOnIdle {
+                val current = requireNotNull(state.value)
+                val anchor = current.combatants.getValue("silence_voice_anchor")
+                state.value = current.copy(combatants = current.combatants + ("silence_voice_anchor" to anchor.copy(hp = 0)))
+            }
+            compose.onNodeWithTag("combat-linked-target-silence_voice_anchor").assertIsNotEnabled()
+            compose.onNodeWithTag("combat-linked-target-silence_memory_anchor").assertIsEnabled()
+            assertEquals(before, compose.onNodeWithTag("combat-enemies").fetchSemanticsNode().boundsInRoot)
+            shot("silence-anchor-broken.png")
+        } finally { compose.runOnUiThread { vm.runtime.close(); services.release() } }
+    }
+
+    @Test fun ringDuetArtAndBothTargetsStayReadableAcrossLinkLoss() {
+        val base = ApplicationProvider.getApplicationContext<Context>()
+        lateinit var services: AppServices
+        lateinit var vm: CombatViewModel
+        compose.runOnUiThread {
+            services = AppServices(IsolatedProgressionContext(base), true)
+            assertTrue(services.startDebugScenario("w3_lockdown_escape"))
+            services.sessionStore.restore(services.sessionStore.state.value.copy(worldId = "world_5",
+                hubId = "hub_10_deep_ring", roomId = "deep_tear"))
+            vm = CombatViewModelFactory(services, listOf("compliance_avatar"), false).create(CombatViewModel::class.java)
+            vm.setBackgroundPaused(true)
+        }
+        compose.setContent { StarbornTheme { Box(Modifier.height(720.dp)) {
+            CombatScreen(rememberNavController(), vm, services.audioCuePlayer,
+                suppressFlashes = true, suppressScreenshake = true, highContrastMode = false,
+                largeTouchTargets = false, showCombatActionText = true, overlayPaused = true)
+        } } }
+        try {
+            val tags = listOf("compliance_avatar", "directive_conductor")
+            for (id in tags) {
+                compose.onNodeWithTag("combat-enemy-$id", useUnmergedTree = true).assertIsDisplayed()
+                    .performTouchInput { click() }
+                compose.runOnIdle { assertEquals(id, vm.inspectedEnemyId.value); vm.dismissEnemyInspection() }
+            }
+            val field = com.example.starborn.feature.combat.viewmodel.CombatController::class.java.getDeclaredField("_state").apply { isAccessible = true }
+            @Suppress("UNCHECKED_CAST")
+            val state = field.get(vm.runtime) as kotlinx.coroutines.flow.MutableStateFlow<com.example.starborn.domain.combat.CombatState?>
+            val folder = File(base.getExternalFilesDir(null), "world5-authored").apply { mkdirs() }
+            fun shot(name: String) {
+                val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+                File(folder, name).outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }; bitmap.recycle()
+            }
+            compose.waitForIdle(); shot("avatar-linked.png")
+            val before = compose.onNodeWithTag("combat-enemy-compliance_avatar", useUnmergedTree = true).fetchSemanticsNode().boundsInRoot
+            compose.runOnIdle {
+                val current = requireNotNull(state.value)
+                val killed = current.copy(combatants = current.combatants + ("directive_conductor" to current.combatants.getValue("directive_conductor").copy(hp = 0)))
+                val definitions = vm.enemies.associateBy { it.id }
+                state.value = com.example.starborn.domain.combat.AuthoredEncounterRules.reconcile(killed, definitions,
+                    com.example.starborn.domain.combat.StatusRegistry(services.worldDataSource.loadStatuses()))
+            }
+            compose.waitForIdle()
+            assertEquals(before, compose.onNodeWithTag("combat-enemy-compliance_avatar", useUnmergedTree = true).fetchSemanticsNode().boundsInRoot)
+            shot("avatar-unlinked.png")
+        } finally { compose.runOnUiThread { vm.runtime.close(); services.release() } }
+    }
     @Test fun administratorReinforcementsReuseFixedVacanciesWithoutMovingSurvivors() {
         val base = ApplicationProvider.getApplicationContext<Context>()
         lateinit var services: AppServices

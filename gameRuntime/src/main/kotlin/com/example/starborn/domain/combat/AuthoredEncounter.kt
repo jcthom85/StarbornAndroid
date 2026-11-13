@@ -72,6 +72,7 @@ object AuthoredEncounterRules {
             if (state.outcome == null && actor.isAlive && id !in runtime.brokenLinks &&
                 combatants[partner]?.isAlive == false) {
                 runtime = runtime.copy(brokenLinks = runtime.brokenLinks + id,
+                    phases = runtime.phases + (id to link.name),
                     phaseOpenings = runtime.phaseOpenings + id,
                     cyclePositions = runtime.cyclePositions + (id to 0),
                     preparations = runtime.preparations - id)

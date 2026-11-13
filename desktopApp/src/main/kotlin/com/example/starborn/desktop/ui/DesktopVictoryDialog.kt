@@ -54,6 +54,7 @@ internal fun DesktopVictoryDialog(
     onContinue: () -> Unit,
     largeTouchTargets: Boolean = false
 ) {
+    val transformation = payload.enemyIds == listOf("ascended_vale")
     var stage by remember(payload) { mutableStateOf(DesktopVictoryStage.SPOILS) }
     var completed by remember(payload) { mutableStateOf(false) }
     var settled by remember(payload) { mutableStateOf(false) }
@@ -74,14 +75,14 @@ internal fun DesktopVictoryDialog(
         val buttonLabel = if (stage == DesktopVictoryStage.SPOILS && payload.levelUps.isNotEmpty()) {
             "Next"
         } else {
-            "Continue"
+            if (transformation) "Return to The Center" else "Continue"
         }
         val title = when (stage) {
-            DesktopVictoryStage.SPOILS -> "Spoils Recovered"
+            DesktopVictoryStage.SPOILS -> if (transformation) "The Silence Rises" else "Spoils Recovered"
             DesktopVictoryStage.LEVEL_UPS -> "Level Up!"
         }
         val eyebrow = when (stage) {
-            DesktopVictoryStage.SPOILS -> "Battle Rewards"
+            DesktopVictoryStage.SPOILS -> if (transformation) "Vale’s Transformation" else "Battle Rewards"
             DesktopVictoryStage.LEVEL_UPS -> "Progression"
         }
         val panelColor = Color(0xFF21130D).copy(alpha = if (highContrastMode) 0.98f else 0.94f)
