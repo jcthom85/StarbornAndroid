@@ -23,7 +23,7 @@ class FocusedCombatCheckpointExportTest {
         val cases=listOf(
             Triple(11,"warden","launch_bay"),Triple(12,"beast","sector9_canopy_ridge"),
             Triple(13,"hound-pack","sector9_wilds_nest"),Triple(14,"plant-pair","sector9_canopy"))
-        assertEquals((1..20).toList(),SessionSaveRepository.MANUAL_SLOTS.toList())
+        assertEquals((1..30).toList(),SessionSaveRepository.MANUAL_SLOTS.toList())
         for((slot,name,room) in cases) {
             val arrival=javaClass.getResourceAsStream("/playtest/focused-combat/$name.json")!!.bufferedReader().use {
                 MoshiProvider.instance.adapter(GameSessionState::class.java).fromJson(it.readText())!!

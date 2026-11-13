@@ -8916,7 +8916,7 @@
       }
     ],
     "enemy_flavor": {
-      "compliance_avatar": "Vale's security intelligence condenses into a towering hard-light execution protocol."
+      "compliance_avatar": "An independent Conductor directs the Avatar through a fragile command link. Break the preparation or destroy the Conductor to end their coordination."
     }
   },
   {
@@ -18963,9 +18963,7 @@
     "description": "A chorus tank echoes with synthetic voices trying to smooth Elara into infrastructure. Breath meters rise beside the glass whenever the system calls her an asset instead of a person.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "hk_droid"
-    ],
+    "enemies": [],
     "connections": {
       "south": "deep_anchor_chamber_scale_01",
       "north": "deep_anchor_chamber_scale_03"
@@ -19135,9 +19133,7 @@
     "description": "An empty cradle afterimage burns where the Anchor should be, as if the relic refuses to admit it has been stolen. The afterimage throws Elara's shadow in the wrong direction.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "hk_droid"
-    ],
+    "enemies": [],
     "connections": {
       "south": "deep_anchor_chamber_scale_05",
       "north": "deep_anchor_chamber_scale_07"
@@ -19391,7 +19387,7 @@
     "npcs": [],
     "items": [],
     "enemies": [
-      "compliance_avatar"
+      "boardroom_bailiff"
     ],
     "connections": {
       "south": "deep_throne_room_scale_03",

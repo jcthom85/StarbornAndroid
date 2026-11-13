@@ -450,7 +450,7 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 202. From **Soloist Dais**, go **north** to **Boardroom Grave** (`deep_throne_room_scale_04`).
 
-203. At **Boardroom Grave**, inspect **empty chairs**, **casualty projection**. These are local details; do not expect a quest reward from every inspection.
+203. At **Boardroom Grave**, inspect **empty chairs**, **casualty projection**. These are local details; do not expect a quest reward from every inspection. For the optional combat, defeat the **Boardroom Bailiff**: guard its announced verdict and attack during recovery. It grants three Power Cells but does not credit the main Avatar objective. A save with this room's older Avatar already defeated keeps the encounter cleared.
 
 204. From **Boardroom Grave**, go **north** to **Coup Balcony** (`deep_throne_room_scale_05`).
 
@@ -484,7 +484,7 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 218. At **The Tear**, inspect **spatial shear**. These are local details; do not expect a quest reward from every inspection.
 
-219. At **The Tear**, engage and defeat the **Compliance Avatar** after the Soloist scene. Confirm **Defeat the Avatar** credited. The current authored encounter is here, not in Throne Room.
+219. At **The Tear**, engage and defeat the **Compliance Avatar** after the Soloist scene. Its separate **Directive Conductor** supplies brief wards and directs joint attacks. Interrupt the Conductor during a joint preparation, destroy it to sever coordination permanently, or attack the Avatar directly. Below half HP, an intact link prepares Purge; after the link breaks, the Avatar recalibrates before returning to simpler discharges. Defeating the Avatar ends the encounter and awards its original reward once. Confirm **Defeat the Avatar** credited. This main encounter is here, not in Throne Room or Boardroom Grave.
 
 220. From **The Tear**, go **north** to **Gravity Suture** (`deep_tear_scale_01`).
 

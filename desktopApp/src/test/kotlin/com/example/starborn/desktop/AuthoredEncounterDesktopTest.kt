@@ -22,6 +22,46 @@ import javax.imageio.ImageIO
 
 class AuthoredEncounterDesktopTest {
     @get:Rule val compose=createComposeRule()
+    @Test fun spawnedAndFallenEnemiesLeaveDesktopSurvivorsInTheirSlots() {
+        val dir = Files.createTempDirectory("fixed-reserve-formation").toFile()
+        val services = DesktopAppServices(dir, RecordingAudioDriver())
+        fun actor(id: String) = CombatantState(Combatant(id, id, CombatSide.ENEMY,
+            StatBlock(200, 8, 4, 4, 4, 1, 5)), 200, 100)
+        val boss = actor("administrator_boss")
+        val drone = actor("aero_drone")
+        var state by mutableStateOf(CombatState(emptyList(), 0, mapOf(boss.combatant.id to boss, drone.combatant.id to drone),
+            authored = AuthoredEncounterState(formationSlots = mapOf("administrator_boss" to 0, "aero_drone" to 1), formationCapacity = 3)))
+        try {
+            compose.setContent { DesktopStarbornTheme(services) {
+                DesktopBattleFormation(state.combatants.values.toList(), services, Modifier.size(390.dp, 400.dp),
+                    true, sprite = { "images/enemies/null_g_drone_combat.png" }, selectedId = null,
+                    validTargets = emptySet(), targeting = false, meters = emptyMap(), intents = emptyMap(),
+                    feedback = emptyMap(), cues = emptyList(),
+                    lungeStyle = com.example.starborn.feature.combat.viewmodel.AttackLungeStyle.MELEE,
+                    lungeActor = null, lungeToken = 0, missActor = null, missToken = 0,
+                    authoredState = state, enemySize = { if (it == "administrator_boss") "massive" else "medium" }, onSelect = {})
+            } }
+            fun bounds(id: String) = compose.onNodeWithTag("combat-figure-$id", useUnmergedTree = true).fetchSemanticsNode().boundsInRoot
+            val bossBounds = bounds("administrator_boss")
+            val droneBounds = bounds("aero_drone")
+            compose.runOnIdle { state = state.copy(combatants = state.combatants + ("reserve1" to actor("reserve1")),
+                authored = state.authored.copy(formationSlots = state.authored.formationSlots + ("reserve1" to 2))) }
+            compose.waitForIdle()
+            val reserveBounds = bounds("reserve1")
+            assertEquals(bossBounds, bounds("administrator_boss"))
+            assertEquals(droneBounds, bounds("aero_drone"))
+            compose.runOnIdle { state = state.copy(combatants = state.combatants + ("aero_drone" to drone.copy(hp = 0))) }
+            compose.waitForIdle()
+            assertEquals(bossBounds, bounds("administrator_boss"))
+            assertEquals(reserveBounds, bounds("reserve1"))
+            compose.runOnIdle { state = state.copy(combatants = state.combatants + ("reserve2" to actor("reserve2")),
+                authored = state.authored.copy(formationSlots = state.authored.formationSlots + ("reserve2" to 1))) }
+            compose.waitForIdle()
+            assertEquals(droneBounds, bounds("reserve2"))
+            assertEquals(bossBounds, bounds("administrator_boss"))
+            assertEquals(reserveBounds, bounds("reserve1"))
+        } finally { compose.runOnIdle { services.close() }; dir.deleteRecursively() }
+    }
     @Test @OptIn(ExperimentalTestApi::class)
     fun compositeTargetsStayAccessibleAtPortraitAndWideSizes() {
         val dir=Files.createTempDirectory("authored-encounter-desktop").toFile()

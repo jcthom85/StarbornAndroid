@@ -29,6 +29,94 @@ import java.io.File
 /** Separate cache-backed Test Session; never loads or moves the player's campaign. */
 class AuthoredEncounterPresentationTest {
     @get:Rule val compose=createComposeRule()
+    @Test fun administratorReinforcementsReuseFixedVacanciesWithoutMovingSurvivors() {
+        val base = ApplicationProvider.getApplicationContext<Context>()
+        lateinit var services: AppServices
+        lateinit var vm: CombatViewModel
+        compose.runOnUiThread {
+            services = AppServices(IsolatedProgressionContext(base), true)
+            assertTrue(services.debugScenarioError, services.startDebugScenario("w3_lockdown_escape"))
+            services.sessionStore.restore(services.sessionStore.state.value.copy(roomId = "spire_landing_pad_roof"))
+            vm = CombatViewModelFactory(services, listOf("administrator_boss", "aero_drone"), false)
+                .create(CombatViewModel::class.java)
+            vm.setBackgroundPaused(true)
+        }
+        compose.setContent { StarbornTheme { Box(Modifier.height(720.dp)) {
+            CombatScreen(rememberNavController(), vm, services.audioCuePlayer,
+                suppressFlashes = true, suppressScreenshake = true, highContrastMode = false,
+                largeTouchTargets = false, showCombatActionText = true, overlayPaused = true)
+        } } }
+        val controller = com.example.starborn.feature.combat.viewmodel.CombatController::class.java
+        val field = controller.getDeclaredField("_state").apply { isAccessible = true }
+        @Suppress("UNCHECKED_CAST")
+        val state = field.get(vm.runtime) as kotlinx.coroutines.flow.MutableStateFlow<com.example.starborn.domain.combat.CombatState?>
+        val deploy = controller.getDeclaredMethod("deployReserve", com.example.starborn.domain.combat.CombatState::class.java,
+            String::class.java).apply { isAccessible = true }
+        fun bounds(id: String) = compose.onNodeWithTag("combat-enemy-$id", useUnmergedTree = true)
+            .assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+        fun spawn(): String {
+            compose.runOnIdle { state.value = deploy.invoke(vm.runtime, state.value, "administrator_boss") as com.example.starborn.domain.combat.CombatState }
+            compose.waitForIdle()
+            return state.value!!.authored.reserveOwners.keys.last()
+        }
+        fun remove(id: String) {
+            compose.runOnIdle {
+                val current = state.value!!
+                state.value = current.copy(combatants = current.combatants + (id to current.combatants.getValue(id).copy(hp = 0)))
+            }
+            compose.waitForIdle()
+        }
+        try {
+            val boss = bounds("administrator_boss")
+            val escort = bounds("aero_drone")
+            val first = spawn()
+            val firstPosition = bounds(first)
+            assertEquals(boss, bounds("administrator_boss"))
+            assertEquals(escort, bounds("aero_drone"))
+            remove("aero_drone")
+            assertEquals(boss, bounds("administrator_boss"))
+            assertEquals(firstPosition, bounds(first))
+            val second = spawn()
+            assertEquals(escort, bounds(second))
+            assertEquals(boss, bounds("administrator_boss"))
+            assertEquals(firstPosition, bounds(first))
+            remove(first)
+            val third = spawn()
+            assertEquals(firstPosition, bounds(third))
+            assertEquals(escort, bounds(second))
+            assertEquals(boss, bounds("administrator_boss"))
+            val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+            File(base.getExternalFilesDir(null), "administrator-fixed-formation.png").outputStream().use {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+            }
+            bitmap.recycle()
+        } finally { compose.runOnUiThread { vm.runtime.close(); services.release() } }
+    }
+    @Test fun administratorBattleScaleReview() {
+        val base = ApplicationProvider.getApplicationContext<Context>()
+        lateinit var services: AppServices
+        lateinit var vm: CombatViewModel
+        compose.runOnUiThread {
+            services = AppServices(IsolatedProgressionContext(base), true)
+            assertTrue(services.debugScenarioError, services.startDebugScenario("w3_lockdown_escape"))
+            vm = CombatViewModelFactory(services, listOf("administrator_boss", "aero_drone"), false)
+                .create(CombatViewModel::class.java)
+            vm.setBackgroundPaused(true)
+        }
+        compose.setContent { StarbornTheme { Box(Modifier.height(720.dp)) {
+            CombatScreen(rememberNavController(), vm, services.audioCuePlayer,
+                suppressFlashes = true, suppressScreenshake = true, highContrastMode = false,
+                largeTouchTargets = false, showCombatActionText = true, overlayPaused = true)
+        } } }
+        try {
+            compose.onNodeWithTag("combat-enemy-administrator_boss", useUnmergedTree = true).assertIsDisplayed()
+            val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+            File(base.getExternalFilesDir(null), "administrator-combat-scale.png").outputStream().use {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+            }
+            bitmap.recycle()
+        } finally { compose.runOnUiThread { vm.runtime.close(); services.release() } }
+    }
     @Test fun fiveTargetButtonsDispatchDistinctTargetIds() {
         val ids=listOf("body","missile","cutter","anchor","projector")
         val actors=ids.map { com.example.starborn.domain.combat.Combatant(it,it,

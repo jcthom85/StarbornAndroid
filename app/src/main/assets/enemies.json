@@ -1660,7 +1660,8 @@
       "orbital"
     ],
     "abilities": [
-      "missile_barrage"
+      "ring_guided_pass",
+      "ring_recover"
     ],
     "flavor": "A remote interceptor slaved to Orbital Compliance.",
     "xp_reward": 240,
@@ -1671,8 +1672,18 @@
         "chance": 0.4
       }
     ],
-    "description": "Fast orbital striker. Shock disrupts its guidance.",
-    "portrait": "images/enemies/aero_drone_combat.png"
+    "description": "Marks its missile pass before committing, then reorients. Shock disrupts its guidance.",
+    "portrait": "images/enemies/aero_drone_combat.png",
+    "authored": {
+      "cycle": [
+        "ring_guided_pass",
+        "ring_recover"
+      ],
+      "windups": {
+        "ring_guided_pass": "Guidance light fixing a missile pass"
+      },
+      "duplicate_cycle_offset": 1
+    }
   },
   {
     "id": "compliance_officer",
@@ -1702,7 +1713,8 @@
       "orbital"
     ],
     "abilities": [
-      "baton_strike"
+      "ring_detain",
+      "ring_recover"
     ],
     "flavor": "A security officer who now answers to Vale instead of Thorne.",
     "xp_reward": 260,
@@ -1714,8 +1726,17 @@
         "quantity": 1
       }
     ],
-    "description": "Elite security controller with stun pressure.",
-    "portrait": "images/enemies/riot_guard_combat.png"
+    "description": "Commits to a warned detention sweep, then resets its stance.",
+    "portrait": "images/enemies/riot_guard_combat.png",
+    "authored": {
+      "cycle": [
+        "ring_detain",
+        "ring_recover"
+      ],
+      "windups": {
+        "ring_detain": "Officer winding up a detention sweep"
+      }
+    }
   },
   {
     "id": "null_g_drone",
@@ -1745,7 +1766,8 @@
       "orbital"
     ],
     "abilities": [
-      "resonance_beam"
+      "ring_tether",
+      "ring_recover"
     ],
     "flavor": "A maintenance unit re-tasked to pin intruders in zero gravity.",
     "xp_reward": 190,
@@ -1756,11 +1778,23 @@
         "chance": 0.45
       }
     ],
-    "description": "Mobile support drone vulnerable to shock.",
+    "description": "Prepares a short gravity tether, then releases its clamps. Shock is effective.",
     "portrait": "images/enemies/null_g_drone_combat.png",
     "sprite": [
       "images/enemies/null_g_drone_combat.png"
-    ]
+    ],
+    "authored": {
+      "cycle": [
+        "ring_tether",
+        "ring_recover"
+      ],
+      "windups": {
+        "ring_tether": "Gravity clamps converging"
+      },
+      "interrupt_on_damage": [
+        "ring_tether"
+      ]
+    }
   },
   {
     "id": "void_turret",
@@ -1789,7 +1823,8 @@
       "orbital"
     ],
     "abilities": [
-      "resonance_beam"
+      "ring_beam",
+      "ring_recover"
     ],
     "flavor": "A tracking cannon bolted between frozen server racks.",
     "xp_reward": 230,
@@ -1800,8 +1835,20 @@
         "chance": 0.45
       }
     ],
-    "description": "High-damage stationary turret vulnerable to melee pressure.",
-    "portrait": "images/enemies/sentinel_orb_combat.png"
+    "description": "Charges a beam before firing, then vents. Interrupt the charge or guard and punish the opening.",
+    "portrait": "images/enemies/sentinel_orb_combat.png",
+    "authored": {
+      "cycle": [
+        "ring_beam",
+        "ring_recover"
+      ],
+      "windups": {
+        "ring_beam": "Cannon aperture charging"
+      },
+      "interrupt_on_damage": [
+        "ring_beam"
+      ]
+    }
   },
   {
     "id": "hk_droid",
@@ -1869,8 +1916,9 @@
       "elite"
     ],
     "abilities": [
-      "baton_strike",
-      "missile_barrage"
+      "ring_guard",
+      "ring_guard_strike",
+      "ring_recover"
     ],
     "flavor": "Vale's inner guard carries a reflector shield tuned against ranged energy.",
     "xp_reward": 310,
@@ -1881,8 +1929,18 @@
         "chance": 0.5
       }
     ],
-    "description": "Reflector-shield guard vulnerable to melee and area attacks.",
-    "portrait": "images/enemies/riot_guard_combat.png"
+    "description": "Braces behind its shield, then lowers it for a committed strike. Guarding reduces damage; it does not reflect attacks.",
+    "portrait": "images/enemies/riot_guard_combat.png",
+    "authored": {
+      "cycle": [
+        "ring_guard",
+        "ring_guard_strike",
+        "ring_recover"
+      ],
+      "windups": {
+        "ring_guard_strike": "Mirror shield lowering for a strike"
+      }
+    }
   },
   {
     "id": "firewall_construct",
@@ -1912,8 +1970,8 @@
       "elite"
     ],
     "abilities": [
-      "resonance_beam",
-      "roar_of_the_source"
+      "ring_frequency",
+      "ring_recover"
     ],
     "flavor": "A hard-light security intelligence that rewrites its own defensive frequency.",
     "xp_reward": 390,
@@ -1924,15 +1982,21 @@
         "chance": 0.7
       }
     ],
-    "description": "Shifting hard-light elite. Scan reveals its current weakness.",
-    "portrait": "images/enemies/ruin_guardian_combat.png"
+    "description": "Aligns its hard-light lattice before a Source sweep. Neutral attacks remain useful; recovery opens a response window.",
+    "portrait": "images/enemies/ruin_guardian_combat.png",
+    "authored": {
+      "cycle": [
+        "ring_frequency",
+        "ring_recover"
+      ],
+      "windups": {
+        "ring_frequency": "Hard-light lattice aligning"
+      }
+    }
   },
   {
     "id": "compliance_avatar",
     "combat_size": "massive",
-    "recovery_after": {
-      "missile_barrage": "avatar_recalibration"
-    },
     "name": "Compliance Avatar",
     "tier": "boss",
     "combat_behavior": "boss",
@@ -1959,9 +2023,10 @@
       "orbital"
     ],
     "abilities": [
-      "missile_barrage",
-      "seismic_stomp",
-      "roar_of_the_source",
+      "ring_joint_execution",
+      "ring_joint_purge",
+      "ring_unlinked_fire",
+      "ring_link_exposure",
       "avatar_recalibration"
     ],
     "flavor": "Orbital Compliance given a body: turrets, purge routines, and Vale's certainty rendered as hard light.",
@@ -1975,8 +2040,54 @@
         "quantity": 3
       }
     ],
-    "description": "World 5 boss. Destroy its power rhythm and survive Purge Mode.",
-    "portrait": "images/enemies/the_warden_combat.png"
+    "description": "The Conductor directs joint attacks. Interrupt its preparation or destroy it to break coordination permanently. The Avatar recalibrates after the link breaks; defeating the body ends the encounter.",
+    "portrait": "images/enemies/the_warden_combat.png",
+    "authored": {
+      "cycle": [
+        "ring_joint_execution",
+        "ring_link_exposure",
+        "avatar_recalibration"
+      ],
+      "windups": {
+        "ring_joint_execution": "Conductor directing an execution",
+        "ring_joint_purge": "Purge directive crossing the link",
+        "ring_unlinked_fire": "Avatar discharge charging"
+      },
+      "linked_actions": {
+        "ring_joint_execution": "directive_conductor",
+        "ring_joint_purge": "directive_conductor"
+      },
+      "interrupt_on_damage": [
+        "ring_joint_execution",
+        "ring_joint_purge"
+      ],
+      "coordination": {
+        "partner": "directive_conductor",
+        "name": "Command link severed — recalibrating",
+        "opening_skill": "ring_link_exposure",
+        "cycle": [
+          "ring_unlinked_fire",
+          "ring_link_exposure",
+          "avatar_recalibration"
+        ],
+        "remove_statuses": [
+          "ring_command_ward"
+        ]
+      },
+      "phase": {
+        "hp_below": 0.5,
+        "name": "Purge Mode — command link exposed",
+        "opening_skill": "ring_link_exposure",
+        "cycle": [
+          "ring_joint_purge",
+          "ring_link_exposure",
+          "avatar_recalibration"
+        ],
+        "remove_statuses": [
+          "ring_command_ward"
+        ]
+      }
+    }
   },
   {
     "id": "manager_projection",
@@ -2801,5 +2912,113 @@
       "height_scale": 0.3897,
       "z": 1
     }
+  },
+  {
+    "id": "directive_conductor",
+    "combat_size": "medium",
+    "name": "Directive Conductor",
+    "tier": "elite",
+    "combat_behavior": "aggressive",
+    "combat_role": "support",
+    "hp": 170,
+    "strength": 5,
+    "vitality": 12,
+    "agility": 20,
+    "focus": 12,
+    "luck": 5,
+    "speed": 10,
+    "stability": 65,
+    "element": "shock",
+    "resistances": {
+      "physical": 0,
+      "burn": 10,
+      "shock": -20,
+      "source": 0
+    },
+    "tags": [
+      "machine",
+      "drone",
+      "orbital"
+    ],
+    "abilities": [
+      "ring_command_ward",
+      "ring_recover"
+    ],
+    "flavor": "A separate command intelligence conducting the Avatar through a fragile hard-light link.",
+    "xp_reward": 0,
+    "credit_reward": 0,
+    "drops": [],
+    "description": "Independent command partner. Supplies three brief wards, never direct attacks. Its destruction permanently breaks the Avatar link.",
+    "portrait": "images/enemies/null_g_drone_combat.png",
+    "sprite": [
+      "images/enemies/null_g_drone_combat.png"
+    ],
+    "authored": {
+      "cycle": [
+        "ring_command_ward",
+        "ring_recover"
+      ],
+      "resource_labels": {
+        "ring_command_ward": "Ward charges"
+      },
+      "wait_when_unavailable": true
+    },
+    "ap_reward": 0
+  },
+  {
+    "id": "boardroom_bailiff",
+    "combat_size": "large",
+    "name": "Boardroom Bailiff",
+    "tier": "elite",
+    "combat_behavior": "defensive",
+    "combat_role": "tank",
+    "hp": 480,
+    "strength": 22,
+    "vitality": 24,
+    "agility": 13,
+    "focus": 22,
+    "luck": 8,
+    "speed": 12,
+    "stability": 145,
+    "element": "shock",
+    "resistances": {
+      "physical": -10,
+      "burn": 10,
+      "shock": 25,
+      "source": 15
+    },
+    "tags": [
+      "human",
+      "dominion",
+      "elite"
+    ],
+    "abilities": [
+      "ring_guard",
+      "ring_beam",
+      "ring_recover"
+    ],
+    "flavor": "The abandoned boardroom still enforces votes cast by dead directors.",
+    "xp_reward": 750,
+    "credit_reward": 500,
+    "drops": [
+      {
+        "id": "power_cell",
+        "chance": 1,
+        "quantity": 3
+      }
+    ],
+    "description": "Optional judgment elite. Raises a limited guard before committing to a warned verdict. Its defeat grants no Avatar story credit.",
+    "portrait": "images/enemies/ruin_guardian_combat.png",
+    "authored": {
+      "cycle": [
+        "ring_guard",
+        "ring_beam",
+        "ring_recover"
+      ],
+      "windups": {
+        "ring_beam": "Bailiff pronouncing its verdict"
+      }
+    },
+    "ap_reward": 4
   }
 ]

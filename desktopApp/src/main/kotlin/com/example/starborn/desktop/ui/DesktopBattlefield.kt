@@ -57,6 +57,12 @@ internal fun DesktopBattleFormation(
     onSelect: (String) -> Unit
 ) {
     val settings by services.userSettingsStore.settings.collectAsState(initial = UserSettings())
+    val occupants = if (enemySide && authoredState != null)
+        com.example.starborn.domain.combat.AuthoredEncounterRules.formationOccupants(authoredState)
+        else members.map { it.combatant.id }
+    val slotShapes = remember(enemySide, authoredState?.authored?.formationCapacity) {
+        occupants.map { id -> FormationMember(id.orEmpty(), id?.let(enemySize) ?: "medium", id?.let(enemyWidth) ?: 1f) }
+    }
     BoxWithConstraints(modifier) {
         val parts = members.associate { it.combatant.id to composite(it.combatant.id) }
         val isComposite = enemySide && parts.isNotEmpty() && parts.values.all { it != null } &&
@@ -82,10 +88,11 @@ internal fun DesktopBattleFormation(
                     unit * part.widthScale, unit * part.heightScale, 0f)
             }
         } else planBattleFormation(
-            members.map { FormationMember(it.combatant.id, enemySize(it.combatant.id), enemyWidth(it.combatant.id)) },
+            occupants.mapIndexed { slot, id -> slotShapes.getOrElse(slot) { FormationMember("") }
+                .copy(id = id ?: "__formation_vacancy_$slot") },
             maxWidth.value, maxHeight.value, enemySide)
         placements.forEach { placement ->
-            val member = members.first { it.combatant.id == placement.id }
+            val member = members.firstOrNull { it.combatant.id == placement.id } ?: return@forEach
             val id = member.combatant.id
             key(id) {
                 Box(Modifier.offset(x = placement.x.dp, y = placement.y.dp).width(placement.width.dp)) {

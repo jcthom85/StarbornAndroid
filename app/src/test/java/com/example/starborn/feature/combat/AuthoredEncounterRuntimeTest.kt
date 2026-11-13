@@ -268,6 +268,71 @@ class AuthoredEncounterRuntimeTest {
         }
     }
 
+    @Test fun avatarPartnerDeathBreaksPreparationPermanentlyAndOnlyBodyVictoryPays() {
+        for (bodyFirst in listOf(false, true)) {
+            val (vm, store) = create(listOf("compliance_avatar"))
+            try {
+                assertEquals(listOf("compliance_avatar"), vm.encounterEnemyIds)
+                assertTrue("directive_conductor" in vm.enemyCombatantIds)
+                val cells = store.state.value.inventory["power_cell"] ?: 0
+                until(vm) { vm.combatState!!.authored.preparations["compliance_avatar"]?.sourceId == "directive_conductor" }
+                CombatPlaytestBridge.isOpMode = true
+                if (!bodyFirst) {
+                    novaAttack(vm, "directive_conductor")
+                    val broken = vm.combatState!!
+                    assertNull(broken.outcome)
+                    assertTrue("compliance_avatar" in broken.authored.brokenLinks)
+                    assertFalse("compliance_avatar" in broken.authored.preparations)
+                    assertFalse(broken.combatants.getValue("compliance_avatar").statusEffects.any { it.id == "ring_command_ward" })
+                    CombatPlaytestBridge.isOpMode = false
+                    until(vm) { vm.combatState!!.authored.preparations["compliance_avatar"]?.skillId == "ring_unlinked_fire" }
+                    assertEquals("compliance_avatar", vm.combatState!!.authored.preparations.getValue("compliance_avatar").sourceId)
+                    CombatPlaytestBridge.isOpMode = true
+                }
+                novaAttack(vm, "compliance_avatar")
+                val victory = vm.combatState!!.outcome as CombatOutcome.Victory
+                assertFalse(vm.combatState!!.combatants.getValue("directive_conductor").isAlive)
+                assertEquals(750, victory.rewards.xp)
+                assertEquals(500, victory.rewards.credits)
+                assertEquals(cells + 3, store.state.value.inventory["power_cell"])
+            } finally { vm.close(); CombatPlaytestBridge.isOpMode = false }
+        }
+    }
+
+    @Test fun historicalSideRoomAvatarReceiptCannotCompleteTheMainBossTask() {
+        val store = GameSessionStore()
+        store.startQuest("w5_mq25")
+        store.setQuestTaskCompleted("w5_mq25", "witness_soloist", true)
+        store.restore(store.state.value.copy(roomId = "deep_tear", roomStates = mapOf(
+            "deep_throne_room_scale_04" to mapOf("encounter_cleared:compliance_avatar" to true))))
+        val manager = com.example.starborn.domain.event.EventManager(
+            events = reader.readList<com.example.starborn.domain.model.GameEvent>("events.json"), sessionStore = store)
+        manager.reconcileRecordedVictories()
+        assertFalse("ms_w5_avatar_defeated" in store.state.value.completedMilestones)
+        fun victory(ids: List<String>, room: String) = manager.handleTrigger("encounter_victory",
+            com.example.starborn.domain.event.EventPayload.EncounterOutcome(ids,
+                com.example.starborn.domain.event.EventPayload.EncounterOutcome.Outcome.VICTORY, room))
+        victory(listOf("compliance_avatar"), "deep_throne_room_scale_04")
+        victory(listOf("directive_conductor"), "deep_tear")
+        assertFalse("ms_w5_avatar_defeated" in store.state.value.completedMilestones)
+        victory(listOf("compliance_avatar"), "deep_tear")
+        assertTrue("ms_w5_avatar_defeated" in store.state.value.completedMilestones)
+    }
+
+    @Test fun ringFighterPairStaggersItsOpeningAndConductorHasFiniteWards() {
+        val (fighters, _) = create(listOf("orbital_fighter", "orbital_fighter"))
+        try {
+            assertNotEquals(fighters.combatState!!.authored.cyclePositions["orbital_fighter#1"],
+                fighters.combatState!!.authored.cyclePositions["orbital_fighter#2"])
+            until(fighters) { fighters.combatState!!.authored.preparations.isNotEmpty() }
+            assertTrue(fighters.combatState!!.authored.preparations.values.all { it.skillId == "ring_guided_pass" })
+        } finally { fighters.close() }
+        val (boss, _) = create(listOf("compliance_avatar"))
+        try {
+            assertEquals(3, boss.combatState!!.authored.remainingUses["directive_conductor"]?.get("ring_command_ward"))
+        } finally { boss.close() }
+    }
+
     @Test fun plantHealingExhaustsItsVisibleReservesAndPackMembersBeginOnDifferentBeats() {
         val (vine,_)=create(listOf("stalker_vine","spore_spitter"))
         try {

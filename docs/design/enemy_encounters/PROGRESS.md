@@ -1,6 +1,6 @@
 # Implementation progress — November 13, 2026
 
-The campaign now has authored combat through the Foundry's first mechanics pass. The Titan Walker has original artwork. Worlds 5–6 and the remaining art batches are planned. Moss Borer and Mist Glider use temporary sprites.
+The campaign now has authored combat through the Foundry and a first Ring mechanics pass. The Titan Walker and Administrator have original artwork. The wider World 5 roster, World 6 redesign and remaining art batches are planned. Moss Borer, Mist Glider, Directive Conductor and Boardroom Bailiff use temporary sprites.
 
 ## Implemented
 
@@ -8,6 +8,7 @@ The campaign now has authored combat through the Foundry's first mechanics pass.
 - A five-target Titan laboratory encounter: one body clock, four independently destructible weapon sources, immediate interruption when their source is disabled, and one encounter payout.
 - A finite reinforcement laboratory encounter: actual targetable enemies, live escort cap, exhausted reserve budget, body-controlled victory and no extra spawn rewards.
 - Persistent attack/target warnings and independently readable multipart target controls in Android and desktop combat.
+- Fixed combat formation slots: reserve capacity is allocated at battle entry; reinforcements reuse vacant escort slots and fallen enemies leave their space. Android collapse animation retains layout space, and desktop plans from the same slot assignments.
 - A basic Guard action on both platforms, without an optional skill prerequisite.
 - The existing World 1 solo Warden now has shield, prepared offense, recovery and a shield-down overclock phase. Existing stats, rewards, formation and story gates remain.
 - Two isolated Android Test Session entries for the laboratory encounters. Temporary art is intentional; neither laboratory formation is connected to a campaign room.
@@ -44,6 +45,16 @@ The expanding warning card is replaced by compact cues in existing message space
 - Slag River's drone shows a marked Heat Burst followed by venting. Slag Golem and Flame Trooper warn before their heavy attacks. On Conveyor Belt, the Welder Bot's limited repairs can be interrupted by damaging it during the charge.
 - An earned route verified the north gate, one victory receipt, save and reload, and the hardware checks before departure to World 5. Review saves 18–20 are exported by that route.
 
+## World 5 — first mechanics pass
+
+- The Avatar automatically brings a separately targetable Directive Conductor into combat while retaining the original single-boss encounter receipt. The Conductor has three brief wards and no damaging action cycle. Joint preparations use the Conductor as their interruptible source.
+- Destroying the Conductor cancels the joint preparation, removes its ward and permanently replaces coordination with an exposed recalibration and simpler single-target discharges. An intact link introduces a warned party Purge below half HP. Avatar death collapses the partner and pays the original reward once.
+- Boardroom Grave now has a distinct Boardroom Bailiff, retaining its previous reward budget and three guaranteed cells. Historical side-room Avatar receipts retire the replacement; they cannot recover main-boss quest credit. The main Avatar victory handler is scoped to The Tear.
+- Chorus Tank and Empty Cradle Afterimage no longer duplicate the scripted Hunter-Killer. The Anchor acquisition/Stasis sequence remains.
+- Fighter pairs start on alternating beats. Officers, gravity drones, turrets, shield guards and the main Firewall Construct now have explicit preparation/recovery cycles. Drone tethers and turret charges can be interrupted by damage.
+- The first pass uses temporary art for the Conductor and Bailiff. The wider density/roster plan, actual reflector and frequency-switch mechanics, and final World 5 artwork remain open. The current guard reduces damage rather than reflecting it; descriptions state its implemented behavior.
+- Main-story and completionist routes both reached the Source from an earned World 1–4 arrival, using real combat and seed 17. Runtime checks cover body-first/partner-first victory, interruption, permanent link loss, the original payout, staggered fighter openings and rejection of an old side-room boss receipt. This is progression evidence, not blind-play or multi-seed balance acceptance.
+
 ## Verified / limits
 
 See the [verification report](../../testing/AUTHORED_COMBAT_PROTOTYPE_AND_WORLD1_2026-11-12.md) for test scope and evidence. Earned launch-checkpoint progression and World 2 save/reload are verified. A fresh full World 1 playthrough remains open.
@@ -54,4 +65,4 @@ Combat restarts from battle entry when reopened. The source reconciliation recor
 
 ## Next
 
-Playtest the Slag River, Conveyor Belt and Titan Dock checkpoints on a phone. Compare a chassis rush with dismantling the Titan and check whether the sprite arrangement and target names are easy to read. The wider Foundry roster and route redesign remains proposed.
+Review Administrator battlefield scale and the Ring duet's presentation, then stabilize the remaining Ring roles before producing their artwork. The wider Foundry roster and route redesign remains proposed. The save menu supports 30 manual slots; the requested World 6 slot 21 starts at Echo of the Mines after the opening rescues, using temporary battle assistance and normal rewards while preserving the player's slot 10 build.

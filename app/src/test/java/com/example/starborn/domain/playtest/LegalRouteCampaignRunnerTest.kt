@@ -120,11 +120,13 @@ class LegalRouteCampaignRunnerTest {
     private val world3RewardObservations = mutableListOf<String>()
     private var recordSystemsAudit = false
     private var useProductionCrewRules = false
+    private var playerCheckpointCombatAssist = false
 
     @Before
     fun setUp() {
         com.example.starborn.domain.combat.CombatPlaytestBridge.reset()
         useProductionCrewRules = false
+        playerCheckpointCombatAssist = false
         publicCombats.clear()
         world3RewardObservations.clear()
         assistance.clear()
@@ -889,6 +891,42 @@ class LegalRouteCampaignRunnerTest {
     }
 
     @Test
+    fun earnedRingMainAndCompletionistRoutesReachTheSource() {
+        useProductionCrewRules = true
+        val source = WorldAssetDataSource(AssetJsonReader(DesktopAssetProvider(
+            listOf(assets, File(root, "app/src/debug/assets"))), moshi))
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope,
+            initialState = requireNotNull(source.loadWorld1Checkpoint("w1_mq05")))
+        try {
+            h.settle()
+            val agent = LegalCampaignAgent(h)
+            agent.finishWorld1Launch()
+            agent.playWorld2()
+            agent.playWorld3()
+            agent.playWorld4()
+            val arrival = h.saveSlot(7)
+            for (completionist in listOf(false, true)) {
+                h.loadSlot(7)
+                assertEquals(arrival.roomId, h.sessionStore.state.value.roomId)
+                assertEquals(arrival.inventory, h.sessionStore.state.value.inventory)
+                assertEquals(arrival.playerXp, h.sessionStore.state.value.playerXp)
+                agent.playWorld5(completionist = completionist)
+                val end = h.saveSlot(8)
+                assertEquals("source_campfire", end.roomId)
+                assertTrue(end.completedQuests.containsAll((21..25).map { "w5_mq$it" }))
+                if (completionist) assertTrue(end.completedQuests.containsAll((21..25).map { "w5_sq$it" }))
+                assertEquals(end, h.loadSlot(8))
+            }
+            assertTrue(assistance.isEmpty())
+            File("build/reports/world5-authored/earned-routes.txt").apply {
+                parentFile.mkdirs()
+                writeText("Earned W1 launch through W4 arrival; W5 main and completionist routes; real combat, seed 17.\n" +
+                    publicCombats.joinToString("\n") + "\nAssistance: $assistance\n")
+            }
+        } finally { h.close() }
+    }
+
+    @Test
     fun productionWorlds456CompletionistRoutesVerifyBranchesAndCredits() {
         useProductionCrewRules = true
         val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
@@ -1326,6 +1364,84 @@ class LegalRouteCampaignRunnerTest {
                 parentFile!!.mkdirs();writeText(publicCombats.joinToString("\n") +
                     "\nAll five main quests complete; World 3 arrival and slot 8 reload verified.\nAssistance: $assistance\n")
             }
+        } finally { h.close() }
+    }
+
+    @Test
+    fun playerSlot10ProgressesThroughTheSourceRescuesToMineMemoriesInSlot21() = runBlocking {
+        val inputPath = System.getenv("STARBORN_PLAYER_SAVE_DIR")
+        org.junit.Assume.assumeTrue("Explicit player-save input required", inputPath != null)
+        val input = File(requireNotNull(inputPath))
+        val output = File(requireNotNull(System.getenv("STARBORN_PLAYER_SAVE_OUTPUT"))).apply { mkdirs() }
+        val sourceFile = File(input, "game_session_slot10.pb")
+        val originalBytes = sourceFile.readBytes()
+        val arrival = requireNotNull(GameSessionPersistence(input).readSlot(10))
+        assertEquals("world_6", arrival.worldId)
+        assertEquals("source_campfire", arrival.roomId)
+        useProductionCrewRules = true
+        playerCheckpointCombatAssist = true
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = arrival)
+        try {
+            val agent = LegalCampaignAgent(h)
+            fun dismiss() {
+                repeat(12) {
+                    h.explorationVm.dismissNarration()
+                    h.explorationVm.dismissPrompt()
+                    h.explorationVm.dismissEventAnnouncement()
+                    h.settle()
+                }
+            }
+            fun room(id: String) { dismiss(); agent.navigateLegalPath(id) }
+            fun use(name: String) {
+                dismiss()
+                val action = h.explorationVm.uiState.value.actions.firstOrNull { it.name.equals(name, true) }
+                    ?: error("Missing visible '$name' at ${h.sessionStore.state.value.roomId}")
+                h.explorationVm.onActionSelected(action)
+                h.settle()
+                dismiss()
+            }
+            fun inspect(id: String, vararg names: String) { room(id); names.forEach(::use) }
+            fun recover() { room("source_campfire"); h.restAtVisibleStop(); dismiss() }
+            recover()
+            room("source_zeke_review_loop"); h.playPublicEncounter("manager_projection")
+            inspect("source_zeke_nightmare_node_scale_01", "badge labyrinth", "plastic smile", "corporate termination notice")
+            inspect("source_zeke_nightmare_node_scale_02", "quota altar", "red stapler")
+            inspect("source_zeke_nightmare_node_scale_03", "resignation window", "open sky", "freedom filing case")
+            recover()
+            room("source_gh0st_kill_suite"); h.playPublicEncounter("endless_war_echo")
+            inspect("source_gh0st_nightmare_node_scale_01", "order well", "command static", "phantom dogtags")
+            inspect("source_gh0st_nightmare_node_scale_02", "rifle forest", "cold barrels")
+            inspect("source_gh0st_nightmare_node_scale_03", "sister signal", "soft waveform", "sister memory core")
+            recover()
+            inspect("source_orion_nightmare", "black ocean", "Aethel note")
+            room("source_orion_tide_well"); h.playPublicEncounter("silent_shore_wraith")
+            inspect("source_orion_chorus", "crooked tool marks")
+            inspect("source_orion_nightmare_node_scale_01", "black tide", "salt stars", "salt-crusted chronometer")
+            inspect("source_orion_nightmare_node_scale_02", "empty observatory", "silent lens")
+            inspect("source_orion_nightmare_node_scale_03", "Chorus door", "wet harmonics", "tide glass shell")
+            inspect("source_campfire_node_scale_01", "blue ash", "open ring")
+            inspect("source_campfire_node_scale_02", "dark paths", "fear tones")
+            inspect("source_campfire_node_scale_03", "unshared blanket", "empty corner")
+            inspect("source_campfire_node_scale_04", "key ember", "single voice")
+            inspect("source_campfire_node_scale_final", "tide marks", "blue ash", "hearth memory chest")
+            recover()
+            agent.performAction("w6_mq26_reassemble")
+            agent.finishDialogue("correct")
+            dismiss()
+            val checkpoint = h.saveSlot(21)
+            assertEquals("source_echo_mines", checkpoint.roomId)
+            assertTrue("w6_mq26" in checkpoint.completedQuests)
+            assertTrue("w6_mq27" in checkpoint.activeQuests)
+            assertTrue("w6_sq26" in checkpoint.activeQuests)
+            assertFalse("talk_to_jed" in checkpoint.questTasksCompleted["w6_sq26"].orEmpty())
+            assertTrue("enter_mines" in checkpoint.questTasksCompleted["w6_mq27"].orEmpty())
+            assertEquals("Only the three requested rescue battles use temporary assistance", 3, assistance.size)
+            assertFalse(com.example.starborn.domain.combat.CombatPlaytestBridge.isOpMode)
+            GameSessionPersistence(output).writeSlot(21, checkpoint)
+            assertEquals(checkpoint, GameSessionPersistence(output).readSlot(21))
+            org.junit.Assert.assertArrayEquals("Slot 10 source must remain unchanged", originalBytes, sourceFile.readBytes())
+            File(output, "slot21-route.txt").writeText("Source: emulator slot 10. Completed World 6 guide steps 1–55 using visible actions, NSEW walking and user-approved temporary combat assistance (seed 17; normal encounter rewards), with Campfire rests between rescues. Four branch caches collected. Stopped at step 56, Echo of the Mines; Jed's lesson and remaining section 5 untouched. No AP purchases or artificial resources added.\n" +
+                "XP ${arrival.playerXp} -> ${checkpoint.playerXp}; AP ${arrival.playerAp} -> ${checkpoint.playerAp}; room=${checkpoint.roomId}\n" + publicCombats.joinToString("\n"))
         } finally { h.close() }
     }
 
@@ -2271,8 +2387,8 @@ class LegalRouteCampaignRunnerTest {
             navigateLegalPath("foundry_slag_river")
             if (exportReviewSaves) {
                 harness.exportCombatReviewSave("world_4", 18, "magma_drone")
-                harness.playPublicEncounter("magma_drone")
             }
+            harness.playPublicEncounter("magma_drone")
             performAction("w4_mq16_cross_slag_river")
             navigateLegalPath("foundry_waste_intake")
             performAction("w4_mq16_hack_cooling_vents")
@@ -3000,6 +3116,11 @@ class LegalRouteCampaignRunnerTest {
                 .fromJson(sessionStore.state.value.pendingBattleJson))
             val encounterIds = descriptor.enemies.map { it.enemyId }
             assertTrue("Public encounter must include $enemyId", enemyId in encounterIds)
+            val previousOpMode = com.example.starborn.domain.combat.CombatPlaytestBridge.isOpMode
+            if (playerCheckpointCombatAssist) {
+                com.example.starborn.domain.combat.CombatPlaytestBridge.isOpMode = true
+                assistance += "Temporary combat assistance: $room / $enemyId"
+            }
             val combat = publicCombat(encounterIds, seed)
             try {
                 combat.onScreenReady()
@@ -3227,7 +3348,10 @@ class LegalRouteCampaignRunnerTest {
                     rewardItems = reward.drops.associate { it.itemId to it.quantity }
                 ))
                 settle()
-            } finally { combat.close() }
+            } finally {
+                combat.close()
+                com.example.starborn.domain.combat.CombatPlaytestBridge.isOpMode = previousOpMode
+            }
         }
 
         private fun conditionEvaluator(raw: String?, state: GameSessionState): Boolean =

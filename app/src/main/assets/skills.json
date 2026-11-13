@@ -2655,5 +2655,200 @@
     "combat_tags": [
       "support"
     ]
+  },
+  {
+    "id": "ring_recover",
+    "name": "Reorienting",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Reorienting.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "self"
+  },
+  {
+    "id": "ring_guided_pass",
+    "name": "Guided Missile Pass",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Guided Missile Pass.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 75,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "enemy"
+  },
+  {
+    "id": "ring_detain",
+    "name": "Detention Sweep",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Detention Sweep.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 60,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "enemy"
+  },
+  {
+    "id": "ring_tether",
+    "name": "Gravity Tether",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Gravity Tether.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 45,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "enemy",
+    "status_applications": [
+      "ring_gravity_tether"
+    ]
+  },
+  {
+    "id": "ring_beam",
+    "name": "Aperture Beam",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Aperture Beam.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 90,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "enemy"
+  },
+  {
+    "id": "ring_guard",
+    "name": "Mirror Guard",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Mirror Guard.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "self",
+    "status_applications": [
+      "ring_guard"
+    ]
+  },
+  {
+    "id": "ring_guard_strike",
+    "name": "Shield Commitment",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Shield Commitment.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 80,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "enemy"
+  },
+  {
+    "id": "ring_frequency",
+    "name": "Frequency Sweep",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Frequency Sweep.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 80,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "enemy"
+  },
+  {
+    "id": "ring_joint_execution",
+    "name": "Directive Execution",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Directive Execution.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 85,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "enemy"
+  },
+  {
+    "id": "ring_joint_purge",
+    "name": "Coordinated Purge",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Coordinated Purge.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 65,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "all_enemies"
+  },
+  {
+    "id": "ring_unlinked_fire",
+    "name": "Unlinked Discharge",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Unlinked Discharge.",
+    "combat_tags": [
+      "dmg"
+    ],
+    "base_power": 75,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "enemy"
+  },
+  {
+    "id": "ring_link_exposure",
+    "name": "Exposed Command Link",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Exposed Command Link.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "self",
+    "status_applications": [
+      "ring_link_exposed"
+    ]
+  },
+  {
+    "id": "ring_command_ward",
+    "name": "Command Ward",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "Command Ward.",
+    "combat_tags": [
+      "support"
+    ],
+    "base_power": 0,
+    "scaling": "focus",
+    "cooldown": 0,
+    "targeting": "all_allies",
+    "status_applications": [
+      "ring_command_ward"
+    ],
+    "uses_per_battle": 3
   }
 ]

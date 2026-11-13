@@ -8830,7 +8830,8 @@
       "type": "encounter_victory",
       "enemies": [
         "compliance_avatar"
-      ]
+      ],
+      "room_id": "deep_tear"
     },
     "conditions": [
       {

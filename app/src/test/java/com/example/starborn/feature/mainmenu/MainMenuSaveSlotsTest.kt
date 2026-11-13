@@ -33,14 +33,14 @@ class MainMenuSaveSlotsTest {
             on { themeRepository } doReturn themes
         }
         val saved = GameSessionState(worldId = "world_2", roomId = "sector9_stream_falls", playerId = "nova")
-        whenever(services.slotInfo(20)).thenReturn(GameSessionSlotInfo(saved, 1234L))
-        whenever(services.loadSlot(20)).thenReturn(true)
+        whenever(services.slotInfo(30)).thenReturn(GameSessionSlotInfo(saved, 1234L))
+        whenever(services.loadSlot(30)).thenReturn(true)
         val vm = MainMenuViewModel(services)
         runCurrent()
-        assertEquals((1..20).toList(), vm.slots.value.filter { it.slot > 0 }.map { it.slot })
-        assertEquals(22, vm.slots.value.size)
-        assertEquals(saved, vm.slots.value.single { it.slot == 20 }.state)
-        assertTrue(vm.loadSlot(20))
-        verify(services).loadSlot(20)
+        assertEquals((1..30).toList(), vm.slots.value.filter { it.slot > 0 }.map { it.slot })
+        assertEquals(32, vm.slots.value.size)
+        assertEquals(saved, vm.slots.value.single { it.slot == 30 }.state)
+        assertTrue(vm.loadSlot(30))
+        verify(services).loadSlot(30)
     }
 }

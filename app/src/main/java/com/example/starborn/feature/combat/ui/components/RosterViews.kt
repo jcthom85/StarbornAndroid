@@ -19,6 +19,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.stateDescription
@@ -517,13 +518,17 @@ fun EnemyRoster(
         return
     }
     val density = LocalDensity.current
-    val totalEnemies = enemies.size
+    val occupants = com.example.starborn.domain.combat.AuthoredEncounterRules.formationOccupants(combatState)
+    val totalEnemies = occupants.size
     val rowCounts = when {
         totalEnemies <= 3 -> listOf(totalEnemies)
         totalEnemies == 4 -> listOf(2, 2)
         else -> listOf(2, 3)
     }
-    val indexedEnemies = enemies.mapIndexed { index, enemy -> index to enemy }
+    val indexedEnemies = occupants.mapIndexed { slot, id ->
+        val index = combatantIds.indexOf(id)
+        (if (index >= 0) index else -slot - 1) to enemies.getOrElse(index) { enemies.first() }
+    }
     var cursor = 0
     val rows = rowCounts.mapNotNull { count ->
         if (cursor >= indexedEnemies.size) return@mapNotNull null
@@ -567,7 +572,7 @@ fun EnemyRoster(
                     modifier = Modifier.offset(y = rowOffset)
                 ) {
                     row.forEach { (index, enemy) ->
-                        val combatantId = combatantIds.getOrElse(index) { enemy.id }
+                        val combatantId = combatantIds.getOrElse(index) { if (index >= 0) enemy.id else "__formation_vacancy_${-index}" }
                         val enemyState = combatState.combatants[combatantId]
                         val maxHp = enemyState?.combatant?.stats?.maxHp ?: enemy.hp.coerceAtLeast(1)
                         val currentHp = enemyState?.hp ?: maxHp
@@ -575,9 +580,11 @@ fun EnemyRoster(
                         val currentStability = enemyState?.stability ?: maxStability
                         val isActive = activeId == combatantId
                         val isSelected = combatantId in selectedEnemyIds
-                        val isAlive = enemyState?.isAlive != false
+                        val isAlive = index >= 0 && enemyState?.isAlive != false
                         val telegraphHighlights = telegraphFx.filter { combatantId in it.targetIds }
                         val isVisible = isAlive || delayedDeathTargets.containsKey(combatantId)
+                        val visibilityAlpha by animateFloatAsState(if (isVisible) 1f else 0f, tween(360), label = "enemy visibility")
+                        val visibilityScale by animateFloatAsState(if (isVisible) 1f else .65f, tween(420), label = "enemy collapse")
                         val isElite = isEliteTier(enemy.tier)
                         val isBoss = isBossTier(enemy.tier)
                         val flash = rememberDamageFlash(combatantId, combatState.log)
@@ -634,15 +641,12 @@ fun EnemyRoster(
                                 onLongClick = { if (isAlive) onEnemyLongPress(combatantId) }
                             )
 
-                        AnimatedVisibility(
-                            visible = isVisible,
-                            enter = fadeIn(animationSpec = tween(220)) +
-                                scaleIn(initialScale = 0.9f, animationSpec = tween(260)),
-                            exit = fadeOut(animationSpec = tween(360)) +
-                                scaleOut(targetScale = 0.65f, animationSpec = tween(420)),
-                            modifier = cardModifier,
-                            label = "enemy_card_$combatantId"
-                        ) {
+                        // Keep the measured slot after collapse; animation must not reflow the formation.
+                        Box(modifier = cardModifier.graphicsLayer {
+                            alpha = visibilityAlpha
+                            scaleX = visibilityScale
+                            scaleY = visibilityScale
+                        }.then(if (!isVisible) Modifier.clearAndSetSemantics {} else Modifier)) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.spacedBy(8.dp)

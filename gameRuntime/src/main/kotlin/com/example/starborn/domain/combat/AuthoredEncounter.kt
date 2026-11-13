@@ -16,6 +16,9 @@ data class AuthoredEncounterState(
     val cyclePositions: Map<String, Int> = emptyMap(),
     val phases: Map<String, String> = emptyMap(),
     val phaseOpenings: Set<String> = emptySet(),
+    val brokenLinks: Set<String> = emptySet(),
+    val formationSlots: Map<String, Int> = emptyMap(),
+    val formationCapacity: Int = 0,
     val recovery: Set<String> = emptySet(),
     val reservesUsed: Map<String, Int> = emptyMap(),
     val remainingUses: Map<String, Map<String, Int>> = emptyMap(),
@@ -23,6 +26,15 @@ data class AuthoredEncounterState(
 )
 
 object AuthoredEncounterRules {
+    /** The latest occupant owns a reused vacancy; fallen actors never pull survivors inward. */
+    fun formationOccupants(state: CombatState): List<String?> {
+        if (state.authored.formationCapacity == 0) return state.combatants.values
+            .filter { it.combatant.side == CombatSide.ENEMY }.map { it.combatant.id }
+        return List(state.authored.formationCapacity) { slot ->
+            state.authored.formationSlots.entries.lastOrNull { it.value == slot }?.key
+        }
+    }
+
     fun linkedOwner(id: String, definitions: Map<String, Enemy>): String? =
         definitions[id]?.authored?.linkedTo?.let { canonical ->
             val candidates = definitions.filterValues { it.id == canonical }
@@ -34,7 +46,8 @@ object AuthoredEncounterRules {
     fun sourceFor(actor: String, skill: String, definitions: Map<String, Enemy>): String? {
         val canonical = definitions[actor]?.authored?.linkedActions?.get(skill) ?: return actor
         return definitions.entries.singleOrNull {
-            it.value.id == canonical && linkedOwner(it.key, definitions) == actor
+            it.value.id == canonical && (linkedOwner(it.key, definitions) == actor ||
+                definitions[actor]?.authored?.coordination?.partner == canonical)
         }?.key
     }
 
@@ -52,9 +65,25 @@ object AuthoredEncounterRules {
         var combatants = state.combatants
         val messages = mutableListOf<CombatLogEntry>()
         definitions.forEach { (id, definition) ->
+            val link = definition.authored?.coordination ?: return@forEach
+            val actor = combatants[id] ?: return@forEach
+            val partner = definitions.entries.singleOrNull { it.value.id == link.partner }?.key
+                ?: return@forEach
+            if (state.outcome == null && actor.isAlive && id !in runtime.brokenLinks &&
+                combatants[partner]?.isAlive == false) {
+                runtime = runtime.copy(brokenLinks = runtime.brokenLinks + id,
+                    phaseOpenings = runtime.phaseOpenings + id,
+                    cyclePositions = runtime.cyclePositions + (id to 0),
+                    preparations = runtime.preparations - id)
+                combatants = combatants + (id to actor.copy(
+                    statusEffects = actor.statusEffects.filterNot { it.id in link.removeStatuses }))
+                messages += CombatLogEntry.TurnSkipped(state.round, id, link.name)
+            }
+        }
+        definitions.forEach { (id, definition) ->
             val phase = definition.authored?.phase ?: return@forEach
             val actor = combatants[id] ?: return@forEach
-            if (state.outcome == null && actor.isAlive && id !in runtime.phases &&
+            if (state.outcome == null && actor.isAlive && id !in runtime.phases && id !in runtime.brokenLinks &&
                 actor.hp.toDouble() / actor.combatant.stats.maxHp < phase.hpBelow) {
                 runtime = runtime.copy(phases = runtime.phases + (id to phase.name),
                     phaseOpenings = runtime.phaseOpenings + id,

@@ -833,7 +833,8 @@ private fun DesktopCombatContent(
         DesktopPortraitBackdrop(rememberDesktopAssetPainter(runtime.roomBackground, services.assetProvider), null, Modifier.fillMaxSize()) { backdropLayout ->
             val density = androidx.compose.ui.platform.LocalDensity.current
             val originalWide = hasThreePanelSpace(backdropLayout, density.density)
-            val needsLargerStage = enemies.size > 3 || enemies.size > 1 && runtime.enemies.any { it.combatSize == "massive" }
+            val formationCount = battle.authored.formationCapacity.takeIf { it > 0 } ?: enemies.size
+            val needsLargerStage = formationCount > 3 || formationCount > 1 && runtime.enemies.any { it.combatSize == "massive" }
             val layout = if (originalWide && needsLargerStage) {
                 val stageWidth = maxOf(backdropLayout.center.width, with(density) { (maxWidth - 480.dp).toPx() })
                 val side = (with(density) { maxWidth.toPx() } - stageWidth) / 2f

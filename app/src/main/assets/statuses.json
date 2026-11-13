@@ -264,5 +264,33 @@
     "default_duration": 2,
     "incoming_multiplier": 0.65,
     "target": "self"
+  },
+  {
+    "id": "ring_guard",
+    "name": "Mirror Guard",
+    "default_duration": 1,
+    "incoming_multiplier": 0.65,
+    "target": "self"
+  },
+  {
+    "id": "ring_command_ward",
+    "name": "Command Ward",
+    "default_duration": 1,
+    "incoming_multiplier": 0.85,
+    "target": "ally"
+  },
+  {
+    "id": "ring_link_exposed",
+    "name": "Command Link Exposed",
+    "default_duration": 1,
+    "incoming_multiplier": 1.2,
+    "target": "self"
+  },
+  {
+    "id": "ring_gravity_tether",
+    "name": "Gravity Tether",
+    "default_duration": 1,
+    "incoming_multiplier": 1.1,
+    "target": "enemy"
   }
 ]

@@ -57,12 +57,23 @@ data class AuthoredEnemyPattern(
     val windups: Map<String, String> = emptyMap(),
     @Json(name = "duplicate_cycle_offset") val duplicateCycleOffset: Int = 0,
     @Json(name = "interrupt_on_damage") val interruptOnDamage: Set<String> = emptySet(),
+    @Json(name = "wait_when_unavailable") val waitWhenUnavailable: Boolean = false,
     @Json(name = "resource_labels") val resourceLabels: Map<String, String> = emptyMap(),
     @Json(name = "linked_to") val linkedTo: String? = null,
     @Json(name = "linked_actions") val linkedActions: Map<String, String> = emptyMap(),
     @Json(name = "disarmed_cycle") val disarmedCycle: List<String> = emptyList(),
     val phase: AuthoredEnemyPhase? = null,
+    val coordination: AuthoredCoordination? = null,
     val reinforcements: AuthoredReinforcements? = null
+)
+
+/** An independently acting partner; losing it permanently replaces the joint attack rhythm. */
+data class AuthoredCoordination(
+    val partner: String,
+    val name: String,
+    @Json(name = "opening_skill") val openingSkill: String,
+    val cycle: List<String>,
+    @Json(name = "remove_statuses") val removeStatuses: List<String> = emptyList()
 )
 
 data class AuthoredEnemyPhase(

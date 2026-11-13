@@ -1049,8 +1049,9 @@ fun CombatScreen(
                 ?: commandActor?.hp?.coerceAtLeast(1)
                 ?: 1
             val commandCurrentHp = commandActorState?.hp ?: commandMaxHp
+            val formationCount = state.authored.formationCapacity.takeIf { it > 0 } ?: enemies.size
             val compactCrew = playerParty.size > 2 &&
-                (maxHeight < 640.dp || (maxHeight < 800.dp && (enemies.size > 3 || density.fontScale >= 1.2f)))
+                (maxHeight < 640.dp || (maxHeight < 800.dp && (formationCount > 3 || density.fontScale >= 1.2f)))
             val crewPortraitSize = if (compactCrew) 48.dp else if (maxHeight < 640.dp) 64.dp else 80.dp
             val crewSingleRow = maxWidth >= 600.dp
             val multipart = enemies.firstOrNull()?.composite?.group?.let { it != "driller" } == true

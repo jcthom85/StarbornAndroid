@@ -6866,6 +6866,8 @@ private fun roomEnemyParties(room: Room): List<List<String>> {
 
 private fun removeDefeatedEnemies(room: Room, historicalIds: List<String>): Room {
     val defeatedIds = when {
+        room.id == "deep_throne_room_scale_04" && historicalIds == listOf("compliance_avatar") ->
+            listOf("boardroom_bailiff")
         room.id == "spire_archive_vault" && historicalIds == listOf("corporate_assassin") ->
             listOf("corporate_assassin", "concierge_relay")
         room.id == "spire_exec_lounge_scale_05" && historicalIds == listOf("aero_drone") ->

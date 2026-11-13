@@ -443,7 +443,7 @@ class CombatController(
         enemyIdList = enemyCombatants.map { it.id }.toMutableList()
         bossCoreCombatantIds = encounterEnemySlots.mapIndexedNotNull { index, slot ->
             val role = slot.enemy.composite?.role
-            if (role.equals("core", ignoreCase = true) || slot.enemy.authored?.reinforcements != null) {
+            if (role.equals("core", ignoreCase = true) || slot.enemy.authored?.reinforcements != null || slot.enemy.authored?.coordination != null) {
                 enemyCombatants.getOrNull(index)?.id
             } else {
                 null
@@ -523,6 +523,12 @@ class CombatController(
             }
             val seeded = if (baseSeeded != null && updatedCombatants != null) {
                 baseSeeded.copy(combatants = updatedCombatants, authored = baseSeeded.authored.copy(
+                    formationSlots = enemyIdList.withIndex().associate { it.value to it.index },
+                    formationCapacity = enemyIdList.size + (enemyIdList.maxOfOrNull { owner ->
+                        val limit = enemyDefinitions[owner]?.authored?.reinforcements?.maxAlive ?: return@maxOfOrNull 0
+                        val escorts = enemyIdList.count { it != owner && AuthoredEncounterRules.linkedOwner(it, enemyDefinitions) == null }
+                        (limit - escorts).coerceAtLeast(0)
+                    } ?: 0),
                     cyclePositions = enemyIdList.associateWith { id ->
                         val definition = enemyDefinitions.getValue(id)
                         val ordinal = enemyIdList.filter { enemyDefinitions[it]?.id == definition.id }.indexOf(id)
@@ -2751,11 +2757,14 @@ class CombatController(
                 pending.targetIds.filter { current.combatants[it]?.isAlive == true })
         }
         val phaseOpening = id in current.authored.phaseOpenings
+        val brokenLink = id in current.authored.brokenLinks
+        val openingSkill = if (brokenLink) pattern.coordination?.openingSkill else pattern.phase?.openingSkill
         val disarmed = pattern.disarmedCycle.isNotEmpty() && pattern.linkedActions.keys.none { skillId ->
             val part = AuthoredEncounterRules.sourceFor(id, skillId, enemyDefinitions)
             current.combatants[part]?.isAlive == true
         }
         val cycle = when {
+            brokenLink -> pattern.coordination?.cycle.orEmpty()
             disarmed -> pattern.disarmedCycle
             id in current.authored.phases -> pattern.phase?.cycle.orEmpty()
             else -> pattern.cycle
@@ -2766,7 +2775,7 @@ class CombatController(
             val sourceId = AuthoredEncounterRules.sourceFor(id, skillId, enemyDefinitions)
             skillId !in pattern.linkedActions || current.combatants[sourceId]?.isAlive == true
         } ?: 0
-        val desired = if (phaseOpening) pattern.phase?.openingSkill
+        val desired = if (phaseOpening) openingSkill
             else cycle.getOrNull((position + offset) % cycle.size.coerceAtLeast(1))
         val skill = desired?.let(skillById::get)
         val source = desired?.let { AuthoredEncounterRules.sourceFor(id, it, enemyDefinitions) }
@@ -2775,7 +2784,7 @@ class CombatController(
         val action = if (skill != null && source != null && reserveAvailable &&
             AuthoredEncounterRules.canPrepare(source, current, statusRegistry) && enemyAI.canEnemyUseSkill(id, skill, current)) {
             CombatAction.SkillUse(id, skill.id, resolveSkillTargets(skill, current, id))
-        } else if (desired != null && (!reserveAvailable || desired in pattern.linkedActions)) {
+        } else if (desired != null && (!reserveAvailable || desired in pattern.linkedActions || pattern.waitWhenUnavailable)) {
             updateState { it.copy(authored = it.authored.copy(cyclePositions = it.authored.cyclePositions + (id to position + offset + 1))) }
             waitAuthoredTurn(id, if (!reserveAvailable) "Deployment bay unavailable"
                 else "${pattern.windups[desired] ?: skill?.name ?: "Weapon"} unavailable")
@@ -2786,7 +2795,7 @@ class CombatController(
         } else selectEnemyAction(current, current.combatants.getValue(id))
         updateState { it.copy(authored = it.authored.copy(
             cyclePositions = if (phaseOpening) it.authored.cyclePositions else it.authored.cyclePositions + (id to position + offset + 1),
-            phaseOpenings = if (phaseOpening && (action as? CombatAction.SkillUse)?.skillId != pattern.phase?.openingSkill)
+            phaseOpenings = if (phaseOpening && (action as? CombatAction.SkillUse)?.skillId != openingSkill)
                 it.authored.phaseOpenings else it.authored.phaseOpenings - id)) }
         val use = action as? CombatAction.SkillUse ?: return action
         val label = pattern.windups[use.skillId] ?: return action
@@ -2826,6 +2835,11 @@ class CombatController(
         val used = state.authored.reservesUsed[owner] ?: 0
         val id = "$canonical#reserve${used + 1}@$owner"
         if (id in state.combatants) return state
+        val slot = (0 until state.authored.formationCapacity).firstOrNull { slot ->
+            state.authored.formationSlots.none { (actor, position) ->
+                position == slot && state.combatants[actor]?.isAlive == true
+            }
+        } ?: return state
         val combatant = definition.toCombatant(id)
         enemyDefinitions[id] = definition
         activeEnemyDefinitions.add(definition)
@@ -2840,6 +2854,7 @@ class CombatController(
         return state.copy(turnOrder = state.turnOrder + TurnSlot(id, 0),
             combatants = state.combatants + (id to CombatantState(combatant, combatant.stats.maxHp, combatant.stats.stability)),
             authored = state.authored.copy(reservesUsed = state.authored.reservesUsed + (owner to used + 1),
+                formationSlots = state.authored.formationSlots + (id to slot),
                 reserveOwners = state.authored.reserveOwners + (id to owner)),
             log = state.log + CombatLogEntry.TurnSkipped(state.round, owner, "${definition.name} deployed"))
     }
@@ -3356,7 +3371,9 @@ class CombatController(
             combatants[id]?.isAlive == false
         }
         if (downedCores.isEmpty()) return this
-        val shutsDownFormation = downedCores.any { enemyDefinitions[it]?.authored?.reinforcements != null }
+        val shutsDownFormation = downedCores.any {
+            enemyDefinitions[it]?.authored?.let { pattern -> pattern.reinforcements != null || pattern.coordination != null } == true
+        }
         val survivors = combatants.mapValues { (id, actor) ->
             val shutsDown = shutsDownFormation || AuthoredEncounterRules.linkedOwner(id, enemyDefinitions) in downedCores
             if (actor.combatant.side == CombatSide.ENEMY && actor.isAlive && shutsDown) actor.copy(hp = 0) else actor
