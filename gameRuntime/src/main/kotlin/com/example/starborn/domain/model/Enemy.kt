@@ -60,6 +60,7 @@ data class AuthoredEnemyPattern(
     @Json(name = "resource_labels") val resourceLabels: Map<String, String> = emptyMap(),
     @Json(name = "linked_to") val linkedTo: String? = null,
     @Json(name = "linked_actions") val linkedActions: Map<String, String> = emptyMap(),
+    @Json(name = "disarmed_cycle") val disarmedCycle: List<String> = emptyList(),
     val phase: AuthoredEnemyPhase? = null,
     val reinforcements: AuthoredReinforcements? = null
 )

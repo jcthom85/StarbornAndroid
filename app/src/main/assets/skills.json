@@ -2525,5 +2525,135 @@
       "weak"
     ],
     "targeting": "single_enemy"
+  },
+  {
+    "id": "foundry_titan_salvo",
+    "name": "Missile Salvo",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "The missile pods rake the whole crew.",
+    "base_power": 49,
+    "cooldown": 0,
+    "targeting": "all_enemies",
+    "scaling": "focus",
+    "status_applications": [],
+    "combat_tags": [
+      "explosive"
+    ]
+  },
+  {
+    "id": "foundry_titan_cut",
+    "name": "Cutting Strike",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "The cutter drives into the marked target.",
+    "base_power": 79,
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "scaling": "atk",
+    "status_applications": [],
+    "combat_tags": [
+      "physical"
+    ]
+  },
+  {
+    "id": "foundry_titan_anchor",
+    "name": "Anchor Shot",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "An electrical tether briefly disrupts the marked target.",
+    "base_power": 32,
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "scaling": "focus",
+    "status_applications": [
+      "short"
+    ],
+    "combat_tags": [
+      "shock"
+    ]
+  },
+  {
+    "id": "foundry_titan_shield",
+    "name": "Shield Pulse",
+    "character": "enemy",
+    "type": "support",
+    "description": "The projector briefly hardens the chassis barrier.",
+    "base_power": 0,
+    "cooldown": 0,
+    "targeting": "self",
+    "scaling": "atk",
+    "status_applications": [
+      "foundry_titan_barrier"
+    ],
+    "combat_tags": [
+      "support"
+    ]
+  },
+  {
+    "id": "foundry_titan_cooling",
+    "name": "Exposed Vents",
+    "character": "enemy",
+    "type": "support",
+    "description": "The chassis purges heat and exposes its radiators.",
+    "base_power": 0,
+    "cooldown": 0,
+    "targeting": "self",
+    "scaling": "atk",
+    "status_applications": [
+      "radiators_exposed"
+    ],
+    "combat_tags": [
+      "support"
+    ]
+  },
+  {
+    "id": "foundry_titan_stomp",
+    "name": "Hydraulic Stomp",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "The chassis brings one foot down on the marked target.",
+    "base_power": 46,
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "scaling": "atk",
+    "status_applications": [],
+    "combat_tags": [
+      "physical"
+    ]
+  },
+  {
+    "id": "foundry_heat_burst",
+    "name": "Heat Burst",
+    "character": "enemy",
+    "type": "enemy",
+    "description": "The drone releases its charge at the marked target.",
+    "base_power": 55,
+    "cooldown": 0,
+    "targeting": "single_enemy",
+    "scaling": "focus",
+    "status_applications": [
+      "meltdown"
+    ],
+    "combat_tags": [
+      "fire"
+    ]
+  },
+  {
+    "id": "foundry_heat_vent",
+    "name": "Heat Vent",
+    "character": "enemy",
+    "type": "support",
+    "description": "The drone opens its cooling vents between bursts.",
+    "base_power": 0,
+    "cooldown": 0,
+    "targeting": "self",
+    "scaling": "atk",
+    "status_applications": [
+      "radiators_exposed"
+    ],
+    "combat_tags": [
+      "support"
+    ]
   }
 ]

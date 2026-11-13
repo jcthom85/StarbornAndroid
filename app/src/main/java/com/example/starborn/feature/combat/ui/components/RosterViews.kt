@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
@@ -657,6 +658,7 @@ fun EnemyRoster(
                                     isAlive = isAlive,
                                     isActive = isActive,
                                     isSelected = isSelected,
+                                    modifier = Modifier.zIndex(2f),
                                     accentColor = labelBorderColor,
                                     barWidth = barWidth,
                                     weaknesses = knownEnemyWeaknesses[enemy.id].orEmpty().sorted()
@@ -664,6 +666,7 @@ fun EnemyRoster(
                                 Spacer(modifier = Modifier.height(labelSpacer))
                                 Box(
                                     modifier = Modifier
+                                        .zIndex(1f)
                                         .size(cardSize)
                                         .graphicsLayer {
                                             val glowScale = 1f + selectionGlow.value * 0.08f
@@ -875,13 +878,13 @@ fun CompositeEnemyRoster(
         contentAlignment = Alignment.BottomCenter
     ) {
         val boxWidth = maxWidth
-        val paddingFactor = 0.18f
+        val paddingFactor = if (compositeGroup == "driller") 0.18f else 0.04f
         val extentFactorX = entries.maxOf { entry ->
             abs(entry.layout.offsetX) + (entry.layout.widthScale / 2f)
         }
-        val widthLimit = boxWidth * 0.95f
+        val widthLimit = boxWidth * if (compositeGroup == "driller") 0.95f else 1f
         val sizeLimit = widthLimit / (extentFactorX * 2f + paddingFactor)
-        val baseSize = minOf(minOf(220.dp, sizeLimit) * 1.08f, sizeLimit)
+        val baseSize = if (compositeGroup == "driller") minOf(237.6.dp, sizeLimit) else sizeLimit
         val baseValue = baseSize.value
         val groupOffsetX = groupOffsetSource?.layout?.groupOffsetX ?: 0f
         val groupOffsetY = groupOffsetSource?.layout?.groupOffsetY ?: 0f
@@ -1239,6 +1242,49 @@ fun CompositePartStatus(
 
 
 @Composable
+fun MultipartEnemyStatus(
+    state: CombatState,
+    ids: List<String>,
+    activeId: String?,
+    selectedIds: Set<String>,
+    atbMeters: Map<String, Float>,
+    accentColor: Color,
+    modifier: Modifier = Modifier,
+    onEnemyTap: (String) -> Unit,
+    onEnemyLongPress: (String) -> Unit
+) {
+    Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        ids.chunked(3).forEach { row ->
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                row.forEach targets@{ id ->
+                    val actor = state.combatants[id] ?: return@targets
+                    val preparing = state.authored.preparations.values.any { it.sourceId == id }
+                    EnemyStatusLabel(
+                        name = actor.combatant.name,
+                        currentHp = actor.hp,
+                        maxHp = actor.combatant.stats.maxHp,
+                        currentStability = actor.stability,
+                        maxStability = actor.combatant.stats.stability,
+                        breakTurns = actor.breakTurns,
+                        atbProgress = atbMeters[id] ?: 0f,
+                        isAlive = actor.isAlive,
+                        isActive = id == activeId,
+                        isSelected = id in selectedIds,
+                        accentColor = accentColor,
+                        barWidth = Dp.Unspecified,
+                        modifier = Modifier.weight(1f).maestroTag("combat-linked-target-$id"),
+                        compact = true,
+                        preparing = preparing,
+                        onClick = { onEnemyTap(id) },
+                        onLongClick = { onEnemyLongPress(id) }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun EnemyStatusLabel(
     name: String,
     currentHp: Int,
@@ -1254,11 +1300,14 @@ fun EnemyStatusLabel(
     barWidth: Dp,
     weaknesses: List<String> = emptyList(),
     modifier: Modifier = Modifier,
+    compact: Boolean = false,
+    preparing: Boolean = false,
     onClick: (() -> Unit)? = null,
     onLongClick: (() -> Unit)? = null
 ) {
     val baseAccent = accentColor.copy(alpha = 1f)
     val borderColor = when {
+        preparing -> Color(0xFFFFC46B)
         isActive -> baseAccent
         isSelected -> baseAccent.copy(alpha = 0.7f)
         else -> baseAccent.copy(alpha = 0.4f)
@@ -1282,6 +1331,7 @@ fun EnemyStatusLabel(
     }
     val interactionModifier = if (onClick != null || onLongClick != null) {
         modifier.combinedClickable(
+            enabled = isAlive,
             onClick = { onClick?.invoke() },
             onLongClick = { onLongClick?.invoke() }
         )
@@ -1289,28 +1339,31 @@ fun EnemyStatusLabel(
         modifier
     }
     val hasWeaknesses = weaknesses.isNotEmpty()
+    val barModifier = if (compact) Modifier.fillMaxWidth() else Modifier.width(barWidth)
     Surface(
         color = Color(0xFF0C0F14).copy(alpha = if (isSelected) 0.72f else 0.5f),
         contentColor = Color.White,
         shape = RoundedCornerShape(14.dp),
-        border = BorderStroke(1.dp, borderColor),
+        border = BorderStroke(if (preparing) 2.dp else 1.dp, borderColor),
         modifier = interactionModifier
+            .semantics { if (preparing) stateDescription = "Preparing an action" }
             .maestroTag(if (isAlive) "combat-target-$name" else "combat-defeated-$name")
-            .heightIn(min = if (hasWeaknesses) 112.dp else 96.dp)
+            .heightIn(min = if (compact) 44.dp else if (hasWeaknesses) 112.dp else 96.dp)
             .alpha(if (isAlive) 1f else 0.45f)
     ) {
         Column(
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
-            verticalArrangement = Arrangement.spacedBy(3.dp),
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = if (compact) 4.dp else 6.dp),
+            verticalArrangement = Arrangement.spacedBy(if (compact) 2.dp else 3.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Column(
-                modifier = Modifier.width(barWidth),
+                modifier = barModifier,
                 horizontalAlignment = Alignment.Start
             ) {
                 com.example.starborn.ui.menu.ReadableEnemyName(titleCaseName(name),
-                    modifier = Modifier.fillMaxWidth().maestroTag("enemy-label-name-$name"))
-                Spacer(modifier = Modifier.height(2.dp))
+                    modifier = Modifier.fillMaxWidth().maestroTag("enemy-label-name-$name"),
+                    baseSize = if (compact) 11 else 13)
+                if (!compact) Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = "HP $currentHp / $maxHp",
                     style = MaterialTheme.typography.labelSmall.copy(
@@ -1331,16 +1384,16 @@ fun EnemyStatusLabel(
                 max = maxHp,
                 color = Color(0xFFFF5252),
                 background = Color.Black.copy(alpha = 0.5f),
-                height = 7.dp,
-                modifier = Modifier.width(barWidth)
+                height = if (compact) 4.dp else 7.dp,
+                modifier = barModifier
             )
-            AtbBar(
+            if (!compact) AtbBar(
                 progress = atbProgress,
                 modifier = Modifier.width(barWidth).height(3.dp),
                 color = if (isActive) Color(0xFFFFD36E) else Color(0xFFFF9F43)
             )
             Row(
-                modifier = Modifier.width(barWidth),
+                modifier = barModifier,
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -1348,14 +1401,14 @@ fun EnemyStatusLabel(
                     imageVector = if (isBroken) Icons.Rounded.FlashOn else Icons.Rounded.Bolt,
                     contentDescription = if (isBroken) "Broken: takes 25% more direct damage" else "Stability (Stagger)",
                     tint = if (isBroken) Color(0xFFFF8A80) else Color(0xFFB39DDB).copy(alpha = 0.9f),
-                    modifier = Modifier.size(12.dp)
+                    modifier = Modifier.size(if (compact) 8.dp else 12.dp)
                 )
                 StatBar(
                     current = displayedStability.value.roundToInt(),
                     max = maxStability,
                     color = if (isBroken) Color(0xFFE57373) else Color(0xFF7E57C2),
                     background = Color.Black.copy(alpha = 0.45f),
-                    height = 5.dp,
+                    height = if (compact) 3.dp else 5.dp,
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -1510,6 +1563,7 @@ fun isShieldVisualStatus(statusId: String): Boolean {
     val normalized = statusId.trim().lowercase(Locale.getDefault())
     return normalized == "invulnerable" ||
         normalized == "shield" ||
+        normalized == "foundry_titan_barrier" ||
         normalized == "guard" ||
         normalized == "defend"
 }

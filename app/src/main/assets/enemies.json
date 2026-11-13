@@ -1176,7 +1176,7 @@
       }
     ],
     "description": "Warns before deploying an Interdictor or firing the Laser Lattice. Carries three reserve drones, with at most two escorts active. Below 35% HP it switches to exposed emergency fire. Shock is effective.",
-    "portrait": "images/enemies/the_warden_combat.png",
+    "portrait": "images/enemies/administrator_boss_combat.png",
     "authored": {
       "cycle": [
         "spire_deploy",
@@ -1238,8 +1238,8 @@
       "foundry"
     ],
     "abilities": [
-      "heat_burst",
-      "evasive_maneuver"
+      "foundry_heat_burst",
+      "foundry_heat_vent"
     ],
     "flavor": "A heat-shielded aerial harasser built to herd workers away from restricted slag channels.",
     "xp_reward": 120,
@@ -1255,7 +1255,17 @@
       }
     ],
     "description": "Fast burn-element drone. Cooling and shock attacks destabilize it. May yield Wiring Bundles and Power Cells for Field Kit repairs.",
-    "portrait": "images/enemies/security_drone_combat.png"
+    "portrait": "images/enemies/security_drone_combat.png",
+    "authored": {
+      "cycle": [
+        "foundry_heat_burst",
+        "foundry_heat_vent"
+      ],
+      "windups": {
+        "foundry_heat_burst": "Heat chamber charging"
+      },
+      "duplicate_cycle_offset": 1
+    }
   },
   {
     "id": "slag_golem",
@@ -1305,7 +1315,16 @@
       }
     ],
     "description": "Slow armored hitter. After Molten Slam it spends a turn cooling with its shell exposed. Exploit that opening or use Freeze and Shock against its armor. May yield Scrap Metal and Power Cells for crafting and salvage.",
-    "portrait": "images/enemies/heavy_loader_combat.png"
+    "portrait": "images/enemies/heavy_loader_combat.png",
+    "authored": {
+      "cycle": [
+        "molten_slam",
+        "slag_cooldown"
+      ],
+      "windups": {
+        "molten_slam": "Molten fist rising"
+      }
+    }
   },
   {
     "id": "welder_bot",
@@ -1350,7 +1369,21 @@
       }
     ],
     "description": "Repair support. Field Weld restores itself and its squad, but only twice per battle. Disable it or focus it down before attacking armored allies; between repairs it uses Torch Cut. May yield Scrap Metal and Power Cells. Check individual patrols for recoverable stock.",
-    "portrait": "images/enemies/heavy_loader_combat.png"
+    "portrait": "images/enemies/heavy_loader_combat.png",
+    "authored": {
+      "cycle": [
+        "torch_cut",
+        "field_weld",
+        "torch_cut",
+        "torch_cut"
+      ],
+      "windups": {
+        "field_weld": "Repair spool spinning"
+      },
+      "interrupt_on_damage": [
+        "field_weld"
+      ]
+    }
   },
   {
     "id": "flame_trooper",
@@ -1396,7 +1429,16 @@
       }
     ],
     "description": "Armored cone-AoE trooper. Source disruption weakens its suit locks. May yield healing supplies and Battery Packs. Salvage a Battery Pack for wiring.",
-    "portrait": "images/enemies/dominion_dampener_combat.png"
+    "portrait": "images/enemies/dominion_dampener_combat.png",
+    "authored": {
+      "cycle": [
+        "armor_lock",
+        "flame_cone"
+      ],
+      "windups": {
+        "flame_cone": "Flame nozzle pressurizing"
+      }
+    }
   },
   {
     "id": "phantom_prototype",
@@ -1485,15 +1527,11 @@
   {
     "id": "titan_walker_boss",
     "combat_size": "massive",
-    "recovery_after": {
-      "missile_barrage": "vent_exposure",
-      "titan_stomp": "vent_exposure"
-    },
     "name": "Titan Walker",
     "tier": "boss",
     "combat_behavior": "boss",
     "combat_role": "boss",
-    "hp": 540,
+    "hp": 680,
     "strength": 22,
     "vitality": 18,
     "agility": 8,
@@ -1515,9 +1553,12 @@
       "foundry"
     ],
     "abilities": [
-      "missile_barrage",
-      "vent_exposure",
-      "titan_stomp"
+      "foundry_titan_salvo",
+      "foundry_titan_cut",
+      "foundry_titan_anchor",
+      "foundry_titan_shield",
+      "foundry_titan_stomp",
+      "foundry_titan_cooling"
     ],
     "flavor": "Commander Rylos pilots this siege frame from a cockpit suspended over the volcano vent.",
     "xp_reward": 600,
@@ -1530,8 +1571,66 @@
         "quantity": 3
       }
     ],
-    "description": "Rylos boss vehicle. Strike exposed cooling vents after attacks.",
-    "portrait": "images/enemies/the_warden_combat.png"
+    "description": "Rylos pilots a single chassis with four destructible systems. Disable the system preparing an attack to cancel it, or drive straight for the chassis. Strike while the vents are exposed.",
+    "portrait": "images/enemies/titan_walker_boss_combat.png",
+    "sprite": [
+      "images/enemies/titan_walker_chassis_combat.png"
+    ],
+    "composite": {
+      "group": "titan_walker",
+      "role": "core",
+      "offset_x": -0.01,
+      "offset_y": 0.1045,
+      "width_scale": 1.24,
+      "height_scale": 0.7131
+    },
+    "authored": {
+      "cycle": [
+        "foundry_titan_salvo",
+        "foundry_titan_cooling",
+        "foundry_titan_cut",
+        "foundry_titan_cooling",
+        "foundry_titan_anchor",
+        "foundry_titan_shield",
+        "foundry_titan_cooling"
+      ],
+      "windups": {
+        "foundry_titan_salvo": "Missile doors opening",
+        "foundry_titan_cut": "Cutting arm extending",
+        "foundry_titan_anchor": "Anchor cannon locking on",
+        "foundry_titan_shield": "Shield projector aligning",
+        "foundry_titan_stomp": "Hydraulics bracing"
+      },
+      "linked_actions": {
+        "foundry_titan_salvo": "titan_missile_battery",
+        "foundry_titan_cut": "titan_cutting_arm",
+        "foundry_titan_anchor": "titan_anchor_cannon",
+        "foundry_titan_shield": "titan_shield_projector"
+      },
+      "disarmed_cycle": [
+        "foundry_titan_stomp",
+        "foundry_titan_cooling"
+      ],
+      "phase": {
+        "hp_below": 0.4,
+        "name": "Emergency Power",
+        "opening_skill": "foundry_titan_cooling",
+        "cycle": [
+          "foundry_titan_cut",
+          "foundry_titan_cooling",
+          "foundry_titan_stomp",
+          "foundry_titan_cooling",
+          "foundry_titan_salvo",
+          "foundry_titan_cooling",
+          "foundry_titan_anchor",
+          "foundry_titan_shield",
+          "foundry_titan_cooling"
+        ],
+        "remove_statuses": [
+          "foundry_titan_barrier"
+        ]
+      }
+    }
   },
   {
     "id": "orbital_fighter",
@@ -2541,6 +2640,166 @@
       "windups": {
         "spire_interception": "Interception emitter charging"
       }
+    }
+  },
+  {
+    "id": "titan_missile_battery",
+    "name": "Missile Battery",
+    "tier": "standard",
+    "combat_size": "small",
+    "hp": 158,
+    "strength": 0,
+    "vitality": 6,
+    "agility": 0,
+    "focus": 0,
+    "luck": 0,
+    "speed": 1,
+    "stability": 48,
+    "element": "physical",
+    "resistances": {
+      "shock": -25
+    },
+    "tags": [
+      "machine",
+      "foundry"
+    ],
+    "xp_reward": 0,
+    "credit_reward": 0,
+    "ap_reward": 0,
+    "drops": [],
+    "description": "Opens its pods before a salvo aimed at the whole crew.",
+    "portrait": "images/enemies/titan_missile_battery_combat.png",
+    "authored": {
+      "linked_to": "titan_walker_boss"
+    },
+    "composite": {
+      "group": "titan_walker",
+      "role": "weapon",
+      "offset_x": -0.375,
+      "offset_y": -0.2642,
+      "width_scale": 0.44,
+      "height_scale": 0.3516,
+      "z": 1
+    }
+  },
+  {
+    "id": "titan_cutting_arm",
+    "name": "Cutting Arm",
+    "tier": "standard",
+    "combat_size": "small",
+    "hp": 142,
+    "strength": 0,
+    "vitality": 6,
+    "agility": 0,
+    "focus": 0,
+    "luck": 0,
+    "speed": 1,
+    "stability": 48,
+    "element": "physical",
+    "resistances": {
+      "shock": -25
+    },
+    "tags": [
+      "machine",
+      "foundry"
+    ],
+    "xp_reward": 0,
+    "credit_reward": 0,
+    "ap_reward": 0,
+    "drops": [],
+    "description": "Extends its cutter for a heavy strike on a single crew member.",
+    "portrait": "images/enemies/titan_cutting_arm_combat.png",
+    "authored": {
+      "linked_to": "titan_walker_boss"
+    },
+    "composite": {
+      "group": "titan_walker",
+      "role": "weapon",
+      "offset_x": -0.565,
+      "offset_y": 0.0821,
+      "width_scale": 0.51,
+      "height_scale": 0.3883,
+      "z": 1
+    }
+  },
+  {
+    "id": "titan_anchor_cannon",
+    "name": "Anchor Cannon",
+    "tier": "standard",
+    "combat_size": "small",
+    "hp": 115,
+    "strength": 0,
+    "vitality": 6,
+    "agility": 0,
+    "focus": 0,
+    "luck": 0,
+    "speed": 1,
+    "stability": 48,
+    "element": "physical",
+    "resistances": {
+      "shock": -25
+    },
+    "tags": [
+      "machine",
+      "foundry"
+    ],
+    "xp_reward": 0,
+    "credit_reward": 0,
+    "ap_reward": 0,
+    "drops": [],
+    "description": "Locks onto a single crew member before a disruptive shot.",
+    "portrait": "images/enemies/titan_anchor_cannon_combat.png",
+    "authored": {
+      "linked_to": "titan_walker_boss"
+    },
+    "composite": {
+      "group": "titan_walker",
+      "role": "weapon",
+      "offset_x": 0.556,
+      "offset_y": 0.0615,
+      "width_scale": 0.53,
+      "height_scale": 0.2471,
+      "z": 1
+    }
+  },
+  {
+    "id": "titan_shield_projector",
+    "name": "Shield Projector",
+    "tier": "standard",
+    "combat_size": "small",
+    "hp": 110,
+    "strength": 0,
+    "vitality": 6,
+    "agility": 0,
+    "focus": 0,
+    "luck": 0,
+    "speed": 1,
+    "stability": 48,
+    "element": "physical",
+    "resistances": {
+      "shock": -25
+    },
+    "tags": [
+      "machine",
+      "foundry"
+    ],
+    "xp_reward": 0,
+    "credit_reward": 0,
+    "ap_reward": 0,
+    "drops": [],
+    "description": "Briefly protects the chassis when its pulse fires.",
+    "portrait": "images/enemies/titan_shield_projector_combat.png",
+    "authored": {
+      "linked_to": "titan_walker_boss"
+    },
+    "composite": {
+      "group": "titan_walker",
+      "role": "weapon",
+      "offset_x": 0.3845,
+      "offset_y": -0.2672,
+      "width_scale": 0.405,
+      "height_scale": 0.3897,
+      "z": 1
     }
   }
 ]

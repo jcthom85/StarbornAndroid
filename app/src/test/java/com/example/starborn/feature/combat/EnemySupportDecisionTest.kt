@@ -214,27 +214,28 @@ class EnemySupportDecisionTest {
         assertFalse(ai.canEnemyUseSkill(welder.id, weld, onCooldown))
     }
 
-    @Test fun `Titan vents after either heavy attack and exposes only itself`() {
+    @Test fun `Titan's authored cycles vent after heavy attacks and expose only the chassis`() {
         val skills = assets.loadSkills().associateBy { it.id }
-        val titan = core.copy(id = "titan_walker_boss", skills = listOf("missile_barrage", "titan_stomp", "vent_exposure"))
-        for (previous in listOf("missile_barrage", "titan_stomp")) {
-            val state = CombatState(turnOrder = listOf(TurnSlot(titan.id, 10), TurnSlot(nova.id, 5)),
-                activeTurnIndex = 0, combatants = mapOf(titan.id to CombatantState(titan, hp = 200, stability = 100),
-                    nova.id to CombatantState(nova, hp = 200, stability = 100)))
-            val ai = CombatEnemyAI(skills, assets.loadEnemies().associateBy { it.id }, registry, CombatAiWeights(),
-                isSupportSkill = { false }, skillStatusDefinitions = { emptyList() },
-                determineSkillTargeting = { SkillTargeting.SINGLE_ENEMY }, checkSkillConditions = { _, _, _, _ -> true },
-                enemyBrains = mutableMapOf(), enemyActionHistory = mutableMapOf(titan.id to ArrayDeque(listOf(previous))),
-                enemySkillUsageCounts = mutableMapOf(), getPlayerIdList = { listOf(nova.id) })
-            val action = ai.selectEnemyAction(state, state.combatants.getValue(titan.id), null) {}
-            assertEquals(CombatAction.SkillUse(titan.id, "vent_exposure", listOf(titan.id)), action)
-            val processor = CombatActionProcessor(CombatEngine(statusRegistry = registry), registry, skills::get,
-                random = SeededCombatRandom(1))
-            val after = processor.execute(state, action) { CombatReward() }
-            assertTrue(after.combatants.getValue(titan.id).statusEffects.any { it.id == "radiators_exposed" && it.remainingTurns > 0 })
-            assertTrue(after.combatants.getValue(nova.id).statusEffects.isEmpty())
-            assertEquals(200, after.combatants.getValue(nova.id).hp)
+        val definition = assets.loadEnemies().single { it.id == "titan_walker_boss" }
+        val pattern = requireNotNull(definition.authored)
+        val heavy = setOf("foundry_titan_salvo", "foundry_titan_cut", "foundry_titan_stomp")
+        val cooling = "foundry_titan_cooling"
+        for (cycle in listOf(pattern.cycle, requireNotNull(pattern.phase).cycle, pattern.disarmedCycle)) {
+            assertTrue(cycle.any { it in heavy })
+            cycle.forEachIndexed { index, skill ->
+                if (skill in heavy) assertEquals(cooling, cycle[(index + 1) % cycle.size])
+            }
         }
+        val titan = core.copy(id = definition.id, skills = definition.abilities)
+        val state = CombatState(turnOrder = listOf(TurnSlot(titan.id, 10), TurnSlot(nova.id, 5)),
+            activeTurnIndex = 0, combatants = mapOf(titan.id to CombatantState(titan, hp = 200, stability = 100),
+                nova.id to CombatantState(nova, hp = 200, stability = 100)))
+        val processor = CombatActionProcessor(CombatEngine(statusRegistry = registry), registry, skills::get,
+            random = SeededCombatRandom(1))
+        val after = processor.execute(state, CombatAction.SkillUse(titan.id, cooling, listOf(titan.id))) { CombatReward() }
+        assertTrue(after.combatants.getValue(titan.id).statusEffects.any { it.id == "radiators_exposed" && it.remainingTurns > 0 })
+        assertTrue(after.combatants.getValue(nova.id).statusEffects.isEmpty())
+        assertEquals(200, after.combatants.getValue(nova.id).hp)
     }
 
     @Test fun `radiator exposure reduces physical defense with identical damage rolls`() {

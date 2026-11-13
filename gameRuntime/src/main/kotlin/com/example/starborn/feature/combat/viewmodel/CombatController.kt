@@ -362,7 +362,7 @@ class CombatController(
         val pendingEncounter = encounterCoordinator.consumePendingEncounter()
         encounterSourcePartyId = pendingEncounter?.sourcePartyId
         val pendingSlots = pendingEncounter?.enemies.orEmpty()
-        val slots = enemyIds
+        val requestedSlots = enemyIds
             .mapIndexedNotNull { index, id ->
                 val canonicalId = id.takeIf { it.isNotBlank() } ?: return@mapIndexedNotNull null
                 val enemy = allEnemies.find { it.id == canonicalId } ?: return@mapIndexedNotNull null
@@ -378,9 +378,16 @@ class CombatController(
                     extraDrops = overrides?.extraDrops.orEmpty()
                 )
             }
+        encounterEnemyIdList = requestedSlots.map { it.canonicalId }
+        val slots = requestedSlots.flatMap { slot ->
+            // Room and victory receipts name the chassis. Its systems exist only in combat.
+            val parts = slot.enemy.authored?.linkedActions?.values.orEmpty().distinct()
+                .filterNot { it in encounterEnemyIdList }
+                .mapNotNull { id -> enemyCatalog[id]?.let { EncounterEnemySlot(id, it) } }
+            listOf(slot) + parts
+        }
         encounterEnemySlots = slots
         activeEnemyDefinitions.addAll(slots.map { it.enemy })
-        encounterEnemyIdList = slots.map { it.canonicalId }
 
         val currentRoomId = sessionSnapshot.roomId
         encounterRoomId = currentRoomId
@@ -409,7 +416,7 @@ class CombatController(
                 activeMeal
             )
         }
-        val duplicateCounts = encounterEnemyIdList.groupingBy { it }.eachCount()
+        val duplicateCounts = slots.groupingBy { it.canonicalId }.eachCount()
         val instanceCounters = mutableMapOf<String, Int>()
         val isMasterProtocol = "ms_master_protocol_active" in sessionSnapshot.completedMilestones
         enemyCombatants = encounterEnemySlots.map { slot ->
@@ -430,7 +437,7 @@ class CombatController(
                 stabilityOverride = slot.stability
             )
         }.toMutableList()
-        val rawTitle = buildEncounterTitle(encounterEnemySlots.map { it.enemy })
+        val rawTitle = buildEncounterTitle(encounterEnemySlots.map { it.enemy }.filter { it.authored?.linkedTo == null })
         encounterTitle = if (isMasterProtocol) "⚡ MASTER: $rawTitle" else rawTitle
         playerIdList = playerCombatants.map { it.id }
         enemyIdList = enemyCombatants.map { it.id }.toMutableList()
@@ -2744,9 +2751,23 @@ class CombatController(
                 pending.targetIds.filter { current.combatants[it]?.isAlive == true })
         }
         val phaseOpening = id in current.authored.phaseOpenings
-        val cycle = if (id in current.authored.phases) pattern.phase?.cycle.orEmpty() else pattern.cycle
+        val disarmed = pattern.disarmedCycle.isNotEmpty() && pattern.linkedActions.keys.none { skillId ->
+            val part = AuthoredEncounterRules.sourceFor(id, skillId, enemyDefinitions)
+            current.combatants[part]?.isAlive == true
+        }
+        val cycle = when {
+            disarmed -> pattern.disarmedCycle
+            id in current.authored.phases -> pattern.phase?.cycle.orEmpty()
+            else -> pattern.cycle
+        }
         val position = current.authored.cyclePositions[id] ?: 0
-        val desired = if (phaseOpening) pattern.phase?.openingSkill else cycle.getOrNull(position % cycle.size.coerceAtLeast(1))
+        val offset = cycle.indices.firstOrNull { step ->
+            val skillId = cycle[(position + step) % cycle.size]
+            val sourceId = AuthoredEncounterRules.sourceFor(id, skillId, enemyDefinitions)
+            skillId !in pattern.linkedActions || current.combatants[sourceId]?.isAlive == true
+        } ?: 0
+        val desired = if (phaseOpening) pattern.phase?.openingSkill
+            else cycle.getOrNull((position + offset) % cycle.size.coerceAtLeast(1))
         val skill = desired?.let(skillById::get)
         val source = desired?.let { AuthoredEncounterRules.sourceFor(id, it, enemyDefinitions) }
         val reserveAvailable = desired != pattern.reinforcements?.skillId ||
@@ -2754,16 +2775,17 @@ class CombatController(
         val action = if (skill != null && source != null && reserveAvailable &&
             AuthoredEncounterRules.canPrepare(source, current, statusRegistry) && enemyAI.canEnemyUseSkill(id, skill, current)) {
             CombatAction.SkillUse(id, skill.id, resolveSkillTargets(skill, current, id))
-        } else if (!reserveAvailable && desired != null) {
-            updateState { it.copy(authored = it.authored.copy(cyclePositions = it.authored.cyclePositions + (id to position + 1))) }
-            waitAuthoredTurn(id, "Deployment bay unavailable")
+        } else if (desired != null && (!reserveAvailable || desired in pattern.linkedActions)) {
+            updateState { it.copy(authored = it.authored.copy(cyclePositions = it.authored.cyclePositions + (id to position + offset + 1))) }
+            waitAuthoredTurn(id, if (!reserveAvailable) "Deployment bay unavailable"
+                else "${pattern.windups[desired] ?: skill?.name ?: "Weapon"} unavailable")
             enemyTurnJob = null
             return null
         } else if (desired != null) {
             CombatAction.BasicAttack(id, resolvePlayerTargets(current).firstOrNull() ?: return null)
         } else selectEnemyAction(current, current.combatants.getValue(id))
         updateState { it.copy(authored = it.authored.copy(
-            cyclePositions = if (phaseOpening) it.authored.cyclePositions else it.authored.cyclePositions + (id to position + 1),
+            cyclePositions = if (phaseOpening) it.authored.cyclePositions else it.authored.cyclePositions + (id to position + offset + 1),
             phaseOpenings = if (phaseOpening && (action as? CombatAction.SkillUse)?.skillId != pattern.phase?.openingSkill)
                 it.authored.phaseOpenings else it.authored.phaseOpenings - id)) }
         val use = action as? CombatAction.SkillUse ?: return action
@@ -3330,19 +3352,16 @@ class CombatController(
 
     private fun CombatState.applyBossCoreOutcome(): CombatState {
         if (outcome != null || bossCoreCombatantIds.isEmpty()) return this
-        val coreDown = bossCoreCombatantIds.any { id ->
+        val downedCores = bossCoreCombatantIds.filter { id ->
             combatants[id]?.isAlive == false
         }
-        if (!coreDown) return this
-        val reward = victoryReward()
-        val victory = CombatOutcome.Victory(reward)
-        return copy(
-            combatants = combatants.mapValues { (_, actor) ->
-                if (actor.combatant.side == CombatSide.ENEMY && actor.isAlive) actor.copy(hp = 0) else actor
-            },
-            outcome = victory,
-            log = log + CombatLogEntry.Outcome(turn = round, result = victory)
-        )
+        if (downedCores.isEmpty()) return this
+        val shutsDownFormation = downedCores.any { enemyDefinitions[it]?.authored?.reinforcements != null }
+        val survivors = combatants.mapValues { (id, actor) ->
+            val shutsDown = shutsDownFormation || AuthoredEncounterRules.linkedOwner(id, enemyDefinitions) in downedCores
+            if (actor.combatant.side == CombatSide.ENEMY && actor.isAlive && shutsDown) actor.copy(hp = 0) else actor
+        }
+        return combatEngine.resolveOutcome(copy(combatants = survivors), ::victoryReward)
     }
 
     private fun persistPartyVitals(state: CombatState) {

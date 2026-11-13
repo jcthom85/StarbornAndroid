@@ -1,5 +1,8 @@
 package com.example.starborn.feature.exploration.ui
 
+import android.content.ContextWrapper
+import android.view.KeyEvent as AndroidKeyEvent
+import com.example.starborn.MainActivity
 import com.example.starborn.ui.components.maestroTag
 import com.example.starborn.shared.ui.typewriterText
 
@@ -170,6 +173,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
@@ -365,9 +369,14 @@ fun ExplorationScreen(
     onDemoRootBack: (() -> Unit)? = null,
     hubAreaEntry: com.example.starborn.feature.exploration.viewmodel.AreaEntryUi? = null,
     onHubAreaEntryFinished: () -> Unit = {},
-    isTestSession: Boolean = false
+    isTestSession: Boolean = false,
+    combatTransitionVisible: Boolean = false
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val bossOverlapsPanels = uiState.visualEnemyParties.singleOrNull()?.enemies.orEmpty()
+        .any { it == "titan_walker_boss" || it == "administrator_boss" }
+    val bossBottomAllowance = if (bossOverlapsPanels &&
+        uiState.visualEnemyParties.single().enemies.contains("administrator_boss")) 28.dp else 0.dp
     val areaEntry = uiState.areaEntry ?: hubAreaEntry
     var finishedAreaEntryId by rememberSaveable { mutableStateOf<Long?>(null) }
     val areaEntryActive = areaEntry != null && areaEntry.id != finishedAreaEntryId
@@ -671,7 +680,43 @@ fun ExplorationScreen(
         showExitConfirmDialog ||
         showInventoryTargetDialog
     val keyboardNavigationReady = !blockingOverlayActive && !isAnyOverlayOpen &&
-        !roomTransitionInProgress && !importantQuestPopupVisible && !uiState.isLoading && !approachingCombat
+        !roomTransitionInProgress && !importantQuestPopupVisible && !uiState.isLoading &&
+        !approachingCombat && !combatTransitionVisible
+    fun handleMovementKey(event: AndroidKeyEvent): Boolean {
+        if (!keyboardNavigationReady || event.action != AndroidKeyEvent.ACTION_DOWN ||
+            !event.hasNoModifiers()) return false
+        val direction = when (event.keyCode) {
+            AndroidKeyEvent.KEYCODE_W, AndroidKeyEvent.KEYCODE_DPAD_UP -> "north"
+            AndroidKeyEvent.KEYCODE_S, AndroidKeyEvent.KEYCODE_DPAD_DOWN -> "south"
+            AndroidKeyEvent.KEYCODE_A, AndroidKeyEvent.KEYCODE_DPAD_LEFT -> "west"
+            AndroidKeyEvent.KEYCODE_D, AndroidKeyEvent.KEYCODE_DPAD_RIGHT -> "east"
+            else -> return false
+        }
+        val target = uiState.availableConnections.keys.firstOrNull { it.equals(direction, ignoreCase = true) }
+            ?: return false
+        if (event.repeatCount == 0) viewModel.travel(target)
+        return true
+    }
+
+    val context = LocalContext.current
+    val activity = remember(context) {
+        generateSequence(context) { (it as? ContextWrapper)?.baseContext }
+            .filterIsInstance<MainActivity>().firstOrNull()
+    }
+    val movementKeys by rememberUpdatedState(::handleMovementKey)
+    LaunchedEffect(activity, explorationLifecycle) {
+        if (activity == null) return@LaunchedEffect
+        explorationLifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            // Route room movement even when the Compose exploration root has lost keyboard focus.
+            val handler: (AndroidKeyEvent) -> Boolean = { movementKeys(it) }
+            activity.explorationMovementKeys = handler
+            try {
+                kotlinx.coroutines.awaitCancellation()
+            } finally {
+                if (activity.explorationMovementKeys === handler) activity.explorationMovementKeys = null
+            }
+        }
+    }
     LaunchedEffect(viewModel, keyboardNavigationReady) {
         if (keyboardNavigationReady) {
             // A dialog can dispose its focused node a frame after it closes.
@@ -778,18 +823,7 @@ fun ExplorationScreen(
             .focusRequester(keyboardFocusRequester)
             .onPreviewKeyEvent { keyEvent ->
                 if (scriptedTravelActive || areaEntryActive) return@onPreviewKeyEvent true
-                if (!keyboardNavigationReady || keyEvent.type != KeyEventType.KeyDown) return@onPreviewKeyEvent false
-                val direction = when (keyEvent.key) {
-                    Key.W, Key.DirectionUp -> "north"
-                    Key.S, Key.DirectionDown -> "south"
-                    Key.A, Key.DirectionLeft -> "west"
-                    Key.D, Key.DirectionRight -> "east"
-                    else -> return@onPreviewKeyEvent false
-                }
-                val target = uiState.availableConnections.keys.firstOrNull { it.equals(direction, ignoreCase = true) }
-                    ?: return@onPreviewKeyEvent false
-                viewModel.travel(target)
-                true
+                handleMovementKey(keyEvent.nativeKeyEvent)
             }
             .onKeyEvent { keyEvent ->
                 if (uiState.activeDialogue != null || uiState.cinematic != null || importantQuestPopupVisible) return@onKeyEvent false
@@ -1073,7 +1107,7 @@ fun ExplorationScreen(
                 .fillMaxSize()
                 .statusBarsPadding()
             .navigationBarsPadding()
-            .padding(bottom = ExplorationControlSpacing.sceneBottomClearance)
+            .padding(bottom = ExplorationControlSpacing.sceneBottomClearance - bossBottomAllowance)
             .padding(horizontal = 24.dp, vertical = 24.dp)
             .clipToBounds()
         ) {
@@ -1093,6 +1127,7 @@ fun ExplorationScreen(
             Column(
                 modifier = Modifier
                     .maestroTag("room-${uiState.currentRoom?.id.orEmpty()}")
+                    .zIndex(if (bossOverlapsPanels) 2f else 0f)
                     .align(Alignment.TopCenter)
                     .fillMaxWidth(0.9f)
                     .verticalScroll(rememberScrollState()),
@@ -1180,6 +1215,7 @@ fun ExplorationScreen(
                     roomId = uiState.currentRoom?.id,
                     onPartyClick = { enemyId -> if (!approachingCombat) viewModel.engageEnemy(enemyId) },
                     modifier = Modifier
+                        .zIndex(if (bossOverlapsPanels) 1f else 0f)
                         .graphicsLayer { scaleX = hostileApproachScale; scaleY = hostileApproachScale }
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth()
@@ -6010,12 +6046,20 @@ private fun EnemyPartyStrip(
 ) {
     if (visualParties.isEmpty()) return
 
-    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+    BoxWithConstraints(modifier = Modifier.widthIn(max = 1200.dp).fillMaxWidth()) {
         val stageWidth = maxWidth
         val baseMemberSize = when {
             stageWidth < 380.dp -> 160.dp
             stageWidth < 520.dp -> 185.dp
             else -> 210.dp
+        }
+        val soloBossParty = visualParties.singleOrNull()?.takeIf { party ->
+            party.enemies.any { enemyPresentationTier(enemyTiers[it]) == EnemyPresentationTier.BOSS }
+        }
+        val largeBossSize = if (soloBossParty != null) {
+            minOf(stageWidth * if (soloBossParty.enemies.size == 1) 0.78f else 0.70f, 320.dp)
+        } else {
+            baseMemberSize
         }
         val laneRise = (baseMemberSize * 0.72f).coerceAtLeast(88.dp)
         fun overlapFor(members: Int): Float = when {
@@ -6064,15 +6108,17 @@ private fun EnemyPartyStrip(
 
         val placements = orderedParties.mapNotNull { party ->
             slotAssignments[party.id]?.let { slotIndex ->
-                Triple(party, ENEMY_PARTY_SLOTS[slotIndex], slotIndex)
+                val slot = if (party == soloBossParty) EnemyPartySlot(0.5f, row = 0)
+                    else ENEMY_PARTY_SLOTS[slotIndex]
+                Triple(party, slot, slotIndex)
             }
         }
+        val stageHeight = maxOf(baseMemberSize + laneRise, largeBossSize) + 28.dp
 
         Box(
             modifier = Modifier
-                .widthIn(max = 1200.dp)
                 .fillMaxWidth()
-                .height(baseMemberSize + 28.dp + laneRise),
+                .height(stageHeight),
             contentAlignment = Alignment.BottomCenter
         ) {
             val renderPlacements = placements.sortedWith(
@@ -6081,12 +6127,11 @@ private fun EnemyPartyStrip(
                 }.thenBy { (_, _, slotIndex) -> slotIndex }
             )
             renderPlacements.forEach { (party, slot, slotIndex) ->
-                val memberSize = baseMemberSize
-                val width = clusterWidth(party.enemies, memberSize)
+                val memberSize = if (party == soloBossParty) largeBossSize else baseMemberSize
+                val width = if (party == soloBossParty) memberSize else clusterWidth(party.enemies, memberSize)
                 val centerX = stageWidth * slot.centerFraction
                 val xOffset = centerX - (width / 2f)
                 val yOffset = -laneRise * slot.row
-                val stageHeight = baseMemberSize + 28.dp + laneRise
                 val offscreenPadding = 72.dp
                 fun transitionOffsetX(direction: String?): Float = when (direction) {
                     "east" -> (stageWidth - xOffset + offscreenPadding).value
@@ -6095,7 +6140,7 @@ private fun EnemyPartyStrip(
                 }
                 fun transitionOffsetY(direction: String?): Float = when (direction) {
                     "north" -> -(stageHeight + yOffset + offscreenPadding).value
-                    "south" -> (baseMemberSize + 28.dp - yOffset + offscreenPadding).value
+                    "south" -> (memberSize + 28.dp - yOffset + offscreenPadding).value
                     "east", "west" -> 0f
                     else -> if (slot.row == 0) 36f else -36f
                 }
@@ -6108,7 +6153,10 @@ private fun EnemyPartyStrip(
                     (ENEMY_PARTY_SLOTS.size - slotIndex + 10).toFloat()
                 }
                 EnemyPartyCluster(
-                    party = party,
+                    party = if (party == soloBossParty) party.copy(enemies = party.enemies.sortedByDescending {
+                        enemyPresentationTier(enemyTiers[it]) == EnemyPresentationTier.BOSS
+                    }) else party,
+                    centerBoss = party == soloBossParty,
                     enemyTiers = enemyTiers,
                     enemyIcons = enemyIcons,
                     accentColor = accentColor,
@@ -6188,6 +6236,7 @@ private val EnemyPresenceShadowDrop = 0.dp
 @Composable
 private fun EnemyPartyCluster(
     party: VisualEnemyParty,
+    centerBoss: Boolean = false,
     enemyTiers: Map<String, String>,
     enemyIcons: Map<String, EnemyIconUi>,
     accentColor: Color,
@@ -6289,9 +6338,13 @@ private fun EnemyPartyCluster(
         party.enemies.forEachIndexed { index, enemyId ->
             val step = (index + 1) / 2
             val isLeft = index % 2 == 1
-            val offsetX = if (index == 0) 0.dp else (if (isLeft) -24.dp else 24.dp) * step
-            val offsetY = if (index == 0) 0.dp else -16.dp * step
-            val scale = if (index == 0) 1f else (1f - 0.08f * step).coerceAtLeast(0.8f)
+            val offsetX = when {
+                index == 0 -> 0.dp
+                centerBoss -> memberSize * (if (isLeft) 0.38f else -0.38f) * step
+                else -> (if (isLeft) -24.dp else 24.dp) * step
+            }
+            val offsetY = if (centerBoss || index == 0) 0.dp else -16.dp * step
+            val scale = if (centerBoss || index == 0) 1f else (1f - 0.08f * step).coerceAtLeast(0.8f)
 
             EnemyPartyStandee(
                 enemyId = enemyId,
@@ -6302,11 +6355,11 @@ private fun EnemyPartyCluster(
                 isDark = isDark,
                 transitionActive = transitionActive,
                 icon = enemyIcons[enemyId],
-                size = memberSize,
+                size = if (centerBoss && index > 0) memberSize * 0.52f else memberSize,
                 showFightBadge = (index == 0),
                 isAggressive = party.isAggressive,
                 modifier = Modifier
-                    .zIndex((party.enemies.size - index).toFloat())
+                    .zIndex(if (centerBoss) index.toFloat() else (party.enemies.size - index).toFloat())
                     .offset(x = offsetX, y = offsetY)
                     .graphicsLayer {
                         scaleX = scale
@@ -6500,7 +6553,7 @@ private fun EnemyPartyLeaderIcon(
                     scaleY = scale * spriteScale
                 }
                 .let { base ->
-                    if (transitionActive) {
+                    if (transitionActive || tier == EnemyPresentationTier.BOSS) {
                         base
                     } else {
                         base

@@ -39,8 +39,17 @@ internal fun DesktopExplorationEnemyStage(services: DesktopAppServices, ui: Expl
         ui.visualEnemyParties.forEachIndexed { lane, party -> key(ui.currentRoom?.id, party.id) {
             val count = party.enemies.size.coerceAtLeast(1)
             val overlap = when { count >= 4 -> .42f; count == 3 -> .36f; count == 2 -> .28f; else -> 0f }
-            val memberSize = minOf(base, (width - 24.dp) / (1f + (count - 1) * (1f - overlap)))
-            val clusterWidth = memberSize * (1f + (count - 1) * (1f - overlap))
+            val soloBoss = ui.visualEnemyParties.size == 1 &&
+                party.enemies.any { enemyPresentationTier(ui.enemyTiers[it]) == EnemyPresentationTier.BOSS }
+            val members = if (soloBoss) party.enemies.sortedByDescending {
+                enemyPresentationTier(ui.enemyTiers[it]) == EnemyPresentationTier.BOSS
+            } else party.enemies
+            val memberSize = if (soloBoss) {
+                minOf(width * if (count == 1) 0.78f else 0.70f, stageHeight - 28.dp, 320.dp)
+            } else {
+                minOf(base, (width - 24.dp) / (1f + (count - 1) * (1f - overlap)))
+            }
+            val clusterWidth = if (soloBoss) memberSize else memberSize * (1f + (count - 1) * (1f - overlap))
             val arrival = remember { Animatable(0f) }
             LaunchedEffect(party.enteringFrom, party.leavingTo) { arrival.snapTo(0f); arrival.animateTo(1f, tween(450)) }
             val transition = rememberInfiniteTransition(label = "room enemies")
@@ -53,11 +62,17 @@ internal fun DesktopExplorationEnemyStage(services: DesktopAppServices, ui: Expl
                     translationX = when (direction?.lowercase()) { "west" -> -distance * 90.dp.toPx(); "east" -> distance * 90.dp.toPx(); else -> 0f }
                     translationY = when (direction?.lowercase()) { "north" -> -distance * 60.dp.toPx(); "south" -> distance * 60.dp.toPx(); else -> 0f }
                 }) {
-                party.enemies.forEachIndexed { index, enemyId ->
+                members.forEachIndexed { index, enemyId ->
                     val icon = ui.enemyIcons[enemyId]
                     val tierScale = explorationEnemySpriteScale(enemyPresentationTier(ui.enemyTiers[enemyId]))
-                    Box(Modifier.offset(x = memberSize * index * (1f - overlap)).size(memberSize)
-                        .zIndex((count - index).toFloat()).graphicsLayer {
+                    val standeeSize = if (soloBoss && index > 0) memberSize * 0.52f else memberSize
+                    val offset = when {
+                        !soloBoss -> memberSize * index * (1f - overlap)
+                        index == 0 -> 0.dp
+                        else -> (memberSize - standeeSize) / 2 + memberSize * if (index % 2 == 1) .38f else -.38f
+                    }
+                    Box(Modifier.offset(x = offset).size(standeeSize)
+                        .zIndex(if (soloBoss) index.toFloat() else (count - index).toFloat()).graphicsLayer {
                             scaleX = tierScale; scaleY = tierScale
                             if (!settings.disableScreenshake) translationY = sin(wave + index) * 2.dp.toPx()
                         }.explorationFeedback(!blocked && party.leavingTo == null, Color(0xFFFF8A80)).clickable(enabled = !blocked && party.leavingTo == null) { services.exploration.engageEnemy(enemyId) }

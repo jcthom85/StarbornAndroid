@@ -1,6 +1,6 @@
-# Focused Worlds 1–3 combat playtest
+# Focused Worlds 1–4 combat playtest
 
-Use **Load Game** to jump to a prepared checkpoint. Slots 1–10 hold the original campaign saves. Slots 18–20 are available for additional saves.
+Use **Load Game** to jump to a prepared checkpoint. Slots 1–10 hold the original campaign saves.
 
 | Slot | Fight / location | Starting crew | Start the fight |
 | --- | --- | --- | --- |
@@ -11,8 +11,13 @@ Use **Load Game** to jump to a prepared checkpoint. Slots 1–10 hold the origin
 | **15** | Rooftop security — Landing Pad Roof | Nova, Zeke, Orion and Gh0st | Select the Heavy Mech and Aero Drone party. After winning, try the west exit before returning for the Administrator. |
 | **16** | Administrator — Landing Pad Roof | Nova, Zeke, Orion and Gh0st | Select the Administrator after loading. Rooftop security is already defeated and the crew has rested. |
 | **17** | Corporate Assassin — Drone Wreck Roof | Nova, Zeke, Orion and Gh0st | Wait for the patrol countdown to start combat, tap the assassin to engage early, or leave before it expires. |
+| **18** | Magma Drone — Slag River | Nova, Zeke, Orion and Gh0st | Select the drone. Watch for its mark, then try Guard or interrupt it before Heat Burst. |
+| **19** | Welder Bot and Magma Drone — Conveyor Belt | Nova, Zeke, Orion and Gh0st | Select the paired encounter. Try hitting the Welder while its repair spool is spinning. |
+| **20** | Titan Walker — Titan Dock | Nova, Zeke, Orion and Gh0st | Select the Titan. On one attempt, destroy the charging system. On another, focus the chassis and use the exposed vents. |
 
 These are captured earned arrivals with their original inventory, gear, HP, XP and quest progress. Both rooftop fights use the World 3 main route. The patrol checkpoint comes from the completionist route, after the Fuel Bridge encounter.
+
+The World 4 saves come from an earned campaign run. The [exported World 4 saves](../../app/build/reports/world4-readiness/slots/) are ready for installation.
 
 Keep OP and instant victory off. Reload a checkpoint to compare another approach. Use a free slot or quicksave for experiments so the starting checkpoints remain reusable. Playing from a checkpoint can update the autosave, as usual.
 

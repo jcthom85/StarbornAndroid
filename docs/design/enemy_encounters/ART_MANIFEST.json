@@ -1,7 +1,7 @@
 {
-  "status": "planning only",
+  "status": "Titan and Administrator sprites integrated; remaining subjects are planned",
   "unique_subjects": 69,
-  "no_new_images_generated": true,
+  "no_new_images_generated": false,
   "subjects": [
     {
       "enemy_id": "faulted_loader",
@@ -283,9 +283,9 @@
       "world": "world_3",
       "name": "Administrator",
       "visual_brief": "Large suspended concierge intelligence with a smiling porcelain display.",
-      "current_review_candidate": "images/enemies/the_warden_combat.png",
+      "current_review_candidate": "images/enemies/administrator_boss_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/administrator_boss_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Original porcelain concierge command-frame art generated through the OpenAI Image API and integrated.",
       "additional_state_requirements": [
         "command preparation",
         "reserve depleted/shutdown"
@@ -375,9 +375,9 @@
       "world": "world_4",
       "name": "Titan Walker",
       "visual_brief": "Huge suspended siege chassis with clear sockets for four separate systems.",
-      "current_review_candidate": "images/enemies/the_warden_combat.png",
+      "current_review_candidate": "images/enemies/titan_walker_boss_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/titan_walker_boss_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Original Titan art integrated. The assembled portrait appears in exploration, and the separate combat sprites attach at their sockets.",
       "additional_state_requirements": [
         "four empty/destroyed socket treatments",
         "exposed vent state",
@@ -863,9 +863,9 @@
       "world": "world_4",
       "name": "Missile Battery",
       "visual_brief": "Wide twin missile pod, top-left socket.",
-      "current_review_candidate": null,
+      "current_review_candidate": "images/enemies/titan_missile_battery_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/titan_missile_battery_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Original detachable combat sprite integrated.",
       "additional_state_requirements": [
         "active/inactive treatment and clear attachment anchor"
       ],
@@ -876,9 +876,9 @@
       "world": "world_4",
       "name": "Cutting Arm",
       "visual_brief": "Long articulated saw arm, lower-left socket.",
-      "current_review_candidate": null,
+      "current_review_candidate": "images/enemies/titan_cutting_arm_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/titan_cutting_arm_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Original detachable combat sprite integrated.",
       "additional_state_requirements": [
         "active/inactive treatment and clear attachment anchor"
       ],
@@ -889,9 +889,9 @@
       "world": "world_4",
       "name": "Anchor Cannon",
       "visual_brief": "Short heavy grapnel barrel with cable spool, lower-right socket.",
-      "current_review_candidate": null,
+      "current_review_candidate": "images/enemies/titan_anchor_cannon_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/titan_anchor_cannon_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Original detachable combat sprite integrated.",
       "additional_state_requirements": [
         "active/inactive treatment and clear attachment anchor"
       ],
@@ -902,9 +902,9 @@
       "world": "world_4",
       "name": "Shield Projector",
       "visual_brief": "Tall forked emitter with a flat shield lens, top-right socket.",
-      "current_review_candidate": null,
+      "current_review_candidate": "images/enemies/titan_shield_projector_combat.png",
       "proposed_base_path": "world_assets/src/main/assets/images/enemies/titan_shield_projector_combat.png",
-      "decision": "Review candidate or generate only after behavior/layout acceptance. No image commissioned by this manifest.",
+      "decision": "Original detachable combat sprite integrated.",
       "additional_state_requirements": [
         "active/inactive treatment and clear attachment anchor"
       ],

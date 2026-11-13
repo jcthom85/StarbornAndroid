@@ -867,12 +867,14 @@ private fun DesktopCombatContent(
             Column(Modifier.offset(x = centerX).width(centerWidth).fillMaxHeight()
                 .background(Color(if (settings.highContrastMode) 0x9505070D else 0x2505070D)).padding(start = 12.dp, end = 12.dp, bottom = 44.dp, top = if (wide) 12.dp else 64.dp)) {
 DesktopBattleFormation(enemies, services, Modifier.fillMaxWidth().weight(if (wide) .58f else .64f), true,
-                    sprite = { id -> runtime.enemies.firstOrNull { it.id == runtime.enemyTypeId(id) }?.portrait },
+                    sprite = { id -> runtime.enemies.firstOrNull { it.id == runtime.enemyTypeId(id) }?.let { enemy ->
+                        enemy.sprite.firstOrNull()?.takeIf { it.isNotBlank() } ?: enemy.portrait
+                    } },
                     enemySize = { id -> runtime.enemies.firstOrNull { it.id == runtime.enemyTypeId(id) }?.combatSize ?: "medium" },
                     enemyWidth = { id -> runtime.enemies.firstOrNull { it.id == runtime.enemyTypeId(id) }?.combatWidth ?: 1f },
                     composite = { id -> runtime.enemies.firstOrNull { it.id == runtime.enemyTypeId(id) }?.composite },
                     selectedId = if (targetAction != null) selectedTarget else focusedEnemies.firstOrNull(), validTargets = validIds, targeting = targetAction != null,
-                    meters = meters, intents = intents, feedback = feedback, cues = cues, lungeStyle = lungeStyle,
+                    meters = meters, intents = intents, feedback = feedback, cues = cues, lungeStyle = lungeStyle, authoredState = battle,
                     lungeActor = lungeActor, lungeToken = lungeToken, missActor = missActor, missToken = missToken, battleHeight = battlefieldHeight, opposingCount = enemies.size,
                     onHover = { hoveredEnemyId = it },
                     onSelect = { id ->
@@ -885,7 +887,7 @@ DesktopBattleFormation(enemies, services, Modifier.fillMaxWidth().weight(if (wid
                     if (com.example.starborn.ui.combat.hasAuthoredPreparation(battle))
                         com.example.starborn.ui.combat.AuthoredEncounterPanel(battle, runtime.enemies,
                             runtime::focusEnemyTarget, compact = true, skillName = runtime::skillDisplayName)
-                    else com.example.starborn.ui.combat.AuthoredEncounterStatus(battle, runtime.enemies)
+                    else com.example.starborn.ui.combat.AuthoredEncounterStatus(battle)
                 }
                 if (!wide && targetAction != null) Text(instruction ?: "Choose a target", color = Color(0xFF63E6FF), style = MaterialTheme.typography.labelMedium)
 DesktopBattleFormation(party, services, Modifier.fillMaxWidth().weight(if (wide) .42f else .36f), false,

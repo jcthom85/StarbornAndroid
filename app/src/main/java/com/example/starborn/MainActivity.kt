@@ -1,6 +1,7 @@
 package com.example.starborn
 
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -16,6 +17,12 @@ import com.example.starborn.navigation.NavigationHost
 import com.example.starborn.ui.theme.StarbornTheme
 
 class MainActivity : ComponentActivity() {
+
+    internal var explorationMovementKeys: ((KeyEvent) -> Boolean)? = null
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        return explorationMovementKeys?.invoke(event) == true || super.dispatchKeyEvent(event)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

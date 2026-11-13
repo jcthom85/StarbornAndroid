@@ -4747,6 +4747,11 @@ class ExplorationController(
             val leaderId = partyIds.firstOrNull().orEmpty()
             if (leaderId.isBlank()) return@forEach
             val leaderEnemy = enemyById[leaderId]?.forEncounterRoom(room.id)
+            if (partyIds.size == 1 && leaderEnemy?.authored?.linkedActions?.isNotEmpty() == true &&
+                !leaderEnemy.portrait.isNullOrBlank()) {
+                result[leaderId] = EnemyIconUi(spritePath = leaderEnemy.portrait)
+                return@forEach
+            }
             val leaderSprite = leaderEnemy?.let { enemySpritePath(it) }
                 ?: "images/enemies/${leaderId}_combat.png"
             val partyEnemies = partyIds.mapNotNull { enemyById[it] }

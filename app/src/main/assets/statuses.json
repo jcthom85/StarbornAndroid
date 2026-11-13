@@ -257,5 +257,12 @@
     "default_duration": 2,
     "defense_multiplier": 0.7,
     "target": "self"
+  },
+  {
+    "id": "foundry_titan_barrier",
+    "name": "Chassis Barrier",
+    "default_duration": 2,
+    "incoming_multiplier": 0.65,
+    "target": "self"
   }
 ]

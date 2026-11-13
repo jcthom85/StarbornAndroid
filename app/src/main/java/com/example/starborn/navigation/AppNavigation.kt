@@ -395,6 +395,7 @@ internal fun CampaignNavigationHost(
                     hubAreaEntry = pendingAreaEntry,
                     onHubAreaEntryFinished = { pendingAreaEntry = null },
                     isTestSession = services.isTestSession,
+                    combatTransitionVisible = combatTransitionVisible,
                     onDemoRootBack = onDemoRootBack,
                     viewModel = explorationViewModel,
                     audioCuePlayer = services.audioCuePlayer,

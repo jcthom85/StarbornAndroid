@@ -105,6 +105,47 @@ class AuthoredEncounterRuntimeTest {
             assertEquals(listOf("prototype_administrator"),vm.encounterEnemyIds)
         } finally { vm.close() }
     }
+
+    @Test fun titanPartsCanBeDisabledIndependentlyAndDisarmedChassisKeepsItsWarnedStomp() {
+        val boss = "titan_walker_boss"
+        val missile = "titan_missile_battery"
+        val parts = listOf(missile, "titan_cutting_arm", "titan_anchor_cannon", "titan_shield_projector")
+        val (vm, _) = create(listOf(boss))
+        try {
+            assertEquals(listOf(boss) + parts, vm.enemyCombatantIds)
+            until(vm) { vm.combatState!!.authored.preparations[boss]?.sourceId == missile }
+            assertTrue(parts.all { vm.atbMeters.value[it] == 0f })
+            CombatPlaytestBridge.isOpMode = true
+            novaAttack(vm, missile)
+            assertFalse(vm.combatState!!.combatants.getValue(missile).isAlive)
+            assertTrue(vm.combatState!!.authored.preparations.isEmpty())
+            parts.drop(1).forEach { part ->
+                novaAttack(vm, part)
+                assertNull(vm.combatState!!.outcome)
+            }
+            until(vm) { vm.combatState!!.authored.preparations[boss]?.skillId == "foundry_titan_stomp" }
+            assertEquals(boss, vm.combatState!!.authored.preparations.getValue(boss).sourceId)
+            novaAttack(vm, boss)
+            val reward = (vm.combatState!!.outcome as CombatOutcome.Victory).rewards
+            assertEquals(CombatReward(600, 3, 400, listOf(LootDrop("power_cell", 3))), reward)
+            assertEquals(listOf(boss), vm.encounterEnemyIds)
+        } finally { vm.close() }
+    }
+
+    @Test fun defeatingTitanShutsDownAttachedSystemsInAMixedEncounter() {
+        val boss = "titan_walker_boss"
+        val (vm, _) = create(listOf("the_iron_warden", boss))
+        try {
+            CombatPlaytestBridge.isOpMode = true
+            novaAttack(vm, boss)
+            val battle = vm.combatState!!
+            assertTrue(battle.combatants.getValue("the_iron_warden").isAlive)
+            assertTrue(vm.enemyCombatantIds.filter { it != "the_iron_warden" }.none {
+                battle.combatants.getValue(it).isAlive
+            })
+            assertNull(battle.outcome)
+        } finally { vm.close() }
+    }
     @Test fun spireAdministratorDeploysThreeReservesAcrossEscortLossesAndShutsDownSurvivors() {
         val boss = "administrator_boss"
         val (vm, _) = create(listOf(boss, "aero_drone"))

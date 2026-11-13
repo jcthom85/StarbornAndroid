@@ -64,6 +64,8 @@ Optional supply fights include **Coolant Spillway** (two guaranteed **Pure Iron*
 
 The **Slag River** Magma Drone holds the east crossing to **Waste Intake**. Defeat it before you first head east. You can still retreat west to Obsidian Shelf.
 
+The drone marks a crew member before Heat Burst. Guard that character or interrupt the drone, then attack while it vents.
+
 ## 3. Read the river crossing, begin Sabotage and open the optional smelter
 
 17. From **Obsidian Shelf**, go **east** to **Slag River** (`foundry_slag_river`).
@@ -510,7 +512,7 @@ The **Slag River** Magma Drone holds the east crossing to **Waste Intake**. Defe
 
 213. At **Titan Dock**, use **commander rylos**. Finish the confrontation so the actual showdown is credited. Merely entering Titan Dock is not that conversation.
 
-214. Defeat the **Titan Walker** encounter using the current party’s abilities and supplies. Check **Meltdown → defeat Titan Walker**/the victory milestone afterward. An incomplete confrontation or retreat does not satisfy it. Let victory feedback finish before using other controls.
+214. Defeat the **Titan Walker**. Its **Missile Battery**, **Cutting Arm**, **Anchor Cannon** and **Shield Projector** can each be targeted. Destroy a charging system to cancel its attack, or focus the chassis to end the fight. Use its exposed vents after heavy attacks. Check **Meltdown → defeat Titan Walker** when the chassis falls, then let victory feedback finish.
 
 215. From **Titan Dock**, go **north** to **Escape Catwalk** (`foundry_escape_catwalk`).
 

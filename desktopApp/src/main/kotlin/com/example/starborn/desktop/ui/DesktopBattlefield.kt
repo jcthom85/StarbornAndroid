@@ -27,6 +27,7 @@ import androidx.compose.material.icons.rounded.Bolt
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.zIndex
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
@@ -61,9 +62,9 @@ internal fun DesktopBattleFormation(
         val isComposite = enemySide && parts.isNotEmpty() && parts.values.all { it != null } &&
             parts.values.map { it?.group }.distinct().size == 1
         val hud = if (isComposite) 112f else 0f
-        if (isComposite) Box(Modifier.fillMaxWidth().align(Alignment.TopCenter)) {
+        if (isComposite) Box(Modifier.fillMaxWidth().align(Alignment.TopCenter).zIndex(2f)) {
             com.example.starborn.ui.combat.LinkedEnemyTargets(
-                com.example.starborn.domain.combat.CombatState(emptyList(), 0, members.associateBy { it.combatant.id }),
+                authoredState ?: com.example.starborn.domain.combat.CombatState(emptyList(), 0, members.associateBy { it.combatant.id }),
                 members.map { it.combatant.id }, setOfNotNull(selectedId), onSelect)
         }
         val placements = if (isComposite) {
@@ -71,11 +72,13 @@ internal fun DesktopBattleFormation(
             val extentX = layouts.maxOf { kotlin.math.abs(it.offsetX) + it.widthScale / 2f }.coerceAtLeast(.5f) * 2
             val extentY = layouts.maxOf { kotlin.math.abs(it.offsetY) + it.heightScale / 2f }.coerceAtLeast(.5f) * 2
             val unit = minOf(maxWidth.value / extentX, (maxHeight.value - hud).coerceAtLeast(1f) / extentY) * .90f
+            val titan = layouts.any { it.group == "titan_walker" }
             members.map { member ->
                 val part = requireNotNull(parts[member.combatant.id])
                 FormationPlacement(member.combatant.id,
                     maxWidth.value / 2 + unit * (part.offsetX - part.widthScale / 2),
-                    hud + (maxHeight.value - hud) / 2 + unit * (part.offsetY - part.heightScale / 2),
+                    (if (titan) hud - 8f + unit * extentY / 2 else hud + (maxHeight.value - hud) / 2) +
+                        unit * (part.offsetY - part.heightScale / 2),
                     unit * part.widthScale, unit * part.heightScale, 0f)
             }
         } else planBattleFormation(
@@ -121,7 +124,9 @@ private fun DesktopBattleFigure(
     val wave by idle.animateFloat(0f, 6.28318f, infiniteRepeatable(tween(3000, easing = LinearEasing)), label = "breathing")
     val phase = (state.combatant.id.hashCode() % 100) / 100f * 6.28318f
     val breath = sin(wave + phase)
-    val shielded = state.statusEffects.any { it.id.lowercase() in setOf("invulnerable", "shield", "guard", "defend") }
+    val shielded = state.statusEffects.any {
+        it.id.lowercase() in setOf("invulnerable", "shield", "guard", "defend", "foundry_titan_barrier")
+    }
     val lifeAlpha by animateFloatAsState(if (state.isAlive) 1f else if (enemySide) 0f else .65f, tween(850), label = "knockout")
     val isBroken = enemySide && state.isAlive && state.breakTurns > 0
     val displayedStability = remember(state.combatant.id) { Animatable(state.stability.toFloat()) }

@@ -1053,7 +1053,9 @@ fun CombatScreen(
                 (maxHeight < 640.dp || (maxHeight < 800.dp && (enemies.size > 3 || density.fontScale >= 1.2f)))
             val crewPortraitSize = if (compactCrew) 48.dp else if (maxHeight < 640.dp) 64.dp else 80.dp
             val crewSingleRow = maxWidth >= 600.dp
-            val scrollBattle = maxHeight < 640.dp && enemies.firstOrNull()?.composite?.group?.let { it != "driller" } == true
+            val multipart = enemies.firstOrNull()?.composite?.group?.let { it != "driller" } == true
+            val titanFormation = enemies.firstOrNull()?.composite?.group == "titan_walker"
+            val scrollBattle = multipart && maxHeight < 720.dp
             val battleScrollState = rememberScrollState()
             val contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
             Column(
@@ -1097,13 +1099,19 @@ fun CombatScreen(
                                 viewModel::onCombatTutorialContinue, viewModel::skipCombatTutorial,
                                 Modifier.testTag("combat-tutorial-guidance"))
                         }
-                        if (state != null && enemies.firstOrNull()?.composite?.group != null &&
-                            enemies.firstOrNull()?.composite?.group != "driller") {
-                            com.example.starborn.ui.combat.LinkedEnemyTargets(state, enemyCombatantIds,
-                                selectedEnemyIds, { handleEnemyTap(it) })
+                        if (multipart) {
+                            com.example.starborn.feature.combat.ui.components.MultipartEnemyStatus(
+                                state, enemyCombatantIds, activeId, selectedEnemyIds, atbMeters, accentColor,
+                                modifier = Modifier.zIndex(2f),
+                                onEnemyTap = ::handleEnemyTap,
+                                onEnemyLongPress = { if (!combatLocked) viewModel.inspectEnemy(it) }
+                            )
                         }
                         com.example.starborn.feature.combat.ui.components.EnemyFormationViewport(
-                            Modifier.fillMaxWidth().then(if (scrollBattle) Modifier.height(140.dp) else Modifier.weight(1f)).testTag("combat-enemies")
+                            Modifier.fillMaxWidth().zIndex(1f)
+                                .then(if (scrollBattle) Modifier.height(280.dp) else Modifier.weight(1f))
+                                .testTag("combat-enemies"),
+                            topOverlap = if (titanFormation) 8.dp else 0.dp
                         ) {
                           EnemyRoster(
                             enemies = enemies,
@@ -1163,7 +1171,7 @@ fun CombatScreen(
                         )
                        }
                       }
-                      com.example.starborn.ui.combat.AuthoredEncounterStatus(state, enemies)
+                      com.example.starborn.ui.combat.AuthoredEncounterStatus(state)
                     }
                 }
                 Spacer(Modifier.height(8.dp))

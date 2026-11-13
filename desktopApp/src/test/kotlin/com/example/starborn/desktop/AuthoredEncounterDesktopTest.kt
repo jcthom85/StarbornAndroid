@@ -26,7 +26,7 @@ class AuthoredEncounterDesktopTest {
     fun compositeTargetsStayAccessibleAtPortraitAndWideSizes() {
         val dir=Files.createTempDirectory("authored-encounter-desktop").toFile()
         val s=DesktopAppServices(dir,RecordingAudioDriver())
-        val ids=listOf("prototype_titan","prototype_missile","prototype_cutter","prototype_anchor","prototype_projector")
+        val ids=listOf("titan_walker_boss","titan_missile_battery","titan_cutting_arm","titan_anchor_cannon","titan_shield_projector")
         var wide by mutableStateOf(false)
         try {
             runBlocking { s.userSettingsStore.setTutorialsEnabled(false) }
@@ -40,7 +40,7 @@ class AuthoredEncounterDesktopTest {
             compose.setContent { DesktopStarbornTheme(s) {
                 CompositionLocalProvider(LocalDesktopForeground provides false) {
                     Box(Modifier.size(if(wide) 1024.dp else 390.dp,768.dp)) {
-                        DesktopCombatScreen(s,ids,{},{},{})
+                        DesktopCombatScreen(s,listOf(ids.first()),{},{},{})
                     }
                 }
             } }
@@ -80,7 +80,7 @@ class AuthoredEncounterDesktopTest {
                     Box(Modifier.fillMaxWidth().height(24.dp),contentAlignment=Alignment.Center) {
                         if(com.example.starborn.ui.combat.hasAuthoredPreparation(state))
                             com.example.starborn.ui.combat.AuthoredEncounterPanel(state,emptyList(),{focused=it},compact=true,skillName={"Hunting lunge"})
-                        else com.example.starborn.ui.combat.AuthoredEncounterStatus(state,emptyList())
+                        else com.example.starborn.ui.combat.AuthoredEncounterStatus(state)
                     }
                     DesktopBattleFormation(state.combatants.values.filter { it.combatant.side==CombatSide.PLAYER },services,
                         Modifier.fillMaxWidth().weight(.4f),false,sprite={ "images/characters/emotes/${it}_cool.png" },

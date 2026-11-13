@@ -252,7 +252,8 @@ class OpeningCombatRuntimeTest {
                     assets.loadCharacters().single { it.id == id }.skills
                 assertEquals("Earned skills for $id", expected, vm.skillsForPlayer(id).map { it.id }.toSet())
             }
-            assertEquals(listOf("titan_walker_boss"), vm.enemies.map { it.id })
+            assertEquals(listOf("titan_walker_boss"), vm.encounterEnemyIds)
+            assertEquals(5, vm.enemies.size)
         } finally { vm.viewModelScope.cancel() }
     }
 

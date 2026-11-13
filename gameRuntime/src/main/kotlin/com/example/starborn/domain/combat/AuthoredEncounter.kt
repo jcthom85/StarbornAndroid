@@ -25,7 +25,10 @@ data class AuthoredEncounterState(
 object AuthoredEncounterRules {
     fun linkedOwner(id: String, definitions: Map<String, Enemy>): String? =
         definitions[id]?.authored?.linkedTo?.let { canonical ->
-            definitions.entries.singleOrNull { it.value.id == canonical }?.key
+            val candidates = definitions.filterValues { it.id == canonical }
+            candidates.keys.singleOrNull() ?: candidates.keys.firstOrNull {
+                it.substringAfter('#', "") == id.substringAfter('#', "")
+            }
         }
 
     fun sourceFor(actor: String, skill: String, definitions: Map<String, Enemy>): String? {

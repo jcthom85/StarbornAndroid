@@ -867,6 +867,28 @@ class LegalRouteCampaignRunnerTest {
     }
 
     @Test
+    fun earnedFoundryRouteVerifiesTitanAndExportsReviewSaves() {
+        useProductionCrewRules = true
+        val source = WorldAssetDataSource(AssetJsonReader(DesktopAssetProvider(
+            listOf(assets, File(root, "app/src/debug/assets"))), moshi))
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope,
+            initialState = requireNotNull(source.loadWorld1Checkpoint("w1_mq05")))
+        try {
+            h.settle()
+            val agent = LegalCampaignAgent(h)
+            agent.finishWorld1Launch()
+            agent.playWorld2()
+            agent.playWorld3()
+            agent.playWorld4(exportReviewSaves = true)
+            val arrival = h.saveSlot(7)
+            assertEquals("orbital_executive_dock", arrival.roomId)
+            assertTrue(arrival.completedQuests.containsAll((16..20).map { "w4_mq$it" }))
+            assertEquals(arrival, h.loadSlot(7))
+            assertTrue(assistance.isEmpty())
+        } finally { h.close() }
+    }
+
+    @Test
     fun productionWorlds456CompletionistRoutesVerifyBranchesAndCredits() {
         useProductionCrewRules = true
         val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
@@ -2243,10 +2265,14 @@ class LegalRouteCampaignRunnerTest {
             harness.restAtVisibleStop()
         }
 
-        fun playWorld4(completionist: Boolean = false, alternate: Boolean = false) {
+        fun playWorld4(completionist: Boolean = false, alternate: Boolean = false, exportReviewSaves: Boolean = false) {
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w4_mq16"))
             performAction("w4_mq16_land_shelf")
             navigateLegalPath("foundry_slag_river")
+            if (exportReviewSaves) {
+                harness.exportCombatReviewSave("world_4", 18, "magma_drone")
+                harness.playPublicEncounter("magma_drone")
+            }
             performAction("w4_mq16_cross_slag_river")
             navigateLegalPath("foundry_waste_intake")
             performAction("w4_mq16_hack_cooling_vents")
@@ -2280,6 +2306,10 @@ class LegalRouteCampaignRunnerTest {
                 world3RewardObservations += "Foundry return corridor passed: real Assembly-to-Slag Pits-to-Assembly walk, save/reload; delayed early quests and Crucible=$alternate."
             }
             navigateLegalPath("foundry_conveyor_belt")
+            if (exportReviewSaves) {
+                harness.exportCombatReviewSave("world_4", 19, "welder_bot")
+                harness.playPublicEncounter("welder_bot")
+            }
             performAction("w4_mq18_navigate_conveyors")
             navigateLegalPath("foundry_conditioning_chamber")
             performAction("w4_mq18_defeat_prototypes")
@@ -2310,8 +2340,26 @@ class LegalRouteCampaignRunnerTest {
             navigateLegalPath("foundry_titan_dock")
             performAction("w4_mq20_confront_rylos_scene")
             finishDialogue("correct")
+            if (exportReviewSaves) {
+                harness.exportCombatReviewSave("world_4", 20, "titan_walker_boss")
+                harness.explorationVm.travel("north")
+                harness.settle()
+                assertEquals("foundry_titan_dock", harness.sessionStore.state.value.roomId)
+                harness.explorationVm.dismissBlockedPrompt()
+                harness.settle()
+            }
             harness.playPublicEncounter("titan_walker_boss")
             assertTrue("Real Titan victory must advance the quest", "ms_w4_titan_defeated" in harness.sessionStore.state.value.completedMilestones)
+            if (exportReviewSaves) {
+                harness.loadCombatReviewSave("world_4", 20)
+                harness.playPublicEncounter("titan_walker_boss", seed = 41, preferChassis = true)
+                harness.saveSlot(8); harness.loadSlot(8)
+                assertFalse("The Titan stays cleared after reload",
+                    "titan_walker_boss" in harness.explorationVm.uiState.value.enemies)
+                travelDirection("north")
+                assertEquals("foundry_escape_catwalk", harness.sessionStore.state.value.roomId)
+                travelDirection("south")
+            }
             performAction("w4_mq20_escape_launch")
             assertEquals("Escape must wait for both stolen components", "foundry_titan_dock", harness.sessionStore.state.value.roomId)
             assertTrue("Unprepared launch must not finish the quest", "w4_mq20" in harness.sessionStore.state.value.activeQuests)
@@ -2909,19 +2957,32 @@ class LegalRouteCampaignRunnerTest {
             )
         }
 
-        fun exportSpireReviewSave(slot: Int, enemyId: String) = runBlocking {
+        private fun combatReviewSaves(worldId: String) =
+            GameSessionPersistence(File("build/reports/${worldId.replace("_", "")}-readiness/slots").apply { mkdirs() })
+
+        fun exportSpireReviewSave(slot: Int, enemyId: String) = exportCombatReviewSave("world_3", slot, enemyId)
+
+        fun exportCombatReviewSave(worldId: String, slot: Int, enemyId: String) = runBlocking {
             val state = sessionStore.state.value
-            assertEquals("world_3", state.worldId)
+            assertEquals(worldId, state.worldId)
             assertTrue(enemyId in explorationVm.uiState.value.enemies)
             assertTrue(state.pendingBattleJson.isBlank())
             assertNull(state.battleCheckpoint)
-            val output = File("build/reports/world3-readiness/slots").apply { mkdirs() }
-            val persistence = GameSessionPersistence(output)
+            val persistence = combatReviewSaves(worldId)
             persistence.writeSlot(slot, state)
             assertEquals(state, persistence.readSlot(slot))
         }
 
-        fun playPublicEncounter(enemyId: String, retreat: Boolean = false, pending: Boolean = false, seed: Int = 17, verifyIntercept: Boolean = false) {
+        fun loadCombatReviewSave(worldId: String, slot: Int) {
+            val saved = runBlocking { requireNotNull(combatReviewSaves(worldId).readSlot(slot)) }
+            runBlocking { persistence.writeSlot(slot, saved) }
+            assertEquals(saved, loadSlot(slot))
+        }
+
+        fun playPublicEncounter(
+            enemyId: String, retreat: Boolean = false, pending: Boolean = false, seed: Int = 17,
+            verifyIntercept: Boolean = false, preferChassis: Boolean = false
+        ) {
             val room = requireNotNull(sessionStore.state.value.roomId)
             if (!pending && enemyId in setOf("the_iron_warden", "stalker_vine", "shard_hound")) {
                 val snapshot=sessionStore.state.value
@@ -3034,7 +3095,7 @@ class LegalRouteCampaignRunnerTest {
                             combat.useSkill(support)
                             continue
                         }
-                        val target = if (room.startsWith("source")) {
+                        val target = if (preferChassis) enemyId else if (room.startsWith("source")) {
                             state.combatants.values.filter { it.combatant.side == com.example.starborn.domain.combat.CombatSide.ENEMY && it.isAlive }
                                 .minBy { (if (it.statusEffects.any { s -> s.id in setOf("stun", "freeze") }) 500 else 0) + it.hp - it.combatant.stats.speed }.combatant.id
                         } else {
@@ -3042,15 +3103,18 @@ class LegalRouteCampaignRunnerTest {
                                 .minBy { it.hp }.combatant.id
                         }
                         if ((prototypeBranch != null || useProductionCrewRules) && actor == "nova") {
-                            val preferred = if (livingEnemies.size > 1) "nova_scatter_charge" else "nova_breaker_bolt"
+                            val useAreaAttack = !preferChassis && livingEnemies.size > 1
+                            val preferred = if (useAreaAttack) "nova_scatter_charge" else "nova_breaker_bolt"
                             val move = combat.skillsForPlayer(actor).firstOrNull { it.id == preferred && combat.canUseSkill(actor, it) }
                             if (move != null) {
-                                combat.useSkill(move, if (livingEnemies.size > 1) livingEnemies.map { it.combatant.id } else listOf(target))
+                                combat.useSkill(move, if (useAreaAttack) livingEnemies.map { it.combatant.id } else listOf(target))
                                 prototypeSkillsUsed += preferred
                                 continue
                             }
                         }
                         val availableSkills = combat.skillsForPlayer(actor).filter {
+                            (!preferChassis || combat.targetRequirementFor(it) ==
+                                com.example.starborn.feature.combat.viewmodel.TargetRequirement.ENEMY) &&
                             (it.id in setOf("nova_arc_tether", "nova_blast_wave", "nova_hydraulic_kick", "zeke_shatter_blow", "orion_prism_lance", "gh0st_headshot") ||
                                 ((room.startsWith("orbital") || room.startsWith("deep") || room.startsWith("source")) && it.id in setOf("nova_cryo_vent", "zeke_overload_fists", "gh0st_system_crash", "gh0st_venom_edge")) ||
                                 (room.startsWith("source") && it.id == "source_art_stasis")) && combat.canUseSkill(actor, it)
@@ -3130,6 +3194,22 @@ class LegalRouteCampaignRunnerTest {
                     assertTrue(reward.drops.any { it.itemId == "power_cell" && it.quantity >= 2 })
                     assertTrue((state.authored.reservesUsed["administrator_boss"] ?: 0) <= 3)
                     assertTrue(state.combatants.values.none { it.isAlive && it.combatant.side == com.example.starborn.domain.combat.CombatSide.ENEMY })
+                }
+                if (enemyId == "titan_walker_boss") {
+                    assertEquals(listOf(enemyId), combat.encounterEnemyIds)
+                    assertEquals(600, reward.xp)
+                    assertEquals(400, reward.credits)
+                    assertEquals(3, reward.ap)
+                    assertEquals(listOf(com.example.starborn.domain.combat.LootDrop("power_cell", 3)), reward.drops)
+                    if (preferChassis) {
+                        val defeatedParts = state.log.filterIsInstance<com.example.starborn.domain.combat.CombatLogEntry.Damage>()
+                            .map { it.targetId }.filter { it.startsWith("titan_") && it != enemyId }
+                        assertTrue("Chassis strategy must leave at least one system untouched", defeatedParts.distinct().size < 4)
+                    }
+                    File("build/reports/world4-readiness/$enemyId-$seed-combat.txt").apply {
+                        parentFile!!.mkdirs()
+                        writeText(publicCombats.last() + "\n" + state.log.joinToString("\n") + "\nOutcome: ${state.outcome}\n")
+                    }
                 }
                 if (room.startsWith("spire_")) File("build/reports/world3-readiness/$room-$enemyId-$seed-combat.txt").apply {
                     parentFile!!.mkdirs()

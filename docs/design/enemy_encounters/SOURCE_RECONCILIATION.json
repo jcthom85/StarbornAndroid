@@ -4,13 +4,13 @@
   "sources": {
     "enemies": {
       "baseline_sha256": "0ec9871c9de2262e7368bfef317ce0f79888776250c06afc80cae9b11b4829ea",
-      "implemented_sha256": "9e0fbb0e9aa0e5be99b2d63784cf4a854177a8568a313c987a2c439b2aa7f464",
-      "reason": "Adds authored Spire combat patterns, Concierge Relay and Administrator Interdictor to the implemented Worlds 1\u20132 definitions."
+      "implemented_sha256": "478150445a4821ddb3529e91d6d09c66231b55042855dee68fdffd1a2c6abf71",
+      "reason": "Adds authored Spire combat patterns, Concierge Relay and Administrator Interdictor to the implemented Worlds 1\u20132 definitions. Adds the Titan Walker systems and authored Foundry drone, golem, welder and trooper patterns. Binds the original Titan art and aligns the four weapons to their sockets. Assigns original Administrator boss artwork."
     },
     "skills": {
       "baseline_sha256": "3fe9d0f064f687cc7e780e65d0f547e31ffe52047bb0ac0df9cdc0ac1b5e438f",
-      "implemented_sha256": "7c21726c888bd766bb0e5ba3c9e5ce71246b370811ce361b267e5f0312fe3682",
-      "reason": "Adds authored Spire skills and recovery actions to the Warden and Sector 9 additions."
+      "implemented_sha256": "b09c5109e591b27f90c35fb413fec22f02248101da60e35e281f8dd007731d90",
+      "reason": "Adds authored Spire skills and recovery actions to the Warden and Sector 9 additions. Adds Titan weapon, cooling and fallback actions and the Magma Drone charge and vent actions."
     },
     "rooms": {
       "baseline_sha256": "eb540ae416d920e3b3ffe29538ad3caa3b21fe32ee8a65f49804fafbcc8c80ff",
@@ -31,8 +31,8 @@
   "supplemental_sources": {
     "statuses": {
       "baseline_sha256": "a42ecf6bc1c0daf55a4510e15a80820d08380b7a6f5dc59ef6cb2cd28d51b07c",
-      "implemented_sha256": "9a1162e1036d08f23e47ab60e97d04b77686dc5690042c50bb291f1c6a2758e3",
-      "reason": "Adds Sector 9 shelter/exposure and Spire shield order/exposed vents statuses."
+      "implemented_sha256": "f57ce7e817bf65eae8a5d5b93b408136cb487cc0cd57a037729ddcfe42391688",
+      "reason": "Adds Sector 9 shelter/exposure and Spire shield order/exposed vents statuses. Adds the Titan chassis barrier."
     }
   },
   "reports": [

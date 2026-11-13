@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.*
@@ -30,6 +31,133 @@ import org.junit.Test
 
 class ExplorationNavigationInstrumentedTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
+
+    @Test fun administratorCentersAboveItsEscortAndEitherSpriteStartsTheirSharedParty() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val services = compose.runOnUiThread {
+            AppServices(IsolatedProgressionContext(context), isTestSession = true)
+        }
+        lateinit var vm: ExplorationViewModel
+        var opponents by mutableStateOf<List<String>>(emptyList())
+        var hubReturns = 0
+        try {
+            runBlocking {
+                services.userSettingsStore.setTutorialsEnabled(false)
+                services.userSettingsStore.setEnvironmentalEffectsQuality(
+                    com.example.starborn.data.local.EnvironmentalEffectsQuality.OFF
+                )
+            }
+            compose.runOnUiThread {
+                assertTrue(services.debugScenarioError, services.startDebugScenario("w3_lockdown_escape"))
+                services.clearDebugBootstrap()
+                services.sessionStore.restore(services.sessionStore.state.value.copy(
+                    roomId = "spire_landing_pad_roof",
+                    roomStates = services.sessionStore.state.value.roomStates +
+                        ("spire_landing_pad_roof" to mapOf("encounter_cleared:aero_drone|heavy_mech" to true))
+                ))
+                vm = ExplorationViewModelFactory(services).create(ExplorationViewModel::class.java)
+            }
+            compose.waitUntil(15_000) {
+                vm.uiState.value.currentRoom?.id == "spire_landing_pad_roof" && !vm.uiState.value.isLoading
+            }
+            compose.runOnUiThread {
+                services.tutorialManager.cancelAllScheduled()
+                services.promptManager.discardMatching { true }
+            }
+            compose.setContent {
+                StarbornTheme {
+                    ExplorationScreen(
+                        vm, services.audioCuePlayer, services.uiEventBus, services.questPresentations,
+                        modifier = Modifier.testTag("administrator-exploration-room"),
+                        onEnemySelected = { opponents = it },
+                        onReturnToHub = { hubReturns++ },
+                        isTestSession = true
+                    )
+                }
+            }
+            val boss = compose.onNodeWithTag("engage-administrator_boss")
+            compose.runOnUiThread {
+                vm.dismissNarration()
+                vm.dismissEventAnnouncement()
+            }
+            compose.waitForIdle()
+            val escort = compose.onNodeWithTag("engage-aero_drone")
+            val bounds = boss.assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+            val drone = escort.assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+            val room = compose.onNodeWithTag("administrator-exploration-room").fetchSemanticsNode().boundsInRoot
+            assertEquals(room.center.x, bounds.center.x, 2f)
+            assertTrue(drone.center.x > bounds.center.x)
+            assertTrue(drone.width < bounds.width * .6f)
+            compose.onNodeWithContentDescription("Upper City map").assertIsDisplayed()
+                .performTouchInput { click() }
+            compose.runOnIdle {
+                assertEquals("The map control must win taps where the boss overlaps it", 1, hubReturns)
+                assertTrue(opponents.isEmpty())
+            }
+            val screenshot = java.io.File(compose.activity.getExternalFilesDir(null), "administrator-exploration.png")
+            val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+            screenshot.outputStream().use { bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }
+            bitmap.recycle()
+            escort.performClick()
+            compose.waitUntil(5_000) { opponents.isNotEmpty() }
+            assertEquals(listOf("administrator_boss", "aero_drone"), opponents)
+        } finally {
+            compose.runOnUiThread { runCatching { vm.runtime.close() }; services.release() }
+        }
+    }
+
+    @Test fun titanFillsTheCenterOfExplorationAndStartsTheSameEncounter() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val services = compose.runOnUiThread {
+            AppServices(IsolatedProgressionContext(context), isTestSession = true)
+        }
+        lateinit var vm: ExplorationViewModel
+        var opponents by mutableStateOf<List<String>>(emptyList())
+        try {
+            runBlocking {
+                services.userSettingsStore.setTutorialsEnabled(false)
+                services.userSettingsStore.setEnvironmentalEffectsQuality(
+                    com.example.starborn.data.local.EnvironmentalEffectsQuality.OFF
+                )
+            }
+            compose.runOnUiThread {
+                assertTrue(services.debugScenarioError, services.startDebugScenario("boss_titan_walker"))
+                services.clearDebugBootstrap()
+                vm = ExplorationViewModelFactory(services).create(ExplorationViewModel::class.java)
+            }
+            compose.waitUntil(15_000) {
+                vm.uiState.value.currentRoom?.id == "foundry_titan_dock" && !vm.uiState.value.isLoading
+            }
+            compose.runOnUiThread {
+                services.tutorialManager.cancelAllScheduled()
+                services.promptManager.discardMatching { true }
+            }
+            compose.setContent {
+                StarbornTheme {
+                    ExplorationScreen(
+                        vm, services.audioCuePlayer, services.uiEventBus, services.questPresentations,
+                        modifier = Modifier.testTag("titan-exploration-room"),
+                        onEnemySelected = { opponents = it },
+                        isTestSession = true
+                    )
+                }
+            }
+            val titan = compose.onNodeWithTag("engage-titan_walker_boss")
+            val bounds = titan.assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+            val room = compose.onNodeWithTag("titan-exploration-room").fetchSemanticsNode().boundsInRoot
+            assertEquals(room.center.x, bounds.center.x, 2f)
+            assertTrue("Titan should occupy most of the room width", bounds.width >= room.width * 0.62f)
+            val screenshot = java.io.File(compose.activity.getExternalFilesDir(null), "titan-exploration.png")
+            val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+            screenshot.outputStream().use { bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it) }
+            bitmap.recycle()
+            titan.performClick()
+            compose.waitUntil(5_000) { opponents.isNotEmpty() }
+            assertEquals(listOf("titan_walker_boss"), opponents)
+        } finally {
+            compose.runOnUiThread { runCatching { vm.runtime.close() }; services.release() }
+        }
+    }
 
     @Test fun spirePatrolShowsCountdownBeforeStartingCombat() {
         val context = ApplicationProvider.getApplicationContext<Context>()

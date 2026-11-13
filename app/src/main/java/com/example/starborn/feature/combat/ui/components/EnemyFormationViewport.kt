@@ -7,15 +7,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 
 /** Measure the complete formation, including composite bosses, before fitting it above the party. */
 @Composable
-fun EnemyFormationViewport(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+fun EnemyFormationViewport(
+    modifier: Modifier = Modifier,
+    topOverlap: Dp = 0.dp,
+    content: @Composable () -> Unit
+) {
     Layout(modifier = modifier, content = {
         // Leave room for idle motion, recoil and selection effects around the formation.
-        Box(Modifier.padding(horizontal = 12.dp, vertical = 20.dp)) { content() }
+        Box(Modifier.padding(horizontal = 12.dp, vertical = if (topOverlap > 0.dp) 0.dp else 20.dp)) { content() }
     }) { measurables, constraints ->
         val formation = measurables.single().measure(
             Constraints(maxWidth = constraints.maxWidth, maxHeight = Constraints.Infinity)
@@ -24,7 +29,8 @@ fun EnemyFormationViewport(modifier: Modifier = Modifier, content: @Composable (
         layout(constraints.maxWidth, constraints.maxHeight) {
             formation.placeWithLayer(
                 ((constraints.maxWidth - formation.width * scale) / 2).roundToInt(),
-                ((constraints.maxHeight - formation.height * scale) / 2).roundToInt()
+                if (topOverlap > 0.dp) -topOverlap.roundToPx()
+                else ((constraints.maxHeight - formation.height * scale) / 2).roundToInt()
             ) {
                 transformOrigin = TransformOrigin(0f, 0f)
                 scaleX = scale

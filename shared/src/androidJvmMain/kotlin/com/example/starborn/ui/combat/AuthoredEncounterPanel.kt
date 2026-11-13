@@ -21,6 +21,7 @@ import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.starborn.domain.combat.CombatSide
@@ -99,17 +100,11 @@ fun AuthoredEncounterPanel(state: CombatState?, enemies: List<Enemy>, onTarget: 
     }
 }
 
-/** Secondary information stays in the same fixed message slot, never above the enemy formation. */
+/** Phase labels share the fixed message slot with attack warnings. */
 @Composable
-fun AuthoredEncounterStatus(state: CombatState?, enemies: List<Enemy>, modifier: Modifier = Modifier) {
+fun AuthoredEncounterStatus(state: CombatState?, modifier: Modifier = Modifier) {
     if (state == null || state.outcome != null) return
-    val labels = state.authored.phases.values.map { it.substringBefore(" — ") } +
-        state.combatants.values.filter { it.isAlive }.mapNotNull { actor ->
-            val pattern = enemies.firstOrNull { it.id == actor.combatant.id.substringBefore('#') }?.authored
-            val reinforcements = pattern?.reinforcements ?: return@mapNotNull null
-            val deployed = state.authored.reservesUsed[actor.combatant.id] ?: 0
-            "Reserves ${(reinforcements.pool.size - deployed).coerceAtLeast(0)}"
-        }
+    val labels = state.authored.phases.values.map { it.substringBefore(" — ") }
     if (labels.isEmpty()) return
     Text(labels.joinToString(" · "), modifier.widthIn(max = 164.dp).testTag("combat-authored-status"),
         color = ThreatAmber.copy(alpha = .85f), style = MaterialTheme.typography.labelSmall,
@@ -141,11 +136,17 @@ fun LinkedEnemyTargets(state: CombatState, ids: List<String>, selected: Set<Stri
         horizontalArrangement = Arrangement.spacedBy(4.dp), verticalArrangement = Arrangement.spacedBy(4.dp),
         maxItemsInEachRow = 3) {
         ids.mapNotNull(state.combatants::get).filter { it.combatant.side == CombatSide.ENEMY }.forEach { actor ->
+            val preparing = state.authored.preparations.values.any { it.sourceId == actor.combatant.id }
             Surface(Modifier.weight(1f).widthIn(min = 90.dp).heightIn(min = 44.dp)
                 .clickable(enabled = actor.isAlive) { onTarget(actor.combatant.id) }
-                .testTag("combat-linked-target-${actor.combatant.id}"),
+                .testTag("combat-linked-target-${actor.combatant.id}")
+                .semantics { if (preparing) stateDescription = "Preparing an action" },
                 color = if (actor.combatant.id in selected) Color(0xFF334938) else Color(0xDD0A1721),
-                shape = RoundedCornerShape(6.dp), border = BorderStroke(1.dp, if (actor.isAlive) Color(0xFF6C899C) else Color(0xFF35424D))) {
+                shape = RoundedCornerShape(6.dp), border = BorderStroke(if (preparing) 2.dp else 1.dp, when {
+                    preparing -> ThreatAmber
+                    actor.isAlive -> Color(0xFF6C899C)
+                    else -> Color(0xFF35424D)
+                })) {
                 Column(Modifier.padding(horizontal = 6.dp, vertical = 4.dp)) {
                     Text(actor.combatant.name, color = if (actor.isAlive) Color.White else Color(0xFF9AA8AF),
                         style = MaterialTheme.typography.labelMedium)

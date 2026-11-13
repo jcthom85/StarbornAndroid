@@ -45,7 +45,7 @@ class AuthoredEncounterPresentationTest {
             compose.runOnIdle { assertEquals(id,selected) }
         }
     }
-    @Test fun fiveWeaponTargetsAndPersistentWarningStayReadableOnShortAndLargeTextScreens() {
+    @Test fun foundryTitanTargetsAndWarningStayReadableOnShortAndLargeTextScreens() {
         val instrumentation=InstrumentationRegistry.getInstrumentation()
         val base=ApplicationProvider.getApplicationContext<Context>()
         lateinit var services:AppServices
@@ -55,8 +55,11 @@ class AuthoredEncounterPresentationTest {
         var fontScale by mutableFloatStateOf(1f)
         instrumentation.runOnMainSync {
             services=AppServices(IsolatedProgressionContext(base),true)
-            assertTrue(services.debugScenarioError,services.startDebugScenario("combat_prototype_titan"))
-            vm=CombatViewModelFactory(services,listOf("prototype_titan","prototype_missile","prototype_cutter","prototype_anchor","prototype_projector"),false)
+            assertTrue(services.debugScenarioError,services.startDebugScenario("boss_titan_walker"))
+            services.sessionStore.restore(services.sessionStore.state.value.copy(
+                partyMembers = listOf("nova", "zeke", "orion", "gh0st")
+            ))
+            vm=CombatViewModelFactory(services,listOf("titan_walker_boss"),false)
                 .create(CombatViewModel::class.java)
         }
         compose.setContent {
@@ -73,12 +76,20 @@ class AuthoredEncounterPresentationTest {
             compose.waitUntil(20000) { vm.combatState?.authored?.preparations?.isNotEmpty()==true }
             compose.runOnIdle { showing=true };compose.waitForIdle()
             compose.runOnIdle { vm.runtime.setBackgroundPaused(true) }
-            val ids=listOf("prototype_titan","prototype_missile","prototype_cutter","prototype_anchor","prototype_projector")
+            val ids=listOf("titan_walker_boss","titan_missile_battery","titan_cutting_arm","titan_anchor_cannon","titan_shield_projector")
+            val field = com.example.starborn.feature.combat.viewmodel.CombatController::class.java
+                .getDeclaredField("_state").apply { isAccessible = true }
+            @Suppress("UNCHECKED_CAST")
+            val state = field.get(vm.runtime) as kotlinx.coroutines.flow.MutableStateFlow<com.example.starborn.domain.combat.CombatState?>
             val folder=File(base.getExternalFilesDir(null),"authored-encounters").apply { mkdirs() }
             for((screenHeight,scale) in listOf(720 to 1f,560 to 1.3f)) {
                 compose.runOnIdle { height=screenHeight;fontScale=scale };compose.waitForIdle()
-                compose.onNodeWithTag("combat-authored-warnings").assertIsDisplayed()
-                compose.onNodeWithTag("combat-preparation-prototype_titan").assertIsDisplayed()
+                val warning = compose.onNodeWithTag("combat-preparation-titan_walker_boss")
+                if (screenHeight >= 640) warning.assertIsDisplayed() else warning.assertExists()
+                if (screenHeight < 640) compose.onNodeWithTag("combat-linked-target-titan_missile_battery").performScrollTo()
+                compose.onNodeWithTag("combat-linked-target-titan_missile_battery")
+                    .assert(SemanticsMatcher.expectValue(androidx.compose.ui.semantics.SemanticsProperties.StateDescription,
+                        "Preparing an action"))
                 val party=compose.onNodeWithTag("combat-party").fetchSemanticsNode().boundsInRoot
                 val bitmap=compose.onRoot().captureToImage().asAndroidBitmap()
                 File(folder,"titan-${screenHeight}h-font$scale.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG,100,it) }
@@ -89,12 +100,38 @@ class AuthoredEncounterPresentationTest {
                     val button=compose.onNodeWithTag("combat-linked-target-$id")
                     button.assertIsDisplayed()
                     if (screenHeight >= 640) assertTrue("Target stays above the crew: $id",button.fetchSemanticsNode().boundsInRoot.bottom < party.top)
+                    button.performTouchInput { click() }
+                    compose.runOnIdle {
+                        assertEquals("Target card must inspect $id above the sprite", id, vm.inspectedEnemyId.value)
+                        vm.dismissEnemyInspection()
+                    }
                 }
                 if (screenHeight < 640) {
                     compose.onNodeWithTag("combat-party").performScrollTo().assertIsDisplayed()
-                    compose.onNodeWithTag("combat-preparation-prototype_titan").performScrollTo().assertIsDisplayed()
-                    compose.onNodeWithTag("combat-linked-target-prototype_projector").performScrollTo().assertIsDisplayed()
+                    compose.onNodeWithTag("combat-preparation-titan_walker_boss").performScrollTo().assertIsDisplayed()
+                    compose.onNodeWithTag("combat-linked-target-titan_shield_projector").performScrollTo().assertIsDisplayed()
                 }
+            }
+            val intact = requireNotNull(state.value)
+            for (disabled in listOf(ids.drop(1).take(1), ids.drop(1))) {
+                compose.runOnIdle {
+                    height = 720
+                    fontScale = 1f
+                    state.value = intact.copy(
+                        combatants = intact.combatants.mapValues { (id, actor) ->
+                            if (id in disabled) actor.copy(hp = 0) else actor
+                        },
+                        authored = intact.authored.copy(preparations = emptyMap())
+                    )
+                }
+                compose.waitForIdle()
+                disabled.forEach { compose.onNodeWithTag("combat-linked-target-$it").assertIsNotEnabled() }
+                compose.onNodeWithTag("combat-linked-target-titan_walker_boss").assertIsEnabled()
+                val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+                File(folder, "titan-disabled-${disabled.size}.png").outputStream().use {
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+                }
+                bitmap.recycle()
             }
         } finally { instrumentation.runOnMainSync { vm.viewModelScope.cancel();services.release() } }
     }
